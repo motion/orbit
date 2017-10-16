@@ -3,10 +3,8 @@ import { User, Setting } from '@mcro/models'
 import { store, watch } from '@mcro/black'
 import { omit } from 'lodash'
 import passportLink from './passportLink'
-
-// TODO: Constants.API_HOST
-const API_HOST = `${window.location.host}`
-const API_URL = `http://${API_HOST}`
+import r2 from '@mcro/r2'
+import * as Constants from '~/constants'
 
 @store
 class CurrentUser {
@@ -26,8 +24,7 @@ class CurrentUser {
         .reduce((acc, cur) => ({ ...acc, [cur.type]: cur }), {})) ||
     {}
 
-  constructor(options: Object) {
-    this.options = options
+  constructor() {
     this.connected = true
     this.start()
   }
@@ -85,8 +82,9 @@ class CurrentUser {
             },
           },
         })
-        // double ensure sync
-        // await User.sync({ direction: { push: true } })
+        await r2.post(`${Constants.API_URL}/setCreds`, {
+          json: this.user.authorizations,
+        })
       }
     } catch (err) {
       return false
@@ -99,26 +97,9 @@ class CurrentUser {
     user.authorizations = omit(user.authorizations, [provider])
     await user.save()
   }
-
-  setUserSession = async () => {
-    try {
-      if (this.superlogin) {
-        this.sessionInfo = await this.superlogin.getSession()
-      }
-    } catch (e) {
-      console.error('got err with current user get', e)
-    }
-  }
 }
 
-const user = new CurrentUser({
-  providers: ['slack', 'github'],
-  baseUrl: `${API_URL}/api/auth/`,
-  endpoints: [API_HOST],
-  storage: 'local', //   'local' | 'session'
-  checkExpired: 'stateChange', // 'stateChange' ($stateChangeStart or $routeChangeStart is fired) | 'startup'
-  refreshThreshold: 0.2, // eg: a token was issued at 1pm and expires at 2pm, threshold = 0.5, token will refresh at 1:30pm
-})
+const user = new CurrentUser()
 
 // because
 window.CurrentUser = user

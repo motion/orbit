@@ -57,7 +57,7 @@ export default class Server {
     // app.use(logger('dev'))
 
     const HEADER_ALLOWED =
-      'Origin, X-Requested-With, Content-Type, Accept, Authorization, X-Token, Access-Control-Allow-Headers, Access-Control-Allow-Credentials, Access-Control-Allow-Origin, Content-Length'
+      'Origin, X-Requested-With, Content-Type, Accept, Authorization, X-Token, Access-Control-Allow-Headers'
     const corsAllow = (req, res, next) => {
       res.header('Access-Control-Allow-Origin', req.headers.origin)
       res.header('Access-Control-Allow-Credentials', 'true')
@@ -73,6 +73,9 @@ export default class Server {
     this.app = app
 
     // ROUTES
+    this.app.use('/auth', bodyParser.json())
+    this.app.use('/auth', bodyParser.urlencoded({ extended: false }))
+    this.setupCredPass()
     this.setupPassportRoutes()
     this.setupPouch()
     this.setupProxy()
@@ -85,6 +88,26 @@ export default class Server {
 
   dispose() {
     console.log('dispose server')
+  }
+
+  creds = {}
+  setupCredPass() {
+    this.app.use(bodyParser.json())
+    this.app.use(bodyParser.urlencoded({ extended: false }))
+    this.app.use('/getCreds', (req, res) => {
+      if (Object.keys(this.creds).length) {
+        res.json(this.creds)
+      } else {
+        res.json({ error: 'no creds' })
+      }
+    })
+    this.app.use('/setCreds', (req, res) => {
+      console.log('set', typeof req.body, req.body)
+      if (req.body) {
+        this.creds = req.body
+      }
+      res.sendStatus(200)
+    })
   }
 
   verifySession = async (username, token) => {
@@ -144,21 +167,14 @@ export default class Server {
   }
 
   setupPassportRoutes() {
-    this.setupAuthRoutes()
-    this.setupAuthRefreshRoutes()
-    this.setupAuthReplyRoutes()
-  }
-
-  setupAuthRoutes() {
-    this.app.use('/auth', bodyParser.json())
-    this.app.use('/auth', bodyParser.urlencoded({ extended: false }))
-    // TODO change secret
     this.app.use(
-      '/auth',
+      '/auth', // TODO change secret
       session({ secret: 'orbit', resave: false, saveUninitialized: true })
     )
     this.app.use('/auth', Passport.initialize())
     this.app.use('/auth', Passport.session())
+    this.setupAuthRefreshRoutes()
+    this.setupAuthReplyRoutes()
   }
 
   setupAuthRefreshRoutes() {

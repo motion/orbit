@@ -144,10 +144,20 @@ class R2 {
   }
 }
 
-export default (...args) => new R2(...args)
+export default function r2(...args) {
+  return new R2(...args)
+}
+
 export const put = (...args) => new R2().put(...args)
 export const get = (...args) => new R2().get(...args)
 export const post = (...args) => new R2().post(...args)
 export const head = (...args) => new R2().head(...args)
 export const patch = (...args) => new R2().patch(...args)
 export const del = (...args) => new R2().delete(...args)
+
+r2.put = put
+r2.get = get
+r2.post = post
+r2.head = head
+r2.patch = patch
+r2.del = del

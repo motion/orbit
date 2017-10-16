@@ -8,6 +8,8 @@ import Logo from './logo'
 import { formatDistance } from 'date-fns'
 import { includes } from 'lodash'
 import SyncStatus from './syncStatus'
+import r2 from '@mcro/r2'
+import * as Constants from '~/constants'
 
 @view
 class NotFound {
@@ -29,7 +31,6 @@ class ItemStore {
     const { type } = this.props
     const { action, service } = this.typeToJob[type]
     console.log('running', { type: service, action })
-
     Job.create({ type: service, action })
   }
 
@@ -50,6 +51,31 @@ class ItemStore {
 
     const job = this.props.serviceStore.lastJobs[service + ':' + action]
     return job
+  }
+
+  checkAuths = async () => {
+    const { error, ...authorizations } = await r2.get(
+      `${Constants.API_URL}/getCreds`
+    ).json
+    if (error) {
+      console.log('no creds')
+    } else {
+      await CurrentUser.mergeUpdate({
+        authorizations,
+      })
+      return authorizations
+    }
+  }
+
+  startOauth(integration) {
+    OS.send('open-settings', integration)
+    const checker = this.setInterval(async () => {
+      const done = await this.checkAuths()
+      if (done) {
+        console.log('update auths', done)
+        clearInterval(checker)
+      }
+    }, 1000)
   }
 }
 
@@ -103,7 +129,7 @@ export default class Item {
             </right>
             <right if={!store.auth} $$row css={{ alignItems: 'center' }}>
               <UI.Button
-                onClick={() => OS.send('open-settings', store.authName)}
+                onClick={() => store.startOauth(store.authName)}
                 size={0.9}
                 css={{ marginBottom: 2 }}
               >

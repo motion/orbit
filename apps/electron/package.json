@@ -1,7 +1,7 @@
 {
   "name": "@mcro/electron",
   "productName": "Orbit",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "private": true,
   "description": "Description",
   "author": "Orbit",
@@ -10,7 +10,8 @@
       "https://raw.githubusercontent.com/motion/orbit-updates/master/updates.json"
   },
   "scripts": {
-    "dist": "npm run package-app && npm run bundle-app && npm run publish-app",
+    "dist":
+      "npm run package-app && npm run bundle-app && npm run prepare-publish && npm run publish-app",
     "start": "electron build/out --start",
     "start-prod": "app/Orbit-darwin-x64/Orbit.app/Contents/MacOS/Orbit",
     "build": "webpack",

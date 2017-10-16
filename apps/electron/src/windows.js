@@ -14,6 +14,8 @@ export function onWindow(cb) {
   onWindows.push(cb)
 }
 
+console.log('Constants.APP_URL', Constants.APP_URL)
+
 const AppWindows = new WindowsStore()
 
 export default class ExampleApp extends React.Component {

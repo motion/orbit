@@ -41,7 +41,7 @@ function build-other() {
     BABEL_ENV=es5 babel src --out-dir es5 -s true $1
 }
 
-if [ "$APP" = "electron" ]; then
+if [ "$APP" = "electron" ] || [ "$APP" = "app" ]; then
   cd $ROOT/apps/electron
   npm run dist
 elif [ "$APP" = "site" ]; then

@@ -54,7 +54,9 @@ export default class Server {
 
     const app = express()
     app.set('port', port)
-    // app.use(logger('dev'))
+    if (Constants.IS_PROD) {
+      app.use(logger('dev'))
+    }
 
     const HEADER_ALLOWED =
       'Origin, X-Requested-With, Content-Type, Accept, Authorization, X-Token, Access-Control-Allow-Headers'
@@ -127,7 +129,10 @@ export default class Server {
   }
 
   setupProxy() {
-    console.log('proxying', Constants.PUBLIC_URL)
+    const router = {
+      [Constants.API_HOST]: Constants.PUBLIC_URL,
+    }
+    console.log('proxying', router)
     this.app.use(
       '/',
       proxy({
@@ -136,6 +141,7 @@ export default class Server {
         secure: false,
         ws: true,
         logLevel: 'warn',
+        router,
       })
     )
   }

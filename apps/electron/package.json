@@ -9,25 +9,30 @@
     "dist":
       "DEBUG=electron-packager electron-packager . --out app --overwrite --icon ./resources/icon.icns --prune && npm run fix-build",
     "start": "electron build/out --start",
+    "start-prod": "app/Orbit-darwin-x64/Orbit.app/Contents/MacOS/Orbit",
     "build": "webpack",
     "watch": "webpack --watch",
-    "fix-build":
-      "npm run fix-build-log; npm run fix-build-nm; npm run fix-build-el; npm run fix-build-mobx",
+    "fix-build-clean": "npm run clean-build-modules; npm run fix-build",
+    "fix-build": "npm run fix-build-modules",
+    "fix-build-modules":
+      "npm run fix-build-log; npm run fix-build-copy-modules; npm run fix-build-electron; npm run fix-build-mobx",
     "fix-build-mobx":
       "cp -r ../../node_modules/mobx ./app/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules",
     "fix-build-log":
       "touch ./app/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/log.txt",
-    "fix-build-nm":
-      "rm -r ./app/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules/*; cpx -L './node_modules/**/*{.js,.json,.html,.map}' ./app/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules",
-    "fix-build-el":
-      "rm -r ./app/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules/@mcro/ionize/node_modules/electron",
-    "test-build": "app/Orbit-darwin-x64/Orbit.app/Contents/MacOS/Orbit"
+    "clean-build-modules":
+      "rm -r ./app/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules/*",
+    "fix-build-copy-modules":
+      "cpx -uL './node_modules/**/*{.js,.json,.html,.map}' ./app/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules",
+    "fix-build-electron":
+      "rm -r ./app/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules/@mcro/ionize/node_modules/electron"
   },
   "dependencies": {
     "@mcro/api": "*",
     "@mcro/black": "^1.4.1",
     "@mcro/ionize": "^1.4.0",
     "electron-localshortcut": "^2.0.2",
+    "electron-simple-updater": "^1.2.1",
     "lodash": "^4.17.4",
     "opn": "^5.1.0",
     "react": "16.0.0-alpha.5",
@@ -38,6 +43,7 @@
     "electron": "^1.8.0",
     "webpack": "^3.4.1",
     "electron-packager": "^9.1.0",
-    "cpx": "^1.5.0"
+    "cpx": "^1.5.0",
+    "electron-installer-dmg": "^0.2.1"
   }
 }

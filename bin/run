@@ -43,11 +43,16 @@ function run-site() {
 if [ "$ACTION" = "backend" ]; then
   echo "Open about:inspect in Chrome to debug Node"
   compose up ${@:2}
-elif [ "$ACTION" = "electron" ]; then
-  cd apps/electron
-  npm run watch &
-  sleep 3
-  npm start &
+elif [ "$ACTION" = "electron" ] || [ "$ACTION" = "app" ]; then
+  if [ "$ARG1" = "--prod" ]; then
+    cd apps/electron
+    npm run start-prod
+  else
+    cd apps/electron
+    npm run watch &
+    sleep 3
+    npm start &
+  fi
   wait
 elif [ "$ACTION" =  "site" ]; then
   run-site ${@:2} &

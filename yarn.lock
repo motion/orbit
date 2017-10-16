@@ -2654,13 +2654,6 @@ electron-installer-dmg@^0.2.1:
   optionalDependencies:
     appdmg "^0.4.5"
 
-electron-simple-updater@^1.2.1:
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/electron-simple-updater/-/electron-simple-updater-1.2.1.tgz#7a2ef3d54b1fd01a7288ec7fab850370217ee75f"
-  dependencies:
-    httpreq "^0.4.22"
-    semver "*"
-
 electron-to-chromium@^1.3.18:
   version "1.3.22"
   resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.22.tgz#4322d52c151406e3eaef74ad02676883e8416418"
@@ -4063,10 +4056,6 @@ http-signature@~1.2.0:
     assert-plus "^1.0.0"
     jsprim "^1.2.2"
     sshpk "^1.7.0"
-
-httpreq@^0.4.22:
-  version "0.4.24"
-  resolved "https://registry.yarnpkg.com/httpreq/-/httpreq-0.4.24.tgz#4335ffd82cd969668a39465c929ac61d6393627f"
 
 https-browserify@0.0.1:
   version "0.0.1"
@@ -7145,7 +7134,7 @@ semver-diff@^2.0.0:
   dependencies:
     semver "^5.0.3"
 
-semver@*, "semver@2 || 3 || 4 || 5", "semver@2.x || 3.x || 4 || 5", semver@^5.0.1, semver@^5.0.3, semver@^5.1.0, semver@^5.3.0, semver@^5.4.1:
+"semver@2 || 3 || 4 || 5", "semver@2.x || 3.x || 4 || 5", semver@^5.0.1, semver@^5.0.3, semver@^5.1.0, semver@^5.3.0, semver@^5.4.1:
   version "5.4.1"
   resolved "https://registry.yarnpkg.com/semver/-/semver-5.4.1.tgz#e059c09d8571f0540823733433505d3a2f00b18e"
 

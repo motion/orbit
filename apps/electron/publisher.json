@@ -1,0 +1,7 @@
+{
+  "transport": {
+    "module": "github",
+    "token": "deb150b6bff29e135bc281a705624e86f21675b9",
+    "repository": "https://github.com/motion/orbit-updates"
+  }
+}

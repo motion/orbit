@@ -35,6 +35,8 @@
         "@mcro/css",
         "@mcro/gloss",
         "victory",
+        "electron-simple-publisher",
+        "electron-simple-updater",
         "electron-prebuilt-compile",
         "electron-packager",
         "electron-forge",

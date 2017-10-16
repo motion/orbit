@@ -1,3 +1,4 @@
+import 'electron-simple-updater'
 import React from 'react'
 import Ionize from '@mcro/ionize'
 import Windows, { onWindow } from './windows'

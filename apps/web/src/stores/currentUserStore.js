@@ -34,12 +34,6 @@ class CurrentUser {
     // temp user for now
     await User.findOrCreate('a@b.com')
     this._ensureSettings()
-
-    this.watch(() => {
-      if (this.user) {
-        this.version++
-      }
-    })
   }
 
   _ensureSettings() {
@@ -63,23 +57,21 @@ class CurrentUser {
   }
 
   get authorizations() {
-    this.version
     return this.user && this.user.authorizations
   }
 
   async setAuthorizations(authorizations) {
-    return await this.user.mergeUpdate({
+    await this.user.mergeUpdate({
       authorizations,
     })
+    this.version++
   }
 
   get refreshToken() {
-    this.version
     return this.user && this.user.refreshToken
   }
 
   get token(): (provider: string) => string {
-    this.version
     return (this.user && this.user.token) || (_ => '')
   }
 

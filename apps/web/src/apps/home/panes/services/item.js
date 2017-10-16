@@ -60,7 +60,6 @@ class ItemStore {
     if (error) {
       console.log('no creds')
     } else {
-      await CurrentUser.setAuthorizations(authorizations)
       return authorizations
     }
   }
@@ -68,9 +67,10 @@ class ItemStore {
   startOauth(integration) {
     OS.send('open-settings', integration)
     const checker = this.setInterval(async () => {
-      const done = await this.checkAuths()
-      if (done) {
-        console.log('update auths', done)
+      const authorizations = await this.checkAuths()
+      if (authorizations) {
+        console.log('update auths', authorizations)
+        await CurrentUser.setAuthorizations(authorizations)
         clearInterval(checker)
       }
     }, 1000)

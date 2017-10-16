@@ -25,12 +25,13 @@ console.log('IS_PROD', IS_PROD)
 const MINIFY = process.env.MINIFY === 'true'
 const IS_DEV = !IS_PROD
 const filtered = ls => ls.filter(x => !!x)
+const watch = !!process.argv.indexOf('--watch')
 
 // if you want to parse our modules directly use this, but we have dist/ folder now
 // const ORG = Path.resolve(__dirname, '..', '..', 'node_modules', '@mcro')
 // const includes = Fs.readdirSync(ORG).map(folder => Path.resolve(ORG, folder))
 
-console.log('running webpack for:', process.env.NODE_ENV)
+console.log('running webpack for:', process.env.NODE_ENV, 'watching', watch)
 console.log(env.stringified)
 
 let config
@@ -47,7 +48,7 @@ if (IS_PROD) {
 }
 
 module.exports = Object.assign(config, {
-  watch: !!process.argv.indexOf('--watch'),
+  watch,
 
   entry: {
     app: filtered([
@@ -111,9 +112,12 @@ module.exports = Object.assign(config, {
     //
     // 🚨
     // warning: disabling this fixed styles not attaching:
-    // new webpack.DefinePlugin({
-    //   'process.env': { NODE_ENV: '"production"', IS_PROD: true },
-    // }),
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: '"production"',
+        IS_PROD: 'true',
+      },
+    }),
     // ⏰
     //
     new CaseSensitivePathsPlugin(),

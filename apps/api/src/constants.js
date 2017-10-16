@@ -8,7 +8,8 @@ export const DB_PUBLIC_URL = process.env.DB_PUBLIC_URL
 export const DB_URL = `${DB_PROTOCOL}${DB_USER}:${DB_PASSWORD}@${DB_HOST}`
 
 export const IS_PROD =
-  process.env.NODE_ENV === 'production' || process.env.IS_PROD
+  (process.env.NODE_ENV === 'production' || process.env.IS_PROD) &&
+  !process.env.LOCAL_PROD
 
 console.log('IS_PROD', IS_PROD)
 

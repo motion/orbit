@@ -53,7 +53,9 @@ export default class Input extends React.Component<Props> {
 
   onNode = (node: ?HTMLInputElement) => {
     this.node = node
-    this.props.getRef && this.props.getRef(node)
+    if (this.props.getRef) {
+      this.props.getRef(node)
+    }
 
     if (node) {
       this.on(node, 'keydown', e => {

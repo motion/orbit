@@ -23,10 +23,7 @@ export default class Main {
         console.log('notfound', stackItem.sidebarSelected)
         return <null>not found {stackItem.sidebarSelected.type}</null>
       }
-      const key = `${stackItem.selectedKey}${index}`
-      if (this.cached[key]) {
-        return this.cached[key]
-      }
+      const key = stackItem.selectedKey
       const result = (
         <pane key={key} $active={stackItem.col === 1}>
           <Main

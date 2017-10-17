@@ -124,15 +124,6 @@ export default class MainSidebar {
         people: ['Carol Hienz', 'Nate Wienert', 'Steel', 'Nick Cammarata'],
       },
     },
-    // {
-    //   title: 'My Team',
-    //   displayTitle: <UI.Title size={1.5}>My Team</UI.Title>,
-    //   type: 'feed',
-    //   icon: 'social-slack',
-    //   data: {
-    //     people: ['Carol Hienz', 'Nate Wienert', 'Steel', 'Nick Cammarata'],
-    //   },
-    // },
   ]
 
   get settings() {

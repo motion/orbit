@@ -82,14 +82,14 @@ export default class MainSidebarStore {
     }
     return [
       ...(this.myrecent || []).map(x =>
-        Thing.toResult(x, { category: 'Recently Viewed', data: { body: '' } })
+        Thing.toResult(x, { category: 'Recently', data: { body: '' } })
       ),
       ...(this.myrecent || []).map(x =>
         Thing.toResult(x, { category: 'Assigned' })
       ),
-      ...(this.teamrecent || []).map(x =>
-        Thing.toResult(x, { category: 'Team Recent', data: { body: '' } })
-      ),
+      // ...(this.teamrecent || []).map(x =>
+      //   Thing.toResult(x, { category: 'Team Recent', data: { body: '' } })
+      // ),
     ]
   }
 

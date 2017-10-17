@@ -30,16 +30,20 @@ export default class MainSidebar {
   }
 
   _watchLastKey() {
-    let lastKey = null
     this.react(
       () => this.props.homeStore.lastKey,
       key => {
-        if (key !== lastKey) {
-          lastKey = key
-          this.setTimeout(() => {
-            this.list.scrollToRow(0)
-          }, 100)
+        if (
+          key === 'up' ||
+          key === 'down' ||
+          key === 'left' ||
+          key === 'right'
+        ) {
+          return
         }
+        this.setTimeout(() => {
+          this.list.scrollToRow(0)
+        }, 20)
       }
     )
   }

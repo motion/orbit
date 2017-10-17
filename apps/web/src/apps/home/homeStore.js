@@ -95,7 +95,19 @@ export default class HomeStore {
 
   _watchKeyEvents() {
     this.on(this.inputRef, 'keydown', e => {
-      this.lastKey = keycode(e.keyCode)
+      const key = (this.lastKey = keycode(e.keyCode))
+
+      if (key === 'up' || key === 'down' || key === 'left' || key === 'right') {
+        return
+      }
+
+      this.shouldFocus = true
+      this.setTimeout(() => {
+        if (this.shouldFocus) {
+          this.stack.focus(0)
+          this.shouldFocus = false
+        }
+      }, 150)
     })
   }
 
@@ -112,8 +124,11 @@ export default class HomeStore {
   }
 
   setSearch = debounce(text => {
-    console.log('debounced', text)
     this.search = text
+    if (this.shouldFocus) {
+      this.stack.focus(0)
+      this.shouldFocus = false
+    }
   }, 20)
 
   attachTrap(attachName, el) {

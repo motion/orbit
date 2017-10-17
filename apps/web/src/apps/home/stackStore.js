@@ -86,7 +86,6 @@ class StackItemStore {
 @store
 export default class StackStore {
   items = []
-  currentIndex = 0
   constructor(stack: Array<Object>) {
     const all = stack || []
     this.items = all.map(
@@ -103,6 +102,9 @@ export default class StackStore {
   }
   get last() {
     return this.items[this.items.length - 1]
+  }
+  focus(index) {
+    this.last.setActive(0, index)
   }
   get down() {
     return this.last.down

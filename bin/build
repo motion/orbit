@@ -13,7 +13,7 @@ killgroup() {
 }
 
 function build-dev() {
-  npx lerna exec --parallel \
+  npx lerna exec --parallel --concurrency 1 \
     --ignore @mcro/web \
     --ignore @mcro/site \
       -- \
@@ -21,18 +21,19 @@ function build-dev() {
 }
 
 function build-es5() {
-  npx lerna exec \
+  npx lerna exec --parallel \
     --scope @mcro/builder \
     --scope @mcro/gloss \
     --scope @mcro/hmr \
     --scope @mcro/hmr-view \
     --scope @mcro/react-tunnel \
+    --scope @mcro/preset-motion \
       -- \
         BABEL_ENV=es5 babel src --out-dir es5 -s true $1
 }
 
 function build-prod() {
-  npx lerna exec --parallel \
+  npx lerna exec --parallel --concurrency 1 \
     --ignore @mcro/builder \
     --ignore @mcro/hmr \
     --ignore @mcro/hmr-view \
@@ -42,7 +43,7 @@ function build-prod() {
 }
 
 function build-other() {
-  npx lerna exec --parallel \
+  npx lerna exec \
     --scope @mcro/electron \
     -- \
       BABEL_ENV=es5 babel src --out-dir es5 -s true $1
@@ -74,8 +75,8 @@ elif [ "$APP" = "web" ]; then
     echo "finished build web"
   fi
 else
-  # only build modern during dev-watch
   if [ "$ARGS" = "--watch" ]; then
+    # only build modern during dev-watch
     build-es5 --watch &
     build-dev --watch &
     build-prod --watch &

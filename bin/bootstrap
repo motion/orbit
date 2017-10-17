@@ -52,13 +52,15 @@ echo 3001 > ~/.puma-dev/jot
 yarn install
 
 echo "lerna bootstrap"
+rm lerna_debug.json > /dev/null
 npx lerna bootstrap
 
-yarn link @mcro/preset-motion &
+build build-es5
 yarn link @mcro/gloss &
 yarn link @mcro/css &
 yarn link @mcro/hmr &
 yarn link @mcro/hmr-view &
+yarn link @mcro/preset-motion &
 
 wait
 

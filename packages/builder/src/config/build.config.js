@@ -19,8 +19,10 @@ const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin')
 const BabelMinifyPlugin = require('babel-minify-webpack-plugin')
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
   .BundleAnalyzerPlugin
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
 
 const IS_PROD = process.env.NODE_ENV === 'production'
+
 console.log('IS_PROD', IS_PROD)
 const MINIFY = process.env.MINIFY === 'true'
 const IS_DEV = !IS_PROD
@@ -32,7 +34,6 @@ const watch = process.argv.indexOf('--watch') > 0
 // const includes = Fs.readdirSync(ORG).map(folder => Path.resolve(ORG, folder))
 
 console.log('running webpack for:', process.env.NODE_ENV, 'watching', watch)
-console.log(env.stringified)
 
 let config
 
@@ -109,17 +110,7 @@ module.exports = Object.assign(config, {
       inject: true,
       template: paths.appHtml,
     }),
-    //
-    // 🚨
-    // warning: disabling this fixed styles not attaching:
-    new webpack.DefinePlugin({
-      'process.env': {
-        NODE_ENV: '"production"',
-        IS_PROD: 'true',
-      },
-    }),
-    // ⏰
-    //
+    new webpack.DefinePlugin(env.stringified),
     new CaseSensitivePathsPlugin(),
     // hmr
     IS_DEV && new webpack.HotModuleReplacementPlugin(),
@@ -137,12 +128,11 @@ module.exports = Object.assign(config, {
         },
       }),
     IS_PROD && new webpack.optimize.OccurrenceOrderPlugin(),
-    MINIFY &&
-      IS_PROD &&
-      new BabelMinifyPlugin({
-        deadcode: true,
-        mangle: { topLevel: true },
-      }),
+    MINIFY && new UglifyJSPlugin(),
+    // new BabelMinifyPlugin({
+    //   deadcode: true,
+    //   mangle: { topLevel: true },
+    // }),
 
     // bundle analyzer
     process.env.DEBUG && new BundleAnalyzerPlugin(),

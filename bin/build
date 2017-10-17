@@ -30,10 +30,7 @@ function build-es5() {
 
 function build-prod() {
   npx lerna exec --parallel \
-    --ignore @mcro/web \
-    --ignore @mcro/site \
-      -- \
-        BABEL_ENV=dist babel src --out-dir dist -s true $1
+      BABEL_ENV=dist babel src --out-dir dist -s true $1
 }
 
 function build-other() {

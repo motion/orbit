@@ -152,7 +152,6 @@ export default class HomeStore {
   actions = {
     down: e => {
       if (this.stack.col === 0) {
-        console.log('prevnted')
         e.preventDefault()
       }
       this.stack.down()

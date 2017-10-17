@@ -14,8 +14,10 @@ module.exports = function(context, givenOpts) {
   const envOpts = Object.assign(
     {
       useBuiltIns: true,
+      modules: false,
+      debug: true,
       targets: {
-        node: opts.nodeTarget || 8,
+        node: opts.nodeTarget || 'current',
       },
       exclude: isAsync
         ? ['transform-regenerator', 'transform-async-to-generator']

@@ -9,6 +9,6 @@ export const DB_URL = `${DB_PROTOCOL}${DB_USER}:${DB_PASSWORD}@${DB_HOST}`
 
 export const IS_PROD = process.env.NODE_ENV === 'production'
 
-export const API_HOST = IS_PROD ? 'orbit.dev' : 'jot.dev'
+export const API_HOST = IS_PROD ? 'orbit.dev' : 'orbit.dev'
 
 export const SERVER_PORT = process.env.PORT || 3001

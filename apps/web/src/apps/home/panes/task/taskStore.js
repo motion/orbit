@@ -52,7 +52,7 @@ export default class TaskStore {
   }
 
   get taskId() {
-    return this.props.result.id
+    return this.props.result.data.id
   }
 
   get results() {

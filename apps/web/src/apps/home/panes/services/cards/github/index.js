@@ -128,7 +128,10 @@ class GithubStore {
     return Github.setting.values.repos[repo.fullName] || false
   }
 
-  orgs = ['motion', 'reactjs']
+  get orgs() {
+    return ['motion', 'reactjs', 'babel']
+  }
+
   newOrg = ''
   addOrg = () => {
     this.orgs = [...this.orgs, this.newOrg]

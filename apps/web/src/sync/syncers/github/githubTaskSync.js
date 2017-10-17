@@ -46,7 +46,7 @@ edges {
 const repoGetIssues = `
     id
     name
-    issues(first: 100) {
+    issues(last: 100) {
       ${issueGet}
     }
 `
@@ -87,6 +87,7 @@ export default class GithubIssueSync {
   }
 
   syncRepo = async (org: string, name: string) => {
+    console.log('getting', org, name)
     const results = await this.graphFetch({
       query: `
       query AllIssues {
@@ -98,9 +99,8 @@ export default class GithubIssueSync {
       }
     `,
     })
-    console.log('got', results)
 
-    if (!results) {
+    if (!results || !results.data) {
       return
     }
     const repository = results.data.organization.repository

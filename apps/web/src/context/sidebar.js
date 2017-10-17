@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react'
-import { SidebarTitle } from '../helpers'
+// import { SidebarTitle } from '../helpers'
 
 export default class ContextStore {
   results = [

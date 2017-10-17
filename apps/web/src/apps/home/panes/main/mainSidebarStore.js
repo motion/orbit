@@ -135,15 +135,12 @@ export default class MainSidebarStore {
   ]
 
   get settings() {
-    if (App && App.sync && App.sync.syncers) {
-      return Object.keys(App.sync.syncers).map(name => ({
-        title: capitalize(name),
-        icon: `social-${name}`,
-        type: 'services',
-        category: 'Services',
-      }))
-    }
-    return []
+    return ['github', 'google', 'slack'].map(name => ({
+      title: capitalize(name),
+      icon: `social-${name}`,
+      type: 'services',
+      category: 'Services',
+    }))
   }
 
   get results(): Array<PaneResult> {

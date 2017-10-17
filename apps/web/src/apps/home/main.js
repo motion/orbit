@@ -35,6 +35,7 @@ export default class Main {
               light: true,
               stack: homeStore.stack,
               getActiveIndex: () => stackItem.firstIndex,
+              stackItem,
             }}
           />
         </pane>

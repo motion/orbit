@@ -84,55 +84,49 @@ class SelectItem {
 class Labels {
   render({ onChange, onClose, store, activeIds }) {
     return (
-      <UI.Theme name="light">
-        <multi>
-          <Multiselect
-            onClose={onClose}
-            items={store.labelOptions}
-            activeIds={activeIds}
-            onChange={onChange}
-            renderItem={(item, { index, isActive, isHighlight }) => (
-              <SelectItem
-                text={item.id}
-                isActive={isActive}
-                isHighlight={isHighlight}
-                index={index}
-                icon={<ColorBlock id={item.id} />}
-              />
-            )}
-          />
-        </multi>
-      </UI.Theme>
+      <multi>
+        <Multiselect
+          onClose={onClose}
+          items={store.labelOptions}
+          activeIds={activeIds}
+          onChange={onChange}
+          renderItem={(item, { index, isActive, isHighlight }) => (
+            <SelectItem
+              text={item.id}
+              isActive={isActive}
+              isHighlight={isHighlight}
+              index={index}
+              icon={<ColorBlock id={item.id} />}
+            />
+          )}
+        />
+      </multi>
     )
   }
-
-  static style = {}
 }
 
 @view
 class Assign {
   render({ onClose, onChange, store }) {
     return (
-      <UI.Theme name="light">
-        <multi>
-          <Multiselect
-            items={store.assignOptions}
-            onClose={onClose}
-            activeIds={store.assigned}
-            onChange={onChange}
-            renderItem={(item, { index, isActive, isHighlight }) => (
-              <SelectItem
-                key={item.id}
-                text={item.id}
-                isActive={isActive}
-                isHighlight={isHighlight}
-                index={index}
-                icon={<img src={`/images/${item.id}.jpg`} $avatar />}
-              />
-            )}
-          />
-        </multi>
-      </UI.Theme>
+      <multi>
+        <Multiselect
+          items={store.assignOptions}
+          onClose={onClose}
+          activeIds={store.assigned}
+          onChange={onChange}
+          renderItem={(item, { index, isActive, isHighlight }) => (
+            <SelectItem
+              key={item.id}
+              text={item.id}
+              isActive={isActive}
+              isHighlight={isHighlight}
+              index={index}
+              icon={<img src={`/images/${item.id}.jpg`} $avatar />}
+            />
+          )}
+        />
+      </multi>
     )
   }
 

@@ -29,6 +29,7 @@ class TaskMain {
             data={data}
             taskStore={taskStore}
             paneStore={paneStore}
+            index={index}
             key={index}
           />
         ),
@@ -38,6 +39,7 @@ class TaskMain {
     return (
       <Pane
         {...paneProps}
+        actions={[{ title: 'Respond' }, { title: 'Close' }, { title: 'Label' }]}
         items={[
           () => <TaskHeader taskStore={taskStore} result={result} />,
           ...taskStore.results,

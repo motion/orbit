@@ -1,3 +1,9 @@
+/* for markdown content in tasks */
+.innerContent ul,
+.innerContent ol {
+  padding-left: 20px;
+}
+
 /* for google docs */
 style,
 sup {

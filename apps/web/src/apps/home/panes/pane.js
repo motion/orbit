@@ -77,8 +77,9 @@ export default class Pane {
     style,
     width,
     sidebar,
-    actionBar,
+    actions,
     light,
+    stackItem,
   }) {
     let { theme } = this.props
 
@@ -131,7 +132,44 @@ export default class Pane {
             {typeof children === 'function' ? children(list) : children}
           </content>
           <content if={!children}>{list}</content>
-          <actions if={actionBar}>{actionBar}</actions>
+          <actions if={actions}>
+            <UI.Theme name="clear-light">
+              <bar>
+                <div $$flex={2} $$row>
+                  <UI.Button
+                    if={stackItem.result && stackItem.result.title}
+                    chromeless
+                    inline
+                    opacity={0.5}
+                    size={1.3}
+                  >
+                    {stackItem.result.title}
+                  </UI.Button>
+                </div>
+                <UI.Row
+                  spaced={10}
+                  itemProps={{
+                    size: 1.3,
+                    inline: true,
+                    chromeless: true,
+                    glow: true,
+                  }}
+                >
+                  {actions.map(
+                    ({ title, content, ...props }, index) =>
+                      content || (
+                        <UI.Button $actionButton key={index} {...props}>
+                          <actionButton>
+                            <strong>{title.slice(0, 1).toUpperCase()}</strong>
+                            {title.slice(1, Infinity)}
+                          </actionButton>
+                        </UI.Button>
+                      )
+                  )}
+                </UI.Row>
+              </bar>
+            </UI.Theme>
+          </actions>
         </pane>
       </UI.Theme>
     )
@@ -148,6 +186,22 @@ export default class Pane {
     content: {
       overflowY: 'scroll',
       flex: 1,
+    },
+    bar: {
+      padding: [10, 15],
+      borderTop: [1, [0, 0, 0, 0.05]],
+      flexFlow: 'row',
+      alignItems: 'center',
+      position: 'fixed',
+      bottom: 0,
+      left: 250,
+      right: 0,
+      background: [255, 255, 255, 0.4],
+      backdropFilter: 'blur(20px)',
+      zIndex: Number.MAX_VALUE,
+    },
+    actionButton: {
+      display: 'block',
     },
     fullscreen: {
       position: 'absolute',

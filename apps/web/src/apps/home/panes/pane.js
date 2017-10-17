@@ -25,8 +25,12 @@ import * as UI from '@mcro/ui'
         col => {
           // focusing on main
           if (col === 1 && this.contentRef) {
-            console.log('this.contentRef', this.contentRef)
-            this.contentRef.focus()
+            const list = this.contentRef.querySelector(
+              '.ReactVirtualized__List'
+            )
+            if (list) {
+              list.focus()
+            }
           }
         }
       )

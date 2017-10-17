@@ -20,12 +20,12 @@ export default class TaskMain {
       setMainStore(taskStore)
     }
 
-    const getElement = ({ elName, result }, index) => {
+    const getElement = ({ elName, data }, index) => {
       const Element = typeToElement[elName]
       return {
         children: () => (
           <Element
-            result={result}
+            data={data}
             taskStore={taskStore}
             paneStore={paneStore}
             index={index}

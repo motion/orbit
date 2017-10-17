@@ -13,8 +13,6 @@ module.exports = function(context, givenOpts) {
 
   const envOpts = Object.assign(
     {
-      useBuiltIns: true,
-      // debug: process.env.DEBUG,
       targets: {
         node: opts.nodeTarget || 'current',
       },

@@ -68,15 +68,16 @@ export default class HomeStore {
   }
 
   _watchFocusBar() {
-    let lastActiveCol = null
+    let lastCol = null
     this.watch(() => {
-      if (this.activeCol === 0 && lastActiveCol !== 0) {
+      const { col } = this.stack
+      if (col === 0 && lastCol !== 0) {
         this.focusBar()
       }
-      if (this.activeCol !== 0 && lastActiveCol === 0) {
+      if (col !== 0 && lastCol === 0) {
         this.blurBar()
       }
-      lastActiveCol = this.activeCol
+      lastCol = col
     })
   }
 
@@ -151,6 +152,7 @@ export default class HomeStore {
   actions = {
     down: e => {
       if (this.stack.col === 0) {
+        console.log('prevnted')
         e.preventDefault()
       }
       this.stack.down()

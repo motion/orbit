@@ -30,7 +30,7 @@ export default class Commit {
       return null
     }
     return (
-      <UI.Card>
+      <UI.Card $commit>
         <pre>{store.info.files.map(file => file.patch)}</pre>
       </UI.Card>
     )
@@ -39,6 +39,7 @@ export default class Commit {
   static style = {
     commit: {
       border: [2, 'red'],
+      overflow: 'hidden',
     },
   }
 }

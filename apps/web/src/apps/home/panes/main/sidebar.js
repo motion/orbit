@@ -5,8 +5,9 @@ import { watch } from '@mcro/black'
 import type { PaneProps, PaneResult } from '~/types'
 import { Person, Thing } from '~/app'
 import { fuzzy } from '~/helpers'
+import { capitalize } from 'lodash'
 
-export default class MainSidebarStore {
+export default class MainSidebar {
   props: PaneProps
   list = null
   started = false
@@ -29,16 +30,20 @@ export default class MainSidebarStore {
   }
 
   _watchLastKey() {
-    let lastKey = null
     this.react(
       () => this.props.homeStore.lastKey,
       key => {
-        if (key !== lastKey) {
-          lastKey = key
-          this.setTimeout(() => {
-            this.list.scrollToRow(0)
-          }, 100)
+        if (
+          key === 'up' ||
+          key === 'down' ||
+          key === 'left' ||
+          key === 'right'
+        ) {
+          return
         }
+        this.setTimeout(() => {
+          this.list.scrollToRow(0)
+        }, 20)
       }
     )
   }
@@ -62,7 +67,7 @@ export default class MainSidebarStore {
       .where('author')
       .in(['natew'])
       .sort({ updated: 'desc' })
-      .limit(8)
+      .limit(3)
 
   @watch
   teamrecent = () =>
@@ -70,28 +75,29 @@ export default class MainSidebarStore {
       .where('author')
       .ne('natew')
       .sort({ updated: 'desc' })
-      .limit(8)
+      .limit(3)
 
   get things() {
     if (this.search) {
-      return fuzzy(this.searchable, this.search)
+      return fuzzy(this.searchable || [], this.search)
         .slice(0, 30)
         .map(x => Thing.toResult(x, { category: 'Search Results' }))
     }
     return [
       ...(this.myrecent || []).map(x =>
-        Thing.toResult(x, { category: 'My Recent' })
+        Thing.toResult(x, { category: 'Recently', itemProps: { children: '' } })
       ),
-      ...(this.teamrecent || []).map(x =>
-        Thing.toResult(x, { category: 'Team Recent' })
+      ...(this.myrecent || []).map(x =>
+        Thing.toResult(x, { category: 'Assigned' })
       ),
     ]
   }
 
   pinned: Array<PaneResult> = [
     {
-      title: 'Orbit',
-      displayTitle: <UI.Title size={1.5}>Orbit</UI.Title>,
+      id: 0,
+      title: 'My Team',
+      displayTitle: <UI.Title size={1.5}>My Team</UI.Title>,
       type: 'feed',
       icon: (
         <icon style={{ alignSelf: 'center', flexFlow: 'row', marginRight: 10 }}>
@@ -118,35 +124,31 @@ export default class MainSidebarStore {
         people: ['Carol Hienz', 'Nate Wienert', 'Steel', 'Nick Cammarata'],
       },
     },
-    {
-      title: 'My Team',
-      displayTitle: <UI.Title size={1.5}>My Team</UI.Title>,
-      type: 'feed',
-      icon: 'social-slack',
-      data: {
-        people: ['Carol Hienz', 'Nate Wienert', 'Steel', 'Nick Cammarata'],
-      },
-    },
+    // {
+    //   title: 'My Team',
+    //   displayTitle: <UI.Title size={1.5}>My Team</UI.Title>,
+    //   type: 'feed',
+    //   icon: 'social-slack',
+    //   data: {
+    //     people: ['Carol Hienz', 'Nate Wienert', 'Steel', 'Nick Cammarata'],
+    //   },
+    // },
   ]
 
-  testing = [
-    { title: 'Context', type: 'context', category: 'testing', icon: 'gear' },
-  ]
-
-  settings = [
-    {
-      title: 'Services',
-      icon: 'gear',
+  get settings() {
+    return ['github', 'google', 'slack'].map(name => ({
+      title: capitalize(name),
+      icon: `social-${name}`,
       type: 'services',
-      category: 'Settings',
-    },
-  ]
+      category: 'Services',
+    }))
+  }
 
   get results(): Array<PaneResult> {
     const all = [
       ...this.pinned,
       ...this.things,
-      ...this.testing,
+      // ...this.testing,
       ...(this.people || []).map(x =>
         Person.toResult(x, { category: 'People' })
       ),

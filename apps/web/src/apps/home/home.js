@@ -40,6 +40,50 @@ export default class HomePage {
               css={inputStyle}
             />
             <dock
+              css={{
+                position: 'absolute',
+                top: 0,
+                right: 20,
+                bottom: 0,
+                alignItems: 'center',
+                flexFlow: 'row',
+              }}
+            >
+              <UI.Row spaced>
+                <UI.Popover
+                  openOnHover
+                  openOnClick
+                  closeOnClick
+                  overlay
+                  theme="light"
+                  sizeRadius
+                  closeOnEsc
+                  target={
+                    <UI.Button theme="clear-dark" borderRadius={500}>
+                      Welcome, Matt
+                    </UI.Button>
+                  }
+                >
+                  <UI.Theme name="light">
+                    <UI.SizedSurface sizeRadius>
+                      <UI.List
+                        itemProps={{
+                          padding: [10],
+                          glow: true,
+                        }}
+                        items={[
+                          { primary: 'You are awesome', icon: 'matt' },
+                          { primary: 'Create project', icon: 'pro' },
+                          { primary: 'Pin', icon: 'pin' },
+                        ]}
+                      />
+                    </UI.SizedSurface>
+                  </UI.Theme>
+                </UI.Popover>
+              </UI.Row>
+            </dock>
+
+            <dock
               if={false}
               css={{
                 position: 'absolute',

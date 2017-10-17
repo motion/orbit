@@ -2,14 +2,16 @@
 import * as React from 'react'
 import { SidebarTitle } from '../helpers'
 
-export default class FeedSidebarStore {
+export default class FeedSidebar {
   results = [
     {
       type: 'feed',
       isParent: true,
       result: this.props.result,
-      display: <SidebarTitle {...this.props} />,
+      displayTitle: false,
+      children: <SidebarTitle {...this.props} />,
       onClick: this.props.onBack,
+      id: this.props.result.id,
     },
     {
       title: 'Product',

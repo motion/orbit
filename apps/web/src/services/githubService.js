@@ -37,29 +37,4 @@ export default class GithubService {
     }
     return orgs
   }
-
-  @watch
-  allRepos = () =>
-    this.github &&
-    this.setting &&
-    this.setting.activeOrgs &&
-    Promise.all(
-      this.setting.activeOrgs.map(org =>
-        this.github
-          .orgs(org)
-          .repos.fetchAll()
-          .then(repos => ({ org, repos }))
-      )
-    )
-
-  @watch
-  repos = () =>
-    this.allRepos &&
-    this.allRepos.reduce(
-      (acc, { org, repos }) => ({
-        ...acc,
-        [org]: repos.reduce((acc, cur) => ({ ...acc, [cur.name]: cur }), {}),
-      }),
-      {}
-    )
 }

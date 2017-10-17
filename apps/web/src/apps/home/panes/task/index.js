@@ -1,13 +1,10 @@
 import { view } from '@mcro/black'
 import Pane from '../pane'
 import * as React from 'react'
-import * as UI from '@mcro/ui'
 import Comment from './taskComment'
 import TaskStore from './taskStore'
-import { LabelAction, AssignAction } from './taskActions'
 import TaskResponse from './taskResponse'
 import TaskHeader from './taskHeader'
-import TaskSidebar from './taskSidebar'
 
 const typeToElement = {
   comment: Comment,
@@ -16,10 +13,12 @@ const typeToElement = {
 @view({
   taskStore: TaskStore,
 })
-class TaskMain {
+export default class TaskMain {
   render({ taskStore, paneStore, paneProps, result, setMainStore }) {
     // TODO automate this probably
-    // setMainStore(taskStore)
+    if (setMainStore) {
+      setMainStore(taskStore)
+    }
 
     const getElement = ({ elName, data }, index) => {
       const Element = typeToElement[elName]
@@ -29,6 +28,7 @@ class TaskMain {
             data={data}
             taskStore={taskStore}
             paneStore={paneStore}
+            index={index}
             key={index}
           />
         ),
@@ -38,6 +38,7 @@ class TaskMain {
     return (
       <Pane
         {...paneProps}
+        actions={[{ title: 'Respond' }, { title: 'Close' }, { title: 'Label' }]}
         items={[
           () => <TaskHeader taskStore={taskStore} result={result} />,
           ...taskStore.results,
@@ -51,9 +52,4 @@ class TaskMain {
       />
     )
   }
-}
-
-export default {
-  Sidebar: TaskSidebar,
-  Main: TaskMain,
 }

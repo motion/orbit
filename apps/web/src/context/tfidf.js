@@ -1,6 +1,7 @@
 import { countBy, memoize, flatten } from 'lodash'
 
 export default docs => {
+  console.log('called tfidf with ', docs.length, 'docs')
   const terms = countBy(flatten(docs))
 
   const idf = t => {
@@ -10,14 +11,14 @@ export default docs => {
     return val
   }
 
-  window._terms = terms
+  // window._terms = terms
 
   const getVal = memoize((key, doc) => {
     const docTerms = countBy(doc)
     const val = doc
-      .map(t => ({
-        t,
-        rank: (docTerms[t] || 0) * idf(t),
+      .map(term => ({
+        term,
+        rank: (docTerms[term] || 0) * idf(term),
       }))
       .filter(t => t.rank > 0)
     return val

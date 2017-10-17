@@ -68,15 +68,16 @@ export default class HomeStore {
   }
 
   _watchFocusBar() {
-    let lastActiveCol = null
+    let lastCol = null
     this.watch(() => {
-      if (this.activeCol === 0 && lastActiveCol !== 0) {
+      const { col } = this.stack
+      if (col === 0 && lastCol !== 0) {
         this.focusBar()
       }
-      if (this.activeCol !== 0 && lastActiveCol === 0) {
+      if (col !== 0 && lastCol === 0) {
         this.blurBar()
       }
-      lastActiveCol = this.activeCol
+      lastCol = col
     })
   }
 
@@ -95,7 +96,19 @@ export default class HomeStore {
 
   _watchKeyEvents() {
     this.on(this.inputRef, 'keydown', e => {
-      this.lastKey = keycode(e.keyCode)
+      const key = (this.lastKey = keycode(e.keyCode))
+
+      if (key === 'up' || key === 'down' || key === 'left' || key === 'right') {
+        return
+      }
+
+      this.shouldFocus = true
+      this.setTimeout(() => {
+        if (this.shouldFocus) {
+          this.stack.focus(0)
+          this.shouldFocus = false
+        }
+      }, 150)
     })
   }
 
@@ -112,8 +125,11 @@ export default class HomeStore {
   }
 
   setSearch = debounce(text => {
-    console.log('debounced', text)
     this.search = text
+    if (this.shouldFocus) {
+      this.stack.focus(0)
+      this.shouldFocus = false
+    }
   }, 20)
 
   attachTrap(attachName, el) {
@@ -135,11 +151,15 @@ export default class HomeStore {
 
   actions = {
     down: e => {
-      e.preventDefault()
+      if (this.stack.col === 0) {
+        e.preventDefault()
+      }
       this.stack.down()
     },
     up: e => {
-      e.preventDefault()
+      if (this.stack.col === 0) {
+        e.preventDefault()
+      }
       this.stack.up()
     },
     esc: e => {

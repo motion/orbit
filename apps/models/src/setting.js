@@ -23,15 +23,6 @@ export class SettingModel extends Model {
       pull: false, //'basic',
     },
   }
-
-  methods = {
-    get activeOrgs() {
-      return (
-        (this.values.orgs && Object.keys(this.values.orgs).filter(x => !!x)) ||
-        null
-      )
-    },
-  }
 }
 
 const SettingInstance = new SettingModel()

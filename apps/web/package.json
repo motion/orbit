@@ -7,7 +7,7 @@
     "start": "motion",
     "start-prod": "static-server -p 3002 -n build/index.html build",
     "start-debug": "motion --debug",
-    "build": "NODE_ENV=production BUILD_DIR=. mcro-build",
+    "build": "MINIFY=true NODE_ENV=production BUILD_DIR=. mcro-build",
     "deploy": "surge ./build seemirai.com"
   },
   "dependencies": {

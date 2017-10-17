@@ -1,4 +1,5 @@
 process.env.NODE_ENV = 'production'
+process.env.IS_PROD = true
 
 const electronApp = require('./dist/index').default
 electronApp()

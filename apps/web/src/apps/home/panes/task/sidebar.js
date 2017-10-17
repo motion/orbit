@@ -1,10 +1,11 @@
 // @flow
 import * as React from 'react'
 import { watch } from '@mcro/black'
-import { Person } from '~/app'
-import Context from '~/views/context'
+import { Person, Thing } from '~/app'
+import Context from '~/context'
 import * as UI from '@mcro/ui'
 import { SidebarTitle } from '../helpers'
+console.log('context is', Context)
 
 export default class TaskSidebarStore {
   last = null
@@ -27,14 +28,8 @@ export default class TaskSidebarStore {
   }
 
   willMount() {
-    console.log('in will mount')
-    window.sb = this
-    this.context = new Context({ search: this.props.result.title })
-    this.clearId = setInterval(() => (this.last = this.context.last), 100)
-  }
-
-  willUnmount() {
-    clearInterval(this.clearId)
+    this.context = new Context()
+    window.context = this.context
   }
 
   @watch
@@ -52,13 +47,26 @@ export default class TaskSidebarStore {
         isParent: true,
         result: this.props.result,
         title: this.props.result.title,
-        display: <SidebarTitle {...this.props} />,
+        displayTitle: false,
+        children: <SidebarTitle {...this.props} />,
         onClick: this.props.onBack,
         id: this.props.data.id,
       },
       ...(this.people || []).map(x =>
         Person.toResult(x, { category: 'People' })
       ),
+      ...(!this.context.loading
+        ? this.context
+            .closestItems(this.props.result.title, 30)
+            .filter(x => x.item.id !== this.props.data.id)
+            .map(x =>
+              Thing.toResult(x.item, {
+                category: 'Context',
+                itemProps: { children: '' },
+              })
+            )
+        : []),
+      /*
       ...(this.last || [])
         .filter(item => item.id !== this.props.data.id)
         .map(item => ({
@@ -78,6 +86,7 @@ export default class TaskSidebarStore {
           id: item.data.id,
           // display: Thing.toResult(item, { category: 'Context' }),
         })),
+        */
     ]
   }
 }

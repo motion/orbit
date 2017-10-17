@@ -30,7 +30,7 @@ export default class TaskHeader {
           <Title>{title}</Title>
           <left>
             <UI.Text if={task} opacity={0.7} size={2} css={{ marginRight: 20 }}>
-              #{task.data.number + ''}
+              #{result.number || task.data.number}
             </UI.Text>
             <UI.Icon size={36} name="github" css={{ marginRight: 10 }} />
           </left>
@@ -87,7 +87,7 @@ export default class TaskHeader {
 
   static style = {
     header: {
-      padding: [10, 15, 0],
+      padding: [0, 15, 0],
       width: '100%',
     },
     below: {

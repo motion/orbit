@@ -1,11 +1,26 @@
+import electronContextMenu from 'electron-context-menu'
+import electronDebug from 'electron-debug'
+import updater from 'electron-simple-updater'
 import React from 'react'
 import Ionize from '@mcro/ionize'
 import Windows, { onWindow } from './windows'
+import * as Constants from '~/constants'
 
 let app = null
 
+// update checker
+if (Constants.IS_PROD) {
+  const updateUrl = require('../package.json').updater.url
+  console.log('updateUrl', updateUrl)
+  updater.init(updateUrl)
+}
+
 export default function start() {
   Ionize.start(<Windows />)
+
+  electronContextMenu()
+  electronDebug()
+
   onWindow(ref => {
     app = ref
   })

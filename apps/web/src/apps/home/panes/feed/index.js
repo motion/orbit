@@ -8,9 +8,8 @@ import Calendar from './calendar'
 import FeedItem from './feedItem'
 import FeedStore from './feedStore'
 import FeedHeader from './feedHeader'
-import FeedRecently from './feedRecently'
+// import FeedRecently from './feedRecently'
 import { isUndefined, capitalize } from 'lodash'
-import FeedSidebar from './feedSidebar'
 
 type Props = PaneProps & { store: FeedStore }
 
@@ -83,7 +82,7 @@ class FeedNavBar {
   static style = {
     navbar: {
       flex: 1,
-      padding: [10, 25, 0],
+      padding: [0, 25, 0],
       marginTop: 15,
       flexFlow: 'row',
       justifyContent: 'space-between',
@@ -97,40 +96,11 @@ class FeedNavBar {
 @view({
   feedStore: FeedStore,
 })
-class FeedMain extends React.Component<Props> {
+export default class FeedMain extends React.Component<Props> {
   render({ feedStore, paneProps }: Props) {
     return (
       <Pane
         {...paneProps}
-        actionBar={
-          <UI.Theme name="clear-light">
-            <bar>
-              <div $$flex={2} $$row>
-                <UI.Button
-                  chromeless
-                  inline
-                  icon="funnel"
-                  opacity={0.5}
-                  size={1.3}
-                >
-                  Team GSD
-                </UI.Button>
-              </div>
-              <UI.Row
-                spaced={10}
-                itemProps={{
-                  size: 1.3,
-                  inline: true,
-                  chromeless: true,
-                  glow: true,
-                }}
-              >
-                <UI.Button>Create group chat</UI.Button>
-                <UI.Button>Define as team</UI.Button>
-              </UI.Row>
-            </bar>
-          </UI.Theme>
-        }
         items={[
           () => <FeedHeader feedStore={feedStore} />,
           //() => <FeedRecently />,
@@ -149,24 +119,4 @@ class FeedMain extends React.Component<Props> {
       />
     )
   }
-
-  static style = {
-    bar: {
-      padding: [10, 15],
-      borderTop: [1, [0, 0, 0, 0.05]],
-      flexFlow: 'row',
-      alignItems: 'center',
-      position: 'fixed',
-      bottom: 0,
-      left: 250,
-      right: 0,
-      background: [255, 255, 255, 0.3],
-      backdropFilter: 'blur(10px)',
-    },
-  }
-}
-
-export default {
-  Sidebar: FeedSidebar,
-  Main: FeedMain,
 }

@@ -6,9 +6,14 @@ import * as UI from '@mcro/ui'
 @view({
   paneStore: class PaneStore {
     listRef = null
+    contentRef = null
 
     willMount() {
       this.watchDrillIn()
+    }
+
+    setContentRef(ref) {
+      this.contentRef = ref
     }
 
     watchDrillIn = () => {
@@ -16,11 +21,16 @@ import * as UI from '@mcro/ui'
         return
       }
       this.react(
-        () => this.props.stack.last.col,
+        () => this.props.stack && this.props.stack.last.col,
         col => {
           // focusing on main
-          if (col === 1 && this.listRef) {
-            this.listRef.focus()
+          if (col === 1 && this.contentRef) {
+            const list =
+              this.contentRef.querySelector('.ReactVirtualized__List') ||
+              this.contentRef.querySelector('.content')
+            if (list) {
+              list.focus()
+            }
           }
         }
       )
@@ -39,8 +49,12 @@ import * as UI from '@mcro/ui'
     }
 
     watchSelection = () => {
+      // turned off
+      return false
       const { sidebar, stack } = this.props
-
+      if (!stack) {
+        return
+      }
       // scroll to row in list
       this.react(
         () =>
@@ -77,8 +91,9 @@ export default class Pane {
     style,
     width,
     sidebar,
-    actionBar,
+    actions,
     light,
+    stackItem,
   }) {
     let { theme } = this.props
 
@@ -127,11 +142,49 @@ export default class Pane {
           $fullscreen={paneStore.fullscreen}
           $sidebar={sidebar}
         >
-          <content if={children}>
-            {typeof children === 'function' ? children(list) : children}
+          <content ref={paneStore.setContentRef}>
+            {!children
+              ? list
+              : typeof children === 'function' ? children(list) : children}
           </content>
-          <content if={!children}>{list}</content>
-          <actions if={actionBar}>{actionBar}</actions>
+          <actions if={actions && stackItem && stackItem.col === 1}>
+            <UI.Theme name="clear-light">
+              <bar>
+                <div $$flex={2} $$row>
+                  <UI.Button
+                    if={stackItem.result && stackItem.result.title}
+                    chromeless
+                    inline
+                    opacity={0.5}
+                    size={1.3}
+                  >
+                    {stackItem.result.title}
+                  </UI.Button>
+                </div>
+                <UI.Row
+                  spaced={10}
+                  itemProps={{
+                    size: 1.3,
+                    inline: true,
+                    chromeless: true,
+                    glow: true,
+                  }}
+                >
+                  {actions.map(
+                    ({ title, content, ...props }, index) =>
+                      content || (
+                        <UI.Button $actionButton key={index} {...props}>
+                          <actionButton>
+                            <strong>{title.slice(0, 1).toUpperCase()}</strong>
+                            {title.slice(1, Infinity)}
+                          </actionButton>
+                        </UI.Button>
+                      )
+                  )}
+                </UI.Row>
+              </bar>
+            </UI.Theme>
+          </actions>
         </pane>
       </UI.Theme>
     )
@@ -149,6 +202,22 @@ export default class Pane {
     content: {
       overflowY: 'scroll',
       flex: 1,
+    },
+    bar: {
+      padding: [10, 15],
+      borderTop: [1, [0, 0, 0, 0.05]],
+      flexFlow: 'row',
+      alignItems: 'center',
+      position: 'fixed',
+      bottom: 0,
+      left: 250,
+      right: 0,
+      background: [255, 255, 255, 0.4],
+      backdropFilter: 'blur(20px)',
+      zIndex: Number.MAX_VALUE,
+    },
+    actionButton: {
+      display: 'block',
     },
     fullscreen: {
       position: 'absolute',

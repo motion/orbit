@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import * as Panes from './panes'
+import * as Mains from './panes/mains'
 
 const SHADOW = [0, 2, 10, [0, 0, 0, 0.15]]
 
@@ -16,14 +16,15 @@ export default class Main {
       if (!active) {
         return <null>Nothing selected</null>
       }
-      const Pane = Panes[stackItem.sidebarSelected.type]
-      if (!Pane || !Pane.Main) {
+      const Main = Mains[stackItem.sidebarSelected.type]
+      if (!Main) {
         console.log('notfound', stackItem.sidebarSelected)
         return <null>not found {stackItem.sidebarSelected.type}</null>
       }
+      console.log('main', stackItem.selectedKey, stackItem)
       return (
-        <pane $active={stackItem.col === 1}>
-          <Pane.Main
+        <pane key={stackItem.selectedKey} $active={stackItem.col === 1}>
+          <Main
             key={stackItem.selectedKey}
             stackItem={stackItem}
             navigate={stack.navigate}
@@ -35,6 +36,7 @@ export default class Main {
               light: true,
               stack: homeStore.stack,
               getActiveIndex: () => stackItem.firstIndex,
+              stackItem,
             }}
           />
         </pane>

@@ -24,7 +24,7 @@ class ItemStore {
     drive: { action: 'drive', service: 'google' },
     slack: { action: 'gather', service: 'slack' },
     calendar: { action: 'cal', service: 'google' },
-    github: { action: 'issues', service: 'github' },
+    github: { action: 'task', service: 'github' },
   }
 
   runJob = () => {

@@ -2,6 +2,10 @@
 import * as React from 'react'
 import fuzzy_ from './fuzzy'
 
+// because honestly, its easy to forget when writing jsx
+// maybe im missing something in flow
+window.React = React
+
 export const fuzzy = fuzzy_
 export const Component = React.Component
 

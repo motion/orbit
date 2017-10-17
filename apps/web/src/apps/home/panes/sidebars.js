@@ -1,0 +1,6 @@
+export main from './main/sidebar'
+export services from './services/sidebar'
+export task from './task/sidebar'
+export doc from './doc/sidebar'
+export feed from './feed/sidebar'
+export { MessageSidebar as message } from './message'

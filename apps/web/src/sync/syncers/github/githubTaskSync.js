@@ -46,7 +46,7 @@ edges {
 const repoGetIssues = `
     id
     name
-    issues(last: 100) {
+    issues(first: 100) {
       ${issueGet}
     }
 `

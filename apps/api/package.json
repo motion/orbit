@@ -2,11 +2,13 @@
   "name": "@mcro/api",
   "private": true,
   "version": "1.4.1",
-  "main": "es5/index.js",
+  "main": "dist/index.js",
   "module": "lib/index.js",
   "scripts": {
     "start": "node index.js",
-    "start-prod": "node index.js",
+    "start-prod": "NODE_ENV=production IS_PROD=true node index.js",
+    "start-local-prod":
+      "LOCAL_PROD=true NODE_ENV=production IS_PROD=true node index.js",
     "start-dev": "nodemon --inspect=0.0.0.0:5858 index.js",
     "start-watch": "../../bin/build --watch",
     "watch": "webpack --watch"
@@ -15,7 +17,6 @@
     "ignore": ["**/*.map", "lib", "dist"]
   },
   "dependencies": {
-    "@mcro/models": "*",
     "@mcro/passport-slack": "^1.2.0",
     "babel-polyfill": "^6.23.0",
     "better-stack-traces": "^1.1.0",

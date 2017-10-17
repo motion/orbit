@@ -4,7 +4,7 @@ import { view } from '@mcro/black'
 
 @view
 export default class Fade {
-  render({ width, style, children, index, currentIndex }) {
+  render({ width, style, children, index, currentIndex, previousIndex }) {
     return <fade style={{ width, ...style }}>{children}</fade>
   }
 
@@ -15,18 +15,21 @@ export default class Fade {
       left: 0,
       right: 0,
       bottom: 0,
-      transition: 'all ease-in 100ms',
     },
   }
 
-  static theme = ({ width, index, currentIndex }) => ({
-    fade: {
-      width,
-      opacity: currentIndex === index ? 1 : 0,
-      pointerEvents: currentIndex === index ? 'auto' : 'none',
-      transform: {
-        x: (index - currentIndex) * width / 10,
+  static theme = ({ width, index, currentIndex, previousIndex }) => {
+    const movingBackwards = previousIndex > currentIndex
+    return {
+      fade: {
+        width,
+        opacity: currentIndex === index ? 1 : 0,
+        pointerEvents: currentIndex === index ? 'auto' : 'none',
+        transform: {
+          x: (index - currentIndex) * width / 10,
+        },
+        transition: ['opacity ease-in 80ms', 'transform ease-out 100ms'],
       },
-    },
-  })
+    }
+  }
 }

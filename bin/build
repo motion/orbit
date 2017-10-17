@@ -41,7 +41,7 @@ function build-other() {
     BABEL_ENV=es5 babel src --out-dir es5 -s true $1
 }
 
-if [ "$APP" = "electron" ]; then
+if [ "$APP" = "electron" ] || [ "$APP" = "app" ]; then
   cd $ROOT/apps/electron
   npm run dist
 elif [ "$APP" = "site" ]; then
@@ -52,8 +52,12 @@ elif [ "$APP" = "api" ]; then
 elif [ "$APP" = "web" ]; then
   cd $ROOT/apps/web
   rm -rf build
-  npm run build -- ${ARGS} &
-  wait
+  if [ "$ARGS" = "--watch" ]; then
+    npm run build -- --watch
+  else
+    npm run build
+    echo "finished build web"
+  fi
 else
   # only build modern during dev-watch
   if [ "$ARGS" = "--watch" ]; then

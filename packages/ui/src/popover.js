@@ -5,7 +5,7 @@ import getTarget from './helpers/getTarget'
 import Portal from './helpers/portal'
 import { isNumber, debounce, throttle } from 'lodash'
 import Arrow from './arrow'
-import Surface from './surface'
+import SizedSurface from './sizedSurface'
 import injectTheme from './helpers/injectTheme'
 
 export type Props = {
@@ -763,18 +763,16 @@ class Popover extends React.PureComponent<Props> {
                   boxShadow={getShadow(shadow, elevation)}
                 />
               </arrowContain>
-              <Surface
+              <SizedSurface
                 flex={1}
                 {...props}
                 elevation={elevation}
                 background={background}
               >
-                {typeof children === 'function' ? (
-                  children(showPopover)
-                ) : (
-                  children
-                )}
-              </Surface>
+                {typeof children === 'function'
+                  ? children(showPopover)
+                  : children}
+              </SizedSurface>
             </popover>
           </container>
         </Portal>

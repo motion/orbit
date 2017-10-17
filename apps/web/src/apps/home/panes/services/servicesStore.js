@@ -1,5 +1,5 @@
-import { without, sortBy, last, countBy, flatten } from 'lodash'
-import App, { Thing, Event, Job, CurrentUser } from '~/app'
+import { sortBy, last, countBy, flatten } from 'lodash'
+import App, { Thing, Event, Job } from '~/app'
 
 export default class ServicesStore {
   things = Thing.find()

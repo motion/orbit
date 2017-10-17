@@ -8,39 +8,65 @@ import {
   sortBy,
   sum,
 } from 'lodash'
+import { watch, store } from '@mcro/black'
+import { Thing } from '~/app'
 import tfidf from './tfidf'
 import stopwords from './stopwords'
 
 const vectorsFile = `/vectors15k.txt`
 
 // alphanumeric and spacse
-const cleanText = s => s.toLowerCase().replace(/[^0-9a-zA-Z\ ]/g, '')
+const cleanText = s => {
+  if (s.toLowerCase) {
+    return s.toLowerCase().replace(/[^0-9a-zA-Z\ ]/g, '')
+  } else {
+    console.log('s is', s)
+    return ''
+  }
+}
 
-export default new class Context {
+let vectorCache = null
+
+@store
+export default class Context {
   // out of vocabulary words, a map of word -> count
-  oov = null
   vectors = null
+  items = Thing.find()
+
+  @watch
+  tfidf = () =>
+    this.items &&
+    !this.loading &&
+    tfidf((this.items || []).map(item => this.textToWords(item.title)))
+
+  @watch oov = () => this.items && this.vectors && this.getOov()
 
   get loading() {
-    this.oov === null || this.vectors === null
+    if (Object.keys(this.oov || {}).length < 5) return true
+    return this.vectors === null
   }
 
   // prepatory
+  onLoad = () =>
+    new Promise(resolve => {
+      const clearId = setInterval(() => {
+        if (!this.loading) {
+          clearInterval(clearId)
+          resolve()
+        }
+      }, 100)
+    })
+
   constructor() {
     this.load()
   }
 
   load = async () => {
     this.vectors = await this.getVectors()
-    this.oov = this.getOov()
-  }
-
-  setItems = items => {
-    this.items = items
-    this.tfidf = tfidf(this.items.map(this.textToWords))
   }
 
   getVectors = async () => {
+    if (vectorCache) return vectorCache
     const text = await (await fetch(vectorsFile)).text()
 
     const vectors = {}
@@ -52,6 +78,8 @@ export default new class Context {
       )
       vectors[word] = vsList
     })
+
+    vectorCache = vectors
 
     return vectors
   }
@@ -65,16 +93,16 @@ export default new class Context {
 
     const counts = countBy(
       flatten(
-        this.items.map(item =>
-          item
+        (this.items || []).map(item =>
+          cleanText(item.title)
             .split(' ')
-            .map(cleanText)
             .map(i => wordMap[i] || i)
             // there are some words like "constructor" that behave weirdly
             .filter(i => typeof i === 'string' && !this.vectors[i])
         )
       )
     )
+    return counts
 
     return Object.keys(counts).reduce((acc, item) => {
       if (counts[name] > 2) return { ...acc, [item]: counts[name] }
@@ -106,7 +134,7 @@ export default new class Context {
     const v = this.vectors[w]
     const v2 = this.vectors[w2]
     return Math.sqrt(
-      sum(v.forEach((_, index) => Math.pow(Math.abs(v[index] - v2[index]), 2)))
+      sum(v.map((_, index) => Math.pow(Math.abs(v[index] - v2[index]), 2)))
     )
   })
 
@@ -124,11 +152,12 @@ export default new class Context {
 
   closestItems = (text, n = 5) => {
     const words = this.textToWords(text)
-    const items = this.items.map(item => ({
-      similarity: this.textDistances(words, item.text),
+
+    const items = (this.items || []).map(item => ({
+      similarity: this.wordsDistance(words, this.textToWords(item.title)),
       item,
     }))
 
     return sortBy(items, 'similarity').slice(0, n)
   }
-}()
+}

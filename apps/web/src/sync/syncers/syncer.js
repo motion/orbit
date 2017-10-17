@@ -23,30 +23,48 @@ export default class Syncer {
   syncers = {}
   jobWatcher: ?number
 
+  get settings() {
+    return this.constructor.settings
+  }
+
   start() {
-    const { settings } = this.constructor
-    const { syncers } = settings
-
-    // setup syncers
-    if (syncers) {
-      this.syncers = {}
-      for (const key of Object.keys(syncers)) {
-        const Syncer = syncers[key]
-        this.syncers[key] = new Syncer(this)
-
-        // helper to make checking syncers easier
-        if (!this[key]) {
-          this[key] = this.syncers[key]
-        }
-      }
-    }
+    this.createSyncers()
 
     // every so often
     this.jobWatcher = setInterval(
       () => this.check(false),
-      settings.checkInterval || DEFAULT_CHECK_INTERVAL
+      this.settings.checkInterval || DEFAULT_CHECK_INTERVAL
     )
     this.check(false)
+  }
+
+  createSyncers() {
+    this.watch(() => {
+      if (this.setting && this.token) {
+        const { syncers } = this.settings
+
+        // setup syncers
+        if (syncers) {
+          for (const key of Object.keys(syncers)) {
+            if (this.syncers[key]) {
+              return
+            }
+
+            const Syncer = syncers[key]
+            this.syncers[key] = new Syncer({
+              setting: this.setting,
+              token: this.token,
+              helpers: this.helpers,
+            })
+
+            // helper to make checking syncers easier
+            if (!this[key]) {
+              this[key] = this.syncers[key]
+            }
+          }
+        }
+      }
+    })
   }
 
   async run(action: string) {
@@ -58,7 +76,11 @@ export default class Syncer {
     }
     this.ensureSetting()
     log(`Running ${this.type} ${action}`)
-    await this.syncers[action].run()
+    if (!this.syncers[action]) {
+      console.log('NO SYNCER FOUND', action)
+    } else {
+      await this.syncers[action].run()
+    }
   }
 
   async runAll() {

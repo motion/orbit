@@ -89,7 +89,6 @@ class Org {
 }
 
 class GithubStore {
-  // org/repo: 'feed' 'issue' 'all'
   things = Thing.find()
   active = 'repos'
   syncing = {}
@@ -100,17 +99,8 @@ class GithubStore {
   }
 
   onSync = (repo, val) => {
-    /*
-    this.syncVersion += 1
-    this.syncing = {
-      ...this.syncing,
-      [repo.fullName]: val,
-    }
-    */
     const { Github } = App.services
-
     this.syncVersion++
-
     Github.setting.mergeUpdate({
       values: {
         repos: {

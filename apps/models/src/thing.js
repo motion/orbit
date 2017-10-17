@@ -1,4 +1,5 @@
 // @flow
+import * as React from 'react'
 import global from 'global'
 import { Model, str, object } from '@mcro/model'
 import { cleanId, findOrUpdate } from './helpers'
@@ -73,7 +74,7 @@ export class Thing extends Model {
     this.currentUser = currentUser
   }
 
-  toResult(thing: Thing, extra: ?Object): PaneResult {
+  toResult(thing: Thing, extra): PaneResult {
     const icon =
       thing.integration === 'google'
         ? thing.integration + '-' + thing.type
@@ -84,13 +85,8 @@ export class Thing extends Model {
       title: thing.title,
       type: thing.type,
       iconAfter: true,
-      icon: `social-${icon}`,
-      data: {
-        id: thing.id,
-        integration: thing.integration,
-        type: thing.type,
-        body: (thing.body || '').slice(0, 200),
-      },
+      icon: icon === 'github' ? <item>{thing.number}</item> : `social-${icon}`,
+      data: thing,
       ...extra,
     }
   }

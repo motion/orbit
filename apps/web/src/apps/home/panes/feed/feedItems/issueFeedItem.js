@@ -2,7 +2,7 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { format } from '~/apps/home/panes/task/helpers'
-import Task from '~/apps/home/panes/task'
+import TaskMain from '~/apps/home/panes/task'
 import Commit from './views/commit'
 
 @view
@@ -12,7 +12,7 @@ export default class IssueFeedItem {
     switch (event.action) {
       case 'IssuesEvent':
         return (
-          <Task.Main
+          <TaskMain
             paneStore={{
               activeIndex: 1,
               data: { ...event, data: payload.issue },

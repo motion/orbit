@@ -1,70 +1,75 @@
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 
-// add types
+class PaneStore {
+  listRef = null
+  contentRef = null
 
-@view({
-  paneStore: class PaneStore {
-    listRef = null
-    contentRef = null
+  willMount() {
+    this.watchDrillIn()
+  }
 
-    willMount() {
-      this.watchDrillIn()
+  setContentRef(ref) {
+    this.contentRef = ref
+  }
+
+  watchDrillIn = () => {
+    if (this.props.sidebar) {
+      return
     }
-
-    setContentRef(ref) {
-      this.contentRef = ref
-    }
-
-    watchDrillIn = () => {
-      if (this.props.sidebar) {
-        return
-      }
-      this.react(
-        () => this.props.stack && this.props.stack.last.col,
-        col => {
-          // focusing on main
-          if (col === 1 && this.contentRef) {
-            const list =
-              this.contentRef.querySelector('.ReactVirtualized__List') ||
-              this.contentRef.querySelector('.content')
-            if (list) {
-              list.focus()
-            }
+    this.react(
+      () => this.props.stack && this.props.stack.last.col,
+      col => {
+        // focusing on main
+        if (col === 1 && this.contentRef) {
+          const list =
+            this.contentRef.querySelector('.ReactVirtualized__List') ||
+            this.contentRef.querySelector('.content')
+          if (list) {
+            list.focus()
           }
         }
-      )
-    }
-
-    setList = ref => {
-      if (!this.listRef) {
-        this.listRef = ref
-
-        if (this.props.store && this.props.store.onListRef) {
-          this.props.store.onListRef(this.listRef)
-        }
-
-        this.watchSelection()
       }
-    }
+    )
+  }
 
-    watchSelection = () => {
-      const { sidebar, stack } = this.props
-      if (!stack) {
-        return
+  setList = ref => {
+    if (!this.listRef) {
+      this.listRef = ref
+
+      if (this.props.store && this.props.store.onListRef) {
+        this.props.store.onListRef(this.listRef)
       }
-      // scroll to row in list
-      this.react(
-        () =>
-          sidebar
-            ? stack.last.sidebarSelectedIndex
-            : stack.last.mainSelectedIndex,
-        index => {
-          this.listRef.scrollToRow(index)
-        }
-      )
+
+      this.watchSelection()
     }
-  },
+  }
+
+  watchSelection = () => {
+    const { sidebar, stack } = this.props
+    if (!stack) {
+      return
+    }
+    // scroll to row in list
+    this.react(
+      () => [
+        sidebar
+          ? stack.last.sidebarSelectedIndex
+          : stack.last.mainSelectedIndex,
+        this.props.homeStore.search,
+      ],
+      ([index]) => {
+        // TODO fix flicker
+        this.listRef.scrollToRow(index)
+        this.setTimeout(() => this.listRef.scrollToRow(index))
+      }
+    )
+  }
+}
+
+@view.attach('homeStore')
+@view({
+  paneStore: PaneStore,
 })
 export default class Pane {
   onSelect = (item, index) => {

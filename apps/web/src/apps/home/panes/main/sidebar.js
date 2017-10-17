@@ -33,17 +33,10 @@ export default class MainSidebar {
     this.react(
       () => this.props.homeStore.lastKey,
       key => {
-        if (
-          key === 'up' ||
-          key === 'down' ||
-          key === 'left' ||
-          key === 'right'
-        ) {
+        if (key === 'up' || key === 'down' || key === 'right') {
           return
         }
-        this.setTimeout(() => {
-          this.list.scrollToRow(0)
-        }, 20)
+        this.props.homeStore.stack.last.setActive(0, 0)
       }
     )
   }

@@ -19,6 +19,7 @@ class SidebarInner extends React.Component {
     return (
       <PaneView
         {...paneProps}
+        sidebar
         store={store}
         getItem={getItem(paneProps.getActiveIndex)}
         stackItem={stackItem}

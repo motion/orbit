@@ -40,6 +40,38 @@ export default class HomePage {
               css={inputStyle}
             />
             <dock
+              css={{
+                position: 'absolute',
+                top: 0,
+                right: 20,
+                bottom: 0,
+                alignItems: 'center',
+                flexFlow: 'row',
+              }}
+            >
+              <UI.Row spaced>
+                <UI.Popover
+                  openOnClick
+                  target={
+                    <UI.Button borderRadius={500}>Welcome, Matt</UI.Button>
+                  }
+                >
+                  <UI.Theme name="light">
+                    <UI.List
+                      background="#fff"
+                      borderRadius
+                      items={[
+                        { primary: 'You are awesome', icon: 'matt' },
+                        { primary: 'Create project', icon: 'project' },
+                        { primary: 'Pin', icon: 'pin' },
+                      ]}
+                    />
+                  </UI.Theme>
+                </UI.Popover>
+              </UI.Row>
+            </dock>
+
+            <dock
               if={false}
               css={{
                 position: 'absolute',

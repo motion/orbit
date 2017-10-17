@@ -186,6 +186,11 @@ export default class HomeStore {
         // OS.send('bar-goto', `http://jot.dev/master?schema=${schema}`)
       }
     },
+    backspace: () => {
+      if (this.textboxVal === '') {
+        this.stack.left()
+      }
+    },
     right: e => {
       e.preventDefault()
       this.stack.right()

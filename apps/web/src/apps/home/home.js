@@ -51,24 +51,33 @@ export default class HomePage {
             >
               <UI.Row spaced>
                 <UI.Popover
+                  openOnHover
                   openOnClick
                   closeOnClick
-                  overlay="transparent"
+                  overlay
+                  theme="light"
+                  sizeRadius
                   closeOnEsc
                   target={
-                    <UI.Button borderRadius={500}>Welcome, Matt</UI.Button>
+                    <UI.Button theme="clear-dark" borderRadius={500}>
+                      Welcome, Matt
+                    </UI.Button>
                   }
                 >
                   <UI.Theme name="light">
-                    <UI.List
-                      background="#fff"
-                      borderRadius
-                      items={[
-                        { primary: 'You are awesome', icon: 'matt' },
-                        { primary: 'Create project', icon: 'project' },
-                        { primary: 'Pin', icon: 'pin' },
-                      ]}
-                    />
+                    <UI.SizedSurface sizeRadius>
+                      <UI.List
+                        itemProps={{
+                          padding: [10],
+                          glow: true,
+                        }}
+                        items={[
+                          { primary: 'You are awesome', icon: 'matt' },
+                          { primary: 'Create project', icon: 'pro' },
+                          { primary: 'Pin', icon: 'pin' },
+                        ]}
+                      />
+                    </UI.SizedSurface>
                   </UI.Theme>
                 </UI.Popover>
               </UI.Row>

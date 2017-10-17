@@ -189,6 +189,7 @@ export default function storeProvidable(options, Helpers) {
           this.setupProps()
           this.setupStores()
           this.mountStores()
+          this.forceUpdate()
         }
 
         render() {

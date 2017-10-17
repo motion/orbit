@@ -16,11 +16,7 @@ export default class ProvideStore extends React.Component {
     const { Child } = this
     const { storeProps } = this.props
     return (
-      <Child {...storeProps}>
-        {props => {
-          return this.props.children(props.store)
-        }}
-      </Child>
+      <Child {...storeProps}>{props => this.props.children(props.store)}</Child>
     )
   }
 }

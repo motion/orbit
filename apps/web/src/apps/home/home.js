@@ -60,7 +60,7 @@ export default class HomePage {
                   closeOnEsc
                   target={
                     <UI.Button theme="clear-dark" borderRadius={500}>
-                      Welcome, Matt
+                      Welcome, Matt22s
                     </UI.Button>
                   }
                 >

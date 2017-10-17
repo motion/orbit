@@ -48,6 +48,9 @@ function proxyReactComponents({
       instance.hotReload(module);
     }
     (0, _reactDeepForceUpdate2.default)(instance);
+    if (instance.forceUpdate) {
+      instance.forceUpdate();
+    }
     reloadedInstances++;
   };
 

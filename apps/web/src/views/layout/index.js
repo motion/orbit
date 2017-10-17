@@ -11,10 +11,6 @@ import * as UI from '@mcro/ui'
 
 @view
 export default class Layout {
-  state = {
-    error: null,
-  }
-
   componentDidMount() {
     window.lastInstance = this
   }
@@ -26,13 +22,10 @@ export default class Layout {
 
   render() {
     const CurrentPage = Router.activeView || NotFound
-
+    console.log('@@', Router.key, Router.path)
     if (Constants.IS_BAR) {
       return <CurrentPage />
     }
-
-    console.log('@@@', Router.key, Router.path)
-
     return (
       <UI.Theme name="light">
         <layout>

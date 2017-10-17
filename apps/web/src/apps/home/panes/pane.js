@@ -100,12 +100,9 @@ export default class Pane {
       children: item,
     })
 
-    let items
-
-    if (store) {
+    let items = items_
+    if (!items && store) {
       items = store.results
-    } else {
-      items = items_
     }
 
     if (light) {

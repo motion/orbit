@@ -38,13 +38,14 @@ function build-prod() {
     --ignore @mcro/hmr-view \
     --ignore @mcro/preset-motion \
     -- \
-      BABEL_ENV=dist babel src --out-dir dist -s true $1
+      BABEL_ENV=production babel src --out-dir dist -s true $1
 }
 
 function build-other() {
-  npx lerna exec --parallel --scope @mcro/electron \
+  npx lerna exec --parallel \
+    --scope @mcro/electron \
     -- \
-    BABEL_ENV=es5 babel src --out-dir es5 -s true $1
+      BABEL_ENV=es5 babel src --out-dir es5 -s true $1
 }
 
 if [ "$APP" = "build-dev" ]; then

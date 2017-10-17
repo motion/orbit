@@ -1,5 +1,6 @@
 // @flow
 import { store } from '@mcro/black'
+import SidebarTitle from './views/sidebarTitle'
 
 @store
 class StackItemStore {
@@ -8,9 +9,9 @@ class StackItemStore {
   result = null
   col = 0
   active = [0, 0]
-  constructor({ result, navigate, parent }) {
+  constructor({ result, stack, parent }) {
     this.result = result
-    this.navigate = navigate
+    this.stack = stack
     this.parent = parent
   }
   setStore(store) {
@@ -20,14 +21,32 @@ class StackItemStore {
     this.mainStore = store
   }
   get results() {
-    return this.store ? this.store.results : []
+    let results = this.store ? this.store.results : []
+    if (this.parent) {
+      const { result } = this
+      return [
+        {
+          id: result.id,
+          result,
+          type: result.type,
+          isParent: true,
+          displayTitle: false,
+          children: (
+            <SidebarTitle title={result.title} onBack={this.stack.left} />
+          ),
+          onClick: this.stack.left,
+        },
+        ...results,
+      ]
+    }
+    return results
   }
   onSelect(item: Object, index: number) {
     // update the highlighted item after we animate
     this.setTimeout(() => {
       this.setActive(0, index)
     }, 50)
-    this.navigate(item)
+    this.stack.navigate(item)
   }
   get selectedIndex() {
     return this.active[this.col]
@@ -92,7 +111,7 @@ export default class StackStore {
       (result, index) =>
         new StackItemStore({
           result,
-          navigate: this.navigate,
+          stack: this,
           parent: all[index - 1],
         })
     )
@@ -142,7 +161,7 @@ export default class StackStore {
       new StackItemStore({
         result,
         parent: last,
-        navigate: this.navigate,
+        stack: this,
       }),
     ]
   }

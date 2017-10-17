@@ -26,6 +26,7 @@ function build-es5() {
     --scope @mcro/gloss \
     --scope @mcro/hmr \
     --scope @mcro/hmr-view \
+    --scope @mcro/react-tunnel \
       -- \
         BABEL_ENV=es5 babel src --out-dir es5 -s true $1
 }

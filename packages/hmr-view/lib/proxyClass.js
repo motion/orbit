@@ -4,25 +4,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _extends2 = require('babel-runtime/helpers/extends');
-
-var _extends3 = _interopRequireDefault(_extends2);
-
-var _defineProperty = require('babel-runtime/core-js/object/define-property');
-
-var _defineProperty2 = _interopRequireDefault(_defineProperty);
-
-var _getOwnPropertyDescriptor = require('babel-runtime/core-js/object/get-own-property-descriptor');
-
-var _getOwnPropertyDescriptor2 = _interopRequireDefault(_getOwnPropertyDescriptor);
-
-var _getOwnPropertyNames = require('babel-runtime/core-js/object/get-own-property-names');
-
-var _getOwnPropertyNames2 = _interopRequireDefault(_getOwnPropertyNames);
-
-var _keys = require('babel-runtime/core-js/object/keys');
-
-var _keys2 = _interopRequireDefault(_keys);
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 exports.default = createClassProxy;
 
@@ -96,7 +78,7 @@ function proxyClass(InitialComponent) {
       return component.apply(context, params);
     } catch (err) {
       const instance = new component(...params);
-      (0, _keys2.default)(instance).forEach(key => {
+      Object.keys(instance).forEach(key => {
         if (RESERVED_STATICS.indexOf(key) > -1) {
           return;
         }
@@ -167,50 +149,50 @@ function proxyClass(InitialComponent) {
 
     // Copy over static methods and properties added at runtime
     if (PreviousComponent) {
-      (0, _getOwnPropertyNames2.default)(PreviousComponent).forEach(key => {
+      Object.getOwnPropertyNames(PreviousComponent).forEach(key => {
         if (RESERVED_STATICS.indexOf(key) > -1) {
           return;
         }
 
-        const prevDescriptor = (0, _getOwnPropertyDescriptor2.default)(PreviousComponent, key);
+        const prevDescriptor = Object.getOwnPropertyDescriptor(PreviousComponent, key);
         const savedDescriptor = savedDescriptors[key];
 
         if (!isEqualDescriptor(prevDescriptor, savedDescriptor)) {
-          (0, _defineProperty2.default)(NextComponent, key, prevDescriptor);
+          Object.defineProperty(NextComponent, key, prevDescriptor);
         }
       });
     }
 
     // Copy newly defined static methods and properties
-    (0, _getOwnPropertyNames2.default)(NextComponent).forEach(key => {
+    Object.getOwnPropertyNames(NextComponent).forEach(key => {
       if (RESERVED_STATICS.indexOf(key) > -1) {
         return;
       }
 
-      const prevDescriptor = PreviousComponent && (0, _getOwnPropertyDescriptor2.default)(PreviousComponent, key);
+      const prevDescriptor = PreviousComponent && Object.getOwnPropertyDescriptor(PreviousComponent, key);
       const savedDescriptor = savedDescriptors[key];
 
       // Skip redefined descriptors
       if (prevDescriptor && savedDescriptor && !isEqualDescriptor(savedDescriptor, prevDescriptor)) {
-        (0, _defineProperty2.default)(NextComponent, key, prevDescriptor);
-        (0, _defineProperty2.default)(ProxyComponent, key, prevDescriptor);
+        Object.defineProperty(NextComponent, key, prevDescriptor);
+        Object.defineProperty(ProxyComponent, key, prevDescriptor);
         return;
       }
 
       if (prevDescriptor && !savedDescriptor) {
-        (0, _defineProperty2.default)(ProxyComponent, key, prevDescriptor);
+        Object.defineProperty(ProxyComponent, key, prevDescriptor);
         return;
       }
 
-      const nextDescriptor = (0, _extends3.default)({}, (0, _getOwnPropertyDescriptor2.default)(NextComponent, key), {
+      const nextDescriptor = _extends({}, Object.getOwnPropertyDescriptor(NextComponent, key), {
         configurable: true
       });
       savedDescriptors[key] = nextDescriptor;
-      (0, _defineProperty2.default)(ProxyComponent, key, nextDescriptor);
+      Object.defineProperty(ProxyComponent, key, nextDescriptor);
     });
 
     // Remove static methods and properties that are no longer defined
-    (0, _getOwnPropertyNames2.default)(ProxyComponent).forEach(key => {
+    Object.getOwnPropertyNames(ProxyComponent).forEach(key => {
       if (RESERVED_STATICS.indexOf(key) > -1) {
         return;
       }
@@ -219,12 +201,12 @@ function proxyClass(InitialComponent) {
         return;
       }
       // Skip non-configurable statics
-      const proxyDescriptor = (0, _getOwnPropertyDescriptor2.default)(ProxyComponent, key);
+      const proxyDescriptor = Object.getOwnPropertyDescriptor(ProxyComponent, key);
       if (proxyDescriptor && !proxyDescriptor.configurable) {
         return;
       }
 
-      const prevDescriptor = PreviousComponent && (0, _getOwnPropertyDescriptor2.default)(PreviousComponent, key);
+      const prevDescriptor = PreviousComponent && Object.getOwnPropertyDescriptor(PreviousComponent, key);
       const savedDescriptor = savedDescriptors[key];
 
       // Skip redefined descriptors

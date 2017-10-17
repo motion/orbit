@@ -143,6 +143,7 @@ export default class MainSidebarStore {
         category: 'Services',
       }))
     }
+    return []
   }
 
   get results(): Array<PaneResult> {

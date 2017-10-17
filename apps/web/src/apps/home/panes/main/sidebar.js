@@ -75,7 +75,7 @@ export default class MainSidebar {
 
   get things() {
     if (this.search) {
-      return fuzzy(this.searchable, this.search)
+      return fuzzy(this.searchable || [], this.search)
         .slice(0, 30)
         .map(x => Thing.toResult(x, { category: 'Search Results' }))
     }

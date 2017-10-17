@@ -154,6 +154,16 @@ export default class MainSidebar {
       ...this.settings,
     ]
     const search = fuzzy(all, this.search)
+    if (!search.length) {
+      return [
+        {
+          type: 'message',
+          title: 'No Results...',
+          data: { message: 'No results' },
+          category: 'Search Results',
+        },
+      ]
+    }
     return search
   }
 

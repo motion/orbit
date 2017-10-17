@@ -51,15 +51,19 @@ export default class Syncer {
             }
 
             const Syncer = syncers[key]
-            this.syncers[key] = new Syncer({
-              setting: this.setting,
-              token: this.token,
-              helpers: this.helpers,
-            })
+            if (!Syncer) {
+              console.error('no syncer for', key)
+            } else {
+              this.syncers[key] = new Syncer({
+                setting: this.setting,
+                token: this.token,
+                helpers: this.helpers,
+              })
 
-            // helper to make checking syncers easier
-            if (!this[key]) {
-              this[key] = this.syncers[key]
+              // helper to make checking syncers easier
+              if (!this[key]) {
+                this[key] = this.syncers[key]
+              }
             }
           }
         }

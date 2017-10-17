@@ -29,14 +29,7 @@ export default class GithubFeedSync {
     log('SYNC feed for repo', org, repo)
     const repoEvents = await this.getRepoEvents(org, repo)
     const created = await this.insertEvents(repoEvents)
-    console.log(
-      'Created',
-      created ? created.length : 0,
-      'feed events',
-      created,
-      'for org',
-      orgLogin
-    )
+    console.log('Created', created && created.length, created, org, repo)
     await this.helpers.writeLastSyncs()
   }
 

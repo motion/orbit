@@ -206,6 +206,9 @@ export default class HomeStore {
         // OS.send('bar-goto', `http://jot.dev/master?schema=${schema}`)
       }
     },
+    cmdL: () => {
+      this.focusBar()
+    },
     delete: () => {
       if (this.textboxVal === '') {
         this.stack.left()

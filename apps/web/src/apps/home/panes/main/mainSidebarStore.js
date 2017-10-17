@@ -5,6 +5,8 @@ import { watch } from '@mcro/black'
 import type { PaneProps, PaneResult } from '~/types'
 import { Person, Thing } from '~/app'
 import { fuzzy } from '~/helpers'
+import App from '~/app'
+import { capitalize } from 'lodash'
 
 export default class MainSidebarStore {
   props: PaneProps
@@ -62,7 +64,7 @@ export default class MainSidebarStore {
       .where('author')
       .in(['natew'])
       .sort({ updated: 'desc' })
-      .limit(8)
+      .limit(3)
 
   @watch
   teamrecent = () =>
@@ -70,7 +72,7 @@ export default class MainSidebarStore {
       .where('author')
       .ne('natew')
       .sort({ updated: 'desc' })
-      .limit(8)
+      .limit(3)
 
   get things() {
     if (this.search) {
@@ -90,8 +92,8 @@ export default class MainSidebarStore {
 
   pinned: Array<PaneResult> = [
     {
-      title: 'Orbit',
-      displayTitle: <UI.Title size={1.5}>Orbit</UI.Title>,
+      title: 'My Team',
+      displayTitle: <UI.Title size={1.5}>My Team</UI.Title>,
       type: 'feed',
       icon: (
         <icon style={{ alignSelf: 'center', flexFlow: 'row', marginRight: 10 }}>
@@ -118,25 +120,27 @@ export default class MainSidebarStore {
         people: ['Carol Hienz', 'Nate Wienert', 'Steel', 'Nick Cammarata'],
       },
     },
-    {
-      title: 'My Team',
-      displayTitle: <UI.Title size={1.5}>My Team</UI.Title>,
-      type: 'feed',
-      icon: 'social-slack',
-      data: {
-        people: ['Carol Hienz', 'Nate Wienert', 'Steel', 'Nick Cammarata'],
-      },
-    },
+    // {
+    //   title: 'My Team',
+    //   displayTitle: <UI.Title size={1.5}>My Team</UI.Title>,
+    //   type: 'feed',
+    //   icon: 'social-slack',
+    //   data: {
+    //     people: ['Carol Hienz', 'Nate Wienert', 'Steel', 'Nick Cammarata'],
+    //   },
+    // },
   ]
 
-  settings = [
-    {
-      title: 'Services',
-      icon: 'gear',
-      type: 'services',
-      category: 'Settings',
-    },
-  ]
+  get settings() {
+    if (App.sync && App.sync.syncers) {
+      return Object.keys(App.sync.syncers).map(name => ({
+        title: capitalize(name),
+        icon: `social-${name}`,
+        type: 'services',
+        category: 'Services',
+      }))
+    }
+  }
 
   get results(): Array<PaneResult> {
     const all = [

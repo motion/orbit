@@ -397,6 +397,7 @@ class List extends React.PureComponent<Props, { selected: number }> {
       for (const { index, name } of groups) {
         let child = (extraProps: Object) => (
           <separator $firstSeparator={index === 0} key={name} {...extraProps}>
+            <notch />
             {name}
           </separator>
         )
@@ -498,10 +499,24 @@ class List extends React.PureComponent<Props, { selected: number }> {
       padding: [20, 12, 6],
       justifyContent: 'center',
       // background: [0, 0, 0, 0.02],
-      borderBottom: [1, [0, 0, 0, 0.035]],
-      color: [255, 255, 255, 0.45],
+      borderBottom: [1, [0, 0, 0, 0.05]],
+      textAlign: 'right',
+      color: [255, 255, 255],
       pointerEvents: 'none',
       userSelect: 'none',
+      position: 'relative',
+    },
+    notch: {
+      position: 'absolute',
+      bottom: 11,
+      right: -3,
+      height: 6,
+      width: 6,
+      opacity: 0,
+      transform: {
+        rotate: '45deg',
+      },
+      background: '#fff',
     },
     firstSeparator: {
       paddingTop: 10,

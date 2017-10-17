@@ -211,7 +211,6 @@ export default class FeedStore {
   }
 
   togglePerson = name => {
-    console.log('toggling person', name)
     this.setFilter(
       'people',
       includes(this.filters.people, name)

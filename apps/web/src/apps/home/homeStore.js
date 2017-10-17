@@ -134,7 +134,6 @@ export default class HomeStore {
   }
 
   focusBar = () => {
-    console.log('this.inputRef', this.inputRef)
     if (this.inputRef) {
       this.inputRef.focus()
       this.inputRef.select()

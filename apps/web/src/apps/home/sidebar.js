@@ -9,17 +9,22 @@ import PaneView from './panes/pane'
 
 const width = 250
 
-const SidebarInner = ({ stackItem, store, paneProps, setStore }) => {
-  window.sidebarStore = store // TODO: remove, TEMP
-  setStore(store)
-  return (
-    <PaneView
-      {...paneProps}
-      store={store}
-      getItem={getItem(paneProps.getActiveIndex)}
-      stackItem={stackItem}
-    />
-  )
+class SidebarInner extends React.Component {
+  componentWillMount() {
+    this.props.setStore(this.props.store)
+  }
+  render() {
+    const { stackItem, store, paneProps } = this.props
+    window.sidebarStore = store // TODO: remove, TEMP
+    return (
+      <PaneView
+        {...paneProps}
+        store={store}
+        getItem={getItem(paneProps.getActiveIndex)}
+        stackItem={stackItem}
+      />
+    )
+  }
 }
 
 const SidebarContainer = ({ sidebarStore, ...rest }) => {

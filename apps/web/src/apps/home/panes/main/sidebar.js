@@ -5,10 +5,9 @@ import { watch } from '@mcro/black'
 import type { PaneProps, PaneResult } from '~/types'
 import { Person, Thing } from '~/app'
 import { fuzzy } from '~/helpers'
-import App from '~/app'
 import { capitalize } from 'lodash'
 
-export default class MainSidebarStore {
+export default class MainSidebar {
   props: PaneProps
   list = null
   started = false
@@ -82,19 +81,17 @@ export default class MainSidebarStore {
     }
     return [
       ...(this.myrecent || []).map(x =>
-        Thing.toResult(x, { category: 'Recently', data: { body: '' } })
+        Thing.toResult(x, { category: 'Recently', itemProps: { children: '' } })
       ),
       ...(this.myrecent || []).map(x =>
         Thing.toResult(x, { category: 'Assigned' })
       ),
-      // ...(this.teamrecent || []).map(x =>
-      //   Thing.toResult(x, { category: 'Team Recent', data: { body: '' } })
-      // ),
     ]
   }
 
   pinned: Array<PaneResult> = [
     {
+      id: 0,
       title: 'My Team',
       displayTitle: <UI.Title size={1.5}>My Team</UI.Title>,
       type: 'feed',

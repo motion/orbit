@@ -13,23 +13,25 @@ export default function getItem(getActiveIndex) {
   return (result, index) => ({
     key: `${index}${result.id}`,
     highlight: () => index === getActiveIndex(),
-    primary: result.displayTitle
-      ? result.displayTitle
-      : result.display ? null : result.title,
+    primary:
+      typeof result.displayTitle !== 'undefined'
+        ? result.displayTitle || null
+        : result.display ? null : result.title,
     primaryEllipse: !hasContent(result),
     children:
-      result.display ||
-      [
-        result.data &&
-          result.data.body && (
-            <UI.Text key={0} lineHeight={20} opacity={0.5}>
-              {getDate(result) + ' · '}
-              {(result.data.body && result.data.body.slice(0, 50)) || ''}
-            </UI.Text>
-          ),
-        !result.data &&
-          getDate(result) && <UI.Text key={1}>{getDate(result)}</UI.Text>,
-      ].filter(Boolean),
+      typeof result.children !== 'undefined'
+        ? result.children
+        : [
+            result.data &&
+              result.data.body && (
+                <UI.Text key={0} lineHeight={20} opacity={0.5}>
+                  {getDate(result) + ' · '}
+                  {(result.data.body && result.data.body.slice(0, 50)) || ''}
+                </UI.Text>
+              ),
+            !result.data &&
+              getDate(result) && <UI.Text key={1}>{getDate(result)}</UI.Text>,
+          ].filter(Boolean),
     iconAfter: result.iconAfter !== false,
     icon:
       result.data && result.data.image ? (

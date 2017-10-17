@@ -3,12 +3,12 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import Pane from './pane'
 
-class MessageSidebar {
+export class MessageSidebar {
   results = []
 }
 
 @view
-class MessageMain extends React.Component<Props> {
+export class MessageMain extends React.Component<Props> {
   render({ data, paneProps }) {
     return (
       <Pane {...paneProps}>
@@ -18,9 +18,4 @@ class MessageMain extends React.Component<Props> {
       </Pane>
     )
   }
-}
-
-export default {
-  Sidebar: MessageSidebar,
-  Main: MessageMain,
 }

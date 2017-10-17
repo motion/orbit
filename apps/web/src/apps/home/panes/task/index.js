@@ -7,7 +7,6 @@ import TaskStore from './taskStore'
 import { LabelAction, AssignAction } from './taskActions'
 import TaskResponse from './taskResponse'
 import TaskHeader from './taskHeader'
-import TaskSidebar from './taskSidebar'
 
 const typeToElement = {
   comment: Comment,
@@ -16,7 +15,7 @@ const typeToElement = {
 @view({
   taskStore: TaskStore,
 })
-class TaskMain {
+export default class TaskMain {
   render({ taskStore, paneStore, paneProps, result, setMainStore }) {
     // TODO automate this probably
     if (setMainStore) {
@@ -55,9 +54,4 @@ class TaskMain {
       />
     )
   }
-}
-
-export default {
-  Sidebar: TaskSidebar,
-  Main: TaskMain,
 }

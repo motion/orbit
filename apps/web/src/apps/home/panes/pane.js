@@ -40,7 +40,9 @@ import * as UI from '@mcro/ui'
 
     watchSelection = () => {
       const { sidebar, stack } = this.props
-
+      if (!stack) {
+        return
+      }
       // scroll to row in list
       this.react(
         () =>

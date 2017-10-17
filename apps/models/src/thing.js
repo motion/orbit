@@ -73,25 +73,19 @@ export class Thing extends Model {
     this.currentUser = currentUser
   }
 
-  toResult(thing: Thing, { data, ...extra } = {}): PaneResult {
+  toResult(thing: Thing, extra): PaneResult {
     const icon =
       thing.integration === 'google'
         ? thing.integration + '-' + thing.type
         : thing.integration
 
     return {
-      id: thing.id || thing.data.id,
+      id: thing.id, // || thing.data.id,
       title: thing.title,
       type: thing.type,
       iconAfter: true,
-      icon: `social-${icon}`,
-      data: {
-        id: thing.id,
-        integration: thing.integration,
-        type: thing.type,
-        body: (thing.body || '').slice(0, 200),
-        ...data,
-      },
+      icon: icon === 'github' ? <item>{thing.number}</item> : `social-${icon}`,
+      data: thing,
       ...extra,
     }
   }

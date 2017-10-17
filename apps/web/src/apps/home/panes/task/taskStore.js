@@ -6,10 +6,7 @@ import GithubStore from '~/stores/githubStore'
 type TaskProps = {
   paneStore: {
     activeIndex: number,
-    data: {
-      id: number,
-      labels: ?Array<string>,
-    },
+    data: Thing,
   },
 }
 
@@ -31,7 +28,6 @@ export default class TaskStore {
     { id: 'wontfix' },
   ]
 
-  @watch task = () => Thing.findOne(this.taskId)
   @watch
   allIssues = () =>
     this.task &&
@@ -51,16 +47,15 @@ export default class TaskStore {
     return this.props.result
   }
 
-  get taskId() {
-    return this.props.result.id
+  get task() {
+    return this.props.data
   }
 
   get results() {
-    const data = this.task && this.task.data
-    if (!data) {
+    if (!this.task) {
       return []
     }
-    const comments = (data.comments || []).map(comment => ({
+    const comments = (this.task.data.comments || []).map(comment => ({
       elName: 'comment',
       data: comment,
       actions: [],
@@ -69,12 +64,7 @@ export default class TaskStore {
     const firstComment = {
       height: 100,
       elName: 'comment',
-      data: {
-        author: data.author,
-        body: data.body,
-        createdAt: data.createdAt,
-        issueBody: true,
-      },
+      data: this.task,
     }
     return [firstComment, ...comments]
   }

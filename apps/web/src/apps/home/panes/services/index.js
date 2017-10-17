@@ -3,12 +3,11 @@ import Pane from '../pane'
 import * as UI from '@mcro/ui'
 import ServicesStore from './servicesStore'
 import Item from './item'
-import ServicesSidebar from './sidebar'
 
 @view({
   store: ServicesStore,
 })
-class Services {
+export default class Services {
   render({ store, paneProps }) {
     const { types } = store
 
@@ -78,9 +77,4 @@ class Services {
       marginBottom: 10,
     },
   }
-}
-
-export default {
-  Main: Services,
-  Sidebar: ServicesSidebar,
 }

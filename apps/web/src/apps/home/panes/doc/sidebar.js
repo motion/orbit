@@ -2,13 +2,15 @@
 import * as React from 'react'
 import { SidebarTitle } from '../helpers'
 
-export default class DocSidebarStore {
+export default class DocSidebar {
   results = [
     {
       type: 'doc',
       isParent: true,
       result: this.props.result,
-      display: <SidebarTitle {...this.props} />,
+      children: <SidebarTitle {...this.props} />,
+      displayTitle: false,
+      title: this.props.result.title,
       onClick: this.props.onBack,
     },
   ]

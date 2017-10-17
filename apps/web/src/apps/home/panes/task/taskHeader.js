@@ -29,7 +29,7 @@ export default class TaskHeader {
           <Title>{title}</Title>
           <left>
             <UI.Text if={task} opacity={0.7} size={2} css={{ marginRight: 20 }}>
-              #{task.data.number + ''}
+              #{result.number || task.data.number}
             </UI.Text>
             <UI.Icon size={36} name="github" css={{ marginRight: 10 }} />
           </left>

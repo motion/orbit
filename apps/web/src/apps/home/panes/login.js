@@ -21,7 +21,7 @@ import Signup from './views/signup'
     }
   },
 })
-class BarLoginPane {
+export class LoginMain {
   render({ store }) {
     return (
       <setup>
@@ -59,8 +59,4 @@ class BarLoginPane {
       padding: 20,
     },
   }
-}
-
-export default {
-  main: BarLoginPane,
 }

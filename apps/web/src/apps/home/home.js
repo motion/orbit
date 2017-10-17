@@ -52,7 +52,8 @@ export default class HomePage {
               <UI.Row spaced>
                 <UI.Popover
                   openOnClick
-                  closeOnClickAway
+                  closeOnClick
+                  overlay="transparent"
                   closeOnEsc
                   target={
                     <UI.Button borderRadius={500}>Welcome, Matt</UI.Button>

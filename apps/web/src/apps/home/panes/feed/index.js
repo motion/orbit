@@ -8,9 +8,8 @@ import Calendar from './calendar'
 import FeedItem from './feedItem'
 import FeedStore from './feedStore'
 import FeedHeader from './feedHeader'
-import FeedRecently from './feedRecently'
+// import FeedRecently from './feedRecently'
 import { isUndefined, capitalize } from 'lodash'
-import FeedSidebar from './feedSidebar'
 
 type Props = PaneProps & { store: FeedStore }
 
@@ -97,7 +96,7 @@ class FeedNavBar {
 @view({
   feedStore: FeedStore,
 })
-class FeedMain extends React.Component<Props> {
+export default class FeedMain extends React.Component<Props> {
   render({ feedStore, paneProps }: Props) {
     return (
       <Pane
@@ -120,9 +119,4 @@ class FeedMain extends React.Component<Props> {
       />
     )
   }
-}
-
-export default {
-  Sidebar: FeedSidebar,
-  Main: FeedMain,
 }

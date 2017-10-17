@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view, ProvideStore } from '@mcro/black'
 import Fade from './views/fade'
-import * as Panes from './panes'
+import * as Sidebars from './panes/sidebars'
 import { getItem } from './panes/helpers'
 import PaneView from './panes/pane'
 
@@ -10,7 +10,7 @@ const width = 250
 @view.attach('homeStore')
 @view.ui
 class SidebarContainer {
-  render({ sidebarStore, paneProps, children, ...rest }) {
+  render({ sidebarStore, paneProps, ...rest }) {
     return (
       <ProvideStore store={sidebarStore} storeProps={rest}>
         {store => {
@@ -43,28 +43,10 @@ export default class Sidebar {
           if (!stackItem.result) {
             return <null>bad result</null>
           }
-          const Pane = Panes[stackItem.result.type]
-          if (!Pane || !Pane.Sidebar) {
-            return <null>not found Pane {stackItem.result.type}</null>
+          const Sidebar = Sidebars[stackItem.result.type]
+          if (!Sidebar) {
+            return <null>not found Sidebar {stackItem.result.type}</null>
           }
-
-          const paneProps = {
-            index,
-            stack: homeStore.stack,
-            sidebar: true,
-            getActiveIndex: () => stackItem.col === 0 && stackItem.firstIndex,
-            onSelect: stackItem.onSelect,
-            itemProps: {
-              size: 1.14,
-              glow: true,
-              padding: [10, 12],
-              iconAfter: true,
-              //iconSize: 22,
-            },
-            width,
-            groupKey: 'category',
-          }
-
           return (
             <Fade
               key={index}
@@ -79,8 +61,24 @@ export default class Sidebar {
                 data={stackItem.result.data}
                 result={stackItem.result}
                 onBack={homeStore.stack.pop}
-                paneProps={paneProps}
-                sidebarStore={Pane.Sidebar}
+                paneProps={{
+                  index,
+                  stack: homeStore.stack,
+                  sidebar: true,
+                  getActiveIndex: () =>
+                    stackItem.col === 0 && stackItem.firstIndex,
+                  onSelect: stackItem.onSelect,
+                  itemProps: {
+                    size: 1.14,
+                    glow: true,
+                    padding: [10, 12],
+                    iconAfter: true,
+                    //iconSize: 22,
+                  },
+                  width,
+                  groupKey: 'category',
+                }}
+                sidebarStore={Sidebar}
               />
             </Fade>
           )

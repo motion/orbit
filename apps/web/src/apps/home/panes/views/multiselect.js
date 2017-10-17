@@ -1,6 +1,6 @@
 import { view } from '@mcro/black'
 import Mousetrap from 'mousetrap'
-import { SHORTCUTS } from '~/stores/rootStore'
+import { SHORTCUTS } from '~/stores/homeStore'
 import * as UI from '@mcro/ui'
 import { includes, findIndex, without } from 'lodash'
 import { fuzzy } from '~/helpers'

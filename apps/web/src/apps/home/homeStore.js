@@ -91,7 +91,6 @@ export default class HomeStore {
     let lastCol = null
     this.watch(() => {
       const { col } = this.stack
-      console.log('col', col, lastCol)
       if (col === 0 && lastCol !== 0) {
         this.focusBar()
       }

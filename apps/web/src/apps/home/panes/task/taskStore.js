@@ -64,7 +64,7 @@ export default class TaskStore {
     const firstComment = {
       height: 100,
       elName: 'comment',
-      data: this.task,
+      data: this.task.data,
     }
     return [firstComment, ...comments]
   }

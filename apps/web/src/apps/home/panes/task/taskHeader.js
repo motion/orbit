@@ -86,7 +86,7 @@ export default class TaskHeader {
 
   static style = {
     header: {
-      padding: [10, 15, 0],
+      padding: [0, 15, 0],
       width: '100%',
     },
     below: {

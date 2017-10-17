@@ -23,7 +23,7 @@ export default class Main {
       }
       console.log('main', stackItem.selectedKey, stackItem)
       return (
-        <pane $active={stackItem.col === 1}>
+        <pane key={stackItem.selectedKey} $active={stackItem.col === 1}>
           <Main
             key={stackItem.selectedKey}
             stackItem={stackItem}

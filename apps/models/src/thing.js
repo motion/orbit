@@ -80,7 +80,7 @@ export class Thing extends Model {
         : thing.integration
 
     return {
-      id: thing.id, // || thing.data.id,
+      id: thing.id || thing.data.id,
       title: thing.title,
       type: thing.type,
       iconAfter: true,

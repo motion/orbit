@@ -31,13 +31,17 @@ class SidebarContainer {
 
 @view
 export default class Sidebar {
+  previousIndex = -1
+
   render({ homeStore, homeStore: { stack } }) {
-    const lastIndex = stack.length - 1
+    const currentIndex = stack.length - 1
+    const { previousIndex } = this
+    this.previousIndex = currentIndex
     return (
       <sidebar css={{ width }}>
         {stack.items.map((stackItem, index) => {
           // only show last two
-          if (index + 1 < lastIndex) {
+          if (index + 1 < currentIndex) {
             return null
           }
           if (!stackItem.result) {
@@ -52,7 +56,8 @@ export default class Sidebar {
               key={index}
               width={width}
               index={index}
-              currentIndex={lastIndex}
+              currentIndex={currentIndex}
+              previousIndex={previousIndex}
             >
               <SidebarContainer
                 stackItem={stackItem}

@@ -17,7 +17,7 @@ const SidebarInner = ({ stackItem, store, paneProps, setStore }) => {
       {...paneProps}
       store={store}
       getItem={getItem(paneProps.getActiveIndex)}
-      items={stackItem.results}
+      stackItem={stackItem}
     />
   )
 }

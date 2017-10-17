@@ -101,8 +101,8 @@ export default class Pane {
     })
 
     let items = items_
-    if (!items && store) {
-      items = store.results
+    if (!items && stackItem) {
+      items = stackItem.results
     }
 
     if (light) {

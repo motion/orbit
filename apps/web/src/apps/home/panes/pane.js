@@ -6,9 +6,14 @@ import * as UI from '@mcro/ui'
 @view({
   paneStore: class PaneStore {
     listRef = null
+    contentRef = null
 
     willMount() {
       this.watchDrillIn()
+    }
+
+    setContentRef(ref) {
+      this.contentRef = ref
     }
 
     watchDrillIn = () => {
@@ -19,8 +24,9 @@ import * as UI from '@mcro/ui'
         () => this.props.stack && this.props.stack.last.col,
         col => {
           // focusing on main
-          if (col === 1 && this.listRef) {
-            this.listRef.focus()
+          if (col === 1 && this.contentRef) {
+            console.log('this.contentRef', this.contentRef)
+            this.contentRef.focus()
           }
         }
       )
@@ -130,10 +136,11 @@ export default class Pane {
           $fullscreen={paneStore.fullscreen}
           $sidebar={sidebar}
         >
-          <content if={children}>
-            {typeof children === 'function' ? children(list) : children}
+          <content ref={paneStore.setContentRef}>
+            {!children
+              ? list
+              : typeof children === 'function' ? children(list) : children}
           </content>
-          <content if={!children}>{list}</content>
           <actions if={actions && stackItem && stackItem.col === 1}>
             <UI.Theme name="clear-light">
               <bar>

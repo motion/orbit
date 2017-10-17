@@ -110,6 +110,9 @@ export default class StackStore {
   get up() {
     return this.last.up
   }
+  get col() {
+    return this.last.col
+  }
   left() {
     if (this.last.col) {
       this.last.left()

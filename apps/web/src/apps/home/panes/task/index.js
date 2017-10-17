@@ -1,10 +1,8 @@
 import { view } from '@mcro/black'
 import Pane from '../pane'
 import * as React from 'react'
-import * as UI from '@mcro/ui'
 import Comment from './taskComment'
 import TaskStore from './taskStore'
-import { LabelAction, AssignAction } from './taskActions'
 import TaskResponse from './taskResponse'
 import TaskHeader from './taskHeader'
 
@@ -22,12 +20,12 @@ export default class TaskMain {
       setMainStore(taskStore)
     }
 
-    const getElement = ({ elName, data }, index) => {
+    const getElement = ({ elName, result }, index) => {
       const Element = typeToElement[elName]
       return {
         children: () => (
           <Element
-            data={data}
+            result={result}
             taskStore={taskStore}
             paneStore={paneStore}
             index={index}

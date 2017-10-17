@@ -135,11 +135,15 @@ export default class HomeStore {
 
   actions = {
     down: e => {
-      e.preventDefault()
+      if (this.stack.col === 0) {
+        e.preventDefault()
+      }
       this.stack.down()
     },
     up: e => {
-      e.preventDefault()
+      if (this.stack.col === 0) {
+        e.preventDefault()
+      }
       this.stack.up()
     },
     esc: e => {

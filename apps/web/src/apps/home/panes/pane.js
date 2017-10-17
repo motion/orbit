@@ -132,7 +132,7 @@ export default class Pane {
             {typeof children === 'function' ? children(list) : children}
           </content>
           <content if={!children}>{list}</content>
-          <actions if={actions}>
+          <actions if={actions && stackItem.col === 1}>
             <UI.Theme name="clear-light">
               <bar>
                 <div $$flex={2} $$row>

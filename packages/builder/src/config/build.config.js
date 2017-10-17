@@ -128,11 +128,13 @@ module.exports = Object.assign(config, {
         },
       }),
     IS_PROD && new webpack.optimize.OccurrenceOrderPlugin(),
-    MINIFY && new UglifyJSPlugin(),
-    // new BabelMinifyPlugin({
-    //   deadcode: true,
-    //   mangle: { topLevel: true },
-    // }),
+    // MINIFY && new UglifyJSPlugin(),
+    // slow
+    MINIFY &&
+      new BabelMinifyPlugin({
+        deadcode: true,
+        mangle: { topLevel: true },
+      }),
 
     // bundle analyzer
     process.env.DEBUG && new BundleAnalyzerPlugin(),

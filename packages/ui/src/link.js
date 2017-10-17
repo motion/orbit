@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react'
-import { view, IS_ELECTRON } from '@mcro/black'
+import { view, Constants } from '@mcro/black'
 
 type Props = {
   router?: { path: string, go: Function },
@@ -41,7 +41,7 @@ export default class Link extends React.Component<Props> {
 
   static style = {
     a: {
-      cursor: IS_ELECTRON ? 'default' : 'pointer',
+      cursor: Constants.IS_ELECTRON ? 'default' : 'pointer',
     },
   }
 

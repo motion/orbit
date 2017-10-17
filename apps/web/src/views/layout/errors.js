@@ -1,10 +1,11 @@
 import React from 'react'
 import { view } from '@mcro/black'
-import { App } from '~/index'
 
 @view
 export default class Errors {
   render() {
+    const { App } = window
+
     if (!App) {
       return null
     }

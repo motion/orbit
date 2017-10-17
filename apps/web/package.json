@@ -3,7 +3,6 @@
   "private": true,
   "version": "1.4.1",
   "main": "index.js",
-  "main:production": "./dist/index.js",
   "scripts": {
     "start": "motion",
     "start-prod": "static-server -p 3002 -n build/index.html build",

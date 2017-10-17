@@ -51,6 +51,11 @@ export default class GithubSync extends Syncer {
       )
       const uri = `https://api.github.com${path}?${requestSearch.toString()}`
 
+      // ensure lastsyncs
+      if (!this.setting.values.lastSyncs) {
+        await this.helpers.writeLastSyncs()
+      }
+
       const requestHeaders = force ? null : this.fetchHeaders(uri, headers)
       if (requestHeaders) {
         opts.headers = requestHeaders

@@ -1,6 +1,5 @@
 // @flow
 import { Event } from '~/app'
-import { flatten } from 'lodash'
 import debug from 'debug'
 
 const log = debug('sync')
@@ -12,17 +11,23 @@ export default class GithubFeedSync {
     this.helpers = helpers
   }
 
+  get repos() {
+    return Object.keys(this.setting.values.repos || {}).map(x => x.split('/'))
+  }
+
   run = async () => {
-    if (this.setting.activeOrgs) {
-      await Promise.all(this.setting.activeOrgs.map(this.syncFeed))
+    if (this.repos.length) {
+      await Promise.all(
+        this.repos.map(([org, repo]) => this.syncFeed(org, repo))
+      )
     } else {
-      log('No orgs selected')
+      log('No repos selected')
     }
   }
 
-  syncFeed = async (orgLogin: string) => {
-    log('SYNC feed for org', orgLogin)
-    const repoEvents = await this.getNewEvents(orgLogin)
+  syncFeed = async (org: string, repo: string) => {
+    log('SYNC feed for repo', org, repo)
+    const repoEvents = await this.getRepoEvents(org, repo)
     const created = await this.insertEvents(repoEvents)
     console.log(
       'Created',
@@ -98,49 +103,6 @@ export default class GithubFeedSync {
     }
 
     return events
-  }
-
-  getAllRepos = async (org: string): Promise<Array<Object>> => {
-    const getPage = (page: number) =>
-      this.helpers.fetch(`/orgs/${org}/repos`, {
-        force: true,
-        search: { page },
-      })
-    let res = []
-    let done = false
-    let page = 1
-    let lastFetch = null
-    while (!done) {
-      lastFetch = await getPage(page)
-      if (!lastFetch) {
-        done = true
-      } else {
-        if (Array.isArray(lastFetch)) {
-          if (lastFetch.length < 30) {
-            done = true
-          }
-          page++
-          res = [...res, ...lastFetch]
-        } else {
-          console.error(lastFetch)
-          throw new Error('weird thing')
-        }
-      }
-    }
-    return res
-  }
-
-  getNewEvents = async (org: string): Promise<Array<Object>> => {
-    // empty headers to avoid modified header
-    const repos = await this.getAllRepos(org)
-    if (Array.isArray(repos)) {
-      return flatten(
-        await Promise.all(repos.map(repo => this.getRepoEvents(org, repo.name)))
-      ).filter(x => !!x)
-    } else {
-      log('No repos', repos)
-    }
-    return []
   }
 
   insertEvents = async (allEvents: Array<Object>): Promise<Array<Object>> => {

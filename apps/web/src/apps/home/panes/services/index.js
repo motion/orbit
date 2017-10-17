@@ -1,7 +1,7 @@
 import { view } from '@mcro/black'
 import Pane from '../pane'
 import * as UI from '@mcro/ui'
-import ServicesStore from './store'
+import ServicesStore from './servicesStore'
 import Item from './item'
 import ServicesSidebar from './sidebar'
 

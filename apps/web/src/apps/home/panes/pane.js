@@ -16,7 +16,7 @@ import * as UI from '@mcro/ui'
         return
       }
       this.react(
-        () => this.props.stack.last.col,
+        () => this.props.stack && this.props.stack.last.col,
         col => {
           // focusing on main
           if (col === 1 && this.listRef) {
@@ -132,7 +132,7 @@ export default class Pane {
             {typeof children === 'function' ? children(list) : children}
           </content>
           <content if={!children}>{list}</content>
-          <actions if={actions && stackItem.col === 1}>
+          <actions if={actions && stackItem && stackItem.col === 1}>
             <UI.Theme name="clear-light">
               <bar>
                 <div $$flex={2} $$row>

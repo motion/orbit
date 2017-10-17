@@ -82,10 +82,13 @@ export default class MainSidebarStore {
     }
     return [
       ...(this.myrecent || []).map(x =>
-        Thing.toResult(x, { category: 'My Recent' })
+        Thing.toResult(x, { category: 'Recently Viewed', data: { body: '' } })
+      ),
+      ...(this.myrecent || []).map(x =>
+        Thing.toResult(x, { category: 'Assigned' })
       ),
       ...(this.teamrecent || []).map(x =>
-        Thing.toResult(x, { category: 'Team Recent' })
+        Thing.toResult(x, { category: 'Team Recent', data: { body: '' } })
       ),
     ]
   }
@@ -132,7 +135,7 @@ export default class MainSidebarStore {
   ]
 
   get settings() {
-    if (App.sync && App.sync.syncers) {
+    if (App && App.sync && App.sync.syncers) {
       return Object.keys(App.sync.syncers).map(name => ({
         title: capitalize(name),
         icon: `social-${name}`,

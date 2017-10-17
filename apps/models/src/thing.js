@@ -73,7 +73,7 @@ export class Thing extends Model {
     this.currentUser = currentUser
   }
 
-  toResult(thing: Thing, extra: ?Object): PaneResult {
+  toResult(thing: Thing, { data, ...extra } = {}): PaneResult {
     const icon =
       thing.integration === 'google'
         ? thing.integration + '-' + thing.type
@@ -90,6 +90,7 @@ export class Thing extends Model {
         integration: thing.integration,
         type: thing.type,
         body: (thing.body || '').slice(0, 200),
+        ...data,
       },
       ...extra,
     }

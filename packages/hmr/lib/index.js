@@ -4,6 +4,10 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _keys = require('babel-runtime/core-js/object/keys');
+
+var _keys2 = _interopRequireDefault(_keys);
+
 exports.default = function ({ types: t, template }) {
   function matchesDecorator(node, decoratorName) {
     return node.decorators && node.decorators.some(item => {
@@ -65,7 +69,7 @@ exports.default = function ({ types: t, template }) {
 
   // `{ name: foo }` => Node { type: "ObjectExpression", properties: [...] }
   function toObjectExpression(object) {
-    const properties = Object.keys(object).map(key => {
+    const properties = (0, _keys2.default)(object).map(key => {
       return t.objectProperty(t.identifier(key), object[key]);
     });
 

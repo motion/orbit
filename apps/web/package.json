@@ -3,6 +3,7 @@
   "private": true,
   "version": "1.4.1",
   "main": "index.js",
+  "main:production": "./dist/index.js",
   "scripts": {
     "start": "motion",
     "start-prod": "static-server -p 3002 -n build/index.html build",
@@ -21,7 +22,7 @@
     "apollo-fetch": "^0.6.0",
     "babel-polyfill": "^6.23.0",
     "color": "^2.0.0",
-    "date-fns": "^2.0.0-alpha.3",
+    "date-fns": "^2.0.0-alpha.7",
     "debug": "^2.6.9",
     "emojinize": "^1.0.0",
     "keycode": "^2.1.9",

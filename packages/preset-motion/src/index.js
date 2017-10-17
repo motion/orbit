@@ -14,8 +14,7 @@ module.exports = function(context, givenOpts) {
   const envOpts = Object.assign(
     {
       useBuiltIns: true,
-      modules: false,
-      debug: true,
+      // debug: process.env.DEBUG,
       targets: {
         node: opts.nodeTarget || 'current',
       },
@@ -28,7 +27,7 @@ module.exports = function(context, givenOpts) {
 
   const config = {
     plugins: [
-      // getPlugin('babel-plugin-transform-runtime'),
+      getPlugin('babel-plugin-transform-runtime'),
       // order important here
       getPlugin('babel-plugin-transform-decorators-legacy-without-clutter'),
       getPlugin('babel-plugin-transform-class-properties'),
@@ -56,7 +55,7 @@ module.exports = function(context, givenOpts) {
       }),
     ],
     presets: opts.presets || [
-      [getPlugin('babel-preset-env'), envOpts],
+      getPlugin('babel-preset-env', envOpts),
       getPlugin('babel-preset-react'),
       isAsync && getPlugin('babel-preset-stage-1-without-async'),
       noAsync && getPlugin('babel-preset-stage-1'),

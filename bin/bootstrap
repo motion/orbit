@@ -54,4 +54,12 @@ yarn install
 echo "lerna bootstrap"
 npx lerna bootstrap
 
+yarn link @mcro/preset-motion &
+yarn link @mcro/gloss &
+yarn link @mcro/css &
+yarn link @mcro/hmr &
+yarn link @mcro/hmr-view &
+
+wait
+
 echo " done!"

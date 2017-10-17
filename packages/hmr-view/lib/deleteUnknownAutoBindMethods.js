@@ -3,7 +3,19 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+
+var _getOwnPropertyNames = require('babel-runtime/core-js/object/get-own-property-names');
+
+var _getOwnPropertyNames2 = _interopRequireDefault(_getOwnPropertyNames);
+
+var _getOwnPropertyDescriptor = require('babel-runtime/core-js/object/get-own-property-descriptor');
+
+var _getOwnPropertyDescriptor2 = _interopRequireDefault(_getOwnPropertyDescriptor);
+
 exports.default = deleteUnknownAutoBindMethods;
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function shouldDeleteClassicInstanceMethod(component, name) {
   if (component.__reactAutoBindMap && component.__reactAutoBindMap.hasOwnProperty(name)) {
     // It's a known autobound function, keep it
@@ -27,7 +39,7 @@ function shouldDeleteClassicInstanceMethod(component, name) {
 
 function shouldDeleteModernInstanceMethod(component, name) {
   const { prototype } = component.constructor;
-  const prototypeDescriptor = Object.getOwnPropertyDescriptor(prototype, name);
+  const prototypeDescriptor = (0, _getOwnPropertyDescriptor2.default)(prototype, name);
 
   if (!prototypeDescriptor || !prototypeDescriptor.get) {
     // This is definitely not an autobinding getter
@@ -45,7 +57,7 @@ function shouldDeleteModernInstanceMethod(component, name) {
 }
 
 function shouldDeleteInstanceMethod(component, name) {
-  const descriptor = Object.getOwnPropertyDescriptor(component, name);
+  const descriptor = (0, _getOwnPropertyDescriptor2.default)(component, name);
   if (typeof descriptor.value !== 'function') {
     // Not a function, or something fancy: bail out
     return;
@@ -72,7 +84,7 @@ function shouldDeleteInstanceMethod(component, name) {
  * and the getter will re-generate the memoized handler on next access.
  */
 function deleteUnknownAutoBindMethods(component) {
-  const names = Object.getOwnPropertyNames(component);
+  const names = (0, _getOwnPropertyNames2.default)(component);
 
   names.forEach(name => {
     if (shouldDeleteInstanceMethod(component, name)) {

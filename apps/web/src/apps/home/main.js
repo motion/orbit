@@ -6,6 +6,8 @@ const SHADOW = [0, 2, 10, [0, 0, 0, 0.15]]
 
 @view
 export default class Main {
+  cached = {}
+
   render({ homeStore, homeStore: { stack } }) {
     const lastIndex = stack.length - 1
     return stack.items.map((stackItem, index) => {
@@ -21,11 +23,14 @@ export default class Main {
         console.log('notfound', stackItem.sidebarSelected)
         return <null>not found {stackItem.sidebarSelected.type}</null>
       }
-      console.log('main', stackItem.selectedKey, stackItem)
-      return (
-        <pane key={stackItem.selectedKey} $active={stackItem.col === 1}>
+      const key = `${stackItem.selectedKey}${index}`
+      if (this.cached[key]) {
+        return this.cached[key]
+      }
+      const result = (
+        <pane key={key} $active={stackItem.col === 1}>
           <Main
-            key={stackItem.selectedKey}
+            key={key}
             stackItem={stackItem}
             navigate={stack.navigate}
             result={stackItem.sidebarSelected}
@@ -41,6 +46,8 @@ export default class Main {
           />
         </pane>
       )
+      this.cached[key] = result
+      return result
     })
   }
 

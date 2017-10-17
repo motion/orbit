@@ -21,7 +21,12 @@
         [
           "@mcro/preset-motion",
           {
-            "disable": ["@mcro/hmr", "@mcro/hmr-view", "babel-plugin-sitrep"]
+            "disable": [
+              "@mcro/hmr",
+              "@mcro/hmr-view",
+              "babel-plugin-sitrep",
+              "babel-preset-env"
+            ]
           }
         ]
       ]

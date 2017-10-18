@@ -109,11 +109,14 @@ export default class MainSidebar {
         .map(x => Thing.toResult(x, { category: 'Search Results' }))
     }
     return [
-      ...(this.myrecent || []).map(thing => ({
-        ...Thing.toResult(thing),
-        category: 'Recently',
-        event: this.thingToEvent[thing.id],
-      })),
+      ...(this.myrecent || []).map(thing => {
+        const event = this.thingToEvent[thing.id]
+        return {
+          ...Thing.toResult(thing),
+          category: 'Recently',
+          event,
+        }
+      }),
       ...(this.teamrecent || []).map(x =>
         Thing.toResult(x, { category: 'My Team' })
       ),

@@ -66,6 +66,7 @@ npx lerna exec --parallel \
         BABEL_ENV=es6 babel src --out-dir es6 -s true
 
 # link internal tools in
+npx lerna exec --parallel -- yarn link
 yarn link @mcro/gloss &
 yarn link @mcro/css &
 yarn link @mcro/hmr &

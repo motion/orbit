@@ -2,6 +2,7 @@
 import { Person } from '~/app'
 import debug from 'debug'
 import { createInChunks } from '~/sync/helpers'
+import App from '~/app'
 
 const log = debug('sync')
 
@@ -13,8 +14,9 @@ export default class GithubPeopleSync {
   }
 
   run = async () => {
-    if (this.setting.activeOrgs) {
-      await Promise.all(this.setting.activeOrgs.map(this.syncMembers))
+    const orgs = this.setting.orgs
+    if (orgs) {
+      await Promise.all(orgs.map(this.syncMembers))
     } else {
       log('No orgs selected')
     }

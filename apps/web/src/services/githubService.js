@@ -1,15 +1,11 @@
 // @flow
 import Octokat from 'octokat'
-import { store, watch } from '@mcro/black'
+import { store } from '@mcro/black'
 import { CurrentUser } from '~/app'
 
 @store
 export default class GithubService {
   github = null
-
-  get setting(): ?string {
-    return CurrentUser.setting.github
-  }
 
   constructor() {
     this.react(
@@ -25,16 +21,15 @@ export default class GithubService {
     )
   }
 
-  @watch
-  orgs = async () => {
-    if (!this.setting || !this.github) {
-      return null
-    }
-    const orgs = await this.github.user.orgs.fetchAll()
-    if (orgs.message) {
-      console.error('orgs.message', orgs.message)
-      return null
-    }
-    return orgs
+  get setting(): ?string {
+    return CurrentUser.setting.github
+  }
+
+  get repos() {
+    return this.setting.values.repos
+  }
+
+  get orgs() {
+    return this.setting.orgs
   }
 }

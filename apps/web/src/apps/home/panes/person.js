@@ -5,15 +5,13 @@ import Pane from './pane'
 import Calendar from './feed/calendar'
 import { Title } from '~/views'
 
-class PersonSidebar {
+export class PersonSidebar {
   results = []
 }
 
 @view
-class PersonMain extends React.Component<Props> {
+export class PersonMain extends React.Component<Props> {
   render({ paneProps, result }) {
-    const icon = result.icon.props.src
-
     return (
       <Pane
         {...paneProps}
@@ -28,9 +26,4 @@ class PersonMain extends React.Component<Props> {
       />
     )
   }
-}
-
-export default {
-  Sidebar: PersonSidebar,
-  Main: PersonMain,
 }

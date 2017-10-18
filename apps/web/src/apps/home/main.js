@@ -17,7 +17,8 @@ export default class Main {
         return <null>Nothing selected</null>
       }
       const Main = Mains[stackItem.sidebarSelected.type]
-      if (!Main) {
+      if (!Main || typeof Main !== 'function') {
+        console.log('Main = ', Main)
         return <null>not found {stackItem.sidebarSelected.type}</null>
       }
       const key = stackItem.selectedKey

@@ -116,7 +116,6 @@ export default class Pane {
 
     const list = items && (
       <UI.List
-        key={Math.random()}
         getRef={paneStore.setList}
         groupKey={groupKey}
         onSelect={this.onSelect}

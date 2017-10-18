@@ -120,12 +120,10 @@ export default class Pane {
         getRef={paneStore.setList}
         groupKey={groupKey}
         onSelect={this.onSelect}
-        virtualized={
-          false && {
-            measure: true,
-            ...virtualProps,
-          }
-        }
+        virtualized={{
+          measure: true,
+          ...virtualProps,
+        }}
         itemProps={{
           padding: 0,
           highlightBackground: [0, 0, 0, 0.08],

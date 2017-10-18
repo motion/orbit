@@ -2,7 +2,6 @@
 import { Person } from '~/app'
 import debug from 'debug'
 import { createInChunks } from '~/sync/helpers'
-import App from '~/app'
 
 const log = debug('sync')
 

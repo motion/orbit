@@ -3,6 +3,7 @@ import { view, watch } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import App from '~/app'
 
+// cache it for speed
 const CommitInfo = {}
 
 @view({
@@ -19,7 +20,6 @@ const CommitInfo = {}
           .repos('motion', 'orbit')
           .commits(sha)
           .fetch())
-
       return CommitInfo[sha]
     }
   },

@@ -6,8 +6,6 @@ const log = debug('model')
 // @flow
 export default async function findOrUpdate(doc: Object) {
   const id = cleanId(doc)
-  // TODO; this is a horrible lcoation for this
-  doc.id = id
   const { created, updated } = doc
   if (!id || !created || !updated) {
     throw new Error('Object must have properties: id, created, updated')

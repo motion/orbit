@@ -59,6 +59,7 @@ export class Event extends Model {
 
   hooks = {
     preInsert: (doc: Object) => {
+      console.log('preinsert', doc)
       doc.id = cleanId(doc)
     },
   }

@@ -75,6 +75,22 @@ export default class MainSidebar {
       .sort({ updated: 'desc' })
       .limit(3)
 
+  @watch
+  lastEvents = () =>
+    Event.find()
+      .where('thingId')
+      .in(this.thingIds)
+
+  get thingIds() {
+    const getIds = x => (x || []).map(x => x.id)
+    return [
+      ...getIds(this.searchable),
+      ...getIds(this.people),
+      ...getIds(this.myrecent),
+      ...getIds(this.teamrecent),
+    ]
+  }
+
   get things() {
     if (this.search) {
       return fuzzy(this.searchable || [], this.search)

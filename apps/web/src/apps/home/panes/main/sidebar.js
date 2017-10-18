@@ -6,7 +6,6 @@ import type { PaneProps, PaneResult } from '~/types'
 import { Person, Thing } from '~/app'
 import { fuzzy } from '~/helpers'
 import { capitalize } from 'lodash'
-import FeedItem from '../feed/feedItem'
 
 export default class MainSidebar {
   props: PaneProps
@@ -110,21 +109,11 @@ export default class MainSidebar {
         .map(x => Thing.toResult(x, { category: 'Search Results' }))
     }
     return [
-      ...(this.myrecent || []).map(thing => {
-        const event = this.thingToEvent[thing.id]
-        return {
-          ...Thing.toResult(thing),
-          category: 'Recently',
-          children:
-            event &&
-            ((
-              <event css={{ padding: [5, 0] }}>
-                <FeedItem inline event={event} />
-              </event>
-            ) ||
-              null),
-        }
-      }),
+      ...(this.myrecent || []).map(thing => ({
+        ...Thing.toResult(thing),
+        category: 'Recently',
+        event: this.thingToEvent[thing.id],
+      })),
       ...(this.myrecent || []).map(x =>
         Thing.toResult(x, { category: 'Assigned' })
       ),

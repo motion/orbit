@@ -160,6 +160,9 @@ export default class FeedItem {
           height: 14,
           marginRight: 4,
         },
+        info: {
+          flexWrap: 'nowrap',
+        },
         sideLine: {
           display: 'none',
         },

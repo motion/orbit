@@ -629,12 +629,11 @@ export default class Model {
     if (object instanceof Object) {
       const previous = await this.get(object.id)
       if (previous) {
-        await previous.atomicUpdate(doc => {
+        return await previous.atomicUpdate(doc => {
           for (const key of Object.keys(object).filter(x => x !== 'id')) {
             doc[key] = object[key]
           }
         })
-        return previous
       }
     }
     return await this.create(object)

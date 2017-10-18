@@ -41,6 +41,7 @@ export class Event extends Model {
     type: str.indexed,
     action: str.indexed,
     parentId: str.optional,
+    thingId: str.optional,
     org: str.indexed.optional,
     author: str.optional,
     data: object.optional,
@@ -50,6 +51,7 @@ export class Event extends Model {
   }
 
   methods = methods
+  cleanId = cleanId
 
   settings = {
     database: 'events',

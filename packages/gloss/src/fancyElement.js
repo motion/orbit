@@ -27,6 +27,7 @@ const TAG_NAME_MAP = {
   body: 'div',
   meta: 'div',
   head: 'div',
+  item: 'div',
 }
 
 // factory that returns fancyElement helper

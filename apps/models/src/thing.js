@@ -54,6 +54,7 @@ export class Thing extends Model {
     },
   }
 
+  cleanId = cleanId
   findOrUpdate = findOrUpdate
 
   search = async (text: string) => {
@@ -85,7 +86,12 @@ export class Thing extends Model {
       title: thing.title,
       type: thing.type,
       iconAfter: true,
-      icon: icon === 'github' ? <item>{thing.number}</item> : `social-${icon}`,
+      icon:
+        icon === 'github' ? (
+          <item css={{ background: 'red' }}>{thing.number}</item>
+        ) : (
+          `social-${icon}`
+        ),
       data: thing,
       ...extra,
     }

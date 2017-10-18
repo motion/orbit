@@ -41,8 +41,8 @@ class CurrentUser {
       if (!this.user) {
         return
       }
-      if (this.user.authorizations) {
-        for (const type of Object.keys(this.user.authorizations)) {
+      if (this.authorizations) {
+        for (const type of Object.keys(this.authorizations)) {
           await Setting.findOrCreate({
             userId: this.id,
             type,

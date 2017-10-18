@@ -98,7 +98,6 @@ export default class GithubIssueSync {
       }
     `,
     })
-    console.log('got', results)
 
     if (!results) {
       return

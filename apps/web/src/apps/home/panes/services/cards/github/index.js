@@ -1,5 +1,5 @@
 import * as UI from '@mcro/ui'
-import { view } from '@mcro/black'
+import { view, watch } from '@mcro/black'
 import { sortBy, reverse } from 'lodash'
 import App, { Thing } from '~/app'
 import Things from '../../views/things'
@@ -9,17 +9,16 @@ import Repos from './repos'
 class OrgStore {
   open = false
   repos = null
-
   get api() {
     return App.services.Github.github
   }
-
-  async willMount() {
-    const { items } = await this.api
+  @watch
+  repos = () =>
+    this.api &&
+    this.api
       .orgs(this.props.name)
       .repos.fetch({ per_page: 100 })
-    this.repos = items
-  }
+      .then(res => res.items)
 }
 @view.attach('githubStore')
 @view({
@@ -98,6 +97,14 @@ class GithubStore {
     return (this.things || []).filter(t => t.type === 'task')
   }
 
+  get orgs() {
+    return (
+      (App.services.Github.orgs &&
+        App.services.Github.orgs.map(org => org.login)) ||
+      []
+    )
+  }
+
   onSync = (repo, val) => {
     const { Github } = App.services
     this.syncVersion++
@@ -118,7 +125,6 @@ class GithubStore {
     return Github.setting.values.repos[repo.fullName] || false
   }
 
-  orgs = ['motion', 'reactjs']
   newOrg = ''
   addOrg = () => {
     this.orgs = [...this.orgs, this.newOrg]
@@ -151,12 +157,12 @@ export default class Github {
           </UI.Button>
         </UI.Row>
         <repos if={store.active === 'repos'}>
-          <orgs>{store.orgs.map(org => <Org name={org} />)}</orgs>
+          <orgs>{store.orgs.map(org => <Org key={org} name={org} />)}</orgs>
           <add>
             <UI.Input
               width={200}
               size={1}
-              autofocus
+              autoFocus
               placeholder="Add Organization"
               value={store.newOrg}
               onKeyDown={e => {

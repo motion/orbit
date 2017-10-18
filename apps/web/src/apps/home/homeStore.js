@@ -193,7 +193,7 @@ export default class HomeStore {
     },
     enter: e => {
       e.preventDefault()
-      if (this.stack.selected.static) {
+      if (this.stack.selected && this.stack.selected.static) {
         console.log('static item, no action')
         return
       }

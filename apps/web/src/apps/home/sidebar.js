@@ -10,7 +10,7 @@ import PaneView from './panes/pane'
 const width = 250
 
 class SidebarInner extends React.Component {
-  componentWillMount() {
+  componentDidMount() {
     this.props.setStore(this.props.store)
   }
   render() {

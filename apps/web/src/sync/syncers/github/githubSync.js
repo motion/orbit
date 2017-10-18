@@ -4,6 +4,9 @@ import Syncer from '../syncer'
 import GithubFeedSync from './githubFeedSync'
 import GithubTaskSync from './githubTaskSync'
 import GithubPeopleSync from './githubPeopleSync'
+import debug from 'debug'
+
+const log = debug('sync')
 
 @store
 export default class GithubSync extends Syncer {
@@ -11,7 +14,7 @@ export default class GithubSync extends Syncer {
     type: 'github',
     actions: {
       task: { every: 60 * 5 },
-      feed: { every: 60 * 5 },
+      feed: { every: 30 },
       people: { every: 60 * 5 },
     },
     syncers: {
@@ -87,8 +90,8 @@ export default class GithubSync extends Syncer {
       return date.toGMTString()
     },
 
-    writeLastSyncs: async () => {
-      const { lastSyncs } = this
+    writeLastSyncs: async (lastSyncs = this.lastSyncs) => {
+      log('writing', lastSyncs)
       await this.setting.mergeUpdate({
         values: {
           lastSyncs,

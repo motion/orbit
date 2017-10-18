@@ -9,12 +9,12 @@ import PaneView from './panes/pane'
 
 const width = 250
 
-class SidebarInner extends React.Component {
+@view
+class SidebarInner {
   componentDidMount() {
     this.props.setStore(this.props.store)
   }
-  render() {
-    const { stackItem, store, paneProps } = this.props
+  render({ store, paneProps, stackItem }) {
     window.sidebarStore = store // TODO: remove, TEMP
     return (
       <PaneView
@@ -28,12 +28,15 @@ class SidebarInner extends React.Component {
   }
 }
 
-const SidebarContainer = ({ sidebarStore, ...rest }) => {
-  return (
-    <ProvideStore store={sidebarStore} storeProps={rest}>
-      {store => <SidebarInner store={store} {...rest} />}
-    </ProvideStore>
-  )
+@view
+class SidebarContainer {
+  render({ sidebarStore, ...rest }) {
+    return (
+      <ProvideStore store={sidebarStore} storeProps={rest}>
+        {store => <SidebarInner store={store} {...rest} />}
+      </ProvideStore>
+    )
+  }
 }
 
 @view

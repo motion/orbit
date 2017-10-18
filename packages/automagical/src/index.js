@@ -281,6 +281,7 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
 
   let stop
   let disposed = false
+  let result
 
   const dispose = () => {
     if (disposed) {
@@ -302,7 +303,7 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
     let value = val
 
     return function watcherCb() {
-      const result = resolve(value.call(obj, obj.props)) // hit user observables // pass in props
+      result = resolve(value.call(obj, obj.props)) // hit user observables // pass in props
       const observableLike = isObservableLike(result)
       stopAutoObserve()
 
@@ -382,7 +383,7 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
 
   Object.defineProperty(obj, `${method}__automagic_source`, {
     get() {
-      return { current, currentObservable }
+      return { result, current, currentObservable }
     },
   })
 

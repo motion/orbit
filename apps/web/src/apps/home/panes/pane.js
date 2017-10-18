@@ -116,13 +116,16 @@ export default class Pane {
 
     const list = items && (
       <UI.List
+        key={Math.random()}
         getRef={paneStore.setList}
         groupKey={groupKey}
         onSelect={this.onSelect}
-        virtualized={{
-          measure: true,
-          ...virtualProps,
-        }}
+        virtualized={
+          false && {
+            measure: true,
+            ...virtualProps,
+          }
+        }
         itemProps={{
           padding: 0,
           highlightBackground: [0, 0, 0, 0.08],

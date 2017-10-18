@@ -50,7 +50,7 @@ type VirtualItemProps = {
 
 @parentSize('virtualized')
 @view.ui
-class List extends React.PureComponent<Props, { selected: number }> {
+class List extends React.Component<Props, { selected: number }> {
   static Item = ListItem
 
   static defaultProps = {

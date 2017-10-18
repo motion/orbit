@@ -6,6 +6,7 @@ import type { PaneProps, PaneResult } from '~/types'
 import { Person, Thing } from '~/app'
 import { fuzzy } from '~/helpers'
 import { capitalize } from 'lodash'
+import FeedItem from '../feed/feedItem'
 
 export default class MainSidebar {
   props: PaneProps
@@ -77,9 +78,20 @@ export default class MainSidebar {
 
   @watch
   lastEvents = () =>
+    this.thingIds.length &&
     Event.find()
       .where('thingId')
       .in(this.thingIds)
+
+  get thingToEvent() {
+    return (this.lastEvents || []).reduce(
+      (acc, cur) => ({
+        ...acc,
+        [cur.thingId]: cur,
+      }),
+      {}
+    )
+  }
 
   get thingIds() {
     const getIds = x => (x || []).map(x => x.id)
@@ -98,9 +110,21 @@ export default class MainSidebar {
         .map(x => Thing.toResult(x, { category: 'Search Results' }))
     }
     return [
-      ...(this.myrecent || []).map(x =>
-        Thing.toResult(x, { category: 'Recently', itemProps: { children: '' } })
-      ),
+      ...(this.myrecent || []).map(thing => {
+        const event = this.thingToEvent[thing.id]
+        return {
+          ...Thing.toResult(thing),
+          category: 'Recently',
+          children:
+            event &&
+            ((
+              <event css={{ padding: [5, 0] }}>
+                <FeedItem inline event={event} />
+              </event>
+            ) ||
+              null),
+        }
+      }),
       ...(this.myrecent || []).map(x =>
         Thing.toResult(x, { category: 'Assigned' })
       ),

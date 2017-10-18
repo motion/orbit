@@ -14,8 +14,8 @@ function getIcon(result) {
   if (result.data && result.data.integration === 'github') {
     const num = result.data.data.number
     return (
-      <UI.Button circular fontSize={5 / Math.min(5, num.length) * 5 + 10}>
-        #{num}
+      <UI.Button size={0.8} circular>
+        {num}
       </UI.Button>
     )
   }

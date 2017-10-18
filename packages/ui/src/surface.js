@@ -567,7 +567,7 @@ export default class Surface extends React.PureComponent<Props> {
     }
 
     const flexFlow = props.flexFlow || props.row ? 'row' : 'column'
-    const iconPad = props.icon ? `- ${iconSize + ICON_PAD * 2}px` : ''
+    const iconPad = props.icon ? `- ${iconSize + ICON_PAD}px` : ''
 
     const result = {
       element: {

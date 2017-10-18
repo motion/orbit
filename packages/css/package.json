@@ -2,7 +2,7 @@
   "name": "@mcro/css",
   "version": "1.4.0",
   "description": "",
-  "main": "lib/index.js",
+  "main": "es6/index.js",
   "module": "lib/index.js",
   "module:production": "dist/index.js",
   "author": "Motion",

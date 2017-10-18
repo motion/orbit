@@ -1,7 +1,10 @@
-import 'babel-polyfill'
 import 'source-map-support/register'
 import 'isomorphic-fetch'
 import cleanStack from 'clean-stacktrace'
+
+if (!process.env.HAS_BABEL_POLYFILL) {
+  require('babel-polyfill')
+}
 
 process.on('unhandledRejection', function(error, p) {
   const path = require('path')

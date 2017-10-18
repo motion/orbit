@@ -1,7 +1,9 @@
 process.env.NODE_ENV = 'production'
 process.env.IS_PROD = true
+process.env.HAS_BABEL_POLYFILL = true
 
-const electronApp = require('./es5/index').default
+require('babel-polyfill')
+const electronApp = require('./es6/index').default
 electronApp()
 
 setTimeout(() => {

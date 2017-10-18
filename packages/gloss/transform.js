@@ -1,1 +1,1 @@
-module.exports = require('./es5/transform')
+module.exports = require('./es6/transform')

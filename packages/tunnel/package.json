@@ -2,7 +2,7 @@
   "name": "@mcro/react-tunnel",
   "main": "es6/index.js",
   "module": "lib/index.js",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "scripts": {},
   "dependencies": {
     "invariant": "^2.2.2",

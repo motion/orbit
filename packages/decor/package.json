@@ -3,10 +3,10 @@
   "main": "es6/index.js",
   "module": "lib/index.js",
   "module:production": "dist/index.js",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "scripts": {},
   "dependencies": {
-    "@mcro/helpers": "^1.4.0",
+    "@mcro/helpers": "^1.5.1",
     "autobind-decorator": "^2.1.0",
     "hoist-non-react-statics": "^2.3.1",
     "lodash": "^4.17.4",

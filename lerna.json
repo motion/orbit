@@ -1,8 +1,11 @@
 {
   "lerna": "2.0.0",
-  "packages": ["apps/*", "packages/*"],
+  "packages": [
+    "apps/*",
+    "packages/*"
+  ],
   "npmClient": "yarn",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "commands": {
     "bootstrap": {
       "hoist": true,

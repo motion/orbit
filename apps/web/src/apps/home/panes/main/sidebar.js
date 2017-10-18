@@ -114,8 +114,8 @@ export default class MainSidebar {
         category: 'Recently',
         event: this.thingToEvent[thing.id],
       })),
-      ...(this.myrecent || []).map(x =>
-        Thing.toResult(x, { category: 'Assigned' })
+      ...(this.teamrecent || []).map(x =>
+        Thing.toResult(x, { category: 'My Team' })
       ),
     ]
   }

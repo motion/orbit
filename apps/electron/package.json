@@ -6,28 +6,40 @@
   "description": "Description",
   "author": "Orbit",
   "updater": {
-    "url": "https://raw.githubusercontent.com/motion/orbit-updates/master/updates.json"
+    "url":
+      "https://raw.githubusercontent.com/motion/orbit-updates/master/updates.json"
   },
   "scripts": {
-    "build": "INCLUDE_MODULES=true TARGET=electron NODE_ENV=production BUILD_DIR=. mcro-build",
+    "build":
+      "INCLUDE_MODULES=true TARGET=electron NODE_ENV=production BUILD_DIR=. mcro-build",
     "dist": "npm version patch && npm run package-app",
-    "deploy": "npm run sign-app && npm run bundle-app && npm run prepare-publish && npm run publish-app",
-    "start": "electron build/js/app --start",
+    "deploy":
+      "npm run sign-app && npm run bundle-app && npm run prepare-publish && npm run publish-app",
+    "start": "electron build/out --start",
     "start-prod": "app/Orbit-darwin-x64/Orbit.app/Contents/MacOS/Orbit",
     "watch": "webpack --watch",
     "publish-app": "publish -p ./app",
-    "prepare-publish": "cp ./app/Orbit.dmg ./app/Orbit-$npm_package_version.dmg && zip -r ./app/Orbit-$npm_package_version-mac.zip ./app/Orbit-darwin-x64/Orbit.app",
-    "bundle-app": "electron-installer-dmg --overwrite --out ./app --icon ./resources/icon.icns ./app/Orbit-darwin-x64/Orbit.app Orbit",
+    "prepare-publish":
+      "cp ./app/Orbit.dmg ./app/Orbit-$npm_package_version.dmg && zip -r ./app/Orbit-$npm_package_version-mac.zip ./app/Orbit-darwin-x64/Orbit.app",
+    "bundle-app":
+      "electron-installer-dmg --overwrite --out ./app --icon ./resources/icon.icns ./app/Orbit-darwin-x64/Orbit.app Orbit",
     "sign-app": "electron-osx-sign ./app/Orbit-darwin-x64/Orbit.app",
-    "package-app": "DEBUG=electron-packager electron-packager . --out app --overwrite --icon ./resources/icon.icns --prune && npm run fix-build",
+    "package-app":
+      "DEBUG=electron-packager electron-packager . --out app --overwrite --icon ./resources/icon.icns --prune && npm run fix-build",
     "fix-build-clean": "npm run clean-build-modules; npm run fix-build",
     "fix-build": "npm run fix-build-modules",
-    "fix-build-modules": "npm run fix-build-log; npm run fix-build-copy-modules; npm run fix-build-electron; npm run fix-build-mobx",
-    "fix-build-mobx": "cp -r ../../node_modules/mobx ./app/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules",
-    "fix-build-log": "touch ./app/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/log.txt",
-    "clean-build-modules": "rm -r ./app/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules/*",
-    "fix-build-copy-modules": "cpx -uL './node_modules/**/*{.js,.json,.html,.map}' ./app/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules",
-    "fix-build-electron": "rm -r ./app/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules/@mcro/ionize/node_modules/electron"
+    "fix-build-modules":
+      "npm run fix-build-log; npm run fix-build-copy-modules; npm run fix-build-electron; npm run fix-build-mobx",
+    "fix-build-mobx":
+      "cp -r ../../node_modules/mobx ./app/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules",
+    "fix-build-log":
+      "touch ./app/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/log.txt",
+    "clean-build-modules":
+      "rm -r ./app/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules/*",
+    "fix-build-copy-modules":
+      "cpx -uL './node_modules/**/*{.js,.json,.html,.map}' ./app/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules",
+    "fix-build-electron":
+      "rm -r ./app/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules/@mcro/ionize/node_modules/electron"
   },
   "dependencies": {
     "@mcro/api": "^1.5.0",

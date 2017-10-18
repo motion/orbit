@@ -1,7 +1,7 @@
 process.env.NODE_ENV = 'production'
 process.env.IS_PROD = true
 
-const electronApp = require('./dist/index').default
+const electronApp = require('./es5/index').default
 electronApp()
 
 setTimeout(() => {

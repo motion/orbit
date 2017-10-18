@@ -33,7 +33,12 @@ export default class MainSidebar {
     this.react(
       () => this.props.homeStore.lastKey,
       key => {
-        if (key === 'up' || key === 'down' || key === 'right') {
+        if (
+          key === 'up' ||
+          key === 'down' ||
+          key === 'right' ||
+          key === 'left'
+        ) {
           return
         }
         this.props.homeStore.stack.last.setActive(0, 0)

@@ -3,7 +3,7 @@
   "main": "lib/index.js",
   "module": "lib/index.js",
   "module:production": "dist/index.js",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "dependencies": {
     "caseless": "^0.12.0",
     "isomorphic-fetch": "^2.2.1",

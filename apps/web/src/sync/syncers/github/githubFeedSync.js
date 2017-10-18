@@ -1,5 +1,5 @@
 // @flow
-import { Event } from '~/app'
+import { Event, Thing } from '~/app'
 import debug from 'debug'
 
 const log = debug('sync')
@@ -31,6 +31,11 @@ export default class GithubFeedSync {
     const created = await this.insertEvents(repoEvents)
     console.log('Created', created && created.length, created, org, repo)
     await this.helpers.writeLastSyncs()
+  }
+
+  async clearLastSyncs() {
+    await this.helpers.writeLastSyncs(null)
+    await this.helpers.writeLastSyncs({})
   }
 
   getRepoEventsPage = async (
@@ -94,28 +99,42 @@ export default class GithubFeedSync {
         }
       }
     }
-
     return events
+  }
+
+  findThingId = async event => {
+    if (event.payload && event.payload.issue) {
+      return Thing.cleanId({
+        id: `${event.payload.issue.id}`,
+        integration: 'github',
+        type: 'task',
+      })
+    }
+    return ''
   }
 
   insertEvents = async (allEvents: Array<Object>): Promise<Array<Object>> => {
     const creating = []
+    log('inserting', allEvents)
     for (const event of allEvents) {
       const id = `${event.id}`
       const created = event.created_at || ''
       const updated = event.updated_at || created
       creating.push(
-        Event.findOrUpdate({
-          id,
-          integration: 'github',
-          type: 'issue',
-          action: event.type,
-          author: event.actor.login,
-          org: event.org.login,
-          parentId: event.repo.name,
-          created,
-          updated,
-          data: event,
+        this.findThingId(event).then(thingId => {
+          return Event.findOrUpdate({
+            id,
+            integration: 'github',
+            type: 'issue',
+            action: event.type,
+            author: event.actor.login,
+            org: event.org.login,
+            parentId: event.repo.name,
+            thingId,
+            created,
+            updated,
+            data: event,
+          })
         })
       )
     }

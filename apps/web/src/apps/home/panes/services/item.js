@@ -65,7 +65,11 @@ class ItemStore {
   }
 
   startOauth(integration) {
-    OS.send('open-settings', integration)
+    if (Constants.IS_ELECTRON) {
+      OS.send('open-settings', integration)
+    } else {
+      window.open(`${Constants.API_URL}/settings?service=${integration}`)
+    }
     const checker = this.setInterval(async () => {
       const authorizations = await this.checkAuths()
       if (authorizations) {

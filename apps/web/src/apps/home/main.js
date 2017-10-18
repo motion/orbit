@@ -56,12 +56,15 @@ export default class Main {
       borderRadius: 6,
       borderBottomRightRadius: 0,
       boxShadow: [SHADOW],
-      transition: 'all ease-in 80ms',
+      transition: 'transform ease-in 130ms',
       zIndex: 1000,
       overflow: 'hidden',
     },
     active: {
-      boxShadow: [SHADOW, [0, 0, 0, 3, [0, 0, 0, 0.3]]],
+      boxShadow: [SHADOW, [0, 0, 0, 2, [0, 0, 0, 0.23]]],
+      transform: {
+        y: -3,
+      },
     },
   }
 }

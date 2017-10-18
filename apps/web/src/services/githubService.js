@@ -13,7 +13,7 @@ export default class GithubService {
 
   constructor() {
     this.react(
-      () => (CurrentUser.user && CurrentUser.user.authorizations) || {},
+      () => (CurrentUser.user && CurrentUser.authorizations) || {},
       ({ github }) => {
         if (github && !this.github) {
           this.github = new Octokat({

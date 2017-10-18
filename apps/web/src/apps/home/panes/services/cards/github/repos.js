@@ -95,7 +95,7 @@ export default class Repos {
     return (
       <repos>
         {reverse(sortBy(recent, 'pushedAt')).map(repo => (
-          <Repo store={store} repo={repo} />
+          <Repo key={repo.name} store={store} repo={repo} />
         ))}
         <buttons $$row>
           <UI.Button

@@ -1,12 +1,32 @@
 import { watch } from '@mcro/black'
 import { Thing } from '~/app'
 import { find } from 'lodash'
-import { SHORTCUTS } from '~/stores/rootStore'
 import Mousetrap from 'mousetrap'
 import { OS } from '~/helpers'
 import StackStore from './stackStore'
 //import { debounce } from 'lodash'
 import keycode from 'keycode'
+
+export const SHORTCUTS = {
+  left: 'left',
+  right: 'right',
+  down: 'down',
+  up: 'up',
+  j: 'j', // down
+  k: 'k', // up
+  d: 'd', // doc
+  enter: 'enter',
+  esc: 'esc',
+  explorer: ['command+t'],
+  cmdA: 'command+a',
+  cmdL: 'command+l',
+  cmdEnter: 'command+enter',
+  cmdUp: 'command+up',
+  cmdR: 'command+r',
+  delete: ['delete', 'backspace'],
+  togglePane: 'shift+tab',
+  fullscreen: ['command+b', 'command+\\'],
+}
 
 const debounce = (fn, timeout) => {
   let clearId = null
@@ -182,6 +202,14 @@ export default class HomeStore {
       } else {
         const schema = JSON.stringify(this.stack.selected)
         // OS.send('bar-goto', `http://orbit.dev/master?schema=${schema}`)
+      }
+    },
+    cmdL: () => {
+      this.focusBar()
+    },
+    delete: () => {
+      if (this.textboxVal === '') {
+        this.stack.left()
       }
     },
     right: e => {

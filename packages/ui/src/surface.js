@@ -249,7 +249,6 @@ export default class Surface extends React.PureComponent<Props> {
 
     const contents = [
       <Glint
-        key={0}
         if={glint}
         size={size}
         borderLeftRadius={borderLeftRadius - 1}
@@ -258,11 +257,10 @@ export default class Surface extends React.PureComponent<Props> {
       <badge if={badge} {...badgeProps}>
         {typeof badge !== 'boolean' ? badge : ''}
       </badge>,
-      <icon key={1} if={icon && !stringIcon} $iconAfter={hasIconAfter}>
+      <icon if={icon && !stringIcon} $iconAfter={hasIconAfter}>
         {icon}
       </icon>,
       <Icon
-        key={1}
         if={icon && stringIcon}
         $icon
         $iconAfter={hasIconAfter}
@@ -271,7 +269,6 @@ export default class Surface extends React.PureComponent<Props> {
         {...iconProps}
       />,
       <HoverGlow
-        key={2}
         if={glow && !active && !disabled}
         full
         scale={1.3}
@@ -283,7 +280,6 @@ export default class Surface extends React.PureComponent<Props> {
         {...glowProps}
       />,
       <element
-        key={3}
         if={!noElement || (noElement && !noWrap && hasChildren(children))}
         {...wrapElement && passProps}
         {...elementProps}
@@ -295,7 +291,6 @@ export default class Surface extends React.PureComponent<Props> {
       noElement && noWrap && hasChildren(children) && children,
       tooltip && (
         <Popover
-          key={4}
           theme="dark"
           background
           openOnHover
@@ -534,12 +529,12 @@ export default class Surface extends React.PureComponent<Props> {
       (!props.chromeless &&
         !props.disabled &&
         (props.hoverable || props.hoverBackground))) && {
-        ...theme.hover,
-        color: hoverColor,
-        borderColor: hoverBorderColor,
-        background: hoverBackground,
-        ...props.hover,
-      }
+      ...theme.hover,
+      color: hoverColor,
+      borderColor: hoverBorderColor,
+      background: hoverBackground,
+      ...props.hover,
+    }
 
     const activeStyle = !props.chromeless && {
       position: 'relative',

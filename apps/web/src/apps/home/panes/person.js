@@ -2,20 +2,11 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import Pane from './pane'
-import { SidebarTitle } from './helpers'
 import Calendar from './feed/calendar'
 import { Title } from '~/views'
 
 class PersonSidebar {
-  results = [
-    {
-      type: 'person',
-      isParent: true,
-      result: this.props.result,
-      display: <SidebarTitle {...this.props} />,
-      onClick: this.props.onBack,
-    },
-  ]
+  results = []
 }
 
 @view

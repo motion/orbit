@@ -1,5 +1,4 @@
 // @flow
-import * as React from 'react'
 import decor from '@mcro/decor'
 import { object, string } from 'prop-types'
 import extendsReact from '@mcro/decor/lib/plugins/react/extendsReact'
@@ -19,17 +18,16 @@ import storeProvidable from '@mcro/decor/lib/plugins/react/storeProvidable'
 import { storeOptions } from './store'
 import { decorator as glossDecorator } from './gloss'
 // import type { Glossy } from './gloss'
-import * as Helpers from './helpers'
+import typeof watch from './helpers/watch'
 
 declare class ViewClass<Props, State> {
-  props: $Abstract<Props>,
-  state: $Abstract<State>,
-  watch: typeof Helpers.watch,
-  react: typeof Helpers.react,
+  props: $Abstract<Props>;
+  state: $Abstract<State>;
+  watch: watch;
   // emitter: typeof Emitter,
-  emit(name: string, data: any): void,
-  render(props: Props, state: State): React$Element<any>,
-  subscriptions: Set<any>,
+  emit(name: string, data: any): void;
+  render(props: Props, state: State): React$Element<any>;
+  subscriptions: Set<any>;
 }
 
 type View = ViewClass<any, any>

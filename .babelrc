@@ -16,17 +16,22 @@
         ]
       ]
     },
-    "dist": {
+    "production": {
       "presets": [
         [
           "@mcro/preset-motion",
           {
-            "disable": ["@mcro/hmr", "@mcro/hmr-view", "babel-plugin-sitrep"]
+            "disable": [
+              "@mcro/hmr",
+              "@mcro/hmr-view",
+              "babel-plugin-sitrep",
+              "babel-preset-env"
+            ]
           }
         ]
       ]
     },
-    "production": {
+    "production-package": {
       "presets": [
         "es2015",
         [

@@ -13,9 +13,8 @@ module.exports = function(context, givenOpts) {
 
   const envOpts = Object.assign(
     {
-      useBuiltIns: true,
       targets: {
-        node: opts.nodeTarget || 8,
+        node: opts.nodeTarget || 'current',
       },
       exclude: isAsync
         ? ['transform-regenerator', 'transform-async-to-generator']
@@ -54,7 +53,7 @@ module.exports = function(context, givenOpts) {
       }),
     ],
     presets: opts.presets || [
-      [getPlugin('babel-preset-env'), envOpts],
+      getPlugin('babel-preset-env', envOpts),
       getPlugin('babel-preset-react'),
       isAsync && getPlugin('babel-preset-stage-1-without-async'),
       noAsync && getPlugin('babel-preset-stage-1'),

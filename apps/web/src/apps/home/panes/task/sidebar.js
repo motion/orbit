@@ -1,11 +1,7 @@
 // @flow
-import * as React from 'react'
 import { watch } from '@mcro/black'
-import { Person, Thing } from '~/app'
 import Context from '~/context'
-import * as UI from '@mcro/ui'
-import { SidebarTitle } from '../helpers'
-console.log('context is', Context)
+import { Person, Thing } from '~/app'
 
 export default class TaskSidebarStore {
   last = null
@@ -42,16 +38,6 @@ export default class TaskSidebarStore {
   get results() {
     console.log('props are ', this.props)
     return [
-      {
-        type: 'task',
-        isParent: true,
-        result: this.props.result,
-        title: this.props.result.title,
-        displayTitle: false,
-        children: <SidebarTitle {...this.props} />,
-        onClick: this.props.onBack,
-        id: this.props.data.id,
-      },
       ...(this.people || []).map(x =>
         Person.toResult(x, { category: 'People' })
       ),

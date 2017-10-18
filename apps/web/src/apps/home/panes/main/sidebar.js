@@ -33,17 +33,10 @@ export default class MainSidebar {
     this.react(
       () => this.props.homeStore.lastKey,
       key => {
-        if (
-          key === 'up' ||
-          key === 'down' ||
-          key === 'left' ||
-          key === 'right'
-        ) {
+        if (key === 'up' || key === 'down' || key === 'right') {
           return
         }
-        this.setTimeout(() => {
-          this.list.scrollToRow(0)
-        }, 20)
+        this.props.homeStore.stack.last.setActive(0, 0)
       }
     )
   }
@@ -121,18 +114,21 @@ export default class MainSidebar {
         </icon>
       ),
       data: {
+        type: 'person',
         people: ['Carol Hienz', 'Nate Wienert', 'Steel', 'Nick Cammarata'],
       },
     },
-    // {
-    //   title: 'My Team',
-    //   displayTitle: <UI.Title size={1.5}>My Team</UI.Title>,
-    //   type: 'feed',
-    //   icon: 'social-slack',
-    //   data: {
-    //     people: ['Carol Hienz', 'Nate Wienert', 'Steel', 'Nick Cammarata'],
-    //   },
-    // },
+    {
+      id: 1,
+      title: 'babel/babel',
+      displayTitle: <UI.Title size={1.5}>Babel</UI.Title>,
+      type: 'feed',
+      icon: <div />,
+      data: {
+        type: 'repo',
+        repo: 'babel/babel',
+      },
+    },
   ]
 
   get settings() {
@@ -155,6 +151,16 @@ export default class MainSidebar {
       ...this.settings,
     ]
     const search = fuzzy(all, this.search)
+    if (!search.length) {
+      return [
+        {
+          type: 'message',
+          title: 'No Results...',
+          data: { message: 'No results' },
+          category: 'Search Results',
+        },
+      ]
+    }
     return search
   }
 

@@ -38,7 +38,6 @@ export default class Commit {
 
   static style = {
     commit: {
-      border: [2, 'red'],
       overflow: 'hidden',
     },
   }

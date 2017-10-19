@@ -124,36 +124,36 @@ export default class MainSidebar {
   }
 
   pinned: Array<PaneResult> = [
-    {
-      id: 0,
-      title: 'My Team',
-      displayTitle: <UI.Title size={1.5}>My Team</UI.Title>,
-      type: 'feed',
-      icon: (
-        <icon style={{ alignSelf: 'center', flexFlow: 'row', marginRight: 10 }}>
-          {['steph.jpg', 'nick.jpg', 'me.jpg'].map((path, index) => (
-            <img
-              key={index}
-              style={{
-                borderRadius: 12,
-                width: 25,
-                height: 25,
-                marginRight: -10,
-                transform: `rotate(${{
-                  0: '-15%',
-                  1: '0',
-                  2: '15%',
-                }[index]})`,
-              }}
-              src={`/images/${path}`}
-            />
-          ))}
-        </icon>
-      ),
-      data: {
-        people: ['Carol Hienz', 'Nate Wienert', 'Steel', 'Nick Cammarata'],
-      },
-    },
+    // {
+    //   id: 0,
+    //   title: 'My Team',
+    //   displayTitle: <UI.Title size={1.5}>My Team</UI.Title>,
+    //   type: 'feed',
+    //   icon: (
+    //     <icon style={{ alignSelf: 'center', flexFlow: 'row', marginRight: 10 }}>
+    //       {['steph.jpg', 'nick.jpg', 'me.jpg'].map((path, index) => (
+    //         <img
+    //           key={index}
+    //           style={{
+    //             borderRadius: 12,
+    //             width: 25,
+    //             height: 25,
+    //             marginRight: -10,
+    //             transform: `rotate(${{
+    //               0: '-15%',
+    //               1: '0',
+    //               2: '15%',
+    //             }[index]})`,
+    //           }}
+    //           src={`/images/${path}`}
+    //         />
+    //       ))}
+    //     </icon>
+    //   ),
+    //   data: {
+    //     people: ['Carol Hienz', 'Nate Wienert', 'Steel', 'Nick Cammarata'],
+    //   },
+    // },
   ]
 
   get settings() {

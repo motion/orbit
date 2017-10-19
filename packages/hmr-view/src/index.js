@@ -36,9 +36,9 @@ export default function proxyReactComponents({
       instance.hotReload(module)
     }
     deepForceUpdate(instance)
-    if (instance.forceUpdate) {
-      instance.forceUpdate()
-    }
+    // if (instance.forceUpdate) {
+    //   instance.forceUpdate()
+    // }
     reloadedInstances++
   }
 

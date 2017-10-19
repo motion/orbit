@@ -26,7 +26,7 @@ export class Pattern extends React.Component {
 
 export const Title = props => {
   const minSize = 1.8
-  const maxSize = 3
+  const maxSize = 2.5
   const ogSize = 3.4 - props.children.length * 0.05
   const titleSize = Math.min(maxSize, Math.max(ogSize, minSize))
   return (

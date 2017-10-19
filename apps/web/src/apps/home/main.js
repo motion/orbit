@@ -57,10 +57,10 @@ export default class Main {
       overflow: 'hidden',
     },
     active: {
-      boxShadow: [SHADOW, [0, 0, 0, 2, [0, 0, 0, 0.23]]],
-      transform: {
-        y: -3,
-      },
+      boxShadow: [SHADOW, [0, 0, 0, 3, [0, 0, 0, 0.3]]],
+      // transform: {
+      //   y: -3,
+      // },
     },
   }
 }

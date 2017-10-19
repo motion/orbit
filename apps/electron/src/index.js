@@ -13,6 +13,14 @@ if (Constants.IS_PROD) {
   const updateUrl = require('../package.json').updater.url
   console.log('updateUrl', updateUrl)
   updater.init(updateUrl)
+
+  updater.on('update-available', () => {
+    console.log('Update available')
+  })
+
+  updater.on('update-downloaded', () => {
+    updater.quitAndInstall()
+  })
 }
 
 export default function start() {

@@ -5,7 +5,7 @@
 cd $ROOT
 
 APP=$1
-ARGS=${@:1}
+ARG1=$2
 
 trap killgroup SIGINT
 killgroup() {
@@ -65,14 +65,14 @@ elif [ "$APP" = "api" ]; then
 elif [ "$APP" = "web" ]; then
   cd $ROOT/apps/web
   rm -rf build
-  if [ "$ARGS" = "--watch" ]; then
+  if [ "$ARG1" = "--watch" ]; then
     npm run build -- --watch
   else
     npm run build
     echo "finished build web"
   fi
 else
-  if [ "$ARGS" = "--watch" ]; then
+  if [ "$ARG1" = "--watch" ]; then
     # only build modern during dev-watch
     build-es6 --watch &
     build-dev --watch &

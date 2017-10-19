@@ -5,7 +5,7 @@
 cd $ROOT
 
 APP=$1
-ARGS=${@:1}
+ARGS=${@:2}
 
 echo "$ cd $ROOT/apps/$APP"
 cd $ROOT/apps/$APP

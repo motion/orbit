@@ -50,7 +50,7 @@ export default class HomePage {
               }}
             >
               <UI.Row spaced>
-                <UI.Button theme="clear-dark" borderRadius={500}>
+                <UI.Button if={false} theme="clear-dark" borderRadius={500}>
                   Welcome, Matt
                 </UI.Button>
               </UI.Row>

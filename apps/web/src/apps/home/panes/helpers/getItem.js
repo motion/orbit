@@ -14,9 +14,13 @@ function getIcon(result) {
   if (result.data && result.data.integration === 'github') {
     const num = result.data.data.number
     return (
-      <UI.Button size={0.8} circular>
-        {num}
-      </UI.Button>
+      <icon $$centered>
+        <UI.Button size={0.8} circular>
+          {num}
+        </UI.Button>
+        <br />
+        <UI.Icon name="github" />
+      </icon>
     )
   }
   if (result.data && result.data.image) {

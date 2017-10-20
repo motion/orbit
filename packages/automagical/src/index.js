@@ -36,8 +36,6 @@ export default function automagical() {
     name: 'automagical',
     onlyClass: true,
     decorator: (Klass: Class<any> | Function) => {
-      console.log('class is', Klass)
-
       Klass.prototype.automagic =
         Klass.prototype.automagic ||
         function() {

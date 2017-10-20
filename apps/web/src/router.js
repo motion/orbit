@@ -3,6 +3,7 @@ import Router from '@mcro/router'
 import HomePage from './apps/home'
 import WindowPage from './apps/window'
 import AuthPage from './apps/auth'
+import OraPage from './apps/ora'
 
 function runRouter() {
   return new Router({
@@ -10,6 +11,7 @@ function runRouter() {
       '/': HomePage,
       settings: AuthPage,
       window: WindowPage,
+      ora: OraPage,
     },
   })
 }

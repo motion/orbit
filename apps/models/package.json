@@ -2,7 +2,7 @@
   "name": "@mcro/models",
   "private": true,
   "version": "1.5.1",
-  "main": "es6/index.js",
+  "main": "lib/index.js",
   "module": "lib/index.js",
   "dependencies": {
     "@mcro/model": "^1.5.1",

@@ -31,6 +31,7 @@ function build-es6() {
   npx lerna exec --parallel \
     --ignore @mcro/web \
     --ignore @mcro/site \
+    --ignore @mcro/preset-motion \
       -- \
         BABEL_ENV=es6 babel src --out-dir es6 -s true $1
 }
@@ -43,8 +44,8 @@ function build-prod() {
     --ignore @mcro/hmr \
     --ignore @mcro/hmr-view \
     --ignore @mcro/preset-motion \
-    -- \
-      BABEL_ENV=production babel src --out-dir dist -s true $1
+      -- \
+        BABEL_ENV=production babel src --out-dir dist -s true $1
 }
 
 if [ "$APP" = "build-dev" ]; then

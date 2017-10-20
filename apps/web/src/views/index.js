@@ -29,15 +29,7 @@ export const Title = props => {
   const maxSize = 2.5
   const ogSize = 3.4 - props.children.length * 0.05
   const titleSize = Math.min(maxSize, Math.max(ogSize, minSize))
-  return (
-    <UI.Title
-      flex={1}
-      fontWeight={800}
-      color={[0, 0, 0]}
-      size={titleSize}
-      {...props}
-    />
-  )
+  return <UI.Title flex={1} fontWeight={800} size={titleSize} {...props} />
 }
 
 export const SubTitle = props => (

@@ -1,9 +1,6 @@
 {
   "lerna": "2.0.0",
-  "packages": [
-    "apps/*",
-    "packages/*"
-  ],
+  "packages": ["apps/*", "packages/*"],
   "npmClient": "yarn",
   "version": "1.5.1",
   "commands": {
@@ -35,8 +32,6 @@
         "redbox-react",
         "mobx-react",
         "react-virtualized",
-        "@mcro/css",
-        "@mcro/gloss",
         "victory",
         "electron-context-menu",
         "electron-debug",
@@ -76,7 +71,6 @@
         "pouchdb-adapter-http",
         "pouchdb-adapter-memory",
         "pouchdb-express-router",
-        "regenerator-runtime",
         "rxjs",
         "rxdb",
         "sb-promisify",

@@ -9,6 +9,8 @@ import * as Constants from '~/constants'
 import WindowsStore from './windowsStore'
 import Window from './window'
 
+console.log('hi')
+
 let onWindows = []
 export function onWindow(cb) {
   onWindows.push(cb)
@@ -199,10 +201,10 @@ export default class ExampleApp extends React.Component {
     }
 
     const appWindow = {
-      frame: false,
+      frame: true,
       defaultSize: [700, 500],
-      vibrancy: 'dark',
-      transparent: true,
+      //vibrancy: 'dark',
+      //transparent: true,
       backgroundColor: '#00000000',
       hasShadow: true,
       webPreferences: {
@@ -217,11 +219,6 @@ export default class ExampleApp extends React.Component {
       return null
     }
 
-    const bgWindow = {
-      ...appWindow,
-      vibrancy: 'dark',
-    }
-
     const screenSize = screen.getPrimaryDisplay().workAreaSize
     console.log('www', screenSize.width)
 
@@ -230,7 +227,9 @@ export default class ExampleApp extends React.Component {
         <Menu />
         <window
           key="search"
-          {...bgWindow}
+          {...appWindow}
+          vibrancy="dark"
+          transparent
           defaultSize={this.initialSize || this.state.size}
           size={this.state.size}
           ref={this.onWindow}
@@ -249,11 +248,12 @@ export default class ExampleApp extends React.Component {
 
         <window
           key="tray"
-          {...bgWindow}
+          {...appWindow}
+          transparent
           show
           size={[250, 350]}
-          file={`${Constants.APP_URL}/tray`}
-          titleBarStyle="customButtonsOnHover"
+          file={`${Constants.APP_URL}/ora`}
+          titleBarStyle="hidden"
           position={[screenSize.width - 250 - 20, 40]}
         />
 

@@ -41,15 +41,23 @@ module.exports = function(context, givenOpts) {
       }),
     ],
     presets: opts.presets || [
-      getPlugin('babel-preset-env', {
-        targets: {
-          node: opts.nodeTarget || 'current',
-        },
-        exclude: isAsync
-          ? ['transform-regenerator', 'transform-async-to-generator']
-          : [],
-        ...opts.env,
-      }),
+      getPlugin(
+        'babel-preset-env',
+        Object.assign(
+          {
+            // this could avoid building es6 altogether, but lets fix stack before testing
+            // modules: process.env.MODULES ? false : true,
+            useBuiltIns: true,
+            targets: {
+              node: opts.nodeTarget || 'current',
+            },
+            exclude: isAsync
+              ? ['transform-regenerator', 'transform-async-to-generator']
+              : [],
+          },
+          opts.env
+        )
+      ),
       getPlugin('babel-preset-react'),
       isAsync && getPlugin('babel-preset-stage-1-without-async'),
       noAsync && getPlugin('babel-preset-stage-1'),

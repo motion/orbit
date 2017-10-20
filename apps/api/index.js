@@ -1,1 +1,1 @@
-require('./lib/index').default()
+require('./es6/index').default()

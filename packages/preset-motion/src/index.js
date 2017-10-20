@@ -11,18 +11,6 @@ module.exports = function(context, givenOpts) {
     return opts ? [plugin, opts] : plugin
   }
 
-  const envOpts = Object.assign(
-    {
-      targets: {
-        node: opts.nodeTarget || 'current',
-      },
-      exclude: isAsync
-        ? ['transform-regenerator', 'transform-async-to-generator']
-        : [],
-    },
-    opts.env || {}
-  )
-
   const config = {
     plugins: [
       // getPlugin('babel-plugin-transform-runtime'),
@@ -53,7 +41,15 @@ module.exports = function(context, givenOpts) {
       }),
     ],
     presets: opts.presets || [
-      getPlugin('babel-preset-env', envOpts),
+      getPlugin('babel-preset-env', {
+        targets: {
+          node: opts.nodeTarget || 'current',
+        },
+        exclude: isAsync
+          ? ['transform-regenerator', 'transform-async-to-generator']
+          : [],
+        ...opts.env,
+      }),
       getPlugin('babel-preset-react'),
       isAsync && getPlugin('babel-preset-stage-1-without-async'),
       noAsync && getPlugin('babel-preset-stage-1'),

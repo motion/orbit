@@ -38,6 +38,7 @@ function build-es6() {
 function build-prod() {
   npx lerna exec --parallel --concurrency 1 \
     --ignore @mcro/api \
+    --ignore @mcro/electron \
     --ignore @mcro/builder \
     --ignore @mcro/hmr \
     --ignore @mcro/hmr-view \

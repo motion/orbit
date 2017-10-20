@@ -1,9 +1,9 @@
 import React from 'react'
 import { view } from '@mcro/black'
-import * as UI from '@mcro/ui'
 import { CurrentUser } from '~/app'
 
 const service = (window.location + '').split('service=')[1]
+
 @view({
   store: class SettingsStore {
     link = async service => {

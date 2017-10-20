@@ -3,7 +3,7 @@
   "main": "es6/index.js",
   "module": "lib/index.js",
   "module:production": "dist/index.js",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "scripts": {},
   "dependencies": {
     "debug": "^2.6.9",

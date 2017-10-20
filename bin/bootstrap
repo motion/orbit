@@ -55,7 +55,7 @@ echo "lerna bootstrap"
 rm lerna_debug.json > /dev/null
 npx lerna bootstrap
 
-# build and link our internal tools
+# build internal tools
 npx lerna exec --parallel \
     --scope @mcro/gloss \
     --scope @mcro/css \
@@ -64,6 +64,9 @@ npx lerna exec --parallel \
     --scope @mcro/preset-motion \
       -- \
         BABEL_ENV=es6 babel src --out-dir es6 -s true
+
+# link internal tools in
+npx lerna exec --parallel -- yarn link
 yarn link @mcro/gloss &
 yarn link @mcro/css &
 yarn link @mcro/hmr &

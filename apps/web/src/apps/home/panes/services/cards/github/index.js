@@ -8,7 +8,6 @@ import Repos from './repos'
 
 class OrgStore {
   open = false
-  repos = null
   get api() {
     return App.services.Github.github
   }
@@ -92,15 +91,16 @@ class GithubStore {
   active = 'repos'
   syncing = {}
   syncVersion = 0
+  userOrgs = []
 
   get issues() {
     return (this.things || []).filter(t => t.type === 'task')
   }
 
-  get orgs() {
+  get allOrgs() {
     return (
-      (App.services.Github.orgs &&
-        App.services.Github.orgs.map(org => org.login)) ||
+      (App.services.Github.allOrgs &&
+        App.services.Github.allOrgs.map(org => org.login)) ||
       []
     )
   }
@@ -127,7 +127,7 @@ class GithubStore {
 
   newOrg = ''
   addOrg = () => {
-    this.orgs = [...this.orgs, this.newOrg]
+    this.userOrgs = [...this.userOrgs, this.newOrg]
     this.newOrg = ''
   }
 }
@@ -157,7 +157,7 @@ export default class Github {
           </UI.Button>
         </UI.Row>
         <repos if={store.active === 'repos'}>
-          <orgs>{store.orgs.map(org => <Org key={org} name={org} />)}</orgs>
+          <orgs>{store.allOrgs.map(org => <Org key={org} name={org} />)}</orgs>
           <add>
             <UI.Input
               width={200}

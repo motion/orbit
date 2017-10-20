@@ -14,8 +14,8 @@ function getIcon(result) {
   if (result.data && result.data.integration === 'github') {
     const num = result.data.data.number
     return (
-      <UI.Button circular fontSize={5 / Math.min(5, num.length) * 5 + 10}>
-        #{num}
+      <UI.Button size={0.8} circular>
+        {num}
       </UI.Button>
     )
   }
@@ -43,7 +43,7 @@ function getChildren(result) {
   if (result.data && result.data.body) {
     const body = result.data.body
     const extra = body.length > 50 ? '...' : ''
-    text = getDate(result) + ' · ' + body.slice(0, 50) + extra || ''
+    text = getDate(result) + ' · ' + body.slice(0, 30) + extra || ''
   }
   if (!result.data && getDate(result)) {
     text = getDate(result) + ' · '
@@ -51,7 +51,7 @@ function getChildren(result) {
   // make text even shorter if event exists
   // enventualyl we just need <UI.Text lineClamp={number} />
   if (result.event) {
-    text = text.slice(0, 40) + '...'
+    text = text.slice(0, 20) + '...'
   }
   if (text) {
     return [

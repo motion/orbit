@@ -3,7 +3,7 @@ import electronDebug from 'electron-debug'
 import updater from 'electron-simple-updater'
 import React from 'react'
 import Ionize from '@mcro/ionize'
-import Windows, { onWindow } from './windows'
+import { onWindow } from './windows'
 import * as Constants from '~/constants'
 
 let app = null
@@ -13,9 +13,18 @@ if (Constants.IS_PROD) {
   const updateUrl = require('../package.json').updater.url
   console.log('updateUrl', updateUrl)
   updater.init(updateUrl)
+
+  updater.on('update-available', () => {
+    console.log('Update available')
+  })
+
+  updater.on('update-downloaded', () => {
+    updater.quitAndInstall()
+  })
 }
 
 export default function start() {
+  const Windows = require('./windows').default
   Ionize.start(<Windows />)
 
   electronContextMenu()
@@ -37,12 +46,8 @@ function restart() {
       restart: true,
     },
     () => {
-      const Windows = require('./windows').default
-
       setTimeout(() => {
-        //Ionize.reset()
-        Ionize.update(<Windows />)
-        console.log('did hmr')
+        start()
       }, 500)
     }
   )

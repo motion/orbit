@@ -50,36 +50,9 @@ export default class HomePage {
               }}
             >
               <UI.Row spaced>
-                <UI.Popover
-                  openOnHover
-                  openOnClick
-                  closeOnClick
-                  overlay
-                  theme="light"
-                  sizeRadius
-                  closeOnEsc
-                  target={
-                    <UI.Button theme="clear-dark" borderRadius={500}>
-                      Welcome, Matt
-                    </UI.Button>
-                  }
-                >
-                  <UI.Theme name="light">
-                    <UI.SizedSurface sizeRadius>
-                      <UI.List
-                        itemProps={{
-                          padding: [10],
-                          glow: true,
-                        }}
-                        items={[
-                          { primary: 'You are awesome', icon: 'matt' },
-                          { primary: 'Create project', icon: 'pro' },
-                          { primary: 'Pin', icon: 'pin' },
-                        ]}
-                      />
-                    </UI.SizedSurface>
-                  </UI.Theme>
-                </UI.Popover>
+                <UI.Button theme="clear-dark" borderRadius={500}>
+                  Welcome, Matt
+                </UI.Button>
               </UI.Row>
             </dock>
 
@@ -152,7 +125,7 @@ export default class HomePage {
 
   static style = {
     home: {
-      background: [135, 135, 135, 0.6],
+      background: [120, 120, 120, 0.75],
       flex: 1,
     },
     content: {

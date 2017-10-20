@@ -1,5 +1,5 @@
 import React from 'react'
-import { app, globalShortcut, ipcMain } from 'electron'
+import { app, globalShortcut, ipcMain, screen } from 'electron'
 import repl from 'repl'
 // import localShortcut from 'electron-localshortcut'
 import open from 'opn'
@@ -43,6 +43,18 @@ export default class ExampleApp extends React.Component {
     console.log('started a repl!')
   }
 
+  // turns out you can move it pretty fast
+  // but not fast enough to be a smooth animation
+  // movearound() {
+  //   setInterval(() => {
+  //     const amt = Math.round(Math.random() * 20)
+  //     const { position } = this.state
+  //     this.setState({
+  //       position: [position[0] + amt, position[1] + amt],
+  //     })
+  //   }, 30)
+  // }
+
   hide = () => new Promise(resolve => this.setState({ show: false }, resolve))
 
   show = () =>
@@ -73,21 +85,6 @@ export default class ExampleApp extends React.Component {
   onAppWindow = win => electron => {
     if (win && electron && !win.ref) {
       win.ref = electron
-
-      // dev-tools helpers, from electron-debug
-      const toggleDevTools = () => {
-        win.showDevTools = !win.showDevTools
-        this.updateWindows()
-      }
-
-      // localShortcut.register(
-      //   Constants.IS_MAC ? 'Cmd+Alt+I' : 'Ctrl+Shift+I',
-      //   toggleDevTools
-      // )
-      // localShortcut.register('F12', toggleDevTools)
-      // localShortcut.register('CmdOrCtrl+R', () => {
-      //   electron.webContents.reloadIgnoringCache()
-      // })
     }
   }
 
@@ -206,9 +203,10 @@ export default class ExampleApp extends React.Component {
       defaultSize: [700, 500],
       vibrancy: 'dark',
       transparent: true,
-      backgroundColor: 'transparent',
+      backgroundColor: '#00000000',
       hasShadow: true,
       webPreferences: {
+        nativeWindowOpen: true,
         experimentalFeatures: true,
         transparentVisuals: true,
       },
@@ -219,17 +217,19 @@ export default class ExampleApp extends React.Component {
       return null
     }
 
-    const bgPadding = 30
     const bgWindow = {
       ...appWindow,
       vibrancy: 'dark',
     }
 
+    const screenSize = screen.getPrimaryDisplay().workAreaSize
+    console.log('www', screenSize.width)
+
     return (
       <app onBeforeQuit={() => console.log('hi')}>
         <Menu />
         <window
-          key="bar"
+          key="search"
           {...bgWindow}
           defaultSize={this.initialSize || this.state.size}
           size={this.state.size}
@@ -238,26 +238,25 @@ export default class ExampleApp extends React.Component {
           file={Constants.APP_URL}
           titleBarStyle="customButtonsOnHover"
           show={this.state.show}
-          size={this.state.size.map(x => x + bgPadding * 2)}
-          position={this.state.position.map(val => val - bgPadding)}
-          onResize={size =>
-            this.setState({ size: size.map(x => x - bgPadding * 2) })}
-          onMoved={position =>
-            this.setState({ position: position.map(v => v + bgPadding) })}
-          onMove={position => {
-            console.log('called move')
-            this.setState({ position: position.map(v => v + bgPadding) })
-          }}
+          position={this.state.position}
+          onResize={size => this.setState({ size })}
+          onMoved={position => this.setState({ position })}
+          onMove={position => this.setState({ position })}
           onFocus={() => {
             this.activeWindow = this.windowRef
           }}
-          backgroundColor="#00000000"
-          webPreferences={{
-            nativeWindowOpen: true,
-            experimentalFeatures: true,
-            transparentVisuals: true,
-          }}
         />
+
+        <window
+          key="tray"
+          {...bgWindow}
+          show
+          size={[250, 350]}
+          file={`${Constants.APP_URL}/tray`}
+          titleBarStyle="customButtonsOnHover"
+          position={[screenSize.width - 250 - 20, 40]}
+        />
+
         {appWindows.map(win => {
           return (
             <Window

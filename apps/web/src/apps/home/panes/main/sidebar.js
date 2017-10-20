@@ -109,11 +109,14 @@ export default class MainSidebar {
         .map(x => Thing.toResult(x, { category: 'Search Results' }))
     }
     return [
-      ...(this.myrecent || []).map(thing => ({
-        ...Thing.toResult(thing),
-        category: 'Recently',
-        event: this.thingToEvent[thing.id],
-      })),
+      ...(this.myrecent || []).map(thing => {
+        const event = this.thingToEvent[thing.id]
+        return {
+          ...Thing.toResult(thing),
+          category: 'Recently',
+          event,
+        }
+      }),
       ...(this.teamrecent || []).map(x =>
         Thing.toResult(x, { category: 'My Team' })
       ),
@@ -121,6 +124,7 @@ export default class MainSidebar {
   }
 
   pinned: Array<PaneResult> = [
+<<<<<<< HEAD
     {
       id: 0,
       title: 'My Team',
@@ -163,6 +167,38 @@ export default class MainSidebar {
         repo: 'babel/babel',
       },
     },
+=======
+    // {
+    //   id: 0,
+    //   title: 'My Team',
+    //   displayTitle: <UI.Title size={1.5}>My Team</UI.Title>,
+    //   type: 'feed',
+    //   icon: (
+    //     <icon style={{ alignSelf: 'center', flexFlow: 'row', marginRight: 10 }}>
+    //       {['steph.jpg', 'nick.jpg', 'me.jpg'].map((path, index) => (
+    //         <img
+    //           key={index}
+    //           style={{
+    //             borderRadius: 12,
+    //             width: 25,
+    //             height: 25,
+    //             marginRight: -10,
+    //             transform: `rotate(${{
+    //               0: '-15%',
+    //               1: '0',
+    //               2: '15%',
+    //             }[index]})`,
+    //           }}
+    //           src={`/images/${path}`}
+    //         />
+    //       ))}
+    //     </icon>
+    //   ),
+    //   data: {
+    //     people: ['Carol Hienz', 'Nate Wienert', 'Steel', 'Nick Cammarata'],
+    //   },
+    // },
+>>>>>>> 365394e2b1413c7f8014c5849284bf70a62ded2f
   ]
 
   get settings() {

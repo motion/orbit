@@ -26,16 +26,16 @@ export default class TaskHeader {
 
     return (
       <header>
-        <meta css={{ padding: 10, paddingTop: 20 }}>
+        <meta css={{ padding: 10, paddingTop: 18, paddingBottom: 8 }}>
           <Title>{title}</Title>
           <left>
-            <UI.Text if={task} opacity={0.7} size={2} css={{ marginRight: 20 }}>
+            <UI.Text if={task} opacity={0.7} size={2}>
               #{result.number || task.data.number}
             </UI.Text>
-            <UI.Icon size={36} name="github" css={{ marginRight: 10 }} />
+            <UI.Icon size={36} name="github" css={{ marginLeft: 20 }} />
           </left>
         </meta>
-        <below if={task}>
+        <subheader if={task}>
           <badges>
             <left $$row>
               <UI.Text opacity={1} size={1.3} $id>
@@ -63,24 +63,14 @@ export default class TaskHeader {
             ))}
           </badges>
           <buttons>
-            <UI.Button
-              size={1.1}
-              onClick={() => {}}
-              className="target-labels"
-              $button
-            >
+            <UI.Button size={1.1} className="target-labels" $button>
               {labelsText}
             </UI.Button>
-            <UI.Button
-              size={1.1}
-              onClick={() => {}}
-              className="target-assign"
-              $button
-            >
+            <UI.Button size={1.1} className="target-assign" $button>
               Assign
             </UI.Button>
           </buttons>
-        </below>
+        </subheader>
       </header>
     )
   }
@@ -90,7 +80,7 @@ export default class TaskHeader {
       padding: [0, 15, 0],
       width: '100%',
     },
-    below: {
+    subheader: {
       flexFlow: 'row',
       alignItems: 'flex-start',
       padding: [0, 10],
@@ -117,7 +107,7 @@ export default class TaskHeader {
       alignItems: 'center',
     },
     button: {
-      margin: 5,
+      marginLeft: 8,
     },
     firstComment: {
       marginTop: 20,

@@ -140,6 +140,10 @@ class List extends React.Component<Props, { selected: number }> {
     }
   }
 
+  forceUpdateGrid() {
+    return this.virtualListRef.forceUpdateGrid()
+  }
+
   scrollToRow = (index: number) => {
     if (!this.virtualListRef) {
       return

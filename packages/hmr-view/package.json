@@ -1,6 +1,6 @@
 {
   "name": "@mcro/hmr-view",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "main": "es6/index.js",
   "dependencies": {
     "global": "^4.3.2",

@@ -8,7 +8,6 @@ export default class ServicesStore {
 
   get types() {
     return ['github', 'calendar', 'drive', 'slack']
-    // return without(Object.keys(CurrentUser.setting), 'type').filter(Boolean)
   }
 
   // creates a map of { 'type:action': job, .. }
@@ -22,7 +21,6 @@ export default class ServicesStore {
         ({ type, action }) => `${type}:${action}` === name
       )
       job = last(sortBy(job, 'createdAt'))
-
       return { ...acc, [name]: job }
     }, {})
   }
@@ -36,7 +34,7 @@ export default class ServicesStore {
     return countBy(this.things, 'integration')
   }
 
-  actions = type => (App.sync[type] ? Object.keys(App.sync[type].syncers) : [])
+  actions = type => (App.sync && App.sync[type] ? Object.keys(App.sync[type].syncers) : [])
 
   clearType = async name => {
     const things = await Thing.getAll()

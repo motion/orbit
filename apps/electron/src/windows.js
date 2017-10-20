@@ -2,6 +2,7 @@ import React from 'react'
 import { app, globalShortcut, ipcMain, screen } from 'electron'
 import repl from 'repl'
 // import localShortcut from 'electron-localshortcut'
+import applescript from 'node-osascript'
 import open from 'opn'
 import Menu from '~/menu'
 import { measure } from '~/helpers'
@@ -28,7 +29,6 @@ export default class ExampleApp extends React.Component {
   }
 
   componentDidMount() {
-    console.log('did mount windows')
     this.measureAndShow()
     this.next() // preload one app window
     onWindows.forEach(cb => cb(this))
@@ -40,7 +40,6 @@ export default class ExampleApp extends React.Component {
       Root: this,
       AppWindows: AppWindows,
     })
-    console.log('started a repl!')
   }
 
   // turns out you can move it pretty fast
@@ -100,6 +99,19 @@ export default class ExampleApp extends React.Component {
       } else {
         console.log('no window found for where-to event')
       }
+    })
+
+    ipcMain.on('get-context', event => {
+      applescript.execute(
+        `
+tell application "Google Chrome"
+	set source to execute front window's active tab javascript "window.location+''"
+end tell`,
+        (err, result, raw) => {
+          if (err) return console.error(err)
+          event.sender.send('set-context', result)
+        }
+      )
     })
 
     ipcMain.on('bar-goto', (event, path) => {
@@ -250,9 +262,10 @@ export default class ExampleApp extends React.Component {
         <window
           key="tray"
           {...bgWindow}
+          showDevTools
           show
           size={[250, 350]}
-          file={`${Constants.APP_URL}/tray`}
+          file={`${Constants.APP_URL}/context`}
           titleBarStyle="customButtonsOnHover"
           position={[screenSize.width - 250 - 20, 40]}
         />

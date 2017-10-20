@@ -108,6 +108,7 @@ export default class MainSidebar {
         .slice(0, 30)
         .map(x => Thing.toResult(x, { category: 'Search Results' }))
     }
+
     return [
       ...(this.myrecent || []).map(thing => {
         const event = this.thingToEvent[thing.id]
@@ -124,50 +125,6 @@ export default class MainSidebar {
   }
 
   pinned: Array<PaneResult> = [
-<<<<<<< HEAD
-    {
-      id: 0,
-      title: 'My Team',
-      displayTitle: <UI.Title size={1.5}>My Team</UI.Title>,
-      type: 'feed',
-      icon: (
-        <icon style={{ alignSelf: 'center', flexFlow: 'row', marginRight: 10 }}>
-          {['steph.jpg', 'nick.jpg', 'me.jpg'].map((path, index) => (
-            <img
-              key={index}
-              style={{
-                borderRadius: 12,
-                width: 25,
-                height: 25,
-                marginRight: -10,
-                transform: `rotate(${{
-                  0: '-15%',
-                  1: '0',
-                  2: '15%',
-                }[index]})`,
-              }}
-              src={`/images/${path}`}
-            />
-          ))}
-        </icon>
-      ),
-      data: {
-        type: 'person',
-        people: ['Carol Hienz', 'Nate Wienert', 'Steel', 'Nick Cammarata'],
-      },
-    },
-    {
-      id: 1,
-      title: 'babel/babel',
-      displayTitle: <UI.Title size={1.5}>Babel</UI.Title>,
-      type: 'feed',
-      icon: <div />,
-      data: {
-        type: 'repo',
-        repo: 'babel/babel',
-      },
-    },
-=======
     // {
     //   id: 0,
     //   title: 'My Team',
@@ -198,7 +155,6 @@ export default class MainSidebar {
     //     people: ['Carol Hienz', 'Nate Wienert', 'Steel', 'Nick Cammarata'],
     //   },
     // },
->>>>>>> 365394e2b1413c7f8014c5849284bf70a62ded2f
   ]
 
   get settings() {
@@ -214,7 +170,6 @@ export default class MainSidebar {
     const all = [
       ...this.pinned,
       ...this.things,
-      // ...this.testing,
       ...(this.people || []).map(x =>
         Person.toResult(x, { category: 'People' })
       ),

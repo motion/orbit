@@ -5,11 +5,10 @@
     },
     "es6": {
       "presets": [
-        "babel-preset-react",
         [
           "@mcro/preset-motion",
           {
-            "nodeTarget": 7
+            "nodeTarget": 8
           }
         ]
       ]
@@ -25,25 +24,6 @@
               "babel-plugin-sitrep",
               "babel-preset-env"
             ]
-          }
-        ]
-      ]
-    },
-    "production-package": {
-      "presets": [
-        "es2015",
-        [
-          "@mcro/preset-motion",
-          {
-            "disable": ["@mcro/hmr", "@mcro/hmr-view", "babel-plugin-sitrep"],
-            "async": false,
-            "rootSuffix": ""
-          }
-        ],
-        [
-          "minify",
-          {
-            "mangle": false
           }
         ]
       ]

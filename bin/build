@@ -20,20 +20,17 @@ function build-dev() {
       babel src --out-dir lib -s true $1
 }
 
-function build-es5() {
+function build-es6() {
   npx lerna exec --parallel \
-    --scope @mcro/builder \
-    --scope @mcro/gloss \
-    --scope @mcro/hmr \
-    --scope @mcro/hmr-view \
-    --scope @mcro/react-tunnel \
-    --scope @mcro/preset-motion \
+    --ignore @mcro/web \
+    --ignore @mcro/site \
       -- \
-        BABEL_ENV=es5 babel src --out-dir es5 -s true $1
+        BABEL_ENV=es6 babel src --out-dir es6 -s true $1
 }
 
 function build-prod() {
   npx lerna exec --parallel --concurrency 1 \
+    --ignore @mcro/api \
     --ignore @mcro/builder \
     --ignore @mcro/hmr \
     --ignore @mcro/hmr-view \
@@ -46,13 +43,13 @@ function build-other() {
   npx lerna exec \
     --scope @mcro/electron \
     -- \
-      BABEL_ENV=es5 babel src --out-dir es5 -s true $1
+      BABEL_ENV=es6 babel src --out-dir es6 -s true $1
 }
 
 if [ "$APP" = "build-dev" ]; then
   build-dev
-elif [ "$APP" = "build-es5" ]; then
-  build-es5
+elif [ "$APP" = "build-es6" ]; then
+  build-es6
 elif [ "$APP" = "build-prod" ]; then
   build-prod
 elif [ "$APP" = "build-other" ]; then
@@ -77,12 +74,12 @@ elif [ "$APP" = "web" ]; then
 else
   if [ "$ARGS" = "--watch" ]; then
     # only build modern during dev-watch
-    build-es5 --watch &
+    build-es6 --watch &
     build-dev --watch &
     build-prod --watch &
     build-other --watch &
   else
-    build-es5 &
+    build-es6 &
     build-dev &
     build-prod &
     build-other &

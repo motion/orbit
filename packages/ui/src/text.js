@@ -227,6 +227,7 @@ export default class Text extends React.PureComponent<Props> {
       cursor: 'default',
       wordBreak: 'break-word',
       position: 'relative',
+      maxWidth: '100%',
     },
     ellipseText: {
       display: 'flex',

@@ -1,7 +1,7 @@
 node_modules
 lib
 dist
-es5
+es6
 *.log
 log.txt
 .DS_Store
@@ -14,7 +14,7 @@ kubeconfig
 apps/web/public/_/*
 apps/site/public/_/*
 apps/web/build
-apps/api/es5
+apps/api/es6
 apps/api/build
 apps/site/build
 apps/electron/dist

@@ -6,8 +6,6 @@ const SHADOW = [0, 2, 10, [0, 0, 0, 0.15]]
 
 @view
 export default class Main {
-  cached = {}
-
   render({ homeStore, homeStore: { stack } }) {
     const lastIndex = stack.length - 1
     return stack.items.map((stackItem, index) => {
@@ -19,8 +17,8 @@ export default class Main {
         return <null>Nothing selected</null>
       }
       const Main = Mains[stackItem.sidebarSelected.type]
-      if (!Main) {
-        console.log('notfound', stackItem.sidebarSelected)
+      if (!Main || typeof Main !== 'function') {
+        console.log('Main = ', Main)
         return <null>not found {stackItem.sidebarSelected.type}</null>
       }
 
@@ -44,7 +42,6 @@ export default class Main {
           />
         </pane>
       )
-      this.cached[key] = result
       return result
     })
   }

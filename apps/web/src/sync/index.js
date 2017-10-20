@@ -92,7 +92,10 @@ export default class Sync {
     if (!this.syncers) {
       this.syncers = {}
       for (const name of Object.keys(Syncers)) {
-        const syncer = new Syncers[name]({ user: CurrentUser, sync: this })
+        const syncer = new Syncers[name]({
+          user: CurrentUser,
+          sync: this,
+        })
         if (syncer.start) {
           await syncer.start()
         }

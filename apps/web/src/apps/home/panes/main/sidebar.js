@@ -75,6 +75,33 @@ export default class MainSidebar {
       .sort({ updated: 'desc' })
       .limit(3)
 
+  @watch
+  lastEvents = () =>
+    this.thingIds.length &&
+    Event.find()
+      .where('thingId')
+      .in(this.thingIds)
+
+  get thingToEvent() {
+    return (this.lastEvents || []).reduce(
+      (acc, cur) => ({
+        ...acc,
+        [cur.thingId]: cur,
+      }),
+      {}
+    )
+  }
+
+  get thingIds() {
+    const getIds = x => (x || []).map(x => x.id)
+    return [
+      ...getIds(this.searchable),
+      ...getIds(this.people),
+      ...getIds(this.myrecent),
+      ...getIds(this.teamrecent),
+    ]
+  }
+
   get things() {
     if (this.search) {
       return fuzzy(this.searchable || [], this.search)
@@ -82,11 +109,13 @@ export default class MainSidebar {
         .map(x => Thing.toResult(x, { category: 'Search Results' }))
     }
     return [
-      ...(this.myrecent || []).map(x =>
-        Thing.toResult(x, { category: 'Recently', itemProps: { children: '' } })
-      ),
-      ...(this.myrecent || []).map(x =>
-        Thing.toResult(x, { category: 'Assigned' })
+      ...(this.myrecent || []).map(thing => ({
+        ...Thing.toResult(thing),
+        category: 'Recently',
+        event: this.thingToEvent[thing.id],
+      })),
+      ...(this.teamrecent || []).map(x =>
+        Thing.toResult(x, { category: 'My Team' })
       ),
     ]
   }

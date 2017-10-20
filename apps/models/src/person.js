@@ -44,13 +44,11 @@ export class Person extends Model {
   }
 
   toResult(person: PersonType, extra: ?Object) {
+    const id = person.ids ? person.ids[Object.keys(person.ids)[0]] : person.id
     return {
-      id: person.id,
+      id,
       type: 'person',
-      title:
-        person.name ||
-        person.ids[Object.keys(person.ids)[0]] ||
-        person.emails[0],
+      title: person.name || id || person.emails[0],
       icon: (
         <img src={person.avatar} style={{ borderRadius: 100, width: 20 }} />
       ),

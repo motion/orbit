@@ -3,14 +3,14 @@ import * as Constants from '~/constants'
 
 class WindowStore {
   constructor(opts = {}) {
-    this.path = opts.path || Constants.JOT_HOME
+    this.path = opts.path || Constants.APP_HOME
     this.key = opts.key || Math.random()
     this.position = opts.position || measure().position
     this.size = opts.size || measure().size
     this.showBar = true
   }
   get active() {
-    return this.path !== Constants.JOT_HOME
+    return this.path !== Constants.APP_HOME
   }
   setPosition = x => (this.position = x)
   setSize = x => (this.size = x)

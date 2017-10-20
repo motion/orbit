@@ -5,6 +5,17 @@ import { format } from '~/apps/home/panes/task/helpers'
 import TaskMain from '~/apps/home/panes/task'
 import Commit from './views/commit'
 
+const VERB_MAP = {
+  PushEvent: () => 'pushed',
+  CreateEvent: () => 'created branch',
+  IssueCommentEvent: () => 'commented',
+  ForkEvent: () => 'forked',
+  PullRequestEvent: ({ action }) => `${action} a pull request`,
+  WatchEvent: ({ action }) => `${action} watching`,
+  IssuesEvent: () => 'created issue',
+  DeleteEvent: () => 'deleted',
+}
+
 @view
 export default class IssueFeedItem {
   getBody(event) {
@@ -102,17 +113,6 @@ export default class IssueFeedItem {
   }
 
   render({ children, event }) {
-    const VERB_MAP = {
-      PushEvent: () => 'pushed',
-      CreateEvent: () => 'created branch',
-      IssueCommentEvent: () => 'commented',
-      ForkEvent: () => 'forked',
-      PullRequestEvent: ({ action }) => `${action} a pull request`,
-      WatchEvent: ({ action }) => `${action} watching`,
-      IssuesEvent: () => 'created issue',
-      DeleteEvent: () => 'deleted',
-    }
-
     const { actor } = event.data
     const body = this.getBody(event)
     const extraInfo = this.extraInfo(event)

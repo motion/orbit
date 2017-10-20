@@ -130,7 +130,7 @@ export default class GithubIssueSync {
 
   createIssue = async (issue: Object, orgLogin: string) => {
     const data = this.unwrapIssue(omit(issue, ['bodyText']))
-    const id = `${issue.id}`
+    const id = `${issue.number}`
     // ensure if one is set, the other gets set too
     const created = issue.createdAt || issue.updatedAt || ''
     const updated = issue.updatedAt || created

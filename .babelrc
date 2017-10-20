@@ -3,15 +3,13 @@
     "development": {
       "presets": ["@mcro/preset-motion"]
     },
-    "es5": {
+    "es6": {
       "presets": [
-        "es2015",
         "babel-preset-react",
         [
           "@mcro/preset-motion",
           {
-            "async": false,
-            "nodeTarget": 6
+            "nodeTarget": 7
           }
         ]
       ]

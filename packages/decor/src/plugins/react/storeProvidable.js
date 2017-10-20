@@ -64,6 +64,8 @@ export default function storeProvidable(options, Helpers) {
           error: null,
         }
 
+        allStores = allStores
+
         componentWillMount() {
           this.componentWillUpdate = this.componentWillUpdate.bind(this)
           this.setupProps()

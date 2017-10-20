@@ -26,6 +26,7 @@ const IS_PROD = process.env.NODE_ENV === 'production'
 console.log('IS_PROD', IS_PROD)
 const MINIFY = process.env.MINIFY === 'true'
 const IS_DEV = !IS_PROD
+const TARGET = process.env.TARGET
 const filtered = ls => ls.filter(x => !!x)
 const watch = process.argv.indexOf('--watch') > 0
 
@@ -48,6 +49,10 @@ if (IS_PROD) {
   }
 }
 
+if (TARGET) {
+  config.target = TARGET
+}
+
 module.exports = Object.assign(config, {
   watch,
 
@@ -68,10 +73,9 @@ module.exports = Object.assign(config, {
 
   resolve: {
     // avoid module field so we pick up our prod build stuff
-    // NOTE: 'es5'
     mainFields: IS_DEV
-      ? ['module', 'browser', 'main', 'es5']
-      : ['browser', 'module:production', 'main', 'es5'],
+      ? ['module', 'browser', 'main', 'es6']
+      : ['browser', 'module:production', 'main', 'es6'],
     extensions: ['.js', '.json'],
     // WARNING: messing with this order is dangerous af
     // TODO: can add root monorepo node_modules and then remove a lot of babel shit
@@ -139,9 +143,11 @@ module.exports = Object.assign(config, {
     // bundle analyzer
     process.env.DEBUG && new BundleAnalyzerPlugin(),
   ]),
-  node: {
-    fs: 'empty',
-    net: 'empty',
-    tls: 'empty',
-  },
+  node: TARGET
+    ? false
+    : {
+        fs: 'empty',
+        net: 'empty',
+        tls: 'empty',
+      },
 })

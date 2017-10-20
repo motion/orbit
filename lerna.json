@@ -1,9 +1,6 @@
 {
   "lerna": "2.0.0",
-  "packages": [
-    "apps/*",
-    "packages/*"
-  ],
+  "packages": ["apps/*", "packages/*"],
   "npmClient": "yarn",
   "version": "1.5.0",
   "commands": {
@@ -38,6 +35,8 @@
         "@mcro/css",
         "@mcro/gloss",
         "victory",
+        "electron-context-menu",
+        "electron-debug",
         "electron-simple-publisher",
         "electron-simple-updater",
         "electron-prebuilt-compile",

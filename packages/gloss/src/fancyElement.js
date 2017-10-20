@@ -66,6 +66,11 @@ export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
     const name: string = !isTag ? `${type.name}` : type
     const finalProps = {}
     const finalStyles = []
+
+    if (!this) {
+      return ogCreateElement(type, props, ...children)
+    }
+
     const { theme } = this
     const { glossUID } = this.constructor
 

@@ -80,18 +80,12 @@ export class Thing extends Model {
       thing.integration === 'google'
         ? thing.integration + '-' + thing.type
         : thing.integration
-
     return {
       id: thing.id || thing.data.id,
       title: thing.title,
       type: thing.type,
       iconAfter: true,
-      icon:
-        icon === 'github' ? (
-          <item css={{ background: 'red' }}>{thing.number}</item>
-        ) : (
-          `social-${icon}`
-        ),
+      icon: `social-${icon}`,
       data: thing,
       ...extra,
     }

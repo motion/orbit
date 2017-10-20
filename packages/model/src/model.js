@@ -611,6 +611,7 @@ export default class Model {
     if (!this._collection) {
       await this.onConnection()
     }
+    this.applyDefaults(object)
     return this._collection.insert(this.paramsToObject(object))
   }
 

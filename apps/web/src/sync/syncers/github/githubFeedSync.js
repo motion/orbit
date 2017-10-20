@@ -105,7 +105,7 @@ export default class GithubFeedSync {
   findThingId = async event => {
     if (event.payload && event.payload.issue) {
       return Thing.cleanId({
-        id: `${event.payload.issue.id}`,
+        id: `${event.payload.issue.number}`,
         integration: 'github',
         type: 'task',
       })

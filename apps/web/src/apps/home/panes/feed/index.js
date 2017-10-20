@@ -110,6 +110,12 @@ class RepoHighlights {
       </things>
     )
   }
+
+  static style = {
+    things: {
+      marginTop: 100,
+    },
+  }
 }
 
 @view.attach('homeStore')

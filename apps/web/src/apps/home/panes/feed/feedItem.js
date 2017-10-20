@@ -5,7 +5,7 @@ import * as FeedItems from './feedItems'
 
 @view
 export default class FeedItem {
-  render({ index, hideName, event, style }) {
+  render({ inline, index, hideName, event, style }) {
     const { data } = event
     if (!data) {
       console.log('no data')
@@ -20,7 +20,7 @@ export default class FeedItem {
       )
     }
     return (
-      <GetFeedItem event={event}>
+      <GetFeedItem inline={inline} event={event}>
         {({ name, verb, avatar, extraInfo, body }) => {
           return (
             <feeditem style={style}>
@@ -59,7 +59,7 @@ export default class FeedItem {
                   />
                 </after>
               </info>
-              <body if={body}>
+              <body if={body && !inline}>
                 <UI.Text>{body}</UI.Text>
               </body>
             </feeditem>
@@ -147,5 +147,42 @@ export default class FeedItem {
       marginLeft: 10,
       marginRight: 5,
     },
+  }
+
+  static theme = props => {
+    if (props.inline) {
+      return {
+        feeditem: {
+          padding: 0,
+        },
+        avatar: {
+          width: 14,
+          height: 14,
+          marginRight: 4,
+        },
+        info: {
+          flexWrap: 'nowrap',
+        },
+        sideLine: {
+          display: 'none',
+        },
+        icon: {
+          display: 'none',
+        },
+        typeIcon: {
+          display: 'none',
+        },
+        name: {
+          fontSize: 12,
+        },
+        action: {
+          fontSize: 12,
+        },
+        date: {
+          fontSize: 12,
+        },
+      }
+    }
+    return {}
   }
 }

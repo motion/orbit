@@ -2,7 +2,7 @@
   "name": "@mcro/gloss",
   "version": "1.5.1",
   "description": "Higher order component for nicer component styles",
-  "main": "es6/index.js",
+  "main": "lib/index.js",
   "module": "lib/index.js",
   "module:production": "dist/index.js",
   "repository": {

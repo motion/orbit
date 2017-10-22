@@ -2,7 +2,7 @@
   "name": "@mcro/router",
   "version": "1.5.1",
   "description": "",
-  "main": "es6/index.js",
+  "main": "lib/index.js",
   "module": "lib/index.js",
   "module:production": "dist/index.js",
   "author": "Motion (motion.io)",

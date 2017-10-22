@@ -1,8 +1,9 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as Mains from './panes/mains'
+import * as UI from '@mcro/ui'
 
-const SHADOW = [0, 2, 10, [0, 0, 0, 0.15]]
+const SHADOW = [0, 0, 120, [0, 0, 0, 0.05]]
 
 @view
 export default class Main {
@@ -25,21 +26,23 @@ export default class Main {
       const key = stackItem.selectedKey
       const result = (
         <pane key={key} $active={stackItem.col === 1}>
-          <Main
-            key={key}
-            stackItem={stackItem}
-            navigate={stack.navigate}
-            result={stackItem.sidebarSelected}
-            data={stackItem.sidebarSelected.data}
-            setMainStore={stackItem.setMainStore}
-            paneProps={{
-              index,
-              light: true,
-              stack: homeStore.stack,
-              getActiveIndex: () => stackItem.firstIndex,
-              stackItem,
-            }}
-          />
+          <UI.Theme name="light">
+            <Main
+              key={key}
+              stackItem={stackItem}
+              navigate={stack.navigate}
+              result={stackItem.sidebarSelected}
+              data={stackItem.sidebarSelected.data}
+              setMainStore={stackItem.setMainStore}
+              paneProps={{
+                index,
+                //dark: true,
+                stack: homeStore.stack,
+                getActiveIndex: () => stackItem.firstIndex,
+                stackItem,
+              }}
+            />
+          </UI.Theme>
         </pane>
       )
       return result
@@ -49,7 +52,7 @@ export default class Main {
   static style = {
     pane: {
       flex: 1,
-      background: '#fff',
+      background: [255, 255, 255],
       borderRadius: 6,
       borderBottomRightRadius: 0,
       boxShadow: [SHADOW],

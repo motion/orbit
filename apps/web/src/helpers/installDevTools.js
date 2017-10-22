@@ -19,7 +19,7 @@ import r2 from '@mcro/r2'
 // Mobx.useStrict(true)
 
 // install console formatters
-// mobxFormatters(Mobx)
+mobxFormatters(Mobx)
 
 // the heavy hitters
 window.React = React

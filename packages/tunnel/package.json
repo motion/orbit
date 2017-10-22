@@ -1,6 +1,6 @@
 {
   "name": "@mcro/react-tunnel",
-  "main": "es6/index.js",
+  "main": "lib/index.js",
   "module": "lib/index.js",
   "version": "1.5.1",
   "scripts": {},

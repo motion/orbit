@@ -1,7 +1,7 @@
 {
   "name": "@mcro/automagical",
   "main": "lib/index.js",
-  "module": "es6/index.js",
+  "module": "lib/index.js",
   "module:production": "dist/index.js",
   "version": "1.5.1",
   "scripts": {},

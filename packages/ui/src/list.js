@@ -50,7 +50,7 @@ type VirtualItemProps = {
 
 @parentSize('virtualized')
 @view.ui
-class List extends React.Component<Props, { selected: number }> {
+class List extends React.PureComponent<Props, { selected: number }> {
   static Item = ListItem
 
   static defaultProps = {
@@ -110,7 +110,11 @@ class List extends React.Component<Props, { selected: number }> {
     }
 
     const totalItems = this.getTotalItems(nextProps)
-    const hasNewItems = totalItems !== this.totalItems
+
+    const hasNewItems =
+      totalItems !== this.totalItems ||
+      this.props.itemsKey !== nextProps.itemsKey
+
     if (hasNewItems) {
       this.totalItems = totalItems
       // resize to fit

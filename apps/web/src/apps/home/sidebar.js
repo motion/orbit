@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view, ProvideStore } from '@mcro/black'
+import { view, store } from '@mcro/black'
 import Fade from './views/fade'
 import * as Sidebars from './panes/sidebars'
 import getItem from './panes/helpers/getItem'
@@ -9,16 +9,31 @@ import PaneView from './panes/pane'
 
 const width = 250
 
-@view
-class SidebarInner {
+@view({
+  sidebar: class SidebarStore {
+    childStore = null
+    get results() {
+      return this.childStore.results
+    }
+    setStore(childStore) {
+      Object.defineProperty(childStore.prototype, 'props', {
+        get: () => this.props,
+        configurable: true,
+      })
+      this.childStore = new store(childStore)()
+      this.props.setStore(this.childStore)
+    }
+  },
+})
+class SidebarContainer {
   componentDidMount() {
-    this.props.setStore(this.props.store)
+    this.props.sidebar.setStore(this.props.sidebarStore)
   }
   render({ store, paneProps, stackItem }) {
-    window.sidebarStore = store // TODO: remove, TEMP
     return (
       <PaneView
         {...paneProps}
+        theme="dark"
         sidebar
         store={store}
         getItem={getItem(paneProps.getActiveIndex)}
@@ -29,21 +44,14 @@ class SidebarInner {
 }
 
 @view
-class SidebarContainer {
-  render({ sidebarStore, ...rest }) {
-    return (
-      <ProvideStore store={sidebarStore} storeProps={rest}>
-        {store => <SidebarInner store={store} {...rest} />}
-      </ProvideStore>
-    )
-  }
-}
-
-@view
 export default class Sidebar {
+  static defaultProps = {
+    sidebars: Sidebars,
+  }
+
   previousIndex = -1
 
-  render({ homeStore, homeStore: { stack } }) {
+  render({ sidebars, homeStore, homeStore: { stack } }) {
     const currentIndex = stack.length - 1
     const { previousIndex } = this
     this.previousIndex = currentIndex
@@ -57,7 +65,7 @@ export default class Sidebar {
           if (!stackItem.result) {
             return <null>bad result</null>
           }
-          const Sidebar = Sidebars[stackItem.result.type]
+          const Sidebar = sidebars[stackItem.result.type]
           if (!Sidebar) {
             return <null>not found Sidebar {stackItem.result.type}</null>
           }

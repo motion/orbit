@@ -2,7 +2,7 @@
   "name": "@mcro/ionize",
   "version": "1.5.1",
   "description": "An experimental React renderer for Electron apps",
-  "main": "es6/index.js",
+  "main": "lib/index.js",
   "module": "lib/index.js",
   "module:production": "dist/index.js",
   "license": "MIT",

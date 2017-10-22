@@ -4,9 +4,30 @@ import * as UI from '@mcro/ui'
 class PaneStore {
   listRef = null
   contentRef = null
+  contentVersion = 0
 
   willMount() {
     this.watchDrillIn()
+
+    const { stackItem } = this.props
+    this.watch(() => {
+      if (stackItem && stackItem.results) {
+        this.bumpVersion()
+      }
+    })
+  }
+
+  bumpVersion() {
+    this.contentVersion++
+  }
+
+  get items() {
+    if (this.props.items) {
+      return this.props.items
+    }
+    if (this.props.stackItem) {
+      return this.props.stackItem.results
+    }
   }
 
   setContentRef(ref) {
@@ -87,7 +108,6 @@ export default class Pane {
     virtualProps,
     itemProps,
     store,
-    items: items_,
     paneStore,
     getActiveIndex,
     children,
@@ -105,17 +125,13 @@ export default class Pane {
       children: item,
     })
 
-    let items = items_
-    if (!items && stackItem) {
-      items = stackItem.results
-    }
-
     if (light) {
       theme = 'light'
     }
 
-    const list = items && (
+    const list = paneStore.items && (
       <UI.List
+        itemsKey={paneStore.contentVersion}
         getRef={paneStore.setList}
         groupKey={groupKey}
         onSelect={this.onSelect}
@@ -129,7 +145,7 @@ export default class Pane {
           highlightColor: [255, 255, 255, 1],
           ...itemProps,
         }}
-        items={items}
+        items={paneStore.items}
         getItem={getItem || getItemDefault}
         {...listProps}
       />

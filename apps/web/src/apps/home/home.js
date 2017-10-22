@@ -125,7 +125,7 @@ export default class HomePage {
 
   static style = {
     home: {
-      background: [120, 120, 120, 0.75],
+      background: [200, 200, 200, 0.45],
       flex: 1,
     },
     content: {

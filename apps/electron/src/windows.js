@@ -10,6 +10,8 @@ import * as Constants from '~/constants'
 import WindowsStore from './windowsStore'
 import Window from './window'
 
+console.log('hi')
+
 let onWindows = []
 export function onWindow(cb) {
   onWindows.push(cb)
@@ -211,10 +213,10 @@ end tell`,
     }
 
     const appWindow = {
-      frame: false,
+      frame: true,
       defaultSize: [700, 500],
-      vibrancy: 'dark',
-      transparent: true,
+      //vibrancy: 'dark',
+      //transparent: true,
       backgroundColor: '#00000000',
       hasShadow: true,
       webPreferences: {
@@ -229,11 +231,6 @@ end tell`,
       return null
     }
 
-    const bgWindow = {
-      ...appWindow,
-      vibrancy: 'dark',
-    }
-
     const screenSize = screen.getPrimaryDisplay().workAreaSize
     console.log('www', screenSize.width)
 
@@ -242,7 +239,9 @@ end tell`,
         <Menu />
         <window
           key="search"
-          {...bgWindow}
+          {...appWindow}
+          vibrancy="dark"
+          transparent
           defaultSize={this.initialSize || this.state.size}
           size={this.state.size}
           ref={this.onWindow}
@@ -261,12 +260,13 @@ end tell`,
 
         <window
           key="tray"
-          {...bgWindow}
-          showDevTools
+          {...appWindow}
+          transparent
           show
+          showDevTools
           size={[250, 350]}
-          file={`${Constants.APP_URL}/context`}
-          titleBarStyle="customButtonsOnHover"
+          file={`${Constants.APP_URL}/ora`}
+          titleBarStyle="hidden"
           position={[screenSize.width - 250 - 20, 40]}
         />
 

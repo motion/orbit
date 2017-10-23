@@ -44,9 +44,9 @@ const sidebars = {
 }
 
 const inputStyle = {
-  fontWeight: 200,
+  fontWeight: 300,
   color: '#fff',
-  fontSize: 30,
+  fontSize: 20,
 }
 
 @view.provide({
@@ -57,13 +57,13 @@ export default class HomePage {
   render({ homeStore }) {
     return (
       <UI.Theme name="clear-dark">
-        <home ref={homeStore.ref('barRef').set} $$fullscreen>
+        <home ref={homeStore.ref('barRef').set} $$fullscreen $$draggable>
           <header $$draggable>
             <UI.Icon
               $searchIcon
               size={16}
               name="zoom"
-              color={[255, 255, 255, 0.1]}
+              color={[255, 255, 255, 1]}
             />
             <UI.Input
               $searchInput
@@ -88,29 +88,30 @@ export default class HomePage {
 
   static style = {
     home: {
-      background: [200, 200, 200, 0.45],
-      flex: 1,
+      // background: [20, 20, 20, 0.93],
+      // borderRadius: 12,
+      overflow: 'hidden',
     },
     content: {
-      flexFlow: 'row',
       flex: 1,
       position: 'relative',
     },
     header: {
       position: 'relative',
-      height: 70,
-      marginTop: -1,
     },
     searchIcon: {
       position: 'absolute',
-      top: 3,
+      top: 0,
       bottom: 0,
       alignItems: 'center',
       height: 'auto',
-      left: 18,
+      left: 12,
     },
     searchInput: {
-      padding: [0, 15, 0, 30],
+      position: 'relative',
+      padding: [10, 25],
+      paddingLeft: 36,
+      borderBottom: [1, 'dotted', [255, 255, 255, 0.1]],
     },
   }
 }

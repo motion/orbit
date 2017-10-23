@@ -165,7 +165,7 @@ export default class Pane {
           </content>
           <actions if={actions && stackItem && stackItem.col === 1}>
             <UI.Theme name="clear-light">
-              <bar>
+              <actionbar>
                 <div $$flex={2} $$row>
                   <UI.Button
                     if={stackItem.result && stackItem.result.title}
@@ -198,7 +198,7 @@ export default class Pane {
                       )
                   )}
                 </UI.Row>
-              </bar>
+              </actionbar>
             </UI.Theme>
           </actions>
         </pane>
@@ -212,14 +212,11 @@ export default class Pane {
       position: 'relative',
       overflow: 'scroll',
     },
-    sidebar: {
-      marginTop: 5,
-    },
     content: {
       overflowY: 'scroll',
       flex: 1,
     },
-    bar: {
+    actionbar: {
       padding: [10, 15],
       borderTop: [1, [0, 0, 0, 0.05]],
       flexFlow: 'row',

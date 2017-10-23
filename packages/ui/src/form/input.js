@@ -112,7 +112,6 @@ export default class Input extends React.Component<Props> {
       <SizedSurface
         sizeFont
         borderRadius
-        sizeHeight
         sizePadding
         flex
         borderWidth={1}

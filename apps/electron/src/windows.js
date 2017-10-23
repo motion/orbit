@@ -27,11 +27,16 @@ export default class ExampleApp extends React.Component {
     show: true,
     size: [0, 0],
     position: [0, 0],
+    trayPosition: [0, 0],
     appWindows: AppWindows.windows,
   }
 
   componentDidMount() {
     this.measureAndShow()
+
+    const screenSize = screen.getPrimaryDisplay().workAreaSize
+    this.setState({ trayPosition: [screenSize.width - 250 - 20, 40] })
+
     this.next() // preload one app window
     onWindows.forEach(cb => cb(this))
     setTimeout(this.measureAndShow, 500)
@@ -212,18 +217,17 @@ end tell`,
       )
     }
 
+    const webPreferences = {
+      // nativeWindowOpen: true,
+      experimentalFeatures: true,
+      // transparentVisuals: true,
+    }
+
     const appWindow = {
-      frame: true,
+      frame: false,
       defaultSize: [700, 500],
-      //vibrancy: 'dark',
-      //transparent: true,
       backgroundColor: '#00000000',
-      hasShadow: true,
-      webPreferences: {
-        nativeWindowOpen: true,
-        experimentalFeatures: true,
-        transparentVisuals: true,
-      },
+      webPreferences,
     }
 
     if (error) {
@@ -231,17 +235,16 @@ end tell`,
       return null
     }
 
-    const screenSize = screen.getPrimaryDisplay().workAreaSize
-    console.log('www', screenSize.width)
-
     return (
       <app onBeforeQuit={() => console.log('hi')}>
         <Menu />
+
         <window
           key="search"
           {...appWindow}
           vibrancy="dark"
           transparent
+          hasShadow
           defaultSize={this.initialSize || this.state.size}
           size={this.state.size}
           ref={this.onWindow}
@@ -261,13 +264,17 @@ end tell`,
         <window
           key="tray"
           {...appWindow}
+          titleBarStyle="customButtonsOnHover"
+          showDevTools
           transparent
           show
           showDevTools
+          vibrancy="ultra-dark"
           size={[250, 350]}
           file={`${Constants.APP_URL}/ora`}
-          titleBarStyle="hidden"
-          position={[screenSize.width - 250 - 20, 40]}
+          position={this.state.trayPosition}
+          onMoved={trayPosition => this.setState({ trayPosition })}
+          onMove={trayPosition => this.setState({ trayPosition })}
         />
 
         {appWindows.map(win => {

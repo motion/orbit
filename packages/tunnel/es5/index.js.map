@@ -1,1 +1,0 @@
-{"version":3,"sources":["../src/index.js"],"names":["Provider","inject"],"mappings":";;;;;;;AAAA;;;;AACA;;;;;;iBAEoC,yC;;IAArBA,Q,cAAAA,Q;IAAUC,M,cAAAA,M","file":"index.js","sourcesContent":["import React from 'react';\nimport createAll from './components/createAll';\n\nexport const { Provider, inject } = createAll(React);\n"]}

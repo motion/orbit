@@ -1,1 +1,0 @@
-{"version":3,"sources":["../src/native.js"],"names":["Provider","inject"],"mappings":";;;;;;;AAAA;;;;AACA;;;;;;iBAEoC,+C;;IAArBA,Q,cAAAA,Q;IAAUC,M,cAAAA,M","file":"native.js","sourcesContent":["import React from 'react-native';\nimport createAll from './components/createAll';\n\nexport const { Provider, inject } = createAll(React);\n"]}

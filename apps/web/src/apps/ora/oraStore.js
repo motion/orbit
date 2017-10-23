@@ -2,7 +2,9 @@ import { watch } from '@mcro/black'
 import { Thing } from '~/app'
 import Mousetrap from 'mousetrap'
 import { OS } from '~/helpers'
+import Context from '~/context'
 import StackStore from '../home/stackStore'
+import { last } from 'lodash'
 import keycode from 'keycode'
 
 export const SHORTCUTS = {
@@ -40,14 +42,59 @@ export default class HomeStore {
   inputRef = null
   search = ''
   textboxVal = ''
+  things = Thing.find()
   traps = {}
   lastKey = null
+  contxt = new Context()
+  activeThing = null
+
+  osContext = null
 
   willMount() {
     window.homeStore = this
     this.attachTrap('window', window)
     this._watchFocusBar()
     this._watchInput()
+
+    OS.on('set-context', (event, url) => {
+      this.osContext = this.parseUrl(url)
+    })
+    this.getOSContext()
+    this.context = new Context()
+  }
+
+  getOSContext = () => {
+    OS.send('get-context')
+    setTimeout(this.getOSContext, 500)
+  }
+
+  parseUrl = url => {
+    let title = ''
+    if (url.indexOf('/issues/') > -1) {
+      const active = (this.things || []).filter(
+        t => t.data.number === +last(url.split('/'))
+      )
+
+      if (active.length > 0) {
+        this.activeThing = active[0]
+        title = active[0].title
+      }
+    }
+    return { url, title, show: title !== '' }
+  }
+
+  get contextResults() {
+    return this.context.loading || this.osContext === null
+      ? []
+      : this.context
+          .closestItems(this.osContext.title, 5)
+          .filter(x => x.item.id !== (this.activeThing || { id: null }).id)
+          .map(x =>
+            Thing.toResult(x.item, {
+              category: 'Context',
+              itemProps: { children: '' },
+            })
+          )
   }
 
   _watchInput() {

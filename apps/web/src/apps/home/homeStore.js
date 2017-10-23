@@ -201,7 +201,7 @@ export default class HomeStore {
         this.stack.selected.onSelect()
       } else {
         const schema = JSON.stringify(this.stack.selected)
-        // OS.send('bar-goto', `http://jot.dev/master?schema=${schema}`)
+        // OS.send('bar-goto', `http://orbit.dev/master?schema=${schema}`)
       }
     },
     cmdL: () => {

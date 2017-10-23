@@ -4,6 +4,7 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import Pane from '../pane'
 import type { PaneProps } from '~/types'
+import { Thing } from '~/app'
 import Calendar from './calendar'
 import FeedItem from './feedItem'
 import FeedStore from './feedStore'
@@ -92,19 +93,58 @@ class FeedNavBar {
   }
 }
 
+@view({
+  store: class HighlightsStore {
+    things = Thing.find()
+  },
+})
+class RepoHighlights {
+  render({ store, onSelect }) {
+    return (
+      <things>
+        {(store.things || []).map(thing => (
+          <thing onClick={() => onSelect(thing)}>
+            <UI.Title size={1.2}>{thing.title}</UI.Title>
+          </thing>
+        ))}
+      </things>
+    )
+  }
+
+  static style = {
+    things: {
+      marginTop: 100,
+    },
+  }
+}
+
 @view.attach('homeStore')
 @view({
   feedStore: FeedStore,
 })
 export default class FeedMain extends React.Component<Props> {
-  render({ feedStore, paneProps }: Props) {
+  render({ feedStore, homeStore, paneProps, data }: Props) {
+    // const { type } = paneProps.data
+    // console.log('type is', type)
     return (
       <Pane
         {...paneProps}
         items={[
           () => <FeedHeader feedStore={feedStore} />,
           //() => <FeedRecently />,
-          () => <Calendar labels={feedStore.firstNames} />,
+          () => (
+            <highlights>
+              <Calendar
+                labels={feedStore.firstNames}
+                if={data.type === 'person'}
+              />
+              <RepoHighlights
+                onSelect={thing => {
+                  homeStore.stack.navigate(thing)
+                }}
+              />
+            </highlights>
+          ),
           () => <FeedNavBar feedStore={feedStore} />,
           ...feedStore.activeItems.map((item, index) => () => (
             <FeedItem

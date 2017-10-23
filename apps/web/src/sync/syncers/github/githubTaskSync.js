@@ -87,6 +87,7 @@ export default class GithubIssueSync {
   }
 
   syncRepo = async (org: string, name: string) => {
+    console.log('getting', org, name)
     const results = await this.graphFetch({
       query: `
       query AllIssues {
@@ -99,7 +100,7 @@ export default class GithubIssueSync {
     `,
     })
 
-    if (!results) {
+    if (!results || !results.data) {
       return
     }
     const repository = results.data.organization.repository

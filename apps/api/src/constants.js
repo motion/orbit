@@ -16,6 +16,6 @@ console.log('IS_PROD', IS_PROD)
 export const PUBLIC_URL = IS_PROD
   ? 'http://seemirai.com'
   : 'http://localhost:3002'
-export const API_HOST = IS_PROD ? 'app.seemirai.com' : 'jot.dev'
+export const API_HOST = IS_PROD ? 'app.seemirai.com' : 'orbit.dev'
 
 export const SERVER_PORT = process.env.PORT || 3001

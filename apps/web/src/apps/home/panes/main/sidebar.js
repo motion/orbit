@@ -108,6 +108,7 @@ export default class MainSidebar {
         .slice(0, 30)
         .map(x => Thing.toResult(x, { category: 'Search Results' }))
     }
+
     return [
       ...(this.myrecent || []).map(thing => {
         const event = this.thingToEvent[thing.id]

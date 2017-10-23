@@ -210,6 +210,7 @@ export default class Pane {
     pane: {
       flex: 1,
       position: 'relative',
+      overflow: 'scroll',
     },
     content: {
       overflowY: 'scroll',

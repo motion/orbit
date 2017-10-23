@@ -121,7 +121,6 @@ export default class Item {
               >
                 syncing now
               </UI.Text>
-
               <UI.Button
                 icon="refresh2"
                 onClick={store.runJob}

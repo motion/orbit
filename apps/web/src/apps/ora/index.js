@@ -11,21 +11,34 @@ const sidebars = {
       return this.props.homeStore.search
     }
 
-    items = [{ title: 'test', icon: 'poo' }]
+    items = []
 
     get results() {
+      const { contextResults, osContext } = this.props.homeStore
       const search = fuzzy(this.items, this.search)
-      if (!search.length) {
-        return [
-          {
-            type: 'message',
-            title: 'No Results...',
-            data: { message: 'No results' },
-            category: 'Search Results',
-          },
-        ]
-      }
-      return search
+      const searchItems = search.length
+        ? search
+        : [
+            {
+              type: 'message',
+              title: 'No Results...',
+              data: { message: 'No results' },
+              category: 'Search Results',
+            },
+          ]
+
+      const context =
+        osContext && osContext.show
+          ? contextResults
+          : [
+              {
+                type: 'message',
+                title: 'Load a github issue',
+              },
+            ]
+
+      return context // searchItems.concat(contextResults)
+      // return [...searchItems, ...this.props.homeStore.context]
     }
   },
 }

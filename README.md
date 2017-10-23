@@ -12,4 +12,4 @@ build --watch
 run web
 ```
 
-then go to http://jot.dev
+then go to http://orbit.dev

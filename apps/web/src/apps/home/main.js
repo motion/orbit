@@ -22,6 +22,7 @@ export default class Main {
         console.log('Main = ', Main)
         return <null>not found {stackItem.sidebarSelected.type}</null>
       }
+
       const key = stackItem.selectedKey
       const result = (
         <pane key={key} $active={stackItem.col === 1}>

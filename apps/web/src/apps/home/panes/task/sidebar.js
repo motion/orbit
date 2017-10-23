@@ -25,7 +25,6 @@ export default class TaskSidebarStore {
 
   willMount() {
     this.context = new Context()
-    window.context = this.context
   }
 
   @watch
@@ -36,7 +35,6 @@ export default class TaskSidebarStore {
       .in(this.authorIds)
 
   get results() {
-    console.log('props are ', this.props)
     return [
       ...(this.people || []).map(x =>
         Person.toResult(x, { category: 'People' })

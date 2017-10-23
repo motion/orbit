@@ -20,21 +20,23 @@ console.log('Constants.APP_URL', Constants.APP_URL)
 
 const AppWindows = new WindowsStore()
 
-const screenSize = screen.getPrimaryDisplay().workAreaSize
-
 export default class ExampleApp extends React.Component {
   state = {
     restart: false,
     show: true,
     size: [0, 0],
     position: [0, 0],
-    trayPosition: [screenSize.width - 250 - 20, 40],
+    trayPosition: [0, 0],
     appWindows: AppWindows.windows,
   }
 
   componentDidMount() {
     console.log('did mount windows')
     this.measureAndShow()
+
+    const screenSize = screen.getPrimaryDisplay().workAreaSize
+    this.setState({ trayPosition: [screenSize.width - 250 - 20, 40] })
+
     this.next() // preload one app window
     onWindows.forEach(cb => cb(this))
     setTimeout(this.measureAndShow, 500)
@@ -254,6 +256,7 @@ export default class ExampleApp extends React.Component {
           showDevTools
           transparent
           show
+          vibrancy="ultra-dark"
           size={[250, 350]}
           file={`${Constants.APP_URL}/ora`}
           position={this.state.trayPosition}

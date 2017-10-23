@@ -75,8 +75,8 @@ export default class HomePage {
 
   static style = {
     home: {
-      background: [20, 20, 20, 0.93],
-      borderRadius: 12,
+      // background: [20, 20, 20, 0.93],
+      // borderRadius: 12,
       overflow: 'hidden',
     },
     content: {

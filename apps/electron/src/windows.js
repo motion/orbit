@@ -271,6 +271,7 @@ end tell`,
           showDevTools
           transparent
           show
+          alwaysOnTop
           vibrancy={false && 'ultra-dark'}
           size={[ORA_WIDTH, 500]}
           file={`${Constants.APP_URL}/ora`}

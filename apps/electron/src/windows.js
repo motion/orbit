@@ -19,6 +19,7 @@ export function onWindow(cb) {
 console.log('Constants.APP_URL', Constants.APP_URL)
 
 const AppWindows = new WindowsStore()
+const ORA_WIDTH = 300
 
 export default class ExampleApp extends React.Component {
   state = {
@@ -35,7 +36,7 @@ export default class ExampleApp extends React.Component {
     this.measureAndShow()
 
     const screenSize = screen.getPrimaryDisplay().workAreaSize
-    this.setState({ trayPosition: [screenSize.width - 250 - 20, 40] })
+    this.setState({ trayPosition: [screenSize.width - ORA_WIDTH - 20, 40] })
 
     this.next() // preload one app window
     onWindows.forEach(cb => cb(this))
@@ -227,27 +228,29 @@ export default class ExampleApp extends React.Component {
       <app onBeforeQuit={() => console.log('hi')}>
         <Menu />
 
-        <window
-          key="search"
-          {...appWindow}
-          vibrancy="dark"
-          transparent
-          hasShadow
-          defaultSize={this.initialSize || this.state.size}
-          size={this.state.size}
-          ref={this.onWindow}
-          showDevTools={true || !Constants.IS_PROD}
-          file={Constants.APP_URL}
-          titleBarStyle="customButtonsOnHover"
-          show={this.state.show}
-          position={this.state.position}
-          onResize={size => this.setState({ size })}
-          onMoved={position => this.setState({ position })}
-          onMove={position => this.setState({ position })}
-          onFocus={() => {
-            this.activeWindow = this.windowRef
-          }}
-        />
+        {false && (
+          <window
+            key="search"
+            {...appWindow}
+            vibrancy="dark"
+            transparent
+            hasShadow
+            defaultSize={this.initialSize || this.state.size}
+            size={this.state.size}
+            ref={this.onWindow}
+            showDevTools={true || !Constants.IS_PROD}
+            file={Constants.APP_URL}
+            titleBarStyle="customButtonsOnHover"
+            show={this.state.show}
+            position={this.state.position}
+            onResize={size => this.setState({ size })}
+            onMoved={position => this.setState({ position })}
+            onMove={position => this.setState({ position })}
+            onFocus={() => {
+              this.activeWindow = this.windowRef
+            }}
+          />
+        )}
 
         <window
           key="tray"
@@ -256,8 +259,8 @@ export default class ExampleApp extends React.Component {
           showDevTools
           transparent
           show
-          vibrancy="ultra-dark"
-          size={[250, 350]}
+          vibrancy={false && 'ultra-dark'}
+          size={[ORA_WIDTH, 500]}
           file={`${Constants.APP_URL}/ora`}
           position={this.state.trayPosition}
           onMoved={trayPosition => this.setState({ trayPosition })}

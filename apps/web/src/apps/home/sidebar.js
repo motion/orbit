@@ -7,7 +7,7 @@ import PaneView from './panes/pane'
 
 // see stackStore for the "back" result item
 
-const width = 250
+const width = 280
 
 @view({
   sidebar: class SidebarStore {
@@ -47,11 +47,17 @@ class SidebarContainer {
 export default class Sidebar {
   static defaultProps = {
     sidebars: Sidebars,
+    itemProps: {
+      size: 1.14,
+      glow: true,
+      padding: [10, 12],
+      iconAfter: true,
+    },
   }
 
   previousIndex = -1
 
-  render({ sidebars, homeStore, homeStore: { stack } }) {
+  render({ itemProps, sidebars, homeStore, homeStore: { stack } }) {
     const currentIndex = stack.length - 1
     const { previousIndex } = this
     this.previousIndex = currentIndex
@@ -95,12 +101,7 @@ export default class Sidebar {
                   stack: homeStore.stack,
                   sidebar: true,
                   onSelect: stackItem.onSelect,
-                  itemProps: {
-                    size: 1.14,
-                    glow: true,
-                    padding: [10, 12],
-                    iconAfter: true,
-                  },
+                  itemProps,
                 }}
               />
             </Fade>

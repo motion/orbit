@@ -42,12 +42,29 @@ export default class HomeStore {
   textboxVal = ''
   traps = {}
   lastKey = null
+  hidden = false
 
   willMount() {
     window.homeStore = this
     this.attachTrap('window', window)
     this._watchFocusBar()
     this._watchInput()
+    this._watchToggleHide()
+  }
+
+  _watchToggleHide() {
+    OS.send('start-ora')
+
+    OS.on('show-ora', () => {
+      this.hidden = false
+    })
+    OS.on('hide-ora', () => {
+      this.hidden = true
+    })
+  }
+
+  hide = () => {
+    this.hidden = true
   }
 
   _watchInput() {
@@ -156,7 +173,7 @@ export default class HomeStore {
     esc: e => {
       if (this.search === '') {
         e.preventDefault()
-        OS.send('bar-hide')
+        this.hide()
       }
     },
     cmdA: () => {
@@ -171,7 +188,7 @@ export default class HomeStore {
       if (this.stack.selected.onSelect) {
         this.stack.selected.onSelect()
       } else {
-        const schema = JSON.stringify(this.stack.selected)
+        // const schema = JSON.stringify(this.stack.selected)
         // OS.send('bar-goto', `http://jot.dev/master?schema=${schema}`)
       }
     },

@@ -3,7 +3,7 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import OraStore from './oraStore'
 import Sidebar from '../home/sidebar'
-import { fuzzy } from '~/helpers'
+import { OS, fuzzy } from '~/helpers'
 
 const sidebars = {
   oramain: class OraMain {
@@ -13,40 +13,74 @@ const sidebars = {
 
     items = [
       {
-        title: (
-          <UI.Title size={1.2}>Confirm your Twitter account, neon</UI.Title>
-        ),
+        title: 'Confirm your Twitter account, neon',
         subtitle: 'confirm@twitter.com',
         icon: 'mail',
         props: {
-          style: {
+          iconAfter: false,
+          highlight: false,
+          primaryProps: {
+            size: 1.2,
+            fontWeight: 600,
+          },
+          css: {
             paddingTop: 12,
             paddingBottom: 12,
+            borderBottom: [1, 'dotted', [255, 255, 255, 0.1]],
           },
         },
       },
       {
-        title: (
-          <row css={{ flexFlow: 'row' }}>
-            <img
-              css={{ width: 20, height: 20, borderRadius: 100, marginRight: 5 }}
-              src="/images/jacob.jpg"
-            />
-            Jacob Bovee
+        title: '123',
+        displayTitle: false,
+        children: (
+          <row
+            css={{
+              flexFlow: 'row',
+              overflowX: 'scroll',
+              width: '100%',
+            }}
+          >
+            {['Jacob Bovee', 'Nick Cammarata'].map(name => (
+              <minicard
+                key={name}
+                css={{
+                  width: '90%',
+                  borderRadius: 5,
+                  background: [255, 255, 255, 0.1],
+                  padding: [8, 10],
+                  margin: [0, 10, 0, 0],
+                }}
+              >
+                <title
+                  css={{
+                    flexFlow: 'row',
+                    marginBottom: 3,
+                    alignItems: 'center',
+                  }}
+                >
+                  <img
+                    css={{
+                      width: 26,
+                      height: 26,
+                      borderRadius: 100,
+                      border: [3, [255, 255, 255, 0.1]],
+                      marginRight: 5,
+                    }}
+                    src="/images/jacob.jpg"
+                  />
+                  <UI.Text size={1.1}>Jacob Bovee</UI.Text>
+                </title>
+                <UI.Row stretch itemProps={{ height: 26 }}>
+                  <UI.Button icon="social-fb" />
+                  <UI.Button icon="social-linked" />
+                  <UI.Button icon="social-pr" />
+                </UI.Row>
+              </minicard>
+            ))}
           </row>
         ),
         category: 'People',
-      },
-      {
-        title: '12',
-        displayTitle: false,
-        children: (
-          <UI.Row stretch>
-            <UI.Button icon="social-fb" />
-            <UI.Button icon="social-linked" />
-            <UI.Button icon="social-pr" />
-          </UI.Row>
-        ),
       },
       {
         title: 'Some related email goes here',
@@ -121,7 +155,12 @@ export default class HomePage {
   render({ homeStore }) {
     return (
       <UI.Theme name="clear-dark">
-        <home ref={homeStore.ref('barRef').set} $$fullscreen $$draggable>
+        <home
+          $visible={!homeStore.hidden}
+          ref={homeStore.ref('barRef').set}
+          $$fullscreen
+          $$draggable
+        >
           <header $$draggable>
             <UI.Icon
               $searchIcon
@@ -153,7 +192,12 @@ export default class HomePage {
                 opacity: 0.5,
               }}
             >
-              <UI.Icon size={12} name="remove" color={[255, 255, 255, 1]} />
+              <UI.Icon
+                onClick={homeStore.hide}
+                size={12}
+                name="remove"
+                color={[255, 255, 255, 1]}
+              />
             </buttons>
           </header>
           <content>
@@ -175,11 +219,22 @@ export default class HomePage {
 
   static style = {
     home: {
-      background: [30, 30, 30, 0.98],
+      background: [20, 20, 20, 0.98],
       boxShadow: [[0, 0, 10, [0, 0, 0, 0.4]]],
       margin: 10,
       borderRadius: 10,
       overflow: 'hidden',
+      transition: 'all ease-in 100ms',
+      opacity: 0,
+      transform: {
+        x: 20,
+      },
+    },
+    visible: {
+      opacity: 1,
+      transform: {
+        x: 0,
+      },
     },
     content: {
       flex: 1,
@@ -199,7 +254,7 @@ export default class HomePage {
     },
     searchInput: {
       position: 'relative',
-      padding: [10, 25],
+      padding: [8, 25],
       paddingLeft: 36,
       borderBottom: [1, 'dotted', [255, 255, 255, 0.1]],
     },

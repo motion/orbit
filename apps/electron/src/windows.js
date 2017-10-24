@@ -63,15 +63,15 @@ export default class ExampleApp extends React.Component {
   //   }, 30)
   // }
 
-  hide = () => new Promise(resolve => this.setState({ show: false }, resolve))
+  // hide = () => new Promise(resolve => this.setState({ show: false }, resolve))
 
-  show = () =>
-    new Promise(resolve =>
-      this.setState(
-        { show: true, position: this.position, size: this.size },
-        resolve
-      )
-    )
+  // show = () =>
+  //   new Promise(resolve =>
+  //     this.setState(
+  //       { show: true, position: this.position, size: this.size },
+  //       resolve
+  //     )
+  //   )
 
   measure = () => {
     const { position, size } = measure()
@@ -83,8 +83,8 @@ export default class ExampleApp extends React.Component {
   onWindow = ref => {
     if (ref) {
       this.windowRef = ref
-      this.measure()
-      this.show()
+      // this.measure()
+      // this.show()
       this.listenToApps()
       this.registerShortcuts()
     }
@@ -97,6 +97,11 @@ export default class ExampleApp extends React.Component {
   }
 
   listenToApps = () => {
+    ipcMain.on('start-ora', event => {
+      this.show = () => event.sender.send('show-ora')
+      this.hide = () => event.sender.send('hide-ora')
+    })
+
     ipcMain.on('where-to', (event, key) => {
       console.log('where-to from', key)
       const win = AppWindows.findBy(key)
@@ -164,11 +169,13 @@ export default class ExampleApp extends React.Component {
     const SHORTCUTS = {
       'Option+Space': () => {
         console.log('command option+space')
-        if (this.state.show) {
-          this.hide()
-        } else {
-          this.measureAndShow()
-        }
+        this.show()
+
+        // if (this.state.show) {
+        //   this.hide()
+        // } else {
+        //   this.measureAndShow()
+        // }
       },
     }
     for (const shortcut of Object.keys(SHORTCUTS)) {
@@ -255,6 +262,7 @@ export default class ExampleApp extends React.Component {
         <window
           key="tray"
           {...appWindow}
+          ref={this.onWindow}
           titleBarStyle="customButtonsOnHover"
           showDevTools
           transparent

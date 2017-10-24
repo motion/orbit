@@ -56,7 +56,7 @@ export default class ExampleApp extends React.Component {
 
   onTray = ref => {
     if (ref) {
-      this.windowRef = ref
+      this.trayRef = ref
       this.listenToApps()
       this.registerShortcuts()
     }
@@ -72,7 +72,7 @@ export default class ExampleApp extends React.Component {
     ipcMain.on('start-ora', event => {
       this.show = () => {
         event.sender.send('show-ora')
-        this.windowRef.focus()
+        this.trayRef.focus()
       }
       this.hide = () => event.sender.send('hide-ora')
     })
@@ -233,13 +233,12 @@ end tell`,
             onMoved={position => this.setState({ position })}
             onMove={position => this.setState({ position })}
             onFocus={() => {
-              this.activeWindow = this.windowRef
+              this.activeWindow = this.trayRef
             }}
           />
         )}
 
         <window
-          key="tray"
           {...appWindow}
           ref={this.onTray}
           titleBarStyle="customButtonsOnHover"

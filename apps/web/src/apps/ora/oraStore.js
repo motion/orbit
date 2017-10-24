@@ -42,7 +42,7 @@ export default class HomeStore {
   inputRef = null
   search = ''
   textboxVal = ''
-  things = Thing.find()
+  // things = Thing.find()
   traps = {}
   lastKey = null
   hidden = false
@@ -71,11 +71,11 @@ export default class HomeStore {
   hide = () => {
     this.hidden = true
 
-    OS.on('set-context', (event, url) => {
-      this.osContext = this.parseUrl(url)
-    })
-    this.getOSContext()
-    this.context = new Context()
+    // OS.on('set-context', (event, url) => {
+    //   this.osContext = this.parseUrl(url)
+    // })
+    // this.getOSContext()
+    // this.context = new Context()
   }
 
   getOSContext = () => {

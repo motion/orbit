@@ -29,6 +29,9 @@ export default class OraMain {
       title: '123',
       displayTitle: false,
       category: 'People',
+      props: {
+        glow: false,
+      },
       children: (
         <row
           css={{

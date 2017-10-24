@@ -98,7 +98,10 @@ export default class ExampleApp extends React.Component {
 
   listenToApps = () => {
     ipcMain.on('start-ora', event => {
-      this.show = () => event.sender.send('show-ora')
+      this.show = () => {
+        event.sender.send('show-ora')
+        this.windowRef.focus()
+      }
       this.hide = () => event.sender.send('hide-ora')
     })
 

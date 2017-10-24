@@ -244,6 +244,7 @@ export default class HomePage {
     },
     focus: {
       margin: 0,
+      opacity: 1,
       transform: 'scaleX(1)',
       '& .icon': {
         transform: 'scaleX(1)',

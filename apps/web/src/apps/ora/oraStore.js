@@ -169,6 +169,10 @@ export default class HomeStore {
       this.stack.up()
     },
     esc: e => {
+      if (this.inputRef === document.activeElement) {
+        this.inputRef.blur()
+        return
+      }
       if (this.search === '') {
         e.preventDefault()
         this.hide()

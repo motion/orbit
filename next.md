@@ -5,6 +5,13 @@
 - merge context
 - search icon turns into back button
 - working opens links to browser
+- simple profile page sidebar
+- import other sidebars / decide on removing main window
+- correctness:
+  - "selectable: false" for some results
+  - horizontal scrolling cards
+  - enter to select item
+    - cmd+enter to open then?
 - implement floating peek window
 
 # unsorted

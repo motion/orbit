@@ -43,6 +43,7 @@ export default class HomeStore {
   traps = {}
   lastKey = null
   hidden = false
+  focused = false
 
   willMount() {
     window.homeStore = this
@@ -56,10 +57,7 @@ export default class HomeStore {
     OS.send('start-ora')
 
     OS.on('show-ora', () => {
-      this.hidden = false
-    })
-    OS.on('hide-ora', () => {
-      this.hidden = true
+      this.hidden = !this.hidden
     })
   }
 

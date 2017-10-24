@@ -87,7 +87,7 @@ export default class Icon extends React.PureComponent<Props> {
     content = content || children || !iconName ? name : ''
 
     return (
-      <div
+      <icon
         contentEditable={false}
         className={`${className || ''} ${this.uniq}`}
         onClick={onClick}
@@ -125,7 +125,7 @@ export default class Icon extends React.PureComponent<Props> {
             {tooltip}
           </Popover>
         )}
-      </div>
+      </icon>
     )
   }
 }

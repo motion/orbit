@@ -153,6 +153,7 @@ const inputStyle = {
 @view
 export default class HomePage {
   render({ homeStore }) {
+    const { focused } = homeStore
     return (
       <UI.Theme name="clear-dark">
         <home
@@ -161,10 +162,15 @@ export default class HomePage {
           $$fullscreen
           $$draggable
         >
-          <header $$draggable>
+          <header
+            $focus={focused}
+            onFocus={homeStore.ref('focused').setter(true)}
+            onBlur={homeStore.ref('focused').setter(false)}
+            $$draggable
+          >
             <UI.Icon
               $searchIcon
-              size={16}
+              size={12}
               name="zoom"
               color={[255, 255, 255, 1]}
             />
@@ -218,6 +224,34 @@ export default class HomePage {
   }
 
   static style = {
+    header: {
+      position: 'relative',
+      opacity: 0.3,
+      transform: 'scaleY(0.75)',
+      margin: [-5, 0],
+      transition: 'all ease-in 80ms',
+      '& .icon': {
+        transition: 'all ease-in 80ms',
+        transform: 'scaleX(0.75)',
+      },
+      '& > .input': {
+        transition: 'all ease-in 80ms',
+        transform: 'scaleX(0.75)',
+      },
+      '&:hover': {
+        background: [255, 255, 255, 0.05],
+      },
+    },
+    focus: {
+      margin: 0,
+      transform: 'scaleX(1)',
+      '& .icon': {
+        transform: 'scaleX(1)',
+      },
+      '& > .input': {
+        transform: 'scaleX(1)',
+      },
+    },
     home: {
       background: [20, 20, 20, 0.98],
       boxShadow: [[0, 0, 10, [0, 0, 0, 0.4]]],
@@ -239,10 +273,6 @@ export default class HomePage {
     content: {
       flex: 1,
       position: 'relative',
-    },
-    header: {
-      position: 'relative',
-      opacity: 0.3,
     },
     searchIcon: {
       position: 'absolute',

@@ -37,7 +37,7 @@ export default class OraMain {
             width: '100%',
           }}
         >
-          {['Jacob Bovee', 'Nick Cammarata'].map(name => (
+          {['Mike McConville', 'Nick Cammarata'].map(name => (
             <minicard
               key={name}
               css={{
@@ -65,7 +65,7 @@ export default class OraMain {
                   }}
                   src="/images/jacob.jpg"
                 />
-                <UI.Text size={1.1}>Jacob Bovee</UI.Text>
+                <UI.Text size={1.1}>{name}</UI.Text>
               </title>
               <UI.Row stretch itemProps={{ height: 26 }}>
                 <UI.Button icon="social-fb" />
@@ -76,26 +76,27 @@ export default class OraMain {
           ))}
         </row>
       ),
-      category: 'People',
+    },
+    {
+      title: 'Some related email goes here',
+      subtitle: 'Some related text you can see here',
+      date: Date.now(),
+      icon: 'email',
+      category: 'Recently',
     },
     {
       title: 'Some related email goes here',
       subtitle: 'Some related text you can see here',
       icon: 'email',
-      category: 'Related Emails',
+      date: Date.now() - 100000,
+      category: 'Recently',
     },
-    {
-      title: 'Some related email goes here',
-      subtitle: 'Some related text you can see here',
-      icon: 'email',
-      category: 'Related Emails',
-    },
-
     {
       title: 'How do you solve for X when Y is something',
       subtitle: 'Some related text you can see here',
       icon: 'social-slack',
-      category: 'Conversations',
+      date: Date.now() - 1000000,
+      category: 'Recently',
     },
 
     {
@@ -134,17 +135,18 @@ export default class OraMain {
           },
         ]
 
-    const context =
-      osContext && osContext.show
-        ? contextResults
-        : [
-            {
-              type: 'message',
-              title: 'Load a github issue',
-            },
-          ]
+    // const context =
+    //   osContext && osContext.show
+    //     ? contextResults
+    //     : [
+    //         {
+    //           type: 'message',
+    //           title: 'Load a github issue',
+    //         },
+    //       ]
 
-    return context // searchItems.concat(contextResults)
+    return searchItems
+    // return context // searchItems.concat(contextResults)
     // return [...searchItems, ...this.props.homeStore.context]
   }
 }

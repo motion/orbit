@@ -274,7 +274,7 @@ export default class Surface extends React.PureComponent<Props> {
         scale={1.1}
         show
         color={glowColor}
-        opacity={0.25}
+        opacity={0.35}
         borderLeftRadius={borderLeftRadius - 1}
         borderRightRadius={borderRightRadius - 1}
         {...glowProps}

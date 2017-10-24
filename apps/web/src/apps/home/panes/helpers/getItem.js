@@ -81,6 +81,7 @@ export default function getItem(getActiveIndex) {
     children: getChildren(result),
     iconAfter: result.iconAfter !== false,
     icon: getIcon(result),
+    date: result.date,
     ...result.props,
   })
 }

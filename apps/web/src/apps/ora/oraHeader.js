@@ -1,8 +1,9 @@
+import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 
 @view
-export default class OraHeader {
+export default class OraHeader extends React.Component {
   focused = false
   downAt = Date.now()
 
@@ -11,10 +12,12 @@ export default class OraHeader {
   }
 
   onHeaderMouseUp = () => {
+    const { homeStore } = this.props
     if (Date.now() - this.downAt < 200) {
+      log('hi')
       this.focused = true
       this.setTimeout(() => {
-        this.props.homeStore.inputRef.focus()
+        homeStore.inputRef.focus()
       })
     }
   }
@@ -78,7 +81,7 @@ export default class OraHeader {
   static style = {
     header: {
       position: 'relative',
-      opacity: 0.3,
+      opacity: 0.5,
       transform: 'scaleY(0.75)',
       margin: [-5, 0],
       transition: 'all ease-in 80ms',
@@ -91,7 +94,7 @@ export default class OraHeader {
         transform: 'scaleX(0.75)',
       },
       '&:hover': {
-        background: [255, 255, 255, 0.05],
+        background: [255, 255, 255, 0.2],
       },
     },
     focus: {
@@ -103,6 +106,9 @@ export default class OraHeader {
       },
       '& > .input': {
         transform: 'scaleX(1)',
+      },
+      '&:hover': {
+        background: 'transparent',
       },
     },
     disabled: {

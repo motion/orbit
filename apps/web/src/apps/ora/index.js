@@ -21,7 +21,6 @@ export default class OraPage {
         <home
           $visible={!homeStore.hidden}
           ref={homeStore.ref('barRef').set}
-          $$fullscreen
           $$draggable
         >
           <OraHeader homeStore={homeStore} />
@@ -51,6 +50,7 @@ export default class OraPage {
       overflow: 'hidden',
       transition: 'all ease-in 100ms',
       opacity: 0,
+      height: 500,
       transform: {
         x: 20,
       },
@@ -62,8 +62,8 @@ export default class OraPage {
       },
     },
     content: {
-      flex: 1,
       position: 'relative',
+      flex: 1,
     },
   }
 }

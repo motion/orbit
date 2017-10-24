@@ -80,7 +80,6 @@ class App {
   }
 
   render(): void {
-    // console.time('#render')
     let ROOT = document.querySelector('#app')
     ReactDOM.render(
       <Root>
@@ -90,7 +89,6 @@ class App {
       </Root>,
       ROOT
     )
-    // console.timeEnd('#render')
   }
 
   // helpers that wrap appStore

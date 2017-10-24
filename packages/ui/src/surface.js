@@ -283,6 +283,7 @@ export default class Surface extends React.PureComponent<Props> {
         if={!noElement || (noElement && !noWrap && hasChildren(children))}
         {...wrapElement && passProps}
         {...elementProps}
+        disabled={disabled}
         $hasIconBefore={hasIconBefore}
         $hasIconAfter={hasIconAfter}
       >

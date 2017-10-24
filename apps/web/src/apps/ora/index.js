@@ -152,6 +152,27 @@ const inputStyle = {
 })
 @view
 export default class HomePage {
+  focused = false
+  downAt = Date.now()
+
+  onHeaderMouseDown = () => {
+    this.downAt = Date.now()
+  }
+
+  onHeaderMouseUp = () => {
+    if (Date.now() - this.downAt < 200) {
+      this.focused = true
+      this.setTimeout(() => {
+        this.props.homeStore.inputRef.focus()
+      })
+    }
+  }
+
+  onHeaderBlur = () => {
+    this.props.homeStore.focused = false
+    this.focused = false
+  }
+
   render({ homeStore }) {
     const { focused } = homeStore
     return (
@@ -165,7 +186,9 @@ export default class HomePage {
           <header
             $focus={focused}
             onFocus={homeStore.ref('focused').setter(true)}
-            onBlur={homeStore.ref('focused').setter(false)}
+            onBlur={this.onHeaderBlur}
+            onMouseDown={this.onHeaderMouseDown}
+            onMouseUp={this.onHeaderMouseUp}
             $$draggable
           >
             <UI.Icon
@@ -176,7 +199,7 @@ export default class HomePage {
             />
             <UI.Input
               $searchInput
-              onClick={homeStore.onClickInput}
+              $disabled={!this.focused}
               size={1}
               getRef={homeStore.onInputRef}
               borderRadius={0}
@@ -252,6 +275,9 @@ export default class HomePage {
       '& > .input': {
         transform: 'scaleX(1)',
       },
+    },
+    disabled: {
+      pointerEvents: 'none',
     },
     home: {
       background: [20, 20, 20, 0.98],

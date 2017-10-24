@@ -22,6 +22,7 @@ export default class TaskHeader {
     if (labels.length === 1) {
       labelsText = 'One Label'
     }
+    console.log('task is', task)
 
     return (
       <header>

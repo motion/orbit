@@ -1,7 +1,6 @@
 import React from 'react'
 import { app, globalShortcut, ipcMain, screen } from 'electron'
 import repl from 'repl'
-// import localShortcut from 'electron-localshortcut'
 import applescript from 'node-osascript'
 import open from 'opn'
 import Menu from '~/menu'
@@ -9,8 +8,6 @@ import { measure } from '~/helpers'
 import * as Constants from '~/constants'
 import WindowsStore from './windowsStore'
 import Window from './window'
-
-console.log('hi')
 
 let onWindows = []
 export function onWindow(cb) {
@@ -50,28 +47,6 @@ export default class ExampleApp extends React.Component {
     })
   }
 
-  // turns out you can move it pretty fast
-  // but not fast enough to be a smooth animation
-  // movearound() {
-  //   setInterval(() => {
-  //     const amt = Math.round(Math.random() * 20)
-  //     const { position } = this.state
-  //     this.setState({
-  //       position: [position[0] + amt, position[1] + amt],
-  //     })
-  //   }, 30)
-  // }
-
-  // hide = () => new Promise(resolve => this.setState({ show: false }, resolve))
-
-  // show = () =>
-  //   new Promise(resolve =>
-  //     this.setState(
-  //       { show: true, position: this.position, size: this.size },
-  //       resolve
-  //     )
-  //   )
-
   measure = () => {
     const { position, size } = measure()
     this.size = size
@@ -79,11 +54,9 @@ export default class ExampleApp extends React.Component {
     this.initialSize = this.initialSize || this.size
   }
 
-  onWindow = ref => {
+  onTray = ref => {
     if (ref) {
       this.windowRef = ref
-      // this.measure()
-      // this.show()
       this.listenToApps()
       this.registerShortcuts()
     }
@@ -185,12 +158,6 @@ end tell`,
       'Option+Space': () => {
         console.log('command option+space')
         this.show()
-
-        // if (this.state.show) {
-        //   this.hide()
-        // } else {
-        //   this.measureAndShow()
-        // }
       },
     }
     for (const shortcut of Object.keys(SHORTCUTS)) {
@@ -203,8 +170,7 @@ end tell`,
 
   measureAndShow = async () => {
     this.measure()
-    await this.show()
-    this.windowRef.focus()
+    this.setState({ show: true, position: this.position, size: this.size })
   }
 
   componentDidCatch(error) {
@@ -229,9 +195,9 @@ end tell`,
     }
 
     const webPreferences = {
-      // nativeWindowOpen: true,
+      nativeWindowOpen: true,
       experimentalFeatures: true,
-      // transparentVisuals: true,
+      transparentVisuals: true,
     }
 
     const appWindow = {
@@ -250,36 +216,31 @@ end tell`,
       <app onBeforeQuit={() => console.log('hi')}>
         <Menu />
 
-        {false && (
-          <window
-            key="search"
-            {...appWindow}
-            vibrancy="dark"
-            transparent
-            hasShadow
-            defaultSize={this.initialSize || this.state.size}
-            size={this.state.size}
-            ref={this.onWindow}
-            showDevTools={true || !Constants.IS_PROD}
-            file={Constants.APP_URL}
-            titleBarStyle="customButtonsOnHover"
-            show={this.state.show}
-            position={this.state.position}
-            onResize={size => this.setState({ size })}
-            onMoved={position => this.setState({ position })}
-            onMove={position => this.setState({ position })}
-            onFocus={() => {
-              this.activeWindow = this.windowRef
-            }}
-          />
-        )}
+        <window
+          key="search"
+          {...appWindow}
+          vibrancy="dark"
+          transparent
+          hasShadow
+          defaultSize={this.initialSize || this.state.size}
+          size={this.state.size}
+          file={Constants.APP_URL}
+          titleBarStyle="customButtonsOnHover"
+          show={this.state.show}
+          position={this.state.position}
+          onResize={size => this.setState({ size })}
+          onMoved={position => this.setState({ position })}
+          onMove={position => this.setState({ position })}
+          onFocus={() => {
+            this.activeWindow = this.windowRef
+          }}
+        />
 
         <window
           key="tray"
           {...appWindow}
-          ref={this.onWindow}
+          ref={this.onTray}
           titleBarStyle="customButtonsOnHover"
-          showDevTools
           transparent
           show
           alwaysOnTop

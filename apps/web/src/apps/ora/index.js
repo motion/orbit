@@ -3,191 +3,19 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import OraStore from './oraStore'
 import Sidebar from '../home/sidebar'
-import { OS, fuzzy } from '~/helpers'
+import OraMain from './oraMain'
+import OraHeader from './oraHeader'
 
 const sidebars = {
-  oramain: class OraMain {
-    get search() {
-      return this.props.homeStore.search
-    }
-
-    items = [
-      {
-        title: 'Confirm your Twitter account, neon',
-        subtitle: 'confirm@twitter.com',
-        icon: 'mail',
-        props: {
-          iconAfter: false,
-          highlight: false,
-          primaryProps: {
-            size: 1.2,
-            fontWeight: 600,
-          },
-          css: {
-            paddingTop: 12,
-            paddingBottom: 12,
-            borderBottom: [1, 'dotted', [255, 255, 255, 0.1]],
-          },
-        },
-      },
-      {
-        title: '123',
-        displayTitle: false,
-        children: (
-          <row
-            css={{
-              flexFlow: 'row',
-              overflowX: 'scroll',
-              width: '100%',
-            }}
-          >
-            {['Jacob Bovee', 'Nick Cammarata'].map(name => (
-              <minicard
-                key={name}
-                css={{
-                  width: '90%',
-                  borderRadius: 5,
-                  background: [255, 255, 255, 0.1],
-                  padding: [8, 10],
-                  margin: [0, 10, 0, 0],
-                }}
-              >
-                <title
-                  css={{
-                    flexFlow: 'row',
-                    marginBottom: 3,
-                    alignItems: 'center',
-                  }}
-                >
-                  <img
-                    css={{
-                      width: 26,
-                      height: 26,
-                      borderRadius: 100,
-                      border: [3, [255, 255, 255, 0.1]],
-                      marginRight: 5,
-                    }}
-                    src="/images/jacob.jpg"
-                  />
-                  <UI.Text size={1.1}>Jacob Bovee</UI.Text>
-                </title>
-                <UI.Row stretch itemProps={{ height: 26 }}>
-                  <UI.Button icon="social-fb" />
-                  <UI.Button icon="social-linked" />
-                  <UI.Button icon="social-pr" />
-                </UI.Row>
-              </minicard>
-            ))}
-          </row>
-        ),
-        category: 'People',
-      },
-      {
-        title: 'Some related email goes here',
-        subtitle: 'Some related text you can see here',
-        icon: 'email',
-        category: 'Related Emails',
-      },
-      {
-        title: 'Some related email goes here',
-        subtitle: 'Some related text you can see here',
-        icon: 'email',
-        category: 'Related Emails',
-      },
-
-      {
-        title: 'How do you solve for X when Y is something',
-        subtitle: 'Some related text you can see here',
-        icon: 'social-slack',
-        category: 'Conversations',
-      },
-
-      {
-        title: (
-          <div>
-            <UI.Button>Add Note</UI.Button>
-            {false && (
-              <textarea
-                css={{
-                  background: 'transparent',
-                  border: [1, [255, 255, 255, 0.1]],
-                  borderRadius: 3,
-                  width: '100%',
-                  margin: 0,
-                  height: 50,
-                }}
-              />
-            )}
-          </div>
-        ),
-        category: 'Notes',
-      },
-    ]
-
-    get results() {
-      const { contextResults, osContext } = this.props.homeStore
-      const search = fuzzy(this.items, this.search)
-      const searchItems = search.length
-        ? search
-        : [
-            {
-              type: 'message',
-              title: 'No Results...',
-              data: { message: 'No results' },
-              category: 'Search Results',
-            },
-          ]
-
-      const context =
-        osContext && osContext.show
-          ? contextResults
-          : [
-              {
-                type: 'message',
-                title: 'Load a github issue',
-              },
-            ]
-
-      return context // searchItems.concat(contextResults)
-      // return [...searchItems, ...this.props.homeStore.context]
-    }
-  },
-}
-
-const inputStyle = {
-  fontWeight: 300,
-  color: '#fff',
-  fontSize: 20,
+  oramain: OraMain,
 }
 
 @view.provide({
   homeStore: OraStore,
 })
 @view
-export default class HomePage {
-  focused = false
-  downAt = Date.now()
-
-  onHeaderMouseDown = () => {
-    this.downAt = Date.now()
-  }
-
-  onHeaderMouseUp = () => {
-    if (Date.now() - this.downAt < 200) {
-      this.focused = true
-      this.setTimeout(() => {
-        this.props.homeStore.inputRef.focus()
-      })
-    }
-  }
-
-  onHeaderBlur = () => {
-    this.props.homeStore.focused = false
-    this.focused = false
-  }
-
+export default class OraPage {
   render({ homeStore }) {
-    const { focused } = homeStore
     return (
       <UI.Theme name="clear-dark">
         <home
@@ -196,52 +24,7 @@ export default class HomePage {
           $$fullscreen
           $$draggable
         >
-          <header
-            $focus={focused}
-            onFocus={homeStore.ref('focused').setter(true)}
-            onBlur={this.onHeaderBlur}
-            onMouseDown={this.onHeaderMouseDown}
-            onMouseUp={this.onHeaderMouseUp}
-            $$draggable
-          >
-            <UI.Icon
-              $searchIcon
-              size={12}
-              name="zoom"
-              color={[255, 255, 255, 1]}
-            />
-            <UI.Input
-              $searchInput
-              $disabled={!this.focused}
-              size={1}
-              getRef={homeStore.onInputRef}
-              borderRadius={0}
-              onChange={homeStore.onSearchChange}
-              value={homeStore.textboxVal}
-              borderWidth={0}
-              fontWeight={200}
-              css={inputStyle}
-            />
-
-            <buttons
-              css={{
-                position: 'absolute',
-                top: 0,
-                right: 10,
-                bottom: 0,
-                alignItems: 'center',
-                justifyContent: 'center',
-                opacity: 0.5,
-              }}
-            >
-              <UI.Icon
-                onClick={homeStore.hide}
-                size={12}
-                name="remove"
-                color={[255, 255, 255, 1]}
-              />
-            </buttons>
-          </header>
+          <OraHeader homeStore={homeStore} />
           <content>
             <Sidebar
               sidebars={sidebars}
@@ -260,38 +43,6 @@ export default class HomePage {
   }
 
   static style = {
-    header: {
-      position: 'relative',
-      opacity: 0.3,
-      transform: 'scaleY(0.75)',
-      margin: [-5, 0],
-      transition: 'all ease-in 80ms',
-      '& .icon': {
-        transition: 'all ease-in 80ms',
-        transform: 'scaleX(0.75)',
-      },
-      '& > .input': {
-        transition: 'all ease-in 80ms',
-        transform: 'scaleX(0.75)',
-      },
-      '&:hover': {
-        background: [255, 255, 255, 0.05],
-      },
-    },
-    focus: {
-      margin: 0,
-      opacity: 1,
-      transform: 'scaleX(1)',
-      '& .icon': {
-        transform: 'scaleX(1)',
-      },
-      '& > .input': {
-        transform: 'scaleX(1)',
-      },
-    },
-    disabled: {
-      pointerEvents: 'none',
-    },
     home: {
       background: [20, 20, 20, 0.98],
       boxShadow: [[0, 0, 10, [0, 0, 0, 0.4]]],
@@ -313,20 +64,6 @@ export default class HomePage {
     content: {
       flex: 1,
       position: 'relative',
-    },
-    searchIcon: {
-      position: 'absolute',
-      top: 0,
-      bottom: 0,
-      alignItems: 'center',
-      height: 'auto',
-      left: 12,
-    },
-    searchInput: {
-      position: 'relative',
-      padding: [8, 25],
-      paddingLeft: 36,
-      borderBottom: [1, 'dotted', [255, 255, 255, 0.1]],
     },
   }
 }

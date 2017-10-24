@@ -30,7 +30,7 @@ export default class OraPage {
               homeStore={homeStore}
               itemProps={{
                 size: 1,
-                padding: [6, 10],
+                padding: [6, 12],
                 glow: true,
                 highlightBackground: [255, 255, 255, 0.08],
               }}
@@ -50,7 +50,7 @@ export default class OraPage {
       overflow: 'hidden',
       transition: 'all ease-in 100ms',
       opacity: 0,
-      height: 500,
+      height: 600,
       transform: {
         x: 20,
       },

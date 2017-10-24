@@ -13,7 +13,6 @@ export default class OraMain {
       subtitle: 'confirm@twitter.com',
       icon: 'mail',
       props: {
-        iconAfter: false,
         highlight: false,
         primaryProps: {
           size: 1.2,
@@ -29,12 +28,16 @@ export default class OraMain {
     {
       title: '123',
       displayTitle: false,
+      category: 'People',
       children: (
         <row
           css={{
             flexFlow: 'row',
+            overflowY: 'hidden',
             overflowX: 'scroll',
-            width: '100%',
+            maxWidth: 'calc(100% + 20px)',
+            margin: [0, -10],
+            padding: [0, 10],
           }}
         >
           {['Mike McConville', 'Nick Cammarata'].map(name => (
@@ -83,6 +86,7 @@ export default class OraMain {
       date: Date.now(),
       icon: 'email',
       category: 'Recently',
+      props: { iconAfter: false },
     },
     {
       title: 'Some related email goes here',
@@ -90,6 +94,7 @@ export default class OraMain {
       icon: 'email',
       date: Date.now() - 100000,
       category: 'Recently',
+      props: { iconAfter: false },
     },
     {
       title: 'How do you solve for X when Y is something',
@@ -97,12 +102,81 @@ export default class OraMain {
       icon: 'social-slack',
       date: Date.now() - 1000000,
       category: 'Recently',
+      props: { iconAfter: false },
     },
 
     {
-      title: (
-        <div>
-          <UI.Button>Add Note</UI.Button>
+      title: 'Suggestions',
+      category: 'Follow Up',
+      displayTitle: false,
+      children: (
+        <row
+          css={{
+            flex: 1,
+            overflow: 'hidden',
+            flexFlow: 'row',
+            justifyContent: 'space-between',
+          }}
+        >
+          {[
+            {
+              name: 'Jacob Bovee',
+              image: 'jacob',
+              type: 'Person',
+              subtitle: 'jacob@me.com',
+            },
+            {
+              name: 'Engineering',
+              subtitle: 'Search',
+              image: 'steph',
+              type: 'Team',
+            },
+            {
+              name: 'motion/orbit',
+              type: 'Issues',
+              image: 'nick',
+              subtitle: '#frontend',
+            },
+          ].map(thing => (
+            <thing
+              css={{
+                alignItems: 'center',
+                padding: [0, 5],
+                flex: 1,
+                width: '33.33333%',
+              }}
+            >
+              <UI.Text css={{ marginBottom: 5 }} ellipse size={1} opacity={0.5}>
+                {thing.type}
+              </UI.Text>
+              <img
+                css={{
+                  width: 40,
+                  height: 40,
+                  borderRadius: 100,
+                  marginBottom: 5,
+                  border: [3, [255, 255, 255, 0.1]],
+                }}
+                src={`/images/${thing.image}.jpg`}
+              />
+              <UI.Text ellipse size={0.9}>
+                {thing.name}
+              </UI.Text>
+            </thing>
+          ))}
+        </row>
+      ),
+    },
+
+    {
+      title: 'Actions',
+      displayTitle: false,
+      children: (
+        <div css={{ flex: 1 }}>
+          <UI.Row stretch>
+            <UI.Button>Create Issue</UI.Button>
+            <UI.Button>Add Note</UI.Button>
+          </UI.Row>
           {false && (
             <textarea
               css={{
@@ -117,7 +191,7 @@ export default class OraMain {
           )}
         </div>
       ),
-      category: 'Notes',
+      category: 'Actions',
     },
   ]
 

@@ -151,7 +151,6 @@ export default class StackStore {
     }
     if (this.last.sidebarSelected) {
       this.navigate(this.last.sidebarSelected)
-      this.last.right()
     }
   }
   push(result) {

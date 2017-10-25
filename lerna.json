@@ -18,7 +18,6 @@
         "pouchdb-express-router",
         "pouchdb-abstract-mapreduce",
         "pouchdb-browser",
-        "react*",
         "react",
         "disposable-event",
         "object-path",

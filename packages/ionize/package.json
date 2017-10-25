@@ -11,6 +11,10 @@
     "react": "16.0.0-alpha.5",
     "react-dom": "16.0.0-alpha.5"
   },
+  "dependencies": {
+    "react": "16.0.0-alpha.5",
+    "react-dom": "16.0.0-alpha.5"
+  },
   "publishConfig": {
     "access": "public"
   }

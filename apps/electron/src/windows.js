@@ -245,7 +245,6 @@ end tell`,
           show
           alwaysOnTop
           showDevTools
-          vibrancy={'ultra-dark'}
           size={[ORA_WIDTH, 1000]}
           file={`${Constants.APP_URL}/ora`}
           position={this.state.trayPosition}

@@ -115,19 +115,12 @@ export default class Pane {
     width,
     sidebar,
     actions,
-    light,
     stackItem,
   }) {
-    let { theme } = this.props
-
     const getItemDefault = (item, index) => ({
       highlight: () => (getActiveIndex ? index === getActiveIndex() : false),
       children: item,
     })
-
-    if (light) {
-      theme = 'light'
-    }
 
     const list = paneStore.items && (
       <UI.List
@@ -152,57 +145,55 @@ export default class Pane {
     )
 
     return (
-      <UI.Theme name={theme}>
-        <pane
-          style={{ width, ...style }}
-          $fullscreen={paneStore.fullscreen}
-          $sidebar={sidebar}
-        >
-          <content ref={paneStore.setContentRef}>
-            {!children
-              ? list
-              : typeof children === 'function' ? children(list) : children}
-          </content>
-          <actions if={actions && stackItem && stackItem.col === 1}>
-            <UI.Theme name="clear-light">
-              <actionbar>
-                <div $$flex={2} $$row>
-                  <UI.Button
-                    if={stackItem.result && stackItem.result.title}
-                    chromeless
-                    inline
-                    opacity={0.5}
-                    size={1.3}
-                  >
-                    {stackItem.result.title}
-                  </UI.Button>
-                </div>
-                <UI.Row
-                  spaced={10}
-                  itemProps={{
-                    size: 1.3,
-                    inline: true,
-                    chromeless: true,
-                    glow: true,
-                  }}
+      <pane
+        style={{ width, ...style }}
+        $fullscreen={paneStore.fullscreen}
+        $sidebar={sidebar}
+      >
+        <content ref={paneStore.setContentRef}>
+          {!children
+            ? list
+            : typeof children === 'function' ? children(list) : children}
+        </content>
+        <actions if={actions && stackItem && stackItem.col === 1}>
+          <UI.Theme name="clear-light">
+            <actionbar>
+              <div $$flex={2} $$row>
+                <UI.Button
+                  if={stackItem.result && stackItem.result.title}
+                  chromeless
+                  inline
+                  opacity={0.5}
+                  size={1.3}
                 >
-                  {actions.map(
-                    ({ title, content, ...props }, index) =>
-                      content || (
-                        <UI.Button $actionButton key={index} {...props}>
-                          <actionButton>
-                            <strong>{title.slice(0, 1).toUpperCase()}</strong>
-                            {title.slice(1, Infinity)}
-                          </actionButton>
-                        </UI.Button>
-                      )
-                  )}
-                </UI.Row>
-              </actionbar>
-            </UI.Theme>
-          </actions>
-        </pane>
-      </UI.Theme>
+                  {stackItem.result.title}
+                </UI.Button>
+              </div>
+              <UI.Row
+                spaced={10}
+                itemProps={{
+                  size: 1.3,
+                  inline: true,
+                  chromeless: true,
+                  glow: true,
+                }}
+              >
+                {actions.map(
+                  ({ title, content, ...props }, index) =>
+                    content || (
+                      <UI.Button $actionButton key={index} {...props}>
+                        <actionButton>
+                          <strong>{title.slice(0, 1).toUpperCase()}</strong>
+                          {title.slice(1, Infinity)}
+                        </actionButton>
+                      </UI.Button>
+                    )
+                )}
+              </UI.Row>
+            </actionbar>
+          </UI.Theme>
+        </actions>
+      </pane>
     )
   }
 

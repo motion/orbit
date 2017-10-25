@@ -33,7 +33,6 @@ class SidebarContainer {
     return (
       <PaneView
         {...paneProps}
-        theme="dark"
         sidebar
         store={store}
         getItem={getItem(paneProps.getActiveIndex)}

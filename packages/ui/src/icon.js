@@ -1,6 +1,6 @@
 // @flow
+import { view } from '@mcro/black'
 import * as React from 'react'
-import $ from 'color'
 import Popover from './popover'
 import names from './iconNames'
 import iconsDetailed from './iconsDetailed'
@@ -24,6 +24,7 @@ export type Props = {
   opacity?: number,
 }
 
+@view.ui
 export default class Icon extends React.PureComponent<Props> {
   static defaultProps = {
     size: 16,
@@ -33,27 +34,23 @@ export default class Icon extends React.PureComponent<Props> {
 
   uniq = `icon-${Math.round(Math.random() * 1000000)}`
 
-  render() {
-    const {
-      color,
-      hoverColor,
-      size,
-      tooltip,
-      tooltipProps,
-      name,
-      type,
-      className,
-      onClick,
-      children,
-      margin,
-      opacity,
-      style,
-      contentEditable,
-      alignSelf,
-      width,
-      height,
-      ...props
-    } = this.props
+  render({
+    color,
+    hoverColor,
+    size,
+    tooltip,
+    tooltipProps,
+    name,
+    type,
+    className,
+    children,
+    margin,
+    opacity,
+    alignSelf,
+    width,
+    height,
+    ...props
+  }) {
     let content
 
     if (type === 'detailed') {
@@ -64,44 +61,17 @@ export default class Icon extends React.PureComponent<Props> {
       )
     }
 
-    const styles = {
-      margin,
-      opacity,
-      alignSelf,
-      alignItems: 'center',
-      color: color ? $(color).toString() : '',
-      width: width || size,
-      height: height || size,
-      fontSize: size,
-      lineHeight: `${size / 12 - 1}rem`, // scale where 1 when 14
-      '&:hover': hoverColor && {
-        color: hoverColor.toString(),
-      },
-    }
-
     if (name[0] === '/') {
-      return <img style={{ ...styles, ...style }} src={name} />
+      return <img $icon src={name} {...props} />
     }
 
     const iconName = findMatch(name)
     content = content || children || !iconName ? name : ''
 
     return (
-      <icon
-        contentEditable={false}
-        className={`${className || ''} ${this.uniq}`}
-        onClick={onClick}
-        style={{
-          ...styles,
-          ...style,
-        }}
-        {...props}
-        contentEditable={contentEditable}
-      >
+      <icon $icon {...props}>
         <div
-          contentEditable={false}
           className={`nc-icon-${type} ${iconName}`}
-          contentEditable={contentEditable}
           style={{
             margin: 'auto',
             textRendering: 'geometricPrecision',
@@ -127,5 +97,41 @@ export default class Icon extends React.PureComponent<Props> {
         )}
       </icon>
     )
+  }
+
+  static style = {
+    icon: {},
+  }
+
+  static theme = ({
+    margin,
+    padding,
+    opacity,
+    alignSelf,
+    color,
+    width,
+    height,
+    size,
+    hoverColor,
+    hover,
+  }) => {
+    return {
+      icon: {
+        margin,
+        padding,
+        opacity,
+        alignSelf,
+        color,
+        alignItems: 'center',
+        width: width || size,
+        height: height || size,
+        fontSize: size,
+        lineHeight: `${size / 12 - 1}rem`, // scale where 1 when 14
+        '&:hover': {
+          color: hoverColor || color,
+          ...hover,
+        },
+      },
+    }
   }
 }

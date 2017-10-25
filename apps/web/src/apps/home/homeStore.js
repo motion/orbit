@@ -101,10 +101,6 @@ export default class HomeStore {
     })
   }
 
-  get peekItem() {
-    return find(peeks, peek => peek.indexOf(this.search) === 0)
-  }
-
   onInputRef = el => {
     if (!el) {
       return

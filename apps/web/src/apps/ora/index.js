@@ -3,14 +3,8 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import OraStore from './oraStore'
 import Sidebar from '../home/sidebar'
-import OraMain from './oraMain'
 import OraHeader from './oraHeader'
 import * as Sidebars from '../panes/sidebars'
-
-const sidebars = {
-  oramain: OraMain,
-  ...Sidebars,
-}
 
 @view.provide({
   homeStore: OraStore,
@@ -30,7 +24,7 @@ export default class OraPage {
           </UI.Theme>
           <content>
             <Sidebar
-              sidebars={sidebars}
+              sidebars={Sidebars}
               homeStore={homeStore}
               itemProps={{
                 size: 1,

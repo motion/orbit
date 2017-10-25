@@ -2,20 +2,21 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 
-@view
+@view({
+  store: class HeaderStore {
+    downAt = Date.now()
+    focused = false
+  },
+})
 export default class OraHeader extends React.Component {
-  focused = false
-  downAt = Date.now()
-
   onHeaderMouseDown = () => {
-    this.downAt = Date.now()
+    this.props.store.downAt = Date.now()
   }
 
   onHeaderMouseUp = () => {
-    const { homeStore } = this.props
-    if (Date.now() - this.downAt < 200) {
-      log('hi')
-      this.focused = true
+    const { homeStore, store } = this.props
+    if (Date.now() - store.downAt < 200) {
+      store.focused = true
       this.setTimeout(() => {
         homeStore.inputRef.focus()
       })
@@ -23,17 +24,13 @@ export default class OraHeader extends React.Component {
   }
 
   onHeaderBlur = () => {
-    this.props.homeStore.focused = false
-    this.focused = false
+    this.props.store.focused = false
   }
 
-  render({ homeStore }) {
-    const { focused } = homeStore
+  render({ store, homeStore }) {
     return (
       <header
-        $focus={focused}
-        onFocus={homeStore.ref('focused').setter(true)}
-        onBlur={this.onHeaderBlur}
+        $focus={store.focused}
         onMouseDown={this.onHeaderMouseDown}
         onMouseUp={this.onHeaderMouseUp}
         $$draggable
@@ -41,11 +38,13 @@ export default class OraHeader extends React.Component {
         <UI.Icon $searchIcon size={12} name="zoom" color={[255, 255, 255, 1]} />
         <UI.Input
           $searchInput
-          $disabled={!this.focused}
+          $disabled={!store.focused}
           size={1}
           getRef={homeStore.onInputRef}
           borderRadius={0}
+          onBlur={this.onHeaderBlur}
           onChange={homeStore.onSearchChange}
+          onFocus={store.ref('focused').setter(true)}
           value={homeStore.textboxVal}
           borderWidth={0}
           fontWeight={200}
@@ -56,22 +55,32 @@ export default class OraHeader extends React.Component {
           }}
         />
 
+        <title>
+          <UI.Text size={0.8}>{homeStore.stack.last.result.type}</UI.Text>
+        </title>
+
         <buttons
           css={{
             position: 'absolute',
             top: 0,
-            right: 10,
+            right: 12,
             bottom: 0,
-            alignItems: 'center',
             justifyContent: 'center',
-            opacity: 0.5,
           }}
         >
           <UI.Icon
             onClick={homeStore.hide}
             size={12}
+            padding={[0, 10]}
             name="remove"
-            color={[255, 255, 255, 1]}
+            color={[255, 255, 255, 0.5]}
+            hover={{
+              color: [255, 255, 255, 1],
+              transformOrigin: 'right right',
+              transform: {
+                scale: 1.1,
+              },
+            }}
           />
         </buttons>
       </header>
@@ -81,35 +90,42 @@ export default class OraHeader extends React.Component {
   static style = {
     header: {
       position: 'relative',
-      opacity: 0.5,
-      transform: 'scaleY(0.75)',
-      margin: [-5, 0],
+      opacity: 0.85,
+      height: 30,
       transition: 'all ease-in 80ms',
       '& .icon': {
-        transition: 'all ease-in 80ms',
-        transform: 'scaleX(0.75)',
-      },
-      '& > .input': {
-        transition: 'all ease-in 80ms',
-        transform: 'scaleX(0.75)',
+        transition: 'all ease-in 100ms',
+        transform: 'scale(0.75)',
       },
       '&:hover': {
         background: [255, 255, 255, 0.2],
       },
     },
     focus: {
-      margin: 0,
       opacity: 1,
-      transform: 'scaleX(1)',
+      height: 'auto',
       '& .icon': {
-        transform: 'scaleX(1)',
+        transform: 'scale(1)',
       },
-      '& > .input': {
-        transform: 'scaleX(1)',
+      '& .title': {
+        display: 'none',
       },
       '&:hover': {
         background: 'transparent',
       },
+    },
+    title: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      textAlign: 'center',
+      alignItems: 'center',
+      justifyContent: 'center',
+      zIndex: 1000,
+      pointerEvents: 'none',
+      userSelect: 'none',
     },
     disabled: {
       pointerEvents: 'none',

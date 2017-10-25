@@ -5,9 +5,11 @@ import OraStore from './oraStore'
 import Sidebar from '../home/sidebar'
 import OraMain from './oraMain'
 import OraHeader from './oraHeader'
+import * as Sidebars from '../panes/sidebars'
 
 const sidebars = {
   oramain: OraMain,
+  ...Sidebars,
 }
 
 @view.provide({

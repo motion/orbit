@@ -53,6 +53,14 @@ export default class OraMain {
                 padding: [8, 10],
                 margin: [0, 10, 0, 0],
               }}
+              onClick={e => {
+                e.stopPropagation()
+                this.props.navigate({
+                  title: name,
+                  type: 'person',
+                  id: 1,
+                })
+              }}
             >
               <title
                 css={{

@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { view, store } from '@mcro/black'
 import Fade from './views/fade'
-import * as Sidebars from './panes/sidebars'
-import getItem from './panes/helpers/getItem'
-import PaneView from './panes/pane'
+import * as Sidebars from '../panes/sidebars'
+import getItem from '../panes/helpers/getItem'
+import PaneView from '../panes/pane'
 
 // see stackStore for the "back" result item
 

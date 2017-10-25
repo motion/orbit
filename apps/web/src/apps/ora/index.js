@@ -19,13 +19,15 @@ const sidebars = {
 export default class OraPage {
   render({ homeStore }) {
     return (
-      <UI.Theme name="clear-dark">
+      <UI.Theme name="dark">
         <home
           $visible={!homeStore.hidden}
           ref={homeStore.ref('barRef').set}
           $$draggable
         >
-          <OraHeader homeStore={homeStore} />
+          <UI.Theme name="clear-dark">
+            <OraHeader homeStore={homeStore} />
+          </UI.Theme>
           <content>
             <Sidebar
               sidebars={sidebars}

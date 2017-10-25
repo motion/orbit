@@ -158,7 +158,7 @@ export default class Calendar {
       zIndex: 100,
     },
     currentTime: {
-      width: 3,
+      width: 2,
       background: '#7c50d2',
       bottom: 2,
       top: 0,

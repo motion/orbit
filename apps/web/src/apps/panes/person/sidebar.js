@@ -4,34 +4,6 @@ import * as UI from '@mcro/ui'
 export default class PersonSidebar {
   results = [
     {
-      title: 'Name McNamey',
-      subtitle: 'name@mcnamey.com',
-      icon: (
-        <img
-          css={{
-            width: 36,
-            height: 36,
-            borderRadius: 100,
-            border: [2, [255, 255, 255, 0.2]],
-          }}
-          src="/images/me.jpg"
-        />
-      ),
-      props: {
-        highlight: false,
-        primaryProps: {
-          size: 1.2,
-          fontWeight: 600,
-        },
-        css: {
-          paddingTop: 12,
-          paddingBottom: 12,
-          borderBottom: [1, 'dotted', [255, 255, 255, 0.1]],
-        },
-      },
-    },
-
-    {
       title: 'Actions',
       displayTitle: false,
       children: (

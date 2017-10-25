@@ -57,6 +57,8 @@ export default class OraMain {
                 e.stopPropagation()
                 this.props.navigate({
                   title: name,
+                  subtitle: 'mike@mconasda.com',
+                  icon: true,
                   type: 'person',
                   id: 1,
                 })

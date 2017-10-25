@@ -44,7 +44,6 @@ export default class OraHeader extends React.Component {
           borderRadius={0}
           onBlur={this.onHeaderBlur}
           onChange={homeStore.onSearchChange}
-          onFocus={store.ref('focused').setter(true)}
           value={homeStore.textboxVal}
           borderWidth={0}
           fontWeight={200}

@@ -64,7 +64,7 @@ export default class Text extends React.PureComponent<Props> {
             this.clickaway.dispose()
           }
           if (editable) {
-            // this.clickaway = this.addEvent(window, 'click', (event: Event) => {
+            // this.clickaway = this.on(window, 'click', (event: Event) => {
             //   if (this.props.onFinishEdit) {
             //     this.props.onFinishEdit(this.value)
             //   }

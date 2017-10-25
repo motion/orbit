@@ -37,7 +37,7 @@ const debounce = (fn, timeout) => {
   }
 }
 
-export default class HomeStore {
+export default class OraStore {
   stack = new StackStore([{ type: 'oramain' }])
   inputRef = null
   search = ''

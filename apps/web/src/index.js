@@ -6,7 +6,6 @@ import createElement from '@mcro/black/lib/createElement'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import * as Constants from './constants'
-import '@mcro/models/lib/user' // start user connect immediately
 import debug from 'debug'
 
 // $FlowIgnore

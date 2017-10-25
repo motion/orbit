@@ -4,7 +4,6 @@ import ReactDOM from 'react-dom'
 import { ThemeProvide } from '@mcro/ui'
 import Themes from './themes'
 import Root from './views/root'
-import Layout from './views/layout'
 import Sync from './sync'
 import { Models } from '@mcro/models'
 import * as Constants from '~/constants'
@@ -12,9 +11,6 @@ import AppStore from './stores/appStore'
 import adapter from 'pouchdb-adapter-idb'
 import * as Services from './services'
 import CurrentUser_ from './stores/currentUserStore'
-import debug from 'debug'
-
-const log = debug('app')
 
 // ugly but we want to export these all here
 // this prevents hmr from going nuts when we edit models
@@ -47,22 +43,6 @@ class App {
 
   async start(quiet?: boolean) {
     await this.store.start(quiet)
-
-    // sync before starting
-    let jobs
-    if (!quiet) {
-      console.time('startModels')
-      jobs = await Job.pending().exec()
-    }
-    // await Promise.all([
-    //   Setting.find().sync(),
-    //   User.find().sync(),
-    //   ...(jobs || []).map(job => job.remove()),
-    // ])
-    if (!quiet) {
-      console.timeEnd('startModels')
-    }
-
     this.sync = new Sync()
     this.sync.start()
     this.render()
@@ -82,11 +62,9 @@ class App {
   render(): void {
     let ROOT = document.querySelector('#app')
     ReactDOM.render(
-      <Root>
-        <ThemeProvide {...Themes}>
-          <Layout />
-        </ThemeProvide>
-      </Root>,
+      <ThemeProvide {...Themes}>
+        <Root />
+      </ThemeProvide>,
       ROOT
     )
   }
@@ -114,10 +92,6 @@ class App {
 
   get models(): Object {
     return this.store && this.store.models
-  }
-
-  get services(): Object {
-    return this.store && this.store.services
   }
 
   debug(setting) {

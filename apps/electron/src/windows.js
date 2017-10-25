@@ -216,27 +216,26 @@ end tell`,
       <app onBeforeQuit={() => console.log('hi')}>
         <Menu />
 
-        {false && (
-          <window
-            key="search"
-            {...appWindow}
-            vibrancy="dark"
-            transparent
-            hasShadow
-            defaultSize={this.initialSize || this.state.size}
-            size={this.state.size}
-            file={Constants.APP_URL}
-            titleBarStyle="customButtonsOnHover"
-            show={this.state.show}
-            position={this.state.position}
-            onResize={size => this.setState({ size })}
-            onMoved={position => this.setState({ position })}
-            onMove={position => this.setState({ position })}
-            onFocus={() => {
-              this.activeWindow = this.trayRef
-            }}
-          />
-        )}
+        <window
+          key="search"
+          {...appWindow}
+          vibrancy="dark"
+          transparent
+          hasShadow
+          show
+          defaultSize={this.initialSize || this.state.size}
+          size={this.state.size}
+          file={Constants.APP_URL}
+          titleBarStyle="customButtonsOnHover"
+          show={this.state.show}
+          position={this.state.position}
+          onResize={size => this.setState({ size })}
+          onMoved={position => this.setState({ position })}
+          onMove={position => this.setState({ position })}
+          onFocus={() => {
+            this.activeWindow = this.trayRef
+          }}
+        />
 
         <window
           {...appWindow}
@@ -246,7 +245,7 @@ end tell`,
           show
           alwaysOnTop
           showDevTools
-          vibrancy={false && 'ultra-dark'}
+          vibrancy={'ultra-dark'}
           size={[ORA_WIDTH, 1000]}
           file={`${Constants.APP_URL}/ora`}
           position={this.state.trayPosition}

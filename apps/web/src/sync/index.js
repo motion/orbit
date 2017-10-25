@@ -1,5 +1,5 @@
 // @flow
-import { store, watch } from '@mcro/black/store'
+import { store, watch } from '@mcro/black'
 import * as Syncers from './syncers'
 import { Job, CurrentUser } from '~/app'
 import debug from 'debug'

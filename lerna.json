@@ -42,7 +42,6 @@
         "electron-forge",
         "electron-compile",
         "electron-squirrel-startup",
-        "electron-builder",
         "electron-localshortcut",
         "opn",
         "babel-polyfill",

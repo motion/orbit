@@ -61,7 +61,7 @@ export default class Sidebar {
     const { previousIndex } = this
     this.previousIndex = currentIndex
     return (
-      <sidebar css={{ width, flex: 1 }}>
+      <sidebar css={{ width, maxWidth: width, flex: 1 }}>
         {stack.items.map((stackItem, index) => {
           // only show last two
           if (index + 1 < currentIndex) {

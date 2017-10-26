@@ -15,8 +15,10 @@ class CurrentUser {
   id = 'a@b.com'
   version = 0
 
-  @watch user = () => this.id && User.findOrCreate(this.id)
-  @watch settings = () => this.id && Setting.find({ userId: this.id })
+  @watch user = () => this.id && User.connected && User.findOrCreate(this.id)
+  @watch
+  settings = () =>
+    this.id && Setting.connected && Setting.find({ userId: this.id })
   @watch
   setting = () =>
     (this.settings &&

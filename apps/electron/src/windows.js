@@ -223,6 +223,7 @@ end tell`,
           transparent
           hasShadow
           show
+          showDevTools
           defaultSize={this.initialSize || this.state.size}
           size={this.state.size}
           file={Constants.APP_URL}

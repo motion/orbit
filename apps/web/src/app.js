@@ -43,6 +43,9 @@ class App {
 
   async start(quiet?: boolean) {
     await this.store.start(quiet)
+    // this fixes weird issues with model.isntConnected in mobx
+    const jobs = (await Job.pending().exec()) || []
+    jobs.map(job => job.remove())
     this.sync = new Sync()
     this.sync.start()
     this.render()

@@ -57,6 +57,16 @@ export default class OraStore {
     this._watchFocusBar()
     this._watchInput()
     this._watchToggleHide()
+    this._watchMouse()
+  }
+
+  _watchMouse() {
+    OS.send('mouse-listen')
+    OS.on('mouse-in-corner', () => {
+      if (this.hidden) {
+        this.hidden = false
+      }
+    })
   }
 
   _watchToggleHide() {

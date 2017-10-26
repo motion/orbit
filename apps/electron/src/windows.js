@@ -8,6 +8,8 @@ import { measure } from '~/helpers'
 import * as Constants from '~/constants'
 import WindowsStore from './windowsStore'
 import Window from './window'
+import mouse from 'osx-mouse'
+import { throttle } from 'lodash'
 
 let onWindows = []
 export function onWindow(cb) {
@@ -32,8 +34,10 @@ export default class ExampleApp extends React.Component {
   componentDidMount() {
     this.measureAndShow()
 
-    const screenSize = screen.getPrimaryDisplay().workAreaSize
-    this.setState({ trayPosition: [screenSize.width - ORA_WIDTH - 20, 40] })
+    this.screenSize = screen.getPrimaryDisplay().workAreaSize
+    this.setState({
+      trayPosition: [this.screenSize.width - ORA_WIDTH - 20, 40],
+    })
 
     this.next() // preload one app window
     onWindows.forEach(cb => cb(this))
@@ -44,6 +48,26 @@ export default class ExampleApp extends React.Component {
     Object.assign(this.repl.context, {
       Root: this,
       AppWindows: AppWindows,
+    })
+
+    this.listenForMouse()
+  }
+
+  listenForMouse() {
+    ipcMain.on('mouse-listen', event => {
+      console.log('start')
+      const triggerX = this.screenSize.width - 50
+      const triggerY = 50
+      const mousey = mouse()
+      mousey.on(
+        'move',
+        throttle((x, y) => {
+          if (+x > triggerX && +y < triggerY) {
+            console.log('IN CORNER')
+            event.sender.send('mouse-in-corner')
+          }
+        }, 40)
+      )
     })
   }
 

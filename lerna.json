@@ -7,6 +7,10 @@
     "bootstrap": {
       "hoist": true,
       "nohoist": [
+        "bindings",
+        "osx-mouse",
+        "ref",
+        "ffi",
         "hostile",
         "sudo-prompt",
         "pouchdb-mapreduce",

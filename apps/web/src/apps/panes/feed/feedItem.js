@@ -24,7 +24,6 @@ export default class FeedItem {
         {({ name, verb, avatar, extraInfo, body }) => {
           return (
             <feeditem style={style}>
-              <fade if={index === 0} />
               <sideLine />
               <bottomLine />
               <info>
@@ -75,15 +74,6 @@ export default class FeedItem {
       justifyContent: 'flex-start',
       overflow: 'hidden',
       padding: [20, 25, 20, 29],
-    },
-    fade: {
-      position: 'absolute',
-      top: 0,
-      right: 0,
-      left: 0,
-      height: 50,
-      background: 'linear-gradient(#fff, transparent)',
-      zIndex: -1,
     },
     sideLine: {
       width: 1,

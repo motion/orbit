@@ -144,16 +144,16 @@ export default class OraMain {
   get results() {
     const items = [
       ...this.items,
-      ...(this.events || []).map((item, index) => () => (
-        <FeedItem event={item} index={index} />
-      )),
+      ...(this.events || []).map((item, index) => ({
+        children: () => <FeedItem inline event={item} index={index} />,
+      })),
     ]
 
     if (!this.search) {
       return items
     }
 
-    const search = fuzzy(items, this.search)
+    const search = fuzzy(this.items, this.search)
     const searchItems = search.length
       ? search
       : [

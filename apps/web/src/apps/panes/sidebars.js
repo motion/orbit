@@ -1,4 +1,5 @@
 export main from './main/sidebar'
+export oramain from './oramain/sidebar'
 export services from './services/sidebar'
 export task from './task/sidebar'
 export doc from './doc/sidebar'

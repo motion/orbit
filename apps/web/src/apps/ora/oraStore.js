@@ -38,7 +38,7 @@ const debounce = (fn, timeout) => {
 }
 
 export default class OraStore {
-  stack = new StackStore([{ type: 'mail' }])
+  stack = new StackStore([{ type: 'oramain' }])
   inputRef = null
   search = ''
   textboxVal = ''

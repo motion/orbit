@@ -6,6 +6,8 @@ import Sidebar from '../home/sidebar'
 import OraHeader from './oraHeader'
 import * as Sidebars from '../panes/sidebars'
 
+const width = 280
+
 @view.provide({
   homeStore: OraStore,
 })
@@ -24,6 +26,7 @@ export default class OraPage {
           </UI.Theme>
           <content>
             <Sidebar
+              width={width}
               sidebars={Sidebars}
               homeStore={homeStore}
               itemProps={{
@@ -41,6 +44,7 @@ export default class OraPage {
 
   static style = {
     home: {
+      width,
       background: [20, 20, 20, 0.98],
       boxShadow: [[0, 0, 10, [0, 0, 0, 0.4]]],
       margin: 10,

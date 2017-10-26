@@ -4,6 +4,7 @@ import Fade from './views/fade'
 import * as Sidebars from '../panes/sidebars'
 import getItem from '../panes/helpers/getItem'
 import PaneView from '../panes/pane'
+//import App from '~/app'
 
 // see stackStore for the "back" result item
 
@@ -19,7 +20,9 @@ import PaneView from '../panes/pane'
         configurable: true,
       })
       this.childStore = new store(childStore)()
-      this.props.setStore(this.childStore)
+      this.props.stackItem.setStore(this.childStore)
+      // hacky for now
+      window.sidebarStore = this.childStore
     }
   },
 })
@@ -84,7 +87,6 @@ export default class Sidebar {
               <SidebarContainer
                 stackItem={stackItem}
                 navigate={stack.navigate}
-                setStore={stackItem.setStore}
                 data={stackItem.result.data}
                 result={stackItem.result}
                 onBack={homeStore.stack.pop}

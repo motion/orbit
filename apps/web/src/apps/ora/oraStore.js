@@ -62,7 +62,8 @@ export default class OraStore {
 
     this.watch(() => {
       if (this.hidden) {
-        this.blurBar()
+        // timeout based on animation
+        this.setTimeout(this.blurBar, 100)
       }
     })
   }

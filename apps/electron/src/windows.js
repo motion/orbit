@@ -55,9 +55,8 @@ export default class ExampleApp extends React.Component {
 
   listenForMouse() {
     ipcMain.on('mouse-listen', event => {
-      console.log('start')
-      const triggerX = this.screenSize.width - 50
-      const triggerY = 50
+      const triggerX = this.screenSize.width - 20
+      const triggerY = 20
       const mousey = mouse()
       mousey.on(
         'move',

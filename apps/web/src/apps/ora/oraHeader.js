@@ -5,7 +5,6 @@ import * as UI from '@mcro/ui'
 @view({
   store: class HeaderStore {
     downAt = Date.now()
-    focused = false
   },
 })
 export default class OraHeader extends React.Component {
@@ -16,7 +15,7 @@ export default class OraHeader extends React.Component {
   onHeaderMouseUp = () => {
     const { homeStore, store } = this.props
     if (Date.now() - store.downAt < 200) {
-      store.focused = true
+      homeStore.focused = true
       this.setTimeout(() => {
         homeStore.inputRef.focus()
       })
@@ -24,13 +23,13 @@ export default class OraHeader extends React.Component {
   }
 
   onHeaderBlur = () => {
-    this.props.store.focused = false
+    this.props.homeStore.focused = false
   }
 
   render({ store, homeStore }) {
     return (
       <header
-        $focus={store.focused}
+        $focus={homeStore.focused}
         onMouseDown={this.onHeaderMouseDown}
         onMouseUp={this.onHeaderMouseUp}
         $$draggable
@@ -38,7 +37,7 @@ export default class OraHeader extends React.Component {
         <UI.Icon $searchIcon size={12} name="zoom" color={[255, 255, 255, 1]} />
         <UI.Input
           $searchInput
-          $disabled={!store.focused}
+          $disabled={!homeStore.focused}
           size={1}
           getRef={homeStore.onInputRef}
           borderRadius={0}

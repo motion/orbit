@@ -46,6 +46,7 @@ export default class OraStore {
   traps = {}
   lastKey = null
   hidden = false
+  focused = false
   context = new Context()
   activeThing = null
 
@@ -58,6 +59,12 @@ export default class OraStore {
     this._watchInput()
     this._watchToggleHide()
     this._watchMouse()
+
+    this.watch(() => {
+      if (this.hidden) {
+        this.blurBar()
+      }
+    })
   }
 
   _watchMouse() {
@@ -65,6 +72,7 @@ export default class OraStore {
     OS.on('mouse-in-corner', () => {
       if (this.hidden) {
         this.hidden = false
+        this.setTimeout(this.focusBar)
       }
     })
   }
@@ -74,6 +82,10 @@ export default class OraStore {
 
     OS.on('show-ora', () => {
       this.hidden = !this.hidden
+
+      if (!this.hidden) {
+        this.setTimeout(this.focusBar)
+      }
     })
   }
 
@@ -89,7 +101,7 @@ export default class OraStore {
 
   getOSContext = () => {
     OS.send('get-context')
-    setTimeout(this.getOSContext, 500)
+    this.setTimeout(this.getOSContext, 500)
   }
 
   parseUrl = url => {
@@ -178,7 +190,13 @@ export default class OraStore {
     if (this.inputRef) {
       this.inputRef.focus()
       this.inputRef.select()
+      this.focused = true
     }
+  }
+
+  blurBar = () => {
+    this.inputRef && this.inputRef.blur()
+    this.focused = false
   }
 
   onSearchChange = e => {
@@ -205,10 +223,6 @@ export default class OraStore {
         }
       })
     }
-  }
-
-  blurBar() {
-    this.inputRef && this.inputRef.blur()
   }
 
   actions = {

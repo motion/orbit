@@ -1,12 +1,11 @@
 import * as React from 'react'
 import { view, watch } from '@mcro/black'
 import * as UI from '@mcro/ui'
-// import { Pattern } from '~/views'
 
-const VERTICAL_PADDING = 30
+const VERTICAL_PADDING = 25
 const ROW_HEIGHT = 45
 const ROW_PAD = 2
-const HOUR_WIDTH = (window.innerWidth - 250) / 10
+const HOUR_WIDTH = window.innerWidth / 5
 const START_HOUR = 8.5
 const EVENT_BORDER_WIDTH = 3
 const CURRENT_TIME = 9
@@ -38,23 +37,11 @@ export default class Calendar {
         </labels>
         <calendarRow $calendarHeight={2}>
           <controls $$row>
-            <UI.Theme name="light">
+            <UI.Theme name="dark">
               <UI.Row>
-                <UI.Button
-                  size={0.9}
-                  color={[0, 0, 0, 0.3]}
-                  icon="arrowminleft"
-                  sizePadding={1}
-                />
-                <UI.Button size={0.9} color={[0, 0, 0, 0.8]}>
-                  Jan 12th
-                </UI.Button>
-                <UI.Button
-                  size={0.9}
-                  color={[0, 0, 0, 0.3]}
-                  icon="arrowminright"
-                  sizePadding={1}
-                />
+                <UI.Button size={0.8} icon="arrowminleft" sizePadding={1} />
+                <UI.Button size={0.8}>Jan 12th</UI.Button>
+                <UI.Button size={0.8} icon="arrowminright" sizePadding={1} />
               </UI.Row>
               <div css={{ marginRight: 10 }} />
               <UI.Row if={false}>
@@ -110,17 +97,6 @@ export default class Calendar {
             {[8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20].map(time => (
               <mark key={time} $atTime={time} $bold={time === 12} />
             ))}
-            <fadeRight
-              css={{
-                position: 'absolute',
-                top: 0,
-                right: 0,
-                bottom: 0,
-                width: 100,
-                background: 'linear-gradient(to right, transparent, #fff 90%)',
-                zIndex: 1000,
-              }}
-            />
           </period>
           <hours>
             {[8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20].map(time => (
@@ -138,7 +114,7 @@ export default class Calendar {
   static style = {
     calendar: {
       flex: 1,
-      // marginTop: 10,
+      maxWidth: '100%',
     },
     calendarRow: {
       position: 'relative',
@@ -177,12 +153,12 @@ export default class Calendar {
     },
     controls: {
       position: 'absolute',
-      top: -13,
-      right: 20,
+      bottom: -5,
+      right: -15,
       zIndex: 100,
     },
     currentTime: {
-      width: 3,
+      width: 2,
       background: '#7c50d2',
       bottom: 2,
       top: 0,
@@ -192,7 +168,7 @@ export default class Calendar {
     dot: {
       width: 9,
       height: 9,
-      marginLeft: -4,
+      marginLeft: -5,
       bottom: -8,
       position: 'absolute',
       left: '50%',
@@ -250,16 +226,14 @@ export default class Calendar {
       bottom: 0,
       top: 0,
       width: 1,
-      // background: 'linear-gradient(#eee, transparent)',
-      borderRight: '1px dotted #ddd',
+      borderRight: [1, 'dotted', [255, 255, 255, 0.3]],
       opacity: 0.75,
     },
     hourMark: {
       opacity: 0.5,
-      bottom: 0,
+      top: 0,
       padding: [0, 0, 0, 5],
       fontSize: 13,
-      //fontWeight: 600,
       width: 100,
       borderColor: 'transparent',
     },

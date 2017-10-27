@@ -3,83 +3,39 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import OraStore from './oraStore'
 import Sidebar from '../home/sidebar'
-import { fuzzy } from '~/helpers'
+import OraHeader from './oraHeader'
+import * as Sidebars from '../panes/sidebars'
 
-const sidebars = {
-  oramain: class OraMain {
-    get search() {
-      return this.props.homeStore.search
-    }
-
-    items = []
-
-    get results() {
-      const { contextResults, osContext } = this.props.homeStore
-      const search = fuzzy(this.items, this.search)
-      const searchItems = search.length
-        ? search
-        : [
-            {
-              type: 'message',
-              title: 'No Results...',
-              data: { message: 'No results' },
-              category: 'Search Results',
-            },
-          ]
-
-      const context =
-        osContext && osContext.show
-          ? contextResults
-          : [
-              {
-                type: 'message',
-                title: 'Load a github issue',
-              },
-            ]
-
-      return context // searchItems.concat(contextResults)
-      // return [...searchItems, ...this.props.homeStore.context]
-    }
-  },
-}
-
-const inputStyle = {
-  fontWeight: 300,
-  color: '#fff',
-  fontSize: 20,
-}
+const width = 280
 
 @view.provide({
   homeStore: OraStore,
 })
 @view
-export default class HomePage {
+export default class OraPage {
   render({ homeStore }) {
     return (
-      <UI.Theme name="clear-dark">
-        <home ref={homeStore.ref('barRef').set} $$fullscreen $$draggable>
-          <header $$draggable>
-            <UI.Icon
-              $searchIcon
-              size={16}
-              name="zoom"
-              color={[255, 255, 255, 1]}
-            />
-            <UI.Input
-              $searchInput
-              onClick={homeStore.onClickInput}
-              size={1}
-              getRef={homeStore.onInputRef}
-              borderRadius={0}
-              onChange={homeStore.onSearchChange}
-              value={homeStore.textboxVal}
-              borderWidth={0}
-              fontWeight={200}
-              css={inputStyle}
-            />
-          </header>
+      <UI.Theme name="dark">
+        <home
+          $visible={!homeStore.hidden}
+          ref={homeStore.ref('barRef').set}
+          $$draggable
+        >
+          <UI.Theme name="clear-dark">
+            <OraHeader homeStore={homeStore} />
+          </UI.Theme>
           <content>
-            <Sidebar sidebars={sidebars} homeStore={homeStore} />
+            <Sidebar
+              width={width}
+              sidebars={Sidebars}
+              homeStore={homeStore}
+              itemProps={{
+                size: 1,
+                padding: [6, 12],
+                glow: true,
+                highlightBackground: [255, 255, 255, 0.08],
+              }}
+            />
           </content>
         </home>
       </UI.Theme>
@@ -88,30 +44,28 @@ export default class HomePage {
 
   static style = {
     home: {
-      // background: [20, 20, 20, 0.93],
-      // borderRadius: 12,
+      width,
+      background: [20, 20, 20, 0.98],
+      boxShadow: [[0, 0, 10, [0, 0, 0, 0.4]]],
+      margin: 10,
+      borderRadius: 10,
       overflow: 'hidden',
+      transition: 'all ease-in 100ms',
+      opacity: 0,
+      height: 600,
+      transform: {
+        x: 20,
+      },
+    },
+    visible: {
+      opacity: 1,
+      transform: {
+        x: 0,
+      },
     },
     content: {
+      position: 'relative',
       flex: 1,
-      position: 'relative',
-    },
-    header: {
-      position: 'relative',
-    },
-    searchIcon: {
-      position: 'absolute',
-      top: 0,
-      bottom: 0,
-      alignItems: 'center',
-      height: 'auto',
-      left: 12,
-    },
-    searchInput: {
-      position: 'relative',
-      padding: [10, 25],
-      paddingLeft: 36,
-      borderBottom: [1, 'dotted', [255, 255, 255, 0.1]],
     },
   }
 }

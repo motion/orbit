@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import * as Mains from './panes/mains'
+import * as Mains from '../panes/mains'
 import * as UI from '@mcro/ui'
 
 const SHADOW = [0, 0, 120, [0, 0, 0, 0.05]]

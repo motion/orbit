@@ -1,49 +1,31 @@
-# features
+# next
 
-## search
-fast, offline, cross platform, cross service, smart
+- navigation between items
+- sync people from github/docs
+- merge context
+- search icon turns into back button
+- working opens links to browser
+- simple profile page sidebar
+- import other sidebars / decide on removing main window
+- correctness:
+  - "selectable: false" for some results
+  - horizontal scrolling cards
+  - enter to select item
+    - cmd+enter to open then?
+- implement floating peek window
 
-## answers
-"docs dave edited last week"
-"conversations about x"
-"cto"
-"frontend developers"
-"developers active today"
+# unsorted
 
-## visibility
-"lisa" shows everything about her, and whats she is doing
-
-## cohesion
-attaches slack conversations to relevant tickets
-auto groups projects
-auto figures out teams
-
-## extensibility
-platform not a product, you can extend it
-gives you data input, custom apps
-lets you expose features easily
-  - zappos had a "give someone a bonus feature", could add that to profile
-  - could add arbitraty info to internal profiles easily
-  - can have custom feeds into what shows in search
-
----
-
-# potential features
-
-## notifications
-lets you know when someone edits a document, issue, etc that you're interested in
-
-## UI for your day to day
-station.co / going far with actions -- custom browser
+- email integration
+- default/home screen design
+-
 
 ---
 
 # strategy
 
-## offline, security first
-
-## bottom up, appeals to any individual employee or team
-
-## heavy on launch (branding/ux/virality/onboarding)
+- offline, security first
+- bottom up, appeals to any individual employee or team
+- heavy on launch (branding/ux/virality/onboarding)
 
 ---

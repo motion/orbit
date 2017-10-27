@@ -32,9 +32,20 @@ class StackItemStore {
           isParent: true,
           displayTitle: false,
           children: (
-            <SidebarTitle title={result.title} onBack={this.stack.left} />
+            <SidebarTitle
+              title={result.title}
+              icon={result.icon}
+              subtitle={result.subtitle}
+              onBack={this.stack.left}
+            />
           ),
           onClick: this.stack.left,
+          props: {
+            highlight: false,
+            css: {
+              borderBottom: [1, 'dotted', [255, 255, 255, 0.1]],
+            },
+          },
         },
         ...results,
       ]
@@ -151,7 +162,6 @@ export default class StackStore {
     }
     if (this.last.sidebarSelected) {
       this.navigate(this.last.sidebarSelected)
-      this.last.right()
     }
   }
   push(result) {

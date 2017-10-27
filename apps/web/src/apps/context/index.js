@@ -1,8 +1,7 @@
 import React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { CurrentUser } from '~/app'
-import PaneView from '~/apps/home/panes/pane'
+import PaneView from '~/apps/panes/pane'
 import { OS } from '~/helpers'
 
 @view({

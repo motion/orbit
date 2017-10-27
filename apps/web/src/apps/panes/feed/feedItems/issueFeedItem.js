@@ -1,8 +1,8 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { format } from '~/apps/home/panes/task/helpers'
-import TaskMain from '~/apps/home/panes/task'
+import { format } from '~/apps/panes/task/helpers'
+import TaskMain from '~/apps/panes/task'
 import Commit from './views/commit'
 
 const VERB_MAP = {

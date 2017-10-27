@@ -37,15 +37,17 @@ const debounce = (fn, timeout) => {
   }
 }
 
-export default class HomeStore {
+export default class OraStore {
   stack = new StackStore([{ type: 'oramain' }])
   inputRef = null
   search = ''
   textboxVal = ''
-  things = Thing.find()
+  // things = Thing.find()
   traps = {}
   lastKey = null
-  contxt = new Context()
+  hidden = false
+  focused = false
+  context = new Context()
   activeThing = null
 
   osContext = null
@@ -55,17 +57,52 @@ export default class HomeStore {
     this.attachTrap('window', window)
     this._watchFocusBar()
     this._watchInput()
+    this._watchToggleHide()
+    this._watchMouse()
 
-    OS.on('set-context', (event, url) => {
-      this.osContext = this.parseUrl(url)
+    this.watch(() => {
+      if (this.hidden) {
+        // timeout based on animation
+        this.setTimeout(this.blurBar, 100)
+      }
     })
-    this.getOSContext()
-    this.context = new Context()
+  }
+
+  _watchMouse() {
+    OS.send('mouse-listen')
+    OS.on('mouse-in-corner', () => {
+      if (this.hidden) {
+        this.hidden = false
+        this.setTimeout(this.focusBar)
+      }
+    })
+  }
+
+  _watchToggleHide() {
+    OS.send('start-ora')
+
+    OS.on('show-ora', () => {
+      this.hidden = !this.hidden
+
+      if (!this.hidden) {
+        this.setTimeout(this.focusBar)
+      }
+    })
+  }
+
+  hide = () => {
+    this.hidden = true
+
+    // OS.on('set-context', (event, url) => {
+    //   this.osContext = this.parseUrl(url)
+    // })
+    // this.getOSContext()
+    // this.context = new Context()
   }
 
   getOSContext = () => {
     OS.send('get-context')
-    setTimeout(this.getOSContext, 500)
+    this.setTimeout(this.getOSContext, 500)
   }
 
   parseUrl = url => {
@@ -154,7 +191,13 @@ export default class HomeStore {
     if (this.inputRef) {
       this.inputRef.focus()
       this.inputRef.select()
+      this.focused = true
     }
+  }
+
+  blurBar = () => {
+    this.inputRef && this.inputRef.blur()
+    this.focused = false
   }
 
   onSearchChange = e => {
@@ -183,10 +226,6 @@ export default class HomeStore {
     }
   }
 
-  blurBar() {
-    this.inputRef && this.inputRef.blur()
-  }
-
   actions = {
     down: e => {
       if (this.stack.col === 0) {
@@ -201,9 +240,13 @@ export default class HomeStore {
       this.stack.up()
     },
     esc: e => {
+      if (this.inputRef === document.activeElement) {
+        this.inputRef.blur()
+        return
+      }
       if (this.search === '') {
         e.preventDefault()
-        OS.send('bar-hide')
+        this.hide()
       }
     },
     cmdA: () => {
@@ -218,7 +261,7 @@ export default class HomeStore {
       if (this.stack.selected.onSelect) {
         this.stack.selected.onSelect()
       } else {
-        const schema = JSON.stringify(this.stack.selected)
+        // const schema = JSON.stringify(this.stack.selected)
         // OS.send('bar-goto', `http://jot.dev/master?schema=${schema}`)
       }
     },

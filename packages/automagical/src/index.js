@@ -18,12 +18,14 @@ const isObservable = x => {
   try {
     return Mobx.isObservable(x)
   } catch (e) {
+    console.error('err', e)
     return false
   }
 }
 const isFunction = val => typeof val === 'function'
 const isQuery = val => val && !!val.$isQuery
-const isRxObservable = val => val instanceof Observable
+const isRxObservable = val =>
+  val instanceof Observable || (val && val.subscribe && val.source)
 const isPromise = val => val instanceof Promise
 const isWatch = (val: any) => val && val.IS_AUTO_RUN
 const isObservableLike = val =>
@@ -63,8 +65,6 @@ const FILTER_KEYS = {
   setInterval: true,
   setTimeout: true,
   shouldComponentUpdate: true,
-  start: true,
-  stop: true,
   subscriptions: true,
   watch: true,
   $mobx: true,
@@ -220,10 +220,10 @@ function resolve(inValue: any) {
   // convert RxQuery to RxObservable
   if (value) {
     if (isRxDbQuery(value)) {
-      if (!value.isntConnected) {
-        value = value.$
-      } else {
+      if (value.isntConnected) {
         return value
+      } else {
+        value = value.$
       }
     }
     // let this fall through from rxdbquerys
@@ -247,23 +247,25 @@ const uid = () => `__ID_${Math.random()}__`
 
 // watches values in an autorun, and resolves their results
 function mobxifyWatch(obj: MagicalObject, method, val) {
-  // const debug = (...args) => {
-  //   const KEY = `${obj.constructor.name}.${method}--${Math.random()}--`
-  //   console.log(KEY, ...args)
-  // }
-
   let current = Mobx.observable.box(DEFAULT_VALUE)
   let currentDisposable = null
   let currentObservable = null
   let autoObserver = null
+  let stopReaction
+  let disposed = false
+  let result
   const stopAutoObserve = () => autoObserver && autoObserver()
 
-  const update = newValue => {
+  let isntConnected = false
+
+  function update(newValue) {
+    if (isntConnected) {
+      return
+    }
     let value = newValue
     if (Mobx.isObservableArray(value) || Mobx.isObservableMap(value)) {
       value = Mobx.toJS(value)
     }
-    // debug('update ===', value)
     current.set(Mobx.observable.box(value))
   }
 
@@ -271,32 +273,46 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
     stopAutoObserve()
     autoObserver = Mobx.autorun(() => {
       if (currentObservable) {
-        const value = currentObservable.get
-          ? currentObservable.get()
-          : currentObservable
-        update(value) // set + wrap
+        update(
+          currentObservable.get ? currentObservable.get() : currentObservable
+        )
       }
     })
   }
 
-  let stop
-  let disposed = false
-  let result
-
-  const dispose = () => {
+  function dispose() {
     if (disposed) {
       return
     }
     if (currentDisposable) {
       currentDisposable()
     }
-    if (stop) {
-      stop()
+    if (stopReaction) {
+      stopReaction()
     }
     if (stopAutoObserve) {
       stopAutoObserve()
     }
     disposed = true
+  }
+
+  // auto add subscription so it disposes on unmount
+  if (obj.subscriptions && obj.subscriptions.add) {
+    obj.subscriptions.add(dispose)
+  }
+
+  function run() {
+    if (disposed) {
+      console.log('avoiding work')
+      return
+    }
+    if (Array.isArray(val)) {
+      // reaction
+      stopReaction = Mobx.reaction(val[0], watcher(val[1]), val[3] || true)
+    } else {
+      //autorun
+      stopReaction = Mobx.autorun(watcher(val))
+    }
   }
 
   function watcher(val) {
@@ -307,7 +323,7 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
       const observableLike = isObservableLike(result)
       stopAutoObserve()
 
-      const replaceDisposable = () => {
+      function replaceDisposable() {
         if (currentDisposable) {
           currentDisposable()
           currentDisposable = null
@@ -319,11 +335,18 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
 
       if (observableLike) {
         if (result.isntConnected) {
-          // try on reconnect
+          // re-run after connect
+          console.warn(
+            'result of ',
+            obj.constructor.name,
+            method,
+            'isnt connected yet'
+          )
+          isntConnected = true
           result.onConnection().then(() => {
-            // re-run after connect
+            isntConnected = false
             dispose()
-            watcherCb()
+            run()
           })
           return false
         }
@@ -353,19 +376,7 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
 
   // autorun vs reaction
   // settimeout allows the watchers to run after react renders
-  setTimeout(() => {
-    if (disposed) {
-      console.log('avoiding work')
-      return
-    }
-    if (Array.isArray(val)) {
-      // reaction
-      stop = Mobx.reaction(val[0], watcher(val[1]), val[3] || true)
-    } else {
-      //autorun
-      stop = Mobx.autorun(watcher(val))
-    }
-  })
+  setTimeout(run)
 
   Object.defineProperty(obj, method, {
     get() {
@@ -386,8 +397,6 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
       return { result, current, currentObservable }
     },
   })
-
-  obj.subscriptions.add(dispose)
 
   return current
 }

@@ -3,6 +3,8 @@ import { view } from '@mcro/black'
 import Redbox from 'redbox-react'
 import RootStore from '~/stores/rootStore'
 import * as UI from '@mcro/ui'
+import NotFound from '~/views/404'
+import Router from '~/router'
 
 @view.provide({
   rootStore: RootStore,
@@ -68,6 +70,8 @@ export default class Root extends React.Component {
       )
     }
 
-    return this.props.children
+    const CurrentPage = Router.activeView || NotFound
+    console.log('@@', Router.key, Router.path)
+    return <CurrentPage key={Router.key} {...Router.params} />
   }
 }

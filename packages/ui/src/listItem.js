@@ -3,6 +3,7 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import { object, string } from 'prop-types'
 import Text from './text'
+import Date from './date'
 import SizedSurface from './sizedSurface'
 
 export type Props = {
@@ -169,12 +170,16 @@ export default class ListItem extends React.Component<Props> {
                 {primary}
               </Text>
               <Text
-                if={secondary}
+                if={secondary || date}
                 $text
                 size={size * 0.85}
                 opacity={0.7}
                 ellipse
               >
+                <Date $date if={date}>
+                  {date}
+                </Date>
+                <middot if={date && secondary}> &middot; </middot>
                 {secondary}
               </Text>
             </prop>
@@ -224,6 +229,9 @@ export default class ListItem extends React.Component<Props> {
       fontWeight: 200,
       padding: [0, 10, 0, 0],
     },
+    middot: {
+      display: 'inline',
+    },
     text: {
       width: '100%',
     },
@@ -232,12 +240,9 @@ export default class ListItem extends React.Component<Props> {
       maxHeight: '2.8rem',
     },
     date: {
-      justifyContent: 'flex-end',
-      margin: ['-1.2rem', 0, 0],
       userSelect: 'none',
-      fontSize: 12,
-      fontWeight: 200,
-      opacity: 0.9,
+      fontWeight: 600,
+      opacity: 0.8,
     },
     col: {
       flexDirection: 'column',

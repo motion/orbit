@@ -22,7 +22,6 @@ export default class GithubService {
   }
 
   get setting(): ?string {
-    console.log('get a setting yo')
     return CurrentUser.setting.github
   }
 

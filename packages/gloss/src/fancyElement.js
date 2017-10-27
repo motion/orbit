@@ -100,7 +100,7 @@ export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
       }
     }
 
-    if (styles && name) {
+    if (name) {
       addStyle(styles, `${name}--${glossUID}`, null, true)
     }
 

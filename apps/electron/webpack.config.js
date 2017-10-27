@@ -17,9 +17,24 @@ module.exports = {
     path: Path.join(__dirname, 'build'),
     filename: 'out.js',
   },
+  resolve: {
+    extensions: ['.js', '.json', '.node'],
+  },
+  module: {
+    rules: [
+      {
+        test: /\.node$/,
+        use: 'node-loader',
+      },
+    ],
+  },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NamedModulesPlugin(),
+    new webpack.NormalModuleReplacementPlugin(
+      /^bindings$/,
+      require.resolve('./bindings')
+    ),
   ],
   externals: nodeModules,
 }

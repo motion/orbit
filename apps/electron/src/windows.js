@@ -1,7 +1,6 @@
 import React from 'react'
 import { app, globalShortcut, ipcMain, screen } from 'electron'
 import repl from 'repl'
-// import localShortcut from 'electron-localshortcut'
 import applescript from 'node-osascript'
 import open from 'opn'
 import Menu from '~/menu'
@@ -9,8 +8,8 @@ import { measure } from '~/helpers'
 import * as Constants from '~/constants'
 import WindowsStore from './windowsStore'
 import Window from './window'
-
-console.log('hi')
+import mouse from 'osx-mouse'
+import { throttle } from 'lodash'
 
 let onWindows = []
 export function onWindow(cb) {
@@ -20,6 +19,7 @@ export function onWindow(cb) {
 console.log('Constants.APP_URL', Constants.APP_URL)
 
 const AppWindows = new WindowsStore()
+const ORA_WIDTH = 300
 
 export default class ExampleApp extends React.Component {
   state = {
@@ -34,8 +34,10 @@ export default class ExampleApp extends React.Component {
   componentDidMount() {
     this.measureAndShow()
 
-    const screenSize = screen.getPrimaryDisplay().workAreaSize
-    this.setState({ trayPosition: [screenSize.width - 250 - 20, 40] })
+    this.screenSize = screen.getPrimaryDisplay().workAreaSize
+    this.setState({
+      trayPosition: [this.screenSize.width - ORA_WIDTH - 20, 40],
+    })
 
     this.next() // preload one app window
     onWindows.forEach(cb => cb(this))
@@ -47,29 +49,27 @@ export default class ExampleApp extends React.Component {
       Root: this,
       AppWindows: AppWindows,
     })
+
+    this.listenForMouse()
   }
 
-  // turns out you can move it pretty fast
-  // but not fast enough to be a smooth animation
-  // movearound() {
-  //   setInterval(() => {
-  //     const amt = Math.round(Math.random() * 20)
-  //     const { position } = this.state
-  //     this.setState({
-  //       position: [position[0] + amt, position[1] + amt],
-  //     })
-  //   }, 30)
-  // }
-
-  hide = () => new Promise(resolve => this.setState({ show: false }, resolve))
-
-  show = () =>
-    new Promise(resolve =>
-      this.setState(
-        { show: true, position: this.position, size: this.size },
-        resolve
+  listenForMouse() {
+    ipcMain.on('mouse-listen', event => {
+      console.log('start')
+      const triggerX = this.screenSize.width - 50
+      const triggerY = 50
+      const mousey = mouse()
+      mousey.on(
+        'move',
+        throttle((x, y) => {
+          if (+x > triggerX && +y < triggerY) {
+            console.log('IN CORNER')
+            event.sender.send('mouse-in-corner')
+          }
+        }, 40)
       )
-    )
+    })
+  }
 
   measure = () => {
     const { position, size } = measure()
@@ -78,11 +78,9 @@ export default class ExampleApp extends React.Component {
     this.initialSize = this.initialSize || this.size
   }
 
-  onWindow = ref => {
+  onTray = ref => {
     if (ref) {
-      this.windowRef = ref
-      this.measure()
-      this.show()
+      this.trayRef = ref
       this.listenToApps()
       this.registerShortcuts()
     }
@@ -95,6 +93,14 @@ export default class ExampleApp extends React.Component {
   }
 
   listenToApps = () => {
+    ipcMain.on('start-ora', event => {
+      this.show = () => {
+        event.sender.send('show-ora')
+        this.trayRef.focus()
+      }
+      this.hide = () => event.sender.send('hide-ora')
+    })
+
     ipcMain.on('where-to', (event, key) => {
       console.log('where-to from', key)
       const win = AppWindows.findBy(key)
@@ -175,11 +181,7 @@ end tell`,
     const SHORTCUTS = {
       'Option+Space': () => {
         console.log('command option+space')
-        if (this.state.show) {
-          this.hide()
-        } else {
-          this.measureAndShow()
-        }
+        this.show()
       },
     }
     for (const shortcut of Object.keys(SHORTCUTS)) {
@@ -192,8 +194,7 @@ end tell`,
 
   measureAndShow = async () => {
     this.measure()
-    await this.show()
-    this.windowRef.focus()
+    this.setState({ show: true, position: this.position, size: this.size })
   }
 
   componentDidCatch(error) {
@@ -218,9 +219,9 @@ end tell`,
     }
 
     const webPreferences = {
-      // nativeWindowOpen: true,
+      nativeWindowOpen: true,
       experimentalFeatures: true,
-      // transparentVisuals: true,
+      transparentVisuals: true,
     }
 
     const appWindow = {
@@ -245,10 +246,10 @@ end tell`,
           vibrancy="dark"
           transparent
           hasShadow
+          show
+          showDevTools
           defaultSize={this.initialSize || this.state.size}
           size={this.state.size}
-          ref={this.onWindow}
-          showDevTools={true || !Constants.IS_PROD}
           file={Constants.APP_URL}
           titleBarStyle="customButtonsOnHover"
           show={this.state.show}
@@ -257,20 +258,19 @@ end tell`,
           onMoved={position => this.setState({ position })}
           onMove={position => this.setState({ position })}
           onFocus={() => {
-            this.activeWindow = this.windowRef
+            this.activeWindow = this.trayRef
           }}
         />
 
         <window
-          key="tray"
           {...appWindow}
+          ref={this.onTray}
           titleBarStyle="customButtonsOnHover"
-          showDevTools
           transparent
           show
+          alwaysOnTop
           showDevTools
-          vibrancy="ultra-dark"
-          size={[250, 350]}
+          size={[ORA_WIDTH, 1000]}
           file={`${Constants.APP_URL}/ora`}
           position={this.state.trayPosition}
           onMoved={trayPosition => this.setState({ trayPosition })}

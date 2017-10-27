@@ -77,8 +77,11 @@ export default function getItem(getActiveIndex) {
         ? result.displayTitle || null
         : result.display ? null : result.title,
     primaryEllipse: !hasContent(result),
+    secondary: result.subtitle,
     children: getChildren(result),
     iconAfter: result.iconAfter !== false,
     icon: getIcon(result),
+    date: result.date,
+    ...result.props,
   })
 }

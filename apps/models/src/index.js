@@ -120,7 +120,7 @@ export default class Database {
     return PouchDB
   }
 
-  start = async ({ options, modelOptions }: StartOptions = {}) => {
+  async start({ options, modelOptions }: StartOptions = {}) {
     this.modelOptions = modelOptions
     this.database = await RxDB.create({
       adapter: this.databaseConfig.adapterName,
@@ -129,7 +129,6 @@ export default class Database {
       multiInstance: false,
       ...options,
     })
-
     await this.attachModels()
     this.connected = true
   }
@@ -178,6 +177,7 @@ export default class Database {
         })
       )
     }
-    return await Promise.all(connections)
+    await Promise.all(connections)
+    console.log('models should be connected')
   }
 }

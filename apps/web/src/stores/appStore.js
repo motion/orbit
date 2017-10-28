@@ -58,7 +58,7 @@ export default class AppStore {
     view.provide.on('store.unmount', this.unmount('stores'))
   }
 
-  start = async (quiet?: boolean) => {
+  async start(quiet?: boolean) {
     if (!quiet) {
       console.log(
         '%cUse App.* (models, stores, sync, debug(false)...))',

@@ -75,7 +75,6 @@ import configureWrappedEventHandler from '../util/configureWrappedEventHandler'
  * closable
  *
  * TBD props
- * alwaysOnTop
  * skipTaskbar
  * autoHideMenuBar
  * onPageTitleUpdated
@@ -101,6 +100,7 @@ const SUPPORTED_PROPS = {
   onClosed: true,
   onBlur: true,
   onFocus: true,
+  alwaysOnTop: true,
 }
 
 const BASIC_PROPS = {
@@ -128,6 +128,7 @@ export default class WindowElement extends BaseElement {
       webPreferences: props.webPreferences,
       hasShadow: props.hasShadow,
       backgroundColor: props.backgroundColor,
+      alwaysOnTop: !!props.alwaysOnTop,
     })
 
     this.parentWindow = null

@@ -1,13 +1,12 @@
 import * as React from 'react'
 import { view, store } from '@mcro/black'
 import Fade from './views/fade'
-import * as Sidebars from './panes/sidebars'
-import getItem from './panes/helpers/getItem'
-import PaneView from './panes/pane'
+import * as Sidebars from '../panes/sidebars'
+import getItem from '../panes/helpers/getItem'
+import PaneView from '../panes/pane'
+//import App from '~/app'
 
 // see stackStore for the "back" result item
-
-const width = 250
 
 @view({
   sidebar: class SidebarStore {
@@ -21,7 +20,9 @@ const width = 250
         configurable: true,
       })
       this.childStore = new store(childStore)()
-      this.props.setStore(this.childStore)
+      this.props.stackItem.setStore(this.childStore)
+      // hacky for now
+      window.sidebarStore = this.childStore
     }
   },
 })
@@ -33,7 +34,6 @@ class SidebarContainer {
     return (
       <PaneView
         {...paneProps}
-        theme="dark"
         sidebar
         store={store}
         getItem={getItem(paneProps.getActiveIndex)}
@@ -46,17 +46,24 @@ class SidebarContainer {
 @view
 export default class Sidebar {
   static defaultProps = {
+    width: 280,
     sidebars: Sidebars,
+    itemProps: {
+      size: 1.14,
+      glow: true,
+      padding: [10, 12],
+      iconAfter: true,
+    },
   }
 
   previousIndex = -1
 
-  render({ sidebars, homeStore, homeStore: { stack } }) {
+  render({ width, itemProps, sidebars, homeStore, homeStore: { stack } }) {
     const currentIndex = stack.length - 1
     const { previousIndex } = this
     this.previousIndex = currentIndex
     return (
-      <sidebar css={{ width }}>
+      <sidebar css={{ width, maxWidth: width, flex: 1 }}>
         {stack.items.map((stackItem, index) => {
           // only show last two
           if (index + 1 < currentIndex) {
@@ -80,7 +87,6 @@ export default class Sidebar {
               <SidebarContainer
                 stackItem={stackItem}
                 navigate={stack.navigate}
-                setStore={stackItem.setStore}
                 data={stackItem.result.data}
                 result={stackItem.result}
                 onBack={homeStore.stack.pop}
@@ -95,12 +101,7 @@ export default class Sidebar {
                   stack: homeStore.stack,
                   sidebar: true,
                   onSelect: stackItem.onSelect,
-                  itemProps: {
-                    size: 1.14,
-                    glow: true,
-                    padding: [10, 12],
-                    iconAfter: true,
-                  },
+                  itemProps,
                 }}
               />
             </Fade>

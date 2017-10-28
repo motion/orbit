@@ -274,7 +274,7 @@ export default class Surface extends React.PureComponent<Props> {
         scale={1.1}
         show
         color={glowColor}
-        opacity={0.25}
+        opacity={0.35}
         borderLeftRadius={borderLeftRadius - 1}
         borderRightRadius={borderRightRadius - 1}
         {...glowProps}
@@ -283,6 +283,7 @@ export default class Surface extends React.PureComponent<Props> {
         if={!noElement || (noElement && !noWrap && hasChildren(children))}
         {...wrapElement && passProps}
         {...elementProps}
+        disabled={disabled}
         $hasIconBefore={hasIconBefore}
         $hasIconAfter={hasIconAfter}
       >
@@ -353,8 +354,8 @@ export default class Surface extends React.PureComponent<Props> {
     icon: {
       pointerEvents: 'none',
       height: 'auto',
-      marginTop: 2,
-      marginBottom: 2,
+      marginTop: 4,
+      marginBottom: 4,
     },
     hasIconBefore: {
       // this adjusts for height

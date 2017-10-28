@@ -45,11 +45,7 @@ function restart() {
     {
       restart: true,
     },
-    () => {
-      setTimeout(() => {
-        start()
-      }, 500)
-    }
+    () => setTimeout(start, 500)
   )
 }
 

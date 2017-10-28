@@ -119,7 +119,7 @@ class GithubStore {
 
   isSyncing = repo => {
     const { Github } = App.services
-    if (!Github.setting.values.repos) {
+    if (!Github.setting || !Github.setting.values.repos) {
       return false
     }
     return Github.setting.values.repos[repo.fullName] || false

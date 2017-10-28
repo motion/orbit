@@ -2,13 +2,9 @@
 import event from 'disposable-event'
 import { CompositeDisposable } from 'sb-event-kit'
 
-function _addEvent(
-  element: HTMLElement,
-  cb: Function,
-  bind: boolean
-): Function {
+function _on(element: HTMLElement, cb: Function, bind: boolean): Function {
   if (element && element.emitter) {
-    return _addEvent.call(this, element.emitter, cb, bind)
+    return _on.call(this, element.emitter, cb, bind)
   }
 
   const e = event(element, cb, bind)
@@ -60,5 +56,4 @@ function patchSubscribers(fn) {
 
 export const setTimeout = patchSubscribers(_setTimeout)
 export const setInterval = patchSubscribers(_setInterval)
-export const addEvent = patchSubscribers(_addEvent)
-export const on = addEvent
+export const on = patchSubscribers(_on)

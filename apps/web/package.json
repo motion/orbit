@@ -49,7 +49,8 @@
     "time-ago": "^0.1.0",
     "triangulr": "^1.0.0",
     "victory": "0.22.2",
-    "worker-pouch": "^2.0.0"
+    "worker-pouch": "^2.0.0",
+    "latinize": "0.4.0"
   },
   "devDependencies": {
     "@mcro/builder": "^1.5.1"

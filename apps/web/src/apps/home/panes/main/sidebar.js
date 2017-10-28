@@ -102,6 +102,16 @@ export default class MainSidebar {
     ]
   }
 
+  get testing() {
+    return [
+      {
+        type: 'stanford',
+        title: 'Stanford Context',
+        category: 'testing',
+      },
+    ]
+  }
+
   get things() {
     if (this.search) {
       return fuzzy(this.searchable || [], this.search)
@@ -170,6 +180,7 @@ export default class MainSidebar {
     const all = [
       ...this.pinned,
       ...this.things,
+      ...this.testing,
       ...(this.people || []).map(x =>
         Person.toResult(x, { category: 'People' })
       ),

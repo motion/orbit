@@ -21,15 +21,37 @@ export default class HomePage {
   render() {
     return (
       <page>
-        <section css={{ background: '#f2f2f2', height: window.innerHeight }}>
-          <header $$row css={{ background: '#da0000' }}>
+        <ora
+          css={{
+            background: [0, 0, 0, 0.29],
+            backdropFilter: 'blur(10px)',
+            position: 'fixed',
+            top: 20,
+            right: 20,
+            color: '#fff',
+            zIndex: 10000000,
+            width: 280,
+            borderRadius: 10,
+            boxShadow: '0 0 10px rgba(0,0,0,0.25)',
+          }}
+        >
+          <header css={{ padding: 10 }}>
+            <UI.Icon name="zoom" />
+          </header>
+          <content css={{ padding: 20 }}>
+            lorem ipsum dolor lorem ipsum dolor lorem ipsum dolor lorem ipsum
+            dolor lorem ipsum dolor
+          </content>
+        </ora>
+
+        <section
+          css={{ background: '#f2f2f2', height: window.innerHeight - 20 }}
+        >
+          <header $$row css={{ background: '#ddd', zIndex: 10000 }}>
             <sectionContent>
               <thing $$row css={{ alignItems: 'center', padding: [10, 0] }}>
-                <img css={{ height: 60, marginRight: 10 }} src="/icon2.png" />
-                <img
-                  css={{ height: 40, fill: '#fff' }}
-                  src="/wordmark-light.svg"
-                />
+                <img css={{ height: 50, marginRight: 10 }} src="/icon2.png" />
+                <img css={{ height: 30, fill: '#fff' }} src="/wordmark.svg" />
               </thing>
             </sectionContent>
           </header>
@@ -42,15 +64,34 @@ export default class HomePage {
             }}
           >
             <content>
-              <Title size={4}>A new class of app.</Title>
+              <Title size={4}>
+                A new class of app,<br /> for the modern team.
+              </Title>
 
               <Text size={2.2}>
-                A smart assistant that is always there.<br />
-                Providing you perfect context for what you're doing.<br />
-                And answering questions before they are even asked.
+                A smart assistant that is always there<br />
+                with answers based on everything you use.<br />
+                <span css={{ background: 'yellow' }}>
+                  Put your company knowledge to work.
+                </span>
+                <br />
               </Text>
 
               <hr />
+
+              <img
+                css={{
+                  position: 'absolute',
+                  top: -200,
+                  right: -200,
+                  opacity: 0.2,
+                  filter: 'grayscale(100%)',
+                  transform: {
+                    scale: 0.5,
+                  },
+                }}
+                src="/orbitals.svg"
+              />
 
               <narrow if={false}>
                 <Text textAlign="center" size={2.2}>
@@ -80,6 +121,34 @@ export default class HomePage {
                   <UI.Icon name="social-trello" />
                 </UI.PassProps>
               </logos>
+
+              <hr />
+
+              <tooltip
+                css={{
+                  position: 'absolute',
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+              >
+                <inner
+                  css={{
+                    background: '#fff',
+                    borderRadius: 10,
+                    padding: [10, 20],
+                    marginBottom: -20,
+                  }}
+                >
+                  <Text size={1.1} textAlign="center">
+                    Orbit is an ambitious new application,<br />
+                    and we're doing things a bit differently.<br />
+                    Read on to learn how.
+                  </Text>
+                </inner>
+              </tooltip>
             </content>
           </sectionContent>
         </section>

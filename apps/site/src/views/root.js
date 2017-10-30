@@ -16,6 +16,7 @@ export default class Root {
           <Header />
           <content>
             <CurrentPage key={Router.key} {...Router.params} />
+            <CurrentPage blurred key={Router.key + '2'} {...Router.params} />
           </content>
         </layout>
       </UI.Theme>

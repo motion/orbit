@@ -12,6 +12,12 @@ body {
   -webkit-text-size-adjust: 100%;
 }
 
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+}
+
 /* Change Autocomplete styles in Chrome*/
 input:-webkit-autofill,
 input:-webkit-autofill:hover,

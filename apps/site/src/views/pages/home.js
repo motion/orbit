@@ -84,13 +84,13 @@ export default class HomePage extends React.Component {
             >
               <content>
                 <Title size={4}>
-                  Keep everyone<br /> on the same page.
+                  A smart assistant<br /> that unifies knowledge.
                 </Title>
 
                 <Text size={2.2}>
-                  A private assistant that is always on.<br />
-                  With answers based on what you're doing.<br />
-                  <Hl>Your company knowledge, put to work.</Hl>
+                  A desktop assistant thats always on,<br />
+                  bringing context to what you're doing.<br />
+                  <Hl>Your companys knowledge, automatically.</Hl>
                   <br />
                 </Text>
 
@@ -160,12 +160,9 @@ export default class HomePage extends React.Component {
             <section $bordered $padded $dark>
               <sectionContent $padRight>
                 <Title size={3}>Unified Knowledge</Title>
-                <Text size={2}>
-                  Orbit makes your wiki work for you. In fact, it makes all your
-                  tools for for you.
-                </Text>
-                <Text>
-                  <ol>
+                <Text size={2}>Your whole company, smarter & in sync.</Text>
+                <Text size={1.8}>
+                  <ol $list>
                     <li>Orbit hooks into all your cloud services.</li>
                     <li>Orbit privately hooks into your email &amp; chat.</li>
                     <li>
@@ -173,9 +170,13 @@ export default class HomePage extends React.Component {
                       machine learning discovered in the last year.
                     </li>
                     <li>
-                      Orbit provides you precise and relevant answers wherever
-                      you are -- in chat, while writing emails, while browsing
-                      the web -- thats right!
+                      Orbit provides you precise and relevant answers in
+                      context, wherever you are -- in chat, while writing
+                      emails, or while browsing the web.
+                    </li>
+                    <li>
+                      Search your entire company, including your slack
+                      conversations, instantly.
                     </li>
                   </ol>
                 </Text>
@@ -187,20 +188,30 @@ export default class HomePage extends React.Component {
             <sectionContent $padRight>
               <Title size={3}>The No-Cloud Infrastructure</Title>
               <Text size={2}>
-                Orbit invents a new type of business tool: one that works for
-                you.
+                Orbit needed to invent a new model:<br />
+                one that keeps your company safe.
               </Text>
               <Text>
-                <Hl>This allows us to be ambitious & focus on user-value.</Hl>
+                Here's the rub. To provide great context, Orbit needs to hook
+                into a lot of company data to be valuable. Your Slack, email,
+                documents, tasks, and all company knowledge.
+              </Text>
+
+              <Text>How do you do that completely securely?</Text>
+
+              <Text>
+                Answer: your data never once leaves your local computer. We
+                never see it, and neither does anyone else.
               </Text>
               <Text>
-                Because your data never once leaves your local computer (not
-                ever going to our servers or anyone elses), Orbit can crawl
-                everything that's relevant to you and your team without fear of
-                data breaches, permissions exposures, or the need to run a
-                complicated on-prem installs.
+                <Hl>
+                  This allows us to be ambitious & focus on user-value from day
+                  one.
+                </Hl>{' '}
+                Orbit can crawl everything that's relevant to you and your team
+                without fear of data breaches, permissions exposures, or the
+                need to run a complicated on-prem installs.
               </Text>
-              <Text>Your security team won't even trip, man.</Text>
             </sectionContent>
           </section>
 
@@ -258,11 +269,11 @@ export default class HomePage extends React.Component {
         margin: [0, 0, 0, -40],
       },
     },
-    subList: {
+    list: {
       '& > li': {
         listStylePosition: 'auto',
         listStyleType: 'decimal',
-        margin: [0, 0, -15, 30],
+        margin: [0, 0, 15, 30],
       },
     },
     hr: {

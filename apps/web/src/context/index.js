@@ -20,7 +20,7 @@ const vectorsFile = `/vectors100k.txt`
 // alphanumeric and spacse
 const cleanText = s => {
   if (s.toLowerCase) {
-    return latinize(s)
+    return latinize(s || '')
       .toLowerCase()
       .replace(/[^0-9a-zA-Z\ ]/g, '')
   } else {
@@ -46,7 +46,7 @@ export default class Context {
   oov = null
 
   get loading() {
-    return this.oov && this.vectors === null
+    return !this.oov || this.vectors === null
   }
 
   // prepatory
@@ -161,10 +161,20 @@ export default class Context {
   closestItems = (text, n = 3) => {
     const words = this.textToWords(text)
 
-    const items = (this.corpus || []).map(item => ({
-      similarity: this.wordsDistance(words, this.textToWords(item.title)),
-      item,
-    }))
+    const items = (this.corpus || []).map(item => {
+      const title = item.title.split('\n')[0]
+      const text = item.title
+        .split('\n')
+        .slice(1)
+        .join('\n')
+
+      return {
+        similarity:
+          this.wordsDistance(words, this.textToWords(title)) +
+          this.wordsDistance(words, this.textToWords(text)),
+        item,
+      }
+    })
 
     return sortBy(items, 'similarity').slice(0, n)
   }

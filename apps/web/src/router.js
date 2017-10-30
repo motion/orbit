@@ -1,7 +1,6 @@
 // @flow
 import Router from '@mcro/router'
 import HomePage from './apps/home'
-import ContextPage from './apps/context'
 import AuthPage from './apps/auth'
 import OraPage from './apps/ora'
 
@@ -10,7 +9,6 @@ function runRouter() {
     routes: {
       '/': HomePage,
       settings: AuthPage,
-      context: ContextPage,
       ora: OraPage,
     },
   })

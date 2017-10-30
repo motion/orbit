@@ -44,7 +44,7 @@ class StanfordStore {
       })
     )
 
-    this.context = new Context(corpus)
+    // this.context = new Context(corpus)
     this.corpus = corpus
     this.questions = questions
   }

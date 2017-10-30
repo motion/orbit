@@ -115,9 +115,10 @@ export default class ExampleApp extends React.Component {
 
     ipcMain.on('get-context', event => {
       applescript.execute(
-        `
-tell application "Google Chrome"
-	set source to execute front window's active tab javascript "window.location+''"
+        `tell application "Google Chrome"
+	tell front window's active tab
+		set source to execute javascript "JSON.stringify({ url: document.location+'', title: document.title, body: document.body.innerText })"
+	end tell
 end tell`,
         (err, result, raw) => {
           if (err) return console.error(err)

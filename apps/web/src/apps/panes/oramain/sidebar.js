@@ -4,6 +4,7 @@ import { watch } from '@mcro/black'
 import { fuzzy } from '~/helpers'
 import Calendar from '../feed/calendar'
 import FeedItem from '../feed/feedItem'
+import Context from '../context'
 import { Event, Thing } from '~/app'
 
 export default class OraMain {
@@ -163,8 +164,19 @@ export default class OraMain {
   }
 
   get results() {
+    const { title } = this.props.homeStore.osContext || { title: 'none yet' }
+    const os =
+      this.props.homeStore.search.length === 0
+        ? {
+            category: 'Currently Viewing',
+            children: <UI.Text opacity={0.7}>{title}</UI.Text>,
+          }
+        : null
+    // return [os, ...this.props.homeStore.contextResults].filter(i => !!i)
+
     const items = [
       ...this.items,
+      ...this.props.homeStore.contextResults,
       ...(this.events || []).map((item, index) => ({
         children: () => <FeedItem inline event={item} index={index} />,
       })),

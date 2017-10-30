@@ -258,10 +258,7 @@ export default class Text extends React.PureComponent<Props> {
         fontSize,
         display: props.display,
         fontWeight: props.fontWeight,
-        lineHeight:
-          typeof props.lineHeight === 'number'
-            ? `${props.lineHeight}px`
-            : props.lineHeight || `${fontSize + 5}px`,
+        lineHeight: props.lineHeight || `${fontSize * 1.25 + 5}px`,
         opacity: props.opacity,
       },
       ellipse: {

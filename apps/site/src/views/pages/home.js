@@ -3,13 +3,7 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 
 const Text = props => (
-  <UI.Text
-    size={1.5}
-    lineHeight="1.9rem"
-    marginBottom={20}
-    color={[0, 0, 0, 0.75]}
-    {...props}
-  />
+  <UI.Text size={1.5} marginBottom={20} color={[0, 0, 0, 0.75]} {...props} />
 )
 
 const SubText = props => <Text size={1.25} lineHeight="1.7rem" {...props} />
@@ -27,50 +21,69 @@ export default class HomePage {
   render() {
     return (
       <page>
-        <section>
-          <Text if={false} size={2} marginBottom={30} textAlign="center">
-            👋
-          </Text>
+        <section css={{ background: '#f2f2f2', height: window.innerHeight }}>
+          <header $$row css={{ background: '#da0000' }}>
+            <sectionContent>
+              <thing $$row css={{ alignItems: 'center', padding: [10, 0] }}>
+                <img css={{ height: 60, marginRight: 10 }} src="/icon2.png" />
+                <img
+                  css={{ height: 40, fill: '#fff' }}
+                  src="/wordmark-light.svg"
+                />
+              </thing>
+            </sectionContent>
+          </header>
 
-          <Title textAlign="center" size={3}>
-            Search everything.<br />See everything.
-          </Title>
-
-          <img $screen src="/screenshot.png" />
-
-          <br />
-          <br />
-          <br />
-
-          <Text textAlign="center" size={1.7}>
-            Search across every service and see an activity feed for any project
-            or team.
-          </Text>
-
-          <logos
+          <sectionContent
+            $padded
             css={{
-              flexFlow: 'row',
               flex: 1,
-              justifyContent: 'space-around',
-              margin: [20, 0, 40],
+              justifyContent: 'center',
             }}
           >
-            <UI.PassProps size={40}>
-              <UI.Icon name="social-slack" />
-              <UI.Icon name="social-github" />
-              <UI.Icon name="social-google" />
-              <UI.Icon name="social-dropbox" />
-              <UI.Icon name="social-trello" />
-            </UI.PassProps>
-          </logos>
+            <content>
+              <Title size={4}>A new class of app.</Title>
 
-          <SubText textAlign="center">
-            We were inspired by tools Stripe & Facebook built to power their
-            company. We want to make yours better than theirs.
-          </SubText>
+              <Text size={2.2}>
+                A smart assistant that is always there.<br />
+                Providing you perfect context for what you're doing.<br />
+                And answering questions before they are even asked.
+              </Text>
 
-          <hr css={{ marginBottom: -70 }} />
+              <hr />
+
+              <narrow if={false}>
+                <Text textAlign="center" size={2.2}>
+                  Search across every service and see an activity feed for any
+                  project or team.
+                </Text>
+              </narrow>
+
+              <logos
+                css={{
+                  flexFlow: 'row',
+                  flex: 1,
+                  justifyContent: 'space-around',
+                  margin: [20, 0, 40],
+                }}
+              >
+                <UI.PassProps size={40}>
+                  <UI.Icon name="social-slack" />
+                  <UI.Icon name="social-github" />
+                  <UI.Icon name="social-google" />
+                  <UI.Icon name="social-dropbox" />
+                  <UI.Icon name="social-trello" />
+                  <UI.Icon name="social-slack" />
+                  <UI.Icon name="social-github" />
+                  <UI.Icon name="social-google" />
+                  <UI.Icon name="social-dropbox" />
+                  <UI.Icon name="social-trello" />
+                </UI.PassProps>
+              </logos>
+            </content>
+          </sectionContent>
         </section>
+
         <section $bordered>
           <ul $mainList>
             <li>
@@ -156,11 +169,20 @@ export default class HomePage {
 
   static style = {
     section: {
-      width: '80%',
+      flex: 1,
+    },
+    sectionContent: {
+      width: '85%',
       minWidth: 300,
-      maxWidth: 500,
+      maxWidth: 800,
       margin: [0, 'auto'],
+    },
+    padded: {
       padding: [45, 0],
+    },
+    narrow: {
+      maxWidth: 500,
+      alignSelf: 'center',
     },
     bordered: {
       borderBottom: [1, [0, 0, 0, 0.05]],

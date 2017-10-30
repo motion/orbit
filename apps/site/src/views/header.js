@@ -5,7 +5,7 @@ import { view } from '@mcro/black'
 export default class Header {
   render() {
     return (
-      <header>
+      <header if={false}>
         <img $icon src="/icon.png" />
         <img $logo src="/orbit-logo.svg" />
         <orbital if={false} />

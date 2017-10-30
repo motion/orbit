@@ -1,7 +1,6 @@
 // @flow
 import Router from '@mcro/router'
 import HomePage from '~/views/pages/home'
-import ContextPage from '~/views/pages/context'
 
 function runRouter() {
   return new Router({

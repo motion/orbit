@@ -26,44 +26,6 @@ export default class OraMain {
       .sort({ created: 'desc' })
       .limit(100)
 
-  // {[
-  //   {
-  //     name: 'Kubernetes deploy docs',
-  //     image: 'jacob',
-  //     date: Date.now() - 1000000,
-  //     type: 'github',
-  //     subtitle: 'jacob@me.com',
-  //   },
-  //   {
-  //     name: 'Engineering',
-  //     subtitle: 'Search',
-  //     date: Date.now() - 10000000,
-  //     image: 'steph',
-  //     type: 'google',
-  //   },
-  //   {
-  //     name: 'motion/orbit',
-  //     type: 'slack',
-  //     date: Date.now() - 100000000,
-  //     image: 'nick',
-  //     subtitle: '#frontend',
-  //   },
-  //   {
-  //     name: 'motion/orbit',
-  //     type: 'github',
-  //     date: Date.now() - 1000000000,
-  //     image: 'nick',
-  //     subtitle: '#frontend',
-  //   },
-  //   {
-  //     name: 'motion/orbit',
-  //     type: 'google',
-  //     date: Date.now() - 10000000000,
-  //     image: 'nick',
-  //     subtitle: '#frontend',
-  //   },
-  // ]}
-
   NAME_MAP = {
     ncammarata: 'nick',
     natew: 'me',

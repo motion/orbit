@@ -18,12 +18,12 @@ let blurredRef
 export default class HomePage extends React.Component {
   setRef = ref => {
     this.node = ref
-    if (this.props.blurred) {
-      blurredRef = ref.childNodes[0]
-      console.log('br', blurredRef)
+    if (!ref) {
       return
     }
-    if (this.node && !this.props.blurred) {
+    if (this.props.blurred) {
+      blurredRef = ref.childNodes[0]
+    } else {
       this.on(this.node, 'scroll', () => {
         console.log(
           this.node.scrollTop,
@@ -35,8 +35,40 @@ export default class HomePage extends React.Component {
   }
 
   render({ blurred }) {
+    function getStyle() {
+      if (!blurred) {
+        return {
+          page: {
+            height: window.innerHeight,
+            overflowY: 'scroll',
+          },
+        }
+      }
+      const pad = 20
+      const width = 280
+      const height = 300
+      const bottom = height + pad
+      const right = window.innerWidth - pad
+      const left = window.innerWidth - width - pad
+      return {
+        page: {
+          pointerEvents: 'none',
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 1000,
+          // rounded:
+          // polygon(5% 0, 95% 0, 100% 4%, 100% 95%, 95% 100%, 5% 100%, 0 95%, 0 5%)
+          clip: `rect(${pad}px, ${right}px, ${bottom}px, ${left}px)`,
+        },
+      }
+    }
+
+    const styles = getStyle()
+
     return (
-      <page ref={this.setRef}>
+      <page css={styles.page} ref={this.setRef}>
         <ora
           if={!blurred}
           css={{
@@ -156,69 +188,85 @@ export default class HomePage extends React.Component {
             </sectionContent>
           </section>
 
+          <section $bordered $padded>
+            <sectionContent $padRight>
+              <img src="" />
+              <Title size={3}>Unified Knowledge</Title>
+              <Text size={2}>How it works:</Text>
+              <Text size={1.6}>
+                <ol $list>
+                  <li>Orbit hooks into all your cloud services and content.</li>
+                  <li>Orbit privately hooks into your own email and chat.</li>
+                  <li>
+                    Orbit builds a smart index of your company knowledge using
+                    machine learning discovered in the last year.
+                  </li>
+                  <li>
+                    Orbit provides you precise and relevant answers in context,
+                    wherever you are -- in chat, while writing emails, or while
+                    browsing the web.
+                  </li>
+                  <li>
+                    Search your entire company, including your slack
+                    conversations, instantly.
+                  </li>
+                </ol>
+              </Text>
+            </sectionContent>
+          </section>
+
           <UI.Theme name="dark">
             <section $bordered $padded $dark>
               <sectionContent $padRight>
-                <Title size={3}>Unified Knowledge</Title>
-                <Text size={2}>Your whole company, smarter & in sync.</Text>
-                <Text size={1.8}>
-                  <ol $list>
-                    <li>Orbit hooks into all your cloud services.</li>
-                    <li>Orbit privately hooks into your email &amp; chat.</li>
-                    <li>
-                      Orbit builds a smart index of your company knowledge using
-                      machine learning discovered in the last year.
-                    </li>
-                    <li>
-                      Orbit provides you precise and relevant answers in
-                      context, wherever you are -- in chat, while writing
-                      emails, or while browsing the web.
-                    </li>
-                    <li>
-                      Search your entire company, including your slack
-                      conversations, instantly.
-                    </li>
-                  </ol>
+                <Title size={3}>The No-Cloud Infrastructure</Title>
+                <Text size={2}>
+                  Orbit needed to invent a new model:<br />
+                  one that keeps your company safe.
+                </Text>
+                <Text>
+                  Here's the rub. To provide great context, Orbit needs to hook
+                  into a lot of company data to be valuable. Your Slack, email,
+                  documents, tasks, and all company knowledge.
+                </Text>
+
+                <Text>How do you do that completely securely?</Text>
+
+                <Text>
+                  Answer: your data never once leaves your local computer. We
+                  never see it, and neither does anyone else.
+                </Text>
+                <Text>
+                  <Hl>
+                    This allows us to be ambitious & focus on user-value from
+                    day one.
+                  </Hl>{' '}
+                  Orbit can crawl everything that's relevant to you and your
+                  team without fear of data breaches, permissions exposures, or
+                  the need to run a complicated on-prem installs.
                 </Text>
               </sectionContent>
             </section>
           </UI.Theme>
 
-          <section $bordered $padded>
-            <sectionContent $padRight>
-              <Title size={3}>The No-Cloud Infrastructure</Title>
-              <Text size={2}>
-                Orbit needed to invent a new model:<br />
-                one that keeps your company safe.
-              </Text>
-              <Text>
-                Here's the rub. To provide great context, Orbit needs to hook
-                into a lot of company data to be valuable. Your Slack, email,
-                documents, tasks, and all company knowledge.
-              </Text>
-
-              <Text>How do you do that completely securely?</Text>
-
-              <Text>
-                Answer: your data never once leaves your local computer. We
-                never see it, and neither does anyone else.
-              </Text>
-              <Text>
-                <Hl>
-                  This allows us to be ambitious & focus on user-value from day
-                  one.
-                </Hl>{' '}
-                Orbit can crawl everything that's relevant to you and your team
-                without fear of data breaches, permissions exposures, or the
-                need to run a complicated on-prem installs.
-              </Text>
-            </sectionContent>
-          </section>
-
-          <footer />
+          <footer>
+            <section $padded $$centered>
+              <Text>Orbit is going into private beta in December.</Text>
+            </section>
+          </footer>
         </contents>
       </page>
     )
+  }
+
+  static theme = ({ blurred }) => {
+    if (!blurred) {
+      return {}
+    }
+    return {
+      section: {
+        filter: 'blur(10px)',
+      },
+    }
   }
 
   static style = {
@@ -239,7 +287,7 @@ export default class HomePage extends React.Component {
       paddingRight: 300,
     },
     dark: {
-      background: '#111',
+      background: '#171717',
     },
     narrow: {
       maxWidth: 500,
@@ -290,38 +338,15 @@ export default class HomePage extends React.Component {
     footer: {
       height: 150,
     },
-  }
-
-  static theme = ({ blurred }) => {
-    if (!blurred) {
-      return {
-        page: {
-          height: window.innerHeight,
-          overflowY: 'scroll',
-        },
-      }
-    }
-
-    const pad = 20
-    const width = 280
-    const height = 300
-    const bottom = height + pad
-    const right = window.innerWidth - pad
-    const left = window.innerWidth - width - pad
-
-    return {
-      page: {
-        pointerEvents: 'none',
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        zIndex: 1000,
-        clip: `rect(${pad}px, ${right}px, ${bottom}px, ${left}px)`,
-      },
-      section: {
-        filter: 'blur(10px)',
-      },
-    }
+    starry: {
+      position: 'absolute',
+      top: 0,
+      right: 0,
+      bottom: 0,
+      left: 0,
+      zIndex: 0,
+      backgroundImage: `url(/4-point-stars.svg)`,
+      backgroundSize: '1%',
+    },
   }
 }

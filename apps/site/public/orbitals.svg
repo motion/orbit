@@ -5,11 +5,11 @@
     <desc>Created with Sketch.</desc>
     <defs></defs>
     <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <circle id="Oval" stroke="#5B31AD" stroke-width="2" cx="307.949219" cy="308.335937" r="306.832031"></circle>
-        <circle id="Oval" stroke="#5B31AD" stroke-width="2" cx="307.949219" cy="308.335937" r="181.414062"></circle>
-        <circle id="Oval" fill="#5B31AD" cx="307.949219" cy="308.335938" r="72.1386719"></circle>
-        <circle id="Oval" fill="#5B31AD" cx="446.816406" cy="196.316406" r="16.6625977"></circle>
-        <circle id="Oval" fill="#5B31AD" cx="122.816406" cy="66.3164062" r="16.6625977"></circle>
-        <circle id="Oval" fill="#5B31AD" cx="122.816406" cy="554.316406" r="16.6625977"></circle>
+        <circle id="Oval" stroke="#49CEAC" stroke-width="2" cx="307.949219" cy="308.335937" r="306.832031"></circle>
+        <circle id="Oval" stroke="#49CEAC" stroke-width="2" cx="307.949219" cy="308.335937" r="181.414062"></circle>
+        <circle id="Oval" fill="#133CCA" cx="307.949219" cy="308.335938" r="72.1386719"></circle>
+        <circle id="Oval" fill="#133CCA" cx="446.816406" cy="196.316406" r="16.6625977"></circle>
+        <circle id="Oval" fill="#133CCA" cx="122.816406" cy="66.3164062" r="16.6625977"></circle>
+        <circle id="Oval" fill="#133CCA" cx="122.816406" cy="554.316406" r="16.6625977"></circle>
     </g>
 </svg>

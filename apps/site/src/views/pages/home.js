@@ -346,20 +346,19 @@ export default class HomePage extends React.Component {
                   Hands-free Intelligence
                 </Title>
                 <Text size={2} fontWeight={600} opacity={0.5}>
-                  An assistant that's always there, not hidden in a tab or
-                  behind a bot.
+                  An assistant that's always there, not hidden in a tab or bot.
                 </Text>
                 <Text size={1.7}>
                   <ol $list>
                     <li>
-                      Orbit hooks into <em>all</em> of your cloud services, even
+                      Orbit hooks into <em>all</em> of your cloud services, and
                       privately into your email and chat.
                     </li>
                     <li>
-                      Orbit uses machine learning to understands what's
-                      important to who, and that{' '}
-                      <strong>accounting paperwork</strong> is similar to{' '}
-                      <strong>tax form</strong>.
+                      Orbit uses machine learning to understand{' '}
+                      <strong>when</strong> to show answers,{' '}
+                      <strong>what's</strong> important to whom, and that{' '}
+                      "accounting paperwork" is similar to "tax form".
                     </li>
                     <li>
                       Orbit is a desktop assistant that's always on. Wherever

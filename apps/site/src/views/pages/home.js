@@ -7,7 +7,7 @@ import Observer from '@researchgate/react-intersection-observer'
 
 let blurredRef
 
-const colorTeal = 'rgb(28.8%, 80.8%, 67.6%)'
+const colorTeal = '#49ceac'
 const colorBlue = '#133cca'
 
 const allItems = {
@@ -204,9 +204,9 @@ export default class HomePage extends React.Component {
                 bottom: 0,
                 left: 0,
                 right: 0,
-                height: 150,
+                height: 500,
                 background: 'linear-gradient(#f2f2f2, #fff)',
-                zIndex: 100,
+                zIndex: 1,
               }}
             />
             <orb
@@ -256,6 +256,39 @@ export default class HomePage extends React.Component {
                 },
               }}
             />
+
+            <bottomSlant
+              css={{
+                zIndex: 100,
+                borderTop: [1, [0, 0, 0, 0.1]],
+                bottom: -360,
+              }}
+            />
+            <bottomSlant
+              css={{
+                zIndex: 100,
+                borderTop: [1, [0, 0, 0, 0.1]],
+                bottom: -365,
+                opacity: 0.75,
+              }}
+            />
+            <bottomSlant
+              css={{
+                zIndex: 100,
+                borderTop: [1, [0, 0, 0, 0.1]],
+                bottom: -370,
+                opacity: 0.5,
+              }}
+            />
+            <bottomSlant
+              css={{
+                zIndex: 100,
+                borderTop: [1, [0, 0, 0, 0.1]],
+                bottom: -375,
+                opacity: 0.25,
+              }}
+            />
+
             <header $$row>
               <sectionContent>
                 <thing
@@ -469,6 +502,7 @@ export default class HomePage extends React.Component {
       maxWidth: 800,
       margin: [0, 'auto'],
       position: 'relative',
+      zIndex: 10,
     },
     padded: {
       padding: [110, 0],

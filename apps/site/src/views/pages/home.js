@@ -83,6 +83,9 @@ const allItems = {
 class Ora {
   render({ showIndex }) {
     const items = allItems[showIndex]
+    if (window.innerWidth < 800) {
+      return null
+    }
     return (
       <UI.Theme name="dark">
         <ora
@@ -185,16 +188,69 @@ export default class HomePage extends React.Component {
         <contents>
           <section
             css={{
-              background: '#f2f2f2',
+              background: '#fff',
               height: window.innerHeight - 30,
               maxHeight: 880,
               minHeight: 700,
               position: 'relative',
             }}
           >
-            <topSlant
+            <fadeDown
               css={{
-                background: '#fff',
+                position: 'absolute',
+                bottom: 0,
+                left: 0,
+                right: 0,
+                height: 150,
+                background: 'linear-gradient(#f2f2f2, #fff)',
+                zIndex: 100,
+              }}
+            />
+            <orb
+              css={{
+                position: 'absolute',
+                bottom: '-480%',
+                right: '20%',
+                borderRadius: 10000,
+                width: 100,
+                height: 100,
+                background: '#f2f2f2',
+                border: [1, 'dotted', '#eee'],
+                transform: {
+                  scale: 100,
+                },
+              }}
+            />
+            <orb
+              css={{
+                position: 'absolute',
+                bottom: '-490%',
+                right: '20%',
+                borderRadius: 10000,
+                width: 100,
+                height: 100,
+                opacity: 0.75,
+                border: [1, 'dotted', '#eee'],
+                transform: {
+                  scale: 100,
+                  rotate: '1.24deg',
+                },
+              }}
+            />
+            <orb
+              css={{
+                position: 'absolute',
+                bottom: '-500%',
+                right: '20%',
+                borderRadius: 10000,
+                width: 100,
+                height: 100,
+                border: [1, 'dotted', '#eee'],
+                opacity: 0.5,
+                transform: {
+                  scale: 100,
+                  rotate: '2.44deg',
+                },
               }}
             />
             <header $$row>
@@ -205,6 +261,7 @@ export default class HomePage extends React.Component {
                     alignItems: 'center',
                     padding: [10, 0],
                     marginTop: 10,
+                    marginBottom: 20,
                   }}
                 >
                   <Icon
@@ -233,17 +290,19 @@ export default class HomePage extends React.Component {
                   justifyContent: 'center',
                 }}
               >
-                <content>
-                  <Title size={3.8}>
-                    A smarter assistant<br /> for your knowledge
-                  </Title>
+                <wrap>
+                  <content $padRight>
+                    <Title size={3.8}>
+                      A smart assistant for your company.
+                    </Title>
 
-                  <Text size={2.2}>
-                    Orbit is an always on app,<br />
-                    exposing helpful context as you work.<br />
-                    <Hl>Unify your company knowledge.</Hl>
-                    <br />
-                  </Text>
+                    <Text size={2.2}>
+                      Orbit is a simple, always on app that provides relevant
+                      context as you work.<br />
+                      <Hl>Scroll down and see how it works.</Hl>
+                      <br />
+                    </Text>
+                  </content>
 
                   <hr />
 
@@ -270,36 +329,13 @@ export default class HomePage extends React.Component {
                   </logos>
 
                   <hr css={{ marginBottom: 0 }} />
-
-                  <tooltip
-                    css={{
-                      position: 'absolute',
-                      bottom: 0,
-                      left: 0,
-                      right: 0,
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}
-                  >
-                    <inner
-                      css={{
-                        background: '#fff',
-                        borderRadius: 10,
-                        padding: [10, 20],
-                      }}
-                    >
-                      <Text size={1.1} textAlign="center">
-                        Scroll down to see it in action
-                      </Text>
-                    </inner>
-                  </tooltip>
-                </content>
+                </wrap>
               </sectionContent>
             </Observer>
           </section>
 
           <Observer onChange={this.handleIntersect(1)} threshold={[0.5]}>
-            <section $bordered $padded>
+            <section css={{ background: '#fff' }} $padded>
               <sectionContent $padRight $padBottom>
                 <img
                   css={{
@@ -316,8 +352,7 @@ export default class HomePage extends React.Component {
                   An assistant that's always there, not hidden in a tab or
                   behind a bot.
                 </Text>
-                <Text>How it works:</Text>
-                <Text>
+                <Text size={1.7}>
                   <ol $list>
                     <li>
                       Orbit hooks into <em>all</em> of your cloud services, even
@@ -343,7 +378,7 @@ export default class HomePage extends React.Component {
 
           <UI.Theme name="dark">
             <Observer onChange={this.handleIntersect(2)} threshold={[0.5]}>
-              <section $bordered $padded $dark>
+              <section $padded $dark>
                 <bottomSlant css={{ background: '#fff' }} />
                 <sectionContent $padRight $padBottom>
                   <after
@@ -409,7 +444,7 @@ export default class HomePage extends React.Component {
     }
     return {
       section: {
-        filter: 'blur(30px)',
+        filter: 'blur(25px)',
       },
     }
   }
@@ -426,6 +461,7 @@ export default class HomePage extends React.Component {
       paddingLeft: 100,
       paddingRight: 100,
       position: 'relative',
+      overflow: 'hidden',
     },
     sectionContent: {
       width: '85%',
@@ -449,9 +485,6 @@ export default class HomePage extends React.Component {
     narrow: {
       maxWidth: 500,
       alignSelf: 'center',
-    },
-    bordered: {
-      borderBottom: [1, [0, 0, 0, 0.05]],
     },
     topSlant: {
       position: 'absolute',

@@ -251,27 +251,28 @@ export default class HomePage extends React.Component {
             <orb
               css={{
                 position: 'absolute',
-                bottom: '-480%',
-                right: '15%',
-                borderRadius: 10000,
-                width: 100,
-                height: 100,
-                background: '#f2f2f2',
-                border: [1, 'dotted', '#eee'],
+                top: -1500,
+                right: -1200,
+                borderRadius: 1000000,
+                width: 11500,
+                height: 11500,
+                background: '#eee',
+                border: [10, UI.color(colorTeal).lighten(0.2)],
                 transform: {
-                  scale: 100,
+                  scale: 1,
                 },
               }}
             />
             <orb
               css={{
                 position: 'absolute',
-                bottom: '-490%',
+                bottom: '-480%',
                 right: '15%',
                 borderRadius: 10000,
+                background: '#f2f2f2',
                 width: 100,
                 height: 100,
-                opacity: 0.75,
+                opacity: 1,
                 border: [1, 'dotted', '#eee'],
                 transform: {
                   scale: 100,
@@ -282,13 +283,13 @@ export default class HomePage extends React.Component {
             <orb
               css={{
                 position: 'absolute',
-                bottom: '-500%',
+                bottom: '-489%',
                 right: '15%',
                 borderRadius: 10000,
                 width: 100,
                 height: 100,
                 border: [1, 'dotted', '#eee'],
-                opacity: 0.5,
+                opacity: 0.75,
                 transform: {
                   scale: 100,
                   rotate: '2.44deg',
@@ -339,14 +340,24 @@ export default class HomePage extends React.Component {
                     marginBottom: 20,
                   }}
                 >
-                  <Icon
-                    fill={'#fff'}
+                  <logos
                     css={{
-                      height: 45,
-                      margin: [-10, 10, -10, -30],
+                      background: '#fff',
+                      alignItems: 'center',
+                      flexFlow: 'row',
+                      padding: 10,
+                      margin: [-10, -10, -10, -20],
                     }}
-                  />
-                  <Logo css={{ height: 40 }} fill={'#fff'} />
+                  >
+                    <Icon
+                      fill={colorBlue}
+                      css={{
+                        height: 45,
+                        margin: [-10, 10, -10, -5],
+                      }}
+                    />
+                    <Logo css={{ height: 40 }} fill={colorBlue} />
+                  </logos>
                 </thing>
               </sectionContent>
             </header>
@@ -360,14 +371,18 @@ export default class HomePage extends React.Component {
             >
               <wrap>
                 <content $padRight>
-                  <Title color={colorBlue} size={3.8}>
-                    A smart assistant for your company.
+                  <Title color={colorBlue} size={4}>
+                    <Hl background={[255, 255, 255, 0.55]} color={colorBlue}>
+                      A smart assistant for your company.
+                    </Hl>
                   </Title>
 
                   <Text size={2.2}>
                     Orbit is a simple, always on app that provides relevant
                     context as you work.<br />
-                    <Hl>Scroll down and see how it works.</Hl>
+                    <Text size={1.7} opacity={0.5}>
+                      Scroll down to see how it works.
+                    </Text>
                     <br />
                   </Text>
 

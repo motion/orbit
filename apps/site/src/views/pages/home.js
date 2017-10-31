@@ -7,6 +7,8 @@ import Observer from '@researchgate/react-intersection-observer'
 
 let blurredRef
 
+const popColor = 'rgb(31.7%, 89%, 75.8%)'
+
 const allItems = {
   0: [
     {
@@ -188,7 +190,7 @@ export default class HomePage extends React.Component {
         <contents>
           <section
             css={{
-              background: '#fff',
+              background: popColor,
               height: window.innerHeight - 30,
               maxHeight: 880,
               minHeight: 700,
@@ -210,7 +212,7 @@ export default class HomePage extends React.Component {
               css={{
                 position: 'absolute',
                 bottom: '-480%',
-                right: '20%',
+                right: '15%',
                 borderRadius: 10000,
                 width: 100,
                 height: 100,
@@ -225,7 +227,7 @@ export default class HomePage extends React.Component {
               css={{
                 position: 'absolute',
                 bottom: '-490%',
-                right: '20%',
+                right: '15%',
                 borderRadius: 10000,
                 width: 100,
                 height: 100,
@@ -241,7 +243,7 @@ export default class HomePage extends React.Component {
               css={{
                 position: 'absolute',
                 bottom: '-500%',
-                right: '20%',
+                right: '15%',
                 borderRadius: 10000,
                 width: 100,
                 height: 100,
@@ -265,21 +267,15 @@ export default class HomePage extends React.Component {
                   }}
                 >
                   <Icon
-                    fill="blue"
+                    fill="#fff"
                     css={{
-                      height: 40,
-                      marginRight: 10,
+                      height: 45,
+                      margin: [-10, 10, -10, -20],
                     }}
                   />
-                  <Logo css={{ height: 30 }} fill="blue" />
+                  <Logo css={{ height: 40 }} fill="blue" />
                 </thing>
               </sectionContent>
-
-              <bottomSlant
-                css={{
-                  background: '#fff',
-                }}
-              />
             </header>
 
             <Observer onChange={this.handleIntersect(0)} threshold={[0.5]}>
@@ -292,7 +288,7 @@ export default class HomePage extends React.Component {
               >
                 <wrap>
                   <content $padRight>
-                    <Title size={3.8}>
+                    <Title color="blue" size={3.8}>
                       A smart assistant for your company.
                     </Title>
 
@@ -302,19 +298,19 @@ export default class HomePage extends React.Component {
                       <Hl>Scroll down and see how it works.</Hl>
                       <br />
                     </Text>
-                  </content>
 
-                  <hr />
+                    <hr />
+                  </content>
 
                   <logos
                     css={{
                       flexFlow: 'row',
                       flex: 1,
                       justifyContent: 'space-around',
-                      margin: [20, 0, 40],
+                      margin: [40, 0, 0],
                     }}
                   >
-                    <UI.PassProps size={40}>
+                    <UI.PassProps size={35} opacity={0.25}>
                       <UI.Icon name="social-slack" />
                       <UI.Icon name="social-github" />
                       <UI.Icon name="social-google" />
@@ -327,8 +323,6 @@ export default class HomePage extends React.Component {
                       <UI.Icon name="attach" />
                     </UI.PassProps>
                   </logos>
-
-                  <hr css={{ marginBottom: 0 }} />
                 </wrap>
               </sectionContent>
             </Observer>
@@ -347,8 +341,12 @@ export default class HomePage extends React.Component {
                   }}
                   src="/orbitals.svg"
                 />
-                <Title size={3}>Look ma, no hands</Title>
-                <Text size={2} fontWeight={600} opacity={0.5}>
+                <Title size={3}>Hands-free Intelligence</Title>
+                <Text
+                  size={2}
+                  fontWeight={600}
+                  color={UI.color(popColor).darken(0.2)}
+                >
                   An assistant that's always there, not hidden in a tab or
                   behind a bot.
                 </Text>
@@ -394,7 +392,7 @@ export default class HomePage extends React.Component {
                     <UI.Icon color="#000" size={501} name="lock" />
                   </after>
                   <Title size={3}>The No-Cloud Infrastructure</Title>
-                  <Text size={2} fontWeight={600}>
+                  <Text size={2} fontWeight={600} opacity={0.7}>
                     In order to work, Orbit needed to invent a new model: one
                     that keeps you safe.
                   </Text>
@@ -412,8 +410,8 @@ export default class HomePage extends React.Component {
                   </SubText>
                   <SubText>
                     <Hl>
-                      This allows us to be ambitious from day one without a
-                      security nightmare.
+                      This allows us to be ambitious from day one without
+                      compromise.
                     </Hl>{' '}
                     Orbit can crawl everything that's relevant to you and your
                     team without fear of data breaches, permissions exposures,
@@ -541,8 +539,8 @@ export default class HomePage extends React.Component {
       height: 0,
       border: 'none',
       borderTop: [1, [0, 0, 0, 0.05]],
-      margin: [15, 0],
-      padding: [10, 0],
+      paddingBottom: 20,
+      marginTop: 20,
     },
     strong: {
       fontWeight: 500,

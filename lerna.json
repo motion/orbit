@@ -7,6 +7,7 @@
     "bootstrap": {
       "hoist": true,
       "nohoist": [
+        "@researchgate/react-intersection-observer",
         "bindings",
         "osx-mouse",
         "ref",

@@ -12,6 +12,7 @@
         "osx-mouse",
         "ref",
         "ffi",
+        "react-measure",
         "hostile",
         "sudo-prompt",
         "pouchdb-mapreduce",

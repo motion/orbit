@@ -3,7 +3,6 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { Icon, Logo, Text, Title, Hl, SubText } from './views'
 import { throttle } from 'lodash'
-import Observer from '@researchgate/react-intersection-observer'
 import SidebarTitle from './sidebarTitle2'
 
 let blurredRef
@@ -148,32 +147,42 @@ export default class HomePage extends React.Component {
     if (this.props.blurred) {
       blurredRef = ref.childNodes[0]
     } else {
+      const update = lastIntersection => {
+        if (this.state.lastIntersection !== lastIntersection) {
+          this.setState({ lastIntersection })
+        }
+      }
+
       this.on(
         this.node,
         'scroll',
         throttle(() => {
           blurredRef.style.transform = `translateY(-${this.node.scrollTop}px)`
+
+          if (this.node.scrollTop < 200) {
+            update(0)
+          } else {
+            const bottom = window.innerHeight + this.node.scrollTop
+            for (let i = this.bounds.length - 1; i > -1; i--) {
+              const bound = this.bounds[i]
+              if (!bound) continue
+              if (bound.top + 300 < bottom) {
+                update(i)
+                break
+              }
+            }
+          }
         }, 16)
       )
     }
   }
 
-  handleIntersect(index) {
-    return ({ intersectionRatio }) => {
-      console.log(
-        index,
-        'intersectionRatio',
-        intersectionRatio,
-        this.node && this.node.scrollTop
-      )
-      if (!this.node || this.node.scrollTop < 100) {
-        this.setState({
-          lastIntersection: 0,
-        })
-      } else {
-        this.setState({
-          lastIntersection: index,
-        })
+  bounds = []
+
+  setSection(index) {
+    return ref => {
+      if (ref) {
+        this.bounds[index] = ref.getBoundingClientRect()
       }
     }
   }
@@ -214,7 +223,11 @@ export default class HomePage extends React.Component {
 
     return (
       <page css={styles.page} ref={x => this.setRef(x)}>
-        <Ora if={!blurred} showIndex={this.state.lastIntersection} />
+        <Ora
+          if={!blurred}
+          key={this.state.lastIntersection}
+          showIndex={this.state.lastIntersection}
+        />
 
         <contents>
           <section
@@ -338,145 +351,143 @@ export default class HomePage extends React.Component {
               </sectionContent>
             </header>
 
-            <Observer onChange={this.handleIntersect(0)} threshold={[0.4]}>
-              <sectionContent
-                $padded
-                css={{
-                  flex: 1,
-                  justifyContent: 'center',
-                }}
-              >
-                <wrap>
-                  <content $padRight>
-                    <Title color={colorBlue} size={3.8}>
-                      A smart assistant for your company.
-                    </Title>
+            <sectionContent
+              $padded
+              css={{
+                flex: 1,
+                justifyContent: 'center',
+              }}
+            >
+              <wrap>
+                <content $padRight>
+                  <Title color={colorBlue} size={3.8}>
+                    A smart assistant for your company.
+                  </Title>
 
-                    <Text size={2.2}>
-                      Orbit is a simple, always on app that provides relevant
-                      context as you work.<br />
-                      <Hl>Scroll down and see how it works.</Hl>
-                      <br />
-                    </Text>
+                  <Text size={2.2}>
+                    Orbit is a simple, always on app that provides relevant
+                    context as you work.<br />
+                    <Hl>Scroll down and see how it works.</Hl>
+                    <br />
+                  </Text>
 
-                    <hr />
-                  </content>
+                  <hr />
+                </content>
 
-                  <logos
-                    css={{
-                      flexFlow: 'row',
-                      flex: 1,
-                      justifyContent: 'space-around',
-                      margin: [40, 0, 0],
-                    }}
-                  >
-                    <UI.PassProps size={35} opacity={0.25}>
-                      <UI.Icon name="social-slack" />
-                      <UI.Icon name="social-github" />
-                      <UI.Icon name="social-google" />
-                      <UI.Icon name="social-dropbox" />
-                      <UI.Icon name="social-trello" />
-                      <UI.Icon name="mail" />
-                      <UI.Icon name="calendar" />
-                      <UI.Icon name="files_archive-paper" />
-                      <UI.Icon name="files_book" />
-                      <UI.Icon name="attach" />
-                    </UI.PassProps>
-                  </logos>
-                </wrap>
-              </sectionContent>
-            </Observer>
+                <logos
+                  css={{
+                    flexFlow: 'row',
+                    flex: 1,
+                    justifyContent: 'space-around',
+                    margin: [40, 0, 0],
+                  }}
+                >
+                  <UI.PassProps size={35} opacity={0.25}>
+                    <UI.Icon name="social-slack" />
+                    <UI.Icon name="social-github" />
+                    <UI.Icon name="social-google" />
+                    <UI.Icon name="social-dropbox" />
+                    <UI.Icon name="social-trello" />
+                    <UI.Icon name="mail" />
+                    <UI.Icon name="calendar" />
+                    <UI.Icon name="files_archive-paper" />
+                    <UI.Icon name="files_book" />
+                    <UI.Icon name="attach" />
+                  </UI.PassProps>
+                </logos>
+              </wrap>
+            </sectionContent>
           </section>
 
-          <Observer onChange={this.handleIntersect(1)} threshold={[0.4]}>
-            <section css={{ background: '#fff' }} $padded>
-              <sectionContent $padRight $padBottom>
-                <img
-                  css={{
-                    position: 'absolute',
-                    top: -35,
-                    right: -370,
-                    transition: 'all ease-in 300ms',
-                    animation: 'rotate 120s infinite linear',
-                  }}
-                  src="/orbitals.svg"
-                />
-                <Title color={colorBlue} size={3}>
-                  Hands-free Intelligence
-                </Title>
-                <Text size={2} fontWeight={600} opacity={0.5}>
-                  An assistant that's always there, not hidden in a tab or bot.
-                </Text>
-                <Text size={1.7}>
-                  <ol $list>
-                    <li>
-                      Orbit hooks into <em>all</em> of your cloud services, and
-                      privately into your email and chat.
-                    </li>
-                    <li>
-                      Orbit uses machine learning to understand{' '}
-                      <strong>when</strong> to show answers,{' '}
-                      <strong>what's</strong> important to whom, and that{' '}
-                      "accounting paperwork" is similar to "tax form".
-                    </li>
-                    <li>
-                      Orbit is a desktop assistant that's always on. Wherever
-                      you are - in chat, emails, your CRM, or just browsing the
-                      web - it just works.
-                    </li>
-                  </ol>
-                </Text>
-              </sectionContent>
-              <bottomSlant $dark />
-            </section>
-          </Observer>
+          <section
+            ref={this.setSection(1)}
+            css={{ background: '#fff' }}
+            $padded
+          >
+            <sectionContent $padRight $padBottom>
+              <img
+                css={{
+                  position: 'absolute',
+                  top: -35,
+                  right: -370,
+                  transition: 'all ease-in 300ms',
+                  animation: 'rotate 120s infinite linear',
+                }}
+                src="/orbitals.svg"
+              />
+              <Title color={colorBlue} size={3}>
+                Hands-free Intelligence
+              </Title>
+              <Text size={2} fontWeight={600} opacity={0.5}>
+                An assistant that's always there, not hidden in a tab or bot.
+              </Text>
+              <Text size={1.7}>
+                <ol $list>
+                  <li>
+                    Orbit hooks into <em>all</em> of your cloud services, and
+                    privately into your email and chat.
+                  </li>
+                  <li>
+                    Orbit uses machine learning to understand{' '}
+                    <strong>when</strong> to show answers,{' '}
+                    <strong>what's</strong> important to whom, and that{' '}
+                    "accounting paperwork" is similar to "tax form".
+                  </li>
+                  <li>
+                    Orbit is a desktop assistant that's always on. Wherever you
+                    are - in chat, emails, your CRM, or just browsing the web -
+                    it just works.
+                  </li>
+                </ol>
+              </Text>
+            </sectionContent>
+            <bottomSlant $dark />
+          </section>
 
           <UI.Theme name="dark">
-            <Observer onChange={this.handleIntersect(2)} threshold={[0.4]}>
-              <section $padded $dark>
-                <bottomSlant css={{ background: '#fff' }} />
-                <sectionContent $padRight $padBottom>
-                  <after
-                    css={{
-                      position: 'absolute',
-                      top: 0,
-                      right: -200,
-                      bottom: 0,
-                      justifyContent: 'center',
-                      opacity: 0.4,
-                    }}
-                  >
-                    <UI.Icon color="#000" size={501} name="lock" />
-                  </after>
-                  <Title size={3}>The No-Cloud Infrastructure</Title>
-                  <Text size={2} fontWeight={600} opacity={0.7}>
-                    In order to work, Orbit needed to invent a new model: one
-                    that keeps you safe.
-                  </Text>
-                  <SubText>
-                    Here's the rub. To provide great context, Orbit needs to
-                    hook into a lot of company data to be valuable. Your Slack,
-                    email, documents, tasks, company knowledge.
-                  </SubText>
+            <section ref={this.setSection(2)} $padded $dark>
+              <bottomSlant css={{ background: '#fff' }} />
+              <sectionContent $padRight $padBottom>
+                <after
+                  css={{
+                    position: 'absolute',
+                    top: 0,
+                    right: -200,
+                    bottom: 0,
+                    justifyContent: 'center',
+                    opacity: 0.4,
+                  }}
+                >
+                  <UI.Icon color="#000" size={501} name="lock" />
+                </after>
+                <Title size={3}>The No-Cloud Infrastructure</Title>
+                <Text size={2} fontWeight={600} opacity={0.7}>
+                  In order to work, Orbit needed to invent a new model: one that
+                  keeps you safe.
+                </Text>
+                <SubText>
+                  Here's the rub. To provide great context, Orbit needs to hook
+                  into a lot of company data to be valuable. Your Slack, email,
+                  documents, tasks, company knowledge.
+                </SubText>
 
-                  <SubText>How can we do that completely securely?</SubText>
+                <SubText>How can we do that completely securely?</SubText>
 
-                  <SubText>
-                    Answer: the data never once leaves your local computer. We
-                    never see it, and neither does anyone else.
-                  </SubText>
-                  <SubText>
-                    <Hl>
-                      This allows us to be ambitious from day one without
-                      compromise.
-                    </Hl>{' '}
-                    Orbit can crawl everything that's relevant to you and your
-                    team without fear of data breaches, permissions exposures,
-                    or the need to run a complicated on-prem installs.
-                  </SubText>
-                </sectionContent>
-              </section>
-            </Observer>
+                <SubText>
+                  Answer: the data never once leaves your local computer. We
+                  never see it, and neither does anyone else.
+                </SubText>
+                <SubText>
+                  <Hl>
+                    This allows us to be ambitious from day one without
+                    compromise.
+                  </Hl>{' '}
+                  Orbit can crawl everything that's relevant to you and your
+                  team without fear of data breaches, permissions exposures, or
+                  the need to run a complicated on-prem installs.
+                </SubText>
+              </sectionContent>
+            </section>
           </UI.Theme>
 
           <footer>

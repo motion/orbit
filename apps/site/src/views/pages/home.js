@@ -7,7 +7,8 @@ import Observer from '@researchgate/react-intersection-observer'
 
 let blurredRef
 
-const popColor = 'rgb(31.7%, 89%, 75.8%)'
+const colorTeal = 'rgb(28.8%, 80.8%, 67.6%)'
+const colorBlue = '#133cca'
 
 const allItems = {
   0: [
@@ -190,7 +191,7 @@ export default class HomePage extends React.Component {
         <contents>
           <section
             css={{
-              background: popColor,
+              background: colorTeal,
               height: window.innerHeight - 30,
               maxHeight: 880,
               minHeight: 700,
@@ -267,13 +268,13 @@ export default class HomePage extends React.Component {
                   }}
                 >
                   <Icon
-                    fill="#fff"
+                    fill={'#fff'}
                     css={{
                       height: 45,
-                      margin: [-10, 10, -10, -20],
+                      margin: [-10, 10, -10, -30],
                     }}
                   />
-                  <Logo css={{ height: 40 }} fill="blue" />
+                  <Logo css={{ height: 40 }} fill={'#fff'} />
                 </thing>
               </sectionContent>
             </header>
@@ -288,7 +289,7 @@ export default class HomePage extends React.Component {
               >
                 <wrap>
                   <content $padRight>
-                    <Title color="blue" size={3.8}>
+                    <Title color={colorBlue} size={3.8}>
                       A smart assistant for your company.
                     </Title>
 
@@ -341,12 +342,10 @@ export default class HomePage extends React.Component {
                   }}
                   src="/orbitals.svg"
                 />
-                <Title size={3}>Hands-free Intelligence</Title>
-                <Text
-                  size={2}
-                  fontWeight={600}
-                  color={UI.color(popColor).darken(0.2)}
-                >
+                <Title color={colorBlue} size={3}>
+                  Hands-free Intelligence
+                </Title>
+                <Text size={2} fontWeight={600} opacity={0.5}>
                   An assistant that's always there, not hidden in a tab or
                   behind a bot.
                 </Text>
@@ -423,12 +422,16 @@ export default class HomePage extends React.Component {
           </UI.Theme>
 
           <footer>
-            <section $padded $$centered>
-              <Text>Orbit is going into private beta in December.</Text>
-              <Text>
-                <a href="mailto:natewienert@gmail.com">Send us an email</a> if
-                you're interested.
-              </Text>
+            <section css={{ padding: [250, 0] }} $$centered>
+              <sectionContent>
+                <Text size={3}>
+                  Orbit is going into private beta in December.
+                </Text>
+                <Text size={2}>
+                  <a href="mailto:natewienert@gmail.com">Send us an email</a> if
+                  you're interested.
+                </Text>
+              </sectionContent>
             </section>
           </footer>
         </contents>
@@ -478,7 +481,7 @@ export default class HomePage extends React.Component {
       paddingBottom: 80,
     },
     dark: {
-      background: '#1a218c',
+      background: colorBlue,
     },
     narrow: {
       maxWidth: 500,

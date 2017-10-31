@@ -40,10 +40,13 @@ select:-webkit-autofill:focus {
 ::selection {
   background: blue;
   color: #fff;
+  text-shadow: none;
 }
+
 *::selection {
   background: blue;
   color: #fff;
+  text-shadow: none;
 }
 
 @keyframes fade {
@@ -295,19 +298,6 @@ html {
   color: #222;
   font-size: 1em;
   line-height: 1.4;
-}
-
-/*
- * Remove text-shadow in selection highlight:
- * https://twitter.com/miketaylr/status/12228805301
- *
- * These selection rule sets have to be separate.
- * Customize the background color to match your design.
- */
-
-::selection {
-  background: #b3d4fc;
-  text-shadow: none;
 }
 
 /*

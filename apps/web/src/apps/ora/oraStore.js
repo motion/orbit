@@ -30,20 +30,6 @@ export const SHORTCUTS = {
   fullscreen: ['command+b', 'command+\\'],
 }
 
-const sleep = n => new Promise(resolve => setTimeout(resolve, n))
-const hashStr = s => {
-  let hash = 0,
-    i,
-    chr
-  if (s.length === 0) return hash
-  for (i = 0; i < s.length; i++) {
-    chr = s.charCodeAt(i)
-    hash = (hash << 5) - hash + chr
-    hash |= 0 // Convert to 32bit integer
-  }
-  return hash
-}
-
 const debounce = (fn, timeout) => {
   let clearId = null
   return (...args) => {
@@ -258,17 +244,23 @@ export default class OraStore {
   }
 
   onSearchChange = e => {
-    this.textboxVal = e.target.value
-    this.setSearch(this.textboxVal)
+    this.setTextboxVal(e.target.value)
   }
 
-  setSearch = debounce(text => {
+  setTextboxVal = value => {
+    this.textboxVal = value
+    this.setSearch(value)
+  }
+
+  setSearchImmediate = text => {
     this.search = text
     if (this.shouldFocus) {
       this.stack.focus(0)
       this.shouldFocus = false
     }
-  }, 20)
+  }
+
+  setSearch = debounce(this.setSearchImmediate, 20)
 
   attachTrap(attachName, el) {
     this.traps[attachName] = new Mousetrap(el)
@@ -298,6 +290,9 @@ export default class OraStore {
     },
     esc: e => {
       if (this.inputRef === document.activeElement) {
+        if (this.textboxVal !== '') {
+          this.setTextboxVal('')
+        }
         this.inputRef.blur()
         return
       }

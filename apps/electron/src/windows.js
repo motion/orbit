@@ -24,7 +24,7 @@ const ORA_WIDTH = 300
 export default class ExampleApp extends React.Component {
   state = {
     restart: false,
-    show: true,
+    showSettings: true,
     size: [0, 0],
     position: [0, 0],
     trayPosition: [0, 0],
@@ -238,21 +238,24 @@ end tell`,
 
     return (
       <app onBeforeQuit={() => console.log('hi')}>
-        <Menu />
+        <Menu
+          onPreferences={() => {
+            console.log('show preferences')
+            this.setState({ showPreferences: true })
+          }}
+        />
 
         <window
-          key="search"
           {...appWindow}
+          show={this.state.showSettings}
           vibrancy="dark"
           transparent
           hasShadow
-          show
           showDevTools
           defaultSize={this.initialSize || this.state.size}
           size={this.state.size}
           file={Constants.APP_URL}
           titleBarStyle="customButtonsOnHover"
-          show={this.state.show}
           position={this.state.position}
           onResize={size => this.setState({ size })}
           onMoved={position => this.setState({ position })}

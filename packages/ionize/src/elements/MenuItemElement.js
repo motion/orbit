@@ -70,6 +70,7 @@ export class RoleMenuItemElement extends MenuItemElement {
 const SUPPORTED_PROPS = {
   label: true,
   onClick: true,
+  accelerator: true,
 }
 
 export class CustomMenuItemElement extends MenuItemElement {
@@ -83,6 +84,7 @@ export class CustomMenuItemElement extends MenuItemElement {
     this.menuItem = new MenuItem({
       type: 'normal',
       label: props.label,
+      acceleartor: props.accelerator,
       click: (menuItem, browserWindow, event) => {
         this.emitter.emit('click', event)
       },
@@ -134,6 +136,7 @@ export class CustomMenuItemElement extends MenuItemElement {
     this.menuItem = new MenuItem({
       type: 'normal',
       label: newProps.label,
+      accelerator: newProps.accelerator,
       click: (menuItem, browserWindow, event) => {
         this.emitter.emit('click', event)
       },

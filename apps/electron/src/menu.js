@@ -1,9 +1,10 @@
 import * as React from 'react'
 
-export default () => (
+export default props => (
   <menu>
-    <submenu label="Electron">
+    <submenu label="Orbit">
       <about />
+      <preferences accelerator="CmdOrCtrl+," onClick={props.onPreferences} />
       <sep />
       <hide />
       <hideothers />

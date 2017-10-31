@@ -11,16 +11,19 @@ import {
 import { watch, store } from '@mcro/black'
 import { Thing } from '~/app'
 import tfidf from './tfidf'
+import latinize from 'latinize'
 import stopwords from './stopwords'
 
-const vectorsFile = `/vectors15k.txt`
+// const vectorsFile = `/vectors15k.txt`
+const vectorsFile = `/vectors100k.txt`
 
 // alphanumeric and spacse
 const cleanText = s => {
   if (s.toLowerCase) {
-    return s.toLowerCase().replace(/[^0-9a-zA-Z\ ]/g, '')
+    return latinize(s || '')
+      .toLowerCase()
+      .replace(/[^0-9a-zA-Z\ ]/g, '')
   } else {
-    console.log('s is', s)
     return ''
   }
 }
@@ -31,19 +34,19 @@ let vectorCache = null
 export default class Context {
   // out of vocabulary words, a map of word -> count
   vectors = null
-  items = Thing.find()
+  // items = Thing.find()
+  corpus = null
 
   @watch
   tfidf = () =>
-    this.items &&
+    this.corpus &&
     !this.loading &&
-    tfidf((this.items || []).map(item => this.textToWords(item.title)))
+    tfidf((this.corpus || []).map(item => this.textToWords(item.title)))
 
-  @watch oov = () => this.items && this.vectors && this.getOov()
+  oov = null
 
   get loading() {
-    if (Object.keys(this.oov || {}).length < 5) return true
-    return this.vectors === null
+    return !this.oov || this.vectors === null
   }
 
   // prepatory
@@ -57,12 +60,15 @@ export default class Context {
       }, 100)
     })
 
-  constructor() {
+  constructor(corpus) {
+    this.corpus = corpus
     this.load()
   }
 
   load = async () => {
     this.vectors = await this.getVectors()
+    this.oov = this.getOov()
+    window.context = this
   }
 
   getVectors = async () => {
@@ -93,7 +99,7 @@ export default class Context {
 
     const counts = countBy(
       flatten(
-        (this.items || []).map(item =>
+        (this.corpus || []).map(item =>
           cleanText(item.title)
             .split(' ')
             .map(i => wordMap[i] || i)
@@ -104,10 +110,12 @@ export default class Context {
     )
     return counts
 
+    /*
     return Object.keys(counts).reduce((acc, item) => {
       if (counts[name] > 2) return { ...acc, [item]: counts[name] }
       return acc
     }, {})
+    */
   }
 
   // calculations
@@ -150,13 +158,23 @@ export default class Context {
       .map(({ term }) => term)
   }
 
-  closestItems = (text, n = 5) => {
+  closestItems = (text, n = 3) => {
     const words = this.textToWords(text)
 
-    const items = (this.items || []).map(item => ({
-      similarity: this.wordsDistance(words, this.textToWords(item.title)),
-      item,
-    }))
+    const items = (this.corpus || []).map(item => {
+      const title = item.title.split('\n')[0]
+      const text = item.title
+        .split('\n')
+        .slice(1)
+        .join('\n')
+
+      return {
+        similarity:
+          this.wordsDistance(words, this.textToWords(title)) +
+          this.wordsDistance(words, this.textToWords(text)),
+        item,
+      }
+    })
 
     return sortBy(items, 'similarity').slice(0, n)
   }

@@ -1,10 +1,12 @@
 import { watch } from '@mcro/black'
+import * as UI from '@mcro/ui'
 import { Thing } from '~/app'
 import Mousetrap from 'mousetrap'
 import { OS } from '~/helpers'
 import Context from '~/context'
 import StackStore from '../home/stackStore'
-import { last } from 'lodash'
+import { summarize, summarizeWithQuestion } from './summarize'
+import { last, flatten, take } from 'lodash'
 import keycode from 'keycode'
 
 export const SHORTCUTS = {
@@ -28,6 +30,20 @@ export const SHORTCUTS = {
   fullscreen: ['command+b', 'command+\\'],
 }
 
+const sleep = n => new Promise(resolve => setTimeout(resolve, n))
+const hashStr = s => {
+  let hash = 0,
+    i,
+    chr
+  if (s.length === 0) return hash
+  for (i = 0; i < s.length; i++) {
+    chr = s.charCodeAt(i)
+    hash = (hash << 5) - hash + chr
+    hash |= 0 // Convert to 32bit integer
+  }
+  return hash
+}
+
 const debounce = (fn, timeout) => {
   let clearId = null
   return (...args) => {
@@ -40,6 +56,7 @@ const debounce = (fn, timeout) => {
 export default class OraStore {
   stack = new StackStore([{ type: 'oramain' }])
   inputRef = null
+  context = null
   search = ''
   textboxVal = ''
   // things = Thing.find()
@@ -47,12 +64,11 @@ export default class OraStore {
   lastKey = null
   hidden = false
   focused = false
-  context = new Context()
   activeThing = null
 
   osContext = null
 
-  willMount() {
+  async willMount() {
     window.homeStore = this
     this.attachTrap('window', window)
     this._watchFocusBar()
@@ -66,6 +82,40 @@ export default class OraStore {
         this.setTimeout(this.blurBar, 100)
       }
     })
+
+    await this.fetchData()
+  }
+
+  addToCorpus = text => {
+    this.corpus = [...this.corpus, { title: text }]
+    localStorage.setItem('corpus', JSON.stringify(this.corpus))
+  }
+
+  addCurrentPage = async () => {
+    const token = `e441c83aed447774532894d25d97c528`
+    const { url } = this.osContext
+    const toFetch = `https://api.diffbot.com/v3/article?token=${token}&url=${url}`
+    console.log('to fetch is', toFetch)
+
+    const res = await (await fetch(toFetch)).json()
+    const { text, title } = res.objects[0]
+    this.addToCorpus(title + '\n' + text)
+  }
+
+  fetchData = async () => {
+    const corpus = JSON.parse(localStorage.getItem('corpus') || '[]')
+
+    this.context = new Context(corpus)
+    this.corpus = corpus
+
+    OS.on('set-context', (event, info) => {
+      const json = JSON.parse(info)
+      // check to avoid rerendering
+      if (!this.osContext || this.osContext.title !== json.title) {
+        this.osContext = json
+      }
+    })
+    this.getOSContext()
   }
 
   _watchMouse() {
@@ -92,12 +142,6 @@ export default class OraStore {
 
   hide = () => {
     this.hidden = true
-
-    // OS.on('set-context', (event, url) => {
-    //   this.osContext = this.parseUrl(url)
-    // })
-    // this.getOSContext()
-    // this.context = new Context()
   }
 
   getOSContext = () => {
@@ -105,33 +149,46 @@ export default class OraStore {
     this.setTimeout(this.getOSContext, 500)
   }
 
-  parseUrl = url => {
-    let title = ''
-    if (url.indexOf('/issues/') > -1) {
-      const active = (this.things || []).filter(
-        t => t.data.number === +last(url.split('/'))
-      )
-
-      if (active.length > 0) {
-        this.activeThing = active[0]
-        title = active[0].title
-      }
-    }
-    return { url, title, show: title !== '' }
-  }
-
   get contextResults() {
-    return this.context.loading || this.osContext === null
+    const title = this.osContext ? this.osContext.title : ''
+    const addBold = line => {
+      const r = new RegExp('(' + this.search.split(' ').join('|') + ')', 'ig')
+      return line.replace(
+        r,
+        '<b style="font-weight: 400; color: #aed6ff;">$1</b>'
+      )
+    }
+
+    return !this.context || this.context.loading // || this.osContext === null
       ? []
       : this.context
-          .closestItems(this.osContext.title, 5)
-          .filter(x => x.item.id !== (this.activeThing || { id: null }).id)
-          .map(x =>
-            Thing.toResult(x.item, {
+          .closestItems(this.search.length > 0 ? this.search : title, 5)
+          .map(({ item }) => {
+            const { title, lines } =
+              this.search.length === 0
+                ? summarize(item.title)
+                : summarizeWithQuestion(item.title, this.search)
+
+            return {
               category: 'Context',
-              itemProps: { children: '' },
-            })
-          )
+              height: 200,
+              children: (
+                <paras style={{ width: '100%' }}>
+                  <p css={{ opacity: 1, fontSize: 13 }}>{title}</p>
+                  {lines.map(line => (
+                    <p
+                      css={{
+                        marginTop: 4,
+                        opacity: 0.8,
+                        fontSize: 13,
+                      }}
+                      dangerouslySetInnerHTML={{ __html: addBold(line) }}
+                    />
+                  ))}
+                </paras>
+              ),
+            }
+          })
   }
 
   _watchInput() {

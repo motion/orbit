@@ -3,6 +3,9 @@
 .innerContent ol {
   padding-left: 20px;
 }
+summary {
+  display: block !important;
+}
 
 /* for google docs */
 style,

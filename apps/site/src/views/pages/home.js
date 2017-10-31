@@ -93,7 +93,7 @@ class Ora {
             width: 280,
             height: 300,
             borderRadius: 10,
-            background: [0, 0, 0, 0.7],
+            background: [0, 0, 0, 0.65],
             color: '#fff',
             zIndex: 10000,
             boxShadow: '0 0 10px rgba(0,0,0,0.25)',
@@ -189,11 +189,24 @@ export default class HomePage extends React.Component {
               height: window.innerHeight - 30,
               maxHeight: 880,
               minHeight: 700,
+              position: 'relative',
             }}
           >
-            <header $$row css={{ background: '#fff', zIndex: 100 }}>
+            <topSlant
+              css={{
+                background: '#fff',
+              }}
+            />
+            <header $$row>
               <sectionContent>
-                <thing $$row css={{ alignItems: 'center', padding: [10, 0] }}>
+                <thing
+                  $$row
+                  css={{
+                    alignItems: 'center',
+                    padding: [10, 0],
+                    marginTop: 10,
+                  }}
+                >
                   <Icon
                     fill="blue"
                     css={{
@@ -204,6 +217,12 @@ export default class HomePage extends React.Component {
                   <Logo css={{ height: 30 }} fill="blue" />
                 </thing>
               </sectionContent>
+
+              <bottomSlant
+                css={{
+                  background: '#fff',
+                }}
+              />
             </header>
 
             <Observer onChange={this.handleIntersect(0)} threshold={[0.5]}>
@@ -215,25 +234,18 @@ export default class HomePage extends React.Component {
                 }}
               >
                 <content>
-                  <Title size={4}>
-                    A smart assistant<br /> for your knowledge.
+                  <Title size={3.8}>
+                    A smarter assistant<br /> for your knowledge
                   </Title>
 
                   <Text size={2.2}>
-                    A desktop assistant thats always on,<br />
-                    bringing context to everything you do.<br />
-                    <Hl>Your companys knowledge, unified.</Hl>
+                    Orbit is an always on app,<br />
+                    exposing helpful context as you work.<br />
+                    <Hl>Unify your company knowledge.</Hl>
                     <br />
                   </Text>
 
                   <hr />
-
-                  <narrow if={false}>
-                    <Text textAlign="center" size={2.2}>
-                      Search across every service and see an activity feed for
-                      any project or team.
-                    </Text>
-                  </narrow>
 
                   <logos
                     css={{
@@ -257,7 +269,7 @@ export default class HomePage extends React.Component {
                     </UI.PassProps>
                   </logos>
 
-                  <hr />
+                  <hr css={{ marginBottom: 0 }} />
 
                   <tooltip
                     css={{
@@ -274,7 +286,6 @@ export default class HomePage extends React.Component {
                         background: '#fff',
                         borderRadius: 10,
                         padding: [10, 20],
-                        marginBottom: -20,
                       }}
                     >
                       <Text size={1.1} textAlign="center">
@@ -289,7 +300,7 @@ export default class HomePage extends React.Component {
 
           <Observer onChange={this.handleIntersect(1)} threshold={[0.5]}>
             <section $bordered $padded>
-              <sectionContent $padRight>
+              <sectionContent $padRight $padBottom>
                 <img
                   css={{
                     position: 'absolute',
@@ -301,38 +312,40 @@ export default class HomePage extends React.Component {
                   src="/orbitals.svg"
                 />
                 <Title size={3}>Look ma, no hands</Title>
-                <Text size={2}>
-                  Knowledge is 10x more useful when it's always there, not
-                  hidden in a tab.
+                <Text size={2} fontWeight={600} opacity={0.5}>
+                  An assistant that's always there, not hidden in a tab or
+                  behind a bot.
                 </Text>
-                <Text size={2}>
-                  <Hl>Here's what makes Orbit special:</Hl>
-                </Text>
-                <Text size={1.6}>
+                <Text>How it works:</Text>
+                <Text>
                   <ol $list>
                     <li>
                       Orbit hooks into <em>all</em> of your cloud services, even
                       privately into your email and chat.
                     </li>
                     <li>
-                      Orbit lives on your desktop. Wherever you are -- in chat,
-                      emails, your CRM, or just browsing the web -- it just
-                      works.
+                      Orbit uses machine learning to understands what's
+                      important to who, and that{' '}
+                      <strong>accounting paperwork</strong> is similar to{' '}
+                      <strong>tax form</strong>.
                     </li>
                     <li>
-                      Machine learning means Orbit knows that "expense" also
-                      means "charge".
+                      Orbit is a desktop assistant that's always on. Wherever
+                      you are - in chat, emails, your CRM, or just browsing the
+                      web - it just works.
                     </li>
                   </ol>
                 </Text>
               </sectionContent>
+              <bottomSlant $dark />
             </section>
           </Observer>
 
           <UI.Theme name="dark">
             <Observer onChange={this.handleIntersect(2)} threshold={[0.5]}>
               <section $bordered $padded $dark>
-                <sectionContent $padRight>
+                <bottomSlant css={{ background: '#fff' }} />
+                <sectionContent $padRight $padBottom>
                   <after
                     css={{
                       position: 'absolute',
@@ -346,9 +359,9 @@ export default class HomePage extends React.Component {
                     <UI.Icon color="#000" size={501} name="lock" />
                   </after>
                   <Title size={3}>The No-Cloud Infrastructure</Title>
-                  <Text size={2}>
+                  <Text size={2} fontWeight={600}>
                     In order to work, Orbit needed to invent a new model: one
-                    that keeps your data safe.
+                    that keeps you safe.
                   </Text>
                   <SubText>
                     Here's the rub. To provide great context, Orbit needs to
@@ -364,8 +377,8 @@ export default class HomePage extends React.Component {
                   </SubText>
                   <SubText>
                     <Hl>
-                      This allows us to both be ambitious from day one without
-                      creating a security nightmare.
+                      This allows us to be ambitious from day one without a
+                      security nightmare.
                     </Hl>{' '}
                     Orbit can crawl everything that's relevant to you and your
                     team without fear of data breaches, permissions exposures,
@@ -396,7 +409,7 @@ export default class HomePage extends React.Component {
     }
     return {
       section: {
-        filter: 'blur(35px)',
+        filter: 'blur(30px)',
       },
     }
   }
@@ -412,6 +425,7 @@ export default class HomePage extends React.Component {
       marginRight: -100,
       paddingLeft: 100,
       paddingRight: 100,
+      position: 'relative',
     },
     sectionContent: {
       width: '85%',
@@ -426,6 +440,9 @@ export default class HomePage extends React.Component {
     padRight: {
       paddingRight: 300,
     },
+    padBottom: {
+      paddingBottom: 80,
+    },
     dark: {
       background: '#1a218c',
     },
@@ -435,6 +452,28 @@ export default class HomePage extends React.Component {
     },
     bordered: {
       borderBottom: [1, [0, 0, 0, 0.05]],
+    },
+    topSlant: {
+      position: 'absolute',
+      top: -320,
+      left: -500,
+      right: -500,
+      height: 400,
+      zIndex: 0,
+      transform: {
+        rotate: '-1.5deg',
+      },
+    },
+    bottomSlant: {
+      position: 'absolute',
+      bottom: -350,
+      left: -500,
+      right: -500,
+      height: 400,
+      zIndex: 0,
+      transform: {
+        rotate: '-1deg',
+      },
     },
     screen: {
       marginTop: 25,
@@ -471,6 +510,9 @@ export default class HomePage extends React.Component {
       borderTop: [1, [0, 0, 0, 0.05]],
       margin: [15, 0],
       padding: [10, 0],
+    },
+    strong: {
+      fontWeight: 500,
     },
     break: {
       height: 30,

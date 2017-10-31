@@ -3,7 +3,7 @@ import * as UI from '@mcro/ui'
 
 export const Text = props => <UI.Text size={1.5} marginBottom={20} {...props} />
 export const SubText = props => (
-  <Text size={1.25} lineHeight="1.7rem" opacity={0.75} {...props} />
+  <Text size={1.25} lineHeight="1.7rem" opacity={0.8} {...props} />
 )
 export const Hl = props => (
   <UI.Text

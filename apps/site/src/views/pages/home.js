@@ -4,79 +4,96 @@ import * as UI from '@mcro/ui'
 import { Icon, Logo, Text, Title, Hl, SubText } from './views'
 import { throttle } from 'lodash'
 import Observer from '@researchgate/react-intersection-observer'
+import SidebarTitle from './sidebarTitle2'
 
 let blurredRef
 
+const ORA_HEIGHT = 400
 const colorTeal = '#49ceac'
 const colorBlue = '#133cca'
 
 const allItems = {
   0: [
     {
-      primary: 'test',
-      secondary: 'lorem ipsum',
-      icon: 'mail',
-      date: Date.now() - 100000,
+      children: (
+        <SidebarTitle
+          title="A smart assistant for your company"
+          subtitle="Orbit is a simple, always on app that provides relevant"
+          icon="globe"
+          noBack
+        />
+      ),
+    },
+    {
+      primary: 'Unified',
+      children:
+        'All your company knowledge, at your fingertips when you need it most.',
+      icon: 'hand',
       category: 'Results',
     },
     {
-      primary: 'test',
-      secondary: 'lorem ipsum',
-      icon: 'mail',
-      date: Date.now() - 100000,
+      primary: 'Powerful',
+      children:
+        'Advanced machine learning combined with an innovative interface makes your life easy.',
+      icon: 'car',
       category: 'Results',
     },
     {
-      primary: 'test',
-      secondary: 'lorem ipsum',
-      icon: 'mail',
-      date: Date.now() - 100000,
+      primary: 'Secure',
+      children:
+        'Orbit works without leaking any of your data, even to our servers.',
+      icon: 'lock',
       category: 'Results',
     },
   ],
   1: [
     {
-      primary: 'Some slack convo',
-      secondary: 'lorem ipsum',
+      children: (
+        <SidebarTitle
+          title="Hands-free Intelligence"
+          subtitle="An assistant that's always there, not hidden in a tab or bot"
+          icon="think"
+          noBack
+        />
+      ),
+    },
+    {
+      primary: 'Integrations',
+      children:
+        'Not just your knowledgebase or wiki, but your docs, Slack conversations, and more.',
       icon: 'social-slack',
-      date: Date.now() - 100000,
       category: 'Results',
     },
     {
-      primary: 'test',
-      secondary: 'lorem ipsum',
-      icon: 'social-slack',
-      date: Date.now() - 100000,
-      category: 'Results',
-    },
-    {
-      primary: 'test',
-      secondary: 'lorem ipsum',
-      icon: 'social-slack',
-      date: Date.now() - 100000,
+      primary: 'Contextual',
+      children: `With a keystroke you can see whats relevant to whatever you're currently doing, whether writing an email, document, or having a conversation.`,
+      icon: 'brain',
       category: 'Results',
     },
   ],
   2: [
     {
-      primary: 'Document',
-      secondary: 'lorem ipsum',
-      icon: 'google',
-      date: Date.now() - 100000,
+      children: (
+        <SidebarTitle
+          title="The No-Cloud Infrastructur"
+          subtitle="In order to work, Orbit needed to invent a new model"
+          icon="think"
+          noBack
+        />
+      ),
+    },
+    {
+      primary: 'Uses your Permissions',
+      children:
+        'Orbit authenticates using your personal permissions, so it never can expose the wrong thing.',
+      icon: 'lock',
       category: 'Results',
     },
     {
-      primary: 'test',
-      secondary: 'lorem ipsum',
-      icon: 'google',
-      date: Date.now() - 100000,
-      category: 'Results',
-    },
-    {
-      primary: 'test',
-      secondary: 'lorem ipsum',
-      icon: 'google',
-      date: Date.now() - 100000,
+      primary: 'Not on premise',
+      children:
+        'Orbit runs securely on your device, without sending any data outside of your computer.',
+      icon: 'lock',
       category: 'Results',
     },
   ],
@@ -97,7 +114,7 @@ class Ora {
             top: 20,
             right: 20,
             width: 280,
-            height: 300,
+            height: ORA_HEIGHT,
             borderRadius: 10,
             background: [0, 0, 0, 0.65],
             color: '#fff',
@@ -123,7 +140,7 @@ export default class HomePage extends React.Component {
     lastIntersection: 0,
   }
 
-  setRef = ref => {
+  setRef(ref) {
     this.node = ref
     if (!ref) {
       return
@@ -143,10 +160,21 @@ export default class HomePage extends React.Component {
 
   handleIntersect(index) {
     return ({ intersectionRatio }) => {
-      console.log(index, 'intersectionRatio', intersectionRatio)
-      this.setState({
-        lastIntersection: index,
-      })
+      console.log(
+        index,
+        'intersectionRatio',
+        intersectionRatio,
+        this.node && this.node.scrollTop
+      )
+      if (!this.node || this.node.scrollTop < 100) {
+        this.setState({
+          lastIntersection: 0,
+        })
+      } else {
+        this.setState({
+          lastIntersection: index,
+        })
+      }
     }
   }
 
@@ -162,7 +190,7 @@ export default class HomePage extends React.Component {
       }
       const pad = 20
       const width = 280
-      const height = 300
+      const height = ORA_HEIGHT
       const bottom = height + pad
       const right = window.innerWidth - pad
       const left = window.innerWidth - width - pad
@@ -185,16 +213,14 @@ export default class HomePage extends React.Component {
     const styles = getStyle()
 
     return (
-      <page css={styles.page} ref={this.setRef}>
+      <page css={styles.page} ref={x => this.setRef(x)}>
         <Ora if={!blurred} showIndex={this.state.lastIntersection} />
 
         <contents>
           <section
             css={{
               background: colorTeal,
-              height: window.innerHeight - 30,
-              maxHeight: 880,
-              minHeight: 700,
+              height: 880,
               position: 'relative',
             }}
           >
@@ -312,7 +338,7 @@ export default class HomePage extends React.Component {
               </sectionContent>
             </header>
 
-            <Observer onChange={this.handleIntersect(0)} threshold={[0.5]}>
+            <Observer onChange={this.handleIntersect(0)} threshold={[0.4]}>
               <sectionContent
                 $padded
                 css={{
@@ -362,7 +388,7 @@ export default class HomePage extends React.Component {
             </Observer>
           </section>
 
-          <Observer onChange={this.handleIntersect(1)} threshold={[0.5]}>
+          <Observer onChange={this.handleIntersect(1)} threshold={[0.4]}>
             <section css={{ background: '#fff' }} $padded>
               <sectionContent $padRight $padBottom>
                 <img
@@ -406,7 +432,7 @@ export default class HomePage extends React.Component {
           </Observer>
 
           <UI.Theme name="dark">
-            <Observer onChange={this.handleIntersect(2)} threshold={[0.5]}>
+            <Observer onChange={this.handleIntersect(2)} threshold={[0.4]}>
               <section $padded $dark>
                 <bottomSlant css={{ background: '#fff' }} />
                 <sectionContent $padRight $padBottom>

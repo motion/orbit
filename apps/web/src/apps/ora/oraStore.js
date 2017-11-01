@@ -77,7 +77,6 @@ export default class OraStore {
     const { url } = this.osContext
     const toFetch = `https://api.diffbot.com/v3/article?token=${token}&url=${url}`
     console.log('to fetch is', toFetch)
-
     const res = await (await fetch(toFetch)).json()
     const { text, title } = res.objects[0]
     this.addToCorpus(title + '\n' + text)
@@ -91,12 +90,22 @@ export default class OraStore {
 
     OS.on('set-context', (event, info) => {
       const json = JSON.parse(info)
-      console.log('got context', json)
       if (!json) {
         this.osContext = null
+        if (this.stack.last.result.type === 'context') {
+          this.stack.pop()
+        }
+        return
       }
       // check to avoid rerendering
       if (!this.osContext || this.osContext.title !== json.title) {
+        console.log('got context', json)
+        const nextStackItem = { type: 'context', title: json.title }
+        if (this.stack.length > 1) {
+          this.stack.replace(nextStackItem)
+        } else {
+          this.stack.navigate(nextStackItem)
+        }
         this.osContext = json
       }
     })

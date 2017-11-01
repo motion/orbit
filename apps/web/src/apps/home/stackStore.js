@@ -183,4 +183,7 @@ export default class StackStore {
   navigate = result => {
     this.push(result)
   }
+  replace = result => {
+    this.items = [...this.items.slice(0, this.items.length - 1), result]
+  }
 }

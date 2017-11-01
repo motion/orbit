@@ -126,20 +126,6 @@ export default class OraMain {
 
   get results() {
     const { search } = this
-    const context = this.props.homeStore.osContext
-
-    if (!search && context) {
-      const { title } = context
-      const os =
-        this.props.homeStore.search.length === 0
-          ? {
-              category: 'Currently Viewing',
-              children: <UI.Text opacity={0.7}>{title}</UI.Text>,
-            }
-          : null
-      return [os, ...this.props.homeStore.contextResults].filter(i => !!i)
-    }
-
     const items = [
       ...this.items,
       ...this.props.homeStore.contextResults,
@@ -147,11 +133,9 @@ export default class OraMain {
         children: () => <FeedItem inline event={item} index={index} />,
       })),
     ]
-
     if (!search) {
       return items
     }
-
     const filteredSearch = fuzzy(this.items, search)
     const searchItems = filteredSearch.length
       ? filteredSearch

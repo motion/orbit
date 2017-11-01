@@ -82,6 +82,8 @@ export default function getItem(getActiveIndex) {
     iconAfter: result.iconAfter !== false,
     icon: getIcon(result),
     date: result.date,
+    after: result.after,
+    before: result.before,
     ...result.props,
   })
 }

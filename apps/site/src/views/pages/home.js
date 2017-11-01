@@ -7,7 +7,7 @@ import SidebarTitle from './sidebarTitle2'
 
 let blurredRef
 
-const ORA_HEIGHT = 400
+const ORA_HEIGHT = 450
 const colorTeal = '#49ceac'
 const colorBlue = '#133cca'
 
@@ -91,7 +91,7 @@ const allItems = {
     {
       primary: 'Not on premise',
       children:
-        'Orbit runs securely on your device, without sending any data outside of your computer.',
+        'Orbit runs securely on your device, without sending any data outside your computer.',
       icon: 'lock',
       category: 'Results',
     },
@@ -114,18 +114,24 @@ class Ora {
             right: 20,
             width: 280,
             height: ORA_HEIGHT,
-            borderRadius: 10,
+            // borderRadius: 10,
+            userSelect: 'none',
             background: [0, 0, 0, 0.65],
             color: '#fff',
             zIndex: 10000,
             boxShadow: '0 0 10px rgba(0,0,0,0.25)',
           }}
         >
-          <header css={{ padding: 10 }}>
+          <header css={{ padding: 10, opacity: 0.25 }}>
             <UI.Icon name="zoom" />
           </header>
           <content css={{ padding: 0 }}>
-            <UI.List key={showIndex} groupKey="category" items={items} />
+            <UI.List
+              itemProps={{ padding: [10, 10], glow: true }}
+              key={showIndex}
+              groupKey="category"
+              items={items}
+            />
           </content>
         </ora>
       </UI.Theme>
@@ -215,6 +221,7 @@ export default class HomePage extends React.Component {
           // rounded:
           // polygon(5% 0, 95% 0, 100% 4%, 100% 95%, 95% 100%, 5% 100%, 0 95%, 0 5%)
           clip: `rect(${pad}px, ${right}px, ${bottom}px, ${left}px)`,
+          // clipPath: `url(/ora.svg#clip)`,
         },
       }
     }
@@ -229,12 +236,15 @@ export default class HomePage extends React.Component {
           showIndex={this.state.lastIntersection}
         />
 
-        <contents>
+        <contents css={{ overflow: 'hidden' }}>
           <section
             css={{
               background: colorTeal,
               height: 880,
               position: 'relative',
+              transform: {
+                z: 0,
+              },
             }}
           >
             <fadeDown
@@ -246,6 +256,9 @@ export default class HomePage extends React.Component {
                 height: 500,
                 background: 'linear-gradient(#f2f2f2, #fff)',
                 zIndex: 1,
+                transform: {
+                  z: 0,
+                },
               }}
             />
             <orb
@@ -260,6 +273,7 @@ export default class HomePage extends React.Component {
                 border: [10, UI.color(colorTeal).lighten(0.2)],
                 transform: {
                   scale: 1,
+                  z: 0,
                 },
               }}
             />
@@ -277,6 +291,7 @@ export default class HomePage extends React.Component {
                 transform: {
                   scale: 100,
                   rotate: '1.24deg',
+                  z: 0,
                 },
               }}
             />
@@ -293,6 +308,7 @@ export default class HomePage extends React.Component {
                 transform: {
                   scale: 100,
                   rotate: '2.44deg',
+                  z: 0,
                 },
               }}
             />
@@ -439,19 +455,17 @@ export default class HomePage extends React.Component {
               <Text size={1.7}>
                 <ol $list>
                   <li>
-                    Orbit hooks into <em>all</em> of your cloud services, and
-                    privately into your email and chat.
+                    Orbit hooks into <em>every</em> cloud service, including
+                    email and chat.
                   </li>
                   <li>
-                    Orbit uses machine learning to understand{' '}
-                    <strong>when</strong> to show answers,{' '}
-                    <strong>what's</strong> important to whom, and that{' '}
-                    "accounting paperwork" is similar to "tax form".
+                    Using machine learning, Orbit understands{' '}
+                    <strong>when</strong> to show relevant items, and
+                    understands "accounting paperwork" can mean "tax form".
                   </li>
                   <li>
-                    Orbit is a desktop assistant that's always on. Wherever you
-                    are - in chat, emails, your CRM, or just browsing the web -
-                    it just works.
+                    Orbit stays with you: while chatting, writing emails,
+                    updating your CRM, or just browsing.
                   </li>
                 </ol>
               </Text>
@@ -493,7 +507,7 @@ export default class HomePage extends React.Component {
                   never see it, and neither does anyone else.
                 </SubText>
                 <SubText>
-                  <Hl>
+                  <Hl color="#000">
                     This allows us to be ambitious from day one without
                     compromise.
                   </Hl>{' '}
@@ -635,9 +649,6 @@ export default class HomePage extends React.Component {
     },
     break: {
       height: 30,
-    },
-    footer: {
-      height: 150,
     },
     starry: {
       position: 'absolute',

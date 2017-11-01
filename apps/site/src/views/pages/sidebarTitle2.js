@@ -30,6 +30,7 @@ export default class SidebarTitle {
           css={{
             width: 36,
             height: 36,
+            marginLeft: 10,
             borderRadius: 100,
             border: [2, [255, 255, 255, 0.2]],
           }}
@@ -45,7 +46,7 @@ export default class SidebarTitle {
       alignItems: 'center',
       overflow: 'hidden',
       padding: [8, 10],
-      margin: [0, -10],
+      margin: [-10, -10],
       flex: 1,
     },
     titles: {

@@ -99,9 +99,44 @@ const allItems = {
 }
 
 @view
-class Ora {
-  render({ showIndex }) {
-    const items = allItems[showIndex]
+class Ora extends React.Component {
+  state = {
+    lastIntersection: -1,
+  }
+
+  componentDidMount() {
+    const update = lastIntersection => {
+      if (this.state.lastIntersection !== lastIntersection) {
+        this.setState({ lastIntersection })
+      }
+    }
+
+    const { node, bounds } = this.props
+    this.on(
+      node,
+      'scroll',
+      throttle(() => {
+        if (node.scrollTop < 200) {
+          update(0)
+        } else {
+          const bottom = window.innerHeight + node.scrollTop
+          for (let i = bounds.length - 1; i > -1; i--) {
+            const bound = bounds[i]
+            if (!bound) continue
+            if (bound.top + window.innerHeight / 2 < bottom) {
+              update(i)
+              break
+            }
+          }
+        }
+      }, 100)
+    )
+
+    this.setState({ lastIntersection: 0 })
+  }
+
+  render() {
+    const items = allItems[this.state.lastIntersection]
     if (window.innerWidth < 800) {
       return null
     }
@@ -128,7 +163,7 @@ class Ora {
           <content css={{ padding: 0 }}>
             <UI.List
               itemProps={{ padding: [10, 10], glow: true }}
-              key={showIndex}
+              key={this.state.lastIntersection}
               groupKey="category"
               items={items}
             />
@@ -142,42 +177,26 @@ class Ora {
 @view
 export default class HomePage extends React.Component {
   state = {
-    lastIntersection: 0,
+    ready: false,
   }
 
-  setRef(ref) {
-    this.node = ref
-    if (!ref) {
+  componentDidMount() {
+    this.setState({ ready: true })
+  }
+
+  setRef(node) {
+    this.node = node
+    if (!node) {
       return
     }
     if (this.props.blurred) {
-      blurredRef = ref.childNodes[0]
+      blurredRef = node.childNodes[0]
     } else {
-      const update = lastIntersection => {
-        if (this.state.lastIntersection !== lastIntersection) {
-          this.setState({ lastIntersection })
-        }
-      }
-
       this.on(
         this.node,
         'scroll',
         throttle(() => {
           blurredRef.style.transform = `translateY(-${this.node.scrollTop}px)`
-
-          if (this.node.scrollTop < 200) {
-            update(0)
-          } else {
-            const bottom = window.innerHeight + this.node.scrollTop
-            for (let i = this.bounds.length - 1; i > -1; i--) {
-              const bound = this.bounds[i]
-              if (!bound) continue
-              if (bound.top + window.innerHeight / 2 < bottom) {
-                update(i)
-                break
-              }
-            }
-          }
         }, 16)
       )
     }
@@ -186,9 +205,9 @@ export default class HomePage extends React.Component {
   bounds = []
 
   setSection(index) {
-    return ref => {
-      if (ref) {
-        this.bounds[index] = ref.getBoundingClientRect()
+    return node => {
+      if (node) {
+        this.bounds[index] = node.getBoundingClientRect()
       }
     }
   }
@@ -231,7 +250,9 @@ export default class HomePage extends React.Component {
     return (
       <page css={styles.page} ref={x => this.setRef(x)}>
         <Ora
-          if={!blurred}
+          if={!blurred && this.state.ready}
+          bounds={this.bounds}
+          node={this.node}
           key={this.state.lastIntersection}
           showIndex={this.state.lastIntersection}
         />
@@ -413,7 +434,7 @@ export default class HomePage extends React.Component {
                     margin: [40, 0, 0],
                   }}
                 >
-                  <UI.PassProps size={35} opacity={0.25}>
+                  <UI.PassProps size={35} color={colorTeal} opacity={0.7}>
                     <UI.Icon name="social-slack" />
                     <UI.Icon name="social-github" />
                     <UI.Icon name="social-google" />

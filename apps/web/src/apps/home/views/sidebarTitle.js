@@ -32,6 +32,7 @@ export default class SidebarTitle {
             height: 36,
             borderRadius: 100,
             border: [2, [255, 255, 255, 0.2]],
+            marginLeft: 10,
           }}
           name={icon || '/images/me.jpg'}
         />

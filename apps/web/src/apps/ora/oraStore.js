@@ -2,7 +2,6 @@ import Mousetrap from 'mousetrap'
 import { OS } from '~/helpers'
 import Context from '~/context'
 import StackStore from '../home/stackStore'
-import { summarize, summarizeWithQuestion } from './summarize'
 import keycode from 'keycode'
 
 export const SHORTCUTS = {
@@ -39,6 +38,7 @@ export default class OraStore {
   stack = new StackStore([{ type: 'oramain' }])
   inputRef = null
   context = null
+  osContext = null
   search = ''
   textboxVal = ''
   traps = {}
@@ -47,8 +47,6 @@ export default class OraStore {
   focused = false
   activeThing = null
 
-  osContext = null
-
   async willMount() {
     window.homeStore = this
     this.attachTrap('window', window)
@@ -56,14 +54,12 @@ export default class OraStore {
     this._watchInput()
     this._watchToggleHide()
     this._watchMouse()
-
     this.watch(() => {
       if (this.hidden) {
         // timeout based on animation
         this.setTimeout(this.blurBar, 100)
       }
     })
-
     await this.fetchData()
   }
 
@@ -145,48 +141,6 @@ export default class OraStore {
   getOSContext = () => {
     OS.send('get-context')
     this.setTimeout(this.getOSContext, 500)
-  }
-
-  get contextResults() {
-    const title = this.osContext ? this.osContext.title : ''
-    const addBold = line => {
-      const r = new RegExp('(' + this.search.split(' ').join('|') + ')', 'ig')
-      return line.replace(
-        r,
-        '<b style="font-weight: 400; color: #aed6ff;">$1</b>'
-      )
-    }
-
-    return !this.context || this.context.loading // || this.osContext === null
-      ? []
-      : this.context
-          .closestItems(this.search.length > 0 ? this.search : title, 5)
-          .map(({ item }) => {
-            const { title, lines } =
-              this.search.length === 0
-                ? summarize(item.title)
-                : summarizeWithQuestion(item.title, this.search)
-
-            return {
-              category: 'Context',
-              height: 200,
-              children: (
-                <paras style={{ width: '100%' }}>
-                  <p css={{ opacity: 1, fontSize: 13 }}>{title}</p>
-                  {lines.map(line => (
-                    <p
-                      css={{
-                        marginTop: 4,
-                        opacity: 0.8,
-                        fontSize: 13,
-                      }}
-                      dangerouslySetInnerHTML={{ __html: addBold(line) }}
-                    />
-                  ))}
-                </paras>
-              ),
-            }
-          })
   }
 
   _watchInput() {

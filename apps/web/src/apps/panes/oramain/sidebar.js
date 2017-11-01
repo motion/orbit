@@ -128,7 +128,6 @@ export default class OraMain {
     const { search } = this
     const items = [
       ...this.items,
-      ...this.props.homeStore.contextResults,
       ...(this.events || []).map((item, index) => ({
         children: () => <FeedItem inline event={item} index={index} />,
       })),

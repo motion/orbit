@@ -250,18 +250,20 @@ export default class Surface extends React.PureComponent<Props> {
     const contents = [
       <Glint
         if={glint}
+        key={0}
         size={size}
         borderLeftRadius={borderLeftRadius - 1}
         borderRightRadius={borderRightRadius - 1}
       />,
-      <badge if={badge} {...badgeProps}>
+      <badge if={badge} key={1} {...badgeProps}>
         {typeof badge !== 'boolean' ? badge : ''}
       </badge>,
-      <icon if={icon && !stringIcon} $iconAfter={hasIconAfter}>
+      <icon if={icon && !stringIcon} key={2} $iconAfter={hasIconAfter}>
         {icon}
       </icon>,
       <Icon
         if={icon && stringIcon}
+        key={3}
         $icon
         $iconAfter={hasIconAfter}
         name={icon}
@@ -269,6 +271,7 @@ export default class Surface extends React.PureComponent<Props> {
         {...iconProps}
       />,
       <HoverGlow
+        key={4}
         if={glow && !active && !disabled}
         full
         scale={1.1}
@@ -280,6 +283,7 @@ export default class Surface extends React.PureComponent<Props> {
         {...glowProps}
       />,
       <element
+        key={5}
         if={!noElement || (noElement && !noWrap && hasChildren(children))}
         {...wrapElement && passProps}
         {...elementProps}
@@ -292,6 +296,7 @@ export default class Surface extends React.PureComponent<Props> {
       noElement && noWrap && hasChildren(children) && children,
       tooltip && (
         <Popover
+          key={6}
           theme="dark"
           background
           openOnHover

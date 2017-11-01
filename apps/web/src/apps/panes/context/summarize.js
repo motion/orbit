@@ -1,6 +1,3 @@
-'use strict'
-
-// var jaccard = require('jaccard-similarity-sentences')
 import jaccard from './jaccard'
 
 // var getSentencesFromArticle = require('get-sentences-from-article')
@@ -26,8 +23,8 @@ export const summarizeWithQuestion = (text, question, numberSentences = 3) => {
       })
 
     var result = []
-    for (var i = 0; i < sortedArray.length; i++) {
-      result = [...result, sortedArray[i]['sentence'] + '.']
+    for (var j = 0; j < sortedArray.length; j++) {
+      result = [...result, sortedArray[j]['sentence'] + '.']
     }
     lines = result
   }

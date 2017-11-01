@@ -84,32 +84,36 @@ export default class OraStore {
 
   fetchData = async () => {
     const corpus = JSON.parse(localStorage.getItem('corpus') || '[]')
-
     this.context = new Context(corpus)
     this.corpus = corpus
-
+    this.getOSContext()
     OS.on('set-context', (event, info) => {
-      const json = JSON.parse(info)
-      if (!json) {
+      const context = JSON.parse(info)
+      if (!context) {
         this.osContext = null
         if (this.stack.last.result.type === 'context') {
-          this.stack.pop()
+          // if you want it to navigate back home automatically
+          // this.stack.pop()
         }
         return
       }
       // check to avoid rerendering
-      if (!this.osContext || this.osContext.title !== json.title) {
-        console.log('got context', json)
-        const nextStackItem = { type: 'context', title: json.title }
+      if (!this.osContext || this.osContext.title !== context.title) {
+        console.log('set-context', context)
+        const nextStackItem = {
+          type: 'context',
+          title: context.title,
+          icon:
+            context.application === 'Google Chrome' ? 'social-google' : null,
+        }
         if (this.stack.length > 1) {
           this.stack.replace(nextStackItem)
         } else {
           this.stack.navigate(nextStackItem)
         }
-        this.osContext = json
+        this.osContext = context
       }
     })
-    this.getOSContext()
   }
 
   _watchMouse() {

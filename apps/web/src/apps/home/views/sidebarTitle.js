@@ -5,10 +5,11 @@ import * as UI from '@mcro/ui'
 
 @view
 export default class SidebarTitle {
-  render({ icon, subtitle, title, onBack }) {
+  render({ noBack, icon, subtitle, title, onBack }) {
     return (
       <sidebartitle onClick={onBack}>
         <UI.Button
+          if={!noBack}
           $backButton
           size={1}
           circular
@@ -24,7 +25,7 @@ export default class SidebarTitle {
             {subtitle}
           </UI.Title>
         </titles>
-        <img
+        <UI.Icon
           if={icon}
           css={{
             width: 36,
@@ -32,7 +33,7 @@ export default class SidebarTitle {
             borderRadius: 100,
             border: [2, [255, 255, 255, 0.2]],
           }}
-          src="/images/me.jpg"
+          name={icon || '/images/me.jpg'}
         />
       </sidebartitle>
     )
@@ -42,11 +43,14 @@ export default class SidebarTitle {
     sidebartitle: {
       flexFlow: 'row',
       alignItems: 'center',
-      padding: [8, 0],
+      overflow: 'hidden',
+      padding: [8, 10],
+      margin: [0, -10],
       flex: 1,
     },
     titles: {
       flex: 1,
+      width: '50%',
     },
     backButton: {
       margin: [0, 8, 0, -3],

@@ -63,7 +63,11 @@ export default class ExampleApp extends React.Component {
         throttle((x, y) => {
           if (+x > triggerX && +y < triggerY) {
             console.log('IN CORNER')
-            event.sender.send('mouse-in-corner')
+            try {
+              event.sender.send('mouse-in-corner')
+            } catch (e) {
+              console.error('err', e)
+            }
           }
         }, 40)
       )
@@ -131,11 +135,11 @@ end tell
 
 return {frontAppName, windowTitle}
         `,
-        (err, result) => {
+        (err, answer) => {
           if (err) {
             return console.error(err)
           }
-          const [application, title] = result
+          const [application, title] = answer
 
           if (application === 'Google Chrome') {
             applescript.execute(
@@ -144,11 +148,20 @@ return {frontAppName, windowTitle}
           set source to execute javascript "JSON.stringify({ url: document.location+'', title: document.title, body: document.body.innerText })"
         end tell
       end tell`,
-              (err, result) => {
+              (err, res) => {
                 if (err) {
                   return console.error(err)
                 }
-                event.sender.send('set-context', result)
+                const result = JSON.parse(res)
+                event.sender.send(
+                  'set-context',
+                  JSON.stringify({
+                    title: result.title,
+                    body: result.body,
+                    url: result.url,
+                    application,
+                  })
+                )
               }
             )
           } else {

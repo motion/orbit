@@ -184,6 +184,7 @@ export default class StackStore {
     this.push(result)
   }
   replace = result => {
-    this.items = [...this.items.slice(0, this.items.length - 1), result]
+    this.pop()
+    this.push(result)
   }
 }

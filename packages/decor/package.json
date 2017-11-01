@@ -7,6 +7,7 @@
   "scripts": {},
   "dependencies": {
     "@mcro/helpers": "^1.5.1",
+    "@mcro/black": "^1.5.1",
     "autobind-decorator": "^2.1.0",
     "hoist-non-react-statics": "^2.3.1",
     "lodash": "^4.17.4",

@@ -21,7 +21,9 @@ console.log('Constants.APP_URL', Constants.APP_URL)
 const AppWindows = new WindowsStore()
 const ORA_WIDTH = 300
 
-export default class ExampleApp extends React.Component {
+export default class Windows extends React.Component {
+  subscriptions = []
+  uid = Math.random()
   state = {
     restart: false,
     showSettings: false,
@@ -53,8 +55,19 @@ export default class ExampleApp extends React.Component {
     this.listenForMouse()
   }
 
+  componentWillUnmount() {
+    for (const [emitter, name, callback] of this.subscriptions) {
+      emitter.removeListener(name, callback)
+    }
+  }
+
+  on(emitter, name, callback) {
+    emitter.on(name, callback)
+    this.subscriptions.push([emitter, name, callback])
+  }
+
   listenForMouse() {
-    ipcMain.on('mouse-listen', event => {
+    this.on(ipcMain, 'mouse-listen', event => {
       const triggerX = this.screenSize.width - 20
       const triggerY = 20
       const mousey = mouse()
@@ -96,7 +109,7 @@ export default class ExampleApp extends React.Component {
   }
 
   listenToApps = () => {
-    ipcMain.on('start-ora', event => {
+    this.on(ipcMain, 'start-ora', event => {
       this.show = () => {
         event.sender.send('show-ora')
         this.trayRef.focus()
@@ -104,7 +117,7 @@ export default class ExampleApp extends React.Component {
       this.hide = () => event.sender.send('hide-ora')
     })
 
-    ipcMain.on('where-to', (event, key) => {
+    this.on(ipcMain, 'where-to', (event, key) => {
       console.log('where-to from', key)
       const win = AppWindows.findBy(key)
       if (win) {
@@ -117,7 +130,7 @@ export default class ExampleApp extends React.Component {
       }
     })
 
-    ipcMain.on('get-context', event => {
+    this.on(ipcMain, 'get-context', event => {
       applescript.execute(
         `
 global frontApp, frontAppName, windowTitle
@@ -175,26 +188,26 @@ return {frontAppName, windowTitle}
       )
     })
 
-    ipcMain.on('bar-goto', (event, path) => {
+    this.on(ipcMain, 'bar-goto', (event, path) => {
       this.openApp(path)
     })
 
-    ipcMain.on('bar-hide', () => {
+    this.on(ipcMain, 'bar-hide', () => {
       this.hide()
     })
 
-    ipcMain.on('close', (event, key) => {
+    this.on(ipcMain, 'close', (event, key) => {
       AppWindows.removeByKey(+key)
       this.updateWindows()
     })
 
-    ipcMain.on('app-bar-toggle', (event, key) => {
+    this.on(ipcMain, 'app-bar-toggle', (event, key) => {
       AppWindows.findBy(key).toggleBar()
       this.updateWindows()
       event.sender.send('app-bar-toggle', 'success')
     })
 
-    ipcMain.on('open-settings', (event, service) => {
+    this.on(ipcMain, 'open-settings', (event, service) => {
       open(`${Constants.APP_URL}/settings?service=` + service)
     })
   }
@@ -250,8 +263,6 @@ return {frontAppName, windowTitle}
     this.setState({ error })
   }
 
-  uid = Math.random()
-
   render() {
     const { appWindows, error, restart } = this.state
 
@@ -286,12 +297,36 @@ return {frontAppName, windowTitle}
 
     return (
       <app onBeforeQuit={() => console.log('hi')}>
-        <Menu
-          onPreferences={() => {
-            console.log('show preferences')
-            this.setState({ showPreferences: true })
-          }}
-        />
+        <menu>
+          <submenu label="Orbit">
+            <about />
+            <preferences
+              accelerator="CmdOrCtrl+,"
+              onClick={() => {
+                console.log('show preferences')
+                this.setState({ showPreferences: true })
+              }}
+            />
+            <sep />
+            <hide />
+            <hideothers />
+            <unhide />
+            <sep />
+            <quit />
+          </submenu>
+          <submenu label="Edit">
+            <undo />
+            <redo />
+            <sep />
+            <cut />
+            <copy />
+            <paste />
+            <selectall />
+          </submenu>
+          <submenu label="Window">
+            <togglefullscreen />
+          </submenu>
+        </menu>
 
         <window
           {...appWindow}

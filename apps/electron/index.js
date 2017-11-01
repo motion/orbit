@@ -1,8 +1,11 @@
+console.log('polyfilled')
+
 process.env.NODE_ENV = 'production'
 process.env.IS_PROD = true
 process.env.HAS_BABEL_POLYFILL = true
 
 require('babel-polyfill')
+
 const electronApp = require('./es6/index').default
 electronApp()
 

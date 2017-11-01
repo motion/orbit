@@ -6,7 +6,6 @@ function _on(element: HTMLElement, cb: Function, bind: boolean): Function {
   if (element && element.emitter) {
     return _on.call(this, element.emitter, cb, bind)
   }
-
   const e = event(element, cb, bind)
   this.subscriptions.add(e)
   return e

@@ -1,3 +1,4 @@
+import 'raf/polyfill'
 import electronContextMenu from 'electron-context-menu'
 import electronDebug from 'electron-debug'
 import updater from 'electron-simple-updater'
@@ -5,6 +6,18 @@ import React from 'react'
 import Ionize from '@mcro/ionize'
 import { onWindow } from './windows'
 import * as Constants from '~/constants'
+
+const ogerror = console.error.bind(console)
+console.error = function(...args) {
+  if (
+    args &&
+    typeof args[0] === 'string' &&
+    args[0].indexOf('EmojiFunctionRowItem')
+  ) {
+    return
+  }
+  return ogerror(...args)
+}
 
 let app = null
 

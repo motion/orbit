@@ -61,23 +61,28 @@ export default class OraHeader extends React.Component {
           css={{
             position: 'absolute',
             top: 0,
-            right: 12,
+            right: 5,
             bottom: 0,
+            zIndex: 1000,
             justifyContent: 'center',
           }}
         >
           <UI.Icon
-            onClick={homeStore.hide}
+            onClick={e => {
+              e.stopPropagation()
+              homeStore.hide()
+            }}
             size={12}
-            padding={[0, 10]}
-            name="remove"
+            margin={[0, -5]}
+            css={{
+              height: 40,
+              width: 40,
+              position: 'relative',
+            }}
+            name="arrowmin-right"
             color={[255, 255, 255, 0.5]}
             hover={{
               color: [255, 255, 255, 1],
-              transformOrigin: 'right right',
-              transform: {
-                scale: 1.1,
-              },
             }}
           />
         </buttons>

@@ -29,7 +29,7 @@ export default class Title extends React.PureComponent<Props> {
     fontWeight: 200,
   }
 
-  render({ stat, size, children, tagName, ...props }: Props) {
+  render({ getRef, stat, size, children, tagName, ...props }: Props) {
     return (
       <Text
         $title
@@ -37,6 +37,7 @@ export default class Title extends React.PureComponent<Props> {
         {...{ [`\$size${Math.floor(size * 1.8)}`]: true }}
         tagName={tagName}
         size={size}
+        ref={getRef}
         {...props}
       >
         {children}

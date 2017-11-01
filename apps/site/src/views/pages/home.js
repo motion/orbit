@@ -172,7 +172,7 @@ export default class HomePage extends React.Component {
             for (let i = this.bounds.length - 1; i > -1; i--) {
               const bound = this.bounds[i]
               if (!bound) continue
-              if (bound.top + 300 < bottom) {
+              if (bound.top + window.innerHeight / 2 < bottom) {
                 update(i)
                 break
               }
@@ -430,11 +430,7 @@ export default class HomePage extends React.Component {
             </sectionContent>
           </section>
 
-          <section
-            ref={this.setSection(1)}
-            css={{ background: '#fff' }}
-            $padded
-          >
+          <section css={{ background: '#fff' }} $padded>
             <sectionContent $padRight $padBottom>
               <img
                 css={{
@@ -446,7 +442,7 @@ export default class HomePage extends React.Component {
                 }}
                 src="/orbitals.svg"
               />
-              <Title color={colorBlue} size={3}>
+              <Title getRef={this.setSection(1)} color={colorBlue} size={3}>
                 Hands-free Intelligence
               </Title>
               <Text size={2} fontWeight={600} opacity={0.5}>
@@ -474,7 +470,7 @@ export default class HomePage extends React.Component {
           </section>
 
           <UI.Theme name="dark">
-            <section ref={this.setSection(2)} $padded $dark>
+            <section $padded $dark>
               <bottomSlant css={{ background: '#fff' }} />
               <sectionContent $padRight $padBottom>
                 <after
@@ -489,7 +485,9 @@ export default class HomePage extends React.Component {
                 >
                   <UI.Icon color="#000" size={501} name="lock" />
                 </after>
-                <Title size={3}>The No-Cloud Infrastructure</Title>
+                <Title getRef={this.setSection(2)} size={3}>
+                  The No-Cloud Infrastructure
+                </Title>
                 <Text size={2} fontWeight={600} opacity={0.7}>
                   In order to work, Orbit needed to invent a new model: one that
                   keeps you safe.

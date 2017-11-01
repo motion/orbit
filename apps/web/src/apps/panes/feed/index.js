@@ -118,12 +118,12 @@ class RepoHighlights {
   }
 }
 
-@view.attach('homeStore')
+@view.attach('oraStore')
 @view({
   feedStore: FeedStore,
 })
 export default class FeedMain extends React.Component<Props> {
-  render({ feedStore, homeStore, paneProps, data }: Props) {
+  render({ feedStore, oraStore, paneProps, data }: Props) {
     // const { type } = paneProps.data
     // console.log('type is', type)
     return (
@@ -140,7 +140,7 @@ export default class FeedMain extends React.Component<Props> {
               />
               <RepoHighlights
                 onSelect={thing => {
-                  homeStore.stack.navigate(thing)
+                  oraStore.stack.navigate(thing)
                 }}
               />
             </highlights>

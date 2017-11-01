@@ -208,7 +208,7 @@ return {frontAppName, windowTitle}
     })
 
     this.on(ipcMain, 'open-settings', (event, service) => {
-      open(`${Constants.APP_URL}/settings?service=` + service)
+      open(`${Constants.APP_URL}/authorize?service=` + service)
     })
   }
 

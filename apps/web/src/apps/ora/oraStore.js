@@ -1,16 +1,13 @@
 import Mousetrap from 'mousetrap'
 import { OS } from '~/helpers'
-import Context from '~/context'
-import StackStore from '../home/stackStore'
+import StackStore from '~/stores/stackStore'
 import keycode from 'keycode'
 
 export const SHORTCUTS = {
   left: 'left',
   right: 'right',
-  down: 'down',
-  up: 'up',
-  j: 'j', // down
-  k: 'k', // up
+  down: ['down', 'j'],
+  up: ['up', 'k'],
   d: 'd', // doc
   enter: 'enter',
   esc: 'esc',
@@ -48,7 +45,6 @@ export default class OraStore {
   activeThing = null
 
   async willMount() {
-    window.homeStore = this
     this.attachTrap('window', window)
     this._watchFocusBar()
     this._watchInput()
@@ -60,57 +56,11 @@ export default class OraStore {
         this.setTimeout(this.blurBar, 100)
       }
     })
-    await this.fetchData()
   }
 
-  addToCorpus = text => {
-    this.corpus = [...this.corpus, { title: text }]
-    localStorage.setItem('corpus', JSON.stringify(this.corpus))
-  }
-
-  addCurrentPage = async () => {
-    const token = `e441c83aed447774532894d25d97c528`
-    const { url } = this.osContext
-    const toFetch = `https://api.diffbot.com/v3/article?token=${token}&url=${url}`
-    console.log('to fetch is', toFetch)
-    const res = await (await fetch(toFetch)).json()
-    const { text, title } = res.objects[0]
-    this.addToCorpus(title + '\n' + text)
-  }
-
-  fetchData = async () => {
-    const corpus = JSON.parse(localStorage.getItem('corpus') || '[]')
-    this.context = new Context(corpus)
-    this.corpus = corpus
-    this.getOSContext()
-    OS.on('set-context', (event, info) => {
-      const context = JSON.parse(info)
-      if (!context) {
-        this.osContext = null
-        if (this.stack.last.result.type === 'context') {
-          // if you want it to navigate back home automatically
-          // this.stack.pop()
-        }
-        return
-      }
-      // check to avoid rerendering
-      if (!this.osContext || this.osContext.title !== context.title) {
-        console.log('set-context', context)
-        const nextStackItem = {
-          type: 'context',
-          title: context.title,
-          icon:
-            context.application === 'Google Chrome' ? 'social-google' : null,
-        }
-        if (this.stack.length > 1) {
-          this.stack.replace(nextStackItem)
-        } else {
-          this.stack.navigate(nextStackItem)
-        }
-        this.osContext = context
-      }
-    })
-  }
+  // get context() {
+  //   return this.props.contextStore
+  // }
 
   _watchMouse() {
     OS.send('mouse-listen')
@@ -136,11 +86,6 @@ export default class OraStore {
 
   hide = () => {
     this.hidden = true
-  }
-
-  getOSContext = () => {
-    OS.send('get-context')
-    this.setTimeout(this.getOSContext, 500)
   }
 
   _watchInput() {

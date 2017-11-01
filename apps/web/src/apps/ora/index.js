@@ -2,33 +2,35 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import OraStore from './oraStore'
-import Sidebar from '../home/sidebar'
-import OraHeader from './oraHeader'
+import Sidebar from '../panes/sidebar'
 import * as Sidebars from '../panes/sidebars'
+import OraHeader from './oraHeader'
 
 const width = 280
 
+@view.attach('contextStore')
 @view.provide({
-  homeStore: OraStore,
+  oraStore: OraStore,
 })
 @view
 export default class OraPage {
-  render({ homeStore }) {
+  render({ oraStore }) {
     return (
       <UI.Theme name="dark">
-        <home
-          $visible={!homeStore.hidden}
-          ref={homeStore.ref('barRef').set}
+        <ora
+          $visible={!oraStore.hidden}
+          ref={oraStore.ref('barRef').set}
           $$draggable
         >
           <UI.Theme name="clear-dark">
-            <OraHeader homeStore={homeStore} />
+            <OraHeader oraStore={oraStore} />
           </UI.Theme>
           <content>
             <Sidebar
               width={width}
+              store={oraStore}
+              oraStore={oraStore}
               sidebars={Sidebars}
-              homeStore={homeStore}
               itemProps={{
                 size: 1,
                 padding: [6, 12],
@@ -37,13 +39,13 @@ export default class OraPage {
               }}
             />
           </content>
-        </home>
+        </ora>
       </UI.Theme>
     )
   }
 
   static style = {
-    home: {
+    ora: {
       width,
       background: [20, 20, 20, 0.98],
       boxShadow: [[0, 0, 10, [0, 0, 0, 0.4]]],

@@ -2,22 +2,8 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import Pane from './pane'
-import { take, flatten, includes } from 'lodash'
-import Context from '~/context'
 
 const sleep = n => new Promise(resolve => setTimeout(resolve, n))
-const hashStr = s => {
-  let hash = 0,
-    i,
-    chr
-  if (s.length === 0) return hash
-  for (i = 0; i < s.length; i++) {
-    chr = s.charCodeAt(i)
-    hash = (hash << 5) - hash + chr
-    hash |= 0 // Convert to 32bit integer
-  }
-  return hash
-}
 
 export class StanfordSidebar {
   results = []
@@ -32,20 +18,7 @@ class StanfordStore {
   wrong = []
 
   getData = async () => {
-    const json = await (await fetch('/stanford.json')).json()
     const questions = []
-    const corpus = flatten(
-      json.data.slice(0, 100).map(article => {
-        return take(article.paragraphs, 5).map(para => {
-          const hash = hashStr(para.context)
-          para.qas.forEach(({ question }) => questions.push({ question, hash }))
-          return { title: para.context, hash }
-        })
-      })
-    )
-
-    // this.context = new Context(corpus)
-    this.corpus = corpus
     this.questions = questions
   }
 

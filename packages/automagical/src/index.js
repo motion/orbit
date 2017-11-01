@@ -41,7 +41,10 @@ export default function automagical() {
       Klass.prototype.automagic =
         Klass.prototype.automagic ||
         function() {
-          automagic(this)
+          if (!this._isAutomagical) {
+            automagic(this)
+            this._isAutomagical = true
+          }
         }
       return Klass
     },

@@ -1,4 +1,5 @@
 // @flow
+import latinize from 'latinize'
 import * as React from 'react'
 import fuzzy_ from './fuzzy'
 
@@ -38,3 +39,14 @@ export const HotKeys = ({ style, ...props }: Props) => (
 import electron_, { OS as OS_ } from '~/helpers/electron'
 export const electron = electron_
 export const OS = OS_
+
+// alphanumeric and spacse
+export const cleanText = s => {
+  if (s.toLowerCase) {
+    return latinize(s || '')
+      .toLowerCase()
+      .replace(/[^0-9a-zA-Z\ ]/g, '')
+  } else {
+    return ''
+  }
+}

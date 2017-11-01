@@ -2,9 +2,9 @@ import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { fuzzy } from '~/helpers'
 
-export default class OraMain {
+export default class MailSidebar {
   get search() {
-    return this.props.homeStore.search
+    return this.props.oraStore.search
   }
 
   items = [
@@ -209,7 +209,7 @@ export default class OraMain {
   ]
 
   get results() {
-    const { contextResults, osContext } = this.props.homeStore
+    const { contextResults, osContext } = this.props.oraStore
     const search = fuzzy(this.items, this.search)
     const searchItems = search.length
       ? search
@@ -234,6 +234,6 @@ export default class OraMain {
 
     return searchItems
     // return context // searchItems.concat(contextResults)
-    // return [...searchItems, ...this.props.homeStore.context]
+    // return [...searchItems, ...this.props.oraStore.context]
   }
 }

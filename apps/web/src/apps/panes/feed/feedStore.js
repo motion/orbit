@@ -96,14 +96,14 @@ export default class FeedStore {
     this.react(
       () => this.filters,
       () => {
-        this.props.homeStore.filters = this.filters
+        this.props.oraStore.filters = this.filters
       }
     )
 
     this.react(
       () => this.activeItems.length,
       () => {
-        this.props.homeStore.resultCount = this.activeItems.length
+        this.props.oraStore.resultCount = this.activeItems.length
       }
     )
   }

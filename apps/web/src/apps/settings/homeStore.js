@@ -1,10 +1,8 @@
 import { watch } from '@mcro/black'
 import { Thing } from '~/app'
-import { find } from 'lodash'
 import Mousetrap from 'mousetrap'
 import { OS } from '~/helpers'
-import StackStore from './stackStore'
-//import { debounce } from 'lodash'
+import StackStore from '~/stores/stackStore'
 import keycode from 'keycode'
 
 export const SHORTCUTS = {
@@ -67,7 +65,6 @@ export default class HomeStore {
       .limit(5)
 
   willMount() {
-    window.homeStore = this
     this.attachTrap('window', window)
     this._watchFocusBar()
     this._watchInput()

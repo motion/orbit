@@ -11,22 +11,9 @@ import {
 import { watch, store } from '@mcro/black'
 import { Thing } from '~/app'
 import tfidf from './tfidf'
-import latinize from 'latinize'
 import stopwords from './stopwords'
-
-// const vectorsFile = `/vectors15k.txt`
-const vectorsFile = `/vectors100k.txt`
-
-// alphanumeric and spacse
-const cleanText = s => {
-  if (s.toLowerCase) {
-    return latinize(s || '')
-      .toLowerCase()
-      .replace(/[^0-9a-zA-Z\ ]/g, '')
-  } else {
-    return ''
-  }
-}
+import { OS } from '~/helpers'
+import { cleanText } from '~/helpers'
 
 let vectorCache = null
 
@@ -34,19 +21,70 @@ let vectorCache = null
 export default class Context {
   // out of vocabulary words, a map of word -> count
   vectors = null
-  // items = Thing.find()
-  corpus = null
-
+  items = Thing.find()
+  oov = null
   @watch
   tfidf = () =>
-    this.corpus &&
+    this.items &&
     !this.loading &&
-    tfidf((this.corpus || []).map(item => this.textToWords(item.title)))
+    tfidf((this.items || []).map(item => this.textToWords(item.title)))
 
-  oov = null
+  constructor() {
+    this.start()
+  }
+
+  async start() {
+    this.vectors = await this.getVectors()
+    this.oov = this.getOov()
+    await this.listenForContext()
+  }
 
   get loading() {
     return !this.oov || this.vectors === null
+  }
+
+  addCurrentPage = async () => {
+    const token = `e441c83aed447774532894d25d97c528`
+    const { url } = this.osContext
+    const toFetch = `https://api.diffbot.com/v3/article?token=${token}&url=${url}`
+    console.log('to fetch is', toFetch)
+    const res = await (await fetch(toFetch)).json()
+    const { text, title } = res.objects[0]
+    this.addToCorpus(title + '\n' + text)
+  }
+
+  listenForContext = async () => {
+    this.setInterval(() => {
+      OS.send('get-context')
+    }, 500)
+
+    OS.on('set-context', (event, info) => {
+      const context = JSON.parse(info)
+      if (!context) {
+        this.osContext = null
+        if (this.stack.last.result.type === 'context') {
+          // if you want it to navigate back home automatically
+          // this.stack.pop()
+        }
+        return
+      }
+      // check to avoid rerendering
+      if (!this.osContext || this.osContext.title !== context.title) {
+        console.log('set-context', context)
+        const nextStackItem = {
+          type: 'context',
+          title: context.title,
+          icon:
+            context.application === 'Google Chrome' ? 'social-google' : null,
+        }
+        if (this.stack.length > 1) {
+          this.stack.replace(nextStackItem)
+        } else {
+          this.stack.navigate(nextStackItem)
+        }
+        this.osContext = context
+      }
+    })
   }
 
   // prepatory
@@ -60,21 +98,11 @@ export default class Context {
       }, 100)
     })
 
-  constructor(corpus) {
-    this.corpus = corpus
-    this.load()
-  }
-
-  load = async () => {
-    this.vectors = await this.getVectors()
-    this.oov = this.getOov()
-    window.context = this
-  }
-
   getVectors = async () => {
-    if (vectorCache) return vectorCache
-    const text = await (await fetch(vectorsFile)).text()
-
+    if (vectorCache) {
+      return vectorCache
+    }
+    const text = await fetch(`/vectors100k.txt`).then(res => res.text())
     const vectors = {}
     text.split('\n').forEach(line => {
       const split = line.split(' ')
@@ -84,9 +112,7 @@ export default class Context {
       )
       vectors[word] = vsList
     })
-
     vectorCache = vectors
-
     return vectors
   }
 
@@ -96,10 +122,9 @@ export default class Context {
       couldnt: 'cannot',
       doesnt: 'dont',
     }
-
     const counts = countBy(
       flatten(
-        (this.corpus || []).map(item =>
+        (this.items || []).map(item =>
           cleanText(item.title)
             .split(' ')
             .map(i => wordMap[i] || i)
@@ -109,17 +134,9 @@ export default class Context {
       )
     )
     return counts
-
-    /*
-    return Object.keys(counts).reduce((acc, item) => {
-      if (counts[name] > 2) return { ...acc, [item]: counts[name] }
-      return acc
-    }, {})
-    */
   }
 
   // calculations
-
   textToWords = memoize(text => {
     return cleanText(text)
       .split(' ')
@@ -138,7 +155,6 @@ export default class Context {
       if (w === w2) return 0
       return 300
     }
-
     const v = this.vectors[w]
     const v2 = this.vectors[w2]
     return Math.sqrt(
@@ -160,14 +176,12 @@ export default class Context {
 
   closestItems = (text, n = 3) => {
     const words = this.textToWords(text)
-
-    const items = (this.corpus || []).map(item => {
+    const items = (this.items || []).map(item => {
       const title = item.title.split('\n')[0]
       const text = item.title
         .split('\n')
         .slice(1)
         .join('\n')
-
       return {
         similarity:
           this.wordsDistance(words, this.textToWords(title)) +
@@ -175,7 +189,6 @@ export default class Context {
         item,
       }
     })
-
     return sortBy(items, 'similarity').slice(0, n)
   }
 }

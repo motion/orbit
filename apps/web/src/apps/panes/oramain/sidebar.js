@@ -6,9 +6,9 @@ import Calendar from '../feed/calendar'
 import FeedItem from '../feed/feedItem'
 import { Event, Thing } from '~/app'
 
-export default class OraMain {
+export default class OraMainSidebar {
   get search() {
-    return this.props.homeStore.search
+    return this.props.oraStore.search
   }
 
   @watch

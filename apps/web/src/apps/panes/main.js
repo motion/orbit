@@ -1,13 +1,13 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import * as Mains from '../panes/mains'
+import * as Mains from './mains'
 import * as UI from '@mcro/ui'
 
 const SHADOW = [0, 0, 120, [0, 0, 0, 0.05]]
 
 @view
 export default class Main {
-  render({ homeStore, homeStore: { stack } }) {
+  render({ store, store: { stack } }) {
     const lastIndex = stack.length - 1
     return stack.items.map((stackItem, index) => {
       if (index !== lastIndex) {
@@ -37,7 +37,7 @@ export default class Main {
               paneProps={{
                 index,
                 //dark: true,
-                stack: homeStore.stack,
+                stack: store.stack,
                 getActiveIndex: () => stackItem.firstIndex,
                 stackItem,
               }}

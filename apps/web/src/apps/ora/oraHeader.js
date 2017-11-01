@@ -13,23 +13,23 @@ export default class OraHeader extends React.Component {
   }
 
   onHeaderMouseUp = () => {
-    const { homeStore, store } = this.props
+    const { oraStore, store } = this.props
     if (Date.now() - store.downAt < 200) {
-      homeStore.focused = true
+      oraStore.focused = true
       this.setTimeout(() => {
-        homeStore.inputRef.focus()
+        oraStore.inputRef.focus()
       })
     }
   }
 
   onHeaderBlur = () => {
-    this.props.homeStore.focused = false
+    this.props.oraStore.focused = false
   }
 
-  render({ store, homeStore }) {
+  render({ store, oraStore }) {
     return (
       <header
-        $focus={homeStore.focused}
+        $focus={oraStore.focused}
         onMouseDown={this.onHeaderMouseDown}
         onMouseUp={this.onHeaderMouseUp}
         $$draggable
@@ -37,13 +37,13 @@ export default class OraHeader extends React.Component {
         <UI.Icon $searchIcon size={12} name="zoom" color={[255, 255, 255, 1]} />
         <UI.Input
           $searchInput
-          $disabled={!homeStore.focused}
+          $disabled={!oraStore.focused}
           size={1}
-          getRef={homeStore.onInputRef}
+          getRef={oraStore.onInputRef}
           borderRadius={0}
           onBlur={this.onHeaderBlur}
-          onChange={homeStore.onSearchChange}
-          value={homeStore.textboxVal}
+          onChange={oraStore.onSearchChange}
+          value={oraStore.textboxVal}
           borderWidth={0}
           fontWeight={200}
           css={{
@@ -54,7 +54,7 @@ export default class OraHeader extends React.Component {
         />
 
         <title>
-          <UI.Text size={0.8}>{homeStore.stack.last.result.type}</UI.Text>
+          <UI.Text size={0.8}>{oraStore.stack.last.result.type}</UI.Text>
         </title>
 
         <buttons
@@ -70,7 +70,7 @@ export default class OraHeader extends React.Component {
           <UI.Icon
             onClick={e => {
               e.stopPropagation()
-              homeStore.hide()
+              oraStore.hide()
             }}
             size={12}
             margin={[0, -5]}

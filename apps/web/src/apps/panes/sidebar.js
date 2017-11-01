@@ -1,12 +1,9 @@
 import * as React from 'react'
 import { view, store } from '@mcro/black'
-import Fade from './views/fade'
-import * as Sidebars from '../panes/sidebars'
-import getItem from '../panes/helpers/getItem'
-import PaneView from '../panes/pane'
-//import App from '~/app'
-
-// see stackStore for the "back" result item
+import Fade from '~/views/fade'
+import * as Sidebars from './sidebars'
+import getItem from './helpers/getItem'
+import PaneView from './pane'
 
 @view({
   sidebar: class SidebarStore {
@@ -30,14 +27,14 @@ class SidebarContainer {
   componentDidMount() {
     this.props.sidebar.setStore(this.props.sidebarStore)
   }
-  render({ store, paneProps, stackItem }) {
+  render({ paneProps, stackItem, ...props }) {
     return (
       <PaneView
         {...paneProps}
         sidebar
-        store={store}
         getItem={getItem(paneProps.getActiveIndex)}
         stackItem={stackItem}
+        {...props}
       />
     )
   }
@@ -58,7 +55,7 @@ export default class Sidebar {
 
   previousIndex = -1
 
-  render({ width, itemProps, sidebars, homeStore, homeStore: { stack } }) {
+  render({ width, itemProps, sidebars, store, store: { stack }, ...props }) {
     const currentIndex = stack.length - 1
     const { previousIndex } = this
     this.previousIndex = currentIndex
@@ -89,8 +86,7 @@ export default class Sidebar {
                 navigate={stack.navigate}
                 data={stackItem.result.data}
                 result={stackItem.result}
-                onBack={homeStore.stack.pop}
-                homeStore={homeStore}
+                onBack={store.stack.pop}
                 sidebarStore={Sidebar}
                 paneProps={{
                   index,
@@ -98,11 +94,12 @@ export default class Sidebar {
                   getActiveIndex: () =>
                     stackItem.col === 0 && stackItem.firstIndex,
                   groupKey: 'category',
-                  stack: homeStore.stack,
+                  stack: store.stack,
                   sidebar: true,
                   onSelect: stackItem.onSelect,
                   itemProps,
                 }}
+                {...props}
               />
             </Fade>
           )

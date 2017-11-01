@@ -1,18 +1,21 @@
 import * as React from 'react'
-import * as UI from '@mcro/ui'
 import { fuzzy } from '~/helpers'
-import { summarize, summarizeWithQuestion } from './summarize'
+import { summarize, summarizeWithQuestion } from './helpers/summarize'
 
 export default class ContextSidebar {
+  get oraStore() {
+    return this.props.oraStore
+  }
+
   // copy it here
-  osContext = this.props.homeStore.osContext
+  osContext = this.oraStore.osContext
 
   get context() {
-    return this.props.homeStore.context
+    return this.oraStore.context
   }
 
   get search() {
-    return this.props.homeStore.search
+    return this.oraStore.search
   }
 
   get contextResults() {
@@ -62,7 +65,7 @@ export default class ContextSidebar {
         icon: 'ui-1_bold-add',
         children: 'Pin',
         onClick: () => {
-          this.props.homeStore.addCurrentPage()
+          this.oraStore.addCurrentPage()
         },
       },
     ]

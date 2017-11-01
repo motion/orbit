@@ -2,8 +2,8 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import HomeStore from './homeStore'
-import Main from './main'
-import Sidebar from './sidebar'
+import Main from '~/apps/panes/main'
+import Sidebar from '~/apps/panes/sidebar'
 
 const inputStyle = {
   fontWeight: 200,
@@ -115,8 +115,8 @@ export default class HomePage {
             </forwardcomplete>
           </header>
           <content>
-            <Sidebar homeStore={homeStore} />
-            <Main homeStore={homeStore} />
+            <Sidebar store={homeStore} />
+            <Main store={homeStore} />
           </content>
         </home>
       </UI.Theme>

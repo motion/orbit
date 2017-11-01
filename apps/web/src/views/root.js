@@ -2,12 +2,14 @@ import React from 'react'
 import { view } from '@mcro/black'
 import Redbox from 'redbox-react'
 import RootStore from '~/stores/rootStore'
+import ContextStore from '~/stores/contextStore'
 import * as UI from '@mcro/ui'
 import NotFound from '~/views/404'
 import Router from '~/router'
 
 @view.provide({
   rootStore: RootStore,
+  contextStore: ContextStore,
 })
 @view
 export default class Root extends React.Component {

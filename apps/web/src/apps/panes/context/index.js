@@ -2,11 +2,10 @@ import React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import PaneView from '~/apps/panes/pane'
-import Context from '~/context'
+import ContextStore from '~/stores/contextStore'
 import { take, flatten } from 'lodash'
 import { OS } from '~/helpers'
 
-const sleep = n => new Promise(resolve => setTimeout(resolve, n))
 const hashStr = s => {
   let hash = 0,
     i,
@@ -21,7 +20,7 @@ const hashStr = s => {
 }
 
 @view({
-  store: class ContextStore {
+  store: class ContextViewStore {
     url = null
     results = []
 
@@ -40,8 +39,7 @@ const hashStr = s => {
         })
       )
       console.log('corpus is', corpus)
-
-      this.context = new Context(corpus)
+      this.context = new ContextStore(corpus)
       this.corpus = corpus
     }
 

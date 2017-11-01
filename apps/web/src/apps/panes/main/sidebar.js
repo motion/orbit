@@ -19,7 +19,7 @@ export default class MainSidebar {
   }
 
   get search() {
-    return this.props.homeStore.search
+    return this.props.oraStore.search
   }
 
   onListRef(ref) {
@@ -31,7 +31,7 @@ export default class MainSidebar {
 
   _watchLastKey() {
     this.react(
-      () => this.props.homeStore.lastKey,
+      () => this.props.oraStore.lastKey,
       key => {
         if (
           key === 'up' ||
@@ -41,7 +41,7 @@ export default class MainSidebar {
         ) {
           return
         }
-        this.props.homeStore.stack.last.setActive(0, 0)
+        this.props.oraStore.stack.last.setActive(0, 0)
       }
     )
   }

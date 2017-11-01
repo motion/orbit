@@ -77,7 +77,7 @@ class PaneStore {
         sidebar
           ? stack.last.sidebarSelectedIndex
           : stack.last.mainSelectedIndex,
-        this.props.homeStore.search,
+        this.props.oraStore.search,
       ],
       ([index]) => {
         // TODO fix flicker
@@ -88,7 +88,7 @@ class PaneStore {
   }
 }
 
-@view.attach('homeStore')
+@view.attach('oraStore')
 @view({
   paneStore: PaneStore,
 })

@@ -1,6 +1,6 @@
 // @flow
 import { watch } from '@mcro/black'
-import Context from '~/context'
+import ContextStore from '~/stores/contextStore'
 import { Person, Thing } from '~/app'
 
 export default class TaskSidebarStore {
@@ -24,7 +24,7 @@ export default class TaskSidebarStore {
   }
 
   willMount() {
-    this.context = new Context()
+    this.context = new ContextStore()
   }
 
   @watch
@@ -50,27 +50,6 @@ export default class TaskSidebarStore {
               })
             )
         : []),
-      /*
-      ...(this.last || [])
-        .filter(item => item.id !== this.props.data.id)
-        .map(item => ({
-          title: item.title,
-          iconAfter: true,
-          icon: `social-${'github'}`,
-          key: item.id,
-          body: (item.body || '').slice(0, 200),
-          type: 'task',
-          result: item,
-          data: {
-            id: item.id,
-            integration: item.integration,
-            type: item.type,
-            body: (item.body || '').slice(0, 200),
-          },
-          id: item.data.id,
-          // display: Thing.toResult(item, { category: 'Context' }),
-        })),
-        */
     ]
   }
 }

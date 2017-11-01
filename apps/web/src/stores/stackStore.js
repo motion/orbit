@@ -184,7 +184,11 @@ export default class StackStore {
     this.push(result)
   }
   replace = result => {
+    console.log('replace')
+    console.log(this.items)
     this.pop()
+    console.log(this.items)
     this.push(result)
+    console.log(this.items)
   }
 }

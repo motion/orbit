@@ -8,7 +8,6 @@ export default class ContextSidebar {
   osContext = this.props.homeStore.osContext
 
   get context() {
-    console.log('returnign', this.props.homeStore.context)
     return this.props.homeStore.context
   }
 
@@ -17,7 +16,6 @@ export default class ContextSidebar {
   }
 
   get contextResults() {
-    console.log('123', this.osContext, this.context)
     const title = this.osContext ? this.osContext.title : ''
     const addBold = line => {
       const r = new RegExp('(' + this.search.split(' ').join('|') + ')', 'ig')
@@ -26,7 +24,6 @@ export default class ContextSidebar {
         '<b style="font-weight: 400; color: #aed6ff;">$1</b>'
       )
     }
-
     return !this.context || this.context.loading // || this.osContext === null
       ? []
       : this.context
@@ -59,17 +56,21 @@ export default class ContextSidebar {
           })
   }
 
+  get actions() {
+    return [
+      {
+        icon: 'ui-1_bold-add',
+        children: 'Pin',
+        onClick: () => {
+          this.props.homeStore.addCurrentPage()
+        },
+      },
+    ]
+  }
+
   get results() {
     if (this.context) {
-      const { title } = this.context
-      const os =
-        this.search.length === 0
-          ? {
-              category: 'Currently Viewing',
-              children: <UI.Text opacity={0.7}>{title}</UI.Text>,
-              after: <UI.Button icon="ui-1_bold-add" />,
-            }
-          : null
+      const os = this.search.length === 0 ? [] : []
       return [os, ...this.contextResults].filter(i => !!i)
     }
     return []

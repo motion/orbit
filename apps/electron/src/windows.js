@@ -152,16 +152,20 @@ return {frontAppName, windowTitle}
                 if (err) {
                   return console.error(err)
                 }
-                const result = JSON.parse(res)
-                event.sender.send(
-                  'set-context',
-                  JSON.stringify({
-                    title: result.title,
-                    body: result.body,
-                    url: result.url,
-                    application,
-                  })
-                )
+                try {
+                  const result = JSON.parse(res)
+                  event.sender.send(
+                    'set-context',
+                    JSON.stringify({
+                      title: result.title,
+                      body: result.body,
+                      url: result.url,
+                      application,
+                    })
+                  )
+                } catch (err) {
+                  console.log('error parsing json', err, res)
+                }
               }
             )
           } else {

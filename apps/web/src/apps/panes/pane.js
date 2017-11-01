@@ -114,7 +114,6 @@ export default class Pane {
     style,
     width,
     sidebar,
-    actions,
     stackItem,
   }) {
     const getItemDefault = (item, index) => ({
@@ -144,6 +143,8 @@ export default class Pane {
       />
     )
 
+    const actions = stackItem.store && stackItem.store.actions
+
     return (
       <pane
         style={{ width, ...style }}
@@ -155,43 +156,20 @@ export default class Pane {
             ? list
             : typeof children === 'function' ? children(list) : children}
         </content>
-        <actions if={actions && stackItem && stackItem.col === 1}>
-          <UI.Theme name="clear-light">
-            <actionbar>
-              <div $$flex={2} $$row>
-                <UI.Button
-                  if={stackItem.result && stackItem.result.title}
-                  chromeless
-                  inline
-                  opacity={0.5}
-                  size={1.3}
-                >
-                  {stackItem.result.title}
-                </UI.Button>
-              </div>
-              <UI.Row
-                spaced={10}
-                itemProps={{
-                  size: 1.3,
-                  inline: true,
-                  chromeless: true,
-                  glow: true,
-                }}
-              >
-                {actions.map(
-                  ({ title, content, ...props }, index) =>
-                    content || (
-                      <UI.Button $actionButton key={index} {...props}>
-                        <actionButton>
-                          <strong>{title.slice(0, 1).toUpperCase()}</strong>
-                          {title.slice(1, Infinity)}
-                        </actionButton>
-                      </UI.Button>
-                    )
-                )}
-              </UI.Row>
-            </actionbar>
-          </UI.Theme>
+        <actions if={actions}>
+          <actionbar>
+            <UI.Row
+              spaced={10}
+              itemProps={{
+                glow: true,
+              }}
+            >
+              {actions.map(
+                ({ content, ...props }, index) =>
+                  content || <UI.Button key={index} {...props} />
+              )}
+            </UI.Row>
+          </actionbar>
         </actions>
       </pane>
     )
@@ -214,9 +192,9 @@ export default class Pane {
       alignItems: 'center',
       position: 'fixed',
       bottom: 0,
-      left: 250,
+      left: 0,
       right: 0,
-      background: [255, 255, 255, 0.4],
+      background: [0, 0, 0, 0.14],
       backdropFilter: 'blur(20px)',
       zIndex: Number.MAX_VALUE,
     },

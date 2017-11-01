@@ -13,12 +13,14 @@ export default class OraMain {
 
   @watch
   things = () =>
+    Thing.connected &&
     Thing.find()
       .sort({ updated: 'desc' })
       .limit(20)
 
   @watch
   events = () =>
+    Event.connected &&
     Event.find()
       .where('created')
       .ne(null)

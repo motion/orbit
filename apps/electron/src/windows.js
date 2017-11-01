@@ -36,7 +36,7 @@ export default class ExampleApp extends React.Component {
 
     this.screenSize = screen.getPrimaryDisplay().workAreaSize
     this.setState({
-      trayPosition: [this.screenSize.width - ORA_WIDTH - 20, 40],
+      trayPosition: [this.screenSize.width - ORA_WIDTH, 20],
     })
 
     this.next() // preload one app window

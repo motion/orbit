@@ -10,6 +10,9 @@ let blurredRef
 const ORA_HEIGHT = 450
 const colorTeal = '#49ceac'
 const colorBlue = '#133cca'
+const screen = {
+  small: '@media (max-width: 800px)',
+}
 
 const allItems = {
   0: [
@@ -176,6 +179,7 @@ class Ora extends React.Component {
 
 @view
 export default class HomePage extends React.Component {
+  bounds = []
   state = {
     ready: false,
   }
@@ -202,8 +206,6 @@ export default class HomePage extends React.Component {
     }
   }
 
-  bounds = []
-
   setSection(index) {
     return node => {
       if (node) {
@@ -212,45 +214,44 @@ export default class HomePage extends React.Component {
     }
   }
 
-  render({ blurred }) {
-    function getStyle() {
-      if (!blurred) {
-        return {
-          page: {
-            height: window.innerHeight,
-            overflowY: 'scroll',
-          },
-        }
-      }
-      const pad = 20
-      const width = 280
-      const height = ORA_HEIGHT
-      const bottom = height + pad
-      const right = window.innerWidth - pad
-      const left = window.innerWidth - width - pad
+  getStyle() {
+    if (!this.props.blurred) {
       return {
         page: {
-          background: '#fff',
-          pointerEvents: 'none',
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          zIndex: 1000,
-          // rounded:
-          // polygon(5% 0, 95% 0, 100% 4%, 100% 95%, 95% 100%, 5% 100%, 0 95%, 0 5%)
-          clip: `rect(${pad}px, ${right}px, ${bottom}px, ${left}px)`,
-          // clipPath: `url(/ora.svg#clip)`,
+          height: window.innerHeight,
+          overflowY: 'scroll',
         },
       }
     }
+    const pad = 20
+    const width = 280
+    const height = ORA_HEIGHT
+    const bottom = height + pad
+    const right = window.innerWidth - pad
+    const left = window.innerWidth - width - pad
+    return {
+      page: {
+        background: '#fff',
+        pointerEvents: 'none',
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: 1000,
+        // rounded:
+        // polygon(5% 0, 95% 0, 100% 4%, 100% 95%, 95% 100%, 5% 100%, 0 95%, 0 5%)
+        clip: `rect(${pad}px, ${right}px, ${bottom}px, ${left}px)`,
+        // clipPath: `url(/ora.svg#clip)`,
+      },
+    }
+  }
 
-    const styles = getStyle()
-
+  render({ blurred, isSmall }) {
+    const styles = this.getStyle()
     return (
       <page css={styles.page} ref={x => this.setRef(x)}>
         <Ora
-          if={!blurred && this.state.ready}
+          if={!blurred && this.state.ready && !isSmall}
           bounds={this.bounds}
           node={this.node}
           key={this.state.lastIntersection}
@@ -400,7 +401,6 @@ export default class HomePage extends React.Component {
             </header>
 
             <sectionContent
-              $padded
               css={{
                 flex: 1,
                 justifyContent: 'center',
@@ -454,6 +454,7 @@ export default class HomePage extends React.Component {
           <section css={{ background: '#fff' }} $padded>
             <sectionContent $padRight $padBottom>
               <img
+                if={!isSmall}
                 css={{
                   position: 'absolute',
                   top: -35,
@@ -539,7 +540,7 @@ export default class HomePage extends React.Component {
           </UI.Theme>
 
           <footer>
-            <section css={{ padding: [250, 0] }} $$centered>
+            <section css={{ padding: [250, 0] }} $$centered $padded>
               <sectionContent>
                 <Text size={3}>
                   Orbit is going into private beta in December.
@@ -591,9 +592,13 @@ export default class HomePage extends React.Component {
     },
     padded: {
       padding: [110, 0],
+      margin: 0,
     },
     padRight: {
       paddingRight: 300,
+      [screen.small]: {
+        paddingRight: 0,
+      },
     },
     padBottom: {
       paddingBottom: 80,

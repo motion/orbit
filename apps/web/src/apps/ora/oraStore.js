@@ -34,7 +34,6 @@ const debounce = (fn, timeout) => {
 export default class OraStore {
   stack = new StackStore([{ type: 'oramain' }])
   inputRef = null
-  context = null
   osContext = null
   search = ''
   textboxVal = ''
@@ -56,11 +55,43 @@ export default class OraStore {
         this.setTimeout(this.blurBar, 100)
       }
     })
+    await this.listenForContext()
   }
 
-  // get context() {
-  //   return this.props.contextStore
-  // }
+  listenForContext = async () => {
+    // check
+    this.setInterval(() => {
+      OS.send('get-context')
+    }, 500)
+    // response
+    OS.on('set-context', (event, info) => {
+      const context = JSON.parse(info)
+      if (!context) {
+        this.osContext = null
+        if (this.stack.last.result.type === 'context') {
+          // if you want it to navigate back home automatically
+          // this.stack.pop()
+        }
+        return
+      }
+      // check to avoid rerendering
+      if (!this.osContext || this.osContext.title !== context.title) {
+        console.log('set-context', context)
+        const nextStackItem = {
+          type: 'context',
+          title: context.title,
+          icon:
+            context.application === 'Google Chrome' ? 'social-google' : null,
+        }
+        if (this.stack.length > 1) {
+          this.stack.replace(nextStackItem)
+        } else {
+          this.stack.navigate(nextStackItem)
+        }
+        this.osContext = context
+      }
+    })
+  }
 
   _watchMouse() {
     OS.send('mouse-listen')

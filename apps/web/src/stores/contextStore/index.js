@@ -21,22 +21,23 @@ let vectorCache = null
 export default class Context {
   // out of vocabulary words, a map of word -> count
   vectors = null
-  items = Thing.find()
   oov = null
+  manualContext = null
+  @watch items = () => Thing.connected && Thing.find()
   @watch
   tfidf = () =>
     this.items &&
     !this.loading &&
     tfidf((this.items || []).map(item => this.textToWords(item.title)))
 
-  constructor() {
+  constructor(manualContext) {
     this.start()
+    this.manualContext = manualContext
   }
 
   async start() {
     this.vectors = await this.getVectors()
     this.oov = this.getOov()
-    await this.listenForContext()
   }
 
   get loading() {
@@ -51,40 +52,6 @@ export default class Context {
     const res = await (await fetch(toFetch)).json()
     const { text, title } = res.objects[0]
     this.addToCorpus(title + '\n' + text)
-  }
-
-  listenForContext = async () => {
-    this.setInterval(() => {
-      OS.send('get-context')
-    }, 500)
-
-    OS.on('set-context', (event, info) => {
-      const context = JSON.parse(info)
-      if (!context) {
-        this.osContext = null
-        if (this.stack.last.result.type === 'context') {
-          // if you want it to navigate back home automatically
-          // this.stack.pop()
-        }
-        return
-      }
-      // check to avoid rerendering
-      if (!this.osContext || this.osContext.title !== context.title) {
-        console.log('set-context', context)
-        const nextStackItem = {
-          type: 'context',
-          title: context.title,
-          icon:
-            context.application === 'Google Chrome' ? 'social-google' : null,
-        }
-        if (this.stack.length > 1) {
-          this.stack.replace(nextStackItem)
-        } else {
-          this.stack.navigate(nextStackItem)
-        }
-        this.osContext = context
-      }
-    })
   }
 
   // prepatory

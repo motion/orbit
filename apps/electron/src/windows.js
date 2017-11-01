@@ -3,7 +3,6 @@ import { app, globalShortcut, ipcMain, screen } from 'electron'
 import repl from 'repl'
 import applescript from 'node-osascript'
 import open from 'opn'
-import Menu from '~/menu'
 import { measure } from '~/helpers'
 import * as Constants from '~/constants'
 import WindowsStore from './windowsStore'
@@ -130,63 +129,7 @@ export default class Windows extends React.Component {
       }
     })
 
-    this.on(ipcMain, 'get-context', event => {
-      applescript.execute(
-        `
-global frontApp, frontAppName, windowTitle
-
-set windowTitle to ""
-tell application "System Events"
-  set frontApp to first application process whose frontmost is true
-  set frontAppName to name of frontApp
-  tell process frontAppName
-    tell (1st window whose value of attribute "AXMain" is true)
-      set windowTitle to value of attribute "AXTitle"
-    end tell
-  end tell
-end tell
-
-return {frontAppName, windowTitle}
-        `,
-        (err, answer) => {
-          if (err) {
-            return console.error(err)
-          }
-          const [application, title] = answer
-
-          if (application === 'Google Chrome') {
-            applescript.execute(
-              `tell application "Google Chrome"
-        tell front window's active tab
-          set source to execute javascript "JSON.stringify({ url: document.location+'', title: document.title, body: document.body.innerText })"
-        end tell
-      end tell`,
-              (err, res) => {
-                if (err) {
-                  return console.error(err)
-                }
-                try {
-                  const result = JSON.parse(res)
-                  event.sender.send(
-                    'set-context',
-                    JSON.stringify({
-                      title: result.title,
-                      body: result.body,
-                      url: result.url,
-                      application,
-                    })
-                  )
-                } catch (err) {
-                  console.log('error parsing json', err, res)
-                }
-              }
-            )
-          } else {
-            event.sender.send('set-context', null)
-          }
-        }
-      )
-    })
+    this.on(ipcMain, 'get-context', this.getContext)
 
     this.on(ipcMain, 'bar-goto', (event, path) => {
       this.openApp(path)
@@ -211,6 +154,64 @@ return {frontAppName, windowTitle}
       open(`${Constants.APP_URL}/authorize?service=` + service)
     })
   }
+
+  getContext = throttle(event => {
+    applescript.execute(
+      `
+global frontApp, frontAppName, windowTitle
+
+set windowTitle to ""
+tell application "System Events"
+  set frontApp to first application process whose frontmost is true
+  set frontAppName to name of frontApp
+  tell process frontAppName
+    tell (1st window whose value of attribute "AXMain" is true)
+      set windowTitle to value of attribute "AXTitle"
+    end tell
+  end tell
+end tell
+
+return {frontAppName, windowTitle}
+        `,
+      (err, answer) => {
+        if (err) {
+          return console.error(err)
+        }
+        const [application, title] = answer
+
+        if (application === 'Google Chrome') {
+          applescript.execute(
+            `tell application "Google Chrome"
+        tell front window's active tab
+          set source to execute javascript "JSON.stringify({ url: document.location+'', title: document.title, body: document.body.innerText })"
+        end tell
+      end tell`,
+            (err, res) => {
+              if (err) {
+                return console.error(err)
+              }
+              try {
+                const result = JSON.parse(res)
+                event.sender.send(
+                  'set-context',
+                  JSON.stringify({
+                    title: result.title,
+                    body: result.body,
+                    url: result.url,
+                    application,
+                  })
+                )
+              } catch (err) {
+                console.log('error parsing json', err, res)
+              }
+            }
+          )
+        } else {
+          event.sender.send('set-context', null)
+        }
+      }
+    )
+  }, 200)
 
   updateWindows = () => {
     return new Promise(resolve => {

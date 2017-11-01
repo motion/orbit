@@ -4,7 +4,6 @@ import { watch } from '@mcro/black'
 import { fuzzy } from '~/helpers'
 import Calendar from '../feed/calendar'
 import FeedItem from '../feed/feedItem'
-import Context from '../context'
 import { Event, Thing } from '~/app'
 
 export default class OraMain {
@@ -126,15 +125,20 @@ export default class OraMain {
   }
 
   get results() {
-    const { title } = this.props.homeStore.osContext || { title: 'none yet' }
-    const os =
-      this.props.homeStore.search.length === 0
-        ? {
-            category: 'Currently Viewing',
-            children: <UI.Text opacity={0.7}>{title}</UI.Text>,
-          }
-        : null
-    // return [os, ...this.props.homeStore.contextResults].filter(i => !!i)
+    const { search } = this
+    const context = this.props.homeStore.osContext
+
+    if (!search && context) {
+      const { title } = context
+      const os =
+        this.props.homeStore.search.length === 0
+          ? {
+              category: 'Currently Viewing',
+              children: <UI.Text opacity={0.7}>{title}</UI.Text>,
+            }
+          : null
+      return [os, ...this.props.homeStore.contextResults].filter(i => !!i)
+    }
 
     const items = [
       ...this.items,
@@ -144,13 +148,13 @@ export default class OraMain {
       })),
     ]
 
-    if (!this.search) {
+    if (!search) {
       return items
     }
 
-    const search = fuzzy(this.items, this.search)
-    const searchItems = search.length
-      ? search
+    const filteredSearch = fuzzy(this.items, search)
+    const searchItems = filteredSearch.length
+      ? filteredSearch
       : [
           {
             type: 'message',
@@ -159,7 +163,6 @@ export default class OraMain {
             category: 'Search Results',
           },
         ]
-
     return searchItems
   }
 }

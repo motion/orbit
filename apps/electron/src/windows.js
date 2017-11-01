@@ -24,7 +24,7 @@ const ORA_WIDTH = 300
 export default class ExampleApp extends React.Component {
   state = {
     restart: false,
-    showSettings: true,
+    showSettings: false,
     size: [0, 0],
     position: [0, 0],
     trayPosition: [0, 0],
@@ -115,14 +115,45 @@ export default class ExampleApp extends React.Component {
 
     ipcMain.on('get-context', event => {
       applescript.execute(
-        `tell application "Google Chrome"
-	tell front window's active tab
-		set source to execute javascript "JSON.stringify({ url: document.location+'', title: document.title, body: document.body.innerText })"
-	end tell
-end tell`,
-        (err, result, raw) => {
-          if (err) return console.error(err)
-          event.sender.send('set-context', result)
+        `
+global frontApp, frontAppName, windowTitle
+
+set windowTitle to ""
+tell application "System Events"
+  set frontApp to first application process whose frontmost is true
+  set frontAppName to name of frontApp
+  tell process frontAppName
+    tell (1st window whose value of attribute "AXMain" is true)
+      set windowTitle to value of attribute "AXTitle"
+    end tell
+  end tell
+end tell
+
+return {frontAppName, windowTitle}
+        `,
+        (err, result) => {
+          if (err) {
+            return console.error(err)
+          }
+          const [application, title] = result
+
+          if (application === 'Google Chrome') {
+            applescript.execute(
+              `tell application "Google Chrome"
+        tell front window's active tab
+          set source to execute javascript "JSON.stringify({ url: document.location+'', title: document.title, body: document.body.innerText })"
+        end tell
+      end tell`,
+              (err, result) => {
+                if (err) {
+                  return console.error(err)
+                }
+                event.sender.send('set-context', result)
+              }
+            )
+          } else {
+            event.sender.send('set-context', null)
+          }
         }
       )
     })
@@ -251,7 +282,7 @@ end tell`,
           vibrancy="dark"
           transparent
           hasShadow
-          showDevTools
+          showDevTools={this.state.showSettings}
           defaultSize={this.initialSize || this.state.size}
           size={this.state.size}
           file={Constants.APP_URL}

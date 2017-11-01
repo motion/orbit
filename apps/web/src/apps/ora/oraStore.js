@@ -1,12 +1,8 @@
-import { watch } from '@mcro/black'
-import * as UI from '@mcro/ui'
-import { Thing } from '~/app'
 import Mousetrap from 'mousetrap'
 import { OS } from '~/helpers'
 import Context from '~/context'
 import StackStore from '../home/stackStore'
 import { summarize, summarizeWithQuestion } from './summarize'
-import { last, flatten, take } from 'lodash'
 import keycode from 'keycode'
 
 export const SHORTCUTS = {
@@ -45,7 +41,6 @@ export default class OraStore {
   context = null
   search = ''
   textboxVal = ''
-  // things = Thing.find()
   traps = {}
   lastKey = null
   hidden = false
@@ -96,6 +91,10 @@ export default class OraStore {
 
     OS.on('set-context', (event, info) => {
       const json = JSON.parse(info)
+      console.log('got context', json)
+      if (!json) {
+        this.osContext = null
+      }
       // check to avoid rerendering
       if (!this.osContext || this.osContext.title !== json.title) {
         this.osContext = json

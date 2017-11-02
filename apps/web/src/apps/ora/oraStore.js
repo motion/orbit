@@ -7,6 +7,16 @@ import keycode from 'keycode'
 import ContextStore from '~/stores/contextStore'
 import SHORTCUTS from './shortcuts'
 
+const BANNERS = {
+  note: 'note',
+  success: 'success',
+}
+
+const BANNER_TIMES = {
+  note: 5000,
+  success: 1500,
+}
+
 export default class OraStore {
   stack = new StackStore([{ type: 'oramain' }])
   inputRef = null
@@ -17,6 +27,7 @@ export default class OraStore {
   lastKey = null
   hidden = false
   focused = false
+  banner = null
 
   @watch items = () => Thing.find()
   @watch context = () => this.items && new ContextStore(this.items)
@@ -36,23 +47,39 @@ export default class OraStore {
     await this.listenForContext()
   }
 
+  setBanner = (type, message, timeout) => {
+    this.banner = { message, type }
+    const fadeOutTime = timeout || BANNER_TIMES[type]
+    if (fadeOutTime) {
+      this.setTimeout(() => {
+        if (this.banner.type === type && this.banner.message === message) {
+          this.banner = null
+        }
+      }, fadeOutTime)
+    }
+  }
+
   addCurrentPage = async () => {
     if (!this.osContext) {
       return
     }
+    this.setBanner(BANNERS.note, 'Pinning...')
     const token = `e441c83aed447774532894d25d97c528`
     const { url } = this.osContext
     const toFetch = `https://api.diffbot.com/v3/article?token=${token}&url=${url}`
     console.log('to fetch is', toFetch)
-    const res = await (await fetch(toFetch)).json()
+    const res = await fetch(toFetch).then(res => res.json())
     const { text, title } = res.objects[0]
     const thing = await Thing.create({
       title,
       integration: 'manual',
       type: 'manual',
       body: text,
+      url,
     })
-    console.log('created', thing)
+    log('mdae a thing')
+    this.setBanner(BANNERS.success, 'Added pin')
+    return thing
   }
 
   listenForContext = async () => {

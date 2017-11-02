@@ -56,7 +56,7 @@ export default class Context {
     if (vectorCache) {
       return vectorCache
     }
-    const text = await fetch(`/vectors100k.txt`).then(res => res.text())
+    const text = await fetch(`/vectors15k.txt`).then(res => res.text())
     const vectors = {}
     text.split('\n').forEach(line => {
       const split = line.split(' ')
@@ -104,10 +104,10 @@ export default class Context {
 
   wordDistance = memoize((key, w, w2) => {
     // if out of vocab, we can't compare in vector space
-    // Penalize 300 if other doc doesn't contain
+    // Penalize the diff between onion and beach if other doc doesn't contain
     if (this.oov[w] || this.oov[w2]) {
       if (w === w2) return 0
-      return 300
+      return this.wordDistance('base', 'onion', 'beach')
     }
     const v = this.vectors[w]
     const v2 = this.vectors[w2]
@@ -130,6 +130,10 @@ export default class Context {
 
   closestItems = (text, n = 3) => {
     const words = this.textToWords(text)
+    console.log(
+      'sim is',
+      this.wordsDistance(words, this.textToWords('food is great'))
+    )
     const items = (this.items || []).map(item => {
       const title = item.title
       const text = item.body

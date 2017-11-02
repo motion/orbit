@@ -23,6 +23,8 @@ export type ThingType = typeof methods & {
   updated: string,
   date: string,
   orgName: string,
+  bucket?: string,
+  url?: string,
 }
 
 export class Thing extends Model {
@@ -39,6 +41,7 @@ export class Thing extends Model {
     updated: str.indexed,
     orgName: str.optional,
     bucket: str.optional,
+    url: str.optional,
     timestamps: true,
   }
 

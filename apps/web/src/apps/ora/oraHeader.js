@@ -3,6 +3,12 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { CurrentUser } from '~/app'
 
+const BANNER_COLORS = {
+  note: 'blue',
+  success: 'green',
+  failure: 'red',
+}
+
 @view({
   store: class HeaderStore {
     downAt = Date.now()
@@ -36,6 +42,10 @@ export default class OraHeader extends React.Component {
   }
 
   render({ oraStore }) {
+    if (!CurrentUser.user) {
+      return null
+    }
+
     const itemProps = {
       glow: false,
       chromeless: true,
@@ -94,8 +104,13 @@ export default class OraHeader extends React.Component {
           }}
         />
 
-        <title>
-          <UI.Text size={0.8}>{oraStore.stack.last.result.type}</UI.Text>
+        <title
+          $$background={BANNER_COLORS[oraStore.banner && oraStore.banner.type]}
+        >
+          <UI.Text size={0.8}>
+            {(oraStore.banner && oraStore.banner.message) ||
+              oraStore.stack.last.result.type}
+          </UI.Text>
         </title>
 
         <buttons
@@ -182,7 +197,7 @@ export default class OraHeader extends React.Component {
       textAlign: 'center',
       alignItems: 'center',
       justifyContent: 'center',
-      zIndex: 1000,
+      zIndex: 0,
       pointerEvents: 'none',
       userSelect: 'none',
     },
@@ -196,6 +211,7 @@ export default class OraHeader extends React.Component {
       alignItems: 'center',
       height: 'auto',
       left: 12,
+      zIndex: 2,
     },
     searchInput: {
       position: 'relative',

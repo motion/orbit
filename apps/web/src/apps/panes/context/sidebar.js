@@ -1,6 +1,7 @@
 import * as React from 'react'
-import { fuzzy } from '~/helpers'
+import { OS, fuzzy } from '~/helpers'
 import { summarize, summarizeWithQuestion } from './helpers/summarize'
+import * as UI from '@mcro/ui'
 
 export default class ContextSidebar {
   get oraStore() {
@@ -27,7 +28,6 @@ export default class ContextSidebar {
         '<b style="font-weight: 400; color: #aed6ff;">$1</b>'
       )
     }
-    console.log('this.context', this.context)
     return !this.context || this.context.loading // || this.osContext === null
       ? []
       : this.context
@@ -44,18 +44,12 @@ export default class ContextSidebar {
               height: 200,
               title,
               subtitle: `Similarity: ${similarity}`,
+              onClick: () => {
+                OS.send('navigate', item.url)
+              },
               children: (
                 <paras style={{ width: '100%' }}>
-                  {lines.map(line => (
-                    <p
-                      css={{
-                        marginTop: 4,
-                        opacity: 0.8,
-                        fontSize: 13,
-                      }}
-                      dangerouslySetInnerHTML={{ __html: addBold(line) }}
-                    />
-                  ))}
+                  {lines.map(line => <UI.Text html={addBold(line)} />)}
                 </paras>
               ),
             }
@@ -77,7 +71,7 @@ export default class ContextSidebar {
   get results() {
     if (this.context) {
       const os = this.search.length === 0 ? [] : []
-      return [os, ...this.contextResults].filter(i => !!i)
+      return [...os, ...this.contextResults].filter(i => !!i)
     }
     return []
   }

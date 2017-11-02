@@ -1,35 +1,11 @@
+import { Thing } from '~/app'
+import { watch } from '@mcro/black'
 import Mousetrap from 'mousetrap'
-import { OS } from '~/helpers'
+import { OS, debounceIdle } from '~/helpers'
 import StackStore from '~/stores/stackStore'
 import keycode from 'keycode'
-
-export const SHORTCUTS = {
-  left: 'left',
-  right: 'right',
-  down: ['down', 'j'],
-  up: ['up', 'k'],
-  d: 'd', // doc
-  enter: 'enter',
-  esc: 'esc',
-  explorer: ['command+t'],
-  cmdA: 'command+a',
-  cmdL: 'command+l',
-  cmdEnter: 'command+enter',
-  cmdUp: 'command+up',
-  cmdR: 'command+r',
-  delete: ['delete', 'backspace'],
-  togglePane: 'shift+tab',
-  fullscreen: ['command+b', 'command+\\'],
-}
-
-const debounce = (fn, timeout) => {
-  let clearId = null
-  return (...args) => {
-    if (clearId) cancelIdleCallback(clearId)
-
-    clearId = requestIdleCallback(() => fn(...args), { timeout })
-  }
-}
+import ContextStore from '~/stores/contextStore'
+import SHORTCUTS from './shortcuts'
 
 export default class OraStore {
   stack = new StackStore([{ type: 'oramain' }])
@@ -42,6 +18,9 @@ export default class OraStore {
   hidden = false
   focused = false
   activeThing = null
+
+  @watch items = () => Thing.find()
+  @watch context = () => this.items && new ContextStore(this.items)
 
   async willMount() {
     this.attachTrap('window', window)
@@ -56,6 +35,25 @@ export default class OraStore {
       }
     })
     await this.listenForContext()
+  }
+
+  addCurrentPage = async () => {
+    if (!this.osContext) {
+      return
+    }
+    const token = `e441c83aed447774532894d25d97c528`
+    const { url } = this.osContext
+    const toFetch = `https://api.diffbot.com/v3/article?token=${token}&url=${url}`
+    console.log('to fetch is', toFetch)
+    const res = await (await fetch(toFetch)).json()
+    const { text, title } = res.objects[0]
+    const thing = await Thing.create({
+      title,
+      integration: 'manual',
+      type: 'manual',
+      body: text,
+    })
+    console.log('created', thing)
   }
 
   listenForContext = async () => {
@@ -202,7 +200,7 @@ export default class OraStore {
     }
   }
 
-  setSearch = debounce(this.setSearchImmediate, 20)
+  setSearch = debounceIdle(this.setSearchImmediate, 20)
 
   attachTrap(attachName, el) {
     this.traps[attachName] = new Mousetrap(el)

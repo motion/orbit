@@ -8,7 +8,6 @@ import OraHeader from './oraHeader'
 
 const width = 280
 
-@view.attach('contextStore')
 @view.provide({
   oraStore: OraStore,
 })

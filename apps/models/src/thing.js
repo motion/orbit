@@ -38,7 +38,7 @@ export class Thing extends Model {
     author: str.optional,
     created: str.indexed,
     updated: str.indexed,
-    orgName: str.indexed,
+    orgName: str.optional,
     timestamps: true,
   }
 
@@ -51,6 +51,9 @@ export class Thing extends Model {
   hooks = {
     preInsert: (doc: Object) => {
       doc.id = cleanId(doc)
+      const now = new Date().toISOString()
+      doc.created = doc.created || now
+      doc.updated = doc.updated || now
     },
   }
 

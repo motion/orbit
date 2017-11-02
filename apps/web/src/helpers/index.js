@@ -50,3 +50,12 @@ export const cleanText = s => {
     return ''
   }
 }
+
+export const debounceIdle = (fn, timeout) => {
+  let clearId = null
+  return (...args) => {
+    if (clearId) cancelIdleCallback(clearId)
+
+    clearId = requestIdleCallback(() => fn(...args), { timeout })
+  }
+}

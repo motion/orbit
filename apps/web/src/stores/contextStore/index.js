@@ -8,31 +8,24 @@ import {
   sortBy,
   sum,
 } from 'lodash'
-import { watch, store } from '@mcro/black'
-import { Thing } from '~/app'
 import tfidf from './tfidf'
 import stopwords from './stopwords'
-import { OS } from '~/helpers'
 import { cleanText } from '~/helpers'
 
 let vectorCache = null
 
-@store
 export default class Context {
   // out of vocabulary words, a map of word -> count
   vectors = null
   oov = null
-  manualContext = null
-  @watch items = () => Thing.connected && Thing.find()
-  @watch
-  tfidf = () =>
-    this.items &&
-    !this.loading &&
-    tfidf((this.items || []).map(item => this.textToWords(item.title)))
 
-  constructor(manualContext) {
+  tfidf = items =>
+    !this.loading &&
+    tfidf((items || []).map(item => this.textToWords(item.title)))
+
+  constructor(items) {
+    this.items = items
     this.start()
-    this.manualContext = manualContext
   }
 
   async start() {
@@ -42,16 +35,6 @@ export default class Context {
 
   get loading() {
     return !this.oov || this.vectors === null
-  }
-
-  addCurrentPage = async () => {
-    const token = `e441c83aed447774532894d25d97c528`
-    const { url } = this.osContext
-    const toFetch = `https://api.diffbot.com/v3/article?token=${token}&url=${url}`
-    console.log('to fetch is', toFetch)
-    const res = await (await fetch(toFetch)).json()
-    const { text, title } = res.objects[0]
-    this.addToCorpus(title + '\n' + text)
   }
 
   // prepatory

@@ -133,6 +133,10 @@ return {activeApp, activeApp2}
       }
     })
 
+    this.on(ipcMain, 'navigate', (event, url) => {
+      open(url)
+    })
+
     this.on(ipcMain, 'where-to', (event, key) => {
       console.log('where-to from', key)
       const win = AppWindows.findBy(key)

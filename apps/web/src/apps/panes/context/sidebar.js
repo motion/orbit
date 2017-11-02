@@ -27,22 +27,25 @@ export default class ContextSidebar {
         '<b style="font-weight: 400; color: #aed6ff;">$1</b>'
       )
     }
+    console.log('this.context', this.context)
     return !this.context || this.context.loading // || this.osContext === null
       ? []
       : this.context
           .closestItems(this.search.length > 0 ? this.search : title, 5)
-          .map(({ item }) => {
-            const { title, lines } =
+          .map(({ item, similarity }) => {
+            const title = item.title
+            const { lines } =
               this.search.length === 0
-                ? summarize(item.title)
-                : summarizeWithQuestion(item.title, this.search)
+                ? summarize(item.body)
+                : summarizeWithQuestion(item.body, this.search)
 
             return {
               category: 'Context',
               height: 200,
+              title,
+              subtitle: `Similarity: ${similarity}`,
               children: (
                 <paras style={{ width: '100%' }}>
-                  <p css={{ opacity: 1, fontSize: 13 }}>{title}</p>
                   {lines.map(line => (
                     <p
                       css={{

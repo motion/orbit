@@ -2,15 +2,15 @@
 import { view } from '@mcro/black'
 import * as React from 'react'
 import Popover from './popover'
-import names from './iconNames'
+import iconNames from './iconNames'
 import iconsDetailed from './iconsDetailed'
 import fuzzy from 'fuzzy'
 
 const cache = {}
 const findMatch = (name: string) => {
   if (cache[name]) return cache[name]
-  if (names[name]) return names[name]
-  const matches = fuzzy.filter(name, names)
+  if (iconNames[name]) return iconNames[name]
+  const matches = fuzzy.filter(name, iconNames)
   const match = matches.length ? matches[0].original : null
   cache[name] = match
   return match
@@ -66,7 +66,7 @@ export default class Icon extends React.PureComponent<Props> {
     }
 
     const iconName = findMatch(name)
-    content = content || children || !iconName ? name : ''
+    content = content || children
 
     return (
       <icon $icon {...props}>

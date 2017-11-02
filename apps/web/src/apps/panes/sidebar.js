@@ -12,14 +12,16 @@ import PaneView from './pane'
       return this.childStore.results
     }
     setStore(childStore) {
-      Object.defineProperty(childStore.prototype, 'props', {
-        get: () => this.props,
-        configurable: true,
-      })
-      this.childStore = new store(childStore)()
-      this.props.stackItem.setStore(this.childStore)
-      // hacky for now
-      window.sidebarStore = this.childStore
+      if (childStore.prototype) {
+        Object.defineProperty(childStore.prototype, 'props', {
+          get: () => this.props,
+          configurable: true,
+        })
+        this.childStore = new store(childStore)()
+        this.props.stackItem.setStore(this.childStore)
+        // hacky for now
+        window.sidebarStore = this.childStore
+      }
     }
   },
 })

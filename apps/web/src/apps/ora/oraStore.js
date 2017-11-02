@@ -56,6 +56,7 @@ export default class OraStore {
   }
 
   listenForContext = async () => {
+    log('listenforcontext')
     // check
     this.setInterval(() => {
       OS.send('get-context')
@@ -64,8 +65,8 @@ export default class OraStore {
     OS.on('set-context', (event, info) => {
       const context = JSON.parse(info)
       if (!context) {
-        this.osContext = null
         if (this.stack.last.result.type === 'context') {
+          // this.osContext = null
           // if you want it to navigate back home automatically
           // this.stack.pop()
         }
@@ -73,7 +74,9 @@ export default class OraStore {
       }
       // check to avoid rerendering
       if (!this.osContext || this.osContext.title !== context.title) {
-        console.log('set-context', context)
+        if (this.osContext) {
+          console.log('set-context', context.title, this.osContext.title)
+        }
         const nextStackItem = {
           type: 'context',
           title: context.title,

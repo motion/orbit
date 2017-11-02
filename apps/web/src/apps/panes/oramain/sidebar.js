@@ -1,10 +1,29 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
-import { watch } from '@mcro/black'
+import { view, watch } from '@mcro/black'
 import { fuzzy } from '~/helpers'
 import Calendar from '../feed/calendar'
 import FeedItem from '../feed/feedItem'
 import { Event, Thing } from '~/app'
+
+@view
+class Avatar extends React.Component {
+  render() {
+    return <img {...this.props} />
+  }
+  static style = {
+    img: {
+      width: 40,
+      height: 40,
+      borderRadius: 100,
+      marginBottom: 5,
+      border: [3, [255, 255, 255, 0.1]],
+      '&:hover': {
+        borderColor: [255, 255, 255, 0.4],
+      },
+    },
+  }
+}
 
 export default class OraMainSidebar {
   get search() {
@@ -59,7 +78,10 @@ export default class OraMainSidebar {
               <thing
                 onClick={e => {
                   e.stopPropagation()
-                  this.props.navigate(Thing.toResult(thing))
+                  this.props.navigate({
+                    ...Thing.toResult(thing),
+                    type: 'context',
+                  })
                 }}
                 css={{
                   alignItems: 'center',
@@ -73,14 +95,7 @@ export default class OraMainSidebar {
                     position: 'relative',
                   }}
                 >
-                  <img
-                    css={{
-                      width: 40,
-                      height: 40,
-                      borderRadius: 100,
-                      marginBottom: 5,
-                      border: [3, [255, 255, 255, 0.1]],
-                    }}
+                  <Avatar
                     src={`/images/${this.NAME_MAP[thing.author] ||
                       'steph'}.jpg`}
                   />

@@ -19,6 +19,7 @@
 - add option to drill in rather than open in browser so you can see context
 - add preview of body contents when showing items
 - hover to see tooltip peek (test if it be done in same browserwindow)
+- :bug: popover flicker
 
 # integration related
 - import slack

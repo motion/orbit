@@ -21,6 +21,7 @@ export default class ContextSidebar {
 
   get contextResults() {
     const title = this.osContext ? this.osContext.title : ''
+    log('title is', title)
     const addBold = line => {
       const r = new RegExp('(' + this.search.split(' ').join('|') + ')', 'ig')
       return line.replace(
@@ -32,7 +33,7 @@ export default class ContextSidebar {
       ? []
       : this.context
           .closestItems(this.search.length > 0 ? this.search : title, 5)
-          .map(({ item, similarity }) => {
+          .map(({ debug, item, similarity }) => {
             const title = item.title
             const { lines } =
               this.search.length === 0
@@ -50,6 +51,13 @@ export default class ContextSidebar {
               children: (
                 <paras style={{ width: '100%' }}>
                   {lines.map(line => <UI.Text html={addBold(line)} />)}
+                  <debug>
+                    {debug.map(({ word, word2, similarity }) => (
+                      <item>
+                        {word} -> {word2}: {similarity}
+                      </item>
+                    ))}
+                  </debug>
                 </paras>
               ),
             }

@@ -103,6 +103,7 @@ export default class OraStore {
         if (this.osContext) {
           console.log('set-context', context.title, this.osContext.title)
         }
+        this.osContext = context
         const nextStackItem = {
           type: 'context',
           title: context.title,
@@ -114,7 +115,6 @@ export default class OraStore {
         } else {
           this.stack.navigate(nextStackItem)
         }
-        this.osContext = context
       }
     })
   }

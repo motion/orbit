@@ -128,6 +128,26 @@ export default class Context {
       .map(({ term }) => term)
   }
 
+  debugWordsDistance = (ws, ws2) => {
+    return ws.map(w => {
+      const vals = {}
+
+      const minVal = min(
+        ws2.map(w2 => {
+          const val = this.wordDistance(w + ':' + w2, w, w2)
+          vals[val] = w2
+          return val
+        })
+      )
+
+      return {
+        word: w,
+        word2: vals[minVal],
+        similarity: minVal,
+      }
+    })
+  }
+
   closestItems = (text, n = 3) => {
     const words = this.textToWords(text)
     console.log(
@@ -142,6 +162,7 @@ export default class Context {
           this.wordsDistance(words, this.textToWords(title)) +
           this.wordsDistance(words, this.textToWords(text)),
         item,
+        debug: this.debugWordsDistance(words, this.textToWords(text)),
       }
     })
     return sortBy(items, 'similarity').slice(0, n)

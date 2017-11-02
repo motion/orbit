@@ -764,6 +764,8 @@ class Popover extends React.PureComponent<Props> {
                 />
               </arrowContain>
               <SizedSurface
+                sizeRadius
+                ignoreSegment
                 flex={1}
                 {...props}
                 elevation={elevation}

@@ -220,6 +220,7 @@ export default class Surface extends React.PureComponent<Props> {
       tooltipProps,
       width,
       wrapElement,
+      ignoreSegment,
       ...props
     } = this.props
     const hasIconBefore = icon && !iconAfter
@@ -490,7 +491,7 @@ export default class Surface extends React.PureComponent<Props> {
     radius = typeof radius === 'number' ? Math.round(radius) : radius
 
     const borderRadius = {}
-    if (uiContext && uiContext.inSegment) {
+    if (uiContext && uiContext.inSegment && !props.ignoreSegment) {
       borderRadius.borderLeftRadius = uiContext.inSegment.first ? radius : 0
       borderRadius.borderRightRadius = uiContext.inSegment.last ? radius : 0
     } else if (props.circular) {

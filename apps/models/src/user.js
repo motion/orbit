@@ -53,10 +53,12 @@ export class UserModel extends Model {
     activity: array.optional.items(object),
     session: object.optional,
     authorizations: object,
+    settings: object,
   }
 
   static defaultProps = {
     authorizations: {},
+    settings: {},
   }
 
   settings = {

@@ -4,7 +4,11 @@ export default props => (
   <menu>
     <submenu label="Orbit">
       <about />
-      <preferences accelerator="CmdOrCtrl+," onClick={props.onPreferences} />
+      <item
+        label="Preferences"
+        accelerator="CmdOrCtrl+,"
+        onClick={props.onPreferences}
+      />
       <sep />
       <hide />
       <hideothers />

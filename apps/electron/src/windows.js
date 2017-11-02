@@ -9,6 +9,7 @@ import WindowsStore from './windowsStore'
 import Window from './window'
 import mouse from 'osx-mouse'
 import { throttle } from 'lodash'
+import Menu from './menu'
 
 let onWindows = []
 export function onWindow(cb) {
@@ -298,36 +299,11 @@ return {frontAppName, windowTitle}
 
     return (
       <app onBeforeQuit={() => console.log('hi')}>
-        <menu>
-          <submenu label="Orbit">
-            <about />
-            <preferences
-              accelerator="CmdOrCtrl+,"
-              onClick={() => {
-                console.log('show preferences')
-                this.setState({ showPreferences: true })
-              }}
-            />
-            <sep />
-            <hide />
-            <hideothers />
-            <unhide />
-            <sep />
-            <quit />
-          </submenu>
-          <submenu label="Edit">
-            <undo />
-            <redo />
-            <sep />
-            <cut />
-            <copy />
-            <paste />
-            <selectall />
-          </submenu>
-          <submenu label="Window">
-            <togglefullscreen />
-          </submenu>
-        </menu>
+        <Menu
+          onPreferences={() => {
+            this.setState({ showSettings: true })
+          }}
+        />
 
         <window
           {...appWindow}
@@ -338,7 +314,7 @@ return {frontAppName, windowTitle}
           showDevTools={this.state.showSettings}
           defaultSize={this.initialSize || this.state.size}
           size={this.state.size}
-          file={Constants.APP_URL}
+          file={`${Constants.APP_URL}/settings`}
           titleBarStyle="customButtonsOnHover"
           position={this.state.position}
           onResize={size => this.setState({ size })}

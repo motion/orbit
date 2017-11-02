@@ -27,6 +27,14 @@ export default class OraHeader extends React.Component {
   }
 
   render({ store, oraStore }) {
+    const itemProps = {
+      chromeless: true,
+      color: [255, 255, 255, 0.5],
+      hover: {
+        color: [255, 255, 255, 1],
+      },
+    }
+
     return (
       <header
         $focus={oraStore.focused}
@@ -61,30 +69,44 @@ export default class OraHeader extends React.Component {
           css={{
             position: 'absolute',
             top: 0,
-            right: 5,
+            right: 0,
             bottom: 0,
             zIndex: 1000,
             justifyContent: 'center',
           }}
         >
-          <UI.Icon
-            onClick={e => {
-              e.stopPropagation()
-              oraStore.hide()
-            }}
-            size={12}
-            margin={[0, -5]}
-            css={{
-              height: 40,
-              width: 40,
-              position: 'relative',
-            }}
-            name="arrowmin-right"
-            color={[255, 255, 255, 0.5]}
-            hover={{
-              color: [255, 255, 255, 1],
-            }}
-          />
+          <UI.Row>
+            <UI.Popover
+              openOnHover
+              closeOnEsc
+              overlay="transparent"
+              theme="light"
+              width={150}
+              target={
+                <UI.Button
+                  {...itemProps}
+                  icon="bucket"
+                  opacity={0.5}
+                  onClick={e => {
+                    e.stopPropagation()
+                    oraStore.hide()
+                  }}
+                />
+              }
+            >
+              <UI.List
+                items={[{ primary: 'Main' }, { primary: 'Secondary' }]}
+              />
+            </UI.Popover>
+            <UI.Button
+              {...itemProps}
+              onClick={e => {
+                e.stopPropagation()
+                oraStore.hide()
+              }}
+              icon="remove"
+            />
+          </UI.Row>
         </buttons>
       </header>
     )

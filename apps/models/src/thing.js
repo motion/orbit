@@ -38,6 +38,7 @@ export class Thing extends Model {
     created: str.indexed,
     updated: str.indexed,
     orgName: str.optional,
+    bucket: str.optional,
     timestamps: true,
   }
 

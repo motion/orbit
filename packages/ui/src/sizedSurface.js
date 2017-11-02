@@ -54,7 +54,7 @@ export default function SizedSurface(props: Props) {
     pass.margin = margin
   }
   if (sizeRadius) {
-    const radius = (sizeRadius && num(sizeRadius) * 4) || 0
+    const radius = (sizeRadius && num(sizeRadius) * 8) || 0
     pass.borderRadius = radius
   }
 

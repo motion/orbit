@@ -56,7 +56,6 @@ export default class OraStore {
   }
 
   listenForContext = async () => {
-    log('listenforcontext')
     // check
     this.setInterval(() => {
       OS.send('get-context')

@@ -1,11 +1,12 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { watch, view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { CurrentUser } from '~/app'
 
 @view({
   store: class HeaderStore {
     downAt = Date.now()
+    @watch userSettings = () => CurrentUser.user.settings
   },
 })
 export default class OraHeader extends React.Component {
@@ -31,25 +32,36 @@ export default class OraHeader extends React.Component {
     console.log('select', index, item)
   }
 
-  render({ oraStore }) {
+  render({ store, oraStore }) {
     const itemProps = {
       glow: false,
       chromeless: true,
       color: [255, 255, 255, 0.5],
     }
 
-    const {
-      buckets = ['Default'],
-      activeBucket = 'Default',
-    } = CurrentUser.user.settings
+    const settings = store.userSettings || {}
+    const { buckets = ['Default'], activeBucket = 'Default' } = settings
 
-    const bucketItems = buckets.map(name => ({
-      primary: name,
-      icon: name === activeBucket ? 'check' : null,
-      onMouseUp: e => {
-        e.stopPropagation()
+    const bucketItems = [
+      ...buckets.map(name => ({
+        primary: name,
+        icon: name === activeBucket ? 'check' : null,
+      })),
+      {
+        children: (
+          <UI.Input
+            onEnter={e => {
+              CurrentUser.user.mergeUpdate({
+                settings: {
+                  buckets: [...buckets, e.target.value || 'null'],
+                },
+              })
+            }}
+            placeholder="Create..."
+          />
+        ),
       },
-    }))
+    ]
 
     return (
       <header
@@ -89,6 +101,9 @@ export default class OraHeader extends React.Component {
             bottom: 0,
             zIndex: 1000,
             justifyContent: 'center',
+          }}
+          onMouseUp={e => {
+            e.stopPropagation()
           }}
         >
           <UI.Row>

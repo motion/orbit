@@ -3,7 +3,7 @@
 // it causes the entire app to be imported before boot
 import * as React from 'react'
 import * as Mobx from 'mobx'
-import MobxUtils from 'mobx-utils'
+import * as MobxUtils from 'mobx-utils'
 import ReactDOM from 'react-dom'
 import RxDB from 'rxdb'
 import Rx from 'rxjs'

@@ -577,7 +577,7 @@ class Popover extends React.PureComponent<Props> {
     // this will avoid the delay open if its already open
     const onEnter = () =>
       isTarget && this.state.menuHovered ? openIfOver() : delayOpenIfHover()
-    const onLeave = debounce(closeIfOut, isTarget ? 80 : 40) // 🐛 target should close slower than menu opens
+    const onLeave = debounce(closeIfOut, isTarget ? 80 : 20) // 🐛 target should close slower than menu opens
 
     // logic for enter/leave
     listeners.push(

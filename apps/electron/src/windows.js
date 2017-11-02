@@ -114,7 +114,23 @@ export default class Windows extends React.Component {
         event.sender.send('show-ora')
         this.trayRef.focus()
       }
-      this.hide = () => event.sender.send('hide-ora')
+      this.hide = () => {
+        console.log('hiding')
+        // return focus to last app
+        applescript.execute(
+          `
+tell application "System Events"
+  set activeApp to name of first application process whose frontmost is true
+  set activeApp2 to name of second application process whose frontmost is true
+end tell
+return {activeApp, activeApp2}
+        `,
+          (err, answer) => {
+            console.log('refocus', err, answer)
+          }
+        )
+        event.sender.send('hide-ora')
+      }
     })
 
     this.on(ipcMain, 'where-to', (event, key) => {

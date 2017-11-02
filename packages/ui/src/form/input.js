@@ -90,6 +90,7 @@ export default class Input extends React.Component<Props> {
       form,
       elementProps,
       style,
+      onEnter,
       ...props
     } = this.props
 

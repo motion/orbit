@@ -1,3 +1,6 @@
+- return focus to previous window on hide ora
+
+
 # next
 
 - navigation between items

@@ -1,6 +1,7 @@
 // @flow
 import global from 'global'
-import { fromStream, fromPromise, isPromiseBasedObservable } from 'mobx-utils'
+import { fromPromise, isPromiseBasedObservable } from 'mobx-utils'
+import fromStream from './fromStream'
 import * as Mobx from 'mobx'
 import { Observable } from 'rxjs'
 
@@ -218,7 +219,7 @@ function mobxify(target: Object, method: string, descriptor: Object) {
 }
 
 // * => Mobx
-function resolve(inValue: any) {
+function valueToObservable(inValue: any) {
   let value = inValue
   // convert RxQuery to RxObservable
   if (value) {
@@ -231,12 +232,11 @@ function resolve(inValue: any) {
     }
     // let this fall through from rxdbquerys
     if (isRxObservable(value)) {
-      const observable = value
       const mobxStream = fromStream(value)
       return {
         get: () => mobxStream.current,
         mobxStream,
-        observable,
+        value: inValue,
         dispose: mobxStream.dispose,
         isObservable: true,
       }
@@ -253,11 +253,11 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
   let current = Mobx.observable.box(DEFAULT_VALUE)
   let currentDisposable = null
   let currentObservable = null
-  let autoObserver = null
+  let autoObserveDispose = null
   let stopReaction
   let disposed = false
   let result
-  const stopAutoObserve = () => autoObserver && autoObserver()
+  const stopAutoObserve = () => autoObserveDispose && autoObserveDispose()
 
   let isntConnected = false
 
@@ -274,8 +274,13 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
 
   function runObservable() {
     stopAutoObserve()
-    autoObserver = Mobx.autorun(() => {
+    autoObserveDispose = Mobx.autorun(() => {
       if (currentObservable) {
+        // 🐛 this fixes non-reaction for some odd reason
+        // i think mobx things RxDocument looks "the same", so we follow version as well
+        if (currentObservable.mobxStream) {
+          currentObservable.mobxStream.currentVersion
+        }
         update(
           currentObservable.get ? currentObservable.get() : currentObservable
         )
@@ -322,7 +327,7 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
     let value = val
 
     return function watcherCb() {
-      result = resolve(value.call(obj, obj.props)) // hit user observables // pass in props
+      result = valueToObservable(value.call(obj, obj.props)) // hit user observables // pass in props
       const observableLike = isObservableLike(result)
       stopAutoObserve()
 
@@ -339,12 +344,7 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
       if (observableLike) {
         if (result.isntConnected) {
           // re-run after connect
-          console.warn(
-            'result of ',
-            obj.constructor.name,
-            method,
-            'isnt connected yet'
-          )
+          console.warn(obj.constructor.name, method, 'not connected')
           isntConnected = true
           result.onConnection().then(() => {
             isntConnected = false
@@ -370,7 +370,6 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
         if (isPromise(result)) {
           current.set(fromPromise(result))
         } else {
-          // debug('watchForNewValue ===', result)
           update(result)
         }
       }

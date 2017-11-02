@@ -28,7 +28,7 @@ class App {
   started = false
 
   constructor() {
-    this.render() // to render before db connects
+    // this.render() // to render before db connects
     this.store = new AppStore({
       config: {
         ...Constants.DB_CONFIG,

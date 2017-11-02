@@ -162,7 +162,7 @@ export default function storeProvidable(options, Helpers) {
           for (const name of Object.keys(this.stores)) {
             const store = this.stores[name]
             if (Helpers) {
-              Helpers.emitter.emit('store.mount', { name, thing: store })
+              Helpers.emit('store.mount', { name, thing: store })
             }
             if (options.onStoreDidMount) {
               options.onStoreDidMount(store, this.props)
@@ -178,7 +178,7 @@ export default function storeProvidable(options, Helpers) {
           for (const name of Object.keys(this.stores)) {
             const store = this.stores[name]
             if (Helpers) {
-              Helpers.emitter.emit('store.unmount', { name, thing: store })
+              Helpers.emit('store.unmount', { name, thing: store })
             }
             if (options.onStoreUnmount) {
               options.onStoreUnmount(store)

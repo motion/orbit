@@ -8,7 +8,7 @@ export default (options: Object, Helpers: Helpers) => ({
   decorator: (Klass: Class<any> | Function) => {
     const ogMount = Klass.prototype.componentDidMount
     Klass.prototype.componentDidMount = function(...args) {
-      Helpers.emitter.emit('view.mount', {
+      Helpers.emit('view.mount', {
         name: this.constructor.name,
         thing: this,
       })
@@ -16,7 +16,7 @@ export default (options: Object, Helpers: Helpers) => ({
     }
     const ogUnmount = Klass.prototype.componentWillUnmount
     Klass.prototype.componentWillUnmount = function() {
-      Helpers.emitter.emit('view.unmount', {
+      Helpers.emit('view.unmount', {
         name: this.constructor.name,
         thing: this,
       })

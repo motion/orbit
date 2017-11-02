@@ -19,13 +19,14 @@ type Plugin = (
   mixin?: Object,
 }
 
-const empty = (...args) => void 0
+const empty = () => void 0
 
 export default function decor(plugins: Array<[Plugin, Object] | Plugin>) {
   const allPlugins = []
 
   // Helpers
   const emitter = new Emitter()
+  const emit = (...args) => emitter.emit(...args)
   const isClass = x => x && !!x.prototype
 
   // process plugins
@@ -51,7 +52,7 @@ export default function decor(plugins: Array<[Plugin, Object] | Plugin>) {
       return result
     }
     const Helpers = {
-      emitter,
+      emit,
       alreadyDecorated,
     }
 
@@ -106,9 +107,9 @@ export default function decor(plugins: Array<[Plugin, Object] | Plugin>) {
   }
 
   // to listen to plugin events
-  decorDecorator.off = emitter.off.bind(emitter)
-  decorDecorator.on = emitter.on.bind(emitter)
-  decorDecorator.emit = emitter.emit.bind(emitter)
+  decorDecorator.off = (...args) => emitter.off(...args)
+  decorDecorator.on = (...args) => emitter.on(...args)
+  decorDecorator.emit = emit
 
   return decorDecorator
 }

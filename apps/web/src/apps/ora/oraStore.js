@@ -17,7 +17,6 @@ export default class OraStore {
   lastKey = null
   hidden = false
   focused = false
-  activeThing = null
 
   @watch items = () => Thing.find()
   @watch context = () => this.items && new ContextStore(this.items)

@@ -1,5 +1,4 @@
 // @flow
-import * as React from 'react'
 import global from 'global'
 import { Model, str, object } from '@mcro/model'
 import { cleanId, findOrUpdate } from './helpers'

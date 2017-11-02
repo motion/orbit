@@ -359,9 +359,7 @@ export default class Surface extends React.PureComponent<Props> {
     },
     icon: {
       pointerEvents: 'none',
-      height: 'auto',
-      marginTop: 4,
-      marginBottom: 4,
+      height: '1.4rem',
     },
     hasIconBefore: {
       // this adjusts for height

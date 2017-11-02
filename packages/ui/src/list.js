@@ -39,6 +39,7 @@ export type Props = {
   virtualized?: { rowHeight: number | ((a: number) => number) },
   // force update children
   updateChildren?: boolean,
+  captureClickEvents?: boolean,
 }
 
 type VirtualItemProps = {
@@ -55,7 +56,6 @@ class List extends React.PureComponent<Props, { selected: number }> {
 
   static defaultProps = {
     getItem: idFn,
-    onSelect: idFn,
     onHighlight: idFn,
   }
 
@@ -194,19 +194,26 @@ class List extends React.PureComponent<Props, { selected: number }> {
     }
   }
 
-  highlightItem(setter: (a: number) => number, cb?: Function) {
+  highlightItem(setter: (a: number) => number, event?: Event) {
     const selected = setter(this.state.selected)
+    const hasSelectCb = !!this.props.onSelect
+    if (hasSelectCb && event && this.props.captureClickEvents) {
+      event.preventDefault()
+      event.stopPropagation()
+    }
     this.lastSelectionDate = Date.now()
     // only setstate if controlled
     if (this.props.controlled) {
       this.setState({ selected }, () => {
-        this.props.onSelect(this.selected, selected)
-        if (cb) cb()
+        if (hasSelectCb) {
+          this.props.onSelect(this.selected, selected)
+        }
       })
     } else {
       this.state.selected = selected
-      this.props.onSelect(this.selected, selected)
-      if (cb) cb()
+      if (hasSelectCb) {
+        this.props.onSelect(this.selected, selected)
+      }
     }
     return selected
   }
@@ -282,10 +289,10 @@ class List extends React.PureComponent<Props, { selected: number }> {
     // handle click
     if (onSelect || controlled) {
       const ogClick = props.onClick
-      props.onClick = e => {
-        this.highlightItem(() => index)
+      props.onClick = event => {
+        this.highlightItem(() => index, event)
         if (ogClick) {
-          ogClick.call(this, e)
+          ogClick.call(this, event)
         }
       }
     }

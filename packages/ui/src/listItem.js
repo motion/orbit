@@ -130,7 +130,7 @@ export default class ListItem extends React.Component<Props> {
       <SizedSurface
         tagName="listitem"
         size={size}
-        sizePadding={1.2}
+        sizePadding={1.4}
         $item
         {...radiusProps}
         border={false}

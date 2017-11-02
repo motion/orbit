@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
+import { CurrentUser } from '~/app'
 
 @view({
   store: class HeaderStore {
@@ -26,14 +27,29 @@ export default class OraHeader extends React.Component {
     this.props.oraStore.focused = false
   }
 
-  render({ store, oraStore }) {
+  selectBucket = (item, index) => {
+    console.log('select', index, item)
+  }
+
+  render({ oraStore }) {
     const itemProps = {
+      glow: false,
       chromeless: true,
       color: [255, 255, 255, 0.5],
-      hover: {
-        color: [255, 255, 255, 1],
-      },
     }
+
+    const {
+      buckets = ['Default'],
+      activeBucket = 'Default',
+    } = CurrentUser.user.settings
+
+    const bucketItems = buckets.map(name => ({
+      primary: name,
+      icon: name === activeBucket ? 'check' : null,
+      onMouseUp: e => {
+        e.stopPropagation()
+      },
+    }))
 
     return (
       <header
@@ -94,9 +110,7 @@ export default class OraHeader extends React.Component {
                 />
               }
             >
-              <UI.List
-                items={[{ primary: 'Main' }, { primary: 'Secondary' }]}
-              />
+              <UI.List items={bucketItems} onSelect={this.selectBucket} />
             </UI.Popover>
             <UI.Button
               {...itemProps}

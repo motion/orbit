@@ -45,8 +45,9 @@ export default function SizedSurface(props: Props) {
     pass.fontSize = fontSize
   }
   if (sizePadding) {
-    const padWithWrap = props.wrapElement ? 0 : height ? height / 3.5 : 8
-    const padding = (sizePadding && [0, padWithWrap * num(sizePadding)]) || 0
+    const padSize = num(sizePadding) * size
+    const padWithWrap = props.wrapElement ? 0 : padSize * 4
+    const padding = (sizePadding && [padSize * 2, padWithWrap * padSize]) || 0
     pass.padding = padding
   }
   if (sizeMargin) {

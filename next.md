@@ -1,9 +1,11 @@
+- dont show the exact same item in context for itself
 - finish buckets
   - needs to take you back home when changing bucket
 - :bug: once you pin the results disappear
 - :bug: prevent click going to url unless window is focused
 - :bug: popovers stick when you scroll
 - :bug: popovers stick when you close window
+- strip whitespace if it exists in body text
 - return focus to previous window on hide ora
 - we need a line clamp feature that ellipses text after x lines
 - need to do bolding inside ui.text so it works well with clamps
@@ -22,6 +24,9 @@
 - :bug: popover flicker
 
 # integration related
+- fix settings pane
+- sync github issues
+- make github issues look nice in context
 - import slack
 - import email
 - show related people

@@ -101,7 +101,8 @@ class List extends React.PureComponent<Props, { selected: number }> {
 
   // willUpdate only runs when PureComponent has new props
   componentWillUpdate(nextProps: Props) {
-    const { updateChildren, selected } = nextProps
+    const { virtualized, updateChildren, selected } = nextProps
+
     if (typeof selected !== 'undefined') {
       this.lastDidReceivePropsDate = Date.now()
       if (selected !== this.state.selected) {
@@ -131,6 +132,7 @@ class List extends React.PureComponent<Props, { selected: number }> {
 
     if (
       updateChildren ||
+      !virtualized ||
       (typeof selected === 'number' && this.state.selected !== selected) ||
       hasNewItems ||
       !this.childrenVersion

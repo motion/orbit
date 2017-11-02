@@ -1,12 +1,11 @@
 import * as React from 'react'
-import { watch, view } from '@mcro/black'
+import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { CurrentUser } from '~/app'
 
 @view({
   store: class HeaderStore {
     downAt = Date.now()
-    @watch userSettings = () => CurrentUser.user.settings
   },
 })
 export default class OraHeader extends React.Component {
@@ -28,18 +27,22 @@ export default class OraHeader extends React.Component {
     this.props.oraStore.focused = false
   }
 
-  selectBucket = (item, index) => {
-    console.log('select', index, item)
+  selectBucket = item => {
+    CurrentUser.user.mergeUpdate({
+      settings: {
+        activeBucket: item.primary,
+      },
+    })
   }
 
-  render({ store, oraStore }) {
+  render({ oraStore }) {
     const itemProps = {
       glow: false,
       chromeless: true,
       color: [255, 255, 255, 0.5],
     }
 
-    const settings = store.userSettings || {}
+    const settings = CurrentUser.user.settings || {}
     const { buckets = ['Default'], activeBucket = 'Default' } = settings
 
     const bucketItems = [
@@ -51,11 +54,13 @@ export default class OraHeader extends React.Component {
         children: (
           <UI.Input
             onEnter={e => {
-              CurrentUser.user.mergeUpdate({
-                settings: {
-                  buckets: [...buckets, e.target.value || 'null'],
-                },
-              })
+              if (e.target.value) {
+                CurrentUser.user.mergeUpdate({
+                  settings: {
+                    buckets: [...buckets, e.target.value],
+                  },
+                })
+              }
             }}
             placeholder="Create..."
           />

@@ -1,3 +1,4 @@
+- dont show pin if already pinned (show that its pinned)
 - dont show the exact same item in context for itself
 - finish buckets
   - needs to take you back home when changing bucket
@@ -8,6 +9,7 @@
 - strip whitespace if it exists in body text
 - return focus to previous window on hide ora
 - we need a line clamp feature that ellipses text after x lines
+  - once we have it use it for titles of context items (clamp=2)
 - need to do bolding inside ui.text so it works well with clamps
 - integrate scraper into our own api
 - use scraper for preview so title matches eventual pinned result

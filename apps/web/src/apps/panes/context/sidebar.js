@@ -3,6 +3,22 @@ import { OS, fuzzy } from '~/helpers'
 import { summarize, summarizeWithQuestion } from './helpers/summarize'
 import * as UI from '@mcro/ui'
 
+const similarityOpacity = similarity => {
+  if (similarity > 5000) {
+    return 0.1
+  }
+  if (similarity > 2000) {
+    return 0.3
+  }
+  if (similarity > 1000) {
+    return 0.5
+  }
+  if (similarity > 500) {
+    return 0.7
+  }
+  return 1
+}
+
 export default class ContextSidebar {
   get oraStore() {
     return this.props.oraStore
@@ -35,7 +51,7 @@ export default class ContextSidebar {
           .closestItems(this.search.length > 0 ? this.search : title, 5)
           .map(({ debug, item, similarity }) => {
             const title = item.title
-            const { lines } =
+            const lines =
               this.search.length === 0
                 ? summarize(item.body)
                 : summarizeWithQuestion(item.body, this.search)
@@ -44,21 +60,29 @@ export default class ContextSidebar {
               category: 'Context',
               height: 200,
               title,
-              subtitle: `Similarity: ${similarity}`,
               onClick: () => {
                 OS.send('navigate', item.url)
               },
-              children: (
-                <paras style={{ width: '100%' }}>
-                  {lines.map(line => <UI.Text html={addBold(line)} />)}
-                  <debug>
-                    {debug.map(({ word, word2, similarity }) => (
-                      <item>
-                        {word} -> {word2}: {similarity}
-                      </item>
-                    ))}
-                  </debug>
-                </paras>
+              children: lines.map((line, index) => (
+                <UI.Text key={index} ellipse html={addBold(line)} />
+              )),
+              after: (
+                <UI.Row css={{ marginTop: 5, overflowX: 'scroll' }}>
+                  <UI.Button tooltip={`Similarity: ${similarity}`}>
+                    Info
+                  </UI.Button>
+                  {debug.map(({ word, word2, similarity }) => (
+                    <UI.Button
+                      chromeless
+                      inline
+                      tooltip={`${word2} : ${similarity}`}
+                      key={word}
+                      opacity={similarityOpacity(similarity)}
+                    >
+                      {word}
+                    </UI.Button>
+                  ))}
+                </UI.Row>
               ),
             }
           })

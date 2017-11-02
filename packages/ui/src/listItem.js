@@ -148,6 +148,7 @@ export default class ListItem extends React.Component<Props> {
         style={style}
         getRef={this.getRef}
         highlight={highlightValue}
+        after={after}
         {...props}
       >
         <before if={before}>{before}</before>
@@ -197,7 +198,6 @@ export default class ListItem extends React.Component<Props> {
             {children}
           </Text>
         </content>
-        <after if={after}>{after}</after>
       </SizedSurface>
     )
   }
@@ -209,7 +209,6 @@ export default class ListItem extends React.Component<Props> {
     content: {
       flex: 1,
       maxWidth: '100%',
-      justifyContent: 'center',
     },
     above: {
       maxWidth: '100%',
@@ -260,7 +259,6 @@ export default class ListItem extends React.Component<Props> {
     children: {
       flexFlow: 'row',
       margin: [0, -10],
-      flex: 1,
       lineHeight: '1.38rem',
       padding: [0, 10],
     },

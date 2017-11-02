@@ -150,7 +150,6 @@ class Popover extends React.PureComponent<Props> {
     if (closeOnEsc) {
       this.on(window, 'keyup', e => {
         if (e.keyCode === 27) {
-          log('close popover')
           this.close()
         }
       })
@@ -578,7 +577,7 @@ class Popover extends React.PureComponent<Props> {
     // this will avoid the delay open if its already open
     const onEnter = () =>
       isTarget && this.state.menuHovered ? openIfOver() : delayOpenIfHover()
-    const onLeave = debounce(closeIfOut, isTarget ? 80 : 20) // 🐛 target should close slower than menu opens
+    const onLeave = debounce(closeIfOut, isTarget ? 80 : 40) // 🐛 target should close slower than menu opens
 
     // logic for enter/leave
     listeners.push(
@@ -621,13 +620,13 @@ class Popover extends React.PureComponent<Props> {
     return val
   }
 
-  isNodeHovered = (
-    node: HTMLElement,
-    checkParent: boolean = false
-  ): boolean => {
+  isNodeHovered = (node: HTMLElement): boolean => {
+    const childSelector = `${node.tagName.toLowerCase()}.${node.className.replace(
+      /\s+/g,
+      '.'
+    )}:hover`
     return (
-      !!node.parentNode.querySelector(`${node.tagName}:hover`) ||
-      (checkParent && !!node.parentNode.querySelector(':hover')) ||
+      !!node.parentNode.querySelector(childSelector) ||
       node.querySelector(':hover')
     )
   }

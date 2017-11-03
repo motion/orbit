@@ -2,7 +2,7 @@ import * as React from 'react'
 import { OS, fuzzy } from '~/helpers'
 import { summarize, summarizeWithQuestion } from './helpers/summarize'
 import * as UI from '@mcro/ui'
-import { view } from '@mcro/black'
+import { view, watch } from '@mcro/black'
 import { Thing } from '~/app'
 
 @view
@@ -52,12 +52,15 @@ const similarityOpacity = similarity => {
 }
 
 export default class ContextSidebar {
+  // copy it here
+  osContext = this.oraStore.osContext
+
+  @watch
+  isPinned = () => this.osContext && Thing.find({ url: this.osContext.url })
+
   get oraStore() {
     return this.props.oraStore
   }
-
-  // copy it here
-  osContext = this.oraStore.osContext
 
   get context() {
     return this.oraStore.context
@@ -141,8 +144,10 @@ export default class ContextSidebar {
   }
 
   get actions() {
+    console.log('ispinned?', this.isPinned)
+
     return [
-      {
+      !this.isPinned && {
         icon: 'ui-1_bold-add',
         children: 'Pin',
         onClick: () => {

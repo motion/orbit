@@ -34,20 +34,33 @@ export type Props = {
 
 // click away from edit clears it
 @view.ui
-export default class Text extends React.PureComponent<Props> {
+export default class Text extends React.Component<Props> {
   static defaultProps = {
     tagName: 'text', // TODO: prod p mode
   }
 
+  state = {
+    doClamp: false,
+  }
+
   editableReaction: ?Function
-  @observable selected = false
-  @observable editable = false
+  selected = false
+  editable = false
   node = null
 
   componentWillMount() {
     this.handleProps(this.props)
     this.handleKeydown = this.handleKeydown.bind(this)
     this.getRef = this.getRef.bind(this)
+  }
+
+  componentDidMount() {
+    // this fixes bug because clamp is hacky af and needs to re-measure to trigger
+    if (this.props.ellipse > 1) {
+      this.setTimeout(() => {
+        this.setState({ doClamp: true })
+      })
+    }
   }
 
   componentWillReceiveProps(nextProps: Object) {
@@ -177,6 +190,10 @@ export default class Text extends React.PureComponent<Props> {
     ) : (
       children
     )
+
+    const oneLineEllipse = ellipse && typeof ellipse === 'boolean'
+    const multiLineEllipse = ellipse > 1
+
     return (
       <text
         className={className}
@@ -188,22 +205,25 @@ export default class Text extends React.PureComponent<Props> {
         ref={this.getRef}
         css={props}
         style={style}
-        $ellipseText={ellipse && typeof ellipse === 'boolean'}
+        $ellipseText={oneLineEllipse}
         {...eventProps}
         {...pick(props, DOM_EVENTS)}
       >
         {!ellipse && inner}
         <span
           if={ellipse}
-          $ellipseLines={ellipse > 1}
+          $ellipseLines={multiLineEllipse}
           style={
-            ellipse > 1
+            multiLineEllipse
               ? {
                   WebkitLineClamp: ellipse,
+                  maxHeight: `${ellipse * 1.6}em`,
+                  width: this.state.doClamp ? '100%' : '100.001%',
+                  opacity: this.state.doClamp ? 1 : 0,
                 }
               : null
           }
-          $$ellipse={ellipse > 1 === false}
+          $$ellipse={oneLineEllipse}
         >
           {inner}
         </span>

@@ -159,7 +159,6 @@ export default class Text extends React.PureComponent<Props> {
     style,
     placeholder,
     lineHeight,
-    lines,
     attach,
     className,
     html,
@@ -178,24 +177,6 @@ export default class Text extends React.PureComponent<Props> {
     ) : (
       children
     )
-
-    if (lines) {
-      if (!children) {
-        return null
-      }
-      let childrenString = children
-      if (Array.isArray(children)) {
-        childrenString = children.filter(x => !!x).join('')
-      }
-      // TODO get a good ellpse tool
-      // inner = (
-      //   <LinesEllipse
-      //     className="line-ellipse"
-      //     text={childrenString}
-      //     maxLine={200}
-      //   />
-      // )
-    }
     return (
       <text
         className={className}
@@ -207,14 +188,21 @@ export default class Text extends React.PureComponent<Props> {
         ref={this.getRef}
         css={props}
         style={style}
-        $ellipseText={!!ellipse}
+        $ellipseText={ellipse && typeof ellipse === 'boolean'}
         {...eventProps}
         {...pick(props, DOM_EVENTS)}
       >
         {!ellipse && inner}
         <span
           if={ellipse}
-          $ellipseLines={ellipse > 1 ? ellipse : false}
+          $ellipseLines={ellipse > 1}
+          style={
+            ellipse > 1
+              ? {
+                  WebkitLineClamp: ellipse,
+                }
+              : null
+          }
           $$ellipse={ellipse > 1 === false}
         >
           {inner}
@@ -237,14 +225,13 @@ export default class Text extends React.PureComponent<Props> {
       flex: 1,
       overflow: 'hidden',
     },
-    ellipseLines: lines => ({
+    ellipseLines: {
       overflow: 'hidden',
       textOverflow: 'ellipsis',
       display: '-webkit-box',
-      WebkitLineClamp: lines,
       WebkitBoxOrient: 'vertical',
       width: '100%',
-    }),
+    },
     selectable: {
       userSelect: 'auto',
       cursor: 'text',
@@ -269,7 +256,7 @@ export default class Text extends React.PureComponent<Props> {
         fontSize,
         display: props.display,
         fontWeight: props.fontWeight,
-        lineHeight: props.lineHeight || `${fontSize * 1.25 + 5}px`,
+        lineHeight: props.lineHeight || `${fontSize * 1.3 + 4}px`,
         opacity: props.opacity,
       },
       ellipse: {

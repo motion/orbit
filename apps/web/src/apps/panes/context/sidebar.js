@@ -3,6 +3,7 @@ import { OS, fuzzy } from '~/helpers'
 import { summarize, summarizeWithQuestion } from './helpers/summarize'
 import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
+import { Thing } from '~/app'
 
 @view
 class After {
@@ -108,10 +109,8 @@ export default class ContextSidebar {
                     e.preventDefault()
                     e.stopPropagation()
                     this.props.navigate({
+                      ...Thing.toResult(item),
                       type: 'context',
-                      title: item.title,
-                      id: item.id,
-                      data: item,
                     })
                   }}
                 />

@@ -1,9 +1,9 @@
 # completed
 - strip whitespace if it exists in body text
 - we need a line clamp feature that ellipses text after x lines
+- add option to drill in rather than open in browser so you can see context
 
 # next
-- add option to drill in rather than open in browser so you can see context
 - clamp titles of context items (clamp=2)
 - dont show pin if already pinned (show that its pinned)
 - dont show the exact same item in context for itself

@@ -110,7 +110,7 @@ export default class OraMainSidebar {
                     }}
                   />
                 </iconarea>
-                <UI.Text ellipse size={0.9}>
+                <UI.Text ellipse={2} size={0.9}>
                   {thing.title}
                 </UI.Text>
                 <UI.Date ellipse size={0.8} opacity={0.6}>

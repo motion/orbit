@@ -98,11 +98,12 @@ export default class OraStore {
         }
         return
       }
-      // check to avoid rerendering
+      if (!context || (!context.url || !context.title)) {
+        log('no context or url/title', this.osContext)
+        return
+      }
+      // new title
       if (!this.osContext || this.osContext.title !== context.title) {
-        if (this.osContext) {
-          console.log('set-context', context.title, this.osContext.title)
-        }
         this.osContext = context
         const nextStackItem = {
           type: 'context',

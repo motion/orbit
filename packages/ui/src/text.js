@@ -150,7 +150,6 @@ export default class Text extends React.PureComponent<Props> {
     opacity,
     size,
     tagName,
-    css,
     onClick,
     onMouseEnter,
     onMouseLeave,
@@ -206,14 +205,18 @@ export default class Text extends React.PureComponent<Props> {
         suppressContentEditableWarning={editable}
         onKeyDown={this.handleKeydown}
         ref={this.getRef}
-        css={{ ...props, ...css }}
+        css={props}
         style={style}
-        $ellipseText={ellipse}
+        $ellipseText={!!ellipse}
         {...eventProps}
         {...pick(props, DOM_EVENTS)}
       >
         {!ellipse && inner}
-        <span if={ellipse} $$ellipse>
+        <span
+          if={ellipse}
+          $ellipseLines={ellipse > 1 ? ellipse : false}
+          $$ellipse={ellipse > 1 === false}
+        >
           {inner}
         </span>
       </text>
@@ -234,6 +237,14 @@ export default class Text extends React.PureComponent<Props> {
       flex: 1,
       overflow: 'hidden',
     },
+    ellipseLines: lines => ({
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      display: '-webkit-box',
+      WebkitLineClamp: lines,
+      WebkitBoxOrient: 'vertical',
+      width: '100%',
+    }),
     selectable: {
       userSelect: 'auto',
       cursor: 'text',

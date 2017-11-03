@@ -84,6 +84,7 @@ export default function getItem(getActiveIndex) {
     date: result.date,
     after: result.after,
     before: result.before,
+    below: result.below,
     ...result.props,
   })
 }

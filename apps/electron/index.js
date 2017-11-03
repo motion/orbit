@@ -1,5 +1,3 @@
-console.log('polyfilled')
-
 process.env.NODE_ENV = 'production'
 process.env.IS_PROD = true
 process.env.HAS_BABEL_POLYFILL = true

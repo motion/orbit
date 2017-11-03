@@ -63,11 +63,23 @@ export default class ContextSidebar {
               onClick: () => {
                 OS.send('navigate', item.url)
               },
-              children: lines.map((line, index) => (
-                <UI.Text key={index} ellipse html={addBold(line)} />
-              )),
-              after: (
-                <UI.Row css={{ marginTop: 5, overflowX: 'scroll' }}>
+              children:
+                lines.length >= 3
+                  ? lines.map((line, i) => (
+                      <UI.Text key={i} ellipse>
+                        {line.trim()}
+                      </UI.Text>
+                    ))
+                  : lines
+                      .join('\n')
+                      .replace(/[\s]{2,}/g, ' ')
+                      .trim(),
+              after: <UI.Icon name="arrow-min-right" />,
+              below: (
+                <UI.Row
+                  css={{ marginTop: 5, overflowX: 'scroll' }}
+                  itemProps={{ height: 20 }}
+                >
                   <UI.Button tooltip={`Similarity: ${similarity}`}>
                     Info
                   </UI.Button>

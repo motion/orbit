@@ -74,7 +74,10 @@ export default class ListItem extends React.Component<Props> {
   render() {
     const {
       after,
+      afterProps,
+      below,
       before,
+      beforeProps,
       borderRadius,
       children: _children,
       date,
@@ -92,7 +95,7 @@ export default class ListItem extends React.Component<Props> {
       secondary,
       size,
       style,
-      ellipse,
+      childrenEllipse,
       primaryEllipse,
       glowProps,
       editable,
@@ -125,7 +128,6 @@ export default class ListItem extends React.Component<Props> {
     if (typeof children === 'function') {
       children = _children()
     }
-
     return (
       <SizedSurface
         tagName="listitem"
@@ -148,11 +150,13 @@ export default class ListItem extends React.Component<Props> {
         style={style}
         getRef={this.getRef}
         highlight={highlightValue}
-        after={after}
+        after={below}
         {...props}
       >
-        <before if={before}>{before}</before>
-        <content>
+        <before if={before} {...beforeProps}>
+          {before}
+        </before>
+        <content $overflowHidden={after || before}>
           <above if={primary || secondary || date}>
             <prop if={primary || secondary} $col>
               <Text
@@ -193,11 +197,15 @@ export default class ListItem extends React.Component<Props> {
             if={children && !React.isValidElement(children)}
             size={size * 0.9}
             opacity={0.6}
+            ellipse={childrenEllipse}
             {...childrenProps}
           >
             {children}
           </Text>
         </content>
+        <after if={after} {...afterProps}>
+          {after}
+        </after>
       </SizedSurface>
     )
   }
@@ -209,6 +217,9 @@ export default class ListItem extends React.Component<Props> {
     content: {
       flex: 1,
       maxWidth: '100%',
+    },
+    overflowHidden: {
+      overflow: 'hidden',
     },
     above: {
       maxWidth: '100%',

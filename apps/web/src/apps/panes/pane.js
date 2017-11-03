@@ -150,6 +150,7 @@ export default class Pane {
         style={{ width, ...style }}
         $fullscreen={paneStore.fullscreen}
         $sidebar={sidebar}
+        $actionBarPad={!!actions}
       >
         <content ref={paneStore.setContentRef}>
           {!children
@@ -184,6 +185,10 @@ export default class Pane {
     content: {
       overflowY: 'scroll',
       flex: 1,
+    },
+    // pads height of actionbar
+    actionBarPad: {
+      paddingBottom: 50,
     },
     actionbar: {
       padding: 10,

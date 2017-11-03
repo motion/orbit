@@ -52,6 +52,7 @@ export default class Sidebar {
       glow: true,
       padding: [10, 12],
       iconAfter: true,
+      childrenEllipse: 3,
     },
   }
 

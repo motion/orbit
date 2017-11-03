@@ -35,6 +35,7 @@ export default class OraPage {
                 padding: [6, 12],
                 glow: true,
                 highlightBackground: [255, 255, 255, 0.08],
+                childrenEllipse: 3,
               }}
             />
           </content>

@@ -329,7 +329,7 @@ export default class Surface extends React.PureComponent<Props> {
       >
         {after && (
           <wrap>
-            <before>{contents}</before>
+            <wrapContents>{contents}</wrapContents>
             <after>{after}</after>
           </wrap>
         )}
@@ -364,6 +364,16 @@ export default class Surface extends React.PureComponent<Props> {
     hasIconBefore: {
       // this adjusts for height
       marginLeft: ICON_PAD,
+    },
+    wrap: {
+      flex: 1,
+      overflow: 'hidden',
+    },
+    after: {},
+    wrapContents: {
+      flex: 1,
+      position: 'relative',
+      overflow: 'hidden',
     },
     hasIconAfter: {
       marginRight: ICON_PAD,
@@ -573,10 +583,16 @@ export default class Surface extends React.PureComponent<Props> {
 
     const flexFlow = props.flexFlow || props.row ? 'row' : 'column'
     const iconPad = props.icon ? `- ${iconSize + ICON_PAD}px` : ''
+    const undoPadding = {
+      margin: padding
+        ? typeof padding === 'number' ? -padding : padding.map(x => -x)
+        : 0,
+      padding,
+    }
 
     const result = {
       element: {
-        height,
+        // height,
         ...borderRadius,
         overflow: props.overflow || 'visible',
         flexFlow: props.noElement ? 'column' : flexFlow,
@@ -587,6 +603,13 @@ export default class Surface extends React.PureComponent<Props> {
         maxWidth: `calc(100% ${iconPad})`,
         maxHeight: '100%',
         textAlign: props.textAlign,
+      },
+      wrap: undoPadding,
+      wrapContents: undoPadding,
+      after: {
+        marginTop: padding
+          ? Array.isArray(padding) ? padding[0] : padding
+          : 0,
       },
       surface: {
         transform: {

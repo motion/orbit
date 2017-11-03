@@ -150,18 +150,14 @@ export default class Context {
 
   closestItems = (text, n = 3) => {
     const words = this.textToWords(text)
-    console.log(
-      'sim is',
-      this.wordsDistance(words, this.textToWords('food is great'))
-    )
     const items = (this.items || []).map(item => {
       const title = item.title
       const text = item.body
       return {
+        item,
         similarity:
           this.wordsDistance(words, this.textToWords(title)) +
           this.wordsDistance(words, this.textToWords(text)),
-        item,
         debug: this.debugWordsDistance(words, this.textToWords(text)),
       }
     })

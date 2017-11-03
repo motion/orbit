@@ -1,34 +1,36 @@
+- dont show pin if already pinned (show that its pinned)
+- dont show the exact same item in context for itself
+- finish buckets
+  - needs to take you back home when changing bucket
+- :bug: once you pin the results disappear
+- :bug: prevent click going to url unless window is focused
+- :bug: popovers stick when you scroll
+- :bug: popovers stick when you close window
+- strip whitespace if it exists in body text
 - return focus to previous window on hide ora
+- we need a line clamp feature that ellipses text after x lines
+  - once we have it use it for titles of context items (clamp=2)
+- need to do bolding inside ui.text so it works well with clamps
+- integrate scraper into our own api
+- use scraper for preview so title matches eventual pinned result
+- get favicon from website
+- way to go "back", because its confusing if you accidently leave
+  - magnifying glass turns into back button
+  - keep a stack history in stackStore
+- prevent flickering when moving between pages
+  - stack should load item with prop onLoaded and wait for that before navigating
+- favicons and urls showing in subtitle in context results
+- add option to drill in rather than open in browser so you can see context
+- add preview of body contents when showing items
+- hover to see tooltip peek (test if it be done in same browserwindow)
+- :bug: popover flicker
 
-
-# next
-
-- navigation between items
-- sync people from github/docs
-- merge context
-- search icon turns into back button
-- working opens links to browser
-- simple profile page sidebar
-- import other sidebars / decide on removing main window
-- correctness:
-  - "selectable: false" for some results
-  - horizontal scrolling cards
-  - enter to select item
-    - cmd+enter to open then?
-- implement floating peek window
-
-# unsorted
-
-- email integration
-- default/home screen design
--
-
----
-
-# strategy
-
-- offline, security first
-- bottom up, appeals to any individual employee or team
-- heavy on launch (branding/ux/virality/onboarding)
-
----
+# integration related
+- fix settings pane
+- sync github issues
+- make github issues look nice in context
+- import slack
+- import email
+- show related people
+- show related project/task
+- fix calendar

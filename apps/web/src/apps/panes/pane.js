@@ -186,8 +186,8 @@ export default class Pane {
       flex: 1,
     },
     actionbar: {
-      padding: [10, 15],
-      borderTop: [1, [0, 0, 0, 0.05]],
+      padding: 10,
+      borderTop: [1, [255, 255, 255, 0.15]],
       flexFlow: 'row',
       alignItems: 'center',
       position: 'fixed',
@@ -195,7 +195,7 @@ export default class Pane {
       left: 0,
       right: 0,
       background: [0, 0, 0, 0.14],
-      backdropFilter: 'blur(20px)',
+      backdropFilter: 'blur(15px)',
       zIndex: Number.MAX_VALUE,
     },
     actionButton: {

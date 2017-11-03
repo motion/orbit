@@ -28,7 +28,7 @@ export const summarizeWithQuestion = (text, question, numberSentences = 3) => {
     }
     lines = result
   }
-  return { title: text.split('\n')[0], lines }
+  return lines
 }
 
 export const summarize = (text, numberSentences = 3) => {
@@ -59,5 +59,5 @@ export const summarize = (text, numberSentences = 3) => {
     lines = result
   }
 
-  return { title: text.split('\n')[0], lines }
+  return lines
 }

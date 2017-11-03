@@ -56,7 +56,7 @@ export default class ContextSidebar {
   osContext = this.oraStore.osContext
 
   @watch
-  isPinned = () => this.osContext && Thing.find({ url: this.osContext.url })
+  isPinned = () => this.osContext && Thing.findOne({ url: this.osContext.url })
 
   get oraStore() {
     return this.props.oraStore

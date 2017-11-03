@@ -83,6 +83,8 @@ export default class ContextSidebar {
       ? []
       : this.context
           .closestItems(this.search.length > 0 ? this.search : title, 5)
+          // filter same item
+          .filter(x => x.item.url !== this.props.result.data.url)
           .map(({ debug, item, similarity }) => {
             const title = item.title
             const lines =

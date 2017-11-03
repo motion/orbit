@@ -3,14 +3,14 @@
 - we need a line clamp feature that ellipses text after x lines
 - add option to drill in rather than open in browser so you can see context
 - clamp titles of context items (clamp=2)
-
-# next
 - dont show pin if already pinned (show that its pinned)
 - dont show the exact same item in context for itself
-- make stack link to url so that hmr doesnt lose state
+
+# next
 - finish buckets
   - needs to take you back home when changing bucket
 - settings pane: general settings + integrations split out + working open/close
+- make stack link to url so that hmr doesnt lose state
 - return focus to previous window on hide ora
 - need to do bolding inside ui.text so it works well with clamps
 - add preview of body contents when showing items

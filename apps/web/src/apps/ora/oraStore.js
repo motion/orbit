@@ -77,7 +77,6 @@ export default class OraStore {
       body: text,
       url,
     })
-    log('mdae a thing')
     this.setBanner(BANNERS.success, 'Added pin')
     return thing
   }

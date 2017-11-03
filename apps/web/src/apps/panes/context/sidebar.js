@@ -72,7 +72,6 @@ export default class ContextSidebar {
 
   get contextResults() {
     const title = this.osContext ? this.osContext.title : ''
-    log('title is', title)
     const addBold = line => {
       const r = new RegExp('(' + this.search.split(' ').join('|') + ')', 'ig')
       return line.replace(
@@ -144,9 +143,11 @@ export default class ContextSidebar {
   }
 
   get actions() {
-    console.log('ispinned?', this.isPinned)
-
     return [
+      this.isPinned && {
+        icon: 'check',
+        children: 'Pinned',
+      },
       !this.isPinned && {
         icon: 'ui-1_bold-add',
         children: 'Pin',

@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { OS, fuzzy } from '~/helpers'
 import { summarize, summarizeWithQuestion } from './helpers/summarize'
+import { Thing } from '~/app'
 import * as UI from '@mcro/ui'
 
 export default class ContextSidebar {
@@ -71,6 +72,23 @@ export default class ContextSidebar {
         children: 'Pin',
         onClick: () => {
           this.oraStore.addCurrentPage()
+        },
+      },
+      {
+        icon: 'bug',
+        children: 'Crawl',
+        onClick: async () => {
+          const val = await (await fetch('http://localhost:3000')).json()
+          val.forEach(item => {
+            Thing.create({
+              title: item.title,
+              body: item.content,
+              integration: 'manual',
+              type: 'manual',
+              url: item.url,
+            })
+          })
+          console.log('val is', val)
         },
       },
     ]

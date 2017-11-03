@@ -7,6 +7,7 @@
 - clamp titles of context items (clamp=2)
 - dont show pin if already pinned (show that its pinned)
 - dont show the exact same item in context for itself
+- make stack link to url so that hmr doesnt lose state
 - finish buckets
   - needs to take you back home when changing bucket
 - settings pane: general settings + integrations split out + working open/close

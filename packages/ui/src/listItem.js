@@ -54,6 +54,7 @@ export default class ListItem extends React.Component<Props> {
       opacity: 0.2,
       show: false,
       resist: 60,
+      zIndex: -1,
     },
   }
 
@@ -262,7 +263,8 @@ export default class ListItem extends React.Component<Props> {
       flexGrow: 1,
     },
     after: {
-      margin: ['auto', -5, 'auto', 5],
+      margin: [0, -5, 0, 5],
+      height: '100%',
     },
     before: {
       margin: ['auto', 5, 'auto', 0],

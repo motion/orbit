@@ -49,6 +49,7 @@ export default class Icon extends React.PureComponent<Props> {
     alignSelf,
     width,
     height,
+    hover,
     ...props
   }) {
     let content

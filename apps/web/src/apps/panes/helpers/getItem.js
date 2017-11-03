@@ -85,6 +85,8 @@ export default function getItem(getActiveIndex) {
     after: result.after,
     before: result.before,
     below: result.below,
+    beforeProps: result.beforeProps,
+    afterProps: result.afterProps,
     ...result.props,
   })
 }

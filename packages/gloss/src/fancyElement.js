@@ -111,10 +111,6 @@ export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
     if (propNames) {
       for (const prop of propNames) {
         const val = props && props[prop]
-        // ignore most falsy values (except 0)
-        if (val === false || val === null || val === undefined) {
-          continue
-        }
         // style={}
         if (prop === 'style') {
           style = { ...style, ...val }
@@ -139,10 +135,15 @@ export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
           type = val
           continue
         }
-        // ensure before tagName={} so it passes tagName down
-        if (prop[0] !== $) {
+        // after tagname, css, style
+        const notStyle = prop[0] !== $
+        if (notStyle) {
           // pass props down if not glossProp style prop
           finalProps[prop] = val
+          continue
+        }
+        // ignore most falsy values (except 0)
+        if (val === false || val === null || val === undefined) {
           continue
         }
         // $$style={}

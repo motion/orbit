@@ -590,10 +590,19 @@ export default class Surface extends React.PureComponent<Props> {
       padding,
     }
 
+    let elementGlowProps
+    if (props.glow) {
+      elementGlowProps = {
+        position: 'relative',
+        zIndex: 1,
+      }
+    }
+
     const result = {
       element: {
         // height,
         ...borderRadius,
+        ...elementGlowProps,
         overflow: props.overflow || 'visible',
         flexFlow: props.noElement ? 'column' : flexFlow,
         fontSize: props.fontSize,

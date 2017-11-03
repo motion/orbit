@@ -2,13 +2,44 @@ import * as React from 'react'
 import { OS, fuzzy } from '~/helpers'
 import { summarize, summarizeWithQuestion } from './helpers/summarize'
 import * as UI from '@mcro/ui'
+import { view } from '@mcro/black'
+
+@view
+class After {
+  render(props) {
+    log('props', props, this.props)
+    return (
+      <after {...props}>
+        <UI.Icon opacity={0.35} name="arrow-min-right" />
+      </after>
+    )
+  }
+  static style = {
+    after: {
+      position: 'relative',
+      zIndex: 1000,
+      background: [0, 0, 0, 0.2],
+      borderLeft: [1, [0, 0, 0, 0.5]],
+      margin: -5,
+      padding: 2,
+      alignItems: 'center',
+      justifyContent: 'center',
+      flex: 1,
+      '&:hover': {
+        background: [255, 255, 255, 0.025],
+      },
+    },
+  }
+}
+
+const clean = str => str.replace(/[\r\n|\n|\r|\s]+/gm, ' ').trim()
 
 const similarityOpacity = similarity => {
   if (similarity > 5000) {
     return 0.1
   }
   if (similarity > 2000) {
-    return 0.3
+    return 0.2
   }
   if (similarity > 1000) {
     return 0.5
@@ -67,14 +98,24 @@ export default class ContextSidebar {
                 lines.length >= 3
                   ? lines.map((line, i) => (
                       <UI.Text key={i} ellipse>
-                        {line.trim()}
+                        {clean(line)}
                       </UI.Text>
                     ))
-                  : lines
-                      .join('\n')
-                      .replace(/[\s]{2,}/g, ' ')
-                      .trim(),
-              after: <UI.Icon name="arrow-min-right" />,
+                  : clean(lines),
+              after: (
+                <After
+                  onClick={e => {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    this.props.navigate({
+                      type: 'context',
+                      title: item.title,
+                      id: item.id,
+                      data: item,
+                    })
+                  }}
+                />
+              ),
               below: (
                 <UI.Row
                   css={{ marginTop: 5, overflowX: 'scroll' }}

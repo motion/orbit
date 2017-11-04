@@ -8,6 +8,7 @@ import SidebarTitle from './sidebarTitle2'
 let blurredRef
 
 const ORA_HEIGHT = 450
+const ORA_WIDTH = 300
 const colorTeal = '#49ceac'
 const colorBlue = '#133cca'
 const screen = {
@@ -150,7 +151,7 @@ class Ora extends React.Component {
             position: 'fixed',
             top: 20,
             right: 20,
-            width: 280,
+            width: ORA_WIDTH,
             height: ORA_HEIGHT,
             // borderRadius: 10,
             userSelect: 'none',
@@ -224,11 +225,10 @@ export default class HomePage extends React.Component {
       }
     }
     const pad = 20
-    const width = 280
     const height = ORA_HEIGHT
     const bottom = height + pad
     const right = window.innerWidth - pad
-    const left = window.innerWidth - width - pad
+    const left = window.innerWidth - ORA_WIDTH - pad
     return {
       page: {
         background: '#fff',

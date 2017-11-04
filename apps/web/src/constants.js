@@ -6,6 +6,8 @@ console.log('process.env.IS_PROD', process.env.IS_PROD)
 
 export const VERSION = require('../package.json').version
 
+export const ORA_WIDTH = 280
+
 export const IS_ELECTRON = Constants.IS_ELECTRON
 export const IS_PROD =
   process.env.NODE_ENV === 'production' || process.env.IS_PROD

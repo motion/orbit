@@ -4,6 +4,7 @@ import Fade from '~/views/fade'
 import * as Sidebars from './sidebars'
 import getItem from './helpers/getItem'
 import PaneView from './pane'
+import { ORA_WIDTH } from '~/constants'
 
 @view({
   sidebar: class SidebarStore {
@@ -45,7 +46,7 @@ class SidebarContainer {
 @view
 export default class Sidebar {
   static defaultProps = {
-    width: 280,
+    width: ORA_WIDTH,
     sidebars: Sidebars,
     itemProps: {
       size: 1.14,

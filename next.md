@@ -7,6 +7,7 @@
 - dont show the exact same item in context for itself
 - finish buckets
   - needs to take you back home when changing bucket
+- dont focus search on open
 
 # next
 - slack integration get last message
@@ -14,7 +15,6 @@
 - hover to see tooltip peek (test if it be done in same browserwindow)
 - add preview of body contents when showing items
 - hiding should remove pointer events
-- dont focus search on open
 - settings pane: general settings + integrations split out + working open/close
 - make stack link to url so that hmr doesnt lose state
 - return focus to previous window on hide ora

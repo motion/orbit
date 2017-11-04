@@ -27,6 +27,7 @@ export default class Windows extends React.Component {
   state = {
     restart: false,
     showSettings: false,
+    closeSettings: false,
     size: [0, 0],
     position: [0, 0],
     trayPosition: [0, 0],
@@ -326,25 +327,34 @@ return {frontAppName, windowTitle}
           }}
         />
 
-        <window
-          {...appWindow}
-          show={this.state.showSettings}
-          vibrancy="dark"
-          transparent
-          hasShadow
-          showDevTools={this.state.showSettings}
-          defaultSize={this.initialSize || this.state.size}
-          size={this.state.size}
-          file={`${Constants.APP_URL}/settings`}
-          titleBarStyle="customButtonsOnHover"
-          position={this.state.position}
-          onResize={size => this.setState({ size })}
-          onMoved={position => this.setState({ position })}
-          onMove={position => this.setState({ position })}
-          onFocus={() => {
-            this.activeWindow = this.trayRef
-          }}
-        />
+        {!this.state.closeSettings && (
+          <window
+            {...appWindow}
+            show={this.state.showSettings}
+            vibrancy="dark"
+            transparent
+            hasShadow
+            showDevTools={this.state.showSettings}
+            defaultSize={this.initialSize || this.state.size}
+            size={this.state.size}
+            file={`${Constants.APP_URL}/settings`}
+            titleBarStyle="customButtonsOnHover"
+            position={this.state.position}
+            onResize={size => this.setState({ size })}
+            onMoved={position => this.setState({ position })}
+            onMove={position => this.setState({ position })}
+            onFocus={() => {
+              this.activeWindow = this.trayRef
+            }}
+            onClose={() => {
+              this.setState({ closeSettings: true })
+              this.setTimeout(() => {
+                // reopen invisible so its quick to open again
+                this.setState({ closeSettings: false, showSettings: false })
+              }, 500)
+            }}
+          />
+        )}
 
         <window
           {...appWindow}

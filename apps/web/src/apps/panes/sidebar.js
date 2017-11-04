@@ -122,7 +122,7 @@ export default class Sidebar {
           }
           return (
             <Fade
-              key={index + stackItem.result.title}
+              key={stackItem.result.title}
               width={width}
               index={index}
               currentIndex={currentIndex}

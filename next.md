@@ -8,6 +8,7 @@
 - finish buckets
   - needs to take you back home when changing bucket
 - dont focus search on open
+- :bug: popover flicker
 
 # next
 - slack integration get last message
@@ -21,7 +22,6 @@
 - need to do bolding inside ui.text so it works well with clamps
 - :bug: once you pin the results disappear
 - :bug: prevent click going to url unless window is focused
-- :bug: popover flicker
 - :bug: popovers stick when you scroll
 - :bug: popovers stick when you close window
 - use scraper for preview so title matches eventual pinned result

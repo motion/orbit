@@ -127,6 +127,7 @@ export default class OraHeader extends React.Component {
           <UI.Row>
             <UI.Popover
               openOnHover
+              delay={300}
               closeOnEsc
               overlay="transparent"
               theme="light"

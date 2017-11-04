@@ -89,7 +89,7 @@ export default class ContextSidebar {
                 : summarizeWithQuestion(item.body, this.search)
 
             return {
-              category: 'Context',
+              // category: 'Context',
               height: 200,
               title,
               onClick: () => {

@@ -2,9 +2,17 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import { keycode } from '@mcro/ui'
-import { observable } from 'mobx'
 import $ from 'color'
 import { pick } from 'lodash'
+
+const getTextProperties = props => {
+  const fontSize =
+    (typeof props.fontSize === 'number' && props.fontSize) || props.size
+      ? props.size * 14
+      : 'auto'
+  const lineHeight = props.lineHeight || fontSize * 1.3 + 4
+  return { fontSize, lineHeight }
+}
 
 const DOM_EVENTS = [
   'onClick',
@@ -177,6 +185,7 @@ export default class Text extends React.Component<Props> {
     html,
     ...props
   }: Props) {
+    const textProperties = getTextProperties(this.props)
     const eventProps = {
       onClick,
       onMouseEnter,
@@ -184,16 +193,13 @@ export default class Text extends React.Component<Props> {
       onFocus,
       onBlur,
     }
-
     let inner = html ? (
       <span dangerouslySetInnerHTML={{ __html: html }} />
     ) : (
       children
     )
-
     const oneLineEllipse = ellipse && typeof ellipse === 'boolean'
     const multiLineEllipse = ellipse > 1
-
     return (
       <text
         className={className}
@@ -217,7 +223,7 @@ export default class Text extends React.Component<Props> {
             multiLineEllipse
               ? {
                   WebkitLineClamp: ellipse,
-                  maxHeight: `${ellipse * 1.6}em`,
+                  maxHeight: `${ellipse * textProperties.lineHeight}px`,
                   width: this.state.doClamp ? '100%' : '100.001%',
                   opacity: this.state.doClamp ? 1 : 0,
                 }
@@ -259,10 +265,7 @@ export default class Text extends React.Component<Props> {
   }
 
   static theme = (props, theme) => {
-    const fontSize =
-      (typeof props.fontSize === 'number' && props.fontSize) || props.size
-        ? props.size * 14
-        : 'auto'
+    const { fontSize, lineHeight } = getTextProperties(props)
 
     let color = props.color || theme.base.color
     // allow textOpacity adjustments
@@ -274,9 +277,10 @@ export default class Text extends React.Component<Props> {
       text: {
         color,
         fontSize,
+        lineHeight:
+          typeof lineHeight === 'number' ? `${lineHeight}px` : lineHeight,
         display: props.display,
         fontWeight: props.fontWeight,
-        lineHeight: props.lineHeight || `${fontSize * 1.3 + 4}px`,
         opacity: props.opacity,
       },
       ellipse: {

@@ -98,7 +98,7 @@ export default class ContextSidebar {
               children:
                 lines.length >= 3
                   ? lines.map((line, i) => (
-                      <UI.Text key={i} ellipse>
+                      <UI.Text key={i} ellipse opacity={0.5} size={0.9}>
                         {clean(line)}
                       </UI.Text>
                     ))

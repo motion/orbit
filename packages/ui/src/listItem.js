@@ -128,6 +128,9 @@ export default class ListItem extends React.Component<Props> {
     if (typeof children === 'function') {
       children = _children()
     }
+
+    const areChildrenString = typeof children === 'string'
+
     return (
       <SizedSurface
         tagName="listitem"
@@ -189,12 +192,9 @@ export default class ListItem extends React.Component<Props> {
               </Text>
             </prop>
           </above>
-          <children if={children && React.isValidElement(children)}>
-            {children}
-          </children>
+          <children if={!areChildrenString}>{children}</children>
           <Text
-            $children
-            if={children && !React.isValidElement(children)}
+            if={areChildrenString}
             size={size * 0.9}
             opacity={0.6}
             ellipse={childrenEllipse}
@@ -213,6 +213,7 @@ export default class ListItem extends React.Component<Props> {
   static style = {
     item: {
       maxWidth: '100%',
+      userSelect: 'none',
     },
     content: {
       flex: 1,
@@ -267,12 +268,6 @@ export default class ListItem extends React.Component<Props> {
     },
     before: {
       margin: ['auto', 5, 'auto', 0],
-    },
-    children: {
-      flexFlow: 'row',
-      margin: [0, -10],
-      lineHeight: '1.38rem',
-      padding: [0, 10],
     },
   }
 }

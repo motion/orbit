@@ -116,6 +116,7 @@ class StackItemStore {
 @store
 export default class StackStore {
   items = []
+  version = 0
   constructor(stack: Array<Object>) {
     const all = stack || []
     this.items = all.map(
@@ -165,6 +166,7 @@ export default class StackStore {
     }
   }
   push(result) {
+    this.version++
     const { last } = this
     this.items = [
       ...this.items,
@@ -177,6 +179,7 @@ export default class StackStore {
   }
   pop() {
     if (this.items.length > 1) {
+      this.version++
       this.items = this.items.slice(0, this.items.length - 1)
     }
   }

@@ -6,6 +6,7 @@ import StackStore from '~/stores/stackStore'
 import keycode from 'keycode'
 import ContextStore from '~/stores/contextStore'
 import SHORTCUTS from './shortcuts'
+import { CurrentUser } from '~/app'
 
 const BANNERS = {
   note: 'note',
@@ -29,7 +30,19 @@ export default class OraStore {
   focused = false
   banner = null
 
-  @watch items = () => Thing.find()
+  get bucket() {
+    const { activeBucket } = CurrentUser.user.settings
+    return activeBucket && activeBucket !== 'Default' && activeBucket
+  }
+
+  @watch
+  items = () =>
+    !this.bucket
+      ? Thing.find()
+      : Thing.find()
+          .where('bucket')
+          .in(this.bucket)
+
   @watch context = () => this.items && new ContextStore(this.items)
 
   async willMount() {

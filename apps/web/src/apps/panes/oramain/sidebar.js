@@ -30,12 +30,12 @@ export default class OraMainSidebar {
     return this.props.oraStore.search
   }
 
-  @watch
-  things = () =>
-    Thing.connected &&
-    Thing.find()
-      .sort({ updated: 'desc' })
-      .limit(20)
+  get things() {
+    return (
+      (this.props.oraStore.items && this.props.oraStore.items.slice(0, 20)) ||
+      []
+    )
+  }
 
   @watch
   events = () =>
@@ -122,22 +122,7 @@ export default class OraMainSidebar {
         ),
       },
 
-      {
-        category: 'Upcoming',
-        title: 'none',
-        displayTitle: false,
-        children: (
-          <calwrap
-            css={{
-              border: [1, [255, 255, 255, 0.1]],
-              borderRight: 'none',
-              borderLeft: 'none',
-            }}
-          >
-            <Calendar labels={[]} />
-          </calwrap>
-        ),
-      },
+      ...this.things.map(x => ({ ...Thing.toResult(x), type: 'context' })),
     ]
   }
 

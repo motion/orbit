@@ -38,7 +38,6 @@ const hashStr = s => {
           })
         })
       )
-      console.log('corpus is', corpus)
       this.context = new ContextStore(corpus)
       this.corpus = corpus
     }

@@ -8,7 +8,6 @@ import { Thing } from '~/app'
 @view
 class After {
   render(props) {
-    log('props', props, this.props)
     return (
       <after {...props}>
         <UI.Icon opacity={0.35} name="arrow-min-right" />
@@ -72,19 +71,16 @@ export default class ContextSidebar {
 
   get contextResults() {
     const title = this.osContext ? this.osContext.title : ''
-    const addBold = line => {
-      const r = new RegExp('(' + this.search.split(' ').join('|') + ')', 'ig')
-      return line.replace(
-        r,
-        '<b style="font-weight: 400; color: #aed6ff;">$1</b>'
-      )
-    }
     return !this.context || this.context.loading // || this.osContext === null
       ? []
       : this.context
           .closestItems(this.search.length > 0 ? this.search : title, 5)
           // filter same item
-          .filter(x => x.item.url !== this.props.result.data.url)
+          .filter(x => {
+            if (!x.item) return true
+            if (!this.props.data) return true
+            return x.item.url !== this.props.result.data.url
+          })
           .map(({ debug, item, similarity }) => {
             const title = item.title
             const lines =

@@ -101,10 +101,13 @@ class App {
   debug(setting) {
     if (setting === false) {
       console.log('Disabling debug...')
-      localStorage.setItem('debug', 'none')
+      localStorage.debug = 'none'
       debug.enable('none')
+      debug.instances.forEach(instance => {
+        debug.disable(instance)
+      })
     } else {
-      localStorage.setItem('debug', setting)
+      localStorage.debug = setting
       debug.enable(setting)
     }
   }

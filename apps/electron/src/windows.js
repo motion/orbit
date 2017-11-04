@@ -204,7 +204,7 @@ return {frontAppName, windowTitle}
           applescript.execute(
             `tell application "Google Chrome"
         tell front window's active tab
-          set source to execute javascript "JSON.stringify({ url: document.location+'', title: document.title, body: document.body.innerText })"
+          set source to execute javascript "JSON.stringify({ url: document.location+'', title: document.title, body: document.body.innerText, selection: document.getSelection().toString() })"
         end tell
       end tell`,
             (err, res) => {
@@ -219,6 +219,7 @@ return {frontAppName, windowTitle}
                     title: result.title,
                     body: result.body,
                     url: result.url,
+                    selection: result.selection,
                     application,
                   })
                 )

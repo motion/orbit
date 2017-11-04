@@ -114,12 +114,12 @@ export default class OraStore {
         log('no context or url/title', this.osContext)
         return
       }
-      // new title
-      if (!this.osContext || this.osContext.title !== context.title) {
+
+      const updateContext = title => {
         this.osContext = context
         const nextStackItem = {
+          title,
           type: 'context',
-          title: context.title,
           icon:
             context.application === 'Google Chrome' ? 'social-google' : null,
         }
@@ -128,6 +128,13 @@ export default class OraStore {
         } else {
           this.stack.navigate(nextStackItem)
         }
+      }
+
+      if (!this.osContext || this.osContext.title !== context.title) {
+        return updateContext(context.title)
+      }
+      if (this.osContext.selection !== context.selection) {
+        return updateContext(context.selection || context.title)
       }
     })
   }

@@ -76,6 +76,7 @@ export default class OraMainSidebar {
           >
             {(this.things || []).map(thing => (
               <thing
+                key={thing.id}
                 onClick={e => {
                   e.stopPropagation()
                   this.props.navigate({

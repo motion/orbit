@@ -35,6 +35,7 @@ const TAG_NAME_MAP = {
 // factory that returns fancyElement helper
 export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
   const { baseStyles, options, css } = Gloss
+  const tagNameOption = options.tagName
 
   // Fast object reduce
   function objToCamel(style) {
@@ -126,12 +127,16 @@ export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
           continue
         }
         // tagName={}
-        if (
-          options.tagName &&
-          prop === options.tagName &&
-          isTag &&
-          typeof val === 'string'
-        ) {
+        if (tagNameOption && prop === tagNameOption && isTag) {
+          if (!val) {
+            // undefined, ignore
+            continue
+          }
+          if (typeof val !== 'string') {
+            throw new Error(
+              `tagName must be a string (tag: ${name}, type received: ${typeof val})`
+            )
+          }
           type = val
           continue
         }

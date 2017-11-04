@@ -144,20 +144,14 @@ export default class OraStore {
     OS.on('mouse-in-corner', () => {
       if (this.hidden) {
         this.hidden = false
-        this.setTimeout(this.focusBar)
       }
     })
   }
 
   _watchToggleHide() {
     OS.send('start-ora')
-
     OS.on('show-ora', () => {
       this.hidden = !this.hidden
-
-      if (!this.hidden) {
-        this.setTimeout(this.focusBar)
-      }
     })
   }
 

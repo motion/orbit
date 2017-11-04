@@ -46,7 +46,6 @@ export default class ListItem extends React.Component<Props> {
   static defaultProps = {
     size: 1,
     borderWidth: 0,
-    ellipse: true,
     glowProps: {
       color: '#fff',
       scale: 1,

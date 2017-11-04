@@ -2,7 +2,9 @@
 // export constants from @mcro/black
 import { Constants } from '@mcro/black'
 
-console.log('process.env.IS_PROD', process.env.IS_PROD)
+if (process.env.IS_PROD) {
+  console.log('IS_PROD!')
+}
 
 export const VERSION = require('../package.json').version
 

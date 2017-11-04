@@ -31,8 +31,11 @@ export default class OraStore {
   banner = null
 
   get bucket() {
+    if (!CurrentUser.user) {
+      return null
+    }
     const { activeBucket } = CurrentUser.user.settings
-    return activeBucket && activeBucket !== 'Default' && activeBucket
+    return (activeBucket && activeBucket !== 'Default' && activeBucket) || null
   }
 
   @watch

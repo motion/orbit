@@ -46,17 +46,13 @@ export default class OraHeader extends React.Component {
     if (!CurrentUser.user) {
       return null
     }
-
     const itemProps = {
       glow: false,
       chromeless: true,
       color: [255, 255, 255, 0.5],
     }
-
     const settings = CurrentUser.user.settings || {}
     const { buckets = ['Default'], activeBucket = 'Default' } = settings
-    log(settings)
-
     const bucketItems = [
       ...buckets.map(name => ({
         primary: name,

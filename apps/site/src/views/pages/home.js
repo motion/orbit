@@ -14,7 +14,7 @@ const screen = {
   small: '@media (max-width: 800px)',
 }
 
-const Section = view.simple(
+const Section = view(
   'section',
   {
     marginLeft: -100,
@@ -32,7 +32,7 @@ const Section = view.simple(
   }
 )
 
-const SectionContent = view.simple('section', {
+const SectionContent = view('section', {
   width: '85%',
   minWidth: 300,
   maxWidth: 800,

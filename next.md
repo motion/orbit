@@ -11,6 +11,7 @@
 - :bug: popover flicker
 
 # next
+- auto minimize height if window behind is at bottom (slack)
 - slack integration get last message
   - selection
 - hover to see tooltip peek (test if it be done in same browserwindow)

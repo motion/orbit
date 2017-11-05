@@ -19,7 +19,7 @@ export function onWindow(cb) {
 console.log('Constants.APP_URL', Constants.APP_URL)
 
 const AppWindows = new WindowsStore()
-const ORA_WIDTH = 300
+const ORA_WIDTH = 320
 
 export default class Windows extends React.Component {
   subscriptions = []

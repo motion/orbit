@@ -191,6 +191,7 @@ export class Gloss {
           !lastUpdatedStyles ||
           (window.lastHotReload && lastUpdatedStyles > window.lastHotReload)
         ) {
+          console.log('Child.style', Child.style)
           attachStyles(Child.glossUID, Child.style, true)
           lastUpdatedStyles = Date.now()
         }
@@ -223,6 +224,12 @@ export class Gloss {
     }
     for (const key of Object.keys(styles)) {
       const style = styles[key]
+      // @keyframes
+      if (key[0] === '@') {
+        console.log('adding animation')
+        this.stylesheet.addRule(key, style)
+        return
+      }
       const stylesKey = childKey ? `${key}--${childKey}` : key
       if (typeof style === 'function') {
         this.stylesheet[stylesKey] = style

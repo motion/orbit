@@ -5,7 +5,7 @@ import OraStore from './oraStore'
 import Sidebar from '../panes/sidebar'
 import * as Sidebars from '../panes/sidebars'
 import OraHeader from './oraHeader'
-import { ORA_WIDTH } from '~/constants'
+import * as Constants from '~/constants'
 
 @view.provide({
   oraStore: OraStore,
@@ -25,7 +25,7 @@ export default class OraPage {
           </UI.Theme>
           <content>
             <Sidebar
-              width={ORA_WIDTH}
+              width={Constants.ORA_WIDTH}
               store={oraStore}
               oraStore={oraStore}
               sidebars={Sidebars}
@@ -45,7 +45,8 @@ export default class OraPage {
 
   static style = {
     ora: {
-      width: ORA_WIDTH,
+      width: Constants.ORA_WIDTH,
+      height: Constants.ORA_HEIGHT,
       background: [20, 20, 20, 0.98],
       boxShadow: [[0, 0, 10, [0, 0, 0, 0.4]]],
       margin: 10,
@@ -53,7 +54,6 @@ export default class OraPage {
       overflow: 'hidden',
       transition: 'all ease-in 100ms',
       opacity: 0,
-      height: 600,
       transform: {
         x: 20,
       },

@@ -209,15 +209,17 @@ export default class Header {
                   }}
                 />
                 {['mail', 'cool', 'what'].map((n, i) => (
-                  <UI.Icon
-                    key={i}
-                    name={n}
-                    color="#fff"
-                    size={30}
-                    css={{
-                      animation: `orbital 4s linear infinite`,
-                    }}
-                  />
+                  <contain $$fullscreen key={i}>
+                    <UI.Icon
+                      name={n}
+                      color="#fff"
+                      size={30}
+                      css={{
+                        animation: `orbital${i} 4s linear infinite`,
+                        margin: 'auto',
+                      }}
+                    />
+                  </contain>
                 ))}
               </contain>
             </section>
@@ -228,7 +230,23 @@ export default class Header {
   }
 
   static style = {
-    '@keyframes orbital': {
+    '@keyframes orbital0': {
+      from: {
+        transform: 'rotate(0deg) translateX(150px) rotate(0deg)',
+      },
+      to: {
+        transform: 'rotate(360deg) translateX(150px) rotate(-360deg)',
+      },
+    },
+    '@keyframes orbital1': {
+      from: {
+        transform: 'rotate(0deg) translateX(300px) rotate(0deg)',
+      },
+      to: {
+        transform: 'rotate(360deg) translateX(300px) rotate(-360deg)',
+      },
+    },
+    '@keyframes orbital2': {
       from: {
         transform: 'rotate(0deg) translateX(500px) rotate(0deg)',
       },

@@ -228,7 +228,7 @@ export class Gloss {
       if (key[0] === '@') {
         console.log('adding animation')
         this.stylesheet.addRule(key, style)
-        return
+        continue
       }
       const stylesKey = childKey ? `${key}--${childKey}` : key
       if (typeof style === 'function') {

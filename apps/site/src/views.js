@@ -18,6 +18,9 @@ export const SubTitle = props => (
 const dark = {
   background: Constants.colorBlue,
 }
+const space = {
+  background: '#000',
+}
 const padRight = {
   paddingRight: 300,
   [Constants.screen.small]: {
@@ -41,6 +44,7 @@ export const Section = view(
       margin: 0,
     },
     dark,
+    space,
   }
 )
 

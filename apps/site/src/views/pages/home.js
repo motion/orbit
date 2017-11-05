@@ -6,6 +6,8 @@ import * as Constants from '~/constants'
 import { throttle } from 'lodash'
 import Ora from './home/ora'
 import HomeHeader from './home/header'
+import HomeHandsFree from './home/sectionHandsFree'
+import HomeSecurity from './home/sectionSecurity'
 
 let blurredRef
 
@@ -38,7 +40,7 @@ export default class HomePage extends React.Component {
     }
   }
 
-  setSection(index) {
+  setSection = index => {
     return node => {
       if (node) {
         this.bounds[index] = node.getBoundingClientRect()
@@ -83,6 +85,10 @@ export default class HomePage extends React.Component {
 
   render({ blurred, isSmall }) {
     const styles = this.getStyle()
+    const sectionProps = {
+      setSection: this.setSection,
+      ...this.props,
+    }
     return (
       <page css={styles.page} ref={x => this.setRef(x)}>
         <Ora
@@ -96,99 +102,12 @@ export default class HomePage extends React.Component {
         <contents css={{ overflow: 'hidden' }}>
           <HomeHeader />
 
-          <View.Section css={{ background: '#fff' }} padded>
-            <View.SectionContent padRight padBottom>
-              <img
-                if={!isSmall}
-                css={{
-                  position: 'absolute',
-                  top: -35,
-                  right: -370,
-                  transition: 'all ease-in 300ms',
-                  animation: 'rotate 120s infinite linear',
-                }}
-                src="/orbitals.svg"
-              />
-              <View.Title
-                getRef={this.setSection(1)}
-                color={Constants.colorBlue}
-                size={3}
-              >
-                Hands-free Intelligence
-              </View.Title>
-              <View.Text size={2} fontWeight={600} opacity={0.5}>
-                An assistant that's always there, not hidden in a tab or bot.
-              </View.Text>
-              <View.Text size={1.7}>
-                <View.List>
-                  <li>
-                    Orbit hooks into <em>every</em> cloud service, including
-                    email and chat.
-                  </li>
-                  <li>
-                    Using machine learning, Orbit understands{' '}
-                    <View.Strong>when</View.Strong> to show relevant items, and
-                    understands "accounting paperwork" can mean "tax form".
-                  </li>
-                  <li>
-                    Orbit stays with you: while chatting, writing emails,
-                    updating your CRM, or just browsing.
-                  </li>
-                </View.List>
-              </View.Text>
-            </View.SectionContent>
-            <View.BottomSlant dark />
+          <View.Section space css={{ height: 500 }}>
+            <UI.Icon name="social-slack" size={100} />
           </View.Section>
 
-          <UI.Theme name="dark">
-            <View.Section padded dark>
-              <View.BottomSlant css={{ background: '#fff' }} />
-              <View.SectionContent padRight padBottom>
-                <after
-                  css={{
-                    position: 'absolute',
-                    top: 0,
-                    right: -200,
-                    bottom: 0,
-                    justifyContent: 'center',
-                    opacity: 0.4,
-                  }}
-                >
-                  <UI.Icon color="#000" size={501} name="lock" />
-                </after>
-                <View.Title getRef={this.setSection(2)} size={3}>
-                  The No-Cloud Infrastructure
-                </View.Title>
-                <View.Text size={2} fontWeight={600} opacity={0.7}>
-                  In order to work, Orbit needed to invent a new model: one that
-                  keeps you safe.
-                </View.Text>
-                <View.SubText>
-                  Here's the rub. To provide great context, Orbit needs to hook
-                  into a lot of company data to be valuable. Your Slack, email,
-                  documents, tasks, company knowledge.
-                </View.SubText>
-
-                <View.SubText>
-                  How can we do that completely securely?
-                </View.SubText>
-
-                <View.SubText>
-                  Answer: the data never once leaves your local computer. We
-                  never see it, and neither does anyone else.
-                </View.SubText>
-                <View.SubText>
-                  <View.Hl color="#000">
-                    This allows us to be ambitious from day one without
-                    compromise.
-                  </View.Hl>{' '}
-                  Orbit can crawl everything that's relevant to you and your
-                  team without fear of data breaches, permissions exposures, or
-                  the need to run a complicated on-prem installs.
-                </View.SubText>
-              </View.SectionContent>
-            </View.Section>
-          </UI.Theme>
+          <HomeHandsFree {...sectionProps} />
+          <HomeSecurity {...sectionProps} />
 
           <footer>
             <View.Section css={{ padding: [250, 0] }} $$centered padded>

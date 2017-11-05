@@ -53,7 +53,6 @@ export default class Icon extends React.PureComponent<Props> {
     ...props
   }) {
     let content
-
     if (type === 'detailed') {
       content = (
         <detailIcon css={{ transform: { scale: 0.01 * size } }}>
@@ -61,16 +60,13 @@ export default class Icon extends React.PureComponent<Props> {
         </detailIcon>
       )
     }
-
     if (name[0] === '/') {
       return <img $icon src={name} {...props} />
     }
-
     const iconName = findMatch(name)
     content = content || children
-
     return (
-      <icon $icon {...props}>
+      <icon {...props}>
         <div
           className={`nc-icon-${type} ${iconName}`}
           style={{

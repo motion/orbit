@@ -81,9 +81,9 @@ function createViewDecorator(): ViewDecorator {
     decorations({ mobx: true, magic: false, ui: true })
   )
 
-  const view = (item: Decoratable) => {
+  const view = (item: Decoratable, ...args) => {
     if (typeof item === 'string') {
-      return glossDecorator(...arguments)
+      return glossDecorator(item, ...args)
     }
     // @view({ ...stores }) shorthand
     if (typeof item === 'object') {

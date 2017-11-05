@@ -89,6 +89,16 @@ export class Gloss {
 
     const Child = optionalNameOrChild
 
+    if (!Child) {
+      console.error(
+        'invalid view given to gloss',
+        optionalNameOrChild,
+        optionalStyle,
+        optionalPropStyles
+      )
+      return () => this.createElement('div', { children: 'Error Component' })
+    }
+
     // @view decorated style component
     if (Child.prototype) {
       const { attachStyles, css } = this

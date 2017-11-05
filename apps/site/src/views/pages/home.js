@@ -1,45 +1,13 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { Icon, Logo, Text, Title, Hl, SubText } from './views'
+import * as View from '~/views'
+import * as Constants from '~/constants'
 import { throttle } from 'lodash'
-import { ORA_BORDER_RADIUS, ORA_HEIGHT, ORA_WIDTH } from '~/constants'
 import Ora from './ora'
+import HomeHeader from './home/header'
 
 let blurredRef
-
-const colorTeal = '#49ceac'
-const colorBlue = '#133cca'
-const screen = {
-  small: '@media (max-width: 800px)',
-}
-
-const Section = view(
-  'section',
-  {
-    marginLeft: -100,
-    marginRight: -100,
-    paddingLeft: 100,
-    paddingRight: 100,
-    position: 'relative',
-    overflow: 'hidden',
-  },
-  {
-    padded: {
-      padding: [110, 0],
-      margin: 0,
-    },
-  }
-)
-
-const SectionContent = view('section', {
-  width: '85%',
-  minWidth: 300,
-  maxWidth: 800,
-  margin: [0, 'auto'],
-  position: 'relative',
-  zIndex: 10,
-})
 
 @view
 export default class HomePage extends React.Component {
@@ -88,10 +56,14 @@ export default class HomePage extends React.Component {
       }
     }
     const pad = 20
-    const height = ORA_HEIGHT
+    const height = Constants.ORA_HEIGHT
     const bottom = height + pad
-    const right = window.innerWidth - pad - ORA_BORDER_RADIUS
-    const left = window.innerWidth - ORA_WIDTH - pad + ORA_BORDER_RADIUS
+    const right = window.innerWidth - pad - Constants.ORA_BORDER_RADIUS
+    const left =
+      window.innerWidth -
+      Constants.ORA_WIDTH -
+      pad +
+      Constants.ORA_BORDER_RADIUS
     return {
       page: {
         background: '#fff',
@@ -122,200 +94,10 @@ export default class HomePage extends React.Component {
         />
 
         <contents css={{ overflow: 'hidden' }}>
-          <Section
-            css={{
-              background: colorTeal,
-              height: 880,
-              position: 'relative',
-              transform: {
-                z: 0,
-              },
-            }}
-          >
-            <fadeDown
-              css={{
-                position: 'absolute',
-                bottom: 0,
-                left: 0,
-                right: 0,
-                height: 500,
-                background: 'linear-gradient(#f2f2f2, #fff)',
-                zIndex: 1,
-                transform: {
-                  z: 0,
-                },
-              }}
-            />
-            <orb
-              css={{
-                position: 'absolute',
-                top: -1500,
-                right: -1200,
-                borderRadius: 1000000,
-                width: 11500,
-                height: 11500,
-                background: '#eee',
-                border: [10, UI.color(colorTeal).lighten(0.2)],
-                transform: {
-                  scale: 1,
-                  z: 0,
-                },
-              }}
-            />
-            <orb
-              css={{
-                position: 'absolute',
-                bottom: '-480%',
-                right: '15%',
-                borderRadius: 10000,
-                background: '#f2f2f2',
-                width: 100,
-                height: 100,
-                opacity: 1,
-                border: [1, 'dotted', '#eee'],
-                transform: {
-                  scale: 100,
-                  rotate: '1.24deg',
-                  z: 0,
-                },
-              }}
-            />
-            <orb
-              css={{
-                position: 'absolute',
-                bottom: '-489%',
-                right: '15%',
-                borderRadius: 10000,
-                width: 100,
-                height: 100,
-                border: [1, 'dotted', '#eee'],
-                opacity: 0.75,
-                transform: {
-                  scale: 100,
-                  rotate: '2.44deg',
-                  z: 0,
-                },
-              }}
-            />
+          <HomeHeader />
 
-            <bottomSlant
-              css={{
-                zIndex: 100,
-                borderTop: [1, [0, 0, 0, 0.1]],
-                bottom: -360,
-              }}
-            />
-            <bottomSlant
-              css={{
-                zIndex: 100,
-                borderTop: [1, [0, 0, 0, 0.1]],
-                bottom: -365,
-                opacity: 0.75,
-              }}
-            />
-            <bottomSlant
-              css={{
-                zIndex: 100,
-                borderTop: [1, [0, 0, 0, 0.1]],
-                bottom: -370,
-                opacity: 0.5,
-              }}
-            />
-            <bottomSlant
-              css={{
-                zIndex: 100,
-                borderTop: [1, [0, 0, 0, 0.1]],
-                bottom: -375,
-                opacity: 0.25,
-              }}
-            />
-
-            <header $$row>
-              <SectionContent>
-                <thing
-                  $$row
-                  css={{
-                    alignItems: 'center',
-                    padding: [10, 0],
-                    marginTop: 10,
-                    marginBottom: 20,
-                  }}
-                >
-                  <logos
-                    css={{
-                      background: '#fff',
-                      alignItems: 'center',
-                      flexFlow: 'row',
-                      padding: 10,
-                      margin: [-10, -10, -10, -20],
-                    }}
-                  >
-                    <Icon
-                      fill={colorBlue}
-                      css={{
-                        height: 45,
-                        margin: [-10, 10, -10, -5],
-                      }}
-                    />
-                    <Logo css={{ height: 40 }} fill={colorBlue} />
-                  </logos>
-                </thing>
-              </SectionContent>
-            </header>
-
-            <SectionContent
-              css={{
-                flex: 1,
-                justifyContent: 'center',
-              }}
-            >
-              <wrap>
-                <content $padRight>
-                  <Title color={colorBlue} size={4}>
-                    <Hl background={[255, 255, 255, 0.55]} color={colorBlue}>
-                      A smart assistant for your company.
-                    </Hl>
-                  </Title>
-
-                  <Text size={2.2}>
-                    Orbit is a simple, always on app that provides relevant
-                    context as you work.<br />
-                    <Text size={1.7} opacity={0.5}>
-                      Scroll down to see how it works.
-                    </Text>
-                    <br />
-                  </Text>
-
-                  <hr />
-                </content>
-
-                <logos
-                  css={{
-                    flexFlow: 'row',
-                    flex: 1,
-                    justifyContent: 'space-around',
-                    margin: [40, 0, 0],
-                  }}
-                >
-                  <UI.PassProps size={35} color={colorTeal} opacity={0.7}>
-                    <UI.Icon name="social-slack" />
-                    <UI.Icon name="social-github" />
-                    <UI.Icon name="social-google" />
-                    <UI.Icon name="social-dropbox" />
-                    <UI.Icon name="social-trello" />
-                    <UI.Icon name="mail" />
-                    <UI.Icon name="calendar" />
-                    <UI.Icon name="files_archive-paper" />
-                    <UI.Icon name="files_book" />
-                    <UI.Icon name="attach" />
-                  </UI.PassProps>
-                </logos>
-              </wrap>
-            </SectionContent>
-          </Section>
-
-          <Section css={{ background: '#fff' }} padded>
-            <SectionContent $padRight $padBottom>
+          <View.Section css={{ background: '#fff' }} padded>
+            <View.SectionContent padRight $padBottom>
               <img
                 if={!isSmall}
                 css={{
@@ -327,13 +109,17 @@ export default class HomePage extends React.Component {
                 }}
                 src="/orbitals.svg"
               />
-              <Title getRef={this.setSection(1)} color={colorBlue} size={3}>
+              <View.Title
+                getRef={this.setSection(1)}
+                color={Constants.colorBlue}
+                size={3}
+              >
                 Hands-free Intelligence
-              </Title>
-              <Text size={2} fontWeight={600} opacity={0.5}>
+              </View.Title>
+              <View.Text size={2} fontWeight={600} opacity={0.5}>
                 An assistant that's always there, not hidden in a tab or bot.
-              </Text>
-              <Text size={1.7}>
+              </View.Text>
+              <View.Text size={1.7}>
                 <ol $list>
                   <li>
                     Orbit hooks into <em>every</em> cloud service, including
@@ -349,15 +135,15 @@ export default class HomePage extends React.Component {
                     updating your CRM, or just browsing.
                   </li>
                 </ol>
-              </Text>
-            </SectionContent>
+              </View.Text>
+            </View.SectionContent>
             <bottomSlant $dark />
-          </Section>
+          </View.Section>
 
           <UI.Theme name="dark">
-            <Section padded $dark>
+            <View.Section padded $dark>
               <bottomSlant css={{ background: '#fff' }} />
-              <SectionContent $padRight $padBottom>
+              <View.SectionContent padRight $padBottom>
                 <after
                   css={{
                     position: 'absolute',
@@ -370,50 +156,52 @@ export default class HomePage extends React.Component {
                 >
                   <UI.Icon color="#000" size={501} name="lock" />
                 </after>
-                <Title getRef={this.setSection(2)} size={3}>
+                <View.Title getRef={this.setSection(2)} size={3}>
                   The No-Cloud Infrastructure
-                </Title>
-                <Text size={2} fontWeight={600} opacity={0.7}>
+                </View.Title>
+                <View.Text size={2} fontWeight={600} opacity={0.7}>
                   In order to work, Orbit needed to invent a new model: one that
                   keeps you safe.
-                </Text>
-                <SubText>
+                </View.Text>
+                <View.SubText>
                   Here's the rub. To provide great context, Orbit needs to hook
                   into a lot of company data to be valuable. Your Slack, email,
                   documents, tasks, company knowledge.
-                </SubText>
+                </View.SubText>
 
-                <SubText>How can we do that completely securely?</SubText>
+                <View.SubText>
+                  How can we do that completely securely?
+                </View.SubText>
 
-                <SubText>
+                <View.SubText>
                   Answer: the data never once leaves your local computer. We
                   never see it, and neither does anyone else.
-                </SubText>
-                <SubText>
-                  <Hl color="#000">
+                </View.SubText>
+                <View.SubText>
+                  <View.Hl color="#000">
                     This allows us to be ambitious from day one without
                     compromise.
-                  </Hl>{' '}
+                  </View.Hl>{' '}
                   Orbit can crawl everything that's relevant to you and your
                   team without fear of data breaches, permissions exposures, or
                   the need to run a complicated on-prem installs.
-                </SubText>
-              </SectionContent>
-            </Section>
+                </View.SubText>
+              </View.SectionContent>
+            </View.Section>
           </UI.Theme>
 
           <footer>
-            <Section css={{ padding: [250, 0] }} $$centered padded>
-              <SectionContent>
-                <Text size={3}>
+            <View.Section css={{ padding: [250, 0] }} $$centered padded>
+              <View.SectionContent>
+                <View.Text size={3}>
                   Orbit is going into private beta in December.
-                </Text>
-                <Text size={2}>
+                </View.Text>
+                <View.Text size={2}>
                   <a href="mailto:natewienert@gmail.com">Send us an email</a> if
                   you're interested.
-                </Text>
-              </SectionContent>
-            </Section>
+                </View.Text>
+              </View.SectionContent>
+            </View.Section>
           </footer>
         </contents>
       </page>
@@ -437,17 +225,11 @@ export default class HomePage extends React.Component {
       color: '#5420a5',
       textDecoration: 'underline',
     },
-    padRight: {
-      paddingRight: 300,
-      [screen.small]: {
-        paddingRight: 0,
-      },
-    },
     padBottom: {
       paddingBottom: 80,
     },
     dark: {
-      background: colorBlue,
+      background: Constants.colorBlue,
     },
     narrow: {
       maxWidth: 500,

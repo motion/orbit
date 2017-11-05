@@ -55,7 +55,41 @@ export class Gloss {
     this.decorator.createElement = this.createElement
   }
 
-  decorator = (Child: Function) => {
+  decorator = (
+    optionalNameOrChild: string | Function,
+    optionalStyle?: Object,
+    optionalPropStyles?: Object
+  ) => {
+    if (typeof optionalNameOrChild === 'string') {
+      // shorthand -- $('tagName', {}) style component
+      const tagName = optionalNameOrChild
+      const styles = optionalStyle
+      const id = uid()
+      const glossComponent = props => {
+        let finalProps
+        // make propstyles work
+        if (props && optionalPropStyles) {
+          finalProps = {}
+          for (const key of Object.keys(props)) {
+            if (optionalPropStyles[key]) {
+              finalProps[`$${key}`] = props[key]
+            } else {
+              finalProps[key] = props[key]
+            }
+          }
+        } else {
+          finalProps = props
+        }
+        return this.createElement(tagName, { glossUID: id, ...finalProps })
+      }
+      this.attachStyles(id, { [tagName]: styles, ...optionalPropStyles })
+      glossComponent.displayName = tagName
+      return glossComponent
+    }
+
+    const Child = optionalNameOrChild
+
+    // @view decorated style component
     if (Child.prototype) {
       const { attachStyles, css } = this
 

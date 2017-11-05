@@ -64,6 +64,12 @@ export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
       )
     }
 
+    let { glossUID } = this.constructor
+    if (props && props.glossUID) {
+      glossUID = props.glossUID
+      delete props.glossUID
+    }
+
     const propNames = props ? Object.keys(props) : null
     const isTag = typeof type === 'string'
     const name: string = !isTag ? `${type.name}` : type
@@ -75,7 +81,6 @@ export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
     }
 
     const { theme } = this
-    const { glossUID } = this.constructor
 
     const addStyle = (obj, key, val, checkTheme): ?Object => {
       let style = obj[key]
@@ -104,6 +109,9 @@ export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
     }
 
     if (name) {
+      if (props && props.debug) {
+        console.log('looking for style', `${name}--${glossUID}`, styles)
+      }
       addStyle(styles, `${name}--${glossUID}`, null, true)
     }
 

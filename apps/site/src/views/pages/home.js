@@ -3,180 +3,43 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { Icon, Logo, Text, Title, Hl, SubText } from './views'
 import { throttle } from 'lodash'
-import SidebarTitle from './sidebarTitle2'
+import { ORA_BORDER_RADIUS, ORA_HEIGHT, ORA_WIDTH } from '~/constants'
+import Ora from './ora'
 
 let blurredRef
 
-const ORA_HEIGHT = 450
-const ORA_WIDTH = 300
 const colorTeal = '#49ceac'
 const colorBlue = '#133cca'
 const screen = {
   small: '@media (max-width: 800px)',
 }
 
-const allItems = {
-  0: [
-    {
-      children: (
-        <SidebarTitle
-          title="A smart assistant for your company"
-          subtitle="Orbit is a simple, always on app that provides relevant"
-          icon="globe"
-          noBack
-        />
-      ),
+const Section = view.simple(
+  'section',
+  {
+    marginLeft: -100,
+    marginRight: -100,
+    paddingLeft: 100,
+    paddingRight: 100,
+    position: 'relative',
+    overflow: 'hidden',
+  },
+  {
+    padded: {
+      padding: [110, 0],
+      margin: 0,
     },
-    {
-      primary: 'Unified',
-      children:
-        'All your company knowledge, at your fingertips when you need it most.',
-      icon: 'hand',
-      category: 'Results',
-    },
-    {
-      primary: 'Powerful',
-      children:
-        'Advanced machine learning combined with an innovative interface makes your life easy.',
-      icon: 'car',
-      category: 'Results',
-    },
-    {
-      primary: 'Secure',
-      children:
-        'Orbit works without leaking any of your data, even to our servers.',
-      icon: 'lock',
-      category: 'Results',
-    },
-  ],
-  1: [
-    {
-      children: (
-        <SidebarTitle
-          title="Hands-free Intelligence"
-          subtitle="An assistant that's always there, not hidden in a tab or bot"
-          icon="think"
-          noBack
-        />
-      ),
-    },
-    {
-      primary: 'Integrations',
-      children:
-        'Not just your knowledgebase or wiki, but your docs, Slack conversations, and more.',
-      icon: 'social-slack',
-      category: 'Results',
-    },
-    {
-      primary: 'Contextual',
-      children: `With a keystroke you can see whats relevant to whatever you're currently doing, whether writing an email, document, or having a conversation.`,
-      icon: 'brain',
-      category: 'Results',
-    },
-  ],
-  2: [
-    {
-      children: (
-        <SidebarTitle
-          title="The No-Cloud Infrastructur"
-          subtitle="In order to work, Orbit needed to invent a new model"
-          icon="think"
-          noBack
-        />
-      ),
-    },
-    {
-      primary: 'Uses your Permissions',
-      children:
-        'Orbit authenticates using your personal permissions, so it never can expose the wrong thing.',
-      icon: 'lock',
-      category: 'Results',
-    },
-    {
-      primary: 'Not on premise',
-      children:
-        'Orbit runs securely on your device, without sending any data outside your computer.',
-      icon: 'lock',
-      category: 'Results',
-    },
-  ],
-}
-
-@view
-class Ora extends React.Component {
-  state = {
-    lastIntersection: -1,
   }
+)
 
-  componentDidMount() {
-    const update = lastIntersection => {
-      if (this.state.lastIntersection !== lastIntersection) {
-        this.setState({ lastIntersection })
-      }
-    }
-
-    const { node, bounds } = this.props
-    this.on(
-      node,
-      'scroll',
-      throttle(() => {
-        if (node.scrollTop < 200) {
-          update(0)
-        } else {
-          const bottom = window.innerHeight + node.scrollTop
-          for (let i = bounds.length - 1; i > -1; i--) {
-            const bound = bounds[i]
-            if (!bound) continue
-            if (bound.top + window.innerHeight / 2 < bottom) {
-              update(i)
-              break
-            }
-          }
-        }
-      }, 100)
-    )
-
-    this.setState({ lastIntersection: 0 })
-  }
-
-  render() {
-    const items = allItems[this.state.lastIntersection]
-    if (window.innerWidth < 800) {
-      return null
-    }
-    return (
-      <UI.Theme name="dark">
-        <ora
-          css={{
-            position: 'fixed',
-            top: 20,
-            right: 20,
-            width: ORA_WIDTH,
-            height: ORA_HEIGHT,
-            // borderRadius: 10,
-            userSelect: 'none',
-            background: [0, 0, 0, 0.65],
-            color: '#fff',
-            zIndex: 10000,
-            boxShadow: '0 0 10px rgba(0,0,0,0.25)',
-          }}
-        >
-          <header css={{ padding: 10, opacity: 0.25 }}>
-            <UI.Icon name="zoom" />
-          </header>
-          <content css={{ padding: 0 }}>
-            <UI.List
-              itemProps={{ padding: [10, 10], glow: true }}
-              key={this.state.lastIntersection}
-              groupKey="category"
-              items={items}
-            />
-          </content>
-        </ora>
-      </UI.Theme>
-    )
-  }
-}
+const SectionContent = view.simple('section', {
+  width: '85%',
+  minWidth: 300,
+  maxWidth: 800,
+  margin: [0, 'auto'],
+  position: 'relative',
+  zIndex: 10,
+})
 
 @view
 export default class HomePage extends React.Component {
@@ -227,8 +90,8 @@ export default class HomePage extends React.Component {
     const pad = 20
     const height = ORA_HEIGHT
     const bottom = height + pad
-    const right = window.innerWidth - pad
-    const left = window.innerWidth - ORA_WIDTH - pad
+    const right = window.innerWidth - pad - ORA_BORDER_RADIUS
+    const left = window.innerWidth - ORA_WIDTH - pad + ORA_BORDER_RADIUS
     return {
       page: {
         background: '#fff',
@@ -259,7 +122,7 @@ export default class HomePage extends React.Component {
         />
 
         <contents css={{ overflow: 'hidden' }}>
-          <section
+          <Section
             css={{
               background: colorTeal,
               height: 880,
@@ -368,7 +231,7 @@ export default class HomePage extends React.Component {
             />
 
             <header $$row>
-              <sectionContent>
+              <SectionContent>
                 <thing
                   $$row
                   css={{
@@ -397,10 +260,10 @@ export default class HomePage extends React.Component {
                     <Logo css={{ height: 40 }} fill={colorBlue} />
                   </logos>
                 </thing>
-              </sectionContent>
+              </SectionContent>
             </header>
 
-            <sectionContent
+            <SectionContent
               css={{
                 flex: 1,
                 justifyContent: 'center',
@@ -448,11 +311,11 @@ export default class HomePage extends React.Component {
                   </UI.PassProps>
                 </logos>
               </wrap>
-            </sectionContent>
-          </section>
+            </SectionContent>
+          </Section>
 
-          <section css={{ background: '#fff' }} $padded>
-            <sectionContent $padRight $padBottom>
+          <Section css={{ background: '#fff' }} padded>
+            <SectionContent $padRight $padBottom>
               <img
                 if={!isSmall}
                 css={{
@@ -487,14 +350,14 @@ export default class HomePage extends React.Component {
                   </li>
                 </ol>
               </Text>
-            </sectionContent>
+            </SectionContent>
             <bottomSlant $dark />
-          </section>
+          </Section>
 
           <UI.Theme name="dark">
-            <section $padded $dark>
+            <Section padded $dark>
               <bottomSlant css={{ background: '#fff' }} />
-              <sectionContent $padRight $padBottom>
+              <SectionContent $padRight $padBottom>
                 <after
                   css={{
                     position: 'absolute',
@@ -535,13 +398,13 @@ export default class HomePage extends React.Component {
                   team without fear of data breaches, permissions exposures, or
                   the need to run a complicated on-prem installs.
                 </SubText>
-              </sectionContent>
-            </section>
+              </SectionContent>
+            </Section>
           </UI.Theme>
 
           <footer>
-            <section css={{ padding: [250, 0] }} $$centered $padded>
-              <sectionContent>
+            <Section css={{ padding: [250, 0] }} $$centered padded>
+              <SectionContent>
                 <Text size={3}>
                   Orbit is going into private beta in December.
                 </Text>
@@ -549,8 +412,8 @@ export default class HomePage extends React.Component {
                   <a href="mailto:natewienert@gmail.com">Send us an email</a> if
                   you're interested.
                 </Text>
-              </sectionContent>
-            </section>
+              </SectionContent>
+            </Section>
           </footer>
         </contents>
       </page>
@@ -562,37 +425,17 @@ export default class HomePage extends React.Component {
       return {}
     }
     return {
-      section: {
+      contents: {
         filter: 'blur(25px)',
       },
     }
   }
 
   static style = {
-    page: {},
+    contents: {},
     a: {
       color: '#5420a5',
       textDecoration: 'underline',
-    },
-    section: {
-      marginLeft: -100,
-      marginRight: -100,
-      paddingLeft: 100,
-      paddingRight: 100,
-      position: 'relative',
-      overflow: 'hidden',
-    },
-    sectionContent: {
-      width: '85%',
-      minWidth: 300,
-      maxWidth: 800,
-      margin: [0, 'auto'],
-      position: 'relative',
-      zIndex: 10,
-    },
-    padded: {
-      padding: [110, 0],
-      margin: 0,
     },
     padRight: {
       paddingRight: 300,

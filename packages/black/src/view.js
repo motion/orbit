@@ -97,6 +97,7 @@ function createViewDecorator(): ViewDecorator {
   view.emit = base.emit
 
   // other decorators
+  view.simple = glossDecorator
   view.ui = decor(decorations({ ui: true }))
   view.gloss = decor([uiContext, glossPlugin])
   view.basics = decor([extendsReact, reactRenderArgs, observer, glossPlugin])

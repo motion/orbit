@@ -4,7 +4,7 @@ import * as UI from '@mcro/ui'
 import * as View from '~/views'
 import * as Constants from '~/constants'
 import { throttle } from 'lodash'
-import Ora from './ora'
+import Ora from './home/ora'
 import HomeHeader from './home/header'
 
 let blurredRef

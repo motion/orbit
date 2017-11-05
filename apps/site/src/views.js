@@ -106,6 +106,14 @@ export const Strong = view('strong', {
   fontWeight: 500,
 })
 
+export const List = view('ol', {
+  '& > li': {
+    listStylePosition: 'auto',
+    listStyleType: 'decimal',
+    margin: [0, 0, 15, 30],
+  },
+})
+
 export const Logo = ({ fill, ...props }) => (
   <svg viewBox="0 0 498 157" {...props}>
     <g id="Page-1" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">

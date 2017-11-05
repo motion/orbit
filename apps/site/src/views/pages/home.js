@@ -120,7 +120,7 @@ export default class HomePage extends React.Component {
                 An assistant that's always there, not hidden in a tab or bot.
               </View.Text>
               <View.Text size={1.7}>
-                <ol $list>
+                <View.List>
                   <li>
                     Orbit hooks into <em>every</em> cloud service, including
                     email and chat.
@@ -134,7 +134,7 @@ export default class HomePage extends React.Component {
                     Orbit stays with you: while chatting, writing emails,
                     updating your CRM, or just browsing.
                   </li>
-                </ol>
+                </View.List>
               </View.Text>
             </View.SectionContent>
             <View.BottomSlant dark />
@@ -222,24 +222,9 @@ export default class HomePage extends React.Component {
   }
 
   static style = {
-    contents: {},
-    liTitle: {
-      marginLeft: 15,
-      marginBottom: 0,
-    },
-    mainList: {
-      padding: [0, 20],
-      '& > li': {
-        listStylePosition: 'inside',
-        listStyleType: 'decimal-leading-zero',
-        margin: [0, 0, 0, -40],
-      },
-    },
-    list: {
-      '& > li': {
-        listStylePosition: 'auto',
-        listStyleType: 'decimal',
-        margin: [0, 0, 15, 30],
+    contents: {
+      transform: {
+        z: 0,
       },
     },
   }

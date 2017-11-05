@@ -97,7 +97,7 @@ export default class HomePage extends React.Component {
           <HomeHeader />
 
           <View.Section css={{ background: '#fff' }} padded>
-            <View.SectionContent padRight $padBottom>
+            <View.SectionContent padRight padBottom>
               <img
                 if={!isSmall}
                 css={{
@@ -127,7 +127,7 @@ export default class HomePage extends React.Component {
                   </li>
                   <li>
                     Using machine learning, Orbit understands{' '}
-                    <strong>when</strong> to show relevant items, and
+                    <View.Strong>when</View.Strong> to show relevant items, and
                     understands "accounting paperwork" can mean "tax form".
                   </li>
                   <li>
@@ -137,13 +137,13 @@ export default class HomePage extends React.Component {
                 </ol>
               </View.Text>
             </View.SectionContent>
-            <bottomSlant $dark />
+            <View.BottomSlant dark />
           </View.Section>
 
           <UI.Theme name="dark">
-            <View.Section padded $dark>
-              <bottomSlant css={{ background: '#fff' }} />
-              <View.SectionContent padRight $padBottom>
+            <View.Section padded dark>
+              <View.BottomSlant css={{ background: '#fff' }} />
+              <View.SectionContent padRight padBottom>
                 <after
                   css={{
                     position: 'absolute',
@@ -197,8 +197,10 @@ export default class HomePage extends React.Component {
                   Orbit is going into private beta in December.
                 </View.Text>
                 <View.Text size={2}>
-                  <a href="mailto:natewienert@gmail.com">Send us an email</a> if
-                  you're interested.
+                  <View.Link href="mailto:natewienert@gmail.com">
+                    Send us an email
+                  </View.Link>{' '}
+                  if you're interested.
                 </View.Text>
               </View.SectionContent>
             </View.Section>
@@ -221,57 +223,12 @@ export default class HomePage extends React.Component {
 
   static style = {
     contents: {},
-    a: {
-      color: '#5420a5',
-      textDecoration: 'underline',
-    },
-    padBottom: {
-      paddingBottom: 80,
-    },
-    dark: {
-      background: Constants.colorBlue,
-    },
-    narrow: {
-      maxWidth: 500,
-      alignSelf: 'center',
-    },
-    topSlant: {
-      position: 'absolute',
-      top: -320,
-      left: -500,
-      right: -500,
-      height: 400,
-      zIndex: 0,
-      transform: {
-        rotate: '-1.5deg',
-      },
-    },
-    bottomSlant: {
-      position: 'absolute',
-      bottom: -350,
-      left: -500,
-      right: -500,
-      height: 400,
-      zIndex: 0,
-      transform: {
-        rotate: '-1deg',
-      },
-    },
-    screen: {
-      marginTop: 25,
-      marginBottom: -25,
-      zIndex: 100,
-      width: 2054 / 3,
-      height: 1762 / 3,
-      alignSelf: 'center',
-    },
     liTitle: {
       marginLeft: 15,
       marginBottom: 0,
     },
     mainList: {
       padding: [0, 20],
-
       '& > li': {
         listStylePosition: 'inside',
         listStyleType: 'decimal-leading-zero',
@@ -284,30 +241,6 @@ export default class HomePage extends React.Component {
         listStyleType: 'decimal',
         margin: [0, 0, 15, 30],
       },
-    },
-    hr: {
-      display: 'flex',
-      height: 0,
-      border: 'none',
-      borderTop: [1, [0, 0, 0, 0.05]],
-      paddingBottom: 20,
-      marginTop: 20,
-    },
-    strong: {
-      fontWeight: 500,
-    },
-    break: {
-      height: 30,
-    },
-    starry: {
-      position: 'absolute',
-      top: 0,
-      right: 0,
-      bottom: 0,
-      left: 0,
-      zIndex: 0,
-      backgroundImage: `url(/4-point-stars.svg)`,
-      backgroundSize: '1%',
     },
   }
 }

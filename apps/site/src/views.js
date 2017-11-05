@@ -15,6 +15,9 @@ export const SubTitle = props => (
   <UI.Title fontWeight={800} marginBottom={30} opacity={0.6} {...props} />
 )
 
+const dark = {
+  background: Constants.colorBlue,
+}
 const padRight = {
   paddingRight: 300,
   [Constants.screen.small]: {
@@ -37,6 +40,7 @@ export const Section = view(
       padding: [110, 0],
       margin: 0,
     },
+    dark,
   }
 )
 
@@ -52,6 +56,9 @@ export const SectionContent = view(
   },
   {
     padRight,
+    padBottom: {
+      paddingBottom: 80,
+    },
   }
 )
 
@@ -62,6 +69,42 @@ export const Content = view(
     padRight,
   }
 )
+
+export const Hr = view('hr', {
+  display: 'flex',
+  height: 0,
+  border: 'none',
+  borderTop: [1, [0, 0, 0, 0.05]],
+  paddingBottom: 20,
+  marginTop: 20,
+})
+
+export const BottomSlant = view(
+  'div',
+  {
+    position: 'absolute',
+    bottom: -350,
+    left: -500,
+    right: -500,
+    height: 400,
+    zIndex: 0,
+    transform: {
+      rotate: '-1deg',
+    },
+  },
+  {
+    dark,
+  }
+)
+
+export const Link = view('a', {
+  color: '#5420a5',
+  textDecoration: 'underline',
+})
+
+export const Strong = view('strong', {
+  fontWeight: 500,
+})
 
 export const Logo = ({ fill, ...props }) => (
   <svg viewBox="0 0 498 157" {...props}>

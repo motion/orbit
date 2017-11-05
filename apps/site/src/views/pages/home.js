@@ -8,6 +8,7 @@ import Ora from './home/ora'
 import HomeHeader from './home/header'
 import HomeHandsFree from './home/sectionHandsFree'
 import HomeSecurity from './home/sectionSecurity'
+import HomeChat from './home/sectionChat'
 
 let blurredRef
 
@@ -106,6 +107,7 @@ export default class HomePage extends React.Component {
             <UI.Icon name="social-slack" size={100} />
           </View.Section>
 
+          <HomeChat {...sectionProps} />
           <HomeHandsFree {...sectionProps} />
           <HomeSecurity {...sectionProps} />
 

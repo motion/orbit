@@ -139,7 +139,7 @@ export default class Sidebar {
                   width,
                   getActiveIndex: () =>
                     stackItem.col === 0 && stackItem.firstIndex,
-                  groupKey: 'category',
+                  groupBy: 'category',
                   stack: stack,
                   sidebar: true,
                   onSelect: stackItem.onSelect,

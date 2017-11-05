@@ -75,7 +75,7 @@ export default class Ora extends React.Component {
             <UI.List
               itemProps={{ padding: [10, 15], glow: true }}
               key={this.state.lastIntersection}
-              groupKey="category"
+              groupBy="category"
               items={items}
             />
           </content>

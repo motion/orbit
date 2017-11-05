@@ -103,7 +103,7 @@ export default class Pane {
 
   render({
     getItem,
-    groupKey,
+    groupBy,
     listProps,
     virtualProps,
     itemProps,
@@ -125,7 +125,7 @@ export default class Pane {
       <UI.List
         itemsKey={paneStore.contentVersion}
         getRef={paneStore.setList}
-        groupKey={groupKey}
+        groupBy={groupBy}
         onSelect={this.onSelect}
         virtualized={{
           measure: true,

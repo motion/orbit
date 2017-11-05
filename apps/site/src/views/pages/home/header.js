@@ -4,7 +4,9 @@ import * as View from '~/views'
 import * as Constants from '~/constants'
 import { view } from '@mcro/black'
 
-const headerBg = '#111'
+const headerMain = '#4f78de'
+const headerSecondary = '#7d43bc'
+const orbitLineColor = 'pink'
 
 @view
 export default class Header {
@@ -12,7 +14,7 @@ export default class Header {
     return (
       <View.Section
         css={{
-          background: '#000',
+          background: `linear-gradient(-195deg, ${headerMain}, ${headerSecondary})`,
           minHeight: 880,
           position: 'relative',
           transform: {
@@ -27,7 +29,7 @@ export default class Header {
             left: 0,
             right: 0,
             height: 500,
-            background: `linear-gradient(${headerBg}, #000)`,
+            background: `linear-gradient(${headerSecondary}, #000)`,
             zIndex: 1,
             transform: {
               z: 0,
@@ -111,8 +113,25 @@ export default class Header {
           >
             <wrap>
               <View.Content padRight>
-                <View.Title size={4}>
-                  A smart assistant for your company.
+                <View.Title size={4} color={UI.color(headerMain).lighten(0.35)}>
+                  <div
+                    css={{
+                      background: `
+                      -webkit-linear-gradient(
+                        30deg,
+                        ${UI.color(headerMain)
+                          .lighten(0.15)
+                          .toString()},
+                        ${UI.color(headerSecondary)
+                          .lighten(0.65)
+                          .toString()}
+                      )`,
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
+                    }}
+                  >
+                    A smart assistant for your company.
+                  </div>
                 </View.Title>
 
                 <View.Text size={2.2}>
@@ -124,10 +143,11 @@ export default class Header {
                   <br />
                 </View.Text>
 
-                <hr />
+                <View.Hr />
               </View.Content>
 
               <logos
+                if={false}
                 css={{
                   flexFlow: 'row',
                   flex: 1,
@@ -159,14 +179,15 @@ export default class Header {
                 position: 'relative',
                 height: 1000,
                 width: 1000,
-                margin: [200, -600, 200, 0],
+                margin: [-200, -600, -200, 0],
+                zIndex: -1,
               }}
             >
               <contain $$fullscreen>
                 <circle
                   css={{
                     margin: 'auto',
-                    border: [1, 'blue'],
+                    border: [1, orbitLineColor],
                     width: 100,
                     height: 100,
                     borderRadius: 1000000000,
@@ -177,7 +198,7 @@ export default class Header {
                 <circle
                   css={{
                     margin: 'auto',
-                    border: [1, 'blue'],
+                    border: [1, orbitLineColor],
                     width: 300,
                     height: 300,
                     borderRadius: 1000000000,
@@ -189,7 +210,7 @@ export default class Header {
                 <circle
                   css={{
                     margin: 'auto',
-                    border: [1, 'blue'],
+                    border: [1, orbitLineColor],
                     width: 600,
                     height: 600,
                     borderRadius: 1000000000,
@@ -201,22 +222,40 @@ export default class Header {
                 <circle
                   css={{
                     margin: 'auto',
-                    border: [1, 'blue'],
-                    width: 1000,
-                    height: 1000,
+                    border: [1, orbitLineColor],
+                    width: 900,
+                    height: 900,
                     borderRadius: 1000000000,
                     opacity: 0.4,
                   }}
                 />
-                {['mail', 'cool', 'what'].map((n, i) => (
+                {[
+                  'mail',
+                  'cool',
+                  'what',
+                  'how',
+                  'can',
+                  'this',
+                  'be',
+                  'mail',
+                  'cool',
+                  'what',
+                  'how',
+                  'can',
+                  'this',
+                  'be',
+                ].map((n, i) => (
                   <contain $$fullscreen key={i}>
                     <UI.Icon
                       name={n}
                       color="#fff"
                       size={30}
                       css={{
-                        animation: `orbital${i} 4s linear infinite`,
+                        animation: `orbital${i % 3} ${(i + 1) *
+                          20}s linear infinite`,
+                        animationDelay: `${i * 100}ms`,
                         margin: 'auto',
+                        opacity: Math.random(),
                       }}
                     />
                   </contain>
@@ -248,10 +287,10 @@ export default class Header {
     },
     '@keyframes orbital2': {
       from: {
-        transform: 'rotate(0deg) translateX(500px) rotate(0deg)',
+        transform: 'rotate(0deg) translateX(450px) rotate(0deg)',
       },
       to: {
-        transform: 'rotate(360deg) translateX(500px) rotate(-360deg)',
+        transform: 'rotate(360deg) translateX(450px) rotate(-360deg)',
       },
     },
   }

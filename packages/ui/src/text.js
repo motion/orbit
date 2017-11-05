@@ -10,7 +10,7 @@ const getTextProperties = props => {
     (typeof props.fontSize === 'number' && props.fontSize) || props.size
       ? props.size * 14
       : 'auto'
-  const lineHeight = props.lineHeight || fontSize * 1.3 + 4
+  const lineHeight = props.lineHeight || fontSize * 1.15 + 6
   return { fontSize, lineHeight }
 }
 

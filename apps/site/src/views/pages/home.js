@@ -137,7 +137,7 @@ export default class HomePage extends React.Component {
     }
     return {
       contents: {
-        filter: 'blur(25px)',
+        filter: 'blur(20px)',
       },
     }
   }

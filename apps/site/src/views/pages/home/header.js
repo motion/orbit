@@ -29,7 +29,9 @@ export default class Header {
             left: 0,
             right: 0,
             height: 500,
-            background: `linear-gradient(${headerSecondary}, #000)`,
+            background: `linear-gradient(${UI.color(headerSecondary)
+              .alpha(0)
+              .toString()}, #000)`,
             zIndex: 1,
             transform: {
               z: 0,
@@ -145,6 +147,33 @@ export default class Header {
 
                 <View.Hr />
               </View.Content>
+
+              <arrows>
+                <arrowVertical
+                  css={{
+                    position: 'absolute',
+                    top: 350,
+                    right: -25,
+                    width: 10,
+                    paddingLeft: 40,
+                    height: 200,
+                    borderRight: [5, 'dashed', [255, 255, 255, 0.5]],
+                    alignItems: 'center',
+                  }}
+                >
+                  <UI.Arrow
+                    css={{
+                      position: 'absolute',
+                      bottom: 0,
+                      marginBottom: -34,
+                      marginLeft: 3,
+                    }}
+                    color="white"
+                    size={30}
+                    opacity={0.5}
+                  />
+                </arrowVertical>
+              </arrows>
 
               <logos
                 if={false}

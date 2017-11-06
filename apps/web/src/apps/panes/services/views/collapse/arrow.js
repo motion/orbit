@@ -3,13 +3,13 @@ import * as UI from '@mcro/ui'
 
 @view
 export default class CollapseArrow {
-  render({ open, height, width, iconSize }) {
+  render({ color, open, height, width, size }) {
     return (
       <container css={{ width, height }}>
         <UI.Icon
-          color="#333"
+          color={color || '#fff'}
           name="arrows-1_small-triangle-right"
-          size={iconSize || 24}
+          size={size || 24}
           $arrow
           $flip={open}
         />

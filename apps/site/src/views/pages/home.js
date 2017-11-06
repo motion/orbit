@@ -61,12 +61,13 @@ export default class HomePage extends React.Component {
     const pad = 20
     const height = Constants.ORA_HEIGHT
     const bottom = height + pad
-    const right = window.innerWidth - pad - Constants.ORA_BORDER_RADIUS
+    const right = window.innerWidth - pad - Constants.ORA_BORDER_RADIUS + 2
     const left =
       window.innerWidth -
       Constants.ORA_WIDTH -
       pad +
-      Constants.ORA_BORDER_RADIUS
+      Constants.ORA_BORDER_RADIUS -
+      2
     return {
       page: {
         background: '#fff',
@@ -133,7 +134,7 @@ export default class HomePage extends React.Component {
     }
     return {
       contents: {
-        filter: 'blur(15px)',
+        filter: 'blur(20px)',
       },
     }
   }

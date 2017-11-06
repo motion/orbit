@@ -60,12 +60,12 @@ export default class Ora extends React.Component {
             userSelect: 'none',
             background: [50, 50, 50, 0.7],
             borderRadius: ORA_BORDER_RADIUS,
-            border: ['inset', 4, [0, 0, 0, 0.5]],
+            border: ['inset', 4, [0, 0, 0, 0.3]],
             color: '#fff',
             zIndex: 10000,
             boxShadow: [
-              '0 0 30px rgba(50,50,50,0.45)',
-              'inset 0 0 100px 10px rgba(20,20,20,0.5)',
+              '0 0 20px rgba(50,50,50,0.45)',
+              'inset 0 0 180px 25px rgba(10,10,10,0.25)',
               //'inset 0 0 0 4px #444',
             ],
           }}

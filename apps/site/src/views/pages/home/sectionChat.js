@@ -11,8 +11,8 @@ export default class SectionChat extends React.Component {
   render() {
     return (
       <section css={{ position: 'relative' }}>
-        <UI.Theme name="dark">
-          <View.Section css={{ background: 'linear-gradient(#111, #000)' }}>
+        <UI.Theme name="light">
+          <View.Section css={{ background: 'linear-gradient(#fff, #fff)' }}>
             <View.SectionContent padRight $section>
               <View.Title size={3}>Welcome to space</View.Title>
               <UI.Theme name="light">

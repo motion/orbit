@@ -32,23 +32,6 @@ export default class Header {
           }}
         />
 
-        <fadeDown
-          css={{
-            position: 'absolute',
-            bottom: 0,
-            left: 0,
-            right: 0,
-            height: 320,
-            background: `linear-gradient(${UI.color(headerSecondary)
-              .alpha(0)
-              .toString()}, #111)`,
-            zIndex: 1000000,
-            transform: {
-              z: 0,
-            },
-          }}
-        />
-
         <section
           $$fullscreen
           css={{

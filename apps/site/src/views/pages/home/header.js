@@ -187,13 +187,14 @@ export default class Header {
             >
               <wrap>
                 <View.Content padRight>
-                  <View.Title
-                    size={4}
-                    color={UI.color(headerMain).lighten(0.35)}
-                  >
-                    <div
-                      css={{
-                        background: `
+                  <View.Title size={4} color="#fff">
+                    Solve your company knowledge.
+                  </View.Title>
+
+                  <View.Text
+                    size={2.2}
+                    css={{
+                      background: `
                       -webkit-linear-gradient(
                         30deg,
                         ${UI.color(headerMain)
@@ -203,19 +204,14 @@ export default class Header {
                           .lighten(0.65)
                           .toString()}
                       )`,
-                        WebkitBackgroundClip: 'text',
-                        WebkitTextFillColor: 'transparent',
-                      }}
-                    >
-                      A smart assistant for your company.
-                    </div>
-                  </View.Title>
-
-                  <View.Text size={2.2}>
-                    Orbit is a simple, always on app that provides relevant
-                    context as you work.<br />
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
+                    }}
+                  >
+                    Introducting Ora: the smart assistant that removes the pain
+                    of keeping everyone on the same page.
                     <View.Text size={1.7} opacity={0.5}>
-                      Scroll down to see how it works.
+                      Scroll down to see it in action.
                     </View.Text>
                     <br />
                   </View.Text>
@@ -228,7 +224,7 @@ export default class Header {
                     css={{
                       position: 'absolute',
                       top: 350,
-                      right: -25,
+                      right: 0,
                       width: 10,
                       paddingLeft: 40,
                       height: 200,

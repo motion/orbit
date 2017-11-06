@@ -7,31 +7,27 @@ export default {
       children: (
         <SidebarTitle
           title="Hi, I'm Ora"
-          subtitle="I live on your desktop"
-          icon="globe"
+          icon="emoticons-e_quite-happy-e"
           noBack
         />
       ),
     },
     {
-      primary: 'How I work',
-      children: 'Scroll down to see a demo in action.',
+      primary: `I live on your desktop`,
+      children: `I'm pretty unique. This is a demo of how I work, live on this website!`,
+      icon: 'tech_desktop',
+    },
+    {
+      // primary: 'How I work',
+      primary: 'On the desktop?',
+      children: `I don't need any internet or cloud to run, I just sync the stuff your company
+      gives you permission to locally.`,
+      icon: '2_menu-dots',
+    },
+    {
+      primary: 'I have so many questions',
+      children: `Scroll down and I'll do my best!`,
       icon: 'help',
-    },
-    {
-      // primary: 'How I work',
-      children: 'Private',
-      icon: 'check',
-    },
-    {
-      // primary: 'How I work',
-      children: 'Awesome',
-      icon: 'check',
-    },
-    {
-      // primary: 'How I work',
-      children: 'Helpful',
-      icon: 'check',
     },
   ],
   1: [

@@ -27,12 +27,9 @@ export default class SidebarTitle {
         </titles>
         <UI.Icon
           if={icon}
+          size={36}
           css={{
-            width: 36,
-            height: 36,
             marginLeft: 10,
-            borderRadius: 100,
-            border: [2, [255, 255, 255, 0.2]],
           }}
           name={icon || '/images/me.jpg'}
         />

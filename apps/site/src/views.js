@@ -16,7 +16,7 @@ export const SubTitle = props => (
 )
 
 const dark = {
-  background: Constants.colorBlue,
+  background: `linear-gradient(40deg, ${Constants.colorMain}, ${Constants.colorSecondary})`,
 }
 const space = {
   background: '#000',

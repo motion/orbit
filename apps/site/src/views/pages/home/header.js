@@ -4,9 +4,7 @@ import * as View from '~/views'
 import * as Constants from '~/constants'
 import { view } from '@mcro/black'
 
-const headerMain = '#4f78de'
-const headerSecondary = '#7d43bc'
-const orbitLineColor = UI.color(headerMain).darken(0.25)
+const orbitLineColor = UI.color(Constants.colorMain).darken(0.25)
 
 @view
 export default class Header {
@@ -14,9 +12,8 @@ export default class Header {
     return (
       <View.Section
         css={{
-          background: `linear-gradient(-195deg, ${headerMain}, ${headerSecondary})`,
+          background: `linear-gradient(-195deg, ${Constants.colorMain}, ${Constants.colorSecondary})`,
           minHeight: 400,
-          paddingBottom: 200,
           position: 'relative',
           transform: {
             z: 0,
@@ -28,14 +25,13 @@ export default class Header {
           $$fullscreen
           css={{
             zIndex: 101,
-            background: `linear-gradient(-195deg, transparent, ${headerSecondary})`,
+            background: `linear-gradient(-195deg, transparent, ${Constants.colorSecondary})`,
           }}
         />
 
         <section
           $$fullscreen
           css={{
-            position: 'relative',
             height: 1000,
             width: 1000,
             margin: [-200, -1800, -780, 400],
@@ -119,7 +115,11 @@ export default class Header {
                     justifyContent: 'center',
                   }}
                 >
-                  <UI.Icon name={n} color={headerSecondary} size={20} />
+                  <UI.Icon
+                    name={n}
+                    color={Constants.colorSecondary}
+                    size={20}
+                  />
                 </planet>
               </contain>
             ))}
@@ -154,7 +154,7 @@ export default class Header {
                       margin: [-10, 10, -10, -5],
                     }}
                   />
-                  <View.Logo css={{ height: 40 }} fill={'#fff'} />
+                  <View.Logo css={{ height: 30 }} fill={'#fff'} />
                 </logos>
               </header>
             </View.SectionContent>
@@ -180,10 +180,10 @@ export default class Header {
                       background: `
                       -webkit-linear-gradient(
                         30deg,
-                        ${UI.color(headerMain)
+                        ${UI.color(Constants.colorMain)
                           .lighten(0.15)
                           .toString()},
-                        ${UI.color(headerSecondary)
+                        ${UI.color(Constants.colorSecondary)
                           .lighten(0.65)
                           .toString()}
                       )`,
@@ -195,13 +195,11 @@ export default class Header {
                     assistant.<br />
                     <br />
                     On your desktop with instant search and contextual help.
-                    <View.Text size={1.7} opacity={0.5}>
-                      Scroll down to see it in action.
-                    </View.Text>
-                    <br />
                   </View.Text>
 
-                  <View.Hr />
+                  <View.Text size={1.7}>
+                    Scroll down to see it in action.
+                  </View.Text>
                 </View.Content>
 
                 <arrows>
@@ -209,7 +207,7 @@ export default class Header {
                     css={{
                       position: 'absolute',
                       top: 350,
-                      right: 0,
+                      right: 100,
                       width: 10,
                       paddingLeft: 40,
                       height: 200,

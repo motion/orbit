@@ -103,10 +103,6 @@ export default class HomePage extends React.Component {
         <contents css={{ overflow: 'hidden' }}>
           <HomeHeader />
 
-          <View.Section space css={{ height: 500 }}>
-            <UI.Icon name="social-slack" size={100} />
-          </View.Section>
-
           <HomeChat {...sectionProps} />
           <HomeHandsFree {...sectionProps} />
           <HomeSecurity {...sectionProps} />
@@ -137,7 +133,7 @@ export default class HomePage extends React.Component {
     }
     return {
       contents: {
-        filter: 'blur(20px)',
+        filter: 'blur(15px)',
       },
     }
   }

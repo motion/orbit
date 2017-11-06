@@ -58,13 +58,13 @@ export default class Ora extends React.Component {
             height: ORA_HEIGHT,
             // borderRadius: 10,
             userSelect: 'none',
-            background: [40, 40, 40, 0.8],
+            background: [40, 40, 40, 0.85],
             borderRadius: ORA_BORDER_RADIUS,
             color: '#fff',
             zIndex: 10000,
             boxShadow: [
-              '0 0 10px rgba(0,0,0,0.25)',
-              'inset 0 0 100px 30px #252525',
+              '0 0 30px rgba(0,0,0,0.45)',
+              'inset 0 0 230px 30px #111',
             ],
           }}
         >

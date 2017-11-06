@@ -21,7 +21,7 @@ export default class SidebarTitle {
           <UI.Title ellipse $title size={1.3} fontWeight={600}>
             {title}
           </UI.Title>
-          <UI.Title if={subtitle} ellipse size={0.8} opacity={0.5}>
+          <UI.Title if={subtitle} ellipse size={1} opacity={0.5}>
             {subtitle}
           </UI.Title>
         </titles>

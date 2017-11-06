@@ -6,33 +6,32 @@ export default {
     {
       children: (
         <SidebarTitle
-          title="A smart assistant for your company"
-          subtitle="Orbit is a simple, always on app that provides relevant"
+          title="Hi, I'm Ora"
+          subtitle="I live on your desktop"
           icon="globe"
           noBack
         />
       ),
     },
     {
-      primary: 'Unified',
-      children:
-        'All your company knowledge, at your fingertips when you need it most.',
-      icon: 'hand',
-      category: 'Results',
+      primary: 'How I work',
+      children: 'Scroll down to see a demo in action.',
+      icon: 'help',
     },
     {
-      primary: 'Powerful',
-      children:
-        'Advanced machine learning combined with an innovative interface makes your life easy.',
-      icon: 'car',
-      category: 'Results',
+      // primary: 'How I work',
+      children: 'Private',
+      icon: 'check',
     },
     {
-      primary: 'Secure',
-      children:
-        'Orbit works without leaking any of your data, even to our servers.',
-      icon: 'lock',
-      category: 'Results',
+      // primary: 'How I work',
+      children: 'Awesome',
+      icon: 'check',
+    },
+    {
+      // primary: 'How I work',
+      children: 'Helpful',
+      icon: 'check',
     },
   ],
   1: [

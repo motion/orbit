@@ -40,7 +40,8 @@ let config
 
 if (IS_PROD) {
   config = {
-    devtool: 'source-map',
+    devtool: false,
+    // devtool: 'source-map',
     // bail: true,
   }
 } else {
@@ -120,18 +121,18 @@ module.exports = Object.assign(config, {
     IS_DEV && new webpack.HotModuleReplacementPlugin(),
     IS_DEV && new WatchMissingNodeModulesPlugin(paths.appNodeModules),
     // readable names
-    new webpack.NamedModulesPlugin(),
+    // new webpack.NamedModulesPlugin(),
 
     // production
-    IS_PROD &&
-      new webpack.optimize.CommonsChunkPlugin({
-        name: 'common',
-        minChunks(module) {
-          var context = module.context
-          return context && context.indexOf('node_modules') >= 0
-        },
-      }),
-    IS_PROD && new webpack.optimize.OccurrenceOrderPlugin(),
+    // IS_PROD &&
+    //   new webpack.optimize.CommonsChunkPlugin({
+    //     name: 'common',
+    //     minChunks(module) {
+    //       var context = module.context
+    //       return context && context.indexOf('node_modules') >= 0
+    //     },
+    //   }),
+    // IS_PROD && new webpack.optimize.OccurrenceOrderPlugin(),
     // MINIFY && new UglifyJSPlugin(),
     // slow
     MINIFY &&

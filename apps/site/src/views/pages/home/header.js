@@ -188,7 +188,7 @@ export default class Header {
               <wrap>
                 <View.Content padRight>
                   <View.Title size={4} color="#fff">
-                    Solve your company knowledge.
+                    Company knowledge, smarter.
                   </View.Title>
 
                   <View.Text
@@ -208,8 +208,10 @@ export default class Header {
                       WebkitTextFillColor: 'transparent',
                     }}
                   >
-                    Introducting Ora: the smart assistant that removes the pain
-                    of keeping everyone on the same page.
+                    Your wiki, chats, documents, and much more in a smart
+                    assistant.<br />
+                    <br />
+                    On your desktop with instant search and contextual help.
                     <View.Text size={1.7} opacity={0.5}>
                       Scroll down to see it in action.
                     </View.Text>

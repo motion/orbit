@@ -40,9 +40,9 @@ let config
 
 if (IS_PROD) {
   config = {
-    devtool: false,
-    // devtool: 'source-map',
-    // bail: true,
+    // devtool: false,
+    devtool: 'source-map',
+    bail: true,
   }
 } else {
   config = {
@@ -133,13 +133,17 @@ module.exports = Object.assign(config, {
     //     },
     //   }),
     // IS_PROD && new webpack.optimize.OccurrenceOrderPlugin(),
-    // MINIFY && new UglifyJSPlugin(),
-    // slow
     MINIFY &&
-      new BabelMinifyPlugin({
-        deadcode: true,
-        mangle: { topLevel: true },
+      new UglifyJSPlugin({
+        cache: true,
+        parallel: true,
       }),
+    // slow
+    // MINIFY &&
+    //   new BabelMinifyPlugin({
+    //     deadcode: true,
+    //     mangle: { topLevel: true },
+    //   }),
 
     // bundle analyzer
     process.env.DEBUG && new BundleAnalyzerPlugin(),

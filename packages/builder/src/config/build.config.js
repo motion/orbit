@@ -121,24 +121,24 @@ module.exports = Object.assign(config, {
     IS_DEV && new webpack.HotModuleReplacementPlugin(),
     IS_DEV && new WatchMissingNodeModulesPlugin(paths.appNodeModules),
     // readable names
-    // new webpack.NamedModulesPlugin(),
+    new webpack.NamedModulesPlugin(),
 
     // production
-    // IS_PROD &&
-    //   new webpack.optimize.CommonsChunkPlugin({
-    //     name: 'common',
-    //     minChunks(module) {
-    //       var context = module.context
-    //       return context && context.indexOf('node_modules') >= 0
-    //     },
-    //   }),
-    // IS_PROD && new webpack.optimize.OccurrenceOrderPlugin(),
-    MINIFY &&
-      new UglifyJSPlugin({
-        cache: true,
-        parallel: true,
+    IS_PROD &&
+      new webpack.optimize.CommonsChunkPlugin({
+        name: 'common',
+        minChunks(module) {
+          var context = module.context
+          return context && context.indexOf('node_modules') >= 0
+        },
       }),
-    // slow
+    IS_PROD && new webpack.optimize.OccurrenceOrderPlugin(),
+    // MINIFY &&
+    //   new UglifyJSPlugin({
+    //     cache: true,
+    //     parallel: true,
+    //   }),
+    // slower
     // MINIFY &&
     //   new BabelMinifyPlugin({
     //     deadcode: true,

@@ -5,6 +5,12 @@ import * as Constants from '~/constants'
 import { view } from '@mcro/black'
 
 const orbitLineColor = UI.color(Constants.colorMain).darken(0.25)
+const dark1 = UI.color(Constants.colorMain)
+  .darken(0.75)
+  .toString()
+const dark2 = UI.color(Constants.colorSecondary)
+  .darken(0.75)
+  .toString()
 
 @view
 export default class Header {
@@ -12,13 +18,12 @@ export default class Header {
     return (
       <View.Section
         css={{
-          background: `linear-gradient(-195deg, ${Constants.colorMain}, ${Constants.colorSecondary})`,
+          background: `linear-gradient(-195deg, ${dark1}, ${dark2})`,
           minHeight: 400,
           position: 'relative',
           transform: {
             z: 0,
           },
-          marginBottom: -100,
         }}
       >
         <fadeOver
@@ -32,9 +37,10 @@ export default class Header {
         <section
           $$fullscreen
           css={{
-            height: 1000,
-            width: 1000,
-            margin: [-200, -1800, -780, 400],
+            height: 2000,
+            width: 2000,
+            top: -500,
+            margin: [0, 0, 0, -100],
             zIndex: 100,
           }}
         >
@@ -81,7 +87,7 @@ export default class Header {
                 width: 900,
                 height: 900,
                 borderRadius: 1000000000,
-                opacity: 0.4,
+                opacity: 0.3,
               }}
             />
             {[
@@ -124,6 +130,18 @@ export default class Header {
               </contain>
             ))}
           </contain>
+          <contain $$fullscreen>
+            <circle
+              css={{
+                margin: 'auto',
+                border: [1, orbitLineColor],
+                width: 1400,
+                height: 1400,
+                borderRadius: 1000000000,
+                opacity: 0.15,
+              }}
+            />
+          </contain>
         </section>
 
         <visible css={{ position: 'relative', zIndex: 1000 }}>
@@ -144,7 +162,6 @@ export default class Header {
                     alignItems: 'center',
                     flexFlow: 'row',
                     padding: 10,
-                    margin: [-10, -10, -10, -20],
                   }}
                 >
                   <View.Icon
@@ -154,7 +171,7 @@ export default class Header {
                       margin: [-10, 10, -10, -5],
                     }}
                   />
-                  <View.Logo css={{ height: 30 }} fill={'#fff'} />
+                  <View.Logo css={{ height: 24 }} fill={'#fff'} />
                 </logos>
               </header>
             </View.SectionContent>
@@ -170,12 +187,13 @@ export default class Header {
             >
               <wrap>
                 <View.Content padRight>
-                  <View.Title size={4} color="#fff">
+                  <View.Title size={5} color="#fff" fontWeight={200}>
                     Company knowledge, smarter.
                   </View.Title>
 
                   <View.Text
                     size={2.2}
+                    fontWeight={200}
                     css={{
                       background: `
                       -webkit-linear-gradient(
@@ -255,6 +273,7 @@ export default class Header {
             </View.SectionContent>
           </UI.Theme>
         </visible>
+        <View.BottomSlant css={{ background: '#fff' }} />
       </View.Section>
     )
   }

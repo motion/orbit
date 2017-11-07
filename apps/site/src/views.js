@@ -4,13 +4,17 @@ import * as UI from '@mcro/ui'
 import * as Constants from '~/constants'
 
 export const Text = props => <UI.Text size={1.5} marginBottom={20} {...props} />
+
 export const SubText = props => (
   <Text size={1.25} lineHeight="1.7rem" {...props} />
 )
+
 export const Hl = props => (
   <UI.Text display="inline" padding={[5]} background="yellow" {...props} />
 )
+
 export const Title = props => <Text fontWeight={800} {...props} />
+
 export const SubTitle = props => (
   <UI.Title fontWeight={800} marginBottom={30} opacity={0.6} {...props} />
 )

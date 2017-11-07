@@ -33,6 +33,14 @@ export default class Header {
             background: `linear-gradient(-195deg, transparent, ${Constants.colorSecondary})`,
           }}
         />
+        <fadeDown
+          $$fullscreen
+          css={{
+            top: '10%',
+            background: `linear-gradient(transparent, ${dark2})`,
+            zIndex: 102,
+          }}
+        />
 
         <section
           $$fullscreen
@@ -273,7 +281,7 @@ export default class Header {
             </View.SectionContent>
           </UI.Theme>
         </visible>
-        <View.BottomSlant css={{ background: '#fff' }} />
+        <View.BottomSlant if={false} css={{ background: '#fff' }} />
       </View.Section>
     )
   }

@@ -16,7 +16,13 @@ export const Hl = props => (
 export const Title = props => <Text fontWeight={800} {...props} />
 
 export const SubTitle = props => (
-  <UI.Title fontWeight={800} marginBottom={30} opacity={0.6} {...props} />
+  <UI.Title
+    size={2.2}
+    fontWeight={200}
+    marginBottom={30}
+    opacity={0.6}
+    {...props}
+  />
 )
 
 const dark = {

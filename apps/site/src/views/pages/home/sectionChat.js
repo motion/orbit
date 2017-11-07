@@ -2,9 +2,7 @@ import { view } from '@mcro/black'
 import * as React from 'react'
 import * as View from '~/views'
 import * as UI from '@mcro/ui'
-
-const headerMain = '#4f78de'
-const headerSecondary = '#7d43bc'
+import * as Constants from '~/constants'
 
 @view
 export default class SectionChat extends React.Component {
@@ -12,18 +10,30 @@ export default class SectionChat extends React.Component {
     return (
       <section css={{ position: 'relative' }}>
         <UI.Theme name="light">
-          <View.Section css={{ background: 'linear-gradient(#fff, #fff)' }}>
-            <View.SectionContent padRight $section>
-              <View.Title size={3}>Welcome to space</View.Title>
+          <View.Section
+            padded
+            css={{
+              background: `#fff`,
+            }}
+          >
+            <View.SectionContent padRight>
+              <View.Title size={3}>Everywhere</View.Title>
+              <View.SubTitle color="#000">
+                Ora isn't a plugin or bot. It's a desktop app that integrates
+                into your OS. It works with everything you use.
+              </View.SubTitle>
+              <View.Text color="#000">
+                <View.Hl>Slack</View.Hl> Email Browser Search
+              </View.Text>
               <UI.Theme name="light">
                 <fakeSlack>
-                  <buttons>
+                  <buttons $section>
                     <chrome $$background="#ED6A5E" />
                     <chrome $$background="#F6BF50" />
                     <chrome $$background="#62C655" />
                   </buttons>
 
-                  <content $$row>
+                  <content $section $$row>
                     <rooms>
                       <room />
                       <room />
@@ -47,64 +57,52 @@ export default class SectionChat extends React.Component {
                           },
                           {
                             primary: 'brand',
-                            icon: 'hash',
                             category: 'Channels',
                           },
                           {
                             primary: 'general',
-                            icon: 'hash',
                             category: 'Channels',
                           },
                           {
                             primary: 'research',
-                            icon: 'hash',
                             category: 'Channels',
                           },
                           {
                             primary: 'showoff',
-                            icon: 'hash',
                             category: 'Channels',
                           },
                           {
                             primary: 'status',
-                            icon: 'hash',
                             category: 'Channels',
                           },
                           {
                             primary: 'tech',
-                            icon: 'hash',
                             category: 'Channels',
                           },
                           {
                             primary: 'users',
-                            icon: 'hash',
                             category: 'Channels',
                           },
-                          { primary: 'ux', icon: 'hash', category: 'Channels' },
                           {
                             primary: 'watercooler',
-                            icon: 'hash',
                             category: 'Channels',
                           },
                           {
                             primary: 'slackbot',
-                            icon: 'hash',
                             category: 'Direct Messages',
                           },
                           {
                             primary: 'nate',
-                            icon: 'hash',
                             category: 'Direct Messages',
                           },
                           {
                             primary: 'nick',
-                            icon: 'hash',
                             category: 'Direct Messages',
                           },
                         ]}
                       />
                     </channels>
-                    <messages>
+                    <messages $section>
                       <header
                         css={{
                           padding: [10, 10, 0],
@@ -136,18 +134,20 @@ export default class SectionChat extends React.Component {
   }
 
   static style = {
-    section: {
-      padding: [100, 0],
-    },
     fakeSlack: {
       background: '#fff',
       position: 'relative',
       borderRadius: 5,
-      border: [1, [0, 0, 0, 0.1]],
-      transform: {
-        scale: 0.75,
-        x: '-25%',
-      },
+      width: 700,
+      height: 500,
+      border: [1, [0, 0, 0, 0.05]],
+      boxShadow: [[0, 0, 120, [0, 0, 0, 0.12]]],
+      // transform: {
+      //   x: '-25%',
+      // },
+    },
+    section: {
+      flex: 1,
     },
     buttons: {
       position: 'absolute',
@@ -163,21 +163,21 @@ export default class SectionChat extends React.Component {
       background: '#eee',
     },
     rooms: {
-      background: '#f2f2f2',
-      borderRight: [1, [0, 0, 0, 0.1]],
+      background: [0, 0, 0, 0.03],
+      borderRight: [1, [0, 0, 0, 0.05]],
       padding: 10,
       paddingTop: 30,
     },
     room: {
       width: 50,
       height: 50,
-      background: '#ddd',
+      background: [0, 0, 0, 0.03],
       borderRadius: 5,
       marginBottom: 10,
     },
     channels: {
-      background: '#fcfcfc',
-      borderRight: [1, [0, 0, 0, 0.1]],
+      background: [0, 0, 0, 0.02],
+      borderRight: [1, [0, 0, 0, 0.05]],
     },
     messages: {
       flex: 1,

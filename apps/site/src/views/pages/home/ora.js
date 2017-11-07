@@ -64,7 +64,7 @@ export default class Ora extends React.Component {
             color: '#fff',
             zIndex: 10000,
             boxShadow: [
-              '0 0 20px rgba(50,50,50,0.45)',
+              '0 0 20px rgba(0,0,0,0.45)',
               'inset 0 0 180px 25px rgba(10,10,10,0.25)',
               //'inset 0 0 0 4px #444',
             ],

@@ -12,6 +12,28 @@ import HomeChat from './home/sectionChat'
 
 let blurredRef
 
+const Logo = props => (
+  <img
+    src={`/logos/${props.name}.svg`}
+    css={{
+      display: 'inline-block',
+      alignSelf: 'center',
+      margin: [-18, 0, -12],
+      width: 30,
+      height: 30,
+      filter: `grayscale(100%) contrast(100%) blur(1px)`,
+    }}
+  />
+)
+
+const Icon = props => (
+  <UI.Icon css={{ display: 'inline' }} size={30} {...props} />
+)
+
+const dark2 = UI.color(Constants.colorSecondary)
+  .darken(0.75)
+  .toString()
+
 @view
 export default class HomePage extends React.Component {
   bounds = []
@@ -21,6 +43,91 @@ export default class HomePage extends React.Component {
 
   componentDidMount() {
     this.setState({ ready: true })
+  }
+
+  render({ blurred, isSmall }) {
+    const styles = this.getStyle()
+    const sectionProps = {
+      setSection: this.setSection,
+      ...this.props,
+    }
+    return (
+      <page css={styles.page} ref={x => this.setRef(x)}>
+        <Ora
+          if={!blurred && this.state.ready && !isSmall}
+          bounds={this.bounds}
+          node={this.node}
+          key={this.state.lastIntersection}
+          showIndex={this.state.lastIntersection}
+        />
+        <contents css={{ overflow: 'hidden' }}>
+          <HomeHeader />
+          <UI.Theme name="dark">
+            <View.Section
+              padded
+              css={{ background: `linear-gradient(${dark2}, #000)` }}
+            >
+              <View.SectionContent padRight>
+                <View.Title size={3}>Do you wish...</View.Title>
+                <View.SubTitle opacity={1}>
+                  You'd have known about that <Logo name="slack" /> Slack
+                  conversation before you opened a duplicate{' '}
+                  <Logo name="jira" /> ticket?
+                </View.SubTitle>
+                <View.SubTitle opacity={1}>
+                  You could quickly verify with that{' '}
+                  <Logo name="google-drive" /> planning document before you hit
+                  send on that <Logo name="google-gmail" /> email?
+                </View.SubTitle>
+                <View.SubTitle opacity={1}>
+                  You'd known that <Icon name="user" /> Lisa was already working
+                  on writing that <Logo name="dropbox" /> action plan for ad
+                  spending Q4, just in a different folder?
+                </View.SubTitle>
+                <View.SubTitle opacity={1}>
+                  That you could peek at that <Logo name="github-icon" /> ticket
+                  you remembered more quickly, in the middle of trying to handle
+                  that outage in <Logo name="slack" /> #devops?
+                </View.SubTitle>
+                <br />
+                <br />
+                <br />
+                <View.SubTitle opacity={1}>
+                  That doing all this didn't get in your way, and actually
+                  reduced headaches proactively?
+                </View.SubTitle>
+                <br />
+                <br />
+                <br />
+                <View.SubTitle opacity={1}>
+                  Orbit is the first ever knowledge assistant that knows
+                  <View.Hl>everything</View.Hl> in your company, and keeps it on
+                  hand <View.Hl>anywhere</View.Hl> you are.
+                </View.SubTitle>
+              </View.SectionContent>
+            </View.Section>
+          </UI.Theme>
+          <HomeChat {...sectionProps} />
+          <HomeHandsFree {...sectionProps} />
+          <HomeSecurity {...sectionProps} />
+          <footer>
+            <View.Section css={{ padding: [250, 0] }} $$centered padded>
+              <View.SectionContent>
+                <View.Text size={3}>
+                  Orbit is going into private beta in December.
+                </View.Text>
+                <View.Text size={2}>
+                  <View.Link href="mailto:natewienert@gmail.com">
+                    Send us an email
+                  </View.Link>{' '}
+                  if you're interested.
+                </View.Text>
+              </View.SectionContent>
+            </View.Section>
+          </footer>
+        </contents>
+      </page>
+    )
   }
 
   setRef(node) {
@@ -83,49 +190,6 @@ export default class HomePage extends React.Component {
         // clipPath: `url(/ora.svg#clip)`,
       },
     }
-  }
-
-  render({ blurred, isSmall }) {
-    const styles = this.getStyle()
-    const sectionProps = {
-      setSection: this.setSection,
-      ...this.props,
-    }
-    return (
-      <page css={styles.page} ref={x => this.setRef(x)}>
-        <Ora
-          if={!blurred && this.state.ready && !isSmall}
-          bounds={this.bounds}
-          node={this.node}
-          key={this.state.lastIntersection}
-          showIndex={this.state.lastIntersection}
-        />
-
-        <contents css={{ overflow: 'hidden' }}>
-          <HomeHeader />
-
-          <HomeChat if={false} {...sectionProps} />
-          <HomeHandsFree {...sectionProps} />
-          <HomeSecurity {...sectionProps} />
-
-          <footer>
-            <View.Section css={{ padding: [250, 0] }} $$centered padded>
-              <View.SectionContent>
-                <View.Text size={3}>
-                  Orbit is going into private beta in December.
-                </View.Text>
-                <View.Text size={2}>
-                  <View.Link href="mailto:natewienert@gmail.com">
-                    Send us an email
-                  </View.Link>{' '}
-                  if you're interested.
-                </View.Text>
-              </View.SectionContent>
-            </View.Section>
-          </footer>
-        </contents>
-      </page>
-    )
   }
 
   static theme = ({ blurred }) => {

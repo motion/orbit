@@ -2,6 +2,7 @@ import React from 'react'
 import { app, globalShortcut, ipcMain, screen } from 'electron'
 import repl from 'repl'
 import applescript from 'node-osascript'
+import promisify from 'sb-promisify'
 import open from 'opn'
 import { measure } from '~/helpers'
 import * as Constants from '~/constants'
@@ -10,6 +11,10 @@ import Window from './window'
 import mouse from 'osx-mouse'
 import { throttle } from 'lodash'
 import Menu from './menu'
+import getCrawler from './getCrawler'
+import escapeStringApplescript from 'escape-string-applescript'
+
+const execute = promisify(applescript.execute)
 
 let onWindows = []
 export function onWindow(cb) {
@@ -35,6 +40,10 @@ export default class Windows extends React.Component {
   }
 
   componentDidMount() {
+    setTimeout(() => {
+      this.injectCrawler()
+    }, 1500)
+
     this.measureAndShow()
 
     this.screenSize = screen.getPrimaryDisplay().workAreaSize
@@ -117,20 +126,20 @@ export default class Windows extends React.Component {
       }
       this.hide = () => {
         console.log('hiding')
-        // return focus to last app
-        applescript.execute(
-          `
-tell application "System Events"
-  set activeApp to name of first application process whose frontmost is true
-  set activeApp2 to name of second application process whose frontmost is true
-end tell
-return {activeApp, activeApp2}
-        `,
-          (err, answer) => {
-            console.log('refocus', err, answer)
-          }
-        )
         event.sender.send('hide-ora')
+        // return focus to last app
+        //         const res = await execute(
+        //           `
+        // tell application "System Events"
+        //   set activeApp to name of first application process whose frontmost is true
+        //   set activeApp2 to name of second application process whose frontmost is true
+        // end tell
+        // return {activeApp, activeApp2}
+        //         `,
+        //           (err, answer) => {
+        //             console.log('refocus', err, answer)
+        //           }
+        //         )
       }
     })
 
@@ -177,63 +186,62 @@ return {activeApp, activeApp2}
     })
   }
 
-  getContext = throttle(event => {
-    applescript.execute(
-      `
-global frontApp, frontAppName, windowTitle
-
-set windowTitle to ""
-tell application "System Events"
-  set frontApp to first application process whose frontmost is true
-  set frontAppName to name of frontApp
-  tell process frontAppName
-    tell (1st window whose value of attribute "AXMain" is true)
-      set windowTitle to value of attribute "AXTitle"
-    end tell
-  end tell
-end tell
-
-return {frontAppName, windowTitle}
-        `,
-      (err, answer) => {
-        if (err) {
-          return console.error(err)
-        }
-        const [application, title] = answer
-
-        if (application === 'Google Chrome') {
-          applescript.execute(
-            `tell application "Google Chrome"
+  injectCrawler = async () => {
+    const js = await getCrawler()
+    const res = await execute(`
+      tell application "Google Chrome"
         tell front window's active tab
-          set source to execute javascript "JSON.stringify({ url: document.location+'', title: document.title, body: document.body.innerText, selection: document.getSelection().toString() })"
+          set source to execute javascript "${escapeStringApplescript(js)}"
         end tell
-      end tell`,
-            (err, res) => {
-              if (err) {
-                return console.error(err)
-              }
-              try {
-                const result = JSON.parse(res)
-                event.sender.send(
-                  'set-context',
-                  JSON.stringify({
-                    title: result.title,
-                    body: result.body,
-                    url: result.url,
-                    selection: result.selection,
-                    application,
-                  })
-                )
-              } catch (err) {
-                console.log('error parsing json', err, res)
-              }
-            }
-          )
-        } else {
-          event.sender.send('set-context', null)
-        }
+      end tell
+    `)
+    console.log('now we got the juice')
+    console.log(res)
+  }
+
+  getContext = throttle(async event => {
+    const [application, title] = await execute(`
+      global frontApp, frontAppName, windowTitle
+      set windowTitle to ""
+      tell application "System Events"
+        set frontApp to first application process whose frontmost is true
+        set frontAppName to name of frontApp
+        tell process frontAppName
+          tell (1st window whose value of attribute "AXMain" is true)
+            set windowTitle to value of attribute "AXTitle"
+          end tell
+        end tell
+      end tell
+      return {frontAppName, windowTitle}
+    `)
+
+    if (application === 'Google Chrome') {
+      const res = await execute(`
+        tell application "Google Chrome"
+          tell front window's active tab
+            set source to execute javascript "JSON.stringify({ url: document.location+'', title: document.title, body: document.body.innerText, selection: document.getSelection().toString() })"
+          end tell
+        end tell
+      `)
+
+      try {
+        const result = JSON.parse(res)
+        event.sender.send(
+          'set-context',
+          JSON.stringify({
+            title: result.title,
+            body: result.body,
+            url: result.url,
+            selection: result.selection,
+            application,
+          })
+        )
+      } catch (err) {
+        console.log('error parsing json', err, res)
       }
-    )
+    } else {
+      event.sender.send('set-context', null)
+    }
   }, 200)
 
   updateWindows = () => {
@@ -348,7 +356,7 @@ return {frontAppName, windowTitle}
             }}
             onClose={() => {
               this.setState({ closeSettings: true })
-              this.setTimeout(() => {
+              setTimeout(() => {
                 // reopen invisible so its quick to open again
                 this.setState({ closeSettings: false, showSettings: false })
               }, 500)

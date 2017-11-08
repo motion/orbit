@@ -1,6 +1,5 @@
 import React from 'react'
 import * as Mobx from 'mobx'
-import { view } from '@mcro/black'
 import { object } from 'prop-types'
 import { pickBy, difference, isEqual } from 'lodash'
 import hoistStatics from 'hoist-non-react-statics'
@@ -83,8 +82,10 @@ export default function storeProvidable(options, Helpers) {
             return
           }
           this.mountStores()
-          view.on('hmr', () => this.clearError && this.clearError())
+          Helpers.on('hmr', this.clearErrors)
         }
+
+        clearErrors = () => this.clearError && this.clearError()
 
         clearError() {
           if (!this.unmounted) {
@@ -96,7 +97,7 @@ export default function storeProvidable(options, Helpers) {
           // if you remove @view({ store: ... }) it tries to remove it here but its gone
           if (this.disposeStores) {
             this.disposeStores()
-            view.off('hmr', () => this.clearError && this.clearError())
+            Helpers.off('hmr', this.clearErrors)
             this.unmounted = true
           }
         }

@@ -13,6 +13,7 @@
     "@mcro/gloss": "^1.5.1",
     "@mcro/react-tunnel": "^1.5.1",
     "color": "^2.0.0",
+    "color-convert": "^1.9.1",
     "element-resize-detector": "^1.1.12",
     "fuzzy": "^0.1.3",
     "hoist-non-react-statics": "^2.3.0",

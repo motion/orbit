@@ -16,6 +16,7 @@ killgroup() {
 
 function build-dev() {
   npx lerna exec --parallel --concurrency 1 \
+    --ignore @mcro/crawler \
     --ignore @mcro/web \
     --ignore @mcro/site \
     --ignore @mcro/api \
@@ -30,6 +31,7 @@ function build-dev() {
 function build-es6() {
   npx lerna exec --parallel \
     --ignore @mcro/web \
+    --ignore @mcro/crawler \
     --ignore @mcro/site \
     --ignore @mcro/preset-motion \
       -- \
@@ -39,6 +41,7 @@ function build-es6() {
 function build-prod() {
   npx lerna exec --parallel --concurrency 1 \
     --ignore @mcro/api \
+    --ignore @mcro/crawler \
     --ignore @mcro/electron \
     --ignore @mcro/builder \
     --ignore @mcro/hmr \
@@ -54,6 +57,9 @@ elif [ "$APP" = "build-es6" ]; then
   build-es6
 elif [ "$APP" = "build-prod" ]; then
   build-prod
+elif [ "$APP" = "crawler" ]; then
+  cd $ROOT/apps/electron
+  npm run build
 elif [ "$APP" = "electron" ] || [ "$APP" = "app" ]; then
   cd $ROOT/apps/electron
   npm run dist
@@ -75,10 +81,12 @@ else
     build-es6 --watch &
     build-dev --watch &
     build-prod --watch &
+    (cd apps/crawler && npm run watch) &
   else
     build-es6 &
     build-dev &
     build-prod &
+    (cd apps/crawler && npm run build) &
   fi
 
   wait

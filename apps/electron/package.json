@@ -59,7 +59,10 @@
     "lodash": "^4.17.4",
     "mobx": "^3.3.1",
     "opn": "^5.1.0",
+    "isomorphic-fetch": "^2.2.1",
     "node-osascript": "2.0.0",
+    "sb-promisify": "^2.0.2",
+    "escape-string-applescript": "^2.0.0",
     "react": "16.0.0-alpha.5",
     "react-dom": "16.0.0-alpha.5"
   },

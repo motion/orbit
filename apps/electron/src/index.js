@@ -1,3 +1,4 @@
+import 'isomorphic-fetch'
 import 'raf/polyfill'
 import electronContextMenu from 'electron-context-menu'
 import electronDebug from 'electron-debug'

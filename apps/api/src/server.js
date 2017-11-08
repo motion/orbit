@@ -9,6 +9,7 @@ import OAuth from './server/oauth'
 import OAuthStrategies from './server/oauth.strategies'
 import Passport from 'passport'
 import expressPouch from 'express-pouchdb'
+import Path from 'path'
 
 const port = Constants.SERVER_PORT
 
@@ -44,6 +45,7 @@ export default class Server {
     // ROUTES
     app.use('/auth', bodyParser.json())
     app.use('/auth', bodyParser.urlencoded({ extended: false }))
+    this.setupCrawler()
     this.setupCredPass()
     this.setupPassportRoutes()
     // this.setupPouch()
@@ -72,6 +74,13 @@ export default class Server {
       )
       next()
     }
+  }
+
+  setupCrawler() {
+    const crawlerIndex = require.resolve('@mcro/crawler')
+    const crawlerDist = Path.join(crawlerIndex, '..', '..', 'build', 'js')
+    console.log('setting up crawler', crawlerDist)
+    this.app.use('/crawler', express.static(crawlerDist))
   }
 
   creds = {}

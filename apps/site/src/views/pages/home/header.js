@@ -36,7 +36,7 @@ export default class Header {
         <fadeDown
           $$fullscreen
           css={{
-            top: '10%',
+            top: '20%',
             background: `linear-gradient(transparent, ${dark2})`,
             zIndex: 102,
           }}
@@ -107,44 +107,63 @@ export default class Header {
                 }}
               />
               {[
-                'mail',
-                'cool',
-                'what',
-                'how',
-                'can',
-                'this',
-                'be',
-                'mail',
-                'cool',
-                'what',
-                'how',
-                'can',
-                'this',
-                'be',
-              ].map((n, i) => (
-                <contain $$fullscreen key={i}>
-                  <planet
-                    css={{
-                      borderRadius: 100,
-                      background: '#000',
-                      width: 40,
-                      height: 40,
-                      margin: 'auto',
-                      animation: `orbital${i % 3} ${(i + 1) *
-                        20}s linear infinite`,
-                      animationDelay: `${i * 100}ms`,
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}
-                  >
-                    <UI.Icon
-                      name={n}
-                      color={Constants.colorSecondary}
-                      size={20}
-                    />
-                  </planet>
-                </contain>
-              ))}
+                'google-gmail',
+                'google-drive',
+                'asana',
+                'base',
+                'box',
+                'confluence',
+                'discord',
+                'dropbox',
+                'facebook',
+                'frontapp',
+                'github-icon',
+                'gitter',
+                'hipchat',
+                'hubspot',
+                'jira',
+                'markdown',
+                'medium',
+                'microsoft',
+                'office',
+                'quora',
+                'salesforce',
+                'slack',
+                'trello',
+                'zendesk',
+                'angellist',
+                'shopify',
+                'twitter',
+                'bitbucket',
+              ].map((n, i) => {
+                const col = i % 3
+                return (
+                  <contain $$fullscreen key={i}>
+                    <planet
+                      css={{
+                        borderRadius: 100,
+                        background: '#000',
+                        width: 40,
+                        height: 40,
+                        margin: 'auto',
+                        animation: `orbital${col} ${col * 30 +
+                          50}s linear infinite`,
+                        animationDelay: `-${(col + 1 * 5) * (i + 1) * 3000}ms`,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      <img
+                        src={`/logos/${n}.svg`}
+                        css={{
+                          width: 20,
+                          height: 20,
+                        }}
+                      />
+                    </planet>
+                  </contain>
+                )
+              })}
             </contain>
             <contain $$fullscreen>
               <circle

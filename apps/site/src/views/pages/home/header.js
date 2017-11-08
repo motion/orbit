@@ -55,8 +55,8 @@ export default class Header {
               position: 'absolute',
               height: 2000,
               width: 2000,
-              top: -500,
-              right: -280,
+              top: -600,
+              right: -380,
               zIndex: 100,
             }}
           >
@@ -256,12 +256,12 @@ export default class Header {
                   </View.Text>
                 </View.Content>
 
-                <arrows>
+                <arrows css={{ position: 'absolute', right: 0 }}>
                   <arrowVertical
                     css={{
                       position: 'absolute',
-                      top: 350,
-                      right: 100,
+                      top: 200,
+                      right: Constants.ORA_WIDTH / 2,
                       width: 10,
                       paddingLeft: 40,
                       height: 200,

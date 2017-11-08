@@ -12,28 +12,8 @@ export default class Ora extends React.Component {
   }
 
   componentDidMount() {
-    const update = lastIntersection => {
-      if (this.state.lastIntersection !== lastIntersection) {
-        this.setState({ lastIntersection })
-      }
-    }
-
-    const { homeStore } = this.props
-
     this.watch(() => {
-      if (homeStore.pageNode) {
-        this.on(
-          homeStore.pageNode,
-          'scroll',
-          throttle(() => {
-            if (homeStore.pageNode.scrollTop < 200) {
-              update(0)
-            } else {
-              update(homeStore.activeKey)
-            }
-          }, 100)
-        )
-      }
+      this.setState({ lastIntersection: this.props.homeStore.activeKey })
     })
 
     this.setState({ lastIntersection: 0 })

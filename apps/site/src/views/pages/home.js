@@ -18,17 +18,35 @@ let blurredRef
     bounds = {}
     ready = false
     pageNode = null
+    activeKey = null
 
     willMount() {
-      window.homeStore = this
+      this.watch(() => {
+        if (this.pageNode) {
+          this.on(
+            this.pageNode,
+            'scroll',
+            throttle(() => {
+              if (this.pageNode.scrollTop < 200) {
+                this.activeKey = 0
+              } else {
+                this.activeKey = this.getActiveKey()
+              }
+            }, 100)
+          )
+        }
+      })
     }
 
-    get activeKey() {
+    getActiveKey() {
       const bottom = window.innerHeight + this.pageNode.scrollTop
       for (const key of Object.keys(this.bounds).reverse()) {
         const bound = this.bounds[key]
-        if (!bound) continue
-        if (bound.top + window.innerHeight / 2 < bottom) {
+        if (!bound) {
+          continue
+        }
+        const extraDistance = window.innerHeight / (100 / bound.percentFromTop)
+        if (bound.top + extraDistance < bottom) {
           return key
         }
       }
@@ -37,6 +55,22 @@ let blurredRef
 
     get activeBounds() {
       return this.bounds[this.activeKey]
+    }
+
+    setSection = (key, options = { percentFromTop: 50 }) => {
+      return node => {
+        if (node) {
+          const { top, bottom } = node.getBoundingClientRect()
+          this.bounds = {
+            ...this.bounds,
+            [key]: {
+              ...options,
+              top,
+              bottom,
+            },
+          }
+        }
+      }
     }
   },
 })
@@ -49,8 +83,8 @@ export default class HomePage extends React.Component {
   render({ homeStore, blurred, isSmall }) {
     const styles = this.getStyle()
     const sectionProps = {
-      setSection: this.setSection,
       ...this.props,
+      setSection: homeStore.setSection,
     }
     return (
       <page css={styles.page} ref={x => this.setRef(x)}>
@@ -100,17 +134,6 @@ export default class HomePage extends React.Component {
           blurredRef.style.transform = `translateY(-${this.node.scrollTop}px)`
         }, 16)
       )
-    }
-  }
-
-  setSection = index => {
-    return node => {
-      if (node) {
-        this.props.homeStore.bounds = {
-          ...this.props.homeStore.bounds,
-          [index]: node.getBoundingClientRect(),
-        }
-      }
     }
   }
 

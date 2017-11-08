@@ -69,7 +69,7 @@ export default function getItem(getActiveIndex) {
     primaryEllipse: !hasContent(result),
     secondary: result.subtitle,
     children: getChildren(result),
-    iconAfter: result.iconAfter !== false,
+    iconAfter: result.iconAfter,
     icon: getIcon(result),
     date: result.date,
     after: result.after,

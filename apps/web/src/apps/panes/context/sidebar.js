@@ -7,10 +7,11 @@ import { Thing } from '~/app'
 
 @view
 class After {
-  render(props) {
+  render({ children, ...props }) {
     return (
       <after {...props}>
         <UI.Icon opacity={0.35} name="arrow-min-right" />
+        {children}
       </after>
     )
   }
@@ -33,22 +34,6 @@ class After {
 }
 
 const clean = str => str.replace(/[\r\n|\n|\r|\s]+/gm, ' ').trim()
-
-const similarityOpacity = similarity => {
-  if (similarity > 5000) {
-    return 0.1
-  }
-  if (similarity > 2000) {
-    return 0.2
-  }
-  if (similarity > 1000) {
-    return 0.5
-  }
-  if (similarity > 500) {
-    return 0.7
-  }
-  return 1
-}
 
 export default class ContextSidebar {
   // copy it here
@@ -74,7 +59,7 @@ export default class ContextSidebar {
     return !this.context || this.context.loading // || this.osContext === null
       ? []
       : this.context
-          .closestItems(this.search.length > 0 ? this.search : title, 5)
+          .closestItems(this.search.length > 0 ? this.search : title, 8)
           // filter same item
           .filter(x => {
             if (!x.item) return true
@@ -89,9 +74,8 @@ export default class ContextSidebar {
                 : summarizeWithQuestion(item.body, this.search)
 
             return {
-              // category: 'Context',
-              height: 200,
               title,
+              icon: 'link',
               onClick: () => {
                 OS.send('navigate', item.url)
               },
@@ -113,28 +97,28 @@ export default class ContextSidebar {
                       type: 'context',
                     })
                   }}
-                />
-              ),
-              below: (
-                <UI.Row
-                  css={{ marginTop: 5, overflowX: 'scroll' }}
-                  itemProps={{ height: 20 }}
                 >
-                  <UI.Button tooltip={`Similarity: ${similarity}`}>
-                    Info
-                  </UI.Button>
-                  {debug.map(({ word, word2, similarity }) => (
-                    <UI.Button
-                      chromeless
-                      inline
-                      tooltip={`${word2} : ${similarity}`}
-                      key={word}
-                      opacity={similarityOpacity(similarity)}
+                  <debug css={{ position: 'absolute', top: 0, right: 0 }}>
+                    <UI.Popover
+                      openOnHover
+                      closeOnEsc
+                      towards="left"
+                      width={150}
+                      target={<UI.Button circular chromeless icon="help" />}
                     >
-                      {word}
-                    </UI.Button>
-                  ))}
-                </UI.Row>
+                      <UI.List>
+                        <UI.ListItem primary={`Similarity: ${similarity}`} />
+                        {debug.map(({ word, word2, similarity }, index) => (
+                          <UI.ListItem
+                            key={index}
+                            primary={word}
+                            secondary={`${word2}: ${similarity}`}
+                          />
+                        ))}
+                      </UI.List>
+                    </UI.Popover>
+                  </debug>
+                </After>
               ),
             }
           })

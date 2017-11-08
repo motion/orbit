@@ -11,6 +11,7 @@
         "bindings",
         "osx-mouse",
         "ref",
+        "puppeteer",
         "ffi",
         "react-measure",
         "hostile",

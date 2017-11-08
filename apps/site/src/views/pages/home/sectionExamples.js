@@ -36,9 +36,39 @@ export default class SectionExamples {
     const makeSection = (key, content) => (
       <View.SubTitle
         getRef={setSection(key, opts)}
-        opacity={homeStore.activeKey === key ? 1 : 0.5}
+        opacity={homeStore.activeKey === key ? 1 : 0.2}
+        css={{
+          transition: 'all ease-in 300ms',
+        }}
       >
         {content}
+
+        <line
+          css={{
+            position: 'absolute',
+            bottom: -125,
+            right: -385,
+            width: 300,
+            height: 1,
+            background: 'red',
+          }}
+        >
+          <upwardsLine
+            css={{
+              position: 'absolute',
+              left: '-100%',
+              width: 300,
+              height: 1,
+              background: 'linear-gradient(to right, transparent 20%, red)',
+              transformOrigin: 'bottom right',
+              transform: {
+                rotate: '50deg',
+                // y: -125,
+                // x: -50,
+              },
+            }}
+          />
+        </line>
       </View.SubTitle>
     )
 

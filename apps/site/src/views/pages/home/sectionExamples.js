@@ -26,19 +26,21 @@ const dark2 = UI.color(Constants.colorSecondary)
   .darken(0.75)
   .toString()
 
-const opts = {
+const OPTS = {
   percentFromTop: 76,
 }
 
 @view
 export default class SectionExamples {
   render({ setSection, homeStore }) {
-    const makeSection = (key, content) => (
+    const makeSection = (key, content, opts = OPTS) => (
       <View.SubTitle
         getRef={setSection(key, opts)}
         opacity={homeStore.activeKey === key ? 1 : 0.2}
         css={{
           transition: 'all ease-in 300ms',
+          marginBottom: 50,
+          marginTop: 50,
         }}
       >
         {content}
@@ -84,12 +86,22 @@ export default class SectionExamples {
               {makeSection(
                 'example-1',
                 <span>
-                  Know about that <Logo name="slack" /> Slack conversation
-                  before you open a duplicate <Logo name="jira" /> ticket.
-                </span>
+                  Know there was already a <Logo name="slack" /> Slack
+                  conversation <em>before</em> you open that duplicate{' '}
+                  <Logo name="jira" /> ticket.
+                </span>,
+                { percentFromTop: 50 }
               )}
               {makeSection(
                 'example-2',
+                <span>
+                  Have the <Logo name="confluence" /> knowledgebase answer on
+                  hand the second your customer asks you a{' '}
+                  <Logo name="zendesk" /> question in chat.
+                </span>
+              )}
+              {makeSection(
+                'example-3',
                 <span>
                   Verify you're referencing the latest numbers in that{' '}
                   <Logo name="google-drive" /> planning document before you hit
@@ -97,9 +109,9 @@ export default class SectionExamples {
                 </span>
               )}
               {makeSection(
-                'example-3',
+                'example-4',
                 <span>
-                  Know that{' '}
+                  See that{' '}
                   <img
                     src="/steph.jpg"
                     css={{
@@ -109,16 +121,16 @@ export default class SectionExamples {
                       display: 'inline',
                     }}
                   />{' '}
-                  Lisa already wrote <Logo name="dropbox" /> notes for that
-                  upcoming meeting.
+                  Lisa already wrote <Logo name="dropbox" /> some notes on that
+                  last meeting.
                 </span>
               )}
               {makeSection(
-                'example-4',
+                'example-5',
                 <span>
-                  Be the hero in <Logo name="slack" /> #devops by knowing that a{' '}
+                  Be the hero in <Logo name="slack" /> #devops when you see a{' '}
                   <Logo name="github-icon" /> ticket was just opened for the
-                  very issue brought up.
+                  very issue someone just asked about.
                 </span>
               )}
               <br />

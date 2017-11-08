@@ -2,7 +2,7 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { throttle } from 'lodash'
-import { ORA_BORDER_RADIUS, ORA_HEIGHT, ORA_WIDTH } from '~/constants'
+import * as Constants from '~/constants'
 import oraItems from './oraItems'
 
 @view
@@ -44,7 +44,7 @@ export default class Ora extends React.Component {
 
   render() {
     const items = oraItems[this.state.lastIntersection]
-    if (window.innerWidth < 800) {
+    if (window.innerWidth < Constants.smallSize) {
       return null
     }
     return (
@@ -53,13 +53,17 @@ export default class Ora extends React.Component {
           css={{
             position: 'fixed',
             top: 20,
-            right: 20,
-            width: ORA_WIDTH,
-            height: ORA_HEIGHT,
+            left: '50%',
+            marginLeft: 305,
+            transform: {
+              x: '-50%',
+            },
+            width: Constants.ORA_WIDTH,
+            height: Constants.ORA_HEIGHT,
             // borderRadius: 10,
             userSelect: 'none',
             background: [50, 50, 50, 0.7],
-            borderRadius: ORA_BORDER_RADIUS,
+            borderRadius: Constants.ORA_BORDER_RADIUS,
             border: [4, '#333'],
             color: '#fff',
             zIndex: 10000,

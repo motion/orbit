@@ -42,115 +42,124 @@ export default class Header {
           }}
         />
 
-        <section
-          $$fullscreen
+        <orbitals
           css={{
-            height: 2000,
+            position: 'absolute',
             width: 2000,
-            top: -500,
-            margin: [0, 0, 0, -100],
-            zIndex: 100,
+            left: '50%',
+            marginLeft: -1000,
           }}
         >
-          <contain $$fullscreen>
-            <circle
-              css={{
-                margin: 'auto',
-                border: [1, orbitLineColor],
-                width: 100,
-                height: 100,
-                borderRadius: 1000000000,
-              }}
-            />
-          </contain>
-          <contain $$fullscreen>
-            <circle
-              css={{
-                margin: 'auto',
-                border: [1, orbitLineColor],
-                width: 300,
-                height: 300,
-                borderRadius: 1000000000,
-                opacity: 0.8,
-              }}
-            />
-          </contain>
-          <contain $$fullscreen>
-            <circle
-              css={{
-                margin: 'auto',
-                border: [1, orbitLineColor],
-                width: 600,
-                height: 600,
-                borderRadius: 1000000000,
-                opacity: 0.7,
-              }}
-            />
-          </contain>
-          <contain $$fullscreen>
-            <circle
-              css={{
-                margin: 'auto',
-                border: [1, orbitLineColor],
-                width: 900,
-                height: 900,
-                borderRadius: 1000000000,
-                opacity: 0.3,
-              }}
-            />
-            {[
-              'mail',
-              'cool',
-              'what',
-              'how',
-              'can',
-              'this',
-              'be',
-              'mail',
-              'cool',
-              'what',
-              'how',
-              'can',
-              'this',
-              'be',
-            ].map((n, i) => (
-              <contain $$fullscreen key={i}>
-                <planet
-                  css={{
-                    borderRadius: 100,
-                    background: '#000',
-                    width: 40,
-                    height: 40,
-                    margin: 'auto',
-                    animation: `orbital${i % 3} ${(i + 1) *
-                      20}s linear infinite`,
-                    animationDelay: `${i * 100}ms`,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}
-                >
-                  <UI.Icon
-                    name={n}
-                    color={Constants.colorSecondary}
-                    size={20}
-                  />
-                </planet>
-              </contain>
-            ))}
-          </contain>
-          <contain $$fullscreen>
-            <circle
-              css={{
-                margin: 'auto',
-                border: [1, orbitLineColor],
-                width: 1400,
-                height: 1400,
-                borderRadius: 1000000000,
-                opacity: 0.15,
-              }}
-            />
-          </contain>
-        </section>
+          <inner
+            css={{
+              position: 'absolute',
+              height: 2000,
+              width: 2000,
+              top: -500,
+              right: -280,
+              zIndex: 100,
+            }}
+          >
+            <contain $$fullscreen>
+              <circle
+                css={{
+                  margin: 'auto',
+                  border: [1, orbitLineColor],
+                  width: 100,
+                  height: 100,
+                  borderRadius: 1000000000,
+                }}
+              />
+            </contain>
+            <contain $$fullscreen>
+              <circle
+                css={{
+                  margin: 'auto',
+                  border: [1, orbitLineColor],
+                  width: 300,
+                  height: 300,
+                  borderRadius: 1000000000,
+                  opacity: 0.8,
+                }}
+              />
+            </contain>
+            <contain $$fullscreen>
+              <circle
+                css={{
+                  margin: 'auto',
+                  border: [1, orbitLineColor],
+                  width: 600,
+                  height: 600,
+                  borderRadius: 1000000000,
+                  opacity: 0.7,
+                }}
+              />
+            </contain>
+            <contain $$fullscreen>
+              <circle
+                css={{
+                  margin: 'auto',
+                  border: [1, orbitLineColor],
+                  width: 900,
+                  height: 900,
+                  borderRadius: 1000000000,
+                  opacity: 0.3,
+                }}
+              />
+              {[
+                'mail',
+                'cool',
+                'what',
+                'how',
+                'can',
+                'this',
+                'be',
+                'mail',
+                'cool',
+                'what',
+                'how',
+                'can',
+                'this',
+                'be',
+              ].map((n, i) => (
+                <contain $$fullscreen key={i}>
+                  <planet
+                    css={{
+                      borderRadius: 100,
+                      background: '#000',
+                      width: 40,
+                      height: 40,
+                      margin: 'auto',
+                      animation: `orbital${i % 3} ${(i + 1) *
+                        20}s linear infinite`,
+                      animationDelay: `${i * 100}ms`,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <UI.Icon
+                      name={n}
+                      color={Constants.colorSecondary}
+                      size={20}
+                    />
+                  </planet>
+                </contain>
+              ))}
+            </contain>
+            <contain $$fullscreen>
+              <circle
+                css={{
+                  margin: 'auto',
+                  border: [1, orbitLineColor],
+                  width: 1400,
+                  height: 1400,
+                  borderRadius: 1000000000,
+                  opacity: 0.15,
+                }}
+              />
+            </contain>
+          </inner>
+        </orbitals>
 
         <visible css={{ position: 'relative', zIndex: 1000 }}>
           <header $$row>

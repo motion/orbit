@@ -170,16 +170,16 @@ export default class HomePage extends React.Component {
         },
       }
     }
+
     const pad = 20
     const height = Constants.ORA_HEIGHT
+    const rightEdge = window.innerWidth / 2 + 475 - pad
+
     const bottom = height + pad
-    const right = window.innerWidth - pad - Constants.ORA_BORDER_RADIUS + 2
+    const right = rightEdge - Constants.ORA_BORDER_RADIUS + 2
     const left =
-      window.innerWidth -
-      Constants.ORA_WIDTH -
-      pad +
-      Constants.ORA_BORDER_RADIUS -
-      2
+      rightEdge - Constants.ORA_WIDTH + Constants.ORA_BORDER_RADIUS - 2
+
     return {
       page: {
         background: '#fff',
@@ -191,7 +191,7 @@ export default class HomePage extends React.Component {
         zIndex: 1000,
         // rounded:
         // polygon(5% 0, 95% 0, 100% 4%, 100% 95%, 95% 100%, 5% 100%, 0 95%, 0 5%)
-        clip: `rect(${pad}px, ${right}px, ${bottom}px, ${left}px)`,
+        clip: `rect(${pad + 1}px, ${right}px, ${bottom}px, ${left}px)`,
         // clipPath: `url(/ora.svg#clip)`,
       },
     }

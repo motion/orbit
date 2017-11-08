@@ -18,26 +18,23 @@ export default class Ora extends React.Component {
       }
     }
 
-    const { node, bounds } = this.props
-    this.on(
-      node,
-      'scroll',
-      throttle(() => {
-        if (node.scrollTop < 200) {
-          update(0)
-        } else {
-          const bottom = window.innerHeight + node.scrollTop
-          for (const key of Object.keys(bounds)) {
-            const bound = bounds[key]
-            if (!bound) continue
-            if (bound.top + window.innerHeight / 2 < bottom) {
-              update(key)
-              break
+    const { homeStore } = this.props
+
+    this.watch(() => {
+      if (homeStore.pageNode) {
+        this.on(
+          homeStore.pageNode,
+          'scroll',
+          throttle(() => {
+            if (homeStore.pageNode.scrollTop < 200) {
+              update(0)
+            } else {
+              update(homeStore.activeKey)
             }
-          }
-        }
-      }, 100)
-    )
+          }, 100)
+        )
+      }
+    })
 
     this.setState({ lastIntersection: 0 })
   }

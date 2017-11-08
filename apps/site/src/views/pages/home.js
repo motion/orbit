@@ -17,6 +17,27 @@ let blurredRef
   homeStore: class HomeStore {
     bounds = {}
     ready = false
+    pageNode = null
+
+    willMount() {
+      window.homeStore = this
+    }
+
+    get activeKey() {
+      const bottom = window.innerHeight + this.pageNode.scrollTop
+      for (const key of Object.keys(this.bounds).reverse()) {
+        const bound = this.bounds[key]
+        if (!bound) continue
+        if (bound.top + window.innerHeight / 2 < bottom) {
+          return key
+        }
+      }
+      return 0
+    }
+
+    get activeBounds() {
+      return this.bounds[this.activeKey]
+    }
   },
 })
 @view
@@ -35,8 +56,7 @@ export default class HomePage extends React.Component {
       <page css={styles.page} ref={x => this.setRef(x)}>
         <Ora
           if={!blurred && homeStore.ready && !isSmall}
-          bounds={homeStore.bounds}
-          node={this.node}
+          homeStore={homeStore}
         />
         <contents css={{ overflow: 'hidden' }}>
           <HomeHeader />
@@ -66,6 +86,7 @@ export default class HomePage extends React.Component {
 
   setRef(node) {
     this.node = node
+    this.props.homeStore.pageNode = node
     if (!node) {
       return
     }

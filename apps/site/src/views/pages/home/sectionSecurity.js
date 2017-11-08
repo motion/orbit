@@ -3,8 +3,8 @@ import * as View from '~/views'
 import * as UI from '@mcro/ui'
 
 export default props => (
-  <UI.Theme name="dark">
-    <View.Section padded dark>
+  <UI.Theme name="light">
+    <View.Section padded css={{ background: '#f2f2f2' }}>
       <View.BottomSlant css={{ background: '#fff' }} />
       <View.SectionContent padRight padBottom>
         <after
@@ -14,7 +14,7 @@ export default props => (
             right: -200,
             bottom: 0,
             justifyContent: 'center',
-            opacity: 0.4,
+            opacity: 0.05,
           }}
         >
           <UI.Icon color="#000" size={501} name="lock" />
@@ -22,29 +22,28 @@ export default props => (
         <View.Title getRef={props.setSection(2)} size={3}>
           The No-Cloud Infrastructure
         </View.Title>
-        <View.Text size={2} fontWeight={600} opacity={0.7}>
+        <View.Text size={2.5} fontWeight={200} opacity={0.7}>
           In order to work, Orbit needed to invent a new model: one that keeps
           you safe.
         </View.Text>
         <View.SubText>
-          Here's the rub. To provide great context, Orbit needs to hook into a
-          lot of company data to be valuable. Your Slack, email, documents,
-          tasks, company knowledge.
+          Here's the deal. To work really well, Orbit needs to hook into a lot
+          of valuable company data. Slack, email, documents, knowledge...
+          everything.
         </View.SubText>
 
-        <View.SubText>How can we do that completely securely?</View.SubText>
+        <View.SubText>How do we do that securely?</View.SubText>
 
         <View.SubText>
-          Answer: the data never once leaves your local computer. We never see
-          it, and neither does anyone else.
+          Our answer: your data never once leaves your local computer. Thats
+          right. We never see it, and neither does anyone else but yourself.
         </View.SubText>
         <View.SubText>
           <View.Hl color="#000">
             This allows us to be ambitious from day one without compromise.
           </View.Hl>{' '}
-          Orbit can crawl everything that's relevant to you and your team
-          without fear of data breaches, permissions exposures, or the need to
-          run a complicated on-prem installs.
+          Our interests are aligned with yours: no data breaches, permissions
+          mixups, or complicated on-premise software.
         </View.SubText>
       </View.SectionContent>
     </View.Section>

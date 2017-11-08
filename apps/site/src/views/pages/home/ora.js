@@ -27,11 +27,11 @@ export default class Ora extends React.Component {
           update(0)
         } else {
           const bottom = window.innerHeight + node.scrollTop
-          for (let i = bounds.length - 1; i > -1; i--) {
-            const bound = bounds[i]
+          for (const key of Object.keys(bounds)) {
+            const bound = bounds[key]
             if (!bound) continue
             if (bound.top + window.innerHeight / 2 < bottom) {
-              update(i)
+              update(key)
               break
             }
           }

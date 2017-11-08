@@ -3,13 +3,6 @@ import * as Constants from '~/constants'
 import * as View from '~/views'
 import * as UI from '@mcro/ui'
 
-const dark1 = UI.color(Constants.colorMain)
-  .darken(0.55)
-  .toString()
-const dark2 = UI.color(Constants.colorSecondary)
-  .darken(0.275)
-  .toString()
-
 export default props => (
   <UI.Theme name="dark">
     <View.Section
@@ -51,7 +44,6 @@ export default props => (
           a new email, or chatting with a co-worker.
         </View.Text>
       </View.SectionContent>
-      <View.BottomSlant dark />
     </View.Section>
   </UI.Theme>
 )

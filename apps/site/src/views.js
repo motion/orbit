@@ -10,7 +10,12 @@ export const SubText = props => (
 )
 
 export const Hl = props => (
-  <UI.Text display="inline" padding={[5]} background="yellow" {...props} />
+  <UI.Text
+    display="inline"
+    padding={[3]}
+    background={Constants.colorSecondary}
+    {...props}
+  />
 )
 
 export const Title = props => <Text fontWeight={800} {...props} />

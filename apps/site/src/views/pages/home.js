@@ -21,7 +21,7 @@ const Logo = props => (
       margin: [-18, 0, -12],
       width: 30,
       height: 30,
-      filter: `grayscale(100%) contrast(100%) blur(1px)`,
+      // filter: `grayscale(100%) contrast(100%) blur(1px)`,
     }}
   />
 )
@@ -68,38 +68,43 @@ export default class HomePage extends React.Component {
               css={{ background: `linear-gradient(${dark2}, #000)` }}
             >
               <View.SectionContent padRight>
-                <View.Title size={3}>Do you wish...</View.Title>
+                <View.Title size={3}>Ora keeps you in sync</View.Title>
                 <View.SubTitle opacity={1}>
-                  You'd have known about that <Logo name="slack" /> Slack
-                  conversation before you opened a duplicate{' '}
-                  <Logo name="jira" /> ticket?
+                  Know about that <Logo name="slack" /> Slack conversation
+                  before you open a duplicate <Logo name="jira" /> ticket.
                 </View.SubTitle>
-                <View.SubTitle opacity={1}>
-                  You could quickly verify with that{' '}
+                <View.SubTitle opacity={0.5}>
+                  Verify you're referencing the latest numbers in that{' '}
                   <Logo name="google-drive" /> planning document before you hit
-                  send on that <Logo name="google-gmail" /> email?
+                  send on that <Logo name="google-gmail" /> email.
                 </View.SubTitle>
-                <View.SubTitle opacity={1}>
-                  You'd known that <Icon name="user" /> Lisa was already working
-                  on writing that <Logo name="dropbox" /> action plan for ad
-                  spending Q4, just in a different folder?
+                <View.SubTitle opacity={0.5}>
+                  Know that{' '}
+                  <img
+                    src="/steph.jpg"
+                    css={{
+                      width: 30,
+                      height: 30,
+                      borderRadius: 30,
+                      display: 'inline',
+                    }}
+                  />{' '}
+                  Lisa already wrote <Logo name="dropbox" /> notes for that
+                  upcoming meeting.
                 </View.SubTitle>
-                <View.SubTitle opacity={1}>
-                  That you could peek at that <Logo name="github-icon" /> ticket
-                  you remembered more quickly, in the middle of trying to handle
-                  that outage in <Logo name="slack" /> #devops?
+                <View.SubTitle opacity={0.5}>
+                  Be the hero in <Logo name="slack" /> #devops by knowing that a{' '}
+                  <Logo name="github-icon" /> ticket was just opened for the
+                  very issue brought up.
                 </View.SubTitle>
                 <br />
                 <br />
                 <br />
-                <View.SubTitle opacity={1}>
-                  That doing all this didn't get in your way, and actually
-                  reduced headaches proactively?
-                </View.SubTitle>
+                <View.SubTitle opacity={0.5}>And much more.</View.SubTitle>
                 <br />
                 <br />
                 <br />
-                <View.SubTitle opacity={1}>
+                <View.SubTitle opacity={0.5}>
                   Orbit is the first ever knowledge assistant that knows
                   <View.Hl>everything</View.Hl> in your company, and keeps it on
                   hand <View.Hl>anywhere</View.Hl> you are.

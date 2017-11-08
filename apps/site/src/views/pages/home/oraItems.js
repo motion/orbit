@@ -5,16 +5,13 @@ export default {
   0: [
     {
       children: (
-        <SidebarTitle
-          title="Hi, I'm Ora"
-          icon="emoticons-e_quite-happy-e"
-          noBack
-        />
+        <SidebarTitle title="Hi, I'm Ora" icon="objects_planet" noBack />
       ),
+      glow: false,
     },
     {
       primary: `I live on your desktop`,
-      children: `I'm pretty unique. This is a demo of how I work, live on this website!`,
+      children: `Scroll down to see me in action!`,
       icon: 'tech_desktop',
     },
     {

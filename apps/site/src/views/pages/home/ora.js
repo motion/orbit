@@ -60,7 +60,7 @@ export default class Ora extends React.Component {
             userSelect: 'none',
             background: [50, 50, 50, 0.7],
             borderRadius: ORA_BORDER_RADIUS,
-            border: ['inset', 4, [0, 0, 0, 0.3]],
+            border: [4, '#333'],
             color: '#fff',
             zIndex: 10000,
             boxShadow: [
@@ -75,7 +75,7 @@ export default class Ora extends React.Component {
           </header>
           <content css={{ padding: 0 }}>
             <UI.List
-              itemProps={{ padding: [10, 15], glow: true }}
+              itemProps={{ padding: [10, 15], glow: true, size: 1.15 }}
               key={this.state.lastIntersection}
               groupBy="category"
               items={items}

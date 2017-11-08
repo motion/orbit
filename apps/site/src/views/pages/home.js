@@ -106,8 +106,11 @@ export default class HomePage extends React.Component {
                 <br />
                 <View.SubTitle opacity={0.5}>
                   Orbit is the first ever knowledge assistant that knows
-                  <View.Hl>everything</View.Hl> in your company, and keeps it on
-                  hand <View.Hl>anywhere</View.Hl> you are.
+                  <View.Hl color="#000">everything</View.Hl> in your company,
+                  and keeps it on hand <View.Hl color="#000">
+                    anywhere
+                  </View.Hl>{' '}
+                  you are.
                 </View.SubTitle>
               </View.SectionContent>
             </View.Section>

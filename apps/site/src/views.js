@@ -32,7 +32,7 @@ const space = {
   background: '#000',
 }
 const padRight = {
-  paddingRight: 300,
+  paddingRight: 380,
   [Constants.screen.small]: {
     paddingRight: 0,
   },

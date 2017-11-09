@@ -1,3 +1,4 @@
+import * as React from 'react'
 import SizedSurface from '../sizedSurface'
 import Text from '../text'
 

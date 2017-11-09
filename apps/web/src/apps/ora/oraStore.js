@@ -103,7 +103,7 @@ export default class OraStore {
       OS.send('get-context')
     }, 500)
     // response
-    OS.on('set-context', (event, info) => {
+    this.on(OS, 'set-context', (event, info) => {
       const context = JSON.parse(info)
       if (!context) {
         if (this.stack.last.result.type === 'context') {
@@ -144,7 +144,7 @@ export default class OraStore {
 
   _watchMouse() {
     OS.send('mouse-listen')
-    OS.on('mouse-in-corner', () => {
+    this.on(OS, 'mouse-in-corner', () => {
       if (this.hidden) {
         this.hidden = false
       }
@@ -153,7 +153,7 @@ export default class OraStore {
 
   _watchToggleHide() {
     OS.send('start-ora')
-    OS.on('show-ora', () => {
+    this.on(OS, 'show-ora', () => {
       this.hidden = !this.hidden
     })
   }

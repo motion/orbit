@@ -8,7 +8,7 @@ const jss = JSS.create()
 function specific() {
   return {
     onProcessRule(rule) {
-      console.log('rule is', rule.selector, rule)
+      // console.log('rule is', rule.selector, rule)
       // rule.selector = ` body ${rule.selector}`
     },
   }

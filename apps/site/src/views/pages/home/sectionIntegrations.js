@@ -5,7 +5,7 @@ import * as UI from '@mcro/ui'
 import appleWatch from './helpers/appleWatch'
 
 const width = 900
-const height = 500
+const height = 460
 
 @view
 export default class SectionIntegrations extends React.Component {
@@ -16,17 +16,22 @@ export default class SectionIntegrations extends React.Component {
     appleWatch(ref)
   }
 
-  render() {
+  render({ blurred }) {
+    const background = blurred ? '#000' : '#fff'
     return (
       <UI.Theme name="light">
         <View.Section
-          css={{ padding: [60, 0], background: '#fff', zIndex: 100000 }}
+          css={{
+            padding: [60, 0],
+            background,
+            zIndex: 100000,
+          }}
         >
           <slant
             css={{
               position: 'absolute',
               top: -50,
-              background: '#fff',
+              background,
               left: -300,
               right: -300,
               height: 100,
@@ -41,7 +46,7 @@ export default class SectionIntegrations extends React.Component {
             css={{
               position: 'absolute',
               bottom: -50,
-              background: '#fff',
+              background,
               left: -300,
               right: -300,
               height: 100,
@@ -52,12 +57,28 @@ export default class SectionIntegrations extends React.Component {
               },
             }}
           />
-          <View.SectionContent $content>
-            <View.Title size={3}>With anything you use</View.Title>
-            <View.SubTitle color="#000">
-              Ora works with you, by supporting nearly any integration you have.<br />
-              Learn more.
+          <View.SectionContent>
+            <View.Title size={3}>Works with you</View.Title>
+            <View.SubTitle css={{ padding: [0, 400, 0, 0] }}>
+              Instead of adding another source of truth, Orbit works with any
+              integration you have. <View.Link>Learn more.</View.Link>
             </View.SubTitle>
+            <box
+              css={{
+                position: 'absolute',
+                top: 0,
+                right: 0,
+                height: 280,
+                width: 340,
+                background: '#fff',
+                border: [1, [0, 0, 0, 0.1]],
+                boxShadow: [[0, 0, 10, [0, 0, 0, 0.1]]],
+                borderRadius: 10,
+                padding: 20,
+              }}
+            >
+              lorem ipsum
+            </box>
             <svg
               $watch
               viewBox="-1.855 -2.325 3.75 4.7"

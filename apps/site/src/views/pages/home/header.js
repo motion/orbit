@@ -19,7 +19,7 @@ export default class Header {
       <View.Section
         css={{
           background: `linear-gradient(-195deg, ${dark1}, ${dark2})`,
-          minHeight: 400,
+          minHeight: Math.min(1100, window.innerHeight),
           position: 'relative',
           transform: {
             z: 0,
@@ -184,7 +184,7 @@ export default class Header {
           </inner>
         </orbitals>
 
-        <visible css={{ position: 'relative', zIndex: 1000 }}>
+        <visible css={{ position: 'relative', zIndex: 1000, flex: 1 }}>
           <header $$row>
             <View.SectionContent>
               <header
@@ -223,16 +223,22 @@ export default class Header {
                 flex: 1,
                 justifyContent: 'center',
                 padding: [200, 0, 100],
+                margin: 'auto',
               }}
             >
               <wrap>
                 <View.Content padRight>
-                  <View.Title size={5} color="#fff" fontWeight={200}>
+                  <View.Title
+                    size={5}
+                    color="#fff"
+                    fontWeight={100}
+                    lineHeight={75}
+                  >
                     Company knowledge, smarter.
                   </View.Title>
 
                   <View.Text
-                    size={2.2}
+                    size={2.3}
                     fontWeight={200}
                     css={{
                       background: `
@@ -249,13 +255,13 @@ export default class Header {
                       WebkitTextFillColor: 'transparent',
                     }}
                   >
-                    Your wiki, chats, documents, and much more in a smart
-                    assistant.<br />
+                    An assistant that tracks your wiki, chats, documents, and
+                    much more.<br />
                     <br />
-                    On your desktop with instant search and contextual help.
+                    Instant search & contextual answers, wherever you are.
                   </View.Text>
 
-                  <View.Text size={1.7}>
+                  <View.Text if={false} size={1.7}>
                     Scroll down to see it in action.
                   </View.Text>
                 </View.Content>
@@ -269,8 +275,11 @@ export default class Header {
                       width: 10,
                       paddingLeft: 40,
                       height: 200,
-                      borderRight: [4, 'dashed', '#fff'],
-                      opacity: 0.7,
+                      // borderRight: [4, 'solid', '#fff'],
+                      borderImage: 'linear-gradient(transparent, #fff) 1 100%',
+                      borderWidth: 4,
+                      borderRightStyle: 'solid',
+                      opacity: 0.3,
                       alignItems: 'center',
                     }}
                   >
@@ -278,7 +287,7 @@ export default class Header {
                       css={{
                         position: 'absolute',
                         bottom: 0,
-                        marginBottom: -34,
+                        marginBottom: -30,
                         marginLeft: 2,
                       }}
                       color="#fff"

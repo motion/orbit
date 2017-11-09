@@ -14,6 +14,15 @@ const PreviewText = ({ children, ...props }) => (
 
 const HL_CLASS = '__orbit_highlight'
 
+const getTagInfo = node => ({
+  tagName: node.tagName.toLowerCase(),
+  className: (node.className || '')
+    .replace(HL_CLASS, '')
+    .trim()
+    .split(' ')
+    .join('.'),
+})
+
 @view({
   store: class CrawlerStore {
     parentNode = null
@@ -22,9 +31,9 @@ const HL_CLASS = '__orbit_highlight'
     highlighted = null
     selected = {
       title: null,
-      titleClass: null,
+      titleSelector: null,
       body: null,
-      bodyClass: null,
+      bodySelector: null,
     }
 
     willMount() {
@@ -58,15 +67,25 @@ const HL_CLASS = '__orbit_highlight'
     }
 
     selectCurrent = () => {
-      const selector = this.highlighted.className
-        .replace(HL_CLASS, '')
-        .trim()
-        .split(' ')
-        .join('.')
+      let finalSelector
+      const { className, tagName } = getTagInfo(this.highlighted)
+
+      // generates a semi-generic selector
+      if (className) {
+        finalSelector = `.${className}`
+      } else {
+        const parentInfo = getTagInfo(this.highlighted.parentNode)
+        if (parentInfo.className) {
+          finalSelector = `${parentInfo.className} > ${tagName}`
+        } else {
+          finalSelector = `${parentInfo.tagName} > ${tagName}`
+        }
+      }
+
       this.selected = {
         ...this.selected,
         [this.step]: this.highlighted.innerText,
-        [`${this.step}Class`]: selector ? `.${selector}` : '',
+        [`${this.step}Selector`]: finalSelector,
       }
     }
 
@@ -99,7 +118,7 @@ export default class Root extends React.Component {
     }
 
     const curPath = window.location.pathname.split('/')
-    const parentPath = curPath.slice(0, curPath.length - 2).join('/')
+    const parentPath = curPath.slice(0, curPath.length - 1).join('/')
     const parentLocation = parentPath || '/'
 
     return (
@@ -124,11 +143,11 @@ aside span aside * { display: flex; flex-flow: column; }
                 <previewLine>
                   <PreviewTitle>Title:</PreviewTitle>
                   <PreviewTitle
-                    if={store.selected.titleClass}
+                    if={store.selected.titleSelector}
                     color="yellow"
                     css={{ marginLeft: 10 }}
                   >
-                    {store.selected.titleClass}
+                    {store.selected.titleSelector}
                   </PreviewTitle>
                   <PreviewText>
                     {store.selected.title || 'None selected'}
@@ -137,11 +156,11 @@ aside span aside * { display: flex; flex-flow: column; }
                 <previewLine>
                   <PreviewTitle>Body:</PreviewTitle>
                   <PreviewTitle
-                    if={store.selected.bodyClass}
+                    if={store.selected.bodySelector}
                     color="yellow"
                     css={{ marginLeft: 10 }}
                   >
-                    {store.selected.bodyClass}
+                    {store.selected.bodySelector}
                   </PreviewTitle>
                   <PreviewText>
                     {store.selected.body || 'None selected'}

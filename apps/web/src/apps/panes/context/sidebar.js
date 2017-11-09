@@ -38,9 +38,15 @@ const clean = str => str.replace(/[\r\n|\n|\r|\s]+/gm, ' ').trim()
 export default class ContextSidebar {
   // copy it here
   osContext = this.oraStore.osContext
-
+  isCrawling = false
   @watch
   isPinned = () => this.osContext && Thing.findOne({ url: this.osContext.url })
+
+  willMount() {
+    this.on(OS, 'crawl-preview', stuff => {
+      console.log('got crawl preview', stuff)
+    })
+  }
 
   get oraStore() {
     return this.props.oraStore
@@ -141,6 +147,7 @@ export default class ContextSidebar {
         icon: 'bug',
         children: 'Crawl',
         onClick: () => {
+          this.isCrawling = true
           OS.send('inject-crawler')
         },
       },
@@ -148,6 +155,9 @@ export default class ContextSidebar {
   }
 
   get results() {
+    if (this.isCrawling) {
+      return []
+    }
     if (this.context) {
       const os = this.search.length === 0 ? [] : []
       return [...os, ...this.contextResults].filter(i => !!i)

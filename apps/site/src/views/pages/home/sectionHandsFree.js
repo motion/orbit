@@ -37,9 +37,14 @@ export default props => (
           better team communication and collaboration, dynamic app generation,
           and innovative app development.
         </View.Text>
-        <View.Text size={2} opacity={0.8}>
-          Orbit is the culmination of years of work towards that goal. We're
-          excited to share it with you.
+        <View.Text size={3}>
+          Orbit is going into private beta in December.
+        </View.Text>
+        <View.Text size={2}>
+          <View.Link href="mailto:natewienert@gmail.com">
+            Send us an email
+          </View.Link>{' '}
+          if you're interested.
         </View.Text>
       </View.SectionContent>
     </View.Section>

@@ -297,6 +297,19 @@ export default function watchify(rootNode) {
       eCircle.setAttribute('cy', circlePos[1])
       eCircle.setAttribute('r', circle.radius)
       eCircle.setAttribute('fill', circle.color)
+
+      const eIcon = document.createElementNS(
+        'http://www.w3.org/2000/svg',
+        'image'
+      )
+      eIcon.setAttribute('xlink:href', '/logos/hubspot.svg')
+      eIcon.setAttribute('width', '40px')
+      eIcon.setAttribute('height', '40px')
+      eIcon.setAttribute('x', '0')
+      eIcon.setAttribute('y', '0')
+
+      eCircle.appendChild(eIcon)
+
       // eCircle.addEventListener("click", this.clickCircle.bind(this, circle));
 
       this.element.appendChild(eCircle)

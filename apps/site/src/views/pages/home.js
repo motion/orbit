@@ -102,28 +102,25 @@ export default class HomePage extends React.Component {
           <HomeIntegrations {...sectionProps} />
           <HomeChat {...sectionProps} />
           <HomeSecurity {...sectionProps} />
-          <View.Section
-            css={{
-              padding: [250, 0],
-              zIndex: 100000,
-              background: '#fff',
-            }}
-            $$centered
-            padded
-          >
-            <View.SectionContent>
-              <View.Text size={3}>
-                Orbit is going into private beta in December.
-              </View.Text>
-              <View.Text size={2}>
-                <View.Link href="mailto:natewienert@gmail.com">
-                  Send us an email
-                </View.Link>{' '}
-                if you're interested.
-              </View.Text>
-            </View.SectionContent>
-          </View.Section>
           <HomeHandsFree {...sectionProps} />
+          <UI.Theme name="dark">
+            <footer>
+              <View.Section space padded>
+                <View.SectionContent>
+                  <content $$row>
+                    <column
+                      css={{ height: 200, justifyContent: 'space-between' }}
+                    >
+                      <View.Title>Orbit</View.Title>
+                      <View.Link>About us</View.Link>
+                      <View.Link>Follow us</View.Link>
+                      <View.Link>Press kit</View.Link>
+                    </column>
+                  </content>
+                </View.SectionContent>
+              </View.Section>
+            </footer>
+          </UI.Theme>
         </contents>
       </page>
     )

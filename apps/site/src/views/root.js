@@ -9,6 +9,8 @@ import * as Constants from '~/constants'
 
 @view
 export default class Root extends React.Component {
+  lastHeight = window.innerHeight
+
   state = {
     resizeVersion: 0,
   }
@@ -18,7 +20,9 @@ export default class Root extends React.Component {
       window,
       'resize',
       debounce(() => {
-        this.setState({ resizeVersion: ++this.state.resizeVersion })
+        if (window.innerHeight !== this.lastHeight) {
+          this.setState({ resizeVersion: ++this.state.resizeVersion })
+        }
       }),
       100
     )

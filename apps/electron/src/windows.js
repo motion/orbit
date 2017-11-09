@@ -15,6 +15,7 @@ import getCrawler from './getCrawler'
 import escapeStringApplescript from 'escape-string-applescript'
 
 const execute = promisify(applescript.execute)
+const sleep = ms => new Promise(res => setTimeout(res, ms))
 
 let onWindows = []
 export function onWindow(cb) {
@@ -139,8 +140,8 @@ export default class Windows extends React.Component {
       }
     })
 
-    this.on(ipcMain, 'inject-crawler', () => {
-      this.injectCrawler()
+    this.on(ipcMain, 'inject-crawler', event => {
+      this.injectCrawler(event.sender.send)
     })
 
     this.on(ipcMain, 'navigate', (event, url) => {
@@ -186,17 +187,50 @@ export default class Windows extends React.Component {
     })
   }
 
-  injectCrawler = async () => {
+  injectCrawler = async sendToOra => {
     const js = await getCrawler()
-    const res = await execute(`
+    await execute(`
       tell application "Google Chrome"
         tell front window's active tab
           set source to execute javascript "${escapeStringApplescript(js)}"
         end tell
       end tell
     `)
-    console.log('now we got the juice')
-    console.log(res)
+
+    this.continueChecking = true
+    this.checkCrawlerLoop(res => {
+      console.log('got res', res)
+      if (res && res.done) {
+        this.continueChecking = false
+        console.log('finished', res)
+        sendToOra(res)
+      }
+    })
+  }
+
+  checkCrawlerLoop = async cb => {
+    cb(await this.checkCrawler())
+    await sleep(1000)
+    if (this.continueChecking) {
+      this.checkCrawlerLoop()
+    }
+  }
+
+  checkCrawler = async () => {
+    const res = await execute(`
+      tell application "Google Chrome"
+        tell front window's active tab
+          set source to execute javascript "JSON.stringify(window.__oraCrawlerAnswer || {})"
+        end tell
+      end tell
+    `)
+    try {
+      const result = JSON.parse(res)
+      console.log('got answer', result)
+      return result
+    } catch (err) {
+      console.log('error parsing result', err)
+    }
   }
 
   getContext = throttle(async event => {

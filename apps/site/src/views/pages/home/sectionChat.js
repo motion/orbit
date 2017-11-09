@@ -9,20 +9,28 @@ export default class SectionChat extends React.Component {
   render() {
     return (
       <section css={{ position: 'relative' }}>
-        <UI.Theme name="light">
+        <UI.Theme name="dark">
           <View.Section
+            space
             css={{
-              padding: [140, 0],
-              background: `#f6f6f6`,
+              padding: [210, 0],
             }}
           >
+            <background
+              $$fullscreen
+              css={{
+                background: `#282e3a url(/wallpaper.jpg) no-repeat`,
+                backgroundSize: 'cover',
+                opacity: 0.3,
+              }}
+            />
             <View.SectionContent padRight>
               <View.Title size={3}>Wherever you are</View.Title>
-              <View.SubTitle color="#000">
+              <View.SubTitle>
                 Unlike a browser extension or bot, Ora lives on your desktop and
                 works across many apps.
               </View.SubTitle>
-              <View.Text color="#000">
+              <View.Text>
                 <View.Hl>Slack</View.Hl> Email Browser Search
               </View.Text>
               <UI.Theme name="light">

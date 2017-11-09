@@ -34,7 +34,7 @@ const OPTS = {
 export default class SectionExamples {
   render({ setSection, homeStore, blurred }) {
     const makeSection = (key, content, opts = OPTS) => {
-      const adjustDown = opts.percentFromTop - 25 * 2
+      const adjustDown = opts.percentFromTop - 30 * 2
       const isActive = homeStore.activeKey === key
       return (
         <View.SubTitle
@@ -107,7 +107,7 @@ export default class SectionExamples {
                   conversation <em>before</em> you open that duplicate{' '}
                   <Logo name="jira" /> ticket.
                 </span>,
-                { percentFromTop: 35 }
+                { percentFromTop: 38 }
               )}
               {makeSection(
                 'example-2',
@@ -116,7 +116,7 @@ export default class SectionExamples {
                   hand the second your customer asks you a{' '}
                   <Logo name="zendesk" /> question in chat.
                 </span>,
-                { percentFromTop: 50 }
+                { percentFromTop: 55 }
               )}
               {makeSection(
                 'example-3',
@@ -125,7 +125,7 @@ export default class SectionExamples {
                   <Logo name="google-drive" /> planning document before you hit
                   send on that <Logo name="google-gmail" /> email.
                 </span>,
-                { percentFromTop: 55 }
+                { percentFromTop: 58 }
               )}
               {makeSection(
                 'example-4',
@@ -143,7 +143,7 @@ export default class SectionExamples {
                   Lisa already wrote <Logo name="dropbox" /> some notes on that
                   last meeting.
                 </span>,
-                { percentFromTop: 55 }
+                { percentFromTop: 63 }
               )}
               {makeSection(
                 'example-5',
@@ -152,7 +152,7 @@ export default class SectionExamples {
                   <Logo name="github-icon" /> ticket was just opened for the
                   very issue someone just asked about.
                 </span>,
-                { percentFromTop: 60 }
+                { percentFromTop: 70 }
               )}
               <br />
               <br />

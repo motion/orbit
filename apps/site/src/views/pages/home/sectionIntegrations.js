@@ -4,7 +4,7 @@ import * as View from '~/views'
 import * as UI from '@mcro/ui'
 import appleWatch from './helpers/appleWatch'
 
-const width = 870
+const width = 900
 const height = 575
 
 @view
@@ -20,7 +20,12 @@ export default class SectionIntegrations {
     return (
       <UI.Theme name="light">
         <View.Section padded css={{ background: '#fff' }}>
-          <View.SectionContent $content>
+          <View.SectionContent padRight $content>
+            <View.Title size={3}>With anything you use</View.Title>
+            <View.SubTitle color="#000">
+              Ora works with you, by supporting nearly any integration you have.
+              Learn more.
+            </View.SubTitle>
             <svg
               $watch
               viewBox="-1.855 -2.325 3.75 4.7"
@@ -36,6 +41,7 @@ export default class SectionIntegrations {
     watch: {
       width,
       height,
+      margin: [40, 0],
       userSelect: 'none',
     },
   }

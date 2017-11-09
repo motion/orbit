@@ -34,7 +34,7 @@ const OPTS = {
 export default class SectionExamples {
   render({ setSection, homeStore }) {
     const makeSection = (key, content, opts = OPTS) => {
-      const adjustDown = opts.percentFromTop - 30 * 2
+      const adjustDown = opts.percentFromTop - 25 * 2
       return (
         <View.SubTitle
           getRef={setSection(key, opts)}
@@ -50,8 +50,8 @@ export default class SectionExamples {
           <line
             css={{
               position: 'absolute',
-              bottom: -adjustDown * 4,
-              right: -385,
+              bottom: -adjustDown * 4 + 20,
+              right: -440,
               width: 300,
               height: 1,
               background: 'linear-gradient(to left, transparent, red 50%)',
@@ -66,7 +66,7 @@ export default class SectionExamples {
                 background: 'linear-gradient(to right, transparent 50%, red)',
                 transformOrigin: 'bottom right',
                 transform: {
-                  rotate: `${adjustDown}deg`,
+                  rotate: `${adjustDown * 1.1}deg`,
                   // y: -125,
                   // x: -50,
                 },
@@ -83,7 +83,7 @@ export default class SectionExamples {
           padded
           css={{ background: `linear-gradient(${dark2}, #000)` }}
         >
-          <View.SectionContent padRight>
+          <View.SectionContent css={{ paddingRight: 430 }}>
             <inner css={{ padding: [0, 0] }}>
               <View.Title size={3}>Ora keeps you in sync</View.Title>
               {makeSection(
@@ -111,7 +111,7 @@ export default class SectionExamples {
                   <Logo name="google-drive" /> planning document before you hit
                   send on that <Logo name="google-gmail" /> email.
                 </span>,
-                { percentFromTop: 60 }
+                { percentFromTop: 55 }
               )}
               {makeSection(
                 'example-4',
@@ -129,7 +129,7 @@ export default class SectionExamples {
                   Lisa already wrote <Logo name="dropbox" /> some notes on that
                   last meeting.
                 </span>,
-                { percentFromTop: 65 }
+                { percentFromTop: 55 }
               )}
               {makeSection(
                 'example-5',
@@ -138,7 +138,7 @@ export default class SectionExamples {
                   <Logo name="github-icon" /> ticket was just opened for the
                   very issue someone just asked about.
                 </span>,
-                { percentFromTop: 70 }
+                { percentFromTop: 60 }
               )}
               <br />
               <br />

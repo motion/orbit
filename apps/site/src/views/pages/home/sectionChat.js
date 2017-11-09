@@ -11,16 +11,15 @@ export default class SectionChat extends React.Component {
       <section css={{ position: 'relative' }}>
         <UI.Theme name="light">
           <View.Section
-            padded
             css={{
               background: `#fff`,
             }}
           >
-            <View.SectionContent padRight>
-              <View.Title size={3}>Everywhere</View.Title>
+            <View.SectionContent padRight padBottom>
+              <View.Title size={3}>Wherever you are</View.Title>
               <View.SubTitle color="#000">
-                Ora isn't a plugin or bot. It's a desktop app that integrates
-                into your OS. It works with everything you use.
+                Unlike a browser extension or bot, Ora lives on your desktop and
+                works across many apps.
               </View.SubTitle>
               <View.Text color="#000">
                 <View.Hl>Slack</View.Hl> Email Browser Search

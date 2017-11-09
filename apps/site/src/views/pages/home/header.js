@@ -218,7 +218,7 @@ export default class Header {
               css={{
                 flex: 1,
                 justifyContent: 'center',
-                padding: [200, 0],
+                padding: [200, 0, 100],
               }}
             >
               <wrap>

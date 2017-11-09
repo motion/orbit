@@ -98,7 +98,6 @@ export default class HomePage extends React.Component {
           <HomeExamples {...sectionProps} />
           <HomeIntegrations {...sectionProps} />
           <HomeChat {...sectionProps} />
-          <HomeHandsFree {...sectionProps} />
           <HomeSecurity {...sectionProps} />
           <footer>
             <View.Section css={{ padding: [250, 0] }} $$centered padded>
@@ -115,6 +114,7 @@ export default class HomePage extends React.Component {
               </View.SectionContent>
             </View.Section>
           </footer>
+          <HomeHandsFree {...sectionProps} />
         </contents>
       </page>
     )

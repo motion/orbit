@@ -23,25 +23,23 @@ export default props => (
             opacity: 0.4,
           }}
         >
-          <UI.Icon
-            color={Constants.colorSecondary}
-            size={501}
-            name="travel_jellyfish"
-          />
+          <UI.Icon color={Constants.colorSecondary} size={501} name="planet" />
         </after>
         <View.Title getRef={props.setSection(1)} size={3} fontWeight={200}>
-          As you work
+          About Orbit
         </View.Title>
         <View.Text
-          size={4}
-          fontWeight={100}
+          size={3.5}
+          fontWeight={200}
           color={UI.color(Constants.colorSecondary).lighten(0.5)}
         >
-          Always on: no browser tab to lose, no bot you don't know how to use.
+          We're a small team thats been researching and building tools for
+          better team communication and collaboration, dynamic app generation,
+          and innovative app development.
         </View.Text>
         <View.Text size={2} opacity={0.8}>
-          Orbit is there with you, whether you're writing a Google doc, reading
-          a new email, or chatting with a co-worker.
+          Orbit is the culmination of years of work towards that goal. We're
+          excited to share it with you.
         </View.Text>
       </View.SectionContent>
     </View.Section>

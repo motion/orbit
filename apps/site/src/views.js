@@ -13,7 +13,7 @@ export const Hl = props => (
   <UI.Text
     display="inline"
     padding={[3]}
-    background={Constants.colorSecondary}
+    background={'rgb(98.4%, 97.1%, 77.3%)'}
     {...props}
   />
 )
@@ -34,7 +34,7 @@ const dark = {
   background: `linear-gradient(40deg, ${Constants.colorMain}, ${Constants.colorSecondary})`,
 }
 const space = {
-  background: '#000',
+  background: '#222',
 }
 const padRight = {
   paddingRight: 380,

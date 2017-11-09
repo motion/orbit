@@ -3,8 +3,8 @@ import * as View from '~/views'
 import * as UI from '@mcro/ui'
 
 export default props => (
-  <UI.Theme name="light">
-    <View.Section padded css={{ background: '#f2f2f2' }}>
+  <UI.Theme name="dark">
+    <View.Section space padded>
       <View.BottomSlant css={{ background: '#fff' }} />
       <View.SectionContent padRight padBottom>
         <after

@@ -114,6 +114,7 @@ export default class Input extends React.Component<Props> {
         sizeFont
         borderRadius
         sizePadding
+        sizeHeight
         flex
         borderWidth={1}
         wrapElement

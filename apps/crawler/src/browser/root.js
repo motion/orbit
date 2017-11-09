@@ -98,74 +98,95 @@ export default class Root extends React.Component {
       color: '#000',
     }
 
+    const curPath = window.location.pathname.split('/')
+    const parentPath = curPath.slice(0, curPath.length - 2).join('/')
+    const parentLocation = parentPath || '/'
+
     return (
       <UI.Theme name="dark">
-        <crawler ref={store.setParent}>
-          <style
-            type="text/css"
-            style={{ display: 'none' }}
-            dangerouslySetInnerHTML={{
-              __html: `
+        <aside>
+          <span>
+            <aside $crawler ref={store.setParent}>
+              <style
+                type="text/css"
+                style={{ display: 'none' }}
+                // yo dawg, we cant use class selectors to avoid specificity, so this fucking exists
+                // aside span aside
+                dangerouslySetInnerHTML={{
+                  __html: `
 .__orbit_highlight { background: rgba(0%, 62.5%, 84.7%, 0.25) !important;  }
+aside span aside * { display: flex; flex-flow: column; }
               `,
-            }}
-          />
+                }}
+              />
 
-          <preview $$flex>
-            <previewLine>
-              <PreviewTitle>Title:</PreviewTitle>
-              <PreviewTitle
-                if={store.selected.titleClass}
-                color="yellow"
-                css={{ marginLeft: 10 }}
-              >
-                {store.selected.titleClass}
-              </PreviewTitle>
-              <PreviewText>
-                {store.selected.title || 'None selected'}
-              </PreviewText>
-            </previewLine>
-            <previewLine>
-              <PreviewTitle>Body:</PreviewTitle>
-              <PreviewTitle
-                if={store.selected.bodyClass}
-                color="yellow"
-                css={{ marginLeft: 10 }}
-              >
-                {store.selected.bodyClass}
-              </PreviewTitle>
-              <PreviewText>
-                {store.selected.body || 'None selected'}
-              </PreviewText>
-            </previewLine>
-          </preview>
+              <preview $$flex>
+                <previewLine>
+                  <PreviewTitle>Title:</PreviewTitle>
+                  <PreviewTitle
+                    if={store.selected.titleClass}
+                    color="yellow"
+                    css={{ marginLeft: 10 }}
+                  >
+                    {store.selected.titleClass}
+                  </PreviewTitle>
+                  <PreviewText>
+                    {store.selected.title || 'None selected'}
+                  </PreviewText>
+                </previewLine>
+                <previewLine>
+                  <PreviewTitle>Body:</PreviewTitle>
+                  <PreviewTitle
+                    if={store.selected.bodyClass}
+                    color="yellow"
+                    css={{ marginLeft: 10 }}
+                  >
+                    {store.selected.bodyClass}
+                  </PreviewTitle>
+                  <PreviewText>
+                    {store.selected.body || 'None selected'}
+                  </PreviewText>
+                </previewLine>
+              </preview>
 
-          <section $$flex $$row>
-            <UI.Row itemProps={{ size: 1.2 }}>
-              <UI.Button background="transparent">Settings:</UI.Button>
-              <UI.Button>Max Pages: 1,000</UI.Button>
-            </UI.Row>
-            <flex css={{ flex: 1 }} />
-            <UI.Row itemProps={{ size: 1.2 }}>
-              <UI.Button background="transparent">Select content:</UI.Button>
-              <UI.Button
-                {...store.step === 'title' && activeButtonProps}
-                onClick={store.stepSelect('title')}
-              >
-                1. Title
-              </UI.Button>
-              <UI.Button
-                {...store.step === 'body' && activeButtonProps}
-                onClick={store.stepSelect('body')}
-              >
-                2. Body
-              </UI.Button>
-              <UI.Button icon="bug" theme="#23c161">
-                Begin
-              </UI.Button>
-            </UI.Row>
-          </section>
-        </crawler>
+              <section $$flex $$row>
+                <UI.Row>
+                  <UI.Label tooltip="Crawler won't go above this path">
+                    Path:
+                  </UI.Label>
+                  <UI.Field
+                    type="input"
+                    width={100}
+                    row
+                    defaultValue={parentLocation}
+                  />
+                  <UI.Button>Max Pages: 1,000</UI.Button>
+                </UI.Row>
+                <flex css={{ flex: 1 }} />
+                <UI.Row itemProps={{ size: 1.2 }}>
+                  <UI.Button background="transparent">
+                    Select content:
+                  </UI.Button>
+                  <UI.Button
+                    {...store.step === 'title' && activeButtonProps}
+                    onClick={store.stepSelect('title')}
+                  >
+                    1. Title
+                  </UI.Button>
+                  <UI.Button
+                    {...store.step === 'body' && activeButtonProps}
+                    onClick={store.stepSelect('body')}
+                  >
+                    2. Body
+                  </UI.Button>
+                  <UI.Button icon="bug" theme="#23c161">
+                    Begin
+                  </UI.Button>
+                </UI.Row>
+              </section>
+            </aside>
+          </span>
+        </aside>
       </UI.Theme>
     )
   }
@@ -179,14 +200,10 @@ export default class Root extends React.Component {
       left: 0,
       right: 0,
       background: '#111',
-      zIndex: Number.MAX_SAFE_INTEGER,
+      zIndex: Number.MAX_SAFE_INTEGER - 2,
       boxShadow: [[0, 0, 50, [0, 0, 0, 0.35]]],
       transform: {
-        z: Number.MAX_SAFE_INTEGER,
-      },
-
-      '& *': {
-        display: 'flex',
+        z: Number.MAX_SAFE_INTEGER - 2,
       },
     },
     space: {

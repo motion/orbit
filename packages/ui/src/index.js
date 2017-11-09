@@ -60,6 +60,7 @@ import import_Checkbox from './form/checkbox'
 import import_Toggle from './form/toggle'
 import import_Field from './form/field'
 import import_Select from './form/select'
+import import_Label from './form/label'
 
 export const color = import_color
 export const ThemeProvide = import_ThemeProvide
@@ -114,4 +115,5 @@ export const Checkbox = import_Checkbox
 export const Toggle = import_Toggle
 export const Field = import_Field
 export const Select = import_Select
+export const Label = import_Label
 export const FakeText = import_FakeText

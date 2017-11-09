@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react'
 import { view } from '@mcro/black'
-import Text from '../text'
+import Label from './label'
 import type { Color } from '@mcro/gloss'
 
 // fields
@@ -83,18 +83,10 @@ export default class Field extends React.Component<Props> {
     }
 
     return (
-      <field $width={width} css={props}>
-        <Text
-          if={label}
-          tagName="label"
-          $label
-          ellipse
-          htmlFor={id}
-          size={size}
-          {...labelProps}
-        >
+      <field css={props}>
+        <Label if={label} $label htmlFor={id} size={size} {...labelProps}>
           {label === true ? ' ' : label}
-        </Text>
+        </Label>
         <Element
           if={!children && Element}
           $element
@@ -143,7 +135,7 @@ export default class Field extends React.Component<Props> {
       },
       label: {
         margin: 0,
-        padding: [0, 10, 0, 0],
+        padding: [0, 10],
         flex: 'none',
         width: 'auto',
       },
@@ -156,6 +148,7 @@ export default class Field extends React.Component<Props> {
 
     return {
       field: {
+        width: props.width,
         ...(props.row && rowStyle.field),
         ...(props.inactive && inactiveStyle.field),
         ...props.fieldStyle,

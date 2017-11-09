@@ -137,6 +137,13 @@ export default class ContextSidebar {
           this.oraStore.addCurrentPage()
         },
       },
+      {
+        icon: 'bug',
+        children: 'Crawl',
+        onClick: () => {
+          OS.send('inject-crawler')
+        },
+      },
     ]
   }
 

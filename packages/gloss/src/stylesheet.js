@@ -5,7 +5,16 @@ import * as JSS from 'jss'
 
 const jss = JSS.create()
 
-jss.use(jssNested(), jssDefaultUnit(), jssPropsSort())
+function specific() {
+  return {
+    onProcessRule(rule) {
+      console.log('rule is', rule.selector, rule)
+      // rule.selector = ` body ${rule.selector}`
+    },
+  }
+}
+
+jss.use(jssNested(), jssDefaultUnit(), jssPropsSort(), specific())
 
 export default jss
 

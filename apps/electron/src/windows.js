@@ -40,10 +40,6 @@ export default class Windows extends React.Component {
   }
 
   componentDidMount() {
-    setTimeout(() => {
-      this.injectCrawler()
-    }, 1500)
-
     this.measureAndShow()
 
     this.screenSize = screen.getPrimaryDisplay().workAreaSize
@@ -141,6 +137,10 @@ export default class Windows extends React.Component {
         //           }
         //         )
       }
+    })
+
+    this.on(ipcMain, 'inject-crawler', () => {
+      this.injectCrawler()
     })
 
     this.on(ipcMain, 'navigate', (event, url) => {

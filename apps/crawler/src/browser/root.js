@@ -103,10 +103,11 @@ export default class Root extends React.Component {
         <crawler ref={store.setParent}>
           <style
             type="text/css"
+            style={{ display: 'none' }}
             dangerouslySetInnerHTML={{
               __html: `
-            .__orbit_highlight { background: rgba(0%, 62.5%, 84.7%, 0.25) !important;  }
-          `,
+.__orbit_highlight { background: rgba(0%, 62.5%, 84.7%, 0.25) !important;  }
+              `,
             }}
           />
 
@@ -182,6 +183,10 @@ export default class Root extends React.Component {
       boxShadow: [[0, 0, 50, [0, 0, 0, 0.35]]],
       transform: {
         z: Number.MAX_SAFE_INTEGER,
+      },
+
+      '& *': {
+        display: 'flex',
       },
     },
     space: {

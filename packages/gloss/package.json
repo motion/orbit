@@ -22,7 +22,8 @@
     "jss-default-unit": "^8.0.0",
     "jss-global": "^3.0.0",
     "jss-nested": "^6.0.0",
-    "jss-props-sort": "^6.0.0"
+    "jss-props-sort": "^6.0.0",
+    "jss-increase-specificity": "^0.3.5"
   },
   "peerDependencies": {
     "react": "^0.14.0 || ^15.0.0 || ^16.0.0",

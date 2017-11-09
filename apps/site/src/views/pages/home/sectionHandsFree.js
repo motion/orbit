@@ -7,9 +7,9 @@ export default props => (
   <UI.Theme name="dark">
     <View.Section
       space
-      padded
       css={{
         background: `linear-gradient(to left, #7A52B9, #8D6BC3)`,
+        padding: [200, 0, 100],
       }}
     >
       <View.SectionContent padRight padBottom>

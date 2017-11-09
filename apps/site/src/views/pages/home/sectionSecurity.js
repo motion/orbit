@@ -2,19 +2,36 @@ import * as React from 'react'
 import * as View from '~/views'
 import * as UI from '@mcro/ui'
 
+const background = '#fff'
+
 export default props => (
-  <UI.Theme name="dark">
-    <View.Section space css={{ background: '#222', zIndex: 100000 }} padded>
+  <UI.Theme name="light">
+    <View.Section css={{ background, zIndex: 100000, padding: [100, 0] }}>
       <slant
         css={{
           position: 'absolute',
           top: -50,
-          background: '#222',
+          background,
           left: -300,
           right: -300,
           height: 100,
           zIndex: 1200000,
-          boxShadow: [[0, -10, 10, [0, 0, 0, 0.05]]],
+          boxShadow: [[0, -50, 70, [0, 0, 0, 0.5]]],
+          transform: {
+            rotate: '-1deg',
+          },
+        }}
+      />
+      <bottomSlant
+        css={{
+          position: 'absolute',
+          bottom: -50,
+          background,
+          left: -300,
+          right: -300,
+          height: 100,
+          zIndex: 1200000,
+          boxShadow: [[0, 20, 20, [0, 0, 0, 0.025]]],
           transform: {
             rotate: '-1deg',
           },
@@ -31,7 +48,13 @@ export default props => (
             justifyContent: 'center',
           }}
         >
-          <UI.Icon color="#fff" opacity={0.8} size={501} name="lock" />
+          <UI.Icon
+            color="#fff"
+            opacity={0.8}
+            size={501}
+            name="lock"
+            css={{ textShadow: '0 0 1px #000' }}
+          />
         </after>
         <View.Title getRef={props.setSection(2)} size={3}>
           The No-Cloud Infrastructure

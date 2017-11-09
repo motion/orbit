@@ -3,7 +3,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import createElement from '@mcro/black/lib/createElement'
 import Themes from '~/browser/themes'
-import { ThemeProvide, Theme } from '@mcro/ui'
+import { ThemeProvide } from '@mcro/ui'
 
 // Gloss: all <tag />s can use $$styleProps or css={{}}
 React.createElement = createElement
@@ -14,9 +14,7 @@ function main() {
   const Root = require('./root').default
   ReactDOM.render(
     <ThemeProvide {...Themes}>
-      <Theme name="dark">
-        <Root />
-      </Theme>
+      <Root />
     </ThemeProvide>,
     injectedRoot
   )

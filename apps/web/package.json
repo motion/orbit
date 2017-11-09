@@ -18,6 +18,7 @@
     "@mcro/r2": "^1.5.1",
     "@mcro/router": "^1.5.1",
     "@mcro/ui": "^1.5.1",
+    "@mcro/crawler": "*",
     "apollo-fetch": "^0.6.0",
     "babel-polyfill": "^6.23.0",
     "color": "^2.0.0",

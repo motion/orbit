@@ -82,10 +82,17 @@ export default function storeProvidable(options, Helpers) {
             return
           }
           this.mountStores()
-          Helpers.on('hmr', this.clearErrors)
+          if (window.Black) {
+            window.Black.view.on('hmr', this.clearErrors)
+          }
         }
 
-        clearErrors = () => this.clearError && this.clearError()
+        clearErrors = () => {
+          console.log('gopt hrm')
+          if (this.clearError) {
+            this.clearError()
+          }
+        }
 
         clearError() {
           if (!this.unmounted) {
@@ -96,8 +103,10 @@ export default function storeProvidable(options, Helpers) {
         componentWillUnmount() {
           // if you remove @view({ store: ... }) it tries to remove it here but its gone
           if (this.disposeStores) {
+            if (window.Black) {
+              window.Black.view.off('hmr', this.clearErrors)
+            }
             this.disposeStores()
-            Helpers.off('hmr', this.clearErrors)
             this.unmounted = true
           }
         }

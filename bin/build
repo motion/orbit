@@ -16,7 +16,6 @@ killgroup() {
 
 function build-dev() {
   npx lerna exec --parallel --concurrency 1 \
-    --ignore @mcro/crawler \
     --ignore @mcro/web \
     --ignore @mcro/site \
     --ignore @mcro/api \
@@ -79,7 +78,9 @@ else
   if [ "$APP" = "--watch" ]; then
     # only build modern during dev-watch
     build-es6 --watch &
+    sleep 4
     build-dev --watch &
+    sleep 4
     build-prod --watch &
     (cd apps/crawler && npm run watch) &
   else

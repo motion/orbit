@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { findDOMNode } from 'react-dom'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import * as View from '~/views'
@@ -84,7 +85,9 @@ export default class HomePage extends React.Component {
   render({ homeStore, blurred, isSmall }) {
     const styles = this.getStyle()
     const sectionProps = {
-      ...this.props,
+      isSmall,
+      blurred,
+      homeStore,
       setSection: homeStore.setSection,
     }
     return (
@@ -99,21 +102,27 @@ export default class HomePage extends React.Component {
           <HomeIntegrations {...sectionProps} />
           <HomeChat {...sectionProps} />
           <HomeSecurity {...sectionProps} />
-          <footer>
-            <View.Section css={{ padding: [250, 0] }} $$centered padded>
-              <View.SectionContent>
-                <View.Text size={3}>
-                  Orbit is going into private beta in December.
-                </View.Text>
-                <View.Text size={2}>
-                  <View.Link href="mailto:natewienert@gmail.com">
-                    Send us an email
-                  </View.Link>{' '}
-                  if you're interested.
-                </View.Text>
-              </View.SectionContent>
-            </View.Section>
-          </footer>
+          <View.Section
+            css={{
+              padding: [250, 0],
+              zIndex: 100000,
+              background: '#fff',
+            }}
+            $$centered
+            padded
+          >
+            <View.SectionContent>
+              <View.Text size={3}>
+                Orbit is going into private beta in December.
+              </View.Text>
+              <View.Text size={2}>
+                <View.Link href="mailto:natewienert@gmail.com">
+                  Send us an email
+                </View.Link>{' '}
+                if you're interested.
+              </View.Text>
+            </View.SectionContent>
+          </View.Section>
           <HomeHandsFree {...sectionProps} />
         </contents>
       </page>
@@ -121,6 +130,9 @@ export default class HomePage extends React.Component {
   }
 
   setRef(node) {
+    if (this.node) {
+      return
+    }
     this.node = node
     this.props.homeStore.pageNode = node
     if (!node) {
@@ -185,9 +197,9 @@ export default class HomePage extends React.Component {
 
   static style = {
     contents: {
-      transform: {
-        z: 0,
-      },
+      // transform: {
+      //   z: 0,
+      // },
     },
   }
 }

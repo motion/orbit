@@ -12,10 +12,11 @@ export default class SectionChat extends React.Component {
         <UI.Theme name="light">
           <View.Section
             css={{
-              background: `#fff`,
+              padding: [140, 0],
+              background: `#f6f6f6`,
             }}
           >
-            <View.SectionContent padRight padBottom>
+            <View.SectionContent padRight>
               <View.Title size={3}>Wherever you are</View.Title>
               <View.SubTitle color="#000">
                 Unlike a browser extension or bot, Ora lives on your desktop and

@@ -1017,6 +1017,6 @@ export default function watchify(rootNode) {
   const drag = new DragModule(display)
   drag.setDraggable()
 
-  const zoom = new ZoomModule(display)
-  zoom.setZoomable()
+  // const zoom = new ZoomModule(display)
+  // zoom.setZoomable()
 }

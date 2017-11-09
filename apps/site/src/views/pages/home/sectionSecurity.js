@@ -4,20 +4,49 @@ import * as UI from '@mcro/ui'
 
 export default props => (
   <UI.Theme name="dark">
-    <View.Section space padded>
-      <View.BottomSlant css={{ background: '#fff' }} />
+    <View.Section space css={{ background: '#111', zIndex: 100000 }} padded>
+      <slant
+        css={{
+          position: 'absolute',
+          top: -50,
+          background: '#111',
+          left: -300,
+          right: -300,
+          height: 100,
+          zIndex: 1200000,
+          boxShadow: [[0, -10, 10, [0, 0, 0, 0.05]]],
+          transform: {
+            rotate: '-1deg',
+          },
+        }}
+      />
+      <bottomSlant
+        css={{
+          position: 'absolute',
+          bottom: -50,
+          background: '#111',
+          left: -300,
+          right: -300,
+          height: 100,
+          zIndex: 1200000,
+          boxShadow: [[0, 20, 20, [0, 0, 0, 0.025]]],
+          transform: {
+            rotate: '-1deg',
+          },
+        }}
+      />
+
       <View.SectionContent padRight padBottom>
         <after
           css={{
             position: 'absolute',
             top: 0,
-            right: -200,
+            right: -100,
             bottom: 0,
             justifyContent: 'center',
-            opacity: 0.05,
           }}
         >
-          <UI.Icon color="#000" size={501} name="lock" />
+          <UI.Icon color="#fff" size={501} name="lock" />
         </after>
         <View.Title getRef={props.setSection(2)} size={3}>
           The No-Cloud Infrastructure

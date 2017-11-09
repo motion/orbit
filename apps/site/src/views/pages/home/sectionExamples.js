@@ -84,7 +84,7 @@ export default class SectionExamples {
           css={{ background: `linear-gradient(${dark2}, #000)` }}
         >
           <View.SectionContent css={{ paddingRight: 430 }}>
-            <inner css={{ padding: [0, 0] }}>
+            <inner>
               <View.Title size={3}>Ora keeps you in sync</View.Title>
               {makeSection(
                 'example-1',

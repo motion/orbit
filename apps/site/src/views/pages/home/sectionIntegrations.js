@@ -5,12 +5,12 @@ import * as UI from '@mcro/ui'
 import appleWatch from './helpers/appleWatch'
 
 const width = 900
-const height = 575
+const height = 500
 
 @view
-export default class SectionIntegrations {
+export default class SectionIntegrations extends React.Component {
   setupWatch = ref => {
-    if (!ref) {
+    if (!ref || this.props.blurred) {
       return
     }
     appleWatch(ref)
@@ -19,11 +19,43 @@ export default class SectionIntegrations {
   render() {
     return (
       <UI.Theme name="light">
-        <View.Section padded css={{ background: '#fff' }}>
-          <View.SectionContent padRight $content>
+        <View.Section
+          css={{ padding: [60, 0], background: '#fff', zIndex: 100000 }}
+        >
+          <slant
+            css={{
+              position: 'absolute',
+              top: -50,
+              background: '#fff',
+              left: -300,
+              right: -300,
+              height: 100,
+              zIndex: 1200000,
+              boxShadow: [[0, -50, 70, [0, 0, 0, 0.5]]],
+              transform: {
+                rotate: '-1deg',
+              },
+            }}
+          />
+          <bottomSlant
+            css={{
+              position: 'absolute',
+              bottom: -50,
+              background: '#fff',
+              left: -300,
+              right: -300,
+              height: 100,
+              zIndex: 1200000,
+              boxShadow: [[0, 20, 20, [0, 0, 0, 0.025]]],
+              transform: {
+                rotate: '-1deg',
+              },
+            }}
+          />
+          <View.SectionContent $content>
             <View.Title size={3}>With anything you use</View.Title>
             <View.SubTitle color="#000">
-              Ora works with you, by supporting nearly any integration you have.
+              Ora works with you, by supporting nearly any integration you have.<br />
               Learn more.
             </View.SubTitle>
             <svg

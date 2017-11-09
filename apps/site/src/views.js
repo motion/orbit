@@ -51,7 +51,7 @@ export const Section = view(
     paddingLeft: 100,
     paddingRight: 100,
     position: 'relative',
-    overflow: 'hidden',
+    //overflow: 'hidden',
   },
   {
     padded: {
@@ -106,7 +106,6 @@ export const BottomSlant = view(
     left: -500,
     right: -500,
     height: 400,
-    zIndex: 0,
     transform: {
       rotate: '-1deg',
     },

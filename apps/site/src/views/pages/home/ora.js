@@ -29,7 +29,7 @@ export default class Ora extends React.Component {
         <ora
           css={{
             position: 'fixed',
-            top: 20,
+            top: 40,
             left: '50%',
             marginLeft: 305,
             transform: {
@@ -46,7 +46,7 @@ export default class Ora extends React.Component {
             zIndex: 10000,
             boxShadow: [
               '0 0 20px rgba(0,0,0,0.45)',
-              'inset 0 0 180px 25px rgba(10,10,10,0.25)',
+              // 'inset 0 0 180px 25px rgba(10,10,10,0.25)',
               //'inset 0 0 0 4px #444',
             ],
           }}

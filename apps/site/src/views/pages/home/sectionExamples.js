@@ -27,52 +27,55 @@ const dark2 = UI.color(Constants.colorSecondary)
   .toString()
 
 const OPTS = {
-  percentFromTop: 76,
+  percentFromTop: 50,
 }
 
 @view
 export default class SectionExamples {
   render({ setSection, homeStore }) {
-    const makeSection = (key, content, opts = OPTS) => (
-      <View.SubTitle
-        getRef={setSection(key, opts)}
-        opacity={homeStore.activeKey === key ? 1 : 0.2}
-        css={{
-          transition: 'all ease-in 300ms',
-          marginBottom: 50,
-          marginTop: 50,
-        }}
-      >
-        {content}
-
-        <line
+    const makeSection = (key, content, opts = OPTS) => {
+      const adjustDown = opts.percentFromTop - 30 * 2
+      return (
+        <View.SubTitle
+          getRef={setSection(key, opts)}
+          opacity={homeStore.activeKey === key ? 1 : 0.32}
           css={{
-            position: 'absolute',
-            bottom: -125,
-            right: -385,
-            width: 300,
-            height: 1,
-            background: 'red',
+            transition: 'all ease-in 300ms',
+            marginBottom: 50,
+            marginTop: 50,
           }}
         >
-          <upwardsLine
+          {content}
+
+          <line
             css={{
               position: 'absolute',
-              left: '-100%',
+              bottom: -adjustDown * 4,
+              right: -385,
               width: 300,
               height: 1,
-              background: 'linear-gradient(to right, transparent 20%, red)',
-              transformOrigin: 'bottom right',
-              transform: {
-                rotate: '50deg',
-                // y: -125,
-                // x: -50,
-              },
+              background: 'linear-gradient(to left, transparent, red 50%)',
             }}
-          />
-        </line>
-      </View.SubTitle>
-    )
+          >
+            <upwardsLine
+              css={{
+                position: 'absolute',
+                left: '-100%',
+                width: 300,
+                height: 1,
+                background: 'linear-gradient(to right, transparent 50%, red)',
+                transformOrigin: 'bottom right',
+                transform: {
+                  rotate: `${adjustDown}deg`,
+                  // y: -125,
+                  // x: -50,
+                },
+              }}
+            />
+          </line>
+        </View.SubTitle>
+      )
+    }
 
     return (
       <UI.Theme name="dark">
@@ -81,7 +84,7 @@ export default class SectionExamples {
           css={{ background: `linear-gradient(${dark2}, #000)` }}
         >
           <View.SectionContent padRight>
-            <inner css={{ padding: [100, 0] }}>
+            <inner css={{ padding: [0, 0] }}>
               <View.Title size={3}>Ora keeps you in sync</View.Title>
               {makeSection(
                 'example-1',
@@ -90,7 +93,7 @@ export default class SectionExamples {
                   conversation <em>before</em> you open that duplicate{' '}
                   <Logo name="jira" /> ticket.
                 </span>,
-                { percentFromTop: 50 }
+                { percentFromTop: 35 }
               )}
               {makeSection(
                 'example-2',
@@ -98,7 +101,8 @@ export default class SectionExamples {
                   Have the <Logo name="confluence" /> knowledgebase answer on
                   hand the second your customer asks you a{' '}
                   <Logo name="zendesk" /> question in chat.
-                </span>
+                </span>,
+                { percentFromTop: 50 }
               )}
               {makeSection(
                 'example-3',
@@ -106,7 +110,8 @@ export default class SectionExamples {
                   Verify you're referencing the latest numbers in that{' '}
                   <Logo name="google-drive" /> planning document before you hit
                   send on that <Logo name="google-gmail" /> email.
-                </span>
+                </span>,
+                { percentFromTop: 60 }
               )}
               {makeSection(
                 'example-4',
@@ -123,7 +128,8 @@ export default class SectionExamples {
                   />{' '}
                   Lisa already wrote <Logo name="dropbox" /> some notes on that
                   last meeting.
-                </span>
+                </span>,
+                { percentFromTop: 65 }
               )}
               {makeSection(
                 'example-5',
@@ -131,7 +137,8 @@ export default class SectionExamples {
                   Be the hero in <Logo name="slack" /> #devops when you see a{' '}
                   <Logo name="github-icon" /> ticket was just opened for the
                   very issue someone just asked about.
-                </span>
+                </span>,
+                { percentFromTop: 70 }
               )}
               <br />
               <br />
@@ -140,7 +147,7 @@ export default class SectionExamples {
               <br />
               <br />
               <br />
-              <div>
+              <div if={false}>
                 <View.SubTitle opacity={1}>
                   Orbit is the first ever knowledge assistant that knows
                   <View.Hl color="#000">everything</View.Hl> in your company,

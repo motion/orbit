@@ -10,6 +10,7 @@ import HomeHandsFree from './home/sectionHandsFree'
 import HomeSecurity from './home/sectionSecurity'
 import HomeChat from './home/sectionChat'
 import HomeExamples from './home/sectionExamples'
+import HomeIntegrations from './home/sectionIntegrations'
 
 let blurredRef
 
@@ -95,6 +96,7 @@ export default class HomePage extends React.Component {
         <contents css={{ overflow: 'hidden' }}>
           <HomeHeader />
           <HomeExamples {...sectionProps} />
+          <HomeIntegrations {...sectionProps} />
           <HomeChat {...sectionProps} />
           <HomeHandsFree {...sectionProps} />
           <HomeSecurity {...sectionProps} />
@@ -146,10 +148,10 @@ export default class HomePage extends React.Component {
         },
       }
     }
-    const pad = 20
+    const topPad = 40
     const height = Constants.ORA_HEIGHT
-    const rightEdge = window.innerWidth / 2 + 475 - pad
-    const bottom = height + pad
+    const rightEdge = window.innerWidth / 2 + 475 - 20
+    const bottom = height + topPad
     const right = rightEdge - Constants.ORA_BORDER_RADIUS + 2
     const left =
       rightEdge - Constants.ORA_WIDTH + Constants.ORA_BORDER_RADIUS - 2
@@ -164,7 +166,7 @@ export default class HomePage extends React.Component {
         zIndex: 1000,
         // rounded:
         // polygon(5% 0, 95% 0, 100% 4%, 100% 95%, 95% 100%, 5% 100%, 0 95%, 0 5%)
-        clip: `rect(${pad + 1}px, ${right}px, ${bottom}px, ${left}px)`,
+        clip: `rect(${topPad + 1}px, ${right}px, ${bottom}px, ${left}px)`,
         // clipPath: `url(/ora.svg#clip)`,
       },
     }

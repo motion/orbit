@@ -142,13 +142,17 @@ export default class Header {
                     <planet
                       css={{
                         borderRadius: 100,
-                        background: '#000',
-                        width: 40,
-                        height: 40,
+                        background:
+                          i % 7 === 0
+                            ? UI.color(Constants.colorMain).lighten(5)
+                            : '#000',
+                        border: [1, orbitLineColor],
+                        width: 50,
+                        height: 50,
                         margin: 'auto',
                         animation: `orbital${col} ${col * 30 +
                           50}s linear infinite`,
-                        animationDelay: `-${(col + 1 * 5) * (i + 1) * 3000}ms`,
+                        animationDelay: `-${(col + 1 * 5) * (i + 1) * 2000}ms`,
                         alignItems: 'center',
                         justifyContent: 'center',
                       }}
@@ -265,7 +269,8 @@ export default class Header {
                       width: 10,
                       paddingLeft: 40,
                       height: 200,
-                      borderRight: [5, 'dashed', [255, 255, 255, 0.5]],
+                      borderRight: [4, 'dashed', '#fff'],
+                      opacity: 0.7,
                       alignItems: 'center',
                     }}
                   >
@@ -274,11 +279,10 @@ export default class Header {
                         position: 'absolute',
                         bottom: 0,
                         marginBottom: -34,
-                        marginLeft: 3,
+                        marginLeft: 2,
                       }}
-                      color="white"
+                      color="#fff"
                       size={30}
-                      opacity={0.5}
                     />
                   </arrowVertical>
                 </arrows>

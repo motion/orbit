@@ -32,13 +32,14 @@ const OPTS = {
 
 @view
 export default class SectionExamples {
-  render({ setSection, homeStore }) {
+  render({ setSection, homeStore, blurred }) {
     const makeSection = (key, content, opts = OPTS) => {
       const adjustDown = opts.percentFromTop - 25 * 2
+      const isActive = homeStore.activeKey === key
       return (
         <View.SubTitle
           getRef={setSection(key, opts)}
-          opacity={homeStore.activeKey === key ? 1 : 0.32}
+          opacity={isActive ? 1 : 0.32}
           css={{
             transition: 'all ease-in 300ms',
             marginBottom: 50,
@@ -57,6 +58,19 @@ export default class SectionExamples {
               background: 'linear-gradient(to left, transparent, red 50%)',
             }}
           >
+            <dot
+              css={{
+                position: 'absolute',
+                top: -10,
+                left: '50%',
+                marginLeft: -30,
+                width: 20,
+                height: 20,
+                border: [2, '#000'],
+                background: 'red',
+                borderRadius: 100,
+              }}
+            />
             <upwardsLine
               css={{
                 position: 'absolute',

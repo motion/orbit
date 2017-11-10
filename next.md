@@ -1,25 +1,39 @@
-# completed
-- strip whitespace if it exists in body text
-- we need a line clamp feature that ellipses text after x lines
-- add option to drill in rather than open in browser so you can see context
-- clamp titles of context items (clamp=2)
-- dont show pin if already pinned (show that its pinned)
-- dont show the exact same item in context for itself
-- finish buckets
-  - needs to take you back home when changing bucket
-- dont focus search on open
-- :bug: popover flicker
+## product
+- settings pane working
+- onboarding flow
+- various fixes for good ux
+- calndar meetings
+- related project/task/person in special area
 
-# next
+## focus
+- slack
+- microsoft word/excel
+- intercom/zendesk apps (likely not hard)
+
+## ingest
+- sources:
+  - local files
+  - dropbox
+  - google drive docx type (titles at least)
+  - drive excel files (titles at least + link to them)
+  - jira/confluence
+  - slack
+  - gmail
+  - calendar
+- people:
+  - sync people in from various oauth sources
+  - doing smart combination of people across sources
+  - modeling of topics people are experts in
+  - returning proper people for certain things / showing in app
+
+## small things
+- settings pane: general settings + integrations split out + working open/close
 - auto minimize height if window behind is at bottom (slack)
-- slack integration get last message
-  - selection
+- return focus to previous window on hide ora
 - hover to see tooltip peek (test if it be done in same browserwindow)
 - add preview of body contents when showing items
 - hiding should remove pointer events
-- settings pane: general settings + integrations split out + working open/close
 - make stack link to url so that hmr doesnt lose state
-- return focus to previous window on hide ora
 - need to do bolding inside ui.text so it works well with clamps
 - :bug: once you pin the results disappear
 - :bug: prevent click going to url unless window is focused
@@ -33,13 +47,3 @@
 - prevent flickering when moving between pages
   - stack should load item with prop onLoaded and wait for that before navigating
 - favicons and urls showing in subtitle in context results
-
-# integration related
-- fix settings pane
-- sync github issues
-- make github issues look nice in context
-- import slack
-- import email
-- show related people
-- show related project/task
-- fix calendar

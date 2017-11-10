@@ -73,7 +73,6 @@ export default class Crawler {
                 : '',
             }
           }, options)
-          console.log('GOTCHA', contents)
           const outboundUrls = links.filter(link => {
             return url.parse(link).host === entryUrl.host
           })

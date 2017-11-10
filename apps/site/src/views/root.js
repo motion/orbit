@@ -55,10 +55,10 @@ export default class Root extends React.Component {
   }
 
   static style = {
-    layout: {
-      width: '100%',
-      maxWidth: '100%',
-      overflow: 'hidden',
-    },
+    // layout: {
+    //   width: '100%',
+    //   maxWidth: '100%',
+    //   overflow: 'hidden',
+    // },
   }
 }

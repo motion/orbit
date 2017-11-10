@@ -72,6 +72,9 @@ export const SectionContent = view(
     margin: [0, 'auto'],
     position: 'relative',
     zIndex: 10,
+    transform: {
+      z: 0,
+    },
   },
   {
     padRight,

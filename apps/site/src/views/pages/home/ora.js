@@ -26,34 +26,11 @@ export default class Ora extends React.Component {
     }
     return (
       <UI.Theme name="dark">
-        <ora
-          css={{
-            position: 'fixed',
-            top: 40,
-            left: '50%',
-            marginLeft: 305,
-            transform: {
-              x: '-50%',
-            },
-            width: Constants.ORA_WIDTH,
-            height: Constants.ORA_HEIGHT,
-            borderRadius: Constants.ORA_BORDER_RADIUS,
-            userSelect: 'none',
-            background: [40, 40, 40, 0.6],
-            border: [4, 'transparent'],
-            color: '#fff',
-            zIndex: 10000,
-            boxShadow: [
-              '0 0 20px rgba(0,0,0,0.45)',
-              // 'inset 0 0 180px 25px rgba(10,10,10,0.25)',
-              //'inset 0 0 0 4px #444',
-            ],
-          }}
-        >
-          <header css={{ padding: 10, opacity: 0.25 }}>
+        <ora>
+          <header>
             <UI.Icon name="zoom" />
           </header>
-          <content css={{ padding: 0 }}>
+          <content>
             <UI.List
               itemProps={{ padding: [10, 15], glow: true, size: 1.15 }}
               key={this.state.lastIntersection}
@@ -64,5 +41,27 @@ export default class Ora extends React.Component {
         </ora>
       </UI.Theme>
     )
+  }
+  static style = {
+    ora: {
+      position: 'fixed',
+      top: 40,
+      left: '50%',
+      marginLeft: 305,
+      transform: {
+        x: '-50%',
+      },
+      width: Constants.ORA_WIDTH,
+      height: Constants.ORA_HEIGHT,
+      borderRadius: Constants.ORA_BORDER_RADIUS,
+      userSelect: 'none',
+      background: [40, 40, 40, 0.6],
+      border: [4, 'transparent'],
+      color: '#fff',
+      zIndex: 10000,
+      boxShadow: ['0 0 20px rgba(0,0,0,0.45)'],
+    },
+    header: { padding: 10, opacity: 0.25 },
+    content: { padding: 0 },
   }
 }

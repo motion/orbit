@@ -19,25 +19,25 @@ let blurredRef
   homeStore: class HomeStore {
     bounds = {}
     ready = false
-    pageNode = null
+    pageNode = document.body.parentNode
     activeKey = null
 
     willMount() {
-      this.watch(() => {
-        if (this.pageNode) {
-          this.on(
-            this.pageNode,
-            'scroll',
-            throttle(() => {
-              if (this.pageNode.scrollTop < 200) {
-                this.activeKey = 0
-              } else {
-                this.activeKey = this.getActiveKey()
-              }
-            }, 100)
-          )
-        }
-      })
+      this.watchScroll()
+    }
+
+    watchScroll = () => {
+      const { pageNode } = this
+      const { scrollTop } = pageNode
+      if (blurredRef) {
+        blurredRef.style.transform = `translateY(-${scrollTop}px)`
+      }
+      if (pageNode.scrollTop < 200) {
+        this.activeKey = 0
+      } else {
+        this.activeKey = this.getActiveKey()
+      }
+      requestAnimationFrame(this.watchScroll)
     }
 
     getActiveKey() {
@@ -83,6 +83,7 @@ export default class HomePage extends React.Component {
   }
 
   render({ homeStore, blurred, isSmall }) {
+    console.log('rendering home')
     const styles = this.getStyle()
     const sectionProps = {
       isSmall,
@@ -131,20 +132,11 @@ export default class HomePage extends React.Component {
       return
     }
     this.node = node
-    this.props.homeStore.pageNode = node
     if (!node) {
       return
     }
     if (this.props.blurred) {
       blurredRef = node.childNodes[0]
-    } else {
-      this.on(
-        this.node,
-        'scroll',
-        throttle(() => {
-          blurredRef.style.transform = `translateY(-${this.node.scrollTop}px)`
-        }, 16)
-      )
     }
   }
 
@@ -152,8 +144,8 @@ export default class HomePage extends React.Component {
     if (!this.props.blurred) {
       return {
         page: {
-          height: window.innerHeight,
-          overflowY: 'scroll',
+          // height: window.innerHeight,
+          // overflowY: 'scroll',
         },
       }
     }

@@ -22,6 +22,101 @@ const Icon = props => (
   <UI.Icon css={{ display: 'inline' }} size={30} {...props} />
 )
 
+const Nebula = () => (
+  <nebula>
+    <cloud
+      css={{
+        position: 'absolute',
+        bottom: -400,
+        right: -100,
+        width: 1200,
+        height: 500,
+        background: 'radial-gradient(orange, transparent 50%)',
+        zIndex: 2,
+        opacity: 0.15,
+        transform: {
+          z: 0,
+          scale: 3,
+        },
+      }}
+    />
+    <cloud
+      css={{
+        position: 'absolute',
+        bottom: -400,
+        right: -100,
+        width: 1000,
+        height: 800,
+        background: 'radial-gradient(red, transparent 50%)',
+        zIndex: 1,
+        opacity: 0.25,
+        transform: {
+          z: 0,
+          scale: 3,
+        },
+      }}
+    />
+    <cloud
+      css={{
+        position: 'absolute',
+        bottom: -200,
+        right: -300,
+        width: 500,
+        height: 500,
+        background: 'radial-gradient(black, transparent 50%)',
+        zIndex: 3,
+        opacity: 0.5,
+        transform: {
+          z: 0,
+          scale: 3,
+        },
+      }}
+    />
+  </nebula>
+)
+
+const Lines = ({ adjustDown }) => (
+  <line
+    css={{
+      position: 'absolute',
+      bottom: -adjustDown * 4 + 20,
+      right: -440,
+      width: 300,
+      height: 1,
+      background: 'linear-gradient(to left, transparent, red 50%)',
+    }}
+  >
+    <dot
+      css={{
+        position: 'absolute',
+        top: -10,
+        left: '50%',
+        marginLeft: -30,
+        width: 20,
+        height: 20,
+        border: [2, '#000'],
+        background: 'red',
+        borderRadius: 100,
+      }}
+    />
+    <upwardsLine
+      css={{
+        position: 'absolute',
+        left: '-100%',
+        width: 300,
+        height: 1,
+        background: 'linear-gradient(to right, transparent 50%, red)',
+        transformOrigin: 'bottom right',
+        transform: {
+          rotate: `${adjustDown * 1.1}deg`,
+          // y: -125,
+          // x: -50,
+        },
+      }}
+    />
+  </line>
+)
+
 const dark2 = UI.color(Constants.colorSecondary)
   .darken(0.75)
   .toString()
@@ -47,46 +142,7 @@ export default class SectionExamples {
           }}
         >
           {content}
-
-          <line
-            css={{
-              position: 'absolute',
-              bottom: -adjustDown * 4 + 20,
-              right: -440,
-              width: 300,
-              height: 1,
-              background: 'linear-gradient(to left, transparent, red 50%)',
-            }}
-          >
-            <dot
-              css={{
-                position: 'absolute',
-                top: -10,
-                left: '50%',
-                marginLeft: -30,
-                width: 20,
-                height: 20,
-                border: [2, '#000'],
-                background: 'red',
-                borderRadius: 100,
-              }}
-            />
-            <upwardsLine
-              css={{
-                position: 'absolute',
-                left: '-100%',
-                width: 300,
-                height: 1,
-                background: 'linear-gradient(to right, transparent 50%, red)',
-                transformOrigin: 'bottom right',
-                transform: {
-                  rotate: `${adjustDown * 1.1}deg`,
-                  // y: -125,
-                  // x: -50,
-                },
-              }}
-            />
-          </line>
+          <Lines key={adjustDown} adjustDown={adjustDown} />
         </View.SubTitle>
       )
     }
@@ -174,56 +230,7 @@ export default class SectionExamples {
             </inner>
           </View.SectionContent>
 
-          <nebula>
-            <cloud
-              css={{
-                position: 'absolute',
-                bottom: -400,
-                right: -100,
-                width: 1200,
-                height: 500,
-                background: 'radial-gradient(orange, transparent 50%)',
-                zIndex: 2,
-                opacity: 0.15,
-                transform: {
-                  z: 0,
-                  scale: 3,
-                },
-              }}
-            />
-            <cloud
-              css={{
-                position: 'absolute',
-                bottom: -400,
-                right: -100,
-                width: 1000,
-                height: 800,
-                background: 'radial-gradient(red, transparent 50%)',
-                zIndex: 1,
-                opacity: 0.25,
-                transform: {
-                  z: 0,
-                  scale: 3,
-                },
-              }}
-            />
-            <cloud
-              css={{
-                position: 'absolute',
-                bottom: -200,
-                right: -300,
-                width: 500,
-                height: 500,
-                background: 'radial-gradient(black, transparent 50%)',
-                zIndex: 3,
-                opacity: 0.5,
-                transform: {
-                  z: 0,
-                  scale: 3,
-                },
-              }}
-            />
-          </nebula>
+          <Nebula key={0} />
         </View.Section>
       </UI.Theme>
     )

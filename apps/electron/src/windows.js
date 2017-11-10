@@ -1,3 +1,4 @@
+import * as r2 from '@mcro/r2'
 import React from 'react'
 import { app, globalShortcut, ipcMain, screen } from 'electron'
 import repl from 'repl'
@@ -13,7 +14,6 @@ import { throttle } from 'lodash'
 import Menu from './menu'
 import getCrawler from './getCrawler'
 import escapeStringApplescript from 'escape-string-applescript'
-import crawl from '@mcro/crawler'
 
 const execute = promisify(applescript.execute)
 const sleep = ms => new Promise(res => setTimeout(res, ms))
@@ -150,9 +150,12 @@ export default class Windows extends React.Component {
       })
     })
 
-    this.on(ipcMain, 'start-crawl', () => {
-      console.log('crawl that bitch', !!crawlInfo)
-      crawl(crawlInfo)
+    this.on(ipcMain, 'start-crawl', async () => {
+      console.log('crawl that bitch', crawlInfo)
+      await r2.post('http://localhost:3001/crawler/start', {
+        json: { options: crawlInfo },
+      })
+      console.log('posted')
     })
 
     this.on(ipcMain, 'navigate', (event, url) => {
@@ -211,10 +214,10 @@ export default class Windows extends React.Component {
     this.continueChecking = true
     this.checkCrawlerLoop(res => {
       console.log('got res', res)
+      sendToOra(res)
       if (res && res.start) {
         this.continueChecking = false
         console.log('finished', res)
-        sendToOra(res)
       }
     })
   }

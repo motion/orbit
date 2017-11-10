@@ -12,6 +12,8 @@ import pup from 'puppeteer'
 // console.log('profile at', userProfileDir.toString())
 
 export default async function run(options = { entry: 'https://google.com' }) {
+  console.log('LAUNCHING PUPPETERERERER', options)
+
   const browser = await pup.launch({
     // executablePath:
     //   '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',

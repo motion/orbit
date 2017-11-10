@@ -40,7 +40,7 @@ export default class Ora extends React.Component {
             borderRadius: Constants.ORA_BORDER_RADIUS,
             userSelect: 'none',
             background: [40, 40, 40, 0.6],
-            border: [4, '#333'],
+            border: [4, 'transparent'],
             color: '#fff',
             zIndex: 10000,
             boxShadow: [

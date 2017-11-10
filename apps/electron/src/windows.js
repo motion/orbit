@@ -151,6 +151,7 @@ export default class Windows extends React.Component {
     })
 
     this.on(ipcMain, 'start-crawl', () => {
+      console.log('crawl that bitch', !!crawlInfo)
       crawl(crawlInfo)
     })
 
@@ -219,10 +220,16 @@ export default class Windows extends React.Component {
   }
 
   checkCrawlerLoop = async cb => {
-    cb(await this.checkCrawler())
+    try {
+      cb(await this.checkCrawler())
+    } catch (err) {
+      this.continueChecking = false
+      console.log('error with crawl loop', err)
+    }
     await sleep(1000)
     if (this.continueChecking) {
-      this.checkCrawlerLoop()
+      console.log('loop')
+      this.checkCrawlerLoop(cb)
     }
   }
 
@@ -236,7 +243,6 @@ export default class Windows extends React.Component {
     `)
     try {
       const result = JSON.parse(res)
-      console.log('got answer', result)
       return result
     } catch (err) {
       console.log('error parsing result', err)

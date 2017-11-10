@@ -39,12 +39,13 @@ export default class ContextSidebar {
   // copy it here
   osContext = this.oraStore.osContext
   isCrawling = false
+  crawlInfo = null
   @watch
   isPinned = () => this.osContext && Thing.findOne({ url: this.osContext.url })
 
   willMount() {
-    this.on(OS, 'crawl-preview', stuff => {
-      console.log('got crawl preview', stuff)
+    this.on(OS, 'crawler-selection', (event, info) => {
+      this.crawlInfo = info
     })
   }
 
@@ -131,6 +132,21 @@ export default class ContextSidebar {
   }
 
   get actions() {
+    if (this.crawlInfo) {
+      return [
+        {
+          key: Math.random(),
+          icon: 'play',
+          children: 'Start Crawl',
+          onClick: () => {
+            console.log('starting crawl')
+            this.isCrawling = true
+            OS.send('start-crawl')
+          },
+        },
+      ]
+    }
+
     return [
       this.isPinned && {
         icon: 'check',
@@ -155,8 +171,20 @@ export default class ContextSidebar {
   }
 
   get results() {
+    if (this.crawlInfo) {
+      return [
+        {
+          title: this.crawlInfo.title,
+          children: this.crawlInfo.body,
+        },
+      ]
+    }
     if (this.isCrawling) {
-      return []
+      return [
+        {
+          title: 'Select content in Chrome',
+        },
+      ]
     }
     if (this.context) {
       const os = this.search.length === 0 ? [] : []

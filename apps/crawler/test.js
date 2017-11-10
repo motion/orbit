@@ -1,6 +1,7 @@
 const run = require('./lib/index.js').default
 
-run('http://paulgraham.com', {
+run({
+  entry: 'http://paulgraham.com',
   puppeteerOptions: {
     headless: false,
   },

@@ -10,7 +10,9 @@ process.on('unhandledRejection', function(error, p) {
   }
 })
 
-export default async function run(entry = 'http://paulgraham.com', options) {
+export default async function run(
+  { entry = 'http://paulgraham.com', ...options } = {}
+) {
   const crawler = new Crawler(options)
   await crawler.start(entry)
   console.log(`Done!`)

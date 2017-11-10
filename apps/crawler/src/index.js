@@ -1,27 +1,17 @@
-import pup from 'puppeteer'
-// import Path from 'path'
+import Crawler from './crawler'
 
-// const userProfileDir = Path.join(
-//   process.env.HOME,
-//   'Library',
-//   'Application Support',
-//   'Google',
-//   'Chrome'
-//   // 'Default'
-// )
-// console.log('profile at', userProfileDir.toString())
+process.on('unhandledRejection', function(error, p) {
+  console.log('PromiseFail:')
+  if (error.stack) {
+    console.log(error.message)
+    console.log(error.stack)
+  } else {
+    console.log(error)
+  }
+})
 
-export default async function run(options = { entry: 'https://google.com' }) {
-  console.log('LAUNCHING PUPPETERERERER', options)
-
-  const browser = await pup.launch({
-    // executablePath:
-    //   '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
-    // userDataDir: userProfileDir.toString(),
-    headless: false,
-  })
-  const page = await browser.newPage()
-  await page.goto(options.entry)
-  // await page.screenshot({ path: 'example.png' })
-  // await browser.close()
+export default async function run(entry = 'http://paulgraham.com', options) {
+  const crawler = new Crawler(options)
+  await crawler.start(entry)
+  console.log(`Done!`)
 }

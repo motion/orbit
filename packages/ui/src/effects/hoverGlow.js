@@ -3,7 +3,7 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import $ from 'color'
 import offset from '~/helpers/offset'
-import { throttle } from 'lodash-decorators'
+import { throttle } from 'frame-throttle'
 import type { Color } from 'gloss'
 
 type Props = {
@@ -117,8 +117,7 @@ class HoverGlow extends React.PureComponent<Props, State> {
   }
 
   // offset gives us offset without scroll, just based on parent
-  @throttle(14)
-  move(e) {
+  move = throttle(e => {
     const [x, y] = offset(e, this.node)
     if (this.unmounted || !this.bounds) {
       console.log('no move', this)
@@ -130,7 +129,7 @@ class HoverGlow extends React.PureComponent<Props, State> {
         y: y - this.bounds.height / 2,
       },
     })
-  }
+  })
 
   mouseDown() {
     this.setState({ clicked: true }, () => {

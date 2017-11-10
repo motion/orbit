@@ -18,6 +18,7 @@ const BabelMinifyPlugin = require('babel-minify-webpack-plugin')
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
   .BundleAnalyzerPlugin
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
+const DuplicatePackageCheckerPlugin = require('duplicate-package-checker-webpack-plugin')
 
 const IS_PROD = process.env.NODE_ENV === 'production'
 const MINIFY = process.env.MINIFY === 'true'
@@ -73,6 +74,10 @@ module.exports = Object.assign(config, {
     pathinfo: true,
     filename: 'js/[name].js',
     publicPath: '/',
+  },
+
+  resolveLoader: {
+    modules: [Path.join(__dirname, '..', '..', 'node_modules')],
   },
 
   resolve: {
@@ -143,6 +148,8 @@ module.exports = Object.assign(config, {
         cache: true,
         parallel: true,
       }),
+
+    // new DuplicatePackageCheckerPlugin(),
     // slower
     // MINIFY &&
     //   new BabelMinifyPlugin({

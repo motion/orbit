@@ -9,7 +9,7 @@
     "@mcro/automagical": "^1.5.1",
     "@mcro/decor": "^1.5.1",
     "@mcro/gloss": "^1.5.1",
-    "color": "^2.0.0",
+    "color": "2.0.1",
     "global": "^4.3.0",
     "kontur": "^0.2.0",
     "pouchdb-core": "^6.3.0",

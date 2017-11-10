@@ -56,19 +56,15 @@ js-tokens@^3.0.0:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/js-tokens/-/js-tokens-3.0.2.tgz#9866df395102130e38f7f996bceb65443209c25b"
 
-jss-cache@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/jss-cache/-/jss-cache-3.0.0.tgz#c76848a486e6a00730d0996297db588ef265914f"
-
 jss-default-unit@^8.0.0:
   version "8.0.0"
   resolved "https://registry.yarnpkg.com/jss-default-unit/-/jss-default-unit-8.0.0.tgz#a308ead4f587ebe17cc845f9870867400de90910"
   dependencies:
     is-observable "^0.2.0"
 
-jss-global@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/jss-global/-/jss-global-3.0.0.tgz#e19e5c91ab2b96353c227e30aa2cbd938cdaafa2"
+jss-increase-specificity@^0.3.5:
+  version "0.3.5"
+  resolved "https://registry.yarnpkg.com/jss-increase-specificity/-/jss-increase-specificity-0.3.5.tgz#694a85acb5218ddcf5bb202e64b3d6b3fa20bdb5"
 
 jss-nested@^6.0.0:
   version "6.0.1"

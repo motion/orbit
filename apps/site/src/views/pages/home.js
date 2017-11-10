@@ -23,7 +23,11 @@ let blurredRef
     activeKey = null
 
     willMount() {
+      window.homeStore = this
       this.watchScroll()
+      setTimeout(() => {
+        this.ready = true
+      }, 16)
     }
 
     watchScroll = () => {
@@ -78,12 +82,7 @@ let blurredRef
 })
 @view
 export default class HomePage extends React.Component {
-  componentDidMount() {
-    this.props.homeStore.ready = true
-  }
-
   render({ homeStore, blurred, isSmall }) {
-    console.log('rendering home')
     const styles = this.getStyle()
     const sectionProps = {
       isSmall,
@@ -91,6 +90,7 @@ export default class HomePage extends React.Component {
       homeStore,
       setSection: homeStore.setSection,
     }
+    console.log('home', blurred, homeStore.ready, !isSmall)
     return (
       <page css={styles.page} ref={x => this.setRef(x)}>
         <Ora
@@ -158,6 +158,7 @@ export default class HomePage extends React.Component {
     const left = rightEdge - Constants.ORA_WIDTH + radius - 2
     return {
       page: {
+        willChange: 'transform',
         background: '#fff',
         pointerEvents: 'none',
         position: 'fixed',
@@ -165,10 +166,7 @@ export default class HomePage extends React.Component {
         left: 0,
         right: 0,
         zIndex: 1000,
-        // rounded:
-        // polygon(5% 0, 95% 0, 100% 4%, 100% 95%, 95% 100%, 5% 100%, 0 95%, 0 5%)
         clip: `rect(${topPad + radius}px, ${right}px, ${bottom}px, ${left}px)`,
-        // clipPath: `url(/ora.svg#clip)`,
       },
     }
   }

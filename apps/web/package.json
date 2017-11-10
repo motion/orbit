@@ -21,7 +21,7 @@
     "@mcro/crawler": "*",
     "apollo-fetch": "^0.6.0",
     "babel-polyfill": "^6.23.0",
-    "color": "^2.0.0",
+    "color": "2.0.1",
     "date-fns": "^2.0.0-alpha.7",
     "debug": "^3.1.0",
     "emojinize": "^1.0.0",

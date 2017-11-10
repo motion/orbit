@@ -26,69 +26,79 @@ export default class Crawler {
 
   async start(entry: string, options: Options = this.options) {
     log.crawl('Starting crawler')
-    let target = this.db.popUrl() || { url: entry, radius: 0 }
     const {
       puppeteerOptions,
       maxPages = Infinity,
       maxRadius = Infinity,
     } = options
 
+    let target = this.db.popUrl() || { url: entry, radius: 0 }
+
     if (!target.url) {
       log.crawl('no url')
+      return
+    }
+    if (!options.titleSelector || !options.bodySelector) {
+      log.crawl(`needs title/body selector`)
       return
     }
 
     const entryUrl = url.parse(target.url)
     const browser = await puppeteer.launch(puppeteerOptions)
     const page = await browser.newPage()
-    const next = () => {
-      target = this.db.popUrl()
-    }
 
     let count = 0
     while (target && this.shouldCrawl) {
       if (target.radius >= maxRadius) {
         log.page(`Maximum radius reached, did not crawl ${target.url}`)
       } else {
+        count++
         log.page(`Crawling ${target.url}`)
         try {
           await page.goto(target.url)
-          count++
-        } catch (err) {
-          log.page(`Error crawling url ${target.url}`)
-          next()
-          continue
-        }
-        let outboundUrls
-        try {
           const links = await page.evaluate(() => {
             return Array.from(document.querySelectorAll('[href]')).map(
               link => link.href
             )
           })
-          outboundUrls = links.filter(link => {
+          const contents = await page.evaluate(async options => {
+            const titleNode = document.querySelector(options.titleSelector)
+            const bodyNodes = Array.from(
+              document.querySelectorAll(options.bodySelector)
+            )
+            return {
+              title: titleNode ? titleNode.innerText : '',
+              body: bodyNodes.length
+                ? bodyNodes.map(node => node.innerText).join('\n\n')
+                : '',
+            }
+          }, options)
+          console.log('GOTCHA', contents)
+          const outboundUrls = links.filter(link => {
             return url.parse(link).host === entryUrl.host
           })
+          log.page(`Found ${outboundUrls.length} urls`)
+          this.db.store({
+            outboundUrls,
+            contents,
+            radius: ++target.radius,
+            url: target.url,
+          })
         } catch (err) {
-          log.page(`Error parsing page: ${err.message}`)
-          next()
-          continue
+          log.page(`Error crawling url ${target.url} ${err.message}`)
         }
-        log.page(`Found ${outboundUrls.length} urls`)
-        this.db.store({
-          outboundUrls,
-          radius: ++target.radius,
-          url: target.url,
-        })
       }
       if (count >= maxPages) {
+        log.crawl(`Max pages reached! ${maxPages}`)
         break
       }
-      next()
+      target = this.db.popUrl()
     }
 
     log.crawl(`Crawler done, crawled ${count} pages`)
     browser.close()
+    // return all items stored
+    return this.db.getAll()
   }
 
   stop() {

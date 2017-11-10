@@ -32,4 +32,8 @@ export default class CrawlerDB {
     }
     return null
   }
+
+  getAll() {
+    return this.crawled
+  }
 }

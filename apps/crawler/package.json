@@ -2,7 +2,7 @@
   "name": "@mcro/crawler",
   "private": true,
   "version": "1.5.1",
-  "main": "src/index.js",
+  "main": "index.js",
   "module": "src/index.js",
   "scripts": {
     "start": "node index.js",

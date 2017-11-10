@@ -27,6 +27,7 @@ const TAG_MAP = {
 export default class Input extends React.Component<Props> {
   static defaultProps = {
     type: 'input',
+    elementProps: {},
   }
 
   node: ?HTMLInputElement = null

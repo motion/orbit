@@ -13,6 +13,7 @@ import { throttle } from 'lodash'
 import Menu from './menu'
 import getCrawler from './getCrawler'
 import escapeStringApplescript from 'escape-string-applescript'
+import crawl from '@mcro/crawler'
 
 const execute = promisify(applescript.execute)
 const sleep = ms => new Promise(res => setTimeout(res, ms))
@@ -140,8 +141,17 @@ export default class Windows extends React.Component {
       }
     })
 
+    let crawlInfo
+
     this.on(ipcMain, 'inject-crawler', event => {
-      this.injectCrawler(event.sender.send)
+      this.injectCrawler(info => {
+        crawlInfo = info
+        event.sender.send('crawler-selection', info)
+      })
+    })
+
+    this.on(ipcMain, 'start-crawl', () => {
+      crawl(crawlInfo)
     })
 
     this.on(ipcMain, 'navigate', (event, url) => {
@@ -200,7 +210,7 @@ export default class Windows extends React.Component {
     this.continueChecking = true
     this.checkCrawlerLoop(res => {
       console.log('got res', res)
-      if (res && res.done) {
+      if (res && res.start) {
         this.continueChecking = false
         console.log('finished', res)
         sendToOra(res)
@@ -230,6 +240,7 @@ export default class Windows extends React.Component {
       return result
     } catch (err) {
       console.log('error parsing result', err)
+      return null
     }
   }
 

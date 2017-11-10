@@ -23,12 +23,19 @@ const getTagInfo = node => ({
     .join('.'),
 })
 
+const curPath = window.location.pathname.split('/')
+const parentPath = curPath.slice(0, curPath.length - 1).join('/')
+const parentLocation = parentPath || '/'
+
 @view({
   store: class CrawlerStore {
     parentNode = null
     lastEvent = null
     step = 'title'
     highlighted = null
+    options = {
+      depth: parentLocation,
+    }
     selected = {
       title: null,
       titleSelector: null,
@@ -37,6 +44,7 @@ const getTagInfo = node => ({
     }
 
     willMount() {
+      // follow mouse + highlight
       this.on(document, 'mousemove', e => {
         if (this.highlighted) {
           this.lastEvent.dispose()
@@ -50,6 +58,7 @@ const getTagInfo = node => ({
         }
         this.highlighted = e.target
         this.highlighted.classList.add(HL_CLASS)
+        // click to select node
         this.lastEvent = this.on(this.highlighted, 'click', e => {
           e.preventDefault()
           e.stopPropagation()
@@ -58,11 +67,21 @@ const getTagInfo = node => ({
         })
       })
 
+      // once we have highlighted + step, select something
       this.watch(() => {
         if (!this.highlighted || !this.step) {
           return
         }
         this.selectCurrent()
+      })
+
+      // sets the answer to send back to ora
+      this.watch(() => {
+        window.__oraCrawlerAnswer = {
+          ...this.selected,
+          ...this.options,
+          entry: window.location.href,
+        }
       })
     }
 
@@ -76,7 +95,7 @@ const getTagInfo = node => ({
       } else {
         const parentInfo = getTagInfo(this.highlighted.parentNode)
         if (parentInfo.className) {
-          finalSelector = `${parentInfo.className} > ${tagName}`
+          finalSelector = `.${parentInfo.className} > ${tagName}`
         } else {
           finalSelector = `${parentInfo.tagName} > ${tagName}`
         }
@@ -84,7 +103,7 @@ const getTagInfo = node => ({
 
       this.selected = {
         ...this.selected,
-        [this.step]: this.highlighted.innerText,
+        [this.step]: this.highlighted.innerText.slice(0, 200),
         [`${this.step}Selector`]: finalSelector,
       }
     }
@@ -117,15 +136,28 @@ export default class Root extends React.Component {
       color: '#000',
     }
 
-    const curPath = window.location.pathname.split('/')
-    const parentPath = curPath.slice(0, curPath.length - 1).join('/')
-    const parentLocation = parentPath || '/'
-
     return (
       <UI.Theme name="dark">
         <aside>
           <span>
             <aside $crawler ref={store.setParent}>
+              <style
+                type="text/css"
+                style={{ display: 'none' }}
+                dangerouslySetInnerHTML={{
+                  __html: `
+${store.selected.titleSelector} {
+  background: yellow;
+}
+${store.selected.bodySelector} {
+  background: lightgreen;
+  position: relative;
+  z-index: 10000000;
+}
+              `,
+                }}
+              />
+
               <style
                 type="text/css"
                 style={{ display: 'none' }}
@@ -141,10 +173,11 @@ aside span aside * { display: flex; flex-flow: column; }
 
               <preview $$flex>
                 <previewLine>
-                  <PreviewTitle>Title:</PreviewTitle>
+                  <PreviewTitle color="yellow">Title:</PreviewTitle>
                   <PreviewTitle
                     if={store.selected.titleSelector}
                     color="yellow"
+                    opacity={0.5}
                     css={{ marginLeft: 10 }}
                   >
                     {store.selected.titleSelector}
@@ -154,10 +187,11 @@ aside span aside * { display: flex; flex-flow: column; }
                   </PreviewText>
                 </previewLine>
                 <previewLine>
-                  <PreviewTitle>Body:</PreviewTitle>
+                  <PreviewTitle color="lightgreen">Body:</PreviewTitle>
                   <PreviewTitle
                     if={store.selected.bodySelector}
-                    color="yellow"
+                    color="lightgreen"
+                    opacity={0.5}
                     css={{ marginLeft: 10 }}
                   >
                     {store.selected.bodySelector}
@@ -170,14 +204,15 @@ aside span aside * { display: flex; flex-flow: column; }
 
               <section $$flex $$row>
                 <UI.Row>
-                  <UI.Label tooltip="Crawler won't go above this path">
-                    Path:
+                  <UI.Label tooltip="Crawler will only look for things below this path">
+                    Depth:
                   </UI.Label>
                   <UI.Field
                     type="input"
                     width={100}
                     row
-                    defaultValue={parentLocation}
+                    defaultValue={store.options.depth}
+                    sync={store.ref('options.depth')}
                   />
                   <UI.Button>Max Pages: 1,000</UI.Button>
                 </UI.Row>
@@ -198,7 +233,13 @@ aside span aside * { display: flex; flex-flow: column; }
                   >
                     2. Body
                   </UI.Button>
-                  <UI.Button icon="bug" theme="#23c161">
+                  <UI.Button
+                    icon="bug"
+                    theme="#23c161"
+                    onClick={() => {
+                      window.__oraCrawlerAnswer.start = true
+                    }}
+                  >
                     Begin
                   </UI.Button>
                 </UI.Row>

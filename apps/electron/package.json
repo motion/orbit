@@ -46,6 +46,7 @@
     "@mcro/api": "^1.5.1",
     "@mcro/builder": "^1.5.1",
     "@mcro/ionize": "^1.5.1",
+    "@mcro/crawler": "*",
     "osx-mouse": "^1.2.1",
     "node-loader": "^0.6.0",
     "raf": "^3.4.0",

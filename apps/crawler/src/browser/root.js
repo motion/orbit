@@ -233,15 +233,6 @@ aside span aside * { display: flex; flex-flow: column; }
                   >
                     2. Body
                   </UI.Button>
-                  <UI.Button
-                    icon="bug"
-                    theme="#23c161"
-                    onClick={() => {
-                      window.__oraCrawlerAnswer.start = true
-                    }}
-                  >
-                    Begin
-                  </UI.Button>
                 </UI.Row>
               </section>
             </aside>

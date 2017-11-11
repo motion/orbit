@@ -151,11 +151,10 @@ export default class Windows extends React.Component {
     })
 
     this.on(ipcMain, 'start-crawl', async () => {
-      console.log('crawl that bitch', crawlInfo)
+      this.continueChecking = false
       await r2.post('http://localhost:3001/crawler/start', {
         json: { options: crawlInfo },
       })
-      console.log('posted')
     })
 
     this.on(ipcMain, 'navigate', (event, url) => {
@@ -216,10 +215,6 @@ export default class Windows extends React.Component {
     this.checkCrawlerLoop(res => {
       if (!isEqual(lastRes, res)) {
         sendToOra(res)
-        if (res && res.start) {
-          this.continueChecking = false
-          console.log('finished', res)
-        }
       }
     })
   }

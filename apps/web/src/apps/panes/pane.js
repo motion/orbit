@@ -169,7 +169,11 @@ export default class Pane {
                 .filter(Boolean)
                 .map(
                   ({ content, ...props }, index) =>
-                    content || <UI.Button key={index} {...props} />
+                    content ? (
+                      <span key={index}>content</span>
+                    ) : (
+                      <UI.Button key={index} {...props} />
+                    )
                 )}
             </UI.Row>
           </actionbar>

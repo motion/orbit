@@ -40,6 +40,9 @@ export default class ContextSidebar {
   osContext = this.oraStore.osContext
   isCrawling = false
   crawlInfo = null
+  crawlerSettings = {
+    maxPages: 1000,
+  }
   @watch
   isPinned = () => this.osContext && Thing.findOne({ url: this.osContext.url })
 
@@ -141,6 +144,14 @@ export default class ContextSidebar {
   get actions() {
     if (this.crawlInfo) {
       return [
+        {
+          content: (
+            <UI.Input
+              sync={this.ref('crawlerSettings.maxPages')}
+              placeholder="Max Pages"
+            />
+          ),
+        },
         {
           key: Math.random(),
           icon: 'play',

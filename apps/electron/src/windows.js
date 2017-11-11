@@ -149,9 +149,10 @@ export default class Windows extends React.Component {
 
     this.on(ipcMain, 'start-crawl', async (event, options) => {
       this.continueChecking = false
-      await r2.post('http://localhost:3001/crawler/start', {
+      const results = await r2.post('http://localhost:3001/crawler/start', {
         json: { options },
-      })
+      }).json
+      console.log('got results', results)
     })
 
     this.on(ipcMain, 'navigate', (event, url) => {

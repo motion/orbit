@@ -14,8 +14,8 @@ process.on('unhandledRejection', function(error, p) {
 
 export default async function run(options: Options = {}) {
   const { entry = 'http://paulgraham.com', ...config } = options
-  console.log('Starting crawler...', entry)
+  console.log('Starting crawler...', entry, config)
   const crawler = new Crawler(config)
-  await crawler.start(entry)
-  console.log(`Done!`)
+  const results = await crawler.start(entry)
+  return results
 }

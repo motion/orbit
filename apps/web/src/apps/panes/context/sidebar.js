@@ -43,6 +43,14 @@ export default class ContextSidebar {
   crawlerSettings = {
     maxPages: 100,
   }
+
+  get crawlerOptions() {
+    return {
+      ...this.crawlerSettings,
+      ...this.crawlerInfo,
+    }
+  }
+
   @watch
   isPinned = () => this.osContext && Thing.findOne({ url: this.osContext.url })
 
@@ -159,12 +167,9 @@ export default class ContextSidebar {
           icon: 'play',
           children: 'Start Crawl',
           onClick: () => {
-            console.log('starting crawl')
+            console.log('starting crawl', this.crawlerOptions)
             this.isCrawling = true
-            OS.send('start-crawl', {
-              ...this.crawlerSettings,
-              ...this.crawlerInfo,
-            })
+            OS.send('start-crawl', this.crawlerOptions)
           },
         },
       ]
@@ -197,9 +202,15 @@ export default class ContextSidebar {
     if (this.crawlerInfo) {
       return [
         {
+          category: 'Preview',
           title: this.crawlerInfo.title,
           children: this.crawlerInfo.body,
         },
+        ...Object.keys(this.crawlerInfo).map(key => ({
+          category: 'Crawler Selected',
+          title: key,
+          children: this.crawlerInfo[key],
+        })),
       ]
     }
     if (this.isCrawling) {

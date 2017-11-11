@@ -82,12 +82,17 @@ export default class Server {
     const crawlerDist = Path.join(crawlerIndex, '..', 'build', 'js')
     console.log('setting up crawler', crawlerDist)
     this.app.use('/crawler', express.static(crawlerDist))
-    this.app.post('/crawler/start', (req, res) => {
-      console.log('crawler got opts', req.body)
-      if (req.body.options) {
-        crawler(req.body.options)
+    this.app.post('/crawler/start', async (req, res) => {
+      const { options } = req.body
+      if (options) {
+        const results = await crawler({
+          ...options,
+        })
+        res.json({ results })
+      } else {
+        console.log('No options sent')
+        res.sendStatus(500)
       }
-      res.sendStatus(200)
     })
   }
 

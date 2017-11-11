@@ -5,4 +5,7 @@ export type Options = {
   titleSelector?: string,
   bodySelector?: string,
   depth?: string,
+  maxPages?: number,
+  maxRadius?: number,
+  puppeteerOptions?: Object,
 }

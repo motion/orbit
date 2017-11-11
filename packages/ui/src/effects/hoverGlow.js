@@ -3,7 +3,7 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import $ from 'color'
 import offset from '~/helpers/offset'
-import { throttle } from 'frame-throttle'
+import throttle from 'raf-throttle'
 import type { Color } from 'gloss'
 
 type Props = {

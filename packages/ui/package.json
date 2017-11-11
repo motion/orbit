@@ -21,7 +21,7 @@
     "react-tilt": "^0.1.4",
     "react-virtualized": "^9.9.0",
     "time-ago": "^0.1.0",
-    "frame-throttle": "^3.0.0"
+    "raf-throttle": "^2.0.3"
   },
   "peerDependencies": {
     "mobx": "*",

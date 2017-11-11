@@ -1,3 +1,11 @@
 #!/bin/bash
 
-npx lerna bootstrap
+ARGS=${@:1}
+
+if [ -z "$ARGS" ]; then
+  npx lerna bootstrap
+else
+  NAME=$(grep '"name":' package.json | cut -d\" -f4)
+  npx lerna add $ARGS --scope $NAME
+fi
+

@@ -139,13 +139,12 @@ class HoverGlow extends React.PureComponent<Props, State> {
     })
   }
 
-  @throttle(20)
-  trackMouse(track) {
+  trackMouse = throttle(track => {
     if (this.unmounted) {
       return
     }
     this.setState({ track })
-  }
+  })
 
   render({
     boundPct,

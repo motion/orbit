@@ -8,25 +8,24 @@ import oraItems from './oraItems'
 @view
 export default class Ora extends React.Component {
   state = {
-    lastIntersection: -1,
+    lastIntersection: 0,
   }
 
   componentDidMount() {
     this.watch(() => {
-      this.setState({ lastIntersection: this.props.homeStore.activeKey })
+      this.setState({ lastIntersection: this.props.homeStore.activeKey || 0 })
     })
-
-    this.setState({ lastIntersection: 0 })
   }
 
-  render() {
+  render({ style }) {
     const items = oraItems[this.state.lastIntersection]
+    console.log(this.state, items)
     if (window.innerWidth < Constants.smallSize) {
       return null
     }
     return (
       <UI.Theme name="dark">
-        <ora>
+        <ora style={style}>
           <header>
             <UI.Icon name="zoom" />
           </header>

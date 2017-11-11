@@ -19,27 +19,35 @@ let blurredRef
   homeStore: class HomeStore {
     bounds = {}
     ready = false
+    show = false
     pageNode = document.body.parentNode
     activeKey = null
+    scrollPosition = 0
 
     willMount() {
       window.homeStore = this
       this.watchScroll()
-      setTimeout(() => {
+      this.setTimeout(() => {
         this.ready = true
-      }, 16)
+      }, 500)
+      this.setTimeout(() => {
+        this.show = true
+      }, 1000)
     }
 
     watchScroll = () => {
       const { pageNode } = this
       const { scrollTop } = pageNode
-      if (blurredRef) {
-        blurredRef.style.transform = `translateY(-${scrollTop}px)`
-      }
-      if (pageNode.scrollTop < 200) {
-        this.activeKey = 0
-      } else {
-        this.activeKey = this.getActiveKey()
+      if (scrollTop !== this.scrollPosition) {
+        if (blurredRef) {
+          blurredRef.style.transform = `translateY(-${scrollTop}px)`
+        }
+        if (pageNode.scrollTop < 200) {
+          this.activeKey = 0
+        } else {
+          this.activeKey = this.getActiveKey()
+        }
+        this.scrollPosition = scrollTop
       }
       requestAnimationFrame(this.watchScroll)
     }
@@ -90,11 +98,14 @@ export default class HomePage extends React.Component {
       homeStore,
       setSection: homeStore.setSection,
     }
-    console.log('home', blurred, homeStore.ready, !isSmall)
     return (
       <page css={styles.page} ref={x => this.setRef(x)}>
         <Ora
           if={!blurred && homeStore.ready && !isSmall}
+          css={{
+            opacity: homeStore.show ? 1 : 0,
+            transition: 'opacity ease-in 1000ms',
+          }}
           homeStore={homeStore}
         />
         <contents css={{ overflow: 'hidden' }}>
@@ -166,6 +177,8 @@ export default class HomePage extends React.Component {
         left: 0,
         right: 0,
         zIndex: 1000,
+        transition: 'opacity ease-in 1000ms',
+        opacity: this.props.homeStore.show ? 1 : 0,
         clip: `rect(${topPad + radius}px, ${right}px, ${bottom}px, ${left}px)`,
       },
     }

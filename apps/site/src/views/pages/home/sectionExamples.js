@@ -4,6 +4,28 @@ import * as Constants from '~/constants'
 import * as View from '~/views'
 import * as UI from '@mcro/ui'
 
+const size = 2000
+
+const Nadir = view(({ homeStore }) => (
+  <nadir
+    css={{
+      position: 'fixed',
+      width: size,
+      height: size,
+      borderRadius: size,
+      top: 0,
+      left: '50%',
+      marginLeft: -(size / 4),
+      border: [1, Constants.colorMain],
+      zIndex: 0,
+      transition: 'all ease-in 500ms',
+      transform: {
+        y: 200 + homeStore.scrollPosition / 3,
+      },
+    }}
+  />
+))
+
 const Logo = props => (
   <img
     src={`/logos/${props.name}.svg`}
@@ -153,6 +175,7 @@ export default class SectionExamples {
           padded
           css={{ background: `linear-gradient(${dark2}, #000)` }}
         >
+          <Nadir if={false} homeStore={homeStore} />
           <View.SectionContent css={{ paddingRight: 430 }}>
             <inner>
               <View.Title size={3}>Ora keeps you in sync</View.Title>
@@ -221,9 +244,7 @@ export default class SectionExamples {
                 <View.SubTitle opacity={1}>
                   Orbit is the first ever knowledge assistant that knows
                   <View.Hl color="#000">everything</View.Hl> in your company,
-                  and keeps it on hand <View.Hl color="#000">
-                    anywhere
-                  </View.Hl>{' '}
+                  and keeps it on hand <View.Hl color="#000">anywhere</View.Hl>{' '}
                   you are.
                 </View.SubTitle>
               </div>

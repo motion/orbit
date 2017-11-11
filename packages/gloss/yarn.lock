@@ -30,6 +30,10 @@ core-js@^2.4.0:
   version "2.5.1"
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.5.1.tgz#ae6874dc66937789b80754ff5428df66819ca50b"
 
+css-initials@^0.1.0:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/css-initials/-/css-initials-0.1.1.tgz#cc6dcdb70dc6038c6cf494dd4980f001b824a4ab"
+
 deep-extend@^0.5.0:
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/deep-extend/-/deep-extend-0.5.0.tgz#6ef4a09b05f98b0e358d6d93d4ca3caec6672803"
@@ -65,6 +69,12 @@ jss-default-unit@^8.0.0:
 jss-increase-specificity@^0.3.5:
   version "0.3.5"
   resolved "https://registry.yarnpkg.com/jss-increase-specificity/-/jss-increase-specificity-0.3.5.tgz#694a85acb5218ddcf5bb202e64b3d6b3fa20bdb5"
+
+jss-isolate@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/jss-isolate/-/jss-isolate-5.0.0.tgz#89069d58af0b086b4f989d9aff718733f0f7a8f7"
+  dependencies:
+    css-initials "^0.1.0"
 
 jss-nested@^6.0.0:
   version "6.0.1"

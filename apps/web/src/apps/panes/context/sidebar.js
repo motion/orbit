@@ -45,7 +45,14 @@ export default class ContextSidebar {
 
   willMount() {
     this.on(OS, 'crawler-selection', (event, info) => {
-      this.crawlInfo = info
+      if (info && Object.keys(info).length) {
+        // matching url
+        if (info.entry === this.osContext.url) {
+          this.crawlInfo = info
+        } else {
+          console.log('not on same url')
+        }
+      }
     })
   }
 

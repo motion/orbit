@@ -23,7 +23,8 @@
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
     "babel-polyfill": "^6.26.0",
-    "debug": "^3.1.0"
+    "debug": "^3.1.0",
+    "mobx": "3.3.1"
   },
   "devDependencies": {
     "@mcro/builder": "^1.5.1",

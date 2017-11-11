@@ -226,6 +226,9 @@ export default function motionStyle(options: Object = {}) {
       } else if (valueType === 'object') {
         toReturn[finalKey] = processObject(key, value)
         respond = true
+      } else if (key === 'isolate') {
+        toReturn[key] = value
+        respond = true
       }
 
       // shorthands

@@ -39,9 +39,9 @@ export default class ContextSidebar {
   // copy it here
   osContext = this.oraStore.osContext
   isCrawling = false
-  crawlInfo = null
+  crawlerInfo = null
   crawlerSettings = {
-    maxPages: 1000,
+    maxPages: 100,
   }
   @watch
   isPinned = () => this.osContext && Thing.findOne({ url: this.osContext.url })
@@ -51,7 +51,7 @@ export default class ContextSidebar {
       if (info && Object.keys(info).length) {
         // matching url
         if (info.entry === this.osContext.url) {
-          this.crawlInfo = info
+          this.crawlerInfo = info
         } else {
           console.log('not on same url')
         }
@@ -142,13 +142,15 @@ export default class ContextSidebar {
   }
 
   get actions() {
-    if (this.crawlInfo) {
+    if (this.crawlerInfo) {
       return [
         {
           content: (
-            <UI.Input
+            <UI.Field
+              row
+              width={90}
+              label="Max:"
               sync={this.ref('crawlerSettings.maxPages')}
-              placeholder="Max Pages"
             />
           ),
         },
@@ -159,7 +161,10 @@ export default class ContextSidebar {
           onClick: () => {
             console.log('starting crawl')
             this.isCrawling = true
-            OS.send('start-crawl')
+            OS.send('start-crawl', {
+              ...this.crawlerSettings,
+              ...this.crawlerInfo,
+            })
           },
         },
       ]
@@ -189,11 +194,11 @@ export default class ContextSidebar {
   }
 
   get results() {
-    if (this.crawlInfo) {
+    if (this.crawlerInfo) {
       return [
         {
-          title: this.crawlInfo.title,
-          children: this.crawlInfo.body,
+          title: this.crawlerInfo.title,
+          children: this.crawlerInfo.body,
         },
       ]
     }

@@ -1,8 +1,9 @@
 // @flow
 import * as React from 'react'
 import { view } from '@mcro/black'
-import Label from './label'
 import type { Color } from '@mcro/gloss'
+import Label from './label'
+import Row from '../row'
 
 // fields
 import Input from './input'
@@ -82,30 +83,35 @@ export default class Field extends React.Component<Props> {
       throw new Error('Invalid field type or no children given to Field')
     }
 
-    return (
-      <field css={props}>
-        <Label if={label} $label htmlFor={id} size={size} {...labelProps}>
-          {label === true ? ' ' : label}
-        </Label>
-        <Element
-          if={!children && Element}
-          $element
-          type={type}
-          onChange={onChange}
-          name={id}
-          defaultValue={defaultValue}
-          sync={sync}
-          theme={theme}
-          chromeless={chromeless}
-          placeholder={placeholder}
-          placeholderColor={placeholderColor}
-          borderRadius={0}
-          size={size}
-          {...elementProps}
-        />
-        {children}
-      </field>
-    )
+    const contents = [
+      <Label if={label} key={0} $label htmlFor={id} size={size} {...labelProps}>
+        {label === true ? ' ' : label}
+      </Label>,
+      <Element
+        if={!children && Element}
+        key={1}
+        $element
+        type={type}
+        onChange={onChange}
+        name={id}
+        defaultValue={defaultValue}
+        sync={sync}
+        theme={theme}
+        chromeless={chromeless}
+        placeholder={placeholder}
+        placeholderColor={placeholderColor}
+        borderRadius={0}
+        size={size}
+        {...elementProps}
+      />,
+      children,
+    ].filter(Boolean)
+
+    if (row) {
+      return <Row>{contents}</Row>
+    }
+
+    return <field css={props}>{contents}</field>
   }
 
   static style = {

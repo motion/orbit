@@ -170,7 +170,7 @@ export default class Pane {
                 .map(
                   ({ content, ...props }, index) =>
                     content ? (
-                      <span key={index}>content</span>
+                      <span key={index}>{content}</span>
                     ) : (
                       <UI.Button key={index} {...props} />
                     )

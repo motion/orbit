@@ -141,19 +141,16 @@ export default class Windows extends React.Component {
       }
     })
 
-    let crawlInfo
-
     this.on(ipcMain, 'inject-crawler', event => {
       this.injectCrawler(info => {
-        crawlInfo = info
         event.sender.send('crawler-selection', info)
       })
     })
 
-    this.on(ipcMain, 'start-crawl', async () => {
+    this.on(ipcMain, 'start-crawl', async (event, options) => {
       this.continueChecking = false
       await r2.post('http://localhost:3001/crawler/start', {
-        json: { options: crawlInfo },
+        json: { options },
       })
     })
 

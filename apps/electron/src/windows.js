@@ -10,7 +10,7 @@ import * as Constants from '~/constants'
 import WindowsStore from './windowsStore'
 import Window from './window'
 import mouse from 'osx-mouse'
-import { throttle } from 'lodash'
+import { throttle, isEqual } from 'lodash'
 import Menu from './menu'
 import getCrawler from './getCrawler'
 import escapeStringApplescript from 'escape-string-applescript'
@@ -212,12 +212,14 @@ export default class Windows extends React.Component {
     `)
 
     this.continueChecking = true
+    let lastRes = null
     this.checkCrawlerLoop(res => {
-      console.log('got res', res)
-      sendToOra(res)
-      if (res && res.start) {
-        this.continueChecking = false
-        console.log('finished', res)
+      if (!isEqual(lastRes, res)) {
+        sendToOra(res)
+        if (res && res.start) {
+          this.continueChecking = false
+          console.log('finished', res)
+        }
       }
     })
   }
@@ -229,9 +231,8 @@ export default class Windows extends React.Component {
       this.continueChecking = false
       console.log('error with crawl loop', err)
     }
-    await sleep(1000)
+    await sleep(500)
     if (this.continueChecking) {
-      console.log('loop')
       this.checkCrawlerLoop(cb)
     }
   }

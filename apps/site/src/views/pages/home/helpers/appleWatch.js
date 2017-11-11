@@ -302,11 +302,16 @@ export default function watchify(rootNode) {
         'http://www.w3.org/2000/svg',
         'image'
       )
-      eIcon.setAttribute('xlink:href', '/logos/hubspot.svg')
+      eIcon.setAttribute(
+        'xlink:href',
+        'http://localhost:5000/logos/facebook.svg'
+      )
       eIcon.setAttribute('width', '40px')
       eIcon.setAttribute('height', '40px')
-      eIcon.setAttribute('x', '0')
-      eIcon.setAttribute('y', '0')
+      // eIcon.setAttribute('x', '0')
+      // eIcon.setAttribute('y', '0')
+      // eIcon.setAttribute('x', circlePos[0])
+      // eIcon.setAttribute('y', circlePos[1])
 
       eCircle.appendChild(eIcon)
 

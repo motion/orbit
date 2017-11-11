@@ -57,8 +57,8 @@ export default class Crawler {
         try {
           await page.goto(target.url)
           const links = await page.evaluate(() => {
-            return Array.from(document.querySelectorAll('[href]')).map(
-              link => link.href
+            return Array.from(document.querySelectorAll('[href]')).map(link =>
+              link.href.replace(/[#](.*)$/g, '')
             )
           })
           const contents = await page.evaluate(async options => {

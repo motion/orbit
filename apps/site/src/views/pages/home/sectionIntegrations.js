@@ -77,7 +77,7 @@ export default class SectionIntegrations extends React.Component {
                 padding: 20,
               }}
             >
-              lorem ipsum
+              lorem ipsum2
             </box>
             <svg
               $watch

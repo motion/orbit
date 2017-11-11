@@ -254,6 +254,7 @@ aside span aside * { display: flex; flex-flow: column; }
   static style = {
     crawler: {
       isolate: true,
+      fontFamily: `"Helvetica Nueue", Helvetica, Arial, sans-serif`,
       padding: [10, 110],
       margin: [0, -100],
       position: 'fixed',

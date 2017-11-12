@@ -4,8 +4,8 @@ import * as View from '~/views'
 import * as Constants from '~/constants'
 import { view } from '@mcro/black'
 import Logo from './logo'
+import Orbitals from './orbitals'
 
-const orbitLineColor = UI.color(Constants.colorMain).darken(0.25)
 const dark1 = UI.color(Constants.colorMain)
   .darken(0.75)
   .toString()
@@ -27,149 +27,6 @@ const gradientedText = {
   WebkitBackgroundClip: 'text',
   WebkitTextFillColor: 'transparent',
 }
-
-const Orbitals = () => (
-  <orbitals
-    css={{
-      position: 'absolute',
-      width: 2000,
-      left: '50%',
-      marginLeft: -1000,
-    }}
-  >
-    <inner
-      css={{
-        position: 'absolute',
-        height: 2000,
-        width: 2000,
-        top: -600,
-        right: -380,
-        zIndex: 100,
-      }}
-    >
-      <contain $$fullscreen>
-        <circle
-          css={{
-            margin: 'auto',
-            border: [1, orbitLineColor],
-            width: 100,
-            height: 100,
-            borderRadius: 1000000000,
-          }}
-        />
-      </contain>
-      <contain $$fullscreen>
-        <circle
-          css={{
-            margin: 'auto',
-            border: [1, orbitLineColor],
-            width: 300,
-            height: 300,
-            borderRadius: 1000000000,
-            opacity: 0.8,
-          }}
-        />
-      </contain>
-      <contain $$fullscreen>
-        <circle
-          css={{
-            margin: 'auto',
-            border: [1, orbitLineColor],
-            width: 600,
-            height: 600,
-            borderRadius: 1000000000,
-            opacity: 0.7,
-          }}
-        />
-      </contain>
-      <contain $$fullscreen>
-        <circle
-          css={{
-            margin: 'auto',
-            border: [1, orbitLineColor],
-            width: 900,
-            height: 900,
-            borderRadius: 1000000000,
-            opacity: 0.3,
-          }}
-        />
-        {[
-          'google-gmail',
-          'google-drive',
-          'asana',
-          'base',
-          'box',
-          'confluence',
-          'discord',
-          'dropbox',
-          'facebook',
-          'frontapp',
-          'github-icon',
-          'gitter',
-          'hipchat',
-          'hubspot',
-          'jira',
-          'markdown',
-          'medium',
-          'microsoft',
-          'office',
-          'quora',
-          'salesforce',
-          'slack',
-          'trello',
-          'zendesk',
-          'angellist',
-          'shopify',
-          'twitter',
-          'bitbucket',
-        ].map((n, i) => {
-          const col = i % 3
-          return (
-            <contain $$fullscreen key={i}>
-              <planet
-                css={{
-                  borderRadius: 100,
-                  background:
-                    i % 7 === 0
-                      ? UI.color(Constants.colorMain).lighten(5)
-                      : '#000',
-                  border: [1, orbitLineColor],
-                  width: 50,
-                  height: 50,
-                  margin: 'auto',
-                  animation: `orbital${col} ${col * 30 + 50}s linear infinite`,
-                  animationDelay: `-${(col + 1 * 5) * (i + 1) * 2000}ms`,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                <img
-                  src={`/logos/${n}.svg`}
-                  css={{
-                    width: 20,
-                    height: 20,
-                  }}
-                />
-              </planet>
-            </contain>
-          )
-        })}
-      </contain>
-      <contain $$fullscreen>
-        <circle
-          css={{
-            margin: 'auto',
-            border: [1, orbitLineColor],
-            width: 1400,
-            height: 1400,
-            borderRadius: 1000000000,
-            opacity: 0.15,
-          }}
-        />
-      </contain>
-    </inner>
-  </orbitals>
-)
 
 @view
 export default class Header {

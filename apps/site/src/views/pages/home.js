@@ -13,20 +13,23 @@ import HomeChat from './home/sectionChat'
 import HomeExamples from './home/sectionExamples'
 import HomeIntegrations from './home/sectionIntegrations'
 import Logo from './home/logo'
+import Orbitals from './home/orbitals'
 
 @view
 class HomeHeader2 {
   render() {
     return (
       <View.Section css={{ background: '#f2f2f2' }}>
-        <tophead css={{ background: '#fff', padding: [10, 0] }}>
+        <tophead css={{ background: 'transparent', padding: [10, 0] }}>
           <View.SectionContent>
             <Logo color={Constants.colorSecondary} />
           </View.SectionContent>
         </tophead>
         <View.SectionContent>
-          <content $$row css={{ margin: [50, 0] }}>
-            <section css={{ position: 'relative', width: '50%' }}>
+          <content $$row css={{ margin: [100, 0] }}>
+            <section
+              css={{ marginTop: 100, position: 'relative', width: '50%' }}
+            >
               <View.Title size={3} fontWeight={200}>
                 Keeping everyone in sync shouldn't be so hard
               </View.Title>
@@ -94,39 +97,22 @@ class HomeHeader2 {
                 }}
               >
                 <things $$row css={{ margin: 'auto' }}>
-                  <icon css={{ alignItems: 'center', width: 120, height: 120 }}>
-                    <img
-                      src={`/logos/slack.svg`}
-                      css={{
-                        width: 20,
-                        height: 20,
-                        marginBottom: 10,
-                      }}
-                    />
-                    <UI.Text size={1.2}>Conversations</UI.Text>
-                  </icon>
-                  <icon css={{ alignItems: 'center', width: 120, height: 120 }}>
-                    <img
-                      src={`/logos/google-drive.svg`}
-                      css={{
-                        width: 20,
-                        height: 20,
-                        marginBottom: 10,
-                      }}
-                    />
-                    <UI.Text size={1.2}>Documents</UI.Text>
-                  </icon>
-                  <icon css={{ alignItems: 'center', width: 120, height: 120 }}>
-                    <img
-                      src={`/logos/confluence.svg`}
-                      css={{
-                        width: 20,
-                        height: 20,
-                        marginBottom: 10,
-                      }}
-                    />
-                    <UI.Text size={1.2}>Wiki</UI.Text>
-                  </icon>
+                  <Orbitals
+                    rings={1}
+                    items={[
+                      'google-gmail',
+                      'google-drive',
+                      'slack',
+                      'confluence',
+                      'zendesk',
+                    ]}
+                    css={{
+                      top: -50,
+                      transform: {
+                        scale: 0.75,
+                      },
+                    }}
+                  />
                 </things>
 
                 <img

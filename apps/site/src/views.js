@@ -31,7 +31,9 @@ export const SubTitle = props => (
 )
 
 const dark = {
-  background: `linear-gradient(40deg, ${Constants.colorMain}, ${Constants.colorSecondary})`,
+  background: `linear-gradient(40deg, ${Constants.colorMain}, ${
+    Constants.colorSecondary
+  })`,
 }
 const space = {
   background: '#222',
@@ -80,6 +82,10 @@ export const SectionContent = view(
     padRight,
     padBottom: {
       paddingBottom: 80,
+    },
+    row: {
+      flexFlow: 'row',
+      alignItems: 'center',
     },
   }
 )

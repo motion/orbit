@@ -333,14 +333,38 @@ class Illustration1 {
   }
 }
 
+const MenuItem = props => (
+  <item
+    css={{ padding: [5, 30], fontWeight: 600, color: Constants.colorSecondary }}
+    {...props}
+  />
+)
+
 @view
 class HomeHeader2 {
   render() {
     return (
       <View.Section css={{ background: '#f2f2f2' }}>
         <tophead css={{ background: 'transparent', padding: [10, 0] }}>
-          <View.SectionContent>
+          <View.SectionContent row css={{ justifyContent: 'space-between' }}>
             <Logo color={Constants.colorMain} />
+
+            <menu css={{ flexFlow: 'row', padding: [0, 100] }}>
+              <MenuItem>For Sales</MenuItem>
+              <MenuItem>For Support</MenuItem>
+              <MenuItem>Pricing</MenuItem>
+            </menu>
+
+            <end>
+              <UI.Button
+                icon="saturn"
+                size={1.5}
+                sizeRadius={0.25}
+                theme="green"
+              >
+                Download
+              </UI.Button>
+            </end>
           </View.SectionContent>
         </tophead>
         <View.SectionContent>

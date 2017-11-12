@@ -15,6 +15,195 @@ import HomeIntegrations from './home/sectionIntegrations'
 import Logo from './home/logo'
 import Orbitals from './home/orbitals'
 
+// {/* <img
+//                     src="/figures/Hummingbird.svg"
+//                     css={{
+//                       width: 200,
+//                       height: 200,
+//                       zIndex: 1000,
+//                     }}
+//                   />
+//                   <img
+//                     src="/figures/Snail.svg"
+//                     css={{
+//                       width: 200,
+//                       height: 200,
+//                       zIndex: 1000,
+//                     }}
+//                   />
+//                   <img
+//                     src="/figures/Rabbit.svg"
+//                     css={{
+//                       width: 200,
+//                       height: 200,
+//                       zIndex: 1000,
+//                     }}
+//                   />
+//                   <img
+//                     src="/figures/Mailbox.svg"
+//                     css={{
+//                       width: 200,
+//                       height: 200,
+//                       zIndex: 1000,
+//                     }}
+//                   />
+//                   <img
+//                     src="/figures/Wellington Boots.svg"
+//                     css={{
+//                       width: 200,
+//                       height: 200,
+//                       zIndex: 1000,
+//                     }}
+//                   /> */}
+
+@view
+class Illustration1 {
+  render() {
+    return (
+      <things
+        $$row
+        css={{
+          flex: 1,
+          justifyContent: 'center',
+        }}
+      >
+        <stage css={{ flexFlow: 'row', flex: 1, alignItems: 'flex-end' }}>
+          <figure
+            css={{
+              marginRight: -30,
+              zIndex: 100,
+              height: 180,
+            }}
+          >
+            <bubble
+              css={{
+                width: 110,
+                height: 110,
+                margin: [0, 0, -70, 0],
+                position: 'relative',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <img
+                src="/figures/Cloud 2.svg"
+                css={{
+                  width: 150,
+                  height: 150,
+                }}
+              />
+              <img
+                src="/logos/google-drive.svg"
+                css={{
+                  width: '25%',
+                  height: '25%',
+                  marginLeft: -5,
+                  marginTop: 4,
+                  position: 'absolute',
+                }}
+              />
+            </bubble>
+            <img
+              src="/figures/Snail.svg"
+              css={{
+                margin: [0, 0, 0, -150],
+                width: 150,
+                height: 150,
+                zIndex: 1000,
+                alignSelf: 'flex-end',
+              }}
+            />
+          </figure>
+
+          <space css={{ minWidth: 100, flex: 1 }} />
+
+          <figure css={{ marginRight: -30, zIndex: 100 }}>
+            <bubble
+              css={{
+                width: 110,
+                height: 110,
+                margin: [0, 55, -70, 0],
+                position: 'relative',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <img
+                src="/figures/Cloud 2.svg"
+                css={{
+                  width: 150,
+                  height: 150,
+                }}
+              />
+              <img
+                src="/logos/slack.svg"
+                css={{
+                  width: '25%',
+                  height: '25%',
+                  marginLeft: -5,
+                  marginTop: 4,
+                  position: 'absolute',
+                }}
+              />
+            </bubble>
+            <img
+              src="/figures/Rabbit.svg"
+              css={{
+                width: 150,
+                height: 150,
+                alignSelf: 'flex-end',
+                transform: { scaleX: -1 },
+              }}
+            />
+          </figure>
+        </stage>
+
+        <floor
+          css={{
+            position: 'absolute',
+            bottom: 10,
+            left: 120,
+            right: 90,
+            flexFlow: 'row',
+            alignItems: 'flex-end',
+            justifyContent: 'space-around',
+          }}
+        >
+          <img src="/figures/Lavender.svg" css={{ width: 80, height: 80 }} />
+          <pile>
+            <icon
+              css={{
+                border: [1, [255, 255, 255, 0.3]],
+                borderRadius: 1000,
+                width: 50,
+                height: 50,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <img
+                src="/logos/asana.svg"
+                css={{
+                  width: '80%',
+                  height: '80%',
+                }}
+              />
+            </icon>
+          </pile>
+          <img
+            src="/figures/Pinecomb.svg"
+            css={{
+              width: 80,
+              height: 80,
+              transform: { rotate: '-25deg' },
+            }}
+          />
+        </floor>
+      </things>
+    )
+  }
+}
+
 @view
 class HomeHeader2 {
   render() {
@@ -37,55 +226,20 @@ class HomeHeader2 {
               <inner
                 css={{ position: 'relative', minHeight: 250, margin: [50, 0] }}
               >
-                <things $$row css={{ margin: 'auto' }}>
-                  <icon css={{ alignItems: 'center', width: 120, height: 120 }}>
-                    <img
-                      src={`/logos/slack.svg`}
-                      css={{
-                        width: 20,
-                        height: 20,
-                        marginBottom: 10,
-                      }}
-                    />
-                    <UI.Text size={1.2}>Conversations</UI.Text>
-                  </icon>
-                  <icon css={{ alignItems: 'center', width: 120, height: 120 }}>
-                    <img
-                      src={`/logos/google-drive.svg`}
-                      css={{
-                        width: 20,
-                        height: 20,
-                        marginBottom: 10,
-                      }}
-                    />
-                    <UI.Text size={1.2}>Documents</UI.Text>
-                  </icon>
-                  <icon css={{ alignItems: 'center', width: 120, height: 120 }}>
-                    <img
-                      src={`/logos/confluence.svg`}
-                      css={{
-                        width: 20,
-                        height: 20,
-                        marginBottom: 10,
-                      }}
-                    />
-                    <UI.Text size={1.2}>Wiki</UI.Text>
-                  </icon>
-                </things>
-
                 <img
                   src="/watercolor3.png"
                   css={{
                     position: 'absolute',
-                    top: 0,
+                    top: '24%',
                     left: 0,
                     width: 2022,
                     height: 904,
                     transformOrigin: 'top left',
-                    transform: { scale: 0.3 },
-                    margin: '-10%',
+                    transform: { scale: 0.295 },
+                    margin: '-18%',
                   }}
                 />
+                <Illustration1 />
               </inner>
             </section>
             <section css={{ width: '50%' }}>

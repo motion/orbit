@@ -109,7 +109,13 @@ export default function motionStyle(options: Object = {}) {
     if (OBJECT_TRANSFORM[key]) {
       return OBJECT_TRANSFORM[key](value)
     }
-    if (key === 'scale' || key === 'grayscale' || key === 'brightness') {
+    if (
+      key === 'scale' ||
+      key === 'scaleX' ||
+      key === 'scaleY' ||
+      key === 'grayscale' ||
+      key === 'brightness'
+    ) {
       return value
     }
     if (typeof value === 'number') {
@@ -247,8 +253,9 @@ export default function motionStyle(options: Object = {}) {
       }
 
       throw new Error(
-        `${(opts && opts.errorMessage) ||
-          'Error'}: Invalid style value for ${key}: ${JSON.stringify(value)}`
+        `${(opts && opts.errorMessage) || 'Error'}: Invalid style value for ${
+          key
+        }: ${JSON.stringify(value)}`
       )
     }
 

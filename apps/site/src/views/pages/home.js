@@ -158,6 +158,88 @@ class Illustration1 {
           </figure>
         </stage>
 
+        <sky $$fullscreen>
+          <icon
+            css={{
+              transform: { rotate: '-10deg' },
+              bottom: 10,
+              left: -40,
+            }}
+          >
+            <img
+              src="/logos/base.svg"
+              css={{
+                width: '60%',
+                height: '60%',
+              }}
+            />
+          </icon>
+
+          <icon
+            css={{
+              transform: { rotate: '15deg' },
+              bottom: 10,
+              right: -40,
+            }}
+          >
+            <img
+              src="/logos/twitter.svg"
+              css={{
+                width: '50%',
+                height: '50%',
+              }}
+            />
+          </icon>
+
+          <icon
+            css={{
+              transform: { rotate: '15deg' },
+              top: 40,
+              left: 200,
+            }}
+          >
+            <img
+              src="/logos/hubspot.svg"
+              css={{
+                width: '80%',
+                height: '80%',
+              }}
+            />
+          </icon>
+
+          <icon
+            css={{
+              transform: { rotate: '-15deg' },
+              top: 30,
+              left: 130,
+            }}
+          >
+            <img
+              src="/logos/markdown.svg"
+              css={{
+                width: '60%',
+                height: '60%',
+              }}
+            />
+          </icon>
+
+          <icon
+            css={{
+              transform: { rotate: '15deg' },
+              top: 20,
+              left: 270,
+            }}
+          >
+            <img
+              src="/logos/zendesk.svg"
+              css={{
+                width: '60%',
+                height: '60%',
+              }}
+            />
+          </icon>
+        </sky>
+
         <floor
           css={{
             position: 'absolute',
@@ -170,15 +252,10 @@ class Illustration1 {
           }}
         >
           <img src="/figures/Lavender.svg" css={{ width: 80, height: 80 }} />
-          <pile>
+          <pile css={{ margin: [0, 40, 10], position: 'relative', width: 50 }}>
             <icon
               css={{
-                border: [1, [255, 255, 255, 0.3]],
-                borderRadius: 1000,
-                width: 50,
-                height: 50,
-                alignItems: 'center',
-                justifyContent: 'center',
+                transform: { rotate: '10deg' },
               }}
             >
               <img
@@ -186,6 +263,36 @@ class Illustration1 {
                 css={{
                   width: '80%',
                   height: '80%',
+                }}
+              />
+            </icon>
+            <icon
+              css={{
+                transform: { rotate: '-10deg' },
+                bottom: 10,
+                left: -40,
+              }}
+            >
+              <img
+                src="/logos/mixpanel.svg"
+                css={{
+                  width: '80%',
+                  height: '80%',
+                }}
+              />
+            </icon>
+            <icon
+              css={{
+                transform: { rotate: '20deg' },
+                bottom: 10,
+                left: 35,
+              }}
+            >
+              <img
+                src="/logos/google-gmail.svg"
+                css={{
+                  width: '50%',
+                  height: '50%',
                 }}
               />
             </icon>
@@ -201,6 +308,20 @@ class Illustration1 {
         </floor>
       </things>
     )
+  }
+
+  static style = {
+    icon: {
+      border: [1, [0, 0, 255, 0.075]],
+      background: [255, 255, 255, 0.1],
+      borderRadius: 10,
+      width: 45,
+      height: 45,
+      alignItems: 'center',
+      justifyContent: 'center',
+      position: 'absolute',
+      bottom: 0,
+    },
   }
 }
 

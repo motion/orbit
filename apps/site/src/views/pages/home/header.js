@@ -66,7 +66,7 @@ export default class Header {
 
         <visible
           css={{
-            padding: [150, 0],
+            padding: [150, 0, 50],
             position: 'relative',
             zIndex: 1000,
             flex: 1,
@@ -82,10 +82,10 @@ export default class Header {
             >
               <wrap>
                 <View.Content padRight>
-                  <text css={{ marginTop: -150, marginBottom: 50 }}>
+                  <text css={{ marginTop: -150 }}>
                     <View.Text
                       style={{
-                        marginBottom: 50,
+                        marginBottom: 100,
                       }}
                       size={3}
                       fontWeight={800}
@@ -95,12 +95,13 @@ export default class Header {
                       />
                     </View.Text>
                     <UI.Text
-                      size={3}
+                      size={3.5}
                       fontWeight={200}
+                      padding={[0, 100, 0, 0]}
                       css={gradientedTextLight}
                     >
-                      It's always on, using Machine Learning to show contextual
-                      answers wherever you are.
+                      Like Siri, it lives on your desktop.<br />
+                      Orbit uses ML that exposes anything relevant.
                     </UI.Text>
 
                     <View.Text if={false} size={1.7}>

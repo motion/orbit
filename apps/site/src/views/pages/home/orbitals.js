@@ -2,7 +2,7 @@ import * as React from 'react'
 import * as UI from '@mcro/ui'
 import * as Constants from '~/constants'
 
-const orbitLineColor = UI.color(Constants.colorMain).darken(0.25)
+const orbitLineColor = UI.color(Constants.colorMain).lighten(0.45)
 
 const ITEMS = [
   'google-gmail',

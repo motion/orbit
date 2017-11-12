@@ -58,7 +58,7 @@ import Orbitals from './home/orbitals'
 
 @view
 class Illustration1 {
-  render() {
+  render(props) {
     return (
       <things
         $$row
@@ -67,6 +67,7 @@ class Illustration1 {
           justifyContent: 'center',
           userSelect: 'none',
         }}
+        {...props}
       >
         <stage css={{ flexFlow: 'row', flex: 1, alignItems: 'flex-end' }}>
           <figure
@@ -399,7 +400,7 @@ class HomeHeader2 {
             src="/watercolorlight.png"
             css={{
               position: 'absolute',
-              top: 200,
+              top: 270,
               left: -180,
               width: 2022,
               height: 904,
@@ -411,10 +412,15 @@ class HomeHeader2 {
 
           <content
             $$row
-            css={{ margin: [100, 0], justifyContent: 'space-between' }}
+            css={{ margin: [100, 0, 150], justifyContent: 'space-between' }}
           >
             <section
-              css={{ marginTop: -10, position: 'relative', width: '48%' }}
+              css={{
+                marginTop: -50,
+                marginBottom: 50,
+                position: 'relative',
+                width: '48%',
+              }}
             >
               <View.Title size={2.8} fontWeight={200}>
                 Company knowledge shouldn't be so messy
@@ -433,16 +439,16 @@ class HomeHeader2 {
                     position: 'absolute',
                     top: '24%',
                     left: 0,
-                    opacity: 0.4,
+                    opacity: 0,
                     width: 2022,
                     height: 904,
                     transformOrigin: 'top left',
-                    transform: { scale: 0.3 },
+                    transform: { scale: 0.4 },
                     marginTop: '-20%',
-                    marginLeft: '-20%',
+                    marginLeft: '-60%',
                   }}
                 />
-                <Illustration1 />
+                <Illustration1 css={{ transform: { scale: 1.15 } }} />
               </inner>
             </section>
             <section css={{ marginTop: 30, width: '45%' }}>
@@ -450,7 +456,7 @@ class HomeHeader2 {
                 css={{
                   position: 'relative',
                   minHeight: 250,
-                  margin: [-20, 0, 0],
+                  margin: [20, 0, 0],
                 }}
               >
                 <things $$row css={{ margin: 'auto' }}>
@@ -464,28 +470,14 @@ class HomeHeader2 {
                       'zendesk',
                     ]}
                     css={{
-                      top: -50,
+                      top: -100,
+                      left: 270,
                       transform: {
-                        scale: 0.75,
+                        scale: 0.9,
                       },
                     }}
                   />
                 </things>
-
-                <img
-                  src="/watercolor3.png"
-                  css={{
-                    position: 'absolute',
-                    opacity: 0.4,
-                    top: '24%',
-                    left: 50,
-                    width: 2022,
-                    height: 904,
-                    transformOrigin: 'top left',
-                    transform: { scale: 0.25 },
-                    margin: '-18%',
-                  }}
-                />
               </inner>
               <View.Title textAlign="right" size={3} fontWeight={200}>
                 Orbit keeps everyone on the same page

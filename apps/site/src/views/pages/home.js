@@ -87,7 +87,7 @@ class Illustration2 {
             <img
               src="/figures/Hummingbird.svg"
               css={{
-                margin: [-160, 0, 0, -50],
+                margin: [-170, 0, 0, -40],
                 width: 150,
                 height: 150,
                 zIndex: 1000,
@@ -558,7 +558,7 @@ class HomeHeader2 {
               }}
             >
               <View.Title size={2.8} fontWeight={300}>
-                Company knowledge shouldn't be such a mess
+                Company knowledge shouldn't be so messy
               </View.Title>
 
               <inner
@@ -597,12 +597,12 @@ class HomeHeader2 {
                 <Illustration2 css={{ transform: { scale: 1 } }} />
               </inner>
               <View.Title
-                margin={[40, 0, 0]}
+                margin={[40, 0, 0, 40]}
                 textAlign="right"
                 size={2.8}
                 fontWeight={300}
               >
-                Orbit keeps everyone on the same page
+                Orbit gives everyone insight as they work
               </View.Title>
             </section>
           </content>

@@ -60,25 +60,16 @@ export default class Header {
           }}
         />
 
-        <Orbitals />
+        <Orbitals css={{ position: 'absolute', left: 1200 }} />
 
-        <visible css={{ position: 'relative', zIndex: 1000, flex: 1 }}>
-          <header $$row if={false}>
-            <View.SectionContent>
-              <header
-                $$row
-                css={{
-                  alignItems: 'center',
-                  padding: [10, 0],
-                  marginTop: 10,
-                  marginBottom: 20,
-                }}
-              >
-                <Logo />
-              </header>
-            </View.SectionContent>
-          </header>
-
+        <visible
+          css={{
+            padding: [200, 0, 0],
+            position: 'relative',
+            zIndex: 1000,
+            flex: 1,
+          }}
+        >
           <UI.Theme name="dark">
             <View.SectionContent
               css={{
@@ -99,7 +90,7 @@ export default class Header {
                     Company knowledge, smarter.
                   </View.Title>
 
-                  <View.Text size={3.3} fontWeight={100} css={gradientedText}>
+                  <View.Text size={3.3} fontWeight={800} css={gradientedText}>
                     Orbit is an assistant that tracks your wiki, chats,
                     documents, and anything relevant to your company.<br />
                   </View.Text>

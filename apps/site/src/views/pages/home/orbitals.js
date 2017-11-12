@@ -103,7 +103,7 @@ export default ({ items = ITEMS, rings = 3, ...props }) => {
             }}
           />
         </contain>
-        <contain if={rings > 2} $$fullscreen>
+        <contain if={rings > 3} $$fullscreen>
           <circle
             css={{
               margin: 'auto',

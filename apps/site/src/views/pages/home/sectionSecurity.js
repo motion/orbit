@@ -60,28 +60,28 @@ export default props => (
           The No-Cloud Infrastructure
         </View.Title>
         <View.Text size={2.5} fontWeight={200} opacity={0.7}>
-          In order to work, Orbit needed to invent a new model: one that keeps
-          you safe.
+          In order to work well, we invented a new model: one that keeps you
+          safe.
         </View.Text>
-        <View.SubText>
-          Here's the deal. To work really well, Orbit needs to hook into a lot
-          of valuable company data. Slack, email, documents, knowledge...
-          everything.
-        </View.SubText>
+        <View.Text size={2.2} fontWeight={200}>
+          Orbit needs to hook into a lot of valuable company data. Slack, email,
+          documents, knowledge... everything.
+        </View.Text>
 
-        <View.SubText>How do we do that securely?</View.SubText>
+        <View.Text size={2.2} fontWeight={200}>
+          How do we do that securely?
+        </View.Text>
 
-        <View.SubText>
-          Our answer: your data never once leaves your local computer. Thats
-          right. We never see it, and neither does anyone else but yourself.
-        </View.SubText>
-        <View.SubText>
+        <View.Text size={2.2} fontWeight={600}>
+          By never letting your data leave your computer.
+        </View.Text>
+        <View.Text size={2.2} fontWeight={200}>
           <View.Hl color="#000">
             This allows us to be ambitious from day one without compromise.
           </View.Hl>{' '}
           Our interests are aligned with yours: no data breaches, permissions
           mixups, or complicated on-premise software.
-        </View.SubText>
+        </View.Text>
       </View.SectionContent>
     </View.Section>
   </UI.Theme>

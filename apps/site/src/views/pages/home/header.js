@@ -91,11 +91,12 @@ export default class Header {
                   </View.Title>
 
                   <View.Text size={3.3} fontWeight={800} css={gradientedText}>
-                    Orbit is an assistant that tracks your wiki, chats,
-                    documents, and anything relevant to your company.<br />
+                    Orbit answers questions your customers and teammates ask
+                    without you having to lift a finger.<br />
                   </View.Text>
                   <UI.Text size={2.5} fontWeight={200} css={gradientedText}>
-                    Instant search & contextual answers, wherever you are.
+                    An always there assistant that uses advanced ML to serve
+                    contextual answers, no matter what you're doing.
                   </UI.Text>
 
                   <View.Text if={false} size={1.7}>

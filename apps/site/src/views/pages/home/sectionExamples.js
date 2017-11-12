@@ -51,43 +51,11 @@ const Nebula = () => (
         position: 'absolute',
         bottom: -400,
         right: -100,
-        width: 1200,
-        height: 500,
-        background: 'radial-gradient(yellow, transparent 50%)',
-        zIndex: 2,
-        opacity: 0.15,
-        transform: {
-          z: 0,
-          scale: 3,
-        },
-      }}
-    />
-    <cloud
-      css={{
-        position: 'absolute',
-        bottom: -400,
-        right: -100,
         width: 1000,
         height: 800,
         background: 'radial-gradient(white, transparent 50%)',
         zIndex: 1,
         opacity: 0.25,
-        transform: {
-          z: 0,
-          scale: 3,
-        },
-      }}
-    />
-    <cloud
-      css={{
-        position: 'absolute',
-        bottom: -200,
-        right: -300,
-        width: 500,
-        height: 500,
-        background: 'radial-gradient(black, transparent 50%)',
-        zIndex: 3,
-        opacity: 0.5,
         transform: {
           z: 0,
           scale: 3,
@@ -223,9 +191,6 @@ export default class SectionExamples {
                   { percentFromTop: 70 }
                 )}
               <br />
-              <br />
-              <br />
-              <View.SubTitle opacity={0.5}>And much more.</View.SubTitle>
               <br />
               <br />
               <br />

@@ -49,8 +49,7 @@ export default class Header {
     return (
       <View.Section
         css={{
-          background: `linear-gradient(#f2f2f2, #f2f2f2, ${dark2})`,
-          // minHeight: Math.min(1100, window.innerHeight),
+          background: dark2,
           position: 'relative',
           transform: {
             z: 0,
@@ -76,7 +75,7 @@ export default class Header {
         />
 
         <Orbitals
-          css={{ position: 'absolute', left: 1200, transform: { scale: 1.75 } }}
+          css={{ position: 'absolute', left: 1200, transform: { scale: 1.2 } }}
         />
 
         <visible
@@ -100,11 +99,11 @@ export default class Header {
                   <View.Text
                     style={{
                       marginTop: -100,
-                      marginBottom: 200,
+                      marginBottom: 100,
                     }}
-                    size={3.3}
+                    size={3}
                     fontWeight={800}
-                    css={gradientedText}
+                    color="#fff"
                   >
                     Orbit answers questions your customers & teammates ask
                     without you lifting a finger.<br />
@@ -112,7 +111,6 @@ export default class Header {
                   <UI.Text
                     size={2.5}
                     fontWeight={200}
-                    style={{ marginBottom: 30 }}
                     css={gradientedTextLight}
                   >
                     It's an always on assistant that uses Machine Learning to

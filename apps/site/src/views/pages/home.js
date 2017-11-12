@@ -162,8 +162,8 @@ class Illustration1 {
           <icon
             css={{
               transform: { rotate: '-10deg' },
-              bottom: 10,
-              left: -40,
+              top: 30,
+              left: 0,
             }}
           >
             <img
@@ -178,7 +178,7 @@ class Illustration1 {
           <icon
             css={{
               transform: { rotate: '15deg' },
-              bottom: 10,
+              top: 10,
               right: -40,
             }}
           >
@@ -193,13 +193,13 @@ class Illustration1 {
 
           <icon
             css={{
-              transform: { rotate: '15deg' },
-              top: 40,
+              transform: { rotate: '5deg', scale: 0.8 },
+              top: 60,
               left: 200,
             }}
           >
             <img
-              src="/logos/hubspot.svg"
+              src="/logos/github-octocat.svg"
               css={{
                 width: '80%',
                 height: '80%',
@@ -225,7 +225,7 @@ class Illustration1 {
 
           <icon
             css={{
-              transform: { rotate: '15deg' },
+              transform: { rotate: '15deg', scale: 0.9 },
               top: 20,
               left: 270,
             }}
@@ -251,11 +251,15 @@ class Illustration1 {
             justifyContent: 'space-around',
           }}
         >
-          <img src="/figures/Lavender.svg" css={{ width: 80, height: 80 }} />
-          <pile css={{ margin: [0, 40, 10], position: 'relative', width: 50 }}>
+          <img
+            src="/figures/Lavender.svg"
+            css={{ width: 80, height: 80, opacity: 0 }}
+          />
+          <pile css={{ margin: [0, 60, 10], position: 'relative', width: 30 }}>
             <icon
               css={{
-                transform: { rotate: '10deg' },
+                transform: { rotate: '10deg', scale: 0.8 },
+                bottom: 80,
               }}
             >
               <img
@@ -283,9 +287,9 @@ class Illustration1 {
             </icon>
             <icon
               css={{
-                transform: { rotate: '20deg' },
+                transform: { rotate: '20deg', scale: 0.9 },
                 bottom: 10,
-                left: 35,
+                left: 50,
               }}
             >
               <img
@@ -312,15 +316,19 @@ class Illustration1 {
 
   static style = {
     icon: {
-      border: [1, [0, 0, 255, 0.075]],
+      // border: [1, [0, 0, 255, 0.075]],
       background: [255, 255, 255, 0.1],
       borderRadius: 10,
+      opacity: 0.5,
       width: 45,
       height: 45,
       alignItems: 'center',
       justifyContent: 'center',
       position: 'absolute',
       bottom: 0,
+      filter: {
+        grayscale: '100%',
+      },
     },
   }
 }
@@ -332,20 +340,27 @@ class HomeHeader2 {
       <View.Section css={{ background: '#f2f2f2' }}>
         <tophead css={{ background: 'transparent', padding: [10, 0] }}>
           <View.SectionContent>
-            <Logo color={Constants.colorSecondary} />
+            <Logo color={Constants.colorMain} />
           </View.SectionContent>
         </tophead>
         <View.SectionContent>
-          <content $$row css={{ margin: [100, 0] }}>
+          <content
+            $$row
+            css={{ margin: [100, 0], justifyContent: 'space-between' }}
+          >
             <section
-              css={{ marginTop: 100, position: 'relative', width: '50%' }}
+              css={{ marginTop: -10, position: 'relative', width: '48%' }}
             >
-              <View.Title size={3} fontWeight={200}>
+              <View.Title size={2.8} fontWeight={200}>
                 Keeping everyone in sync shouldn't be so hard
               </View.Title>
 
               <inner
-                css={{ position: 'relative', minHeight: 250, margin: [50, 0] }}
+                css={{
+                  position: 'relative',
+                  minHeight: 250,
+                  margin: [15, 0, 50, 0],
+                }}
               >
                 <img
                   src="/watercolor3.png"
@@ -363,7 +378,7 @@ class HomeHeader2 {
                 <Illustration1 />
               </inner>
             </section>
-            <section css={{ width: '50%' }}>
+            <section css={{ marginTop: 30, width: '45%' }}>
               <inner
                 css={{
                   position: 'relative',
@@ -394,13 +409,13 @@ class HomeHeader2 {
                   src="/watercolor3.png"
                   css={{
                     position: 'absolute',
-                    top: 0,
-                    left: 0,
+                    top: '24%',
+                    left: 50,
                     width: 2022,
                     height: 904,
                     transformOrigin: 'top left',
-                    transform: { scale: 0.3 },
-                    margin: '-10%',
+                    transform: { scale: 0.275 },
+                    margin: '-18%',
                   }}
                 />
               </inner>
@@ -447,10 +462,14 @@ let blurredRef
           this.activeKey = this.getActiveKey()
         }
         // hide ora in header
-        if (pageNode.scrollTop > 350) {
-          this.show = true
+        if (pageNode.scrollTop > 450) {
+          if (!this.show) {
+            this.show = true
+          }
         } else {
-          this.show = false
+          if (this.show) {
+            this.show = false
+          }
         }
         this.scrollPosition = scrollTop
       }

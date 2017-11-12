@@ -35,7 +35,16 @@ const ITEMS = [
   'bitbucket',
 ]
 
-export default ({ items = ITEMS, rings = 3, ...props }) => {
+const PLANET_STYLES = {
+  background: Constants.colorMain,
+}
+
+export default ({
+  planetStyles = PLANET_STYLES,
+  items = ITEMS,
+  rings = 3,
+  ...props
+}) => {
   const size = rings * 360
   console.log('render orbital')
 
@@ -123,10 +132,6 @@ export default ({ items = ITEMS, rings = 3, ...props }) => {
               <planet
                 css={{
                   borderRadius: 100,
-                  background:
-                    i % 7 === 0
-                      ? UI.color(Constants.colorMain).lighten(5)
-                      : Constants.colorMain,
                   // border: [1, orbitLineColor],
                   width: 50,
                   height: 50,
@@ -135,6 +140,7 @@ export default ({ items = ITEMS, rings = 3, ...props }) => {
                   animationDelay: `-${(col + 1 * 5) * (i + 1) * 2000}ms`,
                   alignItems: 'center',
                   justifyContent: 'center',
+                  ...planetStyles,
                 }}
               >
                 <img

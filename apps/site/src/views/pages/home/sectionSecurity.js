@@ -2,10 +2,10 @@ import * as React from 'react'
 import * as View from '~/views'
 import * as UI from '@mcro/ui'
 
-const background = '#fff'
+const background = '#111'
 
 export default props => (
-  <UI.Theme name="light">
+  <UI.Theme name="dark">
     <View.Section css={{ background, zIndex: 100000, padding: [100, 0] }}>
       <slant
         css={{
@@ -16,7 +16,7 @@ export default props => (
           right: -300,
           height: 100,
           zIndex: 1200000,
-          boxShadow: [[0, -50, 70, [0, 0, 0, 0.5]]],
+          boxShadow: [[0, -10, 20, [0, 0, 0, 0.05]]],
           transform: {
             rotate: '-1deg',
           },

@@ -57,6 +57,146 @@ import Orbitals from './home/orbitals'
 //                   /> */}
 
 @view
+class Illustration2 {
+  render(props) {
+    return (
+      <things
+        $$row
+        css={{
+          flex: 1,
+          marginRight: -140,
+          justifyContent: 'center',
+          userSelect: 'none',
+        }}
+        {...props}
+      >
+        <Orbitals
+          rings={2}
+          planetStyles={{
+            background: '#fff',
+            border: [1, Constants.colorMain],
+          }}
+          items={[
+            'google-gmail',
+            'google-drive',
+            'slack',
+            'confluence',
+            'zendesk',
+          ]}
+          css={{
+            top: -75,
+            left: 240,
+            transform: {
+              scale: 0.5,
+            },
+          }}
+        />
+
+        <stage
+          css={{
+            flexFlow: 'row',
+            alignItems: 'flex-end',
+            margin: [0, 'auto'],
+          }}
+        >
+          <figure
+            css={{
+              marginRight: -30,
+              zIndex: 100,
+              height: 180,
+            }}
+          >
+            <img
+              src="/figures/Snail.svg"
+              css={{
+                margin: [30, 0, 0, -150],
+                width: 150,
+                height: 150,
+                zIndex: 1000,
+                alignSelf: 'flex-end',
+              }}
+            />
+          </figure>
+
+          <figure
+            css={{
+              marginRight: -30,
+              zIndex: 100,
+              height: 180,
+            }}
+          >
+            <img
+              src="/figures/Hummingbird.svg"
+              css={{
+                margin: [-150, 0, 0, -50],
+                width: 150,
+                height: 150,
+                zIndex: 1000,
+                alignSelf: 'flex-end',
+              }}
+            />
+          </figure>
+
+          <figure css={{ marginRight: -30, zIndex: 100 }}>
+            <img
+              src="/figures/Rabbit.svg"
+              css={{
+                width: 150,
+                height: 150,
+                alignSelf: 'flex-end',
+                transform: { scaleX: -1 },
+              }}
+            />
+          </figure>
+        </stage>
+
+        <floor
+          css={{
+            position: 'absolute',
+            bottom: 10,
+            left: 120,
+            right: 90,
+            flexFlow: 'row',
+            alignItems: 'flex-end',
+            justifyContent: 'space-around',
+          }}
+        >
+          <img
+            src="/figures/Lavender.svg"
+            css={{ width: 80, height: 80, opacity: 0 }}
+          />
+
+          <img
+            if={false}
+            src="/figures/Pinecomb.svg"
+            css={{
+              width: 80,
+              height: 80,
+              transform: { rotate: '-25deg' },
+            }}
+          />
+        </floor>
+      </things>
+    )
+  }
+
+  static style = {
+    icon: {
+      // border: [1, [0, 0, 255, 0.075]],
+      background: [255, 255, 255, 0.1],
+      borderRadius: 10,
+      opacity: 0.25,
+      width: 45,
+      height: 45,
+      alignItems: 'center',
+      justifyContent: 'center',
+      position: 'absolute',
+      bottom: 0,
+    },
+  }
+}
+
+@view
 class Illustration1 {
   render(props) {
     return (
@@ -346,9 +486,20 @@ class HomeHeader2 {
     return (
       <View.Section
         css={{
-          background: 'linear-gradient(#fff, #f2f2f2)',
+          position: 'relative',
+          background: 'linear-gradient(transparent, #fff 30%, #f2f2f2)',
         }}
       >
+        <fadeUp
+          $$fullscreen
+          css={{
+            pointerEvents: 'none',
+            zIndex: 2,
+            background:
+              'linear-gradient(rgb(93%, 99.5%, 100%), transparent 30%, transparent)',
+          }}
+        />
+
         <tophead
           css={{
             background: 'transparent',
@@ -379,21 +530,12 @@ class HomeHeader2 {
           </View.SectionContent>
         </tophead>
 
-        <bg
-          if={false}
-          $$fullscreen
-          css={{
-            background: 'radial-gradient(#fff, transparent)',
-            top: '-10%',
-            left: '-10%',
-          }}
-        />
-
         <View.SectionContent
           css={{
             margin: 'auto',
             padding: [50, 0, 100],
-            zIndex: 0,
+            position: 'relative',
+            zIndex: 5,
           }}
         >
           <img
@@ -412,7 +554,10 @@ class HomeHeader2 {
 
           <content
             $$row
-            css={{ margin: [100, 0, 150], justifyContent: 'space-between' }}
+            css={{
+              margin: [120, 0, 120],
+              justifyContent: 'space-between',
+            }}
           >
             <section
               css={{
@@ -448,10 +593,10 @@ class HomeHeader2 {
                     marginLeft: '-60%',
                   }}
                 />
-                <Illustration1 css={{ transform: { scale: 1.15 } }} />
+                <Illustration1 css={{ transform: { scale: 1 } }} />
               </inner>
             </section>
-            <section css={{ marginTop: 30, width: '45%' }}>
+            <section css={{ marginTop: -20, width: '45%' }}>
               <inner
                 css={{
                   position: 'relative',
@@ -459,27 +604,14 @@ class HomeHeader2 {
                   margin: [20, 0, 0],
                 }}
               >
-                <things $$row css={{ margin: 'auto' }}>
-                  <Orbitals
-                    rings={1}
-                    items={[
-                      'google-gmail',
-                      'google-drive',
-                      'slack',
-                      'confluence',
-                      'zendesk',
-                    ]}
-                    css={{
-                      top: -100,
-                      left: 270,
-                      transform: {
-                        scale: 0.9,
-                      },
-                    }}
-                  />
-                </things>
+                <Illustration2 css={{ transform: { scale: 1 } }} />
               </inner>
-              <View.Title textAlign="right" size={3} fontWeight={200}>
+              <View.Title
+                margin={[40, 0, 0]}
+                textAlign="right"
+                size={3}
+                fontWeight={200}
+              >
                 Orbit keeps everyone on the same page
               </View.Title>
             </section>

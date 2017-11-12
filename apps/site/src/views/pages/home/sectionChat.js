@@ -11,17 +11,17 @@ export default class SectionChat extends React.Component {
       <section css={{ position: 'relative' }}>
         <UI.Theme name="dark">
           <View.Section
-            space
             css={{
+              background: '#7b99d9',
               padding: [210, 0],
             }}
           >
             <background
               $$fullscreen
               css={{
-                background: `#282e3a url(/wallpaper.jpg) no-repeat`,
+                background: `url(/wallpaper.jpg) no-repeat`,
                 backgroundSize: 'cover',
-                opacity: 0.3,
+                opacity: 0.28,
               }}
             />
             <View.SectionContent padRight>

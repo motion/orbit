@@ -522,7 +522,7 @@ let blurredRef
           this.activeKey = this.getActiveKey()
         }
         // hide ora in header
-        if (pageNode.scrollTop > 450) {
+        if (pageNode.scrollTop > 600) {
           if (!this.show) {
             this.show = true
           }
@@ -588,7 +588,7 @@ export default class HomePage extends React.Component {
           if={!blurred && homeStore.ready && !isSmall}
           css={{
             opacity: homeStore.show ? 1 : 0,
-            transition: 'opacity ease-in 1000ms',
+            transition: 'opacity ease-in 400ms',
           }}
           homeStore={homeStore}
         />
@@ -662,7 +662,7 @@ export default class HomePage extends React.Component {
         left: 0,
         right: 0,
         zIndex: 1000,
-        transition: 'opacity ease-in 1000ms',
+        transition: 'opacity ease-in 400ms',
         opacity: this.props.homeStore.show ? 1 : 0,
         clip: `rect(${topPad + radius}px, ${right}px, ${bottom}px, ${left}px)`,
       },

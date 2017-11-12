@@ -3,6 +3,7 @@ import * as UI from '@mcro/ui'
 import * as View from '~/views'
 import * as Constants from '~/constants'
 import { view } from '@mcro/black'
+import Logo from './logo'
 
 const orbitLineColor = UI.color(Constants.colorMain).darken(0.25)
 const dark1 = UI.color(Constants.colorMain)
@@ -12,6 +13,164 @@ const dark2 = UI.color(Constants.colorSecondary)
   .darken(0.75)
   .toString()
 
+const gradientedText = {
+  background: `
+  -webkit-linear-gradient(
+    30deg,
+    ${UI.color(Constants.colorMain)
+      .lighten(0.15)
+      .toString()},
+    ${UI.color(Constants.colorSecondary)
+      .lighten(0.65)
+      .toString()}
+  )`,
+  WebkitBackgroundClip: 'text',
+  WebkitTextFillColor: 'transparent',
+}
+
+const Orbitals = () => (
+  <orbitals
+    css={{
+      position: 'absolute',
+      width: 2000,
+      left: '50%',
+      marginLeft: -1000,
+    }}
+  >
+    <inner
+      css={{
+        position: 'absolute',
+        height: 2000,
+        width: 2000,
+        top: -600,
+        right: -380,
+        zIndex: 100,
+      }}
+    >
+      <contain $$fullscreen>
+        <circle
+          css={{
+            margin: 'auto',
+            border: [1, orbitLineColor],
+            width: 100,
+            height: 100,
+            borderRadius: 1000000000,
+          }}
+        />
+      </contain>
+      <contain $$fullscreen>
+        <circle
+          css={{
+            margin: 'auto',
+            border: [1, orbitLineColor],
+            width: 300,
+            height: 300,
+            borderRadius: 1000000000,
+            opacity: 0.8,
+          }}
+        />
+      </contain>
+      <contain $$fullscreen>
+        <circle
+          css={{
+            margin: 'auto',
+            border: [1, orbitLineColor],
+            width: 600,
+            height: 600,
+            borderRadius: 1000000000,
+            opacity: 0.7,
+          }}
+        />
+      </contain>
+      <contain $$fullscreen>
+        <circle
+          css={{
+            margin: 'auto',
+            border: [1, orbitLineColor],
+            width: 900,
+            height: 900,
+            borderRadius: 1000000000,
+            opacity: 0.3,
+          }}
+        />
+        {[
+          'google-gmail',
+          'google-drive',
+          'asana',
+          'base',
+          'box',
+          'confluence',
+          'discord',
+          'dropbox',
+          'facebook',
+          'frontapp',
+          'github-icon',
+          'gitter',
+          'hipchat',
+          'hubspot',
+          'jira',
+          'markdown',
+          'medium',
+          'microsoft',
+          'office',
+          'quora',
+          'salesforce',
+          'slack',
+          'trello',
+          'zendesk',
+          'angellist',
+          'shopify',
+          'twitter',
+          'bitbucket',
+        ].map((n, i) => {
+          const col = i % 3
+          return (
+            <contain $$fullscreen key={i}>
+              <planet
+                css={{
+                  borderRadius: 100,
+                  background:
+                    i % 7 === 0
+                      ? UI.color(Constants.colorMain).lighten(5)
+                      : '#000',
+                  border: [1, orbitLineColor],
+                  width: 50,
+                  height: 50,
+                  margin: 'auto',
+                  animation: `orbital${col} ${col * 30 + 50}s linear infinite`,
+                  animationDelay: `-${(col + 1 * 5) * (i + 1) * 2000}ms`,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <img
+                  src={`/logos/${n}.svg`}
+                  css={{
+                    width: 20,
+                    height: 20,
+                  }}
+                />
+              </planet>
+            </contain>
+          )
+        })}
+      </contain>
+      <contain $$fullscreen>
+        <circle
+          css={{
+            margin: 'auto',
+            border: [1, orbitLineColor],
+            width: 1400,
+            height: 1400,
+            borderRadius: 1000000000,
+            opacity: 0.15,
+          }}
+        />
+      </contain>
+    </inner>
+  </orbitals>
+)
+
 @view
 export default class Header {
   render() {
@@ -19,7 +178,7 @@ export default class Header {
       <View.Section
         css={{
           background: `linear-gradient(-195deg, ${dark1}, ${dark2})`,
-          minHeight: Math.min(1100, window.innerHeight),
+          // minHeight: Math.min(1100, window.innerHeight),
           position: 'relative',
           transform: {
             z: 0,
@@ -30,7 +189,9 @@ export default class Header {
           $$fullscreen
           css={{
             zIndex: 101,
-            background: `linear-gradient(-195deg, transparent, ${Constants.colorSecondary})`,
+            background: `linear-gradient(-195deg, transparent, ${
+              Constants.colorSecondary
+            })`,
           }}
         />
         <fadeDown
@@ -42,150 +203,10 @@ export default class Header {
           }}
         />
 
-        <orbitals
-          css={{
-            position: 'absolute',
-            width: 2000,
-            left: '50%',
-            marginLeft: -1000,
-          }}
-        >
-          <inner
-            css={{
-              position: 'absolute',
-              height: 2000,
-              width: 2000,
-              top: -600,
-              right: -380,
-              zIndex: 100,
-            }}
-          >
-            <contain $$fullscreen>
-              <circle
-                css={{
-                  margin: 'auto',
-                  border: [1, orbitLineColor],
-                  width: 100,
-                  height: 100,
-                  borderRadius: 1000000000,
-                }}
-              />
-            </contain>
-            <contain $$fullscreen>
-              <circle
-                css={{
-                  margin: 'auto',
-                  border: [1, orbitLineColor],
-                  width: 300,
-                  height: 300,
-                  borderRadius: 1000000000,
-                  opacity: 0.8,
-                }}
-              />
-            </contain>
-            <contain $$fullscreen>
-              <circle
-                css={{
-                  margin: 'auto',
-                  border: [1, orbitLineColor],
-                  width: 600,
-                  height: 600,
-                  borderRadius: 1000000000,
-                  opacity: 0.7,
-                }}
-              />
-            </contain>
-            <contain $$fullscreen>
-              <circle
-                css={{
-                  margin: 'auto',
-                  border: [1, orbitLineColor],
-                  width: 900,
-                  height: 900,
-                  borderRadius: 1000000000,
-                  opacity: 0.3,
-                }}
-              />
-              {[
-                'google-gmail',
-                'google-drive',
-                'asana',
-                'base',
-                'box',
-                'confluence',
-                'discord',
-                'dropbox',
-                'facebook',
-                'frontapp',
-                'github-icon',
-                'gitter',
-                'hipchat',
-                'hubspot',
-                'jira',
-                'markdown',
-                'medium',
-                'microsoft',
-                'office',
-                'quora',
-                'salesforce',
-                'slack',
-                'trello',
-                'zendesk',
-                'angellist',
-                'shopify',
-                'twitter',
-                'bitbucket',
-              ].map((n, i) => {
-                const col = i % 3
-                return (
-                  <contain $$fullscreen key={i}>
-                    <planet
-                      css={{
-                        borderRadius: 100,
-                        background:
-                          i % 7 === 0
-                            ? UI.color(Constants.colorMain).lighten(5)
-                            : '#000',
-                        border: [1, orbitLineColor],
-                        width: 50,
-                        height: 50,
-                        margin: 'auto',
-                        animation: `orbital${col} ${col * 30 +
-                          50}s linear infinite`,
-                        animationDelay: `-${(col + 1 * 5) * (i + 1) * 2000}ms`,
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                      }}
-                    >
-                      <img
-                        src={`/logos/${n}.svg`}
-                        css={{
-                          width: 20,
-                          height: 20,
-                        }}
-                      />
-                    </planet>
-                  </contain>
-                )
-              })}
-            </contain>
-            <contain $$fullscreen>
-              <circle
-                css={{
-                  margin: 'auto',
-                  border: [1, orbitLineColor],
-                  width: 1400,
-                  height: 1400,
-                  borderRadius: 1000000000,
-                  opacity: 0.15,
-                }}
-              />
-            </contain>
-          </inner>
-        </orbitals>
+        <Orbitals />
 
         <visible css={{ position: 'relative', zIndex: 1000, flex: 1 }}>
-          <header $$row>
+          <header $$row if={false}>
             <View.SectionContent>
               <header
                 $$row
@@ -196,23 +217,7 @@ export default class Header {
                   marginBottom: 20,
                 }}
               >
-                <logos
-                  css={{
-                    // background: '#fff',
-                    alignItems: 'center',
-                    flexFlow: 'row',
-                    padding: 10,
-                  }}
-                >
-                  <View.Icon
-                    fill={'#fff'}
-                    css={{
-                      height: 45,
-                      margin: [-10, 10, -10, -5],
-                    }}
-                  />
-                  <View.Logo css={{ height: 24 }} fill={'#fff'} />
-                </logos>
+                <Logo />
               </header>
             </View.SectionContent>
           </header>
@@ -222,13 +227,13 @@ export default class Header {
               css={{
                 flex: 1,
                 justifyContent: 'center',
-                padding: [200, 0, 100],
                 margin: 'auto',
               }}
             >
               <wrap>
                 <View.Content padRight>
                   <View.Title
+                    if={false}
                     size={5}
                     color="#fff"
                     fontWeight={100}
@@ -237,29 +242,13 @@ export default class Header {
                     Company knowledge, smarter.
                   </View.Title>
 
-                  <View.Text
-                    size={2.3}
-                    fontWeight={200}
-                    css={{
-                      background: `
-                      -webkit-linear-gradient(
-                        30deg,
-                        ${UI.color(Constants.colorMain)
-                          .lighten(0.15)
-                          .toString()},
-                        ${UI.color(Constants.colorSecondary)
-                          .lighten(0.65)
-                          .toString()}
-                      )`,
-                      WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent',
-                    }}
-                  >
-                    An assistant that tracks your wiki, chats, documents, and
-                    much more.<br />
-                    <br />
-                    Instant search & contextual answers, wherever you are.
+                  <View.Text size={3.3} fontWeight={100} css={gradientedText}>
+                    Orbit is an assistant that tracks your wiki, chats,
+                    documents, and anything relevant to your company.<br />
                   </View.Text>
+                  <UI.Text size={2.5} fontWeight={200} css={gradientedText}>
+                    Instant search & contextual answers, wherever you are.
+                  </UI.Text>
 
                   <View.Text if={false} size={1.7}>
                     Scroll down to see it in action.

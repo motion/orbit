@@ -12,6 +12,147 @@ import HomeSecurity from './home/sectionSecurity'
 import HomeChat from './home/sectionChat'
 import HomeExamples from './home/sectionExamples'
 import HomeIntegrations from './home/sectionIntegrations'
+import Logo from './home/logo'
+
+@view
+class HomeHeader2 {
+  render() {
+    return (
+      <View.Section css={{ background: '#f2f2f2' }}>
+        <tophead css={{ background: '#fff', padding: [10, 0] }}>
+          <View.SectionContent>
+            <Logo color={Constants.colorSecondary} />
+          </View.SectionContent>
+        </tophead>
+        <View.SectionContent>
+          <content $$row css={{ margin: [50, 0] }}>
+            <section css={{ position: 'relative', width: '50%' }}>
+              <View.Title size={3} fontWeight={200}>
+                Keeping everyone in sync shouldn't be so hard
+              </View.Title>
+
+              <inner
+                css={{ position: 'relative', minHeight: 250, margin: [50, 0] }}
+              >
+                <things $$row css={{ margin: 'auto' }}>
+                  <icon css={{ alignItems: 'center', width: 120, height: 120 }}>
+                    <img
+                      src={`/logos/slack.svg`}
+                      css={{
+                        width: 20,
+                        height: 20,
+                        marginBottom: 10,
+                      }}
+                    />
+                    <UI.Text size={1.2}>Conversations</UI.Text>
+                  </icon>
+                  <icon css={{ alignItems: 'center', width: 120, height: 120 }}>
+                    <img
+                      src={`/logos/google-drive.svg`}
+                      css={{
+                        width: 20,
+                        height: 20,
+                        marginBottom: 10,
+                      }}
+                    />
+                    <UI.Text size={1.2}>Documents</UI.Text>
+                  </icon>
+                  <icon css={{ alignItems: 'center', width: 120, height: 120 }}>
+                    <img
+                      src={`/logos/confluence.svg`}
+                      css={{
+                        width: 20,
+                        height: 20,
+                        marginBottom: 10,
+                      }}
+                    />
+                    <UI.Text size={1.2}>Wiki</UI.Text>
+                  </icon>
+                </things>
+
+                <img
+                  src="/watercolor3.png"
+                  css={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: 2022,
+                    height: 904,
+                    transformOrigin: 'top left',
+                    transform: { scale: 0.3 },
+                    margin: '-10%',
+                  }}
+                />
+              </inner>
+            </section>
+            <section css={{ width: '50%' }}>
+              <inner
+                css={{
+                  position: 'relative',
+                  minHeight: 250,
+                  margin: [50, 0, 0],
+                }}
+              >
+                <things $$row css={{ margin: 'auto' }}>
+                  <icon css={{ alignItems: 'center', width: 120, height: 120 }}>
+                    <img
+                      src={`/logos/slack.svg`}
+                      css={{
+                        width: 20,
+                        height: 20,
+                        marginBottom: 10,
+                      }}
+                    />
+                    <UI.Text size={1.2}>Conversations</UI.Text>
+                  </icon>
+                  <icon css={{ alignItems: 'center', width: 120, height: 120 }}>
+                    <img
+                      src={`/logos/google-drive.svg`}
+                      css={{
+                        width: 20,
+                        height: 20,
+                        marginBottom: 10,
+                      }}
+                    />
+                    <UI.Text size={1.2}>Documents</UI.Text>
+                  </icon>
+                  <icon css={{ alignItems: 'center', width: 120, height: 120 }}>
+                    <img
+                      src={`/logos/confluence.svg`}
+                      css={{
+                        width: 20,
+                        height: 20,
+                        marginBottom: 10,
+                      }}
+                    />
+                    <UI.Text size={1.2}>Wiki</UI.Text>
+                  </icon>
+                </things>
+
+                <img
+                  src="/watercolor3.png"
+                  css={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: 2022,
+                    height: 904,
+                    transformOrigin: 'top left',
+                    transform: { scale: 0.3 },
+                    margin: '-10%',
+                  }}
+                />
+              </inner>
+              <View.Title textAlign="right" size={3} fontWeight={200}>
+                With Orbit, it's easy
+              </View.Title>
+            </section>
+          </content>
+        </View.SectionContent>
+      </View.Section>
+    )
+  }
+}
 
 let blurredRef
 
@@ -29,10 +170,7 @@ let blurredRef
       this.watchScroll()
       this.setTimeout(() => {
         this.ready = true
-      }, 500)
-      this.setTimeout(() => {
-        this.show = true
-      }, 1000)
+      }, 100)
     }
 
     watchScroll = () => {
@@ -46,6 +184,12 @@ let blurredRef
           this.activeKey = 0
         } else {
           this.activeKey = this.getActiveKey()
+        }
+        // hide ora in header
+        if (pageNode.scrollTop > 350) {
+          this.show = true
+        } else {
+          this.show = false
         }
         this.scrollPosition = scrollTop
       }
@@ -109,6 +253,7 @@ export default class HomePage extends React.Component {
           homeStore={homeStore}
         />
         <contents css={{ overflow: 'hidden' }}>
+          <HomeHeader2 />
           <HomeHeader />
           <HomeExamples {...sectionProps} />
           <HomeIntegrations {...sectionProps} />

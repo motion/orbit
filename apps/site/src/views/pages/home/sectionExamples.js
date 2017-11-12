@@ -178,61 +178,50 @@ export default class SectionExamples {
           <Nadir if={false} homeStore={homeStore} />
           <View.SectionContent css={{ paddingRight: 430 }}>
             <inner>
-              <View.Title size={3}>Ora keeps you in sync</View.Title>
               {makeSection(
                 'example-1',
                 <span>
-                  Know there was already a <Logo name="slack" /> Slack
-                  conversation <em>before</em> you open that duplicate{' '}
-                  <Logo name="jira" /> ticket.
+                  Discover the relevant Slack conversation <Logo name="slack" />{' '}
+                  as you discuss opening a ticket <Logo name="jira" />.
                 </span>,
                 { percentFromTop: 38 }
               )}
               {makeSection(
                 'example-2',
                 <span>
-                  Have the <Logo name="confluence" /> knowledgebase answer on
-                  hand the second your customer asks you a{' '}
-                  <Logo name="zendesk" /> question in chat.
+                  Knowledgebase answers <Logo name="confluence" /> on hand the
+                  second your customer asks in Zendesk <Logo name="zendesk" />.
                 </span>,
                 { percentFromTop: 55 }
               )}
               {makeSection(
                 'example-3',
                 <span>
-                  Verify you're referencing the latest numbers in that{' '}
-                  <Logo name="google-drive" /> planning document before you hit
-                  send on that <Logo name="google-gmail" /> email.
+                  See the latest numbers in that planning doc{' '}
+                  <Logo name="google-drive" /> before you send{' '}
+                  <Logo name="google-gmail" />.
                 </span>,
                 { percentFromTop: 58 }
               )}
-              {makeSection(
-                'example-4',
-                <span>
-                  See that{' '}
-                  <img
-                    src="/steph.jpg"
-                    css={{
-                      width: 30,
-                      height: 30,
-                      borderRadius: 30,
-                      display: 'inline',
-                    }}
-                  />{' '}
-                  Lisa already wrote <Logo name="dropbox" /> some notes on that
-                  last meeting.
-                </span>,
-                { percentFromTop: 63 }
-              )}
-              {makeSection(
-                'example-5',
-                <span>
-                  Be the hero in <Logo name="slack" /> #devops when you see a{' '}
-                  <Logo name="github-icon" /> ticket was just opened for the
-                  very issue someone just asked about.
-                </span>,
-                { percentFromTop: 70 }
-              )}
+              {false &&
+                makeSection(
+                  'example-4',
+                  <span>
+                    Michelle already wrote <Logo name="dropbox" /> some notes on
+                    that last meeting.
+                  </span>,
+                  { percentFromTop: 63 }
+                )}
+              {false &&
+                makeSection(
+                  'example-5',
+                  <span>
+                    Be the hero in <Logo name="slack" /> #devops when you see a{' '}
+                    <Logo name="github-icon" /> ticket was just opened for the
+                    very issue someone just asked about.
+                  </span>,
+                  { percentFromTop: 70 }
+                )}
               <br />
               <br />
               <br />

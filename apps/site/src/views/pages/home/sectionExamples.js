@@ -73,7 +73,7 @@ const Lines = ({ adjustDown }) => (
       right: -440,
       width: 300,
       height: 1,
-      background: 'linear-gradient(to left, transparent, red 50%)',
+      background: 'linear-gradient(to left, transparent, #fff 50%)',
     }}
   >
     <dot
@@ -85,7 +85,7 @@ const Lines = ({ adjustDown }) => (
         width: 20,
         height: 20,
         border: [2, '#000'],
-        background: 'red',
+        background: '#fff',
         borderRadius: 100,
       }}
     />
@@ -95,7 +95,7 @@ const Lines = ({ adjustDown }) => (
         left: '-100%',
         width: 300,
         height: 1,
-        background: 'linear-gradient(to right, transparent 50%, red)',
+        background: 'linear-gradient(to right, transparent 50%, #fff)',
         transformOrigin: 'bottom right',
         transform: {
           rotate: `${adjustDown * 1.1}deg`,

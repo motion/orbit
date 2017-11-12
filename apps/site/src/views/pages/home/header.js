@@ -18,6 +18,21 @@ const gradientedText = {
   -webkit-linear-gradient(
     30deg,
     ${UI.color(Constants.colorMain)
+      .darken(0.45)
+      .toString()},
+    ${UI.color(Constants.colorSecondary)
+      .darken(0.65)
+      .toString()}
+  )`,
+  WebkitBackgroundClip: 'text',
+  WebkitTextFillColor: 'transparent',
+}
+
+const gradientedTextLight = {
+  background: `
+  -webkit-linear-gradient(
+    30deg,
+    ${UI.color(Constants.colorMain)
       .lighten(0.15)
       .toString()},
     ${UI.color(Constants.colorSecondary)
@@ -34,7 +49,7 @@ export default class Header {
     return (
       <View.Section
         css={{
-          background: `linear-gradient(-195deg, ${dark1}, ${dark2})`,
+          background: `linear-gradient(#f2f2f2, #f2f2f2, ${dark2})`,
           // minHeight: Math.min(1100, window.innerHeight),
           position: 'relative',
           transform: {
@@ -46,7 +61,7 @@ export default class Header {
           $$fullscreen
           css={{
             zIndex: 101,
-            background: `linear-gradient(-195deg, transparent, ${
+            background: `linear-gradient(transparent, ${
               Constants.colorSecondary
             })`,
           }}
@@ -60,7 +75,9 @@ export default class Header {
           }}
         />
 
-        <Orbitals css={{ position: 'absolute', left: 1200 }} />
+        <Orbitals
+          css={{ position: 'absolute', left: 1200, transform: { scale: 1.75 } }}
+        />
 
         <visible
           css={{
@@ -80,23 +97,26 @@ export default class Header {
             >
               <wrap>
                 <View.Content padRight>
-                  <View.Title
-                    if={false}
-                    size={5}
-                    color="#fff"
-                    fontWeight={100}
-                    lineHeight={75}
+                  <View.Text
+                    style={{
+                      marginTop: -100,
+                      marginBottom: 200,
+                    }}
+                    size={3.3}
+                    fontWeight={800}
+                    css={gradientedText}
                   >
-                    Company knowledge, smarter.
-                  </View.Title>
-
-                  <View.Text size={3.3} fontWeight={800} css={gradientedText}>
-                    Orbit answers questions your customers and teammates ask
-                    without you having to lift a finger.<br />
+                    Orbit answers questions your customers & teammates ask
+                    without you lifting a finger.<br />
                   </View.Text>
-                  <UI.Text size={2.5} fontWeight={200} css={gradientedText}>
-                    An always there assistant that uses advanced ML to serve
-                    contextual answers, no matter what you're doing.
+                  <UI.Text
+                    size={2.5}
+                    fontWeight={200}
+                    style={{ marginBottom: 30 }}
+                    css={gradientedTextLight}
+                  >
+                    It's an always on assistant that uses Machine Learning to
+                    serve contextual answers, wherever you are.
                   </UI.Text>
 
                   <View.Text if={false} size={1.7}>

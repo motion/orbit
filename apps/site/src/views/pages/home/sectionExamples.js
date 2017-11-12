@@ -125,6 +125,8 @@ export default class SectionExamples {
         <View.SubTitle
           getRef={setSection(key, opts)}
           opacity={isActive ? 1 : 0.32}
+          color="#000"
+          fontWeight={300}
           css={{
             transition: 'all ease-in 300ms',
             marginBottom: 50,
@@ -138,10 +140,12 @@ export default class SectionExamples {
     }
 
     return (
-      <UI.Theme name="dark">
+      <UI.Theme name="light">
         <View.Section
-          padded
-          css={{ background: `linear-gradient(${dark2}, #000)` }}
+          css={{
+            background: `linear-gradient(#f2f2f2, #f2f2f2)`,
+            padding: [0, 0, 100],
+          }}
         >
           <Nadir if={false} homeStore={homeStore} />
           <View.SectionContent css={{ paddingRight: 430 }}>

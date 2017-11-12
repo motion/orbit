@@ -36,7 +36,7 @@ export default class SectionIntegrations extends React.Component {
               right: -300,
               height: 100,
               zIndex: 1200000,
-              boxShadow: [[0, -20, 25, [0, 0, 0, 0.1]]],
+              // boxShadow: [[0, -20, 25, [0, 0, 0, 0.1]]],
               transform: {
                 rotate: '-1deg',
               },

@@ -62,6 +62,9 @@ export const Section = view(
     },
     dark,
     space,
+    fullscreen: {
+      minHeight: Math.min(1200, window.innerHeight - 10),
+    },
   }
 )
 

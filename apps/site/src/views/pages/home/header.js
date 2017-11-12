@@ -10,7 +10,7 @@ const dark1 = UI.color(Constants.colorMain)
   .darken(0.75)
   .toString()
 const dark2 = UI.color(Constants.colorSecondary)
-  .darken(0.75)
+  .darken(0.175)
   .toString()
 
 const gradientedText = {
@@ -49,38 +49,24 @@ export default class Header {
     return (
       <View.Section
         css={{
-          background: dark2,
+          background: '#f2f2f2',
           position: 'relative',
-          transform: {
-            z: 0,
-          },
         }}
       >
         <fadeOver
+          if={false}
           $$fullscreen
           css={{
             zIndex: 101,
-            background: `linear-gradient(transparent, ${
-              Constants.colorSecondary
-            })`,
-          }}
-        />
-        <fadeDown
-          $$fullscreen
-          css={{
-            top: '20%',
-            background: `linear-gradient(transparent, ${dark2})`,
-            zIndex: 102,
+            background: `linear-gradient(transparent, #f2f2f2)`,
           }}
         />
 
-        <Orbitals
-          css={{ position: 'absolute', left: 1200, transform: { scale: 1.2 } }}
-        />
+        <Orbitals css={{ position: 'absolute', left: 1200 }} />
 
         <visible
           css={{
-            padding: [200, 0, 0],
+            padding: [150, 0],
             position: 'relative',
             zIndex: 1000,
             flex: 1,
@@ -96,30 +82,31 @@ export default class Header {
             >
               <wrap>
                 <View.Content padRight>
-                  <View.Text
-                    style={{
-                      marginTop: -100,
-                      marginBottom: 100,
-                    }}
-                    size={3}
-                    fontWeight={800}
-                    color="#fff"
-                  >
-                    Orbit answers questions your customers & teammates ask
-                    without you lifting a finger.<br />
-                  </View.Text>
-                  <UI.Text
-                    size={2.5}
-                    fontWeight={200}
-                    css={gradientedTextLight}
-                  >
-                    It's an always on assistant that uses Machine Learning to
-                    serve contextual answers, wherever you are.
-                  </UI.Text>
+                  <text css={{ marginTop: -150, marginBottom: 50 }}>
+                    <View.Text
+                      style={{
+                        marginBottom: 50,
+                      }}
+                      size={3}
+                      fontWeight={800}
+                      color={Constants.colorSecondary}
+                    >
+                      Orbit answers questions your customers & teammates ask.<br
+                      />
+                    </View.Text>
+                    <UI.Text
+                      size={3}
+                      fontWeight={200}
+                      css={gradientedTextLight}
+                    >
+                      It's always on, using Machine Learning to show contextual
+                      answers wherever you are.
+                    </UI.Text>
 
-                  <View.Text if={false} size={1.7}>
-                    Scroll down to see it in action.
-                  </View.Text>
+                    <View.Text if={false} size={1.7}>
+                      Scroll down to see it in action.
+                    </View.Text>
+                  </text>
                 </View.Content>
 
                 <arrows css={{ position: 'absolute', right: 0 }}>

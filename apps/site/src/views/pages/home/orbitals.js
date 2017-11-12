@@ -37,6 +37,7 @@ const ITEMS = [
 
 export default ({ items = ITEMS, rings = 3, ...props }) => {
   const size = rings * 360
+  console.log('render orbital')
 
   return (
     <orbitals
@@ -125,12 +126,12 @@ export default ({ items = ITEMS, rings = 3, ...props }) => {
                   background:
                     i % 7 === 0
                       ? UI.color(Constants.colorMain).lighten(5)
-                      : '#000',
-                  border: [1, orbitLineColor],
+                      : Constants.colorMain,
+                  // border: [1, orbitLineColor],
                   width: 50,
                   height: 50,
                   margin: 'auto',
-                  animation: `orbital${col} ${col * 30 + 50}s linear infinite`,
+                  animation: `orbital${col} ${col * 120 + 50}s linear infinite`,
                   animationDelay: `-${(col + 1 * 5) * (i + 1) * 2000}ms`,
                   alignItems: 'center',
                   justifyContent: 'center',

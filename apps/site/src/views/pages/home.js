@@ -65,6 +65,7 @@ class Illustration1 {
         css={{
           flex: 1,
           justifyContent: 'center',
+          userSelect: 'none',
         }}
       >
         <stage css={{ flexFlow: 'row', flex: 1, alignItems: 'flex-end' }}>
@@ -302,6 +303,7 @@ class Illustration1 {
             </icon>
           </pile>
           <img
+            if={false}
             src="/figures/Pinecomb.svg"
             css={{
               width: 80,
@@ -319,16 +321,13 @@ class Illustration1 {
       // border: [1, [0, 0, 255, 0.075]],
       background: [255, 255, 255, 0.1],
       borderRadius: 10,
-      opacity: 0.5,
+      opacity: 0.25,
       width: 45,
       height: 45,
       alignItems: 'center',
       justifyContent: 'center',
       position: 'absolute',
       bottom: 0,
-      filter: {
-        grayscale: '100%',
-      },
     },
   }
 }
@@ -344,8 +343,19 @@ const MenuItem = props => (
 class HomeHeader2 {
   render() {
     return (
-      <View.Section css={{ background: '#f2f2f2' }}>
-        <tophead css={{ background: 'transparent', padding: [10, 0] }}>
+      <View.Section
+        css={{
+          background: 'linear-gradient(#fff, #f2f2f2)',
+        }}
+      >
+        <tophead
+          css={{
+            background: 'transparent',
+            padding: [10, 0],
+            position: 'relative',
+            zIndex: 10,
+          }}
+        >
           <View.SectionContent row css={{ justifyContent: 'space-between' }}>
             <Logo color={Constants.colorMain} />
 
@@ -367,7 +377,38 @@ class HomeHeader2 {
             </end>
           </View.SectionContent>
         </tophead>
-        <View.SectionContent>
+
+        <bg
+          if={false}
+          $$fullscreen
+          css={{
+            background: 'radial-gradient(#fff, transparent)',
+            top: '-10%',
+            left: '-10%',
+          }}
+        />
+
+        <View.SectionContent
+          css={{
+            margin: 'auto',
+            padding: [50, 0, 100],
+            zIndex: 0,
+          }}
+        >
+          <img
+            src="/watercolorlight.png"
+            css={{
+              position: 'absolute',
+              top: 200,
+              left: -180,
+              width: 2022,
+              height: 904,
+              transformOrigin: 'top left',
+              transform: { scale: 0.75 },
+              margin: '-20%',
+            }}
+          />
+
           <content
             $$row
             css={{ margin: [100, 0], justifyContent: 'space-between' }}
@@ -376,14 +417,14 @@ class HomeHeader2 {
               css={{ marginTop: -10, position: 'relative', width: '48%' }}
             >
               <View.Title size={2.8} fontWeight={200}>
-                Keeping everyone in sync shouldn't be so hard
+                Company knowledge shouldn't be so messy
               </View.Title>
 
               <inner
                 css={{
                   position: 'relative',
                   minHeight: 250,
-                  margin: [15, 0, 50, 0],
+                  margin: [25, 0, 50, 0],
                 }}
               >
                 <img
@@ -392,11 +433,13 @@ class HomeHeader2 {
                     position: 'absolute',
                     top: '24%',
                     left: 0,
+                    opacity: 0.4,
                     width: 2022,
                     height: 904,
                     transformOrigin: 'top left',
-                    transform: { scale: 0.295 },
-                    margin: '-18%',
+                    transform: { scale: 0.3 },
+                    marginTop: '-20%',
+                    marginLeft: '-20%',
                   }}
                 />
                 <Illustration1 />
@@ -407,7 +450,7 @@ class HomeHeader2 {
                 css={{
                   position: 'relative',
                   minHeight: 250,
-                  margin: [50, 0, 0],
+                  margin: [-20, 0, 0],
                 }}
               >
                 <things $$row css={{ margin: 'auto' }}>
@@ -433,18 +476,19 @@ class HomeHeader2 {
                   src="/watercolor3.png"
                   css={{
                     position: 'absolute',
+                    opacity: 0.4,
                     top: '24%',
                     left: 50,
                     width: 2022,
                     height: 904,
                     transformOrigin: 'top left',
-                    transform: { scale: 0.275 },
+                    transform: { scale: 0.25 },
                     margin: '-18%',
                   }}
                 />
               </inner>
               <View.Title textAlign="right" size={3} fontWeight={200}>
-                With Orbit, it's easy
+                Orbit keeps everyone on the same page
               </View.Title>
             </section>
           </content>

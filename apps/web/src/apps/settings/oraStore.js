@@ -1,5 +1,3 @@
-import { watch } from '@mcro/black'
-import { Thing } from '~/app'
 import Mousetrap from 'mousetrap'
 import { OS } from '~/helpers'
 import StackStore from '~/stores/stackStore'
@@ -35,19 +33,7 @@ const debounce = (fn, timeout) => {
   }
 }
 
-const peeks = [
-  'remind',
-  'send',
-  'attach',
-  'discuss',
-  'assign',
-  'update',
-  'new',
-  'issues',
-  'docs',
-].sort()
-
-export default class HomeStore {
+export default class OraStore {
   stack = new StackStore([{ type: 'main' }])
   inputRef = null
   search = ''
@@ -55,14 +41,6 @@ export default class HomeStore {
   fullscreen = false
   traps = {}
   lastKey = null
-
-  @watch
-  myrecent = () =>
-    Thing.find()
-      .where('author')
-      .in(['natew'])
-      .sort({ updated: 'desc' })
-      .limit(5)
 
   willMount() {
     this.attachTrap('window', window)

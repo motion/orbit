@@ -88,7 +88,9 @@ export default function storeProvidable(options, Helpers) {
         }
 
         clearErrors = () => {
-          console.log('gopt hrm')
+          if (this.unmounted) {
+            return
+          }
           if (this.clearError) {
             this.clearError()
           }
@@ -225,7 +227,9 @@ export default function storeProvidable(options, Helpers) {
             Object.keys(Stores).forEach(name => {
               if (this.context.stores[name]) {
                 console.log(
-                  `Notice! You are overwriting an existing store in provide. This may be intentional: ${name} from ${Klass.name}`
+                  `Notice! You are overwriting an existing store in provide. This may be intentional: ${
+                    name
+                  } from ${Klass.name}`
                 )
               }
             })

@@ -176,7 +176,7 @@ export default class OraHeader extends React.Component {
     },
     focus: {
       opacity: 1,
-      height: 'auto',
+      height: 40,
       '& .icon': {
         transform: 'scale(1)',
       },

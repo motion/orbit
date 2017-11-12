@@ -297,7 +297,7 @@ function configureFile({ file }: Object) {
 }
 
 function configureSize({ size, onResize, defaultSize }: Object) {
-  if (this.window.disposed) {
+  if (this.disposed || this.window.disposed) {
     return
   }
 
@@ -333,7 +333,7 @@ function configurePosition({
   onMoved,
   defaultPosition,
 }: Object) {
-  if (this.window.disposed) {
+  if (this.disposed || this.window.disposed) {
     return
   }
 

@@ -65,37 +65,25 @@ const Nebula = () => (
   </nebula>
 )
 
-const Lines = ({ adjustDown }) => (
+const Lines = ({ adjustDown, isActive }) => (
   <line
     css={{
       position: 'absolute',
-      bottom: -adjustDown * 4 + 20,
-      right: -440,
-      width: 300,
+      bottom: -adjustDown * 4 + 100,
+      right: -140,
+      width: 100,
       height: 1,
-      background: 'linear-gradient(to left, transparent, #fff 50%)',
+      opacity: isActive ? 1 : 0,
+      //background: 'linear-gradient(to left, transparent, #000 50%)',
     }}
   >
-    <dot
-      css={{
-        position: 'absolute',
-        top: -10,
-        left: '50%',
-        marginLeft: -30,
-        width: 20,
-        height: 20,
-        border: [2, '#000'],
-        background: '#fff',
-        borderRadius: 100,
-      }}
-    />
     <upwardsLine
       css={{
         position: 'absolute',
         left: '-100%',
         width: 300,
         height: 1,
-        background: 'linear-gradient(to right, transparent 50%, #fff)',
+        background: 'linear-gradient(to right, #ccc 50%, #000)',
         transformOrigin: 'bottom right',
         transform: {
           rotate: `${adjustDown * 1.1}deg`,
@@ -134,7 +122,7 @@ export default class SectionExamples {
           }}
         >
           {content}
-          <Lines key={adjustDown} adjustDown={adjustDown} />
+          <Lines key={adjustDown} adjustDown={adjustDown} isActive={isActive} />
         </View.SubTitle>
       )
     }

@@ -39,7 +39,6 @@ export default class Button extends React.PureComponent {
         type={type}
         clickable
         hoverable
-        borderRadius
         sizeFont
         sizePadding={1.5}
         sizeRadius

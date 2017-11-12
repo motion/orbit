@@ -137,7 +137,7 @@ export default ({
                   height: 50,
                   margin: 'auto',
                   animation: `orbital${col} ${col * 120 + 50}s linear infinite`,
-                  animationDelay: `-${(col + 1 * 5) * (i + 1) * 2000}ms`,
+                  animationDelay: `-${(col + 1 * 2.5) * (i + 1) * 2000}ms`,
                   alignItems: 'center',
                   justifyContent: 'center',
                   ...planetStyles,

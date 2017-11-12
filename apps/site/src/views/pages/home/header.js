@@ -18,10 +18,10 @@ const gradientedText = {
   -webkit-linear-gradient(
     30deg,
     ${UI.color(Constants.colorMain)
-      .darken(0.45)
+      .darken(0.05)
       .toString()},
     ${UI.color(Constants.colorSecondary)
-      .darken(0.65)
+      .darken(0.15)
       .toString()}
   )`,
   WebkitBackgroundClip: 'text',
@@ -62,7 +62,13 @@ export default class Header {
           }}
         />
 
-        <Orbitals css={{ position: 'absolute', left: 1200 }} />
+        <Orbitals
+          planetStyles={{
+            background: '#f2f2f2',
+            border: [1, '#ccc'],
+          }}
+          css={{ top: -90, position: 'absolute', right: -100, left: 'auto' }}
+        />
 
         <visible
           css={{
@@ -88,11 +94,12 @@ export default class Header {
                         marginBottom: 100,
                       }}
                       size={3}
-                      fontWeight={800}
-                      color={Constants.colorSecondary}
+                      fontWeight={400}
+                      css={gradientedText}
                     >
-                      Orbit answers questions your customers & teammates ask.<br
-                      />
+                      Orbit provides answers as you talk with{' '}
+                      <span css={{ fontWeight: 600 }}>customers</span> &{' '}
+                      <span css={{ fontWeight: 600 }}>teammates</span>.<br />
                     </View.Text>
                     <UI.Text
                       size={3.5}

@@ -19,7 +19,6 @@ export default class Ora extends React.Component {
 
   render({ style }) {
     const items = oraItems[this.state.lastIntersection]
-    console.log(this.state, items)
     if (window.innerWidth < Constants.smallSize) {
       return null
     }

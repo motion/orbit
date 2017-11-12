@@ -15,47 +15,6 @@ import HomeIntegrations from './home/sectionIntegrations'
 import Logo from './home/logo'
 import Orbitals from './home/orbitals'
 
-// {/* <img
-//                     src="/figures/Hummingbird.svg"
-//                     css={{
-//                       width: 200,
-//                       height: 200,
-//                       zIndex: 1000,
-//                     }}
-//                   />
-//                   <img
-//                     src="/figures/Snail.svg"
-//                     css={{
-//                       width: 200,
-//                       height: 200,
-//                       zIndex: 1000,
-//                     }}
-//                   />
-//                   <img
-//                     src="/figures/Rabbit.svg"
-//                     css={{
-//                       width: 200,
-//                       height: 200,
-//                       zIndex: 1000,
-//                     }}
-//                   />
-//                   <img
-//                     src="/figures/Mailbox.svg"
-//                     css={{
-//                       width: 200,
-//                       height: 200,
-//                       zIndex: 1000,
-//                     }}
-//                   />
-//                   <img
-//                     src="/figures/Wellington Boots.svg"
-//                     css={{
-//                       width: 200,
-//                       height: 200,
-//                       zIndex: 1000,
-//                     }}
-//                   /> */}
-
 @view
 class Illustration2 {
   render(props) {
@@ -109,7 +68,7 @@ class Illustration2 {
             <img
               src="/figures/Snail.svg"
               css={{
-                margin: [30, 0, 0, -150],
+                margin: [0, 0, 0, -150],
                 width: 150,
                 height: 150,
                 zIndex: 1000,
@@ -128,7 +87,7 @@ class Illustration2 {
             <img
               src="/figures/Hummingbird.svg"
               css={{
-                margin: [-150, 0, 0, -50],
+                margin: [-160, 0, 0, -50],
                 width: 150,
                 height: 150,
                 zIndex: 1000,
@@ -209,12 +168,20 @@ class Illustration1 {
         }}
         {...props}
       >
-        <stage css={{ flexFlow: 'row', flex: 1, alignItems: 'flex-end' }}>
+        <stage
+          css={{
+            height: 300,
+            flexFlow: 'row',
+            flex: 1,
+            alignItems: 'flex-end',
+          }}
+        >
           <figure
             css={{
               marginRight: -30,
+              marginBottom: 30,
               zIndex: 100,
-              height: 180,
+              height: 185,
             }}
           >
             <bubble
@@ -321,7 +288,7 @@ class Illustration1 {
             css={{
               transform: { rotate: '15deg' },
               top: 10,
-              right: -40,
+              right: 0,
             }}
           >
             <img
@@ -475,7 +442,12 @@ class Illustration1 {
 
 const MenuItem = props => (
   <item
-    css={{ padding: [5, 30], fontWeight: 600, color: Constants.colorSecondary }}
+    css={{
+      padding: [5, 25],
+      fontWeight: 600,
+      color: Constants.colorSecondary,
+      cursor: 'pointer',
+    }}
     {...props}
   />
 )
@@ -487,16 +459,48 @@ class HomeHeader2 {
       <View.Section
         css={{
           position: 'relative',
-          background: 'linear-gradient(transparent, #fff 30%, #f2f2f2)',
+          background: 'linear-gradient(#fff, #fff 30%, #f2f2f2)',
         }}
       >
+        <stripe
+          $$fullscreen
+          css={{
+            background:
+              'linear-gradient(rgba(83%, 89.5%, 89.9%, 0.2), transparent)',
+            zIndex: 1,
+            top: '50%',
+            bottom: 0,
+            transformOrigin: 'top',
+            transform: {
+              rotate: '6deg',
+              scale: 2,
+              y: 155,
+            },
+          }}
+        />
+
         <fadeUp
+          if={false}
           $$fullscreen
           css={{
             pointerEvents: 'none',
             zIndex: 2,
-            background:
-              'linear-gradient(rgb(93%, 99.5%, 100%), transparent 30%, transparent)',
+            background: 'linear-gradient(#fff, transparent 30%, transparent)',
+          }}
+        />
+
+        <img
+          if={false}
+          src="/watercolorlight.png"
+          css={{
+            position: 'absolute',
+            top: 420,
+            left: 180,
+            width: 2022,
+            height: 904,
+            transformOrigin: 'top left',
+            transform: { scale: 0.75 },
+            margin: '-20%',
           }}
         />
 
@@ -519,10 +523,11 @@ class HomeHeader2 {
 
             <end>
               <UI.Button
-                icon="saturn"
+                icon="objects_planet"
+                iconAfter
                 size={1.5}
-                sizeRadius={0.25}
-                theme="green"
+                theme="rgb(6.1%, 53.4%, 22.6%)"
+                color="#fff"
               >
                 Download
               </UI.Button>
@@ -533,42 +538,28 @@ class HomeHeader2 {
         <View.SectionContent
           css={{
             margin: 'auto',
-            padding: [50, 0, 100],
+            padding: [100, 0, 200],
             position: 'relative',
             zIndex: 5,
           }}
         >
-          <img
-            src="/watercolorlight.png"
-            css={{
-              position: 'absolute',
-              top: 270,
-              left: -180,
-              width: 2022,
-              height: 904,
-              transformOrigin: 'top left',
-              transform: { scale: 0.75 },
-              margin: '-20%',
-            }}
-          />
-
           <content
             $$row
             css={{
-              margin: [120, 0, 120],
+              margin: [120, 0, 20],
               justifyContent: 'space-between',
             }}
           >
             <section
               css={{
-                marginTop: -50,
+                marginTop: -80,
                 marginBottom: 50,
                 position: 'relative',
-                width: '48%',
+                width: '45%',
               }}
             >
-              <View.Title size={2.8} fontWeight={200}>
-                Company knowledge shouldn't be so messy
+              <View.Title size={2.8} fontWeight={300}>
+                Company knowledge shouldn't be such a mess
               </View.Title>
 
               <inner
@@ -609,8 +600,8 @@ class HomeHeader2 {
               <View.Title
                 margin={[40, 0, 0]}
                 textAlign="right"
-                size={3}
-                fontWeight={200}
+                size={2.8}
+                fontWeight={300}
               >
                 Orbit keeps everyone on the same page
               </View.Title>
@@ -720,6 +711,7 @@ export default class HomePage extends React.Component {
           if={!blurred && homeStore.ready && !isSmall}
           css={{
             opacity: homeStore.show ? 1 : 0,
+            pointerEvents: homeStore.show ? 'auto' : 'none',
             transition: 'opacity ease-in 400ms',
           }}
           homeStore={homeStore}

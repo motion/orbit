@@ -60,8 +60,8 @@ export default class SectionIntegrations extends React.Component {
           <View.SectionContent>
             <View.Title size={3}>Works with you</View.Title>
             <View.SubTitle css={{ padding: [0, 400, 0, 0] }}>
-              Instead of adding another source of truth, Orbit works with any
-              integration you have. <View.Link>Learn more.</View.Link>
+              Don't add yet another source of truth, Orbit works with all your
+              integrations.
             </View.SubTitle>
             <box
               css={{
@@ -71,8 +71,8 @@ export default class SectionIntegrations extends React.Component {
                 height: 280,
                 width: 340,
                 background: '#fff',
-                border: [1, [0, 0, 0, 0.1]],
-                boxShadow: [[0, 0, 10, [0, 0, 0, 0.1]]],
+                border: [1, [0, 0, 0, 0.05]],
+                boxShadow: [[0, 0, 10, [0, 0, 0, 0.04]]],
                 borderRadius: 10,
                 padding: 20,
               }}

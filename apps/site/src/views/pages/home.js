@@ -466,7 +466,7 @@ class HomeHeader2 {
           $$fullscreen
           css={{
             background:
-              'linear-gradient(rgba(83%, 89.5%, 89.9%, 0.2), transparent)',
+              'radial-gradient(at top left, rgba(83%, 89.5%, 89.9%, 0.6), transparent 38%)',
             zIndex: 1,
             top: '50%',
             bottom: 0,
@@ -538,7 +538,7 @@ class HomeHeader2 {
         <View.SectionContent
           css={{
             margin: 'auto',
-            padding: [100, 0, 200],
+            padding: [200, 0],
             position: 'relative',
             zIndex: 5,
           }}
@@ -546,7 +546,6 @@ class HomeHeader2 {
           <content
             $$row
             css={{
-              margin: [120, 0, 20],
               justifyContent: 'space-between',
             }}
           >

@@ -141,8 +141,8 @@ export default class SectionExamples {
               {makeSection(
                 'example-1',
                 <span>
-                  Discover the relevant Slack conversation <Logo name="slack" />{' '}
-                  as you discuss opening a ticket <Logo name="jira" />.
+                  Discover a Slack conversation <Logo name="slack" /> as you
+                  open a ticket <Logo name="jira" />.
                 </span>,
                 { percentFromTop: 38 }
               )}

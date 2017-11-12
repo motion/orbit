@@ -88,7 +88,7 @@ export default class Header {
             >
               <wrap>
                 <View.Content padRight>
-                  <text css={{ marginTop: -150 }}>
+                  <text css={{ marginTop: -180 }}>
                     <View.Text
                       style={{
                         marginBottom: 100,
@@ -102,13 +102,13 @@ export default class Header {
                       <span css={{ fontWeight: 600 }}>teammates</span>.<br />
                     </View.Text>
                     <UI.Text
-                      size={3.5}
+                      size={3.8}
                       fontWeight={200}
                       padding={[0, 100, 0, 0]}
                       css={gradientedTextLight}
                     >
-                      Like Siri, it lives on your desktop.<br />
-                      Orbit uses ML that exposes anything relevant.
+                      It lives on your desktop and uses<br />
+                      machine learning to guide you.
                     </UI.Text>
 
                     <View.Text if={false} size={1.7}>

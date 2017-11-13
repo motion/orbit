@@ -3,28 +3,7 @@ import * as React from 'react'
 import * as Constants from '~/constants'
 import * as View from '~/views'
 import * as UI from '@mcro/ui'
-
-const size = 2000
-
-const Nadir = view(({ homeStore }) => (
-  <nadir
-    css={{
-      position: 'fixed',
-      width: size,
-      height: size,
-      borderRadius: size,
-      top: 0,
-      left: '50%',
-      marginLeft: -(size / 4),
-      border: [1, Constants.colorMain],
-      zIndex: 0,
-      transition: 'all ease-in 500ms',
-      transform: {
-        y: 200 + homeStore.scrollPosition / 3,
-      },
-    }}
-  />
-))
+import Orbitals from './orbitals'
 
 const Logo = props => (
   <img
@@ -38,10 +17,6 @@ const Logo = props => (
       // filter: `grayscale(100%) contrast(100%) blur(1px)`,
     }}
   />
-)
-
-const Icon = props => (
-  <UI.Icon css={{ display: 'inline' }} size={30} {...props} />
 )
 
 const Nebula = () => (
@@ -95,10 +70,6 @@ const Lines = ({ adjustDown, isActive }) => (
   </line>
 )
 
-const dark2 = UI.color(Constants.colorSecondary)
-  .darken(0.75)
-  .toString()
-
 const OPTS = {
   percentFromTop: 50,
 }
@@ -106,7 +77,7 @@ const OPTS = {
 @view
 export default class SectionExamples {
   render({ setSection, homeStore, blurred }) {
-    const makeSection = (key, content, opts = OPTS) => {
+    const makeSection = (key, content, opts = OPTS, props) => {
       const adjustDown = opts.percentFromTop - 30 * 2
       const isActive = homeStore.activeKey === key
       return (
@@ -120,6 +91,7 @@ export default class SectionExamples {
             marginBottom: 50,
             marginTop: 50,
           }}
+          {...props}
         >
           {content}
         </View.SubTitle>
@@ -130,21 +102,93 @@ export default class SectionExamples {
       <UI.Theme name="light">
         <View.Section
           css={{
-            padding: [0, 0, 100],
+            // background: Constants.mainLight,
+            padding: [100, 0],
           }}
         >
-          <Nadir if={false} homeStore={homeStore} />
           <View.SectionContent css={{ paddingRight: 430 }}>
-            <background
-              $$fullscreen
+            <stripeBetween
               css={{
-                background: 'radial-gradient(white 30%, transparent 50%)',
-                top: -500,
-                bottom: -500,
-                left: -500,
+                position: 'absolute',
+                top: -100,
+                left: 0,
+                bottom: 0,
+                right: 0,
+              }}
+            >
+              <fadeDown
+                css={{
+                  position: 'absolute',
+                  top: 582,
+                  left: -1114,
+                  width: 2000,
+                  height: 1000,
+                  background: `linear-gradient(-90deg, ${
+                    Constants.mainLight
+                  }, white 50%)`,
+                  zIndex: 2,
+                  transform: {
+                    rotate: '-98deg',
+                    scale: 1,
+                    y: 155,
+                  },
+                }}
+              />
+              <levelerStripe
+                css={{
+                  position: 'absolute',
+                  top: 0,
+                  width: '100%',
+                  left: '-100%',
+                  marginLeft: 395,
+                  height: 200,
+                  background: Constants.mainLight,
+                  zIndex: 1,
+                }}
+              />
+            </stripeBetween>
+
+            <background
+              css={{
+                position: 'absolute',
+                background: `radial-gradient(${
+                  Constants.mainLight
+                }, transparent 50%)`,
+                height: 1800,
+                width: 1800,
+                bottom: -900,
+                right: -600,
+                zIndex: 1,
               }}
             />
-            <inner>
+
+            <Orbitals
+              planetStyles={{
+                background: '#f2f2f2',
+                border: [1, '#ccc'],
+              }}
+              css={{
+                zIndex: 0,
+                top: -200,
+                position: 'absolute',
+                right: -800,
+                left: 'auto',
+                transform: { scale: 1.75 },
+              }}
+            />
+
+            <inner css={{ position: 'relative', zIndex: 3 }}>
+              <UI.Text
+                size={3.8}
+                fontWeight={200}
+                padding={[0, 100, 60, 0]}
+                color="#000"
+              >
+                Orbit provides insight as you work & talk with{' '}
+                <span css={{ fontWeight: 600 }}>customers</span> &{' '}
+                <span css={{ fontWeight: 600 }}>teammates</span>.<br />
+              </UI.Text>
+
               {makeSection(
                 'example-1',
                 <span>

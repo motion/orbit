@@ -3,89 +3,132 @@ import * as UI from '@mcro/ui'
 import * as View from '~/views'
 import * as Constants from '~/constants'
 import { view } from '@mcro/black'
-import Orbitals from './orbitals'
+import Illustration1 from './header/illustration1'
+import Illustration2 from './header/illustration2'
+import Header from '../views/header'
 
-const gradientedTextLight = {
-  background: `
-  -webkit-linear-gradient(
-    30deg,
-    ${UI.color(Constants.colorMain)
-      .lighten(0.15)
-      .toString()},
-    ${UI.color(Constants.colorSecondary)
-      .lighten(0.65)
-      .toString()}
-  )`,
-  WebkitBackgroundClip: 'text',
-  WebkitTextFillColor: 'transparent',
-}
+const dark1 = UI.color(Constants.colorMain)
+  .darken(0.7)
+  .toString()
+const dark2 = UI.color(Constants.colorSecondary)
+  .darken(0.45)
+  .toString()
 
 @view
-export default class Header {
+export default class HomeHeader {
   render() {
     return (
       <View.Section
         css={{
           position: 'relative',
+          background: `linear-gradient(-195deg, ${dark1}, ${dark2})`,
+          overflow: 'hidden',
         }}
       >
-        <fadeOver
-          if={false}
-          $$fullscreen
-          css={{
-            zIndex: 101,
-            background: `linear-gradient(transparent, #f2f2f2)`,
-          }}
-        />
+        <Header />
 
-        <Orbitals
-          planetStyles={{
-            background: '#f2f2f2',
-            border: [1, '#ccc'],
-          }}
+        <View.SectionContent
           css={{
-            top: 100,
-            position: 'absolute',
-            right: -200,
-            left: 'auto',
-            transform: { scale: 1.75 },
-          }}
-        />
-
-        <visible
-          css={{
-            padding: [50, 0, 50],
-            position: 'relative',
-            flex: 1,
+            margin: 'auto',
+            padding: [300, 0, 50],
           }}
         >
-          <UI.Theme name="dark">
-            <View.SectionContent
+          <content
+            $$row
+            css={{
+              justifyContent: 'space-between',
+            }}
+          >
+            <UI.Theme name="dark">
+              <section
+                css={{
+                  marginTop: -70,
+                  // marginBottom: 40,
+                  height: 560,
+                  position: 'relative',
+                  width: '45%',
+                  transform: {
+                    y: -120,
+                  },
+                }}
+              >
+                <View.Title size={2.8} fontWeight={300} textAlign="right">
+                  Company knowledge shouldn't be such a pain
+                </View.Title>
+
+                <inner
+                  css={{
+                    position: 'relative',
+                    margin: [70, 0, 40, 0],
+                    userSelect: 'none',
+                  }}
+                >
+                  <img
+                    src="/watercolor.png"
+                    css={{
+                      position: 'absolute',
+                      top: 0,
+                      opacity: 0.6,
+                      left: -40,
+                      width: 2022,
+                      height: 904,
+                      zIndex: 0,
+                      transformOrigin: 'top left',
+                      transform: { scale: 0.5 },
+                      filter: 'hue-rotate(-45deg) brightness(0.99)',
+                      margin: '-20%',
+                    }}
+                  />
+                  <Illustration1 css={{ transform: { scale: 1 } }} />
+                </inner>
+              </section>
+            </UI.Theme>
+            <stripeBetween
+              $$fullscreen
               css={{
-                flex: 1,
-                justifyContent: 'center',
-                margin: 'auto',
+                // left: 0,
+                left: '50%',
+                marginRight: -720,
+                background: '#fff',
+                zIndex: 10,
+                transform: {
+                  rotate: '98deg',
+                  scale: 1,
+                  y: 155,
+                },
+              }}
+            />
+            <section
+              css={{
+                marginTop: -20,
+                width: '45%',
+                zIndex: 20,
+                position: 'relative',
+                transform: {
+                  y: -50,
+                },
               }}
             >
-              <wrap>
-                <View.Content padRight>
-                  <text css={{ padding: [40, 0] }}>
-                    <UI.Text
-                      size={3.8}
-                      fontWeight={200}
-                      padding={[0, 100, 0, 0]}
-                      color="#000"
-                    >
-                      Orbit provides insight while you work or talk with{' '}
-                      <span css={{ fontWeight: 600 }}>customers</span> &{' '}
-                      <span css={{ fontWeight: 600 }}>teammates</span>.<br />
-                    </UI.Text>
+              <inner
+                css={{
+                  position: 'relative',
+                  minHeight: 250,
+                  margin: [20, 0, 0],
+                  userSelect: 'none',
+                }}
+              >
+                <Illustration2 css={{ transform: { scale: 1 } }} />
+              </inner>
 
-                    <View.Text if={false} size={1.7}>
-                      Scroll down to see it in action.
-                    </View.Text>
-                  </text>
-                </View.Content>
+              <text css={{ margin: [60, 0, 0, 40] }}>
+                <View.Title
+                  textAlign="left"
+                  size={2.8}
+                  fontWeight={300}
+                  color={dark2}
+                >
+                  Orbit keeps your team in sync without hassle.
+                </View.Title>
 
                 <arrows css={{ position: 'absolute', right: 0 }}>
                   <arrowVertical
@@ -117,61 +160,23 @@ export default class Header {
                   </arrowVertical>
                 </arrows>
 
-                <logos
+                <afterwards
                   if={false}
                   css={{
-                    flexFlow: 'row',
-                    flex: 1,
-                    justifyContent: 'space-around',
-                    margin: [40, 0, 0],
+                    marginTop: 30,
+                    fontFamily: 'Hand of Sean',
+                    fontSize: 20,
+                    color: Constants.colorMain,
+                    opacity: 0.75,
                   }}
                 >
-                  <UI.PassProps size={35} color="#fff">
-                    <UI.Icon name="social-slack" />
-                    <UI.Icon name="social-github" />
-                    <UI.Icon name="social-google" />
-                    <UI.Icon name="social-dropbox" />
-                    <UI.Icon name="social-trello" />
-                    <UI.Icon name="mail" />
-                    <UI.Icon name="calendar" />
-                    <UI.Icon name="files_archive-paper" />
-                    <UI.Icon name="files_book" />
-                    <UI.Icon name="attach" />
-                  </UI.PassProps>
-                </logos>
-              </wrap>
-            </View.SectionContent>
-          </UI.Theme>
-        </visible>
-        <View.BottomSlant if={false} css={{ background: '#fff' }} />
+                  & lets you stop worrying about the cloud.
+                </afterwards>
+              </text>
+            </section>
+          </content>
+        </View.SectionContent>
       </View.Section>
     )
-  }
-
-  static style = {
-    '@keyframes orbital0': {
-      from: {
-        transform: 'rotate(0deg) translateX(150px) rotate(0deg)',
-      },
-      to: {
-        transform: 'rotate(360deg) translateX(150px) rotate(-360deg)',
-      },
-    },
-    '@keyframes orbital1': {
-      from: {
-        transform: 'rotate(0deg) translateX(300px) rotate(0deg)',
-      },
-      to: {
-        transform: 'rotate(360deg) translateX(300px) rotate(-360deg)',
-      },
-    },
-    '@keyframes orbital2': {
-      from: {
-        transform: 'rotate(0deg) translateX(450px) rotate(0deg)',
-      },
-      to: {
-        transform: 'rotate(360deg) translateX(450px) rotate(-360deg)',
-      },
-    },
   }
 }

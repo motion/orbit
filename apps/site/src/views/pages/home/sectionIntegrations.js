@@ -2,6 +2,7 @@ import { view } from '@mcro/black'
 import * as React from 'react'
 import * as View from '~/views'
 import * as UI from '@mcro/ui'
+import * as Constants from '~/constants'
 import appleWatch from './helpers/appleWatch'
 
 const width = 900
@@ -17,7 +18,7 @@ export default class SectionIntegrations extends React.Component {
   }
 
   render({ blurred }) {
-    const background = blurred ? '#eee' : '#fff'
+    const background = Constants.mainLight
     return (
       <UI.Theme name="light">
         <View.Section
@@ -36,7 +37,6 @@ export default class SectionIntegrations extends React.Component {
               right: -300,
               height: 100,
               zIndex: 1200000,
-              boxShadow: [[0, -10, 10, [0, 0, 0, 0.025]]],
               transform: {
                 rotate: '-1deg',
               },
@@ -51,7 +51,7 @@ export default class SectionIntegrations extends React.Component {
               right: -300,
               height: 100,
               zIndex: 1200000,
-              boxShadow: [[0, 10, 10, [0, 0, 0, 0.055]]],
+              boxShadow: [[0, 10, 10, [0, 0, 0, 0.1]]],
               transform: {
                 rotate: '-1deg',
               },

@@ -122,7 +122,6 @@ export default class SectionExamples {
           }}
         >
           {content}
-          <Lines key={adjustDown} adjustDown={adjustDown} isActive={isActive} />
         </View.SubTitle>
       )
     }
@@ -131,12 +130,20 @@ export default class SectionExamples {
       <UI.Theme name="light">
         <View.Section
           css={{
-            background: `#f2f2f2`,
             padding: [0, 0, 100],
           }}
         >
           <Nadir if={false} homeStore={homeStore} />
           <View.SectionContent css={{ paddingRight: 430 }}>
+            <background
+              $$fullscreen
+              css={{
+                background: 'radial-gradient(white 30%, transparent 50%)',
+                top: -500,
+                bottom: -500,
+                left: -500,
+              }}
+            />
             <inner>
               {makeSection(
                 'example-1',

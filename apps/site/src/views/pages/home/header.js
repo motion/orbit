@@ -3,30 +3,7 @@ import * as UI from '@mcro/ui'
 import * as View from '~/views'
 import * as Constants from '~/constants'
 import { view } from '@mcro/black'
-import Logo from './logo'
 import Orbitals from './orbitals'
-
-const dark1 = UI.color(Constants.colorMain)
-  .darken(0.75)
-  .toString()
-const dark2 = UI.color(Constants.colorSecondary)
-  .darken(0.175)
-  .toString()
-
-const gradientedText = {
-  background: `
-  -webkit-linear-gradient(
-    30deg,
-    ${UI.color(Constants.colorMain)
-      .darken(0.05)
-      .toString()},
-    ${UI.color(Constants.colorSecondary)
-      .darken(0.15)
-      .toString()}
-  )`,
-  WebkitBackgroundClip: 'text',
-  WebkitTextFillColor: 'transparent',
-}
 
 const gradientedTextLight = {
   background: `
@@ -49,7 +26,6 @@ export default class Header {
     return (
       <View.Section
         css={{
-          background: '#f2f2f2',
           position: 'relative',
         }}
       >
@@ -80,7 +56,6 @@ export default class Header {
           css={{
             padding: [50, 0, 50],
             position: 'relative',
-            zIndex: 1000,
             flex: 1,
           }}
         >
@@ -95,27 +70,15 @@ export default class Header {
               <wrap>
                 <View.Content padRight>
                   <text css={{ padding: [40, 0] }}>
-                    <View.Text
-                      style={{
-                        marginBottom: 50,
-                        marginRight: 20,
-                      }}
-                      size={2.6}
-                      fontWeight={300}
-                      css={gradientedText}
-                    >
-                      Orbit provides answers as you talk with{' '}
-                      <span css={{ fontWeight: 600 }}>customers</span> &{' '}
-                      <span css={{ fontWeight: 600 }}>teammates</span>.<br />
-                    </View.Text>
                     <UI.Text
                       size={3.8}
                       fontWeight={200}
                       padding={[0, 100, 0, 0]}
-                      css={gradientedTextLight}
+                      color="#000"
                     >
-                      It lives on your desktop and uses<br />
-                      machine learning to guide you.
+                      Orbit provides insight while you work or talk with{' '}
+                      <span css={{ fontWeight: 600 }}>customers</span> &{' '}
+                      <span css={{ fontWeight: 600 }}>teammates</span>.<br />
                     </UI.Text>
 
                     <View.Text if={false} size={1.7}>

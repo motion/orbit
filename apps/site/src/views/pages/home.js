@@ -43,10 +43,10 @@ class Illustration2 {
             'zendesk',
           ]}
           css={{
-            top: -75,
-            left: 240,
+            top: -170,
+            left: 220,
             transform: {
-              scale: 0.5,
+              scale: 0.666,
             },
           }}
         />
@@ -87,7 +87,7 @@ class Illustration2 {
             <img
               src="/figures/Hummingbird.svg"
               css={{
-                margin: [-170, 0, 0, -40],
+                margin: [-220, 0, 0, -40],
                 width: 150,
                 height: 150,
                 zIndex: 1000,
@@ -96,7 +96,7 @@ class Illustration2 {
             />
           </figure>
 
-          <figure css={{ marginRight: -30, zIndex: 100 }}>
+          <figure css={{ marginRight: 0, zIndex: 100 }}>
             <img
               src="/figures/Rabbit.svg"
               css={{
@@ -188,7 +188,7 @@ class Illustration1 {
               css={{
                 width: 110,
                 height: 110,
-                margin: [0, 0, -70, 0],
+                margin: [0, 0, -65, 0],
                 position: 'relative',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -231,7 +231,7 @@ class Illustration1 {
               css={{
                 width: 110,
                 height: 110,
-                margin: [0, 55, -70, 0],
+                margin: [0, 55, -50, 0],
                 position: 'relative',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -360,10 +360,6 @@ class Illustration1 {
             justifyContent: 'space-around',
           }}
         >
-          <img
-            src="/figures/Lavender.svg"
-            css={{ width: 80, height: 80, opacity: 0 }}
-          />
           <pile css={{ margin: [0, 60, 10], position: 'relative', width: 30 }}>
             <icon
               css={{
@@ -429,7 +425,7 @@ class Illustration1 {
       // border: [1, [0, 0, 255, 0.075]],
       background: [255, 255, 255, 0.1],
       borderRadius: 10,
-      opacity: 0.25,
+      // opacity: 0.25,
       width: 45,
       height: 45,
       alignItems: 'center',
@@ -445,12 +441,19 @@ const MenuItem = props => (
     css={{
       padding: [5, 25],
       fontWeight: 600,
-      color: Constants.colorSecondary,
+      color: props.color || Constants.colorSecondary,
       cursor: 'pointer',
     }}
     {...props}
   />
 )
+
+const dark1 = UI.color(Constants.colorMain)
+  .darken(0.75)
+  .toString()
+const dark2 = UI.color(Constants.colorSecondary)
+  .darken(0.45)
+  .toString()
 
 @view
 class HomeHeader2 {
@@ -459,22 +462,22 @@ class HomeHeader2 {
       <View.Section
         css={{
           position: 'relative',
-          background: 'linear-gradient(#fff, #fff 30%, #f2f2f2)',
+          background: `linear-gradient(-195deg, ${dark1}, ${dark2})`,
+          // background: '#000',
         }}
       >
         <stripe
           $$fullscreen
           css={{
-            background:
-              'radial-gradient(at top left, rgba(83%, 89.5%, 89.9%, 0.6), transparent 38%)',
-            zIndex: 1,
+            background: 'radial-gradient(at top left, #fff, #f2f2f2 58%)',
+            zIndex: 10,
             top: '50%',
             bottom: 0,
             transformOrigin: 'top',
             transform: {
-              rotate: '6deg',
+              // rotate: '3deg',
               scale: 2,
-              y: 155,
+              y: 165,
             },
           }}
         />
@@ -489,21 +492,6 @@ class HomeHeader2 {
           }}
         />
 
-        <img
-          if={false}
-          src="/watercolorlight.png"
-          css={{
-            position: 'absolute',
-            top: 420,
-            left: 180,
-            width: 2022,
-            height: 904,
-            transformOrigin: 'top left',
-            transform: { scale: 0.75 },
-            margin: '-20%',
-          }}
-        />
-
         <tophead
           css={{
             background: 'transparent',
@@ -513,11 +501,11 @@ class HomeHeader2 {
           }}
         >
           <View.SectionContent row css={{ justifyContent: 'space-between' }}>
-            <Logo color={Constants.colorMain} />
+            <Logo color="#fff" />
 
             <menu css={{ flexFlow: 'row', padding: [0, 100] }}>
-              <MenuItem>For Sales</MenuItem>
-              <MenuItem>For Support</MenuItem>
+              <MenuItem color="#fff">For Sales</MenuItem>
+              <MenuItem color="#fff">For Support</MenuItem>
               <MenuItem>Pricing</MenuItem>
             </menu>
 
@@ -538,9 +526,7 @@ class HomeHeader2 {
         <View.SectionContent
           css={{
             margin: 'auto',
-            padding: [200, 0],
-            position: 'relative',
-            zIndex: 5,
+            padding: [300, 0],
           }}
         >
           <content
@@ -549,60 +535,92 @@ class HomeHeader2 {
               justifyContent: 'space-between',
             }}
           >
-            <section
-              css={{
-                marginTop: -80,
-                marginBottom: 50,
-                position: 'relative',
-                width: '45%',
-              }}
-            >
-              <View.Title size={2.8} fontWeight={300}>
-                Company knowledge shouldn't be so messy
-              </View.Title>
-
-              <inner
+            <UI.Theme name="dark">
+              <section
                 css={{
+                  marginTop: -80,
+                  marginBottom: 50,
                   position: 'relative',
-                  minHeight: 250,
-                  margin: [25, 0, 50, 0],
+                  width: '45%',
+                  transform: {
+                    y: -120,
+                  },
                 }}
               >
-                <img
-                  src="/watercolor3.png"
+                <View.Title size={2.8} fontWeight={300} textAlign="right">
+                  Company knowledge shouldn't be so messy
+                </View.Title>
+
+                <inner
                   css={{
-                    position: 'absolute',
-                    top: '24%',
-                    left: 0,
-                    opacity: 0,
-                    width: 2022,
-                    height: 904,
-                    transformOrigin: 'top left',
-                    transform: { scale: 0.4 },
-                    marginTop: '-20%',
-                    marginLeft: '-60%',
+                    position: 'relative',
+                    minHeight: 250,
+                    margin: [50, 0, 50, 0],
+                    userSelect: 'none',
                   }}
-                />
-                <Illustration1 css={{ transform: { scale: 1 } }} />
-              </inner>
-            </section>
-            <section css={{ marginTop: -20, width: '45%' }}>
+                >
+                  <img
+                    src="/watercolor.png"
+                    css={{
+                      position: 'absolute',
+                      top: 0,
+                      opacity: 0.6,
+                      left: -100,
+                      width: 2022,
+                      height: 904,
+                      zIndex: 0,
+                      transformOrigin: 'top left',
+                      transform: { scale: 0.5 },
+                      margin: '-20%',
+                    }}
+                  />
+                  <Illustration1 css={{ transform: { scale: 1 } }} />
+                </inner>
+              </section>
+            </UI.Theme>
+            <stripeBetween
+              $$fullscreen
+              css={{
+                left: 0,
+                right: '-50%',
+                marginRight: -935,
+                background: '#fff',
+                zIndex: 10,
+                transform: {
+                  rotate: '98deg',
+                  scale: 1,
+                  y: 155,
+                },
+              }}
+            />
+            <section
+              css={{
+                marginTop: -20,
+                width: '45%',
+                zIndex: 20,
+                position: 'relative',
+                transform: {
+                  y: -20,
+                },
+              }}
+            >
               <inner
                 css={{
                   position: 'relative',
                   minHeight: 250,
                   margin: [20, 0, 0],
+                  userSelect: 'none',
                 }}
               >
                 <Illustration2 css={{ transform: { scale: 1 } }} />
               </inner>
               <View.Title
                 margin={[40, 0, 0, 40]}
-                textAlign="right"
+                textAlign="left"
                 size={2.8}
                 fontWeight={300}
               >
-                Orbit gives everyone insight as they work
+                Orbit keeps everyone on the same page
               </View.Title>
             </section>
           </content>

@@ -512,8 +512,9 @@ class HomeHeader2 {
             <UI.Theme name="dark">
               <section
                 css={{
-                  marginTop: -80,
-                  marginBottom: 50,
+                  marginTop: -70,
+                  // marginBottom: 40,
+                  height: 560,
                   position: 'relative',
                   width: '45%',
                   transform: {
@@ -522,14 +523,13 @@ class HomeHeader2 {
                 }}
               >
                 <View.Title size={2.8} fontWeight={300} textAlign="right">
-                  Company knowledge shouldn't be so messy
+                  Company knowledge shouldn't be such a pain
                 </View.Title>
 
                 <inner
                   css={{
                     position: 'relative',
-                    minHeight: 250,
-                    margin: [50, 0, 50, 0],
+                    margin: [70, 0, 40, 0],
                     userSelect: 'none',
                   }}
                 >
@@ -575,7 +575,7 @@ class HomeHeader2 {
                 zIndex: 20,
                 position: 'relative',
                 transform: {
-                  y: -20,
+                  y: -50,
                 },
               }}
             >
@@ -589,14 +589,30 @@ class HomeHeader2 {
               >
                 <Illustration2 css={{ transform: { scale: 1 } }} />
               </inner>
-              <View.Title
-                margin={[50, 0, 0, 40]}
-                textAlign="left"
-                size={2.8}
-                fontWeight={300}
-              >
-                Orbit makes your team coordination experts
-              </View.Title>
+
+              <text css={{ margin: [60, 0, 0, 40] }}>
+                <View.Title
+                  textAlign="left"
+                  size={2.8}
+                  fontWeight={300}
+                  color={dark2}
+                >
+                  Orbit keeps your team in sync without hassle.
+                </View.Title>
+
+                <afterwards
+                  if={false}
+                  css={{
+                    marginTop: 30,
+                    fontFamily: 'Hand of Sean',
+                    fontSize: 20,
+                    color: Constants.colorMain,
+                    opacity: 0.75,
+                  }}
+                >
+                  & lets you stop worrying about the cloud.
+                </afterwards>
+              </text>
             </section>
           </content>
         </View.SectionContent>

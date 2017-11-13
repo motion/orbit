@@ -73,6 +73,7 @@ export default ({
               border: [1, orbitLineColor],
               width: 100,
               height: 100,
+              background: 'rgba(64.5%, 85.7%, 98.7%, 0.125)',
               borderRadius: 1000000000,
             }}
           />
@@ -84,6 +85,7 @@ export default ({
               border: [1, orbitLineColor],
               width: 300,
               height: 300,
+              background: 'rgba(64.5%, 85.7%, 98.7%, 0.125)',
               borderRadius: 1000000000,
               opacity: 0.8,
             }}
@@ -94,6 +96,7 @@ export default ({
             css={{
               margin: 'auto',
               border: [1, orbitLineColor],
+              background: 'rgba(64.5%, 85.7%, 98.7%, 0.125)',
               width: 600,
               height: 600,
               borderRadius: 1000000000,

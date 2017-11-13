@@ -204,8 +204,8 @@ class Illustration1 {
               <img
                 src="/logos/google-drive.svg"
                 css={{
-                  width: '25%',
-                  height: '25%',
+                  width: '35%',
+                  height: '35%',
                   marginLeft: -5,
                   marginTop: 4,
                   position: 'absolute',
@@ -247,8 +247,8 @@ class Illustration1 {
               <img
                 src="/logos/slack.svg"
                 css={{
-                  width: '25%',
-                  height: '25%',
+                  width: '35%',
+                  height: '35%',
                   marginLeft: -5,
                   marginTop: 4,
                   position: 'absolute',
@@ -270,7 +270,7 @@ class Illustration1 {
         <sky $$fullscreen>
           <icon
             css={{
-              transform: { rotate: '-10deg' },
+              transform: { rotate: '-10deg', scale: 0.65 },
               top: 30,
               left: 0,
             }}
@@ -286,7 +286,7 @@ class Illustration1 {
 
           <icon
             css={{
-              transform: { rotate: '15deg' },
+              transform: { rotate: '15deg', scale: 0.65 },
               top: 10,
               right: 0,
             }}
@@ -308,17 +308,17 @@ class Illustration1 {
             }}
           >
             <img
-              src="/logos/github-octocat.svg"
+              src="/logos/github-icon.svg"
               css={{
-                width: '80%',
-                height: '80%',
+                width: '60%',
+                height: '60%',
               }}
             />
           </icon>
 
           <icon
             css={{
-              transform: { rotate: '-15deg' },
+              transform: { rotate: '-15deg', scale: 0.85 },
               top: 30,
               left: 130,
             }}
@@ -377,7 +377,7 @@ class Illustration1 {
             </icon>
             <icon
               css={{
-                transform: { rotate: '-10deg' },
+                transform: { rotate: '-10deg', scale: 0.85 },
                 bottom: 10,
                 left: -40,
               }}
@@ -449,7 +449,7 @@ const MenuItem = props => (
 )
 
 const dark1 = UI.color(Constants.colorMain)
-  .darken(0.75)
+  .darken(0.7)
   .toString()
 const dark2 = UI.color(Constants.colorSecondary)
   .darken(0.45)
@@ -463,35 +463,9 @@ class HomeHeader2 {
         css={{
           position: 'relative',
           background: `linear-gradient(-195deg, ${dark1}, ${dark2})`,
-          // background: '#000',
+          overflow: 'hidden',
         }}
       >
-        <stripe
-          $$fullscreen
-          css={{
-            background: 'radial-gradient(at top left, #fff, #f2f2f2 58%)',
-            zIndex: 10,
-            top: '50%',
-            bottom: 0,
-            transformOrigin: 'top',
-            transform: {
-              // rotate: '3deg',
-              scale: 2,
-              y: 165,
-            },
-          }}
-        />
-
-        <fadeUp
-          if={false}
-          $$fullscreen
-          css={{
-            pointerEvents: 'none',
-            zIndex: 2,
-            background: 'linear-gradient(#fff, transparent 30%, transparent)',
-          }}
-        />
-
         <tophead
           css={{
             background: 'transparent',
@@ -526,7 +500,7 @@ class HomeHeader2 {
         <View.SectionContent
           css={{
             margin: 'auto',
-            padding: [300, 0],
+            padding: [300, 0, 50],
           }}
         >
           <content
@@ -565,12 +539,13 @@ class HomeHeader2 {
                       position: 'absolute',
                       top: 0,
                       opacity: 0.6,
-                      left: -100,
+                      left: -40,
                       width: 2022,
                       height: 904,
                       zIndex: 0,
                       transformOrigin: 'top left',
                       transform: { scale: 0.5 },
+                      filter: 'hue-rotate(-20deg) brightness(0.99)',
                       margin: '-20%',
                     }}
                   />
@@ -581,9 +556,9 @@ class HomeHeader2 {
             <stripeBetween
               $$fullscreen
               css={{
-                left: 0,
-                right: '-50%',
-                marginRight: -935,
+                // left: 0,
+                left: '50%',
+                marginRight: -720,
                 background: '#fff',
                 zIndex: 10,
                 transform: {
@@ -615,12 +590,12 @@ class HomeHeader2 {
                 <Illustration2 css={{ transform: { scale: 1 } }} />
               </inner>
               <View.Title
-                margin={[40, 0, 0, 40]}
+                margin={[50, 0, 0, 40]}
                 textAlign="left"
                 size={2.8}
                 fontWeight={300}
               >
-                Orbit keeps everyone on the same page
+                Orbit makes your team coordination experts
               </View.Title>
             </section>
           </content>

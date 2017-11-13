@@ -131,7 +131,7 @@ export default class SectionExamples {
       <UI.Theme name="light">
         <View.Section
           css={{
-            background: `linear-gradient(#f2f2f2, #f2f2f2)`,
+            background: `#f2f2f2`,
             padding: [0, 0, 100],
           }}
         >

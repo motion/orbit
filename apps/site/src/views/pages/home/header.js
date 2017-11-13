@@ -67,12 +67,18 @@ export default class Header {
             background: '#f2f2f2',
             border: [1, '#ccc'],
           }}
-          css={{ top: -90, position: 'absolute', right: -100, left: 'auto' }}
+          css={{
+            top: 100,
+            position: 'absolute',
+            right: -200,
+            left: 'auto',
+            transform: { scale: 1.75 },
+          }}
         />
 
         <visible
           css={{
-            padding: [150, 0, 50],
+            padding: [50, 0, 50],
             position: 'relative',
             zIndex: 1000,
             flex: 1,
@@ -88,13 +94,14 @@ export default class Header {
             >
               <wrap>
                 <View.Content padRight>
-                  <text css={{ marginTop: -180 }}>
+                  <text css={{ padding: [40, 0] }}>
                     <View.Text
                       style={{
-                        marginBottom: 100,
+                        marginBottom: 50,
+                        marginRight: 20,
                       }}
-                      size={3}
-                      fontWeight={400}
+                      size={2.6}
+                      fontWeight={300}
                       css={gradientedText}
                     >
                       Orbit provides answers as you talk with{' '}

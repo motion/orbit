@@ -1,11 +1,17 @@
 // @flow
 import Router from '@mcro/router'
 import HomePage from '~/views/pages/home'
+import SalesPage from '~/views/pages/sales'
+import SupportPage from '~/views/pages/support'
+import PricingPage from '~/views/pages/pricing'
 
 function runRouter() {
   return new Router({
     routes: {
       '/': HomePage,
+      '/sales': SalesPage,
+      '/support': SupportPage,
+      '/pricing': PricingPage,
     },
   })
 }

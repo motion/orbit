@@ -1,10 +1,8 @@
 import * as React from 'react'
-import { findDOMNode } from 'react-dom'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import * as View from '~/views'
 import * as Constants from '~/constants'
-import { throttle } from 'lodash'
 import Ora from './home/ora'
 import HomeHeader from './home/header'
 import HomeHandsFree from './home/sectionHandsFree'
@@ -12,8 +10,8 @@ import HomeSecurity from './home/sectionSecurity'
 import HomeChat from './home/sectionChat'
 import HomeExamples from './home/sectionExamples'
 import HomeIntegrations from './home/sectionIntegrations'
-import Logo from './home/logo'
 import Orbitals from './home/orbitals'
+import Header from './views/header'
 
 @view
 class Illustration2 {
@@ -436,18 +434,6 @@ class Illustration1 {
   }
 }
 
-const MenuItem = props => (
-  <item
-    css={{
-      padding: [5, 25],
-      fontWeight: 600,
-      color: props.color || Constants.colorSecondary,
-      cursor: 'pointer',
-    }}
-    {...props}
-  />
-)
-
 const dark1 = UI.color(Constants.colorMain)
   .darken(0.7)
   .toString()
@@ -466,36 +452,7 @@ class HomeHeader2 {
           overflow: 'hidden',
         }}
       >
-        <tophead
-          css={{
-            background: 'transparent',
-            padding: [10, 0],
-            position: 'relative',
-            zIndex: 10,
-          }}
-        >
-          <View.SectionContent row css={{ justifyContent: 'space-between' }}>
-            <Logo color="#fff" />
-
-            <menu css={{ flexFlow: 'row', padding: [0, 100] }}>
-              <MenuItem color="#fff">For Sales</MenuItem>
-              <MenuItem color="#fff">For Support</MenuItem>
-              <MenuItem>Pricing</MenuItem>
-            </menu>
-
-            <end>
-              <UI.Button
-                icon="objects_planet"
-                iconAfter
-                size={1.5}
-                theme="rgb(6.1%, 53.4%, 22.6%)"
-                color="#fff"
-              >
-                Download
-              </UI.Button>
-            </end>
-          </View.SectionContent>
-        </tophead>
+        <Header />
 
         <View.SectionContent
           css={{
@@ -545,7 +502,7 @@ class HomeHeader2 {
                       zIndex: 0,
                       transformOrigin: 'top left',
                       transform: { scale: 0.5 },
-                      filter: 'hue-rotate(-20deg) brightness(0.99)',
+                      filter: 'hue-rotate(-45deg) brightness(0.99)',
                       margin: '-20%',
                     }}
                   />

@@ -111,9 +111,7 @@ export default class SectionExamples {
               css={{
                 position: 'absolute',
                 top: -100,
-                left: 0,
-                bottom: 0,
-                right: 0,
+                left: 23,
               }}
             >
               <fadeDown
@@ -125,7 +123,7 @@ export default class SectionExamples {
                   height: 1000,
                   background: `linear-gradient(-90deg, ${
                     Constants.mainLight
-                  }, white 50%)`,
+                  }, #fff)`,
                   zIndex: 2,
                   transform: {
                     rotate: '-98deg',
@@ -138,8 +136,8 @@ export default class SectionExamples {
                 css={{
                   position: 'absolute',
                   top: 0,
-                  width: '100%',
-                  left: '-100%',
+                  width: 1000,
+                  left: -1000,
                   marginLeft: 395,
                   height: 200,
                   background: Constants.mainLight,
@@ -151,13 +149,11 @@ export default class SectionExamples {
             <background
               css={{
                 position: 'absolute',
-                background: `radial-gradient(${
-                  Constants.mainLight
-                }, transparent 50%)`,
+                background: `radial-gradient(#fff 10%, transparent 40%)`,
                 height: 1800,
-                width: 1800,
-                bottom: -900,
-                right: -600,
+                width: 2000,
+                bottom: '-80%',
+                right: '-90%',
                 zIndex: 1,
               }}
             />
@@ -182,7 +178,7 @@ export default class SectionExamples {
                 size={3.8}
                 fontWeight={200}
                 padding={[0, 100, 60, 0]}
-                color="#000"
+                color={Constants.colorSecondary}
               >
                 Orbit provides insight as you work & talk with{' '}
                 <span css={{ fontWeight: 600 }}>customers</span> &{' '}

@@ -88,11 +88,11 @@ export default class HomeHeader {
               css={{
                 // left: 0,
                 left: '50%',
-                marginRight: -720,
+                marginRight: -740,
                 background: '#fff',
                 zIndex: 10,
                 transform: {
-                  rotate: '98deg',
+                  rotate: '96.5deg',
                   scale: 1,
                   y: 155,
                 },

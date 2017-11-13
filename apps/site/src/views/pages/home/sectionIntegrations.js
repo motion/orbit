@@ -18,7 +18,7 @@ export default class SectionIntegrations extends React.Component {
   }
 
   render({ blurred }) {
-    const background = Constants.mainLight
+    const background = '#fff' //Constants.mainLight
     return (
       <UI.Theme name="light">
         <View.Section
@@ -37,6 +37,8 @@ export default class SectionIntegrations extends React.Component {
               right: -300,
               height: 100,
               zIndex: 1200000,
+              // boxShadow: [[0, -10, 10, [0, 0, 0, 0.015]]],
+              borderTop: [1, Constants.colorMain],
               transform: {
                 rotate: '-1deg',
               },
@@ -52,6 +54,7 @@ export default class SectionIntegrations extends React.Component {
               height: 100,
               zIndex: 1200000,
               boxShadow: [[0, 10, 10, [0, 0, 0, 0.1]]],
+              // borderBottom: [1, Constants.colorSecondary],
               transform: {
                 rotate: '-1deg',
               },

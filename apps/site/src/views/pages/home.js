@@ -688,7 +688,7 @@ export default class HomePage extends React.Component {
           <HomeIntegrations {...sectionProps} />
           <HomeChat {...sectionProps} />
           <HomeSecurity {...sectionProps} />
-          <HomeHandsFree {...sectionProps} />
+          <HomeHandsFree if={false} {...sectionProps} />
           <UI.Theme name="dark">
             <footer>
               <View.Section space padded>

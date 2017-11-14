@@ -4,7 +4,7 @@ import { summarize, summarizeWithQuestion } from './helpers/summarize'
 import * as UI from '@mcro/ui'
 import { view, watch } from '@mcro/black'
 import { Thing } from '~/app'
-import { isEqual } from 'lodash'
+import { flatten, isEqual } from 'lodash'
 
 @view
 class After {
@@ -34,7 +34,12 @@ class After {
   }
 }
 
-const clean = str => str.replace(/[\r\n|\n|\r|\s]+/gm, ' ').trim()
+const clean = str => {
+  if (typeof str !== 'string') {
+    return 'bad string'
+  }
+  return str.replace(/[\r\n|\n|\r|\s]+/gm, ' ').trim()
+}
 
 export default class ContextSidebar {
   // copy it here
@@ -109,8 +114,8 @@ export default class ContextSidebar {
                 OS.send('navigate', item.url)
               },
               children:
-                lines.length >= 3
-                  ? lines.map((line, i) => (
+                Array.isArray(lines) && lines.length >= 3
+                  ? flatten(lines).map((line, i) => (
                       <UI.Text key={i} ellipse opacity={0.5} size={0.9}>
                         {clean(line)}
                       </UI.Text>

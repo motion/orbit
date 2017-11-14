@@ -105,10 +105,12 @@ export default class OraHeader extends React.Component {
         <title
           $$background={BANNER_COLORS[oraStore.banner && oraStore.banner.type]}
         >
-          <UI.Text size={0.8}>
-            {(oraStore.banner && oraStore.banner.message) ||
-              oraStore.stack.last.result.type}
-          </UI.Text>
+          <titleText>
+            <UI.Text ellipse size={0.8}>
+              {(oraStore.banner && oraStore.banner.message) ||
+                oraStore.stack.last.result.id}
+            </UI.Text>
+          </titleText>
         </title>
 
         <buttons
@@ -199,6 +201,12 @@ export default class OraHeader extends React.Component {
       zIndex: 0,
       pointerEvents: 'none',
       userSelect: 'none',
+    },
+    titleText: {
+      position: 'absolute',
+      top: 6,
+      right: 62,
+      left: 38,
     },
     disabled: {
       pointerEvents: 'none',

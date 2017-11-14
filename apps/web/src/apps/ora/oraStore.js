@@ -126,7 +126,7 @@ export default class OraStore {
         }
         return
       }
-      if (!context || (!context.url || !context.title)) {
+      if (!context || !context.url || !context.title) {
         log('no context or url/title', this.osContext)
         return
       }
@@ -134,6 +134,7 @@ export default class OraStore {
       const updateContext = title => {
         this.osContext = context
         const nextStackItem = {
+          id: context.url,
           title,
           type: 'context',
           icon:

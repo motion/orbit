@@ -159,7 +159,7 @@ export default class Pane {
         </content>
         <actions if={actions}>
           <actionbar>
-            <row $$row>
+            <UI.Row spaced>
               {actions
                 .filter(Boolean)
                 .map(
@@ -170,7 +170,7 @@ export default class Pane {
                       <UI.Button key={index} {...props} />
                     )
                 )}
-            </row>
+            </UI.Row>
           </actionbar>
         </actions>
       </pane>

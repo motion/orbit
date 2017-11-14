@@ -1,8 +1,5 @@
 # me
 
-- clicking on electron window when its not focused should FOCUS first
-  - easy: send a blur event from electron to browser
-  - browser then shows an inviisble div above everything that clicks to go away
 - return focus to previous window on hide ora
 - fix navigating around the app to be faster
 - fix navigating to not flicker when moving between things

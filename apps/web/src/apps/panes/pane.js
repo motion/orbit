@@ -159,7 +159,7 @@ export default class Pane {
         </content>
         <actions if={actions}>
           <actionbar>
-            <UI.Row spaced>
+            <UI.Row spaced itemProps={{ glow: true }}>
               {actions
                 .filter(Boolean)
                 .map(

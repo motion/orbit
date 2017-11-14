@@ -1,11 +1,22 @@
+# me
+
+- clicking on electron window when its not focused should FOCUS first
+  - easy: send a blur event from electron to browser
+  - browser then shows an inviisble div above everything that clicks to go away
+- return focus to previous window on hide ora
+- fix navigating around the app to be faster
+- fix navigating to not flicker when moving between things
+- get a bundle of app built
+- test bundle onboarding process
+- super basic onboarding window
+
 ## product
 - settings pane working
 - onboarding flow
-- various fixes for good ux
-- calndar meetings
 - related project/task/person in special area
 
 ## focus
+- intercom
 - slack
 - microsoft word/excel
 - intercom/zendesk apps (likely not hard)
@@ -27,12 +38,10 @@
   - returning proper people for certain things / showing in app
 
 ## small things
+- resizing the window (height)
 - settings pane: general settings + integrations split out + working open/close
-- auto minimize height if window behind is at bottom (slack)
-- return focus to previous window on hide ora
-- hover to see tooltip peek (test if it be done in same browserwindow)
-- add preview of body contents when showing items
-- hiding should remove pointer events
+- peek things
+- show body contents snippet when on thing
 - make stack link to url so that hmr doesnt lose state
 - need to do bolding inside ui.text so it works well with clamps
 - :bug: once you pin the results disappear
@@ -44,6 +53,5 @@
 - way to go "back", because its confusing if you accidently leave
   - magnifying glass turns into back button
   - keep a stack history in stackStore
-- prevent flickering when moving between pages
   - stack should load item with prop onLoaded and wait for that before navigating
 - favicons and urls showing in subtitle in context results

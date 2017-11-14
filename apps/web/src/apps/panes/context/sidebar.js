@@ -118,7 +118,7 @@ export default class ContextSidebar {
                   ? flatten(lines)
                       .slice(0, 2)
                       .map((line, i) => (
-                        <UI.Text key={i} ellipse opacity={0.5} size={1.1}>
+                        <UI.Text key={i} ellipse opacity={0.65} size={1.1}>
                           {clean(line)}
                         </UI.Text>
                       ))

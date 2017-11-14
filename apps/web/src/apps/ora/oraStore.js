@@ -169,6 +169,7 @@ export default class OraStore {
       })
     })
     this.on(OS, 'ora-blur', () => {
+      console.log('blur')
       this.focused = false
     })
   }

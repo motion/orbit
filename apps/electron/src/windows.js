@@ -29,6 +29,12 @@ const AppWindows = new WindowsStore()
 const ORA_WIDTH = 320
 
 export default class Windows extends React.Component {
+  // this is an event bus that should be open
+  // whenever ora is open
+  sendOra = name => {
+    console.log('called this.sendOra before setup', name)
+  }
+
   subscriptions = []
   uid = Math.random()
   state = {
@@ -118,27 +124,8 @@ export default class Windows extends React.Component {
 
   listenToApps = () => {
     this.on(ipcMain, 'start-ora', event => {
-      this.show = () => {
-        event.sender.send('show-ora')
-        this.trayRef.focus()
-      }
-      this.hide = () => {
-        console.log('hiding')
-        event.sender.send('hide-ora')
-        // return focus to last app
-        //         const res = await execute(
-        //           `
-        // tell application "System Events"
-        //   set activeApp to name of first application process whose frontmost is true
-        //   set activeApp2 to name of second application process whose frontmost is true
-        // end tell
-        // return {activeApp, activeApp2}
-        //         `,
-        //           (err, answer) => {
-        //             console.log('refocus', err, answer)
-        //           }
-        //         )
-      }
+      // setup our event bus
+      this.sendOra = (...args) => event.sender.send(...args)
     })
 
     this.on(ipcMain, 'inject-crawler', event => {
@@ -197,6 +184,29 @@ export default class Windows extends React.Component {
     this.on(ipcMain, 'open-settings', (event, service) => {
       open(`${Constants.APP_URL}/authorize?service=` + service)
     })
+  }
+
+  show = () => {
+    this.sendOra('ora-show')
+    this.trayRef.focus()
+  }
+
+  hide = () => {
+    console.log('hiding')
+    this.sendOra('ora-hide')
+    // return focus to last app
+    //         const res = await execute(
+    //           `
+    // tell application "System Events"
+    //   set activeApp to name of first application process whose frontmost is true
+    //   set activeApp2 to name of second application process whose frontmost is true
+    // end tell
+    // return {activeApp, activeApp2}
+    //         `,
+    //           (err, answer) => {
+    //             console.log('refocus', err, answer)
+    //           }
+    //         )
   }
 
   injectCrawler = async sendToOra => {
@@ -344,6 +354,14 @@ export default class Windows extends React.Component {
     this.setState({ error })
   }
 
+  onOraBlur = () => {
+    this.sendOra('ora-blur')
+  }
+
+  onOraFocus = () => {
+    this.sendOra('ora-focus')
+  }
+
   render() {
     const { appWindows, error, restart } = this.state
 
@@ -426,6 +444,8 @@ export default class Windows extends React.Component {
           position={this.state.trayPosition}
           onMoved={trayPosition => this.setState({ trayPosition })}
           onMove={trayPosition => this.setState({ trayPosition })}
+          onBlur={this.onOraBlur}
+          onFocus={this.onOraFocus}
         />
 
         {appWindows.map(win => {

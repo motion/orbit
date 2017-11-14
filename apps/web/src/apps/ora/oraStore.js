@@ -28,7 +28,8 @@ export default class OraStore {
   traps = {}
   lastKey = null
   hidden = false
-  focused = false
+  focused = true
+  focusedBar = false
   banner = null
 
   // TODO move into currentuser
@@ -52,6 +53,7 @@ export default class OraStore {
 
   async willMount() {
     this.attachTrap('window', window)
+    this._watchFocus()
     this._watchFocusBar()
     this._watchInput()
     this._watchToggleHide()
@@ -156,6 +158,19 @@ export default class OraStore {
     })
   }
 
+  _watchFocus() {
+    this.on(OS, 'ora-focus', () => {
+      // SET TIMEOUT HERE because electron is super quick
+      // and tells the app its focused BEFORE your click event happens
+      this.setTimeout(() => {
+        this.focused = true
+      })
+    })
+    this.on(OS, 'ora-blur', () => {
+      this.focused = false
+    })
+  }
+
   _watchCrawlResults() {
     this.on(OS, 'crawl-results', (event, answer) => {
       console.log('yay results', answer)
@@ -186,7 +201,7 @@ export default class OraStore {
 
   _watchToggleHide() {
     OS.send('start-ora')
-    this.on(OS, 'show-ora', () => {
+    this.on(OS, 'ora-show', () => {
       this.hidden = !this.hidden
     })
   }
@@ -252,13 +267,13 @@ export default class OraStore {
     if (this.inputRef) {
       this.inputRef.focus()
       this.inputRef.select()
-      this.focused = true
+      this.focusedBar = true
     }
   }
 
   blurBar = () => {
     this.inputRef && this.inputRef.blur()
-    this.focused = false
+    this.focusedBar = false
   }
 
   onSearchChange = e => {

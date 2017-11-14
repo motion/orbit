@@ -7,6 +7,12 @@ import * as Sidebars from '../panes/sidebars'
 import OraHeader from './oraHeader'
 import * as Constants from '~/constants'
 
+const prevent = e => {
+  console.log('preventing')
+  e.preventDefault()
+  e.stopPropagation()
+}
+
 @view.provide({
   oraStore: OraStore,
 })
@@ -20,6 +26,15 @@ export default class OraPage {
           ref={oraStore.ref('barRef').set}
           $$draggable
         >
+          <overlay
+            if={!oraStore.focused}
+            $$fullscreen
+            css={{
+              zIndex: 100000000000,
+            }}
+            onMouseDown={prevent}
+            onClick={prevent}
+          />
           <UI.Theme name="clear-dark">
             <OraHeader oraStore={oraStore} />
           </UI.Theme>

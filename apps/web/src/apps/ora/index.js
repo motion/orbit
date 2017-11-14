@@ -45,11 +45,11 @@ export default class OraPage {
               oraStore={oraStore}
               sidebars={Sidebars}
               itemProps={{
-                size: 1,
+                size: 1.1,
                 padding: [6, 12],
                 glow: true,
                 highlightBackground: [255, 255, 255, 0.08],
-                childrenEllipse: 3,
+                childrenEllipse: 2,
               }}
             />
           </content>

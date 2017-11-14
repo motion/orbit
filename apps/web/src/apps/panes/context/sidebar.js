@@ -114,12 +114,14 @@ export default class ContextSidebar {
                 OS.send('navigate', item.url)
               },
               children:
-                Array.isArray(lines) && lines.length >= 3
-                  ? flatten(lines).map((line, i) => (
-                      <UI.Text key={i} ellipse opacity={0.5} size={0.9}>
-                        {clean(line)}
-                      </UI.Text>
-                    ))
+                Array.isArray(lines) && lines.length >= 2
+                  ? flatten(lines)
+                      .slice(0, 2)
+                      .map((line, i) => (
+                        <UI.Text key={i} ellipse opacity={0.5} size={1.1}>
+                          {clean(line)}
+                        </UI.Text>
+                      ))
                   : clean(lines),
               after: (
                 <After

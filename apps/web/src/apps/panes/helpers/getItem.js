@@ -2,7 +2,6 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
 import type { PaneResult } from '~/types'
-import FeedItem from '../feed/feedItem'
 
 const hasContent = (result: PaneResult) =>
   result && result.data && result.data.body
@@ -67,6 +66,9 @@ export default function getItem(getActiveIndex) {
         ? result.displayTitle || null
         : result.display ? null : result.title,
     primaryEllipse: !hasContent(result),
+    primaryProps: {
+      fontWeight: 500,
+    },
     secondary: result.subtitle,
     children: getChildren(result),
     iconAfter: result.iconAfter,

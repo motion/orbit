@@ -354,11 +354,11 @@ export default class Windows extends React.Component {
     this.setState({ error })
   }
 
-  onOraBlur = () => {
+  onOraBlur() {
     this.sendOra('ora-blur')
   }
 
-  onOraFocus = () => {
+  onOraFocus() {
     this.sendOra('ora-focus')
   }
 
@@ -444,8 +444,8 @@ export default class Windows extends React.Component {
           position={this.state.trayPosition}
           onMoved={trayPosition => this.setState({ trayPosition })}
           onMove={trayPosition => this.setState({ trayPosition })}
-          onBlur={this.onOraBlur}
-          onFocus={this.onOraFocus}
+          onBlur={() => this.onOraBlur()}
+          onFocus={() => this.onOraFocus()}
         />
 
         {appWindows.map(win => {

@@ -5,13 +5,36 @@ import puppeteer from 'puppeteer'
 import debug from 'debug'
 import CrawlerDB from './crawlerDB'
 import type { Options } from '~/types'
+import { uniq } from 'lodash'
 
 const log = {
   crawl: debug('crawler:crawl'),
   page: debug('crawler:page'),
 }
 
+const removeLastSegmentOfPath = x => x.replace(/\/[^\/]+$/g, '')
 const cleanUrl = url => url.replace(/[#](.*)$/g, '')
+const cleanUrlSearch = url => url.replace(/[?](.*)$/g, '')
+
+const urlSimilarity = (wanted, given) => {
+  let score = 100
+  // de-weight paths with ?params just a lil
+  if (/[?](.*)$/g.test(given)) {
+    score -= 4
+  }
+  // avoid those paths confusing the score
+  let curPath = cleanUrlSearch(given)
+  const segments = given.split('/').length
+  for (let i = 0; i < segments; i++) {
+    if (wanted === curPath) {
+      return score
+    }
+    score--
+    curPath = removeLastSegmentOfPath(curPath)
+  }
+  return 0
+}
+
 const extensionLooksLike = (url, extensions) =>
   extensions.indexOf(url.slice(url.length - 4, url.length)) >= 0
 
@@ -37,7 +60,8 @@ export default class Crawler {
       return parse(url).pathname.indexOf(depth) === 0
     }
 
-    let target = this.db.popUrl() || { url: cleanUrl(entry), radius: 0 }
+    const initialUrl = cleanUrl(entry)
+    let target = { url: initialUrl, radius: 0 }
 
     if (!target.url) {
       log.crawl('no url')
@@ -49,6 +73,11 @@ export default class Crawler {
     }
 
     const entryUrl = parse(target.url)
+    const fullMatchUrl = `${entryUrl.protocol}//${entryUrl.host}${depth}`
+
+    log.crawl('scoring closest to url:', fullMatchUrl)
+    this.db.setScoringFn(url => urlSimilarity(fullMatchUrl, url))
+
     const browser = await puppeteer.launch(puppeteerOptions)
     const page = await browser.newPage()
 
@@ -59,7 +88,7 @@ export default class Crawler {
       } else if (target.radius >= maxRadius) {
         log.page(`Maximum radius reached, did not crawl ${target.url}`)
       } else {
-        const isValidPath = !matchPath || matchPath(target.url)
+        const isValidPath = matchPath(target.url)
 
         // content-type whitelist
         const res = await fetch(target.url, { method: 'HEAD' })
@@ -74,21 +103,26 @@ export default class Crawler {
 
         log.page(`Crawling ${target.url}`)
         try {
-          await page.goto(target.url)
+          await page.goto(target.url, {
+            waitLoad: true,
+          })
           const links = (await page.evaluate(async () => {
             return Array.from(document.querySelectorAll('[href]')).map(
               link => link.href
             )
           })).map(cleanUrl)
-          const outboundUrls = links.filter(link => {
-            return parse(link).host === entryUrl.host
-          })
+          let outboundUrls = uniq(
+            links.filter(link => {
+              const matchesHost = parse(link).host === entryUrl.host
+              const isNotOriginalUrl = link !== initialUrl
+              return matchesHost && isNotOriginalUrl
+            })
+          )
           log.page(`Found ${outboundUrls.length} urls`)
           // this allows it to crawl pages that arent valid matches
           // but could lead back to valid pages
           // should have a flag to make stricter if desired
           if (isValidPath) {
-            count++
             const contents = await page.evaluate(async options => {
               const titleNode = document.querySelector(options.titleSelector)
               const bodyNodes = Array.from(
@@ -101,6 +135,12 @@ export default class Crawler {
                   : '',
               }
             }, options)
+
+            // only count it if it finds goodies
+            if (contents.title || contents.body) {
+              count++
+            }
+            // store crawl results
             this.db.store({
               outboundUrls,
               contents,
@@ -109,14 +149,16 @@ export default class Crawler {
             })
           }
         } catch (err) {
-          log.page(`Error crawling url ${target.url} ${err.message}`)
+          log.page(
+            `Error crawling url ${target.url}\n${err.message}\n${err.stack}`
+          )
         }
       }
       if (count >= maxPages) {
         log.crawl(`Max pages reached! ${maxPages}`)
         break
       }
-      target = this.db.popUrl()
+      target = this.db.shiftUrl()
     }
 
     log.crawl(`Crawler done, crawled ${count} pages`)

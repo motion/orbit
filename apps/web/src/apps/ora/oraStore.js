@@ -31,12 +31,13 @@ export default class OraStore {
   focused = false
   banner = null
 
+  // TODO move into currentuser
   get bucket() {
     if (!CurrentUser.user) {
-      return null
+      return 'Default'
     }
     const { activeBucket } = CurrentUser.user.settings
-    return (activeBucket && activeBucket !== 'Default' && activeBucket) || null
+    return activeBucket || 'Default'
   }
 
   @watch
@@ -155,11 +156,19 @@ export default class OraStore {
   }
 
   _watchCrawlResults() {
-    this.on(OS, 'crawl-results', (event, results) => {
-      console.log('yay results', results)
-      if (results) {
-        for (const result of results) {
-          console.log('add result', result)
+    this.on(OS, 'crawl-results', (event, answer) => {
+      console.log('yay results', answer)
+      if (answer) {
+        for (const { url, contents } of answer.results) {
+          console.log('creating a thing', url, contents)
+          Thing.create({
+            url,
+            title: contents.title,
+            body: contents.body,
+            integration: 'crawler',
+            type: 'website',
+            bucket: this.bucket || 'Default',
+          })
         }
       }
     })

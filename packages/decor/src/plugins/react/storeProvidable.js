@@ -81,6 +81,7 @@ export default function storeProvidable(options, Helpers) {
           if (this.stores === null) {
             return
           }
+          this.mounted = true
           this.mountStores()
           if (window.Black) {
             window.Black.view.on('hmr', this.clearErrors)
@@ -97,7 +98,7 @@ export default function storeProvidable(options, Helpers) {
         }
 
         clearError() {
-          if (!this.unmounted) {
+          if (this.mounted && !this.unmounted) {
             this.setState({ error: null })
           }
         }

@@ -7,6 +7,7 @@ import keycode from 'keycode'
 import ContextStore from '~/stores/contextStore'
 import SHORTCUTS from './shortcuts'
 import { CurrentUser } from '~/app'
+import * as r2 from '@mcro/r2'
 
 const BANNERS = {
   note: 'note',
@@ -44,7 +45,7 @@ export default class OraStore {
       ? Thing.find()
       : Thing.find()
           .where('bucket')
-          .in(this.bucket)
+          .eq(this.bucket)
 
   @watch context = () => this.items && new ContextStore(this.items)
 
@@ -54,6 +55,7 @@ export default class OraStore {
     this._watchInput()
     this._watchToggleHide()
     this._watchMouse()
+    this._watchCrawlResults()
     this.watch(() => {
       if (this.hidden) {
         // timeout based on animation
@@ -61,6 +63,14 @@ export default class OraStore {
       }
     })
     await this.listenForContext()
+  }
+
+  startCrawl = async options => {
+    console.log('starting crawl', options)
+    const results = await r2.post('http://localhost:3001/crawler/start', {
+      json: { options },
+    }).json
+    console.log('crawl done', results)
   }
 
   setBanner = (type, message, timeout) => {
@@ -82,7 +92,9 @@ export default class OraStore {
     this.setBanner(BANNERS.note, 'Pinning...')
     const token = `e441c83aed447774532894d25d97c528`
     const { url } = this.osContext
-    const toFetch = `https://api.diffbot.com/v3/article?token=${token}&url=${url}`
+    const toFetch = `https://api.diffbot.com/v3/article?token=${token}&url=${
+      url
+    }`
     console.log('to fetch is', toFetch)
     const res = await fetch(toFetch).then(res => res.json())
     const { text, title } = res.objects[0]
@@ -138,6 +150,17 @@ export default class OraStore {
       }
       if (this.osContext.selection !== context.selection) {
         return updateContext(context.selection || context.title)
+      }
+    })
+  }
+
+  _watchCrawlResults() {
+    this.on(OS, 'crawl-results', (event, results) => {
+      console.log('yay results', results)
+      if (results) {
+        for (const result of results) {
+          console.log('add result', result)
+        }
       }
     })
   }

@@ -108,7 +108,7 @@ export default class Field extends React.Component<Props> {
     ].filter(Boolean)
 
     if (row) {
-      return <Row>{contents}</Row>
+      return <Row $field>{contents}</Row>
     }
 
     return <field css={props}>{contents}</field>
@@ -133,12 +133,6 @@ export default class Field extends React.Component<Props> {
     }
 
     const rowStyle = {
-      field: {
-        padding: [6, 0],
-        flexFlow: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-      },
       label: {
         margin: 0,
         padding: [0, 10],
@@ -155,7 +149,6 @@ export default class Field extends React.Component<Props> {
     return {
       field: {
         width: props.width,
-        ...(props.row && rowStyle.field),
         ...(props.inactive && inactiveStyle.field),
         ...props.fieldStyle,
       },

@@ -153,6 +153,7 @@ export default class Windows extends React.Component {
         json: { options },
       }).json
       console.log('got results', results)
+      event.sender.send('crawl-results', results)
     })
 
     this.on(ipcMain, 'navigate', (event, url) => {

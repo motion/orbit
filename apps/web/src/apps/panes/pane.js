@@ -159,12 +159,7 @@ export default class Pane {
         </content>
         <actions if={actions}>
           <actionbar>
-            <UI.Row
-              spaced={10}
-              itemProps={{
-                glow: true,
-              }}
-            >
+            <row $$row>
               {actions
                 .filter(Boolean)
                 .map(
@@ -175,7 +170,7 @@ export default class Pane {
                       <UI.Button key={index} {...props} />
                     )
                 )}
-            </UI.Row>
+            </row>
           </actionbar>
         </actions>
       </pane>

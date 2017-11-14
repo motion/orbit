@@ -31,7 +31,9 @@ export async function ensureJob(
       (Date.now() - Date.parse(lastPending.createdAt)) / UNITS_SECOND
     if (secondsAgo > SECONDS_UNTIL_JOB_STALE) {
       log(
-        `Stale job, removing... ${type} ${action}, ${secondsAgo} seconds ago (${SECONDS_UNTIL_JOB_STALE} until stale)`
+        `Stale job, removing... ${type} ${action}, ${secondsAgo} seconds ago (${
+          SECONDS_UNTIL_JOB_STALE
+        } until stale)`
       )
       try {
         await lastPending.update({
@@ -56,7 +58,7 @@ export async function ensureJob(
     return await createJob()
   } else {
     // not old enough
-    log('Not old enough', type, action)
+    // log('Not old enough', type, action)
   }
 }
 

@@ -4,6 +4,7 @@ import { summarize, summarizeWithQuestion } from './helpers/summarize'
 import * as UI from '@mcro/ui'
 import { view, watch } from '@mcro/black'
 import { Thing } from '~/app'
+import { isEqual } from 'lodash'
 
 @view
 class After {
@@ -41,7 +42,7 @@ export default class ContextSidebar {
   isCrawling = false
   crawlerInfo = null
   crawlerSettings = {
-    maxPages: 100,
+    maxPages: 6,
   }
 
   get crawlerOptions() {
@@ -59,7 +60,10 @@ export default class ContextSidebar {
       if (info && Object.keys(info).length) {
         // matching url
         if (info.entry === this.osContext.url) {
-          this.crawlerInfo = info
+          if (!isEqual(info, this.crawlerInfo)) {
+            console.log('update selection', info)
+            this.crawlerInfo = info
+          }
         } else {
           console.log('not on same url')
         }
@@ -156,7 +160,10 @@ export default class ContextSidebar {
           content: (
             <UI.Field
               row
-              width={90}
+              width={140}
+              css={{
+                marginRight: 10,
+              }}
               label="Max:"
               sync={this.ref('crawlerSettings.maxPages')}
             />

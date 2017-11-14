@@ -12,6 +12,8 @@ const log = {
 }
 
 const cleanUrl = url => url.replace(/[#](.*)$/g, '')
+const extensionLooksLike = (url, extensions) =>
+  extensions.indexOf(url.slice(url.length - 4, url.length)) >= 0
 
 export default class Crawler {
   shouldCrawl = true
@@ -52,18 +54,18 @@ export default class Crawler {
 
     let count = 0
     while (target && this.shouldCrawl) {
-      if (target.radius >= maxRadius) {
+      if (extensionLooksLike(target.url, ['.png', '.jpg', '.gif'])) {
+        log.page(`Looks like an image, avoid ${target.url}`)
+      } else if (target.radius >= maxRadius) {
         log.page(`Maximum radius reached, did not crawl ${target.url}`)
       } else {
         const isValidPath = !matchPath || matchPath(target.url)
 
         // content-type whitelist
         const res = await fetch(target.url, { method: 'HEAD' })
-        if (
-          !res.headers ||
-          !res.headers.has('content-type') ||
-          !/text\/(html|xml)/g.test(res.headers.get('content-type'))
-        ) {
+        const contentType =
+          res.headers.get('content-type') || res.headers.get('Content-Type')
+        if (!contentType || !/text\/(html|xml)/g.test(contentType)) {
           log.page(
             `No content type or invalid: ${res.headers.get('content-type')}`
           )

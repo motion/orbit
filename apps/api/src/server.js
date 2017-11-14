@@ -11,6 +11,9 @@ import Passport from 'passport'
 import expressPouch from 'express-pouchdb'
 import Path from 'path'
 import crawler from '@mcro/crawler'
+import debug from 'debug'
+
+const log = debug('api')
 
 const port = Constants.SERVER_PORT
 
@@ -59,7 +62,7 @@ export default class Server {
   }
 
   dispose() {
-    console.log('dispose server')
+    log('dispose server')
   }
 
   cors() {
@@ -80,17 +83,22 @@ export default class Server {
   setupCrawler() {
     const crawlerIndex = require.resolve('@mcro/crawler')
     const crawlerDist = Path.join(crawlerIndex, '..', 'build', 'js')
-    console.log('setting up crawler', crawlerDist)
+    log('setting up crawler', crawlerDist)
     this.app.use('/crawler', express.static(crawlerDist))
     this.app.post('/crawler/start', async (req, res) => {
       const { options } = req.body
       if (options) {
+        log('start crawl')
         const results = await crawler({
           ...options,
         })
+        log(
+          `crawl results ${typeof results}, ${Array.isArray(results) &&
+            results.length} results`
+        )
         res.json({ results })
       } else {
-        console.log('No options sent')
+        log('No options sent')
         res.sendStatus(500)
       }
     })
@@ -106,7 +114,7 @@ export default class Server {
       }
     })
     this.app.use('/setCreds', (req, res) => {
-      console.log('set', typeof req.body, req.body)
+      log('set', typeof req.body, req.body)
       if (req.body) {
         this.creds = req.body
       }
@@ -124,7 +132,7 @@ export default class Server {
       return false
     }
     if (typeof session.expires !== 'number') {
-      console.log('non-number session')
+      log('non-number session')
       return false
     }
     return session.expires > Date.now()
@@ -134,7 +142,7 @@ export default class Server {
     const router = {
       [Constants.API_HOST]: Constants.PUBLIC_URL,
     }
-    console.log('proxying', router)
+    log('proxying', router)
     this.app.use(
       '/',
       proxy({
@@ -188,12 +196,12 @@ export default class Server {
 
   setupAuthRefreshRoutes() {
     this.app.use('/auth/refreshToken/:service', async (req, res) => {
-      console.log('refresh for', req.params.service)
+      log('refresh for', req.params.service)
       try {
         const refreshToken = await this.oauth.refreshToken(req.params.service)
         res.json({ refreshToken })
       } catch (error) {
-        console.log('error', error)
+        log('error', error)
         res.status(500)
         res.json({ error })
       }

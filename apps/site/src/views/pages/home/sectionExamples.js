@@ -19,57 +19,6 @@ const Logo = props => (
   />
 )
 
-const Nebula = () => (
-  <nebula>
-    <cloud
-      css={{
-        position: 'absolute',
-        bottom: -400,
-        right: -100,
-        width: 1000,
-        height: 800,
-        background: 'radial-gradient(white, transparent 50%)',
-        zIndex: 1,
-        opacity: 0.25,
-        transform: {
-          z: 0,
-          scale: 3,
-        },
-      }}
-    />
-  </nebula>
-)
-
-const Lines = ({ adjustDown, isActive }) => (
-  <line
-    css={{
-      position: 'absolute',
-      bottom: -adjustDown * 4 + 100,
-      right: -140,
-      width: 100,
-      height: 1,
-      opacity: isActive ? 1 : 0,
-      //background: 'linear-gradient(to left, transparent, #000 50%)',
-    }}
-  >
-    <upwardsLine
-      css={{
-        position: 'absolute',
-        left: '-100%',
-        width: 300,
-        height: 1,
-        background: 'linear-gradient(to right, #ccc 50%, #000)',
-        transformOrigin: 'bottom right',
-        transform: {
-          rotate: `${adjustDown * 1.1}deg`,
-          // y: -125,
-          // x: -50,
-        },
-      }}
-    />
-  </line>
-)
-
 const OPTS = {
   percentFromTop: 50,
 }
@@ -77,8 +26,10 @@ const OPTS = {
 @view
 export default class SectionExamples {
   render({ setSection, homeStore, blurred }) {
+    const TOTAL_EXAMPLES = 3
+    let index = -1
     const makeSection = (key, content, opts = OPTS, props) => {
-      const adjustDown = opts.percentFromTop - 30 * 2
+      index++
       const isActive = homeStore.activeKey === key
       return (
         <View.SubTitle
@@ -90,6 +41,7 @@ export default class SectionExamples {
             transition: 'all ease-in 300ms',
             marginBottom: 50,
             marginTop: 50,
+            marginRight: 50 + 50 * (TOTAL_EXAMPLES - index),
           }}
           {...props}
         >
@@ -150,6 +102,7 @@ export default class SectionExamples {
               css={{
                 position: 'absolute',
                 background: `radial-gradient(#fff 10%, transparent 40%)`,
+                opacity: 0.75,
                 height: 1800,
                 width: 2000,
                 bottom: '-80%',
@@ -177,58 +130,60 @@ export default class SectionExamples {
               <UI.Text
                 size={3.8}
                 fontWeight={200}
-                padding={[0, 100, 60, 0]}
+                padding={[0, 80, 30, 0]}
                 color={Constants.colorSecondary}
               >
-                Orbit provides insight as you work & talk with{' '}
-                <span css={{ fontWeight: 600 }}>customers</span> &{' '}
-                <span css={{ fontWeight: 600 }}>teammates</span>.<br />
+                Insight as you talk to{' '}
+                <span css={{ fontWeight: 600 }}>teammates</span> &{' '}
+                <span css={{ fontWeight: 600 }}>customers</span>
               </UI.Text>
 
-              {makeSection(
-                'example-1',
-                <span>
-                  Discover a Slack conversation <Logo name="slack" /> as you
-                  open a ticket <Logo name="jira" />.
-                </span>,
-                { percentFromTop: 38 }
-              )}
-              {makeSection(
-                'example-2',
-                <span>
-                  Knowledgebase answers <Logo name="confluence" /> on hand the
-                  second your customer asks in Zendesk <Logo name="zendesk" />.
-                </span>,
-                { percentFromTop: 55 }
-              )}
-              {makeSection(
-                'example-3',
-                <span>
-                  See the latest numbers in that planning doc{' '}
-                  <Logo name="google-drive" /> before you send{' '}
-                  <Logo name="google-gmail" />.
-                </span>,
-                { percentFromTop: 58 }
-              )}
-              {false &&
-                makeSection(
-                  'example-4',
+              <examples css={{ marginRight: -120 }}>
+                {makeSection(
+                  'example-1',
                   <span>
-                    Michelle already wrote <Logo name="dropbox" /> some notes on
-                    that last meeting.
+                    Discover a Slack conversation <Logo name="slack" /> as you
+                    open a ticket <Logo name="jira" />.
                   </span>,
-                  { percentFromTop: 63 }
+                  { percentFromTop: 38 }
                 )}
-              {false &&
-                makeSection(
-                  'example-5',
+                {makeSection(
+                  'example-2',
                   <span>
-                    Be the hero in <Logo name="slack" /> #devops when you see a{' '}
-                    <Logo name="github-icon" /> ticket was just opened for the
-                    very issue someone just asked about.
+                    Knowledgebase answers <Logo name="confluence" /> on hand the
+                    second your customer asks in Zendesk <Logo name="zendesk" />.
                   </span>,
-                  { percentFromTop: 70 }
+                  { percentFromTop: 55 }
                 )}
+                {makeSection(
+                  'example-3',
+                  <span>
+                    See the latest numbers in that planning doc{' '}
+                    <Logo name="google-drive" /> before you send{' '}
+                    <Logo name="google-gmail" />.
+                  </span>,
+                  { percentFromTop: 58 }
+                )}
+                {false &&
+                  makeSection(
+                    'example-4',
+                    <span>
+                      Michelle already wrote <Logo name="dropbox" /> some notes
+                      on that last meeting.
+                    </span>,
+                    { percentFromTop: 63 }
+                  )}
+                {false &&
+                  makeSection(
+                    'example-5',
+                    <span>
+                      Be the hero in <Logo name="slack" /> #devops when you see
+                      a <Logo name="github-icon" /> ticket was just opened for
+                      the very issue someone just asked about.
+                    </span>,
+                    { percentFromTop: 70 }
+                  )}
+              </examples>
               <br />
               <br />
               <br />
@@ -243,8 +198,6 @@ export default class SectionExamples {
               </div>
             </inner>
           </View.SectionContent>
-
-          <Nebula key={0} />
         </View.Section>
       </UI.Theme>
     )

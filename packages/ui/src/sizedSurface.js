@@ -20,10 +20,11 @@ export default function SizedSurface(props: Props) {
     sizeFont,
     sizePadding,
     sizeRadius,
+    sizeIcon,
     ...rest
   } = props
 
-  const size = props.size === true ? 1 : props.size
+  const size = props.size === true ? 1 : props.size || 1
   const num = x => (x === true ? size : x * size)
 
   // sizes
@@ -59,6 +60,10 @@ export default function SizedSurface(props: Props) {
   if (sizeRadius) {
     const radius = (sizeRadius && num(sizeRadius) * 8) || 0
     pass.borderRadius = radius
+  }
+  if (sizeIcon) {
+    const iconSize = (sizeIcon && num(sizeIcon)) || 1
+    pass.sizeIcon = iconSize
   }
 
   return <Surface {...pass} {...rest} />

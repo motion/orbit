@@ -44,7 +44,7 @@ export default () => (
         <UI.Button
           icon="objects_planet"
           iconAfter
-          size={1.5}
+          size={1.2}
           theme="rgb(6.1%, 53.4%, 22.6%)"
           color="#fff"
         >

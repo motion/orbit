@@ -2,18 +2,34 @@ import { view } from '@mcro/black'
 import * as React from 'react'
 import * as View from '~/views'
 import * as UI from '@mcro/ui'
-import * as Constants from '~/constants'
+import FakeSlack from './demos/slack'
 
-@view
+@view({
+  store: class DemosStore {
+    active = 0
+
+    sections = [
+      {
+        title: 'Browser',
+      },
+      {
+        title: 'Slack',
+      },
+      {
+        title: 'Email',
+      },
+    ]
+  },
+})
 export default class SectionChat extends React.Component {
-  render() {
+  render({ store }) {
     return (
       <section css={{ position: 'relative' }}>
         <UI.Theme name="dark">
           <View.Section
             css={{
               background: '#7b99d9',
-              padding: [190, 0],
+              padding: [110, 0, 200],
             }}
           >
             <background
@@ -26,114 +42,19 @@ export default class SectionChat extends React.Component {
             />
             <View.SectionContent padRight>
               <View.Title size={3}>Wherever you are</View.Title>
-              <View.SubTitle>
-                Unlike a browser extension or bot, Ora lives on your desktop and
-                works across many apps.
+              <View.SubTitle size={3}>
+                Ora lives on your desktop and works across many apps.
               </View.SubTitle>
-              <View.Text>
-                <strong>Slack</strong> Email Browser Search
-              </View.Text>
-              <UI.Theme name="light">
-                <fakeSlack>
-                  <buttons $section>
-                    <chrome $$background="#ED6A5E" />
-                    <chrome $$background="#F6BF50" />
-                    <chrome $$background="#62C655" />
-                  </buttons>
-
-                  <content $section $$row>
-                    <rooms>
-                      <room />
-                      <room />
-                      <room />
-                    </rooms>
-                    <channels>
-                      <UI.Text
-                        size={1.2}
-                        fontWeight={600}
-                        css={{ padding: [10, 20, 0] }}
-                      >
-                        Orbit Dev Team
-                      </UI.Text>
-                      <UI.List
-                        groupBy="category"
-                        items={[
-                          {
-                            primary: 'All Threads',
-                            icon: 'chat',
-                            category: ' ',
-                          },
-                          {
-                            primary: 'brand',
-                            category: 'Channels',
-                          },
-                          {
-                            primary: 'general',
-                            category: 'Channels',
-                          },
-                          {
-                            primary: 'research',
-                            category: 'Channels',
-                          },
-                          {
-                            primary: 'showoff',
-                            category: 'Channels',
-                          },
-                          {
-                            primary: 'status',
-                            category: 'Channels',
-                          },
-                          {
-                            primary: 'tech',
-                            category: 'Channels',
-                          },
-                          {
-                            primary: 'users',
-                            category: 'Channels',
-                          },
-                          {
-                            primary: 'watercooler',
-                            category: 'Channels',
-                          },
-                          {
-                            primary: 'slackbot',
-                            category: 'Direct Messages',
-                          },
-                          {
-                            primary: 'nate',
-                            category: 'Direct Messages',
-                          },
-                          {
-                            primary: 'nick',
-                            category: 'Direct Messages',
-                          },
-                        ]}
-                      />
-                    </channels>
-                    <messages $section>
-                      <header
-                        css={{
-                          padding: [10, 10, 0],
-                          borderBottom: [1, [0, 0, 0, 0.1]],
-                        }}
-                      >
-                        <UI.Text size={1.5} fontWeight={600}>
-                          #showoff
-                        </UI.Text>
-                        <search>Search</search>
-                      </header>
-                      <chats>
-                        <chat>hi</chat>
-                      </chats>
-                      <inputBar>
-                        <UI.Button flex={1} borderRadius={0} icon="add">
-                          Message #showoff
-                        </UI.Button>
-                      </inputBar>
-                    </messages>
-                  </content>
-                </fakeSlack>
-              </UI.Theme>
+              <UI.Text size={1.5}>
+                <row $$row>
+                  {store.sections.map(({ title }, index) => (
+                    <item key={title} $itemActive={index === store.active}>
+                      {title}
+                    </item>
+                  ))}
+                </row>
+              </UI.Text>
+              <FakeSlack />
             </View.SectionContent>
           </View.Section>
         </UI.Theme>
@@ -142,57 +63,15 @@ export default class SectionChat extends React.Component {
   }
 
   static style = {
-    fakeSlack: {
-      background: '#fff',
-      position: 'relative',
-      borderRadius: 5,
-      width: 700,
-      height: 500,
-      border: [1, [0, 0, 0, 0.05]],
-      boxShadow: [[0, 0, 120, [0, 0, 0, 0.12]]],
-      // transform: {
-      //   x: '-25%',
-      // },
+    row: {
+      margin: [-15, 0, 20],
     },
-    section: {
-      flex: 1,
+    item: {
+      padding: [8, 12],
+      marginRight: 15,
     },
-    buttons: {
-      position: 'absolute',
-      top: 5,
-      left: 0,
-      flexFlow: 'row',
-    },
-    chrome: {
-      width: 15,
-      height: 15,
-      marginLeft: 5,
-      borderRadius: 100,
-      background: '#eee',
-    },
-    rooms: {
-      background: [0, 0, 0, 0.03],
-      borderRight: [1, [0, 0, 0, 0.05]],
-      padding: 10,
-      paddingTop: 30,
-    },
-    room: {
-      width: 50,
-      height: 50,
-      background: [0, 0, 0, 0.03],
-      borderRadius: 5,
-      marginBottom: 10,
-    },
-    channels: {
-      background: [0, 0, 0, 0.02],
-      borderRight: [1, [0, 0, 0, 0.05]],
-    },
-    messages: {
-      flex: 1,
-    },
-    chats: {
-      flex: 1,
-      justifyContent: 'flex-end',
+    itemActive: {
+      borderBottom: [2, '#fff'],
     },
   }
 }

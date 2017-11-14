@@ -112,12 +112,11 @@ export default class SectionExamples {
             <background
               css={{
                 position: 'absolute',
-                background: `radial-gradient(#fff 10%, transparent 40%)`,
-                opacity: 0.75,
+                background: `radial-gradient(#fff 10%, transparent 70%)`,
                 height: 1800,
                 width: 2000,
-                bottom: '-80%',
-                right: '-90%',
+                bottom: '-100%',
+                right: '-95%',
                 zIndex: 1,
               }}
             />
@@ -129,11 +128,11 @@ export default class SectionExamples {
               }}
               css={{
                 zIndex: 0,
-                top: -200,
+                top: -100,
                 position: 'absolute',
                 right: -800,
                 left: 'auto',
-                transform: { scale: 1.75 },
+                transform: { scale: 1.3 },
               }}
             />
 

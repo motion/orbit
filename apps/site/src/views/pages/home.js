@@ -120,7 +120,7 @@ export default class HomePage extends React.Component {
         <contents css={{ overflow: 'hidden' }}>
           <HomeHeader />
           <HomeExamples {...sectionProps} />
-          <HomeIntegrations {...sectionProps} />
+          <HomeIntegrations if={false} {...sectionProps} />
           <HomeChat {...sectionProps} />
           <HomeSecurity {...sectionProps} />
           <HomeHandsFree if={false} {...sectionProps} />

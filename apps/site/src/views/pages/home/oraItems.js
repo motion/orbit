@@ -5,28 +5,24 @@ import SidebarTitle from './sidebarTitle2'
 export default {
   0: [
     {
-      children: <SidebarTitle title="Hi, I'm Ora" noBack />,
+      children: <SidebarTitle title="👋, I'm Orbit" noBack />,
       glow: false,
     },
     {
       //primary: `I unify your cloud services`,
       children: (
-        <UI.Text size={1.3} opacity={0.5} marginTop={0}>
-          I unify your cloud services & put them into an app that helps as you
-          work.
-        </UI.Text>
+        <children>
+          <UI.Text size={1.3} opacity={0.5} marginTop={0}>
+            I live on your desktop, unify your cloud services & provide insight
+            as you work.
+          </UI.Text>
+          <br />
+          <br />
+          <UI.Text size={1.3} opacity={0.5} marginTop={0}>
+            Scroll down to see me in action.
+          </UI.Text>
+        </children>
       ),
-    },
-    {
-      // primary: 'How I work',
-      primary: 'Conversation on 2/22',
-      children: `So I can show you stuff like your recent slack conversations`,
-      icon: 'socialslack',
-    },
-    {
-      primary: 'Planning meeting notes',
-      children: `...this is a document...`,
-      icon: 'socgoogle',
     },
   ],
   'example-1': [

@@ -7,6 +7,8 @@ import Illustration1 from './header/illustration1'
 import Illustration2 from './header/illustration2'
 import Header from '../views/header'
 
+const TITLE_SIZE = 2.6
+
 @view
 export default class HomeHeader {
   render() {
@@ -45,7 +47,11 @@ export default class HomeHeader {
                   },
                 }}
               >
-                <View.Title size={2.8} fontWeight={300} textAlign="right">
+                <View.Title
+                  size={TITLE_SIZE}
+                  fontWeight={300}
+                  textAlign="right"
+                >
                   Company knowledge shouldn't be such a mess
                 </View.Title>
 
@@ -116,11 +122,11 @@ export default class HomeHeader {
               <text css={{ margin: [65, 0, 0, 40] }}>
                 <View.Title
                   textAlign="left"
-                  size={2.8}
+                  size={TITLE_SIZE}
                   fontWeight={300}
                   color={Constants.dark2}
                 >
-                  Orbit keeps your team in sync without hassle.
+                  Orbit keeps your team in sync without hassle
                 </View.Title>
 
                 <arrows css={{ position: 'absolute', right: 0 }}>

@@ -5,9 +5,12 @@ import ReactDOM from 'react-dom'
 import createElement from '@mcro/black/lib/createElement'
 import Themes from '~/themes'
 import { ThemeProvide } from '@mcro/ui'
+import * as Black from '@mcro/black'
 import * as Constants from '~/constants'
 
 window.Constants = Constants
+// for hmr clearing
+window.Black = Black
 
 // Gloss: all <tag />s can use $$styleProps or css={{}}
 React.createElement = createElement

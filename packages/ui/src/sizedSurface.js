@@ -3,7 +3,6 @@ import * as React from 'react'
 import Surface from './surface'
 
 const LINE_HEIGHT = 30
-const num = x => (x === true ? 1 : x || 1)
 
 type Props = {
   size: number,
@@ -24,7 +23,8 @@ export default function SizedSurface(props: Props) {
     ...rest
   } = props
 
-  const size = num(props.size)
+  const size = props.size === true ? 1 : props.size
+  const num = x => (x === true ? size : x * size)
 
   // sizes
   let height = sizeHeight

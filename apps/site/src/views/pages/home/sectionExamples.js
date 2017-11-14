@@ -23,6 +23,8 @@ const OPTS = {
   percentFromTop: 50,
 }
 
+const lightText = UI.color(Constants.colorSecondary).lighten(0.4)
+
 @view
 export default class SectionExamples {
   render({ setSection, homeStore, blurred }) {
@@ -68,7 +70,7 @@ export default class SectionExamples {
               <fadeDown
                 css={{
                   position: 'absolute',
-                  top: 582,
+                  top: 520,
                   left: -1113,
                   width: 2000,
                   height: 1000,
@@ -77,9 +79,9 @@ export default class SectionExamples {
                   }, #111)`,
                   zIndex: 2,
                   transform: {
-                    rotate: '-98deg',
+                    rotate: '-96deg',
                     scale: 1,
-                    y: 155,
+                    y: 115,
                   },
                 }}
               >
@@ -144,12 +146,17 @@ export default class SectionExamples {
                 size={3.8}
                 fontWeight={200}
                 padding={[0, 80, 30, 0]}
-                color={UI.color(Constants.colorSecondary).lighten(0.4)}
+                color={lightText}
               >
                 Insight as you talk to{' '}
                 <span css={{ fontWeight: 600, color: '#fff' }}>teammates</span>{' '}
                 &{' '}
                 <span css={{ fontWeight: 600, color: '#fff' }}>customers</span>
+              </UI.Text>
+
+              <UI.Text size={2} padding={[0, 80, 0, 0]} color={lightText}>
+                Here are a few ways Orbit keeps everyone on your team up to date
+                and knowledgeable of whats important in your company:
               </UI.Text>
 
               <examples css={{ marginRight: -120 }}>

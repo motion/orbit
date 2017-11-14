@@ -9,7 +9,7 @@ import * as Constants from '~/constants'
 
 @view
 export default class Root extends React.Component {
-  lastHeight = window.innerHeight
+  lastWidth = window.innerWidth
 
   state = {
     resizeVersion: 0,
@@ -20,11 +20,11 @@ export default class Root extends React.Component {
       window,
       'resize',
       debounce(() => {
-        if (window.innerHeight !== this.lastHeight) {
+        if (window.innerWidth !== this.lastWidth) {
           this.setState({ resizeVersion: ++this.state.resizeVersion })
         }
       }),
-      100
+      300
     )
   }
 

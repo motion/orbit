@@ -30,7 +30,7 @@ export default () => (
     <View.SectionContent row css={{ justifyContent: 'space-between' }}>
       <Logo color="#fff" />
 
-      <menu css={{ flexFlow: 'row', padding: [0, 100] }}>
+      <menu css={{ flexFlow: 'row', padding: [0, 100, 0, 70] }}>
         <MenuItem to="/sales" color="#fff">
           For Sales
         </MenuItem>

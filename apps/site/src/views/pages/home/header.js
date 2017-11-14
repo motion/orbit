@@ -18,6 +18,7 @@ export default class HomeHeader {
           position: 'relative',
           background: `linear-gradient(${Constants.dark1}, ${Constants.dark2})`,
           overflow: 'hidden',
+          minHeight: Constants.ORA_TOP,
         }}
       >
         <Header />
@@ -82,21 +83,36 @@ export default class HomeHeader {
                 </inner>
               </section>
             </UI.Theme>
+
             <stripeBetween
               $$fullscreen
               css={{
-                // left: 0,
+                marginLeft: 50,
+                top: -250,
+                bottom: -200,
+                right: '-150%',
                 left: '50%',
-                marginRight: -740,
                 background: '#fff',
                 zIndex: 10,
-                transform: {
-                  rotate: '96.5deg',
-                  scale: 1,
-                  y: 155,
-                },
               }}
-            />
+            >
+              <div
+                css={{
+                  position: 'absolute',
+                  background: '#fff',
+                  top: 0,
+                  left: 0,
+                  bottom: 0,
+                  width: 100,
+                  zIndex: 100,
+                  transformOrigin: 'top left',
+                  transform: {
+                    rotate: '4deg',
+                  },
+                }}
+              />
+            </stripeBetween>
+
             <section
               css={{
                 marginTop: -20,

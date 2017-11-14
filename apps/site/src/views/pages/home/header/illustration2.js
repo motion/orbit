@@ -92,7 +92,7 @@ export default class Illustration2 {
             <img
               src="/figures/Hummingbird.svg"
               css={{
-                margin: [-320, 125, 0, -100],
+                margin: [-310, 125, 0, -90],
                 width: 145,
                 height: 145,
                 zIndex: 1000,

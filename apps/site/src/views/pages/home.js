@@ -40,19 +40,20 @@ let blurredRef
       if (scrollTop !== this.scrollPosition) {
         // hide ora in header
         if (scrollTop > Constants.ORA_TOP - Constants.ORA_TOP_PAD) {
-          this.activeKey = 0
           if (!this.show) {
             this.show = true
           }
-        } else {
           const key = this.getActiveKey(scrollTop)
           if (key !== this.activeKey) {
             this.activeKey = key
           }
+        } else {
           if (this.show) {
             this.show = false
+            this.activeKey = 0
           }
         }
+
         if (blurredRef) {
           const scrollTo = this.show ? scrollTop : 0
           blurredRef.style.transform = `translateY(-${scrollTo}px)`

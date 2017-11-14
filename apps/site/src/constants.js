@@ -6,7 +6,7 @@ export const PAGE_WIDTH = smallSize
 
 export const ORA_LEFT_PAD = 285
 export const ORA_TOP_PAD = 40
-export const ORA_TOP = 200
+export const ORA_TOP = 920
 export const ORA_HEIGHT = 410
 export const ORA_WIDTH = 300
 export const ORA_BORDER_RADIUS = 6

@@ -40,6 +40,7 @@ const PLANET_STYLES = {
 }
 
 export default ({
+  ringBackground = 'rgba(64.5%, 85.7%, 98.7%, 0.125)',
   planetSize = 50,
   hideRings = {},
   planetStyles = PLANET_STYLES,
@@ -75,7 +76,7 @@ export default ({
               border: [1, orbitLineColor],
               width: 100,
               height: 100,
-              background: 'rgba(64.5%, 85.7%, 98.7%, 0.125)',
+              background: ringBackground,
               borderRadius: 1000000000,
             }}
           />
@@ -87,7 +88,7 @@ export default ({
               border: [1, orbitLineColor],
               width: 300,
               height: 300,
-              background: 'rgba(64.5%, 85.7%, 98.7%, 0.125)',
+              background: ringBackground,
               borderRadius: 1000000000,
               opacity: 0.8,
             }}
@@ -98,7 +99,7 @@ export default ({
             css={{
               margin: 'auto',
               border: [1, orbitLineColor],
-              background: 'rgba(64.5%, 85.7%, 98.7%, 0.125)',
+              background: ringBackground,
               width: 600,
               height: 600,
               borderRadius: 1000000000,
@@ -135,27 +136,28 @@ export default ({
           if (hideRings[col]) {
             return null
           }
+          const scale = Math.min(1, (col + 1.5) / rings)
           return (
             <contain $$fullscreen key={i}>
               <planet
                 css={{
                   borderRadius: 100,
-                  // border: [1, orbitLineColor],
-                  width: planetSize,
-                  height: planetSize,
+                  width: planetSize * scale,
+                  height: planetSize * scale,
                   margin: 'auto',
                   animation: `orbital${col} ${col * 120 + 50}s linear infinite`,
                   animationDelay: `-${(col + 1 * 2.5) * (i + 1) * 3000}ms`,
                   alignItems: 'center',
                   justifyContent: 'center',
+                  // transform: { scale },
                   ...planetStyles,
                 }}
               >
                 <img
                   src={`/logos/${n}.svg`}
                   css={{
-                    width: planetSize * 0.5,
-                    height: planetSize * 0.5,
+                    width: planetSize * 0.5 * scale,
+                    height: planetSize * 0.5 * scale,
                   }}
                 />
               </planet>

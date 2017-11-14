@@ -156,14 +156,16 @@ export default class HomeHeader {
                 <afterwards
                   if={false}
                   css={{
-                    marginTop: 30,
+                    margin: [30, 20, -30],
+                    textAlign: 'center',
                     fontFamily: 'Hand of Sean',
                     fontSize: 20,
+                    lineHeight: '25px',
                     color: Constants.colorMain,
-                    opacity: 0.75,
+                    opacity: 0.4,
                   }}
                 >
-                  & lets you stop worrying about the cloud.
+                  See it in action
                 </afterwards>
               </text>
             </section>

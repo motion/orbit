@@ -1,4 +1,5 @@
 import * as React from 'react'
+import * as UI from '@mcro/ui'
 import SidebarTitle from './sidebarTitle2'
 
 export default {
@@ -8,9 +9,13 @@ export default {
       glow: false,
     },
     {
-      primary: `I unify your cloud services`,
-      children: `And put them all into a handy desktop assistant`,
-      icon: 'tech_desktop',
+      //primary: `I unify your cloud services`,
+      children: (
+        <UI.Text size={1.3} opacity={0.5} marginTop={0}>
+          I unify your cloud services & put them into an app that helps as you
+          work.
+        </UI.Text>
+      ),
     },
     {
       // primary: 'How I work',
@@ -19,9 +24,9 @@ export default {
       icon: 'socialslack',
     },
     {
-      primary: 'I have so many questions',
-      children: `Scroll down and I'll do my best!`,
-      icon: 'help',
+      primary: 'Planning meeting notes',
+      children: `...this is a document...`,
+      icon: 'socgoogle',
     },
   ],
   'example-1': [

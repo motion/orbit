@@ -19,13 +19,15 @@ export default class Illustration2 {
       >
         <Orbitals
           rings={2}
-          planetSize={60}
           hideRings={{
             0: true,
           }}
+          planetSize={60}
+          ringBackground="rgba(64.5%, 85.7%, 98.7%, 0.075)"
           planetStyles={{
             background: '#fff',
             border: [1, Constants.colorMain],
+            // filter: 'grayscale(0.5)',
           }}
           items={[
             'google-gmail',
@@ -38,19 +40,17 @@ export default class Illustration2 {
             'dropbox',
             'quora',
             'trello',
-            'github-icon',
             'bitbucket',
             'jira',
             'markdown',
             'medium',
             'microsoft',
-            'office',
           ]}
           css={{
-            top: -220,
-            left: 320,
+            top: -165,
+            left: 235,
             transform: {
-              scale: 0.5,
+              scale: 0.64,
             },
           }}
         />
@@ -59,7 +59,7 @@ export default class Illustration2 {
           css={{
             flexFlow: 'row',
             alignItems: 'flex-end',
-            margin: [0, 'auto', -20],
+            margin: [0, 'auto', -70],
           }}
         >
           <figure
@@ -92,9 +92,9 @@ export default class Illustration2 {
             <img
               src="/figures/Hummingbird.svg"
               css={{
-                margin: [-260, 120, 0, -110],
-                width: 140,
-                height: 140,
+                margin: [-320, 125, 0, -100],
+                width: 145,
+                height: 145,
                 zIndex: 1000,
                 alignSelf: 'flex-end',
               }}
@@ -107,40 +107,13 @@ export default class Illustration2 {
               css={{
                 width: 170,
                 height: 170,
-                marginLeft: 100,
+                marginLeft: 80,
                 alignSelf: 'flex-end',
                 transform: { scaleX: -1 },
               }}
             />
           </figure>
         </stage>
-
-        <floor
-          css={{
-            position: 'absolute',
-            bottom: 10,
-            left: 120,
-            right: 90,
-            flexFlow: 'row',
-            alignItems: 'flex-end',
-            justifyContent: 'space-around',
-          }}
-        >
-          <img
-            src="/figures/Lavender.svg"
-            css={{ width: 80, height: 80, opacity: 0 }}
-          />
-
-          <img
-            if={false}
-            src="/figures/Pinecomb.svg"
-            css={{
-              width: 80,
-              height: 80,
-              transform: { rotate: '-25deg' },
-            }}
-          />
-        </floor>
       </things>
     )
   }

@@ -1,8 +1,6 @@
 # me
 
 - return focus to previous window on hide ora
-- fix navigating around the app to be faster
-- fix navigating to not flicker when moving between things
 - get a bundle of app built
 - test bundle onboarding process
 - super basic onboarding window

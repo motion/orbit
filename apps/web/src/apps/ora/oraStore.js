@@ -136,7 +136,9 @@ export default class OraStore {
       const updateContext = title => {
         this.osContext = context
         const nextStackItem = {
-          id: context.url,
+          id: `${context.selection ? context.selection + ' -- ' : ''}${
+            context.url
+          }`,
           title,
           type: 'context',
           icon:

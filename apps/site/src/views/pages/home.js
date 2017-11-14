@@ -53,8 +53,9 @@ let blurredRef
             this.show = false
           }
         }
-        if (this.show && blurredRef) {
-          blurredRef.style.transform = `translateY(-${scrollTop}px)`
+        if (blurredRef) {
+          const scrollTo = this.show ? scrollTop : 0
+          blurredRef.style.transform = `translateY(-${scrollTo}px)`
         }
         this.scrollPosition = scrollTop
       }

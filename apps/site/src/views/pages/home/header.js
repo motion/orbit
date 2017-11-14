@@ -7,13 +7,6 @@ import Illustration1 from './header/illustration1'
 import Illustration2 from './header/illustration2'
 import Header from '../views/header'
 
-const dark1 = UI.color(Constants.colorMain)
-  .darken(0.7)
-  .toString()
-const dark2 = UI.color(Constants.colorSecondary)
-  .darken(0.45)
-  .toString()
-
 @view
 export default class HomeHeader {
   render() {
@@ -21,7 +14,7 @@ export default class HomeHeader {
       <View.Section
         css={{
           position: 'relative',
-          background: `linear-gradient(-195deg, ${dark1}, ${dark2})`,
+          background: `linear-gradient(${Constants.dark1}, ${Constants.dark2})`,
           overflow: 'hidden',
         }}
       >
@@ -125,7 +118,7 @@ export default class HomeHeader {
                   textAlign="left"
                   size={2.8}
                   fontWeight={300}
-                  color={dark2}
+                  color={Constants.dark2}
                 >
                   Orbit keeps your team in sync without hassle.
                 </View.Title>

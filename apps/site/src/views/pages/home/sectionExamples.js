@@ -35,7 +35,6 @@ export default class SectionExamples {
         <View.SubTitle
           getRef={setSection(key, opts)}
           opacity={isActive ? 1 : 0.32}
-          color="#000"
           fontWeight={300}
           css={{
             transition: 'all ease-in 300ms',
@@ -51,7 +50,7 @@ export default class SectionExamples {
     }
 
     return (
-      <UI.Theme name="light">
+      <UI.Theme name="dark">
         <View.Section
           css={{
             // background: Constants.mainLight,
@@ -70,12 +69,12 @@ export default class SectionExamples {
                 css={{
                   position: 'absolute',
                   top: 582,
-                  left: -1114,
+                  left: -1113,
                   width: 2000,
                   height: 1000,
                   background: `linear-gradient(-90deg, ${
-                    Constants.mainLight
-                  }, #fff)`,
+                    Constants.dark2
+                  }, #111)`,
                   zIndex: 2,
                   transform: {
                     rotate: '-98deg',
@@ -83,7 +82,19 @@ export default class SectionExamples {
                     y: 155,
                   },
                 }}
-              />
+              >
+                <chromeBugCoverup
+                  css={{
+                    position: 'absolute',
+                    background: Constants.dark2,
+                    top: 0,
+                    bottom: 0,
+                    right: -5,
+                    width: 10,
+                    zIndex: 100,
+                  }}
+                />
+              </fadeDown>
               <levelerStripe
                 css={{
                   position: 'absolute',
@@ -92,7 +103,7 @@ export default class SectionExamples {
                   left: -1000,
                   marginLeft: 395,
                   height: 200,
-                  background: Constants.mainLight,
+                  background: Constants.dark2,
                   zIndex: 1,
                 }}
               />
@@ -113,7 +124,7 @@ export default class SectionExamples {
 
             <Orbitals
               planetStyles={{
-                background: '#f2f2f2',
+                background: '#fff',
                 border: [1, '#ccc'],
               }}
               css={{
@@ -127,15 +138,19 @@ export default class SectionExamples {
             />
 
             <inner css={{ position: 'relative', zIndex: 3 }}>
+              <UI.Text fontWeight={600} marginBottom={20} size={1.3}>
+                Orbit gives you
+              </UI.Text>
               <UI.Text
                 size={3.8}
                 fontWeight={200}
                 padding={[0, 80, 30, 0]}
-                color={Constants.colorSecondary}
+                color={UI.color(Constants.colorSecondary).lighten(0.4)}
               >
                 Insight as you talk to{' '}
-                <span css={{ fontWeight: 600 }}>teammates</span> &{' '}
-                <span css={{ fontWeight: 600 }}>customers</span>
+                <span css={{ fontWeight: 600, color: '#fff' }}>teammates</span>{' '}
+                &{' '}
+                <span css={{ fontWeight: 600, color: '#fff' }}>customers</span>
               </UI.Text>
 
               <examples css={{ marginRight: -120 }}>

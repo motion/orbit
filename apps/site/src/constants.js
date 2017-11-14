@@ -18,3 +18,10 @@ export const mainLight = UI.color(colorMain)
 export const screen = {
   small: `@media (max-width: ${smallSize}px)`,
 }
+
+export const dark1 = UI.color(colorMain)
+  .darken(0.7)
+  .toString()
+export const dark2 = UI.color(colorSecondary)
+  .darken(0.45)
+  .toString()

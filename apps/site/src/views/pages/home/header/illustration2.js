@@ -18,8 +18,11 @@ export default class Illustration2 {
         {...props}
       >
         <Orbitals
-          if={false}
-          rings={1}
+          rings={2}
+          planetSize={60}
+          hideRings={{
+            0: true,
+          }}
           planetStyles={{
             background: '#fff',
             border: [1, Constants.colorMain],
@@ -30,12 +33,24 @@ export default class Illustration2 {
             'slack',
             'confluence',
             'zendesk',
+            'gitter',
+            'intercom',
+            'dropbox',
+            'quora',
+            'trello',
+            'github-icon',
+            'bitbucket',
+            'jira',
+            'markdown',
+            'medium',
+            'microsoft',
+            'office',
           ]}
           css={{
-            top: -170,
-            left: 220,
+            top: -220,
+            left: 320,
             transform: {
-              scale: 1.25,
+              scale: 0.5,
             },
           }}
         />

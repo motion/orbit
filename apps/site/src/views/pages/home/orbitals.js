@@ -40,6 +40,8 @@ const PLANET_STYLES = {
 }
 
 export default ({
+  planetSize = 50,
+  hideRings = {},
   planetStyles = PLANET_STYLES,
   items = ITEMS,
   rings = 3,
@@ -129,18 +131,21 @@ export default ({
           />
         </contain>
         {items.map((n, i) => {
-          const col = i % rings
+          let col = i % rings
+          if (hideRings[col]) {
+            return null
+          }
           return (
             <contain $$fullscreen key={i}>
               <planet
                 css={{
                   borderRadius: 100,
                   // border: [1, orbitLineColor],
-                  width: 50,
-                  height: 50,
+                  width: planetSize,
+                  height: planetSize,
                   margin: 'auto',
                   animation: `orbital${col} ${col * 120 + 50}s linear infinite`,
-                  animationDelay: `-${(col + 1 * 2.5) * (i + 1) * 2000}ms`,
+                  animationDelay: `-${(col + 1 * 2.5) * (i + 1) * 3000}ms`,
                   alignItems: 'center',
                   justifyContent: 'center',
                   ...planetStyles,
@@ -149,8 +154,8 @@ export default ({
                 <img
                   src={`/logos/${n}.svg`}
                   css={{
-                    width: 20,
-                    height: 20,
+                    width: planetSize * 0.5,
+                    height: planetSize * 0.5,
                   }}
                 />
               </planet>

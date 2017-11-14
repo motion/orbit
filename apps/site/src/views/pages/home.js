@@ -38,9 +38,6 @@ let blurredRef
       const { pageNode } = this
       const { scrollTop } = pageNode
       if (scrollTop !== this.scrollPosition) {
-        if (blurredRef) {
-          blurredRef.style.transform = `translateY(-${scrollTop}px)`
-        }
         // hide ora in header
         if (scrollTop > Constants.ORA_TOP - Constants.ORA_TOP_PAD) {
           this.activeKey = 0
@@ -55,6 +52,9 @@ let blurredRef
           if (this.show) {
             this.show = false
           }
+        }
+        if (this.show && blurredRef) {
+          blurredRef.style.transform = `translateY(-${scrollTop}px)`
         }
         this.scrollPosition = scrollTop
       }
@@ -167,7 +167,8 @@ export default class HomePage extends React.Component {
         },
       }
     }
-    const topPad = Constants.ORA_TOP_PAD
+    const show = this.props.homeStore.show
+    const topPad = show ? Constants.ORA_TOP_PAD : Constants.ORA_TOP
     const radius = Constants.ORA_BORDER_RADIUS / 2
     const height = Constants.ORA_HEIGHT
     const rightEdge = window.innerWidth / 2 + Constants.ORA_LEFT_PAD + 150
@@ -179,13 +180,13 @@ export default class HomePage extends React.Component {
         willChange: 'transform',
         background: '#fff',
         pointerEvents: 'none',
-        position: 'fixed',
+        position: show ? 'fixed' : 'absolute',
         top: 0,
         left: 0,
         right: 0,
         zIndex: 1000,
         // transition: 'opacity ease-in 400ms',
-        opacity: this.props.homeStore.show ? 1 : 0,
+        // opacity:  ? 1 : 0,
         clip: `rect(${topPad + radius}px, ${right}px, ${bottom}px, ${left}px)`,
       },
     }

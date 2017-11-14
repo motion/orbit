@@ -224,6 +224,7 @@ export default class Windows extends React.Component {
     this.checkCrawlerLoop(res => {
       if (!isEqual(lastRes, res)) {
         sendToOra(res)
+        lastRes = res
       }
     })
   }

@@ -108,9 +108,11 @@ export default class Windows extends React.Component {
     this.initialSize = this.initialSize || this.size
   }
 
-  onTray = ref => {
+  onOra = ref => {
     if (ref) {
-      this.trayRef = ref
+      this.oraRef = ref
+      console.log('clearing storage data!!!!!!!')
+      this.oraRef.webContents.session.clearStorageData()
       this.listenToApps()
       this.registerShortcuts()
     }
@@ -188,7 +190,7 @@ export default class Windows extends React.Component {
 
   show = () => {
     this.sendOra('ora-show')
-    this.trayRef.focus()
+    this.oraRef.focus()
   }
 
   hide = () => {
@@ -420,7 +422,7 @@ export default class Windows extends React.Component {
             onMoved={position => this.setState({ position })}
             onMove={position => this.setState({ position })}
             onFocus={() => {
-              this.activeWindow = this.trayRef
+              this.activeWindow = this.oraRef
             }}
             onClose={() => {
               this.setState({ closeSettings: true })
@@ -434,7 +436,7 @@ export default class Windows extends React.Component {
 
         <window
           {...appWindow}
-          ref={this.onTray}
+          ref={this.onOra}
           titleBarStyle="customButtonsOnHover"
           transparent
           show

@@ -95,9 +95,11 @@ export default class Input extends React.Component<Props> {
       ...props
     } = this.props
 
+    const finalProps = { ...elementProps }
+
     if (sync && elementProps) {
-      elementProps.value = sync.get()
-      elementProps.onChange = e => sync.set(e.target.value)
+      finalProps.value = sync.get()
+      finalProps.onChange = e => sync.set(e.target.value)
     }
 
     if (type === 'checkbox') {
@@ -130,7 +132,7 @@ export default class Input extends React.Component<Props> {
             ...style,
           },
           ref: this.onNode,
-          ...elementProps,
+          ...finalProps,
         }}
         {...props}
       />

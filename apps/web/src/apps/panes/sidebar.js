@@ -126,6 +126,7 @@ export default class Sidebar {
     if (!stackItems) {
       return null
     }
+    console.log('stackItems', stackItems)
     const currentIndex = stackItems.length - (isLoadingNext ? 2 : 1)
     // log(isLoadingNext, 'index', currentIndex, 'length', stackItems.length)
     return (

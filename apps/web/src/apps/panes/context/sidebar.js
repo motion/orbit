@@ -74,6 +74,10 @@ export default class ContextSidebar {
         }
       }
     })
+
+    this.watch(() => {
+      console.log('settings', this.crawlerSettings)
+    })
   }
 
   get oraStore() {
@@ -164,17 +168,8 @@ export default class ContextSidebar {
     if (this.crawlerInfo) {
       return [
         {
-          content: (
-            <UI.Field
-              row
-              width={140}
-              css={{
-                marginRight: 10,
-              }}
-              label="Max:"
-              sync={this.ref('crawlerSettings.maxPages')}
-            />
-          ),
+          key: 0,
+          content: <div $$flex />,
         },
         {
           key: Math.random(),
@@ -214,11 +209,28 @@ export default class ContextSidebar {
 
   get results() {
     if (this.crawlerInfo) {
+      console.log('trigger update', this.crawlerSettings)
       return [
         {
           category: 'Preview',
           title: this.crawlerInfo.title,
           children: this.crawlerInfo.body,
+        },
+        {
+          category: 'Settings',
+          title: ' ',
+          displayTitle: false,
+          children: (
+            <UI.Field
+              row
+              width={140}
+              css={{
+                marginRight: 10,
+              }}
+              label="Max pages:"
+              sync={this.ref('crawlerSettings.maxPages')}
+            />
+          ),
         },
         ...Object.keys(this.crawlerInfo).map(key => ({
           category: 'Crawler Selected',

@@ -1,37 +1,42 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { throttle } from 'lodash'
 import * as Constants from '~/constants'
 import oraItems from './oraItems'
 
 @view
 export default class Ora extends React.Component {
-  state = {
-    lastIntersection: 0,
-  }
+  render({ style, homeStore }) {
+    const { show, activeKey } = homeStore
 
-  componentDidMount() {
-    this.watch(() => {
-      this.setState({ lastIntersection: this.props.homeStore.activeKey || 0 })
-    })
-  }
-
-  render({ style }) {
-    const items = oraItems[this.state.lastIntersection]
+    const items = oraItems[activeKey]
     if (window.innerWidth < Constants.smallSize) {
       return null
     }
+    const positionStyle = !show
+      ? {
+          position: 'absolute',
+          top: Constants.ORA_TOP,
+        }
+      : {
+          position: 'fixed',
+          top: Constants.ORA_TOP_PAD,
+        }
     return (
       <UI.Theme name="dark">
-        <ora style={style}>
+        <ora
+          style={{
+            ...positionStyle,
+            ...style,
+          }}
+        >
           <header>
             <UI.Icon name="zoom" />
           </header>
           <content>
             <UI.List
               itemProps={{ padding: [10, 15], glow: true, size: 1.15 }}
-              key={this.state.lastIntersection}
+              key={activeKey}
               groupBy="category"
               items={items}
             />
@@ -42,10 +47,8 @@ export default class Ora extends React.Component {
   }
   static style = {
     ora: {
-      position: 'fixed',
-      top: 40,
       left: '50%',
-      marginLeft: 305,
+      marginLeft: Constants.ORA_LEFT_PAD,
       transform: {
         x: '-50%',
       },
@@ -57,7 +60,7 @@ export default class Ora extends React.Component {
       border: [4, 'transparent'],
       color: '#fff',
       zIndex: 10000,
-      boxShadow: ['0 0 5px rgba(0,0,0,0.35)'],
+      boxShadow: ['0 10px 80px rgba(0,0,0,0.4)'],
     },
     header: { padding: 10, opacity: 0.25 },
     content: { padding: 0 },

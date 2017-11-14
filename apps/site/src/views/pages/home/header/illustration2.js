@@ -18,7 +18,8 @@ export default class Illustration2 {
         {...props}
       >
         <Orbitals
-          rings={2}
+          if={false}
+          rings={1}
           planetStyles={{
             background: '#fff',
             border: [1, Constants.colorMain],
@@ -34,7 +35,7 @@ export default class Illustration2 {
             top: -170,
             left: 220,
             transform: {
-              scale: 0.666,
+              scale: 1.25,
             },
           }}
         />
@@ -54,6 +55,7 @@ export default class Illustration2 {
             }}
           >
             <img
+              if={false}
               src="/figures/Snail.svg"
               css={{
                 margin: [0, 0, 0, -150],
@@ -75,9 +77,9 @@ export default class Illustration2 {
             <img
               src="/figures/Hummingbird.svg"
               css={{
-                margin: [-250, 0, 0, -40],
-                width: 150,
-                height: 150,
+                margin: [-260, 120, 0, -110],
+                width: 140,
+                height: 140,
                 zIndex: 1000,
                 alignSelf: 'flex-end',
               }}
@@ -88,8 +90,9 @@ export default class Illustration2 {
             <img
               src="/figures/Rabbit.svg"
               css={{
-                width: 150,
-                height: 150,
+                width: 170,
+                height: 170,
+                marginLeft: 100,
                 alignSelf: 'flex-end',
                 transform: { scaleX: -1 },
               }}

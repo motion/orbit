@@ -46,7 +46,7 @@ export default class HomeHeader {
                 }}
               >
                 <View.Title size={2.8} fontWeight={300} textAlign="right">
-                  Company knowledge shouldn't be such a pain
+                  Company knowledge shouldn't be such a mess
                 </View.Title>
 
                 <inner
@@ -113,7 +113,7 @@ export default class HomeHeader {
                 <Illustration2 css={{ transform: { scale: 1 } }} />
               </inner>
 
-              <text css={{ margin: [60, 0, 0, 40] }}>
+              <text css={{ margin: [65, 0, 0, 40] }}>
                 <View.Title
                   textAlign="left"
                   size={2.8}

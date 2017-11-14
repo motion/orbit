@@ -2,6 +2,28 @@ import * as React from 'react'
 import SidebarTitle from './sidebarTitle2'
 
 export default {
+  0: [
+    {
+      children: <SidebarTitle title="Hi, I'm Ora" noBack />,
+      glow: false,
+    },
+    {
+      primary: `I unify your cloud services`,
+      children: `And put them all into a handy desktop assistant`,
+      icon: 'tech_desktop',
+    },
+    {
+      // primary: 'How I work',
+      primary: 'Conversation on 2/22',
+      children: `So I can show you stuff like your recent slack conversations`,
+      icon: 'socialslack',
+    },
+    {
+      primary: 'I have so many questions',
+      children: `Scroll down and I'll do my best!`,
+      icon: 'help',
+    },
+  ],
   'example-1': [
     {
       children: (
@@ -51,32 +73,6 @@ export default {
       date: Date.now() - 1000,
       icon: 'dropbox',
       children: `...we ended up coming just short of our Q4 goals, which we had set aggresively...`,
-    },
-  ],
-
-  0: [
-    {
-      children: (
-        <SidebarTitle title="Hi, I'm Ora" icon="objects_planet" noBack />
-      ),
-      glow: false,
-    },
-    {
-      primary: `I live on your desktop`,
-      children: `Scroll down to see me in action!`,
-      icon: 'tech_desktop',
-    },
-    {
-      // primary: 'How I work',
-      primary: 'On the desktop?',
-      children: `I don't need any internet or cloud to run, I just sync the stuff your company
-      gives you permission to locally.`,
-      icon: '2_menu-dots',
-    },
-    {
-      primary: 'I have so many questions',
-      children: `Scroll down and I'll do my best!`,
-      icon: 'help',
     },
   ],
   1: [

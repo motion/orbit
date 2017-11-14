@@ -18,9 +18,9 @@ export default class SectionIntegrations extends React.Component {
   }
 
   render({ blurred }) {
-    const background = '#fff' //Constants.mainLight
+    const background = '#261B37' //Constants.mainLight
     return (
-      <UI.Theme name="light">
+      <UI.Theme name="dark">
         <View.Section
           css={{
             padding: [60, 0],
@@ -38,7 +38,6 @@ export default class SectionIntegrations extends React.Component {
               height: 100,
               zIndex: 1200000,
               // boxShadow: [[0, -10, 10, [0, 0, 0, 0.015]]],
-              borderTop: [40, '#f2f2f2'],
               transform: {
                 rotate: '-1deg',
               },
@@ -61,7 +60,7 @@ export default class SectionIntegrations extends React.Component {
             }}
           />
           <View.SectionContent>
-            <View.Title size={3}>Works with you</View.Title>
+            <View.Title size={3}>Orbits works with you</View.Title>
             <View.SubTitle css={{ padding: [0, 400, 0, 0] }}>
               Don't add yet another source of truth, Orbit works with all your
               integrations.

@@ -62,11 +62,11 @@ export default class Illustration1 {
               />
             </bubble>
             <img
-              src="/figures/Snail.svg"
+              src="/figures/Hummingbird.svg"
               css={{
-                margin: [0, 0, 0, -150],
-                width: 150,
-                height: 150,
+                margin: [20, 40, 0, -180],
+                width: 125,
+                height: 125,
                 zIndex: 1000,
                 alignSelf: 'flex-end',
               }}
@@ -107,8 +107,9 @@ export default class Illustration1 {
             <img
               src="/figures/Rabbit.svg"
               css={{
-                width: 150,
-                height: 150,
+                marginTop: -5,
+                width: 155,
+                height: 155,
                 alignSelf: 'flex-end',
                 transform: { scaleX: -1 },
               }}

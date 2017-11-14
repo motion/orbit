@@ -3,6 +3,7 @@ import * as View from '~/views'
 import * as UI from '@mcro/ui'
 
 const background = '#111'
+const bgLight = UI.color(background).lighten(0.5)
 
 export default props => (
   <UI.Theme name="dark">
@@ -25,8 +26,8 @@ export default props => (
       <bottomSlant
         css={{
           position: 'absolute',
-          bottom: -50,
-          background,
+          bottom: -20,
+          background: bgLight,
           left: -300,
           right: -300,
           height: 100,
@@ -35,6 +36,13 @@ export default props => (
           transform: {
             rotate: '-1deg',
           },
+        }}
+      />
+
+      <bg
+        $$fullscreen
+        css={{
+          background: `linear-gradient(${background}, ${bgLight})`,
         }}
       />
 
@@ -48,37 +56,27 @@ export default props => (
             justifyContent: 'center',
           }}
         >
-          <UI.Icon
-            color="#fff"
-            opacity={0.8}
-            size={501}
-            name="lock"
-            css={{ textShadow: '0 0 1px #000' }}
-          />
+          <UI.Icon color="#000" opacity={0.8} size={480} name="lock" />
         </after>
         <View.Title getRef={props.setSection(2)} size={3}>
           The No-Cloud Infrastructure
         </View.Title>
-        <View.Text size={2.5} fontWeight={200} opacity={0.7}>
+        <View.Text size={3.5} fontWeight={200} opacity={0.7}>
           In order to work well, we invented a new model: one that keeps you
           safe.
         </View.Text>
-        <View.Text size={2.2} fontWeight={200}>
-          Orbit needs to hook into a lot of valuable company data. Slack, email,
-          documents, knowledge... everything.
+
+        <View.Text size={2} fontWeight={200}>
+          How do we do that?
         </View.Text>
 
-        <View.Text size={2.2} fontWeight={200}>
-          How do we do that securely?
+        <View.Text size={2} fontWeight={200}>
+          Your data is yours, we never touch it.
         </View.Text>
-
-        <View.Text size={2.2} fontWeight={600}>
-          By never letting your data leave your computer.
-        </View.Text>
-        <View.Text size={2.2} fontWeight={200}>
-          <View.Hl color="#000">
+        <View.Text size={2} fontWeight={200}>
+          <span css={{ background: [255, 255, 255, 0.055], padding: 3 }}>
             This allows us to be ambitious from day one without compromise.
-          </View.Hl>{' '}
+          </span>{' '}
           Our interests are aligned with yours: no data breaches, permissions
           mixups, or complicated on-premise software.
         </View.Text>

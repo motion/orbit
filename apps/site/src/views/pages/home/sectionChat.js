@@ -13,7 +13,7 @@ export default class SectionChat extends React.Component {
           <View.Section
             css={{
               background: '#7b99d9',
-              padding: [210, 0],
+              padding: [190, 0],
             }}
           >
             <background
@@ -31,7 +31,7 @@ export default class SectionChat extends React.Component {
                 works across many apps.
               </View.SubTitle>
               <View.Text>
-                <View.Hl>Slack</View.Hl> Email Browser Search
+                <strong>Slack</strong> Email Browser Search
               </View.Text>
               <UI.Theme name="light">
                 <fakeSlack>

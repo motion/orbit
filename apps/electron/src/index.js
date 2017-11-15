@@ -8,7 +8,6 @@ import Ionize from '@mcro/ionize'
 import { onWindow } from './windows'
 import { throttle } from 'lodash'
 import * as Constants from '~/constants'
-import { throttle } from 'lodash'
 
 const ogerror = console.error.bind(console)
 console.error = function(...args) {

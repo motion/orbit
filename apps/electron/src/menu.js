@@ -1,7 +1,7 @@
 import * as React from 'react'
 
 export default props => (
-  <menu>
+  <menu ref={props.getRef}>
     <submenu label="Orbit">
       <about />
       <item

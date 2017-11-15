@@ -12,9 +12,23 @@ const log = {
   page: debug('crawler:page'),
 }
 
+const ENDING_QUERY = /[?](.*)$/g
+const ENDING_HASH = /[#](.*)$/g
+
 const removeLastSegmentOfPath = x => x.replace(/\/[^\/]+$/g, '')
-const cleanUrl = url => url.replace(/[#](.*)$/g, '')
-const cleanUrlSearch = url => url.replace(/[?](.*)$/g, '')
+const cleanUrlHash = url => url.replace(ENDING_HASH, '')
+const cleanUrlSearch = url => url.replace(ENDING_QUERY, '')
+const cleanUrlEnd = url => cleanUrlHash(cleanUrlSearch(url))
+
+const FILTER_URL_EXTENSIONS = [
+  '.png',
+  '.jpg',
+  '.gif',
+  '.css',
+  '.js',
+  '.svg',
+  '.xml',
+]
 
 const urlSimilarity = (wanted, given) => {
   let score = 100
@@ -23,7 +37,7 @@ const urlSimilarity = (wanted, given) => {
     score -= 4
   }
   // avoid those paths confusing the score
-  let curPath = cleanUrlSearch(given)
+  let curPath = cleanUrlEnd(given)
   const segments = given.split('/').length
   for (let i = 0; i < segments; i++) {
     if (wanted === curPath) {
@@ -35,32 +49,45 @@ const urlSimilarity = (wanted, given) => {
   return 0
 }
 
-const extensionLooksLike = (url, extensions) =>
-  extensions.indexOf(url.slice(url.length - 4, url.length)) >= 0
+const urlMatchesExtensions = (url, extensions) => {
+  const extension = cleanUrlEnd(url).slice(url.length - 4, url.length)
+  return extensions.indexOf(extension) >= 0
+}
 
 export default class Crawler {
   shouldCrawl = true
+  isRunning = false
 
   constructor(options: Options) {
     this.options = options
     this.db = new CrawlerDB()
   }
 
-  async start(entry: string, options: Options = this.options) {
+  async start(entry: string, runOptions: Options = this.options) {
+    if (!entry) {
+      throw new Error('No entry given!')
+    }
+    this.shouldCrawl = true
     log.crawl('Starting crawler')
+    // merge options
+    const options = {
+      ...this.options,
+      ...runOptions,
+    }
     const {
       puppeteerOptions,
       maxPages = Infinity,
       maxRadius = Infinity,
       // maxOffPathRadius, this would be really nice
       depth,
+      filterUrlExtensions = FILTER_URL_EXTENSIONS,
     } = options
 
     const matchPath = url => {
       return parse(url).pathname.indexOf(depth) === 0
     }
 
-    const initialUrl = cleanUrl(entry)
+    const initialUrl = cleanUrlHash(entry)
     let target = { url: initialUrl, radius: 0 }
 
     if (!target.url) {
@@ -82,13 +109,22 @@ export default class Crawler {
     const page = await browser.newPage()
 
     let count = 0
+    this.isRunning = true
+
     while (target && this.shouldCrawl) {
-      if (extensionLooksLike(target.url, ['.png', '.jpg', '.gif'])) {
+      if (urlMatchesExtensions(target.url, filterUrlExtensions)) {
         log.page(`Looks like an image, avoid ${target.url}`)
       } else if (target.radius >= maxRadius) {
         log.page(`Maximum radius reached, did not crawl ${target.url}`)
       } else {
         const isValidPath = matchPath(target.url)
+
+        if (!isValidPath) {
+          log.page(`Path is not at same depth:`)
+          log.page(`  ${parse(target.url).pathname}`)
+          log.page(`  ${depth}`)
+          continue
+        }
 
         // content-type whitelist
         const res = await fetch(target.url, { method: 'HEAD' })
@@ -96,7 +132,7 @@ export default class Crawler {
           res.headers.get('content-type') || res.headers.get('Content-Type')
         if (!contentType || !/text\/(html|xml)/g.test(contentType)) {
           log.page(
-            `No content type or invalid: ${res.headers.get('content-type')}`
+            `Bad content-type: ${res.headers.get('content-type')} ${target.url}`
           )
           continue
         }
@@ -106,48 +142,48 @@ export default class Crawler {
           await page.goto(target.url, {
             waitLoad: true,
           })
-          const links = (await page.evaluate(async () => {
+          const links = await page.evaluate(async () => {
             return Array.from(document.querySelectorAll('[href]')).map(
               link => link.href
             )
-          })).map(cleanUrl)
-          let outboundUrls = uniq(
-            links.filter(link => {
-              const matchesHost = parse(link).host === entryUrl.host
-              const isNotOriginalUrl = link !== initialUrl
-              return matchesHost && isNotOriginalUrl
-            })
-          )
+          })
+          let outboundUrls = uniq(links.map(cleanUrlHash)).filter(link => {
+            const matchesHost = parse(link).host === entryUrl.host
+            const isNotOriginalUrl = link !== initialUrl
+            return matchesHost && isNotOriginalUrl
+          })
           log.page(`Found ${outboundUrls.length} urls`)
           // this allows it to crawl pages that arent valid matches
           // but could lead back to valid pages
           // should have a flag to make stricter if desired
-          if (isValidPath) {
-            const contents = await page.evaluate(async options => {
-              const titleNode = document.querySelector(options.titleSelector)
-              const bodyNodes = Array.from(
-                document.querySelectorAll(options.bodySelector)
-              )
-              return {
-                title: titleNode ? titleNode.innerText : '',
-                body: bodyNodes.length
-                  ? bodyNodes.map(node => node.innerText).join('\n\n')
-                  : '',
-              }
-            }, options)
-
-            // only count it if it finds goodies
-            if (contents.title || contents.body) {
-              count++
+          log.page(`Valid path ${target.url}`)
+          const contents = await page.evaluate(async options => {
+            const titleNode = document.querySelector(options.titleSelector)
+            const bodyNodes = Array.from(
+              document.querySelectorAll(options.bodySelector)
+            )
+            return {
+              title: titleNode ? titleNode.innerText : '',
+              body: bodyNodes.length
+                ? bodyNodes.map(node => node.innerText).join('\n\n')
+                : '',
             }
-            // store crawl results
-            this.db.store({
-              outboundUrls,
-              contents,
-              radius: ++target.radius,
-              url: target.url,
-            })
+          }, options)
+
+          // only count it if it finds goodies
+          if (contents.title || contents.body) {
+            log.page(`Good contents`)
+            count++
+          } else {
+            log.page(`No contents found`)
           }
+          // store crawl results
+          this.db.store({
+            outboundUrls,
+            contents,
+            radius: ++target.radius,
+            url: target.url,
+          })
         } catch (err) {
           log.page(
             `Error crawling url ${target.url}\n${err.message}\n${err.stack}`
@@ -163,8 +199,14 @@ export default class Crawler {
 
     log.crawl(`Crawler done, crawled ${count} pages`)
     browser.close()
+    this.isRunning = false
+
     // return all items stored
-    return this.db.getAll()
+    if (this.shouldCrawl) {
+      return this.db.getAll()
+    } else {
+      return []
+    }
   }
 
   stop() {

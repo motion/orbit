@@ -10,7 +10,7 @@ import * as Constants from '~/constants'
 import WindowsStore from './windowsStore'
 import Window from './window'
 import mouse from 'osx-mouse'
-import { throttle, isEqual } from 'lodash'
+import { throttle, isEqual, once } from 'lodash'
 import Menu from './menu'
 import getCrawler from './getCrawler'
 import escapeStringApplescript from 'escape-string-applescript'
@@ -111,12 +111,16 @@ export default class Windows extends React.Component {
   onOra = ref => {
     if (ref) {
       this.oraRef = ref
-      // console.log('clear storage data!!!!!!!')
-      // this.oraRef.webContents.session.clearStorageData()
-      this.listenToApps()
-      this.registerShortcuts()
+      this.startOra()
     }
   }
+
+  startOra = once(() => {
+    // console.log('clear storage data!!!!!!!')
+    // this.oraRef.webContents.session.clearStorageData()
+    this.listenToApps()
+    this.registerShortcuts()
+  })
 
   onAppWindow = win => electron => {
     if (win && electron && !win.ref) {

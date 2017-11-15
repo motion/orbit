@@ -1,9 +1,5 @@
 // @flow
 import Crawler from './crawler'
-import type { Options } from '~/types'
-import debug from 'debug'
-
-const log = debug('crawler')
 
 process.on('unhandledRejection', function(error, p) {
   console.log('PromiseFail:')
@@ -15,10 +11,4 @@ process.on('unhandledRejection', function(error, p) {
   }
 })
 
-export default async function run(options: Options = {}) {
-  const { entry = 'http://paulgraham.com', ...config } = options
-  log('run()', entry, config)
-  const crawler = new Crawler(config)
-  const results = await crawler.start(entry)
-  return results
-}
+export default Crawler

@@ -22,12 +22,14 @@ export default class CrawlerDB {
         this.discoveredUrls[url] = true
       }
     }
-    // add to beginning
-    this.pageQueue = sortBy(this.pageQueue, 'score').reverse()
-    log(`Added ${count} new urls to queue`)
-    const duplicates = page.outboundUrls.length - count
-    if (duplicates) {
-      log(`${page.outboundUrls.length - count} duplicates found`)
+    if (count) {
+      this.pageQueue = sortBy(this.pageQueue, 'score').reverse()
+      log(`Added ${count} new urls to queue`)
+      log(`New top of queue: ${this.pageQueue[0].url}`)
+      const duplicates = page.outboundUrls.length - count
+      if (duplicates) {
+        log(`${page.outboundUrls.length - count} duplicates found`)
+      }
     }
   }
 
@@ -44,7 +46,6 @@ export default class CrawlerDB {
   }
 
   shiftUrl = () => {
-    console.log('shift', this.pageQueue[0])
     if (this.pageQueue.length) {
       return this.pageQueue.shift()
     }

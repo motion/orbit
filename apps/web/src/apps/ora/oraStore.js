@@ -60,7 +60,6 @@ export default class OraStore {
     this._watchInput()
     this._watchToggleHide()
     this._watchMouse()
-    this._watchCrawlResults()
     this.watch(() => {
       if (this.hidden) {
         // timeout based on animation
@@ -68,14 +67,6 @@ export default class OraStore {
       }
     })
     await this.listenForContext()
-  }
-
-  startCrawl = async options => {
-    console.log('starting crawl', options)
-    const results = await r2.post('http://localhost:3001/crawler/start', {
-      json: { options },
-    }).json
-    console.log('crawl done', results)
   }
 
   setBanner = (type, message, timeout) => {
@@ -180,12 +171,17 @@ export default class OraStore {
     })
   }
 
-  _watchCrawlResults() {
-    this.on(OS, 'crawl-results', (event, answer) => {
-      console.log('yay results', answer)
-      if (answer) {
-        for (const { url, contents } of answer.results) {
-          console.log('creating a thing', url, contents)
+  startCrawl = async options => {
+    console.log('starting crawl', options)
+    const results = await r2.post('http://localhost:3001/crawler/start', {
+      json: { options },
+    }).json
+    console.log('crawl done', results)
+    let creating = []
+    if (results) {
+      for (const { url, contents } of results.results) {
+        console.log('creating a thing', url, contents)
+        creating.push(
           Thing.create({
             url,
             title: contents.title,
@@ -194,9 +190,15 @@ export default class OraStore {
             type: 'website',
             bucket: this.bucket || 'Default',
           })
-        }
+        )
       }
-    })
+    }
+    return await Promise.all(creating)
+  }
+
+  stopCrawl = async () => {
+    const response = await r2.post('http://localhost:3001/crawler/stop').json
+    return response && response.success
   }
 
   _watchMouse() {

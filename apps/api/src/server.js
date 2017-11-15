@@ -10,7 +10,7 @@ import OAuthStrategies from './server/oauth.strategies'
 import Passport from 'passport'
 import expressPouch from 'express-pouchdb'
 import Path from 'path'
-import crawler from '@mcro/crawler'
+import Crawler from '@mcro/crawler'
 import debug from 'debug'
 
 const log = debug('api')
@@ -85,22 +85,37 @@ export default class Server {
     const crawlerDist = Path.join(crawlerIndex, '..', 'build', 'js')
     log('setting up crawler', crawlerDist)
     this.app.use('/crawler', express.static(crawlerDist))
+
+    const crawler = new Crawler()
+
     this.app.post('/crawler/start', async (req, res) => {
+      log(`Got a request for crawl`)
       const { options } = req.body
       if (options) {
         log('start crawl')
-        const results = await crawler({
-          ...options,
-        })
-        log(
-          `crawl results ${typeof results}, ${Array.isArray(results) &&
-            results.length} results`
-        )
+        if (crawler.isRunning) {
+          log('stopping previous crawler')
+          crawler.stop()
+        }
+        const results = await crawler.start(options.entry, options)
+        log(`crawl results: ${results.length} results`)
         res.json({ results })
       } else {
         log('No options sent')
         res.sendStatus(500)
       }
+    })
+
+    this.app.post('/crawler/stop', async (req, res) => {
+      let success = false
+      if (crawler.isRunning) {
+        log('Cancelling crawl')
+        crawler.stop()
+        success = true
+      } else {
+        log(`No crawler running`)
+      }
+      res.json({ success })
     })
   }
 

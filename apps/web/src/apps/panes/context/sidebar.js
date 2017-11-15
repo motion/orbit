@@ -44,16 +44,17 @@ const clean = str => {
 export default class ContextSidebar {
   // copy it here
   osContext = this.oraStore.osContext
-  isCrawling = false
+  isShowingCrawlInBrowser = false
   crawlerInfo = null
   crawlerSettings = {
     maxPages: 6,
+    depth: '/',
   }
 
   get crawlerOptions() {
     return {
-      ...this.crawlerSettings,
       ...this.crawlerInfo,
+      ...this.crawlerSettings,
     }
   }
 
@@ -73,6 +74,7 @@ export default class ContextSidebar {
           if (!isEqual(info, this.crawlerInfo)) {
             console.log('update selection', info)
             this.crawlerInfo = info
+            this.crawlerSettings.depth = this.crawlerInfo.depth
           }
         } else {
           console.log('not on same url')
@@ -173,17 +175,27 @@ export default class ContextSidebar {
     if (this.crawlerInfo) {
       return [
         {
-          key: 0,
+          key: Math.random(),
           content: <div $$flex />,
         },
         {
           key: Math.random(),
           icon: 'play',
           children: 'Start Crawl',
-          onClick: () => {
+          onClick: async () => {
             console.log('starting crawl', this.crawlerOptions)
-            this.isCrawling = true
-            OS.send('start-crawl', this.crawlerOptions)
+            this.isShowingCrawlInBrowser = true
+            const things = await this.oraStore.startCrawl(this.crawlerOptions)
+            console.log('made stuff', things)
+          },
+        },
+        {
+          key: Math.random(),
+          icon: 'play',
+          children: 'Cancel Crawl',
+          onClick: async () => {
+            const cancelled = await this.oraStore.stopCrawl()
+            console.log('cancelled', cancelled)
           },
         },
       ]
@@ -205,7 +217,7 @@ export default class ContextSidebar {
         icon: 'bug',
         children: 'Crawl',
         onClick: () => {
-          this.isCrawling = true
+          this.isShowingCrawlInBrowser = true
           OS.send('inject-crawler')
         },
       },
@@ -228,12 +240,21 @@ export default class ContextSidebar {
           children: (
             <UI.Field
               row
-              width={140}
-              css={{
-                marginRight: 10,
-              }}
               label="Max pages:"
+              tooltip="This will make the crawler avoid going above this path"
               sync={this.ref('crawlerSettings.maxPages')}
+            />
+          ),
+        },
+        {
+          category: 'Settings',
+          title: ' ',
+          displayTitle: false,
+          children: (
+            <UI.Field
+              row
+              label="Depth:"
+              sync={this.ref('crawlerSettings.depth')}
             />
           ),
         },
@@ -244,7 +265,7 @@ export default class ContextSidebar {
         })),
       ]
     }
-    if (this.isCrawling) {
+    if (this.isShowingCrawlInBrowser) {
       return [
         {
           title: 'Select content in Chrome',

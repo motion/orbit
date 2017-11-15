@@ -70,6 +70,7 @@ export default class Windows extends React.Component {
   }
 
   componentWillUnmount() {
+    globalShortcut.unregisterAll()
     for (const [emitter, name, callback] of this.subscriptions) {
       emitter.removeListener(name, callback)
     }
@@ -81,22 +82,26 @@ export default class Windows extends React.Component {
   }
 
   listenForMouse() {
-    this.on(ipcMain, 'mouse-listen', event => {
+    this.on(ipcMain, 'mouse-listen', () => {
       const triggerX = this.screenSize.width - 20
       const triggerY = 20
       const mousey = mouse()
+
+      let hasLeftCorner = true
+
       mousey.on(
         'move',
         throttle((x, y) => {
           if (+x > triggerX && +y < triggerY) {
-            console.log('IN CORNER')
-            try {
-              event.sender.send('mouse-in-corner')
-            } catch (e) {
-              console.error('err', e)
+            if (hasLeftCorner) {
+              hasLeftCorner = false
+              console.log('IN CORNER')
+              this.toggleShown()
             }
+          } else {
+            hasLeftCorner = true
           }
-        }, 40)
+        }, 60)
       )
     })
   }
@@ -181,7 +186,7 @@ export default class Windows extends React.Component {
 
   shown = true
 
-  toggleShown = () => {
+  toggleShown = throttle(() => {
     this.sendOra('ora-toggle')
     this.shown = !this.shown // hacky
     if (this.shown) {
@@ -198,7 +203,7 @@ export default class Windows extends React.Component {
         }
       }, 300)
     }
-  }
+  }, 500)
 
   injectCrawler = async sendToOra => {
     const js = await getCrawler()

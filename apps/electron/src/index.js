@@ -7,6 +7,7 @@ import React from 'react'
 import Ionize from '@mcro/ionize'
 import { onWindow } from './windows'
 import * as Constants from '~/constants'
+import { throttle } from 'lodash'
 
 const ogerror = console.error.bind(console)
 console.error = function(...args) {
@@ -37,7 +38,7 @@ if (Constants.IS_PROD) {
   })
 }
 
-export default function start() {
+const start = throttle(() => {
   const Windows = require('./windows').default
   Ionize.start(<Windows />)
 
@@ -47,19 +48,28 @@ export default function start() {
   onWindow(ref => {
     app = ref
   })
-}
+}, 1000)
+
+export default start
 
 if (process.argv.find(x => x === '--start')) {
   start()
 }
 
+let restarting
+
 function restart() {
   console.log('got a restart from hmr')
+  if (restarting) {
+    clearTimeout(restarting)
+  }
   app.setState(
     {
       restart: true,
     },
-    () => setTimeout(start, 500)
+    () => {
+      restarting = setTimeout(start, 500)
+    }
   )
 }
 

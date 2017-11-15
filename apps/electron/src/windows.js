@@ -205,7 +205,7 @@ export default class Windows extends React.Component {
     }
   }, 500)
 
-  injectCrawler = async sendToOra => {
+  injectCrawler = throttle(async sendToOra => {
     const js = await getCrawler()
     await execute(`
       tell application "Google Chrome"
@@ -223,7 +223,7 @@ export default class Windows extends React.Component {
         lastRes = res
       }
     })
-  }
+  }, 500)
 
   checkCrawlerLoop = async cb => {
     try {

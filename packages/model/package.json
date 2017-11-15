@@ -6,7 +6,7 @@
   "version": "1.5.1",
   "scripts": {},
   "dependencies": {
-    "debug": "^2.6.9",
+    "debug": "^3.1.0",
     "is-my-json-valid": "^2.16.0",
     "kontur": "^0.2.0",
     "lodash": "^4.17.4",

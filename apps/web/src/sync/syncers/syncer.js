@@ -76,7 +76,8 @@ export default class Syncer {
       throw new Error('Must provide action')
     }
     if (!this.token) {
-      throw new Error('No token found for syncer')
+      console.log('No token found for syncer')
+      return
     }
     this.ensureSetting()
     log(`Running ${this.type} ${action}`)

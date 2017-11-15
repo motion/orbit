@@ -19,7 +19,7 @@ export function onWindow(cb) {
 console.log('Constants.APP_URL', Constants.APP_URL)
 
 const AppWindows = new WindowsStore()
-const ORA_WIDTH = 300
+const ORA_WIDTH = 320
 
 export default class Windows extends React.Component {
   subscriptions = []
@@ -27,6 +27,7 @@ export default class Windows extends React.Component {
   state = {
     restart: false,
     showSettings: false,
+    closeSettings: false,
     size: [0, 0],
     position: [0, 0],
     trayPosition: [0, 0],
@@ -204,7 +205,7 @@ return {frontAppName, windowTitle}
           applescript.execute(
             `tell application "Google Chrome"
         tell front window's active tab
-          set source to execute javascript "JSON.stringify({ url: document.location+'', title: document.title, body: document.body.innerText })"
+          set source to execute javascript "JSON.stringify({ url: document.location+'', title: document.title, body: document.body.innerText, selection: document.getSelection().toString() })"
         end tell
       end tell`,
             (err, res) => {
@@ -219,6 +220,7 @@ return {frontAppName, windowTitle}
                     title: result.title,
                     body: result.body,
                     url: result.url,
+                    selection: result.selection,
                     application,
                   })
                 )
@@ -325,25 +327,34 @@ return {frontAppName, windowTitle}
           }}
         />
 
-        <window
-          {...appWindow}
-          show={this.state.showSettings}
-          vibrancy="dark"
-          transparent
-          hasShadow
-          showDevTools={this.state.showSettings}
-          defaultSize={this.initialSize || this.state.size}
-          size={this.state.size}
-          file={`${Constants.APP_URL}/settings`}
-          titleBarStyle="customButtonsOnHover"
-          position={this.state.position}
-          onResize={size => this.setState({ size })}
-          onMoved={position => this.setState({ position })}
-          onMove={position => this.setState({ position })}
-          onFocus={() => {
-            this.activeWindow = this.trayRef
-          }}
-        />
+        {!this.state.closeSettings && (
+          <window
+            {...appWindow}
+            show={this.state.showSettings}
+            vibrancy="dark"
+            transparent
+            hasShadow
+            showDevTools={this.state.showSettings}
+            defaultSize={this.initialSize || this.state.size}
+            size={this.state.size}
+            file={`${Constants.APP_URL}/settings`}
+            titleBarStyle="customButtonsOnHover"
+            position={this.state.position}
+            onResize={size => this.setState({ size })}
+            onMoved={position => this.setState({ position })}
+            onMove={position => this.setState({ position })}
+            onFocus={() => {
+              this.activeWindow = this.trayRef
+            }}
+            onClose={() => {
+              this.setState({ closeSettings: true })
+              this.setTimeout(() => {
+                // reopen invisible so its quick to open again
+                this.setState({ closeSettings: false, showSettings: false })
+              }, 500)
+            }}
+          />
+        )}
 
         <window
           {...appWindow}

@@ -81,7 +81,6 @@
         "source-map-support",
         "superlogin",
         "wait-for-port",
-        "debug",
         "global",
         "pouchdb",
         "pouchdb-adapter-http",

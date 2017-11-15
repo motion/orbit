@@ -33,28 +33,26 @@ export default class OraHeader extends React.Component {
     this.props.oraStore.focused = false
   }
 
-  selectBucket = item => {
-    CurrentUser.user.mergeUpdate({
+  selectBucket = async item => {
+    await CurrentUser.user.mergeUpdate({
       settings: {
         activeBucket: item.primary,
       },
     })
+    console.log('set bucket', item.primary)
   }
 
   render({ oraStore }) {
     if (!CurrentUser.user) {
       return null
     }
-
     const itemProps = {
       glow: false,
       chromeless: true,
       color: [255, 255, 255, 0.5],
     }
-
     const settings = CurrentUser.user.settings || {}
     const { buckets = ['Default'], activeBucket = 'Default' } = settings
-
     const bucketItems = [
       ...buckets.map(name => ({
         primary: name,
@@ -129,6 +127,7 @@ export default class OraHeader extends React.Component {
           <UI.Row>
             <UI.Popover
               openOnHover
+              delay={300}
               closeOnEsc
               overlay="transparent"
               theme="light"

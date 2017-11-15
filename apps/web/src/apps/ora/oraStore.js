@@ -4,8 +4,9 @@ import Mousetrap from 'mousetrap'
 import { OS, debounceIdle } from '~/helpers'
 import StackStore from '~/stores/stackStore'
 import keycode from 'keycode'
-import ContextStore from '~/stores/contextStore'
+import ContextStore from '~/context'
 import SHORTCUTS from './shortcuts'
+import { CurrentUser } from '~/app'
 
 const BANNERS = {
   note: 'note',
@@ -29,8 +30,23 @@ export default class OraStore {
   focused = false
   banner = null
 
-  @watch items = () => Thing.find()
-  @watch context = () => this.items && new ContextStore(this.items)
+  get bucket() {
+    if (!CurrentUser.user) {
+      return null
+    }
+    const { activeBucket } = CurrentUser.user.settings
+    return (activeBucket && activeBucket !== 'Default' && activeBucket) || null
+  }
+
+  @watch
+  items = () =>
+    !this.bucket
+      ? Thing.find()
+      : Thing.find()
+          .where('bucket')
+          .eq(this.bucket)
+
+  @watch context = () => null // this.items && new ContextStore(this.items)
 
   async willMount() {
     this.attachTrap('window', window)
@@ -77,7 +93,6 @@ export default class OraStore {
       body: text,
       url,
     })
-    log('mdae a thing')
     this.setBanner(BANNERS.success, 'Added pin')
     return thing
   }
@@ -98,15 +113,16 @@ export default class OraStore {
         }
         return
       }
-      // check to avoid rerendering
-      if (!this.osContext || this.osContext.title !== context.title) {
-        if (this.osContext) {
-          console.log('set-context', context.title, this.osContext.title)
-        }
+      if (!context || (!context.url || !context.title)) {
+        log('no context or url/title', this.osContext)
+        return
+      }
+
+      const updateContext = title => {
         this.osContext = context
         const nextStackItem = {
+          title,
           type: 'context',
-          title: context.title,
           icon:
             context.application === 'Google Chrome' ? 'social-google' : null,
         }
@@ -116,6 +132,13 @@ export default class OraStore {
           this.stack.navigate(nextStackItem)
         }
       }
+
+      if (!this.osContext || this.osContext.title !== context.title) {
+        return updateContext(context.title)
+      }
+      if (this.osContext.selection !== context.selection) {
+        return updateContext(context.selection || context.title)
+      }
     })
   }
 
@@ -124,20 +147,14 @@ export default class OraStore {
     OS.on('mouse-in-corner', () => {
       if (this.hidden) {
         this.hidden = false
-        this.setTimeout(this.focusBar)
       }
     })
   }
 
   _watchToggleHide() {
     OS.send('start-ora')
-
     OS.on('show-ora', () => {
       this.hidden = !this.hidden
-
-      if (!this.hidden) {
-        this.setTimeout(this.focusBar)
-      }
     })
   }
 

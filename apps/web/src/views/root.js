@@ -71,7 +71,6 @@ export default class Root extends React.Component {
     }
 
     const CurrentPage = Router.activeView || NotFound
-    console.log('@@', Router.key, Router.path)
     return <CurrentPage key={Router.key} {...Router.params} />
   }
 }

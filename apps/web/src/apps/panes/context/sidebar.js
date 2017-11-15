@@ -3,13 +3,43 @@ import { OS, fuzzy } from '~/helpers'
 import { summarize, summarizeWithQuestion } from './helpers/summarize'
 import { Thing } from '~/app'
 import * as UI from '@mcro/ui'
+import { view, watch } from '@mcro/black'
+
+@view
+class After {
+  render(props) {
+    return (
+      <after {...props}>
+        <UI.Icon opacity={0.35} name="arrow-min-right" />
+      </after>
+    )
+  }
+  static style = {
+    after: {
+      position: 'relative',
+      zIndex: 1000,
+      background: [0, 0, 0, 0.2],
+      borderLeft: [1, [0, 0, 0, 0.5]],
+      margin: -5,
+      padding: 2,
+      alignItems: 'center',
+      justifyContent: 'center',
+      flex: 1,
+      '&:hover': {
+        background: [255, 255, 255, 0.025],
+      },
+    },
+  }
+}
+
+const clean = str => str.replace(/[\r\n|\n|\r|\s]+/gm, ' ').trim()
 
 const similarityOpacity = similarity => {
   if (similarity > 5000) {
     return 0.1
   }
   if (similarity > 2000) {
-    return 0.3
+    return 0.2
   }
   if (similarity > 1000) {
     return 0.5
@@ -21,12 +51,15 @@ const similarityOpacity = similarity => {
 }
 
 export default class ContextSidebar {
+  // copy it here
+  osContext = this.oraStore.osContext
+
+  @watch
+  isPinned = () => this.osContext && Thing.findOne({ url: this.osContext.url })
+
   get oraStore() {
     return this.props.oraStore
   }
-
-  // copy it here
-  osContext = this.oraStore.osContext
 
   get context() {
     return this.oraStore.context
@@ -37,19 +70,18 @@ export default class ContextSidebar {
   }
 
   get contextResults() {
+    window.contextSidebar = this
     const title = this.osContext ? this.osContext.title : ''
-    log('title is', title)
-    const addBold = line => {
-      const r = new RegExp('(' + this.search.split(' ').join('|') + ')', 'ig')
-      return line.replace(
-        r,
-        '<b style="font-weight: 400; color: #aed6ff;">$1</b>'
-      )
-    }
     return !this.context || this.context.loading // || this.osContext === null
       ? []
       : this.context
           .closestItems(this.search.length > 0 ? this.search : title, 5)
+          // filter same item
+          .filter(x => {
+            if (!x.item) return true
+            if (!this.props.data) return true
+            return x.item.url !== this.props.result.data.url
+          })
           .map(({ debug, item, similarity }) => {
             const title = item.title
             const lines =
@@ -58,17 +90,37 @@ export default class ContextSidebar {
                 : summarizeWithQuestion(item.body, this.search)
 
             return {
-              category: 'Context',
+              // category: 'Context',
               height: 200,
               title,
               onClick: () => {
                 OS.send('navigate', item.url)
               },
-              children: lines.map((line, index) => (
-                <UI.Text key={index} ellipse html={addBold(line)} />
-              )),
+              children:
+                lines.length >= 3
+                  ? lines.map((line, i) => (
+                      <UI.Text key={i} ellipse opacity={0.5} size={0.9}>
+                        {clean(line)}
+                      </UI.Text>
+                    ))
+                  : lines.map(clean),
               after: (
-                <UI.Row css={{ marginTop: 5, overflowX: 'scroll' }}>
+                <After
+                  onClick={e => {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    this.props.navigate({
+                      ...Thing.toResult(item),
+                      type: 'context',
+                    })
+                  }}
+                />
+              ),
+              below: (
+                <UI.Row
+                  css={{ marginTop: 5, overflowX: 'scroll' }}
+                  itemProps={{ height: 20 }}
+                >
                   <UI.Button tooltip={`Similarity: ${similarity}`}>
                     Info
                   </UI.Button>
@@ -91,7 +143,11 @@ export default class ContextSidebar {
 
   get actions() {
     return [
-      {
+      this.isPinned && {
+        icon: 'check',
+        children: 'Pinned',
+      },
+      !this.isPinned && {
         icon: 'ui-1_bold-add',
         children: 'Pin',
         onClick: () => {
@@ -106,6 +162,7 @@ export default class ContextSidebar {
           val.forEach(item => {
             Thing.create({
               title: item.title,
+              bucket: 'dropbox',
               body: item.content,
               integration: 'manual',
               type: 'manual',

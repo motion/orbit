@@ -46,24 +46,14 @@ function getChildren(result) {
   let text
   if (result.data && result.data.body) {
     const body = result.data.body
-    const extra = body.length > 50 ? '...' : ''
-    text = getDate(result) + ' · ' + body.slice(0, 30) + extra || ''
+    text = getDate(result) + ' · ' + body
   }
   if (!result.data && getDate(result)) {
     text = getDate(result) + ' · '
   }
-  // make text even shorter if event exists
-  // enventualyl we just need <UI.Text lineClamp={number} />
-  if (result.event) {
-    text = text.slice(0, 20) + '...'
-  }
   if (text) {
-    return [
-      <UI.Text key={0} lineHeight={20} opacity={0.5}>
-        {text}
-      </UI.Text>,
-      result.event && <FeedItem key={1} inline event={result.event} />,
-    ].filter(Boolean)
+    return text
+    // <FeedItem key={1} inline event={result.event} />
   }
   return null
 }
@@ -84,6 +74,9 @@ export default function getItem(getActiveIndex) {
     date: result.date,
     after: result.after,
     before: result.before,
+    below: result.below,
+    beforeProps: result.beforeProps,
+    afterProps: result.afterProps,
     ...result.props,
   })
 }

@@ -563,8 +563,15 @@ class Popover extends React.PureComponent<Props> {
     const isTarget = name === 'target'
     const setHovered = () => this.hoverStateSet(name, true)
     const setUnhovered = () => this.hoverStateSet(name, false)
-    const openIfOver = () => this.isNodeHovered(node, isPopover) && setHovered()
+    const openIfOver = () => {
+      if (this.isNodeHovered(node, isPopover)) {
+        setHovered()
+      }
+    }
     const closeIfOut = () => {
+      if (isPopover && Date.now() - this.state.menuHovered < 200) {
+        return
+      }
       if (!this.isNodeHovered(node, isPopover)) {
         setUnhovered()
         if (delayOpenIfHover.cancel) {
@@ -602,9 +609,8 @@ class Popover extends React.PureComponent<Props> {
     const { openOnHover, onMouseEnter } = this.curProps
     const setter = () => {
       // this.lastEvent[val ? 'enter' : 'leave'][name] = Date.now()
-      this.setState({ [`${name}Hovered`]: val })
+      this.setState({ [`${name}Hovered`]: val ? Date.now() : false })
     }
-
     if (val) {
       if (openOnHover) {
         this.setPosition(setter)
@@ -620,11 +626,20 @@ class Popover extends React.PureComponent<Props> {
     return val
   }
 
-  isNodeHovered = (node: HTMLElement): boolean => {
+  isNodeHovered = (node: HTMLElement, isPopover): boolean => {
     const childSelector = `${node.tagName.toLowerCase()}.${node.className.replace(
       /\s+/g,
       '.'
     )}:hover`
+
+    if (isPopover) {
+      console.log(
+        'popoverHovered?',
+        !!node.parentNode.querySelector(childSelector) ||
+          node.querySelector(':hover')
+      )
+    }
+
     return (
       !!node.parentNode.querySelector(childSelector) ||
       node.querySelector(':hover')
@@ -834,7 +849,7 @@ class Popover extends React.PureComponent<Props> {
     },
     popoverOpen: {
       opacity: 1,
-      pointerEvents: 'auto !important',
+      pointerEvents: 'auto',
       transition: 'transform 0ms',
       transform: {
         y: 0,

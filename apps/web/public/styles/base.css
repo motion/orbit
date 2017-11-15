@@ -1,3 +1,7 @@
+#app {
+  overflow: scroll !important;
+}
+
 /* for markdown content in tasks */
 .innerContent ul,
 .innerContent ol {

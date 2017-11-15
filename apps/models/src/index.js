@@ -178,6 +178,5 @@ export default class Database {
       )
     }
     await Promise.all(connections)
-    console.log('models should be connected')
   }
 }

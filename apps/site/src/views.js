@@ -1,5 +1,7 @@
+import { view } from '@mcro/black'
 import * as React from 'react'
 import * as UI from '@mcro/ui'
+import * as Constants from '~/constants'
 
 export const Text = props => <UI.Text size={1.5} marginBottom={20} {...props} />
 export const SubText = props => (
@@ -12,6 +14,109 @@ export const Title = props => <Text fontWeight={800} {...props} />
 export const SubTitle = props => (
   <UI.Title fontWeight={800} marginBottom={30} opacity={0.6} {...props} />
 )
+
+const dark = {
+  background: Constants.colorBlue,
+}
+const space = {
+  background: '#000',
+}
+const padRight = {
+  paddingRight: 300,
+  [Constants.screen.small]: {
+    paddingRight: 0,
+  },
+}
+
+export const Section = view(
+  'section',
+  {
+    marginLeft: -100,
+    marginRight: -100,
+    paddingLeft: 100,
+    paddingRight: 100,
+    position: 'relative',
+    overflow: 'hidden',
+  },
+  {
+    padded: {
+      padding: [110, 0],
+      margin: 0,
+    },
+    dark,
+    space,
+  }
+)
+
+export const SectionContent = view(
+  'section',
+  {
+    width: '85%',
+    minWidth: 300,
+    maxWidth: 800,
+    margin: [0, 'auto'],
+    position: 'relative',
+    zIndex: 10,
+  },
+  {
+    padRight,
+    padBottom: {
+      paddingBottom: 80,
+    },
+  }
+)
+
+export const Content = view(
+  'div',
+  {},
+  {
+    padRight,
+  }
+)
+
+export const Hr = view('hr', {
+  display: 'flex',
+  height: 0,
+  border: 'none',
+  borderTop: [1, [0, 0, 0, 0.05]],
+  paddingBottom: 20,
+  marginTop: 20,
+})
+
+export const BottomSlant = view(
+  'div',
+  {
+    position: 'absolute',
+    bottom: -350,
+    left: -500,
+    right: -500,
+    height: 400,
+    zIndex: 0,
+    transform: {
+      rotate: '-1deg',
+    },
+  },
+  {
+    dark,
+  }
+)
+
+export const Link = view('a', {
+  color: '#5420a5',
+  textDecoration: 'underline',
+})
+
+export const Strong = view('strong', {
+  fontWeight: 500,
+})
+
+export const List = view('ol', {
+  '& > li': {
+    listStylePosition: 'auto',
+    listStyleType: 'decimal',
+    margin: [0, 0, 15, 30],
+  },
+})
 
 export const Logo = ({ fill, ...props }) => (
   <svg viewBox="0 0 498 157" {...props}>

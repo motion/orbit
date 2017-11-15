@@ -55,7 +55,51 @@ export class Gloss {
     this.decorator.createElement = this.createElement
   }
 
-  decorator = (Child: Function) => {
+  decorator = (
+    optionalNameOrChild: string | Function,
+    optionalStyle?: Object,
+    optionalPropStyles?: Object
+  ) => {
+    if (typeof optionalNameOrChild === 'string') {
+      // shorthand -- $('tagName', {}) style component
+      const tagName = optionalNameOrChild
+      const styles = optionalStyle
+      const id = uid()
+      const glossComponent = props => {
+        let finalProps
+        // make propstyles work
+        if (props && optionalPropStyles) {
+          finalProps = {}
+          for (const key of Object.keys(props)) {
+            if (optionalPropStyles[key]) {
+              finalProps[`$${key}`] = props[key]
+            } else {
+              finalProps[key] = props[key]
+            }
+          }
+        } else {
+          finalProps = props
+        }
+        return this.createElement(tagName, { glossUID: id, ...finalProps })
+      }
+      this.attachStyles(id, { [tagName]: styles, ...optionalPropStyles })
+      glossComponent.displayName = tagName
+      return glossComponent
+    }
+
+    const Child = optionalNameOrChild
+
+    if (!Child) {
+      console.error(
+        'invalid view given to gloss',
+        optionalNameOrChild,
+        optionalStyle,
+        optionalPropStyles
+      )
+      return () => this.createElement('div', { children: 'Error Component' })
+    }
+
+    // @view decorated style component
     if (Child.prototype) {
       const { attachStyles, css } = this
 
@@ -147,6 +191,7 @@ export class Gloss {
           !lastUpdatedStyles ||
           (window.lastHotReload && lastUpdatedStyles > window.lastHotReload)
         ) {
+          // console.log('Child.style', Child.style)
           attachStyles(Child.glossUID, Child.style, true)
           lastUpdatedStyles = Date.now()
         }
@@ -179,6 +224,12 @@ export class Gloss {
     }
     for (const key of Object.keys(styles)) {
       const style = styles[key]
+      // @keyframes
+      if (key[0] === '@') {
+        console.log('adding animation')
+        this.stylesheet.addRule(key, style)
+        continue
+      }
       const stylesKey = childKey ? `${key}--${childKey}` : key
       if (typeof style === 'function') {
         this.stylesheet[stylesKey] = style

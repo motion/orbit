@@ -1,4 +1,4 @@
-export default function isAlphaNumeric(str) {
+export default function isAlpha(str) {
   var code, i, len
 
   for (i = 0, len = str.length; i < len; i++) {

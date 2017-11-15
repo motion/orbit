@@ -46,7 +46,6 @@ export default class ListItem extends React.Component<Props> {
   static defaultProps = {
     size: 1,
     borderWidth: 0,
-    ellipse: true,
     glowProps: {
       color: '#fff',
       scale: 1,
@@ -54,6 +53,7 @@ export default class ListItem extends React.Component<Props> {
       opacity: 0.2,
       show: false,
       resist: 60,
+      zIndex: -1,
     },
   }
 
@@ -74,7 +74,10 @@ export default class ListItem extends React.Component<Props> {
   render() {
     const {
       after,
+      afterProps,
+      below,
       before,
+      beforeProps,
       borderRadius,
       children: _children,
       date,
@@ -92,7 +95,7 @@ export default class ListItem extends React.Component<Props> {
       secondary,
       size,
       style,
-      ellipse,
+      childrenEllipse,
       primaryEllipse,
       glowProps,
       editable,
@@ -126,6 +129,8 @@ export default class ListItem extends React.Component<Props> {
       children = _children()
     }
 
+    const areChildrenString = typeof children === 'string'
+
     return (
       <SizedSurface
         tagName="listitem"
@@ -148,11 +153,13 @@ export default class ListItem extends React.Component<Props> {
         style={style}
         getRef={this.getRef}
         highlight={highlightValue}
-        after={after}
+        after={below}
         {...props}
       >
-        <before if={before}>{before}</before>
-        <content>
+        <before if={before} {...beforeProps}>
+          {before}
+        </before>
+        <content $overflowHidden={after || before}>
           <above if={primary || secondary || date}>
             <prop if={primary || secondary} $col>
               <Text
@@ -185,19 +192,21 @@ export default class ListItem extends React.Component<Props> {
               </Text>
             </prop>
           </above>
-          <children if={children && React.isValidElement(children)}>
-            {children}
-          </children>
+          <children if={!areChildrenString}>{children}</children>
           <Text
-            $children
-            if={children && !React.isValidElement(children)}
+            if={areChildrenString}
             size={size * 0.9}
             opacity={0.6}
+            padding={[3, 0]}
+            ellipse={childrenEllipse}
             {...childrenProps}
           >
             {children}
           </Text>
         </content>
+        <after if={after} {...afterProps}>
+          {after}
+        </after>
       </SizedSurface>
     )
   }
@@ -205,10 +214,14 @@ export default class ListItem extends React.Component<Props> {
   static style = {
     item: {
       maxWidth: '100%',
+      userSelect: 'none',
     },
     content: {
       flex: 1,
       maxWidth: '100%',
+    },
+    overflowHidden: {
+      overflow: 'hidden',
     },
     above: {
       maxWidth: '100%',
@@ -251,16 +264,11 @@ export default class ListItem extends React.Component<Props> {
       flexGrow: 1,
     },
     after: {
-      margin: ['auto', -5, 'auto', 5],
+      margin: [0, -5, 0, 5],
+      height: '100%',
     },
     before: {
       margin: ['auto', 5, 'auto', 0],
-    },
-    children: {
-      flexFlow: 'row',
-      margin: [0, -10],
-      lineHeight: '1.38rem',
-      padding: [0, 10],
     },
   }
 }

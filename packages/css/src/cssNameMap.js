@@ -1,6 +1,10 @@
 export const CAMEL_TO_SNAKE = {
   pointerEvents: 'pointer-events',
   WebkitAppRegion: '-webkit-app-region',
+  WebkitLineClamp: '-webkit-line-clamp',
+  WebkitBoxOrient: '-webkit-box-orient',
+  WebkitBackgroundClip: '-webkit-background-clip',
+  WebkitTextFillColor: '-webkit-text-fill-color',
   alignContent: 'align-content',
   alignItems: 'align-items',
   alignSelf: 'align-self',

@@ -1,6 +1,6 @@
 // @flow
 import { watch } from '@mcro/black'
-import ContextStore from '~/stores/contextStore'
+import ContextStore from '~/context'
 import { Person, Thing } from '~/app'
 
 export default class TaskSidebarStore {

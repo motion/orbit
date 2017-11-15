@@ -2,9 +2,14 @@
 // export constants from @mcro/black
 import { Constants } from '@mcro/black'
 
-console.log('process.env.IS_PROD', process.env.IS_PROD)
+if (process.env.IS_PROD) {
+  console.log('IS_PROD!')
+}
 
 export const VERSION = require('../package.json').version
+
+export const ORA_WIDTH = 300
+export const ORA_HEIGHT = 700
 
 export const IS_ELECTRON = Constants.IS_ELECTRON
 export const IS_PROD =

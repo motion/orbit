@@ -4,6 +4,7 @@ import Fade from '~/views/fade'
 import * as Sidebars from './sidebars'
 import getItem from './helpers/getItem'
 import PaneView from './pane'
+import { ORA_WIDTH } from '~/constants'
 
 @view({
   sidebar: class SidebarStore {
@@ -42,30 +43,74 @@ class SidebarContainer {
   }
 }
 
-@view
+@view({
+  // cache store handles preloading the next result
+  // and then showing it after its done
+  // this is so we can animate after results are there
+  // and prevents lots of flickering as you move around
+  cacheStore: class SidebarCacheStore {
+    nextItems = null
+    items = this.props.store.stack.items
+    version = 0
+
+    get stackItems() {
+      return this.nextItems || this.items
+    }
+
+    get showingNext() {
+      return !!this.nextItems
+    }
+
+    willMount() {
+      // watch for update
+      this.watch(() => {
+        const { stack } = this.props.store
+        // log('checking out for shit yea', this.version, stack.version)
+        if (stack && this.version !== stack.version) {
+          this.nextItems = stack.items
+          // log('next id:', stack.last.result.id)
+        }
+      })
+      // watch for load
+      this.watch(() => {
+        const { stack } = this.props.store
+        if (this.nextItems && stack.last.results && stack.last.results.length) {
+          // log('LOADED NEXT', stack.last.result.id)
+          this.onLoadedNext()
+        }
+      })
+    }
+
+    onLoadedNext() {
+      this.version = this.props.store.stack.version
+      this.items = this.nextItems
+      this.nextItems = null
+    }
+  },
+})
 export default class Sidebar {
   static defaultProps = {
-    width: 280,
+    width: ORA_WIDTH,
     sidebars: Sidebars,
     itemProps: {
       size: 1.14,
       glow: true,
       padding: [10, 12],
       iconAfter: true,
+      childrenEllipse: 3,
     },
   }
 
-  previousIndex = -1
-
-  render({ width, itemProps, sidebars, store, store: { stack }, ...props }) {
-    const currentIndex = stack.length - 1
-    const { previousIndex } = this
-    this.previousIndex = currentIndex
+  render({ width, itemProps, sidebars, store, cacheStore, ...props }) {
+    const { stack } = store
+    const { stackItems, showingNext } = cacheStore
+    const currentIndex = stackItems.length - (showingNext ? 2 : 1)
+    // log('render', showingNext, currentIndex)
     return (
       <sidebar css={{ width, maxWidth: width, flex: 1 }}>
-        {stack.items.map((stackItem, index) => {
-          // only show last two
-          if (index + 1 < currentIndex) {
+        {stackItems.map((stackItem, index) => {
+          // only show last three
+          if (index + 2 < currentIndex) {
             return null
           }
           if (!stackItem.result) {
@@ -77,26 +122,25 @@ export default class Sidebar {
           }
           return (
             <Fade
-              key={index + stackItem.result.title}
+              key={stackItem.result.title}
               width={width}
               index={index}
               currentIndex={currentIndex}
-              previousIndex={previousIndex}
             >
               <SidebarContainer
                 stackItem={stackItem}
                 navigate={stack.navigate}
                 data={stackItem.result.data}
                 result={stackItem.result}
-                onBack={store.stack.pop}
+                onBack={stack.pop}
                 sidebarStore={Sidebar}
                 paneProps={{
                   index,
                   width,
                   getActiveIndex: () =>
                     stackItem.col === 0 && stackItem.firstIndex,
-                  groupKey: 'category',
-                  stack: store.stack,
+                  groupBy: 'category',
+                  stack: stack,
                   sidebar: true,
                   onSelect: stackItem.onSelect,
                   itemProps,

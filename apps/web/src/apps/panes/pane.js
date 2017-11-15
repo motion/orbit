@@ -103,7 +103,7 @@ export default class Pane {
 
   render({
     getItem,
-    groupKey,
+    groupBy,
     listProps,
     virtualProps,
     itemProps,
@@ -125,7 +125,7 @@ export default class Pane {
       <UI.List
         itemsKey={paneStore.contentVersion}
         getRef={paneStore.setList}
-        groupKey={groupKey}
+        groupBy={groupBy}
         onSelect={this.onSelect}
         virtualized={{
           measure: true,
@@ -150,6 +150,7 @@ export default class Pane {
         style={{ width, ...style }}
         $fullscreen={paneStore.fullscreen}
         $sidebar={sidebar}
+        $actionBarPad={!!actions}
       >
         <content ref={paneStore.setContentRef}>
           {!children
@@ -164,10 +165,12 @@ export default class Pane {
                 glow: true,
               }}
             >
-              {actions.map(
-                ({ content, ...props }, index) =>
-                  content || <UI.Button key={index} {...props} />
-              )}
+              {actions
+                .filter(Boolean)
+                .map(
+                  ({ content, ...props }, index) =>
+                    content || <UI.Button key={index} {...props} />
+                )}
             </UI.Row>
           </actionbar>
         </actions>
@@ -184,6 +187,10 @@ export default class Pane {
     content: {
       overflowY: 'scroll',
       flex: 1,
+    },
+    // pads height of actionbar
+    actionBarPad: {
+      paddingBottom: 50,
     },
     actionbar: {
       padding: 10,

@@ -6,7 +6,7 @@ import { CurrentUser } from '~/app'
 const BANNER_COLORS = {
   note: 'blue',
   success: 'green',
-  failure: 'red',
+  error: 'red',
 }
 
 @view({

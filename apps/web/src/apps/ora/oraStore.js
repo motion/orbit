@@ -12,11 +12,13 @@ import * as r2 from '@mcro/r2'
 const BANNERS = {
   note: 'note',
   success: 'success',
+  error: 'error',
 }
 
 const BANNER_TIMES = {
   note: 5000,
   success: 1500,
+  error: 5000,
 }
 
 export default class OraStore {
@@ -98,8 +100,12 @@ export default class OraStore {
     const toFetch = `https://api.diffbot.com/v3/article?token=${token}&url=${
       url
     }`
-    console.log('to fetch is', toFetch)
     const res = await fetch(toFetch).then(res => res.json())
+    if (res.error) {
+      this.setBanner(BANNERS.error, `Diffbot: ${res.error}`)
+      return
+    }
+    console.log('got res', res)
     const { text, title } = res.objects[0]
     const thing = await Thing.create({
       title,

@@ -92,8 +92,8 @@ class SidebarContainer {
         }
         if (
           this.nextStack &&
-          this.nextStack.last.results &&
-          this.nextStack.last.results.length > 1
+          this.nextStack.last.store &&
+          this.nextStack.last.store.finishedLoading
         ) {
           this.onLoadedNext()
         }
@@ -126,9 +126,18 @@ export default class Sidebar {
     if (!stackItems) {
       return null
     }
-    console.log('stackItems', stackItems)
+    // console.log('stackItems', stackItems)
     const currentIndex = stackItems.length - (isLoadingNext ? 2 : 1)
-    // log(isLoadingNext, 'index', currentIndex, 'length', stackItems.length)
+    if (isLoadingNext) {
+      log(
+        isLoadingNext,
+        'index',
+        currentIndex,
+        'length',
+        stackItems.length,
+        `${stackItems.map(i => i.result.id)}`
+      )
+    }
     return (
       <sidebar css={{ width, maxWidth: width, flex: 1 }}>
         {stackItems.map((stackItem, index) => {

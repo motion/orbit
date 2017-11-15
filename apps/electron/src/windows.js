@@ -111,8 +111,8 @@ export default class Windows extends React.Component {
   onOra = ref => {
     if (ref) {
       this.oraRef = ref
-      console.log('clearing storage data!!!!!!!')
-      this.oraRef.webContents.session.clearStorageData()
+      // console.log('clear storage data!!!!!!!')
+      // this.oraRef.webContents.session.clearStorageData()
       this.listenToApps()
       this.registerShortcuts()
     }

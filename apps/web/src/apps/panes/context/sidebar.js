@@ -57,6 +57,11 @@ export default class ContextSidebar {
     }
   }
 
+  // this determines when the pane slides in
+  get finishedLoading() {
+    return !this.context.isLoading
+  }
+
   @watch
   isPinned = () => this.osContext && Thing.findOne({ url: this.osContext.url })
 

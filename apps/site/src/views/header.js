@@ -1,6 +1,6 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
-import * as View from '~/views'
+import { SectionContent } from '~/views'
 import * as Constants from '~/constants'
 import Logo from './logo'
 import Router from '~/router'
@@ -27,7 +27,7 @@ export default () => (
       zIndex: 10,
     }}
   >
-    <View.SectionContent row css={{ justifyContent: 'space-between' }}>
+    <SectionContent row css={{ justifyContent: 'space-between' }}>
       <Logo color="#fff" />
 
       <menu css={{ flexFlow: 'row', padding: [0, 100, 0, 70] }}>
@@ -51,6 +51,6 @@ export default () => (
           Download
         </UI.Button>
       </end>
-    </View.SectionContent>
+    </SectionContent>
   </tophead>
 )

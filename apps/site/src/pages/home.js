@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import * as UI from '@mcro/ui'
 import * as View from '~/views'
 import * as Constants from '~/constants'
 import Ora from './home/ora'
@@ -124,24 +123,7 @@ export default class HomePage extends React.Component {
           <HomeChat {...sectionProps} />
           <HomeSecurity {...sectionProps} />
           <HomeHandsFree if={false} {...sectionProps} />
-          <UI.Theme name="dark">
-            <footer>
-              <View.Section space padded>
-                <View.SectionContent>
-                  <content $$row>
-                    <column
-                      css={{ height: 200, justifyContent: 'space-between' }}
-                    >
-                      <View.Title>Orbit</View.Title>
-                      <View.Link>About us</View.Link>
-                      <View.Link>Follow us</View.Link>
-                      <View.Link>Press kit</View.Link>
-                    </column>
-                  </content>
-                </View.SectionContent>
-              </View.Section>
-            </footer>
-          </UI.Theme>
+          <View.Footer />
         </contents>
       </page>
     )

@@ -5,7 +5,6 @@ import * as Constants from '~/constants'
 import { view } from '@mcro/black'
 import Illustration1 from './header/illustration1'
 import Illustration2 from './header/illustration2'
-import Header from '../views/header'
 
 const titleProps = {
   size: 3,
@@ -24,7 +23,7 @@ export default class HomeHeader {
           minHeight: Constants.ORA_TOP,
         }}
       >
-        <Header />
+        <View.Header />
 
         <View.SectionContent
           css={{

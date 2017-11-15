@@ -17,7 +17,7 @@ React.createElement = createElement
 
 function main() {
   const RootNode = document.querySelector('#app')
-  const Root = require('./views/root').default
+  const Root = require('./root').default
   ReactDOM.render(
     <ThemeProvide {...Themes}>
       <Root />

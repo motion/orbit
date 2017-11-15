@@ -91,7 +91,7 @@ export default class Windows extends React.Component {
           if (+x > triggerX && +y < triggerY) {
             console.log('IN CORNER')
             try {
-              event.sender.send('mouse-in-corner')
+              this.toggleShown()
             } catch (e) {
               console.error('err', e)
             }
@@ -181,7 +181,7 @@ export default class Windows extends React.Component {
 
   shown = true
 
-  toggleShown = () => {
+  toggleShown = throttle(() => {
     this.sendOra('ora-toggle')
     this.shown = !this.shown // hacky
     if (this.shown) {
@@ -198,7 +198,7 @@ export default class Windows extends React.Component {
         }
       }, 300)
     }
-  }
+  }, 500)
 
   injectCrawler = async sendToOra => {
     const js = await getCrawler()
@@ -359,6 +359,9 @@ export default class Windows extends React.Component {
     if (restart) {
       console.log('\n\n\n\n\n\nRESTARTING\n\n\n\n\n\n')
       this.repl.close()
+      if (this.appRef) {
+        this.appRef.close()
+      }
       onWindows = []
       return (
         <app>

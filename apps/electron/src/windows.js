@@ -364,6 +364,9 @@ export default class Windows extends React.Component {
     if (restart) {
       console.log('\n\n\n\n\n\nRESTARTING\n\n\n\n\n\n')
       this.repl.close()
+      if (this.appRef) {
+        this.appRef.close()
+      }
       onWindows = []
       return (
         <app>

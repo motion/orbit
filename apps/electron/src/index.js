@@ -6,6 +6,7 @@ import updater from 'electron-simple-updater'
 import React from 'react'
 import Ionize from '@mcro/ionize'
 import { onWindow } from './windows'
+import { throttle } from 'lodash'
 import * as Constants from '~/constants'
 import { throttle } from 'lodash'
 

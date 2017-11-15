@@ -22,9 +22,11 @@
   - steps:
     - 1. Welcome to Orbit, we need to setup integrations
     - 2. We work with your browser, navigate to your knowledgebase in Chrome
-      - Switch onboard to ora window, so it shows as they go to knowledgebase
+      - Open ora window that welcomes them, instructs them to go to knowledgebase
+      - Ora needs to detect when they enter a Intercom/Zendesk/etc knowedgebase
       - Have "Add this site" button glow for them
-      - Once they start first crawl it shows status, redirects them back to onboard flow
+      - Should show some nice stats on estimated time, etc
+      - Once they start first crawl it shows status, re-focuses the onboarding window:
     - 3. You can also Pin individual sites
     - 4. Keyboard shortcuts / search / usage generally
     - 5. Done! Tweet/email us easily here

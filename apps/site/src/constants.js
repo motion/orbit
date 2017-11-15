@@ -6,7 +6,7 @@ export const PAGE_WIDTH = smallSize
 
 export const ORA_LEFT_PAD = 285
 export const ORA_TOP_PAD = 60
-export const ORA_TOP = Math.max(920, window.innerHeight - 150)
+export const ORA_TOP = Math.max(930, window.innerHeight - 120)
 export const ORA_HEIGHT = 410
 export const ORA_WIDTH = 300
 export const ORA_BORDER_RADIUS = 6

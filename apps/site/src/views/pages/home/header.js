@@ -7,7 +7,10 @@ import Illustration1 from './header/illustration1'
 import Illustration2 from './header/illustration2'
 import Header from '../views/header'
 
-const TITLE_SIZE = 2.6
+const titleProps = {
+  size: 3,
+  fontWeight: 200,
+}
 
 @view
 export default class HomeHeader {
@@ -38,22 +41,14 @@ export default class HomeHeader {
             <UI.Theme name="dark">
               <section
                 css={{
-                  marginTop: -70,
-                  // marginBottom: 40,
+                  marginTop: -210,
                   height: 560,
                   position: 'relative',
                   width: '45%',
-                  transform: {
-                    y: -120,
-                  },
                 }}
               >
-                <View.Title
-                  size={TITLE_SIZE}
-                  fontWeight={300}
-                  textAlign="right"
-                >
-                  Company knowledge shouldn't be such a mess
+                <View.Title {...titleProps} textAlign="right">
+                  Company knowledge shouldn't be so messy
                 </View.Title>
 
                 <inner
@@ -64,6 +59,7 @@ export default class HomeHeader {
                   }}
                 >
                   <img
+                    if={false}
                     src="/watercolor.png"
                     css={{
                       position: 'absolute',
@@ -115,19 +111,16 @@ export default class HomeHeader {
 
             <section
               css={{
-                marginTop: -20,
+                marginTop: -100,
                 width: '45%',
                 zIndex: 20,
                 position: 'relative',
-                transform: {
-                  y: -50,
-                },
               }}
             >
               <inner
                 css={{
                   position: 'relative',
-                  minHeight: 250,
+                  minHeight: 220,
                   margin: [20, 0, 0],
                   userSelect: 'none',
                 }}
@@ -135,14 +128,13 @@ export default class HomeHeader {
                 <Illustration2 css={{ transform: { scale: 1 } }} />
               </inner>
 
-              <text css={{ margin: [65, 0, 0, 40] }}>
+              <text css={{ margin: [65, 0, 0, 20] }}>
                 <View.Title
+                  {...titleProps}
                   textAlign="left"
-                  size={TITLE_SIZE}
-                  fontWeight={300}
                   color={Constants.dark2}
                 >
-                  Orbit keeps your team in sync without hassle
+                  Orbit keeps your team in sync, without hassle
                 </View.Title>
 
                 <arrows css={{ position: 'absolute', right: 0 }}>

@@ -10,7 +10,7 @@ import * as Constants from '~/constants'
 
 window.Constants = Constants
 // for hmr clearing
-window.Black = Black
+Black.view.on('hmr', main)
 
 // Gloss: all <tag />s can use $$styleProps or css={{}}
 React.createElement = createElement

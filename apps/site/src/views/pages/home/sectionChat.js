@@ -2,6 +2,7 @@ import { view } from '@mcro/black'
 import * as React from 'react'
 import * as View from '~/views'
 import * as UI from '@mcro/ui'
+import * as Constants from '~/constants'
 import FakeSlack from './demos/slack'
 
 @view({
@@ -28,18 +29,35 @@ export default class SectionChat extends React.Component {
         <UI.Theme name="dark">
           <View.Section
             css={{
-              background: '#7b99d9',
+              background: '#fff',
               padding: [110, 0, 200],
             }}
           >
-            <background
-              $$fullscreen
+            <stripeBetween
               css={{
-                background: `url(/wallpaper.jpg) no-repeat`,
-                backgroundSize: 'cover',
-                opacity: 0.28,
+                position: 'absolute',
+                top: -50,
+                left: 32,
+                zIndex: 0,
               }}
-            />
+            >
+              <fadeDown
+                css={{
+                  position: 'absolute',
+                  top: 520,
+                  left: -673,
+                  width: 2000,
+                  height: 1000,
+                  background: Constants.dark2,
+                  zIndex: 2,
+                  transform: {
+                    rotate: '94deg',
+                    scale: 1,
+                    y: 115,
+                  },
+                }}
+              />
+            </stripeBetween>
             <View.SectionContent padRight>
               <View.Title size={3}>Wherever you are</View.Title>
               <View.SubTitle size={3}>

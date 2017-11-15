@@ -2,11 +2,13 @@ import * as React from 'react'
 import * as View from '~/views'
 import * as UI from '@mcro/ui'
 
-const background = '#111'
-const bgLight = UI.color(background).lighten(0.5)
+const background = '#ffeb72'
+const bgLight = UI.color(background) //.lighten(0.15)
+const colorLight = bgLight.lighten(0.05) //.lighten(0.15)
+const colorDark = bgLight.darken(0.75)
 
 export default props => (
-  <UI.Theme name="dark">
+  <UI.Theme name="light">
     <View.Section css={{ background, zIndex: 100000, padding: [100, 0] }}>
       <slant
         css={{
@@ -56,18 +58,20 @@ export default props => (
             justifyContent: 'center',
           }}
         >
-          <UI.Icon color="#000" opacity={0.8} size={480} name="lock" />
+          <UI.Icon
+            color={colorLight}
+            opacity={0.8}
+            size={480}
+            name="lock"
+            css={{ textShadow: `0 0 1px #000` }}
+          />
         </after>
-        <View.Title getRef={props.setSection(2)} size={3}>
+        <View.Title getRef={props.setSection(2)} size={1.7} color={colorDark}>
           The No-Cloud Infrastructure
         </View.Title>
-        <View.Text size={3.5} fontWeight={200} opacity={0.7}>
+        <View.Text size={3.5} fontWeight={200} opacity={0.7} color={colorDark}>
           In order to work well, we invented a new model: one that keeps you
           safe.
-        </View.Text>
-
-        <View.Text size={2} fontWeight={200}>
-          How do we do that?
         </View.Text>
 
         <View.Text size={2} fontWeight={200}>

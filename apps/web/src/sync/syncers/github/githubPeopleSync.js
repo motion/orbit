@@ -3,7 +3,7 @@ import { Person } from '~/app'
 import debug from 'debug'
 import { createInChunks } from '~/sync/helpers'
 
-const log = debug('sync')
+const log = _ => _ || debug('sync')
 
 export default class GithubPeopleSync {
   constructor({ setting, token, helpers }) {

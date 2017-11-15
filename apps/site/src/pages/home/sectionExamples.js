@@ -64,7 +64,7 @@ export default class SectionExamples {
               css={{
                 position: 'absolute',
                 top: -100,
-                left: 23,
+                left: 32,
               }}
             >
               <fadeDown
@@ -74,9 +74,7 @@ export default class SectionExamples {
                   left: -1113,
                   width: 2000,
                   height: 1000,
-                  background: `linear-gradient(-90deg, ${
-                    Constants.dark2
-                  }, #111)`,
+                  background: Constants.dark2,
                   zIndex: 2,
                   transform: {
                     rotate: '-96deg',
@@ -140,7 +138,7 @@ export default class SectionExamples {
 
             <inner css={{ position: 'relative', zIndex: 3 }}>
               <UI.Text fontWeight={600} marginBottom={20} size={1.3}>
-                Orbit gives you
+                How Orbit works
               </UI.Text>
               <UI.Text
                 size={3.8}
@@ -154,9 +152,8 @@ export default class SectionExamples {
                 <span css={{ fontWeight: 600, color: '#fff' }}>customers</span>
               </UI.Text>
 
-              <UI.Text size={2} padding={[0, 80, 0, 0]} color={lightText}>
-                Here are a few ways Orbit keeps everyone on your team up to date
-                and knowledgeable of whats important in your company:
+              <UI.Text size={2} padding={[10, 80, 40, 0]} color="#fff">
+                Some examples of how Orbit keeps you in the know:
               </UI.Text>
 
               <examples css={{ marginRight: -120 }}>

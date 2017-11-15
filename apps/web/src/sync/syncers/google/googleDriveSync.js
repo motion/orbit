@@ -3,7 +3,7 @@ import { Event, Thing } from '~/app'
 import { createInChunks } from '~/sync/helpers'
 import debug from 'debug'
 
-const log = debug('sync')
+const log = _ => _ || debug('sync')
 const sleep = ms => new Promise(res => setTimeout(res, ms))
 
 export default class GoogleDriveSync {

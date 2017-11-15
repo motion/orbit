@@ -10,14 +10,14 @@ import * as Constants from '~/constants'
 
 window.Constants = Constants
 // for hmr clearing
-window.Black = Black
+Black.view.on('hmr', main)
 
 // Gloss: all <tag />s can use $$styleProps or css={{}}
 React.createElement = createElement
 
 function main() {
   const RootNode = document.querySelector('#app')
-  const Root = require('./views/root').default
+  const Root = require('./root').default
   ReactDOM.render(
     <ThemeProvide {...Themes}>
       <Root />

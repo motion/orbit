@@ -3,36 +3,9 @@ import { OS, fuzzy } from '~/helpers'
 import { summarize, summarizeWithQuestion } from './helpers/summarize'
 import { Thing } from '~/app'
 import * as UI from '@mcro/ui'
-import { view, watch } from '@mcro/black'
+import { watch } from '@mcro/black'
 import { flatten, isEqual } from 'lodash'
-
-@view
-class After {
-  render({ children, ...props }) {
-    return (
-      <after {...props}>
-        <UI.Icon opacity={0.35} name="arrow-min-right" />
-        {children}
-      </after>
-    )
-  }
-  static style = {
-    after: {
-      position: 'relative',
-      zIndex: 1000,
-      background: [0, 0, 0, 0.2],
-      borderLeft: [1, [0, 0, 0, 0.5]],
-      margin: -5,
-      padding: 2,
-      alignItems: 'center',
-      justifyContent: 'center',
-      flex: 1,
-      '&:hover': {
-        background: [255, 255, 255, 0.025],
-      },
-    },
-  }
-}
+import After from '~/views/after'
 
 const clean = str => {
   if (typeof str !== 'string') {
@@ -80,10 +53,6 @@ export default class ContextSidebar {
           console.log('not on same url')
         }
       }
-    })
-
-    this.watch(() => {
-      console.log('settings', this.crawlerSettings)
     })
   }
 

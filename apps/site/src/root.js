@@ -2,7 +2,7 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import Router from '~/router'
-import NotFound from '~/views/pages/404'
+import NotFound from '~/pages/404'
 import * as UI from '@mcro/ui'
 import { debounce } from 'lodash'
 import * as Constants from '~/constants'

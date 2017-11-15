@@ -23,17 +23,16 @@ export default class Illustration2 {
             0: true,
           }}
           planetSize={60}
-          ringBackground="rgba(64.5%, 85.7%, 98.7%, 0.075)"
+          ringBackground="transparent"
           planetStyles={{
-            background: '#fff',
-            border: [1, Constants.colorMain],
-            // filter: 'grayscale(0.5)',
+            background: Constants.mainLight,
+            border: [1, Constants.mainLight],
           }}
           items={[
             'google-gmail',
             'google-drive',
             'slack',
-            'confluence',
+            'github',
             'zendesk',
             'gitter',
             'intercom',
@@ -45,12 +44,16 @@ export default class Illustration2 {
             'markdown',
             'medium',
             'microsoft',
+            'base',
+            'base',
+            '',
+            'github',
           ]}
           css={{
             top: -165,
             left: 235,
             transform: {
-              scale: 0.64,
+              scale: 0.6,
             },
           }}
         />
@@ -92,7 +95,7 @@ export default class Illustration2 {
             <img
               src="/figures/Hummingbird.svg"
               css={{
-                margin: [-310, 125, 0, -90],
+                margin: [-300, 125, 0, -90],
                 width: 145,
                 height: 145,
                 zIndex: 1000,
@@ -120,7 +123,6 @@ export default class Illustration2 {
 
   static style = {
     icon: {
-      // border: [1, [0, 0, 255, 0.075]],
       background: [255, 255, 255, 0.1],
       borderRadius: 10,
       opacity: 0.25,

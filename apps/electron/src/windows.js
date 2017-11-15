@@ -1,6 +1,6 @@
 import * as r2 from '@mcro/r2'
 import React from 'react'
-import { app, globalShortcut, ipcMain, screen } from 'electron'
+import { app, globalShortcut, ipcMain, screen, Menu } from 'electron'
 import repl from 'repl'
 import applescript from 'node-osascript'
 import promisify from 'sb-promisify'
@@ -11,7 +11,7 @@ import WindowsStore from './windowsStore'
 import Window from './window'
 import mouse from 'osx-mouse'
 import { throttle, isEqual, once } from 'lodash'
-import Menu from './menu'
+import MenuItems from './menu'
 import getCrawler from './getCrawler'
 import escapeStringApplescript from 'escape-string-applescript'
 
@@ -70,6 +70,7 @@ export default class Windows extends React.Component {
   }
 
   componentWillUnmount() {
+    globalShortcut.unregisterAll()
     for (const [emitter, name, callback] of this.subscriptions) {
       emitter.removeListener(name, callback)
     }
@@ -81,22 +82,26 @@ export default class Windows extends React.Component {
   }
 
   listenForMouse() {
-    this.on(ipcMain, 'mouse-listen', event => {
+    this.on(ipcMain, 'mouse-listen', () => {
       const triggerX = this.screenSize.width - 20
       const triggerY = 20
       const mousey = mouse()
+
+      let hasLeftCorner = true
+
       mousey.on(
         'move',
         throttle((x, y) => {
           if (+x > triggerX && +y < triggerY) {
-            console.log('IN CORNER')
-            try {
-              event.sender.send('mouse-in-corner')
-            } catch (e) {
-              console.error('err', e)
+            if (hasLeftCorner) {
+              hasLeftCorner = false
+              console.log('IN CORNER')
+              this.toggleShown()
             }
+          } else {
+            hasLeftCorner = true
           }
-        }, 40)
+        }, 60)
       )
     })
   }
@@ -140,15 +145,6 @@ export default class Windows extends React.Component {
       })
     })
 
-    this.on(ipcMain, 'start-crawl', async (event, options) => {
-      this.continueChecking = false
-      const results = await r2.post('http://localhost:3001/crawler/start', {
-        json: { options },
-      }).json
-      console.log('got results', results)
-      event.sender.send('crawl-results', results)
-    })
-
     this.on(ipcMain, 'navigate', (event, url) => {
       open(url)
     })
@@ -172,10 +168,6 @@ export default class Windows extends React.Component {
       this.openApp(path)
     })
 
-    this.on(ipcMain, 'bar-hide', () => {
-      this.hide()
-    })
-
     this.on(ipcMain, 'close', (event, key) => {
       AppWindows.removeByKey(+key)
       this.updateWindows()
@@ -192,30 +184,28 @@ export default class Windows extends React.Component {
     })
   }
 
-  show = () => {
-    this.sendOra('ora-show')
-    this.oraRef.focus()
-  }
+  shown = true
 
-  hide = () => {
-    console.log('hiding')
-    this.sendOra('ora-hide')
-    // return focus to last app
-    //         const res = await execute(
-    //           `
-    // tell application "System Events"
-    //   set activeApp to name of first application process whose frontmost is true
-    //   set activeApp2 to name of second application process whose frontmost is true
-    // end tell
-    // return {activeApp, activeApp2}
-    //         `,
-    //           (err, answer) => {
-    //             console.log('refocus', err, answer)
-    //           }
-    //         )
-  }
+  toggleShown = throttle(() => {
+    this.sendOra('ora-toggle')
+    this.shown = !this.shown // hacky
+    if (this.shown) {
+      if (this.appRef) {
+        this.appRef.show()
+        this.appRef.focus()
+      }
+      // Menu.sendActionToFirstResponder('show:')
+      this.oraRef.focus()
+    } else {
+      setTimeout(() => {
+        if (this.appRef) {
+          this.appRef.hide()
+        }
+      }, 300)
+    }
+  }, 500)
 
-  injectCrawler = async sendToOra => {
+  injectCrawler = throttle(async sendToOra => {
     const js = await getCrawler()
     await execute(`
       tell application "Google Chrome"
@@ -233,7 +223,7 @@ export default class Windows extends React.Component {
         lastRes = res
       }
     })
-  }
+  }, 500)
 
   checkCrawlerLoop = async cb => {
     try {
@@ -329,7 +319,6 @@ export default class Windows extends React.Component {
   }
 
   openApp = path => {
-    this.hide()
     const next = this.next(path)
     if (next) {
       setTimeout(() => next.ref && next.ref.focus(), 100)
@@ -341,7 +330,7 @@ export default class Windows extends React.Component {
     const SHORTCUTS = {
       'Option+Space': () => {
         console.log('command option+space')
-        this.show()
+        this.toggleShown()
       },
     }
     for (const shortcut of Object.keys(SHORTCUTS)) {
@@ -403,10 +392,18 @@ export default class Windows extends React.Component {
     }
 
     return (
-      <app onBeforeQuit={() => console.log('hi')}>
-        <Menu
+      <app
+        onBeforeQuit={() => console.log('hi')}
+        ref={ref => {
+          this.appRef = ref
+        }}
+      >
+        <MenuItems
           onPreferences={() => {
             this.setState({ showSettings: true })
+          }}
+          getRef={ref => {
+            this.menuRef = ref
           }}
         />
 

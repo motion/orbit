@@ -212,7 +212,7 @@ export default class OraStore {
 
   _watchToggleHide() {
     OS.send('start-ora')
-    this.on(OS, 'ora-show', () => {
+    this.on(OS, 'ora-toggle', () => {
       this.hidden = !this.hidden
     })
   }

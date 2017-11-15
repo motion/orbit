@@ -156,7 +156,7 @@ export default class OraStore {
     esc: e => {
       if (this.search === '') {
         e.preventDefault()
-        OS.send('bar-hide')
+        OS.send('ora-hide')
       }
     },
     cmdA: () => {

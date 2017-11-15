@@ -4,7 +4,7 @@ import * as Syncers from './syncers'
 import { Job, CurrentUser } from '~/app'
 import debug from 'debug'
 
-const log = debug('sync')
+const log = _ => _ || debug('sync')
 
 function getRxError(error: Error) {
   const { message, stack } = error
@@ -29,6 +29,9 @@ export default class Sync {
     this.watchJobs()
     this.startSyncers()
     this.watch(() => {
+      if (this.enabled) {
+        return
+      }
       const title = this.enabled
         ? 'SYNC ENABLED ✅ (disable: App.sync.disable())'
         : 'SYNC DISABLED (enable: App.sync.enable())'

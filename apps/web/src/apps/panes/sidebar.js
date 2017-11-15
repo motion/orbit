@@ -71,11 +71,17 @@ class SidebarContainer {
 
     willMount() {
       this.items = [...this.props.store.stack.items]
+      this.version = this.props.store.stack.version
 
       // watch for update/load
       this.watch(() => {
         const { stack } = this.props.store
         if (!stack) {
+          return
+        }
+        const isGoingBack = stack.items.length < this.items.length
+        if (isGoingBack) {
+          this.loadNext()
           return
         }
         if (this.version !== stack.version) {
@@ -95,13 +101,13 @@ class SidebarContainer {
           this.nextStack.last.store &&
           this.nextStack.last.store.finishedLoading
         ) {
-          this.onLoadedNext()
+          this.loadNext()
         }
       })
     }
 
-    onLoadedNext = () => {
-      this.items = [...this.nextStack.items]
+    loadNext = () => {
+      this.items = [...this.stack.items]
       this.version = this.props.store.stack.version
       this.nextStack = null
     }
@@ -110,7 +116,6 @@ class SidebarContainer {
 export default class Sidebar {
   static defaultProps = {
     width: ORA_WIDTH,
-    sidebars: Sidebars,
     itemProps: {
       size: 1.14,
       glow: true,
@@ -120,24 +125,18 @@ export default class Sidebar {
     },
   }
 
-  render({ width, itemProps, sidebars, store, cacheStore, ...props }) {
+  render({ width, itemProps, store, cacheStore, ...props }) {
     const { stack } = store
     const { stackItems, isLoadingNext } = cacheStore
     if (!stackItems) {
       return null
     }
-    // console.log('stackItems', stackItems)
     const currentIndex = stackItems.length - (isLoadingNext ? 2 : 1)
-    if (isLoadingNext) {
-      log(
-        isLoadingNext,
-        'index',
-        currentIndex,
-        'length',
-        stackItems.length,
-        `${stackItems.map(i => i.result.id)}`
-      )
-    }
+    // if (isLoadingNext) {
+    //   log('loadnext')
+    //   log(isLoadingNext, currentIndex, `${stackItems.map(i => i.result.id)}`)
+    // }
+    // console.log('render', currentIndex, 'stackItems', stackItems)
     return (
       <sidebar css={{ width, maxWidth: width, flex: 1 }}>
         {stackItems.map((stackItem, index) => {
@@ -148,7 +147,7 @@ export default class Sidebar {
           if (!stackItem.result) {
             return <null>bad result</null>
           }
-          const Sidebar = sidebars[stackItem.result.type]
+          const Sidebar = Sidebars[stackItem.result.type]
           if (!Sidebar) {
             return <null>not found Sidebar {stackItem.result.type}</null>
           }

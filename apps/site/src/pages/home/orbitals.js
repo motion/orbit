@@ -131,9 +131,9 @@ export default ({
             }}
           />
         </contain>
-        {items.map((n, i) => {
+        {items.map((item, i) => {
           let col = i % rings
-          if (hideRings[col]) {
+          if (!item || hideRings[col]) {
             return null
           }
           const scale = Math.min(1, (col + 1.5) / rings)
@@ -154,7 +154,7 @@ export default ({
                 }}
               >
                 <img
-                  src={`/logos/${n}.svg`}
+                  src={`/logos/${item}.svg`}
                   css={{
                     width: planetSize * 0.5 * scale,
                     height: planetSize * 0.5 * scale,

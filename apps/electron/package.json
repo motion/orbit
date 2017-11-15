@@ -17,7 +17,7 @@
     "deploy":
       "npm run sign-app && npm run bundle-app && npm run prepare-publish && npm run publish-app",
     "bundle":
-      "DEBUG=electron-packager electron-packager . --out app --overwrite --icon ./resources/icon.icns --prune && npm run fix-build",
+      "DEBUG=* . --out app --overwrite --icon ./resources/icon.icns --prune && npm run fix-build",
     "start": "electron build/out --start",
     "start-prod": "app/Orbit-darwin-x64/Orbit.app/Contents/MacOS/Orbit",
     "watch": "webpack --watch",
@@ -46,6 +46,8 @@
     "@mcro/api": "^1.5.1",
     "@mcro/builder": "^1.5.1",
     "@mcro/ionize": "^1.5.1",
+    "@mcro/crawler": "*",
+    "@mcro/r2": "*",
     "osx-mouse": "^1.2.1",
     "node-loader": "^0.6.0",
     "raf": "^3.4.0",
@@ -59,7 +61,10 @@
     "lodash": "^4.17.4",
     "mobx": "^3.3.1",
     "opn": "^5.1.0",
+    "isomorphic-fetch": "^2.2.1",
     "node-osascript": "2.0.0",
+    "sb-promisify": "^2.0.2",
+    "escape-string-applescript": "^2.0.0",
     "react": "16.0.0-alpha.5",
     "react-dom": "16.0.0-alpha.5"
   },

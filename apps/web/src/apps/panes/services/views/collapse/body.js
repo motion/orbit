@@ -1,5 +1,5 @@
+import * as React from 'react'
 import { view } from '@mcro/black'
-import * as UI from '@mcro/ui'
 import Measure from 'react-measure'
 
 @view({
@@ -7,8 +7,9 @@ import Measure from 'react-measure'
     height = null
   },
 })
-export default class CollapseBody {
+export default class CollapseBody extends React.Component {
   render({ open, store, children }) {
+    console.log('this is', this)
     return (
       <container css={{ height: open ? store.height : 0 }}>
         <Measure

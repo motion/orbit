@@ -1,38 +1,79 @@
 import * as React from 'react'
+import * as UI from '@mcro/ui'
 import SidebarTitle from './sidebarTitle2'
 
 export default {
   0: [
     {
+      children: <SidebarTitle title="👋, I'm Orbit" noBack />,
+      glow: false,
+    },
+    {
+      //primary: `I unify your cloud services`,
+      children: (
+        <children>
+          <UI.Text size={1.3} opacity={0.5} marginTop={0}>
+            I live on your desktop, unify your cloud services & provide insight
+            as you work.
+          </UI.Text>
+          <br />
+          <br />
+          <UI.Text size={1.3} opacity={0.5} marginTop={0}>
+            Scroll down to see me in action.
+          </UI.Text>
+        </children>
+      ),
+    },
+  ],
+  'example-1': [
+    {
+      children: (
+        <SidebarTitle title="Slack with @nick" icon="social-slack" noBack />
+      ),
+      glow: false,
+    },
+    {
+      category: 'Results',
+      primary: 'Product Page Add to Cart Bug',
+      icon: 'issue',
+      children: `We noticed if you hold down for more than 300ms on the button, it won't always
+      add to cart, but it will...`,
+    },
+  ],
+
+  'example-2': [
+    {
+      children: (
+        <SidebarTitle title={`1on1 on Fossa Sales`} icon="mail" noBack />
+      ),
+      glow: false,
+    },
+    {
+      category: 'Results',
+      primary: 'Fossa Sales',
+      date: Date.now() - 10000,
+      icon: 'google',
+      children: `...we ended up coming just short of our Q4 goals, which we had set aggresively...`,
+    },
+  ],
+
+  'example-3': [
+    {
       children: (
         <SidebarTitle
-          title="A smart assistant for your company"
-          subtitle="Orbit is a simple, always on app that provides relevant"
-          icon="globe"
+          title={`Event: Product Page Planning 12/17`}
+          icon="calendar"
           noBack
         />
       ),
+      glow: false,
     },
     {
-      primary: 'Unified',
-      children:
-        'All your company knowledge, at your fingertips when you need it most.',
-      icon: 'hand',
       category: 'Results',
-    },
-    {
-      primary: 'Powerful',
-      children:
-        'Advanced machine learning combined with an innovative interface makes your life easy.',
-      icon: 'car',
-      category: 'Results',
-    },
-    {
-      primary: 'Secure',
-      children:
-        'Orbit works without leaking any of your data, even to our servers.',
-      icon: 'lock',
-      category: 'Results',
+      primary: 'Plans for December',
+      date: Date.now() - 1000,
+      icon: 'dropbox',
+      children: `...we ended up coming just short of our Q4 goals, which we had set aggresively...`,
     },
   ],
   1: [

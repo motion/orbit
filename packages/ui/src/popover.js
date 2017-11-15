@@ -149,7 +149,9 @@ class Popover extends React.PureComponent<Props> {
     }
     if (closeOnEsc) {
       this.on(window, 'keyup', e => {
-        if (e.keyCode === 27) {
+        if (e.keyCode === 27 && this.showPopover) {
+          e.preventDefault()
+          e.stopPropagation()
           this.close()
         }
       })
@@ -813,13 +815,13 @@ class Popover extends React.PureComponent<Props> {
       flex: 1,
     },
     open: {
-      zIndex: 100000,
+      zIndex: Number.MAX_SAFE_INTEGER,
       '& > *': {
         pointerEvents: 'all !important',
       },
     },
     closing: {
-      zIndex: 100000 - 1,
+      zIndex: Number.MAX_SAFE_INTEGER - 1,
     },
     background: {
       position: 'absolute',

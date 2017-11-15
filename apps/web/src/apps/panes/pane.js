@@ -159,17 +159,16 @@ export default class Pane {
         </content>
         <actions if={actions}>
           <actionbar>
-            <UI.Row
-              spaced={10}
-              itemProps={{
-                glow: true,
-              }}
-            >
+            <UI.Row spaced itemProps={{ glow: true }}>
               {actions
                 .filter(Boolean)
                 .map(
                   ({ content, ...props }, index) =>
-                    content || <UI.Button key={index} {...props} />
+                    content ? (
+                      <span key={index}>{content}</span>
+                    ) : (
+                      <UI.Button key={index} {...props} />
+                    )
                 )}
             </UI.Row>
           </actionbar>

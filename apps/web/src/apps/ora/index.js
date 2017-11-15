@@ -7,6 +7,12 @@ import * as Sidebars from '../panes/sidebars'
 import OraHeader from './oraHeader'
 import * as Constants from '~/constants'
 
+const prevent = e => {
+  console.log('preventing')
+  e.preventDefault()
+  e.stopPropagation()
+}
+
 @view.provide({
   oraStore: OraStore,
 })
@@ -20,6 +26,15 @@ export default class OraPage {
           ref={oraStore.ref('barRef').set}
           $$draggable
         >
+          <overlay
+            if={!oraStore.focused}
+            $$fullscreen
+            css={{
+              zIndex: 100000000000,
+            }}
+            onMouseDown={prevent}
+            onClick={prevent}
+          />
           <UI.Theme name="clear-dark">
             <OraHeader oraStore={oraStore} />
           </UI.Theme>
@@ -30,11 +45,11 @@ export default class OraPage {
               oraStore={oraStore}
               sidebars={Sidebars}
               itemProps={{
-                size: 1,
+                size: 1.1,
                 padding: [6, 12],
                 glow: true,
                 highlightBackground: [255, 255, 255, 0.08],
-                childrenEllipse: 3,
+                childrenEllipse: 2,
               }}
             />
           </content>
@@ -47,8 +62,12 @@ export default class OraPage {
     ora: {
       width: Constants.ORA_WIDTH,
       height: Constants.ORA_HEIGHT,
-      background: [20, 20, 20, 0.98],
-      boxShadow: [[0, 0, 10, [0, 0, 0, 0.4]]],
+      background: [25, 25, 25, 0.98],
+      border: [1, [255, 255, 255, 0.1]],
+      boxShadow: [
+        [0, 0, 15, [0, 0, 0, 0.9]],
+        ['inset', 0, 0, 120, [255, 255, 255, 0.053]],
+      ],
       margin: 10,
       borderRadius: 10,
       overflow: 'hidden',

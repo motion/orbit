@@ -3,7 +3,7 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import $ from 'color'
 import offset from '~/helpers/offset'
-import { throttle } from 'lodash-decorators'
+import throttle from 'raf-throttle'
 import type { Color } from 'gloss'
 
 type Props = {
@@ -81,15 +81,14 @@ class HoverGlow extends React.PureComponent<Props, State> {
     if (node) {
       this.node = node
       this.setBounds()
-      this.on(node, 'mouseenter', () => {
-        this.trackMouse(true)
-      })
-      this.on(node, 'mousemove', event => {
-        this.move(event)
-      })
-      this.on(node, 'mouseleave', () => {
-        this.trackMouse(false)
-      })
+
+      const trackMouseTrue = throttle(() => this.trackMouse(true))
+      const trackMouseFalse = throttle(() => this.trackMouse(false))
+      const move = throttle(this.move.bind(this))
+
+      this.on(node, 'mouseenter', trackMouseTrue)
+      this.on(node, 'mousemove', move)
+      this.on(node, 'mouseleave', trackMouseFalse)
       // Resize.listenTo(node, this.setBounds)
 
       if (this.props.clickable) {
@@ -117,7 +116,6 @@ class HoverGlow extends React.PureComponent<Props, State> {
   }
 
   // offset gives us offset without scroll, just based on parent
-  @throttle(14)
   move(e) {
     const [x, y] = offset(e, this.node)
     if (this.unmounted || !this.bounds) {
@@ -140,7 +138,6 @@ class HoverGlow extends React.PureComponent<Props, State> {
     })
   }
 
-  @throttle(20)
   trackMouse(track) {
     if (this.unmounted) {
       return

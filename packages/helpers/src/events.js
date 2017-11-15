@@ -11,9 +11,11 @@ function _on(element: HTMLElement, cb: Function, bind: boolean): Function {
   return e
 }
 
-const originalSetTimeout =
+const ogSetTimeout =
   typeof window !== 'undefined' ? window.setTimeout : global.setTimeout
-const originalSetInterval =
+const ogSetInterval =
+  typeof window !== 'undefined' ? window.setInterval : global.setInterval
+const ogRequestAnimationFrame =
   typeof window !== 'undefined' ? window.setInterval : global.setInterval
 
 function _setTimeout(givenCallback: Function, duration: number): number {
@@ -22,7 +24,7 @@ function _setTimeout(givenCallback: Function, duration: number): number {
     if (subscription) subscription.dispose()
     givenCallback.call(this)
   }
-  const timeoutId = originalSetTimeout(callback, duration)
+  const timeoutId = ogSetTimeout(callback, duration)
   subscription = this.subscriptions.add(() => {
     clearTimeout(timeoutId)
   })
@@ -30,11 +32,22 @@ function _setTimeout(givenCallback: Function, duration: number): number {
 }
 
 function _setInterval(givenCallback: Function, duration: number): number {
-  const intervalId = originalSetInterval(givenCallback, duration)
+  const intervalId = ogSetInterval(givenCallback, duration)
   this.subscriptions.add(() => {
     clearInterval(intervalId)
   })
   return intervalId
+}
+
+function _requestAnimationFrame(
+  givenCallback: Function,
+  duration: number
+): number {
+  const id = ogRequestAnimationFrame(givenCallback, duration)
+  this.subscriptions.add(() => {
+    clearInterval(id)
+  })
+  return id
 }
 
 // adds this.subscriptions to a class at call-time
@@ -53,6 +66,7 @@ function patchSubscribers(fn) {
   }
 }
 
+export const requestAnimationFrame = patchSubscribers(_requestAnimationFrame)
 export const setTimeout = patchSubscribers(_setTimeout)
 export const setInterval = patchSubscribers(_setInterval)
 export const on = patchSubscribers(_on)

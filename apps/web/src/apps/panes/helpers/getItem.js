@@ -2,7 +2,6 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
 import type { PaneResult } from '~/types'
-import FeedItem from '../feed/feedItem'
 
 const hasContent = (result: PaneResult) =>
   result && result.data && result.data.body
@@ -60,16 +59,19 @@ function getChildren(result) {
 
 export default function getItem(getActiveIndex) {
   return (result, index) => ({
-    key: `${index}${result.id}`,
+    key: `${index}${result.id}${result.title}${result.category}`,
     highlight: () => index === getActiveIndex(),
     primary:
       typeof result.displayTitle !== 'undefined'
         ? result.displayTitle || null
         : result.display ? null : result.title,
     primaryEllipse: !hasContent(result),
+    primaryProps: {
+      fontWeight: 500,
+    },
     secondary: result.subtitle,
     children: getChildren(result),
-    iconAfter: result.iconAfter !== false,
+    iconAfter: result.iconAfter,
     icon: getIcon(result),
     date: result.date,
     after: result.after,

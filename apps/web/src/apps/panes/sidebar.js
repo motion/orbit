@@ -49,42 +49,61 @@ class SidebarContainer {
   // this is so we can animate after results are there
   // and prevents lots of flickering as you move around
   cacheStore: class SidebarCacheStore {
-    nextItems = null
-    items = this.props.store.stack.items
+    items = null
+    nextStack = null
     version = 0
 
-    get stackItems() {
-      return this.nextItems || this.items
+    get stack() {
+      return this.nextStack || this.props.store.stack
     }
 
-    get showingNext() {
-      return !!this.nextItems
+    get stackItems() {
+      if (this.nextStack) {
+        const toLoad = this.nextStack.last
+        return [...this.items, toLoad]
+      }
+      return this.items
+    }
+
+    get isLoadingNext() {
+      return !!this.nextStack
     }
 
     willMount() {
-      // watch for update
+      this.items = [...this.props.store.stack.items]
+
+      // watch for update/load
       this.watch(() => {
         const { stack } = this.props.store
-        // log('checking out for shit yea', this.version, stack.version)
-        if (stack && this.version !== stack.version) {
-          this.nextItems = stack.items
-          // log('next id:', stack.last.result.id)
+        if (!stack) {
+          return
+        }
+        if (this.version !== stack.version) {
+          if (!this.nextStack) {
+            this.nextStack = stack
+          }
         }
       })
-      // watch for load
+
       this.watch(() => {
         const { stack } = this.props.store
-        if (this.nextItems && stack.last.results && stack.last.results.length) {
-          // log('LOADED NEXT', stack.last.result.id)
+        if (this.version === stack.version) {
+          return
+        }
+        if (
+          this.nextStack &&
+          this.nextStack.last.store &&
+          this.nextStack.last.store.finishedLoading
+        ) {
           this.onLoadedNext()
         }
       })
     }
 
-    onLoadedNext() {
+    onLoadedNext = () => {
+      this.items = [...this.nextStack.items]
       this.version = this.props.store.stack.version
-      this.items = this.nextItems
-      this.nextItems = null
+      this.nextStack = null
     }
   },
 })
@@ -103,9 +122,22 @@ export default class Sidebar {
 
   render({ width, itemProps, sidebars, store, cacheStore, ...props }) {
     const { stack } = store
-    const { stackItems, showingNext } = cacheStore
-    const currentIndex = stackItems.length - (showingNext ? 2 : 1)
-    // log('render', showingNext, currentIndex)
+    const { stackItems, isLoadingNext } = cacheStore
+    if (!stackItems) {
+      return null
+    }
+    // console.log('stackItems', stackItems)
+    const currentIndex = stackItems.length - (isLoadingNext ? 2 : 1)
+    if (isLoadingNext) {
+      log(
+        isLoadingNext,
+        'index',
+        currentIndex,
+        'length',
+        stackItems.length,
+        `${stackItems.map(i => i.result.id)}`
+      )
+    }
     return (
       <sidebar css={{ width, maxWidth: width, flex: 1 }}>
         {stackItems.map((stackItem, index) => {
@@ -120,9 +152,10 @@ export default class Sidebar {
           if (!Sidebar) {
             return <null>not found Sidebar {stackItem.result.type}</null>
           }
+          const key = stackItem.result.id || stackItem.result.title || index
           return (
             <Fade
-              key={stackItem.result.title}
+              key={key}
               width={width}
               index={index}
               currentIndex={currentIndex}
@@ -136,11 +169,11 @@ export default class Sidebar {
                 sidebarStore={Sidebar}
                 paneProps={{
                   index,
+                  stack,
                   width,
                   getActiveIndex: () =>
                     stackItem.col === 0 && stackItem.firstIndex,
                   groupBy: 'category',
-                  stack: stack,
                   sidebar: true,
                   onSelect: stackItem.onSelect,
                   itemProps,

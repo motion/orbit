@@ -11,8 +11,6 @@ export const IS_PROD =
   (process.env.NODE_ENV === 'production' || process.env.IS_PROD) &&
   !process.env.LOCAL_PROD
 
-console.log('IS_PROD', IS_PROD)
-
 export const PUBLIC_URL = IS_PROD
   ? 'http://seemirai.com'
   : 'http://localhost:3002'

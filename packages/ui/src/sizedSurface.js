@@ -3,7 +3,6 @@ import * as React from 'react'
 import Surface from './surface'
 
 const LINE_HEIGHT = 30
-const num = x => (x === true ? 1 : x || 1)
 
 type Props = {
   size: number,
@@ -21,10 +20,12 @@ export default function SizedSurface(props: Props) {
     sizeFont,
     sizePadding,
     sizeRadius,
+    sizeIcon,
     ...rest
   } = props
 
-  const size = num(props.size)
+  const size = props.size === true ? 1 : props.size || 1
+  const num = x => (x === true ? size : x * size)
 
   // sizes
   let height = sizeHeight
@@ -59,6 +60,10 @@ export default function SizedSurface(props: Props) {
   if (sizeRadius) {
     const radius = (sizeRadius && num(sizeRadius) * 8) || 0
     pass.borderRadius = radius
+  }
+  if (sizeIcon) {
+    const iconSize = (sizeIcon && num(sizeIcon)) || 1
+    pass.sizeIcon = iconSize
   }
 
   return <Surface {...pass} {...rest} />

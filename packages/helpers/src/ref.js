@@ -46,6 +46,7 @@ export default function ref(path: CursorPath): Cursor {
   const key = firstSegment(path)
 
   const get = () => {
+    console.log('GETTT', key)
     this[key] // trigger mobx watch
     return objectPath.get(this, path)
   }

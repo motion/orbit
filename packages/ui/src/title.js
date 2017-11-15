@@ -1,9 +1,7 @@
 // @flow
 import * as React from 'react'
 import { view } from '@mcro/black'
-import Button from './button'
 import type { Color } from '@mcro/gloss'
-import $ from 'color'
 import Text from './text'
 
 export type Props = {
@@ -29,7 +27,7 @@ export default class Title extends React.PureComponent<Props> {
     fontWeight: 200,
   }
 
-  render({ getRef, stat, size, children, tagName, ...props }: Props) {
+  render({ stat, size, children, tagName, ...props }: Props) {
     return (
       <Text
         $title
@@ -37,7 +35,6 @@ export default class Title extends React.PureComponent<Props> {
         {...{ [`\$size${Math.floor(size * 1.8)}`]: true }}
         tagName={tagName}
         size={size}
-        ref={getRef}
         {...props}
       >
         {children}
@@ -48,7 +45,6 @@ export default class Title extends React.PureComponent<Props> {
 
   static style = {
     size1: {
-      textTransform: 'uppercase',
       fontWeight: 200,
     },
     stat: {

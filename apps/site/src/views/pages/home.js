@@ -3,49 +3,160 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import * as View from '~/views'
 import * as Constants from '~/constants'
-import { throttle } from 'lodash'
 import Ora from './home/ora'
 import HomeHeader from './home/header'
 import HomeHandsFree from './home/sectionHandsFree'
 import HomeSecurity from './home/sectionSecurity'
 import HomeChat from './home/sectionChat'
+import HomeExamples from './home/sectionExamples'
+import HomeIntegrations from './home/sectionIntegrations'
 
 let blurredRef
 
+@view.provide({
+  homeStore: class HomeStore {
+    bounds = {}
+    ready = false
+    show = false
+    pageNode = document.body.parentNode
+    activeKey = 0
+    scrollPosition = 0
+
+    willMount() {
+      window.homeStore = this
+      this.watchScroll()
+      this.setTimeout(() => {
+        this.ready = true
+      }, 100)
+    }
+
+    willUnmount() {
+      this.unmounted = true
+    }
+
+    watchScroll = () => {
+      const { pageNode } = this
+      const { scrollTop } = pageNode
+      if (scrollTop !== this.scrollPosition) {
+        // hide ora in header
+        if (scrollTop > Constants.ORA_TOP - Constants.ORA_TOP_PAD) {
+          if (!this.show) {
+            this.show = true
+          }
+          const key = this.getActiveKey(scrollTop)
+          if (key !== this.activeKey) {
+            this.activeKey = key
+          }
+        } else {
+          if (this.show) {
+            this.show = false
+            this.activeKey = 0
+          }
+        }
+
+        if (blurredRef) {
+          const scrollTo = this.show ? scrollTop : 0
+          blurredRef.style.transform = `translateY(-${scrollTo}px)`
+        }
+        this.scrollPosition = scrollTop
+      }
+      if (!this.unmounted) {
+        requestAnimationFrame(this.watchScroll)
+      }
+    }
+
+    getActiveKey(scrollTop) {
+      const bottom = window.innerHeight + scrollTop
+      for (const key of Object.keys(this.bounds).reverse()) {
+        const bound = this.bounds[key]
+        if (!bound) {
+          continue
+        }
+        const extraDistance = window.innerHeight / (100 / bound.percentFromTop)
+        if (bound.top + extraDistance < bottom) {
+          return key
+        }
+      }
+      return 0
+    }
+
+    get activeBounds() {
+      return this.bounds[this.activeKey]
+    }
+
+    setSection = (key, options = { percentFromTop: 50 }) => {
+      return node => {
+        if (node) {
+          const { top, bottom } = node.getBoundingClientRect()
+          this.bounds = {
+            ...this.bounds,
+            [key]: {
+              ...options,
+              top,
+              bottom,
+            },
+          }
+        }
+      }
+    }
+  },
+})
 @view
 export default class HomePage extends React.Component {
-  bounds = []
-  state = {
-    ready: false,
-  }
-
-  componentDidMount() {
-    this.setState({ ready: true })
+  render({ homeStore, blurred, isSmall }) {
+    const styles = this.getStyle()
+    const sectionProps = {
+      isSmall,
+      blurred,
+      homeStore,
+      setSection: homeStore.setSection,
+    }
+    return (
+      <page css={styles.page} ref={x => this.setRef(x)}>
+        <Ora
+          if={!blurred && homeStore.ready && !isSmall}
+          homeStore={homeStore}
+        />
+        <contents css={{ overflow: 'hidden' }}>
+          <HomeHeader />
+          <HomeExamples {...sectionProps} />
+          <HomeIntegrations if={false} {...sectionProps} />
+          <HomeChat {...sectionProps} />
+          <HomeSecurity {...sectionProps} />
+          <HomeHandsFree if={false} {...sectionProps} />
+          <UI.Theme name="dark">
+            <footer>
+              <View.Section space padded>
+                <View.SectionContent>
+                  <content $$row>
+                    <column
+                      css={{ height: 200, justifyContent: 'space-between' }}
+                    >
+                      <View.Title>Orbit</View.Title>
+                      <View.Link>About us</View.Link>
+                      <View.Link>Follow us</View.Link>
+                      <View.Link>Press kit</View.Link>
+                    </column>
+                  </content>
+                </View.SectionContent>
+              </View.Section>
+            </footer>
+          </UI.Theme>
+        </contents>
+      </page>
+    )
   }
 
   setRef(node) {
+    if (this.node) {
+      return
+    }
     this.node = node
     if (!node) {
       return
     }
     if (this.props.blurred) {
       blurredRef = node.childNodes[0]
-    } else {
-      this.on(
-        this.node,
-        'scroll',
-        throttle(() => {
-          blurredRef.style.transform = `translateY(-${this.node.scrollTop}px)`
-        }, 16)
-      )
-    }
-  }
-
-  setSection = index => {
-    return node => {
-      if (node) {
-        this.bounds[index] = node.getBoundingClientRect()
-      }
     }
   }
 
@@ -53,82 +164,34 @@ export default class HomePage extends React.Component {
     if (!this.props.blurred) {
       return {
         page: {
-          height: window.innerHeight,
-          overflowY: 'scroll',
+          // height: window.innerHeight,
+          // overflowY: 'scroll',
         },
       }
     }
-    const pad = 20
+    const show = this.props.homeStore.show
+    const topPad = show ? Constants.ORA_TOP_PAD : Constants.ORA_TOP
+    const radius = Constants.ORA_BORDER_RADIUS / 2
     const height = Constants.ORA_HEIGHT
-    const bottom = height + pad
-    const right = window.innerWidth - pad - Constants.ORA_BORDER_RADIUS
-    const left =
-      window.innerWidth -
-      Constants.ORA_WIDTH -
-      pad +
-      Constants.ORA_BORDER_RADIUS
+    const rightEdge = window.innerWidth / 2 + Constants.ORA_LEFT_PAD + 150
+    const bottom = height + topPad - radius
+    const right = rightEdge - radius + 2
+    const left = rightEdge - Constants.ORA_WIDTH + radius - 2
     return {
       page: {
+        willChange: 'transform',
         background: '#fff',
         pointerEvents: 'none',
-        position: 'fixed',
+        position: show ? 'fixed' : 'absolute',
         top: 0,
         left: 0,
         right: 0,
         zIndex: 1000,
-        // rounded:
-        // polygon(5% 0, 95% 0, 100% 4%, 100% 95%, 95% 100%, 5% 100%, 0 95%, 0 5%)
-        clip: `rect(${pad}px, ${right}px, ${bottom}px, ${left}px)`,
-        // clipPath: `url(/ora.svg#clip)`,
+        // transition: 'opacity ease-in 400ms',
+        // opacity:  ? 1 : 0,
+        clip: `rect(${topPad + radius}px, ${right}px, ${bottom}px, ${left}px)`,
       },
     }
-  }
-
-  render({ blurred, isSmall }) {
-    const styles = this.getStyle()
-    const sectionProps = {
-      setSection: this.setSection,
-      ...this.props,
-    }
-    return (
-      <page css={styles.page} ref={x => this.setRef(x)}>
-        <Ora
-          if={!blurred && this.state.ready && !isSmall}
-          bounds={this.bounds}
-          node={this.node}
-          key={this.state.lastIntersection}
-          showIndex={this.state.lastIntersection}
-        />
-
-        <contents css={{ overflow: 'hidden' }}>
-          <HomeHeader />
-
-          <View.Section space css={{ height: 500 }}>
-            <UI.Icon name="social-slack" size={100} />
-          </View.Section>
-
-          <HomeChat {...sectionProps} />
-          <HomeHandsFree {...sectionProps} />
-          <HomeSecurity {...sectionProps} />
-
-          <footer>
-            <View.Section css={{ padding: [250, 0] }} $$centered padded>
-              <View.SectionContent>
-                <View.Text size={3}>
-                  Orbit is going into private beta in December.
-                </View.Text>
-                <View.Text size={2}>
-                  <View.Link href="mailto:natewienert@gmail.com">
-                    Send us an email
-                  </View.Link>{' '}
-                  if you're interested.
-                </View.Text>
-              </View.SectionContent>
-            </View.Section>
-          </footer>
-        </contents>
-      </page>
-    )
   }
 
   static theme = ({ blurred }) => {
@@ -137,15 +200,35 @@ export default class HomePage extends React.Component {
     }
     return {
       contents: {
-        filter: 'blur(25px)',
+        filter: 'blur(20px)',
       },
     }
   }
 
   static style = {
-    contents: {
-      transform: {
-        z: 0,
+    contents: {},
+    '@keyframes orbital0': {
+      from: {
+        transform: 'rotate(0deg) translateX(150px) rotate(0deg)',
+      },
+      to: {
+        transform: 'rotate(360deg) translateX(150px) rotate(-360deg)',
+      },
+    },
+    '@keyframes orbital1': {
+      from: {
+        transform: 'rotate(0deg) translateX(300px) rotate(0deg)',
+      },
+      to: {
+        transform: 'rotate(360deg) translateX(300px) rotate(-360deg)',
+      },
+    },
+    '@keyframes orbital2': {
+      from: {
+        transform: 'rotate(0deg) translateX(450px) rotate(0deg)',
+      },
+      to: {
+        transform: 'rotate(360deg) translateX(450px) rotate(-360deg)',
       },
     },
   }

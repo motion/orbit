@@ -3,12 +3,14 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import Router from '~/router'
 import NotFound from '~/views/pages/404'
-import Header from '~/views/header'
 import * as UI from '@mcro/ui'
 import { debounce } from 'lodash'
+import * as Constants from '~/constants'
 
 @view
 export default class Root extends React.Component {
+  lastWidth = window.innerWidth
+
   state = {
     resizeVersion: 0,
   }
@@ -18,20 +20,21 @@ export default class Root extends React.Component {
       window,
       'resize',
       debounce(() => {
-        this.setState({ resizeVersion: ++this.state.resizeVersion })
+        if (window.innerWidth !== this.lastWidth) {
+          this.setState({ resizeVersion: ++this.state.resizeVersion })
+        }
       }),
-      100
+      300
     )
   }
 
   render() {
     const CurrentPage = Router.activeView || NotFound
     const width = window.innerWidth
-    const isSmall = width < 800
+    const isSmall = width < Constants.smallSize
     return (
       <UI.Theme name="light">
         <layout>
-          <Header />
           <content>
             <CurrentPage
               width={width}
@@ -52,10 +55,10 @@ export default class Root extends React.Component {
   }
 
   static style = {
-    layout: {
-      width: '100%',
-      maxWidth: '100%',
-      overflow: 'hidden',
-    },
+    // layout: {
+    //   width: '100%',
+    //   maxWidth: '100%',
+    //   overflow: 'hidden',
+    // },
   }
 }

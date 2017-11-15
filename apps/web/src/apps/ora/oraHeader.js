@@ -6,7 +6,7 @@ import { CurrentUser } from '~/app'
 const BANNER_COLORS = {
   note: 'blue',
   success: 'green',
-  failure: 'red',
+  error: 'red',
 }
 
 @view({
@@ -22,7 +22,7 @@ export default class OraHeader extends React.Component {
   onHeaderMouseUp = () => {
     const { oraStore, store } = this.props
     if (Date.now() - store.downAt < 200) {
-      oraStore.focused = true
+      oraStore.focusedBar = true
       this.setTimeout(() => {
         oraStore.inputRef.focus()
       })
@@ -30,7 +30,7 @@ export default class OraHeader extends React.Component {
   }
 
   onHeaderBlur = () => {
-    this.props.oraStore.focused = false
+    this.props.oraStore.focusedBar = false
   }
 
   selectBucket = async item => {
@@ -78,7 +78,7 @@ export default class OraHeader extends React.Component {
 
     return (
       <header
-        $focus={oraStore.focused}
+        $focus={oraStore.focusedBar}
         onMouseDown={this.onHeaderMouseDown}
         onMouseUp={this.onHeaderMouseUp}
         $$draggable
@@ -86,7 +86,7 @@ export default class OraHeader extends React.Component {
         <UI.Icon $searchIcon size={12} name="zoom" color={[255, 255, 255, 1]} />
         <UI.Input
           $searchInput
-          $disabled={!oraStore.focused}
+          $disabled={!oraStore.focusedBar}
           size={1}
           getRef={oraStore.onInputRef}
           borderRadius={0}
@@ -105,10 +105,12 @@ export default class OraHeader extends React.Component {
         <title
           $$background={BANNER_COLORS[oraStore.banner && oraStore.banner.type]}
         >
-          <UI.Text size={0.8}>
-            {(oraStore.banner && oraStore.banner.message) ||
-              oraStore.stack.last.result.type}
-          </UI.Text>
+          <titleText>
+            <UI.Text ellipse size={0.8}>
+              {(oraStore.banner && oraStore.banner.message) ||
+                oraStore.stack.last.result.id}
+            </UI.Text>
+          </titleText>
         </title>
 
         <buttons
@@ -176,7 +178,7 @@ export default class OraHeader extends React.Component {
     },
     focus: {
       opacity: 1,
-      height: 'auto',
+      height: 40,
       '& .icon': {
         transform: 'scale(1)',
       },
@@ -199,6 +201,12 @@ export default class OraHeader extends React.Component {
       zIndex: 0,
       pointerEvents: 'none',
       userSelect: 'none',
+    },
+    titleText: {
+      position: 'absolute',
+      top: 6,
+      right: 62,
+      left: 38,
     },
     disabled: {
       pointerEvents: 'none',

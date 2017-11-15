@@ -9,8 +9,10 @@ class StackItemStore {
   result = null
   col = 0
   active = [0, 0]
+  id = null
   constructor({ result, stack, parent }) {
     this.result = result
+    this.id = this.result.id
     this.stack = stack
     this.parent = parent
   }

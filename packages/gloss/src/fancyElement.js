@@ -63,6 +63,13 @@ export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
           : children}`
       )
     }
+    if (!this) {
+      throw new Error(
+        `No this is set here! type: ${type}, props: ${props
+          ? Object.keys(props)
+          : ''}`
+      )
+    }
 
     let { glossUID } = this.constructor
     if (props && props.glossUID) {

@@ -1,15 +1,22 @@
+import * as r2 from '@mcro/r2'
 import React from 'react'
 import { app, globalShortcut, ipcMain, screen } from 'electron'
 import repl from 'repl'
 import applescript from 'node-osascript'
+import promisify from 'sb-promisify'
 import open from 'opn'
 import { measure } from '~/helpers'
 import * as Constants from '~/constants'
 import WindowsStore from './windowsStore'
 import Window from './window'
 import mouse from 'osx-mouse'
-import { throttle } from 'lodash'
+import { throttle, isEqual, once } from 'lodash'
 import Menu from './menu'
+import getCrawler from './getCrawler'
+import escapeStringApplescript from 'escape-string-applescript'
+
+const execute = promisify(applescript.execute)
+const sleep = ms => new Promise(res => setTimeout(res, ms))
 
 let onWindows = []
 export function onWindow(cb) {
@@ -22,6 +29,12 @@ const AppWindows = new WindowsStore()
 const ORA_WIDTH = 320
 
 export default class Windows extends React.Component {
+  // this is an event bus that should be open
+  // whenever ora is open
+  sendOra = name => {
+    console.log('called this.sendOra before setup', name)
+  }
+
   subscriptions = []
   uid = Math.random()
   state = {
@@ -95,13 +108,19 @@ export default class Windows extends React.Component {
     this.initialSize = this.initialSize || this.size
   }
 
-  onTray = ref => {
+  onOra = ref => {
     if (ref) {
-      this.trayRef = ref
-      this.listenToApps()
-      this.registerShortcuts()
+      this.oraRef = ref
+      this.startOra()
     }
   }
+
+  startOra = once(() => {
+    // console.log('clear storage data!!!!!!!')
+    // this.oraRef.webContents.session.clearStorageData()
+    this.listenToApps()
+    this.registerShortcuts()
+  })
 
   onAppWindow = win => electron => {
     if (win && electron && !win.ref) {
@@ -111,27 +130,23 @@ export default class Windows extends React.Component {
 
   listenToApps = () => {
     this.on(ipcMain, 'start-ora', event => {
-      this.show = () => {
-        event.sender.send('show-ora')
-        this.trayRef.focus()
-      }
-      this.hide = () => {
-        console.log('hiding')
-        // return focus to last app
-        applescript.execute(
-          `
-tell application "System Events"
-  set activeApp to name of first application process whose frontmost is true
-  set activeApp2 to name of second application process whose frontmost is true
-end tell
-return {activeApp, activeApp2}
-        `,
-          (err, answer) => {
-            console.log('refocus', err, answer)
-          }
-        )
-        event.sender.send('hide-ora')
-      }
+      // setup our event bus
+      this.sendOra = (...args) => event.sender.send(...args)
+    })
+
+    this.on(ipcMain, 'inject-crawler', event => {
+      this.injectCrawler(info => {
+        event.sender.send('crawler-selection', info)
+      })
+    })
+
+    this.on(ipcMain, 'start-crawl', async (event, options) => {
+      this.continueChecking = false
+      const results = await r2.post('http://localhost:3001/crawler/start', {
+        json: { options },
+      }).json
+      console.log('got results', results)
+      event.sender.send('crawl-results', results)
     })
 
     this.on(ipcMain, 'navigate', (event, url) => {
@@ -177,63 +192,123 @@ return {activeApp, activeApp2}
     })
   }
 
-  getContext = throttle(event => {
-    applescript.execute(
-      `
-global frontApp, frontAppName, windowTitle
+  show = () => {
+    this.sendOra('ora-show')
+    this.oraRef.focus()
+  }
 
-set windowTitle to ""
-tell application "System Events"
-  set frontApp to first application process whose frontmost is true
-  set frontAppName to name of frontApp
-  tell process frontAppName
-    tell (1st window whose value of attribute "AXMain" is true)
-      set windowTitle to value of attribute "AXTitle"
-    end tell
-  end tell
-end tell
+  hide = () => {
+    console.log('hiding')
+    this.sendOra('ora-hide')
+    // return focus to last app
+    //         const res = await execute(
+    //           `
+    // tell application "System Events"
+    //   set activeApp to name of first application process whose frontmost is true
+    //   set activeApp2 to name of second application process whose frontmost is true
+    // end tell
+    // return {activeApp, activeApp2}
+    //         `,
+    //           (err, answer) => {
+    //             console.log('refocus', err, answer)
+    //           }
+    //         )
+  }
 
-return {frontAppName, windowTitle}
-        `,
-      (err, answer) => {
-        if (err) {
-          return console.error(err)
-        }
-        const [application, title] = answer
-
-        if (application === 'Google Chrome') {
-          applescript.execute(
-            `tell application "Google Chrome"
+  injectCrawler = async sendToOra => {
+    const js = await getCrawler()
+    await execute(`
+      tell application "Google Chrome"
         tell front window's active tab
-          set source to execute javascript "JSON.stringify({ url: document.location+'', title: document.title, body: document.body.innerText, selection: document.getSelection().toString() })"
+          set source to execute javascript "${escapeStringApplescript(js)}"
         end tell
-      end tell`,
-            (err, res) => {
-              if (err) {
-                return console.error(err)
-              }
-              try {
-                const result = JSON.parse(res)
-                event.sender.send(
-                  'set-context',
-                  JSON.stringify({
-                    title: result.title,
-                    body: result.body,
-                    url: result.url,
-                    selection: result.selection,
-                    application,
-                  })
-                )
-              } catch (err) {
-                console.log('error parsing json', err, res)
-              }
-            }
-          )
-        } else {
-          event.sender.send('set-context', null)
-        }
+      end tell
+    `)
+
+    this.continueChecking = true
+    let lastRes = null
+    this.checkCrawlerLoop(res => {
+      if (!isEqual(lastRes, res)) {
+        sendToOra(res)
+        lastRes = res
       }
-    )
+    })
+  }
+
+  checkCrawlerLoop = async cb => {
+    try {
+      cb(await this.checkCrawler())
+    } catch (err) {
+      this.continueChecking = false
+      console.log('error with crawl loop', err)
+    }
+    await sleep(500)
+    if (this.continueChecking) {
+      this.checkCrawlerLoop(cb)
+    }
+  }
+
+  checkCrawler = async () => {
+    const res = await execute(`
+      tell application "Google Chrome"
+        tell front window's active tab
+          set source to execute javascript "JSON.stringify(window.__oraCrawlerAnswer || {})"
+        end tell
+      end tell
+    `)
+    try {
+      const result = JSON.parse(res)
+      return result
+    } catch (err) {
+      console.log('error parsing result', err)
+      return null
+    }
+  }
+
+  getContext = throttle(async event => {
+    const [application, title] = await execute(`
+      global frontApp, frontAppName, windowTitle
+      set windowTitle to ""
+      tell application "System Events"
+        set frontApp to first application process whose frontmost is true
+        set frontAppName to name of frontApp
+        tell process frontAppName
+          tell (1st window whose value of attribute "AXMain" is true)
+            set windowTitle to value of attribute "AXTitle"
+          end tell
+        end tell
+      end tell
+      return {frontAppName, windowTitle}
+    `)
+
+    if (application === 'Google Chrome') {
+      const res = await execute(`
+        tell application "Google Chrome"
+          tell front window's active tab
+            set source to execute javascript "JSON.stringify({ url: document.location+'', title: document.title, body: document.body.innerText, selection: document.getSelection().toString() ? document.getSelection().toString() : document.getSelection().anchorNode.textContent  })"
+          end tell
+        end tell
+      `)
+
+      try {
+        const result = JSON.parse(res)
+        event.sender.send(
+          'set-context',
+          JSON.stringify({
+            title: result.title,
+            body: result.body,
+            currentText: result.currentText,
+            url: result.url,
+            selection: result.selection,
+            application,
+          })
+        )
+      } catch (err) {
+        console.log('error parsing json', err, res)
+      }
+    } else {
+      event.sender.send('set-context', null)
+    }
   }, 200)
 
   updateWindows = () => {
@@ -285,6 +360,14 @@ return {frontAppName, windowTitle}
   componentDidCatch(error) {
     console.error(error)
     this.setState({ error })
+  }
+
+  onOraBlur() {
+    this.sendOra('ora-blur')
+  }
+
+  onOraFocus() {
+    this.sendOra('ora-focus')
   }
 
   render() {
@@ -344,11 +427,11 @@ return {frontAppName, windowTitle}
             onMoved={position => this.setState({ position })}
             onMove={position => this.setState({ position })}
             onFocus={() => {
-              this.activeWindow = this.trayRef
+              this.activeWindow = this.oraRef
             }}
             onClose={() => {
               this.setState({ closeSettings: true })
-              this.setTimeout(() => {
+              setTimeout(() => {
                 // reopen invisible so its quick to open again
                 this.setState({ closeSettings: false, showSettings: false })
               }, 500)
@@ -358,7 +441,7 @@ return {frontAppName, windowTitle}
 
         <window
           {...appWindow}
-          ref={this.onTray}
+          ref={this.onOra}
           titleBarStyle="customButtonsOnHover"
           transparent
           show
@@ -369,6 +452,8 @@ return {frontAppName, windowTitle}
           position={this.state.trayPosition}
           onMoved={trayPosition => this.setState({ trayPosition })}
           onMove={trayPosition => this.setState({ trayPosition })}
+          onBlur={() => this.onOraBlur()}
+          onFocus={() => this.onOraFocus()}
         />
 
         {appWindows.map(win => {

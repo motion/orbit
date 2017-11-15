@@ -7,15 +7,18 @@ import keycode from 'keycode'
 import ContextStore from '~/context'
 import SHORTCUTS from './shortcuts'
 import { CurrentUser } from '~/app'
+import * as r2 from '@mcro/r2'
 
 const BANNERS = {
   note: 'note',
   success: 'success',
+  error: 'error',
 }
 
 const BANNER_TIMES = {
   note: 5000,
   success: 1500,
+  error: 5000,
 }
 
 export default class OraStore {
@@ -27,15 +30,17 @@ export default class OraStore {
   traps = {}
   lastKey = null
   hidden = false
-  focused = false
+  focused = true
+  focusedBar = false
   banner = null
 
+  // TODO move into currentuser
   get bucket() {
     if (!CurrentUser.user) {
-      return null
+      return 'Default'
     }
     const { activeBucket } = CurrentUser.user.settings
-    return (activeBucket && activeBucket !== 'Default' && activeBucket) || null
+    return activeBucket || 'Default'
   }
 
   @watch
@@ -46,10 +51,11 @@ export default class OraStore {
           .where('bucket')
           .eq(this.bucket)
 
-  @watch context = () => null // this.items && new ContextStore(this.items)
+  @watch context = () => this.items && new ContextStore(this.items)
 
   async willMount() {
     this.attachTrap('window', window)
+    this._watchFocus()
     this._watchFocusBar()
     this._watchInput()
     this._watchToggleHide()
@@ -83,8 +89,12 @@ export default class OraStore {
     const token = `e441c83aed447774532894d25d97c528`
     const { url } = this.osContext
     const toFetch = `https://api.diffbot.com/v3/article?token=${token}&url=${url}`
-    console.log('to fetch is', toFetch)
     const res = await fetch(toFetch).then(res => res.json())
+    if (res.error) {
+      this.setBanner(BANNERS.error, `Diffbot: ${res.error}`)
+      return
+    }
+    console.log('got res', res)
     const { text, title } = res.objects[0]
     const thing = await Thing.create({
       title,
@@ -103,7 +113,7 @@ export default class OraStore {
       OS.send('get-context')
     }, 500)
     // response
-    OS.on('set-context', (event, info) => {
+    this.on(OS, 'set-context', (event, info) => {
       const context = JSON.parse(info)
       if (!context) {
         if (this.stack.last.result.type === 'context') {
@@ -113,14 +123,18 @@ export default class OraStore {
         }
         return
       }
-      if (!context || (!context.url || !context.title)) {
+      if (!context || !context.url || !context.title) {
         log('no context or url/title', this.osContext)
         return
       }
 
       const updateContext = title => {
+        console.log('updating to ', title)
         this.osContext = context
         const nextStackItem = {
+          id: `${context.selection
+            ? context.selection + ' -- '
+            : ''}${context.url}`,
           title,
           type: 'context',
           icon:
@@ -134,17 +148,62 @@ export default class OraStore {
       }
 
       if (!this.osContext || this.osContext.title !== context.title) {
-        return updateContext(context.title)
+        return updateContext(context.currentText || context.title)
       }
+
       if (this.osContext.selection !== context.selection) {
         return updateContext(context.selection || context.title)
       }
     })
   }
 
+  _watchFocus() {
+    this.on(OS, 'ora-focus', () => {
+      // SET TIMEOUT HERE because electron is super quick
+      // and tells the app its focused BEFORE your click event happens
+      this.setTimeout(() => {
+        this.focused = true
+      })
+    })
+    this.on(OS, 'ora-blur', () => {
+      console.log('blur')
+      this.focused = false
+    })
+  }
+
+  startCrawl = async options => {
+    console.log('starting crawl', options)
+    const results = await r2.post('http://localhost:3001/crawler/start', {
+      json: { options },
+    }).json
+    console.log('crawl done', results)
+    let creating = []
+    if (results) {
+      for (const { url, contents } of results.results) {
+        console.log('creating a thing', url, contents)
+        creating.push(
+          Thing.create({
+            url,
+            title: contents.title,
+            body: contents.body,
+            integration: 'crawler',
+            type: 'website',
+            bucket: this.bucket || 'Default',
+          })
+        )
+      }
+    }
+    return await Promise.all(creating)
+  }
+
+  stopCrawl = async () => {
+    const response = await r2.post('http://localhost:3001/crawler/stop').json
+    return response && response.success
+  }
+
   _watchMouse() {
     OS.send('mouse-listen')
-    OS.on('mouse-in-corner', () => {
+    this.on(OS, 'mouse-in-corner', () => {
       if (this.hidden) {
         this.hidden = false
       }
@@ -153,7 +212,7 @@ export default class OraStore {
 
   _watchToggleHide() {
     OS.send('start-ora')
-    OS.on('show-ora', () => {
+    this.on(OS, 'ora-show', () => {
       this.hidden = !this.hidden
     })
   }
@@ -219,13 +278,13 @@ export default class OraStore {
     if (this.inputRef) {
       this.inputRef.focus()
       this.inputRef.select()
-      this.focused = true
+      this.focusedBar = true
     }
   }
 
   blurBar = () => {
     this.inputRef && this.inputRef.blur()
-    this.focused = false
+    this.focusedBar = false
   }
 
   onSearchChange = e => {

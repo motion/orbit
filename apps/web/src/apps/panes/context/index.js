@@ -51,11 +51,7 @@ const hashStr = s => {
       this.getUrl()
     }
 
-    runContext = text => {
-      this.results = this.context.closestItems(text).map(({ item }) => {
-        return item.title
-      })
-    }
+    runContext = text => {}
 
     getUrl = () => {
       OS.send('get-context')

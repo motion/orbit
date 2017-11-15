@@ -1,3 +1,4 @@
+// @flow
 import helper from 'babel-helper-builder-react-jsx'
 
 export default function({ types: t }: { types: Object }) {
@@ -49,9 +50,9 @@ export default function({ types: t }: { types: Object }) {
         {
           JSXNamespacedName,
           JSXElement: {
-            enter(...args) {
+            enter(path) {
               if (state.opts.jsxIf) {
-                jsxIfPlugin(...args)
+                jsxIfPlugin(path)
               }
               hasJSX = true
             },
@@ -137,6 +138,11 @@ export default function({ types: t }: { types: Object }) {
     visitor: {
       Program(path: Object, state: Object) {
         path.traverse(programVisitor, state)
+      },
+      JSXElement(path, state) {
+        if (state.opts.jsxIf) {
+          jsxIfPlugin(path)
+        }
       },
     },
   }

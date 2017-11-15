@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react'
 import { view } from '@mcro/black'
-import { keycode } from '@mcro/ui'
+import keycode from 'keycode'
 import $ from 'color'
 import { pick } from 'lodash'
 

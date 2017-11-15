@@ -1,5 +1,3 @@
-let firstTime = true
-
 module.exports = (fatalError, stats) => {
   if (fatalError) {
     console.error(fatalError)
@@ -24,10 +22,5 @@ module.exports = (fatalError, stats) => {
         version: false,
       })
     )
-  }
-
-  if (firstTime) {
-    console.log('\ncool, now:')
-    console.log('run web --prod')
   }
 }

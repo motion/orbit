@@ -1,50 +1,52 @@
 import * as React from 'react'
 import * as Constants from '~/constants'
 import * as View from '~/views'
+import * as UI from '@mcro/ui'
 
 export default props => (
-  <View.Section css={{ background: '#fff' }} padded>
-    <View.SectionContent padRight padBottom>
-      {!props.isSmall && (
-        <img
+  <UI.Theme name="dark">
+    <View.Section
+      space
+      css={{
+        background: `linear-gradient(to left, #7A52B9, #8D6BC3)`,
+        padding: [200, 0, 100],
+      }}
+    >
+      <View.SectionContent padRight padBottom>
+        <after
           css={{
             position: 'absolute',
-            top: -35,
-            right: -370,
-            transition: 'all ease-in 300ms',
-            animation: 'rotate 120s infinite linear',
+            top: 0,
+            right: -200,
+            bottom: 0,
+            justifyContent: 'center',
+            opacity: 0.4,
           }}
-          src="/orbitals.svg"
-        />
-      )}
-      <View.Title
-        getRef={props.setSection(1)}
-        color={Constants.colorBlue}
-        size={3}
-      >
-        Hands-free Intelligence
-      </View.Title>
-      <View.Text size={2} fontWeight={600} opacity={0.5}>
-        An assistant that's always there, not hidden in a tab or bot.
-      </View.Text>
-      <View.Text size={1.7}>
-        <View.List>
-          <li>
-            Orbit hooks into <em>every</em> cloud service, including email and
-            chat.
-          </li>
-          <li>
-            Using machine learning, Orbit understands{' '}
-            <View.Strong>when</View.Strong> to show relevant items, and
-            understands "accounting paperwork" can mean "tax form".
-          </li>
-          <li>
-            Orbit stays with you: while chatting, writing emails, updating your
-            CRM, or just browsing.
-          </li>
-        </View.List>
-      </View.Text>
-    </View.SectionContent>
-    <View.BottomSlant dark />
-  </View.Section>
+        >
+          <UI.Icon color={Constants.colorSecondary} size={501} name="planet" />
+        </after>
+        <View.Title getRef={props.setSection(1)} size={3} fontWeight={200}>
+          About Orbit
+        </View.Title>
+        <View.Text
+          size={3.5}
+          fontWeight={200}
+          color={UI.color(Constants.colorSecondary).lighten(0.5)}
+        >
+          We're a small team thats been researching and building tools for
+          better team communication and collaboration, dynamic app generation,
+          and innovative app development.
+        </View.Text>
+        <View.Text size={3}>
+          Orbit is going into private beta in December.
+        </View.Text>
+        <View.Text size={2}>
+          <View.Link href="mailto:natewienert@gmail.com">
+            Send us an email
+          </View.Link>{' '}
+          if you're interested.
+        </View.Text>
+      </View.SectionContent>
+    </View.Section>
+  </UI.Theme>
 )

@@ -1,8 +1,9 @@
 // @flow
 import * as React from 'react'
 import { view } from '@mcro/black'
-import Text from '../text'
 import type { Color } from '@mcro/gloss'
+import Label from './label'
+import Row from '../row'
 
 // fields
 import Input from './input'
@@ -82,38 +83,35 @@ export default class Field extends React.Component<Props> {
       throw new Error('Invalid field type or no children given to Field')
     }
 
-    return (
-      <field $width={width} css={props}>
-        <Text
-          if={label}
-          tagName="label"
-          $label
-          ellipse
-          htmlFor={id}
-          size={size}
-          {...labelProps}
-        >
-          {label === true ? ' ' : label}
-        </Text>
-        <Element
-          if={!children && Element}
-          $element
-          type={type}
-          onChange={onChange}
-          name={id}
-          defaultValue={defaultValue}
-          sync={sync}
-          theme={theme}
-          chromeless={chromeless}
-          placeholder={placeholder}
-          placeholderColor={placeholderColor}
-          borderRadius={0}
-          size={size}
-          {...elementProps}
-        />
-        {children}
-      </field>
-    )
+    const contents = [
+      <Label if={label} key={0} $label htmlFor={id} size={size} {...labelProps}>
+        {label === true ? ' ' : label}
+      </Label>,
+      <Element
+        if={!children && Element}
+        key={1}
+        $element
+        type={type}
+        onChange={onChange}
+        name={id}
+        defaultValue={defaultValue}
+        sync={sync}
+        theme={theme}
+        chromeless={chromeless}
+        placeholder={placeholder}
+        placeholderColor={placeholderColor}
+        borderRadius={0}
+        size={size}
+        {...elementProps}
+      />,
+      children,
+    ].filter(Boolean)
+
+    if (row) {
+      return <Row $field>{contents}</Row>
+    }
+
+    return <field css={props}>{contents}</field>
   }
 
   static style = {
@@ -135,15 +133,9 @@ export default class Field extends React.Component<Props> {
     }
 
     const rowStyle = {
-      field: {
-        padding: [6, 0],
-        flexFlow: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-      },
       label: {
         margin: 0,
-        padding: [0, 10, 0, 0],
+        padding: [0, 10],
         flex: 'none',
         width: 'auto',
       },
@@ -156,7 +148,7 @@ export default class Field extends React.Component<Props> {
 
     return {
       field: {
-        ...(props.row && rowStyle.field),
+        width: props.width,
         ...(props.inactive && inactiveStyle.field),
         ...props.fieldStyle,
       },

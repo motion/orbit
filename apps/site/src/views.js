@@ -4,25 +4,40 @@ import * as UI from '@mcro/ui'
 import * as Constants from '~/constants'
 
 export const Text = props => <UI.Text size={1.5} marginBottom={20} {...props} />
+
 export const SubText = props => (
   <Text size={1.25} lineHeight="1.7rem" {...props} />
 )
+
 export const Hl = props => (
-  <UI.Text display="inline" padding={[5]} background="yellow" {...props} />
+  <UI.Text
+    display="inline"
+    padding={[3]}
+    background={'rgb(98.4%, 97.1%, 77.3%)'}
+    {...props}
+  />
 )
+
 export const Title = props => <Text fontWeight={800} {...props} />
+
 export const SubTitle = props => (
-  <UI.Title fontWeight={800} marginBottom={30} opacity={0.6} {...props} />
+  <UI.Title
+    size={2.2}
+    fontWeight={200}
+    marginBottom={30}
+    opacity={0.6}
+    {...props}
+  />
 )
 
 const dark = {
-  background: Constants.colorBlue,
+  background: `linear-gradient(40deg, ${Constants.colorMain}, ${Constants.colorSecondary})`,
 }
 const space = {
-  background: '#000',
+  background: '#222',
 }
 const padRight = {
-  paddingRight: 300,
+  paddingRight: 380,
   [Constants.screen.small]: {
     paddingRight: 0,
   },
@@ -36,7 +51,7 @@ export const Section = view(
     paddingLeft: 100,
     paddingRight: 100,
     position: 'relative',
-    overflow: 'hidden',
+    //overflow: 'hidden',
   },
   {
     padded: {
@@ -45,6 +60,9 @@ export const Section = view(
     },
     dark,
     space,
+    fullscreen: {
+      minHeight: Math.min(1200, window.innerHeight - 10),
+    },
   }
 )
 
@@ -53,15 +71,20 @@ export const SectionContent = view(
   {
     width: '85%',
     minWidth: 300,
-    maxWidth: 800,
+    maxWidth: Constants.smallSize,
     margin: [0, 'auto'],
-    position: 'relative',
-    zIndex: 10,
+    transform: {
+      z: 0,
+    },
   },
   {
     padRight,
     padBottom: {
       paddingBottom: 80,
+    },
+    row: {
+      flexFlow: 'row',
+      alignItems: 'center',
     },
   }
 )
@@ -91,7 +114,6 @@ export const BottomSlant = view(
     left: -500,
     right: -500,
     height: 400,
-    zIndex: 0,
     transform: {
       rotate: '-1deg',
     },

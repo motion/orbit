@@ -9,7 +9,8 @@
     "start-prod": "NODE_ENV=production IS_PROD=true node index.js",
     "start-local-prod":
       "LOCAL_PROD=true NODE_ENV=production IS_PROD=true node index.js",
-    "start-dev": "nodemon --inspect=0.0.0.0:5858 index.js",
+    "start-dev":
+      "DEBUG=api,crawler,crawler:* nodemon --inspect=0.0.0.0:5858 index.js",
     "start-watch": "../../bin/build --watch",
     "build": "webpack",
     "watch": "webpack --watch"
@@ -18,12 +19,14 @@
     "ignore": ["**/*.map", "lib", "dist"]
   },
   "dependencies": {
+    "@mcro/crawler": "^1.5.1",
     "@mcro/passport-slack": "^1.5.1",
     "babel-polyfill": "^6.23.0",
     "better-stack-traces": "^1.1.0",
     "body-parser": "^1.16.1",
     "clean-stacktrace": "^1.1.0",
     "cors": "^2.8.3",
+    "debug": "^3.1.0",
     "express": "^4.15.2",
     "express-pouchdb": "^2.3.7",
     "express-session": "^1.15.5",

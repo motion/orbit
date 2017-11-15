@@ -4,13 +4,15 @@ import { summarize, summarizeWithQuestion } from './helpers/summarize'
 import { Thing } from '~/app'
 import * as UI from '@mcro/ui'
 import { view, watch } from '@mcro/black'
+import { flatten, isEqual } from 'lodash'
 
 @view
 class After {
-  render(props) {
+  render({ children, ...props }) {
     return (
       <after {...props}>
         <UI.Icon opacity={0.35} name="arrow-min-right" />
+        {children}
       </after>
     )
   }
@@ -32,30 +34,58 @@ class After {
   }
 }
 
-const clean = str => str.replace(/[\r\n|\n|\r|\s]+/gm, ' ').trim()
-
-const similarityOpacity = similarity => {
-  if (similarity > 5000) {
-    return 0.1
+const clean = str => {
+  if (typeof str !== 'string') {
+    return 'bad string'
   }
-  if (similarity > 2000) {
-    return 0.2
-  }
-  if (similarity > 1000) {
-    return 0.5
-  }
-  if (similarity > 500) {
-    return 0.7
-  }
-  return 1
+  return str.replace(/[\r\n|\n|\r|\s]+/gm, ' ').trim()
 }
 
 export default class ContextSidebar {
   // copy it here
   osContext = this.oraStore.osContext
+  isShowingCrawlInBrowser = false
+  crawlerInfo = null
+  crawlerSettings = {
+    maxPages: 6,
+    depth: '/',
+  }
+
+  get crawlerOptions() {
+    return {
+      ...this.crawlerInfo,
+      ...this.crawlerSettings,
+    }
+  }
+
+  // this determines when the pane slides in
+  get finishedLoading() {
+    return !this.context.isLoading
+  }
 
   @watch
   isPinned = () => this.osContext && Thing.findOne({ url: this.osContext.url })
+
+  willMount() {
+    this.on(OS, 'crawler-selection', (event, info) => {
+      if (info && Object.keys(info).length) {
+        // matching url
+        if (info.entry === this.osContext.url) {
+          if (!isEqual(info, this.crawlerInfo)) {
+            console.log('update selection', info)
+            this.crawlerInfo = info
+            this.crawlerSettings.depth = this.crawlerInfo.depth
+          }
+        } else {
+          console.log('not on same url')
+        }
+      }
+    })
+
+    this.watch(() => {
+      console.log('settings', this.crawlerSettings)
+    })
+  }
 
   get oraStore() {
     return this.props.oraStore
@@ -71,11 +101,13 @@ export default class ContextSidebar {
 
   get contextResults() {
     window.contextSidebar = this
-    const title = this.osContext ? this.osContext.title : ''
+    const title = this.osContext
+      ? this.osContext.selection || this.osContext.title || ''
+      : ''
     return !this.context || this.context.loading // || this.osContext === null
       ? []
       : this.context
-          .closestItems(this.search.length > 0 ? this.search : title, 5)
+          .search(this.search.length > 0 ? this.search : title, 8)
           // filter same item
           .filter(x => {
             if (!x.item) return true
@@ -90,20 +122,21 @@ export default class ContextSidebar {
                 : summarizeWithQuestion(item.body, this.search)
 
             return {
-              // category: 'Context',
-              height: 200,
               title,
+              icon: 'link',
               onClick: () => {
                 OS.send('navigate', item.url)
               },
               children:
-                lines.length >= 3
-                  ? lines.map((line, i) => (
-                      <UI.Text key={i} ellipse opacity={0.5} size={0.9}>
-                        {clean(line)}
-                      </UI.Text>
-                    ))
-                  : lines.map(clean),
+                Array.isArray(lines) && lines.length >= 2
+                  ? flatten(lines)
+                      .slice(0, 2)
+                      .map((line, i) => (
+                        <UI.Text key={i} ellipse opacity={0.65} size={1.1}>
+                          {clean(line)}
+                        </UI.Text>
+                      ))
+                  : clean(lines),
               after: (
                 <After
                   onClick={e => {
@@ -114,34 +147,63 @@ export default class ContextSidebar {
                       type: 'context',
                     })
                   }}
-                />
-              ),
-              below: (
-                <UI.Row
-                  css={{ marginTop: 5, overflowX: 'scroll' }}
-                  itemProps={{ height: 20 }}
                 >
-                  <UI.Button tooltip={`Similarity: ${similarity}`}>
-                    Info
-                  </UI.Button>
-                  {debug.map(({ word, word2, similarity }) => (
-                    <UI.Button
-                      chromeless
-                      inline
-                      tooltip={`${word2} : ${similarity}`}
-                      key={word}
-                      opacity={similarityOpacity(similarity)}
+                  <debug css={{ position: 'absolute', top: 0, right: 0 }}>
+                    <UI.Popover
+                      openOnHover
+                      closeOnEsc
+                      towards="left"
+                      width={150}
+                      target={<UI.Button circular chromeless icon="help" />}
                     >
-                      {word}
-                    </UI.Button>
-                  ))}
-                </UI.Row>
+                      <UI.List>
+                        <UI.ListItem primary={`Similarity: ${similarity}`} />
+                        {debug.map(({ word, word2, similarity }, index) => (
+                          <UI.ListItem
+                            key={index}
+                            primary={word}
+                            secondary={`${word2}: ${similarity}`}
+                          />
+                        ))}
+                      </UI.List>
+                    </UI.Popover>
+                  </debug>
+                </After>
               ),
             }
           })
   }
 
   get actions() {
+    if (this.crawlerInfo) {
+      return [
+        {
+          key: Math.random(),
+          content: <div $$flex />,
+        },
+        {
+          key: Math.random(),
+          icon: 'play',
+          children: 'Start Crawl',
+          onClick: async () => {
+            console.log('starting crawl', this.crawlerOptions)
+            this.isShowingCrawlInBrowser = true
+            const things = await this.oraStore.startCrawl(this.crawlerOptions)
+            console.log('made stuff', things)
+          },
+        },
+        {
+          key: Math.random(),
+          icon: 'play',
+          children: 'Cancel Crawl',
+          onClick: async () => {
+            const cancelled = await this.oraStore.stopCrawl()
+            console.log('cancelled', cancelled)
+          },
+        },
+      ]
+    }
+
     return [
       this.isPinned && {
         icon: 'check',
@@ -157,25 +219,62 @@ export default class ContextSidebar {
       {
         icon: 'bug',
         children: 'Crawl',
-        onClick: async () => {
-          const val = await (await fetch('http://localhost:3000')).json()
-          val.forEach(item => {
-            Thing.create({
-              title: item.title,
-              bucket: 'dropbox',
-              body: item.content,
-              integration: 'manual',
-              type: 'manual',
-              url: item.url,
-            })
-          })
-          console.log('val is', val)
+        onClick: () => {
+          this.isShowingCrawlInBrowser = true
+          OS.send('inject-crawler')
         },
       },
     ]
   }
 
   get results() {
+    if (this.crawlerInfo) {
+      console.log('trigger update', this.crawlerSettings)
+      return [
+        {
+          category: 'Preview',
+          title: this.crawlerInfo.title,
+          children: this.crawlerInfo.body,
+        },
+        {
+          category: 'Settings',
+          title: ' ',
+          displayTitle: false,
+          children: (
+            <UI.Field
+              row
+              label="Max pages:"
+              tooltip="This will make the crawler avoid going above this path"
+              sync={this.ref('crawlerSettings.maxPages')}
+            />
+          ),
+        },
+        {
+          category: 'Settings',
+          title: ' ',
+          displayTitle: false,
+          children: (
+            <UI.Field
+              row
+              label="Depth:"
+              sync={this.ref('crawlerSettings.depth')}
+            />
+          ),
+        },
+        ...Object.keys(this.crawlerInfo).map(key => ({
+          category: 'Crawler Selected',
+          title: key,
+          children: this.crawlerInfo[key],
+        })),
+      ]
+    }
+    if (this.isShowingCrawlInBrowser) {
+      return [
+        {
+          title: 'Select content in Chrome',
+        },
+      ]
+    }
     if (this.context) {
       const os = this.search.length === 0 ? [] : []
       return [...os, ...this.contextResults].filter(i => !!i)

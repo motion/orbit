@@ -37,34 +37,35 @@ export default class Arrow extends React.Component<> {
     }
   }
 
-  render({ size, towards, theme, boxShadow, background, ...props }: Props) {
+  render({ size, towards, theme, boxShadow, color, opacity, ...props }: Props) {
     const onBottom = towards === 'bottom'
     const innerTop = size * (onBottom ? -1 : 1)
 
     // add padding so big shadows work
     return (
-      <arrowOuter
-        css={{ transform: { rotate: this.getOuterRotation(towards) } }}
-        style={{
-          width: size,
-          height: size,
-        }}
-      >
-        <arrow
-          css={{
-            transform: { rotate: this.getRotation(towards) },
+      <arrowContain {...props}>
+        <arrowOuter
+          css={{ transform: { rotate: this.getOuterRotation(towards) } }}
+          style={{
+            width: size,
+            height: size,
           }}
-          {...props}
         >
-          <arrowInner
-            style={{
-              top: innerTop * 0.75,
-              width: size,
-              height: size,
+          <arrow
+            css={{
+              transform: { rotate: this.getRotation(towards) },
             }}
-          />
-        </arrow>
-      </arrowOuter>
+          >
+            <arrowInner
+              style={{
+                top: innerTop * 0.75,
+                width: size,
+                height: size,
+              }}
+            />
+          </arrow>
+        </arrowOuter>
+      </arrowContain>
     )
   }
 
@@ -82,13 +83,12 @@ export default class Arrow extends React.Component<> {
     },
   }
 
-  static theme = ({ size, background, boxShadow }, theme) => ({
+  static theme = ({ size, color, boxShadow, opacity }, theme) => ({
     arrowInner: {
       background:
-        background === true
-          ? theme.base.background
-          : background || theme.base.background,
-      boxShadow: boxShadow,
+        color === true ? theme.base.background : color || theme.base.background,
+      boxShadow,
+      opacity,
     },
     arrow: {
       width: size,

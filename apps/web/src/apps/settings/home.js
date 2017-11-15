@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import HomeStore from './homeStore'
+import OraStore from './oraStore'
 import Main from '~/apps/panes/main'
 import Sidebar from '~/apps/panes/sidebar'
 
@@ -12,14 +12,14 @@ const inputStyle = {
 }
 
 @view.provide({
-  homeStore: HomeStore,
+  oraStore: OraStore,
 })
 @view
 export default class HomePage {
-  render({ homeStore }) {
+  render({ oraStore }) {
     return (
       <UI.Theme name="clear-dark">
-        <home ref={homeStore.ref('barRef').set} $$fullscreen>
+        <home ref={oraStore.ref('barRef').set} $$fullscreen>
           <header $$draggable>
             <UI.Icon
               $searchIcon
@@ -29,94 +29,20 @@ export default class HomePage {
             />
             <UI.Input
               $searchInput
-              onClick={homeStore.onClickInput}
+              onClick={oraStore.onClickInput}
               size={1.8}
-              getRef={homeStore.onInputRef}
+              getRef={oraStore.onInputRef}
               borderRadius={0}
-              onChange={homeStore.onSearchChange}
-              value={homeStore.textboxVal}
+              onChange={oraStore.onSearchChange}
+              value={oraStore.textboxVal}
               borderWidth={0}
               fontWeight={200}
               css={inputStyle}
             />
-            <dock
-              css={{
-                position: 'absolute',
-                top: 0,
-                right: 20,
-                bottom: 0,
-                alignItems: 'center',
-                flexFlow: 'row',
-              }}
-            >
-              <UI.Row spaced>
-                <UI.Button if={false} theme="clear-dark" borderRadius={500}>
-                  Welcome, Matt
-                </UI.Button>
-              </UI.Row>
-            </dock>
-
-            <dock
-              if={false}
-              css={{
-                position: 'absolute',
-                top: 0,
-                right: 20,
-                bottom: 0,
-                alignItems: 'center',
-                flexFlow: 'row',
-              }}
-            >
-              <UI.Row spaced>
-                {(homeStore.myrecent || []).map(item => (
-                  <wrap
-                    key={item.id}
-                    css={{ position: 'relative', marginLeft: 15 }}
-                  >
-                    <UI.Button
-                      circular
-                      chromeless
-                      key={item.id}
-                      size={2}
-                      iconSize={36}
-                      icon={`social${item.integration}`}
-                      iconProps={{
-                        color: ['yellow', 'darkorange', 'purple', 'darkblue'][
-                          Math.floor(Math.random() * 5)
-                        ],
-                        style: {
-                          marginTop: -14,
-                        },
-                      }}
-                      glow
-                      badge={`#${item.data.number}`}
-                    />
-                    <UI.Text
-                      ellipse
-                      size={0.8}
-                      fontWeight={200}
-                      opacity={0.6}
-                      css={{
-                        textAlign: 'center',
-                        position: 'absolute',
-                        bottom: 0,
-                        left: 0,
-                        right: 0,
-                      }}
-                    >
-                      {item.title}
-                    </UI.Text>
-                  </wrap>
-                ))}
-              </UI.Row>
-            </dock>
-            <forwardcomplete>
-              <fwdcontents>{homeStore.peekItem}</fwdcontents>
-            </forwardcomplete>
           </header>
           <content>
-            <Sidebar store={homeStore} />
-            <Main store={homeStore} />
+            <Sidebar store={oraStore} oraStore={oraStore} />
+            <Main store={oraStore} />
           </content>
         </home>
       </UI.Theme>

@@ -1,6 +1,5 @@
 import React from 'react'
 import * as Mobx from 'mobx'
-import { view } from '@mcro/black'
 import { object } from 'prop-types'
 import { pickBy, difference, isEqual } from 'lodash'
 import hoistStatics from 'hoist-non-react-statics'
@@ -82,12 +81,24 @@ export default function storeProvidable(options, Helpers) {
           if (this.stores === null) {
             return
           }
+          this.mounted = true
           this.mountStores()
-          view.on('hmr', () => this.clearError && this.clearError())
+          if (window.Black) {
+            window.Black.view.on('hmr', this.clearErrors)
+          }
+        }
+
+        clearErrors = () => {
+          if (this.unmounted) {
+            return
+          }
+          if (this.clearError) {
+            this.clearError()
+          }
         }
 
         clearError() {
-          if (!this.unmounted) {
+          if (this.mounted && !this.unmounted) {
             this.setState({ error: null })
           }
         }
@@ -95,8 +106,10 @@ export default function storeProvidable(options, Helpers) {
         componentWillUnmount() {
           // if you remove @view({ store: ... }) it tries to remove it here but its gone
           if (this.disposeStores) {
+            if (window.Black) {
+              window.Black.view.off('hmr', this.clearErrors)
+            }
             this.disposeStores()
-            view.off('hmr', () => this.clearError && this.clearError())
             this.unmounted = true
           }
         }
@@ -215,7 +228,9 @@ export default function storeProvidable(options, Helpers) {
             Object.keys(Stores).forEach(name => {
               if (this.context.stores[name]) {
                 console.log(
-                  `Notice! You are overwriting an existing store in provide. This may be intentional: ${name} from ${Klass.name}`
+                  `Notice! You are overwriting an existing store in provide. This may be intentional: ${
+                    name
+                  } from ${Klass.name}`
                 )
               }
             })

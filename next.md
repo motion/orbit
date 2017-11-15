@@ -4,21 +4,33 @@
 
 # now
 
+- bug: ora pane flickering away when you try and edit crawl settings
 - crawler
+  - after crawl needs to show the results before committing them
+    - should let you uncheck some results
+    - should let you enter a url/title exclusion scheme too
+  - bug with running crawls on diff sites within same session
+  - cancel crawl working in browser + ora
   - { flex } elements in actionbar
   - show crawl status:
     - change Start Crawl to Disable
     - show crawl status in action bar (1/6 pages...)
     - show Cancel Crawl button
     - ideally, show this all in a slide up banner so you can keep moving
+- onboarding:
+  - simple next/back onboarding pane
+  - steps:
+    - 1. Welcome to Orbit, we need to setup integrations
+    - 2. We work with your browser, navigate to your knowledgebase in Chrome
+      - Switch onboard to ora window, so it shows as they go to knowledgebase
+      - Have "Add this site" button glow for them
+      - Once they start first crawl it shows status, redirects them back to onboard flow
+    - 3. You can also Pin individual sites
+    - 4. Keyboard shortcuts / search / usage generally
+    - 5. Done! Tweet/email us easily here
 - get a bundle of app built
 - test bundle onboarding process
 - super basic onboarding window
-
-## product
-- settings pane working
-- onboarding flow
-- related project/task/person in special area
 
 ## focus
 - intercom

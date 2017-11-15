@@ -187,6 +187,7 @@ export default class Windows extends React.Component {
     if (this.shown) {
       if (this.appRef) {
         this.appRef.show()
+        this.appRef.focus()
       }
       // Menu.sendActionToFirstResponder('show:')
       this.oraRef.focus()

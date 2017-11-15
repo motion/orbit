@@ -2,7 +2,7 @@
 import { Job } from '@mcro/models'
 import debug from 'debug'
 
-const log = debug('sync')
+const log = _ => _ || debug('sync')
 
 const SECONDS_UNTIL_JOB_STALE = 60 * 10
 const UNITS_SECOND = 1000

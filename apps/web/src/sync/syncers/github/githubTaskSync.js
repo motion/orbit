@@ -5,7 +5,7 @@ import { omit, flatten } from 'lodash'
 import { createInChunks } from '~/sync/helpers'
 import debug from 'debug'
 
-const log = debug('sync')
+const log = _ => _ || debug('sync')
 const issueGet = `
 edges {
   node {

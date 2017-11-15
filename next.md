@@ -1,6 +1,9 @@
-# me
+# done
 
 - return focus to previous window on hide ora
+
+# now
+
 - crawler
   - { flex } elements in actionbar
   - show crawl status:

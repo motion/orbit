@@ -4,7 +4,7 @@ import * as Syncers from './syncers'
 import { Job, CurrentUser } from '~/app'
 import debug from 'debug'
 
-const log = debug('sync')
+const log = _ => _ || debug('sync')
 
 function getRxError(error: Error) {
   const { message, stack } = error

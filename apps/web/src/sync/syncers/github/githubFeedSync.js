@@ -2,7 +2,7 @@
 import { Event, Thing } from '~/app'
 import debug from 'debug'
 
-const log = debug('sync')
+const log = _ => _ || debug('sync')
 
 export default class GithubFeedSync {
   constructor({ setting, token, helpers }) {

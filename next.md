@@ -1,5 +1,12 @@
 # me
 
+- crawler
+  - { flex } elements in actionbar
+  - show crawl status:
+    - change Start Crawl to Disable
+    - show crawl status in action bar (1/6 pages...)
+    - show Cancel Crawl button
+    - ideally, show this all in a slide up banner so you can keep moving
 - return focus to previous window on hide ora
 - get a bundle of app built
 - test bundle onboarding process

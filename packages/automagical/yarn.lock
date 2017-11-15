@@ -19,13 +19,9 @@ min-document@^2.19.0:
   dependencies:
     dom-walk "^0.1.0"
 
-mobx-utils@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/mobx-utils/-/mobx-utils-3.0.0.tgz#80944d2a931c140209930403df545c6938f04e64"
-
-mobx@^3.2.2:
-  version "3.3.1"
-  resolved "https://registry.yarnpkg.com/mobx/-/mobx-3.3.1.tgz#c38fc1a287a0dda3f5d4b85efe1137fedd9dcdf0"
+mobx-utils@^3.2.1:
+  version "3.2.1"
+  resolved "https://registry.yarnpkg.com/mobx-utils/-/mobx-utils-3.2.1.tgz#44ba6a5b64db1437475217eb630f1f8e1e723323"
 
 process@~0.5.1:
   version "0.5.2"

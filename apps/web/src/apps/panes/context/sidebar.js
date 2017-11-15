@@ -67,6 +67,7 @@ export default class ContextSidebar {
   isPinned = () => this.osContext && Thing.findOne({ url: this.osContext.url })
 
   willMount() {
+    console.log('willmount')
     this.on(OS, 'crawler-selection', (event, info) => {
       if (info && Object.keys(info).length) {
         // matching url
@@ -80,10 +81,6 @@ export default class ContextSidebar {
           console.log('not on same url')
         }
       }
-    })
-
-    this.watch(() => {
-      console.log('settings', this.crawlerSettings)
     })
   }
 

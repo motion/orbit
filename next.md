@@ -47,7 +47,6 @@
 - settings pane: general settings + integrations split out + working open/close
 - peek things
 - show body contents snippet when on thing
-- make stack link to url so that hmr doesnt lose state
 - need to do bolding inside ui.text so it works well with clamps
 - :bug: once you pin the results disappear
 - :bug: prevent click going to url unless window is focused

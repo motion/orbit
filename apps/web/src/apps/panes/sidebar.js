@@ -110,7 +110,6 @@ class SidebarContainer {
 export default class Sidebar {
   static defaultProps = {
     width: ORA_WIDTH,
-    sidebars: Sidebars,
     itemProps: {
       size: 1.14,
       glow: true,
@@ -120,7 +119,7 @@ export default class Sidebar {
     },
   }
 
-  render({ width, itemProps, sidebars, store, cacheStore, ...props }) {
+  render({ width, itemProps, store, cacheStore, ...props }) {
     const { stack } = store
     const { stackItems, isLoadingNext } = cacheStore
     if (!stackItems) {
@@ -148,7 +147,7 @@ export default class Sidebar {
           if (!stackItem.result) {
             return <null>bad result</null>
           }
-          const Sidebar = sidebars[stackItem.result.type]
+          const Sidebar = Sidebars[stackItem.result.type]
           if (!Sidebar) {
             return <null>not found Sidebar {stackItem.result.type}</null>
           }

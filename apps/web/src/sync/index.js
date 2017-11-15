@@ -29,6 +29,9 @@ export default class Sync {
     this.watchJobs()
     this.startSyncers()
     this.watch(() => {
+      if (this.enabled) {
+        return
+      }
       const title = this.enabled
         ? 'SYNC ENABLED ✅ (disable: App.sync.disable())'
         : 'SYNC DISABLED (enable: App.sync.enable())'

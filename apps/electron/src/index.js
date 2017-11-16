@@ -36,17 +36,19 @@ let restarting
 
 function restart() {
   console.log('got a restart from hmr')
-  if (restarting) {
-    clearTimeout(restarting)
-  }
-  app.setState(
-    {
-      restart: true,
-    },
-    () => {
-      restarting = setTimeout(start, 500)
-    }
-  )
+  // for now
+  process.exit()
+  // if (restarting) {
+  //   clearTimeout(restarting)
+  // }
+  // app.setState(
+  //   {
+  //     restart: true,
+  //   },
+  //   () => {
+  //     restarting = setTimeout(start, 1000)
+  //   }
+  // )
 }
 
 if (module.hot) {

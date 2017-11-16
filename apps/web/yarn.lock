@@ -1088,9 +1088,9 @@ react-measure@2.0.2:
     prop-types "^15.5.10"
     resize-observer-polyfill "^1.4.2"
 
-react@16.0.0:
-  version "16.0.0"
-  resolved "https://registry.yarnpkg.com/react/-/react-16.0.0.tgz#ce7df8f1941b036f02b2cca9dbd0cb1f0e855e2d"
+react@^16.0.0:
+  version "16.1.1"
+  resolved "https://registry.yarnpkg.com/react/-/react-16.1.1.tgz#d5c4ef795507e3012282dd51261ff9c0e824fe1f"
   dependencies:
     fbjs "^0.8.16"
     loose-envify "^1.1.0"
@@ -1470,7 +1470,7 @@ wink-helpers@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/wink-helpers/-/wink-helpers-1.2.0.tgz#00cd74dfba544b77305178e3b17f2bc8bb15c60f"
 
-wink-nlp-utils@1.7.0:
+wink-nlp-utils@^1.7.0:
   version "1.7.0"
   resolved "https://registry.yarnpkg.com/wink-nlp-utils/-/wink-nlp-utils-1.7.0.tgz#2fadd8f118e08ab19fe9a6888182f494a8b9ff9f"
   dependencies:

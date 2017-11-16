@@ -47,8 +47,8 @@ export default class Server {
     app.use(this.cors())
 
     // ROUTES
-    this.app.use(bodyParser.json({ limit: '500mb' }))
-    this.app.use(bodyParser.urlencoded({ limit: '500mb', extended: false }))
+    this.app.use(bodyParser.json({ limit: '2048mb' }))
+    this.app.use(bodyParser.urlencoded({ limit: '2048mb', extended: true }))
     this.setupCrawler()
     this.setupCredPass()
     this.setupPassportRoutes()

@@ -23,6 +23,14 @@ export default class ContextSidebar {
     return this.oraStore.osContext
   }
 
+  get context() {
+    return this.oraStore.context
+  }
+
+  get search() {
+    return this.oraStore.search
+  }
+
   // can customize the shown title here
   get title() {
     return this.oraStore.osContext ? this.oraStore.osContext.title : null
@@ -67,16 +75,10 @@ export default class ContextSidebar {
     })
   }
 
-  get context() {
-    return this.oraStore.context
-  }
-
-  get search() {
-    return this.oraStore.search
-  }
-
   get contextResults() {
-    const title = this.osContext ? this.osContext.title : ''
+    const title = this.osContext
+      ? this.osContext.selection || this.osContext.title
+      : ''
     return !this.context || this.context.loading // || this.osContext === null
       ? []
       : this.context

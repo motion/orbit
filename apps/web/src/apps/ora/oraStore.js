@@ -132,11 +132,11 @@ export default class OraStore {
 
       const updateContext = title => {
         this.osContext = context
+        // if were at home, move into a new pane
+        // otherwise, no need to push a new pane
         if (this.stack.length === 1) {
           const nextStackItem = {
-            id: `${context.selection ? context.selection + ' -- ' : ''}${
-              context.url
-            }`,
+            id: context.url,
             title,
             type: 'context',
             icon:

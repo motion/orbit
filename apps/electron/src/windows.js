@@ -9,6 +9,7 @@ import { throttle, isEqual, once } from 'lodash'
 import MenuItems from './menu'
 import getCrawler from './helpers/getCrawler'
 import escapeStringApplescript from 'escape-string-applescript'
+import log from '@mcro/black/lib/helpers/log'
 
 let onWindows = []
 export function onWindow(cb) {
@@ -87,6 +88,7 @@ export default class Windows extends React.Component {
     })
   }
 
+  @log
   measure = () => {
     const { position, size } = Helpers.measure()
     this.size = size
@@ -116,6 +118,7 @@ export default class Windows extends React.Component {
     }
   }
 
+  @log
   listenToApps = () => {
     this.on(ipcMain, 'start-ora', event => {
       // setup our event bus
@@ -141,6 +144,7 @@ export default class Windows extends React.Component {
 
   shown = true
 
+  @log
   toggleShown = throttle(() => {
     this.sendOra('ora-toggle')
     this.shown = !this.shown // hacky
@@ -159,6 +163,7 @@ export default class Windows extends React.Component {
     }
   }, 500)
 
+  @log
   injectCrawler = throttle(async sendToOra => {
     const js = await getCrawler()
     await Helpers.runAppleScript(`
@@ -178,6 +183,7 @@ export default class Windows extends React.Component {
     })
   }, 500)
 
+  @log
   checkCrawlerLoop = async cb => {
     try {
       cb(await this.checkCrawler())
@@ -190,11 +196,12 @@ export default class Windows extends React.Component {
       return
     }
     if (this.continueChecking) {
-      console.log('loop')
+      console.log('loop check crawler')
       this.checkCrawlerLoop(cb)
     }
   }
 
+  @log
   checkCrawler = throttle(async () => {
     const res = await Helpers.runAppleScript(`
       tell application "Google Chrome"
@@ -212,6 +219,7 @@ export default class Windows extends React.Component {
     }
   }, 200)
 
+  @log
   getContext = throttle(async event => {
     const [application, title] = await Helpers.runAppleScript(`
       global frontApp, frontAppName, windowTitle

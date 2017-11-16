@@ -113,7 +113,7 @@ export default class OraStore {
     // check
     this.setInterval(() => {
       OS.send('get-context')
-    }, 500)
+    }, 300)
     // response
     this.on(OS, 'set-context', (event, info) => {
       const context = JSON.parse(info)

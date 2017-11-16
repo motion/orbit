@@ -58,8 +58,6 @@ wait
 echo "3001 > ~/.puma-dev/jot"
 echo 3001 > ~/.puma-dev/jot
 
-yarn install
-
 echo "lerna bootstrap"
 rm lerna_debug.json &> /dev/null
 npx lerna bootstrap

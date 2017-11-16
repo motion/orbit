@@ -1,6 +1,7 @@
 {
   "name": "motion-starter",
   "private": true,
+  "workspaces": ["apps/*", "packages/*"],
   "scripts": {
     "start": "See: bin/* for commands available"
   },

@@ -83,12 +83,8 @@ export default class ContextSidebar {
             if (!this.props.data) return true
             return x.item.url !== this.props.result.data.url
           })
-          .map(({ debug, item, similarity }) => {
+          .map(({ debug, item, similarity }, index) => {
             const title = item.title
-            const lines =
-              this.search.length === 0
-                ? summarize(item.body)
-                : summarizeWithQuestion(item.body, this.search)
 
             return {
               title,
@@ -96,16 +92,11 @@ export default class ContextSidebar {
               onClick: () => {
                 OS.send('navigate', item.url)
               },
-              children:
-                Array.isArray(lines) && lines.length >= 2
-                  ? flatten(lines)
-                      .slice(0, 2)
-                      .map((line, i) => (
-                        <UI.Text key={i} ellipse opacity={0.65} size={1.1}>
-                          {clean(line)}
-                        </UI.Text>
-                      ))
-                  : clean(lines),
+              children: (
+                <UI.Text opacity={0.65} size={0.9}>
+                  {this.context.sentences[index]}
+                </UI.Text>
+              ),
               after: (
                 <After
                   onClick={e => {

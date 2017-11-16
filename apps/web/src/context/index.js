@@ -179,14 +179,14 @@ export default class Context {
     )
   }
 
-  getSentences = debounce(text => {
+  getSentences = text => {
     const txt = `getting sentence for text: ${text}`
     console.time(txt)
     this.sentences = this.searchResults.map(({ item }) => {
       return this.sentenceDistances(text, item.body)[0].sentence
     })
     console.timeEnd(txt)
-  }, 180)
+  }
 
   getRealWord = memoize(word => this.getRealWordFromText(word, this.docTexts))
 

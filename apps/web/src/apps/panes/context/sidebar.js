@@ -99,7 +99,7 @@ export default class ContextSidebar {
                 OS.send('navigate', item.url)
               },
               children: (
-                <UI.Text opacity={0.65} size={0.9}>
+                <UI.Text ellipse={2} opacity={0.65} size={0.9}>
                   {this.context.sentences[index] &&
                     this.context.sentences[index].sentence}
                 </UI.Text>

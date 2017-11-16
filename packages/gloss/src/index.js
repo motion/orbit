@@ -191,7 +191,6 @@ export class Gloss {
           !lastUpdatedStyles ||
           (window.lastHotReload && lastUpdatedStyles > window.lastHotReload)
         ) {
-          // console.log('Child.style', Child.style)
           attachStyles(Child.glossUID, Child.style, true)
           lastUpdatedStyles = Date.now()
         }

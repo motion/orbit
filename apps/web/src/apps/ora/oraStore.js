@@ -148,7 +148,7 @@ export default class OraStore {
       }
 
       if (!this.osContext || this.osContext.title !== context.title) {
-        return updateContext(context.currentText || context.title)
+        return updateContext(context.title)
       }
 
       if (this.osContext.selection !== context.selection) {

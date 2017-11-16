@@ -4,6 +4,7 @@
 
 # now
 
+- try pm2 to monitor usage
 - bug: hitting close causes state of openness to bug out
 - bug: ora pane flickering away when you try and edit crawl settings
 - crawler

@@ -172,8 +172,8 @@ export default class Crawler {
 
           // only count it if it finds goodies
           if (contents.title || contents.body) {
-            log.page(`Good contents`)
             count++
+            log.page(`Good contents. Total ${count}`)
           } else {
             log.page(`No contents found`)
           }

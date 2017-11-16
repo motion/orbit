@@ -29,6 +29,8 @@ const logTimes = (id, times, ...vals) => {
   if (times < timesCount[id]) console.log(...vals)
 }
 
+let vectorCache = null
+
 export default class Context {
   items = []
   autocomplete = []
@@ -55,6 +57,8 @@ export default class Context {
   }
 
   loadVectors = async () => {
+    if (vectorCache) return vectorCache
+
     const text = await fetch(`/vectors50k.txt`).then(res => res.text())
     const vectors = {}
     text.split('\n').forEach(line => {
@@ -65,6 +69,7 @@ export default class Context {
       )
       vectors[word] = vsList
     })
+    vectorCache = vectors
     return vectors
   }
 
@@ -132,14 +137,12 @@ export default class Context {
     }))
     const xs = minKBy(freqsTotalWeights, 15, _ => -_.weight)
     const norm = xs.map(x => ({ ...x, weight: x.weight / xs[0].weight }))
-    console.log('norm is ', norm)
     const vec = norm.filter(i => this.vectors[i.word]).reduce((vec, item) => {
       const newVec = this.vectors[item.word]
       if (vec === null) return newVec
 
       return vec.map((_, i) => vec[i] + (newVec[i] - vec[i]) * item.weight)
     }, null)
-    console.log('nearest words', this.nearestWords(vec))
   }
 
   nearestWords = vec => {
@@ -186,6 +189,7 @@ export default class Context {
       return this.sentenceDistances(text, item.body)[0].sentence
     })
     console.timeEnd(txt)
+    return this.sentences
   }
 
   getRealWord = memoize(word => this.getRealWordFromText(word, this.docTexts))
@@ -198,7 +202,8 @@ export default class Context {
   }
 
   search = (text, n = 5) => {
-    console.time('searching ' + text)
+    console.log('searching ' + text)
+    if (!this.engine.isConsolidated()) return []
     /*
     const words = text
       .split(' ')
@@ -235,9 +240,6 @@ export default class Context {
           debug: [],
         }
       })
-
-    this.sentences = []
-    this.getSentences(text)
 
     const freqs = {}
 
@@ -277,6 +279,9 @@ export default class Context {
     this.autocomplete = autocomplete
     this.searchResults = vals
     console.timeEnd('searching ' + text)
+    this.sentences = []
+    this.getSentences(text)
+
     return vals
   }
 }

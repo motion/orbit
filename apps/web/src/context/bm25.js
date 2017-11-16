@@ -416,7 +416,8 @@ const bm25fIMS = () => {
         // magnitude of `k1` can jeopardize the sign!
         documents[id].freq[t] =
           Math.sign(freq) *
-          (Math.abs(freq * (k1 + 1) / (k1 * normalizationFactor + freq)) *
+          (
+            Math.abs(freq * (k1 + 1) / (k1 * normalizationFactor + freq)) *
             idf[t]
           ).toFixed(freqPrecision)
         // To be uncommented to probe values!
@@ -610,6 +611,7 @@ const bm25fIMS = () => {
   methods.defineConfig = defineConfig
   methods.addDoc = addDoc
   methods.consolidate = consolidate
+  methods.isConsolidated = () => consolidated
   methods.search = search
   methods.exportJSON = exportJSON
   methods.importJSON = importJSON

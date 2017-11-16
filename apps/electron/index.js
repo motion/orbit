@@ -1,8 +1,14 @@
 process.env.NODE_ENV = 'production'
 process.env.IS_PROD = true
 process.env.HAS_BABEL_POLYFILL = true
+import global from 'global'
 
 require('babel-polyfill')
+
+// shim groupCollapsed for sitrep
+global.console.groupCollapsed = (...args) => {
+  console.log(...args)
+}
 
 process.on('unhandledRejection', function(error, p) {
   console.log('PromiseFail:')

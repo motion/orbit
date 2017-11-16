@@ -9,18 +9,6 @@ import { onWindow } from './windows'
 import { throttle } from 'lodash'
 import * as Constants from '~/constants'
 
-const ogerror = console.error.bind(console)
-console.error = function(...args) {
-  if (
-    args &&
-    typeof args[0] === 'string' &&
-    args[0].indexOf('EmojiFunctionRowItem')
-  ) {
-    return
-  }
-  return ogerror(...args)
-}
-
 let app = null
 
 // update checker

@@ -1,4 +1,3 @@
-import * as r2 from '@mcro/r2'
 import React from 'react'
 import { app, globalShortcut, ipcMain, screen, Menu } from 'electron'
 import repl from 'repl'
@@ -48,6 +47,7 @@ export default class Windows extends React.Component {
   }
 
   componentDidMount() {
+    this.mounted = true
     this.measureAndShow()
 
     this.screenSize = screen.getPrimaryDisplay().workAreaSize
@@ -55,11 +55,10 @@ export default class Windows extends React.Component {
       trayPosition: [this.screenSize.width - ORA_WIDTH, 20],
     })
 
-    this.next() // preload one app window
     onWindows.forEach(cb => cb(this))
     setTimeout(this.measureAndShow, 500)
     this.repl = repl.start({
-      prompt: 'electron > ',
+      prompt: '$ > ',
     })
     Object.assign(this.repl.context, {
       Root: this,
@@ -70,6 +69,7 @@ export default class Windows extends React.Component {
   }
 
   componentWillUnmount() {
+    this.mounted = false
     globalShortcut.unregisterAll()
     for (const [emitter, name, callback] of this.subscriptions) {
       emitter.removeListener(name, callback)
@@ -149,35 +149,7 @@ export default class Windows extends React.Component {
       open(url)
     })
 
-    this.on(ipcMain, 'where-to', (event, key) => {
-      console.log('where-to from', key)
-      const win = AppWindows.findBy(key)
-      if (win) {
-        win.onHasPath(() => {
-          console.log('where-to:', key, win.path)
-          event.sender.send('app-goto', win.path)
-        })
-      } else {
-        console.log('no window found for where-to event')
-      }
-    })
-
     this.on(ipcMain, 'get-context', this.getContext)
-
-    this.on(ipcMain, 'bar-goto', (event, path) => {
-      this.openApp(path)
-    })
-
-    this.on(ipcMain, 'close', (event, key) => {
-      AppWindows.removeByKey(+key)
-      this.updateWindows()
-    })
-
-    this.on(ipcMain, 'app-bar-toggle', (event, key) => {
-      AppWindows.findBy(key).toggleBar()
-      this.updateWindows()
-      event.sender.send('app-bar-toggle', 'success')
-    })
 
     this.on(ipcMain, 'open-settings', (event, service) => {
       open(`${Constants.APP_URL}/authorize?service=` + service)
@@ -233,12 +205,16 @@ export default class Windows extends React.Component {
       console.log('error with crawl loop', err)
     }
     await sleep(500)
+    if (!this.mounted) {
+      return
+    }
     if (this.continueChecking) {
+      console.log('loop')
       this.checkCrawlerLoop(cb)
     }
   }
 
-  checkCrawler = async () => {
+  checkCrawler = throttle(async () => {
     const res = await execute(`
       tell application "Google Chrome"
         tell front window's active tab
@@ -253,7 +229,7 @@ export default class Windows extends React.Component {
       console.log('error parsing result', err)
       return null
     }
-  }
+  }, 200)
 
   getContext = throttle(async event => {
     const [application, title] = await execute(`

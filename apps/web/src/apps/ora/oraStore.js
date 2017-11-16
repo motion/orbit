@@ -354,9 +354,6 @@ export default class OraStore {
       }
       if (this.stack.selected.onSelect) {
         this.stack.selected.onSelect()
-      } else {
-        // const schema = JSON.stringify(this.stack.selected)
-        // OS.send('bar-goto', `http://jot.dev/master?schema=${schema}`)
       }
     },
     cmdL: () => {

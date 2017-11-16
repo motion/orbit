@@ -15,6 +15,10 @@ const clean = str => {
 }
 
 export default class ContextSidebar {
+  get oraStore() {
+    return this.props.oraStore
+  }
+
   get osContext() {
     return this.oraStore.osContext
   }
@@ -61,10 +65,6 @@ export default class ContextSidebar {
         }
       }
     })
-  }
-
-  get oraStore() {
-    return this.props.oraStore
   }
 
   get context() {

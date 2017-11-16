@@ -569,6 +569,10 @@ console-control-strings@^1.0.0, console-control-strings@~1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/console-control-strings/-/console-control-strings-1.1.0.tgz#3d7cf4464db6446ea644bf4b39507f9851008e8e"
 
+console-group@^0.3.3:
+  version "0.3.3"
+  resolved "https://registry.yarnpkg.com/console-group/-/console-group-0.3.3.tgz#6d8eb6b9d6b757a2895284f62d09c7ad43f2bbce"
+
 constants-browserify@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/constants-browserify/-/constants-browserify-1.0.0.tgz#c20b96d8c617748aaf1c16021760cd27fcb8cb75"

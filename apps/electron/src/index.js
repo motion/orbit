@@ -1,38 +1,24 @@
 import 'isomorphic-fetch'
 import 'raf/polyfill'
+import './helpers/updateChecker'
 import electronContextMenu from 'electron-context-menu'
 import electronDebug from 'electron-debug'
-import updater from 'electron-simple-updater'
 import React from 'react'
 import Ionize from '@mcro/ionize'
 import { onWindow } from './windows'
 import { throttle } from 'lodash'
-import * as Constants from '~/constants'
+import { extras } from 'mobx'
+
+// share state because node loads multiple copies
+extras.shareGlobalState()
 
 let app = null
-
-// update checker
-if (Constants.IS_PROD) {
-  const updateUrl = require('../package.json').updater.url
-  console.log('updateUrl', updateUrl)
-  updater.init(updateUrl)
-
-  updater.on('update-available', () => {
-    console.log('Update available')
-  })
-
-  updater.on('update-downloaded', () => {
-    updater.quitAndInstall()
-  })
-}
 
 const start = throttle(() => {
   const Windows = require('./windows').default
   Ionize.start(<Windows />)
-
   electronContextMenu()
   electronDebug()
-
   onWindow(ref => {
     app = ref
   })

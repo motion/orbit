@@ -96,7 +96,7 @@ export default class ContextSidebar {
               title,
               // icon: 'link',
               onClick: () => {
-                OS.send('navigate', item.url)
+                OS.send('open-browser', item.url)
               },
               children: (
                 <UI.Text ellipse={2} opacity={0.65} size={0.9}>

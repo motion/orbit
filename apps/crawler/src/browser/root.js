@@ -260,13 +260,16 @@ aside span aside * { display: flex; flex-flow: column; }
       },
     },
     space: {
+      isolate: true,
       width: 10,
     },
     preview: {
+      isolate: true,
       padding: 10,
       paddingTop: 5,
     },
     previewLine: {
+      isolate: true,
       flexFlow: 'row',
       alignItems: 'center',
     },

@@ -29,10 +29,22 @@ export default class OraStore {
   textboxVal = ''
   traps = {}
   lastKey = null
-  hidden = false
-  focused = true
-  focusedBar = false
   banner = null
+  focusedBar = false
+
+  // this is synced to electron!
+  state = {
+    hidden: false,
+    focused: true,
+  }
+
+  setState = newState => {
+    this.state = {
+      ...this.state,
+      ...newState,
+    }
+    OS.send('set-state', this.state)
+  }
 
   // TODO move into currentuser
   get bucket() {
@@ -55,18 +67,16 @@ export default class OraStore {
 
   async willMount() {
     this.attachTrap('window', window)
+
+    this._listenForStateSync()
+    this._listenForContext()
+    // side effect watchers
     this._watchFocus()
     this._watchFocusBar()
     this._watchInput()
     this._watchToggleHide()
     this._watchMouse()
-    this.watch(() => {
-      if (this.hidden) {
-        // timeout based on animation
-        this.setTimeout(this.blurBar, 100)
-      }
-    })
-    await this.listenForContext()
+    this._watchBlurBar()
   }
 
   setBanner = (type, message, timeout) => {
@@ -109,7 +119,22 @@ export default class OraStore {
     return thing
   }
 
-  listenForContext = async () => {
+  _watchBlurBar = () => {
+    this.watch(() => {
+      if (this.state.hidden) {
+        // timeout based on animation
+        this.setTimeout(this.blurBar, 100)
+      }
+    })
+  }
+
+  _listenForStateSync = () => {
+    this.on(OS, 'get-state', () => {
+      OS.send('got-state', this.state)
+    })
+  }
+
+  _listenForContext = () => {
     // check
     this.setInterval(() => {
       OS.send('get-context')
@@ -162,12 +187,11 @@ export default class OraStore {
       // SET TIMEOUT HERE because electron is super quick
       // and tells the app its focused BEFORE your click event happens
       this.setTimeout(() => {
-        this.focused = true
+        this.setState({ focused: true })
       })
     })
     this.on(OS, 'ora-blur', () => {
-      console.log('blur')
-      this.focused = false
+      this.setState({ focused: false })
     })
   }
 
@@ -204,8 +228,8 @@ export default class OraStore {
   _watchMouse() {
     OS.send('mouse-listen')
     this.on(OS, 'mouse-in-corner', () => {
-      if (this.hidden) {
-        this.hidden = false
+      if (this.state.hidden) {
+        this.setState({ hidden: false })
       }
     })
   }
@@ -213,12 +237,12 @@ export default class OraStore {
   _watchToggleHide() {
     OS.send('start-ora')
     this.on(OS, 'ora-toggle', () => {
-      this.hidden = !this.hidden
+      this.setState({ hidden: !this.state.hidden })
     })
   }
 
   hide = () => {
-    this.hidden = true
+    this.setState({ hidden: true })
   }
 
   _watchInput() {

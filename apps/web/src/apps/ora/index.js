@@ -22,12 +22,12 @@ export default class OraPage {
     return (
       <UI.Theme name="dark">
         <ora
-          $visible={!oraStore.hidden}
+          $visible={!oraStore.state.hidden}
           ref={oraStore.ref('barRef').set}
           $$draggable
         >
           <overlay
-            if={!oraStore.focused}
+            if={!oraStore.state.focused}
             $$fullscreen
             css={{
               zIndex: 100000000000,

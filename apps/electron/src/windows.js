@@ -168,7 +168,6 @@ export default class Windows extends React.Component {
 
   toggleShown = throttle(async () => {
     await this.sendOra('ora-toggle')
-    console.log('ok so...', this.oraState)
     if (this.oraState.hidden) {
       await Helpers.sleep(200)
       if (this.appRef) {

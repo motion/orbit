@@ -27,7 +27,7 @@ export default class OraPage {
           $$draggable
         >
           <overlay
-            if={!oraStore.state.focused}
+            if={oraStore.wasBlurred}
             $$fullscreen
             css={{
               zIndex: 100000000000,

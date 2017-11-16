@@ -31,6 +31,7 @@ export default class OraStore {
   lastKey = null
   banner = null
   focusedBar = false
+  wasBlurred = false
 
   // this is synced to electron!
   state = {
@@ -77,6 +78,14 @@ export default class OraStore {
     this._watchToggleHide()
     this._watchMouse()
     this._watchBlurBar()
+
+    this.watch(() => {
+      const { focused } = this.state
+      // one frame later
+      this.setTimeout(() => {
+        this.wasBlurred = !focused
+      }, 16)
+    })
   }
 
   setBanner = (type, message, timeout) => {
@@ -184,11 +193,8 @@ export default class OraStore {
 
   _watchFocus() {
     this.on(OS, 'ora-focus', () => {
-      // SET TIMEOUT HERE because electron is super quick
-      // and tells the app its focused BEFORE your click event happens
-      this.setTimeout(() => {
-        this.setState({ focused: true })
-      })
+      this.focusedAt = Date.now()
+      this.setState({ focused: true })
     })
     this.on(OS, 'ora-blur', () => {
       this.setState({ focused: false })

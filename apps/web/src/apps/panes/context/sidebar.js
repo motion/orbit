@@ -15,8 +15,15 @@ const clean = str => {
 }
 
 export default class ContextSidebar {
-  // copy it here
-  osContext = this.oraStore.osContext
+  get osContext() {
+    return this.oraStore.osContext
+  }
+
+  // can customize the shown title here
+  get title() {
+    return this.oraStore.osContext ? this.oraStore.osContext.title : null
+  }
+
   isShowingCrawlInBrowser = false
   crawlerInfo = null
   crawlerSettings = {
@@ -89,7 +96,7 @@ export default class ContextSidebar {
 
             return {
               title,
-              icon: 'link',
+              // icon: 'link',
               onClick: () => {
                 OS.send('navigate', item.url)
               },

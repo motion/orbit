@@ -132,18 +132,16 @@ export default class OraStore {
 
       const updateContext = title => {
         this.osContext = context
-        const nextStackItem = {
-          id: `${context.selection ? context.selection + ' -- ' : ''}${
-            context.url
-          }`,
-          title,
-          type: 'context',
-          icon:
-            context.application === 'Google Chrome' ? 'social-google' : null,
-        }
-        if (this.stack.length > 1) {
-          this.stack.replace(nextStackItem)
-        } else {
+        if (this.stack.length === 1) {
+          const nextStackItem = {
+            id: `${context.selection ? context.selection + ' -- ' : ''}${
+              context.url
+            }`,
+            title,
+            type: 'context',
+            icon:
+              context.application === 'Google Chrome' ? 'social-google' : null,
+          }
           this.stack.navigate(nextStackItem)
         }
       }

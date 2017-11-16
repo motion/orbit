@@ -35,10 +35,13 @@ class StackItemStore {
           displayTitle: false,
           children: (
             <SidebarTitle
-              title={result.title}
-              icon={result.icon}
+              title={(this.store && this.store.title) || result.title}
+              icon={false && result.icon}
               subtitle={result.subtitle}
               onBack={this.stack.left}
+              backProps={{
+                icon: this.stack.length > 2 ? 'arrow-min-left' : 'home',
+              }}
             />
           ),
           onClick: this.stack.left,

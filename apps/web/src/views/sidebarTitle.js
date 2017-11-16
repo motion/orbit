@@ -5,17 +5,23 @@ import * as UI from '@mcro/ui'
 
 @view
 export default class SidebarTitle {
-  render({ noBack, icon, subtitle, title, onBack }) {
+  render({ backProps, noBack, icon, subtitle, title, onBack }) {
     return (
-      <sidebartitle onClick={onBack}>
+      <sidebartitle
+        onClick={e => {
+          e.stopPropagation()
+          onBack(e)
+        }}
+      >
         <UI.Button
           if={!noBack}
           $backButton
-          size={1}
+          size={0.9}
           circular
           theme="light"
           icon="arrominleft"
           boxShadow="0 0 10px rgba(0,0,0,0.1)"
+          {...backProps}
         />
         <titles>
           <UI.Title ellipse={2} $title size={1.25} fontWeight={600}>

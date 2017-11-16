@@ -51,7 +51,12 @@
     "triangulr": "^1.0.0",
     "victory": "0.22.2",
     "worker-pouch": "^2.0.0",
-    "latinize": "0.4.0"
+    "latinize": "0.4.0",
+    "compendium-js": "0.0.25",
+    "compute-cosine-distance": "1.0.0",
+    "compromise": "11.1.0",
+    "wink-bm25-text-search": "2.0.1",
+    "wink-nlp-utils": "1.7.0"
   },
   "devDependencies": {
     "@mcro/builder": "^1.5.1"

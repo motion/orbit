@@ -2,7 +2,7 @@ import React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import PaneView from '~/apps/panes/pane'
-import ContextStore from '~/stores/contextStore'
+import ContextStore from '~/context'
 import { take, flatten } from 'lodash'
 import { OS } from '~/helpers'
 
@@ -46,17 +46,12 @@ const hashStr = s => {
       await this.getData()
       window.contextPane = this
       OS.on('set-context', (event, url) => {
-        console.log('got url', url)
         this.url = url
       })
       this.getUrl()
     }
 
-    runContext = text => {
-      this.results = this.context.closestItems(text).map(({ item }) => {
-        return item.title
-      })
-    }
+    runContext = text => {}
 
     getUrl = () => {
       OS.send('get-context')
@@ -77,13 +72,20 @@ export default class ContextView {
         <UI.Theme name="dark">
           <button
             onClick={() => {
-              console.log('getting context')
               OS.send('get-context')
             }}
           >
             get
           </button>
           <UI.Text>url is {store.url}</UI.Text>
+          <autocomplete>
+            <UI.Title>autocomplete</UI.Title>
+            {store.autocomplete.map(i => (
+              <UI.Text>
+                {i.freq} - {i.val}
+              </UI.Text>
+            ))}
+          </autocomplete>
           {store.results.map(text => (
             <UI.Text css={{ width: '100%' }}>{text}</UI.Text>
           ))}
@@ -97,5 +99,9 @@ export default class ContextView {
     )
   }
 
-  static style = {}
+  static style = {
+    autocomplete: {
+      margin: 20,
+    },
+  }
 }

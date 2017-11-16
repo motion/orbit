@@ -4,7 +4,7 @@ import Mousetrap from 'mousetrap'
 import { OS, debounceIdle } from '~/helpers'
 import StackStore from '~/stores/stackStore'
 import keycode from 'keycode'
-import ContextStore from '~/stores/contextStore'
+import ContextStore from '~/context'
 import SHORTCUTS from './shortcuts'
 import { CurrentUser } from '~/app'
 import * as r2 from '@mcro/r2'
@@ -131,6 +131,7 @@ export default class OraStore {
       }
 
       const updateContext = title => {
+        console.log('updating to ', title)
         this.osContext = context
         // if were at home, move into a new pane
         // otherwise, no need to push a new pane
@@ -149,6 +150,7 @@ export default class OraStore {
       if (!this.osContext || this.osContext.title !== context.title) {
         return updateContext(context.title)
       }
+
       if (this.osContext.selection !== context.selection) {
         return updateContext(context.selection || context.title)
       }

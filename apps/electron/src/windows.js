@@ -232,7 +232,7 @@ export default class Windows extends React.Component {
       const res = await Helpers.runAppleScript(`
         tell application "Google Chrome"
           tell front window's active tab
-            set source to execute javascript "JSON.stringify({ url: document.location+'', title: document.title, body: document.body.innerText, selection: document.getSelection().toString() })"
+            set source to execute javascript "JSON.stringify({ url: document.location+'', title: document.title, body: document.body.innerText, selection: document.getSelection().toString() ? document.getSelection().toString() : (document.getSelection().anchorNode ? document.getSelection().anchorNode.textContent : '') })"
           end tell
         end tell
       `)
@@ -243,6 +243,7 @@ export default class Windows extends React.Component {
           JSON.stringify({
             title: result.title,
             body: result.body,
+            currentText: result.currentText,
             url: result.url,
             selection: result.selection,
             application,

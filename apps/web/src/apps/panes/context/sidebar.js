@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { OS, fuzzy } from '~/helpers'
 import { summarize, summarizeWithQuestion } from './helpers/summarize'
+import { Thing } from '~/app'
 import * as UI from '@mcro/ui'
 import { watch } from '@mcro/black'
-import { Thing } from '~/app'
 import { flatten, isEqual } from 'lodash'
 import After from '~/views/after'
 
@@ -82,19 +82,15 @@ export default class ContextSidebar {
     return !this.context || this.context.loading // || this.osContext === null
       ? []
       : this.context
-          .closestItems(this.search.length > 0 ? this.search : title, 8)
+          .search(this.search.length > 0 ? this.search : title, 8)
           // filter same item
           .filter(x => {
             if (!x.item) return true
             if (!this.props.data) return true
             return x.item.url !== this.props.result.data.url
           })
-          .map(({ debug, item, similarity }) => {
+          .map(({ debug, item, similarity }, index) => {
             const title = item.title
-            const lines =
-              this.search.length === 0
-                ? summarize(item.body)
-                : summarizeWithQuestion(item.body, this.search)
 
             return {
               title,
@@ -102,16 +98,12 @@ export default class ContextSidebar {
               onClick: () => {
                 OS.send('navigate', item.url)
               },
-              children:
-                Array.isArray(lines) && lines.length >= 2
-                  ? flatten(lines)
-                      .slice(0, 2)
-                      .map((line, i) => (
-                        <UI.Text key={i} ellipse opacity={0.65} size={1.1}>
-                          {clean(line)}
-                        </UI.Text>
-                      ))
-                  : clean(lines),
+              children: (
+                <UI.Text ellipse={2} opacity={0.65} size={0.9}>
+                  {this.context.sentences[index] &&
+                    this.context.sentences[index].sentence}
+                </UI.Text>
+              ),
               after: (
                 <After
                   onClick={e => {

@@ -1,32 +1,20 @@
-import * as r2 from '@mcro/r2'
 import React from 'react'
-import { app, globalShortcut, ipcMain, screen, Menu } from 'electron'
+import * as Helpers from './helpers'
+import { app, globalShortcut, ipcMain, screen } from 'electron'
 import repl from 'repl'
-import applescript from 'node-osascript'
-import promisify from 'sb-promisify'
 import open from 'opn'
-import { measure } from '~/helpers'
 import * as Constants from '~/constants'
-import WindowsStore from './windowsStore'
-import Window from './window'
 import mouse from 'osx-mouse'
 import { throttle, isEqual, once } from 'lodash'
 import MenuItems from './menu'
-import getCrawler from './getCrawler'
+import getCrawler from './helpers/getCrawler'
 import escapeStringApplescript from 'escape-string-applescript'
-
-const execute = promisify(applescript.execute)
-const sleep = ms => new Promise(res => setTimeout(res, ms))
+import log from '@mcro/black/lib/helpers/log'
 
 let onWindows = []
 export function onWindow(cb) {
   onWindows.push(cb)
 }
-
-console.log('Constants.APP_URL', Constants.APP_URL)
-
-const AppWindows = new WindowsStore()
-const ORA_WIDTH = 320
 
 export default class Windows extends React.Component {
   // this is an event bus that should be open
@@ -44,32 +32,28 @@ export default class Windows extends React.Component {
     size: [0, 0],
     position: [0, 0],
     trayPosition: [0, 0],
-    appWindows: AppWindows.windows,
   }
 
   componentDidMount() {
+    this.mounted = true
     this.measureAndShow()
-
     this.screenSize = screen.getPrimaryDisplay().workAreaSize
     this.setState({
-      trayPosition: [this.screenSize.width - ORA_WIDTH, 20],
+      trayPosition: [this.screenSize.width - Constants.ORA_WIDTH, 20],
     })
-
-    this.next() // preload one app window
     onWindows.forEach(cb => cb(this))
     setTimeout(this.measureAndShow, 500)
     this.repl = repl.start({
-      prompt: 'electron > ',
+      prompt: '$ > ',
     })
     Object.assign(this.repl.context, {
       Root: this,
-      AppWindows: AppWindows,
     })
-
     this.listenForMouse()
   }
 
   componentWillUnmount() {
+    this.mounted = false
     globalShortcut.unregisterAll()
     for (const [emitter, name, callback] of this.subscriptions) {
       emitter.removeListener(name, callback)
@@ -86,9 +70,7 @@ export default class Windows extends React.Component {
       const triggerX = this.screenSize.width - 20
       const triggerY = 20
       const mousey = mouse()
-
       let hasLeftCorner = true
-
       mousey.on(
         'move',
         throttle((x, y) => {
@@ -106,8 +88,9 @@ export default class Windows extends React.Component {
     })
   }
 
+  @log
   measure = () => {
-    const { position, size } = measure()
+    const { position, size } = Helpers.measure()
     this.size = size
     this.position = position
     this.initialSize = this.initialSize || this.size
@@ -121,8 +104,10 @@ export default class Windows extends React.Component {
   }
 
   startOra = once(() => {
-    // console.log('clear storage data!!!!!!!')
-    // this.oraRef.webContents.session.clearStorageData()
+    // CLEAR DATA
+    if (process.env.CLEAR_DATA) {
+      this.oraRef.webContents.session.clearStorageData()
+    }
     this.listenToApps()
     this.registerShortcuts()
   })
@@ -133,6 +118,7 @@ export default class Windows extends React.Component {
     }
   }
 
+  @log
   listenToApps = () => {
     this.on(ipcMain, 'start-ora', event => {
       // setup our event bus
@@ -149,35 +135,7 @@ export default class Windows extends React.Component {
       open(url)
     })
 
-    this.on(ipcMain, 'where-to', (event, key) => {
-      console.log('where-to from', key)
-      const win = AppWindows.findBy(key)
-      if (win) {
-        win.onHasPath(() => {
-          console.log('where-to:', key, win.path)
-          event.sender.send('app-goto', win.path)
-        })
-      } else {
-        console.log('no window found for where-to event')
-      }
-    })
-
     this.on(ipcMain, 'get-context', this.getContext)
-
-    this.on(ipcMain, 'bar-goto', (event, path) => {
-      this.openApp(path)
-    })
-
-    this.on(ipcMain, 'close', (event, key) => {
-      AppWindows.removeByKey(+key)
-      this.updateWindows()
-    })
-
-    this.on(ipcMain, 'app-bar-toggle', (event, key) => {
-      AppWindows.findBy(key).toggleBar()
-      this.updateWindows()
-      event.sender.send('app-bar-toggle', 'success')
-    })
 
     this.on(ipcMain, 'open-settings', (event, service) => {
       open(`${Constants.APP_URL}/authorize?service=` + service)
@@ -186,6 +144,7 @@ export default class Windows extends React.Component {
 
   shown = true
 
+  @log
   toggleShown = throttle(() => {
     this.sendOra('ora-toggle')
     this.shown = !this.shown // hacky
@@ -194,7 +153,6 @@ export default class Windows extends React.Component {
         this.appRef.show()
         this.appRef.focus()
       }
-      // Menu.sendActionToFirstResponder('show:')
       this.oraRef.focus()
     } else {
       setTimeout(() => {
@@ -205,16 +163,16 @@ export default class Windows extends React.Component {
     }
   }, 500)
 
+  @log
   injectCrawler = throttle(async sendToOra => {
     const js = await getCrawler()
-    await execute(`
+    await Helpers.runAppleScript(`
       tell application "Google Chrome"
         tell front window's active tab
           set source to execute javascript "${escapeStringApplescript(js)}"
         end tell
       end tell
     `)
-
     this.continueChecking = true
     let lastRes = null
     this.checkCrawlerLoop(res => {
@@ -225,6 +183,7 @@ export default class Windows extends React.Component {
     })
   }, 500)
 
+  @log
   checkCrawlerLoop = async cb => {
     try {
       cb(await this.checkCrawler())
@@ -232,14 +191,19 @@ export default class Windows extends React.Component {
       this.continueChecking = false
       console.log('error with crawl loop', err)
     }
-    await sleep(500)
+    await Helpers.sleep(500)
+    if (!this.mounted) {
+      return
+    }
     if (this.continueChecking) {
+      console.log('loop check crawler')
       this.checkCrawlerLoop(cb)
     }
   }
 
-  checkCrawler = async () => {
-    const res = await execute(`
+  @log
+  checkCrawler = throttle(async () => {
+    const res = await Helpers.runAppleScript(`
       tell application "Google Chrome"
         tell front window's active tab
           set source to execute javascript "JSON.stringify(window.__oraCrawlerAnswer || {})"
@@ -253,10 +217,11 @@ export default class Windows extends React.Component {
       console.log('error parsing result', err)
       return null
     }
-  }
+  }, 200)
 
+  @log
   getContext = throttle(async event => {
-    const [application, title] = await execute(`
+    const [application, title] = await Helpers.runAppleScript(`
       global frontApp, frontAppName, windowTitle
       set windowTitle to ""
       tell application "System Events"
@@ -270,16 +235,14 @@ export default class Windows extends React.Component {
       end tell
       return {frontAppName, windowTitle}
     `)
-
     if (application === 'Google Chrome') {
-      const res = await execute(`
+      const res = await Helpers.runAppleScript(`
         tell application "Google Chrome"
           tell front window's active tab
             set source to execute javascript "JSON.stringify({ url: document.location+'', title: document.title, body: document.body.innerText, selection: document.getSelection().toString() ? document.getSelection().toString() : (document.getSelection().anchorNode ? document.getSelection().anchorNode.textContent : '') })"
           end tell
         end tell
       `)
-
       try {
         const result = JSON.parse(res)
         event.sender.send(
@@ -300,30 +263,6 @@ export default class Windows extends React.Component {
       event.sender.send('set-context', null)
     }
   }, 200)
-
-  updateWindows = () => {
-    return new Promise(resolve => {
-      this.setState(
-        {
-          appWindows: AppWindows.windows,
-        },
-        resolve
-      )
-    })
-  }
-
-  next = path => {
-    const next = AppWindows.next(path)
-    this.updateWindows()
-    return next
-  }
-
-  openApp = path => {
-    const next = this.next(path)
-    if (next) {
-      setTimeout(() => next.ref && next.ref.focus(), 100)
-    }
-  }
 
   registerShortcuts = () => {
     globalShortcut.unregisterAll()
@@ -351,16 +290,8 @@ export default class Windows extends React.Component {
     this.setState({ error })
   }
 
-  onOraBlur() {
-    this.sendOra('ora-blur')
-  }
-
-  onOraFocus() {
-    this.sendOra('ora-focus')
-  }
-
   render() {
-    const { appWindows, error, restart } = this.state
+    const { error, restart } = this.state
 
     if (restart) {
       console.log('\n\n\n\n\n\nRESTARTING\n\n\n\n\n\n')
@@ -406,7 +337,6 @@ export default class Windows extends React.Component {
             this.menuRef = ref
           }}
         />
-
         {!this.state.closeSettings && (
           <window
             {...appWindow}
@@ -435,7 +365,6 @@ export default class Windows extends React.Component {
             }}
           />
         )}
-
         <window
           {...appWindow}
           ref={this.onOra}
@@ -444,61 +373,14 @@ export default class Windows extends React.Component {
           show
           alwaysOnTop
           showDevTools
-          size={[ORA_WIDTH, 1000]}
+          size={[Constants.ORA_WIDTH, 1000]}
           file={`${Constants.APP_URL}/ora`}
           position={this.state.trayPosition}
           onMoved={trayPosition => this.setState({ trayPosition })}
           onMove={trayPosition => this.setState({ trayPosition })}
-          onBlur={() => this.onOraBlur()}
-          onFocus={() => this.onOraFocus()}
+          onBlur={() => this.sendOra('ora-blur')}
+          onFocus={() => this.sendOra('ora-focus')}
         />
-
-        {appWindows.map(win => {
-          return (
-            <Window
-              key={win.key}
-              file={`${Constants.APP_URL}?key=${win.key}`}
-              show={win.active}
-              {...appWindow}
-              defaultSize={win.size}
-              size={win.size}
-              position={win.position}
-              onMoved={x => {
-                win.setPosition(x)
-                this.updateWindows()
-              }}
-              onResize={x => {
-                win.setSize(x)
-                this.updateWindows()
-              }}
-              onClose={() => {
-                AppWindows.removeByKey(win.key)
-                this.updateWindows()
-              }}
-              onFocus={() => {
-                win.showDevTools = true
-                win.focused = true
-                this.activeWindow = win
-                this.updateWindows()
-              }}
-              onBlur={() => {
-                if (!win) {
-                  console.log('no window weird')
-                  return
-                }
-                win.focused = false
-                if (this.activeWindow.key === win.key) {
-                  this.activeWindow = null
-                }
-                this.updateWindows()
-              }}
-              showDevTools={win.showDevTools}
-              titleBarStyle={
-                win.showBar ? 'hidden-inset' : 'customButtonsOnHover'
-              }
-            />
-          )
-        })}
       </app>
     )
   }

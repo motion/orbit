@@ -1,6 +1,8 @@
 import * as React from 'react'
 import Crawler from '@mcro/crawler/lib/browser/root'
 
+// this view helps test out crawler UI easily
+
 export default class extends React.Component {
   render() {
     return (

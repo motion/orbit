@@ -153,6 +153,7 @@ export default class WindowElement extends BaseElement {
       this.window.webContents.openDevTools()
     }
 
+    console.log('--1')
     configureSize.call(this, props)
     configurePosition.call(this, props)
     configureFile.call(this, props)
@@ -301,29 +302,33 @@ function configureSize({ size, onResize, defaultSize }: Object) {
     return
   }
 
-  this.configureEvent('onResize', 'resize', onResize, rawHandler => {
-    const size = this.window.getSize()
-    rawHandler(size)
-  })
+  try {
+    this.configureEvent('onResize', 'resize', onResize, rawHandler => {
+      const size = this.window.getSize()
+      rawHandler(size)
+    })
 
-  if (!size && defaultSize) {
-    this.window.setSize(...defaultSize)
-    this.window.setResizable(true)
-    return
-  }
-  if (!size && !defaultSize) {
-    this.window.setResizable(true)
-    return
-  }
-  if (size && onResize) {
-    this.window.setSize(...size)
-    this.window.setResizable(true)
-    return
-  }
-  if (size && !onResize) {
-    this.window.setSize(...size)
-    this.window.setResizable(false)
-    return
+    if (!size && defaultSize) {
+      this.window.setSize(...defaultSize)
+      this.window.setResizable(true)
+      return
+    }
+    if (!size && !defaultSize) {
+      this.window.setResizable(true)
+      return
+    }
+    if (size && onResize) {
+      this.window.setSize(...size)
+      this.window.setResizable(true)
+      return
+    }
+    if (size && !onResize) {
+      this.window.setSize(...size)
+      this.window.setResizable(false)
+      return
+    }
+  } catch (e) {
+    console.log('error in configureSize', e)
   }
 }
 

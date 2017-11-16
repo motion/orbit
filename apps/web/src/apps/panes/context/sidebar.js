@@ -15,8 +15,20 @@ const clean = str => {
 }
 
 export default class ContextSidebar {
+  get oraStore() {
+    return this.props.oraStore
+  }
+
   get osContext() {
     return this.oraStore.osContext
+  }
+
+  get context() {
+    return this.oraStore.context
+  }
+
+  get search() {
+    return this.oraStore.search
   }
 
   // can customize the shown title here
@@ -63,22 +75,9 @@ export default class ContextSidebar {
     })
   }
 
-  get oraStore() {
-    return this.props.oraStore
-  }
-
-  get context() {
-    return this.oraStore.context
-  }
-
-  get search() {
-    return this.oraStore.search
-  }
-
   get contextResults() {
-    window.contextSidebar = this
     const title = this.osContext
-      ? this.osContext.selection || this.osContext.title || ''
+      ? this.osContext.selection || this.osContext.title
       : ''
     return !this.context || this.context.loading // || this.osContext === null
       ? []
@@ -101,7 +100,8 @@ export default class ContextSidebar {
               },
               children: (
                 <UI.Text opacity={0.65} size={0.9}>
-                  {this.context.sentences[index]}
+                  {this.context.sentences[index] &&
+                    this.context.sentences[index].sentence}
                 </UI.Text>
               ),
               after: (

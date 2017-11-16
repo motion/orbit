@@ -42,8 +42,6 @@ export const splitSentences = s =>
     .split('|')
     .filter(s => s.length > 10)
 
-window.euc = euclideanDistance
-
 export const minKBy = (vals, k, fn) => {
   let stash = []
   let min = Infinity
@@ -61,5 +59,5 @@ export const minKBy = (vals, k, fn) => {
     }
   })
 
-  return stash
+  return sortBy(stash, fn)
 }

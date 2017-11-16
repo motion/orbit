@@ -6,6 +6,13 @@ import Sidebar from '../panes/sidebar'
 import * as Sidebars from '../panes/sidebars'
 import * as Constants from '~/constants'
 
+const makeBold = (input, toBold) => {
+  return input.replace(
+    new RegExp('(\\b)(' + toBold.join('|') + ')(\\b)', 'ig'),
+    '$1<b style="display: inline;">$2</b>$3'
+  )
+}
+
 @view({
   store: RelevancyStore,
 })
@@ -47,9 +54,17 @@ export default class RelevancyPage {
                 >
                   {item.title}
                 </UI.Title>
-                <UI.Text if={store.sentences && store.sentences.length > 0}>
-                  {store.sentences[index]}
-                </UI.Text>
+                <div
+                  style={{ display: 'inline' }}
+                  $$row
+                  dangerouslySetInnerHTML={{
+                    __html: makeBold(
+                      store.sentences[index].sentence,
+                      store.sentences[index].toBold
+                    ),
+                  }}
+                  if={store.sentences && store.sentences.length > 0}
+                />
                 <details>
                   {debug.map(info => (
                     <UI.Text>

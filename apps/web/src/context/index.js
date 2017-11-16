@@ -167,9 +167,14 @@ export default class Context {
     })
     const termsWords = toValidWords(terms)
 
+    const toBold = minKBy(this.engine.getWeights(terms), 4, _ => -_.weight).map(
+      ({ t }) => this.getRealWordFromText(t, terms)
+    )
+
     return minKBy(
       splitSentences(content).map(sentence => ({
         sentence,
+        toBold,
         distance: emd(
           termsWords,
           toValidWords(sentence),
@@ -186,7 +191,8 @@ export default class Context {
     const txt = `getting sentence for text: ${text}`
     console.time(txt)
     this.sentences = this.searchResults.map(({ item }) => {
-      return this.sentenceDistances(text, item.body)[0].sentence
+      const responses = this.sentenceDistances(text, item.body)
+      return responses.length > 0 ? responses[0] : null
     })
     console.timeEnd(txt)
     return this.sentences

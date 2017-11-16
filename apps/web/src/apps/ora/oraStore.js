@@ -133,11 +133,11 @@ export default class OraStore {
       const updateContext = title => {
         console.log('updating to ', title)
         this.osContext = context
+        // if were at home, move into a new pane
+        // otherwise, no need to push a new pane
         if (this.stack.length === 1) {
           const nextStackItem = {
-            id: `${context.selection ? context.selection + ' -- ' : ''}${
-              context.url
-            }`,
+            id: context.url,
             title,
             type: 'context',
             icon:
@@ -356,9 +356,6 @@ export default class OraStore {
       }
       if (this.stack.selected.onSelect) {
         this.stack.selected.onSelect()
-      } else {
-        // const schema = JSON.stringify(this.stack.selected)
-        // OS.send('bar-goto', `http://jot.dev/master?schema=${schema}`)
       }
     },
     cmdL: () => {

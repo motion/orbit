@@ -1,4 +1,9 @@
+import applescript from 'node-osascript'
+import promisify from 'sb-promisify'
 import { screen } from 'electron'
+
+export const runAppleScript = promisify(applescript.execute)
+export const sleep = ms => new Promise(res => setTimeout(res, ms))
 
 const MIN_WIDTH = 800
 const MIN_HEIGHT = 750

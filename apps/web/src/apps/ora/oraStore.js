@@ -88,7 +88,9 @@ export default class OraStore {
     this.setBanner(BANNERS.note, 'Pinning...')
     const token = `e441c83aed447774532894d25d97c528`
     const { url } = this.osContext
-    const toFetch = `https://api.diffbot.com/v3/article?token=${token}&url=${url}`
+    const toFetch = `https://api.diffbot.com/v3/article?token=${token}&url=${
+      url
+    }`
     const res = await fetch(toFetch).then(res => res.json())
     if (res.error) {
       this.setBanner(BANNERS.error, `Diffbot: ${res.error}`)
@@ -111,7 +113,7 @@ export default class OraStore {
     // check
     this.setInterval(() => {
       OS.send('get-context')
-    }, 500)
+    }, 300)
     // response
     this.on(OS, 'set-context', (event, info) => {
       const context = JSON.parse(info)
@@ -131,18 +133,16 @@ export default class OraStore {
       const updateContext = title => {
         console.log('updating to ', title)
         this.osContext = context
-        const nextStackItem = {
-          id: `${context.selection
-            ? context.selection + ' -- '
-            : ''}${context.url}`,
-          title,
-          type: 'context',
-          icon:
-            context.application === 'Google Chrome' ? 'social-google' : null,
-        }
-        if (this.stack.length > 1) {
-          this.stack.replace(nextStackItem)
-        } else {
+        if (this.stack.length === 1) {
+          const nextStackItem = {
+            id: `${context.selection ? context.selection + ' -- ' : ''}${
+              context.url
+            }`,
+            title,
+            type: 'context',
+            icon:
+              context.application === 'Google Chrome' ? 'social-google' : null,
+          }
           this.stack.navigate(nextStackItem)
         }
       }

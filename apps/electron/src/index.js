@@ -1,5 +1,6 @@
 import 'isomorphic-fetch'
 import 'raf/polyfill'
+import './helpers/handlePromiseErrors'
 import './helpers/updateChecker'
 import './helpers/monitorResourceUsage'
 import electronContextMenu from 'electron-context-menu'

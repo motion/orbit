@@ -8,7 +8,7 @@ import { throttle, isEqual, once } from 'lodash'
 import MenuItems from './menu'
 import getCrawler from './helpers/getCrawler'
 import escapeStringApplescript from 'escape-string-applescript'
-// import log from '@mcro/black/lib/helpers/log'
+import log from '@mcro/black/lib/helpers/log'
 
 let onWindows = []
 export function onWindow(cb) {
@@ -54,7 +54,7 @@ export default class Windows extends React.Component {
     this.mounted = false
     globalShortcut.unregisterAll()
     for (const [emitter, name, callback] of this.subscriptions) {
-      emitter.removeListener(name, callback)
+      emitter.off(name, callback)
     }
   }
 

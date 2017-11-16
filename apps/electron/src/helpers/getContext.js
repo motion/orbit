@@ -18,7 +18,7 @@ export default async function getContext() {
   if (application !== 'Google Chrome') {
     return null
   }
-  const res = await Helpers.runAppleScript(`
+  const res = await runAppleScript(`
     tell application "Google Chrome"
       tell front window's active tab
         set source to execute javascript "JSON.stringify({ url: document.location+'', title: document.title, body: document.body.innerText, selection: document.getSelection().toString() ? document.getSelection().toString() : (document.getSelection().anchorNode ? document.getSelection().anchorNode.textContent : '') })"

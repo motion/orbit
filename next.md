@@ -4,6 +4,7 @@
 
 # now
 
+- bug: hitting close causes state of openness to bug out
 - bug: ora pane flickering away when you try and edit crawl settings
 - crawler
   - after crawl needs to show the results before committing them

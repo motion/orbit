@@ -33,6 +33,6 @@ setTimeout(() => {
 
 setInterval(() => {
   usage.lookup(pid, options, (err, res) => {
-    console.log('memory usage:', res.memory / 1024)
+    console.log('memory usage:', res.memory / 1024 / 1024, 'gb')
   })
 }, SECONDS_BETWEEN_MEMORY_LOG * 1000)

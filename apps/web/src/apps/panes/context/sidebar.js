@@ -55,7 +55,6 @@ export default class ContextSidebar {
 
   // can show a modal that slides in
   get drawer() {
-    this.crawlerSettings // trigger reaction on changes here
     if (!this.showCrawler || !this.crawlerInfo) {
       return null
     }
@@ -67,39 +66,22 @@ export default class ContextSidebar {
     }
     return (
       <UI.List
+        groupBy="category"
         items={[
           {
             category: 'Preview',
             primary: this.crawlerInfo.title,
+            secondary: this.crawlerInfo.entry,
             children: this.crawlerInfo.body,
           },
-          {
-            category: 'Settings',
+          ...Object.keys(this.crawlerSettings).map(key => ({
+            category: 'Crawl Settings:',
             children: (
               <UI.Field
-                label="Max pages:"
-                tooltip="This will make the crawler avoid going above this path"
-                sync={this.ref('crawlerSettings.maxPages')}
+                label={key}
+                sync={this.ref(`crawlerSettings.${key}`)}
                 {...fieldProps}
               />
-            ),
-          },
-          {
-            category: 'Settings',
-            children: (
-              <UI.Field
-                {...fieldProps}
-                label="Depth:"
-                sync={this.ref('crawlerSettings.depth')}
-              />
-            ),
-          },
-          ...Object.keys(this.crawlerInfo).map(key => ({
-            category: 'Crawler Selected',
-            children: (
-              <UI.Field label={key} {...fieldProps}>
-                <UI.Text ellipse>{this.crawlerInfo[key]}</UI.Text>
-              </UI.Field>
             ),
           })),
         ]}
@@ -116,7 +98,7 @@ export default class ContextSidebar {
 
   // this determines when the pane slides in
   get finishedLoading() {
-    return !this.context.isLoading
+    return this.context && !this.context.isLoading
   }
 
   willMount() {
@@ -125,12 +107,18 @@ export default class ContextSidebar {
         // matching url
         if (info.entry === this.osContext.url) {
           if (!isEqual(info, this.crawlerInfo)) {
-            console.log('update selection', info)
             if (this.showCrawler === null) {
               this.showCrawler = true
             }
-            this.crawlerInfo = info
-            this.crawlerSettings.depth = this.crawlerInfo.depth
+            const { depth, bodySelector, titleSelector, ...crawlerInfo } = info
+
+            this.crawlerInfo = crawlerInfo
+            this.crawlerSettings = {
+              ...this.crawlerSettings,
+              depth,
+              bodySelector,
+              titleSelector,
+            }
           }
         } else {
           console.log('not on same url')

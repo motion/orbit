@@ -328,7 +328,7 @@ function configureSize({ size, onResize, defaultSize }: Object) {
       return
     }
   } catch (e) {
-    console.log('error in configureSize', e)
+    console.log('error in configureSize')
   }
 }
 

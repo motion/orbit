@@ -109,6 +109,7 @@ export default class Drawer extends React.PureComponent<Props> {
   static style = {
     drawer: {
       position: 'absolute',
+      overflow: 'hidden', // needed to hide drawer when closed
       top: 0,
       right: 0,
       bottom: 0,

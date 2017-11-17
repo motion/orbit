@@ -6,9 +6,18 @@
 # now
 
 - bug: if chrome is empty tab, dont show context
-- bug: electron needs to tell ora if its been dragged (onMove)
-  - and then ora should cancel any click event
-    - hacky first version could just shim reactElement, shim onClick, if dragged, do cancel/stopprop
+- ux: better "unfocused" state visuals
+  - shadow should be less strong
+  - slightly less contrast on things
+- better way to prevent click events
+  - problems:
+    - bug: click happens even when dragging
+    - bug: cant scroll or hover things or click anything on first click
+      - usually you want to prevent clicks on focus, but may want to allow for ex click on titlebar
+      - also, hover/scroll while inactive are really important, especially scroll
+  - solution:
+    - hacky first version could just shim reactElement, shim onClick for any onclick, and prevent
+      - we can just set window.shouldPreventClick for now
 - bug: ora pane flickering away when you try and edit crawl settings
 - crawler
   - after crawl needs to show the results before committing them

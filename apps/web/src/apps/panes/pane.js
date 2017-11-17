@@ -160,7 +160,7 @@ export default class Pane {
             from="bottom"
             background="#fff"
             boxShadow="0 0 100px #000"
-            size={450}
+            size={614}
           >
             <drawerTitle if={store}>
               <UI.Title
@@ -209,6 +209,7 @@ export default class Pane {
             </UI.Row>
           </actionbar>
         </actions>
+        <bottomGlow $showWithActionBar={!!actions} />
       </pane>
     )
   }
@@ -252,7 +253,19 @@ export default class Pane {
       right: 0,
       background: [0, 0, 0, 0.14],
       backdropFilter: 'blur(15px)',
+      height: Constants.ACTION_BAR_HEIGHT,
       zIndex: 100000,
+    },
+    bottomGlow: {
+      boxShadow: '0 0 80px 3px rgba(0,0,0,1)',
+      zIndex: 100000 - 1,
+      pointerEvents: 'none',
+      position: 'fixed',
+      bottom: 0,
+      left: 0,
+      right: 0,
+    },
+    showWithActionBar: {
       height: Constants.ACTION_BAR_HEIGHT,
     },
     actionButton: {

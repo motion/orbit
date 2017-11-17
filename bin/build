@@ -100,6 +100,6 @@ else
     (cd apps/crawler && npm run build) &
   fi
 
-  wait
+  easy-exit
   echo "done building"
 fi

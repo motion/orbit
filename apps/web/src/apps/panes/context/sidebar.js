@@ -15,6 +15,16 @@ const clean = str => {
 }
 
 export default class ContextSidebar {
+  @watch
+  isPinned = () => this.osContext && Thing.findOne({ url: this.osContext.url })
+  showCrawler = null
+  isShowingCrawlInBrowser = false
+  crawlerInfo = null
+  crawlerSettings = {
+    maxPages: 6,
+    depth: '/',
+  }
+
   get oraStore() {
     return this.props.oraStore
   }
@@ -36,11 +46,65 @@ export default class ContextSidebar {
     return this.oraStore.osContext ? this.oraStore.osContext.title : null
   }
 
-  isShowingCrawlInBrowser = false
-  crawlerInfo = null
-  crawlerSettings = {
-    maxPages: 6,
-    depth: '/',
+  onDrawerClose() {
+    this.showCrawler = false
+  }
+
+  get drawerTitle() {
+    return 'Start Crawling'
+  }
+
+  // can show a modal that slides in
+  get drawer() {
+    if (!this.showCrawler || !this.crawlerInfo) {
+      return null
+    }
+    const fieldProps = {
+      row: true,
+      labelProps: {
+        width: 90,
+      },
+    }
+    return (
+      <UI.List
+        items={[
+          {
+            category: 'Preview',
+            primary: this.crawlerInfo.title,
+            children: this.crawlerInfo.body,
+          },
+          {
+            category: 'Settings',
+            children: (
+              <UI.Field
+                label="Max pages:"
+                tooltip="This will make the crawler avoid going above this path"
+                sync={this.ref('crawlerSettings.maxPages')}
+                {...fieldProps}
+              />
+            ),
+          },
+          {
+            category: 'Settings',
+            children: (
+              <UI.Field
+                {...fieldProps}
+                label="Depth:"
+                sync={this.ref('crawlerSettings.depth')}
+              />
+            ),
+          },
+          ...Object.keys(this.crawlerInfo).map(key => ({
+            category: 'Crawler Selected',
+            children: (
+              <UI.Field label={key} {...fieldProps}>
+                <UI.Text ellipse>{this.crawlerInfo[key]}</UI.Text>
+              </UI.Field>
+            ),
+          })),
+        ]}
+      />
+    )
   }
 
   get crawlerOptions() {
@@ -55,9 +119,6 @@ export default class ContextSidebar {
     return !this.context.isLoading
   }
 
-  @watch
-  isPinned = () => this.osContext && Thing.findOne({ url: this.osContext.url })
-
   willMount() {
     this.on(OS, 'crawler-selection', (event, info) => {
       if (info && Object.keys(info).length) {
@@ -65,6 +126,9 @@ export default class ContextSidebar {
         if (info.entry === this.osContext.url) {
           if (!isEqual(info, this.crawlerInfo)) {
             console.log('update selection', info)
+            if (this.showCrawler === null) {
+              this.showCrawler = true
+            }
             this.crawlerInfo = info
             this.crawlerSettings.depth = this.crawlerInfo.depth
           }
@@ -144,6 +208,15 @@ export default class ContextSidebar {
   get actions() {
     if (this.crawlerInfo) {
       return [
+        // {
+        //   key: Math.random(),
+        //   icon: 'remove',
+        //   children: 'Cancel',
+        //   onClick: async () => {
+        //     const cancelled = await this.oraStore.stopCrawl()
+        //     console.log('cancelled', cancelled)
+        //   },
+        // },
         {
           key: Math.random(),
           content: <div $$flex />,
@@ -155,17 +228,9 @@ export default class ContextSidebar {
           onClick: async () => {
             console.log('starting crawl', this.crawlerOptions)
             this.isShowingCrawlInBrowser = true
+            this.showCrawler = true
             const things = await this.oraStore.startCrawl(this.crawlerOptions)
             console.log('made stuff', things)
-          },
-        },
-        {
-          key: Math.random(),
-          icon: 'play',
-          children: 'Cancel Crawl',
-          onClick: async () => {
-            const cancelled = await this.oraStore.stopCrawl()
-            console.log('cancelled', cancelled)
           },
         },
       ]
@@ -195,46 +260,6 @@ export default class ContextSidebar {
   }
 
   get results() {
-    if (this.crawlerInfo) {
-      console.log('trigger update', this.crawlerSettings)
-      return [
-        {
-          category: 'Preview',
-          title: this.crawlerInfo.title,
-          children: this.crawlerInfo.body,
-        },
-        {
-          category: 'Settings',
-          title: ' ',
-          displayTitle: false,
-          children: (
-            <UI.Field
-              row
-              label="Max pages:"
-              tooltip="This will make the crawler avoid going above this path"
-              sync={this.ref('crawlerSettings.maxPages')}
-            />
-          ),
-        },
-        {
-          category: 'Settings',
-          title: ' ',
-          displayTitle: false,
-          children: (
-            <UI.Field
-              row
-              label="Depth:"
-              sync={this.ref('crawlerSettings.depth')}
-            />
-          ),
-        },
-        ...Object.keys(this.crawlerInfo).map(key => ({
-          category: 'Crawler Selected',
-          title: key,
-          children: this.crawlerInfo[key],
-        })),
-      ]
-    }
     if (this.isShowingCrawlInBrowser) {
       return [
         {

@@ -216,7 +216,6 @@ export default class Windows extends React.Component {
       return
     }
     if (this.continueChecking) {
-      console.log('loop check crawler')
       this.checkCrawlerLoop(cb)
     }
   }

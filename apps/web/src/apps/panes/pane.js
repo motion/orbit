@@ -107,7 +107,6 @@ export default class Pane {
     listProps,
     virtualProps,
     itemProps,
-    store,
     paneStore,
     getActiveIndex,
     children,
@@ -143,7 +142,9 @@ export default class Pane {
       />
     )
 
-    const actions = stackItem.store && stackItem.store.actions
+    const { store } = stackItem
+    const actions = store && store.actions
+    const drawer = store && store.drawer
 
     return (
       <pane
@@ -152,6 +153,40 @@ export default class Pane {
         $sidebar={sidebar}
         $actionBarPad={!!actions}
       >
+        <UI.Drawer open={drawer} from="bottom" background="#000" size={400}>
+          <drawerContents
+            if={store}
+            css={{
+              padding: 10,
+              flex: 1,
+              overflowY: 'scroll',
+            }}
+          >
+            <drawerTitle>
+              <UI.Title
+                if={store.drawerTitle}
+                fontWeight={600}
+                size={1.2}
+                ellipse
+              >
+                {store.drawerTitle}
+              </UI.Title>
+              <UI.Button
+                chromeless
+                icon="remove"
+                color="#fff"
+                size={0.9}
+                css={{ position: 'absolute', top: 10, right: 10 }}
+                onClick={() => {
+                  if (store.onDrawerClose) {
+                    store.onDrawerClose()
+                  }
+                }}
+              />
+            </drawerTitle>
+            {drawer}
+          </drawerContents>
+        </UI.Drawer>
         <content ref={paneStore.setContentRef}>
           {!children
             ? list
@@ -187,6 +222,15 @@ export default class Pane {
       overflowY: 'scroll',
       flex: 1,
     },
+    drawerTitle: {
+      background: [255, 255, 255, 0.05],
+      borderBottom: [1, [255, 255, 255, 0.1]],
+      margin: -10,
+      padding: 10,
+      flexFlow: 'row',
+      position: 'relative',
+      zIndex: 10,
+    },
     // pads height of actionbar
     actionBarPad: {
       paddingBottom: 50,
@@ -202,7 +246,7 @@ export default class Pane {
       right: 0,
       background: [0, 0, 0, 0.14],
       backdropFilter: 'blur(15px)',
-      zIndex: Number.MAX_VALUE,
+      zIndex: 100000,
     },
     actionButton: {
       display: 'block',

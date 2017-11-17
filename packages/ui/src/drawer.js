@@ -41,7 +41,7 @@ export default class Drawer extends React.PureComponent<Props> {
   static defaultProps = {
     size: 400,
     from: 'left',
-    zIndex: 10000,
+    zIndex: 100,
     transitionDuration: 500,
   }
 
@@ -138,6 +138,7 @@ export default class Drawer extends React.PureComponent<Props> {
       right: 0,
       transition: 'transform ease-in-out 150ms',
       zIndex: 100,
+      maxHeight: '100%',
     },
     panelOpen: {
       pointerEvents: 'all',

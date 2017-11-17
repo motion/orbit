@@ -30,9 +30,7 @@ import import_Loading from './loading'
 import import_Grid from './grid'
 import import_Icon from './icon'
 import import_Modal from './modal'
-import import_Pane from './pane'
 import import_Row from './row'
-import import_TabPane from './tabPane'
 import import_Title from './title'
 import import_Placeholder from './placeholder'
 import import_Tag from './tag'
@@ -90,9 +88,7 @@ export const Loading = import_Loading
 export const Grid = import_Grid
 export const Icon = import_Icon
 export const Modal = import_Modal
-export const Pane = import_Pane
 export const Row = import_Row
-export const TabPane = import_TabPane
 export const Title = import_Title
 export const Placeholder = import_Placeholder
 export const Tag = import_Tag

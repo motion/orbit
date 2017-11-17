@@ -570,7 +570,8 @@ export default class Surface extends React.PureComponent<Props> {
     }
 
     const iconSize =
-      props.iconSize || Math.round(size * ICON_SCALE * (props.sizeIcon || 1))
+      props.iconSize ||
+      Math.round(size * ICON_SCALE * (props.sizeIcon || 1) * 100) / 100
 
     // TODO figure out better pattern for this
     self.themeValues = {

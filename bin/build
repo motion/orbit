@@ -36,7 +36,7 @@ function build-dev() {
     --ignore @mcro/hmr-view \
     --ignore @mcro/preset-motion \
       -- \
-      babel src --out-dir lib -s true $1
+      babel src --out-dir lib -s true ${@:1}
 }
 
 function build-es6() {
@@ -46,7 +46,7 @@ function build-es6() {
     --ignore @mcro/site \
     --ignore @mcro/preset-motion \
       -- \
-        BABEL_ENV=es6 babel src --out-dir es6 -s true $1
+        BABEL_ENV=es6 babel src --out-dir es6 -s true ${@:1}
 }
 
 function build-prod() {
@@ -59,7 +59,7 @@ function build-prod() {
     --ignore @mcro/hmr-view \
     --ignore @mcro/preset-motion \
       -- \
-        BABEL_ENV=production babel src --out-dir dist -s true $1
+        BABEL_ENV=production babel src --out-dir dist -s true ${@:1}
 }
 
 if [ "$APP" = "build-dev" ]; then
@@ -89,11 +89,9 @@ elif [ "$APP" = "web" ]; then
 else
   if [ "$APP" = "--watch" ]; then
     # only build modern during dev-watch
-    build-es6 --watch &
-    sleep 4
-    build-dev --watch &
-    sleep 4
-    build-prod --watch &
+    build-es6 --watch --skip-initial-build &
+    build-dev --watch --skip-initial-build &
+    build-prod --watch --skip-initial-build &
     (cd apps/crawler && npm run watch) &
   else
     build-es6 &

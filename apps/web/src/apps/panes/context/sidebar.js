@@ -18,7 +18,6 @@ export default class ContextSidebar {
   @watch
   isPinned = () => this.osContext && Thing.findOne({ url: this.osContext.url })
   showCrawler = null
-  isShowingCrawlInBrowser = false
   crawlerInfo = null
   crawlerSettings = {
     maxPages: 6,
@@ -137,6 +136,10 @@ export default class ContextSidebar {
         }
       }
     })
+
+    this.watch(() => {
+      this.oraStore.showWhiteBottomBg = this.showCrawler
+    })
   }
 
   get contextResults() {
@@ -226,11 +229,12 @@ export default class ContextSidebar {
           icon: 'play',
           children: 'Start Crawl',
           onClick: async () => {
-            console.log('starting crawl', this.crawlerOptions)
-            this.isShowingCrawlInBrowser = true
-            this.showCrawler = true
-            const things = await this.oraStore.startCrawl(this.crawlerOptions)
-            console.log('made stuff', things)
+            if (this.showCrawler) {
+              const things = await this.oraStore.startCrawl(this.crawlerOptions)
+              console.log('made stuff', things)
+            } else {
+              this.showCrawler = true
+            }
           },
         },
       ]
@@ -252,7 +256,6 @@ export default class ContextSidebar {
         icon: 'bug',
         children: 'Crawl',
         onClick: () => {
-          this.isShowingCrawlInBrowser = true
           OS.send('inject-crawler')
         },
       },
@@ -260,13 +263,6 @@ export default class ContextSidebar {
   }
 
   get results() {
-    if (this.isShowingCrawlInBrowser) {
-      return [
-        {
-          title: 'Select content in Chrome',
-        },
-      ]
-    }
     if (this.context) {
       const os = this.search.length === 0 ? [] : []
       return [...os, ...this.contextResults].filter(i => !!i)

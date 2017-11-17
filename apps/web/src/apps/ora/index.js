@@ -53,6 +53,18 @@ export default class OraPage {
               }}
             />
           </content>
+          <fakeWhiteBg
+            if={oraStore.showWhiteBottomBg}
+            css={{
+              background: '#fff',
+              position: 'absolute',
+              left: 0,
+              right: 0,
+              bottom: 0,
+              zIndex: -1,
+              height: Constants.ACTION_BAR_HEIGHT,
+            }}
+          />
         </ora>
       </UI.Theme>
     )

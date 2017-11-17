@@ -32,6 +32,7 @@ export default class OraStore {
   banner = null
   focusedBar = false
   wasBlurred = false
+  showWhiteBottomBg = false
 
   // this is synced to electron!
   state = {

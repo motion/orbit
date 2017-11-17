@@ -10,6 +10,13 @@ export const VERSION = require('../package.json').version
 
 export const ORA_WIDTH = 300
 export const ORA_HEIGHT = 700
+export const ACTION_BAR_HEIGHT = 60
+export const HEADER_HEIGHT = 36
+export const TRAY_WIDTH = 400
+export const TRAY_HEIGHT = 500
+
+export const IN_TRAY =
+  IS_ELECTRON && (window.location + '').indexOf('?inTray') !== -1
 
 export const IS_ELECTRON = Constants.IS_ELECTRON
 export const IS_PROD =
@@ -26,14 +33,6 @@ export const DB_CONFIG = {
   password: 'password',
   remoteUrl: COUCH_URL,
 }
-
-export const HEADER_HEIGHT = 36
-
-export const IN_TRAY =
-  IS_ELECTRON && (window.location + '').indexOf('?inTray') !== -1
-
-export const TRAY_WIDTH = 400
-export const TRAY_HEIGHT = 500
 
 export const IS_BAR = window.location.pathname === '/'
 

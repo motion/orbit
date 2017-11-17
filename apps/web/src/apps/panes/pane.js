@@ -1,5 +1,6 @@
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
+import * as Constants from '~/constants'
 
 class PaneStore {
   listRef = null
@@ -153,40 +154,43 @@ export default class Pane {
         $sidebar={sidebar}
         $actionBarPad={!!actions}
       >
-        <UI.Drawer open={drawer} from="bottom" background="#000" size={400}>
-          <drawerContents
-            if={store}
-            css={{
-              padding: 10,
-              flex: 1,
-              overflowY: 'scroll',
-            }}
-          >
-            <drawerTitle>
-              <UI.Title
-                if={store.drawerTitle}
-                fontWeight={600}
-                size={1.2}
-                ellipse
-              >
-                {store.drawerTitle}
-              </UI.Title>
-              <UI.Button
-                chromeless
-                icon="remove"
-                color="#fff"
-                size={0.9}
-                css={{ position: 'absolute', top: 10, right: 10 }}
-                onClick={() => {
-                  if (store.onDrawerClose) {
-                    store.onDrawerClose()
-                  }
-                }}
-              />
-            </drawerTitle>
-            {drawer}
-          </drawerContents>
-        </UI.Drawer>
+        <UI.Theme name="light">
+          <UI.Drawer open={drawer} from="bottom" background="#fff" size={450}>
+            <drawerContents
+              if={store}
+              css={{
+                padding: 10,
+                flex: 1,
+                overflowY: 'scroll',
+              }}
+            >
+              <drawerTitle>
+                <UI.Title
+                  if={store.drawerTitle}
+                  fontWeight={600}
+                  size={1.2}
+                  ellipse
+                >
+                  {store.drawerTitle}
+                </UI.Title>
+                <UI.Button
+                  chromeless
+                  icon="remove"
+                  color="#000"
+                  opacity={0.8}
+                  size={0.9}
+                  css={{ position: 'absolute', top: 10, right: 10 }}
+                  onClick={() => {
+                    if (store.onDrawerClose) {
+                      store.onDrawerClose()
+                    }
+                  }}
+                />
+              </drawerTitle>
+              {drawer}
+            </drawerContents>
+          </UI.Drawer>
+        </UI.Theme>
         <content ref={paneStore.setContentRef}>
           {!children
             ? list
@@ -223,9 +227,9 @@ export default class Pane {
       flex: 1,
     },
     drawerTitle: {
-      background: [255, 255, 255, 0.05],
-      borderBottom: [1, [255, 255, 255, 0.1]],
-      margin: -10,
+      background: [0, 0, 0, 0.05],
+      borderBottom: [1, [0, 0, 0, 0.1]],
+      margin: [-10, -10, 0, -10],
       padding: 10,
       flexFlow: 'row',
       position: 'relative',
@@ -247,6 +251,7 @@ export default class Pane {
       background: [0, 0, 0, 0.14],
       backdropFilter: 'blur(15px)',
       zIndex: 100000,
+      height: Constants.ACTION_BAR_HEIGHT,
     },
     actionButton: {
       display: 'block',

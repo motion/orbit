@@ -8,18 +8,19 @@ import { ThemeProvide } from '@mcro/ui'
 // Gloss: all <tag />s can use $$styleProps or css={{}}
 React.createElement = createElement
 
+const injectedRoot = document.createElement('div')
+
+function close() {
+  ReactDOM.render(<div />, injectedRoot)
+  injectedRoot.parentNode.removeChild(injectedRoot)
+}
+
 function main() {
-  const injectedRoot = document.createElement('div')
   document.body.appendChild(injectedRoot)
-
-  // const shadow = document.body.createShadowRoot()
-  // shadow.innerHTML = '<div></div>'
-  // const injectedRoot = shadow.children[0]
-
   const Root = require('./root').default
   ReactDOM.render(
     <ThemeProvide {...Themes}>
-      <Root />
+      <Root onClose={close} />
     </ThemeProvide>,
     injectedRoot
   )

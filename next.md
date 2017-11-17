@@ -5,6 +5,7 @@
 
 # now
 
+- bug: if chrome is empty tab, dont show context
 - bug: electron needs to tell ora if its been dragged (onMove)
   - and then ora should cancel any click event
     - hacky first version could just shim reactElement, shim onClick, if dragged, do cancel/stopprop

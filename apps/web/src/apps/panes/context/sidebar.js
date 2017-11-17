@@ -233,6 +233,7 @@ export default class ContextSidebar {
               const things = await this.oraStore.startCrawl(this.crawlerOptions)
               console.log('made stuff', things)
             } else {
+              OS.send('inject-crawler')
               this.showCrawler = true
             }
           },

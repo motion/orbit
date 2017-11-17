@@ -23,20 +23,17 @@ const getTagInfo = node => ({
     .join('.'),
 })
 
-const curPath = window.location.pathname.split('/')
-const parentPath = curPath.slice(0, curPath.length - 1).join('/')
-const parentLocation = parentPath || '/'
-
 @view({
   store: class CrawlerStore {
     parentNode = null
     lastEvent = null
     step = 'title'
     highlighted = null
-    options = {
-      depth: parentLocation,
-    }
-    selected = {
+
+    // syncs to ora
+    // see window.__oraCrawlerAnswer below
+    state = {
+      closed: false,
       title: null,
       titleSelector: null,
       body: null,
@@ -78,9 +75,12 @@ const parentLocation = parentPath || '/'
       // sets the answer to send back to ora
       this.watch(() => {
         window.__oraCrawlerAnswer = {
-          ...this.selected,
-          ...this.options,
+          ...this.state,
           entry: window.location.href,
+        }
+
+        if (this.state.closed) {
+          this.props.onClose()
         }
       })
     }
@@ -101,10 +101,16 @@ const parentLocation = parentPath || '/'
         }
       }
 
-      this.selected = {
-        ...this.selected,
+      this.setState({
         [this.step]: this.highlighted.innerText.slice(0, 200),
         [`${this.step}Selector`]: finalSelector,
+      })
+    }
+
+    setState = nextState => {
+      this.state = {
+        ...this.state,
+        ...nextState,
       }
     }
 
@@ -138,103 +144,104 @@ export default class Root extends React.Component {
 
     return (
       <UI.Theme name="dark">
-        <aside>
+        <aside if={!store.state.closed}>
           <span>
             <aside $crawler ref={store.setParent}>
-              <style
-                type="text/css"
-                style={{ display: 'none' }}
-                dangerouslySetInnerHTML={{
-                  __html: `
-${store.selected.titleSelector} {
+              <crawlerInner>
+                <style
+                  type="text/css"
+                  style={{ display: 'none' }}
+                  dangerouslySetInnerHTML={{
+                    __html: `
+${store.state.titleSelector} {
   background: yellow;
 }
-${store.selected.bodySelector} {
+${store.state.bodySelector} {
   background: lightgreen;
   position: relative;
   z-index: 10000000;
 }
               `,
-                }}
-              />
+                  }}
+                />
 
-              <style
-                type="text/css"
-                style={{ display: 'none' }}
-                // yo dawg, we cant use class selectors to avoid specificity, so this fucking exists
-                // aside span aside
-                dangerouslySetInnerHTML={{
-                  __html: `
+                <style
+                  type="text/css"
+                  style={{ display: 'none' }}
+                  // yo dawg, we cant use class selectors to avoid specificity, so this fucking exists
+                  // aside span aside
+                  dangerouslySetInnerHTML={{
+                    __html: `
 .__orbit_highlight { background: rgba(0%, 62.5%, 84.7%, 0.25) !important;  }
 aside span aside * { display: flex; flex-flow: column; }
               `,
-                }}
-              />
+                  }}
+                />
 
-              <preview $$flex>
-                <previewLine>
-                  <PreviewTitle color="yellow">Title:</PreviewTitle>
-                  <PreviewTitle
-                    if={store.selected.titleSelector}
-                    color="yellow"
-                    opacity={0.5}
-                    css={{ marginLeft: 10 }}
+                <controls>
+                  <UI.Button
+                    onClick={() => {
+                      store.setState({
+                        closed: true,
+                      })
+                    }}
                   >
-                    {store.selected.titleSelector}
-                  </PreviewTitle>
-                  <PreviewText>
-                    {store.selected.title || 'None selected'}
-                  </PreviewText>
-                </previewLine>
-                <previewLine>
-                  <PreviewTitle color="lightgreen">Body:</PreviewTitle>
-                  <PreviewTitle
-                    if={store.selected.bodySelector}
-                    color="lightgreen"
-                    opacity={0.5}
-                    css={{ marginLeft: 10 }}
-                  >
-                    {store.selected.bodySelector}
-                  </PreviewTitle>
-                  <PreviewText>
-                    {store.selected.body || 'None selected'}
-                  </PreviewText>
-                </previewLine>
-              </preview>
+                    Cancel
+                  </UI.Button>
+                </controls>
 
-              <section $$flex $$row>
-                <UI.Row>
-                  <UI.Label tooltip="Crawler will only look for things below this path">
-                    Depth:
-                  </UI.Label>
-                  <UI.Field
-                    type="input"
-                    width={100}
-                    row
-                    defaultValue={store.options.depth}
-                    sync={store.ref('options.depth')}
-                  />
-                  <UI.Button>Max Pages: 1,000</UI.Button>
-                </UI.Row>
-                <flex css={{ flex: 1 }} />
-                <UI.Row itemProps={{ size: 1.2 }}>
-                  <UI.Button background="transparent">
-                    Select content:
-                  </UI.Button>
-                  <UI.Button
-                    {...store.step === 'title' && activeButtonProps}
-                    onClick={store.stepSelect('title')}
-                  >
-                    1. Title
-                  </UI.Button>
-                  <UI.Button
-                    {...store.step === 'body' && activeButtonProps}
-                    onClick={store.stepSelect('body')}
-                  >
-                    2. Body
-                  </UI.Button>
-                </UI.Row>
-              </section>
+                <preview $$flex>
+                  <previewLine>
+                    <PreviewTitle color="yellow">Title:</PreviewTitle>
+                    <PreviewTitle
+                      if={store.state.titleSelector}
+                      color="yellow"
+                      opacity={0.5}
+                      css={{ marginLeft: 10 }}
+                    >
+                      {store.state.titleSelector}
+                    </PreviewTitle>
+                    <PreviewText>
+                      {store.state.title || 'None selected'}
+                    </PreviewText>
+                  </previewLine>
+                  <previewLine>
+                    <PreviewTitle color="lightgreen">Body:</PreviewTitle>
+                    <PreviewTitle
+                      if={store.state.bodySelector}
+                      color="lightgreen"
+                      opacity={0.5}
+                      css={{ marginLeft: 10 }}
+                    >
+                      {store.state.bodySelector}
+                    </PreviewTitle>
+                    <PreviewText>
+                      {store.state.body || 'None selected'}
+                    </PreviewText>
+                  </previewLine>
+                </preview>
+
+                <section $$flex $$row>
+                  <flex css={{ flex: 1 }} />
+                  <UI.Row>
+                    <UI.Button background="transparent">
+                      Select content:
+                    </UI.Button>
+                    <UI.Button
+                      {...store.step === 'title' && activeButtonProps}
+                      onClick={store.stepSelect('title')}
+                    >
+                      1. Title
+                    </UI.Button>
+                    <UI.Button
+                      {...store.step === 'body' && activeButtonProps}
+                      onClick={store.stepSelect('body')}
+                    >
+                      2. Body
+                    </UI.Button>
+                  </UI.Row>
+                </section>
+              </crawlerInner>
             </aside>
           </span>
         </aside>
@@ -246,18 +253,20 @@ aside span aside * { display: flex; flex-flow: column; }
     crawler: {
       isolate: true,
       fontFamily: `"Helvetica Nueue", Helvetica, Arial, sans-serif`,
-      padding: [10, 110],
-      margin: [0, -100],
       position: 'fixed',
       bottom: 0,
       left: 0,
       right: 0,
-      background: '#111',
       zIndex: Number.MAX_SAFE_INTEGER - 2,
-      boxShadow: [[0, 0, 50, [0, 0, 0, 0.35]]],
       transform: {
         z: Number.MAX_SAFE_INTEGER - 2,
       },
+    },
+    crawlerInner: {
+      background: '#111',
+      boxShadow: [[0, 0, 50, [0, 0, 0, 0.35]]],
+      margin: [0, -100],
+      padding: [10, 110],
     },
     space: {
       isolate: true,
@@ -272,6 +281,14 @@ aside span aside * { display: flex; flex-flow: column; }
       isolate: true,
       flexFlow: 'row',
       alignItems: 'center',
+    },
+    controls: {
+      position: 'absolute',
+      top: 10,
+      right: 10,
+      flexFlow: 'row',
+      alignItems: 'center',
+      zIndex: 10,
     },
   }
 }

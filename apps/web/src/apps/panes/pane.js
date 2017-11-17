@@ -106,7 +106,6 @@ export default class Pane {
     getItem,
     groupBy,
     listProps,
-    virtualProps,
     itemProps,
     paneStore,
     getActiveIndex,
@@ -127,10 +126,6 @@ export default class Pane {
         getRef={paneStore.setList}
         groupBy={groupBy}
         onSelect={this.onSelect}
-        virtualized={{
-          measure: true,
-          ...virtualProps,
-        }}
         itemProps={{
           padding: 0,
           highlightBackground: [0, 0, 0, 0.08],

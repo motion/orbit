@@ -99,7 +99,6 @@ else
     build-prod &
     (cd apps/crawler && npm run build) &
   fi
-
-  easy-exit
+  wait
   echo "done building"
 fi

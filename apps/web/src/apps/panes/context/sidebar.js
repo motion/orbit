@@ -1,10 +1,9 @@
 import * as React from 'react'
 import { OS, fuzzy } from '~/helpers'
-import { summarize, summarizeWithQuestion } from './helpers/summarize'
 import { Thing } from '~/app'
 import * as UI from '@mcro/ui'
 import { watch } from '@mcro/black'
-import { flatten, isEqual } from 'lodash'
+import { isEqual } from 'lodash'
 import After from '~/views/after'
 
 const clean = str => {
@@ -71,6 +70,7 @@ export default class ContextSidebar {
           {
             category: 'Preview',
             primary: this.crawlerInfo.title,
+            primaryEllipse: true,
             secondary: this.crawlerInfo.entry,
             children: this.crawlerInfo.body,
           },
@@ -110,12 +110,11 @@ export default class ContextSidebar {
             if (this.showCrawler === null) {
               this.showCrawler = true
             }
-            const { depth, bodySelector, titleSelector, ...crawlerInfo } = info
+            const { bodySelector, titleSelector, ...crawlerInfo } = info
 
             this.crawlerInfo = crawlerInfo
             this.crawlerSettings = {
               ...this.crawlerSettings,
-              depth,
               bodySelector,
               titleSelector,
             }
@@ -198,7 +197,7 @@ export default class ContextSidebar {
   }
 
   get actions() {
-    if (this.crawlerInfo) {
+    if (this.showCrawler) {
       return [
         // {
         //   key: Math.random(),
@@ -210,8 +209,7 @@ export default class ContextSidebar {
         //   },
         // },
         {
-          key: Math.random(),
-          content: <div $$flex />,
+          flex: true,
         },
         {
           key: Math.random(),
@@ -241,6 +239,9 @@ export default class ContextSidebar {
         onClick: () => {
           this.oraStore.addCurrentPage()
         },
+      },
+      {
+        flex: true,
       },
       {
         icon: 'bug',

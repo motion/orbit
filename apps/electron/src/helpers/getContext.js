@@ -1,6 +1,6 @@
 import runAppleScript from './runAppleScript'
 
-export default async function getContext() {
+export async function getActiveWindowInfo() {
   const [application, title] = await runAppleScript(`
   global frontApp, frontAppName, windowTitle
   set windowTitle to ""
@@ -15,13 +15,16 @@ export default async function getContext() {
   end tell
   return {frontAppName, windowTitle}
   `)
-  if (application !== 'Google Chrome') {
-    return null
-  }
+  // application is like 'Google Chrome'
+  // title is like 'Welcome to my Webpage'
+  return { application, title }
+}
+
+export async function getChromeContext() {
   const res = await runAppleScript(`
     tell application "Google Chrome"
       tell front window's active tab
-        set source to execute javascript "JSON.stringify({ url: document.location+'', title: document.title, body: document.body.innerText, selection: document.getSelection().toString() ? document.getSelection().toString() : (document.getSelection().anchorNode ? document.getSelection().anchorNode.textContent : '') })"
+        set source to execute javascript "JSON.stringify({ url: document.location+'', title: document.title, selection: document.getSelection().toString() ? document.getSelection().toString() : (document.getSelection().anchorNode ? document.getSelection().anchorNode.textContent : '') })"
       end tell
     end tell
   `)
@@ -29,11 +32,10 @@ export default async function getContext() {
     const result = JSON.parse(res)
     return {
       title: result.title,
-      body: result.body,
+      // body: result.body,
       currentText: result.currentText,
       url: result.url,
       selection: result.selection,
-      application,
     }
   } catch (err) {
     console.log('error parsing json', err, res)

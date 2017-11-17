@@ -160,7 +160,7 @@ export default class Pane {
             from="bottom"
             background="#fff"
             boxShadow="0 0 100px #000"
-            size={614}
+            size={window.innerHeight - 330}
           >
             <drawerTitle if={store}>
               <UI.Title
@@ -195,21 +195,22 @@ export default class Pane {
         </content>
         <actions if={actions}>
           <actionbar>
-            <UI.Row spaced itemProps={{ glow: true }}>
+            <UI.Row spaced flex itemProps={{ glow: true }}>
               {actions
                 .filter(Boolean)
-                .map(
-                  ({ content, ...props }, index) =>
-                    content ? (
-                      <span key={index}>{content}</span>
-                    ) : (
-                      <UI.Button key={index} {...props} />
-                    )
-                )}
+                .map(({ flex, content, ...props }, index) => {
+                  if (flex) {
+                    return <div key={index} $$flex={flex} />
+                  }
+                  if (content) {
+                    return <span key={index}>{content}</span>
+                  }
+                  return <UI.Button key={index} {...props} />
+                })}
             </UI.Row>
           </actionbar>
         </actions>
-        <bottomGlow $showWithActionBar={!!actions} />
+        <bottomGlow if={!drawer} $showWithActionBar={!!actions} />
       </pane>
     )
   }

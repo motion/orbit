@@ -237,9 +237,16 @@ export default class Windows extends React.Component {
     }
   }, 200)
 
+  lastContext = null
+
   getContext = throttle(async event => {
-    const result = await Helpers.getContext()
-    event.sender.send('set-context', result ? JSON.stringify(result) : null)
+    const { application } = await Helpers.getActiveWindowInfo()
+    const context = await Helpers.getChromeContext()
+    const answer = {
+      application,
+      ...context,
+    }
+    event.sender.send('set-context', JSON.stringify(answer))
   }, 200)
 
   SHORTCUTS = {

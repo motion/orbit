@@ -2,6 +2,10 @@
 // export constants from @mcro/black
 import { Constants } from '@mcro/black'
 
+export const IS_ELECTRON = Constants.IS_ELECTRON
+export const IS_PROD =
+  process.env.NODE_ENV === 'production' || process.env.IS_PROD
+
 if (process.env.IS_PROD) {
   console.log('IS_PROD!')
 }
@@ -17,10 +21,6 @@ export const TRAY_HEIGHT = 500
 
 export const IN_TRAY =
   IS_ELECTRON && (window.location + '').indexOf('?inTray') !== -1
-
-export const IS_ELECTRON = Constants.IS_ELECTRON
-export const IS_PROD =
-  process.env.NODE_ENV === 'production' || process.env.IS_PROD
 
 const protocol = `${window.location.protocol}//`
 export const API_HOST = `app.seemirai.com:3001`

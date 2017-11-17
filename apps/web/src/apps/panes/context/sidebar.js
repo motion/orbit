@@ -55,6 +55,7 @@ export default class ContextSidebar {
 
   // can show a modal that slides in
   get drawer() {
+    this.crawlerSettings // trigger reaction on changes here
     if (!this.showCrawler || !this.crawlerInfo) {
       return null
     }

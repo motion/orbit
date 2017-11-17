@@ -1,9 +1,14 @@
-import 'babel-polyfill'
-import React from 'react'
-import ReactDOM from 'react-dom'
-import createElement from '@mcro/black/lib/createElement'
-import Themes from '~/browser/themes'
-import { ThemeProvide } from '@mcro/ui'
+try {
+  require('babel-polyfill')
+} catch (err) {
+  console.log('re-injecting?')
+}
+
+const React = require('react')
+const ReactDOM = require('react-dom')
+const createElement = require('@mcro/black/lib/createElement').default
+const Themes = require('~/browser/themes').default
+const { ThemeProvide } = require('@mcro/ui')
 
 // Gloss: all <tag />s can use $$styleProps or css={{}}
 React.createElement = createElement

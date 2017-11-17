@@ -14,7 +14,7 @@ export const VERSION = require('../package.json').version
 
 export const ORA_WIDTH = 300
 export const ORA_HEIGHT = 700
-export const ACTION_BAR_HEIGHT = 60
+export const ACTION_BAR_HEIGHT = 50
 export const HEADER_HEIGHT = 36
 export const TRAY_WIDTH = 400
 export const TRAY_HEIGHT = 500

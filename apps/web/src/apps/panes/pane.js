@@ -155,40 +155,37 @@ export default class Pane {
         $actionBarPad={!!actions}
       >
         <UI.Theme name="light">
-          <UI.Drawer open={drawer} from="bottom" background="#fff" size={450}>
-            <drawerContents
-              if={store}
-              css={{
-                padding: 10,
-                flex: 1,
-                overflowY: 'scroll',
-              }}
-            >
-              <drawerTitle>
-                <UI.Title
-                  if={store.drawerTitle}
-                  fontWeight={600}
-                  size={1.2}
-                  ellipse
-                >
-                  {store.drawerTitle}
-                </UI.Title>
-                <UI.Button
-                  chromeless
-                  icon="remove"
-                  color="#000"
-                  opacity={0.8}
-                  size={0.9}
-                  css={{ position: 'absolute', top: 10, right: 10 }}
-                  onClick={() => {
-                    if (store.onDrawerClose) {
-                      store.onDrawerClose()
-                    }
-                  }}
-                />
-              </drawerTitle>
-              {drawer}
-            </drawerContents>
+          <UI.Drawer
+            open={drawer}
+            from="bottom"
+            background="#fff"
+            boxShadow="0 0 100px #000"
+            size={450}
+          >
+            <drawerTitle if={store}>
+              <UI.Title
+                if={store.drawerTitle}
+                fontWeight={600}
+                size={1.2}
+                ellipse
+              >
+                {store.drawerTitle}
+              </UI.Title>
+              <UI.Button
+                chromeless
+                icon="remove"
+                color="#000"
+                opacity={0.8}
+                size={0.9}
+                css={{ position: 'absolute', top: 10, right: 10 }}
+                onClick={() => {
+                  if (store.onDrawerClose) {
+                    store.onDrawerClose()
+                  }
+                }}
+              />
+            </drawerTitle>
+            <drawerContents if={store}>{drawer}</drawerContents>
           </UI.Drawer>
         </UI.Theme>
         <content ref={paneStore.setContentRef}>
@@ -226,12 +223,17 @@ export default class Pane {
       overflowY: 'scroll',
       flex: 1,
     },
+    drawerContents: {
+      padding: 10,
+      paddingBottom: Constants.ACTION_BAR_HEIGHT + 10,
+      flex: 1,
+      overflowY: 'scroll',
+    },
     drawerTitle: {
       background: [0, 0, 0, 0.05],
-      borderBottom: [1, [0, 0, 0, 0.1]],
-      margin: [-10, -10, 0, -10],
-      padding: 10,
+      padding: 7,
       flexFlow: 'row',
+      alignItems: 'center',
       position: 'relative',
       zIndex: 10,
     },

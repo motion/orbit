@@ -56,7 +56,6 @@ export default class Drawer extends React.PureComponent<Props> {
     percent,
     onClickOverlay,
     showOverlay,
-    boxShadow,
     bordered,
     zIndex,
     className,
@@ -176,10 +175,6 @@ export default class Drawer extends React.PureComponent<Props> {
         // transition:
         //   (props.transition && `all ease-in ${props.transitionDuration}`) || '',
         borderColor: (props.bordered && theme.base.borderColor) || '',
-        boxShadow:
-          props.boxShadow === true
-            ? '0 0 6px rgba(0,0,0,0.3)'
-            : props.boxShadow,
       },
     }
   }

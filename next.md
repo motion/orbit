@@ -5,6 +5,7 @@
 
 # now
 
+- bug: electron needs to tell ora if its been dragged (onMove) and then ora should cancel any click event
 - bug: ora pane flickering away when you try and edit crawl settings
 - crawler
   - after crawl needs to show the results before committing them

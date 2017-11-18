@@ -253,13 +253,13 @@ export default class Pane {
       zIndex: 100000,
     },
     bottomGlow: {
-      boxShadow: '0 0 80px 3px rgba(0,0,0,1)',
+      boxShadow: '0 0 80px 3px rgba(0,0,0,0.5)',
       zIndex: 100000 - 1,
       pointerEvents: 'none',
       position: 'fixed',
       bottom: 0,
-      left: 0,
-      right: 0,
+      left: -120,
+      right: -120,
     },
     showWithActionBar: {
       height: Constants.ACTION_BAR_HEIGHT,

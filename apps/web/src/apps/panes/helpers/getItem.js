@@ -65,12 +65,17 @@ export default function getItem(getActiveIndex) {
       typeof result.displayTitle !== 'undefined'
         ? result.displayTitle || null
         : result.display ? null : result.title,
-    primaryEllipse: !hasContent(result),
+    primaryEllipse: !hasContent(result) ? 2 : false,
     primaryProps: {
+      size: 1.2,
       fontWeight: 500,
     },
     secondary: result.subtitle,
     children: getChildren(result),
+    childrenProps: {
+      ellipse: index < 3 ? 3 : 2,
+      size: 1.1,
+    },
     iconAfter: result.iconAfter,
     icon: getIcon(result),
     date: result.date,

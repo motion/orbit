@@ -153,12 +153,8 @@ export default class ContextSidebar {
               onClick: () => {
                 OS.send('open-browser', item.url)
               },
-              children: (
-                <UI.Text ellipse={2} opacity={0.65} size={0.9}>
-                  {this.context.sentences[index] &&
-                    this.context.sentences[index].sentence}
-                </UI.Text>
-              ),
+              children: this.context.sentences[index] &&
+              this.context.sentences[index].sentence,
               after: (
                 <After
                   onClick={e => {

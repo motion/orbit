@@ -166,14 +166,13 @@ export default class OraStore {
       }
 
       const updateContext = title => {
-        console.log('updating to ', title)
         this.osContext = context
         // if were at home, move into a new pane
         // otherwise, no need to push a new pane
         if (this.stack.length === 1) {
           const nextStackItem = {
             id: context.url,
-            title,
+            title: title || context.title,
             type: 'context',
             icon:
               context.application === 'Google Chrome' ? 'social-google' : null,
@@ -182,12 +181,19 @@ export default class OraStore {
         }
       }
 
-      if (!this.osContext || this.osContext.title !== context.title) {
-        return updateContext(context.title)
+      // update logic
+      if (!this.osContext) {
+        return updateContext()
       }
-
-      if (this.osContext.selection !== context.selection) {
-        return updateContext(context.selection || context.title)
+      const hasNewTitle = this.osContext.title !== context.title
+      const hasNewFocusedApp =
+        this.osContext.application !== context.application
+      if (hasNewTitle || hasNewFocusedApp) {
+        return updateContext()
+      }
+      const hasNewSelection = this.osContext.selection !== context.selection
+      if (hasNewSelection) {
+        return updateContext(context.selection)
       }
     })
   }

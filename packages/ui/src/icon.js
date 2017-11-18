@@ -11,7 +11,7 @@ const findMatch = (name: string) => {
   if (cache[name]) return cache[name]
   if (iconNames[name]) return iconNames[name]
   const matches = fuzzy.filter(name, iconNames)
-  const match = matches.length ? matches[0].original : null
+  const match = matches.length ? matches[0].original : 'none'
   cache[name] = match
   return match
 }

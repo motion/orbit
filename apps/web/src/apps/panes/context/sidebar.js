@@ -149,12 +149,14 @@ export default class ContextSidebar {
 
             return {
               title,
+              type: 'context',
               // icon: 'link',
               onClick: () => {
                 OS.send('open-browser', item.url)
               },
-              children: this.context.sentences[index] &&
-              this.context.sentences[index].sentence,
+              children:
+                this.context.sentences[index] &&
+                this.context.sentences[index].sentence,
               after: (
                 <After
                   onClick={e => {

@@ -117,13 +117,6 @@ class SidebarContainer {
 export default class Sidebar {
   static defaultProps = {
     width: ORA_WIDTH,
-    itemProps: {
-      size: 1.14,
-      glow: true,
-      padding: [10, 12],
-      iconAfter: true,
-      childrenEllipse: 3,
-    },
   }
 
   render({ width, itemProps, store, cacheStore, ...props }) {

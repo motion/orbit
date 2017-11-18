@@ -3,7 +3,6 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import OraStore from './oraStore'
 import Sidebar from '../panes/sidebar'
-import * as Sidebars from '../panes/sidebars'
 import OraHeader from './oraHeader'
 import * as Constants from '~/constants'
 
@@ -43,11 +42,19 @@ export default class OraPage {
               width={Constants.ORA_WIDTH}
               store={oraStore}
               oraStore={oraStore}
-              sidebars={Sidebars}
               itemProps={{
                 size: 1.1,
-                padding: [6, 12],
+                padding: [8, 12],
                 glow: true,
+                glowProps: {
+                  color: '#fff',
+                  scale: 1,
+                  blur: 70,
+                  opacity: 0.1,
+                  show: false,
+                  resist: 60,
+                  zIndex: -1,
+                },
                 highlightBackground: [255, 255, 255, 0.08],
                 childrenEllipse: 2,
               }}
@@ -75,10 +82,10 @@ export default class OraPage {
       width: Constants.ORA_WIDTH,
       height: Constants.ORA_HEIGHT,
       background: [25, 25, 25, 0.98],
-      border: [1, [255, 255, 255, 0.1]],
+      border: [1, [255, 255, 255, 0.025]],
       boxShadow: [
-        [0, 0, 15, [0, 0, 0, 0.9]],
-        ['inset', 0, 0, 120, [255, 255, 255, 0.053]],
+        [0, 0, 15, [0, 0, 0, 0.8]],
+        // ['inset', 0, 0, 120, [255, 255, 255, 0.053]],
       ],
       margin: 10,
       borderRadius: 10,

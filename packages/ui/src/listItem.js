@@ -50,7 +50,7 @@ export default class ListItem extends React.Component<Props> {
       color: '#fff',
       scale: 1,
       blur: 70,
-      opacity: 0.2,
+      opacity: 0.15,
       show: false,
       resist: 60,
       zIndex: -1,

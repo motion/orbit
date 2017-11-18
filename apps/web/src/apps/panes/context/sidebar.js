@@ -174,7 +174,14 @@ export default class ContextSidebar {
                       closeOnEsc
                       towards="left"
                       width={150}
-                      target={<UI.Button circular chromeless icon="help" />}
+                      target={
+                        <UI.Button
+                          circular
+                          chromeless
+                          opacity={0.2}
+                          icon="help"
+                        />
+                      }
                     >
                       <UI.List>
                         <UI.ListItem primary={`Similarity: ${similarity}`} />

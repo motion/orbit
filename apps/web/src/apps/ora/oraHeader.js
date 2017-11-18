@@ -173,7 +173,7 @@ export default class OraHeader extends React.Component {
         transform: 'scale(0.75)',
       },
       '&:hover': {
-        background: [255, 255, 255, 0.2],
+        background: [255, 255, 255, 0.1],
       },
     },
     focus: {

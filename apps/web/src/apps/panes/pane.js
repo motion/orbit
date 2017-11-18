@@ -1,6 +1,7 @@
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import * as Constants from '~/constants'
+import SidebarTitle from '~/views/sidebarTitle'
 
 class PaneStore {
   listRef = null
@@ -114,6 +115,7 @@ export default class Pane {
     width,
     sidebar,
     stackItem,
+    hasParent,
   }) {
     const getItemDefault = (item, index) => ({
       highlight: () => (getActiveIndex ? index === getActiveIndex() : false),
@@ -132,13 +134,16 @@ export default class Pane {
           highlightColor: [255, 255, 255, 1],
           ...itemProps,
         }}
+        virtualized={{
+          measure: true,
+        }}
         items={paneStore.items}
         getItem={getItem || getItemDefault}
         {...listProps}
       />
     )
 
-    const { store } = stackItem
+    const { store, result } = stackItem
     const actions = store && store.actions
     const drawer = store && store.drawer
 
@@ -183,6 +188,15 @@ export default class Pane {
             <drawerContents if={store}>{drawer}</drawerContents>
           </UI.Drawer>
         </UI.Theme>
+        <SidebarTitle
+          if={hasParent}
+          title={(store && store.title) || result.title}
+          subtitle={result.subtitle}
+          onBack={stackItem.stack.left}
+          backProps={{
+            icon: stackItem.stack.length > 2 ? 'arrow-min-left' : 'home',
+          }}
+        />
         <content ref={paneStore.setContentRef}>
           {!children
             ? list

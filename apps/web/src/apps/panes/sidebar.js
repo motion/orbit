@@ -37,6 +37,7 @@ class SidebarContainer {
         sidebar
         getItem={getItem(paneProps.getActiveIndex)}
         stackItem={stackItem}
+        hasParent={!!stackItem.parent}
         {...props}
       />
     )

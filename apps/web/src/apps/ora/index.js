@@ -86,7 +86,7 @@ export default class OraPage {
       transition: 'all ease-in 100ms',
       opacity: 0,
       transform: {
-        x: 20,
+        x: 8,
       },
     },
     visible: {

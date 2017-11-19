@@ -101,6 +101,7 @@ const SUPPORTED_PROPS = {
   onBlur: true,
   onFocus: true,
   alwaysOnTop: true,
+  devToolsExtensions: true,
 }
 
 const BASIC_PROPS = {
@@ -112,6 +113,8 @@ const BASIC_PROPS = {
 }
 
 export default class WindowElement extends BaseElement {
+  extensionNames: Object
+  devExtensions: Set
   parentWindow: null | BrowserWindow
   window: BrowserWindow
   attachedHandlers: { [string]: Function }
@@ -131,6 +134,8 @@ export default class WindowElement extends BaseElement {
       alwaysOnTop: !!props.alwaysOnTop,
     })
 
+    this.extensionNames = {}
+    this.devExtensions = new Set()
     this.parentWindow = null
     this.attachedHandlers = {}
   }
@@ -153,7 +158,7 @@ export default class WindowElement extends BaseElement {
       this.window.webContents.openDevTools()
     }
 
-    console.log('--1')
+    configureExtensions.call(this, props)
     configureSize.call(this, props)
     configurePosition.call(this, props)
     configureFile.call(this, props)
@@ -222,6 +227,8 @@ export default class WindowElement extends BaseElement {
       }
 
       switch (propKey) {
+        case 'devToolsExtensions':
+          configureExtensions.call(this, newProps)
         case 'showDevTools':
           if (propVal) {
             this.window.webContents.openDevTools()
@@ -371,4 +378,27 @@ function configurePosition({
     this.window.setMovable(false)
     return
   }
+}
+
+function configureExtensions({ devToolsExtensions }) {
+  if (this.disposed || this.window.disposed) {
+    return
+  }
+  const incoming = new Set(devToolsExtensions)
+
+  const newExtensions = new Set(
+    [...incoming].filter(x => !this.devExtensions.has(x))
+  )
+  const oldExtensions = [...this.devExtensions].filter(x => !incoming.has(x))
+  for (const path of oldExtensions) {
+    BrowserWindow.removeDevToolsExtension(this.extensionNames[path])
+    this.devExtensions.delete(path)
+    delete this.extensionNames[path]
+  }
+  for (const path of newExtensions) {
+    const name = BrowserWindow.addDevToolsExtension(path)
+    this.devExtensions.add(path)
+    this.extensionNames[path] = name
+  }
+  console.log('added extensions' + [...newExtensions])
 }

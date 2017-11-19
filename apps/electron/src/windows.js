@@ -8,7 +8,19 @@ import { throttle, isEqual, once } from 'lodash'
 import MenuItems from './menu'
 import getCrawler from './helpers/getCrawler'
 import escapeStringApplescript from 'escape-string-applescript'
-import log from '@mcro/black/lib/helpers/log'
+import Path from 'path'
+import Fs from 'fs'
+// import log from '@mcro/black/lib/helpers/log'
+
+const EXTENSIONS = {
+  mobx: 'fmkadmapgofadopljbjfkapdkoienihi',
+  react: 'pfgnfdagidkfgccljigdamigbcnndkod',
+}
+
+const extensionToID = name => EXTENSIONS[name]
+const extensionIDToPath = id =>
+  Path.join(__dirname, '..', 'resources', 'extensions', id)
+const getExtensions = names => names.map(extensionToID).map(extensionIDToPath)
 
 let onWindows = []
 export function onWindow(cb) {
@@ -358,6 +370,7 @@ export default class Windows extends React.Component {
           onMove={trayPosition => this.setState({ trayPosition })}
           onBlur={() => this.sendOra('ora-blur')}
           onFocus={() => this.sendOra('ora-focus')}
+          devToolsExtensions={getExtensions(['mobx', 'react'])}
         />
       </app>
     )

@@ -1,4 +1,4 @@
-export default class Root {
+export default class BaseComponent {
   parent = null
   children = []
 

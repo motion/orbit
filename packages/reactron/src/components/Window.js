@@ -1,9 +1,10 @@
 // @flow
+import React from 'react'
 import { BrowserWindow } from 'electron'
 import configureEventHandler from '../utils/configureEventHandler'
 import isEqual from 'lodash.isequal'
 
-const BASIC_EVENT_PROPS = {
+const SIMPLE_EVENT_PROPS = {
   onReadyToShow: 'ready-to-show',
   onClose: 'close',
   onClosed: 'closed',
@@ -11,12 +12,15 @@ const BASIC_EVENT_PROPS = {
   onFocus: 'focus',
 }
 
-export default class WindowElement {
-  extensionNames: Object
-  devExtensions: Set
-  parentWindow: null | BrowserWindow
-  window: BrowserWindow
-  attachedHandlers: { [string]: Function }
+export default class Window extends React.Component {
+  extensionNames = {}
+  devExtensions = new Set()
+  parentWindow = null
+  attachedHandlers = {}
+
+  render() {
+    return <div />
+  }
 
   componentDidMount(props: Object) {
     console.log('mounting window')
@@ -31,13 +35,7 @@ export default class WindowElement {
       backgroundColor: props.backgroundColor,
       alwaysOnTop: !!props.alwaysOnTop,
     })
-    this.extensionNames = {}
-    this.devExtensions = new Set()
-    this.parentWindow = null
-    this.attachedHandlers = {}
-
-    this.handleNewProps(Object.keys(this.props))
-
+    this.handleNewProps(Object.keys(props))
     if (this.parentWindow) {
       this.window.setParentWindow(this.parentWindow)
     }
@@ -83,11 +81,11 @@ export default class WindowElement {
   updatePosition = () => configurePosition.call(this, this.props)
 
   newPropHandlers = {
-    ...Object.keys(BASIC_EVENT_PROPS).reduce(
+    ...Object.keys(SIMPLE_EVENT_PROPS).reduce(
       (acc, propKey) => ({
         ...acc,
         [propKey]: propVal =>
-          this.configureEvent(propKey, BASIC_EVENT_PROPS[propKey], propVal),
+          this.configureEvent(propKey, SIMPLE_EVENT_PROPS[propKey], propVal),
       }),
       {}
     ),
@@ -131,6 +129,8 @@ export default class WindowElement {
 function configureFile({ file }: Object) {
   if (file) {
     this.window.loadURL(`${file}`)
+  } else {
+    console.warn('No file given to electron window')
   }
 }
 

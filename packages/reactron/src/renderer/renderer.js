@@ -1,9 +1,13 @@
 import Reconciler from 'react-reconciler'
 import emptyObject from 'fbjs/lib/emptyObject'
 import { createElement, getHostContextNode } from '../utils/createElement'
+import * as ReactDOMFrameScheduling from './ReactDOMFrameScheduling'
+
+const UPDATE_SIGNAL = {}
 
 export default Reconciler({
   appendInitialChild(parentInstance, child) {
+    console.log('appendInitialChild', parentInstance)
     if (parentInstance.appendChild) {
       parentInstance.appendChild(child)
     } else {
@@ -19,37 +23,28 @@ export default Reconciler({
     return text
   },
 
-  finalizeInitialChildren(wordElement, type, props) {
+  finalizeInitialChildren(element, type, props) {
     return false
   },
 
-  getPublicInstance(inst) {
-    return inst
+  getPublicInstance(instance) {
+    return instance
   },
 
   prepareForCommit() {
     // noop
   },
 
-  prepareUpdate(wordElement, type, oldProps, newProps) {
-    return true
+  prepareUpdate(element, type, oldProps, newProps) {
+    return UPDATE_SIGNAL
   },
 
   resetAfterCommit() {
     // noop
   },
 
-  resetTextContent(wordElement) {
-    // Redocx does not have a text node like DOM
-  },
-
-  // If you've such use case where you need to provide data from the root instance,
-  // see the below example. This may help you in creating your own custom renderer
-
-  createInstance(type, props, internalInstanceHandle) {
-    // 'internalInstanceHandle' is not transparent here. So use host context methods
-    // to get data from roots
-    return createElement(type, props)
+  resetTextContent(element) {
+    // noop
   },
 
   // Use this current instance to pass data from root
@@ -66,24 +61,20 @@ export default Reconciler({
     return false // Redocx does not have a text node like DOM
   },
 
-  now: () => {},
-
+  now: ReactDOMFrameScheduling.now,
+  scheduleDeferredCallback: ReactDOMFrameScheduling.rIC,
   useSyncScheduling: true,
 
   mutation: {
     appendChild(parentInstance, child) {
       if (parentInstance.appendChild) {
         parentInstance.appendChild(child)
-      } else {
-        parentInstance.document = child
       }
     },
 
     appendChildToContainer(parentInstance, child) {
       if (parentInstance.appendChild) {
         parentInstance.appendChild(child)
-      } else {
-        parentInstance.document = child
       }
     },
 
@@ -100,7 +91,7 @@ export default Reconciler({
     },
 
     commitUpdate(instance, updatePayload, type, oldProps, newProps) {
-      // noop
+      instance._applyProps(instance, newProps, oldProps)
     },
 
     commitMount(instance, updatePayload, type, oldProps, newProps) {

@@ -1,8 +1,6 @@
 import { app } from 'electron'
+import { Component } from 'react'
 
 export default class Root {
-  constructor() {
-    console.log('make container', app)
-    this.app = app
-  }
+  app = app
 }

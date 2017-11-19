@@ -3,7 +3,7 @@ import * as Components from '../components'
 // Stores the root container instance
 let ROOT_NODE_INSTANCE = null
 
-function getHostContextNode(rootNode) {
+export function getHostContextNode(rootNode) {
   if (typeof rootNode !== undefined) {
     return (ROOT_NODE_INSTANCE = rootNode)
   } else {
@@ -13,17 +13,18 @@ function getHostContextNode(rootNode) {
   }
 }
 
-function createElement(type, props) {
+export function createElement(type, props) {
   const COMPONENTS = {
     ROOT: () => new Components.Root(),
-    TEXT: () => new Components.Text(ROOT_NODE_INSTANCE, props),
     MENU: () => new Components.Menu(ROOT_NODE_INSTANCE, props),
     MENUITEM: () => new Components.MenuItem(ROOT_NODE_INSTANCE, props),
     SUBMENUITEM: () => new Components.SubMenuItem(ROOT_NODE_INSTANCE, props),
     WINDOW: () => new Components.Window(ROOT_NODE_INSTANCE, props),
-    default: undefined,
   }
-  return COMPONENTS[type]() || COMPONENTS.default
-}
 
-export { createElement, getHostContextNode }
+  if (COMPONENTS[type]) {
+    return COMPONENTS[type]()
+  }
+
+  console.warn('Invalid type given to reactron', type)
+}

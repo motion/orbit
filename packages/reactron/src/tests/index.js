@@ -9,5 +9,6 @@ render(
     vibrancy="dark"
     size={[200, 200]}
     position={[200, 200]}
+    file="https://google.com"
   />
 )

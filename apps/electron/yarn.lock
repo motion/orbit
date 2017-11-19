@@ -2,6 +2,10 @@
 # yarn lockfile v1
 
 
+"@mcro/ionize@^1.5.1":
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/@mcro/ionize/-/ionize-1.5.1.tgz#02ec86adffe727f422793e96ca44c64abef9c1ff"
+
 "@types/node@^8.0.24":
   version "8.0.34"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-8.0.34.tgz#55f801fa2ddb2a40dd6dfc15ecfe1dde9c129fe9"

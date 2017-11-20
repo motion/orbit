@@ -49,6 +49,14 @@ export default class BaseComponent {
     }
   }
 
+  render() {
+    return this.children.map(child => {
+      if (child.render) {
+        return child.render()
+      }
+    })
+  }
+
   // helpers for events
   handleEvent(emitter, key, val, wrapper = cb => cb()) {
     configureEventHandler(emitter, this.attachedHandlers, key, val, wrapper)

@@ -16,9 +16,10 @@ export function getHostContextNode(rootNode) {
 export function createElement(type, props) {
   const COMPONENTS = {
     ROOT: () => new Components.Root(),
+    APP: () => new Components.App(ROOT, props),
     MENU: () => new Components.Menu(ROOT, props),
     MENUITEM: () => new Components.MenuItem(ROOT, props),
-    SUBMENUITEM: () => new Components.SubMenuItem(ROOT, props),
+    SUBMENU: () => new Components.SubMenu(ROOT, props),
     WINDOW: () => new Components.Window(ROOT, props),
   }
 

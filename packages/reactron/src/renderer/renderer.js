@@ -7,12 +7,7 @@ const noop = () => {}
 
 export default Reconciler({
   appendInitialChild(parentInstance, child) {
-    console.log('appendInitialChild', parentInstance)
-    if (parentInstance.appendChild) {
-      parentInstance.appendChild(child)
-    } else {
-      parentInstance.document = child
-    }
+    parentInstance.appendChild(child)
   },
 
   createInstance(type, props) {
@@ -58,16 +53,12 @@ export default Reconciler({
 
   mutation: {
     appendChild(parentInstance, child) {
-      if (parentInstance.appendChild) {
-        parentInstance.appendChild(child)
-      }
+      parentInstance.appendChild(child)
       child.parent = parentInstance
     },
 
     appendChildToContainer(parentInstance, child) {
-      if (parentInstance.appendChild) {
-        parentInstance.appendChild(child)
-      }
+      parentInstance.appendChild(child)
       child.parent = parentInstance
     },
 

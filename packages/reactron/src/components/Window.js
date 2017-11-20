@@ -70,10 +70,6 @@ export default class Window extends BaseComponent {
 
   unmount() {
     this.window.close()
-    for (const eventKey in this.attachedHandlers) {
-      const handler = this.attachedHandlers[eventKey]
-      this.window.removeListener(eventKey, handler)
-    }
   }
 
   handleNewProps(keys: Array<string>) {

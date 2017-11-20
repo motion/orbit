@@ -9,9 +9,19 @@ render(
   <App>
     <Menu>
       <SubMenu label="Electron">
-        <MenuItem type="about" />
+        <MenuItem label="about" />
       </SubMenu>
     </Menu>
     <Window size={[200, 200]} position={[200, 200]} file="https://google.com" />
   </App>
 )
+
+process.on('unhandledRejection', function(error, p) {
+  console.log('PromiseFail:')
+  if (error.stack) {
+    console.log(error.message)
+    console.log(error.stack)
+  } else {
+    console.log(error)
+  }
+})

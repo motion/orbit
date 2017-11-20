@@ -1,7 +1,20 @@
 import BaseComponent from './BaseComponent'
+import { Menu, MenuItem } from 'electron'
 
-export default class SubMenuItem extends BaseComponent {
-  handleNewProps(keys) {
-    console.log('props', keys)
+export default class SubMenu extends BaseComponent {
+  handleNewProps() {
+    const { props } = this
+    const submenu = new Menu()
+
+    for (const child of this.children) {
+      if (child.menuItem) {
+        submenu.append(child.menuItem)
+      }
+    }
+
+    this.menuItem = new MenuItem({
+      label: props.label,
+      submenu,
+    })
   }
 }

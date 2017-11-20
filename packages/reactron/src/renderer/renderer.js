@@ -18,7 +18,8 @@ export default Reconciler({
     return text
   },
 
-  finalizeInitialChildren(element, type, props) {
+  finalizeInitialChildren(instance, type, props) {
+    instance.applyProps(props)
     return false
   },
 

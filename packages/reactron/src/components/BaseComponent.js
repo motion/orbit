@@ -35,17 +35,18 @@ export default class BaseComponent {
     this.children.splice(index, 1)
   }
 
-  applyProps(newProps, oldProps) {
+  applyProps(newProps = {}, oldProps) {
     this.props = newProps
     this.update(oldProps)
   }
 
   update(prevProps) {
-    const newPropKeys = Object.keys(this.props).map(
-      k => !isEqual(this.props[k], prevProps[k])
-    )
+    const currentPropKeys = Object.keys(this.props)
+    const newPropKeys = !prevProps
+      ? currentPropKeys
+      : currentPropKeys.map(k => !isEqual(this.props[k], prevProps[k]))
     if (this.handleNewProps) {
-      this.handleNewProps(newPropKeys)
+      this.handleNewProps(newPropKeys, prevProps)
     }
   }
 

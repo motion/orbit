@@ -24,7 +24,9 @@ export function createElement(type, props) {
   }
 
   if (COMPONENTS[type]) {
-    return COMPONENTS[type]()
+    const instance = COMPONENTS[type]()
+    // instance.applyProps(props)
+    return instance
   }
 
   console.warn('Invalid type given to reactron', type)

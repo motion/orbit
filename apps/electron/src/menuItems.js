@@ -15,7 +15,7 @@ export default props => (
       <MenuItems.HideOthers />
       <MenuItems.Unhide />
       <MenuItems.Separator />
-      <MenuItems.Quit />
+      <MenuItems.Quit onClick={props.onQuit} />
     </SubMenu>
     <SubMenu label="Edit">
       <MenuItems.Undo />

@@ -55,12 +55,10 @@ export default Reconciler({
   mutation: {
     appendChild(parentInstance, child) {
       parentInstance.appendChild(child)
-      child.parent = parentInstance
     },
 
     appendChildToContainer(parentInstance, child) {
       parentInstance.appendChild(child)
-      child.parent = parentInstance
     },
 
     removeChild(parentInstance, child) {

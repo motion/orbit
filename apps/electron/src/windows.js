@@ -33,7 +33,6 @@ export default class Windows extends React.Component {
   state = {
     restart: false,
     showSettings: false,
-    closeSettings: false,
     size: [0, 0],
     position: [0, 0],
     trayPosition: [0, 0],
@@ -296,8 +295,6 @@ export default class Windows extends React.Component {
       },
     }
 
-    console.log('render me')
-
     return (
       <App
         onBeforeQuit={() => console.log('hi')}
@@ -314,14 +311,17 @@ export default class Windows extends React.Component {
           getRef={ref => {
             this.menuRef = ref
           }}
+          onQuit={() => {
+            this.isClosing = true
+          }}
         />
         <Window
           {...appWindow}
           show={this.state.showSettings}
+          showDevTools={this.state.showSettings}
           vibrancy="dark"
           transparent
           hasShadow
-          showDevTools={this.state.showSettings}
           defaultSize={this.initialSize || this.state.size}
           size={this.state.size}
           file={`${Constants.APP_URL}/settings`}
@@ -330,12 +330,11 @@ export default class Windows extends React.Component {
           onResize={size => this.setState({ size })}
           onMoved={position => this.setState({ position })}
           onMove={position => this.setState({ position })}
-          onClose={() => {
-            this.setState({ closeSettings: true })
-            setTimeout(() => {
-              // reopen invisible so its quick to open again
-              this.setState({ closeSettings: false, showSettings: false })
-            }, 500)
+          onClose={e => {
+            if (!this.isClosing && this.state.showSettings) {
+              e.preventDefault()
+              this.setState({ showSettings: false })
+            }
           }}
         />
         <Window

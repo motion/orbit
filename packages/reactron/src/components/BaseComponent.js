@@ -5,6 +5,7 @@ import configureEventHandler from '../utils/configureEventHandler'
 
 export default class BaseComponent {
   constructor(root, props) {
+    this._id = `${this.constructor.name}${Math.random()}`
     this.root = root
     this.props = props
     this.parent = null
@@ -25,14 +26,14 @@ export default class BaseComponent {
 
   removeChild(child) {
     const index = this.children.indexOf(child)
-    child.parent = null
+    delete child.parent
     if (child.unmount) {
       child.unmount()
     }
     child.unmounted = true
     for (const key of Object.keys(child.attachedHandlers)) {
-      const { emitter, rawHandler } = child.attachedHandlers[key]
-      emitter.removeListener(key, rawHandler)
+      const { emitter, handler } = child.attachedHandlers[key]
+      emitter.removeListener(key, handler)
     }
     this.children.splice(index, 1)
   }

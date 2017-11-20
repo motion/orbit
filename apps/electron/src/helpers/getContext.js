@@ -30,6 +30,9 @@ export async function getChromeContext() {
   `)
   try {
     const result = JSON.parse(res)
+    if (!result) {
+      return null
+    }
     return {
       title: result.title,
       // body: result.body,

@@ -42,6 +42,7 @@ export default class Window extends BaseComponent {
         }
       },
       show: propVal => {
+        console.log('calling show with', propVal)
         if (propVal) {
           this.window.show()
         } else {
@@ -73,15 +74,24 @@ export default class Window extends BaseComponent {
   }
 
   handleNewProps(keys: Array<string>) {
-    for (const key of keys) {
-      const val = this.props[key]
-      if (EVENT_KEYS[key]) {
-        this.handleEvent(this.window, EVENT_KEYS[key], val)
-        continue
+    if (!this.window) {
+      console.log('no window ey')
+      return
+    }
+    try {
+      for (const key of keys) {
+        const val = this.props[key]
+        if (EVENT_KEYS[key]) {
+          this.handleEvent(this.window, EVENT_KEYS[key], val)
+          continue
+        }
+        if (this.propHandlers[key]) {
+          this.propHandlers[key](val)
+        }
       }
-      if (this.propHandlers[key]) {
-        this.propHandlers[key](val)
-      }
+    } catch (e) {
+      console.log('error with prop handlers')
+      console.log(e)
     }
   }
 }

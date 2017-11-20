@@ -100,7 +100,7 @@ function configureSize({ size, onResize, defaultSize }: Object) {
   }
 
   try {
-    this.handleEvent('onResize', 'resize', onResize, rawHandler => {
+    this.handleEvent(this.window, 'resize', onResize, rawHandler => {
       const size = this.window.getSize()
       rawHandler(size)
     })
@@ -139,12 +139,12 @@ function configurePosition({
     return
   }
 
-  this.handleEvent('onMove', 'move', onMove, rawHandler => {
+  this.handleEvent(this.window, 'move', onMove, rawHandler => {
     const position = this.window.getPosition()
     rawHandler(position)
   })
 
-  this.handleEvent('onMoved', 'moved', onMoved, rawHandler => {
+  this.handleEvent(this.window, 'moved', onMoved, rawHandler => {
     const position = this.window.getPosition()
     rawHandler(position)
   })

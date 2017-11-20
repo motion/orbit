@@ -1,8 +1,7 @@
 // @flow
-import React from 'react'
+import BaseComponent from './BaseComponent'
 import { BrowserWindow } from 'electron'
 import configureEventHandler from '../utils/configureEventHandler'
-import isEqual from 'lodash.isequal'
 
 const SIMPLE_EVENT_PROPS = {
   onReadyToShow: 'ready-to-show',
@@ -12,20 +11,16 @@ const SIMPLE_EVENT_PROPS = {
   onFocus: 'focus',
 }
 
-export default class Window extends React.Component {
-  extensionNames = {}
-  devExtensions = new Set()
-  parentWindow = null
-  attachedHandlers = {}
+export default class Window extends BaseComponent {
+  mount() {
+    this.extensionNames = {}
+    this.devExtensions = new Set()
+    this.parentWindow = null
+    this.attachedHandlers = {}
 
-  render() {
-    return <div />
-  }
-
-  componentDidMount(props: Object) {
-    console.log('mounting window')
+    const { props } = this
     this.window = new BrowserWindow({
-      show: false,
+      show: !!props.show,
       acceptFirstMouse: !!props.acceptFirstMouse,
       titleBarStyle: props.titleBarStyle,
       vibrancy: props.vibrancy,
@@ -35,14 +30,56 @@ export default class Window extends React.Component {
       backgroundColor: props.backgroundColor,
       alwaysOnTop: !!props.alwaysOnTop,
     })
-    this.handleNewProps(Object.keys(props))
-    if (this.parentWindow) {
-      this.window.setParentWindow(this.parentWindow)
+
+    this.updateSize = () => configureSize.call(this, this.props)
+    this.updatePosition = () => configurePosition.call(this, this.props)
+    this.newPropHandlers = {
+      ...Object.keys(SIMPLE_EVENT_PROPS).reduce(
+        (acc, propKey) => ({
+          ...acc,
+          [propKey]: propVal =>
+            this.configureEvent(propKey, SIMPLE_EVENT_PROPS[propKey], propVal),
+        }),
+        {}
+      ),
+      devToolsExtensions: () => {
+        configureExtensions.call(this, this.props)
+      },
+      showDevTools: propVal => {
+        if (propVal) {
+          this.window.webContents.openDevTools()
+        } else {
+          this.window.webContents.closeDevTools()
+        }
+      },
+      show: propVal => {
+        if (propVal) {
+          this.window.show()
+        } else {
+          this.window.hide()
+        }
+      },
+      size: this.updateSize,
+      defaultSize: this.updateSize,
+      onResize: this.updateSize,
+      position: this.updatePosition,
+      defaultPosition: this.updatePosition,
+      onMove: this.updatePosition,
+      onMoved: this.updatePosition,
+      file: () => configureFile.call(this, this.props),
+      acceptFirstMouse: () => {
+        if (process.env.NODE_ENV !== 'production') {
+          console.warn(
+            'A component is changing the acceptFirstMouse prop of a window. ' +
+              'The acceptFirstMouse prop only has effect when the window is first rendered, ' +
+              'changing it after the first render does nothing. '
+          )
+        }
+      },
     }
   }
 
-  componentWillUnmount(): void {
-    this.disposed = true
+  unmount() {
     this.window.close()
     for (const eventKey in this.attachedHandlers) {
       const handler = this.attachedHandlers[eventKey]
@@ -50,23 +87,16 @@ export default class Window extends React.Component {
     }
   }
 
-  componentDidUpdate(prevProps: Object) {
-    const newPropKeys = Object.keys(this.props).map(
-      k => !isEqual(this.props[k], prevProps[k])
-    )
-    this.handleNewProps(newPropKeys)
-  }
-
-  handleNewProps(newPropKeys: Array<string>) {
-    for (const propKey of newPropKeys) {
-      const propVal = this.props[propKey]
-      if (this.newPropHandlers[propKey]) {
-        this.newPropHandlers[propKey](propVal)
+  handleNewProps(keys: Array<string>) {
+    for (const key of keys) {
+      const propVal = this.props[key]
+      if (this.newPropHandlers[key]) {
+        this.newPropHandlers[key](propVal)
       }
     }
   }
 
-  configureEvent = (propName, eventName, value, handler = cb => cb()) => {
+  configureEvent(propName, eventName, value, handler = x => x()) {
     configureEventHandler(
       this.window,
       this.attachedHandlers,
@@ -75,54 +105,6 @@ export default class Window extends React.Component {
       value,
       handler
     )
-  }
-
-  updateSize = () => configureSize.call(this, this.props)
-  updatePosition = () => configurePosition.call(this, this.props)
-
-  newPropHandlers = {
-    ...Object.keys(SIMPLE_EVENT_PROPS).reduce(
-      (acc, propKey) => ({
-        ...acc,
-        [propKey]: propVal =>
-          this.configureEvent(propKey, SIMPLE_EVENT_PROPS[propKey], propVal),
-      }),
-      {}
-    ),
-    devToolsExtensions: () => {
-      configureExtensions.call(this, this.props)
-    },
-    showDevTools: propVal => {
-      if (propVal) {
-        this.window.webContents.openDevTools()
-      } else {
-        this.window.webContents.closeDevTools()
-      }
-    },
-    show: propVal => {
-      if (propVal) {
-        this.window.show()
-      } else {
-        this.window.hide()
-      }
-    },
-    size: this.updateSize,
-    defaultSize: this.updateSize,
-    onResize: this.updateSize,
-    position: this.updatePosition,
-    defaultPosition: this.updatePosition,
-    onMove: this.updatePosition,
-    onMoved: this.updatePosition,
-    file: () => configureFile.call(this, this.props),
-    acceptFirstMouse: () => {
-      if (process.env.NODE_ENV !== 'production') {
-        console.warn(
-          'A component is changing the acceptFirstMouse prop of a window. ' +
-            'The acceptFirstMouse prop only has effect when the window is first rendered, ' +
-            'changing it after the first render does nothing. '
-        )
-      }
-    },
   }
 }
 
@@ -165,7 +147,7 @@ function configureSize({ size, onResize, defaultSize }: Object) {
       return
     }
   } catch (e) {
-    console.log('error in configureSize')
+    console.log('error in configureSize', e)
   }
 }
 

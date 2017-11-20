@@ -3,7 +3,7 @@ import emptyObject from 'fbjs/lib/emptyObject'
 import { createElement, getHostContextNode } from '../utils/createElement'
 import * as ReactDOMFrameScheduling from './ReactDOMFrameScheduling'
 
-const UPDATE_SIGNAL = {}
+const noop = () => {}
 
 export default Reconciler({
   appendInitialChild(parentInstance, child) {
@@ -15,11 +15,11 @@ export default Reconciler({
     }
   },
 
-  createInstance(type, props, internalInstanceHandle) {
+  createInstance(type, props) {
     return createElement(type, props)
   },
 
-  createTextInstance(text, rootContainerInstance, internalInstanceHandle) {
+  createTextInstance(text) {
     return text
   },
 
@@ -31,25 +31,16 @@ export default Reconciler({
     return instance
   },
 
-  prepareForCommit() {
-    // noop
-  },
+  prepareForCommit: noop,
 
   prepareUpdate(element, type, oldProps, newProps) {
-    return UPDATE_SIGNAL
+    return true
   },
 
-  resetAfterCommit() {
-    // noop
-  },
+  resetAfterCommit: noop,
+  resetTextContent: noop,
 
-  resetTextContent(element) {
-    // noop
-  },
-
-  // Use this current instance to pass data from root
   getRootHostContext(instance) {
-    // getHostContextNode here updates the internal state of createElement and stores a ref to current instance
     return getHostContextNode(instance)
   },
 
@@ -58,7 +49,7 @@ export default Reconciler({
   },
 
   shouldSetTextContent(type, props) {
-    return false // Redocx does not have a text node like DOM
+    return false
   },
 
   now: ReactDOMFrameScheduling.now,
@@ -70,12 +61,14 @@ export default Reconciler({
       if (parentInstance.appendChild) {
         parentInstance.appendChild(child)
       }
+      child.parent = parentInstance
     },
 
     appendChildToContainer(parentInstance, child) {
       if (parentInstance.appendChild) {
         parentInstance.appendChild(child)
       }
+      child.parent = parentInstance
     },
 
     removeChild(parentInstance, child) {
@@ -86,16 +79,11 @@ export default Reconciler({
       parentInstance.removeChild(child)
     },
 
-    insertBefore(parentInstance, child, beforeChild) {
-      // noob
-    },
+    insertBefore: noop,
+    commitMount: noop,
 
     commitUpdate(instance, updatePayload, type, oldProps, newProps) {
-      instance._applyProps(instance, newProps, oldProps)
-    },
-
-    commitMount(instance, updatePayload, type, oldProps, newProps) {
-      // noop
+      instance.applyProps(newProps, oldProps)
     },
 
     commitTextUpdate(textInstance, oldText, newText) {

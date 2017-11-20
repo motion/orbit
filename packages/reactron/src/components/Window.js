@@ -1,9 +1,8 @@
 // @flow
 import BaseComponent from './BaseComponent'
 import { BrowserWindow } from 'electron'
-import configureEventHandler from '../utils/configureEventHandler'
 
-const SIMPLE_EVENT_PROPS = {
+const EVENT_KEYS = {
   onReadyToShow: 'ready-to-show',
   onClose: 'close',
   onClosed: 'closed',
@@ -33,15 +32,7 @@ export default class Window extends BaseComponent {
 
     this.updateSize = () => configureSize.call(this, this.props)
     this.updatePosition = () => configurePosition.call(this, this.props)
-    this.newPropHandlers = {
-      ...Object.keys(SIMPLE_EVENT_PROPS).reduce(
-        (acc, propKey) => ({
-          ...acc,
-          [propKey]: propVal =>
-            this.configureEvent(propKey, SIMPLE_EVENT_PROPS[propKey], propVal),
-        }),
-        {}
-      ),
+    this.propHandlers = {
       devToolsExtensions: () => {
         configureExtensions.call(this, this.props)
       },
@@ -89,9 +80,12 @@ export default class Window extends BaseComponent {
 
   handleNewProps(keys: Array<string>) {
     for (const key of keys) {
-      const propVal = this.props[key]
-      if (this.newPropHandlers[key]) {
-        this.newPropHandlers[key](propVal)
+      const val = this.props[key]
+      if (EVENT_KEYS[key]) {
+        return this.handleEvent(this.window, EVENT_KEYS[key], val),
+      }
+      if (this.propHandlers[key]) {
+        this.propHandlers[key](val)
       }
     }
   }

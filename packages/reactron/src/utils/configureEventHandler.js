@@ -4,7 +4,6 @@ import EventEmitter from 'events'
 export default function configureEventHandler(
   emitter: EventEmitter,
   attachedHandlers: { [string]: Function },
-  propKey: string,
   eventKey: string,
   rawHandler: Function,
   wrapper: Function

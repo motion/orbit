@@ -7,10 +7,14 @@ render(
   <App>
     <Menu>
       <SubMenu label="Electron">
+        <MenuItems.About />
         <MenuItems.Separator />
-        <MenuItem label="test" />
+        <MenuItems.Quit />
         <MenuItems.Separator />
         <MenuItem label="test2" />
+      </SubMenu>
+      <SubMenu label="Custom Menu">
+        <MenuItem label="hello" onClick={() => console.log('hi')} />
       </SubMenu>
     </Menu>
     <Window size={[200, 200]} position={[200, 200]} file="https://google.com" />

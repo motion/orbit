@@ -1,15 +1,16 @@
 import React from 'react'
 // import ReactTestUtils from 'react-dom/test-utils'
-import { App, Window, Menu, SubMenu, MenuItem } from '../index'
+import { App, Window, Menu, SubMenu, MenuItem, MenuItems } from '../index'
 import { render } from '../renderer/render'
-
-console.log({ App, Window, Menu, SubMenu, MenuItem })
 
 render(
   <App>
     <Menu>
       <SubMenu label="Electron">
-        <MenuItem label="about" />
+        <MenuItems.Separator />
+        <MenuItem label="test" />
+        <MenuItems.Separator />
+        <MenuItem label="test2" />
       </SubMenu>
     </Menu>
     <Window size={[200, 200]} position={[200, 200]} file="https://google.com" />

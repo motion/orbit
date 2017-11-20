@@ -11,7 +11,7 @@ export default class MenuItem extends BaseComponent {
     const { props } = this
     this.handleEvent(this.emitter, 'click', props.onClick)
     this.menuItem = new ElectronMenuItem({
-      type: 'normal',
+      type: props.type || 'normal',
       label: props.label,
       accelerator: props.accelerator,
       click: (menuItem, browserWindow, event) => {

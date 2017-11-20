@@ -1,16 +1,15 @@
 import React from 'react'
+import { App, Window } from '@mcro/reactron'
 import * as Helpers from './helpers'
 import { app, globalShortcut, ipcMain, screen } from 'electron'
 import repl from 'repl'
 import * as Constants from '~/constants'
 import mouse from 'osx-mouse'
 import { throttle, isEqual, once } from 'lodash'
-import MenuItems from './menu'
+import MenuItems from './menuItems'
 import getCrawler from './helpers/getCrawler'
 import escapeStringApplescript from 'escape-string-applescript'
 import Path from 'path'
-import Fs from 'fs'
-// import log from '@mcro/black/lib/helpers/log'
 
 const EXTENSIONS = {
   mobx: 'fmkadmapgofadopljbjfkapdkoienihi',
@@ -315,8 +314,10 @@ export default class Windows extends React.Component {
       },
     }
 
+    console.log(App, Window)
+
     return (
-      <app
+      <App
         onBeforeQuit={() => console.log('hi')}
         ref={ref => {
           this.appRef = ref
@@ -331,7 +332,7 @@ export default class Windows extends React.Component {
           }}
         />
         {!this.state.closeSettings && (
-          <window
+          <Window
             {...appWindow}
             show={this.state.showSettings}
             vibrancy="dark"
@@ -355,7 +356,7 @@ export default class Windows extends React.Component {
             }}
           />
         )}
-        <window
+        <Window
           {...appWindow}
           ref={this.onOra}
           titleBarStyle="customButtonsOnHover"
@@ -372,7 +373,7 @@ export default class Windows extends React.Component {
           onFocus={() => this.sendOra('ora-focus')}
           devToolsExtensions={getExtensions(['mobx', 'react'])}
         />
-      </app>
+      </App>
     )
   }
 }

@@ -6,24 +6,24 @@ import './helpers/monitorResourceUsage'
 import electronContextMenu from 'electron-context-menu'
 import electronDebug from 'electron-debug'
 import React from 'react'
-import Ionize from '@mcro/ionize'
-import { onWindow } from './windows'
+import { render } from '@mcro/reactron'
+// import { onWindow } from './windows'
 import { throttle } from 'lodash'
 import { extras } from 'mobx'
 
 // share state because node loads multiple copies
 extras.shareGlobalState()
 
-let app = null
+// let app = null
 
 const start = throttle(() => {
   const Windows = require('./windows').default
-  Ionize.start(<Windows />)
+  render(<Windows />)
   electronContextMenu()
   electronDebug()
-  onWindow(ref => {
-    app = ref
-  })
+  // onWindow(ref => {
+  //   app = ref
+  // })
 }, 1000)
 
 export default start
@@ -32,7 +32,7 @@ if (process.argv.find(x => x === '--start')) {
   start()
 }
 
-let restarting
+// let restarting
 
 function restart() {
   console.log('got a restart from hmr')

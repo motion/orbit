@@ -147,7 +147,7 @@ export default class Pane {
     const actions = store && store.actions
     const drawer = store && store.drawer
 
-    console.log('pane render', result)
+    console.log('pane render')
 
     return (
       <pane

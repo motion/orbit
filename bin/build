@@ -71,7 +71,7 @@ elif [ "$APP" = "build-prod" ]; then
 elif [ "$APP" = "crawler" ]; then
   cd $ROOT/apps/electron
   npm run build
-elif [ "$APP" = "electron" ] || [ "$APP" = "app" ]; then
+elif [ "$APP" = "electron" ]; then
   cd $ROOT/apps/electron
   npm run dist
 elif [ "$APP" = "site" ]; then
@@ -86,19 +86,19 @@ elif [ "$APP" = "web" ]; then
     npm run build
     echo "finished build web"
   fi
-else
-  if [ "$APP" = "--watch" ]; then
-    # only build modern during dev-watch
-    build-es6 --watch --skip-initial-build &
-    build-dev --watch --skip-initial-build &
-    build-prod --watch --skip-initial-build &
-    (cd apps/crawler && npm run watch) &
-  else
-    build-es6 &
-    build-dev &
-    build-prod &
-    (cd apps/crawler && npm run build) &
-  fi
+elif [ "$APP" = "--watch" ]; then
+  # only build modern during dev-watch
+  build-es6 --watch --skip-initial-build &
+  build-dev --watch --skip-initial-build &
+  build-prod --watch --skip-initial-build &
+  (cd apps/crawler && npm run watch) &
   wait
-  echo "done building"
+elif [ "$APP" = "" ]; then
+  build-es6 &
+  build-dev &
+  build-prod &
+  (cd apps/crawler && npm run build) &
+  wait
+else
+  echo "should be able to build individual apps"
 fi

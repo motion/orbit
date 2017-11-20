@@ -2,6 +2,14 @@
 
 - return focus to previous window on hide ora
 - bug: hitting close causes state of openness to bug out
+- explored pouch-leveldb, seems possible but bailed because it was frustrating
+- build if-changed working
+- we have black now in electron with @view.electron
+- dev extensions: mobx + react in electron
+- fixed some performance regressions in app
+- fixed show/hide to be smooth
+- simplified some stuff so panes are easier to customize
+- fixed ref to properly trigger changes
 
 # now
 

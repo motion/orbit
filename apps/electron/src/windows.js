@@ -1,7 +1,7 @@
 import React from 'react'
 import { App, Window } from '@mcro/reactron'
 import * as Helpers from './helpers'
-import { app, globalShortcut, ipcMain, screen } from 'electron'
+import { globalShortcut, ipcMain, screen } from 'electron'
 import repl from 'repl'
 import * as Constants from '~/constants'
 import mouse from 'osx-mouse'
@@ -10,6 +10,7 @@ import MenuItems from './menuItems'
 import getCrawler from './helpers/getCrawler'
 import escapeStringApplescript from 'escape-string-applescript'
 import Path from 'path'
+import { view } from '@mcro/black'
 
 const EXTENSIONS = {
   mobx: 'fmkadmapgofadopljbjfkapdkoienihi',
@@ -21,16 +22,11 @@ const extensionIDToPath = id =>
   Path.join(__dirname, '..', 'resources', 'extensions', id)
 const getExtensions = names => names.map(extensionToID).map(extensionIDToPath)
 
-let onWindows = []
-export function onWindow(cb) {
-  onWindows.push(cb)
-}
-
+@view.electron
 export default class Windows extends React.Component {
   // this is an event bus that should be open whenever ora is open
   sendOra = async name => console.log('called this.sendOra before setup', name)
 
-  subscriptions = []
   uid = Math.random()
 
   oraState = {}
@@ -50,7 +46,6 @@ export default class Windows extends React.Component {
     this.setState({
       trayPosition: [this.screenSize.width - Constants.ORA_WIDTH, 20],
     })
-    onWindows.forEach(cb => cb(this))
     setTimeout(this.measureAndShow, 500)
     this.repl = repl.start({
       prompt: '$ > ',
@@ -64,14 +59,6 @@ export default class Windows extends React.Component {
   componentWillUnmount() {
     this.mounted = false
     globalShortcut.unregisterAll()
-    for (const [emitter, name, callback] of this.subscriptions) {
-      emitter.off(name, callback)
-    }
-  }
-
-  on(emitter, name, callback) {
-    emitter.on(name, callback)
-    this.subscriptions.push([emitter, name, callback])
   }
 
   listenForMouse() {
@@ -178,23 +165,23 @@ export default class Windows extends React.Component {
   }
 
   toggleShown = throttle(async () => {
-    await this.sendOra('ora-toggle')
-    if (this.oraState.hidden) {
-      await Helpers.sleep(200)
-      if (this.appRef) {
-        this.appRef.hide()
-      }
+    if (!this.appRef) {
+      console.log('no app ref :(')
+      return
+    }
+    if (!this.oraState.hidden) {
+      await this.sendOra('ora-toggle')
+      await Helpers.sleep(150)
+      this.appRef.hide()
     } else {
-      if (!this.appRef) {
-        console.log('no app ref :(')
-        return
-      }
       this.appRef.show()
-      await Helpers.sleep(200)
+      await Helpers.sleep(50)
+      await this.sendOra('ora-toggle')
+      await Helpers.sleep(150)
       this.appRef.focus()
       this.oraRef.focus()
     }
-  }, 500)
+  }, 200)
 
   injectCrawler = throttle(async sendToOra => {
     const js = await getCrawler()
@@ -291,12 +278,7 @@ export default class Windows extends React.Component {
     if (restart) {
       console.log('\n\n\n\n\n\nRESTARTING\n\n\n\n\n\n')
       this.repl.close()
-      onWindows = []
-      return (
-        <app>
-          <window />
-        </app>
-      )
+      return null
     }
     if (error) {
       console.log('recover render from error')

@@ -40,6 +40,8 @@ export class Gloss {
   createElement: Function
   Helpers: Object = Helpers
   themeSheets = {}
+  // for debug
+  JSS = JSS
 
   constructor(opts: Options = DEFAULT_OPTS) {
     this.options = opts
@@ -189,7 +191,9 @@ export class Gloss {
         // ONLY IN DEV -- ALWAYS UPDATE STYLESHEET SO HMR STYLE CHANGES WORK
         if (
           !lastUpdatedStyles ||
-          (window.lastHotReload && lastUpdatedStyles > window.lastHotReload)
+          (typeof window !== 'undefined' &&
+            window.lastHotReload &&
+            lastUpdatedStyles > window.lastHotReload)
         ) {
           attachStyles(Child.glossUID, Child.style, true)
           lastUpdatedStyles = Date.now()

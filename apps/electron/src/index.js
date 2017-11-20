@@ -1,3 +1,4 @@
+import 'source-map-support/register'
 import 'isomorphic-fetch'
 import 'raf/polyfill'
 import './helpers/handlePromiseErrors'

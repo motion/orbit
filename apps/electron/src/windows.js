@@ -296,6 +296,8 @@ export default class Windows extends React.Component {
       },
     }
 
+    console.log('render me')
+
     return (
       <App
         onBeforeQuit={() => console.log('hi')}
@@ -313,31 +315,29 @@ export default class Windows extends React.Component {
             this.menuRef = ref
           }}
         />
-        {!this.state.closeSettings && (
-          <Window
-            {...appWindow}
-            show={this.state.showSettings}
-            vibrancy="dark"
-            transparent
-            hasShadow
-            showDevTools={this.state.showSettings}
-            defaultSize={this.initialSize || this.state.size}
-            size={this.state.size}
-            file={`${Constants.APP_URL}/settings`}
-            titleBarStyle="customButtonsOnHover"
-            position={this.state.position}
-            onResize={size => this.setState({ size })}
-            onMoved={position => this.setState({ position })}
-            onMove={position => this.setState({ position })}
-            onClose={() => {
-              this.setState({ closeSettings: true })
-              setTimeout(() => {
-                // reopen invisible so its quick to open again
-                this.setState({ closeSettings: false, showSettings: false })
-              }, 500)
-            }}
-          />
-        )}
+        <Window
+          {...appWindow}
+          show={this.state.showSettings}
+          vibrancy="dark"
+          transparent
+          hasShadow
+          showDevTools={this.state.showSettings}
+          defaultSize={this.initialSize || this.state.size}
+          size={this.state.size}
+          file={`${Constants.APP_URL}/settings`}
+          titleBarStyle="customButtonsOnHover"
+          position={this.state.position}
+          onResize={size => this.setState({ size })}
+          onMoved={position => this.setState({ position })}
+          onMove={position => this.setState({ position })}
+          onClose={() => {
+            this.setState({ closeSettings: true })
+            setTimeout(() => {
+              // reopen invisible so its quick to open again
+              this.setState({ closeSettings: false, showSettings: false })
+            }, 500)
+          }}
+        />
         <Window
           {...appWindow}
           ref={this.oraRef}

@@ -314,8 +314,6 @@ export default class Windows extends React.Component {
       },
     }
 
-    console.log(App, Window)
-
     return (
       <App
         onBeforeQuit={() => console.log('hi')}

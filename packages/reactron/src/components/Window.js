@@ -14,12 +14,10 @@ export default class Window extends BaseComponent {
   mount() {
     this.extensionNames = {}
     this.devExtensions = new Set()
-    this.parentWindow = null
-    this.attachedHandlers = {}
 
     const { props } = this
     this.window = new BrowserWindow({
-      show: !!props.show,
+      show: props.show === undefined ? true : props.show,
       acceptFirstMouse: !!props.acceptFirstMouse,
       titleBarStyle: props.titleBarStyle,
       vibrancy: props.vibrancy,
@@ -82,23 +80,13 @@ export default class Window extends BaseComponent {
     for (const key of keys) {
       const val = this.props[key]
       if (EVENT_KEYS[key]) {
-        return this.handleEvent(this.window, EVENT_KEYS[key], val),
+        this.handleEvent(this.window, EVENT_KEYS[key], val)
+        continue
       }
       if (this.propHandlers[key]) {
         this.propHandlers[key](val)
       }
     }
-  }
-
-  configureEvent(propName, eventName, value, handler = x => x()) {
-    configureEventHandler(
-      this.window,
-      this.attachedHandlers,
-      propName,
-      eventName,
-      value,
-      handler
-    )
   }
 }
 
@@ -116,7 +104,7 @@ function configureSize({ size, onResize, defaultSize }: Object) {
   }
 
   try {
-    this.configureEvent('onResize', 'resize', onResize, rawHandler => {
+    this.handleEvent('onResize', 'resize', onResize, rawHandler => {
       const size = this.window.getSize()
       rawHandler(size)
     })
@@ -155,12 +143,12 @@ function configurePosition({
     return
   }
 
-  this.configureEvent('onMove', 'move', onMove, rawHandler => {
+  this.handleEvent('onMove', 'move', onMove, rawHandler => {
     const position = this.window.getPosition()
     rawHandler(position)
   })
 
-  this.configureEvent('onMoved', 'moved', onMoved, rawHandler => {
+  this.handleEvent('onMoved', 'moved', onMoved, rawHandler => {
     const position = this.window.getPosition()
     rawHandler(position)
   })

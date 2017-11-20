@@ -8,29 +8,26 @@ export default function configureEventHandler(
   rawHandler: Function,
   wrapper: Function
 ) {
-  const rawEventKey = `${eventKey}_raw`
   const removingHandler =
-    rawHandler === undefined && attachedHandlers[rawEventKey] !== undefined
+    rawHandler === undefined && attachedHandlers[eventKey] !== undefined
 
   const changingHandler =
     rawHandler !== undefined &&
-    attachedHandlers[rawEventKey] !== undefined &&
-    rawHandler !== attachedHandlers[rawEventKey]
+    attachedHandlers[eventKey] !== undefined &&
+    rawHandler !== attachedHandlers[eventKey].rawHandler
 
   const newHandler =
-    rawHandler !== undefined && attachedHandlers[rawEventKey] === undefined
+    rawHandler !== undefined && attachedHandlers[eventKey] === undefined
 
   if (removingHandler || changingHandler) {
-    const existingHandler = attachedHandlers[eventKey]
+    const existingHandler = attachedHandlers[eventKey].handler
     emitter.removeListener(eventKey, existingHandler)
     delete attachedHandlers[eventKey]
-    delete attachedHandlers[rawEventKey]
   }
 
   if (changingHandler || newHandler) {
     const handler = () => wrapper(rawHandler)
-    attachedHandlers[eventKey] = handler
-    attachedHandlers[rawEventKey] = rawHandler
+    attachedHandlers[eventKey] = { rawHandler, handler, emitter }
     emitter.on(eventKey, handler)
   }
 }

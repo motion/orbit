@@ -4,13 +4,12 @@ import configureEventHandler from '../utils/configureEventHandler'
 // sort of like our own mini react API
 
 export default class BaseComponent {
-  parent = null
-  children = []
-  attachedHandlers = {}
-
   constructor(root, props) {
     this.root = root
     this.props = props
+    this.parent = null
+    this.children = []
+    this.attachedHandlers = {}
     if (this.mount) {
       this.mount()
     }
@@ -21,6 +20,7 @@ export default class BaseComponent {
 
   appendChild(child) {
     this.children.push(child)
+    child.parent = this
   }
 
   removeChild(child) {
@@ -28,6 +28,9 @@ export default class BaseComponent {
     child.parent = null
     if (child.unmount) {
       child.unmount()
+    }
+    for (const { emitter, handler } of Object.keys(this.attachedHandlers)) {
+      emitter.removeListener(handler)
     }
     this.children.splice(index, 1)
   }

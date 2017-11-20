@@ -38,12 +38,12 @@ export const DARWIN_ROLES = {
   services: 'Services',
 }
 
-GENERIC_ROLES.forEach(role => {
+Object.keys(GENERIC_ROLES).forEach(role => {
   exports[GENERIC_ROLES[role]] = props => <MenuItem role={role} {...props} />
 })
 
 if (process.platform === 'darwin') {
-  DARWIN_ROLES.forEach(role => {
+  Object.keys(DARWIN_ROLES).forEach(role => {
     exports[DARWIN_ROLES[role]] = props => <MenuItem role={role} {...props} />
   })
 }

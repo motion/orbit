@@ -10,13 +10,19 @@ export default class MenuItem extends BaseComponent {
   handleNewProps() {
     const { props } = this
     this.handleEvent(this.emitter, 'click', props.onClick)
-    this.menuItem = new ElectronMenuItem({
-      type: props.type || 'normal',
-      label: props.label,
-      accelerator: props.accelerator,
-      click: (menuItem, browserWindow, event) => {
-        this.emitter.emit('click', event)
-      },
-    })
+    if (props.role) {
+      this.menuItem = new ElectronMenuItem({
+        role: props.role,
+      })
+    } else {
+      this.menuItem = new ElectronMenuItem({
+        type: props.type || 'normal',
+        label: props.label,
+        accelerator: props.accelerator,
+        click: (menuItem, browserWindow, event) => {
+          this.emitter.emit('click', event)
+        },
+      })
+    }
   }
 }

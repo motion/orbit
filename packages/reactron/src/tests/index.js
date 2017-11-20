@@ -17,7 +17,12 @@ render(
         <MenuItem label="hello" onClick={() => console.log('hi')} />
       </SubMenu>
     </Menu>
-    <Window size={[200, 200]} position={[200, 200]} file="https://google.com" />
+    <Window
+      size={[200, 200]}
+      position={[200, 200]}
+      file="https://google.com"
+      onMove={(...args) => console.log(...args)}
+    />
   </App>
 )
 

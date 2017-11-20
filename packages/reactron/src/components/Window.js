@@ -95,10 +95,9 @@ function configureFile({ file }: Object) {
 }
 
 function configureSize({ size, onResize, defaultSize }: Object) {
-  if (this.disposed || this.window.disposed) {
+  if (this.unmounted) {
     return
   }
-
   try {
     this.handleEvent(this.window, 'resize', onResize, rawHandler => {
       const size = this.window.getSize()
@@ -135,10 +134,9 @@ function configurePosition({
   onMoved,
   defaultPosition,
 }: Object) {
-  if (this.disposed || this.window.disposed) {
+  if (this.unmounted) {
     return
   }
-
   this.handleEvent(this.window, 'move', onMove, rawHandler => {
     const position = this.window.getPosition()
     rawHandler(position)
@@ -171,7 +169,7 @@ function configurePosition({
 }
 
 function configureExtensions({ devToolsExtensions }) {
-  if (this.disposed || this.window.disposed) {
+  if (this.unmounted) {
     return
   }
   const incoming = new Set(devToolsExtensions)
@@ -190,5 +188,4 @@ function configureExtensions({ devToolsExtensions }) {
     this.devExtensions.add(path)
     this.extensionNames[path] = name
   }
-  console.log('added extensions' + [...newExtensions])
 }

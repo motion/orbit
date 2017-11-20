@@ -29,8 +29,10 @@ export default class BaseComponent {
     if (child.unmount) {
       child.unmount()
     }
-    for (const { emitter, handler } of Object.keys(this.attachedHandlers)) {
-      emitter.removeListener(handler)
+    child.unmounted = true
+    for (const key of Object.keys(child.attachedHandlers)) {
+      const { emitter, rawHandler } = child.attachedHandlers[key]
+      emitter.removeListener(key, rawHandler)
     }
     this.children.splice(index, 1)
   }
@@ -44,7 +46,7 @@ export default class BaseComponent {
     const currentPropKeys = Object.keys(this.props)
     const newPropKeys = !prevProps
       ? currentPropKeys
-      : currentPropKeys.map(k => !isEqual(this.props[k], prevProps[k]))
+      : currentPropKeys.map(k => !isEqual(this.props[k], prevProps[k]) && k)
     if (this.handleNewProps) {
       this.handleNewProps(newPropKeys, prevProps)
     }

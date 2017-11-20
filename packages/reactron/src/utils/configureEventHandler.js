@@ -28,7 +28,6 @@ export default function configureEventHandler(
   if (changingHandler || newHandler) {
     const handler = () => wrapper(rawHandler)
     attachedHandlers[eventKey] = { rawHandler, handler, emitter }
-    console.log('emitter', emitter)
     emitter.on(eventKey, handler)
   }
 }

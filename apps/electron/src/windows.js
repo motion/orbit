@@ -104,9 +104,9 @@ export default class Windows extends React.Component {
     this.initialSize = this.initialSize || this.size
   }
 
-  onOra = ref => {
+  oraRef = ref => {
     if (ref) {
-      this.oraRef = ref
+      this.oraRef = ref.window
       this.startOra()
     }
   }
@@ -320,7 +320,9 @@ export default class Windows extends React.Component {
       <App
         onBeforeQuit={() => console.log('hi')}
         ref={ref => {
-          this.appRef = ref
+          if (ref) {
+            this.appRef = ref.app
+          }
         }}
       >
         <MenuItems
@@ -358,7 +360,7 @@ export default class Windows extends React.Component {
         )}
         <Window
           {...appWindow}
-          ref={this.onOra}
+          ref={this.oraRef}
           titleBarStyle="customButtonsOnHover"
           transparent
           show

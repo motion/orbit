@@ -101,7 +101,7 @@ function createViewDecorator(): ViewDecorator {
 
   // other decorators
   view.ui = decor(decorations({ ui: true }))
-  view.electron = decor(decorations({ ui: false }))
+  view.electron = decor(decorations({ mobx: true, ui: false }))
 
   const providable = decor([[storeProvidable, storeOptions]])
   view.provide = stores => providable({ stores, context: true })

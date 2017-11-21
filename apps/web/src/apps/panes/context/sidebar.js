@@ -204,15 +204,6 @@ export default class ContextSidebar {
   get actions() {
     if (this.showCrawler) {
       return [
-        // {
-        //   key: Math.random(),
-        //   icon: 'remove',
-        //   children: 'Cancel',
-        //   onClick: async () => {
-        //     const cancelled = await this.oraStore.stopCrawl()
-        //     console.log('cancelled', cancelled)
-        //   },
-        // },
         {
           flex: true,
         },

@@ -57,6 +57,7 @@ const urlMatchesExtensions = (url, extensions) => {
 export default class Crawler {
   shouldCrawl = true
   isRunning = false
+  count = 0
 
   constructor(options: Options) {
     this.options = options
@@ -108,7 +109,7 @@ export default class Crawler {
     const browser = await puppeteer.launch(puppeteerOptions)
     const page = await browser.newPage()
 
-    let count = 0
+    this.count = 0
     this.isRunning = true
 
     while (target && this.shouldCrawl) {
@@ -172,8 +173,8 @@ export default class Crawler {
 
           // only count it if it finds goodies
           if (contents.title || contents.body) {
-            count++
-            log.page(`Good contents. Total ${count}`)
+            this.count++
+            log.page(`Good contents. Total ${this.count}`)
           } else {
             log.page(`No contents found`)
           }
@@ -190,14 +191,14 @@ export default class Crawler {
           )
         }
       }
-      if (count >= maxPages) {
+      if (this.count >= maxPages) {
         log.crawl(`Max pages reached! ${maxPages}`)
         break
       }
       target = this.db.shiftUrl()
     }
 
-    log.crawl(`Crawler done, crawled ${count} pages`)
+    log.crawl(`Crawler done, crawled ${this.count} pages`)
     browser.close()
     this.isRunning = false
 
@@ -207,6 +208,10 @@ export default class Crawler {
     } else {
       return []
     }
+  }
+
+  getStatus() {
+    return this.count
   }
 
   stop() {

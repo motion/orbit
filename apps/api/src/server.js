@@ -117,6 +117,10 @@ export default class Server {
       }
       res.json({ success })
     })
+
+    this.app.get('/crawler/status', async (req, res) => {
+      res.json({ status: crawler.getStatus() })
+    })
   }
 
   creds = {}

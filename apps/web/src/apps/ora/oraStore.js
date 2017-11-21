@@ -33,6 +33,8 @@ export default class OraStore {
   focusedBar = false
   wasBlurred = false
   showWhiteBottomBg = false
+  crawlState = null
+  crawlStatus = null
 
   // this is synced to electron!
   state = {
@@ -40,6 +42,7 @@ export default class OraStore {
     focused: true,
   }
 
+  // synced from electron!
   electronState = {}
 
   setState = newState => {
@@ -81,6 +84,7 @@ export default class OraStore {
     this._watchToggleHide()
     this._watchMouse()
     this._watchBlurBar()
+    this._watchCrawlStatus()
 
     this.watch(() => {
       const { focused } = this.state
@@ -136,6 +140,30 @@ export default class OraStore {
       if (this.state.hidden) {
         // timeout based on animation
         this.setTimeout(this.blurBar, 100)
+      }
+    })
+  }
+
+  _watchCrawlStatus = () => {
+    let watcher
+
+    this.watch(() => {
+      if (this.crawlState) {
+        watcher = this.setInterval(async () => {
+          try {
+            const { status } = await r2.get(
+              'http://localhost:3001/crawler/progress'
+            ).json
+            this.crawlStatus = status
+            console.log('this.crawlStatus', this.crawlStatus)
+          } catch (err) {
+            clearInterval(watcher)
+          }
+        }, 1000)
+      } else {
+        if (watcher) {
+          clearInterval(watcher)
+        }
       }
     })
   }
@@ -217,11 +245,11 @@ export default class OraStore {
   }
 
   startCrawl = async options => {
-    console.log('starting crawl', options)
+    this.crawlState = options
     const results = await r2.post('http://localhost:3001/crawler/start', {
       json: { options },
     }).json
-    console.log('crawl done', results)
+    this.crawlState = false
     let creating = []
     if (results) {
       for (const { url, contents } of results.results) {

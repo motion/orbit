@@ -14,6 +14,7 @@
 - cancel crawl working in browser + ora
 - stack traces nice in electron
 - working open/close settings pane in electron
+- sync state from electron to oraStore.electronState
 
 # now
 
@@ -25,6 +26,7 @@
 - Slack import using Readability
 - Crawler: if on a knowledgebase root of known type, have it auto-crawl
 
+- car: reduce pane render calls, lots are happening
 - bug: if chrome is empty tab, dont show context
 - ux: better "unfocused" state visuals
   - shadow should be less strong

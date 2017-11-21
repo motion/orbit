@@ -151,9 +151,17 @@ export default class Pane {
       />
     )
 
-    const { store, result } = stackItem
-    const actions = store && store.actions
-    const drawer = store && store.drawer
+    let actions
+    let drawer
+    let store
+    let result
+
+    if (stackItem) {
+      store = stackItem.store
+      result = stackItem.result
+      actions = store && store.actions
+      drawer = store && store.drawer
+    }
 
     const drawerHeight = 420
     console.log('pane render drawerheight', drawerHeight)

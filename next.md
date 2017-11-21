@@ -33,6 +33,11 @@
 - Slack import using Readability
 - Crawler: if on a knowledgebase root of known type, have it auto-crawl
 
+- Crawler:
+  - Needs to store crawl settings once completed so it can re-run
+  - Needs to store proper url for each item so it can detect pinned
+  - Needs improvement to ux while crawling
+  - Needs place to see/edit stored crawl settings
 - car: reduce pane render calls, lots are happening
 - bug: if chrome is empty tab, dont show context
 - ux: better "unfocused" state visuals

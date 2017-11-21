@@ -201,10 +201,6 @@ export default class OraStore {
         console.log('no context or url/title', this.context)
         return
       }
-      const isAlreadyOnResultsPane = this.stack.length > 1
-      if (isAlreadyOnResultsPane) {
-        return
-      }
       if (lastContext) {
         if (lastContext.url === context.url) return
       }
@@ -215,7 +211,12 @@ export default class OraStore {
         type: 'context',
         icon: context.application === 'Google Chrome' ? 'social-google' : null,
       }
-      this.stack.navigate(nextStackItem)
+      const isAlreadyOnResultsPane = this.stack.length > 1
+      if (isAlreadyOnResultsPane) {
+        this.stack.replaceInPlace(nextStackItem)
+      } else {
+        this.stack.navigate(nextStackItem)
+      }
     })
   }
 

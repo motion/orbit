@@ -159,14 +159,12 @@ export default class OraStore {
     this.watch(() => {
       clearInterval(watcher)
       if (this.crawlState) {
-        console.log('crawlstate', this.crawlState)
         watcher = this.setInterval(async () => {
           try {
             const { status } = await r2.get(
               'http://localhost:3001/crawler/status'
             ).json
             this.crawlStatus = status
-            console.log('this.crawlStatus', this.crawlStatus)
           } catch (err) {
             clearInterval(watcher)
           }
@@ -233,11 +231,15 @@ export default class OraStore {
 
   startCrawl = async options => {
     this.crawlState = options
+    this.crawlStatus = { count: 0 }
     try {
       const { results } = await r2.post('http://localhost:3001/crawler/start', {
         json: { options },
       }).json
-      this.crawlResults = results
+      // ensure not cancelled in meanwhile
+      if (this.crawlState) {
+        this.crawlResults = results
+      }
     } catch (err) {
       console.log('error during crawl', err)
     } finally {
@@ -245,10 +247,17 @@ export default class OraStore {
     }
   }
 
-  insertCrawlResults = async results => {
+  cancelResults = () => {
+    this.crawlResults = null
+  }
+
+  commitResults = async () => {
+    this.setBanner(BANNERS.note, 'Saving...')
     let creating = []
-    if (results) {
-      for (const { url, contents } of results) {
+    const { crawlResults } = this
+    this.crawlResults = null
+    if (crawlResults) {
+      for (const { url, contents } of crawlResults) {
         creating.push(
           Thing.create({
             url,
@@ -261,7 +270,9 @@ export default class OraStore {
         )
       }
     }
-    return await Promise.all(creating)
+    const results = await Promise.all(creating)
+    this.setBanner(BANNERS.success, 'Saved results!')
+    return results
   }
 
   stopCrawl = async () => {

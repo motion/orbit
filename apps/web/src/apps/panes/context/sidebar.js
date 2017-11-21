@@ -44,7 +44,11 @@ export default class ContextSidebar {
   }
 
   get isShowingCrawlDrawer() {
-    return this.crawlerInfo && !this.oraStore.crawlState
+    return (
+      this.crawlerInfo &&
+      !this.oraStore.crawlState &&
+      !this.oraStore.crawlResults
+    )
   }
 
   // can show a modal that slides in
@@ -195,6 +199,25 @@ export default class ContextSidebar {
   }
 
   get actions() {
+    if (this.oraStore.crawlResults) {
+      return [
+        {
+          icon: 'remove',
+          children: 'Cancel',
+          onClick: this.oraStore.cancelResults,
+          theme: 'red',
+        },
+        {
+          flex: true,
+        },
+        {
+          icon: 'check',
+          children: 'Save',
+          onClick: this.oraStore.commitResults,
+          theme: 'green',
+        },
+      ]
+    }
     if (this.crawlerInfo) {
       return [
         {

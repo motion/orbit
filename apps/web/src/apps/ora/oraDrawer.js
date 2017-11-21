@@ -12,17 +12,16 @@ import Drawer from '~/views/drawer'
 export default class OraDrawer {
   render({ store, oraStore }) {
     const { crawlState, crawlStatus, crawlResults } = oraStore
-    const statusOpen = !crawlResults && crawlState
+    const statusOpen = !crawlResults && crawlState && crawlStatus
 
-    console.log('crawlResults', crawlResults)
     return (
       <drawers>
         <Drawer
+          open={crawlResults}
           collapsable
           collapsed={!store.resultsShown}
           onCollapse={store.ref('resultsShown').toggle}
           renderTitle={() => `Crawl Results ${crawlResults.length})`}
-          open={crawlResults}
           size={300}
         >
           <content if={crawlResults}>
@@ -37,6 +36,7 @@ export default class OraDrawer {
         </Drawer>
 
         <Drawer
+          open={statusOpen}
           collapsable
           collapsed={!store.statusShown}
           onCollapse={store.ref('statusShown').toggle}
@@ -44,8 +44,7 @@ export default class OraDrawer {
             `Crawling (${crawlStatus.count} of ${crawlState.maxPages})`
           }
           renderProgress={() => crawlStatus.count / crawlState.maxPages * 100}
-          open={statusOpen}
-          size={140}
+          size={150}
         >
           <content $$flex if={crawlState}>
             <UI.Text opacity={0.5} ellipse css={{ marginRight: 10 }}>

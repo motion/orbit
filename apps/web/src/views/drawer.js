@@ -50,7 +50,7 @@ export default class Drawer {
           size={collapsed ? 82 : size}
           {...props}
         >
-          <container if={children}>
+          <container if={open}>
             <title if={renderTitle || title}>
               <UI.Progress.Circle
                 if={typeof (renderProgress || progress) !== 'undefined'}

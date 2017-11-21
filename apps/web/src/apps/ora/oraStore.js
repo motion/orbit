@@ -162,7 +162,7 @@ export default class OraStore {
         watcher = this.setInterval(async () => {
           try {
             const { status } = await r2.get(
-              'http://localhost:3001/crawler/progress'
+              'http://localhost:3001/crawler/status'
             ).json
             this.crawlStatus = status
             console.log('this.crawlStatus', this.crawlStatus)

@@ -28,6 +28,7 @@ const FILTER_URL_EXTENSIONS = [
   '.js',
   '.svg',
   '.xml',
+  '.pdf',
 ]
 
 const urlSimilarity = (wanted, given) => {
@@ -211,7 +212,7 @@ export default class Crawler {
   }
 
   getStatus() {
-    return this.count
+    return { count: this.count }
   }
 
   stop() {

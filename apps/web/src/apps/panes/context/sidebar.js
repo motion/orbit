@@ -9,8 +9,6 @@ import After from '~/views/after'
 export default class ContextSidebar {
   @watch
   isPinned = () => this.osContext && Thing.findOne({ url: this.osContext.url })
-  showCrawler = null
-  crawlerInfo = null
   crawlerSettings = {
     maxPages: 6,
     depth: '/',
@@ -38,7 +36,7 @@ export default class ContextSidebar {
   }
 
   onDrawerClose() {
-    this.showCrawler = false
+    OS.send('kill-crawler')
   }
 
   get drawerTitle() {
@@ -47,7 +45,7 @@ export default class ContextSidebar {
 
   // can show a modal that slides in
   get drawer() {
-    if (!this.showCrawler || !this.crawlerInfo) {
+    if (!this.crawlerInfo) {
       return null
     }
     const fieldProps = {
@@ -82,6 +80,10 @@ export default class ContextSidebar {
     )
   }
 
+  get crawlerInfo() {
+    return this.oraStore.electronState.context.crawlerInfo
+  }
+
   get crawlerOptions() {
     return {
       ...this.crawlerInfo,
@@ -95,31 +97,22 @@ export default class ContextSidebar {
   }
 
   willMount() {
-    this.on(OS, 'crawler-selection', (event, info) => {
-      if (info && Object.keys(info).length) {
-        // matching url
-        if (info.entry === this.osContext.url) {
-          if (!isEqual(info, this.crawlerInfo)) {
-            if (this.showCrawler === null) {
-              this.showCrawler = true
-            }
-            const { bodySelector, titleSelector, ...crawlerInfo } = info
-
-            this.crawlerInfo = crawlerInfo
-            this.crawlerSettings = {
-              ...this.crawlerSettings,
-              bodySelector,
-              titleSelector,
-            }
-          }
-        } else {
-          console.log('not on same url')
-        }
+    this.watch(() => {
+      const { crawlerInfo } = this
+      if (!crawlerInfo) return
+      const { bodySelector, titleSelector } = crawlerInfo
+      const crawlerSettings = {
+        ...this.crawlerSettings,
+        bodySelector,
+        titleSelector,
+      }
+      if (!isEqual(crawlerSettings, this.crawlerSettings)) {
+        this.crawlerSettings = crawlerSettings
       }
     })
 
     this.watch(() => {
-      this.oraStore.showWhiteBottomBg = this.showCrawler
+      this.oraStore.showWhiteBottomBg = !!this.crawlerInfo
     })
   }
 
@@ -195,7 +188,7 @@ export default class ContextSidebar {
   }
 
   get actions() {
-    if (this.showCrawler) {
+    if (this.crawlerInfo) {
       return [
         {
           flex: true,
@@ -205,13 +198,8 @@ export default class ContextSidebar {
           icon: 'play',
           children: 'Start Crawl',
           onClick: async () => {
-            if (this.showCrawler) {
-              const things = await this.oraStore.startCrawl(this.crawlerOptions)
-              console.log('made stuff', things)
-            } else {
-              OS.send('inject-crawler')
-              this.showCrawler = true
-            }
+            const things = await this.oraStore.startCrawl(this.crawlerOptions)
+            console.log('made stuff', things)
           },
         },
       ]

@@ -19,6 +19,7 @@ export default class Windows extends React.Component {
     size: [0, 0],
     position: [0, 0],
     trayPosition: [0, 0],
+    context: null, // osContext
   }
 
   async setState(state) {
@@ -141,6 +142,20 @@ export default class Windows extends React.Component {
 
     this.on(ipcMain, 'inject-crawler', () => {
       this.injectCrawler()
+    })
+
+    this.on(ipcMain, 'kill-crawler', () => {
+      const { crawlerInfo, ...otherContext } = this.state.context
+      this.setState({
+        context: otherContext,
+      })
+      Helpers.runAppleScript(`
+        tell application "Google Chrome"
+          tell front window's active tab
+            set source to execute javascript "document.getElementById('__oraCloseCrawler').click()"
+          end tell
+        end tell
+      `)
     })
 
     this.on(ipcMain, 'open-browser', (event, url) => {

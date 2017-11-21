@@ -5,7 +5,6 @@ import { view } from '@mcro/black'
 @view.electron
 export default class MenuEl {
   render(props) {
-    console.log('render menu')
     return (
       <Menu ref={props.getRef}>
         <SubMenu label="Orbit">

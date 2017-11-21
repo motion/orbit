@@ -26,7 +26,7 @@ JSON.stringify({
   url: document.location+'',
   title: document.title,
   selection: document.getSelection().toString() ? document.getSelection().toString() : (document.getSelection().anchorNode ? document.getSelection().anchorNode.textContent : ''),
-  crawler: window.__oraCrawlerAnswer,
+  crawlerInfo: document.__oraCrawlerAnswer,
 })
 `
   .trim()
@@ -49,10 +49,10 @@ export async function getChromeContext() {
     }
     return {
       title: result.title,
-      // body: result.body,
       currentText: result.currentText,
       url: result.url,
       selection: result.selection,
+      crawlerInfo: result.crawlerInfo,
     }
   } catch (err) {
     console.log('error parsing json', err, res)

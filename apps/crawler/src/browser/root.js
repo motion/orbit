@@ -74,13 +74,14 @@ const getTagInfo = node => ({
 
       // sets the answer to send back to ora
       this.watch(() => {
-        window.__oraCrawlerAnswer = {
-          ...this.state,
-          entry: window.location.href,
-        }
-
         if (this.state.closed) {
+          delete document.__oraCrawlerAnswer
           this.props.onClose()
+        } else {
+          document.__oraCrawlerAnswer = {
+            ...this.state,
+            entry: window.location.href,
+          }
         }
       })
     }
@@ -180,6 +181,7 @@ aside span aside * { display: flex; flex-flow: column; }
 
                 <controls>
                   <UI.Button
+                    id="__oraCloseCrawler"
                     onClick={() => {
                       store.setState({
                         closed: true,

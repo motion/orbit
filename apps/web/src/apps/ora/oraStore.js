@@ -256,8 +256,9 @@ export default class OraStore {
   }
 
   stopCrawl = async () => {
-    const response = await r2.post('http://localhost:3001/crawler/stop').json
-    return response && response.success
+    this.crawlState = false
+    this.crawlStatus = false
+    return await r2.post('http://localhost:3001/crawler/stop').json
   }
 
   _watchMouse() {

@@ -43,9 +43,13 @@ export default class ContextSidebar {
     return 'Crawl Settings'
   }
 
+  get isShowingCrawlDrawer() {
+    return this.crawlerInfo && !this.oraStore.crawlState
+  }
+
   // can show a modal that slides in
   get drawer() {
-    if (!this.crawlerInfo) {
+    if (!this.isShowingCrawlDrawer) {
       return null
     }
     const fieldProps = {
@@ -112,7 +116,7 @@ export default class ContextSidebar {
     })
 
     this.watch(() => {
-      this.oraStore.showWhiteBottomBg = !!this.crawlerInfo
+      this.oraStore.showWhiteBottomBg = this.isShowingCrawlDrawer
     })
   }
 

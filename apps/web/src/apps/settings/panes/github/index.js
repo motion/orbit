@@ -2,8 +2,8 @@ import * as UI from '@mcro/ui'
 import { view, watch } from '@mcro/black'
 import { sortBy, reverse } from 'lodash'
 import App, { Thing } from '~/app'
-import Things from '../../views/things'
-import * as Collapse from '../../views/collapse'
+import Things from '../views/things'
+import * as Collapse from '../views/collapse'
 import Repos from './repos'
 
 class OrgStore {

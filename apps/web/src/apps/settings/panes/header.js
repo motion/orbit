@@ -75,6 +75,7 @@ class ItemStore {
   }
 }
 
+@view.attach('settingsStore')
 @view({
   store: ItemStore,
 })

@@ -5,17 +5,22 @@ import PaneView from '~/apps/panes/pane'
 import * as Panes from './panes'
 import App, { Thing, Event, Job } from '~/app'
 import { sortBy, last, countBy, flatten } from 'lodash'
+import SettingHeader from './panes/header'
 
-@view({
-  store: class SettingsStore {
+@view.provide({
+  settingsStore: class SettingsStore {
     activeIndex = 0
     items = [
-      { primary: 'Slack', type: 'slack' },
-      { primary: 'Slack', type: 'slack' },
-      { primary: 'Slack', type: 'slack' },
-      { primary: 'Slack', type: 'slack' },
+      { primary: 'Slack', type: 'slack', category: 'Integrations' },
+      { primary: 'Github', type: 'github', category: 'Integrations' },
+      { primary: 'Google Drive', type: 'drive', category: 'Integrations' },
+      {
+        primary: 'Google Calendar',
+        type: 'calendar',
+        category: 'Integrations',
+      },
     ]
-    get paneKey() {
+    get type() {
       return this.items[this.activeIndex].type
     }
     selectItem = (result, index) => {
@@ -70,23 +75,37 @@ import { sortBy, last, countBy, flatten } from 'lodash'
     }
   },
 })
+@view
 export default class SettingsPage {
-  render({ store }) {
-    const ActivePane = Panes[store.paneKey]
-    console.log('ActivePane', ActivePane)
-
+  render({ settingsStore }) {
+    const ActivePane = Panes[settingsStore.type]
+    if (!ActivePane) {
+      console.log('nada')
+      return null
+    }
     return (
       <UI.Theme name="clear-dark">
         <home $$fullscreen>
-          <sidebar css={{ width: 280 }}>
+          <handle
+            $$draggable
+            css={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              height: 40,
+              zIndex: 100,
+            }}
+          />
+          <sidebar $$draggable css={{ paddingTop: 36, width: 280 }}>
             <PaneView
               sidebar
               groupBy="category"
-              onSelect={store.selectItem}
-              items={store.items}
+              onSelect={settingsStore.selectItem}
+              items={settingsStore.items}
               getItem={(item, index) => ({
                 ...item,
-                highlight: () => index === store.activeIndex,
+                highlight: () => index === settingsStore.activeIndex,
               })}
               itemProps={{
                 size: 1.1,
@@ -96,19 +115,20 @@ export default class SettingsPage {
                   color: '#fff',
                   scale: 1,
                   blur: 70,
-                  opacity: 0.1,
+                  opacity: 0.3,
                   show: false,
                   resist: 60,
                   zIndex: -1,
                 },
-                highlightBackground: [255, 255, 255, 0.08],
+                highlightBackground: [255, 255, 255, 0.1],
                 childrenEllipse: 2,
               }}
             />
           </sidebar>
           <UI.Theme name="light">
             <content>
-              <ActivePane settingsStore={store} />
+              <SettingHeader type={settingsStore.type} />
+              <ActivePane settingsStore={settingsStore} />
             </content>
           </UI.Theme>
         </home>

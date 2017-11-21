@@ -304,10 +304,10 @@ export default class Windows extends React.Component {
           vibrancy="dark"
           transparent
           hasShadow
+          titleBarStyle="hiddenInset"
           defaultSize={this.state.size}
           size={this.state.size}
           file={`${Constants.APP_URL}/settings`}
-          titleBarStyle="customButtonsOnHover"
           position={this.state.position}
           onResize={this.onSettingsSized}
           onMoved={this.onSettingsMoved}

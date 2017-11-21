@@ -2,7 +2,7 @@ import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
 import { sortBy, reverse } from 'lodash'
 import App, { Thing } from '~/app'
-import * as Collapse from '../../views/collapse'
+import * as Collapse from '../views/collapse'
 import { formatDistance } from 'date-fns'
 
 const baseId = '0AKfTFZu-thXbUk9PVA'
@@ -80,10 +80,7 @@ class Folder {
                     {truncate(item.title, 20)}
                   </UI.Button>
                   <UI.Text opacity={0.7}>
-                    edited {formatDistance(
-                      item.data.modifiedTime,
-                      Date.now()
-                    )}{' '}
+                    edited {formatDistance(item.data.modifiedTime, Date.now())}{' '}
                     ago
                   </UI.Text>
                 </container>

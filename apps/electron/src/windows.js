@@ -300,7 +300,6 @@ export default class Windows extends React.Component {
         <Window
           {...appWindow}
           show={this.state.showSettings}
-          showDevTools={this.state.showSettings}
           vibrancy="dark"
           transparent
           hasShadow

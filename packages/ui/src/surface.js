@@ -611,7 +611,7 @@ export default class Surface extends React.PureComponent<Props> {
         lineHeight: props.lineHeight || 'inherit',
         justifyContent: props.justify,
         maxWidth: `calc(100% ${iconPad})`,
-        maxHeight: '100%',
+        // maxHeight: '100%',
         textAlign: props.textAlign,
       },
       wrap: undoPadding,

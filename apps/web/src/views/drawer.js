@@ -4,17 +4,16 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 
 @view
-export default class OraDrawer {
+export default class Drawer {
   static defaultProps = {
     theme: 'dark',
     background: '#222',
     size: 200,
     open: false,
-    progress: false,
     progressProps: null,
     title: '',
     titleProps: null,
-    collapsable: true,
+    collapsable: false,
     collapsed: false,
     onCollapse: _ => _,
     closable: false,
@@ -36,6 +35,9 @@ export default class OraDrawer {
     children,
     closable,
     onClose,
+    renderTitle,
+    renderProgress,
+    contentProps,
     ...props
   }) {
     return (
@@ -45,21 +47,21 @@ export default class OraDrawer {
           from="bottom"
           boxShadow="0 0 100px #000"
           background={background}
-          size={size}
+          size={collapsed ? 82 : size}
           {...props}
         >
           <container if={children}>
-            <title if={title}>
+            <title if={renderTitle || title}>
               <UI.Progress.Circle
-                if={typeof progress !== 'boolean'}
+                if={typeof (renderProgress || progress) !== 'undefined'}
                 css={{ marginRight: 10 }}
                 lineColor="green"
                 size={18}
-                percent={progress}
+                percent={renderProgress ? renderProgress() : progress}
                 {...progressProps}
               />
               <UI.Title fontWeight={600} size={1} {...titleProps}>
-                {title}
+                {renderTitle ? renderTitle() : title}
               </UI.Title>
               <UI.Row
                 spaced
@@ -68,13 +70,13 @@ export default class OraDrawer {
               >
                 <UI.Button
                   if={collapsable}
-                  icon={collapsed ? 'arrow-min-down' : 'arrow-min-up'}
+                  icon={collapsed ? 'arrow-min-up' : 'arrow-min-down'}
                   onClick={onCollapse}
                 />
                 <UI.Button if={closable} icon="remove" onClick={onClose} />
               </UI.Row>
             </title>
-            <content>{children}</content>
+            <content {...contentProps}>{children}</content>
           </container>
         </UI.Drawer>
       </UI.Theme>
@@ -82,13 +84,16 @@ export default class OraDrawer {
   }
 
   static style = {
+    container: {
+      flex: 1,
+    },
     content: {
-      padding: 10,
-      paddingBottom: Constants.ACTION_BAR_HEIGHT + 10,
+      padding: 5,
+      paddingBottom: Constants.ACTION_BAR_HEIGHT + 10, // 10 is padding around app
       flex: 1,
       flexFlow: 'row',
       maxWidth: '100%',
-      overflow: 'hidden',
+      overflowX: 'hidden',
       overflowY: 'scroll',
     },
     title: {

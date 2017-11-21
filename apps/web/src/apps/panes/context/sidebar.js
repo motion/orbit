@@ -60,6 +60,9 @@ export default class ContextSidebar {
     }
     return (
       <UI.List
+        css={{
+          maxWidth: '100%',
+        }}
         groupBy="category"
         items={[
           {
@@ -115,9 +118,9 @@ export default class ContextSidebar {
       }
     })
 
-    this.watch(() => {
-      this.oraStore.showWhiteBottomBg = this.isShowingCrawlDrawer
-    })
+    // this.watch(() => {
+    //   this.oraStore.showWhiteBottomBg = this.isShowingCrawlDrawer
+    // })
   }
 
   get contextResults() {

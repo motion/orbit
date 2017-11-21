@@ -80,7 +80,7 @@ export default class Drawer extends React.PureComponent<Props> {
     }
 
     return (
-      <drawer {...containerProps}>
+      <drawer $drawerOpen={open} {...containerProps}>
         <Surface
           style={{ ...style, ...panelStyle }}
           $panel
@@ -119,6 +119,9 @@ export default class Drawer extends React.PureComponent<Props> {
         z: 0,
       },
     },
+    drawerOpen: {
+      zIndex: 100,
+    },
     // darken bg much less if blurring
     overlayBg: ({ blur }) =>
       blur
@@ -139,6 +142,7 @@ export default class Drawer extends React.PureComponent<Props> {
       transition: 'transform ease-in-out 150ms',
       zIndex: 100,
       maxHeight: '100%',
+      maxWidth: '100%',
     },
     panelOpen: {
       pointerEvents: 'all',

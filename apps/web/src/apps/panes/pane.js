@@ -105,8 +105,9 @@ export default class Pane {
   }
 
   handleDrawerClose = () => {
-    if (this.props.store.onDrawerClose) {
-      this.props.store.onDrawerClose()
+    const { store } = this.props.stackItem
+    if (store && store.onDrawerClose) {
+      store.onDrawerClose()
     }
   }
 
@@ -165,13 +166,14 @@ export default class Pane {
         $actionBarPad={!!actions}
       >
         <Drawer
+          if={store}
           size={drawerHeight}
           open={drawer}
           closable
           onClose={this.handleDrawerClose}
           title={store.drawerTitle}
         >
-          <contents if={store}>{drawer}</contents>
+          {drawer}
         </Drawer>
         <SidebarTitle
           if={hasParent}
@@ -202,20 +204,6 @@ export default class Pane {
       overflowY: 'scroll',
       flex: 1,
       position: 'relative',
-    },
-    drawerContents: {
-      padding: 10,
-      paddingBottom: Constants.ACTION_BAR_HEIGHT + 10,
-      flex: 1,
-      overflowY: 'scroll',
-    },
-    drawerTitle: {
-      background: [0, 0, 0, 0.05],
-      padding: 7,
-      flexFlow: 'row',
-      alignItems: 'center',
-      position: 'relative',
-      zIndex: 10,
     },
     bottomGlow: {
       boxShadow: '0 0 80px 3px rgba(0,0,0,0.5)',

@@ -6,13 +6,6 @@ import { watch } from '@mcro/black'
 import { isEqual } from 'lodash'
 import After from '~/views/after'
 
-const clean = str => {
-  if (typeof str !== 'string') {
-    return 'bad string'
-  }
-  return str.replace(/[\r\n|\n|\r|\s]+/gm, ' ').trim()
-}
-
 export default class ContextSidebar {
   @watch
   isPinned = () => this.osContext && Thing.findOne({ url: this.osContext.url })
@@ -28,7 +21,7 @@ export default class ContextSidebar {
   }
 
   get osContext() {
-    return this.oraStore.osContext
+    return this.oraStore.electronState.context
   }
 
   get context() {
@@ -41,7 +34,7 @@ export default class ContextSidebar {
 
   // can customize the shown title here
   get title() {
-    return this.oraStore.osContext ? this.oraStore.osContext.title : null
+    return this.osContext ? this.osContext.title : null
   }
 
   onDrawerClose() {
@@ -49,7 +42,7 @@ export default class ContextSidebar {
   }
 
   get drawerTitle() {
-    return 'Start Crawling'
+    return 'Crawl Settings'
   }
 
   // can show a modal that slides in

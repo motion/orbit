@@ -89,7 +89,7 @@
 
 ## small things
 - resizing the window (height)
-- settings pane: general settings + integrations split out + working open/close
+- settings pane: general settings + integrations split out
 - peek things
 - show body contents snippet when on thing
 - need to do bolding inside ui.text so it works well with clamps

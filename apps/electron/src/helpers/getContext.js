@@ -1,4 +1,5 @@
 import runAppleScript from './runAppleScript'
+import escapeAppleScriptString from 'escape-string-applescript'
 
 export async function getActiveWindowInfo() {
   const [application, title] = await runAppleScript(`
@@ -20,11 +21,24 @@ export async function getActiveWindowInfo() {
   return { application, title }
 }
 
+const CONTEXT_JS = `
+JSON.stringify({
+  url: document.location+'',
+  title: document.title,
+  selection: document.getSelection().toString() ? document.getSelection().toString() : (document.getSelection().anchorNode ? document.getSelection().anchorNode.textContent : ''),
+  crawler: window.__oraCrawlerAnswer,
+})
+`
+  .trim()
+  .replace(/\n/g, '')
+
 export async function getChromeContext() {
   const res = await runAppleScript(`
     tell application "Google Chrome"
       tell front window's active tab
-        set source to execute javascript "JSON.stringify({ url: document.location+'', title: document.title, selection: document.getSelection().toString() ? document.getSelection().toString() : (document.getSelection().anchorNode ? document.getSelection().anchorNode.textContent : '') })"
+        set source to execute javascript "${escapeAppleScriptString(
+          CONTEXT_JS
+        )}"
       end tell
     end tell
   `)

@@ -8,7 +8,6 @@ import mouse from 'osx-mouse'
 import { throttle, isEqual, once } from 'lodash'
 import MenuItems from './menuItems'
 import getCrawler from './helpers/getCrawler'
-import escapeStringApplescript from 'escape-string-applescript'
 import Path from 'path'
 import { view } from '@mcro/black'
 
@@ -110,6 +109,7 @@ export default class Windows extends React.Component {
     if (process.env.CLEAR_DATA) {
       this.oraRef.webContents.session.clearStorageData()
     }
+    this.watchForContext()
     this.listenToApps()
     this.registerShortcuts()
   })
@@ -151,7 +151,6 @@ export default class Windows extends React.Component {
     this.on(ipcMain, 'set-state', (event, state) => {
       // update state
       this.oraState = state
-      console.log('updated state', this.oraState)
       if (this.oraStateGetters.length) {
         for (const getter of this.oraStateGetters) {
           getter(state)
@@ -162,17 +161,13 @@ export default class Windows extends React.Component {
       }
     })
 
-    this.on(ipcMain, 'inject-crawler', event => {
-      this.injectCrawler(info => {
-        event.sender.send('crawler-selection', info)
-      })
+    this.on(ipcMain, 'inject-crawler', () => {
+      this.injectCrawler()
     })
 
     this.on(ipcMain, 'open-browser', (event, url) => {
       Helpers.open(url)
     })
-
-    this.on(ipcMain, 'get-context', this.getContext)
 
     this.on(ipcMain, 'open-settings', (event, service) => {
       Helpers.open(`${Constants.APP_URL}/authorize?service=` + service)
@@ -198,69 +193,33 @@ export default class Windows extends React.Component {
     }
   }, 200)
 
-  injectCrawler = throttle(async sendToOra => {
+  injectCrawler = throttle(async () => {
     const js = await getCrawler()
     await Helpers.runAppleScript(`
       tell application "Google Chrome"
         tell front window's active tab
-          set source to execute javascript "${escapeStringApplescript(js)}"
+          set source to execute javascript "${Helpers.escapeAppleScriptString(
+            js
+          )}"
         end tell
       end tell
     `)
-    this.continueChecking = true
-    let lastRes = null
-    this.checkCrawlerLoop(res => {
-      if (!isEqual(lastRes, res)) {
-        sendToOra(res)
-        lastRes = res
-      }
-    })
   }, 500)
-
-  checkCrawlerLoop = async cb => {
-    try {
-      cb(await this.checkCrawler())
-    } catch (err) {
-      this.continueChecking = false
-      console.log('error with crawl loop', err)
-    }
-    await Helpers.sleep(500)
-    if (!this.mounted) {
-      return
-    }
-    if (this.continueChecking) {
-      this.checkCrawlerLoop(cb)
-    }
-  }
-
-  checkCrawler = throttle(async () => {
-    const res = await Helpers.runAppleScript(`
-      tell application "Google Chrome"
-        tell front window's active tab
-          set source to execute javascript "JSON.stringify(window.__oraCrawlerAnswer || {})"
-        end tell
-      end tell
-    `)
-    try {
-      const result = JSON.parse(res)
-      return result
-    } catch (err) {
-      console.log('error parsing result', err)
-      return null
-    }
-  }, 200)
 
   lastContext = null
 
-  getContext = throttle(async event => {
-    const { application } = await Helpers.getActiveWindowInfo()
-    const context = await Helpers.getChromeContext()
-    const answer = {
-      application,
-      ...context,
-    }
-    event.sender.send('set-context', JSON.stringify(answer))
-  }, 200)
+  watchForContext = () => {
+    this.setInterval(async () => {
+      const { application } = await Helpers.getActiveWindowInfo()
+      const context = {
+        focusedApp: application,
+        ...(await Helpers.getChromeContext()),
+      }
+      if (!isEqual(this.state.context, context)) {
+        this.setState({ context })
+      }
+    }, 500)
+  }
 
   SHORTCUTS = {
     'Option+Space': () => {

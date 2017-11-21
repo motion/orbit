@@ -24,7 +24,6 @@ const BANNER_TIMES = {
 export default class OraStore {
   stack = new StackStore([{ type: 'oramain' }])
   inputRef = null
-  osContext = null
   search = ''
   textboxVal = ''
   traps = {}
@@ -76,7 +75,7 @@ export default class OraStore {
     this.attachTrap('window', window)
 
     this._listenForStateSync()
-    this._listenForContext()
+    this._watchContext()
     // side effect watchers
     this._watchFocus()
     this._watchFocusBar()
@@ -107,13 +106,23 @@ export default class OraStore {
     }
   }
 
+  get context() {
+    return (
+      this.electronState.context &&
+      // ensure theres at least a title to the page
+      this.electronState.context.title &&
+      this.electronState.context
+    )
+  }
+
   addCurrentPage = async () => {
-    if (!this.osContext) {
+    if (!this.context) {
+      console.log('no context to add')
       return
     }
     this.setBanner(BANNERS.note, 'Pinning...')
     const token = `e441c83aed447774532894d25d97c528`
-    const { url } = this.osContext
+    const { url } = this.context
     const toFetch = `https://api.diffbot.com/v3/article?token=${token}&url=${
       url
     }`
@@ -146,9 +155,10 @@ export default class OraStore {
 
   _watchCrawlStatus = () => {
     let watcher
-
     this.watch(() => {
+      clearInterval(watcher)
       if (this.crawlState) {
+        console.log('crawlstate', this.crawlState)
         watcher = this.setInterval(async () => {
           try {
             const { status } = await r2.get(
@@ -160,10 +170,6 @@ export default class OraStore {
             clearInterval(watcher)
           }
         }, 1000)
-      } else {
-        if (watcher) {
-          clearInterval(watcher)
-        }
       }
     })
   }
@@ -180,57 +186,31 @@ export default class OraStore {
     })
   }
 
-  _listenForContext = () => {
-    // check
-    this.setInterval(() => {
-      OS.send('get-context')
-    }, 300)
-    // response
-    this.on(OS, 'set-context', (event, info) => {
-      const context = JSON.parse(info)
+  _watchContext = () => {
+    this.watch(() => {
+      const { context } = this.electronState
       if (!context) {
         if (this.stack.last.result.type === 'context') {
-          // this.osContext = null
           // if you want it to navigate back home automatically
           // this.stack.pop()
         }
         return
       }
       if (!context || !context.url || !context.title) {
-        log('no context or url/title', this.osContext)
+        console.log('no context or url/title', this.context)
         return
       }
-
-      const updateContext = title => {
-        this.osContext = context
-        // if were at home, move into a new pane
-        // otherwise, no need to push a new pane
-        if (this.stack.length === 1) {
-          const nextStackItem = {
-            id: context.url,
-            title: title || context.title,
-            type: 'context',
-            icon:
-              context.application === 'Google Chrome' ? 'social-google' : null,
-          }
-          this.stack.navigate(nextStackItem)
-        }
+      const isAlreadyOnResultsPane = this.stack.length > 1
+      if (isAlreadyOnResultsPane) {
+        return
       }
-
-      // update logic
-      if (!this.osContext) {
-        return updateContext()
+      const nextStackItem = {
+        id: context.url,
+        title: context.selection || context.title,
+        type: 'context',
+        icon: context.application === 'Google Chrome' ? 'social-google' : null,
       }
-      const hasNewTitle = this.osContext.title !== context.title
-      const hasNewFocusedApp =
-        this.osContext.application !== context.application
-      if (hasNewTitle || hasNewFocusedApp) {
-        return updateContext()
-      }
-      const hasNewSelection = this.osContext.selection !== context.selection
-      if (hasNewSelection) {
-        return updateContext(context.selection)
-      }
+      this.stack.navigate(nextStackItem)
     })
   }
 

@@ -208,6 +208,9 @@ export default class Context {
   }
 
   search = (text, n = 5) => {
+    if (!text) {
+      return []
+    }
     console.log('searching ' + text)
     if (!this.engine.isConsolidated()) return []
     /*

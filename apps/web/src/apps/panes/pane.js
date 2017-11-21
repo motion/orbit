@@ -147,7 +147,8 @@ export default class Pane {
     const actions = store && store.actions
     const drawer = store && store.drawer
 
-    console.log('pane render')
+    const drawerHeight = 420
+    console.log('pane render drawerheight', drawerHeight)
 
     return (
       <pane
@@ -162,7 +163,7 @@ export default class Pane {
             from="bottom"
             background="#fff"
             boxShadow="0 0 100px #000"
-            size={window.innerHeight - 330}
+            size={drawerHeight}
           >
             <drawerTitle if={store}>
               <UI.Title

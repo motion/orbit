@@ -61,6 +61,8 @@ export default function getItem(getActiveIndex) {
   return (result, index) => ({
     key: `${index}${result.id}${result.title}${result.category}`,
     highlight: () => index === getActiveIndex(),
+    // dynamic lower opacity as list items go down
+    opacity: Math.max(0.5, (8 - index) / 8),
     primary:
       typeof result.displayTitle !== 'undefined'
         ? result.displayTitle || null

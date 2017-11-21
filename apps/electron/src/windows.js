@@ -38,6 +38,14 @@ export default class Windows extends React.Component {
     trayPosition: [0, 0],
   }
 
+  async setState(state) {
+    const setter = super.setState.bind(this)
+    await new Promise(res => setter(state, res))
+    if (this.sendOraSimple) {
+      this.sendOraSimple('electron-state', this.state)
+    }
+  }
+
   componentDidMount() {
     this.mounted = true
     this.measureAndShow()
@@ -120,16 +128,24 @@ export default class Windows extends React.Component {
   }
 
   listenToApps = () => {
-    this.on(ipcMain, 'start-ora', event => {
-      // setup our event bus
-      // this one runs without updating (only used internally)
-      this.sendOraSimple = (...args) => event.sender.send(...args)
-      // this one updates state
-      this.sendOra = async (...args) => {
-        event.sender.send(...args)
-        return await this.getOraState()
-      }
-    })
+    this.on(
+      ipcMain,
+      'start-ora',
+      once(event => {
+        // setup our event bus
+        // this one runs without updating (only used internally)
+        this.sendOraSimple = (...args) => event.sender.send(...args)
+
+        // send initial state
+        this.sendOraSimple('electron-state', this.state)
+
+        // this one updates state
+        this.sendOra = async (...args) => {
+          event.sender.send(...args)
+          return await this.getOraState()
+        }
+      })
+    )
 
     // if you call this.getOraState() this will handle it
     this.on(ipcMain, 'set-state', (event, state) => {

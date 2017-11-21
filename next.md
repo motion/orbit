@@ -10,8 +10,20 @@
 - fixed show/hide to be smooth
 - simplified some stuff so panes are easier to customize
 - fixed ref to properly trigger changes
+- { flex } elements in actionbar
+- cancel crawl working in browser + ora
+- stack traces nice in electron
+- working open/close settings pane in electron
 
 # now
+
+- Crawler: can start/cancel/see progress in a drawer
+- Crawler: can confirm results afterwards
+- Assemble 5 good knowledgebases to test on from Zendesk/Intercom/other
+- OAuth into Slack + settings pane to choose a room
+- Slack scan room for and collect links
+- Slack import using Readability
+- Crawler: if on a knowledgebase root of known type, have it auto-crawl
 
 - bug: if chrome is empty tab, dont show context
 - ux: better "unfocused" state visuals
@@ -28,12 +40,7 @@
       - we can just set window.shouldPreventClick for now
 - bug: ora pane flickering away when you try and edit crawl settings
 - crawler
-  - after crawl needs to show the results before committing them
-    - should let you uncheck some results
-    - should let you enter a url/title exclusion scheme too
   - bug with running crawls on diff sites within same session
-  - cancel crawl working in browser + ora
-  - { flex } elements in actionbar
   - show crawl status:
     - change Start Crawl to Disable
     - show crawl status in action bar (1/6 pages...)

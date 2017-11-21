@@ -40,6 +40,8 @@ export default class OraStore {
     focused: true,
   }
 
+  electronState = {}
+
   setState = newState => {
     this.state = {
       ...this.state,
@@ -139,8 +141,14 @@ export default class OraStore {
   }
 
   _listenForStateSync = () => {
+    // allows electron to ask for updated app state
     this.on(OS, 'get-state', () => {
       OS.send('got-state', this.state)
+    })
+
+    // allows us to get updated electron state
+    this.on(OS, 'electron-state', (event, state) => {
+      this.electronState = state
     })
   }
 

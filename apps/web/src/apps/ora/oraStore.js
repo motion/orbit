@@ -275,6 +275,14 @@ export default class OraStore {
     return results
   }
 
+  removeCrawler = () => {
+    OS.send('kill-crawler')
+  }
+
+  injectCrawler = () => {
+    OS.send('inject-crawler')
+  }
+
   stopCrawl = async () => {
     this.crawlState = false
     this.crawlStatus = false

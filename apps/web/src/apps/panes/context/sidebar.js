@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { OS, fuzzy } from '~/helpers'
+import { OS } from '~/helpers'
 import { Thing } from '~/app'
 import * as UI from '@mcro/ui'
 import { watch } from '@mcro/black'
@@ -36,7 +36,7 @@ export default class ContextSidebar {
   }
 
   onDrawerClose() {
-    OS.send('kill-crawler')
+    this.oraStore.removeCrawler()
   }
 
   get drawerTitle() {
@@ -228,14 +228,17 @@ export default class ContextSidebar {
           icon: 'play',
           children: 'Start Crawl',
           onClick: async () => {
-            const things = await this.oraStore.startCrawl(this.crawlerOptions)
-            console.log('made stuff', things)
+            this.oraStore.removeCrawler()
+            await this.oraStore.startCrawl(this.crawlerOptions)
           },
         },
       ]
     }
 
     return [
+      {
+        flex: true,
+      },
       this.isPinned && {
         icon: 'check',
         children: 'Pinned',
@@ -243,19 +246,12 @@ export default class ContextSidebar {
       !this.isPinned && {
         icon: 'ui-1_bold-add',
         children: 'Pin',
-        onClick: () => {
-          this.oraStore.addCurrentPage()
-        },
+        onClick: this.oraStore.addCurrentPage,
       },
       {
-        flex: true,
-      },
-      {
-        icon: 'bug',
-        children: 'Crawl',
-        onClick: () => {
-          OS.send('inject-crawler')
-        },
+        icon: 'pin',
+        children: 'Pin Site',
+        onClick: this.oraStore.injectCrawler,
       },
     ]
   }

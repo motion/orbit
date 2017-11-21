@@ -62,13 +62,13 @@ export default class Crawler {
 
   constructor(options: Options) {
     this.options = options
-    this.db = new CrawlerDB()
   }
 
   async start(entry: string, runOptions: Options = this.options) {
     if (!entry) {
       throw new Error('No entry given!')
     }
+    this.db = new CrawlerDB()
     this.shouldCrawl = true
     log.crawl('Starting crawler')
     // merge options

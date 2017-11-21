@@ -91,9 +91,7 @@ export default class Row extends React.Component<Props> {
     }
 
     if (children) {
-      const realChildren = React.Children.map(children, _ => _).filter(
-        child => !!child
-      )
+      const realChildren = React.Children.map(children, _ => _).filter(Boolean)
 
       children = realChildren.map((child, index) => {
         const finalChild =

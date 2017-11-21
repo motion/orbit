@@ -103,6 +103,7 @@ export default class Drawer {
       alignItems: 'center',
       position: 'relative',
       zIndex: 10,
+      userSelect: 'none',
     },
   }
 }

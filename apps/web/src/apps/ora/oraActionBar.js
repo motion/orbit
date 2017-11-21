@@ -3,6 +3,12 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import * as Constants from '~/constants'
 
+const stylesFirst = {}
+
+const styles = {
+  marginLeft: 10,
+}
+
 @view
 export default class OraActionBar {
   render({ oraStore }) {
@@ -11,19 +17,26 @@ export default class OraActionBar {
     return (
       <actions if={actions}>
         <actionbar>
-          <UI.Row spaced flex itemProps={{ glow: true }}>
-            {actions
-              .filter(Boolean)
-              .map(({ flex, content, ...props }, index) => {
-                if (flex) {
-                  return <div key={index} $$flex={flex} />
-                }
-                if (content) {
-                  return <span key={index}>{content}</span>
-                }
-                return <UI.Button key={index} {...props} />
-              })}
-          </UI.Row>
+          {actions
+            .filter(Boolean)
+            .map(({ flex, content, ...props }) => {
+              if (flex) {
+                return <div $$flex={flex} />
+              }
+              if (content) {
+                return <span>{content}</span>
+              }
+              return <UI.Button glow {...props} />
+            })
+            .map((item, index) =>
+              React.cloneElement(item, {
+                key: Math.random(),
+                style: {
+                  ...item.props.style,
+                  ...(index === 0 ? stylesFirst : styles),
+                },
+              })
+            )}
         </actionbar>
       </actions>
     )

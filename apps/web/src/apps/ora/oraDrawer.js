@@ -21,15 +21,16 @@ export default class OraDrawer {
           collapsable
           collapsed={!store.resultsShown}
           onCollapse={store.ref('resultsShown').toggle}
-          renderTitle={() => `Crawl Results ${crawlResults.length})`}
+          renderTitle={() => `Crawl Results (${crawlResults.length})`}
           size={300}
         >
-          <content if={crawlResults}>
+          <content $$flex if={crawlResults}>
             <UI.List
               items={crawlResults}
               getItem={({ contents }) => ({
                 primary: contents.title,
                 children: contents.body,
+                childrenEllipse: 2,
               })}
             />
           </content>

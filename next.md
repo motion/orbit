@@ -24,6 +24,7 @@
   - groupon (old zendesk? pure js) - https://www.groupon.com/faq
   - uber (zendesk?) - https://help.uber.com/h/6949160d-3eb6-42cd-8155-1ae3cf25be0b
   - zenefits - https://help.zenefits.com/Medical_Dental_Vision/Learn_About_Health_Insurance/Qualifying_Life_Events/01-Common_Qualifying_Life_Events/
+- crawler clear results between crawls
 
 # now
 

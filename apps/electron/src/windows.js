@@ -4,22 +4,9 @@ import * as Helpers from './helpers'
 import { globalShortcut, ipcMain, screen } from 'electron'
 import repl from 'repl'
 import * as Constants from '~/constants'
-import mouse from 'osx-mouse'
 import { throttle, isEqual, once } from 'lodash'
 import MenuItems from './menuItems'
-import getCrawler from './helpers/getCrawler'
-import Path from 'path'
 import { view } from '@mcro/black'
-
-const EXTENSIONS = {
-  mobx: 'fmkadmapgofadopljbjfkapdkoienihi',
-  react: 'pfgnfdagidkfgccljigdamigbcnndkod',
-}
-
-const extensionToID = name => EXTENSIONS[name]
-const extensionIDToPath = id =>
-  Path.join(__dirname, '..', 'resources', 'extensions', id)
-const getExtensions = names => names.map(extensionToID).map(extensionIDToPath)
 
 @view.electron
 export default class Windows extends React.Component {
@@ -69,7 +56,7 @@ export default class Windows extends React.Component {
     this.on(ipcMain, 'mouse-listen', () => {
       const triggerX = this.state.screenSize.width - 20
       const triggerY = 20
-      const mousey = mouse()
+      const mousey = Helpers.mouse()
       let hasLeftCorner = true
       mousey.on(
         'move',
@@ -185,7 +172,7 @@ export default class Windows extends React.Component {
   }, 200)
 
   injectCrawler = throttle(async () => {
-    const js = await getCrawler()
+    const js = await Helpers.getCrawler()
     await Helpers.runAppleScript(`
       tell application "Google Chrome"
         tell front window's active tab
@@ -325,7 +312,7 @@ export default class Windows extends React.Component {
           onMove={this.onOraMoved}
           onBlur={this.onOraBlur}
           onFocus={this.onOraFocus}
-          devToolsExtensions={getExtensions(['mobx', 'react'])}
+          devToolsExtensions={Helpers.getExtensions(['mobx', 'react'])}
         />
       </App>
     )

@@ -2,6 +2,7 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import * as Constants from '~/constants'
 import SidebarTitle from '~/views/sidebarTitle'
+import Drawer from '~/views/drawer'
 
 class PaneStore {
   listRef = null
@@ -103,6 +104,12 @@ export default class Pane {
     }
   }
 
+  handleDrawerClose = () => {
+    if (this.props.store.onDrawerClose) {
+      this.props.store.onDrawerClose()
+    }
+  }
+
   render({
     getItem,
     groupBy,
@@ -157,40 +164,15 @@ export default class Pane {
         $sidebar={sidebar}
         $actionBarPad={!!actions}
       >
-        <UI.Theme name="light">
-          <UI.Drawer
-            open={drawer}
-            from="bottom"
-            background="#fff"
-            boxShadow="0 0 100px #000"
-            size={drawerHeight}
-          >
-            <drawerTitle if={store}>
-              <UI.Title
-                if={store.drawerTitle}
-                fontWeight={600}
-                size={1.2}
-                ellipse
-              >
-                {store.drawerTitle}
-              </UI.Title>
-              <UI.Button
-                chromeless
-                icon="remove"
-                color="#000"
-                opacity={0.8}
-                size={0.9}
-                css={{ position: 'absolute', top: 10, right: 10 }}
-                onClick={() => {
-                  if (store.onDrawerClose) {
-                    store.onDrawerClose()
-                  }
-                }}
-              />
-            </drawerTitle>
-            <drawerContents if={store}>{drawer}</drawerContents>
-          </UI.Drawer>
-        </UI.Theme>
+        <Drawer
+          size={drawerHeight}
+          open={drawer}
+          closable
+          onClose={this.handleDrawerClose}
+          title={store.drawerTitle}
+        >
+          <contents if={store}>{drawer}</contents>
+        </Drawer>
         <SidebarTitle
           if={hasParent}
           title={(store && store.title) || result.title}

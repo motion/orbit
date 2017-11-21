@@ -34,6 +34,7 @@ export default class OraStore {
   showWhiteBottomBg = false
   crawlState = null
   crawlStatus = null
+  crawlResults = null
 
   // this is synced to electron!
   state = {
@@ -232,14 +233,22 @@ export default class OraStore {
 
   startCrawl = async options => {
     this.crawlState = options
-    const results = await r2.post('http://localhost:3001/crawler/start', {
-      json: { options },
-    }).json
-    this.crawlState = false
+    try {
+      const { results } = await r2.post('http://localhost:3001/crawler/start', {
+        json: { options },
+      }).json
+      this.crawlResults = results
+    } catch (err) {
+      console.log('error during crawl', err)
+    } finally {
+      this.crawlState = false
+    }
+  }
+
+  insertCrawlResults = async results => {
     let creating = []
     if (results) {
-      for (const { url, contents } of results.results) {
-        console.log('creating a thing', url, contents)
+      for (const { url, contents } of results) {
         creating.push(
           Thing.create({
             url,

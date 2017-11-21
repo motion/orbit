@@ -25,7 +25,12 @@ export default class CrawlerDB {
     if (count) {
       this.pageQueue = sortBy(this.pageQueue, 'score').reverse()
       log(`Added ${count} new urls to queue`)
-      log(`New top of queue: ${this.pageQueue[0].url}`)
+      log(
+        `New top of queue:\n${this.pageQueue
+          .slice(0, 4)
+          .map(x => x.url)
+          .join('\n')}`
+      )
       const duplicates = page.outboundUrls.length - count
       if (duplicates) {
         log(`${page.outboundUrls.length - count} duplicates found`)

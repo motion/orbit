@@ -112,8 +112,15 @@ export default class Crawler {
 
     this.count = 0
     this.isRunning = true
+    let firstLoop = true
 
     while (target && this.shouldCrawl) {
+      // doing this at top prevents bugs where you forget to shift target
+      if (firstLoop) {
+        firstLoop = false
+      } else {
+        target = this.db.shiftUrl()
+      }
       if (urlMatchesExtensions(target.url, filterUrlExtensions)) {
         log.page(`Looks like an image, avoid ${target.url}`)
       } else if (target.radius >= maxRadius) {
@@ -122,9 +129,7 @@ export default class Crawler {
         const isValidPath = matchPath(target.url)
 
         if (!isValidPath) {
-          log.page(`Path is not at same depth:`)
-          log.page(`  ${parse(target.url).pathname}`)
-          log.page(`  ${depth}`)
+          log.page(`Path is not at same depth: ${parse(target.url).pathname}`)
           continue
         }
 
@@ -183,7 +188,7 @@ export default class Crawler {
           this.db.store({
             outboundUrls,
             contents,
-            radius: ++target.radius,
+            radius: target.radius + 1,
             url: target.url,
           })
         } catch (err) {
@@ -196,7 +201,6 @@ export default class Crawler {
         log.crawl(`Max pages reached! ${maxPages}`)
         break
       }
-      target = this.db.shiftUrl()
     }
 
     log.crawl(`Crawler done, crawled ${this.count} pages`)

@@ -21,7 +21,7 @@ export default class ContextSidebar {
   }
 
   get osContext() {
-    return this.oraStore.electronState.context
+    return this.oraStore.osContext
   }
 
   get context() {

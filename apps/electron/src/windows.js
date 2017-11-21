@@ -25,9 +25,6 @@ const getExtensions = names => names.map(extensionToID).map(extensionIDToPath)
 export default class Windows extends React.Component {
   // this is an event bus that should be open whenever ora is open
   sendOra = async name => console.log('called this.sendOra before setup', name)
-
-  uid = Math.random()
-
   oraState = {}
   state = {
     restart: false,
@@ -45,14 +42,15 @@ export default class Windows extends React.Component {
     }
   }
 
+  componentWillMount() {
+    const { position, size } = Helpers.getAppSize()
+    const screenSize = screen.getPrimaryDisplay().workAreaSize
+    const trayPosition = [screenSize.width - Constants.ORA_WIDTH, 20]
+    this.setState({ show: true, position, size, screenSize, trayPosition })
+  }
+
   componentDidMount() {
     this.mounted = true
-    this.measureAndShow()
-    this.screenSize = screen.getPrimaryDisplay().workAreaSize
-    this.setState({
-      trayPosition: [this.screenSize.width - Constants.ORA_WIDTH, 20],
-    })
-    setTimeout(this.measureAndShow, 500)
     this.repl = repl.start({
       prompt: '$ > ',
     })
@@ -69,7 +67,7 @@ export default class Windows extends React.Component {
 
   listenForMouse() {
     this.on(ipcMain, 'mouse-listen', () => {
-      const triggerX = this.screenSize.width - 20
+      const triggerX = this.state.screenSize.width - 20
       const triggerY = 20
       const mousey = mouse()
       let hasLeftCorner = true
@@ -88,13 +86,6 @@ export default class Windows extends React.Component {
         }, 60)
       )
     })
-  }
-
-  measure = () => {
-    const { position, size } = Helpers.getScreenSize()
-    this.size = size
-    this.position = position
-    this.initialSize = this.initialSize || this.size
   }
 
   oraRef = ref => {
@@ -237,20 +228,47 @@ export default class Windows extends React.Component {
     }
   }
 
-  measureAndShow = async () => {
-    this.measure()
-    this.setState({ show: true, position: this.position, size: this.size })
-  }
-
   componentDidCatch(error) {
     console.error(error)
     this.setState({ error })
   }
 
+  onPreferences = () => {
+    this.setState({ showSettings: true })
+  }
+
+  onMenuRef = ref => {
+    this.menuRef = ref
+  }
+
+  onMenuQuit = () => {
+    this.isClosing = true
+  }
+
+  onAppRef = ref => {
+    if (ref) {
+      this.appRef = ref.app
+    }
+  }
+
+  onBeforeQuit = () => console.log('hi')
+  onOraBlur = () => this.sendOra('ora-blur')
+  onOraFocus = () => this.sendOra('ora-focus')
+  onOraMoved = trayPosition => this.setState({ trayPosition })
+
+  onSettingsSized = size => this.setState({ size })
+  onSettingsMoved = position => this.setState({ position })
+  onSettingsClosed = e => {
+    if (!this.isClosing && this.state.showSettings) {
+      e.preventDefault()
+      this.setState({ showSettings: false })
+    }
+  }
+
   render() {
     const { error, restart } = this.state
     if (restart) {
-      console.log('\n\n\n\n\n\nRESTARTING\n\n\n\n\n\n')
+      console.log('RESTARTING')
       this.repl.close()
       return null
     }
@@ -258,7 +276,6 @@ export default class Windows extends React.Component {
       console.log('recover render from error')
       return null
     }
-
     const appWindow = {
       frame: false,
       defaultSize: [700, 500],
@@ -269,26 +286,12 @@ export default class Windows extends React.Component {
         transparentVisuals: true,
       },
     }
-
     return (
-      <App
-        onBeforeQuit={() => console.log('hi')}
-        ref={ref => {
-          if (ref) {
-            this.appRef = ref.app
-          }
-        }}
-      >
+      <App onBeforeQuit={this.onBeforeQuit} ref={this.onAppRef}>
         <MenuItems
-          onPreferences={() => {
-            this.setState({ showSettings: true })
-          }}
-          getRef={ref => {
-            this.menuRef = ref
-          }}
-          onQuit={() => {
-            this.isClosing = true
-          }}
+          onPreferences={this.onPreferences}
+          getRef={this.onMenuRef}
+          onQuit={this.onMenuQuit}
         />
         <Window
           {...appWindow}
@@ -297,20 +300,15 @@ export default class Windows extends React.Component {
           vibrancy="dark"
           transparent
           hasShadow
-          defaultSize={this.initialSize || this.state.size}
+          defaultSize={this.state.size}
           size={this.state.size}
           file={`${Constants.APP_URL}/settings`}
           titleBarStyle="customButtonsOnHover"
           position={this.state.position}
-          onResize={size => this.setState({ size })}
-          onMoved={position => this.setState({ position })}
-          onMove={position => this.setState({ position })}
-          onClose={e => {
-            if (!this.isClosing && this.state.showSettings) {
-              e.preventDefault()
-              this.setState({ showSettings: false })
-            }
-          }}
+          onResize={this.onSettingsSized}
+          onMoved={this.onSettingsMoved}
+          onMove={this.onSettingsMoved}
+          onClose={this.onSettingsClosed}
         />
         <Window
           {...appWindow}
@@ -323,10 +321,10 @@ export default class Windows extends React.Component {
           size={[Constants.ORA_WIDTH, 1000]}
           file={`${Constants.APP_URL}/ora`}
           position={this.state.trayPosition}
-          onMoved={trayPosition => this.setState({ trayPosition })}
-          onMove={trayPosition => this.setState({ trayPosition })}
-          onBlur={() => this.sendOra('ora-blur')}
-          onFocus={() => this.sendOra('ora-focus')}
+          onMoved={this.onOraMoved}
+          onMove={this.onOraMoved}
+          onBlur={this.onOraBlur}
+          onFocus={this.onOraFocus}
           devToolsExtensions={getExtensions(['mobx', 'react'])}
         />
       </App>

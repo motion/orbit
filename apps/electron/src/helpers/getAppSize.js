@@ -9,7 +9,7 @@ const MAX_WIDTH = 1450
 const MAX_WIDTH_TO_HEIGHT = 1.15
 const TOPBAR_HEIGHT = 30
 
-export default function getScreenSize() {
+export default function getAppSize() {
   const { width, height } = screen.getPrimaryDisplay().workAreaSize
 
   const boundedHeight = Math.min(MAX_HEIGHT, height - 100)

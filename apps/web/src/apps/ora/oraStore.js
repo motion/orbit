@@ -106,7 +106,7 @@ export default class OraStore {
     }
   }
 
-  get context() {
+  get osContext() {
     return (
       this.electronState.context &&
       // ensure theres at least a title to the page
@@ -116,7 +116,7 @@ export default class OraStore {
   }
 
   addCurrentPage = async () => {
-    if (!this.context) {
+    if (!this.osContext) {
       console.log('no context to add')
       return
     }

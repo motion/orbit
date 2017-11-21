@@ -2,7 +2,6 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
 import type { PaneResult } from '~/types'
-import FeedItem from '../feed/feedItem'
 
 const hasContent = (result: PaneResult) =>
   result && result.data && result.data.body
@@ -46,44 +45,47 @@ function getChildren(result) {
   let text
   if (result.data && result.data.body) {
     const body = result.data.body
-    const extra = body.length > 50 ? '...' : ''
-    text = getDate(result) + ' · ' + body.slice(0, 30) + extra || ''
+    text = getDate(result) + ' · ' + body
   }
   if (!result.data && getDate(result)) {
     text = getDate(result) + ' · '
   }
-  // make text even shorter if event exists
-  // enventualyl we just need <UI.Text lineClamp={number} />
-  if (result.event) {
-    text = text.slice(0, 20) + '...'
-  }
   if (text) {
-    return [
-      <UI.Text key={0} lineHeight={20} opacity={0.5}>
-        {text}
-      </UI.Text>,
-      result.event && <FeedItem key={1} inline event={result.event} />,
-    ].filter(Boolean)
+    return text
+    // <FeedItem key={1} inline event={result.event} />
   }
   return null
 }
 
 export default function getItem(getActiveIndex) {
   return (result, index) => ({
-    key: `${index}${result.id}`,
+    key: `${index}${result.id}${result.title}${result.category}`,
     highlight: () => index === getActiveIndex(),
+    // dynamic lower opacity as list items go down
+    opacity: Math.max(0.5, (8 - index) / 8),
     primary:
       typeof result.displayTitle !== 'undefined'
         ? result.displayTitle || null
         : result.display ? null : result.title,
-    primaryEllipse: !hasContent(result),
+    primaryEllipse: !hasContent(result) ? 2 : false,
+    primaryProps: {
+      size: 1.2,
+      fontWeight: 500,
+    },
     secondary: result.subtitle,
     children: getChildren(result),
-    iconAfter: result.iconAfter !== false,
+    childrenProps: {
+      ellipse: index < 3 ? 3 : 2,
+      size: 1.1,
+    },
+    iconAfter: result.iconAfter,
     icon: getIcon(result),
     date: result.date,
     after: result.after,
     before: result.before,
+    below: result.below,
+    beforeProps: result.beforeProps,
+    afterProps: result.afterProps,
     ...result.props,
   })
 }

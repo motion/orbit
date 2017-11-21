@@ -32,7 +32,7 @@ export type Props = {
   size?: number,
   style?: Object,
   width?: number,
-  groupKey?: string,
+  groupBy?: string,
   selected?: number,
   separatorHeight: number,
   isSelected?: Function,
@@ -358,7 +358,7 @@ class List extends React.PureComponent<Props, { selected: number }> {
   //   this.totalGroups
   updateChildren() {
     const { props } = this
-    const { items, virtualized, groupKey, parentSize } = props
+    const { items, virtualized, groupBy, parentSize, separatorProps } = props
     const hasChildren = props.children
     if (!items && !hasChildren) {
       return null
@@ -388,14 +388,14 @@ class List extends React.PureComponent<Props, { selected: number }> {
     let realIndex = []
     let totalGroups = 0
 
-    if (groupKey && items) {
+    if (groupBy && items) {
       const groups = []
       let lastGroup = null
 
       items.forEach((item, itemIndex) => {
         const index = itemIndex + totalGroups
-        if (lastGroup !== item[groupKey]) {
-          lastGroup = item[groupKey]
+        if (lastGroup !== item[groupBy]) {
+          lastGroup = item[groupBy]
           // if is separator
           if (lastGroup) {
             groups.push({ index, name: lastGroup })
@@ -413,8 +413,12 @@ class List extends React.PureComponent<Props, { selected: number }> {
 
       for (const { index, name } of groups) {
         let child = (extraProps: Object) => (
-          <separator $firstSeparator={index === 0} key={name} {...extraProps}>
-            <notch />
+          <separator
+            $firstSeparator={index === 0}
+            key={name}
+            {...separatorProps}
+            {...extraProps}
+          >
             {name}
           </separator>
         )
@@ -516,24 +520,12 @@ class List extends React.PureComponent<Props, { selected: number }> {
       padding: [12, 10, 3],
       justifyContent: 'center',
       // background: [0, 0, 0, 0.02],
-      borderBottom: [1, [0, 0, 0, 0.05]],
+      borderBottom: [1, [0, 0, 0, 0.2]],
       textAlign: 'left',
-      color: [255, 255, 255, 0.3],
+      opacity: 0.4,
       pointerEvents: 'none',
       userSelect: 'none',
       position: 'relative',
-    },
-    notch: {
-      position: 'absolute',
-      bottom: 11,
-      right: -3,
-      height: 6,
-      width: 6,
-      opacity: 0,
-      transform: {
-        rotate: '45deg',
-      },
-      background: '#fff',
     },
     firstSeparator: {
       paddingTop: 10,

@@ -11,6 +11,7 @@ import AppStore from './stores/appStore'
 import adapter from 'pouchdb-adapter-idb'
 import * as Services from './services'
 import CurrentUser_ from './stores/currentUserStore'
+import debug from 'debug'
 
 // ugly but we want to export these all here
 // this prevents hmr from going nuts when we edit models
@@ -98,11 +99,15 @@ class App {
   }
 
   debug(setting) {
-    if (!setting) {
-      localStorage.setItem('debug', 'none')
-      debug.enable('')
+    if (setting === false) {
+      console.log('Disabling debug...')
+      localStorage.debug = 'none'
+      debug.enable('none')
+      debug.instances.forEach(instance => {
+        debug.disable(instance)
+      })
     } else {
-      localStorage.setItem('debug', setting)
+      localStorage.debug = setting
       debug.enable(setting)
     }
   }

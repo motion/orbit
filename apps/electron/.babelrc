@@ -1,0 +1,14 @@
+{
+  "env": {
+    "development": {
+      "presets": [
+        [
+          "@mcro/preset-motion",
+          {
+            "disable": ["@mcro/hmr", "@mcro/hmr-view", "@mcro/gloss/transform"]
+          }
+        ]
+      ]
+    }
+  }
+}

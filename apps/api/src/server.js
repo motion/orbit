@@ -9,6 +9,11 @@ import OAuth from './server/oauth'
 import OAuthStrategies from './server/oauth.strategies'
 import Passport from 'passport'
 import expressPouch from 'express-pouchdb'
+import Path from 'path'
+import Crawler from '@mcro/crawler'
+import debug from 'debug'
+
+const log = debug('api')
 
 const port = Constants.SERVER_PORT
 
@@ -42,8 +47,9 @@ export default class Server {
     app.use(this.cors())
 
     // ROUTES
-    app.use('/auth', bodyParser.json())
-    app.use('/auth', bodyParser.urlencoded({ extended: false }))
+    this.app.use(bodyParser.json({ limit: '2048mb' }))
+    this.app.use(bodyParser.urlencoded({ limit: '2048mb', extended: true }))
+    this.setupCrawler()
     this.setupCredPass()
     this.setupPassportRoutes()
     // this.setupPouch()
@@ -56,7 +62,7 @@ export default class Server {
   }
 
   dispose() {
-    console.log('dispose server')
+    log('dispose server')
   }
 
   cors() {
@@ -74,10 +80,51 @@ export default class Server {
     }
   }
 
+  setupCrawler() {
+    const crawlerIndex = require.resolve('@mcro/crawler')
+    const crawlerDist = Path.join(crawlerIndex, '..', 'build', 'js')
+    log('setting up crawler', crawlerDist)
+    this.app.use('/crawler', express.static(crawlerDist))
+
+    const crawler = new Crawler()
+
+    this.app.post('/crawler/start', async (req, res) => {
+      log(`Got a request for crawl`)
+      const { options } = req.body
+      if (options) {
+        log('start crawl')
+        if (crawler.isRunning) {
+          log('stopping previous crawler')
+          crawler.stop()
+        }
+        const results = await crawler.start(options.entry, options)
+        log(`crawl results: ${results.length} results`)
+        res.json({ results })
+      } else {
+        log('No options sent')
+        res.sendStatus(500)
+      }
+    })
+
+    this.app.post('/crawler/stop', async (req, res) => {
+      let success = false
+      if (crawler.isRunning) {
+        log('Cancelling crawl')
+        crawler.stop()
+        success = true
+      } else {
+        log(`No crawler running`)
+      }
+      res.json({ success })
+    })
+
+    this.app.get('/crawler/status', async (req, res) => {
+      res.json({ status: crawler.getStatus() })
+    })
+  }
+
   creds = {}
   setupCredPass() {
-    this.app.use(bodyParser.json())
-    this.app.use(bodyParser.urlencoded({ extended: false }))
     this.app.use('/getCreds', (req, res) => {
       if (Object.keys(this.creds).length) {
         res.json(this.creds)
@@ -86,7 +133,7 @@ export default class Server {
       }
     })
     this.app.use('/setCreds', (req, res) => {
-      console.log('set', typeof req.body, req.body)
+      log('set', typeof req.body, req.body)
       if (req.body) {
         this.creds = req.body
       }
@@ -104,7 +151,7 @@ export default class Server {
       return false
     }
     if (typeof session.expires !== 'number') {
-      console.log('non-number session')
+      log('non-number session')
       return false
     }
     return session.expires > Date.now()
@@ -114,7 +161,7 @@ export default class Server {
     const router = {
       [Constants.API_HOST]: Constants.PUBLIC_URL,
     }
-    console.log('proxying', router)
+    log('proxying', router)
     this.app.use(
       '/',
       proxy({
@@ -168,12 +215,12 @@ export default class Server {
 
   setupAuthRefreshRoutes() {
     this.app.use('/auth/refreshToken/:service', async (req, res) => {
-      console.log('refresh for', req.params.service)
+      log('refresh for', req.params.service)
       try {
         const refreshToken = await this.oauth.refreshToken(req.params.service)
         res.json({ refreshToken })
       } catch (error) {
-        console.log('error', error)
+        log('error', error)
         res.status(500)
         res.json({ error })
       }

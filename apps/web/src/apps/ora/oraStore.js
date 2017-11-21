@@ -4,47 +4,95 @@ import Mousetrap from 'mousetrap'
 import { OS, debounceIdle } from '~/helpers'
 import StackStore from '~/stores/stackStore'
 import keycode from 'keycode'
-import ContextStore from '~/stores/contextStore'
+import ContextStore from '~/context'
 import SHORTCUTS from './shortcuts'
+import { CurrentUser } from '~/app'
+import * as r2 from '@mcro/r2'
 
 const BANNERS = {
   note: 'note',
   success: 'success',
+  error: 'error',
 }
 
 const BANNER_TIMES = {
   note: 5000,
   success: 1500,
+  error: 5000,
 }
 
 export default class OraStore {
   stack = new StackStore([{ type: 'oramain' }])
   inputRef = null
-  osContext = null
   search = ''
   textboxVal = ''
   traps = {}
   lastKey = null
-  hidden = false
-  focused = false
   banner = null
+  focusedBar = false
+  wasBlurred = false
+  showWhiteBottomBg = false
+  crawlState = null
+  crawlStatus = null
+  crawlResults = null
 
-  @watch items = () => Thing.find()
+  // this is synced to electron!
+  state = {
+    hidden: false,
+    focused: true,
+  }
+
+  // synced from electron!
+  electronState = {}
+
+  setState = newState => {
+    this.state = {
+      ...this.state,
+      ...newState,
+    }
+    OS.send('set-state', this.state)
+  }
+
+  // TODO move into currentuser
+  get bucket() {
+    if (!CurrentUser.user) {
+      return 'Default'
+    }
+    const { activeBucket } = CurrentUser.user.settings
+    return activeBucket || 'Default'
+  }
+
+  @watch
+  items = () =>
+    !this.bucket
+      ? Thing.find()
+      : Thing.find()
+          .where('bucket')
+          .eq(this.bucket)
+
   @watch context = () => this.items && new ContextStore(this.items)
 
   async willMount() {
     this.attachTrap('window', window)
+
+    this._listenForStateSync()
+    this._watchContext()
+    // side effect watchers
+    this._watchFocus()
     this._watchFocusBar()
     this._watchInput()
     this._watchToggleHide()
     this._watchMouse()
+    this._watchBlurBar()
+    this._watchCrawlStatus()
+
     this.watch(() => {
-      if (this.hidden) {
-        // timeout based on animation
-        this.setTimeout(this.blurBar, 100)
-      }
+      const { focused } = this.state
+      // one frame later
+      this.setTimeout(() => {
+        this.wasBlurred = !focused
+      }, 16)
     })
-    await this.listenForContext()
   }
 
   setBanner = (type, message, timeout) => {
@@ -59,16 +107,32 @@ export default class OraStore {
     }
   }
 
+  get osContext() {
+    return (
+      this.electronState.context &&
+      // ensure theres at least a title to the page
+      this.electronState.context.title &&
+      this.electronState.context
+    )
+  }
+
   addCurrentPage = async () => {
     if (!this.osContext) {
+      console.log('no context to add')
       return
     }
     this.setBanner(BANNERS.note, 'Pinning...')
     const token = `e441c83aed447774532894d25d97c528`
-    const { url } = this.osContext
-    const toFetch = `https://api.diffbot.com/v3/article?token=${token}&url=${url}`
-    console.log('to fetch is', toFetch)
+    const { url } = this.context
+    const toFetch = `https://api.diffbot.com/v3/article?token=${token}&url=${
+      url
+    }`
     const res = await fetch(toFetch).then(res => res.json())
+    if (res.error) {
+      this.setBanner(BANNERS.error, `Diffbot: ${res.error}`)
+      return
+    }
+    console.log('got res', res)
     const { text, title } = res.objects[0]
     const thing = await Thing.create({
       title,
@@ -77,72 +141,172 @@ export default class OraStore {
       body: text,
       url,
     })
-    log('mdae a thing')
     this.setBanner(BANNERS.success, 'Added pin')
     return thing
   }
 
-  listenForContext = async () => {
-    // check
-    this.setInterval(() => {
-      OS.send('get-context')
-    }, 500)
-    // response
-    OS.on('set-context', (event, info) => {
-      const context = JSON.parse(info)
+  _watchBlurBar = () => {
+    this.watch(() => {
+      if (this.state.hidden) {
+        // timeout based on animation
+        this.setTimeout(this.blurBar, 100)
+      }
+    })
+  }
+
+  _watchCrawlStatus = () => {
+    let watcher
+    this.watch(() => {
+      clearInterval(watcher)
+      if (this.crawlState) {
+        watcher = this.setInterval(async () => {
+          try {
+            const { status } = await r2.get(
+              'http://localhost:3001/crawler/status'
+            ).json
+            this.crawlStatus = status
+          } catch (err) {
+            clearInterval(watcher)
+          }
+        }, 1000)
+      }
+    })
+  }
+
+  _listenForStateSync = () => {
+    // allows electron to ask for updated app state
+    this.on(OS, 'get-state', () => {
+      OS.send('got-state', this.state)
+    })
+
+    // allows us to get updated electron state
+    this.on(OS, 'electron-state', (event, state) => {
+      this.electronState = state
+    })
+  }
+
+  _watchContext = () => {
+    let lastContext = null
+
+    this.watch(() => {
+      const { context } = this.electronState
       if (!context) {
         if (this.stack.last.result.type === 'context') {
-          // this.osContext = null
           // if you want it to navigate back home automatically
           // this.stack.pop()
         }
         return
       }
-      // check to avoid rerendering
-      if (!this.osContext || this.osContext.title !== context.title) {
-        if (this.osContext) {
-          console.log('set-context', context.title, this.osContext.title)
-        }
-        this.osContext = context
-        const nextStackItem = {
-          type: 'context',
-          title: context.title,
-          icon:
-            context.application === 'Google Chrome' ? 'social-google' : null,
-        }
-        if (this.stack.length > 1) {
-          this.stack.replace(nextStackItem)
-        } else {
-          this.stack.navigate(nextStackItem)
-        }
+      if (!context || !context.url || !context.title) {
+        console.log('no context or url/title', this.context)
+        return
       }
+      const isAlreadyOnResultsPane = this.stack.length > 1
+      if (isAlreadyOnResultsPane) {
+        return
+      }
+      if (lastContext) {
+        if (lastContext.url === context.url) return
+      }
+      lastContext = context
+      const nextStackItem = {
+        id: context.url,
+        title: context.selection || context.title,
+        type: 'context',
+        icon: context.application === 'Google Chrome' ? 'social-google' : null,
+      }
+      this.stack.navigate(nextStackItem)
     })
+  }
+
+  _watchFocus() {
+    this.on(OS, 'ora-focus', () => {
+      this.focusedAt = Date.now()
+      this.setState({ focused: true })
+    })
+    this.on(OS, 'ora-blur', () => {
+      this.setState({ focused: false })
+    })
+  }
+
+  startCrawl = async options => {
+    this.crawlState = options
+    this.crawlStatus = { count: 0 }
+    try {
+      const { results } = await r2.post('http://localhost:3001/crawler/start', {
+        json: { options },
+      }).json
+      // ensure not cancelled in meanwhile
+      if (this.crawlState) {
+        this.crawlResults = results
+      }
+    } catch (err) {
+      console.log('error during crawl', err)
+    } finally {
+      this.crawlState = false
+    }
+  }
+
+  cancelResults = () => {
+    this.crawlResults = null
+  }
+
+  commitResults = async () => {
+    this.setBanner(BANNERS.note, 'Saving...')
+    let creating = []
+    const { crawlResults } = this
+    this.crawlResults = null
+    if (crawlResults) {
+      for (const { url, contents } of crawlResults) {
+        creating.push(
+          Thing.create({
+            url,
+            title: contents.title,
+            body: contents.body,
+            integration: 'crawler',
+            type: 'website',
+            bucket: this.bucket || 'Default',
+          })
+        )
+      }
+    }
+    const results = await Promise.all(creating)
+    this.setBanner(BANNERS.success, 'Saved results!')
+    return results
+  }
+
+  removeCrawler = () => {
+    OS.send('kill-crawler')
+  }
+
+  injectCrawler = () => {
+    OS.send('inject-crawler')
+  }
+
+  stopCrawl = async () => {
+    this.crawlState = false
+    this.crawlStatus = false
+    return await r2.post('http://localhost:3001/crawler/stop').json
   }
 
   _watchMouse() {
     OS.send('mouse-listen')
-    OS.on('mouse-in-corner', () => {
-      if (this.hidden) {
-        this.hidden = false
-        this.setTimeout(this.focusBar)
+    this.on(OS, 'mouse-in-corner', () => {
+      if (this.state.hidden) {
+        this.setState({ hidden: false })
       }
     })
   }
 
   _watchToggleHide() {
     OS.send('start-ora')
-
-    OS.on('show-ora', () => {
-      this.hidden = !this.hidden
-
-      if (!this.hidden) {
-        this.setTimeout(this.focusBar)
-      }
+    this.on(OS, 'ora-toggle', () => {
+      this.setState({ hidden: !this.state.hidden })
     })
   }
 
   hide = () => {
-    this.hidden = true
+    this.setState({ hidden: true })
   }
 
   _watchInput() {
@@ -202,13 +366,13 @@ export default class OraStore {
     if (this.inputRef) {
       this.inputRef.focus()
       this.inputRef.select()
-      this.focused = true
+      this.focusedBar = true
     }
   }
 
   blurBar = () => {
     this.inputRef && this.inputRef.blur()
-    this.focused = false
+    this.focusedBar = false
   }
 
   onSearchChange = e => {
@@ -280,9 +444,6 @@ export default class OraStore {
       }
       if (this.stack.selected.onSelect) {
         this.stack.selected.onSelect()
-      } else {
-        // const schema = JSON.stringify(this.stack.selected)
-        // OS.send('bar-goto', `http://jot.dev/master?schema=${schema}`)
       }
     },
     cmdL: () => {

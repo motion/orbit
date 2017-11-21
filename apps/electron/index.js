@@ -1,4 +1,4 @@
-console.log('polyfilled')
+// this is only loaded in production!
 
 process.env.NODE_ENV = 'production'
 process.env.IS_PROD = true

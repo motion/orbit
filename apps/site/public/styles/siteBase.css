@@ -12,12 +12,6 @@ body {
   -webkit-text-size-adjust: 100%;
 }
 
-html,
-body {
-  height: 100%;
-  overflow: hidden;
-}
-
 /* Change Autocomplete styles in Chrome*/
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
@@ -47,6 +41,15 @@ select:-webkit-autofill:focus {
   background: blue;
   color: #fff;
   text-shadow: none;
+}
+
+@keyframes orbit {
+  from {
+    transform: rotate(0deg) translateX(150px) rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg) translateX(150px) rotate(-360deg);
+  }
 }
 
 @keyframes fade {

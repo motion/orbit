@@ -1,65 +1,55 @@
+import 'source-map-support/register'
+import 'isomorphic-fetch'
 import 'raf/polyfill'
+import './helpers/handlePromiseErrors'
+import './helpers/updateChecker'
+import './helpers/monitorResourceUsage'
 import electronContextMenu from 'electron-context-menu'
 import electronDebug from 'electron-debug'
-import updater from 'electron-simple-updater'
 import React from 'react'
-import Ionize from '@mcro/ionize'
-import { onWindow } from './windows'
-import * as Constants from '~/constants'
+import { render } from '@mcro/reactron'
+// import { onWindow } from './windows'
+import { throttle } from 'lodash'
+import { extras } from 'mobx'
 
-const ogerror = console.error.bind(console)
-console.error = function(...args) {
-  if (
-    args &&
-    typeof args[0] === 'string' &&
-    args[0].indexOf('EmojiFunctionRowItem')
-  ) {
-    return
-  }
-  return ogerror(...args)
-}
+// share state because node loads multiple copies
+extras.shareGlobalState()
 
-let app = null
+// let app = null
 
-// update checker
-if (Constants.IS_PROD) {
-  const updateUrl = require('../package.json').updater.url
-  console.log('updateUrl', updateUrl)
-  updater.init(updateUrl)
-
-  updater.on('update-available', () => {
-    console.log('Update available')
-  })
-
-  updater.on('update-downloaded', () => {
-    updater.quitAndInstall()
-  })
-}
-
-export default function start() {
+const start = throttle(() => {
   const Windows = require('./windows').default
-  Ionize.start(<Windows />)
-
+  render(<Windows />)
   electronContextMenu()
   electronDebug()
+  // onWindow(ref => {
+  //   app = ref
+  // })
+}, 1000)
 
-  onWindow(ref => {
-    app = ref
-  })
-}
+export default start
 
 if (process.argv.find(x => x === '--start')) {
   start()
 }
 
+// let restarting
+
 function restart() {
   console.log('got a restart from hmr')
-  app.setState(
-    {
-      restart: true,
-    },
-    () => setTimeout(start, 500)
-  )
+  // for now
+  process.exit()
+  // if (restarting) {
+  //   clearTimeout(restarting)
+  // }
+  // app.setState(
+  //   {
+  //     restart: true,
+  //   },
+  //   () => {
+  //     restarting = setTimeout(start, 1000)
+  //   }
+  // )
 }
 
 if (module.hot) {

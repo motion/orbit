@@ -2,6 +2,18 @@
 
 . $(dirname $0)/__/common
 
+# helpers to build inside a dir
+if [ "$1" = "prod" ]; then
+  BABEL_ENV=production babel src --out-dir dist -s true  ${@:2}
+  exit 0
+elif [ "$1" = "dev" ]; then
+  babel src --out-dir lib -s true ${@:2}
+  exit 0
+elif [ "$1" = "es6" ]; then
+  BABEL_ENV=es6 babel src --out-dir es6 -s true ${@:2}
+  exit 0
+fi
+
 cd $ROOT
 
 APP=$1
@@ -24,28 +36,30 @@ function build-dev() {
     --ignore @mcro/hmr-view \
     --ignore @mcro/preset-motion \
       -- \
-      babel src --out-dir lib -s true $1
+      babel src --out-dir lib -s true ${@:1}
 }
 
 function build-es6() {
   npx lerna exec --parallel \
     --ignore @mcro/web \
+    --ignore @mcro/crawler \
     --ignore @mcro/site \
     --ignore @mcro/preset-motion \
       -- \
-        BABEL_ENV=es6 babel src --out-dir es6 -s true $1
+        BABEL_ENV=es6 babel src --out-dir es6 -s true ${@:1}
 }
 
 function build-prod() {
   npx lerna exec --parallel --concurrency 1 \
     --ignore @mcro/api \
+    --ignore @mcro/crawler \
     --ignore @mcro/electron \
     --ignore @mcro/builder \
     --ignore @mcro/hmr \
     --ignore @mcro/hmr-view \
     --ignore @mcro/preset-motion \
       -- \
-        BABEL_ENV=production babel src --out-dir dist -s true $1
+        BABEL_ENV=production babel src --out-dir dist -s true ${@:1}
 }
 
 if [ "$APP" = "build-dev" ]; then
@@ -54,7 +68,10 @@ elif [ "$APP" = "build-es6" ]; then
   build-es6
 elif [ "$APP" = "build-prod" ]; then
   build-prod
-elif [ "$APP" = "electron" ] || [ "$APP" = "app" ]; then
+elif [ "$APP" = "crawler" ]; then
+  cd $ROOT/apps/electron
+  npm run build
+elif [ "$APP" = "electron" ]; then
   cd $ROOT/apps/electron
   npm run dist
 elif [ "$APP" = "site" ]; then
@@ -69,18 +86,19 @@ elif [ "$APP" = "web" ]; then
     npm run build
     echo "finished build web"
   fi
-else
-  if [ "$APP" = "--watch" ]; then
-    # only build modern during dev-watch
-    build-es6 --watch &
-    build-dev --watch &
-    build-prod --watch &
-  else
-    build-es6 &
-    build-dev &
-    build-prod &
-  fi
-
+elif [ "$APP" = "--watch" ]; then
+  # only build modern during dev-watch
+  build-es6 --watch --skip-initial-build &
+  build-dev --watch --skip-initial-build &
+  build-prod --watch --skip-initial-build &
+  (cd apps/crawler && npm run watch) &
   wait
-  echo "done building"
+elif [ "$APP" = "" ]; then
+  build-es6 &
+  build-dev &
+  build-prod &
+  (cd apps/crawler && npm run build) &
+  wait
+else
+  echo "should be able to build individual apps"
 fi

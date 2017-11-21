@@ -53,8 +53,8 @@ elif [ "$ACTION" = "electron" ] || [ "$ACTION" = "app" ]; then
     npm run watch &
     sleep 3
     npm start &
+    wait
   fi
-  wait
 elif [ "$ACTION" =  "site" ]; then
   run-site ${@:2} &
   wait

@@ -1,4 +1,4 @@
-import Calendar from '../feed/calendar'
+// import Calendar from '../feed/calendar'
 import * as UI from '@mcro/ui'
 
 export default class PersonSidebar {
@@ -19,7 +19,7 @@ export default class PersonSidebar {
     {
       title: 'none',
       displayTitle: false,
-      children: <Calendar labels={[]} />,
+      // children: <Calendar labels={[]} />,
     },
 
     {

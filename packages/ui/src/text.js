@@ -1,10 +1,18 @@
 // @flow
 import * as React from 'react'
 import { view } from '@mcro/black'
-import { keycode } from '@mcro/ui'
-import { observable } from 'mobx'
+import keycode from 'keycode'
 import $ from 'color'
 import { pick } from 'lodash'
+
+const getTextProperties = props => {
+  const fontSize =
+    (typeof props.fontSize === 'number' && props.fontSize) || props.size
+      ? props.size * 14
+      : 'auto'
+  const lineHeight = props.lineHeight || fontSize * 1.15 + 6
+  return { fontSize, lineHeight }
+}
 
 const DOM_EVENTS = [
   'onClick',
@@ -34,20 +42,33 @@ export type Props = {
 
 // click away from edit clears it
 @view.ui
-export default class Text extends React.PureComponent<Props> {
+export default class Text extends React.Component<Props> {
   static defaultProps = {
     tagName: 'text', // TODO: prod p mode
   }
 
+  state = {
+    doClamp: false,
+  }
+
   editableReaction: ?Function
-  @observable selected = false
-  @observable editable = false
+  selected = false
+  editable = false
   node = null
 
   componentWillMount() {
     this.handleProps(this.props)
     this.handleKeydown = this.handleKeydown.bind(this)
     this.getRef = this.getRef.bind(this)
+  }
+
+  componentDidMount() {
+    // this fixes bug because clamp is hacky af and needs to re-measure to trigger
+    if (this.props.ellipse > 1) {
+      this.setTimeout(() => {
+        this.setState({ doClamp: true })
+      })
+    }
   }
 
   componentWillReceiveProps(nextProps: Object) {
@@ -150,7 +171,6 @@ export default class Text extends React.PureComponent<Props> {
     opacity,
     size,
     tagName,
-    css,
     onClick,
     onMouseEnter,
     onMouseLeave,
@@ -160,12 +180,12 @@ export default class Text extends React.PureComponent<Props> {
     style,
     placeholder,
     lineHeight,
-    lines,
     attach,
     className,
     html,
     ...props
   }: Props) {
+    const textProperties = getTextProperties(this.props)
     const eventProps = {
       onClick,
       onMouseEnter,
@@ -173,30 +193,13 @@ export default class Text extends React.PureComponent<Props> {
       onFocus,
       onBlur,
     }
-
     let inner = html ? (
       <span dangerouslySetInnerHTML={{ __html: html }} />
     ) : (
       children
     )
-
-    if (lines) {
-      if (!children) {
-        return null
-      }
-      let childrenString = children
-      if (Array.isArray(children)) {
-        childrenString = children.filter(x => !!x).join('')
-      }
-      // TODO get a good ellpse tool
-      // inner = (
-      //   <LinesEllipse
-      //     className="line-ellipse"
-      //     text={childrenString}
-      //     maxLine={200}
-      //   />
-      // )
-    }
+    const oneLineEllipse = ellipse && typeof ellipse === 'boolean'
+    const multiLineEllipse = ellipse > 1
     return (
       <text
         className={className}
@@ -206,14 +209,28 @@ export default class Text extends React.PureComponent<Props> {
         suppressContentEditableWarning={editable}
         onKeyDown={this.handleKeydown}
         ref={this.getRef}
-        css={{ ...props, ...css }}
+        css={props}
         style={style}
-        $ellipseText={ellipse}
+        $ellipseText={oneLineEllipse}
         {...eventProps}
         {...pick(props, DOM_EVENTS)}
       >
         {!ellipse && inner}
-        <span if={ellipse} $$ellipse>
+        <span
+          if={ellipse}
+          $ellipseLines={multiLineEllipse}
+          style={
+            multiLineEllipse
+              ? {
+                  WebkitLineClamp: ellipse,
+                  maxHeight: `${ellipse * textProperties.lineHeight}px`,
+                  width: this.state.doClamp ? '100%' : '100.001%',
+                  opacity: this.state.doClamp ? 1 : 0,
+                }
+              : null
+          }
+          $$ellipse={oneLineEllipse}
+        >
           {inner}
         </span>
       </text>
@@ -234,6 +251,13 @@ export default class Text extends React.PureComponent<Props> {
       flex: 1,
       overflow: 'hidden',
     },
+    ellipseLines: {
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      display: '-webkit-box',
+      WebkitBoxOrient: 'vertical',
+      width: '100%',
+    },
     selectable: {
       userSelect: 'auto',
       cursor: 'text',
@@ -241,10 +265,7 @@ export default class Text extends React.PureComponent<Props> {
   }
 
   static theme = (props, theme) => {
-    const fontSize =
-      (typeof props.fontSize === 'number' && props.fontSize) || props.size
-        ? props.size * 14
-        : 'auto'
+    const { fontSize, lineHeight } = getTextProperties(props)
 
     let color = props.color || theme.base.color
     // allow textOpacity adjustments
@@ -256,9 +277,10 @@ export default class Text extends React.PureComponent<Props> {
       text: {
         color,
         fontSize,
+        lineHeight:
+          typeof lineHeight === 'number' ? `${lineHeight}px` : lineHeight,
         display: props.display,
         fontWeight: props.fontWeight,
-        lineHeight: props.lineHeight || `${fontSize * 1.25 + 5}px`,
         opacity: props.opacity,
       },
       ellipse: {

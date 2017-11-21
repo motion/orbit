@@ -5,6 +5,7 @@
 // WARNING
 
 const Path = require('path')
+const Fs = require('fs')
 // const Fs = require('fs')
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
@@ -12,23 +13,26 @@ const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin')
 const WatchMissingNodeModulesPlugin = require('react-dev-utils/WatchMissingNodeModulesPlugin')
 const getClientEnvironment = require('./env')
 const paths = require('./paths')
-const publicPath = '/'
-const publicUrl = ''
-const env = getClientEnvironment(publicUrl)
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin')
 const BabelMinifyPlugin = require('babel-minify-webpack-plugin')
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
   .BundleAnalyzerPlugin
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
+// const DuplicatePackageCheckerPlugin = require('duplicate-package-checker-webpack-plugin')
 
 const IS_PROD = process.env.NODE_ENV === 'production'
-
-console.log('IS_PROD', IS_PROD)
 const MINIFY = process.env.MINIFY === 'true'
 const IS_DEV = !IS_PROD
 const TARGET = process.env.TARGET
+const HAS_HTML = Fs.existsSync(paths.appHtml)
+const CHUNK_COMMONS = process.env.CHUNK_COMMONS !== 'false'
+
+console.log('IS_PROD', IS_PROD)
+
 const filtered = ls => ls.filter(x => !!x)
 const watch = process.argv.indexOf('--watch') > 0
+const publicUrl = ''
+const env = getClientEnvironment(publicUrl)
 
 // if you want to parse our modules directly use this, but we have dist/ folder now
 // const ORG = Path.resolve(__dirname, '..', '..', 'node_modules', '@mcro')
@@ -40,8 +44,9 @@ let config
 
 if (IS_PROD) {
   config = {
+    // devtool: false,
     devtool: 'source-map',
-    // bail: true,
+    bail: true,
   }
 } else {
   config = {
@@ -60,7 +65,7 @@ module.exports = Object.assign(config, {
     app: filtered([
       IS_DEV && require.resolve('webpack-dev-server/client') + '?/',
       IS_DEV && require.resolve('webpack/hot/only-dev-server'),
-      paths.appIndexJs,
+      paths.appEntry,
     ]),
   },
 
@@ -68,7 +73,11 @@ module.exports = Object.assign(config, {
     path: paths.appBuild,
     pathinfo: true,
     filename: 'js/[name].js',
-    publicPath: publicPath,
+    publicPath: '/',
+  },
+
+  resolveLoader: {
+    modules: [Path.join(__dirname, '..', '..', 'node_modules')],
   },
 
   resolve: {
@@ -110,10 +119,11 @@ module.exports = Object.assign(config, {
 
   plugins: filtered([
     new InterpolateHtmlPlugin(env.raw),
-    new HtmlWebpackPlugin({
-      inject: true,
-      template: paths.appHtml,
-    }),
+    HAS_HTML &&
+      new HtmlWebpackPlugin({
+        inject: true,
+        template: paths.appHtml,
+      }),
     new webpack.DefinePlugin(env.stringified),
     new CaseSensitivePathsPlugin(),
     // hmr
@@ -124,6 +134,7 @@ module.exports = Object.assign(config, {
 
     // production
     IS_PROD &&
+      CHUNK_COMMONS &&
       new webpack.optimize.CommonsChunkPlugin({
         name: 'common',
         minChunks(module) {
@@ -132,13 +143,19 @@ module.exports = Object.assign(config, {
         },
       }),
     IS_PROD && new webpack.optimize.OccurrenceOrderPlugin(),
-    // MINIFY && new UglifyJSPlugin(),
-    // slow
     MINIFY &&
-      new BabelMinifyPlugin({
-        deadcode: true,
-        mangle: { topLevel: true },
+      new UglifyJSPlugin({
+        cache: true,
+        parallel: true,
       }),
+
+    // new DuplicatePackageCheckerPlugin(),
+    // slower
+    // MINIFY &&
+    //   new BabelMinifyPlugin({
+    //     deadcode: true,
+    //     mangle: { topLevel: true },
+    //   }),
 
     // bundle analyzer
     process.env.DEBUG && new BundleAnalyzerPlugin(),

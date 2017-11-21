@@ -35,6 +35,7 @@ const TAG_NAME_MAP = {
 // factory that returns fancyElement helper
 export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
   const { baseStyles, options, css } = Gloss
+  const tagNameOption = options.tagName
 
   // Fast object reduce
   function objToCamel(style) {
@@ -62,6 +63,19 @@ export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
           : children}`
       )
     }
+    if (!this) {
+      throw new Error(
+        `No this is set here! type: ${type}, props: ${props
+          ? Object.keys(props)
+          : ''}`
+      )
+    }
+
+    let { glossUID } = this.constructor
+    if (props && props.glossUID) {
+      glossUID = props.glossUID
+      delete props.glossUID
+    }
 
     const propNames = props ? Object.keys(props) : null
     const isTag = typeof type === 'string'
@@ -74,7 +88,6 @@ export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
     }
 
     const { theme } = this
-    const { glossUID } = this.constructor
 
     const addStyle = (obj, key, val, checkTheme): ?Object => {
       let style = obj[key]
@@ -103,6 +116,9 @@ export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
     }
 
     if (name) {
+      if (props && props.debug) {
+        console.log('looking for style', `${name}--${glossUID}`, styles)
+      }
       addStyle(styles, `${name}--${glossUID}`, null, true)
     }
 
@@ -111,10 +127,6 @@ export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
     if (propNames) {
       for (const prop of propNames) {
         const val = props && props[prop]
-        // ignore most falsy values (except 0)
-        if (val === false || val === null || val === undefined) {
-          continue
-        }
         // style={}
         if (prop === 'style') {
           style = { ...style, ...val }
@@ -130,19 +142,28 @@ export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
           continue
         }
         // tagName={}
-        if (
-          options.tagName &&
-          prop === options.tagName &&
-          isTag &&
-          typeof val === 'string'
-        ) {
+        if (tagNameOption && prop === tagNameOption && isTag) {
+          if (!val) {
+            // undefined, ignore
+            continue
+          }
+          if (typeof val !== 'string') {
+            throw new Error(
+              `tagName must be a string (tag: ${name}, type received: ${typeof val})`
+            )
+          }
           type = val
           continue
         }
-        // ensure before tagName={} so it passes tagName down
-        if (prop[0] !== $) {
+        // after tagname, css, style
+        const notStyle = prop[0] !== $
+        if (notStyle) {
           // pass props down if not glossProp style prop
           finalProps[prop] = val
+          continue
+        }
+        // ignore most falsy values (except 0)
+        if (val === false || val === null || val === undefined) {
           continue
         }
         // $$style={}

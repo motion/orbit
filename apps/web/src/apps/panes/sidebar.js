@@ -4,6 +4,7 @@ import Fade from '~/views/fade'
 import * as Sidebars from './sidebars'
 import getItem from './helpers/getItem'
 import PaneView from './pane'
+import { ORA_WIDTH } from '~/constants'
 
 @view({
   sidebar: class SidebarStore {
@@ -36,67 +37,136 @@ class SidebarContainer {
         sidebar
         getItem={getItem(paneProps.getActiveIndex)}
         stackItem={stackItem}
+        hasParent={!!stackItem.parent}
         {...props}
       />
     )
   }
 }
 
-@view
+@view({
+  // cache store handles preloading the next result
+  // and then showing it after its done
+  // this is so we can animate after results are there
+  // and prevents lots of flickering as you move around
+  cacheStore: class SidebarCacheStore {
+    items = null
+    nextStack = null
+    version = 0
+
+    get stack() {
+      return this.nextStack || this.props.store.stack
+    }
+
+    get stackItems() {
+      if (this.nextStack) {
+        const toLoad = this.nextStack.last
+        return [...this.items, toLoad]
+      }
+      return this.items
+    }
+
+    get isLoadingNext() {
+      return !!this.nextStack
+    }
+
+    willMount() {
+      this.items = [...this.props.store.stack.items]
+      this.version = this.props.store.stack.version
+
+      // watch for update/load
+      this.watch(() => {
+        const { stack } = this.props.store
+        if (!stack) {
+          return
+        }
+        const isGoingBack = stack.items.length < this.items.length
+        if (isGoingBack) {
+          this.loadNext()
+          return
+        }
+        if (this.version !== stack.version) {
+          if (!this.nextStack) {
+            this.nextStack = stack
+          }
+        }
+      })
+
+      this.watch(() => {
+        const { stack } = this.props.store
+        if (this.version === stack.version) {
+          return
+        }
+        if (
+          this.nextStack &&
+          this.nextStack.last.store &&
+          this.nextStack.last.store.finishedLoading
+        ) {
+          this.loadNext()
+        }
+      })
+    }
+
+    loadNext = () => {
+      this.items = [...this.stack.items]
+      this.version = this.props.store.stack.version
+      this.nextStack = null
+    }
+  },
+})
 export default class Sidebar {
   static defaultProps = {
-    width: 280,
-    sidebars: Sidebars,
-    itemProps: {
-      size: 1.14,
-      glow: true,
-      padding: [10, 12],
-      iconAfter: true,
-    },
+    width: ORA_WIDTH,
   }
 
-  previousIndex = -1
-
-  render({ width, itemProps, sidebars, store, store: { stack }, ...props }) {
-    const currentIndex = stack.length - 1
-    const { previousIndex } = this
-    this.previousIndex = currentIndex
+  render({ width, itemProps, store, cacheStore, ...props }) {
+    const { stack } = store
+    const { stackItems, isLoadingNext } = cacheStore
+    if (!stackItems) {
+      return null
+    }
+    const currentIndex = stackItems.length - (isLoadingNext ? 2 : 1)
+    // if (isLoadingNext) {
+    //   log('loadnext')
+    //   log(isLoadingNext, currentIndex, `${stackItems.map(i => i.result.id)}`)
+    // }
+    // console.log('render', currentIndex, 'stackItems', stackItems)
     return (
       <sidebar css={{ width, maxWidth: width, flex: 1 }}>
-        {stack.items.map((stackItem, index) => {
-          // only show last two
-          if (index + 1 < currentIndex) {
+        {stackItems.map((stackItem, index) => {
+          // only show last three
+          if (index + 2 < currentIndex) {
             return null
           }
           if (!stackItem.result) {
             return <null>bad result</null>
           }
-          const Sidebar = sidebars[stackItem.result.type]
+          const Sidebar = Sidebars[stackItem.result.type]
           if (!Sidebar) {
             return <null>not found Sidebar {stackItem.result.type}</null>
           }
+          const key = stackItem.result.id || stackItem.result.title || index
           return (
             <Fade
-              key={index + stackItem.result.title}
+              key={key}
               width={width}
               index={index}
               currentIndex={currentIndex}
-              previousIndex={previousIndex}
             >
               <SidebarContainer
                 stackItem={stackItem}
                 navigate={stack.navigate}
                 data={stackItem.result.data}
                 result={stackItem.result}
-                onBack={store.stack.pop}
+                onBack={stack.pop}
                 sidebarStore={Sidebar}
                 paneProps={{
                   index,
+                  stack,
                   width,
                   getActiveIndex: () =>
                     stackItem.col === 0 && stackItem.firstIndex,
-                  groupKey: 'category',
-                  stack: store.stack,
+                  groupBy: 'category',
                   sidebar: true,
                   onSelect: stackItem.onSelect,
                   itemProps,

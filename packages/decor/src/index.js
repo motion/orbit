@@ -27,6 +27,8 @@ export default function decor(plugins: Array<[Plugin, Object] | Plugin>) {
   // Helpers
   const emitter = new Emitter()
   const emit = (...args) => emitter.emit(...args)
+  const on = (...args) => emitter.on(...args)
+  const off = (...args) => emitter.off(...args)
   const isClass = x => x && !!x.prototype
 
   // process plugins
@@ -53,6 +55,8 @@ export default function decor(plugins: Array<[Plugin, Object] | Plugin>) {
     }
     const Helpers = {
       emit,
+      on,
+      off,
       alreadyDecorated,
     }
 

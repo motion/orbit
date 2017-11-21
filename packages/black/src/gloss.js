@@ -40,6 +40,5 @@ const Gloss = gloss({
   },
 })
 
-window.Gloss = Gloss
-
+export default Gloss
 export const { decorator, createElement } = Gloss

@@ -1,47 +1,56 @@
-import React from 'react'
-import { view } from '@mcro/black'
+import * as React from 'react'
+import * as UI from '@mcro/ui'
+import { SectionContent } from '~/views'
+import * as Constants from '~/constants'
+import Logo from './logo'
+import Router from '~/router'
 
-@view
-export default class Header {
-  render() {
-    return (
-      <header if={false}>
-        <img $icon src="/icon.png" />
-        <img $logo src="/orbit-logo.svg" />
-        <orbital if={false} />
-        <space />
-      </header>
-    )
-  }
+const MenuItem = props => (
+  <UI.Link
+    router={Router}
+    css={{
+      padding: [5, 25],
+      fontWeight: 600,
+      color: props.color || Constants.colorSecondary,
+      cursor: 'pointer',
+    }}
+    {...props}
+  />
+)
 
-  static style = {
-    header: {
-      position: 'relative',
+export default () => (
+  <tophead
+    css={{
       background: 'transparent',
-      padding: [50, 10, 0],
-      alignItems: 'center',
-      justifyContent: 'center',
-      // maxWidth: 800,
-      // width: '100%',
-      // margin: [0, 'auto'],
-    },
-    icon: {
-      width: 30,
-      marginBottom: 15,
-    },
-    logo: {
-      width: 85,
-    },
-    space: {
-      height: 500,
-      position: 'absolute',
-      top: 390,
-      right: 0,
-      left: 0,
-      zIndex: -1,
-      pointerEvents: 'none',
-      background: 'url(/space.jpg) center center no-repeat',
-      backgroundSize: 'contain',
-    },
-  }
-}
+      padding: [10, 0],
+      position: 'relative',
+      zIndex: 10,
+    }}
+  >
+    <SectionContent row css={{ justifyContent: 'space-between' }}>
+      <Logo color="#fff" />
+
+      <menu css={{ flexFlow: 'row', padding: [0, 100, 0, 70] }}>
+        <MenuItem to="/sales" color="#fff">
+          For Sales
+        </MenuItem>
+        <MenuItem to="/support" color="#fff">
+          For Support
+        </MenuItem>
+        <MenuItem to="/pricing">Pricing</MenuItem>
+      </menu>
+
+      <end>
+        <UI.Button
+          icon="objects_planet"
+          iconAfter
+          size={1.2}
+          theme="rgb(6.1%, 53.4%, 22.6%)"
+          color="#fff"
+        >
+          Download
+        </UI.Button>
+      </end>
+    </SectionContent>
+  </tophead>
+)

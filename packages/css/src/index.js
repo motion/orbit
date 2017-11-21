@@ -109,7 +109,13 @@ export default function motionStyle(options: Object = {}) {
     if (OBJECT_TRANSFORM[key]) {
       return OBJECT_TRANSFORM[key](value)
     }
-    if (key === 'scale' || key === 'grayscale' || key === 'brightness') {
+    if (
+      key === 'scale' ||
+      key === 'scaleX' ||
+      key === 'scaleY' ||
+      key === 'grayscale' ||
+      key === 'brightness'
+    ) {
       return value
     }
     if (typeof value === 'number') {
@@ -169,6 +175,7 @@ export default function motionStyle(options: Object = {}) {
   // style transformer
   function processStyles(styles: Object, opts: Opts): Object {
     const toReturn = {}
+
     for (let key in styles) {
       if (!styles.hasOwnProperty(key)) {
         continue
@@ -213,12 +220,20 @@ export default function motionStyle(options: Object = {}) {
           toReturn[finalKey] = processArray(key, value)
         }
         respond = true
-      } else if (firstChar === '&' || firstChar === '@') {
+      } else if (
+        firstChar === '&' ||
+        firstChar === '@' ||
+        key === 'from' ||
+        key === 'to'
+      ) {
         // recurse into psuedo or media query
         toReturn[finalKey] = processStyles(value, opts)
         respond = true
       } else if (valueType === 'object') {
         toReturn[finalKey] = processObject(key, value)
+        respond = true
+      } else if (key === 'isolate') {
+        toReturn[key] = value
         respond = true
       }
 
@@ -238,8 +253,9 @@ export default function motionStyle(options: Object = {}) {
       }
 
       throw new Error(
-        `${(opts && opts.errorMessage) ||
-          'Error'}: Invalid style value for ${key}: ${JSON.stringify(value)}`
+        `${(opts && opts.errorMessage) || 'Error'}: Invalid style value for ${
+          key
+        }: ${JSON.stringify(value)}`
       )
     }
 

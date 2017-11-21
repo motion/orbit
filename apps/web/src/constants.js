@@ -2,13 +2,25 @@
 // export constants from @mcro/black
 import { Constants } from '@mcro/black'
 
-console.log('process.env.IS_PROD', process.env.IS_PROD)
-
-export const VERSION = require('../package.json').version
-
 export const IS_ELECTRON = Constants.IS_ELECTRON
 export const IS_PROD =
   process.env.NODE_ENV === 'production' || process.env.IS_PROD
+
+if (process.env.IS_PROD) {
+  console.log('IS_PROD!')
+}
+
+export const VERSION = require('../package.json').version
+
+export const ORA_WIDTH = 300
+export const ORA_HEIGHT = 700
+export const ACTION_BAR_HEIGHT = 50
+export const HEADER_HEIGHT = 36
+export const TRAY_WIDTH = 400
+export const TRAY_HEIGHT = 500
+
+export const IN_TRAY =
+  IS_ELECTRON && (window.location + '').indexOf('?inTray') !== -1
 
 const protocol = `${window.location.protocol}//`
 export const API_HOST = `app.seemirai.com:3001`
@@ -21,14 +33,6 @@ export const DB_CONFIG = {
   password: 'password',
   remoteUrl: COUCH_URL,
 }
-
-export const HEADER_HEIGHT = 36
-
-export const IN_TRAY =
-  IS_ELECTRON && (window.location + '').indexOf('?inTray') !== -1
-
-export const TRAY_WIDTH = 400
-export const TRAY_HEIGHT = 500
 
 export const IS_BAR = window.location.pathname === '/'
 

@@ -66,6 +66,7 @@ const FILTER_KEYS = {
   react: true,
   ref: true,
   render: true,
+  requestAnimationFrame: true,
   setInterval: true,
   setTimeout: true,
   shouldComponentUpdate: true,

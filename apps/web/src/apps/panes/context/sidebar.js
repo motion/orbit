@@ -1,32 +1,36 @@
 import * as React from 'react'
 import { OS, fuzzy } from '~/helpers'
-import { summarize, summarizeWithQuestion } from './helpers/summarize'
 import { Thing } from '~/app'
 import * as UI from '@mcro/ui'
+import { watch } from '@mcro/black'
+import { isEqual } from 'lodash'
+import After from '~/views/after'
 
-const similarityOpacity = similarity => {
-  if (similarity > 5000) {
-    return 0.1
-  }
-  if (similarity > 2000) {
-    return 0.3
-  }
-  if (similarity > 1000) {
-    return 0.5
-  }
-  if (similarity > 500) {
-    return 0.7
-  }
-  return 1
-}
+const idFn = _ => _
 
 export default class ContextSidebar {
+  @watch
+  isPinned = () => this.osContext && Thing.findOne({ url: this.osContext.url })
+  crawlerSettings = {
+    maxPages: 6,
+    depth: '/',
+  }
+  osContext = null
+
+  willMount() {
+    this.watch(() => {
+      // prevent focusedApp from triggered changes
+      const { focusedApp, ...context } = this.oraStore.osContext
+      idFn(focusedApp)
+      if (!isEqual(context, this.osContext)) {
+        this.osContext = context
+      }
+    })
+  }
+
   get oraStore() {
     return this.props.oraStore
   }
-
-  // copy it here
-  osContext = this.oraStore.osContext
 
   get context() {
     return this.oraStore.context
@@ -36,67 +40,231 @@ export default class ContextSidebar {
     return this.oraStore.search
   }
 
-  get contextResults() {
-    const title = this.osContext ? this.osContext.title : ''
-    log('title is', title)
-    const addBold = line => {
-      const r = new RegExp('(' + this.search.split(' ').join('|') + ')', 'ig')
-      return line.replace(
-        r,
-        '<b style="font-weight: 400; color: #aed6ff;">$1</b>'
-      )
+  // can customize the shown title here
+  get title() {
+    return this.osContext ? this.osContext.title : null
+  }
+
+  onDrawerClose() {
+    this.oraStore.removeCrawler()
+  }
+
+  get drawerTitle() {
+    return 'Crawl Settings'
+  }
+
+  get isShowingCrawlDrawer() {
+    return (
+      this.crawlerInfo &&
+      !this.oraStore.crawlState &&
+      !this.oraStore.crawlResults
+    )
+  }
+
+  // can show a modal that slides in
+  get drawer() {
+    if (!this.isShowingCrawlDrawer) {
+      return null
     }
+    const fieldProps = {
+      row: true,
+      labelProps: {
+        width: 90,
+      },
+    }
+    return (
+      <UI.List
+        css={{
+          maxWidth: '100%',
+        }}
+        groupBy="category"
+        items={[
+          {
+            category: 'Preview',
+            primary: this.crawlerInfo.title,
+            primaryEllipse: true,
+            secondary: this.crawlerInfo.entry,
+            children: this.crawlerInfo.body,
+          },
+          ...Object.keys(this.crawlerSettings).map(key => ({
+            category: 'Crawl Settings:',
+            children: (
+              <UI.Field
+                label={key}
+                sync={this.ref(`crawlerSettings.${key}`)}
+                {...fieldProps}
+              />
+            ),
+          })),
+        ]}
+      />
+    )
+  }
+
+  get crawlerInfo() {
+    return (
+      this.oraStore.electronState.context &&
+      this.oraStore.electronState.context.crawlerInfo
+    )
+  }
+
+  get crawlerOptions() {
+    return {
+      ...this.crawlerInfo,
+      ...this.crawlerSettings,
+    }
+  }
+
+  // this determines when the pane slides in
+  get finishedLoading() {
+    return this.context && !this.context.isLoading
+  }
+
+  willMount() {
+    this.watch(() => {
+      const { crawlerInfo } = this
+      if (!crawlerInfo) return
+      const { bodySelector, titleSelector } = crawlerInfo
+      const crawlerSettings = {
+        ...this.crawlerSettings,
+        bodySelector,
+        titleSelector,
+      }
+      if (!isEqual(crawlerSettings, this.crawlerSettings)) {
+        this.crawlerSettings = crawlerSettings
+      }
+    })
+
+    // this.watch(() => {
+    //   this.oraStore.showWhiteBottomBg = this.isShowingCrawlDrawer
+    // })
+  }
+
+  get contextResults() {
+    const title = this.osContext
+      ? this.osContext.selection || this.osContext.title
+      : ''
     return !this.context || this.context.loading // || this.osContext === null
       ? []
       : this.context
-          .closestItems(this.search.length > 0 ? this.search : title, 5)
-          .map(({ debug, item, similarity }) => {
+          .search(this.search.length > 0 ? this.search : title, 8)
+          // filter same item
+          .filter(x => {
+            if (!x.item) return true
+            if (!this.props.data) return true
+            return x.item.url !== this.props.result.data.url
+          })
+          .map(({ debug, item, similarity }, index) => {
             const title = item.title
-            const lines =
-              this.search.length === 0
-                ? summarize(item.body)
-                : summarizeWithQuestion(item.body, this.search)
 
             return {
-              category: 'Context',
-              height: 200,
               title,
+              type: 'context',
+              // icon: 'link',
               onClick: () => {
-                OS.send('navigate', item.url)
+                OS.send('open-browser', item.url)
               },
-              children: lines.map((line, index) => (
-                <UI.Text key={index} ellipse html={addBold(line)} />
-              )),
+              children:
+                this.context.sentences[index] &&
+                this.context.sentences[index].sentence,
               after: (
-                <UI.Row css={{ marginTop: 5, overflowX: 'scroll' }}>
-                  <UI.Button tooltip={`Similarity: ${similarity}`}>
-                    Info
-                  </UI.Button>
-                  {debug.map(({ word, word2, similarity }) => (
-                    <UI.Button
-                      chromeless
-                      inline
-                      tooltip={`${word2} : ${similarity}`}
-                      key={word}
-                      opacity={similarityOpacity(similarity)}
+                <After
+                  onClick={e => {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    this.props.navigate({
+                      ...Thing.toResult(item),
+                      type: 'context',
+                    })
+                  }}
+                >
+                  <debug css={{ position: 'absolute', top: 0, right: 0 }}>
+                    <UI.Popover
+                      openOnHover
+                      closeOnEsc
+                      towards="left"
+                      width={150}
+                      target={
+                        <UI.Button
+                          circular
+                          chromeless
+                          opacity={0.2}
+                          icon="help"
+                        />
+                      }
                     >
-                      {word}
-                    </UI.Button>
-                  ))}
-                </UI.Row>
+                      <UI.List>
+                        <UI.ListItem primary={`Similarity: ${similarity}`} />
+                        {debug.map(({ word, word2, similarity }, index) => (
+                          <UI.ListItem
+                            key={index}
+                            primary={word}
+                            secondary={`${word2}: ${similarity}`}
+                          />
+                        ))}
+                      </UI.List>
+                    </UI.Popover>
+                  </debug>
+                </After>
               ),
             }
           })
   }
 
   get actions() {
+    if (this.oraStore.crawlResults) {
+      return [
+        {
+          icon: 'remove',
+          children: 'Cancel',
+          onClick: this.oraStore.cancelResults,
+          theme: 'red',
+        },
+        {
+          flex: true,
+        },
+        {
+          icon: 'check',
+          children: 'Save',
+          onClick: this.oraStore.commitResults,
+          theme: 'green',
+        },
+      ]
+    }
+    if (this.crawlerInfo) {
+      return [
+        {
+          flex: true,
+        },
+        {
+          key: Math.random(),
+          icon: 'play',
+          children: 'Start Crawl',
+          onClick: async () => {
+            this.oraStore.removeCrawler()
+            await this.oraStore.startCrawl(this.crawlerOptions)
+          },
+        },
+      ]
+    }
+
     return [
       {
+        flex: true,
+      },
+      this.isPinned && {
+        icon: 'check',
+        children: 'Pinned',
+      },
+      !this.isPinned && {
         icon: 'ui-1_bold-add',
         children: 'Pin',
-        onClick: () => {
-          this.oraStore.addCurrentPage()
-        },
+        onClick: this.oraStore.addCurrentPage,
+      },
+      {
+        icon: 'pin',
+        children: 'Pin Site',
+        onClick: this.oraStore.injectCrawler,
       },
       {
         icon: 'bug',

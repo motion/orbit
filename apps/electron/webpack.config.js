@@ -13,6 +13,10 @@ module.exports = {
   entry: ['webpack/hot/poll?500', Path.join(__dirname, 'lib', 'index.js')],
   devtool: 'source-map',
   target: 'electron',
+  node: {
+    __filename: false,
+    __dirname: false,
+  },
   output: {
     path: Path.join(__dirname, 'build'),
     filename: 'out.js',

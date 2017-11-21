@@ -30,9 +30,7 @@ import import_Loading from './loading'
 import import_Grid from './grid'
 import import_Icon from './icon'
 import import_Modal from './modal'
-import import_Pane from './pane'
 import import_Row from './row'
-import import_TabPane from './tabPane'
 import import_Title from './title'
 import import_Placeholder from './placeholder'
 import import_Tag from './tag'
@@ -60,6 +58,7 @@ import import_Checkbox from './form/checkbox'
 import import_Toggle from './form/toggle'
 import import_Field from './form/field'
 import import_Select from './form/select'
+import import_Label from './form/label'
 
 export const color = import_color
 export const ThemeProvide = import_ThemeProvide
@@ -89,9 +88,7 @@ export const Loading = import_Loading
 export const Grid = import_Grid
 export const Icon = import_Icon
 export const Modal = import_Modal
-export const Pane = import_Pane
 export const Row = import_Row
-export const TabPane = import_TabPane
 export const Title = import_Title
 export const Placeholder = import_Placeholder
 export const Tag = import_Tag
@@ -114,4 +111,5 @@ export const Checkbox = import_Checkbox
 export const Toggle = import_Toggle
 export const Field = import_Field
 export const Select = import_Select
+export const Label = import_Label
 export const FakeText = import_FakeText

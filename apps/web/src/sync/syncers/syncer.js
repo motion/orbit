@@ -3,7 +3,7 @@ import * as Helpers from '../helpers'
 import type { Setting } from '@mcro/models'
 import debug from 'debug'
 
-const log = debug('sync')
+const log = _ => _ || debug('sync')
 const DEFAULT_CHECK_INTERVAL = 1000 * 60 // 1 minute
 
 export default class Syncer {
@@ -76,7 +76,8 @@ export default class Syncer {
       throw new Error('Must provide action')
     }
     if (!this.token) {
-      throw new Error('No token found for syncer')
+      console.log('No token found for syncer')
+      return
     }
     this.ensureSetting()
     log(`Running ${this.type} ${action}`)

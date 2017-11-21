@@ -570,7 +570,8 @@ export default class Surface extends React.PureComponent<Props> {
     }
 
     const iconSize =
-      props.iconSize || Math.round(size * ICON_SCALE * (props.sizeIcon || 1))
+      props.iconSize ||
+      Math.round(size * ICON_SCALE * (props.sizeIcon || 1) * 100) / 100
 
     // TODO figure out better pattern for this
     self.themeValues = {
@@ -590,10 +591,19 @@ export default class Surface extends React.PureComponent<Props> {
       padding,
     }
 
+    let elementGlowProps
+    if (props.glow) {
+      elementGlowProps = {
+        position: 'relative',
+        zIndex: 1,
+      }
+    }
+
     const result = {
       element: {
         // height,
         ...borderRadius,
+        ...elementGlowProps,
         overflow: props.overflow || 'visible',
         flexFlow: props.noElement ? 'column' : flexFlow,
         fontSize: props.fontSize,
@@ -601,7 +611,7 @@ export default class Surface extends React.PureComponent<Props> {
         lineHeight: props.lineHeight || 'inherit',
         justifyContent: props.justify,
         maxWidth: `calc(100% ${iconPad})`,
-        maxHeight: '100%',
+        // maxHeight: '100%',
         textAlign: props.textAlign,
       },
       wrap: undoPadding,

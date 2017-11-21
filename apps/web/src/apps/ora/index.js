@@ -3,10 +3,33 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import OraStore from './oraStore'
 import Sidebar from '../panes/sidebar'
-import * as Sidebars from '../panes/sidebars'
 import OraHeader from './oraHeader'
+import OraDrawer from './oraDrawer'
+import OraActionBar from './oraActionBar'
+import * as Constants from '~/constants'
 
-const width = 280
+const prevent = e => {
+  console.log('preventing')
+  e.preventDefault()
+  e.stopPropagation()
+}
+
+@view
+class OraBlur {
+  render({ oraStore }) {
+    return (
+      <overlay
+        if={oraStore.wasBlurred}
+        $$fullscreen
+        css={{
+          zIndex: 100000000000,
+        }}
+        onMouseDown={prevent}
+        onClick={prevent}
+      />
+    )
+  }
+}
 
 @view.provide({
   oraStore: OraStore,
@@ -17,27 +40,51 @@ export default class OraPage {
     return (
       <UI.Theme name="dark">
         <ora
-          $visible={!oraStore.hidden}
+          $visible={!oraStore.state.hidden}
           ref={oraStore.ref('barRef').set}
           $$draggable
         >
+          <OraBlur oraStore={oraStore} />
           <UI.Theme name="clear-dark">
             <OraHeader oraStore={oraStore} />
           </UI.Theme>
           <content>
             <Sidebar
-              width={width}
+              width={Constants.ORA_WIDTH}
               store={oraStore}
               oraStore={oraStore}
-              sidebars={Sidebars}
               itemProps={{
-                size: 1,
-                padding: [6, 12],
+                size: 1.1,
+                padding: [8, 12],
                 glow: true,
+                glowProps: {
+                  color: '#fff',
+                  scale: 1,
+                  blur: 70,
+                  opacity: 0.1,
+                  show: false,
+                  resist: 60,
+                  zIndex: -1,
+                },
                 highlightBackground: [255, 255, 255, 0.08],
+                childrenEllipse: 2,
               }}
             />
           </content>
+          <OraDrawer oraStore={oraStore} />
+          <OraActionBar oraStore={oraStore} />
+          <fakeWhiteBg
+            if={oraStore.showWhiteBottomBg}
+            css={{
+              background: '#fff',
+              position: 'absolute',
+              left: 0,
+              right: 0,
+              bottom: 0,
+              zIndex: -1,
+              height: Constants.ACTION_BAR_HEIGHT,
+            }}
+          />
         </ora>
       </UI.Theme>
     )
@@ -45,17 +92,21 @@ export default class OraPage {
 
   static style = {
     ora: {
-      width,
-      background: [20, 20, 20, 0.98],
-      boxShadow: [[0, 0, 10, [0, 0, 0, 0.4]]],
+      width: Constants.ORA_WIDTH,
+      height: Constants.ORA_HEIGHT,
+      background: [25, 25, 25, 0.98],
+      border: [1, [255, 255, 255, 0.025]],
+      boxShadow: [
+        [0, 0, 15, [0, 0, 0, 0.8]],
+        // ['inset', 0, 0, 120, [255, 255, 255, 0.053]],
+      ],
       margin: 10,
       borderRadius: 10,
       overflow: 'hidden',
       transition: 'all ease-in 100ms',
       opacity: 0,
-      height: 600,
       transform: {
-        x: 20,
+        x: 8,
       },
     },
     visible: {

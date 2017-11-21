@@ -1,5 +1,8 @@
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
+import * as Constants from '~/constants'
+import SidebarTitle from '~/views/sidebarTitle'
+import Drawer from '~/views/drawer'
 
 class PaneStore {
   listRef = null
@@ -101,13 +104,18 @@ export default class Pane {
     }
   }
 
+  handleDrawerClose = () => {
+    const { store } = this.props.stackItem
+    if (store && store.onDrawerClose) {
+      store.onDrawerClose()
+    }
+  }
+
   render({
     getItem,
-    groupKey,
+    groupBy,
     listProps,
-    virtualProps,
     itemProps,
-    store,
     paneStore,
     getActiveIndex,
     children,
@@ -115,6 +123,7 @@ export default class Pane {
     width,
     sidebar,
     stackItem,
+    hasParent,
   }) {
     const getItemDefault = (item, index) => ({
       highlight: () => (getActiveIndex ? index === getActiveIndex() : false),
@@ -125,17 +134,16 @@ export default class Pane {
       <UI.List
         itemsKey={paneStore.contentVersion}
         getRef={paneStore.setList}
-        groupKey={groupKey}
+        groupBy={groupBy}
         onSelect={this.onSelect}
-        virtualized={{
-          measure: true,
-          ...virtualProps,
-        }}
         itemProps={{
           padding: 0,
           highlightBackground: [0, 0, 0, 0.08],
           highlightColor: [255, 255, 255, 1],
           ...itemProps,
+        }}
+        virtualized={{
+          measure: true,
         }}
         items={paneStore.items}
         getItem={getItem || getItemDefault}
@@ -143,34 +151,53 @@ export default class Pane {
       />
     )
 
-    const actions = stackItem.store && stackItem.store.actions
+    let actions
+    let drawer
+    let store
+    let result
+
+    if (stackItem) {
+      store = stackItem.store
+      result = stackItem.result
+      actions = store && store.actions
+      drawer = store && store.drawer
+    }
+
+    const drawerHeight = 420
+    console.log('pane render drawerheight', drawerHeight)
 
     return (
       <pane
         style={{ width, ...style }}
         $fullscreen={paneStore.fullscreen}
         $sidebar={sidebar}
+        $actionBarPad={!!actions}
       >
+        <Drawer
+          if={store}
+          size={drawerHeight}
+          open={drawer}
+          closable
+          onClose={this.handleDrawerClose}
+          title={store.drawerTitle}
+        >
+          {drawer}
+        </Drawer>
+        <SidebarTitle
+          if={hasParent}
+          title={(store && store.title) || result.title}
+          subtitle={result.subtitle}
+          onBack={stackItem.stack.left}
+          backProps={{
+            icon: stackItem.stack.length > 2 ? 'arrow-min-left' : 'home',
+          }}
+        />
         <content ref={paneStore.setContentRef}>
           {!children
             ? list
             : typeof children === 'function' ? children(list) : children}
         </content>
-        <actions if={actions}>
-          <actionbar>
-            <UI.Row
-              spaced={10}
-              itemProps={{
-                glow: true,
-              }}
-            >
-              {actions.map(
-                ({ content, ...props }, index) =>
-                  content || <UI.Button key={index} {...props} />
-              )}
-            </UI.Row>
-          </actionbar>
-        </actions>
+        <bottomGlow if={!drawer} $showWithActionBar={!!actions} />
       </pane>
     )
   }
@@ -178,28 +205,25 @@ export default class Pane {
   static style = {
     pane: {
       flex: 1,
-      position: 'relative',
+      // position: 'relative',
       overflow: 'scroll',
     },
     content: {
       overflowY: 'scroll',
       flex: 1,
+      position: 'relative',
     },
-    actionbar: {
-      padding: 10,
-      borderTop: [1, [255, 255, 255, 0.15]],
-      flexFlow: 'row',
-      alignItems: 'center',
+    bottomGlow: {
+      boxShadow: '0 0 80px 3px rgba(0,0,0,0.5)',
+      zIndex: 100000 - 1,
+      pointerEvents: 'none',
       position: 'fixed',
       bottom: 0,
-      left: 0,
-      right: 0,
-      background: [0, 0, 0, 0.14],
-      backdropFilter: 'blur(15px)',
-      zIndex: Number.MAX_VALUE,
+      left: -120,
+      right: -120,
     },
-    actionButton: {
-      display: 'block',
+    showWithActionBar: {
+      height: Constants.ACTION_BAR_HEIGHT,
     },
     fullscreen: {
       position: 'absolute',

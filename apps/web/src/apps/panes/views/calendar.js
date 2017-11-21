@@ -4,6 +4,7 @@ import * as Pane from '~/apps/pane'
 import * as React from 'react'
 import { range, capitalize, sample, includes, random } from 'lodash'
 import moment from 'moment'
+import { ORA_WIDTH } from '~/constants'
 
 const dayIndex = (row, col) => row * 7 + col - 4
 const daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
@@ -129,7 +130,7 @@ class RightList extends React.Component<> {
 
   static style = {
     list: {
-      width: 280,
+      width: ORA_WIDTH,
       borderLeft: [1, [0, 0, 0, 0.1]],
       justifyContent: 'center',
       padding: [0, 0, 0, 10],

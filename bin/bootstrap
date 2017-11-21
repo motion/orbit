@@ -26,10 +26,19 @@ function ensure-dep {
 function ensure-dir {
   cmd=${@:3}
   if [ ! -d "$1" ]; then
-    echo "$1 is not installed, installing... $cmd"
+    echo "$1 doesnt exist, running... $cmd"
     $($cmd)
   fi
-  echo "installed: $1"
+  echo "directory exists: $1"
+}
+
+function ensure-symlink {
+  cmd=${@:3}
+  if [ ! -L "$1" ]; then
+    echo "$1 doesnt exist, running... $cmd"
+    $($cmd)
+  fi
+  echo "symlink exists: $1"
 }
 
 function install-puma-dev {
@@ -52,11 +61,11 @@ echo 3001 > ~/.puma-dev/jot
 yarn install
 
 echo "lerna bootstrap"
-rm lerna_debug.json > /dev/null
+rm lerna_debug.json &> /dev/null
 npx lerna bootstrap
 
-# build internal tools
-npx lerna exec --parallel \
+function compile-root-modules() {
+  npx lerna exec --parallel \
     --scope @mcro/gloss \
     --scope @mcro/css \
     --scope @mcro/hmr \
@@ -64,15 +73,25 @@ npx lerna exec --parallel \
     --scope @mcro/preset-motion \
       -- \
         BABEL_ENV=es6 babel src --out-dir es6 -s true
+}
 
-# link internal tools in
-npx lerna exec --parallel -- yarn link
-yarn link @mcro/gloss &
-yarn link @mcro/css &
-yarn link @mcro/hmr &
-yarn link @mcro/hmr-view &
-yarn link @mcro/preset-motion &
+function link-root-modules() {
+  npx lerna exec --parallel -- yarn link
+  yarn link @mcro/gloss &
+  yarn link @mcro/css &
+  yarn link @mcro/hmr &
+  yarn link @mcro/hmr-view &
+  yarn link @mcro/preset-motion &
+  wait
+}
 
-wait
+# function link-buildconfig() {
+#   npx lerna exec --parallel -- ln -s ../../buildconfig .
+# }
+
+# internal tools
+ensure-dir ./packages/gloss/es6 -- compile-root-modules
+ensure-symlink ./node_modules/@mcro/gloss -- link-root-modules
+# ensure-symlink ./packages/gloss/buildconfig -- link-buildconfigs
 
 echo " done!"

@@ -2,7 +2,7 @@
 import type Model from './model'
 import debug from 'debug'
 
-const log = debug('model')
+const log = _ => _ || debug('model')
 
 export const applyHooks = (model: Model) => {
   // PRE-INSERT

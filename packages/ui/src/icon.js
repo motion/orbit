@@ -11,7 +11,7 @@ const findMatch = (name: string) => {
   if (cache[name]) return cache[name]
   if (iconNames[name]) return iconNames[name]
   const matches = fuzzy.filter(name, iconNames)
-  const match = matches.length ? matches[0].original : null
+  const match = matches.length ? matches[0].original : 'none'
   cache[name] = match
   return match
 }
@@ -49,10 +49,10 @@ export default class Icon extends React.PureComponent<Props> {
     alignSelf,
     width,
     height,
+    hover,
     ...props
   }) {
     let content
-
     if (type === 'detailed') {
       content = (
         <detailIcon css={{ transform: { scale: 0.01 * size } }}>
@@ -60,16 +60,13 @@ export default class Icon extends React.PureComponent<Props> {
         </detailIcon>
       )
     }
-
     if (name[0] === '/') {
       return <img $icon src={name} {...props} />
     }
-
     const iconName = findMatch(name)
     content = content || children
-
     return (
-      <icon $icon {...props}>
+      <icon {...props}>
         <div
           className={`nc-icon-${type} ${iconName}`}
           style={{

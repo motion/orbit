@@ -41,7 +41,7 @@ export default class Drawer extends React.PureComponent<Props> {
   static defaultProps = {
     size: 400,
     from: 'left',
-    zIndex: 10000,
+    zIndex: 100,
     transitionDuration: 500,
   }
 
@@ -56,7 +56,6 @@ export default class Drawer extends React.PureComponent<Props> {
     percent,
     onClickOverlay,
     showOverlay,
-    boxShadow,
     bordered,
     zIndex,
     className,
@@ -81,7 +80,7 @@ export default class Drawer extends React.PureComponent<Props> {
     }
 
     return (
-      <drawer {...containerProps}>
+      <drawer $drawerOpen={open} {...containerProps}>
         <Surface
           style={{ ...style, ...panelStyle }}
           $panel
@@ -110,6 +109,7 @@ export default class Drawer extends React.PureComponent<Props> {
   static style = {
     drawer: {
       position: 'absolute',
+      overflow: 'hidden', // needed to hide drawer when closed
       top: 0,
       right: 0,
       bottom: 0,
@@ -118,6 +118,9 @@ export default class Drawer extends React.PureComponent<Props> {
       transform: {
         z: 0,
       },
+    },
+    drawerOpen: {
+      zIndex: 100,
     },
     // darken bg much less if blurring
     overlayBg: ({ blur }) =>
@@ -138,6 +141,8 @@ export default class Drawer extends React.PureComponent<Props> {
       right: 0,
       transition: 'transform ease-in-out 150ms',
       zIndex: 100,
+      maxHeight: '100%',
+      maxWidth: '100%',
     },
     panelOpen: {
       pointerEvents: 'all',
@@ -175,10 +180,6 @@ export default class Drawer extends React.PureComponent<Props> {
         // transition:
         //   (props.transition && `all ease-in ${props.transitionDuration}`) || '',
         borderColor: (props.bordered && theme.base.borderColor) || '',
-        boxShadow:
-          props.boxShadow === true
-            ? '0 0 6px rgba(0,0,0,0.3)'
-            : props.boxShadow,
       },
     }
   }

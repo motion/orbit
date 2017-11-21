@@ -36,10 +36,10 @@ export default class Button extends React.PureComponent {
     return (
       <SizedSurface
         tagName="button"
+        $button
         type={type}
         clickable
         hoverable
-        borderRadius
         sizeFont
         sizePadding={1.5}
         sizeRadius
@@ -52,10 +52,6 @@ export default class Button extends React.PureComponent {
         align="center"
         justify="center"
         glow={glow}
-        css={{
-          flexWrap: 'nowrap',
-          whiteSpace: 'pre',
-        }}
         glowProps={{
           scale: 1.8,
           draggable: false,
@@ -82,6 +78,11 @@ export default class Button extends React.PureComponent {
   }
 
   static style = {
+    button: {
+      outline: 0,
+      flexWrap: 'nowrap',
+      whiteSpace: 'pre',
+    },
     badge: {
       position: 'absolute',
       top: '23%',

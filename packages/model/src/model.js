@@ -9,7 +9,7 @@ import { cloneDeep, merge } from 'lodash'
 import * as Helpers from './helpers'
 import debug from 'debug'
 
-const log = debug('model')
+const log = _ => _ || debug('model')
 
 type SettingsObject = {
   index?: Array<string>,
@@ -190,7 +190,8 @@ export default class Model {
   }
 
   get title(): string {
-    return ((this.settings && this.settings.database) ||
+    return (
+      (this.settings && this.settings.database) ||
       this.constructor.name
     ).toLowerCase()
   }

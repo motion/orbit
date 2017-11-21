@@ -9,8 +9,10 @@ class StackItemStore {
   result = null
   col = 0
   active = [0, 0]
+  id = null
   constructor({ result, stack, parent }) {
     this.result = result
+    this.id = this.result.id
     this.stack = stack
     this.parent = parent
   }
@@ -25,28 +27,31 @@ class StackItemStore {
     if (this.parent) {
       const { result } = this
       return [
-        {
-          id: result.id,
-          result,
-          type: result.type,
-          isParent: true,
-          displayTitle: false,
-          children: (
-            <SidebarTitle
-              title={result.title}
-              icon={result.icon}
-              subtitle={result.subtitle}
-              onBack={this.stack.left}
-            />
-          ),
-          onClick: this.stack.left,
-          props: {
-            highlight: false,
-            css: {
-              borderBottom: [1, 'dotted', [255, 255, 255, 0.1]],
-            },
-          },
-        },
+        // {
+        //   id: result.id,
+        //   result,
+        //   type: result.type,
+        //   isParent: true,
+        //   displayTitle: false,
+        //   children: (
+        //     <SidebarTitle
+        //       title={(this.store && this.store.title) || result.title}
+        //       icon={false && result.icon}
+        //       subtitle={result.subtitle}
+        //       onBack={this.stack.left}
+        //       backProps={{
+        //         icon: this.stack.length > 2 ? 'arrow-min-left' : 'home',
+        //       }}
+        //     />
+        //   ),
+        //   onClick: this.stack.left,
+        //   props: {
+        //     highlight: false,
+        //     css: {
+        //       borderBottom: [1, 'dotted', [255, 255, 255, 0.1]],
+        //     },
+        //   },
+        // },
         ...results,
       ]
     }
@@ -116,6 +121,7 @@ class StackItemStore {
 @store
 export default class StackStore {
   items = []
+  version = 0
   constructor(stack: Array<Object>) {
     const all = stack || []
     this.items = all.map(
@@ -165,6 +171,7 @@ export default class StackStore {
     }
   }
   push(result) {
+    this.version++
     const { last } = this
     this.items = [
       ...this.items,
@@ -177,6 +184,7 @@ export default class StackStore {
   }
   pop() {
     if (this.items.length > 1) {
+      this.version++
       this.items = this.items.slice(0, this.items.length - 1)
     }
   }

@@ -6,7 +6,7 @@ import GithubTaskSync from './githubTaskSync'
 import GithubPeopleSync from './githubPeopleSync'
 import debug from 'debug'
 
-const log = debug('sync')
+const log = _ => _ || debug('sync')
 
 @store
 export default class GithubSync extends Syncer {

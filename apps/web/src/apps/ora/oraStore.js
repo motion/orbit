@@ -190,13 +190,6 @@ export default class OraStore {
 
     this.watch(() => {
       const { context } = this.electronState
-      if (!context) {
-        if (this.stack.last.result.type === 'context') {
-          // if you want it to navigate back home automatically
-          // this.stack.pop()
-        }
-        return
-      }
       if (!context || !context.url || !context.title) {
         console.log('no context or url/title', this.context)
         return

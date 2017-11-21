@@ -5,6 +5,7 @@ import OraStore from './oraStore'
 import Sidebar from '../panes/sidebar'
 import OraHeader from './oraHeader'
 import OraDrawer from './oraDrawer'
+import OraActionBar from './oraActionBar'
 import * as Constants from '~/constants'
 
 const prevent = e => {
@@ -62,6 +63,7 @@ export default class OraPage {
             />
           </content>
           <OraDrawer oraStore={oraStore} />
+          <OraActionBar oraStore={oraStore} />
           <fakeWhiteBg
             if={oraStore.showWhiteBottomBg}
             css={{

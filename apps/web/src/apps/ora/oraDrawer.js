@@ -8,22 +8,21 @@ export default class OraDrawer {
   render({ oraStore }) {
     const { crawlState, crawlStatus } = oraStore
     return (
-      <UI.Theme name="light">
+      <UI.Theme name="dark">
         <UI.Drawer
           open={crawlState}
           from="bottom"
-          background="green"
+          background="#222"
           boxShadow="0 0 100px #000"
-          size={400}
+          size={120}
         >
-          <title if={crawlState}>
-            <UI.Title fontWeight={600} size={1.2}>
+          <title>
+            <UI.Title fontWeight={600} size={1}>
               Crawl Status
             </UI.Title>
             <UI.Button
               chromeless
               icon="remove"
-              color="#000"
               opacity={0.8}
               size={0.9}
               css={{ position: 'absolute', top: 10, right: 10 }}
@@ -31,8 +30,12 @@ export default class OraDrawer {
             />
           </title>
           <contents>
-            <status if={crawlStatus}>Crawled: {crawlStatus.count}</status>
-            <info if={crawlState}>entry: {crawlState.entry}</info>
+            <status if={crawlStatus}>
+              <UI.Text>Crawled: {crawlStatus.count}</UI.Text>
+            </status>
+            <info if={crawlState}>
+              <UI.Text>entry: {crawlState.entry}</UI.Text>
+            </info>
           </contents>
         </UI.Drawer>
       </UI.Theme>

@@ -187,6 +187,8 @@ export default class OraStore {
   }
 
   _watchContext = () => {
+    let lastContext = null
+
     this.watch(() => {
       const { context } = this.electronState
       if (!context) {
@@ -204,6 +206,10 @@ export default class OraStore {
       if (isAlreadyOnResultsPane) {
         return
       }
+      if (lastContext) {
+        if (lastContext.url === context.url) return
+      }
+      lastContext = context
       const nextStackItem = {
         id: context.url,
         title: context.selection || context.title,

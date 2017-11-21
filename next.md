@@ -15,12 +15,18 @@
 - stack traces nice in electron
 - working open/close settings pane in electron
 - sync state from electron to oraStore.electronState
-
-# now
-
 - Crawler: can start/cancel/see progress in a drawer
 - Crawler: can confirm results afterwards
 - Assemble 5 good knowledgebases to test on from Zendesk/Intercom/other
+  - custom - https://www.dropbox.com/help/security/recover-deleted-files-folders
+  - intercom - https://docs.expensify.com/setup-for-submitters/day-1-with-expensify-submitters
+  - shopify (zendesk?) - https://help.shopify.com/manual/apps
+  - groupon (old zendesk? pure js) - https://www.groupon.com/faq
+  - uber (zendesk?) - https://help.uber.com/h/6949160d-3eb6-42cd-8155-1ae3cf25be0b
+  - zenefits - https://help.zenefits.com/Medical_Dental_Vision/Learn_About_Health_Insurance/Qualifying_Life_Events/01-Common_Qualifying_Life_Events/
+
+# now
+
 - OAuth into Slack + settings pane to choose a room
 - Slack scan room for and collect links
 - Slack import using Readability

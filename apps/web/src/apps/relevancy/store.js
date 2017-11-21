@@ -40,7 +40,6 @@ export default class {
         url: item.url,
       })
     })
-    console.log('val is', val)
   }
 
   get items() {

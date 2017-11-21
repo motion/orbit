@@ -57,12 +57,15 @@ export default class RelevancyPage {
                 <div
                   style={{ display: 'inline' }}
                   $$row
-                  dangerouslySetInnerHTML={{
-                    __html: makeBold(
-                      store.sentences[index].sentence,
-                      store.sentences[index].toBold
-                    ),
-                  }}
+                  dangerouslySetInnerHTML={
+                    store.sentences[index] && {
+                      __html: makeBold(
+                        store.sentences[index].sentence,
+
+                        store.sentences[index].toBold
+                      ),
+                    }
+                  }
                   if={store.sentences && store.sentences.length > 0}
                 />
                 <details>

@@ -5,7 +5,10 @@ import {
   debounce,
   reverse,
   uniqBy,
+  min,
   memoize,
+  startsWith,
+  countBy,
   flatten,
   mean,
 } from 'lodash'
@@ -41,6 +44,10 @@ export default class Context {
   docTexts = ''
   indexToToken = null
   searchResults = []
+
+  vectorsIn = {}
+  vectorsOut = {}
+
   get loading() {
     return this.engine === null
   }
@@ -60,6 +67,32 @@ export default class Context {
     if (vectorCache) return vectorCache
 
     const text = await fetch(`/vectors50k.txt`).then(res => res.text())
+    const vectors = this.parseVectors(text)
+    vectorCache = vectors
+
+    this.vectorsIn = this.parseVectors(
+      await fetch(`/vectors15k-in.txt`).then(res => res.text())
+    )
+    this.vectorsOut = this.parseVectors(
+      await fetch(`/vectors15k-out.txt`).then(res => res.text())
+    )
+
+    this.vectorsTotal = {}
+    this.vectorsTotal2 = {}
+    Object.keys(this.vectorsIn).map(word => {
+      this.vectorsTotal[word] = [
+        ...this.vectorsIn[word],
+        ...this.vectorsOut[word],
+      ]
+      this.vectorsTotal2[word] = this.vectorsIn[word].map(
+        (_, index) => this.vectorsIn[word][index] + this.vectorsOut[word][index]
+      )
+    })
+
+    return vectors
+  }
+
+  parseVectors = text => {
     const vectors = {}
     text.split('\n').forEach(line => {
       const split = line.split(' ')
@@ -69,7 +102,6 @@ export default class Context {
       )
       vectors[word] = vsList
     })
-    vectorCache = vectors
     return vectors
   }
 
@@ -145,14 +177,46 @@ export default class Context {
     }, null)
   }
 
-  nearestWords = vec => {
-    const vecs = Object.keys(this.vectors).map(word => ({
-      word,
-      vec: this.vectors[word],
-      distance: cosineSimilarity(Math.random(), vec, this.vectors[word]),
-    }))
-    return minKBy(vecs, 7, _ => -_.distance)
+  nearestWords = word => {
+    const vecT1 = this.nearestWordsByVector('total1', word, this.vectorsTotal)
+    const vecT2 = this.nearestWordsByVector('total2', word, this.vectorsTotal2)
+
+    const vec1 = this.nearestWordsByVector('in', word, this.vectorsIn)
+    const vec2 = this.nearestWordsByVector('out', word, this.vectorsOut)
+    const total = vec1.map(item => {
+      const x = vec2.filter(v => v.word === item.word)
+      return {
+        word: item.word,
+        distance: x.length > 0 ? x[0].distance + item.distance : item.distance,
+      }
+    })
+    console.log(
+      'total all is',
+      reverse(sortBy(total, 'distance')).map(_ => _.word)
+    )
   }
+
+  nearestWordsByVector = (name, word, space) => {
+    const vec = space[word]
+    // const vecOut = this.vectorsIn[word]
+    const vecs = Object.keys(space).map(word => ({
+      word,
+      vec: space[word],
+      distance: cosineSimilarity(Math.random(), vec, space[word]),
+    }))
+
+    const similar = minKBy(vecs, 25, _ => -_.distance)
+    //const otherDocs = similar.map(i => )
+    console.log(
+      name,
+      ': ',
+      similar.map(_ => _.word + '[' + _.distance + '], ').slice(0, 25)
+    )
+    return similar
+  }
+
+  docsWithWord = (word, docs = this.items) =>
+    docs.filter(i => (i.title + ' ' + i.body).indexOf(word) > -1)
 
   sentenceDistances = (terms, content) => {
     const toValidWords = doc =>
@@ -207,9 +271,48 @@ export default class Context {
     return val.length > 0 ? val : word
   }
 
+  getIdfCounts = results => {
+    let titles = ''
+    let contents = ''
+    results.forEach(({ item }) => {
+      contents = ' ' + item.content
+      titles += ' ' + item.title
+    })
+
+    const alpha = s => s.replace(/[^A-Za-z0-9\ ]/g, '')
+
+    const titleCounts = countBy(alpha(titles.toLowerCase()).split(' '))
+    const contentCounts = countBy(alpha(contents.toLowerCase()).split(' '))
+    const combinedCounts = {}
+    Object.keys(contentCounts).forEach(w => {
+      if (w.length === 0) return
+      if (!combinedCounts[w]) combinedCounts[w] = 0
+      combinedCounts[w] += contentCounts[w] * 4
+    })
+
+    Object.keys(titleCounts).forEach(w => {
+      if (w.length === 0) return
+      if (!combinedCounts[w]) combinedCounts[w] = 0
+      combinedCounts[w] += titleCounts[w] * 4
+    })
+
+    const weight = w => {
+      const val = this.engine.getWeights(w)
+      return val.length > 0 ? val[0].weight : 1
+    }
+
+    return Object.keys(combinedCounts)
+      .map(word => ({
+        word,
+        weight: weight(word) * combinedCounts[word],
+      }))
+      .filter(i => i.word !== 'undefined')
+  }
+
   search = (text, n = 5) => {
-    console.log('searching ' + text)
-    if (!this.engine.isConsolidated()) return []
+    if (!this.engine.isConsolidated()) {
+      return []
+    }
     /*
     const words = text
       .split(' ')
@@ -222,10 +325,60 @@ export default class Context {
       .join(' ')
     */
 
-    const words = text
     const wordList = text.split(' ')
+    const i2t = this.engine.getIndex2Token()
+    const idfs = Object.keys(i2t).map(i => ({
+      idf: this.engine.idf[i],
+      word: i2t[i],
+    }))
 
-    let results = this.engine.search(words, n)
+    const lastWord = last(wordList)
+    const typingWord = this.docTexts.indexOf(lastWord + ' ') === -1 // this.engine.getWeights(lastWord).length === 0
+
+    // const minIdf = min(idfs.map(_ => _.idf))
+    const likelyNextWords = minKBy(
+      lastWord.length === 0
+        ? idfs
+        : idfs.filter(_ => _.word.indexOf(lastWord) === 0),
+      // idfs.filter(_ => _.idf > minIdf),
+      15,
+      _ => _.idf
+    )
+
+    const results = this.engine.search(wordList.join(' '), n)
+
+    const vals = uniqBy(results, val => val[0])
+      .slice(0, n)
+      .map(res => {
+        return {
+          similarity: res[1],
+          item: this.items[res[0]],
+          index: res[0],
+          debug: [],
+        }
+      })
+
+    const counts = this.getIdfCounts(vals).filter(
+      _ =>
+        !includes(wordList, _.word) &&
+        (typingWord ? startsWith(_.word, lastWord) : true)
+    )
+    console.log('counts are', counts)
+    const next = minKBy(counts, 15, _ => -_.weight)
+    console.log('next is', next)
+
+    this.autocomplete = next.map(({ word, weight }) => ({
+      realWord: word,
+      freq: weight,
+    }))
+
+    this.searchResults = vals
+    this.sentences = []
+
+    this.getSentences(text)
+
+    return vals
+
     /*
     this.qe = ''
     if (results.length < 4) {
@@ -236,6 +389,9 @@ export default class Context {
     */
 
     // make sure query expansion doesn't return duplicates
+
+    /*
+
     const vals = uniqBy(results, val => val[0])
       .slice(0, n)
       .map(res => {
@@ -259,15 +415,8 @@ export default class Context {
       })
     })
 
-    const lastWord = last(wordList)
-    const typingWord =
-      lastWord.length > 0 && this.engine.getWeights(lastWord).length === 0
 
-    const xs = minKBy(
-      Object.keys(freqs).map(word => ({ word, val: freqs[word] })),
-      15,
-      _ => -_.val
-    )
+    console.log('typing', lastWord, 'xs is', xs)
 
     let autocomplete = null
     if (typingWord) {
@@ -289,5 +438,6 @@ export default class Context {
     this.getSentences(text)
 
     return vals
+    */
   }
 }

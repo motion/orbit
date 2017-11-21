@@ -14,14 +14,14 @@ export default class CrawlerDB {
     this.crawled.push(page)
     let count = 0
     const radius = page.radius
-    for (const url of page.outboundUrls) {
+    page.outboundUrls.forEach(url => {
       if (!this.discoveredUrls[url]) {
         count++
         const score = this.scoreFn(url)
         this.pageQueue.push({ url, radius, score })
         this.discoveredUrls[url] = true
       }
-    }
+    })
     if (count) {
       this.pageQueue = sortBy(this.pageQueue, 'score').reverse()
       log(`Added ${count} new urls to queue`)
@@ -50,6 +50,10 @@ export default class CrawlerDB {
       return this.pageQueue.shift()
     }
     return null
+  }
+
+  getValid = () => {
+    return this.crawled.filter(_ => _.contents !== null)
   }
 
   getAll() {

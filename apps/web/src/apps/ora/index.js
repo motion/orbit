@@ -14,6 +14,23 @@ const prevent = e => {
   e.stopPropagation()
 }
 
+@view
+class OraBlur {
+  render({ oraStore }) {
+    return (
+      <overlay
+        if={oraStore.wasBlurred}
+        $$fullscreen
+        css={{
+          zIndex: 100000000000,
+        }}
+        onMouseDown={prevent}
+        onClick={prevent}
+      />
+    )
+  }
+}
+
 @view.provide({
   oraStore: OraStore,
 })
@@ -27,15 +44,7 @@ export default class OraPage {
           ref={oraStore.ref('barRef').set}
           $$draggable
         >
-          <overlay
-            if={oraStore.wasBlurred}
-            $$fullscreen
-            css={{
-              zIndex: 100000000000,
-            }}
-            onMouseDown={prevent}
-            onClick={prevent}
-          />
+          <OraBlur oraStore={oraStore} />
           <UI.Theme name="clear-dark">
             <OraHeader oraStore={oraStore} />
           </UI.Theme>

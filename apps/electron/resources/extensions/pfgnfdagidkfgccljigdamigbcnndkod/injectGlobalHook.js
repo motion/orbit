@@ -60,18 +60,18 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 181);
+/******/ 	return __webpack_require__(__webpack_require__.s = 335);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 181:
+/***/ 335:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _installGlobalHook = __webpack_require__(182);
+var _installGlobalHook = __webpack_require__(336);
 
 var _installGlobalHook2 = _interopRequireDefault(_installGlobalHook);
 
@@ -82,9 +82,16 @@ script.textContent = ';(' + _installGlobalHook2.default.toString() + '(window))'
 document.documentElement.appendChild(script);
 script.parentNode.removeChild(script);
 
+// if (__DEV__) {
+window.addEventListener('test-open-mobx-devtools-window', function () {
+  console.log('test-open-mobx-devtools-window'); // eslint-disable-line no-console
+  chrome.extension.sendMessage({ eventName: 'open-mobx-devtools-window' });
+});
+// }
+
 /***/ }),
 
-/***/ 182:
+/***/ 336:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";

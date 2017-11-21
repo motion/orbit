@@ -6,6 +6,8 @@ import { watch } from '@mcro/black'
 import { isEqual } from 'lodash'
 import After from '~/views/after'
 
+const idFn = _ => _
+
 export default class ContextSidebar {
   @watch
   isPinned = () => this.osContext && Thing.findOne({ url: this.osContext.url })
@@ -13,13 +15,21 @@ export default class ContextSidebar {
     maxPages: 6,
     depth: '/',
   }
+  osContext = null
+
+  willMount() {
+    this.watch(() => {
+      // prevent focusedApp from triggered changes
+      const { focusedApp, ...context } = this.oraStore.osContext
+      idFn(focusedApp)
+      if (!isEqual(context, this.osContext)) {
+        this.osContext = context
+      }
+    })
+  }
 
   get oraStore() {
     return this.props.oraStore
-  }
-
-  get osContext() {
-    return this.oraStore.osContext
   }
 
   get context() {
@@ -92,7 +102,10 @@ export default class ContextSidebar {
   }
 
   get crawlerInfo() {
-    return this.oraStore.electronState.context.crawlerInfo
+    return (
+      this.oraStore.electronState.context &&
+      this.oraStore.electronState.context.crawlerInfo
+    )
   }
 
   get crawlerOptions() {

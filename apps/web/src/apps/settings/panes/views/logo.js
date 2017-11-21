@@ -1,3 +1,4 @@
+import * as React from 'react'
 import { view } from '@mcro/black'
 import { capitalize } from 'lodash'
 

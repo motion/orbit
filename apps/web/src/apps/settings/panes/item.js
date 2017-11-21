@@ -1,22 +1,15 @@
+import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
 import { CurrentUser, Job } from '~/app'
-import * as Cards from './cards'
 import { OS } from '~/helpers'
 import * as Collapse from './views/collapse'
-import Logo from './logo'
+import Logo from './views/logo'
 import { formatDistance } from 'date-fns'
 import { includes } from 'lodash'
-import SyncStatus from './syncStatus'
+import SyncStatus from './views/syncStatus'
 import r2 from '@mcro/r2'
 import * as Constants from '~/constants'
-
-@view
-class NotFound {
-  render({ type }) {
-    return <UI.Title size={1.2}>card {type} not found</UI.Title>
-  }
-}
 
 class ItemStore {
   open = false
@@ -48,9 +41,10 @@ class ItemStore {
   get lastJob() {
     const { type } = this.props
     const { action, service } = this.typeToJob[type]
-
-    const job = this.props.serviceStore.lastJobs[service + ':' + action]
-    return job
+    if (!this.props.settingsStore.lastJobs) {
+      return null
+    }
+    return this.props.settingsStore.lastJobs[service + ':' + action]
   }
 
   checkAuths = async () => {
@@ -85,8 +79,7 @@ class ItemStore {
   store: ItemStore,
 })
 export default class Item {
-  render({ store, serviceStore, type }) {
-    const Card = Cards[type] || NotFound
+  render({ store, settingsStore, type }) {
     return (
       <service key={type}>
         <header>
@@ -107,10 +100,7 @@ export default class Item {
                 css={{ marginLeft: 10 }}
               >
                 synced{' '}
-                {formatDistance(
-                  new Date(store.lastJob.createdAt),
-                  Date.now()
-                )}{' '}
+                {formatDistance(new Date(store.lastJob.createdAt), Date.now())}{' '}
                 ago
               </UI.Text>
               <UI.Text
@@ -139,14 +129,9 @@ export default class Item {
             </right>
           </top>
           <sub if={store.auth}>
-            <SyncStatus store={serviceStore} service={type} />
+            <SyncStatus settingsStore={settingsStore} service={type} />
           </sub>
         </header>
-        <Collapse.Body open={store.open && store.auth}>
-          <card>
-            <Card if={store.open && store.auth} store={store} />
-          </card>
-        </Collapse.Body>
       </service>
     )
   }
@@ -154,9 +139,6 @@ export default class Item {
   static style = {
     service: {
       marginTop: 30,
-    },
-    card: {
-      margin: [5, 15],
     },
     left: {
       alignItems: 'center',

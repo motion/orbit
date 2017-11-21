@@ -1,9 +1,11 @@
+import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
 import { uniq, range, sortBy, sample, random } from 'lodash'
+import Item from './item'
 
 @view
-class Channel {
+class SlackChannel {
   render({ channel }) {
     return (
       <channel $$row>
@@ -75,15 +77,18 @@ const people = ['nate', 'nick', 'steel', 'steph']
   },
 })
 export default class Slack {
-  render({ store }) {
+  render({ store, settingsStore }) {
+    console.log('settingsStore', settingsStore)
     const channels = store.showAll
       ? store.channels
       : sortBy(store.channels, 'convos').slice(0, 5)
 
     return (
       <slack>
+        <Item type="slack" settingsStore={settingsStore} />
+
         {channels.map(channel => (
-          <Channel key={channel.name} channel={channel} />
+          <SlackChannel key={channel.name} channel={channel} />
         ))}
 
         <buttons $$row>

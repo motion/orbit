@@ -1,3 +1,4 @@
+import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 
@@ -37,7 +38,9 @@ export default class Progress {
           >
             <info>
               <UI.Text opacity={0.9} size={0.9}>
-                Syncronizing issues from tensorflow/tensorflow ({pad(store.percent)}%)
+                Syncronizing issues from tensorflow/tensorflow ({pad(
+                  store.percent
+                )}%)
               </UI.Text>
             </info>
             <UI.Button

@@ -1,5 +1,5 @@
+import * as React from 'react'
 import { view } from '@mcro/black'
-import Pane from '../pane'
 import * as UI from '@mcro/ui'
 import ServicesStore from './servicesStore'
 import Item from './item'
@@ -17,7 +17,7 @@ export default class Services {
       .map(type => <Item key={type} serviceStore={store} type={type} />)
 
     return (
-      <Pane {...paneProps} css={{ padding: 20 }}>
+      <pane {...paneProps} css={{ padding: 20 }}>
         <meta>
           <title
             $$row
@@ -68,7 +68,7 @@ export default class Services {
           </gradual>
         </meta>
         {serviceItems}
-      </Pane>
+      </pane>
     )
   }
 

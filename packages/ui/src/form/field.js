@@ -70,6 +70,7 @@ export default class Field extends React.Component<Props> {
     chromeless,
     placeholder,
     placeholderColor,
+    value,
     size,
     ...props
   }: Props) {
@@ -95,6 +96,7 @@ export default class Field extends React.Component<Props> {
         onChange={onChange}
         name={id}
         defaultValue={defaultValue}
+        value={value}
         sync={sync}
         theme={theme}
         chromeless={chromeless}

@@ -83,20 +83,20 @@ export default class Input extends React.Component<Props> {
     }
   }
 
-  render() {
-    const {
-      sync,
-      type,
-      name,
-      uiContext,
-      form,
-      elementProps,
-      style,
-      onEnter,
-      size,
-      ...props
-    } = this.props
-
+  render({
+    sync,
+    type,
+    name,
+    uiContext,
+    form,
+    elementProps,
+    style,
+    onEnter,
+    onChange,
+    size,
+    value,
+    ...props
+  }) {
     const finalProps = { ...elementProps }
     if (sync && elementProps) {
       finalProps.value = sync.get()
@@ -110,6 +110,7 @@ export default class Input extends React.Component<Props> {
         <Button type="submit" noElement {...props} onClick={this.onClick} />
       )
     }
+    console.log('got a thing', typeof value)
     return (
       <SizedSurface
         size={size}
@@ -126,6 +127,8 @@ export default class Input extends React.Component<Props> {
         name={name}
         type={type}
         elementProps={{
+          value,
+          onChange,
           style: {
             width: '100%',
             padding: `0 ${10 * size}px`,

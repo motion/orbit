@@ -90,7 +90,7 @@ class SlackChannel extends React.Component {
           <UI.Field
             size={1.2}
             type="toggle"
-            defaultValue={channels[channel.id]}
+            value={channels[channel.id]}
             onChange={this.onChange}
           />
         </options>

@@ -21,6 +21,8 @@ const updateProps = Mobx.action('updateProps', (props, nextProps) => {
   }
 })
 
+window.storeViews = []
+
 export default function storeProvidable(options, Helpers) {
   return {
     name: 'store-providable',
@@ -66,6 +68,7 @@ export default function storeProvidable(options, Helpers) {
         allStores = allStores
 
         componentWillMount() {
+          window.storeViews.push(this)
           this.componentWillUpdate = this.componentWillUpdate.bind(this)
           this.setupProps()
           this.setupStores()
@@ -84,11 +87,12 @@ export default function storeProvidable(options, Helpers) {
           this.mounted = true
           this.mountStores()
           if (window.Black) {
-            window.Black.view.on('hmr', this.clearErrors)
+            this.errorClear = () => this.clearErrors()
+            window.Black.view.on('hmr', this.errorClear)
           }
         }
 
-        clearErrors = () => {
+        clearErrors() {
           if (this.unmounted) {
             return
           }
@@ -107,7 +111,7 @@ export default function storeProvidable(options, Helpers) {
           // if you remove @view({ store: ... }) it tries to remove it here but its gone
           if (this.disposeStores) {
             if (window.Black) {
-              window.Black.view.off('hmr', this.clearErrors)
+              window.Black.view.off('hmr', this.errorClear)
             }
             this.disposeStores()
             this.unmounted = true

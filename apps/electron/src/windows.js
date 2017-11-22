@@ -56,26 +56,24 @@ export default class Windows extends React.Component {
   }
 
   listenForMouse() {
-    this.on(ipcMain, 'mouse-listen', () => {
-      const triggerX = this.state.screenSize.width - 20
-      const triggerY = 20
-      const mousey = Helpers.mouse()
-      let hasLeftCorner = true
-      mousey.on(
-        'move',
-        throttle((x, y) => {
-          if (+x > triggerX && +y < triggerY) {
-            if (hasLeftCorner) {
-              hasLeftCorner = false
-              console.log('IN CORNER')
-              this.toggleShown()
-            }
-          } else {
-            hasLeftCorner = true
+    const triggerX = this.state.screenSize.width - 20
+    const triggerY = 20
+    const mousey = Helpers.mouse()
+    let hasLeftCorner = true
+    mousey.on(
+      'move',
+      throttle((x, y) => {
+        if (+x > triggerX && +y < triggerY) {
+          if (hasLeftCorner) {
+            hasLeftCorner = false
+            console.log('IN CORNER')
+            this.toggleShown()
           }
-        }, 60)
-      )
-    })
+        } else {
+          hasLeftCorner = true
+        }
+      }, 60)
+    )
   }
 
   oraRef = ref => {

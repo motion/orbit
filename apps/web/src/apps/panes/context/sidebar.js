@@ -26,6 +26,22 @@ export default class ContextSidebar {
         this.osContext = context
       }
     })
+    this.watch(() => {
+      const { crawlerInfo } = this
+      if (!crawlerInfo) return
+      const { bodySelector, titleSelector } = crawlerInfo
+      const crawlerSettings = {
+        ...this.crawlerSettings,
+        bodySelector,
+        titleSelector,
+      }
+      if (!isEqual(crawlerSettings, this.crawlerSettings)) {
+        this.crawlerSettings = crawlerSettings
+      }
+    })
+    // this.watch(() => {
+    //   this.oraStore.showWhiteBottomBg = this.isShowingCrawlDrawer
+    // })
   }
 
   get oraStore() {
@@ -118,26 +134,6 @@ export default class ContextSidebar {
   // this determines when the pane slides in
   get finishedLoading() {
     return this.context && !this.context.isLoading
-  }
-
-  willMount() {
-    this.watch(() => {
-      const { crawlerInfo } = this
-      if (!crawlerInfo) return
-      const { bodySelector, titleSelector } = crawlerInfo
-      const crawlerSettings = {
-        ...this.crawlerSettings,
-        bodySelector,
-        titleSelector,
-      }
-      if (!isEqual(crawlerSettings, this.crawlerSettings)) {
-        this.crawlerSettings = crawlerSettings
-      }
-    })
-
-    // this.watch(() => {
-    //   this.oraStore.showWhiteBottomBg = this.isShowingCrawlDrawer
-    // })
   }
 
   get contextResults() {

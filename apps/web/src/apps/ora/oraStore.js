@@ -65,9 +65,9 @@ export default class OraStore {
   @watch
   items = () =>
     !this.bucket
-      ? Thing.find().limit(100)
+      ? Thing.find().limit(8)
       : Thing.find()
-          .limit(100)
+          .limit(8)
           .where('bucket')
           .eq(this.bucket)
 
@@ -75,18 +75,15 @@ export default class OraStore {
 
   async willMount() {
     this.attachTrap('window', window)
-
+    // listeners
     this._listenForStateSync()
+    this.on(OS, 'ora-toggle', this.toggleHidden)
+    // watchers
     this._watchContext()
-    // side effect watchers
     this._watchFocus()
     this._watchFocusBar()
-    this._watchInput()
-    this._watchToggleHide()
-    this._watchMouse()
     this._watchBlurBar()
     this._watchCrawlStatus()
-
     this.watch(() => {
       const { focused } = this.state
       // one frame later
@@ -94,6 +91,8 @@ export default class OraStore {
         this.wasBlurred = !focused
       }, 16)
     })
+    this.setState({}) // trigger first send
+    OS.send('start-ora')
   }
 
   setBanner = (type, message, timeout) => {
@@ -150,7 +149,7 @@ export default class OraStore {
     this.watch(() => {
       if (this.state.hidden) {
         // timeout based on animation
-        this.setTimeout(this.blurBar, 100)
+        this.setTimeout(this.blurBar, 150)
       }
     })
   }
@@ -179,7 +178,6 @@ export default class OraStore {
     this.on(OS, 'get-state', () => {
       OS.send('got-state', this.state)
     })
-
     // allows us to get updated electron state
     this.on(OS, 'electron-state', (event, state) => {
       this.electronState = state
@@ -188,7 +186,6 @@ export default class OraStore {
 
   _watchContext = () => {
     let lastContext = null
-
     this.watch(() => {
       const { context } = this.electronState
       if (!context || !context.url || !context.title) {
@@ -284,38 +281,10 @@ export default class OraStore {
     return await r2.post('http://localhost:3001/crawler/stop').json
   }
 
-  _watchMouse() {
-    OS.send('mouse-listen')
-    this.on(OS, 'mouse-in-corner', () => {
-      if (this.state.hidden) {
-        this.setState({ hidden: false })
-      }
-    })
-  }
-
-  _watchToggleHide() {
-    OS.send('start-ora')
-    this.on(OS, 'ora-toggle', () => {
-      this.setState({ hidden: !this.state.hidden })
-    })
-  }
+  toggleHidden = () => this.setState({ hidden: !this.state.hidden })
 
   hide = () => {
     this.setState({ hidden: true })
-  }
-
-  _watchInput() {
-    let lastChar = null
-    this.watch(() => {
-      const char = this.search[this.search.length - 1]
-      if (lastChar && this.search.length === 0) {
-        this.emit('clearSearch')
-      }
-      if (!lastChar && this.search.length) {
-        this.emit('startSearch')
-      }
-      lastChar = char
-    })
   }
 
   _watchFocusBar() {

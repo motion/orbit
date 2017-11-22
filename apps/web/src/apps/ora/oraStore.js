@@ -8,6 +8,7 @@ import ContextStore from '~/context'
 import SHORTCUTS from './shortcuts'
 import { CurrentUser } from '~/app'
 import * as r2 from '@mcro/r2'
+import { throttle } from 'lodash'
 
 const BANNERS = {
   note: 'note',
@@ -281,7 +282,10 @@ export default class OraStore {
     return await r2.post('http://localhost:3001/crawler/stop').json
   }
 
-  toggleHidden = () => this.setState({ hidden: !this.state.hidden })
+  toggleHidden = throttle(
+    () => this.setState({ hidden: !this.state.hidden }),
+    150
+  )
 
   hide = () => {
     this.setState({ hidden: true })

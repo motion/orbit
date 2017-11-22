@@ -26,6 +26,7 @@ const TAG_MAP = {
 @view.ui
 export default class Input extends React.Component<Props> {
   static defaultProps = {
+    size: 1,
     type: 'input',
     elementProps: {},
   }
@@ -92,34 +93,33 @@ export default class Input extends React.Component<Props> {
       elementProps,
       style,
       onEnter,
+      size,
       ...props
     } = this.props
 
     const finalProps = { ...elementProps }
-
     if (sync && elementProps) {
       finalProps.value = sync.get()
       finalProps.onChange = e => sync.set(e.target.value)
     }
-
     if (type === 'checkbox') {
       return <Checkbox {...props} />
     }
-
     if (type === 'submit') {
       return (
         <Button type="submit" noElement {...props} onClick={this.onClick} />
       )
     }
-
     return (
       <SizedSurface
+        size={size}
         sizeFont
-        borderRadius
+        sizeRadius
         sizePadding
         sizeHeight
         flex
         borderWidth={1}
+        flex="none"
         wrapElement
         tagName={TAG_MAP[type] || type}
         className="input"
@@ -128,7 +128,7 @@ export default class Input extends React.Component<Props> {
         elementProps={{
           style: {
             width: '100%',
-            padding: '0 10px',
+            padding: `0 ${10 * size}px`,
             ...style,
           },
           ref: this.onNode,

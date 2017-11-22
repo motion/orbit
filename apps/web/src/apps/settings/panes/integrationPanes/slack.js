@@ -1,107 +1,109 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
-import { uniq, range, sortBy, sample, random } from 'lodash'
+import { fuzzy } from '~/helpers'
+import App from '~/app'
+
+@view({
+  store: class SlackStore {
+    search = ''
+    get channels() {
+      return fuzzy(App.services.Slack.allChannels || [], this.search, {
+        keys: ['name'],
+      })
+    }
+  },
+})
+export default class Slack {
+  render({ store }) {
+    return (
+      <slack>
+        <UI.Input
+          marginBottom={10}
+          size={1.2}
+          placeholder="Filter Channels..."
+          onChange={e => (store.search = e.target.value)}
+          value={store.search}
+        />
+        <UI.List
+          itemsKey={store.search}
+          virtualized={{
+            measure: true,
+          }}
+          items={store.channels}
+          getItem={channel => (
+            <SlackChannel key={channel.id} channel={channel} />
+          )}
+        />
+      </slack>
+    )
+  }
+
+  static style = {
+    slack: {
+      padding: 10,
+      flex: 1,
+    },
+    buttons: {
+      marginTop: 15,
+    },
+  }
+}
 
 @view
 class SlackChannel {
   render({ channel }) {
     return (
       <channel $$row>
-        <UI.Field row size={1.2} type="toggle" defaultValue={true} />
         <info>
           <UI.Text fontWeight={600} size={1} $name opacity={0.7}>
             #{channel.name}
           </UI.Text>
           <sub $$row>
             <UI.Text>{channel.convos} convos &middot;</UI.Text>
-            {channel.people.map((person, index) => (
-              <people $$row css={{ alignItems: 'center' }}>
+            {(channel.members || []).map((member, index) => (
+              <members $$row css={{ alignItems: 'center' }}>
                 <UI.Text $mark if={index > 0}>
                   /
                 </UI.Text>
                 <img
                   css={{ marginTop: 4 }}
-                  src={'/images/' + person + '.jpg'}
+                  src={'/images/' + member + '.jpg'}
                   $avatar
                 />
-                <UI.Text $personName>{person}</UI.Text>
-              </people>
+                <UI.Text $memberName>{member}</UI.Text>
+              </members>
             ))}
           </sub>
         </info>
+        <UI.Field row size={1.2} type="toggle" defaultValue={false} />
       </channel>
     )
   }
 
   static style = {
     channel: {
-      marginTop: 10,
+      padding: [10, 15],
     },
     avatar: {
       width: 15,
       height: 15,
       borderRadius: 100,
     },
-    people: {
+    members: {
       marginLeft: 10,
     },
-    person: {
+    member: {
       marginLeft: 5,
     },
-    personName: {
+    memberName: {
       marginLeft: 5,
     },
     mark: {
       marginRight: 5,
     },
     info: {
-      marginLeft: 20,
-    },
-  }
-}
-
-const people = ['nate', 'nick', 'steel', 'steph']
-
-@view({
-  store: class SlackStore {
-    showAll = false
-    channels = 'general watercooler office snacks status showoff design tech research ux'
-      .split(' ')
-      .map(name => ({
-        name,
-        convos: random(10, 1500),
-        people: uniq(range(random(1, 4)).map(() => sample(people))),
-      }))
-  },
-})
-export default class Slack {
-  render({ type, store }) {
-    const channels = store.showAll
-      ? store.channels
-      : sortBy(store.channels, 'convos').slice(0, 5)
-    return (
-      <slack>
-        {channels.map(channel => (
-          <SlackChannel key={channel.name} channel={channel} />
-        ))}
-        <buttons $$row>
-          <UI.Button
-            if={store.channels.length !== channels.length}
-            onClick={() => (store.showAll = true)}
-            $add
-            icon="simple-add"
-          >
-            show {store.channels.length - channels.length} more
-          </UI.Button>
-        </buttons>
-      </slack>
-    )
-  }
-
-  static style = {
-    buttons: {
-      marginTop: 15,
+      flex: 1,
     },
   }
 }

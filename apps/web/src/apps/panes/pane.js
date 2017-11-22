@@ -205,7 +205,7 @@ export default class Pane {
   static style = {
     pane: {
       flex: 1,
-      // position: 'relative',
+      position: 'relative',
       overflow: 'scroll',
     },
     content: {
@@ -214,7 +214,7 @@ export default class Pane {
       position: 'relative',
     },
     bottomGlow: {
-      boxShadow: '0 0 80px 3px rgba(0,0,0,0.5)',
+      boxShadow: '0 0 80px 30px rgba(20,20,20,0.25)',
       zIndex: 100000 - 1,
       pointerEvents: 'none',
       position: 'fixed',

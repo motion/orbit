@@ -62,19 +62,20 @@ export default function getItem(getActiveIndex) {
     key: `${index}${result.id}${result.title}${result.category}`,
     highlight: () => index === getActiveIndex(),
     // dynamic lower opacity as list items go down
-    opacity: Math.max(0.5, (8 - index) / 8),
     primary:
       typeof result.displayTitle !== 'undefined'
         ? result.displayTitle || null
         : result.display ? null : result.title,
     primaryEllipse: !hasContent(result) ? 2 : false,
     primaryProps: {
+      opacity: Math.max(0.5, (9 - index) / 8),
       size: 1.2,
       fontWeight: 500,
     },
     secondary: result.subtitle,
     children: getChildren(result),
     childrenProps: {
+      opacity: Math.max(0.25, (9 - index) / 16),
       ellipse: index < 3 ? 3 : 2,
       size: 1.1,
     },

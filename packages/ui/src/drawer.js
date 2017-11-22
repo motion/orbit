@@ -114,12 +114,14 @@ export default class Drawer extends React.PureComponent<Props> {
       right: 0,
       bottom: 0,
       left: 0,
+      opacity: 0,
       pointerEvents: 'none',
       transform: {
         z: 0,
       },
     },
     drawerOpen: {
+      opacity: 1,
       zIndex: 100,
     },
     // darken bg much less if blurring

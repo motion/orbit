@@ -33,6 +33,7 @@
 
 # now
 
+- bug: on window focus (clicked via dock or via task switch) make ora show if hidden
 - indexeddb for item contents, add hook to remove in model, add getter to fetch contents
 - settings pane to choose a room
 - Slack scan room for and collect links

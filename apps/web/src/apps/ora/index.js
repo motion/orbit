@@ -6,30 +6,8 @@ import Sidebar from '../panes/sidebar'
 import OraHeader from './oraHeader'
 import OraDrawer from './oraDrawer'
 import OraActionBar from './oraActionBar'
+import OraBlur from './oraBlur'
 import * as Constants from '~/constants'
-
-const prevent = e => {
-  console.log('preventing')
-  e.preventDefault()
-  e.stopPropagation()
-}
-
-@view
-class OraBlur {
-  render({ oraStore }) {
-    return (
-      <overlay
-        if={oraStore.wasBlurred}
-        $$fullscreen
-        css={{
-          zIndex: 100000000000,
-        }}
-        onMouseDown={prevent}
-        onClick={prevent}
-      />
-    )
-  }
-}
 
 @view.provide({
   oraStore: OraStore,
@@ -66,7 +44,7 @@ export default class OraPage {
                   resist: 60,
                   zIndex: -1,
                 },
-                highlightBackground: [255, 255, 255, 0.08],
+                highlightBackground: [255, 255, 255, 0.048],
                 childrenEllipse: 2,
               }}
             />

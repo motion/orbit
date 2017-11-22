@@ -9,7 +9,7 @@ export default class SidebarTitle {
     return (
       <sidebartitle onClick={e => e.stopPropagation()}>
         <UI.Button
-          if={!noBack}
+          if={false && !noBack}
           $backButton
           size={0.9}
           circular
@@ -20,7 +20,7 @@ export default class SidebarTitle {
           {...backProps}
         />
         <titles>
-          <UI.Title ellipse={2} $title size={1.2} fontWeight={600}>
+          <UI.Title ellipse={2} size={1.1} fontWeight={400} opacity={0.9}>
             {title}
           </UI.Title>
           <UI.Title if={subtitle} ellipse size={0.8} opacity={0.5}>
@@ -48,6 +48,7 @@ export default class SidebarTitle {
       alignItems: 'center',
       overflow: 'hidden',
       padding: [10, 10],
+      borderBottom: [1, [255, 255, 255, 0.05]],
       // background: [255, 255, 255, 0.05],
     },
     titles: {

@@ -28,11 +28,12 @@ export default class Title extends React.PureComponent<Props> {
   }
 
   render({ stat, size, children, tagName, ...props }: Props) {
+    // if you want to have static styles per-rounded unit
+    // {...{ [`\$size${Math.floor(size * 1.8)}`]: true }}
     return (
       <Text
         $title
         display="inline-block"
-        {...{ [`\$size${Math.floor(size * 1.8)}`]: true }}
         tagName={tagName}
         size={size}
         {...props}
@@ -44,9 +45,6 @@ export default class Title extends React.PureComponent<Props> {
   }
 
   static style = {
-    size1: {
-      fontWeight: 200,
-    },
     stat: {
       fontSize: '50%',
       marginLeft: 8,

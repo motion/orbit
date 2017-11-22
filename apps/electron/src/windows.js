@@ -47,7 +47,6 @@ export default class Windows extends React.Component {
     Object.assign(this.repl.context, {
       Root: this,
     })
-    this.listenForMouse()
   }
 
   componentWillUnmount() {
@@ -55,26 +54,25 @@ export default class Windows extends React.Component {
     globalShortcut.unregisterAll()
   }
 
-  listenForMouse() {
-    const triggerX = this.state.screenSize.width - 20
-    const triggerY = 20
-    const mousey = Helpers.mouse()
-    let hasLeftCorner = true
-    mousey.on(
-      'move',
-      throttle((x, y) => {
-        if (+x > triggerX && +y < triggerY) {
-          if (hasLeftCorner) {
-            hasLeftCorner = false
-            console.log('IN CORNER')
-            this.toggleShown()
-          }
-        } else {
-          hasLeftCorner = true
-        }
-      }, 60)
-    )
-  }
+  // listenForMouse() {
+  //   const triggerX = this.state.screenSize.width - 20
+  //   const triggerY = 20
+  //   const mousey = Helpers.mouse()
+  //   let hasLeftCorner = true
+  //   mousey.on(
+  //     'move',
+  //     throttle((x, y) => {
+  //       if (+x > triggerX && +y < triggerY) {
+  //         if (hasLeftCorner) {
+  //           hasLeftCorner = false
+  //           this.toggleShown()
+  //         }
+  //       } else {
+  //         hasLeftCorner = true
+  //       }
+  //     }, 60)
+  //   )
+  // }
 
   oraRef = ref => {
     if (ref) {

@@ -65,8 +65,9 @@ export default class OraStore {
   @watch
   items = () =>
     !this.bucket
-      ? Thing.find()
+      ? Thing.find().limit(100)
       : Thing.find()
+          .limit(100)
           .where('bucket')
           .eq(this.bucket)
 

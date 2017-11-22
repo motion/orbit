@@ -3,7 +3,6 @@ import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
 import { CurrentUser, Job } from '~/app'
 import { OS } from '~/helpers'
-import * as Collapse from './views/collapse'
 import Logo from './views/logo'
 import { formatDistance } from 'date-fns'
 import { includes } from 'lodash'
@@ -11,7 +10,6 @@ import r2 from '@mcro/r2'
 import * as Constants from '~/constants'
 
 class IntegrationHeaderStore {
-  open = false
   typeToJob = {
     drive: { action: 'drive', service: 'google' },
     slack: { action: 'gather', service: 'slack' },
@@ -79,84 +77,70 @@ class IntegrationHeaderStore {
   store: IntegrationHeaderStore,
 })
 export default class ServiceHeader {
-  render({ store, integrationStore, type }) {
+  render({ store, type }) {
     return (
-      <service key={type}>
-        <header>
-          <top $$row>
-            <left $$row css={{ flex: 1 }}>
-              <toggle $$row onClick={() => (store.open = !store.open)}>
-                <Collapse.Arrow if={store.auth} open={store.open} />
-                <logo>
-                  <Logo service={type} />
-                </logo>
-              </toggle>
-            </left>
-            <right if={store.auth} $$row css={{ alignItems: 'center' }}>
-              <UI.Text
-                if={store.lastJob && store.lastJob.status === 2}
-                size={0.9}
-                opacity={0.7}
-                css={{ marginLeft: 10 }}
-              >
-                synced{' '}
-                {formatDistance(new Date(store.lastJob.createdAt), Date.now())}{' '}
-                ago
-              </UI.Text>
-              <UI.Text
-                if={store.lastJob && store.lastJob.status < 2}
-                size={0.9}
-                opacity={0.7}
-                css={{ marginLeft: 10 }}
-              >
-                syncing now
-              </UI.Text>
-              <UI.Button
-                icon="refresh2"
-                onClick={store.runJob}
-                size={0.8}
-                css={{ marginLeft: 10 }}
-              />
-            </right>
-            <right if={!store.auth} $$row css={{ alignItems: 'center' }}>
-              <UI.Button
-                onClick={() => store.startOauth(store.authName)}
-                size={0.9}
-                css={{ marginBottom: 2 }}
-              >
-                authorize
-              </UI.Button>
-            </right>
-          </top>
-        </header>
-      </service>
+      <header>
+        <left>
+          <Logo service={type} />
+        </left>
+        <right if={store.auth}>
+          <UI.Text
+            if={store.lastJob && store.lastJob.status === 2}
+            size={0.9}
+            opacity={0.7}
+            css={{ marginLeft: 10 }}
+          >
+            synced{' '}
+            {formatDistance(new Date(store.lastJob.createdAt), Date.now())} ago
+          </UI.Text>
+          <UI.Text
+            if={store.lastJob && store.lastJob.status < 2}
+            size={0.9}
+            opacity={0.7}
+            css={{ marginLeft: 10 }}
+          >
+            Syncing now
+          </UI.Text>
+          <UI.Button
+            icon="refresh2"
+            onClick={store.runJob}
+            size={1}
+            css={{ marginLeft: 10 }}
+          >
+            Sync
+          </UI.Button>
+        </right>
+        <right if={!store.auth}>
+          <UI.Button
+            onClick={() => store.startOauth(store.authName)}
+            size={1}
+            css={{ marginBottom: 2 }}
+          >
+            Authorize
+          </UI.Button>
+        </right>
+      </header>
     )
   }
 
   static style = {
-    service: {
-      marginTop: 30,
-    },
-    left: {
-      alignItems: 'center',
-    },
-    logo: {
-      userSelect: 'none',
-    },
-    toggle: {
-      userSelect: 'none',
-    },
-    top: {
+    header: {
+      padding: [10, 0],
+      flexFlow: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
       borderBottom: '1px solid rgba(0,0,0,0.1)',
       marginBottom: 5,
+      userSelect: 'none',
     },
-    actions: {
-      margin: 10,
+    left: {
+      alignItems: 'center',
+      flex: 1,
+      flexFlow: 'row',
     },
-    contents: {
-      padding: [5, 10],
+    right: {
+      flexFlow: 'row',
+      alignItems: 'center',
     },
   }
 }

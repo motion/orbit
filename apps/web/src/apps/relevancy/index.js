@@ -2,9 +2,6 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import RelevancyStore from './store'
-import Sidebar from '../panes/sidebar'
-import * as Sidebars from '../panes/sidebars'
-import * as Constants from '~/constants'
 
 const makeBold = (input, toBold) => {
   return input.replace(

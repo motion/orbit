@@ -4,7 +4,7 @@ import { watch } from '@mcro/black'
 import { fuzzy } from '~/helpers'
 import { Event, Thing } from '~/app'
 
-export default class OraMainSidebar {
+export default class MainSidebar {
   get search() {
     return this.props.oraStore.search
   }

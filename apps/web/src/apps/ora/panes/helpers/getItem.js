@@ -1,12 +1,9 @@
 // @flow
 import * as React from 'react'
 import * as UI from '@mcro/ui'
-import type { PaneResult } from '~/types'
 
-const hasContent = (result: PaneResult) =>
-  result && result.data && result.data.body
-
-const getDate = (result: PaneResult) =>
+const hasContent = result => result && result.data && result.data.body
+const getDate = result =>
   result.data && result.data.updated ? UI.Date.format(result.data.updated) : ''
 
 function getIcon(result) {

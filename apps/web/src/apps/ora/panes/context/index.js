@@ -1,7 +1,7 @@
 import React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import PaneView from '~/apps/panes/pane'
+import PaneView from '../pane'
 import ContextStore from '~/context'
 import { take, flatten } from 'lodash'
 import { OS } from '~/helpers'

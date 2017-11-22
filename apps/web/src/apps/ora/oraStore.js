@@ -23,7 +23,7 @@ const BANNER_TIMES = {
 }
 
 export default class OraStore {
-  stack = new StackStore([{ type: 'oramain' }])
+  stack = new StackStore([{ type: 'main' }])
   inputRef = null
   search = ''
   textboxVal = ''

@@ -18,7 +18,7 @@ export default class Logo {
       <img
         css={{
           height: 'auto',
-          width: 80,
+          width: 100,
         }}
         src="/images/slack-logo.png"
       />

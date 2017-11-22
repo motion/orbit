@@ -12,15 +12,17 @@ export default class Root extends React.Component {
   }
 
   clearErr = () => {
+    if (this.unmounted) return
     this.setState({ error: null })
   }
 
   componentDidMount() {
-    view.on('hmr', this.clearErr)
+    this.on(view, 'hmr', this.clearErr)
   }
 
   componentWillUnmount() {
-    view.off('hmr', this.clearErr)
+    this.unmounted = true
+    this.off(view, 'hmr', this.clearErr)
   }
 
   componentDidCatch(error) {

@@ -45,7 +45,7 @@ export default class SettingsPage {
               left: 0,
               right: 0,
               height: 40,
-              zIndex: 100,
+              zIndex: 0,
             }}
           />
           <sidebar $$draggable css={{ paddingTop: 36, width: 280 }}>

@@ -35,6 +35,10 @@ class IntegrationHeaderStore {
     )
   }
 
+  unlink = () => {
+    CurrentUser.unlink(this.authName)
+  }
+
   get lastJob() {
     const { type } = this.props
     const { action, service } = this.typeToJob[type]
@@ -108,6 +112,14 @@ export default class ServiceHeader {
             css={{ marginLeft: 10 }}
           >
             Sync
+          </UI.Button>
+          <UI.Button
+            icon="lock-c-open"
+            onClick={store.unlink}
+            size={1}
+            css={{ marginLeft: 10 }}
+          >
+            Unlink
           </UI.Button>
         </right>
         <right if={!store.auth}>

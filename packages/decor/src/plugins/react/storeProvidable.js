@@ -21,8 +21,6 @@ const updateProps = Mobx.action('updateProps', (props, nextProps) => {
   }
 })
 
-window.storeViews = []
-
 export default function storeProvidable(options, Helpers) {
   return {
     name: 'store-providable',
@@ -68,7 +66,6 @@ export default function storeProvidable(options, Helpers) {
         allStores = allStores
 
         componentWillMount() {
-          window.storeViews.push(this)
           this.componentWillUpdate = this.componentWillUpdate.bind(this)
           this.setupProps()
           this.setupStores()

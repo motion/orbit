@@ -23,7 +23,6 @@ export default class Illustration2 {
             0: true,
           }}
           planetSize={60}
-          ringBackground="transparent"
           planetStyles={{
             background: Constants.mainLight,
             border: [1, Constants.mainLight],
@@ -50,10 +49,11 @@ export default class Illustration2 {
             'github',
           ]}
           css={{
-            top: -165,
+            top: '-50%',
             left: 235,
+            transformOrigin: 'center center',
             transform: {
-              scale: 0.6,
+              scale: 0.45,
             },
           }}
         />
@@ -87,7 +87,6 @@ export default class Illustration2 {
 
           <figure
             css={{
-              marginRight: -30,
               zIndex: 100,
               height: 180,
             }}
@@ -95,9 +94,9 @@ export default class Illustration2 {
             <img
               src="/figures/Hummingbird.svg"
               css={{
-                margin: [-300, 125, 0, -90],
-                width: 145,
-                height: 145,
+                margin: [-250, 30, 0, -90],
+                width: 120,
+                height: 120,
                 zIndex: 1000,
                 alignSelf: 'flex-end',
               }}

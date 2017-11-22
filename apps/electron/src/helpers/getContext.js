@@ -1,5 +1,6 @@
 import runAppleScript from './runAppleScript'
 import escapeAppleScriptString from 'escape-string-applescript'
+import getFavicon from './getFavicon'
 
 export async function getActiveWindowInfo() {
   const [application, title] = await runAppleScript(`
@@ -21,16 +22,17 @@ export async function getActiveWindowInfo() {
   return { application, title }
 }
 
+const getFaviconSrc = getFavicon.toString()
+
 const CONTEXT_JS = `
 JSON.stringify({
   url: document.location+'',
   title: document.title,
   selection: document.getSelection().toString() ? document.getSelection().toString() : (document.getSelection().anchorNode ? document.getSelection().anchorNode.textContent : ''),
   crawlerInfo: document.__oraCrawlerAnswer,
+  favicon: ${getFaviconSrc}(),
 })
 `
-  .trim()
-  .replace(/\n/g, '')
 
 export async function getChromeContext() {
   const res = await runAppleScript(`
@@ -42,20 +44,20 @@ export async function getChromeContext() {
       end tell
     end tell
   `)
+  if (res === 'missing value') {
+    console.log('missing value')
+    return null
+  }
   try {
     const result = JSON.parse(res)
     if (!result) {
       return null
     }
-    return {
-      title: result.title,
-      currentText: result.currentText,
-      url: result.url,
-      selection: result.selection,
-      crawlerInfo: result.crawlerInfo,
-    }
+    return result
   } catch (err) {
-    console.log('error parsing json', err, res)
+    console.log('error parsing json')
+    console.log('res:', res)
+    console.log(err)
     return null
   }
 }

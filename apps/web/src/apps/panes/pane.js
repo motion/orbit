@@ -188,6 +188,10 @@ export default class Pane {
           title={(store && store.title) || result.title}
           subtitle={result.subtitle}
           onBack={stackItem.stack.left}
+          image={
+            this.props.oraStore.osContext &&
+            this.props.oraStore.osContext.favicon
+          }
           backProps={{
             icon: stackItem.stack.length > 2 ? 'arrow-min-left' : 'home',
           }}

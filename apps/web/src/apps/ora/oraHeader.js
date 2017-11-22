@@ -62,6 +62,7 @@ export default class OraHeader extends React.Component {
       return null
     }
     const itemProps = {
+      size: 1.04,
       glow: false,
       chromeless: true,
       color: [255, 255, 255, 0.5],
@@ -177,12 +178,7 @@ export default class OraHeader extends React.Component {
               >
                 <UI.List items={bucketItems} onSelect={this.selectBucket} />
               </UI.Popover>
-              <UI.Button
-                {...itemProps}
-                onClick={this.onHide}
-                icon="remove"
-                size={1.04}
-              />
+              <UI.Button {...itemProps} onClick={this.onHide} icon="remove" />
             </UI.Row>
           </rightSide>
         </header>

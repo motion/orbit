@@ -5,7 +5,7 @@ import * as UI from '@mcro/ui'
 
 @view
 export default class SidebarTitle {
-  render({ backProps, noBack, icon, subtitle, title, onBack }) {
+  render({ image, backProps, noBack, icon, subtitle, title, onBack }) {
     return (
       <sidebartitle onClick={e => e.stopPropagation()}>
         <UI.Button
@@ -27,22 +27,20 @@ export default class SidebarTitle {
             {subtitle}
           </UI.Title>
         </titles>
-        <UI.Icon
-          if={icon}
-          css={{
-            width: 36,
-            height: 36,
-            borderRadius: 100,
-            border: [2, [255, 255, 255, 0.2]],
-            marginLeft: 10,
-          }}
-          name={icon || '/images/me.jpg'}
-        />
+        <img if={image} $image src={image} />
+        <UI.Icon if={icon} $image name={icon || '/images/me.jpg'} />
       </sidebartitle>
     )
   }
 
   static style = {
+    image: {
+      width: 24,
+      height: 24,
+      borderRadius: 100,
+      border: [2, [255, 255, 255, 0.2]],
+      marginLeft: 10,
+    },
     sidebartitle: {
       flexFlow: 'row',
       alignItems: 'center',

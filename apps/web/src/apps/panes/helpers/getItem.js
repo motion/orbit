@@ -76,7 +76,7 @@ export default function getItem(getActiveIndex) {
     children: getChildren(result),
     childrenProps: {
       opacity: Math.max(0.25, (9 - index) / 16),
-      ellipse: index < 3 ? 3 : 2,
+      ellipse: index < 2 ? 3 : 2,
       size: 1.1,
     },
     iconAfter: result.iconAfter,

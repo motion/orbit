@@ -202,6 +202,7 @@ export default class OraStore {
         title: context.selection || context.title,
         type: 'context',
         icon: context.application === 'Google Chrome' ? 'social-google' : null,
+        image: context.favicon,
       }
       const isAlreadyOnResultsPane = this.stack.length > 1
       if (isAlreadyOnResultsPane) {

@@ -7,11 +7,10 @@ import * as Collapse from './views/collapse'
 import Logo from './views/logo'
 import { formatDistance } from 'date-fns'
 import { includes } from 'lodash'
-import SyncStatus from './views/syncStatus'
 import r2 from '@mcro/r2'
 import * as Constants from '~/constants'
 
-class ItemStore {
+class IntegrationHeaderStore {
   open = false
   typeToJob = {
     drive: { action: 'drive', service: 'google' },
@@ -41,10 +40,10 @@ class ItemStore {
   get lastJob() {
     const { type } = this.props
     const { action, service } = this.typeToJob[type]
-    if (!this.props.settingsStore.lastJobs) {
+    if (!this.props.integrationStore.lastJobs) {
       return null
     }
-    return this.props.settingsStore.lastJobs[service + ':' + action]
+    return this.props.integrationStore.lastJobs[service + ':' + action]
   }
 
   checkAuths = async () => {
@@ -75,12 +74,12 @@ class ItemStore {
   }
 }
 
-@view.attach('settingsStore')
+@view.attach('integrationStore')
 @view({
-  store: ItemStore,
+  store: IntegrationHeaderStore,
 })
-export default class Item {
-  render({ store, settingsStore, type }) {
+export default class ServiceHeader {
+  render({ store, integrationStore, type }) {
     return (
       <service key={type}>
         <header>
@@ -129,9 +128,6 @@ export default class Item {
               </UI.Button>
             </right>
           </top>
-          <sub if={store.auth}>
-            <SyncStatus settingsStore={settingsStore} service={type} />
-          </sub>
         </header>
       </service>
     )

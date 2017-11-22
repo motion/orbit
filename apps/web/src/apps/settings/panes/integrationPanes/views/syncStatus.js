@@ -6,14 +6,6 @@ import { uniq, min, capitalize } from 'lodash'
 
 @view
 export default class SyncStatus {
-  renderDrive() {
-    return (
-      <UI.Text size={1} opacity={0.6}>
-        syncing <b>3,320 files</b> across <b>130 folders</b>
-      </UI.Text>
-    )
-  }
-
   renderCalendar() {
     const { settingsStore } = this.props
     const events = (settingsStore.events || []).filter(
@@ -43,14 +35,6 @@ export default class SyncStatus {
     return (
       <UI.Text size={1} opacity={0.6}>
         syncing <b>{issues.length} issues</b> across <b>{repoCount} repos</b>
-      </UI.Text>
-    )
-  }
-
-  renderSlack() {
-    return (
-      <UI.Text size={1} opacity={0.6}>
-        syncing <b>4,200 conversations</b> across <b>13 channels</b>
       </UI.Text>
     )
   }

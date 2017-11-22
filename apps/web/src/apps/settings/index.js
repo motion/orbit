@@ -2,13 +2,10 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import PaneView from '~/apps/panes/pane'
-import * as Panes from './panes'
-import App, { Thing, Event, Job } from '~/app'
-import { sortBy, last, countBy, flatten } from 'lodash'
-import SettingHeader from './panes/header'
+import * as CategoryPanes from './panes'
 
 @view.provide({
-  settingsStore: class SettingsStore {
+  store: class SettingsStore {
     activeIndex = 0
     items = [
       { primary: 'Slack', type: 'slack', category: 'Integrations' },
@@ -20,66 +17,20 @@ import SettingHeader from './panes/header'
         category: 'Integrations',
       },
     ]
-    get type() {
-      return this.items[this.activeIndex].type
+    get activeItem() {
+      return this.items[this.activeIndex]
     }
     selectItem = (result, index) => {
       this.activeIndex = index
-    }
-
-    things = Thing.find()
-    jobs = Job.find()
-    events = Event.find()
-
-    get types() {
-      return ['github', 'calendar', 'drive', 'slack']
-    }
-
-    // creates a map of { 'type:action': job, .. }
-    get lastJobs() {
-      return flatten(
-        this.types.map(type =>
-          this.actions(type).map(action => `${type}:${action}`)
-        )
-      ).reduce((acc, name) => {
-        let job = (this.jobs || []).filter(
-          ({ type, action }) => `${type}:${action}` === name
-        )
-        job = last(sortBy(job, 'createdAt'))
-        return { ...acc, [name]: job }
-      }, {})
-    }
-
-    lastSync = (type, action) => {
-      this.jobs
-      return this.lastJobs[type + ':' + action]
-    }
-
-    get countByType() {
-      return countBy(this.things, 'integration')
-    }
-
-    actions = type =>
-      App.sync && App.sync[type] ? Object.keys(App.sync[type].syncers) : []
-
-    clearType = async name => {
-      const things = await Thing.getAll()
-      await Promise.all(
-        things.filter(t => t.integration === name).map(t => t.remove())
-      )
-    }
-
-    clearEverything = async () => {
-      await Promise.all((this.things || []).map(t => t.remove()))
-      return true
     }
   },
 })
 @view
 export default class SettingsPage {
-  render({ settingsStore }) {
-    const ActivePane = Panes[settingsStore.type]
-    if (!ActivePane) {
+  render({ store }) {
+    const category = store.activeItem.category.toLowerCase()
+    const CategoryPane = CategoryPanes[category]
+    if (!CategoryPane) {
       console.log('nada')
       return null
     }
@@ -101,11 +52,11 @@ export default class SettingsPage {
             <PaneView
               sidebar
               groupBy="category"
-              onSelect={settingsStore.selectItem}
-              items={settingsStore.items}
+              onSelect={store.selectItem}
+              items={store.items}
               getItem={(item, index) => ({
                 ...item,
-                highlight: () => index === settingsStore.activeIndex,
+                highlight: () => index === store.activeIndex,
               })}
               itemProps={{
                 size: 1.1,
@@ -127,8 +78,7 @@ export default class SettingsPage {
           </sidebar>
           <UI.Theme name="light">
             <content>
-              <SettingHeader type={settingsStore.type} />
-              <ActivePane settingsStore={settingsStore} />
+              <CategoryPane type={store.activeItem.type} />
             </content>
           </UI.Theme>
         </home>

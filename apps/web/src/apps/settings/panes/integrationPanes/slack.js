@@ -3,12 +3,20 @@ import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
 import { fuzzy } from '~/helpers'
 import App from '~/app'
+import * as _ from 'lodash'
 
 @view({
   store: class SlackStore {
     search = ''
+    get sortedChannels() {
+      return _.orderBy(
+        App.services.Slack.allChannels || [],
+        ['is_private', 'num_members'],
+        ['asc', 'desc']
+      )
+    }
     get channels() {
-      return fuzzy(App.services.Slack.allChannels || [], this.search, {
+      return fuzzy(this.sortedChannels, this.search, {
         keys: ['name'],
       })
     }
@@ -50,17 +58,13 @@ export default class Slack {
       flex: 1,
       overflowY: 'scroll',
     },
-    buttons: {
-      marginTop: 15,
-    },
   }
 }
 
 @view
 class SlackChannel extends React.Component {
   onChange = val => {
-    const { Slack } = App.services
-    Slack.setting.mergeUpdate({
+    App.services.Slack.setting.mergeUpdate({
       values: {
         channels: {
           [this.props.channel.id]: val,
@@ -73,62 +77,47 @@ class SlackChannel extends React.Component {
     const { Slack } = App.services
     const { channels = {} } = Slack.setting.values
     return (
-      <channel $$row>
+      <channel>
         <info>
-          <UI.Text fontWeight={600} size={1} $name opacity={0.7}>
-            #{channel.name}
+          <UI.Text $title fontWeight={600} size={1.2}>
+            #{channel.name} <span>({channel.num_members} Members)</span>
           </UI.Text>
-          <sub $$row>
-            <UI.Text>{channel.convos} convos &middot;</UI.Text>
-            {(channel.members || []).map((member, index) => (
-              <members key={member} $$row css={{ alignItems: 'center' }}>
-                <UI.Text $mark if={index > 0}>
-                  /
-                </UI.Text>
-                <img
-                  css={{ marginTop: 4 }}
-                  src={'/images/' + member + '.jpg'}
-                  $avatar
-                />
-                <UI.Text $memberName>{member}</UI.Text>
-              </members>
-            ))}
-          </sub>
+          <UI.Text $description ellipse size={1.1} opacity={0.6}>
+            {channel.topic.value}
+          </UI.Text>
         </info>
-        <UI.Field
-          row
-          size={1.2}
-          type="toggle"
-          defaultValue={channels[channel.id]}
-          onChange={this.onChange}
-        />
+        <options>
+          <UI.Field
+            size={1.2}
+            type="toggle"
+            defaultValue={channels[channel.id]}
+            onChange={this.onChange}
+          />
+        </options>
       </channel>
     )
   }
 
   static style = {
     channel: {
-      padding: [10, 15],
+      flex: 1,
+      flexFlow: 'row',
+      maxWidth: '100%',
+      overflow: 'hidden',
+      alignItems: 'center',
+      padding: [5, 10],
     },
-    avatar: {
-      width: 15,
-      height: 15,
-      borderRadius: 100,
-    },
-    members: {
-      marginLeft: 10,
-    },
-    member: {
-      marginLeft: 5,
-    },
-    memberName: {
-      marginLeft: 5,
-    },
-    mark: {
-      marginRight: 5,
+    span: {
+      fontWeight: 300,
+      fontSize: '80%',
     },
     info: {
       flex: 1,
+      overflow: 'hidden',
+    },
+    options: {
+      flexFlow: 'row',
+      flexShrink: 0,
     },
   }
 }

@@ -2,6 +2,7 @@
 import App, { Thing } from '~/app'
 import { createInChunks } from '~/sync/helpers'
 import debug from 'debug'
+import * as _ from 'lodash'
 
 const log = _ => _ || debug('sync')
 
@@ -21,8 +22,17 @@ export default class SlackAttachmentSync {
   run = async () => {
     console.log('running slack sync')
     if (this.service.activeChannels) {
-      for (const channelId of Object.keys(this.service.activeChannels)) {
-        console.log('channelId', channelId)
+      for (const channel of Object.keys(this.service.activeChannels)) {
+        const { messages } = await this.service.slack.channels.history({
+          channel,
+          limit: 1000,
+        })
+        const links = _.chain(messages)
+          .map(message => message.text.match(/\<([a-z]+:\/\/[^>]+)\>/g))
+          .filter(Boolean)
+          .flatten()
+          .value()
+        console.log('got links', links)
       }
     }
   }

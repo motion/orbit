@@ -96,6 +96,7 @@ export default class SettingsPage {
       flex: 1,
       background: '#fff',
       padding: 20,
+      width: 'calc(100% - 280px)',
     },
   }
 }

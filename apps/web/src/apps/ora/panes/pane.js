@@ -124,6 +124,7 @@ export default class Pane {
     sidebar,
     stackItem,
     hasParent,
+    disableGlow,
   }) {
     const getItemDefault = (item, index) => ({
       highlight: () => (getActiveIndex ? index === getActiveIndex() : false),
@@ -201,7 +202,10 @@ export default class Pane {
             ? list
             : typeof children === 'function' ? children(list) : children}
         </content>
-        <bottomGlow if={!drawer} $showWithActionBar={!!actions} />
+        <bottomGlow
+          if={!drawer && !disableGlow}
+          $showWithActionBar={!!actions}
+        />
       </pane>
     )
   }

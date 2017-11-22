@@ -16,6 +16,9 @@ import App from '~/app'
 })
 export default class Slack {
   render({ store }) {
+    // virtualized={{
+    //   measure: true,
+    // }}
     return (
       <slack>
         <UI.Input
@@ -25,16 +28,15 @@ export default class Slack {
           onChange={e => (store.search = e.target.value)}
           value={store.search}
         />
-        <UI.List
-          itemsKey={store.search}
-          virtualized={{
-            measure: true,
-          }}
-          items={store.channels}
-          getItem={channel => (
-            <SlackChannel key={channel.id} channel={channel} />
-          )}
-        />
+        <content>
+          <UI.List
+            itemsKey={store.search}
+            items={store.channels}
+            getItem={channel => (
+              <SlackChannel key={channel.id} channel={channel} />
+            )}
+          />
+        </content>
       </slack>
     )
   }
@@ -44,6 +46,10 @@ export default class Slack {
       padding: 10,
       flex: 1,
     },
+    content: {
+      flex: 1,
+      overflowY: 'scroll',
+    },
     buttons: {
       marginTop: 15,
     },
@@ -51,8 +57,21 @@ export default class Slack {
 }
 
 @view
-class SlackChannel {
+class SlackChannel extends React.Component {
+  onChange = val => {
+    const { Slack } = App.services
+    Slack.setting.mergeUpdate({
+      values: {
+        channels: {
+          [this.props.channel.id]: val,
+        },
+      },
+    })
+  }
+
   render({ channel }) {
+    const { Slack } = App.services
+    const { channels = {} } = Slack.setting.values
     return (
       <channel $$row>
         <info>
@@ -62,7 +81,7 @@ class SlackChannel {
           <sub $$row>
             <UI.Text>{channel.convos} convos &middot;</UI.Text>
             {(channel.members || []).map((member, index) => (
-              <members $$row css={{ alignItems: 'center' }}>
+              <members key={member} $$row css={{ alignItems: 'center' }}>
                 <UI.Text $mark if={index > 0}>
                   /
                 </UI.Text>
@@ -76,7 +95,13 @@ class SlackChannel {
             ))}
           </sub>
         </info>
-        <UI.Field row size={1.2} type="toggle" defaultValue={false} />
+        <UI.Field
+          row
+          size={1.2}
+          type="toggle"
+          defaultValue={channels[channel.id]}
+          onChange={this.onChange}
+        />
       </channel>
     )
   }

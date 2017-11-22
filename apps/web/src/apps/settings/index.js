@@ -50,7 +50,7 @@ export default class SettingsPage {
           />
           <sidebar $$draggable css={{ paddingTop: 36, width: 280 }}>
             <PaneView
-              sidebar
+              disableGlow
               groupBy="category"
               onSelect={store.selectItem}
               items={store.items}

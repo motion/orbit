@@ -4,6 +4,10 @@ export const smallSize = 900
 
 export const PAGE_WIDTH = smallSize
 
+export const SLANT_AMT = 50
+export const SECTION_HEIGHT = window.innerHeight
+export const SLANT = Math.atan(SLANT_AMT / (SECTION_HEIGHT / 2)) * 180 / Math.PI
+
 export const ORA_LEFT_PAD = 285
 export const ORA_TOP_PAD = 60
 export const ORA_TOP = Math.max(930, window.innerHeight - 120)

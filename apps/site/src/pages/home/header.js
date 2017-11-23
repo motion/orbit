@@ -5,43 +5,54 @@ import * as Constants from '~/constants'
 import { view } from '@mcro/black'
 import Illustration1 from './header/illustration1'
 import Illustration2 from './header/illustration2'
+import { throttle } from 'lodash'
 
 const titleProps = {
   size: 2.5,
   fontWeight: 200,
 }
 
-@view
+const height = () => {
+  return Math.max(Constants.ORA_TOP, window.innerHeight)
+}
+
+@view({
+  store: class {
+    height = height()
+    willMount() {
+      this.on(
+        window,
+        'resize',
+        throttle(() => {
+          this.height = height()
+        }, 80)
+      )
+    }
+  },
+})
 export default class HomeHeader {
-  render() {
+  render({ store: { height } }) {
     return (
       <View.Section
         css={{
           position: 'relative',
-          background: `linear-gradient(#444, #444)`,
+          background: `#000`,
           overflow: 'hidden',
-          minHeight: Constants.ORA_TOP,
         }}
       >
-        <View.Header />
+        <View.SectionContent css={{ height }}>
+          <View.Header />
 
-        <View.SectionContent
-          css={{
-            margin: 'auto',
-            padding: [300, 0, 50],
-          }}
-        >
           <content
             $$row
             css={{
+              margin: ['auto', 0],
               justifyContent: 'space-between',
             }}
           >
             <UI.Theme name="dark">
               <section
                 css={{
-                  marginTop: -220,
-                  height: 560,
                   position: 'relative',
                   width: '45%',
                 }}
@@ -79,15 +90,25 @@ export default class HomeHeader {
               </section>
             </UI.Theme>
 
+            <center
+              css={{
+                position: 'absolute',
+                top: 0,
+                left: '50%',
+                bottom: 0,
+                width: 1,
+                background: 'red',
+                zIndex: 100000,
+              }}
+            />
+
             <stripeBetween
               $$fullscreen
               css={{
-                marginLeft: 50,
                 top: -250,
-                bottom: -200,
+                bottom: -250,
                 right: '-150%',
                 left: '50%',
-                background: '#fff',
                 zIndex: 10,
               }}
             >
@@ -98,19 +119,28 @@ export default class HomeHeader {
                   top: 0,
                   left: 0,
                   bottom: 0,
-                  width: 100,
-                  zIndex: 100,
-                  transformOrigin: 'top left',
+                  width: Constants.SLANT_AMT * 2,
+                  zIndex: Constants.SLANT_AMT * 2,
+                  transformOrigin: 'center left',
                   transform: {
-                    rotate: '4deg',
+                    rotate: `${Constants.SLANT}deg`,
                   },
+                }}
+              />
+              <div
+                css={{
+                  position: 'absolute',
+                  background: '#fff',
+                  top: 0,
+                  left: Constants.SLANT_AMT,
+                  bottom: 0,
+                  width: '200%',
                 }}
               />
             </stripeBetween>
 
             <section
               css={{
-                marginTop: -100,
                 width: '45%',
                 zIndex: 20,
                 position: 'relative',
@@ -134,51 +164,6 @@ export default class HomeHeader {
                 >
                   Orbit keeps your team in sync, without hassle
                 </View.Title>
-
-                <arrows css={{ position: 'absolute', right: 0 }}>
-                  <arrowVertical
-                    css={{
-                      position: 'absolute',
-                      top: 200,
-                      right: Constants.ORA_WIDTH / 2,
-                      width: 10,
-                      paddingLeft: 40,
-                      height: 200,
-                      // borderRight: [4, 'solid', '#fff'],
-                      borderImage: 'linear-gradient(transparent, #fff) 1 100%',
-                      borderWidth: 4,
-                      borderRightStyle: 'solid',
-                      opacity: 0.3,
-                      alignItems: 'center',
-                    }}
-                  >
-                    <UI.Arrow
-                      css={{
-                        position: 'absolute',
-                        bottom: 0,
-                        marginBottom: -30,
-                        marginLeft: 2,
-                      }}
-                      color="#fff"
-                      size={30}
-                    />
-                  </arrowVertical>
-                </arrows>
-
-                <afterwards
-                  if={false}
-                  css={{
-                    margin: [30, 20, -30],
-                    textAlign: 'center',
-                    fontFamily: 'Hand of Sean',
-                    fontSize: 20,
-                    lineHeight: '25px',
-                    color: Constants.colorMain,
-                    opacity: 0.4,
-                  }}
-                >
-                  See it in action
-                </afterwards>
               </text>
             </section>
           </content>

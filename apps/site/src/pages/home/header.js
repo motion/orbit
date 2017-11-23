@@ -5,7 +5,6 @@ import * as Constants from '~/constants'
 import { view } from '@mcro/black'
 import Illustration1 from './header/illustration1'
 import Illustration2 from './header/illustration2'
-import { throttle } from 'lodash'
 
 const titleProps = {
   size: 2.5,
@@ -16,28 +15,9 @@ const titleProps = {
 export default class HomeHeader {
   render() {
     return (
-      <View.Section
-        css={{
-          position: 'relative',
-          background: `#000`,
-          overflow: 'hidden',
-        }}
-      >
+      <View.Section dark>
         <View.SectionContent fullscreen>
           <View.Header />
-
-          <center
-            css={{
-              position: 'absolute',
-              top: 0,
-              left: '50%',
-              bottom: 0,
-              width: 1,
-              background: 'red',
-              zIndex: 100000,
-            }}
-          />
-
           <View.Slant />
 
           <content

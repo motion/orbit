@@ -54,25 +54,9 @@ export default class SectionExamples {
 
     return (
       <UI.Theme name="dark">
-        <View.Section
-          css={{
-            padding: [40, 0],
-          }}
-        >
-          <View.SectionContent css={{ paddingRight: 430 }}>
-            <View.Slant background="red" inverse />
-
-            <background
-              css={{
-                position: 'absolute',
-                background: `radial-gradient(#fff 10%, transparent 70%)`,
-                height: 1800,
-                width: 2000,
-                bottom: '-100%',
-                right: '-95%',
-                zIndex: 1,
-              }}
-            />
+        <View.Section>
+          <View.SectionContent fullscreen>
+            <View.Slant dark inverse />
 
             <Orbitals
               planetStyles={{
@@ -89,7 +73,13 @@ export default class SectionExamples {
               }}
             />
 
-            <inner css={{ position: 'relative', zIndex: 3 }}>
+            <inner
+              css={{
+                position: 'relative',
+                zIndex: 3,
+                padding: [20, 480, 20, 0],
+              }}
+            >
               <UI.Text fontWeight={600} marginBottom={20} size={1.3}>
                 How Orbit works
               </UI.Text>

@@ -27,38 +27,9 @@ export default class SectionChat extends React.Component {
     return (
       <section css={{ position: 'relative' }}>
         <UI.Theme name="dark">
-          <View.Section
-            css={{
-              background: '#fff',
-              padding: [110, 0, 200],
-            }}
-          >
-            <stripeBetween
-              css={{
-                position: 'absolute',
-                top: -50,
-                left: 32,
-                zIndex: 0,
-              }}
-            >
-              <fadeDown
-                css={{
-                  position: 'absolute',
-                  top: 520,
-                  left: -673,
-                  width: 2000,
-                  height: 1000,
-                  background: Constants.dark2,
-                  zIndex: 2,
-                  transform: {
-                    rotate: '94deg',
-                    scale: 1,
-                    y: 115,
-                  },
-                }}
-              />
-            </stripeBetween>
-            <View.SectionContent padRight>
+          <View.Section dark>
+            <View.SectionContent fullscreen padRight>
+              <View.Slant />
               <View.Title size={3}>Wherever you are</View.Title>
               <View.SubTitle size={3}>
                 Ora lives on your desktop and works across many apps.

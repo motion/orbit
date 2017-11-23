@@ -3,7 +3,6 @@ import * as React from 'react'
 import * as Constants from '~/constants'
 import * as View from '~/views'
 import * as UI from '@mcro/ui'
-import Orbitals from './orbitals'
 
 const Logo = props => (
   <img
@@ -89,19 +88,6 @@ export default class SectionExamples {
         <View.Section>
           <View.SectionContent fullscreen>
             <View.Slant dark inverse />
-
-            <Orbitals
-              planetStyles={{
-                background: Constants.colorTeal,
-                border: [1, '#ccc'],
-              }}
-              css={{
-                zIndex: 0,
-                margin: ['auto', 0],
-                right: -400,
-                left: 'auto',
-              }}
-            />
 
             <inner
               css={{

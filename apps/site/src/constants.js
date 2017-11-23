@@ -29,7 +29,7 @@ export const screen = {
 }
 
 export const dark1 = UI.color(colorMain)
-  .darken(0.7)
+  .darken(0.75)
   .toString()
 export const dark2 = UI.color(colorSecondary)
   .darken(0.45)

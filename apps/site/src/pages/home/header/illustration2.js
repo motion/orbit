@@ -1,7 +1,7 @@
 import * as React from 'react'
 import * as Constants from '~/constants'
 import { view } from '@mcro/black'
-import Orbitals from '../orbitals'
+import * as Views from '~/views'
 
 @view
 export default class Illustration2 {
@@ -17,7 +17,7 @@ export default class Illustration2 {
         }}
         {...props}
       >
-        <Orbitals
+        <Views.Orbitals
           rings={2}
           hideRings={{
             0: true,

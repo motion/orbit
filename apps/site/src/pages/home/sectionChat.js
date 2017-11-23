@@ -49,6 +49,19 @@ export default class SectionChat extends React.Component {
               <content css={{ zIndex: 10 }}>
                 <FakeSlack />
               </content>
+
+              <View.Orbitals
+                planetStyles={{
+                  background: Constants.colorTeal,
+                  border: [1, '#ccc'],
+                }}
+                css={{
+                  zIndex: 9,
+                  margin: ['auto', 0],
+                  right: -400,
+                  left: 'auto',
+                }}
+              />
             </View.SectionContent>
           </View.Section>
         </UI.Theme>

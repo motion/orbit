@@ -61,10 +61,6 @@ export const Slant = ({ dark, inverse, backgroundColor = '#fff' }) => {
 export const Section = view(
   'section',
   {
-    marginLeft: -100,
-    marginRight: -100,
-    paddingLeft: 100,
-    paddingRight: 100,
     position: 'relative',
     overflow: 'hidden',
   },

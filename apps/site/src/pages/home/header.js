@@ -25,6 +25,7 @@ export default class HomeHeader {
             css={{
               margin: ['auto', 0],
               justifyContent: 'space-between',
+              userSelect: 'none',
             }}
           >
             <UI.Theme name="dark">
@@ -32,36 +33,19 @@ export default class HomeHeader {
                 css={{
                   position: 'relative',
                   width: '45%',
+                  marginTop: -90,
                 }}
               >
                 <View.Title {...titleProps} textAlign="right">
                   Company knowledge shouldn't be so messy
                 </View.Title>
-
                 <inner
                   css={{
                     position: 'relative',
-                    margin: [35, 0, 0, 0],
+                    margin: [10, 0, 0, 0],
                     userSelect: 'none',
                   }}
                 >
-                  <img
-                    if={false}
-                    src="/watercolor.png"
-                    css={{
-                      position: 'absolute',
-                      top: 0,
-                      opacity: 0.6,
-                      left: -40,
-                      width: 2022,
-                      height: 904,
-                      zIndex: 0,
-                      transformOrigin: 'top left',
-                      transform: { scale: 0.5 },
-                      filter: 'hue-rotate(-45deg) brightness(0.99)',
-                      margin: '-20%',
-                    }}
-                  />
                   <Illustration1 css={{ transform: { scale: 1 } }} />
                 </inner>
               </section>
@@ -71,14 +55,12 @@ export default class HomeHeader {
               css={{
                 width: '45%',
                 zIndex: 20,
-                position: 'relative',
               }}
             >
               <inner
                 css={{
                   position: 'relative',
-                  minHeight: 220,
-                  userSelect: 'none',
+                  height: 220,
                 }}
               >
                 <Illustration2 css={{ transform: { scale: 1 } }} />

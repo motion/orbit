@@ -40,7 +40,7 @@ export const Hr = view('hr', {
 })
 
 export const Link = view('a', {
-  color: Constants.colorMain,
+  color: Constants.colorSecondary,
   fontWeight: 500,
   // textDecoration: 'underline',
 })

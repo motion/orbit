@@ -97,11 +97,10 @@ export default class SectionExamples {
               }}
               css={{
                 zIndex: 0,
-                top: -100,
-                position: 'absolute',
-                right: -800,
+                margin: ['auto', 0],
+                right: -400,
                 left: 'auto',
-                transform: { scale: 1.3 },
+                transform: { scale: 1 },
               }}
             />
 

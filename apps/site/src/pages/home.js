@@ -48,15 +48,15 @@ let blurredRef
       if (!pageNode) {
         return
       }
-      const { scrollTop } = pageNode
-      if (scrollTop !== this.scrollPosition) {
+      const { scrollTop: y } = pageNode
+      if (y !== this.scrollPosition) {
         const { isSticky } = this
         // hide ora in header
-        if (scrollTop > Constants.ORA_TOP - Constants.ORA_TOP_PAD) {
+        if (y > Constants.ORA_TOP - Constants.ORA_TOP_PAD) {
           if (!isSticky) {
             this.isSticky = true
           }
-          const key = this.getActiveKey(scrollTop)
+          const key = this.getActiveKey(y)
           if (key !== this.activeKey) {
             this.activeKey = key
           }
@@ -67,18 +67,14 @@ let blurredRef
           }
         }
         if (blurredRef) {
-          if (!isSticky) {
-            blurredRef.parentNode.style.clip = this.getClipBox(
-              -scrollTop,
-              0,
-              -scrollTop
-            )
+          blurredRef.style.transform = `translateY(-${y}px)`
+          if (!this.isSticky) {
+            blurredRef.parentNode.style.clip = this.getClipBox(-y, 0, -y)
           } else {
             blurredRef.parentNode.style.clip = this.getClipBox()
-            blurredRef.style.transform = `translateY(-${scrollTop}px)`
           }
         }
-        this.scrollPosition = scrollTop
+        this.scrollPosition = y
       }
       if (!this.unmounted) {
         requestAnimationFrame(this.watchScroll)
@@ -122,15 +118,16 @@ let blurredRef
 
     getClipBox = (t = 0, r = 0, b = 0, l = 0) => {
       const { isSticky } = this
+      const radiusAdjust = 1.5
       const topPad = isSticky ? Constants.ORA_TOP_PAD : Constants.ORA_TOP
       const radius = Constants.ORA_BORDER_RADIUS / 2
       const height = Constants.ORA_HEIGHT
       const rightEdge = window.innerWidth / 2 + Constants.ORA_LEFT_PAD + 150
-      const bottom = height + topPad - radius
+      const bottom = height + topPad - radius / radiusAdjust
       const right = rightEdge - radius + 2
       const left = rightEdge - Constants.ORA_WIDTH + radius - 2
-      return `rect(${topPad + radius + t}px, ${right + r}px, ${bottom +
-        b}px, ${left + l}px)`
+      return `rect(${topPad + radius / radiusAdjust + t}px, ${right +
+        r}px, ${bottom + b}px, ${left + l}px)`
     }
   },
 })
@@ -170,6 +167,16 @@ export default class HomePage extends React.Component {
           <HomeHeader />
           {homeContents}
         </contents>
+
+        <centerline
+          if={false}
+          css={{
+            position: [0, 'auto', 0, '50%'],
+            width: 1,
+            background: 'red',
+            zIndex: 10000,
+          }}
+        />
       </page>
     )
   }

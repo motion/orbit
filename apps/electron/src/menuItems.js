@@ -32,6 +32,11 @@ export default class MenuEl {
         </SubMenu>
         <SubMenu label="Window">
           <MenuItems.ToggleFullscreen />
+          <MenuItem
+            label="Show Dev Tools"
+            accelerator="CmdOrCtrl+Option+i"
+            onClick={props.onShowDevTools}
+          />
         </SubMenu>
       </Menu>
     )

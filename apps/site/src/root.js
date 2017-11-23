@@ -34,22 +34,18 @@ export default class Root extends React.Component {
     const isSmall = width < Constants.smallSize
     return (
       <UI.Theme name="light">
-        <layout>
-          <content>
-            <CurrentPage
-              width={width}
-              isSmall={isSmall}
-              key={Router.key + this.state.resizeVersion}
-              {...Router.params}
-            />
-            <CurrentPage
-              if={!isSmall}
-              blurred
-              key={Router.key + '2' + this.state.resizeVersion}
-              {...Router.params}
-            />
-          </content>
-        </layout>
+        <CurrentPage
+          width={width}
+          isSmall={isSmall}
+          key={Router.key + this.state.resizeVersion}
+          {...Router.params}
+        />
+        <CurrentPage
+          if={!isSmall}
+          blurred
+          key={Router.key + '2' + this.state.resizeVersion}
+          {...Router.params}
+        />
       </UI.Theme>
     )
   }

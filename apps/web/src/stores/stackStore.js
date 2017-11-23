@@ -23,39 +23,7 @@ class StackItemStore {
     this.mainStore = store
   }
   get results() {
-    let results = this.store ? this.store.results : []
-    if (this.parent) {
-      const { result } = this
-      return [
-        // {
-        //   id: result.id,
-        //   result,
-        //   type: result.type,
-        //   isParent: true,
-        //   displayTitle: false,
-        //   children: (
-        //     <SidebarTitle
-        //       title={(this.store && this.store.title) || result.title}
-        //       icon={false && result.icon}
-        //       subtitle={result.subtitle}
-        //       onBack={this.stack.left}
-        //       backProps={{
-        //         icon: this.stack.length > 2 ? 'arrow-min-left' : 'home',
-        //       }}
-        //     />
-        //   ),
-        //   onClick: this.stack.left,
-        //   props: {
-        //     highlight: false,
-        //     css: {
-        //       borderBottom: [1, 'dotted', [255, 255, 255, 0.1]],
-        //     },
-        //   },
-        // },
-        ...results,
-      ]
-    }
-    return results
+    return this.store ? this.store.results : []
   }
   onSelect(item: Object, index: number) {
     // update the highlighted item after we animate
@@ -194,5 +162,8 @@ export default class StackStore {
   replace = result => {
     this.pop()
     this.push(result)
+  }
+  replaceInPlace = result => {
+    this.last.result = result
   }
 }

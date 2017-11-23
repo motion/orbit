@@ -13,7 +13,7 @@ if (process.env.IS_PROD) {
 export const VERSION = require('../package.json').version
 
 export const ORA_WIDTH = 300
-export const ORA_HEIGHT = 700
+export const ORA_HEIGHT = 600
 export const ACTION_BAR_HEIGHT = 50
 export const HEADER_HEIGHT = 36
 export const TRAY_WIDTH = 400

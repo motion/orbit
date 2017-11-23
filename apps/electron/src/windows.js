@@ -14,8 +14,10 @@ export default class Windows extends React.Component {
   sendOra = async name => console.log('called this.sendOra before setup', name)
   oraState = {}
   state = {
+    showDevTools: false,
     restart: false,
     showSettings: false,
+    showSettingsDevTools: false,
     size: [0, 0],
     position: [0, 0],
     trayPosition: [0, 0],
@@ -45,7 +47,6 @@ export default class Windows extends React.Component {
     Object.assign(this.repl.context, {
       Root: this,
     })
-    this.listenForMouse()
   }
 
   componentWillUnmount() {
@@ -53,28 +54,25 @@ export default class Windows extends React.Component {
     globalShortcut.unregisterAll()
   }
 
-  listenForMouse() {
-    this.on(ipcMain, 'mouse-listen', () => {
-      const triggerX = this.state.screenSize.width - 20
-      const triggerY = 20
-      const mousey = Helpers.mouse()
-      let hasLeftCorner = true
-      mousey.on(
-        'move',
-        throttle((x, y) => {
-          if (+x > triggerX && +y < triggerY) {
-            if (hasLeftCorner) {
-              hasLeftCorner = false
-              console.log('IN CORNER')
-              this.toggleShown()
-            }
-          } else {
-            hasLeftCorner = true
-          }
-        }, 60)
-      )
-    })
-  }
+  // listenForMouse() {
+  //   const triggerX = this.state.screenSize.width - 20
+  //   const triggerY = 20
+  //   const mousey = Helpers.mouse()
+  //   let hasLeftCorner = true
+  //   mousey.on(
+  //     'move',
+  //     throttle((x, y) => {
+  //       if (+x > triggerX && +y < triggerY) {
+  //         if (hasLeftCorner) {
+  //           hasLeftCorner = false
+  //           this.toggleShown()
+  //         }
+  //       } else {
+  //         hasLeftCorner = true
+  //       }
+  //     }, 60)
+  //   )
+  // }
 
   oraRef = ref => {
     if (ref) {
@@ -269,6 +267,14 @@ export default class Windows extends React.Component {
     }
   }
 
+  onShowDevTools = () => {
+    if (this.state.showSettings) {
+      this.setState({ showSettingsDevTools: !this.state.showSettingsDevTools })
+    } else {
+      this.setState({ showDevTools: !this.state.showDevTools })
+    }
+  }
+
   render() {
     const { error, restart } = this.state
     if (restart) {
@@ -294,20 +300,21 @@ export default class Windows extends React.Component {
       <App onBeforeQuit={this.onBeforeQuit} ref={this.onAppRef}>
         <MenuItems
           onPreferences={this.onPreferences}
+          onShowDevTools={this.onShowDevTools}
           getRef={this.onMenuRef}
           onQuit={this.onMenuQuit}
         />
         <Window
           {...appWindow}
           show={this.state.showSettings}
-          showDevTools={this.state.showSettings}
+          showDevTools={this.state.showSettingsDevTools}
           vibrancy="dark"
           transparent
           hasShadow
+          titleBarStyle="hiddenInset"
           defaultSize={this.state.size}
           size={this.state.size}
           file={`${Constants.APP_URL}/settings`}
-          titleBarStyle="customButtonsOnHover"
           position={this.state.position}
           onResize={this.onSettingsSized}
           onMoved={this.onSettingsMoved}
@@ -321,7 +328,7 @@ export default class Windows extends React.Component {
           transparent
           show
           alwaysOnTop
-          showDevTools
+          showDevTools={this.state.showDevTools}
           size={[Constants.ORA_WIDTH, 1000]}
           file={`${Constants.APP_URL}/ora`}
           position={this.state.trayPosition}

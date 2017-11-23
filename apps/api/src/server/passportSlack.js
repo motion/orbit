@@ -90,8 +90,8 @@ Strategy.prototype.userProfile = function(accessToken, done) {
 }
 
 /** The default oauth2 strategy puts the access_token into Authorization: header AND query string
-  * which is a violation of the RFC so lets override and not add the header and supply only the token for qs.
-  */
+ * which is a violation of the RFC so lets override and not add the header and supply only the token for qs.
+ */
 Strategy.prototype.get = function(url, callback) {
   this._oauth2._request('GET', url, {}, '', '', callback)
 }
@@ -104,8 +104,11 @@ Strategy.prototype.get = function(url, callback) {
  * @return {Object}
  */
 Strategy.prototype.authorizationParams = function(options) {
-  var params = {}
-  var team = options.team || this._team
+  const params = {}
+
+  params.scope = options.scope || this._scope
+
+  const team = options.team || this._team
   if (team) {
     params.team = team
   }

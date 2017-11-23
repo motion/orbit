@@ -95,6 +95,7 @@ function createViewDecorator(): ViewDecorator {
   }
 
   // pass on emitter
+  view.emitter = base.emitter
   view.on = base.on
   view.off = base.off
   view.emit = base.emit

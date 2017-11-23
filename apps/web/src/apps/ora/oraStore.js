@@ -9,6 +9,7 @@ import ContextStore from '~/context'
 import SHORTCUTS from './shortcuts'
 import { CurrentUser } from '~/app'
 import * as r2 from '@mcro/r2'
+import { throttle } from 'lodash'
 
 const BANNERS = {
   note: 'note',
@@ -23,7 +24,7 @@ const BANNER_TIMES = {
 }
 
 export default class OraStore {
-  stack = new StackStore([{ type: 'oramain' }])
+  stack = new StackStore([{ type: 'main' }])
   inputRef = null
   search = ''
   textboxVal = ''
@@ -64,8 +65,9 @@ export default class OraStore {
   @watch
   items = () =>
     !this.bucket
-      ? Thing.find()
+      ? Thing.find().limit(8)
       : Thing.find()
+          .limit(8)
           .where('bucket')
           .eq(this.bucket)
 
@@ -73,17 +75,19 @@ export default class OraStore {
 
   async willMount() {
     this.attachTrap('window', window)
-
+    // listeners
     this._listenForStateSync()
+    this.on(OS, 'ora-toggle', this.toggleHidden)
+    // watchers
     this._watchContext()
-    // side effect watchers
     this._watchFocus()
     this._watchFocusBar()
-    this._watchInput()
-    this._watchToggleHide()
-    this._watchMouse()
     this._watchBlurBar()
+<<<<<<< HEAD
 
+=======
+    this._watchCrawlStatus()
+>>>>>>> 65a4dad82fb58b50d088f2280cce710eb2e9d5de
     this.watch(() => {
       const { focused } = this.state
       // one frame later
@@ -91,6 +95,8 @@ export default class OraStore {
         this.wasBlurred = !focused
       }, 16)
     })
+    this.setState({}) // trigger first send
+    OS.send('start-ora')
   }
 
   setBanner = (type, message, timeout) => {
@@ -147,7 +153,7 @@ export default class OraStore {
     this.watch(() => {
       if (this.state.hidden) {
         // timeout based on animation
-        this.setTimeout(this.blurBar, 100)
+        this.setTimeout(this.blurBar, 150)
       }
     })
   }
@@ -157,7 +163,6 @@ export default class OraStore {
     this.on(OS, 'get-state', () => {
       OS.send('got-state', this.state)
     })
-
     // allows us to get updated electron state
     this.on(OS, 'electron-state', (event, state) => {
       this.electronState = state
@@ -166,22 +171,10 @@ export default class OraStore {
 
   _watchContext = () => {
     let lastContext = null
-
     this.watch(() => {
       const { context } = this.electronState
-      if (!context) {
-        if (this.stack.last.result.type === 'context') {
-          // if you want it to navigate back home automatically
-          // this.stack.pop()
-        }
-        return
-      }
       if (!context || !context.url || !context.title) {
         console.log('no context or url/title', this.context)
-        return
-      }
-      const isAlreadyOnResultsPane = this.stack.length > 1
-      if (isAlreadyOnResultsPane) {
         return
       }
       if (lastContext) {
@@ -193,8 +186,14 @@ export default class OraStore {
         title: context.selection || context.title,
         type: 'context',
         icon: context.application === 'Google Chrome' ? 'social-google' : null,
+        image: context.favicon,
       }
-      this.stack.navigate(nextStackItem)
+      const isAlreadyOnResultsPane = this.stack.length > 1
+      if (isAlreadyOnResultsPane) {
+        this.stack.replaceInPlace(nextStackItem)
+      } else {
+        this.stack.navigate(nextStackItem)
+      }
     })
   }
 
@@ -260,38 +259,13 @@ export default class OraStore {
     this.crawler.onStop()
   }
 
-  _watchMouse() {
-    OS.send('mouse-listen')
-    this.on(OS, 'mouse-in-corner', () => {
-      if (this.state.hidden) {
-        this.setState({ hidden: false })
-      }
-    })
-  }
-
-  _watchToggleHide() {
-    OS.send('start-ora')
-    this.on(OS, 'ora-toggle', () => {
-      this.setState({ hidden: !this.state.hidden })
-    })
-  }
+  toggleHidden = throttle(
+    () => this.setState({ hidden: !this.state.hidden }),
+    150
+  )
 
   hide = () => {
     this.setState({ hidden: true })
-  }
-
-  _watchInput() {
-    let lastChar = null
-    this.watch(() => {
-      const char = this.search[this.search.length - 1]
-      if (lastChar && this.search.length === 0) {
-        this.emit('clearSearch')
-      }
-      if (!lastChar && this.search.length) {
-        this.emit('startSearch')
-      }
-      lastChar = char
-    })
   }
 
   _watchFocusBar() {

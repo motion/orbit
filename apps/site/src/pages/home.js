@@ -16,8 +16,8 @@ let blurredRef
   homeStore: class HomeStore {
     bounds = {}
     ready = false
-    show = false
-    pageNode = document.body.parentNode
+    isSticky = false
+    pageNode = null
     activeKey = 0
     scrollPosition = 0
 
@@ -33,28 +33,42 @@ let blurredRef
       this.unmounted = true
     }
 
+    setPageRef = ref => {
+      if (!ref) return
+      if (this.props.blurred) {
+        blurredRef = ref.childNodes[0]
+      } else {
+        this.pageNode = ref
+      }
+    }
+
     watchScroll = () => {
       const { pageNode } = this
+      if (!pageNode) {
+        return
+      }
       const { scrollTop } = pageNode
       if (scrollTop !== this.scrollPosition) {
+        const { isSticky } = this
+
         // hide ora in header
         if (scrollTop > Constants.ORA_TOP - Constants.ORA_TOP_PAD) {
-          if (!this.show) {
-            this.show = true
+          if (!isSticky) {
+            this.isSticky = true
           }
           const key = this.getActiveKey(scrollTop)
           if (key !== this.activeKey) {
             this.activeKey = key
           }
         } else {
-          if (this.show) {
-            this.show = false
+          if (isSticky) {
+            this.isSticky = false
             this.activeKey = 0
           }
         }
 
         if (blurredRef) {
-          const scrollTo = this.show ? scrollTop : 0
+          const scrollTo = isSticky ? scrollTop : 0
           blurredRef.style.transform = `translateY(-${scrollTo}px)`
         }
         this.scrollPosition = scrollTop
@@ -111,48 +125,30 @@ export default class HomePage extends React.Component {
       setSection: homeStore.setSection,
     }
     return (
-      <page css={styles.page} ref={x => this.setRef(x)}>
+      <page css={styles.page} ref={homeStore.setPageRef}>
+        <HomeHeader />
         <Ora
           if={!blurred && homeStore.ready && !isSmall}
           homeStore={homeStore}
         />
-        <contents css={{ overflow: 'hidden' }}>
-          <HomeHeader />
-          <HomeExamples {...sectionProps} />
-          <HomeIntegrations if={false} {...sectionProps} />
-          <HomeChat {...sectionProps} />
-          <HomeSecurity {...sectionProps} />
-          <HomeHandsFree if={false} {...sectionProps} />
-          <View.Footer />
-        </contents>
+        <HomeExamples {...sectionProps} />
+        <HomeIntegrations if={false} {...sectionProps} />
+        <HomeChat {...sectionProps} />
+        <HomeSecurity {...sectionProps} />
+        <HomeHandsFree if={false} {...sectionProps} />
+        <View.Footer />
       </page>
     )
-  }
-
-  setRef(node) {
-    if (this.node) {
-      return
-    }
-    this.node = node
-    if (!node) {
-      return
-    }
-    if (this.props.blurred) {
-      blurredRef = node.childNodes[0]
-    }
   }
 
   getStyle() {
     if (!this.props.blurred) {
       return {
-        page: {
-          // height: window.innerHeight,
-          // overflowY: 'scroll',
-        },
+        page: {},
       }
     }
-    const show = this.props.homeStore.show
-    const topPad = show ? Constants.ORA_TOP_PAD : Constants.ORA_TOP
+    const isSticky = this.props.homeStore.isSticky
+    const topPad = isSticky ? Constants.ORA_TOP_PAD : Constants.ORA_TOP
     const radius = Constants.ORA_BORDER_RADIUS / 2
     const height = Constants.ORA_HEIGHT
     const rightEdge = window.innerWidth / 2 + Constants.ORA_LEFT_PAD + 150
@@ -162,9 +158,9 @@ export default class HomePage extends React.Component {
     return {
       page: {
         willChange: 'transform',
-        background: '#fff',
+        background: 'red',
         pointerEvents: 'none',
-        position: show ? 'fixed' : 'absolute',
+        position: isSticky ? 'fixed' : 'absolute',
         top: 0,
         left: 0,
         right: 0,
@@ -188,6 +184,11 @@ export default class HomePage extends React.Component {
   }
 
   static style = {
+    page: {
+      flex: 1,
+      height: '100%',
+      overflowY: 'scroll',
+    },
     contents: {},
     '@keyframes orbital0': {
       from: {

@@ -25,24 +25,25 @@
   - uber (zendesk?) - https://help.uber.com/h/6949160d-3eb6-42cd-8155-1ae3cf25be0b
   - zenefits - https://help.zenefits.com/Medical_Dental_Vision/Learn_About_Health_Insurance/Qualifying_Life_Events/01-Common_Qualifying_Life_Events/
 - crawler clear results between crawls
+- OAuth into Slack
+- car: reduce pane render calls, lots are happening
+- bug: if chrome is empty tab, dont show context
+- bug: ora pane flickering away when you try and edit crawl settings
+  - bug with running crawls on diff sites within same session
 
 # now
 
-- OAuth into Slack + settings pane to choose a room
+- bug: on window focus (clicked via dock or via task switch) make ora show if hidden
+- indexeddb for item contents, add hook to remove in model, add getter to fetch contents
+- settings pane to choose a room
 - Slack scan room for and collect links
 - Slack import using Readability
 - Crawler: if on a knowledgebase root of known type, have it auto-crawl
-
 - Crawler:
   - Needs to store crawl settings once completed so it can re-run
   - Needs to store proper url for each item so it can detect pinned
   - Needs improvement to ux while crawling
   - Needs place to see/edit stored crawl settings
-- car: reduce pane render calls, lots are happening
-- bug: if chrome is empty tab, dont show context
-- ux: better "unfocused" state visuals
-  - shadow should be less strong
-  - slightly less contrast on things
 - better way to prevent click events
   - problems:
     - bug: click happens even when dragging
@@ -52,14 +53,6 @@
   - solution:
     - hacky first version could just shim reactElement, shim onClick for any onclick, and prevent
       - we can just set window.shouldPreventClick for now
-- bug: ora pane flickering away when you try and edit crawl settings
-- crawler
-  - bug with running crawls on diff sites within same session
-  - show crawl status:
-    - change Start Crawl to Disable
-    - show crawl status in action bar (1/6 pages...)
-    - show Cancel Crawl button
-    - ideally, show this all in a slide up banner so you can keep moving
 - onboarding:
   - simple next/back onboarding pane
   - steps:
@@ -101,7 +94,6 @@
 
 ## small things
 - resizing the window (height)
-- settings pane: general settings + integrations split out
 - peek things
 - show body contents snippet when on thing
 - need to do bolding inside ui.text so it works well with clamps

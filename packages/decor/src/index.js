@@ -114,6 +114,7 @@ export default function decor(plugins: Array<[Plugin, Object] | Plugin>) {
   decorDecorator.off = (...args) => emitter.off(...args)
   decorDecorator.on = (...args) => emitter.on(...args)
   decorDecorator.emit = emit
+  decorDecorator.emitter = emitter
 
   return decorDecorator
 }

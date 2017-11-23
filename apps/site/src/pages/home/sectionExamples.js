@@ -56,7 +56,7 @@ export default class SectionExamples {
         <View.Section
           css={{
             // background: Constants.mainLight,
-            padding: [100, 0],
+            padding: [40, 0],
           }}
         >
           <View.SectionContent css={{ paddingRight: 430 }}>
@@ -74,7 +74,9 @@ export default class SectionExamples {
                   left: -1113,
                   width: 2000,
                   height: 1000,
-                  background: Constants.dark2,
+                  background: `linear-gradient(to left, #000, ${
+                    Constants.dark2
+                  })`,
                   zIndex: 2,
                   transform: {
                     rotate: '-96deg',
@@ -86,7 +88,7 @@ export default class SectionExamples {
                 <chromeBugCoverup
                   css={{
                     position: 'absolute',
-                    background: Constants.dark2,
+                    background: '#000',
                     top: 0,
                     bottom: 0,
                     right: -5,
@@ -103,7 +105,7 @@ export default class SectionExamples {
                   left: -1000,
                   marginLeft: 395,
                   height: 200,
-                  background: Constants.dark2,
+                  background: '#000',
                   zIndex: 1,
                 }}
               />
@@ -141,10 +143,10 @@ export default class SectionExamples {
                 How Orbit works
               </UI.Text>
               <UI.Text
-                size={3.8}
-                fontWeight={200}
+                size={3.5}
+                fontWeight={100}
                 padding={[0, 80, 30, 0]}
-                color={lightText}
+                color={[255, 255, 255, 0.5]}
               >
                 Insight as you talk to{' '}
                 <span css={{ fontWeight: 600, color: '#fff' }}>teammates</span>{' '}
@@ -152,7 +154,12 @@ export default class SectionExamples {
                 <span css={{ fontWeight: 600, color: '#fff' }}>customers</span>
               </UI.Text>
 
-              <UI.Text size={2} padding={[10, 80, 40, 0]} color="#fff">
+              <UI.Text
+                size={2}
+                padding={[10, 80, 40, 0]}
+                color={lightText}
+                fontWeight={200}
+              >
                 Some examples of how Orbit keeps you in the know:
               </UI.Text>
 

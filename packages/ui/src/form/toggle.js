@@ -22,9 +22,15 @@ export default class Toggle extends React.Component {
   }
 
   componentWillMount() {
-    if (this.props.defaultValue) {
-      this.setState({ on: this.props.defaultValue })
-    }
+    this.updateValue(this.props)
+  }
+
+  componentWillReceiveProps(props) {
+    this.updateValue(props)
+  }
+
+  updateValue(props) {
+    this.setState({ on: props.value || props.defaultValue })
   }
 
   componentDidMount() {
@@ -67,6 +73,8 @@ export default class Toggle extends React.Component {
       on: dontUse,
       dotSize,
       defaultValue,
+      value,
+      onChange,
       color,
       dark,
       barColor,

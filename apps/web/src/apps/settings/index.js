@@ -1,16 +1,86 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import Sidebar from './sidebar'
+import PaneView from '~/apps/ora/panes/pane'
+import * as CategoryPanes from './panes'
 
+@view.provide({
+  store: class SettingsStore {
+    activeIndex = 0
+    items = [
+      { primary: 'Slack', type: 'slack', category: 'Integrations' },
+      { primary: 'Github', type: 'github', category: 'Integrations' },
+      { primary: 'Google Drive', type: 'drive', category: 'Integrations' },
+      {
+        primary: 'Google Calendar',
+        type: 'calendar',
+        category: 'Integrations',
+      },
+    ]
+    get activeItem() {
+      return this.items[this.activeIndex]
+    }
+    selectItem = (result, index) => {
+      this.activeIndex = index
+    }
+  },
+})
 @view
 export default class SettingsPage {
-  render() {
+  render({ store }) {
+    const category = store.activeItem.category.toLowerCase()
+    const CategoryPane = CategoryPanes[category]
+    if (!CategoryPane) {
+      console.log('nada')
+      return null
+    }
     return (
       <UI.Theme name="clear-dark">
         <home $$fullscreen>
-          <Sidebar items={[{ primary: 'hi22' }]} />
-          <content>hi</content>
+          <handle
+            $$draggable
+            css={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              height: 40,
+              zIndex: 0,
+            }}
+          />
+          <sidebar $$draggable css={{ paddingTop: 36, width: 280 }}>
+            <PaneView
+              disableGlow
+              groupBy="category"
+              onSelect={store.selectItem}
+              items={store.items}
+              getItem={(item, index) => ({
+                ...item,
+                highlight: () => index === store.activeIndex,
+              })}
+              itemProps={{
+                size: 1.1,
+                padding: [8, 12],
+                glow: true,
+                glowProps: {
+                  color: '#fff',
+                  scale: 1,
+                  blur: 70,
+                  opacity: 0.3,
+                  show: false,
+                  resist: 60,
+                  zIndex: -1,
+                },
+                highlightBackground: [255, 255, 255, 0.1],
+                childrenEllipse: 2,
+              }}
+            />
+          </sidebar>
+          <UI.Theme name="light">
+            <content>
+              <CategoryPane type={store.activeItem.type} />
+            </content>
+          </UI.Theme>
         </home>
       </UI.Theme>
     )
@@ -23,9 +93,10 @@ export default class SettingsPage {
       flexFlow: 'row',
     },
     content: {
-      flexFlow: 'row',
       flex: 1,
-      position: 'relative',
+      background: '#fff',
+      padding: 20,
+      width: 'calc(100% - 280px)',
     },
   }
 }

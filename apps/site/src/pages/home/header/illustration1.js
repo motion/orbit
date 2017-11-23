@@ -48,6 +48,7 @@ export default class Illustration1 {
                 css={{
                   width: 150,
                   height: 150,
+                  opacity: 0.2,
                 }}
               />
               <img
@@ -89,6 +90,7 @@ export default class Illustration1 {
               <img
                 src="/figures/Cloud 2.svg"
                 css={{
+                  opacity: 0.2,
                   width: 150,
                   height: 150,
                 }}
@@ -273,7 +275,7 @@ export default class Illustration1 {
   static style = {
     icon: {
       // border: [1, [0, 0, 255, 0.075]],
-      background: [255, 255, 255, 0.1],
+      // background: [255, 255, 255, 0.1],
       borderRadius: 10,
       // opacity: 0.25,
       width: 45,

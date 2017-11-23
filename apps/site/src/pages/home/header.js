@@ -7,7 +7,7 @@ import Illustration1 from './header/illustration1'
 import Illustration2 from './header/illustration2'
 
 const titleProps = {
-  size: 3,
+  size: 2.5,
   fontWeight: 200,
 }
 
@@ -18,7 +18,7 @@ export default class HomeHeader {
       <View.Section
         css={{
           position: 'relative',
-          background: `linear-gradient(${Constants.dark1}, ${Constants.dark2})`,
+          background: `linear-gradient(${Constants.dark1}, #000)`,
           overflow: 'hidden',
           minHeight: Constants.ORA_TOP,
         }}
@@ -58,7 +58,6 @@ export default class HomeHeader {
                   }}
                 >
                   <img
-                    if={false}
                     src="/watercolor.png"
                     css={{
                       position: 'absolute',

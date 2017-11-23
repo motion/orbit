@@ -13,23 +13,22 @@ export default class Ora extends React.Component {
     if (window.innerWidth < Constants.smallSize) {
       return null
     }
-    const positionStyle = !show
-      ? {
-          position: 'absolute',
-          top: Constants.ORA_TOP,
-        }
-      : {
-          position: 'fixed',
-          top: Constants.ORA_TOP_PAD,
-        }
+    const positionStyle = {
+      position: 'sticky',
+      // top: Constants.ORA_TOP,
+    }
+    // : {
+    //     position: 'fixed',
+    //     top: Constants.ORA_TOP_PAD,
+    //   }
     return (
-      <UI.Theme name="dark">
-        <ora
-          style={{
-            ...positionStyle,
-            ...style,
-          }}
-        >
+      <ora
+        style={{
+          ...positionStyle,
+          ...style,
+        }}
+      >
+        <UI.Theme name="dark">
           <header>
             <UI.Icon name="zoom" />
           </header>
@@ -41,17 +40,19 @@ export default class Ora extends React.Component {
               items={items}
             />
           </content>
-        </ora>
-      </UI.Theme>
+        </UI.Theme>
+      </ora>
     )
   }
   static style = {
     ora: {
-      left: '50%',
-      marginLeft: Constants.ORA_LEFT_PAD,
-      transform: {
-        x: '-50%',
-      },
+      margin: [0, 0, -400, 800],
+      top: 20,
+      // left: '50%',
+      // marginLeft: Constants.ORA_LEFT_PAD,
+      // transform: {
+      //   x: '-50%',
+      // },
       width: Constants.ORA_WIDTH,
       height: Constants.ORA_HEIGHT,
       borderRadius: Constants.ORA_BORDER_RADIUS,

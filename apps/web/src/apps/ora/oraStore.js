@@ -83,11 +83,6 @@ export default class OraStore {
     this._watchFocus()
     this._watchFocusBar()
     this._watchBlurBar()
-<<<<<<< HEAD
-
-=======
-    this._watchCrawlStatus()
->>>>>>> 65a4dad82fb58b50d088f2280cce710eb2e9d5de
     this.watch(() => {
       const { focused } = this.state
       // one frame later

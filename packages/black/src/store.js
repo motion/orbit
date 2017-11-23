@@ -29,7 +29,7 @@ export const storeOptions = {
   },
   onStoreUnmount(store: StoreClass) {
     if (store.willUnmount) {
-      store.willUnmount.call(store)
+      store.willUnmount(store)
     }
     store.subscriptions.dispose()
   },

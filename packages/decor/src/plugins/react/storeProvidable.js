@@ -186,7 +186,7 @@ export default function storeProvidable(options, Helpers) {
 
         disposeStores() {
           if (!this.stores) {
-            log('no stores to dispose')
+            console.log('no stores to dispose')
             return
           }
           for (const name of Object.keys(this.stores)) {

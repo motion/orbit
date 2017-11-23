@@ -24,6 +24,7 @@ const OPTS = {
 }
 
 const lightText = UI.color(Constants.colorSecondary).lighten(0.4)
+const topColor = '#444'
 
 @view
 export default class SectionExamples {
@@ -74,7 +75,7 @@ export default class SectionExamples {
                   left: -1113,
                   width: 2000,
                   height: 1000,
-                  background: `linear-gradient(to left, #000, ${
+                  background: `linear-gradient(to left, ${topColor}, ${
                     Constants.dark2
                   })`,
                   zIndex: 2,
@@ -88,7 +89,7 @@ export default class SectionExamples {
                 <chromeBugCoverup
                   css={{
                     position: 'absolute',
-                    background: '#000',
+                    background: topColor,
                     top: 0,
                     bottom: 0,
                     right: -5,
@@ -105,7 +106,7 @@ export default class SectionExamples {
                   left: -1000,
                   marginLeft: 395,
                   height: 200,
-                  background: '#000',
+                  background: topColor,
                   zIndex: 1,
                 }}
               />

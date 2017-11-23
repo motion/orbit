@@ -18,7 +18,7 @@ export default class HomeHeader {
       <View.Section
         css={{
           position: 'relative',
-          background: `linear-gradient(${Constants.dark1}, #000)`,
+          background: `linear-gradient(#444, #444)`,
           overflow: 'hidden',
           minHeight: Constants.ORA_TOP,
         }}
@@ -40,7 +40,7 @@ export default class HomeHeader {
             <UI.Theme name="dark">
               <section
                 css={{
-                  marginTop: -210,
+                  marginTop: -220,
                   height: 560,
                   position: 'relative',
                   width: '45%',
@@ -53,11 +53,12 @@ export default class HomeHeader {
                 <inner
                   css={{
                     position: 'relative',
-                    margin: [70, 0, 40, 0],
+                    margin: [35, 0, 0, 0],
                     userSelect: 'none',
                   }}
                 >
                   <img
+                    if={false}
                     src="/watercolor.png"
                     css={{
                       position: 'absolute',
@@ -119,14 +120,13 @@ export default class HomeHeader {
                 css={{
                   position: 'relative',
                   minHeight: 220,
-                  margin: [20, 0, 0],
                   userSelect: 'none',
                 }}
               >
                 <Illustration2 css={{ transform: { scale: 1 } }} />
               </inner>
 
-              <text css={{ margin: [65, 0, 0, 20] }}>
+              <text css={{ margin: [45, 0, 0, 20] }}>
                 <View.Title
                   {...titleProps}
                   textAlign="left"

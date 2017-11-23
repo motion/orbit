@@ -123,8 +123,8 @@ export default class Illustration1 {
           <icon
             css={{
               transform: { rotate: '-10deg', scale: 0.65 },
-              top: 30,
-              left: 0,
+              top: 40,
+              left: 30,
             }}
           >
             <img
@@ -139,8 +139,8 @@ export default class Illustration1 {
           <icon
             css={{
               transform: { rotate: '15deg', scale: 0.65 },
-              top: 10,
-              right: 0,
+              top: 40,
+              right: 10,
             }}
           >
             <img

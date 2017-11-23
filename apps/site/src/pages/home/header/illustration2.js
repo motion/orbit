@@ -109,7 +109,7 @@ export default class Illustration2 {
               css={{
                 width: 170,
                 height: 170,
-                marginLeft: 80,
+                marginLeft: 75,
                 alignSelf: 'flex-end',
                 transform: { scaleX: -1 },
               }}

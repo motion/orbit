@@ -23,7 +23,6 @@ let blurredRef
 
     willMount() {
       window.homeStore = this
-      this.watchScroll()
       this.setTimeout(() => {
         this.ready = true
       }, 100)
@@ -33,13 +32,15 @@ let blurredRef
       this.unmounted = true
     }
 
+    setBlurredRef = ref => {
+      if (!ref) return
+      blurredRef = ref
+    }
+
     setPageRef = ref => {
       if (!ref) return
-      if (this.props.blurred) {
-        blurredRef = ref.childNodes[0]
-      } else {
-        this.pageNode = ref
-      }
+      this.pageNode = ref
+      this.watchScroll()
     }
 
     watchScroll = () => {
@@ -50,7 +51,6 @@ let blurredRef
       const { scrollTop } = pageNode
       if (scrollTop !== this.scrollPosition) {
         const { isSticky } = this
-
         // hide ora in header
         if (scrollTop > Constants.ORA_TOP - Constants.ORA_TOP_PAD) {
           if (!isSticky) {
@@ -66,10 +66,17 @@ let blurredRef
             this.activeKey = 0
           }
         }
-
         if (blurredRef) {
-          const scrollTo = isSticky ? scrollTop : 0
-          blurredRef.style.transform = `translateY(-${scrollTo}px)`
+          if (!isSticky) {
+            blurredRef.parentNode.style.clip = this.getClipBox(
+              -scrollTop,
+              0,
+              -scrollTop
+            )
+          } else {
+            blurredRef.parentNode.style.clip = this.getClipBox()
+            blurredRef.style.transform = `translateY(-${scrollTop}px)`
+          }
         }
         this.scrollPosition = scrollTop
       }
@@ -112,6 +119,19 @@ let blurredRef
         }
       }
     }
+
+    getClipBox = (t = 0, r = 0, b = 0, l = 0) => {
+      const { isSticky } = this
+      const topPad = isSticky ? Constants.ORA_TOP_PAD : Constants.ORA_TOP
+      const radius = Constants.ORA_BORDER_RADIUS / 2
+      const height = Constants.ORA_HEIGHT
+      const rightEdge = window.innerWidth / 2 + Constants.ORA_LEFT_PAD + 150
+      const bottom = height + topPad - radius
+      const right = rightEdge - radius + 2
+      const left = rightEdge - Constants.ORA_WIDTH + radius - 2
+      return `rect(${topPad + radius + t}px, ${right + r}px, ${bottom +
+        b}px, ${left + l}px)`
+    }
   },
 })
 @view
@@ -124,19 +144,32 @@ export default class HomePage extends React.Component {
       homeStore,
       setSection: homeStore.setSection,
     }
+
+    const homeContents = [
+      <HomeExamples {...sectionProps} />,
+      //<HomeIntegrations if={false} {...sectionProps} />,
+      <HomeChat {...sectionProps} />,
+      <HomeSecurity {...sectionProps} />,
+      <HomeHandsFree {...sectionProps} />,
+      <View.Footer />,
+    ].map((x, index) => React.cloneElement(x, { key: index }))
+
     return (
-      <page css={styles.page} ref={homeStore.setPageRef}>
-        <HomeHeader />
+      <page css={styles.page} ref={!blurred && homeStore.setPageRef}>
+        <HomeHeader if={!blurred} />
         <Ora
           if={!blurred && homeStore.ready && !isSmall}
           homeStore={homeStore}
         />
-        <HomeExamples {...sectionProps} />
-        <HomeIntegrations if={false} {...sectionProps} />
-        <HomeChat {...sectionProps} />
-        <HomeSecurity {...sectionProps} />
-        <HomeHandsFree if={false} {...sectionProps} />
-        <View.Footer />
+        {!blurred && homeContents}
+        <contents
+          if={blurred}
+          ref={homeStore.setBlurredRef}
+          css={{ overflow: 'hidden' }}
+        >
+          <HomeHeader />
+          {homeContents}
+        </contents>
       </page>
     )
   }
@@ -147,27 +180,17 @@ export default class HomePage extends React.Component {
         page: {},
       }
     }
-    const isSticky = this.props.homeStore.isSticky
-    const topPad = isSticky ? Constants.ORA_TOP_PAD : Constants.ORA_TOP
-    const radius = Constants.ORA_BORDER_RADIUS / 2
-    const height = Constants.ORA_HEIGHT
-    const rightEdge = window.innerWidth / 2 + Constants.ORA_LEFT_PAD + 150
-    const bottom = height + topPad - radius
-    const right = rightEdge - radius + 2
-    const left = rightEdge - Constants.ORA_WIDTH + radius - 2
     return {
       page: {
+        background: '#fff',
         willChange: 'transform',
-        background: 'red',
         pointerEvents: 'none',
-        position: isSticky ? 'fixed' : 'absolute',
+        position: 'absolute',
         top: 0,
         left: 0,
         right: 0,
         zIndex: 1000,
-        // transition: 'opacity ease-in 400ms',
-        // opacity:  ? 1 : 0,
-        clip: `rect(${topPad + radius}px, ${right}px, ${bottom}px, ${left}px)`,
+        clip: this.props.homeStore.getClipBox(),
       },
     }
   }

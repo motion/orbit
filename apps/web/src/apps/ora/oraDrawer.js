@@ -11,22 +11,22 @@ import Drawer from '~/views/drawer'
 })
 export default class OraDrawer {
   render({ store, oraStore }) {
-    const { crawlState, crawlStatus, crawlResults } = oraStore
-    const statusOpen = !crawlResults && crawlState && crawlStatus
+    const { crawler } = oraStore
+    const statusOpen = !crawler.results && crawler.isRunning && crawler.status
 
     return (
       <drawers>
         <Drawer
-          open={crawlResults}
+          open={crawler.results}
           collapsable
           collapsed={!store.resultsShown}
           onCollapse={store.ref('resultsShown').toggle}
-          renderTitle={() => `Crawl Results (${crawlResults.length})`}
+          renderTitle={() => `Crawl Results (${crawler.results.length})`}
           size={300}
         >
-          <content $$flex if={crawlResults}>
+          <content $$flex if={crawler.results}>
             <UI.List
-              items={crawlResults}
+              items={crawler.results}
               getItem={({ contents }) => ({
                 primary: contents.title,
                 children: contents.body,
@@ -42,14 +42,16 @@ export default class OraDrawer {
           collapsed={!store.statusShown}
           onCollapse={store.ref('statusShown').toggle}
           renderTitle={() =>
-            `Crawling (${crawlStatus.count} of ${crawlState.maxPages})`
+            `Crawling (${crawler.status.count} of ${crawler.settings.maxPages})`
           }
-          renderProgress={() => crawlStatus.count / crawlState.maxPages * 100}
+          renderProgress={() =>
+            crawler.status.count / crawler.settings.maxPages * 100
+          }
           size={150}
         >
-          <content $$flex if={crawlState}>
+          <content $$flex if={crawler.status}>
             <UI.Text opacity={0.5} ellipse css={{ marginRight: 10 }}>
-              Entry: {crawlState.entry}
+              Entry: {crawler.status.entry}
               <br />
               Attempted URLs: 0
             </UI.Text>

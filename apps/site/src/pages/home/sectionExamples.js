@@ -92,7 +92,7 @@ export default class SectionExamples {
 
             <Orbitals
               planetStyles={{
-                background: '#fff',
+                background: Constants.colorTeal,
                 border: [1, '#ccc'],
               }}
               css={{
@@ -100,7 +100,6 @@ export default class SectionExamples {
                 margin: ['auto', 0],
                 right: -400,
                 left: 'auto',
-                transform: { scale: 1 },
               }}
             />
 

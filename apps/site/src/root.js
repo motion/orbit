@@ -49,12 +49,4 @@ export default class Root extends React.Component {
       </UI.Theme>
     )
   }
-
-  static style = {
-    // layout: {
-    //   width: '100%',
-    //   maxWidth: '100%',
-    //   overflow: 'hidden',
-    // },
-  }
 }

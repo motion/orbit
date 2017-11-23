@@ -49,7 +49,6 @@ export default ({
   ...props
 }) => {
   const size = rings * 360
-  console.log('render orbital')
 
   return (
     <orbitals
@@ -58,6 +57,9 @@ export default ({
         left: '50%',
         marginLeft: -size / 2,
         width: size,
+        transform: {
+          z: 0,
+        },
       }}
       {...props}
     >

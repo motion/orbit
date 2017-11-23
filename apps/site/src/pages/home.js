@@ -71,7 +71,9 @@ let blurredRef
           if (!this.isSticky) {
             blurredRef.parentNode.style.clip = this.getClipBox(-y, 0, -y)
           } else {
-            blurredRef.parentNode.style.clip = this.getClipBox()
+            if (isSticky !== this.isSticky) {
+              blurredRef.parentNode.style.clip = this.getClipBox()
+            }
           }
         }
         this.scrollPosition = y
@@ -159,11 +161,7 @@ export default class HomePage extends React.Component {
           homeStore={homeStore}
         />
         {!blurred && homeContents}
-        <contents
-          if={blurred}
-          ref={homeStore.setBlurredRef}
-          css={{ overflow: 'hidden' }}
-        >
+        <contents if={blurred} ref={homeStore.setBlurredRef}>
           <HomeHeader />
           {homeContents}
         </contents>
@@ -190,7 +188,7 @@ export default class HomePage extends React.Component {
     return {
       page: {
         background: '#fff',
-        willChange: 'transform',
+        willChange: 'clip',
         pointerEvents: 'none',
         position: 'absolute',
         top: 0,
@@ -209,15 +207,19 @@ export default class HomePage extends React.Component {
     return {
       contents: {
         filter: 'blur(20px)',
+        overflow: 'hidden',
+        willChange: 'transform',
+        transform: { y: 0 },
       },
     }
   }
 
   static style = {
     page: {
-      flex: 1,
       height: '100%',
       overflowY: 'scroll',
+      // dont do this causes tons of paints:
+      // transform: { z: 0 },
     },
     contents: {},
     '@keyframes orbital0': {

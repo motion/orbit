@@ -23,8 +23,8 @@ export const Slant = ({ dark, inverse, backgroundColor = '#fff' }) => {
       css={{
         top: 0,
         bottom: 0,
-        right: inverse ? '50%' : '-150%',
-        left: inverse ? '-150%' : '50%',
+        right: inverse ? '50%' : '-50%',
+        left: inverse ? '-50%' : '50%',
         zIndex: 1,
       }}
     >

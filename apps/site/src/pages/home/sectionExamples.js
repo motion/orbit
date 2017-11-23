@@ -56,61 +56,11 @@ export default class SectionExamples {
       <UI.Theme name="dark">
         <View.Section
           css={{
-            // background: Constants.mainLight,
             padding: [40, 0],
           }}
         >
           <View.SectionContent css={{ paddingRight: 430 }}>
-            <stripeBetween
-              css={{
-                position: 'absolute',
-                top: -100,
-                left: 32,
-              }}
-            >
-              <fadeDown
-                css={{
-                  position: 'absolute',
-                  top: 520,
-                  left: -1113,
-                  width: 2000,
-                  height: 1000,
-                  background: `linear-gradient(to left, ${topColor}, ${
-                    Constants.dark2
-                  })`,
-                  zIndex: 2,
-                  transform: {
-                    rotate: '-96deg',
-                    scale: 1,
-                    y: 115,
-                  },
-                }}
-              >
-                <chromeBugCoverup
-                  css={{
-                    position: 'absolute',
-                    background: topColor,
-                    top: 0,
-                    bottom: 0,
-                    right: -5,
-                    width: 10,
-                    zIndex: 100,
-                  }}
-                />
-              </fadeDown>
-              <levelerStripe
-                css={{
-                  position: 'absolute',
-                  top: 0,
-                  width: 1000,
-                  left: -1000,
-                  marginLeft: 395,
-                  height: 200,
-                  background: topColor,
-                  zIndex: 1,
-                }}
-              />
-            </stripeBetween>
+            <View.Slant background="red" inverse />
 
             <background
               css={{

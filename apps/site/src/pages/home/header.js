@@ -12,26 +12,9 @@ const titleProps = {
   fontWeight: 200,
 }
 
-const height = () => {
-  return Math.max(Constants.ORA_TOP, window.innerHeight)
-}
-
-@view({
-  store: class {
-    height = height()
-    willMount() {
-      this.on(
-        window,
-        'resize',
-        throttle(() => {
-          this.height = height()
-        }, 80)
-      )
-    }
-  },
-})
+@view
 export default class HomeHeader {
-  render({ store: { height } }) {
+  render() {
     return (
       <View.Section
         css={{
@@ -40,8 +23,22 @@ export default class HomeHeader {
           overflow: 'hidden',
         }}
       >
-        <View.SectionContent css={{ height }}>
+        <View.SectionContent fullscreen>
           <View.Header />
+
+          <center
+            css={{
+              position: 'absolute',
+              top: 0,
+              left: '50%',
+              bottom: 0,
+              width: 1,
+              background: 'red',
+              zIndex: 100000,
+            }}
+          />
+
+          <View.Slant />
 
           <content
             $$row
@@ -89,55 +86,6 @@ export default class HomeHeader {
                 </inner>
               </section>
             </UI.Theme>
-
-            <center
-              css={{
-                position: 'absolute',
-                top: 0,
-                left: '50%',
-                bottom: 0,
-                width: 1,
-                background: 'red',
-                zIndex: 100000,
-              }}
-            />
-
-            <stripeBetween
-              $$fullscreen
-              css={{
-                top: -250,
-                bottom: -250,
-                right: '-150%',
-                left: '50%',
-                zIndex: 10,
-              }}
-            >
-              <div
-                css={{
-                  position: 'absolute',
-                  background: '#fff',
-                  top: 0,
-                  left: 0,
-                  bottom: 0,
-                  width: Constants.SLANT_AMT * 2,
-                  zIndex: Constants.SLANT_AMT * 2,
-                  transformOrigin: 'center left',
-                  transform: {
-                    rotate: `${Constants.SLANT}deg`,
-                  },
-                }}
-              />
-              <div
-                css={{
-                  position: 'absolute',
-                  background: '#fff',
-                  top: 0,
-                  left: Constants.SLANT_AMT,
-                  bottom: 0,
-                  width: '200%',
-                }}
-              />
-            </stripeBetween>
 
             <section
               css={{

@@ -3,6 +3,46 @@ import * as React from 'react'
 import * as UI from '@mcro/ui'
 import * as Constants from '~/constants'
 
+export const Slant = ({ inverse, background = '#fff' }) => (
+  <slant
+    $$fullscreen
+    css={{
+      top: 0,
+      bottom: 0,
+      right: inverse ? '50%' : '-150%',
+      left: inverse ? '-150%' : '50%',
+      zIndex: 1,
+    }}
+  >
+    <div
+      css={{
+        position: 'absolute',
+        background,
+        top: 0,
+        left: inverse ? 'auto' : 0,
+        right: inverse ? 0 : 'auto',
+        bottom: 0,
+        width: Constants.SLANT_AMT * 2,
+        zIndex: Constants.SLANT_AMT * 2,
+        transformOrigin: 'center right',
+        transform: {
+          rotate: `${(inverse ? -1 : 1) * Constants.SLANT}deg`,
+        },
+      }}
+    />
+    <div
+      css={{
+        position: 'absolute',
+        background,
+        top: 0,
+        right: inverse ? Constants.SLANT_AMT : '-200%',
+        left: inverse ? '-200%' : Constants.SLANT_AMT,
+        bottom: 0,
+      }}
+    />
+  </slant>
+)
+
 export const Text = props => <UI.Text size={1.5} marginBottom={20} {...props} />
 
 export const SubText = props => (
@@ -62,9 +102,6 @@ export const Section = view(
     },
     dark,
     space,
-    fullscreen: {
-      minHeight: Math.min(1200, window.innerHeight - 10),
-    },
   }
 )
 
@@ -87,6 +124,9 @@ export const SectionContent = view(
     row: {
       flexFlow: 'row',
       alignItems: 'center',
+    },
+    fullscreen: {
+      height: Math.min(1200, window.innerHeight - 5),
     },
   }
 )

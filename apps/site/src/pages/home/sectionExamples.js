@@ -39,6 +39,7 @@ export default class SectionExamples {
           getRef={setSection(key, opts)}
           opacity={isActive ? 1 : 0.32}
           fontWeight={300}
+          size={2}
           css={{
             transition: 'all ease-in 300ms',
             marginBottom: 50,
@@ -54,6 +55,37 @@ export default class SectionExamples {
 
     return (
       <UI.Theme name="dark">
+        <View.SectionContent>
+          <above
+            css={{
+              position: 'absolute',
+              top: -100,
+              height: 100,
+              left: 0,
+              right: '60%',
+              textAlign: 'right',
+              zIndex: 100,
+              color: '#fff',
+            }}
+          >
+            <UI.Text size={2} fontWeight={200}>
+              Unify your cloud
+            </UI.Text>
+
+            <across
+              $$fullscreen
+              css={{
+                transform: { x: '120%' },
+                textAlign: 'left',
+              }}
+            >
+              <UI.Text size={2} fontWeight={200} color="#000">
+                Answers in context
+              </UI.Text>
+            </across>
+          </above>
+        </View.SectionContent>
+
         <View.Section>
           <View.SectionContent fullscreen>
             <View.Slant dark inverse />
@@ -77,14 +109,14 @@ export default class SectionExamples {
               css={{
                 position: 'relative',
                 zIndex: 3,
-                padding: [20, 480, 20, 0],
+                padding: [100, 480, 100, 0],
               }}
             >
               <UI.Text fontWeight={600} marginBottom={20} size={1.3}>
-                How Orbit works
+                How it works
               </UI.Text>
               <UI.Text
-                size={3.5}
+                size={3}
                 fontWeight={100}
                 padding={[0, 80, 30, 0]}
                 color={[255, 255, 255, 0.5]}
@@ -96,6 +128,7 @@ export default class SectionExamples {
               </UI.Text>
 
               <UI.Text
+                if={false}
                 size={2}
                 padding={[10, 80, 40, 0]}
                 color={lightText}

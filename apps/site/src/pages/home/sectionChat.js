@@ -9,17 +9,17 @@ import FakeSlack from './demos/slack'
   store: class DemosStore {
     active = 0
 
-    sections = [
-      {
-        title: 'Browser',
-      },
-      {
-        title: 'Slack',
-      },
-      {
-        title: 'Email',
-      },
-    ]
+    sections = []
+    //   {
+    //     title: 'Browser',
+    //   },
+    //   {
+    //     title: 'Slack',
+    //   },
+    //   {
+    //     title: 'Email',
+    //   },
+    // ]
   },
 })
 export default class SectionChat extends React.Component {
@@ -28,10 +28,13 @@ export default class SectionChat extends React.Component {
       <section css={{ position: 'relative' }}>
         <UI.Theme name="dark">
           <View.Section dark>
-            <View.SectionContent fullscreen padRight>
+            <View.SectionContent
+              fullscreen
+              css={{ padding: [100, 430, 100, 0] }}
+            >
               <View.Slant />
               <View.Title size={3}>Wherever you are</View.Title>
-              <View.SubTitle size={3}>
+              <View.SubTitle size={2}>
                 Ora lives on your desktop and works across many apps.
               </View.SubTitle>
               <UI.Text size={1.5}>
@@ -43,7 +46,9 @@ export default class SectionChat extends React.Component {
                   ))}
                 </row>
               </UI.Text>
-              <FakeSlack />
+              <content css={{ zIndex: 10 }}>
+                <FakeSlack />
+              </content>
             </View.SectionContent>
           </View.Section>
         </UI.Theme>

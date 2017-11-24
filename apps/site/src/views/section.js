@@ -31,9 +31,15 @@ export const Slant = ({ dark, inverse, backgroundColor = '#fff' }) => {
       <div
         css={{
           position: 'absolute',
-          background,
-          top: -100,
-          bottom: -100,
+          background:
+            background.indexOf('linear') === 0
+              ? background.replace(
+                  'linear-gradient(',
+                  `linear-gradient(${170 + Constants.SLANT}deg, `
+                )
+              : background,
+          top: -20,
+          bottom: -20,
           left: inverse ? 'auto' : 0,
           right: inverse ? 0 : 'auto',
           width: Constants.SLANT_AMT * 2,

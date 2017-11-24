@@ -139,6 +139,7 @@ export default class OraStore {
         type: 'site',
         body: content,
         url,
+        bucket: this.bucket || 'Default',
       })
       console.log('made a thing', thing)
       this.setBanner(BANNERS.success, 'Added pin')

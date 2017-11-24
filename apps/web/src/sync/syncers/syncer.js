@@ -54,15 +54,20 @@ export default class Syncer {
             if (!Syncer) {
               console.error('no syncer for', key)
             } else {
-              this.syncers[key] = new Syncer({
-                setting: this.setting,
-                token: this.token,
-                helpers: this.helpers,
-              })
+              try {
+                this.syncers[key] = new Syncer({
+                  setting: this.setting,
+                  token: this.token,
+                  helpers: this.helpers,
+                })
 
-              // helper to make checking syncers easier
-              if (!this[key]) {
-                this[key] = this.syncers[key]
+                // helper to make checking syncers easier
+                if (!this[key]) {
+                  this[key] = this.syncers[key]
+                }
+              } catch (err) {
+                console.log('error creating syncer', key, Syncer)
+                console.error(err)
               }
             }
           }
@@ -76,7 +81,7 @@ export default class Syncer {
       throw new Error('Must provide action')
     }
     if (!this.token) {
-      console.log('No token found for syncer')
+      console.log(`No token found for syncer ${this.type} ${action}`)
       return
     }
     this.ensureSetting()

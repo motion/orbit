@@ -3,6 +3,7 @@ import App, { Thing } from '~/app'
 import { createInChunks } from '~/sync/helpers'
 import debug from 'debug'
 import * as _ from 'lodash'
+import * as r2 from '@mcro/r2'
 
 const log = _ => _ || debug('sync')
 
@@ -30,8 +31,25 @@ export default class SlackAttachmentSync {
           .map(message => message.text.match(/\<([a-z]+:\/\/[^>]+)\>/g))
           .filter(Boolean)
           .flatten()
+          // remove the <wrapping-things>
+          .map(link =>
+            link
+              .slice(1, link.length)
+              .slice(0, link.length - 2)
+              .replace(/\|.*$/g, '')
+          )
           .value()
         console.log('got links', links)
+        if (links.length) {
+          const results = await r2.post('http://localhost:3001/crawler/exact', {
+            json: {
+              options: {
+                entries: links,
+              },
+            },
+          }).json
+          console.log('got results', results)
+        }
       }
     }
   }

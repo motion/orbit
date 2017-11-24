@@ -106,6 +106,22 @@ export default class Server {
       }
     })
 
+    this.app.post('/crawler/exact', async (req, res) => {
+      const { options } = req.body
+      if (options && options.entries && options.entries.length) {
+        const crawler = new Crawler()
+        const [entry, ...queue] = options.entries
+        const results = await crawler.start(entry, {
+          disableLinkFinding: true,
+          queue,
+        })
+        res.json({ results })
+      } else {
+        console.log('no options.entries')
+        res.sendStatus(500)
+      }
+    })
+
     const crawler = new Crawler()
     let results = null
 

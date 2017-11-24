@@ -14,10 +14,10 @@
 * idb for Thing.body
 * merge crawler
 * endpoint for single page pin
+* pin single page button working
 
 # now
 
-* pin single page button working
 * slack syncer working using endpoint
 * slack syncer date working, index last 3 months
 * crawler ui cleanup

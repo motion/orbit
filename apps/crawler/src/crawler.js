@@ -216,7 +216,6 @@ export default class Crawler {
     if (!entry) {
       throw new Error('No entry given!')
     }
-    this.db = new CrawlerDB()
     this.count = 0
     this.isRunning = true
     this.hasFinished = false
@@ -227,6 +226,12 @@ export default class Crawler {
       ...this.options,
       ...runOptions,
     }
+    // options.queue for preset queue
+    this.db = new CrawlerDB({
+      queue: options.queue,
+      disableLinkFinding: options.disableLinkFinding,
+    })
+    // defaults
     const {
       puppeteerOptions,
       maxPages = Infinity,
@@ -358,40 +363,43 @@ export default class Crawler {
 
     const openPages = range(concurrentTabs).map(_ => true)
     const pages = await Promise.all(
-      openPages.map(async _ => await browser.newPage())
+      openPages.map(async () => await browser.newPage())
     )
     this.db.store(await runTarget(target, pages[0]))
     await sleep(50)
+    const shouldCrawlMoreThanOne = maxPages > 1
 
-    while (!this.hasFinished) {
-      const openIndex = openPages.indexOf(true)
-      if (openIndex !== -1) {
-        const target = this.db.shiftUrl()
-        if (target !== null) {
-          openPages[openIndex] = false
-          runTarget(target, pages[openIndex]).then(val => {
-            openPages[openIndex] = true
-            if (val) {
-              log.step('Downloaded ', this.db.getValid().length, 'pages')
-              if (
-                openPages.indexOf(false) === -1 &&
-                this.db.pageQueue.length === 0
-              ) {
-                this.hasFinished = true
+    if (shouldCrawlMoreThanOne) {
+      while (!this.hasFinished) {
+        const openIndex = openPages.indexOf(true)
+        if (openIndex !== -1) {
+          const target = this.db.shiftUrl()
+          if (target !== null) {
+            openPages[openIndex] = false
+            runTarget(target, pages[openIndex]).then(val => {
+              openPages[openIndex] = true
+              if (val) {
+                log.step('Downloaded ', this.db.getValid().length, 'pages')
+                if (
+                  openPages.indexOf(false) === -1 &&
+                  this.db.pageQueue.length === 0
+                ) {
+                  this.hasFinished = true
+                }
+                this.db.store(val)
+                if (val.contents) {
+                  this.count++
+                }
               }
-              this.db.store(val)
-              if (val.contents) {
-                this.count++
-              }
-            }
-          })
+            })
+          }
         }
-      }
-      await sleep(20)
+        await sleep(20)
 
-      if (this.count >= maxPages) {
-        log.crawl(`Max pages reached! ${maxPages}`)
-        break
+        if (this.count >= maxPages) {
+          log.crawl(`Max pages reached! ${maxPages}`)
+          break
+        }
       }
     }
 

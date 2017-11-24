@@ -18,6 +18,7 @@ import * as _ from 'lodash'
     }
 
     get channels() {
+      App.services.Slack.setting && App.services.Slack.setting.values
       return fuzzy(this.sortedChannels, this.search, {
         keys: ['name'],
       })
@@ -40,7 +41,7 @@ export default class Slack {
         />
         <content>
           <UI.List
-            itemsKey={store.search}
+            itemsKey={store.search + store.channels && store.channels.length}
             items={store.channels}
             getItem={channel => (
               <SlackChannel key={channel.id} channel={channel} />
@@ -77,6 +78,9 @@ class SlackChannel extends React.Component {
 
   render({ channel }) {
     const { Slack } = App.services
+    if (!Slack.setting) {
+      return null
+    }
     const { channels = {} } = Slack.setting.values
     return (
       <channel>

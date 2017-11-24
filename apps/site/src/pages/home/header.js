@@ -37,12 +37,14 @@ export default class HomeHeader {
                 }}
               >
                 <View.Title {...titleProps} textAlign="right">
-                  Company knowledge shouldn't be so messy
+                  <span css={{ marginRight: -10 }}>Company knowledge</span>
+                  <br />
+                  shouldn't be so messy
                 </View.Title>
                 <inner
                   css={{
                     position: 'relative',
-                    margin: [10, 0, 0, 0],
+                    margin: [20, 10, 0, 0],
                     userSelect: 'none',
                   }}
                 >
@@ -67,13 +69,14 @@ export default class HomeHeader {
                 <Illustration2 css={{ transform: { scale: 1 } }} />
               </inner>
 
-              <text css={{ margin: [45, 0, 0, 20] }}>
+              <text css={{ margin: [50, 0, 0, 20] }}>
                 <View.Title
                   {...titleProps}
                   textAlign="left"
                   color={Constants.dark2}
                 >
-                  Orbit keeps your team in sync, without hassle
+                  Orbit keeps your team in<br />
+                  <span css={{ marginLeft: -2 }}>sync, without hassle</span>
                 </View.Title>
               </text>
             </section>

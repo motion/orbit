@@ -11,7 +11,7 @@ export default class Illustration2 {
         $$row
         css={{
           flex: 1,
-          marginRight: -140,
+          marginRight: -70,
           justifyContent: 'center',
           userSelect: 'none',
         }}
@@ -22,9 +22,10 @@ export default class Illustration2 {
           hideRings={{
             0: true,
           }}
+          ringBackground="transparent"
           planetSize={60}
           planetStyles={{
-            background: Constants.mainLight,
+            background: '#fff',
             border: [1, Constants.mainLight],
           }}
           items={[
@@ -50,10 +51,10 @@ export default class Illustration2 {
           ]}
           css={{
             top: '-50%',
-            left: 235,
+            left: 188,
             transformOrigin: 'center center',
             transform: {
-              scale: 0.45,
+              scale: 0.47,
             },
           }}
         />
@@ -67,26 +68,6 @@ export default class Illustration2 {
         >
           <figure
             css={{
-              marginRight: -30,
-              zIndex: 100,
-              height: 180,
-            }}
-          >
-            <img
-              if={false}
-              src="/figures/Snail.svg"
-              css={{
-                margin: [0, 0, 0, -150],
-                width: 150,
-                height: 150,
-                zIndex: 1000,
-                alignSelf: 'flex-end',
-              }}
-            />
-          </figure>
-
-          <figure
-            css={{
               zIndex: 100,
               height: 180,
             }}
@@ -94,7 +75,7 @@ export default class Illustration2 {
             <img
               src="/figures/Hummingbird.svg"
               css={{
-                margin: [-250, 30, 0, -90],
+                margin: [-250, 0, 0, -90],
                 width: 120,
                 height: 120,
                 zIndex: 1000,

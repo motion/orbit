@@ -95,9 +95,14 @@ export default class Crawler {
         window.find(title)
         // select first class because it didn't work on any of my
         // test cases with all of them
-        titleEl = document.getSelection().anchorNode.parentNode
-        if (titleEl.tagName[0] !== 'H') continue
-
+        const { anchorNode } = document.getSelection()
+        if (!anchorNode) {
+          continue
+        }
+        titleEl = anchorNode.parentNode
+        if (titleEl.tagName[0] !== 'H') {
+          continue
+        }
         titleSelector = titleEl.classList[0]
           ? titleEl.classList[0].toString().trim()
           : null
@@ -105,16 +110,19 @@ export default class Crawler {
 
       window.getSelection().empty()
       window.find(content)
-      const contentParent = document.getSelection().anchorNode.parentNode
-        .parentNode
-      const contentSelector = contentParent.classList[0]
-        ? contentParent.classList[0].toString().trim()
-        : null
+      const { anchorNode } = document.getSelection()
+      if (anchorNode) {
+        const contentParent = document.getSelection().anchorNode.parentNode
+          .parentNode
+        const contentSelector = contentParent.classList[0]
+          ? contentParent.classList[0].toString().trim()
+          : null
 
-      return (
-        contentSelector &&
-        titleSelector && { title: titleSelector, content: contentSelector }
-      )
+        return (
+          contentSelector &&
+          titleSelector && { title: titleSelector, content: contentSelector }
+        )
+      }
     }, contents)
   }
 
@@ -224,7 +232,7 @@ export default class Crawler {
       maxPages = Infinity,
       maxRadius = Infinity,
       // maxOffPathRadius, this would be really nice
-      depth,
+      depth = '/',
       filterUrlExtensions = FILTER_URL_EXTENSIONS,
     } = options
 

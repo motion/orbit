@@ -12,11 +12,11 @@
     https://help.zenefits.com/Medical_Dental_Vision/Learn_About_Health_Insurance/Qualifying_Life_Events/01-Common_Qualifying_Life_Events/
 * indexeddb class
 * idb for Thing.body
+* merge crawler
+* endpoint for single page pin
 
 # now
 
-* merge crawler
-* endpoint for single page pin
 * pin single page button working
 * slack syncer working using endpoint
 * slack syncer date working, index last 3 months

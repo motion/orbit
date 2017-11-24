@@ -121,27 +121,30 @@ export default class OraStore {
       return
     }
     this.setBanner(BANNERS.note, 'Pinning...')
-    const token = `e441c83aed447774532894d25d97c528`
-    const { url } = this.context
-    const toFetch = `https://api.diffbot.com/v3/article?token=${token}&url=${
-      url
-    }`
-    const res = await fetch(toFetch).then(res => res.json())
-    if (res.error) {
-      this.setBanner(BANNERS.error, `Diffbot: ${res.error}`)
+    const { url } = this.osContext
+    const response = await r2.post('http://localhost:3001/crawler/single', {
+      json: { options: { entry: url } },
+    }).json
+    if (response.error) {
+      this.setBanner(BANNERS.error, `${response.error}`)
       return
     }
-    console.log('got res', res)
-    const { text, title } = res.objects[0]
-    const thing = await Thing.create({
-      title,
-      integration: 'manual',
-      type: 'manual',
-      body: text,
-      url,
-    })
-    this.setBanner(BANNERS.success, 'Added pin')
-    return thing
+    const { result } = response
+    if (result) {
+      const { url } = result
+      const { title, content } = result.contents
+      const thing = await Thing.create({
+        title,
+        integration: 'pin',
+        type: 'site',
+        body: content,
+        url,
+      })
+      console.log('made a thing', thing)
+      this.setBanner(BANNERS.success, 'Added pin')
+    } else {
+      this.setBanner(BANNERS.error, 'Failed pinning :(')
+    }
   }
 
   _watchBlurBar = () => {

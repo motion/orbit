@@ -12,7 +12,7 @@ export default class SlackAttachmentSync {
     this.token = token
     this.helpers = helpers
     // TODO REMOVE THIS IS TESTING PURPOSES ONLY:
-    this.run()
+    // this.run()
   }
 
   get service() {
@@ -20,7 +20,6 @@ export default class SlackAttachmentSync {
   }
 
   run = async () => {
-    console.log('running slack sync')
     if (this.service.activeChannels) {
       for (const channel of Object.keys(this.service.activeChannels)) {
         const { messages } = await this.service.slack.channels.history({

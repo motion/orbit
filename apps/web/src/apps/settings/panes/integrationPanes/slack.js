@@ -8,6 +8,7 @@ import * as _ from 'lodash'
 @view({
   store: class SlackStore {
     search = ''
+
     get sortedChannels() {
       return _.orderBy(
         App.services.Slack.allChannels || [],
@@ -15,6 +16,7 @@ import * as _ from 'lodash'
         ['asc', 'desc']
       )
     }
+
     get channels() {
       return fuzzy(this.sortedChannels, this.search, {
         keys: ['name'],

@@ -2,6 +2,9 @@
 import Model$ from './model'
 export const Model = Model$
 
+import IndexDB$ from './indexDB'
+export const IndexDB = IndexDB$
+
 // mobx helpers
 import * as Mobx from 'mobx'
 export const { computed, observable, autorun, react, isObservable } = Mobx

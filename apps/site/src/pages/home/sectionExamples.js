@@ -58,7 +58,7 @@ export default class SectionExamples {
           <above
             css={{
               position: 'absolute',
-              top: -100,
+              top: -150,
               height: 100,
               left: 0,
               right: '60%',
@@ -74,7 +74,7 @@ export default class SectionExamples {
             <across
               $$fullscreen
               css={{
-                transform: { x: '120%' },
+                transform: { x: '120%', y: 50 },
                 textAlign: 'left',
               }}
             >

@@ -2,7 +2,7 @@ import * as React from 'react'
 import * as View from '~/views'
 import * as UI from '@mcro/ui'
 
-const background = '#ffeb72'
+const background = '#f2f2f2'
 const bgLight = UI.color(background) //.lighten(0.15)
 const colorLight = bgLight.lighten(0.05) //.lighten(0.15)
 const colorDark = bgLight.darken(0.75)
@@ -14,7 +14,7 @@ export default props => (
         background,
         zIndex: 100000,
         padding: [140, 0],
-        boxShadow: [[0, 0, 100, [0, 0, 0, 0.2]]],
+        boxShadow: [[0, 0, 20, [0, 0, 0, 0.1]]],
         width: '105%',
         margin: [-50, '-2.5%'],
         overflow: 'visible',

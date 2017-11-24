@@ -25,13 +25,13 @@ export default class HomeHeader {
             css={{
               margin: ['auto', 0],
               justifyContent: 'space-between',
-              userSelect: 'none',
             }}
           >
             <UI.Theme name="dark">
               <section
                 css={{
                   position: 'relative',
+                  zIndex: 11,
                   width: '45%',
                   marginTop: -90,
                 }}
@@ -60,6 +60,7 @@ export default class HomeHeader {
               <inner
                 css={{
                   position: 'relative',
+                  zIndex: 11,
                   height: 220,
                 }}
               >

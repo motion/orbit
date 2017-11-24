@@ -48,14 +48,18 @@ export default class SectionChat extends React.Component {
 
             <View.Orbitals
               planetStyles={{
-                background: Constants.colorTeal,
-                border: [1, '#ccc'],
+                background: '#fff',
               }}
+              ringBackground="transparent"
+              rings={2}
               css={{
                 zIndex: 9,
                 margin: ['auto', 0],
-                right: -400,
+                right: -700,
                 left: 'auto',
+                transform: {
+                  scale: 2,
+                },
               }}
             />
           </View.SectionContent>

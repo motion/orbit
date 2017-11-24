@@ -144,6 +144,8 @@ export default class HomePage extends React.Component {
       setSection: homeStore.setSection,
     }
 
+    const sinWidth = 200
+
     const homeContents = [
       <HomeExamples {...sectionProps} />,
       //<HomeIntegrations if={false} {...sectionProps} />,
@@ -155,6 +157,29 @@ export default class HomePage extends React.Component {
 
     return (
       <page css={styles.page} ref={!blurred && homeStore.setPageRef}>
+        <View.Sine
+          if={!blurred}
+          color={Constants.colorSecondary}
+          strokeWidth={3}
+          amplitude={sinWidth / 2}
+          freq={0.006}
+          css={{
+            opacity: 1,
+            pointerEvents: 'none',
+            height: sinWidth,
+            marginLeft: sinWidth / 2,
+            position: 'absolute',
+            zIndex: 2,
+            top: 0,
+            left: '50%',
+            width: 100000,
+            transformOrigin: 'top left',
+            transform: {
+              rotate: '90deg',
+              scale: 1,
+            },
+          }}
+        />
         <HomeHeader if={!blurred} />
         <Ora
           if={!blurred && homeStore.ready && !isSmall}
@@ -165,7 +190,6 @@ export default class HomePage extends React.Component {
           <HomeHeader />
           {homeContents}
         </contents>
-
         <centerline
           if={false}
           css={{
@@ -217,7 +241,9 @@ export default class HomePage extends React.Component {
   static style = {
     page: {
       height: '100%',
+      overflowX: 'hidden',
       overflowY: 'scroll',
+      position: 'relative',
       // dont do this causes tons of paints:
       // transform: { z: 0 },
     },

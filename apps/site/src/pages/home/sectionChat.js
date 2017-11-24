@@ -25,47 +25,42 @@ import FakeSlack from './demos/slack'
 export default class SectionChat extends React.Component {
   render({ store }) {
     return (
-      <section css={{ position: 'relative' }}>
-        <UI.Theme name="dark">
-          <View.Section dark>
-            <View.SectionContent
-              fullscreen
-              css={{ padding: [100, 430, 100, 0] }}
-            >
-              <View.Slant />
-              <View.Title size={3}>Wherever you are</View.Title>
-              <View.SubTitle size={2}>
-                Ora lives on your desktop and works across many apps.
-              </View.SubTitle>
-              <UI.Text size={1.5}>
-                <row $$row>
-                  {store.sections.map(({ title }, index) => (
-                    <item key={title} $itemActive={index === store.active}>
-                      {title}
-                    </item>
-                  ))}
-                </row>
-              </UI.Text>
-              <content css={{ zIndex: 10 }}>
-                <FakeSlack />
-              </content>
+      <UI.Theme name="dark">
+        <View.Section dark>
+          <View.SectionContent fullscreen css={{ padding: [100, 430, 100, 0] }}>
+            <View.Slant />
+            <View.Title size={3}>Wherever you are</View.Title>
+            <View.SubTitle size={2}>
+              Ora lives on your desktop and works across many apps.
+            </View.SubTitle>
+            <UI.Text size={1.5}>
+              <row $$row>
+                {store.sections.map(({ title }, index) => (
+                  <item key={title} $itemActive={index === store.active}>
+                    {title}
+                  </item>
+                ))}
+              </row>
+            </UI.Text>
+            <content css={{ zIndex: 10 }}>
+              <FakeSlack />
+            </content>
 
-              <View.Orbitals
-                planetStyles={{
-                  background: Constants.colorTeal,
-                  border: [1, '#ccc'],
-                }}
-                css={{
-                  zIndex: 9,
-                  margin: ['auto', 0],
-                  right: -400,
-                  left: 'auto',
-                }}
-              />
-            </View.SectionContent>
-          </View.Section>
-        </UI.Theme>
-      </section>
+            <View.Orbitals
+              planetStyles={{
+                background: Constants.colorTeal,
+                border: [1, '#ccc'],
+              }}
+              css={{
+                zIndex: 9,
+                margin: ['auto', 0],
+                right: -400,
+                left: 'auto',
+              }}
+            />
+          </View.SectionContent>
+        </View.Section>
+      </UI.Theme>
     )
   }
 

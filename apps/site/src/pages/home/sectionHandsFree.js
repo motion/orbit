@@ -33,9 +33,7 @@ export default props => (
           fontWeight={200}
           color={UI.color(Constants.colorSecondary).lighten(0.5)}
         >
-          We're a small team thats been researching and building tools for
-          better team communication and collaboration, dynamic app generation,
-          and innovative app development.
+          Teamwork. It's how teams work.
         </View.Text>
         <View.Text size={3}>
           Orbit is going into private beta in December.

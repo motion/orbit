@@ -68,7 +68,7 @@ export default class SectionExamples {
             }}
           >
             <UI.Text size={2} fontWeight={200}>
-              Unify your cloud
+              Tame the cloud
             </UI.Text>
 
             <across
@@ -79,7 +79,7 @@ export default class SectionExamples {
               }}
             >
               <UI.Text size={2} fontWeight={200} color="#000">
-                Answers in context
+                See how
               </UI.Text>
             </across>
           </above>
@@ -128,7 +128,7 @@ export default class SectionExamples {
                     Discover a Slack conversation <Logo name="slack" /> as you
                     open a ticket <Logo name="jira" />.
                   </span>,
-                  { percentFromTop: 38 }
+                  { percentFromTop: 45 }
                 )}
                 {makeSection(
                   'example-2',
@@ -136,7 +136,7 @@ export default class SectionExamples {
                     Knowledgebase answers <Logo name="confluence" /> on hand the
                     second your customer asks in Zendesk <Logo name="zendesk" />.
                   </span>,
-                  { percentFromTop: 55 }
+                  { percentFromTop: 50 }
                 )}
                 {makeSection(
                   'example-3',
@@ -145,7 +145,7 @@ export default class SectionExamples {
                     <Logo name="google-drive" /> before you send{' '}
                     <Logo name="google-gmail" />.
                   </span>,
-                  { percentFromTop: 58 }
+                  { percentFromTop: 55 }
                 )}
                 {false &&
                   makeSection(

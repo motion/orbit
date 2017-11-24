@@ -1,20 +1,23 @@
 import * as React from 'react'
-import { OS } from '~/helpers'
+import { OS, fuzzy } from '~/helpers'
 import { Thing } from '~/app'
 import * as UI from '@mcro/ui'
 import { watch } from '@mcro/black'
 import { isEqual } from 'lodash'
 import After from '~/views/after'
+import CrawlSetup from './crawlSetup'
 
 const idFn = _ => _
 
 export default class ContextSidebar {
   @watch
   isPinned = () => this.osContext && Thing.findOne({ url: this.osContext.url })
+
   crawlerSettings = {
-    maxPages: 6,
+    maxPages: Infinity,
     depth: '/',
   }
+
   osContext = null
 
   willMount() {
@@ -24,6 +27,7 @@ export default class ContextSidebar {
       idFn(focusedApp)
       if (!isEqual(context, this.osContext)) {
         this.osContext = context
+        this.setDepth()
       }
     })
     this.watch(() => {
@@ -44,6 +48,14 @@ export default class ContextSidebar {
     // })
   }
 
+  setDepth = () => {
+    if (!this.osContext.url) {
+      return null
+    }
+
+    this.crawlerSettings.depth = new URL(this.osContext.url).pathname
+  }
+
   get oraStore() {
     return this.props.oraStore
   }
@@ -62,45 +74,48 @@ export default class ContextSidebar {
   }
 
   onDrawerClose() {
-    this.oraStore.removeCrawler()
+    this.oraStore.crawler.showing = false
   }
 
   get drawerTitle() {
     return 'Crawl Settings'
   }
 
-  get isShowingCrawlDrawer() {
-    return (
-      this.crawlerInfo &&
-      !this.oraStore.crawlState &&
-      !this.oraStore.crawlResults
-    )
-  }
-
   // can show a modal that slides in
   get drawer() {
-    if (!this.isShowingCrawlDrawer) {
+    if (!this.oraStore.crawler.showing) {
       return null
     }
+
+    return (
+      <CrawlSetup
+        settings={this.crawlerSettings}
+        osContext={this.osContext}
+        onChangeSettings={settings => (this.crawlerSettings = settings)}
+      />
+    )
+
     const fieldProps = {
       row: true,
       labelProps: {
         width: 90,
       },
     }
+
     return (
       <UI.List
         css={{
           maxWidth: '100%',
         }}
         groupBy="category"
-        items={[
+        items={
+          /*[
           {
             category: 'Preview',
-            primary: this.crawlerInfo.title,
+            primary: this.crawlerSettings.title,
             primaryEllipse: true,
-            secondary: this.crawlerInfo.entry,
-            children: this.crawlerInfo.body,
+            secondary: this.crawlerSettings.entry,
+            children: this.crawlerSettings.body,
           },
           ...Object.keys(this.crawlerSettings).map(key => ({
             category: 'Crawl Settings:',
@@ -112,23 +127,15 @@ export default class ContextSidebar {
               />
             ),
           })),
-        ]}
+        ]*/ [
+            {
+              category: 'Settings',
+              children: <div />,
+            },
+          ]
+        }
       />
     )
-  }
-
-  get crawlerInfo() {
-    return (
-      this.oraStore.electronState.context &&
-      this.oraStore.electronState.context.crawlerInfo
-    )
-  }
-
-  get crawlerOptions() {
-    return {
-      ...this.crawlerInfo,
-      ...this.crawlerSettings,
-    }
   }
 
   // this determines when the pane slides in
@@ -208,7 +215,7 @@ export default class ContextSidebar {
   }
 
   get actions() {
-    if (this.oraStore.crawlResults) {
+    if (this.oraStore.crawler.results) {
       return [
         {
           icon: 'remove',
@@ -227,7 +234,7 @@ export default class ContextSidebar {
         },
       ]
     }
-    if (this.crawlerInfo) {
+    if (this.oraStore.crawler.showing) {
       return [
         {
           flex: true,

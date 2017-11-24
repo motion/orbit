@@ -15,6 +15,7 @@ import debug from 'debug'
 
 const log = debug('api')
 
+const sleep = ms => new Promise(res => setTimeout(res, ms))
 const port = Constants.SERVER_PORT
 
 export default class Server {
@@ -88,22 +89,32 @@ export default class Server {
 
     const crawler = new Crawler()
 
+    let results = null
+
     this.app.post('/crawler/start', async (req, res) => {
       log(`Got a request for crawl`)
       const { options } = req.body
       if (options) {
         log('start crawl')
+        results = null
         if (crawler.isRunning) {
           log('stopping previous crawler')
           crawler.stop()
         }
-        const results = await crawler.start(options.entry, options)
-        log(`crawl results: ${results.length} results`)
-        res.json({ results })
+        crawler.start(options.entry, options).then(vals => {
+          results = vals
+        })
+        // allow crawler to reset
+        res.sendStatus(200)
       } else {
         log('No options sent')
         res.sendStatus(500)
       }
+    })
+
+    this.app.get('/crawler/results', (req, res) => {
+      log(`crawl results: ${(results || []).length} results`)
+      res.json(results || [])
     })
 
     this.app.post('/crawler/stop', async (req, res) => {

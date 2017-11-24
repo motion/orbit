@@ -3,6 +3,7 @@ import { watch } from '@mcro/black'
 import Mousetrap from 'mousetrap'
 import { OS, debounceIdle } from '~/helpers'
 import StackStore from '~/stores/stackStore'
+import Crawler from '~/stores/crawler'
 import keycode from 'keycode'
 import ContextStore from '~/context'
 import SHORTCUTS from './shortcuts'
@@ -33,9 +34,7 @@ export default class OraStore {
   focusedBar = false
   wasBlurred = false
   showWhiteBottomBg = false
-  crawlState = null
-  crawlStatus = null
-  crawlResults = null
+  crawler = new Crawler()
 
   // this is synced to electron!
   state = {
@@ -84,7 +83,6 @@ export default class OraStore {
     this._watchFocus()
     this._watchFocusBar()
     this._watchBlurBar()
-    this._watchCrawlStatus()
     this.watch(() => {
       const { focused } = this.state
       // one frame later
@@ -155,25 +153,6 @@ export default class OraStore {
     })
   }
 
-  _watchCrawlStatus = () => {
-    let watcher
-    this.watch(() => {
-      clearInterval(watcher)
-      if (this.crawlState) {
-        watcher = this.setInterval(async () => {
-          try {
-            const { status } = await r2.get(
-              'http://localhost:3001/crawler/status'
-            ).json
-            this.crawlStatus = status
-          } catch (err) {
-            clearInterval(watcher)
-          }
-        }, 1000)
-      }
-    })
-  }
-
   _listenForStateSync = () => {
     // allows electron to ask for updated app state
     this.on(OS, 'get-state', () => {
@@ -224,34 +203,27 @@ export default class OraStore {
   }
 
   startCrawl = async options => {
-    this.crawlState = options
-    this.crawlStatus = { count: 0 }
-    try {
-      const { results } = await r2.post('http://localhost:3001/crawler/start', {
-        json: { options },
-      }).json
-      // ensure not cancelled in meanwhile
-      if (this.crawlState) {
-        this.crawlResults = results
-      }
-    } catch (err) {
-      console.log('error during crawl', err)
-    } finally {
-      this.crawlState = false
+    this.crawler.showing = false
+    this.crawler.settings = {
+      entry: 'https://dropbox.com/help',
+      maxPages: 30,
+      depth: '/help',
     }
+
+    this.crawler.onStart()
   }
 
   cancelResults = () => {
-    this.crawlResults = null
+    this.crawler.onStop()
   }
 
   commitResults = async () => {
     this.setBanner(BANNERS.note, 'Saving...')
     let creating = []
-    const { crawlResults } = this
-    this.crawlResults = null
-    if (crawlResults) {
-      for (const { url, contents } of crawlResults) {
+    const { results } = this.crawler
+    this.crawler.clean()
+    if (results) {
+      for (const { url, contents } of results) {
         creating.push(
           Thing.create({
             url,
@@ -264,9 +236,9 @@ export default class OraStore {
         )
       }
     }
-    const results = await Promise.all(creating)
+    const thingResults = await Promise.all(creating)
     this.setBanner(BANNERS.success, 'Saved results!')
-    return results
+    return thingResults
   }
 
   removeCrawler = () => {
@@ -274,13 +246,12 @@ export default class OraStore {
   }
 
   injectCrawler = () => {
-    OS.send('inject-crawler')
+    this.crawler.showing = true
+    // OS.send('inject-crawler')
   }
 
   stopCrawl = async () => {
-    this.crawlState = false
-    this.crawlStatus = false
-    return await r2.post('http://localhost:3001/crawler/stop').json
+    this.crawler.onStop()
   }
 
   toggleHidden = throttle(

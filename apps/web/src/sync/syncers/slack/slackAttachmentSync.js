@@ -52,6 +52,9 @@ export default class SlackAttachmentSync {
           return
         }
 
+        console.log('disabling until /crawler/exact works')
+        return
+
         try {
           const results = await r2.post('http://localhost:3001/crawler/exact', {
             json: {

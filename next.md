@@ -15,11 +15,11 @@
 * merge crawler
 * endpoint for single page pin
 * pin single page button working
+* slack syncer working using endpoint
+* slack syncer date working, index last 3 months
 
 # now
 
-* slack syncer working using endpoint
-* slack syncer date working, index last 3 months
 * crawler ui cleanup
 * second window that tracks next to main window
 * second window shows peek view of items

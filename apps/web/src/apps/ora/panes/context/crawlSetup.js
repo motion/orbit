@@ -42,17 +42,27 @@ export default class CrawlSetup {
   render({ store, settings }) {
     return (
       <setup>
-        <top $$row>
-          <UI.Title size={1} opacity={0.8}>
-            Preview
-          </UI.Title>
-          <UI.Button $btn onClick={store.onPreview}>
+        <div if={store.crawler}>
+          <UI.Separator>Settings</UI.Separator>
+
+          <UI.Row>
+            <UI.Label>Version</UI.Label>
+            <UI.Text>{store.crawler.version}</UI.Text>
+          </UI.Row>
+
+          <UI.Row>
+            <UI.Label>Max Depth</UI.Label>
+            <UI.Input onChange={store.setDepth} value={settings.depth} />
+          </UI.Row>
+
+          <UI.Separator>Preview</UI.Separator>
+          <UI.Button
+            if={!store.crawler.isRunning}
+            $btn
+            onClick={store.onPreview}
+          >
             run preview
           </UI.Button>
-        </top>
-        <div if={store.crawler}>
-          <UI.Title>version {store.crawler.version}</UI.Title>
-          <input type="text" onChange={store.setDepth} value={settings.depth} />
           <UI.Title if={store.crawler.isRunning}>running</UI.Title>
           <UI.Title if={store.crawler.results}>
             previewing {store.crawler.results.length} results
@@ -73,7 +83,6 @@ export default class CrawlSetup {
   }
 
   static style = {
-    top: {},
     btn: {
       marginLeft: 20,
     },

@@ -42,6 +42,7 @@ import import_Circle from './circle'
 import import_Surface from './surface'
 import import_SizedSurface from './sizedSurface'
 import import_Date from './date'
+import import_Separator from './separator'
 import import_FakeText from './fake/fakeText'
 
 // effects
@@ -80,6 +81,7 @@ export const Drawer = import_Drawer
 export const Dropdown = import_Dropdown
 export const Ellipse = import_Ellipse
 export const ContextMenu = import_ContextMenu
+export const Separator = import_Separator
 export const Card = import_Card
 export const Link = import_Link
 export const List = import_List

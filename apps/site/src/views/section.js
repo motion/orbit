@@ -10,12 +10,20 @@ const padRight = {
   },
 }
 
-export const Slant = ({ dark, inverse, backgroundColor = '#fff' }) => {
+export const Slant = ({
+  dark,
+  inverse,
+  inverseSlant,
+  inverseBackground,
+  backgroundColor = '#fff',
+  ...props
+}) => {
   let background = backgroundColor
   if (dark) {
-    background = inverse
-      ? Constants.darkBackgroundInverse
-      : Constants.darkBackground
+    background =
+      inverse && !inverseBackground
+        ? Constants.darkBackgroundInverse
+        : Constants.darkBackground
   }
   return (
     <slant
@@ -27,6 +35,7 @@ export const Slant = ({ dark, inverse, backgroundColor = '#fff' }) => {
         left: inverse ? '-50%' : '50%',
         zIndex: 1,
       }}
+      {...props}
     >
       <div
         css={{
@@ -46,7 +55,9 @@ export const Slant = ({ dark, inverse, backgroundColor = '#fff' }) => {
           zIndex: Constants.SLANT_AMT * 2,
           transformOrigin: 'center right',
           transform: {
-            rotate: `${(inverse ? -1 : 1) * Constants.SLANT}deg`,
+            rotate: `${(inverse ? -1 : 1) *
+              (inverseSlant ? -1 : 1) *
+              Constants.SLANT}deg`,
           },
         }}
       />

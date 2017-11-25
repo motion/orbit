@@ -46,6 +46,14 @@ const Circles = ({ rings, ringSize, ...props }) => {
                 '#f2f2f2',
                 '#fff',
                 '#f2f2f2',
+                '#fff',
+                'yellow',
+                '#fff',
+                '#f2f2f2',
+                '#fff',
+                '#f2f2f2',
+                '#fff',
+                '#f2f2f2',
               ][index],
               width: circleSize,
               height: circleSize,
@@ -98,16 +106,20 @@ export default class SectionExamples {
       <howitworks css={{ position: 'relative' }}>
         <UI.Theme name="dark">
           <View.Section
-            if={false}
             css={{
-              // transform: { rotate: '-1deg' },
+              transform: { rotate: '-1deg' },
               zIndex: 1000,
               position: 'relative',
               overflow: 'visible',
-              top: -120,
-              background: 'yellow',
-              height: 120,
-              marginBottom: -120,
+              top: -80,
+              left: -100,
+              right: -100,
+              width: '120%',
+              background: `linear-gradient(to right, ${Constants.dark1}, ${
+                Constants.dark2
+              })`,
+              height: 80,
+              marginBottom: -80,
               marginTop: -90,
               alignItems: 'center',
               justifyContent: 'center',
@@ -126,7 +138,7 @@ export default class SectionExamples {
               <left
                 css={{ width: '46%', marginRight: '2%', textAlign: 'right' }}
               >
-                <UI.Text size={3} fontWeight={200} color={Constants.colorMain}>
+                <UI.Text size={2} fontWeight={200} color={Constants.colorMain}>
                   It's about time
                 </UI.Text>
               </left>
@@ -137,7 +149,7 @@ export default class SectionExamples {
                 }}
               >
                 <UI.Text
-                  size={3}
+                  size={2}
                   fontWeight={200}
                   color={Constants.colorSecondary}
                 >
@@ -148,9 +160,9 @@ export default class SectionExamples {
           </View.Section>
 
           <Circles
-            rings={10}
+            rings={12}
             ringSize={145}
-            css={{ position: 'absolute', top: -200, left: -100, zIndex: 1 }}
+            css={{ position: 'absolute', top: 90, left: -185, zIndex: 1 }}
           />
 
           <View.Section>

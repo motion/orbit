@@ -3,6 +3,7 @@ import * as React from 'react'
 import * as Constants from '~/constants'
 import * as View from '~/views'
 import * as UI from '@mcro/ui'
+import { range } from 'lodash'
 
 const Logo = props => (
   <img
@@ -17,6 +18,47 @@ const Logo = props => (
     }}
   />
 )
+
+const Circles = ({ rings, ringSize, ...props }) => {
+  const size = rings * ringSize
+  return (
+    <circles
+      css={{
+        position: 'absolute',
+        width: size,
+        height: size,
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+      {...props}
+    >
+      {range(rings).map(index => {
+        const circleSize = (index + 1) * ringSize
+        return (
+          <circle
+            key={index}
+            css={{
+              background: [
+                '#f2f2f2',
+                '#fff',
+                '#f2f2f2',
+                '#fff',
+                '#f2f2f2',
+                '#fff',
+                '#f2f2f2',
+              ][index],
+              width: circleSize,
+              height: circleSize,
+              position: 'absolute',
+              zIndex: rings - index,
+              borderRadius: size,
+            }}
+          />
+        )
+      })}
+    </circles>
+  )
+}
 
 const OPTS = {
   percentFromTop: 50,
@@ -53,200 +95,168 @@ export default class SectionExamples {
     }
 
     return (
-      <UI.Theme name="dark">
-        <View.Section
-          css={{
-            // transform: { rotate: '-1deg' },
-            zIndex: 1000,
-            position: 'relative',
-            overflow: 'visible',
-            top: -120,
-            background: 'yellow',
-            height: 120,
-            marginBottom: -120,
-            marginTop: -90,
-            alignItems: 'center',
-            justifyContent: 'center',
-            boxShadow: [[0, 0, 70, [0, 0, 0, 0.1]]],
-          }}
-        >
-          <View.SectionContent
+      <howitworks css={{ position: 'relative' }}>
+        <UI.Theme name="dark">
+          <View.Section
+            if={false}
             css={{
-              flexFlow: 'row',
-              transform: {
-                // rotate: '2deg',
-              },
-              // opacity: 0,
+              // transform: { rotate: '-1deg' },
+              zIndex: 1000,
+              position: 'relative',
+              overflow: 'visible',
+              top: -120,
+              background: 'yellow',
+              height: 120,
+              marginBottom: -120,
+              marginTop: -90,
+              alignItems: 'center',
+              justifyContent: 'center',
+              boxShadow: [[0, 0, 70, [0, 0, 0, 0.1]]],
             }}
           >
-            <left css={{ width: '46%', marginRight: '2%', textAlign: 'right' }}>
-              <UI.Text size={3} fontWeight={200} color={Constants.colorMain}>
-                It's about time
-              </UI.Text>
-            </left>
-
-            <across
+            <View.SectionContent
               css={{
-                textAlign: 'left',
+                flexFlow: 'row',
+                transform: {
+                  // rotate: '2deg',
+                },
+                // opacity: 0,
               }}
             >
-              <UI.Text
-                size={3}
-                fontWeight={200}
-                color={Constants.colorSecondary}
+              <left
+                css={{ width: '46%', marginRight: '2%', textAlign: 'right' }}
               >
-                you tamed the cloud
-              </UI.Text>
-            </across>
-          </View.SectionContent>
-        </View.Section>
+                <UI.Text size={3} fontWeight={200} color={Constants.colorMain}>
+                  It's about time
+                </UI.Text>
+              </left>
 
-        <View.Section>
-          <View.SectionContent fullscreen>
-            <View.Slant dark inverse />
-
-            <stripes>
-              <stripe
+              <across
                 css={{
-                  transform: { rotate: '-7deg' },
-                  zIndex: -1,
-                  position: 'absolute',
-                  top: 350,
-                  left: 0,
-                  right: -1000,
-                  background: 'orange',
-                  opacity: 1,
-                  height: 3,
-                  alignItems: 'center',
-                  justifyContent: 'center',
+                  textAlign: 'left',
                 }}
-              />
-              <stripe
-                css={{
-                  transform: { rotate: '-7deg' },
-                  zIndex: -1,
-                  position: 'absolute',
-                  top: 550,
-                  left: 0,
-                  right: -1000,
-                  background: 'red',
-                  opacity: 1,
-                  height: 3,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              />
-              <stripe
-                css={{
-                  transform: { rotate: '-7deg' },
-                  zIndex: -1,
-                  position: 'absolute',
-                  top: 750,
-                  left: 0,
-                  right: -1000,
-                  background: 'purple',
-                  opacity: 1,
-                  height: 3,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              />
-            </stripes>
-
-            <inner
-              css={{
-                position: 'relative',
-                zIndex: 3,
-                padding: [100, 480, 100, 0],
-              }}
-            >
-              <UI.Text fontWeight={600} marginBottom={20} size={1.3}>
-                How it works
-              </UI.Text>
-              <UI.Text
-                size={3}
-                fontWeight={100}
-                padding={[0, 80, 30, 0]}
-                color={[255, 255, 255, 0.5]}
               >
-                Insight as you talk to{' '}
-                <span css={{ fontWeight: 600, color: '#fff' }}>teammates</span>{' '}
-                &{' '}
-                <span css={{ fontWeight: 600, color: '#fff' }}>customers</span>
-              </UI.Text>
+                <UI.Text
+                  size={3}
+                  fontWeight={200}
+                  color={Constants.colorSecondary}
+                >
+                  you tamed the cloud
+                </UI.Text>
+              </across>
+            </View.SectionContent>
+          </View.Section>
 
-              <UI.Text
-                if={false}
-                size={2}
-                padding={[10, 80, 40, 0]}
-                color={lightText}
-                fontWeight={200}
+          <Circles
+            rings={10}
+            ringSize={145}
+            css={{ position: 'absolute', top: -200, left: -100, zIndex: 1 }}
+          />
+
+          <View.Section>
+            <View.SectionContent fullscreen>
+              <View.Slant dark inverse />
+
+              <inner
+                css={{
+                  position: 'relative',
+                  zIndex: 3,
+                  padding: [100, 480, 100, 0],
+                }}
               >
-                Some examples of how Orbit keeps you in the know:
-              </UI.Text>
+                <UI.Text fontWeight={600} marginBottom={20} size={1.3}>
+                  How it works
+                </UI.Text>
+                <UI.Text
+                  size={3}
+                  fontWeight={100}
+                  padding={[0, 80, 30, 0]}
+                  color={[255, 255, 255, 0.5]}
+                >
+                  Insight as you talk to{' '}
+                  <span css={{ fontWeight: 600, color: '#fff' }}>
+                    teammates
+                  </span>{' '}
+                  &{' '}
+                  <span css={{ fontWeight: 600, color: '#fff' }}>
+                    customers
+                  </span>
+                </UI.Text>
 
-              <examples>
-                {makeSection(
-                  'example-1',
-                  <span>
-                    Discover a Slack conversation <Logo name="slack" /> as you
-                    open a ticket <Logo name="jira" />.
-                  </span>,
-                  { percentFromTop: 45 }
-                )}
-                {makeSection(
-                  'example-2',
-                  <span>
-                    Knowledgebase answers <Logo name="confluence" /> on hand the
-                    second your customer asks in Zendesk <Logo name="zendesk" />.
-                  </span>,
-                  { percentFromTop: 50 }
-                )}
-                {makeSection(
-                  'example-3',
-                  <span>
-                    See the latest numbers in that Q4 doc{' '}
-                    <Logo name="google-drive" /> before you hit send{' '}
-                    <Logo name="google-gmail" />.
-                  </span>,
-                  { percentFromTop: 55 }
-                )}
-                {false &&
-                  makeSection(
-                    'example-4',
+                <UI.Text
+                  if={false}
+                  size={2}
+                  padding={[10, 80, 40, 0]}
+                  color={lightText}
+                  fontWeight={200}
+                >
+                  Some examples of how Orbit keeps you in the know:
+                </UI.Text>
+
+                <examples>
+                  {makeSection(
+                    'example-1',
                     <span>
-                      Michelle already wrote <Logo name="dropbox" /> some notes
-                      on that last meeting.
+                      Discover a Slack conversation <Logo name="slack" /> as you
+                      open a ticket <Logo name="jira" />.
                     </span>,
-                    { percentFromTop: 63 }
+                    { percentFromTop: 45 }
                   )}
-                {false &&
-                  makeSection(
-                    'example-5',
+                  {makeSection(
+                    'example-2',
                     <span>
-                      Be the hero in <Logo name="slack" /> #devops when you see
-                      a <Logo name="github-icon" /> ticket was just opened for
-                      the very issue someone just asked about.
+                      Knowledgebase answers <Logo name="confluence" /> on hand
+                      the second your customer asks in Zendesk{' '}
+                      <Logo name="zendesk" />.
                     </span>,
-                    { percentFromTop: 70 }
+                    { percentFromTop: 50 }
                   )}
-              </examples>
-              <br />
-              <br />
-              <br />
-              <br />
-              <div if={false}>
-                <View.SubTitle opacity={1}>
-                  Orbit is the first ever knowledge assistant that knows
-                  <View.Hl color="#000">everything</View.Hl> in your company,
-                  and keeps it on hand <View.Hl color="#000">anywhere</View.Hl>{' '}
-                  you are.
-                </View.SubTitle>
-              </div>
-            </inner>
-          </View.SectionContent>
-        </View.Section>
-      </UI.Theme>
+                  {makeSection(
+                    'example-3',
+                    <span>
+                      See the latest numbers in that Q4 doc{' '}
+                      <Logo name="google-drive" /> before you hit send{' '}
+                      <Logo name="google-gmail" />.
+                    </span>,
+                    { percentFromTop: 55 }
+                  )}
+                  {false &&
+                    makeSection(
+                      'example-4',
+                      <span>
+                        Michelle already wrote <Logo name="dropbox" /> some
+                        notes on that last meeting.
+                      </span>,
+                      { percentFromTop: 63 }
+                    )}
+                  {false &&
+                    makeSection(
+                      'example-5',
+                      <span>
+                        Be the hero in <Logo name="slack" /> #devops when you
+                        see a <Logo name="github-icon" /> ticket was just opened
+                        for the very issue someone just asked about.
+                      </span>,
+                      { percentFromTop: 70 }
+                    )}
+                </examples>
+                <br />
+                <br />
+                <br />
+                <br />
+                <div if={false}>
+                  <View.SubTitle opacity={1}>
+                    Orbit is the first ever knowledge assistant that knows
+                    <View.Hl color="#000">everything</View.Hl> in your company,
+                    and keeps it on hand{' '}
+                    <View.Hl color="#000">anywhere</View.Hl> you are.
+                  </View.SubTitle>
+                </div>
+              </inner>
+            </View.SectionContent>
+          </View.Section>
+        </UI.Theme>
+      </howitworks>
     )
   }
 }

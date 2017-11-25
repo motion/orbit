@@ -36,4 +36,30 @@ export default class SlackService {
   get activeChannels() {
     return this.setting.values.channels
   }
+
+  getChannelHistory = async options => {
+    const res = await this.slack.channels.history(options)
+    return res.messages
+  }
+
+  channelHistory = async ({ count, ...rest }) => {
+    const oldest = messages => messages[messages.length - 1].ts
+    let results = await this.getChannelHistory({
+      count: Math.min(1000, count),
+      ...rest,
+    })
+    while (results.length < count) {
+      const newcount = Math.min(1000, count - results.length)
+      const moreResults = await this.getChannelHistory({
+        count: newcount,
+        oldest: oldest(results),
+        ...rest,
+      })
+      if (!moreResults || !moreResults.length) {
+        break
+      }
+      results = [...results, ...moreResults]
+    }
+    return results
+  }
 }

@@ -13,7 +13,7 @@ export default class SlackAttachmentSync {
     this.token = token
     this.helpers = helpers
     // TODO REMOVE THIS IS TESTING PURPOSES ONLY:
-    this.run()
+    // this.run()
   }
 
   get service() {
@@ -23,9 +23,9 @@ export default class SlackAttachmentSync {
   run = async () => {
     if (this.service.activeChannels) {
       for (const channel of Object.keys(this.service.activeChannels)) {
-        const { messages } = await this.service.slack.channels.history({
+        const messages = await this.service.channelHistory({
           channel,
-          limit: 1000,
+          count: 2000,
         })
         const links = _.chain(messages)
           .map(message => message.text.match(/\<([a-z]+:\/\/[^>]+)\>/g))
@@ -41,14 +41,14 @@ export default class SlackAttachmentSync {
           .value()
         console.log('got links', links)
         if (links.length) {
-          const results = await r2.post('http://localhost:3001/crawler/exact', {
-            json: {
-              options: {
-                entries: links,
-              },
-            },
-          }).json
-          console.log('got results', results)
+          // const results = await r2.post('http://localhost:3001/crawler/exact', {
+          //   json: {
+          //     options: {
+          //       entries: links,
+          //     },
+          //   },
+          // }).json
+          // console.log('got results', results)
         }
       }
     }

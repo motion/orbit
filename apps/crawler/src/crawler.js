@@ -128,7 +128,6 @@ export default class Crawler {
 
   parse = async (page, url) => {
     let selectorResults = null
-
     if (this.selectors) {
       selectorResults = await page.evaluate(classes => {
         const titles = Array.from(
@@ -140,25 +139,16 @@ export default class Crawler {
           .filter(_ => _)
           .map(_ => _.innerText)
           .join('\n')
-
         if (titles.length === 0 || titles.length > 1) {
           return null
         }
-
         return { title: titles[0].innerText, content }
       }, this.selectors)
-
       if (!selectorResults) {
-        log.crawl(
-          'skipping because ',
-          url,
-          'does not contain class .',
-          this.articleClasses
-        )
+        log.crawl(`skipping: ${url} doesn't have class .${this.articleClasses}`)
         return null
       }
     }
-
     const html = await page.evaluate(() => {
       // some kbs have error pages that are hidden in the dom
       Array.from(document.querySelectorAll('.hide, .hidden, .error')).forEach(
@@ -166,19 +156,17 @@ export default class Crawler {
       )
       return document.documentElement.outerHTML
     })
-
     const result =
       selectorResults ||
       readabilityFromString(sanitizeHtml(html, { allowedTags: false }), {
         href: url,
       })
-
-    if (!result) return null
-
+    if (!result) {
+      return null
+    }
     const md = await new Promise(res => {
       und.convert(result.content, (err, md) => res(md))
     })
-
     if (result && !this.selectors) {
       this.selectors = await this.textToSelectors(page, {
         title: result.title.slice(0, 15),
@@ -186,7 +174,6 @@ export default class Crawler {
       })
       log.crawl('set classes to ' + JSON.stringify(this.selectors))
     }
-
     return { title: result.title, content: md }
   }
 
@@ -210,6 +197,43 @@ export default class Crawler {
       writeFileSync(`${path}/${page.contents.title}.txt`, page.contents.content)
     })
     return true
+  }
+
+  async validContentType(url) {
+    const res = await fetch(url, { method: 'HEAD' })
+    const contentType =
+      res.headers.get('content-type') || res.headers.get('Content-Type')
+    if (!contentType || !/text\/(html|xml)/g.test(contentType)) {
+      log.page(`Bad content-type: ${res.headers.get('content-type')} ${url}`)
+      return false
+    }
+    return true
+  }
+
+  async findLinks(page, { initialUrl, matchPath, entryUrl }) {
+    const links = await page.evaluate(() => {
+      const val = Array.from(document.querySelectorAll('[href]')).map(
+        link => link.href
+      )
+      return val
+    })
+    return uniq(
+      links
+        .filter(x => x !== null)
+        .map(cleanUrlHash)
+        .map(href => normalizeHref(target.url, href))
+    )
+      .filter(x => x !== null)
+      .filter(link => {
+        const parsed = parse(link)
+        const noPrefix = s => s.replace(/www\./, '')
+        const isNotOriginalUrl = link !== initialUrl
+        return (
+          isNotOriginalUrl &&
+          matchPath(link) &&
+          noPrefix(parsed.host) === noPrefix(entryUrl.host)
+        )
+      })
   }
 
   async start(entry: string, runOptions: Options = this.options) {
@@ -249,97 +273,54 @@ export default class Crawler {
     let target = { url: initialUrl, radius: 0 }
 
     if (!target.url) {
-      log.crawl('no url')
+      log.crawl(`no url: ${target.url}`)
       return
     }
 
     const entryUrl = parse(target.url)
     const fullMatchUrl = `${entryUrl.protocol}//${entryUrl.host}${depth}`
 
-    log.crawl('scoring closest to url:', fullMatchUrl)
+    log.crawl('Scoring closest to url:', fullMatchUrl)
     this.db.setScoringFn(url => urlSimilarity(fullMatchUrl, url))
 
     const browser = await puppeteer.launch(puppeteerOptions)
-    // const page = await browser.newPage()
 
     const runTarget = async (target, page) => {
-      if (urlMatchesExtensions(target.url, filterUrlExtensions)) {
-        log.page(`Looks like an image, avoid ${target.url}`)
-        return null
-      } else if (target.radius >= maxRadius) {
-        log.page(
-          `Maximum radius reached, did not crawl ${target.url} with radius ${
-            target.radius
-          }`
-        )
-        return null
-      } else {
-        const isValidPath = matchPath(target.url)
-
-        if (!isValidPath) {
+      log.page(`now: ${target.url}`)
+      try {
+        if (urlMatchesExtensions(target.url, filterUrlExtensions)) {
+          log.page(`Looks like an image, avoid`)
+          return null
+        } else if (target.radius >= maxRadius) {
+          log.page(`Maximum radius reached. Radius: ${target.radius}`)
+          return null
+        } else if (!matchPath(target.url)) {
           log.page(`Path is not at same depth:`)
           log.page(`  ${parse(target.url).pathname}`)
           log.page(`  ${depth}`)
           return null
         }
-      }
-      // content-type whitelist
-      const res = await fetch(target.url, { method: 'HEAD' })
-      const contentType =
-        res.headers.get('content-type') || res.headers.get('Content-Type')
-
-      if (!contentType || !/text\/(html|xml)/g.test(contentType)) {
-        log.page(
-          `Bad content-type: ${res.headers.get('content-type')} ${target.url}`
-        )
-        return null
-      }
-
-      log.page(`Crawling ${target.url}`)
-      try {
+        // content-type whitelist
+        if (!await this.validContentType(target.url)) {
+          return null
+        }
         await page.goto(target.url, {
           waitUntil: 'domcontentloaded',
         })
-
         const contents = await this.parse(page, target.url)
-
-        const links = await page.evaluate(() => {
-          const val = Array.from(document.querySelectorAll('[href]')).map(
-            link => link.href
-          )
-          return val
-        })
-
-        let outboundUrls = uniq(
-          links
-            .filter(x => x !== null)
-            .map(cleanUrlHash)
-            .map(href => normalizeHref(target.url, href))
-        )
-          .filter(x => x !== null)
-          .filter(link => {
-            const parsed = parse(link)
-            const noPrefix = s => s.replace(/www\./, '')
-            const isNotOriginalUrl = link !== initialUrl
-            return (
-              isNotOriginalUrl &&
-              matchPath(link) &&
-              noPrefix(parsed.host) === noPrefix(entryUrl.host)
-            )
+        let outboundUrls
+        if (!options.disableLinkFinding) {
+          outboundUrls = await this.findLinks(page, {
+            initialUrl,
+            matchPath,
+            entryUrl,
           })
-
-        log.page(`Found ${outboundUrls.length} urls`)
-        // this allows it to crawl pages that arent valid matches
-        // but could lead back to valid pages
-        // should have a flag to make stricter if desired
-        log.page(`Valid path ${target.url}`)
-
+          log.page(`Found ${outboundUrls.length} urls`)
+        }
         // only count it if it finds goodies
         if (contents) {
           log.page(
-            `Good contents. Total ${this.count}. Crawled ${
-              contents.title
-            } which has ${contents.content.length} characters.`
+            `Found ${contents.title}, body len: ${contents.content.length}`
           )
         } else {
           log.page(`No contents found`)
@@ -355,60 +336,68 @@ export default class Crawler {
         log.page(
           `Error crawling url ${target.url}\n${err.message}\n${err.stack}`
         )
+        return null
       }
     }
 
-    const concurrentTabs = 3
+    // if only running on 1 open 1 tab
+    const concurrentTabs = Math.min(maxPages, 3)
     const startTime = +Date.now()
+    const loadingPage = range(concurrentTabs).map(() => false)
+    const pages = await Promise.all(loadingPage.map(() => browser.newPage()))
 
-    const openPages = range(concurrentTabs).map(_ => true)
-    const pages = await Promise.all(
-      openPages.map(async () => await browser.newPage())
-    )
-    this.db.store(await runTarget(target, pages[0]))
-    await sleep(50)
-    const shouldCrawlMoreThanOne = maxPages > 1
-
-    if (shouldCrawlMoreThanOne) {
-      while (!this.hasFinished) {
-        const openIndex = openPages.indexOf(true)
-        if (openIndex !== -1) {
-          const target = this.db.shiftUrl()
-          if (target !== null) {
-            openPages[openIndex] = false
-            runTarget(target, pages[openIndex]).then(val => {
-              openPages[openIndex] = true
-              if (val) {
-                log.step('Downloaded ', this.db.getValid().length, 'pages')
-                if (
-                  openPages.indexOf(false) === -1 &&
-                  this.db.pageQueue.length === 0
-                ) {
-                  this.hasFinished = true
-                }
-                this.db.store(val)
-                if (val.contents) {
-                  this.count++
-                }
-              }
-            })
-          }
+    // handlers for after loaded a page
+    const finishProcessing = tabIndex => {
+      return result => {
+        if (result && result.contents) {
+          log.step('Downloaded ', this.db.getValid().length, 'pages')
+          this.db.store(result)
+          this.count++
         }
-        await sleep(20)
-
-        if (this.count >= maxPages) {
-          log.crawl(`Max pages reached! ${maxPages}`)
-          break
-        }
+        loadingPage[tabIndex] = false
+      }
+    }
+    const handleProcessingError = tabIndex => {
+      return err => {
+        console.log('err', err)
+        loadingPage[tabIndex] = false
       }
     }
 
+    // do first one
+    await runTarget(target, pages[0])
+      .then(finishProcessing(0))
+      .catch(handleProcessingError(0))
+
+    const shouldCrawlMoreThanOne = maxPages > 1
+    // start rest
+    if (shouldCrawlMoreThanOne) {
+      const finished = () => {
+        const isLoadingPage = loadingPage.indexOf(true) > -1
+        const hasMoreInQueue = this.db.pageQueue.length > 0
+        const hasFoundEnough = this.count >= maxPages
+        return hasFoundEnough || (!isLoadingPage && !hasMoreInQueue)
+      }
+      while (!finished()) {
+        await sleep(20) // throttle
+        const tabIndex = loadingPage.indexOf(false)
+        if (tabIndex === -1) {
+          continue
+        }
+        const target = this.db.shiftUrl()
+        if (!target) {
+          log.crawl(`No target from db, still loading page`, loadingPage)
+          continue
+        }
+        loadingPage[tabIndex] = true
+        runTarget(target, pages[tabIndex])
+          .then(finishProcessing(tabIndex))
+          .catch(handleProcessingError(tabIndex))
+      }
+    }
     log.crawl(`Crawler done, crawled ${this.count} pages`)
     log.crawl(`took ${(+Date.now() - startTime) / 1000} seconds`)
-
-    // await this.writeFolder('./out', this.db.getValid())
     this.isRunning = false
-
     // return all items stored
     if (this.shouldCrawl) {
       return this.db.getValid()
@@ -416,8 +405,6 @@ export default class Crawler {
       return []
     }
   }
-
-  crawlForSelectors() {}
 
   getStatus() {
     return { count: this.count, isRunning: this.isRunning }

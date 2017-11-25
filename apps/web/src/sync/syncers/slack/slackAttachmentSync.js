@@ -13,7 +13,7 @@ export default class SlackAttachmentSync {
     this.token = token
     this.helpers = helpers
     // TODO REMOVE THIS IS TESTING PURPOSES ONLY:
-    // this.run()
+    this.run()
   }
 
   get service() {

@@ -12,7 +12,7 @@ export default class CrawlerDB {
   constructor(options = {}) {
     this.disableLinkFinding = options.disableLinkFinding
     if (options.queue) {
-      this.pageQueue = options.queue
+      this.pageQueue = options.queue.map(url => ({ url, radius: 0 }))
     }
   }
 
@@ -52,7 +52,6 @@ export default class CrawlerDB {
   }
 
   popUrl = () => {
-    console.log('pop', this.pageQueue[0])
     if (this.pageQueue.length) {
       return this.pageQueue.pop()
     }

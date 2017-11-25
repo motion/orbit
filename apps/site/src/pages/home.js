@@ -144,7 +144,7 @@ export default class HomePage extends React.Component {
       setSection: homeStore.setSection,
     }
 
-    const sinWidth = 300
+    const sinWidth = 100
 
     const homeContents = [
       <HomeExamples {...sectionProps} />,
@@ -159,19 +159,43 @@ export default class HomePage extends React.Component {
       <page css={styles.page} ref={!blurred && homeStore.setPageRef}>
         <View.Sine
           if={!blurred}
-          color={Constants.dark1}
+          color="#fff"
           strokeWidth={2}
           amplitude={sinWidth / 2}
-          freq={0.004}
-          phase={0}
+          freq={0.005}
+          phase={250}
           css={{
-            opacity: 0.3,
+            opacity: 0.1,
             pointerEvents: 'none',
             height: sinWidth,
             marginLeft: sinWidth / 2,
             position: 'absolute',
             zIndex: 2,
             top: 0,
+            left: '50%',
+            width: Constants.SECTION_HEIGHT * 3 + 200,
+            transformOrigin: 'top left',
+            transform: {
+              rotate: '90deg',
+              scale: 1,
+            },
+          }}
+        />
+        <View.Sine
+          if={!blurred}
+          color={Constants.dark2}
+          strokeWidth={2}
+          amplitude={sinWidth / 2}
+          freq={0.005}
+          phase={250}
+          css={{
+            opacity: 0.1,
+            pointerEvents: 'none',
+            height: sinWidth,
+            marginLeft: sinWidth / 2,
+            position: 'absolute',
+            zIndex: 2,
+            top: -2,
             left: '50%',
             width: Constants.SECTION_HEIGHT * 3 + 200,
             transformOrigin: 'top left',

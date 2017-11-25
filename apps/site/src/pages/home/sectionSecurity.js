@@ -2,7 +2,7 @@ import * as React from 'react'
 import * as View from '~/views'
 import * as UI from '@mcro/ui'
 
-const background = '#f2f2f2'
+const background = '#fff'
 const bgLight = UI.color(background) //.lighten(0.15)
 const colorLight = bgLight.lighten(0.05) //.lighten(0.15)
 const colorDark = bgLight.darken(0.75)

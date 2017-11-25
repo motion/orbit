@@ -43,7 +43,7 @@ export default class SectionExamples {
             transition: 'all ease-in 300ms',
             marginBottom: 50,
             marginTop: 50,
-            marginRight: 50 + 50 * (TOTAL_EXAMPLES - index),
+            marginRight: 15 * (TOTAL_EXAMPLES - index),
           }}
           {...props}
         >
@@ -54,40 +54,104 @@ export default class SectionExamples {
 
     return (
       <UI.Theme name="dark">
-        <View.SectionContent>
-          <above
+        <View.Section
+          css={{
+            // transform: { rotate: '-1deg' },
+            zIndex: 1000,
+            position: 'relative',
+            overflow: 'visible',
+            top: -120,
+            background: 'yellow',
+            height: 120,
+            marginBottom: -120,
+            marginTop: -90,
+            alignItems: 'center',
+            justifyContent: 'center',
+            boxShadow: [[0, 0, 70, [0, 0, 0, 0.1]]],
+          }}
+        >
+          <View.SectionContent
             css={{
-              position: 'absolute',
-              top: -150,
-              height: 100,
-              left: 0,
-              right: '60%',
-              textAlign: 'right',
-              zIndex: 100,
-              color: '#fff',
+              flexFlow: 'row',
+              transform: {
+                // rotate: '2deg',
+              },
+              // opacity: 0,
             }}
           >
-            <UI.Text size={2} fontWeight={200}>
-              Tame the cloud
-            </UI.Text>
+            <left css={{ width: '46%', marginRight: '2%', textAlign: 'right' }}>
+              <UI.Text size={3} fontWeight={200} color={Constants.colorMain}>
+                It's about time
+              </UI.Text>
+            </left>
 
             <across
-              $$fullscreen
               css={{
-                transform: { x: '120%', y: 50 },
                 textAlign: 'left',
               }}
             >
-              <UI.Text size={2} fontWeight={200} color="#000">
-                See how
+              <UI.Text
+                size={3}
+                fontWeight={200}
+                color={Constants.colorSecondary}
+              >
+                you tamed the cloud
               </UI.Text>
             </across>
-          </above>
-        </View.SectionContent>
+          </View.SectionContent>
+        </View.Section>
 
         <View.Section>
           <View.SectionContent fullscreen>
             <View.Slant dark inverse />
+
+            <stripes>
+              <stripe
+                css={{
+                  transform: { rotate: '-7deg' },
+                  zIndex: -1,
+                  position: 'absolute',
+                  top: 350,
+                  left: 0,
+                  right: -1000,
+                  background: 'orange',
+                  opacity: 1,
+                  height: 3,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              />
+              <stripe
+                css={{
+                  transform: { rotate: '-7deg' },
+                  zIndex: -1,
+                  position: 'absolute',
+                  top: 550,
+                  left: 0,
+                  right: -1000,
+                  background: 'red',
+                  opacity: 1,
+                  height: 3,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              />
+              <stripe
+                css={{
+                  transform: { rotate: '-7deg' },
+                  zIndex: -1,
+                  position: 'absolute',
+                  top: 750,
+                  left: 0,
+                  right: -1000,
+                  background: 'purple',
+                  opacity: 1,
+                  height: 3,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              />
+            </stripes>
 
             <inner
               css={{
@@ -121,7 +185,7 @@ export default class SectionExamples {
                 Some examples of how Orbit keeps you in the know:
               </UI.Text>
 
-              <examples css={{ marginRight: -120 }}>
+              <examples>
                 {makeSection(
                   'example-1',
                   <span>
@@ -141,8 +205,8 @@ export default class SectionExamples {
                 {makeSection(
                   'example-3',
                   <span>
-                    See the latest numbers in that planning doc{' '}
-                    <Logo name="google-drive" /> before you send{' '}
+                    See the latest numbers in that Q4 doc{' '}
+                    <Logo name="google-drive" /> before you hit send{' '}
                     <Logo name="google-gmail" />.
                   </span>,
                   { percentFromTop: 55 }

@@ -113,6 +113,7 @@ export default class Server {
         const [entry, ...queue] = options.entries
         const results = await crawler.start(entry, {
           disableLinkFinding: true,
+          disableStructureFinding: true,
           queue,
         })
         res.json({ results })

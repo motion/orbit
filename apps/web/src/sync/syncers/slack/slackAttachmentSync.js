@@ -20,13 +20,20 @@ export default class SlackAttachmentSync {
     return App.services.Slack
   }
 
+  get lastSync() {
+    return this.setting.values.lastAttachmentSync || {}
+  }
+
   run = async () => {
     if (this.service.activeChannels) {
       for (const channel of Object.keys(this.service.activeChannels)) {
+        const oldestSynced = this.lastSync[channel]
         const messages = await this.service.channelHistory({
           channel,
+          oldest: oldestSynced,
           count: 2000,
         })
+        console.log('got messages', messages)
         const links = _.chain(messages)
           .map(message => message.text.match(/\<([a-z]+:\/\/[^>]+)\>/g))
           .filter(Boolean)
@@ -39,16 +46,37 @@ export default class SlackAttachmentSync {
               .replace(/\|.*$/g, '')
           )
           .value()
-        console.log('got links', links)
-        if (links.length) {
-          // const results = await r2.post('http://localhost:3001/crawler/exact', {
-          //   json: {
-          //     options: {
-          //       entries: links,
-          //     },
-          //   },
-          // }).json
-          // console.log('got results', results)
+
+        if (!links.length) {
+          log('No links found')
+          return
+        }
+
+        try {
+          const results = await r2.post('http://localhost:3001/crawler/exact', {
+            json: {
+              options: {
+                entries: links,
+              },
+            },
+          }).json
+
+          if (results && results.length) {
+            await createInChunks(results, this.createThings)
+          }
+
+          // write last sync
+          const oldestSyncedTime = messages[messages.length - 1].ts
+          console.log('oldestSyncedTime', oldestSyncedTime)
+          await this.setting.mergeUpdate({
+            values: {
+              lastAttachmentSync: {
+                [channel]: oldestSyncedTime,
+              },
+            },
+          })
+        } catch (err) {
+          log(`Error crawling results ${err.message}\n${err.stack}`)
         }
       }
     }

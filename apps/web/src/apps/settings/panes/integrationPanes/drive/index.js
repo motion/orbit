@@ -123,15 +123,10 @@ class Folder {
 @view({
   store: class DriveStore {
     things = Thing.find()
-    folders = null
 
-    getFolders = async () => {
-      const res = await App.sync.google.drive.fetchFolders({})
-      this.folders = res.files
-    }
-
-    willMount() {
-      this.getFolders()
+    get folders() {
+      return null
+      // return App.sync.google.drive && App.sync.google.drive.getFiles()
     }
 
     get files() {

@@ -18,6 +18,7 @@
 * slack syncer working using endpoint
 * slack syncer date working, index last 3 months
 * crawler ui cleanup
+* slack stores and uses lastSync when resuming sync
 
 # now
 

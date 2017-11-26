@@ -1,12 +1,12 @@
 import { view } from '@mcro/black'
 import { debounce } from 'lodash'
 import * as UI from '@mcro/ui'
-import Crawler from '~/stores/crawler'
+import CrawlerStore from '~/stores/crawlerStore'
 
 class CrawlSetupStore {
   preview = null
   crawler = null
-  crawler = new Crawler()
+  crawler = new CrawlerStore()
 
   willMount() {
     this.onPreview()
@@ -14,17 +14,14 @@ class CrawlSetupStore {
 
   onPreview = debounce(() => {
     const { osContext: { url }, settings: { depth } } = this.props
-
     if (this.crawler.isRunning) {
       this.crawler.onStop()
     }
-
     this.crawler.settings = {
       maxPages: 6,
       entry: url,
       depth,
     }
-
     this.crawler.onStart()
   }, 300)
 
@@ -40,51 +37,47 @@ class CrawlSetupStore {
 })
 export default class CrawlSetup {
   render({ store, settings }) {
+    const lblProps = { style: { paddingLeft: 0 } }
     return (
-      <setup>
-        <div if={store.crawler}>
-          <UI.Separator>Settings</UI.Separator>
+      <setup css={{ flex: 1, overflowY: 'scroll' }} if={store.crawler}>
+        <UI.Separator>Settings</UI.Separator>
 
+        <content>
           <UI.Row>
-            <UI.Label>Version</UI.Label>
+            <UI.Label {...lblProps}>Version</UI.Label>
             <UI.Text>{store.crawler.version}</UI.Text>
           </UI.Row>
 
           <UI.Row>
-            <UI.Label>Max Depth</UI.Label>
-            <UI.Input onChange={store.setDepth} value={settings.depth} />
+            <UI.Label {...lblProps}>Max Depth</UI.Label>
+            <UI.Input flex onChange={store.setDepth} value={settings.depth} />
           </UI.Row>
+        </content>
 
-          <UI.Separator>Preview</UI.Separator>
-          <UI.Button
-            if={!store.crawler.isRunning}
-            $btn
-            onClick={store.onPreview}
-          >
-            run preview
-          </UI.Button>
-          <UI.Title if={store.crawler.isRunning}>running</UI.Title>
-          <UI.Title if={store.crawler.results}>
-            previewing {store.crawler.results.length} results
-          </UI.Title>
-          <div>
-            {store.crawler.results &&
-              store.crawler.results.map(_ => _.contents.title).join(', ')}
-          </div>
-          <UI.List
-            if={store.crawler.results}
-            items={store.crawler.results.map(_ => ({
-              primary: _.contents.title,
-            }))}
-          />
-        </div>
+        <UI.Separator
+          after={
+            <UI.Button chromeless icon="refresh" onClick={store.onPreview} />
+          }
+        >
+          Preview
+        </UI.Separator>
+        <UI.List
+          css={{ maxWidth: '100%' }}
+          items={
+            store.crawler.results || [{ contents: { title: 'Loading...' } }]
+          }
+          getItem={({ contents }) => ({
+            primary: contents.title,
+            children: contents.body,
+          })}
+        />
       </setup>
     )
   }
 
   static style = {
-    btn: {
-      marginLeft: 20,
+    content: {
+      padding: 10,
     },
   }
 }

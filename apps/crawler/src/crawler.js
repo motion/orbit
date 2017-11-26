@@ -210,7 +210,7 @@ export default class Crawler {
     return true
   }
 
-  async findLinks(page, { initialUrl, matchPath, entryUrl }) {
+  async findLinks(page, { target, initialUrl, matchesDepth, entryUrl }) {
     const links = await page.evaluate(() => {
       const val = Array.from(document.querySelectorAll('[href]')).map(
         link => link.href
@@ -221,19 +221,17 @@ export default class Crawler {
       links
         .filter(x => x !== null)
         .map(cleanUrlHash)
-        .map(href => normalizeHref(initialUrl, href))
-    )
-      .filter(x => x !== null)
-      .filter(link => {
-        const parsed = parse(link)
-        const noPrefix = s => s.replace(/www\./, '')
-        const isNotOriginalUrl = link !== initialUrl
-        return (
-          isNotOriginalUrl &&
-          matchPath(link) &&
-          noPrefix(parsed.host) === noPrefix(entryUrl.host)
-        )
-      })
+        .map(href => normalizeHref(target.url, href))
+    ).filter(link => {
+      const parsed = parse(link)
+      const noPrefix = s => s.replace(/www\./, '')
+      const isNotOriginalUrl = link !== initialUrl
+      return (
+        isNotOriginalUrl &&
+        matchesDepth(link) &&
+        noPrefix(parsed.host) === noPrefix(entryUrl.host)
+      )
+    })
   }
 
   async start(entry: string, runOptions: Options = this.options) {
@@ -265,8 +263,8 @@ export default class Crawler {
       filterUrlExtensions = FILTER_URL_EXTENSIONS,
     } = options
 
-    const matchPath = url => {
-      return parse(url).pathname.indexOf(depth) === 0
+    const matchesDepth = url => {
+      return parse(url).pathname && parse(url).pathname.indexOf(depth) === 0
     }
 
     const initialUrl = cleanUrlHash(entry)
@@ -294,7 +292,7 @@ export default class Crawler {
         } else if (target.radius >= maxRadius) {
           log.page(`Maximum radius reached. Radius: ${target.radius}`)
           return null
-        } else if (!matchPath(target.url)) {
+        } else if (!matchesDepth(target.url)) {
           log.page(`Path is not at same depth:`)
           log.page(`  ${parse(target.url).pathname}`)
           log.page(`  ${depth}`)
@@ -311,8 +309,9 @@ export default class Crawler {
         let outboundUrls
         if (!options.disableLinkFinding) {
           outboundUrls = await this.findLinks(page, {
+            target,
             initialUrl,
-            matchPath,
+            matchesDepth,
             entryUrl,
           })
           log.page(`Found ${outboundUrls.length} urls`)
@@ -351,9 +350,9 @@ export default class Crawler {
       return result => {
         if (result && result.contents) {
           log.step('Downloaded ', this.db.getValid().length, 'pages')
-          this.db.store(result)
           this.count++
         }
+        this.db.store(result)
         loadingPage[tabIndex] = false
       }
     }
@@ -372,20 +371,22 @@ export default class Crawler {
     const shouldCrawlMoreThanOne = maxPages > 1
     // start rest
     if (shouldCrawlMoreThanOne) {
-      const finished = () => {
+      const isFinished = () => {
         const isLoadingPage = loadingPage.indexOf(true) > -1
         const hasMoreInQueue = this.db.pageQueue.length > 0
         const hasFoundEnough = this.count >= maxPages
         return hasFoundEnough || (!isLoadingPage && !hasMoreInQueue)
       }
-      while (!finished()) {
+      while (!isFinished()) {
         await sleep(20) // throttle
         const tabIndex = loadingPage.indexOf(false)
         if (tabIndex === -1) {
+          // may need to wait for a tab to clear up
           continue
         }
         const target = this.db.shiftUrl()
         if (!target) {
+          // could be processing a page that will fill queue once done
           log.crawl(`No target from db, still loading page`, loadingPage)
           continue
         }

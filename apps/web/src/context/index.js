@@ -211,8 +211,9 @@ export default class Context {
     if (!text) {
       return []
     }
-    console.log('searching ' + text)
-    if (!this.engine.isConsolidated()) return []
+    if (!this.engine.isConsolidated()) {
+      return []
+    }
     /*
     const words = text
       .split(' ')
@@ -287,7 +288,6 @@ export default class Context {
 
     this.autocomplete = autocomplete
     this.searchResults = vals
-    console.timeEnd('searching ' + text)
     this.sentences = []
     this.getSentences(text)
 

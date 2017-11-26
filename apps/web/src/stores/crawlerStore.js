@@ -1,5 +1,4 @@
 import r2 from '@mcro/r2'
-import { without } from 'lodash'
 import { store } from '@mcro/black'
 
 const base = `http://localhost:3001`
@@ -31,24 +30,20 @@ export default class Crawler {
       }
       return true
     })
-
     this.isRunning = true
-
     await r2.post(`${base}/crawler/start`, {
       json: { options: this.settings || {} },
     })
-
-    setTimeout(this.onCheckStatus, 2500)
+    this.setTimeout(this.onCheckStatus, 2500)
   }
 
   async onStop() {
-    console.log('stopping')
-    await r2.post(`${base}/crawler/stop`, {})
+    await r2.post(`${base}/crawler/stop`)
     this.clean()
   }
 
   async onFinished() {
-    this.results = await r2.get(`${base}/crawler/results`, {}).json
+    this.results = await r2.get(`${base}/crawler/results`).json
     this.isFinished = true
     activeCrawlers.push(this)
   }
@@ -64,15 +59,11 @@ export default class Crawler {
 
   onCheckStatus = async () => {
     const { status } = await r2.get(`${base}/crawler/status`).json
-
-    console.log('status is', status)
     this.status = status
-
     if (status.count > 0 && !status.isRunning) {
       this.isRunning = false
       this.onFinished()
     }
-
     if (this.isRunning) {
       setTimeout(this.onCheckStatus, 300)
     }

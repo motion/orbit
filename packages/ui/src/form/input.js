@@ -117,9 +117,7 @@ export default class Input extends React.Component<Props> {
         sizeRadius
         sizePadding
         sizeHeight
-        flex
         borderWidth={1}
-        flex="none"
         wrapElement
         tagName={TAG_MAP[type] || type}
         className="input"

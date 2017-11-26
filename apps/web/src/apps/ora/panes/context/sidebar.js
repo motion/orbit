@@ -43,9 +43,6 @@ export default class ContextSidebar {
         this.crawlerSettings = crawlerSettings
       }
     })
-    // this.watch(() => {
-    //   this.oraStore.showWhiteBottomBg = this.isShowingCrawlDrawer
-    // })
   }
 
   setDepth = () => {
@@ -59,86 +56,43 @@ export default class ContextSidebar {
   get oraStore() {
     return this.props.oraStore
   }
-
   get context() {
     return this.oraStore.context
   }
-
   get search() {
     return this.oraStore.search
   }
-
+  get crawler() {
+    return this.oraStore.crawler
+  }
   // can customize the shown title here
   get title() {
     return this.osContext ? this.osContext.title : null
   }
 
-  onDrawerClose() {
-    this.oraStore.crawler.showing = false
-  }
-
-  get drawerTitle() {
-    return 'Crawl Settings'
-  }
-
-  // can show a modal that slides in
   get drawer() {
-    if (!this.oraStore.crawler.showing) {
+    if (!this.crawler.showing) {
       return null
     }
-
-    return (
-      <CrawlSetup
-        settings={this.crawlerSettings}
-        osContext={this.osContext}
-        onChangeSettings={settings => (this.crawlerSettings = settings)}
-      />
-    )
-
-    const fieldProps = {
-      row: true,
-      labelProps: {
-        width: 90,
+    return {
+      title: 'Crawl Settings',
+      onClose: () => {
+        this.crawler.onStop()
+        this.crawler.showing = false
       },
+      children: (
+        <CrawlSetup
+          settings={this.crawlerSettings}
+          osContext={this.osContext}
+          onChangeSettings={settings => (this.crawlerSettings = settings)}
+        />
+      ),
     }
-
-    return (
-      <UI.List
-        css={{
-          maxWidth: '100%',
-        }}
-        groupBy="category"
-        items={
-          /*[
-          {
-            category: 'Preview',
-            primary: this.crawlerSettings.title,
-            primaryEllipse: true,
-            secondary: this.crawlerSettings.entry,
-            children: this.crawlerSettings.body,
-          },
-          ...Object.keys(this.crawlerSettings).map(key => ({
-            category: 'Crawl Settings:',
-            children: (
-              <UI.Field
-                label={key}
-                sync={this.ref(`crawlerSettings.${key}`)}
-                {...fieldProps}
-              />
-            ),
-          })),
-        ]*/ [
-            {
-              category: 'Settings',
-              children: <div />,
-            },
-          ]
-        }
-      />
-    )
   }
 
-  // this determines when the pane slides in
+  // END DRAWER
+
+  // this determines when this pane will appear
   get finishedLoading() {
     return this.context && !this.context.isLoading
   }
@@ -215,7 +169,7 @@ export default class ContextSidebar {
   }
 
   get actions() {
-    if (this.oraStore.crawler.results) {
+    if (this.crawler.results) {
       return [
         {
           icon: 'remove',
@@ -234,7 +188,7 @@ export default class ContextSidebar {
         },
       ]
     }
-    if (this.oraStore.crawler.showing) {
+    if (this.crawler.showing) {
       return [
         {
           flex: true,

@@ -3,13 +3,16 @@ import { watch } from '@mcro/black'
 import Mousetrap from 'mousetrap'
 import { OS, debounceIdle } from '~/helpers'
 import StackStore from '~/stores/stackStore'
-import Crawler from '~/stores/crawler'
+import CrawlerStore from '~/stores/crawlerStore'
 import keycode from 'keycode'
 import ContextStore from '~/context'
 import SHORTCUTS from './shortcuts'
 import { CurrentUser } from '~/app'
 import * as r2 from '@mcro/r2'
 import { throttle } from 'lodash'
+import debug from 'debug'
+
+const log = _ => _ || debug('ora')
 
 const BANNERS = {
   note: 'note',
@@ -34,7 +37,7 @@ export default class OraStore {
   focusedBar = false
   wasBlurred = false
   showWhiteBottomBg = false
-  crawler = new Crawler()
+  crawler = new CrawlerStore()
 
   // this is synced to electron!
   state = {
@@ -173,7 +176,7 @@ export default class OraStore {
     this.watch(() => {
       const { context } = this.electronState
       if (!context || !context.url || !context.title) {
-        console.log('no context or url/title', this.context)
+        log('no context or url/title', this.context)
         return
       }
       if (lastContext) {

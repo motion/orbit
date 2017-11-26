@@ -10,7 +10,11 @@ const getTextProperties = props => {
     (typeof props.fontSize === 'number' && props.fontSize) || props.size
       ? props.size * 14
       : 'auto'
-  const lineHeight = props.lineHeight || fontSize * 1.15 + 2.5 * (fontSize / 10)
+  const lineHeight =
+    props.lineHeight ||
+    (typeof props.fontSize === 'number' &&
+      fontSize * 1.15 + 2.5 * (fontSize / 10)) ||
+    '1.4rem'
   return { fontSize, lineHeight }
 }
 
@@ -45,6 +49,7 @@ export type Props = {
 export default class Text extends React.Component<Props> {
   static defaultProps = {
     tagName: 'text', // TODO: prod p mode
+    size: 1,
   }
 
   state = {
@@ -185,7 +190,11 @@ export default class Text extends React.Component<Props> {
     html,
     ...props
   }: Props) {
-    const textProperties = getTextProperties(this.props)
+    const text = getTextProperties(this.props)
+    const maxHeight =
+      typeof text.lineHeight === 'number'
+        ? `${ellipse * text.lineHeight}px`
+        : 'auto'
     const eventProps = {
       onClick,
       onMouseEnter,
@@ -223,7 +232,7 @@ export default class Text extends React.Component<Props> {
             multiLineEllipse
               ? {
                   WebkitLineClamp: ellipse,
-                  maxHeight: `${ellipse * textProperties.lineHeight}px`,
+                  maxHeight,
                   width: this.state.doClamp ? '100%' : '100.001%',
                   opacity: this.state.doClamp ? 1 : 0,
                 }
@@ -277,8 +286,7 @@ export default class Text extends React.Component<Props> {
       text: {
         color,
         fontSize,
-        lineHeight:
-          typeof lineHeight === 'number' ? `${lineHeight}px` : lineHeight,
+        lineHeight,
         display: props.display,
         fontWeight: props.fontWeight,
         opacity: props.opacity,

@@ -116,6 +116,7 @@ export default class Drawer extends React.PureComponent<Props> {
       left: 0,
       opacity: 0,
       pointerEvents: 'none',
+      transition: 'opacity ease-out 150ms',
       transform: {
         z: 0,
       },

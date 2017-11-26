@@ -66,7 +66,7 @@ export default class Syncer {
                   this[key] = this.syncers[key]
                 }
               } catch (err) {
-                console.log('error creating syncer', key, Syncer)
+                log('error creating syncer', key, Syncer)
                 console.error(err)
               }
             }
@@ -81,7 +81,7 @@ export default class Syncer {
       throw new Error('Must provide action')
     }
     if (!this.token) {
-      console.log(`No token found for syncer ${this.type} ${action}`)
+      log(`No token found for syncer ${this.type} ${action}`)
       return
     }
     this.ensureSetting()

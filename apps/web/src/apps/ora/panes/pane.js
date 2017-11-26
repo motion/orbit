@@ -106,8 +106,8 @@ export default class Pane {
 
   handleDrawerClose = () => {
     const { store } = this.props.stackItem
-    if (store && store.onDrawerClose) {
-      store.onDrawerClose()
+    if (store && store.drawer && store.drawer.handleClose) {
+      store.drawer.handleClose()
     }
   }
 
@@ -165,7 +165,7 @@ export default class Pane {
     }
 
     const drawerHeight = 420
-    console.log('pane render drawerheight', drawerHeight)
+    console.log('pane render')
 
     return (
       <pane
@@ -177,13 +177,10 @@ export default class Pane {
         <Drawer
           if={store}
           size={drawerHeight}
-          open={drawer}
+          open={!!drawer}
           closable
-          onClose={this.handleDrawerClose}
-          title={store.drawerTitle}
-        >
-          {drawer}
-        </Drawer>
+          {...drawer}
+        />
         <SidebarTitle
           if={hasParent}
           title={(store && store.title) || result.title}

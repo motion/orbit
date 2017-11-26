@@ -39,7 +39,7 @@ export default class Syncer {
   }
 
   createSyncers() {
-    this.watch(() => {
+    this.watch(function watchCreateSyncers() {
       if (this.setting && this.token) {
         const { syncers } = this.settings
 

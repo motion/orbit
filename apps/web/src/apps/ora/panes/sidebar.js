@@ -65,7 +65,7 @@ class SidebarContainer {
       this.version = this.props.store.stack.version
 
       // watch for update/load
-      this.watch(() => {
+      this.watch(function watchStackLoad() {
         const { stack } = this.props.store
         if (!stack) {
           return
@@ -82,7 +82,7 @@ class SidebarContainer {
         }
       })
 
-      this.watch(() => {
+      this.watch(function watchFinishedLoading() {
         const { stack } = this.props.store
         if (this.version === stack.version) {
           return

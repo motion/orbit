@@ -204,7 +204,6 @@ export default class Text extends React.Component<Props> {
       ellipse && text.lineHeightNum
         ? `${ellipse * text.lineHeightNum}px`
         : 'auto'
-
     const eventProps = {
       onClick,
       onMouseEnter,

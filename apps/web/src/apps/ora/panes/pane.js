@@ -13,7 +13,7 @@ class PaneStore {
   willMount() {
     this.watchDrillIn()
     const { stackItem } = this.props
-    this.watch(() => {
+    this.watch(function watchPaneStackVersion() {
       if (stackItem && stackItem.results) {
         this.bumpVersion()
       }

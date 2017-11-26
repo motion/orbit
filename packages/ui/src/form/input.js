@@ -110,7 +110,6 @@ export default class Input extends React.Component<Props> {
         <Button type="submit" noElement {...props} onClick={this.onClick} />
       )
     }
-    console.log('got a thing', typeof value)
     return (
       <SizedSurface
         size={size}

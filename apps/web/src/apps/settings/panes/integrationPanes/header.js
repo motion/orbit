@@ -12,7 +12,7 @@ import * as Constants from '~/constants'
 class IntegrationHeaderStore {
   typeToJob = {
     drive: { action: 'drive', service: 'google' },
-    slack: { action: 'gather', service: 'slack' },
+    slack: { action: 'attachments', service: 'slack' },
     calendar: { action: 'cal', service: 'google' },
     github: { action: 'task', service: 'github' },
   }

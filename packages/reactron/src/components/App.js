@@ -8,6 +8,7 @@ const EVENT_KEYS = {
 export default class App extends BaseComponent {
   mount() {
     this.app = this.root.app
+    this.update()
   }
 
   handleNewProps(keys) {

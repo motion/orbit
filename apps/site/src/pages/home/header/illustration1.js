@@ -9,10 +9,7 @@ export default class Illustration1 {
   render(props) {
     return (
       <things
-        $$row
         css={{
-          flex: 1,
-          justifyContent: 'center',
           userSelect: 'none',
         }}
         {...props}
@@ -27,10 +24,9 @@ export default class Illustration1 {
         >
           <figure
             css={{
-              marginRight: -30,
-              marginBottom: 30,
+              marginRight: -50,
+              marginBottom: 35,
               zIndex: 100,
-              height: 185,
             }}
           >
             <bubble
@@ -122,9 +118,8 @@ export default class Illustration1 {
         <sky $$fullscreen>
           <icon
             css={{
-              transform: { rotate: '-10deg', scale: 0.65 },
-              top: 30,
-              left: 0,
+              top: 40,
+              left: 30,
             }}
           >
             <img
@@ -139,8 +134,8 @@ export default class Illustration1 {
           <icon
             css={{
               transform: { rotate: '15deg', scale: 0.65 },
-              top: 10,
-              right: 0,
+              top: 40,
+              right: 10,
             }}
           >
             <img
@@ -235,7 +230,7 @@ export default class Illustration1 {
               }}
             >
               <img
-                src="/logos/mixpanel.svg"
+                src="/logos/intercom.svg"
                 css={{
                   width: '80%',
                   height: '80%',
@@ -258,15 +253,6 @@ export default class Illustration1 {
               />
             </icon>
           </pile>
-          <img
-            if={false}
-            src="/figures/Pinecomb.svg"
-            css={{
-              width: 80,
-              height: 80,
-              transform: { rotate: '-25deg' },
-            }}
-          />
         </floor>
       </things>
     )
@@ -274,16 +260,12 @@ export default class Illustration1 {
 
   static style = {
     icon: {
-      // border: [1, [0, 0, 255, 0.075]],
-      // background: [255, 255, 255, 0.1],
       borderRadius: 10,
-      // opacity: 0.25,
       width: 45,
       height: 45,
       alignItems: 'center',
       justifyContent: 'center',
       position: 'absolute',
-      bottom: 0,
     },
   }
 }

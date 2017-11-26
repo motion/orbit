@@ -58,17 +58,13 @@ export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
     let type = type_
     if (!type) {
       throw new Error(
-        `Didn't get a valid type: ${type}, children: ${children
-          ? children.toString()
-          : children}`
+        `Didn't get a valid type: ${type}, children: ${
+          children ? children.toString() : children
+        }`
       )
     }
     if (!this) {
-      throw new Error(
-        `No this is set here! type: ${type}, props: ${props
-          ? Object.keys(props)
-          : ''}`
-      )
+      return ogCreateElement(type, props, ...children)
     }
 
     let { glossUID } = this.constructor
@@ -82,10 +78,6 @@ export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
     const name: string = !isTag ? `${type.name}` : type
     const finalProps = {}
     const finalStyles = []
-
-    if (!this) {
-      return ogCreateElement(type, props, ...children)
-    }
 
     const { theme } = this
 
@@ -149,7 +141,9 @@ export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
           }
           if (typeof val !== 'string') {
             throw new Error(
-              `tagName must be a string (tag: ${name}, type received: ${typeof val})`
+              `tagName must be a string (tag: ${
+                name
+              }, type received: ${typeof val})`
             )
           }
           type = val

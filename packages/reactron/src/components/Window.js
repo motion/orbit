@@ -23,7 +23,7 @@ export default class Window extends BaseComponent {
       vibrancy: props.vibrancy,
       transparent: !!props.transparent,
       webPreferences: props.webPreferences,
-      hasShadow: props.hasShadow,
+      hasShadow: !!props.hasShadow,
       backgroundColor: props.backgroundColor,
       alwaysOnTop: !!props.alwaysOnTop,
     })
@@ -42,7 +42,6 @@ export default class Window extends BaseComponent {
         }
       },
       show: propVal => {
-        console.log('calling show with', propVal)
         if (propVal) {
           this.window.show()
         } else {

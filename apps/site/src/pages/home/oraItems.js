@@ -105,7 +105,7 @@ export default {
     {
       children: (
         <SidebarTitle
-          title="The No-Cloud Infrastructur"
+          title="ok"
           subtitle="In order to work, Orbit needed to invent a new model"
           icon="think"
           noBack

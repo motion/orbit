@@ -23,6 +23,7 @@ export default () => (
     css={{
       background: 'transparent',
       padding: [10, 0],
+      margin: [0, -25],
       position: 'relative',
       zIndex: 10,
     }}

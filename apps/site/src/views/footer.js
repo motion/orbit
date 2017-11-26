@@ -19,7 +19,7 @@ const colProps = {
 export default () => (
   <UI.Theme name="dark">
     <footer>
-      <Section space padded>
+      <Section css={{ background: '#000' }} padded>
         <SectionContent>
           <content $$row>
             <column

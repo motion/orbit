@@ -85,9 +85,46 @@ export default class Server {
     const crawlerIndex = require.resolve('@mcro/crawler')
     const crawlerDist = Path.join(crawlerIndex, '..', 'build', 'js')
     log('setting up crawler', crawlerDist)
+
+    // for injecting crawler js into browser
     this.app.use('/crawler', express.static(crawlerDist))
 
+    this.app.post('/crawler/single', async (req, res) => {
+      const { options } = req.body
+      if (options) {
+        const crawler = new Crawler()
+        const results = await crawler.start(options.entry, {
+          maxPages: 1,
+        })
+        if (results && results.length) {
+          res.json({ result: results[0] })
+        } else {
+          res.json({ result: null })
+        }
+      } else {
+        res.sendStatus(500)
+      }
+    })
+
+    this.app.post('/crawler/exact', async (req, res) => {
+      const { options } = req.body
+      if (options && options.entries && options.entries.length) {
+        const crawler = new Crawler()
+        const [entry, ...queue] = options.entries
+        const results = await crawler.start(entry, {
+          disableLinkFinding: true,
+          disableStructureFinding: true,
+          queue,
+        })
+        res.json({ results })
+      } else {
+        console.log('no options.entries')
+        res.sendStatus(500)
+      }
+    })
+
     const crawler = new Crawler()
+    let results = null
 
     let results = null
 
@@ -95,7 +132,6 @@ export default class Server {
       log(`Got a request for crawl`)
       const { options } = req.body
       if (options) {
-        log('start crawl')
         results = null
         if (crawler.isRunning) {
           log('stopping previous crawler')

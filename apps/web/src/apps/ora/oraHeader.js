@@ -124,6 +124,7 @@ export default class OraHeader extends React.Component {
               {...iconProps}
             />
           </leftIcon>
+
           <UI.Input
             $searchInput
             $disabled={!oraStore.focusedBar}
@@ -134,12 +135,7 @@ export default class OraHeader extends React.Component {
             onChange={oraStore.onSearchChange}
             value={oraStore.textboxVal}
             borderWidth={0}
-            fontWeight={200}
             background="transparent"
-            css={{
-              fontWeight: 300,
-              fontSize: 20,
-            }}
           />
 
           <title
@@ -191,13 +187,15 @@ export default class OraHeader extends React.Component {
       position: 'relative',
       opacity: 0.85,
       height: 30,
+      borderBottom: [1, [255, 255, 255, 0.1]],
       transition: 'all ease-in 80ms',
+      justifyContent: 'center',
       '& .icon': {
         transition: 'all ease-in 100ms',
         transform: 'scale(0.75)',
       },
       '&:hover': {
-        background: [255, 255, 255, 0.1],
+        background: [255, 255, 255, 0.02],
       },
     },
     focus: {
@@ -259,7 +257,8 @@ export default class OraHeader extends React.Component {
       position: 'relative',
       padding: [8, 25],
       paddingLeft: 36,
-      borderBottom: [1, 'dotted', [255, 255, 255, 0.1]],
+      fontWeight: 300,
+      fontSize: 20,
     },
   }
 }

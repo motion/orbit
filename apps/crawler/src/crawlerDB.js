@@ -9,9 +9,23 @@ export default class CrawlerDB {
   pageQueue = []
   scoreFn = () => 0
 
+  constructor(options = {}) {
+    this.disableLinkFinding = options.disableLinkFinding
+    if (options.queue) {
+      this.pageQueue = options.queue.map(url => ({ url, radius: 0 }))
+    }
+  }
+
   store = page => {
+    if (!page) {
+      console.log('not storing')
+      return
+    }
     log(`Store -> ${page.url}`)
     this.crawled.push(page)
+    if (this.disableLinkFinding) {
+      return
+    }
     let count = 0
     const radius = page.radius
     page.outboundUrls.forEach(url => {
@@ -38,7 +52,6 @@ export default class CrawlerDB {
   }
 
   popUrl = () => {
-    console.log('pop', this.pageQueue[0])
     if (this.pageQueue.length) {
       return this.pageQueue.pop()
     }

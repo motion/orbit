@@ -23,7 +23,6 @@ let blurredRef
 
     willMount() {
       window.homeStore = this
-      this.watchScroll()
       this.setTimeout(() => {
         this.ready = true
       }, 100)
@@ -33,13 +32,15 @@ let blurredRef
       this.unmounted = true
     }
 
+    setBlurredRef = ref => {
+      if (!ref) return
+      blurredRef = ref
+    }
+
     setPageRef = ref => {
       if (!ref) return
-      if (this.props.blurred) {
-        blurredRef = ref.childNodes[0]
-      } else {
-        this.pageNode = ref
-      }
+      this.pageNode = ref
+      this.watchScroll()
     }
 
     watchScroll = () => {
@@ -47,16 +48,15 @@ let blurredRef
       if (!pageNode) {
         return
       }
-      const { scrollTop } = pageNode
-      if (scrollTop !== this.scrollPosition) {
+      const { scrollTop: y } = pageNode
+      if (y !== this.scrollPosition) {
         const { isSticky } = this
-
         // hide ora in header
-        if (scrollTop > Constants.ORA_TOP - Constants.ORA_TOP_PAD) {
+        if (y > Constants.ORA_TOP - Constants.ORA_TOP_PAD) {
           if (!isSticky) {
             this.isSticky = true
           }
-          const key = this.getActiveKey(scrollTop)
+          const key = this.getActiveKey(y)
           if (key !== this.activeKey) {
             this.activeKey = key
           }
@@ -66,12 +66,17 @@ let blurredRef
             this.activeKey = 0
           }
         }
-
         if (blurredRef) {
-          const scrollTo = isSticky ? scrollTop : 0
-          blurredRef.style.transform = `translateY(-${scrollTo}px)`
+          blurredRef.style.transform = `translateY(-${y}px)`
+          if (!this.isSticky) {
+            blurredRef.parentNode.style.clip = this.getClipBox(-y, 0, -y)
+          } else {
+            if (isSticky !== this.isSticky) {
+              blurredRef.parentNode.style.clip = this.getClipBox()
+            }
+          }
         }
-        this.scrollPosition = scrollTop
+        this.scrollPosition = y
       }
       if (!this.unmounted) {
         requestAnimationFrame(this.watchScroll)
@@ -112,6 +117,20 @@ let blurredRef
         }
       }
     }
+
+    getClipBox = (t = 0, r = 0, b = 0, l = 0) => {
+      const { isSticky } = this
+      const radiusAdjust = 1.5
+      const topPad = isSticky ? Constants.ORA_TOP_PAD : Constants.ORA_TOP
+      const radius = Constants.ORA_BORDER_RADIUS / 2
+      const height = Constants.ORA_HEIGHT
+      const rightEdge = window.innerWidth / 2 + Constants.ORA_LEFT_PAD + 150
+      const bottom = height + topPad - radius / radiusAdjust
+      const right = rightEdge - radius + 2
+      const left = rightEdge - Constants.ORA_WIDTH + radius - 2
+      return `rect(${topPad + radius / radiusAdjust + t}px, ${right +
+        r}px, ${bottom + b}px, ${left + l}px)`
+    }
   },
 })
 @view
@@ -124,19 +143,87 @@ export default class HomePage extends React.Component {
       homeStore,
       setSection: homeStore.setSection,
     }
+
+    const sinWidth = 100
+
+    const homeContents = [
+      <HomeExamples {...sectionProps} />,
+      //<HomeIntegrations if={false} {...sectionProps} />,
+      <HomeChat {...sectionProps} />,
+      <HomeSecurity {...sectionProps} />,
+      <HomeHandsFree {...sectionProps} />,
+      <View.Footer />,
+    ].map((x, index) => React.cloneElement(x, { key: index }))
+
     return (
-      <page css={styles.page} ref={homeStore.setPageRef}>
-        <HomeHeader />
+      <page css={styles.page} ref={!blurred && homeStore.setPageRef}>
+        <View.Sine
+          if={!blurred}
+          color="#fff"
+          strokeWidth={2}
+          amplitude={sinWidth / 2}
+          freq={0.005}
+          phase={250}
+          css={{
+            opacity: 0.1,
+            pointerEvents: 'none',
+            height: sinWidth,
+            marginLeft: sinWidth / 2,
+            position: 'absolute',
+            zIndex: 2,
+            top: 0,
+            left: '50%',
+            width: Constants.SECTION_HEIGHT * 3 + 200,
+            transformOrigin: 'top left',
+            transform: {
+              rotate: '90deg',
+              scale: 1,
+            },
+          }}
+        />
+        <View.Sine
+          if={!blurred}
+          color={Constants.dark2}
+          strokeWidth={2}
+          amplitude={sinWidth / 2}
+          freq={0.005}
+          phase={250}
+          css={{
+            opacity: 0.1,
+            pointerEvents: 'none',
+            height: sinWidth,
+            marginLeft: sinWidth / 2,
+            position: 'absolute',
+            zIndex: 2,
+            top: -2,
+            left: '50%',
+            width: Constants.SECTION_HEIGHT * 3 + 200,
+            transformOrigin: 'top left',
+            transform: {
+              rotate: '90deg',
+              scale: 1,
+            },
+          }}
+        />
+        <HomeHeader if={!blurred} />
         <Ora
           if={!blurred && homeStore.ready && !isSmall}
           homeStore={homeStore}
         />
-        <HomeExamples {...sectionProps} />
-        <HomeIntegrations if={false} {...sectionProps} />
-        <HomeChat {...sectionProps} />
-        <HomeSecurity {...sectionProps} />
-        <HomeHandsFree if={false} {...sectionProps} />
-        <View.Footer />
+        {!blurred && homeContents}
+        <contents if={blurred} ref={homeStore.setBlurredRef}>
+          <HomeHeader />
+          {homeContents}
+        </contents>
+        <centerline
+          if={false}
+          css={{
+            position: [0, 'auto', 0, '50%'],
+            width: 1,
+            background: 'red',
+            zIndex: 10000,
+          }}
+        />
       </page>
     )
   }
@@ -147,27 +234,17 @@ export default class HomePage extends React.Component {
         page: {},
       }
     }
-    const isSticky = this.props.homeStore.isSticky
-    const topPad = isSticky ? Constants.ORA_TOP_PAD : Constants.ORA_TOP
-    const radius = Constants.ORA_BORDER_RADIUS / 2
-    const height = Constants.ORA_HEIGHT
-    const rightEdge = window.innerWidth / 2 + Constants.ORA_LEFT_PAD + 150
-    const bottom = height + topPad - radius
-    const right = rightEdge - radius + 2
-    const left = rightEdge - Constants.ORA_WIDTH + radius - 2
     return {
       page: {
-        willChange: 'transform',
-        background: 'red',
+        background: '#fff',
+        willChange: 'clip',
         pointerEvents: 'none',
-        position: isSticky ? 'fixed' : 'absolute',
+        position: 'absolute',
         top: 0,
         left: 0,
         right: 0,
         zIndex: 1000,
-        // transition: 'opacity ease-in 400ms',
-        // opacity:  ? 1 : 0,
-        clip: `rect(${topPad + radius}px, ${right}px, ${bottom}px, ${left}px)`,
+        clip: this.props.homeStore.getClipBox(),
       },
     }
   }
@@ -179,15 +256,21 @@ export default class HomePage extends React.Component {
     return {
       contents: {
         filter: 'blur(20px)',
+        overflow: 'hidden',
+        willChange: 'transform',
+        transform: { y: 0 },
       },
     }
   }
 
   static style = {
     page: {
-      flex: 1,
       height: '100%',
+      overflowX: 'hidden',
       overflowY: 'scroll',
+      position: 'relative',
+      // dont do this causes tons of paints:
+      // transform: { z: 0 },
     },
     contents: {},
     '@keyframes orbital0': {

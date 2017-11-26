@@ -5,6 +5,7 @@ import EventEmitter from 'events'
 export default class MenuItem extends BaseComponent {
   mount() {
     this.emitter = new EventEmitter()
+    this.update()
   }
 
   handleNewProps() {

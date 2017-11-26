@@ -30,75 +30,6 @@ export const SubTitle = props => (
   />
 )
 
-const dark = {
-  background: `linear-gradient(40deg, ${Constants.colorMain}, ${
-    Constants.colorSecondary
-  })`,
-}
-const space = {
-  background: '#222',
-}
-const padRight = {
-  paddingRight: 380,
-  [Constants.screen.small]: {
-    paddingRight: 0,
-  },
-}
-
-export const Section = view(
-  'section',
-  {
-    marginLeft: -100,
-    marginRight: -100,
-    paddingLeft: 100,
-    paddingRight: 100,
-    position: 'relative',
-    //overflow: 'hidden',
-  },
-  {
-    padded: {
-      padding: [110, 0],
-      margin: 0,
-    },
-    dark,
-    space,
-    fullscreen: {
-      minHeight: Math.min(1200, window.innerHeight - 10),
-    },
-  }
-)
-
-export const SectionContent = view(
-  'section',
-  {
-    width: '85%',
-    minWidth: 300,
-    maxWidth: Constants.smallSize,
-    margin: [0, 'auto'],
-    transform: {
-      z: 0,
-    },
-  },
-  {
-    padRight,
-    padBottom: {
-      paddingBottom: 80,
-    },
-    row: {
-      flexFlow: 'row',
-      alignItems: 'center',
-    },
-  }
-)
-
-export const Content = view(
-  'div',
-  {},
-  {
-    padRight,
-  }
-)
-
 export const Hr = view('hr', {
   display: 'flex',
   height: 0,
@@ -108,25 +39,8 @@ export const Hr = view('hr', {
   marginTop: 20,
 })
 
-export const BottomSlant = view(
-  'div',
-  {
-    position: 'absolute',
-    bottom: -350,
-    left: -500,
-    right: -500,
-    height: 400,
-    transform: {
-      rotate: '-1deg',
-    },
-  },
-  {
-    dark,
-  }
-)
-
 export const Link = view('a', {
-  color: Constants.colorMain,
+  color: Constants.colorSecondary,
   fontWeight: 500,
   // textDecoration: 'underline',
 })

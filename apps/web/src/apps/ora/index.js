@@ -72,10 +72,10 @@ export default class OraPage {
     ora: {
       width: Constants.ORA_WIDTH,
       height: Constants.ORA_HEIGHT,
-      background: [25, 25, 25, 0.98],
-      border: [1, [255, 255, 255, 0.025]],
+      background: [21, 21, 21, 0.98],
+      // border: [1, [255, 255, 255, 0.035]],
       boxShadow: [
-        [0, 0, 15, [0, 0, 0, 0.8]],
+        [0, 0, 15, [0, 0, 0, 0.4]],
         // ['inset', 0, 0, 120, [255, 255, 255, 0.053]],
       ],
       margin: 10,

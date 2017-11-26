@@ -1,8 +1,7 @@
-import * as React from 'react'
-import * as UI from '@mcro/ui'
-import { watch } from '@mcro/black'
+// import * as React from 'react'
+// import * as UI from '@mcro/ui'
 import { fuzzy } from '~/helpers'
-import { Event, Thing } from '~/app'
+import { Thing } from '~/app'
 
 export default class MainSidebar {
   get search() {
@@ -10,21 +9,8 @@ export default class MainSidebar {
   }
 
   get things() {
-    return (
-      (this.props.oraStore.items && this.props.oraStore.items.slice(0, 20)) ||
-      []
-    )
+    return this.props.oraStore.items || []
   }
-
-  @watch
-  events = () =>
-    Event.connected &&
-    Event.find()
-      .where('created')
-      .ne(null)
-      .lte(new Date().toISOString())
-      .sort({ created: 'desc' })
-      .limit(100)
 
   NAME_MAP = {
     ncammarata: 'nick',
@@ -32,19 +18,22 @@ export default class MainSidebar {
   }
 
   get items() {
+    if (this.things.length) {
+      return [
+        ...this.things.map(x => ({ ...Thing.toResult(x), type: 'context' })),
+      ]
+    }
     return [
-      ...this.things.map(x => ({ ...Thing.toResult(x), type: 'context' })),
+      {
+        type: 'message',
+        title: 'Welcome to Orbit',
+      },
     ]
   }
 
   get results() {
     const { search } = this
-    const items = [
-      ...this.items,
-      ...(this.events || []).map((item, index) => ({
-        children: () => <FeedItem inline event={item} index={index} />,
-      })),
-    ]
+    const items = [...this.items]
     if (!search) {
       return items
     }
@@ -55,7 +44,6 @@ export default class MainSidebar {
           {
             type: 'message',
             title: 'No Results...',
-            data: { message: 'No results' },
             category: 'Search Results',
           },
         ]

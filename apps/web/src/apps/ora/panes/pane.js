@@ -120,10 +120,9 @@ export default class Pane {
     hasParent,
     disableGlow,
   }) {
-    console.log('listProps', listProps)
     const list = paneStore.items && (
       <UI.List
-        itemsKey={paneStore.contentVersion}
+        key={paneStore.contentVersion}
         getRef={paneStore.setList}
         onSelect={this.onSelect}
         items={paneStore.items}
@@ -145,7 +144,6 @@ export default class Pane {
     }
 
     const drawerHeight = 420
-    console.log('pane render')
 
     return (
       <pane

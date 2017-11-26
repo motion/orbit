@@ -316,7 +316,6 @@ class List extends React.PureComponent<Props, { selected: number }> {
         this.state.selected = index
       }
     }
-    console.log('returning props for item', props)
     return props
   }
 

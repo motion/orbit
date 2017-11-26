@@ -120,7 +120,6 @@ export default class Sidebar {
     //   log('loadnext')
     //   log(isLoadingNext, currentIndex, `${stackItems.map(i => i.result.id)}`)
     // }
-    console.log('render', currentIndex, 'stackItems', stackItems)
     return (
       <sidebar css={{ width, maxWidth: width, flex: 1 }}>
         {stackItems.map((stackItem, index) => {

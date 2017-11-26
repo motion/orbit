@@ -3,6 +3,7 @@ import * as UI from '@mcro/ui'
 import * as Constants from '~/constants'
 import SidebarTitle from '~/views/sidebarTitle'
 import Drawer from '~/views/drawer'
+import getItem from './helpers/getItem'
 
 class PaneStore {
   listRef = null
@@ -11,7 +12,6 @@ class PaneStore {
 
   willMount() {
     this.watchDrillIn()
-
     const { stackItem } = this.props
     this.watch(() => {
       if (stackItem && stackItem.results) {
@@ -60,11 +60,9 @@ class PaneStore {
   setList = ref => {
     if (!this.listRef) {
       this.listRef = ref
-
       if (this.props.store && this.props.store.onListRef) {
         this.props.store.onListRef(this.listRef)
       }
-
       this.watchSelection()
     }
   }
@@ -112,12 +110,8 @@ export default class Pane {
   }
 
   render({
-    getItem,
-    groupBy,
     listProps,
-    itemProps,
     paneStore,
-    getActiveIndex,
     children,
     style,
     width,
@@ -126,28 +120,14 @@ export default class Pane {
     hasParent,
     disableGlow,
   }) {
-    const getItemDefault = (item, index) => ({
-      highlight: () => (getActiveIndex ? index === getActiveIndex() : false),
-      children: item,
-    })
-
+    console.log('listProps', listProps)
     const list = paneStore.items && (
       <UI.List
         itemsKey={paneStore.contentVersion}
         getRef={paneStore.setList}
-        groupBy={groupBy}
         onSelect={this.onSelect}
-        itemProps={{
-          padding: 0,
-          highlightBackground: [0, 0, 0, 0.08],
-          highlightColor: [255, 255, 255, 1],
-          ...itemProps,
-        }}
-        virtualized={{
-          measure: true,
-        }}
         items={paneStore.items}
-        getItem={getItem || getItemDefault}
+        getItem={getItem}
         {...listProps}
       />
     )

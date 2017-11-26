@@ -9,6 +9,23 @@ import OraActionBar from './oraActionBar'
 import OraBlur from './oraBlur'
 import * as Constants from '~/constants'
 
+const itemProps = {
+  size: 1.1,
+  padding: [8, 12],
+  glow: true,
+  glowProps: {
+    color: '#fff',
+    scale: 1,
+    blur: 70,
+    opacity: 0.1,
+    show: false,
+    resist: 60,
+    zIndex: -1,
+  },
+  highlightBackground: [255, 255, 255, 0.048],
+  childrenEllipse: 2,
+}
+
 @view.provide({
   oraStore: OraStore,
 })
@@ -31,21 +48,12 @@ export default class OraPage {
               width={Constants.ORA_WIDTH}
               store={oraStore}
               oraStore={oraStore}
-              itemProps={{
-                size: 1.1,
-                padding: [8, 12],
-                glow: true,
-                glowProps: {
-                  color: '#fff',
-                  scale: 1,
-                  blur: 70,
-                  opacity: 0.1,
-                  show: false,
-                  resist: 60,
-                  zIndex: -1,
+              listProps={{
+                groupBy: 'category',
+                virtualized: {
+                  measure: true,
                 },
-                highlightBackground: [255, 255, 255, 0.048],
-                childrenEllipse: 2,
+                itemProps,
               }}
             />
           </content>

@@ -34,6 +34,7 @@ export type Props = {
   fontWeight?: number | string,
   fontSize?: number | string,
   primaryProps?: Object,
+  index?: number,
 }
 
 @view
@@ -108,6 +109,7 @@ export default class ListItem extends React.Component<Props> {
       fontWeight,
       primaryProps,
       fontSize,
+      index,
       ...props
     } = this.props
     const radiusProps = segmented
@@ -120,8 +122,10 @@ export default class ListItem extends React.Component<Props> {
           borderRadius,
         }
 
+    // reactive highlight
+    // TODO: make this not rely on listitem being mobx
     const highlightValue =
-      typeof highlight === 'function' ? highlight() : highlight
+      typeof highlight === 'function' ? highlight(index) : highlight
 
     let children = _children
     // allows for reactive children
@@ -165,7 +169,7 @@ export default class ListItem extends React.Component<Props> {
               <Text
                 $text
                 $primaryText
-                fontSize={fontSize || 'inherit'}
+                fontSize={fontSize}
                 size={size}
                 color="inherit"
                 editable={editable}

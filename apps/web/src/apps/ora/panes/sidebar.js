@@ -2,7 +2,6 @@ import * as React from 'react'
 import { view, store } from '@mcro/black'
 import Fade from '~/views/fade'
 import * as Sidebars from './sidebars'
-import getItem from './helpers/getItem'
 import PaneView from './pane'
 import { ORA_WIDTH } from '~/constants'
 
@@ -30,17 +29,8 @@ class SidebarContainer {
   componentDidMount() {
     this.props.sidebar.setStore(this.props.sidebarStore)
   }
-  render({ paneProps, stackItem, ...props }) {
-    return (
-      <PaneView
-        {...paneProps}
-        sidebar
-        getItem={getItem(paneProps.getActiveIndex)}
-        stackItem={stackItem}
-        hasParent={!!stackItem.parent}
-        {...props}
-      />
-    )
+  render(props) {
+    return <PaneView {...props} />
   }
 }
 
@@ -119,7 +109,7 @@ export default class Sidebar {
     width: ORA_WIDTH,
   }
 
-  render({ width, itemProps, store, cacheStore, ...props }) {
+  render({ width, store, cacheStore, listProps, oraStore }) {
     const { stack } = store
     const { stackItems, isLoadingNext } = cacheStore
     if (!stackItems) {
@@ -130,7 +120,7 @@ export default class Sidebar {
     //   log('loadnext')
     //   log(isLoadingNext, currentIndex, `${stackItems.map(i => i.result.id)}`)
     // }
-    // console.log('render', currentIndex, 'stackItems', stackItems)
+    console.log('render', currentIndex, 'stackItems', stackItems)
     return (
       <sidebar css={{ width, maxWidth: width, flex: 1 }}>
         {stackItems.map((stackItem, index) => {
@@ -154,24 +144,20 @@ export default class Sidebar {
               currentIndex={currentIndex}
             >
               <SidebarContainer
+                oraStore={oraStore}
+                width={width}
+                stack={stack}
                 stackItem={stackItem}
                 navigate={stack.navigate}
-                data={stackItem.result.data}
                 result={stackItem.result}
-                onBack={stack.pop}
                 sidebarStore={Sidebar}
-                paneProps={{
-                  index,
-                  stack,
+                onSelect={stackItem.onSelect}
+                hasParent={!!stackItem.parent}
+                listProps={{
                   width,
-                  getActiveIndex: () =>
-                    stackItem.col === 0 && stackItem.firstIndex,
-                  groupBy: 'category',
-                  sidebar: true,
-                  onSelect: stackItem.onSelect,
-                  itemProps,
+                  highlight: i => i === stackItem.selectedIndex,
+                  ...listProps,
                 }}
-                {...props}
               />
             </Fade>
           )

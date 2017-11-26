@@ -304,11 +304,30 @@ export default class Windows extends React.Component {
           getRef={this.onMenuRef}
           onQuit={this.onMenuQuit}
         />
+        {/* APP: */}
+        <Window
+          {...appWindow}
+          ref={this.oraRef}
+          titleBarStyle="customButtonsOnHover"
+          transparent
+          show
+          alwaysOnTop
+          hasShadow={false}
+          showDevTools={this.state.showDevTools}
+          size={[Constants.ORA_WIDTH, 1000]}
+          file={`${Constants.APP_URL}/ora`}
+          position={this.state.trayPosition}
+          onMoved={this.onOraMoved}
+          onMove={this.onOraMoved}
+          onBlur={this.onOraBlur}
+          onFocus={this.onOraFocus}
+          devToolsExtensions={Helpers.getExtensions(['mobx', 'react'])}
+        />
+        {/* SETTINGS PANE: */}
         <Window
           {...appWindow}
           show={this.state.showSettings}
           showDevTools={this.state.showSettingsDevTools}
-          vibrancy="dark"
           transparent
           hasShadow
           titleBarStyle="hiddenInset"
@@ -320,23 +339,6 @@ export default class Windows extends React.Component {
           onMoved={this.onSettingsMoved}
           onMove={this.onSettingsMoved}
           onClose={this.onSettingsClosed}
-        />
-        <Window
-          {...appWindow}
-          ref={this.oraRef}
-          titleBarStyle="customButtonsOnHover"
-          transparent
-          show
-          alwaysOnTop
-          showDevTools={this.state.showDevTools}
-          size={[Constants.ORA_WIDTH, 1000]}
-          file={`${Constants.APP_URL}/ora`}
-          position={this.state.trayPosition}
-          onMoved={this.onOraMoved}
-          onMove={this.onOraMoved}
-          onBlur={this.onOraBlur}
-          onFocus={this.onOraFocus}
-          devToolsExtensions={Helpers.getExtensions(['mobx', 'react'])}
         />
       </App>
     )

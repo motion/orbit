@@ -24,7 +24,6 @@
 
 * second window that tracks next to main window
 * second window shows peek view of items
-
 * feature: crawler/crawler take options.disableStructureFinding, to just do
   readability
 * bug: on window focus (clicked via dock or via task switch) make ora show if

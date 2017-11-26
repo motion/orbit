@@ -18,8 +18,16 @@ export default class MainSidebar {
   }
 
   get items() {
+    if (this.things.length) {
+      return [
+        ...this.things.map(x => ({ ...Thing.toResult(x), type: 'context' })),
+      ]
+    }
     return [
-      ...this.things.map(x => ({ ...Thing.toResult(x), type: 'context' })),
+      {
+        type: 'message',
+        title: 'Welcome to Orbit',
+      },
     ]
   }
 
@@ -36,7 +44,6 @@ export default class MainSidebar {
           {
             type: 'message',
             title: 'No Results...',
-            data: { message: 'No results' },
             category: 'Search Results',
           },
         ]

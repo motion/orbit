@@ -2,6 +2,10 @@ import BaseComponent from './BaseComponent'
 import { Menu, MenuItem } from 'electron'
 
 export default class SubMenu extends BaseComponent {
+  mount() {
+    this.update()
+  }
+
   handleNewProps() {
     const { props } = this
     const submenu = new Menu()

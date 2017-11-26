@@ -14,9 +14,6 @@ export default class BaseComponent {
     if (this.mount) {
       this.mount()
     }
-    if (this.handleNewProps) {
-      this.handleNewProps(Object.keys(this.props))
-    }
   }
 
   appendChild(child) {

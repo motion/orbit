@@ -221,7 +221,7 @@ export default class Crawler {
       links
         .filter(x => x !== null)
         .map(cleanUrlHash)
-        .map(href => normalizeHref(target.url, href))
+        .map(href => normalizeHref(initialUrl, href))
     )
       .filter(x => x !== null)
       .filter(link => {

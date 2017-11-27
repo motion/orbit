@@ -127,7 +127,7 @@ export default class Server {
     let results = null
 
     this.app.post('/crawler/start', async (req, res) => {
-      log(`Got a request for crawl`)
+      log(`POST /crawler/start`)
       const { options } = req.body
       if (options) {
         await crawler.stop()
@@ -149,6 +149,7 @@ export default class Server {
     })
 
     this.app.post('/crawler/stop', async (req, res) => {
+      log(`POST /crawler/stop`)
       if (await crawler.stop()) {
         res.json({ success: true })
       } else {

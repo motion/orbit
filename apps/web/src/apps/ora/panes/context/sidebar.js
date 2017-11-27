@@ -6,19 +6,19 @@ import { watch } from '@mcro/black'
 import { isEqual } from 'lodash'
 import After from '~/views/after'
 import CrawlSetup from './crawlSetup'
+import CrawlerStore from '~/stores/crawlerStore'
 
 const idFn = _ => _
 
 export default class ContextSidebar {
   @watch
   isPinned = () => this.osContext && Thing.findOne({ url: this.osContext.url })
-
+  osContext = null
+  previewCrawler = new CrawlerStore()
   crawlerSettings = {
-    maxPages: Infinity,
+    maxPages: 10000,
     depth: '/',
   }
-
-  osContext = null
 
   willMount() {
     this.watch(function watchSidebarContext() {
@@ -41,8 +41,6 @@ export default class ContextSidebar {
       ...this.crawlerSettings,
       ...settings,
     }
-    // update the global crawler too
-    this.crawler.settings = this.crawlerSettings
   }
 
   get oraStore() {
@@ -54,9 +52,7 @@ export default class ContextSidebar {
   get search() {
     return this.oraStore.search
   }
-  get crawler() {
-    return this.oraStore.crawler
-  }
+
   // can customize the shown title here
   get title() {
     if (!this.osContext) return
@@ -67,17 +63,18 @@ export default class ContextSidebar {
   }
 
   get drawer() {
-    if (!this.crawler.showing) {
+    if (!this.previewCrawler.showing) {
       return null
     }
     return {
       title: 'Crawl Settings',
       onClose: () => {
-        this.crawler.stop()
-        this.crawler.hide()
+        this.previewCrawler.stop()
+        this.previewCrawler.hide()
       },
       children: (
         <CrawlSetup
+          crawler={this.previewCrawler}
           settings={this.crawlerSettings}
           onChangeSettings={this.handleChangeSettings}
         />
@@ -164,12 +161,12 @@ export default class ContextSidebar {
   }
 
   get actions() {
-    if (this.crawler.results) {
+    if (this.oraStore.crawler.results) {
       return [
         {
           icon: 'remove',
           children: 'Cancel',
-          onClick: this.crawler.stop,
+          onClick: this.oraStore.crawler.stop,
           theme: 'red',
         },
         {
@@ -183,7 +180,7 @@ export default class ContextSidebar {
         },
       ]
     }
-    if (this.crawler.showing) {
+    if (this.previewCrawler.showing) {
       return [
         {
           flex: true,
@@ -192,7 +189,11 @@ export default class ContextSidebar {
           key: Math.random(),
           icon: 'play',
           children: 'Start Crawl',
-          onClick: this.crawler.start,
+          onClick: async () => {
+            this.oraStore.crawler.start(this.crawlerSettings)
+            this.previewCrawler.hide()
+            await this.previewCrawler.stop()
+          },
         },
       ]
     }
@@ -212,7 +213,7 @@ export default class ContextSidebar {
       {
         icon: 'pin',
         children: 'Pin Site',
-        onClick: this.crawler.show,
+        onClick: this.previewCrawler.show,
       },
     ]
   }

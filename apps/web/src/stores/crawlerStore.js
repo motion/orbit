@@ -17,9 +17,11 @@ export default class Crawler {
     this.id = Math.random() + ''
   }
 
-  start = async () => {
-    this.showing = false
-    await this.stop()
+  start = async settings => {
+    this.reset()
+    if (settings) {
+      this.settings = settings
+    }
     this.isRunning = true
     console.log('start crawl with settings', this.settings)
     await r2.post(`${base}/crawler/start`, {
@@ -62,7 +64,7 @@ export default class Crawler {
     if (status.results) {
       this.results = status.results
     }
-    if (status.count > 0 && !status.isRunning) {
+    if (!status.isRunning) {
       this.isRunning = false
       this.finish()
     }

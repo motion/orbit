@@ -1,10 +1,11 @@
 import { view } from '@mcro/black'
 import { debounce } from 'lodash'
 import * as UI from '@mcro/ui'
-import CrawlerStore from '~/stores/crawlerStore'
 
 class CrawlSetupStore {
-  crawler = new CrawlerStore()
+  get crawler() {
+    return this.props.crawler
+  }
 
   willMount() {
     this.watch(function crawlerSetupWatchEntry() {
@@ -14,11 +15,16 @@ class CrawlSetupStore {
     })
   }
 
-  preview = debounce(() => {
-    const { settings } = this.props
-    if (this.crawler.isRunning) {
-      this.crawler.stop()
+  willUnmount() {
+    this.unmounted = true
+  }
+
+  preview = debounce(async () => {
+    if (this.unmounted) {
+      return
     }
+    const { settings } = this.props
+    await this.crawler.stop()
     this.crawler.settings = {
       ...settings,
       maxPages: 6,

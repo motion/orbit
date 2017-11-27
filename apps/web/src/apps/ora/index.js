@@ -22,7 +22,7 @@ const itemProps = {
     resist: 60,
     zIndex: -1,
   },
-  highlightBackground: [255, 255, 255, 0.028],
+  highlightBackground: [255, 255, 255, 0.05],
   childrenEllipse: 2,
 }
 

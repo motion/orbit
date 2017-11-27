@@ -14,7 +14,7 @@ const Tab = ({ children }) => {
           right: 0,
           bottom: 0,
           borderTopRadius: 6,
-          background: [70, 70, 70, 0.6],
+          background: [40, 40, 40, 0.75],
           // background:
           //   'linear-gradient(rgba(70, 70, 70,0.6), rgba(70, 70, 70,0.5))',
           boxShadow: 'inset 0 0.5px 0 rgba(255,255,255,0.1)',
@@ -64,20 +64,13 @@ export default class SidebarTitle {
   }
 
   static style = {
-    image: {
-      width: 24,
-      height: 24,
-      borderRadius: 100,
-      border: [1, [255, 255, 255, 0.7]],
-      marginLeft: 10,
-      alignSelf: 'center',
-    },
     sidebartitle: {
       flexFlow: 'row',
       alignItems: 'center',
       overflow: 'hidden',
-      padding: [5, 10, 0],
-      borderBottom: [1, [255, 255, 255, 0.05]],
+      padding: [5, 7, 0],
+      userSelect: 'none',
+      // borderBottom: [1, [255, 255, 255, 0.05]],
       // background: [255, 255, 255, 0.05],
     },
     titles: {
@@ -86,6 +79,14 @@ export default class SidebarTitle {
     },
     backButton: {
       margin: [0, 8, 0, -3],
+    },
+    image: {
+      width: 24,
+      height: 24,
+      borderRadius: 100,
+      border: [1, [255, 255, 255, 0.7]],
+      marginLeft: 10,
+      alignSelf: 'center',
     },
   }
 }

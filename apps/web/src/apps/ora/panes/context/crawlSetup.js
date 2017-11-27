@@ -5,30 +5,29 @@ import CrawlerStore from '~/stores/crawlerStore'
 
 class CrawlSetupStore {
   preview = null
-  crawler = null
   crawler = new CrawlerStore()
 
   willMount() {
-    this.onPreview()
+    this.preview()
   }
 
-  onPreview = debounce(() => {
-    const { osContext: { url }, settings: { depth } } = this.props
+  preview = debounce(() => {
+    const { osContext: { url }, settings } = this.props
     if (this.crawler.isRunning) {
-      this.crawler.onStop()
+      this.crawler.stop()
     }
     this.crawler.settings = {
+      ...settings,
       maxPages: 6,
       entry: url,
-      depth,
     }
-    this.crawler.onStart()
+    this.crawler.start()
   }, 300)
 
   setDepth = ({ target: { value } }) => {
     const { settings, onChangeSettings } = this.props
     onChangeSettings({ ...settings, depth: value })
-    this.onPreview()
+    this.preview()
   }
 }
 
@@ -44,8 +43,8 @@ export default class CrawlSetup {
 
         <content>
           <UI.Row>
-            <UI.Label {...lblProps}>Version</UI.Label>
-            <UI.Text>{store.crawler.version}</UI.Text>
+            <UI.Label {...lblProps}>Entry</UI.Label>
+            <UI.Text>{settings.entry}</UI.Text>
           </UI.Row>
 
           <UI.Row>

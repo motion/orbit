@@ -6,7 +6,6 @@ let activeCrawlers = []
 
 @store
 export default class Crawler {
-  settings = null
   results = null
   settings = null
   status = null
@@ -15,37 +14,50 @@ export default class Crawler {
   showing = false
   id = null
 
-  constructor(settings) {
-    if (settings) {
-      this.settings = settings
-    }
+  constructor() {
     this.id = Math.random() + ''
   }
 
-  async onStart() {
+  start = async settings => {
+    this.settings = {
+      maxPages: 30,
+      depth: '/',
+      ...settings,
+    }
+    console.log('starting crawl', this.settings)
+    this.showing = false
     this.clean()
-    activeCrawlers.forEach(async crawler => {
-      if (crawler.isRunning) {
-        await crawler.onStop()
-      }
-      return true
-    })
+    await Promise.all(
+      activeCrawlers.map(async crawler => {
+        if (crawler.isRunning) {
+          await crawler.stop()
+        }
+      })
+    )
     this.isRunning = true
     await r2.post(`${base}/crawler/start`, {
-      json: { options: this.settings || {} },
+      json: { options: this.settings },
     })
     this.setTimeout(this.onCheckStatus, 2500)
   }
 
-  async onStop() {
+  stop = async () => {
     await r2.post(`${base}/crawler/stop`)
     this.clean()
   }
 
-  async onFinished() {
+  finish = async () => {
     this.results = await r2.get(`${base}/crawler/results`).json
     this.isFinished = true
     activeCrawlers.push(this)
+  }
+
+  hide = () => {
+    this.showing = false
+  }
+
+  show = () => {
+    this.showing = true
   }
 
   clean = () => {
@@ -62,7 +74,7 @@ export default class Crawler {
     this.status = status
     if (status.count > 0 && !status.isRunning) {
       this.isRunning = false
-      this.onFinished()
+      this.finish()
     }
     if (this.isRunning) {
       setTimeout(this.onCheckStatus, 300)

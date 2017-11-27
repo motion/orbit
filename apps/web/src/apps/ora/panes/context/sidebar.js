@@ -25,32 +25,21 @@ export default class ContextSidebar {
       // prevent focusedApp from triggered changes
       const { focusedApp, ...context } = this.oraStore.osContext
       idFn(focusedApp)
-      if (!isEqual(context, this.osContext)) {
+      if (context && !isEqual(context, this.osContext)) {
         this.osContext = context
-        this.setDepth()
-      }
-    })
-    this.watch(function watchCrawlerSettings() {
-      const { crawlerInfo } = this
-      if (!crawlerInfo) return
-      const { bodySelector, titleSelector } = crawlerInfo
-      const crawlerSettings = {
-        ...this.crawlerSettings,
-        bodySelector,
-        titleSelector,
-      }
-      if (!isEqual(crawlerSettings, this.crawlerSettings)) {
-        this.crawlerSettings = crawlerSettings
+        this.handleChangeSettings({
+          entry: context.url,
+          depth: new URL(context.url).pathname,
+        })
       }
     })
   }
 
-  setDepth = () => {
-    if (!this.osContext.url) {
-      return null
+  handleChangeSettings = settings => {
+    this.crawlerSettings = {
+      ...this.crawlerSettings,
+      ...settings,
     }
-
-    this.crawlerSettings.depth = new URL(this.osContext.url).pathname
   }
 
   get oraStore() {
@@ -81,14 +70,14 @@ export default class ContextSidebar {
     return {
       title: 'Crawl Settings',
       onClose: () => {
-        this.crawler.onStop()
-        this.crawler.showing = false
+        this.crawler.stop()
+        this.crawler.hide()
       },
       children: (
         <CrawlSetup
           settings={this.crawlerSettings}
           osContext={this.osContext}
-          onChangeSettings={settings => (this.crawlerSettings = settings)}
+          onChangeSettings={this.handleChangeSettings}
         />
       ),
     }
@@ -178,7 +167,7 @@ export default class ContextSidebar {
         {
           icon: 'remove',
           children: 'Cancel',
-          onClick: this.oraStore.cancelResults,
+          onClick: this.crawler.stop,
           theme: 'red',
         },
         {
@@ -201,9 +190,8 @@ export default class ContextSidebar {
           key: Math.random(),
           icon: 'play',
           children: 'Start Crawl',
-          onClick: async () => {
-            this.oraStore.removeCrawler()
-            await this.oraStore.startCrawl(this.crawlerOptions)
+          onClick: () => {
+            this.crawler.start({ entry: this.context.url })
           },
         },
       ]
@@ -224,7 +212,7 @@ export default class ContextSidebar {
       {
         icon: 'pin',
         children: 'Pin Site',
-        onClick: this.oraStore.injectCrawler,
+        onClick: this.crawler.show,
       },
     ]
   }

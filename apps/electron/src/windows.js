@@ -142,11 +142,7 @@ export default class Windows extends React.Component {
       this.injectCrawler()
     })
 
-    this.on(ipcMain, 'kill-crawler', () => {
-      const { crawlerInfo, ...otherContext } = this.state.context
-      this.setState({
-        context: otherContext,
-      })
+    this.on(ipcMain, 'uninject-crawler', () => {
       Helpers.runAppleScript(`
         tell application "Google Chrome"
           tell front window's active tab

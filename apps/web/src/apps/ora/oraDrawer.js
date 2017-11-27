@@ -56,7 +56,7 @@ export default class OraDrawer {
               Attempted URLs: 0
             </UI.Text>
             <after css={{ flex: 0.5 }}>
-              <UI.Button onClick={oraStore.stopCrawl}>Cancel</UI.Button>
+              <UI.Button onClick={crawler.stop}>Cancel</UI.Button>
             </after>
           </content>
         </Drawer>

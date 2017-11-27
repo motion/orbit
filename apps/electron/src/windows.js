@@ -243,12 +243,18 @@ export default class Windows extends React.Component {
     this.setState({ showSettings: true })
   }
 
-  onMenuRef = ref => {
+  handleMenuRef = ref => {
     this.menuRef = ref
   }
 
-  onMenuQuit = () => {
+  handleMenuQuit = () => {
     this.isClosing = true
+  }
+
+  handleMenuClose = () => {
+    if (this.state.showSettings) {
+      this.setState({ showSettings: false })
+    }
   }
 
   onAppRef = ref => {
@@ -305,8 +311,9 @@ export default class Windows extends React.Component {
         <MenuItems
           onPreferences={this.handlePreferences}
           onShowDevTools={this.handleShowDevTools}
-          getRef={this.onMenuRef}
-          onQuit={this.onMenuQuit}
+          getRef={this.handleMenuRef}
+          onQuit={this.handleMenuQuit}
+          onClose={this.handleMenuClose}
         />
         {/* APP: */}
         <Window

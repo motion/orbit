@@ -87,7 +87,7 @@ export default class SidebarTitle {
       width: 24,
       height: 24,
       borderRadius: 100,
-      border: [1, [255, 255, 255, 0.7]],
+      // border: [1, [255, 255, 255, 0.7]],
       marginLeft: 10,
       alignSelf: 'center',
     },

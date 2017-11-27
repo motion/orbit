@@ -14,6 +14,9 @@ const GOOD_LOOKIN_PATH_LIMITS = /^(help|docs|faq|support|h)$/
 const idFn = _ => _
 const getDefaultDepth = url => {
   const { pathname } = new URL(url)
+  if (!pathname) {
+    return '/'
+  }
   const segments = pathname.split('/')
   if (GOOD_LOOKIN_PATH_LIMITS.test(segments[1])) {
     return `/${segments[1]}`

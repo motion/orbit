@@ -162,6 +162,7 @@ export default class Surface extends React.PureComponent<Props> {
       color,
       dim,
       dimmed,
+      disabled,
       elementProps,
       elevation,
       flex,
@@ -273,7 +274,7 @@ export default class Surface extends React.PureComponent<Props> {
       />,
       <HoverGlow
         key={4}
-        if={glow && !active && !dimmed}
+        if={glow && !dimmed && !disabled}
         full
         scale={1.1}
         show
@@ -288,7 +289,7 @@ export default class Surface extends React.PureComponent<Props> {
         if={!noElement || (noElement && !noWrap && hasChildren(children))}
         {...wrapElement && passProps}
         {...elementProps}
-        dimmed={dimmed}
+        disabled={disabled}
         $hasIconBefore={hasIconBefore}
         $hasIconAfter={hasIconAfter}
       >

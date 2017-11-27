@@ -24,7 +24,7 @@ const chromeStyle = {
   overflow: 'hidden',
   transform: {
     perspective: '100px',
-    rotateX: '10deg',
+    rotateX: '8deg',
   },
 }
 
@@ -109,7 +109,7 @@ export default class SidebarTitle {
     sidebartitle: {
       flexFlow: 'row',
       alignItems: 'center',
-      padding: [0, 5, 0],
+      padding: [0, 4.3, 0, 3.6],
       userSelect: 'none',
       // borderBottom: [1, [255, 255, 255, 0.05]],
       // background: [255, 255, 255, 0.05],

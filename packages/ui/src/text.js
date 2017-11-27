@@ -276,6 +276,9 @@ export default class Text extends React.Component<Props> {
       WebkitBoxOrient: 'vertical',
       width: '100%',
     },
+    span: {
+      margin: 'auto',
+    },
     selectable: {
       userSelect: 'auto',
       cursor: 'text',

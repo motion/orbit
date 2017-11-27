@@ -7,7 +7,7 @@ import * as UI from '@mcro/ui'
 export default class Drawer {
   static defaultProps = {
     theme: 'dark',
-    background: '#222',
+    background: '#333',
     size: 200,
     open: false,
     progressProps: null,
@@ -46,7 +46,10 @@ export default class Drawer {
         <UI.Drawer
           open={open}
           from="bottom"
-          boxShadow="0 0 100px #000"
+          boxShadow={[[0, 0, 50, [0, 0, 0, 0.5]]]}
+          css={{
+            borderTop: [1, [255, 255, 255, 0.1]],
+          }}
           background={background}
           size={collapsed ? 82 : size}
           {...props}

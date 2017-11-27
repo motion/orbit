@@ -1,6 +1,7 @@
 import { view } from '@mcro/black'
 import { debounce } from 'lodash'
 import * as UI from '@mcro/ui'
+import { isEqual } from 'lodash'
 
 class CrawlSetupStore {
   get crawler() {
@@ -19,18 +20,22 @@ class CrawlSetupStore {
     this.unmounted = true
   }
 
-  preview = debounce(async () => {
+  preview = debounce(async force => {
     if (this.unmounted) {
       return
     }
     const { settings } = this.props
-    await this.crawler.stop()
-    this.crawler.settings = {
+    const nextSettings = {
       ...settings,
       maxPages: 6,
     }
-    this.crawler.start()
+    if (force || !isEqual(this.crawler.settings, nextSettings)) {
+      await this.crawler.stop()
+      this.crawler.start(nextSettings)
+    }
   }, 300)
+
+  forcePreview = () => this.preview(true)
 
   handleSetting = key => e =>
     this.props.onChangeSettings({ [key]: e.target.value })
@@ -47,15 +52,20 @@ export default class CrawlSetup {
       alignItems: 'flex-end',
       fontWeight: 600,
     }
+    const rowProps = {
+      css: {
+        marginBottom: 5,
+      },
+    }
     return (
       <setup css={{ flex: 1, overflowY: 'scroll' }} if={store.crawler}>
         <UI.Separator>Settings</UI.Separator>
         <content>
-          <UI.Row>
+          <UI.Row {...rowProps}>
             <UI.Label {...lblProps}>Entry</UI.Label>
-            <UI.Text ellipse>{settings.entry}</UI.Text>
+            <UI.Input disabled value={settings.entry} />
           </UI.Row>
-          <UI.Row>
+          <UI.Row {...rowProps}>
             <UI.Label tooltip="Limit to subpath" {...lblProps}>
               Max Depth
             </UI.Label>
@@ -65,7 +75,7 @@ export default class CrawlSetup {
               value={settings.depth}
             />
           </UI.Row>
-          <UI.Row>
+          <UI.Row {...rowProps}>
             <UI.Label tooltip="Limit total pages" {...lblProps}>
               Max Pages
             </UI.Label>
@@ -83,7 +93,7 @@ export default class CrawlSetup {
               tooltip="Refresh preview"
               chromeless
               icon="refresh"
-              onClick={store.onPreview}
+              onClick={store.forcePreview}
             />
           }
         >
@@ -96,8 +106,8 @@ export default class CrawlSetup {
               store.crawler.results || [{ contents: { title: 'Loading...' } }]
             }
             getItem={({ contents }) => ({
-              primary: contents.title,
-              children: contents.body,
+              primary: contents.title || 'No title found',
+              children: contents.body || 'No body found',
             })}
           />
         </content>

@@ -19,7 +19,6 @@ type Props = {
   children?: React.Element<any> | string,
   className?: string,
   from: 'top' | 'bottom' | 'left' | 'right',
-  showOverlay?: boolean,
   onClickOverlay: Function,
   open?: boolean,
   overlayBlur?: number,
@@ -55,7 +54,6 @@ export default class Drawer extends React.PureComponent<Props> {
     size,
     percent,
     onClickOverlay,
-    showOverlay,
     bordered,
     zIndex,
     className,
@@ -64,6 +62,7 @@ export default class Drawer extends React.PureComponent<Props> {
     scrollable,
     closePortal,
     style,
+    overlayBackground,
     containerProps,
     ...props
   }: Props) {
@@ -85,6 +84,7 @@ export default class Drawer extends React.PureComponent<Props> {
           style={{ ...style, ...panelStyle }}
           $panel
           $from={from}
+          $withShadow={!!props.boxShadow && sizeKey}
           $panelOpen={open}
           className={className}
           {...props}
@@ -92,9 +92,10 @@ export default class Drawer extends React.PureComponent<Props> {
           {children}
         </Surface>
         <overlay
-          if={showOverlay}
+          if={overlayBackground}
           $overlayOpen={open}
-          $overlayBg={{ blur: overlayBlur === true ? 5 : overlayBlur }}
+          $overlayBlur={overlayBlur}
+          $overlayBackground={overlayBackground}
           onClick={e => {
             e.preventDefault()
             if (onClickOverlay) {
@@ -125,16 +126,13 @@ export default class Drawer extends React.PureComponent<Props> {
       opacity: 1,
       zIndex: 100,
     },
+    overlayBackground: val => ({
+      background: val === true ? [0, 0, 0, 0.3] : val,
+    }),
     // darken bg much less if blurring
-    overlayBg: ({ blur }) =>
-      blur
-        ? {
-            backdropFilter: `blur(${blur}px)`,
-            background: 'rgba(0,0,0,0.1)',
-          }
-        : {
-            background: 'rgba(0,0,0,0.25)',
-          },
+    overlayBlur: blur => ({
+      backdropFilter: `blur(${blur === true ? 5 : blur}px)`,
+    }),
     panel: {
       pointerEvents: 'none',
       position: 'absolute',
@@ -145,7 +143,6 @@ export default class Drawer extends React.PureComponent<Props> {
       transition: 'transform ease-in-out 150ms',
       zIndex: 100,
       maxHeight: '100%',
-      maxWidth: '100%',
     },
     panelOpen: {
       pointerEvents: 'all',
@@ -155,6 +152,18 @@ export default class Drawer extends React.PureComponent<Props> {
       [direction]: 0,
       [opposite(direction)]: 'auto',
     }),
+    // for nicer shadows, they will go "offscreen" a bit
+    // which avoids showing the edges of it onscreen
+    withShadow: dimension =>
+      dimension === 'height'
+        ? {
+            margin: [0, -100],
+            padding: [0, 100],
+          }
+        : {
+            margin: [-100, 0],
+            padding: [100, 0],
+          },
     overlay: {
       position: 'absolute',
       top: 0,

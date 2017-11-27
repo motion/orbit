@@ -161,7 +161,7 @@ export default class Surface extends React.PureComponent<Props> {
       clickable,
       color,
       dim,
-      disabled,
+      dimmed,
       elementProps,
       elevation,
       flex,
@@ -273,7 +273,7 @@ export default class Surface extends React.PureComponent<Props> {
       />,
       <HoverGlow
         key={4}
-        if={glow && !active && !disabled}
+        if={glow && !active && !dimmed}
         full
         scale={1.1}
         show
@@ -288,7 +288,7 @@ export default class Surface extends React.PureComponent<Props> {
         if={!noElement || (noElement && !noWrap && hasChildren(children))}
         {...wrapElement && passProps}
         {...elementProps}
-        disabled={disabled}
+        dimmed={dimmed}
         $hasIconBefore={hasIconBefore}
         $hasIconAfter={hasIconAfter}
       >
@@ -388,7 +388,7 @@ export default class Surface extends React.PureComponent<Props> {
     borderRadius: 1000,
   }
 
-  static disabledStyle = {
+  static dimmedStyle = {
     opacity: 0.2,
     // pointerEvents: 'none',
   }
@@ -542,7 +542,7 @@ export default class Surface extends React.PureComponent<Props> {
     // state styles
     const hoverStyle = (props.hover ||
       (!props.chromeless &&
-        !props.disabled &&
+        !props.dimmed &&
         (props.hoverable || props.hoverBackground))) && {
       ...theme.hover,
       color: hoverColor,
@@ -680,7 +680,7 @@ export default class Surface extends React.PureComponent<Props> {
         }),
         ...(props.hovered && hoverStyle),
         ...(props.inline && self.constructor.inlineStyle),
-        ...(props.disabled && self.constructor.disabledStyle),
+        ...(props.dimmed && self.constructor.dimmedStyle),
         ...(props.dim && self.constructor.dimStyle),
         ...(props.spaced && self.constructor.spacedStyle),
         ...chromelessStyle,

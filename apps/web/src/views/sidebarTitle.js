@@ -3,34 +3,72 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 
-const Tab = ({ children }) => {
-  return (
-    <tab css={{ position: 'relative', flex: 1 }}>
-      <chrome
-        css={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          zIndex: 0,
-          borderTopRadius: 6,
-          background: [40, 40, 40, 0.98],
-          boxShadow: [
-            'inset 0 0.5px 0 rgba(255,255,255,0.1)',
-            '0 0 5px rgba(0,0,0,0.5)',
-          ],
-          transform: {
-            perspective: '100px',
-            rotateX: '10deg',
-          },
-        }}
-      />
-      <inner css={{ padding: [8, 12], flexFlow: 'row', flex: 1, zIndex: 1 }}>
-        {children}
-      </inner>
-    </tab>
-  )
+const glowProps = {
+  color: '#fff',
+  scale: 0.5,
+  blur: 70,
+  opacity: 0.03,
+  resist: 20,
+  zIndex: 1,
+}
+
+const chromeStyle = {
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  zIndex: 0,
+  borderTopRadius: 6,
+  overflow: 'hidden',
+  transform: {
+    perspective: '100px',
+    rotateX: '10deg',
+  },
+}
+
+@view({
+  store: class TabStore {
+    showGlow = false
+  },
+})
+class Tab {
+  render({ store, children }) {
+    return (
+      <tab
+        css={{ position: 'relative', flex: 1 }}
+        onMouseEnter={store.ref('showGlow').setter(true)}
+        onMouseLeave={store.ref('showGlow').setter(false)}
+      >
+        <chrome
+          css={{
+            ...chromeStyle,
+            background: [40, 40, 40, 0.98],
+            borderBottom: 'none',
+            boxShadow: [
+              'inset 0 0.5px 0 rgba(255,255,255,0.15)',
+              '0 0 7px 0 rgba(0,0,0,0.5)',
+            ],
+          }}
+        />
+        <inner
+          css={{
+            padding: [8, 12],
+            flexFlow: 'row',
+            flex: 1,
+            zIndex: 1,
+          }}
+        >
+          {children}
+          <chromeAbove
+            css={{ ...chromeStyle, background: 'transparent', zIndex: 1 }}
+          >
+            <UI.HoverGlow {...glowProps} show={store.showGlow} />
+          </chromeAbove>
+        </inner>
+      </tab>
+    )
+  }
 }
 
 @view
@@ -70,7 +108,6 @@ export default class SidebarTitle {
     sidebartitle: {
       flexFlow: 'row',
       alignItems: 'center',
-      overflow: 'hidden',
       padding: [0, 5, 0],
       userSelect: 'none',
       // borderBottom: [1, [255, 255, 255, 0.05]],

@@ -20,9 +20,9 @@ const itemProps = {
     opacity: 0.1,
     show: false,
     resist: 60,
-    zIndex: -1,
+    zIndex: 1,
   },
-  highlightBackground: [255, 255, 255, 0.05],
+  highlightBackground: [255, 255, 255, 0.045],
   childrenEllipse: 2,
 }
 
@@ -80,10 +80,10 @@ export default class OraPage {
     ora: {
       width: Constants.ORA_WIDTH,
       height: Constants.ORA_HEIGHT,
-      background: [21, 21, 21, 0.85],
+      background: [21, 21, 21, 0.9],
       // border: [1, [255, 255, 255, 0.035]],
       boxShadow: [
-        [0, 0, 15, [0, 0, 0, 0.4]],
+        [0, 0, 10, [0, 0, 0, 0.5]],
         // ['inset', 0, 0, 120, [255, 255, 255, 0.053]],
       ],
       margin: 10,

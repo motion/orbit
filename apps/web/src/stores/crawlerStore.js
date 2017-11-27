@@ -19,7 +19,6 @@ export default class Crawler {
   }
 
   start = async () => {
-    console.log('starting crawl', this.settings)
     this.showing = false
     this.clean()
     await Promise.all(

@@ -28,7 +28,9 @@ export default class SettingsPage {
     return (
       <h5 css={{ padding: 30 }}>
         loading {service} integration{' '}
-        <button onClick={() => store.link(service)}>link</button>
+        <button id="link" onClick={() => store.link(service)}>
+          link
+        </button>
       </h5>
     )
   }

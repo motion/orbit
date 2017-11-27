@@ -265,6 +265,10 @@ export default class Crawler {
     log.crawl('Starting crawler')
     // merge options
     const options = {
+      puppeteerOptions: {
+        ignoreHTTPSErrors: true,
+        timeout: 10000, // 10 seconds
+      },
       ...this.options,
       ...runOptions,
     }
@@ -385,6 +389,9 @@ export default class Crawler {
     const concurrentTabs = Math.min(maxCores, 7)
     const startTime = +Date.now()
     const loadingPage = range(concurrentTabs).map(() => false)
+    log.crawl(
+      `Using puppeteer options: ${JSON.stringify(options.puppeteerOptions)}`
+    )
     const browser = await puppeteer.launch(options.puppeteerOptions)
     const pages = await Promise.all(loadingPage.map(() => browser.newPage()))
 

@@ -16,6 +16,7 @@
 * expensify: crawl properly
 * slack: crawl links properly
 * build app to prod bundle
+* tray icon (onboarding should show you how to move it by spotlight)
 * oauth window popup controller so it doesnt show "link" button and auto-opens
   * AS: cmd+n => AS: move offscreen => AS inject js to click button
   * API: watch for oauth finish => AS: close offscreen window
@@ -31,11 +32,9 @@
   * Show recently viewed
   * Show recently pinned
 - Crawler:
-
   * Setting panes to see stores crawls + run + see/manage results
   * Store crawl settings once completed so it can re-run
   * Store proper url for each item so it can detect pinned
-
 - Ingest:
   * Knowledgebase
   * Slack
@@ -64,3 +63,4 @@
   * get a bundle of app built
   * test bundle onboarding process
   * super basic onboarding window
+  * token refreshing

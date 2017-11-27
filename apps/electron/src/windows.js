@@ -7,6 +7,7 @@ import * as Constants from '~/constants'
 import { throttle, isEqual, once } from 'lodash'
 import MenuItems from './menuItems'
 import { view } from '@mcro/black'
+import * as Injections from '~/injections'
 
 @view.electron
 export default class Windows extends React.Component {
@@ -54,26 +55,6 @@ export default class Windows extends React.Component {
     globalShortcut.unregisterAll()
   }
 
-  // listenForMouse() {
-  //   const triggerX = this.state.screenSize.width - 20
-  //   const triggerY = 20
-  //   const mousey = Helpers.mouse()
-  //   let hasLeftCorner = true
-  //   mousey.on(
-  //     'move',
-  //     throttle((x, y) => {
-  //       if (+x > triggerX && +y < triggerY) {
-  //         if (hasLeftCorner) {
-  //           hasLeftCorner = false
-  //           this.toggleShown()
-  //         }
-  //       } else {
-  //         hasLeftCorner = true
-  //       }
-  //     }, 60)
-  //   )
-  // }
-
   oraRef = ref => {
     if (ref) {
       this.oraRef = ref.window
@@ -112,10 +93,8 @@ export default class Windows extends React.Component {
         // setup our event bus
         // this one runs without updating (only used internally)
         this.sendOraSimple = (...args) => event.sender.send(...args)
-
         // send initial state
         this.sendOraSimple('electron-state', this.state)
-
         // this one updates state
         this.sendOra = async (...args) => {
           event.sender.send(...args)
@@ -123,7 +102,6 @@ export default class Windows extends React.Component {
         }
       })
     )
-
     // if you call this.getOraState() this will handle it
     this.on(ipcMain, 'set-state', (event, state) => {
       // update state
@@ -137,32 +115,15 @@ export default class Windows extends React.Component {
         console.log('nothing is listening for state')
       }
     })
-
-    this.on(ipcMain, 'inject-crawler', () => {
-      this.injectCrawler()
-    })
-
-    this.on(ipcMain, 'uninject-crawler', () => {
-      Helpers.runAppleScript(`
-        tell application "Google Chrome"
-          tell front window's active tab
-            set source to execute javascript "document.getElementById('__oraCloseCrawler').click()"
-          end tell
-        end tell
-      `)
-    })
-
+    this.on(ipcMain, 'inject-crawler', Injections.injectCrawler)
+    this.on(ipcMain, 'uninject-crawler', Injections.uninjectCrawler)
     this.on(ipcMain, 'open-browser', (event, url) => {
       Helpers.open(url)
     })
-
     this.on(ipcMain, 'open-auth', (event, service) => {
-      Helpers.open(`${Constants.APP_URL}/authorize?service=` + service)
+      Injections.openAuth(`${Constants.APP_URL}/authorize?service=` + service)
     })
-
-    this.on(ipcMain, 'open-settings', () => {
-      this.handlePreferences()
-    })
+    this.on(ipcMain, 'open-settings', this.handlePreferences)
   }
 
   toggleShown = throttle(async () => {
@@ -185,19 +146,6 @@ export default class Windows extends React.Component {
       this.oraRef.focus()
     }
   }, 200)
-
-  injectCrawler = throttle(async () => {
-    const js = await Helpers.getCrawler()
-    await Helpers.runAppleScript(`
-      tell application "Google Chrome"
-        tell front window's active tab
-          set source to execute javascript "${Helpers.escapeAppleScriptString(
-            js
-          )}"
-        end tell
-      end tell
-    `)
-  }, 500)
 
   lastContext = null
 

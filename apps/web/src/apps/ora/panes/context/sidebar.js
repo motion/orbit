@@ -76,7 +76,6 @@ export default class ContextSidebar {
       children: (
         <CrawlSetup
           settings={this.crawlerSettings}
-          osContext={this.osContext}
           onChangeSettings={this.handleChangeSettings}
         />
       ),
@@ -190,9 +189,7 @@ export default class ContextSidebar {
           key: Math.random(),
           icon: 'play',
           children: 'Start Crawl',
-          onClick: () => {
-            this.crawler.start({ entry: this.context.url })
-          },
+          onClick: this.crawler.start,
         },
       ]
     }

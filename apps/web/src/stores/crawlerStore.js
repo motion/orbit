@@ -18,12 +18,7 @@ export default class Crawler {
     this.id = Math.random() + ''
   }
 
-  start = async settings => {
-    this.settings = {
-      maxPages: 30,
-      depth: '/',
-      ...settings,
-    }
+  start = async () => {
     console.log('starting crawl', this.settings)
     this.showing = false
     this.clean()

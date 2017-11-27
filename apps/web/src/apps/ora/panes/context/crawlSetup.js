@@ -4,22 +4,25 @@ import * as UI from '@mcro/ui'
 import CrawlerStore from '~/stores/crawlerStore'
 
 class CrawlSetupStore {
-  preview = null
   crawler = new CrawlerStore()
 
   willMount() {
-    this.preview()
+    this.watch(() => {
+      if (this.props.settings.entry) {
+        console.log('call preview')
+        this.preview()
+      }
+    })
   }
 
   preview = debounce(() => {
-    const { osContext: { url }, settings } = this.props
+    const { settings } = this.props
     if (this.crawler.isRunning) {
       this.crawler.stop()
     }
     this.crawler.settings = {
       ...settings,
       maxPages: 6,
-      entry: url,
     }
     this.crawler.start()
   }, 300)
@@ -27,7 +30,6 @@ class CrawlSetupStore {
   setDepth = ({ target: { value } }) => {
     const { settings, onChangeSettings } = this.props
     onChangeSettings({ ...settings, depth: value })
-    this.preview()
   }
 }
 

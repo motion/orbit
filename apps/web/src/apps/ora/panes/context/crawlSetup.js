@@ -63,11 +63,18 @@ export default class CrawlSetup {
         <content>
           <UI.Row {...rowProps}>
             <UI.Label {...lblProps}>Entry</UI.Label>
-            <UI.Input disabled value={settings.entry} />
+            <UI.Input
+              disabled
+              color={[255, 255, 255, 0.5]}
+              value={settings.entry}
+            />
           </UI.Row>
           <UI.Row {...rowProps}>
-            <UI.Label tooltip="Limit to subpath" {...lblProps}>
-              Max Depth
+            <UI.Label
+              tooltip="Don't crawl anything above this pathname"
+              {...lblProps}
+            >
+              Limit Path
             </UI.Label>
             <UI.Input
               flex
@@ -76,7 +83,10 @@ export default class CrawlSetup {
             />
           </UI.Row>
           <UI.Row {...rowProps}>
-            <UI.Label tooltip="Limit total pages" {...lblProps}>
+            <UI.Label
+              tooltip="Set upper limit of pages to gather"
+              {...lblProps}
+            >
               Max Pages
             </UI.Label>
             <UI.Input
@@ -117,7 +127,7 @@ export default class CrawlSetup {
 
   static style = {
     content: {
-      padding: 10,
+      padding: [4, 10],
     },
   }
 }

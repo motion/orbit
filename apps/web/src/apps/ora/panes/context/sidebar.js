@@ -8,7 +8,18 @@ import After from '~/views/after'
 import CrawlSetup from './crawlSetup'
 import CrawlerStore from '~/stores/crawlerStore'
 
+// finds commons paths for knowledgebasey sites
+const GOOD_LOOKIN_PATH_LIMITS = /^(help|docs|faq|support|h)$/
+
 const idFn = _ => _
+const getDefaultDepth = url => {
+  const { pathname } = new URL(url)
+  const segments = pathname.split('/')
+  if (GOOD_LOOKIN_PATH_LIMITS.test(segments[1])) {
+    return `/${segments[1]}`
+  }
+  return '/'
+}
 
 export default class ContextSidebar {
   @watch
@@ -29,7 +40,7 @@ export default class ContextSidebar {
         this.osContext = context
         this.handleChangeSettings({
           entry: context.url,
-          depth: new URL(context.url).pathname,
+          depth: getDefaultDepth(context.url),
         })
       }
     })
@@ -41,6 +52,11 @@ export default class ContextSidebar {
       ...this.crawlerSettings,
       ...settings,
     }
+  }
+
+  cancelPreview = () => {
+    this.previewCrawler.stop()
+    this.previewCrawler.hide()
   }
 
   get oraStore() {
@@ -68,10 +84,7 @@ export default class ContextSidebar {
     }
     return {
       title: 'Crawl Settings',
-      onClose: () => {
-        this.previewCrawler.stop()
-        this.previewCrawler.hide()
-      },
+      onClose: this.cancelPreview,
       children: (
         <CrawlSetup
           crawler={this.previewCrawler}
@@ -163,6 +176,10 @@ export default class ContextSidebar {
   get actions() {
     if (this.previewCrawler.showing) {
       return [
+        {
+          children: 'Cancel',
+          onClick: this.cancelPreview,
+        },
         {
           flex: true,
         },

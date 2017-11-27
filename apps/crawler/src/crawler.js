@@ -129,8 +129,9 @@ export default class Crawler {
     }, contents)
   }
 
-  parse = async (page, url) => {
+  parseContents = async (page, url) => {
     let selectorResults = null
+    // if we have selectors
     if (this.selectors) {
       selectorResults = await page.evaluate(classes => {
         const titles = Array.from(
@@ -148,7 +149,7 @@ export default class Crawler {
         return { title: titles[0].innerText, content }
       }, this.selectors)
       if (!selectorResults) {
-        log.crawl(`skipping: ${url} doesn't have class .${this.articleClasses}`)
+        log.page(`skipping: ${url} doesn't have class .${this.articleClasses}`)
         return null
       }
     }
@@ -165,19 +166,35 @@ export default class Crawler {
         href: url,
       })
     if (!result) {
+      log.page(`Readability didn't find anything`)
       return null
     }
-    const md = await new Promise(res => {
-      und.convert(result.content, (err, md) => res(md))
-    })
+    let content
+    if (result.content) {
+      try {
+        content = await new Promise((resolve, reject) => {
+          und.convert(
+            result.content,
+            (err, md) => (err ? reject(err) : resolve(md))
+          )
+        })
+      } catch (err) {
+        log.page(`Error parsing markdown from content: ${err.message}`)
+        content = sanitizeHtml(result.content, { allowedTags: [] })
+      }
+    } else {
+      log.page(`Readability didn't find any content`)
+    }
     if (result && !this.selectors) {
       this.selectors = await this.textToSelectors(page, {
         title: result.title.slice(0, 15),
-        content: md.slice(0, 30),
+        content: content.slice(0, 30),
       })
-      log.crawl('set classes to ' + JSON.stringify(this.selectors))
+      if (this.selectors) {
+        log.crawl('set classes to ' + JSON.stringify(this.selectors))
+      }
     }
-    return { title: result.title, content: md }
+    return { title: result.title, content }
   }
 
   selectorParse = async (page, options) => {
@@ -220,6 +237,7 @@ export default class Crawler {
       )
       return val
     })
+    log.page(`Raw links: ${links.length}`)
     return uniq(
       links
         .filter(x => x !== null)
@@ -323,7 +341,7 @@ export default class Crawler {
           log.page(`Cancelled during page process`)
           return null
         }
-        const contents = await this.parse(page, target.url)
+        const contents = await this.parseContents(page, target.url)
         if (this.cancelled) {
           log.page(`Cancelled during page process`)
           return null

@@ -22,7 +22,7 @@ export default class OraDrawer {
           onCollapse={store.ref('resultsShown').toggle}
           renderTitle={() =>
             crawler.isFinished
-              ? `Crawl done!`
+              ? `Completed`
               : `Crawling... (${crawler.results ? crawler.results.length : 0})`
           }
           renderProgress={() =>
@@ -56,26 +56,27 @@ export default class OraDrawer {
           }
         >
           <inner css={{ paddingBottom: 50, width: '100%' }} if={crawler.status}>
-            <UI.Text if={!crawler.isFinished} opacity={0.5} margin={[0, 0, 10]}>
-              Crawler active. Finding up to {crawler.settings.maxPages} pages:
-            </UI.Text>
-            <UI.Text
-              if={crawler.isFinished && crawler.results}
-              opacity={0.5}
-              margin={[0, 0, 10]}
-            >
-              Finished crawl, found {crawler.results.length} pages:
-            </UI.Text>
+            <textual css={{ padding: 10 }}>
+              <UI.Text if={!crawler.isFinished} opacity={0.6}>
+                Crawler active. Finding up to {crawler.settings.maxPages} pages:
+              </UI.Text>
+              <UI.Text if={crawler.isFinished && crawler.results} opacity={0.6}>
+                Finished crawl, found {crawler.results.length} pages:
+              </UI.Text>
+            </textual>
             <UI.List
               if={crawler.results}
               virtualized={{
                 measure: true,
               }}
+              css={{
+                margin: [0, 0, -15],
+              }}
               itemKey={crawler.results.length}
               items={crawler.results || []}
               getItem={({ contents }) => ({
-                primary: contents.title,
-                children: contents.body,
+                primary: contents.title || 'No title found',
+                children: contents.body || 'No body found',
                 childrenEllipse: 2,
               })}
             />

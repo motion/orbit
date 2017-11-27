@@ -99,7 +99,7 @@ export default class Drawer {
       paddingBottom: Constants.ACTION_BAR_HEIGHT,
     },
     after: {
-      padding: 5,
+      padding: [5, 105],
       position: 'absolute',
       backdropFilter: 'blur(20px)',
       background: [255, 255, 255, 0.15],

@@ -7,9 +7,8 @@ class CrawlSetupStore {
   crawler = new CrawlerStore()
 
   willMount() {
-    this.watch(() => {
+    this.watch(function crawlerSetupWatchEntry() {
       if (this.props.settings.entry) {
-        console.log('call preview')
         this.preview()
       }
     })

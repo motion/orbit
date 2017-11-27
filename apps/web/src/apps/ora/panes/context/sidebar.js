@@ -23,9 +23,9 @@ export default class ContextSidebar {
   willMount() {
     this.watch(function watchSidebarContext() {
       // prevent focusedApp from triggered changes
-      const { focusedApp, ...context } = this.oraStore.osContext
+      const { focusedApp, ...context } = this.oraStore.osContext || {}
       idFn(focusedApp)
-      if (context && !isEqual(context, this.osContext)) {
+      if (context && context.url && !isEqual(context, this.osContext)) {
         this.osContext = context
         this.handleChangeSettings({
           entry: context.url,
@@ -36,10 +36,13 @@ export default class ContextSidebar {
   }
 
   handleChangeSettings = settings => {
+    // this is for the preview
     this.crawlerSettings = {
       ...this.crawlerSettings,
       ...settings,
     }
+    // update the global crawler too
+    this.crawler.settings = this.crawlerSettings
   }
 
   get oraStore() {

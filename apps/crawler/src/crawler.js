@@ -73,15 +73,19 @@ const urlMatchesExtensions = (url, extensions) => {
 }
 
 export default class Crawler {
-  shouldCrawl = true
+  cancelled = false
   isRunning = false
-  hasFinished = false
-
+  browser = null
   count = 0
   selectors = null
 
   constructor(options: Options) {
-    this.options = options
+    this.options = options || {}
+    this.init()
+  }
+
+  async init() {
+    this.browser = await puppeteer.launch(this.options.puppeteerOptions)
   }
 
   textToSelectors = async (page, contents) => {
@@ -240,8 +244,7 @@ export default class Crawler {
     }
     this.count = 0
     this.isRunning = true
-    this.hasFinished = false
-    this.shouldCrawl = true
+    this.cancelled = false
     log.crawl('Starting crawler')
     // merge options
     const options = {
@@ -255,7 +258,6 @@ export default class Crawler {
     })
     // defaults
     const {
-      puppeteerOptions,
       maxPages = Infinity,
       maxRadius = Infinity,
       // maxOffPathRadius, this would be really nice
@@ -280,8 +282,6 @@ export default class Crawler {
 
     log.crawl('Scoring closest to url:', fullMatchUrl)
     this.db.setScoringFn(url => urlSimilarity(fullMatchUrl, url))
-
-    const browser = await puppeteer.launch(puppeteerOptions)
 
     const runTarget = async (target, page) => {
       log.page(`now: ${target.url}`)
@@ -343,7 +343,9 @@ export default class Crawler {
     const concurrentTabs = Math.min(maxPages, 3)
     const startTime = +Date.now()
     const loadingPage = range(concurrentTabs).map(() => false)
-    const pages = await Promise.all(loadingPage.map(() => browser.newPage()))
+    const pages = await Promise.all(
+      loadingPage.map(() => this.browser.newPage())
+    )
 
     // handlers for after loaded a page
     const finishProcessing = tabIndex => {
@@ -375,12 +377,17 @@ export default class Crawler {
         const isLoadingPage = loadingPage.indexOf(true) > -1
         const hasMoreInQueue = this.db.pageQueue.length > 0
         const hasFoundEnough = this.count >= maxPages
-        return hasFoundEnough || (!isLoadingPage && !hasMoreInQueue)
+        return (
+          this.cancelled ||
+          hasFoundEnough ||
+          (!isLoadingPage && !hasMoreInQueue)
+        )
       }
       while (!isFinished()) {
         await sleep(20) // throttle
         const tabIndex = loadingPage.indexOf(false)
-        if (tabIndex === -1) {
+        // check isFinished again because sleep
+        if (tabIndex === -1 || isFinished()) {
           // may need to wait for a tab to clear up
           continue
         }
@@ -399,19 +406,40 @@ export default class Crawler {
     log.crawl(`Crawler done, crawled ${this.count} pages`)
     log.crawl(`took ${(+Date.now() - startTime) / 1000} seconds`)
     this.isRunning = false
-    // return all items stored
-    if (this.shouldCrawl) {
-      return this.db.getValid()
-    } else {
-      return []
+    // close pages
+    await Promise.all(pages.map(page => page.close()))
+    // resolve any cancels
+    if (this.promiseEnd) {
+      this.promiseEnd()
     }
+    // return empty on cancel
+    if (this.cancelled) {
+      return null
+    }
+    // return results
+    return this.db.getValid()
   }
 
-  getStatus() {
-    return { count: this.count, isRunning: this.isRunning }
+  getStatus({ includeResults = false } = {}) {
+    const res = { count: this.count, isRunning: this.isRunning }
+    if (includeResults) {
+      const results = this.db.getValid()
+      // only show results if we have more than 0
+      if (results && results.length) {
+        res.results = results
+      }
+    }
+    return res
   }
 
+  // returns true if it was running
   stop() {
-    this.hasFinished = false
+    this.cancelled = true
+    if (!this.isRunning) {
+      return Promise.resolve(false)
+    }
+    return new Promise(resolve => {
+      this.promiseEnd = () => resolve(true)
+    })
   }
 }

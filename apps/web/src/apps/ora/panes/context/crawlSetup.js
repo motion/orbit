@@ -41,13 +41,11 @@ export default class CrawlSetup {
     return (
       <setup css={{ flex: 1, overflowY: 'scroll' }} if={store.crawler}>
         <UI.Separator>Settings</UI.Separator>
-
         <content>
           <UI.Row>
             <UI.Label {...lblProps}>Entry</UI.Label>
             <UI.Text>{settings.entry}</UI.Text>
           </UI.Row>
-
           <UI.Row>
             <UI.Label {...lblProps}>Max Depth</UI.Label>
             <UI.Input flex onChange={store.setDepth} value={settings.depth} />

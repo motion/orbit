@@ -156,6 +156,7 @@ export default class Pane {
           size={drawerHeight}
           open={!!drawer}
           closable
+          showOverlay
           {...drawer}
         />
         <SidebarTitle

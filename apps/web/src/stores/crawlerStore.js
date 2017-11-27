@@ -2,7 +2,6 @@ import r2 from '@mcro/r2'
 import { store } from '@mcro/black'
 
 const base = `http://localhost:3001`
-let activeCrawlers = []
 
 @store
 export default class Crawler {
@@ -20,15 +19,9 @@ export default class Crawler {
 
   start = async () => {
     this.showing = false
-    this.clean()
-    await Promise.all(
-      activeCrawlers.map(async crawler => {
-        if (crawler.isRunning) {
-          await crawler.stop()
-        }
-      })
-    )
+    await this.stop()
     this.isRunning = true
+    console.log('start crawl with settings', this.settings)
     await r2.post(`${base}/crawler/start`, {
       json: { options: this.settings },
     })
@@ -37,13 +30,12 @@ export default class Crawler {
 
   stop = async () => {
     await r2.post(`${base}/crawler/stop`)
-    this.clean()
+    this.reset()
   }
 
   finish = async () => {
     this.results = await r2.get(`${base}/crawler/results`).json
     this.isFinished = true
-    activeCrawlers.push(this)
   }
 
   hide = () => {
@@ -54,24 +46,28 @@ export default class Crawler {
     this.showing = true
   }
 
-  clean = () => {
-    console.log('cleaning')
+  reset = () => {
     this.isRunning = false
     this.isFinished = false
     this.results = null
     this.status = null
-    activeCrawlers = activeCrawlers.filter(c => c.id !== this.id)
   }
 
   onCheckStatus = async () => {
     const { status } = await r2.get(`${base}/crawler/status`).json
+    if (!this.isRunning) {
+      return
+    }
     this.status = status
+    if (status.results) {
+      this.results = status.results
+    }
     if (status.count > 0 && !status.isRunning) {
       this.isRunning = false
       this.finish()
     }
     if (this.isRunning) {
-      setTimeout(this.onCheckStatus, 300)
+      this.setTimeout(this.onCheckStatus, 300)
     }
   }
 }

@@ -2,6 +2,7 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { CurrentUser } from '~/app'
+import * as Constants from '~/constants'
 
 const BANNER_COLORS = {
   note: 'blue',
@@ -185,7 +186,7 @@ export default class OraHeader extends React.Component {
     header: {
       position: 'relative',
       opacity: 0.85,
-      height: 30,
+      height: Constants.ORA_HEADER_HEIGHT,
       // borderBottom: [1, [255, 255, 255, 0.1]],
       transition: 'all ease-in 80ms',
       justifyContent: 'center',
@@ -199,7 +200,7 @@ export default class OraHeader extends React.Component {
     },
     focus: {
       opacity: 1,
-      height: 40,
+      height: Constants.ORA_HEADER_HEIGHT_FULL,
       '& .icon': {
         transform: 'scale(1)',
       },

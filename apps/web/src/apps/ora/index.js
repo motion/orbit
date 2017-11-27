@@ -26,6 +26,43 @@ const itemProps = {
   childrenEllipse: 2,
 }
 
+@view
+class OraContent {
+  render({ oraStore }) {
+    return (
+      <content $contentWithHeaderOpen={oraStore.focusedBar}>
+        <Sidebar
+          width={Constants.ORA_WIDTH}
+          store={oraStore}
+          oraStore={oraStore}
+          listProps={{
+            groupBy: 'category',
+            virtualized: {
+              measure: true,
+            },
+            itemProps,
+          }}
+        />
+      </content>
+    )
+  }
+  static style = {
+    content: {
+      position: 'absolute',
+      top: Constants.ORA_HEADER_HEIGHT,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      transition: `transform 100ms ease-in`,
+    },
+    contentWithHeaderOpen: {
+      transform: {
+        y: Constants.ORA_HEADER_HEIGHT_FULL - Constants.ORA_HEADER_HEIGHT,
+      },
+    },
+  }
+}
+
 @view.provide({
   oraStore: OraStore,
 })
@@ -43,20 +80,7 @@ export default class OraPage {
           <UI.Theme name="clear-dark">
             <OraHeader oraStore={oraStore} />
           </UI.Theme>
-          <content>
-            <Sidebar
-              width={Constants.ORA_WIDTH}
-              store={oraStore}
-              oraStore={oraStore}
-              listProps={{
-                groupBy: 'category',
-                virtualized: {
-                  measure: true,
-                },
-                itemProps,
-              }}
-            />
-          </content>
+          <OraContent oraStore={oraStore} />
           <OraDrawer oraStore={oraStore} />
           <OraActionBar oraStore={oraStore} />
           <fakeWhiteBg
@@ -100,10 +124,6 @@ export default class OraPage {
       transform: {
         x: 0,
       },
-    },
-    content: {
-      position: 'relative',
-      flex: 1,
     },
   }
 }

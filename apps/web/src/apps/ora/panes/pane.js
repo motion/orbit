@@ -191,7 +191,7 @@ export default class Pane {
       overflowY: 'scroll',
       flex: 1,
       position: 'relative',
-      background: [40, 40, 40, 0.98],
+      background: Constants.ORA_BG_MAIN,
     },
     transparent: {
       background: 'transparent',

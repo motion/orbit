@@ -140,6 +140,8 @@ export default class OraHeader extends React.Component {
             background="transparent"
           />
 
+          <UI.HoverGlow zIndex={-1} opacity={0.075} blur={60} />
+
           <title
             $$background={
               BANNER_COLORS[oraStore.banner && oraStore.banner.type]
@@ -186,6 +188,7 @@ export default class OraHeader extends React.Component {
     header: {
       position: 'relative',
       opacity: 0.85,
+      zIndex: -1,
       height: Constants.ORA_HEADER_HEIGHT,
       // borderBottom: [1, [255, 255, 255, 0.1]],
       transition: 'all ease-in 80ms',

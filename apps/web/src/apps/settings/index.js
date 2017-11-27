@@ -3,6 +3,7 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import PaneView from '~/apps/ora/panes/pane'
 import * as CategoryPanes from './panes'
+import * as Constants from '~/constants'
 
 const itemProps = {
   size: 1.1,
@@ -101,7 +102,7 @@ export default class SettingsPage {
       width: 'calc(100% - 280px)',
     },
     sidebar: {
-      background: [40, 40, 40, 0.98],
+      background: Constants.ORA_BG_MAIN,
     },
   }
 }

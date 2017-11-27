@@ -2,6 +2,7 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
+import * as Constants from '~/constants'
 
 const glowProps = {
   color: '#fff',
@@ -43,7 +44,7 @@ class Tab {
         <chrome
           css={{
             ...chromeStyle,
-            background: [40, 40, 40, 0.98],
+            background: Constants.ORA_BG_MAIN,
             borderBottom: 'none',
             boxShadow: [
               'inset 0 0.5px 0 rgba(255,255,255,0.15)',

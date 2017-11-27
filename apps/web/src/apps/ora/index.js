@@ -104,7 +104,7 @@ export default class OraPage {
     ora: {
       width: Constants.ORA_WIDTH,
       height: Constants.ORA_HEIGHT,
-      background: [12, 12, 12, 0.9],
+      background: Constants.ORA_BG,
       // border: [1, [255, 255, 255, 0.035]],
       boxShadow: [
         [0, 0, 10, [0, 0, 0, 0.5]],

@@ -11,6 +11,9 @@ import upndown from 'upndown'
 import URI from 'urijs'
 import sanitizeHtml from 'sanitize-html'
 import { writeFileSync } from 'fs'
+import OS from 'os'
+
+const MAX_CORES_DEFAULT = OS.cpus().length - 1
 
 const normalizeHref = (baseUrl, href) => {
   let url = new URI(href)
@@ -73,15 +76,15 @@ const urlMatchesExtensions = (url, extensions) => {
 }
 
 export default class Crawler {
-  shouldCrawl = true
+  cancelled = false
   isRunning = false
-  hasFinished = false
-
+  browser = null
   count = 0
   selectors = null
+  promiseEnds = []
 
   constructor(options: Options) {
-    this.options = options
+    this.options = options || {}
   }
 
   textToSelectors = async (page, contents) => {
@@ -240,8 +243,7 @@ export default class Crawler {
     }
     this.count = 0
     this.isRunning = true
-    this.hasFinished = false
-    this.shouldCrawl = true
+    this.cancelled = false
     log.crawl('Starting crawler')
     // merge options
     const options = {
@@ -255,7 +257,7 @@ export default class Crawler {
     })
     // defaults
     const {
-      puppeteerOptions,
+      maxCores = MAX_CORES_DEFAULT,
       maxPages = Infinity,
       maxRadius = Infinity,
       // maxOffPathRadius, this would be really nice
@@ -281,7 +283,19 @@ export default class Crawler {
     log.crawl('Scoring closest to url:', fullMatchUrl)
     this.db.setScoringFn(url => urlSimilarity(fullMatchUrl, url))
 
-    const browser = await puppeteer.launch(puppeteerOptions)
+    // used to check if done in while loop and after page crash
+    const isFinished = checkQueue => {
+      const isLoadingPage = loadingPage.indexOf(true) > -1
+      const hasMoreInQueue = this.db.pageQueue.length > 0
+      const hasFoundEnough = this.count >= maxPages
+      const queueEmpty = !isLoadingPage && !hasMoreInQueue
+      if (checkQueue) {
+        if (this.cancelled) log.crawl('isFinished => cancelled')
+        if (hasFoundEnough) log.crawl('isFinished => hasFoundEnough')
+        if (queueEmpty) log.crawl('isFinished => queueEmpty')
+      }
+      return this.cancelled || hasFoundEnough || (checkQueue && queueEmpty)
+    }
 
     const runTarget = async (target, page) => {
       log.page(`now: ${target.url}`)
@@ -305,7 +319,15 @@ export default class Crawler {
         await page.goto(target.url, {
           waitUntil: 'domcontentloaded',
         })
+        if (this.cancelled) {
+          log.page(`Cancelled during page process`)
+          return null
+        }
         const contents = await this.parse(page, target.url)
+        if (this.cancelled) {
+          log.page(`Cancelled during page process`)
+          return null
+        }
         let outboundUrls
         if (!options.disableLinkFinding) {
           outboundUrls = await this.findLinks(page, {
@@ -332,86 +354,96 @@ export default class Crawler {
           url: target.url,
         }
       } catch (err) {
-        log.page(
-          `Error crawling url ${target.url}\n${err.message}\n${err.stack}`
-        )
+        if (!isFinished()) {
+          log.page(
+            `Error crawling url ${target.url}\n${err.message}\n${err.stack}`
+          )
+        }
         return null
       }
     }
 
     // if only running on 1 open 1 tab
-    const concurrentTabs = Math.min(maxPages, 3)
+    const concurrentTabs = Math.min(maxCores, 7)
     const startTime = +Date.now()
     const loadingPage = range(concurrentTabs).map(() => false)
+    const browser = await puppeteer.launch(options.puppeteerOptions)
     const pages = await Promise.all(loadingPage.map(() => browser.newPage()))
 
     // handlers for after loaded a page
     const finishProcessing = tabIndex => {
       return result => {
+        this.db.store(result)
         if (result && result.contents) {
-          log.step('Downloaded ', this.db.getValid().length, 'pages')
+          log.step('Downloaded', this.db.getValid().length, 'pages')
           this.count++
         }
-        this.db.store(result)
-        loadingPage[tabIndex] = false
-      }
-    }
-    const handleProcessingError = tabIndex => {
-      return err => {
-        console.log('err', err)
         loadingPage[tabIndex] = false
       }
     }
 
     // do first one
-    await runTarget(target, pages[0])
-      .then(finishProcessing(0))
-      .catch(handleProcessingError(0))
+    await runTarget(target, pages[0]).then(finishProcessing(0))
 
     const shouldCrawlMoreThanOne = maxPages > 1
     // start rest
     if (shouldCrawlMoreThanOne) {
-      const isFinished = () => {
-        const isLoadingPage = loadingPage.indexOf(true) > -1
-        const hasMoreInQueue = this.db.pageQueue.length > 0
-        const hasFoundEnough = this.count >= maxPages
-        return hasFoundEnough || (!isLoadingPage && !hasMoreInQueue)
-      }
-      while (!isFinished()) {
-        await sleep(20) // throttle
+      while (!isFinished(true)) {
+        // throttle
+        await sleep(20)
+        // may need to wait for a tab to clear up
         const tabIndex = loadingPage.indexOf(false)
         if (tabIndex === -1) {
-          // may need to wait for a tab to clear up
           continue
         }
         const target = this.db.shiftUrl()
         if (!target) {
           // could be processing a page that will fill queue once done
-          log.crawl(`No target from db, still loading page`, loadingPage)
           continue
         }
         loadingPage[tabIndex] = true
-        runTarget(target, pages[tabIndex])
-          .then(finishProcessing(tabIndex))
-          .catch(handleProcessingError(tabIndex))
+        runTarget(target, pages[tabIndex]).then(finishProcessing(tabIndex))
       }
     }
+
     log.crawl(`Crawler done, crawled ${this.count} pages`)
     log.crawl(`took ${(+Date.now() - startTime) / 1000} seconds`)
     this.isRunning = false
-    // return all items stored
-    if (this.shouldCrawl) {
-      return this.db.getValid()
-    } else {
-      return []
+    // close pages
+    await browser.close()
+    // resolve any cancels
+    if (this.promiseEnds.length) {
+      this.promiseEnds.forEach(resolve => resolve())
+      this.promiseEnds = []
     }
+    // return empty on cancel
+    if (this.cancelled) {
+      return null
+    }
+    // return results
+    return this.db.getValid()
   }
 
-  getStatus() {
-    return { count: this.count, isRunning: this.isRunning }
+  getStatus({ includeResults = false } = {}) {
+    const res = { count: this.count, isRunning: this.isRunning }
+    if (includeResults) {
+      const results = this.db.getValid()
+      // only show results if we have more than 0
+      if (results && results.length) {
+        res.results = results
+      }
+    }
+    return res
   }
 
+  // returns true if it was running
   stop() {
-    this.hasFinished = false
+    this.cancelled = true
+    if (!this.isRunning) {
+      return Promise.resolve(false)
+    }
+    return new Promise(resolve => {
+      this.promiseEnds.push(() => resolve(true))
+    })
   }
 }

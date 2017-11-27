@@ -6,51 +6,41 @@ import { watch } from '@mcro/black'
 import { isEqual } from 'lodash'
 import After from '~/views/after'
 import CrawlSetup from './crawlSetup'
+import CrawlerStore from '~/stores/crawlerStore'
 
 const idFn = _ => _
 
 export default class ContextSidebar {
   @watch
   isPinned = () => this.osContext && Thing.findOne({ url: this.osContext.url })
-
+  osContext = null
+  previewCrawler = new CrawlerStore()
   crawlerSettings = {
-    maxPages: Infinity,
+    maxPages: 10000,
     depth: '/',
   }
-
-  osContext = null
 
   willMount() {
     this.watch(function watchSidebarContext() {
       // prevent focusedApp from triggered changes
-      const { focusedApp, ...context } = this.oraStore.osContext
+      const { focusedApp, ...context } = this.oraStore.osContext || {}
       idFn(focusedApp)
-      if (!isEqual(context, this.osContext)) {
+      if (context && context.url && !isEqual(context, this.osContext)) {
         this.osContext = context
-        this.setDepth()
-      }
-    })
-    this.watch(function watchCrawlerSettings() {
-      const { crawlerInfo } = this
-      if (!crawlerInfo) return
-      const { bodySelector, titleSelector } = crawlerInfo
-      const crawlerSettings = {
-        ...this.crawlerSettings,
-        bodySelector,
-        titleSelector,
-      }
-      if (!isEqual(crawlerSettings, this.crawlerSettings)) {
-        this.crawlerSettings = crawlerSettings
+        this.handleChangeSettings({
+          entry: context.url,
+          depth: new URL(context.url).pathname,
+        })
       }
     })
   }
 
-  setDepth = () => {
-    if (!this.osContext.url) {
-      return null
+  handleChangeSettings = settings => {
+    // this is for the preview
+    this.crawlerSettings = {
+      ...this.crawlerSettings,
+      ...settings,
     }
-
-    this.crawlerSettings.depth = new URL(this.osContext.url).pathname
   }
 
   get oraStore() {
@@ -62,9 +52,7 @@ export default class ContextSidebar {
   get search() {
     return this.oraStore.search
   }
-  get crawler() {
-    return this.oraStore.crawler
-  }
+
   // can customize the shown title here
   get title() {
     if (!this.osContext) return
@@ -75,20 +63,20 @@ export default class ContextSidebar {
   }
 
   get drawer() {
-    if (!this.crawler.showing) {
+    if (!this.previewCrawler.showing) {
       return null
     }
     return {
       title: 'Crawl Settings',
       onClose: () => {
-        this.crawler.onStop()
-        this.crawler.showing = false
+        this.previewCrawler.stop()
+        this.previewCrawler.hide()
       },
       children: (
         <CrawlSetup
+          crawler={this.previewCrawler}
           settings={this.crawlerSettings}
-          osContext={this.osContext}
-          onChangeSettings={settings => (this.crawlerSettings = settings)}
+          onChangeSettings={this.handleChangeSettings}
         />
       ),
     }
@@ -173,26 +161,7 @@ export default class ContextSidebar {
   }
 
   get actions() {
-    if (this.crawler.results) {
-      return [
-        {
-          icon: 'remove',
-          children: 'Cancel',
-          onClick: this.oraStore.cancelResults,
-          theme: 'red',
-        },
-        {
-          flex: true,
-        },
-        {
-          icon: 'check',
-          children: 'Save',
-          onClick: this.oraStore.commitResults,
-          theme: 'green',
-        },
-      ]
-    }
-    if (this.crawler.showing) {
+    if (this.previewCrawler.showing) {
       return [
         {
           flex: true,
@@ -202,8 +171,9 @@ export default class ContextSidebar {
           icon: 'play',
           children: 'Start Crawl',
           onClick: async () => {
-            this.oraStore.removeCrawler()
-            await this.oraStore.startCrawl(this.crawlerOptions)
+            this.oraStore.crawler.start(this.crawlerSettings)
+            this.previewCrawler.hide()
+            await this.previewCrawler.stop()
           },
         },
       ]
@@ -221,10 +191,10 @@ export default class ContextSidebar {
         children: 'Pin',
         onClick: this.oraStore.addCurrentPage,
       },
-      {
+      !this.oraStore.crawler.isRunning && {
         icon: 'pin',
         children: 'Pin Site',
-        onClick: this.oraStore.injectCrawler,
+        onClick: this.previewCrawler.show,
       },
     ]
   }

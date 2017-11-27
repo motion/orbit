@@ -115,9 +115,11 @@ export default class Row extends React.Component<Props> {
       children = items.map((seg, index) => {
         const { text, id, icon, ...segmentProps } =
           typeof seg === 'object' ? seg : { text: seg, id: seg }
-
+        if (segmentProps.flex) {
+          return <flexer $$flex={segmentProps.flex} />
+        }
         return (
-          <Provider key={index} provide={getContext(index, children.length)}>
+          <Provider key={index} provide={getContext(index, items.length)}>
             <Button
               active={(id || icon) === ACTIVE}
               icon={onlyIcons ? text : icon}
@@ -131,7 +133,7 @@ export default class Row extends React.Component<Props> {
               {...segmentProps}
               {...itemProps}
             >
-              {!onlyIcons && text}
+              {(!onlyIcons && text) || segmentProps.children}
             </Button>
           </Provider>
         )

@@ -119,7 +119,6 @@ class HoverGlow extends React.PureComponent<Props, State> {
   move(e) {
     const [x, y] = offset(e, this.node)
     if (this.unmounted || !this.bounds) {
-      console.log('no move', this)
       return
     }
     this.setState({

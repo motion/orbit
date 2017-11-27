@@ -126,17 +126,12 @@ export default class Server {
     const crawler = new Crawler()
     let results = null
 
-    let results = null
-
     this.app.post('/crawler/start', async (req, res) => {
-      log(`Got a request for crawl`)
+      log(`POST /crawler/start`)
       const { options } = req.body
       if (options) {
+        await crawler.stop()
         results = null
-        if (crawler.isRunning) {
-          log('stopping previous crawler')
-          crawler.stop()
-        }
         crawler.start(options.entry, options).then(vals => {
           results = vals
         })
@@ -154,19 +149,16 @@ export default class Server {
     })
 
     this.app.post('/crawler/stop', async (req, res) => {
-      let success = false
-      if (crawler.isRunning) {
-        log('Cancelling crawl')
-        crawler.stop()
-        success = true
+      log(`POST /crawler/stop`)
+      if (await crawler.stop()) {
+        res.json({ success: true })
       } else {
-        log(`No crawler running`)
+        res.json({ success: false })
       }
-      res.json({ success })
     })
 
     this.app.get('/crawler/status', async (req, res) => {
-      res.json({ status: crawler.getStatus() })
+      res.json({ status: crawler.getStatus({ includeResults: true }) })
     })
   }
 

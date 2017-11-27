@@ -156,6 +156,7 @@ export default class Pane {
           size={drawerHeight}
           open={!!drawer}
           closable
+          showOverlay
           {...drawer}
         />
         <SidebarTitle
@@ -185,7 +186,6 @@ export default class Pane {
     pane: {
       flex: 1,
       position: 'relative',
-      overflow: 'scroll',
     },
     content: {
       overflowY: 'scroll',

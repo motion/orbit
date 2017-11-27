@@ -37,6 +37,11 @@ export default class MainSidebar {
       title: 'Home',
       after: (
         <UI.Icon
+          css={{
+            zIndex: 10,
+          }}
+          color={[255, 255, 255, 0.1]}
+          hoverColor={[255, 255, 255, 0.6]}
           name="gear"
           onClick={this.props.oraStore.actions.openSettings}
         />

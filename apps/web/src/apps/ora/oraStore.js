@@ -214,21 +214,6 @@ export default class OraStore {
     })
   }
 
-  startCrawl = async options => {
-    this.crawler.showing = false
-    this.crawler.settings = {
-      entry: 'https://dropbox.com/help',
-      maxPages: 30,
-      depth: '/help',
-    }
-
-    this.crawler.onStart()
-  }
-
-  cancelResults = () => {
-    this.crawler.onStop()
-  }
-
   commitResults = async () => {
     this.setBanner(BANNERS.note, 'Saving...')
     let creating = []
@@ -239,8 +224,8 @@ export default class OraStore {
         creating.push(
           Thing.create({
             url,
-            title: contents.title,
-            body: contents.body,
+            title: `${contents.title}`,
+            body: `${contents.body}`,
             integration: 'crawler',
             type: 'website',
             bucket: this.bucket || 'Default',
@@ -251,19 +236,6 @@ export default class OraStore {
     const thingResults = await Promise.all(creating)
     this.setBanner(BANNERS.success, 'Saved results!')
     return thingResults
-  }
-
-  removeCrawler = () => {
-    OS.send('kill-crawler')
-  }
-
-  injectCrawler = () => {
-    this.crawler.showing = true
-    // OS.send('inject-crawler')
-  }
-
-  stopCrawl = async () => {
-    this.crawler.onStop()
   }
 
   toggleHidden = throttle(

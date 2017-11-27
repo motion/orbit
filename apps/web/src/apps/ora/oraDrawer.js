@@ -23,8 +23,30 @@ export default class OraDrawer {
           onCollapse={store.ref('resultsShown').toggle}
           renderTitle={() => `Crawl Results (${crawler.results.length})`}
           size={300}
+          after={
+            <UI.Row
+              spaced
+              items={[
+                {
+                  icon: 'remove',
+                  children: 'Cancel',
+                  onClick: oraStore.crawler.stop,
+                  theme: 'darkred',
+                },
+                {
+                  flex: true,
+                },
+                {
+                  icon: 'check',
+                  children: 'Save',
+                  onClick: oraStore.commitResults,
+                  theme: 'green',
+                },
+              ]}
+            />
+          }
         >
-          <content $$flex if={crawler.results}>
+          <inner css={{ paddingBottom: 50 }} if={crawler.results}>
             <UI.List
               items={crawler.results}
               getItem={({ contents }) => ({
@@ -33,7 +55,7 @@ export default class OraDrawer {
                 childrenEllipse: 2,
               })}
             />
-          </content>
+          </inner>
         </Drawer>
 
         <Drawer
@@ -56,7 +78,7 @@ export default class OraDrawer {
               Attempted URLs: 0
             </UI.Text>
             <after css={{ flex: 0.5 }}>
-              <UI.Button onClick={oraStore.stopCrawl}>Cancel</UI.Button>
+              <UI.Button onClick={crawler.stop}>Cancel</UI.Button>
             </after>
           </content>
         </Drawer>

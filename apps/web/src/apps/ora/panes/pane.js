@@ -3,7 +3,6 @@ import * as UI from '@mcro/ui'
 import * as Constants from '~/constants'
 import SidebarTitle from '~/views/sidebarTitle'
 import Drawer from '~/views/drawer'
-import getItem from './helpers/getItem'
 
 class PaneStore {
   listRef = null
@@ -117,8 +116,8 @@ export default class Pane {
     width,
     sidebar,
     stackItem,
-    hasParent,
     disableGlow,
+    transparent,
   }) {
     const list = paneStore.items && (
       <UI.List
@@ -126,7 +125,6 @@ export default class Pane {
         getRef={paneStore.setList}
         onSelect={this.onSelect}
         items={paneStore.items}
-        getItem={getItem}
         {...listProps}
       />
     )
@@ -170,7 +168,7 @@ export default class Pane {
           }}
           {...typeof title === 'object' && title}
         />
-        <content ref={paneStore.setContentRef}>
+        <content $transparent={transparent} ref={paneStore.setContentRef}>
           {!children
             ? list
             : typeof children === 'function' ? children(list) : children}
@@ -194,6 +192,9 @@ export default class Pane {
       flex: 1,
       position: 'relative',
       background: [40, 40, 40, 0.98],
+    },
+    transparent: {
+      background: 'transparent',
     },
     bottomGlow: {
       boxShadow: '0 0 80px 30px rgba(20,20,20,0.25)',

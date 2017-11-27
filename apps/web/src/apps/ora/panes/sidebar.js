@@ -4,6 +4,7 @@ import Fade from '~/views/fade'
 import * as Sidebars from './sidebars'
 import PaneView from './pane'
 import { ORA_WIDTH } from '~/constants'
+import getItem from './helpers/getItem'
 
 @view({
   sidebar: class SidebarStore {
@@ -153,6 +154,7 @@ export default class Sidebar {
                 onSelect={stackItem.onSelect}
                 hasParent={!!stackItem.parent}
                 listProps={{
+                  getItem,
                   width,
                   highlight: i => i === stackItem.selectedIndex,
                   ...listProps,

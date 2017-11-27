@@ -4,6 +4,23 @@ import * as UI from '@mcro/ui'
 import PaneView from '~/apps/ora/panes/pane'
 import * as CategoryPanes from './panes'
 
+const itemProps = {
+  size: 1.1,
+  padding: [8, 12],
+  glow: true,
+  glowProps: {
+    color: '#fff',
+    scale: 1,
+    blur: 70,
+    opacity: 0.3,
+    show: false,
+    resist: 60,
+    zIndex: -1,
+  },
+  highlightBackground: [255, 255, 255, 0.1],
+  childrenEllipse: 2,
+}
+
 @view.provide({
   store: class SettingsStore {
     activeIndex = 0
@@ -51,28 +68,13 @@ export default class SettingsPage {
           <sidebar $$draggable css={{ paddingTop: 36, width: 280 }}>
             <PaneView
               disableGlow
-              groupBy="category"
+              transparent
               onSelect={store.selectItem}
               items={store.items}
-              getItem={(item, index) => ({
-                ...item,
-                highlight: () => index === store.activeIndex,
-              })}
-              itemProps={{
-                size: 1.1,
-                padding: [8, 12],
-                glow: true,
-                glowProps: {
-                  color: '#fff',
-                  scale: 1,
-                  blur: 70,
-                  opacity: 0.3,
-                  show: false,
-                  resist: 60,
-                  zIndex: -1,
-                },
-                highlightBackground: [255, 255, 255, 0.1],
-                childrenEllipse: 2,
+              listProps={{
+                highlight: i => i === store.activeIndex,
+                groupBy: 'category',
+                itemProps,
               }}
             />
           </sidebar>
@@ -97,6 +99,9 @@ export default class SettingsPage {
       background: '#fff',
       padding: 20,
       width: 'calc(100% - 280px)',
+    },
+    sidebar: {
+      background: [40, 40, 40, 0.98],
     },
   }
 }

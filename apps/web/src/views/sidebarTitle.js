@@ -13,18 +13,20 @@ const Tab = ({ children }) => {
           left: 0,
           right: 0,
           bottom: 0,
+          zIndex: 0,
           borderTopRadius: 6,
-          background: [40, 40, 40, 0.75],
-          // background:
-          //   'linear-gradient(rgba(70, 70, 70,0.6), rgba(70, 70, 70,0.5))',
-          boxShadow: 'inset 0 0.5px 0 rgba(255,255,255,0.1)',
+          background: [40, 40, 40, 0.98],
+          boxShadow: [
+            'inset 0 0.5px 0 rgba(255,255,255,0.1)',
+            '0 0 5px rgba(0,0,0,0.5)',
+          ],
           transform: {
             perspective: '100px',
             rotateX: '10deg',
           },
         }}
       />
-      <inner css={{ padding: [8, 12], flexFlow: 'row', flex: 1 }}>
+      <inner css={{ padding: [8, 12], flexFlow: 'row', flex: 1, zIndex: 1 }}>
         {children}
       </inner>
     </tab>
@@ -33,7 +35,7 @@ const Tab = ({ children }) => {
 
 @view
 export default class SidebarTitle {
-  render({ image, backProps, noBack, icon, subtitle, title, onBack }) {
+  render({ after, image, backProps, noBack, icon, subtitle, title, onBack }) {
     return (
       <sidebartitle onClick={e => e.stopPropagation()}>
         <UI.Button
@@ -56,6 +58,7 @@ export default class SidebarTitle {
               {subtitle}
             </UI.Title>
           </titles>
+          {after}
           <img if={image} $image src={image} />
           <UI.Icon if={icon} $image name={icon || '/images/me.jpg'} />
         </Tab>
@@ -68,7 +71,7 @@ export default class SidebarTitle {
       flexFlow: 'row',
       alignItems: 'center',
       overflow: 'hidden',
-      padding: [5, 7, 0],
+      padding: [0, 5, 0],
       userSelect: 'none',
       // borderBottom: [1, [255, 255, 255, 0.05]],
       // background: [255, 255, 255, 0.05],

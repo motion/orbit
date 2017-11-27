@@ -160,8 +160,12 @@ export default class Windows extends React.Component {
       Helpers.open(url)
     })
 
-    this.on(ipcMain, 'open-settings', (event, service) => {
+    this.on(ipcMain, 'open-auth', (event, service) => {
       Helpers.open(`${Constants.APP_URL}/authorize?service=` + service)
+    })
+
+    this.on(ipcMain, 'open-settings', () => {
+      this.handlePreferences()
     })
   }
 
@@ -235,7 +239,7 @@ export default class Windows extends React.Component {
     this.setState({ error })
   }
 
-  onPreferences = () => {
+  handlePreferences = () => {
     this.setState({ showSettings: true })
   }
 
@@ -267,7 +271,7 @@ export default class Windows extends React.Component {
     }
   }
 
-  onShowDevTools = () => {
+  handleShowDevTools = () => {
     if (this.state.showSettings) {
       this.setState({ showSettingsDevTools: !this.state.showSettingsDevTools })
     } else {
@@ -299,8 +303,8 @@ export default class Windows extends React.Component {
     return (
       <App onBeforeQuit={this.onBeforeQuit} ref={this.onAppRef}>
         <MenuItems
-          onPreferences={this.onPreferences}
-          onShowDevTools={this.onShowDevTools}
+          onPreferences={this.handlePreferences}
+          onShowDevTools={this.handleShowDevTools}
           getRef={this.onMenuRef}
           onQuit={this.onMenuQuit}
         />

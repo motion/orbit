@@ -144,6 +144,7 @@ export default class Pane {
     }
 
     const drawerHeight = 420
+    const title = (store && store.title) || (result && result.title)
 
     return (
       <pane
@@ -160,17 +161,14 @@ export default class Pane {
           {...drawer}
         />
         <SidebarTitle
-          if={hasParent}
-          title={(store && store.title) || result.title}
+          if={title}
+          title={title}
           subtitle={result.subtitle}
           onBack={stackItem.stack.left}
-          image={
-            this.props.oraStore.osContext &&
-            this.props.oraStore.osContext.favicon
-          }
           backProps={{
             icon: stackItem.stack.length > 2 ? 'arrow-min-left' : 'home',
           }}
+          {...typeof title === 'object' && title}
         />
         <content ref={paneStore.setContentRef}>
           {!children
@@ -195,6 +193,7 @@ export default class Pane {
       overflowY: 'scroll',
       flex: 1,
       position: 'relative',
+      background: [40, 40, 40, 0.98],
     },
     bottomGlow: {
       boxShadow: '0 0 80px 30px rgba(20,20,20,0.25)',

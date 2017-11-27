@@ -175,7 +175,12 @@ export default class OraStore {
     let lastContext = null
     this.watch(function watchContext() {
       const { context } = this.electronState
-      if (!context || !context.url || !context.title) {
+      if (!context) {
+        return
+      }
+      // fixes bug where empty string === true
+      context.title = `${context.title}`
+      if (!context.url || !context.title) {
         log('no context or url/title', this.context)
         return
       }
@@ -355,6 +360,9 @@ export default class OraStore {
   }
 
   actions = {
+    openSettings: () => {
+      OS.send('open-settings')
+    },
     down: e => {
       if (this.stack.col === 0) {
         e.preventDefault()

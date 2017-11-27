@@ -39,7 +39,7 @@ export default class OraPage {
           ref={oraStore.ref('barRef').set}
           $$draggable
         >
-          <OraBlur oraStore={oraStore} />
+          <OraBlur if={false} oraStore={oraStore} />
           <UI.Theme name="clear-dark">
             <OraHeader oraStore={oraStore} />
           </UI.Theme>
@@ -80,7 +80,7 @@ export default class OraPage {
     ora: {
       width: Constants.ORA_WIDTH,
       height: Constants.ORA_HEIGHT,
-      background: [21, 21, 21, 0.98],
+      background: [21, 21, 21, 0.85],
       // border: [1, [255, 255, 255, 0.035]],
       boxShadow: [
         [0, 0, 15, [0, 0, 0, 0.4]],

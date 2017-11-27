@@ -139,6 +139,9 @@ export default function storeProvidable(options, Helpers) {
           const stores = Object.keys(Stores).reduce((acc, cur) => {
             const Store = Stores[cur]
             const createStore = () => {
+              if (!Store.prototype) {
+                throw new Error(`Store has no prototype: ${cur}`)
+              }
               Object.defineProperty(Store.prototype, 'props', getProps)
               const store = new Store()
               delete Store.prototype.props // safety, remove hack

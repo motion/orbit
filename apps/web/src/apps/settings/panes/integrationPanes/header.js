@@ -61,7 +61,7 @@ class IntegrationHeaderStore {
 
   startOauth(integration) {
     if (Constants.IS_ELECTRON) {
-      OS.send('open-settings', integration)
+      OS.send('open-auth', integration)
     } else {
       window.open(`${Constants.API_URL}/authorize?service=${integration}`)
     }

@@ -67,7 +67,11 @@ export default class ContextSidebar {
   }
   // can customize the shown title here
   get title() {
-    return this.osContext ? this.osContext.title : null
+    if (!this.osContext) return
+    return {
+      title: this.osContext.title,
+      image: this.osContext.favicon,
+    }
   }
 
   get drawer() {

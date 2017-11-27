@@ -111,7 +111,7 @@ export default class OraHeader extends React.Component {
           onMouseUp={this.handleHeaderMouseUp}
           $$draggable
         >
-          <leftIcon>
+          <leftSide>
             <UI.Icon
               if={oraStore.stack.length === 1}
               name="zoom"
@@ -124,7 +124,7 @@ export default class OraHeader extends React.Component {
               onMouseUp={this.preventPropagation}
               {...iconProps}
             />
-          </leftIcon>
+          </leftSide>
 
           <UI.Input
             $searchInput
@@ -153,30 +153,28 @@ export default class OraHeader extends React.Component {
           </title>
 
           <rightSide onMouseUp={this.preventPropagation}>
-            <row $$row>
-              <UI.Popover
-                openOnHover
-                delay={300}
-                closeOnEsc
-                overlay="transparent"
-                theme="light"
-                width={150}
-                target={
-                  <UI.Button
-                    {...itemProps}
-                    icon="bucket"
-                    opacity={0.5}
-                    onClick={e => {
-                      e.stopPropagation()
-                      oraStore.hide()
-                    }}
-                  />
-                }
-              >
-                <UI.List items={bucketItems} onSelect={this.selectBucket} />
-              </UI.Popover>
-              <UI.Button {...itemProps} onClick={this.onHide} icon="remove" />
-            </row>
+            <UI.Popover
+              openOnHover
+              delay={300}
+              closeOnEsc
+              overlay="transparent"
+              theme="light"
+              width={150}
+              target={
+                <UI.Button
+                  {...itemProps}
+                  icon="bucket"
+                  opacity={0.5}
+                  onClick={e => {
+                    e.stopPropagation()
+                    oraStore.hide()
+                  }}
+                />
+              }
+            >
+              <UI.List items={bucketItems} onSelect={this.selectBucket} />
+            </UI.Popover>
+            <UI.Button {...itemProps} onClick={this.onHide} icon="remove" />
           </rightSide>
         </header>
       </UI.Theme>
@@ -234,24 +232,25 @@ export default class OraHeader extends React.Component {
     disabled: {
       pointerEvents: 'none',
     },
-    leftIcon: {
+    leftSide: {
       position: 'absolute',
       top: 0,
-      bottom: 1,
+      bottom: 0,
       alignItems: 'center',
       justifyContent: 'center',
       height: 'auto',
-      left: 12,
+      left: 10,
       zIndex: 2,
     },
     rightSide: {
       position: 'absolute',
       top: 0,
       right: 2,
-      bottom: 1,
+      bottom: 0,
       zIndex: 1000,
       justifyContent: 'center',
       alignItems: 'center',
+      flexFlow: 'row',
     },
     searchInput: {
       position: 'relative',

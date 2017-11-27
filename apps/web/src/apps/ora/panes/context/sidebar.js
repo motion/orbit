@@ -161,25 +161,6 @@ export default class ContextSidebar {
   }
 
   get actions() {
-    if (this.oraStore.crawler.results) {
-      return [
-        {
-          icon: 'remove',
-          children: 'Cancel',
-          onClick: this.oraStore.crawler.stop,
-          theme: 'red',
-        },
-        {
-          flex: true,
-        },
-        {
-          icon: 'check',
-          children: 'Save',
-          onClick: this.oraStore.commitResults,
-          theme: 'green',
-        },
-      ]
-    }
     if (this.previewCrawler.showing) {
       return [
         {
@@ -210,7 +191,7 @@ export default class ContextSidebar {
         children: 'Pin',
         onClick: this.oraStore.addCurrentPage,
       },
-      {
+      !this.oraStore.crawler.isRunning && {
         icon: 'pin',
         children: 'Pin Site',
         onClick: this.previewCrawler.show,

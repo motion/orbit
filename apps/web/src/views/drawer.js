@@ -38,6 +38,7 @@ export default class Drawer {
     renderTitle,
     renderProgress,
     contentProps,
+    after,
     ...props
   }) {
     return (
@@ -76,7 +77,10 @@ export default class Drawer {
                 <UI.Button if={closable} icon="remove" onClick={onClose} />
               </UI.Row>
             </title>
-            <content {...contentProps}>{children}</content>
+            <outerContent>
+              <content {...contentProps}>{children}</content>
+              <after if={open && !collapsed && after}>{after}</after>
+            </outerContent>
           </container>
         </UI.Drawer>
       </UI.Theme>
@@ -87,9 +91,21 @@ export default class Drawer {
     container: {
       flex: 1,
     },
+    outerContent: {
+      flex: 1,
+      paddingBottom: Constants.ACTION_BAR_HEIGHT,
+    },
+    after: {
+      padding: 5,
+      position: 'absolute',
+      backdropFilter: 'blur(20px)',
+      background: [255, 255, 255, 0.15],
+      bottom: Constants.ACTION_BAR_HEIGHT,
+      left: 0,
+      right: 0,
+    },
     content: {
       padding: 5,
-      paddingBottom: Constants.ACTION_BAR_HEIGHT + 10, // 10 is padding around app
       flex: 1,
       flexFlow: 'row',
       maxWidth: '100%',

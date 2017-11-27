@@ -265,8 +265,6 @@ export default class Crawler {
       filterUrlExtensions = FILTER_URL_EXTENSIONS,
     } = options
 
-    console.log('GOT MAX PAGES', maxPages, runOptions, this.options)
-
     const matchesDepth = url => {
       return parse(url).pathname && parse(url).pathname.indexOf(depth) === 0
     }
@@ -407,8 +405,7 @@ export default class Crawler {
         runTarget(target, pages[tabIndex]).then(finishProcessing(tabIndex))
       }
     }
-    console.log('shouldCrawlMoreThanOne', shouldCrawlMoreThanOne, maxPages)
-    isFinished(true)
+
     log.crawl(`Crawler done, crawled ${this.count} pages`)
     log.crawl(`took ${(+Date.now() - startTime) / 1000} seconds`)
     this.isRunning = false

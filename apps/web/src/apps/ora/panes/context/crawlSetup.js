@@ -32,10 +32,8 @@ class CrawlSetupStore {
     this.crawler.start()
   }, 300)
 
-  setDepth = ({ target: { value } }) => {
-    const { settings, onChangeSettings } = this.props
-    onChangeSettings({ ...settings, depth: value })
-  }
+  handleSetting = key => e =>
+    this.props.onChangeSettings({ [key]: e.target.value })
 }
 
 @view({
@@ -43,38 +41,66 @@ class CrawlSetupStore {
 })
 export default class CrawlSetup {
   render({ store, settings }) {
-    const lblProps = { style: { paddingLeft: 0 } }
+    const lblProps = {
+      paddingLeft: 0,
+      width: 100,
+      alignItems: 'flex-end',
+      fontWeight: 600,
+    }
     return (
       <setup css={{ flex: 1, overflowY: 'scroll' }} if={store.crawler}>
         <UI.Separator>Settings</UI.Separator>
         <content>
           <UI.Row>
             <UI.Label {...lblProps}>Entry</UI.Label>
-            <UI.Text>{settings.entry}</UI.Text>
+            <UI.Text ellipse>{settings.entry}</UI.Text>
           </UI.Row>
           <UI.Row>
-            <UI.Label {...lblProps}>Max Depth</UI.Label>
-            <UI.Input flex onChange={store.setDepth} value={settings.depth} />
+            <UI.Label tooltip="Limit to subpath" {...lblProps}>
+              Max Depth
+            </UI.Label>
+            <UI.Input
+              flex
+              onChange={store.handleSetting('depth')}
+              value={settings.depth}
+            />
+          </UI.Row>
+          <UI.Row>
+            <UI.Label tooltip="Limit total pages" {...lblProps}>
+              Max Pages
+            </UI.Label>
+            <UI.Input
+              flex
+              onChange={store.handleSetting('maxPages')}
+              value={settings.maxPages}
+            />
           </UI.Row>
         </content>
 
         <UI.Separator
           after={
-            <UI.Button chromeless icon="refresh" onClick={store.onPreview} />
+            <UI.Button
+              tooltip="Refresh preview"
+              chromeless
+              icon="refresh"
+              onClick={store.onPreview}
+            />
           }
         >
           Preview
         </UI.Separator>
-        <UI.List
-          css={{ maxWidth: '100%' }}
-          items={
-            store.crawler.results || [{ contents: { title: 'Loading...' } }]
-          }
-          getItem={({ contents }) => ({
-            primary: contents.title,
-            children: contents.body,
-          })}
-        />
+        <content>
+          <UI.List
+            css={{ maxWidth: '100%' }}
+            items={
+              store.crawler.results || [{ contents: { title: 'Loading...' } }]
+            }
+            getItem={({ contents }) => ({
+              primary: contents.title,
+              children: contents.body,
+            })}
+          />
+        </content>
       </setup>
     )
   }

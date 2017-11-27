@@ -11,6 +11,7 @@ import { CurrentUser } from '~/app'
 import * as r2 from '@mcro/r2'
 import { throttle } from 'lodash'
 import debug from 'debug'
+import { createInChunks } from '~/sync/helpers'
 
 const log = _ => _ || debug('ora')
 
@@ -216,26 +217,21 @@ export default class OraStore {
 
   commitResults = async () => {
     this.setBanner(BANNERS.note, 'Saving...')
-    let creating = []
     const { results } = this.crawler
-    this.crawler.clean()
+    this.crawler.reset()
     if (results) {
-      for (const { url, contents } of results) {
-        creating.push(
-          Thing.create({
-            url,
-            title: `${contents.title}`,
-            body: `${contents.body}`,
-            integration: 'crawler',
-            type: 'website',
-            bucket: this.bucket || 'Default',
-          })
-        )
-      }
+      await createInChunks(results, ({ url, contents }) => {
+        Thing.create({
+          url,
+          title: `${contents.title}`,
+          body: `${contents.body}`,
+          integration: 'crawler',
+          type: 'website',
+          bucket: this.bucket || 'Default',
+        })
+      })
+      this.setBanner(BANNERS.success, 'Saved results!')
     }
-    const thingResults = await Promise.all(creating)
-    this.setBanner(BANNERS.success, 'Saved results!')
-    return thingResults
   }
 
   toggleHidden = throttle(

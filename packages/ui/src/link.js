@@ -11,7 +11,7 @@ export default class Link extends React.Component<Props> {
   isActive = false
 
   componentDidMount() {
-    this.watch(() => {
+    this.watch(function watchRouterPath() {
       const isActive =
         this.props.router.path === this.props.to ||
         this.props.router.path === this.props.match

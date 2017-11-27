@@ -12,7 +12,7 @@ export default class SlackService {
     this.slack && this.slack.channels.list({}).then(res => res.channels)
 
   constructor() {
-    this.watch(() => {
+    this.watch(function watchSlackToken() {
       const { token } = this
       if (token && !this.slack) {
         this.slack = new Slack({ token })

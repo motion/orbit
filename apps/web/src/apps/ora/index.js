@@ -9,6 +9,23 @@ import OraActionBar from './oraActionBar'
 import OraBlur from './oraBlur'
 import * as Constants from '~/constants'
 
+const itemProps = {
+  size: 1.1,
+  padding: [8, 12],
+  glow: true,
+  glowProps: {
+    color: '#fff',
+    scale: 1,
+    blur: 70,
+    opacity: 0.1,
+    show: false,
+    resist: 60,
+    zIndex: -1,
+  },
+  highlightBackground: [255, 255, 255, 0.05],
+  childrenEllipse: 2,
+}
+
 @view.provide({
   oraStore: OraStore,
 })
@@ -22,7 +39,7 @@ export default class OraPage {
           ref={oraStore.ref('barRef').set}
           $$draggable
         >
-          <OraBlur oraStore={oraStore} />
+          <OraBlur if={false} oraStore={oraStore} />
           <UI.Theme name="clear-dark">
             <OraHeader oraStore={oraStore} />
           </UI.Theme>
@@ -31,21 +48,12 @@ export default class OraPage {
               width={Constants.ORA_WIDTH}
               store={oraStore}
               oraStore={oraStore}
-              itemProps={{
-                size: 1.1,
-                padding: [8, 12],
-                glow: true,
-                glowProps: {
-                  color: '#fff',
-                  scale: 1,
-                  blur: 70,
-                  opacity: 0.1,
-                  show: false,
-                  resist: 60,
-                  zIndex: -1,
+              listProps={{
+                groupBy: 'category',
+                virtualized: {
+                  measure: true,
                 },
-                highlightBackground: [255, 255, 255, 0.048],
-                childrenEllipse: 2,
+                itemProps,
               }}
             />
           </content>
@@ -72,7 +80,7 @@ export default class OraPage {
     ora: {
       width: Constants.ORA_WIDTH,
       height: Constants.ORA_HEIGHT,
-      background: [21, 21, 21, 0.98],
+      background: [21, 21, 21, 0.85],
       // border: [1, [255, 255, 255, 0.035]],
       boxShadow: [
         [0, 0, 15, [0, 0, 0, 0.4]],

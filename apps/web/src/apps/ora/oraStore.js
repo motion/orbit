@@ -86,7 +86,7 @@ export default class OraStore {
     this._watchFocus()
     this._watchFocusBar()
     this._watchBlurBar()
-    this.watch(() => {
+    this.watch(function watchWasBlurred() {
       const { focused } = this.state
       // one frame later
       this.setTimeout(() => {
@@ -152,7 +152,7 @@ export default class OraStore {
   }
 
   _watchBlurBar = () => {
-    this.watch(() => {
+    this.watch(function watchBlurBar() {
       if (this.state.hidden) {
         // timeout based on animation
         this.setTimeout(this.blurBar, 150)
@@ -173,9 +173,14 @@ export default class OraStore {
 
   _watchContext = () => {
     let lastContext = null
-    this.watch(() => {
+    this.watch(function watchContext() {
       const { context } = this.electronState
-      if (!context || !context.url || !context.title) {
+      if (!context) {
+        return
+      }
+      // fixes bug where empty string === true
+      context.title = `${context.title}`
+      if (!context.url || !context.title) {
         log('no context or url/title', this.context)
         return
       }
@@ -272,7 +277,7 @@ export default class OraStore {
 
   _watchFocusBar() {
     let lastCol = null
-    this.watch(() => {
+    this.watch(function watchFocusBar() {
       const { col } = this.stack
       if (col === 0 && lastCol !== 0) {
         this.focusBar()
@@ -355,6 +360,9 @@ export default class OraStore {
   }
 
   actions = {
+    openSettings: () => {
+      OS.send('open-settings')
+    },
     down: e => {
       if (this.stack.col === 0) {
         e.preventDefault()

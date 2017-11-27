@@ -21,7 +21,7 @@ export default class ContextSidebar {
   osContext = null
 
   willMount() {
-    this.watch(() => {
+    this.watch(function watchSidebarContext() {
       // prevent focusedApp from triggered changes
       const { focusedApp, ...context } = this.oraStore.osContext
       idFn(focusedApp)
@@ -30,7 +30,7 @@ export default class ContextSidebar {
         this.setDepth()
       }
     })
-    this.watch(() => {
+    this.watch(function watchCrawlerSettings() {
       const { crawlerInfo } = this
       if (!crawlerInfo) return
       const { bodySelector, titleSelector } = crawlerInfo
@@ -67,7 +67,11 @@ export default class ContextSidebar {
   }
   // can customize the shown title here
   get title() {
-    return this.osContext ? this.osContext.title : null
+    if (!this.osContext) return
+    return {
+      title: this.osContext.title,
+      image: this.osContext.favicon,
+    }
   }
 
   get drawer() {

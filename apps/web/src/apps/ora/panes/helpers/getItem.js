@@ -54,17 +54,16 @@ function getChildren(result) {
   return null
 }
 
-export default function getItem(getActiveIndex) {
-  return (result, index) => ({
+export default function getItem(result, index) {
+  return {
     key: `${index}${result.id}${result.title}${result.category}`,
-    highlight: () => index === getActiveIndex(),
-    // dynamic lower opacity as list items go down
     primary:
       typeof result.displayTitle !== 'undefined'
         ? result.displayTitle || null
         : result.display ? null : result.title,
     primaryEllipse: !hasContent(result) ? 2 : false,
     primaryProps: {
+      // lower opacity as list items go down
       opacity: Math.max(0.5, (9 - index) / 8),
       size: 1.2,
       fontWeight: 500,
@@ -85,5 +84,5 @@ export default function getItem(getActiveIndex) {
     beforeProps: result.beforeProps,
     afterProps: result.afterProps,
     ...result.props,
-  })
+  }
 }

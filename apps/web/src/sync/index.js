@@ -28,7 +28,7 @@ export default class Sync {
   start() {
     this.watchJobs()
     this.startSyncers()
-    this.watch(() => {
+    this.watch(function watchSyncEnabled() {
       if (this.enabled) {
         return
       }

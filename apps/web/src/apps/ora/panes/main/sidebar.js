@@ -1,7 +1,8 @@
 // import * as React from 'react'
-// import * as UI from '@mcro/ui'
+import * as UI from '@mcro/ui'
 import { fuzzy } from '~/helpers'
 import { Thing } from '~/app'
+import SidebarTitle from '~/views/sidebarTitle'
 
 export default class MainSidebar {
   get search() {
@@ -29,6 +30,18 @@ export default class MainSidebar {
         title: 'Welcome to Orbit',
       },
     ]
+  }
+
+  get title() {
+    return {
+      title: 'Home',
+      after: (
+        <UI.Icon
+          name="gear"
+          onClick={this.props.oraStore.actions.openSettings}
+        />
+      ),
+    }
   }
 
   get results() {

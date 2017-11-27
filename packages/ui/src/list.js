@@ -112,7 +112,6 @@ class List extends React.PureComponent<Props, { selected: number }> {
     }
 
     const totalItems = this.getTotalItems(nextProps)
-
     const hasNewItems =
       totalItems !== this.totalItems ||
       this.props.itemsKey !== nextProps.itemsKey
@@ -269,6 +268,7 @@ class List extends React.PureComponent<Props, { selected: number }> {
       isSelected,
       selected,
       segmented,
+      highlight,
     } = this.props
     const getRef = this.gatherRefs(index)
     const props = {
@@ -279,6 +279,8 @@ class List extends React.PureComponent<Props, { selected: number }> {
             size,
             getRef,
             segmented,
+            highlight,
+            index,
             isFirstElement: index === 0,
             isLastElement: index === this.totalItems - 1,
           }

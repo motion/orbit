@@ -6,16 +6,25 @@ import $ from 'color'
 import { pick } from 'lodash'
 
 const getTextProperties = props => {
-  const fontSize =
-    (typeof props.fontSize === 'number' && props.fontSize) || props.size
-      ? props.size * 14
-      : 'auto'
-  const lineHeight =
-    props.lineHeight ||
-    (typeof props.fontSize === 'number' &&
-      fontSize * 1.15 + 2.5 * (fontSize / 10)) ||
-    '1.4rem'
-  return { fontSize, lineHeight }
+  let fontSizeNum
+  let lineHeightNum
+  let fontSize = props.fontSize
+  if (typeof fontSize === 'undefined' && props.size) {
+    fontSize = props.size * 14
+  }
+  let lineHeight = props.lineHeight
+  if (typeof lineHeight === 'undefined' && typeof fontSize === 'number') {
+    lineHeight = fontSize * 1.15 + 2.5 * (fontSize / 10)
+  }
+  if (typeof fontSize === 'number') {
+    fontSizeNum = Math.round(fontSize * 10) / 10
+    fontSize = `${fontSizeNum}px`
+  }
+  if (typeof lineHeight === 'number') {
+    lineHeightNum = Math.round(lineHeight * 10) / 10
+    lineHeight = `${lineHeightNum}px`
+  }
+  return { fontSize, fontSizeNum, lineHeight, lineHeightNum }
 }
 
 const DOM_EVENTS = [
@@ -192,8 +201,8 @@ export default class Text extends React.Component<Props> {
   }: Props) {
     const text = getTextProperties(this.props)
     const maxHeight =
-      typeof text.lineHeight === 'number'
-        ? `${ellipse * text.lineHeight}px`
+      ellipse && text.lineHeightNum
+        ? `${ellipse * text.lineHeightNum}px`
         : 'auto'
     const eventProps = {
       onClick,

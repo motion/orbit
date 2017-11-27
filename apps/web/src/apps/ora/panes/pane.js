@@ -11,9 +11,8 @@ class PaneStore {
 
   willMount() {
     this.watchDrillIn()
-
     const { stackItem } = this.props
-    this.watch(() => {
+    this.watch(function watchPaneStackVersion() {
       if (stackItem && stackItem.results) {
         this.bumpVersion()
       }
@@ -60,11 +59,9 @@ class PaneStore {
   setList = ref => {
     if (!this.listRef) {
       this.listRef = ref
-
       if (this.props.store && this.props.store.onListRef) {
         this.props.store.onListRef(this.listRef)
       }
-
       this.watchSelection()
     }
   }
@@ -112,42 +109,22 @@ export default class Pane {
   }
 
   render({
-    getItem,
-    groupBy,
     listProps,
-    itemProps,
     paneStore,
-    getActiveIndex,
     children,
     style,
     width,
     sidebar,
     stackItem,
-    hasParent,
     disableGlow,
+    transparent,
   }) {
-    const getItemDefault = (item, index) => ({
-      highlight: () => (getActiveIndex ? index === getActiveIndex() : false),
-      children: item,
-    })
-
     const list = paneStore.items && (
       <UI.List
-        itemsKey={paneStore.contentVersion}
+        key={paneStore.contentVersion}
         getRef={paneStore.setList}
-        groupBy={groupBy}
         onSelect={this.onSelect}
-        itemProps={{
-          padding: 0,
-          highlightBackground: [0, 0, 0, 0.08],
-          highlightColor: [255, 255, 255, 1],
-          ...itemProps,
-        }}
-        virtualized={{
-          measure: true,
-        }}
         items={paneStore.items}
-        getItem={getItem || getItemDefault}
         {...listProps}
       />
     )
@@ -165,7 +142,7 @@ export default class Pane {
     }
 
     const drawerHeight = 420
-    console.log('pane render')
+    const title = (store && store.title) || (result && result.title)
 
     return (
       <pane
@@ -182,19 +159,16 @@ export default class Pane {
           {...drawer}
         />
         <SidebarTitle
-          if={hasParent}
-          title={(store && store.title) || result.title}
+          if={title}
+          title={title}
           subtitle={result.subtitle}
           onBack={stackItem.stack.left}
-          image={
-            this.props.oraStore.osContext &&
-            this.props.oraStore.osContext.favicon
-          }
           backProps={{
             icon: stackItem.stack.length > 2 ? 'arrow-min-left' : 'home',
           }}
+          {...typeof title === 'object' && title}
         />
-        <content ref={paneStore.setContentRef}>
+        <content $transparent={transparent} ref={paneStore.setContentRef}>
           {!children
             ? list
             : typeof children === 'function' ? children(list) : children}
@@ -217,6 +191,10 @@ export default class Pane {
       overflowY: 'scroll',
       flex: 1,
       position: 'relative',
+      background: [40, 40, 40, 0.98],
+    },
+    transparent: {
+      background: 'transparent',
     },
     bottomGlow: {
       boxShadow: '0 0 80px 30px rgba(20,20,20,0.25)',

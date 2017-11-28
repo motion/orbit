@@ -233,7 +233,7 @@ export default class OraStore {
           url,
           title: `${contents.title}`,
           body: `${contents.content}`,
-          integration: 'crawler',
+          integration: new URL(url).origin,
           type: 'website',
           bucket: this.bucket || 'Default',
         })

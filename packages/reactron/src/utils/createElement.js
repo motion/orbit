@@ -29,5 +29,5 @@ export function createElement(type, props) {
     return instance
   }
 
-  console.warn('Invalid type given to reactron', type)
+  console.warn('Invalid type given to reactron:', type)
 }

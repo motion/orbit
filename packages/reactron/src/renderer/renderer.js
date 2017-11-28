@@ -19,6 +19,7 @@ export default Reconciler({
   },
 
   finalizeInitialChildren(instance, type, props) {
+    if (!instance) return
     instance.applyProps(props)
     return false
   },
@@ -54,11 +55,15 @@ export default Reconciler({
 
   mutation: {
     appendChild(parentInstance, child) {
-      parentInstance.appendChild(child)
+      if (child) {
+        parentInstance.appendChild(child)
+      }
     },
 
     appendChildToContainer(parentInstance, child) {
-      parentInstance.appendChild(child)
+      if (child) {
+        parentInstance.appendChild(child)
+      }
     },
 
     removeChild(parentInstance, child) {
@@ -73,6 +78,7 @@ export default Reconciler({
     commitMount: noop,
 
     commitUpdate(instance, updatePayload, type, oldProps, newProps) {
+      if (!instance) return
       instance.applyProps(newProps, oldProps)
     },
 

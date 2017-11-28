@@ -9,6 +9,12 @@ import MenuItems from './menuItems'
 import { view } from '@mcro/black'
 import * as Injections from '~/injections'
 
+let onWindows = []
+export function onWindow(cb) {
+  console.log('onwindow')
+  onWindows.push(cb)
+}
+
 @view.electron
 export default class Windows extends React.Component {
   // this is an event bus that should be open whenever ora is open
@@ -36,7 +42,8 @@ export default class Windows extends React.Component {
   componentWillMount() {
     const { position, size } = Helpers.getAppSize()
     const screenSize = screen.getPrimaryDisplay().workAreaSize
-    const trayPosition = [screenSize.width - Constants.ORA_WIDTH, 20]
+    console.log('mount me')
+    const trayPosition = [screenSize.width - Constants.ORA_WIDTH - 10, 20]
     this.setState({ show: true, position, size, screenSize, trayPosition })
   }
 
@@ -45,6 +52,7 @@ export default class Windows extends React.Component {
     this.repl = repl.start({
       prompt: '$ > ',
     })
+    onWindows.forEach(cb => cb(this))
     Object.assign(this.repl.context, {
       Root: this,
     })
@@ -234,7 +242,8 @@ export default class Windows extends React.Component {
     if (restart) {
       console.log('RESTARTING')
       this.repl.close()
-      return null
+      // onWindows = []
+      return <App key={0} />
     }
     if (error) {
       console.log('recover render from error')

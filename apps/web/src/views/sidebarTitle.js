@@ -75,6 +75,8 @@ class Tab {
 @view
 export default class SidebarTitle {
   render({ after, image, backProps, noBack, icon, subtitle, title, onBack }) {
+    const titleIsString = typeof title === 'string'
+    const titleIsElement = React.isValidElement(title)
     return (
       <sidebartitle onClick={e => e.stopPropagation()}>
         <UI.Button
@@ -90,9 +92,15 @@ export default class SidebarTitle {
         />
         <Tab>
           <titles>
-            <UI.Title ellipse={2} size={1.05} fontWeight={300}>
+            <UI.Title
+              if={titleIsString}
+              ellipse={2}
+              size={1.05}
+              fontWeight={300}
+            >
               {title}
             </UI.Title>
+            {titleIsElement ? title : null}
             <UI.Title if={subtitle} ellipse size={0.8} opacity={0.5}>
               {subtitle}
             </UI.Title>
@@ -117,6 +125,7 @@ export default class SidebarTitle {
     titles: {
       flex: 1,
       width: '50%',
+      alignItems: 'flex-start',
     },
     backButton: {
       margin: [0, 8, 0, -3],

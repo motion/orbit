@@ -150,7 +150,7 @@ export default class ListItem extends React.Component<Props> {
         glowProps={glowProps}
         sizeIcon={1.5}
         iconProps={{
-          alignSelf: 'flex-start',
+          alignSelf: children ? 'flex-start' : 'center',
           opacity: 0.6,
           ...iconProps,
         }}
@@ -165,7 +165,7 @@ export default class ListItem extends React.Component<Props> {
         </before>
         <content $overflowHidden={after || before}>
           <above if={primary || secondary || date}>
-            <prop if={primary || secondary} $col>
+            <prop if={primary || secondary}>
               <Text
                 $text
                 $primaryText
@@ -223,6 +223,7 @@ export default class ListItem extends React.Component<Props> {
     content: {
       flex: 1,
       maxWidth: '100%',
+      justifyContent: 'center',
     },
     overflowHidden: {
       overflow: 'hidden',
@@ -243,7 +244,8 @@ export default class ListItem extends React.Component<Props> {
       overflow: 'hidden',
       maxWidth: '100%',
       fontWeight: 200,
-      padding: [0, 10, 0, 0],
+      flexDirection: 'column',
+      alignItems: 'flex-start',
     },
     middot: {
       display: 'inline',
@@ -259,10 +261,6 @@ export default class ListItem extends React.Component<Props> {
       userSelect: 'none',
       fontWeight: 600,
       opacity: 0.8,
-    },
-    col: {
-      flexDirection: 'column',
-      alignItems: 'flex-start',
     },
     flex: {
       flexGrow: 1,

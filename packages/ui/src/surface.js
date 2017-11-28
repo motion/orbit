@@ -92,7 +92,8 @@ export type Props = {
 }
 
 const ICON_SCALE = 12
-const ICON_PAD = 10
+// TODO: make this dynamic with size (move into theme)
+const ICON_PAD = 8
 const LINE_HEIGHT = 30
 const DEFAULT_GLOW_COLOR = [255, 255, 255]
 const BORDER_RADIUS_SIDES = [
@@ -137,6 +138,7 @@ export default class Surface extends React.PureComponent<Props> {
       after,
       align,
       alignSelf,
+      alpha,
       background,
       badge,
       badgeProps,
@@ -420,11 +422,14 @@ export default class Surface extends React.PureComponent<Props> {
       (props.highlight && 'highlight') || (props.active && 'active') || 'base'
 
     // colors
-    const color = $(
+    let color = $(
       props.color ||
         (props.highlight && props.highlightColor) ||
         theme[STATE].color
     )
+    if (typeof props.alpha === 'number') {
+      color = color.alpha(props.alpha)
+    }
     const iconColor = props.iconColor || color
 
     // background

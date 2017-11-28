@@ -184,7 +184,7 @@ export default class OraStore {
         return
       }
       // fixes bug where empty string === true
-      context.title = `${context.title}`
+      context.title = `${context.title}`.trim()
       if (!context.url || !context.title) {
         log('no context or url/title', this.context)
         return

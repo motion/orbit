@@ -6,7 +6,8 @@ import Portal from './helpers/portal'
 import { isNumber, debounce, throttle } from 'lodash'
 import Arrow from './arrow'
 import SizedSurface from './sizedSurface'
-import injectTheme from './helpers/injectTheme'
+import Theme from './helpers/theme'
+import * as PropTypes from 'prop-types'
 
 export type Props = {
   // can pass function to get isOpen passed in
@@ -80,7 +81,6 @@ const getShadow = (shadow, elevation) => {
 }
 const calcForgiveness = (forgiveness, distance) => forgiveness
 
-@injectTheme
 @view.ui
 class Popover extends React.PureComponent<Props> {
   static acceptsHovered = 'open'
@@ -93,6 +93,9 @@ class Popover extends React.PureComponent<Props> {
     animation: 'slide 300ms',
     adjust: [0, 0],
     delay: 16,
+  }
+  static contextTypes = {
+    uiThemes: PropTypes.object,
   }
 
   curProps = {}
@@ -772,25 +775,31 @@ class Popover extends React.PureComponent<Props> {
                 }}
               >
                 <Arrow
-                  theme={theme && theme.base}
+                  theme={
+                    this.context.uiThemes &&
+                    this.context.uiThemes[theme] &&
+                    this.context.uiThemes[theme].base
+                  }
                   background={background !== 'transparent' ? background : null}
                   size={arrowSize}
                   towards={INVERSE[direction]}
                   boxShadow={getShadow(shadow, elevation)}
                 />
               </arrowContain>
-              <SizedSurface
-                sizeRadius
-                ignoreSegment
-                flex={1}
-                {...props}
-                elevation={elevation}
-                background={background}
-              >
-                {typeof children === 'function'
-                  ? children(showPopover)
-                  : children}
-              </SizedSurface>
+              <Theme name={theme}>
+                <SizedSurface
+                  sizeRadius
+                  ignoreSegment
+                  flex={1}
+                  {...props}
+                  elevation={elevation}
+                  background={background}
+                >
+                  {typeof children === 'function'
+                    ? children(showPopover)
+                    : children}
+                </SizedSurface>
+              </Theme>
             </popover>
           </container>
         </Portal>
@@ -869,7 +878,7 @@ class Popover extends React.PureComponent<Props> {
     },
   }
 
-  static theme = (props, theme) => {
+  static theme = props => {
     return {
       popover: {
         padding: calcForgiveness(props.forgiveness, props.distance),

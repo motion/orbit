@@ -23,7 +23,7 @@ setTimeout(() => {
         burnTime = 0
       }
 
-      if (burnTime > 30) {
+      if (burnTime > 60) {
         console.log('weve been burning far too long')
         process.exit()
       }

@@ -79,7 +79,7 @@ export class Thing extends Model {
       doc.updated = doc.updated || now
 
       // body shim
-      if (doc.body) {
+      if (typeof doc.body !== 'undefined') {
         db.put({ id: doc.id, body: doc.body })
         doc.bodyTEMP = `${Math.random()}`
         delete doc.body

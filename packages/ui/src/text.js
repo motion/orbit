@@ -277,7 +277,8 @@ export default class Text extends React.Component<Props> {
       width: '100%',
     },
     span: {
-      margin: 'auto',
+      margin: ['auto', 0],
+      maxWidth: '100%',
     },
     selectable: {
       userSelect: 'auto',

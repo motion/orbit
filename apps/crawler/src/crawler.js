@@ -133,6 +133,7 @@ export default class Crawler {
     let selectorResults = null
     // if we have selectors
     if (this.selectors) {
+      log.page(`Using selectors: ${JSON.stringify(this.selectors)}`)
       selectorResults = await page.evaluate(classes => {
         const titles = Array.from(
           document.querySelectorAll('.' + classes.title)
@@ -170,7 +171,10 @@ export default class Crawler {
       return null
     }
     let content
-    if (result.content) {
+    if (!result.content) {
+      log.page(`Readability didn't find any content`)
+      console.log(result)
+    } else {
       try {
         content = await new Promise((resolve, reject) => {
           und.convert(
@@ -178,14 +182,24 @@ export default class Crawler {
             (err, md) => (err ? reject(err) : resolve(md))
           )
         })
+        if (content) {
+          log.page(`Got markdown: ${content.slice(0, 30)}...`)
+        }
       } catch (err) {
         log.page(`Error parsing markdown from content: ${err.message}`)
-        content = sanitizeHtml(result.content, { allowedTags: [] })
       }
-    } else {
-      log.page(`Readability didn't find any content`)
+      if (!content) {
+        content = sanitizeHtml(result.content, { allowedTags: [] })
+        if (content) {
+          log.page(`Sanitized for content: ${content.slice(0, 30)}...`)
+        }
+      }
     }
-    if (result && !this.selectors) {
+    if (!content) {
+      log.page(`No content, looks like a dud`)
+      return null
+    }
+    if (!this.selectors) {
       this.selectors = await this.textToSelectors(page, {
         title: result.title.slice(0, 15),
         content: content.slice(0, 30),

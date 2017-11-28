@@ -2,8 +2,8 @@
   "name": "@mcro/api",
   "private": true,
   "version": "1.5.1",
-  "main": "lib/index.js",
-  "module": "lib/index.js",
+  "main": "es6/index.js",
+  "module": "es6/index.js",
   "scripts": {
     "start": "node index.js",
     "start-prod": "NODE_ENV=production IS_PROD=true node index.js",

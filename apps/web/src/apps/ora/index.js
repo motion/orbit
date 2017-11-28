@@ -83,16 +83,15 @@ export default class OraPage {
           <OraContent oraStore={oraStore} />
           <OraDrawer oraStore={oraStore} />
           <OraActionBar oraStore={oraStore} />
-          <fakeWhiteBg
-            if={oraStore.showWhiteBottomBg}
+          <bottomBackground
             css={{
-              background: '#fff',
+              background: Constants.ORA_BG_MAIN,
               position: 'absolute',
-              left: 0,
-              right: 0,
-              bottom: 0,
+              left: -100,
+              right: -100,
+              bottom: -100,
               zIndex: -1,
-              height: Constants.ACTION_BAR_HEIGHT,
+              height: Constants.ACTION_BAR_HEIGHT + 100,
             }}
           />
         </ora>

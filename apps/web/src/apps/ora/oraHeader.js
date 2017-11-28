@@ -112,73 +112,75 @@ export default class OraHeader extends React.Component {
           onMouseUp={this.handleHeaderMouseUp}
           $$draggable
         >
-          <leftSide>
-            <UI.Icon
-              if={oraStore.stack.length === 1}
-              name="zoom"
-              {...iconProps}
+          <contents>
+            <leftSide>
+              <UI.Icon
+                if={oraStore.stack.length === 1}
+                name="zoom"
+                {...iconProps}
+              />
+              <UI.Icon
+                if={oraStore.stack.length > 1}
+                name="arrominleft"
+                onClick={this.handleBack}
+                onMouseUp={this.preventPropagation}
+                {...iconProps}
+              />
+            </leftSide>
+
+            <UI.Input
+              $searchInput
+              $disabled={!oraStore.focusedBar}
+              size={1}
+              getRef={oraStore.onInputRef}
+              borderRadius={0}
+              onBlur={this.onHeaderBlur}
+              onChange={oraStore.onSearchChange}
+              value={oraStore.textboxVal}
+              borderWidth={0}
+              background="transparent"
             />
-            <UI.Icon
-              if={oraStore.stack.length > 1}
-              name="arrominleft"
-              onClick={this.handleBack}
-              onMouseUp={this.preventPropagation}
-              {...iconProps}
-            />
-          </leftSide>
 
-          <UI.Input
-            $searchInput
-            $disabled={!oraStore.focusedBar}
-            size={1}
-            getRef={oraStore.onInputRef}
-            borderRadius={0}
-            onBlur={this.onHeaderBlur}
-            onChange={oraStore.onSearchChange}
-            value={oraStore.textboxVal}
-            borderWidth={0}
-            background="transparent"
-          />
+            <UI.HoverGlow zIndex={-1} opacity={0.075} blur={60} />
 
-          <UI.HoverGlow zIndex={-1} opacity={0.075} blur={60} />
-
-          <title
-            $$background={
-              BANNER_COLORS[oraStore.banner && oraStore.banner.type]
-            }
-          >
-            <titleText>
-              <UI.Text ellipse size={0.8}>
-                {(oraStore.banner && oraStore.banner.message) ||
-                  oraStore.stack.last.result.id}
-              </UI.Text>
-            </titleText>
-          </title>
-
-          <rightSide onMouseUp={this.preventPropagation}>
-            <UI.Popover
-              openOnHover
-              delay={300}
-              closeOnEsc
-              overlay="transparent"
-              theme="light"
-              width={150}
-              target={
-                <UI.Button
-                  {...itemProps}
-                  icon="bucket"
-                  opacity={0.5}
-                  onClick={e => {
-                    e.stopPropagation()
-                    oraStore.hide()
-                  }}
-                />
+            <title
+              $$background={
+                BANNER_COLORS[oraStore.banner && oraStore.banner.type]
               }
             >
-              <UI.List items={bucketItems} onSelect={this.selectBucket} />
-            </UI.Popover>
-            <UI.Button {...itemProps} onClick={this.onHide} icon="remove" />
-          </rightSide>
+              <titleText>
+                <UI.Text ellipse size={0.8}>
+                  {(oraStore.banner && oraStore.banner.message) ||
+                    oraStore.stack.last.result.id}
+                </UI.Text>
+              </titleText>
+            </title>
+
+            <rightSide onMouseUp={this.preventPropagation}>
+              <UI.Popover
+                openOnHover
+                delay={300}
+                closeOnEsc
+                overlay="transparent"
+                theme="light"
+                width={150}
+                target={
+                  <UI.Button
+                    {...itemProps}
+                    icon="bucket"
+                    opacity={0.5}
+                    onClick={e => {
+                      e.stopPropagation()
+                      oraStore.hide()
+                    }}
+                  />
+                }
+              >
+                <UI.List items={bucketItems} onSelect={this.selectBucket} />
+              </UI.Popover>
+              <UI.Button {...itemProps} onClick={this.onHide} icon="remove" />
+            </rightSide>
+          </contents>
         </header>
       </UI.Theme>
     )
@@ -187,9 +189,11 @@ export default class OraHeader extends React.Component {
   static style = {
     header: {
       position: 'relative',
+      overflow: 'hidden',
       opacity: 0.85,
       zIndex: -1,
-      height: Constants.ORA_HEADER_HEIGHT,
+      height: Constants.ORA_HEADER_HEIGHT + 100,
+      paddingBottom: 100,
       // borderBottom: [1, [255, 255, 255, 0.1]],
       transition: 'all ease-in 80ms',
       justifyContent: 'center',
@@ -203,7 +207,7 @@ export default class OraHeader extends React.Component {
     },
     focus: {
       opacity: 1,
-      height: Constants.ORA_HEADER_HEIGHT_FULL,
+      height: Constants.ORA_HEADER_HEIGHT_FULL + 100,
       '& .icon': {
         transform: 'scale(1)',
       },
@@ -213,6 +217,9 @@ export default class OraHeader extends React.Component {
       '&:hover': {
         background: 'transparent',
       },
+    },
+    contents: {
+      position: 'relative',
     },
     title: {
       opacity: 0.5,

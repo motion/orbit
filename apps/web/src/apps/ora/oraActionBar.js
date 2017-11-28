@@ -56,7 +56,7 @@ export default class OraActionBar {
       bottom: 0,
       left: 0,
       right: 0,
-      background: [20, 20, 20, 0.14],
+      background: [...Constants.ORA_BG_MAIN_OPAQUE, 0.4],
       backdropFilter: 'blur(20px)',
       height: Constants.ACTION_BAR_HEIGHT,
       zIndex: 100000,

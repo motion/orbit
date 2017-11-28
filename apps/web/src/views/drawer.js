@@ -46,10 +46,7 @@ export default class Drawer {
         <UI.Drawer
           open={open}
           from="bottom"
-          boxShadow={[[0, 0, 50, [0, 0, 0, 0.5]]]}
-          css={{
-            borderTop: [1, [255, 255, 255, 0.1]],
-          }}
+          boxShadow={[[0, 0, 20, [20, 20, 20, 0.25]]]}
           background={background}
           size={collapsed ? 82 : size}
           {...props}
@@ -69,8 +66,13 @@ export default class Drawer {
               </UI.Title>
               <UI.Row
                 spaced
-                css={{ position: 'absolute', top: 5, right: 7 }}
-                itemProps={{ chromeless: true, size: 0.9, opacity: 0.8 }}
+                css={{ position: 'absolute', top: 3, right: 5 }}
+                itemProps={{
+                  chromeless: true,
+                  size: 0.9,
+                  color: [255, 255, 255, 0.5],
+                  hoverColor: [255, 255, 255, 0.8],
+                }}
               >
                 <UI.Button
                   if={collapsable}

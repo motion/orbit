@@ -197,7 +197,7 @@ export default class Pane {
       background: 'transparent',
     },
     bottomGlow: {
-      boxShadow: '0 0 80px 30px rgba(20,20,20,0.25)',
+      boxShadow: [[0, 0, 80, 30, [...Constants.ORA_BG_MAIN_OPAQUE, 0.25]]],
       zIndex: 100000 - 1,
       pointerEvents: 'none',
       position: 'fixed',

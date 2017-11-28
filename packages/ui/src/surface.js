@@ -242,8 +242,8 @@ export default class Surface extends React.PureComponent<Props> {
       _borderRightRadius || themeValues.borderRadius.borderRightRadius
 
     if (typeof borderLeftRadius === 'undefined') {
-      borderLeftRadius = themeValues.radius
-      borderRightRadius = themeValues.radius
+      borderLeftRadius = themeValues.borderRadiusSize
+      borderRightRadius = themeValues.borderRadiusSize
     }
 
     const glowColor =
@@ -347,7 +347,6 @@ export default class Surface extends React.PureComponent<Props> {
 
   static style = {
     surface: {
-      lineHeight: '1rem',
       position: 'relative',
     },
     element: {
@@ -357,10 +356,12 @@ export default class Surface extends React.PureComponent<Props> {
       height: '100%',
       flex: 1,
       color: 'inherit',
+      marginBottom: -0.5,
     },
     icon: {
       pointerEvents: 'none',
       height: '1.4rem',
+      marginBottom: -0.5,
     },
     hasIconBefore: {
       // this adjusts for height
@@ -609,7 +610,7 @@ export default class Surface extends React.PureComponent<Props> {
         flexFlow: props.noElement ? 'column' : flexFlow,
         fontSize: props.fontSize,
         fontWeight: props.fontWeight,
-        lineHeight: props.lineHeight || 'inherit',
+        lineHeight: props.lineHeight,
         justifyContent: props.justify || props.justifyContent,
         maxWidth: `calc(100% ${iconPad})`,
         // maxHeight: '100%',

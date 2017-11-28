@@ -3,7 +3,7 @@ import { screen } from 'electron'
 export const sleep = ms => new Promise(res => setTimeout(res, ms))
 
 const MIN_WIDTH = 800
-const MIN_HEIGHT = 750
+const MIN_HEIGHT = 500
 const MAX_HEIGHT = 1000
 const MAX_WIDTH = 1450
 const MAX_WIDTH_TO_HEIGHT = 1.15

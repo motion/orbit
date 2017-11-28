@@ -15,6 +15,7 @@ import OS from 'os'
 
 const MAX_CORES_DEFAULT = OS.cpus().length - 1
 
+const removeMdPrefix = text => text.replace(/^[^a-zA-Z0-9]*[a-zA-Z0-9]/, '')
 const normalizeHref = (baseUrl, href) => {
   let url = new URI(href)
   if (url.is('relative')) {
@@ -131,6 +132,10 @@ export default class Crawler {
         if (name === 'article' || name === 'section') {
           return name
         }
+        // bad
+        if (/^(ul|li|a|ol)$/.test(name)) {
+          return null
+        }
         const CONTENTY = /content|article|post|body/
         if (CONTENTY.test(node.id)) {
           return `#${node.id}`
@@ -152,6 +157,13 @@ export default class Crawler {
       while (current && !contentSelector && tries++ < 3) {
         current = current.parentNode
         if (!current || !current.tagName) continue
+        // if we found a bad node, try again
+        if (/^(H[1-6]|LI|A)$/.test(current.tagName)) {
+          window.find(content)
+          const nextNode = document.getSelection().anchorNode
+          if (!nextNode) break
+          current = current.parentNode
+        }
         contentSelector = getContentSelector(current)
       }
       if (contentSelector) {
@@ -161,11 +173,7 @@ export default class Crawler {
   }
 
   textToSelectors = async (page, contents) => {
-    try {
-      return await page.evaluate(this.selectorFinder, contents)
-    } catch (err) {
-      log.page(`Error finding selectors: ${err.message}`)
-    }
+    return await page.evaluate(this.selectorFinder, contents)
   }
 
   parseContents = async (page, url) => {
@@ -243,10 +251,23 @@ export default class Crawler {
       return null
     }
     if (!this.selectors) {
-      this.selectors = await this.textToSelectors(page, {
-        title: result.title.slice(0, 15),
-        content: content.slice(0, 30),
-      })
+      try {
+        const contentString = sanitizeHtml(result.content, {
+          allowedTags: [],
+        }).trim()
+        const contentPs = contentString.split('\n')
+        const contentLastP = contentPs[contentPs.length - 1]
+        const contentLastSentence = content
+          .slice(Math.max(0, contentLastP.length - 30), contentLastP.length)
+          .trim()
+        console.log('contentLastSentence', contentLastSentence)
+        this.selectors = await this.textToSelectors(page, {
+          title: result.title.slice(0, 30),
+          content: removeMdPrefix(contentLastSentence),
+        })
+      } catch (err) {
+        log.page(`Error finding selectors: ${err.message}`)
+      }
       if (this.selectors) {
         log.crawl('Selectors: ' + JSON.stringify(this.selectors))
       }

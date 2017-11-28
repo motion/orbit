@@ -22,6 +22,15 @@ export async function getActiveWindowInfo() {
     // title is like 'Welcome to my Webpage'
     return { application, title }
   } catch (err) {
+    if (err.message.indexOf(`Can't get window 1 of`)) {
+      // super hacky but if it fails it usually gives an error like:
+      //   execution error: System Events got an error: Can’t get window 1 of process "Slack"
+      // so we can find it:
+      const name = err.message.match(/process "([^"]+)"/)
+      if (name && name.length) {
+        return { application: name[1], title: name[1] }
+      }
+    }
     console.log('getContext() error:', err.message)
   }
 }

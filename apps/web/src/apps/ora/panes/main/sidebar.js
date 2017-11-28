@@ -54,7 +54,6 @@ export default class MainSidebar {
           closeOnEsc
           theme="light"
           delay={300}
-          arrow
           width={140}
           boxShadow={[[0, 0, 10, [0, 0, 0, 0.2]]]}
           target={

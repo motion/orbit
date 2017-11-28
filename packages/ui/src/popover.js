@@ -311,6 +311,9 @@ class Popover extends React.PureComponent<Props> {
   }
 
   setPosition(callback?: Function) {
+    if (!this.popoverRef) {
+      return
+    }
     clearTimeout(this.positionTimeout)
     this.positionTimeout = this.setTimeout(() => {
       if (!this.unmounted) {
@@ -636,15 +639,6 @@ class Popover extends React.PureComponent<Props> {
       /\s+/g,
       '.'
     )}:hover`
-
-    if (isPopover) {
-      console.log(
-        'popoverHovered?',
-        !!node.parentNode.querySelector(childSelector) ||
-          node.querySelector(':hover')
-      )
-    }
-
     return (
       !!node.parentNode.querySelector(childSelector) ||
       node.querySelector(':hover')

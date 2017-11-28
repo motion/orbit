@@ -125,7 +125,7 @@ export class Thing extends Model {
   }
 
   createFromCrawlResult = ({ url, contents }) => {
-    return Thing.create({
+    return ThingInstance.create({
       url,
       title: `${contents.title}`,
       body: `${contents.content}`,

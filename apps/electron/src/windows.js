@@ -63,12 +63,14 @@ export default class Windows extends React.Component {
 
   handleOraRef = ref => {
     if (ref) {
-      this.oraRef = ref.window
-      this.startOra()
+      this.startOra(ref.window)
     }
   }
 
-  startOra = once(() => {
+  startOra = once(ref => {
+    console.log('starting ora')
+    this.oraRef = ref
+
     // CLEAR DATA
     if (process.env.CLEAR_DATA) {
       this.oraRef.webContents.session.clearStorageData()

@@ -69,7 +69,7 @@ export default class SlackAttachmentSync {
               console.log('got results', results)
               if (results && results.length) {
                 // create in 10 at at time (default chunk)
-                await createInChunks(results, Thing.createFromResult)
+                await createInChunks(results, Thing.createFromCrawlResult)
               }
             }
           }

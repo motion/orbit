@@ -31,9 +31,8 @@ export default class Windows extends React.Component {
     context: null, // osContext
   }
 
-  async setState(state) {
-    const setter = super.setState.bind(this)
-    await new Promise(res => setter(state, res))
+  async updateState(state) {
+    await new Promise(res => this.setState(state, res))
     if (this.sendOraSimple) {
       this.sendOraSimple('electron-state', this.state)
     }
@@ -43,7 +42,7 @@ export default class Windows extends React.Component {
     const { position, size } = Helpers.getAppSize()
     const screenSize = screen.getPrimaryDisplay().workAreaSize
     const trayPosition = [screenSize.width - Constants.ORA_WIDTH, 20]
-    this.setState({ show: true, position, size, screenSize, trayPosition })
+    this.updateState({ show: true, position, size, screenSize, trayPosition })
   }
 
   componentDidMount() {
@@ -166,7 +165,7 @@ export default class Windows extends React.Component {
           ...(await Helpers.getChromeContext()),
         }
         if (!isEqual(this.state.context, context)) {
-          this.setState({ context })
+          this.updateState({ context })
         }
       }
     }, 500)
@@ -190,11 +189,11 @@ export default class Windows extends React.Component {
 
   componentDidCatch(error) {
     console.error(error)
-    this.setState({ error })
+    this.updateState({ error })
   }
 
   handlePreferences = () => {
-    this.setState({ showSettings: true })
+    this.updateState({ showSettings: true })
   }
 
   handleMenuRef = ref => {
@@ -207,7 +206,7 @@ export default class Windows extends React.Component {
 
   handleMenuClose = () => {
     if (this.state.showSettings) {
-      this.setState({ showSettings: false })
+      this.updateState({ showSettings: false })
     }
   }
 
@@ -220,22 +219,24 @@ export default class Windows extends React.Component {
   onBeforeQuit = () => console.log('hi')
   onOraBlur = () => this.sendOra('ora-blur')
   onOraFocus = () => this.sendOra('ora-focus')
-  onOraMoved = trayPosition => this.setState({ trayPosition })
+  onOraMoved = trayPosition => this.updateState({ trayPosition })
 
-  onSettingsSized = size => this.setState({ size })
-  onSettingsMoved = position => this.setState({ position })
+  onSettingsSized = size => this.updateState({ size })
+  onSettingsMoved = position => this.updateState({ position })
   onSettingsClosed = e => {
     if (!this.isClosing && this.state.showSettings) {
       e.preventDefault()
-      this.setState({ showSettings: false })
+      this.updateState({ showSettings: false })
     }
   }
 
   handleShowDevTools = () => {
     if (this.state.showSettings) {
-      this.setState({ showSettingsDevTools: !this.state.showSettingsDevTools })
+      this.updateState({
+        showSettingsDevTools: !this.state.showSettingsDevTools,
+      })
     } else {
-      this.setState({ showDevTools: !this.state.showDevTools })
+      this.updateState({ showDevTools: !this.state.showDevTools })
     }
   }
 

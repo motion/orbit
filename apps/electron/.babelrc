@@ -1,11 +1,22 @@
 {
-  "extends": "../../.babelrc",
   "env": {
     "development": {
       "presets": [
         [
           "@mcro/preset-motion",
           {
+            "disable": ["@mcro/hmr", "@mcro/hmr-view", "@mcro/gloss/transform"]
+          }
+        ]
+      ]
+    },
+    "es6": {
+      "presets": [
+        "es2015",
+        [
+          "@mcro/preset-motion",
+          {
+            "targets": { "electron": "1.8.1" },
             "disable": ["@mcro/hmr", "@mcro/hmr-view", "@mcro/gloss/transform"]
           }
         ]

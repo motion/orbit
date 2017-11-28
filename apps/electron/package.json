@@ -1,43 +1,33 @@
 {
   "name": "@mcro/electron",
   "productName": "Orbit",
-  "version": "1.5.15",
+  "version": "1.5.16",
   "private": true,
   "description": "Description",
   "author": "Orbit",
   "updater": {
-    "url":
-      "https://raw.githubusercontent.com/motion/orbit-updates/master/updates.json"
+    "url": "https://raw.githubusercontent.com/motion/orbit-updates/master/updates.json"
   },
   "scripts": {
-    "build":
-      "INCLUDE_MODULES=true TARGET=electron NODE_ENV=production BUILD_DIR=. mcro-build",
+    "build": "INCLUDE_MODULES=true TARGET=electron NODE_ENV=production BUILD_DIR=. mcro-build",
     "dist": "npm version patch && npm run bundle",
-    "deploy":
-      "npm run sign-app && npm run bundle-app && npm run prepare-publish && npm run publish-app",
-    "bundle":
-      "DEBUG=electron-packager electron-packager . --out app --overwrite --icon ./resources/icon.icns --no-prune --deref-symlinks true --package-manager false && npm run fix-build",
+    "deploy": "npm run sign-app && npm run bundle-app && npm run prepare-publish && npm run publish-app",
+    "bundle": "DEBUG=electron-packager electron-packager . --out app --overwrite --icon ./resources/icon.icns --no-prune --deref-symlinks true --package-manager false && npm run fix-build",
+    "test-app": "app/Orbit-darwin-x64/Orbit.app/Contents/MacOS/Orbit",
     "start": "electron build/out --start",
     "start-prod": "app/Orbit-darwin-x64/Orbit.app/Contents/MacOS/Orbit",
     "watch": "webpack --watch",
     "publish-app": "publish -p ./app",
-    "prepare-publish":
-      "cp ./app/Orbit.dmg ./app/Orbit-$npm_package_version.dmg && zip -r ./app/Orbit-$npm_package_version-mac.zip ./app/Orbit-darwin-x64/Orbit.app",
-    "bundle-app":
-      "electron-installer-dmg --overwrite --out ./app --icon ./resources/icon.icns ./app/Orbit-darwin-x64/Orbit.app Orbit",
+    "prepare-publish": "cp ./app/Orbit.dmg ./app/Orbit-$npm_package_version.dmg && zip -r ./app/Orbit-$npm_package_version-mac.zip ./app/Orbit-darwin-x64/Orbit.app",
+    "bundle-app": "electron-installer-dmg --overwrite --out ./app --icon ./resources/icon.icns ./app/Orbit-darwin-x64/Orbit.app Orbit",
     "sign-app": "electron-osx-sign ./app/Orbit-darwin-x64/Orbit.app",
     "fix-build-clean": "npm run clean-build-modules; npm run fix-build",
     "fix-build": "npm run fix-build-modules",
-    "fix-build-modules":
-      "npm run fix-build-log && npm run fix-build-copy-modules && npm run fix-build-electron",
-    "fix-build-log":
-      "touch ./app/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/log.txt",
-    "clean-build-modules":
-      "rm -r ./app/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules/*",
-    "fix-build-copy-modules":
-      "cpx -uL './node_modules/**/*{.js,.json,.html,.map}' ./app/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules",
-    "fix-build-electron":
-      "rm -r ./app/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules/@mcro/reactron/node_modules/electron &"
+    "fix-build-modules": "npm run fix-build-log && npm run fix-build-copy-modules && npm run fix-build-electron",
+    "fix-build-log": "touch ./app/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/log.txt",
+    "clean-build-modules": "rm -r ./app/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules/*",
+    "fix-build-copy-modules": "cpx -uL './node_modules/**/*{.js,.json,.html,.map}' ./app/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules",
+    "fix-build-electron": "rm -r ./app/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules/@mcro/reactron/node_modules/electron &"
   },
   "dependencies": {
     "@mcro/api": "^1.5.1",

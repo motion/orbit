@@ -134,16 +134,17 @@ export default class Crawler {
     // if we have selectors
     if (this.selectors) {
       log.page(`Using selectors: ${JSON.stringify(this.selectors)}`)
-      selectorResults = await page.evaluate(classes => {
+      selectorResults = await page.evaluate(selectors => {
         const titles = Array.from(
-          document.querySelectorAll('.' + classes.title)
+          document.querySelectorAll('.' + selectors.title)
         )
         const content = Array.from(
-          document.querySelectorAll('.' + classes.content)
+          document.querySelectorAll('.' + selectors.content)
         )
           .filter(_ => _)
           .map(_ => _.innerText)
           .join('\n')
+        // dont allow index pages or untitled pages
         if (titles.length === 0 || titles.length > 1) {
           return null
         }
@@ -161,14 +162,15 @@ export default class Crawler {
       )
       return document.documentElement.outerHTML
     })
-    const result =
-      selectorResults ||
-      readabilityFromString(sanitizeHtml(html, { allowedTags: false }), {
+    let result = selectorResults
+    if (!result) {
+      result = readabilityFromString(sanitizeHtml(html, { allowedTags: false }), {
         href: url,
       })
-    if (!result) {
-      log.page(`Readability didn't find anything`)
-      return null
+      if (!result) {
+        log.page(`Readability didn't find anything`)
+        return null
+      }
     }
     let content
     if (!result.content) {

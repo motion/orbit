@@ -224,7 +224,7 @@ export default class OraStore {
         Thing.create({
           url,
           title: `${contents.title}`,
-          body: `${contents.body}`,
+          body: `${contents.content}`,
           integration: 'crawler',
           type: 'website',
           bucket: this.bucket || 'Default',

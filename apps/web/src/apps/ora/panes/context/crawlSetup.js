@@ -117,7 +117,8 @@ export default class CrawlSetup {
             }
             getItem={({ contents }) => ({
               primary: contents.title || 'No title found',
-              children: contents.body || 'No body found',
+              children: contents.content || 'No body found',
+              childrenEllipse: 4,
             })}
           />
         </content>

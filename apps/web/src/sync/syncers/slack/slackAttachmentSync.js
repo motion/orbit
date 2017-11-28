@@ -25,6 +25,7 @@ export default class SlackAttachmentSync {
   }
 
   run = async () => {
+    console.log('Running slack sync')
     if (this.service.activeChannels) {
       for (const channel of Object.keys(this.service.activeChannels)) {
         const oldestSynced = this.lastSync[channel]
@@ -54,27 +55,23 @@ export default class SlackAttachmentSync {
 
         try {
           if (links && links.length) {
-            await Promise.all(
-              // crawl 20 at a time
-              _.chunk(links, 20).map(async entries => {
-                try {
-                  const { results } = await r2.post(
-                    'http://localhost:3001/crawler/exact',
-                    {
-                      json: {
-                        options: { entries },
-                      },
-                    }
-                  ).json
-                  if (results && results.length) {
-                    // create in 10 at at time (default chunk)
-                    await createInChunks(results, Thing.createFromResult)
-                  }
-                } catch (err) {
-                  console.log('Error crawling/creating links', err)
+            // crawl 20 at a time
+            for (const entries of _.chunk(links, 20)) {
+              console.log('crawling chunk', entries)
+              const { results } = await r2.post(
+                'http://localhost:3001/crawler/exact',
+                {
+                  json: {
+                    options: { entries },
+                  },
                 }
-              })
-            )
+              ).json
+              console.log('got results', results)
+              if (results && results.length) {
+                // create in 10 at at time (default chunk)
+                await createInChunks(results, Thing.createFromResult)
+              }
+            }
           }
 
           // write last sync

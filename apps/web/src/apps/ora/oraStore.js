@@ -103,7 +103,11 @@ export default class OraStore {
     const fadeOutTime = timeout || BANNER_TIMES[type]
     if (fadeOutTime) {
       this.setTimeout(() => {
-        if (this.banner.type === type && this.banner.message === message) {
+        if (
+          this.banner &&
+          this.banner.type === type &&
+          this.banner.message === message
+        ) {
           this.banner = null
         }
       }, fadeOutTime)

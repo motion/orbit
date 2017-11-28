@@ -228,16 +228,7 @@ export default class OraStore {
     const { results } = this.crawler
     this.crawler.reset()
     if (results) {
-      await createInChunks(results, ({ url, contents }) => {
-        return Thing.create({
-          url,
-          title: `${contents.title}`,
-          body: `${contents.content}`,
-          integration: new URL(url).origin,
-          type: 'website',
-          bucket: this.bucket || 'Default',
-        })
-      })
+      await createInChunks(results, Thing.createFromCrawlResult)
       this.setBanner(BANNERS.success, 'Saved results!')
     }
   }

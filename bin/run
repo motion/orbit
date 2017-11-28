@@ -62,7 +62,7 @@ elif [ "$ACTION" =  "api" ]; then
   run-api ${@:2}
 elif [ "$ACTION" =  "web" ]; then
   if [ ! -d "$ROOT/packages/ui/lib" ]; then
-    echo "Make sure to run 'build --watch' before running web"
+    echo "Make sure to run 'build' once before running web"
     exit 0
   fi
   run-web ${@:2} &

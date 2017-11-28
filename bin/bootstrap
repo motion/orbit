@@ -71,6 +71,7 @@ function compile-root-modules() {
     --scope @mcro/hmr \
     --scope @mcro/hmr-view \
     --scope @mcro/preset-motion \
+    --scope @mcro/builder \
       -- \
         BABEL_ENV=es6 babel src --out-dir es6 -s true
 }

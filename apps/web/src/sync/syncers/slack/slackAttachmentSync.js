@@ -1,9 +1,9 @@
 // @flow
 import App, { Thing } from '~/app'
-import { createInChunks } from '~/sync/helpers'
 import debug from 'debug'
 import * as _ from 'lodash'
 import * as r2 from '@mcro/r2'
+import { createInChunks } from '~/sync/helpers'
 
 const log = _ => _ || debug('sync')
 
@@ -52,20 +52,29 @@ export default class SlackAttachmentSync {
           return
         }
 
-        console.log('disabling until /crawler/exact works')
-        return
-
         try {
-          const results = await r2.post('http://localhost:3001/crawler/exact', {
-            json: {
-              options: {
-                entries: links,
-              },
-            },
-          }).json
-
-          if (results && results.length) {
-            await createInChunks(results, this.createThings)
+          if (links && links.length) {
+            await Promise.all(
+              // crawl 20 at a time
+              _.chunk(links, 20).map(async entries => {
+                try {
+                  const { results } = await r2.post(
+                    'http://localhost:3001/crawler/exact',
+                    {
+                      json: {
+                        options: { entries },
+                      },
+                    }
+                  ).json
+                  if (results && results.length) {
+                    // create in 10 at at time (default chunk)
+                    await createInChunks(results, Thing.createFromResult)
+                  }
+                } catch (err) {
+                  console.log('Error crawling/creating links', err)
+                }
+              })
+            )
           }
 
           // write last sync

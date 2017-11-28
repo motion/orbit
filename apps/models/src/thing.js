@@ -123,6 +123,17 @@ export class Thing extends Model {
       ...extra,
     }
   }
+
+  createFromCrawlResult = ({ url, contents }) => {
+    return Thing.create({
+      url,
+      title: `${contents.title}`,
+      body: `${contents.content}`,
+      integration: new URL(url).origin,
+      type: 'website',
+      bucket: this.bucket || 'Default',
+    })
+  }
 }
 
 const ThingInstance = new Thing()

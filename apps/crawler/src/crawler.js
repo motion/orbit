@@ -176,7 +176,7 @@ export default class Crawler {
     return await page.evaluate(this.selectorFinder, contents)
   }
 
-  parseContents = async (page, url) => {
+  parseContents = async (page, url, options) => {
     let selectorResults = null
     // if we have selectors
     if (this.selectors) {
@@ -250,7 +250,7 @@ export default class Crawler {
       log.page(`No content, looks like a dud`)
       return null
     }
-    if (!this.selectors) {
+    if (!options.disableStructureFinding && !this.selectors) {
       try {
         const contentString = sanitizeHtml(result.content, {
           allowedTags: [],
@@ -423,7 +423,7 @@ export default class Crawler {
           log.page(`Cancelled during page process`)
           return null
         }
-        const contents = await this.parseContents(page, target.url)
+        const contents = await this.parseContents(page, target.url, options)
         if (this.cancelled) {
           log.page(`Cancelled during page process`)
           return null

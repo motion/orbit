@@ -13,7 +13,6 @@
 
 # now
 
-* slack: crawl links properly (disableStructureFinding)
 * build app to prod bundle
 * finish oauth window popup controller
   * API: watch for oauth finish => AS: close offscreen window

@@ -89,42 +89,73 @@ export default class Crawler {
 
   textToSelectors = async (page, contents) => {
     return await page.evaluate(({ title, content }) => {
-      let foundTitle = false
       let tries = 0
-
-      let titleEl = null
+      let current = null
       let titleSelector = null
-      while (!foundTitle && tries++ < 3) {
-        window.find(title)
-        // select first class because it didn't work on any of my
-        // test cases with all of them
+      window.find(title)
+      if (document.getSelection()) {
+        const getTitleSelector = node => {
+          const name = node.tagName.toLowerCase()
+          if (name[0] !== 'h' && name.length === 2) {
+            return name
+          }
+          const TITLEY = /title|headline/
+          if (TITLEY.test(node.id)) {
+            return `#${node.id}`
+          }
+          const cn = node.className.split(' ').find(x => TITLEY.test(x))
+          if (cn) {
+            return `${name}.${cn.trim()}`
+          }
+        }
         const { anchorNode } = document.getSelection()
-        if (!anchorNode) {
-          continue
+        current = anchorNode
+        while (current && !titleSelector && tries++ < 3) {
+          titleSelector = getTitleSelector(current)
+          if (!titleSelector) {
+            current = anchorNode.parentNode
+          }
         }
-        titleEl = anchorNode.parentNode
-        if (titleEl.tagName[0] !== 'H') {
-          continue
-        }
-        titleSelector = titleEl.classList[0]
-          ? titleEl.classList[0].toString().trim()
-          : null
       }
-
+      if (!titleSelector) {
+        return null
+      }
+      // get content now
       window.getSelection().empty()
       window.find(content)
-      const { anchorNode } = document.getSelection()
-      if (anchorNode) {
-        const contentParent = document.getSelection().anchorNode.parentNode
-          .parentNode
-        const contentSelector = contentParent.classList[0]
-          ? contentParent.classList[0].toString().trim()
-          : null
-
-        return (
-          contentSelector &&
-          titleSelector && { title: titleSelector, content: contentSelector }
-        )
+      if (document.getSelection()) {
+        const getContentSelector = node => {
+          const name = node.tagName.toLowerCase()
+          if (name === 'article' || name === 'section') {
+            return name
+          }
+          const CONTENTY = /content|article|post|body/
+          if (CONTENTY.test(node.id)) {
+            return `#${node.id}`
+          }
+          const cn = node.className.split(' ').find(x => CONTENTY.test(x))
+          if (cn) {
+            const selector = `${name}.${cn.trim()}`
+            // this should narrow it a bit
+            if (node.parentNode) {
+              return `${node.parentNode.tagName.toLowerCase()} > ${selector}`
+            }
+            return selector
+          }
+        }
+        const { anchorNode } = document.getSelection()
+        let contentSelector = null
+        current = anchorNode
+        tries = 0
+        while (!contentSelector && tries++ < 3) {
+          contentSelector = getContentSelector(current)
+          if (!contentSelector) {
+            current = current.parentNode
+          }
+        }
+        if (contentSelector) {
+          return { titleSelector, contentSelector }
+        }
       }
     }, contents)
   }
@@ -134,14 +165,14 @@ export default class Crawler {
     // if we have selectors
     if (this.selectors) {
       log.page(`Using selectors: ${JSON.stringify(this.selectors)}`)
-      selectorResults = await page.evaluate(classes => {
+      selectorResults = await page.evaluate(selectors => {
         const titles = Array.from(
-          document.querySelectorAll('.' + classes.title)
+          document.querySelectorAll(selectors.titleSelector)
         )
         const content = Array.from(
-          document.querySelectorAll('.' + classes.content)
+          document.querySelectorAll(selectors.contentSelector)
         )
-          .filter(_ => _)
+          .filter(Boolean)
           .map(_ => _.innerText)
           .join('\n')
         // dont allow index pages or untitled pages

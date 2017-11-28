@@ -48,7 +48,7 @@ class Tab {
             borderBottom: 'none',
             boxShadow: [
               'inset 0 0.5px 0 rgba(255,255,255,0.15)',
-              '0 0 7px 0 rgba(0,0,0,0.5)',
+              '0 0 12px 0 rgba(0,0,0,0.85)',
             ],
           }}
         />
@@ -90,7 +90,7 @@ export default class SidebarTitle {
         />
         <Tab>
           <titles>
-            <UI.Title ellipse={2} size={1.1} fontWeight={500}>
+            <UI.Title ellipse={2} size={1.05} fontWeight={300}>
               {title}
             </UI.Title>
             <UI.Title if={subtitle} ellipse size={0.8} opacity={0.5}>

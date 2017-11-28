@@ -87,77 +87,81 @@ export default class Crawler {
     this.options = options || {}
   }
 
+  selectorFinder = ({ title, content }) => {
+    Array.from(
+      document.querySelectorAll('.breadcrumbs, .crumbs, .breadcrumb')
+    ).forEach(_ => _.remove())
+    let tries = 0
+    let current = null
+    let titleSelector = null
+    window.getSelection().empty()
+    window.find(title)
+    if (document.getSelection()) {
+      const getTitleSelector = node => {
+        const name = node.tagName.toLowerCase()
+        if (name[0] === 'h' && name.length === 2) {
+          return name
+        }
+        const TITLEY = /title|headline/
+        if (TITLEY.test(node.id)) {
+          return `#${node.id}`
+        }
+        const cn = node.className.split(' ').find(x => TITLEY.test(x))
+        if (cn) {
+          return `${name}.${cn.trim()}`
+        }
+      }
+      const { anchorNode } = document.getSelection()
+      current = anchorNode
+      while (!titleSelector && tries++ < 3) {
+        current = current.parentNode
+        if (!current || !current.tagName) continue
+        titleSelector = getTitleSelector(current)
+      }
+    }
+    if (!titleSelector) {
+      return null
+    }
+    // get content now
+    window.getSelection().empty()
+    window.find(content)
+    if (document.getSelection()) {
+      const getContentSelector = node => {
+        const name = node.tagName.toLowerCase()
+        if (name === 'article' || name === 'section') {
+          return name
+        }
+        const CONTENTY = /content|article|post|body/
+        if (CONTENTY.test(node.id)) {
+          return `#${node.id}`
+        }
+        const cn = node.className.split(' ').find(x => CONTENTY.test(x))
+        if (cn) {
+          const selector = `${name}.${cn.trim()}`
+          // this should narrow it a bit
+          if (node.parentNode) {
+            return `${node.parentNode.tagName.toLowerCase()} > ${selector}`
+          }
+          return selector
+        }
+      }
+      const { anchorNode } = document.getSelection()
+      let contentSelector = null
+      current = anchorNode
+      tries = 0
+      while (!contentSelector && tries++ < 3) {
+        current = current.parentNode
+        if (!current || !current.tagName) continue
+        contentSelector = getContentSelector(current)
+      }
+      if (contentSelector) {
+        return { titleSelector, contentSelector }
+      }
+    }
+  }
+
   textToSelectors = async (page, contents) => {
-    return await page.evaluate(({ title, content }) => {
-      let tries = 0
-      let current = null
-      let titleSelector = null
-      window.find(title)
-      if (document.getSelection()) {
-        const getTitleSelector = node => {
-          const name = node.tagName.toLowerCase()
-          if (name[0] !== 'h' && name.length === 2) {
-            return name
-          }
-          const TITLEY = /title|headline/
-          if (TITLEY.test(node.id)) {
-            return `#${node.id}`
-          }
-          const cn = node.className.split(' ').find(x => TITLEY.test(x))
-          if (cn) {
-            return `${name}.${cn.trim()}`
-          }
-        }
-        const { anchorNode } = document.getSelection()
-        current = anchorNode
-        while (current && !titleSelector && tries++ < 3) {
-          titleSelector = getTitleSelector(current)
-          if (!titleSelector) {
-            current = anchorNode.parentNode
-          }
-        }
-      }
-      if (!titleSelector) {
-        return null
-      }
-      // get content now
-      window.getSelection().empty()
-      window.find(content)
-      if (document.getSelection()) {
-        const getContentSelector = node => {
-          const name = node.tagName.toLowerCase()
-          if (name === 'article' || name === 'section') {
-            return name
-          }
-          const CONTENTY = /content|article|post|body/
-          if (CONTENTY.test(node.id)) {
-            return `#${node.id}`
-          }
-          const cn = node.className.split(' ').find(x => CONTENTY.test(x))
-          if (cn) {
-            const selector = `${name}.${cn.trim()}`
-            // this should narrow it a bit
-            if (node.parentNode) {
-              return `${node.parentNode.tagName.toLowerCase()} > ${selector}`
-            }
-            return selector
-          }
-        }
-        const { anchorNode } = document.getSelection()
-        let contentSelector = null
-        current = anchorNode
-        tries = 0
-        while (!contentSelector && tries++ < 3) {
-          contentSelector = getContentSelector(current)
-          if (!contentSelector) {
-            current = current.parentNode
-          }
-        }
-        if (contentSelector) {
-          return { titleSelector, contentSelector }
-        }
-      }
-    }, contents)
+    return await page.evaluate(this.selectorFinder, contents)
   }
 
   parseContents = async (page, url) => {
@@ -209,7 +213,6 @@ export default class Crawler {
     let content
     if (!result.content) {
       log.page(`Readability didn't find any content`)
-      console.log(result)
     } else {
       try {
         content = await new Promise((resolve, reject) => {
@@ -241,7 +244,7 @@ export default class Crawler {
         content: content.slice(0, 30),
       })
       if (this.selectors) {
-        log.crawl('set classes to ' + JSON.stringify(this.selectors))
+        log.crawl('Selectors: ' + JSON.stringify(this.selectors))
       }
     }
     return { title: result.title, content }
@@ -408,12 +411,14 @@ export default class Crawler {
             matchesDepth,
             entryUrl,
           })
-          log.page(`Found ${outboundUrls.length} urls`)
+          log.page(`Found urls: ${outboundUrls.length}`)
         }
         // only count it if it finds goodies
         if (contents) {
           log.page(
-            `Found ${contents.title}, body len: ${contents.content.length}`
+            `Found title (${contents.title}) body of ${
+              contents.content.length
+            } length`
           )
         } else {
           log.page(`No contents found`)

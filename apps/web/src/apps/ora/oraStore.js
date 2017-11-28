@@ -225,7 +225,7 @@ export default class OraStore {
     this.crawler.reset()
     if (results) {
       await createInChunks(results, ({ url, contents }) => {
-        Thing.create({
+        return Thing.create({
           url,
           title: `${contents.title}`,
           body: `${contents.content}`,

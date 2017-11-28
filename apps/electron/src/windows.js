@@ -158,13 +158,16 @@ export default class Windows extends React.Component {
 
   watchForContext = () => {
     this.setInterval(async () => {
-      const { application } = await Helpers.getActiveWindowInfo()
-      const context = {
-        focusedApp: application,
-        ...(await Helpers.getChromeContext()),
-      }
-      if (!isEqual(this.state.context, context)) {
-        this.setState({ context })
+      const res = await Helpers.getActiveWindowInfo()
+      if (res) {
+        const { application } = res
+        const context = {
+          focusedApp: application,
+          ...(await Helpers.getChromeContext()),
+        }
+        if (!isEqual(this.state.context, context)) {
+          this.setState({ context })
+        }
       }
     }, 500)
   }

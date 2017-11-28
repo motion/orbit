@@ -61,7 +61,7 @@ export default class Windows extends React.Component {
     globalShortcut.unregisterAll()
   }
 
-  oraRef = ref => {
+  handleOraRef = ref => {
     if (ref) {
       this.oraRef = ref.window
       this.startOra()
@@ -210,7 +210,7 @@ export default class Windows extends React.Component {
     }
   }
 
-  onAppRef = ref => {
+  handleAppRef = ref => {
     if (ref) {
       this.appRef = ref.app
     }
@@ -263,7 +263,7 @@ export default class Windows extends React.Component {
       },
     }
     return (
-      <App onBeforeQuit={this.onBeforeQuit} ref={this.onAppRef}>
+      <App onBeforeQuit={this.onBeforeQuit} ref={this.handleAppRef}>
         <MenuItems
           onPreferences={this.handlePreferences}
           onShowDevTools={this.handleShowDevTools}
@@ -274,7 +274,7 @@ export default class Windows extends React.Component {
         {/* APP: */}
         <Window
           {...appWindow}
-          ref={this.oraRef}
+          ref={this.handleOraRef}
           transparent
           show
           alwaysOnTop

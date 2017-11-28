@@ -134,12 +134,12 @@ export default class Crawler {
     // if we have selectors
     if (this.selectors) {
       log.page(`Using selectors: ${JSON.stringify(this.selectors)}`)
-      selectorResults = await page.evaluate(selectors => {
+      selectorResults = await page.evaluate(classes => {
         const titles = Array.from(
-          document.querySelectorAll('.' + selectors.title)
+          document.querySelectorAll('.' + classes.title)
         )
         const content = Array.from(
-          document.querySelectorAll('.' + selectors.content)
+          document.querySelectorAll('.' + classes.content)
         )
           .filter(_ => _)
           .map(_ => _.innerText)
@@ -151,7 +151,7 @@ export default class Crawler {
         return { title: titles[0].innerText, content }
       }, this.selectors)
       if (!selectorResults) {
-        log.page(`skipping: ${url} doesn't have class .${this.articleClasses}`)
+        log.page(`skip: didn't find content with selectors`)
         return null
       }
     }
@@ -164,9 +164,12 @@ export default class Crawler {
     })
     let result = selectorResults
     if (!result) {
-      result = readabilityFromString(sanitizeHtml(html, { allowedTags: false }), {
-        href: url,
-      })
+      result = readabilityFromString(
+        sanitizeHtml(html, { allowedTags: false }),
+        {
+          href: url,
+        }
+      )
       if (!result) {
         log.page(`Readability didn't find anything`)
         return null

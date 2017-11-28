@@ -13,6 +13,8 @@
 
 # now
 
+* store url with Thing
+* store base domain with Thing
 * expensify: crawl properly
 * test crawler on a few kb's
 * slack: crawl links properly (disableStructureFinding)

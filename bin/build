@@ -97,8 +97,8 @@ elif [ "$APP" = "" ]; then
   build-es6 &
   build-dev &
   build-prod &
-  (cd apps/crawler && npm run build) &
   wait
+  (cd apps/crawler && npm run build)
 else
   echo "should be able to build individual apps"
 fi

@@ -15,6 +15,10 @@ let burnTime = 0
 setTimeout(() => {
   setInterval(() => {
     usage.lookup(pid, options, (err, res) => {
+      if (err || !res) {
+        console.log(err)
+        return
+      }
       // in percent
       if (res.cpu > 90) {
         console.log(`CPU usage above 90% for ${burnTime} seconds`)

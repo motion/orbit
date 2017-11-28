@@ -10,7 +10,6 @@ class PaneStore {
   contentVersion = 0
 
   willMount() {
-    this.watchDrillIn()
     const { stackItem } = this.props
     this.watch(function watchPaneStackVersion() {
       if (stackItem && stackItem.results) {
@@ -36,26 +35,6 @@ class PaneStore {
     this.contentRef = ref
   }
 
-  watchDrillIn = () => {
-    if (this.props.sidebar) {
-      return
-    }
-    this.react(
-      () => this.props.stack && this.props.stack.last.col,
-      col => {
-        // focusing on main
-        if (col === 1 && this.contentRef) {
-          const list =
-            this.contentRef.querySelector('.ReactVirtualized__List') ||
-            this.contentRef.querySelector('.content')
-          if (list) {
-            list.focus()
-          }
-        }
-      }
-    )
-  }
-
   setList = ref => {
     if (!this.listRef) {
       this.listRef = ref
@@ -78,12 +57,16 @@ class PaneStore {
           ? stack.last.sidebarSelectedIndex
           : stack.last.mainSelectedIndex,
         this.props.oraStore.search,
+        this.props.oraStore.focusedBar,
+        this.contentVersion,
       ],
       ([index]) => {
         // TODO fix flicker
+        // console.log('scrolling to', index, (window.x = this.listRef))
         this.listRef.scrollToRow(index)
         this.setTimeout(() => this.listRef.scrollToRow(index))
-      }
+      },
+      true
     )
   }
 }

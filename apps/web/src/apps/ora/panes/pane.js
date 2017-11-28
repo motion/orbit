@@ -61,10 +61,10 @@ class PaneStore {
         this.contentVersion,
       ],
       ([index]) => {
-        // TODO fix flicker
-        // console.log('scrolling to', index, (window.x = this.listRef))
+        // TODO fix this garbage
         this.listRef.scrollToRow(index)
         this.setTimeout(() => this.listRef.scrollToRow(index))
+        this.setTimeout(() => this.listRef.scrollToRow(index), 16)
       },
       true
     )

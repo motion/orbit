@@ -4,31 +4,46 @@ import { fuzzy } from '~/helpers'
 import { Thing } from '~/app'
 
 export default class MainSidebar {
+  get oraStore() {
+    return this.props.oraStore
+  }
   get search() {
-    return this.props.oraStore.search
+    return this.oraStore.search
   }
-
-  get things() {
-    return this.props.oraStore.items || []
+  get recentItems() {
+    return this.oraStore.items || []
   }
-
-  NAME_MAP = {
-    ncammarata: 'nick',
-    natew: 'me',
-  }
-
+  // public api
   get items() {
-    if (this.things.length) {
-      return [
-        ...this.things.map(x => ({ ...Thing.toResult(x), type: 'context' })),
+    let results = []
+    const { lastContext } = this.oraStore
+    if (lastContext) {
+      results = [
+        {
+          ...this.oraStore.contextToResult(lastContext),
+          category: 'Context',
+        },
       ]
     }
-    return [
-      {
-        type: 'message',
-        title: 'Welcome to Orbit',
-      },
-    ]
+    if (this.recentItems.length) {
+      results = [
+        ...results,
+        ...this.recentItems.map(x => ({
+          ...Thing.toResult(x),
+          type: 'context',
+          category: 'Recent',
+        })),
+      ]
+    } else {
+      results = [
+        ...results,
+        {
+          type: 'message',
+          title: 'Welcome to Orbit',
+        },
+      ]
+    }
+    return results
   }
 
   get title() {
@@ -41,7 +56,6 @@ export default class MainSidebar {
           delay={300}
           arrow
           width={140}
-          open
           boxShadow={[[0, 0, 10, [0, 0, 0, 0.2]]]}
           target={
             <UI.Button
@@ -66,11 +80,12 @@ export default class MainSidebar {
           <UI.List
             itemProps={{
               primaryEllipse: true,
-              sizeHeight: 1.2,
+              sizeHeight: 1.15,
+              hoverBackground: [0, 0, 0, 0.025],
             }}
             items={[
-              { primary: 'dropbox.com', icon: 'site' },
-              { primary: 'support.stripe.com', icon: 'site' },
+              { primary: 'dropbox.com' },
+              { primary: 'support.stripe.com' },
               { primary: 'Slack', icon: 'social-slack' },
             ]}
           />

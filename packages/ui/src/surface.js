@@ -248,8 +248,7 @@ export default class Surface extends React.PureComponent<Props> {
       borderRightRadius = themeValues.borderRadiusSize
     }
 
-    const glowColor =
-      (this.theme && themeValues.color.lighten(0.2)) || DEFAULT_GLOW_COLOR
+    const glowColor = (this.theme && themeValues.color) || DEFAULT_GLOW_COLOR
 
     const contents = [
       <Glint

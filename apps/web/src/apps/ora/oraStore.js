@@ -39,6 +39,7 @@ export default class OraStore {
   wasBlurred = false
   showWhiteBottomBg = false
   crawler = new CrawlerStore()
+  lastContext = null
 
   // this is synced to electron!
   state = {
@@ -74,6 +75,7 @@ export default class OraStore {
           .limit(8)
           .where('bucket')
           .eq(this.bucket)
+          .sort({ updatedAt: 'desc' })
 
   @watch context = () => this.items && new ContextStore(this.items)
 
@@ -176,8 +178,16 @@ export default class OraStore {
     })
   }
 
+  contextToResult = context => ({
+    id: context.url,
+    title: context.selection || context.title,
+    type: 'context',
+    icon: context.application === 'Google Chrome' ? 'social-google' : null,
+    image: context.favicon,
+  })
+
   _watchContext = () => {
-    let lastContext = null
+    this.lastContext = null
     this.watch(function watchContext() {
       const { context } = this.electronState
       if (!context) {
@@ -189,17 +199,11 @@ export default class OraStore {
         log('no context or url/title', this.context)
         return
       }
-      if (lastContext) {
-        if (lastContext.url === context.url) return
+      if (this.lastContext) {
+        if (this.lastContext.url === context.url) return
       }
-      lastContext = context
-      const nextStackItem = {
-        id: context.url,
-        title: context.selection || context.title,
-        type: 'context',
-        icon: context.application === 'Google Chrome' ? 'social-google' : null,
-        image: context.favicon,
-      }
+      this.lastContext = context
+      const nextStackItem = this.contextToResult(context)
       const isAlreadyOnResultsPane = this.stack.length > 1
       if (isAlreadyOnResultsPane) {
         this.stack.replaceInPlace(nextStackItem)

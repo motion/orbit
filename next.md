@@ -13,6 +13,10 @@
 
 # now
 
+* home sections:
+  * currently (to go back to last context)
+  * recent
+  * generally relevant
 * store url with Thing
 * store base domain with Thing
 * expensify: crawl properly

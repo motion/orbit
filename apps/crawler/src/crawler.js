@@ -15,6 +15,7 @@ import OS from 'os'
 
 const MAX_CORES_DEFAULT = OS.cpus().length - 1
 
+const removeMdPrefix = text => text.replace(/^[^a-zA-Z0-9]*[a-zA-Z0-9]/, '')
 const normalizeHref = (baseUrl, href) => {
   let url = new URI(href)
   if (url.is('relative')) {
@@ -87,46 +88,92 @@ export default class Crawler {
     this.options = options || {}
   }
 
-  textToSelectors = async (page, contents) => {
-    return await page.evaluate(({ title, content }) => {
-      let foundTitle = false
-      let tries = 0
-
-      let titleEl = null
-      let titleSelector = null
-      while (!foundTitle && tries++ < 3) {
-        window.find(title)
-        // select first class because it didn't work on any of my
-        // test cases with all of them
-        const { anchorNode } = document.getSelection()
-        if (!anchorNode) {
-          continue
+  selectorFinder = ({ title, content }) => {
+    Array.from(
+      document.querySelectorAll('.breadcrumbs, .crumbs, .breadcrumb')
+    ).forEach(_ => _.remove())
+    let tries = 0
+    let current = null
+    let titleSelector = null
+    window.getSelection().empty()
+    window.find(title)
+    if (document.getSelection()) {
+      const getTitleSelector = node => {
+        const name = node.tagName.toLowerCase()
+        if (name[0] === 'h' && name.length === 2) {
+          return name
         }
-        titleEl = anchorNode.parentNode
-        if (titleEl.tagName[0] !== 'H') {
-          continue
+        const TITLEY = /title|headline/
+        if (TITLEY.test(node.id)) {
+          return `#${node.id}`
         }
-        titleSelector = titleEl.classList[0]
-          ? titleEl.classList[0].toString().trim()
-          : null
+        const cn = node.className.split(' ').find(x => TITLEY.test(x))
+        if (cn) {
+          return `${name}.${cn.trim()}`
+        }
       }
-
-      window.getSelection().empty()
-      window.find(content)
       const { anchorNode } = document.getSelection()
-      if (anchorNode) {
-        const contentParent = document.getSelection().anchorNode.parentNode
-          .parentNode
-        const contentSelector = contentParent.classList[0]
-          ? contentParent.classList[0].toString().trim()
-          : null
-
-        return (
-          contentSelector &&
-          titleSelector && { title: titleSelector, content: contentSelector }
-        )
+      current = anchorNode
+      while (current && !titleSelector && tries++ < 3) {
+        current = current.parentNode
+        if (!current || !current.tagName) continue
+        titleSelector = getTitleSelector(current)
       }
-    }, contents)
+    }
+    if (!titleSelector) {
+      return null
+    }
+    // get content now
+    window.getSelection().empty()
+    window.find(content)
+    if (document.getSelection()) {
+      const getContentSelector = node => {
+        const name = node.tagName.toLowerCase()
+        if (name === 'article' || name === 'section') {
+          return name
+        }
+        // bad
+        if (/^(ul|li|a|ol)$/.test(name)) {
+          return null
+        }
+        const CONTENTY = /content|article|post|body/
+        if (CONTENTY.test(node.id)) {
+          return `#${node.id}`
+        }
+        const cn = node.className.split(' ').find(x => CONTENTY.test(x))
+        if (cn) {
+          const selector = `${name}.${cn.trim()}`
+          // this should narrow it a bit
+          if (node.parentNode) {
+            return `${node.parentNode.tagName.toLowerCase()} > ${selector}`
+          }
+          return selector
+        }
+      }
+      const { anchorNode } = document.getSelection()
+      let contentSelector = null
+      current = anchorNode
+      tries = 0
+      while (current && !contentSelector && tries++ < 3) {
+        current = current.parentNode
+        if (!current || !current.tagName) continue
+        // if we found a bad node, try again
+        if (/^(H[1-6]|LI|A)$/.test(current.tagName)) {
+          window.find(content)
+          const nextNode = document.getSelection().anchorNode
+          if (!nextNode) break
+          current = current.parentNode
+        }
+        contentSelector = getContentSelector(current)
+      }
+      if (contentSelector) {
+        return { titleSelector, contentSelector }
+      }
+    }
+  }
+
+  textToSelectors = async (page, contents) => {
+    return await page.evaluate(this.selectorFinder, contents)
   }
 
   parseContents = async (page, url) => {
@@ -134,14 +181,14 @@ export default class Crawler {
     // if we have selectors
     if (this.selectors) {
       log.page(`Using selectors: ${JSON.stringify(this.selectors)}`)
-      selectorResults = await page.evaluate(classes => {
+      selectorResults = await page.evaluate(selectors => {
         const titles = Array.from(
-          document.querySelectorAll('.' + classes.title)
+          document.querySelectorAll(selectors.titleSelector)
         )
         const content = Array.from(
-          document.querySelectorAll('.' + classes.content)
+          document.querySelectorAll(selectors.contentSelector)
         )
-          .filter(_ => _)
+          .filter(Boolean)
           .map(_ => _.innerText)
           .join('\n')
         // dont allow index pages or untitled pages
@@ -178,7 +225,6 @@ export default class Crawler {
     let content
     if (!result.content) {
       log.page(`Readability didn't find any content`)
-      console.log(result)
     } else {
       try {
         content = await new Promise((resolve, reject) => {
@@ -205,12 +251,25 @@ export default class Crawler {
       return null
     }
     if (!this.selectors) {
-      this.selectors = await this.textToSelectors(page, {
-        title: result.title.slice(0, 15),
-        content: content.slice(0, 30),
-      })
+      try {
+        const contentString = sanitizeHtml(result.content, {
+          allowedTags: [],
+        }).trim()
+        const contentPs = contentString.split('\n')
+        const contentLastP = contentPs[contentPs.length - 1]
+        const contentLastSentence = content
+          .slice(Math.max(0, contentLastP.length - 30), contentLastP.length)
+          .trim()
+        console.log('contentLastSentence', contentLastSentence)
+        this.selectors = await this.textToSelectors(page, {
+          title: result.title.slice(0, 30),
+          content: removeMdPrefix(contentLastSentence),
+        })
+      } catch (err) {
+        log.page(`Error finding selectors: ${err.message}`)
+      }
       if (this.selectors) {
-        log.crawl('set classes to ' + JSON.stringify(this.selectors))
+        log.crawl('Selectors: ' + JSON.stringify(this.selectors))
       }
     }
     return { title: result.title, content }
@@ -377,12 +436,14 @@ export default class Crawler {
             matchesDepth,
             entryUrl,
           })
-          log.page(`Found ${outboundUrls.length} urls`)
+          log.page(`Found urls: ${outboundUrls.length}`)
         }
         // only count it if it finds goodies
         if (contents) {
           log.page(
-            `Found ${contents.title}, body len: ${contents.content.length}`
+            `Found title (${contents.title}) body of ${
+              contents.content.length
+            } length`
           )
         } else {
           log.page(`No contents found`)
@@ -488,6 +549,10 @@ export default class Crawler {
     }
     return new Promise(resolve => {
       this.promiseEnds.push(() => resolve(true))
+      // failsafe
+      setTimeout(() => {
+        resolve(false)
+      }, 5)
     })
   }
 }

@@ -205,6 +205,7 @@ export default class ContextSidebar {
       this.isPinned && {
         icon: 'check',
         children: 'Pinned',
+        onClick: this.oraStore.addCurrentPage,
       },
       !this.isPinned && {
         icon: 'ui-1_bold-add',

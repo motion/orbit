@@ -113,7 +113,7 @@ export default class Crawler {
       }
       const { anchorNode } = document.getSelection()
       current = anchorNode
-      while (!titleSelector && tries++ < 3) {
+      while (current && !titleSelector && tries++ < 3) {
         current = current.parentNode
         if (!current || !current.tagName) continue
         titleSelector = getTitleSelector(current)
@@ -149,7 +149,7 @@ export default class Crawler {
       let contentSelector = null
       current = anchorNode
       tries = 0
-      while (!contentSelector && tries++ < 3) {
+      while (current && !contentSelector && tries++ < 3) {
         current = current.parentNode
         if (!current || !current.tagName) continue
         contentSelector = getContentSelector(current)
@@ -161,7 +161,11 @@ export default class Crawler {
   }
 
   textToSelectors = async (page, contents) => {
-    return await page.evaluate(this.selectorFinder, contents)
+    try {
+      return await page.evaluate(this.selectorFinder, contents)
+    } catch (err) {
+      log.page(`Error finding selectors: ${err.message}`)
+    }
   }
 
   parseContents = async (page, url) => {
@@ -524,6 +528,10 @@ export default class Crawler {
     }
     return new Promise(resolve => {
       this.promiseEnds.push(() => resolve(true))
+      // failsafe
+      setTimeout(() => {
+        resolve(false)
+      }, 5)
     })
   }
 }

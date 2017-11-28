@@ -14,18 +14,17 @@
 # now
 
 * expensify: crawl properly
-* slack: crawl links properly
+* test crawler on a few kb's
+* slack: crawl links properly (disableStructureFinding)
 * build app to prod bundle
-* tray icon (onboarding should show you how to move it by spotlight)
-* oauth window popup controller so it doesnt show "link" button and auto-opens
-  * AS: cmd+n => AS: move offscreen => AS inject js to click button
+* finish oauth window popup controller
   * API: watch for oauth finish => AS: close offscreen window
 * peek window that tracks next to main window
 * peek window shows peek view of items
 * feature: on window focus make ora show if hidden (clicked dock / task switch)
 * resizing the window (height)
 * show body contents snippet when on thing
-* bolding inside ui.text so it works well with clamps
+* bolding inside ui.text for highlighting key words
 
 - Home:
   * Show current context as first item so you can look back into it if wanted

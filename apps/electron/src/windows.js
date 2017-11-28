@@ -42,7 +42,6 @@ export default class Windows extends React.Component {
   componentWillMount() {
     const { position, size } = Helpers.getAppSize()
     const screenSize = screen.getPrimaryDisplay().workAreaSize
-    console.log('mount me')
     const trayPosition = [screenSize.width - Constants.ORA_WIDTH, 20]
     this.setState({ show: true, position, size, screenSize, trayPosition })
   }

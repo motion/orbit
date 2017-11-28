@@ -1,7 +1,7 @@
 {
   "name": "@mcro/electron",
   "productName": "Orbit",
-  "version": "1.5.17",
+  "version": "1.5.20",
   "private": true,
   "description": "Description",
   "author": "Orbit",
@@ -10,9 +10,10 @@
   },
   "scripts": {
     "build": "INCLUDE_MODULES=true TARGET=electron NODE_ENV=production BUILD_DIR=. mcro-build",
-    "dist": "npm version patch && npm run bundle",
+    "dist": "npm run clean-app && npm version patch && npm run bundle",
     "deploy": "npm run sign-app && npm run bundle-app && npm run prepare-publish && npm run publish-app",
     "bundle": "DEBUG=electron-packager electron-packager . --out app --overwrite --icon ./resources/icon.icns --no-prune --deref-symlinks true --package-manager false && npm run fix-build",
+    "clean-app": "if [ -d './app/Orbit-darwin-x64' ]; then rm -rf ./app/Orbit-darwin-x64; fi",
     "test-app": "app/Orbit-darwin-x64/Orbit.app/Contents/MacOS/Orbit",
     "start": "electron build/out --start",
     "start-prod": "app/Orbit-darwin-x64/Orbit.app/Contents/MacOS/Orbit",

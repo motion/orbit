@@ -281,7 +281,7 @@ export default class Windows extends React.Component {
           hasShadow={false}
           showDevTools={this.state.showDevTools}
           size={[Constants.ORA_WIDTH, 1000]}
-          file={`${Constants.APP_URL}/ora`}
+          file={`${Constants.APP_URL}`}
           position={this.state.trayPosition}
           onMoved={this.onOraMoved}
           onMove={this.onOraMoved}

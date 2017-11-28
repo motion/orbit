@@ -133,7 +133,7 @@ export default class Icon extends React.PureComponent<Props> {
         fontSize: size,
         lineHeight: `${size / 12 - 1}rem`, // scale where 1 when 14
         '&:hover': {
-          color: hoverColor || theme.color || color,
+          color: '#fff' || hoverColor || theme.color || color,
           ...hover,
         },
       },

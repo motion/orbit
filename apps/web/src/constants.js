@@ -12,7 +12,7 @@ if (process.env.IS_PROD) {
 
 export const VERSION = require('../package.json').version
 
-export const ORA_BG = [0, 0, 0, 0.85]
+export const ORA_BG = [10, 10, 10, 0.88]
 export const ORA_BG_MAIN_OPAQUE = [45, 45, 45]
 export const ORA_BG_MAIN = [...ORA_BG_MAIN_OPAQUE, 0.96]
 export const ORA_WIDTH = 300

@@ -62,13 +62,6 @@ export default class OraHeader extends React.Component {
     if (!CurrentUser.user) {
       return null
     }
-    const itemProps = {
-      size: 1.04,
-      glow: false,
-      chromeless: true,
-      color: [255, 255, 255, 0.5],
-      margin: [0, 0, 0, -10],
-    }
     const settings = CurrentUser.user.settings || {}
     const { buckets = ['Default'], activeBucket = 'Default' } = settings
     const bucketItems = [
@@ -97,8 +90,8 @@ export default class OraHeader extends React.Component {
     const iconProps = {
       color: [255, 255, 255, 0.7],
       hoverColor: [255, 255, 255, 1],
-      padding: 6,
-      size: 15,
+      padding: 8,
+      size: 16,
       css: {
         marginLeft: -8,
       },
@@ -165,9 +158,9 @@ export default class OraHeader extends React.Component {
                 theme="light"
                 width={150}
                 target={
-                  <UI.Button
-                    {...itemProps}
-                    icon="bucket"
+                  <UI.Icon
+                    {...iconProps}
+                    name="bucket"
                     opacity={0.5}
                     onClick={e => {
                       e.stopPropagation()
@@ -178,7 +171,7 @@ export default class OraHeader extends React.Component {
               >
                 <UI.List items={bucketItems} onSelect={this.selectBucket} />
               </UI.Popover>
-              <UI.Button {...itemProps} onClick={this.onHide} icon="remove" />
+              <UI.Icon {...iconProps} onClick={this.handleHide} name="remove" />
             </rightSide>
           </contents>
         </header>
@@ -195,7 +188,7 @@ export default class OraHeader extends React.Component {
       height: Constants.ORA_HEADER_HEIGHT + 100,
       paddingBottom: 100,
       // borderBottom: [1, [255, 255, 255, 0.1]],
-      transition: 'all ease-in 80ms',
+      transition: 'all ease-in 100ms',
       justifyContent: 'center',
       '& .icon': {
         transition: 'all ease-in 100ms',
@@ -265,7 +258,7 @@ export default class OraHeader extends React.Component {
     },
     searchInput: {
       position: 'relative',
-      padding: [8, 25],
+      padding: [8, 25, 9],
       paddingLeft: 36,
       fontWeight: 300,
       fontSize: 20,

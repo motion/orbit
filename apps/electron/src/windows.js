@@ -43,7 +43,7 @@ export default class Windows extends React.Component {
     const { position, size } = Helpers.getAppSize()
     const screenSize = screen.getPrimaryDisplay().workAreaSize
     console.log('mount me')
-    const trayPosition = [screenSize.width - Constants.ORA_WIDTH - 10, 20]
+    const trayPosition = [screenSize.width - Constants.ORA_WIDTH, 20]
     this.setState({ show: true, position, size, screenSize, trayPosition })
   }
 
@@ -272,7 +272,6 @@ export default class Windows extends React.Component {
         <Window
           {...appWindow}
           ref={this.oraRef}
-          titleBarStyle="customButtonsOnHover"
           transparent
           show
           alwaysOnTop

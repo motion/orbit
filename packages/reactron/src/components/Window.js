@@ -26,6 +26,7 @@ export default class Window extends BaseComponent {
       hasShadow: !!props.hasShadow,
       backgroundColor: props.backgroundColor,
       alwaysOnTop: !!props.alwaysOnTop,
+      frame: !!props.frame,
     })
 
     this.updateSize = () => configureSize.call(this, this.props)

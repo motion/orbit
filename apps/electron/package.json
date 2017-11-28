@@ -1,7 +1,7 @@
 {
   "name": "@mcro/electron",
   "productName": "Orbit",
-  "version": "1.5.11",
+  "version": "1.5.12",
   "private": true,
   "description": "Description",
   "author": "Orbit",
@@ -13,7 +13,7 @@
     "build":
       "INCLUDE_MODULES=true TARGET=electron NODE_ENV=production BUILD_DIR=. mcro-build",
     "dist":
-      "npm version patch && npm run bundle && git commit -am ':arrow_up: version $npm_package_version'",
+      "npm version patch && npm run bundle && git commit -am ':arrow_up: release: electron'",
     "deploy":
       "npm run sign-app && npm run bundle-app && npm run prepare-publish && npm run publish-app",
     "bundle":
@@ -30,9 +30,7 @@
     "fix-build-clean": "npm run clean-build-modules; npm run fix-build",
     "fix-build": "npm run fix-build-modules",
     "fix-build-modules":
-      "npm run fix-build-log; npm run fix-build-copy-modules; npm run fix-build-electron; npm run fix-build-mobx",
-    "fix-build-mobx":
-      "cp -r ../../node_modules/mobx ./app/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules",
+      "npm run fix-build-log && npm run fix-build-copy-modules && npm run fix-build-electron",
     "fix-build-log":
       "touch ./app/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/log.txt",
     "clean-build-modules":
@@ -40,7 +38,7 @@
     "fix-build-copy-modules":
       "cpx -uL './node_modules/**/*{.js,.json,.html,.map}' ./app/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules",
     "fix-build-electron":
-      "rm -r ./app/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules/@mcro/reactron/node_modules/electron"
+      "rm -r ./app/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules/@mcro/reactron/node_modules/electron &"
   },
   "dependencies": {
     "@mcro/api": "^1.5.1",

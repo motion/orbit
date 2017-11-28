@@ -1,4 +1,5 @@
 {
+  "extends": "../../.babelrc",
   "env": {
     "development": {
       "presets": [

@@ -121,7 +121,8 @@ export default class Pane {
   }) {
     const list = paneStore.items && (
       <UI.List
-        key={paneStore.contentVersion}
+        key={stackItem.id}
+        itemsKey={paneStore.contentVersion}
         getRef={paneStore.setList}
         onSelect={this.onSelect}
         items={paneStore.items}

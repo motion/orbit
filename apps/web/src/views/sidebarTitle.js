@@ -6,9 +6,9 @@ import * as Constants from '~/constants'
 
 const glowProps = {
   color: '#fff',
-  scale: 0.5,
+  scale: 0.7,
   blur: 70,
-  opacity: 0.08,
+  opacity: 0.04,
   resist: 20,
   zIndex: 1,
 }

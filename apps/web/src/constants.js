@@ -14,9 +14,9 @@ export const VERSION = require('../package.json').version
 
 export const ORA_BG = [0, 0, 0, 0.85]
 export const ORA_BG_MAIN_OPAQUE = [45, 45, 45]
-export const ORA_BG_MAIN = [...ORA_BG_MAIN_OPAQUE, 0.98]
+export const ORA_BG_MAIN = [...ORA_BG_MAIN_OPAQUE, 0.96]
 export const ORA_WIDTH = 300
-export const ORA_HEIGHT = 600
+export const ORA_HEIGHT = 535
 export const ORA_HEADER_HEIGHT = 30
 export const ORA_HEADER_HEIGHT_FULL = 40
 export const ACTION_BAR_HEIGHT = 50

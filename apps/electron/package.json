@@ -1,7 +1,7 @@
 {
   "name": "@mcro/electron",
   "productName": "Orbit",
-  "version": "1.5.24",
+  "version": "1.5.26",
   "private": true,
   "description": "Description",
   "author": "Orbit",
@@ -24,7 +24,7 @@
     "sign-app": "electron-osx-sign ./app/Orbit-darwin-x64/Orbit.app",
     "clean-build-modules": "rm -r ./app/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules/*",
     "fix-build-clean": "npm run clean-build-modules; npm run fix-build",
-    "fix-build": "npm run fix-build-log",
+    "fix-build": "npm run fix-build-copy-modules && npm run fix-build-log",
     "fix-build-log": "touch ./app/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/log.txt",
     "fix-build-copy-modules": "cpx -uL './node_modules/**/*{.js,.json,.html,.map}' ./app/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules",
     "fix-build-electron": "rm -r ./app/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules/@mcro/reactron/node_modules/electron &"

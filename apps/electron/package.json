@@ -15,6 +15,9 @@
       "npm run sign-app && npm run bundle-app && npm run prepare-publish && npm run publish-app",
     "bundle":
       "npm run clean-app && DEBUG=electron-packager electron-packager . --out app --overwrite --icon ./resources/icon.icns --deref-symlinks true --no-prune --package-manager false",
+    "pre-bundle": "npm run clean-puppeteer",
+    "clean-puppeteer":
+      "rm -rf ../crawler/node_modules/puppeteer/.local-chromium &",
     "clean-app":
       "if [ -d \"./app/Orbit-darwin-x64\" ]; then rm -rf ./app/Orbit-darwin-x64; fi",
     "start": "NODE_ENV=development DISABLE_API=true electron index.js",
@@ -43,7 +46,6 @@
     "electron-localshortcut": "^2.0.2",
     "electron-simple-updater": "^1.2.1",
     "escape-string-applescript": "^2.0.0",
-    "ffi": "^2.2.0",
     "lodash": "^4.17.4",
     "mobx": "^3.3.1",
     "node-loader": "^0.6.0",
@@ -61,7 +63,7 @@
     "electron": "^1.8.0",
     "electron-installer-dmg": "^0.2.1",
     "electron-osx-sign": "^0.4.7",
-    "electron-packager": "^10.1.0",
+    "electron-packager": "malept/electron-packager#fs-extra-v5-experimental",
     "electron-simple-publisher": "^0.4.7"
   }
 }

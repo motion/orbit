@@ -30,22 +30,3 @@ export function start() {
     app = ref
   })
 }
-
-// if (process.env.NODE_ENV === 'production') {
-//   start()
-// }
-
-if (module.hot) {
-  // let restarting
-  // function restart() {
-  //   if (restarting) {
-  //     clearTimeout(restarting)
-  //   }
-  //   app.setState({
-  //     restart: true,
-  //   })
-  //   restarting = setTimeout(start, 1000)
-  // }
-  // module.hot.accept(restart)
-  // module.hot.accept('./windows', restart)
-}

@@ -1,7 +1,6 @@
 import r2 from '@mcro/r2'
 import { store } from '@mcro/black'
-
-const base = `http://localhost:3001`
+import { API_URL } from '~/constants'
 
 @store
 export default class Crawler {
@@ -24,19 +23,19 @@ export default class Crawler {
     }
     this.isRunning = true
     console.log('start crawl with settings', this.settings)
-    await r2.post(`${base}/crawler/start`, {
+    await r2.post(`${API_URL}/crawler/start`, {
       json: { options: this.settings },
     })
     this.setTimeout(this.onCheckStatus, 2500)
   }
 
   stop = async () => {
-    await r2.post(`${base}/crawler/stop`)
+    await r2.post(`${API_URL}/crawler/stop`)
     this.reset()
   }
 
   finish = async () => {
-    this.results = await r2.get(`${base}/crawler/results`).json
+    this.results = await r2.get(`${API_URL}/crawler/results`).json
     this.isFinished = true
   }
 
@@ -56,7 +55,7 @@ export default class Crawler {
   }
 
   onCheckStatus = async () => {
-    const { status } = await r2.get(`${base}/crawler/status`).json
+    const { status } = await r2.get(`${API_URL}/crawler/status`).json
     if (!this.isRunning) {
       return
     }

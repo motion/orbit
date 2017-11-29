@@ -1,6 +1,9 @@
-import 'source-map-support/register'
 import 'isomorphic-fetch'
 import cleanStack from 'clean-stacktrace'
+
+if (process.env.NODE_ENV !== 'production') {
+  require('source-map-support/register')
+}
 
 if (!process.env.HAS_BABEL_POLYFILL) {
   require('babel-polyfill')

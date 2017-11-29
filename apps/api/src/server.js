@@ -82,12 +82,12 @@ export default class Server {
   }
 
   setupCrawler() {
-    const crawlerIndex = require.resolve('@mcro/crawler')
-    const crawlerDist = Path.join(crawlerIndex, '..', 'build', 'js')
-    log('setting up crawler', crawlerDist)
-
+    console.log('setupCrawler()')
     // for injecting crawler js into browser
-    this.app.use('/crawler', express.static(crawlerDist))
+    // const crawlerIndex = require.resolve('@mcro/crawler')
+    // const crawlerDist = Path.join(crawlerIndex, '..', 'build', 'js')
+    // log('setting up crawler', crawlerDist)
+    // this.app.use('/crawler', express.static(crawlerDist))
 
     this.app.post('/crawler/single', async (req, res) => {
       const { options } = req.body

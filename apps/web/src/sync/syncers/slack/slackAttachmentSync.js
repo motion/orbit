@@ -4,6 +4,7 @@ import debug from 'debug'
 import * as _ from 'lodash'
 import * as r2 from '@mcro/r2'
 import { createInChunks } from '~/sync/helpers'
+import * as Constants from '~/constants'
 
 const log = _ => _ || debug('sync')
 
@@ -59,7 +60,7 @@ export default class SlackAttachmentSync {
             for (const entries of _.chunk(links, 20)) {
               console.log('crawling chunk', entries)
               const { results } = await r2.post(
-                'http://localhost:3001/crawler/exact',
+                `${Constants.API_URL}/crawler/exact`,
                 {
                   json: {
                     options: { entries },

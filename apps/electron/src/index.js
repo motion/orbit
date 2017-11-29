@@ -11,6 +11,10 @@ import { render } from '@mcro/reactron'
 import { throttle } from 'lodash'
 import { extras } from 'mobx'
 
+if (process.env.NODE_ENV !== 'production') {
+  require('source-map-support/register')
+}
+
 // share state because node loads multiple copies
 extras.shareGlobalState()
 

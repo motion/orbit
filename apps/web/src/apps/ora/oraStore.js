@@ -12,6 +12,7 @@ import * as r2 from '@mcro/r2'
 import { throttle } from 'lodash'
 import debug from 'debug'
 import { createInChunks } from '~/sync/helpers'
+import * as Constants from '~/constants'
 
 const log = _ => _ || debug('ora')
 
@@ -132,7 +133,7 @@ export default class OraStore {
     }
     this.setBanner(BANNERS.note, 'Pinning...')
     const { url } = this.osContext
-    const response = await r2.post('http://localhost:3001/crawler/single', {
+    const response = await r2.post(`${Constants.API_URL}/crawler/single`, {
       json: { options: { entry: url } },
     }).json
     if (response.error) {

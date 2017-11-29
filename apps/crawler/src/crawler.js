@@ -23,11 +23,8 @@ const normalizeHref = (baseUrl, href) => {
   }
   return url.toString()
 }
-
 const sleep = ms => new Promise(res => setTimeout(res, ms))
-
 const und = new upndown()
-
 const log = {
   crawl: debug('crawler:crawl'),
   page: debug('crawler:page'),
@@ -36,7 +33,6 @@ const log = {
 
 const ENDING_QUERY = /[?](.*)$/g
 const ENDING_HASH = /[#](.*)$/g
-
 const removeLastSegmentOfPath = x => x.replace(/\/[^\/]+$/g, '')
 const cleanUrlHash = url => url.replace(ENDING_HASH, '')
 const cleanUrlSearch = url => url.replace(ENDING_QUERY, '')
@@ -51,7 +47,6 @@ const FILTER_URL_EXTENSIONS = [
   '.svg',
   '.xml',
 ]
-
 const urlSimilarity = (wanted, given) => {
   let score = 100
   // de-weight paths with ?params just a lil
@@ -290,14 +285,14 @@ export default class Crawler {
     }, options)
   }
 
-  async writeFolder(path, pages) {
+  writeFolder = async (path, pages) => {
     pages.forEach(page => {
       writeFileSync(`${path}/${page.contents.title}.txt`, page.contents.content)
     })
     return true
   }
 
-  async validContentType(url) {
+  validContentType = async url => {
     const res = await fetch(url, { method: 'HEAD' })
     const contentType =
       res.headers.get('content-type') || res.headers.get('Content-Type')
@@ -308,7 +303,7 @@ export default class Crawler {
     return true
   }
 
-  async findLinks(page, { target, initialUrl, matchesDepth, entryUrl }) {
+  findLinks = async (page, { target, initialUrl, matchesDepth, entryUrl }) => {
     const links = await page.evaluate(() => {
       const val = Array.from(document.querySelectorAll('[href]')).map(
         link => link.href
@@ -333,7 +328,7 @@ export default class Crawler {
     })
   }
 
-  async start(entry: string, runOptions: Options = this.options) {
+  start = async (entry: string, runOptions: Options = this.options) => {
     if (!entry) {
       throw new Error('No entry given!')
     }
@@ -529,9 +524,9 @@ export default class Crawler {
     return this.db.getValid()
   }
 
-  getStatus({ includeResults = false } = {}) {
+  getStatus = ({ includeResults = false } = {}) => {
     const res = { count: this.count, isRunning: this.isRunning }
-    if (includeResults) {
+    if (includeResults && this.db) {
       const results = this.db.getValid()
       // only show results if we have more than 0
       if (results && results.length) {
@@ -542,7 +537,7 @@ export default class Crawler {
   }
 
   // returns true if it was running
-  stop() {
+  stop = () => {
     this.cancelled = true
     if (!this.isRunning) {
       return Promise.resolve(false)

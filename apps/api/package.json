@@ -6,14 +6,9 @@
   "module": "es6/index.js",
   "scripts": {
     "start": "NODE_ENV=development node index.js",
-    "start-prod": "NODE_ENV=production IS_PROD=true node index.js",
-    "start-local-prod":
-      "LOCAL_PROD=true NODE_ENV=production IS_PROD=true node index.js",
+    "start-prod": "NODE_ENV=production node index.js",
     "start-dev":
-      "DEBUG=api,crawler,crawler:* nodemon --inspect=0.0.0.0:5858 index.js",
-    "start-watch": "../../bin/build --watch",
-    "build": "webpack",
-    "watch": "webpack --watch"
+      "DEBUG=api,crawler,crawler:* nodemon --inspect=0.0.0.0:5858 index.js"
   },
   "nodemonConfig": {
     "ignore": ["**/*.map", "lib", "dist"]

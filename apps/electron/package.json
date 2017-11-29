@@ -6,27 +6,33 @@
   "description": "Description",
   "author": "Orbit",
   "updater": {
-    "url": "https://raw.githubusercontent.com/motion/orbit-updates/master/updates.json"
+    "url":
+      "https://raw.githubusercontent.com/motion/orbit-updates/master/updates.json"
   },
   "scripts": {
-    "build": "CHUNK_COMMONS=false TARGET=electron NODE_ENV=production mcro-build",
     "dist": "npm version patch && npm run bundle",
-    "deploy": "npm run sign-app && npm run bundle-app && npm run prepare-publish && npm run publish-app",
-    "bundle": "npm run clean-app && DEBUG=electron-packager electron-packager . --out app --overwrite --icon ./resources/icon.icns --deref-symlinks true --no-prune --package-manager false",
-    "clean-app": "if [ -d \"./app/Orbit-darwin-x64\" ]; then rm -rf ./app/Orbit-darwin-x64; fi",
+    "deploy":
+      "npm run sign-app && npm run bundle-app && npm run prepare-publish && npm run publish-app",
+    "bundle":
+      "npm run clean-app && DEBUG=electron-packager electron-packager . --out app --overwrite --icon ./resources/icon.icns --deref-symlinks true --no-prune --package-manager false",
+    "clean-app":
+      "if [ -d \"./app/Orbit-darwin-x64\" ]; then rm -rf ./app/Orbit-darwin-x64; fi",
     "start": "NODE_ENV=development DISABLE_API=true electron index.js",
-    "start-prod": "DEBUG=api,crawler,crawler:* app/Orbit-darwin-x64/Orbit.app/Contents/MacOS/Orbit",
+    "start-prod":
+      "DEBUG=api,crawler,crawler:* app/Orbit-darwin-x64/Orbit.app/Contents/MacOS/Orbit",
     "watch": "npm run build -- --watch",
     "publish-app": "publish -p ./app",
-    "prepare-publish": "cp ./app/Orbit.dmg ./app/Orbit-$npm_package_version.dmg && zip -r ./app/Orbit-$npm_package_version-mac.zip ./app/Orbit-darwin-x64/Orbit.app",
-    "bundle-app": "electron-installer-dmg --overwrite --out ./app --icon ./resources/icon.icns ./app/Orbit-darwin-x64/Orbit.app Orbit",
+    "prepare-publish":
+      "cp ./app/Orbit.dmg ./app/Orbit-$npm_package_version.dmg && zip -r ./app/Orbit-$npm_package_version-mac.zip ./app/Orbit-darwin-x64/Orbit.app",
+    "bundle-app":
+      "electron-installer-dmg --overwrite --out ./app --icon ./resources/icon.icns ./app/Orbit-darwin-x64/Orbit.app Orbit",
     "sign-app": "electron-osx-sign ./app/Orbit-darwin-x64/Orbit.app",
-    "clean-build-modules": "rm -r ./app/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules"
+    "clean-build-modules":
+      "rm -r ./app/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules"
   },
   "dependencies": {
     "@mcro/api": "^1.5.1",
     "@mcro/black": "^1.5.1",
-    "@mcro/builder": "^1.5.1",
     "@mcro/crawler": "^1.5.1",
     "@mcro/reactron": "^1.5.1",
     "@mcro/r2": "^1.5.1",

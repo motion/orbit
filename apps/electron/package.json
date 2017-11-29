@@ -1,7 +1,7 @@
 {
   "name": "@mcro/electron",
   "productName": "Orbit",
-  "version": "1.5.29",
+  "version": "1.5.30",
   "private": true,
   "description": "Description",
   "author": "Orbit",
@@ -10,14 +10,13 @@
   },
   "scripts": {
     "build": "CHUNK_COMMONS=false TARGET=electron NODE_ENV=production mcro-build",
-    "dist": "npm run clean-app && npm run build && npm version patch && npm run bundle",
+    "dist": "npm version patch && npm run bundle",
     "deploy": "npm run sign-app && npm run bundle-app && npm run prepare-publish && npm run publish-app",
-    "bundle": "DEBUG=electron-packager electron-packager . --out app --overwrite --icon ./resources/icon.icns --deref-symlinks true --no-prune --package-manager false",
+    "bundle": "npm run clean-app && DEBUG=electron-packager electron-packager . --out app --overwrite --icon ./resources/icon.icns --deref-symlinks true --no-prune --package-manager false",
     "clean-app": "if [ -d \"./app/Orbit-darwin-x64\" ]; then rm -rf ./app/Orbit-darwin-x64; fi",
-    "test-app": "DEBUG=api,crawler,crawler:* app/Orbit-darwin-x64/Orbit.app/Contents/MacOS/Orbit",
-    "start": "electron index.js",
-    "start-prod": "app/Orbit-darwin-x64/Orbit.app/Contents/MacOS/Orbit",
-    "watch": "webpack --watch",
+    "start": "NODE_ENV=development DISABLE_API=true electron index.js",
+    "start-prod": "DEBUG=api,crawler,crawler:* app/Orbit-darwin-x64/Orbit.app/Contents/MacOS/Orbit",
+    "watch": "npm run build -- --watch",
     "publish-app": "publish -p ./app",
     "prepare-publish": "cp ./app/Orbit.dmg ./app/Orbit-$npm_package_version.dmg && zip -r ./app/Orbit-$npm_package_version-mac.zip ./app/Orbit-darwin-x64/Orbit.app",
     "bundle-app": "electron-installer-dmg --overwrite --out ./app --icon ./resources/icon.icns ./app/Orbit-darwin-x64/Orbit.app Orbit",
@@ -53,8 +52,6 @@
     "usage": "^0.7.1"
   },
   "devDependencies": {
-    "cpx": "^1.5.0",
-    "devtron": "^1.4.0",
     "electron": "^1.8.0",
     "electron-installer-dmg": "^0.2.1",
     "electron-osx-sign": "^0.4.7",

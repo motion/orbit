@@ -8,7 +8,7 @@ const EXTENSIONS = {
 
 const extensionToID = name => EXTENSIONS[name]
 const extensionIDToPath = id =>
-  Path.join(Constants.ROOT_PATH, '..', 'resources', 'extensions', id)
+  Path.join(Constants.ROOT_PATH, 'resources', 'extensions', id)
 
 export default function getExtensions(names) {
   const extensions = names.map(extensionToID).map(extensionIDToPath)

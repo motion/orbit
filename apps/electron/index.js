@@ -1,21 +1,14 @@
-// this is only loaded in production!
-
-process.env.NODE_ENV = 'production'
+require('babel-polyfill')
 process.env.HAS_BABEL_POLYFILL = true
 
-require('babel-polyfill')
-// electron app
+require('./lib/index').start()
 
-if (process.env.NODE_ENV === 'production') {
-  require('./build/app')
-} else {
-  require('./lib/index')
+if (!process.env.DISABLE_API) {
+  setTimeout(() => {
+    // api
+    const startApi = require('@mcro/api').default
+    startApi().then(() => {
+      console.log('started')
+    })
+  }, 100)
 }
-
-setTimeout(() => {
-  // api
-  const startApi = require('@mcro/api').default
-  startApi().then(() => {
-    console.log('started')
-  })
-}, 100)

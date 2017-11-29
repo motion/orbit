@@ -6,10 +6,7 @@ import electronContextMenu from 'electron-context-menu'
 import electronDebug from 'electron-debug'
 import React from 'react'
 import { render } from '@mcro/reactron'
-import { throttle } from 'lodash'
 import { extras } from 'mobx'
-
-console.log('NODE_ENV', process.env.NODE_ENV)
 
 if (process.env.NODE_ENV !== 'production') {
   require('./helpers/monitorResourceUsage')
@@ -21,7 +18,8 @@ extras.shareGlobalState()
 
 let app = null
 
-const start = throttle(() => {
+export function start() {
+  console.log('starting electron', process.env.NODE_ENV)
   const { default: Windows, onWindow } = require('./windows')
   render(<Windows key={Math.random()} />)
   if (!app) {
@@ -31,14 +29,11 @@ const start = throttle(() => {
   onWindow(ref => {
     app = ref
   })
-}, 1000)
-
-export default start
-
-if (process.env.NODE_ENV === 'production') {
-  console.log('STARTING ELECTRON APP')
-  start()
 }
+
+// if (process.env.NODE_ENV === 'production') {
+//   start()
+// }
 
 if (module.hot) {
   // let restarting

@@ -296,7 +296,7 @@ export default class Crawler {
     const res = await fetch(url, { method: 'HEAD' })
     const contentType =
       res.headers.get('content-type') || res.headers.get('Content-Type')
-    if (!contentType || !/text\/(html|xml)/g.test(contentType)) {
+    if (!contentType || !/text\/(html|xml|plain)/g.test(contentType)) {
       log.page(`Bad content-type: ${res.headers.get('content-type')} ${url}`)
       return false
     }

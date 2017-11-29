@@ -15,9 +15,9 @@ function run-api() {
   cd $ROOT/apps/api
   if [ "$ARG1" = "--prod" ]; then
     # this is really test-prod
-    npm run start-local-prod
+    npm run start-prod
   else
-    npm run start-dev
+    npm run start
   fi
 }
 
@@ -44,19 +44,13 @@ function run-site() {
 if [ "$ACTION" = "backend" ]; then
   echo "Open about:inspect in Chrome to debug Node"
   compose up ${@:2}
-elif [ "$ACTION" = "electron-dist" ]; then
-  cd apps/electron
-  npm run test-app
 elif [ "$ACTION" = "electron" ]; then
   if [ "$ARG1" = "--prod" ]; then
     cd apps/electron
     npm run start-prod
   else
     cd apps/electron
-    npm run watch &
-    sleep 3
-    npm start &
-    wait
+    npm start
   fi
 elif [ "$ACTION" =  "site" ]; then
   run-site ${@:2} &

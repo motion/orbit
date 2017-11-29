@@ -4,6 +4,11 @@
   "scripts": {
     "start": "See: bin/* for commands available"
   },
+  "dependencies": {
+    "mobx": "^3.3.1",
+    "react": "^16.1.0",
+    "react-dom": "^16.1.0"
+  },
   "devDependencies": {
     "@mcro/preset-motion": "^1.2.0",
     "babel-cli": "^6.23.0",

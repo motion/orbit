@@ -40,6 +40,7 @@ function getServedPath(appPackageJson) {
 }
 
 module.exports = {
+  resolve: resolveApp,
   appBuild: resolveApp('build'),
   appPublic: resolveApp('public'),
   appHtml: resolveApp('index.html'),

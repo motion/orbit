@@ -1,9 +1,7 @@
 import 'source-map-support/register'
-import 'isomorphic-fetch'
 import 'raf/polyfill'
 import './helpers/handlePromiseErrors'
 import './helpers/updateChecker'
-import './helpers/monitorResourceUsage'
 import electronContextMenu from 'electron-context-menu'
 import electronDebug from 'electron-debug'
 import React from 'react'
@@ -11,7 +9,10 @@ import { render } from '@mcro/reactron'
 import { throttle } from 'lodash'
 import { extras } from 'mobx'
 
+console.log('NODE_ENV', process.env.NODE_ENV)
+
 if (process.env.NODE_ENV !== 'production') {
+  require('./helpers/monitorResourceUsage')
   require('source-map-support/register')
 }
 
@@ -34,7 +35,8 @@ const start = throttle(() => {
 
 export default start
 
-if (process.argv.find(x => x === '--start')) {
+if (process.env.NODE_ENV === 'production') {
+  console.log('STARTING ELECTRON APP')
   start()
 }
 

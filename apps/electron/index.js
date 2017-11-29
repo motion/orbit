@@ -1,15 +1,19 @@
 // this is only loaded in production!
 
 process.env.NODE_ENV = 'production'
-process.env.IS_PROD = true
 process.env.HAS_BABEL_POLYFILL = true
 
 require('babel-polyfill')
+// electron app
 
-const electronApp = require('./es6/index').default
-electronApp()
+if (process.env.NODE_ENV === 'production') {
+  require('./build/app')
+} else {
+  require('./lib/index')
+}
 
 setTimeout(() => {
+  // api
   const startApi = require('@mcro/api').default
   startApi().then(() => {
     console.log('started')

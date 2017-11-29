@@ -11,5 +11,6 @@ const extensionIDToPath = id =>
   Path.join(Constants.ROOT_PATH, '..', 'resources', 'extensions', id)
 
 export default function getExtensions(names) {
-  return names.map(extensionToID).map(extensionIDToPath)
+  const extensions = names.map(extensionToID).map(extensionIDToPath)
+  return extensions
 }

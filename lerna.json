@@ -9,7 +9,6 @@
       "nohoist": [
         "@researchgate/react-intersection-observer",
         "bindings",
-        "osx-mouse",
         "ref",
         "puppeteer",
         "color-convert",

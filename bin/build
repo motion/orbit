@@ -42,6 +42,7 @@ function build-dev() {
 function build-es6() {
   npx lerna exec --parallel \
     --ignore @mcro/web \
+    --ignore @mcro/electron \
     --ignore @mcro/crawler \
     --ignore @mcro/site \
     --ignore @mcro/preset-motion \

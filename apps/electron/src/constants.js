@@ -6,3 +6,4 @@ export const ORA_WIDTH = 320
 export const ROOT_PATH = __dirname
 
 console.log('Constants.APP_URL', APP_URL)
+console.log('Constants.ROOT_PATH', ROOT_PATH)

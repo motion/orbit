@@ -20,7 +20,12 @@ export const emd = (words, words2, weights, vecs) => {
     let minIndex = null
 
     words2.forEach((w2, index) => {
-      const val = euclideanDistance(w + ':' + w2, vecs[w], vecs[w2])
+      const val = euclideanDistance(
+        Math.random() + w + ':' + w2,
+        vecs[w],
+        vecs[w2]
+      )
+
       if (val < minVal) {
         minVal = val
         minIndex = index
@@ -48,6 +53,7 @@ export const minKBy = (vals, k, fn) => {
 
   vals.forEach(item => {
     const val = fn(item)
+    console.log('min is', min)
     if (val < min) {
       if (stash.length < k) {
         stash.push(item)

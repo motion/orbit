@@ -613,14 +613,15 @@ const bm25fIMS = () => {
   methods.consolidate = consolidate
   methods.isConsolidated = () => consolidated
   methods.search = search
-  methods.invertedIdx = invertedIdx
-  methods.helpers = helpers
-  methods.token2Index = token2Index
-  methods.prepareInput = prepareInput
   methods.exportJSON = exportJSON
   methods.importJSON = importJSON
   methods.reset = reset
   methods.getIndex2Token = () => invert(token2Index)
+  methods.prepareInput = prepareInput
+  methods.token2Index = token2Index
+  methods.helpers = helpers
+  methods.getInvertedIdx = () => invertedIdx
+
   methods.idf = idf
   methods.documents = documents
   methods.getWeights = text =>

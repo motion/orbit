@@ -1,16 +1,43 @@
-import Context from '~/context'
+import Search from '~/search'
 import { watch } from '@mcro/black'
 import { Thing } from '~/app'
-import { debounce } from 'lodash'
+import { debounce, flatten, range } from 'lodash'
 
 export default class {
   clearId = null
+  allItems = null
+
   willMount() {
     window.relevancy = this
     this.clearId = setInterval(() => {
       this.sentences = this.context && this.context.sentences
     }, 40)
+
+    this.getData()
   }
+
+  async getData() {
+    const text = await (await fetch('/dropbox.json')).json()
+    const tens = text => {
+      const lines = text.split('\n\n')
+
+      return range(Math.floor(lines.length / 10)).map(i =>
+        lines.slice(i * 10, (i + 1) * 10).join('\n')
+      )
+    }
+
+    this.allItems = flatten(
+      text.map(({ body, title }) => {
+        return { title, body }
+
+        return tens(body).map(body => ({
+          title,
+          body,
+        }))
+      })
+    )
+  }
+
   willUnmount() {
     console.log('clearning')
     clearInterval(this.clearId)
@@ -23,10 +50,14 @@ export default class {
   setSearch = debounce(val => {
     this.textboxVal = val
     this.search = val
+    if (this.context) {
+      this.context.searchText = val
+    }
   }, 50)
-  @watch allItems = () => Thing.find()
+  // @watch allItems = () => Thing.find()
 
-  @watch context = () => this.allItems && new Context(this.allItems || [])
+  @watch
+  context = () => this.allItems && new Search({ items: this.allItems || [] })
 
   crawl = async () => {
     const val = await (await fetch('http://localhost:3000')).json()
@@ -40,6 +71,7 @@ export default class {
         url: item.url,
       })
     })
+    console.log('val is', val)
   }
 
   get items() {

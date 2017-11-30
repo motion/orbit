@@ -6,8 +6,7 @@
   "module": "src/index.js",
   "scripts": {
     "start": "node index.js",
-    "start-prod": "NODE_ENV=production IS_PROD=true node lib/index.js",
-    "watch": "npm run build -- --watch"
+    "start-prod": "NODE_ENV=production IS_PROD=true node lib/index.js"
   },
   "dependencies": {
     "babel-polyfill": "^6.26.0",

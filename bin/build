@@ -93,14 +93,12 @@ elif [ "$APP" = "--watch" ]; then
   build-es6 --watch --skip-initial-build &
   build-dev --watch --skip-initial-build &
   build-prod --watch --skip-initial-build &
-  (cd apps/crawler && npm run watch) &
   wait
 elif [ "$APP" = "" ]; then
   build-es6 &
   build-dev &
   build-prod &
   wait
-  (cd apps/crawler && npm run build)
 else
   echo "should be able to build individual apps"
 fi

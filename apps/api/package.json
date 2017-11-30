@@ -6,7 +6,7 @@
   "module": "index-mjs.js",
   "scripts": {
     "start":
-      "NODE_ENV=development DEBUG=puppeteer:*,api,crawler,crawler:* ../../node_modules/.bin/nodemon --inspect=0.0.0.0:5858 index.js",
+      "NODE_ENV=development DEBUG=api,crawler,crawler:* ../../node_modules/.bin/nodemon --inspect=0.0.0.0:5858 index.js",
     "start-prod": "NODE_ENV=production node index.js"
   },
   "nodemonConfig": {

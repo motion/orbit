@@ -47,10 +47,12 @@ if [ "$ACTION" = "backend" ]; then
 elif [ "$ACTION" = "electron" ]; then
   if [ "$ARG1" = "--prod" ]; then
     cd apps/electron-build
-    npm run start-prod
+    npm run start-prod &
+    wait
   else
     cd apps/electron-build
-    npm start
+    npm start &
+    wait
   fi
 elif [ "$ACTION" =  "site" ]; then
   run-site ${@:2} &

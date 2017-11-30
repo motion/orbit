@@ -14,15 +14,7 @@
 # now
 
 * script to clean electron after build:
-  * do a clean/insall
   * npm dedupe (verify this works)
-  * investigate if puppeteer can use Chrome.app
-    * or if it has a smaller version of chromium it can use (can it share w
-      electron?)
-  * remove @mcro/api/node_modules/leveldown (and other pouch stuff being
-    installed)
-  * remove dup crawler
-    * rm -r ./node_modules/@mcro/api/node_modules/@mcro/crawler
   * remove puppeteer 2 extra chromes:
   * rm this big file
     * rm -r ./node_modules/@mcro/crawler/node_modules/.cache

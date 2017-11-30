@@ -163,7 +163,6 @@ export default class Windows extends React.Component {
       let res
       try {
         res = await Helpers.getActiveWindowInfo()
-        console.log('got res', res)
       } catch (err) {
         if (err.message.indexOf(`Can't get window 1 of`)) {
           // super hacky but if it fails it usually gives an error like:

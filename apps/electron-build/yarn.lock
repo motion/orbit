@@ -569,7 +569,7 @@ fs-extra@^2.0.0:
     graceful-fs "^4.1.2"
     jsonfile "^2.1.0"
 
-fs-extra@^4.0.0, fs-extra@jprichardson/node-fs-extra#42e42be:
+fs-extra@^4.0.0, fs-extra@^4.0.2, fs-extra@jprichardson/node-fs-extra#42e42be:
   version "4.0.2"
   resolved "https://codeload.github.com/jprichardson/node-fs-extra/tar.gz/42e42bea22bfa7707966141cd186e3ef26894460"
   dependencies:

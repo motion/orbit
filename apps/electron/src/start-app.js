@@ -34,6 +34,6 @@ export function start() {
   })
 }
 
-if (process.argv.indexOf('--start')) {
+if (process.env.NODE_ENV === 'development') {
   start()
 }

@@ -1,17 +1,19 @@
 import 'babel-polyfill'
+import { setTimeout } from 'core-js/library/web/timers'
 
 process.env.HAS_BABEL_POLYFILL = true
+process.env.NODE_ENV = 'production'
 
 console.log('starting app')
 require('./start-app').start()
 
-if (!process.env.DISABLE_API) {
+export async function startAPI() {
   console.log('starting api')
-  setTimeout(() => {
-    // api
-    const startApi = require('@mcro/api').default
-    startApi().then(() => {
-      console.log('started')
-    })
-  }, 100)
+  const sleep = ms => new Promise(res => setTimeout(res, ms))
+  await sleep(100)
+  require('@mcro/api')
+}
+
+if (!process.env.DISABLE_API) {
+  startAPI()
 }

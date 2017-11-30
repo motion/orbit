@@ -74,7 +74,7 @@ elif [ "$APP" = "crawler" ]; then
   cd $ROOT/apps/electron
   npm run build
 elif [ "$APP" = "electron" ]; then
-  cd $ROOT/apps/electron
+  cd $ROOT/apps/electron-build
   npm run dist
 elif [ "$APP" = "site" ]; then
   cd $ROOT/apps/site

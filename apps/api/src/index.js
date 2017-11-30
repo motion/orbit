@@ -39,15 +39,11 @@ process.title = 'orbit-api'
 
 const API = require('./api').default
 
-export default async function run() {
+export async function run() {
   const Api = new API()
   try {
     await Api.start()
   } catch (err) {
     console.log('error', err)
   }
-}
-
-if (!IS_DEV) {
-  run()
 }

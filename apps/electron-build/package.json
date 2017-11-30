@@ -1,8 +1,9 @@
 {
   "name": "@mcro/electron-build",
-  "version": "1.5.34",
+  "version": "1.5.37",
   "private": true,
   "scripts": {
+    "start": "NODE_ENV=development electron ../electron/lib/start-app",
     "deploy":
       "npm run sign-app && npm run bundle-app && npm run prepare-publish && npm run publish-app",
     "dist": "npm version patch && npm run bundle",
@@ -26,6 +27,7 @@
     "rimraf": "^2.6.2"
   },
   "dependencies": {
-    "debug": "^3.1.0"
+    "debug": "^3.1.0",
+    "fs-extra": "^4.0.2"
   }
 }

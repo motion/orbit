@@ -30,3 +30,7 @@ export function start() {
     app = ref
   })
 }
+
+if (process.argv.indexOf('--start')) {
+  start()
+}

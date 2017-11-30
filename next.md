@@ -13,7 +13,6 @@
 
 # now
 
-* build app to prod bundle
 * finish oauth window popup controller
   * API: watch for oauth finish => AS: close offscreen window
 * peek window that tracks next to main window

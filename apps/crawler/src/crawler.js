@@ -341,9 +341,6 @@ export default class Crawler {
       puppeteerOptions: {
         ignoreHTTPSErrors: true,
         timeout: 10000, // 10 seconds
-        // args: ['--no-sandbox', '--disable-setuid-sandbox'],
-        // executablePath:
-        //   '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
       },
       ...this.options,
       ...runOptions,

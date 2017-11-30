@@ -13,6 +13,20 @@
 
 # now
 
+* script to clean electron after build:
+  * do a clean/insall
+  * npm dedupe (verify this works)
+  * investigate if puppeteer can use Chrome.app
+    * or if it has a smaller version of chromium it can use (can it share w
+      electron?)
+  * remove @mcro/api/node_modules/leveldown (and other pouch stuff being
+    installed)
+  * remove dup crawler
+    * rm -r ./node_modules/@mcro/api/node_modules/@mcro/crawler
+  * remove puppeteer 2 extra chromes:
+  * rm this big file
+    * rm -r ./node_modules/@mcro/crawler/node_modules/.cache
+  * rm devDependencies of @mcro/electron (and api)
 * finish oauth window popup controller
   * API: watch for oauth finish => AS: close offscreen window
 * peek window that tracks next to main window
@@ -29,7 +43,6 @@
 - Crawler:
   * Setting panes to see stores crawls + run + see/manage results
   * Store crawl settings once completed so it can re-run
-  * Store proper url for each item so it can detect pinned
 - Ingest:
   * Knowledgebase
   * Slack
@@ -55,7 +68,6 @@
     * 4. Keyboard shortcuts / search / usage generally
     * 5. Done! Tweet/email us easily here
 - Beta:
-  * get a bundle of app built
   * test bundle onboarding process
   * super basic onboarding window
   * token refreshing

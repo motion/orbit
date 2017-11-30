@@ -39,7 +39,7 @@ const BINDINGS_PATH =
 const BROWSER_MAINS = IS_DEV
   ? ['module', 'browser', 'main', 'es6']
   : ['browser', 'module:production', 'main', 'es6']
-const SOMEONE_GET_THEY_MAINS = TARGET ? ['main'] : BROWSER_MAINS
+const SOMEONE_GET_THEY_MAINS = TARGET ? ['module', 'main'] : BROWSER_MAINS
 const MAIN_FIELDS = process.env.MAIN_FIELDS || SOMEONE_GET_THEY_MAINS
 
 // if you want to parse our modules directly use this, but we have dist/ folder now
@@ -142,8 +142,6 @@ module.exports = Object.assign(config, {
     IS_DEV && new WatchMissingNodeModulesPlugin(Paths.appNodeModules),
     // readable names
     new webpack.NamedModulesPlugin(),
-
-    new webpack.IgnorePlugin(/\/iconv-loader$/),
 
     BINDINGS_PATH &&
       new webpack.NormalModuleReplacementPlugin(

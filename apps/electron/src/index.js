@@ -1,36 +1,17 @@
-import 'source-map-support/register'
-import 'raf/polyfill'
-import './helpers/handlePromiseErrors'
-import './helpers/updateChecker'
-import electronContextMenu from 'electron-context-menu'
-import electronDebug from 'electron-debug'
-import React from 'react'
-import { render } from '@mcro/reactron'
-import { extras } from 'mobx'
+import 'babel-polyfill'
 
-if (process.env.NODE_ENV !== 'production') {
-  require('./helpers/monitorResourceUsage')
-  require('source-map-support/register')
-}
+process.env.HAS_BABEL_POLYFILL = true
 
-// share state because node loads multiple copies
-extras.shareGlobalState()
+console.log('starting app')
+require('./start-app').start()
 
-let app = null
-
-export function start() {
-  console.log('starting electron', process.env.NODE_ENV)
-  const { default: Windows, onWindow } = require('./windows')
-  render(<Windows key={Math.random()} />)
-  if (!app) {
-    electronContextMenu()
-    electronDebug()
-  }
-  onWindow(ref => {
-    app = ref
-  })
-}
-
-if (process.argv.indexOf('--start')) {
-  start()
+if (!process.env.DISABLE_API) {
+  console.log('starting api')
+  setTimeout(() => {
+    // api
+    const startApi = require('@mcro/api').default
+    startApi().then(() => {
+      console.log('started')
+    })
+  }, 100)
 }

@@ -156,18 +156,26 @@ export default class Windows extends React.Component {
   }, 200)
 
   lastContext = null
+  lastContextError = null
 
   watchForContext = () => {
     this.setInterval(async () => {
-      const res = await Helpers.getActiveWindowInfo()
-      if (res) {
-        const { application } = res
-        const context = {
-          focusedApp: application,
-          ...(await Helpers.getChromeContext()),
+      try {
+        const res = await Helpers.getActiveWindowInfo()
+        if (res) {
+          const { application } = res
+          const context = {
+            focusedApp: application,
+            ...(await Helpers.getChromeContext()),
+          }
+          if (!isEqual(this.state.context, context)) {
+            this.updateState({ context })
+          }
         }
-        if (!isEqual(this.state.context, context)) {
-          this.updateState({ context })
+      } catch (err) {
+        if (this.lastContextError !== err.message) {
+          console.log('error watching context', err.message)
+          this.lastContextError = err.message
         }
       }
     }, 500)

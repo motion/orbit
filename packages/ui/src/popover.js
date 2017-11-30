@@ -402,7 +402,7 @@ class Popover extends React.PureComponent<Props> {
     return towardsTop ? 'top' : 'bottom'
   }
 
-  edgePad = (currentPosition, windowSize, popoverSize) => {
+  edgePad(currentPosition, windowSize, popoverSize) {
     return Math.min(
       // upper limit
       windowSize - this.curProps.edgePadding - popoverSize,
@@ -523,6 +523,10 @@ class Popover extends React.PureComponent<Props> {
       }
     }
 
+    if (isNaN(top)) {
+      debugger
+    }
+
     return { arrowTop, top, maxHeight }
   }
 
@@ -563,16 +567,14 @@ class Popover extends React.PureComponent<Props> {
       console.log('no node!', name)
       return
     }
-
     const listeners = []
-
     const { delay, noHover } = this.curProps
     const isPopover = name === 'menu'
     const isTarget = name === 'target'
     const setHovered = () => this.hoverStateSet(name, true)
     const setUnhovered = () => this.hoverStateSet(name, false)
     const openIfOver = () => {
-      if (this.isNodeHovered(node, isPopover)) {
+      if (this.isNodeHovered(node)) {
         setHovered()
       }
     }
@@ -580,7 +582,7 @@ class Popover extends React.PureComponent<Props> {
       if (isPopover && Date.now() - this.state.menuHovered < 200) {
         return
       }
-      if (!this.isNodeHovered(node, isPopover)) {
+      if (!this.isNodeHovered(node)) {
         setUnhovered()
         if (delayOpenIfHover.cancel) {
           // cancel previous
@@ -590,10 +592,15 @@ class Popover extends React.PureComponent<Props> {
     }
     const delayOpenIfHover = isTarget ? debounce(openIfOver, delay) : openIfOver
     // this will avoid the delay open if its already open
-    const onEnter = () =>
-      isTarget && this.state.menuHovered ? openIfOver() : delayOpenIfHover()
-    const onLeave = debounce(closeIfOut, isTarget ? 80 : 20) // 🐛 target should close slower than menu opens
-
+    const onEnter = () => {
+      if (isTarget && this.state.menuHovered) {
+        openIfOver()
+      } else {
+        delayOpenIfHover()
+      }
+    }
+    // 🐛 target should close slower than menu opens
+    const onLeave = isTarget ? debounce(closeIfOut, 80) : closeIfOut
     // logic for enter/leave
     listeners.push(
       this.on(node, 'mouseenter', () => {
@@ -604,22 +611,20 @@ class Popover extends React.PureComponent<Props> {
         }
       })
     )
-
     // if noHover it reduces bugs to just not check hovered state
     const onMouseLeave = noHover ? setUnhovered : onLeave
     listeners.push(this.on(node, 'mouseleave', onMouseLeave))
-
     return listeners
   }
 
   // hover helpers
-  hoverStateSet(name, val) {
+  hoverStateSet(name, isHovered) {
     const { openOnHover, onMouseEnter } = this.curProps
     const setter = () => {
       // this.lastEvent[val ? 'enter' : 'leave'][name] = Date.now()
-      this.setState({ [`${name}Hovered`]: val ? Date.now() : false })
+      this.setState({ [`${name}Hovered`]: isHovered ? Date.now() : false })
     }
-    if (val) {
+    if (isHovered) {
       if (openOnHover) {
         this.setPosition(setter)
       }
@@ -631,10 +636,10 @@ class Popover extends React.PureComponent<Props> {
         setter()
       }
     }
-    return val
+    return isHovered
   }
 
-  isNodeHovered = (node: HTMLElement, isPopover): boolean => {
+  isNodeHovered = (node: HTMLElement): boolean => {
     const childSelector = `${node.tagName.toLowerCase()}.${node.className.replace(
       /\s+/g,
       '.'
@@ -654,13 +659,11 @@ class Popover extends React.PureComponent<Props> {
   get showPopover() {
     const { isOpen } = this.state
     const { openOnHover, open, openOnClick } = this.props
-    const openUndef = typeof open === 'undefined'
-    return (
-      (this.mounted && open) ||
-      isOpen ||
-      (openUndef &&
-        ((openOnHover && this.isHovered) || (openOnClick && isOpen)))
-    )
+    if (!this.mounted) return false
+    if (open || isOpen) return true
+    if (typeof open === 'undefined') {
+      return (openOnHover && this.isHovered) || (openOnClick && isOpen)
+    }
   }
 
   render({
@@ -711,7 +714,6 @@ class Popover extends React.PureComponent<Props> {
       direction,
     } = this.state
     const { showPopover } = this
-
     const controlledTarget = target => {
       const targetProps = {
         ref: this.ref('targetRef').set,

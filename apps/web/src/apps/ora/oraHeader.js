@@ -152,7 +152,7 @@ export default class OraHeader extends React.Component {
             <rightSide onMouseUp={this.preventPropagation}>
               <UI.Popover
                 openOnHover
-                delay={300}
+                delay={150}
                 closeOnEsc
                 overlay="transparent"
                 theme="light"

@@ -2,8 +2,8 @@ var path = require('path')
 var fs = require('fs')
 var url = require('url')
 
-const dir = process.env.BUILD_DIR || process.cwd()
-var appDirectory = fs.realpathSync(dir)
+const ROOT_DIR = process.env.BUILD_DIR || process.cwd()
+var appDirectory = fs.realpathSync(ROOT_DIR)
 
 function resolveApp(relativePath) {
   return path.resolve(appDirectory, relativePath)

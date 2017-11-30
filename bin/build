@@ -27,7 +27,7 @@ killgroup() {
 }
 
 function build-dev() {
-  npx lerna exec --parallel --concurrency 1 \
+  npx lerna exec --parallel \
     --ignore @mcro/web \
     --ignore @mcro/site \
     --ignore @mcro/api \
@@ -51,8 +51,7 @@ function build-es6() {
 }
 
 function build-prod() {
-  npx lerna exec --parallel --concurrency 1 \
-    --ignore @mcro/api \
+  npx lerna exec --parallel \
     --ignore @mcro/crawler \
     --ignore @mcro/electron \
     --ignore @mcro/builder \

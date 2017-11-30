@@ -8,8 +8,6 @@ import * as Constants from '~/constants'
 import OAuth from './server/oauth'
 import OAuthStrategies from './server/oauth.strategies'
 import Passport from 'passport'
-import expressPouch from 'express-pouchdb'
-import Path from 'path'
 import Crawler from '@mcro/crawler'
 import debug from 'debug'
 
@@ -53,7 +51,6 @@ export default class Server {
     this.setupCrawler()
     this.setupCredPass()
     this.setupPassportRoutes()
-    // this.setupPouch()
     this.setupProxy()
   }
 
@@ -212,33 +209,6 @@ export default class Server {
         router,
       })
     )
-  }
-
-  setupPouch() {
-    // const dbPaths = Object.keys(Models)
-    //   .map(model => Models[model].title)
-    //   .map(name => `/db/${name}`)
-
-    // rewrite rxdb paths to non-rxdb :)
-    this.app.use(
-      '/db',
-      proxy({
-        target: '/db2',
-        pathRewrite: path => {
-          if (path === '/db' || path === '/db/') {
-            return '/'
-          }
-          const newPath = path.replace(
-            /\/db\/(.*)([\/\?].*)?$/g,
-            '/username-rxdb-0-$1$2'
-          )
-          return newPath
-        },
-      })
-    )
-
-    // pouch routes
-    this.app.use('/db2', expressPouch(this.pouch, { inMemoryConfig: true }))
   }
 
   setupPassportRoutes() {

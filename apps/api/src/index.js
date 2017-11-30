@@ -1,7 +1,9 @@
 import 'isomorphic-fetch'
 import cleanStack from 'clean-stacktrace'
 
-if (process.env.NODE_ENV !== 'production') {
+const IS_DEV = process.env.NODE_ENV === 'development'
+
+if (IS_DEV) {
   require('source-map-support/register')
 }
 
@@ -44,4 +46,8 @@ export default async function run() {
   } catch (err) {
     console.log('error', err)
   }
+}
+
+if (!IS_DEV) {
+  run()
 }

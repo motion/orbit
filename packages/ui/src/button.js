@@ -19,6 +19,7 @@ export default class Button extends React.PureComponent {
     glint,
     glowProps,
     badgeProps,
+    hovered,
     onClick: _onClick,
     ...props
   }) {
@@ -51,11 +52,11 @@ export default class Button extends React.PureComponent {
         row
         align="center"
         justify="center"
+        hovered={hovered}
         glow={glow}
         glowProps={{
           scale: 1.8,
           draggable: false,
-          show: false,
           opacity: 0.15,
           ...glowProps,
           ...(theme && theme.glow),

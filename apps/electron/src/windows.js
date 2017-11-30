@@ -160,22 +160,35 @@ export default class Windows extends React.Component {
 
   watchForContext = () => {
     this.setInterval(async () => {
+      let res
       try {
-        const res = await Helpers.getActiveWindowInfo()
-        if (res) {
-          const { application } = res
-          const context = {
-            focusedApp: application,
-            ...(await Helpers.getChromeContext()),
-          }
-          if (!isEqual(this.state.context, context)) {
-            this.updateState({ context })
+        res = await Helpers.getActiveWindowInfo()
+        console.log('got res', res)
+      } catch (err) {
+        if (err.message.indexOf(`Can't get window 1 of`)) {
+          // super hacky but if it fails it usually gives an error like:
+          //   execution error: System Events got an error: Can’t get window 1 of process "Slack"
+          // so we can find it:
+          const name = err.message.match(/process "([^"]+)"/)
+          if (name && name.length) {
+            res = { application: name[1], title: name[1] }
           }
         }
-      } catch (err) {
-        if (this.lastContextError !== err.message) {
-          console.log('error watching context', err.message)
-          this.lastContextError = err.message
+        if (!res) {
+          if (this.lastContextError !== err.message) {
+            console.log('error watching context', err.message)
+            this.lastContextError = err.message
+          }
+        }
+      }
+      if (res) {
+        const { application } = res
+        const context = {
+          focusedApp: application,
+          ...(await Helpers.getChromeContext()),
+        }
+        if (!isEqual(this.state.context, context)) {
+          this.updateState({ context })
         }
       }
     }, 500)

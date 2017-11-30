@@ -46,7 +46,7 @@ if [ "$ACTION" = "backend" ]; then
   compose up ${@:2}
 elif [ "$ACTION" = "electron" ]; then
   if [ "$ARG1" = "--prod" ]; then
-    cd apps/electron
+    cd apps/electron-build
     npm run start-prod
   else
     cd apps/electron

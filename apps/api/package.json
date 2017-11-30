@@ -6,7 +6,7 @@
   "module": "index-mjs.js",
   "scripts": {
     "start":
-      "NODE_ENV=development DEBUG=puppeteer:*,api,crawler,crawler:* nodemon --inspect=0.0.0.0:5858 index.js",
+      "NODE_ENV=development DEBUG=puppeteer:*,api,crawler,crawler:* ../../node_modules/.bin/nodemon --inspect=0.0.0.0:5858 index.js",
     "start-prod": "NODE_ENV=production node index.js"
   },
   "nodemonConfig": {
@@ -27,7 +27,6 @@
     "invariant": "^2.2.2",
     "isomorphic-fetch": "^2.2.1",
     "lodash": "^4.17.4",
-    "mobx": "^3.3.1",
     "morgan": "^1.8.2",
     "passport": "^0.4.0",
     "passport-facebook": "^2.1.1",
@@ -36,20 +35,9 @@
     "passport-oauth": "^1.0.0",
     "passport-oauth2-refresh": "^1.0.0",
     "passport-slack-ponycode": "0.0.2",
-    "pouchdb": "^6.3.4",
-    "pouchdb-adapter-http": "^6.3.4",
-    "pouchdb-adapter-leveldb": "^6.3.4",
-    "pouchdb-adapter-memory": "^6.3.4",
-    "pouchdb-browser": "^6.3.4",
-    "pouchdb-express-router": "^0.0.9",
-    "pouchdb-replication": "^6.3.4",
     "sb-promisify": "^2.0.2",
     "source-map-support": "^0.4.16",
     "sudo-prompt": "^7.1.1",
     "wait-for-port": "^0.0.2"
-  },
-  "devDependencies": {
-    "nodemon": "^1.11.0",
-    "webpack": "^3.4.1"
   }
 }

@@ -12,7 +12,6 @@
   },
   "dependencies": {
     "@mcro/black": "^1.5.1",
-    "@mcro/crawler": "*",
     "@mcro/gloss": "^1.5.1",
     "@mcro/model": "^1.5.1",
     "@mcro/models": "^1.5.1",

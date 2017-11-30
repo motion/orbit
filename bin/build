@@ -42,6 +42,7 @@ function build-dev() {
 function build-es6() {
   npx lerna exec --parallel \
     --ignore @mcro/web \
+    --ignore @mcro/electron-build \
     --ignore @mcro/electron \
     --ignore @mcro/crawler \
     --ignore @mcro/site \
@@ -54,6 +55,7 @@ function build-prod() {
   npx lerna exec --parallel \
     --ignore @mcro/crawler \
     --ignore @mcro/electron \
+    --ignore @mcro/electron-build \
     --ignore @mcro/builder \
     --ignore @mcro/hmr \
     --ignore @mcro/hmr-view \

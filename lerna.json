@@ -47,7 +47,6 @@
         "victory",
         "electron-context-menu",
         "electron-debug",
-        "devtron",
         "electron-simple-publisher",
         "electron-simple-updater",
         "electron-prebuilt-compile",

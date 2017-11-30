@@ -14,41 +14,20 @@ const log = {
 
 const ROOT = Path.join(__dirname, '..')
 const ELECTRON_DIR = Path.join(ROOT, '..', 'electron')
-const ignoreDirectories = [
-  '/node_modules/.bin',
-  '/node_modules/.cache',
-  '.local-chromium',
-]
-
-const copyAfter = [
-  [
-    Path.join(
-      ROOT,
-      '..',
-      'crawler',
-      'node_modules',
-      'puppeteer',
-      '.local-chromium'
-    ),
-    Path.join(
-      ROOT,
-      'app',
-      'Orbit-darwin-x64',
-      'Orbit.app',
-      'Contents',
-      'Resources',
-      'app',
-      'node_modules',
-      '@mcro',
-      'api',
-      'node_modules',
-      '@mcro',
-      'crawler',
-      'node_modules',
-      'puppeteer',
-      '.local-chromium'
-    ),
-  ],
+const ignorePaths = [
+  // this avoids duplicating the chromium build,
+  // since it derefs the subling Versions/Current symlink it still copies
+  'Framework.framework/Versions/A',
+  // theres a weird nesting here that gets copied too
+  // and chromium doesnt complain if we just leave it out
+  'Chromium Framework.framework/Versions',
+  '/node_modules/.bin/',
+  '/node_modules/.cache/',
+  'node_modules/electron/',
+  'node_modules/electron-prebuilt/',
+  'node_modules/electron-prebuilt-compile/',
+  'node_modules/electron-packager/',
+  '/.git/',
 ]
 
 async function bundle() {
@@ -70,7 +49,7 @@ async function bundle() {
     ignore: path => {
       // paths are relative to the current dir but weird
       // so "/app/something" is referring to the "orbit/apps/electron/app/something"
-      if (ignoreDirectories.find(dir => path.indexOf(dir) >= 0)) {
+      if (ignorePaths.find(dir => path.indexOf(dir) >= 0)) {
         log.ignore(`ignoring path: ${path}`)
         return true
       }
@@ -78,10 +57,6 @@ async function bundle() {
       return false
     },
   })
-  for (const [src, out] of copyAfter) {
-    log.copy(`copy\n from: ${src}\n   to: ${out}`)
-    await Fs.copy(src, out)
-  }
   console.log('wrote app to', paths)
 }
 

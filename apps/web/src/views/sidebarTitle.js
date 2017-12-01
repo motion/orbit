@@ -131,7 +131,7 @@ export default class SidebarTitle {
       flexFlow: 'row',
     },
     backButton: {
-      margin: [0, 8, 0, -3],
+      margin: [0, 3, 0, -3],
     },
     image: {
       width: 16,

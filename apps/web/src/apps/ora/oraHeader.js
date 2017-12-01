@@ -140,7 +140,8 @@ export default class OraHeader extends React.Component {
               <titleText>
                 <UI.Text ellipse size={0.8}>
                   {(oraStore.banner && oraStore.banner.message) ||
-                    oraStore.stack.last.result.id}
+                    oraStore.stack.last.result.id ||
+                    'Search'}
                 </UI.Text>
               </titleText>
             </title>

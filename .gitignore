@@ -21,6 +21,7 @@ apps/electron/dist
 apps/electron/build
 apps/electron/app
 apps/crawler/build
+apps/search/build
 
 # keep these lib folders because these are babel plugins
 !packages/hmr/lib

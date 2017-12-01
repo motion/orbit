@@ -1,5 +1,5 @@
 import { countBy, reverse, sumCounts, sortBy } from 'lodash'
-import stopwords from './stopwords'
+import entityStopwords from './entityStopwords'
 
 export default items => {
   const entityByItems = {}
@@ -16,7 +16,7 @@ export default items => {
     )
       .map(item => item.substr(2))
       .filter(item => !/\n/.test(item))
-      .filter(item => stopwords.indexOf(item.toLowerCase()) == -1)
+      .filter(item => entityStopwords.indexOf(item.toLowerCase()) == -1)
 
     list.forEach(word => {
       if (!totalCounts[word]) totalCounts[word] = 0

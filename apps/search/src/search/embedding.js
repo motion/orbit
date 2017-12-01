@@ -1,5 +1,5 @@
 import { minKBy, cosineSimilarity } from './helpers'
-import { store, watch } from '@mcro/black'
+import { store, watch } from '@mcro/black/store'
 
 @store
 export default class Embedding {
@@ -28,7 +28,10 @@ export default class Embedding {
   }
 
   nearestWords = word => {
-    const vec = this.vectors[word]
+    return this.nearestWordsByVec(this.vectors[word])
+  }
+
+  nearestWordsByVec = vec => {
     const vecs = Object.keys(this.vectors).map(word => ({
       word,
       vec: this.vectors[word],

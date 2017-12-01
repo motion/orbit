@@ -41,7 +41,7 @@ export default class RelevancyPage {
               {store.context &&
                 (store.context.autocomplete || []).map(i => (
                   <UI.Text>
-                    {i.text} - {i.val}
+                    {i.text} - {i.val} - index {i.index}
                   </UI.Text>
                 ))}
             </autocomplete>
@@ -89,12 +89,6 @@ export default class RelevancyPage {
                       </UI.Text>
                     ))}
                   </details>
-                  <buttons $$row>
-                    <button onClick={() => store.setSearch(item.title)}>
-                      use
-                    </button>
-                    <UI.Text>similarity: {similarity}</UI.Text>
-                  </buttons>
                 </item>
               )
             )}

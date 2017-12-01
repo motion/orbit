@@ -62,6 +62,5 @@ function getProperNouns(content) {
   console.log(items)
 }
 export default text => {
-  console.log('text is', text)
   return getProperNouns(text)
 }

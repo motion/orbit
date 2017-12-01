@@ -50,6 +50,7 @@ export default class Server {
     this.app.use(bodyParser.json({ limit: '500mb' }))
     this.app.use(bodyParser.urlencoded({ limit: '500mb', extended: false }))
     this.setupCrawler()
+    this.setupSearch()
     this.setupCredPass()
     this.setupPassportRoutes()
     // this.setupPouch()
@@ -78,6 +79,13 @@ export default class Server {
       )
       next()
     }
+  }
+
+  setupSearch() {
+    const searchIndex = require.resolve('@mcro/search')
+    const searchDist = Path.join(searchIndex, '..', 'build', 'js')
+    log('setting up search', searchDist)
+    this.app.use('/search', express.static(searchDist))
   }
 
   setupCrawler() {

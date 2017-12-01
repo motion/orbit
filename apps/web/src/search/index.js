@@ -1,64 +1,34 @@
-import { watch, store } from '@mcro/black'
-import { range } from 'lodash'
-import Indexer from './indexer'
-import Embedding from './embedding'
+import { store } from '@mcro/black'
+import { debounce } from 'lodash'
 import debug from 'debug'
 
 const log = debug('search')
 log.enabled = true
 
 @store
-export default class Search {
-  items = null
+export default class SearchRunner {
   searchText = ''
-  autocomplete = null
+  autocomplete = []
   results = null
-  resultsCount = null
 
-  @watch
-  indexer = () =>
-    this.items && new Indexer({ items: this.items, embedding: this.embedding })
-  embedding = new Embedding()
-
-  constructor({ items, resultsCount }) {
-    if (items) {
-      this.items = items
+  sendSearch = debounce(() => {
+    if (this.searchText.length) {
+      this.worker.postMessage({ type: 'search', text: this.searchText })
     }
+  }, 50)
 
-    this.resultsCount = resultsCount || 10
+  constructor({ items }) {
+    this.worker = new Worker('/search/app.js')
+    this.worker.postMessage({ type: 'index', items })
 
     this.react(
       () => this.searchText,
       () => {
-        this.searching = true
-        this.results = this.search()
-        this.searching = false
-        this.autocomplete = this.getAutocomplete()
+        this.sendSearch()
       }
     )
-  }
-
-  search = () => {
-    return this.indexer
-      .search(this.searchText, this.resultsCount)
-      .map(({ item, toBold, index, wmd, similarity, snippet }) => {
-        return {
-          item,
-          toBold,
-          wmd,
-          index,
-          snippet,
-          similarity,
-          debug: [],
-        }
-      })
-  }
-
-  getAutocomplete = () => {
-    const important = this.indexer.documentsToImportantTerms(
-      this.results.map(({ index }) => index)
-    )
-
-    return important.map(({ token, freq }) => ({ text: token, val: freq }))
+    this.worker.onmessage = e => {
+      this.results = e.data
+    }
   }
 }

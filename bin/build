@@ -43,6 +43,7 @@ function build-es6() {
   npx lerna exec --parallel \
     --ignore @mcro/web \
     --ignore @mcro/crawler \
+    --ignore @mcro/search \
     --ignore @mcro/site \
     --ignore @mcro/preset-motion \
       -- \
@@ -53,6 +54,7 @@ function build-prod() {
   npx lerna exec --parallel --concurrency 1 \
     --ignore @mcro/api \
     --ignore @mcro/crawler \
+    --ignore @mcro/search \
     --ignore @mcro/electron \
     --ignore @mcro/builder \
     --ignore @mcro/hmr \
@@ -95,11 +97,13 @@ else
     sleep 4
     build-prod --watch &
     (cd apps/crawler && npm run watch) &
+    (cd apps/search && npm run watch) &
   else
     build-es6 &
     build-dev &
     build-prod &
     (cd apps/crawler && npm run build) &
+    (cd apps/search && npm run watch) &
   fi
 
   wait

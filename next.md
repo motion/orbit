@@ -12,10 +12,10 @@
     https://help.zenefits.com/Medical_Dental_Vision/Learn_About_Health_Insurance/Qualifying_Life_Events/01-Common_Qualifying_Life_Events/
 * oauth window
   * click the link after load
+* thing: safety on syncing the same url
 
 # now
 
-* thing: safety on syncing the same url
 * oauth: clean up after cancel/confirm
 * settings pane: see crawls by site, rough results + delete/rerun
 * store crawl settings on create

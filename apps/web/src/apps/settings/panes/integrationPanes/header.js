@@ -61,15 +61,15 @@ class IntegrationHeaderStore {
 
   startOauth(integration) {
     if (Constants.IS_ELECTRON) {
-      OS.send('open-auth', integration)
+      OS.send('auth-open', integration)
     } else {
       window.open(`${Constants.API_URL}/authorize?service=${integration}`)
     }
     const checker = this.setInterval(async () => {
       const authorizations = await this.checkAuths()
       if (authorizations) {
-        console.log('update auths', authorizations)
         await CurrentUser.setAuthorizations(authorizations)
+        OS.send('auth-close', integration)
         clearInterval(checker)
       }
     }, 1000)

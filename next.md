@@ -13,13 +13,13 @@
 
 # now
 
+* oauth window
+  * click the link after load
+  * clean up after cancel/confirm
 * crawler - settings pane - see crawls by site + rough results + delete (?
   re-run)
   * auto re-run / jobs system
   * store crawl settings on create
-* oauth window
-  * click the link after load
-  * clean up after cancel/confirm
 * slack sync
   * turn off a room it should disable/delete attachments
   * sync status is not very good
@@ -27,8 +27,6 @@
   * showing slack icons next to slack things + data.channel
 * thing
   * safety on syncing the same url
-* finish oauth window popup controller
-  * API: watch for oauth finish => AS: close offscreen window
 * cancel crawl from crawling... pane
 * crawling... pane glitch when on home
 * home drilling into item doesnt push that item shows context

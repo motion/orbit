@@ -3,24 +3,92 @@ import * as _ from 'lodash'
 
 export const openAuth = async url => {
   await Helpers.runAppleScript(`
+  -- Create new window
   tell application "Google Chrome"
     make new window
     activate
   end tell
+  -- Move window all the way to bottom right corner
   tell application "System Events"
     set position of first window of application process "Google Chrome" to {15000, 15000}
   end tell
+  tell application "Orbit"
+    activate
+  end tell
+  -- Go to our auth url
   tell application "Google Chrome"
     open location "${url}"
+    delay 1
+    -- Wait for it to eb ready
+    set readyState to false
+    repeat while readyState is false
+      set readyState to (execute active tab of window 1 javascript "document.readyState")
+    end repeat
+    -- This doesnt work, gets blocked :(
+    -- set source to execute javascript "document.getElementById('link').click()"
   end tell
-  delay 10
+  -- Get position of chrome
+  set chromePos to false
+  tell application "System Events"
+    set chromePos to (get position of first window of application process "Google Chrome")
+  end tell
+  -- We'll click 100,100 offset from there
+  set x to (item 1 of chromePos) + 100
+  set y to (item 2 of chromePos) + 100
+  set l to 1 -- click l times
+  -- Make sure its active
   tell application "Google Chrome"
-    tell front window's active tab
-      set source to execute javascript "document.getElementById('link').click()"
-    end tell
+    activate
   end tell
-  `)
+  -- Run python script to click, its slow
+  do shell script "/usr/bin/python <<END
+import time, sys
+from Quartz.CoreGraphics import CGEventCreateMouseEvent
+from Quartz.CoreGraphics import CGEventCreate
+from Quartz.CoreGraphics import CGEventPost
+from Quartz.CoreGraphics import CGEventGetLocation
+from Quartz.CoreGraphics import kCGEventMouseMoved
+from Quartz.CoreGraphics import kCGEventLeftMouseDown
+from Quartz.CoreGraphics import kCGEventLeftMouseUp
+from Quartz.CoreGraphics import kCGMouseButtonLeft
+from Quartz.CoreGraphics import kCGHIDEventTap
+def m_event(type_, x, y): e = CGEventCreateMouseEvent(None, type_, (x, y), kCGMouseButtonLeft); CGEventPost(kCGHIDEventTap, e);
+def m_move(x, y): m_event(kCGEventMouseMoved, x, y);
+def m_click(x, y): m_event(kCGEventLeftMouseDown, x, y); m_event(kCGEventLeftMouseUp, x, y);
+x, y = int(" & x & "), int(" & y & ");
+e = CGEventCreate(None); cur_pos=CGEventGetLocation(e);
+m_click(x, y);
+time.sleep(0.2);
+m_click(x, y);
+m_move(cur_pos.x, cur_pos.y)
+END"
+`)
 }
+;`
+set x to 200
+set y to 200
+set l to 1 -- click same location 50 times
+
+do shell script "
+/usr/bin/python <<END
+import sys
+import time
+from Quartz.CoreGraphics import *
+def mouseEvent(type, posx, posy):
+          theEvent = CGEventCreateMouseEvent(None, type, (posx,posy), kCGMouseButtonLeft)
+          CGEventPost(kCGHIDEventTap, theEvent)
+def mousemove(posx,posy):
+          mouseEvent(kCGEventMouseMoved, posx,posy);
+def mouseclick(posx,posy):
+          mouseEvent(kCGEventLeftMouseDown, posx,posy);
+          mouseEvent(kCGEventLeftMouseUp, posx,posy);
+ourEvent = CGEventCreate(None);
+currentpos=CGEventGetLocation(ourEvent);             # Save current mouse position
+for x in range(0, " & l & "):
+          mouseclick(" & x & "," & y & ");
+mousemove(int(currentpos.x),int(currentpos.y));      # Restore mouse position
+END"
+`
 
 export const injectCrawler = _.throttle(async () => {
   const js = await Helpers.getCrawler()

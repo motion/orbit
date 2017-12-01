@@ -51,8 +51,7 @@ elif [ "$ACTION" = "electron" ]; then
     wait
   else
     cd apps/electron-build
-    npm start &
-    wait
+    npm start
   fi
 elif [ "$ACTION" =  "site" ]; then
   run-site ${@:2} &

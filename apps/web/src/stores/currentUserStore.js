@@ -2,9 +2,6 @@
 import { User, Setting } from '@mcro/models'
 import { store, watch } from '@mcro/black'
 import { omit } from 'lodash'
-import passportLink from './passportLink'
-import r2 from '@mcro/r2'
-import * as Constants from '~/constants'
 
 @store
 class CurrentUser {
@@ -78,33 +75,6 @@ class CurrentUser {
 
   get token(): (provider: string) => string {
     return (this.user && this.user.token) || (_ => '')
-  }
-
-  link = async (provider: string, options: Object = {}) => {
-    if (!this.user) {
-      throw new Error(`No user`)
-    }
-    try {
-      const info = await passportLink(
-        `${Constants.API_URL}/auth/${provider}`,
-        options
-      )
-      if (info) {
-        await this.user.mergeUpdate({
-          authorizations: {
-            [provider]: {
-              ...info,
-              updatedAt: Date.now(),
-            },
-          },
-        })
-        await r2.post(`${Constants.API_URL}/setCreds`, {
-          json: this.user.authorizations,
-        })
-      }
-    } catch (err) {
-      return false
-    }
   }
 
   unlink = async provider => {

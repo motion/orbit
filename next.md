@@ -18,6 +18,8 @@
 
 # now
 
+* resize height
+* thing: show where it came from + url
 * test focus search on open window again
 * settings pane: see crawls by site, rough results + delete/rerun
 * store crawl settings on create

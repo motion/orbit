@@ -41,6 +41,7 @@ export default class OraStore {
   showWhiteBottomBg = false
   crawler = new CrawlerStore()
   lastContext = null
+  height = 'auto'
 
   // this is synced to electron!
   state = {
@@ -86,6 +87,7 @@ export default class OraStore {
     this._listenForStateSync()
     this.on(OS, 'ora-toggle', this.toggleHidden)
     // watchers
+    this._watchHeight()
     this._watchContext()
     this._watchFocus()
     this._watchFocusBar()
@@ -157,6 +159,19 @@ export default class OraStore {
     } else {
       this.setBanner(BANNERS.error, 'Failed pinning :(')
     }
+  }
+
+  _watchHeight = () => {
+    this.watch(() => {
+      let height = 'auto'
+      if (this.stack.last.results) {
+        const { length } = this.stack.last.results
+        if (length > 0) {
+          height = Math.min(Constants.ORA_HEIGHT, length * 160)
+        }
+      }
+      this.height = height
+    })
   }
 
   _watchBlurBar = () => {

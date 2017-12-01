@@ -96,13 +96,6 @@ export const OraContent = ({ oraStore }) => (
 @view
 export default class OraPage {
   render({ oraStore }) {
-    let height = 'auto'
-    if (oraStore.stack.last.results) {
-      const { length } = oraStore.stack.last.results
-      if (length > 0) {
-        height = Math.min(Constants.ORA_HEIGHT, length * 100)
-      }
-    }
     return (
       <UI.Theme name="dark">
         <ora
@@ -110,7 +103,7 @@ export default class OraPage {
           ref={oraStore.ref('barRef').set}
           $$draggable
           css={{
-            height,
+            height: oraStore.height,
           }}
         >
           <OraContent oraStore={oraStore} />

@@ -3,6 +3,7 @@ import * as UI from '@mcro/ui'
 import * as Constants from '~/constants'
 import SidebarTitle from '~/views/sidebarTitle'
 import Drawer from '~/views/drawer'
+import { debounce } from 'lodash'
 
 class PaneStore {
   listRef = null
@@ -51,6 +52,9 @@ class PaneStore {
       return
     }
     // scroll to row in list
+
+    const scrollToIndex = debounce(this.listRef.scrollToRow, 100)
+
     this.react(
       () => [
         sidebar
@@ -58,14 +62,12 @@ class PaneStore {
           : stack.last.mainSelectedIndex,
         this.props.oraStore.search,
         this.props.oraStore.focusedBar,
+        this.props.listProps &&
+          this.props.listProps.virtualized &&
+          this.props.listProps.virtualized.measure,
         this.contentVersion,
       ],
-      ([index]) => {
-        // TODO fix this garbage
-        this.listRef.scrollToRow(index)
-        this.setTimeout(() => this.listRef.scrollToRow(index))
-        this.setTimeout(() => this.listRef.scrollToRow(index), 16)
-      },
+      ([index]) => scrollToIndex(index),
       true
     )
   }

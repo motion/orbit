@@ -42,7 +42,7 @@ class OraMainContent {
           listProps={{
             groupBy: 'category',
             virtualized: {
-              measure: true,
+              measure: oraStore.height !== oraStore.lastHeight,
             },
             itemProps,
           }}

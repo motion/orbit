@@ -41,7 +41,31 @@ export default class OraStore {
   showWhiteBottomBg = false
   crawler = new CrawlerStore()
   lastContext = null
-  height = 'auto'
+
+  lastHeight = 'auto'
+  _height = 'auto'
+
+  set height(val) {
+    this.lastHeight = this._height
+    this._height = val
+  }
+
+  get height() {
+    return this._height
+  }
+
+  _watchHeight = () => {
+    this.react(
+      () => this.stack.last.results || [],
+      ({ length }) => {
+        let height = 'auto'
+        if (length > 0) {
+          height = Math.min(Constants.ORA_HEIGHT, length * 160)
+        }
+        this.height = height
+      }
+    )
+  }
 
   // this is synced to electron!
   state = {
@@ -82,6 +106,7 @@ export default class OraStore {
   @watch context = () => this.items && new ContextStore(this.items)
 
   async willMount() {
+    window.oraStore = this
     this.attachTrap('window', window)
     // listeners
     this._listenForStateSync()
@@ -159,19 +184,6 @@ export default class OraStore {
     } else {
       this.setBanner(BANNERS.error, 'Failed pinning :(')
     }
-  }
-
-  _watchHeight = () => {
-    this.watch(() => {
-      let height = 'auto'
-      if (this.stack.last.results) {
-        const { length } = this.stack.last.results
-        if (length > 0) {
-          height = Math.min(Constants.ORA_HEIGHT, length * 160)
-        }
-      }
-      this.height = height
-    })
   }
 
   _watchBlurBar = () => {

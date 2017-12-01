@@ -13,14 +13,25 @@
 
 # now
 
-* script to clean electron after build:
-  * npm dedupe (verify this works)
-  * remove puppeteer 2 extra chromes:
-  * rm this big file
-    * rm -r ./node_modules/@mcro/crawler/node_modules/.cache
-  * rm devDependencies of @mcro/electron (and api)
+* crawler - settings pane - see crawls by site + rough results + delete (?
+  re-run)
+  * auto re-run / jobs system
+  * store crawl settings on create
+* oauth window
+  * click the link after load
+  * clean up after cancel/confirm
+* slack sync
+  * turn off a room it should disable/delete attachments
+  * sync status is not very good
+    * progress
+  * showing slack icons next to slack things + data.channel
+* thing
+  * safety on syncing the same url
 * finish oauth window popup controller
   * API: watch for oauth finish => AS: close offscreen window
+* cancel crawl from crawling... pane
+* crawling... pane glitch when on home
+* home drilling into item doesnt push that item shows context
 * peek window that tracks next to main window
 * peek window shows peek view of items
 * feature: on window focus make ora show if hidden (clicked dock / task switch)

@@ -48,7 +48,7 @@ class Tab {
             borderBottom: 'none',
             boxShadow: [
               'inset 0 0.5px 0 rgba(255,255,255,0.15)',
-              '0 0 30px 0 rgba(0,0,0,0.5)',
+              '0 0 20px 0 rgba(0,0,0,0.5)',
             ],
           }}
         />
@@ -80,11 +80,10 @@ export default class SidebarTitle {
     return (
       <sidebartitle onClick={e => e.stopPropagation()}>
         <UI.Button
-          if={false && !noBack}
+          if={!!onBack && !noBack}
           $backButton
+          chromeless
           size={0.9}
-          circular
-          theme="light"
           icon="arrominleft"
           boxShadow="0 0 10px rgba(0,0,0,0.1)"
           onClick={onBack}
@@ -127,8 +126,9 @@ export default class SidebarTitle {
     titles: {
       flex: 1,
       width: '50%',
-      alignItems: 'flex-start',
-      marginRight: 5,
+      justifyContent: 'flex-start',
+      paddingRight: 10,
+      flexFlow: 'row',
     },
     backButton: {
       margin: [0, 8, 0, -3],

@@ -147,10 +147,8 @@ export default class Pane {
           if={title}
           title={title}
           subtitle={result.subtitle}
+          noBack={!stackItem.parent}
           onBack={stackItem.stack.left}
-          backProps={{
-            icon: stackItem.stack.length > 2 ? 'arrow-min-left' : 'home',
-          }}
           {...typeof title === 'object' && title}
         />
         <content $transparent={transparent} ref={paneStore.setContentRef}>

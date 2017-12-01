@@ -107,13 +107,9 @@ export default class OraHeader extends React.Component {
         >
           <contents>
             <leftSide>
+              <UI.Icon name="zoom" {...iconProps} />
               <UI.Icon
-                if={oraStore.stack.length === 1}
-                name="zoom"
-                {...iconProps}
-              />
-              <UI.Icon
-                if={oraStore.stack.length > 1}
+                if={false && oraStore.stack.length > 1}
                 name="arrominleft"
                 onClick={this.handleBack}
                 onMouseUp={this.preventPropagation}
@@ -192,7 +188,7 @@ export default class OraHeader extends React.Component {
       justifyContent: 'center',
       '& .icon': {
         transition: 'all ease-in 100ms',
-        transform: 'scale(0.75)',
+        transform: 'scale(0.8)',
       },
       '&:hover': {
         background: [255, 255, 255, 0.02],

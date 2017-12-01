@@ -49,46 +49,49 @@ export default class MainSidebar {
   get title() {
     return {
       title: (
-        <UI.Popover
-          openOnHover
-          closeOnEsc
-          theme="light"
-          delay={300}
-          width={140}
-          boxShadow={[[0, 0, 10, [0, 0, 0, 0.2]]]}
-          target={
-            <UI.Button
-              sizeRadius={2}
-              sizePadding={2}
-              iconAfter
-              iconProps={{
-                size: 12,
+        <React.Fragment>
+          <div $$flex />
+          <UI.Popover
+            openOnHover
+            closeOnEsc
+            theme="light"
+            delay={300}
+            width={140}
+            boxShadow={[[0, 0, 10, [0, 0, 0, 0.2]]]}
+            target={
+              <UI.Button
+                sizeRadius={2}
+                sizePadding={2}
+                iconAfter
+                iconProps={{
+                  size: 12,
+                }}
+                icon="arrow-min-down"
+                margin={[-2, 0]}
+                glow
+                css={{
+                  zIndex: 10,
+                }}
+                alpha={0.8}
+              >
+                All
+              </UI.Button>
+            }
+          >
+            <UI.List
+              itemProps={{
+                primaryEllipse: true,
+                sizeHeight: 1.15,
+                hoverBackground: [0, 0, 0, 0.025],
               }}
-              icon="arrow-min-down"
-              margin={[-2, 0]}
-              glow
-              css={{
-                zIndex: 10,
-              }}
-              alpha={0.8}
-            >
-              All
-            </UI.Button>
-          }
-        >
-          <UI.List
-            itemProps={{
-              primaryEllipse: true,
-              sizeHeight: 1.15,
-              hoverBackground: [0, 0, 0, 0.025],
-            }}
-            items={[
-              { primary: 'dropbox.com' },
-              { primary: 'support.stripe.com' },
-              { primary: 'Slack', icon: 'social-slack' },
-            ]}
-          />
-        </UI.Popover>
+              items={[
+                { primary: 'dropbox.com' },
+                { primary: 'support.stripe.com' },
+                { primary: 'Slack', icon: 'social-slack' },
+              ]}
+            />
+          </UI.Popover>
+        </React.Fragment>
       ),
       after: (
         <UI.Icon

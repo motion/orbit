@@ -13,7 +13,9 @@ import sanitizeHtml from 'sanitize-html'
 import { writeFileSync } from 'fs'
 import OS from 'os'
 
-const MAX_CORES_DEFAULT = OS.cpus().length - 1
+// dont use last two cores if possible
+// so on 4 core machine just use two
+const MAX_CORES_DEFAULT = Math.max(1, OS.cpus().length - 2)
 
 const removeMdPrefix = text => text.replace(/^[^a-zA-Z0-9]*[a-zA-Z0-9]/, '')
 const normalizeHref = (baseUrl, href) => {
@@ -24,7 +26,7 @@ const normalizeHref = (baseUrl, href) => {
   return url.toString()
 }
 const sleep = ms => new Promise(res => setTimeout(res, ms))
-const und = new upndown()
+const markdown = new upndown()
 const log = {
   crawl: debug('crawler:crawl'),
   page: debug('crawler:page'),
@@ -223,7 +225,7 @@ export default class Crawler {
     } else {
       try {
         content = await new Promise((resolve, reject) => {
-          und.convert(
+          markdown.convert(
             result.content,
             (err, md) => (err ? reject(err) : resolve(md))
           )

@@ -215,7 +215,7 @@ export default class OraHeader extends React.Component {
       position: 'relative',
     },
     title: {
-      opacity: 0.5,
+      opacity: 0.28,
       position: 'absolute',
       top: 0,
       left: 0,

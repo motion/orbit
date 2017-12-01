@@ -24,7 +24,7 @@ const chromeStyle = {
   overflow: 'hidden',
   transform: {
     perspective: '100px',
-    rotateX: '8deg',
+    rotateX: '6deg',
   },
 }
 
@@ -48,13 +48,13 @@ class Tab {
             borderBottom: 'none',
             boxShadow: [
               'inset 0 0.5px 0 rgba(255,255,255,0.15)',
-              '0 0 12px 0 rgba(0,0,0,0.85)',
+              '0 0 30px 0 rgba(0,0,0,0.5)',
             ],
           }}
         />
         <inner
           css={{
-            padding: [8, 12],
+            padding: [6, 12],
             flexFlow: 'row',
             flex: 1,
             zIndex: 1,
@@ -95,8 +95,10 @@ export default class SidebarTitle {
             <UI.Title
               if={titleIsString}
               ellipse={2}
-              size={1.05}
+              size={1}
               fontWeight={300}
+              opacity={0.7}
+              textShadow="0 -1px 0 rgba(0,0,0,0.2)"
             >
               {title}
             </UI.Title>
@@ -117,7 +119,7 @@ export default class SidebarTitle {
     sidebartitle: {
       flexFlow: 'row',
       alignItems: 'center',
-      padding: [0, 4.3, 0, 3.6],
+      padding: [0, 3.5, 0, 3],
       userSelect: 'none',
       // borderBottom: [1, [255, 255, 255, 0.05]],
       // background: [255, 255, 255, 0.05],
@@ -126,13 +128,14 @@ export default class SidebarTitle {
       flex: 1,
       width: '50%',
       alignItems: 'flex-start',
+      marginRight: 5,
     },
     backButton: {
       margin: [0, 8, 0, -3],
     },
     image: {
-      width: 24,
-      height: 24,
+      width: 16,
+      height: 16,
       borderRadius: 100,
       // border: [1, [255, 255, 255, 0.7]],
       marginLeft: 10,

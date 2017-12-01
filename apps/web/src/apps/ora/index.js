@@ -22,7 +22,10 @@ const itemProps = {
     resist: 60,
     zIndex: 1,
   },
-  highlightBackground: [255, 255, 255, 0.045],
+  highlightBackground: `linear-gradient(
+    rgba(255,255,255,0),
+    rgba(255,255,255,0.035) 30%
+  )`,
   childrenEllipse: 2,
 }
 
@@ -106,7 +109,7 @@ export default class OraPage {
       background: Constants.ORA_BG,
       // border: [1, [255, 255, 255, 0.035]],
       boxShadow: [
-        [0, 0, 10, [0, 0, 0, 0.5]],
+        [0, 0, 15, [0, 0, 0, 0.5]],
         // ['inset', 0, 0, 120, [255, 255, 255, 0.053]],
       ],
       margin: 10,

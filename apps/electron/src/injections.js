@@ -3,7 +3,13 @@ import * as _ from 'lodash'
 
 export const openAuth = async url => {
   await Helpers.runAppleScript(`
-  -- Create new window
+  -- Store current window
+  global frontAppName, chromePos
+  tell application "System Events"
+    set frontApp to first application process whose frontmost is true
+    set frontAppName to name of frontApp
+  end tell
+  -- Open new Chrome window
   tell application "Google Chrome"
     make new window
     activate
@@ -12,10 +18,11 @@ export const openAuth = async url => {
   tell application "System Events"
     set position of first window of application process "Google Chrome" to {15000, 15000}
   end tell
-  -- tell application "Orbit"
-  --   activate
-  -- end tell
-  -- Go to our auth url
+  -- Re focus original window
+  tell application frontAppName
+    activate
+  end tell
+  -- Chrome go to auth url
   tell application "Google Chrome"
     open location "${url}"
     delay 1
@@ -28,14 +35,12 @@ export const openAuth = async url => {
     -- set source to execute javascript "document.getElementById('link').click()"
   end tell
   -- Get position of chrome
-  set chromePos to false
   tell application "System Events"
     set chromePos to (get position of first window of application process "Google Chrome")
   end tell
   -- We'll click 100,100 offset from there
   set x to (item 1 of chromePos) + 100
   set y to (item 2 of chromePos) + 100
-  set l to 1 -- click l times
   -- Make sure its active
   tell application "Google Chrome"
     activate

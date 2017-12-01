@@ -55,8 +55,8 @@ ensure-dep "puma-dev" -- install-puma-dev &
 
 wait
 
-echo "3001 > ~/.puma-dev/jot"
-echo 3001 > ~/.puma-dev/jot
+echo "3001 > ~/.puma-dev/orbit"
+echo 3001 > ~/.puma-dev/orbit
 
 yarn install
 

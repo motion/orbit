@@ -61,7 +61,7 @@ export class Thing extends Model {
     updated: str.indexed,
     orgName: str.optional,
     bucket: str.optional,
-    url: str.optional,
+    url: str.optional.unique,
     timestamps: true,
   }
 

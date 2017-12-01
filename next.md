@@ -10,23 +10,19 @@
     https://help.uber.com/h/6949160d-3eb6-42cd-8155-1ae3cf25be0b
   * zenefits -
     https://help.zenefits.com/Medical_Dental_Vision/Learn_About_Health_Insurance/Qualifying_Life_Events/01-Common_Qualifying_Life_Events/
+* oauth window
+  * click the link after load
 
 # now
 
-* oauth window
-  * click the link after load
-  * clean up after cancel/confirm
-* crawler - settings pane - see crawls by site + rough results + delete (?
-  re-run)
-  * auto re-run / jobs system
-  * store crawl settings on create
+* thing: safety on syncing the same url
+* oauth: clean up after cancel/confirm
+* settings pane: see crawls by site, rough results + delete/rerun
+* store crawl settings on create
 * slack sync
   * turn off a room it should disable/delete attachments
-  * sync status is not very good
-    * progress
+  * sync status progress
   * showing slack icons next to slack things + data.channel
-* thing
-  * safety on syncing the same url
 * cancel crawl from crawling... pane
 * crawling... pane glitch when on home
 * home drilling into item doesnt push that item shows context

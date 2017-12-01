@@ -7,7 +7,7 @@ export default class SlackSync extends Syncer {
   static settings = {
     type: 'slack',
     actions: {
-      attachments: { every: 60 * 1 },
+      attachments: { every: 60 * 60 * 24 },
     },
     syncers: {
       attachments: SlackAttachmentSync,

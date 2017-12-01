@@ -148,7 +148,7 @@ export default class GoogleDriveSync {
           query.pageToken = res.nextPageToken
         }
       } else {
-        throw new Error('No res')
+        console.error('No res', res, query)
       }
     }
     return all

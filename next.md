@@ -13,10 +13,12 @@
 * oauth window
   * click the link after load
 * thing: safety on syncing the same url
+* oauth: clean up after cancel/confirm
 
 # now
 
-* oauth: clean up after cancel/confirm
+* height adjustment based on results
+* test focus search on open window again
 * settings pane: see crawls by site, rough results + delete/rerun
 * store crawl settings on create
 * slack sync

@@ -67,7 +67,7 @@ class IntegrationHeaderStore {
     }
     const checker = this.setInterval(async () => {
       const authorizations = await this.checkAuths()
-      if (authorizations) {
+      if (authorizations && authorizations[integration]) {
         await CurrentUser.setAuthorizations(authorizations)
         OS.send('auth-close', integration)
         clearInterval(checker)

@@ -1,7 +1,7 @@
 import * as UI from '@mcro/ui'
-import { view } from '@mcro/black'
+import { view, watch } from '@mcro/black'
 import { sortBy, reverse } from 'lodash'
-import App, { Thing } from '~/app'
+import App from '~/app'
 import * as Collapse from '../views/collapse'
 import { formatDistance } from 'date-fns'
 
@@ -15,6 +15,7 @@ class Folder {
   state = { open: false, showAllFiles: false }
 
   render({ id = baseId, folders, files }) {
+    console.log('folders', folders)
     const current = folders.filter(f => f.id === id)
     const { name } = current.length > 0 ? current[0] : { name: 'home' }
     const { open, showAllFiles } = this.state
@@ -122,12 +123,8 @@ class Folder {
 
 @view({
   store: class DriveStore {
-    things = Thing.find()
-
-    get folders() {
-      return null
-      // return App.sync.google.drive && App.sync.google.drive.getFiles()
-    }
+    @watch
+    folders = () => App.sync.google.drive && App.sync.google.drive.getFiles()
 
     get files() {
       return (this.things || []).filter(t => t.type === 'doc')
@@ -136,7 +133,7 @@ class Folder {
 })
 export default class Drive {
   render({ store }) {
-    const loading = !store.things || store.folders === null
+    const loading = !store.folders
 
     return (
       <container>

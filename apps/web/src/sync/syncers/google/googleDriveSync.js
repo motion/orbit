@@ -1,9 +1,9 @@
 // @flow
-import { Event, Thing } from '~/app'
+import { Thing } from '~/app'
 import { createInChunks } from '~/sync/helpers'
 import debug from 'debug'
 
-const log = _ => _ || debug('sync')
+const log = debug('sync')
 const sleep = ms => new Promise(res => setTimeout(res, ms))
 
 export default class GoogleDriveSync {

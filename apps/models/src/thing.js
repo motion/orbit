@@ -72,7 +72,7 @@ export class Thing extends Model {
   }
 
   hooks = {
-    preInsert: (doc: Object) => {
+    preInsert: async (doc: Object) => {
       doc.id = cleanId(doc)
       const now = new Date().toISOString()
       doc.created = doc.created || now
@@ -83,6 +83,10 @@ export class Thing extends Model {
         db.put({ id: doc.id, body: doc.body })
         doc.bodyTEMP = `${Math.random()}`
         delete doc.body
+      }
+
+      if (doc.url && (await ThingInstance.get({ url: doc.url }))) {
+        throw new Error(`Thing already exists with this url`)
       }
     },
   }

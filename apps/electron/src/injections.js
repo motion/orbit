@@ -12,9 +12,9 @@ export const openAuth = async url => {
   tell application "System Events"
     set position of first window of application process "Google Chrome" to {15000, 15000}
   end tell
-  tell application "Orbit"
-    activate
-  end tell
+  -- tell application "Orbit"
+  --   activate
+  -- end tell
   -- Go to our auth url
   tell application "Google Chrome"
     open location "${url}"

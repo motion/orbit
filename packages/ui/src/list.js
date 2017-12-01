@@ -5,7 +5,6 @@ import ListItem from './listItem'
 import { List as VirtualList } from 'react-virtualized'
 import parentSize from '~/helpers/parentSize'
 import type { Props as ItemProps } from './listItem'
-import Surface from './surface'
 import Separator from './separator'
 import { isArrayLike } from 'mobx'
 import { CellMeasurer, CellMeasurerCache } from 'react-virtualized'
@@ -481,18 +480,13 @@ class List extends React.PureComponent<Props, { selected: number }> {
     }
     const { totalItems, totalGroups, realIndex } = this
     return (
-      <Surface
-        $list
+      <list
         $visible={!virtualized || this.state.started}
-        flexFlow={horizontal ? 'row' : null}
-        tagName="list"
-        align="stretch"
-        height={height}
-        width={width}
-        background="transparent"
         style={{
+          height: height || virtualized ? '100%' : 'auto',
+          width,
+          flexFlow: horizontal ? 'row' : null,
           overflowY: scrollable ? 'scroll' : 'auto',
-          height: virtualized ? '100%' : 'auto',
           ...style,
         }}
         {...attach}
@@ -513,12 +507,13 @@ class List extends React.PureComponent<Props, { selected: number }> {
           {...virtualized}
         />
         {!virtualized && children}
-      </Surface>
+      </list>
     )
   }
 
   static style = {
     list: {
+      alignItems: 'stretch',
       overflowX: 'visible',
       visibility: 'hidden',
     },

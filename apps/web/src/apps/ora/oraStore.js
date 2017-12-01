@@ -60,7 +60,13 @@ export default class OraStore {
       ({ length }) => {
         let height = 'auto'
         if (length > 0) {
-          height = Math.min(Constants.ORA_HEIGHT, length * 160)
+          height = 110 + 150 // header
+          // first two results are taller
+          if (length > 1) height += 150
+          // rest are shorter
+          if (length > 2) height += (length - 2) * 90
+          // max height
+          height = Math.min(Constants.ORA_HEIGHT, height)
         }
         this.height = height
       }

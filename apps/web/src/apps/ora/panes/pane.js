@@ -53,8 +53,9 @@ class PaneStore {
     }
     // scroll to row in list
 
-    const scrollToIndex = debounce(this.listRef.scrollToRow, 100)
-
+    const scrollToIndex = debounce(this.listRef.scrollToRow, 150, {
+      trailing: true,
+    })
     this.react(
       () => [
         sidebar

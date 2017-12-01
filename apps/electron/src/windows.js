@@ -123,15 +123,21 @@ export default class Windows extends React.Component {
         console.log('nothing is listening for state')
       }
     })
-    this.on(ipcMain, 'inject-crawler', Injections.injectCrawler)
-    this.on(ipcMain, 'uninject-crawler', Injections.uninjectCrawler)
-    this.on(ipcMain, 'open-browser', (event, url) => {
-      Helpers.open(url)
-    })
-    this.on(ipcMain, 'open-auth', (event, service) => {
+    this.on(ipcMain, 'inject-crawler', throttle(Injections.injectCrawler, 1000))
+    this.on(
+      ipcMain,
+      'uninject-crawler',
+      throttle(Injections.uninjectCrawler, 1000)
+    )
+    this.on(
+      ipcMain,
+      'open-browser',
+      throttle((event, url) => Helpers.open(url), 200)
+    )
+    const openAuthWindow = (event, service) =>
       Injections.openAuth(`${Constants.APP_URL}/authorize?service=` + service)
-    })
-    this.on(ipcMain, 'open-settings', this.handlePreferences)
+    this.on(ipcMain, 'open-auth', throttle(openAuthWindow, 2000))
+    this.on(ipcMain, 'open-settings', throttle(this.handlePreferences, 200))
   }
 
   toggleShown = throttle(async () => {

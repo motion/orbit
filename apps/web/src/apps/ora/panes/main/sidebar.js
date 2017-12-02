@@ -60,68 +60,50 @@ export default class MainSidebar {
   }
 
   get title() {
-    return {
-      title: (
-        <React.Fragment>
-          <div $$flex />
-          <UI.Popover
-            openOnHover
-            closeOnEsc
-            theme="light"
-            delay={300}
-            width={140}
-            boxShadow={[[0, 0, 10, [0, 0, 0, 0.2]]]}
-            target={
-              <UI.Button
-                sizeRadius={2}
-                sizePadding={2}
-                iconAfter
-                iconProps={{
-                  size: 12,
-                }}
-                icon="arrow-min-down"
-                margin={[-2, 0]}
-                glow
-                css={{
-                  zIndex: 10,
-                }}
-                alpha={0.8}
-              >
-                All
-              </UI.Button>
-            }
-          >
-            <UI.List
-              itemProps={{
-                primaryEllipse: true,
-                sizeHeight: 1.15,
-                hover: {
-                  background: [0, 0, 0, 0.025],
-                },
-              }}
-              items={[
-                { primary: 'dropbox.com' },
-                { primary: 'support.stripe.com' },
-                { primary: 'Slack', icon: 'social-slack' },
-              ]}
-            />
-          </UI.Popover>
-        </React.Fragment>
-      ),
-      after: (
-        <UI.Icon
-          css={{
-            zIndex: 10,
-          }}
-          color={[255, 255, 255, 0.2]}
-          hover={{
-            color: [255, 255, 255, 0.45],
-          }}
-          name="gear"
-          onClick={this.props.oraStore.actions.openSettings}
-        />
-      ),
-    }
+    return null
+    // dropdown for selecting filter
+    //   <UI.Popover
+    //   openOnHover
+    //   closeOnEsc
+    //   theme="light"
+    //   delay={300}
+    //   width={140}
+    //   boxShadow={[[0, 0, 10, [0, 0, 0, 0.2]]]}
+    //   target={
+    //     <UI.Button
+    //       sizeRadius={2}
+    //       sizePadding={2}
+    //       iconAfter
+    //       iconProps={{
+    //         size: 12,
+    //       }}
+    //       icon="arrow-min-down"
+    //       margin={[-2, 0]}
+    //       glow
+    //       css={{
+    //         zIndex: 10,
+    //       }}
+    //       alpha={0.8}
+    //     >
+    //       All
+    //     </UI.Button>
+    //   }
+    // >
+    //   <UI.List
+    //     itemProps={{
+    //       primaryEllipse: true,
+    //       sizeHeight: 1.15,
+    //       hover: {
+    //         background: [0, 0, 0, 0.025],
+    //       },
+    //     }}
+    //     items={[
+    //       { primary: 'dropbox.com' },
+    //       { primary: 'support.stripe.com' },
+    //       { primary: 'Slack', icon: 'social-slack' },
+    //     ]}
+    //   />
+    // </UI.Popover>
   }
 
   get results() {

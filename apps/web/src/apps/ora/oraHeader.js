@@ -172,6 +172,12 @@ export default class OraHeader extends React.Component {
               </UI.Popover>
               <UI.Icon
                 {...iconProps}
+                opacity={0.5}
+                name="gear"
+                onClick={this.props.oraStore.actions.openSettings}
+              />
+              <UI.Icon
+                {...iconProps}
                 size={14}
                 opacity={0.5}
                 onClick={this.handleHide}
@@ -235,7 +241,7 @@ export default class OraHeader extends React.Component {
     },
     titleText: {
       position: 'absolute',
-      right: 62,
+      right: 81,
       left: 34,
     },
     disabled: {

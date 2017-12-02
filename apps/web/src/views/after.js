@@ -4,13 +4,13 @@ import { Thing } from '~/app'
 
 @view
 export default class After {
-  render({ thing, children, ...props }) {
+  render({ navigate, thing, children, ...props }) {
     return (
       <after
         onClick={e => {
           e.preventDefault()
           e.stopPropagation()
-          this.props.navigate({
+          navigate({
             ...Thing.toResult(thing),
             type: 'context',
           })

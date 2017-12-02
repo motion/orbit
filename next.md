@@ -18,6 +18,11 @@
 
 # now
 
+* cmd+opt when unfocused: focus + focus search
+* cmd+opt when hidden: focus + focus search
+* cmd+opt when focused: hide
+* fix drill in from home/item to not just use context
+
 * tray
 * height adjust fixes
 * thing: show where it came from + url

@@ -1,7 +1,16 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
-import { fuzzy } from '~/helpers'
+import { fuzzy, OS } from '~/helpers'
 import { Thing } from '~/app'
+import After from '~/views/after'
+
+const contextToResult = context => ({
+  id: context.url,
+  title: context.selection || context.title,
+  type: 'context',
+  icon: context.application === 'Google Chrome' ? 'social-google' : null,
+  image: context.favicon,
+})
 
 export default class MainSidebar {
   get oraStore() {
@@ -20,7 +29,7 @@ export default class MainSidebar {
     if (lastContext) {
       results = [
         {
-          ...this.oraStore.contextToResult(lastContext),
+          ...contextToResult(lastContext),
           category: 'Context',
         },
       ]
@@ -28,8 +37,12 @@ export default class MainSidebar {
     if (this.recentItems.length) {
       results = [
         ...results,
-        ...this.recentItems.map(x => ({
-          ...Thing.toResult(x),
+        ...this.recentItems.map(item => ({
+          ...Thing.toResult(item),
+          icon: false,
+          children: null,
+          onClick: () => OS.send('open-browser', item.url),
+          after: <After thing={item} />,
           type: 'context',
           category: 'Recent',
         })),

@@ -140,7 +140,7 @@ export default class OraHeader extends React.Component {
               }
             >
               <titleText>
-                <UI.Text ellipse size={0.8}>
+                <UI.Text ellipse size={0.9}>
                   {(oraStore.banner && oraStore.banner.message) ||
                     oraStore.stack.last.result.id ||
                     'Search'}
@@ -225,8 +225,8 @@ export default class OraHeader extends React.Component {
       top: 0,
       left: 0,
       right: 0,
-      bottom: 1,
-      textAlign: 'center',
+      bottom: 0,
+      // textAlign: 'center',
       alignItems: 'center',
       justifyContent: 'center',
       zIndex: 0,
@@ -236,7 +236,7 @@ export default class OraHeader extends React.Component {
     titleText: {
       position: 'absolute',
       right: 62,
-      left: 38,
+      left: 34,
     },
     disabled: {
       pointerEvents: 'none',

@@ -60,10 +60,13 @@ export default class OraStore {
       ({ length }) => {
         let height = 'auto'
         if (length > 0) {
-          height = 110 + 150 // header
-          // first two results are taller
-          if (length > 1) height += 150
-          // rest are shorter
+          // header + footer height
+          height = 74 + 40
+          // first
+          height += 120
+          // second
+          if (length > 1) height += 120
+          // ...rest
           if (length > 2) height += (length - 2) * 90
           // max height
           height = Math.min(Constants.ORA_HEIGHT, height)
@@ -211,14 +214,6 @@ export default class OraStore {
       this.electronState = state
     })
   }
-
-  contextToResult = context => ({
-    id: context.url,
-    title: context.selection || context.title,
-    type: 'context',
-    icon: context.application === 'Google Chrome' ? 'social-google' : null,
-    image: context.favicon,
-  })
 
   _watchContext = () => {
     this.lastContext = null

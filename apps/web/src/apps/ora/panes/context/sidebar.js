@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { OS, fuzzy } from '~/helpers'
+import { OS } from '~/helpers'
 import { Thing } from '~/app'
 import * as UI from '@mcro/ui'
 import { watch } from '@mcro/black'
@@ -109,7 +109,7 @@ export default class ContextSidebar {
     const title = this.osContext
       ? this.osContext.selection || this.osContext.title
       : ''
-    return !this.context || this.context.loading // || this.osContext === null
+    return !this.context || this.context.loading
       ? []
       : this.context
           .search(this.search.length > 0 ? this.search : title, 8)
@@ -121,29 +121,16 @@ export default class ContextSidebar {
           })
           .map(({ debug, item, similarity }, index) => {
             const title = item.title
-
             return {
               title,
               data: item,
               type: 'context',
-              // icon: 'link',
-              onClick: () => {
-                OS.send('open-browser', item.url)
-              },
+              onClick: () => OS.send('open-browser', item.url),
               children:
                 this.context.sentences[index] &&
                 this.context.sentences[index].sentence,
               after: (
-                <After
-                  onClick={e => {
-                    e.preventDefault()
-                    e.stopPropagation()
-                    this.props.navigate({
-                      ...Thing.toResult(item),
-                      type: 'context',
-                    })
-                  }}
-                >
+                <After thing={item}>
                   <debug css={{ position: 'absolute', top: 0, right: 0 }}>
                     <UI.Popover
                       openOnHover

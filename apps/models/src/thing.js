@@ -122,7 +122,7 @@ export class Thing extends Model {
       title: thing.title,
       type: thing.type,
       iconAfter: true,
-      icon: `social-${icon}`,
+      icon: `${icon}`,
       data: thing,
       ...extra,
     }

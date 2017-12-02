@@ -145,6 +145,7 @@ export default class Sidebar {
             >
               <SidebarContainer
                 oraStore={oraStore}
+                isActive={index === currentIndex}
                 width={width}
                 stack={stack}
                 stackItem={stackItem}

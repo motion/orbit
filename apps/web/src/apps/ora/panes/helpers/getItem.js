@@ -37,24 +37,11 @@ function getIcon(result) {
 
 function getChildren(result) {
   if (typeof result.children === 'string') {
-    return result.children.slice(0, 200).replace(/[^\w]{2,}/g, ' ... ')
+    return result.children.slice(0, 200).replace(/\s{2,}|\w{10,}/g, ' ... ')
   }
   if (result.children) {
     return result.children
   }
-  let text
-  if (result.data && result.data.body) {
-    const body = result.data.body
-    text = getDate(result) + ' · ' + body
-  }
-  if (!result.data && getDate(result)) {
-    text = getDate(result) + ' · '
-  }
-  if (text) {
-    return text
-    // <FeedItem key={1} inline event={result.event} />
-  }
-  return null
 }
 
 export default function getItem(result, index) {

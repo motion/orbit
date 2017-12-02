@@ -1,11 +1,22 @@
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
+import { Thing } from '~/app'
 
 @view
 export default class After {
-  render({ children, ...props }) {
+  render({ thing, children, ...props }) {
     return (
-      <after {...props}>
+      <after
+        onClick={e => {
+          e.preventDefault()
+          e.stopPropagation()
+          this.props.navigate({
+            ...Thing.toResult(thing),
+            type: 'context',
+          })
+        }}
+        {...props}
+      >
         <UI.Icon opacity={0.1} name="arrow-min-right" />
         {children}
       </after>

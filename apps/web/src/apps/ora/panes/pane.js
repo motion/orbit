@@ -53,9 +53,7 @@ class PaneStore {
     }
     // scroll to row in list
 
-    const scrollToIndex = debounce(this.listRef.scrollToRow, 150, {
-      trailing: true,
-    })
+    let willScrollTo = null
     this.react(
       () => [
         sidebar
@@ -63,12 +61,17 @@ class PaneStore {
           : stack.last.mainSelectedIndex,
         this.props.oraStore.search,
         this.props.oraStore.focusedBar,
-        this.props.listProps &&
-          this.props.listProps.virtualized &&
-          this.props.listProps.virtualized.measure,
         this.contentVersion,
       ],
-      ([index]) => scrollToIndex(index),
+      ([index]) => {
+        if (!this.props.isActive) {
+          return
+        }
+        clearTimeout(willScrollTo)
+        willScrollTo = this.setTimeout(() => {
+          this.listRef.scrollToRow(index)
+        }, 150)
+      },
       true
     )
   }
@@ -120,7 +123,6 @@ export default class Pane {
     let drawer
     let store
     let result
-
     if (stackItem) {
       store = stackItem.store
       result = stackItem.result

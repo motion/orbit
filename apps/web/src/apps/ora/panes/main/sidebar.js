@@ -4,14 +4,6 @@ import { fuzzy, OS } from '~/helpers'
 import { Thing } from '~/app'
 import After from '~/views/after'
 
-const contextToResult = context => ({
-  id: context.url,
-  title: context.selection || context.title,
-  type: 'context',
-  icon: context.application === 'Google Chrome' ? 'social-google' : null,
-  image: context.favicon,
-})
-
 export default class MainSidebar {
   get oraStore() {
     return this.props.oraStore
@@ -29,7 +21,7 @@ export default class MainSidebar {
     if (lastContext) {
       results = [
         {
-          ...contextToResult(lastContext),
+          ...this.props.oraStore.contextToResult(lastContext),
           category: 'Context',
         },
       ]

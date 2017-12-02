@@ -215,6 +215,14 @@ export default class OraStore {
     })
   }
 
+  contextToResult = context => ({
+    id: context.url,
+    title: context.selection || context.title,
+    type: 'context',
+    icon: context.application === 'Google Chrome' ? 'social-google' : null,
+    image: context.favicon,
+  })
+
   _watchContext = () => {
     this.lastContext = null
     this.watch(function watchContext() {

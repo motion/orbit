@@ -40,9 +40,6 @@
 * show body contents snippet when on thing
 * bolding inside ui.text for highlighting key words
 
-- Crawler:
-  * Setting panes to see stores crawls + run + see/manage results
-  * Store crawl settings once completed so it can re-run
 - Ingest:
   * Knowledgebase
   * Slack

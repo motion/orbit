@@ -88,6 +88,7 @@ export const OraContent = ({ oraStore }) => (
         bottom: -100,
         zIndex: -1,
         height: Constants.ACTION_BAR_HEIGHT + 100,
+        pointerEvents: 'none',
       }}
     />
   </React.Fragment>
@@ -117,6 +118,7 @@ export default class OraPage {
 
   static style = {
     ora: {
+      pointerEvents: 'auto',
       width: Constants.ORA_WIDTH,
       // height: Constants.ORA_HEIGHT,
       background: Constants.ORA_BG,

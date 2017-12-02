@@ -7,7 +7,9 @@ export default class Separator {
   render({ after, children, ...props }) {
     return (
       <separator {...props}>
-        <Text $content>{children}</Text>
+        <Text $content size={0.9}>
+          {children}
+        </Text>
         <after if={after}>{after}</after>
       </separator>
     )
@@ -15,7 +17,6 @@ export default class Separator {
 
   static style = {
     separator: {
-      fontSize: 14,
       fontWeight: 500,
       padding: [12, 10, 3],
       justifyContent: 'space-between',

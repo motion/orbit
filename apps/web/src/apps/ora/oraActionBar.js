@@ -15,7 +15,7 @@ export default class OraActionBar {
     const { store } = oraStore.stack.last
     const actions = store && store.actions
     return (
-      <UI.Theme name="dark">
+      <UI.Theme name="clear-dark">
         <actions if={actions}>
           <actionbar>
             {actions
@@ -58,8 +58,8 @@ export default class OraActionBar {
       bottom: 0,
       left: 0,
       right: 0,
-      background: [...Constants.ORA_BG_MAIN_OPAQUE, 0.2],
-      backdropFilter: 'blur(12px)',
+      background: [...Constants.ORA_BG_MAIN_OPAQUE, 0.9],
+      // backdropFilter: 'blur(12px)',
       height: Constants.ACTION_BAR_HEIGHT,
       zIndex: 100000,
     },

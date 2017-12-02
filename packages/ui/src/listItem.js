@@ -186,7 +186,7 @@ export default class ListItem extends React.Component<Props> {
                 if={secondary || date}
                 $text
                 size={size * 0.85}
-                opacity={0.7}
+                alpha={0.7}
                 ellipse
                 {...secondaryProps}
               >
@@ -202,7 +202,7 @@ export default class ListItem extends React.Component<Props> {
           <Text
             if={areChildrenString}
             size={size * 0.9}
-            opacity={0.6}
+            alpha={0.6}
             ellipse={childrenEllipse}
             {...childrenProps}
           >

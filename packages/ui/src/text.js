@@ -5,6 +5,17 @@ import keycode from 'keycode'
 import $ from 'color'
 import { pick } from 'lodash'
 
+const wrapHighlights = (text: string, highlightWords: Array<string>) => {
+  let result = text
+  for (const word of highlightWords) {
+    result = result.replace(
+      new RegExp(`(${word})`, 'g'),
+      '<span style="color: yellow; font-weight: 500;">$1</span>'
+    )
+  }
+  return result
+}
+
 const getTextProperties = props => {
   let fontSizeNum
   let lineHeightNum
@@ -194,9 +205,8 @@ export default class Text extends React.Component<Props> {
     style,
     placeholder,
     lineHeight,
-    attach,
+    highlightWords,
     className,
-    html,
     ...props
   }: Props) {
     const text = getTextProperties(this.props)
@@ -211,13 +221,20 @@ export default class Text extends React.Component<Props> {
       onFocus,
       onBlur,
     }
-    let inner = html ? (
-      <span dangerouslySetInnerHTML={{ __html: html }} />
-    ) : (
-      children
-    )
     const oneLineEllipse = ellipse && typeof ellipse === 'boolean'
     const multiLineEllipse = ellipse > 1
+    let ellipseProps = { children }
+    if (highlightWords) {
+      if (typeof children === 'string') {
+        ellipseProps = {
+          dangerouslySetInnerHTML: {
+            __html: wrapHighlights(children, highlightWords),
+          },
+        }
+      } else {
+        console.warn('Expected chidlren to be string for highlighting')
+      }
+    }
     return (
       <text
         className={className}
@@ -233,7 +250,7 @@ export default class Text extends React.Component<Props> {
         {...eventProps}
         {...pick(props, DOM_EVENTS)}
       >
-        {!ellipse && inner}
+        {!ellipse && children}
         <span
           if={ellipse}
           $ellipseLines={multiLineEllipse}
@@ -248,9 +265,8 @@ export default class Text extends React.Component<Props> {
               : null
           }
           $$ellipse={oneLineEllipse}
-        >
-          {inner}
-        </span>
+          {...ellipseProps}
+        />
       </text>
     )
   }
@@ -290,7 +306,7 @@ export default class Text extends React.Component<Props> {
     const { fontSize, lineHeight } = getTextProperties(props)
     let color = props.color || theme.base.color
     // allow alpha adjustments
-    if (typeof props.alpha === 'number') {
+    if (typeof props.alpha === 'number' && color !== 'inherit') {
       color = $(color).alpha(props.alpha)
     }
     return {

@@ -22,22 +22,17 @@
 * cmd+opt when hidden: focus + focus search
 * cmd+opt when focused: hide
 * fix drill in from home/item to not just use context
-
-* tray
-* height adjust fixes
-* thing: show where it came from + url
-* test focus search on open window again
-* settings pane: see crawls by site, rough results + delete/rerun
-* store crawl settings on create
+* thing: show where it came from
+* settings pane: bottom sync status tray (slack, github, drive)
+* settings pane: better sync button
+* settings pane: crawler section
 * slack sync
   * turn off a room it should disable/delete attachments
-  * sync status progress
   * showing slack icons next to slack things + data.channel
 * cancel crawl from crawling... pane
 * crawling... pane glitch when on home
+* tests and fixes on drive/github
 * crawler breaks on lots of sites due to html parser, do readabiltiy injection
-  via chrome
-* home drilling into item doesnt push that item shows context
 * peek window that tracks next to main window
 * peek window shows peek view of items
 * feature: on window focus make ora show if hidden (clicked dock / task switch)

@@ -155,7 +155,7 @@ export default class ContextSidebar {
                           circular
                           chromeless
                           opacity={0.2}
-                          icon="help"
+                          icon="emptything"
                         />
                       }
                     >

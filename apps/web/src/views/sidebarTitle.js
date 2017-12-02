@@ -58,6 +58,7 @@ class Tab {
             flexFlow: 'row',
             flex: 1,
             zIndex: 1,
+            alignItems: 'center',
           }}
         >
           {children}
@@ -136,7 +137,7 @@ export default class SidebarTitle {
       flexFlow: 'row',
     },
     backButton: {
-      margin: [0, 3, 0, -8],
+      margin: [-2, 3, -2, -8],
       zIndex: 10,
     },
     image: {

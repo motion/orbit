@@ -36,7 +36,10 @@ function getIcon(result) {
 }
 
 function getChildren(result) {
-  if (typeof result.children !== 'undefined') {
+  if (typeof result.children === 'string') {
+    return result.children.slice(0, 200).replace(/[^\w]{2,}/g, ' ... ')
+  }
+  if (result.children) {
     return result.children
   }
   let text
@@ -61,7 +64,7 @@ export default function getItem(result, index) {
       typeof result.displayTitle !== 'undefined'
         ? result.displayTitle || null
         : result.display ? null : result.title,
-    primaryEllipse: !hasContent(result) ? 2 : false,
+    primaryEllipse: index === 0 ? 2 : true,
     primaryProps: {
       // lower opacity as list items go down
       opacity: Math.max(0.5, (9 - index) / 8),

@@ -203,7 +203,6 @@ export default class ListItem extends React.Component<Props> {
             if={areChildrenString}
             size={size * 0.9}
             opacity={0.6}
-            padding={[3, 0]}
             ellipse={childrenEllipse}
             {...childrenProps}
           >

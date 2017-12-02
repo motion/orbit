@@ -30,6 +30,8 @@
   * showing slack icons next to slack things + data.channel
 * cancel crawl from crawling... pane
 * crawling... pane glitch when on home
+* crawler breaks on lots of sites due to html parser, do readabiltiy injection
+  via chrome
 * home drilling into item doesnt push that item shows context
 * peek window that tracks next to main window
 * peek window shows peek view of items

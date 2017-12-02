@@ -94,9 +94,9 @@ export default class SidebarTitle {
             <UI.Title
               if={titleIsString}
               ellipse={2}
-              size={1}
+              size={0.95}
               fontWeight={300}
-              opacity={0.7}
+              opacity={0.6}
               textShadow="0 -1px 0 rgba(0,0,0,0.2)"
             >
               {title}

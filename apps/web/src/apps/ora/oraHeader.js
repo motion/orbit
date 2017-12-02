@@ -157,7 +157,7 @@ export default class OraHeader extends React.Component {
                 target={
                   <UI.Icon
                     {...iconProps}
-                    name="bucket"
+                    name="f"
                     opacity={0.5}
                     onClick={e => {
                       e.stopPropagation()
@@ -168,7 +168,13 @@ export default class OraHeader extends React.Component {
               >
                 <UI.List items={bucketItems} onSelect={this.selectBucket} />
               </UI.Popover>
-              <UI.Icon {...iconProps} onClick={this.handleHide} name="remove" />
+              <UI.Icon
+                {...iconProps}
+                size={14}
+                opacity={0.5}
+                onClick={this.handleHide}
+                name="remove"
+              />
             </rightSide>
           </contents>
         </header>
@@ -189,7 +195,7 @@ export default class OraHeader extends React.Component {
       justifyContent: 'center',
       '& .icon': {
         transition: 'all ease-in 100ms',
-        transform: 'scale(0.8)',
+        transform: 'scale(0.9)',
       },
       '&:hover': {
         background: [255, 255, 255, 0.02],

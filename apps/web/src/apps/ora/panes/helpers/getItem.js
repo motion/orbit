@@ -68,7 +68,7 @@ export default function getItem(result, index) {
       size: 1.2,
       fontWeight: 500,
     },
-    secondary: result.subtitle || result.url,
+    secondary: result.subtitle || (result.data && result.data.url),
     children: getChildren(result),
     childrenProps: {
       opacity: Math.max(0.25, (9 - index) / 16),

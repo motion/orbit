@@ -79,17 +79,22 @@ export default class SidebarTitle {
     const titleIsElement = React.isValidElement(title)
     return (
       <sidebartitle onClick={e => e.stopPropagation()}>
-        <UI.Button
-          if={!!onBack && !noBack}
-          $backButton
-          chromeless
-          size={0.9}
-          icon="arrominleft"
-          boxShadow="0 0 10px rgba(0,0,0,0.1)"
-          onClick={onBack}
-          {...backProps}
-        />
         <Tab>
+          <UI.Button
+            if={!!onBack && !noBack}
+            $backButton
+            chromeless
+            size={1}
+            icon="arrominleft"
+            sizePadding={0}
+            alpha={0.5}
+            alignSelf="center"
+            hover={{
+              alpha: 1,
+            }}
+            onClick={onBack}
+            {...backProps}
+          />
           <titles>
             <UI.Title
               if={titleIsString}
@@ -131,7 +136,8 @@ export default class SidebarTitle {
       flexFlow: 'row',
     },
     backButton: {
-      margin: [0, 3, 0, -3],
+      margin: [0, 3, 0, -8],
+      zIndex: 10,
     },
     image: {
       width: 16,

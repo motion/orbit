@@ -82,7 +82,9 @@ export default class MainSidebar {
               itemProps={{
                 primaryEllipse: true,
                 sizeHeight: 1.15,
-                hoverBackground: [0, 0, 0, 0.025],
+                hover: {
+                  background: [0, 0, 0, 0.025],
+                },
               }}
               items={[
                 { primary: 'dropbox.com' },
@@ -99,7 +101,9 @@ export default class MainSidebar {
             zIndex: 10,
           }}
           color={[255, 255, 255, 0.2]}
-          hoverColor={[255, 255, 255, 0.45]}
+          hover={{
+            color: [255, 255, 255, 0.45],
+          }}
           name="gear"
           onClick={this.props.oraStore.actions.openSettings}
         />

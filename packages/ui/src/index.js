@@ -37,7 +37,6 @@ import import_Tag from './tag'
 import import_Text from './text'
 import import_Popover from './popover'
 import import_Progress from './progress'
-import import_View from './view'
 import import_Circle from './circle'
 import import_Surface from './surface'
 import import_SizedSurface from './sizedSurface'
@@ -97,7 +96,6 @@ export const Tag = import_Tag
 export const Text = import_Text
 export const Popover = import_Popover
 export const Progress = import_Progress
-export const View = import_View
 export const Circle = import_Circle
 export const Surface = import_Surface
 export const SizedSurface = import_SizedSurface

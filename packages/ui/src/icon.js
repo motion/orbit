@@ -36,7 +36,7 @@ export default class Icon extends React.PureComponent<Props> {
 
   render({
     color,
-    hoverColor,
+    hover,
     size,
     tooltip,
     tooltipProps,
@@ -114,7 +114,6 @@ export default class Icon extends React.PureComponent<Props> {
       width,
       height,
       size,
-      hoverColor,
       hover,
       background,
     },

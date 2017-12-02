@@ -50,7 +50,7 @@ export type Props = {
   tagName: string,
   fontWeight?: number,
   lines?: number,
-  textOpacity?: number,
+  alpha?: number,
 }
 
 // click away from edit clears it
@@ -288,13 +288,11 @@ export default class Text extends React.Component<Props> {
 
   static theme = (props, theme) => {
     const { fontSize, lineHeight } = getTextProperties(props)
-
     let color = props.color || theme.base.color
-    // allow textOpacity adjustments
-    if (typeof props.textOpacity === 'number') {
-      color = $(color).alpha(props.textOpacity)
+    // allow alpha adjustments
+    if (typeof props.alpha === 'number') {
+      color = $(color).alpha(props.alpha)
     }
-
     return {
       text: {
         color,

@@ -94,6 +94,7 @@ export default class ListItem extends React.Component<Props> {
       row,
       segmented,
       secondary,
+      secondaryProps,
       size,
       style,
       childrenEllipse,
@@ -187,6 +188,7 @@ export default class ListItem extends React.Component<Props> {
                 size={size * 0.85}
                 opacity={0.7}
                 ellipse
+                {...secondaryProps}
               >
                 <Date $date if={date}>
                   {date}

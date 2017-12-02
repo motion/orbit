@@ -49,7 +49,6 @@ export type Props = {
   height?: number,
   highlight?: boolean,
   hoverable?: boolean,
-  hoverColor?: Color,
   hovered?: boolean,
   icon?: React.Element<any> | string,
   iconAfter?: boolean,
@@ -182,8 +181,6 @@ export default class Surface extends React.PureComponent<Props> {
       highlightColor,
       hover,
       hoverable,
-      hoverBackground,
-      hoverColor,
       hovered,
       icon,
       iconAfter,
@@ -452,21 +449,36 @@ export default class Surface extends React.PureComponent<Props> {
     if (colorfulBg && background && !background.model) {
       background = $(background)
     }
+    if (typeof props.backgroundAlpha === 'number') {
+      background = background.alpha(props.backgroundAlpha)
+    }
 
-    const hoverBackground =
+    let hoverBackground =
       !props.highlight &&
-      (props.hoverBackground === true
+      (props.hover && props.hover.background === true
         ? theme.hover.background
-        : props.hoverBackground ||
+        : (props.hover && props.hover.background) ||
           theme.hover.background ||
           (colorfulBg ? background.lighten(0.5) : background))
+    if (
+      hoverBackground &&
+      props.hover &&
+      typeof props.hover.backgroundAlpha === 'number'
+    ) {
+      hoverBackground = hoverColor.alpha(props.hover.backgroundAlpha)
+    }
 
     const borderColor = $(
       props.borderColor || theme[STATE].borderColor || 'transparent'
     )
     let hoverColor = $(
-      props.hoverColor || theme[STATE].color.lighten(0.2) || props.color
+      (props.hover && props.hover.color) ||
+        theme[STATE].color.lighten(0.2) ||
+        props.color
     )
+    if (props.hover && typeof props.hover.alpha === 'number') {
+      hoverColor = hoverColor.alpha(props.hover.alpha)
+    }
 
     const hoverBorderColor =
       props.hoverBorderColor ||
@@ -547,9 +559,7 @@ export default class Surface extends React.PureComponent<Props> {
 
     // state styles
     const hoverStyle = (props.hover ||
-      (!props.chromeless &&
-        !props.dimmed &&
-        (props.hoverable || props.hoverBackground))) && {
+      (!props.chromeless && !props.disabled && props.hoverable)) && {
       ...theme.hover,
       color: hoverColor,
       borderColor: hoverBorderColor,

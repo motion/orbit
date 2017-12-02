@@ -124,6 +124,7 @@ export default class ContextSidebar {
 
             return {
               title,
+              data: item,
               type: 'context',
               // icon: 'link',
               onClick: () => {

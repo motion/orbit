@@ -89,9 +89,11 @@ export default class OraHeader extends React.Component {
 
     const iconProps = {
       color: [255, 255, 255, 0.7],
-      hoverColor: [255, 255, 255, 1],
       padding: 8,
       size: 16,
+      hover: {
+        color: [255, 255, 255, 1],
+      },
       css: {
         marginLeft: -8,
       },

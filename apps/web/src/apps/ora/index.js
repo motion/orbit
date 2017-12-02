@@ -10,7 +10,7 @@ import OraBlur from './oraBlur'
 import * as Constants from '~/constants'
 
 const itemProps = {
-  size: 1.1,
+  size: 1.05,
   padding: [8, 12],
   glow: true,
   glowProps: {
@@ -21,6 +21,9 @@ const itemProps = {
     show: false,
     resist: 60,
     zIndex: 1,
+  },
+  secondaryProps: {
+    alpha: 0.3,
   },
   highlightBackground: [255, 255, 255, 0.045],
   // highlightBackground: `linear-gradient(

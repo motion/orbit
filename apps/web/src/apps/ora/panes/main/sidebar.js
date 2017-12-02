@@ -42,7 +42,7 @@ export default class MainSidebar {
           icon: false,
           children: null,
           onClick: () => OS.send('open-browser', item.url),
-          after: <After thing={item} />,
+          after: <After navigate={this.oraStore.stack.navigate} thing={item} />,
           type: 'context',
           category: 'Recent',
         })),

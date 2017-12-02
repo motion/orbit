@@ -130,7 +130,7 @@ export default class ContextSidebar {
                 this.context.sentences[index] &&
                 this.context.sentences[index].sentence,
               after: (
-                <After thing={item}>
+                <After navigate={this.props.navigate} thing={item}>
                   <debug css={{ position: 'absolute', top: 0, right: 0 }}>
                     <UI.Popover
                       openOnHover

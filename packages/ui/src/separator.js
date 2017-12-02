@@ -1,12 +1,13 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
+import Text from './text'
 
 @view.ui
 export default class Separator {
   render({ after, children, ...props }) {
     return (
       <separator {...props}>
-        <content>{children}</content>
+        <Text $content>{children}</Text>
         <after if={after}>{after}</after>
       </separator>
     )

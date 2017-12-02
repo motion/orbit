@@ -15,7 +15,7 @@ export default class OraActionBar {
     const { store } = oraStore.stack.last
     const actions = store && store.actions
     return (
-      <UI.Theme name="clear-dark">
+      <UI.Theme name="dark">
         <actions if={actions}>
           <actionbar>
             {actions
@@ -27,7 +27,7 @@ export default class OraActionBar {
                 if (content) {
                   return <span>{content}</span>
                 }
-                return <UI.Button glow glint={false} {...props} />
+                return <UI.Button glow {...props} />
               })
               .map((item, index) =>
                 React.cloneElement(item, {

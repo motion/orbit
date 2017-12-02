@@ -13,13 +13,13 @@ if (process.env.IS_PROD) {
 export const VERSION = require('../package.json').version
 
 export const ORA_BG = [10, 10, 10, 0.88]
-export const ORA_BG_MAIN_OPAQUE = [48, 48, 48]
+export const ORA_BG_MAIN_OPAQUE = [60, 60, 60]
 export const ORA_BG_MAIN = [...ORA_BG_MAIN_OPAQUE, 0.96]
 export const ORA_WIDTH = 300
 export const ORA_HEIGHT = 535
-export const ORA_HEADER_HEIGHT = 30
-export const ORA_HEADER_HEIGHT_FULL = 40
-export const ACTION_BAR_HEIGHT = 50
+export const ORA_HEADER_HEIGHT = 40
+export const ORA_HEADER_HEIGHT_FULL = 46
+export const ACTION_BAR_HEIGHT = 40
 export const HEADER_HEIGHT = 36
 export const TRAY_WIDTH = 400
 export const TRAY_HEIGHT = 500

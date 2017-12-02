@@ -5,10 +5,10 @@ import ListItem from './listItem'
 import { List as VirtualList } from 'react-virtualized'
 import parentSize from '~/helpers/parentSize'
 import type { Props as ItemProps } from './listItem'
-import Surface from './surface'
 import Separator from './separator'
 import { isArrayLike } from 'mobx'
 import { CellMeasurer, CellMeasurerCache } from 'react-virtualized'
+import { throttle } from 'lodash'
 
 const idFn = _ => _
 
@@ -127,6 +127,7 @@ class List extends React.PureComponent<Props, { selected: number }> {
           nextProps.parentHeight.width !== parentHeight.width)
       ) {
         nextProps.parentSize.measure()
+        this.measure()
       }
     }
 
@@ -141,7 +142,11 @@ class List extends React.PureComponent<Props, { selected: number }> {
       this.updateChildren()
     }
 
-    if (nextProps.virtualized && nextProps.virtualized.measure) {
+    if (
+      nextProps.virtualized &&
+      nextProps.virtualized.measure &&
+      !(this.props.virtualized && this.props.virtualized.measure)
+    ) {
       this.measure()
     }
   }
@@ -159,6 +164,7 @@ class List extends React.PureComponent<Props, { selected: number }> {
       row = index === 0 ? 0 : this.realIndex[index] || index + this.totalGroups
     }
     this.virtualListRef.scrollToRow(row)
+    this.lastScrolledToRow = row
   }
 
   focus() {
@@ -169,11 +175,12 @@ class List extends React.PureComponent<Props, { selected: number }> {
     // this.virtualListRef.focus()
   }
 
-  measure = () => {
+  measure = throttle(() => {
     if (this.virtualListRef) {
       this.virtualListRef.recomputeRowHeights(0)
+      this.scrollToRow(this.lastScrolledToRow || 0)
     }
-  }
+  }, 6)
 
   gatherRefs = (index: number) => (ref: ?HTMLElement) => {
     if (ref) {
@@ -473,18 +480,13 @@ class List extends React.PureComponent<Props, { selected: number }> {
     }
     const { totalItems, totalGroups, realIndex } = this
     return (
-      <Surface
-        $list
+      <list
         $visible={!virtualized || this.state.started}
-        flexFlow={horizontal ? 'row' : null}
-        tagName="list"
-        align="stretch"
-        height={height}
-        width={width}
-        background="transparent"
         style={{
+          height: height || virtualized ? '100%' : 'auto',
+          width,
+          flexFlow: horizontal ? 'row' : null,
           overflowY: scrollable ? 'scroll' : 'auto',
-          height: virtualized ? '100%' : 'auto',
           ...style,
         }}
         {...attach}
@@ -505,12 +507,13 @@ class List extends React.PureComponent<Props, { selected: number }> {
           {...virtualized}
         />
         {!virtualized && children}
-      </Surface>
+      </list>
     )
   }
 
   static style = {
     list: {
+      alignItems: 'stretch',
       overflowX: 'visible',
       visibility: 'hidden',
     },

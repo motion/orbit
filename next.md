@@ -14,10 +14,13 @@
   * click the link after load
 * thing: safety on syncing the same url
 * oauth: clean up after cancel/confirm
+* height adjustment based on results
 
 # now
 
-* height adjustment based on results
+* tray
+* height adjust fixes
+* thing: show where it came from + url
 * test focus search on open window again
 * settings pane: see crawls by site, rough results + delete/rerun
 * store crawl settings on create
@@ -35,10 +38,6 @@
 * show body contents snippet when on thing
 * bolding inside ui.text for highlighting key words
 
-- Home:
-  * Show current context as first item so you can look back into it if wanted
-  * Show recently viewed
-  * Show recently pinned
 - Crawler:
   * Setting panes to see stores crawls + run + see/manage results
   * Store crawl settings once completed so it can re-run

@@ -1,12 +1,15 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
+import Text from './text'
 
 @view.ui
 export default class Separator {
   render({ after, children, ...props }) {
     return (
       <separator {...props}>
-        <content>{children}</content>
+        <Text $content size={0.9}>
+          {children}
+        </Text>
         <after if={after}>{after}</after>
       </separator>
     )
@@ -14,7 +17,6 @@ export default class Separator {
 
   static style = {
     separator: {
-      fontSize: 14,
       fontWeight: 500,
       padding: [12, 10, 3],
       justifyContent: 'space-between',

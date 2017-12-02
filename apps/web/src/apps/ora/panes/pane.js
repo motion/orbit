@@ -3,6 +3,7 @@ import * as UI from '@mcro/ui'
 import * as Constants from '~/constants'
 import SidebarTitle from '~/views/sidebarTitle'
 import Drawer from '~/views/drawer'
+import { debounce } from 'lodash'
 
 class PaneStore {
   listRef = null
@@ -51,6 +52,10 @@ class PaneStore {
       return
     }
     // scroll to row in list
+
+    const scrollToIndex = debounce(this.listRef.scrollToRow, 150, {
+      trailing: true,
+    })
     this.react(
       () => [
         sidebar
@@ -58,14 +63,12 @@ class PaneStore {
           : stack.last.mainSelectedIndex,
         this.props.oraStore.search,
         this.props.oraStore.focusedBar,
+        this.props.listProps &&
+          this.props.listProps.virtualized &&
+          this.props.listProps.virtualized.measure,
         this.contentVersion,
       ],
-      ([index]) => {
-        // TODO fix this garbage
-        this.listRef.scrollToRow(index)
-        this.setTimeout(() => this.listRef.scrollToRow(index))
-        this.setTimeout(() => this.listRef.scrollToRow(index), 16)
-      },
+      ([index]) => scrollToIndex(index),
       true
     )
   }
@@ -147,10 +150,8 @@ export default class Pane {
           if={title}
           title={title}
           subtitle={result.subtitle}
+          noBack={!stackItem.parent}
           onBack={stackItem.stack.left}
-          backProps={{
-            icon: stackItem.stack.length > 2 ? 'arrow-min-left' : 'home',
-          }}
           {...typeof title === 'object' && title}
         />
         <content $transparent={transparent} ref={paneStore.setContentRef}>

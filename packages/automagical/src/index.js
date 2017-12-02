@@ -84,7 +84,6 @@ function collectGetterPropertyDescriptors(proto) {
   const fproto = Object.getOwnPropertyNames(proto).filter(
     x => !FILTER_KEYS[x] && x[0] !== '_'
   )
-
   return fproto.reduce(
     (acc, cur) => ({
       ...acc,
@@ -154,7 +153,6 @@ function automagic(obj: MagicalObject) {
     ...Object.getOwnPropertyDescriptors(obj),
     ...collectGetterPropertyDescriptors(Object.getPrototypeOf(obj)),
   }
-
   // mutate to be mobx observables
   for (const method of Object.keys(descriptors)) {
     mobxify(obj, method, descriptors[method])
@@ -164,10 +162,15 @@ function automagic(obj: MagicalObject) {
 // * => mobx
 function mobxify(target: Object, method: string, descriptor: Object) {
   // @computed get (do first to avoid hitting the getter on next line)
-  if (descriptor && !!descriptor.get) {
-    Mobx.extendObservable(target, {
-      [method]: Mobx.computed(descriptor.get),
-    })
+  if (descriptor && (!!descriptor.get || !!descriptor.set)) {
+    if (descriptor.get) {
+      Mobx.extendObservable(target, {
+        [method]: Mobx.computed(descriptor.get),
+      })
+    }
+    if (descriptor.set) {
+      Object.defineProperty(target, method, descriptor)
+    }
     return
   }
 

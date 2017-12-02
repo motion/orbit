@@ -42,6 +42,37 @@ export default class OraStore {
   crawler = new CrawlerStore()
   lastContext = null
 
+  lastHeight = 'auto'
+  _height = 'auto'
+
+  set height(val) {
+    this.lastHeight = this._height
+    this._height = val
+  }
+
+  get height() {
+    return this._height
+  }
+
+  _watchHeight = () => {
+    this.react(
+      () => this.stack.last.results || [],
+      ({ length }) => {
+        let height = 'auto'
+        if (length > 0) {
+          height = 110 + 150 // header
+          // first two results are taller
+          if (length > 1) height += 150
+          // rest are shorter
+          if (length > 2) height += (length - 2) * 90
+          // max height
+          height = Math.min(Constants.ORA_HEIGHT, height)
+        }
+        this.height = height
+      }
+    )
+  }
+
   // this is synced to electron!
   state = {
     hidden: false,
@@ -81,11 +112,13 @@ export default class OraStore {
   @watch context = () => this.items && new ContextStore(this.items)
 
   async willMount() {
+    window.oraStore = this
     this.attachTrap('window', window)
     // listeners
     this._listenForStateSync()
     this.on(OS, 'ora-toggle', this.toggleHidden)
     // watchers
+    this._watchHeight()
     this._watchContext()
     this._watchFocus()
     this._watchFocusBar()

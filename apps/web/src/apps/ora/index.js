@@ -22,15 +22,16 @@ const itemProps = {
     resist: 60,
     zIndex: 1,
   },
-  highlightBackground: `linear-gradient(
-    rgba(255,255,255,0),
-    rgba(255,255,255,0.035) 30%
-  )`,
+  highlightBackground: [255, 255, 255, 0.045],
+  // highlightBackground: `linear-gradient(
+  //   rgba(255,255,255,0),
+  //   rgba(255,255,255,0.035) 30%
+  // )`,
   childrenEllipse: 2,
 }
 
 @view
-class OraContent {
+class OraMainContent {
   render({ oraStore }) {
     return (
       <content $contentWithHeaderOpen={oraStore.focusedBar}>
@@ -41,7 +42,7 @@ class OraContent {
           listProps={{
             groupBy: 'category',
             virtualized: {
-              measure: true,
+              measure: oraStore.height !== oraStore.lastHeight,
             },
             itemProps,
           }}
@@ -66,6 +67,29 @@ class OraContent {
   }
 }
 
+export const OraContent = ({ oraStore }) => (
+  <React.Fragment>
+    <OraBlur if={false} oraStore={oraStore} />
+    <UI.Theme name="clear-dark">
+      <OraHeader oraStore={oraStore} />
+    </UI.Theme>
+    <OraMainContent oraStore={oraStore} />
+    <OraDrawer oraStore={oraStore} />
+    <OraActionBar oraStore={oraStore} />
+    <bottomBackground
+      css={{
+        background: Constants.ORA_BG_MAIN,
+        position: 'absolute',
+        left: -100,
+        right: -100,
+        bottom: -100,
+        zIndex: -1,
+        height: Constants.ACTION_BAR_HEIGHT + 100,
+      }}
+    />
+  </React.Fragment>
+)
+
 @view.provide({
   oraStore: OraStore,
 })
@@ -78,25 +102,11 @@ export default class OraPage {
           $visible={!oraStore.state.hidden}
           ref={oraStore.ref('barRef').set}
           $$draggable
+          css={{
+            height: oraStore.height,
+          }}
         >
-          <OraBlur if={false} oraStore={oraStore} />
-          <UI.Theme name="clear-dark">
-            <OraHeader oraStore={oraStore} />
-          </UI.Theme>
           <OraContent oraStore={oraStore} />
-          <OraDrawer oraStore={oraStore} />
-          <OraActionBar oraStore={oraStore} />
-          <bottomBackground
-            css={{
-              background: Constants.ORA_BG_MAIN,
-              position: 'absolute',
-              left: -100,
-              right: -100,
-              bottom: -100,
-              zIndex: -1,
-              height: Constants.ACTION_BAR_HEIGHT + 100,
-            }}
-          />
         </ora>
       </UI.Theme>
     )
@@ -105,7 +115,7 @@ export default class OraPage {
   static style = {
     ora: {
       width: Constants.ORA_WIDTH,
-      height: Constants.ORA_HEIGHT,
+      // height: Constants.ORA_HEIGHT,
       background: Constants.ORA_BG,
       // border: [1, [255, 255, 255, 0.035]],
       boxShadow: [

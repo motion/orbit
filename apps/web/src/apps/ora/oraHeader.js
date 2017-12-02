@@ -107,13 +107,9 @@ export default class OraHeader extends React.Component {
         >
           <contents>
             <leftSide>
+              <UI.Icon name="zoom" {...iconProps} />
               <UI.Icon
-                if={oraStore.stack.length === 1}
-                name="zoom"
-                {...iconProps}
-              />
-              <UI.Icon
-                if={oraStore.stack.length > 1}
+                if={false && oraStore.stack.length > 1}
                 name="arrominleft"
                 onClick={this.handleBack}
                 onMouseUp={this.preventPropagation}
@@ -144,7 +140,8 @@ export default class OraHeader extends React.Component {
               <titleText>
                 <UI.Text ellipse size={0.8}>
                   {(oraStore.banner && oraStore.banner.message) ||
-                    oraStore.stack.last.result.id}
+                    oraStore.stack.last.result.id ||
+                    'Search'}
                 </UI.Text>
               </titleText>
             </title>
@@ -160,7 +157,7 @@ export default class OraHeader extends React.Component {
                 target={
                   <UI.Icon
                     {...iconProps}
-                    name="bucket"
+                    name="f"
                     opacity={0.5}
                     onClick={e => {
                       e.stopPropagation()
@@ -171,7 +168,13 @@ export default class OraHeader extends React.Component {
               >
                 <UI.List items={bucketItems} onSelect={this.selectBucket} />
               </UI.Popover>
-              <UI.Icon {...iconProps} onClick={this.handleHide} name="remove" />
+              <UI.Icon
+                {...iconProps}
+                size={14}
+                opacity={0.5}
+                onClick={this.handleHide}
+                name="remove"
+              />
             </rightSide>
           </contents>
         </header>
@@ -192,7 +195,7 @@ export default class OraHeader extends React.Component {
       justifyContent: 'center',
       '& .icon': {
         transition: 'all ease-in 100ms',
-        transform: 'scale(0.75)',
+        transform: 'scale(0.9)',
       },
       '&:hover': {
         background: [255, 255, 255, 0.02],

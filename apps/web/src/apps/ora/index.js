@@ -136,7 +136,7 @@ export default class OraPage {
     },
     collapseBar: {
       height: 12,
-      zIndex: 100,
+      zIndex: 10000000,
       position: 'absolute',
       bottom: 0,
       left: 0,

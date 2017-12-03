@@ -41,6 +41,7 @@ export default class OraStore {
   showWhiteBottomBg = false
   crawler = new CrawlerStore()
   lastContext = null
+  collapsed = false
 
   lastHeight = 'auto'
   _height = 'auto'
@@ -51,6 +52,9 @@ export default class OraStore {
   }
 
   get height() {
+    if (this.collapsed) {
+      return 40
+    }
     return this._height
   }
 

@@ -79,18 +79,6 @@ export const OraContent = ({ oraStore }) => (
     <OraMainContent oraStore={oraStore} />
     <OraDrawer oraStore={oraStore} />
     <OraActionBar oraStore={oraStore} />
-    <bottomBackground
-      css={{
-        background: Constants.ORA_BG_MAIN,
-        position: 'absolute',
-        left: -100,
-        right: -100,
-        bottom: -100,
-        zIndex: -1,
-        height: Constants.ACTION_BAR_HEIGHT + 100,
-        pointerEvents: 'none',
-      }}
-    />
   </React.Fragment>
 )
 
@@ -111,6 +99,10 @@ export default class OraPage {
           }}
         >
           <OraContent oraStore={oraStore} />
+          <collapseBar onClick={oraStore.ref('collapsed').toggle}>
+            <UI.Icon name="menu" size={10} />
+          </collapseBar>
+          <bottomBackground if={!oraStore.collapsed} />
         </ora>
       </UI.Theme>
     )
@@ -141,6 +133,29 @@ export default class OraPage {
       transform: {
         x: 0,
       },
+    },
+    collapseBar: {
+      height: 12,
+      zIndex: 100,
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      right: 0,
+      flexFlow: 'row',
+      justifyContent: 'center',
+      '&:hover': {
+        background: [255, 255, 255, 0.025],
+      },
+    },
+    bottomBackground: {
+      background: Constants.ORA_BG_MAIN,
+      position: 'absolute',
+      left: -100,
+      right: -100,
+      bottom: -100,
+      zIndex: -1,
+      height: Constants.ACTION_BAR_HEIGHT + 100,
+      pointerEvents: 'none',
     },
   }
 }

@@ -8,7 +8,6 @@ import HomeHandsFree from './home/sectionHandsFree'
 import HomeSecurity from './home/sectionSecurity'
 import HomeChat from './home/sectionChat'
 import HomeExamples from './home/sectionExamples'
-import HomeIntegrations from './home/sectionIntegrations'
 
 let blurredRef
 
@@ -143,68 +142,17 @@ export default class HomePage extends React.Component {
       homeStore,
       setSection: homeStore.setSection,
     }
-
-    const sinWidth = 100
-
-    const homeContents = [
-      <HomeExamples {...sectionProps} />,
-      //<HomeIntegrations if={false} {...sectionProps} />,
-      <HomeChat {...sectionProps} />,
-      <HomeSecurity {...sectionProps} />,
-      <HomeHandsFree {...sectionProps} />,
-      <View.Footer />,
-    ].map((x, index) => React.cloneElement(x, { key: index }))
-
+    const homeContents = (
+      <React.Fragment>
+        <HomeExamples {...sectionProps} />
+        <HomeChat {...sectionProps} />
+        <HomeSecurity {...sectionProps} />
+        <HomeHandsFree {...sectionProps} />
+        <View.Footer />
+      </React.Fragment>
+    )
     return (
       <page css={styles.page} ref={!blurred && homeStore.setPageRef}>
-        <View.Sine
-          if={!blurred}
-          color="#fff"
-          strokeWidth={2}
-          amplitude={sinWidth / 2}
-          freq={0.005}
-          phase={250}
-          css={{
-            opacity: 0.1,
-            pointerEvents: 'none',
-            height: sinWidth,
-            marginLeft: sinWidth / 2,
-            position: 'absolute',
-            zIndex: 2,
-            top: 0,
-            left: '50%',
-            width: Constants.SECTION_HEIGHT * 3 + 200,
-            transformOrigin: 'top left',
-            transform: {
-              rotate: '90deg',
-              scale: 1,
-            },
-          }}
-        />
-        <View.Sine
-          if={!blurred}
-          color={Constants.dark2}
-          strokeWidth={2}
-          amplitude={sinWidth / 2}
-          freq={0.005}
-          phase={250}
-          css={{
-            opacity: 0.1,
-            pointerEvents: 'none',
-            height: sinWidth,
-            marginLeft: sinWidth / 2,
-            position: 'absolute',
-            zIndex: 2,
-            top: -2,
-            left: '50%',
-            width: Constants.SECTION_HEIGHT * 3 + 200,
-            transformOrigin: 'top left',
-            transform: {
-              rotate: '90deg',
-              scale: 1,
-            },
-          }}
-        />
         <HomeHeader if={!blurred} />
         <Ora
           if={!blurred && homeStore.ready && !isSmall}
@@ -215,15 +163,6 @@ export default class HomePage extends React.Component {
           <HomeHeader />
           {homeContents}
         </contents>
-        <centerline
-          if={false}
-          css={{
-            position: [0, 'auto', 0, '50%'],
-            width: 1,
-            background: 'red',
-            zIndex: 10000,
-          }}
-        />
       </page>
     )
   }

@@ -1,7 +1,7 @@
 {
   "name": "@mcro/electron-build",
   "productName": "Orbit",
-  "version": "1.5.43",
+  "version": "1.5.44",
   "private": true,
   "updater": {
     "url":

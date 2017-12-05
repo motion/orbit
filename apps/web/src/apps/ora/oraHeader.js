@@ -23,7 +23,7 @@ export default class OraHeader extends React.Component {
   handleHeaderMouseUp = () => {
     const { oraStore, store } = this.props
     if (Date.now() - store.downAt < 200) {
-      oraStore.focusedBar = true
+      oraStore.ui.setFocusBar(true)
       this.setTimeout(() => {
         oraStore.inputRef.focus()
       })
@@ -31,7 +31,7 @@ export default class OraHeader extends React.Component {
   }
 
   onHeaderBlur = () => {
-    this.props.oraStore.focusedBar = false
+    this.props.oraStore.ui.setFocusBar(false)
   }
 
   selectBucket = async item => {
@@ -102,7 +102,7 @@ export default class OraHeader extends React.Component {
     return (
       <UI.Theme name="dark">
         <header
-          $focus={oraStore.focusedBar && !oraStore.collapsed}
+          $focus={oraStore.ui.focusedBar && !oraStore.ui.collapsed}
           onMouseDown={this.handleHeaderMouseDown}
           onMouseUp={this.handleHeaderMouseUp}
           $$draggable
@@ -121,9 +121,9 @@ export default class OraHeader extends React.Component {
 
             <UI.Input
               $searchInput
-              $disabled={!oraStore.focusedBar}
+              $disabled={!oraStore.ui.focusedBar}
               size={1}
-              getRef={oraStore.onInputRef}
+              getRef={oraStore.ui.onInputRef}
               borderRadius={0}
               onBlur={this.onHeaderBlur}
               onChange={oraStore.onSearchChange}

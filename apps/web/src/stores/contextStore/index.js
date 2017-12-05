@@ -1,55 +1,44 @@
-import {
-  includes,
-  last,
-  sortBy,
-  debounce,
-  reverse,
-  uniqBy,
-  memoize,
-  flatten,
-  mean,
-} from 'lodash'
+import { watch } from '@mcro/black'
+import { includes, last, uniqBy, memoize } from 'lodash'
 import bm25 from './bm25'
 import winkNlp from 'wink-nlp-utils'
-import {
-  euclideanDistance,
-  cosineSimilarity,
-  splitSentences,
-  minKBy,
-  emd,
-} from './helpers'
-import stopwords from './stopwords'
-import isAlpha from './isAlpha'
-
-const timesCount = {}
-const logTimes = (id, times, ...vals) => {
-  if (!timesCount[id]) timesCount[id] = 0
-  timesCount[id] += 1
-
-  if (times < timesCount[id]) console.log(...vals)
-}
+import { cosineSimilarity, splitSentences, minKBy, emd } from './helpers'
 
 let vectorCache = null
 
-export default class Context {
-  items = []
+export default class ContextStore {
+  query = null
+  propItems = null
+  @watch queryItems = () => this.query && this.query()
   autocomplete = []
   sentences = []
   vectors = null
   engine = null
   qe = ''
-  docTexts = ''
+
+  get items() {
+    if (this.queryItems) {
+      return this.queryItems
+    }
+    return this.propItems
+  }
+
+  @watch
+  docTexts = () => {
+    return this.items
+      .map(item => (item.title + '\n' + item.body).toLowerCase())
+      .join('\n')
+  }
   indexToToken = null
   searchResults = []
+
   get loading() {
     return this.engine === null
   }
 
-  constructor(items) {
-    this.items = items.slice(0, 500)
-    this.docTexts = this.items
-      .map(item => (item.title + '\n' + item.body).toLowerCase())
-      .join('\n')
+  constructor({ query, items }) {
+    this.propItems = items
+    this.query = query
     this.loadVectors().then(vecs => {
       this.vectors = vecs
       this.index()
@@ -58,7 +47,6 @@ export default class Context {
 
   loadVectors = async () => {
     if (vectorCache) return vectorCache
-
     const text = await fetch(`/vectors50k.txt`).then(res => res.text())
     const vectors = {}
     text.split('\n').forEach(line => {

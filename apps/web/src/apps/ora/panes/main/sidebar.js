@@ -1,5 +1,4 @@
 import * as React from 'react'
-import * as UI from '@mcro/ui'
 import { fuzzy, OS } from '~/helpers'
 import { Thing } from '~/app'
 import After from '~/views/after'

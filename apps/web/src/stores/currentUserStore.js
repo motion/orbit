@@ -58,6 +58,14 @@ class CurrentUser {
     })
   }
 
+  get bucket() {
+    if (!this.user) {
+      return 'Default'
+    }
+    const { activeBucket } = this.user.settings
+    return activeBucket || 'Default'
+  }
+
   get loggedIn() {
     return !!this.user
   }

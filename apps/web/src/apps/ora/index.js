@@ -91,7 +91,7 @@ export default class OraPage {
     return (
       <UI.Theme name="dark">
         <ora
-          $visible={!oraStore.state.hidden}
+          $visible={!oraStore.ui.state.hidden}
           ref={oraStore.ref('barRef').set}
           $$draggable
           css={{
@@ -99,7 +99,7 @@ export default class OraPage {
           }}
         >
           <OraContent oraStore={oraStore} />
-          <bottomBackground if={!oraStore.collapsed} />
+          <bottomBackground if={!oraStore.ui.collapsed} />
         </ora>
       </UI.Theme>
     )

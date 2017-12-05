@@ -1,22 +1,36 @@
 // @flow
 import event from 'disposable-event'
-import { CompositeDisposable } from 'sb-event-kit'
+import { Disposable, CompositeDisposable } from 'sb-event-kit'
+import global from 'global'
 
-function _on(element: HTMLElement, cb: Function, bind: boolean): Function {
-  if (element && element.emitter) {
-    return _on.call(this, element.emitter, cb, bind)
+function _on(...args): Disposable {
+  // allows calling with just on('eventName', callback) and using this
+  if (args.length === 2) {
+    if (typeof args[0] !== 'string') {
+      throw new Error(`String required as first arg when only two args passed`)
+    }
+    if (typeof args[1] !== 'function') {
+      throw new Error(
+        `Function callback required as second arg when only two args passed`
+      )
+    }
+    return onSomething.call(this, this, ...args)
   }
-  const e = event(element, cb, bind)
+  return onSomething.call(this, ...args)
+}
+
+function onSomething(target: Object, eventName: String, callback: Function) {
+  if (target && target.emitter) {
+    return _on.call(this, target.emitter, eventName, callback)
+  }
+  const e = event(target, eventName, callback)
   this.subscriptions.add(e)
   return e
 }
 
-const ogSetTimeout =
-  typeof window !== 'undefined' ? window.setTimeout : global.setTimeout
-const ogSetInterval =
-  typeof window !== 'undefined' ? window.setInterval : global.setInterval
-const ogRequestAnimationFrame =
-  typeof window !== 'undefined' ? window.setInterval : global.setInterval
+const ogSetTimeout = global.setTimeout
+const ogSetInterval = global.setInterval
+const ogRequestAnimationFrame = global.setInterval
 
 function _setTimeout(givenCallback: Function, duration: number): number {
   let subscription

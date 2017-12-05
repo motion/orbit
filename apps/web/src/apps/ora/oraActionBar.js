@@ -17,10 +17,10 @@ export default class OraActionBar {
     return (
       <UI.Theme name="dark">
         <actions>
-          <collapseBar onClick={oraStore.ref('collapsed').toggle}>
+          <collapseBar onClick={oraStore.ui.toggleCollapsed}>
             <UI.Icon name="menu" size={10} />
           </collapseBar>
-          <actionbar if={actions && !oraStore.collapsed}>
+          <actionbar if={actions && !oraStore.ui.collapsed}>
             {actions
               .filter(Boolean)
               .map(({ flex, content, ...props }) => {

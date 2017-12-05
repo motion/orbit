@@ -48,7 +48,7 @@ export default class OraDrawer {
                 {
                   icon: 'check',
                   children: 'Save',
-                  onClick: oraStore.commitResults,
+                  onClick: oraStore.crawler.commitResults,
                   theme: 'green',
                 },
               ]}

@@ -1,26 +1,14 @@
 import { Thing } from '~/app'
-import { watch } from '@mcro/black'
-import Mousetrap from 'mousetrap'
-import { OS, debounceIdle } from '~/helpers'
+import { OS } from '~/helpers'
 import StackStore from '~/stores/stackStore'
 import CrawlerStore from '~/stores/crawlerStore'
-import keycode from 'keycode'
-import ContextStore from '~/context'
-import SHORTCUTS from './shortcuts'
+import ContextStore from '~/stores/contextStore'
+import PinStore from '~/stores/pinStore'
+import UIStore from '~/stores/uiStore'
 import { CurrentUser } from '~/app'
-import * as r2 from '@mcro/r2'
-import { throttle } from 'lodash'
 import debug from 'debug'
-import { createInChunks } from '~/sync/helpers'
-import * as Constants from '~/constants'
 
 const log = _ => _ || debug('ora')
-
-const BANNERS = {
-  note: 'note',
-  success: 'success',
-  error: 'error',
-}
 
 const BANNER_TIMES = {
   note: 5000,
@@ -28,120 +16,52 @@ const BANNER_TIMES = {
   error: 5000,
 }
 
+const contextQuery = () =>
+  !CurrentUser.bucket
+    ? Thing.find().limit(8)
+    : Thing.find()
+        .limit(8)
+        .where('bucket')
+        .eq(CurrentUser.bucket)
+        .sort({ updatedAt: 'desc' })
+
 export default class OraStore {
-  stack = new StackStore([{ type: 'main' }])
-  inputRef = null
-  search = ''
-  textboxVal = ''
-  traps = {}
-  lastKey = null
-  banner = null
-  focusedBar = false
-  wasBlurred = false
-  showWhiteBottomBg = false
+  // stores
   crawler = new CrawlerStore()
+  stack = new StackStore([{ type: 'main' }])
+  ui = new UIStore({ stack: this.stack })
+  pin = new PinStore()
+  context = new ContextStore({
+    query: contextQuery,
+  })
+  // state
+  banner = null
   lastContext = null
-  collapsed = false
-
-  lastHeight = 'auto'
-  _height = 'auto'
-
-  set height(val) {
-    this.lastHeight = this._height
-    this._height = val
-  }
-
-  get height() {
-    if (this.collapsed) {
-      return 40
-    }
-    return this._height
-  }
-
-  _watchHeight = () => {
-    this.react(
-      () => this.stack.last.results || [],
-      ({ length }) => {
-        let height = 'auto'
-        if (length > 0) {
-          // header + footer height
-          height = 74 + 40
-          // first
-          height += 120
-          // second
-          if (length > 1) height += 120
-          // ...rest
-          if (length > 2) height += (length - 2) * 90
-          // max height
-          height = Math.min(Constants.ORA_HEIGHT, height)
-        }
-        this.height = height
-      }
-    )
-  }
-
-  // this is synced to electron!
-  state = {
-    hidden: false,
-    focused: true,
-  }
-
-  // synced from electron!
+  // synced from electron
   electronState = {}
 
-  setState = newState => {
-    this.state = {
-      ...this.state,
-      ...newState,
-    }
-    OS.send('set-state', this.state)
-  }
-
-  // TODO move into currentuser
-  get bucket() {
-    if (!CurrentUser.user) {
-      return 'Default'
-    }
-    const { activeBucket } = CurrentUser.user.settings
-    return activeBucket || 'Default'
-  }
-
-  @watch
-  items = () =>
-    !this.bucket
-      ? Thing.find().limit(8)
-      : Thing.find()
-          .limit(8)
-          .where('bucket')
-          .eq(this.bucket)
-          .sort({ updatedAt: 'desc' })
-
-  @watch context = () => this.items && new ContextStore(this.items)
-
   async willMount() {
-    window.oraStore = this
-    this.attachTrap('window', window)
-    // listeners
-    this._listenForStateSync()
-    this.on(OS, 'ora-toggle', this.toggleHidden)
-    // watchers
-    this._watchHeight()
+    window.Store = this
+    this._watchForBanners()
+    this._listenForElectronState()
     this._watchContext()
-    this._watchFocus()
-    this._watchFocusBar()
-    this._watchBlurBar()
-    this.watch(function watchWasBlurred() {
-      const { focused } = this.state
-      // one frame later
-      this.setTimeout(() => {
-        this.wasBlurred = !focused
-      }, 16)
-    })
-    this.setState({}) // trigger first send
     OS.send('start-ora')
   }
 
-  setBanner = (type, message, timeout) => {
+  willUnmount() {
+    this.crawler.dispose()
+    this.stack.dispose()
+    this.ui.dispose()
+    this.context.dispose()
+    this.pin.dispose()
+  }
+
+  _watchForBanners = () => {
+    this.on(this.pin, 'banner', this.setBanner)
+    this.on(this.crawler, 'banner', this.setBanner)
+  }
+
+  setBanner = ({ type, message, timeout }) => {
     this.banner = { message, type }
     const fadeOutTime = timeout || BANNER_TIMES[type]
     if (fadeOutTime) {
@@ -166,49 +86,7 @@ export default class OraStore {
     )
   }
 
-  addCurrentPage = async () => {
-    if (!this.osContext) {
-      console.log('no context to add')
-      return
-    }
-    this.setBanner(BANNERS.note, 'Pinning...')
-    const { url } = this.osContext
-    const response = await r2.post(`${Constants.API_URL}/crawler/single`, {
-      json: { options: { entry: url } },
-    }).json
-    if (response.error) {
-      this.setBanner(BANNERS.error, `${response.error}`)
-      return
-    }
-    const { result } = response
-    if (result) {
-      const { url } = result
-      const { title, content } = result.contents
-      const thing = await Thing.create({
-        title,
-        integration: 'pin',
-        type: 'site',
-        body: content,
-        url,
-        bucket: this.bucket || 'Default',
-      })
-      console.log('made a thing', thing)
-      this.setBanner(BANNERS.success, 'Added pin')
-    } else {
-      this.setBanner(BANNERS.error, 'Failed pinning :(')
-    }
-  }
-
-  _watchBlurBar = () => {
-    this.watch(function watchBlurBar() {
-      if (this.state.hidden) {
-        // timeout based on animation
-        this.setTimeout(this.blurBar, 150)
-      }
-    })
-  }
-
-  _listenForStateSync = () => {
+  _listenForElectronState() {
     // allows electron to ask for updated app state
     this.on(OS, 'get-state', () => {
       OS.send('got-state', this.state)
@@ -218,14 +96,6 @@ export default class OraStore {
       this.electronState = state
     })
   }
-
-  contextToResult = context => ({
-    id: context.url,
-    title: context.selection || context.title,
-    type: 'context',
-    icon: context.application === 'Google Chrome' ? 'social-google' : null,
-    image: context.favicon,
-  })
 
   _watchContext = () => {
     this.lastContext = null
@@ -252,119 +122,6 @@ export default class OraStore {
         this.stack.navigate(nextStackItem)
       }
     })
-  }
-
-  _watchFocus() {
-    this.on(OS, 'ora-focus', () => {
-      this.focusedAt = Date.now()
-      this.setState({ focused: true })
-    })
-    this.on(OS, 'ora-blur', () => {
-      this.setState({ focused: false })
-    })
-  }
-
-  commitResults = async () => {
-    this.setBanner(BANNERS.note, 'Saving...')
-    const { results } = this.crawler
-    this.crawler.reset()
-    if (results) {
-      await createInChunks(results, Thing.createFromCrawlResult)
-      this.setBanner(BANNERS.success, 'Saved results!')
-    }
-  }
-
-  toggleHidden = throttle(
-    () => this.setState({ hidden: !this.state.hidden }),
-    150
-  )
-
-  hide = () => {
-    this.setState({ hidden: true })
-  }
-
-  _watchFocusBar() {
-    let lastCol = null
-    this.watch(function watchFocusBar() {
-      const { col } = this.stack
-      if (col === 0 && lastCol !== 0) {
-        this.focusBar()
-      }
-      if (col !== 0 && lastCol === 0) {
-        this.blurBar()
-      }
-      lastCol = col
-    })
-  }
-
-  onInputRef = el => {
-    if (!el) {
-      return
-    }
-    this.inputRef = el
-    this.attachTrap('bar', el)
-    this._watchKeyEvents()
-  }
-
-  _watchKeyEvents() {
-    this.on(this.inputRef, 'keydown', e => {
-      const key = (this.lastKey = keycode(e.keyCode))
-      if (key === 'up' || key === 'down' || key === 'left' || key === 'right') {
-        return
-      }
-      this.shouldFocus = true
-      this.setTimeout(() => {
-        if (this.shouldFocus) {
-          this.stack.focus(0)
-          this.shouldFocus = false
-        }
-      }, 150)
-    })
-  }
-
-  focusBar = () => {
-    if (this.inputRef) {
-      this.inputRef.focus()
-      this.inputRef.select()
-      this.focusedBar = true
-    }
-  }
-
-  blurBar = () => {
-    this.inputRef && this.inputRef.blur()
-    this.focusedBar = false
-  }
-
-  onSearchChange = e => {
-    this.setTextboxVal(e.target.value)
-  }
-
-  setTextboxVal = value => {
-    this.textboxVal = value
-    this.setSearch(value)
-  }
-
-  setSearchImmediate = text => {
-    this.search = text
-    if (this.shouldFocus) {
-      this.stack.focus(0)
-      this.shouldFocus = false
-    }
-  }
-
-  setSearch = debounceIdle(this.setSearchImmediate, 20)
-
-  attachTrap(attachName, el) {
-    this.traps[attachName] = new Mousetrap(el)
-    for (const name of Object.keys(SHORTCUTS)) {
-      const chord = SHORTCUTS[name]
-      this.traps[attachName].bind(chord, event => {
-        this.emit('shortcut', name)
-        if (this.actions[name]) {
-          this.actions[name](event)
-        }
-      })
-    }
   }
 
   actions = {

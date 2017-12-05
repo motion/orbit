@@ -1,6 +1,8 @@
 import r2 from '@mcro/r2'
 import { store } from '@mcro/black'
 import { API_URL } from '~/constants'
+import { createInChunks } from '~/sync/helpers'
+import { Thing } from '~/app'
 
 @store
 export default class Crawler {
@@ -14,6 +16,16 @@ export default class Crawler {
 
   constructor() {
     this.id = Math.random() + ''
+  }
+
+  commitResults = async () => {
+    this.emit('banner', { type: 'note', message: 'Saving...' })
+    const { results } = this.crawler
+    this.reset()
+    if (results) {
+      await createInChunks(results, Thing.createFromCrawlResult)
+      this.emit('banner', { type: 'success', message: 'Saved results!' })
+    }
   }
 
   start = async settings => {

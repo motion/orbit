@@ -111,6 +111,7 @@ export default class Pane {
     const list = paneStore.items && (
       <UI.List
         key={stackItem && stackItem.id}
+        hideScrollBar
         itemsKey={paneStore.contentVersion}
         getRef={paneStore.setList}
         onSelect={this.onSelect}

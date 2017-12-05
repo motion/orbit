@@ -178,7 +178,6 @@ export default class OraHeader extends React.Component {
       zIndex: -1,
       height: Constants.ORA_HEADER_HEIGHT + 100,
       paddingBottom: 100,
-      // borderBottom: [1, [255, 255, 255, 0.1]],
       transition: 'all ease-in 100ms',
       justifyContent: 'center',
       '& .icon': {
@@ -204,6 +203,8 @@ export default class OraHeader extends React.Component {
     },
     contents: {
       position: 'relative',
+      flex: 1,
+      justifyContent: 'center',
     },
     disabled: {
       pointerEvents: 'none',

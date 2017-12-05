@@ -159,6 +159,7 @@ export default class ListItem extends React.Component<Props> {
         getRef={this.getRef}
         highlight={highlightValue}
         after={below}
+        width="auto"
         {...props}
       >
         <before if={before} {...beforeProps}>
@@ -235,10 +236,6 @@ export default class ListItem extends React.Component<Props> {
       flex: 'none',
       justifyContent: 'space-between',
       alignItems: 'center',
-    },
-    section: {
-      width: '100%',
-      maxWidth: '100%',
     },
     prop: {
       flex: 1,

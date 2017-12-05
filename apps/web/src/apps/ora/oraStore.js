@@ -11,12 +11,6 @@ import debug from 'debug'
 
 const log = _ => _ || debug('ora')
 
-const BANNER_TIMES = {
-  note: 5000,
-  success: 1500,
-  error: 5000,
-}
-
 export default class OraStore {
   // stores
   crawler = new CrawlerStore()
@@ -25,7 +19,6 @@ export default class OraStore {
   pin = new PinStore()
   context = new ContextStore()
   // state
-  banner = null
   lastContext = null
   // synced from electron
   electronState = {}
@@ -42,7 +35,6 @@ export default class OraStore {
 
   async willMount() {
     window.oraStore = this
-    this._watchForBanners()
     this._listenForElectronState()
     this._watchContext()
     this.watch(() => {
@@ -57,27 +49,6 @@ export default class OraStore {
     this.ui.dispose()
     this.context.dispose()
     this.pin.dispose()
-  }
-
-  _watchForBanners = () => {
-    this.on(this.pin, 'banner', this.setBanner)
-    this.on(this.crawler, 'banner', this.setBanner)
-  }
-
-  setBanner = ({ type, message, timeout }) => {
-    this.banner = { message, type }
-    const fadeOutTime = timeout || BANNER_TIMES[type]
-    if (fadeOutTime) {
-      this.setTimeout(() => {
-        if (
-          this.banner &&
-          this.banner.type === type &&
-          this.banner.message === message
-        ) {
-          this.banner = null
-        }
-      }, fadeOutTime)
-    }
   }
 
   get osContext() {

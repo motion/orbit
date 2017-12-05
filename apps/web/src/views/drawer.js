@@ -49,7 +49,6 @@ export default class Drawer {
           boxShadow={[[0, 0, 20, [20, 20, 20, 0.25]]]}
           background={background}
           borderTopRadius={5}
-          debug
           size={collapsed ? 82 : size}
           {...props}
         >

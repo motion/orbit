@@ -199,7 +199,7 @@ export default class UIStore {
     this.react(
       () => [
         (this.stack.last.results || []).length,
-        this.stack.last.store.minHeight,
+        this.stack.last.store && this.stack.last.store.minHeight,
       ],
       ([length, minHeight]) => {
         let height = 'auto'

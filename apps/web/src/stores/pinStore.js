@@ -2,6 +2,7 @@ import { store } from '@mcro/black'
 import { Thing } from '~/app'
 import * as r2 from '@mcro/r2'
 import * as Constants from '~/constants'
+import OraBannerStore from '~/stores/oraBannerStore'
 
 @store
 export default class PinStore {
@@ -10,13 +11,13 @@ export default class PinStore {
       console.log('no context to add')
       return
     }
-    this.emit('banner', { type: 'note', message: 'Pinning...' })
+    OraBannerStore.note({ message: 'Pinning...' })
     const { url } = context
     const response = await r2.post(`${Constants.API_URL}/crawler/single`, {
       json: { options: { entry: url } },
     }).json
     if (response.error) {
-      this.emit('banner', { type: 'error', message: `${response.error}` })
+      OraBannerStore.error({ message: `${response.error}` })
       return
     }
     const { result } = response
@@ -31,10 +32,10 @@ export default class PinStore {
         url,
         bucket: this.bucket || 'Default',
       })
-      this.emit('banner', { type: 'success', message: 'Added pin' })
+      OraBannerStore.success({ message: 'Added pin' })
       return true
     } else {
-      this.emit('banner', { type: 'error', message: 'Failed pinning :(' })
+      OraBannerStore.error({ message: 'Failed pinning :(' })
     }
   }
 }

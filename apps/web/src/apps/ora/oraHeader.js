@@ -3,15 +3,10 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { CurrentUser } from '~/app'
 import * as Constants from '~/constants'
-
-const BANNER_COLORS = {
-  note: 'blue',
-  success: 'green',
-  error: 'red',
-}
+import OraBanner from './oraBanner'
 
 @view({
-  store: class HeaderStore {
+  store: class OraHeaderStore {
     downAt = Date.now()
   },
 })
@@ -134,19 +129,7 @@ export default class OraHeader extends React.Component {
 
             <UI.HoverGlow zIndex={-1} opacity={0.075} blur={60} />
 
-            <title
-              $$background={
-                BANNER_COLORS[oraStore.banner && oraStore.banner.type]
-              }
-            >
-              <titleText>
-                <UI.Text ellipse size={0.9}>
-                  {(oraStore.banner && oraStore.banner.message) ||
-                    oraStore.stack.last.result.id ||
-                    'Search'}
-                </UI.Text>
-              </titleText>
-            </title>
+            <OraBanner />
 
             <rightSide onMouseUp={this.preventPropagation}>
               <UI.Popover
@@ -224,25 +207,6 @@ export default class OraHeader extends React.Component {
     },
     contents: {
       position: 'relative',
-    },
-    title: {
-      opacity: 0.28,
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      // textAlign: 'center',
-      alignItems: 'center',
-      justifyContent: 'center',
-      zIndex: 0,
-      pointerEvents: 'none',
-      userSelect: 'none',
-    },
-    titleText: {
-      position: 'absolute',
-      right: 81,
-      left: 34,
     },
     disabled: {
       pointerEvents: 'none',

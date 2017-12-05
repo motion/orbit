@@ -47,12 +47,22 @@ function build-es6() {
     --ignore @mcro/crawler \
     --ignore @mcro/site \
     --ignore @mcro/preset-motion \
+    --ignore @mcro/ui \
+    --ignore @mcro/router \
+    --ignore @mcro/automagical \
+    --ignore @mcro/r2 \
+    --ignore @mcro/css \
+    --ignore @mcro/reactron \
+    --ignore @mcro/tunnel \
       -- \
         BABEL_ENV=es6 babel src --out-dir es6 -s true ${@:1}
 }
 
 function build-prod() {
   npx lerna exec --parallel \
+    --ignore @mcro/web \
+    --ignore @mcro/site \
+    --ignore @mcro/api \
     --ignore @mcro/crawler \
     --ignore @mcro/electron \
     --ignore @mcro/electron-build \

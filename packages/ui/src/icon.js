@@ -6,6 +6,24 @@ import iconNames from './iconNames'
 import iconsDetailed from './iconsDetailed'
 import fuzzy from 'fuzzy'
 
+const widthPadding = x => {
+  if (typeof x === 'number') {
+    return x * 2
+  }
+  if (Array.isArray(x)) {
+    return x[1] + (typeof x[3] === 'number' ? x[3] : x[1])
+  }
+}
+
+const heightPadding = x => {
+  if (typeof x === 'number') {
+    return x * 2
+  }
+  if (Array.isArray(x)) {
+    return x[0] + (typeof x[2] === 'number' ? x[2] : x[0])
+  }
+}
+
 const cache = {}
 const findMatch = (name: string) => {
   if (cache[name]) return cache[name]
@@ -49,7 +67,6 @@ export default class Icon extends React.PureComponent<Props> {
     alignSelf,
     width,
     height,
-    hover,
     padding,
     ...props
   }) {
@@ -127,12 +144,12 @@ export default class Icon extends React.PureComponent<Props> {
         alignSelf,
         background,
         color: theme.color || color,
-        width: (width || size) + padding * 2,
-        height: (height || size) + padding * 2,
+        width: (width || size) + widthPadding(padding),
+        height: (height || size) + heightPadding(padding),
         fontSize: size,
         lineHeight: `${size / 12 - 1}rem`, // scale where 1 when 14
         '&:hover': {
-          color: hover.color || theme.color || color,
+          color: (hover && hover.color) || theme.color || color,
           ...hover,
         },
       },

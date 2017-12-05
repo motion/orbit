@@ -99,7 +99,6 @@ export default class OraPage {
           }}
         >
           <OraContent oraStore={oraStore} />
-          <bottomBackground if={!oraStore.ui.collapsed} />
         </ora>
       </UI.Theme>
     )
@@ -130,16 +129,6 @@ export default class OraPage {
       transform: {
         x: 0,
       },
-    },
-    bottomBackground: {
-      background: Constants.ORA_BG_MAIN,
-      position: 'absolute',
-      left: -100,
-      right: -100,
-      bottom: -100,
-      zIndex: -1,
-      height: Constants.ACTION_BAR_HEIGHT + 100,
-      pointerEvents: 'none',
     },
   }
 }

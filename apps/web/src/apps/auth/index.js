@@ -6,6 +6,7 @@ import * as Constants from '~/constants'
 const service = (window.location + '').split('service=')[1]
 
 async function link() {
+  console.log('linking service...', service)
   const info = await passportLink(`${Constants.API_URL}/auth/${service}`)
   await r2.post(`${Constants.API_URL}/setCreds`, {
     json: {

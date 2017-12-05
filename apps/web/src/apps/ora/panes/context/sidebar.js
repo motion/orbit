@@ -172,6 +172,10 @@ export default class ContextSidebar {
     this.oraStore.pin.add(this.oraStore.osContext)
   }
 
+  unpinCurrent = () => {
+    this.oraStore.pin.remove(this.oraStore.osContext)
+  }
+
   get actions() {
     if (this.previewCrawler.showing) {
       return [
@@ -201,7 +205,8 @@ export default class ContextSidebar {
       this.isPinned && {
         icon: 'check',
         children: 'Pinned',
-        onClick: this.pinCurrent,
+        tooltip: 'Remove pin',
+        onClick: this.unpinCurrent,
       },
       !this.isPinned && {
         icon: 'ui-1_bold-add',

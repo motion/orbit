@@ -45,8 +45,10 @@ export default class MainSidebar {
         ...results,
         {
           title: 'Welcome to Orbit',
+          category: 'Setup',
+          onClick: this.oraStore.actions.openSettings,
           children:
-            'Try adding some content by linking in an integration or pinning a website',
+            'You can add content two ways. Navigate to a website, or click here to setup integrations.',
         },
       ]
     }

@@ -2,7 +2,6 @@
 
 import Path from 'path'
 import rm from 'rimraf'
-import Fs from 'fs-extra'
 import electronPackager from 'electron-packager'
 import debug from 'debug'
 
@@ -36,6 +35,7 @@ async function bundle() {
   await new Promise(resolve =>
     rm(Path.join(ROOT, 'app', 'Orbit-darwin-x64'), resolve)
   )
+  await new Promise(resolve => rm(Path.join(ROOT, 'app', 'Orbit.dmg'), resolve))
   console.log('bundle new app')
   const paths = await electronPackager({
     dir: ELECTRON_DIR,

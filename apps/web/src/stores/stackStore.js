@@ -1,6 +1,5 @@
 // @flow
 import { store } from '@mcro/black'
-import SidebarTitle from '~/views/sidebarTitle'
 
 @store
 class StackItemStore {

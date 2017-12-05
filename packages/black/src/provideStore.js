@@ -4,6 +4,15 @@ import storeProvidable from '@mcro/decor/lib/plugins/react/storeProvidable'
 
 const storeDecorator = storeProvidable(storeOptions).decorator
 
+/*
+  Usage:
+  <ProvideStore store={StoreClass} storeProps={{ prop: 1 }}>
+    {store => (
+      <children />
+    )}
+  </ProvideStore>
+*/
+
 export default class ProvideStore extends React.Component {
   componentWillMount() {
     const PassThrough = props => props.children(props)

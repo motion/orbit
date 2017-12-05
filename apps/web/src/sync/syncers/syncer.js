@@ -60,7 +60,6 @@ export default class Syncer {
                   token: this.token,
                   helpers: this.helpers,
                 })
-
                 // helper to make checking syncers easier
                 if (!this[key]) {
                   this[key] = this.syncers[key]

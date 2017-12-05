@@ -2,7 +2,7 @@ import React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import PaneView from '../pane'
-import ContextStore from '~/context'
+import ContextStore from '~/stores/contextStore'
 import { take, flatten } from 'lodash'
 import { OS } from '~/helpers'
 
@@ -38,7 +38,7 @@ const hashStr = s => {
           })
         })
       )
-      this.context = new ContextStore(corpus)
+      this.context = new ContextStore({ items: corpus })
       this.corpus = corpus
     }
 

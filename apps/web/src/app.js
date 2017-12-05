@@ -58,9 +58,6 @@ class App {
     if (this.sync) {
       this.sync.dispose()
     }
-    if (super.dispose) {
-      super.dispose()
-    }
   }
 
   render(): void {

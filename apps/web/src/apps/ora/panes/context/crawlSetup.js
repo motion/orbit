@@ -41,17 +41,20 @@ class CrawlSetupStore {
     this.props.onChangeSettings({ [key]: e.target.value })
 }
 
+const lblProps = {
+  css: {
+    paddingLeft: 0,
+    width: 100,
+    alignItems: 'flex-end',
+    fontWeight: 600,
+  },
+}
+
 @view({
   store: CrawlSetupStore,
 })
 export default class CrawlSetup {
   render({ store, settings }) {
-    const lblProps = {
-      paddingLeft: 0,
-      width: 100,
-      alignItems: 'flex-end',
-      fontWeight: 600,
-    }
     const rowProps = {
       css: {
         marginBottom: 5,

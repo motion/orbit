@@ -3,15 +3,10 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { CurrentUser } from '~/app'
 import * as Constants from '~/constants'
-
-const BANNER_COLORS = {
-  note: 'blue',
-  success: 'green',
-  error: 'red',
-}
+import OraBanner from './oraBanner'
 
 @view({
-  store: class HeaderStore {
+  store: class OraHeaderStore {
     downAt = Date.now()
   },
 })
@@ -23,15 +18,12 @@ export default class OraHeader extends React.Component {
   handleHeaderMouseUp = () => {
     const { oraStore, store } = this.props
     if (Date.now() - store.downAt < 200) {
-      oraStore.focusedBar = true
-      this.setTimeout(() => {
-        oraStore.inputRef.focus()
-      })
+      oraStore.ui.focusBar()
     }
   }
 
-  onHeaderBlur = () => {
-    this.props.oraStore.focusedBar = false
+  handleInputBlur = () => {
+    this.props.oraStore.ui.setBarFocus(false)
   }
 
   selectBucket = async item => {
@@ -102,7 +94,7 @@ export default class OraHeader extends React.Component {
     return (
       <UI.Theme name="dark">
         <header
-          $focus={oraStore.focusedBar}
+          $focus={oraStore.ui.barFocused && !oraStore.ui.collapsed}
           onMouseDown={this.handleHeaderMouseDown}
           onMouseUp={this.handleHeaderMouseUp}
           $$draggable
@@ -121,32 +113,20 @@ export default class OraHeader extends React.Component {
 
             <UI.Input
               $searchInput
-              $disabled={!oraStore.focusedBar}
+              $disabled={!oraStore.ui.barFocused}
               size={1}
-              getRef={oraStore.onInputRef}
+              getRef={oraStore.ui.onInputRef}
               borderRadius={0}
-              onBlur={this.onHeaderBlur}
-              onChange={oraStore.onSearchChange}
-              value={oraStore.textboxVal}
+              onBlur={this.handleInputBlur}
+              onChange={oraStore.ui.handleSearchChange}
+              value={oraStore.ui.textboxVal}
               borderWidth={0}
               background="transparent"
             />
 
             <UI.HoverGlow zIndex={-1} opacity={0.075} blur={60} />
 
-            <title
-              $$background={
-                BANNER_COLORS[oraStore.banner && oraStore.banner.type]
-              }
-            >
-              <titleText>
-                <UI.Text ellipse size={0.9}>
-                  {(oraStore.banner && oraStore.banner.message) ||
-                    oraStore.stack.last.result.id ||
-                    'Search'}
-                </UI.Text>
-              </titleText>
-            </title>
+            <OraBanner />
 
             <rightSide onMouseUp={this.preventPropagation}>
               <UI.Popover
@@ -224,25 +204,6 @@ export default class OraHeader extends React.Component {
     },
     contents: {
       position: 'relative',
-    },
-    title: {
-      opacity: 0.28,
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      // textAlign: 'center',
-      alignItems: 'center',
-      justifyContent: 'center',
-      zIndex: 0,
-      pointerEvents: 'none',
-      userSelect: 'none',
-    },
-    titleText: {
-      position: 'absolute',
-      right: 81,
-      left: 34,
     },
     disabled: {
       pointerEvents: 'none',

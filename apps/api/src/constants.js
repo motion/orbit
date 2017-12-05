@@ -16,4 +16,4 @@ export const PUBLIC_URL = IS_DEV
 
 export const API_HOST = IS_DEV ? 'orbit.dev' : 'app.seemirai.com'
 
-export const SERVER_PORT = process.env.PORT || 3001
+export const SERVER_PORT = process.env.PORT || IS_DEV ? 3001 : 3009

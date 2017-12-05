@@ -26,12 +26,39 @@ const itemProps = {
   store: class SettingsStore {
     activeIndex = 0
     items = [
-      { primary: 'Slack', type: 'slack', category: 'Integrations' },
-      { primary: 'Github', type: 'github', category: 'Integrations' },
-      { primary: 'Google Drive', type: 'drive', category: 'Integrations' },
+      {
+        primary: 'Pins',
+        type: 'pins',
+        icon: 'pin',
+        iconProps: {
+          style: {
+            transform: 'scale(0.8)',
+          },
+        },
+        category: 'Settings',
+      },
+      {
+        primary: 'Slack',
+        type: 'slack',
+        icon: 'social-slack',
+        category: 'Integrations',
+      },
+      {
+        primary: 'Github',
+        type: 'github',
+        icon: 'github',
+        category: 'Integrations',
+      },
+      {
+        primary: 'Google Drive',
+        type: 'drive',
+        icon: 'social-google',
+        category: 'Integrations',
+      },
       {
         primary: 'Google Calendar',
         type: 'calendar',
+        icon: 'social-google',
         category: 'Integrations',
       },
     ]
@@ -94,6 +121,7 @@ export default class SettingsPage {
       background: [200, 200, 200, 0.45],
       flex: 1,
       flexFlow: 'row',
+      pointerEvents: 'all',
     },
     content: {
       flex: 1,

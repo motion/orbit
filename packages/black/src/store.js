@@ -31,7 +31,7 @@ export const storeOptions = {
     if (store.willUnmount) {
       store.willUnmount(store)
     }
-    store.subscriptions.dispose()
+    store.dispose()
   },
 }
 
@@ -41,6 +41,13 @@ export default function store(Store: Class<any>): StoreClass {
     const store = new DecoratedStore(...args)
     storeOptions.onStoreMount(Store.constructor.name, store, args[0])
     return store
+  }
+  // copy statics
+  const statics = Object.keys(Store)
+  if (statics.length) {
+    for (const key of statics) {
+      ProxyStore[key] = Store[key]
+    }
   }
   return ProxyStore
 }

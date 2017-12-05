@@ -1,64 +1,63 @@
-import {
-  includes,
-  last,
-  sortBy,
-  debounce,
-  reverse,
-  uniqBy,
-  memoize,
-  flatten,
-  mean,
-} from 'lodash'
+import { store, watch } from '@mcro/black'
+import { includes, last, uniqBy, memoize } from 'lodash'
 import bm25 from './bm25'
 import winkNlp from 'wink-nlp-utils'
-import {
-  euclideanDistance,
-  cosineSimilarity,
-  splitSentences,
-  minKBy,
-  emd,
-} from './helpers'
-import stopwords from './stopwords'
-import isAlpha from './isAlpha'
-
-const timesCount = {}
-const logTimes = (id, times, ...vals) => {
-  if (!timesCount[id]) timesCount[id] = 0
-  timesCount[id] += 1
-
-  if (times < timesCount[id]) console.log(...vals)
-}
+import { cosineSimilarity, splitSentences, minKBy, emd } from './helpers'
 
 let vectorCache = null
 
-export default class Context {
-  items = []
+@store
+export default class ContextStore {
+  static toResult = context => ({
+    id: context.url,
+    title: context.selection || context.title,
+    type: 'context',
+    icon: context.application === 'Google Chrome' ? 'social-google' : null,
+    image: context.favicon,
+  })
+
+  query = null
+  _items = null
+  @watch queryItems = () => this.query && this.query()
+  @watch vectors = () => this.loadVectors()
   autocomplete = []
   sentences = []
   vectors = null
   engine = null
   qe = ''
-  docTexts = ''
+
+  constructor({ query, items } = {}) {
+    this._items = items
+    this.query = query
+    this.watch(this.watchIndex)
+  }
+
+  get items() {
+    if (this.queryItems) {
+      return this.queryItems
+    }
+    return this._items
+  }
+
+  setItems = val => {
+    this._items = val
+  }
+
+  @watch
+  docTexts = () => {
+    return (this.items || [])
+      .map(item => (item.title + '\n' + item.body).toLowerCase())
+      .join('\n')
+  }
   indexToToken = null
   searchResults = []
+
   get loading() {
     return this.engine === null
   }
 
-  constructor(items) {
-    this.items = items.slice(0, 500)
-    this.docTexts = this.items
-      .map(item => (item.title + '\n' + item.body).toLowerCase())
-      .join('\n')
-    this.loadVectors().then(vecs => {
-      this.vectors = vecs
-      this.index()
-    })
-  }
-
   loadVectors = async () => {
     if (vectorCache) return vectorCache
-
     const text = await fetch(`/vectors50k.txt`).then(res => res.text())
     const vectors = {}
     text.split('\n').forEach(line => {
@@ -73,7 +72,9 @@ export default class Context {
     return vectors
   }
 
-  index = () => {
+  watchIndex = () => {
+    if (!this.vectors) return
+    if (!this.items || !this.items.length) return
     this.engine = bm25()
 
     // Step I: Define config

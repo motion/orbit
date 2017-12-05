@@ -37,7 +37,7 @@ const itemProps = {
 class OraMainContent {
   render({ oraStore }) {
     return (
-      <content $contentWithHeaderOpen={oraStore.focusedBar}>
+      <content $contentWithHeaderOpen={oraStore.ui.barFocused}>
         <Sidebar
           width={Constants.ORA_WIDTH}
           store={oraStore}
@@ -45,7 +45,7 @@ class OraMainContent {
           listProps={{
             groupBy: 'category',
             virtualized: {
-              measure: oraStore.height !== oraStore.lastHeight,
+              measure: oraStore.ui.height !== oraStore.ui.lastHeight,
             },
             itemProps,
           }}
@@ -91,18 +91,15 @@ export default class OraPage {
     return (
       <UI.Theme name="dark">
         <ora
-          $visible={!oraStore.state.hidden}
+          $visible={!oraStore.ui.state.hidden}
           ref={oraStore.ref('barRef').set}
           $$draggable
           css={{
-            height: oraStore.height,
+            height: oraStore.ui.height,
           }}
         >
           <OraContent oraStore={oraStore} />
-          <collapseBar onClick={oraStore.ref('collapsed').toggle}>
-            <UI.Icon name="menu" size={10} />
-          </collapseBar>
-          <bottomBackground if={!oraStore.collapsed} />
+          <bottomBackground if={!oraStore.ui.collapsed} />
         </ora>
       </UI.Theme>
     )
@@ -132,19 +129,6 @@ export default class OraPage {
       opacity: 1,
       transform: {
         x: 0,
-      },
-    },
-    collapseBar: {
-      height: 12,
-      zIndex: 10000000,
-      position: 'absolute',
-      bottom: 0,
-      left: 0,
-      right: 0,
-      flexFlow: 'row',
-      justifyContent: 'center',
-      '&:hover': {
-        background: [255, 255, 255, 0.025],
       },
     },
     bottomBackground: {

@@ -70,12 +70,9 @@ elif [ "$APP" = "build-es6" ]; then
   build-es6
 elif [ "$APP" = "build-prod" ]; then
   build-prod
-elif [ "$APP" = "crawler" ]; then
-  cd $ROOT/apps/electron
-  npm run build
 elif [ "$APP" = "electron" ]; then
   cd $ROOT/apps/electron-build
-  npm run dist
+  npm run build
 elif [ "$APP" = "site" ]; then
   cd $ROOT/apps/site
   npm run build

@@ -13,7 +13,8 @@
   "scripts": {
     "build":
       "CHUNK_COMMONS=false TARGET=electron NODE_ENV=production mcro-build",
-    "watch": "npm run build -- --watch"
+    "watch": "npm run build -- --watch",
+    "deploy": "cd ../electron-build && npm run deploy"
   },
   "dependencies": {
     "@mcro/api": "^1.5.1",

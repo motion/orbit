@@ -1,22 +1,11 @@
 // @flow
-import event from 'disposable-event'
 import { CompositeDisposable } from 'sb-event-kit'
+import global from 'global'
+import _on from './on'
+import _requestAnimationFrame from './requestAnimationFrame'
 
-function _on(element: HTMLElement, cb: Function, bind: boolean): Function {
-  if (element && element.emitter) {
-    return _on.call(this, element.emitter, cb, bind)
-  }
-  const e = event(element, cb, bind)
-  this.subscriptions.add(e)
-  return e
-}
-
-const ogSetTimeout =
-  typeof window !== 'undefined' ? window.setTimeout : global.setTimeout
-const ogSetInterval =
-  typeof window !== 'undefined' ? window.setInterval : global.setInterval
-const ogRequestAnimationFrame =
-  typeof window !== 'undefined' ? window.setInterval : global.setInterval
+const ogSetTimeout = global.setTimeout
+const ogSetInterval = global.setInterval
 
 function _setTimeout(givenCallback: Function, duration: number): number {
   let subscription
@@ -37,17 +26,6 @@ function _setInterval(givenCallback: Function, duration: number): number {
     clearInterval(intervalId)
   })
   return intervalId
-}
-
-function _requestAnimationFrame(
-  givenCallback: Function,
-  duration: number
-): number {
-  const id = ogRequestAnimationFrame(givenCallback, duration)
-  this.subscriptions.add(() => {
-    clearInterval(id)
-  })
-  return id
 }
 
 // adds this.subscriptions to a class at call-time

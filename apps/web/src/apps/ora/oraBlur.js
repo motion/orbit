@@ -12,7 +12,7 @@ export default class OraBlur {
   render({ oraStore }) {
     return (
       <overlay
-        if={oraStore.wasBlurred}
+        if={oraStore.ui.wasBlurred}
         $$fullscreen
         css={{
           zIndex: 100000000000,

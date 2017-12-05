@@ -1,5 +1,4 @@
-import Context from '~/context'
-import { watch } from '@mcro/black'
+import ContextStore from '~/stores/contextStore'
 import { Thing } from '~/app'
 import { debounce } from 'lodash'
 
@@ -24,9 +23,8 @@ export default class {
     this.textboxVal = val
     this.search = val
   }, 50)
-  @watch allItems = () => Thing.find()
 
-  @watch context = () => this.allItems && new Context(this.allItems || [])
+  context = new ContextStore({ query: () => Thing.find() })
 
   crawl = async () => {
     const val = await (await fetch('http://localhost:3000')).json()

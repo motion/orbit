@@ -3,7 +3,7 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import App, { Thing, Event, Job } from '~/app'
 import { sortBy, last, countBy, flatten } from 'lodash'
-import IntegrationHeader from './integrationPanes/header'
+import IntegrationHeader from './integrationPanes/views/header'
 
 @view.provide({
   integrationStore: class IntegrationStore {
@@ -12,7 +12,7 @@ import IntegrationHeader from './integrationPanes/header'
     events = Event.find()
 
     get types() {
-      return ['github', 'calendar', 'drive', 'slack']
+      return ['github', 'calendar', 'drive', 'slack', 'pins']
     }
 
     // creates a map of { 'type:action': job, .. }
@@ -59,6 +59,10 @@ import IntegrationHeader from './integrationPanes/header'
 export default class IntegrationPane {
   render({ type, integrationStore }) {
     const ActivePane = Panes[type]
+    if (!ActivePane) {
+      console.error('No ActivePane')
+      return null
+    }
     return (
       <integration $$flex>
         <IntegrationHeader integrationStore={integrationStore} type={type} />

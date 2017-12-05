@@ -69,7 +69,7 @@ export default class ContextSidebar {
     return this.oraStore.context
   }
   get search() {
-    return this.oraStore.search
+    return this.oraStore.ui.search
   }
 
   // can customize the shown title here
@@ -81,12 +81,16 @@ export default class ContextSidebar {
     }
   }
 
+  get minHeight() {
+    return this.drawer ? 400 : null
+  }
+
   get drawer() {
     if (!this.previewCrawler.showing) {
       return null
     }
     return {
-      title: 'Crawl Settings',
+      title: 'Pin Settings',
       onClose: this.cancelPreview,
       children: (
         <CrawlSetup
@@ -164,6 +168,10 @@ export default class ContextSidebar {
           })
   }
 
+  pinCurrent = () => {
+    this.oraStore.pin.add(this.oraStore.osContext)
+  }
+
   get actions() {
     if (this.previewCrawler.showing) {
       return [
@@ -193,12 +201,12 @@ export default class ContextSidebar {
       this.isPinned && {
         icon: 'check',
         children: 'Pinned',
-        onClick: this.oraStore.addCurrentPage,
+        onClick: this.pinCurrent,
       },
       !this.isPinned && {
         icon: 'ui-1_bold-add',
         children: 'Pin',
-        onClick: this.oraStore.addCurrentPage,
+        onClick: this.pinCurrent,
       },
       !this.oraStore.crawler.isRunning && {
         icon: 'pin',

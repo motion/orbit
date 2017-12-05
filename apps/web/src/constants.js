@@ -28,7 +28,9 @@ export const IN_TRAY =
   IS_ELECTRON && (window.location + '').indexOf('?inTray') !== -1
 
 const protocol = `${window.location.protocol}//`
-export const API_HOST = `app.seemirai.com:3001`
+export const API_HOST = IS_PROD
+  ? `app.seemirai.com:3009`
+  : `app.seemirai.com:3001`
 export const API_URL = `${protocol}${API_HOST}`
 export const COUCH_HOST = API_HOST
 export const COUCH_URL = `${protocol}${COUCH_HOST}/couch`

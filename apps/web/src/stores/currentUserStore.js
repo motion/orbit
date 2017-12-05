@@ -50,7 +50,20 @@ class CurrentUser {
           })
         }
       }
+      // ensure pin setting
+      await Setting.findOrCreate({
+        userId: this.id,
+        type: 'pins',
+      })
     })
+  }
+
+  get bucket() {
+    if (!this.user) {
+      return 'Default'
+    }
+    const { activeBucket } = this.user.settings
+    return activeBucket || 'Default'
   }
 
   get loggedIn() {

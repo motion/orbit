@@ -1,18 +1,18 @@
 import * as React from 'react'
-import * as UI from '@mcro/ui'
 import { fuzzy, OS } from '~/helpers'
 import { Thing } from '~/app'
 import After from '~/views/after'
+import ContextStore from '~/stores/contextStore'
 
 export default class MainSidebar {
   get oraStore() {
     return this.props.oraStore
   }
   get search() {
-    return this.oraStore.search
+    return this.oraStore.ui.search
   }
   get recentItems() {
-    return this.oraStore.items || []
+    return this.oraStore.recentItems || []
   }
   // public api
   get items() {
@@ -21,7 +21,7 @@ export default class MainSidebar {
     if (lastContext) {
       results = [
         {
-          ...this.props.oraStore.contextToResult(lastContext),
+          ...ContextStore.toResult(lastContext),
           category: 'Context',
         },
       ]

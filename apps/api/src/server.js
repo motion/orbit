@@ -11,10 +11,9 @@ import Passport from 'passport'
 import Crawler from '@mcro/crawler'
 import debug from 'debug'
 
-const log = debug('api')
+const { SERVER_PORT } = Constants
 
-const sleep = ms => new Promise(res => setTimeout(res, ms))
-const port = Constants.SERVER_PORT
+const log = debug('api')
 
 export default class Server {
   login = null
@@ -35,7 +34,7 @@ export default class Server {
     })
 
     const app = express()
-    app.set('port', port)
+    app.set('port', SERVER_PORT)
 
     if (Constants.IS_PROD) {
       app.use(logger('dev'))
@@ -55,8 +54,8 @@ export default class Server {
   }
 
   start() {
-    http.createServer(this.app).listen(port)
-    return port
+    http.createServer(this.app).listen(SERVER_PORT)
+    return SERVER_PORT
   }
 
   dispose() {

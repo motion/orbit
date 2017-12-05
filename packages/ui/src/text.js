@@ -107,7 +107,7 @@ export default class Text extends React.Component<Props> {
         () => this.editable,
         editable => {
           if (this.clickaway) {
-            this.clickaway.dispose()
+            this.clickaway()
           }
           if (editable) {
             // this.clickaway = this.on(window, 'click', (event: Event) => {

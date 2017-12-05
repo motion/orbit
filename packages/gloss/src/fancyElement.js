@@ -108,9 +108,6 @@ export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
     }
 
     if (name) {
-      if (props && props.debug) {
-        console.log('looking for style', `${name}--${glossUID}`, styles)
-      }
       addStyle(styles, `${name}--${glossUID}`, null, true)
     }
 

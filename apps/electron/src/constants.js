@@ -1,7 +1,9 @@
 import Path from 'path'
 
 export const IS_PROD = process.env.NODE_ENV !== 'development'
-export const APP_URL = 'http://app.seemirai.com:3001'
+export const APP_URL = IS_PROD
+  ? 'http://app.seemirai.com:3009'
+  : 'http://app.seemirai.com:3001'
 export const APP_HOME = '/'
 export const IS_MAC = process.platform === 'darwin'
 export const ORA_WIDTH = 320

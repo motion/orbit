@@ -542,6 +542,9 @@ export default class Surface extends React.PureComponent<Props> {
       // always add hidden for things with radius
       borderRadius.overflow = props.overflow || 'hidden'
     }
+    if (props.debug) {
+      console.log(borderRadius)
+    }
 
     // circular
     const circularStyles = props.circular && {

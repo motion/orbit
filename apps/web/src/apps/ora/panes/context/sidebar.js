@@ -81,12 +81,16 @@ export default class ContextSidebar {
     }
   }
 
+  get minHeight() {
+    return this.drawer ? 400 : null
+  }
+
   get drawer() {
     if (!this.previewCrawler.showing) {
       return null
     }
     return {
-      title: 'Crawl Settings',
+      title: 'Pin Settings',
       onClose: this.cancelPreview,
       children: (
         <CrawlSetup

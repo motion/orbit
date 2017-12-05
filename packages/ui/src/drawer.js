@@ -154,16 +154,16 @@ export default class Drawer extends React.PureComponent<Props> {
     }),
     // for nicer shadows, they will go "offscreen" a bit
     // which avoids showing the edges of it onscreen
-    withShadow: dimension =>
-      dimension === 'height'
-        ? {
-            margin: [0, -100],
-            padding: [0, 100],
-          }
-        : {
-            margin: [-100, 0],
-            padding: [100, 0],
-          },
+    // withShadow: dimension =>
+    //   dimension === 'height'
+    //     ? {
+    //         margin: [0, -100],
+    //         padding: [0, 100],
+    //       }
+    //     : {
+    //         margin: [-100, 0],
+    //         padding: [100, 0],
+    //       },
     overlay: {
       position: 'absolute',
       top: 0,

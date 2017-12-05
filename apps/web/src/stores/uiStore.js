@@ -197,8 +197,11 @@ export default class UIStore {
 
   _watchHeight = () => {
     this.react(
-      () => this.stack.last.results || [],
-      ({ length }) => {
+      () => [
+        (this.stack.last.results || []).length,
+        this.stack.last.store.minHeight,
+      ],
+      ([length, minHeight]) => {
         let height = 'auto'
         if (length > 0) {
           // header + footer height
@@ -211,6 +214,13 @@ export default class UIStore {
           if (length > 2) height += (length - 2) * 90
           // max height
           height = Math.min(Constants.ORA_HEIGHT, height)
+        }
+        if (minHeight) {
+          if (typeof height === 'number') {
+            height = Math.max(minHeight, height)
+          } else {
+            height = minHeight
+          }
         }
         this.height = height
       }

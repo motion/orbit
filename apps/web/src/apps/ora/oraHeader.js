@@ -23,7 +23,7 @@ export default class OraHeader extends React.Component {
   handleHeaderMouseUp = () => {
     const { oraStore, store } = this.props
     if (Date.now() - store.downAt < 200) {
-      oraStore.ui.setFocusBar(true)
+      oraStore.ui.setBarFocus(true)
       this.setTimeout(() => {
         oraStore.ui.focusInput()
       })
@@ -31,7 +31,7 @@ export default class OraHeader extends React.Component {
   }
 
   onHeaderBlur = () => {
-    this.props.oraStore.ui.setFocusBar(false)
+    this.props.oraStore.ui.setBarFocus(false)
   }
 
   selectBucket = async item => {

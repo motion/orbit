@@ -37,7 +37,7 @@ const itemProps = {
 class OraMainContent {
   render({ oraStore }) {
     return (
-      <content $contentWithHeaderOpen={oraStore.barFocused}>
+      <content $contentWithHeaderOpen={oraStore.ui.barFocused}>
         <Sidebar
           width={Constants.ORA_WIDTH}
           store={oraStore}
@@ -45,7 +45,7 @@ class OraMainContent {
           listProps={{
             groupBy: 'category',
             virtualized: {
-              measure: oraStore.height !== oraStore.lastHeight,
+              measure: oraStore.ui.height !== oraStore.ui.lastHeight,
             },
             itemProps,
           }}
@@ -95,7 +95,7 @@ export default class OraPage {
           ref={oraStore.ref('barRef').set}
           $$draggable
           css={{
-            height: oraStore.height,
+            height: oraStore.ui.height,
           }}
         >
           <OraContent oraStore={oraStore} />

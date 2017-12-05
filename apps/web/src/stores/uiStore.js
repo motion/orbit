@@ -154,8 +154,8 @@ export default class UIStore {
     this.barFocused = false
   }
 
-  setFocusBar = val => {
-    this.focusBar = val
+  setBarFocus = val => {
+    this.barFocused = val
   }
 
   toggleCollapsed = () => {

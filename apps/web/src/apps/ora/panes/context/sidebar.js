@@ -66,10 +66,10 @@ export default class ContextSidebar {
     return this.props.oraStore
   }
   get context() {
-    return this.oraStore.contextStore
+    return this.oraStore.context
   }
   get search() {
-    return this.oraStore.search
+    return this.oraStore.ui.search
   }
 
   // can customize the shown title here

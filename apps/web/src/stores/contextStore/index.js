@@ -19,6 +19,7 @@ export default class ContextStore {
   query = null
   propItems = null
   @watch queryItems = () => this.query && this.query()
+  @watch vectors = () => this.loadVectors()
   autocomplete = []
   sentences = []
   vectors = null
@@ -28,10 +29,7 @@ export default class ContextStore {
   constructor({ query, items }) {
     this.propItems = items
     this.query = query
-    this.loadVectors().then(vecs => {
-      this.vectors = vecs
-      this.index()
-    })
+    this.watch(this.index)
   }
 
   get items() {
@@ -71,6 +69,8 @@ export default class ContextStore {
   }
 
   index = () => {
+    if (!this.vectors) return
+    if (!this.items || !this.items.length) return
     this.engine = bm25()
 
     // Step I: Define config

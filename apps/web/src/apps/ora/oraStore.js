@@ -114,7 +114,7 @@ export default class OraStore {
         if (this.lastContext.url === context.url) return
       }
       this.lastContext = context
-      const nextStackItem = this.contextToResult(context)
+      const nextStackItem = ContextStore.toResult(context)
       const isAlreadyOnResultsPane = this.stack.length > 1
       if (isAlreadyOnResultsPane) {
         this.stack.replaceInPlace(nextStackItem)
@@ -167,7 +167,7 @@ export default class OraStore {
       }
     },
     cmdL: () => {
-      this.focusBar()
+      this.ui.setBarFocus(true)
     },
     delete: () => {
       if (this.textboxVal === '') {

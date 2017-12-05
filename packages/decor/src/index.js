@@ -55,7 +55,6 @@ export default function decor(plugins: Array<[Plugin, Object] | Plugin>) {
     const decoratedStore = new WeakMap()
     const alreadyDecorated = Klass => {
       if (decoratedStore.get(Klass)) {
-        console.log('already deco')
         return true
       }
       decoratedStore.set(Klass, true)

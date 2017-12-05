@@ -1,12 +1,13 @@
 // @flow
 import event from 'disposable-event'
 import { Disposable } from 'sb-event-kit'
-import { Observable } from 'rxjs'
+// import { Subject, Observable } from 'rxjs'
 
 export default function on(...args): Disposable {
   // allows calling with just on('eventName', callback) and using this
   if (args.length === 2) {
-    if (args[0] instanceof Observable) {
+    // duck type observables for now
+    if (args[0] && args[0].subscribe) {
       return onSomething.call(this, ...args)
     }
     if (typeof args[0] !== 'string') {
@@ -27,7 +28,7 @@ function onSomething(
   eventName: String | Function,
   callback: Function
 ) {
-  if (target instanceof Observable) {
+  if (target.subscribe) {
     if (typeof eventName !== 'function') {
       throw new Error(`Should pass in (Observable, callback) for Observables`)
     }

@@ -140,7 +140,9 @@ export default function storeProvidable(options, Helpers) {
             const Store = Stores[cur]
             const createStore = () => {
               if (!Store.prototype) {
-                throw new Error(`Store has no prototype: ${cur}`)
+                throw new Error(
+                  `Store has no prototype from ${this.name}: ${cur}`
+                )
               }
               Object.defineProperty(Store.prototype, 'props', getProps)
               const store = new Store()

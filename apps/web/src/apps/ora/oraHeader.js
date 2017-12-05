@@ -18,14 +18,11 @@ export default class OraHeader extends React.Component {
   handleHeaderMouseUp = () => {
     const { oraStore, store } = this.props
     if (Date.now() - store.downAt < 200) {
-      oraStore.ui.setBarFocus(true)
-      this.setTimeout(() => {
-        oraStore.ui.focusInput()
-      })
+      oraStore.ui.focusBar()
     }
   }
 
-  onHeaderBlur = () => {
+  handleInputBlur = () => {
     this.props.oraStore.ui.setBarFocus(false)
   }
 
@@ -120,9 +117,9 @@ export default class OraHeader extends React.Component {
               size={1}
               getRef={oraStore.ui.onInputRef}
               borderRadius={0}
-              onBlur={this.onHeaderBlur}
-              onChange={oraStore.onSearchChange}
-              value={oraStore.textboxVal}
+              onBlur={this.handleInputBlur}
+              onChange={oraStore.ui.handleSearchChange}
+              value={oraStore.ui.textboxVal}
               borderWidth={0}
               background="transparent"
             />

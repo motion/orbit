@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs'
+import { Subject } from 'rxjs'
 
 export const TYPES = {
   note: 'note',
@@ -12,16 +12,16 @@ const BANNER_TIMES = {
   [TYPES.error]: 5000,
 }
 
-let bannerObs = null
-const BANNER$ = Observable.create(observer => {
-  bannerObs = observer
-})
+// bugfix for pundle: its requiring this file twice unfortunately
+// see https://github.com/steelbrain/pundle/issues/172
+const BANNER$ = (window.bs$ = window.bs$ || new Subject())
+export const note = obj => BANNER$.next({ type: TYPES.note, ...obj })
+export const success = obj => BANNER$.next({ type: TYPES.success, ...obj })
+export const error = obj => BANNER$.next({ type: TYPES.error, ...obj })
+
+console.log('BANNER$', BANNER$)
 
 export default class OraBannerStore {
-  static note = obj => bannerObs.next({ type: TYPES.note, ...obj })
-  static success = obj => bannerObs.next({ type: TYPES.success, ...obj })
-  static error = obj => bannerObs.next({ type: TYPES.error, ...obj })
-
   banner = null
 
   willMount() {

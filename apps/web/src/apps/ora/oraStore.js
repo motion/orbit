@@ -36,6 +36,7 @@ export default class OraStore {
   async willMount() {
     window.oraStore = this
     this._listenForElectronState()
+    this._listenForKeyEvents()
     this._watchContext()
     this.watch(() => {
       this.context.setItems(this.recentItems)
@@ -98,6 +99,14 @@ export default class OraStore {
     })
   }
 
+  _listenForKeyEvents() {
+    this.on(this.ui, 'shortcut', (name, event) => {
+      if (this.actions[name]) {
+        this.actions[name](event)
+      }
+    })
+  }
+
   actions = {
     openSettings: () => {
       OS.send('open-settings')
@@ -114,22 +123,6 @@ export default class OraStore {
       }
       this.stack.up()
     },
-    esc: e => {
-      if (this.inputRef === document.activeElement) {
-        if (this.textboxVal !== '') {
-          this.setTextboxVal('')
-        }
-        this.inputRef.blur()
-        return
-      }
-      if (this.search === '') {
-        e.preventDefault()
-        this.hide()
-      }
-    },
-    cmdA: () => {
-      this.inputRef.select()
-    },
     enter: e => {
       e.preventDefault()
       if (this.stack.selected && this.stack.selected.static) {
@@ -144,7 +137,7 @@ export default class OraStore {
       this.ui.setBarFocus(true)
     },
     delete: () => {
-      if (this.textboxVal === '') {
+      if (this.stack.textboxVal === '') {
         this.stack.left()
       }
     },

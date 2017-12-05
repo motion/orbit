@@ -1,11 +1,13 @@
 import { store } from '@mcro/black'
 import * as Constants from '~/constants'
 import { OS } from '~/helpers'
-import { throttle } from 'lodash'
+import { once, throttle } from 'lodash'
 import SHORTCUTS from './shortcuts'
 import Mousetrap from 'mousetrap'
 import { debounceIdle } from '~/helpers'
 import keycode from 'keycode'
+
+export SHORTCUTS from './shortcuts'
 
 @store
 export default class UIStore {
@@ -57,7 +59,7 @@ export default class UIStore {
     }
   }
 
-  onSearchChange = e => {
+  handleSearchChange = e => {
     this.setTextboxVal(e.target.value)
   }
 
@@ -96,12 +98,34 @@ export default class UIStore {
     for (const name of Object.keys(SHORTCUTS)) {
       const chord = SHORTCUTS[name]
       this.traps[attachName].bind(chord, event => {
-        this.emit('shortcut', name)
+        this.emit('shortcut', name, event)
         if (this.actions[name]) {
           this.actions[name](event)
         }
       })
     }
+  }
+
+  actions = {
+    esc: e => {
+      if (this.inputRef === document.activeElement) {
+        if (this.textboxVal !== '') {
+          this.setTextboxVal('')
+        }
+        this.inputRef.blur()
+        return
+      }
+      if (this.search === '') {
+        e.preventDefault()
+        this.hide()
+      }
+    },
+    cmdA: () => {
+      this.inputRef.select()
+    },
+    cmdL: () => {
+      this.focusBar(true)
+    },
   }
 
   setState = newState => {
@@ -114,9 +138,14 @@ export default class UIStore {
 
   onInputRef = el => {
     if (!el) return
-    this.inputRef = el
-    this.on(el, 'keydown', e => this.emit('keydown', keycode(e.keyCode)))
+    this.setupInputRef(el)
   }
+
+  setupInputRef = once(ref => {
+    this.inputRef = ref
+    this.on(ref, 'keydown', e => this.emit('keydown', keycode(e.keyCode)))
+    this.attachTrap('bar', ref)
+  })
 
   _watchFocus() {
     this.on(OS, 'ora-focus', () => {
@@ -135,10 +164,6 @@ export default class UIStore {
 
   hide = () => {
     this.setState({ hidden: true })
-  }
-
-  focusInput = () => {
-    this.inputRef.focus()
   }
 
   focusBar = () => {

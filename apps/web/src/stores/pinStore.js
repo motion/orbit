@@ -2,7 +2,7 @@ import { store } from '@mcro/black'
 import { Thing } from '~/app'
 import * as r2 from '@mcro/r2'
 import * as Constants from '~/constants'
-import * as BannerStore from '~/stores/OraBannerStore'
+import * as BannerStore from '~/stores/oraBannerStore'
 
 @store
 export default class PinStore {

@@ -12,14 +12,10 @@ const BANNER_TIMES = {
   [TYPES.error]: 5000,
 }
 
-// bugfix for pundle: its requiring this file twice unfortunately
-// see https://github.com/steelbrain/pundle/issues/172
-const BANNER$ = (window.bs$ = window.bs$ || new Subject())
+const BANNER$ = new Subject()
 export const note = obj => BANNER$.next({ type: TYPES.note, ...obj })
 export const success = obj => BANNER$.next({ type: TYPES.success, ...obj })
 export const error = obj => BANNER$.next({ type: TYPES.error, ...obj })
-
-console.log('BANNER$', BANNER$)
 
 export default class OraBannerStore {
   banner = null

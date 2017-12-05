@@ -1,23 +1,19 @@
 {
   "name": "@mcro/electron-build",
-  "version": "1.5.42",
+  "version": "1.5.43",
   "private": true,
   "scripts": {
     "start": "NODE_ENV=development electron ../electron/lib/start-app",
     "deploy": "npm run prepare-publish && npm run publish-app",
     "pack": "npm run sign-app && npm run pack-app",
-    "dist": "npm version patch && npm run bundle",
+    "build": "npm version patch && npm run bundle",
     "bundle": "node ./lib/bundle.js",
     "bundle-debug": "DEBUG=electron-packager,electron-build:* npm run bundle",
-    "start-prod":
-      "DEBUG=api,crawler,crawler:* app/Orbit-darwin-x64/Orbit.app/Contents/MacOS/Orbit",
+    "start-prod": "DEBUG=api,crawler,crawler:* app/Orbit-darwin-x64/Orbit.app/Contents/MacOS/Orbit",
     "publish-app": "publish -p ./app",
-    "prepare-publish":
-      "cp ./app/Orbit.dmg ./app/Orbit-$npm_package_version.dmg && zip -r ./app/Orbit-$npm_package_version-mac.zip ./app/Orbit-darwin-x64/Orbit.app",
-    "pack-app":
-      "electron-installer-dmg --overwrite --out ./app --icon ./resources/icon.icns ./app/Orbit-darwin-x64/Orbit.app Orbit",
-    "sign-app":
-      "electron-osx-sign --ignore puppeteer/\\.local-chromium ./app/Orbit-darwin-x64/Orbit.app"
+    "prepare-publish": "cp ./app/Orbit.dmg ./app/Orbit-$npm_package_version.dmg && zip -r ./app/Orbit-$npm_package_version-mac.zip ./app/Orbit-darwin-x64/Orbit.app",
+    "pack-app": "electron-installer-dmg --overwrite --out ./app --icon ./resources/icon.icns ./app/Orbit-darwin-x64/Orbit.app Orbit",
+    "sign-app": "electron-osx-sign --ignore puppeteer/\\.local-chromium ./app/Orbit-darwin-x64/Orbit.app"
   },
   "devDependencies": {
     "electron": "^1.8.0",

@@ -11,13 +11,25 @@ import keycode from 'keycode'
 export default class UIStore {
   inputRef = null
   wasBlurred = false
-  focusedBar = false
+  barFocused = false
   collapsed = false
   lastHeight = 'auto'
   _height = 'auto'
   search = ''
   textboxVal = ''
   traps = {}
+
+  get height() {
+    if (this.collapsed) {
+      return 40
+    }
+    return this._height
+  }
+
+  set height(val) {
+    this.lastHeight = this._height
+    this._height = val
+  }
 
   // this is synced to electron!
   state = {
@@ -125,6 +137,31 @@ export default class UIStore {
     this.setState({ hidden: true })
   }
 
+  focusInput = () => {
+    this.inputRef.focus()
+  }
+
+  focusBar = () => {
+    if (this.inputRef) {
+      this.inputRef.focus()
+      this.inputRef.select()
+      this.barFocused = true
+    }
+  }
+
+  blurBar = () => {
+    this.inputRef && this.inputRef.blur()
+    this.barFocused = false
+  }
+
+  setFocusBar = val => {
+    this.focusBar = val
+  }
+
+  toggleCollapsed = () => {
+    this.collapsed = !this.collapsed
+  }
+
   _watchBlurBar = () => {
     this.watch(function watchBlurBar() {
       if (this.state.hidden) {
@@ -156,39 +193,6 @@ export default class UIStore {
         this.wasBlurred = !focused
       }, 16)
     })
-  }
-
-  focusBar = () => {
-    if (this.inputRef) {
-      this.inputRef.focus()
-      this.inputRef.select()
-      this.focusedBar = true
-    }
-  }
-
-  blurBar = () => {
-    this.inputRef && this.inputRef.blur()
-    this.focusedBar = false
-  }
-
-  setFocusBar = val => {
-    this.focusBar = val
-  }
-
-  toggleCollapsed = () => {
-    this.collapsed = !this.collapsed
-  }
-
-  set height(val) {
-    this.lastHeight = this._height
-    this._height = val
-  }
-
-  get height() {
-    if (this.collapsed) {
-      return 40
-    }
-    return this._height
   }
 
   _watchHeight = () => {

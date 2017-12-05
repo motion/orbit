@@ -37,7 +37,7 @@ const itemProps = {
 class OraMainContent {
   render({ oraStore }) {
     return (
-      <content $contentWithHeaderOpen={oraStore.focusedBar}>
+      <content $contentWithHeaderOpen={oraStore.barFocused}>
         <Sidebar
           width={Constants.ORA_WIDTH}
           store={oraStore}

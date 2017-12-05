@@ -41,7 +41,7 @@ export default class OraStore {
   electronState = {}
 
   async willMount() {
-    window.Store = this
+    window.oraStore = this
     this._watchForBanners()
     this._listenForElectronState()
     this._watchContext()

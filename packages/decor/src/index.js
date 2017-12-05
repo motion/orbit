@@ -52,11 +52,14 @@ export default function decor(plugins: Array<[Plugin, Object] | Plugin>) {
     }
 
     // uid per plugin
-    const uid = Math.random()
+    const decoratedStore = new WeakMap()
     const alreadyDecorated = Klass => {
-      const result = Klass[uid]
-      Klass[uid] = true
-      return result
+      if (decoratedStore.get(Klass)) {
+        console.log('already deco')
+        return true
+      }
+      decoratedStore.set(Klass, true)
+      return false
     }
     const Helpers = {
       emit,

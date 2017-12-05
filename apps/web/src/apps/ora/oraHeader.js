@@ -25,7 +25,7 @@ export default class OraHeader extends React.Component {
     if (Date.now() - store.downAt < 200) {
       oraStore.ui.setFocusBar(true)
       this.setTimeout(() => {
-        oraStore.inputRef.focus()
+        oraStore.ui.focusInput()
       })
     }
   }
@@ -102,7 +102,7 @@ export default class OraHeader extends React.Component {
     return (
       <UI.Theme name="dark">
         <header
-          $focus={oraStore.ui.focusedBar && !oraStore.ui.collapsed}
+          $focus={oraStore.ui.barFocused && !oraStore.ui.collapsed}
           onMouseDown={this.handleHeaderMouseDown}
           onMouseUp={this.handleHeaderMouseUp}
           $$draggable
@@ -121,7 +121,7 @@ export default class OraHeader extends React.Component {
 
             <UI.Input
               $searchInput
-              $disabled={!oraStore.ui.focusedBar}
+              $disabled={!oraStore.ui.barFocused}
               size={1}
               getRef={oraStore.ui.onInputRef}
               borderRadius={0}

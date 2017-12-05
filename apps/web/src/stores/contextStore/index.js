@@ -1,4 +1,4 @@
-import { watch } from '@mcro/black'
+import { store, watch } from '@mcro/black'
 import { includes, last, uniqBy, memoize } from 'lodash'
 import bm25 from './bm25'
 import winkNlp from 'wink-nlp-utils'
@@ -6,7 +6,16 @@ import { cosineSimilarity, splitSentences, minKBy, emd } from './helpers'
 
 let vectorCache = null
 
+@store
 export default class ContextStore {
+  static toResult = context => ({
+    id: context.url,
+    title: context.selection || context.title,
+    type: 'context',
+    icon: context.application === 'Google Chrome' ? 'social-google' : null,
+    image: context.favicon,
+  })
+
   query = null
   propItems = null
   @watch queryItems = () => this.query && this.query()
@@ -15,6 +24,15 @@ export default class ContextStore {
   vectors = null
   engine = null
   qe = ''
+
+  constructor({ query, items }) {
+    this.propItems = items
+    this.query = query
+    this.loadVectors().then(vecs => {
+      this.vectors = vecs
+      this.index()
+    })
+  }
 
   get items() {
     if (this.queryItems) {
@@ -25,7 +43,7 @@ export default class ContextStore {
 
   @watch
   docTexts = () => {
-    return this.items
+    return (this.items || [])
       .map(item => (item.title + '\n' + item.body).toLowerCase())
       .join('\n')
   }
@@ -34,15 +52,6 @@ export default class ContextStore {
 
   get loading() {
     return this.engine === null
-  }
-
-  constructor({ query, items }) {
-    this.propItems = items
-    this.query = query
-    this.loadVectors().then(vecs => {
-      this.vectors = vecs
-      this.index()
-    })
   }
 
   loadVectors = async () => {

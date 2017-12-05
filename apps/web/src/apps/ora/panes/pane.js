@@ -59,8 +59,8 @@ class PaneStore {
         sidebar
           ? stack.last.sidebarSelectedIndex
           : stack.last.mainSelectedIndex,
-        this.props.oraStore.search,
-        this.props.oraStore.focusedBar,
+        this.props.oraStore.ui.search,
+        this.props.oraStore.ui.barFocused,
         this.contentVersion,
       ],
       ([index]) => {

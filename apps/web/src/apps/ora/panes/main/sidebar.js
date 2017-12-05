@@ -2,6 +2,7 @@ import * as React from 'react'
 import { fuzzy, OS } from '~/helpers'
 import { Thing } from '~/app'
 import After from '~/views/after'
+import ContextStore from '~/stores/contextStore'
 
 export default class MainSidebar {
   get oraStore() {
@@ -20,7 +21,7 @@ export default class MainSidebar {
     if (lastContext) {
       results = [
         {
-          ...this.props.oraStore.contextToResult(lastContext),
+          ...ContextStore.toResult(lastContext),
           category: 'Context',
         },
       ]

@@ -1,5 +1,5 @@
 // @flow
-import { User, Setting } from '@mcro/models'
+import { User, Setting, Thing } from '@mcro/models'
 import { store, watch } from '@mcro/black'
 import { omit } from 'lodash'
 
@@ -35,6 +35,7 @@ class CurrentUser {
     // temp user for now
     await User.findOrCreate('a@b.com')
     this._ensureSettings()
+    Thing.setCurrentUser(this)
   }
 
   _ensureSettings() {

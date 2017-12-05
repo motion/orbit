@@ -78,6 +78,10 @@ export class Thing extends Model {
       doc.created = doc.created || now
       doc.updated = doc.updated || now
 
+      if (!doc.bucket) {
+        doc.bucket = this.currentUser.bucket
+      }
+
       // body shim
       if (typeof doc.body !== 'undefined') {
         db.put({ id: doc.id, body: doc.body })
@@ -135,7 +139,16 @@ export class Thing extends Model {
       body: `${contents.content}`,
       integration: new URL(url).origin,
       type: 'pin-site',
-      bucket: this.bucket || 'Default',
+    })
+  }
+
+  createFromPin = ({ url, contents }) => {
+    return ThingInstance.create({
+      url,
+      title: `${contents.title}`,
+      body: `${contents.content}`,
+      integration: new URL(url).origin,
+      type: 'pin',
     })
   }
 }

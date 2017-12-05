@@ -22,16 +22,7 @@ export default class PinStore {
     }
     const { result } = response
     if (result) {
-      const { url } = result
-      const { title, content } = result.contents
-      await Thing.create({
-        title,
-        integration: 'pin',
-        type: 'site',
-        body: content,
-        url,
-        bucket: this.bucket || 'Default',
-      })
+      await Thing.createFromPin(result)
       BannerStore.success({ message: 'Added pin' })
       return true
     } else {

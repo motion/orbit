@@ -157,7 +157,12 @@ export default class Pane {
           onBack={stackItem.stack.left}
           {...typeof title === 'object' && title}
         />
-        <content $transparent={transparent} ref={paneStore.setContentRef}>
+        <content
+          $transparent={transparent}
+          ref={paneStore.setContentRef}
+          css={{ borderTopRadius: title ? 0 : 8 }}
+        >
+          <UI.Glint if={!title} borderRadius={8} />
           {!children
             ? list
             : typeof children === 'function' ? children(list) : children}

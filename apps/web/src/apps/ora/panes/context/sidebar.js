@@ -222,10 +222,17 @@ export default class ContextSidebar {
   }
 
   get results() {
+    let results = []
     if (this.context) {
-      const os = this.search.length === 0 ? [] : []
-      return [...os, ...this.contextResults].filter(i => !!i)
+      results = this.contextResults
     }
-    return []
+    if (!results.length) {
+      results = [
+        {
+          title: 'No results...',
+        },
+      ]
+    }
+    return results
   }
 }

@@ -1,7 +1,7 @@
 {
   "name": "@mcro/electron-build",
   "productName": "Orbit",
-  "version": "1.5.48",
+  "version": "1.5.49",
   "private": true,
   "updater": {
     "url":
@@ -21,7 +21,7 @@
       "DEBUG=api,crawler,crawler:* app/Orbit-darwin-x64/Orbit.app/Contents/MacOS/Orbit",
     "publish-app": "publish -p ./app",
     "prepare-publish":
-      "if [ ! -f \"./app/Orbit-$npm_package_version.dmg\" ]; then cp ./app/Orbit.dmg ./app/Orbit-$npm_package_version.dmg && zip -r ./app/Orbit-$npm_package_version-mac.zip ./app/Orbit-darwin-x64/Orbit.app; fi",
+      "if [ ! -f \"./app/Orbit-$npm_package_version.dmg\" ]; then cp ./app/Orbit.dmg ./app/Orbit-$npm_package_version.dmg && zip -r -X -8 -q ./app/Orbit-$npm_package_version-mac.zip ./app/Orbit-darwin-x64/Orbit.app; fi",
     "publish-clean":
       "rm -r ./app/Orbit-$npm_package_version-mac.zip && mkdir -p ./app/releases && mv ./app/Orbit-$npm_package_version.dmg ./app/releases",
     "sign-app":

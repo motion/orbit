@@ -9,10 +9,10 @@ export default class MainSidebar {
     return this.props.oraStore
   }
   get search() {
-    return this.oraStore.search
+    return this.oraStore.ui.search
   }
   get recentItems() {
-    return this.oraStore.items || []
+    return this.oraStore.recentItems || []
   }
   // public api
   get items() {

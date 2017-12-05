@@ -17,7 +17,7 @@ export default class ContextStore {
   })
 
   query = null
-  propItems = null
+  _items = null
   @watch queryItems = () => this.query && this.query()
   @watch vectors = () => this.loadVectors()
   autocomplete = []
@@ -26,17 +26,21 @@ export default class ContextStore {
   engine = null
   qe = ''
 
-  constructor({ query, items }) {
-    this.propItems = items
+  constructor({ query, items } = {}) {
+    this._items = items
     this.query = query
-    this.watch(this.index)
+    this.watch(this.watchIndex)
   }
 
   get items() {
     if (this.queryItems) {
       return this.queryItems
     }
-    return this.propItems
+    return this._items
+  }
+
+  setItems = val => {
+    this._items = val
   }
 
   @watch
@@ -68,7 +72,7 @@ export default class ContextStore {
     return vectors
   }
 
-  index = () => {
+  watchIndex = () => {
     if (!this.vectors) return
     if (!this.items || !this.items.length) return
     this.engine = bm25()

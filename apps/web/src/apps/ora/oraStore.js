@@ -1,3 +1,4 @@
+import { watch } from '@mcro/black'
 import { Thing } from '~/app'
 import { OS } from '~/helpers'
 import StackStore from '~/stores/stackStore'
@@ -16,35 +17,37 @@ const BANNER_TIMES = {
   error: 5000,
 }
 
-const contextQuery = () =>
-  !CurrentUser.bucket
-    ? Thing.find().limit(8)
-    : Thing.find()
-        .limit(8)
-        .where('bucket')
-        .eq(CurrentUser.bucket)
-        .sort({ updatedAt: 'desc' })
-
 export default class OraStore {
   // stores
   crawler = new CrawlerStore()
   stack = new StackStore([{ type: 'main' }])
   ui = new UIStore({ stack: this.stack })
   pin = new PinStore()
-  context = new ContextStore({
-    query: contextQuery,
-  })
+  context = new ContextStore()
   // state
   banner = null
   lastContext = null
   // synced from electron
   electronState = {}
 
+  @watch
+  recentItems = () =>
+    !CurrentUser.bucket
+      ? Thing.find().limit(8)
+      : Thing.find()
+          .limit(8)
+          .where('bucket')
+          .eq(CurrentUser.bucket)
+          .sort({ updatedAt: 'desc' })
+
   async willMount() {
     window.oraStore = this
     this._watchForBanners()
     this._listenForElectronState()
     this._watchContext()
+    this.watch(() => {
+      this.context.setItems(this.recentItems)
+    })
     OS.send('start-ora')
   }
 

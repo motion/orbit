@@ -22,20 +22,50 @@ export default class PinPane {
     return (
       <pane>
         <content>
-          <UI.List
-            items={store.pinThings || []}
-            getItem={thing => ({
-              primary: thing.title,
-              secondary: thing.url,
-              content: thing.body,
-            })}
-          />
+          <section $$flex>
+            <UI.Title size={2}>Pins</UI.Title>
+            <UI.Title
+              if={!store.pinThings || !store.pinThings.length}
+              size={1.5}
+            >
+              Nothing pinned yet!
+            </UI.Title>
+            <UI.List
+              virtualized
+              if={store.pinThings}
+              items={store.pinThings}
+              getItem={this.getItem}
+            />
+          </section>
+
+          <section $$flex>
+            <UI.Title size={2}>Pinned Sites</UI.Title>
+            <UI.Title
+              if={!store.crawlThings || !store.crawlThings.length}
+              size={1.5}
+            >
+              No pinned sites!
+            </UI.Title>
+            <UI.List
+              if={store.crawlThings}
+              virtualized
+              items={store.crawlThings}
+              getItem={this.getItem}
+            />
+          </section>
 
           {JSON.stringify(store.setting || null)}
         </content>
       </pane>
     )
   }
+
+  getItem = thing => ({
+    primary: thing.title,
+    secondary: thing.url,
+    content: thing.body,
+    after: <UI.Button onClick={() => thing.remove()}>Delete</UI.Button>,
+  })
 
   static style = {
     pane: {

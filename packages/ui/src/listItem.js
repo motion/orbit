@@ -159,7 +159,6 @@ export default class ListItem extends React.Component<Props> {
         getRef={this.getRef}
         highlight={highlightValue}
         after={below}
-        width="auto"
         {...props}
       >
         <before if={before} {...beforeProps}>

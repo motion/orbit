@@ -1,8 +1,8 @@
 import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
 import App, { CurrentUser } from '~/app'
-import Things from '../views/things'
-import * as Collapse from '../views/collapse'
+import Things from './views/things'
+import * as Collapse from './views/collapse'
 
 @view
 class Calendar {

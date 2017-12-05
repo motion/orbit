@@ -2,7 +2,7 @@ import * as UI from '@mcro/ui'
 import { view, watch } from '@mcro/black'
 import { sortBy, reverse } from 'lodash'
 import App from '~/app'
-import * as Collapse from '../views/collapse'
+import * as Collapse from './views/collapse'
 import { formatDistance } from 'date-fns'
 
 const baseId = '0AKfTFZu-thXbUk9PVA'

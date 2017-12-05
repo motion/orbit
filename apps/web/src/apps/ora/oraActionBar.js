@@ -16,13 +16,16 @@ export default class OraActionBar {
     const actions = store && store.actions
     return (
       <UI.Theme name="dark">
-        <actions if={actions}>
-          <actionbar>
+        <actions>
+          <collapseBar onClick={oraStore.ref('collapsed').toggle}>
+            <UI.Icon name="menu" size={10} />
+          </collapseBar>
+          <actionbar if={actions && !oraStore.collapsed}>
             {actions
               .filter(Boolean)
               .map(({ flex, content, ...props }) => {
                 if (flex) {
-                  return <div $$flex={flex} />
+                  return <flexer $$flex={flex} />
                 }
                 if (content) {
                   return <span>{content}</span>
@@ -45,23 +48,43 @@ export default class OraActionBar {
   }
 
   static style = {
-    // pads height of actionbar
-    actionBarPad: {
-      paddingBottom: 50,
-    },
-    actionbar: {
-      padding: [0, 7],
-      // borderTop: [1, [255, 255, 255, 0.08]],
-      flexFlow: 'row',
-      alignItems: 'center',
+    actions: {
       position: 'fixed',
       bottom: 0,
       left: 0,
       right: 0,
-      background: [...Constants.ORA_BG_MAIN_OPAQUE, 0.9],
-      // backdropFilter: 'blur(12px)',
       height: Constants.ACTION_BAR_HEIGHT,
-      zIndex: 100000,
+      justifyContent: 'center',
+      pointerEvents: 'none',
+    },
+    actionbar: {
+      padding: [0, 7],
+      // background: Constants.ORA_BG_MAIN_OPAQUE,
+      position: 'relative',
+      zIndex: 10001,
+      flexFlow: 'row',
+      // so we have no pointer events on this directly
+      // to let them go down to the collapse
+      '& > *': {
+        pointerEvents: 'auto',
+      },
+    },
+    collapseBar: {
+      height: 12,
+      zIndex: 1000,
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      right: 0,
+      flexFlow: 'row',
+      justifyContent: 'center',
+      pointerEvents: 'auto',
+      '&:hover': {
+        background: [255, 255, 255, 0.025],
+      },
+    },
+    flexer: {
+      pointerEvents: 'none',
     },
   }
 }

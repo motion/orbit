@@ -99,9 +99,6 @@ export default class OraPage {
           }}
         >
           <OraContent oraStore={oraStore} />
-          <collapseBar onClick={oraStore.ref('collapsed').toggle}>
-            <UI.Icon name="menu" size={10} />
-          </collapseBar>
           <bottomBackground if={!oraStore.collapsed} />
         </ora>
       </UI.Theme>
@@ -132,19 +129,6 @@ export default class OraPage {
       opacity: 1,
       transform: {
         x: 0,
-      },
-    },
-    collapseBar: {
-      height: 12,
-      zIndex: 10000000,
-      position: 'absolute',
-      bottom: 0,
-      left: 0,
-      right: 0,
-      flexFlow: 'row',
-      justifyContent: 'center',
-      '&:hover': {
-        background: [255, 255, 255, 0.025],
       },
     },
     bottomBackground: {

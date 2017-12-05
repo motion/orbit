@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import { capitalize } from 'lodash'
+import * as UI from '@mcro/ui'
 
 @view
 export default class Logo {
@@ -68,6 +69,14 @@ export default class Logo {
   }
 
   render({ service }) {
-    return this['render' + capitalize(service)]()
+    const logoKey = 'render' + capitalize(service)
+    if (this[logoKey]) {
+      return this[logoKey]()
+    }
+    return (
+      <UI.Title size={2.5} fontWeight={800}>
+        {capitalize(service)}
+      </UI.Title>
+    )
   }
 }

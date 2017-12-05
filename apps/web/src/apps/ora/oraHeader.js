@@ -102,7 +102,7 @@ export default class OraHeader extends React.Component {
     return (
       <UI.Theme name="dark">
         <header
-          $focus={oraStore.focusedBar}
+          $focus={oraStore.focusedBar && !oraStore.collapsed}
           onMouseDown={this.handleHeaderMouseDown}
           onMouseUp={this.handleHeaderMouseUp}
           $$draggable

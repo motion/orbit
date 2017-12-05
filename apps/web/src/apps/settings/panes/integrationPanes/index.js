@@ -1,4 +1,4 @@
-export slack from './slack'
+export slack from './slackPane'
 export github from './github'
-export drive from './drive'
-export calendar from './calendar'
+export drive from './drivePane'
+export calendar from './calendarPane'

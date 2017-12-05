@@ -134,7 +134,7 @@ export class Thing extends Model {
       title: `${contents.title}`,
       body: `${contents.content}`,
       integration: new URL(url).origin,
-      type: 'website',
+      type: 'pin-site',
       bucket: this.bucket || 'Default',
     })
   }

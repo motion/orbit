@@ -50,6 +50,11 @@ class CurrentUser {
           })
         }
       }
+      // ensure pin setting
+      await Setting.findOrCreate({
+        userId: this.id,
+        type: 'pins',
+      })
     })
   }
 

@@ -24,7 +24,7 @@ export default class Crawler {
     const { results } = this.crawler
     this.reset()
     if (results) {
-      await createInChunks(results, Thing.createFromCrawlResult)
+      await createInChunks(results, Thing.createFromCrawl)
       BannerStore.success({ message: 'Saved results!' })
     }
   }

@@ -4,25 +4,26 @@ import { view } from '@mcro/black'
 import { Thing, CurrentUser } from '~/app'
 
 @view({
-  store: class CrawlerPaneStore {
-    things = Thing.find().where({ type: 'pin-site' })
+  store: class PinPaneStore {
+    pinThings = Thing.find().where({ type: 'pin' })
+    crawlThings = Thing.find().where({ type: 'pin-site' })
 
     get setting() {
       return CurrentUser.setting.pins
     }
   },
 })
-export default class CrawlerPane {
+export default class PinPane {
   render({ store }) {
-    if (!CurrentUser.setting) {
-      console.log('no user setting')
+    if (!store.setting) {
+      console.log('no setting')
       return null
     }
     return (
       <pane>
         <content>
           <UI.List
-            items={store.things || []}
+            items={store.pinThings || []}
             getItem={thing => ({
               primary: thing.title,
               secondary: thing.url,

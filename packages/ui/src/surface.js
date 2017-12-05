@@ -228,6 +228,11 @@ export default class Surface extends React.PureComponent<Props> {
     const stringIcon = typeof icon === 'string'
     const { themeValues } = this
 
+    if (!themeValues) {
+      console.warn('this is weird')
+      return null
+    }
+
     const passProps = {
       tagName,
       ref: getRef,

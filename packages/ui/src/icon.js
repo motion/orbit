@@ -143,7 +143,7 @@ export default class Icon extends React.PureComponent<Props> {
         opacity,
         alignSelf,
         background,
-        color: theme.color || color,
+        color: (theme && theme.color) || color,
         width: (width || size) + widthPadding(padding),
         height: (height || size) + heightPadding(padding),
         fontSize: size,

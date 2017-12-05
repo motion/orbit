@@ -3,6 +3,7 @@ import { fuzzy, OS } from '~/helpers'
 import { Thing } from '~/app'
 import After from '~/views/after'
 import ContextStore from '~/stores/contextStore'
+import * as Constants from '~/constants'
 
 export default class MainSidebar {
   get oraStore() {
@@ -12,7 +13,7 @@ export default class MainSidebar {
     return this.oraStore.ui.search
   }
   get recentItems() {
-    return this.oraStore.recentItems || []
+    return (this.oraStore.recentItems || []).slice(0, 5)
   }
   // public api
   get items() {
@@ -43,8 +44,33 @@ export default class MainSidebar {
       results = [
         ...results,
         {
-          type: 'message',
           title: 'Welcome to Orbit',
+          children:
+            'Try adding some content by linking in an integration or pinning a website',
+        },
+      ]
+    }
+    if (Constants.IS_DEV) {
+      results = [
+        ...results,
+        {
+          title: 'Clear all things...',
+          onClick: () => Thing.destroyAll().then(x => x.confirm()),
+          category: 'Dev Tools',
+        },
+        {
+          title: 'Insert test things...',
+          onClick: () => {
+            Thing.createFromPin({
+              url: 'http://google.com',
+              contents: { title: 'Pin Test', content: 'Pin Test Body' },
+            })
+            Thing.createFromCrawl({
+              url: 'http://google.com',
+              contents: { title: 'Crawl Test', content: 'Crawl Test Body' },
+            })
+          },
+          category: 'Dev Tools',
         },
       ]
     }

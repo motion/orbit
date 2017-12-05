@@ -132,7 +132,7 @@ export class Thing extends Model {
     }
   }
 
-  createFromCrawlResult = ({ url, contents }) => {
+  createFromCrawl = ({ url, contents }) => {
     return ThingInstance.create({
       url,
       title: `${contents.title}`,

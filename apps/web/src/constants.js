@@ -5,6 +5,7 @@ import { Constants } from '@mcro/black'
 export const IS_ELECTRON = Constants.IS_ELECTRON
 export const IS_PROD =
   process.env.NODE_ENV === 'production' || process.env.IS_PROD
+export const IS_DEV = !IS_PROD
 
 if (process.env.IS_PROD) {
   console.log('IS_PROD!')

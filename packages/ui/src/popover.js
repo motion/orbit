@@ -589,6 +589,14 @@ class Popover extends React.PureComponent<Props> {
           delayOpenIfHover.cancel()
         }
       }
+      // ensure check if we have a delay open
+      if (delay && isTarget) {
+        this.setTimeout(() => {
+          if (!this.isNodeHovered(node)) {
+            setUnhovered()
+          }
+        }, delay)
+      }
     }
     const delayOpenIfHover = isTarget ? debounce(openIfOver, delay) : openIfOver
     // this will avoid the delay open if its already open

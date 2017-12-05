@@ -1,7 +1,7 @@
 import { store } from '@mcro/black'
 import * as Constants from '~/constants'
 import { OS } from '~/helpers'
-import { once, throttle } from 'lodash'
+import { throttle } from 'lodash'
 import SHORTCUTS from './shortcuts'
 import Mousetrap from 'mousetrap'
 import { debounceIdle } from '~/helpers'
@@ -93,11 +93,14 @@ export default class UIStore {
 
   setSearch = debounceIdle(this.setSearchImmediate, 20)
 
-  attachTrap(attachName, el) {
-    this.traps[attachName] = new Mousetrap(el)
+  attachTrap(ns, el) {
+    if (this.traps[ns]) {
+      this.traps[ns].reset()
+    }
+    this.traps[ns] = new Mousetrap(el)
     for (const name of Object.keys(SHORTCUTS)) {
       const chord = SHORTCUTS[name]
-      this.traps[attachName].bind(chord, event => {
+      this.traps[ns].bind(chord, event => {
         this.emit('shortcut', name, event)
         if (this.actions[name]) {
           this.actions[name](event)
@@ -137,15 +140,23 @@ export default class UIStore {
   }
 
   onInputRef = el => {
-    if (!el) return
-    this.setupInputRef(el)
+    if (el) {
+      this.setupInputRef(el)
+    }
   }
 
-  setupInputRef = once(ref => {
+  emitKeyCode = e => this.emit('keydown', keycode(e.keyCode))
+
+  setupInputRef = ref => {
+    console.log('setting', ref)
     this.inputRef = ref
-    this.on(ref, 'keydown', e => this.emit('keydown', keycode(e.keyCode)))
+    if (this.offKeyCode) {
+      this.offKeyCode()
+    }
+    const off = this.on(ref, 'keydown', this.emitKeyCode)
+    this.offKeyCode = off
     this.attachTrap('bar', ref)
-  })
+  }
 
   _watchFocus() {
     this.on(OS, 'ora-focus', () => {

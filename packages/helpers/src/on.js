@@ -23,23 +23,28 @@ export default function on(...args): Disposable {
   return onSomething.call(this, ...args)
 }
 
+// listens to a three types of things:
+//    Rx.Subject / Rx.Observer
+//    Emitter
+//    eventListeners (addEventListener, removeEventListener)
+// returns an off function
 function onSomething(
   target: Object,
   eventName: String | Function,
   callback: Function
 ) {
+  let disposable
   if (target.subscribe) {
     if (typeof eventName !== 'function') {
       throw new Error(`Should pass in (Observable, callback) for Observables`)
     }
     const subscription = target.subscribe(eventName)
-    this.subscriptions.add(() => subscription.unsubscribe())
-    return subscription
-  }
-  if (target && target.emitter) {
+    disposable = this.subscriptions.add(() => subscription.unsubscribe())
+  } else if (target && target.emitter) {
     return on.call(this, target.emitter, eventName, callback)
+  } else {
+    const e = event(target, eventName, callback)
+    disposable = this.subscriptions.add(e)
   }
-  const e = event(target, eventName, callback)
-  this.subscriptions.add(e)
-  return e
+  return disposable
 }

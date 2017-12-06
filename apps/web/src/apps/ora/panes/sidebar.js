@@ -158,6 +158,9 @@ export default class Sidebar {
                   width,
                   highlight: i => i === stackItem.selectedIndex,
                   onSelect(item) {
+                    if (item.selectable === false) {
+                      return false
+                    }
                     if (item.onClick) {
                       return item.onClick()
                     }

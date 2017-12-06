@@ -131,6 +131,8 @@ export default function getItem(result, index) {
     below: result.below,
     beforeProps: result.beforeProps,
     afterProps: result.afterProps,
+    selectable: result.selectable,
+    glow: result.glow || result.selectable !== false,
     ...result.props,
   }
 }

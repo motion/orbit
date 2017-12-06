@@ -24,7 +24,7 @@ const listProps = {
       zIndex: 1,
     },
     secondaryProps: {
-      alpha: 0.3,
+      alpha: 0.4,
     },
     highlightBackground: [0, 0, 0, 0.15],
     childrenEllipse: 2,

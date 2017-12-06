@@ -110,6 +110,7 @@ export default class ListItem extends React.Component<Props> {
       fontWeight,
       primaryProps,
       fontSize,
+      selectable,
       index,
       ...props
     } = this.props
@@ -157,7 +158,7 @@ export default class ListItem extends React.Component<Props> {
         }}
         style={style}
         getRef={this.getRef}
-        highlight={highlightValue}
+        highlight={selectable !== false && highlightValue}
         after={below}
         {...props}
       >

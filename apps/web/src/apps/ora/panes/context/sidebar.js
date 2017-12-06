@@ -229,6 +229,7 @@ export default class ContextSidebar {
       results = [
         {
           title: 'No results...',
+          selectable: false,
         },
       ]
     }

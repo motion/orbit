@@ -18,21 +18,22 @@
 * pin banner ux improvements
 * bug: home showing recent
 * via [S] #general
+* thing: show where it came from
 
 # now
 
-* thing: show where it came from
+* settings pane: crawler section
+* settings pane: bottom sync status tray (slack, github, drive)
+* settings pane: better sync button
+* slack sync
+  * turn off a room it should disable/delete attachments
+  * showing slack icons next to slack things + data.channel
+* have a poll that checks crawler status so it always shows a status drawer and
+  you can cancel
 * scan hard drives for files (word pdf excel)
 * cmd+opt when unfocused: focus + focus search
 * cmd+opt when hidden: focus + focus search
 * cmd+opt when focused: hide
-* fix drill in from home/item to not just use context
-* settings pane: bottom sync status tray (slack, github, drive)
-* settings pane: better sync button
-* settings pane: crawler section
-* slack sync
-  * turn off a room it should disable/delete attachments
-  * showing slack icons next to slack things + data.channel
 * cancel crawl from crawling... pane
 * crawling... pane glitch when on home
 * tests and fixes on drive/github

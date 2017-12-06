@@ -20,6 +20,8 @@
 
 # now
 
+* via [S] #general
+* scan hard drives for files (word pdf excel)
 * cmd+opt when unfocused: focus + focus search
 * cmd+opt when hidden: focus + focus search
 * cmd+opt when focused: hide

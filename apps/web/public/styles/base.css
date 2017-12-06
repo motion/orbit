@@ -296,6 +296,10 @@ body {
   pointer-events: none;
 }
 
+#app > * {
+  pointer-events: auto;
+}
+
 a {
   text-decoration: none;
   color: inherit;

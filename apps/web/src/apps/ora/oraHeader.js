@@ -101,7 +101,7 @@ export default class OraHeader extends React.Component {
         >
           <contents>
             <leftSide>
-              <UI.Icon name="zoom" {...iconProps} />
+              <UI.Icon name="zoom" {...iconProps} color="#000" />
               <UI.Icon
                 if={false && oraStore.stack.length > 1}
                 name="arrominleft"
@@ -124,7 +124,7 @@ export default class OraHeader extends React.Component {
               background="transparent"
             />
 
-            <UI.HoverGlow zIndex={-1} opacity={0.075} blur={60} />
+            <UI.HoverGlow zIndex={-1} opacity={0.045} blur={60} />
 
             <OraBanner />
 

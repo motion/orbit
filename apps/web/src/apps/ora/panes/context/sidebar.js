@@ -71,12 +71,15 @@ export default class ContextSidebar {
   get search() {
     return this.oraStore.ui.search
   }
+  get result() {
+    return this.oraStore.stack.last.result
+  }
 
   // can customize the shown title here
   get title() {
     if (!this.osContext) return
     return {
-      title: this.osContext.title,
+      title: this.result.title,
       image: this.osContext.favicon,
     }
   }

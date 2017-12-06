@@ -15,6 +15,7 @@ export default class OraActionBar {
   render({ oraStore }) {
     const { store } = oraStore.stack.last
     const actions = store && store.actions
+
     return (
       <UI.Theme name="clear-dark">
         <actions>
@@ -22,6 +23,7 @@ export default class OraActionBar {
             <UI.Arrow />
             <UI.Icon name="menu" size={10} />
           </collapseBar>
+
           <actionbar if={actions && !oraStore.ui.collapsed}>
             {actions
               .filter(Boolean)

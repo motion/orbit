@@ -59,7 +59,7 @@ class Tab {
         <chrome
           css={{
             ...chromeStyle,
-            marginRight: 4,
+            marginRight: 3.5,
             background: Constants.ORA_BG_MAIN,
             borderBottom: 'none',
             boxShadow: [
@@ -158,7 +158,7 @@ export default class SidebarTitle {
       flexFlow: 'row',
     },
     backButton: {
-      margin: [-3, 8, -3, -8],
+      margin: [-3, 5, -3, -8],
       zIndex: 10,
     },
     image: {

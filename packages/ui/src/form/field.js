@@ -70,6 +70,7 @@ export default class Field extends React.Component<Props> {
     chromeless,
     placeholder,
     placeholderColor,
+    value,
     size,
     ...props
   }: Props) {
@@ -78,39 +79,37 @@ export default class Field extends React.Component<Props> {
       name ||
       (label && typeof label === 'string' && label.toLowerCase()) ||
       `element-${Math.round(Math.random() * 10000000)}`
-
     if (!Element && !children) {
       throw new Error('Invalid field type or no children given to Field')
     }
-
-    const contents = [
-      <Label if={label} key={0} $label htmlFor={id} size={size} {...labelProps}>
-        {label === true ? ' ' : label}
-      </Label>,
-      <Element
-        if={!children && Element}
-        key={1}
-        $element
-        type={type}
-        onChange={onChange}
-        name={id}
-        defaultValue={defaultValue}
-        sync={sync}
-        theme={theme}
-        chromeless={chromeless}
-        placeholder={placeholder}
-        placeholderColor={placeholderColor}
-        borderRadius={0}
-        size={size}
-        {...elementProps}
-      />,
-      children,
-    ].filter(Boolean)
-
+    const contents = (
+      <React.Fragment>
+        <Label if={label} $label htmlFor={id} size={size} {...labelProps}>
+          {label === true ? ' ' : label}
+        </Label>
+        <Element
+          if={!children && Element}
+          $element
+          type={type}
+          onChange={onChange}
+          name={id}
+          defaultValue={defaultValue}
+          value={value}
+          sync={sync}
+          theme={theme}
+          chromeless={chromeless}
+          placeholder={placeholder}
+          placeholderColor={placeholderColor}
+          borderRadius={0}
+          size={size}
+          {...elementProps}
+        />
+        {children}
+      </React.Fragment>
+    )
     if (row) {
       return <Row $field>{contents}</Row>
     }
-
     return <field css={props}>{contents}</field>
   }
 

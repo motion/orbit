@@ -11,14 +11,13 @@ export default class Checkbox {
     return this.isChecked
   }
 
-  render({ onChange, sync, ...props }) {
+  render({ onChange, sync, hover, ...props }) {
     const { isChecked } = this
     return (
       <SizedSurface
         margin={[0, 3]}
         background={isChecked ? 'rgb(92, 107, 123)' : '#f2f2f2'}
         color={isChecked ? '#fff' : '#ddd'}
-        hoverColor={isChecked ? '#fff' : '#ddd'}
         borderRadius={6}
         borderWidth={1}
         borderColor={isChecked ? 'rgb(92, 107, 123)' : '#ccc'}
@@ -30,6 +29,10 @@ export default class Checkbox {
         align="center"
         justify="center"
         flex={false}
+        hover={{
+          color: isChecked ? '#fff' : '#ddd',
+          ...hover,
+        }}
         iconProps={{
           css: {
             opacity: isChecked ? 1 : 0,

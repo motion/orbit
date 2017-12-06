@@ -1,7 +1,7 @@
 import * as React from 'react'
 import * as Constants from '~/constants'
 import { view } from '@mcro/black'
-import Orbitals from '../orbitals'
+import * as Views from '~/views'
 
 @view
 export default class Illustration2 {
@@ -11,21 +11,21 @@ export default class Illustration2 {
         $$row
         css={{
           flex: 1,
-          marginRight: -140,
+          marginRight: -70,
           justifyContent: 'center',
           userSelect: 'none',
         }}
         {...props}
       >
-        <Orbitals
+        <Views.Orbitals
           rings={2}
           hideRings={{
             0: true,
           }}
-          planetSize={60}
           ringBackground="transparent"
+          planetSize={60}
           planetStyles={{
-            background: Constants.mainLight,
+            background: '#fff',
             border: [1, Constants.mainLight],
           }}
           items={[
@@ -50,10 +50,11 @@ export default class Illustration2 {
             'github',
           ]}
           css={{
-            top: -165,
-            left: 235,
+            top: '-50%',
+            left: 188,
+            transformOrigin: 'center center',
             transform: {
-              scale: 0.6,
+              scale: 0.47,
             },
           }}
         />
@@ -67,27 +68,6 @@ export default class Illustration2 {
         >
           <figure
             css={{
-              marginRight: -30,
-              zIndex: 100,
-              height: 180,
-            }}
-          >
-            <img
-              if={false}
-              src="/figures/Snail.svg"
-              css={{
-                margin: [0, 0, 0, -150],
-                width: 150,
-                height: 150,
-                zIndex: 1000,
-                alignSelf: 'flex-end',
-              }}
-            />
-          </figure>
-
-          <figure
-            css={{
-              marginRight: -30,
               zIndex: 100,
               height: 180,
             }}
@@ -95,9 +75,9 @@ export default class Illustration2 {
             <img
               src="/figures/Hummingbird.svg"
               css={{
-                margin: [-300, 125, 0, -90],
-                width: 145,
-                height: 145,
+                margin: [-250, 0, 0, -90],
+                width: 120,
+                height: 120,
                 zIndex: 1000,
                 alignSelf: 'flex-end',
               }}
@@ -110,7 +90,7 @@ export default class Illustration2 {
               css={{
                 width: 170,
                 height: 170,
-                marginLeft: 80,
+                marginLeft: 75,
                 alignSelf: 'flex-end',
                 transform: { scaleX: -1 },
               }}

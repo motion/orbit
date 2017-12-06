@@ -30,20 +30,18 @@ import import_Loading from './loading'
 import import_Grid from './grid'
 import import_Icon from './icon'
 import import_Modal from './modal'
-import import_Pane from './pane'
 import import_Row from './row'
-import import_TabPane from './tabPane'
 import import_Title from './title'
 import import_Placeholder from './placeholder'
 import import_Tag from './tag'
 import import_Text from './text'
 import import_Popover from './popover'
 import import_Progress from './progress'
-import import_View from './view'
 import import_Circle from './circle'
 import import_Surface from './surface'
 import import_SizedSurface from './sizedSurface'
 import import_Date from './date'
+import import_Separator from './separator'
 import import_FakeText from './fake/fakeText'
 
 // effects
@@ -82,6 +80,7 @@ export const Drawer = import_Drawer
 export const Dropdown = import_Dropdown
 export const Ellipse = import_Ellipse
 export const ContextMenu = import_ContextMenu
+export const Separator = import_Separator
 export const Card = import_Card
 export const Link = import_Link
 export const List = import_List
@@ -90,16 +89,13 @@ export const Loading = import_Loading
 export const Grid = import_Grid
 export const Icon = import_Icon
 export const Modal = import_Modal
-export const Pane = import_Pane
 export const Row = import_Row
-export const TabPane = import_TabPane
 export const Title = import_Title
 export const Placeholder = import_Placeholder
 export const Tag = import_Tag
 export const Text = import_Text
 export const Popover = import_Popover
 export const Progress = import_Progress
-export const View = import_View
 export const Circle = import_Circle
 export const Surface = import_Surface
 export const SizedSurface = import_SizedSurface

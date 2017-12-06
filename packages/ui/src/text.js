@@ -5,13 +5,37 @@ import keycode from 'keycode'
 import $ from 'color'
 import { pick } from 'lodash'
 
+const wrapHighlights = (text: string, highlightWords: Array<string>) => {
+  let result = text
+  for (const word of highlightWords) {
+    result = result.replace(
+      new RegExp(`(${word})`, 'g'),
+      '<span style="color: yellow; font-weight: 500;">$1</span>'
+    )
+  }
+  return result
+}
+
 const getTextProperties = props => {
-  const fontSize =
-    (typeof props.fontSize === 'number' && props.fontSize) || props.size
-      ? props.size * 14
-      : 'auto'
-  const lineHeight = props.lineHeight || fontSize * 1.15 + 6
-  return { fontSize, lineHeight }
+  let fontSizeNum
+  let lineHeightNum
+  let fontSize = props.fontSize
+  if (typeof fontSize === 'undefined' && props.size) {
+    fontSize = props.size * 14
+  }
+  let lineHeight = props.lineHeight
+  if (typeof lineHeight === 'undefined' && typeof fontSize === 'number') {
+    lineHeight = fontSize * 1.15 + 2.5 * (fontSize / 10)
+  }
+  if (typeof fontSize === 'number') {
+    fontSizeNum = Math.round(fontSize * 10) / 10
+    fontSize = `${fontSizeNum}px`
+  }
+  if (typeof lineHeight === 'number') {
+    lineHeightNum = Math.round(lineHeight * 10) / 10
+    lineHeight = `${lineHeightNum}px`
+  }
+  return { fontSize, fontSizeNum, lineHeight, lineHeightNum }
 }
 
 const DOM_EVENTS = [
@@ -37,7 +61,7 @@ export type Props = {
   tagName: string,
   fontWeight?: number,
   lines?: number,
-  textOpacity?: number,
+  alpha?: number,
 }
 
 // click away from edit clears it
@@ -45,6 +69,7 @@ export type Props = {
 export default class Text extends React.Component<Props> {
   static defaultProps = {
     tagName: 'text', // TODO: prod p mode
+    size: 1,
   }
 
   state = {
@@ -82,7 +107,7 @@ export default class Text extends React.Component<Props> {
         () => this.editable,
         editable => {
           if (this.clickaway) {
-            this.clickaway.dispose()
+            this.clickaway()
           }
           if (editable) {
             // this.clickaway = this.on(window, 'click', (event: Event) => {
@@ -180,12 +205,15 @@ export default class Text extends React.Component<Props> {
     style,
     placeholder,
     lineHeight,
-    attach,
+    highlightWords,
     className,
-    html,
     ...props
   }: Props) {
-    const textProperties = getTextProperties(this.props)
+    const text = getTextProperties(this.props)
+    const maxHeight =
+      ellipse && text.lineHeightNum
+        ? `${ellipse * text.lineHeightNum}px`
+        : 'auto'
     const eventProps = {
       onClick,
       onMouseEnter,
@@ -193,13 +221,20 @@ export default class Text extends React.Component<Props> {
       onFocus,
       onBlur,
     }
-    let inner = html ? (
-      <span dangerouslySetInnerHTML={{ __html: html }} />
-    ) : (
-      children
-    )
     const oneLineEllipse = ellipse && typeof ellipse === 'boolean'
     const multiLineEllipse = ellipse > 1
+    let ellipseProps = { children }
+    if (highlightWords) {
+      if (typeof children === 'string') {
+        ellipseProps = {
+          dangerouslySetInnerHTML: {
+            __html: wrapHighlights(children, highlightWords),
+          },
+        }
+      } else {
+        console.warn('Expected chidlren to be string for highlighting')
+      }
+    }
     return (
       <text
         className={className}
@@ -215,7 +250,7 @@ export default class Text extends React.Component<Props> {
         {...eventProps}
         {...pick(props, DOM_EVENTS)}
       >
-        {!ellipse && inner}
+        {!ellipse && children}
         <span
           if={ellipse}
           $ellipseLines={multiLineEllipse}
@@ -223,16 +258,15 @@ export default class Text extends React.Component<Props> {
             multiLineEllipse
               ? {
                   WebkitLineClamp: ellipse,
-                  maxHeight: `${ellipse * textProperties.lineHeight}px`,
+                  maxHeight,
                   width: this.state.doClamp ? '100%' : '100.001%',
                   opacity: this.state.doClamp ? 1 : 0,
                 }
               : null
           }
           $$ellipse={oneLineEllipse}
-        >
-          {inner}
-        </span>
+          {...ellipseProps}
+        />
       </text>
     )
   }
@@ -258,6 +292,10 @@ export default class Text extends React.Component<Props> {
       WebkitBoxOrient: 'vertical',
       width: '100%',
     },
+    span: {
+      margin: ['auto', 0],
+      maxWidth: '100%',
+    },
     selectable: {
       userSelect: 'auto',
       cursor: 'text',
@@ -266,19 +304,17 @@ export default class Text extends React.Component<Props> {
 
   static theme = (props, theme) => {
     const { fontSize, lineHeight } = getTextProperties(props)
-
     let color = props.color || theme.base.color
-    // allow textOpacity adjustments
-    if (typeof props.textOpacity === 'number') {
-      color = $(color).alpha(props.textOpacity)
+    // allow alpha adjustments
+    if (typeof props.alpha === 'number' && color !== 'inherit') {
+      color = $(color).alpha(props.alpha)
     }
-
     return {
       text: {
         color,
         fontSize,
-        lineHeight:
-          typeof lineHeight === 'number' ? `${lineHeight}px` : lineHeight,
+        lineHeight,
+        textShadow: props.textShadow,
         display: props.display,
         fontWeight: props.fontWeight,
         opacity: props.opacity,

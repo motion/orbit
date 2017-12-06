@@ -11,7 +11,13 @@ import upndown from 'upndown'
 import URI from 'urijs'
 import sanitizeHtml from 'sanitize-html'
 import { writeFileSync } from 'fs'
+import OS from 'os'
 
+// dont use last two cores if possible
+// so on 4 core machine just use two
+const MAX_CORES_DEFAULT = Math.max(1, OS.cpus().length - 2)
+
+const removeMdPrefix = text => text.replace(/^[^a-zA-Z0-9]*[a-zA-Z0-9]/, '')
 const normalizeHref = (baseUrl, href) => {
   let url = new URI(href)
   if (url.is('relative')) {
@@ -19,11 +25,8 @@ const normalizeHref = (baseUrl, href) => {
   }
   return url.toString()
 }
-
 const sleep = ms => new Promise(res => setTimeout(res, ms))
-
-const und = new upndown()
-
+const markdown = new upndown()
 const log = {
   crawl: debug('crawler:crawl'),
   page: debug('crawler:page'),
@@ -32,7 +35,6 @@ const log = {
 
 const ENDING_QUERY = /[?](.*)$/g
 const ENDING_HASH = /[#](.*)$/g
-
 const removeLastSegmentOfPath = x => x.replace(/\/[^\/]+$/g, '')
 const cleanUrlHash = url => url.replace(ENDING_HASH, '')
 const cleanUrlSearch = url => url.replace(ENDING_QUERY, '')
@@ -47,7 +49,6 @@ const FILTER_URL_EXTENSIONS = [
   '.svg',
   '.xml',
 ]
-
 const urlSimilarity = (wanted, given) => {
   let score = 100
   // de-weight paths with ?params just a lil
@@ -73,83 +74,133 @@ const urlMatchesExtensions = (url, extensions) => {
 }
 
 export default class Crawler {
-  shouldCrawl = true
+  cancelled = false
   isRunning = false
+  browser = null
+  count = 0
+  selectors = null
+  promiseEnds = []
 
   selectors = null
 
   constructor(options: Options) {
-    this.options = options
-    this.db = new CrawlerDB()
+    this.options = options || {}
+  }
+
+  selectorFinder = ({ title, content }) => {
+    Array.from(
+      document.querySelectorAll('.breadcrumbs, .crumbs, .breadcrumb')
+    ).forEach(_ => _.remove())
+    let tries = 0
+    let current = null
+    let titleSelector = null
+    window.getSelection().empty()
+    window.find(title)
+    if (document.getSelection()) {
+      const getTitleSelector = node => {
+        const name = node.tagName.toLowerCase()
+        if (name[0] === 'h' && name.length === 2) {
+          return name
+        }
+        const TITLEY = /title|headline/
+        if (TITLEY.test(node.id)) {
+          return `#${node.id}`
+        }
+        const cn = node.className.split(' ').find(x => TITLEY.test(x))
+        if (cn) {
+          return `${name}.${cn.trim()}`
+        }
+      }
+      const { anchorNode } = document.getSelection()
+      current = anchorNode
+      while (current && !titleSelector && tries++ < 3) {
+        current = current.parentNode
+        if (!current || !current.tagName) continue
+        titleSelector = getTitleSelector(current)
+      }
+    }
+    if (!titleSelector) {
+      return null
+    }
+    // get content now
+    window.getSelection().empty()
+    window.find(content)
+    if (document.getSelection()) {
+      const getContentSelector = node => {
+        const name = node.tagName.toLowerCase()
+        if (name === 'article' || name === 'section') {
+          return name
+        }
+        // bad
+        if (/^(ul|li|a|ol)$/.test(name)) {
+          return null
+        }
+        const CONTENTY = /content|article|post|body/
+        if (CONTENTY.test(node.id)) {
+          return `#${node.id}`
+        }
+        const cn = node.className.split(' ').find(x => CONTENTY.test(x))
+        if (cn) {
+          const selector = `${name}.${cn.trim()}`
+          // this should narrow it a bit
+          if (node.parentNode) {
+            return `${node.parentNode.tagName.toLowerCase()} > ${selector}`
+          }
+          return selector
+        }
+      }
+      const { anchorNode } = document.getSelection()
+      let contentSelector = null
+      current = anchorNode
+      tries = 0
+      while (current && !contentSelector && tries++ < 3) {
+        current = current.parentNode
+        if (!current || !current.tagName) continue
+        // if we found a bad node, try again
+        if (/^(H[1-6]|LI|A)$/.test(current.tagName)) {
+          window.find(content)
+          const nextNode = document.getSelection().anchorNode
+          if (!nextNode) break
+          current = current.parentNode
+        }
+        contentSelector = getContentSelector(current)
+      }
+      if (contentSelector) {
+        return { titleSelector, contentSelector }
+      }
+    }
   }
 
   textToSelectors = async (page, contents) => {
-    return await page.evaluate(({ title, content }) => {
-      let foundTitle = false
-      let tries = 0
-
-      let titleEl = null
-      let titleSelector = null
-      while (!foundTitle && tries++ < 3) {
-        window.find(title)
-        // select first class because it didn't work on any of my
-        // test cases with all of them
-        titleEl = document.getSelection().anchorNode.parentNode
-        if (titleEl.tagName[0] !== 'H') continue
-
-        titleSelector = titleEl.classList[0]
-          ? titleEl.classList[0].toString().trim()
-          : null
-      }
-
-      window.getSelection().empty()
-      window.find(content)
-      const contentParent = document.getSelection().anchorNode.parentNode
-        .parentNode
-      const contentSelector = contentParent.classList[0]
-        ? contentParent.classList[0].toString().trim()
-        : null
-
-      return (
-        contentSelector &&
-        titleSelector && { title: titleSelector, content: contentSelector }
-      )
-    }, contents)
+    return await page.evaluate(this.selectorFinder, contents)
   }
 
-  parse = async (page, url) => {
+  parseContents = async (page, url, options) => {
     let selectorResults = null
-
+    // if we have selectors
     if (this.selectors) {
-      selectorResults = await page.evaluate(classes => {
+      log.page(`Using selectors: ${JSON.stringify(this.selectors)}`)
+      selectorResults = await page.evaluate(selectors => {
         const titles = Array.from(
-          document.querySelectorAll('.' + classes.title)
+          document.querySelectorAll(selectors.titleSelector)
         )
         const content = Array.from(
-          document.querySelectorAll('.' + classes.content)
+          document.querySelectorAll(selectors.contentSelector)
         )
-          .filter(_ => _)
+          .filter(Boolean)
           .map(_ => _.innerText)
           .join('\n')
-
+        // dont allow index pages or untitled pages
         if (titles.length === 0 || titles.length > 1) {
           return null
         }
-
         return { title: titles[0].innerText, content }
       }, this.selectors)
-
       if (!selectorResults) {
-        log.crawl(
-          'skipping because ',
-          url,
-          'does not contain class .',
-          this.articleClasses
-        )
+        log.page(`skip: didn't find content with selectors`)
         return null
       }
     }
-
     const html = await page.evaluate(() => {
       // some kbs have error pages that are hidden in the dom
       Array.from(document.querySelectorAll('.hide, .hidden, .error')).forEach(
@@ -157,28 +208,70 @@ export default class Crawler {
       )
       return document.documentElement.outerHTML
     })
-
-    const result =
-      selectorResults ||
-      readabilityFromString(sanitizeHtml(html, { allowedTags: false }), {
-        href: url,
-      })
-
-    if (!result) return null
-
-    const md = await new Promise(res => {
-      und.convert(result.content, (err, md) => res(md))
-    })
-
-    if (result && !this.selectors) {
-      this.selectors = await this.textToSelectors(page, {
-        title: result.title.slice(0, 15),
-        content: md.slice(0, 30),
-      })
-      log.crawl('set classes to ' + JSON.stringify(this.selectors))
+    let result = selectorResults
+    if (!result) {
+      result = readabilityFromString(
+        sanitizeHtml(html, { allowedTags: false }),
+        {
+          href: url,
+        }
+      )
+      if (!result) {
+        log.page(`Readability didn't find anything`)
+        return null
+      }
     }
-
-    return { title: result.title, content: md }
+    let content
+    if (!result.content) {
+      log.page(`Readability didn't find any content`)
+    } else {
+      try {
+        content = await new Promise((resolve, reject) => {
+          markdown.convert(
+            result.content,
+            (err, md) => (err ? reject(err) : resolve(md))
+          )
+        })
+        if (content) {
+          log.page(`Got markdown: ${content.slice(0, 30)}...`)
+        }
+      } catch (err) {
+        log.page(`Error parsing markdown from content: ${err.message}`)
+      }
+      if (!content) {
+        content = sanitizeHtml(result.content, { allowedTags: [] })
+        if (content) {
+          log.page(`Sanitized for content: ${content.slice(0, 30)}...`)
+        }
+      }
+    }
+    if (!content) {
+      log.page(`No content, looks like a dud`)
+      return null
+    }
+    if (!options.disableStructureFinding && !this.selectors) {
+      try {
+        const contentString = sanitizeHtml(result.content, {
+          allowedTags: [],
+        }).trim()
+        const contentPs = contentString.split('\n')
+        const contentLastP = contentPs[contentPs.length - 1]
+        const contentLastSentence = content
+          .slice(Math.max(0, contentLastP.length - 30), contentLastP.length)
+          .trim()
+        console.log('contentLastSentence', contentLastSentence)
+        this.selectors = await this.textToSelectors(page, {
+          title: result.title.slice(0, 30),
+          content: removeMdPrefix(contentLastSentence),
+        })
+      } catch (err) {
+        log.page(`Error finding selectors: ${err.message}`)
+      }
+      if (this.selectors) {
+        log.crawl('Selectors: ' + JSON.stringify(this.selectors))
+      }
+    }
+    return { title: result.title, content }
   }
 
   selectorParse = async (page, options) => {
@@ -196,127 +289,173 @@ export default class Crawler {
     }, options)
   }
 
-  async writeFolder(path, pages) {
+  writeFolder = async (path, pages) => {
     pages.forEach(page => {
       writeFileSync(`${path}/${page.contents.title}.txt`, page.contents.content)
     })
     return true
   }
 
-  async start(entry: string, runOptions: Options = this.options) {
+  validContentType = async url => {
+    const res = await fetch(url, { method: 'HEAD' })
+    const contentType =
+      res.headers.get('content-type') || res.headers.get('Content-Type')
+    if (!contentType || !/text\/(html|xml|plain)/g.test(contentType)) {
+      log.page(`Bad content-type: ${res.headers.get('content-type')} ${url}`)
+      return false
+    }
+    return true
+  }
+
+  findLinks = async (page, { target, initialUrl, matchesDepth, entryUrl }) => {
+    const links = await page.evaluate(() => {
+      const val = Array.from(document.querySelectorAll('[href]')).map(
+        link => link.href
+      )
+      return val
+    })
+    log.page(`Raw links: ${links.length}`)
+    return uniq(
+      links
+        .filter(x => x !== null)
+        .map(cleanUrlHash)
+        .map(href => normalizeHref(target.url, href))
+    ).filter(link => {
+      const parsed = parse(link)
+      const noPrefix = s => s.replace(/www\./, '')
+      const isNotOriginalUrl = link !== initialUrl
+      return (
+        isNotOriginalUrl &&
+        matchesDepth(link) &&
+        noPrefix(parsed.host) === noPrefix(entryUrl.host)
+      )
+    })
+  }
+
+  start = async (entry: string, runOptions: Options = this.options) => {
     if (!entry) {
       throw new Error('No entry given!')
     }
-    this.shouldCrawl = true
+    this.count = 0
+    this.isRunning = true
+    this.cancelled = false
     log.crawl('Starting crawler')
     // merge options
     const options = {
+      puppeteerOptions: {
+        ignoreHTTPSErrors: true,
+        timeout: 10000, // 10 seconds
+      },
       ...this.options,
       ...runOptions,
     }
+    // options.queue for preset queue
+    this.db = new CrawlerDB({
+      queue: options.queue,
+      disableLinkFinding: options.disableLinkFinding,
+    })
+    // defaults
     const {
-      puppeteerOptions,
+      maxCores = MAX_CORES_DEFAULT,
       maxPages = Infinity,
       maxRadius = Infinity,
       // maxOffPathRadius, this would be really nice
-      depth,
+      depth = '/',
       filterUrlExtensions = FILTER_URL_EXTENSIONS,
     } = options
 
-    const matchPath = url => {
-      return parse(url).pathname.indexOf(depth) === 0
+    const matchesDepth = url => {
+      return parse(url).pathname && parse(url).pathname.indexOf(depth) === 0
     }
 
     const initialUrl = cleanUrlHash(entry)
     let target = { url: initialUrl, radius: 0 }
 
     if (!target.url) {
-      log.crawl('no url')
+      log.crawl(`no url: ${target.url}`)
       return
     }
 
     const entryUrl = parse(target.url)
     const fullMatchUrl = `${entryUrl.protocol}//${entryUrl.host}${depth}`
 
-    log.crawl('scoring closest to url:', fullMatchUrl)
+    log.crawl('Scoring closest to url:', fullMatchUrl)
     this.db.setScoringFn(url => urlSimilarity(fullMatchUrl, url))
 
-    const browser = await puppeteer.launch(puppeteerOptions)
-    // const page = await browser.newPage()
+    // used to check if done in while loop and after page crash
+    const isFinished = checkQueue => {
+      const isLoadingPage = loadingPage.indexOf(true) > -1
+      const hasMoreInQueue = this.db.pageQueue.length > 0
+      const hasFoundEnough = this.count >= maxPages
+      const queueEmpty = !isLoadingPage && !hasMoreInQueue
+      if (checkQueue) {
+        if (this.cancelled) log.crawl('isFinished => cancelled')
+        if (hasFoundEnough) log.crawl('isFinished => hasFoundEnough')
+        if (queueEmpty) log.crawl('isFinished => queueEmpty')
+      }
+      return this.cancelled || hasFoundEnough || (checkQueue && queueEmpty)
+    }
 
     const runTarget = async (target, page) => {
-      if (urlMatchesExtensions(target.url, filterUrlExtensions)) {
-        log.page(`Looks like an image, avoid ${target.url}`)
-        return null
-      } else if (target.radius >= maxRadius) {
-        log.page(
-          `Maximum radius reached, did not crawl ${target.url} with radius ${
-            target.radius
-          }`
-        )
-        return null
-      } else {
-        const isValidPath = matchPath(target.url)
-
-        if (!isValidPath) {
+      log.page(`now: ${target.url}`)
+      try {
+        if (urlMatchesExtensions(target.url, filterUrlExtensions)) {
+          log.page(`Looks like an image, avoid`)
+          return null
+        } else if (target.radius >= maxRadius) {
+          log.page(`Maximum radius reached. Radius: ${target.radius}`)
+          return null
+        } else if (!matchesDepth(target.url)) {
           log.page(`Path is not at same depth:`)
           log.page(`  ${parse(target.url).pathname}`)
           log.page(`  ${depth}`)
           return null
         }
-      }
-      // content-type whitelist
-      const res = await fetch(target.url, { method: 'HEAD' })
-      const contentType =
-        res.headers.get('content-type') || res.headers.get('Content-Type')
-
-      if (!contentType || !/text\/(html|xml)/g.test(contentType)) {
-        log.page(
-          `Bad content-type: ${res.headers.get('content-type')} ${target.url}`
-        )
-        return null
-      }
-
-      log.page(`Crawling ${target.url}`)
-      try {
+        // content-type whitelist
+        if (!await this.validContentType(target.url)) {
+          return null
+        }
         await page.goto(target.url, {
           waitUntil: 'domcontentloaded',
         })
-
-        const contents = await this.parse(page, target.url)
-
-        const links = await page.evaluate(() => {
-          const val = Array.from(document.querySelectorAll('[href]')).map(
-            link => link.href
-          )
-          return val
-        })
-
-        let outboundUrls = uniq(
-          links
-            .filter(x => x !== null)
-            .map(cleanUrlHash)
-            .map(href => normalizeHref(target.url, href))
-        )
-          .filter(x => x !== null)
-          .filter(link => {
-            const parsed = parse(link)
-            const noPrefix = s => s.replace(/www\./, '')
-            const isNotOriginalUrl = link !== initialUrl
-            return (
-              isNotOriginalUrl &&
-              noPrefix(parsed.host) === noPrefix(entryUrl.host)
-            )
+        if (this.cancelled) {
+          log.page(`Cancelled during page process`)
+          return null
+        }
+        const contents = await this.parseContents(page, target.url, options)
+        if (this.cancelled) {
+          log.page(`Cancelled during page process`)
+          return null
+        }
+        let outboundUrls
+        if (!options.disableLinkFinding) {
+          outboundUrls = await this.findLinks(page, {
+            target,
+            initialUrl,
+            matchesDepth,
+            entryUrl,
           })
-
-        log.page(`Found ${outboundUrls.length} urls`)
-        // this allows it to crawl pages that arent valid matches
-        // but could lead back to valid pages
-        // should have a flag to make stricter if desired
-        log.page(`Valid path ${target.url}`)
-
+          log.page(`Found urls: ${outboundUrls.length}`)
+        }
         // only count it if it finds goodies
         if (contents) {
+          log.page(
+            `Found title (${contents.title}) body of ${
+              contents.content.length
+            } length`
+          )
+        } else {
+          log.page(`No contents found`)
+        }
+        // store crawl results
+        return {
+          outboundUrls,
+          contents,
+          radius: ++target.radius,
+          url: target.url,
+        }
+      } catch (err) {
+        if (!isFinished()) {
           log.page(
             `Good contents. Total ${count}. Crawled ${
               contents.title
@@ -376,30 +515,98 @@ export default class Crawler {
             }
           })
         }
-      }
-      await sleep(20)
-
-      if (count >= maxPages) {
-        log.crawl(`Max pages reached! ${maxPages}`)
-        break
+        return null
       }
     }
 
-    log.crawl(`Crawler done, crawled ${count} pages`)
+    // if only running on 1 open 1 tab
+    const concurrentTabs = Math.min(maxCores, 7)
+    const startTime = +Date.now()
+    const loadingPage = range(concurrentTabs).map(() => false)
+    log.crawl(
+      `Using puppeteer options: ${JSON.stringify(options.puppeteerOptions)}`
+    )
+    const browser = await puppeteer.launch(options.puppeteerOptions)
+    const pages = await Promise.all(loadingPage.map(() => browser.newPage()))
+
+    // handlers for after loaded a page
+    const finishProcessing = tabIndex => {
+      return result => {
+        this.db.store(result)
+        if (result && result.contents) {
+          log.step('Downloaded', this.db.getValid().length, 'pages')
+          this.count++
+        }
+        loadingPage[tabIndex] = false
+      }
+    }
+
+    // do first one
+    await runTarget(target, pages[0]).then(finishProcessing(0))
+
+    const shouldCrawlMoreThanOne = maxPages > 1
+    // start rest
+    if (shouldCrawlMoreThanOne) {
+      while (!isFinished(true)) {
+        // throttle
+        await sleep(20)
+        // may need to wait for a tab to clear up
+        const tabIndex = loadingPage.indexOf(false)
+        if (tabIndex === -1) {
+          continue
+        }
+        const target = this.db.shiftUrl()
+        if (!target) {
+          // could be processing a page that will fill queue once done
+          continue
+        }
+        loadingPage[tabIndex] = true
+        runTarget(target, pages[tabIndex]).then(finishProcessing(tabIndex))
+      }
+    }
+
+    log.crawl(`Crawler done, crawled ${this.count} pages`)
     log.crawl(`took ${(+Date.now() - startTime) / 1000} seconds`)
-
-    // await this.writeFolder('./out', this.db.getValid())
     this.isRunning = false
-
-    // return all items stored
-    if (this.shouldCrawl) {
-      return this.db.getAll()
-    } else {
-      return []
+    // close pages
+    await browser.close()
+    // resolve any cancels
+    if (this.promiseEnds.length) {
+      this.promiseEnds.forEach(resolve => resolve())
+      this.promiseEnds = []
     }
+    // return empty on cancel
+    if (this.cancelled) {
+      return null
+    }
+    // return results
+    return this.db.getValid()
   }
 
-  stop() {
-    this.shouldCrawl = false
+  getStatus = ({ includeResults = false } = {}) => {
+    const res = { count: this.count, isRunning: this.isRunning }
+    if (includeResults && this.db) {
+      const results = this.db.getValid()
+      // only show results if we have more than 0
+      if (results && results.length) {
+        res.results = results
+      }
+    }
+    return res
+  }
+
+  // returns true if it was running
+  stop = () => {
+    this.cancelled = true
+    if (!this.isRunning) {
+      return Promise.resolve(false)
+    }
+    return new Promise(resolve => {
+      this.promiseEnds.push(() => resolve(true))
+      // failsafe
+      setTimeout(() => {
+        resolve(false)
+      }, 5)
+    })
   }
 }

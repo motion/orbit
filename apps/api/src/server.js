@@ -8,14 +8,12 @@ import * as Constants from '~/constants'
 import OAuth from './server/oauth'
 import OAuthStrategies from './server/oauth.strategies'
 import Passport from 'passport'
-import expressPouch from 'express-pouchdb'
-import Path from 'path'
 import Crawler from '@mcro/crawler'
 import debug from 'debug'
 
-const log = debug('api')
+const { SERVER_PORT } = Constants
 
-const port = Constants.SERVER_PORT
+const log = debug('api')
 
 export default class Server {
   login = null
@@ -36,7 +34,7 @@ export default class Server {
     })
 
     const app = express()
-    app.set('port', port)
+    app.set('port', SERVER_PORT)
 
     if (Constants.IS_PROD) {
       app.use(logger('dev'))
@@ -47,19 +45,18 @@ export default class Server {
     app.use(this.cors())
 
     // ROUTES
-    this.app.use(bodyParser.json({ limit: '500mb' }))
-    this.app.use(bodyParser.urlencoded({ limit: '500mb', extended: false }))
+    this.app.use(bodyParser.json({ limit: '2048mb' }))
+    this.app.use(bodyParser.urlencoded({ limit: '2048mb', extended: true }))
     this.setupCrawler()
     this.setupSearch()
     this.setupCredPass()
     this.setupPassportRoutes()
-    // this.setupPouch()
     this.setupProxy()
   }
 
   start() {
-    http.createServer(this.app).listen(port)
-    return port
+    http.createServer(this.app).listen(SERVER_PORT)
+    return SERVER_PORT
   }
 
   dispose() {
@@ -89,41 +86,76 @@ export default class Server {
   }
 
   setupCrawler() {
-    const crawlerIndex = require.resolve('@mcro/crawler')
-    const crawlerDist = Path.join(crawlerIndex, '..', 'build', 'js')
-    log('setting up crawler', crawlerDist)
-    this.app.use('/crawler', express.static(crawlerDist))
-
-    const crawler = new Crawler()
-
-    this.app.post('/crawler/start', async (req, res) => {
-      log(`Got a request for crawl`)
+    this.app.post('/crawler/single', async (req, res) => {
       const { options } = req.body
       if (options) {
-        log('start crawl')
-        if (crawler.isRunning) {
-          log('stopping previous crawler')
-          crawler.stop()
+        const crawler = new Crawler()
+        const results = await crawler.start(options.entry, {
+          maxPages: 1,
+        })
+        if (results && results.length) {
+          res.json({ result: results[0] })
+        } else {
+          res.json({ result: null })
         }
-        const results = await crawler.start(options.entry, options)
-        log(`crawl results: ${results.length} results`)
+      } else {
+        res.sendStatus(500)
+      }
+    })
+
+    this.app.post('/crawler/exact', async (req, res) => {
+      const { options } = req.body
+      if (options && options.entries && options.entries.length) {
+        const crawler = new Crawler()
+        const [entry, ...queue] = options.entries
+        const results = await crawler.start(entry, {
+          disableLinkFinding: true,
+          disableStructureFinding: true,
+          queue,
+        })
         res.json({ results })
+      } else {
+        console.log('no options.entries')
+        res.sendStatus(500)
+      }
+    })
+
+    const crawler = new Crawler()
+    let results = null
+
+    this.app.post('/crawler/start', async (req, res) => {
+      log(`POST /crawler/start`)
+      const { options } = req.body
+      if (options) {
+        await crawler.stop()
+        results = null
+        crawler.start(options.entry, options).then(vals => {
+          results = vals
+        })
+        // allow crawler to reset
+        res.sendStatus(200)
       } else {
         log('No options sent')
         res.sendStatus(500)
       }
     })
 
+    this.app.get('/crawler/results', (req, res) => {
+      log(`crawl results: ${(results || []).length} results`)
+      res.json(results || [])
+    })
+
     this.app.post('/crawler/stop', async (req, res) => {
-      let success = false
-      if (crawler.isRunning) {
-        log('Cancelling crawl')
-        crawler.stop()
-        success = true
+      log(`POST /crawler/stop`)
+      if (await crawler.stop()) {
+        res.json({ success: true })
       } else {
-        log(`No crawler running`)
+        res.json({ success: false })
       }
-      res.json({ success })
+    })
+
+    this.app.get('/crawler/status', async (req, res) => {
+      res.json({ status: crawler.getStatus({ includeResults: true }) })
     })
   }
 
@@ -177,33 +209,6 @@ export default class Server {
         router,
       })
     )
-  }
-
-  setupPouch() {
-    // const dbPaths = Object.keys(Models)
-    //   .map(model => Models[model].title)
-    //   .map(name => `/db/${name}`)
-
-    // rewrite rxdb paths to non-rxdb :)
-    this.app.use(
-      '/db',
-      proxy({
-        target: '/db2',
-        pathRewrite: path => {
-          if (path === '/db' || path === '/db/') {
-            return '/'
-          }
-          const newPath = path.replace(
-            /\/db\/(.*)([\/\?].*)?$/g,
-            '/username-rxdb-0-$1$2'
-          )
-          return newPath
-        },
-      })
-    )
-
-    // pouch routes
-    this.app.use('/db2', expressPouch(this.pouch, { inMemoryConfig: true }))
   }
 
   setupPassportRoutes() {

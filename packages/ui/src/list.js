@@ -5,9 +5,10 @@ import ListItem from './listItem'
 import { List as VirtualList } from 'react-virtualized'
 import parentSize from '~/helpers/parentSize'
 import type { Props as ItemProps } from './listItem'
-import Surface from './surface'
+import Separator from './separator'
 import { isArrayLike } from 'mobx'
 import { CellMeasurer, CellMeasurerCache } from 'react-virtualized'
+import { throttle } from 'lodash'
 
 const idFn = _ => _
 
@@ -111,7 +112,6 @@ class List extends React.PureComponent<Props, { selected: number }> {
     }
 
     const totalItems = this.getTotalItems(nextProps)
-
     const hasNewItems =
       totalItems !== this.totalItems ||
       this.props.itemsKey !== nextProps.itemsKey
@@ -127,6 +127,7 @@ class List extends React.PureComponent<Props, { selected: number }> {
           nextProps.parentHeight.width !== parentHeight.width)
       ) {
         nextProps.parentSize.measure()
+        this.measure()
       }
     }
 
@@ -141,7 +142,11 @@ class List extends React.PureComponent<Props, { selected: number }> {
       this.updateChildren()
     }
 
-    if (nextProps.virtualized && nextProps.virtualized.measure) {
+    if (
+      nextProps.virtualized &&
+      nextProps.virtualized.measure &&
+      !(this.props.virtualized && this.props.virtualized.measure)
+    ) {
       this.measure()
     }
   }
@@ -159,6 +164,7 @@ class List extends React.PureComponent<Props, { selected: number }> {
       row = index === 0 ? 0 : this.realIndex[index] || index + this.totalGroups
     }
     this.virtualListRef.scrollToRow(row)
+    this.lastScrolledToRow = row
   }
 
   focus() {
@@ -169,11 +175,12 @@ class List extends React.PureComponent<Props, { selected: number }> {
     // this.virtualListRef.focus()
   }
 
-  measure = () => {
+  measure = throttle(() => {
     if (this.virtualListRef) {
       this.virtualListRef.recomputeRowHeights(0)
+      this.scrollToRow(this.lastScrolledToRow || 0)
     }
-  }
+  }, 6)
 
   gatherRefs = (index: number) => (ref: ?HTMLElement) => {
     if (ref) {
@@ -268,6 +275,7 @@ class List extends React.PureComponent<Props, { selected: number }> {
       isSelected,
       selected,
       segmented,
+      highlight,
     } = this.props
     const getRef = this.gatherRefs(index)
     const props = {
@@ -278,6 +286,8 @@ class List extends React.PureComponent<Props, { selected: number }> {
             size,
             getRef,
             segmented,
+            highlight,
+            index,
             isFirstElement: index === 0,
             isLastElement: index === this.totalItems - 1,
           }
@@ -413,14 +423,14 @@ class List extends React.PureComponent<Props, { selected: number }> {
 
       for (const { index, name } of groups) {
         let child = (extraProps: Object) => (
-          <separator
+          <Separator
             $firstSeparator={index === 0}
             key={name}
             {...separatorProps}
             {...extraProps}
           >
             {name}
-          </separator>
+          </Separator>
         )
         if (!virtualized) {
           child = child()
@@ -470,18 +480,13 @@ class List extends React.PureComponent<Props, { selected: number }> {
     }
     const { totalItems, totalGroups, realIndex } = this
     return (
-      <Surface
-        $list
+      <list
         $visible={!virtualized || this.state.started}
-        flexFlow={horizontal ? 'row' : null}
-        tagName="list"
-        align="stretch"
-        height={height}
-        width={width}
-        background="transparent"
         style={{
+          height: height || virtualized ? '100%' : 'auto',
+          width,
+          flexFlow: horizontal ? 'row' : null,
           overflowY: scrollable ? 'scroll' : 'auto',
-          height: virtualized ? '100%' : 'auto',
           ...style,
         }}
         {...attach}
@@ -502,30 +507,18 @@ class List extends React.PureComponent<Props, { selected: number }> {
           {...virtualized}
         />
         {!virtualized && children}
-      </Surface>
+      </list>
     )
   }
 
   static style = {
     list: {
+      alignItems: 'stretch',
       overflowX: 'visible',
       visibility: 'hidden',
     },
     visible: {
       visibility: 'visible',
-    },
-    separator: {
-      fontSize: 14,
-      fontWeight: 500,
-      padding: [12, 10, 3],
-      justifyContent: 'center',
-      // background: [0, 0, 0, 0.02],
-      borderBottom: [1, [0, 0, 0, 0.2]],
-      textAlign: 'left',
-      opacity: 0.4,
-      pointerEvents: 'none',
-      userSelect: 'none',
-      position: 'relative',
     },
     firstSeparator: {
       paddingTop: 10,

@@ -143,6 +143,7 @@ export const CAMEL_TO_SNAKE = {
   transitionProperty: 'transition-property',
   transitionTimingFunction: 'transition-timing-function',
   unicodeBidi: 'unicode-bidi',
+  userSelect: 'user-select',
   verticalAlign: 'vertical-align',
   whiteSpace: 'white-space',
   wordBreak: 'word-break',

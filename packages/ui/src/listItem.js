@@ -34,6 +34,7 @@ export type Props = {
   fontWeight?: number | string,
   fontSize?: number | string,
   primaryProps?: Object,
+  index?: number,
 }
 
 @view
@@ -50,7 +51,7 @@ export default class ListItem extends React.Component<Props> {
       color: '#fff',
       scale: 1,
       blur: 70,
-      opacity: 0.2,
+      opacity: 0.15,
       show: false,
       resist: 60,
       zIndex: -1,
@@ -93,6 +94,7 @@ export default class ListItem extends React.Component<Props> {
       row,
       segmented,
       secondary,
+      secondaryProps,
       size,
       style,
       childrenEllipse,
@@ -108,6 +110,7 @@ export default class ListItem extends React.Component<Props> {
       fontWeight,
       primaryProps,
       fontSize,
+      index,
       ...props
     } = this.props
     const radiusProps = segmented
@@ -120,8 +123,10 @@ export default class ListItem extends React.Component<Props> {
           borderRadius,
         }
 
+    // reactive highlight
+    // TODO: make this not rely on listitem being mobx
     const highlightValue =
-      typeof highlight === 'function' ? highlight() : highlight
+      typeof highlight === 'function' ? highlight(index) : highlight
 
     let children = _children
     // allows for reactive children
@@ -146,7 +151,7 @@ export default class ListItem extends React.Component<Props> {
         glowProps={glowProps}
         sizeIcon={1.5}
         iconProps={{
-          alignSelf: 'flex-start',
+          alignSelf: children ? 'flex-start' : 'center',
           opacity: 0.6,
           ...iconProps,
         }}
@@ -161,11 +166,11 @@ export default class ListItem extends React.Component<Props> {
         </before>
         <content $overflowHidden={after || before}>
           <above if={primary || secondary || date}>
-            <prop if={primary || secondary} $col>
+            <prop if={primary || secondary}>
               <Text
                 $text
                 $primaryText
-                fontSize={fontSize || 'inherit'}
+                fontSize={fontSize}
                 size={size}
                 color="inherit"
                 editable={editable}
@@ -181,8 +186,9 @@ export default class ListItem extends React.Component<Props> {
                 if={secondary || date}
                 $text
                 size={size * 0.85}
-                opacity={0.7}
+                alpha={0.7}
                 ellipse
+                {...secondaryProps}
               >
                 <Date $date if={date}>
                   {date}
@@ -196,8 +202,7 @@ export default class ListItem extends React.Component<Props> {
           <Text
             if={areChildrenString}
             size={size * 0.9}
-            opacity={0.6}
-            padding={[3, 0]}
+            alpha={0.6}
             ellipse={childrenEllipse}
             {...childrenProps}
           >
@@ -219,6 +224,7 @@ export default class ListItem extends React.Component<Props> {
     content: {
       flex: 1,
       maxWidth: '100%',
+      justifyContent: 'center',
     },
     overflowHidden: {
       overflow: 'hidden',
@@ -239,7 +245,8 @@ export default class ListItem extends React.Component<Props> {
       overflow: 'hidden',
       maxWidth: '100%',
       fontWeight: 200,
-      padding: [0, 10, 0, 0],
+      flexDirection: 'column',
+      alignItems: 'flex-start',
     },
     middot: {
       display: 'inline',
@@ -255,10 +262,6 @@ export default class ListItem extends React.Component<Props> {
       userSelect: 'none',
       fontWeight: 600,
       opacity: 0.8,
-    },
-    col: {
-      flexDirection: 'column',
-      alignItems: 'flex-start',
     },
     flex: {
       flexGrow: 1,

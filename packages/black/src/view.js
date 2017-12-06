@@ -71,7 +71,7 @@ function createViewDecorator(): ViewDecorator {
     reactRenderArgs,
     mobx && observer,
     // gloss after mobx
-    glossPlugin,
+    ui && glossPlugin,
     magic && automagical,
     [storeProvidable, storeOptions],
     !ui && emitsMount,
@@ -95,18 +95,21 @@ function createViewDecorator(): ViewDecorator {
   }
 
   // pass on emitter
+  view.emitter = base.emitter
   view.on = base.on
   view.off = base.off
   view.emit = base.emit
 
   // other decorators
   view.ui = decor(decorations({ ui: true }))
+  view.electron = decor(decorations({ mobx: true, ui: false }))
 
   const providable = decor([[storeProvidable, storeOptions]])
   view.provide = stores => providable({ stores, context: true })
   view.provide.on = providable.on
 
   view.attach = (...names) => decor([[attach, { names }]])
+
   return view
 }
 

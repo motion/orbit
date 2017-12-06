@@ -4,11 +4,11 @@ import * as View from '~/views'
 import * as UI from '@mcro/ui'
 
 export default props => (
-  <UI.Theme name="dark">
+  <UI.Theme name="light">
     <View.Section
       space
       css={{
-        background: `linear-gradient(to left, #7A52B9, #8D6BC3)`,
+        background: `#fff`,
         padding: [200, 0, 100],
       }}
     >
@@ -33,9 +33,7 @@ export default props => (
           fontWeight={200}
           color={UI.color(Constants.colorSecondary).lighten(0.5)}
         >
-          We're a small team thats been researching and building tools for
-          better team communication and collaboration, dynamic app generation,
-          and innovative app development.
+          Teamwork. It's how teams work.
         </View.Text>
         <View.Text size={3}>
           Orbit is going into private beta in December.

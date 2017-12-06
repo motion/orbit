@@ -48,7 +48,7 @@ module.exports = function(context, givenOpts) {
             // this could avoid building es6 altogether, but lets fix stack before testing
             // modules: process.env.MODULES ? false : true,
             useBuiltIns: true,
-            targets: {
+            targets: opts.targets || {
               node: opts.nodeTarget || 'current',
             },
             exclude: isAsync

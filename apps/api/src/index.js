@@ -1,6 +1,11 @@
-import 'source-map-support/register'
 import 'isomorphic-fetch'
 import cleanStack from 'clean-stacktrace'
+
+const IS_DEV = process.env.NODE_ENV === 'development'
+
+if (IS_DEV) {
+  require('source-map-support/register')
+}
 
 if (!process.env.HAS_BABEL_POLYFILL) {
   require('babel-polyfill')
@@ -34,7 +39,7 @@ process.title = 'orbit-api'
 
 const API = require('./api').default
 
-export default async function run() {
+export async function run() {
   const Api = new API()
   try {
     await Api.start()

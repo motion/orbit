@@ -1,13 +1,7 @@
 import * as Kontur from 'kontur'
 
-const setProp = (target, prop) => {
-  const next = new target()
-  next.s[prop] = true
-  return next
-}
-
-const prox = obj =>
-  new Proxy(obj, {
+function proxyProperty(obj) {
+  return new Proxy(obj, {
     get(target, property) {
       switch (property) {
         case 'unique':
@@ -17,12 +11,26 @@ const prox = obj =>
         case 'primary':
           return setProp(target, 'primary')
       }
+      if (property === 'optional') {
+        return proxyProperty(target[property])
+      }
       return target[property]
     },
   })
+}
+
+function setProp(Target, prop) {
+  if (!Target.s) {
+    const next = new Target()
+    next.s[prop] = true
+    return proxyProperty(next)
+  }
+  Target.s[prop] = true
+  return proxyProperty(Target)
+}
 
 const Properties = Object.keys(Kontur).reduce(
-  (acc, cur) => ({ ...acc, [cur]: prox(Kontur[cur]) }),
+  (acc, cur) => ({ ...acc, [cur]: proxyProperty(Kontur[cur]) }),
   {}
 )
 

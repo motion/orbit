@@ -9,7 +9,8 @@
         [
           "@mcro/preset-motion",
           {
-            "nodeTarget": 8
+            "nodeTarget": 8,
+            "disable": ["@mcro/hmr", "@mcro/hmr-view"]
           }
         ]
       ]

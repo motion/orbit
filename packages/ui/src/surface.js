@@ -49,7 +49,6 @@ export type Props = {
   height?: number,
   highlight?: boolean,
   hoverable?: boolean,
-  hoverColor?: Color,
   hovered?: boolean,
   icon?: React.Element<any> | string,
   iconAfter?: boolean,
@@ -92,7 +91,8 @@ export type Props = {
 }
 
 const ICON_SCALE = 12
-const ICON_PAD = 10
+// TODO: make this dynamic with size (move into theme)
+const ICON_PAD = 8
 const LINE_HEIGHT = 30
 const DEFAULT_GLOW_COLOR = [255, 255, 255]
 const BORDER_RADIUS_SIDES = [
@@ -137,6 +137,7 @@ export default class Surface extends React.PureComponent<Props> {
       after,
       align,
       alignSelf,
+      alpha,
       background,
       badge,
       badgeProps,
@@ -161,6 +162,7 @@ export default class Surface extends React.PureComponent<Props> {
       clickable,
       color,
       dim,
+      dimmed,
       disabled,
       elementProps,
       elevation,
@@ -179,8 +181,6 @@ export default class Surface extends React.PureComponent<Props> {
       highlightColor,
       hover,
       hoverable,
-      hoverBackground,
-      hoverColor,
       hovered,
       icon,
       iconAfter,
@@ -241,12 +241,11 @@ export default class Surface extends React.PureComponent<Props> {
       _borderRightRadius || themeValues.borderRadius.borderRightRadius
 
     if (typeof borderLeftRadius === 'undefined') {
-      borderLeftRadius = themeValues.radius
-      borderRightRadius = themeValues.radius
+      borderLeftRadius = themeValues.borderRadiusSize
+      borderRightRadius = themeValues.borderRadiusSize
     }
 
-    const glowColor =
-      (this.theme && themeValues.color.lighten(0.2)) || DEFAULT_GLOW_COLOR
+    const glowColor = (this.theme && themeValues.color) || DEFAULT_GLOW_COLOR
 
     const contents = [
       <Glint
@@ -273,10 +272,10 @@ export default class Surface extends React.PureComponent<Props> {
       />,
       <HoverGlow
         key={4}
-        if={glow && !active && !disabled}
+        if={glow && !dimmed && !disabled}
         full
         scale={1.1}
-        show
+        show={hovered}
         color={glowColor}
         opacity={0.35}
         borderLeftRadius={borderLeftRadius - 1}
@@ -346,7 +345,6 @@ export default class Surface extends React.PureComponent<Props> {
 
   static style = {
     surface: {
-      lineHeight: '1rem',
       position: 'relative',
     },
     element: {
@@ -356,10 +354,12 @@ export default class Surface extends React.PureComponent<Props> {
       height: '100%',
       flex: 1,
       color: 'inherit',
+      marginBottom: -0.5,
     },
     icon: {
       pointerEvents: 'none',
       height: '1.4rem',
+      marginBottom: -0.5,
     },
     hasIconBefore: {
       // this adjusts for height
@@ -388,7 +388,7 @@ export default class Surface extends React.PureComponent<Props> {
     borderRadius: 1000,
   }
 
-  static disabledStyle = {
+  static dimmedStyle = {
     opacity: 0.2,
     // pointerEvents: 'none',
   }
@@ -418,11 +418,14 @@ export default class Surface extends React.PureComponent<Props> {
       (props.highlight && 'highlight') || (props.active && 'active') || 'base'
 
     // colors
-    const color = $(
+    let color = $(
       props.color ||
         (props.highlight && props.highlightColor) ||
         theme[STATE].color
     )
+    if (typeof props.alpha === 'number') {
+      color = color.alpha(props.alpha)
+    }
     const iconColor = props.iconColor || color
 
     // background
@@ -446,21 +449,36 @@ export default class Surface extends React.PureComponent<Props> {
     if (colorfulBg && background && !background.model) {
       background = $(background)
     }
+    if (typeof props.backgroundAlpha === 'number') {
+      background = background.alpha(props.backgroundAlpha)
+    }
 
-    const hoverBackground =
+    let hoverBackground =
       !props.highlight &&
-      (props.hoverBackground === true
+      (props.hover && props.hover.background === true
         ? theme.hover.background
-        : props.hoverBackground ||
+        : (props.hover && props.hover.background) ||
           theme.hover.background ||
           (colorfulBg ? background.lighten(0.5) : background))
+    if (
+      hoverBackground &&
+      props.hover &&
+      typeof props.hover.backgroundAlpha === 'number'
+    ) {
+      hoverBackground = hoverColor.alpha(props.hover.backgroundAlpha)
+    }
 
     const borderColor = $(
       props.borderColor || theme[STATE].borderColor || 'transparent'
     )
     let hoverColor = $(
-      props.hoverColor || theme[STATE].color.lighten(0.2) || props.color
+      (props.hover && props.hover.color) ||
+        theme[STATE].color.lighten(0.2) ||
+        props.color
     )
+    if (props.hover && typeof props.hover.alpha === 'number') {
+      hoverColor = hoverColor.alpha(props.hover.alpha)
+    }
 
     const hoverBorderColor =
       props.hoverBorderColor ||
@@ -524,6 +542,9 @@ export default class Surface extends React.PureComponent<Props> {
       // always add hidden for things with radius
       borderRadius.overflow = props.overflow || 'hidden'
     }
+    if (props.debug) {
+      console.log(borderRadius)
+    }
 
     // circular
     const circularStyles = props.circular && {
@@ -541,9 +562,7 @@ export default class Surface extends React.PureComponent<Props> {
 
     // state styles
     const hoverStyle = (props.hover ||
-      (!props.chromeless &&
-        !props.disabled &&
-        (props.hoverable || props.hoverBackground))) && {
+      (!props.chromeless && !props.disabled && props.hoverable)) && {
       ...theme.hover,
       color: hoverColor,
       borderColor: hoverBorderColor,
@@ -570,7 +589,8 @@ export default class Surface extends React.PureComponent<Props> {
     }
 
     const iconSize =
-      props.iconSize || Math.round(size * ICON_SCALE * (props.sizeIcon || 1))
+      props.iconSize ||
+      Math.round(size * ICON_SCALE * (props.sizeIcon || 1) * 100) / 100
 
     // TODO figure out better pattern for this
     self.themeValues = {
@@ -607,10 +627,10 @@ export default class Surface extends React.PureComponent<Props> {
         flexFlow: props.noElement ? 'column' : flexFlow,
         fontSize: props.fontSize,
         fontWeight: props.fontWeight,
-        lineHeight: props.lineHeight || 'inherit',
-        justifyContent: props.justify,
+        lineHeight: props.lineHeight,
+        justifyContent: props.justify || props.justifyContent,
         maxWidth: `calc(100% ${iconPad})`,
-        maxHeight: '100%',
+        // maxHeight: '100%',
         textAlign: props.textAlign,
       },
       wrap: undoPadding,
@@ -639,8 +659,9 @@ export default class Surface extends React.PureComponent<Props> {
         borderColor,
         background,
         boxShadow,
+        fontWeight: props.fontWeight,
         justifyContent: props.justify,
-        alignItems: props.align,
+        alignItems: props.align || props.alignItems,
         alignSelf: props.alignSelf,
         flexFlow,
         ...borderRadius,
@@ -678,7 +699,7 @@ export default class Surface extends React.PureComponent<Props> {
         }),
         ...(props.hovered && hoverStyle),
         ...(props.inline && self.constructor.inlineStyle),
-        ...(props.disabled && self.constructor.disabledStyle),
+        ...(props.dimmed && self.constructor.dimmedStyle),
         ...(props.dim && self.constructor.dimStyle),
         ...(props.spaced && self.constructor.spacedStyle),
         ...chromelessStyle,

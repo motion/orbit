@@ -55,8 +55,8 @@ ensure-dep "puma-dev" -- install-puma-dev &
 
 wait
 
-echo "3001 > ~/.puma-dev/jot"
-echo 3001 > ~/.puma-dev/jot
+echo "3001 > ~/.puma-dev/orbit"
+echo 3001 > ~/.puma-dev/orbit
 
 yarn install
 
@@ -71,6 +71,7 @@ function compile-root-modules() {
     --scope @mcro/hmr \
     --scope @mcro/hmr-view \
     --scope @mcro/preset-motion \
+    --scope @mcro/builder \
       -- \
         BABEL_ENV=es6 babel src --out-dir es6 -s true
 }
@@ -92,6 +93,8 @@ function link-root-modules() {
 # internal tools
 ensure-dir ./packages/gloss/es6 -- compile-root-modules
 ensure-symlink ./node_modules/@mcro/gloss -- link-root-modules
+ensure-dir ./packages/gloss/lib -- build
 # ensure-symlink ./packages/gloss/buildconfig -- link-buildconfigs
 
-echo " done!"
+echo ""
+echo "done! be sure to run build --watch before running stuff"

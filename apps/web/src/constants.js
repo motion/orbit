@@ -2,21 +2,35 @@
 // export constants from @mcro/black
 import { Constants } from '@mcro/black'
 
+export const IS_ELECTRON = Constants.IS_ELECTRON
+export const IS_PROD =
+  process.env.NODE_ENV === 'production' || process.env.IS_PROD
+
 if (process.env.IS_PROD) {
   console.log('IS_PROD!')
 }
 
 export const VERSION = require('../package.json').version
 
+export const ORA_BG = [10, 10, 10, 0.88]
+export const ORA_BG_MAIN_OPAQUE = [60, 60, 60]
+export const ORA_BG_MAIN = [...ORA_BG_MAIN_OPAQUE, 0.96]
 export const ORA_WIDTH = 300
-export const ORA_HEIGHT = 700
+export const ORA_HEIGHT = 535
+export const ORA_HEADER_HEIGHT = 40
+export const ORA_HEADER_HEIGHT_FULL = 46
+export const ACTION_BAR_HEIGHT = 40
+export const HEADER_HEIGHT = 36
+export const TRAY_WIDTH = 400
+export const TRAY_HEIGHT = 500
 
-export const IS_ELECTRON = Constants.IS_ELECTRON
-export const IS_PROD =
-  process.env.NODE_ENV === 'production' || process.env.IS_PROD
+export const IN_TRAY =
+  IS_ELECTRON && (window.location + '').indexOf('?inTray') !== -1
 
 const protocol = `${window.location.protocol}//`
-export const API_HOST = `app.seemirai.com:3001`
+export const API_HOST = IS_PROD
+  ? `app.seemirai.com:3009`
+  : `app.seemirai.com:3001`
 export const API_URL = `${protocol}${API_HOST}`
 export const COUCH_HOST = API_HOST
 export const COUCH_URL = `${protocol}${COUCH_HOST}/couch`
@@ -26,14 +40,6 @@ export const DB_CONFIG = {
   password: 'password',
   remoteUrl: COUCH_URL,
 }
-
-export const HEADER_HEIGHT = 36
-
-export const IN_TRAY =
-  IS_ELECTRON && (window.location + '').indexOf('?inTray') !== -1
-
-export const TRAY_WIDTH = 400
-export const TRAY_HEIGHT = 500
 
 export const IS_BAR = window.location.pathname === '/'
 

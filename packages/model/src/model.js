@@ -143,7 +143,7 @@ export default class Model {
       primaryPath: '_id',
       disableKeyCompression: true,
       ...this.defaultSchema,
-      ...cloneDeep(this.props), // cloneDeep fixes bug when re-using a model (compiling twice)
+      ...cloneDeep(this.schemaProps), // cloneDeep fixes bug when re-using a model (compiling twice)
       title: this.settings.database,
       version: this.settings.version || 0,
     }
@@ -161,7 +161,7 @@ export default class Model {
     return this._collection.pouch
   }
 
-  get props(): Object {
+  get schemaProps(): Object {
     const { timestamps, ...props } = this.constructor.props
     const result = compile(cloneDeep(props))
     if (timestamps) {

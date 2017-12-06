@@ -1,37 +1,36 @@
-import React from 'react'
-import { view } from '@mcro/black'
-import { CurrentUser } from '~/app'
+import * as React from 'react'
+import passportLink from '~/helpers/passportLink'
+import r2 from '@mcro/r2'
+import * as Constants from '~/constants'
 
 const service = (window.location + '').split('service=')[1]
 
-@view({
-  store: class SettingsStore {
-    link = async service => {
-      const clearId = setInterval(async () => {
-        if (CurrentUser.user) {
-          clearInterval(clearId)
-          await CurrentUser.link(service)
-          // setTimeout(() => {
-          //   window.close()
-          // }, 100)
-        }
-      }, 200)
-    }
-  },
-})
-export default class SettingsPage {
-  componentWillMount() {
-    //this.props.store.link(service)
-  }
-
-  render({ store }) {
-    return (
-      <h5 css={{ padding: 30 }}>
-        loading {service} integration{' '}
-        <button onClick={() => store.link(service)}>link</button>
-      </h5>
-    )
-  }
-
-  static style = {}
+async function link() {
+  const info = await passportLink(`${Constants.API_URL}/auth/${service}`)
+  await r2.post(`${Constants.API_URL}/setCreds`, {
+    json: {
+      [service]: {
+        ...info,
+        updatedAt: Date.now(),
+      },
+    },
+  })
 }
+
+export default () => (
+  <div
+    css={{
+      width: '100%',
+      height: '100%',
+      alignitems: 'center',
+      justifyContent: 'center',
+      background: 'green',
+      color: 'white',
+      fontSize: 100,
+    }}
+    id="link"
+    onClick={link}
+  >
+    link {service}
+  </div>
+)

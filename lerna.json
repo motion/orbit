@@ -9,7 +9,6 @@
       "nohoist": [
         "@researchgate/react-intersection-observer",
         "bindings",
-        "osx-mouse",
         "ref",
         "puppeteer",
         "color-convert",
@@ -38,6 +37,7 @@
         "react-tilt",
         "react-native",
         "sb-event-kit",
+        "deep-extend",
         "electron",
         "electron-react-devtools",
         "react-hotkeys",

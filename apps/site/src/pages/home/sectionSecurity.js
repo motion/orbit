@@ -2,53 +2,35 @@ import * as React from 'react'
 import * as View from '~/views'
 import * as UI from '@mcro/ui'
 
-const background = '#ffeb72'
+const background = '#ffd645'
 const bgLight = UI.color(background) //.lighten(0.15)
 const colorLight = bgLight.lighten(0.05) //.lighten(0.15)
 const colorDark = bgLight.darken(0.75)
 
 export default props => (
   <UI.Theme name="light">
-    <View.Section css={{ background, zIndex: 100000, padding: [100, 0] }}>
-      <slant
+    <View.Section
+      css={{
+        background,
+        zIndex: 100000,
+        padding: [140, 0],
+        boxShadow: [[0, 0, 20, [0, 0, 0, 0.1]]],
+        width: '105%',
+        margin: [-50, '-2.5%'],
+        overflow: 'visible',
+        transform: {
+          rotate: '-2deg',
+        },
+      }}
+    >
+      <View.SectionContent
         css={{
-          position: 'absolute',
-          top: -50,
-          background,
-          left: -300,
-          right: -300,
-          height: 100,
-          zIndex: 1200000,
-          boxShadow: [[0, -10, 20, [0, 0, 0, 0.05]]],
+          paddingRight: 400,
           transform: {
-            rotate: '-1deg',
+            rotate: '2deg',
           },
         }}
-      />
-      <bottomSlant
-        css={{
-          position: 'absolute',
-          bottom: -20,
-          background: bgLight,
-          left: -300,
-          right: -300,
-          height: 100,
-          zIndex: 1200000,
-          boxShadow: [[0, 20, 20, [0, 0, 0, 0.025]]],
-          transform: {
-            rotate: '-1deg',
-          },
-        }}
-      />
-
-      <bg
-        $$fullscreen
-        css={{
-          background: `linear-gradient(${background}, ${bgLight})`,
-        }}
-      />
-
-      <View.SectionContent padRight padBottom>
+      >
         <after
           css={{
             position: 'absolute',

@@ -19,6 +19,7 @@ export default class Button extends React.PureComponent {
     glint,
     glowProps,
     badgeProps,
+    hovered,
     onClick: _onClick,
     ...props
   }) {
@@ -36,6 +37,7 @@ export default class Button extends React.PureComponent {
     return (
       <SizedSurface
         tagName="button"
+        $button
         type={type}
         clickable
         hoverable
@@ -50,15 +52,12 @@ export default class Button extends React.PureComponent {
         row
         align="center"
         justify="center"
+        hovered={hovered}
         glow={glow}
-        css={{
-          flexWrap: 'nowrap',
-          whiteSpace: 'pre',
-        }}
         glowProps={{
           scale: 1.8,
           draggable: false,
-          show: false,
+          opacity: 0.15,
           ...glowProps,
           ...(theme && theme.glow),
         }}
@@ -81,6 +80,11 @@ export default class Button extends React.PureComponent {
   }
 
   static style = {
+    button: {
+      outline: 0,
+      flexWrap: 'nowrap',
+      whiteSpace: 'pre',
+    },
     badge: {
       position: 'absolute',
       top: '23%',

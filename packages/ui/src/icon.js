@@ -11,7 +11,7 @@ const findMatch = (name: string) => {
   if (cache[name]) return cache[name]
   if (iconNames[name]) return iconNames[name]
   const matches = fuzzy.filter(name, iconNames)
-  const match = matches.length ? matches[0].original : null
+  const match = matches.length ? matches[0].original : 'none'
   cache[name] = match
   return match
 }
@@ -36,7 +36,7 @@ export default class Icon extends React.PureComponent<Props> {
 
   render({
     color,
-    hoverColor,
+    hover,
     size,
     tooltip,
     tooltipProps,
@@ -50,6 +50,7 @@ export default class Icon extends React.PureComponent<Props> {
     width,
     height,
     hover,
+    padding,
     ...props
   }) {
     let content
@@ -97,35 +98,41 @@ export default class Icon extends React.PureComponent<Props> {
   }
 
   static style = {
-    icon: {},
+    icon: {
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
   }
 
-  static theme = ({
-    margin,
-    padding,
-    opacity,
-    alignSelf,
-    color,
-    width,
-    height,
-    size,
-    hoverColor,
-    hover,
-  }) => {
+  static theme = (
+    {
+      margin,
+      padding,
+      opacity,
+      alignSelf,
+      color,
+      width,
+      height,
+      size,
+      hover,
+      background,
+    },
+    theme
+  ) => {
     return {
       icon: {
         margin,
         padding,
         opacity,
         alignSelf,
-        color,
-        alignItems: 'center',
-        width: width || size,
-        height: height || size,
+        background,
+        color: theme.color || color,
+        width: (width || size) + padding * 2,
+        height: (height || size) + padding * 2,
         fontSize: size,
         lineHeight: `${size / 12 - 1}rem`, // scale where 1 when 14
         '&:hover': {
-          color: hoverColor || color,
+          color: hover.color || theme.color || color,
           ...hover,
         },
       },

@@ -1,53 +1,19 @@
-import 'isomorphic-fetch'
-import 'raf/polyfill'
-import './helpers/updateChecker'
-import electronContextMenu from 'electron-context-menu'
-import electronDebug from 'electron-debug'
-import React from 'react'
-import Ionize from '@mcro/ionize'
-import { onWindow } from './windows'
-import { throttle } from 'lodash'
-import { extras } from 'mobx'
+import 'babel-polyfill'
+import { setTimeout } from 'core-js/library/web/timers'
 
-// share state because node loads multiple copies
-extras.shareGlobalState()
+process.env.HAS_BABEL_POLYFILL = true
+process.env.NODE_ENV = 'production'
 
-let app = null
+console.log('starting app')
+require('./start-app').start()
 
-const start = throttle(() => {
-  const Windows = require('./windows').default
-  Ionize.start(<Windows />)
-  electronContextMenu()
-  electronDebug()
-  onWindow(ref => {
-    app = ref
-  })
-}, 1000)
-
-export default start
-
-if (process.argv.find(x => x === '--start')) {
-  start()
+export async function startAPI() {
+  console.log('starting api')
+  const sleep = ms => new Promise(res => setTimeout(res, ms))
+  await sleep(100)
+  require('@mcro/api')
 }
 
-let restarting
-
-function restart() {
-  console.log('got a restart from hmr')
-  if (restarting) {
-    clearTimeout(restarting)
-  }
-  app.setState(
-    {
-      restart: true,
-    },
-    () => {
-      restarting = setTimeout(start, 500)
-    }
-  )
-}
-
-if (module.hot) {
-  module.hot.accept(restart)
-  module.hot.accept('./windows', restart)
+if (!process.env.DISABLE_API) {
+  startAPI()
 }

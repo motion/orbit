@@ -6,7 +6,8 @@ import Portal from './helpers/portal'
 import { isNumber, debounce, throttle } from 'lodash'
 import Arrow from './arrow'
 import SizedSurface from './sizedSurface'
-import injectTheme from './helpers/injectTheme'
+import Theme from './helpers/theme'
+import * as PropTypes from 'prop-types'
 
 export type Props = {
   // can pass function to get isOpen passed in
@@ -80,7 +81,6 @@ const getShadow = (shadow, elevation) => {
 }
 const calcForgiveness = (forgiveness, distance) => forgiveness
 
-@injectTheme
 @view.ui
 class Popover extends React.PureComponent<Props> {
   static acceptsHovered = 'open'
@@ -93,6 +93,9 @@ class Popover extends React.PureComponent<Props> {
     animation: 'slide 300ms',
     adjust: [0, 0],
     delay: 16,
+  }
+  static contextTypes = {
+    uiThemes: PropTypes.object,
   }
 
   curProps = {}
@@ -308,6 +311,9 @@ class Popover extends React.PureComponent<Props> {
   }
 
   setPosition(callback?: Function) {
+    if (!this.popoverRef) {
+      return
+    }
     clearTimeout(this.positionTimeout)
     this.positionTimeout = this.setTimeout(() => {
       if (!this.unmounted) {
@@ -396,7 +402,7 @@ class Popover extends React.PureComponent<Props> {
     return towardsTop ? 'top' : 'bottom'
   }
 
-  edgePad = (currentPosition, windowSize, popoverSize) => {
+  edgePad(currentPosition, windowSize, popoverSize) {
     return Math.min(
       // upper limit
       windowSize - this.curProps.edgePadding - popoverSize,
@@ -517,6 +523,10 @@ class Popover extends React.PureComponent<Props> {
       }
     }
 
+    if (isNaN(top)) {
+      debugger
+    }
+
     return { arrowTop, top, maxHeight }
   }
 
@@ -557,16 +567,14 @@ class Popover extends React.PureComponent<Props> {
       console.log('no node!', name)
       return
     }
-
     const listeners = []
-
     const { delay, noHover } = this.curProps
     const isPopover = name === 'menu'
     const isTarget = name === 'target'
     const setHovered = () => this.hoverStateSet(name, true)
     const setUnhovered = () => this.hoverStateSet(name, false)
     const openIfOver = () => {
-      if (this.isNodeHovered(node, isPopover)) {
+      if (this.isNodeHovered(node)) {
         setHovered()
       }
     }
@@ -574,20 +582,33 @@ class Popover extends React.PureComponent<Props> {
       if (isPopover && Date.now() - this.state.menuHovered < 200) {
         return
       }
-      if (!this.isNodeHovered(node, isPopover)) {
+      if (!this.isNodeHovered(node)) {
         setUnhovered()
         if (delayOpenIfHover.cancel) {
           // cancel previous
           delayOpenIfHover.cancel()
         }
       }
+      // ensure check if we have a delay open
+      if (delay && isTarget) {
+        this.setTimeout(() => {
+          if (!this.isNodeHovered(node)) {
+            setUnhovered()
+          }
+        }, delay)
+      }
     }
     const delayOpenIfHover = isTarget ? debounce(openIfOver, delay) : openIfOver
     // this will avoid the delay open if its already open
-    const onEnter = () =>
-      isTarget && this.state.menuHovered ? openIfOver() : delayOpenIfHover()
-    const onLeave = debounce(closeIfOut, isTarget ? 80 : 20) // 🐛 target should close slower than menu opens
-
+    const onEnter = () => {
+      if (isTarget && this.state.menuHovered) {
+        openIfOver()
+      } else {
+        delayOpenIfHover()
+      }
+    }
+    // 🐛 target should close slower than menu opens
+    const onLeave = isTarget ? debounce(closeIfOut, 80) : closeIfOut
     // logic for enter/leave
     listeners.push(
       this.on(node, 'mouseenter', () => {
@@ -598,22 +619,20 @@ class Popover extends React.PureComponent<Props> {
         }
       })
     )
-
     // if noHover it reduces bugs to just not check hovered state
     const onMouseLeave = noHover ? setUnhovered : onLeave
     listeners.push(this.on(node, 'mouseleave', onMouseLeave))
-
     return listeners
   }
 
   // hover helpers
-  hoverStateSet(name, val) {
+  hoverStateSet(name, isHovered) {
     const { openOnHover, onMouseEnter } = this.curProps
     const setter = () => {
       // this.lastEvent[val ? 'enter' : 'leave'][name] = Date.now()
-      this.setState({ [`${name}Hovered`]: val ? Date.now() : false })
+      this.setState({ [`${name}Hovered`]: isHovered ? Date.now() : false })
     }
-    if (val) {
+    if (isHovered) {
       if (openOnHover) {
         this.setPosition(setter)
       }
@@ -625,23 +644,14 @@ class Popover extends React.PureComponent<Props> {
         setter()
       }
     }
-    return val
+    return isHovered
   }
 
-  isNodeHovered = (node: HTMLElement, isPopover): boolean => {
+  isNodeHovered = (node: HTMLElement): boolean => {
     const childSelector = `${node.tagName.toLowerCase()}.${node.className.replace(
       /\s+/g,
       '.'
     )}:hover`
-
-    if (isPopover) {
-      console.log(
-        'popoverHovered?',
-        !!node.parentNode.querySelector(childSelector) ||
-          node.querySelector(':hover')
-      )
-    }
-
     return (
       !!node.parentNode.querySelector(childSelector) ||
       node.querySelector(':hover')
@@ -657,13 +667,11 @@ class Popover extends React.PureComponent<Props> {
   get showPopover() {
     const { isOpen } = this.state
     const { openOnHover, open, openOnClick } = this.props
-    const openUndef = typeof open === 'undefined'
-    return (
-      (this.mounted && open) ||
-      isOpen ||
-      (openUndef &&
-        ((openOnHover && this.isHovered) || (openOnClick && isOpen)))
-    )
+    if (!this.mounted) return false
+    if (open || isOpen) return true
+    if (typeof open === 'undefined') {
+      return (openOnHover && this.isHovered) || (openOnClick && isOpen)
+    }
   }
 
   render({
@@ -714,7 +722,6 @@ class Popover extends React.PureComponent<Props> {
       direction,
     } = this.state
     const { showPopover } = this
-
     const controlledTarget = target => {
       const targetProps = {
         ref: this.ref('targetRef').set,
@@ -772,25 +779,31 @@ class Popover extends React.PureComponent<Props> {
                 }}
               >
                 <Arrow
-                  theme={theme && theme.base}
+                  theme={
+                    this.context.uiThemes &&
+                    this.context.uiThemes[theme] &&
+                    this.context.uiThemes[theme].base
+                  }
                   background={background !== 'transparent' ? background : null}
                   size={arrowSize}
                   towards={INVERSE[direction]}
                   boxShadow={getShadow(shadow, elevation)}
                 />
               </arrowContain>
-              <SizedSurface
-                sizeRadius
-                ignoreSegment
-                flex={1}
-                {...props}
-                elevation={elevation}
-                background={background}
-              >
-                {typeof children === 'function'
-                  ? children(showPopover)
-                  : children}
-              </SizedSurface>
+              <Theme name={theme}>
+                <SizedSurface
+                  sizeRadius
+                  ignoreSegment
+                  flex={1}
+                  {...props}
+                  elevation={elevation}
+                  background={background}
+                >
+                  {typeof children === 'function'
+                    ? children(showPopover)
+                    : children}
+                </SizedSurface>
+              </Theme>
             </popover>
           </container>
         </Portal>
@@ -869,7 +882,7 @@ class Popover extends React.PureComponent<Props> {
     },
   }
 
-  static theme = (props, theme) => {
+  static theme = props => {
     return {
       popover: {
         padding: calcForgiveness(props.forgiveness, props.distance),

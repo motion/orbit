@@ -297,6 +297,7 @@ body {
 #app {
   height: 100%;
   position: relative;
+  pointer-events: none;
 }
 
 a {

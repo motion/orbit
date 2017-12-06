@@ -4,6 +4,11 @@
   "scripts": {
     "start": "See: bin/* for commands available"
   },
+  "dependencies": {
+    "mobx": "^3.3.1",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0"
+  },
   "devDependencies": {
     "@mcro/preset-motion": "^1.2.0",
     "babel-cli": "^6.23.0",
@@ -20,6 +25,7 @@
     "eslint-plugin-react": "^7.1.0",
     "flow-bin": "^0.57.0",
     "babel-preset-minify": "^0.2.0",
-    "babel-preset-es2015": "^6.24.1"
+    "babel-preset-es2015": "^6.24.1",
+    "nodemon": "^1.12.1"
   }
 }

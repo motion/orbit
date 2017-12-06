@@ -1,1 +1,1 @@
-require('./es6/index').default()
+require('./es6/index').run()

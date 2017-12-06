@@ -6,15 +6,14 @@
 
 const Path = require('path')
 const Fs = require('fs')
-// const Fs = require('fs')
+const Paths = require('./paths')
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin')
 const WatchMissingNodeModulesPlugin = require('react-dev-utils/WatchMissingNodeModulesPlugin')
 const getClientEnvironment = require('./env')
-const paths = require('./paths')
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin')
-const BabelMinifyPlugin = require('babel-minify-webpack-plugin')
+// const BabelMinifyPlugin = require('babel-minify-webpack-plugin')
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
   .BundleAnalyzerPlugin
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
@@ -24,7 +23,7 @@ const IS_PROD = process.env.NODE_ENV === 'production'
 const MINIFY = process.env.MINIFY === 'true'
 const IS_DEV = !IS_PROD
 const TARGET = process.env.TARGET
-const HAS_HTML = Fs.existsSync(paths.appHtml)
+const HAS_HTML = Fs.existsSync(Paths.appHtml)
 const CHUNK_COMMONS = process.env.CHUNK_COMMONS !== 'false'
 
 console.log('IS_PROD', IS_PROD)
@@ -33,6 +32,15 @@ const filtered = ls => ls.filter(x => !!x)
 const watch = process.argv.indexOf('--watch') > 0
 const publicUrl = ''
 const env = getClientEnvironment(publicUrl)
+
+const BINDINGS_PATH =
+  Fs.existsSync(Paths.resolve('bindings')) && Paths.resolve('bindings')
+
+const BROWSER_MAINS = IS_DEV
+  ? ['module', 'browser', 'main', 'es6']
+  : ['browser', 'module:production', 'main', 'es6']
+const SOMEONE_GET_THEY_MAINS = TARGET ? ['module', 'main'] : BROWSER_MAINS
+const MAIN_FIELDS = process.env.MAIN_FIELDS || SOMEONE_GET_THEY_MAINS
 
 // if you want to parse our modules directly use this, but we have dist/ folder now
 // const ORG = Path.resolve(__dirname, '..', '..', 'node_modules', '@mcro')
@@ -56,6 +64,7 @@ if (IS_PROD) {
 
 if (TARGET) {
   config.target = TARGET
+  console.log('target is', config.target)
 }
 
 module.exports = Object.assign(config, {
@@ -65,14 +74,14 @@ module.exports = Object.assign(config, {
     app: filtered([
       IS_DEV && require.resolve('webpack-dev-server/client') + '?/',
       IS_DEV && require.resolve('webpack/hot/only-dev-server'),
-      paths.appEntry,
+      Paths.appEntry,
     ]),
   },
 
   output: {
-    path: paths.appBuild,
+    path: Paths.appBuild,
     pathinfo: true,
-    filename: 'js/[name].js',
+    filename: '[name].js',
     publicPath: '/',
   },
 
@@ -82,13 +91,11 @@ module.exports = Object.assign(config, {
 
   resolve: {
     // avoid module field so we pick up our prod build stuff
-    mainFields: IS_DEV
-      ? ['module', 'browser', 'main', 'es6']
-      : ['browser', 'module:production', 'main', 'es6'],
+    mainFields: MAIN_FIELDS,
     extensions: ['.js', '.json'],
     // WARNING: messing with this order is dangerous af
     // TODO: can add root monorepo node_modules and then remove a lot of babel shit
-    modules: [paths.modelsNodeModules, paths.appNodeModules, 'node_modules'],
+    modules: [Paths.modelsNodeModules, Paths.appNodeModules, 'node_modules'],
     // since were forced into full lodash anyway, lets dedupe
     alias: {
       'lodash.merge': 'lodash/merge',
@@ -114,6 +121,10 @@ module.exports = Object.assign(config, {
         test: /\.js$/,
         exclude: /node_modules/,
       },
+      {
+        test: /\.node$/,
+        use: 'node-loader',
+      },
     ],
   },
 
@@ -122,15 +133,21 @@ module.exports = Object.assign(config, {
     HAS_HTML &&
       new HtmlWebpackPlugin({
         inject: true,
-        template: paths.appHtml,
+        template: Paths.appHtml,
       }),
     new webpack.DefinePlugin(env.stringified),
     new CaseSensitivePathsPlugin(),
     // hmr
     IS_DEV && new webpack.HotModuleReplacementPlugin(),
-    IS_DEV && new WatchMissingNodeModulesPlugin(paths.appNodeModules),
+    IS_DEV && new WatchMissingNodeModulesPlugin(Paths.appNodeModules),
     // readable names
     new webpack.NamedModulesPlugin(),
+
+    BINDINGS_PATH &&
+      new webpack.NormalModuleReplacementPlugin(
+        /^bindings$/,
+        require.resolve(BINDINGS_PATH)
+      ),
 
     // production
     IS_PROD &&

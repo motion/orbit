@@ -2,35 +2,28 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { CurrentUser } from '~/app'
-
-const BANNER_COLORS = {
-  note: 'blue',
-  success: 'green',
-  error: 'red',
-}
+import * as Constants from '~/constants'
+import OraBanner from './oraBanner'
 
 @view({
-  store: class HeaderStore {
+  store: class OraHeaderStore {
     downAt = Date.now()
   },
 })
 export default class OraHeader extends React.Component {
-  onHeaderMouseDown = () => {
+  handleHeaderMouseDown = () => {
     this.props.store.downAt = Date.now()
   }
 
-  onHeaderMouseUp = () => {
+  handleHeaderMouseUp = () => {
     const { oraStore, store } = this.props
     if (Date.now() - store.downAt < 200) {
-      oraStore.focusedBar = true
-      this.setTimeout(() => {
-        oraStore.inputRef.focus()
-      })
+      oraStore.ui.focusBar()
     }
   }
 
-  onHeaderBlur = () => {
-    this.props.oraStore.focusedBar = false
+  handleInputBlur = () => {
+    this.props.oraStore.ui.setBarFocus(false)
   }
 
   selectBucket = async item => {
@@ -42,14 +35,24 @@ export default class OraHeader extends React.Component {
     console.log('set bucket', item.primary)
   }
 
+  handleBack = e => {
+    e.preventDefault()
+    e.stopPropagation()
+    this.props.oraStore.stack.pop()
+  }
+
+  handleHide = e => {
+    e.stopPropagation()
+    this.props.oraStore.hide()
+  }
+
+  preventPropagation = e => {
+    e.stopPropagation()
+  }
+
   render({ oraStore }) {
     if (!CurrentUser.user) {
       return null
-    }
-    const itemProps = {
-      glow: false,
-      chromeless: true,
-      color: [255, 255, 255, 0.5],
     }
     const settings = CurrentUser.user.settings || {}
     const { buckets = ['Default'], activeBucket = 'Default' } = settings
@@ -76,109 +79,119 @@ export default class OraHeader extends React.Component {
       },
     ]
 
+    const iconProps = {
+      color: [255, 255, 255, 0.7],
+      padding: 8,
+      size: 16,
+      hover: {
+        color: [255, 255, 255, 1],
+      },
+      css: {
+        marginLeft: -8,
+      },
+    }
+
     return (
-      <header
-        $focus={oraStore.focusedBar}
-        onMouseDown={this.onHeaderMouseDown}
-        onMouseUp={this.onHeaderMouseUp}
-        $$draggable
-      >
-        <UI.Icon $searchIcon size={12} name="zoom" color={[255, 255, 255, 1]} />
-        <UI.Input
-          $searchInput
-          $disabled={!oraStore.focusedBar}
-          size={1}
-          getRef={oraStore.onInputRef}
-          borderRadius={0}
-          onBlur={this.onHeaderBlur}
-          onChange={oraStore.onSearchChange}
-          value={oraStore.textboxVal}
-          borderWidth={0}
-          fontWeight={200}
-          css={{
-            fontWeight: 300,
-            color: '#fff',
-            fontSize: 20,
-          }}
-        />
-
-        <title
-          $$background={BANNER_COLORS[oraStore.banner && oraStore.banner.type]}
+      <UI.Theme name="dark">
+        <header
+          $focus={oraStore.ui.barFocused && !oraStore.ui.collapsed}
+          onMouseDown={this.handleHeaderMouseDown}
+          onMouseUp={this.handleHeaderMouseUp}
+          $$draggable
         >
-          <titleText>
-            <UI.Text ellipse size={0.8}>
-              {(oraStore.banner && oraStore.banner.message) ||
-                oraStore.stack.last.result.id}
-            </UI.Text>
-          </titleText>
-        </title>
+          <contents>
+            <leftSide>
+              <UI.Icon name="zoom" {...iconProps} />
+              <UI.Icon
+                if={false && oraStore.stack.length > 1}
+                name="arrominleft"
+                onClick={this.handleBack}
+                onMouseUp={this.preventPropagation}
+                {...iconProps}
+              />
+            </leftSide>
 
-        <buttons
-          css={{
-            position: 'absolute',
-            top: 0,
-            right: 0,
-            bottom: 0,
-            zIndex: 1000,
-            justifyContent: 'center',
-          }}
-          onMouseUp={e => {
-            e.stopPropagation()
-          }}
-        >
-          <UI.Row>
-            <UI.Popover
-              openOnHover
-              delay={300}
-              closeOnEsc
-              overlay="transparent"
-              theme="light"
-              width={150}
-              target={
-                <UI.Button
-                  {...itemProps}
-                  icon="bucket"
-                  opacity={0.5}
-                  onClick={e => {
-                    e.stopPropagation()
-                    oraStore.hide()
-                  }}
-                />
-              }
-            >
-              <UI.List items={bucketItems} onSelect={this.selectBucket} />
-            </UI.Popover>
-            <UI.Button
-              {...itemProps}
-              onClick={e => {
-                e.stopPropagation()
-                oraStore.hide()
-              }}
-              icon="remove"
+            <UI.Input
+              $searchInput
+              $disabled={!oraStore.ui.barFocused}
+              size={1}
+              getRef={oraStore.ui.onInputRef}
+              borderRadius={0}
+              onBlur={this.handleInputBlur}
+              onChange={oraStore.ui.handleSearchChange}
+              value={oraStore.ui.textboxVal}
+              borderWidth={0}
+              background="transparent"
             />
-          </UI.Row>
-        </buttons>
-      </header>
+
+            <UI.HoverGlow zIndex={-1} opacity={0.075} blur={60} />
+
+            <OraBanner />
+
+            <rightSide onMouseUp={this.preventPropagation}>
+              <UI.Popover
+                openOnHover
+                delay={150}
+                closeOnEsc
+                overlay="transparent"
+                theme="light"
+                width={150}
+                target={
+                  <UI.Icon
+                    {...iconProps}
+                    name="f"
+                    opacity={0.5}
+                    onClick={e => {
+                      e.stopPropagation()
+                      oraStore.hide()
+                    }}
+                  />
+                }
+              >
+                <UI.List items={bucketItems} onSelect={this.selectBucket} />
+              </UI.Popover>
+              <UI.Icon
+                {...iconProps}
+                opacity={0.5}
+                name="gear"
+                onClick={this.props.oraStore.actions.openSettings}
+              />
+              <UI.Icon
+                {...iconProps}
+                size={14}
+                opacity={0.5}
+                onClick={this.handleHide}
+                name="remove"
+              />
+            </rightSide>
+          </contents>
+        </header>
+      </UI.Theme>
     )
   }
 
   static style = {
     header: {
       position: 'relative',
+      overflow: 'hidden',
       opacity: 0.85,
-      height: 30,
-      transition: 'all ease-in 80ms',
+      zIndex: -1,
+      height: Constants.ORA_HEADER_HEIGHT + 100,
+      paddingBottom: 100,
+      // borderBottom: [1, [255, 255, 255, 0.1]],
+      transition: 'all ease-in 100ms',
+      justifyContent: 'center',
       '& .icon': {
         transition: 'all ease-in 100ms',
-        transform: 'scale(0.75)',
+        transform: 'scale(0.9)',
       },
       '&:hover': {
-        background: [255, 255, 255, 0.2],
+        background: [255, 255, 255, 0.02],
       },
     },
     focus: {
       opacity: 1,
-      height: 40,
+      height: Constants.ORA_HEADER_HEIGHT_FULL + 100,
       '& .icon': {
         transform: 'scale(1)',
       },
@@ -189,42 +202,38 @@ export default class OraHeader extends React.Component {
         background: 'transparent',
       },
     },
-    title: {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      textAlign: 'center',
-      alignItems: 'center',
-      justifyContent: 'center',
-      zIndex: 0,
-      pointerEvents: 'none',
-      userSelect: 'none',
-    },
-    titleText: {
-      position: 'absolute',
-      top: 6,
-      right: 62,
-      left: 38,
+    contents: {
+      position: 'relative',
     },
     disabled: {
       pointerEvents: 'none',
     },
-    searchIcon: {
+    leftSide: {
       position: 'absolute',
       top: 0,
       bottom: 0,
       alignItems: 'center',
+      justifyContent: 'center',
       height: 'auto',
-      left: 12,
+      left: 10,
       zIndex: 2,
+    },
+    rightSide: {
+      position: 'absolute',
+      top: 0,
+      right: 2,
+      bottom: 0,
+      zIndex: 1000,
+      justifyContent: 'center',
+      alignItems: 'center',
+      flexFlow: 'row',
     },
     searchInput: {
       position: 'relative',
-      padding: [8, 25],
+      padding: [8, 25, 9],
       paddingLeft: 36,
-      borderBottom: [1, 'dotted', [255, 255, 255, 0.1]],
+      fontWeight: 300,
+      fontSize: 20,
     },
   }
 }

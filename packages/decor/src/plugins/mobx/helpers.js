@@ -4,7 +4,7 @@ import { autorun, reaction } from 'mobx'
 
 // subscribe-aware helpers
 export function watch(fn: Function): Function {
-  const dispose = autorun(fn)
+  const dispose = autorun(fn.bind(this))
   this.subscriptions.add(dispose)
   return dispose
 }

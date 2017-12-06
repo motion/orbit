@@ -9,58 +9,35 @@ import FakeSlack from './demos/slack'
   store: class DemosStore {
     active = 0
 
-    sections = [
-      {
-        title: 'Browser',
-      },
-      {
-        title: 'Slack',
-      },
-      {
-        title: 'Email',
-      },
-    ]
+    sections = []
+    //   {
+    //     title: 'Browser',
+    //   },
+    //   {
+    //     title: 'Slack',
+    //   },
+    //   {
+    //     title: 'Email',
+    //   },
+    // ]
   },
 })
 export default class SectionChat extends React.Component {
   render({ store }) {
     return (
-      <section css={{ position: 'relative' }}>
-        <UI.Theme name="dark">
-          <View.Section
-            css={{
-              background: '#fff',
-              padding: [110, 0, 200],
-            }}
-          >
-            <stripeBetween
-              css={{
-                position: 'absolute',
-                top: -50,
-                left: 32,
-                zIndex: 0,
-              }}
-            >
-              <fadeDown
-                css={{
-                  position: 'absolute',
-                  top: 520,
-                  left: -673,
-                  width: 2000,
-                  height: 1000,
-                  background: Constants.dark2,
-                  zIndex: 2,
-                  transform: {
-                    rotate: '94deg',
-                    scale: 1,
-                    y: 115,
-                  },
-                }}
-              />
-            </stripeBetween>
-            <View.SectionContent padRight>
+      <UI.Theme name="dark">
+        <View.Section>
+          <View.SectionContent fullscreen css={{ padding: [100, 430, 100, 0] }}>
+            <View.Slant
+              inverse
+              dark
+              inverseSlant
+              inverseBackground
+              css={{ zIndex: 1 }}
+            />
+            <contents css={{ zIndex: 2 }}>
               <View.Title size={3}>Wherever you are</View.Title>
-              <View.SubTitle size={3}>
+              <View.SubTitle size={2}>
                 Ora lives on your desktop and works across many apps.
               </View.SubTitle>
               <UI.Text size={1.5}>
@@ -72,11 +49,31 @@ export default class SectionChat extends React.Component {
                   ))}
                 </row>
               </UI.Text>
-              <FakeSlack />
-            </View.SectionContent>
-          </View.Section>
-        </UI.Theme>
-      </section>
+              <content css={{ zIndex: 10 }}>
+                <FakeSlack />
+              </content>
+
+              <View.Orbitals
+                if={false}
+                planetStyles={{
+                  background: '#fff',
+                }}
+                ringBackground="transparent"
+                rings={2}
+                css={{
+                  zIndex: 9,
+                  margin: ['auto', 0],
+                  right: -700,
+                  left: 'auto',
+                  transform: {
+                    scale: 2,
+                  },
+                }}
+              />
+            </contents>
+          </View.SectionContent>
+        </View.Section>
+      </UI.Theme>
     )
   }
 

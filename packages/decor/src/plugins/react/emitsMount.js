@@ -15,7 +15,7 @@ export default (options: Object, Helpers: Helpers) => ({
       return ogMount && ogMount.call(this, ...args)
     }
     const ogUnmount = Klass.prototype.componentWillUnmount
-    Klass.prototype.componentWillUnmount = function() {
+    Klass.prototype.componentWillUnmount = function(...args) {
       Helpers.emit('view.unmount', {
         name: this.constructor.name,
         thing: this,

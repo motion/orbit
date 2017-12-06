@@ -19,7 +19,6 @@ type Props = {
   children?: React.Element<any> | string,
   className?: string,
   from: 'top' | 'bottom' | 'left' | 'right',
-  showOverlay?: boolean,
   onClickOverlay: Function,
   open?: boolean,
   overlayBlur?: number,
@@ -41,7 +40,7 @@ export default class Drawer extends React.PureComponent<Props> {
   static defaultProps = {
     size: 400,
     from: 'left',
-    zIndex: 10000,
+    zIndex: 100,
     transitionDuration: 500,
   }
 
@@ -55,8 +54,6 @@ export default class Drawer extends React.PureComponent<Props> {
     size,
     percent,
     onClickOverlay,
-    showOverlay,
-    boxShadow,
     bordered,
     zIndex,
     className,
@@ -65,6 +62,7 @@ export default class Drawer extends React.PureComponent<Props> {
     scrollable,
     closePortal,
     style,
+    overlayBackground,
     containerProps,
     ...props
   }: Props) {
@@ -81,11 +79,12 @@ export default class Drawer extends React.PureComponent<Props> {
     }
 
     return (
-      <drawer {...containerProps}>
+      <drawer $drawerOpen={open} {...containerProps}>
         <Surface
           style={{ ...style, ...panelStyle }}
           $panel
           $from={from}
+          $withShadow={!!props.boxShadow && sizeKey}
           $panelOpen={open}
           className={className}
           {...props}
@@ -93,9 +92,10 @@ export default class Drawer extends React.PureComponent<Props> {
           {children}
         </Surface>
         <overlay
-          if={showOverlay}
+          if={overlayBackground}
           $overlayOpen={open}
-          $overlayBg={{ blur: overlayBlur === true ? 5 : overlayBlur }}
+          $overlayBlur={overlayBlur}
+          $overlayBackground={overlayBackground}
           onClick={e => {
             e.preventDefault()
             if (onClickOverlay) {
@@ -110,25 +110,29 @@ export default class Drawer extends React.PureComponent<Props> {
   static style = {
     drawer: {
       position: 'absolute',
+      overflow: 'hidden', // needed to hide drawer when closed
       top: 0,
       right: 0,
       bottom: 0,
       left: 0,
+      opacity: 0,
       pointerEvents: 'none',
+      transition: 'opacity ease-out 150ms',
       transform: {
         z: 0,
       },
     },
+    drawerOpen: {
+      opacity: 1,
+      zIndex: 100,
+    },
+    overlayBackground: val => ({
+      background: val === true ? [0, 0, 0, 0.3] : val,
+    }),
     // darken bg much less if blurring
-    overlayBg: ({ blur }) =>
-      blur
-        ? {
-            backdropFilter: `blur(${blur}px)`,
-            background: 'rgba(0,0,0,0.1)',
-          }
-        : {
-            background: 'rgba(0,0,0,0.25)',
-          },
+    overlayBlur: blur => ({
+      backdropFilter: `blur(${blur === true ? 5 : blur}px)`,
+    }),
     panel: {
       pointerEvents: 'none',
       position: 'absolute',
@@ -138,6 +142,7 @@ export default class Drawer extends React.PureComponent<Props> {
       right: 0,
       transition: 'transform ease-in-out 150ms',
       zIndex: 100,
+      maxHeight: '100%',
     },
     panelOpen: {
       pointerEvents: 'all',
@@ -147,6 +152,18 @@ export default class Drawer extends React.PureComponent<Props> {
       [direction]: 0,
       [opposite(direction)]: 'auto',
     }),
+    // for nicer shadows, they will go "offscreen" a bit
+    // which avoids showing the edges of it onscreen
+    // withShadow: dimension =>
+    //   dimension === 'height'
+    //     ? {
+    //         margin: [0, -100],
+    //         padding: [0, 100],
+    //       }
+    //     : {
+    //         margin: [-100, 0],
+    //         padding: [100, 0],
+    //       },
     overlay: {
       position: 'absolute',
       top: 0,
@@ -175,10 +192,6 @@ export default class Drawer extends React.PureComponent<Props> {
         // transition:
         //   (props.transition && `all ease-in ${props.transitionDuration}`) || '',
         borderColor: (props.bordered && theme.base.borderColor) || '',
-        boxShadow:
-          props.boxShadow === true
-            ? '0 0 6px rgba(0,0,0,0.3)'
-            : props.boxShadow,
       },
     }
   }

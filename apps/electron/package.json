@@ -1,82 +1,44 @@
 {
   "name": "@mcro/electron",
   "productName": "Orbit",
-  "version": "1.5.9",
-  "private": true,
   "description": "Description",
   "author": "Orbit",
+  "version": "1.5.34",
+  "private": true,
+  "main": "lib/index.js",
   "updater": {
     "url":
       "https://raw.githubusercontent.com/motion/orbit-updates/master/updates.json"
   },
   "scripts": {
     "build":
-      "INCLUDE_MODULES=true TARGET=electron NODE_ENV=production BUILD_DIR=. mcro-build",
-    "dist":
-      "npm version patch && npm run bundle && git commit -am ':arrow_up: version $npm_package_version'",
-    "deploy":
-      "npm run sign-app && npm run bundle-app && npm run prepare-publish && npm run publish-app",
-    "bundle":
-      "DEBUG=* . --out app --overwrite --icon ./resources/icon.icns --prune && npm run fix-build",
-    "start": "electron build/out --start",
-    "start-prod": "app/Orbit-darwin-x64/Orbit.app/Contents/MacOS/Orbit",
-    "watch": "webpack --watch",
-    "publish-app": "publish -p ./app",
-    "prepare-publish":
-      "cp ./app/Orbit.dmg ./app/Orbit-$npm_package_version.dmg && zip -r ./app/Orbit-$npm_package_version-mac.zip ./app/Orbit-darwin-x64/Orbit.app",
-    "bundle-app":
-      "electron-installer-dmg --overwrite --out ./app --icon ./resources/icon.icns ./app/Orbit-darwin-x64/Orbit.app Orbit",
-    "sign-app": "electron-osx-sign ./app/Orbit-darwin-x64/Orbit.app",
-    "fix-build-clean": "npm run clean-build-modules; npm run fix-build",
-    "fix-build": "npm run fix-build-modules",
-    "fix-build-modules":
-      "npm run fix-build-log; npm run fix-build-copy-modules; npm run fix-build-electron; npm run fix-build-mobx",
-    "fix-build-mobx":
-      "cp -r ../../node_modules/mobx ./app/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules",
-    "fix-build-log":
-      "touch ./app/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/log.txt",
-    "clean-build-modules":
-      "rm -r ./app/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules/*",
-    "fix-build-copy-modules":
-      "cpx -uL './node_modules/**/*{.js,.json,.html,.map}' ./app/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules",
-    "fix-build-electron":
-      "rm -r ./app/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules/@mcro/ionize/node_modules/electron"
+      "CHUNK_COMMONS=false TARGET=electron NODE_ENV=production mcro-build",
+    "watch": "npm run build -- --watch",
+    "deploy": "cd ../electron-build && npm run deploy"
   },
   "dependencies": {
     "@mcro/api": "^1.5.1",
-    "@mcro/builder": "^1.5.1",
-    "@mcro/crawler": "*",
-    "@mcro/ionize": "^1.5.1",
-    "@mcro/r2": "*",
-    "@mcro/black": "*",
+    "@mcro/black": "^1.5.1",
+    "@mcro/r2": "^1.5.1",
+    "@mcro/reactron": "^1.5.1",
     "babel-polyfill": "^6.26.0",
+    "electron": "^1.8.0",
     "electron-context-menu": "^0.9.1",
     "electron-debug": "^1.4.0",
     "electron-localshortcut": "^2.0.2",
     "electron-simple-updater": "^1.2.1",
     "escape-string-applescript": "^2.0.0",
-    "ffi": "^2.2.0",
-    "isomorphic-fetch": "^2.2.1",
+    "debug": "^3.1.0",
     "lodash": "^4.17.4",
     "mobx": "^3.3.1",
     "node-loader": "^0.6.0",
     "node-osascript": "2.0.0",
     "opn": "^5.1.0",
-    "osx-mouse": "^1.2.1",
     "raf": "^3.4.0",
-    "react": "16.0.0-alpha.5",
-    "react-dom": "16.0.0-alpha.5",
-    "ref": "^1.3.5",
-    "sb-promisify": "^2.0.2"
-  },
-  "devDependencies": {
-    "cpx": "^1.5.0",
-    "devtron": "^1.4.0",
-    "electron": "^1.8.0",
-    "electron-installer-dmg": "^0.2.1",
-    "electron-osx-sign": "^0.4.7",
-    "electron-packager": "^9.1.0",
-    "electron-simple-publisher": "^0.4.7",
-    "webpack": "^3.4.1"
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "sb-promisify": "^2.0.2",
+    "source-map-support": "^0.5.0",
+    "usage": "^0.7.1"
   }
 }

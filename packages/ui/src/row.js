@@ -91,27 +91,35 @@ export default class Row extends React.Component<Props> {
     }
 
     if (children) {
-      const realChildren = React.Children
-        .map(children, _ => _)
-        .filter(child => !!child)
+      const realChildren = React.Children.map(children, _ => _).filter(Boolean)
 
-      children = realChildren.map((child, index) => (
-        <Provider key={index} provide={getContext(index, realChildren.length)}>
-          {itemProps
-            ? React.cloneElement(child, {
-                ...itemProps,
-                ...child.props,
-              }) /* merge child props so they can override */
-            : child}
-        </Provider>
-      ))
+      children = realChildren.map((child, index) => {
+        const finalChild =
+          typeof child === 'string' ? <span>{child}</span> : child
+
+        return (
+          <Provider
+            key={index}
+            provide={getContext(index, realChildren.length)}
+          >
+            {itemProps
+              ? React.cloneElement(finalChild, {
+                  ...itemProps,
+                  ...finalChild.props,
+                }) /* merge child props so they can override */
+              : finalChild}
+          </Provider>
+        )
+      })
     } else if (Array.isArray(items)) {
       children = items.map((seg, index) => {
         const { text, id, icon, ...segmentProps } =
           typeof seg === 'object' ? seg : { text: seg, id: seg }
-
+        if (segmentProps.flex) {
+          return <flexer $$flex={segmentProps.flex} />
+        }
         return (
-          <Provider key={index} provide={getContext(index, children.length)}>
+          <Provider key={index} provide={getContext(index, items.length)}>
             <Button
               active={(id || icon) === ACTIVE}
               icon={onlyIcons ? text : icon}
@@ -125,7 +133,7 @@ export default class Row extends React.Component<Props> {
               {...segmentProps}
               {...itemProps}
             >
-              {!onlyIcons && text}
+              {(!onlyIcons && text) || segmentProps.children}
             </Button>
           </Provider>
         )

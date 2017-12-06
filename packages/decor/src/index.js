@@ -32,7 +32,9 @@ export default function decor(plugins: Array<[Plugin, Object] | Plugin>) {
   const isClass = x => x && !!x.prototype
 
   // process plugins
+  let index = -1
   for (const curPlugin of plugins.filter(x => !!x)) {
+    index++
     let getPlugin = curPlugin
     let options = {}
 
@@ -43,15 +45,20 @@ export default function decor(plugins: Array<[Plugin, Object] | Plugin>) {
     }
 
     if (typeof getPlugin !== 'function') {
-      throw `Plugin must be a function, got ${typeof getPlugin}`
+      console.log('got some bad plugins', plugins)
+      throw `Bad plugin at index ${index} (expected a function):
+        got type: ${typeof getPlugin}
+        value: ${(getPlugin && getPlugin.toString()) || ''}`
     }
 
     // uid per plugin
-    const uid = Math.random()
+    const decoratedStore = new WeakMap()
     const alreadyDecorated = Klass => {
-      const result = Klass[uid]
-      Klass[uid] = true
-      return result
+      if (decoratedStore.get(Klass)) {
+        return true
+      }
+      decoratedStore.set(Klass, true)
+      return false
     }
     const Helpers = {
       emit,
@@ -114,6 +121,7 @@ export default function decor(plugins: Array<[Plugin, Object] | Plugin>) {
   decorDecorator.off = (...args) => emitter.off(...args)
   decorDecorator.on = (...args) => emitter.on(...args)
   decorDecorator.emit = emit
+  decorDecorator.emitter = emitter
 
   return decorDecorator
 }

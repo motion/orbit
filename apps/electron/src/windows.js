@@ -1,116 +1,91 @@
 import React from 'react'
+import { App, Window } from '@mcro/reactron'
 import * as Helpers from './helpers'
-import { app, globalShortcut, ipcMain, screen } from 'electron'
+import { globalShortcut, ipcMain, screen } from 'electron'
 import repl from 'repl'
-import open from 'opn'
 import * as Constants from '~/constants'
-import mouse from 'osx-mouse'
 import { throttle, isEqual, once } from 'lodash'
-import MenuItems from './menu'
-import getCrawler from './helpers/getCrawler'
-import escapeStringApplescript from 'escape-string-applescript'
-import log from '@mcro/black/lib/helpers/log'
+import MenuItems from './menuItems'
+import { view } from '@mcro/black'
+import * as Injections from '~/injections'
 
 let onWindows = []
 export function onWindow(cb) {
+  console.log('onwindow')
   onWindows.push(cb)
 }
 
+@view.electron
 export default class Windows extends React.Component {
-  // this is an event bus that should be open
-  // whenever ora is open
-  sendOra = name => {
-    console.log('called this.sendOra before setup', name)
-  }
-
-  subscriptions = []
-  uid = Math.random()
+  // this is an event bus that should be open whenever ora is open
+  sendOra = async name => console.log('called this.sendOra before setup', name)
+  oraState = {}
   state = {
+    showDevTools: false,
     restart: false,
     showSettings: false,
-    closeSettings: false,
+    showSettingsDevTools: false,
     size: [0, 0],
     position: [0, 0],
     trayPosition: [0, 0],
+    context: null, // osContext
+  }
+
+  async updateState(state) {
+    await new Promise(res => this.setState(state, res))
+    if (this.sendOraSimple) {
+      this.sendOraSimple('electron-state', this.state)
+    }
+  }
+
+  componentWillMount() {
+    const { position, size } = Helpers.getAppSize()
+    const screenSize = screen.getPrimaryDisplay().workAreaSize
+    const trayPosition = [screenSize.width - Constants.ORA_WIDTH, 20]
+    this.updateState({ show: true, position, size, screenSize, trayPosition })
   }
 
   componentDidMount() {
     this.mounted = true
-    this.measureAndShow()
-    this.screenSize = screen.getPrimaryDisplay().workAreaSize
-    this.setState({
-      trayPosition: [this.screenSize.width - Constants.ORA_WIDTH, 20],
-    })
-    onWindows.forEach(cb => cb(this))
-    setTimeout(this.measureAndShow, 500)
     this.repl = repl.start({
       prompt: '$ > ',
     })
+    onWindows.forEach(cb => cb(this))
     Object.assign(this.repl.context, {
       Root: this,
     })
-    this.listenForMouse()
   }
 
   componentWillUnmount() {
     this.mounted = false
     globalShortcut.unregisterAll()
-    for (const [emitter, name, callback] of this.subscriptions) {
-      emitter.removeListener(name, callback)
-    }
   }
 
-  on(emitter, name, callback) {
-    emitter.on(name, callback)
-    this.subscriptions.push([emitter, name, callback])
-  }
-
-  listenForMouse() {
-    this.on(ipcMain, 'mouse-listen', () => {
-      const triggerX = this.screenSize.width - 20
-      const triggerY = 20
-      const mousey = mouse()
-      let hasLeftCorner = true
-      mousey.on(
-        'move',
-        throttle((x, y) => {
-          if (+x > triggerX && +y < triggerY) {
-            if (hasLeftCorner) {
-              hasLeftCorner = false
-              console.log('IN CORNER')
-              this.toggleShown()
-            }
-          } else {
-            hasLeftCorner = true
-          }
-        }, 60)
-      )
-    })
-  }
-
-  @log
-  measure = () => {
-    const { position, size } = Helpers.measure()
-    this.size = size
-    this.position = position
-    this.initialSize = this.initialSize || this.size
-  }
-
-  onOra = ref => {
+  handleOraRef = ref => {
     if (ref) {
-      this.oraRef = ref
-      this.startOra()
+      this.startOra(ref.window)
     }
   }
 
-  startOra = once(() => {
+  startOra = once(ref => {
+    console.log('starting ora')
+    this.oraRef = ref
+
     // CLEAR DATA
     if (process.env.CLEAR_DATA) {
       this.oraRef.webContents.session.clearStorageData()
     }
+    this.watchForContext()
     this.listenToApps()
     this.registerShortcuts()
   })
+
+  oraStateGetters = []
+  getOraState = () =>
+    new Promise(res => {
+      this.oraStateGetters.push(res)
+      this.sendOraSimple('get-state')
+    })
 
   onAppWindow = win => electron => {
     if (win && electron && !win.ref) {
@@ -118,270 +93,264 @@ export default class Windows extends React.Component {
     }
   }
 
-  @log
   listenToApps = () => {
-    this.on(ipcMain, 'start-ora', event => {
-      // setup our event bus
-      this.sendOra = (...args) => event.sender.send(...args)
-    })
+    this.setupCrawlerListeners()
+    this.setupAuthListeners()
 
-    this.on(ipcMain, 'inject-crawler', event => {
-      this.injectCrawler(info => {
-        event.sender.send('crawler-selection', info)
+    this.on(
+      ipcMain,
+      'start-ora',
+      once(event => {
+        // setup our event bus
+        // this one runs without updating (only used internally)
+        this.sendOraSimple = (...args) => event.sender.send(...args)
+        // send initial state
+        this.sendOraSimple('electron-state', this.state)
+        // this one updates state
+        this.sendOra = async (...args) => {
+          event.sender.send(...args)
+          return await this.getOraState()
+        }
       })
+    )
+
+    // if you call this.getOraState() this will handle it
+    this.on(ipcMain, 'set-state', (event, state) => {
+      // update state
+      this.oraState = state
+      if (this.oraStateGetters.length) {
+        for (const getter of this.oraStateGetters) {
+          getter(state)
+        }
+        this.oraStateGetters = []
+      } else {
+        console.log('nothing is listening for state')
+      }
     })
 
-    this.on(ipcMain, 'navigate', (event, url) => {
-      open(url)
-    })
-
-    this.on(ipcMain, 'get-context', this.getContext)
-
-    this.on(ipcMain, 'open-settings', (event, service) => {
-      open(`${Constants.APP_URL}/authorize?service=` + service)
-    })
+    this.on(
+      ipcMain,
+      'open-browser',
+      throttle((event, url) => Helpers.open(url), 200)
+    )
+    this.on(ipcMain, 'open-settings', throttle(this.handlePreferences, 200))
   }
 
-  shown = true
+  setupCrawlerListeners() {
+    this.on(ipcMain, 'inject-crawler', throttle(Injections.injectCrawler, 1000))
+    this.on(
+      ipcMain,
+      'uninject-crawler',
+      throttle(Injections.uninjectCrawler, 1000)
+    )
+  }
 
-  @log
-  toggleShown = throttle(() => {
-    this.sendOra('ora-toggle')
-    this.shown = !this.shown // hacky
-    if (this.shown) {
-      if (this.appRef) {
-        this.appRef.show()
-        this.appRef.focus()
-      }
-      this.oraRef.focus()
-    } else {
-      setTimeout(() => {
-        if (this.appRef) {
-          this.appRef.hide()
-        }
-      }, 300)
-    }
-  }, 500)
+  setupAuthListeners() {
+    const getAuthUrl = service =>
+      `${Constants.APP_URL}/authorize?service=` + service
+    const openAuthWindow = (e, service) =>
+      Injections.openAuth(getAuthUrl(service))
+    const closeAuthWindow = (e, service) =>
+      Injections.closeChromeTabWithUrl(getAuthUrl(service))
+    this.on(ipcMain, 'auth-open', throttle(openAuthWindow, 2000))
+    this.on(ipcMain, 'auth-close', throttle(closeAuthWindow, 2000))
+  }
 
-  @log
-  injectCrawler = throttle(async sendToOra => {
-    const js = await getCrawler()
-    await Helpers.runAppleScript(`
-      tell application "Google Chrome"
-        tell front window's active tab
-          set source to execute javascript "${escapeStringApplescript(js)}"
-        end tell
-      end tell
-    `)
-    this.continueChecking = true
-    let lastRes = null
-    this.checkCrawlerLoop(res => {
-      if (!isEqual(lastRes, res)) {
-        sendToOra(res)
-        lastRes = res
-      }
-    })
-  }, 500)
-
-  @log
-  checkCrawlerLoop = async cb => {
-    try {
-      cb(await this.checkCrawler())
-    } catch (err) {
-      this.continueChecking = false
-      console.log('error with crawl loop', err)
-    }
-    await Helpers.sleep(500)
-    if (!this.mounted) {
+  toggleShown = throttle(async () => {
+    if (!this.appRef) {
+      console.log('no app ref :(')
       return
     }
-    if (this.continueChecking) {
-      console.log('loop check crawler')
-      this.checkCrawlerLoop(cb)
-    }
-  }
-
-  @log
-  checkCrawler = throttle(async () => {
-    const res = await Helpers.runAppleScript(`
-      tell application "Google Chrome"
-        tell front window's active tab
-          set source to execute javascript "JSON.stringify(window.__oraCrawlerAnswer || {})"
-        end tell
-      end tell
-    `)
-    try {
-      const result = JSON.parse(res)
-      return result
-    } catch (err) {
-      console.log('error parsing result', err)
-      return null
-    }
-  }, 200)
-
-  @log
-  getContext = throttle(async event => {
-    const [application, title] = await Helpers.runAppleScript(`
-      global frontApp, frontAppName, windowTitle
-      set windowTitle to ""
-      tell application "System Events"
-        set frontApp to first application process whose frontmost is true
-        set frontAppName to name of frontApp
-        tell process frontAppName
-          tell (1st window whose value of attribute "AXMain" is true)
-            set windowTitle to value of attribute "AXTitle"
-          end tell
-        end tell
-      end tell
-      return {frontAppName, windowTitle}
-    `)
-    if (application === 'Google Chrome') {
-      const res = await Helpers.runAppleScript(`
-        tell application "Google Chrome"
-          tell front window's active tab
-            set source to execute javascript "JSON.stringify({ url: document.location+'', title: document.title, body: document.body.innerText, selection: document.getSelection().toString() ? document.getSelection().toString() : (document.getSelection().anchorNode ? document.getSelection().anchorNode.textContent : '') })"
-          end tell
-        end tell
-      `)
-      try {
-        const result = JSON.parse(res)
-        event.sender.send(
-          'set-context',
-          JSON.stringify({
-            title: result.title,
-            body: result.body,
-            currentText: result.currentText,
-            url: result.url,
-            selection: result.selection,
-            application,
-          })
-        )
-      } catch (err) {
-        console.log('error parsing json', err, res)
+    if (!this.oraState.hidden) {
+      await this.sendOra('ora-toggle')
+      await Helpers.sleep(150)
+      if (!this.state.showSettings) {
+        this.appRef.hide()
       }
     } else {
-      event.sender.send('set-context', null)
+      this.appRef.show()
+      await Helpers.sleep(50)
+      await this.sendOra('ora-toggle')
+      await Helpers.sleep(150)
+      this.appRef.focus()
+      this.oraRef.focus()
     }
   }, 200)
 
+  lastContext = null
+  lastContextError = null
+
+  watchForContext = () => {
+    this.setInterval(async () => {
+      let res
+      try {
+        res = await Helpers.getActiveWindowInfo()
+      } catch (err) {
+        if (err.message.indexOf(`Can't get window 1 of`)) {
+          // super hacky but if it fails it usually gives an error like:
+          //   execution error: System Events got an error: Can’t get window 1 of process "Slack"
+          // so we can find it:
+          const name = err.message.match(/process "([^"]+)"/)
+          if (name && name.length) {
+            res = { application: name[1], title: name[1] }
+          }
+        }
+        if (!res) {
+          if (this.lastContextError !== err.message) {
+            console.log('error watching context', err.message)
+            this.lastContextError = err.message
+          }
+        }
+      }
+      if (res) {
+        const { application } = res
+        const context = {
+          focusedApp: application,
+          ...(await Helpers.getChromeContext()),
+        }
+        if (!isEqual(this.state.context, context)) {
+          this.updateState({ context })
+        }
+      }
+    }, 500)
+  }
+
+  SHORTCUTS = {
+    'Option+Space': () => {
+      console.log('command option+space')
+      this.toggleShown()
+    },
+  }
+
   registerShortcuts = () => {
-    globalShortcut.unregisterAll()
-    const SHORTCUTS = {
-      'Option+Space': () => {
-        console.log('command option+space')
-        this.toggleShown()
-      },
-    }
-    for (const shortcut of Object.keys(SHORTCUTS)) {
-      const ret = globalShortcut.register(shortcut, SHORTCUTS[shortcut])
+    for (const shortcut of Object.keys(this.SHORTCUTS)) {
+      const ret = globalShortcut.register(shortcut, this.SHORTCUTS[shortcut])
       if (!ret) {
         console.log('couldnt register shortcut')
       }
     }
   }
 
-  measureAndShow = async () => {
-    this.measure()
-    this.setState({ show: true, position: this.position, size: this.size })
-  }
-
   componentDidCatch(error) {
     console.error(error)
-    this.setState({ error })
+    this.updateState({ error })
+  }
+
+  handlePreferences = () => {
+    this.updateState({ showSettings: true })
+  }
+
+  handleMenuRef = ref => {
+    this.menuRef = ref
+  }
+
+  handleMenuQuit = () => {
+    this.isClosing = true
+  }
+
+  handleMenuClose = () => {
+    if (this.state.showSettings) {
+      this.updateState({ showSettings: false })
+    }
+  }
+
+  handleAppRef = ref => {
+    if (ref) {
+      this.appRef = ref.app
+    }
+  }
+
+  onBeforeQuit = () => console.log('hi')
+  onOraBlur = () => this.sendOra('ora-blur')
+  onOraFocus = () => this.sendOra('ora-focus')
+  onOraMoved = trayPosition => this.updateState({ trayPosition })
+
+  onSettingsSized = size => this.updateState({ size })
+  onSettingsMoved = position => this.updateState({ position })
+  onSettingsClosed = e => {
+    if (!this.isClosing && this.state.showSettings) {
+      e.preventDefault()
+      this.updateState({ showSettings: false })
+    }
+  }
+
+  handleShowDevTools = () => {
+    if (this.state.showSettings) {
+      this.updateState({
+        showSettingsDevTools: !this.state.showSettingsDevTools,
+      })
+    } else {
+      this.updateState({ showDevTools: !this.state.showDevTools })
+    }
   }
 
   render() {
     const { error, restart } = this.state
-
     if (restart) {
-      console.log('\n\n\n\n\n\nRESTARTING\n\n\n\n\n\n')
+      console.log('RESTARTING')
       this.repl.close()
-      onWindows = []
-      return (
-        <app>
-          <window />
-        </app>
-      )
+      // onWindows = []
+      return <App key={0} />
     }
-
-    const webPreferences = {
-      nativeWindowOpen: true,
-      experimentalFeatures: true,
-      transparentVisuals: true,
-    }
-
-    const appWindow = {
-      frame: false,
-      defaultSize: [700, 500],
-      backgroundColor: '#00000000',
-      webPreferences,
-    }
-
     if (error) {
       console.log('recover render from error')
       return null
     }
-
+    const appWindow = {
+      frame: false,
+      defaultSize: [700, 500],
+      backgroundColor: '#00000000',
+      webPreferences: {
+        nativeWindowOpen: true,
+        experimentalFeatures: true,
+        transparentVisuals: true,
+      },
+    }
     return (
-      <app
-        onBeforeQuit={() => console.log('hi')}
-        ref={ref => {
-          this.appRef = ref
-        }}
-      >
+      <App onBeforeQuit={this.onBeforeQuit} ref={this.handleAppRef}>
         <MenuItems
-          onPreferences={() => {
-            this.setState({ showSettings: true })
-          }}
-          getRef={ref => {
-            this.menuRef = ref
-          }}
+          onPreferences={this.handlePreferences}
+          onShowDevTools={this.handleShowDevTools}
+          getRef={this.handleMenuRef}
+          onQuit={this.handleMenuQuit}
+          onClose={this.handleMenuClose}
         />
-        {!this.state.closeSettings && (
-          <window
-            {...appWindow}
-            show={this.state.showSettings}
-            vibrancy="dark"
-            transparent
-            hasShadow
-            showDevTools={this.state.showSettings}
-            defaultSize={this.initialSize || this.state.size}
-            size={this.state.size}
-            file={`${Constants.APP_URL}/settings`}
-            titleBarStyle="customButtonsOnHover"
-            position={this.state.position}
-            onResize={size => this.setState({ size })}
-            onMoved={position => this.setState({ position })}
-            onMove={position => this.setState({ position })}
-            onFocus={() => {
-              this.activeWindow = this.oraRef
-            }}
-            onClose={() => {
-              this.setState({ closeSettings: true })
-              setTimeout(() => {
-                // reopen invisible so its quick to open again
-                this.setState({ closeSettings: false, showSettings: false })
-              }, 500)
-            }}
-          />
-        )}
-        <window
+        {/* APP: */}
+        <Window
           {...appWindow}
-          ref={this.onOra}
-          titleBarStyle="customButtonsOnHover"
+          ref={this.handleOraRef}
           transparent
           show
           alwaysOnTop
-          showDevTools
+          hasShadow={false}
+          showDevTools={this.state.showDevTools}
           size={[Constants.ORA_WIDTH, 1000]}
-          file={`${Constants.APP_URL}/ora`}
+          file={`${Constants.APP_URL}`}
           position={this.state.trayPosition}
-          onMoved={trayPosition => this.setState({ trayPosition })}
-          onMove={trayPosition => this.setState({ trayPosition })}
-          onBlur={() => this.sendOra('ora-blur')}
-          onFocus={() => this.sendOra('ora-focus')}
+          onMoved={this.onOraMoved}
+          onMove={this.onOraMoved}
+          onBlur={this.onOraBlur}
+          onFocus={this.onOraFocus}
+          devToolsExtensions={Helpers.getExtensions(['mobx', 'react'])}
         />
-      </app>
+        {/* SETTINGS PANE: */}
+        <Window
+          {...appWindow}
+          show={this.state.showSettings}
+          showDevTools={this.state.showSettingsDevTools}
+          transparent
+          hasShadow
+          titleBarStyle="hiddenInset"
+          defaultSize={this.state.size}
+          size={this.state.size}
+          file={`${Constants.APP_URL}/settings`}
+          position={this.state.position}
+          onResize={this.onSettingsSized}
+          onMoved={this.onSettingsMoved}
+          onMove={this.onSettingsMoved}
+          onClose={this.onSettingsClosed}
+        />
+      </App>
     )
   }
 }

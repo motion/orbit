@@ -3,6 +3,8 @@ import latinize from 'latinize'
 import * as React from 'react'
 import fuzzy_ from './fuzzy'
 
+export IndexDB from './indexDB'
+
 // because honestly, its easy to forget when writing jsx
 // maybe im missing something in flow
 window.React = React

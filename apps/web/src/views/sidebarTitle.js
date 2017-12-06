@@ -2,46 +2,120 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
+import * as Constants from '~/constants'
+
+const glowProps = {
+  color: '#fff',
+  scale: 0.7,
+  blur: 70,
+  opacity: 0.04,
+  resist: 20,
+  zIndex: 1,
+}
+
+const chromeStyle = {
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  zIndex: 0,
+  borderTopRadius: 6,
+  overflow: 'hidden',
+  transform: {
+    perspective: '100px',
+    rotateX: '6deg',
+  },
+}
+
+@view({
+  store: class TabStore {
+    showGlow = false
+  },
+})
+class Tab {
+  render({ store, children }) {
+    return (
+      <tab
+        css={{ position: 'relative', flex: 1 }}
+        onMouseEnter={store.ref('showGlow').setter(true)}
+        onMouseLeave={store.ref('showGlow').setter(false)}
+      >
+        <chrome
+          css={{
+            ...chromeStyle,
+            background: Constants.ORA_BG_MAIN,
+            borderBottom: 'none',
+            boxShadow: [
+              'inset 0 0.5px 0 rgba(255,255,255,0.15)',
+              '0 0 15px 0 rgba(0,0,0,0.3)',
+            ],
+          }}
+        />
+        <inner
+          css={{
+            padding: [6, 12],
+            flexFlow: 'row',
+            flex: 1,
+            zIndex: 1,
+            alignItems: 'center',
+          }}
+        >
+          {children}
+          <chromeAbove
+            css={{ ...chromeStyle, background: 'transparent', zIndex: 1 }}
+          >
+            <UI.HoverGlow {...glowProps} show={store.showGlow} />
+          </chromeAbove>
+        </inner>
+      </tab>
+    )
+  }
+}
 
 @view
 export default class SidebarTitle {
-  render({ backProps, noBack, icon, subtitle, title, onBack }) {
+  render({ after, image, backProps, noBack, icon, subtitle, title, onBack }) {
+    const titleIsString = typeof title === 'string'
+    const titleIsElement = React.isValidElement(title)
     return (
-      <sidebartitle
-        onClick={e => {
-          e.stopPropagation()
-          onBack(e)
-        }}
-      >
-        <UI.Button
-          if={!noBack}
-          $backButton
-          size={0.9}
-          circular
-          theme="light"
-          icon="arrominleft"
-          boxShadow="0 0 10px rgba(0,0,0,0.1)"
-          {...backProps}
-        />
-        <titles>
-          <UI.Title ellipse={2} $title size={1.25} fontWeight={600}>
-            {title}
-          </UI.Title>
-          <UI.Title if={subtitle} ellipse size={0.8} opacity={0.5}>
-            {subtitle}
-          </UI.Title>
-        </titles>
-        <UI.Icon
-          if={icon}
-          css={{
-            width: 36,
-            height: 36,
-            borderRadius: 100,
-            border: [2, [255, 255, 255, 0.2]],
-            marginLeft: 10,
-          }}
-          name={icon || '/images/me.jpg'}
-        />
+      <sidebartitle onClick={e => e.stopPropagation()}>
+        <Tab>
+          <UI.Button
+            if={!!onBack && !noBack}
+            $backButton
+            chromeless
+            size={1}
+            icon="arrominleft"
+            sizePadding={0}
+            alpha={0.5}
+            alignSelf="center"
+            hover={{
+              alpha: 1,
+            }}
+            onClick={onBack}
+            {...backProps}
+          />
+          <titles>
+            <UI.Title
+              if={titleIsString}
+              ellipse={2}
+              size={0.95}
+              fontWeight={300}
+              opacity={0.6}
+              textShadow="0 -1px 0 rgba(0,0,0,0.2)"
+            >
+              {title}
+            </UI.Title>
+            {titleIsElement ? title : null}
+            <UI.Title if={subtitle} ellipse size={0.8} opacity={0.5}>
+              {subtitle}
+            </UI.Title>
+          </titles>
+          {after}
+          <img if={image} $image src={image} />
+          <UI.Icon if={icon} $image name={icon || '/images/me.jpg'} />
+        </Tab>
       </sidebartitle>
     )
   }
@@ -50,17 +124,29 @@ export default class SidebarTitle {
     sidebartitle: {
       flexFlow: 'row',
       alignItems: 'center',
-      overflow: 'hidden',
-      padding: [8, 10],
-      margin: [0, -10],
-      flex: 1,
+      padding: [0, 3.5, 0, 3],
+      userSelect: 'none',
+      // borderBottom: [1, [255, 255, 255, 0.05]],
+      // background: [255, 255, 255, 0.05],
     },
     titles: {
       flex: 1,
       width: '50%',
+      justifyContent: 'flex-start',
+      paddingRight: 10,
+      flexFlow: 'row',
     },
     backButton: {
-      margin: [0, 8, 0, -3],
+      margin: [-2, 3, -2, -8],
+      zIndex: 10,
+    },
+    image: {
+      width: 16,
+      height: 16,
+      borderRadius: 100,
+      // border: [1, [255, 255, 255, 0.7]],
+      marginLeft: 10,
+      alignSelf: 'center',
     },
   }
 }

@@ -28,7 +28,7 @@ export default class Sync {
   start() {
     this.watchJobs()
     this.startSyncers()
-    this.watch(() => {
+    this.watch(function watchSyncEnabled() {
       if (this.enabled) {
         return
       }
@@ -95,17 +95,22 @@ export default class Sync {
     if (!this.syncers) {
       this.syncers = {}
       for (const name of Object.keys(Syncers)) {
-        const syncer = new Syncers[name]({
-          user: CurrentUser,
-          sync: this,
-        })
-        if (syncer.start) {
-          await syncer.start()
-        }
-        this.syncers[name] = syncer
-        if (!this[name]) {
-          // $FlowIgnore
-          this[name] = syncer
+        try {
+          const syncer = new Syncers[name]({
+            user: CurrentUser,
+            sync: this,
+          })
+          if (syncer.start) {
+            await syncer.start()
+          }
+          this.syncers[name] = syncer
+          if (!this[name]) {
+            // $FlowIgnore
+            this[name] = syncer
+          }
+        } catch (err) {
+          console.log('error starting syncer', name)
+          console.log(err)
         }
       }
     }

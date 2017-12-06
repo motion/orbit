@@ -14,5 +14,3 @@ jss.use(
 )
 
 export default jss
-
-window.JSS = jss

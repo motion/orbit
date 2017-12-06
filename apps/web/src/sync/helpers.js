@@ -67,6 +67,9 @@ export async function createInChunks(
   callback: () => Promise<any>,
   chunk = 10
 ) {
+  if (!callback) {
+    throw new Error('Need to provide a function that handles creation')
+  }
   let finished = []
   let creating = []
   async function waitForCreating() {
@@ -79,7 +82,11 @@ export async function createInChunks(
     if (creating.length === chunk) {
       await waitForCreating()
     }
-    creating.push(callback(item))
+    const promise = callback(item)
+    if (!(promise instanceof Promise)) {
+      throw new Error(`Didn't return a promise from your creation function`)
+    }
+    creating.push(promise)
   }
   await waitForCreating()
   return finished.filter(Boolean)

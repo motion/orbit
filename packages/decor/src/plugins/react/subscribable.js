@@ -2,11 +2,11 @@
 import { CompositeDisposable } from 'sb-event-kit'
 
 declare class Subscribable {
-  subscriptions: CompositeDisposable,
+  subscriptions: CompositeDisposable;
 }
 
 declare class Object {
-  static defineProperty(any, any, any): void,
+  static defineProperty(any, any, any): void;
 }
 
 export default () => ({
@@ -28,10 +28,12 @@ export default () => ({
         return this.__subscriptions
       },
     })
-  },
-  mixin: {
-    componentWillUnmount() {
+    const ogDispose = Klass.prototype.dispose
+    Klass.prototype.dispose = function(...args) {
       this.subscriptions.dispose()
-    },
+      if (ogDispose) {
+        ogDispose.call(this, ...args)
+      }
+    }
   },
 })

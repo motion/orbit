@@ -84,11 +84,12 @@ export default function storeProvidable(options, Helpers) {
           this.mounted = true
           this.mountStores()
           if (window.Black) {
-            window.Black.view.on('hmr', this.clearErrors)
+            this.errorClear = () => this.clearErrors()
+            window.Black.view.on('hmr', this.errorClear)
           }
         }
 
-        clearErrors = () => {
+        clearErrors() {
           if (this.unmounted) {
             return
           }
@@ -107,7 +108,7 @@ export default function storeProvidable(options, Helpers) {
           // if you remove @view({ store: ... }) it tries to remove it here but its gone
           if (this.disposeStores) {
             if (window.Black) {
-              window.Black.view.off('hmr', this.clearErrors)
+              window.Black.view.off('hmr', this.errorClear)
             }
             this.disposeStores()
             this.unmounted = true
@@ -138,6 +139,11 @@ export default function storeProvidable(options, Helpers) {
           const stores = Object.keys(Stores).reduce((acc, cur) => {
             const Store = Stores[cur]
             const createStore = () => {
+              if (!Store.prototype) {
+                throw new Error(
+                  `Store has no prototype from ${this.name}: ${cur}`
+                )
+              }
               Object.defineProperty(Store.prototype, 'props', getProps)
               const store = new Store()
               delete Store.prototype.props // safety, remove hack
@@ -185,7 +191,7 @@ export default function storeProvidable(options, Helpers) {
 
         disposeStores() {
           if (!this.stores) {
-            log('no stores to dispose')
+            console.log('no stores to dispose')
             return
           }
           for (const name of Object.keys(this.stores)) {

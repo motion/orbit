@@ -1,16 +1,24 @@
+const Path = require('path')
 const Crawler = require('./lib/index.js').default
 
+// attempt to use regular chrome, no luck
+
 const crawler = new Crawler()
-// const page = 'https://dropbox.com/help'
-const page =
-  'https://get.slack.help/hc/en-us/articles/201864558-Set-your-Slack-status-and-availability'
-// const page = 'https://jacobitemag.com'
-// const page = 'https://support.stripe.com'
-// const page = 'http://paulgraham.com'
-crawler.start(page, {
-  depth: '/hc/en-us',
-  // maxRadius: 2,
+const userProfileDir = Path.join(
+  process.env.HOME,
+  'Library',
+  'Application Support',
+  'Google',
+  'Chrome',
+  'Default'
+)
+
+crawler.start('http://paulgraham.com', {
   puppeteerOptions: {
-    headless: true,
+    headless: false,
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    userProfileDir,
+    executablePath:
+      '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
   },
 })

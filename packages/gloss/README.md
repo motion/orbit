@@ -2,9 +2,9 @@
 
 usage:
 
+See [@mcro/css]() for information on shorthand values Gloss supports.
 
-
-example:
+full-featured example:
 
 ```js
 import React from 'react'

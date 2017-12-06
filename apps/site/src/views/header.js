@@ -23,6 +23,7 @@ export default () => (
     css={{
       background: 'transparent',
       padding: [10, 0],
+      margin: [0, -25],
       position: 'relative',
       zIndex: 10,
     }}
@@ -40,11 +41,14 @@ export default () => (
         <MenuItem to="/pricing">Pricing</MenuItem>
       </menu>
 
-      <end>
+      <end css={{ width: 180, alignItems: 'flex-end' }}>
         <UI.Button
           icon="objects_planet"
           iconAfter
-          size={1.2}
+          size={1}
+          sizePadding={1.8}
+          sizeHeight={1.5}
+          fontWeight={200}
           theme="rgb(6.1%, 53.4%, 22.6%)"
           color="#fff"
         >

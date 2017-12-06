@@ -175,16 +175,12 @@ export default function motionStyle(options: Object = {}) {
   // style transformer
   function processStyles(styles: Object, opts: Opts): Object {
     const toReturn = {}
+    const shouldSnake = !opts || opts.snakeCase !== false
 
-    for (let key in styles) {
-      if (!styles.hasOwnProperty(key)) {
-        continue
-      }
-
+    for (let key of Object.keys(styles)) {
       let value = styles[key]
       let valueType = typeof value
       let finalKey = key
-      const shouldSnake = !opts || opts.snakeCase !== false
 
       // convert camel to snake
       if (shouldSnake) {
@@ -216,6 +212,20 @@ export default function motionStyle(options: Object = {}) {
           toReturn[finalKey] = value
             .map(x => (x.indexOf(' ') ? `"${x}"` : x))
             .join(', ')
+        } else if (key === 'position') {
+          const isSpecific = value.length === 5
+          let index = 0
+          if (isSpecific) {
+            toReturn.position = value[0]
+            index++
+          } else {
+            toReturn.position = 'absolute'
+          }
+          toReturn.top = value[index++]
+          toReturn.right = value[index++]
+          toReturn.bottom = value[index++]
+          toReturn.left = value[index++]
+          console.log('to return', toReturn)
         } else {
           toReturn[finalKey] = processArray(key, value)
         }

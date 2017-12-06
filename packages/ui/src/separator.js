@@ -7,7 +7,7 @@ export default class Separator {
   render({ after, children, ...props }) {
     return (
       <separator {...props}>
-        <Text $content size={0.9}>
+        <Text $text size={0.9}>
           {children}
         </Text>
         <after if={after}>{after}</after>
@@ -23,12 +23,11 @@ export default class Separator {
       alignItems: 'center',
       borderBottom: [1, [0, 0, 0, 0.2]],
       textAlign: 'left',
-      opacity: 0.4,
       userSelect: 'none',
       position: 'relative',
       flexFlow: 'row',
     },
-    content: {
+    text: {
       pointerEvents: 'none',
       flex: 1,
     },

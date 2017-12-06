@@ -228,6 +228,11 @@ export default class Surface extends React.PureComponent<Props> {
     const stringIcon = typeof icon === 'string'
     const { themeValues } = this
 
+    if (!themeValues) {
+      console.warn('this is weird')
+      return null
+    }
+
     const passProps = {
       tagName,
       ref: getRef,
@@ -465,7 +470,7 @@ export default class Surface extends React.PureComponent<Props> {
       props.hover &&
       typeof props.hover.backgroundAlpha === 'number'
     ) {
-      hoverBackground = hoverColor.alpha(props.hover.backgroundAlpha)
+      hoverBackground = hoverBackground.alpha(props.hover.backgroundAlpha)
     }
 
     const borderColor = $(

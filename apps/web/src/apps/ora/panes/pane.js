@@ -3,7 +3,7 @@ import * as UI from '@mcro/ui'
 import * as Constants from '~/constants'
 import SidebarTitle from '~/views/sidebarTitle'
 import Drawer from '~/views/drawer'
-import { debounce } from 'lodash'
+import OraActionBar from '~/apps/ora/oraActionBar'
 
 class PaneStore {
   listRef = null
@@ -111,6 +111,7 @@ export default class Pane {
     const list = paneStore.items && (
       <UI.List
         key={stackItem && stackItem.id}
+        hideScrollBar
         itemsKey={paneStore.contentVersion}
         getRef={paneStore.setList}
         onSelect={this.onSelect}
@@ -156,11 +157,17 @@ export default class Pane {
           onBack={stackItem.stack.left}
           {...typeof title === 'object' && title}
         />
-        <content $transparent={transparent} ref={paneStore.setContentRef}>
+        <content
+          $transparent={transparent}
+          ref={paneStore.setContentRef}
+          css={{ borderTopRadius: title ? 0 : 8 }}
+        >
+          <UI.Glint if={!title} borderRadius={8} />
           {!children
             ? list
             : typeof children === 'function' ? children(list) : children}
         </content>
+        <OraActionBar if={actions} />
         <bottomGlow
           if={!drawer && !disableGlow}
           $showWithActionBar={!!actions}
@@ -173,9 +180,9 @@ export default class Pane {
     pane: {
       flex: 1,
       position: 'relative',
+      overflow: 'hidden',
     },
     content: {
-      // overflowY: 'scroll',
       flex: 1,
       position: 'relative',
       background: Constants.ORA_BG_MAIN,

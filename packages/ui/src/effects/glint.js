@@ -19,7 +19,7 @@ type Props = {
 @view.ui
 export default class Glint extends React.Component<Props> {
   static defaultProps = {
-    color: [255, 255, 255, 0.15],
+    color: [255, 255, 255, 0.09],
     size: 1,
   }
 

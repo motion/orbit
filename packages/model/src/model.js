@@ -649,7 +649,7 @@ export default class Model {
           try {
             await item.remove()
           } catch (e) {
-            // loop on document conflcits to delete all revisions
+            // loop on document conflicts to delete all revisions
             console.log('err', e)
             await remove(item)
           }

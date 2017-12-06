@@ -37,7 +37,7 @@ function getIcon(result) {
 
 function getChildren(result) {
   if (typeof result.children === 'string') {
-    return result.children.slice(0, 200).replace(/\s{2,}|\w{10,}/g, ' ... ')
+    return result.children.slice(0, 200).replace(/\s{2,}|\w{30,}/g, ' ... ')
   }
   if (result.children) {
     return result.children

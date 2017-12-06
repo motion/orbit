@@ -15,9 +15,13 @@
 * thing: safety on syncing the same url
 * oauth: clean up after cancel/confirm
 * height adjustment based on results
+* pin banner ux improvements
+* bug: home showing recent
 
 # now
 
+* via [S] #general
+* scan hard drives for files (word pdf excel)
 * cmd+opt when unfocused: focus + focus search
 * cmd+opt when hidden: focus + focus search
 * cmd+opt when focused: hide

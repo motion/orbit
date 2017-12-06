@@ -27,8 +27,19 @@ const itemProps = {
     activeIndex = 0
     items = [
       {
-        primary: 'Pins',
-        type: 'pins',
+        primary: 'Content',
+        type: 'content',
+        icon: 'content',
+        iconProps: {
+          style: {
+            transform: 'scale(0.8)',
+          },
+        },
+        category: 'Settings',
+      },
+      {
+        primary: 'Pinned Sites',
+        type: 'pinnedSites',
         icon: 'pin',
         iconProps: {
           style: {

@@ -25,7 +25,7 @@ const itemProps = {
   secondaryProps: {
     alpha: 0.3,
   },
-  highlightBackground: [0, 0, 0, 0.085],
+  highlightBackground: [0, 0, 0, 0.15],
   // highlightBackground: `linear-gradient(
   //   rgba(255,255,255,0),
   //   rgba(255,255,255,0.035) 30%

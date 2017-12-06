@@ -8,7 +8,7 @@ const glowProps = {
   color: '#fff',
   scale: 0.7,
   blur: 70,
-  opacity: 0.04,
+  opacity: 0.05,
   resist: 20,
   zIndex: 1,
 }
@@ -18,13 +18,14 @@ const chromeStyle = {
   top: 0,
   left: 0,
   right: 0,
-  bottom: 0,
+  bottom: -1,
   zIndex: 0,
   borderTopRadius: 6,
   overflow: 'hidden',
   transform: {
     perspective: '100px',
     rotateX: '6deg',
+    y: -0.5,
   },
 }
 
@@ -45,11 +46,12 @@ class Tab {
           css={{
             position: 'absolute',
             top: 0,
-            left: -3,
+            left: 0,
             bottom: 0,
-            right: 4,
+            right: 12,
             background: Constants.ORA_BG_MAIN,
-            borderTopRadius: 5,
+            borderTopLeftRadius: 10,
+            borderTopRightRadius: 0,
             zIndex: 2,
             boxShadow: ['inset 0 0.5px 0 rgba(255,255,255,0.15)'],
           }}
@@ -57,30 +59,33 @@ class Tab {
         <chrome
           css={{
             ...chromeStyle,
+            marginRight: 4,
             background: Constants.ORA_BG_MAIN,
             borderBottom: 'none',
             boxShadow: [
-              'inset 0 1px 0 rgba(255,255,255,0.15)',
+              'inset 0 0.5px 0 rgba(255,255,255,0.2)',
               '0 0 15px 0 rgba(0,0,0,0.3)',
             ],
           }}
         />
         <inner
           css={{
-            padding: [4, 12],
+            padding: [6, 12],
+            position: 'relative',
+            width: 'auto',
             flexFlow: 'row',
-            flex: 1,
             zIndex: 3,
             alignItems: 'center',
-            overflow: 'hidden',
-            borderTopRadius: 5,
           }}
         >
           {children}
-          <chromeAbove
-            css={{ ...chromeStyle, background: 'transparent', zIndex: 1 }}
-          />
-          <UI.HoverGlow {...glowProps} show={store.showGlow} />
+          <hoverContain
+            css={{
+              ...chromeStyle,
+            }}
+          >
+            <UI.HoverGlow {...glowProps} show={store.showGlow} />
+          </hoverContain>
         </inner>
       </tab>
     )
@@ -101,7 +106,8 @@ export default class SidebarTitle {
             chromeless
             size={1.1}
             icon="arrominleft"
-            sizePadding={0}
+            sizePadding={0.85}
+            sizeHeight={0.85}
             alpha={0.3}
             alignSelf="center"
             hover={{
@@ -139,7 +145,6 @@ export default class SidebarTitle {
     sidebartitle: {
       flexFlow: 'row',
       alignItems: 'center',
-      padding: [0, 3.5, 0, 3],
       userSelect: 'none',
       // borderBottom: [1, [255, 255, 255, 0.05]],
       // background: [255, 255, 255, 0.05],
@@ -147,7 +152,7 @@ export default class SidebarTitle {
     titles: {
       flex: 1,
       width: '50%',
-      justifyContent: 'center',
+      justifyContent: 'flex-start',
       alignItems: 'center',
       paddingRight: 8,
       flexFlow: 'row',

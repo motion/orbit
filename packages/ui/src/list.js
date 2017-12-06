@@ -42,6 +42,7 @@ export type Props = {
   // force update children
   updateChildren?: boolean,
   captureClickEvents?: boolean,
+  separatorProps?: Object,
 }
 
 type VirtualItemProps = {

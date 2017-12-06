@@ -183,7 +183,6 @@ export default class Pane {
       overflow: 'hidden',
     },
     content: {
-      // overflowY: 'scroll',
       flex: 1,
       position: 'relative',
       background: Constants.ORA_BG_MAIN,

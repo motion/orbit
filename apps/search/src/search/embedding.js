@@ -4,11 +4,13 @@ import { store, watch } from '@mcro/black/store'
 @store
 export default class Embedding {
   vectors = null
+  dimensionality = null
 
   @watch loading = () => this.vectors === null
 
-  constructor() {
-    this.vectors = this.loadData()
+  async willMount() {
+    this.vectors = await this.loadData()
+    this.dimensionality = this.vectors['test'].length
   }
 
   loadData = async () => {

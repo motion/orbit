@@ -1,7 +1,9 @@
 import { store } from '@mcro/black'
 import { debounce } from 'lodash'
 import debug from 'debug'
+import Search from '@mcro/search'
 
+const useWorker = false
 const log = debug('search')
 log.enabled = true
 
@@ -11,15 +13,30 @@ export default class SearchRunner {
   autocomplete = []
   results = null
 
-  sendSearch = debounce(() => {
+  sendSearch = debounce(async () => {
     if (this.searchText.length) {
-      this.worker.postMessage({ type: 'search', text: this.searchText })
+      if (useWorker) {
+        this.worker.postMessage({ type: 'search', text: this.searchText })
+      } else {
+        this.search.searchText = this.searchText
+        await this.search.search()
+        this.results = this.search.results
+        this.autocomplete = this.search.autocomplete
+      }
     }
   }, 50)
 
   constructor({ items }) {
-    this.worker = new Worker('/search/app.js')
-    this.worker.postMessage({ type: 'index', items })
+    if (useWorker) {
+      this.worker = new Worker('/search/app.js')
+      this.worker.postMessage({ type: 'index', items })
+
+      this.worker.onmessage = e => {
+        this.results = e.data
+      }
+    } else {
+      this.search = new Search({ documents: items })
+    }
 
     this.react(
       () => this.searchText,
@@ -27,8 +44,5 @@ export default class SearchRunner {
         this.sendSearch()
       }
     )
-    this.worker.onmessage = e => {
-      this.results = e.data
-    }
   }
 }

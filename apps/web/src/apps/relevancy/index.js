@@ -41,7 +41,7 @@ export default class RelevancyPage {
               {store.context &&
                 (store.context.autocomplete || []).map(i => (
                   <UI.Text>
-                    {i.text} - {i.val} - index {i.index}
+                    {i.word} - {i.weight}
                   </UI.Text>
                 ))}
             </autocomplete>
@@ -82,12 +82,6 @@ export default class RelevancyPage {
                         }}
                       />
                     </content>
-                    {debug.map(info => (
-                      <UI.Text>
-                        similarity: {similarity} {info.word} -> {info.word2} :{' '}
-                        {info.similarity} [{info.ws2.join(', ')}]
-                      </UI.Text>
-                    ))}
                   </details>
                 </item>
               )

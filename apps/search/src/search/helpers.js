@@ -1,4 +1,4 @@
-import { sortBy, last, memoize, range, sum } from 'lodash'
+import { sortBy, repeat, last, memoize, range, sum } from 'lodash'
 
 export const minKBy = (vals, k, fn) => {
   let stash = []
@@ -19,6 +19,20 @@ export const minKBy = (vals, k, fn) => {
   })
 
   return sortBy(stash, fn)
+}
+
+export const isAlphaNum = s => /^[a-z0-9]+$/i.test(s)
+
+export const vectorsToCentroid = (vecs, embedding) => {
+  const zeros = range(embedding.dimensionality).map(() => 0)
+  const addVec = (v, v2, weight) => {
+    const val = v.map((val, index) => val + (v2[index] - val) * weight)
+    return val
+  }
+
+  return vecs.reduce((accVec, { vec, weight }) => {
+    return addVec(accVec, vec, weight)
+  }, zeros)
 }
 
 // { foo: 2, bar: 5 } + { foo: 1 } = { foo: 3, bar: 5 }
@@ -64,10 +78,14 @@ export const wordMoversDistance = (words, words2, vecs) => {
     let minIndex = null
 
     words2.forEach((w2, index) => {
-      const val = 1 - cosineSimilarity(w + ':' + w2, vecs[w], vecs[w2])
+      let val = 1 - cosineSimilarity(w + ':' + w2, vecs[w], vecs[w2])
 
-      // round down because the middle-closeness words are overvalued
-      if (val > 0.25 && val < 0.5) return 0.5
+      // round up because the middle-closeness words are overvalued
+      /*
+      if (val > 0.25 && val < 0.5) {
+        val = 0.55
+      }
+      */
 
       if (val < minVal) {
         minVal = val

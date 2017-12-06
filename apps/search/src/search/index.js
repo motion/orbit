@@ -12,49 +12,42 @@ log.enabled = true
 
 @store
 export default class Search {
-  items = null
+  documents = null
   searchText = ''
   autocomplete = null
   results = null
   resultsCount = null
+  embedding = new Embedding()
 
   @watch
   indexer = () =>
-    this.items && new Indexer({ items: this.items, embedding: this.embedding })
-  embedding = new Embedding()
+    this.documents &&
+    this.embedding &&
+    this.embedding.vectors &&
+    new Indexer({ documents: this.documents, embedding: this.embedding })
 
-  constructor({ items, resultsCount }) {
-    console.log('in worker', items)
-    if (items) {
-      this.items = items
+  constructor({ documents, resultsCount }) {
+    if (documents) {
+      this.documents = documents
     }
 
     this.resultsCount = resultsCount || 10
-
-    /*
-    this.react(
-      () => this.searchText,
-      () => {
-        this.searching = true
-        this.results = this.search()
-        this.searching = false
-        this.autocomplete = this.getAutocomplete()
-      }
-    )
-    */
   }
 
   search = async () => {
-    console.log('going to run', this.searchText)
     const searchResponse = await this.indexer.search(
       this.searchText,
       this.resultsCount
     )
+
     if (searchResponse === false) {
       return false
     }
-    this.results = searchResponse.map(
-      ({ item, toBold, index, wmd, similarity, snippet }) => {
+    const { results, autocomplete } = searchResponse
+
+    this.autocomplete = autocomplete
+    this.results = results.map(
+      ({ item, toBold, index, debug, wmd, similarity, snippet }) => {
         return {
           item,
           toBold,
@@ -62,18 +55,10 @@ export default class Search {
           index,
           snippet,
           similarity,
-          debug: [],
+          debug,
         }
       }
     )
-  }
-
-  getAutocomplete = () => {
-    const important = this.indexer.documentsToImportantTerms(
-      this.results.map(({ index }) => index)
-    )
-
-    return important.map(({ token, freq }) => ({ text: token, val: freq }))
   }
 }
 
@@ -81,7 +66,7 @@ let search = null
 
 onmessage = async e => {
   if (e.data.type === 'index') {
-    search = new Search({ items: e.data.items })
+    search = new Search({ documents: e.data.items })
   }
 
   if (e.data.type === 'search') {
@@ -90,7 +75,10 @@ onmessage = async e => {
     const val = await search.search()
     console.timeEnd('searching ' + search.searchText)
     if (val !== false) {
-      postMessage(search.results)
+      postMessage({
+        results: search.results,
+        autocomplete: search.autocomplete,
+      })
     } else {
       console.log('we cancelled ', e.data.text)
     }

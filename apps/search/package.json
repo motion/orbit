@@ -16,7 +16,7 @@
     "ignore": ["**/*.map", "lib", "dist"]
   },
   "dependencies": {
-    "@mcro/black/store": "*",
+    "@mcro/black": "*",
     "@mcro/ui": "*",
     "babel-polyfill": "^6.26.0",
     "cheerio": "^1.0.0-rc.2",

@@ -22,20 +22,27 @@ export default class PinStore {
     }
     const { result } = response
     if (result) {
-      const { url } = result
-      const { title, content } = result.contents
-      await Thing.create({
-        title,
-        integration: 'pin',
-        type: 'site',
-        body: content,
-        url,
-        bucket: this.bucket || 'Default',
-      })
-      BannerStore.success({ message: 'Added pin' })
-      return true
+      try {
+        await Thing.createFromPin(result)
+        BannerStore.success({ message: 'Added pin' })
+        return true
+      } catch (err) {
+        BannerStore.error({ message: `${err.message}` })
+      }
     } else {
       BannerStore.error({ message: 'Failed pinning :(' })
+    }
+  }
+
+  remove = async context => {
+    try {
+      const thing = await Thing.findOne({ url: context.url })
+      if (thing) {
+        await thing.remove()
+        BannerStore.success({ message: 'Removed pin' })
+      }
+    } catch (err) {
+      BannerStore.error({ message: `Error: ${err.message}` })
     }
   }
 }

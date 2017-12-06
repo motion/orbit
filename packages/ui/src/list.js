@@ -11,6 +11,7 @@ import { CellMeasurer, CellMeasurerCache } from 'react-virtualized'
 import { throttle } from 'lodash'
 
 const idFn = _ => _
+const SCROLL_BAR_WIDTH = 16
 
 export type Props = {
   defaultSelected?: number,
@@ -41,6 +42,7 @@ export type Props = {
   // force update children
   updateChildren?: boolean,
   captureClickEvents?: boolean,
+  separatorProps?: Object,
 }
 
 type VirtualItemProps = {
@@ -250,6 +252,9 @@ class List extends React.PureComponent<Props, { selected: number }> {
     if (!this.children || !this.children[index]) {
       console.log('no child', index, this)
       return null
+    }
+    if (this.props.hideScrollBar && style.width === '100%') {
+      style.width = `calc(100% - ${SCROLL_BAR_WIDTH}px)`
     }
     const child = this.children[index]({ style })
     return (
@@ -469,6 +474,7 @@ class List extends React.PureComponent<Props, { selected: number }> {
       style,
       attach,
       horizontal,
+      hideScrollBar,
     } = this.props
     if (virtualized && !parentSize) {
       return null
@@ -478,10 +484,14 @@ class List extends React.PureComponent<Props, { selected: number }> {
       height = parentSize.height || height || 0
       width = parentSize.width || width || 0
     }
+    if (width && hideScrollBar) {
+      width += SCROLL_BAR_WIDTH
+    }
     const { totalItems, totalGroups, realIndex } = this
     return (
       <list
         $visible={!virtualized || this.state.started}
+        $hideScrollBar={hideScrollBar}
         style={{
           height: height || virtualized ? '100%' : 'auto',
           width,
@@ -516,6 +526,9 @@ class List extends React.PureComponent<Props, { selected: number }> {
       alignItems: 'stretch',
       overflowX: 'visible',
       visibility: 'hidden',
+    },
+    hideScrollBar: {
+      marginRight: -SCROLL_BAR_WIDTH,
     },
     visible: {
       visibility: 'visible',

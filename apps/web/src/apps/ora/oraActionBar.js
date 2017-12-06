@@ -9,17 +9,21 @@ const styles = {
   marginLeft: 6,
 }
 
+@view.attach('oraStore')
 @view
 export default class OraActionBar {
   render({ oraStore }) {
     const { store } = oraStore.stack.last
     const actions = store && store.actions
+
     return (
-      <UI.Theme name="dark">
+      <UI.Theme name="clear-dark">
         <actions>
           <collapseBar onClick={oraStore.ui.toggleCollapsed}>
+            <UI.Arrow />
             <UI.Icon name="menu" size={10} />
           </collapseBar>
+
           <actionbar if={actions && !oraStore.ui.collapsed}>
             {actions
               .filter(Boolean)
@@ -30,7 +34,19 @@ export default class OraActionBar {
                 if (content) {
                   return <span>{content}</span>
                 }
-                return <UI.Button glow {...props} />
+                return (
+                  <UI.Button
+                    glow
+                    glowProps={{
+                      color: [255, 255, 255],
+                      opacity: 0.2,
+                    }}
+                    glint={false}
+                    background={[255, 255, 255, 0.1]}
+                    borderWidth={0}
+                    {...props}
+                  />
+                )
               })
               .map((item, index) =>
                 React.cloneElement(item, {
@@ -71,11 +87,11 @@ export default class OraActionBar {
     },
     collapseBar: {
       height: 12,
+      width: 20,
       zIndex: 1000,
       position: 'absolute',
       bottom: 0,
       left: 0,
-      right: 0,
       flexFlow: 'row',
       justifyContent: 'center',
       pointerEvents: 'auto',

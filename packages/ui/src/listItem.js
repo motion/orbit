@@ -236,10 +236,6 @@ export default class ListItem extends React.Component<Props> {
       justifyContent: 'space-between',
       alignItems: 'center',
     },
-    section: {
-      width: '100%',
-      maxWidth: '100%',
-    },
     prop: {
       flex: 1,
       overflow: 'hidden',

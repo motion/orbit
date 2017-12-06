@@ -71,12 +71,15 @@ export default class ContextSidebar {
   get search() {
     return this.oraStore.ui.search
   }
+  get result() {
+    return this.oraStore.stack.last.result
+  }
 
   // can customize the shown title here
   get title() {
     if (!this.osContext) return
     return {
-      title: this.osContext.title,
+      title: this.result.title,
       image: this.osContext.favicon,
     }
   }
@@ -172,6 +175,10 @@ export default class ContextSidebar {
     this.oraStore.pin.add(this.oraStore.osContext)
   }
 
+  unpinCurrent = () => {
+    this.oraStore.pin.remove(this.oraStore.osContext)
+  }
+
   get actions() {
     if (this.previewCrawler.showing) {
       return [
@@ -201,7 +208,8 @@ export default class ContextSidebar {
       this.isPinned && {
         icon: 'check',
         children: 'Pinned',
-        onClick: this.pinCurrent,
+        tooltip: 'Remove pin',
+        onClick: this.unpinCurrent,
       },
       !this.isPinned && {
         icon: 'ui-1_bold-add',
@@ -217,10 +225,17 @@ export default class ContextSidebar {
   }
 
   get results() {
+    let results = []
     if (this.context) {
-      const os = this.search.length === 0 ? [] : []
-      return [...os, ...this.contextResults].filter(i => !!i)
+      results = this.contextResults
     }
-    return []
+    if (!results.length) {
+      results = [
+        {
+          title: 'No results...',
+        },
+      ]
+    }
+    return results
   }
 }

@@ -234,16 +234,22 @@ export default class UIStore {
   _watchHeight = () => {
     this.react(
       () => [
-        (this.stack.last.results || []).length,
+        this.stack.last.results || [],
         this.stack.last.store && this.stack.last.store.minHeight,
       ],
-      ([length, minHeight]) => {
+      ([results, minHeight]) => {
         let height = 'auto'
+        const length = results.length
+        // TODO make this actually measure
         if (length > 0) {
           // header + footer height
           height = 74 + 40
           // first
-          height += 120
+          if (results[0].content) {
+            height += 120
+          } else {
+            height += 53
+          }
           // second
           if (length > 1) height += 120
           // ...rest

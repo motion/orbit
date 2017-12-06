@@ -165,7 +165,9 @@ export default class Database {
       this.models[name] = model
       if (typeof model.connect !== 'function') {
         throw new Error(
-          `No connect found for model ${model.name} connect = ${typeof model.connect}`
+          `No connect found for model ${
+            model.name
+          } connect = ${typeof model.connect}`
         )
       }
       connections.push(

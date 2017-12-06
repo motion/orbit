@@ -5,6 +5,7 @@ import { Constants } from '@mcro/black'
 export const IS_ELECTRON = Constants.IS_ELECTRON
 export const IS_PROD =
   process.env.NODE_ENV === 'production' || process.env.IS_PROD
+export const IS_DEV = !IS_PROD
 
 if (process.env.IS_PROD) {
   console.log('IS_PROD!')
@@ -13,8 +14,8 @@ if (process.env.IS_PROD) {
 export const VERSION = require('../package.json').version
 
 export const ORA_BG = [10, 10, 10, 0.88]
-export const ORA_BG_MAIN_OPAQUE = [60, 60, 60]
-export const ORA_BG_MAIN = [...ORA_BG_MAIN_OPAQUE, 0.96]
+export const ORA_BG_MAIN_OPAQUE = [50, 50, 50]
+export const ORA_BG_MAIN = [...ORA_BG_MAIN_OPAQUE]
 export const ORA_WIDTH = 300
 export const ORA_HEIGHT = 535
 export const ORA_HEADER_HEIGHT = 40

@@ -8,7 +8,7 @@ const glowProps = {
   color: '#fff',
   scale: 0.7,
   blur: 70,
-  opacity: 0.04,
+  opacity: 0.05,
   resist: 20,
   zIndex: 1,
 }
@@ -18,13 +18,14 @@ const chromeStyle = {
   top: 0,
   left: 0,
   right: 0,
-  bottom: 0,
+  bottom: -1,
   zIndex: 0,
   borderTopRadius: 6,
   overflow: 'hidden',
   transform: {
     perspective: '100px',
     rotateX: '6deg',
+    y: -0.5,
   },
 }
 
@@ -41,13 +42,28 @@ class Tab {
         onMouseEnter={store.ref('showGlow').setter(true)}
         onMouseLeave={store.ref('showGlow').setter(false)}
       >
+        <leftBorder
+          css={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            bottom: 0,
+            right: 12,
+            background: Constants.ORA_BG_MAIN,
+            borderTopLeftRadius: 10,
+            borderTopRightRadius: 0,
+            zIndex: 2,
+            boxShadow: ['inset 0 0.5px 0 rgba(255,255,255,0.15)'],
+          }}
+        />
         <chrome
           css={{
             ...chromeStyle,
+            marginRight: 3.5,
             background: Constants.ORA_BG_MAIN,
             borderBottom: 'none',
             boxShadow: [
-              'inset 0 0.5px 0 rgba(255,255,255,0.15)',
+              'inset 0 0.5px 0 rgba(255,255,255,0.2)',
               '0 0 15px 0 rgba(0,0,0,0.3)',
             ],
           }}
@@ -55,18 +71,21 @@ class Tab {
         <inner
           css={{
             padding: [6, 12],
+            position: 'relative',
+            width: 'auto',
             flexFlow: 'row',
-            flex: 1,
-            zIndex: 1,
+            zIndex: 3,
             alignItems: 'center',
           }}
         >
           {children}
-          <chromeAbove
-            css={{ ...chromeStyle, background: 'transparent', zIndex: 1 }}
+          <hoverContain
+            css={{
+              ...chromeStyle,
+            }}
           >
             <UI.HoverGlow {...glowProps} show={store.showGlow} />
-          </chromeAbove>
+          </hoverContain>
         </inner>
       </tab>
     )
@@ -85,13 +104,15 @@ export default class SidebarTitle {
             if={!!onBack && !noBack}
             $backButton
             chromeless
-            size={1}
+            size={1.1}
             icon="arrominleft"
-            sizePadding={0}
-            alpha={0.5}
+            sizePadding={0.85}
+            sizeHeight={0.85}
+            alpha={0.3}
             alignSelf="center"
             hover={{
-              alpha: 1,
+              alpha: 0.5,
+              background: [0, 0, 0, 0.1],
             }}
             onClick={onBack}
             {...backProps}
@@ -100,7 +121,7 @@ export default class SidebarTitle {
             <UI.Title
               if={titleIsString}
               ellipse={2}
-              size={0.95}
+              size={1.1}
               fontWeight={300}
               opacity={0.6}
               textShadow="0 -1px 0 rgba(0,0,0,0.2)"
@@ -124,7 +145,6 @@ export default class SidebarTitle {
     sidebartitle: {
       flexFlow: 'row',
       alignItems: 'center',
-      padding: [0, 3.5, 0, 3],
       userSelect: 'none',
       // borderBottom: [1, [255, 255, 255, 0.05]],
       // background: [255, 255, 255, 0.05],
@@ -133,11 +153,12 @@ export default class SidebarTitle {
       flex: 1,
       width: '50%',
       justifyContent: 'flex-start',
-      paddingRight: 10,
+      alignItems: 'center',
+      paddingRight: 8,
       flexFlow: 'row',
     },
     backButton: {
-      margin: [-2, 3, -2, -8],
+      margin: [-3, 5, -3, -8],
       zIndex: 10,
     },
     image: {

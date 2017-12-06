@@ -124,7 +124,7 @@ export class Thing extends Model {
     return {
       id: thing.id || thing.data.id,
       title: thing.title,
-      type: thing.type,
+      type: 'context' || thing.type,
       iconAfter: true,
       icon: `${icon}`,
       data: thing,

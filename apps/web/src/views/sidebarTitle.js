@@ -38,7 +38,7 @@ class Tab {
   render({ store, children }) {
     return (
       <tab
-        css={{ position: 'relative', flex: 1 }}
+        css={{ position: 'relative', flex: 1, overflow: 'hidden' }}
         onMouseEnter={store.ref('showGlow').setter(true)}
         onMouseLeave={store.ref('showGlow').setter(false)}
       >
@@ -120,7 +120,7 @@ export default class SidebarTitle {
           <titles>
             <UI.Title
               if={titleIsString}
-              ellipse={2}
+              ellipse
               size={1.1}
               fontWeight={300}
               opacity={0.6}

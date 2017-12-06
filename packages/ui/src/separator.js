@@ -7,7 +7,7 @@ export default class Separator {
   render({ after, children, ...props }) {
     return (
       <separator {...props}>
-        <Text $text size={0.9}>
+        <Text $text size={0.95} alpha={0.5}>
           {children}
         </Text>
         <after if={after}>{after}</after>

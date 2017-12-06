@@ -48,19 +48,38 @@ const InlineIcon = props => (
   <UI.Icon css={{ display: 'inline' }} size={10} {...props} />
 )
 
+const ICON_NAME = {
+  pin: 'pin',
+  'pin-site': 'pin',
+  slack: 'social-slack',
+}
+
+function location(thing) {
+  switch (thing.integration) {
+    case 'slack':
+      return `#${thing.data.channel}`
+    case 'pin':
+    case 'pin-site':
+      return thing.data.host
+  }
+}
+
 function getSecondary(result) {
   const thing = result.data
   if (!thing) {
     return null
   }
   let text = ''
-  let icon = <InlineIcon name={thing.integration.replace(/-.*/, '')} />
+  let icon = null
+  if (ICON_NAME[thing.integration]) {
+    icon = <InlineIcon name={ICON_NAME[thing.integration]} />
+  }
   if (thing.updated) {
     text = getDate(result)
   }
-  if (thing.data && thing.data.host) {
+  if (location(thing)) {
     // origin url is in data.integration
-    text = `${thing.data.host} · ${text}`
+    text = `${location(thing)} · ${text}`
   }
   if (icon) {
     text = (

@@ -97,9 +97,9 @@ export default class SettingsPage {
             <PaneView
               disableGlow
               transparent
-              onSelect={store.selectItem}
               items={store.items}
               listProps={{
+                onSelect: store.selectItem,
                 highlight: i => i === store.activeIndex,
                 groupBy: 'category',
                 itemProps,

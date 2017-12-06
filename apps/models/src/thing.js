@@ -133,16 +133,16 @@ export class Thing extends Model {
     }
   }
 
-  fromCrawl = ({ url, contents, data, ...rest }) => ({
+  fromCrawl = ({ url, contents, data, type, integration }) => ({
     url,
     title: `${contents.title}`,
     body: `${contents.content}`,
-    type: 'website',
+    type: type || 'website',
     data: {
       host: getHost(url),
       ...data,
     },
-    ...rest,
+    integration,
   })
 
   createFromCrawl = result =>

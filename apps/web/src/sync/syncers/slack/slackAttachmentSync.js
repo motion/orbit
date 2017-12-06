@@ -30,6 +30,7 @@ export default class SlackAttachmentSync {
     if (this.service.activeChannels) {
       for (const channel of Object.keys(this.service.activeChannels)) {
         const oldestSynced = this.lastSync[channel]
+        const info = await this.service.slack.channels.info({ channel })
         const messages = await this.service.channelHistory({
           channel,
           oldest: oldestSynced,
@@ -57,7 +58,7 @@ export default class SlackAttachmentSync {
         try {
           if (links && links.length) {
             // crawl 20 at a time
-            for (const entries of _.chunk(links, 20)) {
+            for (const entries of _.chunk(links, 10)) {
               console.log('crawling chunk', entries)
               const { results } = await r2.post(
                 `${Constants.API_URL}/crawler/exact`,
@@ -70,17 +71,19 @@ export default class SlackAttachmentSync {
               console.log('got results', results)
               if (results && results.length) {
                 // create in 10 at at time (default chunk)
-                await createInChunks(results, async result => {
-                  return await Thing.create(
+                const created = await createInChunks(results, result =>
+                  Thing.create(
                     Thing.fromCrawl({
                       ...result,
                       integration: 'slack',
                       data: {
-                        channel,
+                        channelId: channel,
+                        channel: info.channel.name_normalized,
                       },
                     })
                   )
-                })
+                )
+                console.log('created', created)
               }
             }
           }

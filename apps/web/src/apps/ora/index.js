@@ -25,7 +25,7 @@ const itemProps = {
   secondaryProps: {
     alpha: 0.3,
   },
-  highlightBackground: [255, 255, 255, 0.045],
+  highlightBackground: [0, 0, 0, 0.085],
   // highlightBackground: `linear-gradient(
   //   rgba(255,255,255,0),
   //   rgba(255,255,255,0.035) 30%
@@ -78,7 +78,7 @@ export const OraContent = ({ oraStore }) => (
     </UI.Theme>
     <OraMainContent oraStore={oraStore} />
     <OraDrawer oraStore={oraStore} />
-    <OraActionBar oraStore={oraStore} />
+    <OraActionBar if={false} oraStore={oraStore} />
   </React.Fragment>
 )
 
@@ -118,7 +118,7 @@ export default class OraPage {
       margin: 10,
       borderRadius: 10,
       overflow: 'hidden',
-      transition: 'all ease-in 100ms',
+      transition: 'transform ease-in 100ms',
       opacity: 0,
       transform: {
         x: 8,

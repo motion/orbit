@@ -80,10 +80,11 @@ export default class OraHeader extends React.Component {
     ]
 
     const iconProps = {
-      color: [255, 255, 255, 0.7],
+      color: [255, 255, 255, 0.5],
       padding: 8,
       size: 16,
       hover: {
+        opacity: 0.5,
         color: [255, 255, 255, 1],
       },
       css: {
@@ -101,7 +102,7 @@ export default class OraHeader extends React.Component {
         >
           <contents>
             <leftSide>
-              <UI.Icon name="zoom" {...iconProps} color="#000" />
+              <UI.Icon name="zoom" {...iconProps} />
               <UI.Icon
                 if={false && oraStore.stack.length > 1}
                 name="arrominleft"
@@ -139,8 +140,8 @@ export default class OraHeader extends React.Component {
                 target={
                   <UI.Icon
                     {...iconProps}
-                    name="f"
-                    opacity={0.5}
+                    name="bucket"
+                    opacity={0.015}
                     onClick={e => {
                       e.stopPropagation()
                       oraStore.hide()
@@ -152,7 +153,7 @@ export default class OraHeader extends React.Component {
               </UI.Popover>
               <UI.Icon
                 {...iconProps}
-                opacity={0.5}
+                opacity={0.1}
                 name="gear"
                 onClick={this.props.oraStore.actions.openSettings}
               />
@@ -182,7 +183,7 @@ export default class OraHeader extends React.Component {
       justifyContent: 'center',
       '& .icon': {
         transition: 'all ease-in 100ms',
-        transform: 'scale(0.9)',
+        transform: 'scale(0.95)',
       },
       '&:hover': {
         background: [255, 255, 255, 0.02],
@@ -192,7 +193,7 @@ export default class OraHeader extends React.Component {
       opacity: 1,
       height: Constants.ORA_HEADER_HEIGHT_FULL + 100,
       '& .icon': {
-        transform: 'scale(1)',
+        transform: 'scale(1.05)',
       },
       '& .title': {
         display: 'none',
@@ -235,6 +236,7 @@ export default class OraHeader extends React.Component {
       paddingLeft: 36,
       fontWeight: 300,
       fontSize: 20,
+      color: '#fff',
     },
   }
 }

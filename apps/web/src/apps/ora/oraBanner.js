@@ -27,8 +27,8 @@ export default class OraBanner {
         <titleText>
           <UI.Text ellipse size={0.9} alpha={isPinning ? 0.7 : 0.3}>
             {(store.banner && store.banner.message) ||
-              oraStore.stack.last.result.id ||
-              'Search'}
+              // oraStore.stack.last.result.id ||
+              null}
           </UI.Text>
         </titleText>
       </title>

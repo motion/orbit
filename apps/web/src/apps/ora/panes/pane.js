@@ -3,7 +3,7 @@ import * as UI from '@mcro/ui'
 import * as Constants from '~/constants'
 import SidebarTitle from '~/views/sidebarTitle'
 import Drawer from '~/views/drawer'
-import { debounce } from 'lodash'
+import OraActionBar from '~/apps/ora/oraActionBar'
 
 class PaneStore {
   listRef = null
@@ -167,6 +167,7 @@ export default class Pane {
             ? list
             : typeof children === 'function' ? children(list) : children}
         </content>
+        <OraActionBar />
         <bottomGlow
           if={!drawer && !disableGlow}
           $showWithActionBar={!!actions}

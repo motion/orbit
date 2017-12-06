@@ -41,32 +41,46 @@ class Tab {
         onMouseEnter={store.ref('showGlow').setter(true)}
         onMouseLeave={store.ref('showGlow').setter(false)}
       >
+        <leftBorder
+          css={{
+            position: 'absolute',
+            top: 0,
+            left: -3,
+            bottom: 0,
+            right: 4,
+            background: Constants.ORA_BG_MAIN,
+            borderTopRadius: 5,
+            zIndex: 2,
+            boxShadow: ['inset 0 0.5px 0 rgba(255,255,255,0.15)'],
+          }}
+        />
         <chrome
           css={{
             ...chromeStyle,
             background: Constants.ORA_BG_MAIN,
             borderBottom: 'none',
             boxShadow: [
-              'inset 0 0.5px 0 rgba(255,255,255,0.15)',
+              'inset 0 1px 0 rgba(255,255,255,0.15)',
               '0 0 15px 0 rgba(0,0,0,0.3)',
             ],
           }}
         />
         <inner
           css={{
-            padding: [6, 12],
+            padding: [4, 12],
             flexFlow: 'row',
             flex: 1,
-            zIndex: 1,
+            zIndex: 3,
             alignItems: 'center',
+            overflow: 'hidden',
+            borderTopRadius: 5,
           }}
         >
           {children}
           <chromeAbove
             css={{ ...chromeStyle, background: 'transparent', zIndex: 1 }}
-          >
-            <UI.HoverGlow {...glowProps} show={store.showGlow} />
-          </chromeAbove>
+          />
+          <UI.HoverGlow {...glowProps} show={store.showGlow} />
         </inner>
       </tab>
     )
@@ -85,13 +99,14 @@ export default class SidebarTitle {
             if={!!onBack && !noBack}
             $backButton
             chromeless
-            size={1}
+            size={1.1}
             icon="arrominleft"
             sizePadding={0}
-            alpha={0.5}
+            alpha={0.3}
             alignSelf="center"
             hover={{
-              alpha: 1,
+              alpha: 0.5,
+              background: [0, 0, 0, 0.1],
             }}
             onClick={onBack}
             {...backProps}
@@ -100,7 +115,7 @@ export default class SidebarTitle {
             <UI.Title
               if={titleIsString}
               ellipse={2}
-              size={0.95}
+              size={1.1}
               fontWeight={300}
               opacity={0.6}
               textShadow="0 -1px 0 rgba(0,0,0,0.2)"
@@ -132,12 +147,13 @@ export default class SidebarTitle {
     titles: {
       flex: 1,
       width: '50%',
-      justifyContent: 'flex-start',
-      paddingRight: 10,
+      justifyContent: 'center',
+      alignItems: 'center',
+      paddingRight: 8,
       flexFlow: 'row',
     },
     backButton: {
-      margin: [-2, 3, -2, -8],
+      margin: [-3, 8, -3, -8],
       zIndex: 10,
     },
     image: {

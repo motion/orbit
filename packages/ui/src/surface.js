@@ -470,7 +470,7 @@ export default class Surface extends React.PureComponent<Props> {
       props.hover &&
       typeof props.hover.backgroundAlpha === 'number'
     ) {
-      hoverBackground = hoverColor.alpha(props.hover.backgroundAlpha)
+      hoverBackground = hoverBackground.alpha(props.hover.backgroundAlpha)
     }
 
     const borderColor = $(

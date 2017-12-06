@@ -23,12 +23,12 @@ export default class Fade {
     return {
       fade: {
         width,
-        opacity: currentIndex === index ? 1 : 0,
+        opacity: currentIndex === index ? 1 : 0.8,
         pointerEvents: currentIndex === index ? 'auto' : 'none',
         transform: {
           x: (index - currentIndex) * width / 10,
         },
-        transition: ['opacity ease-in 80ms', 'transform ease-out 100ms'],
+        transition: ['opacity ease-in 100ms', 'transform ease-out 100ms'],
       },
     }
   }

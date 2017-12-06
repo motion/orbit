@@ -167,7 +167,7 @@ export default class Pane {
             ? list
             : typeof children === 'function' ? children(list) : children}
         </content>
-        <OraActionBar />
+        <OraActionBar if={actions} />
         <bottomGlow
           if={!drawer && !disableGlow}
           $showWithActionBar={!!actions}

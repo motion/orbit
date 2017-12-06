@@ -17,16 +17,16 @@
 * height adjustment based on results
 * pin banner ux improvements
 * bug: home showing recent
+* via [S] #general
 
 # now
 
-* via [S] #general
+* thing: show where it came from
 * scan hard drives for files (word pdf excel)
 * cmd+opt when unfocused: focus + focus search
 * cmd+opt when hidden: focus + focus search
 * cmd+opt when focused: hide
 * fix drill in from home/item to not just use context
-* thing: show where it came from
 * settings pane: bottom sync status tray (slack, github, drive)
 * settings pane: better sync button
 * settings pane: crawler section

@@ -44,6 +44,34 @@ function getChildren(result) {
   }
 }
 
+const InlineIcon = props => (
+  <UI.Icon css={{ display: 'inline' }} size={10} {...props} />
+)
+
+function getSecondary(result) {
+  const thing = result.data
+  if (!thing) {
+    return null
+  }
+  let text = ''
+  let icon = <InlineIcon name={thing.integration.replace(/-.*/, '')} />
+  if (thing.updated) {
+    text = getDate(result)
+  }
+  if (thing.data && thing.data.host) {
+    // origin url is in data.integration
+    text = `${thing.data.host} · ${text}`
+  }
+  if (icon) {
+    text = (
+      <span $$ellipse>
+        via {icon} · {text}
+      </span>
+    )
+  }
+  return text
+}
+
 export default function getItem(result, index) {
   return {
     key: `${index}${result.id}${result.title}${result.category}`,
@@ -58,7 +86,7 @@ export default function getItem(result, index) {
       size: 1.2,
       fontWeight: 500,
     },
-    secondary: result.subtitle || (result.data && result.data.url),
+    secondary: result.subtitle || getSecondary(result),
     children: getChildren(result),
     childrenProps: {
       alpha: Math.max(0.25, (9 - index) / 16),

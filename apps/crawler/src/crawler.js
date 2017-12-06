@@ -81,8 +81,6 @@ export default class Crawler {
   selectors = null
   promiseEnds = []
 
-  selectors = null
-
   constructor(options: Options) {
     this.options = options || {}
   }
@@ -457,63 +455,8 @@ export default class Crawler {
       } catch (err) {
         if (!isFinished()) {
           log.page(
-            `Good contents. Total ${count}. Crawled ${
-              contents.title
-            } which has ${contents.content.length} characters.`
+            `Error crawling url ${target.url}\n${err.message}\n${err.stack}`
           )
-        } else {
-          log.page(`No contents found`)
-        }
-        // store crawl results
-        return {
-          outboundUrls,
-          contents,
-          radius: ++target.radius,
-          url: target.url,
-        }
-      } catch (err) {
-        log.page(
-          `Error crawling url ${target.url}\n${err.message}\n${err.stack}`
-        )
-      }
-    }
-
-    let count = 0
-    this.isRunning = true
-    const concurrentTabs = 3
-    const startTime = +Date.now()
-
-    const openPages = range(concurrentTabs).map(_ => true)
-    const pages = await Promise.all(
-      openPages.map(async _ => await browser.newPage())
-    )
-    this.db.store(await runTarget(target, pages[0]))
-    await sleep(50)
-
-    let hasFinished = false
-
-    while (!hasFinished) {
-      const openIndex = openPages.indexOf(true)
-      if (openIndex !== -1) {
-        const target = this.db.shiftUrl()
-        if (target !== null) {
-          openPages[openIndex] = false
-          runTarget(target, pages[openIndex]).then(val => {
-            openPages[openIndex] = true
-            if (val) {
-              log.step('Downloaded ', this.db.getValid().length, 'pages')
-              if (
-                openPages.indexOf(false) === -1 &&
-                this.db.pageQueue.length === 0
-              ) {
-                hasFinished = true
-              }
-              this.db.store(val)
-              if (val.contents) {
-                count++
-              }
-            }
-          })
         }
         return null
       }

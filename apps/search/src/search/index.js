@@ -1,6 +1,3 @@
-import 'babel-polyfill'
-
-// import { store, watch } from '@mcro/black/store'
 import { range } from 'lodash'
 import Indexer from './indexer'
 import Embedding from './embedding'

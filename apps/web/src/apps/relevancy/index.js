@@ -36,46 +36,55 @@ export default class RelevancyPage {
             <autocomplete>
               <UI.Title>autocomplete</UI.Title>
               {store.context &&
-                store.context.autocomplete.map(i => (
+                store.context.results &&
+                (store.context.results.autocomplete || []).map(i => (
                   <UI.Text>
-                    {i.realWord} - {i.val}
+                    {i.word} - {i.weight}
                   </UI.Text>
                 ))}
             </autocomplete>
-            {(store.items || []).map(({ debug, item, similarity }, index) => (
-              <item>
+            {(
+              (store.context &&
+                store.context.results &&
+                store.context.results.results) ||
+              []
+            ).map(({ debug, item, toBold, similarity, snippet }, index) => (
+              <item key={Math.random()}>
                 <UI.Title
-                  fontWeight={600}
+                  fontWeight={400}
                   size={1.2}
                   onClick={() => open(item.url)}
                 >
-                  {item.title}
+                  {item.title} - {similarity}
                 </UI.Title>
-                <div
-                  style={{ display: 'inline' }}
-                  $$row
-                  dangerouslySetInnerHTML={{
-                    __html: makeBold(
-                      store.sentences[index].sentence,
-                      store.sentences[index].toBold
-                    ),
-                  }}
-                  if={store.sentences && store.sentences.length > 0}
-                />
+                <UI.Title
+                  fontWeight={400}
+                  size={1.2}
+                  opacity={0.8}
+                  onClick={() => open(item.url)}
+                >
+                  {item.subtitle}
+                </UI.Title>
+                <snippet>
+                  <text
+                    style={{ display: 'inline' }}
+                    $$row
+                    dangerouslySetInnerHTML={{
+                      __html: makeBold(snippet, toBold),
+                    }}
+                  />
+                </snippet>
                 <details>
-                  {debug.map(info => (
-                    <UI.Text>
-                      similarity: {similarity} {info.word} -> {info.word2} :{' '}
-                      {info.similarity} [{info.ws2.join(', ')}]
-                    </UI.Text>
-                  ))}
+                  <content>
+                    <text
+                      style={{ display: 'inline' }}
+                      $$row
+                      dangerouslySetInnerHTML={{
+                        __html: makeBold(item.body, toBold),
+                      }}
+                    />
+                  </content>
                 </details>
-                <buttons $$row>
-                  <button onClick={() => store.setSearch(item.title)}>
-                    use
-                  </button>
-                  <UI.Text>similarity: {similarity}</UI.Text>
-                </buttons>
               </item>
             ))}
           </content>

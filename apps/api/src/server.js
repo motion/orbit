@@ -10,6 +10,7 @@ import OAuthStrategies from './server/oauth.strategies'
 import Passport from 'passport'
 import Crawler from '@mcro/crawler'
 import debug from 'debug'
+import path from 'path'
 
 const { SERVER_PORT } = Constants
 
@@ -80,7 +81,7 @@ export default class Server {
 
   setupSearch() {
     const searchIndex = require.resolve('@mcro/search')
-    const searchDist = Path.join(searchIndex, '..', 'build', 'js')
+    const searchDist = path.join(searchIndex, '..', 'build')
     log('setting up search', searchDist)
     this.app.use('/search', express.static(searchDist))
   }

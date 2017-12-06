@@ -1,9 +1,9 @@
 import { store } from '@mcro/black'
 import { debounce } from 'lodash'
 import debug from 'debug'
-import Search from '@mcro/search'
+// import Search from '@mcro/search'
 
-const useWorker = false
+const useWorker = true
 const log = debug('search')
 log.enabled = true
 

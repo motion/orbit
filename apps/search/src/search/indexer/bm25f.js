@@ -20,8 +20,7 @@
 //     General Public License along with “wink-bm25-text-search”.
 //     If not, see <http://www.gnu.org/licenses/>.
 
-import helpers from 'wink-helpers'
-import { invert } from 'lodash'
+import { invert, isArray, isObject } from 'lodash'
 
 /* eslint guard-for-in: 0 */
 /* eslint complexity: [ "error", 25 ] */
@@ -146,7 +145,7 @@ const bm25fIMS = () => {
         'winkBM25S: Config must be defined before defining prepTasks.'
       )
     }
-    if (!helpers.array.isArray(tasks)) {
+    if (!isArray(tasks)) {
       throw Error(
         `winkBM25S: Tasks should be an array, instead found: ${JSON.stringify(
           tasks
@@ -205,7 +204,7 @@ const bm25fIMS = () => {
         'winkBM25S: config must be defined before learning/addition starts!'
       )
     }
-    if (!helpers.object.isObject(cfg)) {
+    if (!isObject(cfg)) {
       throw Error(
         `winkBM25S: config must be a config object, instead found: ${JSON.stringify(
           cfg
@@ -213,7 +212,7 @@ const bm25fIMS = () => {
       )
     }
     // If `fldWeights` are absent throw error.
-    if (!helpers.object.isObject(cfg.fldWeights)) {
+    if (!isObject(cfg.fldWeights)) {
       throw Error(
         `winkBM25S: fldWeights must be an object, instead found: ${JSON.stringify(
           cfg.fldWeights
@@ -221,7 +220,7 @@ const bm25fIMS = () => {
       )
     }
     // There should be at least one defined field!
-    if (helpers.object.keys(cfg.fldWeights).length === 0) {
+    if (Object.keys(cfg.fldWeights).length === 0) {
       throw Error('winkBM25S: Field config has no field defined.')
     }
     // Setup configuration now.
@@ -256,8 +255,7 @@ const bm25fIMS = () => {
     }
     // Setup BM25F params.
     // Create `bm25Params` if absent in `cfg`.
-    if (!helpers.object.isObject(cfg.bm25Params))
-      cfg.bm25Params = Object.create(null)
+    if (!isObject(cfg.bm25Params)) cfg.bm25Params = Object.create(null)
     // Update config parameters from `cfg`.
     config.bm25Params.b =
       cfg.bm25Params.b === null ||
@@ -290,7 +288,7 @@ const bm25fIMS = () => {
     // Initialize the `ovFldNames` in the final `config` as an empty array
     config.ovFldNames = []
     if (!cfg.ovFldNames) cfg.ovFldNames = []
-    if (!helpers.array.isArray(cfg.ovFldNames)) {
+    if (!isArray(cfg.ovFldNames)) {
       throw Error(
         `winkBM25S: OV Field names should be an array, instead found: ${JSON.stringify(
           typeof cfg.ovFldNames
@@ -491,10 +489,13 @@ const bm25fIMS = () => {
     }
     // Convert to a table in `[ id, score ]` format; sort and slice required number
     // of resultant documents.
+    return []
+    /*
     return helpers.object
       .table(results)
       .sort(helpers.array.descendingOnValue)
       .slice(0, Math.max(limit || 10, 1))
+      */
   } // search()
 
   // #### Reset
@@ -567,21 +568,18 @@ const bm25fIMS = () => {
     }
     // Validate json format
     const isOK = [
-      helpers.object.isObject,
-      helpers.object.isObject,
-      helpers.object.isObject,
-      helpers.array.isArray,
+      isObject,
+      isObject,
+      isObject,
+      isArray,
       Number.isInteger,
-      helpers.object.isObject,
-      helpers.object.isObject,
-      helpers.array.isArray,
-      helpers.array.isArray,
+      isObject,
+      isObject,
+      isArray,
+      isArray,
     ]
     const parsedJSON = JSON.parse(json)
-    if (
-      !helpers.array.isArray(parsedJSON) ||
-      parsedJSON.length !== isOK.length
-    ) {
+    if (!isArray(parsedJSON) || parsedJSON.length !== isOK.length) {
       throw Error('winkBM25S: invalid JSON encountered, can not import.')
     }
     for (let i = 0; i < isOK.length; i += 1) {
@@ -619,7 +617,6 @@ const bm25fIMS = () => {
   methods.getIndex2Token = () => invert(token2Index)
   methods.prepareInput = prepareInput
   methods.token2Index = token2Index
-  methods.helpers = helpers
   methods.getInvertedIdx = () => invertedIdx
 
   methods.idf = idf

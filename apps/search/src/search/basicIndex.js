@@ -1,5 +1,3 @@
-import 'babel-polyfill'
-
 function main() {
   setInterval(() => {
     postMessage('hello! ' + Math.random())

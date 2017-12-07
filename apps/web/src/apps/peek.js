@@ -5,6 +5,9 @@ import * as UI from '@mcro/ui'
 import { OS } from '~/helpers'
 import { debounce } from 'lodash'
 
+const isSamePeek = (a, b) => a && b && a.url === b.url
+const ANIMATION_TIME = 500
+
 type Peek = {
   url?: string,
   offsetTop?: number,
@@ -15,11 +18,18 @@ type Peek = {
   store: class PeekStore {
     lastPeek: ?Peek = null
     currentPeek: ?Peek = null
-    hoveringPeek = false
-    updatingPeek = false
+    pendingPeek: ?Peek = null
+    isHovered = false
 
     get peek() {
-      if (this.hoveringPeek) {
+      if (
+        this.pendingPeek &&
+        this.currentPeek &&
+        !isSamePeek(this.pendingPeek, this.currentPeek)
+      ) {
+        return null
+      }
+      if (this.isHovered) {
         return this.lastPeek
       }
       return this.currentPeek
@@ -28,8 +38,8 @@ type Peek = {
     willMount() {
       OS.send('peek-start')
       this.on(OS, 'peek-to', (event, peek: ?Peek) => {
-        if (peek && this.peek && peek.url !== this.lastPeek.url) {
-          this.updatingPeek = true
+        if (peek && !isSamePeek(this.lastPeek, peek)) {
+          this.pendingPeek = peek
         }
         this.updatePeek(peek)
       })
@@ -41,33 +51,39 @@ type Peek = {
       if (peek) {
         this.lastPeek = peek
       }
-      this.updatingPeek = false
-    }, 500)
+      this.clearPendingPeek()
+    }, ANIMATION_TIME - 100)
 
     handlePeekEnter = () => {
-      this.hoveringPeek = true
+      this.isHovered = true
     }
 
     handlePeekLeave = () => {
-      this.hoveringPeek = false
+      this.isHovered = false
       if (!this.currentPeek) {
         this.lastPeek = null
+        this.clearPendingPeek()
       }
+    }
+
+    clearPendingPeek() {
+      this.pendingPeek = null
     }
   },
 })
 export default class PeekPage {
   render({ store }) {
     const { peek } = store
+    console.log('render peek', peek, store)
     return (
       <UI.Theme name="light">
         <peek
-          $peekVisible={peek && !store.updatingPeek}
+          $peekVisible={peek && !store.pendingPeek}
           onMouseEnter={store.handlePeekEnter}
           onMouseLeave={store.handlePeekLeave}
         >
-          <content $$flex if={peek}>
-            <webview if={peek.url} src={peek.url} />
+          <content $$flex>
+            <webview if={peek && peek.url} src={peek.url} />
           </content>
         </peek>
       </UI.Theme>
@@ -79,15 +95,16 @@ export default class PeekPage {
       width: '100%',
       height: '100%',
       padding: 20,
-      pointerEvents: 'none',
+      pointerEvents: 'none !important',
       opacity: 0,
+      // background: 'red',
       transform: {
         y: -10,
       },
-      transition: 'all ease-in 100ms',
+      transition: 'transform ease-in 100ms, opacity ease-in 100ms',
     },
     peekVisible: {
-      pointerEvents: 'all',
+      pointerEvents: 'all !important',
       opacity: 1,
       transform: {
         y: 0,

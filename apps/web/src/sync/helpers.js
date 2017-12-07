@@ -81,6 +81,7 @@ export async function createInChunks(
       console.log('error creating', err)
       return false
     }
+    return true
   }
   for (const item of items) {
     // pause for every 10 to finish

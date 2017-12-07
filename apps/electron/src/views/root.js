@@ -4,9 +4,13 @@ import ShortcutsStore from '~/stores/shortcutsStore'
 import { view } from '@mcro/black'
 import * as RootHelpers from './rootHelpers'
 import Windows from './windows'
+import { ipcMain } from 'electron'
+import { once } from 'lodash'
 
 @view.provide({
   rootStore: class RootStore {
+    // used to generically talk to browser
+    sendOra = null
     error = null
     appRef = null
 
@@ -18,6 +22,17 @@ import Windows from './windows'
       RootHelpers.listenForOpenBrowser.call(this)
       RootHelpers.listenForCrawlerInject.call(this)
       RootHelpers.injectRepl({ rootStore: this })
+      this.setupOraLink()
+    }
+
+    setupOraLink() {
+      this.on(
+        ipcMain,
+        'start-ora',
+        once(event => {
+          this.sendOra = (...args) => event.sender.send(...args)
+        })
+      )
     }
 
     handleAppRef = ref => {

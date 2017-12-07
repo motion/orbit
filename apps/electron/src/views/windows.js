@@ -11,8 +11,10 @@ import PeekWindow from './windows/peek'
 @view.attach('rootStore')
 @view.electron
 export default class Windows extends React.Component {
-  // this is an event bus that should be open whenever ora is open
-  sendOra = async name => console.log('called this.sendOra before setup', name)
+  get rootStore() {
+    return this.props.rootStore
+  }
+
   oraState = {}
   state = {
     showDevTools: false,
@@ -27,8 +29,8 @@ export default class Windows extends React.Component {
 
   async updateState(state) {
     await new Promise(res => this.setState(state, res))
-    if (this.sendOraSimple) {
-      this.sendOraSimple('electron-state', this.state)
+    if (this.rootStore.sendOra) {
+      this.rootStore.sendOra('electron-state', this.state)
     }
   }
 
@@ -52,7 +54,6 @@ export default class Windows extends React.Component {
   }
 
   startOra = once(ref => {
-    console.log('starting ora')
     this.oraRef = ref
     // CLEAR DATA
     if (process.env.CLEAR_DATA) {
@@ -60,13 +61,19 @@ export default class Windows extends React.Component {
     }
     this.watchForContext()
     this.listenToApps()
+    // send initial state
+    this.watch(function sendInitialState() {
+      if (this.rootStore.sendOra) {
+        this.rootStore.sendOra('electron-state', this.state)
+      }
+    })
   })
 
   oraStateGetters = []
   getOraState = () =>
     new Promise(res => {
       this.oraStateGetters.push(res)
-      this.sendOraSimple('get-state')
+      this.rootStore.sendOra('get-state')
     })
 
   onAppWindow = win => electron => {
@@ -77,23 +84,6 @@ export default class Windows extends React.Component {
 
   listenToApps = () => {
     this.on(ipcMain, 'open-settings', throttle(this.handlePreferences, 200))
-
-    this.on(
-      ipcMain,
-      'start-ora',
-      once(event => {
-        // setup our event bus
-        // this one runs without updating (only used internally)
-        this.sendOraSimple = (...args) => event.sender.send(...args)
-        // send initial state
-        this.sendOraSimple('electron-state', this.state)
-        // this one updates state
-        this.sendOra = async (...args) => {
-          event.sender.send(...args)
-          return await this.getOraState()
-        }
-      })
-    )
 
     // if you call this.getOraState() this will handle it
     this.on(ipcMain, 'set-state', (event, state) => {
@@ -114,6 +104,11 @@ export default class Windows extends React.Component {
     return this.props.rootStore.appRef
   }
 
+  sendOraSync = async (...args) => {
+    this.rootStore.sendOra(...args)
+    return await this.getOraState()
+  }
+
   toggleShown = throttle(async () => {
     if (!this.appRef) {
       console.log('no app ref :(')
@@ -121,7 +116,7 @@ export default class Windows extends React.Component {
     }
     if (!this.oraState.hidden) {
       console.log('send toggle')
-      await this.sendOra('ora-toggle')
+      await this.sendOraSync('ora-toggle')
       await Helpers.sleep(150)
       console.log('now hide')
       if (!this.state.showSettings) {
@@ -130,7 +125,7 @@ export default class Windows extends React.Component {
     } else {
       this.appRef.show()
       await Helpers.sleep(50)
-      await this.sendOra('ora-toggle')
+      await this.sendOraSync('ora-toggle')
       await Helpers.sleep(150)
       this.appRef.focus()
       this.oraRef.focus()
@@ -161,8 +156,8 @@ export default class Windows extends React.Component {
   }
 
   onBeforeQuit = () => console.log('hi')
-  onOraBlur = () => this.sendOra('ora-blur')
-  onOraFocus = () => this.sendOra('ora-focus')
+  onOraBlur = () => this.sendOraSync('ora-blur')
+  onOraFocus = () => this.sendOraSync('ora-focus')
   onOraMoved = trayPosition => this.updateState({ trayPosition })
 
   onSettingsSized = size => this.updateState({ size })

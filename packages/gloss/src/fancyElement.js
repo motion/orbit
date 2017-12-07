@@ -4,12 +4,15 @@ import deepExtend from 'deep-extend'
 import tags from 'html-tags'
 import svgTags from './svgTags'
 
+const electronTags = ['webview']
+
 const $ = '$'
 const ogCreateElement: Function = React.createElement.bind(React)
-const VALID_TAGS: { [string]: boolean } = [...tags, ...svgTags].reduce(
-  (acc, cur) => ({ ...acc, [cur]: true }),
-  {}
-)
+const VALID_TAGS: { [string]: boolean } = [
+  ...tags,
+  ...svgTags,
+  ...electronTags,
+].reduce((acc, cur) => ({ ...acc, [cur]: true }), {})
 
 const arrayOfObjectsToObject = (arr: Array<?Object>) => {
   let res = {}

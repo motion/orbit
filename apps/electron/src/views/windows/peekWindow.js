@@ -14,6 +14,7 @@ type Peek = {
 export default class PeekWindow extends React.Component {
   state = {
     peek: {},
+    lastPeek: {},
     position: [0, 0],
     dimensions: [600, 450],
   }
@@ -27,7 +28,11 @@ export default class PeekWindow extends React.Component {
   listen() {
     // peek stuff
     this.on(ipcMain, 'peek', (event, peek: Peek) => {
-      this.setState({ peek })
+      this.setState({
+        peek,
+        // lastPeek never is the null peek
+        lastPeek: peek || this.state.peek,
+      })
       this.peekSend('peek-to', peek)
     })
     this.on(ipcMain, 'peek-start', event => {
@@ -36,14 +41,14 @@ export default class PeekWindow extends React.Component {
   }
 
   render({ appPosition }) {
-    const X_GAP = 20
+    const X_GAP = 0
     const Y_GAP = 0
     const [x, y] = appPosition
-    const { peek, dimensions } = this.state
+    const { lastPeek, dimensions } = this.state
     const [width] = dimensions
     const position = [
       x - width - X_GAP,
-      y + ((peek && peek.offsetTop) || 0) + Y_GAP,
+      y + ((lastPeek && lastPeek.offsetTop) || 0) + Y_GAP,
     ]
 
     return (

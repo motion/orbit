@@ -6,21 +6,30 @@ import { OS } from '~/helpers'
 @view({
   store: class PeekStore {
     current = null
+    peek = null
 
     willMount() {
       OS.send('peek-start')
-      this.on(OS, 'peek-to', (...args) => {
-        console.log(args)
+      this.on(OS, 'peek-to', (event, peek) => {
+        console.log('peek', peek)
+        this.peek = peek
       })
     }
   },
 })
 export default class PeekPage {
-  render() {
+  render({ store }) {
+    const { peek } = store
     return (
       <UI.Theme name="light">
         <peek>
-          <UI.Text size={3}>Hello</UI.Text>
+          <welcome if={!peek}>
+            <UI.Text size={3}>Welcome to peek</UI.Text>
+          </welcome>
+
+          <content $$flex if={peek}>
+            <iframe $$flex if={peek.url} src={peek.url} />
+          </content>
         </peek>
       </UI.Theme>
     )
@@ -30,8 +39,12 @@ export default class PeekPage {
     peek: {
       width: '100%',
       height: '100%',
-      background: 'blue',
-      alignItems: 'center',
+      background: '#fff',
+    },
+    iframe: {
+      border: 'none',
+      borderWidth: 0,
+      width: '100%',
     },
   }
 }

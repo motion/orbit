@@ -14,38 +14,44 @@ type Peek = {
 export default class PeekView extends React.Component {
   state = {
     peek: {},
-    peekPosition: [100, 100],
+    position: [0, 0],
+    dimensions: [600, 450],
   }
 
   componentWillMount() {
     this.listen()
   }
 
+  peekSend = null
+
   listen() {
     // peek stuff
-    let peekSend = null
     this.on(ipcMain, 'peek', (event, peek: Peek) => {
       this.setState({ peek })
-      peekSend('peek-to', peek)
+      this.peekSend('peek-to', peek)
     })
     this.on(ipcMain, 'peek-start', event => {
-      peekSend = (name, val) => event.sender.send(name, val)
+      this.peekSend = (name, val) => event.sender.send(name, val)
     })
   }
 
-  render() {
+  render({ appPosition }) {
+    const X_GAP = 20
+    const Y_GAP = 0
+    const [x, y] = appPosition
+    const { peek, dimensions } = this.state
+    const [width] = dimensions
+    const position = [x - width - X_GAP, y + peek.offsetTop || 0 + Y_GAP]
+
     return (
       <Window
+        file={`${Constants.APP_URL}/peek`}
         webPreferences={Constants.WEB_PREFERENCES}
         transparent
         show
         alwaysOnTop
-        size={[600, 450]}
-        file={`${Constants.APP_URL}/peek`}
-        position={[
-          this.state.peekPosition[0] + (this.state.peek.offsetTop || 0),
-          this.state.peekPosition[1],
-        ]}
+        size={this.state.dimensions}
+        position={position}
       />
     )
   }

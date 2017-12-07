@@ -212,7 +212,7 @@ export default class Windows extends React.Component {
           onFocus={this.onOraFocus}
           devToolsExtensions={Helpers.getExtensions(['mobx', 'react'])}
         />
-        <PeekWindow />
+        <PeekWindow appPosition={this.state.trayPosition} />
         {/* SETTINGS PANE: */}
         <Window
           {...appWindow}

@@ -3,10 +3,10 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { OS } from '~/helpers'
-import { debounce } from 'lodash'
 
 const isSamePeek = (a, b) => a && b && a.url === b.url
-const ANIMATION_TIME = 500
+const SHOW_DELAY = 200
+const HIDE_DELAY = 40
 
 type Peek = {
   url?: string,
@@ -20,6 +20,7 @@ type Peek = {
     currentPeek: ?Peek = null
     pendingPeek: ?Peek = null
     isHovered = false
+    pageLoaded = false
 
     get peek() {
       if (
@@ -37,22 +38,27 @@ type Peek = {
 
     willMount() {
       OS.send('peek-start')
+
+      let peekTimeout
       this.on(OS, 'peek-to', (event, peek: ?Peek) => {
         if (peek && !isSamePeek(this.lastPeek, peek)) {
           this.pendingPeek = peek
         }
-        this.updatePeek(peek)
+        clearTimeout(peekTimeout)
+        const update = () => this.updatePeek(peek)
+        peekTimeout = this.setTimeout(update, !peek ? HIDE_DELAY : SHOW_DELAY)
       })
     }
 
-    updatePeek = debounce((peek: Peek) => {
+    updatePeek = (peek: Peek) => {
       console.log('setting peek', peek)
+      this.pageLoaded = false
       this.currentPeek = peek
       if (peek) {
         this.lastPeek = peek
       }
       this.clearPendingPeek()
-    }, ANIMATION_TIME - 100)
+    }
 
     handlePeekEnter = () => {
       this.isHovered = true
@@ -69,12 +75,35 @@ type Peek = {
     clearPendingPeek() {
       this.pendingPeek = null
     }
+
+    handlePageRef = ref => {
+      if (!ref) return
+      this.pageRef = ref
+      if (this.offLoad) {
+        this.offLoad()
+      }
+      this.pageLoaded = false
+      const loadPage = () => {
+        if (!this.pageLoaded) {
+          this.pageLoaded = true
+        }
+      }
+      const offFinishLoad = this.on(ref, 'did-finish-load', loadPage)
+      console.log('offFinishLoad', offFinishLoad)
+      // after a second just load anyway
+      const offTimeoutLoad = this.setTimeout(loadPage, 1000)
+      this.offLoad = () => {
+        offFinishLoad.dispose()
+        clearTimeout(offTimeoutLoad)
+      }
+    }
   },
 })
 export default class PeekPage {
   render({ store }) {
     const { peek } = store
     console.log('render peek', peek, store)
+    const hasContent = peek && peek.url
     return (
       <UI.Theme name="light">
         <peek
@@ -82,8 +111,16 @@ export default class PeekPage {
           onMouseEnter={store.handlePeekEnter}
           onMouseLeave={store.handlePeekLeave}
         >
-          <content $$flex>
-            <webview if={peek && peek.url} src={peek.url} />
+          <content $$flex $contentLoading={!store.pageLoaded}>
+            <webview
+              if={hasContent}
+              ref={store.handlePageRef}
+              $visible={store.pageLoaded}
+              src={peek.url}
+            />
+            <loading if={!store.pageLoaded}>
+              <UI.Text>Loading</UI.Text>
+            </loading>
           </content>
         </peek>
       </UI.Theme>
@@ -116,14 +153,21 @@ export default class PeekPage {
       // borderRadius: 10,
       overflow: 'hidden',
     },
+    contentLoading: {
+      background: [0, 0, 0, 0.1],
+    },
     webview: {
       height: '100%',
       width: '100%',
+      opacity: 0,
     },
-    iframe: {
-      border: 'none',
-      borderWidth: 0,
-      width: '100%',
+    visible: {
+      opacity: 1,
+    },
+    loading: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      flex: 1,
     },
   }
 }

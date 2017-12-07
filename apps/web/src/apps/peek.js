@@ -1,16 +1,23 @@
+// @flow
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { OS } from '~/helpers'
 
+type Peek = {
+  url?: string,
+  offsetTop?: number,
+  id?: number,
+}
+
 @view({
   store: class PeekStore {
     current = null
-    peek = null
+    peek: ?Peek = null
 
     willMount() {
       OS.send('peek-start')
-      this.on(OS, 'peek-to', (event, peek) => {
+      this.on(OS, 'peek-to', (event, peek: ?Peek) => {
         console.log('peek', peek)
         this.peek = peek
       })
@@ -22,11 +29,7 @@ export default class PeekPage {
     const { peek } = store
     return (
       <UI.Theme name="light">
-        <peek>
-          <welcome if={!peek}>
-            <UI.Text size={3}>Welcome to peek</UI.Text>
-          </welcome>
-
+        <peek if={peek}>
           <content $$flex if={peek}>
             <iframe $$flex if={peek.url} src={peek.url} />
           </content>

@@ -11,7 +11,7 @@ type Peek = {
 }
 
 @view.electron
-export default class PeekView extends React.Component {
+export default class PeekWindow extends React.Component {
   state = {
     peek: {},
     position: [0, 0],
@@ -41,7 +41,10 @@ export default class PeekView extends React.Component {
     const [x, y] = appPosition
     const { peek, dimensions } = this.state
     const [width] = dimensions
-    const position = [x - width - X_GAP, y + peek.offsetTop || 0 + Y_GAP]
+    const position = [
+      x - width - X_GAP,
+      y + ((peek && peek.offsetTop) || 0) + Y_GAP,
+    ]
 
     return (
       <Window
@@ -50,6 +53,8 @@ export default class PeekView extends React.Component {
         transparent
         show
         alwaysOnTop
+        showDevTools
+        hasShadow
         size={this.state.dimensions}
         position={position}
       />

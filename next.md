@@ -20,6 +20,21 @@
 * via [S] #general
 * thing: show where it came from
 
+# demo video
+
+DeliverX
+
+1. Universal smart search results
+2. Incoming email w context
+3. Copy/look at result to answer
+4. Add DeliverX knowledgebase
+5. Maybe pin the map intranet page
+6. Intercom/zendesk chat w customer 1
+7. Answer using peek map/knowledgebase combo
+8. One part is document on policy for refunds/deliveries
+9. Looking up specific driver on map to send back to c1
+10. mind blown
+
 # now
 
 * drive sync pane / drive sync
@@ -34,7 +49,6 @@
 * cmd+opt when focused: hide
 * cancel crawl from crawling... pane
 * crawling... pane glitch when on home
-* tests and fixes on drive/github
 * crawler breaks on lots of sites due to html parser, do readabiltiy injection
 * peek window that tracks next to main window
 * peek window shows peek view of items

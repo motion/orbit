@@ -6,7 +6,7 @@ import * as Constants from '~/constants'
 import { throttle, once } from 'lodash'
 import MenuItems from './menuItems'
 import { view } from '@mcro/black'
-import PeekWindow from './windows/peek'
+import PeekWindow from './windows/peekWindow'
 
 @view.attach('rootStore')
 @view.electron
@@ -15,7 +15,6 @@ export default class Windows extends React.Component {
     return this.props.rootStore
   }
 
-  oraState = {}
   state = {
     showDevTools: false,
     restart: false,
@@ -64,17 +63,11 @@ export default class Windows extends React.Component {
     // send initial state
     this.watch(function sendInitialState() {
       if (this.rootStore.sendOra) {
+        console.log('send init electron state')
         this.rootStore.sendOra('electron-state', this.state)
       }
     })
   })
-
-  oraStateGetters = []
-  getOraState = () =>
-    new Promise(res => {
-      this.oraStateGetters.push(res)
-      this.rootStore.sendOra('get-state')
-    })
 
   onAppWindow = win => electron => {
     if (win && electron && !win.ref) {
@@ -84,29 +77,10 @@ export default class Windows extends React.Component {
 
   listenToApps = () => {
     this.on(ipcMain, 'open-settings', throttle(this.handlePreferences, 200))
-
-    // if you call this.getOraState() this will handle it
-    this.on(ipcMain, 'set-state', (event, state) => {
-      // update state
-      this.oraState = state
-      if (this.oraStateGetters.length) {
-        for (const getter of this.oraStateGetters) {
-          getter(state)
-        }
-        this.oraStateGetters = []
-      } else {
-        console.log('nothing is listening for state')
-      }
-    })
   }
 
   get appRef() {
     return this.props.rootStore.appRef
-  }
-
-  sendOraSync = async (...args) => {
-    this.rootStore.sendOra(...args)
-    return await this.getOraState()
   }
 
   toggleShown = throttle(async () => {
@@ -114,9 +88,9 @@ export default class Windows extends React.Component {
       console.log('no app ref :(')
       return
     }
-    if (!this.oraState.hidden) {
+    if (!this.rootStore.oraState.hidden) {
       console.log('send toggle')
-      await this.sendOraSync('ora-toggle')
+      await this.rootStore.sendOraSync('ora-toggle')
       await Helpers.sleep(150)
       console.log('now hide')
       if (!this.state.showSettings) {
@@ -125,7 +99,7 @@ export default class Windows extends React.Component {
     } else {
       this.appRef.show()
       await Helpers.sleep(50)
-      await this.sendOraSync('ora-toggle')
+      await this.rootStore.sendOraSync('ora-toggle')
       await Helpers.sleep(150)
       this.appRef.focus()
       this.oraRef.focus()
@@ -156,8 +130,8 @@ export default class Windows extends React.Component {
   }
 
   onBeforeQuit = () => console.log('hi')
-  onOraBlur = () => this.sendOraSync('ora-blur')
-  onOraFocus = () => this.sendOraSync('ora-focus')
+  onOraBlur = () => this.rootStore.sendOraSync('ora-blur')
+  onOraFocus = () => this.rootStore.sendOraSync('ora-focus')
   onOraMoved = trayPosition => this.updateState({ trayPosition })
 
   onSettingsSized = size => this.updateState({ size })
@@ -180,6 +154,7 @@ export default class Windows extends React.Component {
   }
 
   render() {
+    console.log('render windows')
     const appWindow = {
       frame: false,
       defaultSize: [700, 500],

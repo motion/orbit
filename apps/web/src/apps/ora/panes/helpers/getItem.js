@@ -95,6 +95,8 @@ function getSecondary(result) {
 let lastHover
 
 export default function getItem(result, index) {
+  let itemLastHover
+  let itemLastLeave
   return {
     key: `${index}${result.id}${result.title}${result.category}`,
     primary:
@@ -141,12 +143,19 @@ export default function getItem(result, index) {
       const url = result.data && result.data.url
       if (url) {
         const { offsetTop } = e.target.parentNode
-        lastHover = setTimeout(() => {
+        itemLastHover = lastHover = setTimeout(() => {
           OS.send('peek', { url, offsetTop })
         }, 100)
       }
     },
     onMouseLeave: () => {
+      clearTimeout(itemLastLeave)
+      itemLastLeave = setTimeout(() => {
+        if (itemLastHover === lastHover) {
+          OS.send('peek', null)
+          itemLastHover = null
+        }
+      })
       clearTimeout(lastHover)
     },
     ...result.props,

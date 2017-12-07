@@ -1,3 +1,4 @@
+// @flow
 import React from 'react'
 import { App, Window } from '@mcro/reactron'
 import * as Helpers from './helpers'
@@ -15,6 +16,11 @@ export function onWindow(cb) {
   onWindows.push(cb)
 }
 
+type Peek = {
+  url: string,
+  offsetTop: number,
+}
+
 @view.electron
 export default class Windows extends React.Component {
   // this is an event bus that should be open whenever ora is open
@@ -28,6 +34,8 @@ export default class Windows extends React.Component {
     size: [0, 0],
     position: [0, 0],
     trayPosition: [0, 0],
+    peek: {},
+    peekPosition: [100, 100],
     context: null, // osContext
   }
 
@@ -133,6 +141,17 @@ export default class Windows extends React.Component {
       'open-browser',
       throttle((event, url) => Helpers.open(url), 200)
     )
+
+    // peek stuff
+    let peekSend = null
+    this.on(ipcMain, 'peek', (event, peek: Peek) => {
+      this.setState({ peek })
+      peekSend('peek-to', peek)
+    })
+    this.on(ipcMain, 'peek-start', event => {
+      peekSend = (name, val) => event.sender.send(name, val)
+    })
+
     this.on(ipcMain, 'open-settings', throttle(this.handlePreferences, 200))
   }
 
@@ -333,6 +352,21 @@ export default class Windows extends React.Component {
           onMove={this.onOraMoved}
           onBlur={this.onOraBlur}
           onFocus={this.onOraFocus}
+          devToolsExtensions={Helpers.getExtensions(['mobx', 'react'])}
+        />
+        {/* PEEK: */}
+        <Window
+          {...appWindow}
+          ref={this.handleOraRef}
+          transparent
+          show
+          alwaysOnTop
+          size={[600, 450]}
+          file={`${Constants.APP_URL}/peek`}
+          position={[
+            this.state.peekPosition[0] + (this.state.peek.offsetTop || 0),
+            this.state.peekPosition[1],
+          ]}
           devToolsExtensions={Helpers.getExtensions(['mobx', 'react'])}
         />
         {/* SETTINGS PANE: */}

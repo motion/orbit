@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react'
 import * as UI from '@mcro/ui'
+import { OS } from '~/helpers'
 
 const getDate = result =>
   result.data && result.data.updated ? UI.Date.format(result.data.updated) : ''
@@ -91,6 +92,8 @@ function getSecondary(result) {
   return text
 }
 
+let lastHover
+
 export default function getItem(result, index) {
   return {
     key: `${index}${result.id}${result.title}${result.category}`,
@@ -133,6 +136,19 @@ export default function getItem(result, index) {
     afterProps: result.afterProps,
     selectable: result.selectable,
     glow: result.glow || result.selectable !== false,
+    onMouseEnter: e => {
+      clearTimeout(lastHover)
+      const url = result.data && result.data.url
+      if (url) {
+        const { offsetTop } = e.target.parentNode
+        lastHover = setTimeout(() => {
+          OS.send('peek', { url, offsetTop })
+        }, 100)
+      }
+    },
+    onMouseLeave: () => {
+      clearTimeout(lastHover)
+    },
     ...result.props,
   }
 }

@@ -1,5 +1,5 @@
 export runAppleScript from './runAppleScript'
-export { getActiveWindowInfo, getChromeContext } from './getContext'
+export getContext from './getContext'
 export getAppSize from './getAppSize'
 export open from 'opn'
 export escapeAppleScriptString from 'escape-string-applescript'

@@ -1,26 +1,14 @@
-// @flow
-import React from 'react'
-import { App, Window } from '@mcro/reactron'
-import * as Helpers from './helpers'
-import { globalShortcut, ipcMain, screen } from 'electron'
-import repl from 'repl'
+import * as React from 'react'
+import { Window } from '@mcro/reactron'
+import * as Helpers from '~/helpers'
+import { ipcMain, screen } from 'electron'
 import * as Constants from '~/constants'
-import { throttle, isEqual, once } from 'lodash'
+import { throttle, once } from 'lodash'
 import MenuItems from './menuItems'
 import { view } from '@mcro/black'
-import * as Injections from '~/injections'
+import PeekWindow from './windows/peek'
 
-let onWindows = []
-export function onWindow(cb) {
-  console.log('onwindow')
-  onWindows.push(cb)
-}
-
-type Peek = {
-  url: string,
-  offsetTop: number,
-}
-
+@view.attach('rootStore')
 @view.electron
 export default class Windows extends React.Component {
   // this is an event bus that should be open whenever ora is open
@@ -34,8 +22,6 @@ export default class Windows extends React.Component {
     size: [0, 0],
     position: [0, 0],
     trayPosition: [0, 0],
-    peek: {},
-    peekPosition: [100, 100],
     context: null, // osContext
   }
 
@@ -51,26 +37,16 @@ export default class Windows extends React.Component {
     const screenSize = screen.getPrimaryDisplay().workAreaSize
     const trayPosition = [screenSize.width - Constants.ORA_WIDTH, 20]
     this.updateState({ show: true, position, size, screenSize, trayPosition })
-  }
 
-  componentDidMount() {
-    this.mounted = true
-    this.repl = repl.start({
-      prompt: '$ > ',
+    this.on(this.props.rootStore, 'shortcut', x => {
+      if (x === 'Option+Space') {
+        this.toggleShown()
+      }
     })
-    onWindows.forEach(cb => cb(this))
-    Object.assign(this.repl.context, {
-      Root: this,
-    })
-  }
-
-  componentWillUnmount() {
-    this.mounted = false
-    globalShortcut.unregisterAll()
   }
 
   handleOraRef = ref => {
-    if (ref) {
+    if (ref && !this.oraRef) {
       this.startOra(ref.window)
     }
   }
@@ -78,14 +54,12 @@ export default class Windows extends React.Component {
   startOra = once(ref => {
     console.log('starting ora')
     this.oraRef = ref
-
     // CLEAR DATA
     if (process.env.CLEAR_DATA) {
       this.oraRef.webContents.session.clearStorageData()
     }
     this.watchForContext()
     this.listenToApps()
-    this.registerShortcuts()
   })
 
   oraStateGetters = []
@@ -102,8 +76,7 @@ export default class Windows extends React.Component {
   }
 
   listenToApps = () => {
-    this.setupCrawlerListeners()
-    this.setupAuthListeners()
+    this.on(ipcMain, 'open-settings', throttle(this.handlePreferences, 200))
 
     this.on(
       ipcMain,
@@ -135,44 +108,10 @@ export default class Windows extends React.Component {
         console.log('nothing is listening for state')
       }
     })
-
-    this.on(
-      ipcMain,
-      'open-browser',
-      throttle((event, url) => Helpers.open(url), 200)
-    )
-
-    // peek stuff
-    let peekSend = null
-    this.on(ipcMain, 'peek', (event, peek: Peek) => {
-      this.setState({ peek })
-      peekSend('peek-to', peek)
-    })
-    this.on(ipcMain, 'peek-start', event => {
-      peekSend = (name, val) => event.sender.send(name, val)
-    })
-
-    this.on(ipcMain, 'open-settings', throttle(this.handlePreferences, 200))
   }
 
-  setupCrawlerListeners() {
-    this.on(ipcMain, 'inject-crawler', throttle(Injections.injectCrawler, 1000))
-    this.on(
-      ipcMain,
-      'uninject-crawler',
-      throttle(Injections.uninjectCrawler, 1000)
-    )
-  }
-
-  setupAuthListeners() {
-    const getAuthUrl = service =>
-      `${Constants.APP_URL}/authorize?service=` + service
-    const openAuthWindow = (e, service) =>
-      Injections.openAuth(getAuthUrl(service))
-    const closeAuthWindow = (e, service) =>
-      Injections.closeChromeTabWithUrl(getAuthUrl(service))
-    this.on(ipcMain, 'auth-open', throttle(openAuthWindow, 2000))
-    this.on(ipcMain, 'auth-close', throttle(closeAuthWindow, 2000))
+  get appRef() {
+    return this.props.rootStore.appRef
   }
 
   toggleShown = throttle(async () => {
@@ -198,71 +137,17 @@ export default class Windows extends React.Component {
     }
   }, 200)
 
-  lastContext = null
-  lastContextError = null
-
   watchForContext = () => {
     this.setInterval(async () => {
-      let res
-      try {
-        res = await Helpers.getActiveWindowInfo()
-      } catch (err) {
-        if (err.message.indexOf(`Can't get window 1 of`)) {
-          // super hacky but if it fails it usually gives an error like:
-          //   execution error: System Events got an error: Can’t get window 1 of process "Slack"
-          // so we can find it:
-          const name = err.message.match(/process "([^"]+)"/)
-          if (name && name.length) {
-            res = { application: name[1], title: name[1] }
-          }
-        }
-        if (!res) {
-          if (this.lastContextError !== err.message) {
-            console.log('error watching context', err.message)
-            this.lastContextError = err.message
-          }
-        }
-      }
-      if (res) {
-        const { application } = res
-        const context = {
-          focusedApp: application,
-          ...(await Helpers.getChromeContext()),
-        }
-        if (!isEqual(this.state.context, context)) {
-          this.updateState({ context })
-        }
+      const context = await Helpers.getContext(this.state.context)
+      if (context) {
+        this.updateState({ context })
       }
     }, 500)
   }
 
-  SHORTCUTS = {
-    'Option+Space': () => {
-      console.log('command option+space')
-      this.toggleShown()
-    },
-  }
-
-  registerShortcuts = () => {
-    for (const shortcut of Object.keys(this.SHORTCUTS)) {
-      const ret = globalShortcut.register(shortcut, this.SHORTCUTS[shortcut])
-      if (!ret) {
-        console.log('couldnt register shortcut')
-      }
-    }
-  }
-
-  componentDidCatch(error) {
-    console.error(error)
-    this.updateState({ error })
-  }
-
   handlePreferences = () => {
     this.updateState({ showSettings: true })
-  }
-
-  handleMenuRef = ref => {
-    this.menuRef = ref
   }
 
   handleMenuQuit = () => {
@@ -272,12 +157,6 @@ export default class Windows extends React.Component {
   handleMenuClose = () => {
     if (this.state.showSettings) {
       this.updateState({ showSettings: false })
-    }
-  }
-
-  handleAppRef = ref => {
-    if (ref) {
-      this.appRef = ref.app
     }
   }
 
@@ -306,33 +185,17 @@ export default class Windows extends React.Component {
   }
 
   render() {
-    const { error, restart } = this.state
-    if (restart) {
-      console.log('RESTARTING')
-      this.repl.close()
-      // onWindows = []
-      return <App key={0} />
-    }
-    if (error) {
-      console.log('recover render from error')
-      return null
-    }
     const appWindow = {
       frame: false,
       defaultSize: [700, 500],
       backgroundColor: '#00000000',
-      webPreferences: {
-        nativeWindowOpen: true,
-        experimentalFeatures: true,
-        transparentVisuals: true,
-      },
+      webPreferences: Constants.WEB_PREFERENCES,
     }
     return (
-      <App onBeforeQuit={this.onBeforeQuit} ref={this.handleAppRef}>
+      <React.Fragment>
         <MenuItems
           onPreferences={this.handlePreferences}
           onShowDevTools={this.handleShowDevTools}
-          getRef={this.handleMenuRef}
           onQuit={this.handleMenuQuit}
           onClose={this.handleMenuClose}
         />
@@ -354,21 +217,7 @@ export default class Windows extends React.Component {
           onFocus={this.onOraFocus}
           devToolsExtensions={Helpers.getExtensions(['mobx', 'react'])}
         />
-        {/* PEEK: */}
-        <Window
-          {...appWindow}
-          ref={this.handleOraRef}
-          transparent
-          show
-          alwaysOnTop
-          size={[600, 450]}
-          file={`${Constants.APP_URL}/peek`}
-          position={[
-            this.state.peekPosition[0] + (this.state.peek.offsetTop || 0),
-            this.state.peekPosition[1],
-          ]}
-          devToolsExtensions={Helpers.getExtensions(['mobx', 'react'])}
-        />
+        <PeekWindow />
         {/* SETTINGS PANE: */}
         <Window
           {...appWindow}
@@ -386,7 +235,7 @@ export default class Windows extends React.Component {
           onMove={this.onSettingsMoved}
           onClose={this.onSettingsClosed}
         />
-      </App>
+      </React.Fragment>
     )
   }
 }

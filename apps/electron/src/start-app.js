@@ -7,6 +7,7 @@ import electronDebug from 'electron-debug'
 import React from 'react'
 import { render } from '@mcro/reactron'
 import { extras } from 'mobx'
+import Root from './views/root'
 
 if (process.env.NODE_ENV !== 'production') {
   require('./helpers/monitorResourceUsage')
@@ -16,22 +17,15 @@ if (process.env.NODE_ENV !== 'production') {
 // share state because node loads multiple copies
 extras.shareGlobalState()
 
-let app = null
 let started = false
 
 export function start() {
   if (started) return
   started = true
   console.log('starting electron', process.env.NODE_ENV)
-  const { default: Windows, onWindow } = require('./windows')
-  render(<Windows key={Math.random()} />)
-  if (!app) {
-    electronContextMenu()
-    electronDebug()
-  }
-  onWindow(ref => {
-    app = ref
-  })
+  render(<Root />)
+  electronContextMenu()
+  electronDebug()
 }
 
 if (process.env.NODE_ENV === 'development') {

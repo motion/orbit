@@ -4,6 +4,7 @@ import { object } from 'prop-types'
 import { pickBy, difference, isEqual } from 'lodash'
 import hoistStatics from 'hoist-non-react-statics'
 import Redbox from 'redbox-react'
+import global from 'global'
 
 // keep action out of class directly because of hmr bug
 const updateProps = Mobx.action('updateProps', (props, nextProps) => {
@@ -83,9 +84,9 @@ export default function storeProvidable(options, Helpers) {
           }
           this.mounted = true
           this.mountStores()
-          if (window.Black) {
+          if (global.Black) {
             this.errorClear = () => this.clearErrors()
-            window.Black.view.on('hmr', this.errorClear)
+            global.Black.view.on('hmr', this.errorClear)
           }
         }
 
@@ -107,8 +108,8 @@ export default function storeProvidable(options, Helpers) {
         componentWillUnmount() {
           // if you remove @view({ store: ... }) it tries to remove it here but its gone
           if (this.disposeStores) {
-            if (window.Black) {
-              window.Black.view.off('hmr', this.errorClear)
+            if (global.Black) {
+              global.Black.view.off('hmr', this.errorClear)
             }
             this.disposeStores()
             this.unmounted = true

@@ -35,6 +35,7 @@ const getTextProperties = props => {
     lineHeightNum = Math.round(lineHeight * 10) / 10
     lineHeight = `${lineHeightNum}px`
   }
+  console.log(props, fontSize, lineHeight)
   return { fontSize, fontSizeNum, lineHeight, lineHeightNum }
 }
 
@@ -68,7 +69,7 @@ export type Props = {
 @view.ui
 export default class Text extends React.Component<Props> {
   static defaultProps = {
-    tagName: 'text', // TODO: prod p mode
+    tagName: 'p', // TODO: prod p mode
     size: 1,
   }
 
@@ -303,6 +304,7 @@ export default class Text extends React.Component<Props> {
   }
 
   static theme = (props, theme) => {
+    console.log('get the theme')
     const { fontSize, lineHeight } = getTextProperties(props)
     let color = props.color || theme.base.color
     // allow alpha adjustments

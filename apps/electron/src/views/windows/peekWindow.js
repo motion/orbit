@@ -16,7 +16,7 @@ export default class PeekWindow extends React.Component {
     peek: {},
     lastPeek: {},
     position: [0, 0],
-    dimensions: [600, 450],
+    dimensions: [700, 550],
   }
 
   componentWillMount() {
@@ -41,7 +41,7 @@ export default class PeekWindow extends React.Component {
   }
 
   render({ appPosition }) {
-    const X_GAP = 0
+    const X_GAP = -10
     const Y_GAP = 0
     const [x, y] = appPosition
     const { lastPeek, dimensions } = this.state

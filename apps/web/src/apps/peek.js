@@ -8,6 +8,8 @@ const isSamePeek = (a, b) => a && b && a.url === b.url
 const SHOW_DELAY = 200
 const HIDE_DELAY = 40
 
+window.Event = Event
+
 type Peek = {
   url?: string,
   offsetTop?: number,
@@ -89,11 +91,12 @@ type Peek = {
         }
       }
       const offFinishLoad = this.on(ref, 'did-finish-load', loadPage)
-      console.log('offFinishLoad', offFinishLoad)
       // after a second just load anyway
       const offTimeoutLoad = this.setTimeout(loadPage, 1000)
       this.offLoad = () => {
-        offFinishLoad.dispose()
+        if (offFinishLoad) {
+          debugger
+        }
         clearTimeout(offTimeoutLoad)
       }
     }
@@ -154,7 +157,7 @@ export default class PeekPage {
       overflow: 'hidden',
     },
     contentLoading: {
-      background: [0, 0, 0, 0.1],
+      background: [0, 0, 0, 0.31],
     },
     webview: {
       height: '100%',

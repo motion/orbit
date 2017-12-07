@@ -9,7 +9,7 @@ import { Models } from '@mcro/models'
 import * as Constants from '~/constants'
 import AppStore from './stores/appStore'
 import adapter from 'pouchdb-adapter-idb'
-import * as Services from './services'
+import Services from './services'
 import CurrentUser_ from './stores/currentUserStore'
 import debug from 'debug'
 
@@ -38,7 +38,6 @@ class App {
         adapterName: 'idb',
       },
       models: Models,
-      services: Services,
     })
   }
 
@@ -71,8 +70,8 @@ class App {
   }
 
   // helpers that wrap appStore
-  get services(): Object {
-    return this.store && this.store.services
+  get services(): Services {
+    return Services
   }
 
   get database(): Object {

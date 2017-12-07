@@ -123,8 +123,7 @@ class Folder {
 
 @view({
   store: class DriveStore {
-    @watch
-    folders = () => App.sync.google.drive && App.sync.google.drive.getFiles()
+    folders = App.sync.google.drive.getFiles()
 
     get files() {
       return (this.things || []).filter(t => t.type === 'doc')

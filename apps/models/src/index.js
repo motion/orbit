@@ -127,6 +127,7 @@ export default class Database {
       name: this.databaseConfig.name,
       password: this.databaseConfig.password,
       multiInstance: false,
+      ingoreDuplicate: true,
       ...options,
     })
     await this.attachModels()

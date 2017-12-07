@@ -22,15 +22,13 @@
 
 # now
 
+* drive sync pane / drive sync
+* peek view
 * settings pane: crawler section
-* settings pane: bottom sync status tray (slack, github, drive)
-* settings pane: better sync button
-* slack sync
-  * turn off a room it should disable/delete attachments
-  * showing slack icons next to slack things + data.channel
+* settings pane: sync status improvements
+* slack: turn off room it should disable/delete attachments
 * have a poll that checks crawler status so it always shows a status drawer and
   you can cancel
-* scan hard drives for files (word pdf excel)
 * cmd+opt when unfocused: focus + focus search
 * cmd+opt when hidden: focus + focus search
 * cmd+opt when focused: hide

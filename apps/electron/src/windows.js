@@ -162,8 +162,10 @@ export default class Windows extends React.Component {
       return
     }
     if (!this.oraState.hidden) {
+      console.log('send toggle')
       await this.sendOra('ora-toggle')
       await Helpers.sleep(150)
+      console.log('now hide')
       if (!this.state.showSettings) {
         this.appRef.hide()
       }

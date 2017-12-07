@@ -61,9 +61,9 @@ export const openAuth = async url => {
   set x to (item 1 of chromePos) + 100
   set y to (item 2 of chromePos) + 100
   -- Make sure its active
-  tell application "Google Chrome"
-    activate
-  end tell
+  -- tell application "Google Chrome"
+  --   activate
+  -- end tell
   -- Run python script to click, its slow
   do shell script "/usr/bin/python <<END
 import time, sys
@@ -81,38 +81,20 @@ def m_move(x, y): m_event(kCGEventMouseMoved, x, y);
 def m_click(x, y): m_event(kCGEventLeftMouseDown, x, y); m_event(kCGEventLeftMouseUp, x, y);
 x, y = int(" & x & "), int(" & y & ");
 e = CGEventCreate(None); cur_pos=CGEventGetLocation(e);
+time.sleep(0.2);
 m_click(x, y);
 time.sleep(0.2);
 m_click(x, y);
+time.sleep(0.5);
+m_click(x, y);
 m_move(cur_pos.x, cur_pos.y)
 END"
+  -- done with click now re-focus orbit
+  --- tell application frontAppName
+  ---   activate
+  --- end tell
 `)
 }
-;`
-set x to 200
-set y to 200
-set l to 1 -- click same location 50 times
-
-do shell script "
-/usr/bin/python <<END
-import sys
-import time
-from Quartz.CoreGraphics import *
-def mouseEvent(type, posx, posy):
-          theEvent = CGEventCreateMouseEvent(None, type, (posx,posy), kCGMouseButtonLeft)
-          CGEventPost(kCGHIDEventTap, theEvent)
-def mousemove(posx,posy):
-          mouseEvent(kCGEventMouseMoved, posx,posy);
-def mouseclick(posx,posy):
-          mouseEvent(kCGEventLeftMouseDown, posx,posy);
-          mouseEvent(kCGEventLeftMouseUp, posx,posy);
-ourEvent = CGEventCreate(None);
-currentpos=CGEventGetLocation(ourEvent);             # Save current mouse position
-for x in range(0, " & l & "):
-          mouseclick(" & x & "," & y & ");
-mousemove(int(currentpos.x),int(currentpos.y));      # Restore mouse position
-END"
-`
 
 export const injectCrawler = _.throttle(async () => {
   const js = await Helpers.getCrawler()

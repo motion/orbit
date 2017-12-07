@@ -2,22 +2,21 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
 
-const hasContent = result => result && result.data && result.data.body
 const getDate = result =>
   result.data && result.data.updated ? UI.Date.format(result.data.updated) : ''
 
 function getIcon(result) {
   if (result.data && result.data.integration === 'github') {
-    const num = result.data.data.number
-    return (
-      <icon $$centered>
-        <UI.Button size={0.8} circular>
-          {num}
-        </UI.Button>
-        <br />
-        <UI.Icon name="github" />
-      </icon>
-    )
+    // const num = result.data.data.number
+    // return (
+    //   <icon $$centered>
+    //     <UI.Button size={0.8} circular>
+    //       {num}
+    //     </UI.Button>
+    //     <br />
+    //     <UI.Icon name="github" />
+    //   </icon>
+    // )
   }
   if (result.data && result.data.image) {
     return (
@@ -52,6 +51,7 @@ const ICON_NAME = {
   pin: 'pin',
   'pin-site': 'pin',
   slack: 'social-slack',
+  github: 'social-github',
 }
 
 function location(thing) {

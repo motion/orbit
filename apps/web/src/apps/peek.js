@@ -182,6 +182,7 @@ export default class PeekPage {
       opacity: 1,
     },
     loading: {
+      pointerEvents: 'none !important',
       alignItems: 'center',
       justifyContent: 'center',
       flex: 1,

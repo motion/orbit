@@ -13,6 +13,8 @@ const glowProps = {
   zIndex: 1,
 }
 
+const TAB_SLANT_X = 4.5
+
 const chromeStyle = {
   position: 'absolute',
   top: 0,
@@ -24,8 +26,8 @@ const chromeStyle = {
   overflow: 'hidden',
   transform: {
     perspective: '100px',
-    rotateX: '6deg',
-    y: -0.5,
+    rotateX: '8deg',
+    y: -1,
   },
 }
 
@@ -48,18 +50,18 @@ class Tab {
             top: 0,
             left: 0,
             bottom: 0,
-            right: 12,
+            right: TAB_SLANT_X + 10,
             background: Constants.ORA_BG_MAIN,
             borderTopLeftRadius: 10,
             borderTopRightRadius: 0,
             zIndex: 2,
-            boxShadow: ['inset 0 0.5px 0 rgba(255,255,255,0.15)'],
+            boxShadow: ['inset 0 0.5px 0 rgba(255,255,255,0.1)'],
           }}
         />
         <chrome
           css={{
             ...chromeStyle,
-            marginRight: 3.5,
+            marginRight: TAB_SLANT_X,
             background: Constants.ORA_BG_MAIN,
             borderBottom: 'none',
             boxShadow: [

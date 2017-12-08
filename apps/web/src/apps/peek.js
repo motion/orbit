@@ -5,8 +5,8 @@ import * as UI from '@mcro/ui'
 import { OS } from '~/helpers'
 
 const isSamePeek = (a, b) => a && b && a.url === b.url
-const SHOW_DELAY = 200
-const HIDE_DELAY = 40
+const SHOW_DELAY = 500
+const HIDE_DELAY = 60
 
 window.Event = Event
 
@@ -32,6 +32,11 @@ class WebView {
     pageLoaded = false
 
     get peek() {
+      // preload
+      if (this.pendingPeek && !this.currentPeek) {
+        return this.pendingPeek
+      }
+      // about to show different
       if (
         this.pendingPeek &&
         this.currentPeek &&
@@ -39,9 +44,11 @@ class WebView {
       ) {
         return null
       }
+      // during hover its null so show it cached
       if (this.isHovered) {
         return this.lastPeek
       }
+      // current
       return this.currentPeek
     }
 
@@ -50,7 +57,7 @@ class WebView {
 
       let peekTimeout
       this.on(OS, 'peek-to', (event, peek: ?Peek) => {
-        console.log('peek-to', peek, this.lastPeek)
+        // console.log('peek-to', peek, this.lastPeek)
         const isSame = isSamePeek(this.lastPeek, peek)
         const update = () => this.updatePeek(peek)
         if (isSame) {
@@ -99,7 +106,6 @@ class WebView {
           this.pageLoaded = true
         }
       }
-      console.log('handling ref', ref)
       // const offFinishLoad = this.on(ref, 'did-finish-load', loadPage)
       // after a second just load anyway
       const offTimeoutLoad = this.setTimeout(loadPage, 1000)
@@ -112,8 +118,9 @@ class WebView {
 })
 export default class PeekPage {
   render({ store }) {
-    const { peek } = store
-    const peekUrl = peek && peek.url
+    const { peek, pendingPeek } = store
+    const peekUrl = (peek && peek.url) || (pendingPeek && pendingPeek.url)
+    // console.log('peekUrl', !!peekUrl, 'loaded?', store.pageLoaded)
     return (
       <UI.Theme name="light">
         <peek

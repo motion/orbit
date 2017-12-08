@@ -183,12 +183,17 @@ export default class Sync {
     )
   }
 
-  failJob = (job: Job, lastError) =>
-    job.update({
-      status: 3,
-      lastError,
-      tries: 3,
-    })
+  failJob = async (job: Job, lastError) => {
+    try {
+      await job.update({
+        status: 3,
+        lastError,
+        tries: 3,
+      })
+    } catch (err) {
+      console.info(err)
+    }
+  }
 
   runJob = async (job: Job) => {
     log('Running job', job.type, job.action)

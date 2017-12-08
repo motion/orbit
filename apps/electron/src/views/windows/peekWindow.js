@@ -51,11 +51,13 @@ export default class PeekWindow extends React.Component {
     return (
       <Window
         file={`${Constants.APP_URL}/peek`}
+        frame={false}
+        background="#00000000"
         webPreferences={Constants.WEB_PREFERENCES}
         transparent
         show
         alwaysOnTop
-        showDevTools
+        showDevTools={Constants.IS_DEV}
         hasShadow
         size={this.state.dimensions}
         position={position}

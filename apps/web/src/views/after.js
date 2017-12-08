@@ -1,6 +1,7 @@
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { Thing } from '~/app'
+import { OS } from '~/helpers'
 
 @view
 export default class After {
@@ -8,6 +9,7 @@ export default class After {
     return (
       <after
         onClick={e => {
+          OS.send('peek', null)
           e.preventDefault()
           e.stopPropagation()
           navigate({

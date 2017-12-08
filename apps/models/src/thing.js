@@ -5,30 +5,9 @@ import { cleanId, findOrUpdate } from './helpers'
 
 declare class CurrentUser {}
 
-const resolvedBodies = {}
 const db = new IndexDB()
 
 const getHost = url => new URL(url).host.replace(/^www\./, '')
-
-// keep here so we can use as generic
-export const methods = {
-  // hacky way to have async resolving of bodies for now
-  get body() {
-    if (this.bodyTEMP) {
-      ;(async () => {
-        const res = await db.get(this.id)
-        if (resolvedBodies[this.id] !== res.body) {
-          resolvedBodies[this.id] = res.body
-          // hacky, triggers update
-          this.bodyTEMP = `${Math.random()}`
-          this.save()
-        }
-      })()
-      return resolvedBodies[this.id] || ''
-    }
-    return ''
-  },
-}
 
 export type ThingType = typeof methods & {
   title: string,
@@ -54,7 +33,6 @@ export class Thing extends Model {
     title: str.indexed,
     integration: str,
     type: str.indexed,
-    bodyTEMP: str.optional,
     data: object.optional,
     author: str.optional,
     bucket: str.optional,
@@ -64,7 +42,14 @@ export class Thing extends Model {
     timestamps: true,
   }
 
-  methods = methods
+  // methods = {}
+
+  asyncMethods = {
+    async body() {
+      const res = await db.get(this.id)
+      return res ? res.body : ''
+    },
+  }
 
   settings = {
     database: 'things',
@@ -84,7 +69,6 @@ export class Thing extends Model {
       // body shim
       if (typeof doc.body !== 'undefined') {
         db.put({ id: doc.id, body: doc.body })
-        doc.bodyTEMP = `${Math.random()}`
         delete doc.body
       }
 

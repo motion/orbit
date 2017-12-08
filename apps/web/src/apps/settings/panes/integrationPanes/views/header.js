@@ -63,7 +63,7 @@ class IntegrationHeaderStore {
     if (Constants.IS_ELECTRON) {
       OS.send('auth-open', integration)
     } else {
-      window.open(`${Constants.API_URL}/authorize?service=${integration}`)
+      window.open(`${Constants.API_URL}/auth?service=${integration}`)
     }
     const checker = this.setInterval(async () => {
       const authorizations = await this.checkAuths()

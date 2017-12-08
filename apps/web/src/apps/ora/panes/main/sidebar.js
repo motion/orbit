@@ -63,13 +63,26 @@ export default class MainSidebar {
         {
           title: 'Insert test things...',
           onClick: () => {
-            Thing.createFromPin({
-              url: 'http://google.com',
-              contents: { title: 'Pin Test', content: 'Pin Test Body' },
+            this.oraStore.pin.add({
+              url:
+                'https://support.stripe.com/questions/i-have-a-charge-on-my-card-from-stripe-but-i-m-not-a-stripe-user',
+            })
+            this.oraStore.pin.add({
+              url:
+                'https://support.stripe.com/questions/i-have-a-charge-on-my-card-from-stripe-but-i-m-not-a-stripe-user',
             })
             Thing.createFromCrawl({
-              url: 'http://google.com',
+              url:
+                'http://marginalrevolution.com/marginalrevolution/2017/12/adam-smith-occupational-licensing.html',
               contents: { title: 'Crawl Test', content: 'Crawl Test Body' },
+            })
+            Thing.createFromCrawl({
+              url:
+                'https://support.stripe.com/questions/why-are-my-customers-charges-marked-as-recurring',
+              contents: {
+                title: 'Why are my customers charges marked as recurring?',
+                content: 'Crawl Test Body',
+              },
             })
           },
           category: 'Dev Tools',

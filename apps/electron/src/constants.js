@@ -9,5 +9,11 @@ export const IS_MAC = process.platform === 'darwin'
 export const ORA_WIDTH = 320
 export const ROOT_PATH = Path.join(__dirname, '..')
 
+export const WEB_PREFERENCES = {
+  nativeWindowOpen: true,
+  experimentalFeatures: true,
+  transparentVisuals: true,
+}
+
 console.log('Constants.APP_URL', APP_URL)
 console.log('Constants.ROOT_PATH', ROOT_PATH)

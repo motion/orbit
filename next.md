@@ -17,25 +17,38 @@
 * height adjustment based on results
 * pin banner ux improvements
 * bug: home showing recent
+* via [S] #general
+* thing: show where it came from
+
+# demo video
+
+DeliverX
+
+1. Universal smart search results
+2. Incoming email w context
+3. Copy/look at result to answer
+4. Add DeliverX knowledgebase
+5. Maybe pin the map intranet page
+6. Intercom/zendesk chat w customer 1
+7. Answer using peek map/knowledgebase combo
+8. One part is document on policy for refunds/deliveries
+9. Looking up specific driver on map to send back to c1
+10. mind blown
 
 # now
 
-* via [S] #general
-* scan hard drives for files (word pdf excel)
+* drive sync pane / drive sync
+* peek view
+* settings pane: crawler section
+* settings pane: sync status improvements
+* slack: turn off room it should disable/delete attachments
+* have a poll that checks crawler status so it always shows a status drawer and
+  you can cancel
 * cmd+opt when unfocused: focus + focus search
 * cmd+opt when hidden: focus + focus search
 * cmd+opt when focused: hide
-* fix drill in from home/item to not just use context
-* thing: show where it came from
-* settings pane: bottom sync status tray (slack, github, drive)
-* settings pane: better sync button
-* settings pane: crawler section
-* slack sync
-  * turn off a room it should disable/delete attachments
-  * showing slack icons next to slack things + data.channel
 * cancel crawl from crawling... pane
 * crawling... pane glitch when on home
-* tests and fixes on drive/github
 * crawler breaks on lots of sites due to html parser, do readabiltiy injection
 * peek window that tracks next to main window
 * peek window shows peek view of items

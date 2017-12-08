@@ -56,9 +56,7 @@ class PaneStore {
     let willScrollTo = null
     this.react(
       () => [
-        sidebar
-          ? stack.last.sidebarSelectedIndex
-          : stack.last.mainSelectedIndex,
+        stack.last.sidebarSelectedIndex,
         this.props.oraStore.ui.search,
         this.props.oraStore.ui.barFocused,
         this.contentVersion,
@@ -82,14 +80,6 @@ class PaneStore {
   paneStore: PaneStore,
 })
 export default class Pane {
-  onSelect = (item, index) => {
-    if (item.onClick) {
-      item.onClick()
-    } else if (this.props.onSelect) {
-      this.props.onSelect(item, index)
-    }
-  }
-
   handleDrawerClose = () => {
     const { store } = this.props.stackItem
     if (store && store.drawer && store.drawer.handleClose) {
@@ -114,7 +104,6 @@ export default class Pane {
         hideScrollBar
         itemsKey={paneStore.contentVersion}
         getRef={paneStore.setList}
-        onSelect={this.onSelect}
         items={paneStore.items}
         {...listProps}
       />

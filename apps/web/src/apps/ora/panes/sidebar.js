@@ -152,12 +152,20 @@ export default class Sidebar {
                 navigate={stack.navigate}
                 result={stackItem.result}
                 sidebarStore={Sidebar}
-                onSelect={stackItem.onSelect}
                 hasParent={!!stackItem.parent}
                 listProps={{
                   getItem,
                   width,
                   highlight: i => i === stackItem.selectedIndex,
+                  onSelect(item) {
+                    if (item.selectable === false) {
+                      return false
+                    }
+                    if (item.onClick) {
+                      return item.onClick()
+                    }
+                    stackItem.onSelect(item, index)
+                  },
                   ...listProps,
                 }}
               />

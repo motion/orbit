@@ -1,14 +1,12 @@
 // @flow
-import { view, store, watch } from '@mcro/black'
+import { view, store } from '@mcro/black'
 import { autorunAsync } from 'mobx'
 import { uniqBy } from 'lodash'
 import Database from '@mcro/models'
-import CurrentUser from './currentUserStore'
 
 type Options = {
   config: Object,
   models: Object,
-  services: Object,
 }
 
 type ThingRef = {
@@ -31,24 +29,10 @@ export default class AppStore {
   mountedVersion = 0
   stores: ?Object = null
   views: ?Object = null
-  serviceObjects: ?Object = null
 
-  @watch
-  services: ?Object = (() => {
-    if (!CurrentUser.user) {
-      return null
-    }
-    const res = {}
-    for (const serviceName of Object.keys(this.serviceObjects)) {
-      res[serviceName] = new this.serviceObjects[serviceName](CurrentUser)
-    }
-    return res
-  }: any)
-
-  constructor({ config, models, services }: Options) {
+  constructor({ config, models }: Options) {
     this.config = config
     this.models = models
-    this.serviceObjects = services
     // listen for stuff, attach here
     view.on('store.mount', this.mount('stores'))
     view.on('store.unmount', this.unmount('stores'))

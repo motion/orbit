@@ -2,18 +2,25 @@ import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
 import { Thing, CurrentUser } from '~/app'
+import { fuzzy } from '~/helpers'
 
 @view({
-  store: class PinPaneStore {
-    pinThings = Thing.find().where({ type: 'pin' })
-    crawlThings = Thing.find().where({ type: 'pin-site' })
+  store: class ContentPaneStore {
+    search = ''
+    allThings = Thing.find()
+
+    get things() {
+      return fuzzy(this.allThings || [], this.search, {
+        keys: ['title'],
+      })
+    }
 
     get setting() {
       return CurrentUser.setting.pins
     }
   },
 })
-export default class PinPane {
+export default class ContentPane {
   render({ store }) {
     if (!store.setting) {
       console.log('no setting')
@@ -22,39 +29,33 @@ export default class PinPane {
     return (
       <pane>
         <content>
+          <UI.Input
+            marginBottom={10}
+            size={1.2}
+            placeholder="Filter..."
+            onChange={e => (store.search = e.target.value)}
+            value={store.search}
+          />
           <section $$flex>
-            <UI.Title size={2}>Pins</UI.Title>
-            <UI.Title
-              if={!store.pinThings || !store.pinThings.length}
-              size={1.5}
-            >
+            <UI.Title if={!store.things || !store.things.length} size={1.5}>
               Nothing pinned yet!
             </UI.Title>
             <UI.List
               virtualized
-              if={store.pinThings}
-              items={store.pinThings}
+              itemProps={{
+                borderBottom: [1, [0, 0, 0, 0.05]],
+                padding: [15, 10],
+                primaryProps: {
+                  fontWeight: 600,
+                  size: 1.2,
+                  ellipse: true,
+                },
+              }}
+              if={store.things}
+              items={store.things}
               getItem={this.getItem}
             />
           </section>
-
-          <section $$flex>
-            <UI.Title size={2}>Pinned Sites</UI.Title>
-            <UI.Title
-              if={!store.crawlThings || !store.crawlThings.length}
-              size={1.5}
-            >
-              No pinned sites!
-            </UI.Title>
-            <UI.List
-              if={store.crawlThings}
-              virtualized
-              items={store.crawlThings}
-              getItem={this.getItem}
-            />
-          </section>
-
-          {JSON.stringify(store.setting || null)}
         </content>
       </pane>
     )

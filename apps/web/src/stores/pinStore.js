@@ -6,13 +6,11 @@ import * as BannerStore from '~/stores/oraBannerStore'
 
 @store
 export default class PinStore {
-  add = async context => {
-    if (!context) {
-      console.log('no context to add')
-      return
+  add = async ({ url } = {}) => {
+    if (!url) {
+      throw new Error(`No url provided to context`)
     }
     BannerStore.note({ message: 'Pinning...' })
-    const { url } = context
     const response = await r2.post(`${Constants.API_URL}/crawler/single`, {
       json: { options: { entry: url } },
     }).json

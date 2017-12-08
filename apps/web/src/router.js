@@ -2,6 +2,7 @@
 import Router from '@mcro/router'
 import SettingsPage from './apps/settings'
 import AuthPage from './apps/auth'
+import PeekPage from './apps/peek'
 import OraPage from './apps/ora'
 import RelevancyPage from './apps/relevancy'
 
@@ -12,6 +13,7 @@ function runRouter() {
       settings: SettingsPage,
       relevancy: RelevancyPage,
       authorize: AuthPage,
+      peek: PeekPage,
     },
   })
 }

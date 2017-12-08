@@ -28,7 +28,7 @@ class StackItemStore {
     // update the highlighted item after we animate
     this.setTimeout(() => {
       this.setActive(0, index)
-    }, 50)
+    })
     this.stack.navigate(item)
   }
   get selectedIndex() {

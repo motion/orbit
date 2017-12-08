@@ -127,12 +127,8 @@ export default class ContextSidebar {
             return x.item.url !== this.props.result.data.url
           })
           .map(({ debug, item, similarity }, index) => {
-            const title = item.title
             return {
-              title,
-              data: item,
-              type: 'context',
-              onClick: () => OS.send('open-browser', item.url),
+              ...Thing.toResult(item),
               children:
                 this.context.sentences[index] &&
                 this.context.sentences[index].sentence,
@@ -233,6 +229,7 @@ export default class ContextSidebar {
       results = [
         {
           title: 'No results...',
+          selectable: false,
         },
       ]
     }

@@ -37,6 +37,7 @@ export default class OraActionBar {
                 return (
                   <UI.Button
                     glow
+                    sizeHeight={0.9}
                     glowProps={{
                       color: [255, 255, 255],
                       opacity: 0.2,

@@ -28,10 +28,25 @@ export default async function getContext(currentContext) {
   }
   if (res) {
     const { application } = res
-    const context = {
+    let context = {
       focusedApp: application,
-      ...(await getChromeContext()),
     }
+
+    switch (application) {
+      case 'Google Chrome':
+        context = {
+          ...context,
+          ...(await getChromeContext()),
+        }
+        break
+      case 'Safari':
+        context = {
+          ...context,
+          ...(await getSafariContext()),
+        }
+        break
+    }
+
     if (!isEqual(currentContext, context)) {
       return context
     }
@@ -71,15 +86,34 @@ JSON.stringify({
 `
 
 async function getChromeContext() {
-  const res = await runAppleScript(`
+  return parseContextRes(
+    await runAppleScript(`
+    global res
     tell application "Google Chrome"
       tell front window's active tab
-        set source to execute javascript "${escapeAppleScriptString(
-          CONTEXT_JS
-        )}"
+        set res to execute javascript "${escapeAppleScriptString(CONTEXT_JS)}"
       end tell
     end tell
+    return res
   `)
+  )
+}
+
+async function getSafariContext() {
+  return parseContextRes(
+    await runAppleScript(`
+    global res
+    tell application "Safari"
+      set res to do JavaScript "${escapeAppleScriptString(
+        CONTEXT_JS
+      )}" in front document
+    end tell
+    return res
+  `)
+  )
+}
+
+function parseContextRes(res) {
   if (res === 'missing value') {
     console.log('missing value')
     return null
@@ -94,6 +128,6 @@ async function getChromeContext() {
     console.log('error parsing json')
     console.log('res:', res)
     console.log(err)
-    return null
   }
+  return null
 }

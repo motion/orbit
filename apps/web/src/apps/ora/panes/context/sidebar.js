@@ -222,13 +222,21 @@ export default class ContextSidebar {
 
   get results() {
     let results = []
+    // if (this.isPinned) {
+    //   results = [
+    //     {
+    //       children: this.isPinned.body,
+    //       selectable: false,
+    //     },
+    //   ]
+    // }
     if (this.context) {
-      results = this.contextResults
+      results = [...results, ...this.contextResults]
     }
     if (!results.length) {
       results = [
         {
-          title: 'No results...',
+          children: 'No results...',
           selectable: false,
         },
       ]

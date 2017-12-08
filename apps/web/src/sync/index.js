@@ -191,7 +191,10 @@ export default class Sync {
         tries: 3,
       })
     } catch (err) {
-      console.info(err)
+      if (err.message && err.message.indexOf('cant save deleted document')) {
+        return
+      }
+      console.log(err)
     }
   }
 

@@ -48,7 +48,7 @@ elif [ "$ACTION" = "electron" ]; then
     npm run start-prod &
     wait
   else
-    cd apps/electron-build
+    cd apps/electron
     npm start
   fi
 elif [ "$ACTION" =  "site" ]; then

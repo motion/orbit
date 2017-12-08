@@ -15,6 +15,7 @@ import * as Black from '@mcro/black'
 import color from 'color'
 import debug from 'debug'
 import r2 from '@mcro/r2'
+import * as Helpers from '~/helpers'
 
 // Mobx.useStrict(true)
 
@@ -37,6 +38,7 @@ window.$ = color
 window.Black = Black
 window.debug = debug
 window.r2 = r2
+window.Helpers = Helpers
 
 // TODO check if this is needed and fix the global thing if so
 // PATCH: ignore octocat

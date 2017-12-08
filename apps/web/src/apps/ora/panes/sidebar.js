@@ -5,6 +5,7 @@ import * as Sidebars from './sidebars'
 import PaneView from './pane'
 import { ORA_WIDTH } from '~/constants'
 import getItem from './helpers/getItem'
+import { OS } from '~/helpers'
 
 @view({
   sidebar: class SidebarStore {
@@ -152,12 +153,22 @@ export default class Sidebar {
                 navigate={stack.navigate}
                 result={stackItem.result}
                 sidebarStore={Sidebar}
-                onSelect={stackItem.onSelect}
                 hasParent={!!stackItem.parent}
                 listProps={{
                   getItem,
                   width,
                   highlight: i => i === stackItem.selectedIndex,
+                  onSelect(item) {
+                    console.log('clear peek')
+                    OS.send('peek', null)
+                    if (item.selectable === false) {
+                      return false
+                    }
+                    if (item.onClick) {
+                      return item.onClick()
+                    }
+                    stackItem.onSelect(item, index)
+                  },
                   ...listProps,
                 }}
               />

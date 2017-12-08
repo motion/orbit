@@ -7,7 +7,7 @@ export default class Separator {
   render({ after, children, ...props }) {
     return (
       <separator {...props}>
-        <Text $text size={0.9}>
+        <Text $text size={0.95} alpha={0.5}>
           {children}
         </Text>
         <after if={after}>{after}</after>
@@ -21,7 +21,7 @@ export default class Separator {
       padding: [12, 10, 3],
       justifyContent: 'space-between',
       alignItems: 'center',
-      borderBottom: [1, [0, 0, 0, 0.2]],
+      // borderBottom: [1, [0, 0, 0, 0.05]],
       textAlign: 'left',
       userSelect: 'none',
       position: 'relative',

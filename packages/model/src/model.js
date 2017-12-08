@@ -364,6 +364,9 @@ export default class Model {
       statics: this.statics,
       pouchSettings: options.pouchSettings,
       migrationStrategies: this.migrations,
+      options: {
+        asyncMethods: this.asyncMethods,
+      },
     })
 
     // sync PUSH

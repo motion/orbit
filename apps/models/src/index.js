@@ -104,7 +104,26 @@ export default class Database {
     PouchDB.plugin(pMapReduce)
     RxDB.plugin(pMapReduce)
 
+    // asyncMethods => postCreateRxDocument hook
     RxDB.plugin({
+      rxdb: true,
+      hooks: {
+        postCreateRxDocument: async doc => {
+          const { asyncMethods } = doc.collection.options
+          if (asyncMethods) {
+            await Promise.all(
+              Object.keys(asyncMethods).map(async key => {
+                const value = await asyncMethods[key].call(doc)
+                doc[key] = value
+              })
+            )
+          }
+        },
+      },
+    })
+
+    RxDB.plugin({
+      rxdb: true,
       hooks: {
         preCreatePouchDb: options => {
           options.settings = {
@@ -127,6 +146,7 @@ export default class Database {
       name: this.databaseConfig.name,
       password: this.databaseConfig.password,
       multiInstance: false,
+      ingoreDuplicate: true,
       ...options,
     })
     await this.attachModels()

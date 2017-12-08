@@ -5,28 +5,9 @@ import { cleanId, findOrUpdate } from './helpers'
 
 declare class CurrentUser {}
 
-const resolvedBodies = {}
 const db = new IndexDB()
 
-// keep here so we can use as generic
-export const methods = {
-  // hacky way to have async resolving of bodies for now
-  get body() {
-    if (this.bodyTEMP) {
-      ;(async () => {
-        const res = await db.get(this.id)
-        if (resolvedBodies[this.id] !== res.body) {
-          resolvedBodies[this.id] = res.body
-          // hacky, triggers update
-          this.bodyTEMP = `${Math.random()}`
-          this.save()
-        }
-      })()
-      return resolvedBodies[this.id] || ''
-    }
-    return ''
-  },
-}
+const getHost = url => new URL(url).host.replace(/^www\./, '')
 
 export type ThingType = typeof methods & {
   title: string,
@@ -34,17 +15,16 @@ export type ThingType = typeof methods & {
   data?: Object,
   integration: string,
   type: string,
-  parentId?: string,
   id?: string,
   author?: string,
-  createdAt: string,
-  updatedAt: string,
+  date: string,
+  bucket?: string,
+  baseUrl: string,
+  url?: string,
   created: string,
   updated: string,
-  date: string,
-  orgName: string,
-  bucket?: string,
-  url?: string,
+  createdAt: string,
+  updatedAt: string,
 }
 
 export class Thing extends Model {
@@ -53,19 +33,23 @@ export class Thing extends Model {
     title: str.indexed,
     integration: str,
     type: str.indexed,
-    bodyTEMP: str.optional,
     data: object.optional,
-    parentId: str.optional,
     author: str.optional,
-    created: str.indexed,
-    updated: str.indexed,
-    orgName: str.optional,
     bucket: str.optional,
     url: str.optional.unique,
+    created: str.indexed,
+    updated: str.indexed,
     timestamps: true,
   }
 
-  methods = methods
+  // methods = {}
+
+  asyncMethods = {
+    async body() {
+      const res = await db.get(this.id)
+      return res ? res.body : ''
+    },
+  }
 
   settings = {
     database: 'things',
@@ -85,7 +69,6 @@ export class Thing extends Model {
       // body shim
       if (typeof doc.body !== 'undefined') {
         db.put({ id: doc.id, body: doc.body })
-        doc.bodyTEMP = `${Math.random()}`
         delete doc.body
       }
 
@@ -116,41 +99,51 @@ export class Thing extends Model {
     this.currentUser = currentUser
   }
 
+  getIcon(thing) {
+    return thing.integration === 'google'
+      ? thing.integration + '-' + thing.type
+      : thing.integration
+  }
+
   toResult(thing: Thing, extra): PaneResult {
-    const icon =
-      thing.integration === 'google'
-        ? thing.integration + '-' + thing.type
-        : thing.integration
     return {
       id: thing.id || thing.data.id,
       title: thing.title,
-      type: thing.type,
+      type: 'context',
       iconAfter: true,
-      icon: `${icon}`,
+      icon: this.getIcon(thing),
       data: thing,
       ...extra,
     }
   }
 
-  createFromCrawl = ({ url, contents }) => {
-    return ThingInstance.create({
-      url,
-      title: `${contents.title}`,
-      body: `${contents.content}`,
-      integration: new URL(url).origin,
-      type: 'pin-site',
-    })
-  }
+  fromCrawl = ({ url, contents, data, type, integration }) => ({
+    url,
+    title: `${contents.title}`,
+    body: `${contents.content}`,
+    type: type || 'website',
+    data: {
+      host: getHost(url),
+      ...data,
+    },
+    integration,
+  })
 
-  createFromPin = ({ url, contents }) => {
-    return ThingInstance.create({
-      url,
-      title: `${contents.title}`,
-      body: `${contents.content}`,
-      integration: new URL(url).origin,
-      type: 'pin',
-    })
-  }
+  createFromCrawl = result =>
+    ThingInstance.create(
+      this.fromCrawl({
+        ...result,
+        integration: 'pin-site',
+      })
+    )
+
+  createFromPin = result =>
+    ThingInstance.create(
+      this.fromCrawl({
+        ...result,
+        integration: 'pin',
+      })
+    )
 }
 
 const ThingInstance = new Thing()

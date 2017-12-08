@@ -73,14 +73,22 @@ export async function createInChunks(
   let finished = []
   let creating = []
   async function waitForCreating() {
-    const successful = (await Promise.all(creating)).filter(Boolean)
-    finished = [...finished, ...successful]
-    creating = []
+    try {
+      const successful = (await Promise.all(creating)).filter(Boolean)
+      finished = [...finished, ...successful]
+      creating = []
+    } catch (err) {
+      console.log('error creating', err)
+      return false
+    }
+    return true
   }
   for (const item of items) {
     // pause for every 10 to finish
     if (creating.length === chunk) {
-      await waitForCreating()
+      if (!await waitForCreating()) {
+        break
+      }
     }
     const promise = callback(item)
     if (!(promise instanceof Promise)) {

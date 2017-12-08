@@ -1,13 +1,14 @@
 {
   "name": "@mcro/web",
   "private": true,
-  "version": "1.5.4",
+  "version": "1.5.9",
   "main": "index.js",
   "scripts": {
     "start": "motion",
     "start-prod": "static-server -p 3002 -n build/index.html build",
     "start-debug": "motion --debug",
-    "build": "npm version patch && MINIFY=true NODE_ENV=production BUILD_DIR=. mcro-build",
+    "build":
+      "npm version patch && MINIFY=true NODE_ENV=production BUILD_DIR=. mcro-build",
     "deploy": "surge ./build seemirai.com"
   },
   "dependencies": {
@@ -44,8 +45,8 @@
     "react-hotkeys": "^0.10.0",
     "react-measure": "2.0.2",
     "redbox-react": "^1.5.0",
-    "rxdb": "^6.0.1",
-    "rxjs": "^5.5.3",
+    "rxdb": "^7.2.0",
+    "rxjs": "^5.5.5",
     "sb-event-kit": "^3.0.0",
     "sherlockjs": "*",
     "slack": "^9.0.9",

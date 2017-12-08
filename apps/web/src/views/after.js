@@ -1,6 +1,7 @@
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { Thing } from '~/app'
+import { OS } from '~/helpers'
 
 @view
 export default class After {
@@ -8,6 +9,7 @@ export default class After {
     return (
       <after
         onClick={e => {
+          OS.send('peek', null)
           e.preventDefault()
           e.stopPropagation()
           navigate({
@@ -17,7 +19,7 @@ export default class After {
         }}
         {...props}
       >
-        <UI.Icon opacity={0.1} name="arrow-min-right" />
+        <UI.Icon opacity={0.25} name="arrow-min-right" />
         {children}
       </after>
     )
@@ -26,7 +28,8 @@ export default class After {
     after: {
       position: 'relative',
       zIndex: 1000,
-      margin: -5,
+      margin: -7,
+      marginRight: -5,
       marginLeft: 5,
       padding: 2,
       alignItems: 'center',

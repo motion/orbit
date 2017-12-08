@@ -105,7 +105,7 @@ export default class GoogleDriveSync {
     })
   }
 
-  async getFiles(pages = 20, query?: Object, fileQuery?: Object) {
+  async getFiles(pages = 1, query?: Object, fileQuery?: Object) {
     log(`Getting ${pages} pages of files`)
     const files = await this.getFilesBasic(pages, query)
     // just docs

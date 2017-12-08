@@ -22,8 +22,6 @@ function run-api() {
 }
 
 function run-web() {
-  # bugfix for bad bundles coming from uncompoled exports
-  rm -rf packages/automagical/node_modules/mobx-utils/lib 2> /dev/null
   cd $ROOT/apps/web
   if [ "$ARG1" = "--clean" ]; then
     motion watch --debug --disable-cache
@@ -50,7 +48,7 @@ elif [ "$ACTION" = "electron" ]; then
     npm run start-prod &
     wait
   else
-    cd apps/electron-build
+    cd apps/electron
     npm start
   fi
 elif [ "$ACTION" =  "site" ]; then
@@ -67,5 +65,6 @@ elif [ "$ACTION" =  "web" ]; then
   run-api ${@:2} &
   wait
 else
-  npm run $1 ${@:2}
+  cd apps/$1
+  npm run start ${@:2}
 fi

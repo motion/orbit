@@ -6,7 +6,7 @@ import { view } from '@mcro/black'
 export default class MenuEl {
   render(props) {
     return (
-      <Menu ref={props.getRef}>
+      <Menu>
         <SubMenu label="Orbit">
           <MenuItems.About />
           <MenuItem

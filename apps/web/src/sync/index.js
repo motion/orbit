@@ -183,12 +183,20 @@ export default class Sync {
     )
   }
 
-  failJob = (job: Job, lastError) =>
-    job.update({
-      status: 3,
-      lastError,
-      tries: 3,
-    })
+  failJob = async (job: Job, lastError) => {
+    try {
+      await job.update({
+        status: 3,
+        lastError,
+        tries: 3,
+      })
+    } catch (err) {
+      if (err.message && err.message.indexOf('cant save deleted document')) {
+        return
+      }
+      console.log(err)
+    }
+  }
 
   runJob = async (job: Job) => {
     log('Running job', job.type, job.action)

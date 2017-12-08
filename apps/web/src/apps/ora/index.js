@@ -9,28 +9,27 @@ import OraActionBar from './oraActionBar'
 import OraBlur from './oraBlur'
 import * as Constants from '~/constants'
 
-const itemProps = {
-  size: 1.05,
-  padding: [8, 12],
-  glow: true,
-  glowProps: {
-    color: '#fff',
-    scale: 1,
-    blur: 70,
-    opacity: 0.1,
-    show: false,
-    resist: 60,
-    zIndex: 1,
+const listProps = {
+  itemProps: {
+    size: 1.05,
+    padding: [8, 12],
+    glow: true,
+    glowProps: {
+      color: '#fff',
+      scale: 1,
+      blur: 70,
+      opacity: 0.1,
+      show: false,
+      resist: 60,
+      zIndex: 1,
+    },
+    secondaryProps: {
+      alpha: 0.4,
+    },
+    highlightBackground: [255, 255, 255, 0.07],
+    childrenEllipse: 2,
   },
-  secondaryProps: {
-    alpha: 0.3,
-  },
-  highlightBackground: [0, 0, 0, 0.15],
-  // highlightBackground: `linear-gradient(
-  //   rgba(255,255,255,0),
-  //   rgba(255,255,255,0.035) 30%
-  // )`,
-  childrenEllipse: 2,
+  groupBy: 'category',
 }
 
 @view
@@ -43,11 +42,10 @@ class OraMainContent {
           store={oraStore}
           oraStore={oraStore}
           listProps={{
-            groupBy: 'category',
+            ...listProps,
             virtualized: {
               measure: oraStore.ui.height !== oraStore.ui.lastHeight,
             },
-            itemProps,
           }}
         />
       </content>
@@ -118,7 +116,7 @@ export default class OraPage {
       margin: 10,
       borderRadius: 10,
       overflow: 'hidden',
-      transition: 'transform ease-in 100ms',
+      transition: 'transform ease-in 100ms, opacity ease-in 100ms',
       opacity: 0,
       transform: {
         x: 8,

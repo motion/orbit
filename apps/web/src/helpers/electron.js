@@ -12,4 +12,6 @@ export const OS = (electron && electron.ipcRenderer) || {
   },
 }
 
+window.electron = electron
+
 export default electron

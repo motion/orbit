@@ -1,14 +1,13 @@
 {
   "name": "@mcro/electron-build",
   "productName": "Orbit",
-  "version": "1.5.49",
+  "version": "1.5.51",
   "private": true,
   "updater": {
     "url":
       "https://raw.githubusercontent.com/motion/orbit-updates/master/updates.json"
   },
   "scripts": {
-    "start": "NODE_ENV=development electron ../electron/lib/start-app",
     "deploy":
       "npm run prepare-publish && npm run publish-app && npm run publish-clean",
     "pack": "npm run sign-app && npm run pack-app",
@@ -28,7 +27,7 @@
       "electron-osx-sign --ignore puppeteer/\\.local-chromium ./app/Orbit-darwin-x64/Orbit.app"
   },
   "devDependencies": {
-    "electron": "^1.8.0",
+    "electron": "^1.7.9",
     "electron-installer-dmg": "^0.2.1",
     "electron-osx-sign": "^0.4.7",
     "electron-packager": "malept/electron-packager#fs-extra-v5-experimental",

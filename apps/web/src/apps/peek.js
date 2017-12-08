@@ -125,12 +125,12 @@ export default class PeekPage {
         >
           <content $$flex $contentLoading={!store.pageLoaded}>
             <WebView
-              $webview
               if={peekUrl}
+              $webview
+              $visible={store.pageLoaded}
               key={peekUrl}
               src={peekUrl}
               getRef={store.handlePageRef}
-              $visible={store.pageLoaded}
             />
             <loading if={!store.pageLoaded}>
               <UI.Text>Loading</UI.Text>

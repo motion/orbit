@@ -1,5 +1,5 @@
 import Router from '~/router'
-import { view } from '@mcro/view'
+import { view } from '@mcro/black'
 
 @view
 export default class Root {

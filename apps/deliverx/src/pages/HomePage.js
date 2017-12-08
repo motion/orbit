@@ -8,7 +8,7 @@ export default class HomePage extends React.Component {
   render() {
     return (
       <View.Page>
-        <Header />
+        <View.Header />
         <View.Content>
           <View.Section>
             <View.Col>

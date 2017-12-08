@@ -12,7 +12,7 @@ function runRouter() {
       '/': OraPage,
       settings: SettingsPage,
       relevancy: RelevancyPage,
-      authorize: AuthPage,
+      auth: AuthPage,
       peek: PeekPage,
     },
   })

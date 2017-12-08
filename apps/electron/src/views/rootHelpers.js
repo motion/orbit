@@ -6,8 +6,7 @@ import { throttle } from 'lodash'
 import repl from 'repl'
 
 export function listenForAuth() {
-  const getAuthUrl = service =>
-    `${Constants.APP_URL}/authorize?service=` + service
+  const getAuthUrl = service => `${Constants.APP_URL}/auth?service=` + service
   const openAuthWindow = (e, service) =>
     Injections.openAuth(getAuthUrl(service))
   const closeAuthWindow = (e, service) =>

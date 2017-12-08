@@ -16,6 +16,13 @@ type Peek = {
   id?: number,
 }
 
+@view
+class WebView {
+  render({ getRef, ...props }) {
+    return <webview ref={getRef} {...props} />
+  }
+}
+
 @view({
   store: class PeekStore {
     lastPeek: ?Peek = null
@@ -43,23 +50,28 @@ type Peek = {
 
       let peekTimeout
       this.on(OS, 'peek-to', (event, peek: ?Peek) => {
-        if (peek && !isSamePeek(this.lastPeek, peek)) {
+        console.log('peek-to', peek, this.lastPeek)
+        const isSame = isSamePeek(this.lastPeek, peek)
+        const update = () => this.updatePeek(peek)
+        if (isSame) {
+          update()
+          return
+        }
+        if (peek) {
           this.pendingPeek = peek
         }
         clearTimeout(peekTimeout)
-        const update = () => this.updatePeek(peek)
         peekTimeout = this.setTimeout(update, !peek ? HIDE_DELAY : SHOW_DELAY)
       })
     }
 
     updatePeek = (peek: Peek) => {
-      console.log('setting peek', peek)
       this.pageLoaded = false
       this.currentPeek = peek
       if (peek) {
         this.lastPeek = peek
       }
-      this.clearPendingPeek()
+      this.pendingPeek = null
     }
 
     handlePeekEnter = () => {
@@ -67,15 +79,13 @@ type Peek = {
     }
 
     handlePeekLeave = () => {
-      this.isHovered = false
-      if (!this.currentPeek) {
-        this.lastPeek = null
-        this.clearPendingPeek()
-      }
-    }
-
-    clearPendingPeek() {
-      this.pendingPeek = null
+      // timeout here prevent flicker on re-enter same item
+      this.setTimeout(() => {
+        this.isHovered = false
+        if (!this.currentPeek) {
+          this.pendingPeek = null
+        }
+      }, 100)
     }
 
     handlePageRef = ref => {
@@ -90,13 +100,12 @@ type Peek = {
           this.pageLoaded = true
         }
       }
-      const offFinishLoad = this.on(ref, 'did-finish-load', loadPage)
+      console.log('handling ref', ref)
+      // const offFinishLoad = this.on(ref, 'did-finish-load', loadPage)
       // after a second just load anyway
       const offTimeoutLoad = this.setTimeout(loadPage, 1000)
       this.offLoad = () => {
-        if (offFinishLoad) {
-          debugger
-        }
+        // offFinishLoad()
         clearTimeout(offTimeoutLoad)
       }
     }
@@ -105,21 +114,23 @@ type Peek = {
 export default class PeekPage {
   render({ store }) {
     const { peek } = store
-    console.log('render peek', peek, store)
-    const hasContent = peek && peek.url
+    const peekUrl = peek && peek.url
     return (
       <UI.Theme name="light">
         <peek
           $peekVisible={peek && !store.pendingPeek}
+          $peekPosition={[store.lastPeek, store.peek]}
           onMouseEnter={store.handlePeekEnter}
           onMouseLeave={store.handlePeekLeave}
         >
           <content $$flex $contentLoading={!store.pageLoaded}>
-            <webview
-              if={hasContent}
-              ref={store.handlePageRef}
+            <WebView
+              $webview
+              if={peekUrl}
+              key={peekUrl}
+              src={peekUrl}
+              getRef={store.handlePageRef}
               $visible={store.pageLoaded}
-              src={peek.url}
             />
             <loading if={!store.pageLoaded}>
               <UI.Text>Loading</UI.Text>
@@ -133,30 +144,33 @@ export default class PeekPage {
   static style = {
     peek: {
       width: '100%',
-      height: '100%',
+      height: 600,
       padding: 20,
       pointerEvents: 'none !important',
-      opacity: 0,
-      // background: 'red',
-      transform: {
-        y: -10,
-      },
       transition: 'transform ease-in 100ms, opacity ease-in 100ms',
+      opacity: 0,
     },
     peekVisible: {
       pointerEvents: 'all !important',
       opacity: 1,
-      transform: {
-        y: 0,
-      },
+      transition: 'opacity ease-out 1ms, transform ease-out 50ms',
     },
+    peekPosition: ([lastPeek, peek]) => ({
+      transform: {
+        y: peek
+          ? peek.offsetTop
+          : ((lastPeek && lastPeek.offsetTop) || 100) - 10,
+      },
+    }),
     content: {
-      background: '#fff',
+      background: '#000',
+      transition: 'background ease-in 200ms',
       boxShadow: [[0, 0, 20, [0, 0, 0, 0.2]]],
       // borderRadius: 10,
       overflow: 'hidden',
     },
     contentLoading: {
+      transition: 'none',
       background: [0, 0, 0, 0.31],
     },
     webview: {

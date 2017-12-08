@@ -2,7 +2,7 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 
-const SubTitle = props => <UI.Title size={1.75} {...props} />
+const SubTitle = props => <UI.Title size={1.75} fontWeight={500} {...props} />
 const SubText = props => <UI.Text selectable {...props} />
 
 @view

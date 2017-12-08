@@ -66,7 +66,6 @@ class WebView {
     }
 
     updatePeek = (peek: Peek) => {
-      this.pageLoaded = false
       this.currentPeek = peek
       if (peek) {
         this.lastPeek = peek
@@ -123,7 +122,7 @@ export default class PeekPage {
           onMouseEnter={store.handlePeekEnter}
           onMouseLeave={store.handlePeekLeave}
         >
-          <content $$flex $contentLoading={!store.pageLoaded}>
+          <content $$draggable $$flex $contentLoading={!store.pageLoaded}>
             <WebView
               if={peekUrl}
               $webview
@@ -153,25 +152,27 @@ export default class PeekPage {
     peekVisible: {
       pointerEvents: 'all !important',
       opacity: 1,
-      transition: 'opacity ease-out 1ms, transform ease-out 50ms',
+      transition: 'opacity ease-out 1ms, transform ease-out 100ms',
     },
     peekPosition: ([lastPeek, peek]) => ({
       transform: {
         y: peek
           ? peek.offsetTop
-          : ((lastPeek && lastPeek.offsetTop) || 100) - 10,
+          : ((lastPeek && lastPeek.offsetTop) || 10) - 10,
       },
     }),
     content: {
-      background: '#000',
+      background: [0, 0, 0, 0.3],
+      opacity: 1,
       transition: 'background ease-in 200ms',
       boxShadow: [[0, 0, 20, [0, 0, 0, 0.2]]],
       // borderRadius: 10,
       overflow: 'hidden',
     },
     contentLoading: {
+      background: [0, 0, 0, 0.3],
+      opacity: 0.3,
       transition: 'none',
-      background: [0, 0, 0, 0.31],
     },
     webview: {
       height: '100%',

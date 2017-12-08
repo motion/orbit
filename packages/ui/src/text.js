@@ -68,7 +68,8 @@ export type Props = {
 @view.ui
 export default class Text extends React.Component<Props> {
   static defaultProps = {
-    tagName: 'p', // TODO: prod p mode
+    // not a p because tbh its nice to nest it
+    tagName: 'text',
     size: 1,
   }
 

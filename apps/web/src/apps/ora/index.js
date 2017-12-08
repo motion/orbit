@@ -116,7 +116,7 @@ export default class OraPage {
       margin: 10,
       borderRadius: 10,
       overflow: 'hidden',
-      transition: 'transform ease-in 100ms',
+      transition: 'transform ease-in 100ms, opacity ease-in 100ms',
       opacity: 0,
       transform: {
         x: 8,

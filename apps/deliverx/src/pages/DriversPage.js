@@ -111,8 +111,8 @@ export default class Driver {
                         <b>{driver.time}</b> months
                       </left>
                       <right $$row>
-                        last delivery <b>{Math.floor(Math.random() * 30)}</b>{' '}
-                        hours ago
+                        last delivery{' '}
+                        <b>{Math.floor(2 + Math.random() * 30)}</b> hours ago
                       </right>
                     </stats>
                   </profile>
@@ -132,7 +132,7 @@ export default class Driver {
       height: '100%',
     },
     driver: {
-      margin: 15,
+      margin: [15, 0],
       padding: 15,
       border: '1px solid rgba(0,0,0,0.2)',
       background: 'rgba(0,0,0,0.02)',

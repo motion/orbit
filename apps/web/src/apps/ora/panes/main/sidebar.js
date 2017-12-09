@@ -1,8 +1,5 @@
-import * as React from 'react'
-import { fuzzy, OS } from '~/helpers'
+import { fuzzy, contextToResult } from '~/helpers'
 import { Thing } from '~/app'
-import After from '~/views/after'
-import ContextStore from '~/stores/contextStore'
 import * as Constants from '~/constants'
 
 export default class MainSidebar {
@@ -11,85 +8,6 @@ export default class MainSidebar {
   }
   get search() {
     return this.oraStore.ui.search
-  }
-  get recentItems() {
-    return (this.oraStore.recentItems || []).slice(0, 5)
-  }
-  // public api
-  get items() {
-    let results = []
-    const { lastContext } = this.oraStore
-    if (lastContext) {
-      results = [
-        {
-          ...ContextStore.toResult(lastContext),
-          category: 'Context',
-        },
-      ]
-    }
-    if (this.recentItems.length) {
-      results = [
-        ...results,
-        ...this.recentItems.map(item => ({
-          ...Thing.toResult(item),
-          icon: false,
-          children: null,
-          onClick: () => OS.send('open-browser', item.url),
-          after: <After navigate={this.oraStore.stack.navigate} thing={item} />,
-          type: 'context',
-          category: 'Recent',
-        })),
-      ]
-    } else {
-      results = [
-        ...results,
-        {
-          title: 'Welcome to Orbit',
-          category: 'Setup',
-          onClick: this.oraStore.actions.openSettings,
-          children:
-            'You can add content two ways. Navigate to a website, or click here to setup integrations.',
-        },
-      ]
-    }
-    if (Constants.IS_DEV) {
-      results = [
-        ...results,
-        {
-          title: 'Clear all things...',
-          onClick: () => Thing.destroyAll().then(x => x.confirm()),
-          category: 'Dev Tools',
-        },
-        {
-          title: 'Insert test things...',
-          onClick: () => {
-            this.oraStore.pin.add({
-              url:
-                'https://support.stripe.com/questions/i-have-a-charge-on-my-card-from-stripe-but-i-m-not-a-stripe-user',
-            })
-            this.oraStore.pin.add({
-              url:
-                'https://support.stripe.com/questions/i-have-a-charge-on-my-card-from-stripe-but-i-m-not-a-stripe-user',
-            })
-            Thing.createFromCrawl({
-              url:
-                'http://marginalrevolution.com/marginalrevolution/2017/12/adam-smith-occupational-licensing.html',
-              contents: { title: 'Crawl Test', content: 'Crawl Test Body' },
-            })
-            Thing.createFromCrawl({
-              url:
-                'https://support.stripe.com/questions/why-are-my-customers-charges-marked-as-recurring',
-              contents: {
-                title: 'Why are my customers charges marked as recurring?',
-                content: 'Crawl Test Body',
-              },
-            })
-          },
-          category: 'Dev Tools',
-        },
-      ]
-    }
-    return results
   }
 
   get title() {
@@ -139,9 +57,80 @@ export default class MainSidebar {
     // </UI.Popover>
   }
 
+  get rawResults() {
+    let results = []
+
+    // context item
+    const { lastContext } = this.oraStore
+    if (lastContext) {
+      results = [
+        {
+          ...contextToResult(lastContext),
+          category: 'Context',
+        },
+      ]
+    }
+
+    // results
+    if (this.oraStore.contextResults.length) {
+      results = [...results, ...this.oraStore.contextResults]
+    } else {
+      results = [
+        ...results,
+        {
+          title: 'Welcome to Orbit',
+          category: 'Setup',
+          onClick: this.oraStore.actions.openSettings,
+          children:
+            'You can add content two ways. Navigate to a website, or click here to setup integrations.',
+        },
+      ]
+    }
+
+    // dev helpers
+    if (Constants.IS_DEV) {
+      results = [
+        ...results,
+        {
+          title: 'Clear all things...',
+          onClick: () => Thing.destroyAll().then(x => x.confirm()),
+          category: 'Dev Tools',
+        },
+        {
+          title: 'Insert test things...',
+          onClick: () => {
+            this.oraStore.pin.add({
+              url:
+                'https://support.stripe.com/questions/i-have-a-charge-on-my-card-from-stripe-but-i-m-not-a-stripe-user',
+            })
+            this.oraStore.pin.add({
+              url:
+                'https://support.stripe.com/questions/i-have-a-charge-on-my-card-from-stripe-but-i-m-not-a-stripe-user',
+            })
+            Thing.createFromCrawl({
+              url:
+                'http://marginalrevolution.com/marginalrevolution/2017/12/adam-smith-occupational-licensing.html',
+              contents: { title: 'Crawl Test', content: 'Crawl Test Body' },
+            })
+            Thing.createFromCrawl({
+              url:
+                'https://support.stripe.com/questions/why-are-my-customers-charges-marked-as-recurring',
+              contents: {
+                title: 'Why are my customers charges marked as recurring?',
+                content: 'Crawl Test Body',
+              },
+            })
+          },
+          category: 'Dev Tools',
+        },
+      ]
+    }
+    return results
+  }
+
   get results() {
     const { search } = this
-    const items = [...this.items]
+    const items = [...this.rawResults]
     if (!search) {
       return items
     }

@@ -1,6 +1,6 @@
 import { watch } from '@mcro/black'
 import { Thing } from '~/app'
-import { OS } from '~/helpers'
+import { OS, contextToResult } from '~/helpers'
 import StackStore from '~/stores/stackStore'
 import CrawlerStore from '~/stores/crawlerStore'
 import PinStore from '~/stores/pinStore'
@@ -27,12 +27,10 @@ export default class OraStore {
 
   get contextResults() {
     return this.search.results
-      .map(searchResult => {
-        return {
-          thing: this.things[searchResult.items.documentIndex],
-          children: searchResult.snippet,
-        }
-      })
+      .map(searchResult => ({
+        thing: this.things[searchResult.items.documentIndex],
+        children: searchResult.snippet,
+      }))
       .map(({ thing, children }) => ({
         ...Thing.toResult(thing),
         children,
@@ -59,7 +57,7 @@ export default class OraStore {
       this.search.setDocuments(this.things || [])
     })
     this.watch(() => {
-      this.search.setSearch(this.ui.search)
+      this.search.setQuery(this.ui.search)
     })
     OS.send('start-ora')
   }
@@ -109,7 +107,7 @@ export default class OraStore {
         if (this.lastContext.url === context.url) return
       }
       this.lastContext = context
-      const nextStackItem = ContextStore.toResult(context)
+      const nextStackItem = contextToResult(context)
       const isAlreadyOnResultsPane = this.stack.length > 1
       if (isAlreadyOnResultsPane) {
         this.stack.replaceInPlace(nextStackItem)

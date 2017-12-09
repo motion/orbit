@@ -38,7 +38,7 @@ export default class SearchStore {
 
   getResults = async (query: string): Array<SearchResult> => {
     if (query.length === 0) {
-      return false
+      return []
     }
     const results = this.useWorker
       ? await this._searchWorker(query)
@@ -47,7 +47,9 @@ export default class SearchStore {
   }
 
   setQuery = async search => {
-    this.results = await this.getResults(search)
+    const results = await this.getResults(search)
+    console.log('setting results', results)
+    this.results = results
     return this.results
   }
 

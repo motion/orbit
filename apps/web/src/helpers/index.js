@@ -5,6 +5,14 @@ import fuzzy_ from './fuzzy'
 
 export IndexDB from './indexDB'
 
+export const contextToResult = context => ({
+  id: context.url,
+  title: context.selection || context.title,
+  type: 'context',
+  icon: context.application === 'Google Chrome' ? 'social-google' : null,
+  image: context.favicon,
+})
+
 // because honestly, its easy to forget when writing jsx
 // maybe im missing something in flow
 window.React = React

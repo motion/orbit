@@ -134,8 +134,7 @@ export default class MainSidebar {
     if (!search) {
       return items
     }
-    console.log(items, search)
-    const filteredSearch = fuzzy(this.items, search)
+    const filteredSearch = fuzzy(items, search)
     const searchItems = filteredSearch.length
       ? filteredSearch
       : [

@@ -21,7 +21,7 @@ export default class OraActionBar {
         <actions>
           <collapseBar onClick={oraStore.ui.toggleCollapsed}>
             <UI.Arrow />
-            <UI.Icon name="menu" size={10} />
+            <UI.Icon name="menu" size={10} margin={[0, 0, 0, -16]} />
           </collapseBar>
 
           <actionbar if={actions && !oraStore.ui.collapsed}>
@@ -70,6 +70,7 @@ export default class OraActionBar {
       bottom: 0,
       left: 0,
       right: 0,
+      zIndex: 10000,
       height: Constants.ACTION_BAR_HEIGHT,
       justifyContent: 'center',
       pointerEvents: 'none',
@@ -88,7 +89,7 @@ export default class OraActionBar {
     },
     collapseBar: {
       height: 12,
-      width: 20,
+      width: 18,
       zIndex: 1000,
       position: 'absolute',
       bottom: 0,

@@ -10,7 +10,7 @@ export default class Header extends React.Component {
         <img src="/DeliverX.svg" />
 
         <nav>
-          <a onClick={() => Router.go('/map')} href="">
+          <a onClick={() => Router.go('/map')} href="/map">
             Drivers
           </a>
         </nav>

@@ -76,7 +76,7 @@ export const OraContent = ({ oraStore }) => (
     </UI.Theme>
     <OraMainContent oraStore={oraStore} />
     <OraDrawer oraStore={oraStore} />
-    <OraActionBar if={false} oraStore={oraStore} />
+    <OraActionBar />
   </React.Fragment>
 )
 

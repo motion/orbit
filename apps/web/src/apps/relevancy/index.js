@@ -73,6 +73,8 @@ export default class RelevancyPage {
   static style = {
     relevancy: {
       margin: 20,
+      height: '100%',
+      overflow: 'scroll',
     },
     autocomplete: {
       margin: 20,

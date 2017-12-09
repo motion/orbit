@@ -341,9 +341,11 @@ export default class Indexer {
       const debugInfo = { nearest: [] }
       range(words.length).forEach(termIndex => {
         // nearest index is the current loop
+        /*
         if (debug) {
           debugInfo.nearest.push(titlesDistance[currentFragentIndex][termIndex])
         }
+        */
 
         addDistance(
           bodyDistance[currentFragentIndex][termIndex],

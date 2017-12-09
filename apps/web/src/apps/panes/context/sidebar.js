@@ -1,85 +1,122 @@
 import * as React from 'react'
-import { OS, fuzzy } from '~/helpers'
-import { summarize, summarizeWithQuestion } from './helpers/summarize'
+import { OS } from '~/helpers'
 import { Thing } from '~/app'
 import * as UI from '@mcro/ui'
 import { watch } from '@mcro/black'
-import { flatten, isEqual } from 'lodash'
+import { isEqual } from 'lodash'
 import After from '~/views/after'
+import CrawlSetup from './crawlSetup'
+import CrawlerStore from '~/stores/crawlerStore'
 
-const clean = str => {
-  if (typeof str !== 'string') {
-    return 'bad string'
+// finds commons paths for knowledgebasey sites
+const GOOD_LOOKIN_PATH_LIMITS = /^(help|docs|faq|support|h)$/
+
+const idFn = _ => _
+const getDefaultDepth = url => {
+  const { pathname } = new URL(url)
+  if (!pathname) {
+    return '/'
   }
-  return str.replace(/[\r\n|\n|\r|\s]+/gm, ' ').trim()
+  const segments = pathname.split('/')
+  if (GOOD_LOOKIN_PATH_LIMITS.test(segments[1])) {
+    return `/${segments[1]}`
+  }
+  return '/'
 }
 
 export default class ContextSidebar {
+  @watch
+  isPinned = () => this.osContext && Thing.findOne({ url: this.osContext.url })
+  osContext = null
+  previewCrawler = new CrawlerStore()
+  crawlerSettings = {
+    maxPages: 10000,
+    depth: '/',
+  }
+
+  willMount() {
+    this.watch(function watchSidebarContext() {
+      // prevent focusedApp from triggered changes
+      const { focusedApp, ...context } = this.oraStore.osContext || {}
+      idFn(focusedApp)
+      if (context && context.url && !isEqual(context, this.osContext)) {
+        this.osContext = context
+        this.handleChangeSettings({
+          entry: context.url,
+          depth: getDefaultDepth(context.url),
+        })
+      }
+    })
+  }
+
+  handleChangeSettings = settings => {
+    // this is for the preview
+    this.crawlerSettings = {
+      ...this.crawlerSettings,
+      ...settings,
+    }
+  }
+
+  cancelPreview = () => {
+    this.previewCrawler.stop()
+    this.previewCrawler.hide()
+  }
+
   get oraStore() {
     return this.props.oraStore
   }
-
-  get osContext() {
-    return this.oraStore.osContext
-  }
-
   get context() {
     return this.oraStore.context
   }
-
   get search() {
-    return this.oraStore.search
+    return this.oraStore.ui.search
+  }
+  get result() {
+    return this.oraStore.stack.last.result
   }
 
   // can customize the shown title here
   get title() {
-    return this.oraStore.osContext ? this.oraStore.osContext.title : null
-  }
-
-  isShowingCrawlInBrowser = false
-  crawlerInfo = null
-  crawlerSettings = {
-    maxPages: 6,
-    depth: '/',
-  }
-
-  get crawlerOptions() {
+    if (!this.osContext) return
     return {
-      ...this.crawlerInfo,
-      ...this.crawlerSettings,
+      title: this.result.title,
+      image: this.osContext.favicon,
     }
   }
 
-  // this determines when the pane slides in
-  get finishedLoading() {
-    return !this.context.isLoading
+  get minHeight() {
+    return this.drawer ? 400 : null
   }
 
-  @watch
-  isPinned = () => this.osContext && Thing.findOne({ url: this.osContext.url })
+  get drawer() {
+    if (!this.previewCrawler.showing) {
+      return null
+    }
+    return {
+      title: 'Pin Settings',
+      onClose: this.cancelPreview,
+      children: (
+        <CrawlSetup
+          crawler={this.previewCrawler}
+          settings={this.crawlerSettings}
+          onChangeSettings={this.handleChangeSettings}
+        />
+      ),
+    }
+  }
 
-  willMount() {
-    this.on(OS, 'crawler-selection', (event, info) => {
-      if (info && Object.keys(info).length) {
-        // matching url
-        if (info.entry === this.osContext.url) {
-          if (!isEqual(info, this.crawlerInfo)) {
-            console.log('update selection', info)
-            this.crawlerInfo = info
-            this.crawlerSettings.depth = this.crawlerInfo.depth
-          }
-        } else {
-          console.log('not on same url')
-        }
-      }
-    })
+  // END DRAWER
+
+  // this determines when this pane will appear
+  get finishedLoading() {
+    return this.context && !this.context.isLoading
   }
 
   get contextResults() {
     const title = this.osContext
       ? this.osContext.selection || this.osContext.title
       : ''
-    return !this.context || this.context.loading // || this.osContext === null
+    return !this.context || this.context.loading
       ? []
       : this.context
           .search(this.search.length > 0 ? this.search : title, 8)
@@ -90,38 +127,27 @@ export default class ContextSidebar {
             return x.item.url !== this.props.result.data.url
           })
           .map(({ debug, item, similarity }, index) => {
-            const title = item.title
-
             return {
-              title,
-              // icon: 'link',
-              onClick: () => {
-                OS.send('navigate', item.url)
-              },
-              children: (
-                <UI.Text ellipse={2} opacity={0.65} size={0.9}>
-                  {this.context.sentences[index] &&
-                    this.context.sentences[index].sentence}
-                </UI.Text>
-              ),
+              ...Thing.toResult(item),
+              children:
+                this.context.sentences[index] &&
+                this.context.sentences[index].sentence,
               after: (
-                <After
-                  onClick={e => {
-                    e.preventDefault()
-                    e.stopPropagation()
-                    this.props.navigate({
-                      ...Thing.toResult(item),
-                      type: 'context',
-                    })
-                  }}
-                >
+                <After navigate={this.props.navigate} thing={item}>
                   <debug css={{ position: 'absolute', top: 0, right: 0 }}>
                     <UI.Popover
                       openOnHover
                       closeOnEsc
                       towards="left"
                       width={150}
-                      target={<UI.Button circular chromeless icon="help" />}
+                      target={
+                        <UI.Button
+                          circular
+                          chromeless
+                          opacity={0.2}
+                          icon="emptything"
+                        />
+                      }
                     >
                       <UI.List>
                         <UI.ListItem primary={`Similarity: ${similarity}`} />
@@ -141,111 +167,80 @@ export default class ContextSidebar {
           })
   }
 
+  pinCurrent = () => {
+    this.oraStore.pin.add(this.oraStore.osContext)
+  }
+
+  unpinCurrent = () => {
+    this.oraStore.pin.remove(this.oraStore.osContext)
+  }
+
   get actions() {
-    if (this.crawlerInfo) {
+    if (this.previewCrawler.showing) {
       return [
         {
-          key: Math.random(),
-          content: <div $$flex />,
+          children: 'Cancel',
+          onClick: this.cancelPreview,
+        },
+        {
+          flex: true,
         },
         {
           key: Math.random(),
           icon: 'play',
           children: 'Start Crawl',
           onClick: async () => {
-            console.log('starting crawl', this.crawlerOptions)
-            this.isShowingCrawlInBrowser = true
-            const things = await this.oraStore.startCrawl(this.crawlerOptions)
-            console.log('made stuff', things)
-          },
-        },
-        {
-          key: Math.random(),
-          icon: 'play',
-          children: 'Cancel Crawl',
-          onClick: async () => {
-            const cancelled = await this.oraStore.stopCrawl()
-            console.log('cancelled', cancelled)
+            this.oraStore.crawler.start(this.crawlerSettings)
+            this.previewCrawler.hide()
+            await this.previewCrawler.stop()
           },
         },
       ]
     }
-
     return [
+      {
+        flex: true,
+      },
       this.isPinned && {
         icon: 'check',
         children: 'Pinned',
+        tooltip: 'Remove pin',
+        onClick: this.unpinCurrent,
       },
       !this.isPinned && {
         icon: 'ui-1_bold-add',
         children: 'Pin',
-        onClick: () => {
-          this.oraStore.addCurrentPage()
-        },
+        onClick: this.pinCurrent,
       },
-      {
-        icon: 'bug',
-        children: 'Crawl',
-        onClick: () => {
-          this.isShowingCrawlInBrowser = true
-          OS.send('inject-crawler')
-        },
+      !this.oraStore.crawler.isRunning && {
+        icon: 'pin',
+        children: 'Pin Site',
+        onClick: this.previewCrawler.show,
       },
     ]
   }
 
   get results() {
-    if (this.crawlerInfo) {
-      console.log('trigger update', this.crawlerSettings)
-      return [
-        {
-          category: 'Preview',
-          title: this.crawlerInfo.title,
-          children: this.crawlerInfo.body,
-        },
-        {
-          category: 'Settings',
-          title: ' ',
-          displayTitle: false,
-          children: (
-            <UI.Field
-              row
-              label="Max pages:"
-              tooltip="This will make the crawler avoid going above this path"
-              sync={this.ref('crawlerSettings.maxPages')}
-            />
-          ),
-        },
-        {
-          category: 'Settings',
-          title: ' ',
-          displayTitle: false,
-          children: (
-            <UI.Field
-              row
-              label="Depth:"
-              sync={this.ref('crawlerSettings.depth')}
-            />
-          ),
-        },
-        ...Object.keys(this.crawlerInfo).map(key => ({
-          category: 'Crawler Selected',
-          title: key,
-          children: this.crawlerInfo[key],
-        })),
-      ]
-    }
-    if (this.isShowingCrawlInBrowser) {
-      return [
-        {
-          title: 'Select content in Chrome',
-        },
-      ]
-    }
+    let results = []
+    // if (this.isPinned) {
+    //   results = [
+    //     {
+    //       children: this.isPinned.body,
+    //       selectable: false,
+    //     },
+    //   ]
+    // }
     if (this.context) {
-      const os = this.search.length === 0 ? [] : []
-      return [...os, ...this.contextResults].filter(i => !!i)
+      results = [...results, ...this.contextResults]
     }
-    return []
+    if (!results.length) {
+      results = [
+        {
+          children: 'No results...',
+          selectable: false,
+        },
+      ]
+    }
+    return results
   }
 }

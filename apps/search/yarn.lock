@@ -1431,6 +1431,21 @@ widest-line@^2.0.0:
   dependencies:
     string-width "^2.1.1"
 
+wink-helpers@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/wink-helpers/-/wink-helpers-1.2.0.tgz#00cd74dfba544b77305178e3b17f2bc8bb15c60f"
+
+wink-nlp-utils@^1.7.0:
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/wink-nlp-utils/-/wink-nlp-utils-1.7.0.tgz#2fadd8f118e08ab19fe9a6888182f494a8b9ff9f"
+  dependencies:
+    wink-helpers "^1.2.0"
+    wink-porter2-stemmer "^1.0.7"
+
+wink-porter2-stemmer@^1.0.7:
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/wink-porter2-stemmer/-/wink-porter2-stemmer-1.0.7.tgz#f0a651ff063b1fee8f3ed5ddc24ece81e00ebc45"
+
 wrappy@1:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/wrappy/-/wrappy-1.0.2.tgz#b5243d8f3ec1aa35f1364605bc0d1036e30ab69f"

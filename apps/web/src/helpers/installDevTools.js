@@ -40,6 +40,19 @@ window.debug = debug
 window.r2 = r2
 window.Helpers = Helpers
 
+let runners = []
+window.mlog = fn => {
+  runners.push(
+    Mobx.autorun(() => {
+      console.log(fn())
+    })
+  )
+}
+window.mlog.clear = () => {
+  runners.forEach(r => r())
+  runners = []
+}
+
 // TODO check if this is needed and fix the global thing if so
 // PATCH: ignore octocat
 const ogWarn = console.warn.bind(console)

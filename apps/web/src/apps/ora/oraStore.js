@@ -80,7 +80,7 @@ export default class OraStore {
         return
       }
       // fixes bug where empty string === true
-      context.title = `${context.title}`.trim()
+      context.title = `${context.title}`.trim().replace(/\s{2,}/g, ' ')
       if (!context.url || !context.title) {
         log('no context or url/title', this.context)
         return

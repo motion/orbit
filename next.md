@@ -15,7 +15,6 @@ DeliverX
 
 # now
 
-* good crawler ux for demo
 * peek view readability
 * crawler direct inject readability
 * more forgiving markdown parser

@@ -2,6 +2,21 @@ import * as React from 'react'
 import * as UI from '@mcro/ui'
 import * as View from '~/views'
 import { view } from '@mcro/black'
+import { range, sample } from 'lodash'
+
+const randn = r =>
+  range(r)
+    .map(() => Math.floor(Math.random() * 10))
+    .join('')
+const phone = () => randn(3) + '-' + randn(3) + '-' + randn(4)
+const domains = ['gmail.com', 'yahoo.com', 'aol.com']
+const email = name =>
+  (
+    name.split(' ')[0][0] +
+    name.split(' ')[1] +
+    '@' +
+    sample(domains)
+  ).toLowerCase()
 
 const drivers = [
   {
@@ -103,7 +118,16 @@ export default class Driver {
                 <driver $$row>
                   <img width={200} height={200} src={driver.picture} />
                   <profile>
-                    <UI.Title size={1.4}>{driver.name}</UI.Title>
+                    <top $$row>
+                      <left>
+                        <UI.Title size={1.4}>{driver.name}</UI.Title>
+                      </left>
+                      <contact>
+                        <UI.Text size={1.1}>
+                          {email(driver.name)}, {phone()}
+                        </UI.Text>
+                      </contact>
+                    </top>
                     <bio>{driver.bio}</bio>
                     <stats $$row>
                       <left $$row>
@@ -137,6 +161,13 @@ export default class Driver {
       border: '1px solid rgba(0,0,0,0.2)',
       background: 'rgba(0,0,0,0.02)',
       boxShadow: '1px 1px 1px rgba(0,0,0,0.05)',
+    },
+    top: {
+      justifyContent: 'space-between',
+    },
+    contact: {
+      alignSelf: 'center',
+      opacity: 0.7,
     },
     profile: {
       width: 650,

@@ -6,7 +6,7 @@ import Search from '@mcro/search'
 const log = debug('search')
 log.enabled = true
 
-type SearchResult = {
+type WorkerSearchResult = {
   debug: Object,
   index: number,
   item: {
@@ -27,6 +27,8 @@ export default class SearchStore {
   worker = null
   useWorker = true
   results: Array<SearchResult> = []
+  query = ''
+  documents = []
 
   get target() {
     return this.useWorker ? this.worker : this.searchManager
@@ -38,23 +40,34 @@ export default class SearchStore {
 
   getResults = async (query: string): Array<SearchResult> => {
     if (query.length === 0) {
-      return []
+      return this.documents.map(document => ({
+        document,
+        snippet: document.body,
+      }))
     }
     const results = this.useWorker
       ? await this._searchWorker(query)
       : this.target.postMessage({ type: 'search', data: query })
-    return results || []
+    return (results || []).map(result => ({
+      document: this.documents[result.item.documentIndex],
+      snippet: result.snippet,
+    }))
   }
 
   setQuery = async search => {
+    this.query = search
     const results = await this.getResults(search)
-    console.log('setting results', results)
+    console.log('setQuery.results', results)
     this.results = results
     return this.results
   }
 
   setDocuments = documents => {
-    this.target.postMessage({ type: 'documents', data: documents })
+    if (documents && documents.length) {
+      this.documents = documents
+      this.target.postMessage({ type: 'documents', data: documents })
+      this.setQuery(this.query)
+    }
   }
 
   willMount() {
@@ -77,7 +90,7 @@ export default class SearchStore {
     }
   }
 
-  _searchWorker = async query =>
+  _searchWorker = async (query: string): WorkerSearchResult =>
     new Promise(res => {
       this.openQueries[query] = res
       this.worker.postMessage({ type: 'search', data: query })

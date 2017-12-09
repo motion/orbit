@@ -130,10 +130,11 @@ export default class MainSidebar {
 
   get results() {
     const { search } = this
-    const items = [...this.rawResults]
+    const items = this.rawResults
     if (!search) {
       return items
     }
+    console.log(items, search)
     const filteredSearch = fuzzy(this.items, search)
     const searchItems = filteredSearch.length
       ? filteredSearch

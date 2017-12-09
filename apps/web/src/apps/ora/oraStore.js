@@ -26,16 +26,11 @@ export default class OraStore {
   electronState = {}
 
   get contextResults() {
-    return this.search.results
-      .map(searchResult => ({
-        thing: this.things[searchResult.items.documentIndex],
-        children: searchResult.snippet,
-      }))
-      .map(({ thing, children }) => ({
-        ...Thing.toResult(thing),
-        children,
-        after: <After navigate={this.props.navigate} thing={thing} />,
-      }))
+    return this.search.results.map(({ document, snippet }) => ({
+      ...Thing.toResult(document),
+      children: snippet,
+      after: <After navigate={this.props.navigate} thing={document} />,
+    }))
   }
 
   @watch
@@ -54,6 +49,7 @@ export default class OraStore {
     this._listenForKeyEvents()
     this._watchContext()
     this.watch(() => {
+      console.log('setDocuments', this.things || [])
       this.search.setDocuments(this.things || [])
     })
     this.watch(() => {

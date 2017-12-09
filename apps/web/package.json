@@ -15,6 +15,7 @@
     "@mcro/gloss": "^1.5.1",
     "@mcro/model": "^1.5.1",
     "@mcro/models": "^1.5.1",
+    "@mcro/search": "^1.5.1",
     "@mcro/r2": "^1.5.1",
     "@mcro/router": "^1.5.1",
     "@mcro/ui": "^1.5.1",

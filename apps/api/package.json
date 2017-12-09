@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@mcro/crawler": "^1.5.1",
+    "@mcro/search": "^1.5.1",
     "@mcro/passport-slack": "^1.5.1",
     "babel-polyfill": "^6.23.0",
     "body-parser": "^1.16.1",

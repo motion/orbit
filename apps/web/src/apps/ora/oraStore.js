@@ -3,13 +3,15 @@ import { Thing } from '~/app'
 import { OS } from '~/helpers'
 import StackStore from '~/stores/stackStore'
 import CrawlerStore from '~/stores/crawlerStore'
-import ContextStore from '~/stores/contextStore'
 import PinStore from '~/stores/pinStore'
 import UIStore from '~/stores/uiStore'
+import SearchStore from '~/stores/searchStore'
 import { CurrentUser } from '~/app'
 import debug from 'debug'
+import After from '~/views/after'
 
 const log = _ => _ || debug('ora')
+const useWorker = window.location.href.indexOf('?noWorker')
 
 export default class OraStore {
   // stores
@@ -17,18 +19,33 @@ export default class OraStore {
   stack = new StackStore([{ type: 'main' }])
   ui = new UIStore({ stack: this.stack })
   pin = new PinStore()
-  context = new ContextStore()
+  search = new SearchStore({ useWorker })
   // state
   lastContext = null
   // synced from electron
   electronState = {}
 
+  get contextResults() {
+    return this.search.results
+      .map(searchResult => {
+        return {
+          thing: this.things[searchResult.items.documentIndex],
+          children: searchResult.snippet,
+        }
+      })
+      .map(({ thing, children }) => ({
+        ...Thing.toResult(thing),
+        children,
+        after: <After navigate={this.props.navigate} thing={thing} />,
+      }))
+  }
+
   @watch
-  recentItems = () =>
+  things = () =>
     !CurrentUser.bucket
-      ? Thing.find().limit(8)
+      ? Thing.find().limit(500)
       : Thing.find()
-          .limit(8)
+          .limit(500)
           .where('bucket')
           .eq(CurrentUser.bucket)
           .sort({ updatedAt: 'desc' })
@@ -39,7 +56,10 @@ export default class OraStore {
     this._listenForKeyEvents()
     this._watchContext()
     this.watch(() => {
-      this.context.setItems(this.recentItems)
+      this.search.setDocuments(this.things || [])
+    })
+    this.watch(() => {
+      this.search.setSearch(this.ui.search)
     })
     OS.send('start-ora')
   }
@@ -48,8 +68,8 @@ export default class OraStore {
     this.crawler.dispose()
     this.stack.dispose()
     this.ui.dispose()
-    this.context.dispose()
     this.pin.dispose()
+    this.search.dispose()
   }
 
   get osContext() {

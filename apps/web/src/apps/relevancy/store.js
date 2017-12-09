@@ -1,4 +1,4 @@
-import Search from '~/search'
+import SearchStore from '~/stores/searchStore'
 
 const hasString = (string, word) => string.indexOf(word) > -1
 const useWorker = !hasString(window.location + '', '?noWorker')
@@ -7,7 +7,7 @@ export default class RelevancyStore {
   query = ''
   textboxVal = ''
   results = []
-  search = new Search({ useWorker })
+  search = new SearchStore({ useWorker })
   autocomplete = []
 
   async willMount() {
@@ -17,7 +17,7 @@ export default class RelevancyStore {
     this.react(
       () => this.query,
       async () => {
-        const val = await this.search.onSearch(this.query)
+        const val = await this.search.getResults(this.query)
         if (val === false) {
           return false
         }

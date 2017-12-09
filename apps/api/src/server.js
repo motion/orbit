@@ -10,6 +10,7 @@ import OAuthStrategies from './server/oauth.strategies'
 import Passport from 'passport'
 import Crawler from '@mcro/crawler'
 import debug from 'debug'
+import path from 'path'
 
 const { SERVER_PORT } = Constants
 
@@ -48,6 +49,7 @@ export default class Server {
     this.app.use(bodyParser.json({ limit: '2048mb' }))
     this.app.use(bodyParser.urlencoded({ limit: '2048mb', extended: true }))
     this.setupCrawler()
+    this.setupSearch()
     this.setupCredPass()
     this.setupPassportRoutes()
     this.setupProxy()
@@ -75,6 +77,13 @@ export default class Server {
       )
       next()
     }
+  }
+
+  setupSearch() {
+    const searchIndex = require.resolve('@mcro/search')
+    const searchDist = path.join(searchIndex, '..', 'build')
+    log('setting up search', searchDist)
+    this.app.use('/search', express.static(searchDist))
   }
 
   setupCrawler() {

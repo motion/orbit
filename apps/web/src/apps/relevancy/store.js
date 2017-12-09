@@ -1,50 +1,36 @@
-import ContextStore from '~/stores/contextStore'
-import { Thing } from '~/app'
-import { debounce } from 'lodash'
+import Search from '~/search'
 
-export default class {
-  clearId = null
-  willMount() {
-    window.relevancy = this
-    this.clearId = setInterval(() => {
-      this.sentences = this.context && this.context.sentences
-    }, 40)
-  }
-  willUnmount() {
-    console.log('clearning')
-    clearInterval(this.clearId)
-  }
+const hasString = (string, word) => string.indexOf(word) > -1
+const useWorker = !hasString(window.location + '', '?noWorker')
 
-  sentences = []
-  search = ''
+export default class RelevancyStore {
+  query = ''
   textboxVal = ''
+  results = []
+  search = new Search({ useWorker })
+  autocomplete = []
 
-  setSearch = debounce(val => {
-    this.textboxVal = val
-    this.search = val
-  }, 50)
+  async willMount() {
+    window.relevancy = this
 
-  context = new ContextStore({ query: () => Thing.find() })
-
-  crawl = async () => {
-    const val = await (await fetch('http://localhost:3000')).json()
-    val.forEach(item => {
-      Thing.create({
-        title: item.title,
-        bucket: 'dropbox',
-        body: item.content,
-        integration: 'manual',
-        type: 'manual',
-        url: item.url,
-      })
-    })
-    console.log('val is', val)
+    await this.getData()
+    this.react(
+      () => this.query,
+      async () => {
+        const val = await this.search.onSearch(this.query)
+        if (val === false) {
+          return false
+        }
+        this.results = val.results
+        this.autocomplete = val.autocomplete
+      },
+      true
+    )
   }
 
-  get items() {
-    this.search
-    return !this.context || this.context.loading
-      ? []
-      : this.context.search(this.search)
+  async getData() {
+    const documents = await (await fetch('/dropbox.json')).json()
+    this.documents = documents
+    this.search.setDocuments(documents)
   }
 }

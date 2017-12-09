@@ -1,13 +1,18 @@
 import { startsWith } from 'lodash'
 
-const titleMarker = ':title:'
-const subtitleMarker = ':subtitle:'
+const titleMarker = '#'
+const subtitleMarker = '##'
 /*
   given an item of content,
   it returns an array of links, which are individual pieces of content 
   within a larger structure, such as pages in a doc
 */
 export default content => {
+  // modify our temporary dropbox corpus
+  if (content.indexOf(':title:') > -1) {
+    content = content.replace(/\:title\:/g, '#')
+    content = content.replace(/\:subtitle\:/g, '##')
+  }
   const createLink = (title, subtitle, lines) => ({
     body: lines.join('\n'),
     title,
@@ -17,11 +22,6 @@ export default content => {
   const reduced = content.split('\n').reduce(
     (status, line) => {
       line = line.trim()
-      // ignore
-      if (startsWith(line, titleMarker)) {
-        return { ...status, title: line.split(titleMarker)[1].trim() }
-      }
-
       // commit to links
       if (startsWith(line, subtitleMarker)) {
         return {
@@ -33,6 +33,11 @@ export default content => {
           ],
           currentLines: [],
         }
+      }
+
+      // ignore
+      if (startsWith(line, titleMarker)) {
+        return { ...status, title: line.split(titleMarker)[1].trim() }
       }
 
       // add lines to currentLines

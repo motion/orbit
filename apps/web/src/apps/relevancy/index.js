@@ -19,74 +19,51 @@ export default class RelevancyPage {
       <UI.Theme name="light">
         <relevancy $$draggable>
           <UI.Title size={2}>Relevancy</UI.Title>
-          <UI.Title size={1}>
-            query expansion: {store.context && store.context.qe}
-          </UI.Title>
           <content>
             <input
-              value={store.textboxVal}
+              value={store.query}
               onChange={e => {
-                store.textboxVal = e.target.value
-                store.setSearch(e.target.value)
-              }}
-              onKeyDown={e => {
-                if (e.which === 13) store.search = e.target.value
+                store.query = e.target.value
               }}
             />
             <autocomplete>
               <UI.Title>autocomplete</UI.Title>
-              {store.context &&
-                store.context.results &&
-                (store.context.results.autocomplete || []).map(i => (
-                  <UI.Text>
-                    {i.word} - {i.weight}
-                  </UI.Text>
-                ))}
+              {(store.autocomplete || []).map(i => (
+                <UI.Text>
+                  {i.word} - {i.weight}
+                </UI.Text>
+              ))}
             </autocomplete>
-            {(
-              (store.context &&
-                store.context.results &&
-                store.context.results.results) ||
-              []
-            ).map(({ debug, item, toBold, similarity, snippet }, index) => (
-              <item key={Math.random()}>
-                <UI.Title
-                  fontWeight={400}
-                  size={1.2}
-                  onClick={() => open(item.url)}
-                >
-                  {item.title} - {similarity}
-                </UI.Title>
-                <UI.Title
-                  fontWeight={400}
-                  size={1.2}
-                  opacity={0.8}
-                  onClick={() => open(item.url)}
-                >
-                  {item.subtitle}
-                </UI.Title>
-                <snippet>
-                  <text
-                    style={{ display: 'inline' }}
-                    $$row
-                    dangerouslySetInnerHTML={{
-                      __html: makeBold(snippet, toBold),
-                    }}
-                  />
-                </snippet>
-                <details>
-                  <content>
+            {(store.results || []).map(
+              ({ debug, item, toBold, similarity, snippet }, index) => (
+                <item key={Math.random()}>
+                  <UI.Title
+                    fontWeight={400}
+                    size={1.2}
+                    onClick={() => open(item.url)}
+                  >
+                    {item.title} - {similarity}
+                  </UI.Title>
+                  <UI.Title
+                    fontWeight={400}
+                    size={1.2}
+                    opacity={0.8}
+                    onClick={() => open(item.url)}
+                  >
+                    {item.subtitle}
+                  </UI.Title>
+                  <snippet>
                     <text
                       style={{ display: 'inline' }}
                       $$row
                       dangerouslySetInnerHTML={{
-                        __html: makeBold(item.body, toBold),
+                        __html: makeBold(snippet, toBold),
                       }}
                     />
-                  </content>
-                </details>
-              </item>
-            ))}
+                  </snippet>
+                </item>
+              )
+            )}
           </content>
         </relevancy>
       </UI.Theme>

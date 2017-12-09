@@ -9,7 +9,7 @@
     "start-prod": "NODE_ENV=production IS_PROD=true node lib/index.js",
     "start-dev": "nodemon --inspect=0.0.0.0:5858 lib/index.js",
     "build":
-      "CHUNK_COMMONS=false MINIFY=true NODE_ENV=production BUILD_DIR=. ENTRY=./src/search mcro-build",
+      "CHUNK_COMMONS=false MINIFY=true NODE_ENV=production BUILD_DIR=. ENTRY=./src mcro-build",
     "watch": "npm run build -- --watch"
   },
   "nodemonConfig": {

@@ -1,48 +1,65 @@
 import { store } from '@mcro/black'
-import { debounce } from 'lodash'
 import debug from 'debug'
-// import Search from '@mcro/search'
+import Search from '@mcro/search'
 
-const useWorker = true
 const log = debug('search')
 log.enabled = true
 
 @store
 export default class SearchRunner {
-  searchText = ''
-  autocomplete = []
-  results = null
+  openQueries = {}
+  searchManager = null
+  worker = null
+  useWorker = true
 
-  sendSearch = debounce(async () => {
-    if (this.searchText.length) {
-      if (useWorker) {
-        this.worker.postMessage({ type: 'search', text: this.searchText })
-      } else {
-        this.search.searchText = this.searchText
-        await this.search.search()
-        this.results = this.search.results
-        this.autocomplete = this.search.autocomplete
-      }
+  constructor({ useWorker = false }) {
+    return (this.useWorker = useWorker)
+  }
+
+  get target() {
+    return this.useWorker ? this.worker : this.searchManager
+  }
+
+  setDocuments = documents => {
+    this.target.postMessage({ type: 'documents', data: documents })
+  }
+
+  searchWorker = async query =>
+    new Promise(res => {
+      this.openQueries[query] = res
+      this.worker.postMessage({ type: 'search', data: query })
+    })
+
+  onSearch = async query => {
+    if (query.length === 0) {
+      return false
     }
-  }, 50)
 
-  constructor({ items }) {
-    if (useWorker) {
+    if (this.useWorker) {
+      return await this.searchWorker(query)
+    }
+
+    return this.target.postMessage({ type: 'search', data: query })
+  }
+
+  willMount() {
+    if (this.useWorker) {
       this.worker = new Worker('/search/app.js')
-      this.worker.postMessage({ type: 'index', items })
-
+      window.w = this.worker
+      this.worker.onerror = err => {
+        console.error(err)
+      }
       this.worker.onmessage = e => {
-        this.results = e.data
+        const { type, data: { query, results } } = e.data
+
+        if (type === 'results') {
+          if (this.openQueries[query]) {
+            this.openQueries[query](results)
+          }
+        }
       }
     } else {
-      this.search = new Search({ documents: items })
+      this.searchManager = new Search()
     }
-
-    this.react(
-      () => this.searchText,
-      () => {
-        this.sendSearch()
-      }
-    )
   }
 }

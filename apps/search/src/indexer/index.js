@@ -25,25 +25,6 @@ import {
 import namedEntityRecognition from './namedEntityRecognition'
 import getFragments from './getFragments'
 
-/*
-  documentsToImportantTerms = indexes => {
-    const freqs = sumCounts(
-      indexes.map(index => this.engine.documents[index].freq)
-    )
-    const tokenFreqs = Object.keys(freqs).reduce(
-      (acc, termIndex) => [
-        ...acc,
-        { token: this.index2Token[termIndex], freq: freqs[termIndex] },
-      ],
-      []
-    )
-
-    const topTokenFreqs = minKBy(tokenFreqs, 15, _ => -_.freq)
-
-    return topTokenFreqs
-  }
-*/
-
 const allIndexesString = (string, finding) => {
   const indexes = []
   const lower = string.toLowerCase()
@@ -81,9 +62,18 @@ export default class Indexer {
   }
 
   setDocuments = documents => {
-    this.fragments = flatten(documents.map(doc => getFragments(doc.body))).map(
-      (frag, index) => ({ ...frag, index })
-    )
+    const toMarkdown = doc =>
+      `#${doc.title}
+     ${doc.body}`
+
+    this.fragments = flatten(
+      documents.map((doc, documentIndex) =>
+        getFragments(toMarkdown(doc)).map(frag => ({
+          ...frag,
+          documentIndex,
+        }))
+      )
+    ).map((frag, index) => ({ ...frag, index }))
 
     this.engine = this.createEngine()
   }
@@ -144,8 +134,10 @@ export default class Indexer {
     })
 
     const smallest = minKBy(distances, 1, _ => _.distance)[0]
-    if (!smallest) return ''
-    return `similarity: ${smallest.distance}. Sentence: ${smallest.sentence}`
+    if (!smallest) {
+      return ''
+    }
+    return smallest.sentence
   }
 
   queryToCentroid = query => {
@@ -385,7 +377,7 @@ export default class Indexer {
         return {
           item: this.fragments[fragment.index],
           debug,
-          toBold: [],
+          toBold: words,
           wmd: [],
           index: fragment.index,
           similarity: distance,

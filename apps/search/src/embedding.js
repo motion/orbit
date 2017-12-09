@@ -1,6 +1,8 @@
 import { minKBy, cosineSimilarity } from './helpers'
 import { store, watch } from '@mcro/black/store'
 
+let vectorCache = null
+
 @store
 export default class Embedding {
   vectors = null
@@ -14,6 +16,9 @@ export default class Embedding {
   }
 
   loadData = async () => {
+    if (vectorCache) {
+      return vectorCache
+    }
     const url = `/vectors50k.txt`
     const text = await (await fetch(url)).text()
     const vectors = {}
@@ -25,6 +30,8 @@ export default class Embedding {
       )
       vectors[word] = vsList
     })
+
+    vectorCache = vectors
 
     return vectors
   }

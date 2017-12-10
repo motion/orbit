@@ -62,9 +62,11 @@ export default class Indexer {
   }
 
   setDocuments = documents => {
-    const toMarkdown = doc =>
-      `#${doc.title}
-     ${doc.body}`
+    if (!documents) {
+      return
+    }
+    const toMarkdown = doc => `#${doc.title}
+${doc.body}`
 
     this.fragments = flatten(
       documents.map((doc, documentIndex) =>

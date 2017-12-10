@@ -29,7 +29,7 @@ export default class OraStore {
     return this.search.results.map(({ document, snippet }) => ({
       ...Thing.toResult(document),
       children: snippet,
-      after: <After navigate={this.props.navigate} thing={document} />,
+      after: <After navigate={this.stack.navigate} thing={document} />,
     }))
   }
 

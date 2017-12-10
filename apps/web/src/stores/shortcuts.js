@@ -1,8 +1,8 @@
 export default {
   left: 'left',
   right: 'right',
-  down: ['down', 'j'],
-  up: ['up', 'k'],
+  down: ['down'],
+  up: ['up'],
   d: 'd', // doc
   enter: 'enter',
   esc: 'esc',

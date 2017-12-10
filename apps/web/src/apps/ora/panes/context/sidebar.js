@@ -1,10 +1,7 @@
 import * as React from 'react'
-import { OS } from '~/helpers'
 import { Thing } from '~/app'
-import * as UI from '@mcro/ui'
 import { watch } from '@mcro/black'
 import { isEqual } from 'lodash'
-import After from '~/views/after'
 import CrawlSetup from './crawlSetup'
 import CrawlerStore from '~/stores/crawlerStore'
 
@@ -65,9 +62,6 @@ export default class ContextSidebar {
   get oraStore() {
     return this.props.oraStore
   }
-  get context() {
-    return this.oraStore.context
-  }
   get search() {
     return this.oraStore.ui.search
   }
@@ -109,62 +103,7 @@ export default class ContextSidebar {
 
   // this determines when this pane will appear
   get finishedLoading() {
-    return this.context && !this.context.isLoading
-  }
-
-  get contextResults() {
-    const title = this.osContext
-      ? this.osContext.selection || this.osContext.title
-      : ''
-    return !this.context || this.context.loading
-      ? []
-      : this.context
-          .search(this.search.length > 0 ? this.search : title, 8)
-          // filter same item
-          .filter(x => {
-            if (!x.item) return true
-            if (!this.props.data) return true
-            return x.item.url !== this.props.result.data.url
-          })
-          .map(({ debug, item, similarity }, index) => {
-            return {
-              ...Thing.toResult(item),
-              children:
-                this.context.sentences[index] &&
-                this.context.sentences[index].sentence,
-              after: (
-                <After navigate={this.props.navigate} thing={item}>
-                  <debug css={{ position: 'absolute', top: 0, right: 0 }}>
-                    <UI.Popover
-                      openOnHover
-                      closeOnEsc
-                      towards="left"
-                      width={150}
-                      target={
-                        <UI.Button
-                          circular
-                          chromeless
-                          opacity={0.2}
-                          icon="emptything"
-                        />
-                      }
-                    >
-                      <UI.List>
-                        <UI.ListItem primary={`Similarity: ${similarity}`} />
-                        {debug.map(({ word, word2, similarity }, index) => (
-                          <UI.ListItem
-                            key={index}
-                            primary={word}
-                            secondary={`${word2}: ${similarity}`}
-                          />
-                        ))}
-                      </UI.List>
-                    </UI.Popover>
-                  </debug>
-                </After>
-              ),
-            }
-          })
+    return true
   }
 
   pinCurrent = () => {
@@ -221,18 +160,7 @@ export default class ContextSidebar {
   }
 
   get results() {
-    let results = []
-    // if (this.isPinned) {
-    //   results = [
-    //     {
-    //       children: this.isPinned.body,
-    //       selectable: false,
-    //     },
-    //   ]
-    // }
-    if (this.context) {
-      results = [...results, ...this.contextResults]
-    }
+    let results = this.oraStore.contextResults
     if (!results.length) {
       results = [
         {

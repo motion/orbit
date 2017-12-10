@@ -1,4 +1,3 @@
-import { range } from 'lodash'
 import Indexer from './indexer'
 import Embedding from './embedding'
 import debug from 'debug'

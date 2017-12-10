@@ -69,6 +69,10 @@ div[data-slate-editor='true'] > div {
   display: inline;
 }
 
+.html-content p {
+  margin: 0.5rem 0;
+}
+
 .html-content ul {
   padding-left: 20px;
 }

@@ -1,15 +1,17 @@
 import { watch } from '@mcro/black'
 import { Thing } from '~/app'
-import { OS } from '~/helpers'
+import { OS, contextToResult } from '~/helpers'
 import StackStore from '~/stores/stackStore'
 import CrawlerStore from '~/stores/crawlerStore'
-import ContextStore from '~/stores/contextStore'
 import PinStore from '~/stores/pinStore'
 import UIStore from '~/stores/uiStore'
+import SearchStore from '~/stores/searchStore'
 import { CurrentUser } from '~/app'
 import debug from 'debug'
+import After from '~/views/after'
 
 const log = _ => _ || debug('ora')
+const useWorker = window.location.href.indexOf('?noWorker')
 
 export default class OraStore {
   // stores
@@ -17,18 +19,26 @@ export default class OraStore {
   stack = new StackStore([{ type: 'main' }])
   ui = new UIStore({ stack: this.stack })
   pin = new PinStore()
-  context = new ContextStore()
+  search = new SearchStore({ useWorker })
   // state
   lastContext = null
   // synced from electron
   electronState = {}
 
+  get contextResults() {
+    return this.search.results.map(({ document, snippet }) => ({
+      ...Thing.toResult(document),
+      children: snippet,
+      after: <After navigate={this.stack.navigate} thing={document} />,
+    }))
+  }
+
   @watch
-  recentItems = () =>
+  things = () =>
     !CurrentUser.bucket
-      ? Thing.find().limit(8)
+      ? Thing.find().limit(500)
       : Thing.find()
-          .limit(8)
+          .limit(500)
           .where('bucket')
           .eq(CurrentUser.bucket)
           .sort({ updatedAt: 'desc' })
@@ -39,7 +49,11 @@ export default class OraStore {
     this._listenForKeyEvents()
     this._watchContext()
     this.watch(() => {
-      this.context.setItems(this.recentItems)
+      console.log('setDocuments', this.things || [])
+      this.search.setDocuments(this.things || [])
+    })
+    this.watch(() => {
+      this.search.setQuery(this.ui.search)
     })
     OS.send('start-ora')
   }
@@ -48,8 +62,8 @@ export default class OraStore {
     this.crawler.dispose()
     this.stack.dispose()
     this.ui.dispose()
-    this.context.dispose()
     this.pin.dispose()
+    this.search.dispose()
   }
 
   get osContext() {
@@ -80,7 +94,7 @@ export default class OraStore {
         return
       }
       // fixes bug where empty string === true
-      context.title = `${context.title}`.trim()
+      context.title = `${context.title}`.trim().replace(/\s{2,}/g, ' ')
       if (!context.url || !context.title) {
         log('no context or url/title', this.context)
         return
@@ -89,7 +103,7 @@ export default class OraStore {
         if (this.lastContext.url === context.url) return
       }
       this.lastContext = context
-      const nextStackItem = ContextStore.toResult(context)
+      const nextStackItem = contextToResult(context)
       const isAlreadyOnResultsPane = this.stack.length > 1
       if (isAlreadyOnResultsPane) {
         this.stack.replaceInPlace(nextStackItem)

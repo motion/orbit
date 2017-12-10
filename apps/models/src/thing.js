@@ -110,8 +110,6 @@ export class Thing extends Model {
       id: thing.id || thing.data.id,
       title: thing.title,
       type: 'context',
-      iconAfter: true,
-      icon: this.getIcon(thing),
       data: thing,
       ...extra,
     }

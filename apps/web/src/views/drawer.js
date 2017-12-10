@@ -3,6 +3,8 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 
+const HEADER_HEIGHT = 30
+
 @view
 export default class Drawer {
   static defaultProps = {
@@ -49,7 +51,7 @@ export default class Drawer {
           boxShadow={[[0, 0, 20, [20, 20, 20, 0.25]]]}
           background={background}
           borderTopRadius={5}
-          size={collapsed ? 82 : size}
+          size={collapsed ? Constants.ACTION_BAR_HEIGHT + HEADER_HEIGHT : size}
           {...props}
         >
           <container if={open}>
@@ -102,10 +104,11 @@ export default class Drawer {
       paddingBottom: Constants.ACTION_BAR_HEIGHT,
     },
     after: {
-      padding: [5, 105],
+      padding: 5,
+      paddingLeft: 0,
       position: 'absolute',
       backdropFilter: 'blur(20px)',
-      background: [255, 255, 255, 0.15],
+      background: [0, 0, 0, 0.1],
       bottom: Constants.ACTION_BAR_HEIGHT,
       left: 0,
       right: 0,
@@ -121,6 +124,7 @@ export default class Drawer {
     title: {
       background: [0, 0, 0, 0.05],
       padding: [5, 7],
+      height: HEADER_HEIGHT,
       flexFlow: 'row',
       alignItems: 'center',
       position: 'relative',

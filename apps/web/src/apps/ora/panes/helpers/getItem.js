@@ -144,7 +144,7 @@ export default function getItem(result, index) {
       if (url) {
         const { offsetTop } = e.target.parentNode
         itemLastHover = lastHover = setTimeout(() => {
-          OS.send('peek', { url, offsetTop })
+          OS.send('peek', { url, offsetTop, id: result.id })
         }, 100)
       }
     },

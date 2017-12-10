@@ -41,7 +41,8 @@ export default class PeekWindow extends React.Component {
   }
 
   render({ appPosition }) {
-    const X_GAP = -10
+    // overlap a little
+    const X_GAP = -12
     const Y_GAP = 0
     const [x, y] = appPosition
     const { dimensions } = this.state

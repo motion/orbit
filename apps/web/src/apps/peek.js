@@ -1,19 +1,21 @@
 // @flow
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, watch } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { OS } from '~/helpers'
+import { Thing } from '~/app'
+import marked from 'marked'
 
 const isSamePeek = (a, b) => a && b && a.url === b.url
 const SHOW_DELAY = 500
-const HIDE_DELAY = 60
+const HIDE_DELAY = 200
 
 window.Event = Event
 
 type Peek = {
   url?: string,
   offsetTop?: number,
-  id?: number,
+  id: number,
 }
 
 @view
@@ -30,6 +32,8 @@ class WebView {
     pendingPeek: ?Peek = null
     isHovered = false
     pageLoaded = false
+
+    @watch thing = () => this.peek && Thing.get(this.peek.id)
 
     get peek() {
       // preload
@@ -57,7 +61,7 @@ class WebView {
 
       let peekTimeout
       this.on(OS, 'peek-to', (event, peek: ?Peek) => {
-        // console.log('peek-to', peek, this.lastPeek)
+        console.log('peek-to', peek, this.lastPeek)
         const isSame = isSamePeek(this.lastPeek, peek)
         const update = () => this.updatePeek(peek)
         if (isSame) {
@@ -88,10 +92,11 @@ class WebView {
       // timeout here prevent flicker on re-enter same item
       this.setTimeout(() => {
         this.isHovered = false
+        this.lastPeek = null
         if (!this.currentPeek) {
           this.pendingPeek = null
         }
-      }, 100)
+      }, HIDE_DELAY)
     }
 
     handlePageRef = ref => {
@@ -129,9 +134,28 @@ export default class PeekPage {
           onMouseEnter={store.handlePeekEnter}
           onMouseLeave={store.handlePeekLeave}
         >
-          <content $$draggable $$flex $contentLoading={!store.pageLoaded}>
+          <content $$draggable>
+            <thingView if={store.thing}>
+              <UI.Theme name="dark">
+                <UI.Surface padding={20} flex background="#222">
+                  <UI.Title selectable size={2} fontWeight={600}>
+                    {store.thing.title}
+                  </UI.Title>
+                  <UI.Text selectable size={1.2}>
+                    <div
+                      className="html-content"
+                      $$flex
+                      dangerouslySetInnerHTML={{
+                        __html: marked(store.thing.body),
+                      }}
+                    />
+                  </UI.Text>
+                </UI.Surface>
+              </UI.Theme>
+            </thingView>
             <WebView
               if={peekUrl}
+              $contentLoading={!store.pageLoaded}
               $webview
               $visible={store.pageLoaded}
               key={peekUrl}
@@ -169,17 +193,17 @@ export default class PeekPage {
       },
     }),
     content: {
+      flex: 1,
       background: [0, 0, 0, 0.3],
       opacity: 1,
       transition: 'background ease-in 200ms',
       boxShadow: [[0, 0, 20, [0, 0, 0, 0.2]]],
-      // borderRadius: 10,
-      overflow: 'hidden',
+      overflowX: 'hidden',
+      overflowY: 'scroll',
+      pointerEvents: 'all',
     },
     contentLoading: {
-      background: [0, 0, 0, 0.3],
       opacity: 0.3,
-      transition: 'none',
     },
     webview: {
       height: '100%',

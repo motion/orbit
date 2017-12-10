@@ -15,6 +15,7 @@ DeliverX
 
 # now
 
+* peek view readability
 * crawler direct inject readability
 * more forgiving markdown parser
 * height measurement should be based on actual height not guess

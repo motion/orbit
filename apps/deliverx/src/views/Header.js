@@ -2,20 +2,26 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import Router from '~/router'
 
+const Link = ({ to, ...props }) => (
+  <a
+    href={to}
+    onClick={e => {
+      e.preventDefault()
+      Router.go(to)
+    }}
+    {...props}
+  />
+)
+
 @view
 export default class Header extends React.Component {
   render() {
     return (
       <header>
         <img src="/DeliverX.svg" />
-
         <nav $$row>
-          <a onClick={() => Router.go('/drivers')} href="">
-            Drivers
-          </a>
-          <a onClick={() => Router.go('/map')} href="">
-            Map
-          </a>
+          <Link to="/map">Map</Link>
+          <Link to={'/drivers'}>Drivers</Link>
         </nav>
       </header>
     )

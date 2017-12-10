@@ -2,6 +2,7 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import Drawer from '~/views/drawer'
+import * as Constants from '~/constants'
 
 @view({
   store: class CrawlDrawerStore {
@@ -12,6 +13,14 @@ import Drawer from '~/views/drawer'
 export default class OraDrawer {
   render({ store, oraStore }) {
     const { crawler } = oraStore
+
+    const bodyHeight = oraStore.ui.height - Constants.ORA_HEADER_HEIGHT
+    const drawerSize = Math.max(
+      // at least 100
+      100,
+      // at most 300
+      Math.min(300, bodyHeight)
+    )
 
     return (
       <drawers>
@@ -30,7 +39,7 @@ export default class OraDrawer {
               ? crawler.status.count / crawler.settings.maxPages * 100
               : 0
           }
-          size={300}
+          size={drawerSize}
           after={
             <UI.Row
               if={crawler.results}
@@ -55,7 +64,10 @@ export default class OraDrawer {
             />
           }
         >
-          <inner css={{ paddingBottom: 50, width: '100%' }} if={crawler.status}>
+          <inner
+            css={{ paddingBottom: Constants.ACTION_BAR_HEIGHT, width: '100%' }}
+            if={crawler.status}
+          >
             <textual css={{ padding: 10 }}>
               <UI.Text if={!crawler.isFinished} opacity={0.6}>
                 Crawler active. Finding up to {crawler.settings.maxPages} pages:

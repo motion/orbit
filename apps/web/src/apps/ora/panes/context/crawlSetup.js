@@ -10,6 +10,7 @@ class CrawlSetupStore {
 
   willMount() {
     this.watch(function crawlerSetupWatchEntry() {
+      console.log('this.props.settings', this.props.settings)
       if (this.props.settings.entry) {
         this.preview()
       }
@@ -24,6 +25,7 @@ class CrawlSetupStore {
     if (this.unmounted) {
       return
     }
+    console.log('preview')
     const { settings } = this.props
     const nextSettings = {
       ...settings,

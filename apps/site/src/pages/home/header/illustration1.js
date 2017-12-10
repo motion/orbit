@@ -11,12 +11,14 @@ export default class Illustration1 {
       <things
         css={{
           userSelect: 'none',
+          pointerEvents: 'none',
         }}
         {...props}
       >
         <stage
           css={{
-            height: 300,
+            height: 400,
+            width: 280,
             flexFlow: 'row',
             flex: 1,
             alignItems: 'flex-end',
@@ -24,8 +26,9 @@ export default class Illustration1 {
         >
           <figure
             css={{
-              marginRight: -50,
-              marginBottom: 35,
+              marginRight: -90,
+              marginLeft: 50,
+              marginBottom: 115,
               zIndex: 100,
             }}
           >
@@ -40,14 +43,6 @@ export default class Illustration1 {
               }}
             >
               <img
-                src="/figures/Cloud 2.svg"
-                css={{
-                  width: 150,
-                  height: 150,
-                  opacity: 0.2,
-                }}
-              />
-              <img
                 src="/logos/google-drive.svg"
                 css={{
                   width: '35%',
@@ -61,9 +56,9 @@ export default class Illustration1 {
             <img
               src="/figures/Hummingbird.svg"
               css={{
-                margin: [20, 40, 0, -180],
-                width: 125,
-                height: 125,
+                margin: [30, 40, 35, -180],
+                width: 80,
+                height: 80,
                 zIndex: 1000,
                 alignSelf: 'flex-end',
               }}
@@ -77,27 +72,18 @@ export default class Illustration1 {
               css={{
                 width: 110,
                 height: 110,
-                margin: [0, 55, -50, 0],
+                margin: [0, 20, -50, 0],
                 position: 'relative',
                 alignItems: 'center',
                 justifyContent: 'center',
               }}
             >
               <img
-                src="/figures/Cloud 2.svg"
-                css={{
-                  opacity: 0.2,
-                  width: 150,
-                  height: 150,
-                }}
-              />
-              <img
                 src="/logos/slack.svg"
                 css={{
+                  marginLeft: -20,
                   width: '35%',
                   height: '35%',
-                  marginLeft: -5,
-                  marginTop: 4,
                   position: 'absolute',
                 }}
               />
@@ -105,9 +91,9 @@ export default class Illustration1 {
             <img
               src="/figures/Rabbit.svg"
               css={{
-                marginTop: -5,
-                width: 155,
-                height: 155,
+                marginBottom: 20,
+                width: 110,
+                height: 110,
                 alignSelf: 'flex-end',
                 transform: { scaleX: -1 },
               }}
@@ -119,7 +105,7 @@ export default class Illustration1 {
           <icon
             css={{
               top: 40,
-              left: 30,
+              left: 80,
             }}
           >
             <img
@@ -134,8 +120,8 @@ export default class Illustration1 {
           <icon
             css={{
               transform: { rotate: '15deg', scale: 0.65 },
-              top: 40,
-              right: 10,
+              top: 160,
+              right: 80,
             }}
           >
             <img
@@ -150,8 +136,8 @@ export default class Illustration1 {
           <icon
             css={{
               transform: { rotate: '5deg', scale: 0.8 },
-              top: 60,
-              left: 200,
+              top: 160,
+              left: 170,
             }}
           >
             <img
@@ -167,7 +153,7 @@ export default class Illustration1 {
             css={{
               transform: { rotate: '-15deg', scale: 0.85 },
               top: 30,
-              left: 130,
+              left: 170,
             }}
           >
             <img
@@ -207,7 +193,7 @@ export default class Illustration1 {
             justifyContent: 'space-around',
           }}
         >
-          <pile css={{ margin: [0, 60, 10], position: 'relative', width: 30 }}>
+          <pile css={{ margin: [0, 60, 10], position: 'relative', width: 170 }}>
             <icon
               css={{
                 transform: { rotate: '10deg', scale: 0.8 },

@@ -22,8 +22,9 @@ export default class Illustration2 {
           hideRings={{
             0: true,
           }}
-          ringBackground="transparent"
-          planetSize={60}
+          ringBackground="rgba(90,50,100,0.5)"
+          ringBorderColor="transparent"
+          planetSize={100}
           planetStyles={{
             background: '#fff',
             border: [1, Constants.mainLight],

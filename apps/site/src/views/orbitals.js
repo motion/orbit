@@ -2,8 +2,6 @@ import * as React from 'react'
 import * as UI from '@mcro/ui'
 import * as Constants from '~/constants'
 
-const orbitLineColor = UI.color(Constants.colorMain).lighten(0.45)
-
 const ITEMS = [
   'google-gmail',
   'google-drive',
@@ -40,6 +38,7 @@ const PLANET_STYLES = {
 }
 
 export default ({
+  ringBorderColor = UI.color(Constants.colorMain).lighten(0.45),
   ringBackground = 'rgba(64.5%, 85.7%, 98.7%, 0.125)',
   planetSize = 50,
   hideRings = {},
@@ -75,7 +74,7 @@ export default ({
           <circle
             css={{
               margin: 'auto',
-              border: [1, orbitLineColor],
+              border: [1, ringBorderColor],
               width: 100,
               height: 100,
               background: ringBackground,
@@ -87,12 +86,11 @@ export default ({
           <circle
             css={{
               margin: 'auto',
-              border: [1, orbitLineColor],
+              border: [1, ringBorderColor],
               width: 300,
               height: 300,
               background: ringBackground,
               borderRadius: 1000000000,
-              opacity: 0.8,
             }}
           />
         </contain>
@@ -100,12 +98,11 @@ export default ({
           <circle
             css={{
               margin: 'auto',
-              border: [1, orbitLineColor],
+              border: [1, ringBorderColor],
               background: ringBackground,
               width: 600,
               height: 600,
               borderRadius: 1000000000,
-              opacity: 0.7,
             }}
           />
         </contain>
@@ -113,11 +110,10 @@ export default ({
           <circle
             css={{
               margin: 'auto',
-              border: [1, orbitLineColor],
+              border: [1, ringBorderColor],
               width: 900,
               height: 900,
               borderRadius: 1000000000,
-              opacity: 0.3,
             }}
           />
         </contain>
@@ -125,7 +121,7 @@ export default ({
           <circle
             css={{
               margin: 'auto',
-              border: [1, orbitLineColor],
+              border: [1, ringBorderColor],
               width: 1400,
               height: 1400,
               borderRadius: 1000000000,

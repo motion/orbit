@@ -18,7 +18,7 @@ export default class HomeHeader {
       <View.Section dark>
         <View.SectionContent fullscreen>
           <View.Header />
-          <View.Slant />
+          <View.Slant backgroundColor="red" />
 
           <content
             $$row
@@ -36,7 +36,7 @@ export default class HomeHeader {
                   marginTop: -90,
                 }}
               >
-                <View.Title {...titleProps} textAlign="right">
+                <View.Title selectable {...titleProps} textAlign="right">
                   <span css={{ marginRight: -10 }}>Company knowledge</span>
                   <br />
                   shouldn't be so messy
@@ -44,11 +44,16 @@ export default class HomeHeader {
                 <inner
                   css={{
                     position: 'relative',
-                    margin: [20, 10, 0, 0],
+                    margin: [-130, 10, 0, 0],
+                    pointerEvents: 'none',
                     userSelect: 'none',
                   }}
                 >
-                  <Illustration1 css={{ transform: { scale: 1 } }} />
+                  <Illustration1
+                    css={{
+                      transform: { scale: 1.6 },
+                    }}
+                  />
                 </inner>
               </section>
             </UI.Theme>
@@ -64,9 +69,12 @@ export default class HomeHeader {
                   position: 'relative',
                   zIndex: 11,
                   height: 220,
+                  left: 20,
+                  pointerEvents: 'none',
+                  userSelect: 'none',
                 }}
               >
-                <Illustration2 css={{ transform: { scale: 1 } }} />
+                <Illustration2 css={{ transform: { scale: 1.2 } }} />
               </inner>
 
               <text css={{ margin: [50, 0, 0, 20] }}>
@@ -74,6 +82,7 @@ export default class HomeHeader {
                   {...titleProps}
                   textAlign="left"
                   color={Constants.dark2}
+                  selectable
                 >
                   Orbit keeps your team in<br />
                   <span css={{ marginLeft: -2 }}>sync, without hassle</span>

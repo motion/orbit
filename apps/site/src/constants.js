@@ -15,8 +15,8 @@ export const ORA_HEIGHT = 410
 export const ORA_WIDTH = 300
 export const ORA_BORDER_RADIUS = 6
 
-export const colorMain = '#000'
-export const colorSecondary = '#000'
+export const colorMain = 'rgb(0%, 74%, 89%)'
+export const colorSecondary = 'rgb(56.8%, 83.1%, 0%)'
 export const colorTeal = '#49ceac'
 export const colorBlue = '#133cca'
 
@@ -29,10 +29,10 @@ export const screen = {
 }
 
 export const dark1 = UI.color(colorMain)
-  .darken(0.75)
+  // .darken(0.75)
   .toString()
-export const dark2 = UI.color(colorSecondary)
-  .darken(0.45)
+export const dark2 = UI.color(colorMain)
+  // .darken(0.75)
   .toString()
 
 export const darkBackground = `linear-gradient(${dark1}, ${dark2})`

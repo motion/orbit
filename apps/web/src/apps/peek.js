@@ -10,8 +10,6 @@ const isSamePeek = (a, b) => a && b && a.url === b.url
 const SHOW_DELAY = 500
 const HIDE_DELAY = 200
 
-window.Event = Event
-
 type Peek = {
   url?: string,
   offsetTop?: number,
@@ -28,8 +26,8 @@ class WebView {
 @view({
   store: class PeekStore {
     lastPeek: ?Peek = null
-    currentPeek: ?Peek = null
-    pendingPeek: ?Peek = null
+    curPeek: ?Peek = null
+    nextPeek: ?Peek = null
     isHovered = false
     pageLoaded = false
 
@@ -37,14 +35,14 @@ class WebView {
 
     get peek() {
       // preload
-      if (this.pendingPeek && !this.currentPeek) {
-        return this.pendingPeek
+      if (this.nextPeek && !this.curPeek) {
+        return this.nextPeek
       }
       // about to show different
       if (
-        this.pendingPeek &&
-        this.currentPeek &&
-        !isSamePeek(this.pendingPeek, this.currentPeek)
+        this.nextPeek &&
+        this.curPeek &&
+        !isSamePeek(this.nextPeek, this.curPeek)
       ) {
         return null
       }
@@ -53,7 +51,7 @@ class WebView {
         return this.lastPeek
       }
       // current
-      return this.currentPeek
+      return this.curPeek
     }
 
     willMount() {
@@ -62,29 +60,36 @@ class WebView {
       let peekTimeout
       this.on(OS, 'peek-to', (event, peek: ?Peek) => {
         console.log('peek-to', peek, this.lastPeek)
-        const isSame = isSamePeek(this.lastPeek, peek)
-        const update = () => this.updatePeek(peek)
-        if (isSame) {
-          update()
+        if (isSamePeek(this.lastPeek, peek)) {
           return
         }
-        if (peek) {
-          this.pendingPeek = peek
-        }
+        this.nextPeek = peek
         clearTimeout(peekTimeout)
-        peekTimeout = this.setTimeout(update, !peek ? HIDE_DELAY : SHOW_DELAY)
+        clearTimeout(this.leftTimeout)
+        const delay = peek ? SHOW_DELAY : HIDE_DELAY
+        peekTimeout = this.setTimeout(() => this.updatePeek(peek), delay)
       })
     }
 
     updatePeek = (peek: Peek) => {
-      this.currentPeek = peek
+      this.curPeek = peek
       if (peek) {
         this.lastPeek = peek
       }
-      this.pendingPeek = null
+      if (!peek) {
+        this.leftTimeout = this.setTimeout(() => {
+          if (!this.isHovered) {
+            this.lastPeek = null
+            this.nextPeek = null
+          }
+        }, SHOW_DELAY)
+      }
+      this.nextPeek = null
     }
 
     handlePeekEnter = () => {
+      OS.send('peek-focus')
+      clearTimeout(this.leftTimeout)
       this.isHovered = true
     }
 
@@ -92,9 +97,8 @@ class WebView {
       // timeout here prevent flicker on re-enter same item
       this.setTimeout(() => {
         this.isHovered = false
-        this.lastPeek = null
-        if (!this.currentPeek) {
-          this.pendingPeek = null
+        if (!this.curPeek) {
+          this.nextPeek = null
         }
       }, HIDE_DELAY)
     }
@@ -123,13 +127,13 @@ class WebView {
 })
 export default class PeekPage {
   render({ store }) {
-    const { peek, pendingPeek } = store
-    const peekUrl = (peek && peek.url) || (pendingPeek && pendingPeek.url)
+    const { peek, nextPeek } = store
+    const peekUrl = (peek && peek.url) || (nextPeek && nextPeek.url)
     // console.log('peekUrl', !!peekUrl, 'loaded?', store.pageLoaded)
     return (
       <UI.Theme name="light">
         <peek
-          $peekVisible={peek && !store.pendingPeek}
+          $peekVisible={peek && !store.nextPeek}
           $peekPosition={[store.lastPeek, store.peek]}
           onMouseEnter={store.handlePeekEnter}
           onMouseLeave={store.handlePeekLeave}
@@ -177,13 +181,13 @@ export default class PeekPage {
       height: 600,
       padding: 20,
       pointerEvents: 'none !important',
-      transition: 'transform ease-in 100ms, opacity ease-in 100ms',
+      transition: 'opacity ease-in 100ms',
       opacity: 0,
     },
     peekVisible: {
       pointerEvents: 'all !important',
       opacity: 1,
-      transition: 'opacity ease-out 1ms, transform ease-out 100ms',
+      transition: 'opacity ease-out 100ms',
     },
     peekPosition: ([lastPeek, peek]) => ({
       transform: {
@@ -200,7 +204,6 @@ export default class PeekPage {
       boxShadow: [[0, 0, 20, [0, 0, 0, 0.2]]],
       overflowX: 'hidden',
       overflowY: 'scroll',
-      pointerEvents: 'all',
     },
     contentLoading: {
       opacity: 0.3,

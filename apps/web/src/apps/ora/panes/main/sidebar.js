@@ -1,4 +1,4 @@
-import { fuzzy, contextToResult } from '~/helpers'
+import { contextToResult } from '~/helpers'
 import { Thing } from '~/app'
 import * as Constants from '~/constants'
 
@@ -12,49 +12,6 @@ export default class MainSidebar {
 
   get title() {
     return null
-    // dropdown for selecting filter
-    //   <UI.Popover
-    //   openOnHover
-    //   closeOnEsc
-    //   theme="light"
-    //   delay={300}
-    //   width={140}
-    //   boxShadow={[[0, 0, 10, [0, 0, 0, 0.2]]]}
-    //   target={
-    //     <UI.Button
-    //       sizeRadius={2}
-    //       sizePadding={2}
-    //       iconAfter
-    //       iconProps={{
-    //         size: 12,
-    //       }}
-    //       icon="arrow-min-down"
-    //       margin={[-2, 0]}
-    //       glow
-    //       css={{
-    //         zIndex: 10,
-    //       }}
-    //       alpha={0.8}
-    //     >
-    //       All
-    //     </UI.Button>
-    //   }
-    // >
-    //   <UI.List
-    //     itemProps={{
-    //       primaryEllipse: true,
-    //       sizeHeight: 1.15,
-    //       hover: {
-    //         background: [0, 0, 0, 0.025],
-    //       },
-    //     }}
-    //     items={[
-    //       { primary: 'dropbox.com' },
-    //       { primary: 'support.stripe.com' },
-    //       { primary: 'Slack', icon: 'social-slack' },
-    //     ]}
-    //   />
-    // </UI.Popover>
   }
 
   get rawResults() {
@@ -73,7 +30,13 @@ export default class MainSidebar {
 
     // results
     if (this.oraStore.contextResults.length) {
-      results = [...results, ...this.oraStore.contextResults]
+      results = [
+        ...results,
+        ...this.oraStore.contextResults.map(item => ({
+          ...item,
+          category: 'All',
+        })),
+      ]
     } else {
       results = [
         ...results,

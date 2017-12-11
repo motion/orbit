@@ -238,33 +238,29 @@ export default class UIStore {
         this.stack.last.store && this.stack.last.store.minHeight,
       ],
       ([results, minHeight]) => {
-        let height = 'auto'
-        const length = results.length
-        // TODO make this actually measure
-        if (length > 0) {
-          // header + footer height
-          height = 74 + 40
-          // first
-          if (results[0].content) {
-            height += 120
-          } else {
-            height += 53
+        // hacky ass setup for now
+        this.setTimeout(() => {
+          const refs = [
+            // header
+            document.querySelector('.leftSide'),
+            // titlebar
+            document.querySelector('.fade:last-child .tab'),
+            // body
+            document.querySelector(
+              '.fade:last-child .ReactVirtualized__Grid__innerScrollContainer'
+            ),
+          ].filter(Boolean)
+
+          const hasActions =
+            this.stack.last.store && this.stack.last.store.actions
+          if (hasActions) {
+            refs.push(document.querySelector('.actions'))
           }
-          // second
-          if (length > 1) height += 120
-          // ...rest
-          if (length > 2) height += (length - 2) * 90
-          // max height
-          height = Math.min(Constants.ORA_HEIGHT, height)
-        }
-        if (minHeight) {
-          if (typeof height === 'number') {
-            height = Math.max(minHeight, height)
-          } else {
-            height = minHeight
-          }
-        }
-        this.height = height
+          const height = refs
+            .map(ref => ref.clientHeight)
+            .reduce((a, b) => a + b, 0)
+          this.height = height
+        })
       }
     )
   }

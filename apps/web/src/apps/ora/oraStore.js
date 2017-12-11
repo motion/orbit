@@ -26,6 +26,7 @@ export default class OraStore {
   electronState = {}
 
   get contextResults() {
+    console.log('this.search.results', this.search.results)
     return this.search.results.map(({ document, snippet }) => ({
       ...Thing.toResult(document),
       children: snippet,

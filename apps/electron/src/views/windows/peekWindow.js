@@ -38,6 +38,18 @@ export default class PeekWindow extends React.Component {
     this.on(ipcMain, 'peek-start', event => {
       this.peekSend = (name, val) => event.sender.send(name, val)
     })
+    this.on(ipcMain, 'peek-focus', () => {
+      console.log('focusing peek')
+      if (this.peekRef) {
+        this.peekRef.focus()
+      }
+    })
+  }
+
+  handlePeekRef = ref => {
+    if (ref) {
+      this.peekRef = ref.window
+    }
   }
 
   render({ appPosition }) {
@@ -51,6 +63,7 @@ export default class PeekWindow extends React.Component {
 
     return (
       <Window
+        ref={this.handlePeekRef}
         file={`${Constants.APP_URL}/peek`}
         frame={false}
         background="#00000000"

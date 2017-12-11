@@ -12,7 +12,7 @@ function getRxError(error: Error) {
     const parsedMessage = JSON.parse(message)
     console.log(JSON.stringify(parsedMessage, null, 2))
   } catch (e) {
-    console.log('error parsing error', e)
+    console.trace(message)
   }
   return { message, stack }
 }

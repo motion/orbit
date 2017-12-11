@@ -2,7 +2,7 @@
   "name": "@mcro/search",
   "private": true,
   "version": "1.5.1",
-  "main": "index.js",
+  "main": "lib/index.js",
   "module": "src/index.js",
   "scripts": {
     "start": "node index.js",

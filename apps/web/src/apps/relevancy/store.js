@@ -18,6 +18,7 @@ export default class RelevancyStore {
       () => this.query,
       async () => {
         const val = await this.search.getResults(this.query)
+        console.log('got val', val)
         if (val === false) {
           return false
         }

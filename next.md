@@ -15,11 +15,9 @@ DeliverX
 
 # now
 
-* peek view readability
-* crawler direct inject readability
+* crawler dont use node readability
 * more forgiving markdown parser
 * height measurement should be based on actual height not guess
-* auto hide the window at times
 * drive sync pane / drive sync
 * settings pane: crawler section
 * settings pane: sync status improvements

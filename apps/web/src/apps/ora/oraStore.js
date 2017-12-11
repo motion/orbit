@@ -49,7 +49,6 @@ export default class OraStore {
     this._listenForKeyEvents()
     this._watchContext()
     this.watch(() => {
-      console.log('setDocuments', this.things || [])
       this.search.setDocuments(this.things || [])
     })
     this.watch(() => {

@@ -40,32 +40,42 @@ export default class SearchStore {
 
   getResults = async (query: string): Array<SearchResult> => {
     if (query.length === 0) {
-      return this.documents.map(document => ({
-        document,
-        snippet: document.body,
-      }))
+      return false
     }
-    const results = this.useWorker
+    const response = this.useWorker
       ? await this._searchWorker(query)
-      : this.target.postMessage({ type: 'search', data: query })
-    return (results || []).map(result => ({
-      document: this.documents[result.item.documentIndex],
-      snippet: result.snippet,
-    }))
+      : await this.target.postMessage({ type: 'search', data: query })
+    return response
   }
 
   setQuery = async search => {
     this.query = search
-    const results = await this.getResults(search)
-    console.log('setQuery.results', results)
-    this.results = results
-    return this.results
+    const response = await this.getResults(search)
+    if (response) {
+      const results = response.results.map(result => ({
+        document: this.documents[result.item.documentIndex],
+        snippet: result.snippet,
+      }))
+      this.results = results
+    } else {
+      this.results = this.documents.map(document => ({
+        document,
+        snippet: document.body,
+      }))
+    }
   }
 
   setDocuments = documents => {
     if (documents && documents.length) {
       this.documents = documents
-      this.target.postMessage({ type: 'documents', data: documents })
+      console.log('setting documents', documents)
+      this.target.postMessage({
+        type: 'documents',
+        data: documents.map(doc => ({
+          title: doc.title,
+          body: doc.body,
+        })),
+      })
       this.setQuery(this.query)
     }
   }

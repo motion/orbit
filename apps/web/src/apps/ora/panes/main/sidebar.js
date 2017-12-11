@@ -129,14 +129,9 @@ export default class MainSidebar {
   }
 
   get results() {
-    const { search } = this
     const items = this.rawResults
-    if (!search) {
-      return items
-    }
-    const filteredSearch = fuzzy(items, search)
-    const searchItems = filteredSearch.length
-      ? filteredSearch
+    return items && items.length
+      ? items
       : [
           {
             type: 'message',
@@ -144,6 +139,5 @@ export default class MainSidebar {
             category: 'Search Results',
           },
         ]
-    return searchItems
   }
 }

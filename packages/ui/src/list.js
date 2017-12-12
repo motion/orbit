@@ -130,40 +130,36 @@ class List extends React.PureComponent<Props, { selected: number }> {
   // willUpdate only runs when PureComponent has new props
   componentWillUpdate(nextProps: Props) {
     const totalItems = this.getTotalItems(nextProps)
-
-    if (
-      this.totalItems !== totalItems ||
-      (typeof nextProps.itemsKey !== 'undefined' &&
-        nextProps.itemsKey !== this.props.itemsKey)
-    ) {
-      if (this.virtualListRef) {
-        this.setTimeout(() => {
-          console.log('UPDATE', nextProps)
-          this.measure()
-          this.virtualListRef.forceUpdateGrid()
-        })
-      }
-    }
+    const hasNeverSetChildren = !this.childrenVersion
+    const hasNewSelected =
+      typeof nextProps.selected === 'number' && this.state.selected !== selected
+    const hasNewItems = this.totalItems !== totalItems
+    const hasNewItemsKey =
+      typeof nextProps.itemsKey !== 'undefined' &&
+      nextProps.itemsKey !== this.props.itemsKey
 
     this.totalItems = totalItems
 
-    const { virtualized, updateChildren, selected } = nextProps
+    const { virtualized, selected } = nextProps
+
+    const shouldUpdateChildren =
+      hasNeverSetChildren ||
+      hasNewSelected ||
+      !virtualized ||
+      nextProps.updateChildren ||
+      hasNewItems ||
+      hasNewItemsKey
+
+    if (shouldUpdateChildren) {
+      this.props = nextProps
+      this.updateChildren()
+    }
 
     if (typeof selected !== 'undefined') {
       this.lastDidReceivePropsDate = Date.now()
       if (selected !== this.state.selected) {
         this.setState({ selected })
       }
-    }
-
-    if (
-      updateChildren ||
-      !virtualized ||
-      (typeof selected === 'number' && this.state.selected !== selected) ||
-      !this.childrenVersion
-    ) {
-      this.props = nextProps
-      this.updateChildren()
     }
 
     if (
@@ -181,15 +177,14 @@ class List extends React.PureComponent<Props, { selected: number }> {
       this.onRef.push(() => this.forceUpdateGrid())
       return
     }
-    this.virtualListRef.forceUpdateGrid()
-    this.virtualListRef.measureAllRows()
-    if (typeof this.lastScrolledToRow === 'number') {
-      this.scrollToRow(this.lastScrolledToRow)
-    }
+    // seems to work without this step
+    // this.virtualListRef.forceUpdateGrid()
+    this.virtualListRef.recomputeRowHeights(0)
+    this.scrollToRow(this.lastScrolledToRow)
   }
 
   scrollToRow = (index: number) => {
-    if (!this.virtualListRef && this.props.virtualized) {
+    if (!this.virtualListRef) {
       this.onRef.push(() => this.scrollToRow(index))
       return
     }

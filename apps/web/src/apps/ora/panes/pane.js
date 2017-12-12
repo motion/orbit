@@ -108,9 +108,9 @@ export default class Pane {
       const itemsKey = `${index}${paneStore.contentVersion}${
         paneStore.items.length
       }`
-      console.log('list', index, itemsKey)
       list = (
         <UI.List
+          key={index}
           hideScrollBar
           itemsKey={itemsKey}
           getRef={paneStore.setList}

@@ -1,5 +1,4 @@
 import { store } from '@mcro/black'
-import * as Constants from '~/constants'
 import { OS } from '~/helpers'
 import { throttle } from 'lodash'
 import SHORTCUTS from './shortcuts'
@@ -49,6 +48,7 @@ export default class UIStore {
     this._watchWasBlurred()
     this._watchBlurBar()
     this._watchKeyEvents()
+    this._watchHidden()
     this.setState({}) // trigger first send
   }
 
@@ -66,6 +66,12 @@ export default class UIStore {
   setTextboxVal = value => {
     this.textboxVal = value
     this.setSearch(value)
+  }
+
+  _watchHidden() {
+    this.watch(() => {
+      console.log('hidden', this.state.hidden)
+    })
   }
 
   _watchKeyEvents() {

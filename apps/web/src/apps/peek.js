@@ -5,6 +5,7 @@ import * as UI from '@mcro/ui'
 import { OS } from '~/helpers'
 import { Thing } from '~/app'
 import marked from 'marked'
+import Mousetrap from 'mousetrap'
 
 const isSamePeek = (a, b) => a && b && a.id === b.id
 const SHOW_DELAY = 500
@@ -69,6 +70,16 @@ class WebView {
         const delay = peek ? SHOW_DELAY : HIDE_DELAY
         peekTimeout = this.setTimeout(() => this.updatePeek(peek), delay)
       })
+
+      this.trap = new Mousetrap(window)
+      this.trap.bind('esc', () => {
+        console.log('esc')
+        this.isHovered = false
+      })
+    }
+
+    willUnmount() {
+      this.trap.reset()
     }
 
     updatePeek = (peek: Peek) => {

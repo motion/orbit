@@ -43,7 +43,7 @@ export default class OraHeader extends React.Component {
 
   handleHide = e => {
     e.stopPropagation()
-    this.props.oraStore.hide()
+    this.props.oraStore.ui.hide()
   }
 
   preventPropagation = e => {

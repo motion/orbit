@@ -1,7 +1,11 @@
 import SearchStore from '~/stores/searchStore'
+import ContentStore from '~/stores/contentStore'
 
 const hasString = (string, word) => string.indexOf(word) > -1
 const useWorker = !hasString(window.location + '', '?noWorker')
+const useDemo = true
+
+const content = new ContentStore()
 
 export default class RelevancyStore {
   query = ''
@@ -29,8 +33,12 @@ export default class RelevancyStore {
     )
   }
 
+  async getDropboxData() {
+    return await (await fetch('/dropbox.json')).json()
+  }
+
   async getData() {
-    const documents = await (await fetch('/dropbox.json')).json()
+    const documents = useDemo ? content.data : await this.getDropboxData()
     this.documents = documents
     this.search.setDocuments(documents)
   }

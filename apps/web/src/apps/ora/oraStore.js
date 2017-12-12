@@ -27,7 +27,7 @@ export default class OraStore {
 
   get contextResults() {
     console.log('this.search.results', this.search.results)
-    return this.search.results.map(({ document, snippet }) => ({
+    return this.search.results.slice(0, 6).map(({ document, snippet }) => ({
       ...Thing.toResult(document),
       children: snippet,
       after: <After navigate={this.stack.navigate} thing={document} />,

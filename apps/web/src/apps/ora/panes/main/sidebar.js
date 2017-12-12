@@ -1,5 +1,6 @@
 import { contextToResult } from '~/helpers'
 import { Thing } from '~/app'
+import ContentStore from '~/stores/contentStore'
 import * as Constants from '~/constants'
 
 export default class MainSidebar {
@@ -61,28 +62,11 @@ export default class MainSidebar {
         },
         {
           title: 'Insert test things...',
-          onClick: () => {
-            this.oraStore.pin.add({
-              url:
-                'https://support.stripe.com/questions/i-have-a-charge-on-my-card-from-stripe-but-i-m-not-a-stripe-user',
-            })
-            this.oraStore.pin.add({
-              url:
-                'https://support.stripe.com/questions/i-have-a-charge-on-my-card-from-stripe-but-i-m-not-a-stripe-user',
-            })
-            Thing.createFromCrawl({
-              url:
-                'http://marginalrevolution.com/marginalrevolution/2017/12/adam-smith-occupational-licensing.html',
-              contents: { title: 'Crawl Test', content: 'Crawl Test Body' },
-            })
-            Thing.createFromCrawl({
-              url:
-                'https://support.stripe.com/questions/why-are-my-customers-charges-marked-as-recurring',
-              contents: {
-                title: 'Why are my customers charges marked as recurring?',
-                content: 'Crawl Test Body',
-              },
-            })
+          onClick: async () => {
+            const content = new ContentStore()
+            await Promise.all(
+              content.things.map(async t => await Thing.create(t))
+            )
           },
           category: 'Dev Tools',
         },

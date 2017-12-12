@@ -8,8 +8,9 @@ import marked from 'marked'
 import Mousetrap from 'mousetrap'
 
 const isSamePeek = (a, b) => a && b && a.id === b.id
-const SHOW_DELAY = 500
-const HIDE_DELAY = 200
+const SHOW_DELAY = 0
+const HIDE_DELAY = 50
+const background = [20, 20, 20, 0.98]
 
 type Peek = {
   url?: string,
@@ -36,17 +37,17 @@ class WebView {
 
     get peek() {
       // preload
-      if (this.nextPeek && !this.curPeek) {
+      if (this.nextPeek) {
         return this.nextPeek
       }
       // about to show different
-      if (
-        this.nextPeek &&
-        this.curPeek &&
-        !isSamePeek(this.nextPeek, this.curPeek)
-      ) {
-        return null
-      }
+      // if (
+      //   this.nextPeek &&
+      //   this.curPeek &&
+      //   !isSamePeek(this.nextPeek, this.curPeek)
+      // ) {
+      //   return null
+      // }
       // during hover its null so show it cached
       if (this.isHovered) {
         return this.lastPeek
@@ -140,32 +141,41 @@ export default class PeekPage {
   render({ store }) {
     const { peek, nextPeek } = store
     const peekUrl = (peek && peek.url) || (nextPeek && nextPeek.url)
+    const arrowSize = 35
     // console.log('peekUrl', !!peekUrl, 'loaded?', store.pageLoaded)
     return (
       <UI.Theme name="light">
         <peek
-          $peekVisible={peek && !store.nextPeek}
-          $peekPosition={[store.lastPeek, store.peek]}
+          $peekVisible={peek}
+          $peekPosition={[store.nextPeek || store.lastPeek, store.peek]}
           onMouseEnter={store.handlePeekEnter}
           onMouseLeave={store.handlePeekLeave}
         >
+          <UI.Arrow
+            size={arrowSize}
+            towards="right"
+            background={background}
+            css={{
+              position: 'absolute',
+              top: 54,
+              right: 20 - arrowSize,
+            }}
+          />
           <content $$draggable>
-            <thingView if={store.thing}>
+            <thingView if={store.thing} css={{ padding: 20, flex: 1 }}>
               <UI.Theme name="dark">
-                <UI.Surface padding={20} flex background="#222">
-                  <UI.Title selectable size={2} fontWeight={600}>
-                    {store.thing.title}
-                  </UI.Title>
-                  <UI.Text selectable size={1.2}>
-                    <div
-                      className="html-content"
-                      $$flex
-                      dangerouslySetInnerHTML={{
-                        __html: marked(store.thing.body),
-                      }}
-                    />
-                  </UI.Text>
-                </UI.Surface>
+                <UI.Title selectable size={2} fontWeight={600}>
+                  {store.thing.title}
+                </UI.Title>
+                <UI.Text selectable size={1.2}>
+                  <div
+                    className="html-content"
+                    $$flex
+                    dangerouslySetInnerHTML={{
+                      __html: marked(store.thing.body),
+                    }}
+                  />
+                </UI.Text>
               </UI.Theme>
             </thingView>
             <WebView
@@ -192,13 +202,13 @@ export default class PeekPage {
       height: 600,
       padding: 20,
       pointerEvents: 'none !important',
-      transition: 'opacity ease-in 100ms',
+      transition: 'all ease-in 100ms',
       opacity: 0,
     },
     peekVisible: {
       pointerEvents: 'all !important',
       opacity: 1,
-      transition: 'opacity ease-out 100ms',
+      transition: 'all ease-out 100ms',
     },
     peekPosition: ([lastPeek, peek]) => ({
       transform: {
@@ -209,7 +219,8 @@ export default class PeekPage {
     }),
     content: {
       flex: 1,
-      background: [0, 0, 0, 0.3],
+      background,
+      borderRadius: 10,
       opacity: 1,
       transition: 'background ease-in 200ms',
       boxShadow: [[0, 0, 20, [0, 0, 0, 0.2]]],

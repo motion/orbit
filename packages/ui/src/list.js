@@ -147,7 +147,7 @@ class List extends React.PureComponent<Props, { selected: number }> {
     if (
       nextProps.virtualized &&
       nextProps.virtualized.measure &&
-      !(this.props.virtualized && this.props.virtualized.measure)
+      (this.props.virtualized && !this.props.virtualized.measure)
     ) {
       this.measure()
     }
@@ -180,7 +180,7 @@ class List extends React.PureComponent<Props, { selected: number }> {
   measure = throttle(() => {
     if (this.virtualListRef) {
       this.virtualListRef.recomputeRowHeights(0)
-      this.scrollToRow(this.lastScrolledToRow || 0)
+      this.setTimeout(() => this.scrollToRow(this.lastScrolledToRow || 0))
     }
   }, 6)
 

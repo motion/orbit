@@ -42,7 +42,16 @@ export default class RelevancyPage {
                     size={1.2}
                     onClick={() => open(item.url)}
                   >
-                    {item.title} - {similarity}
+                    <text
+                      style={{ display: 'inline' }}
+                      $$row
+                      dangerouslySetInnerHTML={{
+                        __html: makeBold(
+                          item.title + ' - ' + similarity,
+                          toBold
+                        ),
+                      }}
+                    />
                   </UI.Title>
                   <UI.Title
                     fontWeight={400}
@@ -50,7 +59,13 @@ export default class RelevancyPage {
                     opacity={0.8}
                     onClick={() => open(item.url)}
                   >
-                    {item.subtitle}
+                    <text
+                      style={{ display: 'inline' }}
+                      $$row
+                      dangerouslySetInnerHTML={{
+                        __html: makeBold(item.subtitle, toBold),
+                      }}
+                    />
                   </UI.Title>
                   <snippet>
                     <text

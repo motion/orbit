@@ -4,6 +4,7 @@ import { store, watch } from '@mcro/black/store'
 import {
   includes,
   reverse,
+  sortedUniqBy,
   max,
   sortBy,
   range,
@@ -345,6 +346,7 @@ ${doc.body}`
           bodyDistance[currentFragentIndex][termIndex],
           currentFragentIndex
         )
+
         addDistance(
           subtitlesDistance[currentFragentIndex][termIndex],
           currentFragentIndex
@@ -362,6 +364,11 @@ ${doc.body}`
         results.map((val, index) => ({
           distance: val,
           fragment: fragments[index],
+          closestWords: [
+            ...titlesDistance[index],
+            ...subtitlesDistance[index],
+            ...bodyDistance[index],
+          ],
           debug: debugInfos[index],
         })),
         'distance'
@@ -369,11 +376,13 @@ ${doc.body}`
     ).slice(0, Math.max(count * 3, 1))
 
     const resultsByDistance = fragmentsByDistance
-      .map(({ distance, fragment, debug }) => {
+      .map(({ distance, closestWords, fragment, debug }) => {
         return {
           item: this.fragments[fragment.index],
           debug,
-          toBold: words,
+          toBold: sortedUniqBy(sortBy(closestWords, 'weight'), _ => _.word)
+            .slice(0, 3)
+            .map(_ => _.word),
           wmd: [],
           index: fragment.index,
           similarity: distance,

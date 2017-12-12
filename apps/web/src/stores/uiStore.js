@@ -5,6 +5,7 @@ import SHORTCUTS from './shortcuts'
 import Mousetrap from 'mousetrap'
 import { debounceIdle } from '~/helpers'
 import keycode from 'keycode'
+import * as Constants from '~/constants'
 
 export SHORTCUTS from './shortcuts'
 
@@ -265,7 +266,8 @@ export default class UIStore {
           const height = refs
             .map(ref => ref.clientHeight)
             .reduce((a, b) => a + b, 0)
-          this.height = height
+
+          this.height = Math.min(Constants.ORA_HEIGHT, height)
         })
       }
     )

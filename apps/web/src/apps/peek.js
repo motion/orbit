@@ -6,7 +6,7 @@ import { OS } from '~/helpers'
 import { Thing } from '~/app'
 import marked from 'marked'
 
-const isSamePeek = (a, b) => a && b && a.url === b.url
+const isSamePeek = (a, b) => a && b && a.id === b.id
 const SHOW_DELAY = 500
 const HIDE_DELAY = 200
 

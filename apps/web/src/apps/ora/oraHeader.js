@@ -43,7 +43,7 @@ export default class OraHeader extends React.Component {
 
   handleHide = e => {
     e.stopPropagation()
-    this.props.oraStore.hide()
+    this.props.oraStore.ui.hide()
   }
 
   preventPropagation = e => {
@@ -144,7 +144,7 @@ export default class OraHeader extends React.Component {
                     opacity={0.015}
                     onClick={e => {
                       e.stopPropagation()
-                      oraStore.hide()
+                      oraStore.ui.hide()
                     }}
                   />
                 }

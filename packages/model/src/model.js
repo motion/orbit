@@ -358,16 +358,22 @@ export default class Model {
     this.database = database
     const name = options.remoteOnly ? options.remote : this.title
 
-    this._collection = await database.collection({
-      name,
-      schema: this.compiledSchema,
-      statics: this.statics,
-      pouchSettings: options.pouchSettings,
-      migrationStrategies: this.migrations,
-      options: {
-        asyncMethods: this.asyncMethods,
-      },
-    })
+    try {
+      this._collection = await database.collection({
+        name,
+        schema: this.compiledSchema,
+        statics: this.statics,
+        pouchSettings: options.pouchSettings,
+        migrationStrategies: this.migrations,
+        options: {
+          asyncMethods: this.asyncMethods,
+        },
+      })
+    } catch (err) {
+      console.error(err)
+      console.log('TODO: delete data + retry')
+      return
+    }
 
     // sync PUSH
     const { shouldSyncPush } = this

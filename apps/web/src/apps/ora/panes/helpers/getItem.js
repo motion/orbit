@@ -105,8 +105,14 @@ export default function getItem(result, index) {
     clearTimeout(lastLeave)
     itemLastEnter = lastEnter = setTimeout(() => {
       const url = result.data && result.data.url
-      OS.send('peek', { url, offsetTop: currentNode.offsetTop, id: result.id })
-    }, 200)
+      const offsetTop =
+        currentNode.offsetTop +
+        document.querySelector('.header > .contents').clientHeight +
+        document.querySelector('.fade:last-child .pane .content').offsetTop -
+        document.querySelector('.fade:last-child .ReactVirtualized__Grid')
+          .scrollTop
+      OS.send('peek', { url, offsetTop, id: result.id })
+    }, 150)
   }
 
   function onMouseEnter(e) {

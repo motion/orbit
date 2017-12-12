@@ -12,6 +12,13 @@ class StackItemStore {
   constructor({ result, stack, parent }) {
     this.result = result
     this.id = this.result.id
+    if (typeof this.id === 'undefined') {
+      throw new Error(
+        `Expected an ID for stackItem, got ${
+          this.id
+        } from result ${JSON.stringify(result)}`
+      )
+    }
     this.stack = stack
     this.parent = parent
   }

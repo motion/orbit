@@ -172,7 +172,7 @@ ${doc.body}`
   nearestFragments = vec => {
     const distance = this.fragments.map((item, index) => {
       return {
-        title: item.title,
+        ...item,
         index,
         distance: cosineSimilarity(Math.random(), vec, this.centroids[index]),
       }
@@ -252,7 +252,6 @@ ${doc.body}`
           'weight'
         )
       ).filter(_ => !isNaN(_.weight))
-      console.log('most next is', mostNext)
     }
 
     const mostCooccur = reverse(
@@ -342,13 +341,6 @@ ${doc.body}`
     fragments.forEach((fragment, currentFragentIndex) => {
       const debugInfo = { nearest: [] }
       range(words.length).forEach(termIndex => {
-        // nearest index is the current loop
-        /*
-        if (debug) {
-          debugInfo.nearest.push(titlesDistance[currentFragentIndex][termIndex])
-        }
-        */
-
         addDistance(
           bodyDistance[currentFragentIndex][termIndex],
           currentFragentIndex
@@ -401,6 +393,7 @@ ${doc.body}`
     })
 
     const finalResults = noDuplicates.slice(0, count)
+
     return {
       results: finalResults,
       autocomplete: this.autocomplete(

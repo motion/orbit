@@ -19,12 +19,16 @@ export default content => {
     subtitle,
   })
 
+  // if they use **hello** as h2s, remove the asterisks
   const afterMarker = s =>
-    s
-      .split(' ')
-      .slice(1)
-      .join(' ')
-      .trim()
+    s[0] === '*'
+      ? s.replace(/\*/g, '')
+      : s
+          .split(' ')
+          .slice(1)
+          .join(' ')
+          .trim()
+
   const startsWithAny = (s, xs) => xs.filter(x => startsWith(s, x)).length > 0
 
   const reduced = content.split('\n').reduce(
@@ -45,9 +49,11 @@ export default content => {
           }
         }
 
+        const subtitle = afterMarker(line)
+
         return {
           ...status,
-          subtitle: afterMarker(line),
+          subtitle,
           fragments: [
             ...status.fragments,
             createFragment(status.title, status.subtitle, status.currentLines),

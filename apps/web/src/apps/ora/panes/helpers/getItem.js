@@ -140,13 +140,11 @@ export default function getItem(result, index) {
     glow: result.glow || result.selectable !== false,
     onMouseEnter: e => {
       clearTimeout(lastHover)
-      const url = result.data && result.data.url
-      if (url) {
-        const { offsetTop } = e.target.parentNode
-        itemLastHover = lastHover = setTimeout(() => {
-          OS.send('peek', { url, offsetTop, id: result.id })
-        }, 100)
-      }
+      const { offsetTop } = e.target.parentNode
+      itemLastHover = lastHover = setTimeout(() => {
+        const url = result.data && result.data.url
+        OS.send('peek', { url, offsetTop, id: result.id })
+      }, 100)
     },
     onMouseLeave: () => {
       clearTimeout(itemLastLeave)

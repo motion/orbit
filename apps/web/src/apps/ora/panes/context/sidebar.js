@@ -73,7 +73,7 @@ export default class ContextSidebar {
   get title() {
     if (!this.osContext) return
     return {
-      title: this.result.title,
+      title: this.result.title.trim().slice(0, 100),
       image: this.osContext.favicon,
     }
   }

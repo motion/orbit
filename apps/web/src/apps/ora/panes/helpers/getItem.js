@@ -92,11 +92,43 @@ function getSecondary(result) {
   return text
 }
 
-let lastHover
+let lastEnter
+let lastLeave
 
 export default function getItem(result, index) {
-  let itemLastHover
+  let itemLastEnter
   let itemLastLeave
+  let currentNode
+
+  function handleHover(e) {
+    clearTimeout(lastEnter)
+    clearTimeout(lastLeave)
+    itemLastEnter = lastEnter = setTimeout(() => {
+      const url = result.data && result.data.url
+      OS.send('peek', { url, offsetTop: currentNode.offsetTop, id: result.id })
+    }, 200)
+  }
+
+  function onMouseEnter(e) {
+    currentNode = e.target.parentNode
+    handleHover(e)
+  }
+
+  function onMouseMove(e) {
+    handleHover(e)
+  }
+
+  function onMouseLeave() {
+    clearTimeout(lastEnter)
+    clearTimeout(itemLastLeave)
+    itemLastLeave = setTimeout(() => {
+      if (itemLastEnter === lastEnter) {
+        OS.send('peek', null)
+        itemLastEnter = null
+      }
+    }, 50)
+  }
+
   return {
     key: `${index}${result.id}${result.title}${result.category}`,
     primary:
@@ -138,24 +170,9 @@ export default function getItem(result, index) {
     afterProps: result.afterProps,
     selectable: result.selectable,
     glow: result.glow || result.selectable !== false,
-    onMouseEnter: e => {
-      clearTimeout(lastHover)
-      const { offsetTop } = e.target.parentNode
-      itemLastHover = lastHover = setTimeout(() => {
-        const url = result.data && result.data.url
-        OS.send('peek', { url, offsetTop, id: result.id })
-      }, 100)
-    },
-    onMouseLeave: () => {
-      clearTimeout(itemLastLeave)
-      itemLastLeave = setTimeout(() => {
-        if (itemLastHover === lastHover) {
-          OS.send('peek', null)
-          itemLastHover = null
-        }
-      })
-      clearTimeout(lastHover)
-    },
+    onMouseEnter,
+    onMouseMove,
+    onMouseLeave,
     ...result.props,
   }
 }

@@ -129,6 +129,24 @@ class List extends React.PureComponent<Props, { selected: number }> {
 
   // willUpdate only runs when PureComponent has new props
   componentWillUpdate(nextProps: Props) {
+    const totalItems = this.getTotalItems(nextProps)
+
+    if (
+      this.totalItems !== totalItems ||
+      (typeof nextProps.itemsKey !== 'undefined' &&
+        nextProps.itemsKey !== this.props.itemsKey)
+    ) {
+      if (this.virtualListRef) {
+        this.setTimeout(() => {
+          console.log('UPDATE', nextProps)
+          this.measure()
+          this.virtualListRef.forceUpdateGrid()
+        })
+      }
+    }
+
+    this.totalItems = totalItems
+
     const { virtualized, updateChildren, selected } = nextProps
 
     if (typeof selected !== 'undefined') {
@@ -137,9 +155,6 @@ class List extends React.PureComponent<Props, { selected: number }> {
         this.setState({ selected })
       }
     }
-
-    const totalItems = this.getTotalItems(nextProps)
-    this.totalItems = totalItems
 
     if (
       updateChildren ||
@@ -161,11 +176,19 @@ class List extends React.PureComponent<Props, { selected: number }> {
     }
   }
 
-  forceUpdateGrid() {
-    return this.virtualListRef.forceUpdateGrid()
+  forceUpdateGrid = () => {
+    if (!this.virtualListRef) {
+      this.onRef.push(() => this.forceUpdateGrid())
+      return
+    }
+    this.virtualListRef.forceUpdateGrid()
+    this.virtualListRef.measureAllRows()
+    if (typeof this.lastScrolledToRow === 'number') {
+      this.scrollToRow(this.lastScrolledToRow)
+    }
   }
 
-  scrollToRow(index: number) {
+  scrollToRow = (index: number) => {
     if (!this.virtualListRef && this.props.virtualized) {
       this.onRef.push(() => this.scrollToRow(index))
       return
@@ -189,7 +212,7 @@ class List extends React.PureComponent<Props, { selected: number }> {
   measure = throttle(() => {
     if (this.virtualListRef) {
       this.virtualListRef.recomputeRowHeights(0)
-      this.setTimeout(() => this.scrollToRow(this.lastScrolledToRow || 0))
+      this.scrollToRow(this.lastScrolledToRow || 0)
     }
   }, 6)
 
@@ -465,6 +488,9 @@ class List extends React.PureComponent<Props, { selected: number }> {
       this.groupedIndex = groupedIndex
     }
     this.childrenVersion = Math.random()
+    if (virtualized) {
+      this.setTimeout(this.forceUpdateGrid)
+    }
   }
 
   setVirtualRef = ref => {

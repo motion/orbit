@@ -68,7 +68,6 @@ class PaneStore {
         }
         clearTimeout(willScrollTo)
         willScrollTo = this.setTimeout(() => {
-          console.log('make that shit scroll', this.props.index, index)
           this.listRef.scrollToRow(index)
         })
       },
@@ -104,17 +103,23 @@ export default class Pane {
     if (typeof stackItem.id === 'undefined') {
       return null
     }
-    const list = paneStore.items && (
-      <UI.List
-        key={stackItem.id}
-        hideScrollBar
-        itemsKey={paneStore.contentVersion}
-        getRef={paneStore.setList}
-        items={paneStore.items}
-        debug={{ index }}
-        {...listProps}
-      />
-    )
+    let list
+    if (paneStore.items) {
+      const itemsKey = `${index}${paneStore.contentVersion}${
+        paneStore.items.length
+      }`
+      console.log('list', index, itemsKey)
+      list = (
+        <UI.List
+          hideScrollBar
+          itemsKey={itemsKey}
+          getRef={paneStore.setList}
+          items={paneStore.items}
+          {...listProps}
+        />
+      )
+    }
+
     let actions
     let drawer
     let store

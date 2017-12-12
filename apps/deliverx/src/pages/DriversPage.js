@@ -155,6 +155,9 @@ export default class Driver {
       overflow: 'scroll',
       height: '100%',
     },
+    drivers: {
+      flex: 1,
+    },
     driver: {
       margin: [15, 0],
       padding: 15,
@@ -170,8 +173,9 @@ export default class Driver {
       opacity: 0.7,
     },
     profile: {
-      width: 650,
+      maxWidth: 650,
       marginLeft: 20,
+      flex: 1,
       justifyContent: 'space-between',
     },
     stats: {

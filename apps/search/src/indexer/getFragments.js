@@ -1,7 +1,7 @@
 import { startsWith } from 'lodash'
 
-const titleMarker = '#'
-const subtitleMarker = '##'
+const titleMarkers = ['#', ':title:']
+const subtitleMarkers = ['##', ':subtitle:', '**']
 /*
   given an item of content,
   it returns an array of links, which are individual pieces of content 
@@ -13,44 +13,65 @@ export default content => {
     content = content.replace(/\:title\:/g, '#')
     content = content.replace(/\:subtitle\:/g, '##')
   }
-  const createLink = (title, subtitle, lines) => ({
+  const createFragment = (title, subtitle, lines) => ({
     body: lines.join('\n'),
     title,
     subtitle,
   })
 
+  const afterMarker = s =>
+    s
+      .split(' ')
+      .slice(1)
+      .join(' ')
+      .trim()
+  const startsWithAny = (s, xs) => xs.filter(x => startsWith(s, x)).length > 0
+
   const reduced = content.split('\n').reduce(
     (status, line) => {
       line = line.trim()
-      // commit to links
-      if (startsWith(line, subtitleMarker)) {
+
+      // if line is empty, do nothing
+      if (line.length === 0) {
+        return status
+      }
+
+      // commit to fragments if we have any lines so far
+      if (startsWithAny(line, subtitleMarkers)) {
+        if (status.currentLines.length === 0) {
+          return {
+            ...status,
+            subtitle: afterMarker(line),
+          }
+        }
+
         return {
           ...status,
-          subtitle: line.split(subtitleMarker)[1].trim(),
-          links: [
-            ...status.links,
-            createLink(status.title, status.subtitle, status.currentLines),
+          subtitle: afterMarker(line),
+          fragments: [
+            ...status.fragments,
+            createFragment(status.title, status.subtitle, status.currentLines),
           ],
           currentLines: [],
         }
       }
 
       // ignore
-      if (startsWith(line, titleMarker)) {
-        return { ...status, title: line.split(titleMarker)[1].trim() }
+      if (startsWithAny(line, titleMarkers)) {
+        return { ...status, title: afterMarker(line) }
       }
 
       // add lines to currentLines
       return { ...status, currentLines: [...status.currentLines, line] }
     },
-    { title: '', subtitle: '', currentLines: [], links: [] }
+    { title: '', subtitle: '', currentLines: [], fragments: [] }
   )
 
-  // add last built up link to current list
-  const links = [
-    ...reduced.links,
-    createLink(reduced.title, reduced.subtitle, reduced.currentLines),
+  // add last built up fragment
+  const fragments = [
+    ...reduced.fragments,
+    createFragment(reduced.title, reduced.subtitle, reduced.currentLines),
   ]
 
-  return links
+  return fragments
 }

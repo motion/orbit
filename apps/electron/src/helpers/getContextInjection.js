@@ -38,10 +38,26 @@ export default function getContextInjection() {
     return ''
   }
 
-  const contentEditableValue = () =>
-    document.getSelection().toString() || document.getSelection().anchorNode
-      ? document.getSelection().anchorNode.textContent
-      : null
+  const contentEditableValue = () => {
+    let selection = document
+      .getSelection()
+      .toString()
+      .trim()
+    if (!selection) {
+      let anchorNode = document.getSelection().anchorNode
+      if (anchorNode) {
+        anchorNode =
+          anchorNode.querySelector('textarea') ||
+          anchorNode.querySelector('input') ||
+          anchorNode
+        if (anchorNode) {
+          // works with contentEditable + textarea/input
+          selection = anchorNode.textContent || anchorNode.value
+        }
+      }
+    }
+    return (selection || '').trim()
+  }
 
   const rules = [
     {

@@ -78,6 +78,14 @@ function getSecondary(result) {
   if (thing.updated) {
     text = getDate(result)
   }
+  if (result.subtitle) {
+    // origin url is in data.integration
+    if (text) {
+      text = `"${result.subtitle}" · ${text}`
+    } else {
+      text = result.subtitle
+    }
+  }
   if (location(thing)) {
     // origin url is in data.integration
     text = `${location(thing)} · ${text}`
@@ -145,7 +153,7 @@ export default function getItem(result, index) {
       size: 1.2,
       fontWeight: 500,
     },
-    secondary: result.subtitle || getSecondary(result),
+    secondary: getSecondary(result),
     children: getChildren(result),
     childrenProps: {
       alpha: Math.max(0.25, (9 - index) / 16),

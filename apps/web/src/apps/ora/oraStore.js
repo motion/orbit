@@ -28,9 +28,10 @@ export default class OraStore {
   get contextResults() {
     return this.search.results
       .slice(0, 6)
-      .map(({ highlightWords, document, snippet }) => ({
+      .map(({ subtitle, highlightWords, document, snippet }) => ({
         ...Thing.toResult(document),
         highlightWords,
+        subtitle,
         children: snippet,
         after: <After navigate={this.stack.navigate} thing={document} />,
       }))

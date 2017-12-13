@@ -67,6 +67,13 @@ if (TARGET) {
   console.log('target is', config.target)
 }
 
+if (IS_DEV) {
+  config.devServer = {
+    contentBase: Paths.appPublic,
+    port: 3002,
+  }
+}
+
 const webpackConfig = Object.assign(config, {
   watch,
 
@@ -76,11 +83,6 @@ const webpackConfig = Object.assign(config, {
       IS_DEV && require.resolve('webpack/hot/only-dev-server'),
       Paths.appEntry,
     ]),
-  },
-
-  devServer: IS_DEV && {
-    contentBase: Paths.appPublic,
-    port: 3002,
   },
 
   output: {

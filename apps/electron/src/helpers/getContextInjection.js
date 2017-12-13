@@ -1,4 +1,4 @@
-export default () => {
+export default function getContextInjection() {
   const first = (xs, test) => {
     for (const x of xs) {
       if (test(x)) {
@@ -39,18 +39,9 @@ export default () => {
   }
 
   const contentEditableValue = () =>
-    document.getSelection().toString()
-      ? document.getSelection().toString()
-      : document.getSelection().anchorNode
-        ? document.getSelection().anchorNode.textContent
-        : null
-
-  // for sites where it is common to reply to items
-  const contentEditableOr = fn => {
-    const val = contentEditableValue()
-
-    return val && val.length > 0 ? val : fn()
-  }
+    document.getSelection().toString() || document.getSelection().anchorNode
+      ? document.getSelection().anchorNode.textContent
+      : null
 
   const rules = [
     {
@@ -58,10 +49,8 @@ export default () => {
       regex: /.+zendesk.com.+\/tickets\/.+/,
       script: () => {
         return {
-          title: contentEditableOr(
-            () => document.querySelector('input[name=subject]').value
-          ),
-          selection: '',
+          title: document.querySelector('input[name=subject]').value,
+          selection: contentEditableValue(),
         }
       },
     },
@@ -71,7 +60,7 @@ export default () => {
       script: () => {
         return {
           title: document.querySelector('h2.hP').innerText,
-          selection: '',
+          selection: contentEditableValue(),
         }
       },
     },
@@ -89,8 +78,7 @@ export default () => {
 
   return JSON.stringify(
     Object.assign({}, vals, {
-      url,
-      crawlerInfo: document.__oraCrawlerAnswer,
+      url: url,
       favicon: getFavicon(),
     })
   )

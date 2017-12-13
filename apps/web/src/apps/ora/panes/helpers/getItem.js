@@ -108,11 +108,14 @@ export default function getItem(result, index) {
   let itemLastLeave
   let currentNode
 
-  function handleHover(e) {
+  function handleHover() {
     clearTimeout(lastEnter)
     clearTimeout(lastLeave)
     itemLastEnter = lastEnter = setTimeout(() => {
       const url = result.data && result.data.url
+      if (!currentNode) {
+        return
+      }
       const offsetTop =
         currentNode.offsetTop +
         document.querySelector('.header > .contents').clientHeight +

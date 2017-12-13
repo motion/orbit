@@ -16,7 +16,7 @@ const useWorker = window.location.href.indexOf('?noWorker')
 export default class OraStore {
   // stores
   crawler = new CrawlerStore()
-  stack = new StackStore([{ type: 'main' }])
+  stack = new StackStore([{ type: 'main', id: 0 }])
   ui = new UIStore({ stack: this.stack })
   pin = new PinStore()
   search = new SearchStore({ useWorker })
@@ -26,7 +26,6 @@ export default class OraStore {
   electronState = {}
 
   get contextResults() {
-    console.log('this.search.results', this.search.results)
     return this.search.results.slice(0, 6).map(({ document, snippet }) => ({
       ...Thing.toResult(document),
       children: snippet,

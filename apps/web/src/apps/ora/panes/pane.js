@@ -59,6 +59,7 @@ class PaneStore {
         stack.last.sidebarSelectedIndex,
         this.props.oraStore.ui.search,
         this.props.oraStore.ui.barFocused,
+        this.props.oraStore.ui.height,
         this.contentVersion,
       ],
       ([index]) => {
@@ -68,7 +69,7 @@ class PaneStore {
         clearTimeout(willScrollTo)
         willScrollTo = this.setTimeout(() => {
           this.listRef.scrollToRow(index)
-        }, 150)
+        })
       },
       true
     )
@@ -97,17 +98,27 @@ export default class Pane {
     stackItem,
     disableGlow,
     transparent,
+    index,
   }) {
-    const list = paneStore.items && (
-      <UI.List
-        key={stackItem && stackItem.id}
-        hideScrollBar
-        itemsKey={paneStore.contentVersion}
-        getRef={paneStore.setList}
-        items={paneStore.items}
-        {...listProps}
-      />
-    )
+    if (typeof stackItem.id === 'undefined') {
+      return null
+    }
+    let list
+    if (paneStore.items) {
+      const itemsKey = `${index}${paneStore.contentVersion}${
+        paneStore.items.length
+      }`
+      list = (
+        <UI.List
+          key={index}
+          hideScrollBar
+          itemsKey={itemsKey}
+          getRef={paneStore.setList}
+          items={paneStore.items}
+          {...listProps}
+        />
+      )
+    }
 
     let actions
     let drawer

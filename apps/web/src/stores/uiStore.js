@@ -243,8 +243,9 @@ export default class UIStore {
       () => [
         this.stack.last.results || [],
         this.stack.last.store && this.stack.last.store.minHeight,
+        this.stack.last.store && this.stack.last.store.maxHeight,
       ],
-      ([results, minHeight]) => {
+      ([results, minHeight, maxHeight]) => {
         // hacky ass setup for now
         this.setTimeout(() => {
           const refs = [
@@ -267,7 +268,10 @@ export default class UIStore {
             .map(ref => ref.clientHeight)
             .reduce((a, b) => a + b, 0)
 
-          this.height = Math.min(Constants.ORA_HEIGHT, height)
+          this.height = Math.max(
+            minHeight || 0,
+            Math.min(maxHeight || Constants.ORA_HEIGHT, height)
+          )
         })
       }
     )

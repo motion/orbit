@@ -2,24 +2,57 @@
 
 DeliverX
 
-1. Universal smart search results
-2. Incoming email w context
-3. Copy/look at result to answer
-4. Add DeliverX knowledgebase
-5. Maybe pin the map intranet page
-6. Intercom/zendesk chat w customer 1
-7. Answer using peek map/knowledgebase combo
-8. One part is document on policy for refunds/deliveries
-9. Looking up specific driver on map to send back to c1
-10. mind blown
+1. search: three terms that show off indirect results + integrations
+
+* "education" => GDocs
+* "samsung help button bug" => "samsung cant hit help button" issue
+* "restuarant list" => "vendor list" intranet
+
+2. Incoming email
+
+* "Thoughts on adding fast food?"
+* context shows:
+  * McDonalds discussion slack
+  * Hit copy link to paste into email
+* Reply with link to discussion
+* [mention: If someone adds a fast food section later we'd see it in context ]
+
+3. Works w your data:
+
+* [I'm a customer support manager so I want to be sure to add our knowedlgebase]
+* Crawl DeliverX knowledgebase
+* [But I also want to add in this map for my area, the SF municipal construction
+  map]
+* Pin SF municipal construction map
+
+4. Focus works while you chat
+
+* a. Customer sends a message on Zendesk
+* b. They ask about their delivery
+* c. We see automatically pinned their section in intranet
+* d. Pull that section out of peek window to reference later
+* e. "The driver is late"
+* f. We see the driver route via window in (c)
+* g. Hover to construction map in (3c) see theres a lot in his area
+* h. "My apologies it looks like he's in an area with bad traffic, I'll contact"
+* i. "We'll take care of this for you to your satifsaction"
+* j. customer is nice but mildly annoyed, mentions "20 minutes late"
+* k. Entry comes into context "Late delivery customer policy"
+* l. Hover over entry, it highlights the table for 15-20m late, shows "offer
+  credit $15"
+* ...
 
 # now
 
+* flicker/movement on search
+* list: fix scrolldown on pane height adjust bug
+* peek: better behavior based on mouse activity
+* peek: hide on scroll
+* peek: adjust for scroll
+* peek: tearaway
 * crawler dont use node readability
 * more forgiving markdown parser
-* height measurement should be based on actual height not guess
 * drive sync pane / drive sync
-* settings pane: crawler section
 * settings pane: sync status improvements
 * slack: turn off room it should disable/delete attachments
 * have a poll that checks crawler status so it always shows a status drawer and

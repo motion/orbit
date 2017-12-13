@@ -72,7 +72,7 @@ class Tab {
         />
         <inner
           css={{
-            padding: [6, 12],
+            padding: [7, 12],
             position: 'relative',
             width: 'auto',
             flexFlow: 'row',

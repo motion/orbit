@@ -77,7 +77,7 @@ export default class OraActionBar {
     },
     actionbar: {
       padding: [0, 7],
-      // background: Constants.ORA_BG_MAIN_OPAQUE,
+      background: Constants.ORA_BG_MAIN_OPAQUE,
       position: 'relative',
       zIndex: 10001,
       flexFlow: 'row',

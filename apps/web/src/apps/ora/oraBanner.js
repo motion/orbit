@@ -20,12 +20,12 @@ const BANNER_COLORS = {
   store: OraBannerStore,
 })
 export default class OraBanner {
-  render({ oraStore, store }) {
+  render({ store }) {
     const isPinning = !!store.banner
     return (
       <title $pinning={store.banner && store.banner.type}>
         <titleText>
-          <UI.Text ellipse size={1} alpha={isPinning ? 0.7 : 0.3}>
+          <UI.Text ellipse size={1.1} alpha={isPinning ? 0.7 : 0.5}>
             {(store.banner && store.banner.message) ||
               'Search...' ||
               // oraStore.stack.last.result.id ||

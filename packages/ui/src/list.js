@@ -43,6 +43,11 @@ export type Props = {
   updateChildren?: boolean,
   captureClickEvents?: boolean,
   separatorProps?: Object,
+  // row to scroll to after render
+  // only tries if different than last scrolled to row
+  scrollToRow?: number,
+  // passes react-virtualized onScroll to here
+  onScroll?: Function,
 }
 
 type VirtualItemProps = {
@@ -67,6 +72,7 @@ class List extends React.PureComponent<Props, { selected: number }> {
   }
 
   // for tracking list resizing for virtual lists
+  onRef = []
   children: ?Array<any>
   totalItems = null
   itemRefs: Array<HTMLElement> = []
@@ -102,9 +108,52 @@ class List extends React.PureComponent<Props, { selected: number }> {
     })
   }
 
+  componentDidMount() {
+    if (this.props.virtualized && this.props.virtualized.measure) {
+      this.measure()
+    }
+
+    if (typeof this.props.scrollToRow === 'number') {
+      this.scrollToRow(this.props.scrollToRow)
+    }
+  }
+
+  componentDidUpdate() {
+    if (
+      typeof this.props.scrollToRow === 'number' &&
+      this.props.scrollToRow !== this.lastScrolledToRow
+    ) {
+      this.scrollToRow(this.props.scrollToRow)
+    }
+  }
+
   // willUpdate only runs when PureComponent has new props
   componentWillUpdate(nextProps: Props) {
-    const { virtualized, updateChildren, selected } = nextProps
+    const totalItems = this.getTotalItems(nextProps)
+    const hasNeverSetChildren = !this.childrenVersion
+    const hasNewSelected =
+      typeof nextProps.selected === 'number' && this.state.selected !== selected
+    const hasNewItems = this.totalItems !== totalItems
+    const hasNewItemsKey =
+      typeof nextProps.itemsKey !== 'undefined' &&
+      nextProps.itemsKey !== this.props.itemsKey
+
+    this.totalItems = totalItems
+
+    const { virtualized, selected } = nextProps
+
+    const shouldUpdateChildren =
+      hasNeverSetChildren ||
+      hasNewSelected ||
+      !virtualized ||
+      nextProps.updateChildren ||
+      hasNewItems ||
+      hasNewItemsKey
+
+    if (shouldUpdateChildren) {
+      this.props = nextProps
+      this.updateChildren()
+    }
 
     if (typeof selected !== 'undefined') {
       this.lastDidReceivePropsDate = Date.now()
@@ -113,52 +162,30 @@ class List extends React.PureComponent<Props, { selected: number }> {
       }
     }
 
-    const totalItems = this.getTotalItems(nextProps)
-    const hasNewItems =
-      totalItems !== this.totalItems ||
-      this.props.itemsKey !== nextProps.itemsKey
-
-    if (hasNewItems) {
-      this.totalItems = totalItems
-      // resize to fit
-      const { parentHeight } = this.props
-      if (
-        parentHeight &&
-        nextProps.parentHeight &&
-        (nextProps.parentSize.height !== parentHeight.height ||
-          nextProps.parentHeight.width !== parentHeight.width)
-      ) {
-        nextProps.parentSize.measure()
-        this.measure()
-      }
-    }
-
-    if (
-      updateChildren ||
-      !virtualized ||
-      (typeof selected === 'number' && this.state.selected !== selected) ||
-      hasNewItems ||
-      !this.childrenVersion
-    ) {
-      this.props = nextProps
-      this.updateChildren()
-    }
-
     if (
       nextProps.virtualized &&
       nextProps.virtualized.measure &&
-      !(this.props.virtualized && this.props.virtualized.measure)
+      ((this.props.virtualized && !this.props.virtualized.measure) ||
+        !this.props.virtualized)
     ) {
       this.measure()
     }
   }
 
-  forceUpdateGrid() {
-    return this.virtualListRef.forceUpdateGrid()
+  forceUpdateGrid = () => {
+    if (!this.virtualListRef) {
+      this.onRef.push(() => this.forceUpdateGrid())
+      return
+    }
+    // seems to work without this step
+    // this.virtualListRef.forceUpdateGrid()
+    this.virtualListRef.recomputeRowHeights(0)
+    this.scrollToRow(this.lastScrolledToRow)
   }
 
   scrollToRow = (index: number) => {
     if (!this.virtualListRef) {
+      this.onRef.push(() => this.scrollToRow(index))
       return
     }
     let row = index
@@ -166,7 +193,7 @@ class List extends React.PureComponent<Props, { selected: number }> {
       row = index === 0 ? 0 : this.realIndex[index] || index + this.totalGroups
     }
     this.virtualListRef.scrollToRow(row)
-    this.lastScrolledToRow = row
+    this.lastScrolledToRow = index
   }
 
   focus() {
@@ -456,10 +483,19 @@ class List extends React.PureComponent<Props, { selected: number }> {
       this.groupedIndex = groupedIndex
     }
     this.childrenVersion = Math.random()
+    if (virtualized) {
+      this.setTimeout(this.forceUpdateGrid)
+    }
   }
 
   setVirtualRef = ref => {
-    this.virtualListRef = ref
+    if (ref) {
+      this.virtualListRef = ref
+      if (this.onRef.length) {
+        this.onRef.forEach(x => x())
+        this.onRef = []
+      }
+    }
   }
 
   render() {
@@ -475,6 +511,7 @@ class List extends React.PureComponent<Props, { selected: number }> {
       attach,
       horizontal,
       hideScrollBar,
+      onScroll,
     } = this.props
     if (virtualized && !parentSize) {
       return null
@@ -514,6 +551,7 @@ class List extends React.PureComponent<Props, { selected: number }> {
           rowCount={totalItems + totalGroups}
           rowRenderer={this.rowRenderer}
           rowHeight={this.cache.rowHeight}
+          onScroll={onScroll}
           {...virtualized}
         />
         {!virtualized && children}

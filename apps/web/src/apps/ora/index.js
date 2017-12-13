@@ -8,6 +8,7 @@ import OraDrawer from './oraDrawer'
 import OraActionBar from './oraActionBar'
 import OraBlur from './oraBlur'
 import * as Constants from '~/constants'
+import { OS } from '~/helpers'
 
 const listProps = {
   itemProps: {
@@ -30,6 +31,10 @@ const listProps = {
     childrenEllipse: 2,
   },
   groupBy: 'category',
+  onScroll: () => {
+    // TODO clear all popovers
+    OS.send('peek', null)
+  },
 }
 
 @view

@@ -7,11 +7,15 @@ import { ORA_WIDTH } from '~/constants'
 import getItem from './helpers/getItem'
 import { OS } from '~/helpers'
 
+// passes through all props to <PaneView />
 @view({
   sidebar: class SidebarStore {
     childStore = null
     get results() {
       return this.childStore.results
+    }
+    willMount() {
+      this.setStore(this.props.sidebarStore)
     }
     setStore(childStore) {
       if (childStore.prototype) {
@@ -28,9 +32,6 @@ import { OS } from '~/helpers'
   },
 })
 class SidebarContainer {
-  componentDidMount() {
-    this.props.sidebar.setStore(this.props.sidebarStore)
-  }
   render(props) {
     return <PaneView {...props} />
   }
@@ -145,8 +146,9 @@ export default class Sidebar {
               currentIndex={currentIndex}
             >
               <SidebarContainer
+                index={index}
                 oraStore={oraStore}
-                isActive={index === currentIndex}
+                isActive={index === stackItems.length - 1}
                 width={width}
                 stack={stack}
                 stackItem={stackItem}
@@ -158,14 +160,18 @@ export default class Sidebar {
                   getItem,
                   width,
                   highlight: i => i === stackItem.selectedIndex,
+                  scrollToRow: stackItem.selectedIndex,
                   onSelect(item) {
-                    console.log('clear peek')
                     OS.send('peek', null)
                     if (item.selectable === false) {
                       return false
                     }
                     if (item.onClick) {
                       return item.onClick()
+                    }
+                    if (item.data && item.data.url) {
+                      OS.send('open-browser', item.data.url)
+                      return
                     }
                     stackItem.onSelect(item, index)
                   },

@@ -11,6 +11,7 @@ import * as Constants from '~/constants'
 import { OS } from '~/helpers'
 
 const listProps = {
+  virtualized: true,
   itemProps: {
     size: 1.05,
     padding: [8, 12],
@@ -46,12 +47,8 @@ class OraMainContent {
           width={Constants.ORA_WIDTH}
           store={oraStore}
           oraStore={oraStore}
-          listProps={{
-            ...listProps,
-            virtualized: {
-              measure: oraStore.ui.height !== oraStore.ui.lastHeight,
-            },
-          }}
+          shouldMeasure={() => oraStore.ui.height !== oraStore.ui.lastHeight}
+          listProps={listProps}
         />
       </content>
     )

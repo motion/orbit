@@ -19,6 +19,8 @@ const Logo = props => (
   />
 )
 
+const bgColor = Constants.dark2
+
 const Circles = ({ rings, ringSize, ...props }) => {
   const size = rings * ringSize
   return (
@@ -40,19 +42,19 @@ const Circles = ({ rings, ringSize, ...props }) => {
             css={{
               background: [
                 '#f2f2f2',
-                '#fff',
+                bgColor,
                 '#f2f2f2',
-                '#fff',
+                bgColor,
                 '#f2f2f2',
-                '#fff',
+                bgColor,
                 '#f2f2f2',
-                '#fff',
+                bgColor,
                 'yellow',
-                '#fff',
+                bgColor,
                 '#f2f2f2',
-                '#fff',
+                bgColor,
                 '#f2f2f2',
-                '#fff',
+                bgColor,
                 '#f2f2f2',
               ][index],
               width: circleSize,
@@ -111,7 +113,7 @@ export default class SectionExamples {
             css={{ position: 'absolute', top: 90, left: -185, zIndex: 1 }}
           />
 
-          <View.Section>
+          <View.Section dark2>
             <View.SectionContent fullscreen>
               <View.Slant dark inverse />
 
@@ -130,6 +132,7 @@ export default class SectionExamples {
                   fontWeight={100}
                   padding={[0, 80, 30, 0]}
                   color={[255, 255, 255, 0.5]}
+                  selectable
                 >
                   Insight as you talk to{' '}
                   <span css={{ fontWeight: 600, color: '#fff' }}>

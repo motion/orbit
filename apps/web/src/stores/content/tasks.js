@@ -1,5 +1,6 @@
 export default [
   `Surge pricing cap at 2x`,
+  `Samsung can't hit help button issue`,
   `Allow driver to constrain map region they deliver to`,
   `Improve Mapbox initial loading performance`,
   `Automatically load next delivery after food is delivered enhancement`,

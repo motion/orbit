@@ -108,7 +108,7 @@ ${doc.body}`
       winkNlp.string.lowerCase,
       winkNlp.string.removeExtraSpaces,
       winkNlp.string.tokenize0,
-      winkNlp.tokens.propagateNegations,
+      // winkNlp.tokens.propagateNegations,
       winkNlp.tokens.removeWords,
       winkNlp.tokens.stem,
     ])
@@ -221,40 +221,6 @@ ${doc.body}`
       })
     })
 
-    if (false) {
-      const next = {}
-      queryWords.map(word => {
-        fragments.map(fragment => {
-          const text = this.fullText(fragment)
-
-          const indexes = allIndexesString(text, word)
-          indexes.forEach(index => {
-            const nextWord = text.slice(index, index + 50).split(' ')[1]
-            if (!nextWord) return
-            if (capitalize(nextWord) === nextWord) {
-              if (!next[nextWord]) {
-                next[nextWord] = new Set()
-              }
-              next[nextWord].add(fragment.index)
-            }
-          })
-        })
-      })
-      const mostNext = reverse(
-        sortBy(
-          Object.keys(next)
-            .filter(
-              word => !includes(queryWords, word) // && Array.from(next[word]).length > 2
-            )
-            .map(word => ({
-              weight: Array.from(next[word]).length, // * tot(word),
-              word,
-            })),
-          'weight'
-        )
-      ).filter(_ => !isNaN(_.weight))
-    }
-
     const mostCooccur = reverse(
       sortBy(
         Object.keys(cooccur)
@@ -313,8 +279,10 @@ ${doc.body}`
     }
 
     const titlesDistance = await runWmd(fragments.map(_ => _.title))
-    const subtitlesDistance = await runWmd(fragments.map(_ => _.subtitle))
+    const subtitlesDistance = await runWmd(fragments.map(_ => _.subtitle || ''))
     const bodyDistance = await runWmd(fragments.map(_ => _.body))
+
+    console.log('sub distance', subtitlesDistance)
 
     // we bailed somewhere and should abandon ship
     /*if (includes([titlesDistance, subtitlesDistance, bodyDistance], false)) {
@@ -326,12 +294,12 @@ ${doc.body}`
       // weight is how close the word is to the query word
       const wordWeight = Math.pow(this.wordWeight(fragments[index], word), 0.8)
 
-      if (weight === Infinity) return 0
-      if (wordWeight === false) return 0
+      if (weight === Infinity || wordWeight === false) {
+        return 0
+      }
 
-      const val =
-        (1 - weight) * Math.pow(wordWeight, 0.5) + (results[index] || 0)
-      // (wordWeight * Math.pow(1 - weight, 2) || 0) + (results[index] || 0)
+      const val = (1 - weight) * Math.pow(wordWeight, 0.5) + results[index]
+
       results[index] = val
       return val
     }
@@ -341,20 +309,22 @@ ${doc.body}`
     const debugInfos = []
     fragments.forEach((fragment, currentFragentIndex) => {
       const debugInfo = { nearest: [] }
-      range(words.length).forEach(termIndex => {
-        addDistance(
-          bodyDistance[currentFragentIndex][termIndex],
-          currentFragentIndex
-        )
+      results[currentFragentIndex] = 0
 
-        addDistance(
-          subtitlesDistance[currentFragentIndex][termIndex],
-          currentFragentIndex
-        )
-        addDistance(
-          titlesDistance[currentFragentIndex][termIndex],
-          currentFragentIndex
-        )
+      range(words.length).forEach(termIndex => {
+        const titleTerm = titlesDistance[currentFragentIndex][termIndex]
+        const subtitleTerm = subtitlesDistance[currentFragentIndex][termIndex]
+        const bodyTerm = bodyDistance[currentFragentIndex][termIndex]
+        const terms = [titleTerm, subtitleTerm, bodyTerm]
+        // if any of these pieces are missing a field, give it a 30% boost
+
+        terms.forEach(term => {
+          if (term.weight === Infinity) {
+            results[currentFragentIndex] *= 1.3
+          } else {
+            addDistance(term, currentFragentIndex)
+          }
+        })
       })
       debugInfos.push(debugInfo)
     })

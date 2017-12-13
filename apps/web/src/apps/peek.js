@@ -31,7 +31,9 @@ class WebView {
     curPeek: ?Peek = null
     nextPeek: ?Peek = null
     isHovered = false
+    isPinned = false
     pageLoaded = false
+    tab = 'readability'
 
     @watch thing = () => this.peek && Thing.get(this.peek.id)
 
@@ -49,7 +51,7 @@ class WebView {
       //   return null
       // }
       // during hover its null so show it cached
-      if (this.isHovered) {
+      if (this.isHovered || this.isPinned) {
         return this.lastPeek
       }
       // current
@@ -61,6 +63,10 @@ class WebView {
 
       let peekTimeout
       this.on(OS, 'peek-to', (event, peek: ?Peek) => {
+        if (this.isPinned) {
+          console.log('ignore because pinned')
+          return
+        }
         console.log('peek-to', peek, this.lastPeek)
         if (isSamePeek(this.lastPeek, peek)) {
           return
@@ -135,6 +141,14 @@ class WebView {
         clearTimeout(offTimeoutLoad)
       }
     }
+
+    toggleWebview = () => {
+      if (this.tab === 'webview') {
+        this.tab = 'readability'
+      } else {
+        this.tab = 'webview'
+      }
+    }
   },
 })
 export default class PeekPage {
@@ -161,36 +175,61 @@ export default class PeekPage {
               right: 20 - arrowSize,
             }}
           />
-          <content $$draggable>
-            <thingView if={store.thing} css={{ padding: 20, flex: 1 }}>
-              <UI.Theme name="dark">
-                <UI.Title selectable size={2} fontWeight={600}>
-                  {store.thing.title}
-                </UI.Title>
-                <UI.Text selectable size={1.2}>
-                  <div
-                    className="html-content"
-                    $$flex
-                    dangerouslySetInnerHTML={{
-                      __html: marked(store.thing.body),
-                    }}
+          <UI.Theme name="dark">
+            <content $$draggable if={store.thing}>
+              <header>
+                <title>
+                  <UI.Title selectable size={1.5} fontWeight={600}>
+                    {store.thing.title}
+                  </UI.Title>
+                </title>
+                <UI.Row
+                  $controls
+                  itemProps={{ circular: true, sizePadding: 1.5 }}
+                >
+                  <UI.Button
+                    if={peekUrl}
+                    icon="globe"
+                    onClick={store.toggleWebview}
+                    highlight={store.tab === 'webview'}
                   />
-                </UI.Text>
-              </UI.Theme>
-            </thingView>
-            <WebView
-              if={peekUrl}
-              $contentLoading={!store.pageLoaded}
-              $webview
-              $visible={store.pageLoaded}
-              key={peekUrl}
-              src={peekUrl}
-              getRef={store.handlePageRef}
-            />
-            <loading if={!store.pageLoaded}>
-              <UI.Text>Loading</UI.Text>
-            </loading>
-          </content>
+                  <UI.Button
+                    icon="pin"
+                    onClick={store.ref('isPinned').toggle}
+                    highlight={store.isPinned}
+                  />
+                </UI.Row>
+              </header>
+              <tabs>
+                <tab $visible={store.tab === 'readability'}>
+                  <readability>
+                    <UI.Text selectable size={1.2}>
+                      <div
+                        className="html-content"
+                        $$flex
+                        dangerouslySetInnerHTML={{
+                          __html: marked(store.thing.body),
+                        }}
+                      />
+                    </UI.Text>
+                  </readability>
+                </tab>
+                <tab $visible={store.pageLoaded && store.tab === 'webview'}>
+                  <loading if={!store.pageLoaded}>
+                    <UI.Text>Loading</UI.Text>
+                  </loading>
+                  <WebView
+                    if={peekUrl}
+                    $contentLoading={!store.pageLoaded}
+                    $webview
+                    key={peekUrl}
+                    src={peekUrl}
+                    getRef={store.handlePageRef}
+                  />
+                </tab>
+              </tabs>
+            </content>
+          </UI.Theme>
         </peek>
       </UI.Theme>
     )
@@ -217,6 +256,26 @@ export default class PeekPage {
           : ((lastPeek && lastPeek.offsetTop) || 10) - 10,
       },
     }),
+    header: {
+      flexFlow: 'row',
+      alignItems: 'center',
+      padding: 20,
+    },
+    title: {
+      flex: 1,
+    },
+    tab: {
+      flex: 1,
+      opacity: 0,
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      bottom: 0,
+      right: 0,
+    },
+    readability: {
+      padding: 20,
+    },
     content: {
       flex: 1,
       background,
@@ -224,8 +283,12 @@ export default class PeekPage {
       opacity: 1,
       transition: 'background ease-in 200ms',
       boxShadow: [[0, 0, 20, [0, 0, 0, 0.2]]],
+    },
+    tabs: {
+      flex: 1,
       overflowX: 'hidden',
       overflowY: 'scroll',
+      position: 'relative',
     },
     contentLoading: {
       opacity: 0.3,
@@ -233,7 +296,6 @@ export default class PeekPage {
     webview: {
       height: '100%',
       width: '100%',
-      opacity: 0,
     },
     visible: {
       opacity: 1,

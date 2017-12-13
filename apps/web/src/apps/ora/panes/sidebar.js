@@ -162,13 +162,16 @@ export default class Sidebar {
                   highlight: i => i === stackItem.selectedIndex,
                   scrollToRow: stackItem.selectedIndex,
                   onSelect(item) {
-                    console.log('clear peek')
                     OS.send('peek', null)
                     if (item.selectable === false) {
                       return false
                     }
                     if (item.onClick) {
                       return item.onClick()
+                    }
+                    if (item.data && item.data.url) {
+                      OS.send('open-browser', item.data.url)
+                      return
                     }
                     stackItem.onSelect(item, index)
                   },

@@ -8,7 +8,7 @@ import type { Props as ItemProps } from './listItem'
 import Separator from './separator'
 import { isArrayLike } from 'mobx'
 import { CellMeasurer, CellMeasurerCache } from 'react-virtualized'
-import { throttle } from 'lodash'
+import { throttle, debounce } from 'lodash'
 
 const idFn = _ => _
 const SCROLL_BAR_WIDTH = 16
@@ -125,6 +125,12 @@ class List extends React.PureComponent<Props, { selected: number }> {
     ) {
       this.scrollToRow(this.props.scrollToRow)
     }
+
+    // if we changed children, scroll to row again
+    if (this.didUpdateChildren && typeof this.lastScrolledToRow === 'number') {
+      this.scrollToRow(this.lastScrolledToRow)
+      this.didUpdateChildren = false
+    }
   }
 
   // willUpdate only runs when PureComponent has new props
@@ -185,7 +191,7 @@ class List extends React.PureComponent<Props, { selected: number }> {
   }
 
   // sitrep
-  scrollToRow = (index: number) => {
+  scrollToRow = debounce((index: number) => {
     if (!this.virtualListRef) {
       this.onRef.push(() => this.scrollToRow(index))
       return
@@ -196,7 +202,7 @@ class List extends React.PureComponent<Props, { selected: number }> {
     }
     this.virtualListRef.scrollToRow(row)
     this.lastScrolledToRow = index
-  }
+  }, 8)
 
   focus() {
     if (!this.virtualListRef) {
@@ -479,6 +485,7 @@ class List extends React.PureComponent<Props, { selected: number }> {
       fixedWidth: true,
     })
 
+    this.didUpdateChildren = true
     this.children = children
     this.totalGroups = totalGroups
     if (totalGroups) {

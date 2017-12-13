@@ -9,6 +9,7 @@ import SearchStore from '~/stores/searchStore'
 import { CurrentUser } from '~/app'
 import debug from 'debug'
 import After from '~/views/after'
+import { debounce } from 'lodash'
 
 const log = _ => _ || debug('ora')
 const useWorker = window.location.href.indexOf('?noWorker')
@@ -52,19 +53,22 @@ export default class OraStore {
     this._listenForElectronState()
     this._listenForKeyEvents()
     this._watchContext()
-    this.watch(() => {
+
+    this.watch(function setDocuments() {
       this.search.setDocuments(this.things || [])
-    })
-    this.watch(() => {
-      this.electronState
-      if (this.ui.search.length > 0) {
+    }, 16)
+
+    this.watch(function setSearchQuery() {
+      if (this.osContext) {
+        if (!this.ui.barFocused && this.osContext.title) {
+          this.search.setQuery(this.osContext.title)
+          return
+        }
+      } else {
         this.search.setQuery(this.ui.search)
       }
-
-      if (this.electronState.context && this.electronState.context.title) {
-        this.search.setQuery(this.electronState.context.title)
-      }
     })
+
     OS.send('start-ora')
   }
 

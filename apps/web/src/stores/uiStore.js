@@ -6,6 +6,7 @@ import Mousetrap from 'mousetrap'
 import { debounceIdle } from '~/helpers'
 import keycode from 'keycode'
 import * as Constants from '~/constants'
+import * as _ from 'lodash'
 
 export SHORTCUTS from './shortcuts'
 
@@ -241,18 +242,15 @@ export default class UIStore {
     this.react(
       () => [
         this.stack.last.results.map(r => r.id),
-        this.stack.last.store && !this.stack.last.store.finishedLoading,
+        this.stack.last.store && this.stack.last.store.finishedLoading,
       ],
       this.calcHeight,
       true
     )
   }
 
-  calcHeight = () => {
-    if (
-      this.stack.last.store &&
-      this.stack.last.store.finishedLoading === false
-    ) {
+  calcHeight = _.debounce(([_, finishedLoading]) => {
+    if (finishedLoading === false) {
       return
     }
     // hacky ass setup for now
@@ -275,7 +273,8 @@ export default class UIStore {
 
     const newHeight = Math.max(150, Math.min(Constants.ORA_HEIGHT, height))
     if (this.height !== newHeight) {
+      console.log('set to', newHeight)
       this.height = newHeight
     }
-  }
+  }, 32)
 }

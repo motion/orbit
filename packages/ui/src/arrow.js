@@ -85,10 +85,7 @@ export default class Arrow extends React.Component<> {
 
   static theme = ({ size, color, boxShadow, opacity, background }, theme) => ({
     arrowInner: {
-      background:
-        color === true
-          ? theme.base.background
-          : background || theme.base.background,
+      background: background || theme.base.background,
       boxShadow,
       opacity,
     },

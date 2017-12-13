@@ -46,8 +46,11 @@ export default () => {
         : null
 
   // for sites where it is common to reply to items
-  const contentEditableOr = fn =>
-    contentEditableValue().length ? contentEditableValue() : fn()
+  const contentEditableOr = fn => {
+    const val = contentEditableValue()
+
+    return val && val.length > 0 ? val : fn()
+  }
 
   const rules = [
     {
@@ -67,9 +70,7 @@ export default () => {
       regex: /.+mail.google.com.+inbox\/.+/,
       script: () => {
         return {
-          title: contentEditableOr(
-            () => document.querySelector('h2.hP').innerText
-          ),
+          title: document.querySelector('h2.hP').innerText,
           selection: '',
         }
       },

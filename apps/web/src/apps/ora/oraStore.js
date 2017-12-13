@@ -56,7 +56,14 @@ export default class OraStore {
       this.search.setDocuments(this.things || [])
     })
     this.watch(() => {
-      this.search.setQuery(this.ui.search)
+      this.electronState
+      if (this.ui.search.length > 0) {
+        this.search.setQuery(this.ui.search)
+      }
+
+      if (this.electronState.context && this.electronState.context.title) {
+        this.search.setQuery(this.electronState.context.title)
+      }
     })
     OS.send('start-ora')
   }

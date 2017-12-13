@@ -28,7 +28,7 @@ export default class Fade {
         transform: {
           x: (index - currentIndex) * width / 10,
         },
-        transition: ['opacity ease-in 250ms', 'transform ease-in 250ms'],
+        transition: ['opacity ease-in 100ms', 'transform ease-in 100ms'],
       },
     }
   }

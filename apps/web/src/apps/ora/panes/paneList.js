@@ -24,6 +24,10 @@ export default class PaneList {
       paneStore.items.length
     }`
     const { virtualized, ...restListProps } = listProps
+    const finalVirtualized = virtualized && {
+      measure: shouldMeasure && shouldMeasure(),
+      ...(virtualized === true ? {} : virtualized),
+    }
     return (
       <UI.List
         key={index}
@@ -31,12 +35,8 @@ export default class PaneList {
         itemsKey={itemsKey}
         getRef={paneStore.setList}
         items={paneStore.items}
-        virtualized={
-          virtualized && {
-            measure: shouldMeasure && shouldMeasure(),
-            ...(virtualized === true ? {} : virtualized),
-          }
-        }
+        virtualized={finalVirtualized}
+        parentSize
         {...restListProps}
       />
     )

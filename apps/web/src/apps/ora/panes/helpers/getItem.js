@@ -129,8 +129,10 @@ export default function getItem(result, index) {
         currentNode.offsetTop +
         document.querySelector('.header > .contents').clientHeight +
         document.querySelector('.fade:last-child .pane .content').offsetTop -
-        document.querySelector('.fade:last-child .ReactVirtualized__Grid')
-          .scrollTop
+        (
+          document.querySelector('.fade:last-child .ReactVirtualized__Grid') ||
+          document.querySelector('.fade:last-child .list')
+        ).scrollTop
 
       const nextPeek = { url, offsetTop, id: result.id }
 

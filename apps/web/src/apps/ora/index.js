@@ -11,7 +11,7 @@ import * as Constants from '~/constants'
 import { OS } from '~/helpers'
 
 const listProps = {
-  virtualized: true,
+  virtualized: false,
   itemProps: {
     size: 1.05,
     padding: [8, 12],

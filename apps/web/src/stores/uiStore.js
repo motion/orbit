@@ -262,7 +262,7 @@ export default class UIStore {
       // body
       document.querySelector(
         '.fade:last-child .ReactVirtualized__Grid__innerScrollContainer'
-      ),
+      ) || document.querySelector('.fade:last-child .list .listinner'),
     ].filter(Boolean)
 
     const hasActions = this.stack.last.store && this.stack.last.store.actions

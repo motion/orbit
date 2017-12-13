@@ -57,7 +57,7 @@ type VirtualItemProps = {
   parent: any,
 }
 
-@parentSize('virtualized')
+@parentSize('virtualized', 'parentSize')
 @view.ui
 class List extends React.PureComponent<Props, { selected: number }> {
   static Item = ListItem
@@ -289,8 +289,8 @@ class List extends React.PureComponent<Props, { selected: number }> {
       console.log('no child', index, this)
       return null
     }
-    if (this.props.hideScrollBar && style.width === '100%') {
-      style.width = `calc(100% - ${SCROLL_BAR_WIDTH}px)`
+    if (this.props.hideScrollBar) {
+      style.width = `calc(${style.width || '100%'} - ${SCROLL_BAR_WIDTH}px)`
     }
     const child = this.children[index]({ style })
     return (
@@ -348,6 +348,11 @@ class List extends React.PureComponent<Props, { selected: number }> {
           ogClick.call(this, event)
         }
       }
+    }
+    if (!this.props.virtualized && this.props.hideScrollBar) {
+      props.style = props.style || {}
+      props.style.width = `calc(${props.style.width ||
+        '100%'} - ${SCROLL_BAR_WIDTH}px)`
     }
     // highlight logic
     if (controlled && this.showInternalSelection) {
@@ -527,7 +532,7 @@ class List extends React.PureComponent<Props, { selected: number }> {
       return null
     }
     let { width, height } = this.props
-    if (virtualized && parentSize) {
+    if (parentSize) {
       height = parentSize.height || height || 0
       width = parentSize.width || width || 0
     }
@@ -564,7 +569,7 @@ class List extends React.PureComponent<Props, { selected: number }> {
           onScroll={onScroll}
           {...virtualized}
         />
-        {!virtualized && children}
+        <listinner if={!virtualized}>{children}</listinner>
       </list>
     )
   }
@@ -574,6 +579,9 @@ class List extends React.PureComponent<Props, { selected: number }> {
       alignItems: 'stretch',
       overflowX: 'visible',
       visibility: 'hidden',
+    },
+    listinner: {
+      height: 'auto',
     },
     hideScrollBar: {
       marginRight: -SCROLL_BAR_WIDTH,

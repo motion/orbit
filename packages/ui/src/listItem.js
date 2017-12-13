@@ -265,7 +265,7 @@ export default class ListItem extends React.Component<Props> {
     },
     after: {
       margin: [0, -5, 0, 5],
-      height: '100%',
+      height: 'auto',
     },
     before: {
       margin: ['auto', 5, 'auto', 0],

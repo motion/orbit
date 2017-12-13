@@ -16,7 +16,7 @@ class PaneList {
     //     paneStore.contentVersion
     //   )
     // }
-    if (typeof stackItem.id === 'undefined') {
+    if (stackItem && typeof stackItem.id === 'undefined') {
       return null
     }
     if (!paneStore.items) {

@@ -347,12 +347,16 @@ ${doc.body}`
 
     const resultsByDistance = fragmentsByDistance
       .map(({ distance, closestWords, fragment, debug }) => {
+        const matchedWords = sortedUniqBy(
+          sortBy(closestWords, 'weight'),
+          _ => _.word
+        ).slice(0, 3)
+
         return {
           item: this.fragments[fragment.index],
           debug,
-          toBold: sortedUniqBy(sortBy(closestWords, 'weight'), _ => _.word)
-            .slice(0, 3)
-            .map(_ => _.word),
+          toBold: matchedWords.map(_ => _.word),
+          matched: matchedWords,
           wmd: [],
           index: fragment.index,
           similarity: distance,

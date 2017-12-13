@@ -81,11 +81,9 @@ export const wordMoversDistance = (words, words2, vecs) => {
       let val = 1 - cosineSimilarity(w + ':' + w2, vecs[w], vecs[w2])
 
       // round up because the middle-closeness words are overvalued
-      /*
-      if (val > 0.25 && val < 0.5) {
-        val = 0.55
+      if (val > 0.25) {
+        val = 1
       }
-      */
 
       if (val < minVal) {
         minVal = val

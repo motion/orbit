@@ -35,7 +35,10 @@ export default class RelevancyPage {
               ))}
             </autocomplete>
             {(store.results || []).map(
-              ({ debug, item, toBold, similarity, snippet }, index) => (
+              (
+                { debug, item, toBold, matched, similarity, snippet },
+                index
+              ) => (
                 <item key={Math.random()}>
                   <UI.Title
                     fontWeight={400}
@@ -54,8 +57,8 @@ export default class RelevancyPage {
                     />
                   </UI.Title>
                   <UI.Title
-                    fontWeight={400}
-                    size={1.2}
+                    fontWeight={900}
+                    size={1.1}
                     opacity={0.8}
                     onClick={() => open(item.url)}
                   >
@@ -66,6 +69,9 @@ export default class RelevancyPage {
                         __html: makeBold(item.subtitle, toBold),
                       }}
                     />
+                  </UI.Title>
+                  <UI.Title if={false}>
+                    matched: {JSON.stringify(matched)}
                   </UI.Title>
                   <snippet>
                     <text

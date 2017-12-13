@@ -242,6 +242,7 @@ ${doc.body}`
 
   search = async (query, count = 10, debug = true) => {
     const words = uniq(this.toWords(query))
+
     const queryCentroid = this.queryToCentroid(query)
 
     const fragments = this.nearestFragments(queryCentroid)
@@ -316,13 +317,16 @@ ${doc.body}`
         const subtitleTerm = subtitlesDistance[currentFragentIndex][termIndex]
         const bodyTerm = bodyDistance[currentFragentIndex][termIndex]
         const terms = [titleTerm, subtitleTerm, bodyTerm]
-        // if any of these pieces are missing a field, give it a 30% boost
 
+        // if any of these pieces are missing a field, boost with previous val but dulled
+        let lastTermWeight = null
         terms.forEach(term => {
           if (term.weight === Infinity) {
-            results[currentFragentIndex] *= 1.3
+            if (lastTermWeight) {
+              results[currentFragentIndex] += lastTermWeight / 0.7
+            }
           } else {
-            addDistance(term, currentFragentIndex)
+            lastTermWeight = addDistance(term, currentFragentIndex)
           }
         })
       })
@@ -350,12 +354,12 @@ ${doc.body}`
         const matchedWords = sortedUniqBy(
           sortBy(closestWords, 'weight'),
           _ => _.word
-        ).slice(0, 3)
+        ).slice(0, 5)
 
         return {
           item: this.fragments[fragment.index],
           debug,
-          toBold: matchedWords.map(_ => _.word),
+          toBold: matchedWords.map(_ => _.word).slice(0, 3),
           matched: matchedWords,
           wmd: [],
           index: fragment.index,

@@ -57,9 +57,9 @@ export default class RelevancyPage {
                     />
                   </UI.Title>
                   <UI.Title
-                    fontWeight={900}
+                    fontWeight={500}
                     size={1.1}
-                    opacity={0.8}
+                    opacity={1}
                     onClick={() => open(item.url)}
                   >
                     <text
@@ -70,9 +70,6 @@ export default class RelevancyPage {
                       }}
                     />
                   </UI.Title>
-                  <UI.Title if={false}>
-                    matched: {JSON.stringify(matched)}
-                  </UI.Title>
                   <snippet>
                     <text
                       style={{ display: 'inline' }}
@@ -82,6 +79,8 @@ export default class RelevancyPage {
                       }}
                     />
                   </snippet>
+                  <br />
+                  <UI.Title>matched: {JSON.stringify(matched)}</UI.Title>
                 </item>
               )
             )}
@@ -102,6 +101,11 @@ export default class RelevancyPage {
       background: `rgba(0,0,0,0.05)`,
       padding: 20,
       width: 600,
+    },
+    item: {
+      marginTop: 5,
+      padding: 10,
+      borderBottom: '1px solid rgba(0,0,0,.1)',
     },
     input: {
       fontSize: 24,

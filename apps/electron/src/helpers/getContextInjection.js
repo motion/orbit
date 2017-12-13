@@ -46,10 +46,12 @@ export default function getContextInjection() {
     if (!selection) {
       let anchorNode = document.getSelection().anchorNode
       if (anchorNode) {
-        anchorNode =
-          anchorNode.querySelector('textarea') ||
-          anchorNode.querySelector('input') ||
-          anchorNode
+        if (anchorNode.querySelector) {
+          anchorNode =
+            anchorNode.querySelector('textarea') ||
+            anchorNode.querySelector('input') ||
+            anchorNode
+        }
         if (anchorNode) {
           // works with contentEditable + textarea/input
           selection = anchorNode.textContent || anchorNode.value

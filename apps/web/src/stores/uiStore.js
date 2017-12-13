@@ -239,7 +239,10 @@ export default class UIStore {
 
   _watchHeight = () => {
     this.react(
-      () => [this.stack.last.results],
+      () => [
+        this.stack.last.results.map(r => r.id),
+        this.stack.last.store && !this.stack.last.store.finishedLoading,
+      ],
       () => {
         if (this.stack.last.store && !this.stack.last.store.finishedLoading) {
           return
@@ -265,7 +268,7 @@ export default class UIStore {
           .map(ref => ref.clientHeight)
           .reduce((a, b) => a + b, 0)
 
-        const newHeight = Math.max(50, Math.min(Constants.ORA_HEIGHT, height))
+        const newHeight = Math.max(150, Math.min(Constants.ORA_HEIGHT, height))
         if (this.height !== newHeight) {
           this.height = newHeight
         }

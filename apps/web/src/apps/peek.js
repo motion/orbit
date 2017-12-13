@@ -30,6 +30,7 @@ class WebView {
     lastPeek: ?Peek = null
     curPeek: ?Peek = null
     nextPeek: ?Peek = null
+    isTorn = false
     isHovered = false
     isPinned = false
     pageLoaded = false
@@ -49,6 +50,24 @@ class WebView {
     willMount() {
       OS.send('peek-start')
 
+      this.watchPeekTo()
+      this.watchPeekTear()
+
+      this.trap = new Mousetrap(window)
+      this.trap.bind('esc', () => {
+        console.log('esc')
+        this.isHovered = false
+      })
+    }
+
+    watchPeekTear = () => {
+      this.on(OS, 'peak-tear', () => {
+        this.isTorn = true
+        this.isPinned = true
+      })
+    }
+
+    watchPeekTo = () => {
       let peekTimeout
       // this stores null peeks as well for comparison later
       // to see if we are already open and just moving down list
@@ -67,12 +86,6 @@ class WebView {
         clearTimeout(peekTimeout)
         clearTimeout(this.leftTimeout)
         peekTimeout = this.setTimeout(() => this.updatePeek(peek), delay)
-      })
-
-      this.trap = new Mousetrap(window)
-      this.trap.bind('esc', () => {
-        console.log('esc')
-        this.isHovered = false
       })
     }
 
@@ -173,7 +186,7 @@ export default class PeekPage {
                   </title>
                   <UI.Row
                     $controls
-                    itemProps={{ circular: true, sizePadding: 1.5 }}
+                    itemProps={{ sizePadding: 1.75, sizeRadius: 2 }}
                   >
                     <UI.Button
                       if={peekUrl}
@@ -184,7 +197,7 @@ export default class PeekPage {
                     <UI.Button
                       icon="pin"
                       onClick={store.ref('isPinned').toggle}
-                      highlight={store.isPinned}
+                      highlight={store.isTorn || store.isPinned}
                     />
                   </UI.Row>
                 </header>
@@ -255,6 +268,10 @@ export default class PeekPage {
       flexFlow: 'row',
       alignItems: 'center',
       padding: 20,
+    },
+    controls: {
+      padding: [0, 0, 0, 10],
+      alignSelf: 'flex-start',
     },
     title: {
       flex: 1,

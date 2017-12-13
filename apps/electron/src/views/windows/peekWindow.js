@@ -13,16 +13,29 @@ type Peek = {
 
 @view.electron
 export default class PeekWindow extends React.Component {
+  lastAppPositionMove = Date.now()
+  peekKey = 0
+
   state = {
-    peeks: [{ key: 0, dimensions: [700, 5000], position: [0, 0] }],
+    peeks: [
+      {
+        key: this.peekKey,
+        dimensions: [700, 5000],
+        position: [0, 0],
+      },
+    ],
     peek: {},
     lastPeek: {},
   }
 
-  peekKey = 0
-
   componentWillMount() {
     this.listen()
+  }
+
+  componentWillReceiveProps({ appPosition }) {
+    if (!isEqual(appPosition, this.props.appPosition)) {
+      this.lastAppPositionMove = Date.now()
+    }
   }
 
   peekSend = () => console.log('peekSend, not started yet')
@@ -54,30 +67,37 @@ export default class PeekWindow extends React.Component {
     }
   }
 
-  handlePeekMove = (tearPeek, position) => {
-    const { key } = tearPeek
+  handlePeekMove = (tearPeekProps, position) => {
     const { peeks } = this.state
+    const { key } = tearPeekProps
     const peek = peeks.find(p => p.key === key)
-    const isPeek = key === this.peekKey
+    const updatePeekPosition = () => {
+      peek.position = position
+      this.setState({ peeks })
+    }
+    // dont tear away if window moved recently
+    if (Date.now() - this.lastAppPositionMove < 500) {
+      updatePeekPosition()
+      return
+    }
     if (!isEqual(peek.position, position)) {
-      if (isPeek) {
-        this.tearAway(tearPeek)
+      const isPeek = key === this.peekKey
+      if (isPeek && !isEqual(peek.position, [0, 0])) {
+        this.tearAway(tearPeekProps)
       } else {
-        console.log('move', position)
-        peek.position = position
-        this.setState({ peeks })
+        updatePeekPosition()
       }
     }
   }
 
-  tearAway = tearPeek => {
+  tearAway = tearPeekProps => {
     this.peekKey++
     this.peekSend('peek-tear')
     const peeks = [
       // new hidden peek window
-      { ...tearPeek, key: this.peekKey },
+      { ...tearPeekProps, key: this.peekKey },
       // current torn window, keeps key
-      tearPeek,
+      tearPeekProps,
       // keep the rest
       ...this.state.peeks,
     ]
@@ -103,7 +123,6 @@ export default class PeekWindow extends React.Component {
         {this.state.peeks.map((peek, index) => {
           // peek always in front
           const isPeek = index === 0
-          console.log('window is', peek)
           const { key, dimensions } = peek
           let position
           if (isPeek) {

@@ -137,10 +137,7 @@ export default function getItem(result, index) {
 
   return {
     key: `${index}${result.id}${result.title}${result.category}`,
-    primary:
-      typeof result.displayTitle !== 'undefined'
-        ? result.displayTitle || null
-        : result.display ? null : result.title,
+    primary: result.title,
     primaryEllipse: index === 0 ? 2 : true,
     primaryProps: {
       // lower opacity as list items go down
@@ -154,17 +151,7 @@ export default function getItem(result, index) {
       alpha: Math.max(0.25, (9 - index) / 16),
       ellipse: index < 2 ? 3 : 2,
       size: 1.1,
-      highlightWords: [
-        'company',
-        'travel',
-        'section',
-        'app',
-        'squad',
-        'financial',
-        'sensitive',
-        'what',
-        'scenario',
-      ],
+      highlightWords: result.highlightWords,
     },
     iconAfter: result.iconAfter,
     icon: getIcon(result),

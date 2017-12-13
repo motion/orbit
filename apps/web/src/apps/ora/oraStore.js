@@ -26,11 +26,14 @@ export default class OraStore {
   electronState = {}
 
   get contextResults() {
-    return this.search.results.slice(0, 6).map(({ document, snippet }) => ({
-      ...Thing.toResult(document),
-      children: snippet,
-      after: <After navigate={this.stack.navigate} thing={document} />,
-    }))
+    return this.search.results
+      .slice(0, 6)
+      .map(({ highlightWords, document, snippet }) => ({
+        ...Thing.toResult(document),
+        highlightWords,
+        children: snippet,
+        after: <After navigate={this.stack.navigate} thing={document} />,
+      }))
   }
 
   @watch

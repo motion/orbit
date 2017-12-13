@@ -54,6 +54,7 @@ export default class SearchStore {
     if (response) {
       const results = response.results.map(result => ({
         document: this.documents[result.item.documentIndex],
+        highlightWords: result.toBold,
         snippet: result.snippet,
       }))
       this.results = results

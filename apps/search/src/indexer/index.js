@@ -282,7 +282,7 @@ ${doc.body}`
     const subtitlesDistance = await runWmd(fragments.map(_ => _.subtitle || ''))
     const bodyDistance = await runWmd(fragments.map(_ => _.body))
 
-    console.log('sub distance', subtitlesDistance)
+    // console.log('sub distance', subtitlesDistance)
 
     // we bailed somewhere and should abandon ship
     /*if (includes([titlesDistance, subtitlesDistance, bodyDistance], false)) {

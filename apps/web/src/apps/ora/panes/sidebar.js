@@ -112,17 +112,13 @@ export default class Sidebar {
     width: ORA_WIDTH,
   }
 
-  render({ width, store, cacheStore, listProps, oraStore }) {
+  render({ shouldMeasure, width, store, cacheStore, listProps, oraStore }) {
     const { stack } = store
     const { stackItems, isLoadingNext } = cacheStore
     if (!stackItems) {
       return null
     }
     const currentIndex = stackItems.length - (isLoadingNext ? 2 : 1)
-    // if (isLoadingNext) {
-    //   log('loadnext')
-    //   log(isLoadingNext, currentIndex, `${stackItems.map(i => i.result.id)}`)
-    // }
     return (
       <sidebar css={{ width, maxWidth: width, flex: 1 }}>
         {stackItems.map((stackItem, index) => {
@@ -138,6 +134,7 @@ export default class Sidebar {
             return <null>not found Sidebar {stackItem.result.type}</null>
           }
           const key = stackItem.result.id || stackItem.result.title || index
+          const isActive = currentIndex === index
           return (
             <Fade
               key={key}
@@ -148,7 +145,7 @@ export default class Sidebar {
               <SidebarContainer
                 index={index}
                 oraStore={oraStore}
-                isActive={index === stackItems.length - 1}
+                isActive={isActive}
                 width={width}
                 stack={stack}
                 stackItem={stackItem}
@@ -156,11 +153,15 @@ export default class Sidebar {
                 result={stackItem.result}
                 sidebarStore={Sidebar}
                 hasParent={!!stackItem.parent}
+                shouldMeasure={() =>
+                  (shouldMeasure ? shouldMeasure() : true) && isActive
+                }
                 listProps={{
                   getItem,
                   width,
                   highlight: i => i === stackItem.selectedIndex,
                   scrollToRow: stackItem.selectedIndex,
+                  // handles onselect for more list items in panes
                   onSelect(item) {
                     OS.send('peek', null)
                     if (item.selectable === false) {

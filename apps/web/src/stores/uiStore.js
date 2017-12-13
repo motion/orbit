@@ -49,7 +49,6 @@ export default class UIStore {
     this._watchWasBlurred()
     this._watchBlurBar()
     this._watchKeyEvents()
-    this._watchHidden()
     this.setState({}) // trigger first send
   }
 
@@ -67,12 +66,6 @@ export default class UIStore {
   setTextboxVal = value => {
     this.textboxVal = value
     this.setSearch(value)
-  }
-
-  _watchHidden() {
-    this.watch(() => {
-      console.log('hidden', this.state.hidden)
-    })
   }
 
   _watchKeyEvents() {
@@ -155,7 +148,6 @@ export default class UIStore {
   emitKeyCode = e => this.emit('keydown', keycode(e.keyCode))
 
   setupInputRef = ref => {
-    console.log('setting', ref)
     this.inputRef = ref
     if (this.offKeyCode) {
       this.offKeyCode()
@@ -185,7 +177,8 @@ export default class UIStore {
   }
 
   focusBar = () => {
-    if (this.inputRef) {
+    console.log('focus')
+    if (this.inputRef && !this.barFocused) {
       this.inputRef.focus()
       this.inputRef.select()
       this.barFocused = true
@@ -240,40 +233,38 @@ export default class UIStore {
 
   _watchHeight = () => {
     this.react(
-      () => [
-        this.stack.last.results || [],
-        this.stack.last.store && this.stack.last.store.minHeight,
-        this.stack.last.store && this.stack.last.store.maxHeight,
-      ],
-      ([results, minHeight, maxHeight]) => {
+      () => [this.stack.last.results],
+      () => {
+        if (this.stack.last.store && !this.stack.last.store.finishedLoading) {
+          return
+        }
         // hacky ass setup for now
-        this.setTimeout(() => {
-          const refs = [
-            // header
-            document.querySelector('.leftSide'),
-            // titlebar
-            document.querySelector('.fade:last-child .tab'),
-            // body
-            document.querySelector(
-              '.fade:last-child .ReactVirtualized__Grid__innerScrollContainer'
-            ),
-          ].filter(Boolean)
+        const refs = [
+          // header
+          document.querySelector('.leftSide'),
+          // titlebar
+          document.querySelector('.fade:last-child .tab'),
+          // body
+          document.querySelector(
+            '.fade:last-child .ReactVirtualized__Grid__innerScrollContainer'
+          ),
+        ].filter(Boolean)
 
-          const hasActions =
-            this.stack.last.store && this.stack.last.store.actions
-          if (hasActions) {
-            refs.push(document.querySelector('.actions'))
-          }
-          const height = refs
-            .map(ref => ref.clientHeight)
-            .reduce((a, b) => a + b, 0)
+        const hasActions =
+          this.stack.last.store && this.stack.last.store.actions
+        if (hasActions) {
+          refs.push(document.querySelector('.actions'))
+        }
+        const height = refs
+          .map(ref => ref.clientHeight)
+          .reduce((a, b) => a + b, 0)
 
-          this.height = Math.max(
-            minHeight || 0,
-            Math.min(maxHeight || Constants.ORA_HEIGHT, height)
-          )
-        })
-      }
+        const newHeight = Math.max(50, Math.min(Constants.ORA_HEIGHT, height))
+        if (this.height !== newHeight) {
+          this.height = newHeight
+        }
+      },
+      true
     )
   }
 }

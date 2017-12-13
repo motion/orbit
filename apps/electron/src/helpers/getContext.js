@@ -1,6 +1,6 @@
 import runAppleScript from './runAppleScript'
 import escapeAppleScriptString from 'escape-string-applescript'
-import getFavicon from './getFavicon'
+import focus from './focus'
 import { isEqual } from 'lodash'
 
 let lastContextError = null
@@ -73,17 +73,7 @@ async function getActiveWindowInfo() {
   return { application, title }
 }
 
-const getFaviconSrc = getFavicon.toString()
-
-const CONTEXT_JS = `
-JSON.stringify({
-  url: document.location+'',
-  title: document.title,
-  selection: document.getSelection().toString() ? document.getSelection().toString() : (document.getSelection().anchorNode ? document.getSelection().anchorNode.textContent : ''),
-  crawlerInfo: document.__oraCrawlerAnswer,
-  favicon: ${getFaviconSrc}(),
-})
-`
+const CONTEXT_JS = `(${focus.toString()})()`
 
 async function getChromeContext() {
   return parseContextRes(

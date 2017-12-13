@@ -51,13 +51,25 @@ export default class PeekWindow extends React.Component {
       this.peekSend('peek-to', peek)
     })
     this.on(ipcMain, 'peek-start', event => {
-      this.peekSend = (name, val) => event.sender.send(name, val)
+      this.peekSend = (name, val) => {
+        try {
+          event.sender.send(name, val)
+        } catch (err) {
+          console.log('peeksenderr', err)
+        }
+      }
     })
     this.on(ipcMain, 'peek-focus', () => {
       console.log('focusing peek')
       if (this.peekRef) {
         this.peekRef.focus()
       }
+    })
+    this.on(ipcMain, 'peek-close', (event, key) => {
+      console.log('closing', key)
+      const peeks = this.state.peeks.filter(p => `${p.key}` !== `${key}`)
+      console.log('closed after peeks', peeks)
+      this.setState({ peeks })
     })
   }
 
@@ -92,12 +104,15 @@ export default class PeekWindow extends React.Component {
 
   tearAway = tearPeekProps => {
     this.peekKey++
-    this.peekSend('peek-tear')
+    if (this.state.peeks.find(x => x.key === this.peekKey)) {
+      // likely called multiple times unecessarily
+      return
+    }
+    console.log('sending peek tear')
+    this.peekSend('peak-tear')
     const peeks = [
       // new hidden peek window
       { ...tearPeekProps, key: this.peekKey },
-      // current torn window, keeps key
-      tearPeekProps,
       // keep the rest
       ...this.state.peeks,
     ]
@@ -106,7 +121,6 @@ export default class PeekWindow extends React.Component {
 
   render({ appPosition }) {
     const windowProps = {
-      file: `${Constants.APP_URL}/peek`,
       frame: false,
       hasShadow: false,
       background: '#00000000',
@@ -138,6 +152,7 @@ export default class PeekWindow extends React.Component {
           return (
             <Window
               key={key}
+              file={`${Constants.APP_URL}/peek?key=${key}`}
               ref={isPeek ? this.handlePeekRef : _ => _}
               {...windowProps}
               size={dimensions}

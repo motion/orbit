@@ -36,7 +36,7 @@ export default (...props) => Child => {
 
     get isActive() {
       return (
-        !props ||
+        !props.length ||
         Object.keys(this.props).findIndex(
           key => this.props[key] && props.indexOf(key) > -1
         ) > -1

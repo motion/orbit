@@ -23,11 +23,11 @@ debug.enable(DEBUG_FLAG)
 function splash() {
   const Splash = require('./views/splash').default
   ReactDOM.render(<Splash />, document.querySelector('#app'))
-  console.timeEnd('splash')
 }
 
 export function start() {
-  splash()
+  // splash()
+  console.timeEnd('splash')
   require('./app')
 }
 

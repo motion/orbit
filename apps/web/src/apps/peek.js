@@ -8,6 +8,8 @@ import marked from 'marked'
 import Mousetrap from 'mousetrap'
 
 // const isSamePeek = (a, b) => a && b && a.id === b.id
+const keyParam = (window.location.search || '').match(/key=(.*)/)
+const KEY = keyParam && keyParam[1]
 const SHOW_DELAY = 300
 const HIDE_DELAY = 100
 const background = [20, 20, 20, 0.98]
@@ -148,6 +150,10 @@ class WebView {
         this.tab = 'webview'
       }
     }
+
+    closePeek = () => {
+      OS.send('peek-close', KEY)
+    }
   },
 })
 export default class PeekPage {
@@ -166,6 +172,7 @@ export default class PeekPage {
           onMouseLeave={store.handlePeekLeave}
         >
           <UI.Arrow
+            if={!store.isTorn}
             size={arrowSize}
             towards="right"
             background={background}
@@ -195,9 +202,15 @@ export default class PeekPage {
                       highlight={store.tab === 'webview'}
                     />
                     <UI.Button
+                      if={!store.isTorn}
                       icon="pin"
                       onClick={store.ref('isPinned').toggle}
                       highlight={store.isTorn || store.isPinned}
+                    />
+                    <UI.Button
+                      if={store.isTorn}
+                      icon="remove"
+                      onClick={store.closePeek}
                     />
                   </UI.Row>
                 </header>

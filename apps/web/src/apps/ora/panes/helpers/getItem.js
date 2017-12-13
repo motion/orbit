@@ -162,7 +162,7 @@ export default function getItem(result, index) {
 
   // peek hover props
   let peekProps
-  if (result.peek !== false) {
+  if (result.peek !== false && result.data) {
     peekProps = {
       onMouseEnter,
       onMouseMove,

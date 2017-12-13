@@ -172,6 +172,7 @@ class List extends React.PureComponent<Props, { selected: number }> {
     }
   }
 
+  // sitrep
   forceUpdateGrid = () => {
     if (!this.virtualListRef) {
       this.onRef.push(() => this.forceUpdateGrid())
@@ -183,6 +184,7 @@ class List extends React.PureComponent<Props, { selected: number }> {
     this.scrollToRow(this.lastScrolledToRow)
   }
 
+  // sitrep
   scrollToRow = (index: number) => {
     if (!this.virtualListRef) {
       this.onRef.push(() => this.scrollToRow(index))
@@ -204,6 +206,7 @@ class List extends React.PureComponent<Props, { selected: number }> {
     // this.virtualListRef.focus()
   }
 
+  // sitrep
   measure = throttle(() => {
     if (this.virtualListRef) {
       this.virtualListRef.recomputeRowHeights(0)

@@ -141,7 +141,7 @@ export default class PeekPage {
   render({ store }) {
     const { peek } = store
     const peekUrl = peek && peek.url
-    const arrowSize = 42
+    const arrowSize = 32
     const peekY = (store.peek || store.lastPeek || {}).offsetTop || 0
     // console.log('peekUrl', !!peekUrl, 'loaded?', store.pageLoaded)
     return (
@@ -165,7 +165,7 @@ export default class PeekPage {
           <UI.Theme name="dark">
             <content $$draggable>
               <innerContent $$flex if={store.thing}>
-                <header>
+                <header $$draggable>
                   <title>
                     <UI.Title selectable size={1.5} fontWeight={600}>
                       {store.thing.title}

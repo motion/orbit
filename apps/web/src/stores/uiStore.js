@@ -243,37 +243,39 @@ export default class UIStore {
         this.stack.last.results.map(r => r.id),
         this.stack.last.store && !this.stack.last.store.finishedLoading,
       ],
-      () => {
-        if (this.stack.last.store && !this.stack.last.store.finishedLoading) {
-          return
-        }
-        // hacky ass setup for now
-        const refs = [
-          // header
-          document.querySelector('.leftSide'),
-          // titlebar
-          document.querySelector('.fade:last-child .tab'),
-          // body
-          document.querySelector(
-            '.fade:last-child .ReactVirtualized__Grid__innerScrollContainer'
-          ),
-        ].filter(Boolean)
-
-        const hasActions =
-          this.stack.last.store && this.stack.last.store.actions
-        if (hasActions) {
-          refs.push(document.querySelector('.actions'))
-        }
-        const height = refs
-          .map(ref => ref.clientHeight)
-          .reduce((a, b) => a + b, 0)
-
-        const newHeight = Math.max(150, Math.min(Constants.ORA_HEIGHT, height))
-        if (this.height !== newHeight) {
-          this.height = newHeight
-        }
-      },
+      this.calcHeight,
       true
     )
+  }
+
+  calcHeight = () => {
+    if (
+      this.stack.last.store &&
+      this.stack.last.store.finishedLoading === false
+    ) {
+      return
+    }
+    // hacky ass setup for now
+    const refs = [
+      // header
+      document.querySelector('.leftSide'),
+      // titlebar
+      document.querySelector('.fade:last-child .tab'),
+      // body
+      document.querySelector(
+        '.fade:last-child .ReactVirtualized__Grid__innerScrollContainer'
+      ),
+    ].filter(Boolean)
+
+    const hasActions = this.stack.last.store && this.stack.last.store.actions
+    if (hasActions) {
+      refs.push(document.querySelector('.actions'))
+    }
+    const height = refs.map(ref => ref.clientHeight).reduce((a, b) => a + b, 0)
+
+    const newHeight = Math.max(150, Math.min(Constants.ORA_HEIGHT, height))
+    if (this.height !== newHeight) {
+      this.height = newHeight
+    }
   }
 }

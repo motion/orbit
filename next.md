@@ -46,10 +46,6 @@ DeliverX
 
 * flicker/movement on search
 * list: fix scrolldown on pane height adjust bug
-* peek: better behavior based on mouse activity
-* peek: hide on scroll
-* peek: adjust for scroll
-* peek: tearaway
 * crawler dont use node readability
 * more forgiving markdown parser
 * drive sync pane / drive sync

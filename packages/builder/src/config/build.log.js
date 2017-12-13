@@ -1,4 +1,7 @@
-module.exports = (fatalError, stats) => {
+module.exports = (...args) => {
+  const [fatalError, stats] = args
+  console.log(args)
+
   if (fatalError) {
     console.error(fatalError)
     return

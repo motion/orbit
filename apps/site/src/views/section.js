@@ -87,6 +87,7 @@ export const Section = view(
       margin: 0,
     },
     dark: Constants.dark,
+    darkInverse: Constants.darkInverse,
   }
 )
 

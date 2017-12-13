@@ -31,12 +31,17 @@ export const screen = {
 export const dark1 = UI.color(colorMain)
   // .darken(0.75)
   .toString()
-export const dark2 = UI.color(colorMain)
+export const dark2 = UI.color(colorSecondary)
   // .darken(0.75)
   .toString()
 
 export const darkBackground = `linear-gradient(${dark1}, ${dark2})`
 export const darkBackgroundInverse = `linear-gradient(${dark2}, ${dark1})`
+
 export const dark = {
   background: darkBackground,
+}
+
+export const darkInverse = {
+  background: darkBackgroundInverse,
 }

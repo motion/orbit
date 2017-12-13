@@ -1,13 +1,13 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
 import * as View from '~/views'
-import * as Constants from '~/constants'
+// import * as Constants from '~/constants'
 import { view } from '@mcro/black'
 import Illustration1 from './header/illustration1'
 import Illustration2 from './header/illustration2'
 
 const titleProps = {
-  size: 2.5,
+  size: 2.85,
   fontWeight: 200,
 }
 
@@ -15,10 +15,10 @@ const titleProps = {
 export default class HomeHeader {
   render() {
     return (
-      <View.Section dark>
+      <View.Section darkInverse>
         <View.SectionContent fullscreen>
           <View.Header />
-          <View.Slant backgroundColor="red" />
+          <View.Slant dark />
 
           <content
             $$row
@@ -77,11 +77,16 @@ export default class HomeHeader {
                 <Illustration2 css={{ transform: { scale: 1.2 } }} />
               </inner>
 
-              <text css={{ margin: [50, 0, 0, 20] }}>
+              <View.Bubble
+                width={400}
+                css={{ position: 'absolute', top: 72, zIndex: -10 }}
+              />
+
+              <text css={{ margin: [72, 0, 0, 20] }}>
                 <View.Title
                   {...titleProps}
                   textAlign="left"
-                  color={Constants.dark2}
+                  color={'#fff'}
                   selectable
                 >
                   Orbit keeps your team in<br />

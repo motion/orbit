@@ -22,12 +22,12 @@ export default class Illustration2 {
           hideRings={{
             0: true,
           }}
-          ringBackground="rgba(90,50,100,0.5)"
-          ringBorderColor="transparent"
+          ringBackground="transparent"
+          ringBorder={[2, Constants.mainLight]}
           planetSize={100}
           planetStyles={{
             background: '#fff',
-            border: [1, Constants.mainLight],
+            border: [4, Constants.mainLight],
           }}
           items={[
             'google-gmail',
@@ -51,11 +51,11 @@ export default class Illustration2 {
             'github',
           ]}
           css={{
-            top: '-50%',
+            top: '-45%',
             left: 188,
             transformOrigin: 'center center',
             transform: {
-              scale: 0.47,
+              scale: 0.45,
             },
           }}
         />

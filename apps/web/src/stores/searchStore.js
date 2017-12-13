@@ -70,7 +70,6 @@ export default class SearchStore {
   setDocuments = documents => {
     if (documents && documents.length) {
       this.documents = documents
-      console.log('setting documents', documents)
       this.target.postMessage({
         type: 'documents',
         data: documents.map(doc => ({

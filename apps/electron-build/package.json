@@ -1,30 +1,23 @@
 {
   "name": "@mcro/electron-build",
   "productName": "Orbit",
-  "version": "1.5.52",
+  "version": "1.5.53",
   "private": true,
   "updater": {
-    "url":
-      "https://raw.githubusercontent.com/motion/orbit-updates/master/updates.json"
+    "url": "https://raw.githubusercontent.com/motion/orbit-updates/master/updates.json"
   },
   "scripts": {
-    "deploy":
-      "npm run prepare-publish && npm run publish-app && npm run publish-clean",
+    "deploy": "npm run prepare-publish && npm run publish-app && npm run publish-clean",
     "pack": "npm run sign-app && npm run pack-app",
-    "pack-app":
-      "electron-installer-dmg --overwrite --out ./app --icon ./resources/icon.icns ./app/Orbit-darwin-x64/Orbit.app Orbit",
+    "pack-app": "electron-installer-dmg --overwrite --out ./app --icon ./resources/icon.icns ./app/Orbit-darwin-x64/Orbit.app Orbit",
     "build": "npm version patch && npm run bundle && npm run pack",
     "bundle": "node ./lib/bundle.js",
     "bundle-debug": "DEBUG=electron-packager,electron-build:* npm run bundle",
-    "start-prod":
-      "DEBUG=api,crawler,crawler:* app/Orbit-darwin-x64/Orbit.app/Contents/MacOS/Orbit",
+    "start-prod": "DEBUG=api,crawler,crawler:* app/Orbit-darwin-x64/Orbit.app/Contents/MacOS/Orbit",
     "publish-app": "publish -p ./app",
-    "prepare-publish":
-      "if [ ! -f \"./app/Orbit-$npm_package_version.dmg\" ]; then cp ./app/Orbit.dmg ./app/Orbit-$npm_package_version.dmg && zip -r -X -8 -q ./app/Orbit-$npm_package_version-mac.zip ./app/Orbit-darwin-x64/Orbit.app; fi",
-    "publish-clean":
-      "rm -r ./app/Orbit-$npm_package_version-mac.zip && mkdir -p ./app/releases && mv ./app/Orbit-$npm_package_version.dmg ./app/releases",
-    "sign-app":
-      "electron-osx-sign --ignore puppeteer/\\.local-chromium ./app/Orbit-darwin-x64/Orbit.app"
+    "prepare-publish": "if [ ! -f \"./app/Orbit-$npm_package_version.dmg\" ]; then cp ./app/Orbit.dmg ./app/Orbit-$npm_package_version.dmg && zip -r -X -8 -q ./app/Orbit-$npm_package_version-mac.zip ./app/Orbit-darwin-x64/Orbit.app; fi",
+    "publish-clean": "rm -r ./app/Orbit-$npm_package_version-mac.zip && mkdir -p ./app/releases && mv ./app/Orbit-$npm_package_version.dmg ./app/releases",
+    "sign-app": "electron-osx-sign --ignore puppeteer/\\.local-chromium ./app/Orbit-darwin-x64/Orbit.app"
   },
   "devDependencies": {
     "electron": "^1.7.9",

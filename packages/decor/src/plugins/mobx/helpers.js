@@ -1,12 +1,17 @@
 // @flow
 import * as AllHelpers from '@mcro/helpers'
-import { autorun, reaction } from 'mobx'
+import { autorun, autorunAsync, reaction } from 'mobx'
 
 // subscribe-aware helpers
-export function watch(fn: Function): Function {
-  const dispose = autorun(fn.bind(this))
-  this.subscriptions.add(dispose)
-  return dispose
+export function watch(fn: Function, debounce): Function {
+  let runner
+  if (typeof debounce === 'number') {
+    runner = autorunAsync(fn.bind(this))
+  } else {
+    runner = autorun(fn.bind(this))
+  }
+  this.subscriptions.add(runner)
+  return runner
 }
 
 export function react(

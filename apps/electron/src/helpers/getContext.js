@@ -1,6 +1,6 @@
 import runAppleScript from './runAppleScript'
 import escapeAppleScriptString from 'escape-string-applescript'
-import focus from './focus'
+import getContextInjection from './getContextInjection'
 import { isEqual } from 'lodash'
 
 let lastContextError = null
@@ -73,7 +73,7 @@ async function getActiveWindowInfo() {
   return { application, title }
 }
 
-const CONTEXT_JS = `(${focus.toString()})()`
+const CONTEXT_JS = `(${getContextInjection.toString()})()`
 
 async function getChromeContext() {
   return parseContextRes(

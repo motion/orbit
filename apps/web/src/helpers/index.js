@@ -11,6 +11,7 @@ export const contextToResult = context => ({
   type: 'context',
   icon: context.application === 'Google Chrome' ? 'social-google' : null,
   image: context.favicon,
+  peek: false,
 })
 
 // because honestly, its easy to forget when writing jsx

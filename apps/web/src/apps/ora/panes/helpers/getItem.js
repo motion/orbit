@@ -160,6 +160,16 @@ export default function getItem(result, index) {
     }, 50)
   }
 
+  // peek hover props
+  let peekProps
+  if (result.peek !== false) {
+    peekProps = {
+      onMouseEnter,
+      onMouseMove,
+      onMouseLeave,
+    }
+  }
+
   return {
     key: `${index}${result.id}${result.title}${result.category}`,
     primary: result.title,
@@ -188,9 +198,7 @@ export default function getItem(result, index) {
     afterProps: result.afterProps,
     selectable: result.selectable,
     glow: result.glow || result.selectable !== false,
-    onMouseEnter,
-    onMouseMove,
-    onMouseLeave,
+    ...peekProps,
     ...result.props,
   }
 }

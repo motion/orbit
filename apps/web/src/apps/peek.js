@@ -8,7 +8,7 @@ import marked from 'marked'
 import Mousetrap from 'mousetrap'
 
 // const isSamePeek = (a, b) => a && b && a.id === b.id
-const SHOW_DELAY = 0
+const SHOW_DELAY = 300
 const HIDE_DELAY = 100
 const background = [20, 20, 20, 0.98]
 
@@ -50,15 +50,22 @@ class WebView {
       OS.send('peek-start')
 
       let peekTimeout
+      // this stores null peeks as well for comparison later
+      // to see if we are already open and just moving down list
+      let lastPeek
       this.on(OS, 'peek-to', (event, peek: ?Peek) => {
         if (this.isPinned) {
           console.log('ignore because pinned')
           return
         }
         console.log('peek-to', peek, this.lastPeek)
+        let delay = HIDE_DELAY
+        if (peek) {
+          delay = lastPeek ? 0 : SHOW_DELAY
+        }
+        lastPeek = peek
         clearTimeout(peekTimeout)
         clearTimeout(this.leftTimeout)
-        const delay = peek ? SHOW_DELAY : HIDE_DELAY
         peekTimeout = this.setTimeout(() => this.updatePeek(peek), delay)
       })
 

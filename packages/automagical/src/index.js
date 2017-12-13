@@ -351,8 +351,10 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
           console.warn(obj.constructor.name, method, 'not connected')
           isntConnected = true
           result.onConnection().then(() => {
+            console.warn(obj.constructor.name, method, 'is now reconnected')
             isntConnected = false
             dispose()
+            disposed = false
             run()
           })
           return false

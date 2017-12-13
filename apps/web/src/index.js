@@ -26,19 +26,21 @@ function splash() {
   console.timeEnd('splash')
 }
 
-function main() {
+export function start() {
   splash()
   require('./app')
 }
 
 if (!window.started) {
   window.started = true
-  main()
+  start()
 }
 
 // accept hmr
 if (module && module.hot) {
-  const restart = () => require('./app').start(true)
+  const restart = () => {
+    require('./app').start(true)
+  }
   module.hot.accept(restart)
   module.hot.accept('@mcro/models', restart)
 }

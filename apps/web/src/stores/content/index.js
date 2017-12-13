@@ -22,16 +22,14 @@ const deliverx = [
     title: 'Late deliveries map',
     type: 'website',
     integration: 'website',
-    body: '# Late Deliveries Map',
-    url: 'http://deliverx.dev/map',
+    url: 'http://deliverx.com/map',
   },
   {
     id: 'deliverx.map',
     title: 'Drivers',
-    body: '# Drivers',
     type: 'website',
     integration: 'website',
-    url: 'http://deliverx.dev/drivers',
+    url: 'http://deliverx.com/drivers',
   },
 ]
 

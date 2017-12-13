@@ -13,6 +13,30 @@ import Services from './services'
 import CurrentUser_ from './stores/currentUserStore'
 import debug from 'debug'
 
+let app = window.App
+
+export async function start(recreate?: boolean) {
+  if (window.appDisposing) {
+    return
+  }
+  window.appDisposing = true
+  if (app) {
+    await app.dispose()
+  }
+  if (recreate || !app) {
+    app = new App()
+    window.App = app
+    await app.start({ quiet: recreate })
+  }
+  window.appDisposing = false
+}
+
+if (module && module.hot) {
+  module.hot.accept(async () => {
+    await start(true)
+  })
+}
+
 // ugly but we want to export these all here
 // this prevents hmr from going nuts when we edit models
 export const User = Models.User
@@ -104,24 +128,6 @@ class App {
       debug.enable(setting)
     }
   }
-}
-
-let app = window.App
-
-export async function start(recreate?: boolean) {
-  if (window.appDisposing) {
-    return
-  }
-  window.appDisposing = true
-  if (app) {
-    await app.dispose()
-  }
-  if (recreate || !app) {
-    app = new App()
-    window.App = app
-    await app.start(recreate)
-  }
-  window.appDisposing = false
 }
 
 if (!window.App) {

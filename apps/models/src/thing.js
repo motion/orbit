@@ -28,6 +28,8 @@ export type ThingType = typeof methods & {
 }
 
 export class Thing extends Model {
+  version = Math.random()
+
   static props = {
     id: str.primary,
     title: str.indexed,
@@ -67,14 +69,18 @@ export class Thing extends Model {
       }
 
       // body shim
-      if (typeof doc.body !== 'undefined') {
+      if (typeof doc.body === 'string') {
         db.put({ id: doc.id, body: doc.body })
-        delete doc.body
       }
+
+      // always delete because it may actually be undefined
+      delete doc.body
 
       if (doc.url && (await ThingInstance.get({ url: doc.url }))) {
         throw new Error(`Thing already exists with this url`)
       }
+
+      console.log('creating doc', doc)
     },
   }
 

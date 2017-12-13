@@ -409,11 +409,11 @@ export default class Model {
   onConnection = (): Promise<void> => {
     return new Promise((resolve, reject) => {
       if (this.connected) {
-        resolve()
+        resolve(true)
       }
       this.off = autorun(() => {
         if (this.connected) {
-          resolve()
+          resolve(true)
           if (this.off) {
             // :bug: this., not sure why
             this.off()

@@ -9,6 +9,7 @@ import SearchStore from '~/stores/searchStore'
 import { CurrentUser } from '~/app'
 import debug from 'debug'
 import After from '~/views/after'
+import { isEqual } from 'lodash'
 
 const log = _ => _ || debug('ora')
 const useWorker = window.location.href.indexOf('?noWorker')
@@ -52,19 +53,26 @@ export default class OraStore {
     this._listenForElectronState()
     this._listenForKeyEvents()
     this._watchContext()
-    this.watch(() => {
+
+    this.watch(function setDocuments() {
       this.search.setDocuments(this.things || [])
-    })
-    this.watch(() => {
-      this.electronState
-      if (this.ui.search.length > 0) {
+    }, 16)
+
+    this.watch(function setSearchQuery() {
+      if (this.osContext && !this.ui.barFocused) {
+        if (this.osContext.selection) {
+          this.search.setQuery(this.osContext.selection)
+          return
+        }
+        if (this.osContext.title) {
+          this.search.setQuery(this.osContext.title)
+          return
+        }
+      } else {
         this.search.setQuery(this.ui.search)
       }
-
-      if (this.electronState.context && this.electronState.context.title) {
-        this.search.setQuery(this.electronState.context.title)
-      }
     })
+
     OS.send('start-ora')
   }
 
@@ -110,7 +118,9 @@ export default class OraStore {
         return
       }
       if (this.lastContext) {
-        if (this.lastContext.url === context.url) return
+        if (isEqual(this.lastContext, context)) {
+          return
+        }
       }
       this.lastContext = context
       const nextStackItem = contextToResult(context)

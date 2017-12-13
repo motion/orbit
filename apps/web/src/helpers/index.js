@@ -7,7 +7,9 @@ export IndexDB from './indexDB'
 
 export const contextToResult = context => ({
   id: context.url,
-  title: context.selection || context.title,
+  title: context.selection
+    ? `${context.selection} | ${context.title}`
+    : context.title,
   type: 'context',
   icon: context.application === 'Google Chrome' ? 'social-google' : null,
   image: context.favicon,

@@ -38,7 +38,7 @@ const PLANET_STYLES = {
 }
 
 export default ({
-  ringBorderColor = UI.color(Constants.colorMain).lighten(0.45),
+  ringBorder = [1, UI.color(Constants.colorMain).lighten(0.45)],
   ringBackground = 'rgba(64.5%, 85.7%, 98.7%, 0.125)',
   planetSize = 50,
   hideRings = {},
@@ -74,7 +74,7 @@ export default ({
           <circle
             css={{
               margin: 'auto',
-              border: [1, ringBorderColor],
+              border: ringBorder,
               width: 100,
               height: 100,
               background: ringBackground,
@@ -86,7 +86,7 @@ export default ({
           <circle
             css={{
               margin: 'auto',
-              border: [1, ringBorderColor],
+              border: ringBorder,
               width: 300,
               height: 300,
               background: ringBackground,
@@ -98,7 +98,7 @@ export default ({
           <circle
             css={{
               margin: 'auto',
-              border: [1, ringBorderColor],
+              border: ringBorder,
               background: ringBackground,
               width: 600,
               height: 600,
@@ -110,7 +110,7 @@ export default ({
           <circle
             css={{
               margin: 'auto',
-              border: [1, ringBorderColor],
+              border: ringBorder,
               width: 900,
               height: 900,
               borderRadius: 1000000000,
@@ -121,7 +121,7 @@ export default ({
           <circle
             css={{
               margin: 'auto',
-              border: [1, ringBorderColor],
+              border: ringBorder,
               width: 1400,
               height: 1400,
               borderRadius: 1000000000,

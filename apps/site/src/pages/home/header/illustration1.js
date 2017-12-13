@@ -28,7 +28,7 @@ export default class Illustration1 {
             css={{
               marginRight: -90,
               marginLeft: 50,
-              marginBottom: 115,
+              marginBottom: 90,
               zIndex: 100,
             }}
           >

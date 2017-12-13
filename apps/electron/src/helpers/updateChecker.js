@@ -12,6 +12,7 @@ if (Constants.IS_PROD) {
   })
 
   updater.on('update-downloaded', () => {
+    console.log('Update downloaded, quit and install')
     updater.quitAndInstall()
   })
 }

@@ -67,7 +67,7 @@ if (TARGET) {
   console.log('target is', config.target)
 }
 
-module.exports = Object.assign(config, {
+const webpackConfig = Object.assign(config, {
   watch,
 
   entry: {
@@ -76,6 +76,11 @@ module.exports = Object.assign(config, {
       IS_DEV && require.resolve('webpack/hot/only-dev-server'),
       Paths.appEntry,
     ]),
+  },
+
+  devServer: IS_DEV && {
+    contentBase: Paths.appPublic,
+    port: 3002,
   },
 
   output: {
@@ -185,3 +190,7 @@ module.exports = Object.assign(config, {
         tls: 'empty',
       },
 })
+
+console.log('webpackConfig', webpackConfig)
+
+module.exports = webpackConfig

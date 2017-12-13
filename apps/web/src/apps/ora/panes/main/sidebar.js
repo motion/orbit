@@ -10,9 +10,11 @@ export default class MainSidebar {
   get search() {
     return this.oraStore.ui.search
   }
-
   get title() {
     return null
+  }
+  get finishedLoading() {
+    return true
   }
 
   get rawResults() {
@@ -64,9 +66,10 @@ export default class MainSidebar {
           title: 'Insert test things...',
           onClick: async () => {
             const content = new ContentStore()
-            await Promise.all(
-              content.things.map(async t => await Thing.create(t))
+            const res = await Promise.all(
+              content.things.map(t => Thing.create(t))
             )
+            console.log('created things', res)
           },
           category: 'Dev Tools',
         },

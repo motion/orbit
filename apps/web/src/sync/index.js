@@ -188,7 +188,7 @@ export default class Sync {
       await job.update({
         status: 3,
         lastError,
-        tries: 3,
+        tries: job.tries + 1,
       })
     } catch (err) {
       if (err.message && err.message.indexOf('cant save deleted document')) {

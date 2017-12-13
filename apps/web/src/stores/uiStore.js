@@ -6,6 +6,7 @@ import Mousetrap from 'mousetrap'
 import { debounceIdle } from '~/helpers'
 import keycode from 'keycode'
 import * as Constants from '~/constants'
+import * as _ from 'lodash'
 
 export SHORTCUTS from './shortcuts'
 
@@ -111,6 +112,12 @@ export default class UIStore {
 
   actions = {
     esc: e => {
+      console.log('bye')
+      if (!this.barFocused) {
+        console.log('byebye')
+        OS.send('peek', null)
+        return
+      }
       if (this.inputRef === document.activeElement) {
         if (this.textboxVal !== '') {
           this.setTextboxVal('')
@@ -233,38 +240,41 @@ export default class UIStore {
 
   _watchHeight = () => {
     this.react(
-      () => [this.stack.last.results],
-      () => {
-        if (this.stack.last.store && !this.stack.last.store.finishedLoading) {
-          return
-        }
-        // hacky ass setup for now
-        const refs = [
-          // header
-          document.querySelector('.leftSide'),
-          // titlebar
-          document.querySelector('.fade:last-child .tab'),
-          // body
-          document.querySelector(
-            '.fade:last-child .ReactVirtualized__Grid__innerScrollContainer'
-          ),
-        ].filter(Boolean)
-
-        const hasActions =
-          this.stack.last.store && this.stack.last.store.actions
-        if (hasActions) {
-          refs.push(document.querySelector('.actions'))
-        }
-        const height = refs
-          .map(ref => ref.clientHeight)
-          .reduce((a, b) => a + b, 0)
-
-        const newHeight = Math.max(50, Math.min(Constants.ORA_HEIGHT, height))
-        if (this.height !== newHeight) {
-          this.height = newHeight
-        }
-      },
+      () => [
+        this.stack.last.results.map(r => r.id),
+        this.stack.last.store && this.stack.last.store.finishedLoading,
+      ],
+      this.calcHeight,
       true
     )
   }
+
+  calcHeight = _.debounce(([_, finishedLoading]) => {
+    if (finishedLoading === false) {
+      return
+    }
+    // hacky ass setup for now
+    const refs = [
+      // header
+      document.querySelector('.leftSide'),
+      // titlebar
+      document.querySelector('.fade:last-child .tab'),
+      // body
+      document.querySelector(
+        '.fade:last-child .ReactVirtualized__Grid__innerScrollContainer'
+      ),
+    ].filter(Boolean)
+
+    const hasActions = this.stack.last.store && this.stack.last.store.actions
+    if (hasActions) {
+      refs.push(document.querySelector('.actions'))
+    }
+    const height = refs.map(ref => ref.clientHeight).reduce((a, b) => a + b, 0)
+
+    const newHeight = Math.max(150, Math.min(Constants.ORA_HEIGHT, height))
+    if (this.height !== newHeight) {
+      console.log('set to', newHeight)
+      this.height = newHeight
+    }
+  }, 32)
 }

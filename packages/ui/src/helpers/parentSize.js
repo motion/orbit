@@ -40,9 +40,9 @@ export default prop => Child => {
 
     setParent(ref) {
       if (!this.node && ref && this.isActive) {
-        Resize.listenTo(ref, () => this.measure(ref))
-        this.measure(ref)
         this.node = ref
+        Resize.listenTo(this.node, () => this.measure(this.node))
+        this.measure(this.node)
       }
     }
 
@@ -52,7 +52,6 @@ export default prop => Child => {
       }
       const { dimensions } = this.state
       let parentSize
-
       if (dimensions) {
         parentSize = {
           measure: (...args) => this.measure(...args),
@@ -60,9 +59,7 @@ export default prop => Child => {
           width: this.state.dimensions.width,
         }
       }
-
       const { className, style, ...props } = this.props
-
       return (
         <div
           className={className}

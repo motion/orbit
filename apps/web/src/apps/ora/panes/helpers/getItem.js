@@ -2,6 +2,7 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { OS } from '~/helpers'
+import { isEqual } from 'lodash'
 
 const getDate = result =>
   result.data && result.data.updated ? UI.Date.format(result.data.updated) : ''
@@ -102,15 +103,23 @@ function getSecondary(result) {
 
 let lastEnter
 let lastLeave
+let currentNode
+let lastPeek
+
+const setPeek = object => {
+  OS.send('peek', object)
+  lastPeek = object
+}
 
 export default function getItem(result, index) {
   let itemLastEnter
   let itemLastLeave
-  let currentNode
 
   function handleHover() {
     clearTimeout(lastEnter)
     clearTimeout(lastLeave)
+    // dont delay at all if were already peeking
+    const delay = currentNode ? 0 : 150
     itemLastEnter = lastEnter = setTimeout(() => {
       const url = result.data && result.data.url
       if (!currentNode) {
@@ -122,12 +131,17 @@ export default function getItem(result, index) {
         document.querySelector('.fade:last-child .pane .content').offsetTop -
         document.querySelector('.fade:last-child .ReactVirtualized__Grid')
           .scrollTop
-      OS.send('peek', { url, offsetTop, id: result.id })
-    }, 150)
+
+      const nextPeek = { url, offsetTop, id: result.id }
+
+      if (!isEqual(nextPeek, lastPeek)) {
+        setPeek(nextPeek)
+      }
+    }, delay)
   }
 
   function onMouseEnter(e) {
-    currentNode = e.target.parentNode
+    currentNode = e.currentTarget
     handleHover(e)
   }
 
@@ -140,7 +154,7 @@ export default function getItem(result, index) {
     clearTimeout(itemLastLeave)
     itemLastLeave = setTimeout(() => {
       if (itemLastEnter === lastEnter) {
-        OS.send('peek', null)
+        setPeek(null)
         itemLastEnter = null
       }
     }, 50)

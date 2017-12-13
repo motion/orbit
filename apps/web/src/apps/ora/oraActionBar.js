@@ -76,6 +76,8 @@ export default class OraActionBar {
       pointerEvents: 'none',
     },
     actionbar: {
+      flex: 1,
+      alignItems: 'center',
       padding: [0, 7],
       background: Constants.ORA_BG_MAIN_OPAQUE,
       position: 'relative',

@@ -7,9 +7,9 @@ import { Thing } from '~/app'
 import marked from 'marked'
 import Mousetrap from 'mousetrap'
 
-const isSamePeek = (a, b) => a && b && a.id === b.id
+// const isSamePeek = (a, b) => a && b && a.id === b.id
 const SHOW_DELAY = 0
-const HIDE_DELAY = 50
+const HIDE_DELAY = 100
 const background = [20, 20, 20, 0.98]
 
 type Peek = {
@@ -38,18 +38,6 @@ class WebView {
     @watch thing = () => this.peek && Thing.get(this.peek.id)
 
     get peek() {
-      // preload
-      if (this.nextPeek) {
-        return this.nextPeek
-      }
-      // about to show different
-      // if (
-      //   this.nextPeek &&
-      //   this.curPeek &&
-      //   !isSamePeek(this.nextPeek, this.curPeek)
-      // ) {
-      //   return null
-      // }
       // during hover its null so show it cached
       if (this.isHovered || this.isPinned) {
         return this.lastPeek
@@ -68,10 +56,6 @@ class WebView {
           return
         }
         console.log('peek-to', peek, this.lastPeek)
-        if (isSamePeek(this.lastPeek, peek)) {
-          return
-        }
-        this.nextPeek = peek
         clearTimeout(peekTimeout)
         clearTimeout(this.leftTimeout)
         const delay = peek ? SHOW_DELAY : HIDE_DELAY
@@ -98,11 +82,9 @@ class WebView {
         this.leftTimeout = this.setTimeout(() => {
           if (!this.isHovered) {
             this.lastPeek = null
-            this.nextPeek = null
           }
         }, SHOW_DELAY)
       }
-      this.nextPeek = null
     }
 
     handlePeekEnter = () => {
@@ -115,9 +97,6 @@ class WebView {
       // timeout here prevent flicker on re-enter same item
       this.setTimeout(() => {
         this.isHovered = false
-        if (!this.curPeek) {
-          this.nextPeek = null
-        }
       }, HIDE_DELAY)
     }
 
@@ -153,15 +132,16 @@ class WebView {
 })
 export default class PeekPage {
   render({ store }) {
-    const { peek, nextPeek } = store
-    const peekUrl = (peek && peek.url) || (nextPeek && nextPeek.url)
-    const arrowSize = 35
+    const { peek } = store
+    const peekUrl = peek && peek.url
+    const arrowSize = 42
+    const peekY = (store.peek || store.lastPeek || {}).offsetTop || 0
     // console.log('peekUrl', !!peekUrl, 'loaded?', store.pageLoaded)
     return (
       <UI.Theme name="light">
         <peek
           $peekVisible={peek}
-          $peekPosition={[store.nextPeek || store.lastPeek, store.peek]}
+          $peekPosition={peekY - 30}
           onMouseEnter={store.handlePeekEnter}
           onMouseLeave={store.handlePeekLeave}
         >
@@ -171,63 +151,65 @@ export default class PeekPage {
             background={background}
             css={{
               position: 'absolute',
-              top: 54,
+              top: 44,
               right: 20 - arrowSize,
             }}
           />
           <UI.Theme name="dark">
-            <content $$draggable if={store.thing}>
-              <header>
-                <title>
-                  <UI.Title selectable size={1.5} fontWeight={600}>
-                    {store.thing.title}
-                  </UI.Title>
-                </title>
-                <UI.Row
-                  $controls
-                  itemProps={{ circular: true, sizePadding: 1.5 }}
-                >
-                  <UI.Button
-                    if={peekUrl}
-                    icon="globe"
-                    onClick={store.toggleWebview}
-                    highlight={store.tab === 'webview'}
-                  />
-                  <UI.Button
-                    icon="pin"
-                    onClick={store.ref('isPinned').toggle}
-                    highlight={store.isPinned}
-                  />
-                </UI.Row>
-              </header>
-              <tabs>
-                <tab $visible={store.tab === 'readability'}>
-                  <readability>
-                    <UI.Text selectable size={1.2}>
-                      <div
-                        className="html-content"
-                        $$flex
-                        dangerouslySetInnerHTML={{
-                          __html: marked(store.thing.body),
-                        }}
-                      />
-                    </UI.Text>
-                  </readability>
-                </tab>
-                <tab $visible={store.pageLoaded && store.tab === 'webview'}>
-                  <loading if={!store.pageLoaded}>
-                    <UI.Text>Loading</UI.Text>
-                  </loading>
-                  <WebView
-                    if={peekUrl}
-                    $contentLoading={!store.pageLoaded}
-                    $webview
-                    key={peekUrl}
-                    src={peekUrl}
-                    getRef={store.handlePageRef}
-                  />
-                </tab>
-              </tabs>
+            <content $$draggable>
+              <innerContent $$flex if={store.thing}>
+                <header>
+                  <title>
+                    <UI.Title selectable size={1.5} fontWeight={600}>
+                      {store.thing.title}
+                    </UI.Title>
+                  </title>
+                  <UI.Row
+                    $controls
+                    itemProps={{ circular: true, sizePadding: 1.5 }}
+                  >
+                    <UI.Button
+                      if={peekUrl}
+                      icon="globe"
+                      onClick={store.toggleWebview}
+                      highlight={store.tab === 'webview'}
+                    />
+                    <UI.Button
+                      icon="pin"
+                      onClick={store.ref('isPinned').toggle}
+                      highlight={store.isPinned}
+                    />
+                  </UI.Row>
+                </header>
+                <tabs>
+                  <tab $visible={store.tab === 'readability'}>
+                    <readability>
+                      <UI.Text selectable size={1.2}>
+                        <div
+                          className="html-content"
+                          $$flex
+                          dangerouslySetInnerHTML={{
+                            __html: marked(store.thing.body),
+                          }}
+                        />
+                      </UI.Text>
+                    </readability>
+                  </tab>
+                  <tab $visible={store.pageLoaded && store.tab === 'webview'}>
+                    <loading if={!store.pageLoaded}>
+                      <UI.Text>Loading</UI.Text>
+                    </loading>
+                    <WebView
+                      if={false && peekUrl}
+                      $contentLoading={!store.pageLoaded}
+                      $webview
+                      key={peekUrl}
+                      src={peekUrl}
+                      getRef={store.handlePageRef}
+                    />
+                  </tab>
+                </tabs>
+              </innerContent>
             </content>
           </UI.Theme>
         </peek>
@@ -249,13 +231,19 @@ export default class PeekPage {
       opacity: 1,
       transition: 'all ease-out 100ms',
     },
-    peekPosition: ([lastPeek, peek]) => ({
+    peekPosition: y => ({
       transform: {
-        y: peek
-          ? peek.offsetTop
-          : ((lastPeek && lastPeek.offsetTop) || 10) - 10,
+        y,
       },
     }),
+    content: {
+      flex: 1,
+      background,
+      borderRadius: 10,
+      opacity: 1,
+      transition: 'background ease-in 200ms',
+      boxShadow: [[0, 0, 20, [0, 0, 0, 0.2]]],
+    },
     header: {
       flexFlow: 'row',
       alignItems: 'center',
@@ -272,17 +260,10 @@ export default class PeekPage {
       left: 0,
       bottom: 0,
       right: 0,
+      pointerEvents: 'none',
     },
     readability: {
       padding: 20,
-    },
-    content: {
-      flex: 1,
-      background,
-      borderRadius: 10,
-      opacity: 1,
-      transition: 'background ease-in 200ms',
-      boxShadow: [[0, 0, 20, [0, 0, 0, 0.2]]],
     },
     tabs: {
       flex: 1,
@@ -299,6 +280,7 @@ export default class PeekPage {
     },
     visible: {
       opacity: 1,
+      pointerEvents: 'auto',
     },
     loading: {
       pointerEvents: 'none !important',

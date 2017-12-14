@@ -15,16 +15,20 @@ export default class OraActionBar {
   render({ oraStore }) {
     const { store } = oraStore.stack.last
     const actions = store && store.actions
+    const collapse = (
+      <collapseBar onClick={oraStore.ui.toggleCollapsed}>
+        <UI.Arrow />
+        <UI.Icon name="menu" size={10} margin={[0, 0, 0, -16]} />
+      </collapseBar>
+    )
 
     return (
       <UI.Theme name="clear-dark">
         <actions>
-          <collapseBar onClick={oraStore.ui.toggleCollapsed}>
-            <UI.Arrow />
-            <UI.Icon name="menu" size={10} margin={[0, 0, 0, -16]} />
-          </collapseBar>
+          {!actions && collapse}
 
           <actionbar if={actions && !oraStore.ui.collapsed}>
+            {collapse}
             {actions
               .filter(Boolean)
               .map(({ flex, content, ...props }) => {
@@ -83,11 +87,7 @@ export default class OraActionBar {
       position: 'relative',
       zIndex: 10001,
       flexFlow: 'row',
-      // so we have no pointer events on this directly
-      // to let them go down to the collapse
-      '& > *': {
-        pointerEvents: 'auto',
-      },
+      pointerEvents: 'auto',
     },
     collapseBar: {
       height: 12,

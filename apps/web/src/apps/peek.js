@@ -247,7 +247,7 @@ export default class PeekPage {
                       $contentLoading={!store.pageLoaded}
                       $webview
                       key={peekUrl}
-                      src={peekUrl}
+                      src={peekUrl.replace('deliverx.com', 'deliverx.com:5000')}
                       getRef={store.handlePageRef}
                     />
                   </tab>
@@ -324,6 +324,7 @@ export default class PeekPage {
     webview: {
       height: '100%',
       width: '100%',
+      background: '#fff',
     },
     visible: {
       opacity: 1,

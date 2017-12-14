@@ -87,10 +87,7 @@ ${doc.body}`
     }
 
     const valid = word =>
-      word.length > 0 &&
-      isAlphaNum(word) &&
-      !includes(stopwords, word) &&
-      this.embedding.vectors[word]
+      word.length > 0 && isAlphaNum(word) && !includes(stopwords, word)
 
     return text
       .toLowerCase()
@@ -158,7 +155,9 @@ ${doc.body}`
     const { title, subtitle, body } = fragment
     const combined = [title || '', subtitle || '', body].join(' ')
 
-    const words = uniq(this.toWords(combined))
+    const words = uniq(this.toWords(combined)).filter(
+      word => this.embedding.vectors[word]
+    )
     const weights = words.map(word => this.wordWeight(fragment, word))
     const maxWeight = max(weights)
 
@@ -240,7 +239,7 @@ ${doc.body}`
     return mostCooccur
   }
 
-  search = async (query, count = 10, debug = true) => {
+  search = async (query, count = 10) => {
     const words = uniq(this.toWords(query))
 
     const queryCentroid = this.queryToCentroid(query)
@@ -312,6 +311,10 @@ ${doc.body}`
       const debugInfo = { nearest: [] }
       results[currentFragentIndex] = 0
 
+      if (fragment.title.indexOf('conver') === 0) {
+        console.log('frag is', fragment, titlesDistance[currentFragentIndex])
+      }
+
       range(words.length).forEach(termIndex => {
         const titleTerm = titlesDistance[currentFragentIndex][termIndex]
         const subtitleTerm = subtitlesDistance[currentFragentIndex][termIndex]
@@ -371,15 +374,16 @@ ${doc.body}`
 
     // only return one for each title
     const cachedTitles = []
+
     const noDuplicates = resultsByDistance.filter(result => {
-      if (includes(cachedTitles, result.item.title)) {
+      if (includes(cachedTitles, result.item.documentIndex)) {
         return false
       }
-      cachedTitles.push(result.item.title)
+      cachedTitles.push(result.item.documentIndex)
       return true
     })
 
-    const finalResults = noDuplicates.slice(0, count)
+    const finalResults = resultsByDistance.slice(0, count)
 
     return {
       results: finalResults,

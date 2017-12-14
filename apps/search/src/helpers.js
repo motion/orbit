@@ -1,4 +1,4 @@
-import { sortBy, repeat, last, memoize, range, sum } from 'lodash'
+import { sortBy, last, memoize, range, sum } from 'lodash'
 
 export const minKBy = (vals, k, fn) => {
   let stash = []
@@ -78,7 +78,16 @@ export const wordMoversDistance = (words, words2, vecs) => {
     let minIndex = null
 
     words2.forEach((w2, index) => {
-      let val = 1 - cosineSimilarity(w + ':' + w2, vecs[w], vecs[w2])
+      let val = 1
+
+      // if they're the same, don't bother going to the vector space
+      if (w2 === w) {
+        val = 0
+      }
+
+      if (vecs[w] && vecs[w2]) {
+        val = 1 - cosineSimilarity(w + ':' + w2, vecs[w], vecs[w2])
+      }
 
       // round up because the middle-closeness words are overvalued
       if (val > 0.25) {

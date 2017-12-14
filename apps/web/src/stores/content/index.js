@@ -1,4 +1,5 @@
 import rawTasks from './tasks'
+import rawConvos from './conversations'
 import rawDocs from './docs'
 
 const tasks = rawTasks.map(title => ({
@@ -17,6 +18,17 @@ const docs = rawDocs.map(body => ({
   url: 'http://docs.google.com',
 }))
 
+const convos = rawConvos.map(convo => ({
+  title: 'conversation ' + Math.random(), // 'convo ' + Math.floor(Math.random() * 10),
+  // integration: convo.type,
+  integration: 'google-docs',
+  type: 'document',
+  // type: 'conversation',
+  body: `# conversation ${Math.random()}
+  ${convo.body}`,
+  url: 'http://slack.com',
+}))
+
 const deliverx = [
   {
     title: 'Late deliveries map',
@@ -31,5 +43,5 @@ const deliverx = [
     url: 'http://deliverx.com/drivers',
   },
 ]
-
-export default [...tasks, ...docs, ...deliverx]
+console.log('convos are', convos)
+export default [...tasks, ...convos, ...docs, ...deliverx]

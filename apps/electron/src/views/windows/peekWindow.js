@@ -22,6 +22,7 @@ export default class PeekWindow extends React.Component {
         key: this.peekKey,
         dimensions: [700, 5000],
         position: [0, 0],
+        show: false,
       },
     ],
     peek: {},
@@ -73,9 +74,16 @@ export default class PeekWindow extends React.Component {
     })
   }
 
-  handlePeekRef = ref => {
+  handlePeekRef = (ref, peek) => {
     if (ref) {
       this.peekRef = ref.window
+      // show once it gets ref
+      if (!peek.show) {
+        this.setTimeout(() => {
+          peek.show = true
+          this.setState({ peeks: this.state.peeks })
+        }, 250)
+      }
     }
   }
 
@@ -126,8 +134,6 @@ export default class PeekWindow extends React.Component {
       background: '#00000000',
       webPreferences: Constants.WEB_PREFERENCES,
       transparent: true,
-      show: true,
-      alwaysOnTop: true,
     }
 
     console.log('this.state.peeks', this.state.peeks)
@@ -152,8 +158,10 @@ export default class PeekWindow extends React.Component {
           return (
             <Window
               key={key}
+              alwaysOnTop={isPeek}
+              show={peek.show}
               file={`${Constants.APP_URL}/peek?key=${key}`}
-              ref={isPeek ? this.handlePeekRef : _ => _}
+              ref={isPeek ? ref => this.handlePeekRef(ref, peek) : _ => _}
               {...windowProps}
               size={dimensions}
               position={position}

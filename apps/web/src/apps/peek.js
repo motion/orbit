@@ -119,9 +119,11 @@ class WebView {
     }
 
     handlePeekEnter = () => {
-      OS.send('peek-focus')
-      clearTimeout(this.leftTimeout)
-      this.isHovered = true
+      if (!this.isTorn) {
+        OS.send('peek-focus')
+        clearTimeout(this.leftTimeout)
+        this.isHovered = true
+      }
     }
 
     handlePeekLeave = () => {

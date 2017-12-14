@@ -83,7 +83,7 @@ export default class Window extends BaseComponent {
         const setter = this.window[`set${properCase(key)}`]
         if (setter) {
           console.log('update window, set', key, propVal)
-          setter(propVal)
+          setter.call(this.window, propVal)
           this.options[key] = propVal
         }
       }
@@ -91,6 +91,7 @@ export default class Window extends BaseComponent {
   }
 
   unmount() {
+    console.log('unmounting', this.props)
     this.window.close()
   }
 

@@ -109,6 +109,8 @@ function getSecondary(result) {
   return text
 }
 
+const PEEK_HOVER_DELAY = 600
+
 let lastEnter
 let lastLeave
 let currentNode
@@ -123,12 +125,14 @@ export default function getItem(result, index) {
   let itemLastEnter
   let itemLastLeave
 
-  function handleHover() {
+  function handleHover(_, target) {
     clearTimeout(lastEnter)
     clearTimeout(lastLeave)
     // dont delay at all if were already peeking
-    const delay = currentNode ? 0 : 150
+    const isAlreadyPeeking = !!currentNode
+    const delay = isAlreadyPeeking ? 0 : PEEK_HOVER_DELAY
     itemLastEnter = lastEnter = setTimeout(() => {
+      currentNode = target
       const url = result.data && result.data.url
       if (!currentNode) {
         return
@@ -151,12 +155,11 @@ export default function getItem(result, index) {
   }
 
   function onMouseEnter(e) {
-    currentNode = e.currentTarget
-    handleHover(e)
+    handleHover(e, e.currentTarget)
   }
 
   function onMouseMove(e) {
-    handleHover(e)
+    handleHover(e, e.currentTarget)
   }
 
   function onMouseLeave() {
@@ -166,6 +169,7 @@ export default function getItem(result, index) {
       if (itemLastEnter === lastEnter) {
         setPeek(null)
         itemLastEnter = null
+        currentNode = null
       }
     }, 50)
   }

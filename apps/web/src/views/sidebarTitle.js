@@ -125,13 +125,13 @@ export default class SidebarTitle {
               ellipse
               size={1.1}
               fontWeight={300}
-              opacity={0.6}
+              alpha={0.8}
               textShadow="0 -1px 0 rgba(0,0,0,0.2)"
             >
               {title}
             </UI.Title>
             {titleIsElement ? title : null}
-            <UI.Title if={subtitle} ellipse size={0.8} opacity={0.5}>
+            <UI.Title if={subtitle} ellipse size={0.8} alpha={0.35}>
               {subtitle}
             </UI.Title>
           </titles>

@@ -2,6 +2,7 @@ import { contextToResult } from '~/helpers'
 import { Thing } from '~/app'
 import * as ContentStore from '~/stores/contentStore'
 import * as Constants from '~/constants'
+import * as UI from '@mcro/ui'
 
 export default class MainSidebar {
   get oraStore() {
@@ -11,7 +12,39 @@ export default class MainSidebar {
     return this.oraStore.ui.search
   }
   get title() {
-    return null
+    const { lastContext } = this.oraStore
+    if (!lastContext) {
+      return null
+    }
+    const result = contextToResult(lastContext)
+    return {
+      title: <div css={{ width: 100 }} />,
+      after: (
+        <UI.Button
+          sizeRadius={2}
+          glint={false}
+          background="transparent"
+          width={140}
+          icon="arrow-min-right"
+          iconAfter
+          onClick={() => {
+            this.oraStore.stack.navigate(result)
+          }}
+          alpha={0.5}
+          hover={{
+            alpha: 1,
+          }}
+          css={{
+            zIndex: 10,
+            margin: [-2, 0],
+          }}
+        >
+          <UI.Text ellipse size={0.8} color="inherit">
+            {result.title}
+          </UI.Text>
+        </UI.Button>
+      ),
+    }
   }
   get finishedLoading() {
     return true
@@ -19,25 +52,12 @@ export default class MainSidebar {
 
   get rawResults() {
     let results = []
-
-    // context item
-    const { lastContext } = this.oraStore
-    if (lastContext) {
-      results = [
-        {
-          ...contextToResult(lastContext),
-          category: 'Context',
-        },
-      ]
-    }
-
     // results
     if (this.oraStore.contextResults.length) {
       results = [
         ...results,
         ...this.oraStore.contextResults.map(item => ({
           ...item,
-          category: 'All',
         })),
       ]
     } else {

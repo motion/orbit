@@ -28,7 +28,7 @@ const listProps = {
     secondaryProps: {
       alpha: 0.4,
     },
-    highlightBackground: [255, 255, 255, 0.07],
+    highlightBackground: [255, 255, 255, 0.027],
     childrenEllipse: 2,
   },
   groupBy: 'category',

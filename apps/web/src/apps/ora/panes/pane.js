@@ -140,8 +140,8 @@ export default class Pane {
         />
         <content
           $transparent={transparent}
+          $noTitle={!title}
           ref={paneStore.setContentRef}
-          css={{ borderTopRadius: title ? 0 : BORDER_TOP_RADIUS }}
         >
           <UI.Glint if={!title} borderRadius={BORDER_TOP_RADIUS} />
           <PaneList if={!children} {...this.props} />
@@ -166,6 +166,14 @@ export default class Pane {
       position: 'relative',
       background: Constants.ORA_BG_MAIN,
       overflow: 'hidden',
+      boxShadow: [Constants.SHADOW_GLINT_TOP],
+      transform: {
+        z: 0,
+      },
+    },
+    noTitle: {
+      borderTopRadius: BORDER_TOP_RADIUS,
+      boxShadow: [Constants.SHADOW_GLINT_TOP, Constants.ORA_INNER_SHADOW],
     },
     transparent: {
       background: 'transparent',

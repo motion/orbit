@@ -116,9 +116,8 @@ export default class ListItem extends React.Component<Props> {
     } = this.props
     const radiusProps = segmented
       ? {
-          borderRadius: isLastElement || isFirstElement ? borderRadius : 0,
-          borderBottomRadius: isLastElement,
-          borderTopRadius: isFirstElement,
+          borderBottomRadius: isLastElement ? borderRadius : 0,
+          borderTopRadius: isFirstElement ? borderRadius : 0,
         }
       : {
           borderRadius,
@@ -240,7 +239,6 @@ export default class ListItem extends React.Component<Props> {
       flex: 1,
       overflow: 'hidden',
       maxWidth: '100%',
-      fontWeight: 200,
       flexDirection: 'column',
       alignItems: 'flex-start',
     },

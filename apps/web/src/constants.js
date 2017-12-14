@@ -14,9 +14,10 @@ if (process.env.IS_PROD) {
 export const VERSION = require('../package.json').version
 
 export const oraBg = '#5e1bdf'
-export const ORA_BG = [30, 30, 30, 0.98]
-export const ORA_BG_MAIN_OPAQUE = [27, 27, 27]
+export const ORA_BG = [0, 0, 0, 0.8]
+export const ORA_BG_MAIN_OPAQUE = [32, 32, 32]
 export const ORA_BG_MAIN = [...ORA_BG_MAIN_OPAQUE]
+export const ORA_INNER_SHADOW = [0, 0, 10, 0, [0, 0, 0, 3]]
 export const ORA_WIDTH = 300
 export const ORA_HEIGHT = 535
 export const ORA_HEADER_HEIGHT = 40
@@ -25,6 +26,8 @@ export const ACTION_BAR_HEIGHT = 40
 export const HEADER_HEIGHT = 36
 export const TRAY_WIDTH = 400
 export const TRAY_HEIGHT = 500
+
+export const SHADOW_GLINT_TOP = 'inset 0 0.5px rgba(255,255,255,0.08)'
 
 export const IN_TRAY =
   IS_ELECTRON && (window.location + '').indexOf('?inTray') !== -1

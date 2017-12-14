@@ -61,7 +61,7 @@ const listProps = {
     secondaryProps: {
       alpha: 0.4,
     },
-    highlightBackground: [255, 255, 255, 0.027],
+    highlightBackground: [255, 255, 255, 0.075],
     childrenEllipse: 2,
   },
   groupBy: 'category',
@@ -133,6 +133,7 @@ export default class OraPage {
           }}
         >
           <OraContent oraStore={oraStore} />
+          <UI.Glint bottom color="#fff" opacity={0.1} borderRadius={15} />
         </ora>
         <orbit
           $orbitHidden={hidden}
@@ -172,7 +173,7 @@ export default class OraPage {
       ],
       margin: 10,
       borderTopRadius: 10,
-      borderBottomRadius: 20,
+      borderBottomRadius: 15,
       overflow: 'hidden',
       transition: 'transform ease-in 100ms, opacity ease-in 100ms',
       opacity: 0,

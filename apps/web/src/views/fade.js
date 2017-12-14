@@ -36,7 +36,7 @@ export default class Fade extends React.Component {
     return {
       fade: {
         width,
-        opacity: isActive ? 1 : 0.5,
+        opacity: isActive ? 1 : 0,
         pointerEvents: isActive ? 'auto' : 'none',
         transform: {
           x: (index - currentIndex) * width / 10,

@@ -66,8 +66,11 @@ export default function getContextInjection() {
       name: 'Zendesk',
       regex: /.+zendesk.com.+\/tickets\/.+/,
       script: () => {
+        // for some reason there can sometimes be multiple subject fields
+        const subjects = document.querySelectorAll('input[name=subject]')
+        const title = (subjects[subjects.length] - 1).value
         return {
-          title: document.querySelector('input[name=subject]').value,
+          title,
           selection: contentEditableValue(),
         }
       },

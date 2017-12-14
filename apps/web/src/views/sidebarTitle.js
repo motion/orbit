@@ -40,7 +40,12 @@ class Tab {
   render({ store, children }) {
     return (
       <tab
-        css={{ position: 'relative', flex: 1, overflow: 'hidden' }}
+        css={{
+          position: 'relative',
+          flex: 1,
+          overflow: 'hidden',
+          borderBottom: [1, [255, 255, 255, 0.15]],
+        }}
         onMouseEnter={store.ref('showGlow').setter(true)}
         onMouseLeave={store.ref('showGlow').setter(false)}
       >

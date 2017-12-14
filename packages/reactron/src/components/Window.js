@@ -10,13 +10,15 @@ const EVENT_KEYS = {
   onFocus: 'focus',
 }
 
+const properCase = str => `${str[0].toUpperCase()}${str.slice(1)}`
+
 export default class Window extends BaseComponent {
   mount() {
     this.extensionNames = {}
     this.devExtensions = new Set()
 
     const { props } = this
-    this.window = new BrowserWindow({
+    this.options = {
       show: props.show === undefined ? true : props.show,
       acceptFirstMouse: !!props.acceptFirstMouse,
       titleBarStyle: props.titleBarStyle,
@@ -27,7 +29,8 @@ export default class Window extends BaseComponent {
       backgroundColor: props.backgroundColor,
       alwaysOnTop: !!props.alwaysOnTop,
       frame: !!props.frame,
-    })
+    }
+    this.window = new BrowserWindow(this.options)
 
     this.updateSize = () => configureSize.call(this, this.props)
     this.updatePosition = () => configurePosition.call(this, this.props)
@@ -56,6 +59,7 @@ export default class Window extends BaseComponent {
       defaultPosition: this.updatePosition,
       onMove: this.updatePosition,
       onMoved: this.updatePosition,
+      alwaysOnTop: this.handleSettableProp('alwaysOnTop'),
       file: () => configureFile.call(this, this.props),
       acceptFirstMouse: () => {
         if (process.env.NODE_ENV !== 'production') {
@@ -66,6 +70,23 @@ export default class Window extends BaseComponent {
           )
         }
       },
+    }
+  }
+
+  handleSettableProp(key) {
+    return propVal => {
+      if (this.unmounted) {
+        return
+      }
+      // changed value
+      if (this.options[key] !== propVal) {
+        const setter = this.window[`set${properCase(key)}`]
+        if (setter) {
+          console.log('update window, set', key, propVal)
+          setter(propVal)
+          this.options[key] = propVal
+        }
+      }
     }
   }
 

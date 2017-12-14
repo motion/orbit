@@ -191,7 +191,7 @@ export default function getItem(result, index) {
     primaryProps: {
       // lower opacity as list items go down
       alpha: Math.max(0.5, (9 - index) / 8),
-      size: 1.2,
+      size: 1.25,
       fontWeight: 500,
     },
     secondary: getSecondary(result),

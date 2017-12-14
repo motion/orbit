@@ -12,7 +12,9 @@ export default class BaseComponent {
     this.children = []
     this.attachedHandlers = {}
     if (this.mount) {
+      this.unmounted = true
       this.mount()
+      this.unmounted = false
     }
   }
 

@@ -44,8 +44,7 @@ DeliverX
 
 # now
 
-* flicker/movement on search
-* list: fix scrolldown on pane height adjust bug
+* production build fixes for demo
 * crawler dont use node readability
 * more forgiving markdown parser
 * drive sync pane / drive sync

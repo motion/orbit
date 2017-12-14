@@ -173,7 +173,6 @@ export default class ListItem extends React.Component<Props> {
                 $primaryText
                 fontSize={fontSize}
                 size={size}
-                color="inherit"
                 editable={editable}
                 autoselect={autoselect}
                 onFinishEdit={onFinishEdit}

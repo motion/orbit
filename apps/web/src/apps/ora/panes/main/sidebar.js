@@ -24,7 +24,7 @@ export default class MainSidebar {
           sizeRadius={2}
           glint={false}
           background="transparent"
-          width={140}
+          maxWidth={140}
           icon="arrow-min-right"
           iconAfter
           onClick={() => {

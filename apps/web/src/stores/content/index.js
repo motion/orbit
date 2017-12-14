@@ -1,3 +1,4 @@
+import { uniq } from 'lodash'
 import rawTasks from './tasks'
 import rawConvos from './conversations'
 import rawDocs from './docs'
@@ -18,16 +19,22 @@ const docs = rawDocs.map(body => ({
   url: 'http://docs.google.com',
 }))
 
-const convos = rawConvos.map(convo => ({
-  title: 'conversation ' + Math.random(), // 'convo ' + Math.floor(Math.random() * 10),
-  // integration: convo.type,
-  integration: 'google-docs',
-  type: 'document',
-  // type: 'conversation',
-  body: `# conversation ${Math.random()}
+const convos = rawConvos.map(convo => {
+  const title =
+    'chat between ' +
+    uniq(convo.messages.map(({ author }) => author)).join(', ')
+
+  return {
+    title,
+    // integration: convo.type,
+    integration: 'google-docs',
+    type: 'document',
+    // type: 'conversation',
+    body: `# ${title}
   ${convo.body}`,
-  url: 'http://slack.com',
-}))
+    url: 'http://slack.com',
+  }
+})
 
 const deliverx = [
   {

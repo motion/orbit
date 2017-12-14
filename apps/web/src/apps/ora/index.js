@@ -126,6 +126,7 @@ export default class OraPage {
       <UI.Theme name="dark">
         <ora
           $visible={!hidden}
+          $oraFocused={oraStore.ui.barFocused}
           ref={oraStore.ref('barRef').set}
           $$draggable
           css={{
@@ -137,6 +138,7 @@ export default class OraPage {
         </ora>
         <orbit
           $orbitHidden={hidden}
+          $orbitBarFocused={oraStore.ui.barFocused}
           onClick={() => {
             oraStore.ui.toggleHidden()
             if (!oraStore.ui.state.hidden) {
@@ -168,18 +170,21 @@ export default class OraPage {
       background: Constants.ORA_BG,
       // border: [1, [255, 255, 255, 0.035]],
       boxShadow: [
-        [0, 0, 15, [0, 0, 0, 0.5]],
+        [0, 0, 15, 2, [0, 0, 0, 0.2]],
         // ['inset', 0, 0, 120, [255, 255, 255, 0.053]],
       ],
       margin: 10,
       borderTopRadius: 10,
       borderBottomRadius: 15,
       overflow: 'hidden',
-      transition: 'transform ease-in 100ms, opacity ease-in 100ms',
+      transition: 'all ease-in 200ms',
       opacity: 0,
       transform: {
         x: 8,
       },
+    },
+    oraFocused: {
+      background: Constants.ORA_BG_FOCUSED,
     },
     visible: {
       pointerEvents: 'auto',
@@ -193,8 +198,8 @@ export default class OraPage {
       cursor: 'normal',
       userSelect: 'none',
       position: 'absolute',
-      top: 20,
-      right: 20,
+      top: 22,
+      right: 22,
       background: `linear-gradient(to top, ${Constants.oraBg}, ${UI.color(
         Constants.oraBg
       ).darken(0.1)})`,
@@ -248,6 +253,9 @@ export default class OraPage {
           x: 10,
         },
       },
+    },
+    orbitBarFocused: {
+      top: 24,
     },
     icon: {
       position: 'absolute',

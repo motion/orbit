@@ -24,6 +24,7 @@ export default class Windows extends React.Component {
     position: [0, 0],
     trayPosition: [0, 0],
     context: null, // osContext
+    lastMove: Date.now(),
   }
 
   async updateState(state) {
@@ -139,7 +140,9 @@ export default class Windows extends React.Component {
   onBeforeQuit = () => console.log('hi')
   onOraBlur = () => this.rootStore.sendOraSync('ora-blur')
   onOraFocus = () => this.rootStore.sendOraSync('ora-focus')
-  onOraMoved = trayPosition => this.updateState({ trayPosition })
+  onOraMoved = trayPosition => {
+    this.updateState({ trayPosition, lastMove: Date.now() })
+  }
 
   onSettingsSized = size => this.updateState({ size })
   onSettingsMoved = position => this.updateState({ position })

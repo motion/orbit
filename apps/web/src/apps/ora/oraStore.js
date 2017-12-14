@@ -58,6 +58,7 @@ export default class OraStore {
     this._listenForElectronState()
     this._listenForKeyEvents()
     this._watchContext()
+    this._watchClickPrevent()
 
     this.watch(function setDocuments() {
       this.search.setDocuments(this.things || [])
@@ -106,6 +107,20 @@ export default class OraStore {
     // allows us to get updated electron state
     this.on(OS, 'electron-state', (event, state) => {
       this.electronState = state
+    })
+  }
+
+  _watchClickPrevent = () => {
+    let clickPreventClear
+    this.watch(() => {
+      if (Date.now() - this.electronState.lastMove < 100) {
+        clearTimeout(clickPreventClear)
+        localStorage.setItem('click-disabled', true)
+        // wait a little, not sure if necessary
+        clickPreventClear = this.setTimeout(() => {
+          localStorage.removeItem('click-disabled')
+        }, 150)
+      }
     })
   }
 

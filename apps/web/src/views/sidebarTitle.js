@@ -4,7 +4,7 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import * as Constants from '~/constants'
 
-const TAB_SLANT_X = 6.5
+const TAB_SLANT_X = 7
 const BORDER_LEFT_SIZE = 12
 
 const glowProps = {
@@ -32,7 +32,7 @@ const chromeStyle = {
     // this little extra moves the blurry
     // top from perspective up just enough
     // to make the top glint connect nicely
-    y: -1.4,
+    y: '-3.5%',
   },
 }
 
@@ -65,7 +65,7 @@ class Tab {
             borderTopLeftRadius: BORDER_LEFT_SIZE,
             borderTopRightRadius: 0,
             zIndex: 2,
-            boxShadow: ['inset 1px 0.5px rgba(255,255,255,0.1)'],
+            boxShadow: ['inset 1px 1px rgba(255,255,255,0.1)'],
           }}
         />
         <chrome

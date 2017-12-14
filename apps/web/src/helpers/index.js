@@ -5,13 +5,17 @@ import fuzzy_ from './fuzzy'
 
 export IndexDB from './indexDB'
 
+export const trimSingleLine = str => str.trim().replace(/\s{2,}/g, ' ')
+
 export const contextToResult = context => ({
   id: context.url,
-  title: context.selection
-    ? `${context.selection} | ${context.title}`
-    : context.title,
+  title: trimSingleLine(
+    context.selection
+      ? `${context.selection} | ${context.title}`
+      : context.title
+  ),
+  subtitle: `in ${context.focusedApp.replace('Google ', '')} · ${context.url}`,
   type: 'context',
-  icon: context.application === 'Google Chrome' ? 'social-google' : null,
   image: context.favicon,
   peek: false,
 })

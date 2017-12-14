@@ -255,6 +255,7 @@ export default class Text extends React.Component<Props> {
         <span
           if={ellipse}
           $ellipseLines={multiLineEllipse}
+          $ellipseSingle={!multiLineEllipse}
           style={
             multiLineEllipse
               ? {
@@ -292,6 +293,9 @@ export default class Text extends React.Component<Props> {
       display: '-webkit-box',
       WebkitBoxOrient: 'vertical',
       width: '100%',
+    },
+    ellipseSingle: {
+      whiteSpace: 'nowrap',
     },
     span: {
       margin: ['auto', 0],

@@ -7,8 +7,16 @@ import { isEqual } from 'lodash'
 const getDate = result =>
   result.data && result.data.updated ? UI.Date.format(result.data.updated) : ''
 
+const INTEGRATION_ICONS = {
+  github: 'social-github',
+  google: 'social-google',
+  'google-docs': 'social-google',
+  'pin-site': 'pin',
+}
+
 function getIcon(result) {
   if (result.data && result.data.integration === 'github') {
+    return INTEGRATION_ICONS[result.data.integration]
     // const num = result.data.data.number
     // return (
     //   <icon $$centered>
@@ -62,22 +70,21 @@ function location(thing) {
       return `#${thing.data.channel}`
     case 'pin':
     case 'pin-site':
-      return thing.data.host
+      return thing.data && thing.data.host
   }
 }
 
 function getSecondary(result) {
   const thing = result.data
-  if (!thing) {
-    return null
-  }
   let text = ''
   let icon = null
-  if (ICON_NAME[thing.integration]) {
-    icon = <InlineIcon name={ICON_NAME[thing.integration]} />
-  }
-  if (thing.updated) {
-    text = getDate(result)
+  if (thing) {
+    if (ICON_NAME[thing.integration]) {
+      icon = <InlineIcon name={ICON_NAME[thing.integration]} />
+    }
+    if (thing.updated) {
+      text = getDate(result)
+    }
   }
   if (result.subtitle) {
     // origin url is in data.integration
@@ -87,7 +94,7 @@ function getSecondary(result) {
       text = result.subtitle
     }
   }
-  if (location(thing)) {
+  if (thing && location(thing)) {
     // origin url is in data.integration
     text = `${location(thing)} · ${text}`
   }

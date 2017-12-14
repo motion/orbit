@@ -183,7 +183,7 @@ export default class PeekPage {
             }}
           />
           <UI.Theme name="dark">
-            <content $$draggable>
+            <content>
               <innerContent $$flex if={store.thing}>
                 <header $$draggable>
                   <title>

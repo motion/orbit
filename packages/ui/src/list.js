@@ -544,6 +544,7 @@ class List extends React.PureComponent<Props, { selected: number }> {
       <list
         $visible={!virtualized || this.state.started}
         $hideScrollBar={hideScrollBar}
+        onScroll={!virtualized && onScroll}
         style={{
           height: height || virtualized ? '100%' : 'auto',
           width,

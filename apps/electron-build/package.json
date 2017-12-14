@@ -1,7 +1,7 @@
 {
   "name": "@mcro/electron-build",
   "productName": "Orbit",
-  "version": "1.5.53",
+  "version": "1.5.54",
   "private": true,
   "updater": {
     "url": "https://raw.githubusercontent.com/motion/orbit-updates/master/updates.json"

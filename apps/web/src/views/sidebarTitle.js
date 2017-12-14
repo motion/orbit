@@ -155,9 +155,8 @@ export default class SidebarTitle {
       flex: 1,
       width: '50%',
       justifyContent: 'flex-start',
-      alignItems: 'center',
+      alignItems: 'flex-start',
       paddingRight: 8,
-      flexFlow: 'row',
     },
     backButton: {
       margin: [-3, 5, -3, -8],

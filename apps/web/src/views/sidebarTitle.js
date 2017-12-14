@@ -127,7 +127,7 @@ export default class SidebarTitle {
             alignSelf="center"
             hover={{
               alpha: 0.95,
-              background: [20, 20, 20, 1],
+              background: [30, 30, 30, 0.9],
             }}
             onClick={onBack}
             {...backProps}

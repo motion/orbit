@@ -17,32 +17,46 @@ export default class Fade extends React.Component {
   }
 
   render({ width, style, children, index, currentIndex, previousIndex }) {
+    const isActive = currentIndex === index
     const movingBack = previousIndex > currentIndex
-    return <fade style={{ width, ...style }}>{children}</fade>
+    const movingForward = previousIndex < currentIndex
+    const x = (index - currentIndex) * width / 5
+
+    // console.log(
+    //   'Fade:',
+    //   index,
+    //   x,
+    //   movingBack ? 'BACK' : movingForward ? 'FORWARD' : ''
+    // )
+
+    return (
+      <fade
+        css={{
+          ...style,
+          width,
+          opacity: isActive ? 1 : 0,
+          pointerEvents: isActive ? 'auto' : 'none',
+          transform: {
+            x,
+          },
+        }}
+      >
+        {children}
+      </fade>
+    )
   }
 
   static style = {
     fade: {
+      transition: ['opacity ease-in 250ms', 'transform ease-in 250ms'],
       position: 'absolute',
       top: 0,
       left: 0,
       right: 0,
       bottom: 0,
-    },
-  }
-
-  static theme = ({ width, index, currentIndex, previousIndex }) => {
-    const isActive = currentIndex === index
-    return {
-      fade: {
-        width,
-        opacity: isActive ? 1 : 0,
-        pointerEvents: isActive ? 'auto' : 'none',
-        transform: {
-          x: (index - currentIndex) * width / 10,
-        },
-        transition: ['opacity ease-in 250ms', 'transform ease-in 250ms'],
+      transform: {
+        x: 0,
       },
-    }
+    },
   }
 }

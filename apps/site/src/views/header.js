@@ -38,16 +38,18 @@ export default () => (
         <MenuItem to="/support" color="#fff">
           For Support
         </MenuItem>
-        <MenuItem to="/pricing">Pricing</MenuItem>
+        <MenuItem to="/pricing" color="#fff">
+          Pricing
+        </MenuItem>
       </menu>
 
       <end css={{ width: 180, alignItems: 'flex-end' }}>
         <UI.Button
           icon="objects_planet"
           iconAfter
-          size={1}
+          size={1.2}
           fontWeight={200}
-          theme="rgb(6.1%, 53.4%, 22.6%)"
+          theme="#000"
           color="#fff"
         >
           Download

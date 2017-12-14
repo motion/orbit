@@ -4,11 +4,10 @@ import * as View from '~/views'
 import * as UI from '@mcro/ui'
 
 export default props => (
-  <UI.Theme name="light">
+  <UI.Theme name="dark">
     <View.Section
-      space
+      dark
       css={{
-        background: `#fff`,
         padding: [200, 0, 100],
       }}
     >

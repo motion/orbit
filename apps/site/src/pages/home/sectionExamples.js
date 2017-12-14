@@ -20,6 +20,7 @@ const Logo = props => (
 )
 
 const bgColor = Constants.dark2
+const bgColor2 = Constants.dark1
 
 const Circles = ({ rings, ringSize, ...props }) => {
   const size = rings * ringSize
@@ -41,21 +42,21 @@ const Circles = ({ rings, ringSize, ...props }) => {
             key={index}
             css={{
               background: [
-                '#f2f2f2',
+                bgColor2,
                 bgColor,
-                '#f2f2f2',
+                bgColor2,
                 bgColor,
-                '#f2f2f2',
+                bgColor2,
                 bgColor,
-                '#f2f2f2',
+                bgColor2,
                 bgColor,
                 'yellow',
                 bgColor,
-                '#f2f2f2',
+                bgColor2,
                 bgColor,
-                '#f2f2f2',
+                bgColor2,
                 bgColor,
-                '#f2f2f2',
+                bgColor2,
               ][index],
               width: circleSize,
               height: circleSize,
@@ -75,11 +76,10 @@ const OPTS = {
 }
 
 const lightText = UI.color(Constants.colorSecondary).lighten(0.4)
-const topColor = '#444'
 
 @view
 export default class SectionExamples {
-  render({ setSection, homeStore, blurred }) {
+  render({ setSection, homeStore }) {
     const TOTAL_EXAMPLES = 3
     let index = -1
     const makeSection = (key, content, opts = OPTS, props) => {
@@ -113,7 +113,7 @@ export default class SectionExamples {
             css={{ position: 'absolute', top: 90, left: -185, zIndex: 1 }}
           />
 
-          <View.Section dark2>
+          <View.Section dark>
             <View.SectionContent fullscreen>
               <View.Slant dark inverse />
 

@@ -11,7 +11,7 @@ export default class Illustration2 {
         $$row
         css={{
           flex: 1,
-          marginRight: -70,
+          marginRight: -50,
           justifyContent: 'center',
           userSelect: 'none',
         }}
@@ -23,7 +23,7 @@ export default class Illustration2 {
             0: true,
           }}
           ringBackground="transparent"
-          ringBorder={[2, Constants.mainLight]}
+          ringBorder={[10, Constants.colorSecondary]}
           planetSize={100}
           planetStyles={{
             background: '#fff',
@@ -35,7 +35,7 @@ export default class Illustration2 {
             'slack',
             'github',
             'zendesk',
-            'gitter',
+            'intercom',
             'intercom',
             'dropbox',
             'quora',
@@ -64,7 +64,7 @@ export default class Illustration2 {
           css={{
             flexFlow: 'row',
             alignItems: 'flex-end',
-            margin: [0, 'auto', -70],
+            margin: [0, 'auto', -60],
           }}
         >
           <figure
@@ -76,7 +76,7 @@ export default class Illustration2 {
             <img
               src="/figures/Hummingbird.svg"
               css={{
-                margin: [-250, 0, 0, -90],
+                margin: [-280, 0, 0, -90],
                 width: 120,
                 height: 120,
                 zIndex: 1000,
@@ -92,7 +92,6 @@ export default class Illustration2 {
                 width: 170,
                 height: 170,
                 marginLeft: 75,
-                alignSelf: 'flex-end',
                 transform: { scaleX: -1 },
               }}
             />

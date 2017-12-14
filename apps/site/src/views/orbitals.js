@@ -70,18 +70,6 @@ export default ({
           zIndex: 100,
         }}
       >
-        <contain $$fullscreen>
-          <circle
-            css={{
-              margin: 'auto',
-              border: ringBorder,
-              width: 100,
-              height: 100,
-              background: ringBackground,
-              borderRadius: 1000000000,
-            }}
-          />
-        </contain>
         <contain if={rings > 0} $$fullscreen>
           <circle
             css={{

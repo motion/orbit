@@ -17,48 +17,16 @@ export default class SectionIntegrations extends React.Component {
     appleWatch(ref)
   }
 
-  render({ blurred }) {
-    const background = '#261B37' //Constants.mainLight
+  render() {
     return (
       <UI.Theme name="dark">
         <View.Section
+          dark
           css={{
             padding: [60, 0],
-            background,
             zIndex: 100000,
           }}
         >
-          <slant
-            css={{
-              position: 'absolute',
-              top: -50,
-              background,
-              left: -300,
-              right: -300,
-              height: 100,
-              zIndex: 1200000,
-              // boxShadow: [[0, -10, 10, [0, 0, 0, 0.015]]],
-              transform: {
-                rotate: '-1deg',
-              },
-            }}
-          />
-          <bottomSlant
-            css={{
-              position: 'absolute',
-              bottom: -50,
-              background,
-              left: -300,
-              right: -300,
-              height: 100,
-              zIndex: 1200000,
-              boxShadow: [[0, 10, 10, [0, 0, 0, 0.1]]],
-              // borderBottom: [1, Constants.colorSecondary],
-              transform: {
-                rotate: '-1deg',
-              },
-            }}
-          />
           <View.SectionContent>
             <View.Title size={3}>Orbits works with you</View.Title>
             <View.SubTitle css={{ padding: [0, 400, 0, 0] }}>

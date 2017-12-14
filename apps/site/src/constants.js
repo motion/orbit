@@ -5,7 +5,7 @@ export const smallSize = 900
 export const PAGE_WIDTH = smallSize
 
 export const SLANT_AMT = 60
-export const SECTION_HEIGHT = Math.min(1200, window.innerHeight * 1.1)
+export const SECTION_HEIGHT = Math.min(1000, window.innerHeight * 1.1)
 export const SLANT = Math.atan(SLANT_AMT / (SECTION_HEIGHT / 2)) * 180 / Math.PI
 
 export const ORA_LEFT_PAD = 285
@@ -15,8 +15,8 @@ export const ORA_HEIGHT = 410
 export const ORA_WIDTH = 300
 export const ORA_BORDER_RADIUS = 6
 
-export const colorMain = 'rgb(0%, 74%, 89%)'
-export const colorSecondary = 'rgb(56.8%, 83.1%, 0%)'
+export const colorMain = 'rgb(0%, 50.3%, 99.9%)'
+export const colorSecondary = 'rgb(92.1%, 0%, 38.4%)'
 export const colorTeal = '#49ceac'
 export const colorBlue = '#133cca'
 
@@ -35,8 +35,8 @@ export const dark2 = UI.color(colorSecondary)
   // .darken(0.75)
   .toString()
 
-export const darkBackground = `linear-gradient(${dark1}, ${dark2})`
-export const darkBackgroundInverse = `linear-gradient(${dark2}, ${dark1})`
+export const darkBackground = dark1
+export const darkBackgroundInverse = dark2
 
 export const dark = {
   background: darkBackground,

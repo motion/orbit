@@ -33,7 +33,7 @@ export default class HomeHeader {
                   position: 'relative',
                   zIndex: 11,
                   width: '45%',
-                  marginTop: -90,
+                  marginTop: -20,
                 }}
               >
                 <View.Title selectable {...titleProps} textAlign="right">
@@ -68,13 +68,13 @@ export default class HomeHeader {
                 css={{
                   position: 'relative',
                   zIndex: 11,
-                  height: 220,
+                  height: 250,
                   left: 20,
                   pointerEvents: 'none',
                   userSelect: 'none',
                 }}
               >
-                <Illustration2 css={{ transform: { scale: 1.2 } }} />
+                <Illustration2 css={{ transform: { y: 60, scale: 1.2 } }} />
               </inner>
 
               <View.Bubble
@@ -89,8 +89,8 @@ export default class HomeHeader {
                   color={'#fff'}
                   selectable
                 >
-                  Orbit keeps your team in<br />
-                  <span css={{ marginLeft: -2 }}>sync, without hassle</span>
+                  Orbit keeps your team<br />
+                  in sync, <span css={{ marginLeft: -2 }}>without hassle</span>
                 </View.Title>
               </text>
             </section>

@@ -16,6 +16,7 @@ const docs = rawDocs.map(body => ({
   integration: 'google-docs',
   type: 'document',
   body,
+  url: 'http://docs.google.com',
 }))
 
 const deliverx = [

@@ -657,10 +657,13 @@ export default class Model {
         const remove = async item => {
           try {
             await item.remove()
-          } catch (e) {
+          } catch (err) {
             // loop on document conflicts to delete all revisions
-            console.log('err', e)
-            await remove(item)
+            if (err.message === 'Document update conflict') {
+              await remove(item)
+            } else {
+              console.error(err)
+            }
           }
           return true
         }

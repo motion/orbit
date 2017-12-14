@@ -69,8 +69,9 @@ function location(thing) {
     case 'slack':
       return `#${thing.data.channel}`
     case 'pin':
+      return thing.host
     case 'pin-site':
-      return thing.data && thing.data.host
+      return thing.host
   }
 }
 

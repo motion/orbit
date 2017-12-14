@@ -52,6 +52,7 @@ class WebView {
     willMount() {
       OS.send('peek-start')
 
+      this.watchPeekTab()
       this.watchPeekTo()
       this.watchPeekTear()
 
@@ -59,6 +60,14 @@ class WebView {
       this.trap.bind('esc', () => {
         console.log('esc')
         this.isHovered = false
+      })
+    }
+
+    watchPeekTab() {
+      this.watch(function watchPeek() {
+        if (this.thing && !this.thing.body && this.thing.url) {
+          this.tab = 'webview'
+        }
       })
     }
 

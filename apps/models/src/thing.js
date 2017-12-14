@@ -6,7 +6,6 @@ import { cleanId, findOrUpdate } from './helpers'
 declare class CurrentUser {}
 
 const db = new IndexDB()
-
 const getHost = url => new URL(url).host.replace(/^www\./, '')
 
 export type ThingType = typeof methods & {
@@ -44,7 +43,11 @@ export class Thing extends Model {
     timestamps: true,
   }
 
-  // methods = {}
+  methods = {
+    get host() {
+      return (this.url && getHost(this.url)) || ''
+    },
+  }
 
   asyncMethods = {
     async body() {
@@ -126,10 +129,7 @@ export class Thing extends Model {
     title: `${contents.title}`,
     body: `${contents.content}`,
     type: type || 'website',
-    data: {
-      host: getHost(url),
-      ...data,
-    },
+    data,
     integration,
   })
 

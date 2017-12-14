@@ -26,6 +26,11 @@ export default class OraStore {
   // synced from electron
   electronState = {}
 
+  // helper to show currently focused results
+  get results() {
+    return this.stack.last.results
+  }
+
   get contextResults() {
     return this.search.results
       .slice(0, 6)

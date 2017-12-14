@@ -27,12 +27,15 @@ class WebView {
   }
 }
 
+// for hmr
+window.cachedPeek = null
+
 @view({
   store: class PeekStore {
-    lastPeek: ?Peek = null
-    curPeek: ?Peek = null
-    nextPeek: ?Peek = null
-    isTorn = false
+    lastPeek: ?Peek = window.cachedPeek
+    curPeek: ?Peek = window.cachedPeek
+    nextPeek: ?Peek = window.cachedPeek
+    isTorn = !!window.cachedPeek
     isHovered = false
     isPinned = false
     pageLoaded = false
@@ -108,6 +111,7 @@ class WebView {
       this.curPeek = peek
       if (peek) {
         this.lastPeek = peek
+        window.cachedPeek = peek
       }
       if (!peek) {
         this.leftTimeout = this.setTimeout(() => {
@@ -178,7 +182,7 @@ export default class PeekPage {
       <UI.Theme name="light">
         <peek
           $peekVisible={peek}
-          $peekPosition={peekY - 30}
+          $peekPosition={peekY - 20}
           onMouseEnter={store.handlePeekEnter}
           onMouseLeave={store.handlePeekLeave}
         >
@@ -189,7 +193,7 @@ export default class PeekPage {
             background={background}
             css={{
               position: 'absolute',
-              top: 44,
+              top: 35,
               right: 20 - arrowSize,
             }}
           />
@@ -198,7 +202,7 @@ export default class PeekPage {
               <innerContent $$flex if={store.thing}>
                 <header $$draggable>
                   <title>
-                    <UI.Title selectable size={1.5} fontWeight={600}>
+                    <UI.Title selectable size={1} fontWeight={600}>
                       {store.thing.title}
                     </UI.Title>
                   </title>
@@ -292,7 +296,8 @@ export default class PeekPage {
     header: {
       flexFlow: 'row',
       alignItems: 'center',
-      padding: 20,
+      padding: [10, 15],
+      borderBottom: [1, [255, 255, 255, 0.09]],
     },
     controls: {
       padding: [0, 0, 0, 10],

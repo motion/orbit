@@ -202,6 +202,7 @@ export default class PeekPage {
                   </title>
                   <UI.Row
                     $controls
+                    $$undraggable
                     itemProps={{ sizePadding: 1.75, sizeRadius: 2 }}
                   >
                     <UI.Button

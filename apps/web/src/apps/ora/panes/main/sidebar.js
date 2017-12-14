@@ -1,6 +1,6 @@
 import { contextToResult } from '~/helpers'
 import { Thing } from '~/app'
-import ContentStore from '~/stores/contentStore'
+import * as ContentStore from '~/stores/contentStore'
 import * as Constants from '~/constants'
 
 export default class MainSidebar {
@@ -65,9 +65,9 @@ export default class MainSidebar {
         {
           title: 'Insert test things...',
           onClick: async () => {
-            const content = new ContentStore()
+            console.log('insering things', ContentStore)
             const res = await Promise.all(
-              content.things.map(t => Thing.create(t))
+              ContentStore.things.map(t => Thing.create(t))
             )
             console.log('created things', res)
           },

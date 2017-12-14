@@ -57,6 +57,13 @@ export default class OraHeader extends React.Component {
     const settings = CurrentUser.user.settings || {}
     const { buckets = ['Default'], activeBucket = 'Default' } = settings
     const bucketItems = [
+      {
+        children: 'Cancel crawler',
+        onClick: () => {
+          console.log('canceling')
+          oraStore.crawler.stop()
+        },
+      },
       ...buckets.map(name => ({
         primary: name,
         icon: name === activeBucket ? 'check' : null,

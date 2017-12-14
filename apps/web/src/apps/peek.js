@@ -238,6 +238,16 @@ export default class PeekPage {
                       <div
                         className="html-content"
                         $$flex
+                        onClick={e => {
+                          if (e.currentTarget.tagName === 'A') {
+                            e.preventDefault()
+                            console.log(
+                              'e.currentTarget.href',
+                              e.currentTarget.href
+                            )
+                            OS.send('open-browser', e.currentTarget.href)
+                          }
+                        }}
                         dangerouslySetInnerHTML={{
                           __html: marked(store.thing.body),
                         }}

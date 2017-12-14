@@ -119,6 +119,8 @@ export default class Sidebar {
       return null
     }
     const currentIndex = stackItems.length - (isLoadingNext ? 2 : 1)
+    const { previousIndex } = this
+    this.previousIndex = currentIndex
     return (
       <sidebar css={{ width, maxWidth: width, flex: 1 }}>
         {stackItems.map((stackItem, index) => {
@@ -141,6 +143,7 @@ export default class Sidebar {
               width={width}
               index={index}
               currentIndex={currentIndex}
+              previousIndex={previousIndex}
             >
               <SidebarContainer
                 index={index}

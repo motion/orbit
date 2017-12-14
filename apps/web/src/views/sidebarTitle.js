@@ -4,6 +4,9 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import * as Constants from '~/constants'
 
+const TAB_SLANT_X = 7
+const BORDER_LEFT_SIZE = 12
+
 const glowProps = {
   color: '#fff',
   scale: 0.7,
@@ -13,21 +16,23 @@ const glowProps = {
   zIndex: 1,
 }
 
-const TAB_SLANT_X = 4.5
-
 const chromeStyle = {
+  marginRight: TAB_SLANT_X,
   position: 'absolute',
   top: 0,
-  left: 0,
+  left: -2.5,
   right: 0,
-  bottom: -1,
+  bottom: -2,
   zIndex: 0,
-  borderTopRadius: 6,
+  borderTopRadius: BORDER_LEFT_SIZE / 1.75,
   overflow: 'hidden',
   transform: {
     perspective: '100px',
-    rotateX: '8deg',
-    y: -1,
+    rotateX: '12deg',
+    // this little extra moves the blurry
+    // top from perspective up just enough
+    // to make the top glint connect nicely
+    y: '-3.5%',
   },
 }
 
@@ -43,8 +48,8 @@ class Tab {
         css={{
           position: 'relative',
           flex: 1,
-          overflow: 'hidden',
-          borderBottom: [1, [255, 255, 255, 0.15]],
+          maxWidth: '100%',
+          // borderBottom: [1, [255, 255, 255, 0.15]],
         }}
         onMouseEnter={store.ref('showGlow').setter(true)}
         onMouseLeave={store.ref('showGlow').setter(false)}
@@ -55,23 +60,24 @@ class Tab {
             top: 0,
             left: 0,
             bottom: 0,
-            right: TAB_SLANT_X + 10,
+            right: TAB_SLANT_X + BORDER_LEFT_SIZE,
             background: Constants.ORA_BG_MAIN,
-            borderTopLeftRadius: 10,
+            borderTopLeftRadius: BORDER_LEFT_SIZE,
             borderTopRightRadius: 0,
             zIndex: 2,
-            boxShadow: ['inset 0 0.5px 0 rgba(255,255,255,0.1)'],
+            boxShadow: ['inset 1px 1px rgba(255,255,255,0.1)'],
           }}
         />
         <chrome
           css={{
             ...chromeStyle,
-            marginRight: TAB_SLANT_X,
+            left: BORDER_LEFT_SIZE / 4,
             background: Constants.ORA_BG_MAIN,
             borderBottom: 'none',
+            // borderRight: '1px solid rgba(255,255,255,0.25)',
             boxShadow: [
-              'inset 0 0.5px 0 rgba(255,255,255,0.2)',
-              '0 0 15px 0 rgba(0,0,0,0.3)',
+              'inset -0.66px 0.5px 0 rgba(255,255,255,0.25)',
+              Constants.ORA_INNER_SHADOW,
             ],
           }}
         />
@@ -89,6 +95,7 @@ class Tab {
           <hoverContain
             css={{
               ...chromeStyle,
+              overflow: 'hidden',
             }}
           >
             <UI.HoverGlow {...glowProps} show={store.showGlow} />
@@ -113,13 +120,14 @@ export default class SidebarTitle {
             chromeless
             size={1.1}
             icon="arrominleft"
-            sizePadding={0.85}
-            sizeHeight={0.85}
+            sizePadding={0.65}
+            sizeHeight={0.8}
+            sizeRadius={0.7}
             alpha={0.3}
             alignSelf="center"
             hover={{
-              alpha: 0.5,
-              background: [0, 0, 0, 0.1],
+              alpha: 0.95,
+              background: [30, 30, 30, 0.9],
             }}
             onClick={onBack}
             {...backProps}
@@ -129,7 +137,7 @@ export default class SidebarTitle {
               if={titleIsString}
               ellipse
               size={1.1}
-              fontWeight={300}
+              fontWeight={500}
               alpha={0.8}
               textShadow="0 -1px 0 rgba(0,0,0,0.2)"
             >
@@ -164,7 +172,7 @@ export default class SidebarTitle {
       paddingRight: 8,
     },
     backButton: {
-      margin: [-3, 5, -3, -8],
+      margin: [-3, 5, -3, -6],
       zIndex: 10,
     },
     image: {

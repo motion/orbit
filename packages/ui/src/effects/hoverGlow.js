@@ -252,7 +252,6 @@ class HoverGlow extends React.PureComponent<Props, State> {
             transform: `
                 translateX(${translateX + offsetLeft}px)
                 translateY(${translateY + offsetTop}px)
-                translateZ(0px)
               `,
           }}
         >
@@ -260,7 +259,7 @@ class HoverGlow extends React.PureComponent<Props, State> {
             height={height}
             width={width}
             style={{
-              transform: `scale(${scale * extraScale}) translateZ(0px)`,
+              transform: `scale(${scale * extraScale})`,
               opacity: track || show ? opacity : 0,
               width,
               height,
@@ -298,7 +297,7 @@ class HoverGlow extends React.PureComponent<Props, State> {
   static style = {
     overlay: {
       position: 'absolute',
-      transform: 'translateZ(0)',
+      // transform: 'translateZ(0)',
       top: 0,
       left: 0,
       right: 0,
@@ -311,7 +310,7 @@ class HoverGlow extends React.PureComponent<Props, State> {
       position: 'absolute',
       top: '50%',
       left: '50%',
-      transform: 'translateZ(0)',
+      // transform: 'translateZ(0)',
     },
   }
 }

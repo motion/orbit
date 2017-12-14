@@ -33,7 +33,7 @@ function uid() {
   return idCounter++
 }
 
-export class Gloss {
+export default class Gloss {
   options: Options
   css: (a: Object) => Object
   baseStyles: ?Object
@@ -247,8 +247,4 @@ export class Gloss {
       }
     }
   }
-}
-
-export default function glossFactory(options: Options): Gloss {
-  return new Gloss(options)
 }

@@ -68,7 +68,10 @@ class App {
   async start(quiet?: boolean) {
     await this.store.start(quiet)
     this.sync = new Sync()
-    this.sync.start()
+    if (Constants.IS_SETTINGS_PANE) {
+      console.log('running syncers in settings pane, DISABLED')
+      // this.sync.start()
+    }
     this.render()
     this.started = true
   }

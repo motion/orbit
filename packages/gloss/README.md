@@ -9,14 +9,14 @@ full-featured example:
 ```js
 import React from 'react'
 import ReactDOM from 'react-dom'
-import gloss, { color as $, Theme, ThemeProvide } from '@mcro/gloss'
+import Gloss, { color as $, Theme, ThemeProvide } from '@mcro/gloss'
 import type { Color } from '@mcro/gloss'
 import Icon from './icon'
 import Popover from './popover'
 
 const LINE_HEIGHT = 30
 
-const { decorator } = gloss({
+const { decorator } = new Gloss({
   themeProp: 'theme',
   tagName: 'tagName',
   isColor: color => color && !!color.rgb,

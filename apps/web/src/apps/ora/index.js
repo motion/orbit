@@ -61,7 +61,7 @@ const listProps = {
     secondaryProps: {
       alpha: 0.4,
     },
-    highlightBackground: [255, 255, 255, 0.027],
+    highlightBackground: [255, 255, 255, 0.075],
     childrenEllipse: 2,
   },
   groupBy: 'category',
@@ -126,6 +126,7 @@ export default class OraPage {
       <UI.Theme name="dark">
         <ora
           $visible={!hidden}
+          $oraFocused={oraStore.ui.barFocused}
           ref={oraStore.ref('barRef').set}
           $$draggable
           css={{
@@ -133,9 +134,11 @@ export default class OraPage {
           }}
         >
           <OraContent oraStore={oraStore} />
+          <UI.Glint bottom color="#fff" opacity={0.1} borderRadius={15} />
         </ora>
         <orbit
           $orbitHidden={hidden}
+          $orbitBarFocused={oraStore.ui.barFocused}
           onClick={() => {
             oraStore.ui.toggleHidden()
             if (!oraStore.ui.state.hidden) {
@@ -167,17 +170,21 @@ export default class OraPage {
       background: Constants.ORA_BG,
       // border: [1, [255, 255, 255, 0.035]],
       boxShadow: [
-        [0, 0, 15, [0, 0, 0, 0.5]],
+        [0, 0, 15, 2, [0, 0, 0, 0.2]],
         // ['inset', 0, 0, 120, [255, 255, 255, 0.053]],
       ],
       margin: 10,
-      borderRadius: 10,
+      borderTopRadius: 10,
+      borderBottomRadius: 15,
       overflow: 'hidden',
-      transition: 'transform ease-in 100ms, opacity ease-in 100ms',
+      transition: 'all ease-in 200ms',
       opacity: 0,
       transform: {
         x: 8,
       },
+    },
+    oraFocused: {
+      background: Constants.ORA_BG_FOCUSED,
     },
     visible: {
       pointerEvents: 'auto',
@@ -191,14 +198,14 @@ export default class OraPage {
       cursor: 'normal',
       userSelect: 'none',
       position: 'absolute',
-      top: 20,
-      right: 20,
+      top: 22,
+      right: 22,
       background: `linear-gradient(to top, ${Constants.oraBg}, ${UI.color(
         Constants.oraBg
-      ).darken(0.2)})`,
+      ).darken(0.1)})`,
       boxShadow: [
         ['inset', 0, 0, 0, 0.5, UI.color(Constants.oraBg).darken(0.4)],
-        ['inset', 0, 1, 0, 0.5, UI.color(Constants.oraBg).lighten(0.15)],
+        // ['inset', 0, 1, 0, 0.5, UI.color(Constants.oraBg).lighten(0.15)],
       ],
       width: 32,
       height: 32,
@@ -210,7 +217,7 @@ export default class OraPage {
       transition: 'all ease-in-out 100ms',
       transformOrigin: 'top right',
       transform: {
-        scale: 0.6,
+        scale: 0.5,
       },
       '&:hover': {
         background: `linear-gradient(to top, ${Constants.oraBg}, ${UI.color(
@@ -220,7 +227,7 @@ export default class OraPage {
         color: UI.color(Constants.oraBg).darken(0.36),
         // background: UI.color(Constants.oraBg).lighten(0.05),
         transform: {
-          scale: 0.6,
+          scale: 0.5,
         },
       },
     },
@@ -246,6 +253,9 @@ export default class OraPage {
           x: 10,
         },
       },
+    },
+    orbitBarFocused: {
+      top: 24,
     },
     icon: {
       position: 'absolute',

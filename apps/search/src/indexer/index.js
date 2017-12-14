@@ -316,6 +316,10 @@ ${doc.body}`
       }
 
       range(words.length).forEach(termIndex => {
+        if (!titlesDistance[currentFragentIndex]) {
+          console.log('no distance found')
+          return
+        }
         const titleTerm = titlesDistance[currentFragentIndex][termIndex]
         const subtitleTerm = subtitlesDistance[currentFragentIndex][termIndex]
         const bodyTerm = bodyDistance[currentFragentIndex][termIndex]

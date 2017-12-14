@@ -184,8 +184,8 @@ export default function getItem(result, index) {
     }
   }
 
-  return {
-    key: `${index}${result.id}${result.title}${result.category}`,
+  const itemProps = {
+    key: `${index}${result.id}`,
     primary: result.title,
     primaryEllipse: index === 0 ? 2 : true,
     primaryProps: {
@@ -215,4 +215,10 @@ export default function getItem(result, index) {
     ...peekProps,
     ...result.props,
   }
+
+  if (index === 0) {
+    itemProps.highlightBackground = [255, 255, 255, 0.035]
+  }
+
+  return itemProps
 }

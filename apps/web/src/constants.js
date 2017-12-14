@@ -14,9 +14,11 @@ if (process.env.IS_PROD) {
 export const VERSION = require('../package.json').version
 
 export const oraBg = '#5e1bdf'
-export const ORA_BG = [0, 0, 0, 0.9]
-export const ORA_BG_MAIN_OPAQUE = [27, 27, 27]
+export const ORA_BG = [0, 0, 0, 0.7]
+export const ORA_BG_FOCUSED = [0, 0, 0, 0.8]
+export const ORA_BG_MAIN_OPAQUE = [32, 32, 32]
 export const ORA_BG_MAIN = [...ORA_BG_MAIN_OPAQUE]
+export const ORA_INNER_SHADOW = [0, 0, 20, 0, [0, 0, 0, 0.5]]
 export const ORA_WIDTH = 300
 export const ORA_HEIGHT = 535
 export const ORA_HEADER_HEIGHT = 40
@@ -25,6 +27,8 @@ export const ACTION_BAR_HEIGHT = 40
 export const HEADER_HEIGHT = 36
 export const TRAY_WIDTH = 400
 export const TRAY_HEIGHT = 500
+
+export const SHADOW_GLINT_TOP = 'inset 0 0.5px rgba(255,255,255,0.08)'
 
 export const IN_TRAY =
   IS_ELECTRON && (window.location + '').indexOf('?inTray') !== -1
@@ -44,6 +48,7 @@ export const DB_CONFIG = {
 }
 
 export const IS_BAR = window.location.pathname === '/'
+export const IS_SETTINGS_PANE = window.location.pathname === '/settings'
 
 const authService = window.location.search.match(/service\=(.*)/)
 export const AUTH_SERVICE = authService ? authService[1] : null

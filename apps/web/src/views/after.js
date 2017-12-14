@@ -19,7 +19,7 @@ export default class After {
         }}
         {...props}
       >
-        <UI.Icon opacity={0.25} name="arrow-min-right" />
+        <UI.Icon opacity={0.1} name="arrow-min-right" />
         {children}
       </after>
     )
@@ -29,8 +29,8 @@ export default class After {
       position: 'relative',
       zIndex: 1000,
       margin: -7,
-      marginRight: -5,
-      marginLeft: 5,
+      marginRight: -7,
+      marginLeft: 7,
       padding: 2,
       alignItems: 'center',
       justifyContent: 'center',

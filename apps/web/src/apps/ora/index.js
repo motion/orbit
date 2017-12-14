@@ -149,10 +149,11 @@ export default class OraPage {
             $icon
             $show={!hidden}
             name="remove"
-            size={9}
+            size={16}
             color="inherit"
           />
-          <LogoIcon $icon $show={hidden} fill="#fff" width={12} height={12} />
+          <UI.HoverGlow color="#fff" opacity={0.5} full scale={2} show />
+          <LogoIcon $icon $show={hidden} fill="#fff" width={22} height={22} />
         </orbit>
       </UI.Theme>
     )
@@ -186,32 +187,40 @@ export default class OraPage {
       },
     },
     orbit: {
+      overflow: 'hidden',
       cursor: 'normal',
       userSelect: 'none',
       position: 'absolute',
       top: 20,
       right: 20,
-      background: `linear-gradient(${Constants.oraBg}, ${UI.color(
+      background: `linear-gradient(to top, ${Constants.oraBg}, ${UI.color(
         Constants.oraBg
-      ).darken(0.15)})`,
+      ).darken(0.2)})`,
       boxShadow: [
-        // ['inset', 0, 0, 0, 0.5, UI.color(Constants.oraBg).darken(0.4)],
-        ['inset', 1, 1, 0, 0.5, UI.color(Constants.oraBg).darken(0.15)],
+        ['inset', 0, 0, 0, 0.5, UI.color(Constants.oraBg).darken(0.4)],
+        ['inset', 0, 1, 0, 0.5, UI.color(Constants.oraBg).lighten(0.15)],
       ],
-      width: 16,
-      height: 16,
+      width: 32,
+      height: 32,
       borderRadius: 100,
       alignItems: 'center',
       justifyContent: 'center',
       color: 'transparent',
-      opacity: 0.8,
+      opacity: 1,
       transition: 'all ease-in-out 100ms',
+      transformOrigin: 'top right',
+      transform: {
+        scale: 0.6,
+      },
       '&:hover': {
+        background: `linear-gradient(to top, ${Constants.oraBg}, ${UI.color(
+          Constants.oraBg
+        ).lighten(0.2)})`,
         opacity: 1,
-        color: UI.color(Constants.oraBg).darken(0.6),
+        color: UI.color(Constants.oraBg).darken(0.36),
         // background: UI.color(Constants.oraBg).lighten(0.05),
         transform: {
-          scale: 1.05,
+          scale: 0.6,
         },
       },
     },
@@ -220,14 +229,21 @@ export default class OraPage {
       boxShadow: [
         ['inset', 0, 0, 0, 0.5, UI.color(Constants.oraBg).darken(0.4)],
         ['inset', 1, 1, 0, 0.5, UI.color(Constants.oraBg).lighten(0.15)],
-        [0, 0, 40, 3, [0, 0, 0, 1]],
+        [0, 0, 15, 0, [0, 0, 0, 0.5]],
       ],
       transform: {
-        scale: 1.5,
+        scale: 0.85,
+        y: -10,
+        x: 10,
       },
       '&:hover': {
+        background: `linear-gradient(to top, ${Constants.oraBg}, ${UI.color(
+          Constants.oraBg
+        ).lighten(0.2)})`,
         transform: {
-          scale: 1.5,
+          scale: 0.85,
+          y: -10,
+          x: 10,
         },
       },
     },

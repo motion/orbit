@@ -39,6 +39,15 @@ export default class PeekWindow extends React.Component {
     }
   }
 
+  lastSent = this.state.peeks
+
+  componentDidUpdate() {
+    if (!isEqual(this.lastSent, this.state.peeks)) {
+      this.props.onWindows(this.state.peeks)
+      this.lastSent = this.state.peeks
+    }
+  }
+
   peekSend = () => console.log('peekSend, not started yet')
 
   listen() {

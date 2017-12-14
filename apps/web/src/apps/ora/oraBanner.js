@@ -25,7 +25,7 @@ export default class OraBanner {
     return (
       <title $pinning={store.banner && store.banner.type}>
         <titleText if={!oraStore.ui.search}>
-          <UI.Text ellipse size={1.1} alpha={isPinning ? 0.7 : 0.5}>
+          <UI.Text ellipse size={1.1} alpha={isPinning ? 0.7 : 0.4}>
             {(store.banner && store.banner.message) ||
               'Search...' ||
               // oraStore.stack.last.result.id ||

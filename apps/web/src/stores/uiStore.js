@@ -38,6 +38,7 @@ export default class UIStore {
   state = {
     hidden: false,
     focused: true,
+    preventElectronHide: true,
   }
 
   constructor({ stack }) {
@@ -112,11 +113,8 @@ export default class UIStore {
 
   actions = {
     esc: e => {
-      console.log('bye')
       if (!this.barFocused) {
-        console.log('byebye')
         OS.send('peek', null)
-        return
       }
       if (this.inputRef === document.activeElement) {
         if (this.textboxVal !== '') {

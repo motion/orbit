@@ -12,7 +12,7 @@ const keyParam = (window.location.search || '').match(/key=(.*)/)
 const KEY = keyParam && keyParam[1]
 const SHOW_DELAY = 300
 const HIDE_DELAY = 100
-const background = [20, 20, 20, 0.98]
+const background = [255, 255, 255, 0.98]
 
 type Peek = {
   url?: string,
@@ -177,7 +177,7 @@ export default class PeekPage {
     const peekUrl = peek && peek.url
     const arrowSize = 32
     const peekY = (store.peek || store.lastPeek || {}).offsetTop || 0
-    // console.log('peekUrl', !!peekUrl, 'loaded?', store.pageLoaded)
+    // console.log('peekUrl', !!peek.body, 'loaded?', store.pageLoaded)
     return (
       <UI.Theme name="light">
         <peek
@@ -197,70 +197,70 @@ export default class PeekPage {
               right: 20 - arrowSize,
             }}
           />
-          <UI.Theme name="dark">
-            <content>
-              <innerContent $$flex if={store.thing}>
-                <header $$draggable>
-                  <title>
-                    <UI.Title selectable size={1} fontWeight={600}>
-                      {store.thing.title}
-                    </UI.Title>
-                  </title>
-                  <UI.Row
-                    $controls
-                    $$undraggable
-                    itemProps={{ sizePadding: 1.75, sizeRadius: 2 }}
-                  >
-                    <UI.Button
-                      if={peekUrl}
-                      icon="globe"
-                      onClick={store.toggleWebview}
-                      highlight={store.tab === 'webview'}
-                    />
-                    <UI.Button
-                      if={!store.isTorn}
-                      icon="pin"
-                      onClick={store.ref('isPinned').toggle}
-                      highlight={store.isTorn || store.isPinned}
-                    />
-                    <UI.Button
-                      if={store.isTorn}
-                      icon="remove"
-                      onClick={store.closePeek}
-                    />
-                  </UI.Row>
-                </header>
-                <tabs>
-                  <tab $visible={store.tab === 'readability'}>
-                    <readability>
-                      <UI.Text selectable size={1.2}>
-                        <div
-                          className="html-content"
-                          $$flex
-                          dangerouslySetInnerHTML={{
-                            __html: marked(store.thing.body),
-                          }}
-                        />
-                      </UI.Text>
-                    </readability>
-                  </tab>
-                  <tab $visible={store.pageLoaded && store.tab === 'webview'}>
-                    <loading if={!store.pageLoaded}>
-                      <UI.Text>Loading</UI.Text>
-                    </loading>
-                    <WebView
-                      if={peekUrl}
-                      $contentLoading={!store.pageLoaded}
-                      $webview
-                      key={peekUrl}
-                      src={peekUrl.replace('deliverx.com', 'deliverx.com:5000')}
-                      getRef={store.handlePageRef}
-                    />
-                  </tab>
-                </tabs>
-              </innerContent>
-            </content>
-          </UI.Theme>
+          <content>
+            <innerContent $$flex if={store.thing}>
+              <header $$draggable>
+                <title>
+                  <UI.Title selectable size={1} fontWeight={600}>
+                    {store.thing.title}
+                  </UI.Title>
+                </title>
+                <UI.Row
+                  $controls
+                  $$undraggable
+                  itemProps={{ sizePadding: 1.75, sizeRadius: 2 }}
+                >
+                  <UI.Button
+                    if={peekUrl}
+                    icon="globe"
+                    onClick={store.toggleWebview}
+                    highlight={store.tab === 'webview'}
+                    disabled={!store.thing.body}
+                    dimmed={!store.thing.body}
+                  />
+                  <UI.Button
+                    if={!store.isTorn}
+                    icon="pin"
+                    onClick={store.ref('isPinned').toggle}
+                    highlight={store.isTorn || store.isPinned}
+                  />
+                  <UI.Button
+                    if={store.isTorn}
+                    icon="remove"
+                    onClick={store.closePeek}
+                  />
+                </UI.Row>
+              </header>
+              <tabs>
+                <tab $visible={store.tab === 'readability'}>
+                  <readability>
+                    <UI.Text selectable size={1.2}>
+                      <div
+                        className="html-content"
+                        $$flex
+                        dangerouslySetInnerHTML={{
+                          __html: marked(store.thing.body),
+                        }}
+                      />
+                    </UI.Text>
+                  </readability>
+                </tab>
+                <tab $visible={store.pageLoaded && store.tab === 'webview'}>
+                  <loading if={!store.pageLoaded}>
+                    <UI.Text>Loading</UI.Text>
+                  </loading>
+                  <WebView
+                    if={peekUrl}
+                    $contentLoading={!store.pageLoaded}
+                    $webview
+                    key={peekUrl}
+                    src={peekUrl.replace('deliverx.com', 'deliverx.com:5000')}
+                    getRef={store.handlePageRef}
+                  />
+                </tab>
+              </tabs>
+            </innerContent>
+          </content>
         </peek>
       </UI.Theme>
     )

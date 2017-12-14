@@ -1,10 +1,11 @@
 // @flow
 import { ThemeMaker } from '@mcro/ui'
+import * as Constants from '~/constants'
 
 const Theme = new ThemeMaker()
 
 const highlightColor = '#fff'
-const highlightBackground = 'rgb(114, 121, 167)'
+const highlightBackground = Constants.oraBg
 
 const blank = {
   highlightBackground: 'transparent',

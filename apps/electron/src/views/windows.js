@@ -75,6 +75,10 @@ export default class Windows extends React.Component {
     }
   }
 
+  handlePeekWindows = peekWindows => {
+    this.updateState({ peekWindows })
+  }
+
   listenToApps = () => {
     this.on(ipcMain, 'open-settings', throttle(this.handlePreferences, 200))
   }
@@ -93,7 +97,10 @@ export default class Windows extends React.Component {
       await this.rootStore.sendOraSync('ora-toggle')
       await Helpers.sleep(150)
       console.log('now hide')
-      if (!this.state.showSettings) {
+      if (
+        !this.state.showSettings &&
+        !this.rootStore.oraState.preventElectronHide
+      ) {
         this.appRef.hide()
       }
     } else {
@@ -187,7 +194,10 @@ export default class Windows extends React.Component {
           onFocus={this.onOraFocus}
           devToolsExtensions={Helpers.getExtensions(['mobx', 'react'])}
         />
-        <PeekWindow appPosition={this.state.trayPosition} />
+        <PeekWindow
+          appPosition={this.state.trayPosition}
+          onWindows={this.handlePeekWindows}
+        />
         {/* SETTINGS PANE: */}
         <Window
           {...appWindow}

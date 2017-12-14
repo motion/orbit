@@ -160,9 +160,12 @@ export default class OraHeader extends React.Component {
               <UI.Icon
                 {...iconProps}
                 size={14}
-                opacity={0.5}
+                opacity={0}
                 onClick={this.handleHide}
                 name="remove"
+                css={{
+                  pointerEvents: 'none',
+                }}
               />
             </rightSide>
           </contents>
@@ -219,6 +222,7 @@ export default class OraHeader extends React.Component {
       height: 'auto',
       left: 10,
       zIndex: 2,
+      opacity: 0.4,
     },
     rightSide: {
       position: 'absolute',

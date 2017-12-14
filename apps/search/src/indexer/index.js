@@ -240,7 +240,7 @@ ${doc.body}`
   }
 
   search = async (query, count = 10) => {
-    const words = uniq(this.toWords(query))
+    const words = uniq(this.toWords(query.toLowerCase()))
 
     const queryCentroid = this.queryToCentroid(query)
 
@@ -264,7 +264,7 @@ ${doc.body}`
         total.push(
           wordMoversDistance(
             words,
-            uniq(this.toWords(text)),
+            uniq(this.toWords(text.toLowerCase())),
             this.embedding.vectors
           ).list
         )
@@ -383,7 +383,7 @@ ${doc.body}`
       return true
     })
 
-    const finalResults = resultsByDistance.slice(0, count)
+    const finalResults = noDuplicates.slice(0, count)
 
     return {
       results: finalResults,

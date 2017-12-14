@@ -42,9 +42,14 @@ DeliverX
   credit $15"
 * ...
 
-# now
+# demo
 
 * production build fixes for demo
+* working crawl of deliverx kb
+* better icons
+
+# beta
+
 * crawler dont use node readability
 * more forgiving markdown parser
 * drive sync pane / drive sync

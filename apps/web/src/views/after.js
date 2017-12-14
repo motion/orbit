@@ -19,7 +19,7 @@ export default class After {
         }}
         {...props}
       >
-        <UI.Icon opacity={0.25} name="arrow-min-right" />
+        <UI.Icon opacity={0.1} name="arrow-min-right" />
         {children}
       </after>
     )

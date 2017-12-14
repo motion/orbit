@@ -36,6 +36,8 @@ const TAG_NAME_MAP = {
   col: 'div',
 }
 
+const IS_BROWSER = typeof window !== 'undefined'
+
 // factory that returns fancyElement helper
 export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
   const { baseStyles, options, css } = Gloss
@@ -54,7 +56,7 @@ export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
     return newStyle
   }
 
-  return function fancyElement(
+  function fancyElement(
     type_: string | Function,
     props?: Object,
     ...children: Array<any>
@@ -66,6 +68,15 @@ export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
           children ? children.toString() : children
         }`
       )
+    }
+    if (IS_BROWSER && props && props.onClick) {
+      const ogClick = props.onClick
+      props.onClick = function(...args) {
+        if (localStorage.getItem('click-disabled')) {
+          return
+        }
+        return ogClick.call(this, ...args)
+      }
     }
     if (!this) {
       return ogCreateElement(type, props, ...children)
@@ -142,9 +153,7 @@ export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
           }
           if (typeof val !== 'string') {
             throw new Error(
-              `tagName must be a string (tag: ${
-                name
-              }, type received: ${typeof val})`
+              `tagName must be a string (tag: ${name}, type received: ${typeof val})`
             )
           }
           type = val
@@ -233,4 +242,6 @@ export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
 
     return ogCreateElement(type, finalProps, ...children)
   }
+
+  return fancyElement
 }

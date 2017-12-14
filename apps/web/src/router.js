@@ -10,10 +10,10 @@ function runRouter() {
   return new Router({
     routes: {
       '/': OraPage,
-      settings: SettingsPage,
-      relevancy: RelevancyPage,
-      auth: AuthPage,
-      peek: PeekPage,
+      '/settings': SettingsPage,
+      '/relevancy': RelevancyPage,
+      '/auth': AuthPage,
+      '/peek': PeekPage,
     },
   })
 }

@@ -30,9 +30,11 @@ export default class MainSidebar {
           onClick={() => {
             this.oraStore.stack.navigate(result)
           }}
+          glow
           alpha={0.5}
           hover={{
             alpha: 1,
+            background: 'transparent',
           }}
           css={{
             zIndex: 10,

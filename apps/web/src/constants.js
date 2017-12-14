@@ -14,7 +14,7 @@ if (process.env.IS_PROD) {
 export const VERSION = require('../package.json').version
 
 export const oraBg = '#5e1bdf'
-export const ORA_BG = [0, 0, 0, 0.9]
+export const ORA_BG = [30, 30, 30, 0.98]
 export const ORA_BG_MAIN_OPAQUE = [27, 27, 27]
 export const ORA_BG_MAIN = [...ORA_BG_MAIN_OPAQUE]
 export const ORA_WIDTH = 300
@@ -44,6 +44,7 @@ export const DB_CONFIG = {
 }
 
 export const IS_BAR = window.location.pathname === '/'
+export const IS_SETTINGS_PANE = window.location.pathname === '/settings'
 
 const authService = window.location.search.match(/service\=(.*)/)
 export const AUTH_SERVICE = authService ? authService[1] : null

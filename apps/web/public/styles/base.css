@@ -110,7 +110,12 @@ div[data-slate-editor='true'] > div {
 
 .html-content a {
   text-decoration: underline;
-  color: yellow;
+  color: #888;
+}
+
+.html-content img {
+  max-width: 100%;
+  height: auto;
 }
 
 body {

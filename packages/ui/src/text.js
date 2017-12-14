@@ -91,9 +91,7 @@ export default class Text extends React.Component<Props> {
   componentDidMount() {
     // this fixes bug because clamp is hacky af and needs to re-measure to trigger
     if (this.props.ellipse > 1) {
-      this.setTimeout(() => {
-        this.setState({ doClamp: true })
-      })
+      this.setState({ doClamp: true })
     }
   }
 

@@ -185,7 +185,7 @@ export default function getItem(result, index) {
   }
 
   return {
-    key: `${index}${result.id}${result.title}${result.category}`,
+    key: `${index}${result.id}`,
     primary: result.title,
     primaryEllipse: index === 0 ? 2 : true,
     primaryProps: {

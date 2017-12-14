@@ -5,6 +5,8 @@ import SidebarTitle from '~/views/sidebarTitle'
 import Drawer from '~/views/drawer'
 import PaneList from './paneList'
 
+const BORDER_TOP_RADIUS = 15
+
 class PaneStore {
   listRef = null
   contentRef = null
@@ -139,9 +141,9 @@ export default class Pane {
         <content
           $transparent={transparent}
           ref={paneStore.setContentRef}
-          css={{ borderTopRadius: title ? 0 : 8 }}
+          css={{ borderTopRadius: title ? 0 : BORDER_TOP_RADIUS }}
         >
-          <UI.Glint if={!title} borderRadius={8} />
+          <UI.Glint if={!title} borderRadius={BORDER_TOP_RADIUS} />
           <PaneList if={!children} {...this.props} />
           {children || null}
         </content>
@@ -157,12 +159,13 @@ export default class Pane {
     pane: {
       flex: 1,
       position: 'relative',
-      overflow: 'hidden',
+      // overflow: 'hidden',
     },
     content: {
       flex: 1,
       position: 'relative',
       background: Constants.ORA_BG_MAIN,
+      overflow: 'hidden',
     },
     transparent: {
       background: 'transparent',

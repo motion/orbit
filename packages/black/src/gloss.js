@@ -1,5 +1,5 @@
 // @flow
-import gloss from '@mcro/gloss'
+import Gloss from '@mcro/gloss'
 import baseStyles from './baseStyles'
 
 export type Glossy = {
@@ -10,7 +10,7 @@ export type Glossy = {
   ): React$Element<any>,
 }
 
-const Gloss = gloss({
+const gloss = new Gloss({
   baseStyles,
   glossProp: 'css',
   themeProp: 'theme',
@@ -40,5 +40,5 @@ const Gloss = gloss({
   },
 })
 
-export default Gloss
-export const { decorator, createElement } = Gloss
+export default gloss
+export const { decorator, createElement } = gloss

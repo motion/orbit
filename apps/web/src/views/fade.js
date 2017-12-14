@@ -3,8 +3,21 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 
 @view
-export default class Fade {
+export default class Fade extends React.Component {
+  state = {
+    isEntering: this.props.isActive,
+    isActive: false,
+    hasExited: false,
+  }
+
+  componentDidMount() {
+    if (!this.state.isEntering) {
+      this.setState({ isActive: true })
+    }
+  }
+
   render({ width, style, children, index, currentIndex, previousIndex }) {
+    const movingBack = previousIndex > currentIndex
     return <fade style={{ width, ...style }}>{children}</fade>
   }
 
@@ -19,16 +32,16 @@ export default class Fade {
   }
 
   static theme = ({ width, index, currentIndex, previousIndex }) => {
-    const movingBackwards = previousIndex > currentIndex
+    const isActive = currentIndex === index
     return {
       fade: {
         width,
-        opacity: currentIndex === index ? 1 : 0,
-        pointerEvents: currentIndex === index ? 'auto' : 'none',
+        opacity: isActive ? 1 : 0.5,
+        pointerEvents: isActive ? 'auto' : 'none',
         transform: {
           x: (index - currentIndex) * width / 10,
         },
-        transition: ['opacity ease-in 100ms', 'transform ease-in 100ms'],
+        transition: ['opacity ease-in 250ms', 'transform ease-in 250ms'],
       },
     }
   }

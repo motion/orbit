@@ -86,10 +86,11 @@ export default class PeekWindow extends React.Component {
       this.peekRef = ref.window
       // show once it gets ref
       if (!peek.show) {
+        // show after a little bit, because it flashes white weirdly
         this.setTimeout(() => {
           peek.show = true
           this.setState({ peeks: this.state.peeks })
-        }, 250)
+        }, 500)
       }
     }
   }
@@ -111,7 +112,9 @@ export default class PeekWindow extends React.Component {
       const isPeek = key === this.peekKey
       if (isPeek && !isEqual(peek.position, [0, 0])) {
         tearPeekProps.position = position
-        this.tearAway(tearPeekProps)
+        if (!this.tearAway(tearPeekProps)) {
+          updatePeekPosition()
+        }
       } else {
         updatePeekPosition()
       }
@@ -119,15 +122,16 @@ export default class PeekWindow extends React.Component {
   }
 
   tearAway = tearPeekProps => {
-    this.peekKey++
+    const nextKey = this.peekKey + 1
     if (this.state.peeks.find(x => x.show === false)) {
       // havent shown the last peek yet
       return
     }
-    if (this.state.peeks.find(x => x.key === this.peekKey)) {
-      // likely called multiple times unecessarily
+    if (this.state.peeks.find(x => x.key === nextKey)) {
+      // bug called multiple times unecessarily
       return
     }
+    this.peekKey = nextKey
     console.log('sending peek tear')
     this.peekSend('peak-tear')
     const peeks = [
@@ -141,6 +145,7 @@ export default class PeekWindow extends React.Component {
       ...this.state.peeks,
     ]
     this.setState({ peeks })
+    return true
   }
 
   render({ appPosition }) {

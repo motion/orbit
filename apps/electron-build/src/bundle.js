@@ -20,6 +20,7 @@ const ignorePaths = [
   // theres a weird nesting here that gets copied too
   // and chromium doesnt complain if we just leave it out
   'Chromium Framework.framework/Versions',
+  'Electron Framework.framework/Versions',
   '/node_modules/.bin/',
   '/node_modules/.cache/',
   'node_modules/electron/',
@@ -49,11 +50,11 @@ async function bundle() {
     ignore: path => {
       // paths are relative to the current dir but weird
       // so "/app/something" is referring to the "orbit/apps/electron/app/something"
-      if (ignorePaths.find(dir => path.indexOf(dir) >= 0)) {
+      if (ignorePaths.find(ignore => path.indexOf(ignore) >= 0)) {
         log.ignore(`ignoring path: ${path}`)
         return true
       }
-      log.bundle(`bundling path: ${path}`)
+      // log.bundle(`bundling path: ${path}`)
       return false
     },
   })

@@ -4,11 +4,14 @@ import * as UI from '@mcro/ui'
 import Drawer from '~/views/drawer'
 import * as Constants from '~/constants'
 
+class CrawlDrawerStore {
+  statusShown = true
+  resultsShown = true
+}
+
+@view.attach('oraStore')
 @view({
-  store: class CrawlDrawerStore {
-    statusShown = true
-    resultsShown = true
-  },
+  store: CrawlDrawerStore,
 })
 export default class OraDrawer {
   render({ store, oraStore }) {

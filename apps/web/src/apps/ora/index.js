@@ -6,7 +6,6 @@ import Sidebar from './panes/sidebar'
 import OraHeader from './oraHeader'
 import OraDrawer from './oraDrawer'
 import OraActionBar from './oraActionBar'
-import OraBlur from './oraBlur'
 import * as Constants from '~/constants'
 import { OS } from '~/helpers'
 
@@ -71,8 +70,14 @@ const listProps = {
   },
 }
 
+@view.attach('oraStore')
 @view
 class OraMainContent {
+  shouldMeasure = () => {
+    const { oraStore } = this.props
+    return oraStore.ui.height !== oraStore.ui.lastHeight
+  }
+
   render({ oraStore }) {
     return (
       <content $contentWithHeaderOpen={oraStore.ui.barFocused}>
@@ -80,7 +85,7 @@ class OraMainContent {
           width={Constants.ORA_WIDTH}
           store={oraStore}
           oraStore={oraStore}
-          shouldMeasure={() => oraStore.ui.height !== oraStore.ui.lastHeight}
+          shouldMeasure={this.shouldMeasure}
           listProps={listProps}
         />
       </content>
@@ -103,14 +108,11 @@ class OraMainContent {
   }
 }
 
-export const OraContent = ({ oraStore }) => (
+const OraContent = () => (
   <React.Fragment>
-    <OraBlur if={false} oraStore={oraStore} />
-    <UI.Theme name="clear-dark">
-      <OraHeader oraStore={oraStore} />
-    </UI.Theme>
-    <OraMainContent oraStore={oraStore} />
-    <OraDrawer oraStore={oraStore} />
+    <OraHeader />
+    <OraMainContent />
+    <OraDrawer />
     <OraActionBar />
   </React.Fragment>
 )
@@ -120,52 +122,61 @@ export const OraContent = ({ oraStore }) => (
 })
 @view
 export default class OraPage {
+  handleOrbitClick = () => {
+    const { oraStore } = this.props
+    oraStore.ui.toggleHidden()
+    if (!oraStore.ui.state.hidden) {
+      this.setTimeout(() => {
+        oraStore.ui.focusBar()
+      }, 10)
+    }
+  }
+
   render({ oraStore }) {
     const { hidden } = oraStore.ui.state
     return (
-      <UI.Theme name="dark">
-        <ora
-          $visible={!hidden}
-          $oraFocused={oraStore.ui.barFocused}
-          ref={oraStore.ref('barRef').set}
-          $$draggable
-          css={{
-            height: oraStore.ui.height,
-          }}
-        >
-          <OraContent oraStore={oraStore} />
-          <UI.Glint bottom color="#fff" opacity={0.1} borderRadius={15} />
-        </ora>
-        <orbit
-          $orbitHidden={hidden}
-          $orbitBarFocused={oraStore.ui.barFocused}
-          onClick={() => {
-            oraStore.ui.toggleHidden()
-            if (!oraStore.ui.state.hidden) {
-              this.setTimeout(() => {
-                oraStore.ui.focusBar()
-              }, 10)
-            }
-          }}
-        >
-          <UI.Icon
-            $icon
-            $show={!hidden}
-            name="remove"
-            size={16}
-            color="inherit"
-          />
-          <UI.HoverGlow color="#fff" opacity={0.5} full scale={2} show />
-          <LogoIcon $icon $show={hidden} fill="#fff" width={22} height={22} />
-        </orbit>
-      </UI.Theme>
+      <oraContainer>
+        <UI.Theme name="dark">
+          <ora
+            $visible={!hidden}
+            $oraFocused={oraStore.ui.barFocused}
+            ref={oraStore.ref('barRef').set}
+            $$draggable
+            css={{
+              height: oraStore.ui.height,
+            }}
+          >
+            <OraContent />
+            <UI.Glint bottom color="#fff" opacity={0.1} borderRadius={15} />
+          </ora>
+          <orbit
+            $orbitHidden={hidden}
+            $orbitBarFocused={oraStore.ui.barFocused}
+            onClick={this.handleOrbitClick}
+          >
+            <UI.Icon
+              $icon
+              $show={!hidden}
+              name="remove"
+              size={16}
+              color="inherit"
+            />
+            <UI.HoverGlow color="#fff" opacity={0.5} full scale={2} show />
+            <LogoIcon $icon $show={hidden} fill="#fff" width={22} height={22} />
+          </orbit>
+        </UI.Theme>
+      </oraContainer>
     )
   }
 
   static style = {
+    oraContainer: {
+      width: Constants.ORA_WIDTH + Constants.ORA_PAD,
+      position: 'relative',
+      overflow: 'hidden',
+    },
     ora: {
       pointerEvents: 'none',
-      width: Constants.ORA_WIDTH,
       // height: Constants.ORA_HEIGHT,
       background: Constants.ORA_BG,
       // border: [1, [255, 255, 255, 0.035]],

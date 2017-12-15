@@ -82,10 +82,18 @@ class BucketsDropdown {
   }
 }
 
+@view.attach('oraStore')
 @view
 export default class OraHeader extends React.Component {
-  handleHeaderClick = () => {
-    this.props.oraStore.ui.focusBar()
+  handleHeaderClick = e => {
+    e.preventDefault()
+    if (!this.props.oraStore.ui.barFocused) {
+      this.props.oraStore.ui.focusBar()
+    }
+  }
+
+  handleInputMouseDown = e => {
+    e.preventDefault()
   }
 
   handleInputBlur = () => {
@@ -125,12 +133,12 @@ export default class OraHeader extends React.Component {
     if (!CurrentUser.user) {
       return null
     }
-
     return (
       <UI.Theme name="dark">
         <header
           $focus={oraStore.ui.barFocused && !oraStore.ui.collapsed}
           onClick={this.handleHeaderClick}
+          onMouseDown={this.handleInputMouseDown}
           $$draggable
         >
           <contents>
@@ -144,7 +152,6 @@ export default class OraHeader extends React.Component {
                 {...iconProps}
               />
             </leftSide>
-
             <UI.Input
               $searchInput
               $disabled={!oraStore.ui.barFocused}
@@ -153,15 +160,13 @@ export default class OraHeader extends React.Component {
               borderRadius={0}
               onBlur={this.handleInputBlur}
               onChange={oraStore.ui.handleSearchChange}
+              onMouseDown={this.handleInputMouseDown}
               value={oraStore.ui.textboxVal}
               borderWidth={0}
               background="transparent"
             />
-
             <UI.HoverGlow zIndex={-1} opacity={0.045} blur={60} />
-
             <OraBanner />
-
             <rightSide onMouseUp={this.preventPropagation}>
               <BucketsDropdown />
               <UI.Icon

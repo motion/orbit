@@ -38,16 +38,22 @@ const convos = rawConvos.map(convo => {
 
 const deliverx = [
   {
+    title: 'Anchit',
+    type: 'website',
+    integration: 'pin-site',
+    url: 'http://deliverx.dev/user',
+  },
+  {
     title: 'Late deliveries map',
     type: 'website',
     integration: 'pin-site',
-    url: 'http://deliverx.com/map',
+    url: 'http://deliverx.dev/map',
   },
   {
     title: 'Drivers',
     type: 'website',
     integration: 'pin-site',
-    url: 'http://deliverx.com/drivers',
+    url: 'http://deliverx.dev/drivers',
   },
 ]
 

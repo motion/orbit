@@ -14,6 +14,11 @@ import { isEqual } from 'lodash'
 const log = _ => _ || debug('ora')
 const useWorker = window.location.href.indexOf('?noWorker')
 
+// hacky
+// for gloss fancyElement
+let dragListeners = []
+window.addDragListener = window.addDragListener || (x => dragListeners.push(x))
+
 export default class OraStore {
   // stores
   crawler = new CrawlerStore()
@@ -111,15 +116,17 @@ export default class OraStore {
   }
 
   _watchClickPrevent = () => {
-    let clickPreventClear
+    let iters = 0
+    let resetItersTO
     this.watch(() => {
-      if (Date.now() - this.electronState.lastMove < 100) {
-        clearTimeout(clickPreventClear)
-        localStorage.setItem('click-disabled', true)
-        // wait a little, not sure if necessary
-        clickPreventClear = this.setTimeout(() => {
-          localStorage.removeItem('click-disabled')
-        }, 150)
+      clearTimeout(resetItersTO)
+      iters++
+      this.electronState.lastMove
+      if (iters > 3) {
+        dragListeners.forEach(x => x(this.electronState.lastMove))
+        resetItersTO = setTimeout(() => {
+          iters = 0
+        }, 500)
       }
     })
   }

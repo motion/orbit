@@ -211,9 +211,7 @@ export default class OraPage {
       position: 'absolute',
       top: 22,
       right: 22,
-      background: `linear-gradient(to top, ${Constants.oraBg}, ${UI.color(
-        Constants.oraBg
-      ).darken(0.1)})`,
+      background: `linear-gradient(to top, #222, #111)`,
       boxShadow: [
         ['inset', 0, 0, 0, 0.5, UI.color(Constants.oraBg).darken(0.4)],
         // ['inset', 0, 1, 0, 0.5, UI.color(Constants.oraBg).lighten(0.15)],
@@ -231,11 +229,8 @@ export default class OraPage {
         scale: 0.5,
       },
       '&:hover': {
-        background: `linear-gradient(to top, ${Constants.oraBg}, ${UI.color(
-          Constants.oraBg
-        ).lighten(0.2)})`,
         opacity: 1,
-        color: UI.color(Constants.oraBg).darken(0.36),
+        color: '#fff',
         // background: UI.color(Constants.oraBg).lighten(0.05),
         transform: {
           scale: 0.5,
@@ -244,6 +239,9 @@ export default class OraPage {
     },
     orbitHidden: {
       color: 'transparent',
+      background: `linear-gradient(to top, ${Constants.oraBg}, ${UI.color(
+        Constants.oraBg
+      ).darken(0.1)})`,
       boxShadow: [
         ['inset', 0, 0, 0, 0.5, UI.color(Constants.oraBg).darken(0.4)],
         ['inset', 1, 1, 0, 0.5, UI.color(Constants.oraBg).lighten(0.15)],

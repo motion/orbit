@@ -32,7 +32,7 @@ const chromeStyle = {
     // this little extra moves the blurry
     // top from perspective up just enough
     // to make the top glint connect nicely
-    y: '-3.5%',
+    y: '-4%',
   },
 }
 
@@ -65,7 +65,10 @@ class Tab {
             borderTopLeftRadius: BORDER_LEFT_SIZE,
             borderTopRightRadius: 0,
             zIndex: 2,
-            boxShadow: ['inset 1px 1px rgba(255,255,255,0.1)'],
+            boxShadow: ['inset 0.5px 0.5px rgba(255,255,255,0.15)'],
+            transform: {
+              x: -0.5,
+            },
           }}
         />
         <chrome
@@ -74,9 +77,8 @@ class Tab {
             left: BORDER_LEFT_SIZE / 4,
             background: Constants.ORA_BG_MAIN,
             borderBottom: 'none',
-            // borderRight: '1px solid rgba(255,255,255,0.25)',
             boxShadow: [
-              'inset -0.66px 0.5px 0 rgba(255,255,255,0.25)',
+              'inset -0.5px 0.5px 0 rgba(255,255,255,0.15)',
               Constants.ORA_INNER_SHADOW,
             ],
           }}
@@ -96,6 +98,7 @@ class Tab {
             css={{
               ...chromeStyle,
               overflow: 'hidden',
+              left: -4,
             }}
           >
             <UI.HoverGlow {...glowProps} show={store.showGlow} />
@@ -181,6 +184,7 @@ export default class SidebarTitle {
       borderRadius: 100,
       // border: [1, [255, 255, 255, 0.7]],
       marginLeft: 10,
+      marginRight: TAB_SLANT_X,
       alignSelf: 'center',
     },
   }

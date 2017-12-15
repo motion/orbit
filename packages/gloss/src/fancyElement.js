@@ -37,6 +37,31 @@ const TAG_NAME_MAP = {
 }
 
 const IS_BROWSER = typeof window !== 'undefined'
+let cancelNextClick = false
+let lastMouseDown = Date.now()
+
+// TODO
+// Put this on fancyElement.setClickInterrupt or something
+setTimeout(() => {
+  if (IS_BROWSER && window.addDragListener) {
+    window.addEventListener('mousedown', () => {
+      lastMouseDown = Date.now()
+    })
+    window.addEventListener('mouseup', () => {
+      setTimeout(() => {
+        cancelNextClick = false
+      })
+    })
+    window.addDragListener(() => {
+      if (cancelNextClick) {
+        return
+      }
+      if (Date.now() - lastMouseDown < 1000) {
+        cancelNextClick = true
+      }
+    })
+  }
+})
 
 // factory that returns fancyElement helper
 export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
@@ -72,7 +97,8 @@ export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
     if (IS_BROWSER && props && props.onClick) {
       const ogClick = props.onClick
       props.onClick = function(...args) {
-        if (localStorage.getItem('click-disabled')) {
+        if (cancelNextClick) {
+          cancelNextClick = false
           return
         }
         return ogClick.call(this, ...args)

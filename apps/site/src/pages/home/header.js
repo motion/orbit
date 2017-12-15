@@ -38,9 +38,9 @@ export default class HomeHeader {
                 }}
               >
                 <View.Title selectable {...titleProps} textAlign="right">
-                  <span css={{ marginRight: -10 }}>Company knowledge</span>
+                  <span css={{ marginRight: -10 }}>We follow</span>
                   <br />
-                  shouldn't be so messy
+                  what you do
                 </View.Title>
                 <inner
                   css={{
@@ -128,9 +128,8 @@ export default class HomeHeader {
                     color={'#fff'}
                     selectable
                   >
-                    Orbit keeps your team<br />
-                    in sync,{' '}
-                    <span css={{ marginLeft: -2 }}>without hassle</span>
+                    And show you <br />
+                    <span css={{ marginLeft: -2 }}>what you should know</span>
                   </View.Title>
                 </text>
               </inner>

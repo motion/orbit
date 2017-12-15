@@ -2,7 +2,7 @@
 import 'babel-polyfill'
 import 'isomorphic-fetch'
 import createElement from '@mcro/black/lib/createElement'
-// dont do * as React, we need to overwrite createElement
+// dont import * as React, we need to overwrite createElement
 import React from 'react'
 import ReactDOM from 'react-dom'
 import * as Constants from './constants'

@@ -24,7 +24,7 @@ const TAG_MAP = {
 
 @inject(context => ({ uiContext: context.uiContext }))
 @view.ui
-export default class Input extends React.Component<Props> {
+export default class Input extends React.PureComponent<Props> {
   static defaultProps = {
     size: 1,
     type: 'input',
@@ -83,6 +83,8 @@ export default class Input extends React.Component<Props> {
     }
   }
 
+  syncSet = e => this.props.sync.set(e.target.value)
+
   render({
     sync,
     type,
@@ -100,7 +102,7 @@ export default class Input extends React.Component<Props> {
     const finalProps = { ...elementProps }
     if (sync && elementProps) {
       finalProps.value = sync.get()
-      finalProps.onChange = e => sync.set(e.target.value)
+      finalProps.onChange = this.syncSet
     }
     if (type === 'checkbox') {
       return <Checkbox {...props} />

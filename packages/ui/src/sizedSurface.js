@@ -26,7 +26,6 @@ export default function SizedSurface(props: Props) {
 
   const size = props.size === true ? 1 : props.size || 1
   const num = x => (x === true ? size : x * size)
-
   const base = size * LINE_HEIGHT
 
   // sizes

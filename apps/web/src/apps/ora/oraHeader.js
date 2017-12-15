@@ -5,25 +5,97 @@ import { CurrentUser } from '~/app'
 import * as Constants from '~/constants'
 import OraBanner from './oraBanner'
 
-@view({
-  store: class OraHeaderStore {
-    downAt = Date.now()
+const iconProps = {
+  color: [255, 255, 255, 0.5],
+  padding: 8,
+  size: 16,
+  hover: {
+    opacity: 0.5,
+    color: [255, 255, 255, 1],
   },
-})
-export default class OraHeader extends React.Component {
-  handleHeaderMouseDown = () => {
-    this.props.store.downAt = Date.now()
+  css: {
+    marginLeft: -8,
+  },
+}
+
+@view.attach('oraStore')
+@view
+class BucketsDropdown {
+  cancelCrawler = () => {
+    console.log('canceling')
+    this.props.oraStore.crawler.stop()
   }
 
-  handleHeaderMouseUp = () => {
-    const { oraStore, store } = this.props
-    if (Date.now() - store.downAt < 200) {
-      oraStore.ui.focusBar()
-    }
+  render() {
+    const settings = CurrentUser.user.settings || {}
+    const { buckets = ['Default'], activeBucket = 'Default' } = settings
+    return (
+      <UI.Popover
+        openOnHover
+        delay={150}
+        closeOnEsc
+        overlay="transparent"
+        theme="light"
+        width={150}
+        target={
+          <UI.Icon
+            key="icon-bucket"
+            {...iconProps}
+            name="bucket"
+            opacity={0.015}
+            onClick={this.handleBucketClick}
+          />
+        }
+      >
+        <UI.List
+          key="bucket-list"
+          items={[
+            {
+              children: 'Cancel crawler',
+              onClick: this.cancelCrawler,
+            },
+            ...buckets.map(name => ({
+              primary: name,
+              icon: name === activeBucket ? 'check' : null,
+            })),
+            {
+              children: (
+                <UI.Input
+                  onEnter={e => {
+                    if (e.target.value) {
+                      CurrentUser.user.mergeUpdate({
+                        settings: {
+                          buckets: [...buckets, e.target.value],
+                        },
+                      })
+                    }
+                  }}
+                  placeholder="Create..."
+                />
+              ),
+            },
+          ]}
+          onSelect={this.selectBucket}
+        />
+      </UI.Popover>
+    )
+  }
+}
+
+@view.attach('oraStore')
+@view
+export default class OraHeader extends React.Component {
+  handleHeaderClick = e => {
+    e.preventDefault()
+    this.props.oraStore.ui.focusBar()
+  }
+
+  handleInputMouseDown = e => {
+    e.preventDefault()
   }
 
   handleInputBlur = () => {
-    this.props.oraStore.ui.setBarFocus(false)
+    this.props.oraStore.ui.blurBar()
   }
 
   selectBucket = async item => {
@@ -46,6 +118,11 @@ export default class OraHeader extends React.Component {
     this.props.oraStore.ui.hide()
   }
 
+  handleBucketClick = e => {
+    e.stopPropagation()
+    this.props.oraStore.ui.hide()
+  }
+
   preventPropagation = e => {
     e.stopPropagation()
   }
@@ -54,57 +131,12 @@ export default class OraHeader extends React.Component {
     if (!CurrentUser.user) {
       return null
     }
-    const settings = CurrentUser.user.settings || {}
-    const { buckets = ['Default'], activeBucket = 'Default' } = settings
-    const bucketItems = [
-      {
-        children: 'Cancel crawler',
-        onClick: () => {
-          console.log('canceling')
-          oraStore.crawler.stop()
-        },
-      },
-      ...buckets.map(name => ({
-        primary: name,
-        icon: name === activeBucket ? 'check' : null,
-      })),
-      {
-        children: (
-          <UI.Input
-            onEnter={e => {
-              if (e.target.value) {
-                CurrentUser.user.mergeUpdate({
-                  settings: {
-                    buckets: [...buckets, e.target.value],
-                  },
-                })
-              }
-            }}
-            placeholder="Create..."
-          />
-        ),
-      },
-    ]
-
-    const iconProps = {
-      color: [255, 255, 255, 0.5],
-      padding: 8,
-      size: 16,
-      hover: {
-        opacity: 0.5,
-        color: [255, 255, 255, 1],
-      },
-      css: {
-        marginLeft: -8,
-      },
-    }
-
     return (
       <UI.Theme name="dark">
         <header
           $focus={oraStore.ui.barFocused && !oraStore.ui.collapsed}
-          onMouseDown={this.handleHeaderMouseDown}
-          onMouseUp={this.handleHeaderMouseUp}
+          onClick={this.handleHeaderClick}
+          onMouseDown={this.handleInputMouseDown}
           $$draggable
         >
           <contents>
@@ -118,12 +150,11 @@ export default class OraHeader extends React.Component {
                 {...iconProps}
               />
             </leftSide>
-
             <UI.Input
+              key="ora-input"
               $searchInput
-              $disabled={!oraStore.ui.barFocused}
               size={1}
-              getRef={oraStore.ui.onInputRef}
+              getRef={oraStore.ui.handleInputRef}
               borderRadius={0}
               onBlur={this.handleInputBlur}
               onChange={oraStore.ui.handleSearchChange}
@@ -131,33 +162,10 @@ export default class OraHeader extends React.Component {
               borderWidth={0}
               background="transparent"
             />
-
             <UI.HoverGlow zIndex={-1} opacity={0.045} blur={60} />
-
             <OraBanner />
-
             <rightSide onMouseUp={this.preventPropagation}>
-              <UI.Popover
-                openOnHover
-                delay={150}
-                closeOnEsc
-                overlay="transparent"
-                theme="light"
-                width={150}
-                target={
-                  <UI.Icon
-                    {...iconProps}
-                    name="bucket"
-                    opacity={0.015}
-                    onClick={e => {
-                      e.stopPropagation()
-                      oraStore.ui.hide()
-                    }}
-                  />
-                }
-              >
-                <UI.List items={bucketItems} onSelect={this.selectBucket} />
-              </UI.Popover>
+              <BucketsDropdown />
               <UI.Icon
                 {...iconProps}
                 opacity={0.1}

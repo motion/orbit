@@ -315,7 +315,7 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
 
   function run() {
     if (disposed) {
-      console.log('avoiding work')
+      console.log('avoiding work', method)
       return
     }
     if (Array.isArray(val)) {

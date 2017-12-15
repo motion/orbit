@@ -188,7 +188,7 @@ export default class OraStore {
       }
     },
     cmdL: () => {
-      this.ui.setBarFocus(true)
+      this.ui.focusBar()
     },
     delete: () => {
       if (this.stack.textboxVal === '') {

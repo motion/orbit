@@ -5,21 +5,10 @@ import { CurrentUser } from '~/app'
 import * as Constants from '~/constants'
 import OraBanner from './oraBanner'
 
-@view({
-  store: class OraHeaderStore {
-    downAt = Date.now()
-  },
-})
+@view
 export default class OraHeader extends React.Component {
-  handleHeaderMouseDown = () => {
-    this.props.store.downAt = Date.now()
-  }
-
-  handleHeaderMouseUp = () => {
-    const { oraStore, store } = this.props
-    if (Date.now() - store.downAt < 200) {
-      oraStore.ui.focusBar()
-    }
+  handleHeaderClick = () => {
+    this.props.oraStore.ui.focusBar()
   }
 
   handleInputBlur = () => {
@@ -103,8 +92,7 @@ export default class OraHeader extends React.Component {
       <UI.Theme name="dark">
         <header
           $focus={oraStore.ui.barFocused && !oraStore.ui.collapsed}
-          onMouseDown={this.handleHeaderMouseDown}
-          onMouseUp={this.handleHeaderMouseUp}
+          onClick={this.handleHeaderClick}
           $$draggable
         >
           <contents>

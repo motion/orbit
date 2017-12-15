@@ -4,18 +4,18 @@ DeliverX
 
 1. search: three terms that show off indirect results + integrations
 
-* "education" => GDocs
+* "order minimums" => GDocs
 * "samsung help button bug" => "samsung cant hit help button" issue
-* "restuarant list" => "vendor list" intranet
 
 2. Incoming email
 
-* "Thoughts on adding fast food?"
+* incoming email about "Chinese restaurants in SF"
+* "sf restuarant list" => "bay area vendor list" intranet
 * context shows:
-  * McDonalds discussion slack
+  * Discussion talking to Chinese restaurants
   * Hit copy link to paste into email
 * Reply with link to discussion
-* [mention: If someone adds a fast food section later we'd see it in context ]
+* [mention: If someone adds a chinese food in SF section later we'd see it in context]
 
 3. Works w your data:
 

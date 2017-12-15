@@ -4,7 +4,7 @@ import { view, watch } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { OS } from '~/helpers'
 import { Thing } from '~/app'
-import marked from 'marked'
+import MarkdownRender from './markdownRenderer'
 import Mousetrap from 'mousetrap'
 
 // const isSamePeek = (a, b) => a && b && a.id === b.id
@@ -234,25 +234,7 @@ export default class PeekPage {
               <tabs>
                 <tab $visible={store.tab === 'readability'}>
                   <readability>
-                    <UI.Text selectable size={1.2}>
-                      <div
-                        className="html-content"
-                        $$flex
-                        onClick={e => {
-                          if (e.currentTarget.tagName === 'A') {
-                            e.preventDefault()
-                            console.log(
-                              'e.currentTarget.href',
-                              e.currentTarget.href
-                            )
-                            OS.send('open-browser', e.currentTarget.href)
-                          }
-                        }}
-                        dangerouslySetInnerHTML={{
-                          __html: marked(store.thing.body),
-                        }}
-                      />
-                    </UI.Text>
+                    <MarkdownRender markdown={store.thing.body} />
                   </readability>
                 </tab>
                 <tab $visible={store.pageLoaded && store.tab === 'webview'}>

@@ -12,7 +12,8 @@ export SHORTCUTS from './shortcuts'
 
 @store
 export default class UIStore {
-  inputRef = null
+  _inputRefVersion = 0
+  _inputRef = null
   wasBlurred = false
   barFocused = false
   collapsed = false
@@ -21,6 +22,16 @@ export default class UIStore {
   search = ''
   textboxVal = ''
   traps = {}
+
+  get inputRef() {
+    this._inputRefVersion
+    return this._inputRef
+  }
+
+  set inputRef(val) {
+    this._inputRefVersion++
+    this._inputRef = val
+  }
 
   get height() {
     if (this.collapsed) {
@@ -45,13 +56,17 @@ export default class UIStore {
     this.stack = stack
     this.attachTrap('window', window)
     this.on(OS, 'ora-toggle', this.toggleHidden)
-    this._watchHeight()
-    this._watchFocus()
-    this._watchFocusBar()
-    this._watchWasBlurred()
-    this._watchBlurBar()
-    this._watchKeyEvents()
+    this._listenForFocus()
     this.setState({}) // trigger first send
+  }
+
+  willMount() {
+    this._watchHeight()
+    this._watchKeyboardFocus()
+    this._watchBarFocus()
+    this._watchWasBlurred()
+    this._watchBlurBarOnHide()
+    this._watchKeyEvents()
   }
 
   dispose() {
@@ -95,10 +110,15 @@ export default class UIStore {
 
   setSearch = debounceIdle(this.setSearchImmediate, 20)
 
-  attachTrap(ns, el) {
+  removeTrap(ns) {
     if (this.traps[ns]) {
       this.traps[ns].reset()
+      delete this.traps[ns]
     }
+  }
+
+  attachTrap(ns, el) {
+    this.removeTrap(ns)
     this.traps[ns] = new Mousetrap(el)
     for (const name of Object.keys(SHORTCUTS)) {
       const chord = SHORTCUTS[name]
@@ -109,6 +129,7 @@ export default class UIStore {
         }
       })
     }
+    return () => this.removeTrap(ns)
   }
 
   actions = {
@@ -120,7 +141,7 @@ export default class UIStore {
         if (this.textboxVal !== '') {
           this.setTextboxVal('')
         }
-        this.inputRef.blur()
+        this.blurBar()
         return
       }
       if (this.search === '') {
@@ -132,7 +153,7 @@ export default class UIStore {
       this.inputRef.select()
     },
     cmdL: () => {
-      this.focusBar(true)
+      this.focusBar()
     },
   }
 
@@ -144,25 +165,29 @@ export default class UIStore {
     OS.send('set-state', this.state)
   }
 
-  onInputRef = el => {
-    if (el) {
-      this.setupInputRef(el)
+  handleInputRef = ref => {
+    if (ref && this.inputRef !== ref) {
+      this.inputRef = ref
+      this.attachInputHandlers(ref)
     }
+  }
+
+  attachInputHandlers = ref => {
+    // reset before attach
+    if (this.inputDisposables) {
+      this.inputDisposables.map(x => x())
+    }
+    this.inputDisposables = [
+      this.on(ref, 'focus', this.focusBar),
+      this.on(ref, 'blur', this.blurBar),
+      this.on(ref, 'keydown', this.emitKeyCode),
+      this.attachTrap('bar', ref),
+    ]
   }
 
   emitKeyCode = e => this.emit('keydown', keycode(e.keyCode))
 
-  setupInputRef = ref => {
-    this.inputRef = ref
-    if (this.offKeyCode) {
-      this.offKeyCode()
-    }
-    const off = this.on(ref, 'keydown', this.emitKeyCode)
-    this.offKeyCode = off
-    this.attachTrap('bar', ref)
-  }
-
-  _watchFocus() {
+  _listenForFocus() {
     this.on(OS, 'ora-focus', () => {
       this.focusedAt = Date.now()
       this.setState({ focused: true })
@@ -181,30 +206,35 @@ export default class UIStore {
     this.setState({ hidden: true })
   }
 
+  _watchBarFocus() {
+    this.watch(() => {
+      const { inputRef, barFocused } = this
+      if (!inputRef) {
+        return
+      }
+      if (barFocused) {
+        inputRef.focus()
+        inputRef.select()
+      } else {
+        inputRef.blur()
+      }
+    })
+  }
+
   focusBar = () => {
-    if (this.inputRef && !this.barFocused) {
-      this.inputRef.focus()
-      this.inputRef.select()
-      this.barFocused = true
-    }
+    console.trace('focsuin')
+    this.barFocused = true
   }
 
   blurBar = () => {
-    if (this.inputRef && this.barFocused) {
-      this.inputRef.blur()
-      this.barFocused = false
-    }
-  }
-
-  setBarFocus = val => {
-    this.barFocused = val
+    this.barFocused = false
   }
 
   toggleCollapsed = () => {
     this.collapsed = !this.collapsed
   }
 
-  _watchBlurBar = () => {
+  _watchBlurBarOnHide = () => {
     this.watch(function watchBlurBar() {
       if (this.state.hidden) {
         // timeout based on animation
@@ -213,18 +243,20 @@ export default class UIStore {
     })
   }
 
-  _watchFocusBar() {
+  _watchKeyboardFocus() {
     let lastCol = null
-    this.watch(function watchFocusBar() {
-      const { col } = this.stack
-      if (col === 0 && lastCol !== 0) {
-        this.focusBar()
+    this.react(
+      () => this.stack.col,
+      col => {
+        if (col === 0 && lastCol !== 0) {
+          this.focusBar()
+        }
+        if (col !== 0 && lastCol === 0) {
+          this.blurBar()
+        }
+        lastCol = col
       }
-      if (col !== 0 && lastCol === 0) {
-        this.blurBar()
-      }
-      lastCol = col
-    })
+    )
   }
 
   _watchWasBlurred() {

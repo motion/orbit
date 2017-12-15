@@ -646,10 +646,7 @@ export default class Surface extends React.PureComponent<Props> {
           : 0,
       },
       surface: {
-        transform: {
-          z: 0,
-          ...props.transform,
-        },
+        transform: props.transform,
         position: props.position,
         zIndex: props.zIndex,
         opacity: props.opacity,

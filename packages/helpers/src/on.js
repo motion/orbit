@@ -39,12 +39,13 @@ function onSomething(
       throw new Error(`Should pass in (Observable, callback) for Observables`)
     }
     const subscription = target.subscribe(eventName)
-    disposable = this.subscriptions.add(() => subscription.unsubscribe())
+    disposable = () => subscription.unsubscribe()
   } else if (target && target.emitter) {
     return on.call(this, target.emitter, eventName, callback)
   } else {
-    const e = event(target, eventName, callback)
-    disposable = this.subscriptions.add(e)
+    disposable = event(target, eventName, callback)
   }
-  return disposable
+  this.subscriptions.add(disposable)
+  // return just the function that unsubscribes
+  return disposable.dispose ? disposable.dispose.bind(disposable) : disposable
 }

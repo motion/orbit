@@ -87,9 +87,7 @@ class BucketsDropdown {
 export default class OraHeader extends React.Component {
   handleHeaderClick = e => {
     e.preventDefault()
-    if (!this.props.oraStore.ui.barFocused) {
-      this.props.oraStore.ui.focusBar()
-    }
+    this.props.oraStore.ui.focusBar()
   }
 
   handleInputMouseDown = e => {
@@ -97,7 +95,7 @@ export default class OraHeader extends React.Component {
   }
 
   handleInputBlur = () => {
-    this.props.oraStore.ui.setBarFocus(false)
+    this.props.oraStore.ui.blurBar()
   }
 
   selectBucket = async item => {
@@ -153,14 +151,14 @@ export default class OraHeader extends React.Component {
               />
             </leftSide>
             <UI.Input
+              key="ora-input"
               $searchInput
               $disabled={!oraStore.ui.barFocused}
               size={1}
-              getRef={oraStore.ui.onInputRef}
+              getRef={oraStore.ui.handleInputRef}
               borderRadius={0}
               onBlur={this.handleInputBlur}
               onChange={oraStore.ui.handleSearchChange}
-              onMouseDown={this.handleInputMouseDown}
               value={oraStore.ui.textboxVal}
               borderWidth={0}
               background="transparent"

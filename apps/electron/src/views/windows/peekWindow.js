@@ -81,9 +81,17 @@ export default class PeekWindow extends React.Component {
     })
   }
 
-  handlePeekRef = ref => {
+  handlePeekRef = (ref, peek) => {
     if (ref) {
       this.peekRef = ref.window
+      // show once it gets ref
+      if (!peek.show) {
+        // show after a little bit, because it flashes white weirdly
+        this.setTimeout(() => {
+          peek.show = true
+          this.setState({ peeks: this.state.peeks })
+        }, 500)
+      }
     }
   }
 
@@ -104,8 +112,7 @@ export default class PeekWindow extends React.Component {
       const isPeek = key === this.peekKey
       if (isPeek && !isEqual(peek.position, [0, 0])) {
         tearPeekProps.position = position
-        const willBeTorn = this.tearAway(tearPeekProps)
-        if (!willBeTorn) {
+        if (!this.tearAway(tearPeekProps)) {
           updatePeekPosition()
         }
       } else {
@@ -114,20 +121,12 @@ export default class PeekWindow extends React.Component {
     }
   }
 
-  setPeekReady = peek => () => {
-    peek.show = true
-    this.setState({})
-  }
-
   tearAway = tearPeekProps => {
-    if (this.isTearing) {
-      return
-    }
+    const nextKey = this.peekKey + 1
     if (this.state.peeks.find(x => x.show === false)) {
       // havent shown the last peek yet
       return
     }
-    const nextKey = this.peekKey + 1
     if (this.state.peeks.find(x => x.key === nextKey)) {
       // bug called multiple times unecessarily
       return
@@ -135,22 +134,17 @@ export default class PeekWindow extends React.Component {
     this.peekKey = nextKey
     console.log('sending peek tear')
     this.peekSend('peak-tear')
-    // wait a little before loading next window to prevent jitter
-    this.isTearing = true
-    this.setTimeout(() => {
-      const peeks = [
-        // new hidden peek window
-        {
-          ...tearPeekProps,
-          key: this.peekKey,
-          show: false,
-        },
-        // keep the rest
-        ...this.state.peeks,
-      ]
-      this.setState({ peeks })
-      this.isTearing = false
-    }, 250)
+    const peeks = [
+      // new hidden peek window
+      {
+        ...tearPeekProps,
+        key: this.peekKey,
+        show: false,
+      },
+      // keep the rest
+      ...this.state.peeks,
+    ]
+    this.setState({ peeks })
     return true
   }
 
@@ -186,9 +180,8 @@ export default class PeekWindow extends React.Component {
               key={key}
               alwaysOnTop={isPeek || peek.alwaysOnTop}
               show={peek.show}
-              onReadyToShow={this.setPeekReady(peek)}
               file={`${Constants.APP_URL}/peek?key=${key}`}
-              ref={isPeek ? this.handlePeekRef : _ => _}
+              ref={isPeek ? ref => this.handlePeekRef(ref, peek) : _ => _}
               {...windowProps}
               size={dimensions}
               position={position}

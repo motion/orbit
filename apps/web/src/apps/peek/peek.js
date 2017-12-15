@@ -14,6 +14,7 @@ const KEY = keyParam && keyParam[1]
 const SHOW_DELAY = 300
 const HIDE_DELAY = 100
 const background = [255, 255, 255, 0.98]
+const peekShadow = [[0, 0, 20, [0, 0, 0, 0.2]]]
 
 type Peek = {
   url?: string,
@@ -201,6 +202,20 @@ export default class PeekPage {
               position: 'absolute',
               top: 35,
               right: 20 - arrowSize,
+              boxShadow: peekShadow,
+              zIndex: -1,
+            }}
+          />
+          <UI.Arrow
+            if={!store.isTorn}
+            size={arrowSize}
+            towards="right"
+            background={background}
+            css={{
+              position: 'absolute',
+              top: 35,
+              right: 20 - arrowSize,
+              zIndex: 100,
             }}
           />
           <content>
@@ -296,7 +311,7 @@ export default class PeekPage {
       borderRadius: 10,
       opacity: 1,
       transition: 'background ease-in 200ms',
-      boxShadow: [[0, 0, 20, [0, 0, 0, 0.2]]],
+      boxShadow: [peekShadow],
     },
     header: {
       flexFlow: 'row',

@@ -243,6 +243,7 @@ export default class UIStore {
       if (this.state.hidden) {
         // timeout based on animation
         this.setTimeout(this.blurBar, 150)
+        OS.send('peek', null)
       }
     })
   }

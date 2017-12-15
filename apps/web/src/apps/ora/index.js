@@ -176,7 +176,7 @@ export default class OraPage {
       overflow: 'hidden',
     },
     ora: {
-      pointerEvents: 'none',
+      pointerEvents: 'none !important',
       // height: Constants.ORA_HEIGHT,
       background: Constants.ORA_BG,
       // border: [1, [255, 255, 255, 0.035]],
@@ -188,17 +188,17 @@ export default class OraPage {
       borderTopRadius: 10,
       borderBottomRadius: 15,
       overflow: 'hidden',
-      transition: 'all ease-in 200ms',
+      transition: 'all ease-in 50ms',
       opacity: 0,
       transform: {
-        x: 8,
+        x: Constants.ORA_WIDTH + Constants.ORA_PAD,
       },
     },
     oraFocused: {
       background: Constants.ORA_BG_FOCUSED,
     },
     visible: {
-      pointerEvents: 'auto',
+      pointerEvents: 'auto !important',
       opacity: 1,
       transform: {
         x: 0,

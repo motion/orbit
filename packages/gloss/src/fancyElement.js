@@ -61,7 +61,7 @@ setTimeout(() => {
       }
     })
   }
-})
+}, 100)
 
 // factory that returns fancyElement helper
 export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {

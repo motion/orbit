@@ -16,7 +16,7 @@ const docs = rawDocs.map(body => ({
   integration: 'google-docs',
   type: 'document',
   body,
-  url: `http://docs.google.com?id=${Math.random()}`,
+  // url: `http://docs.google.com?id=${Math.random()}`,
 }))
 
 const convos = rawConvos.map(convo => {
@@ -28,11 +28,11 @@ const convos = rawConvos.map(convo => {
     title,
     // integration: convo.type,
     integration: 'google-docs',
-    type: 'document',
+    data: { messages: convo.messages },
+    type: 'conversation',
     // type: 'conversation',
     body: `# ${title}
   ${convo.body}`,
-    url: `http://slack.com?id=${Math.random()}`,
   }
 })
 

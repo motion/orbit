@@ -27,14 +27,19 @@ export default class MarkdownRenderer {
         }
 
         return (
-          <UI.Title $h2={depth === 2} fontWeight={600} size={size}>
+          <UI.Title
+            $h1={depth === 1}
+            $h2={depth === 2}
+            fontWeight={600}
+            size={size}
+          >
             {text}
           </UI.Title>
         )
       },
       paragraph: ({ text }) => {
         return (
-          <UI.Text>
+          <UI.Text $text>
             {text.split('\n').map(line => (
               <div
                 dangerouslySetInnerHTML={{
@@ -63,8 +68,15 @@ export default class MarkdownRenderer {
   }
 
   static style = {
+    h1: {
+      marginBottom: 10,
+    },
     h2: {
       marginTop: 10,
+    },
+    text: {
+      marginTop: 3,
+      marginBottom: 3,
     },
   }
 }

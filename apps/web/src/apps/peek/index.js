@@ -5,6 +5,7 @@ import * as UI from '@mcro/ui'
 import { OS } from '~/helpers'
 import { Thing } from '~/app'
 import MarkdownRender from './markdownRenderer'
+import Conversation from './conversation'
 import Mousetrap from 'mousetrap'
 
 // const isSamePeek = (a, b) => a && b && a.id === b.id
@@ -50,6 +51,10 @@ window.cachedPeek = null
       }
       // current
       return this.curPeek
+    }
+
+    get isConversation() {
+      return this.thing && this.thing.type === 'conversation'
     }
 
     willMount() {
@@ -178,6 +183,7 @@ export default class PeekPage {
     const arrowSize = 32
     const peekY = (store.peek || store.lastPeek || {}).offsetTop || 0
     // console.log('peekUrl', !!peek.body, 'loaded?', store.pageLoaded)
+
     return (
       <UI.Theme name="light">
         <peek
@@ -234,7 +240,14 @@ export default class PeekPage {
               <tabs>
                 <tab $visible={store.tab === 'readability'}>
                   <readability>
-                    <MarkdownRender markdown={store.thing.body} />
+                    <MarkdownRender
+                      if={!store.isConversation}
+                      markdown={store.thing.body}
+                    />
+                    <Conversation
+                      if={store.isConversation}
+                      thing={store.thing}
+                    />
                   </readability>
                 </tab>
                 <tab $visible={store.pageLoaded && store.tab === 'webview'}>
@@ -309,7 +322,7 @@ export default class PeekPage {
       pointerEvents: 'none',
     },
     readability: {
-      padding: 20,
+      padding: [5, 15],
     },
     tabs: {
       flex: 1,

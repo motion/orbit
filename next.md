@@ -44,7 +44,8 @@ DeliverX
 
 # demo
 
-* production build fixes for demo
+* prod build is downloading even if its older version
+* prod build is much bigger now
 * working crawl of deliverx kb
 * better icons
 

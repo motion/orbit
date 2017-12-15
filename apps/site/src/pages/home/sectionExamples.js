@@ -19,8 +19,8 @@ const Logo = props => (
   />
 )
 
-const bgColor = Constants.dark2
-const bgColor2 = Constants.dark1
+const bgColor = Constants.colorMain.darken(0.12)
+const bgColor2 = Constants.colorMain
 
 const Circles = ({ rings, ringSize, ...props }) => {
   const size = rings * ringSize
@@ -42,15 +42,14 @@ const Circles = ({ rings, ringSize, ...props }) => {
             key={index}
             css={{
               background: [
-                bgColor2,
-                bgColor,
-                bgColor2,
-                bgColor,
-                bgColor2,
-                bgColor,
-                bgColor2,
-                bgColor,
                 'yellow',
+                bgColor2,
+                bgColor,
+                bgColor2,
+                bgColor,
+                bgColor2,
+                bgColor,
+                bgColor2,
                 bgColor,
                 bgColor2,
                 bgColor,
@@ -128,20 +127,31 @@ export default class SectionExamples {
                   How it works
                 </UI.Text>
                 <UI.Text
-                  size={3}
+                  size={4.5}
                   fontWeight={100}
                   padding={[0, 80, 30, 0]}
-                  color={[255, 255, 255, 0.5]}
+                  color={[255, 255, 255]}
                   selectable
                 >
-                  Insight as you talk to{' '}
+                  Insight as you do your thing.
+                </UI.Text>
+
+                <UI.Text
+                  size={2.8}
+                  fontWeight={100}
+                  padding={[0, 80, 30, 0]}
+                  color={[255, 255, 255]}
+                  selectable
+                >
+                  Talk to{' '}
                   <span css={{ fontWeight: 600, color: '#fff' }}>
-                    teammates
+                    customers
                   </span>{' '}
                   &{' '}
                   <span css={{ fontWeight: 600, color: '#fff' }}>
-                    customers
-                  </span>
+                    teammates
+                  </span>{' '}
+                  like an expert, immediately.
                 </UI.Text>
 
                 <UI.Text

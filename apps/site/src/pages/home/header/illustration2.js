@@ -24,11 +24,11 @@ export default class Illustration2 {
             0: true,
           }}
           ringBackground="transparent"
-          ringBorder={[3, 'dashed', Constants.colorSecondary]}
+          ringBorder={[28, 'dashed', Constants.colorMain]}
           planetSize={100}
           planetStyles={{
             background: '#fff',
-            border: [4, Constants.mainLight],
+            border: [4, Constants.colorMain.darken(0.1)],
           }}
           items={[
             'google-gmail',

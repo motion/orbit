@@ -33,7 +33,7 @@ export default class Ora extends React.Component {
   static style = {
     ora: {
       position: 'sticky',
-      margin: [0, 0, -Constants.ORA_HEIGHT, 0],
+      margin: [0, 0, -Constants.ORA_HEIGHT + Constants.ORA_PULL_UP, 0],
       left: 'calc(50% + 135px)',
       top: Constants.ORA_TOP_PAD,
       width: Constants.ORA_WIDTH,
@@ -45,6 +45,9 @@ export default class Ora extends React.Component {
       color: '#fff',
       zIndex: 10000,
       boxShadow: ['0 10px 50px rgba(0,0,0,0.29)'],
+      '&:sticky': {
+        background: 'red',
+      },
     },
     header: { padding: 10, opacity: 0.25 },
     content: { padding: 0 },

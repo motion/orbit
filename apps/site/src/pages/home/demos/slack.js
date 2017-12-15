@@ -100,7 +100,7 @@ export default class FakeSlack {
                   <img $avatar src="/steph.jpg" />
                   <chatContent $$flex>
                     <chatTitle $$row>
-                      <strong>Steph</strong> &nbsp;<span $light>10:22 AM</span>
+                      <strong>Meg</strong> &nbsp;<span $light>10:22 AM</span>
                     </chatTitle>
                     <message>
                       running into some crawl stuff thats breaking

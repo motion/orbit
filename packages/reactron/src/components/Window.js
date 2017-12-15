@@ -59,7 +59,7 @@ export default class Window extends BaseComponent {
       defaultPosition: this.updatePosition,
       onMove: this.updatePosition,
       onMoved: this.updatePosition,
-      alwaysOnTop: this.handleSettableProp('alwaysOnTop'),
+      alwaysOnTop: this.handleSettableProp('alwaysOnTop', x => !!x),
       file: () => configureFile.call(this, this.props),
       acceptFirstMouse: () => {
         if (process.env.NODE_ENV !== 'production') {
@@ -73,18 +73,19 @@ export default class Window extends BaseComponent {
     }
   }
 
-  handleSettableProp(key) {
+  handleSettableProp(key, handler = _ => _) {
     return propVal => {
       if (this.unmounted) {
         return
       }
       // changed value
-      if (this.options[key] !== propVal) {
+      const newVal = handler(propVal)
+      if (this.options[key] !== newVal) {
         const setter = this.window[`set${properCase(key)}`]
         if (setter) {
-          console.log('update window, set', key, propVal)
-          setter.call(this.window, propVal)
-          this.options[key] = propVal
+          console.log('update window, set', key, newVal)
+          setter.call(this.window, newVal)
+          this.options[key] = newVal
         }
       }
     }

@@ -19,7 +19,6 @@ export default class HomeHeader {
         <View.SectionContent fullscreen>
           <View.Header />
           <View.Slant dark />
-
           <content
             $$row
             css={{
@@ -74,25 +73,34 @@ export default class HomeHeader {
                   userSelect: 'none',
                 }}
               >
-                <Illustration2 css={{ transform: { y: 60, scale: 1.2 } }} />
-              </inner>
-
-              <View.Bubble
-                width={400}
-                css={{ position: 'absolute', top: 72, zIndex: -10 }}
-              />
-
-              <text css={{ margin: [72, 0, 0, 20] }}>
-                <View.Title
-                  {...titleProps}
-                  textAlign="left"
-                  color={'#fff'}
-                  selectable
+                <Illustration2 css={{ transform: { y: 20, scale: 1.2 } }} />
+                <View.Bubble
+                  width={400}
+                  css={{
+                    position: 'absolute',
+                    top: -235,
+                    left: -20,
+                    zIndex: -10,
+                  }}
+                />
+                <text
+                  css={{
+                    position: 'absolute',
+                    bottom: -220,
+                  }}
                 >
-                  Orbit keeps your team<br />
-                  in sync, <span css={{ marginLeft: -2 }}>without hassle</span>
-                </View.Title>
-              </text>
+                  <View.Title
+                    {...titleProps}
+                    textAlign="left"
+                    color={'#fff'}
+                    selectable
+                  >
+                    Orbit keeps your team<br />
+                    in sync,{' '}
+                    <span css={{ marginLeft: -2 }}>without hassle</span>
+                  </View.Title>
+                </text>
+              </inner>
             </section>
           </content>
         </View.SectionContent>

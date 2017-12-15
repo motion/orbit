@@ -14,6 +14,7 @@ export default class Illustration2 {
           marginRight: -50,
           justifyContent: 'center',
           userSelect: 'none',
+          position: 'relative',
         }}
         {...props}
       >
@@ -23,7 +24,7 @@ export default class Illustration2 {
             0: true,
           }}
           ringBackground="transparent"
-          ringBorder={[10, Constants.colorSecondary]}
+          ringBorder={[3, 'dashed', Constants.colorSecondary]}
           planetSize={100}
           planetStyles={{
             background: '#fff',
@@ -51,10 +52,9 @@ export default class Illustration2 {
             'github',
           ]}
           css={{
-            top: '-45%',
             left: 188,
-            transformOrigin: 'center center',
             transform: {
+              y: -75,
               scale: 0.45,
             },
           }}

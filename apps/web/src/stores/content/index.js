@@ -50,5 +50,5 @@ const deliverx = [
     url: 'http://deliverx.com/drivers',
   },
 ]
-console.log('convos are', convos)
+
 export default [...tasks, ...convos, ...docs, ...deliverx]

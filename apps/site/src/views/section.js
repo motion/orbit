@@ -95,7 +95,7 @@ export const SectionContent = view(
   'section',
   {
     width: '85%',
-    minWidth: 300,
+    minWidth: 660,
     maxWidth: Constants.smallSize,
     margin: [0, 'auto'],
     position: 'relative',

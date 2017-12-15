@@ -201,7 +201,7 @@ export default class PeekPage {
             <innerContent $$flex if={store.thing}>
               <header $$draggable>
                 <title>
-                  <UI.Title selectable size={1} fontWeight={600}>
+                  <UI.Title size={1} fontWeight={600}>
                     {store.thing.title}
                   </UI.Title>
                 </title>

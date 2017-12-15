@@ -153,7 +153,6 @@ export default class OraHeader extends React.Component {
             <UI.Input
               key="ora-input"
               $searchInput
-              $disabled={!oraStore.ui.barFocused}
               size={1}
               getRef={oraStore.ui.handleInputRef}
               borderRadius={0}

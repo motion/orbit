@@ -207,8 +207,13 @@ export default class UIStore {
   }
 
   _watchBarFocus() {
+    let lastState = this.barFocused
     this.watch(() => {
       const { inputRef, barFocused } = this
+      if (barFocused === lastState) {
+        return
+      }
+      lastState = barFocused
       if (!inputRef) {
         return
       }
@@ -222,7 +227,6 @@ export default class UIStore {
   }
 
   focusBar = () => {
-    console.trace('focsuin')
     this.barFocused = true
   }
 

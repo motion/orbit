@@ -5,6 +5,83 @@ import { CurrentUser } from '~/app'
 import * as Constants from '~/constants'
 import OraBanner from './oraBanner'
 
+const iconProps = {
+  color: [255, 255, 255, 0.5],
+  padding: 8,
+  size: 16,
+  hover: {
+    opacity: 0.5,
+    color: [255, 255, 255, 1],
+  },
+  css: {
+    marginLeft: -8,
+  },
+}
+
+@view.attach('oraStore')
+@view
+class BucketsDropdown {
+  cancelCrawler = () => {
+    console.log('canceling')
+    this.props.oraStore.crawler.stop()
+  }
+
+  render() {
+    const settings = CurrentUser.user.settings || {}
+    const { buckets = ['Default'], activeBucket = 'Default' } = settings
+    return (
+      <UI.Popover
+        openOnHover
+        delay={150}
+        closeOnEsc
+        overlay="transparent"
+        theme="light"
+        width={150}
+        target={
+          <UI.Icon
+            key="icon-bucket"
+            {...iconProps}
+            name="bucket"
+            opacity={0.015}
+            onClick={this.handleBucketClick}
+          />
+        }
+      >
+        <UI.List
+          key="bucket-list"
+          items={[
+            {
+              children: 'Cancel crawler',
+              onClick: this.cancelCrawler,
+            },
+            ...buckets.map(name => ({
+              primary: name,
+              icon: name === activeBucket ? 'check' : null,
+            })),
+            {
+              children: (
+                <UI.Input
+                  onEnter={e => {
+                    if (e.target.value) {
+                      CurrentUser.user.mergeUpdate({
+                        settings: {
+                          buckets: [...buckets, e.target.value],
+                        },
+                      })
+                    }
+                  }}
+                  placeholder="Create..."
+                />
+              ),
+            },
+          ]}
+          onSelect={this.selectBucket}
+        />
+      </UI.Popover>
+    )
+  }
+}
+
 @view
 export default class OraHeader extends React.Component {
   handleHeaderClick = () => {
@@ -35,6 +112,11 @@ export default class OraHeader extends React.Component {
     this.props.oraStore.ui.hide()
   }
 
+  handleBucketClick = e => {
+    e.stopPropagation()
+    this.props.oraStore.ui.hide()
+  }
+
   preventPropagation = e => {
     e.stopPropagation()
   }
@@ -42,50 +124,6 @@ export default class OraHeader extends React.Component {
   render({ oraStore }) {
     if (!CurrentUser.user) {
       return null
-    }
-    const settings = CurrentUser.user.settings || {}
-    const { buckets = ['Default'], activeBucket = 'Default' } = settings
-    const bucketItems = [
-      {
-        children: 'Cancel crawler',
-        onClick: () => {
-          console.log('canceling')
-          oraStore.crawler.stop()
-        },
-      },
-      ...buckets.map(name => ({
-        primary: name,
-        icon: name === activeBucket ? 'check' : null,
-      })),
-      {
-        children: (
-          <UI.Input
-            onEnter={e => {
-              if (e.target.value) {
-                CurrentUser.user.mergeUpdate({
-                  settings: {
-                    buckets: [...buckets, e.target.value],
-                  },
-                })
-              }
-            }}
-            placeholder="Create..."
-          />
-        ),
-      },
-    ]
-
-    const iconProps = {
-      color: [255, 255, 255, 0.5],
-      padding: 8,
-      size: 16,
-      hover: {
-        opacity: 0.5,
-        color: [255, 255, 255, 1],
-      },
-      css: {
-        marginLeft: -8,
-      },
     }
 
     return (
@@ -125,27 +163,7 @@ export default class OraHeader extends React.Component {
             <OraBanner />
 
             <rightSide onMouseUp={this.preventPropagation}>
-              <UI.Popover
-                openOnHover
-                delay={150}
-                closeOnEsc
-                overlay="transparent"
-                theme="light"
-                width={150}
-                target={
-                  <UI.Icon
-                    {...iconProps}
-                    name="bucket"
-                    opacity={0.015}
-                    onClick={e => {
-                      e.stopPropagation()
-                      oraStore.ui.hide()
-                    }}
-                  />
-                }
-              >
-                <UI.List items={bucketItems} onSelect={this.selectBucket} />
-              </UI.Popover>
+              <BucketsDropdown />
               <UI.Icon
                 {...iconProps}
                 opacity={0.1}

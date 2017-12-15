@@ -184,6 +184,7 @@ export default class Database {
       const model = this.modelsConfig[name]
       this.models[name] = model
       if (typeof model.connect !== 'function') {
+        console.log('bad model is', model)
         throw new Error(
           `No connect found for model ${
             model.name

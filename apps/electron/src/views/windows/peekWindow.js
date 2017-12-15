@@ -76,9 +76,7 @@ export default class PeekWindow extends React.Component {
       }
     })
     this.on(ipcMain, 'peek-close', (event, key) => {
-      console.log('closing', key)
       const peeks = this.state.peeks.filter(p => `${p.key}` !== `${key}`)
-      console.log('closed after peeks', peeks)
       this.setState({ peeks })
     })
   }
@@ -112,6 +110,7 @@ export default class PeekWindow extends React.Component {
     if (!isEqual(peek.position, position)) {
       const isPeek = key === this.peekKey
       if (isPeek && !isEqual(peek.position, [0, 0])) {
+        tearPeekProps.position = position
         this.tearAway(tearPeekProps)
       } else {
         updatePeekPosition()
@@ -121,6 +120,10 @@ export default class PeekWindow extends React.Component {
 
   tearAway = tearPeekProps => {
     this.peekKey++
+    if (this.state.peeks.find(x => x.show === false)) {
+      // havent shown the last peek yet
+      return
+    }
     if (this.state.peeks.find(x => x.key === this.peekKey)) {
       // likely called multiple times unecessarily
       return
@@ -129,7 +132,11 @@ export default class PeekWindow extends React.Component {
     this.peekSend('peak-tear')
     const peeks = [
       // new hidden peek window
-      { ...tearPeekProps, key: this.peekKey },
+      {
+        ...tearPeekProps,
+        key: this.peekKey,
+        show: false,
+      },
       // keep the rest
       ...this.state.peeks,
     ]
@@ -145,7 +152,7 @@ export default class PeekWindow extends React.Component {
       transparent: true,
     }
 
-    console.log('this.state.peeks', this.state.peeks)
+    console.log('this.state.peeks', JSON.stringify(this.state.peeks, 0, 2))
 
     return (
       <React.Fragment>
@@ -163,11 +170,10 @@ export default class PeekWindow extends React.Component {
           } else {
             position = peek.position
           }
-          console.log('return', position, Window)
           return (
             <Window
               key={key}
-              alwaysOnTop={isPeek}
+              alwaysOnTop={isPeek || peek.alwaysOnTop}
               show={peek.show}
               file={`${Constants.APP_URL}/peek?key=${key}`}
               ref={isPeek ? ref => this.handlePeekRef(ref, peek) : _ => _}

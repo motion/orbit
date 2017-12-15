@@ -182,7 +182,6 @@ export default class UIStore {
   }
 
   focusBar = () => {
-    console.log('focus')
     if (this.inputRef && !this.barFocused) {
       this.inputRef.focus()
       this.inputRef.select()
@@ -271,7 +270,6 @@ export default class UIStore {
 
     const newHeight = Math.max(150, Math.min(Constants.ORA_HEIGHT, height))
     if (this.height !== newHeight) {
-      console.log('set to', newHeight)
       this.height = newHeight
     }
   }, 32)

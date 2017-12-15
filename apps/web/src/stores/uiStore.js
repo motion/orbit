@@ -190,8 +190,10 @@ export default class UIStore {
   }
 
   blurBar = () => {
-    this.inputRef && this.inputRef.blur()
-    this.barFocused = false
+    if (this.inputRef && this.barFocused) {
+      this.inputRef.blur()
+      this.barFocused = false
+    }
   }
 
   setBarFocus = val => {

@@ -16,20 +16,9 @@
     "outDir": "./ts-build",
     "baseUrl": "./src",
     "paths": {
-      "~/*": [
-        "*",
-        "./*"
-      ]
+      "~/*": ["*", "./*"]
     }
   },
-  "exclude": [
-    "node_modules",
-    "app",
-    "build",
-    "assets",
-    "infra"
-  ],
-  "include": [
-    "src/**/*"
-  ]
+  "exclude": ["node_modules", "app", "build", "assets", "infra"],
+  "include": ["src/**/*"]
 }

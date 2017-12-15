@@ -107,11 +107,11 @@ export default class ContextSidebar {
   }
 
   pinCurrent = () => {
-    this.oraStore.pin.add(this.oraStore.osContext)
+    this.oraStore.pin.add(this.oraStore.lastContext)
   }
 
   unpinCurrent = () => {
-    this.oraStore.pin.remove(this.oraStore.osContext)
+    this.oraStore.pin.remove(this.oraStore.lastContext)
   }
 
   get actions() {

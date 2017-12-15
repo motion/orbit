@@ -1,0 +1,23 @@
+#!/bin/bash
+
+. $(dirname $0)/__/common
+
+NAME=$1
+ARGS=${@:2}
+
+echo "in $NAME: $ARGS"
+
+APP="$ROOT/apps/$NAME"
+PKG="$ROOT/packages/$NAME"
+
+if [ -d "$APP" ]; then
+  cd $APP
+  eval $ARGS
+fi
+
+if [ -d "$PKG" ]; then
+  cd $PKG
+  eval $ARGS
+fi
+
+cd $ROOT

@@ -7,15 +7,21 @@ import HomeHandsFree from './home/sectionHandsFree'
 import HomeSecurity from './home/sectionSecurity'
 import HomeChat from './home/sectionChat'
 import HomeExamples from './home/sectionExamples'
+import Animated from 'animated'
 
 @view.provide({
   homeStore: class HomeStore {
     ready = false
+    animations = {
+      val1: new Animated.Value(0),
+    }
 
     willMount() {
       window.homeStore = this
       this.setTimeout(() => {
         this.ready = true
+
+        Animated.spring(this.animations.val1, { toValue: 1 }).start()
       }, 16)
     }
 

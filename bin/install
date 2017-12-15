@@ -2,10 +2,13 @@
 
 ARGS=${@:1}
 
+echo "install: $ARGS"
+
 if [ -z "$ARGS" ]; then
   npx lerna bootstrap
 else
   NAME=$(grep '"name":' package.json | cut -d\" -f4)
+  echo "npx lerna add $ARGS --scope $NAME"
   npx lerna add $ARGS --scope $NAME
 fi
 

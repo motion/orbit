@@ -1,7 +1,7 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
 import * as View from '~/views'
-// import * as Constants from '~/constants'
+import * as Constants from '~/constants'
 import { view } from '@mcro/black'
 import Illustration1 from './header/illustration1'
 import Illustration2 from './header/illustration2'
@@ -14,8 +14,10 @@ const titleProps = {
 @view
 export default class HomeHeader {
   render() {
+    const ringFill = Constants.colorSecondary.darken(0.15).toString()
+
     return (
-      <View.Section darkInverse>
+      <View.Section darkInverse css={{ marginBottom: -Constants.ORA_PULL_UP }}>
         <View.SectionContent fullscreen>
           <View.Header />
           <View.Slant dark />
@@ -46,11 +48,39 @@ export default class HomeHeader {
                     margin: [-130, 10, 0, 0],
                     pointerEvents: 'none',
                     userSelect: 'none',
+                    zIndex: -1,
                   }}
                 >
                   <Illustration1
                     css={{
                       transform: { scale: 1.6 },
+                    }}
+                  />
+                  <View.Ring
+                    width={420}
+                    fill={ringFill}
+                    css={{
+                      position: 'absolute',
+                      top: -235,
+                      left: -20,
+                      zIndex: -10,
+                      transform: {
+                        rotate: '70deg',
+                      },
+                    }}
+                  />
+                  <View.Ring
+                    width={420}
+                    fill={ringFill}
+                    css={{
+                      position: 'absolute',
+                      top: -585,
+                      left: -20,
+                      zIndex: -10,
+                      transform: {
+                        rotate: '170deg',
+                        scale: 0.5,
+                      },
                     }}
                   />
                 </inner>
@@ -75,6 +105,9 @@ export default class HomeHeader {
               >
                 <Illustration2 css={{ transform: { y: 20, scale: 1.2 } }} />
                 <View.Bubble
+                  fill={UI.color(Constants.colorMain)
+                    .darken(0.15)
+                    .toString()}
                   width={400}
                   css={{
                     position: 'absolute',

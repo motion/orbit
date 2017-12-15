@@ -17,11 +17,12 @@ export const ORA_TOP = SECTION_HEIGHT
 export const ORA_HEIGHT = 410
 export const ORA_WIDTH = 300
 export const ORA_BORDER_RADIUS = 6
+export const ORA_PULL_UP = 110
 
-export const colorMain = 'rgb(0%, 50.3%, 99.9%)'
-export const colorSecondary = 'rgb(92.1%, 0%, 38.4%)'
-export const colorTeal = '#49ceac'
-export const colorBlue = '#133cca'
+export const colorMain = UI.color('rgb(0%, 50.3%, 99.9%)')
+export const colorSecondary = UI.color('rgb(92.1%, 0%, 38.4%)')
+export const colorTeal = UI.color('#49ceac')
+export const colorBlue = UI.color('#133cca')
 
 export const mainLight = UI.color(colorMain)
   .lighten(0.65)

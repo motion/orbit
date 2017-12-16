@@ -23,6 +23,7 @@ fn main() {
 	thread::sleep(Duration::from_millis(150));
 
 	let s2 = get_screenshot(0).unwrap();
+	let mut diffimg = Image::new(s1.width() as u32, s1.height() as u32);
 
 	// start them at their worst assumption!
 	// so basically inverse of a full bounding box...
@@ -30,8 +31,6 @@ fn main() {
 	let mut right = 0;
 	let mut top = s1.height();
 	let mut bottom = 0;
-
-	let mut diffimg = Image::new(s1.width() as u32, s1.height() as u32);
 
 	// 40 == menubar height
 	for row in 40..s1.height() {
@@ -44,17 +43,17 @@ fn main() {
 			if r == 0 && g == 0 && b == 0 {
 				// println!("black pixel")
 			} else {
-				if row < left {
-					left = row;
+				if col < left {
+					left = col;
 				}
-				if row > right {
-					right = row;
+				if col > right {
+					right = col;
 				}
-				if col > bottom {
+				if row > bottom {
 					bottom = col;
 				}
-				if col < top {
-					top = col;
+				if row < top {
+					top = row;
 				}
 				// WARNING rust-bmp params are (x, y)
 			}
@@ -62,33 +61,33 @@ fn main() {
 		}
 	}
 
-	diffimg.save("testdiff.bmp").unwrap();
+	diffimg.save("./build/testdiff.bmp").unwrap();
 
 	println!("Found bounding box [{}, {}, {}, {}]", top, right, bottom, left);
 
 	if right <= left || top >= bottom {
 		println!("no diff");
 	} else {
-		let pxw = s1.pixel_width();
-		let pxh = s1.pixel_width();
-		let width = (right - left);
-		let pxwidth = width *  pxw;
-		let height = (bottom - top);
-		let pxheight = height *  pxh;
+		let width = right - left;
+		let height = bottom - top;
 		println!("width {} height {}", width, height);
-		let mut img = Image::new(pxwidth as u32, pxheight as u32);
+
+		let imageWidth = width *  1; //s1.pixel_width()
+		let imageHeight = height *  1; //s1.pixel_width()
+
+		let mut diffScreenshot = Image::new(imageWidth as u32, imageHeight as u32);
 
 		// color in bounding box
 		for row in 0..height {
 			for col in 0..width {
 				let p2 = s2.get_pixel(row, col);
-				img.set_pixel(col as u32, row as u32, Pixel {r: p2.r, g: p2.g, b: p2.b});
+				diffScreenshot.set_pixel(col as u32, row as u32, Pixel {r: p2.r, g: p2.g, b: p2.b});
 			}
 		}
 
 		// println!("{} x {}", s1.width(), s1.height());
 
-		img.save("test.bmp").unwrap();
+		diffScreenshot.save("./build/test.bmp").unwrap();
 
 		println!("done");
 	}

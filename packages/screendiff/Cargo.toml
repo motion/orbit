@@ -1,5 +1,5 @@
 [package]
-name = "screen2"
+name = "screendiff"
 version = "0.1.0"
 authors = ["natew <natewienert@gmail.com>"]
 

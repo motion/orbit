@@ -80,7 +80,7 @@ fn main() {
 		// color in bounding box
 		for row in 0..height {
 			for col in 0..width {
-				let p2 = s2.get_pixel(row + top / 10, col + left / 10);
+				let p2 = s2.get_pixel(row + top, col + left);
 				diffScreenshot.set_pixel(col as u32, row as u32, Pixel {r: p2.r, g: p2.g, b: p2.b});
 			}
 		}

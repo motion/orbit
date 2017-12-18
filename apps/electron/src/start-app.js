@@ -7,7 +7,7 @@ import electronDebug from 'electron-debug'
 import React from 'react'
 import { render } from '@mcro/reactron'
 import { extras } from 'mobx'
-import Root from './views/root'
+import Root from './views/Root'
 
 if (process.env.NODE_ENV !== 'production') {
   require('./helpers/monitorResourceUsage')

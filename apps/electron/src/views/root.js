@@ -3,7 +3,7 @@ import { App } from '@mcro/reactron'
 import ShortcutsStore from '~/stores/shortcutsStore'
 import { view } from '@mcro/black'
 import * as RootHelpers from './rootHelpers'
-import Windows from './windows'
+import Windows from './Windows'
 import { ipcMain } from 'electron'
 
 @view.provide({

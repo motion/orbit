@@ -6,7 +6,8 @@ import * as Constants from '~/constants'
 import { throttle, once } from 'lodash'
 import MenuItems from './menuItems'
 import { view } from '@mcro/black'
-import PeekWindow from './windows/peekWindow'
+import PeekWindow from './windows/PeekWindow'
+import HighlightsWindow from './windows/HighlightsWindow'
 
 @view.attach('rootStore')
 @view.electron
@@ -179,6 +180,8 @@ export default class Windows extends React.Component {
           onQuit={this.handleMenuQuit}
           onClose={this.handleMenuClose}
         />
+        {/* HIGHLIGHTS: */}
+        <HighlightsWindow />
         {/* APP: */}
         <Window
           {...appWindow}
@@ -197,6 +200,7 @@ export default class Windows extends React.Component {
           onFocus={this.onOraFocus}
           devToolsExtensions={Helpers.getExtensions(['mobx', 'react'])}
         />
+        {/* PEEK: */}
         <PeekWindow
           appPosition={this.state.trayPosition}
           onWindows={this.handlePeekWindows}

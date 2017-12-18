@@ -11,7 +11,7 @@ import * as Constants from '~/constants'
 
 const keyParam = (window.location.search || '').match(/key=(.*)/)
 const KEY = keyParam && keyParam[1]
-const SHADOW_PAD = 20
+const SHADOW_PAD = 15
 const SHOW_DELAY = 300
 const HIDE_DELAY = 100
 
@@ -300,7 +300,7 @@ export default class PeekPage {
 
   static style = {
     peek: {
-      width: '100%',
+      width: Constants.PEEK_DIMENSIONS[2] - SHADOW_PAD * 2,
       height: Constants.PEEK_DIMENSIONS[1] - SHADOW_PAD * 2,
       padding: SHADOW_PAD,
       pointerEvents: 'none !important',

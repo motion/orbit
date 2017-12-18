@@ -4,7 +4,7 @@ import * as Constants from '~/constants'
 import { ipcMain } from 'electron'
 import { view } from '@mcro/black'
 import { Window } from '@mcro/reactron'
-import { isEqual } from 'lodash'
+import { isEqual, once } from 'lodash'
 
 type Peek = {
   url: string,
@@ -20,7 +20,7 @@ export default class PeekWindow extends React.Component {
     peeks: [
       {
         key: this.peekKey,
-        dimensions: [700, 5000],
+        dimensions: [Constants.PEEK_DIMENSIONS[0], 5000],
         position: [0, 0],
         show: false,
       },
@@ -95,9 +95,9 @@ export default class PeekWindow extends React.Component {
     }
   }
 
-  handlePeekMove = (tearPeekProps, position) => {
+  handlePeekMove = (curPeek, position) => {
     const { peeks } = this.state
-    const { key } = tearPeekProps
+    const { key } = curPeek
     const peek = peeks.find(p => p.key === key)
     const updatePeekPosition = () => {
       peek.position = position
@@ -111,8 +111,9 @@ export default class PeekWindow extends React.Component {
     if (!isEqual(peek.position, position)) {
       const isPeek = key === this.peekKey
       if (isPeek && !isEqual(peek.position, [0, 0])) {
-        tearPeekProps.position = position
-        if (!this.tearAway(tearPeekProps)) {
+        curPeek.position = position
+        const hasTorn = this.tearAway(curPeek)
+        if (!hasTorn) {
           updatePeekPosition()
         }
       } else {
@@ -121,7 +122,7 @@ export default class PeekWindow extends React.Component {
     }
   }
 
-  tearAway = tearPeekProps => {
+  tearAway = curPeek => {
     const nextKey = this.peekKey + 1
     if (this.state.peeks.find(x => x.show === false)) {
       // havent shown the last peek yet
@@ -133,19 +134,41 @@ export default class PeekWindow extends React.Component {
     }
     this.peekKey = nextKey
     console.log('sending peek tear')
-    this.peekSend('peak-tear')
+    this.peekSend('peek-tear')
+    this.peekSendTorn = once(() => this.peekSend('peek-torn'))
+    this.peekTearing = curPeek.key
+    const [curPeekOld, ...otherPeeks] = this.state.peeks
+    // discard curPeekOld
+    const curPeekPos = curPeek.position
+    const { lastPeek } = this.state
+    const position = [curPeekPos[0], lastPeek.offsetTop]
     const peeks = [
       // new hidden peek window
       {
-        ...tearPeekProps,
+        ...curPeek,
         key: this.peekKey,
         show: false,
       },
+      // current peek, make dimensions short now
+      {
+        ...curPeek,
+        position,
+        dimensions: Constants.PEEK_DIMENSIONS,
+        show: true,
+        isTearing: true,
+      },
       // keep the rest
-      ...this.state.peeks,
+      ...otherPeeks,
     ]
     this.setState({ peeks })
     return true
+  }
+
+  handlePeekTornResize = () => {
+    this.peekSendTorn()
+    // no need to set state, itll pick up next render
+    this.state.peeks.find(p => p.key === this.peekTearing).isTearing = false
+    this.peekTearing = null
   }
 
   render({ appPosition }) {
@@ -157,7 +180,7 @@ export default class PeekWindow extends React.Component {
       transparent: true,
     }
 
-    console.log('this.state.peeks', JSON.stringify(this.state.peeks, 0, 2))
+    console.log('peeks = ', JSON.stringify(this.state.peeks))
 
     return (
       <React.Fragment>
@@ -188,6 +211,7 @@ export default class PeekWindow extends React.Component {
               onMove={(...args) =>
                 this.handlePeekMove({ key, dimensions, position }, ...args)
               }
+              onMoved={peek.isTearing ? this.handlePeekTornResize : _ => _}
             />
           )
         })}

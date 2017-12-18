@@ -87,7 +87,9 @@ function link-root-modules() {
 }
 
 function link-ts-configs() {
-  npx lerna exec --parallel -- ln -s ../../tsconfig.package.json ./tsconfig.json
+  echo "link tsconfig"
+  # TODO once we can get this fuckin wroking
+  # npx lerna exec --parallel -- ln -s ../../tsconfig.package.json ./tsconfig.json
 }
 
 # function link-buildconfig() {

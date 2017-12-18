@@ -7,14 +7,18 @@ import { Thing } from '~/app'
 import MarkdownRender from './markdownRenderer'
 import Conversation from './conversation'
 import Mousetrap from 'mousetrap'
+import * as Constants from '~/constants'
 
-// const isSamePeek = (a, b) => a && b && a.id === b.id
 const keyParam = (window.location.search || '').match(/key=(.*)/)
 const KEY = keyParam && keyParam[1]
+const SHADOW_PAD = 20
 const SHOW_DELAY = 300
 const HIDE_DELAY = 100
+
+// const isSamePeek = (a, b) => a && b && a.id === b.id
+
 const background = [255, 255, 255, 0.98]
-const peekShadow = [[0, 0, 20, [0, 0, 0, 0.2]]]
+const peekShadow = [[0, 0, SHADOW_PAD, [0, 0, 0, 0.2]]]
 
 type Peek = {
   url?: string,
@@ -38,6 +42,7 @@ window.cachedPeek = null
     curPeek: ?Peek = window.cachedPeek
     nextPeek: ?Peek = window.cachedPeek
     isTorn = !!window.cachedPeek
+    isTearing = false
     isHovered = false
     isPinned = false
     pageLoaded = false
@@ -47,7 +52,7 @@ window.cachedPeek = null
 
     get peek() {
       // during hover its null so show it cached
-      if (this.isHovered || this.isPinned) {
+      if (this.isHovered || this.isPinned || this.isTorn) {
         return this.lastPeek
       }
       // current
@@ -81,9 +86,14 @@ window.cachedPeek = null
     }
 
     watchPeekTear = () => {
-      this.on(OS, 'peak-tear', () => {
+      this.on(OS, 'peek-tear', () => {
+        this.isTearing = true
+        this.setTimeout(() => {
+          this.isTorn = true
+        }, 64)
+      })
+      this.on(OS, 'peek-torn', () => {
         this.isTorn = true
-        this.isPinned = true
       })
     }
 
@@ -189,7 +199,9 @@ export default class PeekPage {
       <UI.Theme name="light">
         <peek
           $peekVisible={peek}
-          $peekPosition={peekY - 20}
+          $peekPosition={store.isTorn ? 0 : peekY - SHADOW_PAD}
+          $peekTearing={store.isTearing}
+          $peekTorn={store.isTorn}
           onMouseEnter={store.handlePeekEnter}
           onMouseLeave={store.handlePeekLeave}
         >
@@ -201,7 +213,7 @@ export default class PeekPage {
             css={{
               position: 'absolute',
               top: 35,
-              right: 20 - arrowSize,
+              right: SHADOW_PAD - arrowSize,
               boxShadow: peekShadow,
               zIndex: -1,
             }}
@@ -214,7 +226,7 @@ export default class PeekPage {
             css={{
               position: 'absolute',
               top: 35,
-              right: 20 - arrowSize,
+              right: SHADOW_PAD - arrowSize,
               zIndex: 100,
             }}
           />
@@ -289,8 +301,8 @@ export default class PeekPage {
   static style = {
     peek: {
       width: '100%',
-      height: 600,
-      padding: 20,
+      height: Constants.PEEK_DIMENSIONS[1] - SHADOW_PAD * 2,
+      padding: SHADOW_PAD,
       pointerEvents: 'none !important',
       transition: 'all ease-in 100ms',
       opacity: 0,
@@ -305,6 +317,15 @@ export default class PeekPage {
         y,
       },
     }),
+    peekTorn: {
+      transform: {
+        y: 0,
+      },
+    },
+    peekTearing: {
+      transition: 'none',
+      background: 'red',
+    },
     content: {
       flex: 1,
       background,

@@ -12,15 +12,9 @@ use dssim::*;
 fn main() {
 	let s1 = get_screenshot(0).unwrap();
 
-	println!("{} x {} x {} = {} bytes", s1.height(), s1.width(), s1.pixel_width(), s1.raw_len());
+	println!("---- {} x {} x {} = {} bytes ------", s1.height(), s1.width(), s1.pixel_width(), s1.raw_len());
 
-	println!("test test test test");
-	println!("test test test test");
-	println!("test  hi nate  test");
-	println!("test test test test");
-	println!("test test test test");
-
-	thread::sleep(Duration::from_millis(150));
+	thread::sleep(Duration::from_millis(50));
 
 	let s2 = get_screenshot(0).unwrap();
 	let mut diffimg = Image::new(s1.width() as u32, s1.height() as u32);
@@ -33,31 +27,34 @@ fn main() {
 	let mut bottom = 0;
 
 	// 40 == menubar height
-	for row in 40..s1.height() {
-		for col in 0..s1.width() {
-			let p1 = s1.get_pixel(row, col);
-			let p2 = s2.get_pixel(row, col);
+	for y in 40..s1.height() {
+		for x in 0..s1.width() {
+			let p1 = s1.get_pixel(y, x);
+			let p2 = s2.get_pixel(y, x);
 			let r = p1.r - p2.r;
 			let g = p1.g - p2.g;
 			let b = p1.b - p2.b;
 			if r == 0 && g == 0 && b == 0 {
-				// println!("black pixel")
+				// println!("blank pixel")
 			} else {
-				if col < left {
-					left = col;
+				// they are at their max
+				// this adjusts each down towards its min
+				// min === most amt of screen visible
+				if x < left  {
+					left = x;
 				}
-				if col > right {
-					right = col;
+				if x > right {
+					right = x;
 				}
-				if row > bottom {
-					bottom = col;
+				if y > bottom {
+					bottom = x;
 				}
-				if row < top {
-					top = row;
+				if y < top {
+					top = y;
 				}
-				// WARNING rust-bmp params are (x, y)
+				// WARNING rust-bmp params are (x, x)
 			}
-			diffimg.set_pixel(col as u32, row as u32, Pixel {r: r, g: g, b: b});
+			diffimg.set_pixel(x as u32, y as u32, Pixel {r: r, g: g, b: b});
 		}
 	}
 
@@ -72,16 +69,22 @@ fn main() {
 		let height = bottom - top;
 		println!("width {} height {}", width, height);
 
-		let imageWidth = width *  1; //s1.pixel_width()
-		let imageHeight = height *  1; //s1.pixel_width()
+		let imageWidth = width *  s1.pixel_width();
+		let imageHeight = height *  s1.pixel_width();
 
 		let mut diffScreenshot = Image::new(imageWidth as u32, imageHeight as u32);
 
 		// color in bounding box
-		for row in 0..height {
-			for col in 0..width {
-				let p2 = s2.get_pixel(row + top, col + left);
-				diffScreenshot.set_pixel(col as u32, row as u32, Pixel {r: p2.r, g: p2.g, b: p2.b});
+		for y in 0..height {
+			for x in 0..width {
+				let screenX = x + left;
+				let screenY = y + top;
+				if screenY > imageHeight || screenX > imageWidth {
+					println!("{} > {} || {} > {}", screenY, height, screenX, width);
+					continue
+				}
+				let p2 = s2.get_pixel(screenY, screenX);
+				diffScreenshot.set_pixel(x as u32, y as u32, Pixel {r: p2.r, g: p2.g, b: p2.b});
 			}
 		}
 

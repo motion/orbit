@@ -31,7 +31,7 @@ export default class HighlightsWindow extends React.Component {
         show={this.state.show}
         frame={false}
         hasShadow={false}
-        showDevTools={false}
+        showDevTools={true}
         transparent
         background="#00000000"
         webPreferences={Constants.WEB_PREFERENCES}

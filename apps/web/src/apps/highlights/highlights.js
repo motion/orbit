@@ -1,6 +1,26 @@
 // @flow
 import * as React from 'react'
 import { view } from '@mcro/black'
+import * as Helpers from '~/helpers'
+
+const getHoverProps = Helpers.hoverSettler({
+  enterDelay: 400,
+  onHovered: object => {
+    console.log('SEND PEEK', object)
+    Helpers.OS.send('peek', object)
+  },
+})
+
+function toEvent({ top, left, width, height }) {
+  return {
+    currentTarget: {
+      offsetTop: top,
+      offsetLeft: left,
+      clientHeight: height,
+      clientWidth: width,
+    },
+  }
+}
 
 @view({
   store: class HighlightsStore {
@@ -30,13 +50,22 @@ import { view } from '@mcro/black'
 
     watchForHoverWord = () => {
       console.log('watchForHoverWord')
+      let hoverEvents = {}
+
+      // update hoverEvents for use in hover logic
+      this.react(
+        () => this.highlights,
+        hls => {
+          hoverEvents = {}
+          for (const { key } of hls) {
+            hoverEvents[key] = getHoverProps({ id: key })
+          }
+        },
+      )
+
       this.react(
         () => [this.electronState.mousePosition || {}, this.highlights],
         ([{ x, y }, highlights]) => {
-          console.log('watchForHoverWord [{ x, y }, highlights]', [
-            { x, y },
-            highlights,
-          ])
           let hovered = null
           for (const word of highlights) {
             // outside of x
@@ -51,6 +80,18 @@ import { view } from '@mcro/black'
             hovered = word
             break
           }
+          // before update, handle hover logic
+          // mouseLeave
+          if (!hovered && this.hoveredWord) {
+            hoverEvents[this.hoveredWord.key].onMouseLeave()
+          } else if (hovered && !this.hoveredWord) {
+            // mouseEnter
+            hoverEvents[hovered.key].onMouseEnter(toEvent(hovered))
+          } else if (hovered) {
+            // mouseMove
+            hoverEvents[hovered.key].onMouseMove(toEvent(hovered))
+          }
+          // update state
           this.hoveredWord = hovered
         },
       )

@@ -2,6 +2,8 @@
 import BaseComponent from './BaseComponent'
 import { BrowserWindow } from 'electron'
 
+// TODO: document/type props this takes
+
 const EVENT_KEYS = {
   onReadyToShow: 'ready-to-show',
   onClose: 'close',
@@ -137,9 +139,13 @@ function configureFile({ file }: Object) {
   }
 }
 
-function configureSize({ size, onResize, defaultSize }: Object) {
+function configureSize({ size, onResize, defaultSize, animateSize }: Object) {
   if (this.unmounted) {
     return
+  }
+  // window.setPosition(x, y[, animate])
+  if (animateSize) {
+    size[2] = true
   }
   try {
     this.handleEvent(this.window, 'resize', onResize, rawHandler => {

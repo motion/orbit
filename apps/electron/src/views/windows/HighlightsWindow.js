@@ -26,11 +26,12 @@ export default class HighlightsWindow extends React.Component {
     return (
       <Window
         alwaysOnTop
+        ignoreMouseEvents
         file={`${Constants.APP_URL}/highlights`}
         show={this.state.show}
         frame={false}
         hasShadow={false}
-        showDevTools
+        showDevTools={false}
         transparent
         background="#00000000"
         webPreferences={Constants.WEB_PREFERENCES}

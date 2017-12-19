@@ -4,26 +4,70 @@ import { view } from '@mcro/black'
 
 @view({
   store: class HighlightsStore {
-    highlights = []
+    electronState = {}
+    hoveredWord = null
+
+    // [ { top, left, height, width }, ... ]
+    get highlights() {
+      return (
+        (this.electronState.context && this.electronState.context.highlights) ||
+        []
+      )
+    }
 
     willMount() {
-      this.bus = new BroadcastChannel('ora-electron-state')
-      this.bus.onmessage = ({ data }) => {
-        if (data.context) {
-          this.highlights = data.context.highlights || []
-        }
+      this.listenToElectronState()
+      this.watchForHoverWord()
+    }
+
+    listenToElectronState = () => {
+      this.electronBus = new BroadcastChannel('ora-electron-state')
+      this.electronBus.onmessage = ({ data }) => {
+        this.electronState = data
       }
-      this.subscriptions.add(() => this.bus.close())
+      this.subscriptions.add(() => this.electronBus.close())
+    }
+
+    watchForHoverWord = () => {
+      console.log('watchForHoverWord')
+      this.react(
+        () => [this.electronState.mousePosition || {}, this.highlights],
+        ([{ x, y }, highlights]) => {
+          console.log('watchForHoverWord [{ x, y }, highlights]', [
+            { x, y },
+            highlights,
+          ])
+          let hovered = null
+          for (const word of highlights) {
+            // outside of x
+            if (x < word.left || x > word.left + word.width) {
+              continue
+            }
+            // outside of y
+            if (y < word.top || y > word.top + word.height) {
+              continue
+            }
+            // we good tho
+            hovered = word
+            break
+          }
+          this.hoveredWord = hovered
+        },
+      )
     }
   },
 })
 export default class HighlightsPage {
   render({ store }) {
-    const { highlights } = store
+    const { highlights, hoveredWord } = store
     return (
-      <highlights $$draggable>
+      <highlights>
         {store.highlights.map(hl => (
-          <highlight key={hl.key} $hlPosition={hl} />
+          <highlight
+            key={hl.key}
+            $hlPosition={hl}
+            $hovered={hoveredWord && hl.key === hoveredWord.key}
+          />
         ))}
       </highlights>
     )
@@ -36,6 +80,7 @@ export default class HighlightsPage {
       pointerEvents: 'none',
       userSelect: 'none',
       position: 'relative',
+      // background: [0, 255, 0, 0.1],
     },
     highlight: {
       position: 'absolute',
@@ -47,5 +92,8 @@ export default class HighlightsPage {
       width,
       height,
     }),
+    hovered: {
+      background: 'green',
+    },
   }
 }

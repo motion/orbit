@@ -34,7 +34,17 @@ export default class Window extends BaseComponent {
 
     this.updateSize = () => configureSize.call(this, this.props)
     this.updatePosition = () => configurePosition.call(this, this.props)
+
+    // handles simple prop sync to
+    const ignoreMouseEvents = this.handleSettableProp(
+      'ignoreMouseEvents',
+      x => !!x,
+    )
+
+    ignoreMouseEvents(props.ignoreMouseEvents)
+
     this.propHandlers = {
+      ignoreMouseEvents,
       devToolsExtensions: () => {
         configureExtensions.call(this, this.props)
       },
@@ -66,7 +76,7 @@ export default class Window extends BaseComponent {
           console.warn(
             'A component is changing the acceptFirstMouse prop of a window. ' +
               'The acceptFirstMouse prop only has effect when the window is first rendered, ' +
-              'changing it after the first render does nothing. '
+              'changing it after the first render does nothing. ',
           )
         }
       },
@@ -170,6 +180,9 @@ function configurePosition({
   if (this.unmounted) {
     return
   }
+  const end = m => {
+    throw new Error(`position ${position} ended with error of: ${m}`)
+  }
   this.handleEvent(this.window, 'move', onMove, rawHandler => {
     const position = this.window.getPosition()
     rawHandler(position)
@@ -189,15 +202,20 @@ function configurePosition({
     this.window.setMovable(true)
     return
   }
-  if (position && (onMove || onMoved)) {
-    this.window.setPosition(...position)
-    this.window.setMovable(true)
-    return
-  }
-  if (position && !(onMove || onMoved)) {
-    this.window.setPosition(...position)
-    this.window.setMovable(false)
-    return
+  if (position) {
+    if (!Array.isArray(position)) end(`not array`)
+    if (typeof position[0] !== 'number' || typeof position[1] !== 'number')
+      end(`not number`)
+    if (onMove || onMoved) {
+      this.window.setPosition(...position)
+      this.window.setMovable(true)
+      return
+    }
+    if (!onMove && !onMoved) {
+      this.window.setPosition(...position)
+      this.window.setMovable(false)
+      return
+    }
   }
 }
 
@@ -208,7 +226,7 @@ function configureExtensions({ devToolsExtensions }) {
   const incoming = new Set(devToolsExtensions)
 
   const newExtensions = new Set(
-    [...incoming].filter(x => !this.devExtensions.has(x))
+    [...incoming].filter(x => !this.devExtensions.has(x)),
   )
   const oldExtensions = [...this.devExtensions].filter(x => !incoming.has(x))
   for (const path of oldExtensions) {

@@ -3,7 +3,7 @@ import { Window } from '@mcro/reactron'
 import * as Helpers from '~/helpers'
 import { ipcMain, screen } from 'electron'
 import * as Constants from '~/constants'
-import { throttle, once } from 'lodash'
+import { isEqual, throttle, once } from 'lodash'
 import MenuItems from './menuItems'
 import { view } from '@mcro/black'
 import PeekWindow from './windows/PeekWindow'
@@ -16,6 +16,8 @@ export default class Windows extends React.Component {
     return this.props.rootStore
   }
 
+  // this gets synced down to the browser
+  // see oraStore 'electron-state'
   state = {
     showDevTools: false,
     restart: false,
@@ -23,10 +25,13 @@ export default class Windows extends React.Component {
     showSettingsDevTools: false,
     size: [0, 0],
     position: [0, 0],
+    mousePosition: [0, 0],
     trayPosition: [0, 0],
     context: null, // osContext
     lastMove: Date.now(),
   }
+
+  stateUpdate = []
 
   async updateState(state) {
     await new Promise(res => this.setState(state, res))
@@ -61,6 +66,7 @@ export default class Windows extends React.Component {
       this.oraRef.webContents.session.clearStorageData()
     }
     this.watchForContext()
+    this.watchForMousePosition()
     this.listenToApps()
     // send initial state
     this.watch(function sendInitialState() {
@@ -114,6 +120,17 @@ export default class Windows extends React.Component {
       this.oraRef.focus()
     }
   }, 200)
+
+  watchForMousePosition = () => {
+    this.setInterval(() => {
+      const mousePosition = Helpers.getMousePosition()
+      if (!isEqual(mousePosition, this.state.mousePosition)) {
+        // { x: number, y: number }
+        console.log('set mousePosition', mousePosition)
+        this.updateState({ mousePosition })
+      }
+    }, 150)
+  }
 
   watchForContext = () => {
     this.setInterval(async () => {

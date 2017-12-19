@@ -85,7 +85,7 @@ async function getChromeContext() {
       end tell
     end tell
     return res
-  `)
+  `),
   )
 }
 
@@ -95,11 +95,11 @@ async function getSafariContext() {
     global res
     tell application "Safari"
       set res to do JavaScript "${escapeAppleScriptString(
-        CONTEXT_JS
+        CONTEXT_JS,
       )}" in front document
     end tell
     return res
-  `)
+  `),
   )
 }
 

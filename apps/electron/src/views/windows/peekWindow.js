@@ -7,13 +7,46 @@ import { Window } from '@mcro/reactron'
 import { isEqual, once } from 'lodash'
 import * as Helpers from '~/helpers'
 
-type Peek = {
+type PeekStateItem = {
+  key: number,
+  position: Array<number | boolean>,
+  size: Array<number | boolean>,
+  show: boolean,
+}
+
+type PeekWindowState = {
+  peeks: Array<PeekStateItem>,
+}
+
+type PeekTarget = {
   url: string,
-  offsetTop: number,
+  top: number,
+  left: number,
+  width: number,
+  height: number,
+}
+
+function getPeekPosition(peekTarget: PeekTarget) {
+  console.log('getPeekPosition(peek)', peekTarget)
+  const [peekW, peekH] = Constants.PEEK_DIMENSIONS
+  const [screenW, screenH] = Helpers.getScreenSize()
+  // find best position for peek
+  let x = peekTarget.left - peekW
+  let y = peekTarget.top - 20
+  if (y + peekH > screenH) {
+    console.log('should go upwards')
+    // should go upwards
+  }
+  if (x + peekW > screenW) {
+    console.log('should go rightwards')
+    // should go rightwards
+  }
+  console.log('[x, y]', [x, y])
+  return [x, y]
 }
 
 @view.electron
-export default class PeekWindow extends React.Component {
+export default class PeekWindow extends React.Component<{}, PeekWindowState> {
   lastAppPositionMove = Date.now()
   peekKey = 0
   mounted = false
@@ -58,15 +91,15 @@ export default class PeekWindow extends React.Component {
 
   listen() {
     // peek stuff
-    this.on(ipcMain, 'peek', (event, peek: Peek) => {
+    this.on(ipcMain, 'peek', (event, peek: PeekTarget) => {
       const peeks = [...this.state.peeks]
       const curPeek = peeks[0]
 
       // update curPeek y
-      if (peek && peek.offsetTop !== curPeek.offsetTop) {
-        curPeek.position = [...curPeek.position]
-        curPeek.position[1] = peek.offsetTop
-        console.log('updated peek position', curPeek)
+      // TODO: add conditional to ignore if same peek sent as last
+      if (peek) {
+        curPeek.position = getPeekPosition(peek)
+        console.log('updated peek position', peek, curPeek)
       }
 
       this.setState({

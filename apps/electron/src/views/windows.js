@@ -24,9 +24,9 @@ export default class Windows extends React.Component {
     showSettings: false,
     showSettingsDevTools: false,
     size: [0, 0],
-    position: [0, 0],
+    settingsPosition: [0, 0],
     mousePosition: [0, 0],
-    trayPosition: [0, 0],
+    oraPosition: [0, 0],
     context: null, // osContext
     lastMove: Date.now(),
   }
@@ -35,6 +35,10 @@ export default class Windows extends React.Component {
 
   async updateState(state) {
     await new Promise(res => this.setState(state, res))
+    this.sendOraState()
+  }
+
+  sendOraState() {
     if (this.rootStore.sendOra) {
       this.rootStore.sendOra('electron-state', this.state)
     }
@@ -43,9 +47,14 @@ export default class Windows extends React.Component {
   componentWillMount() {
     const { position, size } = Helpers.getAppSize()
     const screenSize = screen.getPrimaryDisplay().workAreaSize
-    const trayPosition = [screenSize.width - Constants.ORA_WIDTH, 20]
-    this.updateState({ show: true, position, size, screenSize, trayPosition })
-
+    const oraPosition = [screenSize.width - Constants.ORA_WIDTH, 20]
+    this.updateState({
+      show: true,
+      settingsPosition: position,
+      size,
+      screenSize,
+      oraPosition,
+    })
     this.on(this.props.rootStore, 'shortcut', x => {
       if (x === 'Option+Space') {
         this.toggleShown()
@@ -126,7 +135,10 @@ export default class Windows extends React.Component {
       const mousePosition = Helpers.getMousePosition()
       if (!isEqual(mousePosition, this.state.mousePosition)) {
         // { x: number, y: number }
-        this.updateState({ mousePosition })
+        // avoid re-rendering because nothing depends on this in render
+        // TODO: better pattern here
+        this.state.mousePosition = mousePosition
+        this.sendOraState()
       }
     }, 150)
   }
@@ -157,12 +169,12 @@ export default class Windows extends React.Component {
   onBeforeQuit = () => console.log('hi')
   onOraBlur = () => this.rootStore.sendOraSync('ora-blur')
   onOraFocus = () => this.rootStore.sendOraSync('ora-focus')
-  onOraMoved = trayPosition => {
-    this.updateState({ trayPosition, lastMove: Date.now() })
+  onOraMoved = oraPosition => {
+    this.updateState({ oraPosition, lastMove: Date.now() })
   }
 
   onSettingsSized = size => this.updateState({ size })
-  onSettingsMoved = position => this.updateState({ position })
+  onSettingsMoved = settingsPosition => this.updateState({ settingsPosition })
   onSettingsClosed = e => {
     if (!this.isClosing && this.state.showSettings) {
       e.preventDefault()
@@ -209,7 +221,7 @@ export default class Windows extends React.Component {
           showDevTools={this.state.showDevTools}
           size={[Constants.ORA_WIDTH, 1000]}
           file={`${Constants.APP_URL}`}
-          position={this.state.trayPosition}
+          position={this.state.oraPosition}
           onMoved={this.onOraMoved}
           onMove={this.onOraMoved}
           onBlur={this.onOraBlur}
@@ -218,7 +230,7 @@ export default class Windows extends React.Component {
         />
         {/* PEEK: */}
         <PeekWindow
-          appPosition={this.state.trayPosition}
+          appPosition={this.state.oraPosition}
           onWindows={this.handlePeekWindows}
         />
         {/* SETTINGS PANE: */}
@@ -232,7 +244,7 @@ export default class Windows extends React.Component {
           defaultSize={this.state.size}
           size={this.state.size}
           file={`${Constants.APP_URL}/settings`}
-          position={this.state.position}
+          position={this.state.settingsPosition}
           onResize={this.onSettingsSized}
           onMoved={this.onSettingsMoved}
           onMove={this.onSettingsMoved}

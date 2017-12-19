@@ -137,7 +137,15 @@ export default function getItem(result, index) {
       if (!currentNode) {
         return
       }
-      const offsetTop =
+      if (!window.lastElectronState) {
+        console.error('no state')
+        return
+      }
+      const { oraPosition } = window.lastElectronState
+      const [oraX, oraY] = oraPosition
+
+      const top =
+        oraY +
         currentNode.offsetTop +
         document.querySelector('.header > .contents').clientHeight +
         document.querySelector('.fade:last-child .pane .content').offsetTop -
@@ -146,7 +154,14 @@ export default function getItem(result, index) {
           document.querySelector('.fade:last-child .list')
         ).scrollTop
 
-      const nextPeek = { url, offsetTop, id: result.id }
+      const nextPeek = {
+        url,
+        top,
+        left: oraX,
+        width: target.clientWidth,
+        height: target.clientHeight,
+        id: result.id,
+      }
 
       if (!isEqual(nextPeek, lastPeek)) {
         setPeek(nextPeek)

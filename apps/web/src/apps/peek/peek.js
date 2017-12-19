@@ -24,7 +24,10 @@ const peekShadow = [[0, 0, SHADOW_PAD, [0, 0, 0, 0.2]]]
 
 type Peek = {
   url?: string,
-  offsetTop?: number,
+  top?: number,
+  left: number,
+  width: number,
+  height: number,
   id: number,
 }
 
@@ -307,7 +310,7 @@ export default class PeekPage {
   static style = {
     peek: {
       alignSelf: 'flex-end',
-      width: Constants.PEEK_DIMENSIONS[2] - SHADOW_PAD * 2,
+      width: Constants.PEEK_DIMENSIONS[0] - SHADOW_PAD * 2,
       height: Constants.PEEK_DIMENSIONS[1] - SHADOW_PAD * 2,
       padding: SHADOW_PAD,
       pointerEvents: 'none !important',

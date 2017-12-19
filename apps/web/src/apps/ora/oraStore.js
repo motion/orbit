@@ -19,6 +19,8 @@ const useWorker = window.location.href.indexOf('?noWorker')
 let dragListeners = []
 window.addDragListener = window.addDragListener || (x => dragListeners.push(x))
 
+window.lastElectronState = {}
+
 export default class OraStore {
   // helpers
   electronStateBus = new BroadcastChannel('ora-electron-state')
@@ -118,6 +120,7 @@ export default class OraStore {
     // allows us to get updated electron state
     this.on(OS, 'electron-state', (event, state) => {
       this.electronState = state
+      window.lastElectronState = state
     })
   }
 

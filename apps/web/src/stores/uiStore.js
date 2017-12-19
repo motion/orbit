@@ -135,7 +135,7 @@ export default class UIStore {
   actions = {
     esc: e => {
       if (!this.barFocused) {
-        OS.send('peek', null)
+        OS.send('peek-target', null)
       }
       if (this.inputRef === document.activeElement) {
         if (this.textboxVal !== '') {
@@ -199,7 +199,7 @@ export default class UIStore {
 
   toggleHidden = throttle(
     () => this.setState({ hidden: !this.state.hidden }),
-    150
+    150,
   )
 
   hide = () => {
@@ -243,7 +243,7 @@ export default class UIStore {
       if (this.state.hidden) {
         // timeout based on animation
         this.setTimeout(this.blurBar, 150)
-        OS.send('peek', null)
+        OS.send('peek-target', null)
       }
     })
   }
@@ -260,7 +260,7 @@ export default class UIStore {
           this.blurBar()
         }
         lastCol = col
-      }
+      },
     )
   }
 
@@ -281,7 +281,7 @@ export default class UIStore {
         this.stack.last.store && this.stack.last.store.finishedLoading,
       ],
       this.calcHeight,
-      true
+      true,
     )
   }
 
@@ -297,7 +297,7 @@ export default class UIStore {
       document.querySelector('.fade:last-child .tab'),
       // body
       document.querySelector(
-        '.fade:last-child .ReactVirtualized__Grid__innerScrollContainer'
+        '.fade:last-child .ReactVirtualized__Grid__innerScrollContainer',
       ) || document.querySelector('.fade:last-child .list .listinner'),
     ].filter(Boolean)
 

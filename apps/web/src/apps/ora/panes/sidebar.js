@@ -166,7 +166,7 @@ export default class Sidebar {
                   scrollToRow: stackItem.selectedIndex,
                   // handles onselect for more list items in panes
                   onSelect(item) {
-                    OS.send('peek', null)
+                    OS.send('peek-target', null)
                     if (item.selectable === false) {
                       return false
                     }

@@ -7,7 +7,7 @@ const getHoverProps = Helpers.hoverSettler({
   enterDelay: 400,
   onHovered: object => {
     console.log('SEND PEEK', object)
-    Helpers.OS.send('peek', object)
+    Helpers.OS.send('peek-target', object)
   },
 })
 

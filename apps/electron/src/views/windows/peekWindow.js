@@ -27,7 +27,6 @@ type PeekTarget = {
 }
 
 function getPeekPosition(peekTarget: PeekTarget) {
-  console.log('getPeekPosition(peek)', peekTarget)
   const [peekW, peekH] = Constants.PEEK_DIMENSIONS
   const [screenW, screenH] = Helpers.getScreenSize()
   // find best position for peek
@@ -43,7 +42,6 @@ function getPeekPosition(peekTarget: PeekTarget) {
   }
   x = Math.round(x)
   y = Math.round(y)
-  console.log('[x, y]', [x, y])
   return [x, y]
 }
 
@@ -63,7 +61,7 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
       },
     ],
     peek: {},
-    lastPeek: {},
+    lastTarget: {},
   }
 
   componentDidMount() {
@@ -93,24 +91,24 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
 
   listen() {
     // peek stuff
-    this.on(ipcMain, 'peek', (event, peek: PeekTarget) => {
+    this.on(ipcMain, 'peek-target', (event, target: PeekTarget) => {
       const peeks = [...this.state.peeks]
       const curPeek = peeks[0]
 
       // update curPeek y
       // TODO: add conditional to ignore if same peek sent as last
-      if (peek) {
-        curPeek.position = getPeekPosition(peek)
+      if (target) {
+        curPeek.position = getPeekPosition(target)
         console.log('updated peek position', curPeek)
       }
 
       this.setState({
         peeks,
-        peek,
-        // lastPeek never is the null peek
-        lastPeek: peek || this.state.peek,
+        target,
+        // lastTarget never is the null peek
+        lastTarget: target || this.state.target,
       })
-      this.peekSend('peek-to', peek)
+      this.peekSend('peek-to', target)
     })
     this.on(ipcMain, 'peek-start', event => {
       this.peekSend = (name, val) => {
@@ -147,6 +145,7 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
   }
 
   handlePeekMove = ({ key, size, position }, newPosition) => {
+    console.log('handlePeekMove', ({ key, size, position }, newPosition))
     if (!this.mounted) {
       return
     }
@@ -163,7 +162,7 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
       return
     }
     if (!isEqual(peek.position, newPosition)) {
-      console.log('updating peek position', peek.position, newPosition)
+      console.log('handlePeekMove.UPDATE', peek.position, newPosition)
       if (key === this.peekKey) {
         curPeek.position = position
         if (!this.handleTearAway(curPeek)) {
@@ -176,6 +175,9 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
   }
 
   handleTearAway = curPeek => {
+    // TODO this is old code, need new way to handle tear
+    return false
+
     const nextKey = this.peekKey + 1
     if (this.state.peeks.find(x => x.show === false)) {
       // havent shown the last peek yet
@@ -185,8 +187,8 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
       // bug called multiple times unecessarily
       return
     }
-    const { lastPeek } = this.state
-    if (!lastPeek || !lastPeek.offsetTop) {
+    const { lastTarget } = this.state
+    if (!lastTarget || !lastTarget.offsetTop) {
       return
     }
     this.peekKey = nextKey
@@ -197,7 +199,7 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
     const [curPeekOld, ...otherPeeks] = this.state.peeks
     // discard curPeekOld
     const curPeekPos = curPeek.position
-    const position = [curPeekPos[0], lastPeek.offsetTop]
+    const position = [curPeekPos[0], lastTarget.offsetTop]
     console.log('handleTearAway', position)
     const peeks = [
       // new hidden peek window
@@ -210,11 +212,7 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
       {
         ...curPeek,
         position,
-        // set to real its real window size
-        size: Constants.PEEK_DIMENSIONS,
         show: true,
-        // attempt to sync tear better
-        isTearing: true,
       },
       // keep the rest
       ...otherPeeks,
@@ -223,14 +221,7 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
     return true
   }
 
-  handlePeekTornResize = () => {
-    this.peekSendTorn()
-    // no need to set state, itll pick up next render
-    this.state.peeks.find(p => p.key === this.peekTearing).isTearing = false
-    this.peekTearing = null
-  }
-
-  render({ appPosition }) {
+  render() {
     const windowProps = {
       frame: false,
       hasShadow: false,
@@ -264,7 +255,6 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
               onMove={([x, y]) =>
                 this.handlePeekMove({ key, size, position }, [x, y])
               }
-              onMoved={peek.isTearing ? this.handlePeekTornResize : _ => _}
             />
           )
         })}

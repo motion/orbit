@@ -115,8 +115,7 @@ function parseContextRes(res) {
     }
     return result
   } catch (err) {
-    console.log('error parsing json')
-    console.log('res:', res.message)
+    console.log('error parsing context', err.message)
   }
   return null
 }

@@ -25,12 +25,14 @@ export default function hoverSettler({ enterDelay, onHovered }) {
     let itemLastLeave
 
     function handleHover(target) {
+      // remove any other enters/leaves
       clearTimeout(lastEnter)
       clearTimeout(lastLeave)
-      // dont delay at all if were already hovering
-      const isAlreadyHovering = !!currentNode
-      const delay = isAlreadyHovering ? 0 : enterDelay
-      itemLastEnter = lastEnter = setTimeout(() => {
+
+      const updateHover = () => {
+        if (currentNode && currentNode.isEqualNode(target)) {
+          return
+        }
         currentNode = target
         if (!target) {
           return
@@ -46,7 +48,15 @@ export default function hoverSettler({ enterDelay, onHovered }) {
           itemLastEnter = null
           lastEnter = null
         }
-      }, delay)
+      }
+
+      // dont delay enter at all if were already hovering other node
+      const isAlreadyHovering = !!currentNode
+      if (isAlreadyHovering) {
+        updateHover()
+      } else {
+        itemLastEnter = lastEnter = setTimeout(updateHover, enterDelay)
+      }
     }
 
     function onMouseEnter(e) {
@@ -58,15 +68,14 @@ export default function hoverSettler({ enterDelay, onHovered }) {
     }
 
     function onMouseLeave() {
-      clearTimeout(lastEnter)
       clearTimeout(itemLastLeave)
-      itemLastLeave = setTimeout(() => {
+      lastLeave = itemLastLeave = setTimeout(() => {
         if (!lastEnter) {
           setHovered(null)
           itemLastEnter = null
           currentNode = null
         }
-      }, 50)
+      }, 32)
     }
 
     return {

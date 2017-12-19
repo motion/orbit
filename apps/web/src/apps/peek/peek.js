@@ -22,7 +22,7 @@ console.log('Constants', Constants)
 const background = [255, 255, 255, 0.98]
 const peekShadow = [[0, 0, SHADOW_PAD, [0, 0, 0, 0.2]]]
 
-type Peek = {
+type Target = {
   url?: string,
   top?: number,
   left: number,
@@ -39,29 +39,29 @@ class WebView {
 }
 
 // for hmr
-window.cachedPeek = null
+window.cachedTarget = null
 
 @view({
   store: class PeekStore {
-    lastPeek: ?Peek = window.cachedPeek
-    curPeek: ?Peek = window.cachedPeek
-    nextPeek: ?Peek = window.cachedPeek
-    isTorn = !!window.cachedPeek
+    peek = null
+    lastTarget: ?Peek = window.cachedTarget
+    curTarget: ?Peek = window.cachedTarget
+    isTorn = !!window.cachedTarget
     isHovered = false
     isPinned = false
     pageLoaded = false
     showWebview = false
     tab = 'readability'
 
-    @watch thing = () => this.peek && Thing.get(this.peek.id)
+    @watch thing = () => this.target && Thing.get(this.target.id)
 
-    get peek() {
+    get target() {
       // during hover its null so show it cached
       if (this.isHovered || this.isPinned || this.isTorn) {
-        return this.lastPeek
+        return this.lastTarget
       }
       // current
-      return this.curPeek
+      return this.curTarget
     }
 
     get isConversation() {
@@ -71,9 +71,9 @@ window.cachedPeek = null
     willMount() {
       OS.send('peek-start')
 
-      this.watchPeekTab()
+      this.watchTab()
       this.watchPeekTo()
-      this.watchPeekTear()
+      this.watchTear()
 
       this.trap = new Mousetrap(window)
       this.trap.bind('esc', () => {
@@ -86,39 +86,29 @@ window.cachedPeek = null
       }, 150)
     }
 
-    watchPeekTab() {
-      this.watch(function watchPeek() {
+    watchTab() {
+      this.watch(function watchTab() {
         if (this.thing && !this.thing.body && this.thing.url) {
           this.tab = 'webview'
         }
       })
     }
 
-    watchPeekTear = () => {
+    watchTear = () => {
       this.on(OS, 'peek-tear', () => {
         this.isTorn = true
       })
     }
 
     watchPeekTo = () => {
-      let peekTimeout
-      // this stores null peeks as well for comparison later
-      // to see if we are already open and just moving down list
-      let lastPeek
-      this.on(OS, 'peek-to', (event, peek: ?Peek) => {
+      this.on(OS, 'peek-to', (event, { peek, target }) => {
         if (this.isPinned) {
           console.log('ignore because pinned')
           return
         }
-        console.log('peek-to', peek, this.lastPeek)
-        let delay = HIDE_DELAY
-        if (peek) {
-          delay = lastPeek ? 0 : SHOW_DELAY
-        }
-        lastPeek = peek
-        clearTimeout(peekTimeout)
-        clearTimeout(this.leftTimeout)
-        peekTimeout = this.setTimeout(() => this.updatePeek(peek), delay)
+        console.log('peek-to', { peek, target })
+        this.updateTarget(target)
+        this.peek = peek
       })
     }
 
@@ -126,22 +116,22 @@ window.cachedPeek = null
       this.trap.reset()
     }
 
-    updatePeek = (peek: Peek) => {
-      this.curPeek = peek
-      if (peek) {
-        this.lastPeek = peek
-        window.cachedPeek = peek
+    updateTarget = (target: Target) => {
+      this.curTarget = target
+      if (target) {
+        this.lastTarget = target
+        window.cachedTarget = target
       }
-      if (!peek) {
+      if (!target) {
         this.leftTimeout = this.setTimeout(() => {
           if (!this.isHovered) {
-            this.lastPeek = null
+            this.lastTarget = null
           }
         }, SHOW_DELAY)
       }
     }
 
-    handlePeekEnter = () => {
+    handleMouseEnter = () => {
       if (!this.isTorn) {
         OS.send('peek-focus')
         clearTimeout(this.leftTimeout)
@@ -149,7 +139,7 @@ window.cachedPeek = null
       }
     }
 
-    handlePeekLeave = () => {
+    handleMouseLeave = () => {
       // timeout here prevent flicker on re-enter same item
       this.setTimeout(() => {
         this.isHovered = false
@@ -192,29 +182,43 @@ window.cachedPeek = null
 })
 export default class PeekPage {
   render({ store }) {
-    const { peek, showWebview } = store
-    const peekUrl = peek && peek.url
+    const { peek, target, showWebview } = store
+    const targetUrl = target && target.url
+    const arrowDirection = (peek && peek.arrowDirection) || 'right'
     const arrowSize = 32
-    // const peekY = (store.peek || store.lastPeek || {}).offsetTop || 0
-    // console.log('peekUrl', !!peek.body, 'loaded?', store.pageLoaded)
+    let arrowPosition
+
+    switch (arrowDirection) {
+      case 'right':
+        arrowPosition = {
+          top: 35,
+          right: SHADOW_PAD - arrowSize,
+        }
+        break
+      case 'left':
+        arrowPosition = {
+          top: 35,
+          left: -SHADOW_PAD,
+        }
+        break
+    }
 
     return (
       <UI.Theme name="light">
         <peek
-          $peekVisible={peek}
+          $peekVisible={target}
           $peekTorn={store.isTorn}
-          onMouseEnter={store.handlePeekEnter}
-          onMouseLeave={store.handlePeekLeave}
+          onMouseEnter={store.handleMouseEnter}
+          onMouseLeave={store.handleMouseLeave}
         >
           <UI.Arrow
             if={!store.isTorn}
             size={arrowSize}
-            towards="right"
+            towards={arrowDirection}
             background={background}
             css={{
               position: 'absolute',
-              top: 35,
-              right: SHADOW_PAD - arrowSize,
+              ...arrowPosition,
               boxShadow: peekShadow,
               zIndex: -1,
             }}
@@ -222,12 +226,11 @@ export default class PeekPage {
           <UI.Arrow
             if={!store.isTorn}
             size={arrowSize}
-            towards="right"
+            towards={arrowDirection}
             background={background}
             css={{
               position: 'absolute',
-              top: 35,
-              right: SHADOW_PAD - arrowSize,
+              ...arrowPosition,
               zIndex: 100,
             }}
           />
@@ -245,7 +248,7 @@ export default class PeekPage {
                   itemProps={{ sizePadding: 1.75, sizeRadius: 2 }}
                 >
                   <UI.Button
-                    if={peekUrl}
+                    if={targetUrl}
                     icon="globe"
                     onClick={store.toggleWebview}
                     highlight={store.tab === 'webview'}
@@ -283,11 +286,11 @@ export default class PeekPage {
                     <UI.Text>Loading</UI.Text>
                   </loading>
                   <WebView
-                    if={false && peekUrl && showWebview}
+                    if={false && targetUrl && showWebview}
                     $contentLoading={!store.pageLoaded}
                     $webview
-                    key={peekUrl}
-                    src={peekUrl.replace('deliverx.com', 'deliverx.com:5000')}
+                    key={targetUrl}
+                    src={targetUrl.replace('deliverx.com', 'deliverx.com:5000')}
                     getRef={store.handlePageRef}
                   />
                 </tab>

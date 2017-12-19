@@ -107,16 +107,16 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
     // peek stuff
     this.on(ipcMain, 'peek-target', (event, target: PeekTarget) => {
       const peeks = [...this.state.peeks]
-      const curPeek = peeks[0]
+      const peek = peeks[0]
 
-      // update curPeek y
+      // update peek y
       // TODO: add conditional to ignore if same peek sent as last
       if (target) {
         const { position, arrowDirection } = getPeekPosition(target)
         console.log('getPeekPosition', { position, arrowDirection })
-        // curPeek.hasNewTarget = true
-        curPeek.position = position
-        curPeek.arrowDirection = arrowDirection
+        // peek.hasNewTarget = true
+        peek.position = position
+        peek.arrowDirection = arrowDirection
       }
 
       const wasShowing = !!this.state.lastTarget
@@ -137,7 +137,7 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
         wasShowing,
         lastTarget: this.state.target,
       })
-      this.peekSend('peek-to', target)
+      this.peekSend('peek-to', { target, peek })
     })
     this.on(ipcMain, 'peek-start', event => {
       this.peekSend = (name, val) => {

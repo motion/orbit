@@ -71,6 +71,8 @@ export default class Window extends BaseComponent {
       defaultPosition: this.updatePosition,
       onMove: this.updatePosition,
       onMoved: this.updatePosition,
+      animatePosition: this.updatePosition,
+      animateSize: this.updateSize,
       alwaysOnTop: this.handleSettableProp('alwaysOnTop', x => !!x),
       file: () => configureFile.call(this, this.props),
       acceptFirstMouse: () => {
@@ -144,8 +146,8 @@ function configureSize({ size, onResize, defaultSize, animateSize }: Object) {
     return
   }
   // window.setPosition(x, y[, animate])
-  if (animateSize) {
-    size[2] = true
+  if (typeof animateSize === 'boolean') {
+    size[2] = animateSize
   }
   try {
     this.handleEvent(this.window, 'resize', onResize, rawHandler => {
@@ -188,8 +190,8 @@ function configurePosition({
     return
   }
   // window.setPosition(x, y[, animate])
-  if (animatePosition) {
-    position[2] = true
+  if (typeof animatePosition === 'boolean') {
+    position[2] = animatePosition
   }
   const end = m => {
     throw new Error(`position ${position} ended with error of: ${m}`)

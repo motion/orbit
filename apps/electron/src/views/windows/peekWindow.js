@@ -6,6 +6,7 @@ import { view } from '@mcro/black'
 import { Window } from '@mcro/reactron'
 import { isEqual, once } from 'lodash'
 import * as Helpers from '~/helpers'
+import { isAbsolute } from 'path'
 
 type PeekStateItem = {
   key: number,
@@ -61,6 +62,7 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
   lastAppPositionMove = Date.now()
   peekKey = 0
   mounted = false
+  isAnimatingPeek = true
 
   state = {
     peeks: [
@@ -72,7 +74,8 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
       },
     ],
     peek: {},
-    lastTarget: {},
+    lastTarget: null,
+    wasShowing: false,
   }
 
   componentDidMount() {
@@ -110,16 +113,29 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
       // TODO: add conditional to ignore if same peek sent as last
       if (target) {
         const { position, arrowDirection } = getPeekPosition(target)
+        console.log('getPeekPosition', { position, arrowDirection })
+        // curPeek.hasNewTarget = true
         curPeek.position = position
         curPeek.arrowDirection = arrowDirection
-        console.log('updated peek position', curPeek)
       }
+
+      const wasShowing = !!this.state.lastTarget
+      console.log('wasShowing', wasShowing)
+
+      // this handles avoiding tears during animation
+      clearTimeout(this.animatePeekTimeout)
+      this.isAnimatingPeek = true
+      // need to figure out how long electron animates for
+      // for now, be conservative
+      this.animatePeekTimeout = this.setTimeout(() => {
+        this.isAnimatingPeek = false
+      }, 350)
 
       this.setState({
         peeks,
         target,
-        // lastTarget never is the null peek
-        lastTarget: target || this.state.target,
+        wasShowing,
+        lastTarget: this.state.target,
       })
       this.peekSend('peek-to', target)
     })
@@ -157,81 +173,37 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
     }
   }
 
-  handlePeekMove = ({ key, size, position }, newPosition) => {
-    console.log('handlePeekMove', ({ key, size, position }, newPosition))
+  handlePeekMove = (peek, newPosition) => {
     if (!this.mounted) {
       return
     }
-    const curPeek = { key, size, position }
-    const { peeks } = this.state
-    const peek = peeks.find(p => p.key === key)
-    const updatePeekPosition = () => {
+    if (!this.isAnimatingPeek && !peek.isTorn) {
+      this.isAnimatingPeek = true // bug test fix
       peek.position = newPosition
-      this.setState({ peeks })
-    }
-    // dont tear away if window moved recently
-    if (Date.now() - this.lastAppPositionMove < 500) {
-      updatePeekPosition()
-      return
-    }
-    if (!isEqual(peek.position, newPosition)) {
-      console.log('handlePeekMove.UPDATE', peek.position, newPosition)
-      if (key === this.peekKey) {
-        curPeek.position = position
-        if (!this.handleTearAway(curPeek)) {
-          updatePeekPosition()
-        }
-      } else {
-        updatePeekPosition()
-      }
+      this.tearPeek()
     }
   }
 
-  handleTearAway = curPeek => {
-    // TODO this is old code, need new way to handle tear
-    return false
-
-    const nextKey = this.peekKey + 1
-    if (this.state.peeks.find(x => x.show === false)) {
-      // havent shown the last peek yet
-      return
-    }
-    if (this.state.peeks.find(x => x.key === nextKey)) {
-      // bug called multiple times unecessarily
-      return
-    }
-    const { lastTarget } = this.state
-    if (!lastTarget || !lastTarget.offsetTop) {
-      return
-    }
-    this.peekKey = nextKey
-    console.log('sending peek tear')
+  tearPeek = () => {
     this.peekSend('peek-tear')
-    this.peekSendTorn = once(() => this.peekSend('peek-torn'))
-    this.peekTearing = curPeek.key
-    const [curPeekOld, ...otherPeeks] = this.state.peeks
-    // discard curPeekOld
-    const curPeekPos = curPeek.position
-    const position = [curPeekPos[0], lastTarget.offsetTop]
-    console.log('handleTearAway', position)
+    const [peek, ...otherPeeks] = this.state.peeks
+    this.peekKey++
     const peeks = [
       // new hidden peek window
       {
-        ...curPeek,
+        ...peek,
         key: this.peekKey,
         show: false,
       },
       // current peek
       {
-        ...curPeek,
-        position,
+        ...peek,
         show: true,
       },
       // keep the rest
       ...otherPeeks,
     ]
     this.setState({ peeks })
-    return true
   }
 
   render() {
@@ -257,17 +229,15 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
               key={key}
               showDevTools
               alwaysOnTop={isPeek || peek.alwaysOnTop}
-              animatePosition
+              animatePosition={this.state.wasShowing}
               show={peek.show}
               file={`${Constants.APP_URL}/peek?key=${key}`}
               ref={isPeek ? ref => this.handlePeekRef(ref, peek) : _ => _}
               onReadyToShow={() => this.handleReadyToShow(peek)}
               {...windowProps}
               size={size}
-              position={position}
-              onMove={([x, y]) =>
-                this.handlePeekMove({ key, size, position }, [x, y])
-              }
+              position={[position[0], position[1]]}
+              onMove={([x, y]) => this.handlePeekMove(peek, [x, y])}
             />
           )
         })}

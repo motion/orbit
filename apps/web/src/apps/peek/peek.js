@@ -9,13 +9,13 @@ import Conversation from './conversation'
 import Mousetrap from 'mousetrap'
 import * as Constants from '~/constants'
 
-console.log('Constants', Constants)
-
 const keyParam = (window.location.search || '').match(/key=(.*)/)
 const KEY = keyParam && keyParam[1]
 const SHADOW_PAD = 15
 const SHOW_DELAY = 300
 const HIDE_DELAY = 100
+
+console.log('Constants', Constants)
 
 // const isSamePeek = (a, b) => a && b && a.id === b.id
 
@@ -47,7 +47,6 @@ window.cachedPeek = null
     curPeek: ?Peek = window.cachedPeek
     nextPeek: ?Peek = window.cachedPeek
     isTorn = !!window.cachedPeek
-    isTearing = false
     isHovered = false
     isPinned = false
     pageLoaded = false
@@ -97,12 +96,6 @@ window.cachedPeek = null
 
     watchPeekTear = () => {
       this.on(OS, 'peek-tear', () => {
-        this.isTearing = true
-        this.setTimeout(() => {
-          this.isTorn = true
-        }, 64)
-      })
-      this.on(OS, 'peek-torn', () => {
         this.isTorn = true
       })
     }
@@ -209,7 +202,6 @@ export default class PeekPage {
       <UI.Theme name="light">
         <peek
           $peekVisible={peek}
-          $peekTearing={store.isTearing}
           $peekTorn={store.isTorn}
           onMouseEnter={store.handlePeekEnter}
           onMouseLeave={store.handlePeekLeave}
@@ -310,8 +302,8 @@ export default class PeekPage {
   static style = {
     peek: {
       alignSelf: 'flex-end',
-      width: Constants.PEEK_DIMENSIONS[0] - SHADOW_PAD * 2,
-      height: Constants.PEEK_DIMENSIONS[1] - SHADOW_PAD * 2,
+      width: '100%',
+      height: '100%',
       padding: SHADOW_PAD,
       pointerEvents: 'none !important',
       transition: 'all ease-in 100ms',
@@ -323,13 +315,10 @@ export default class PeekPage {
       transition: 'all ease-out 100ms',
     },
     peekTorn: {
+      opacity: 1,
       transform: {
         y: 0,
       },
-    },
-    peekTearing: {
-      transition: 'none',
-      background: 'red',
     },
     content: {
       flex: 1,

@@ -21,6 +21,7 @@ export default class Windows extends React.Component {
   state = {
     showDevTools: false,
     restart: false,
+    loadSettings: false,
     showSettings: false,
     showSettingsDevTools: false,
     size: [0, 0],
@@ -60,6 +61,13 @@ export default class Windows extends React.Component {
         this.toggleShown()
       }
     })
+  }
+
+  componentDidMount() {
+    // unimportant, load after other things done
+    this.setTimeout(() => {
+      this.setState({ loadSettings: true })
+    }, 2000)
   }
 
   handleOraRef = ref => {
@@ -234,6 +242,7 @@ export default class Windows extends React.Component {
         />
         {/* SETTINGS PANE: */}
         <Window
+          if={this.state.loadSettings}
           {...appWindow}
           show={this.state.showSettings}
           showDevTools={this.state.showSettingsDevTools}

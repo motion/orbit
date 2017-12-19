@@ -45,9 +45,6 @@ export default class Ora extends React.Component {
       color: '#fff',
       zIndex: 10000,
       boxShadow: ['0 10px 50px rgba(0,0,0,0.29)'],
-      '&:sticky': {
-        background: 'red',
-      },
     },
     header: { padding: 10, opacity: 0.25 },
     content: { padding: 0 },

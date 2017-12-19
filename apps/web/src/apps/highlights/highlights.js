@@ -1,17 +1,17 @@
 // @flow
 import * as React from 'react'
 import { view } from '@mcro/black'
-import { OS } from '~/helpers'
-import * as Constants from '~/constants'
 
 @view({
-  store: class PeekStore {
+  store: class HighlightsStore {
     highlights = []
 
     willMount() {
-      this.bus = new BroadcastChannel('ora-highlights')
+      this.bus = new BroadcastChannel('ora-electron-state')
       this.bus.onmessage = ({ data }) => {
-        this.highlights = data.highlights
+        if (data.context) {
+          this.highlights = data.context.highlights || []
+        }
       }
       this.subscriptions.add(() => this.bus.close())
     }
@@ -22,7 +22,9 @@ export default class HighlightsPage {
     const { highlights } = store
     return (
       <highlights $$draggable>
-        {store.highlights.map(hl => <highlight key={hl.key} $light={hl} />)}
+        {store.highlights.map(hl => (
+          <highlight key={hl.key} $hlPosition={hl} />
+        ))}
       </highlights>
     )
   }
@@ -33,8 +35,13 @@ export default class HighlightsPage {
       height: '100%',
       pointerEvents: 'none',
       userSelect: 'none',
+      position: 'relative',
     },
-    light: ({ top, left, width, height }) => ({
+    highlight: {
+      position: 'absolute',
+      background: 'red',
+    },
+    hlPosition: ({ top, left, width, height }) => ({
       top,
       left,
       width,

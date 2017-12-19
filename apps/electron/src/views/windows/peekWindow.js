@@ -32,17 +32,28 @@ function getPeekPosition(peekTarget: PeekTarget) {
   // find best position for peek
   let x = peekTarget.left - peekW
   let y = peekTarget.top - 20
-  if (y + peekH > screenH) {
-    console.log('should go upwards')
-    // should go upwards
+  let arrowDirection = 'right'
+
+  // TODO: while(!goodFit) { findNextFit(); testFit(); }
+
+  if (x < 0) {
+    x = peekTarget.left + peekTarget.width
+    arrowDirection = 'left'
+  } else if (x + peekW > screenW) {
+    console.log('should go left')
   }
-  if (x + peekW > screenW) {
-    console.log('should go rightwards')
-    // should go rightwards
+  if (y < 0) {
+    console.log('should go down')
+  } else if (y + peekH > screenH) {
+    y = peekTarget.top - peekH
+    arrowDirection = 'down'
   }
   x = Math.round(x)
   y = Math.round(y)
-  return [x, y]
+  return {
+    position: [x, y],
+    arrowDirection,
+  }
 }
 
 @view.electron
@@ -98,7 +109,9 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
       // update curPeek y
       // TODO: add conditional to ignore if same peek sent as last
       if (target) {
-        curPeek.position = getPeekPosition(target)
+        const { position, arrowDirection } = getPeekPosition(target)
+        curPeek.position = position
+        curPeek.arrowDirection = arrowDirection
         console.log('updated peek position', curPeek)
       }
 

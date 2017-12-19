@@ -3,6 +3,14 @@ import debug from 'debug'
 
 const log = debug('hoverSettler')
 
+// isEqual but works with dom nodes (lodash doesnt)
+function isReallyEqual(a, b) {
+  if (a && a.isEqualNode) {
+    return a.isEqualNode(b)
+  }
+  return isEqual(a, b)
+}
+
 export default function hoverSettler({ enterDelay, onHovered }) {
   let lastEnter
   let lastLeave
@@ -30,7 +38,7 @@ export default function hoverSettler({ enterDelay, onHovered }) {
       clearTimeout(lastLeave)
 
       const updateHover = () => {
-        if (currentNode && currentNode.isEqualNode(target)) {
+        if (isReallyEqual(currentNode, target)) {
           return
         }
         currentNode = target

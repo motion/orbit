@@ -38,6 +38,7 @@ export default class PeekWindow extends React.Component {
   componentDidMount() {
     this.mounted = true
     this.state.peeks[0].size = this.screenSize
+    console.log('this.screenSize', this.screenSize)
     this.setState({ peeks: this.state.peeks })
   }
 
@@ -147,7 +148,7 @@ export default class PeekWindow extends React.Component {
       return
     }
     const { lastPeek } = this.state
-    if (!lastPeek.offsetTop) {
+    if (!lastPeek || !lastPeek.offsetTop) {
       return
     }
     this.peekKey = nextKey
@@ -167,12 +168,12 @@ export default class PeekWindow extends React.Component {
         key: this.peekKey,
         show: false,
       },
-      // current peek, make size short now
+      // current peek
       {
         ...curPeek,
         position,
-        // default to screen size
-        size: this.screenSize,
+        // set to real its real window size
+        size: Constants.PEEK_DIMENSIONS,
         show: true,
         // attempt to sync tear better
         isTearing: true,

@@ -9,6 +9,8 @@ import Conversation from './conversation'
 import Mousetrap from 'mousetrap'
 import * as Constants from '~/constants'
 
+console.log('Constants', Constants)
+
 const keyParam = (window.location.search || '').match(/key=(.*)/)
 const KEY = keyParam && keyParam[1]
 const SHADOW_PAD = 15
@@ -46,6 +48,7 @@ window.cachedPeek = null
     isHovered = false
     isPinned = false
     pageLoaded = false
+    showWebview = false
     tab = 'readability'
 
     @watch thing = () => this.peek && Thing.get(this.peek.id)
@@ -75,6 +78,10 @@ window.cachedPeek = null
         console.log('esc')
         this.isHovered = false
       })
+
+      this.setTimeout(() => {
+        this.showWebview = true
+      }, 150)
     }
 
     watchPeekTab() {
@@ -189,7 +196,7 @@ window.cachedPeek = null
 })
 export default class PeekPage {
   render({ store }) {
-    const { peek } = store
+    const { peek, showWebview } = store
     const peekUrl = peek && peek.url
     const arrowSize = 32
     const peekY = (store.peek || store.lastPeek || {}).offsetTop || 0
@@ -282,7 +289,7 @@ export default class PeekPage {
                     <UI.Text>Loading</UI.Text>
                   </loading>
                   <WebView
-                    if={peekUrl}
+                    if={peekUrl && showWebview}
                     $contentLoading={!store.pageLoaded}
                     $webview
                     key={peekUrl}
@@ -300,6 +307,7 @@ export default class PeekPage {
 
   static style = {
     peek: {
+      alignSelf: 'flex-end',
       width: Constants.PEEK_DIMENSIONS[2] - SHADOW_PAD * 2,
       height: Constants.PEEK_DIMENSIONS[1] - SHADOW_PAD * 2,
       padding: SHADOW_PAD,

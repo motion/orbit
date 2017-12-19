@@ -291,7 +291,7 @@ export default class PeekPage {
                     <UI.Text>Loading</UI.Text>
                   </loading>
                   <WebView
-                    if={peekUrl && showWebview}
+                    if={false && peekUrl && showWebview}
                     $contentLoading={!store.pageLoaded}
                     $webview
                     key={peekUrl}

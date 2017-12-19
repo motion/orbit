@@ -193,7 +193,6 @@ export default class Windows extends React.Component {
   }
 
   render() {
-    console.log('render windows')
     const appWindow = {
       frame: false,
       defaultSize: [700, 500],

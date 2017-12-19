@@ -1,15 +1,22 @@
 import { isEqual } from 'lodash'
+import debug from 'debug'
+
+const log = debug('hoverSettler')
 
 export default function hoverSettler({ enterDelay, onHovered }) {
   let lastEnter
   let lastLeave
   let currentNode
-  let lastHover
+  let lastHovered
 
-  const setHovered = object => {
-    lastHover = object
-    if (onHovered) {
-      onHovered(object)
+  const setHovered = nextHovered => {
+    if (!isEqual(nextHovered, lastHovered)) {
+      // 🐛 object spread fixes comparison bugs later on
+      lastHovered = { ...nextHovered }
+      log('setHovered', nextHovered)
+      if (onHovered) {
+        onHovered(nextHovered)
+      }
     }
   }
 
@@ -28,16 +35,13 @@ export default function hoverSettler({ enterDelay, onHovered }) {
         if (!target) {
           return
         }
-        const nextHover = {
+        setHovered({
           top: target.offsetTop,
           left: target.offsetLeft,
           width: target.clientWidth,
           height: target.clientHeight,
           ...extraProps,
-        }
-        if (!isEqual(nextHover, lastHover)) {
-          setHovered(nextHover)
-        }
+        })
         if (itemLastEnter === lastEnter) {
           itemLastEnter = null
           lastEnter = null
@@ -57,7 +61,6 @@ export default function hoverSettler({ enterDelay, onHovered }) {
       clearTimeout(lastEnter)
       clearTimeout(itemLastLeave)
       itemLastLeave = setTimeout(() => {
-        console.log('LEAVING', itemLastEnter, lastEnter)
         if (!lastEnter) {
           setHovered(null)
           itemLastEnter = null

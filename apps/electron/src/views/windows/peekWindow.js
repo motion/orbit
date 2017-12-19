@@ -44,7 +44,7 @@ function getPeekPosition(peekTarget: PeekTarget) {
   x = Math.round(x)
   y = Math.round(y)
   console.log('[x, y]', [x, y])
-  return [x, y, true]
+  return [x, y]
 }
 
 @view.electron
@@ -251,6 +251,7 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
           return (
             <Window
               key={key}
+              showDevTools
               alwaysOnTop={isPeek || peek.alwaysOnTop}
               animatePosition
               show={peek.show}
@@ -260,8 +261,8 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
               {...windowProps}
               size={size}
               position={position}
-              onMove={(...args) =>
-                this.handlePeekMove({ key, size, position }, ...args)
+              onMove={([x, y]) =>
+                this.handlePeekMove({ key, size, position }, [x, y])
               }
               onMoved={peek.isTearing ? this.handlePeekTornResize : _ => _}
             />

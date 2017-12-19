@@ -38,6 +38,10 @@ export default function hoverSettler({ enterDelay, onHovered }) {
         if (!isEqual(nextHover, lastHover)) {
           setHovered(nextHover)
         }
+        if (itemLastEnter === lastEnter) {
+          itemLastEnter = null
+          lastEnter = null
+        }
       }, delay)
     }
 
@@ -53,7 +57,8 @@ export default function hoverSettler({ enterDelay, onHovered }) {
       clearTimeout(lastEnter)
       clearTimeout(itemLastLeave)
       itemLastLeave = setTimeout(() => {
-        if (itemLastEnter === lastEnter) {
+        console.log('LEAVING', itemLastEnter, lastEnter)
+        if (!lastEnter) {
           setHovered(null)
           itemLastEnter = null
           currentNode = null

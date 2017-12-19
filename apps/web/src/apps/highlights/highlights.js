@@ -26,6 +26,7 @@ function toEvent({ top, left, width, height }) {
   store: class HighlightsStore {
     electronState = {}
     hoveredWord = null
+    hoverEvents = {}
 
     // [ { top, left, height, width }, ... ]
     get highlights() {
@@ -49,23 +50,26 @@ function toEvent({ top, left, width, height }) {
     }
 
     watchForHoverWord = () => {
-      console.log('watchForHoverWord')
-      let hoverEvents = {}
-
       // update hoverEvents for use in hover logic
       this.react(
         () => this.highlights,
         hls => {
-          hoverEvents = {}
+          const hoverEvents = {}
           for (const { key } of hls) {
-            hoverEvents[key] = getHoverProps({ id: key })
+            hoverEvents[key] = getHoverProps({ key, id: key })
           }
+          this.hoverEvents = hoverEvents
         },
       )
 
       this.react(
-        () => [this.electronState.mousePosition || {}, this.highlights],
-        ([{ x, y }, highlights]) => {
+        () => [
+          this.electronState.mousePosition || {},
+          // update when hover event handlers change
+          this.hoverEvents,
+        ],
+        ([{ x, y }, hoverEvents]) => {
+          const highlights = this.highlights
           let hovered = null
           for (const word of highlights) {
             // outside of x

@@ -41,8 +41,10 @@ function getPeekPosition(peekTarget: PeekTarget) {
     console.log('should go rightwards')
     // should go rightwards
   }
+  x = Math.round(x)
+  y = Math.round(y)
   console.log('[x, y]', [x, y])
-  return [x, y]
+  return [x, y, true]
 }
 
 @view.electron
@@ -99,7 +101,7 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
       // TODO: add conditional to ignore if same peek sent as last
       if (peek) {
         curPeek.position = getPeekPosition(peek)
-        console.log('updated peek position', peek, curPeek)
+        console.log('updated peek position', curPeek)
       }
 
       this.setState({

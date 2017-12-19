@@ -176,9 +176,14 @@ function configurePosition({
   onMove,
   onMoved,
   defaultPosition,
+  animatePosition,
 }: Object) {
   if (this.unmounted) {
     return
+  }
+  // window.setPosition(x, y[, animate])
+  if (animatePosition) {
+    position[2] = true
   }
   const end = m => {
     throw new Error(`position ${position} ended with error of: ${m}`)

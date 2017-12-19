@@ -126,7 +126,6 @@ export default class Windows extends React.Component {
       const mousePosition = Helpers.getMousePosition()
       if (!isEqual(mousePosition, this.state.mousePosition)) {
         // { x: number, y: number }
-        console.log('set mousePosition', mousePosition)
         this.updateState({ mousePosition })
       }
     }, 150)

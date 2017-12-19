@@ -199,14 +199,13 @@ export default class PeekPage {
     const { peek, showWebview } = store
     const peekUrl = peek && peek.url
     const arrowSize = 32
-    const peekY = (store.peek || store.lastPeek || {}).offsetTop || 0
+    // const peekY = (store.peek || store.lastPeek || {}).offsetTop || 0
     // console.log('peekUrl', !!peek.body, 'loaded?', store.pageLoaded)
 
     return (
       <UI.Theme name="light">
         <peek
           $peekVisible={peek}
-          $peekPosition={store.isTorn ? 0 : peekY - SHADOW_PAD}
           $peekTearing={store.isTearing}
           $peekTorn={store.isTorn}
           onMouseEnter={store.handlePeekEnter}
@@ -320,11 +319,6 @@ export default class PeekPage {
       opacity: 1,
       transition: 'all ease-out 100ms',
     },
-    peekPosition: y => ({
-      transform: {
-        y,
-      },
-    }),
     peekTorn: {
       transform: {
         y: 0,

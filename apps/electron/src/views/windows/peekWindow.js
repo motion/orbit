@@ -22,7 +22,7 @@ export default class PeekWindow extends React.Component {
     peeks: [
       {
         key: this.peekKey,
-        size: [1000, 1000],
+        size: Constants.PEEK_DIMENSIONS,
         position: [0, 0],
         show: false,
       },
@@ -31,15 +31,8 @@ export default class PeekWindow extends React.Component {
     lastPeek: {},
   }
 
-  get screenSize() {
-    return Helpers.getScreenSize()
-  }
-
   componentDidMount() {
     this.mounted = true
-    this.state.peeks[0].size = this.screenSize
-    console.log('this.screenSize', this.screenSize)
-    this.setState({ peeks: this.state.peeks })
   }
 
   componentWillMount() {
@@ -66,7 +59,18 @@ export default class PeekWindow extends React.Component {
   listen() {
     // peek stuff
     this.on(ipcMain, 'peek', (event, peek: Peek) => {
+      const peeks = [...this.state.peeks]
+      const curPeek = peeks[0]
+
+      // update curPeek y
+      if (peek && peek.offsetTop !== curPeek.offsetTop) {
+        curPeek.position = [...curPeek.position]
+        curPeek.position[1] = peek.offsetTop
+        console.log('updated peek position', curPeek)
+      }
+
       this.setState({
+        peeks,
         peek,
         // lastPeek never is the null peek
         lastPeek: peek || this.state.peek,
@@ -107,15 +111,15 @@ export default class PeekWindow extends React.Component {
     }
   }
 
-  handlePeekMove = (curPeek, position) => {
+  handlePeekMove = ({ key, size, position }, newPosition) => {
     if (!this.mounted) {
       return
     }
+    const curPeek = { key, size, position }
     const { peeks } = this.state
-    const { key } = curPeek
     const peek = peeks.find(p => p.key === key)
     const updatePeekPosition = () => {
-      peek.position = position
+      peek.position = newPosition
       this.setState({ peeks })
     }
     // dont tear away if window moved recently
@@ -123,10 +127,9 @@ export default class PeekWindow extends React.Component {
       updatePeekPosition()
       return
     }
-    if (!isEqual(peek.position, position)) {
-      console.log('updating peek position', peek.position, position)
-      const isPeek = key === this.peekKey
-      if (isPeek && !isEqual(peek.position, [0, 0])) {
+    if (!isEqual(peek.position, newPosition)) {
+      console.log('updating peek position', peek.position, newPosition)
+      if (key === this.peekKey) {
         curPeek.position = position
         if (!this.handleTearAway(curPeek)) {
           updatePeekPosition()
@@ -209,20 +212,12 @@ export default class PeekWindow extends React.Component {
           // peek always in front
           const isPeek = index === 0
           const { key, size } = peek
-          let position
-          if (isPeek) {
-            const X_GAP = -12
-            const Y_GAP = 0
-            const [x, y] = appPosition
-            const [width] = size
-            position = [x - width - X_GAP, y + Y_GAP]
-          } else {
-            position = peek.position
-          }
+          const position = peek.position
           return (
             <Window
               key={key}
               alwaysOnTop={isPeek || peek.alwaysOnTop}
+              animatePosition
               show={peek.show}
               file={`${Constants.APP_URL}/peek?key=${key}`}
               ref={isPeek ? ref => this.handlePeekRef(ref, peek) : _ => _}

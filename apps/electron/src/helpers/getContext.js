@@ -1,6 +1,7 @@
 import runAppleScript from './runAppleScript'
 import escapeAppleScriptString from 'escape-string-applescript'
 import getContextInjection from './getContextInjection'
+import getOcrContext from './getOcrContext'
 import { isEqual } from 'lodash'
 
 let lastContextError = null
@@ -26,11 +27,17 @@ export default async function getContext(currentContext) {
       }
     }
   }
+
   if (res) {
-    const { application } = res
+    const { application, position, size } = res
+    const highlights = await getOcrContext({ position, size })
+
     let context = {
       focusedApp: application,
+      highlights,
     }
+
+    return context
 
     switch (application) {
       case 'Google Chrome':
@@ -68,9 +75,21 @@ async function getActiveWindowInfo() {
   end tell
   return {frontAppName, windowTitle}
   `)
+
+  const [position, size] = await runAppleScript(`
+  tell application "System Events"
+	  set frontApp to first application process whose frontmost is true
+    tell frontApp
+      set pos to position of window 1
+      set sizeVal to size of window 1
+    end tell
+  end tell
+  return {pos, sizeVal}
+  `)
+
   // application is like 'Google Chrome'
   // title is like 'Welcome to my Webpage'
-  return { application, title }
+  return { application, title, position, size }
 }
 
 const CONTEXT_JS = `(${getContextInjection.toString()})()`
@@ -85,7 +104,7 @@ async function getChromeContext() {
       end tell
     end tell
     return res
-  `),
+  `)
   )
 }
 
@@ -95,11 +114,11 @@ async function getSafariContext() {
     global res
     tell application "Safari"
       set res to do JavaScript "${escapeAppleScriptString(
-        CONTEXT_JS,
+        CONTEXT_JS
       )}" in front document
     end tell
     return res
-  `),
+  `)
   )
 }
 

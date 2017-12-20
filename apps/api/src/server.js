@@ -141,11 +141,15 @@ export default class Server {
       }
     })
 
-    this.app.get('/ocr', (req, res) => {
+    this.app.get('/ocr', async (req, res) => {
       log(`running OCR`)
-      OCR().then(val => {
-        res.json(val)
-      })
+      const { position, size } = req.query
+      if (!position || !position.length) return res.json({})
+
+      const parse = param => param.split(',').map(i => +i)
+
+      const val = await OCR({ position: parse(position), size: parse(size) })
+      res.json(val)
     })
 
     this.app.get('/crawler/results', (req, res) => {
@@ -175,6 +179,7 @@ export default class Server {
         res.json({ error: 'no creds' })
       }
     })
+
     this.app.use('/setCreds', (req, res) => {
       log('set', typeof req.body, req.body)
       if (req.body) {

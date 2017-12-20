@@ -2,10 +2,8 @@ import NLP from 'google-nlp'
 import cheerio from 'cheerio'
 import { sortBy } from 'lodash'
 import { exec } from 'child_process'
-import Jimp from 'jimp'
 import path from 'path'
-import screenshot from 'desktop-screenshot'
-import { promisify } from 'util'
+import promisify from 'sb-promisify'
 
 //	Google Cloud API key
 const apiKey = 'AIzaSyDl_JoYndPs9gDWzbldcvx0th0E5d2iQu0'
@@ -13,17 +11,20 @@ const nlp = new NLP(apiKey)
 
 const ocrPath = file => path.resolve(__dirname, '..', file)
 const clean = async () => {
+  return true
   const cmd = `rm ${ocrPath('tmp')}/*`
   await promisify(exec)(cmd)
 }
 
 const ocr = async file => {
   const tesseractHocr = ocrPath('tmp/tesseractOutput')
-  const tess = `${ocrPath(
+  const tess = `OMP_THREAD_LIMIT=1 ${ocrPath(
     'tesseract'
-  )} ${file} ${tesseractHocr} -l eng ${ocrPath('hocr')}`
+  )} ${file} ${tesseractHocr} --oem 1 -l eng ${ocrPath('hocr')}`
+  let start = +new Date()
   const cmd = `${tess} && cat ${tesseractHocr}.hocr`
-  const { stdout } = await promisify(exec)(cmd)
+  const stdout = await promisify(exec)(cmd)
+  console.log('tesseract took', +new Date() - start)
 
   const $ = cheerio.load(stdout)
   const parseBox = s =>
@@ -31,19 +32,22 @@ const ocr = async file => {
       .split(';')[0]
       .split(' ')
       .slice(1)
-      .map(i => +i)
+      .map(i => +i / 2)
 
   const onlyAlpha = s => s.replace(/\W/g, '')
   const texts = []
   $('span.ocrx_word').each(function() {
+    const text = onlyAlpha($(this).text())
+    if (text.length === 0) return
     texts.push({
-      text: onlyAlpha($(this).text()),
+      text,
       box: parseBox($(this).attr('title')),
     })
   })
 
   const text = texts.map(_ => _.text).join(' ')
 
+  start = +new Date()
   const { entities } = await nlp.analyzeEntities(text)
   const formattedEntities = sortBy(
     entities.map(({ name, salience }) => ({ name, weight: salience }))
@@ -61,24 +65,22 @@ const ocr = async file => {
   return { text, boxes }
 }
 
-const run = async () => {
-  const screenFile = ocrPath('tmp/screenshot.png')
-  const screenSmallFile = ocrPath('tmp/screenshot-small.png')
+const run = async ({ position, size }) => {
+  const screenFile = ocrPath(`screenshot.png`)
   try {
-    await promisify(screenshot)(screenFile, {})
-    const image = await Jimp.read(screenFile)
-    await new Promise(res =>
-      image.crop(0, 70, 1300, 600).write(screenSmallFile, res)
-    )
-
-    return await ocr(path.resolve(__dirname, screenSmallFile))
+    const start = +Date.now()
+    const bounds = [...position, ...size].join(',')
+    const getScreenshot = `require('screenshot-node').saveScreenshot(${bounds}, '${screenFile}', () => {})`
+    await promisify(exec)(`node -e "${getScreenshot}"`)
+    console.log('screnshotting took', +Date.now() - start)
+    return await ocr(path.resolve(__dirname, screenFile))
   } catch (error) {
     console.log('Screenshot failed', error)
   }
 }
 
-export default async () => {
-  const val = await run()
+export default async params => {
+  const val = await run(params)
   await clean()
   return val
 }

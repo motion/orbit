@@ -152,12 +152,14 @@ export default class Windows extends React.Component {
   }
 
   watchForContext = () => {
-    this.setInterval(async () => {
+    const next = async () => {
       const context = await Helpers.getContext(this.state.context)
       if (context) {
         this.updateState({ context })
       }
-    }, 500)
+      this.setTimeout(next, 200)
+    }
+    next()
   }
 
   handlePreferences = () => {

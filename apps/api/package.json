@@ -4,18 +4,21 @@
   "version": "1.5.1",
   "main": "index.js",
   "scripts": {
-    "start":
-      "NODE_ENV=development DEBUG=api,crawler,crawler:* ../../node_modules/.bin/nodemon --inspect=0.0.0.0:5858 index.js",
+    "start": "NODE_ENV=development DEBUG=api,crawler,crawler:* ../../node_modules/.bin/nodemon --inspect=0.0.0.0:5858 index.js",
     "start-prod": "NODE_ENV=production node index.js"
   },
   "nodemonConfig": {
-    "ignore": ["**/*.map", "lib", "dist"]
+    "ignore": [
+      "**/*.map",
+      "lib",
+      "dist"
+    ]
   },
   "dependencies": {
     "@mcro/crawler": "^1.5.1",
-    "@mcro/search": "^1.5.1",
     "@mcro/ocr": "^1.5.1",
     "@mcro/passport-slack": "^1.5.1",
+    "@mcro/search": "^1.5.1",
     "babel-polyfill": "^6.23.0",
     "body-parser": "^1.16.1",
     "clean-stacktrace": "^1.1.0",
@@ -37,6 +40,7 @@
     "passport-oauth2-refresh": "^1.0.0",
     "passport-slack-ponycode": "0.0.2",
     "sb-promisify": "^2.0.2",
+    "screenshot-node": "^1.2.1",
     "source-map-support": "^0.4.16",
     "sudo-prompt": "^7.1.1",
     "wait-for-port": "^0.0.2"

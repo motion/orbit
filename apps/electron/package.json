@@ -7,20 +7,19 @@
   "private": true,
   "main": "lib/index.js",
   "updater": {
-    "url":
-      "https://raw.githubusercontent.com/motion/orbit-updates/master/updates.json"
+    "url": "https://raw.githubusercontent.com/motion/orbit-updates/master/updates.json"
   },
   "scripts": {
     "start": "NODE_ENV=development electron ./lib/start-app",
-    "build":
-      "CHUNK_COMMONS=false TARGET=electron NODE_ENV=production mcro-build",
+    "build": "CHUNK_COMMONS=false TARGET=electron NODE_ENV=production mcro-build",
     "watch": "npm run build -- --watch",
     "deploy": "cd ../electron-build && npm run deploy"
   },
   "dependencies": {
     "@mcro/api": "^1.5.1",
-    "@mcro/constants": "^1.5.1",
     "@mcro/black": "^1.5.1",
+    "@mcro/constants": "^1.5.1",
+    "@mcro/ocr": "^1.5.1",
     "@mcro/r2": "^1.5.1",
     "@mcro/reactron": "^1.5.1",
     "babel-polyfill": "^6.26.0",

@@ -67,7 +67,7 @@ export default class HomeHeader {
                 <View.Title selectable {...titleProps} textAlign="right">
                   <span css={{ marginRight: -10 }}>We follow</span>
                   <br />
-                  what you do
+                  <span className="hlword">what you do</span>
                 </View.Title>
                 <inner
                   css={{
@@ -156,7 +156,9 @@ export default class HomeHeader {
                     selectable
                   >
                     And show you <br />
-                    <span css={{ marginLeft: -2 }}>what you should know</span>
+                    <span css={{ marginLeft: -2 }}>
+                      what you <span className="hlword">should know</span>
+                    </span>
                   </View.Title>
                 </text>
               </inner>

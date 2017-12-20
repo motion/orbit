@@ -1,5 +1,5 @@
-// @flow
-// export constants from @mcro/black
+export * from '@mcro/constants'
+
 import { Constants } from '@mcro/black'
 
 export const IS_ELECTRON = Constants.IS_ELECTRON

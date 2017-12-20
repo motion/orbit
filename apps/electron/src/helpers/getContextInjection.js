@@ -97,10 +97,30 @@ export default function getContextInjection() {
         selection: contentEditableValue(),
       }
 
+  // get hardcoded highlights
+  const wtop = document.querySelector('.page').scrollTop
+  const wheight = window.innerHeight
+  const nodes = [...document.querySelectorAll('.hlword')]
+  const highlights = []
+  for (const node of nodes) {
+    const { top, left, height, width } = node.getBoundingClientRect()
+    if (top > 0 && top + height < wtop + wheight) {
+      highlights.push({
+        // 77 = Chrome chrome height
+        top: top + 77,
+        left,
+        height,
+        width,
+        key: `${url}${top}${left}${height}${width}`,
+      })
+    }
+  }
+
   return JSON.stringify(
     Object.assign({}, vals, {
       url: url,
       favicon: getFavicon(),
-    })
+      highlights: highlights,
+    }),
   )
 }

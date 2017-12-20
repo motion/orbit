@@ -1,8 +1,8 @@
 // @flow
 import * as React from 'react'
 import * as UI from '@mcro/ui'
-import { OS } from '~/helpers'
-import { isEqual } from 'lodash'
+import * as Helpers from '~/helpers'
+import * as Constants from '~/constants'
 
 const getDate = result =>
   result.data && result.data.updated ? UI.Date.format(result.data.updated) : ''
@@ -109,79 +109,41 @@ function getSecondary(result) {
   return text
 }
 
-const PEEK_HOVER_DELAY = 600
-
-let lastEnter
-let lastLeave
-let currentNode
-let lastPeek
-
-const setPeek = object => {
-  OS.send('peek', object)
-  lastPeek = object
-}
-
-export default function getItem(result, index) {
-  let itemLastEnter
-  let itemLastLeave
-
-  function handleHover(_, target) {
-    clearTimeout(lastEnter)
-    clearTimeout(lastLeave)
-    // dont delay at all if were already peeking
-    const isAlreadyPeeking = !!currentNode
-    const delay = isAlreadyPeeking ? 0 : PEEK_HOVER_DELAY
-    itemLastEnter = lastEnter = setTimeout(() => {
-      currentNode = target
-      const url = result.data && result.data.url
-      if (!currentNode) {
+const getHoverProps = Helpers.hoverSettler({
+  enterDelay: 600,
+  onHovered: object => {
+    // add on the app position to inner position
+    if (object) {
+      if (!window.lastElectronState) {
+        console.error('no state')
         return
       }
-      const offsetTop =
-        currentNode.offsetTop +
+      const { oraPosition } = window.lastElectronState
+      const [oraX, oraY] = oraPosition
+      // not all of pad because it looks nice slightly overlapped
+      object.left = object.left + oraX + Constants.ORA_PAD * 0.8
+      object.top =
+        object.top +
+        oraY +
         document.querySelector('.header > .contents').clientHeight +
         document.querySelector('.fade:last-child .pane .content').offsetTop -
         (
           document.querySelector('.fade:last-child .ReactVirtualized__Grid') ||
           document.querySelector('.fade:last-child .list')
         ).scrollTop
-
-      const nextPeek = { url, offsetTop, id: result.id }
-
-      if (!isEqual(nextPeek, lastPeek)) {
-        setPeek(nextPeek)
-      }
-    }, delay)
-  }
-
-  function onMouseEnter(e) {
-    handleHover(e, e.currentTarget)
-  }
-
-  function onMouseMove(e) {
-    handleHover(e, e.currentTarget)
-  }
-
-  function onMouseLeave() {
-    clearTimeout(lastEnter)
-    clearTimeout(itemLastLeave)
-    itemLastLeave = setTimeout(() => {
-      if (itemLastEnter === lastEnter) {
-        setPeek(null)
-        itemLastEnter = null
-        currentNode = null
-      }
-    }, 50)
-  }
-
-  // peek hover props
-  let peekProps
-  if (result.peek !== false && result.data) {
-    peekProps = {
-      onMouseEnter,
-      onMouseMove,
-      onMouseLeave,
     }
+    Helpers.OS.send('peek-target', object)
+  },
+})
+
+export default function getItem(result, index) {
+  // peek hover props
+  let hoverProps
+  if (result.peek !== false && result.data) {
+    hoverProps = getHoverProps({
+      url: result.data && result.data.url,
+      id: result.id,
+    })
   }
 
   const itemProps = {
@@ -212,7 +174,7 @@ export default function getItem(result, index) {
     afterProps: result.afterProps,
     selectable: result.selectable,
     glow: result.glow || result.selectable !== false,
-    ...peekProps,
+    ...hoverProps,
     ...result.props,
   }
 

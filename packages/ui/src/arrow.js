@@ -34,6 +34,8 @@ export default class Arrow extends React.Component<> {
     switch (towards) {
       case 'right':
         return '90deg'
+      case 'bottom':
+        return '0deg'
     }
   }
 

@@ -3,6 +3,7 @@ import latinize from 'latinize'
 import * as React from 'react'
 import fuzzy_ from './fuzzy'
 
+export hoverSettler from './hoverSettler'
 export logClass from './logClass'
 export IndexDB from './indexDB'
 
@@ -13,7 +14,7 @@ export const contextToResult = context => ({
   title: trimSingleLine(
     context.selection
       ? `${context.selection} | ${context.title}`
-      : context.title
+      : context.title,
   ),
   subtitle: `in ${context.focusedApp.replace('Google ', '')} · ${context.url}`,
   type: 'context',

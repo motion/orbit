@@ -2,6 +2,8 @@
 import BaseComponent from './BaseComponent'
 import { BrowserWindow } from 'electron'
 
+// TODO: document/type props this takes
+
 const EVENT_KEYS = {
   onReadyToShow: 'ready-to-show',
   onClose: 'close',
@@ -34,7 +36,17 @@ export default class Window extends BaseComponent {
 
     this.updateSize = () => configureSize.call(this, this.props)
     this.updatePosition = () => configurePosition.call(this, this.props)
+
+    // handles simple prop sync to
+    const ignoreMouseEvents = this.handleSettableProp(
+      'ignoreMouseEvents',
+      x => !!x,
+    )
+
+    ignoreMouseEvents(props.ignoreMouseEvents)
+
     this.propHandlers = {
+      ignoreMouseEvents,
       devToolsExtensions: () => {
         configureExtensions.call(this, this.props)
       },
@@ -59,6 +71,8 @@ export default class Window extends BaseComponent {
       defaultPosition: this.updatePosition,
       onMove: this.updatePosition,
       onMoved: this.updatePosition,
+      animatePosition: this.updatePosition,
+      animateSize: this.updateSize,
       alwaysOnTop: this.handleSettableProp('alwaysOnTop', x => !!x),
       file: () => configureFile.call(this, this.props),
       acceptFirstMouse: () => {
@@ -66,7 +80,7 @@ export default class Window extends BaseComponent {
           console.warn(
             'A component is changing the acceptFirstMouse prop of a window. ' +
               'The acceptFirstMouse prop only has effect when the window is first rendered, ' +
-              'changing it after the first render does nothing. '
+              'changing it after the first render does nothing. ',
           )
         }
       },
@@ -127,9 +141,13 @@ function configureFile({ file }: Object) {
   }
 }
 
-function configureSize({ size, onResize, defaultSize }: Object) {
+function configureSize({ size, onResize, defaultSize, animateSize }: Object) {
   if (this.unmounted) {
     return
+  }
+  // window.setPosition(x, y[, animate])
+  if (typeof animateSize === 'boolean') {
+    size[2] = animateSize
   }
   try {
     this.handleEvent(this.window, 'resize', onResize, rawHandler => {
@@ -166,9 +184,17 @@ function configurePosition({
   onMove,
   onMoved,
   defaultPosition,
+  animatePosition,
 }: Object) {
   if (this.unmounted) {
     return
+  }
+  // window.setPosition(x, y[, animate])
+  if (typeof animatePosition === 'boolean') {
+    position[2] = animatePosition
+  }
+  const end = m => {
+    throw new Error(`position ${position} ended with error of: ${m}`)
   }
   this.handleEvent(this.window, 'move', onMove, rawHandler => {
     const position = this.window.getPosition()
@@ -189,15 +215,20 @@ function configurePosition({
     this.window.setMovable(true)
     return
   }
-  if (position && (onMove || onMoved)) {
-    this.window.setPosition(...position)
-    this.window.setMovable(true)
-    return
-  }
-  if (position && !(onMove || onMoved)) {
-    this.window.setPosition(...position)
-    this.window.setMovable(false)
-    return
+  if (position) {
+    if (!Array.isArray(position)) end(`not array`)
+    if (typeof position[0] !== 'number' || typeof position[1] !== 'number')
+      end(`not number`)
+    if (onMove || onMoved) {
+      this.window.setPosition(...position)
+      this.window.setMovable(true)
+      return
+    }
+    if (!onMove && !onMoved) {
+      this.window.setPosition(...position)
+      this.window.setMovable(false)
+      return
+    }
   }
 }
 
@@ -208,7 +239,7 @@ function configureExtensions({ devToolsExtensions }) {
   const incoming = new Set(devToolsExtensions)
 
   const newExtensions = new Set(
-    [...incoming].filter(x => !this.devExtensions.has(x))
+    [...incoming].filter(x => !this.devExtensions.has(x)),
   )
   const oldExtensions = [...this.devExtensions].filter(x => !incoming.has(x))
   for (const path of oldExtensions) {

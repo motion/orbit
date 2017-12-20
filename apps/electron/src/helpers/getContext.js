@@ -85,7 +85,7 @@ async function getChromeContext() {
       end tell
     end tell
     return res
-  `)
+  `),
   )
 }
 
@@ -95,11 +95,11 @@ async function getSafariContext() {
     global res
     tell application "Safari"
       set res to do JavaScript "${escapeAppleScriptString(
-        CONTEXT_JS
+        CONTEXT_JS,
       )}" in front document
     end tell
     return res
-  `)
+  `),
   )
 }
 
@@ -115,9 +115,7 @@ function parseContextRes(res) {
     }
     return result
   } catch (err) {
-    console.log('error parsing json')
-    console.log('res:', res)
-    console.log(err)
+    console.log('error parsing context', err.message)
   }
   return null
 }

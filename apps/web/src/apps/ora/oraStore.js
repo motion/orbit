@@ -19,7 +19,11 @@ const useWorker = window.location.href.indexOf('?noWorker')
 let dragListeners = []
 window.addDragListener = window.addDragListener || (x => dragListeners.push(x))
 
+window.lastElectronState = {}
+
 export default class OraStore {
+  // helpers
+  electronStateBus = new BroadcastChannel('ora-electron-state')
   // stores
   crawler = new CrawlerStore()
   stack = new StackStore([{ type: 'main', id: 0 }])
@@ -28,7 +32,9 @@ export default class OraStore {
   search = new SearchStore({ useWorker })
   // state
   lastContext = null
+
   // synced from electron
+  // see @mcro/electron/src/views/Windows#Windows.state
   electronState = {}
 
   // helper to show currently focused results
@@ -95,6 +101,8 @@ export default class OraStore {
     this.search.dispose()
   }
 
+  // synced from electron
+  // see @mcro/electron/src/helpers/getContext
   get osContext() {
     return (
       this.electronState.context &&
@@ -112,6 +120,7 @@ export default class OraStore {
     // allows us to get updated electron state
     this.on(OS, 'electron-state', (event, state) => {
       this.electronState = state
+      window.lastElectronState = state
     })
   }
 
@@ -134,6 +143,10 @@ export default class OraStore {
   _watchContext = () => {
     this.lastContext = null
     this.watch(function watchContext() {
+      // send electron state over bus
+      this.electronStateBus.postMessage(this.electronState)
+
+      // determine navigation
       const { context } = this.electronState
       if (!context) {
         return

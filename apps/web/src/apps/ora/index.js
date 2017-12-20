@@ -66,7 +66,7 @@ const listProps = {
   groupBy: 'category',
   onScroll: () => {
     // TODO clear all popovers
-    OS.send('peek', null)
+    OS.send('peek-target', null)
   },
 }
 
@@ -240,7 +240,7 @@ export default class OraPage {
     orbitHidden: {
       color: 'transparent',
       background: `linear-gradient(to top, ${Constants.oraBg}, ${UI.color(
-        Constants.oraBg
+        Constants.oraBg,
       ).darken(0.1)})`,
       boxShadow: [
         ['inset', 0, 0, 0, 0.5, UI.color(Constants.oraBg).darken(0.4)],
@@ -254,7 +254,7 @@ export default class OraPage {
       },
       '&:hover': {
         background: `linear-gradient(to top, ${Constants.oraBg}, ${UI.color(
-          Constants.oraBg
+          Constants.oraBg,
         ).lighten(0.2)})`,
         transform: {
           scale: 0.85,

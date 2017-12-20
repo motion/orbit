@@ -24,7 +24,7 @@ export default class Root extends React.Component {
           this.setState({ resizeVersion: ++this.state.resizeVersion })
         }
       }),
-      300
+      300,
     )
   }
 
@@ -38,12 +38,6 @@ export default class Root extends React.Component {
           width={width}
           isSmall={isSmall}
           key={Router.key + this.state.resizeVersion}
-          {...Router.params}
-        />
-        <CurrentPage
-          if={!isSmall}
-          blurred
-          key={Router.key + '2' + this.state.resizeVersion}
           {...Router.params}
         />
       </UI.Theme>

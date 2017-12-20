@@ -45,5 +45,6 @@ module.exports = {
     emit: true,
     __dirname: true,
     exports: true,
+    BroadcastChannel: true,
   },
 }

@@ -27,7 +27,7 @@ export default class AuthPage extends React.Component {
           height: '100%',
           alignitems: 'center',
           justifyContent: 'center',
-          background: 'green',
+          background: 'purple',
           color: 'white',
           fontSize: 100,
         }}

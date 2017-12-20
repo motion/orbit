@@ -3,7 +3,7 @@ import { App } from '@mcro/reactron'
 import ShortcutsStore from '~/stores/shortcutsStore'
 import { view } from '@mcro/black'
 import * as RootHelpers from './rootHelpers'
-import Windows from './windows'
+import Windows from './Windows'
 import { ipcMain } from 'electron'
 
 @view.provide({
@@ -45,7 +45,13 @@ import { ipcMain } from 'electron'
 
     setupOraLink() {
       this.on(ipcMain, 'start-ora', event => {
-        this.sendOra = (...args) => event.sender.send(...args)
+        this.sendOra = (...args) => {
+          try {
+            event.sender.send(...args)
+          } catch (err) {
+            console.log('error sending ora message', err.message)
+          }
+        }
       })
 
       // if you call this.getOraState() this will handle it

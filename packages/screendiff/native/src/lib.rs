@@ -27,13 +27,17 @@ fn screen(call: Call) -> JsResult<JsString> {
     println!("screen({}, {}, {}, {}, {})", outfile, width, height, left, top);
 
     let s = get_screenshot(0).unwrap();
+    let pxwidth = s.pixel_width();
 
     if width == 0 {
-        width = s.width()
+        width = s.width() / (pxwidth / 2);
     }
     if height == 0 {
-        height = s.height()
+        height = s.height() / (pxwidth / 2);
     }
+
+    width = width * pxwidth / 2;
+    height = height * pxwidth / 2;
 
     let mut img = Image::new(width as u32, height as u32);
 

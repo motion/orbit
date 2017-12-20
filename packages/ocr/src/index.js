@@ -1,9 +1,11 @@
+// @flow
 import NLP from 'google-nlp'
 import cheerio from 'cheerio'
 import { sortBy } from 'lodash'
 import { exec } from 'child_process'
 import path from 'path'
 import promisify from 'sb-promisify'
+import { screen } from '@mcro/screendiff'
 
 //	Google Cloud API key
 const apiKey = 'AIzaSyDl_JoYndPs9gDWzbldcvx0th0E5d2iQu0'
@@ -16,17 +18,18 @@ const clean = async () => {
   await promisify(exec)(cmd)
 }
 
-const ocr = async file => {
+const ocrFile = async file => {
   const tesseractHocr = ocrPath('tmp/tesseractOutput')
   const tess = `OMP_THREAD_LIMIT=1 tesseract ${file} ${tesseractHocr} --oem 1 -l eng ${ocrPath(
     'hocr',
   )}`
 
-  let start = +new Date()
+  console.time('tesseract')
   const cmd = `${tess} && cat ${tesseractHocr}.hocr`
   const stdout = await promisify(exec)(cmd)
-  console.log('tesseract took', +new Date() - start)
+  console.timeEnd('tesseract')
 
+  console.time('parseWords')
   const $ = cheerio.load(stdout)
   const parseBox = s =>
     s
@@ -48,7 +51,6 @@ const ocr = async file => {
 
   const text = texts.map(_ => _.text).join(' ')
 
-  start = +new Date()
   const { entities } = await nlp.analyzeEntities(text)
   const formattedEntities = sortBy(
     entities.map(({ name, salience }) => ({ name, weight: salience })),
@@ -63,25 +65,54 @@ const ocr = async file => {
     }
   })
 
+  console.timeEnd('parseWords')
   return { text, boxes }
 }
 
 const run = async ({ position, size }) => {
-  const screenFile = ocrPath(`screenshot.png`)
+  const screenFile = ocrPath(`tmp/screenshot.png`)
   try {
-    const start = +Date.now()
+    console.time('screenshot')
     const bounds = [...position, ...size].join(',')
     const getScreenshot = `require('screenshot-node').saveScreenshot(${bounds}, '${screenFile}', () => {})`
     await promisify(exec)(`node -e "${getScreenshot}"`)
-    console.log('screnshotting took', +Date.now() - start)
-    return await ocr(path.resolve(__dirname, screenFile))
+    console.timeEnd('screenshot')
+    return await ocrFile(path.resolve(__dirname, screenFile))
   } catch (error) {
     console.log('Screenshot failed', error)
   }
 }
 
-export default async params => {
-  const val = await run(params)
+async function screenOcr(options) {
+  console.time('screenshot')
+  const outfile = await screen({
+    destination: 'tmp/screenshot-new.png',
+    ...options,
+  })
+  console.timeEnd('screenshot')
+  return await ocrFile(ocrPath(outfile))
+}
+
+type ScreenOptions = {
+  // output screenshot file path
+  destination: string,
+  // width, height
+  bounds: [number, number],
+  // left, top
+  offset: [number, number],
+}
+
+export default async function ocr(options: ScreenOptions) {
+  const { old, ...runOptions } = options
+  let val
+  if (old) {
+    val = await run({
+      size: runOptions.bounds,
+      position: runOptions.offset,
+    })
+  } else {
+    val = await screenOcr(runOptions)
+  }
   await clean()
   return val
 }

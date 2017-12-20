@@ -2,8 +2,18 @@
 name = "screendiff"
 version = "0.1.0"
 authors = ["natew <natewienert@gmail.com>"]
+license = "MIT"
+build = "build.rs"
+
+[lib]
+name = "screendiff"
+crate-type = ["dylib"]
+
+[build-dependencies]
+neon-build = "0.1.22"
 
 [dependencies]
+neon = "0.1.22"
 screenshot = "0.0.7"
 image = "0.18.0"
 dssim = "2.9.6"

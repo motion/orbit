@@ -139,7 +139,7 @@ export default class HighlightsPage {
       position: 'absolute',
       padding: HL_PAD,
       borderRadius: 10,
-      background: [255, 255, 255, 0.1],
+      background: [200, 200, 200, 0.2],
     },
     hlPosition: ({ top, left, width, height }) => ({
       top: top - HL_PAD,

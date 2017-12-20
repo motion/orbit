@@ -19,8 +19,9 @@ const clean = async () => {
 const ocr = async file => {
   const tesseractHocr = ocrPath('tmp/tesseractOutput')
   const tess = `OMP_THREAD_LIMIT=1 tesseract ${file} ${tesseractHocr} --oem 1 -l eng ${ocrPath(
-    'hocr'
+    'hocr',
   )}`
+
   let start = +new Date()
   const cmd = `${tess} && cat ${tesseractHocr}.hocr`
   const stdout = await promisify(exec)(cmd)
@@ -50,7 +51,7 @@ const ocr = async file => {
   start = +new Date()
   const { entities } = await nlp.analyzeEntities(text)
   const formattedEntities = sortBy(
-    entities.map(({ name, salience }) => ({ name, weight: salience }))
+    entities.map(({ name, salience }) => ({ name, weight: salience })),
   )
 
   const boxes = formattedEntities.map(({ name, weight }) => {

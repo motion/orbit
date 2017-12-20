@@ -74,7 +74,7 @@ export default class Server {
       res.header('Access-Control-Allow-Headers', HEADER_ALLOWED)
       res.header(
         'Access-Control-Allow-Methods',
-        'GET,HEAD,POST,PUT,DELETE,OPTIONS'
+        'GET,HEAD,POST,PUT,DELETE,OPTIONS',
       )
       next()
     }
@@ -219,14 +219,14 @@ export default class Server {
         ws: true,
         logLevel: 'warn',
         router,
-      })
+      }),
     )
   }
 
   setupPassportRoutes() {
     this.app.use(
       '/auth', // TODO change secret
-      session({ secret: 'orbit', resave: false, saveUninitialized: true })
+      session({ secret: 'orbit', resave: false, saveUninitialized: true }),
     )
     this.app.use('/auth', Passport.initialize())
     this.app.use('/auth', Passport.session())
@@ -285,7 +285,7 @@ export default class Server {
 </body>
 </html>
           `)
-        }
+        },
       )
     }
   }

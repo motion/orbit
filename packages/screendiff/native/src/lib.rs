@@ -1,12 +1,6 @@
 #[macro_use]
 extern crate neon;
-extern crate image;
-extern crate screenshot;
-extern crate bmp;
-extern crate dssim;
 
-use screenshot::get_screenshot;
-use bmp::{Image, Pixel};
 use std::time::Duration;
 use std::thread;
 // use std::path::Path;
@@ -50,10 +44,7 @@ fn screen(call: Call) -> JsResult<JsString> {
 
     img.save(&outfile).unwrap();
 
-    // image::save_buffer("test.png",
-	// 	s.as_ref(), s.width() as u32, s.height() as u32, image::RGBA(8))
-	// .unwrap();
-
+    // return saved path as string
     Ok(JsString::new(scope, &outfile).unwrap())
 }
 

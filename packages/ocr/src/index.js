@@ -69,30 +69,6 @@ const ocrFile = async file => {
   return { text, boxes }
 }
 
-const run = async ({ position, size }) => {
-  const screenFile = ocrPath(`tmp/screenshot.png`)
-  try {
-    console.time('screenshot')
-    const bounds = [...position, ...size].join(',')
-    const getScreenshot = `require('screenshot-node').saveScreenshot(${bounds}, '${screenFile}', () => {})`
-    await promisify(exec)(`node -e "${getScreenshot}"`)
-    console.timeEnd('screenshot')
-    return await ocrFile(path.resolve(__dirname, screenFile))
-  } catch (error) {
-    console.log('Screenshot failed', error)
-  }
-}
-
-async function screenOcr(options) {
-  console.time('screenshot')
-  const outfile = await screen({
-    destination: 'tmp/screenshot-new.png',
-    ...options,
-  })
-  console.timeEnd('screenshot')
-  return await ocrFile(ocrPath(outfile))
-}
-
 type ScreenOptions = {
   // output screenshot file path
   destination: string,
@@ -103,16 +79,11 @@ type ScreenOptions = {
 }
 
 export default async function ocr(options: ScreenOptions) {
-  const { old, ...runOptions } = options
-  let val
-  if (old) {
-    val = await run({
-      size: runOptions.bounds,
-      position: runOptions.offset,
-    })
-  } else {
-    val = await screenOcr(runOptions)
-  }
-  await clean()
-  return val
+  console.time('screenshot')
+  const outfile = await screen({
+    destination: 'tmp/screenshot-new.png',
+    ...options,
+  })
+  console.timeEnd('screenshot')
+  return await ocrFile(ocrPath(outfile))
 }

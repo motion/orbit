@@ -9,6 +9,7 @@ import OAuth from './server/oauth'
 import OAuthStrategies from './server/oauth.strategies'
 import Passport from 'passport'
 import Crawler from '@mcro/crawler'
+import OCR from '@mcro/ocr'
 import debug from 'debug'
 import path from 'path'
 
@@ -138,6 +139,13 @@ export default class Server {
         log('No options sent')
         res.sendStatus(500)
       }
+    })
+
+    this.app.get('/ocr', (req, res) => {
+      log(`running OCR`)
+      OCR().then(val => {
+        res.json(val)
+      })
     })
 
     this.app.get('/crawler/results', (req, res) => {

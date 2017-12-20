@@ -19,7 +19,7 @@ console.log('Constants', Constants)
 
 // const isSamePeek = (a, b) => a && b && a.id === b.id
 
-const background = [255, 255, 255, 0.98]
+const background = '#fff'
 const peekShadow = [[0, 0, SHADOW_PAD, [0, 0, 0, 0.2]]]
 
 type Target = {
@@ -184,11 +184,11 @@ export default class PeekPage {
   render({ store }) {
     const { peek, target, showWebview } = store
     const targetUrl = target && target.url
-    const arrowDirection = (peek && peek.arrowDirection) || 'right'
-    const arrowSize = 32
+    const arrowTowards = (peek && peek.arrowTowards) || 'right'
+    const arrowSize = SHADOW_PAD * 2
     let arrowPosition
 
-    switch (arrowDirection) {
+    switch (arrowTowards) {
       case 'right':
         arrowPosition = {
           top: 35,
@@ -201,7 +201,31 @@ export default class PeekPage {
           left: -SHADOW_PAD,
         }
         break
+      case 'bottom':
+        arrowPosition = {
+          bottom: -SHADOW_PAD,
+          left: '50%',
+        }
+        break
+      case 'top':
+        arrowPosition = {
+          top: -SHADOW_PAD,
+          left: '50%',
+        }
+        break
     }
+
+    const arrowStyles = [
+      {
+        boxShadow: peekShadow,
+        zIndex: -1,
+      },
+      {
+        zIndex: 100,
+      },
+    ]
+
+    const hasBody = store.thing && store.thing.body
 
     return (
       <UI.Theme name="light">
@@ -211,35 +235,27 @@ export default class PeekPage {
           onMouseEnter={store.handleMouseEnter}
           onMouseLeave={store.handleMouseLeave}
         >
-          <UI.Arrow
-            if={!store.isTorn}
-            size={arrowSize}
-            towards={arrowDirection}
-            background={background}
-            css={{
-              position: 'absolute',
-              ...arrowPosition,
-              boxShadow: peekShadow,
-              zIndex: -1,
-            }}
-          />
-          <UI.Arrow
-            if={!store.isTorn}
-            size={arrowSize}
-            towards={arrowDirection}
-            background={background}
-            css={{
-              position: 'absolute',
-              ...arrowPosition,
-              zIndex: 100,
-            }}
-          />
+          {/* first is arrow (above), second is arrow shadow (below) */}
+          {[1, 2].map(key => (
+            <UI.Arrow
+              if={!store.isTorn}
+              key={key}
+              size={arrowSize}
+              towards={arrowTowards}
+              background={background}
+              css={{
+                position: 'absolute',
+                ...arrowPosition,
+                ...arrowStyles[key],
+              }}
+            />
+          ))}
           <content>
-            <innerContent $$flex if={store.thing}>
+            <innerContent $$flex>
               <header $$draggable>
                 <title>
                   <UI.Title size={1} fontWeight={600}>
-                    {store.thing.title}
+                    {(store.thing && store.thing.title) || ''}
                   </UI.Title>
                 </title>
                 <UI.Row
@@ -252,8 +268,8 @@ export default class PeekPage {
                     icon="globe"
                     onClick={store.toggleWebview}
                     highlight={store.tab === 'webview'}
-                    disabled={!store.thing.body}
-                    dimmed={!store.thing.body}
+                    disabled={!hasBody}
+                    dimmed={!hasBody}
                   />
                   <UI.Button
                     if={!store.isTorn}
@@ -268,7 +284,7 @@ export default class PeekPage {
                   />
                 </UI.Row>
               </header>
-              <tabs>
+              <tabs if={store.thing}>
                 <tab $visible={store.tab === 'readability'}>
                   <readability>
                     <MarkdownRender

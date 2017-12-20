@@ -2,6 +2,7 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
 import * as Helpers from '~/helpers'
+import * as Constants from '~/constants'
 
 const getDate = result =>
   result.data && result.data.updated ? UI.Date.format(result.data.updated) : ''
@@ -119,7 +120,8 @@ const getHoverProps = Helpers.hoverSettler({
       }
       const { oraPosition } = window.lastElectronState
       const [oraX, oraY] = oraPosition
-      object.left = object.left + oraX
+      // not all of pad because it looks nice slightly overlapped
+      object.left = object.left + oraX + Constants.ORA_PAD * 0.8
       object.top =
         object.top +
         oraY +

@@ -3,6 +3,8 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import * as Helpers from '~/helpers'
 
+const HL_PAD = 5
+
 const getHoverProps = Helpers.hoverSettler({
   enterDelay: 400,
   onHovered: object => {
@@ -87,13 +89,19 @@ function toEvent({ top, left, width, height }) {
           // before update, handle hover logic
           // mouseLeave
           if (!hovered && this.hoveredWord) {
-            hoverEvents[this.hoveredWord.key].onMouseLeave()
+            if (hoverEvents[this.hoveredWord.key]) {
+              hoverEvents[this.hoveredWord.key].onMouseLeave()
+            }
           } else if (hovered && !this.hoveredWord) {
             // mouseEnter
-            hoverEvents[hovered.key].onMouseEnter(toEvent(hovered))
+            if (hoverEvents[hovered.key]) {
+              hoverEvents[hovered.key].onMouseEnter(toEvent(hovered))
+            }
           } else if (hovered) {
             // mouseMove
-            hoverEvents[hovered.key].onMouseMove(toEvent(hovered))
+            if (hoverEvents[hovered.key]) {
+              hoverEvents[hovered.key].onMouseMove(toEvent(hovered))
+            }
           }
           // update state
           this.hoveredWord = hovered
@@ -129,16 +137,18 @@ export default class HighlightsPage {
     },
     highlight: {
       position: 'absolute',
-      background: 'red',
+      padding: HL_PAD,
+      borderRadius: 10,
+      background: [255, 255, 255, 0.1],
     },
     hlPosition: ({ top, left, width, height }) => ({
-      top,
-      left,
-      width,
-      height,
+      top: top - HL_PAD,
+      left: left - HL_PAD,
+      width: width + HL_PAD * 2,
+      height: height + HL_PAD * 2,
     }),
     hovered: {
-      background: 'green',
+      background: [255, 255, 255, 0.3],
     },
   }
 }

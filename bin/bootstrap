@@ -100,7 +100,7 @@ function link-ts-configs() {
 ensure-dir ./packages/gloss/es6 -- compile-root-modules
 ensure-symlink ./node_modules/@mcro/gloss -- link-root-modules
 ensure-dir ./packages/gloss/lib -- build
-ensure-symlink ./packages/gloss/tsconfig.json -- link-ts-configs
+# ensure-symlink ./packages/gloss/tsconfig.json -- link-ts-configs
 # ensure-symlink ./packages/gloss/buildconfig -- link-buildconfigs
 
 echo ""

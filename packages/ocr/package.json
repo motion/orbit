@@ -1,5 +1,5 @@
 {
-  "name": "@mcro/search",
+  "name": "@mcro/ocr",
   "private": true,
   "version": "1.5.1",
   "main": "lib/index.js",
@@ -16,12 +16,12 @@
     "ignore": ["**/*.map", "lib", "dist"]
   },
   "dependencies": {
-    "@mcro/black": "*",
-    "@mcro/ui": "*",
-    "debug": "^3.1.0",
-    "lodash": "^4.17.4",
-    "mobx": "3.3.1",
-    "wink-nlp-utils": "^1.7.0"
+    "cheerio": "^1.0.0-rc.2",
+    "child_process": "^1.0.2",
+    "desktop-screenshot": "^0.1.1",
+    "google-nlp": "^0.5.6",
+    "jimp": "^0.2.28",
+    "path": "^0.12.7"
   },
   "devDependencies": {
     "@mcro/builder": "^1.5.1",

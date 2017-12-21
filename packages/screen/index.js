@@ -98,6 +98,7 @@ class Aperture {
         recorderOpts.videoCodec = codecMap.get(videoCodec)
       }
 
+      console.log('recorderOpts', recorderOpts)
       const args = JSON.stringify(recorderOpts)
       this.recorder = execa(BIN, [args])
 
@@ -123,14 +124,14 @@ class Aperture {
 
   async stopRecording() {
     if (this.recorder === undefined) {
-      throw new Error('Call `.startRecording()` first')
+      // null if not recording
+      return
     }
-
     this.recorder.kill()
+    console.log('killing...')
     await this.recorder
+    console.log('killed...')
     delete this.recorder
-
-    return this.tmpPath
   }
 }
 

@@ -6,34 +6,34 @@ import * as r2 from '@mcro/r2'
 
 const HL_PAD = 5
 
-async function test() {
-  const response = await r2.post(`/screen/start`, {
-    json: {
-      options: {
-        fps: 30,
-        cropArea: {
-          x: 20,
-          y: 0,
-          width: 200,
-          height: 200,
-        },
-      },
-    },
-  }).json
-  console.log('screen recording?', response)
+class Screen {
+  ws = new WebSocket('ws://localhost:40510')
 
-  // start websocket
-  const ws = new WebSocket('ws://localhost:40510')
-  ws.onopen = function() {
-    console.log('websocket is connected ...')
-    ws.send('connected')
+  constructor() {
+    this.ws.onmessage = () => {
+      if (this.onChangeCb) {
+        this.onChangeCb()
+      }
+    }
   }
-  ws.onmessage = function(ev) {
-    console.log('got ws message', ev)
+
+  onChange(fn) {
+    this.onChangeCb = fn
+  }
+
+  async start(options) {
+    console.log('starting screen watch', options)
+    await r2.post(`/screen/start`, {
+      json: {
+        options,
+      },
+    }).json
+  }
+
+  async stop() {
+    await r2.post(`/screen/stop`)
   }
 }
-
-test()
 
 const getHoverProps = Helpers.hoverSettler({
   enterDelay: 400,
@@ -59,6 +59,8 @@ function toEvent({ top, left, width, height }) {
     electronState = {}
     hoveredWord = null
     hoverEvents = {}
+    screen = new Screen()
+    showHighlights = true
 
     // [ { top, left, height, width }, ... ]
     get highlights() {
@@ -71,6 +73,58 @@ function toEvent({ top, left, width, height }) {
     willMount() {
       this.listenToElectronState()
       this.watchForHoverWord()
+
+      this.screen.start({
+        fps: 20,
+        cropArea: {
+          x: 20,
+          y: 0,
+          width: 200,
+          height: 200,
+        },
+      })
+      this.screen.onChange(() => {
+        console.log('hiding highlights due to change')
+        this.showHighlights = false
+      })
+
+      setTimeout(() => {
+        this.screen.stop()
+
+        setTimeout(() => {
+          this.screen.start({
+            fps: 10,
+            cropArea: {
+              x: 100,
+              y: 100,
+              width: 400,
+              height: 400,
+            },
+          })
+          this.screen.onChange(() => {
+            console.log('again???')
+            this.showHighlights = false
+          })
+        }, 5000)
+      }, 5000)
+
+      this.watch(() => {
+        if (this.highlights.length) {
+          this.screen.start({
+            fps: 30,
+            cropArea: {
+              x: 20,
+              y: 0,
+              width: 200,
+              height: 200,
+            },
+          })
+          this.screen.onChange(() => {
+            console.log('hiding highlights due to change')
+            this.showHighlights = false
+          })
+        }
+      })
     }
 
     listenToElectronState = () => {
@@ -144,7 +198,7 @@ export default class HighlightsPage {
   render({ store }) {
     const { highlights, hoveredWord } = store
     return (
-      <highlights>
+      <highlights if={store.showHighlights}>
         {store.highlights.map(hl => (
           <highlight
             key={hl.key}

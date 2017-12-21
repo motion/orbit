@@ -50,12 +50,12 @@ export default class Server {
     // ROUTES
     this.app.use(bodyParser.json({ limit: '2048mb' }))
     this.app.use(bodyParser.urlencoded({ limit: '2048mb', extended: true }))
+    this.setupScreen()
     this.setupCrawler()
     this.setupSearch()
     this.setupCredPass()
     this.setupPassportRoutes()
     this.setupProxy()
-    this.setupScreen()
   }
 
   start() {
@@ -90,16 +90,27 @@ export default class Server {
   }
 
   setupScreen() {
-    console.log('setupScreen')
     this.screen = new ScreenState()
 
     // see ./server/screenState for options
-    this.app.post('/screen/start', (req, res) => {
+    this.app.post('/screen/start', async (req, res) => {
+      console.log('setupScreen')
       const { options } = req.body
       if (options) {
+        await this.screen.stop()
         this.screen.start(options)
         res.json({ started: true })
       } else {
+        res.sendStatus(500)
+      }
+    })
+
+    this.app.post('/screen/stop', async (req, res) => {
+      try {
+        await this.screen.stop()
+        res.json({ stopped: true })
+      } catch (err) {
+        console.log(err.message)
         res.sendStatus(500)
       }
     })

@@ -6,6 +6,7 @@ let arguments = CommandLine.arguments.dropFirst()
 
 func quit(_: Int32) {
   recorder.stop()
+  exit(0)
   // Do not call `exit()` here as the video is not always done
   // saving at this point and will be corrupted randomly
 }

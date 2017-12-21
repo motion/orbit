@@ -14,20 +14,21 @@ const DEFAULT_SETTINGS = {
 export default class ScreenState {
   constructor() {
     this.video = screen()
-  }
-
-  start(settings = DEFAULT_SETTINGS) {
-    this.video.startRecording(settings)
-
     this.wss = new Server({ port: 40510 })
+
     this.wss.on('connection', socket => {
       socket.on('message', message => {
         console.log('received: %s', message)
       })
+      this.sendChange = () => socket.send('changed')
+    })
+  }
 
-      this.video.onChangedFrame(() => {
-        socket.send(`changed`)
-      })
+  start(settings = DEFAULT_SETTINGS) {
+    console.log('starting with settings', settings)
+    this.video.startRecording(settings)
+    this.video.onChangedFrame(() => {
+      this.sendChange(`changed`)
     })
   }
 

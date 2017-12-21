@@ -50,7 +50,7 @@ function build-es6() {
     --ignore @mcro/ocr \
     --ignore @mcro/search \
     --ignore @mcro/constants \
-    --ignore @mcro/screendiff \
+    --ignore @mcro/screendump \
     --ignore @mcro/site \
     --ignore @mcro/preset-motion \
     --ignore @mcro/ui \

@@ -12,7 +12,7 @@ values.yaml
 *.tgz
 kubeconfig
 .vscode/**/*
-packages/screendiff/build
+packages/screendump/build
 apps/web/public/_/*
 apps/site/public/_/*
 apps/web/build

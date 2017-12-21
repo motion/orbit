@@ -5,7 +5,7 @@ import { sortBy } from 'lodash'
 import { exec } from 'child_process'
 import Path from 'path'
 import promisify from 'sb-promisify'
-import { screen } from '@mcro/screendiff'
+import { screen } from '@mcro/screendump'
 
 //	Google Cloud API key
 const apiKey = 'AIzaSyDl_JoYndPs9gDWzbldcvx0th0E5d2iQu0'

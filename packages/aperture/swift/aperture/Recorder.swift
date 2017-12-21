@@ -139,21 +139,18 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
     let int32PerRow = CVPixelBufferGetBytesPerRow(pixelBuffer)
 //    let bufferHeight: Int = CVPixelBufferGetHeight(pixelBuffer)
 //    let bufferWidth: Int = CVPixelBufferGetWidth(pixelBuffer)
-    print("int32PerRow \(int32PerRow)")
-//
 //    let bufferSize = Int(bufferHeight * bufferWidth / 2)
 //    let pixels = Array(UnsafeBufferPointer(start: int32Buffer, count: bufferSize))
-//    print("\(pixels.count)")
-//
 //    for x in 0..<pixels.count {
 //      let r = pixels[x]
 //    }
     
     var curFrame: Array<UInt32> = []
-    let hasLastFrame = self.lastFrame.count > 0
     let height = Int(self.cropRect.height)
     let width = Int(self.cropRect.width)
-    print("hasLastFrame \(hasLastFrame)")
+    let hasLastFrame = self.lastFrame.count == width * height
+    var numChanged = 0
+    var shouldFinish = false
 
     // iterate row after
     for y in 0..<height {
@@ -164,17 +161,28 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
         if (hasLastFrame) {
 //          print("looking at pixel \(x) x \(y) = \(index)")
           if (self.lastFrame[index] != luma) {
-            print("changed! \(self.lastFrame[index]) vs luma \(luma)")
+            numChanged = numChanged + 1
+            if (numChanged > 40) {
+              shouldFinish = true
+              break
+            }
           }
         }
         curFrame.insert(luma, at: index)
-//        print("luma: \(x * y) \(luma)")
-////        let r = pixels[x * y]
-////        let r = int32Buffer[y * bufferWidth * 2 + 2 * x + 0]
-////        let g = int32Buffer[y * bufferWidth * 4 + 4 * x + 1]
-////        let b = int32Buffer[y * bufferWidth * 4 + 4 * x + 2]
-////        let a = int32Buffer[y * bufferWidth * 4 + 4 * x + 3]
       }
+      if (shouldFinish) {
+        break
+      }
+    }
+    
+    if (shouldFinish) {
+      print("40 pixels changed since last frame!")
+      print("40 pixels changed since last frame!")
+      print("40 pixels changed since last frame!")
+      print("40 pixels changed since last frame!")
+      print("40 pixels changed since last frame!")
+      print("40 pixels changed since last frame!")
+      print("40 pixels changed since last frame!")
     }
     
     self.lastFrame = curFrame
@@ -191,6 +199,6 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
     let end = DispatchTime.now()
     let nanoTime = end.uptimeNanoseconds - start.uptimeNanoseconds
     let timeInterval = Double(nanoTime) / 1_000_000
-    print("frame processing took \(timeInterval) ms")
+    print("frame \(timeInterval) ms")
   }
 }

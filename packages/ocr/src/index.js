@@ -14,7 +14,7 @@ const ocrPath = file => path.resolve(__dirname, '..', file)
 
 const ocrFile = async file => {
   const tesseractHocr = ocrPath('tmp/tesseractOutput')
-  const tess = `OMP_THREAD_LIMIT=1 tesseract ${file} ${tesseractHocr} --oem 1 -l eng ${ocrPath(
+  const tess = `TESSDATA_PREFIX=./tessdata OMP_THREAD_LIMIT=1 tesseract ${file} ${tesseractHocr} --oem 1 -l eng ${ocrPath(
     'hocr',
   )}`
 

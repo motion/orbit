@@ -1,5 +1,5 @@
 import * as Constants from '~/constants'
-import * as Injections from '~/injections'
+import * as Injections from '~/helpers/injections'
 import * as Helpers from '~/helpers'
 import { ipcMain } from 'electron'
 import { throttle } from 'lodash'

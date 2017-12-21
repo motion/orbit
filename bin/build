@@ -47,8 +47,10 @@ function build-es6() {
     --ignore @mcro/electron-build \
     --ignore @mcro/electron \
     --ignore @mcro/crawler \
+    --ignore @mcro/ocr \
     --ignore @mcro/search \
     --ignore @mcro/constants \
+    --ignore @mcro/screendiff \
     --ignore @mcro/site \
     --ignore @mcro/preset-motion \
     --ignore @mcro/ui \

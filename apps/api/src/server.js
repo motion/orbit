@@ -74,7 +74,7 @@ export default class Server {
       res.header('Access-Control-Allow-Headers', HEADER_ALLOWED)
       res.header(
         'Access-Control-Allow-Methods',
-        'GET,HEAD,POST,PUT,DELETE,OPTIONS'
+        'GET,HEAD,POST,PUT,DELETE,OPTIONS',
       )
       next()
     }
@@ -142,13 +142,13 @@ export default class Server {
     })
 
     this.app.get('/ocr', async (req, res) => {
-      log(`running OCR`)
-      const { position, size } = req.query
-      if (!position || !position.length) return res.json({})
-
+      const { offset, bounds } = req.query
+      log(`running OCR`, req.query)
+      if (!offset || !offset.length) {
+        return res.json({})
+      }
       const parse = param => param.split(',').map(i => +i)
-
-      const val = await OCR({ position: parse(position), size: parse(size) })
+      const val = await OCR({ offset: parse(offset), bounds: parse(bounds) })
       res.json(val)
     })
 
@@ -219,14 +219,14 @@ export default class Server {
         ws: true,
         logLevel: 'warn',
         router,
-      })
+      }),
     )
   }
 
   setupPassportRoutes() {
     this.app.use(
       '/auth', // TODO change secret
-      session({ secret: 'orbit', resave: false, saveUninitialized: true })
+      session({ secret: 'orbit', resave: false, saveUninitialized: true }),
     )
     this.app.use('/auth', Passport.initialize())
     this.app.use('/auth', Passport.session())
@@ -285,7 +285,7 @@ export default class Server {
 </body>
 </html>
           `)
-        }
+        },
       )
     }
   }

@@ -217,8 +217,6 @@ export default class Windows extends React.Component {
           onQuit={this.handleMenuQuit}
           onClose={this.handleMenuClose}
         />
-        {/* HIGHLIGHTS: */}
-        <HighlightsWindow />
         {/* APP: */}
         <Window
           {...appWindow}
@@ -227,7 +225,7 @@ export default class Windows extends React.Component {
           show
           alwaysOnTop
           hasShadow={false}
-          showDevTools={this.state.showDevTools}
+          showDevTools
           size={[Constants.ORA_WIDTH, 1000]}
           file={`${Constants.APP_URL}`}
           position={this.state.oraPosition}
@@ -236,11 +234,6 @@ export default class Windows extends React.Component {
           onBlur={this.onOraBlur}
           onFocus={this.onOraFocus}
           devToolsExtensions={Helpers.getExtensions(['mobx', 'react'])}
-        />
-        {/* PEEK: */}
-        <PeekWindow
-          appPosition={this.state.oraPosition}
-          onWindows={this.handlePeekWindows}
         />
         {/* SETTINGS PANE: */}
         <Window

@@ -145,11 +145,12 @@ export default class Server {
     const parse = param => param.split(',').map(i => +i)
 
     this.app.get('/screenstate', async ({ query }, res) => {
+      screen.start()
       log(`/screenstate`, query)
-      if (query.options) {
+      if (query.offset || query.bounds) {
         screen.setOptions({
-          offset: parse(query.options.offset),
-          bounds: parse(query.options.bounds),
+          offset: parse(query.offset),
+          bounds: parse(query.bounds),
         })
       }
       res.json(screen.state())

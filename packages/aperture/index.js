@@ -118,11 +118,12 @@ class Aperture {
       //   reject(err)
       // }, 10000)
 
-      this.recorder.catch(err => {
+      this.recorder.catch((err, ...rest) => {
         // clearTimeout(timeout)
         // delete this.recorder
-        console.log('errrr')
+        console.log('errrr', ...rest)
         console.log(err)
+        console.log(err.stack)
       })
 
       this.recorder.stdout.setEncoding('utf8')

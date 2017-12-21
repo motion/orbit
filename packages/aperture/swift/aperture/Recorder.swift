@@ -15,6 +15,8 @@ final class Recorder: NSObject {
   private var height: Int
   private let context = CIContext()
   private var cropRect: CGRect
+  
+  var lastFrame: Array<UInt32>
 
   var onStart: (() -> Void)?
   var onFinish: (() -> Void)?
@@ -41,6 +43,7 @@ final class Recorder: NSObject {
     self.destination = destination
     session = AVCaptureSession()
 
+    self.lastFrame = []
     self.width = CGDisplayPixelsWide(displayId)
     self.height = CGDisplayPixelsHigh(displayId)
     
@@ -129,19 +132,16 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
     let pixelBuffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)!
     
     guard let uiImage = imageFromSampleBuffer(sampleBuffer: sampleBuffer) else { return }
-    
     writeCGImage(image: uiImage, to: "/tmp/test.png")
     
     CVPixelBufferLockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0));
     let int32Buffer = unsafeBitCast(CVPixelBufferGetBaseAddress(pixelBuffer), to: UnsafeMutablePointer<UInt32>.self)
     let int32PerRow = CVPixelBufferGetBytesPerRow(pixelBuffer)
-    let bufferHeight: Int = CVPixelBufferGetHeight(pixelBuffer)
-    let bufferWidth: Int = CVPixelBufferGetWidth(pixelBuffer)
-//
-//    print("\(int32PerRow) x \(bufferHeight / 2) x \(bufferWidth / 2)")
+//    let bufferHeight: Int = CVPixelBufferGetHeight(pixelBuffer)
+//    let bufferWidth: Int = CVPixelBufferGetWidth(pixelBuffer)
+    print("int32PerRow \(int32PerRow)")
 //
 //    let bufferSize = Int(bufferHeight * bufferWidth / 2)
-//
 //    let pixels = Array(UnsafeBufferPointer(start: int32Buffer, count: bufferSize))
 //    print("\(pixels.count)")
 //
@@ -149,11 +149,26 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
 //      let r = pixels[x]
 //    }
     
-    for y in 0..<Int(self.cropRect.height) {
-      for x in 0..<Int(self.cropRect.width) {
-//        print("looking at pixel \(x) x \(y)")
-//        let luma = int32Buffer[17 * int32PerRow + 43]
-////        print("\(x * y)")
+    var curFrame: Array<UInt32> = []
+    let hasLastFrame = self.lastFrame.count > 0
+    let height = Int(self.cropRect.height)
+    let width = Int(self.cropRect.width)
+    print("hasLastFrame \(hasLastFrame)")
+
+    // iterate row after
+    for y in 0..<height {
+      // iterate col first
+      for x in 0..<width {
+        let index = y * height + x
+        let luma = int32Buffer[x * int32PerRow + y]
+        if (hasLastFrame) {
+//          print("looking at pixel \(x) x \(y) = \(index)")
+          if (self.lastFrame[index] != luma) {
+            print("changed! \(self.lastFrame[index]) vs luma \(luma)")
+          }
+        }
+        curFrame.insert(luma, at: index)
+//        print("luma: \(x * y) \(luma)")
 ////        let r = pixels[x * y]
 ////        let r = int32Buffer[y * bufferWidth * 2 + 2 * x + 0]
 ////        let g = int32Buffer[y * bufferWidth * 4 + 4 * x + 1]
@@ -161,6 +176,8 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
 ////        let a = int32Buffer[y * bufferWidth * 4 + 4 * x + 3]
       }
     }
+    
+    self.lastFrame = curFrame
     
     // Get BGRA value for pixel (43, 17)
 //    for row in 0...20 {

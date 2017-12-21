@@ -2,8 +2,38 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as Helpers from '~/helpers'
+import * as r2 from '@mcro/r2'
 
 const HL_PAD = 5
+
+async function test() {
+  const response = await r2.post(`/screen/start`, {
+    json: {
+      options: {
+        fps: 30,
+        cropArea: {
+          x: 20,
+          y: 0,
+          width: 200,
+          height: 200,
+        },
+      },
+    },
+  }).json
+  console.log('screen recording?', response)
+
+  // start websocket
+  const ws = new WebSocket('ws://localhost:40510')
+  ws.onopen = function() {
+    console.log('websocket is connected ...')
+    ws.send('connected')
+  }
+  ws.onmessage = function(ev) {
+    console.log('got ws message', ev)
+  }
+}
+
+test()
 
 const getHoverProps = Helpers.hoverSettler({
   enterDelay: 400,

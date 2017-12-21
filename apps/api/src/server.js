@@ -12,6 +12,7 @@ import Crawler from '@mcro/crawler'
 import Screen from './screen'
 import debug from 'debug'
 import path from 'path'
+import ScreenState from './server/screenState'
 
 const { SERVER_PORT } = Constants
 
@@ -54,6 +55,7 @@ export default class Server {
     this.setupCredPass()
     this.setupPassportRoutes()
     this.setupProxy()
+    this.setupScreen()
   }
 
   start() {
@@ -85,6 +87,21 @@ export default class Server {
     const searchDist = path.join(searchIndex, '..', '..', 'build')
     log('setting up search', searchDist)
     this.app.use('/search', express.static(searchDist))
+  }
+
+  setupScreen() {
+    this.screen = new ScreenState()
+
+    // see ./server/screenState for options
+    this.app.post('/screen/start', (req, res) => {
+      const { options } = req.body
+      if (options) {
+        this.screen.start(options)
+        res.json({ started: true })
+      } else {
+        res.sendStatus(500)
+      }
+    })
   }
 
   setupCrawler() {

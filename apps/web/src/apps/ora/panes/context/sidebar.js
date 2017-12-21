@@ -33,9 +33,9 @@ export default class ContextSidebar {
 
   willMount() {
     this.watch(function watchSidebarContext() {
-      // prevent focusedApp from triggered changes
-      const { focusedApp, ...context } = this.oraStore.osContext || {}
-      idFn(focusedApp)
+      // prevent appName from triggered changes
+      const { appName, ...context } = this.oraStore.osContext || {}
+      idFn(appName)
       if (context && context.url && !isEqual(context, this.osContext)) {
         this.osContext = context
         this.handleChangeSettings({

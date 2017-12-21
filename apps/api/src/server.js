@@ -9,10 +9,8 @@ import OAuth from './server/oauth'
 import OAuthStrategies from './server/oauth.strategies'
 import Passport from 'passport'
 import Crawler from '@mcro/crawler'
-import Screen from './screen'
 import debug from 'debug'
 import path from 'path'
-import ScreenState from './server/screenState'
 
 const { SERVER_PORT } = Constants
 
@@ -50,7 +48,6 @@ export default class Server {
     // ROUTES
     this.app.use(bodyParser.json({ limit: '2048mb' }))
     this.app.use(bodyParser.urlencoded({ limit: '2048mb', extended: true }))
-    this.setupScreen()
     this.setupCrawler()
     this.setupSearch()
     this.setupCredPass()
@@ -87,33 +84,6 @@ export default class Server {
     const searchDist = path.join(searchIndex, '..', '..', 'build')
     log('setting up search', searchDist)
     this.app.use('/search', express.static(searchDist))
-  }
-
-  setupScreen() {
-    this.screen = new ScreenState()
-
-    // see ./server/screenState for options
-    this.app.post('/screen/start', async (req, res) => {
-      console.log('setupScreen')
-      const { options } = req.body
-      if (options) {
-        await this.screen.stop()
-        this.screen.start(options)
-        res.json({ started: true })
-      } else {
-        res.sendStatus(500)
-      }
-    })
-
-    this.app.post('/screen/stop', async (req, res) => {
-      try {
-        await this.screen.stop()
-        res.json({ stopped: true })
-      } catch (err) {
-        console.log(err.message)
-        res.sendStatus(500)
-      }
-    })
   }
 
   setupCrawler() {
@@ -169,21 +139,6 @@ export default class Server {
         log('No options sent')
         res.sendStatus(500)
       }
-    })
-
-    let screen = new Screen()
-    const parse = param => param.split(',').map(i => +i)
-
-    this.app.get('/screenstate', async ({ query }, res) => {
-      screen.start()
-      log(`/screenstate`, query)
-      if (query.offset || query.bounds) {
-        screen.setOptions({
-          offset: parse(query.offset),
-          bounds: parse(query.bounds),
-        })
-      }
-      res.json(screen.state())
     })
 
     this.app.get('/crawler/results', (req, res) => {

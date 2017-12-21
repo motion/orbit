@@ -16,7 +16,7 @@ export const contextToResult = context => ({
       ? `${context.selection} | ${context.title}`
       : context.title,
   ),
-  subtitle: `in ${context.focusedApp.replace('Google ', '')} · ${context.url}`,
+  subtitle: `in ${context.appName.replace('Google ', '')} · ${context.url}`,
   type: 'context',
   image: context.favicon,
   peek: false,

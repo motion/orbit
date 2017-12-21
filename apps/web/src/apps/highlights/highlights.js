@@ -74,55 +74,22 @@ function toEvent({ top, left, width, height }) {
       this.listenToElectronState()
       this.watchForHoverWord()
 
-      this.screen.start({
-        fps: 20,
-        cropArea: {
-          x: 20,
-          y: 0,
-          width: 200,
-          height: 200,
-        },
-      })
-      this.screen.onChange(() => {
-        console.log('hiding highlights due to change')
-        this.showHighlights = false
-      })
-
-      setTimeout(() => {
-        this.screen.stop()
-
-        setTimeout(() => {
-          this.screen.start({
-            fps: 10,
-            cropArea: {
-              x: 100,
-              y: 100,
-              width: 400,
-              height: 400,
-            },
-          })
-          this.screen.onChange(() => {
-            console.log('again???')
-            this.showHighlights = false
-          })
-        }, 5000)
-      }, 5000)
-
       this.watch(() => {
         if (this.highlights.length) {
-          this.screen.start({
-            fps: 30,
-            cropArea: {
-              x: 20,
-              y: 0,
-              width: 200,
-              height: 200,
-            },
-          })
-          this.screen.onChange(() => {
-            console.log('hiding highlights due to change')
-            this.showHighlights = false
-          })
+          console.log('highlights', this.highlights)
+          // this.screen.start({
+          //   fps: 30,
+          //   cropArea: {
+          //     x: 20,
+          //     y: 0,
+          //     width: 200,
+          //     height: 200,
+          //   },
+          // })
+          // this.screen.onChange(() => {
+          //   console.log('hiding highlights due to change')
+          //   this.showHighlights = false
+          // })
         }
       })
     }

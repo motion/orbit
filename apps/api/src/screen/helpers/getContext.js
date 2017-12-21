@@ -1,6 +1,7 @@
 import runAppleScript from './runAppleScript'
 import escapeAppleScriptString from 'escape-string-applescript'
 import getContextInjection from './getContextInjection'
+import getActiveWindow from './getActiveWindow'
 import { isEqual } from 'lodash'
 
 let lastContextError = null
@@ -8,7 +9,7 @@ let lastContextError = null
 export default async function getContext(currentContext) {
   let res
   try {
-    res = await getActiveWindowInfo()
+    res = await getActiveWindow()
   } catch (err) {
     if (err.message.indexOf(`Can't get window 1 of`)) {
       // super hacky but if it fails it usually gives an error like:
@@ -31,7 +32,7 @@ export default async function getContext(currentContext) {
     const { application, offset, bounds } = res
 
     let context = {
-      focusedApp: application,
+      appName: application,
       offset,
       bounds,
     }
@@ -55,38 +56,6 @@ export default async function getContext(currentContext) {
       return context
     }
   }
-}
-
-async function getActiveWindowInfo() {
-  const [application, title] = await runAppleScript(`
-  global frontApp, frontAppName, windowTitle
-  set windowTitle to ""
-  tell application "System Events"
-    set frontApp to first application process whose frontmost is true
-    set frontAppName to name of frontApp
-    tell process frontAppName
-      tell (1st window whose value of attribute "AXMain" is true)
-        set windowTitle to value of attribute "AXTitle"
-      end tell
-    end tell
-  end tell
-  return {frontAppName, windowTitle}
-  `)
-
-  const [offset, bounds] = await runAppleScript(`
-  tell application "System Events"
-	  set frontApp to first application process whose frontmost is true
-    tell frontApp
-      set pos to position of window 1
-      set sizeVal to size of window 1
-    end tell
-  end tell
-  return {pos, sizeVal}
-  `)
-
-  // application is like 'Google Chrome'
-  // title is like 'Welcome to my Webpage'
-  return { application, title, offset, bounds }
 }
 
 const CONTEXT_JS = `(${getContextInjection.toString()})()`

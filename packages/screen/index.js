@@ -128,7 +128,6 @@ class Aperture {
       return
     }
     this.recorder.kill()
-    console.log('killing...')
     await this.recorder
     console.log('killed...')
     delete this.recorder

@@ -8,9 +8,12 @@ enum ApertureError: Error {
 }
 
 final class Recorder: NSObject {
-  private let destination: URL
-  private let session: AVCaptureSession
-  private let output: AVCaptureVideoDataOutput
+  private var destination: URL
+  private var session: AVCaptureSession
+  private var output: AVCaptureVideoDataOutput
+  private var width: Int
+  private var height: Int
+  private let context = CIContext()
 
   var onStart: (() -> Void)?
   var onFinish: (() -> Void)?
@@ -19,42 +22,48 @@ final class Recorder: NSObject {
   var onResume: (() -> Void)?
 
   var isRecording: Bool {
-    return output.isRecording
+    return false
+//    return output.isRecording
   }
 
   var isPaused: Bool {
-    return output.isRecordingPaused
+    return false
+//    return output.isRecordingPaused
+  }
+  
+  func onCaptured(image: CGImage) {
+    print("captured")
   }
 
   /// TODO: When targeting macOS 10.13, make the `videoCodec` option the type `AVVideoCodecType`
   init(destination: URL, fps: Int, cropRect: CGRect?, showCursor: Bool, highlightClicks: Bool, displayId: CGDirectDisplayID = CGMainDisplayID(), audioDevice: AVCaptureDevice? = .default(for: .audio), videoCodec: String? = nil) throws {
     self.destination = destination
     session = AVCaptureSession()
+    
+    self.width = CGDisplayPixelsWide(displayId)
+    self.height = CGDisplayPixelsHigh(displayId)
 
     let input = AVCaptureScreenInput(displayID: displayId)
-
     input.minFrameDuration = CMTimeMake(1, Int32(fps))
-
     if let cropRect = cropRect {
       input.cropRect = cropRect
     }
-
     input.capturesCursor = showCursor
     input.capturesMouseClicks = highlightClicks
 
     output = AVCaptureVideoDataOutput()
-
-    // Needed because otherwise there is no audio on videos longer than 10 seconds
-    // http://stackoverflow.com/a/26769529/64949
-    // output.movieFragmentInterval = kCMTimeInvalid
+    output.alwaysDiscardsLateVideoFrames = true
+    
+    super.init()
+    
+    let queue = DispatchQueue(label: "com.shu223.videosamplequeue")
+    output.setSampleBufferDelegate(self, queue: queue)
 
     if let audioDevice = audioDevice {
       if !audioDevice.hasMediaType(.audio) {
         throw ApertureError.invalidAudioDevice
       }
-
       let audioInput = try AVCaptureDeviceInput(device: audioDevice)
-
       if session.canAddInput(audioInput) {
         session.addInput(audioInput)
       } else {
@@ -73,61 +82,48 @@ final class Recorder: NSObject {
     } else {
       throw ApertureError.couldNotAddOutput
     }
-
-    /// TODO: Default to HEVC when on 10.13 or newer and encoding is hardware supported.
-    /// Without hardware encoding I got 3 FPS full screen recording.
-    /// TODO: Find a way to detect hardware encoding support.
-    /// Hardware encoding is supported on 6th gen Intel processor or newer.
-    // if let videoCodec = videoCodec {
-    //   output.setOutputSettings([AVVideoCodecKey: videoCodec], for: output.connection(with: .video)!)
-    // }
-
-    super.init()
   }
 
   func start() {
     session.startRunning()
-    output.startRecording(to: destination, recordingDelegate: self)
   }
 
   func stop() {
-    output.stopRecording()
     session.stopRunning()
   }
 
   func pause() {
-    output.pauseRecording()
   }
 
   func resume() {
-    output.resumeRecording()
+  }
+  
+  private func imageFromSampleBuffer(sampleBuffer: CMSampleBuffer) -> CGImage? {
+    guard let imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return nil }
+    let ciImage = CIImage(cvPixelBuffer: imageBuffer)
+    guard let cgImage = context.createCGImage(ciImage, from: ciImage.extent) else { return nil }
+    return cgImage
   }
 }
 
-extension Recorder: AVCaptureFileOutputRecordingDelegate {
-  func fileOutput(_ captureOutput: AVCaptureFileOutput, didStartRecordingTo fileURL: URL, from connections: [AVCaptureConnection]) {
-    onStart?()
-  }
-
-  func fileOutput(_ captureOutput: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
-    let FINISHED_RECORDING_ERROR_CODE = -11806
-
-    if let error = error, error._code != FINISHED_RECORDING_ERROR_CODE {
-      onError?(error)
-    } else {
-      onFinish?()
+extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
+  public func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+    let pixelBuffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)!
+    
+    guard let uiImage = imageFromSampleBuffer(sampleBuffer: sampleBuffer) else { return }
+    DispatchQueue.main.async { [unowned self] in
+      self.onCaptured(image: uiImage)
     }
-  }
-
-  func fileOutput(_ output: AVCaptureFileOutput, didPauseRecordingTo fileURL: URL, from connections: [AVCaptureConnection]) {
-    onPause?()
-  }
-
-  func fileOutput(_ output: AVCaptureFileOutput, didResumeRecordingTo fileURL: URL, from connections: [AVCaptureConnection]) {
-    onResume?()
-  }
-
-  func fileOutputShouldProvideSampleAccurateRecordingStart(_ output: AVCaptureFileOutput) -> Bool {
-    return true
+    
+    CVPixelBufferLockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0));
+    let int32Buffer = unsafeBitCast(CVPixelBufferGetBaseAddress(pixelBuffer), to: UnsafeMutablePointer<UInt32>.self)
+    let int32PerRow = CVPixelBufferGetBytesPerRow(pixelBuffer)
+    
+    // Get BGRA value for pixel (43, 17)
+    let luma = int32Buffer[17 * int32PerRow + 43]
+    
+    print("luma is \(luma) in screen \(self.width) by \(self.height)")
+    
+    CVPixelBufferUnlockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0))
   }
 }

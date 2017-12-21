@@ -8,7 +8,7 @@
     "node": ">=8"
   },
   "scripts": {
-    "test": "xo && ava",
+    "test": "node --experimental-modules ./test",
     "build": "cd swift && xcodebuild archive -derivedDataPath $(mktemp -d) -scheme aperture",
     "prepublish": "npm run build"
   },

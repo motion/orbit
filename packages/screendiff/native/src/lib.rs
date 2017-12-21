@@ -51,24 +51,18 @@ fn screen(call: Call) -> JsResult<JsString> {
         *pixel = image::Rgb([p.r as u8, p.g as u8, p.b as u8]);
     }
 
+    // must always run because pixel sizes are weird
     let final_width = ((width as f32) * scale).round();
     let final_height = ((height as f32) * scale).round();
     println!("final_width, final_height {}, {}", final_width, final_height);
-
     imgbuf = image::imageops::resize(&imgbuf, final_width as u32, final_height as u32, image::FilterType::Lanczos3);
-    imgbuf = image::imageops::colorops::contrast(&imgbuf, contrast);
+
+    if contrast != 1.0 {
+        imgbuf = image::imageops::colorops::contrast(&imgbuf, contrast);
+    }
 
     let fout = &mut File::create(&destination).unwrap();
     image::ImageRgb8(imgbuf).save(fout, image::PNG).unwrap();
-
-    // for row in 0..height {
-    //     for col in 0..width {
-    //         let p = s.get_pixel(x, y);
-    //         img.set_pixel(col as u32, row as u32, Pixel{ r: p.r, g: p.g, b: p.b });
-    //     }
-    // }
-
-    // img.save(&destination).unwrap();
 
     // return saved path as string
     Ok(JsString::new(scope, &destination).unwrap())

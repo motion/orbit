@@ -14,4 +14,7 @@ neon-build = "0.1.22"
 
 [dependencies]
 neon = "0.1.22"
-x11-screenshot = "0.1.0"
+screenshot = "0.0.7"
+image = "0.18.0"
+dssim = "2.9.6"
+bmp = "0.3.0"

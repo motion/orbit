@@ -10,13 +10,7 @@ import { screen } from '@mcro/screendiff'
 //	Google Cloud API key
 const apiKey = 'AIzaSyDl_JoYndPs9gDWzbldcvx0th0E5d2iQu0'
 const nlp = new NLP(apiKey)
-
 const ocrPath = file => path.resolve(__dirname, '..', file)
-const clean = async () => {
-  return true
-  const cmd = `rm ${ocrPath('tmp')}/*`
-  await promisify(exec)(cmd)
-}
 
 const ocrFile = async file => {
   const tesseractHocr = ocrPath('tmp/tesseractOutput')

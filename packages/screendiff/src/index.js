@@ -15,6 +15,8 @@ export function screen(options: ScreenOptions) {
     destination = '/tmp/screen.png',
     bounds = [0, 0],
     offset = [0, 0],
+    scale = 1,
+    contrast = 0,
   } = options
-  return Native.screen(destination, ...bounds, ...offset)
+  return Native.screen(destination, ...bounds, ...offset, scale, contrast)
 }

@@ -3,8 +3,10 @@ import ocr from './index'
 async function test() {
   console.log(
     await ocr({
-      bounds: [500, 500],
-      offset: [100, 100],
+      bounds: [200, 200],
+      offset: [100, 700],
+      scale: 1,
+      contrast: 10,
     }),
   )
 }

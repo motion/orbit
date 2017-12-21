@@ -31,7 +31,7 @@ final class Recorder: NSObject {
 //    return output.isRecordingPaused
   }
   
-  func onCaptured(image: CGImage) {
+  func onFrame(image: CGImage) {
     print("captured")
   }
 
@@ -110,19 +110,22 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
   public func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
     let pixelBuffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)!
     
-    guard let uiImage = imageFromSampleBuffer(sampleBuffer: sampleBuffer) else { return }
-    DispatchQueue.main.async { [unowned self] in
-      self.onCaptured(image: uiImage)
-    }
+//    guard let uiImage = imageFromSampleBuffer(sampleBuffer: sampleBuffer) else { return }
+//    DispatchQueue.main.async { [unowned self] in
+//      self.onCaptured(image: uiImage)
+//    }
     
     CVPixelBufferLockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0));
     let int32Buffer = unsafeBitCast(CVPixelBufferGetBaseAddress(pixelBuffer), to: UnsafeMutablePointer<UInt32>.self)
     let int32PerRow = CVPixelBufferGetBytesPerRow(pixelBuffer)
     
     // Get BGRA value for pixel (43, 17)
-    let luma = int32Buffer[17 * int32PerRow + 43]
-    
-    print("luma is \(luma) in screen \(self.width) by \(self.height)")
+    for row in 0...self.height {
+      for col in 0...self.width {
+        let luma = int32Buffer[row * int32PerRow + col]
+        print("luma is \(luma) at \(col) by \(row)")
+      }
+    }
     
     CVPixelBufferUnlockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0))
   }

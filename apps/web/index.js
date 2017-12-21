@@ -3,6 +3,9 @@ const { desktopCapturer } = (window.require && window.require('electron')) || {}
 
 console.log(window.require('electron'))
 
+const width = 1280
+const height = 720
+
 if (desktopCapturer) {
   desktopCapturer.getSources(
     { types: ['window', 'screen'] },
@@ -11,6 +14,8 @@ if (desktopCapturer) {
       if (error) throw error
       for (let i = 0; i < sources.length; ++i) {
         if (sources[i].name === 'Entire screen') {
+          const video = document.querySelector('video')
+
           navigator.mediaDevices
             .getUserMedia({
               audio: false,
@@ -18,14 +23,18 @@ if (desktopCapturer) {
                 mandatory: {
                   chromeMediaSource: 'desktop',
                   chromeMediaSourceId: sources[i].id,
-                  minWidth: 1280,
-                  maxWidth: 1280,
-                  minHeight: 720,
-                  maxHeight: 720,
+                  minWidth: width,
+                  maxWidth: width,
+                  minHeight: height,
+                  maxHeight: height,
                 },
               },
             })
-            .then(stream => handleStream(stream))
+            .then(stream => {
+              handleStream(video, stream)
+
+              setInterval(() => screenshot(video), 500)
+            })
             .catch(e => handleError(e))
           return
         }
@@ -34,16 +43,34 @@ if (desktopCapturer) {
   )
 }
 
-function handleStream(stream) {
+function handleStream(video, stream) {
   console.log('hadnleing stream', stream)
-  const video = document.querySelector('video')
+  console.log(stream.getTracks())
+
   video.srcObject = stream
   video.onloadedmetadata = e => {
     console.log('play')
     video.play()
   }
 
-  console.log(stream.getTracks())
+  setTimeout(() => {
+    screenshot()
+  })
+}
+
+function screenshot(video) {
+  console.time('screen')
+  let data
+  const canvas = document.querySelector('canvas')
+  var context = canvas.getContext('2d')
+  if (width && height) {
+    canvas.width = width
+    canvas.height = height
+    context.drawImage(video, 0, 0, width, height)
+    data = canvas.toDataURL('image/png')
+  }
+  console.timeEnd('screen')
+  return data
 }
 
 function handleError(e) {

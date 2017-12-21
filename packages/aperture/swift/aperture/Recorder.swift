@@ -14,6 +14,7 @@ final class Recorder: NSObject {
   private var width: Int
   private var height: Int
   private let context = CIContext()
+  private var cropRect: CGRect
 
   var onStart: (() -> Void)?
   var onFinish: (() -> Void)?
@@ -39,15 +40,22 @@ final class Recorder: NSObject {
   init(destination: URL, fps: Int, cropRect: CGRect?, showCursor: Bool, highlightClicks: Bool, displayId: CGDirectDisplayID = CGMainDisplayID(), audioDevice: AVCaptureDevice? = .default(for: .audio), videoCodec: String? = nil) throws {
     self.destination = destination
     session = AVCaptureSession()
-    
+
     self.width = CGDisplayPixelsWide(displayId)
     self.height = CGDisplayPixelsHigh(displayId)
+    
+    if let cropRect = cropRect {
+      let y = CGFloat(self.height * 2 - Int(cropRect.height))
+      self.cropRect = CGRect(x: cropRect.minX * 2, y: y, width: cropRect.width, height: cropRect.height)
+    } else {
+      self.cropRect = CGRect(x: 0, y: 0, width: self.width, height: self.height)
+    }
 
     let input = AVCaptureScreenInput(displayID: displayId)
     input.minFrameDuration = CMTimeMake(1, Int32(fps))
-    if let cropRect = cropRect {
-      input.cropRect = cropRect
-    }
+//    if let cropRect = cropRect {
+//      input.cropRect = cropRect
+//    }
     input.capturesCursor = showCursor
     input.capturesMouseClicks = highlightClicks
 
@@ -100,33 +108,72 @@ final class Recorder: NSObject {
   
   private func imageFromSampleBuffer(sampleBuffer: CMSampleBuffer) -> CGImage? {
     guard let imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return nil }
-    let ciImage = CIImage(cvPixelBuffer: imageBuffer)
+    var ciImage = CIImage(cvPixelBuffer: imageBuffer)
+    ciImage = ciImage.cropped(to: self.cropRect)
     guard let cgImage = context.createCGImage(ciImage, from: ciImage.extent) else { return nil }
     return cgImage
   }
+  
+   func writeCGImage(image: CGImage, to destinationString: String) -> Bool {
+      let destinationURL = NSURL.fileURL(withPath: destinationString)
+      guard let destination = CGImageDestinationCreateWithURL(destinationURL as CFURL, kUTTypePNG, 1, nil) else { return false }
+      CGImageDestinationAddImage(destination, image, nil)
+      return CGImageDestinationFinalize(destination)
+   }
 }
 
 extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
   public func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+    let start = DispatchTime.now()
+    
     let pixelBuffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)!
     
-//    guard let uiImage = imageFromSampleBuffer(sampleBuffer: sampleBuffer) else { return }
-//    DispatchQueue.main.async { [unowned self] in
-//      self.onCaptured(image: uiImage)
-//    }
+    guard let uiImage = imageFromSampleBuffer(sampleBuffer: sampleBuffer) else { return }
+    
+    writeCGImage(image: uiImage, to: "/tmp/test.png")
     
     CVPixelBufferLockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0));
     let int32Buffer = unsafeBitCast(CVPixelBufferGetBaseAddress(pixelBuffer), to: UnsafeMutablePointer<UInt32>.self)
     let int32PerRow = CVPixelBufferGetBytesPerRow(pixelBuffer)
+    let bufferHeight: Int = CVPixelBufferGetHeight(pixelBuffer)
+    let bufferWidth: Int = CVPixelBufferGetWidth(pixelBuffer)
+//
+//    print("\(int32PerRow) x \(bufferHeight / 2) x \(bufferWidth / 2)")
+//
+//    let bufferSize = Int(bufferHeight * bufferWidth / 2)
+//
+//    let pixels = Array(UnsafeBufferPointer(start: int32Buffer, count: bufferSize))
+//    print("\(pixels.count)")
+//
+//    for x in 0..<pixels.count {
+//      let r = pixels[x]
+//    }
     
-    // Get BGRA value for pixel (43, 17)
-    for row in 0...self.height {
-      for col in 0...self.width {
-        let luma = int32Buffer[row * int32PerRow + col]
-        print("luma is \(luma) at \(col) by \(row)")
+    for y in 0..<Int(self.cropRect.height) {
+      for x in 0..<Int(self.cropRect.width) {
+//        print("looking at pixel \(x) x \(y)")
+//        let luma = int32Buffer[17 * int32PerRow + 43]
+////        print("\(x * y)")
+////        let r = pixels[x * y]
+////        let r = int32Buffer[y * bufferWidth * 2 + 2 * x + 0]
+////        let g = int32Buffer[y * bufferWidth * 4 + 4 * x + 1]
+////        let b = int32Buffer[y * bufferWidth * 4 + 4 * x + 2]
+////        let a = int32Buffer[y * bufferWidth * 4 + 4 * x + 3]
       }
     }
     
+    // Get BGRA value for pixel (43, 17)
+//    for row in 0...20 {
+//      for col in 0...20 {
+//        let luma = int32Buffer[row * int32PerRow + col]
+//      }
+//    }
+    
     CVPixelBufferUnlockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0))
+    
+    let end = DispatchTime.now()
+    let nanoTime = end.uptimeNanoseconds - start.uptimeNanoseconds
+    let timeInterval = Double(nanoTime) / 1_000_000
+    print("frame processing took \(timeInterval) ms")
   }
 }

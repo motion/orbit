@@ -33,7 +33,7 @@ class Aperture {
 
   startRecording(
     {
-      fps = 30,
+      fps = 60,
       cropArea = undefined,
       showCursor = true,
       highlightClicks = false,
@@ -101,37 +101,40 @@ class Aperture {
         recorderOpts.videoCodec = codecMap.get(videoCodec)
       }
 
-      this.recorder = execa(BIN, [JSON.stringify(recorderOpts)])
+      const args = JSON.stringify(recorderOpts)
+      console.log('args', args)
+      this.recorder = execa(BIN, [args])
 
-      const timeout = setTimeout(() => {
-        // `.stopRecording()` was called already
-        if (this.recorder === undefined) {
-          return
-        }
+      // const timeout = setTimeout(() => {
+      //   // `.stopRecording()` was called already
+      //   if (this.recorder === undefined) {
+      //     return
+      //   }
 
-        const err = new Error('Could not start recording within 5 seconds')
-        err.code = 'RECORDER_TIMEOUT'
-        this.recorder.kill()
-        delete this.recorder
-        reject(err)
-      }, 10000)
+      //   const err = new Error('Could not start recording within 5 seconds')
+      //   err.code = 'RECORDER_TIMEOUT'
+      //   this.recorder.kill()
+      //   delete this.recorder
+      //   reject(err)
+      // }, 10000)
 
       this.recorder.catch(err => {
-        clearTimeout(timeout)
-        delete this.recorder
-        reject(err)
+        // clearTimeout(timeout)
+        // delete this.recorder
+        console.log('errrr')
+        console.log(err)
       })
 
       this.recorder.stdout.setEncoding('utf8')
       this.recorder.stdout.on('data', data => {
         console.log('>>', data)
-        debuglog(data)
+        // debuglog(data)
 
-        if (data.trim() === 'R') {
-          // `R` is printed by Swift when the recording **actually** starts
-          clearTimeout(timeout)
-          resolve(this.tmpPath)
-        }
+        // if (data.trim() === 'R') {
+        //   // `R` is printed by Swift when the recording **actually** starts
+        //   // clearTimeout(timeout)
+        //   resolve(this.tmpPath)
+        // }
       })
     })
   }

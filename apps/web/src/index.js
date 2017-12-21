@@ -1,89 +1,46 @@
-const { desktopCapturer } = require('~/helpers/electron')
+// @flow
+import 'babel-polyfill'
+import 'isomorphic-fetch'
+import createElement from '@mcro/black/lib/createElement'
+// dont import * as React, we need to overwrite createElement
+import React from 'react'
+import ReactDOM from 'react-dom'
+import * as Constants from './constants'
+import debug from 'debug'
 
-desktopCapturer.getSources({ types: ['window', 'screen'] }, function(
-  error,
-  sources,
-) {
-  for (let source of sources) {
-    console.log('Name: ' + source.name)
+// $FlowIgnore
+React.createElement = createElement // any <tag /> can use $$style
+
+if (Constants.IS_PROD) {
+  require('./helpers/installProd')
+} else {
+  require('./helpers/installDevTools')
+}
+
+const DEBUG_FLAG = localStorage.getItem('debug') || 'app,sync,model'
+debug.enable(DEBUG_FLAG)
+
+function splash() {
+  const Splash = require('./views/splash').default
+  ReactDOM.render(<Splash />, document.querySelector('#app'))
+}
+
+export function start() {
+  // splash()
+  console.timeEnd('splash')
+  require('./app')
+}
+
+if (!window.started) {
+  window.started = true
+  start()
+}
+
+// accept hmr
+if (module && module.hot) {
+  const restart = () => {
+    require('./app').start(true)
   }
-})
-
-// let desktopSharing = false
-// let localStream
-
-// function addSource(source) {
-//   refresh()
-// }
-
-// function showSources() {
-
-// }
-
-// function toggle() {
-//   if (!desktopSharing) {
-//     var id = $('select')
-//       .val()
-//       .replace(/window|screen/g, function(match) {
-//         return match + ':'
-//       })
-//     onAccessApproved(id)
-//   } else {
-//     desktopSharing = false
-
-//     if (localStream) localStream.getTracks()[0].stop()
-//     localStream = null
-
-//     document.querySelector('button').innerHTML = 'Enable Capture'
-
-//     $('select').empty()
-//     showSources()
-//     refresh()
-//   }
-// }
-
-// function onAccessApproved(desktop_id) {
-//   if (!desktop_id) {
-//     console.log('Desktop Capture access rejected.')
-//     return
-//   }
-//   desktopSharing = true
-//   document.querySelector('button').innerHTML = 'Disable Capture'
-//   console.log('Desktop sharing started.. desktop_id:' + desktop_id)
-//   navigator.webkitGetUserMedia(
-//     {
-//       audio: false,
-//       video: {
-//         mandatory: {
-//           chromeMediaSource: 'desktop',
-//           chromeMediaSourceId: desktop_id,
-//           minWidth: 1280,
-//           maxWidth: 1280,
-//           minHeight: 720,
-//           maxHeight: 720,
-//         },
-//       },
-//     },
-//     gotStream,
-//     getUserMediaError,
-//   )
-
-//   function gotStream(stream) {
-//     localStream = stream
-//     document.querySelector('video').src = URL.createObjectURL(stream)
-//     stream.onended = function() {
-//       if (desktopSharing) {
-//         toggle()
-//       }
-//     }
-//   }
-
-//   function getUserMediaError(e) {
-//     console.log('getUserMediaError: ' + JSON.stringify(e, null, '---'))
-//   }
-// }
-
-// setTimeout(() => {
-//   showSources()
-//   refresh()
-// })
+  module.hot.accept(restart)
+  module.hot.accept('@mcro/models', restart)
+}

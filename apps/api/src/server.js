@@ -90,6 +90,7 @@ export default class Server {
   }
 
   setupScreen() {
+    console.log('setupScreen')
     this.screen = new ScreenState()
 
     // see ./server/screenState for options
@@ -106,6 +107,7 @@ export default class Server {
 
   setupCrawler() {
     this.app.post('/crawler/single', async (req, res) => {
+      console.log('got a post')
       const { options } = req.body
       if (options) {
         const crawler = new Crawler()

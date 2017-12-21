@@ -1,14 +1,10 @@
-'use strict'
 const os = require('os')
-const util = require('util')
 const path = require('path')
 const execa = require('execa')
 const tempy = require('tempy')
 const macosVersion = require('macos-version')
 const fileUrl = require('file-url')
 const electronUtil = require('electron-util/node')
-
-const debuglog = util.debuglog('aperture')
 
 // Workaround for https://github.com/electron/electron/issues/9459
 const BIN = path.join(electronUtil.fixPathForAsarUnpack(__dirname), 'aperture')
@@ -28,6 +24,7 @@ const supportsHevcHardwareEncoding = (() => {
 
 class Aperture {
   constructor() {
+    this.changedFrameCb = null
     macosVersion.assertGreaterThanOrEqualTo('10.12')
   }
 
@@ -102,42 +99,26 @@ class Aperture {
       }
 
       const args = JSON.stringify(recorderOpts)
-      console.log('args', args)
       this.recorder = execa(BIN, [args])
 
-      // const timeout = setTimeout(() => {
-      //   // `.stopRecording()` was called already
-      //   if (this.recorder === undefined) {
-      //     return
-      //   }
-
-      //   const err = new Error('Could not start recording within 5 seconds')
-      //   err.code = 'RECORDER_TIMEOUT'
-      //   this.recorder.kill()
-      //   delete this.recorder
-      //   reject(err)
-      // }, 10000)
-
       this.recorder.catch((err, ...rest) => {
-        // clearTimeout(timeout)
-        // delete this.recorder
         console.log('errrr', ...rest)
         console.log(err)
         console.log(err.stack)
       })
 
       this.recorder.stdout.setEncoding('utf8')
-      this.recorder.stdout.on('data', data => {
-        console.log('>>', data)
-        // debuglog(data)
-
-        // if (data.trim() === 'R') {
-        //   // `R` is printed by Swift when the recording **actually** starts
-        //   // clearTimeout(timeout)
-        //   resolve(this.tmpPath)
-        // }
+      this.recorder.stdout.on('data', () => {
+        if (this.changedFrameCb) {
+          this.changedFrameCb()
+        }
+        // console.log('>>', data)
       })
     })
+  }
+
+  onChangedFrame(cb) {
+    this.changedFrameCb = cb
   }
 
   async stopRecording() {

@@ -1,7 +1,9 @@
 import aperture from '.'
 
-console.log('before')
-aperture().startRecording({
+const video = aperture()
+
+video.startRecording({
+  fps: 30,
   cropArea: {
     x: 20,
     y: 0,
@@ -9,4 +11,7 @@ aperture().startRecording({
     height: 200,
   },
 })
-console.log('after')
+
+video.onChangedFrame(() => {
+  console.log('Changed!')
+})

@@ -188,15 +188,9 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
     // let hasChanged = curFrame != self.lastFrame
     
     if (hasChanged) {
-      print("40 pixels changed since last frame!")
-      print("40 pixels changed since last frame!")
-      print("40 pixels changed since last frame!")
-      print("40 pixels changed since last frame!")
-      print("40 pixels changed since last frame!")
-      print("40 pixels changed since last frame!")
-      print("40 pixels changed since last frame!")
+      print("changed!")
     }
-    
+
     self.lastFrame = curFrame
     
     // Get BGRA value for pixel (43, 17)
@@ -211,6 +205,6 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
     let end = DispatchTime.now()
     let nanoTime = end.uptimeNanoseconds - start.uptimeNanoseconds
     let timeInterval = Double(nanoTime) / 1_000_000
-    print("frame \(timeInterval) ms")
+//    print("frame \(timeInterval) ms")
   }
 }

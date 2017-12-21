@@ -30,7 +30,10 @@ export default async function getContext(currentContext) {
 
   if (res) {
     const { application, position, size } = res
-    const highlights = await getOcrContext({ position, size })
+    const highlights = await getOcrContext({
+      offset: position,
+      bounds: size,
+    })
 
     let context = {
       focusedApp: application,
@@ -104,7 +107,7 @@ async function getChromeContext() {
       end tell
     end tell
     return res
-  `)
+  `),
   )
 }
 
@@ -114,11 +117,11 @@ async function getSafariContext() {
     global res
     tell application "Safari"
       set res to do JavaScript "${escapeAppleScriptString(
-        CONTEXT_JS
+        CONTEXT_JS,
       )}" in front document
     end tell
     return res
-  `)
+  `),
   )
 }
 

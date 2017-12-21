@@ -3,18 +3,20 @@ import NLP from 'google-nlp'
 import cheerio from 'cheerio'
 import { sortBy } from 'lodash'
 import { exec } from 'child_process'
-import path from 'path'
+import Path from 'path'
 import promisify from 'sb-promisify'
 import { screen } from '@mcro/screendiff'
 
 //	Google Cloud API key
 const apiKey = 'AIzaSyDl_JoYndPs9gDWzbldcvx0th0E5d2iQu0'
 const nlp = new NLP(apiKey)
-const ocrPath = file => path.resolve(__dirname, '..', file)
+const ocrPath = (...path) => Path.resolve(__dirname, '..', ...path)
 
 const ocrFile = async file => {
   const tesseractHocr = ocrPath('tmp/tesseractOutput')
-  const tess = `TESSDATA_PREFIX=./tessdata OMP_THREAD_LIMIT=1 tesseract ${file} ${tesseractHocr} --oem 1 -l eng ${ocrPath(
+  const tess = `TESSDATA_PREFIX=${ocrPath(
+    'tessdata',
+  )} OMP_THREAD_LIMIT=1 tesseract ${file} ${tesseractHocr} --oem 1 -l eng ${ocrPath(
     'hocr',
   )}`
 
@@ -46,16 +48,21 @@ const ocrFile = async file => {
   const text = texts.map(_ => _.text).join(' ')
 
   const { entities } = await nlp.analyzeEntities(text)
+  if (!entities) {
+    return { text, boxes: [] }
+  }
   const formattedEntities = sortBy(
     entities.map(({ name, salience }) => ({ name, weight: salience })),
   )
 
   const boxes = formattedEntities.map(({ name, weight }) => {
     const fits = texts.filter(({ text }) => name.indexOf(text.trim()) > -1)
+    const box1 = fits.length > 0 ? fits[0].box : null
+    const box = box1 ? box1.map(x => x * 2) : null
     return {
       name,
       weight,
-      box: fits.length > 0 ? fits[0].box : null,
+      box,
     }
   })
 
@@ -64,8 +71,6 @@ const ocrFile = async file => {
 }
 
 type ScreenOptions = {
-  // output screenshot file path
-  destination: string,
   // width, height
   bounds: [number, number],
   // left, top
@@ -75,7 +80,7 @@ type ScreenOptions = {
 export default async function ocr(options: ScreenOptions) {
   console.time('screenshot')
   const outfile = await screen({
-    destination: 'tmp/screenshot-new.png',
+    destination: ocrPath('tmp', 'screenshot-new.png'),
     ...options,
   })
   console.timeEnd('screenshot')

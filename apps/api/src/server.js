@@ -142,13 +142,13 @@ export default class Server {
     })
 
     this.app.get('/ocr', async (req, res) => {
-      log(`running OCR`)
-      const { position, size } = req.query
-      if (!position || !position.length) return res.json({})
-
+      const { offset, bounds } = req.query
+      log(`running OCR`, req.query)
+      if (!offset || !offset.length) {
+        return res.json({})
+      }
       const parse = param => param.split(',').map(i => +i)
-
-      const val = await OCR({ position: parse(position), size: parse(size) })
+      const val = await OCR({ offset: parse(offset), bounds: parse(bounds) })
       res.json(val)
     })
 

@@ -10,13 +10,14 @@ type ScreenOptions = {
   offset: [number, number],
 }
 
+const getArguments = ({
+  destination = '/tmp/screen.png',
+  bounds = [0, 0],
+  offset = [0, 0],
+  scale = 1,
+  contrast = 0,
+}) => [destination, ...bounds, ...offset, scale, contrast]
+
 export function screen(options: ScreenOptions) {
-  const {
-    destination = '/tmp/screen.png',
-    bounds = [0, 0],
-    offset = [0, 0],
-    scale = 1,
-    contrast = 0,
-  } = options
-  return Native.screen(destination, ...bounds, ...offset, scale, contrast)
+  return Native.screen(...getArguments(options))
 }

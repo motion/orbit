@@ -34,9 +34,6 @@ process.on('unhandledRejection', function(error, p) {
   }
 })
 
-// bootstrap process
-process.title = 'orbit-api'
-
 const API = require('./api').default
 
 export async function run() {

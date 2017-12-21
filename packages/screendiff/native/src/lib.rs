@@ -25,20 +25,23 @@ fn screen(call: Call) -> JsResult<JsString> {
     let scale = call.arguments.require(scope, 5)?.check::<JsNumber>()?.value() as f32;
     let contrast = call.arguments.require(scope, 6)?.check::<JsNumber>()?.value() as f32;
 
-    println!("screen({}, {}, {}, {}, {}, {}, {})", destination, width, height, left, top, scale, contrast);
+    println!("screen(dest: {}, width: {}, height: {}, left: {}, top: {}, scale: {}, contrast: {})", destination, width, height, left, top, scale, contrast);
 
     let s = get_screenshot(0).unwrap();
     let pixel_width = s.pixel_width() / 2;
 
     if width == 0 {
-        width = s.width();
+        width = s.width() / pixel_width;
     }
     if height == 0 {
-        height = s.height();
+        height = s.height() / pixel_width;
     }
+
 
     let realw = width * pixel_width;
     let realh = height * pixel_width;
+
+    println!("realw, realh: {}, {}", realw, realh);
 
     // let mut img = Image::new(width as u32, height as u32);
     let mut imgbuf = image::ImageBuffer::new(realw as u32, realh as u32);

@@ -1,18 +1,25 @@
+#![feature(core_intrinsics, convert)]
+#![allow(unused_assignments, non_upper_case_globals, dead_code)]
+
 #[macro_use]
 extern crate neon;
 extern crate image;
 extern crate screenshot;
 extern crate bmp;
+extern crate libc;
+extern crate stopwatch;
 // extern crate dssim;
 
-use screenshot::get_screenshot;
-// use bmp::{Image, Pixel};
+mod screen;
+
+// use screenshot::get_screenshot;
+use bmp::{Image, Pixel};
 // use std::path::Path;
 // use dssim::*;
 use neon::vm::{Call, JsResult};
 use neon::js::JsString;
 use neon::js::JsNumber;
-use std::fs::File;
+// use std::fs::File;
 
 fn screen(call: Call) -> JsResult<JsString> {
     let scope = call.scope;
@@ -27,46 +34,58 @@ fn screen(call: Call) -> JsResult<JsString> {
 
     // println!("screen(dest: {}, width: {}, height: {}, left: {}, top: {}, scale: {}, contrast: {})", destination, width, height, left, top, scale, contrast);
 
-    let s = get_screenshot(0).unwrap();
-    let pixel_width = s.pixel_width() / 2;
+    let s = screen::get_screenshot(0).unwrap();
 
-    if width == 0 {
-        width = s.width() / pixel_width;
-    }
-    if height == 0 {
-        height = s.height() / pixel_width;
-    }
+    // let mut img = Image::new(s.width() as u32, s.height() as u32);
+	// for row in 0..s.height() {
+	// 	for col in 0..s.width() {
+	// 		let p = s.get_pixel(row, col);
+	// 		// WARNING rust-bmp params are (x, y)
+	// 		img.set_pixel(col as u32, row as u32, Pixel {r: p.r, g: p.g, b: p.b});
+	// 	}
+	// }
+	// img.save("/tmp/rust.bmp").unwrap();
 
 
-    let realw = width * pixel_width;
-    let realh = height * pixel_width;
+    // let pixel_width = s.pixel_width() / 2;
 
-    // println!("realw, realh: {}, {}", realw, realh);
+    // if width == 0 {
+    //     width = s.width() / pixel_width;
+    // }
+    // if height == 0 {
+    //     height = s.height() / pixel_width;
+    // }
 
-    // let mut img = Image::new(width as u32, height as u32);
-    let mut imgbuf = image::ImageBuffer::new(realw as u32, realh as u32);
 
-    for (x, y, pixel) in imgbuf.enumerate_pixels_mut() {
-        let x2 = x as usize + left * pixel_width;
-        let y2 = y as usize + top * pixel_width;
-        // y, x
-        let p = s.get_pixel(y2, x2);
-        *pixel = image::Rgb([p.r as u8, p.g as u8, p.b as u8]);
-    }
+    // let realw = width * pixel_width;
+    // let realh = height * pixel_width;
 
-    // must always run because pixel sizes are weird
-    let final_width = ((width as f32) * scale).round();
-    let final_height = ((height as f32) * scale).round();
+    // // println!("realw, realh: {}, {}", realw, realh);
 
-    // println!("final_width, final_height {}, {}", final_width, final_height);
-    imgbuf = image::imageops::resize(&imgbuf, final_width as u32, final_height as u32, image::FilterType::Lanczos3);
+    // // let mut img = Image::new(width as u32, height as u32);
+    // let mut imgbuf = image::ImageBuffer::new(realw as u32, realh as u32);
 
-    if contrast != 1.0 {
-        imgbuf = image::imageops::colorops::contrast(&imgbuf, contrast);
-    }
+    // for (x, y, pixel) in imgbuf.enumerate_pixels_mut() {
+    //     let x2 = x as usize + left * pixel_width;
+    //     let y2 = y as usize + top * pixel_width;
+    //     // y, x
+    //     let p = s.get_pixel(y2, x2);
+    //     *pixel = image::Rgb([p.r as u8, p.g as u8, p.b as u8]);
+    // }
 
-    let fout = &mut File::create(&destination).unwrap();
-    image::ImageRgb8(imgbuf).save(fout, image::PNG).unwrap();
+    // // must always run because pixel sizes are weird
+    // let final_width = ((width as f32) * scale).round();
+    // let final_height = ((height as f32) * scale).round();
+
+    // // println!("final_width, final_height {}, {}", final_width, final_height);
+    // imgbuf = image::imageops::resize(&imgbuf, final_width as u32, final_height as u32, image::FilterType::Lanczos3);
+
+    // if contrast != 1.0 {
+    //     imgbuf = image::imageops::colorops::contrast(&imgbuf, contrast);
+    // }
+
+    // let fout = &mut File::create(&destination).unwrap();
+    // image::ImageRgb8(imgbuf).save(fout, image::PNG).unwrap();
 
     // return saved path as string
     Ok(JsString::new(scope, &destination).unwrap())

@@ -1,7 +1,7 @@
 import { screen } from './index'
 
 const x = screen({
-  destination: '/tmp/screen2.png',
+  destination: '/tmp/osx.png',
   bounds: [840, 1028],
   offset: [840, 22],
 

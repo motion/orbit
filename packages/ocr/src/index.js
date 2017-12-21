@@ -79,10 +79,15 @@ type ScreenOptions = {
 
 export default async function ocr(options: ScreenOptions) {
   console.time('screenshot')
-  const outfile = await screen({
-    destination: ocrPath('tmp', 'screenshot-new.png'),
-    ...options,
-  })
+  const destination = ocrPath('tmp', 'screenshot-new.png')
+  if (options.alt) {
+    await screen(...options.offset, ...options.bounds, destination)
+  } else {
+    await screen({
+      destination,
+      ...options,
+    })
+  }
   console.timeEnd('screenshot')
-  return await ocrFile(ocrPath(outfile))
+  return await ocrFile(ocrPath(destination))
 }

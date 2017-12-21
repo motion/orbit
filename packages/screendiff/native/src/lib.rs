@@ -25,7 +25,7 @@ fn screen(call: Call) -> JsResult<JsString> {
     let scale = call.arguments.require(scope, 5)?.check::<JsNumber>()?.value() as f32;
     let contrast = call.arguments.require(scope, 6)?.check::<JsNumber>()?.value() as f32;
 
-    println!("screen(dest: {}, width: {}, height: {}, left: {}, top: {}, scale: {}, contrast: {})", destination, width, height, left, top, scale, contrast);
+    // println!("screen(dest: {}, width: {}, height: {}, left: {}, top: {}, scale: {}, contrast: {})", destination, width, height, left, top, scale, contrast);
 
     let s = get_screenshot(0).unwrap();
     let pixel_width = s.pixel_width() / 2;
@@ -41,7 +41,7 @@ fn screen(call: Call) -> JsResult<JsString> {
     let realw = width * pixel_width;
     let realh = height * pixel_width;
 
-    println!("realw, realh: {}, {}", realw, realh);
+    // println!("realw, realh: {}, {}", realw, realh);
 
     // let mut img = Image::new(width as u32, height as u32);
     let mut imgbuf = image::ImageBuffer::new(realw as u32, realh as u32);
@@ -57,7 +57,8 @@ fn screen(call: Call) -> JsResult<JsString> {
     // must always run because pixel sizes are weird
     let final_width = ((width as f32) * scale).round();
     let final_height = ((height as f32) * scale).round();
-    println!("final_width, final_height {}, {}", final_width, final_height);
+
+    // println!("final_width, final_height {}, {}", final_width, final_height);
     imgbuf = image::imageops::resize(&imgbuf, final_width as u32, final_height as u32, image::FilterType::Lanczos3);
 
     if contrast != 1.0 {

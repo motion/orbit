@@ -9,7 +9,7 @@ import OAuth from './server/oauth'
 import OAuthStrategies from './server/oauth.strategies'
 import Passport from 'passport'
 import Crawler from '@mcro/crawler'
-import OCR from '@mcro/ocr'
+import Screen from './screen'
 import debug from 'debug'
 import path from 'path'
 
@@ -141,15 +141,18 @@ export default class Server {
       }
     })
 
-    this.app.get('/ocr', async (req, res) => {
-      const { offset, bounds } = req.query
-      log(`running OCR`, req.query)
-      if (!offset || !offset.length) {
-        return res.json({})
+    let screen = new Screen()
+    const parse = param => param.split(',').map(i => +i)
+
+    this.app.get('/screenstate', async ({ query }, res) => {
+      log(`/screenstate`, query)
+      if (query.options) {
+        screen.setOptions({
+          offset: parse(query.options.offset),
+          bounds: parse(query.options.bounds),
+        })
       }
-      const parse = param => param.split(',').map(i => +i)
-      const val = await OCR({ offset: parse(offset), bounds: parse(bounds) })
-      res.json(val)
+      res.json(screen.state())
     })
 
     this.app.get('/crawler/results', (req, res) => {

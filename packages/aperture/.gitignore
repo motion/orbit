@@ -1,6 +1,0 @@
-node_modules
-*.xcodeproj/*
-!*.xcodeproj/project.pbxproj
-!*.xcworkspace/contents.xcworkspacedata
-/swift/build
-/aperture

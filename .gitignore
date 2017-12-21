@@ -22,7 +22,12 @@ apps/site/build
 apps/electron-build/app
 apps/crawler/build
 apps/search/build
-packages/aperture/swift/aperture.xcodeproj/project.xcworkspace
+
+*.xcodeproj/*
+!*.xcodeproj/project.pbxproj
+!*.xcworkspace/contents.xcworkspacedata
+packages/screen/swift/build
+packages/screen/aperture
 
 # keep these lib folders because these are babel plugins
 !packages/hmr/lib

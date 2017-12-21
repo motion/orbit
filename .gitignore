@@ -22,6 +22,7 @@ apps/site/build
 apps/electron-build/app
 apps/crawler/build
 apps/search/build
+packages/aperture/swift/aperture.xcodeproj/project.xcworkspace
 
 # keep these lib folders because these are babel plugins
 !packages/hmr/lib

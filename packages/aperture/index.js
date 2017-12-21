@@ -33,7 +33,7 @@ class Aperture {
 
   startRecording(
     {
-      fps = 120,
+      fps = 25,
       cropArea = undefined,
       showCursor = true,
       highlightClicks = false,

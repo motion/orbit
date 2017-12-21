@@ -131,8 +131,8 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
     
     let pixelBuffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)!
     
-    guard let uiImage = imageFromSampleBuffer(sampleBuffer: sampleBuffer) else { return }
-    writeCGImage(image: uiImage, to: "/tmp/test.png")
+//    guard let uiImage = imageFromSampleBuffer(sampleBuffer: sampleBuffer) else { return }
+//    writeCGImage(image: uiImage, to: "/tmp/test.png")
     
     CVPixelBufferLockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0));
     let int32Buffer = unsafeBitCast(CVPixelBufferGetBaseAddress(pixelBuffer), to: UnsafeMutablePointer<UInt32>.self)
@@ -148,21 +148,30 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
     var curFrame: Array<UInt32> = []
     let height = Int(self.cropRect.height)
     let width = Int(self.cropRect.width)
-    let hasLastFrame = self.lastFrame.count == width * height
     var numChanged = 0
     var shouldFinish = false
+    
+    // sensitivity = how many pixels need to change before it triggers
+    //    you want this lower because allows loop to break sooner
+    let sensitivity = 1
+    // sampleSpacing = dithering basically, how many pixels to skip before checking the next
+    //    you want this higher, because it makes the loops shorter
+    let sampleSpacing = 10
+    let smallH = height/sampleSpacing
+    let smallW = width/sampleSpacing
+    let hasLastFrame = self.lastFrame.count == smallW * smallH
 
-    // iterate row after
-    for y in 0..<height {
+    for y in 0..<smallH {
       // iterate col first
-      for x in 0..<width {
-        let index = y * height + x
-        let luma = int32Buffer[x * int32PerRow + y]
+      for x in 0..<smallW {
+        let realY = y * sampleSpacing
+        let realX = x * sampleSpacing
+        let index = y * smallH + x
+        let luma = int32Buffer[realX * int32PerRow + realY]
         if (hasLastFrame) {
-//          print("looking at pixel \(x) x \(y) = \(index)")
           if (self.lastFrame[index] != luma) {
             numChanged = numChanged + 1
-            if (numChanged > 40) {
+            if (numChanged > sensitivity) {
               shouldFinish = true
               break
             }
@@ -175,7 +184,10 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
       }
     }
     
-    if (shouldFinish) {
+    let hasChanged = shouldFinish
+    // let hasChanged = curFrame != self.lastFrame
+    
+    if (hasChanged) {
       print("40 pixels changed since last frame!")
       print("40 pixels changed since last frame!")
       print("40 pixels changed since last frame!")

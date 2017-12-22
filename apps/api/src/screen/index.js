@@ -72,7 +72,11 @@ export default class ScreenState {
     await this.video.stopRecording()
     this.video.startRecording(settings)
     this.video.onChangedFrame(() => {
-      this.sendChange(`changed`)
+      if (this.sendChange) {
+        this.sendChange(`changed`)
+      } else {
+        console.log('No connected app to send change to')
+      }
     })
   }
 

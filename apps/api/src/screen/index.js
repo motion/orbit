@@ -1,5 +1,5 @@
 import { Server } from 'ws'
-import screen from '@mcro/screen'
+import Screen from '@mcro/screen'
 import ocr from '@mcro/ocr'
 import getContext from './helpers/getContext'
 import { isEqual } from 'lodash'
@@ -12,7 +12,7 @@ export default class ScreenState {
   currentApp = {}
 
   constructor() {
-    this.video = screen()
+    this.video = new Screen()
     this.wss = new Server({ port: 40510 })
 
     this.actions = {

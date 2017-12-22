@@ -1,5 +1,6 @@
 // @flow
 import Native from '../native'
+import { exec } from 'node-exec-promise'
 
 type ScreenOptions = {
   // output screenshot file path
@@ -20,6 +21,16 @@ const getArguments = ({
 
 export async function screen(options: ScreenOptions) {
   const args = getArguments(options)
+
+  console.log('args', args)
+
+  // screencapture -t tiff -m -r -x test.tiff
+  console.time('screencapture')
+  await exec(`screencapture -t tiff -m -r -x /tmp/osx.png`)
+  console.timeEnd('screencapture')
+
+  console.time('rust')
   const res = Native.screen(...args)
+  console.timeEnd('rust')
   return res
 }

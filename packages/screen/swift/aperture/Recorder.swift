@@ -13,6 +13,8 @@ final class Recorder: NSObject {
   private var output: AVCaptureVideoDataOutput
   private var width: Int
   private var height: Int
+  private var offsetY: Int
+  private var offsetX: Int
   private let context = CIContext()
   private var cropRect: CGRect
   
@@ -45,8 +47,12 @@ final class Recorder: NSObject {
     self.lastFrame = []
     self.width = CGDisplayPixelsWide(displayId)
     self.height = CGDisplayPixelsHigh(displayId)
+    self.offsetX = 0
+    self.offsetY = 0
     
     if let cropRect = cropRect {
+      self.offsetX = Int(cropRect.minX)
+      self.offsetY = Int(cropRect.minY)
       let y = CGFloat(self.height * 2 - Int(cropRect.minY))
       self.cropRect = CGRect(x: cropRect.minX * 2, y: y, width: cropRect.width * 2, height: CGFloat(-cropRect.height * 2))
       
@@ -120,6 +126,7 @@ final class Recorder: NSObject {
 extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
   public func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
     let start = DispatchTime.now()
+
     
     let pixelBuffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)!
     
@@ -142,7 +149,7 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
     var curFrame: Array<UInt32> = []
     let height = Int(self.cropRect.height) / 2
     let width = Int(self.cropRect.width) / 2
-//    print("w \(width) h \(height)")
+    print("w \(width) h \(height) y \(self.offsetY) x \(self.offsetX)")
     var numChanged = 0
     var shouldFinish = false
     
@@ -160,10 +167,10 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
     for y in 0..<smallH {
       // iterate col first
       for x in 0..<smallW {
-        let realY = y * sampleSpacing
-        let realX = x * sampleSpacing
+        let realY = y * sampleSpacing / 2 + self.offsetY / 2
+        let realX = x * sampleSpacing + self.offsetX / 2
         let index = y * smallW + x
-        let luma = int32Buffer[realX * int32PerRow + realY]
+        let luma = int32Buffer[realY * int32PerRow + realX]
         if (hasLastFrame) {
           if (self.lastFrame[index] != luma) {
             numChanged = numChanged + 1

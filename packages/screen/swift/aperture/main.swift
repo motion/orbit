@@ -26,7 +26,7 @@ func record() throws {
   let options = Options(
 //    destination: URL("file:///private/var/folders/ff/qct69sl552d4p03tl9zbd4040000gp/T/92b29618a2b9a3d396a5aee785ca7251.mp4"),
     fps: 10,
-    cropRect: CGRect(x: 0, y: 0, width: 100, height: 1000),
+    cropRect: CGRect(x: 100, y: 100, width: 500, height: 500),
     showCursor: true,
     displayId: "main",
     videoCodec: "mp4"

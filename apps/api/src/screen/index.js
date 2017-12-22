@@ -19,6 +19,8 @@ const OCR_TMP_DIR = Path.join(
   'screen.png',
 )
 
+let id = 0
+
 export default class ScreenState {
   stopped = false
   invalidateRunningOCR = false
@@ -29,6 +31,7 @@ export default class ScreenState {
   lastChangeTime = Date.now()
   video = new Screen()
   wss = new Server({ port: 40510 })
+  activeSockets = []
 
   state = {
     context: null,
@@ -38,19 +41,26 @@ export default class ScreenState {
 
   constructor() {
     this.wss.on('connection', socket => {
+      let uid = id++
+
       socket.on('message', str => {
         const { action, value } = JSON.parse(str)
-        console.log('received', action, value)
         if (this[action]) {
+          console.log('received action:', action)
           this[action].call(this, value)
         }
       })
 
-      socket.on('error', () => {
-        console.log('error')
+      socket.on('close', () => {
+        this.removeSocket(uid)
       })
 
-      this.socketSend = socket.send.bind(socket)
+      socket.on('error', (...args) => {
+        console.log('error', ...args)
+        this.removeSocket(uid)
+      })
+
+      this.activeSockets.push({ uid, socket })
     })
 
     this.wss.on('error', (...args) => {
@@ -58,14 +68,27 @@ export default class ScreenState {
     })
   }
 
-  start() {
+  socketSend = data => {
+    for (const { socket } of this.activeSockets) {
+      socket.send(data)
+    }
+  }
+
+  removeSocket = uid => {
+    this.activeSockets = this.activeSockets.filter(s => (s.uid = uid))
+  }
+
+  start = () => {
     this.stopped = false
     this.watchApplication(async context => {
       this.updateState({ context })
     })
   }
 
-  updateState(object) {
+  updateState = object => {
+    if (this.stopped) {
+      return
+    }
     const nextState = { ...this.state, ...object }
     if (isEqual(nextState, this.state)) {
       return
@@ -76,10 +99,14 @@ export default class ScreenState {
     if (!this.socketSend) {
       return
     }
-    this.socketSend(JSON.stringify(this.state))
+    try {
+      this.socketSend(JSON.stringify(this.state))
+    } catch (err) {
+      console.log('error sending over socket', err)
+    }
   }
 
-  async onChangedState(prevState) {
+  onChangedState = async prevState => {
     const hasNewContext = !isEqual(prevState.context, this.state.context)
     const hasNewOCR = !isEqual(prevState.ocr, this.state.ocr)
     // re-watch on different context or ocr
@@ -88,7 +115,7 @@ export default class ScreenState {
     }
   }
 
-  async watchApplication(cb) {
+  watchApplication = async cb => {
     const context = await getContext()
     await cb(context)
     if (this.stopped) {
@@ -97,7 +124,7 @@ export default class ScreenState {
     this.watchApplication(cb)
   }
 
-  async watchScreen() {
+  watchScreen = async () => {
     const { appName, offset, bounds } = this.state.context
     console.log('watchScreen', appName, { offset, bounds })
     if (!offset || !bounds) {
@@ -121,6 +148,9 @@ export default class ScreenState {
   }
 
   handleChangedFrame = () => {
+    if (this.stopped) {
+      return
+    }
     clearTimeout(this.ocrTimeout)
     const delay = this.results ? DEBOUNCE_OCR : 0
     // delays taking OCR for no movement
@@ -131,7 +161,8 @@ export default class ScreenState {
       return
     }
     if (this.runningOCR) {
-      this.invalidateRunningOCR = true
+      console.log('running ocr, should invalidate but lets not for now')
+      // this.invalidateRunningOCR = true
     }
     this.updateState({
       lastScreenChange: Date.now(),

@@ -2,7 +2,6 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as Helpers from '~/helpers'
-import ContextStore from '~/stores/contextStore'
 
 const HL_PAD = 5
 
@@ -109,9 +108,7 @@ class HighlightsStore {
   }
 }
 
-@view.provide({
-  contextStore: ContextStore,
-})
+@view.attach('contextStore')
 @view({
   store: HighlightsStore,
 })
@@ -146,7 +143,7 @@ export default class HighlightsPage {
       position: 'absolute',
       padding: HL_PAD,
       borderRadius: 10,
-      background: [200, 200, 200, 0.2],
+      background: [255, 10, 10, 0.5],
     },
     hlPosition: ({ top, left, width, height }) => ({
       top: top - HL_PAD,

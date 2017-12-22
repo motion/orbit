@@ -118,9 +118,9 @@ const OraContent = () => (
   </React.Fragment>
 )
 
+@view.attach('contextStore')
 @view.provide({
   oraStore: OraStore,
-  contextStore: ContextStore,
 })
 @view
 export default class OraPage {
@@ -148,9 +148,14 @@ export default class OraPage {
               height: oraStore.ui.height,
             }}
           >
-            <UI.Button onClick={() => this.props.contextStore.pause()}>
-              Pause OCR
-            </UI.Button>
+            <UI.Row>
+              <UI.Button onClick={() => this.props.contextStore.pause()}>
+                Pause OCR
+              </UI.Button>
+              <UI.Button onClick={() => this.props.contextStore.resume()}>
+                Resume OCR
+              </UI.Button>
+            </UI.Row>
             <OraContent />
             <UI.Glint bottom color="#fff" opacity={0.1} borderRadius={15} />
           </ora>

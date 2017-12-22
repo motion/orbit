@@ -107,7 +107,7 @@ final class Recorder: NSObject {
    func writeCGImage(image: CGImage, to destinationString: String) -> Bool {
       let destinationURL = NSURL.fileURL(withPath: destinationString)
       guard let destination = CGImageDestinationCreateWithURL(destinationURL as CFURL, kUTTypePNG, 1, nil) else { return false }
-      let resolution = 100
+      let resolution = 144
       let properties: NSDictionary = [
         kCGImageDestinationLossyCompressionQuality: 1,
         kCGImagePropertyDPIHeight: resolution,

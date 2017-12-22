@@ -1,3 +1,4 @@
+import Path from 'path'
 import { Server } from 'ws'
 import Screen from '@mcro/screen'
 import ocr from '@mcro/ocr'
@@ -6,10 +7,26 @@ import { isEqual } from 'lodash'
 
 const sleep = ms => new Promise(res => setTimeout(res, ms))
 
+const DEBOUNCE_OCR = 1000
+const OCR_TMP_DIR = Path.join(
+  __dirname,
+  '..',
+  '..',
+  'node_modules',
+  '@mcro',
+  'ocr',
+  'tmp',
+  'screen.png',
+)
+
+console.log('OCR_TMP_DIR', OCR_TMP_DIR)
+
 // send { action, value } to interact
 export default class ScreenState {
-  screenDestination = '/tmp/screen.png'
+  screenDestination = OCR_TMP_DIR
   currentApp = {}
+  lastChangeTime = Date.now()
+  results = null
 
   constructor() {
     this.video = new Screen()
@@ -34,16 +51,30 @@ export default class ScreenState {
     })
   }
 
-  handleChange = async () => {
-    const results = await this.ocr()
+  handleChange = () => {
+    clearTimeout(this.ocrTimeout)
 
-    console.log('got results', results)
+    const delay = this.results ? DEBOUNCE_OCR : 0
+    // delays taking OCR for no movement
+    this.ocrTimeout = setTimeout(this.runOCR, delay)
 
     if (this.sendChange) {
       this.sendChange(`changed`)
     } else {
       console.log('No connected app to send change to')
     }
+  }
+
+  runOCR = async () => {
+    if (this.runningOCR) {
+      setTimeout(this.runOCR, 500)
+    }
+    this.runningOCR = true
+    const results = await this.ocr()
+    this.runningOCR = false
+    this.results = results
+    console.log('got results', results)
+    this.sendChange({ results })
   }
 
   start() {
@@ -91,8 +122,8 @@ export default class ScreenState {
     }
     try {
       // TODO debug why tesseract doesnt like the dpi on our swift screens
-      // const res = await ocr({ inputFile: this.screenDestination })
-      const res = await ocr({ offset, bounds, takeScreenshot: true })
+      const res = await ocr({ inputFile: this.screenDestination })
+      // const res = await ocr({ offset, bounds, takeScreenshot: true })
       console.log('got', res)
       const { boxes } = res
       return boxes.map(({ name, weight, box }) => {

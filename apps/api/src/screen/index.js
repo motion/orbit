@@ -53,7 +53,6 @@ export default class ScreenState {
 
   handleChange = () => {
     clearTimeout(this.ocrTimeout)
-
     const delay = this.results ? DEBOUNCE_OCR : 0
     // delays taking OCR for no movement
     this.ocrTimeout = setTimeout(this.runOCR, delay)
@@ -61,7 +60,7 @@ export default class ScreenState {
     if (this.sendChange) {
       this.sendChange(`changed`)
     } else {
-      console.log('No connected app to send change to')
+      // console.log('No connected app to send change to')
     }
   }
 
@@ -71,6 +70,7 @@ export default class ScreenState {
     }
     this.runningOCR = true
     const results = await this.ocr()
+    console.log('results', results)
     this.runningOCR = false
     this.results = results
     console.log('got results', results)

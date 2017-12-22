@@ -29,6 +29,7 @@ const ocrFile = async file => {
 
   console.time('tesseract')
   const cmd = `${tess} && cat ${tesseractHocr}.hocr`
+  console.log('running', cmd)
   const stdout = await promisify(exec)(cmd)
   console.timeEnd('tesseract')
 

@@ -114,6 +114,7 @@ class Screen {
       // null if not recording
       return
     }
+    this.recorder.stdout.removeAllListeners()
     this.recorder.kill()
     await this.recorder
     // sleep to avoid issues

@@ -2,10 +2,6 @@
   "name": "@mcro/screen",
   "version": "4.0.0",
   "license": "MIT",
-  "repository": "wulkano/aperture",
-  "engines": {
-    "node": ">=8"
-  },
   "scripts": {
     "test": "node --experimental-modules ./test",
     "build": "cd swift && xcodebuild archive -derivedDataPath $(mktemp -d) -scheme aperture",
@@ -21,15 +17,5 @@
     "file-url": "^2.0.2",
     "macos-version": "^4.0.1",
     "tempy": "^0.2.1"
-  },
-  "devDependencies": {
-    "ava": "^0.23.0",
-    "delay": "^2.0.0",
-    "file-type": "^7.2.0",
-    "read-chunk": "^2.0.0",
-    "xo": "^0.18.2"
-  },
-  "xo": {
-    "space": true
   }
 }

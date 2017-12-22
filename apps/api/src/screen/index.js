@@ -200,8 +200,8 @@ export default class ScreenState {
       return
     }
     console.log('running ocr', this.state.context)
-    const { offset, bounds } = this.state.context
-    if (!offset || !bounds) {
+    const { offset } = this.state.context
+    if (!offset) {
       return
     }
     try {
@@ -209,12 +209,16 @@ export default class ScreenState {
       const res = await ocr({ inputFile: this.screenDestination })
       // const res = await ocr({ offset, bounds, takeScreenshot: true })
       const { boxes } = res
+      const [screenX, screenY] = offset
       return boxes.map(({ name, weight, box }) => {
-        const left = offset[0] + box[0]
+        // box => [x, y, width, height]
+        console.log('box', name, box)
+        const [x, y, wWidth, wHeight] = box
+        const left = screenX + x
         const topOffset = 24
-        const top = offset[1] + box[1] - topOffset
-        const width = offset[0] + box[2] - left
-        const height = offset[1] + box[3] - top - topOffset
+        const top = screenY + y - topOffset
+        const width = screenX + wWidth - left
+        const height = screenY + wHeight - top - topOffset
         return {
           word: name,
           weight,

@@ -104,30 +104,30 @@ final class Recorder: NSObject {
     return cgImage
   }
   
-   func writeCGImage(image: CGImage, to destinationString: String) -> Bool {
-      let destinationURL = NSURL.fileURL(withPath: destinationString)
-      guard let destination = CGImageDestinationCreateWithURL(destinationURL as CFURL, kUTTypePNG, 1, nil) else { return false }
+  func scaleImage(cgImage: CGImage, divide: Int) -> CGImage {
+    let width = cgImage.width / divide
+    let height = cgImage.height / divide
+    let bitsPerComponent = cgImage.bitsPerComponent
+    let bytesPerRow = cgImage.bytesPerRow
+    let colorSpace = cgImage.colorSpace
+    let bitmapInfo = cgImage.bitmapInfo
+    let context = CGContext(data: nil, width: width, height: height, bitsPerComponent: bitsPerComponent, bytesPerRow: bytesPerRow, space: colorSpace!, bitmapInfo: bitmapInfo.rawValue)
+    context?.draw(cgImage, in: CGRect(origin: CGPoint.zero, size: CGSize(width: CGFloat(width), height: CGFloat(height))))
+    return context!.makeImage()!
+  }
+  
+   func writeCGImage(image: CGImage, to destination: URL) -> Bool {
+      let cgImage = scaleImage(cgImage: image, divide: 2)
+      guard let destination = CGImageDestinationCreateWithURL(destination as CFURL, kUTTypePNG, 1, nil) else { return false }
       let resolution = 70
       let properties: NSDictionary = [
         kCGImageDestinationLossyCompressionQuality: 1,
         kCGImagePropertyDPIHeight: resolution,
         kCGImagePropertyDPIWidth: resolution
       ]
-      CGImageDestinationAddImage(destination, image, properties)
+      CGImageDestinationAddImage(destination, cgImage, properties)
       return CGImageDestinationFinalize(destination)
    }
-  
-    func writeCGImageToDestination(image: CGImage) -> Bool {
-      guard let destination = CGImageDestinationCreateWithURL(self.destination as CFURL, kUTTypePNG, 1, nil) else { return false }
-      let resolution = 70
-      let properties: NSDictionary = [
-        kCGImageDestinationLossyCompressionQuality: 1,
-        kCGImagePropertyDPIHeight: resolution,
-        kCGImagePropertyDPIWidth: resolution
-      ]
-      CGImageDestinationAddImage(destination, image, properties)
-      return CGImageDestinationFinalize(destination)
-    }
 }
 
 extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
@@ -156,12 +156,13 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
     let smallW = width/sampleSpacing
     let hasLastFrame = self.lastFrame.count == smallW * smallH
     var lastIndex = 0
-    
+
     // on first run write out an image to test
-    if (!hasLastFrame) {
-      guard let uiImage = imageFromSampleBuffer(sampleBuffer: sampleBuffer) else { return }
-      writeCGImage(image: uiImage, to: "/tmp/test.png")
-    }
+//    if (!hasLastFrame) {
+//      guard let uiImage = imageFromSampleBuffer(sampleBuffer: sampleBuffer) else { return }
+//      let destinationURL = URL.init(fileURLWithPath: "/tmp/test.png")
+//      writeCGImage(image: uiImage, to: destinationURL)
+//    }
 
     for y in 0..<smallH {
       // iterate col first
@@ -191,9 +192,10 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
     // let hasChanged = curFrame != self.lastFrame
     
     if (hasChanged) {
-      guard let uiImage = imageFromSampleBuffer(sampleBuffer: sampleBuffer) else { return }
-      writeCGImageToDestination(image: uiImage)
       print("changed!")
+      guard let uiImage = imageFromSampleBuffer(sampleBuffer: sampleBuffer) else { return }
+      if (self.writeCGImage(image: uiImage, to: self.destination)) {
+      }
     }
 
     self.lastFrame = curFrame

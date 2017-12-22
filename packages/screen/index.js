@@ -33,7 +33,6 @@ class Aperture {
       fps = 25,
       cropArea = undefined,
       showCursor = true,
-      highlightClicks = false,
       displayId = 'main',
       audioDeviceId = undefined,
       videoCodec = undefined,
@@ -46,10 +45,6 @@ class Aperture {
       }
 
       this.tmpPath = tempy.file({ extension: 'mp4' })
-
-      if (highlightClicks === true) {
-        showCursor = true
-      }
 
       if (typeof cropArea === 'object') {
         if (
@@ -67,7 +62,6 @@ class Aperture {
         destination: fileUrl(this.tmpPath),
         fps,
         showCursor,
-        highlightClicks,
         displayId,
         audioDeviceId,
       }

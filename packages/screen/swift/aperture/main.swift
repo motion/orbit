@@ -7,33 +7,36 @@ let arguments = CommandLine.arguments.dropFirst()
 func quit(_: Int32) {
   recorder.stop()
   exit(0)
-  // Do not call `exit()` here as the video is not always done
-  // saving at this point and will be corrupted randomly
 }
 
-struct Options: Decodable {
-  let destination: URL
+struct Options {
+//  let destination: URL
   let fps: Int
   let cropRect: CGRect?
   let showCursor: Bool
-  let highlightClicks: Bool
+//  let highlightClicks: Bool
   let displayId: String
-  let audioDeviceId: String?
+//  let audioDeviceId: String?
   let videoCodec: String?
 }
 
 func record() throws {
-  let json = arguments.first!.data(using: .utf8)!
-  let options = try JSONDecoder().decode(Options.self, from: json)
+//  let json = arguments.first!.data(using: .utf8)!
+//  let options = try JSONDecoder().decode(Options.self, from: json)
+  let options = Options(
+//    destination: URL("file:///private/var/folders/ff/qct69sl552d4p03tl9zbd4040000gp/T/92b29618a2b9a3d396a5aee785ca7251.mp4"),
+    fps: 10,
+    cropRect: CGRect(x: 0, y: 0, width: 100, height: 1000),
+    showCursor: true,
+    displayId: "main",
+    videoCodec: "mp4"
+  )
 
   recorder = try Recorder(
-    destination: options.destination,
     fps: options.fps,
     cropRect: options.cropRect,
     showCursor: options.showCursor,
-    highlightClicks: options.highlightClicks,
     displayId: options.displayId == "main" ? CGMainDisplayID() : CGDirectDisplayID(options.displayId)!,
-    audioDevice: options.audioDeviceId != nil ? AVCaptureDevice(uniqueID: options.audioDeviceId!) : nil,
     videoCodec: options.videoCodec
   )
 
@@ -82,5 +85,5 @@ if arguments.first != nil {
   exit(0)
 }
 
-usage()
-exit(1)
+try record()
+exit(0)

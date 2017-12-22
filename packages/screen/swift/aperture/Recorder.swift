@@ -8,7 +8,7 @@ enum ApertureError: Error {
 }
 
 final class Recorder: NSObject {
-  private var destination: URL
+//  private var destination: URL
   private var session: AVCaptureSession
   private var output: AVCaptureVideoDataOutput
   private var width: Int
@@ -38,9 +38,8 @@ final class Recorder: NSObject {
     print("captured")
   }
 
-  /// TODO: When targeting macOS 10.13, make the `videoCodec` option the type `AVVideoCodecType`
-  init(destination: URL, fps: Int, cropRect: CGRect?, showCursor: Bool, highlightClicks: Bool, displayId: CGDirectDisplayID = CGMainDisplayID(), audioDevice: AVCaptureDevice? = .default(for: .audio), videoCodec: String? = nil) throws {
-    self.destination = destination
+  init(fps: Int, cropRect: CGRect?, showCursor: Bool, displayId: CGDirectDisplayID = CGMainDisplayID(), videoCodec: String? = nil) throws {
+//    self.destination = destination
     session = AVCaptureSession()
 
     self.lastFrame = []
@@ -48,8 +47,11 @@ final class Recorder: NSObject {
     self.height = CGDisplayPixelsHigh(displayId)
     
     if let cropRect = cropRect {
-      let y = CGFloat(self.height * 2 - Int(cropRect.height))
-      self.cropRect = CGRect(x: cropRect.minX * 2, y: y, width: cropRect.width, height: cropRect.height)
+      let y = CGFloat(self.height * 2 - Int(cropRect.minY))
+      self.cropRect = CGRect(x: cropRect.minX * 2, y: y, width: cropRect.width * 2, height: CGFloat(-cropRect.height * 2))
+      
+//      let y = CGFloat(self.height * 2 - Int(cropRect.height))
+//      self.cropRect = CGRect(x: cropRect.minX * 2, y: y, width: cropRect.width, height: cropRect.height)
     } else {
       self.cropRect = CGRect(x: 0, y: 0, width: self.width, height: self.height)
     }
@@ -60,7 +62,6 @@ final class Recorder: NSObject {
 //      input.cropRect = cropRect
 //    }
     input.capturesCursor = showCursor
-    input.capturesMouseClicks = highlightClicks
 
     output = AVCaptureVideoDataOutput()
     output.alwaysDiscardsLateVideoFrames = true
@@ -69,18 +70,6 @@ final class Recorder: NSObject {
     
     let queue = DispatchQueue(label: "com.shu223.videosamplequeue")
     output.setSampleBufferDelegate(self, queue: queue)
-
-    if let audioDevice = audioDevice {
-      if !audioDevice.hasMediaType(.audio) {
-        throw ApertureError.invalidAudioDevice
-      }
-      let audioInput = try AVCaptureDeviceInput(device: audioDevice)
-      if session.canAddInput(audioInput) {
-        session.addInput(audioInput)
-      } else {
-        throw ApertureError.couldNotAddMic
-      }
-    }
 
     if session.canAddInput(input) {
       session.addInput(input)
@@ -112,6 +101,9 @@ final class Recorder: NSObject {
   private func imageFromSampleBuffer(sampleBuffer: CMSampleBuffer) -> CGImage? {
     guard let imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return nil }
     var ciImage = CIImage(cvPixelBuffer: imageBuffer)
+//    let angle =  90.0 * CGFloat(CGFloat.pi / 2)
+//    let tr = CGAffineTransform.identity.rotated(by: angle)
+//    ciImage.transformed(by: tr)
     ciImage = ciImage.cropped(to: self.cropRect)
     guard let cgImage = context.createCGImage(ciImage, from: ciImage.extent) else { return nil }
     return cgImage
@@ -131,12 +123,14 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
     
     let pixelBuffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)!
     
-//    guard let uiImage = imageFromSampleBuffer(sampleBuffer: sampleBuffer) else { return }
-//    writeCGImage(image: uiImage, to: "/tmp/test.png")
+    guard let uiImage = imageFromSampleBuffer(sampleBuffer: sampleBuffer) else { return }
+    writeCGImage(image: uiImage, to: "/tmp/test.png")
     
     CVPixelBufferLockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0));
-    let int32Buffer = unsafeBitCast(CVPixelBufferGetBaseAddress(pixelBuffer), to: UnsafeMutablePointer<UInt32>.self)
+    let baseAddress = CVPixelBufferGetBaseAddress(pixelBuffer)
+    let int32Buffer = unsafeBitCast(baseAddress, to: UnsafeMutablePointer<UInt32>.self)
     let int32PerRow = CVPixelBufferGetBytesPerRow(pixelBuffer)
+    
 //    let bufferHeight: Int = CVPixelBufferGetHeight(pixelBuffer)
 //    let bufferWidth: Int = CVPixelBufferGetWidth(pixelBuffer)
 //    let bufferSize = Int(bufferHeight * bufferWidth / 2)
@@ -146,8 +140,9 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
 //    }
     
     var curFrame: Array<UInt32> = []
-    let height = Int(self.cropRect.height)
-    let width = Int(self.cropRect.width)
+    let height = Int(self.cropRect.height) / 2
+    let width = Int(self.cropRect.width) / 2
+//    print("w \(width) h \(height)")
     var numChanged = 0
     var shouldFinish = false
     
@@ -160,13 +155,14 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
     let smallH = height/sampleSpacing
     let smallW = width/sampleSpacing
     let hasLastFrame = self.lastFrame.count == smallW * smallH
+    var lastIndex = 0
 
     for y in 0..<smallH {
       // iterate col first
       for x in 0..<smallW {
         let realY = y * sampleSpacing
         let realX = x * sampleSpacing
-        let index = y * smallH + x
+        let index = y * smallW + x
         let luma = int32Buffer[realX * int32PerRow + realY]
         if (hasLastFrame) {
           if (self.lastFrame[index] != luma) {
@@ -178,6 +174,7 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
           }
         }
         curFrame.insert(luma, at: index)
+        lastIndex = index
       }
       if (shouldFinish) {
         break
@@ -202,9 +199,9 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
     
     CVPixelBufferUnlockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0))
     
-    let end = DispatchTime.now()
-    let nanoTime = end.uptimeNanoseconds - start.uptimeNanoseconds
-    let timeInterval = Double(nanoTime) / 1_000_000
+//    let end = DispatchTime.now()
+//    let nanoTime = end.uptimeNanoseconds - start.uptimeNanoseconds
+//    let timeInterval = Double(nanoTime) / 1_000_000
 //    print("frame \(timeInterval) ms")
   }
 }

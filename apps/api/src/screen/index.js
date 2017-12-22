@@ -89,9 +89,11 @@ export default class ScreenState {
 
   async watchScreen() {
     const { offset, bounds } = this.state.context
+    console.log('watchScreen', { offset, bounds })
     const settings = {
       destination: this.screenDestination,
       fps: this.state.ocr ? 30 : 2,
+      showCursor: false,
       cropArea: {
         x: offset[0],
         y: offset[1],
@@ -99,18 +101,22 @@ export default class ScreenState {
         height: bounds[1],
       },
     }
-    console.log('running ocr with settings', settings)
     await this.video.stopRecording()
     await sleep(100)
     this.video.startRecording(settings)
-    this.video.onChangedFrame(this.handleChange)
+    this.video.onChangedFrame(this.handleChangedFrame)
   }
 
-  handleChange = () => {
+  handleChangedFrame = () => {
     clearTimeout(this.ocrTimeout)
     const delay = this.results ? DEBOUNCE_OCR : 0
     // delays taking OCR for no movement
     this.ocrTimeout = setTimeout(this.runOCR, delay)
+    if (this.hasNewOCR) {
+      this.hasNewOCR = false
+      console.log('just updated ocr, skip this frame diff')
+      return
+    }
     this.updateState({
       lastScreenChange: Date.now(),
     })
@@ -121,11 +127,12 @@ export default class ScreenState {
       this.shouldRunAgain = true
       return
     }
+    console.log('runOCR')
     this.runningOCR = true
     const ocr = await this.ocr()
-    console.log('ocr', ocr)
+    console.log('runOCR answer', ocr)
     this.runningOCR = false
-    console.log('got ocr', ocr)
+    this.hasNewOCR = true
     this.updateState({ ocr })
   }
 

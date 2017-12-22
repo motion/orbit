@@ -87,7 +87,6 @@ class Screen {
       recorderOpts.videoCodec = codecMap.get(videoCodec)
     }
 
-    console.log('recorderOpts', recorderOpts)
     const args = JSON.stringify(recorderOpts)
     this.recorder = execa(BIN, [args])
 

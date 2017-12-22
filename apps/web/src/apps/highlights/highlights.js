@@ -149,8 +149,8 @@ export default class HighlightsPage {
     hlPosition: ({ top, left, width, height }) => ({
       top: top - HL_PAD,
       left: left - HL_PAD,
-      width: width + HL_PAD * 2,
-      height: height + HL_PAD * 2,
+      width: width / 2 + HL_PAD * 2,
+      height: height / 2 + HL_PAD * 2,
     }),
     hovered: {
       background: [255, 255, 255, 0.3],

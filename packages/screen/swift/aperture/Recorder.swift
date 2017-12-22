@@ -51,7 +51,7 @@ final class Recorder: NSObject {
     if let cropRect = cropRect {
       self.offsetX = Int(cropRect.minX)
       self.offsetY = Int(cropRect.minY)
-      let y = CGFloat(self.height * 2 - Int(cropRect.minY))
+      let y = CGFloat(self.height * 2 - Int(cropRect.minY * 2))
       self.cropRect = CGRect(x: cropRect.minX * 2, y: y, width: cropRect.width * 2, height: CGFloat(-cropRect.height * 2))
     } else {
       self.cropRect = CGRect(x: 0, y: 0, width: self.width, height: self.height)

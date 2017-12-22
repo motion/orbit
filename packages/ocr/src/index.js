@@ -7,6 +7,13 @@ import Path from 'path'
 import promisify from 'sb-promisify'
 import { screen } from '@mcro/screendump'
 
+type OCROptions = {
+  inputFile?: 'string',
+  takeScreenshot?: boolean,
+  bounds?: [number, number], // width, height
+  offset?: [number, number], // left, top
+}
+
 //	Google Cloud API key
 const apiKey = 'AIzaSyDl_JoYndPs9gDWzbldcvx0th0E5d2iQu0'
 const nlp = new NLP(apiKey)
@@ -70,24 +77,22 @@ const ocrFile = async file => {
   return { text, boxes }
 }
 
-type ScreenOptions = {
-  // width, height
-  bounds: [number, number],
-  // left, top
-  offset: [number, number],
-}
-
-export default async function ocr(options: ScreenOptions) {
+async function takeScreenshot(options: OCROptions) {
   console.time('screenshot')
-  const destination = ocrPath('tmp', 'screenshot-new.png')
+  const destination = ocrPath('tmp', 'screenshot.png')
+  console.log('tmp screen to', destination)
   if (options.alt) {
     await screen(...options.offset, ...options.bounds, destination)
   } else {
-    await screen({
-      destination,
-      ...options,
-    })
+    await screen({ destination, ...options })
   }
   console.timeEnd('screenshot')
-  return await ocrFile(ocrPath(destination))
+  return destination
+}
+
+export default async function ocr(options: OCROptions) {
+  if (options.takeScreenshot) {
+    options.inputFile = await takeScreenshot(options)
+  }
+  return await ocrFile(options.inputFile)
 }

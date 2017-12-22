@@ -66,7 +66,8 @@ export default class ScreenState {
 
   runOCR = async () => {
     if (this.runningOCR) {
-      setTimeout(this.runOCR, 500)
+      this.shouldRunAgain = true
+      return
     }
     this.runningOCR = true
     const results = await this.ocr()
@@ -74,7 +75,9 @@ export default class ScreenState {
     this.runningOCR = false
     this.results = results
     console.log('got results', results)
-    this.sendChange({ results })
+    if (this.sendChange) {
+      this.sendChange({ results })
+    }
   }
 
   start() {

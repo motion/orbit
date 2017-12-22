@@ -2,38 +2,9 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as Helpers from '~/helpers'
-import * as r2 from '@mcro/r2'
+import ContextStore from '~/stores/context'
 
 const HL_PAD = 5
-
-class Screen {
-  ws = new WebSocket('ws://localhost:40510')
-
-  constructor() {
-    this.ws.onmessage = () => {
-      if (this.onChangeCb) {
-        this.onChangeCb()
-      }
-    }
-  }
-
-  onChange(fn) {
-    this.onChangeCb = fn
-  }
-
-  async start(options) {
-    console.log('starting screen watch', options)
-    await r2.post(`/screen/start`, {
-      json: {
-        options,
-      },
-    }).json
-  }
-
-  async stop() {
-    await r2.post(`/screen/stop`)
-  }
-}
 
 const getHoverProps = Helpers.hoverSettler({
   enterDelay: 400,
@@ -54,112 +25,118 @@ function toEvent({ top, left, width, height }) {
   }
 }
 
-@view({
-  store: class HighlightsStore {
-    electronState = {}
-    hoveredWord = null
-    hoverEvents = {}
-    screen = new Screen()
-    showHighlights = true
+class HighlightsStore {
+  electronState = {}
+  hoveredWord = null
+  hoverEvents = {}
+  screen = new Screen()
+  showHighlights = true
 
-    // [ { top, left, height, width }, ... ]
-    get highlights() {
-      return (
-        (this.electronState.context && this.electronState.context.highlights) ||
-        []
-      )
-    }
+  get context() {
+    return this.props.contextStore.context
+  }
 
-    willMount() {
-      this.listenToElectronState()
-      this.watchForHoverWord()
+  // [ { top, left, height, width }, ... ]
+  get highlights() {
+    return (this.context && this.context.highlights) || []
+  }
 
-      this.watch(() => {
-        if (this.highlights.length) {
-          console.log('highlights', this.highlights)
-          // this.screen.start({
-          //   fps: 30,
-          //   cropArea: {
-          //     x: 20,
-          //     y: 0,
-          //     width: 200,
-          //     height: 200,
-          //   },
-          // })
-          // this.screen.onChange(() => {
-          //   console.log('hiding highlights due to change')
-          //   this.showHighlights = false
-          // })
-        }
-      })
-    }
+  willMount() {
+    this.listenToElectronState()
+    this.watchForHoverWord()
 
-    listenToElectronState = () => {
-      this.electronBus = new BroadcastChannel('ora-electron-state')
-      this.electronBus.onmessage = ({ data }) => {
-        this.electronState = data
+    this.watch(() => {
+      if (this.highlights.length) {
+        console.log('highlights', this.highlights)
+        // this.screen.start({
+        //   fps: 30,
+        //   cropArea: {
+        //     x: 20,
+        //     y: 0,
+        //     width: 200,
+        //     height: 200,
+        //   },
+        // })
+        // this.screen.onChange(() => {
+        //   console.log('hiding highlights due to change')
+        //   this.showHighlights = false
+        // })
       }
-      this.subscriptions.add(() => this.electronBus.close())
-    }
+    })
+  }
 
-    watchForHoverWord = () => {
-      // update hoverEvents for use in hover logic
-      this.react(
-        () => this.highlights,
-        hls => {
-          const hoverEvents = {}
-          for (const { key } of hls) {
-            hoverEvents[key] = getHoverProps({ key, id: key })
-          }
-          this.hoverEvents = hoverEvents
-        },
-      )
-
-      this.react(
-        () => [
-          this.electronState.mousePosition || {},
-          // update when hover event handlers change
-          this.hoverEvents,
-        ],
-        ([{ x, y }, hoverEvents]) => {
-          const highlights = this.highlights
-          let hovered = null
-          for (const word of highlights) {
-            // outside of x
-            if (x < word.left || x > word.left + word.width) {
-              continue
-            }
-            // outside of y
-            if (y < word.top || y > word.top + word.height) {
-              continue
-            }
-            // we good tho
-            hovered = word
-            break
-          }
-          // before update, handle hover logic
-          // mouseLeave
-          if (!hovered && this.hoveredWord) {
-            if (hoverEvents[this.hoveredWord.key]) {
-              hoverEvents[this.hoveredWord.key].onMouseLeave()
-            }
-          } else if (hovered && !this.hoveredWord) {
-            // mouseEnter
-            if (hoverEvents[hovered.key]) {
-              hoverEvents[hovered.key].onMouseEnter(toEvent(hovered))
-            }
-          } else if (hovered) {
-            // mouseMove
-            if (hoverEvents[hovered.key]) {
-              hoverEvents[hovered.key].onMouseMove(toEvent(hovered))
-            }
-          }
-          // update state
-          this.hoveredWord = hovered
-        },
-      )
+  listenToElectronState = () => {
+    this.electronBus = new BroadcastChannel('ora-electron-state')
+    this.electronBus.onmessage = ({ data }) => {
+      this.electronState = data
     }
-  },
+    this.subscriptions.add(() => this.electronBus.close())
+  }
+
+  watchForHoverWord = () => {
+    // update hoverEvents for use in hover logic
+    this.react(
+      () => this.highlights,
+      hls => {
+        const hoverEvents = {}
+        for (const { key } of hls) {
+          hoverEvents[key] = getHoverProps({ key, id: key })
+        }
+        this.hoverEvents = hoverEvents
+      },
+    )
+
+    this.react(
+      () => [
+        this.electronState.mousePosition || {},
+        // update when hover event handlers change
+        this.hoverEvents,
+      ],
+      ([{ x, y }, hoverEvents]) => {
+        const highlights = this.highlights
+        let hovered = null
+        for (const word of highlights) {
+          // outside of x
+          if (x < word.left || x > word.left + word.width) {
+            continue
+          }
+          // outside of y
+          if (y < word.top || y > word.top + word.height) {
+            continue
+          }
+          // we good tho
+          hovered = word
+          break
+        }
+        // before update, handle hover logic
+        // mouseLeave
+        if (!hovered && this.hoveredWord) {
+          if (hoverEvents[this.hoveredWord.key]) {
+            hoverEvents[this.hoveredWord.key].onMouseLeave()
+          }
+        } else if (hovered && !this.hoveredWord) {
+          // mouseEnter
+          if (hoverEvents[hovered.key]) {
+            hoverEvents[hovered.key].onMouseEnter(toEvent(hovered))
+          }
+        } else if (hovered) {
+          // mouseMove
+          if (hoverEvents[hovered.key]) {
+            hoverEvents[hovered.key].onMouseMove(toEvent(hovered))
+          }
+        }
+        // update state
+        this.hoveredWord = hovered
+      },
+    )
+  }
+}
+
+@view.provide({
+  contextStore: ContextStore,
+})
+@view({
+  store: HighlightsStore,
 })
 export default class HighlightsPage {
   render({ store }) {

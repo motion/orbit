@@ -123,7 +123,9 @@ export default class HighlightsPage {
               key={hl.key}
               $hlPosition={hl}
               $hovered={hoveredWord && hl.key === hoveredWord.key}
-            />
+            >
+              <word>{hl.word}</word>
+            </highlight>
           ))}
         </highlights>
       </contain>
@@ -142,17 +144,24 @@ export default class HighlightsPage {
     highlight: {
       position: 'absolute',
       padding: HL_PAD,
-      borderRadius: 10,
-      background: [255, 10, 10, 0.5],
+      borderRadius: 8,
+      background: [255, 0, 0, 0.75],
     },
     hlPosition: ({ top, left, width, height }) => ({
-      top: top - HL_PAD,
-      left: left - HL_PAD,
+      top: top / 2 - HL_PAD + 50,
+      left: left - HL_PAD - 8,
       width: width / 2 + HL_PAD * 2,
-      height: height / 2 + HL_PAD * 2,
+      height: height / 4 + HL_PAD * 2,
     }),
     hovered: {
-      background: [255, 255, 255, 0.3],
+      background: [180, 180, 180, 0.3],
+    },
+    word: {
+      position: 'absolute',
+      top: 0,
+      left: HL_PAD,
+      wordWrap: 'no-wrap',
+      whiteSpace: 'pre',
     },
   }
 }

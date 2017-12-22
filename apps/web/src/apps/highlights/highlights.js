@@ -2,7 +2,7 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as Helpers from '~/helpers'
-import ContextStore from '~/stores/context'
+import ContextStore from '~/stores/contextStore'
 
 const HL_PAD = 5
 
@@ -29,48 +29,25 @@ class HighlightsStore {
   electronState = {}
   hoveredWord = null
   hoverEvents = {}
-  screen = new Screen()
   showHighlights = true
 
   get context() {
-    return this.props.contextStore.context
+    return this.props.contextStore
   }
 
   // [ { top, left, height, width }, ... ]
   get highlights() {
-    return (this.context && this.context.highlights) || []
+    return (this.context && this.context.ocr) || []
   }
 
   willMount() {
-    this.listenToElectronState()
     this.watchForHoverWord()
 
     this.watch(() => {
       if (this.highlights.length) {
         console.log('highlights', this.highlights)
-        // this.screen.start({
-        //   fps: 30,
-        //   cropArea: {
-        //     x: 20,
-        //     y: 0,
-        //     width: 200,
-        //     height: 200,
-        //   },
-        // })
-        // this.screen.onChange(() => {
-        //   console.log('hiding highlights due to change')
-        //   this.showHighlights = false
-        // })
       }
     })
-  }
-
-  listenToElectronState = () => {
-    this.electronBus = new BroadcastChannel('ora-electron-state')
-    this.electronBus.onmessage = ({ data }) => {
-      this.electronState = data
-    }
-    this.subscriptions.add(() => this.electronBus.close())
   }
 
   watchForHoverWord = () => {

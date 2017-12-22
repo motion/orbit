@@ -82,7 +82,6 @@ export default class Windows extends React.Component {
     if (process.env.CLEAR_DATA) {
       this.oraRef.webContents.session.clearStorageData()
     }
-    this.watchForContext()
     this.watchForMousePosition()
     this.listenToApps()
     // send initial state
@@ -151,17 +150,6 @@ export default class Windows extends React.Component {
     }, 150)
   }
 
-  watchForContext = () => {
-    const next = async () => {
-      const context = await Helpers.getContext(this.state.context)
-      if (context) {
-        this.updateState({ context })
-      }
-      this.setTimeout(next, 200)
-    }
-    next()
-  }
-
   handlePreferences = () => {
     this.updateState({ showSettings: true })
   }
@@ -220,7 +208,7 @@ export default class Windows extends React.Component {
         {/* HIGHLIGHTS: */}
         <HighlightsWindow />
         {/* APP: */}
-        <Window
+        {/* <Window
           {...appWindow}
           ref={this.handleOraRef}
           transparent
@@ -236,30 +224,32 @@ export default class Windows extends React.Component {
           onBlur={this.onOraBlur}
           onFocus={this.onOraFocus}
           devToolsExtensions={Helpers.getExtensions(['mobx', 'react'])}
-        />
+        /> */}
         {/* PEEK: */}
-        <PeekWindow
+        {/* <PeekWindow
           appPosition={this.state.oraPosition}
           onWindows={this.handlePeekWindows}
-        />
+        /> */}
         {/* SETTINGS PANE: */}
-        <Window
-          if={this.state.loadSettings}
-          {...appWindow}
-          show={this.state.showSettings}
-          showDevTools={this.state.showSettingsDevTools}
-          transparent
-          hasShadow
-          titleBarStyle="hiddenInset"
-          defaultSize={this.state.size}
-          size={this.state.size}
-          file={`${Constants.APP_URL}/settings`}
-          position={this.state.settingsPosition}
-          onResize={this.onSettingsSized}
-          onMoved={this.onSettingsMoved}
-          onMove={this.onSettingsMoved}
-          onClose={this.onSettingsClosed}
-        />
+        {false &&
+          this.state.loadSettings && (
+            <Window
+              {...appWindow}
+              show={this.state.showSettings}
+              showDevTools={this.state.showSettingsDevTools}
+              transparent
+              hasShadow
+              titleBarStyle="hiddenInset"
+              defaultSize={this.state.size}
+              size={this.state.size}
+              file={`${Constants.APP_URL}/settings`}
+              position={this.state.settingsPosition}
+              onResize={this.onSettingsSized}
+              onMoved={this.onSettingsMoved}
+              onMove={this.onSettingsMoved}
+              onClose={this.onSettingsClosed}
+            />
+          )}
       </React.Fragment>
     )
   }

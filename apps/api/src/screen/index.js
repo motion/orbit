@@ -20,15 +20,15 @@ const OCR_TMP_DIR = Path.join(
 )
 
 export default class ScreenState {
+  stopped = false
+  invalidateRunningOCR = false
+  hasNewOCR = false
+  runningOCR = false
   screenDestination = OCR_TMP_DIR
   currentApp = {}
   lastChangeTime = Date.now()
   video = new Screen()
   wss = new Server({ port: 40510 })
-  actions = {
-    start: this.start,
-    stop: this.stop,
-  }
 
   state = {
     context: null,
@@ -41,8 +41,8 @@ export default class ScreenState {
       socket.on('message', str => {
         const { action, value } = JSON.parse(str)
         console.log('received', action, value)
-        if (this.actions[action]) {
-          this.actions[action](value)
+        if (this[action]) {
+          this[action].call(this, value)
         }
       })
 
@@ -59,6 +59,7 @@ export default class ScreenState {
   }
 
   start() {
+    this.stopped = false
     this.watchApplication(async context => {
       this.updateState({ context })
     })
@@ -69,27 +70,40 @@ export default class ScreenState {
     if (isEqual(nextState, this.state)) {
       return
     }
+    const prevState = this.state
     this.state = nextState
+    this.onChangedState(prevState)
     if (!this.socketSend) {
       return
     }
-    this.onChangedState()
     this.socketSend(JSON.stringify(this.state))
   }
 
-  async onChangedState() {
-    await this.watchScreen()
+  async onChangedState(prevState) {
+    const hasNewContext = !isEqual(prevState.context, this.state.context)
+    const hasNewOCR = !isEqual(prevState.ocr, this.state.ocr)
+    // re-watch on different context or ocr
+    if (hasNewContext || hasNewOCR) {
+      await this.watchScreen()
+    }
   }
 
   async watchApplication(cb) {
     const context = await getContext()
     await cb(context)
+    if (this.stopped) {
+      return
+    }
     this.watchApplication(cb)
   }
 
   async watchScreen() {
-    const { offset, bounds } = this.state.context
-    console.log('watchScreen', { offset, bounds })
+    const { appName, offset, bounds } = this.state.context
+    console.log('watchScreen', appName, { offset, bounds })
+    if (!offset || !bounds) {
+      console.log('didnt get offset/bounds')
+      return
+    }
     const settings = {
       destination: this.screenDestination,
       fps: this.state.ocr ? 30 : 2,
@@ -102,7 +116,6 @@ export default class ScreenState {
       },
     }
     await this.video.stopRecording()
-    await sleep(100)
     this.video.startRecording(settings)
     this.video.onChangedFrame(this.handleChangedFrame)
   }
@@ -114,8 +127,11 @@ export default class ScreenState {
     this.ocrTimeout = setTimeout(this.runOCR, delay)
     if (this.hasNewOCR) {
       this.hasNewOCR = false
-      console.log('just updated ocr, skip this frame diff')
+      console.log('we just drew the ocr results, so ignore this frame diff')
       return
+    }
+    if (this.runningOCR) {
+      this.invalidateRunningOCR = true
     }
     this.updateState({
       lastScreenChange: Date.now(),
@@ -124,20 +140,28 @@ export default class ScreenState {
 
   runOCR = async () => {
     if (this.runningOCR) {
-      this.shouldRunAgain = true
+      console.log('already running ocr, todo: make this wait or something')
       return
     }
     console.log('runOCR')
     this.runningOCR = true
     const ocr = await this.ocr()
-    console.log('runOCR answer', ocr)
+    console.log('runOCR highlights length:', ocr && ocr.length)
     this.runningOCR = false
+    if (this.invalidateRunningOCR) {
+      console.log('app has changed since this ocr')
+      return
+    }
     this.hasNewOCR = true
     this.updateState({ ocr })
   }
 
-  stopDiff() {
-    this.video.stopRecording()
+  stop = () => {
+    console.log('RECEIVING STOP')
+    this.stopped = true
+    if (this.video) {
+      this.video.stopRecording()
+    }
   }
 
   async ocr() {
@@ -153,7 +177,6 @@ export default class ScreenState {
       // TODO debug why tesseract doesnt like the dpi on our swift screens
       const res = await ocr({ inputFile: this.screenDestination })
       // const res = await ocr({ offset, bounds, takeScreenshot: true })
-      console.log('got', res)
       const { boxes } = res
       return boxes.map(({ name, weight, box }) => {
         const left = offset[0] + box[0]

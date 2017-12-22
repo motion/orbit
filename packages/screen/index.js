@@ -7,6 +7,7 @@ const electronUtil = require('electron-util/node')
 
 // Workaround for https://github.com/electron/electron/issues/9459
 const BIN = path.join(electronUtil.fixPathForAsarUnpack(__dirname), 'aperture')
+const sleep = ms => new Promise(res => setTimeout(res, ms))
 
 const supportsHevcHardwareEncoding = (() => {
   if (!macosVersion.isGreaterThanOrEqualTo('10.13')) {
@@ -101,7 +102,6 @@ class Screen {
       if (this.changedFrameCb) {
         this.changedFrameCb()
       }
-      // console.log('>>', data)
     })
   }
 
@@ -116,7 +116,8 @@ class Screen {
     }
     this.recorder.kill()
     await this.recorder
-    console.log('killed...')
+    // sleep to avoid issues
+    await sleep(80)
     delete this.recorder
   }
 }

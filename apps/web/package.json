@@ -48,6 +48,7 @@
     "react-dom": "^16.2.0",
     "react-hotkeys": "^0.10.0",
     "react-measure": "2.0.2",
+    "reconnecting-websocket": "^3.2.2",
     "recordrtc": "^5.4.6",
     "redbox-react": "^1.5.0",
     "rtc-media": "^2.0.1",

@@ -749,6 +749,10 @@ react@^16.2.0:
     object-assign "^4.1.1"
     prop-types "^15.6.0"
 
+reconnecting-websocket@^3.2.2:
+  version "3.2.2"
+  resolved "https://registry.yarnpkg.com/reconnecting-websocket/-/reconnecting-websocket-3.2.2.tgz#8097514e926e9855e03c39e76efa2e3d1f371bee"
+
 recordrtc@^5.4.6:
   version "5.4.6"
   resolved "https://registry.yarnpkg.com/recordrtc/-/recordrtc-5.4.6.tgz#be1c570550708363b23fba530326854be0683210"

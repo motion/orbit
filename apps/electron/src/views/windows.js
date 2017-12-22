@@ -208,7 +208,7 @@ export default class Windows extends React.Component {
         {/* HIGHLIGHTS: */}
         <HighlightsWindow />
         {/* APP: */}
-        {/* <Window
+        <Window
           {...appWindow}
           ref={this.handleOraRef}
           transparent
@@ -224,7 +224,7 @@ export default class Windows extends React.Component {
           onBlur={this.onOraBlur}
           onFocus={this.onOraFocus}
           devToolsExtensions={Helpers.getExtensions(['mobx', 'react'])}
-        /> */}
+        />
         {/* PEEK: */}
         {/* <PeekWindow
           appPosition={this.state.oraPosition}

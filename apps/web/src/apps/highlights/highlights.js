@@ -119,15 +119,17 @@ export default class HighlightsPage {
   render({ store }) {
     const { highlights, hoveredWord } = store
     return (
-      <highlights if={store.showHighlights}>
-        {store.highlights.map(hl => (
-          <highlight
-            key={hl.key}
-            $hlPosition={hl}
-            $hovered={hoveredWord && hl.key === hoveredWord.key}
-          />
-        ))}
-      </highlights>
+      <contain $highlights>
+        <highlights if={store.showHighlights}>
+          {store.highlights.map(hl => (
+            <highlight
+              key={hl.key}
+              $hlPosition={hl}
+              $hovered={hoveredWord && hl.key === hoveredWord.key}
+            />
+          ))}
+        </highlights>
+      </contain>
     )
   }
 

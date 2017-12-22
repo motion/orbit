@@ -149,7 +149,7 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
     var curFrame: Array<UInt32> = []
     let height = Int(self.cropRect.height) / 2
     let width = Int(self.cropRect.width) / 2
-    print("w \(width) h \(height) y \(self.offsetY) x \(self.offsetX)")
+//    print("w \(width) h \(height) y \(self.offsetY) x \(self.offsetX)")
     var numChanged = 0
     var shouldFinish = false
     

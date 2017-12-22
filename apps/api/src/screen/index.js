@@ -41,6 +41,14 @@ export default class ScreenState {
     })
   }
 
+  handleChange = () => {
+    if (this.sendChange) {
+      this.sendChange(`changed`)
+    } else {
+      console.log('No connected app to send change to')
+    }
+  }
+
   start() {
     let currentApp = null
     this.watchApplication(async nextApp => {
@@ -48,7 +56,8 @@ export default class ScreenState {
         currentApp = nextApp
         const { appName, offset, bounds } = nextApp
         console.log('watching', appName)
-        await this.watchDiff({
+        await this.watchScreen({
+          destination: '/tmp/screen.png',
           fps: 10,
           cropArea: {
             x: offset[0],
@@ -67,17 +76,12 @@ export default class ScreenState {
     this.watchApplication(cb)
   }
 
-  async watchDiff(settings = DEFAULT_SETTINGS) {
+  async watchScreen(settings) {
     console.log('starting with settings', settings)
     await this.video.stopRecording()
+    await sleep(100)
     this.video.startRecording(settings)
-    this.video.onChangedFrame(() => {
-      if (this.sendChange) {
-        this.sendChange(`changed`)
-      } else {
-        console.log('No connected app to send change to')
-      }
-    })
+    this.video.onChangedFrame(this.handleChange)
   }
 
   stopDiff() {

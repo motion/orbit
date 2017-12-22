@@ -1,7 +1,6 @@
 const os = require('os')
 const path = require('path')
 const execa = require('execa')
-const tempy = require('tempy')
 const macosVersion = require('macos-version')
 const fileUrl = require('file-url')
 const electronUtil = require('electron-util/node')
@@ -30,6 +29,7 @@ class Aperture {
 
   startRecording(
     {
+      destination = undefined,
       fps = 25,
       cropArea = undefined,
       showCursor = true,
@@ -44,8 +44,6 @@ class Aperture {
         return
       }
 
-      this.tmpPath = tempy.file({ extension: 'mp4' })
-
       if (typeof cropArea === 'object') {
         if (
           typeof cropArea.x !== 'number' ||
@@ -58,8 +56,10 @@ class Aperture {
         }
       }
 
+      const finalDestination = fileUrl(destination)
+
       const recorderOpts = {
-        destination: fileUrl(this.tmpPath),
+        destination: finalDestination,
         fps,
         showCursor,
         displayId,

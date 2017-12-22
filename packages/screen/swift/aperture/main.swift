@@ -10,6 +10,7 @@ func quit(_: Int32) {
 }
 
 struct Options: Decodable {
+  let destination: URL
   let fps: Int
   let cropRect: CGRect?
   let showCursor: Bool
@@ -30,6 +31,7 @@ func record() throws {
 //  )
 
   recorder = try Recorder(
+    destination: options.destination,
     fps: options.fps,
     cropRect: options.cropRect,
     showCursor: options.showCursor,

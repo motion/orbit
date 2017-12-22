@@ -8,7 +8,7 @@ enum ApertureError: Error {
 }
 
 final class Recorder: NSObject {
-//  private var destination: URL
+  private var destination: URL
   private var session: AVCaptureSession
   private var output: AVCaptureVideoDataOutput
   private var width: Int
@@ -28,20 +28,18 @@ final class Recorder: NSObject {
 
   var isRecording: Bool {
     return false
-//    return output.isRecording
   }
 
   var isPaused: Bool {
     return false
-//    return output.isRecordingPaused
   }
   
   func onFrame(image: CGImage) {
     print("captured")
   }
 
-  init(fps: Int, cropRect: CGRect?, showCursor: Bool, displayId: CGDirectDisplayID = CGMainDisplayID(), videoCodec: String? = nil) throws {
-//    self.destination = destination
+  init(destination: URL, fps: Int, cropRect: CGRect?, showCursor: Bool, displayId: CGDirectDisplayID = CGMainDisplayID(), videoCodec: String? = nil) throws {
+    self.destination = destination
     session = AVCaptureSession()
 
     self.lastFrame = []
@@ -55,18 +53,12 @@ final class Recorder: NSObject {
       self.offsetY = Int(cropRect.minY)
       let y = CGFloat(self.height * 2 - Int(cropRect.minY))
       self.cropRect = CGRect(x: cropRect.minX * 2, y: y, width: cropRect.width * 2, height: CGFloat(-cropRect.height * 2))
-      
-//      let y = CGFloat(self.height * 2 - Int(cropRect.height))
-//      self.cropRect = CGRect(x: cropRect.minX * 2, y: y, width: cropRect.width, height: cropRect.height)
     } else {
       self.cropRect = CGRect(x: 0, y: 0, width: self.width, height: self.height)
     }
 
     let input = AVCaptureScreenInput(displayID: displayId)
     input.minFrameDuration = CMTimeMake(1, Int32(fps))
-//    if let cropRect = cropRect {
-//      input.cropRect = cropRect
-//    }
     input.capturesCursor = showCursor
 
     output = AVCaptureVideoDataOutput()
@@ -107,9 +99,6 @@ final class Recorder: NSObject {
   private func imageFromSampleBuffer(sampleBuffer: CMSampleBuffer) -> CGImage? {
     guard let imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return nil }
     var ciImage = CIImage(cvPixelBuffer: imageBuffer)
-//    let angle =  90.0 * CGFloat(CGFloat.pi / 2)
-//    let tr = CGAffineTransform.identity.rotated(by: angle)
-//    ciImage.transformed(by: tr)
     ciImage = ciImage.cropped(to: self.cropRect)
     guard let cgImage = context.createCGImage(ciImage, from: ciImage.extent) else { return nil }
     return cgImage
@@ -121,35 +110,27 @@ final class Recorder: NSObject {
       CGImageDestinationAddImage(destination, image, nil)
       return CGImageDestinationFinalize(destination)
    }
+  
+    func writeCGImageToDestination(image: CGImage) -> Bool {
+      guard let destination = CGImageDestinationCreateWithURL(self.destination as CFURL, kUTTypePNG, 1, nil) else { return false }
+      CGImageDestinationAddImage(destination, image, nil)
+      return CGImageDestinationFinalize(destination)
+    }
 }
 
 extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
   public func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
     let start = DispatchTime.now()
 
-    
     let pixelBuffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)!
-    
-    guard let uiImage = imageFromSampleBuffer(sampleBuffer: sampleBuffer) else { return }
-    writeCGImage(image: uiImage, to: "/tmp/test.png")
-    
     CVPixelBufferLockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0));
     let baseAddress = CVPixelBufferGetBaseAddress(pixelBuffer)
     let int32Buffer = unsafeBitCast(baseAddress, to: UnsafeMutablePointer<UInt32>.self)
     let int32PerRow = CVPixelBufferGetBytesPerRow(pixelBuffer)
-    
-//    let bufferHeight: Int = CVPixelBufferGetHeight(pixelBuffer)
-//    let bufferWidth: Int = CVPixelBufferGetWidth(pixelBuffer)
-//    let bufferSize = Int(bufferHeight * bufferWidth / 2)
-//    let pixels = Array(UnsafeBufferPointer(start: int32Buffer, count: bufferSize))
-//    for x in 0..<pixels.count {
-//      let r = pixels[x]
-//    }
-    
+
     var curFrame: Array<UInt32> = []
     let height = Int(self.cropRect.height) / 2
     let width = Int(self.cropRect.width) / 2
-//    print("w \(width) h \(height) y \(self.offsetY) x \(self.offsetX)")
     var numChanged = 0
     var shouldFinish = false
     
@@ -163,6 +144,12 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
     let smallW = width/sampleSpacing
     let hasLastFrame = self.lastFrame.count == smallW * smallH
     var lastIndex = 0
+    
+    // on first run write out an image to test
+    if (!hasLastFrame) {
+      guard let uiImage = imageFromSampleBuffer(sampleBuffer: sampleBuffer) else { return }
+      writeCGImage(image: uiImage, to: "/tmp/test.png")
+    }
 
     for y in 0..<smallH {
       // iterate col first
@@ -192,17 +179,12 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
     // let hasChanged = curFrame != self.lastFrame
     
     if (hasChanged) {
+      guard let uiImage = imageFromSampleBuffer(sampleBuffer: sampleBuffer) else { return }
+      writeCGImageToDestination(image: uiImage)
       print("changed!")
     }
 
     self.lastFrame = curFrame
-    
-    // Get BGRA value for pixel (43, 17)
-//    for row in 0...20 {
-//      for col in 0...20 {
-//        let luma = int32Buffer[row * int32PerRow + col]
-//      }
-//    }
     
     CVPixelBufferUnlockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0))
     

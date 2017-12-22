@@ -6,18 +6,10 @@ import { isEqual } from 'lodash'
 
 const sleep = ms => new Promise(res => setTimeout(res, ms))
 
-const DEFAULT_SETTINGS = {
-  fps: 30,
-  cropArea: {
-    x: 20,
-    y: 0,
-    width: 200,
-    height: 200,
-  },
-}
-
 // send { action, value } to interact
 export default class ScreenState {
+  screenDestination = '/tmp/screen.png'
+
   constructor() {
     this.video = screen()
     this.wss = new Server({ port: 40510 })
@@ -55,9 +47,9 @@ export default class ScreenState {
       if (!isEqual(currentApp, nextApp)) {
         currentApp = nextApp
         const { appName, offset, bounds } = nextApp
-        console.log('watching', appName)
+        console.log('i see', appName)
         await this.watchScreen({
-          destination: '/tmp/screen.png',
+          destination: this.screenDestination,
           fps: 10,
           cropArea: {
             x: offset[0],

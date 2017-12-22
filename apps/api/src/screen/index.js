@@ -157,20 +157,19 @@ export default class ScreenState {
   }
 
   handleChangedFrame = () => {
+    clearTimeout(this.ocrTimeout)
     if (this.stopped) {
       return
     }
-    clearTimeout(this.ocrTimeout)
+    if (Date.now() - this.hasNewOCR < 500) {
+      console.log('ocr happened recently so ignore frame diff')
+      return
+    }
     const delay = this.results ? DEBOUNCE_OCR : 0
     // delays taking OCR for no movement
     this.ocrTimeout = setTimeout(() => {
       this.runOCR()
     }, delay)
-    if (this.hasNewOCR) {
-      this.hasNewOCR = false
-      console.log('we just drew the ocr results, so ignore this frame diff')
-      return
-    }
     if (this.runningOCR) {
       console.log('running ocr, should invalidate but lets not for now')
       // this.invalidateRunningOCR = true
@@ -195,7 +194,7 @@ export default class ScreenState {
       console.log('app has changed since this ocr')
       return
     }
-    this.hasNewOCR = true
+    this.hasNewOCR = Date.now()
     this.updateState({ ocr, lastOCR: Date.now() })
   }
 

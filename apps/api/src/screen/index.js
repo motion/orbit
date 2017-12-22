@@ -36,6 +36,7 @@ export default class ScreenState {
   state = {
     context: null,
     ocr: null,
+    lastOCR: Date.now(),
     lastScreenChange: Date.now(),
   }
 
@@ -78,6 +79,10 @@ export default class ScreenState {
     this.activeSockets = this.activeSockets.filter(s => (s.uid = uid))
   }
 
+  get hasListeners() {
+    return this.activeSockets.length
+  }
+
   start = () => {
     this.stopped = false
     this.watchApplication(async context => {
@@ -86,6 +91,10 @@ export default class ScreenState {
   }
 
   updateState = object => {
+    if (!this.hasListeners) {
+      console.log('no listeners')
+      return
+    }
     if (this.stopped) {
       return
     }
@@ -108,9 +117,9 @@ export default class ScreenState {
 
   onChangedState = async prevState => {
     const hasNewContext = !isEqual(prevState.context, this.state.context)
-    const hasNewOCR = !isEqual(prevState.ocr, this.state.ocr)
-    // re-watch on different context or ocr
-    if (hasNewContext || hasNewOCR) {
+    // const hasNewOCR = !isEqual(prevState.ocr, this.state.ocr)
+    // re-watch on different context
+    if (hasNewContext) {
       await this.watchScreen()
     }
   }
@@ -166,6 +175,7 @@ export default class ScreenState {
       console.log('running ocr, should invalidate but lets not for now')
       // this.invalidateRunningOCR = true
     }
+    console.log('frame changed')
     this.updateState({
       lastScreenChange: Date.now(),
     })
@@ -186,7 +196,7 @@ export default class ScreenState {
       return
     }
     this.hasNewOCR = true
-    this.updateState({ ocr })
+    this.updateState({ ocr, lastOCR: Date.now() })
   }
 
   stop = () => {

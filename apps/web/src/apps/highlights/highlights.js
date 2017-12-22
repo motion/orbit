@@ -46,9 +46,19 @@ class HighlightsStore {
     this.react(
       () => this.context.lastScreenChange,
       () => {
-        if (this.context.ocr) {
+        if (this.context.lastScreenChange > this.context.lastOCR) {
+          console.log('diff, hide highlights')
           this.showHighlights = false
         }
+      },
+    )
+
+    // show highlights on new ocr
+    this.react(
+      () => this.context.lastOCR,
+      () => {
+        console.log('show highlights')
+        this.showHighlights = true
       },
     )
   }

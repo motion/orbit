@@ -19,6 +19,7 @@ export default class ContextStore {
   context = null
   ocr = null
   lastScreenChange = null
+  lastOCR = null
 
   pause() {
     ws.send(JSON.stringify({ action: 'stop' }))
@@ -44,9 +45,10 @@ export default class ContextStore {
     }
   }
 
-  setState = ({ context, ocr, lastScreenChange }) => {
+  setState = ({ context, ocr, lastScreenChange, lastOCR }) => {
     this.context = context
     this.ocr = ocr
     this.lastScreenChange = lastScreenChange
+    this.lastOCR = lastOCR
   }
 }

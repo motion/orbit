@@ -154,7 +154,9 @@ export default class ScreenState {
     clearTimeout(this.ocrTimeout)
     const delay = this.results ? DEBOUNCE_OCR : 0
     // delays taking OCR for no movement
-    this.ocrTimeout = setTimeout(this.runOCR, delay)
+    this.ocrTimeout = setTimeout(() => {
+      this.runOCR()
+    }, delay)
     if (this.hasNewOCR) {
       this.hasNewOCR = false
       console.log('we just drew the ocr results, so ignore this frame diff')

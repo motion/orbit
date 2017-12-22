@@ -42,11 +42,15 @@ class HighlightsStore {
   willMount() {
     this.watchForHoverWord()
 
-    this.watch(() => {
-      if (this.highlights.length) {
-        console.log('highlights', this.highlights)
-      }
-    })
+    // hide highlights on screen diff
+    this.react(
+      () => this.context.lastScreenChange,
+      () => {
+        if (this.context.ocr) {
+          this.showHighlights = false
+        }
+      },
+    )
   }
 
   watchForHoverWord = () => {

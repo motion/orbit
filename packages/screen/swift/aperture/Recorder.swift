@@ -11,6 +11,8 @@ final class Recorder: NSObject {
   private var destination: URL
   private var session: AVCaptureSession
   private var output: AVCaptureVideoDataOutput
+  private var sensitivity: Int
+  private var sampleSpacing: Int
   private var width: Int
   private var height: Int
   private var offsetY: Int
@@ -38,7 +40,7 @@ final class Recorder: NSObject {
     print("captured")
   }
 
-  init(destination: URL, fps: Int, cropRect: CGRect?, showCursor: Bool, displayId: CGDirectDisplayID = CGMainDisplayID(), videoCodec: String? = nil) throws {
+  init(destination: URL, fps: Int, cropRect: CGRect?, showCursor: Bool, displayId: CGDirectDisplayID = CGMainDisplayID(), videoCodec: String? = nil, sampleSpacing: Int, sensitivity: Int) throws {
     self.destination = destination
     session = AVCaptureSession()
 
@@ -47,6 +49,8 @@ final class Recorder: NSObject {
     self.height = CGDisplayPixelsHigh(displayId)
     self.offsetX = 0
     self.offsetY = 0
+    self.sampleSpacing = sampleSpacing
+    self.sensitivity = sensitivity
     
     if let cropRect = cropRect {
       self.offsetX = Int(cropRect.minX)
@@ -148,10 +152,10 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
     
     // sensitivity = how many pixels need to change before it triggers
     //    you want this lower because allows loop to break sooner
-    let sensitivity = 1
+    let sensitivity = self.sensitivity
     // sampleSpacing = dithering basically, how many pixels to skip before checking the next
     //    you want this higher, because it makes the loops shorter
-    let sampleSpacing = 10
+    let sampleSpacing = self.sampleSpacing
     let smallH = height/sampleSpacing
     let smallW = width/sampleSpacing
     let hasLastFrame = self.lastFrame.count == smallW * smallH

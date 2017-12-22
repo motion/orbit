@@ -35,6 +35,10 @@ class Screen {
       displayId = 'main',
       audioDeviceId = undefined,
       videoCodec = undefined,
+      // how far between pixels to check
+      sampleSpacing = 10,
+      // how many pixels to detect before triggering change
+      sensitivity = 2,
     } = {},
   ) {
     if (this.recorder !== undefined) {
@@ -60,6 +64,8 @@ class Screen {
       showCursor,
       displayId,
       audioDeviceId,
+      sampleSpacing,
+      sensitivity,
     }
 
     if (cropArea) {

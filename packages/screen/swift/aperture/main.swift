@@ -16,6 +16,8 @@ struct Options: Decodable {
   let showCursor: Bool
   let displayId: String
   let videoCodec: String?
+  let sampleSpacing: Int
+  let sensitivity: Int
 }
 
 func record() throws {
@@ -36,7 +38,9 @@ func record() throws {
     cropRect: options.cropRect,
     showCursor: options.showCursor,
     displayId: options.displayId == "main" ? CGMainDisplayID() : CGDirectDisplayID(options.displayId)!,
-    videoCodec: options.videoCodec
+    videoCodec: options.videoCodec,
+    sampleSpacing: options.sampleSpacing,
+    sensitivity: options.sensitivity
   )
 
   recorder.onStart = {

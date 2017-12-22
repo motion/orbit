@@ -91,10 +91,6 @@ export default class ScreenState {
   }
 
   updateState = object => {
-    if (!this.hasListeners) {
-      console.log('no listeners')
-      return
-    }
     if (this.stopped) {
       return
     }
@@ -116,6 +112,10 @@ export default class ScreenState {
   }
 
   onChangedState = async prevState => {
+    // no listeners, no need to watch
+    if (!this.hasListeners) {
+      return
+    }
     const hasNewContext = !isEqual(prevState.context, this.state.context)
     // const hasNewOCR = !isEqual(prevState.ocr, this.state.ocr)
     // re-watch on different context
@@ -143,6 +143,8 @@ export default class ScreenState {
     const settings = {
       destination: this.screenDestination,
       fps: this.state.ocr ? 30 : 2,
+      sampleSpacing: 10,
+      sensitivity: 2,
       showCursor: false,
       cropArea: {
         x: offset[0],
@@ -161,7 +163,7 @@ export default class ScreenState {
     if (this.stopped) {
       return
     }
-    if (Date.now() - this.hasNewOCR < 500) {
+    if (Date.now() - this.hasNewOCR < 1000) {
       console.log('ocr happened recently so ignore frame diff')
       return
     }

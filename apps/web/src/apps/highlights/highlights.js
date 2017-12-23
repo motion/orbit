@@ -40,6 +40,9 @@ class HighlightsStore {
   }
 
   willMount() {
+    // start context watching
+    this.props.contextStore.start()
+
     this.watchForHoverWord()
 
     // hide highlights on screen diff

@@ -70,8 +70,9 @@ export default class ScreenState {
   }
 
   socketSend = data => {
+    const strData = JSON.stringify(data)
     for (const { socket } of this.activeSockets) {
-      socket.send(data)
+      socket.send(strData)
     }
   }
 
@@ -101,11 +102,8 @@ export default class ScreenState {
     const prevState = this.state
     this.state = nextState
     this.onChangedState(prevState)
-    if (!this.socketSend) {
-      return
-    }
     try {
-      this.socketSend(JSON.stringify(this.state))
+      this.socketSend(this.state)
     } catch (err) {
       console.log('error sending over socket', err)
     }

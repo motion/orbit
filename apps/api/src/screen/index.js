@@ -19,19 +19,17 @@ const OCR_TMP_DIR = Path.join(
   'screen.png',
 )
 
-let id = 0
-
 export default class ScreenState {
   stopped = false
-  invalidateRunningOCR = false
+  invalidRunningOCR = Date.now()
   hasNewOCR = false
   runningOCR = false
   screenDestination = OCR_TMP_DIR
-  currentApp = {}
-  lastChangeTime = Date.now()
   video = new Screen()
   wss = new Server({ port: 40510 })
   activeSockets = []
+  id = 0
+  nextOCR = null
 
   state = {
     context: null,
@@ -42,8 +40,7 @@ export default class ScreenState {
 
   constructor() {
     this.wss.on('connection', socket => {
-      let uid = id++
-
+      let uid = this.id++
       socket.on('message', str => {
         const { action, value } = JSON.parse(str)
         if (this[action]) {
@@ -51,33 +48,18 @@ export default class ScreenState {
           this[action].call(this, value)
         }
       })
-
       socket.on('close', () => {
         this.removeSocket(uid)
       })
-
       socket.on('error', (...args) => {
         console.log('error', ...args)
         this.removeSocket(uid)
       })
-
       this.activeSockets.push({ uid, socket })
     })
-
     this.wss.on('error', (...args) => {
       console.log('wss error', args)
     })
-  }
-
-  socketSend = data => {
-    const strData = JSON.stringify(data)
-    for (const { socket } of this.activeSockets) {
-      socket.send(strData)
-    }
-  }
-
-  removeSocket = uid => {
-    this.activeSockets = this.activeSockets.filter(s => (s.uid = uid))
   }
 
   get hasListeners() {
@@ -87,8 +69,18 @@ export default class ScreenState {
   start = () => {
     this.stopped = false
     this.watchApplication(async context => {
-      this.updateState({ context })
+      if (!isEqual(this.state.context, context)) {
+        console.log('new context, invalidate ocr')
+        this.cancelCurrentOCR()
+        this.updateState({ context })
+      }
     })
+  }
+
+  cancelCurrentOCR = () => {
+    // cancel next OCR if we have a new context
+    clearTimeout(this.nextOCR)
+    this.invalidRunningOCR = Date.now()
   }
 
   updateState = object => {
@@ -153,11 +145,15 @@ export default class ScreenState {
     }
     await this.video.stopRecording()
     this.video.startRecording(settings)
+
+    // start a debounced ocr
+    this.handleChangedFrame()
+    // start watching for diffs too
     this.video.onChangedFrame(this.handleChangedFrame)
   }
 
-  handleChangedFrame = () => {
-    clearTimeout(this.ocrTimeout)
+  handleChangedFrame = async () => {
+    clearTimeout(this.nextOCR)
     if (this.stopped) {
       return
     }
@@ -165,16 +161,12 @@ export default class ScreenState {
       console.log('ocr happened recently so ignore frame diff')
       return
     }
-    const delay = this.results ? DEBOUNCE_OCR : 0
-    // delays taking OCR for no movement
-    this.ocrTimeout = setTimeout(() => {
-      this.runOCR()
-    }, delay)
+    // this cancels running ocr due to frame change before scheduling next
     if (this.runningOCR) {
-      console.log('running ocr, should invalidate but lets not for now')
-      // this.invalidateRunningOCR = true
+      this.cancelCurrentOCR()
     }
-    console.log('frame changed')
+    // delays taking OCR for no movement
+    this.nextOCR = setTimeout(this.runOCR, DEBOUNCE_OCR)
     this.updateState({
       lastScreenChange: Date.now(),
     })
@@ -186,12 +178,17 @@ export default class ScreenState {
       return
     }
     console.log('runOCR')
-    this.runningOCR = true
+    let resolveRunningOCR
+    this.runningOCR = new Promise(res => {
+      resolveRunningOCR = res
+    })
+    const dateStarted = Date.now()
     const ocr = await this.ocr()
     console.log('runOCR highlights length:', ocr && ocr.length)
-    this.runningOCR = false
-    if (this.invalidateRunningOCR) {
-      console.log('app has changed since this ocr')
+    resolveRunningOCR()
+    this.runningOCR = null
+    if (this.invalidRunningOCR > dateStarted) {
+      console.log('app has changed since this ocr, invalid')
       return
     }
     this.hasNewOCR = Date.now()
@@ -223,7 +220,7 @@ export default class ScreenState {
       const [screenX, screenY] = offset
       return boxes.map(({ name, weight, box }) => {
         // box => [x, y, width, height]
-        console.log('box', name, box)
+        // console.log('box', name, box)
         const [x, y, wWidth, wHeight] = box
         const left = screenX + x
         const topOffset = 24
@@ -242,6 +239,17 @@ export default class ScreenState {
     } catch (err) {
       console.log('error with ocr', err.message, err.stack)
     }
+  }
+
+  socketSend = data => {
+    const strData = JSON.stringify(data)
+    for (const { socket } of this.activeSockets) {
+      socket.send(strData)
+    }
+  }
+
+  removeSocket = uid => {
+    this.activeSockets = this.activeSockets.filter(s => (s.uid = uid))
   }
 
   dispose() {

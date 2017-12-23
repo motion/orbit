@@ -226,10 +226,10 @@ export default class Windows extends React.Component {
           devToolsExtensions={Helpers.getExtensions(['mobx', 'react'])}
         />
         {/* PEEK: */}
-        {/* <PeekWindow
+        <PeekWindow
           appPosition={this.state.oraPosition}
           onWindows={this.handlePeekWindows}
-        /> */}
+        />
         {/* SETTINGS PANE: */}
         {this.state.loadSettings && (
           <Window

@@ -31,6 +31,7 @@ function build-dev() {
     --ignore @mcro/web \
     --ignore @mcro/deliverx \
     --ignore @mcro/site \
+    --ignore @mcro/screen \
     --ignore @mcro/api \
     --ignore @mcro/builder \
     --ignore @mcro/hmr \
@@ -48,6 +49,7 @@ function build-es6() {
     --ignore @mcro/electron \
     --ignore @mcro/crawler \
     --ignore @mcro/ocr \
+    --ignore @mcro/screen \
     --ignore @mcro/search \
     --ignore @mcro/constants \
     --ignore @mcro/screendump \
@@ -73,6 +75,7 @@ function build-prod() {
     --ignore @mcro/crawler \
     --ignore @mcro/constants \
     --ignore @mcro/search \
+    --ignore @mcro/screen \
     --ignore @mcro/electron \
     --ignore @mcro/electron-build \
     --ignore @mcro/builder \

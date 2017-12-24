@@ -19,6 +19,7 @@ export default class ContextStore {
   ocr = null
   lastScreenChange = null
   lastOCR = null
+  mousePosition = null
 
   pause() {
     this.start()
@@ -51,10 +52,21 @@ export default class ContextStore {
     }
   }
 
-  setState = ({ context, ocr, lastScreenChange, lastOCR }) => {
-    this.context = context
-    this.ocr = ocr
-    this.lastScreenChange = lastScreenChange
-    this.lastOCR = lastOCR
+  setState = ({ mousePosition, context, ocr, lastScreenChange, lastOCR }) => {
+    if (mousePosition) {
+      this.mousePosition = mousePosition
+    }
+    if (context) {
+      this.context = context
+    }
+    if (ocr) {
+      this.ocr = ocr
+    }
+    if (lastScreenChange) {
+      this.lastScreenChange = lastScreenChange
+    }
+    if (lastOCR) {
+      this.lastOCR = lastOCR
+    }
   }
 }

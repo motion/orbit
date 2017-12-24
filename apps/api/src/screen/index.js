@@ -3,7 +3,8 @@ import { Server } from 'ws'
 import Screen from '@mcro/screen'
 import ocr from '@mcro/ocr'
 import getContext from './helpers/getContext'
-import { isEqual } from 'lodash'
+import { isEqual, throttle } from 'lodash'
+import mouse from 'osx-mouse'
 
 const sleep = ms => new Promise(res => setTimeout(res, ms))
 
@@ -36,6 +37,7 @@ export default class ScreenState {
     ocr: null,
     lastOCR: Date.now(),
     lastScreenChange: Date.now(),
+    mousePosition: [0, 0],
   }
 
   constructor() {
@@ -67,6 +69,7 @@ export default class ScreenState {
   }
 
   start = () => {
+    this.watchMouse()
     this.stopped = false
     this.watchApplication(async context => {
       if (!isEqual(this.state.context, context)) {
@@ -75,6 +78,18 @@ export default class ScreenState {
         this.updateState({ context })
       }
     })
+  }
+
+  watchMouse = () => {
+    this.mouse = mouse()
+    this.mouse.on(
+      'move',
+      throttle((x, y) => {
+        this.updateState({
+          mousePosition: [x, y],
+        })
+      }, 32),
+    )
   }
 
   cancelCurrentOCR = () => {
@@ -87,29 +102,34 @@ export default class ScreenState {
     if (this.stopped) {
       return
     }
-    const nextState = { ...this.state, ...object }
-    if (isEqual(nextState, this.state)) {
+    let hasNewState
+    for (const key of Object.keys(object)) {
+      if (!isEqual(this.state[key], object[key])) {
+        hasNewState = true
+        break
+      }
+    }
+    if (!hasNewState) {
       return
     }
-    const prevState = this.state
-    this.state = nextState
-    this.onChangedState(prevState)
+    this.state = { ...this.state, ...object }
+    this.onChangedState(object)
     try {
-      this.socketSend(this.state)
+      // only send the changed things to reduce overhead
+      this.socketSend(object)
     } catch (err) {
       console.log('error sending over socket', err)
     }
   }
 
-  onChangedState = async prevState => {
+  onChangedState = async newStateItems => {
     // no listeners, no need to watch
     if (!this.hasListeners) {
       return
     }
-    const hasNewContext = !isEqual(prevState.context, this.state.context)
     // const hasNewOCR = !isEqual(prevState.ocr, this.state.ocr)
     // re-watch on different context
-    if (hasNewContext) {
+    if (newStateItems.context) {
       await this.watchScreen()
     }
   }
@@ -254,5 +274,6 @@ export default class ScreenState {
 
   dispose() {
     this.stopDiff()
+    this.mouse.destroy()
   }
 }

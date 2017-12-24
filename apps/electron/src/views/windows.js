@@ -3,7 +3,7 @@ import { Window } from '@mcro/reactron'
 import * as Helpers from '~/helpers'
 import { ipcMain, screen } from 'electron'
 import * as Constants from '~/constants'
-import { isEqual, throttle, once } from 'lodash'
+import { throttle, once } from 'lodash'
 import MenuItems from './menuItems'
 import { view } from '@mcro/black'
 import PeekWindow from './windows/PeekWindow'
@@ -26,7 +26,6 @@ export default class Windows extends React.Component {
     showSettingsDevTools: false,
     size: [0, 0],
     settingsPosition: [0, 0],
-    mousePosition: [0, 0],
     oraPosition: [0, 0],
     context: null, // osContext
     lastMove: Date.now(),
@@ -82,7 +81,6 @@ export default class Windows extends React.Component {
     if (process.env.CLEAR_DATA) {
       this.oraRef.webContents.session.clearStorageData()
     }
-    this.watchForMousePosition()
     this.listenToApps()
     // send initial state
     this.watch(function sendInitialState() {
@@ -136,19 +134,6 @@ export default class Windows extends React.Component {
       this.oraRef.focus()
     }
   }, 200)
-
-  watchForMousePosition = () => {
-    this.setInterval(() => {
-      const mousePosition = Helpers.getMousePosition()
-      if (!isEqual(mousePosition, this.state.mousePosition)) {
-        // { x: number, y: number }
-        // avoid re-rendering because nothing depends on this in render
-        // TODO: better pattern here
-        this.state.mousePosition = mousePosition
-        this.sendOraState()
-      }
-    }, 150)
-  }
 
   handlePreferences = () => {
     this.updateState({ showSettings: true })

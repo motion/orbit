@@ -81,11 +81,14 @@ class HighlightsStore {
 
     this.react(
       () => [
-        this.electronState.mousePosition || {},
+        this.context.mousePosition || [],
         // update when hover event handlers change
         this.hoverEvents,
       ],
-      ([{ x, y }, hoverEvents]) => {
+      ([[x, y], hoverEvents]) => {
+        if (!x || !y) {
+          return
+        }
         const highlights = this.highlights
         let hovered = null
         for (const word of highlights) {

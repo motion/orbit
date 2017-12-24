@@ -9,10 +9,18 @@ func quit(_: Int32) {
   exit(0)
 }
 
+struct Box: Decodable {
+  let id: Int
+  let x: Int
+  let y: Int
+  let width: Int
+  let height: Int
+}
+
 struct Options: Decodable {
   let destination: URL
   let fps: Int
-  let cropRect: CGRect?
+  let boxes: Array<Box>
   let showCursor: Bool
   let displayId: String
   let videoCodec: String?
@@ -35,7 +43,7 @@ func record() throws {
   recorder = try Recorder(
     destination: options.destination,
     fps: options.fps,
-    cropRect: options.cropRect,
+    boxes: options.boxes,
     showCursor: options.showCursor,
     displayId: options.displayId == "main" ? CGMainDisplayID() : CGDirectDisplayID(options.displayId)!,
     videoCodec: options.videoCodec,

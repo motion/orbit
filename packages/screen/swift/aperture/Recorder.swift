@@ -22,15 +22,10 @@ final class Recorder: NSObject {
   private var output: AVCaptureVideoDataOutput
   private var sensitivity: Int
   private var sampleSpacing: Int
-  private var width: Int
-  private var height: Int
-  private var offsetY: Int
-  private var offsetX: Int
   private let context = CIContext()
   private var boxes: [Int: Box]
   private var lastBoxes: [Int: Array<Int>]
-  
-  var lastFrame: Array<UInt32>
+  private let displayId: CGDirectDisplayID
 
   var onStart: (() -> Void)?
   var onFinish: (() -> Void)?
@@ -50,30 +45,15 @@ final class Recorder: NSObject {
 
   init(destination: URL, fps: Int, boxes: Array<Box>, showCursor: Bool, displayId: CGDirectDisplayID = CGMainDisplayID(), videoCodec: String? = nil, sampleSpacing: Int, sensitivity: Int) throws {
     self.destination = destination
-    session = AVCaptureSession()
-
-    self.lastFrame = []
-    self.width = CGDisplayPixelsWide(displayId)
-    self.height = CGDisplayPixelsHigh(displayId)
-    self.offsetX = 0
-    self.offsetY = 0
+    self.displayId = displayId
+    self.session = AVCaptureSession()
     self.sampleSpacing = sampleSpacing
     self.sensitivity = sensitivity
-    
     self.lastBoxes = [Int: Array<Int>]()
     self.boxes = [Int: Box]()
     for box in boxes {
       self.boxes[box.id] = box
     }
-    
-    // todo
-//    let cropRect = CGRect(
-//      x: box.x * 2,
-//      y: Int(self.height * 2 - Int(box.y * 2)),
-//      width: box.width * 2,
-//      height: Int(-box.height * 2)
-//    )
-
     self.input = AVCaptureScreenInput(displayID: displayId)
     output = AVCaptureVideoDataOutput()
     
@@ -131,18 +111,18 @@ final class Recorder: NSObject {
     return context!.makeImage()!
   }
   
-   func writeCGImage(image: CGImage, to destination: URL) -> Bool {
-      let cgImage = scaleImage(cgImage: image, divide: 2)
-      guard let destination = CGImageDestinationCreateWithURL(destination as CFURL, kUTTypePNG, 1, nil) else { return false }
-      let resolution = 70
-      let properties: NSDictionary = [
-        kCGImageDestinationLossyCompressionQuality: 1,
-        kCGImagePropertyDPIHeight: resolution,
-        kCGImagePropertyDPIWidth: resolution
-      ]
-      CGImageDestinationAddImage(destination, cgImage, properties)
-      return CGImageDestinationFinalize(destination)
-   }
+  func writeCGImage(image: CGImage, to destination: URL) -> Bool {
+    let cgImage = scaleImage(cgImage: image, divide: 2)
+    guard let destination = CGImageDestinationCreateWithURL(destination as CFURL, kUTTypePNG, 1, nil) else { return false }
+    let resolution = 70
+    let properties: NSDictionary = [
+      kCGImageDestinationLossyCompressionQuality: 1,
+      kCGImagePropertyDPIHeight: resolution,
+      kCGImagePropertyDPIWidth: resolution
+    ]
+    CGImageDestinationAddImage(destination, cgImage, properties)
+    return CGImageDestinationFinalize(destination)
+  }
   
   func hasBoxChanged(box: Box, buffer: UnsafeMutablePointer<UInt32>, perRow: Int) -> Bool {
     let lastBox = self.lastBoxes[box.id]
@@ -212,10 +192,19 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
 
     for boxId in self.boxes.keys {
       let box = self.boxes[boxId]!
+      
+      // test write box
+      let cropRect = CGRect(
+        x: box.x * 2,
+        y: Int(CGDisplayPixelsHigh(self.displayId) * 2 - Int(box.y * 2)),
+        width: box.width * 2,
+        height: Int(-box.height * 2)
+      )
+      guard let uiImage = imageFromSampleBuffer(sampleBuffer: sampleBuffer, cropRect: cropRect) else { return }
+      if (self.writeCGImage(image: uiImage, to: self.destination)) { }
+      
       if (hasBoxChanged(box: box, buffer: int32Buffer, perRow: int32PerRow)) {
         print("\(box.id)")
-//        guard let uiImage = imageFromSampleBuffer(sampleBuffer: sampleBuffer) else { return }
-//        if (self.writeCGImage(image: uiImage, to: self.destination)) { }
       }
     }
 

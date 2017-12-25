@@ -9,14 +9,6 @@ func quit(_: Int32) {
   exit(0)
 }
 
-struct Box: Decodable {
-  let id: Int
-  let x: Int
-  let y: Int
-  let width: Int
-  let height: Int
-}
-
 struct Options: Decodable {
   let destination: URL
   let fps: Int
@@ -29,17 +21,20 @@ struct Options: Decodable {
 }
 
 func record() throws {
-  let json = arguments.first!.data(using: .utf8)!
-  let options = try JSONDecoder().decode(Options.self, from: json)
+//  let json = arguments.first!.data(using: .utf8)!
+//  let options = try JSONDecoder().decode(Options.self, from: json)
   // for testing
-//  let options = Options(
-//    fps: 10,
-//    cropRect: CGRect(x: 100, y: 100, width: 500, height: 500),
-//    showCursor: true,
-//    displayId: "main",
-//    videoCodec: "mp4"
-//  )
-
+  let options = Options(
+    destination: URL(fileURLWithPath: "/tmp/test.png"),
+    fps: 10,
+    boxes: [Box(id: 0, x: 0, y: 0, width: 100, height: 50)],
+    showCursor: true,
+    displayId: "main",
+    videoCodec: "mp4",
+    sampleSpacing: 10,
+    sensitivity: 1
+  )
+  
   recorder = try Recorder(
     destination: options.destination,
     fps: options.fps,
@@ -85,18 +80,13 @@ func usage() {
   )
 }
 
-if arguments.first == "list-audio-devices" {
-  // Uses stderr because of unrelated stuff being outputted on stdout
-  printErr(try toJson(DeviceList.audio()))
-  exit(0)
-}
-
 if arguments.first != nil {
   try record()
   exit(0)
 }
 
-//try record()
-usage()
+print("hi")
+try record()
+//usage()
 exit(1)
 

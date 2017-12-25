@@ -7,6 +7,14 @@ enum ApertureError: Error {
   case couldNotAddOutput
 }
 
+struct Box: Decodable {
+  let id: Int
+  let x: Int
+  let y: Int
+  let width: Int
+  let height: Int
+}
+
 final class Recorder: NSObject {
   private let input: AVCaptureScreenInput
   private var destination: URL

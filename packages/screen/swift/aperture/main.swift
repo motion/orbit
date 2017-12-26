@@ -9,8 +9,12 @@ func quit(_: Int32) {
   exit(0)
 }
 
+// sensitivity = how many pixels need to change before it triggers
+//    you want this lower because allows loop to break sooner
+// sampleSpacing = dithering basically, how many pixels to skip before checking the next
+//    you want this higher, because it makes the loops shorter
 struct Options: Decodable {
-  let destination: URL
+  let destination: String
   let fps: Int
   let boxes: Array<Box>
   let showCursor: Bool
@@ -25,9 +29,9 @@ func record() throws {
 //  let options = try JSONDecoder().decode(Options.self, from: json)
   // for testing
   let options = Options(
-    destination: URL(fileURLWithPath: "/tmp/test.png"),
+    destination: "/tmp",
     fps: 10,
-    boxes: [Box(id: 0, x: 0, y: 0, width: 100, height: 50)],
+    boxes: [Box(id: 0, x: 0, y: 0, width: 100, height: 50), Box(id: 1, x: 100, y: 100, width: 500, height: 500)],
     showCursor: true,
     displayId: "main",
     videoCodec: "mp4",

@@ -17,14 +17,14 @@ struct Box: Decodable {
 
 final class Recorder: NSObject {
   private let input: AVCaptureScreenInput
-  private var destination: URL
+  private var destination: String
   private var session: AVCaptureSession
   private var output: AVCaptureVideoDataOutput
   private var sensitivity: Int
   private var sampleSpacing: Int
   private let context = CIContext()
   private var boxes: [Int: Box]
-  private var lastBoxes: [Int: Array<Int>]
+  private var lastBoxes: [Int: Array<UInt32>]
   private let displayId: CGDirectDisplayID
 
   var onStart: (() -> Void)?
@@ -43,13 +43,13 @@ final class Recorder: NSObject {
     print("captured")
   }
 
-  init(destination: URL, fps: Int, boxes: Array<Box>, showCursor: Bool, displayId: CGDirectDisplayID = CGMainDisplayID(), videoCodec: String? = nil, sampleSpacing: Int, sensitivity: Int) throws {
+  init(destination: String, fps: Int, boxes: Array<Box>, showCursor: Bool, displayId: CGDirectDisplayID = CGMainDisplayID(), videoCodec: String? = nil, sampleSpacing: Int, sensitivity: Int) throws {
     self.destination = destination
     self.displayId = displayId
     self.session = AVCaptureSession()
     self.sampleSpacing = sampleSpacing
     self.sensitivity = sensitivity
-    self.lastBoxes = [Int: Array<Int>]()
+    self.lastBoxes = [Int: Array<UInt32>]()
     self.boxes = [Int: Box]()
     for box in boxes {
       self.boxes[box.id] = box
@@ -111,17 +111,29 @@ final class Recorder: NSObject {
     return context!.makeImage()!
   }
   
-  func writeCGImage(image: CGImage, to destination: URL) -> Bool {
+  func writeCGImage(image: CGImage, to destination: String) -> Bool {
     let cgImage = scaleImage(cgImage: image, divide: 2)
-    guard let destination = CGImageDestinationCreateWithURL(destination as CFURL, kUTTypePNG, 1, nil) else { return false }
+    let destinationURL = URL(fileURLWithPath: destination)
+    guard let finalDestination = CGImageDestinationCreateWithURL(destinationURL as CFURL, kUTTypePNG, 1, nil) else { return false }
     let resolution = 70
     let properties: NSDictionary = [
       kCGImageDestinationLossyCompressionQuality: 1,
       kCGImagePropertyDPIHeight: resolution,
       kCGImagePropertyDPIWidth: resolution
     ]
-    CGImageDestinationAddImage(destination, cgImage, properties)
-    return CGImageDestinationFinalize(destination)
+    CGImageDestinationAddImage(finalDestination, cgImage, properties)
+    return CGImageDestinationFinalize(finalDestination)
+  }
+  
+  func screenshotBox(box: Box, buffer: CMSampleBuffer) {
+    let cropRect = CGRect(
+      x: box.x * 2,
+      y: Int(CGDisplayPixelsHigh(self.displayId) * 2 - Int(box.y * 2)),
+      width: box.width * 2,
+      height: Int(-box.height * 2)
+    )
+    guard let uiImage = imageFromSampleBuffer(sampleBuffer: buffer, cropRect: cropRect) else { return }
+    if (self.writeCGImage(image: uiImage, to: "\(self.destination)/\(box.id).png")) { }
   }
   
   func hasBoxChanged(box: Box, buffer: UnsafeMutablePointer<UInt32>, perRow: Int) -> Bool {
@@ -131,21 +143,16 @@ final class Recorder: NSObject {
     let boxY = box.y
     let height = Int(box.height) / 2
     let width = Int(box.width) / 2
-    var curFrame: Array<UInt32> = []
+    var curBox: Array<UInt32> = []
     var numChanged = 0
     var shouldFinish = false
     
-    // sensitivity = how many pixels need to change before it triggers
-    //    you want this lower because allows loop to break sooner
-    let sensitivity = self.sensitivity
-    // sampleSpacing = dithering basically, how many pixels to skip before checking the next
-    //    you want this higher, because it makes the loops shorter
-    let sampleSpacing = self.sampleSpacing
     let smallH = height/sampleSpacing
     let smallW = width/sampleSpacing
     if (lastBox != nil) {
       hasLastBox = lastBox?.count == smallW * smallH
     }
+//    print("haslast \(hasLastBox)")
 //    var lastIndex = 0
 
     for y in 0..<smallH {
@@ -164,13 +171,15 @@ final class Recorder: NSObject {
             }
           }
         }
-        curFrame.insert(luma, at: index)
+        curBox.insert(luma, at: index)
 //        lastIndex = index
       }
       if (shouldFinish) {
         break
       }
     }
+    
+    self.lastBoxes[box.id] = curBox
 
     let hasChanged = shouldFinish
     if (hasChanged) {
@@ -194,22 +203,12 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
       let box = self.boxes[boxId]!
       
       // test write box
-      let cropRect = CGRect(
-        x: box.x * 2,
-        y: Int(CGDisplayPixelsHigh(self.displayId) * 2 - Int(box.y * 2)),
-        width: box.width * 2,
-        height: Int(-box.height * 2)
-      )
-      guard let uiImage = imageFromSampleBuffer(sampleBuffer: sampleBuffer, cropRect: cropRect) else { return }
-      if (self.writeCGImage(image: uiImage, to: self.destination)) { }
+//      screenshotBox(box: box, buffer: sampleBuffer)
       
       if (hasBoxChanged(box: box, buffer: int32Buffer, perRow: int32PerRow)) {
         print("\(box.id)")
       }
     }
-
-    // todo: store each box diff
-//    self.lastFrame = curFrame
     
     CVPixelBufferUnlockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0))
     

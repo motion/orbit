@@ -83,6 +83,9 @@ export default class ScreenState {
       })
       this.activeSockets.push({ uid, socket })
     })
+    this.wss.on('close', () => {
+      console.log('WE SHOULD HANDLE THIS CLOSE', ...arguments)
+    })
     this.wss.on('error', (...args) => {
       console.log('wss error', args)
     })
@@ -142,7 +145,7 @@ export default class ScreenState {
       // only send the changed things to reduce overhead
       this.socketSend(object)
     } catch (err) {
-      console.log('error sending over socket', err)
+      console.log('error sending over socket', err.message)
     }
   }
 
@@ -153,8 +156,8 @@ export default class ScreenState {
     }
     // const hasNewOCR = !isEqual(prevState.ocr, this.state.ocr)
     // re-watch on different context
-    if (newStateItems.context) {
-      await this.watchScreen()
+    if (newStateItems.context || newStateItems.ocr) {
+      await this.handleNewContext()
     }
   }
 
@@ -167,7 +170,7 @@ export default class ScreenState {
     this.watchApplication(cb)
   }
 
-  watchScreen = async () => {
+  handleNewContext = async () => {
     const { appName, offset, bounds } = this.state.context
     console.log('watchScreen', appName, { offset, bounds })
     if (!offset || !bounds) {
@@ -188,7 +191,7 @@ export default class ScreenState {
 
     let settings
     const { ocr } = this.state
-    console.log('this.screenDestination', this.screenDestination)
+    console.log('watchScreen this.screenDestination', this.screenDestination)
 
     // watch settings
     if (!ocr) {
@@ -206,10 +209,9 @@ export default class ScreenState {
         fps: 30,
         sampleSpacing: 10,
         sensitivity: 1,
-        showCursor: false,
+        showCursor: true,
         boxes: [
           ...ocr.map(({ word, top, left, width, height }) => {
-            console.log('creating box for', word)
             return {
               id: word,
               x: left,
@@ -223,7 +225,6 @@ export default class ScreenState {
       }
     }
 
-    console.log('start recording with settings', settings)
     this.video.startRecording(settings)
 
     // start a debounced ocr
@@ -233,11 +234,13 @@ export default class ScreenState {
   }
 
   handleChangedFrame = async wordId => {
-    if (this.state.ocr && !wordId) {
-      console.log('no word given in change event, but we have ocrs')
-      return
+    if (this.state.ocr) {
+      if (!wordId) {
+        console.log('no word given in change event, but we have ocrs')
+      } else {
+        console.log('got a change for word', wordId)
+      }
     }
-    console.log('got a change for word', wordId)
     clearTimeout(this.nextOCR)
     if (this.stopped) {
       return

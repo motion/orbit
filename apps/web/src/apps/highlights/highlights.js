@@ -4,6 +4,7 @@ import { view } from '@mcro/black'
 import * as Helpers from '~/helpers'
 
 const HL_PAD = 5
+const TOP_BAR_SIZE = 22
 
 const getHoverProps = Helpers.hoverSettler({
   enterDelay: 400,
@@ -36,7 +37,10 @@ class HighlightsStore {
 
   // [ { top, left, height, width }, ... ]
   get highlights() {
-    return (this.context && this.context.ocr) || []
+    return ((this.context && this.context.ocr) || []).map(word => ({
+      ...word,
+      key: `${word.word}${word.top}${word.left}`,
+    }))
   }
 
   willMount() {
@@ -84,12 +88,13 @@ class HighlightsStore {
         this.context.mousePosition || [],
         // update when hover event handlers change
         this.hoverEvents,
+        this.highlights,
       ],
-      ([[x, y], hoverEvents]) => {
-        if (!x || !y) {
+      ([[x, _y], hoverEvents, highlights]) => {
+        if (!x || !_y) {
           return
         }
-        const highlights = this.highlights
+        let y = _y - TOP_BAR_SIZE
         let hovered = null
         for (const word of highlights) {
           // outside of x

@@ -116,6 +116,7 @@ class HighlightsStore {
             hoverEvents[this.hoveredWord.key].onMouseLeave()
           }
         } else if (hovered && !this.hoveredWord) {
+          console.log('hovered', hovered)
           // mouseEnter
           if (hoverEvents[hovered.key]) {
             hoverEvents[hovered.key].onMouseEnter(toEvent(hovered))

@@ -6,20 +6,10 @@ import ocrScreenshot from '@mcro/ocr'
 import getContext from './helpers/getContext'
 import { isEqual, throttle } from 'lodash'
 import mouse from 'osx-mouse'
-
-const sleep = ms => new Promise(res => setTimeout(res, ms))
+import * as Constants from '~/constants'
 
 const APP_ID = 'screen'
 const DEBOUNCE_OCR = 1000
-const OCR_TMP_DIR = Path.join(
-  __dirname,
-  '..',
-  '..',
-  'node_modules',
-  '@mcro',
-  'ocr',
-  'tmp',
-)
 
 type TContext = {
   appName: string,
@@ -49,7 +39,7 @@ export default class ScreenState {
   invalidRunningOCR = Date.now()
   hasNewOCR = false
   runningOCR = false
-  screenDestination = OCR_TMP_DIR
+  screenDestination = Constants.TMP_DIR
   video = new Screen()
   wss = new Server({ port: 40510 })
   activeSockets = []
@@ -101,6 +91,8 @@ export default class ScreenState {
     this.watchApplication(async context => {
       if (!isEqual(this.state.context, context)) {
         console.log('new context, invalidate ocr')
+        console.log('old contet', this.state.context)
+        console.log('new contet', context)
         this.cancelCurrentOCR()
         this.updateState({ context })
       }
@@ -172,6 +164,13 @@ export default class ScreenState {
 
   handleNewContext = async () => {
     const { appName, offset, bounds } = this.state.context
+
+    // test
+    if (appName !== 'Simplenote') {
+      console.log('not simplenote')
+      return
+    }
+
     console.log('watchScreen', appName, { offset, bounds })
     if (!offset || !bounds) {
       console.log('didnt get offset/bounds')
@@ -191,7 +190,6 @@ export default class ScreenState {
 
     let settings
     const { ocr } = this.state
-    console.log('watchScreen this.screenDestination', this.screenDestination)
 
     // watch settings
     if (!ocr) {
@@ -204,26 +202,30 @@ export default class ScreenState {
         boxes: [appBox],
       }
     } else {
+      const boxes = [
+        ...ocr.map(({ word, top, left, width, height }) => {
+          return {
+            id: word,
+            x: left,
+            y: top,
+            width,
+            height,
+            screenDir: this.screenDestination,
+          }
+        }),
+      ]
       // watch just the words to see clears
       settings = {
         fps: 30,
         sampleSpacing: 10,
         sensitivity: 1,
+        // show cursor for now to test
         showCursor: true,
-        boxes: [
-          ...ocr.map(({ word, top, left, width, height }) => {
-            return {
-              id: word,
-              x: left,
-              y: top,
-              width,
-              height,
-              screenDir: this.screenDestination,
-            }
-          }),
-        ],
+        boxes,
       }
     }
+
+    console.log('settings', settings)
 
     this.video.startRecording(settings)
 

@@ -26,9 +26,8 @@ class Screen {
     macosVersion.assertGreaterThanOrEqualTo('10.12')
   }
 
-  async startRecording(
+  startRecording(
     {
-      destination = undefined,
       fps = 25,
       cropArea = undefined,
       showCursor = true,
@@ -39,40 +38,21 @@ class Screen {
       sampleSpacing = 10,
       // how many pixels to detect before triggering change
       sensitivity = 2,
+      boxes,
     } = {},
   ) {
     if (this.recorder !== undefined) {
       throw new Error('Call `.stopRecording()` first')
     }
 
-    if (typeof cropArea === 'object') {
-      if (
-        typeof cropArea.x !== 'number' ||
-        typeof cropArea.y !== 'number' ||
-        typeof cropArea.width !== 'number' ||
-        typeof cropArea.height !== 'number'
-      ) {
-        throw new Error('Invalid `cropArea` option object')
-      }
-    }
-
-    const finalDestination = fileUrl(destination)
-
     const recorderOpts = {
-      destination: finalDestination,
       fps,
       showCursor,
       displayId,
       audioDeviceId,
       sampleSpacing,
       sensitivity,
-    }
-
-    if (cropArea) {
-      recorderOpts.cropRect = [
-        [cropArea.x, cropArea.y],
-        [cropArea.width, cropArea.height],
-      ]
+      boxes,
     }
 
     if (videoCodec) {
@@ -104,11 +84,13 @@ class Screen {
     })
 
     this.recorder.stdout.setEncoding('utf8')
-    this.recorder.stdout.on('data', () => {
+    this.recorder.stdout.on('data', data => {
       if (this.changedFrameCb) {
-        this.changedFrameCb()
+        this.changedFrameCb(data.trim())
       }
     })
+
+    return this.recorder
   }
 
   onChangedFrame(cb) {

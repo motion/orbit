@@ -14,7 +14,6 @@ func quit(_: Int32) {
 // sampleSpacing = dithering basically, how many pixels to skip before checking the next
 //    you want this higher, because it makes the loops shorter
 struct Options: Decodable {
-  let destination: String
   let fps: Int
   let boxes: Array<Box>
   let showCursor: Bool
@@ -25,22 +24,24 @@ struct Options: Decodable {
 }
 
 func record() throws {
-//  let json = arguments.first!.data(using: .utf8)!
-//  let options = try JSONDecoder().decode(Options.self, from: json)
+  // for release
+  let json = arguments.first!.data(using: .utf8)!
+  let options = try JSONDecoder().decode(Options.self, from: json)
   // for testing
-  let options = Options(
-    destination: "/tmp",
-    fps: 10,
-    boxes: [Box(id: 0, x: 0, y: 0, width: 100, height: 50), Box(id: 1, x: 100, y: 100, width: 500, height: 500)],
-    showCursor: true,
-    displayId: "main",
-    videoCodec: "mp4",
-    sampleSpacing: 10,
-    sensitivity: 1
-  )
+//  let options = Options(
+//    fps: 10,
+//    boxes: [
+//      Box(id: 0, x: 0, y: 0, width: 100, height: 50, screenDir: nil),
+//      Box(id: 1, x: 100, y: 100, width: 500, height: 500, screenDir: "/tmp")
+//    ],
+//    showCursor: true,
+//    displayId: "main",
+//    videoCodec: "mp4",
+//    sampleSpacing: 10,
+//    sensitivity: 1
+//  )
   
   recorder = try Recorder(
-    destination: options.destination,
     fps: options.fps,
     boxes: options.boxes,
     showCursor: options.showCursor,

@@ -8,23 +8,23 @@ enum ApertureError: Error {
 }
 
 struct Box: Decodable {
-  let id: Int
+  let id: String
   let x: Int
   let y: Int
   let width: Int
   let height: Int
+  let screenDir: String?
 }
 
 final class Recorder: NSObject {
   private let input: AVCaptureScreenInput
-  private var destination: String
   private var session: AVCaptureSession
   private var output: AVCaptureVideoDataOutput
   private var sensitivity: Int
   private var sampleSpacing: Int
   private let context = CIContext()
-  private var boxes: [Int: Box]
-  private var lastBoxes: [Int: Array<UInt32>]
+  private var boxes: [String: Box]
+  private var lastBoxes: [String: Array<UInt32>]
   private let displayId: CGDirectDisplayID
 
   var onStart: (() -> Void)?
@@ -43,14 +43,13 @@ final class Recorder: NSObject {
     print("captured")
   }
 
-  init(destination: String, fps: Int, boxes: Array<Box>, showCursor: Bool, displayId: CGDirectDisplayID = CGMainDisplayID(), videoCodec: String? = nil, sampleSpacing: Int, sensitivity: Int) throws {
-    self.destination = destination
+  init(fps: Int, boxes: Array<Box>, showCursor: Bool, displayId: CGDirectDisplayID = CGMainDisplayID(), videoCodec: String? = nil, sampleSpacing: Int, sensitivity: Int) throws {
     self.displayId = displayId
     self.session = AVCaptureSession()
     self.sampleSpacing = sampleSpacing
     self.sensitivity = sensitivity
-    self.lastBoxes = [Int: Array<UInt32>]()
-    self.boxes = [Int: Box]()
+    self.lastBoxes = [String: Array<UInt32>]()
+    self.boxes = [String: Box]()
     for box in boxes {
       self.boxes[box.id] = box
     }
@@ -126,14 +125,19 @@ final class Recorder: NSObject {
   }
   
   func screenshotBox(box: Box, buffer: CMSampleBuffer) {
-    let cropRect = CGRect(
-      x: box.x * 2,
-      y: Int(CGDisplayPixelsHigh(self.displayId) * 2 - Int(box.y * 2)),
-      width: box.width * 2,
-      height: Int(-box.height * 2)
-    )
-    guard let uiImage = imageFromSampleBuffer(sampleBuffer: buffer, cropRect: cropRect) else { return }
-    if (self.writeCGImage(image: uiImage, to: "\(self.destination)/\(box.id).png")) { }
+    if (box.screenDir != nil) {
+      let cropRect = CGRect(
+        x: box.x * 2,
+        y: Int(CGDisplayPixelsHigh(self.displayId) * 2 - Int(box.y * 2)),
+        width: box.width * 2,
+        height: Int(-box.height * 2)
+      )
+      guard let uiImage = imageFromSampleBuffer(sampleBuffer: buffer, cropRect: cropRect) else { return }
+      let outPath = "\(box.screenDir ?? "/tmp/screen-")/\(box.id).png"
+      if (self.writeCGImage(image: uiImage, to: outPath)) {
+        // good
+      }
+    }
   }
   
   func hasBoxChanged(box: Box, buffer: UnsafeMutablePointer<UInt32>, perRow: Int) -> Bool {
@@ -192,26 +196,21 @@ final class Recorder: NSObject {
 extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
   public func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
 //    let start = DispatchTime.now()
-
     let pixelBuffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)!
     CVPixelBufferLockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0));
     let baseAddress = CVPixelBufferGetBaseAddress(pixelBuffer)
     let int32Buffer = unsafeBitCast(baseAddress, to: UnsafeMutablePointer<UInt32>.self)
     let int32PerRow = CVPixelBufferGetBytesPerRow(pixelBuffer)
-
+    // loop over boxes and check
     for boxId in self.boxes.keys {
       let box = self.boxes[boxId]!
-      
-      // test write box
-//      screenshotBox(box: box, buffer: sampleBuffer)
-      
       if (hasBoxChanged(box: box, buffer: int32Buffer, perRow: int32PerRow)) {
+        screenshotBox(box: box, buffer: sampleBuffer)
         print("\(box.id)")
       }
     }
-    
+    // release
     CVPixelBufferUnlockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0))
-    
 //    let end = DispatchTime.now()
 //    let nanoTime = end.uptimeNanoseconds - start.uptimeNanoseconds
 //    let timeInterval = Double(nanoTime) / 1_000_000

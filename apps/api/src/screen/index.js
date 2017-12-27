@@ -1,13 +1,15 @@
+// @flow
 import Path from 'path'
 import { Server } from 'ws'
 import Screen from '@mcro/screen'
-import ocr from '@mcro/ocr'
+import ocrScreenshot from '@mcro/ocr'
 import getContext from './helpers/getContext'
 import { isEqual, throttle } from 'lodash'
 import mouse from 'osx-mouse'
 
 const sleep = ms => new Promise(res => setTimeout(res, ms))
 
+const APP_ID = 'screen'
 const DEBOUNCE_OCR = 1000
 const OCR_TMP_DIR = Path.join(
   __dirname,
@@ -17,8 +19,30 @@ const OCR_TMP_DIR = Path.join(
   '@mcro',
   'ocr',
   'tmp',
-  'screen.png',
 )
+
+type TContext = {
+  appName: string,
+  offset: [Number, Number],
+  bounds: [Number, Number],
+}
+
+type Word = {
+  word: string,
+  weight: Number,
+  top: Number,
+  left: Number,
+  width: Number,
+  height: Number,
+}
+
+type TScreenState = {
+  context?: TContext,
+  ocr?: Array<Word>,
+  lastOCR: Number,
+  lastScreenChange: Number,
+  mousePosition: [Number, Number],
+}
 
 export default class ScreenState {
   stopped = false
@@ -32,7 +56,7 @@ export default class ScreenState {
   id = 0
   nextOCR = null
 
-  state = {
+  state: TScreenState = {
     context: null,
     ocr: null,
     lastOCR: Date.now(),
@@ -150,20 +174,56 @@ export default class ScreenState {
       console.log('didnt get offset/bounds')
       return
     }
-    const settings = {
-      destination: this.screenDestination,
-      fps: this.state.ocr ? 30 : 2,
-      sampleSpacing: 10,
-      sensitivity: 2,
-      showCursor: false,
-      cropArea: {
-        x: offset[0],
-        y: offset[1],
-        width: bounds[0],
-        height: bounds[1],
-      },
-    }
+
     await this.video.stopRecording()
+
+    const appBox = {
+      id: APP_ID,
+      x: offset[0],
+      y: offset[1],
+      width: bounds[0],
+      height: bounds[1],
+      screenDir: this.screenDestination,
+    }
+
+    let settings
+    const { ocr } = this.state
+    console.log('this.screenDestination', this.screenDestination)
+
+    // watch settings
+    if (!ocr) {
+      // we are watching the whole app for words
+      settings = {
+        fps: ocr ? 30 : 2,
+        sampleSpacing: 10,
+        sensitivity: 2,
+        showCursor: false,
+        boxes: [appBox],
+      }
+    } else {
+      // watch just the words to see clears
+      settings = {
+        fps: 30,
+        sampleSpacing: 10,
+        sensitivity: 1,
+        showCursor: false,
+        boxes: [
+          ...ocr.map(({ word, top, left, width, height }) => {
+            console.log('creating box for', word)
+            return {
+              id: word,
+              x: left,
+              y: top,
+              width,
+              height,
+              screenDir: this.screenDestination,
+            }
+          }),
+        ],
+      }
+    }
+
+    console.log('start recording with settings', settings)
     this.video.startRecording(settings)
 
     // start a debounced ocr
@@ -172,7 +232,12 @@ export default class ScreenState {
     this.video.onChangedFrame(this.handleChangedFrame)
   }
 
-  handleChangedFrame = async () => {
+  handleChangedFrame = async wordId => {
+    if (this.state.ocr && !wordId) {
+      console.log('no word given in change event, but we have ocrs')
+      return
+    }
+    console.log('got a change for word', wordId)
     clearTimeout(this.nextOCR)
     if (this.stopped) {
       return
@@ -203,7 +268,7 @@ export default class ScreenState {
       resolveRunningOCR = res
     })
     const dateStarted = Date.now()
-    const ocr = await this.ocr()
+    const ocr = await this.getOCR()
     console.log('runOCR highlights length:', ocr && ocr.length)
     resolveRunningOCR()
     this.runningOCR = null
@@ -223,7 +288,7 @@ export default class ScreenState {
     }
   }
 
-  async ocr() {
+  async getOCR() {
     if (!this.state.context) {
       return
     }
@@ -233,9 +298,9 @@ export default class ScreenState {
       return
     }
     try {
-      // TODO debug why tesseract doesnt like the dpi on our swift screens
-      const res = await ocr({ inputFile: this.screenDestination })
-      // const res = await ocr({ offset, bounds, takeScreenshot: true })
+      const res = await ocrScreenshot({
+        inputFile: Path.join(this.screenDestination, `${APP_ID}.png`),
+      })
       const { boxes } = res
       const [screenX, screenY] = offset
       return boxes.map(({ name, weight, box }) => {

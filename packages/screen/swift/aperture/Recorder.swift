@@ -150,7 +150,6 @@ final class Recorder: NSObject {
       )
       guard let uiImage = imageFromSampleBuffer(sampleBuffer: buffer, cropRect: cropRect) else { return }
       let outPath = "\(box.screenDir ?? "/tmp/screen-")/\(box.id).png"
-      print("write to path \(outPath)")
       if (self.writeCGImage(image: uiImage, to: outPath)) {
         // good
       }

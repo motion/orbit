@@ -216,8 +216,8 @@ export default class ScreenState {
       ]
       // watch just the words to see clears
       settings = {
-        fps: 30,
-        sampleSpacing: 10,
+        fps: 20,
+        sampleSpacing: 2,
         sensitivity: 1,
         // show cursor for now to test
         showCursor: true,

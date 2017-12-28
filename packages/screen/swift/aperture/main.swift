@@ -6,6 +6,7 @@ let arguments = CommandLine.arguments.dropFirst()
 
 func quit(_: Int32) {
   recorder.stop()
+  print("received quit, quitting...")
   exit(0)
 }
 
@@ -90,7 +91,6 @@ if arguments.first != nil {
   exit(0)
 }
 
-print("hi")
 try record()
 //usage()
 exit(1)

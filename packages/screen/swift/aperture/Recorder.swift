@@ -222,7 +222,7 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
       let box = self.boxes[boxId]!
       if (hasBoxChanged(box: box, buffer: int32Buffer, perRow: int32PerRow)) {
         screenshotBox(box: box, buffer: sampleBuffer)
-        print("\(box.id)")
+        print(">\(box.id)")
       }
     }
     // release

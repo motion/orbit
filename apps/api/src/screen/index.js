@@ -10,6 +10,7 @@ import * as Constants from '~/constants'
 
 const APP_ID = 'screen'
 const DEBOUNCE_OCR = 1000
+const TOP_BAR_HEIGHT = 23
 
 type TContext = {
   appName: string,
@@ -90,9 +91,7 @@ export default class ScreenState {
     this.stopped = false
     this.watchApplication(async context => {
       if (!isEqual(this.state.context, context)) {
-        console.log('new context, invalidate ocr')
-        console.log('old contet', this.state.context)
-        console.log('new contet', context)
+        console.log('new context, invalidate ocr', context.appName)
         this.cancelCurrentOCR()
         this.updateState({ context })
       }
@@ -142,13 +141,19 @@ export default class ScreenState {
   }
 
   onChangedState = async newStateItems => {
+    if (!newStateItems.mousePosition) {
+      console.log('onChangedState', newStateItems)
+    }
     // no listeners, no need to watch
     if (!this.hasListeners) {
       return
     }
     // const hasNewOCR = !isEqual(prevState.ocr, this.state.ocr)
     // re-watch on different context
-    if (newStateItems.context || newStateItems.ocr) {
+    const firstTimeOCR =
+      (!this.state.ocr || !this.state.ocr.length) && newStateItems.ocr
+    if (newStateItems.context || firstTimeOCR) {
+      console.log('re-run screen watch')
       await this.handleNewContext()
     }
   }
@@ -240,7 +245,24 @@ export default class ScreenState {
       if (!wordId) {
         console.log('no word given in change event, but we have ocrs')
       } else {
-        console.log('got a change for word', wordId)
+        if (wordId !== APP_ID) {
+          console.log('got a change for word', wordId)
+          const wordIndex = this.state.ocr.findIndex(w => w.word === wordId)
+          if (wordIndex === -1) {
+            console.log('weird this word isnt in ocr')
+          } else {
+            console.log('removing word', wordId)
+            this.updateState({
+              ocr: this.state.ocr.splice(wordIndex, 1),
+            })
+          }
+          return
+        } else {
+          console.log(
+            'ERROR< shouldnt be reachable (screen diff during ocr words)',
+          )
+          return
+        }
       }
     }
     clearTimeout(this.nextOCR)
@@ -309,21 +331,15 @@ export default class ScreenState {
       const { boxes } = res
       const [screenX, screenY] = offset
       return boxes.map(({ name, weight, box }) => {
-        // box => [x, y, width, height]
-        // console.log('box', name, box)
-        const [x, y, wWidth, wHeight] = box
-        const left = screenX + x
-        const topOffset = 24
-        const top = screenY + y - topOffset
-        const width = screenX + wWidth - left
-        const height = screenY + wHeight - top - topOffset
+        console.log('got box', name, box)
+        // box => { x, y, width, height }
         return {
           word: name,
           weight,
-          top,
-          left,
-          width,
-          height,
+          top: box.y + screenY - TOP_BAR_HEIGHT,
+          left: box.x + screenX,
+          width: box.width,
+          height: box.height,
         }
       })
     } catch (err) {

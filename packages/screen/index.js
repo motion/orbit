@@ -86,7 +86,10 @@ class Screen {
     this.recorder.stdout.setEncoding('utf8')
     this.recorder.stdout.on('data', data => {
       if (this.changedFrameCb) {
-        this.changedFrameCb(data.trim())
+        const out = data.trim()
+        if (out[0] === '>') {
+          this.changedFrameCb(out.slice(1))
+        }
       }
     })
 

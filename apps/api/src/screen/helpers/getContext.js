@@ -88,19 +88,28 @@ async function getSafariContext() {
   )
 }
 
+let lastRes
+
 function parseContextRes(res) {
-  if (res === 'missing value') {
-    console.log('missing value')
+  let thisRes = res.trim()
+  setTimeout(() => {
+    lastRes = thisRes
+  })
+  if (thisRes === 'missing value') {
+    if (lastRes !== thisRes) {
+      console.log('missing value')
+    }
     return null
   }
   try {
-    const result = JSON.parse(res)
+    const result = JSON.parse(thisRes)
     if (!result) {
       return null
     }
     return result
   } catch (err) {
     console.log('error parsing context', err.message)
+    console.log('in response:', thisRes)
   }
   return null
 }

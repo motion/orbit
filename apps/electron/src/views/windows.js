@@ -210,11 +210,10 @@ export default class Windows extends React.Component {
           onFocus={this.onOraFocus}
           devToolsExtensions={Helpers.getExtensions(['mobx', 'react'])}
         />
-        {/* PEEK:
         <PeekWindow
           appPosition={this.state.oraPosition}
           onWindows={this.handlePeekWindows}
-        /> */}
+        />
         {/* SETTINGS PANE: */}
         {false &&
           this.state.loadSettings && (

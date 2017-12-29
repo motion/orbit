@@ -212,7 +212,7 @@ export default class ScreenState {
           return {
             id: word,
             x: left,
-            y: top,
+            y: top + TOP_BAR_HEIGHT,
             width,
             height,
             screenDir: this.screenDestination,

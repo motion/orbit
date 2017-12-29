@@ -5,7 +5,7 @@ import { sortBy } from 'lodash'
 import { exec } from 'child_process'
 import Path from 'path'
 import promisify from 'sb-promisify'
-import { screen } from '@mcro/screendump'
+// import { screen } from '@mcro/screendump'
 
 type OCROptions = {
   inputFile?: 'string',
@@ -108,8 +108,8 @@ async function takeScreenshot(options: OCROptions) {
 }
 
 export default async function ocr(options: OCROptions) {
-  if (options.takeScreenshot) {
-    options.inputFile = await takeScreenshot(options)
-  }
+  // if (options.takeScreenshot) {
+  //   options.inputFile = await takeScreenshot(options)
+  // }
   return await ocrFile(options.inputFile)
 }

@@ -1,3 +1,5 @@
+import Path from 'path'
+
 export const DB_HOSTNAME = process.env.DB_HOSTNAME
 export const DB_PORT = process.env.DB_PORT
 export const DB_HOST = `${DB_HOSTNAME}:${DB_PORT}`
@@ -17,3 +19,5 @@ export const PUBLIC_URL = IS_DEV
 export const API_HOST = IS_DEV ? 'orbit.dev' : 'app.seemirai.com'
 
 export const SERVER_PORT = process.env.PORT || IS_DEV ? 3001 : 3009
+
+export const TMP_DIR = Path.join(__dirname, '..', 'tmp')

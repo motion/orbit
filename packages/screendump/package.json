@@ -1,12 +1,13 @@
 {
-  "name": "screendiff",
+  "name": "@mcro/screendump",
   "version": "0.1.0",
   "description": "",
   "main": "lib/index.js",
   "author": "natew <natewienert@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "neon-cli": "^0.1.22"
+    "neon-cli": "^0.1.22",
+    "node-exec-promise": "1.0.2"
   },
   "scripts": {
     "install": "neon build",

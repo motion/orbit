@@ -3,7 +3,7 @@ import { Window } from '@mcro/reactron'
 import * as Helpers from '~/helpers'
 import { ipcMain, screen } from 'electron'
 import * as Constants from '~/constants'
-import { isEqual, throttle, once } from 'lodash'
+import { throttle, once } from 'lodash'
 import MenuItems from './menuItems'
 import { view } from '@mcro/black'
 import PeekWindow from './windows/PeekWindow'
@@ -26,7 +26,6 @@ export default class Windows extends React.Component {
     showSettingsDevTools: false,
     size: [0, 0],
     settingsPosition: [0, 0],
-    mousePosition: [0, 0],
     oraPosition: [0, 0],
     context: null, // osContext
     lastMove: Date.now(),
@@ -82,8 +81,6 @@ export default class Windows extends React.Component {
     if (process.env.CLEAR_DATA) {
       this.oraRef.webContents.session.clearStorageData()
     }
-    this.watchForContext()
-    this.watchForMousePosition()
     this.listenToApps()
     // send initial state
     this.watch(function sendInitialState() {
@@ -137,30 +134,6 @@ export default class Windows extends React.Component {
       this.oraRef.focus()
     }
   }, 200)
-
-  watchForMousePosition = () => {
-    this.setInterval(() => {
-      const mousePosition = Helpers.getMousePosition()
-      if (!isEqual(mousePosition, this.state.mousePosition)) {
-        // { x: number, y: number }
-        // avoid re-rendering because nothing depends on this in render
-        // TODO: better pattern here
-        this.state.mousePosition = mousePosition
-        this.sendOraState()
-      }
-    }, 150)
-  }
-
-  watchForContext = () => {
-    const next = async () => {
-      const context = await Helpers.getContext(this.state.context)
-      if (context) {
-        this.updateState({ context })
-      }
-      this.setTimeout(next, 200)
-    }
-    next()
-  }
 
   handlePreferences = () => {
     this.updateState({ showSettings: true })
@@ -237,29 +210,30 @@ export default class Windows extends React.Component {
           onFocus={this.onOraFocus}
           devToolsExtensions={Helpers.getExtensions(['mobx', 'react'])}
         />
-        {/* PEEK: */}
         <PeekWindow
           appPosition={this.state.oraPosition}
           onWindows={this.handlePeekWindows}
         />
         {/* SETTINGS PANE: */}
-        <Window
-          if={this.state.loadSettings}
-          {...appWindow}
-          show={this.state.showSettings}
-          showDevTools={this.state.showSettingsDevTools}
-          transparent
-          hasShadow
-          titleBarStyle="hiddenInset"
-          defaultSize={this.state.size}
-          size={this.state.size}
-          file={`${Constants.APP_URL}/settings`}
-          position={this.state.settingsPosition}
-          onResize={this.onSettingsSized}
-          onMoved={this.onSettingsMoved}
-          onMove={this.onSettingsMoved}
-          onClose={this.onSettingsClosed}
-        />
+        {false &&
+          this.state.loadSettings && (
+            <Window
+              {...appWindow}
+              show={this.state.showSettings}
+              showDevTools={this.state.showSettingsDevTools}
+              transparent
+              hasShadow
+              titleBarStyle="hiddenInset"
+              defaultSize={this.state.size}
+              size={this.state.size}
+              file={`${Constants.APP_URL}/settings`}
+              position={this.state.settingsPosition}
+              onResize={this.onSettingsSized}
+              onMoved={this.onSettingsMoved}
+              onMove={this.onSettingsMoved}
+              onClose={this.onSettingsClosed}
+            />
+          )}
       </React.Fragment>
     )
   }

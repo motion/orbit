@@ -9,7 +9,6 @@ import OAuth from './server/oauth'
 import OAuthStrategies from './server/oauth.strategies'
 import Passport from 'passport'
 import Crawler from '@mcro/crawler'
-import OCR from '@mcro/ocr'
 import debug from 'debug'
 import path from 'path'
 
@@ -89,6 +88,7 @@ export default class Server {
 
   setupCrawler() {
     this.app.post('/crawler/single', async (req, res) => {
+      console.log('got a post')
       const { options } = req.body
       if (options) {
         const crawler = new Crawler()
@@ -139,17 +139,6 @@ export default class Server {
         log('No options sent')
         res.sendStatus(500)
       }
-    })
-
-    this.app.get('/ocr', async (req, res) => {
-      const { offset, bounds } = req.query
-      log(`running OCR`, req.query)
-      if (!offset || !offset.length) {
-        return res.json({})
-      }
-      const parse = param => param.split(',').map(i => +i)
-      const val = await OCR({ offset: parse(offset), bounds: parse(bounds) })
-      res.json(val)
     })
 
     this.app.get('/crawler/results', (req, res) => {

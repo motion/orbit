@@ -1,14 +1,17 @@
 import ocr from './index'
+import Path from 'path'
+
+const opts = {
+  inputFile: Path.join(__dirname, '..', 'test-screen.png'),
+}
+
+console.log(opts)
 
 async function test() {
-  console.log(
-    await ocr({
-      bounds: [500, 300],
-      offset: [100, 700],
-      scale: 1,
-      contrast: 10,
-    }),
-  )
+  console.time('rust')
+  const res = await ocr(opts)
+  console.timeEnd('rust')
+  console.log(JSON.stringify(res, 0, 2))
 }
 
 test()

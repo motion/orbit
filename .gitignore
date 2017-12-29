@@ -12,7 +12,7 @@ values.yaml
 *.tgz
 kubeconfig
 .vscode/**/*
-packages/screendiff/build
+packages/screendump/build
 apps/web/public/_/*
 apps/site/public/_/*
 apps/web/build
@@ -22,6 +22,12 @@ apps/site/build
 apps/electron-build/app
 apps/crawler/build
 apps/search/build
+
+packages/screen/swift/aperture.xcodeproj
+!packages/screen/swift/aperture.xcodeproj/project.pbxproj
+!packages/screen/swift/aperture.xcodeproj/contents.xcworkspacedata
+packages/screen/swift/build
+packages/screen/aperture
 
 # keep these lib folders because these are babel plugins
 !packages/hmr/lib

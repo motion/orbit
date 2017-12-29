@@ -5,6 +5,7 @@ import * as Constants from '~/constants'
 import { promisifyAll } from 'sb-promisify'
 import sudoPrompt_ from 'sudo-prompt'
 import debug from 'debug'
+import Screen from './screen'
 
 const log = debug('api')
 
@@ -15,19 +16,23 @@ const sudoPrompt = promisifyAll(sudoPrompt_)
 
 export default class API {
   server: Server
+  screen: Screen
 
   constructor() {
     this.server = new Server()
+    this.screen = new Screen()
   }
 
   async start() {
     this.setupHosts()
     const port = this.server.start()
     log('On port', port)
+    this.screen.start()
   }
 
   dispose() {
     this.server.dispose()
+    this.screen.dispose()
   }
 
   async setupHosts() {

@@ -2,6 +2,7 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import OraStore from './oraStore'
+import ContextStore from '~/stores/contextStore'
 import Sidebar from './panes/sidebar'
 import OraHeader from './oraHeader'
 import OraDrawer from './oraDrawer'
@@ -117,6 +118,7 @@ const OraContent = () => (
   </React.Fragment>
 )
 
+@view.attach('contextStore')
 @view.provide({
   oraStore: OraStore,
 })
@@ -146,6 +148,14 @@ export default class OraPage {
               height: oraStore.ui.height,
             }}
           >
+            <UI.Row>
+              <UI.Button onClick={() => this.props.contextStore.pause()}>
+                Pause OCR
+              </UI.Button>
+              <UI.Button onClick={() => this.props.contextStore.resume()}>
+                Resume OCR
+              </UI.Button>
+            </UI.Row>
             <OraContent />
             <UI.Glint bottom color="#fff" opacity={0.1} borderRadius={15} />
           </ora>

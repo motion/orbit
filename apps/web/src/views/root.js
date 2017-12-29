@@ -4,7 +4,11 @@ import Redbox from 'redbox-react'
 import * as UI from '@mcro/ui'
 import NotFound from '~/views/404'
 import Router from '~/router'
+import ContextStore from '~/stores/contextStore'
 
+@view.provide({
+  contextStore: ContextStore,
+})
 @view
 export default class Root extends React.Component {
   state = {

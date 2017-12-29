@@ -1,0 +1,21 @@
+{
+  "name": "@mcro/screen",
+  "version": "4.0.0",
+  "license": "MIT",
+  "scripts": {
+    "test": "node --experimental-modules ./test",
+    "build": "cd swift && xcodebuild archive -derivedDataPath $(mktemp -d) -scheme aperture",
+    "prepublish": "npm run build"
+  },
+  "files": [
+    "index.js",
+    "aperture"
+  ],
+  "dependencies": {
+    "electron-util": "^0.2.1",
+    "execa": "^0.8.0",
+    "file-url": "^2.0.2",
+    "macos-version": "^4.0.1",
+    "tempy": "^0.2.1"
+  }
+}

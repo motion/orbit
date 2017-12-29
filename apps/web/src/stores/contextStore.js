@@ -60,6 +60,7 @@ export default class ContextStore {
       this.context = context
     }
     if (ocr) {
+      console.log('got new ocr', ocr.map(x => x.word).join(','))
       this.ocr = ocr
     }
     if (lastScreenChange) {

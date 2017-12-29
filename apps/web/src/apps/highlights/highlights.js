@@ -37,9 +37,9 @@ class HighlightsStore {
 
   // [ { top, left, height, width }, ... ]
   get highlights() {
-    return ((this.context && this.context.ocr) || []).map(word => ({
+    return ((this.context && this.context.ocr) || []).map((word, index) => ({
       ...word,
-      key: `${word.word}${word.top}${word.left}`,
+      key: `${index}-${word.word}-${word.top}-${word.left}`,
     }))
   }
 

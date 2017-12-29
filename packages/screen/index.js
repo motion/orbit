@@ -84,7 +84,7 @@ class Screen {
     this.recorder = execa(BIN, [args])
 
     this.recorder.catch((err, ...rest) => {
-      console.log('errrr', ...rest)
+      console.log('screen err:', ...rest)
       console.log(err)
       console.log(err.stack)
     })

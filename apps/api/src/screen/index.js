@@ -91,7 +91,7 @@ export default class ScreenState {
     this.stopped = false
     this.watchApplication(async context => {
       if (!isEqual(this.state.context, context)) {
-        console.log('new context, invalidate ocr', context.appName)
+        console.log('new context, invalidate ocr', context && context.appName)
         this.cancelCurrentOCR()
         this.updateState({ context })
       }
@@ -120,7 +120,7 @@ export default class ScreenState {
     if (this.stopped) {
       return
     }
-    let hasNewState
+    let hasNewState = false
     for (const key of Object.keys(object)) {
       if (!isEqual(this.state[key], object[key])) {
         hasNewState = true
@@ -130,8 +130,10 @@ export default class ScreenState {
     if (!hasNewState) {
       return
     }
+    const oldState = this.state
     this.state = { ...this.state, ...object }
-    this.onChangedState(object)
+    // sends over (oldState, changedState, newState)
+    this.onChangedState(oldState, object, this.state)
     try {
       // only send the changed things to reduce overhead
       this.socketSend(object)
@@ -140,10 +142,7 @@ export default class ScreenState {
     }
   }
 
-  onChangedState = async newStateItems => {
-    if (!newStateItems.mousePosition) {
-      console.log('onChangedState', newStateItems)
-    }
+  onChangedState = async (oldState, newStateItems) => {
     // no listeners, no need to watch
     if (!this.hasListeners) {
       return
@@ -151,9 +150,10 @@ export default class ScreenState {
     // const hasNewOCR = !isEqual(prevState.ocr, this.state.ocr)
     // re-watch on different context
     const firstTimeOCR =
-      (!this.state.ocr || !this.state.ocr.length) && newStateItems.ocr
-    if (newStateItems.context || firstTimeOCR) {
-      console.log('re-run screen watch')
+      (!oldState.ocr || !oldState.ocr.length) && newStateItems.ocr
+    const newContext = newStateItems.context
+    if (newContext || firstTimeOCR) {
+      console.log('re-run screen watch', newContext, firstTimeOCR)
       await this.handleNewContext()
     }
   }
@@ -215,7 +215,8 @@ export default class ScreenState {
             y: top + TOP_BAR_HEIGHT,
             width,
             height,
-            screenDir: this.screenDestination,
+            // to test what boxes its capturing
+            // screenDir: this.screenDestination,
           }
         }),
       ]
@@ -240,21 +241,20 @@ export default class ScreenState {
     this.video.onChangedFrame(this.handleChangedFrame)
   }
 
-  handleChangedFrame = async wordId => {
+  handleChangedFrame = async changedWord => {
     if (this.state.ocr) {
-      if (!wordId) {
+      if (!changedWord) {
         console.log('no word given in change event, but we have ocrs')
       } else {
-        if (wordId !== APP_ID) {
-          console.log('got a change for word', wordId)
-          const wordIndex = this.state.ocr.findIndex(w => w.word === wordId)
-          if (wordIndex === -1) {
+        if (changedWord !== APP_ID) {
+          console.log('got a change for word', changedWord)
+          const beforeLen = this.state.ocr.length
+          const newOCR = this.state.ocr.filter(x => x.word !== changedWord)
+          if (newOCR.length === beforeLen) {
             console.log('weird this word isnt in ocr')
           } else {
-            console.log('removing word', wordId)
-            this.updateState({
-              ocr: this.state.ocr.splice(wordIndex, 1),
-            })
+            console.log('removing word', changedWord)
+            this.updateState({ ocr: newOCR })
           }
           return
         } else {
@@ -331,15 +331,14 @@ export default class ScreenState {
       const { boxes } = res
       const [screenX, screenY] = offset
       return boxes.map(({ name, weight, box }) => {
-        console.log('got box', name, box)
         // box => { x, y, width, height }
         return {
           word: name,
           weight,
-          top: box.y / 2 + screenY - TOP_BAR_HEIGHT,
-          left: box.x / 2 + screenX,
-          width: box.width / 2,
-          height: box.height / 2,
+          top: Math.round(box.y / 2 + screenY - TOP_BAR_HEIGHT),
+          left: Math.round(box.x / 2 + screenX),
+          width: Math.round(box.width / 2),
+          height: Math.round(box.height / 2),
         }
       })
     } catch (err) {
@@ -355,7 +354,7 @@ export default class ScreenState {
   }
 
   removeSocket = uid => {
-    this.activeSockets = this.activeSockets.filter(s => (s.uid = uid))
+    this.activeSockets = this.activeSockets.filter(s => s.uid === uid)
   }
 
   dispose() {

@@ -24,12 +24,18 @@ class Screen {
   constructor() {
     this.changedFrameCb = null
     macosVersion.assertGreaterThanOrEqualTo('10.12')
+
+    // handle exits to ensure killing swift sub-process
+    const stopRecording = () => this.stopRecording()
+    process.on('exit', stopRecording)
+    process.on('SIGINT', stopRecording)
+    process.on('SIGUSR1', stopRecording)
+    process.on('SIGUSR2', stopRecording)
   }
 
   startRecording(
     {
       fps = 25,
-      cropArea = undefined,
       showCursor = true,
       displayId = 'main',
       audioDeviceId = undefined,

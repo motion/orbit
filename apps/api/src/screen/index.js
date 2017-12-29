@@ -336,10 +336,10 @@ export default class ScreenState {
         return {
           word: name,
           weight,
-          top: box.y + screenY - TOP_BAR_HEIGHT,
-          left: box.x + screenX,
-          width: box.width,
-          height: box.height,
+          top: box.y / 2 + screenY - TOP_BAR_HEIGHT,
+          left: box.x / 2 + screenX,
+          width: box.width / 2,
+          height: box.height / 2,
         }
       })
     } catch (err) {

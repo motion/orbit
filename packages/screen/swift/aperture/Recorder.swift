@@ -100,10 +100,12 @@ final class Recorder: NSObject {
   
   func scaleImage(cgImage: CGImage, divide: Int) -> CGImage {
     let ccc = CIImage(cgImage: cgImage)
-    let filter = CIFilter(name: "CILanczosScaleTransform")!
+//    let filter = CIFilter(name: "CILanczosScaleTransform")!
+    let filter = CIFilter(name: "CIPhotoEffectNoir")!
     filter.setValue(ccc, forKey: "inputImage")
-    filter.setValue(0.5, forKey: "inputScale")
-    filter.setValue(1.0, forKey: "inputAspectRatio")
+//    filter.setValue(
+//    filter.setValue(0.5, forKey: "inputScale")
+//    filter.setValue(1.0, forKey: "inputAspectRatio")
     let outputImage = filter.value(forKey: "outputImage") as! CIImage
     let context = CIContext(options: [kCIContextUseSoftwareRenderer: false])
     return context.createCGImage(outputImage, from: outputImage.extent)!
@@ -130,7 +132,7 @@ final class Recorder: NSObject {
     let cgImage = scaleImage(cgImage: image, divide: 2)
     let destinationURL = URL(fileURLWithPath: destination)
     guard let finalDestination = CGImageDestinationCreateWithURL(destinationURL as CFURL, kUTTypePNG, 1, nil) else { return false }
-    let resolution = 70
+    let resolution = 300
     let properties: NSDictionary = [
       kCGImageDestinationLossyCompressionQuality: 1,
       kCGImagePropertyDPIHeight: resolution,

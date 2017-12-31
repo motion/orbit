@@ -23,11 +23,11 @@ render(
       file="https://google.com"
       onMove={(...args) => console.log(...args)}
     />
-  </App>
+  </App>,
 )
 
 process.on('unhandledRejection', function(error, p) {
-  console.log('PromiseFail:')
+  console.log('Reactron PromiseFail:')
   if (error.stack) {
     console.log(error.message)
     console.log(error.stack)

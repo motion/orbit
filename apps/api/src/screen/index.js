@@ -233,7 +233,12 @@ export default class ScreenState {
 
     console.log('settings', settings)
 
-    this.video.startRecording(settings)
+    try {
+      this.video.startRecording(settings)
+    } catch (err) {
+      console.log('Error starting recorder:', err.message)
+      console.log(err.stack)
+    }
 
     // start a debounced ocr
     this.handleChangedFrame()

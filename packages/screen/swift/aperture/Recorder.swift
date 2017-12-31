@@ -100,32 +100,33 @@ final class Recorder: NSObject {
   
   func scaleImage(cgImage: CGImage, divide: Int) -> CGImage {
     let ccc = CIImage(cgImage: cgImage)
-//    let filter = CIFilter(name: "CILanczosScaleTransform")!
     let filter = CIFilter(name: "CIPhotoEffectNoir")!
     filter.setValue(ccc, forKey: "inputImage")
-//    filter.setValue(
-//    filter.setValue(0.5, forKey: "inputScale")
-//    filter.setValue(1.0, forKey: "inputAspectRatio")
+    // to scale it down in size, didnt work well with current ocr
+    //    let filter = CIFilter(name: "CILanczosScaleTransform")!
+    //    filter.setValue(
+    //    filter.setValue(0.5, forKey: "inputScale")
+    //    filter.setValue(1.0, forKey: "inputAspectRatio")
     let outputImage = filter.value(forKey: "outputImage") as! CIImage
     let context = CIContext(options: [kCIContextUseSoftwareRenderer: false])
     return context.createCGImage(outputImage, from: outputImage.extent)!
     // alt method, blurrier but bolder
     // todo, test which performs better (speed vs translation)
-//    let width = cgImage.width / divide
-//    let height = cgImage.height / divide
-//    let cgRect = CGRect(origin: CGPoint.zero, size: CGSize(width: CGFloat(width), height: CGFloat(height)))
-//    let context = CGContext(
-//      data: nil,
-//      width: width,
-//      height: height,
-//      bitsPerComponent: cgImage.bitsPerComponent,
-//      bytesPerRow: cgImage.bytesPerRow,
-//      space: cgImage.colorSpace!,
-//      bitmapInfo: cgImage.bitmapInfo.rawValue
-//    )!
-//    context.interpolationQuality = CGInterpolationQuality.high
-//    context.draw(cgImage, in: cgRect)
-//    return context.makeImage()!
+    //    let width = cgImage.width / divide
+    //    let height = cgImage.height / divide
+    //    let cgRect = CGRect(origin: CGPoint.zero, size: CGSize(width: CGFloat(width), height: CGFloat(height)))
+    //    let context = CGContext(
+    //      data: nil,
+    //      width: width,
+    //      height: height,
+    //      bitsPerComponent: cgImage.bitsPerComponent,
+    //      bytesPerRow: cgImage.bytesPerRow,
+    //      space: cgImage.colorSpace!,
+    //      bitmapInfo: cgImage.bitmapInfo.rawValue
+    //    )!
+    //    context.interpolationQuality = CGInterpolationQuality.high
+    //    context.draw(cgImage, in: cgRect)
+    //    return context.makeImage()!
   }
   
   func writeCGImage(image: CGImage, to destination: String) -> Bool {

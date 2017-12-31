@@ -4,9 +4,8 @@ import * as Constants from '~/constants'
 import { ipcMain } from 'electron'
 import { view } from '@mcro/black'
 import { Window } from '@mcro/reactron'
-import { isEqual, once } from 'lodash'
+import { isEqual } from 'lodash'
 import * as Helpers from '~/helpers'
-import { isAbsolute } from 'path'
 
 type PeekStateItem = {
   key: number,
@@ -228,7 +227,7 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
           return (
             <Window
               key={key}
-              showDevTools
+              showDevTools={peek.showDevTools}
               alwaysOnTop={isPeek || peek.alwaysOnTop}
               animatePosition={this.state.wasShowing}
               show={peek.show}

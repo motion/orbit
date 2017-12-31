@@ -1,5 +1,4 @@
 import 'isomorphic-fetch'
-import cleanStack from 'clean-stacktrace'
 
 const IS_DEV = process.env.NODE_ENV === 'development'
 
@@ -11,27 +10,14 @@ if (!process.env.HAS_BABEL_POLYFILL) {
   require('babel-polyfill')
 }
 
-process.on('unhandledRejection', function(error, p) {
-  const path = require('path')
-  const stack = stack =>
-    cleanStack(stack, line => {
-      const m = /.*\((.*)\).?/.exec(line) || []
-      return m[1]
-        ? line.replace(m[1], path.relative(process.cwd(), m[1]))
-        : line
-    })
-  console.log('PromiseFail:')
-  if (error.stack) {
-    try {
-      console.log(error.message)
-      console.log(stack(error.stack))
-    } catch (e) {
-      console.log(e.message, e.stack)
-      console.log('errr', error.stack)
-    }
-  } else {
-    console.log(error)
-  }
+process.on('unhandledRejection', function(reason, promise) {
+  console.log(
+    'API: Possibly Unhandled Rejection at: Promise ',
+    promise,
+    ' reason: ',
+    reason,
+  )
+  console.log(reason.stack)
 })
 
 const API = require('./api').default

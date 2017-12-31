@@ -2,7 +2,6 @@ const os = require('os')
 const path = require('path')
 const execa = require('execa')
 const macosVersion = require('macos-version')
-const fileUrl = require('file-url')
 const electronUtil = require('electron-util/node')
 
 // Workaround for https://github.com/electron/electron/issues/9459
@@ -81,12 +80,16 @@ class Screen {
     }
 
     const args = JSON.stringify(recorderOpts)
-    this.recorder = execa(BIN, [args])
+
+    this.recorder = execa(BIN, [args], {
+      reject: false,
+    })
 
     this.recorder.catch((err, ...rest) => {
       console.log('screen err:', ...rest)
       console.log(err)
       console.log(err.stack)
+      throw err
     })
 
     this.recorder.stdout.setEncoding('utf8')
@@ -113,6 +116,7 @@ class Screen {
     }
     this.recorder.stdout.removeAllListeners()
     this.recorder.kill()
+    this.recorder.kill('SIGKILL')
     await this.recorder
     // sleep to avoid issues
     await sleep(80)

@@ -44,6 +44,7 @@ class Screen {
       // how many pixels to detect before triggering change
       sensitivity = 2,
       boxes,
+      initialScreenshot = false,
     } = {},
   ) {
     if (this.recorder !== undefined) {
@@ -53,6 +54,7 @@ class Screen {
     const recorderOpts = {
       fps,
       showCursor,
+      initialScreenshot,
       displayId,
       audioDeviceId,
       sampleSpacing,

@@ -22,6 +22,7 @@ final class Recorder: NSObject {
   private var output: AVCaptureVideoDataOutput
   private var sensitivity: Int
   private var sampleSpacing: Int
+  private var initialScreenshot: Bool
   private let context = CIContext()
   private var boxes: [String: Box]
   private var lastBoxes: [String: Array<UInt32>]
@@ -43,11 +44,12 @@ final class Recorder: NSObject {
     print("captured")
   }
 
-  init(fps: Int, boxes: Array<Box>, showCursor: Bool, displayId: CGDirectDisplayID = CGMainDisplayID(), videoCodec: String? = nil, sampleSpacing: Int, sensitivity: Int) throws {
+  init(fps: Int, boxes: Array<Box>, showCursor: Bool, displayId: CGDirectDisplayID = CGMainDisplayID(), videoCodec: String? = nil, sampleSpacing: Int, sensitivity: Int, initialScreenshot: Bool) throws {
     self.displayId = displayId
     self.session = AVCaptureSession()
     self.sampleSpacing = sampleSpacing
     self.sensitivity = sensitivity
+    self.initialScreenshot = initialScreenshot
     self.lastBoxes = [String: Array<UInt32>]()
     self.boxes = [String: Box]()
     for box in boxes {
@@ -223,11 +225,16 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
     // loop over boxes and check
     for boxId in self.boxes.keys {
       let box = self.boxes[boxId]!
-      if (hasBoxChanged(box: box, buffer: int32Buffer, perRow: int32PerRow)) {
+      if (self.initialScreenshot || hasBoxChanged(box: box, buffer: int32Buffer, perRow: int32PerRow)) {
         screenshotBox(box: box, buffer: sampleBuffer)
         print(">\(box.id)")
       }
     }
+    
+    if (self.initialScreenshot) {
+      self.initialScreenshot = false
+    }
+    
     // release
     CVPixelBufferUnlockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0))
 //    let end = DispatchTime.now()

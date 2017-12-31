@@ -1,5 +1,6 @@
 // @flow
 import Path from 'path'
+import Fs from 'fs-extra'
 import { Server } from 'ws'
 import Screen from '@mcro/screen'
 import ocrScreenshot from '@mcro/ocr'
@@ -9,6 +10,7 @@ import mouse from 'osx-mouse'
 import * as Constants from '~/constants'
 
 const APP_ID = 'screen'
+const APP_SCREEN_PATH = Path.join(Constants.TMP_DIR, `${APP_ID}.png`)
 const DEBOUNCE_OCR = 1000
 const TOP_BAR_HEIGHT = 23
 
@@ -198,12 +200,19 @@ export default class ScreenState {
 
     // watch settings
     if (!ocr) {
+      // remove old screen
+      try {
+        await Fs.remove(APP_SCREEN_PATH)
+      } catch (err) {
+        console.log(err)
+      }
       // we are watching the whole app for words
       settings = {
         fps: ocr ? 30 : 2,
         sampleSpacing: 10,
         sensitivity: 2,
         showCursor: false,
+        initialScreenshot: true,
         boxes: [appBox],
       }
     } else {
@@ -331,7 +340,7 @@ export default class ScreenState {
     }
     try {
       const res = await ocrScreenshot({
-        inputFile: Path.join(this.screenDestination, `${APP_ID}.png`),
+        inputFile: APP_SCREEN_PATH,
       })
       const { boxes } = res
       const [screenX, screenY] = offset

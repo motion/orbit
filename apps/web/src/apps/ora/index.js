@@ -148,14 +148,6 @@ export default class OraPage {
               height: oraStore.ui.height,
             }}
           >
-            <UI.Row>
-              <UI.Button onClick={() => this.props.contextStore.pause()}>
-                Pause OCR
-              </UI.Button>
-              <UI.Button onClick={() => this.props.contextStore.resume()}>
-                Resume OCR
-              </UI.Button>
-            </UI.Row>
             <OraContent />
             <UI.Glint bottom color="#fff" opacity={0.1} borderRadius={15} />
           </ora>
@@ -195,8 +187,8 @@ export default class OraPage {
         // ['inset', 0, 0, 120, [255, 255, 255, 0.053]],
       ],
       margin: 10,
-      borderTopRadius: 10,
-      borderBottomRadius: 15,
+      borderTopRadius: 5,
+      borderBottomRadius: 5,
       overflow: 'hidden',
       transition: 'all ease-in 50ms',
       opacity: 0,

@@ -20,7 +20,7 @@ const BANNER_COLORS = {
   store: OraBannerStore,
 })
 export default class OraBanner {
-  render({ oraStore, store }) {
+  render({ oraStore, store, style }) {
     const isPinning = !!store.banner
     return (
       <title $pinning={store.banner && store.banner.type}>
@@ -29,7 +29,8 @@ export default class OraBanner {
             ellipse
             size={1.1}
             color={[180, 180, 180]}
-            alpha={isPinning ? 1 : 0.8}
+            alpha={isPinning ? 1 : 0.5}
+            style={style}
           >
             {(store.banner && store.banner.message) ||
               'Search...' ||

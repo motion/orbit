@@ -136,12 +136,8 @@ export default class ScreenState {
     this.state = { ...this.state, ...object }
     // sends over (oldState, changedState, newState)
     this.onChangedState(oldState, object, this.state)
-    try {
-      // only send the changed things to reduce overhead
-      this.socketSend(object)
-    } catch (err) {
-      console.log('error sending over socket', err.message)
-    }
+    // only send the changed things to reduce overhead
+    this.socketSend(object)
   }
 
   onChangedState = async (oldState, newStateItems) => {
@@ -362,8 +358,12 @@ export default class ScreenState {
 
   socketSend = data => {
     const strData = JSON.stringify(data)
-    for (const { socket } of this.activeSockets) {
-      socket.send(strData)
+    for (const { socket, uid } of this.activeSockets) {
+      try {
+        socket.send(strData)
+      } catch(err) {
+        this.removeSocket(uid)
+      }
     }
   }
 

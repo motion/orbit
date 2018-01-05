@@ -153,6 +153,7 @@ export default class OraHeader extends React.Component {
             <UI.Input
               key="ora-input"
               $searchInput
+              $searchFont
               size={1}
               getRef={oraStore.ui.handleInputRef}
               borderRadius={0}
@@ -163,7 +164,7 @@ export default class OraHeader extends React.Component {
               background="transparent"
             />
             <UI.HoverGlow zIndex={-1} opacity={0.045} blur={60} />
-            <OraBanner />
+            <OraBanner $searchFont />
             <rightSide onMouseUp={this.preventPropagation}>
               <BucketsDropdown />
               <UI.Icon
@@ -249,12 +250,14 @@ export default class OraHeader extends React.Component {
       alignItems: 'center',
       flexFlow: 'row',
     },
+    searchFont: {
+      fontWeight: 300,
+      fontSize: 20,
+    },
     searchInput: {
       position: 'relative',
       padding: [8, 25, 9],
       paddingLeft: 36,
-      fontWeight: 300,
-      fontSize: 20,
       color: '#fff',
     },
   }

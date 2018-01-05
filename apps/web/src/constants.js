@@ -14,9 +14,9 @@ if (process.env.IS_PROD) {
 export const VERSION = require('../package.json').version
 
 export const oraBg = '#5e1bdf'
-export const ORA_BG = [0, 0, 0, 0.89]
-export const ORA_BG_FOCUSED = [0, 0, 0, 0.8]
-export const ORA_BG_MAIN_OPAQUE = [32, 32, 32]
+export const ORA_BG = [0, 0, 0, 0.95]
+export const ORA_BG_FOCUSED = [0, 0, 0, 0.89]
+export const ORA_BG_MAIN_OPAQUE = [32, 32, 32, 0]
 export const ORA_BG_MAIN = [...ORA_BG_MAIN_OPAQUE]
 export const ORA_INNER_SHADOW = [0, 0, 20, 0, [0, 0, 0, 0.5]]
 export const ORA_PAD = 20

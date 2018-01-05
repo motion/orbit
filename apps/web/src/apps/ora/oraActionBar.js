@@ -15,6 +15,7 @@ export default class OraActionBar {
   render({ oraStore }) {
     const { store } = oraStore.stack.last
     const actions = store && store.actions
+    const isActionsArray = Array.isArray(actions)
     const collapse = (
       <collapseBar onClick={oraStore.ui.toggleCollapsed}>
         <UI.Arrow />
@@ -29,39 +30,41 @@ export default class OraActionBar {
 
           <actionbar if={actions && !oraStore.ui.collapsed}>
             {collapse}
-            {actions
-              .filter(Boolean)
-              .map(({ flex, content, ...props }) => {
-                if (flex) {
-                  return <flexer $$flex={flex} />
-                }
-                if (content) {
-                  return <span>{content}</span>
-                }
-                return (
-                  <UI.Button
-                    glow
-                    sizeHeight={0.9}
-                    glowProps={{
-                      color: [255, 255, 255],
-                      opacity: 0.2,
-                    }}
-                    glint={false}
-                    background={[255, 255, 255, 0.1]}
-                    borderWidth={0}
-                    {...props}
-                  />
-                )
-              })
-              .map((item, index) =>
-                React.cloneElement(item, {
-                  key: Math.random(),
-                  style: {
-                    ...item.props.style,
-                    ...(index === 0 ? stylesFirst : styles),
-                  },
+            {!isActionsArray && actions}
+            {isActionsArray &&
+              actions
+                .filter(Boolean)
+                .map(({ flex, content, ...props }) => {
+                  if (flex) {
+                    return <flexer $$flex={flex} />
+                  }
+                  if (content) {
+                    return <span>{content}</span>
+                  }
+                  return (
+                    <UI.Button
+                      glow
+                      sizeHeight={0.9}
+                      glowProps={{
+                        color: [255, 255, 255],
+                        opacity: 0.2,
+                      }}
+                      glint={false}
+                      background={[255, 255, 255, 0.1]}
+                      borderWidth={0}
+                      {...props}
+                    />
+                  )
                 })
-              )}
+                .map((item, index) =>
+                  React.cloneElement(item, {
+                    key: Math.random(),
+                    style: {
+                      ...item.props.style,
+                      ...(index === 0 ? stylesFirst : styles),
+                    },
+                  }),
+                )}
           </actionbar>
         </actions>
       </UI.Theme>

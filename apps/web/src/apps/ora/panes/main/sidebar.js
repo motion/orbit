@@ -89,7 +89,7 @@ export default class MainSidebar {
           onClick: async () => {
             console.log('insering things', ContentStore)
             const res = await Promise.all(
-              ContentStore.things.map(t => Thing.create(t))
+              ContentStore.things.map(t => Thing.create(t)),
             )
             console.log('created things', res)
           },
@@ -111,5 +111,18 @@ export default class MainSidebar {
             category: 'Search Results',
           },
         ]
+  }
+
+  get actions() {
+    return (
+      <React.Fragment>
+        <UI.Button onClick={() => this.props.contextStore.pause()}>
+          Pause OCR
+        </UI.Button>
+        <UI.Button onClick={() => this.props.contextStore.resume()}>
+          Resume OCR
+        </UI.Button>
+      </React.Fragment>
+    )
   }
 }

@@ -215,25 +215,24 @@ export default class Windows extends React.Component {
           onWindows={this.handlePeekWindows}
         />
         {/* SETTINGS PANE: */}
-        {false &&
-          this.state.loadSettings && (
-            <Window
-              {...appWindow}
-              show={this.state.showSettings}
-              showDevTools={this.state.showSettingsDevTools}
-              transparent
-              hasShadow
-              titleBarStyle="hiddenInset"
-              defaultSize={this.state.size}
-              size={this.state.size}
-              file={`${Constants.APP_URL}/settings`}
-              position={this.state.settingsPosition}
-              onResize={this.onSettingsSized}
-              onMoved={this.onSettingsMoved}
-              onMove={this.onSettingsMoved}
-              onClose={this.onSettingsClosed}
-            />
-          )}
+        {this.state.loadSettings && (
+          <Window
+            {...appWindow}
+            show={this.state.showSettings}
+            showDevTools={this.state.showSettingsDevTools}
+            transparent
+            hasShadow
+            titleBarStyle="hiddenInset"
+            defaultSize={this.state.size}
+            size={this.state.size}
+            file={`${Constants.APP_URL}/settings`}
+            position={this.state.settingsPosition}
+            onResize={this.onSettingsSized}
+            onMoved={this.onSettingsMoved}
+            onMove={this.onSettingsMoved}
+            onClose={this.onSettingsClosed}
+          />
+        )}
       </React.Fragment>
     )
   }

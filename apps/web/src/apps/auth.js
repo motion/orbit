@@ -21,8 +21,9 @@ export default class AuthPage extends React.Component {
 
   render() {
     return (
-      <div
+      <button
         css={{
+          pointerEvents: 'auto',
           width: '100%',
           height: '100%',
           alignitems: 'center',
@@ -36,7 +37,7 @@ export default class AuthPage extends React.Component {
         onMouseUp={this.link}
       >
         >>link {service}
-      </div>
+      </button>
     )
   }
 }

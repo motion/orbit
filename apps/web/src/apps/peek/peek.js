@@ -34,7 +34,22 @@ type Target = {
 @view
 class WebView {
   render({ getRef, ...props }) {
-    return <webview ref={getRef} {...props} />
+    return (
+      <view {...props}>
+        <webview ref={getRef} css={{ width: '100%', height: '100%' }} />
+        <view $location css={{ flex: 1, borderTop: [1, '#eee'] }}>
+          <UI.Text size={0.8} alpha={0.5}>
+            {props.src.replace(':5000', '')}
+          </UI.Text>
+        </view>
+      </view>
+    )
+  }
+
+  static style = {
+    location: {
+      padding: 3,
+    },
   }
 }
 
@@ -297,12 +312,12 @@ export default class PeekPage {
                     />
                   </readability>
                 </tab>
-                <tab $visible={store.pageLoaded && store.tab === 'webview'}>
+                <tab $visible={store.tab === 'webview'}>
                   <loading if={!store.pageLoaded}>
-                    <UI.Text>Loading</UI.Text>
+                    <UI.Text color="#000">Loading</UI.Text>
                   </loading>
                   <WebView
-                    if={false && targetUrl && showWebview}
+                    if={targetUrl && showWebview}
                     $contentLoading={!store.pageLoaded}
                     $webview
                     key={targetUrl}
@@ -381,10 +396,10 @@ export default class PeekPage {
       position: 'relative',
     },
     contentLoading: {
-      opacity: 0.3,
+      // opacity: 0.3,
     },
     webview: {
-      height: '100%',
+      height: '94%',
       width: '100%',
       background: '#fff',
     },

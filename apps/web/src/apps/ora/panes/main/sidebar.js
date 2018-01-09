@@ -114,6 +114,7 @@ export default class MainSidebar {
   }
 
   get actions() {
+    return null
     return (
       <React.Fragment>
         <UI.Button onClick={() => this.props.contextStore.pause()}>

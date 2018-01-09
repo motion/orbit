@@ -41,19 +41,19 @@ const deliverx = [
     title: 'Anchit',
     type: 'website',
     integration: 'pin-site',
-    url: 'http://deliverx.dev/user',
+    url: 'http://deliverx.com/user',
   },
   {
     title: 'Late deliveries map',
     type: 'website',
     integration: 'pin-site',
-    url: 'http://deliverx.dev/map',
+    url: 'http://deliverx.com/map',
   },
   {
     title: 'Drivers',
     type: 'website',
     integration: 'pin-site',
-    url: 'http://deliverx.dev/drivers',
+    url: 'http://deliverx.com/drivers',
   },
 ]
 

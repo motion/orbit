@@ -1,1 +1,1 @@
-export const PEEK_DIMENSIONS = [700, 500]
+export const PEEK_DIMENSIONS = [560, 450]

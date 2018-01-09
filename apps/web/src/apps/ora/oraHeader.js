@@ -252,7 +252,7 @@ export default class OraHeader extends React.Component {
     },
     searchFont: {
       fontWeight: 300,
-      fontSize: 20,
+      fontSize: 16,
     },
     searchInput: {
       position: 'relative',

@@ -1,7 +1,7 @@
 // @flow
 import fancyElement from './fancyElement'
 import css from '@mcro/css'
-import JSS from './stylesheet'
+import JSS from '~/stylesheet'
 import * as Helpers_ from '@mcro/css'
 
 // exports
@@ -12,7 +12,9 @@ export const ThemeProvide = ThemeProvide_
 export const Helpers = Helpers_
 
 // type exports
-export type { Transform, Color } from '@mcro/css'
+// import { Transform, Color } from '@mcro/css'
+// export type Transform
+// export type Color
 export type Options = {
   dontTheme?: boolean,
   themeKey: string | boolean,
@@ -60,7 +62,7 @@ export default class Gloss {
   decorator = (
     optionalNameOrChild: string | Function,
     optionalStyle?: Object,
-    optionalPropStyles?: Object
+    optionalPropStyles?: Object,
   ) => {
     if (typeof optionalNameOrChild === 'string') {
       // shorthand -- $('tagName', {}) style component
@@ -96,7 +98,7 @@ export default class Gloss {
         'invalid view given to gloss',
         optionalNameOrChild,
         optionalStyle,
-        optionalPropStyles
+        optionalPropStyles,
       )
       return () => this.createElement('div', { children: 'Error Component' })
     }
@@ -220,7 +222,7 @@ export default class Gloss {
   attachStyles = (
     childKey: ?string,
     styles: ?{ [a: string]: Object },
-    force: boolean = false
+    force: boolean = false,
   ): void => {
     if (!styles) {
       return null

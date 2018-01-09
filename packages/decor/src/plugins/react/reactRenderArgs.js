@@ -11,6 +11,7 @@ export default () => ({
   onlyClass: true,
   decorator: (Klass: Class<any> | Function) => {
     if (!Klass.prototype.render) {
+      console.log(Klass)
       throw new Error('Not a react-like class')
     }
     // preact-like render

@@ -5,26 +5,12 @@ import * as Constants from '~/constants'
 import { view } from '@mcro/black'
 import Illustration1 from './header/illustration1'
 import Illustration2 from './header/illustration2'
-import Animated from 'animated/lib/targets/react-dom'
-
-window.Animated = Animated
+import { Stage, Scene, Item } from '~/views/stage'
 
 const titleProps = {
   size: 2.85,
   fontWeight: 200,
 }
-
-const animations = {
-  first: new Animated.Value(0),
-  second: new Animated.Value(0),
-  third: new Animated.Value(0),
-}
-
-Animated.spring(animations.first, { toValue: 0 }).start()
-
-setTimeout(() => {
-  Animated.spring(animations.first, { toValue: 1, speed: 0 }).start()
-}, 0)
 
 @view
 export default class HomeHeader {
@@ -36,16 +22,17 @@ export default class HomeHeader {
         <View.SectionContent fullscreen>
           <View.Header />
 
-          <Animated.div
-            style={{
-              transform: [{ scale: animations.first }],
-              width: 100,
-              height: 100,
-              background: 'red',
-            }}
-          >
-            Test Div
-          </Animated.div>
+          <Stage>
+            <Scene>
+              <Item>thing</Item>
+            </Scene>
+            <Scene>
+              <Item>thing</Item>
+            </Scene>
+            <Scene>
+              <Item>thing</Item>
+            </Scene>
+          </Stage>
 
           <View.Slant dark />
           <content

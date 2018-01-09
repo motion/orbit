@@ -35,14 +35,11 @@ type Target = {
 class WebView {
   render({ getRef, ...props }) {
     return (
-      <view {...props}>
-        <webview ref={getRef} css={{ width: '100%', height: '100%' }} />
-        <view $location css={{ flex: 1, borderTop: [1, '#eee'] }}>
-          <UI.Text size={0.8} alpha={0.5}>
-            {props.src.replace(':5000', '')}
-          </UI.Text>
-        </view>
-      </view>
+      <webview
+        ref={getRef}
+        css={{ width: '100%', height: '100%' }}
+        {...props}
+      />
     )
   }
 
@@ -324,6 +321,14 @@ export default class PeekPage {
                     src={targetUrl.replace('deliverx.com', 'deliverx.com:5000')}
                     getRef={store.handlePageRef}
                   />
+                  <view
+                    $location
+                    css={{ width: '100%', borderTop: [1, '#eee'] }}
+                  >
+                    <UI.Text size={0.8} alpha={0.5}>
+                      {targetUrl}
+                    </UI.Text>
+                  </view>
                 </tab>
               </tabs>
             </innerContent>

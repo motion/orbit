@@ -166,8 +166,9 @@ export default class OraHeader extends React.Component {
             <UI.HoverGlow zIndex={-1} opacity={0.045} blur={60} />
             <OraBanner $searchFont />
             <rightSide onMouseUp={this.preventPropagation}>
-              <BucketsDropdown />
+              <BucketsDropdown if={false} />
               <UI.Icon
+                if={false}
                 {...iconProps}
                 opacity={0.1}
                 name="gear"

@@ -44,11 +44,11 @@ export const Slant = ({
             background.indexOf('linear') === 0
               ? background.replace(
                   'linear-gradient(',
-                  `linear-gradient(${170 + Constants.SLANT}deg, `
+                  `linear-gradient(${170 + Constants.SLANT}deg, `,
                 )
               : background,
-          top: -20,
-          bottom: -20,
+          top: -Constants.SLANT_AMT,
+          bottom: -Constants.SLANT_AMT,
           left: inverse ? 'auto' : 0,
           right: inverse ? 0 : 'auto',
           width: Constants.SLANT_AMT * 2,
@@ -88,7 +88,7 @@ export const Section = view(
     },
     dark: Constants.dark,
     darkInverse: Constants.darkInverse,
-  }
+  },
 )
 
 export const SectionContent = view(
@@ -112,5 +112,5 @@ export const SectionContent = view(
     fullscreen: {
       height: Constants.SECTION_HEIGHT,
     },
-  }
+  },
 )

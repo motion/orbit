@@ -8,7 +8,7 @@ import Illustration2 from './header/illustration2'
 import { Stage, Scene, Item } from '~/views/stage'
 
 const titleProps = {
-  size: 2.85,
+  size: 2.7,
   fontWeight: 200,
 }
 
@@ -22,7 +22,7 @@ export default class HomeHeader {
         <View.SectionContent fullscreen>
           <View.Header />
 
-          <Stage>
+          <Stage if={false}>
             <Scene>
               <Item>thing</Item>
             </Scene>
@@ -35,71 +35,34 @@ export default class HomeHeader {
           </Stage>
 
           <View.Slant dark />
+
           <content
             $$row
             css={{
               margin: ['auto', 0],
+              position: 'relative',
               justifyContent: 'space-between',
             }}
           >
-            <UI.Theme name="dark">
-              <section
-                css={{
-                  position: 'relative',
-                  zIndex: 11,
-                  width: '45%',
-                  marginTop: -20,
-                }}
+            <section
+              css={{
+                position: 'relative',
+                zIndex: 11,
+                width: '45%',
+                // marginTop: -20,
+              }}
+            >
+              <View.Title
+                selectable
+                {...titleProps}
+                fontWeight={300}
+                textAlign="right"
               >
-                <View.Title selectable {...titleProps} textAlign="right">
-                  <span css={{ marginRight: -10 }}>We follow</span>
-                  <br />
-                  <span className="hlword">what you do</span>
-                </View.Title>
-                <inner
-                  css={{
-                    position: 'relative',
-                    margin: [-130, 10, 0, 0],
-                    pointerEvents: 'none',
-                    userSelect: 'none',
-                    zIndex: -1,
-                  }}
-                >
-                  <Illustration1
-                    css={{
-                      transform: { scale: 1.6 },
-                    }}
-                  />
-                  <View.Ring
-                    width={420}
-                    fill={ringFill}
-                    css={{
-                      position: 'absolute',
-                      top: -235,
-                      left: -20,
-                      zIndex: -10,
-                      transform: {
-                        rotate: '70deg',
-                      },
-                    }}
-                  />
-                  <View.Ring
-                    width={420}
-                    fill={ringFill}
-                    css={{
-                      position: 'absolute',
-                      top: -585,
-                      left: -20,
-                      zIndex: -10,
-                      transform: {
-                        rotate: '170deg',
-                        scale: 0.5,
-                      },
-                    }}
-                  />
-                </inner>
-              </section>
-            </UI.Theme>
+                <span css={{ marginRight: -10 }}>A new type of tool</span>
+                <br />
+                <span className="hlword">that understands you</span>
+              </View.Title>
+            </section>
 
             <section
               css={{
@@ -112,28 +75,15 @@ export default class HomeHeader {
                   position: 'relative',
                   zIndex: 11,
                   height: 250,
-                  left: 20,
+                  // left: 20,
                   pointerEvents: 'none',
                   userSelect: 'none',
                 }}
               >
-                <Illustration2 css={{ transform: { y: 20, scale: 1.2 } }} />
-                <View.Bubble
-                  fill={UI.color(Constants.colorMain)
-                    .darken(0.15)
-                    .toString()}
-                  width={400}
-                  css={{
-                    position: 'absolute',
-                    top: -235,
-                    left: -20,
-                    zIndex: -10,
-                  }}
-                />
                 <text
                   css={{
                     position: 'absolute',
-                    bottom: -220,
+                    // bottom: -220,
                   }}
                 >
                   <View.Title
@@ -142,9 +92,9 @@ export default class HomeHeader {
                     color={'#fff'}
                     selectable
                   >
-                    And show you <br />
-                    <span css={{ marginLeft: -2 }}>
-                      what you <span className="hlword">should know</span>
+                    And augments your OS <br />
+                    <span css={{ marginLeft: -10 }}>
+                      with what you <span className="hlword">should know</span>
                     </span>
                   </View.Title>
                 </text>

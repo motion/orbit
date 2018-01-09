@@ -33,10 +33,7 @@ export default () => (
 
       <menu css={{ flexFlow: 'row', padding: [0, 100, 0, 70] }}>
         <MenuItem to="/sales" color="#fff">
-          For Sales
-        </MenuItem>
-        <MenuItem to="/support" color="#fff">
-          For Support
+          FAQ
         </MenuItem>
         <MenuItem to="/pricing" color="#fff">
           Pricing

@@ -4,10 +4,10 @@ export const smallSize = 900
 
 export const PAGE_WIDTH = smallSize
 
-export const SLANT_AMT = 60
+export const SLANT_AMT = 80
 export const SECTION_HEIGHT = Math.max(
   900,
-  Math.min(1100, window.innerHeight * 1.1)
+  Math.min(1100, window.innerHeight * 1.1),
 )
 export const SLANT = Math.atan(SLANT_AMT / (SECTION_HEIGHT / 2)) * 180 / Math.PI
 
@@ -33,14 +33,16 @@ export const screen = {
 }
 
 export const dark1 = UI.color(colorMain)
-  // .darken(0.75)
-  .toString()
+// .darken(0.75)
+// .toString()
 export const dark2 = UI.color(colorSecondary)
-  // .darken(0.75)
-  .toString()
+// .darken(0.75)
+// .toString()
 
-export const darkBackground = dark1
-export const darkBackgroundInverse = dark2
+export const darkBackground = `linear-gradient(#000, #333)`
+export const darkBackgroundInverse = `linear-gradient(${dark2}, ${dark2.lighten(
+  0.35,
+)})`
 
 export const dark = {
   background: darkBackground,

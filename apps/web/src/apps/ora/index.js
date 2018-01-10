@@ -103,7 +103,7 @@ class OraMainContent {
     },
     contentWithHeaderOpen: {
       transform: {
-        y: Constants.ORA_HEADER_HEIGHT_FULL - Constants.ORA_HEADER_HEIGHT,
+        y: 0, //Constants.ORA_HEADER_HEIGHT_FULL - Constants.ORA_HEADER_HEIGHT,
       },
     },
   }
@@ -183,13 +183,13 @@ export default class OraPage {
       background: Constants.ORA_BG,
       // border: [1, [255, 255, 255, 0.035]],
       boxShadow: [
-        [0, 0, 15, 2, [0, 0, 0, 0.2]],
+        [0, 0, 15, 0, [0, 0, 0, 0.5]],
         // ['inset', 0, 0, 120, [255, 255, 255, 0.053]],
       ],
       margin: 10,
       borderRadius: 10,
       overflow: 'hidden',
-      transition: 'all ease-in 50ms',
+      transition: 'all ease-in 120ms',
       opacity: 0,
       transform: {
         x: Constants.ORA_WIDTH + Constants.ORA_PAD,

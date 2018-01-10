@@ -101,6 +101,9 @@ export default class MainSidebar {
   }
 
   get results() {
+    if (!this.search) {
+      return []
+    }
     const items = this.rawResults
     return items && items.length
       ? items

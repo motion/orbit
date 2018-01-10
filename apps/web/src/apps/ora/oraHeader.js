@@ -141,7 +141,7 @@ export default class OraHeader extends React.Component {
         >
           <contents>
             <leftSide>
-              <UI.Icon name="zoom" {...iconProps} />
+              <UI.Icon name="zoom" {...iconProps} color="#fff" />
               <UI.Icon
                 if={false && oraStore.stack.length > 1}
                 name="arrominleft"
@@ -195,7 +195,7 @@ export default class OraHeader extends React.Component {
     header: {
       position: 'relative',
       overflow: 'hidden',
-      opacity: 0.85,
+      opacity: 0.9,
       zIndex: -1,
       height: Constants.ORA_HEADER_HEIGHT + 100,
       paddingBottom: 100,
@@ -211,7 +211,7 @@ export default class OraHeader extends React.Component {
     },
     focus: {
       opacity: 1,
-      height: Constants.ORA_HEADER_HEIGHT_FULL + 100,
+      // height: Constants.ORA_HEADER_HEIGHT_FULL + 100,
       '& .icon': {
         transform: 'scale(1.05)',
       },
@@ -239,7 +239,7 @@ export default class OraHeader extends React.Component {
       height: 'auto',
       left: 10,
       zIndex: 2,
-      opacity: 0.4,
+      opacity: 0.5,
     },
     rightSide: {
       position: 'absolute',

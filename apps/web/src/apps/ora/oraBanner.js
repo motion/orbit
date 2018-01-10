@@ -29,7 +29,7 @@ export default class OraBanner {
             ellipse
             size={1.1}
             color={[180, 180, 180]}
-            alpha={isPinning ? 1 : 0.5}
+            alpha={isPinning ? 1 : 0.6}
             style={style}
           >
             {(store.banner && store.banner.message) ||

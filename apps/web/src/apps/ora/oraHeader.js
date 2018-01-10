@@ -85,6 +85,18 @@ class BucketsDropdown {
 @view.attach('oraStore')
 @view
 export default class OraHeader extends React.Component {
+  componentDidMount() {
+    this.react(
+      () => this.props.oraStore.ui.state.hidden,
+      hidden => {
+        // is toggling to shown
+        if (!hidden) {
+          this.props.oraStore.ui.focusBar()
+        }
+      },
+    )
+  }
+
   handleHeaderClick = e => {
     e.preventDefault()
     this.props.oraStore.ui.focusBar()

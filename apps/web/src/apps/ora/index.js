@@ -152,6 +152,7 @@ export default class OraPage {
             <UI.Glint bottom color="#fff" opacity={0.1} borderRadius={15} />
           </ora>
           <orbit
+            if={false}
             $orbitHidden={hidden}
             $orbitBarFocused={oraStore.ui.barFocused}
             onClick={this.handleOrbitClick}

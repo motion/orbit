@@ -105,7 +105,7 @@ import { throttle } from 'lodash'
         this.appRef.focus()
         this.oraRef.focus()
       }
-    }, 200)
+    }, 80)
 
     handleAppRef = ref => {
       if (ref) {

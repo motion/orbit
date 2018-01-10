@@ -4,6 +4,7 @@ import ShortcutsStore from '~/stores/shortcutsStore'
 import { view } from '@mcro/black'
 import * as RootHelpers from './rootHelpers'
 import Windows from './Windows'
+import Tray from './Tray'
 import { ipcMain } from 'electron'
 
 @view.provide({
@@ -90,6 +91,7 @@ export default class Root extends React.Component {
     return (
       <App onBeforeQuit={rootStore.onBeforeQuit} ref={rootStore.handleAppRef}>
         <Windows />
+        <Tray />
       </App>
     )
   }

@@ -13,7 +13,7 @@ export default class TrayEl {
           Constants.ROOT_PATH,
           'resources',
           'icons',
-          'cloudTemplate.png',
+          'orbitTemplate.png',
         )}
         title="Test out the tray"
         onClick={() => console.log('clicked')}

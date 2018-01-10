@@ -28,25 +28,31 @@ export default class TrayElement extends BaseComponent {
     // this.update()
   }
 
+  propHandlers = {
+    image: image => this.tray.setImage(image || ''),
+    pressedImage: pressedImage => this.tray.setPressedImage(pressedImage || ''),
+    title: title => this.tray.setTitle(title || ''),
+    tooltip: tooltip => this.tray.setToolTip(tooltip || ''),
+    highlightMode: highlightMode =>
+      this.tray.setHighlightMode(highlightMode || 'selection'),
+  }
+
   handleNewProps(keys) {
-    console.log('keys', keys)
-    // handle new keys
-    // try {
-    //   this.tray.setImage(this.props.image || '')
-    //   this.tray.setPressedImage(this.props.pressedImage || '')
-    //   this.tray.setTitle(this.props.title || '')
-    //   this.tray.setToolTip(this.props.tooltip || '')
-    //   this.tray.setHighlightMode(this.props.highlightMode || 'selection')
-    //   for (const key of keys) {
-    //     const val = this.props[key]
-    //     if (EVENT_KEYS[key]) {
-    //       this.handleEvent(this.tray, EVENT_KEYS[key], val)
-    //       continue
-    //     }
-    //   }
-    // } catch (e) {
-    //   console.log('error with prop handlers')
-    //   console.log(e)
-    // }
+    console.log('Tray.handleNewProps', keys, !!this.tray)
+    try {
+      for (const key of keys) {
+        const val = this.props[key]
+        if (EVENT_KEYS[key]) {
+          this.handleEvent(this.tray, EVENT_KEYS[key], val)
+          continue
+        }
+        if (this.propHandlers[key]) {
+          this.propHandlers[key](val)
+        }
+      }
+    } catch (e) {
+      console.log('error with prop handlers')
+      console.log(e)
+    }
   }
 }

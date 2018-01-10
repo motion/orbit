@@ -110,7 +110,7 @@ export default ({ color = '#fff', ...props }) => (
       }}
     />
     <LogoText2
-      css={{ height: 36, marginTop: -10, marginRight: 18, marginBottom: -2 }}
+      css={{ height: 30, marginTop: -10, marginRight: 18, marginBottom: -2 }}
       fill={color}
     />
   </logos>

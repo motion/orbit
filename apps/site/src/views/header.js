@@ -44,9 +44,9 @@ export default () => (
         <UI.Button
           icon="objects_planet"
           iconAfter
-          size={1.2}
+          size={1.1}
           fontWeight={200}
-          theme="#000"
+          theme={Constants.colorMain.toString()}
           color="#fff"
         >
           Download

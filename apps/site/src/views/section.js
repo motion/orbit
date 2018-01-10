@@ -12,7 +12,7 @@ const padRight = {
 
 export const Slant = ({
   secondary,
-  reverseGradient,
+  reversed,
   inverse,
   inverseSlant,
   backgroundColor = Constants.gradients.main.background,
@@ -21,11 +21,11 @@ export const Slant = ({
   let background = backgroundColor
   if (secondary) {
     background = Constants.gradients.secondary.background
-    if (reverseGradient) {
+    if (reversed) {
       background = Constants.gradients.secondary.backgroundInverse
     }
   } else {
-    if (reverseGradient) {
+    if (reversed) {
       background = Constants.gradients.main.backgroundInverse
     }
   }
@@ -85,15 +85,18 @@ export const Section = view(
   {
     position: 'relative',
     overflow: 'hidden',
-    background: Constants.gradients.secondary.background,
   },
   {
     padded: {
       padding: [110, 0],
       margin: 0,
     },
-    secondary: Constants.gradients.secondary.background,
-    reverseGradient: Constants.gradients.secondary.backgroundInverse,
+    secondary: {
+      background: Constants.gradients.secondary.background,
+    },
+    secondaryReverse: {
+      background: Constants.gradients.secondary.backgroundInverse,
+    },
   },
 )
 

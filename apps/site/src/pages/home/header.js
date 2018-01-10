@@ -5,52 +5,107 @@ import * as Constants from '~/constants'
 import { view } from '@mcro/black'
 import { Stage, Scene, Item } from '~/views/stage'
 
+// keeping everyone on the same page.
+// Orbit works with every app and fits into your current workflow.
+
+const titleProps = {
+  size: 2.3,
+  fontWeight: 300,
+  color: Constants.colorSecondary.darken(0.5),
+  alpha: 0.9,
+}
+
+const Banner = () => (
+  <content
+    $$row
+    css={{
+      margin: [-50, 0, 0],
+      padding: [50, 0],
+      width: '100%',
+      position: 'relative',
+      justifyContent: 'space-between',
+    }}
+  >
+    <section
+      css={{
+        position: 'relative',
+        zIndex: 11,
+        width: '42%',
+      }}
+    >
+      <View.Title selectable {...titleProps} textAlign="right">
+        Orbit autonomously organizes
+        <br />
+        your company knowledge
+      </View.Title>
+    </section>
+
+    <section
+      css={{
+        width: '42%',
+        zIndex: 20,
+      }}
+    >
+      <inner
+        css={{
+          position: 'relative',
+          zIndex: 11,
+          // left: 20,
+          pointerEvents: 'none',
+        }}
+      >
+        <text
+          css={{
+            position: 'absolute',
+            // bottom: -220,
+          }}
+        >
+          <View.Title {...titleProps} textAlign="left" selectable>
+            & helps keep you up to date,<br />
+            wherever you are.
+          </View.Title>
+        </text>
+      </inner>
+    </section>
+  </content>
+)
+
 @view
 export default class HomeHeader {
   render() {
     return (
-      <View.Section
-        secondary
-        reverseGradient
-        css={{ marginBottom: -Constants.ORA_PULL_UP }}
-      >
+      <View.Section secondary css={{ marginBottom: -Constants.ORA_PULL_UP }}>
         <View.SectionContent fullscreen>
           <View.Header />
-
-          <Stage if={false}>
-            <Scene>
-              <Item>thing</Item>
-            </Scene>
-            <Scene>
-              <Item>thing</Item>
-            </Scene>
-            <Scene>
-              <Item>thing</Item>
-            </Scene>
-          </Stage>
-
           <View.Slant secondary />
 
           <contents
-            css={{ alignItems: 'center', zIndex: 10, margin: ['auto', 0] }}
+            css={{
+              flex: 1,
+              maxHeight: '1vh',
+              justifyContent: 'space-between',
+              zIndex: 10,
+            }}
           >
-            <banner css={{ alignItems: 'center', justifyContent: 'center' }}>
-              <UI.Text color="#fff" size={2.25} weight={800}>
+            <banner
+              css={{
+                padding: [40, 0],
+                alignItems: 'center',
+                justifyContent: 'center',
+                textAlign: 'center',
+              }}
+            >
+              <UI.Text
+                selectable
+                color={Constants.colorSecondary.lighten(0.85)}
+                size={3.3}
+                weight={200}
+              >
                 Autopilot for company knowledge
               </UI.Text>
-
-              <UI.Text
-                color="#fff"
-                size={1.8}
-                weight={200}
-                css={{ marginRight: '50%' }}
-              >
-                Orbit autonomously organizes your company’s knowledge and
-                surfaces information when it is relevant, keeping everyone on
-                the same page. Orbit works with every app and fits into your
-                current workflow.
-              </UI.Text>
             </banner>
+
+            <div $$flex />
 
             <desktop
               css={{
@@ -81,7 +136,7 @@ export default class HomeHeader {
                 css={{
                   position: 'relative',
                   left: 0,
-                  height: 20,
+                  height: 15,
                   width: 5,
                   background: Constants.colorSecondary,
                   alignSelf: 'center',
@@ -93,13 +148,17 @@ export default class HomeHeader {
                   position: 'relative',
                   left: 0,
                   height: 5,
-                  width: 100,
+                  width: 70,
                   background: Constants.colorSecondary,
                   alignSelf: 'center',
                   zIndex: 1000,
                 }}
               />
             </desktop>
+
+            <div $$flex />
+
+            <Banner />
           </contents>
         </View.SectionContent>
       </View.Section>

@@ -184,7 +184,7 @@ export default class OraPage {
       // border: [1, [255, 255, 255, 0.035]],
       boxShadow: [
         [0, 0, 15, 0, [0, 0, 0, 0.5]],
-        // ['inset', 0, 0, 120, [255, 255, 255, 0.053]],
+        ['inset', 0, 0, 0, 1, [255, 255, 255, 0.35]],
       ],
       margin: 10,
       borderRadius: 10,

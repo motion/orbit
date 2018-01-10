@@ -151,7 +151,12 @@ export default class ScreenState {
       (!oldState.ocr || !oldState.ocr.length) && newStateItems.ocr
     const newContext = newStateItems.context
     if (newContext || firstTimeOCR) {
-      console.log('re-run screen watch', newContext, firstTimeOCR)
+      console.log(
+        're-run screen watch',
+        newContext && newContext.appName,
+        'firstTimeOCR',
+        firstTimeOCR,
+      )
       await this.handleNewContext()
     }
   }
@@ -361,7 +366,7 @@ export default class ScreenState {
     for (const { socket, uid } of this.activeSockets) {
       try {
         socket.send(strData)
-      } catch(err) {
+      } catch (err) {
         this.removeSocket(uid)
       }
     }

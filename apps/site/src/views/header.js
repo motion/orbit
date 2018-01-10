@@ -21,7 +21,7 @@ const MenuItem = props => (
 export default () => (
   <tophead
     css={{
-      background: 'transparent',
+      // background: `linear-gradient(#000, transparent)`,
       padding: [10, 0],
       margin: [0, -25],
       position: 'relative',

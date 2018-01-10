@@ -10,8 +10,8 @@ import { Stage, Scene, Item } from '~/views/stage'
 
 const titleProps = {
   size: 2.3,
-  fontWeight: 300,
-  color: Constants.colorSecondary.darken(0.5),
+  fontWeight: 200,
+  color: '#000', //Constants.colorSecondary.darken(0.5),
   alpha: 0.9,
 }
 
@@ -77,7 +77,6 @@ export default class HomeHeader {
       <View.Section secondary css={{ marginBottom: -Constants.ORA_PULL_UP }}>
         <View.SectionContent fullscreen>
           <View.Header />
-          <View.Slant secondary />
 
           <contents
             css={{
@@ -97,7 +96,7 @@ export default class HomeHeader {
             >
               <UI.Text
                 selectable
-                color={Constants.colorSecondary.lighten(0.85)}
+                color={Constants.colorSecondary.darken(0.5)}
                 size={3.3}
                 weight={200}
               >
@@ -117,7 +116,7 @@ export default class HomeHeader {
             >
               <desktopChrome
                 css={{
-                  border: [5, Constants.colorSecondary],
+                  border: [8, Constants.colorMain],
                   borderRadius: 10,
                   left: 20,
                   right: 20,
@@ -138,7 +137,7 @@ export default class HomeHeader {
                   left: 0,
                   height: 15,
                   width: 5,
-                  background: Constants.colorSecondary,
+                  background: Constants.colorMain,
                   alignSelf: 'center',
                   zIndex: 1000,
                 }}
@@ -149,7 +148,7 @@ export default class HomeHeader {
                   left: 0,
                   height: 5,
                   width: 70,
-                  background: Constants.colorSecondary,
+                  background: Constants.colorMain,
                   alignSelf: 'center',
                   zIndex: 1000,
                 }}

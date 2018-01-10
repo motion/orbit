@@ -112,9 +112,9 @@ export default class SectionExamples {
             css={{ position: 'absolute', top: 90, left: -185, zIndex: 1 }}
           />
 
-          <View.Section dark>
+          <View.Section main>
             <View.SectionContent fullscreen>
-              <View.Slant secondary inverse />
+              <View.Slant secondary reversed />
 
               <inner
                 css={{

@@ -91,6 +91,12 @@ export const Section = view(
       padding: [110, 0],
       margin: 0,
     },
+    main: {
+      background: Constants.gradients.main.background,
+    },
+    mainReverse: {
+      background: Constants.gradients.main.backgroundInverse,
+    },
     secondary: {
       background: Constants.gradients.secondary.background,
     },

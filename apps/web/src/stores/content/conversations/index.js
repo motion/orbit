@@ -10,12 +10,23 @@ const convo = obj => ({
 const conv1 = convo({
   type: 'slack',
   messages: [
-    `nickc: there's been an outage this morning in NYC. It was because our EC2 instance for payment processing went down. We'll be comping all deliveries made between 9:15am - 9:40pm EST`,
+    `josh: today I'm working on the final fixes to the new iPhone X screen updates. Should be good to go by this afternoon.`,
     `josh: sounds good! Hope it didn't cause too much stress!`,
-    'nickc: I definitely would have preferred if it outages would be kind enough to only happen in the afternoon :)',
+    `nickc: actually Apple made it pretty easy :)`,
   ],
 })
 
+const conv2 = convo({
+  type: 'slack',
+  messages: [
+    `samantha: a few customers have mentioned that we don't support iPhone X screen size`,
+    `josh: yeah, the app team discussed this yesterday. Going to put it in the next sprint.`,
+    `tom: does React native make this fairly automatic or do we need to roll it ourselves?`,
+    `josh: I'm not sure. I'll do more research this week`,
+  ],
+})
+
+/*
 const conv2 = convo({
   type: 'intercom',
   messages: [
@@ -26,5 +37,6 @@ const conv2 = convo({
     `nickc: Let me know if I can help with anything else. Enjoy your dumplings!`,
   ],
 })
+*/
 
 export default [conv1, conv2]

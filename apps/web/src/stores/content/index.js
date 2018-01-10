@@ -58,7 +58,7 @@ const deliverx = [
 ]
 
 const randUrl = () => `http://example.com?id=${Math.random()}`
-export default [...tasks, ...convos, ...docs, ...deliverx].map(item => ({
+export default [...convos, ...tasks, ...docs].map(item => ({
   ...item,
   url: item.url || randUrl(),
 }))

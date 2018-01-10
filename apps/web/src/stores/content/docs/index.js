@@ -9,4 +9,4 @@ import doc8 from './referral'
 import doc9 from './sharedCarts'
 import doc10 from './vendors'
 
-export default [doc1, doc2, doc3, doc4, doc5, doc6, doc7, doc8, doc9, doc10]
+export default [] // [doc1, doc2, doc3, doc4, doc5, doc6, doc7, doc8, doc9, doc10]

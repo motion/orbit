@@ -4,25 +4,25 @@ import { view } from '@mcro/black'
 import Path from 'path'
 import * as Constants from '~/constants'
 
-@view.attach('rootStore')
-@view.electron
-export default class TrayEl {
+class TrayStore {
   get rootStore() {
     return this.props.rootStore
   }
 
-  componentDidMount() {
-    console.log('mounted tray')
-    this.react(
-      () => this.rootStore.oraState,
-      oraState => {
-        console.log('got new oraState', oraState)
-      },
-      true,
-    )
+  willMount() {
+    this.watch(() => {
+      console.log('got new oraState', this.rootStore.oraState)
+    })
   }
+}
 
-  render(props) {
+@view.attach('rootStore')
+@view.provide({
+  trayStore: TrayStore,
+})
+@view.electron
+export default class TrayEl {
+  render({ rootStore, trayStore, ...props }) {
     return (
       <Tray
         image={Path.join(
@@ -31,7 +31,7 @@ export default class TrayEl {
           'icons',
           'orbitTemplate.png',
         )}
-        title="Test out the tray"
+        title={rootStore.oraState.hidden ? 'Show Orbit' : 'Hide Orbit'}
         {...props}
       />
     )

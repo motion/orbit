@@ -68,7 +68,7 @@ import { throttle } from 'lodash'
       // if you call this.getOraState() this will handle it
       this.on(ipcMain, 'set-state', (event, state) => {
         // update state
-        this.oraState = state
+        this.updateOraState(state)
         if (this._oraStateGetters.length) {
           for (const getter of this._oraStateGetters) {
             getter(state)
@@ -78,6 +78,10 @@ import { throttle } from 'lodash'
           console.log('nothing is listening for state')
         }
       })
+    }
+
+    updateOraState = state => {
+      this.oraState = { ...state }
     }
 
     toggleShown = throttle(async () => {

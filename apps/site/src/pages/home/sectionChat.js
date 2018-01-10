@@ -28,7 +28,7 @@ export default class SectionChat extends React.Component {
       <UI.Theme name="dark">
         <View.Section dark>
           <View.SectionContent fullscreen css={{ padding: [100, 430, 100, 0] }}>
-            <View.Slant inverse dark inverseSlant css={{ zIndex: 1 }} />
+            <View.Slant reverse secondary inverseSlant css={{ zIndex: 1 }} />
             <contents css={{ zIndex: 2 }}>
               <View.Title size={3}>Wherever you are</View.Title>
               <View.SubTitle size={2}>

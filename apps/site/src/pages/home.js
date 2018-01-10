@@ -51,7 +51,6 @@ export default class HomePage extends React.Component {
     return (
       <page>
         <HomeHeader />
-        <Ora if={homeStore.ready && !isSmall} homeStore={homeStore} />
         <HomeExamples {...sectionProps} />
         <HomeChat {...sectionProps} />
         <HomeSecurity {...sectionProps} />

@@ -3,22 +3,17 @@ import * as UI from '@mcro/ui'
 import * as View from '~/views'
 import * as Constants from '~/constants'
 import { view } from '@mcro/black'
-import Illustration1 from './header/illustration1'
-import Illustration2 from './header/illustration2'
 import { Stage, Scene, Item } from '~/views/stage'
-
-const titleProps = {
-  size: 2.7,
-  fontWeight: 200,
-}
 
 @view
 export default class HomeHeader {
   render() {
-    const ringFill = Constants.colorSecondary.darken(0.15).toString()
-
     return (
-      <View.Section darkInverse css={{ marginBottom: -Constants.ORA_PULL_UP }}>
+      <View.Section
+        secondary
+        reverseGradient
+        css={{ marginBottom: -Constants.ORA_PULL_UP }}
+      >
         <View.SectionContent fullscreen>
           <View.Header />
 
@@ -34,73 +29,78 @@ export default class HomeHeader {
             </Scene>
           </Stage>
 
-          <View.Slant dark />
+          <View.Slant secondary />
 
-          <content
-            $$row
-            css={{
-              margin: ['auto', 0],
-              position: 'relative',
-              justifyContent: 'space-between',
-            }}
+          <contents
+            css={{ alignItems: 'center', zIndex: 10, margin: ['auto', 0] }}
           >
-            <section
-              css={{
-                position: 'relative',
-                zIndex: 11,
-                width: '45%',
-                // marginTop: -20,
-              }}
-            >
-              <View.Title
-                selectable
-                {...titleProps}
-                fontWeight={300}
-                textAlign="right"
-              >
-                <span css={{ marginRight: -10 }}>A new type of tool</span>
-                <br />
-                <span className="hlword">that understands you</span>
-              </View.Title>
-            </section>
+            <banner css={{ alignItems: 'center', justifyContent: 'center' }}>
+              <UI.Text color="#fff" size={2.25} weight={800}>
+                Autopilot for company knowledge
+              </UI.Text>
 
-            <section
+              <UI.Text
+                color="#fff"
+                size={1.8}
+                weight={200}
+                css={{ marginRight: '50%' }}
+              >
+                Orbit autonomously organizes your company’s knowledge and
+                surfaces information when it is relevant, keeping everyone on
+                the same page. Orbit works with every app and fits into your
+                current workflow.
+              </UI.Text>
+            </banner>
+
+            <desktop
               css={{
-                width: '45%',
-                zIndex: 20,
+                maxWidth: 2048 / 2,
+                justifyContent: 'center',
+                alignItems: 'center',
+                zIndex: 10,
               }}
             >
-              <inner
+              <desktopChrome
                 css={{
-                  position: 'relative',
-                  zIndex: 11,
-                  height: 250,
-                  // left: 20,
-                  pointerEvents: 'none',
-                  userSelect: 'none',
+                  border: [5, Constants.colorSecondary],
+                  borderRadius: 10,
+                  left: 20,
+                  right: 20,
                 }}
               >
-                <text
-                  css={{
-                    position: 'absolute',
-                    // bottom: -220,
-                  }}
-                >
-                  <View.Title
-                    {...titleProps}
-                    textAlign="left"
-                    color={'#fff'}
-                    selectable
-                  >
-                    And augments your OS <br />
-                    <span css={{ marginLeft: -10 }}>
-                      with what you <span className="hlword">should know</span>
-                    </span>
-                  </View.Title>
-                </text>
-              </inner>
-            </section>
-          </content>
+                <video
+                  src="/tmp/take2.mp4"
+                  width={2048}
+                  height={1152}
+                  autoPlay
+                  loop
+                  css={{ maxWidth: '100%', height: 'auto' }}
+                />
+              </desktopChrome>
+              <stand
+                css={{
+                  position: 'relative',
+                  left: 0,
+                  height: 20,
+                  width: 5,
+                  background: Constants.colorSecondary,
+                  alignSelf: 'center',
+                  zIndex: 1000,
+                }}
+              />
+              <base
+                css={{
+                  position: 'relative',
+                  left: 0,
+                  height: 5,
+                  width: 100,
+                  background: Constants.colorSecondary,
+                  alignSelf: 'center',
+                  zIndex: 1000,
+                }}
+              />
+            </desktop>
+          </contents>
         </View.SectionContent>
       </View.Section>
     )

@@ -114,7 +114,7 @@ export default class SectionExamples {
 
           <View.Section dark>
             <View.SectionContent fullscreen>
-              <View.Slant dark inverse />
+              <View.Slant secondary inverse />
 
               <inner
                 css={{
@@ -171,7 +171,7 @@ export default class SectionExamples {
                       Discover a Slack conversation <Logo name="slack" /> as you
                       open a ticket <Logo name="jira" />.
                     </span>,
-                    { percentFromTop: 45 }
+                    { percentFromTop: 45 },
                   )}
                   {makeSection(
                     'example-2',
@@ -180,7 +180,7 @@ export default class SectionExamples {
                       the second your customer asks in Zendesk{' '}
                       <Logo name="zendesk" />.
                     </span>,
-                    { percentFromTop: 50 }
+                    { percentFromTop: 50 },
                   )}
                   {makeSection(
                     'example-3',
@@ -189,7 +189,7 @@ export default class SectionExamples {
                       <Logo name="google-drive" /> before you hit send{' '}
                       <Logo name="google-gmail" />.
                     </span>,
-                    { percentFromTop: 55 }
+                    { percentFromTop: 55 },
                   )}
                   {false &&
                     makeSection(
@@ -198,7 +198,7 @@ export default class SectionExamples {
                         Michelle already wrote <Logo name="dropbox" /> some
                         notes on that last meeting.
                       </span>,
-                      { percentFromTop: 63 }
+                      { percentFromTop: 63 },
                     )}
                   {false &&
                     makeSection(
@@ -208,7 +208,7 @@ export default class SectionExamples {
                         see a <Logo name="github-icon" /> ticket was just opened
                         for the very issue someone just asked about.
                       </span>,
-                      { percentFromTop: 70 }
+                      { percentFromTop: 70 },
                     )}
                 </examples>
                 <br />

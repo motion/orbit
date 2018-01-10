@@ -11,8 +11,8 @@ export default () => (
       left: -100,
       right: -100,
       width: '120%',
-      background: `linear-gradient(to right, ${Constants.dark1}, ${
-        Constants.dark2
+      background: `linear-gradient(to right, ${Constants.colorMain}, ${
+        Constants.colorSecondary
       })`,
       height: 80,
       marginBottom: -80,

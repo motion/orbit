@@ -25,7 +25,6 @@ export default class TrayElement extends BaseComponent {
       throw new Error(`Expects an image prop with path to image file`)
     }
     this.tray = new Tray(this.props.image)
-    // this.update()
   }
 
   propHandlers = {

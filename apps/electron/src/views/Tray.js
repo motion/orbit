@@ -4,8 +4,24 @@ import { view } from '@mcro/black'
 import Path from 'path'
 import * as Constants from '~/constants'
 
+@view.attach('rootStore')
 @view.electron
 export default class TrayEl {
+  get rootStore() {
+    return this.props.rootStore
+  }
+
+  componentDidMount() {
+    console.log('mounted tray')
+    this.react(
+      () => this.rootStore.oraState,
+      oraState => {
+        console.log('got new oraState', oraState)
+      },
+      true,
+    )
+  }
+
   render(props) {
     return (
       <Tray
@@ -16,7 +32,6 @@ export default class TrayEl {
           'orbitTemplate.png',
         )}
         title="Test out the tray"
-        onClick={() => console.log('clicked')}
         {...props}
       />
     )

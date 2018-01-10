@@ -154,9 +154,9 @@ window.cachedTarget = null
 
     handleMouseLeave = () => {
       // timeout here prevent flicker on re-enter same item
-      // this.setTimeout(() => {
-      //   this.isHovered = false
-      // }, HIDE_DELAY)
+      this.setTimeout(() => {
+        this.isHovered = false
+      }, HIDE_DELAY)
     }
 
     handlePageRef = ref => {

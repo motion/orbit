@@ -11,64 +11,9 @@ import { Stage, Scene, Item } from '~/views/stage'
 const titleProps = {
   size: 2.3,
   fontWeight: 200,
-  color: '#000', //Constants.colorSecondary.darken(0.5),
+  color: Constants.colorSecondary.darken(0.6),
   alpha: 0.9,
 }
-
-const Banner = () => (
-  <content
-    $$row
-    css={{
-      margin: [-50, 0, 0],
-      padding: [50, 0],
-      width: '100%',
-      position: 'relative',
-      justifyContent: 'space-between',
-    }}
-  >
-    <section
-      css={{
-        position: 'relative',
-        zIndex: 11,
-        width: '42%',
-      }}
-    >
-      <View.Title selectable {...titleProps} textAlign="right">
-        Orbit autonomously organizes
-        <br />
-        your company knowledge
-      </View.Title>
-    </section>
-
-    <section
-      css={{
-        width: '42%',
-        zIndex: 20,
-      }}
-    >
-      <inner
-        css={{
-          position: 'relative',
-          zIndex: 11,
-          // left: 20,
-          pointerEvents: 'none',
-        }}
-      >
-        <text
-          css={{
-            position: 'absolute',
-            // bottom: -220,
-          }}
-        >
-          <View.Title {...titleProps} textAlign="left" selectable>
-            & helps keep you up to date,<br />
-            wherever you are.
-          </View.Title>
-        </text>
-      </inner>
-    </section>
-  </content>
-)
 
 @view
 export default class HomeHeader {
@@ -81,14 +26,14 @@ export default class HomeHeader {
           <contents
             css={{
               flex: 1,
-              maxHeight: '1vh',
+              maxHeight: '84.6%',
               justifyContent: 'space-between',
               zIndex: 10,
             }}
           >
             <banner
               css={{
-                padding: [40, 0],
+                padding: [40, 0, 0],
                 alignItems: 'center',
                 justifyContent: 'center',
                 textAlign: 'center',
@@ -96,7 +41,7 @@ export default class HomeHeader {
             >
               <UI.Text
                 selectable
-                color={Constants.colorSecondary.darken(0.5)}
+                color={Constants.colorSecondary.darken(0.75)}
                 size={3.3}
                 weight={200}
               >
@@ -106,11 +51,21 @@ export default class HomeHeader {
 
             <div $$flex />
 
+            <UI.Title selectable {...titleProps} textAlign="center">
+              Orbit organizes company knowledge
+              <br />
+              and keeps your team in sync.
+            </UI.Title>
+
+            <div $$flex />
+
             <desktop
               css={{
+                marginTop: 20,
                 maxWidth: 2048 / 2,
                 justifyContent: 'center',
                 alignItems: 'center',
+                alignSelf: 'center',
                 zIndex: 10,
               }}
             >
@@ -156,8 +111,6 @@ export default class HomeHeader {
             </desktop>
 
             <div $$flex />
-
-            <Banner />
           </contents>
         </View.SectionContent>
       </View.Section>

@@ -122,7 +122,7 @@ export const LogoIcon = ({ fill, ...props }) => (
   </svg>
 )
 
-export default ({ color = '#fff', ...props }) => (
+export default ({ color = '#fff', height, ...props }) => (
   <logos
     css={{
       alignItems: 'center',
@@ -134,12 +134,17 @@ export default ({ color = '#fff', ...props }) => (
     <LogoIcon
       fill={color}
       css={{
-        height: 36,
+        height: height || 36,
         margin: [-10, 8, -10, -10],
       }}
     />
     <LogoText3
-      css={{ height: 30, marginTop: -10, marginRight: 18, marginBottom: -2 }}
+      css={{
+        height: height ? height - 6 : 30,
+        marginTop: -10,
+        marginRight: 18,
+        marginBottom: -2,
+      }}
       fill={color}
     />
   </logos>

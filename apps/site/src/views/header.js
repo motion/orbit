@@ -22,20 +22,19 @@ export default () => (
   <tophead
     css={{
       // background: `linear-gradient(#000, transparent)`,
-      padding: [10, 0],
+      padding: [2, 0],
       margin: [0, -25],
-      position: 'relative',
       zIndex: 10,
     }}
   >
     <SectionContent row css={{ justifyContent: 'space-between' }}>
-      <Logo color="#fff" />
+      <Logo color={Constants.colorMainDark} height={42} />
 
       <menu css={{ flexFlow: 'row', padding: [0, 100, 0, 70] }}>
-        <MenuItem to="/sales" color="#fff">
+        <MenuItem to="/sales" color={Constants.colorMainDark}>
           FAQ
         </MenuItem>
-        <MenuItem to="/pricing" color="#fff">
+        <MenuItem to="/pricing" color={Constants.colorMainDark}>
           Pricing
         </MenuItem>
       </menu>
@@ -47,7 +46,7 @@ export default () => (
           size={1.1}
           fontWeight={200}
           theme={Constants.colorMain.toString()}
-          color="#fff"
+          color={'#fff'}
         >
           Download
         </UI.Button>

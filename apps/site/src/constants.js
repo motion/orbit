@@ -7,8 +7,9 @@ export const PAGE_WIDTH = smallSize
 export const SLANT_AMT = 80
 export const SECTION_HEIGHT = Math.max(
   800,
-  Math.min(1500, window.innerHeight + 150),
+  Math.min(1500, window.innerHeight + 105),
 )
+
 export const SLANT = Math.atan(SLANT_AMT / (SECTION_HEIGHT / 2)) * 180 / Math.PI
 
 export const ORA_LEFT_PAD = 285
@@ -21,8 +22,10 @@ export const ORA_PULL_UP = 110
 
 export const colorMain = UI.color('rgb(92.1%, 69.7%, 34%)')
 export const colorMainLight = colorMain.lighten(0.35)
-export const colorSecondary = UI.color('rgb(96.8%, 84.7%, 35.7%)')
+export const colorMainDark = colorMain.darken(0.78)
+export const colorSecondary = UI.color('rgb(98%, 90%, 36%)')
 export const colorSecondaryLight = colorSecondary.lighten(0.35)
+export const colorSecondaryDark = colorSecondary.darken(0.35)
 export const colorTeal = UI.color('#49ceac')
 export const colorBlue = UI.color('#133cca')
 

@@ -126,6 +126,8 @@ export const SectionContent = view(
     },
     fullscreen: {
       height: Constants.SECTION_HEIGHT,
+      // overflow: 'hidden',
+      // background: [0, 0, 0, 0.5],
     },
   },
 )

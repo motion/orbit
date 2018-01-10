@@ -12,6 +12,7 @@ import * as Constants from '~/constants'
 const keyParam = (window.location.search || '').match(/key=(.*)/)
 const KEY = keyParam && keyParam[1]
 const SHADOW_PAD = 15
+const BORDER_RADIUS = 6
 const SHOW_DELAY = 300
 const HIDE_DELAY = 100
 
@@ -20,7 +21,7 @@ console.log('Constants', Constants)
 // const isSamePeek = (a, b) => a && b && a.id === b.id
 
 const background = '#fff'
-const peekShadow = [[0, 0, SHADOW_PAD, [0, 0, 0, 0.2]]]
+const peekShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.25]]]
 
 type Target = {
   url?: string,
@@ -65,12 +66,12 @@ window.cachedTarget = null
     showWebview = false
     tab = 'readability'
 
-    @watch thing = () => this.target && Thing.get(this.target.id)
+    @watch thing = () => (this.target ? Thing.get(this.target.id) : Thing.get())
 
     get target() {
       // during hover its null so show it cached
       if (this.isHovered || this.isPinned || this.isTorn) {
-        return this.lastTarget
+        return this.lastTarget || {}
       }
       // current
       return this.curTarget
@@ -153,9 +154,9 @@ window.cachedTarget = null
 
     handleMouseLeave = () => {
       // timeout here prevent flicker on re-enter same item
-      this.setTimeout(() => {
-        this.isHovered = false
-      }, HIDE_DELAY)
+      // this.setTimeout(() => {
+      //   this.isHovered = false
+      // }, HIDE_DELAY)
     }
 
     handlePageRef = ref => {
@@ -203,8 +204,8 @@ export default class PeekPage {
     switch (arrowTowards) {
       case 'right':
         arrowPosition = {
-          top: 35,
-          right: SHADOW_PAD - arrowSize,
+          top: 53,
+          right: SHADOW_PAD - arrowSize + 1,
         }
         break
       case 'left':
@@ -265,15 +266,34 @@ export default class PeekPage {
           <content>
             <innerContent $$flex>
               <header $$draggable>
+                <buttons $$row if={store.isTorn} css={{ marginRight: 14 }}>
+                  <controlButton
+                    onClick={store.closePeek}
+                    css={{
+                      width: 12,
+                      height: 12,
+                      background: '#ED6A5F',
+                      borderRadius: 100,
+                      boxShadow: ['inset 0 0 0 0.5px rgba(0,0,0,0.15)'],
+                    }}
+                  />
+                </buttons>
                 <title>
-                  <UI.Title size={1} fontWeight={600}>
+                  <UI.Title size={1} fontWeight={300}>
                     {(store.thing && store.thing.title) || ''}
                   </UI.Title>
                 </title>
                 <UI.Row
                   $controls
                   $$undraggable
-                  itemProps={{ sizePadding: 1.75, sizeRadius: 2 }}
+                  itemProps={{
+                    sizeIcon: 1,
+                    sizePadding: 1.9,
+                    sizeHeight: 0.9,
+                    sizeRadius: 1,
+                    borderWidth: 0,
+                    boxShadow: ['inset 0 0 0 0.5px #C9C9C9'],
+                  }}
                 >
                   <UI.Button
                     if={targetUrl}
@@ -289,18 +309,13 @@ export default class PeekPage {
                     onClick={store.ref('isPinned').toggle}
                     highlight={store.isTorn || store.isPinned}
                   />
-                  <UI.Button
-                    if={store.isTorn}
-                    icon="remove"
-                    onClick={store.closePeek}
-                  />
                 </UI.Row>
               </header>
               <tabs if={store.thing}>
                 <tab $visible={store.tab === 'readability'}>
                   <readability>
                     <MarkdownRender
-                      if={!store.isConversation}
+                      if={!store.isConversation && store.thing.body}
                       markdown={store.thing.body}
                     />
                     <Conversation
@@ -362,20 +377,27 @@ export default class PeekPage {
     content: {
       flex: 1,
       background,
-      borderRadius: 10,
+      border: [1, [0, 0, 0, 0.2]],
+      borderRadius: BORDER_RADIUS,
+      overflow: 'hidden',
       opacity: 1,
       transition: 'background ease-in 200ms',
       boxShadow: [peekShadow],
     },
     header: {
+      height: 38,
       flexFlow: 'row',
       alignItems: 'center',
-      padding: [10, 15],
-      borderBottom: [1, [0, 0, 0, 0.05]],
+      padding: [4, 15],
+      background: ['linear-gradient(#E6E6E6, #D9D9D9)'],
+      borderTopRadius: BORDER_RADIUS - 1,
+      boxShadow: [
+        'inset 0 0.5px 0 rgba(255,255,255,0.7)',
+        'inset 0 -0.5px 0 #C2C2C2',
+      ],
     },
     controls: {
       padding: [0, 0, 0, 10],
-      alignSelf: 'flex-start',
     },
     title: {
       flex: 1,

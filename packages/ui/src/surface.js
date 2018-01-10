@@ -426,7 +426,7 @@ export default class Surface extends React.PureComponent<Props> {
     let color = $(
       props.color ||
         (props.highlight && props.highlightColor) ||
-        theme[STATE].color
+        theme[STATE].color,
     )
     if (typeof props.alpha === 'number') {
       color = color.alpha(props.alpha)
@@ -474,12 +474,12 @@ export default class Surface extends React.PureComponent<Props> {
     }
 
     const borderColor = $(
-      props.borderColor || theme[STATE].borderColor || 'transparent'
+      props.borderColor || theme[STATE].borderColor || 'transparent',
     )
     let hoverColor = $(
       (props.hover && props.hover.color) ||
         theme[STATE].color.lighten(0.2) ||
-        props.color
+        props.color,
     )
     if (props.hover && typeof props.hover.alpha === 'number') {
       hoverColor = hoverColor.alpha(props.hover.alpha)

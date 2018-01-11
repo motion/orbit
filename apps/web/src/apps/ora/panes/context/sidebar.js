@@ -107,11 +107,11 @@ export default class ContextSidebar {
   }
 
   pinCurrent = () => {
-    this.oraStore.pin.add(this.oraStore.lastContext)
+    this.oraStore.pin.add(this.oraStore.activeContext)
   }
 
   unpinCurrent = () => {
-    this.oraStore.pin.remove(this.oraStore.lastContext)
+    this.oraStore.pin.remove(this.oraStore.activeContext)
   }
 
   get actions() {
@@ -136,26 +136,32 @@ export default class ContextSidebar {
         },
       ]
     }
+    let websiteActions = []
+    if (this.oraStore.activeContext && this.oraStore.activeContext.url) {
+      websiteActions = [
+        this.isPinned && {
+          icon: 'check',
+          children: 'Pinned',
+          tooltip: 'Remove pin',
+          onClick: this.unpinCurrent,
+        },
+        !this.isPinned && {
+          icon: 'ui-1_bold-add',
+          children: 'Pin',
+          onClick: this.pinCurrent,
+        },
+        !this.oraStore.crawler.isRunning && {
+          icon: 'pin',
+          children: 'Pin Site',
+          onClick: this.previewCrawler.show,
+        },
+      ].filter(Boolean)
+    }
     return [
       {
         flex: true,
       },
-      this.isPinned && {
-        icon: 'check',
-        children: 'Pinned',
-        tooltip: 'Remove pin',
-        onClick: this.unpinCurrent,
-      },
-      !this.isPinned && {
-        icon: 'ui-1_bold-add',
-        children: 'Pin',
-        onClick: this.pinCurrent,
-      },
-      !this.oraStore.crawler.isRunning && {
-        icon: 'pin',
-        children: 'Pin Site',
-        onClick: this.previewCrawler.show,
-      },
+      ...websiteActions,
     ]
   }
 

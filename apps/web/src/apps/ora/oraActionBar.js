@@ -12,6 +12,10 @@ const styles = {
 @view.attach('oraStore')
 @view
 export default class OraActionBar {
+  preventProp = e => {
+    e.stopPropagation()
+  }
+
   render({ oraStore }) {
     const { store } = oraStore.stack.last
     if (!store) {
@@ -34,7 +38,11 @@ export default class OraActionBar {
         <actions>
           {!actions && collapse}
 
-          <actionbar if={actions && !oraStore.ui.collapsed}>
+          <actionbar
+            if={actions && !oraStore.ui.collapsed}
+            onMouseEnter={this.preventProp}
+            onMouseMove={this.preventProp}
+          >
             {collapse}
             {!isActionsArray && actions}
             {isActionsArray &&

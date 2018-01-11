@@ -28,9 +28,7 @@ export default class OraStore {
   ui = new UIStore({ oraStore: this })
   pin = new PinStore()
   search = new SearchStore({ useWorker })
-  get context() {
-    return this.props.contextStore
-  }
+  context = this.props.contextStore
 
   // synced from electron
   // see @mcro/electron/src/views/Windows#Windows.state
@@ -56,6 +54,17 @@ export default class OraStore {
   }
   get activeStore() {
     return this.stack.last.store
+  }
+  get activeContext() {
+    const { context } = this.props.contextStore
+    if (!context) {
+      return null
+    }
+    // dont treat itself as a context source
+    if (context.appName === 'Electron' || context.appName === 'Orbit') {
+      return null
+    }
+    return context
   }
 
   @watch
@@ -83,18 +92,18 @@ export default class OraStore {
     }, 16)
     // watch and set active search
     this.watch(function setSearchQuery() {
-      const { context } = this.context
-      if (context && !this.ui.barFocused) {
-        if (context.selection) {
-          this.search.setQuery(context.selection)
+      const { activeContext } = this
+      if (activeContext && !this.ui.barFocused) {
+        if (activeContext.selection) {
+          this.search.setQuery(activeContext.selection)
           return
         }
-        if (context.title) {
-          this.search.setQuery(context.title)
+        if (activeContext.title) {
+          this.search.setQuery(activeContext.title)
           return
         }
-        if (context.appName) {
-          this.search.setQuery(context.appName)
+        if (activeContext.appName) {
+          this.search.setQuery(activeContext.appName)
           return
         }
       } else {
@@ -144,16 +153,16 @@ export default class OraStore {
   _watchContext = () => {
     this.watch(function watchContext() {
       // determine navigation
-      const { context } = this.context
-      if (!context) {
+      const { activeContext } = this
+      if (!activeContext) {
         return
       }
-      const title = context.title || context.appName
+      const title = activeContext.title || activeContext.appName
       if (!title) {
-        log('no context title', this.context)
+        log('no context title', activeContext)
         return
       }
-      const nextStackItem = contextToResult(context)
+      const nextStackItem = contextToResult(activeContext)
       const isAlreadyOnResultsPane = this.stack.length > 1
       if (isAlreadyOnResultsPane) {
         this.stack.replaceInPlace(nextStackItem)

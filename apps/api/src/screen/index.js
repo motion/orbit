@@ -113,7 +113,7 @@ export default class ScreenState {
         this.updateState({
           mousePosition: [x, y],
         })
-      }, 32),
+      }, 64),
     )
   }
 

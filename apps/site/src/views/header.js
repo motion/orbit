@@ -21,14 +21,20 @@ const MenuItem = props => (
 export default () => (
   <tophead
     css={{
-      // background: `linear-gradient(#000, transparent)`,
       padding: [2, 0],
       margin: [0, -25],
       zIndex: 10,
     }}
   >
     <SectionContent row css={{ justifyContent: 'space-between' }}>
-      <Logo color={Constants.colorMainDark} height={42} />
+      <logo css={{ position: 'relative' }}>
+        <Logo color={'#151515'} height={38} />
+        <Logo
+          color={'#fff'}
+          height={38}
+          css={{ position: 'absolute', top: -1, zIndex: -1, opacity: 0.3 }}
+        />
+      </logo>
 
       <menu css={{ flexFlow: 'row', padding: [0, 100, 0, 70] }}>
         <MenuItem to="/sales" color={Constants.colorMainDark}>
@@ -41,11 +47,13 @@ export default () => (
 
       <end css={{ width: 180, alignItems: 'flex-end' }}>
         <UI.Button
-          icon="objects_planet"
-          iconAfter
+          iconProps={{
+            style: {
+              fontSmoothing: 'antialiased',
+            },
+          }}
           size={1.1}
-          fontWeight={200}
-          theme={Constants.colorMain.toString()}
+          theme={'#67B931'}
           color={'#fff'}
         >
           Download

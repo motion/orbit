@@ -19,14 +19,16 @@ export const Slant = ({
   ...props
 }) => {
   let background = backgroundColor
-  if (secondary) {
-    background = Constants.gradients.secondary.background
-    if (reversed) {
-      background = Constants.gradients.secondary.backgroundInverse
-    }
-  } else {
-    if (reversed) {
-      background = Constants.gradients.main.backgroundInverse
+  if (!background) {
+    if (secondary) {
+      background = Constants.gradients.secondary.background
+      if (reversed) {
+        background = Constants.gradients.secondary.backgroundInverse
+      }
+    } else {
+      if (reversed) {
+        background = Constants.gradients.main.backgroundInverse
+      }
     }
   }
   console.log('background', background)

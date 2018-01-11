@@ -9,7 +9,6 @@ import { Stage, Scene, Item } from '~/views/stage'
 // Orbit works with every app and fits into your current workflow.
 
 const titleProps = {
-  size: 2.3,
   fontWeight: 200,
   color: Constants.colorSecondary.darken(0.6),
   alpha: 0.9,
@@ -31,7 +30,7 @@ export default class HomeHeader {
               zIndex: 10,
             }}
           >
-            <div $$flex css={{ minHeight: 120 }} />
+            <div $$flex css={{ minHeight: '4%' }} />
 
             <banner
               css={{
@@ -43,17 +42,17 @@ export default class HomeHeader {
               <UI.Text
                 selectable
                 color={Constants.colorSecondary.darken(0.75)}
-                size={3.5}
-                weight={200}
+                size={2}
+                weight={900}
               >
-                Autopilot for company knowledge
+                An always-on brain for your knowledge
               </UI.Text>
             </banner>
 
             <div $$flex css={{ minHeight: 10 }} />
 
-            <UI.Title selectable {...titleProps} textAlign="center">
-              Orbit brings the cloud offline
+            <UI.Title selectable size={2} {...titleProps} textAlign="center">
+              Orbit brings the cloud offline,
               <br />
               making you smarter as you work.
             </UI.Title>
@@ -72,8 +71,8 @@ export default class HomeHeader {
             >
               <desktopChrome
                 css={{
-                  border: [8, Constants.colorMain],
-                  borderRadius: 10,
+                  border: [5, Constants.colorMain],
+                  borderRadius: 4,
                   left: 20,
                   right: 20,
                 }}
@@ -82,6 +81,7 @@ export default class HomeHeader {
                   src="/tmp/try3.mp4"
                   width={2048}
                   height={1152}
+                  muted
                   autoPlay
                   loop
                   css={{ maxWidth: '100%', height: 'auto' }}
@@ -103,7 +103,7 @@ export default class HomeHeader {
                   position: 'relative',
                   left: 0,
                   height: 5,
-                  width: 70,
+                  width: 190,
                   background: Constants.colorMain,
                   alignSelf: 'center',
                   zIndex: 1000,

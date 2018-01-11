@@ -114,7 +114,12 @@ export default class SectionExamples {
 
           <View.Section main>
             <View.SectionContent fullscreen>
-              <View.Slant secondary reversed />
+              <View.Slant
+                inverse
+                secondary
+                reversed
+                backgroundColor={`${Constants.colorMain}`}
+              />
 
               <inner
                 css={{

@@ -469,7 +469,11 @@ html {
  */
 
 ::selection {
-  background: #b3d4fc;
+  background: #3c66a2;
+  text-shadow: none;
+}
+*::selection {
+  background: #3c66a2;
   text-shadow: none;
 }
 

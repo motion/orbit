@@ -1,5 +1,5 @@
 {
-  "name": "@mcro/screen",
+  "name": "@mcro/swindler",
   "version": "4.0.0",
   "license": "MIT",
   "scripts": {
@@ -13,7 +13,6 @@
   ],
   "dependencies": {
     "electron-util": "^0.2.1",
-    "execa": "^0.8.0",
-    "macos-version": "^4.0.1"
+    "execa": "^0.8.0"
   }
 }

@@ -14,6 +14,9 @@ const styles = {
 export default class OraActionBar {
   render({ oraStore }) {
     const { store } = oraStore.stack.last
+    if (!store) {
+      return null
+    }
     const actions = store && store.actions
     const isActionsArray = Array.isArray(actions)
     const collapse = (

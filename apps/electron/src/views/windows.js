@@ -27,7 +27,6 @@ export default class Windows extends React.Component {
     size: [0, 0],
     settingsPosition: [0, 0],
     oraPosition: [0, 0],
-    context: null, // osContext
     lastMove: Date.now(),
   }
 

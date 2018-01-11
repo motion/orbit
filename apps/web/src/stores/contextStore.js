@@ -36,13 +36,11 @@ export default class ContextStore {
       return
     }
     this.ws = new ReconnectingWebSocket('ws://localhost:40510')
-
     // restore from hmr
     if (cached) {
       console.log('restoring from cache', cached)
       this.setState(cached)
     }
-
     this.ws.onmessage = ({ data }) => {
       if (data) {
         const res = JSON.parse(data)

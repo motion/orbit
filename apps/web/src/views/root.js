@@ -32,7 +32,7 @@ export default class Root extends React.Component {
     view.emit('hmr')
   }
 
-  render() {
+  render({ contextStore }) {
     if (this.state.error) {
       return (
         <aboveredbox
@@ -64,7 +64,11 @@ export default class Root extends React.Component {
     const CurrentPage = Router.activeView || NotFound
     return (
       <UI.Theme name="light">
-        <CurrentPage key={Router.key} {...Router.params} />
+        <CurrentPage
+          key={Router.key}
+          contextStore={contextStore}
+          {...Router.params}
+        />
       </UI.Theme>
     )
   }

@@ -31,7 +31,7 @@ export default class TrayEl {
           'icons',
           'orbitTemplate.png',
         )}
-        title={rootStore.oraState.hidden ? 'Show Orbit' : 'Hide Orbit'}
+        title={rootStore.oraState.contextMessage || 'Orbit'}
         {...props}
       />
     )

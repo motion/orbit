@@ -52,8 +52,9 @@ export default class UIStore {
     preventElectronHide: true,
   }
 
-  constructor({ stack }) {
-    this.stack = stack
+  constructor({ oraStore }) {
+    this.oraStore = oraStore
+    this.stack = oraStore.stack
     this.attachTrap('window', window)
     this.on(OS, 'ora-toggle', this.toggleHidden)
     this._listenForFocus()
@@ -67,6 +68,7 @@ export default class UIStore {
     this._watchWasBlurred()
     this._watchBlurBarOnHide()
     this._watchKeyEvents()
+    this._watchContextMessage()
   }
 
   dispose() {
@@ -83,6 +85,24 @@ export default class UIStore {
   setTextboxVal = value => {
     this.textboxVal = value
     this.setSearch(value)
+  }
+
+  _watchContextMessage() {
+    this.watch(() => {
+      const { activeStore, hasContext } = this.oraStore
+      if (hasContext && activeStore && activeStore.title) {
+        if (activeStore.results.length === 0) {
+          return
+        }
+        const contextMessage = `${activeStore.title}: ${
+          activeStore.results.length
+        } items`
+        this.state = {
+          ...this.state,
+          contextMessage,
+        }
+      }
+    })
   }
 
   _watchKeyEvents() {

@@ -118,7 +118,6 @@ const OraContent = () => (
   </React.Fragment>
 )
 
-@view.attach('contextStore')
 @view.provide({
   oraStore: OraStore,
 })

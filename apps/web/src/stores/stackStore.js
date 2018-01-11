@@ -4,7 +4,6 @@ import { store } from '@mcro/black'
 @store
 class StackItemStore {
   store = null
-  mainStore = null
   result = null
   col = 0
   active = [0, 0]
@@ -16,7 +15,7 @@ class StackItemStore {
       throw new Error(
         `Expected an ID for stackItem, got ${
           this.id
-        } from result ${JSON.stringify(result)}`
+        } from result ${JSON.stringify(result)}`,
       )
     }
     this.stack = stack
@@ -24,9 +23,6 @@ class StackItemStore {
   }
   setStore(store) {
     this.store = store
-  }
-  setMainStore(store) {
-    this.mainStore = store
   }
   get results() {
     return this.store ? this.store.results : []
@@ -74,7 +70,7 @@ class StackItemStore {
   down() {
     this.setActive(
       this.col,
-      Math.min(this.results.length - 1, this.active[this.col] + 1)
+      Math.min(this.results.length - 1, this.active[this.col] + 1),
     )
   }
   up() {
@@ -104,7 +100,7 @@ export default class StackStore {
           result,
           stack: this,
           parent: all[index - 1],
-        })
+        }),
     )
   }
   get length() {

@@ -22,26 +22,24 @@ window.addDragListener = window.addDragListener || (x => dragListeners.push(x))
 window.lastElectronState = {}
 
 export default class OraStore {
-  // helpers
-  electronStateBus = new BroadcastChannel('ora-electron-state')
   // stores
   crawler = new CrawlerStore()
   stack = new StackStore([{ type: 'main', id: 0 }])
-  ui = new UIStore({ stack: this.stack })
+  ui = new UIStore({ oraStore: this })
   pin = new PinStore()
   search = new SearchStore({ useWorker })
-  // state
-  lastContext = null
+  get context() {
+    return this.props.contextStore
+  }
 
   // synced from electron
   // see @mcro/electron/src/views/Windows#Windows.state
   electronState = {}
 
-  // helper to show currently focused results
+  // helpers
   get results() {
     return this.stack.last.results
   }
-
   get contextResults() {
     return this.search.results
       .slice(0, 6)
@@ -52,6 +50,12 @@ export default class OraStore {
         children: snippet,
         after: <After navigate={this.stack.navigate} thing={document} />,
       }))
+  }
+  get hasContext() {
+    return this.stack.length > 1
+  }
+  get activeStore() {
+    return this.stack.last.store
   }
 
   @watch
@@ -65,24 +69,32 @@ export default class OraStore {
           .sort({ updatedAt: 'desc' })
 
   async willMount() {
+    // start watching for context
+    this.props.contextStore.start()
+    // helper
     window.oraStore = this
+    // listeners/watchers
     this._listenForElectronState()
     this._listenForKeyEvents()
     this._watchContext()
     this._watchClickPrevent()
-
     this.watch(function setDocuments() {
       this.search.setDocuments(this.things || [])
     }, 16)
-
+    // watch and set active search
     this.watch(function setSearchQuery() {
-      if (this.osContext && !this.ui.barFocused) {
-        if (this.osContext.selection) {
-          this.search.setQuery(this.osContext.selection)
+      const { context } = this.context
+      if (context && !this.ui.barFocused) {
+        if (context.selection) {
+          this.search.setQuery(context.selection)
           return
         }
-        if (this.osContext.title) {
-          this.search.setQuery(this.osContext.title)
+        if (context.title) {
+          this.search.setQuery(context.title)
+          return
+        }
+        if (context.appName) {
+          this.search.setQuery(context.appName)
           return
         }
       } else {
@@ -99,17 +111,6 @@ export default class OraStore {
     this.ui.dispose()
     this.pin.dispose()
     this.search.dispose()
-  }
-
-  // synced from electron
-  // see @mcro/electron/src/helpers/getContext
-  get osContext() {
-    return (
-      this.electronState.context &&
-      // ensure theres at least a title to the page
-      this.electronState.context.title &&
-      this.electronState.context
-    )
   }
 
   _listenForElectronState() {
@@ -141,28 +142,17 @@ export default class OraStore {
   }
 
   _watchContext = () => {
-    this.lastContext = null
     this.watch(function watchContext() {
-      // send electron state over bus
-      this.electronStateBus.postMessage(this.electronState)
-
       // determine navigation
-      const { context } = this.electronState
+      const { context } = this.context
       if (!context) {
         return
       }
-      // fixes bug where empty string === true
-      context.title = `${context.title}`.trim().replace(/\s{2,}/g, ' ')
-      if (!context.url || !context.title) {
-        log('no context or url/title', this.context)
+      const title = context.title || context.appName
+      if (!title) {
+        log('no context title', this.context)
         return
       }
-      if (this.lastContext) {
-        if (isEqual(this.lastContext, context)) {
-          return
-        }
-      }
-      this.lastContext = context
       const nextStackItem = contextToResult(context)
       const isAlreadyOnResultsPane = this.stack.length > 1
       if (isAlreadyOnResultsPane) {

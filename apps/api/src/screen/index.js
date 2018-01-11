@@ -60,6 +60,11 @@ export default class ScreenState {
   constructor() {
     this.wss.on('connection', socket => {
       let uid = this.id++
+      // send current state
+      this.socketSend(socket, this.state)
+      // add to active sockets
+      this.activeSockets.push({ uid, socket })
+      // listen for incoming
       socket.on('message', str => {
         const { action, value } = JSON.parse(str)
         if (this[action]) {
@@ -67,6 +72,7 @@ export default class ScreenState {
           this[action].call(this, value)
         }
       })
+      // handle events
       socket.on('close', () => {
         this.removeSocket(uid)
       })
@@ -74,7 +80,6 @@ export default class ScreenState {
         console.log('error', ...args)
         this.removeSocket(uid)
       })
-      this.activeSockets.push({ uid, socket })
     })
     this.wss.on('close', () => {
       console.log('WE SHOULD HANDLE THIS CLOSE', ...arguments)
@@ -85,7 +90,7 @@ export default class ScreenState {
   }
 
   get hasListeners() {
-    return this.activeSockets.length
+    return !!this.activeSockets.length
   }
 
   start = () => {
@@ -137,7 +142,7 @@ export default class ScreenState {
     // sends over (oldState, changedState, newState)
     this.onChangedState(oldState, object, this.state)
     // only send the changed things to reduce overhead
-    this.socketSend(object)
+    this.socketSendAll(object)
   }
 
   onChangedState = async (oldState, newStateItems) => {
@@ -361,7 +366,15 @@ export default class ScreenState {
     }
   }
 
-  socketSend = data => {
+  socketSend = (socket, data) => {
+    try {
+      socket.send(JSON.stringify(data))
+    } catch (err) {
+      console.log('error with scoket', err.message, err.stack)
+    }
+  }
+
+  socketSendAll = data => {
     const strData = JSON.stringify(data)
     for (const { socket, uid } of this.activeSockets) {
       try {

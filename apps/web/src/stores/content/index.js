@@ -21,14 +21,13 @@ const docs = rawDocs.map(body => ({
 
 const convos = rawConvos.map(convo => {
   const title =
-    'chat between ' +
-    uniq(convo.messages.map(({ author }) => author)).join(', ')
+    'chat: ' + uniq(convo.messages.map(({ author }) => author)).join(', ')
 
   return {
     title,
     // integration: convo.type,
-    integration: 'google-docs',
-    data: { messages: convo.messages },
+    integration: 'slack',
+    data: { channel: 'status', messages: convo.messages },
     type: 'conversation',
     // type: 'conversation',
     body: `# ${title}

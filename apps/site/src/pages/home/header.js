@@ -78,7 +78,7 @@ export default class HomeHeader {
                 }}
               >
                 <video
-                  src="/tmp/take2.mp4"
+                  src="/tmp/try3.mp4"
                   width={2048}
                   height={1152}
                   autoPlay

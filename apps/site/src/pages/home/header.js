@@ -19,7 +19,7 @@ const titleProps = {
 export default class HomeHeader {
   render() {
     return (
-      <View.Section secondary css={{ marginBottom: -Constants.ORA_PULL_UP }}>
+      <View.Section secondary>
         <View.SectionContent fullscreen>
           <View.Header />
 
@@ -27,13 +27,14 @@ export default class HomeHeader {
             css={{
               flex: 1,
               maxHeight: '84.6%',
-              justifyContent: 'space-between',
+              justifyContent: 'space-around',
               zIndex: 10,
             }}
           >
+            <div $$flex css={{ minHeight: 120 }} />
+
             <banner
               css={{
-                padding: [40, 0, 0],
                 alignItems: 'center',
                 justifyContent: 'center',
                 textAlign: 'center',
@@ -42,27 +43,27 @@ export default class HomeHeader {
               <UI.Text
                 selectable
                 color={Constants.colorSecondary.darken(0.75)}
-                size={3.3}
+                size={3.5}
                 weight={200}
               >
                 Autopilot for company knowledge
               </UI.Text>
             </banner>
 
-            <div $$flex />
+            <div $$flex css={{ minHeight: 10 }} />
 
             <UI.Title selectable {...titleProps} textAlign="center">
-              Orbit organizes company knowledge
+              Orbit brings the cloud offline
               <br />
-              and keeps your team in sync.
+              making you smarter as you work.
             </UI.Title>
 
-            <div $$flex />
+            <div $$flex css={{ minHeight: 30 }} />
 
             <desktop
               css={{
-                marginTop: 20,
-                maxWidth: 2048 / 2,
+                margin: [0, -55],
+                // maxWidth: 2048 / 2,
                 justifyContent: 'center',
                 alignItems: 'center',
                 alignSelf: 'center',

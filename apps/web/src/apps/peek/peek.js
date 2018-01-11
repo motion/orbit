@@ -66,12 +66,12 @@ window.cachedTarget = null
     showWebview = false
     tab = 'readability'
 
-    @watch thing = () => (this.target ? Thing.get(this.target.id) : Thing.get())
+    @watch thing = () => this.target && Thing.get(this.target.id)
 
     get target() {
       // during hover its null so show it cached
       if (this.isHovered || this.isPinned || this.isTorn) {
-        return this.lastTarget || {}
+        return this.lastTarget // || {}
       }
       // current
       return this.curTarget

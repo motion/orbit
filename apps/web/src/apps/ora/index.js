@@ -149,7 +149,6 @@ export default class OraPage {
             }}
           >
             <OraContent />
-            <UI.Glint bottom color="#fff" opacity={0.1} borderRadius={15} />
           </ora>
           <orbit
             if={false}
@@ -185,7 +184,7 @@ export default class OraPage {
       // border: [1, [255, 255, 255, 0.035]],
       boxShadow: [
         [0, 0, 15, 0, [0, 0, 0, 0.5]],
-        ['inset', 0, 0, 0, 1, [255, 255, 255, 0.35]],
+        ['inset', 0, 0, 0, 0.5, [255, 255, 255, 0.3]],
       ],
       margin: 10,
       borderRadius: 10,

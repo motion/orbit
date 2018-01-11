@@ -14,7 +14,7 @@ export const contextToResult = context => ({
   title: trimSingleLine(
     context.selection
       ? `${context.selection} | ${context.title}`
-      : context.title,
+      : context.title || context.appName,
   ),
   subtitle: `in ${context.appName.replace('Google ', '')} · ${context.url}`,
   type: 'context',

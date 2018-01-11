@@ -1,14 +1,15 @@
 import * as UI from '@mcro/ui'
 
-export const smallSize = 900
+export const smallSize = 1000
 
 export const PAGE_WIDTH = smallSize
 
 export const SLANT_AMT = 80
 export const SECTION_HEIGHT = Math.max(
-  900,
-  Math.min(1100, window.innerHeight * 1.1),
+  800,
+  Math.min(1500, window.innerHeight * 1.05),
 )
+
 export const SLANT = Math.atan(SLANT_AMT / (SECTION_HEIGHT / 2)) * 180 / Math.PI
 
 export const ORA_LEFT_PAD = 285
@@ -19,8 +20,12 @@ export const ORA_WIDTH = 300
 export const ORA_BORDER_RADIUS = 6
 export const ORA_PULL_UP = 110
 
-export const colorMain = UI.color('rgb(0%, 50.3%, 99.9%)')
-export const colorSecondary = UI.color('rgb(92.1%, 0%, 38.4%)')
+export const colorMain = UI.color('rgb(92.1%, 69.7%, 34%)')
+export const colorMainLight = colorMain.lighten(0.15)
+export const colorMainDark = colorMain.darken(0.48)
+export const colorSecondary = UI.color('rgb(98%, 90%, 36%)')
+export const colorSecondaryLight = colorSecondary.lighten(0.35)
+export const colorSecondaryDark = colorSecondary.darken(0.35)
 export const colorTeal = UI.color('#49ceac')
 export const colorBlue = UI.color('#133cca')
 
@@ -32,22 +37,13 @@ export const screen = {
   small: `@media (max-width: ${smallSize}px)`,
 }
 
-export const dark1 = UI.color(colorMain)
-// .darken(0.75)
-// .toString()
-export const dark2 = UI.color(colorSecondary)
-// .darken(0.75)
-// .toString()
-
-export const darkBackground = `linear-gradient(#000, #333)`
-export const darkBackgroundInverse = `linear-gradient(${dark2}, ${dark2.lighten(
-  0.35,
-)})`
-
-export const dark = {
-  background: darkBackground,
-}
-
-export const darkInverse = {
-  background: darkBackgroundInverse,
+export const gradients = {
+  main: {
+    background: `linear-gradient(${colorMain}, ${colorMainLight})`,
+    backgroundInverse: `linear-gradient(${colorMainLight}, ${colorMain})`,
+  },
+  secondary: {
+    background: `linear-gradient(${colorSecondary}, ${colorSecondaryLight})`,
+    backgroundInverse: `linear-gradient(${colorSecondaryLight}, ${colorSecondary})`,
+  },
 }

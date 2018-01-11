@@ -11,20 +11,27 @@ const padRight = {
 }
 
 export const Slant = ({
-  dark,
+  secondary,
+  reversed,
   inverse,
   inverseSlant,
-  inverseBackground,
-  backgroundColor = '#fff',
+  backgroundColor = Constants.gradients.main.background,
   ...props
 }) => {
   let background = backgroundColor
-  if (dark) {
-    background =
-      inverse && !inverseBackground
-        ? Constants.darkBackgroundInverse
-        : Constants.darkBackground
+  if (!background) {
+    if (secondary) {
+      background = Constants.gradients.secondary.background
+      if (reversed) {
+        background = Constants.gradients.secondary.backgroundInverse
+      }
+    } else {
+      if (reversed) {
+        background = Constants.gradients.main.backgroundInverse
+      }
+    }
   }
+  console.log('background', background)
   return (
     <slant
       $$fullscreen
@@ -86,8 +93,18 @@ export const Section = view(
       padding: [110, 0],
       margin: 0,
     },
-    dark: Constants.dark,
-    darkInverse: Constants.darkInverse,
+    main: {
+      background: Constants.gradients.main.background,
+    },
+    mainReverse: {
+      background: Constants.gradients.main.backgroundInverse,
+    },
+    secondary: {
+      background: Constants.gradients.secondary.background,
+    },
+    secondaryReverse: {
+      background: Constants.gradients.secondary.backgroundInverse,
+    },
   },
 )
 
@@ -111,6 +128,8 @@ export const SectionContent = view(
     },
     fullscreen: {
       height: Constants.SECTION_HEIGHT,
+      // overflow: 'hidden',
+      // background: [0, 0, 0, 0.5],
     },
   },
 )

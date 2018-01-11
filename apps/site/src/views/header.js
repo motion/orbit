@@ -21,33 +21,40 @@ const MenuItem = props => (
 export default () => (
   <tophead
     css={{
-      background: 'transparent',
-      padding: [10, 0],
+      padding: [2, 0],
       margin: [0, -25],
-      position: 'relative',
       zIndex: 10,
     }}
   >
     <SectionContent row css={{ justifyContent: 'space-between' }}>
-      <Logo color="#fff" />
+      <logo css={{ position: 'relative' }}>
+        <Logo color={'#151515'} height={38} />
+        <Logo
+          color={'#fff'}
+          height={38}
+          css={{ position: 'absolute', top: -1, zIndex: -1, opacity: 0.3 }}
+        />
+      </logo>
 
       <menu css={{ flexFlow: 'row', padding: [0, 100, 0, 70] }}>
-        <MenuItem to="/sales" color="#fff">
+        <MenuItem to="/sales" color={Constants.colorMainDark}>
           FAQ
         </MenuItem>
-        <MenuItem to="/pricing" color="#fff">
+        <MenuItem to="/pricing" color={Constants.colorMainDark}>
           Pricing
         </MenuItem>
       </menu>
 
       <end css={{ width: 180, alignItems: 'flex-end' }}>
         <UI.Button
-          icon="objects_planet"
-          iconAfter
-          size={1.2}
-          fontWeight={200}
-          theme="#000"
-          color="#fff"
+          iconProps={{
+            style: {
+              fontSmoothing: 'antialiased',
+            },
+          }}
+          size={1.1}
+          theme={'#67B931'}
+          color={'#fff'}
         >
           Download
         </UI.Button>

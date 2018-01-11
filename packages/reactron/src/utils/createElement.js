@@ -21,6 +21,7 @@ export function createElement(type, props) {
     MENUITEM: () => new Components.MenuItem(ROOT, props),
     SUBMENU: () => new Components.SubMenu(ROOT, props),
     WINDOW: () => new Components.Window(ROOT, props),
+    TRAY: () => new Components.Tray(ROOT, props),
   }
 
   if (COMPONENTS[type]) {

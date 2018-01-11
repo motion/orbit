@@ -17,7 +17,10 @@ export default class OraActionBar {
     const actions = store && store.actions
     const isActionsArray = Array.isArray(actions)
     const collapse = (
-      <collapseBar onClick={oraStore.ui.toggleCollapsed}>
+      <collapseBar
+        if={store.results && store.results.length}
+        onClick={oraStore.ui.toggleCollapsed}
+      >
         <UI.Arrow />
         <UI.Icon name="menu" size={10} margin={[0, 0, 0, -16]} />
       </collapseBar>

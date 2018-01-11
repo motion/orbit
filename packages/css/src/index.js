@@ -61,7 +61,7 @@ export default function motionStyle(options: Object = {}) {
     boxShadow: v =>
       v.inset || v.x || v.y || v.blur || v.spread || v.color
         ? `${v.inset ? 'inset' : ''} ${px(v.x)} ${px(v.y)} ${px(v.blur)} ${px(
-            v.spread
+            v.spread,
           )} ${toColor(v.color)}`
         : toColor(v),
     background: v =>
@@ -86,7 +86,7 @@ export default function motionStyle(options: Object = {}) {
   function processArray(
     key: string,
     value: Array<number | string>,
-    level: number = 0
+    level: number = 0,
   ): string {
     if (key === 'background') {
       if (isColor(value)) {
@@ -132,7 +132,7 @@ export default function motionStyle(options: Object = {}) {
       `linear-gradient(${arrayOrObject(
         all => processArray(key, all),
         ({ deg, from, to }) =>
-          `${deg || 0}deg, ${from || 'transparent'}, ${to || 'transparent'}`
+          `${deg || 0}deg, ${from || 'transparent'}, ${to || 'transparent'}`,
       )(object)})`,
     radialGradient: processArray,
   }
@@ -176,7 +176,9 @@ export default function motionStyle(options: Object = {}) {
   function processStyles(styles: Object, opts: Opts): Object {
     const toReturn = {}
     const shouldSnake = !opts || opts.snakeCase !== false
-
+    if (!styles || typeof styles !== 'object') {
+      throw new Error(`No styles given: ${styles}`)
+    }
     for (let key of Object.keys(styles)) {
       let value = styles[key]
       let valueType = typeof value
@@ -263,9 +265,8 @@ export default function motionStyle(options: Object = {}) {
       }
 
       throw new Error(
-        `${(opts && opts.errorMessage) || 'Error'}: Invalid style value for ${
-          key
-        }: ${JSON.stringify(value)}`
+        `${(opts && opts.errorMessage) ||
+          'Error'}: Invalid style value for ${key}: ${JSON.stringify(value)}`,
       )
     }
 

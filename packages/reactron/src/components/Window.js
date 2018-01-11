@@ -141,9 +141,18 @@ function configureFile({ file }: Object) {
   }
 }
 
-function configureSize({ size, onResize, defaultSize, animateSize }: Object) {
+function configureSize({
+  size: oSize,
+  onResize,
+  defaultSize,
+  animateSize,
+}: Object) {
   if (this.unmounted) {
     return
+  }
+  let size = oSize
+  if (Array.isArray(oSize)) {
+    size = size.map(x => Math.round(x))
   }
   // window.setPosition(x, y[, animate])
   if (typeof animateSize === 'boolean') {

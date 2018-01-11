@@ -8,9 +8,8 @@ import OraBanner from './oraBanner'
 const iconProps = {
   color: [255, 255, 255, 0.5],
   padding: 8,
-  size: 16,
+  size: 15,
   hover: {
-    opacity: 0.5,
     color: [255, 255, 255, 1],
   },
   css: {
@@ -85,6 +84,18 @@ class BucketsDropdown {
 @view.attach('oraStore')
 @view
 export default class OraHeader extends React.Component {
+  componentDidMount() {
+    this.react(
+      () => this.props.oraStore.ui.state.hidden,
+      hidden => {
+        // is toggling to shown
+        if (!hidden) {
+          this.props.oraStore.ui.focusBar()
+        }
+      },
+    )
+  }
+
   handleHeaderClick = e => {
     e.preventDefault()
     this.props.oraStore.ui.focusBar()
@@ -114,8 +125,9 @@ export default class OraHeader extends React.Component {
   }
 
   handleHide = e => {
+    console.log('hide')
     e.stopPropagation()
-    this.props.oraStore.ui.hide()
+    this.props.oraStore.ui.toggleHidden()
   }
 
   handleBucketClick = e => {
@@ -141,7 +153,7 @@ export default class OraHeader extends React.Component {
         >
           <contents>
             <leftSide>
-              <UI.Icon name="zoom" {...iconProps} />
+              <UI.Icon name="zoom" {...iconProps} color="#fff" />
               <UI.Icon
                 if={false && oraStore.stack.length > 1}
                 name="arrominleft"
@@ -176,13 +188,15 @@ export default class OraHeader extends React.Component {
               />
               <UI.Icon
                 {...iconProps}
-                size={14}
-                opacity={0}
-                onClick={this.handleHide}
-                name="remove"
-                css={{
-                  pointerEvents: 'none',
+                size={12}
+                color="#fff"
+                opacity={0.15}
+                padding={10}
+                hover={{
+                  opacity: 0.5,
                 }}
+                onClick={this.handleHide}
+                name="right2"
               />
             </rightSide>
           </contents>
@@ -195,7 +209,7 @@ export default class OraHeader extends React.Component {
     header: {
       position: 'relative',
       overflow: 'hidden',
-      opacity: 0.85,
+      opacity: 0.9,
       zIndex: -1,
       height: Constants.ORA_HEADER_HEIGHT + 100,
       paddingBottom: 100,
@@ -203,7 +217,7 @@ export default class OraHeader extends React.Component {
       justifyContent: 'center',
       '& .icon': {
         transition: 'all ease-in 100ms',
-        transform: 'scale(0.95)',
+        // transform: 'scale(0.95)',
       },
       '&:hover': {
         background: [255, 255, 255, 0.02],
@@ -211,9 +225,9 @@ export default class OraHeader extends React.Component {
     },
     focus: {
       opacity: 1,
-      height: Constants.ORA_HEADER_HEIGHT_FULL + 100,
+      // height: Constants.ORA_HEADER_HEIGHT_FULL + 100,
       '& .icon': {
-        transform: 'scale(1.05)',
+        transform: 'scale(1)',
       },
       '& .title': {
         display: 'none',
@@ -239,7 +253,7 @@ export default class OraHeader extends React.Component {
       height: 'auto',
       left: 10,
       zIndex: 2,
-      opacity: 0.4,
+      opacity: 0.5,
     },
     rightSide: {
       position: 'absolute',
@@ -253,7 +267,7 @@ export default class OraHeader extends React.Component {
     },
     searchFont: {
       fontWeight: 300,
-      fontSize: 16,
+      fontSize: 18,
     },
     searchInput: {
       position: 'relative',

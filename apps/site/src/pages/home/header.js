@@ -3,104 +3,116 @@ import * as UI from '@mcro/ui'
 import * as View from '~/views'
 import * as Constants from '~/constants'
 import { view } from '@mcro/black'
-import Illustration1 from './header/illustration1'
-import Illustration2 from './header/illustration2'
 import { Stage, Scene, Item } from '~/views/stage'
 
+// keeping everyone on the same page.
+// Orbit works with every app and fits into your current workflow.
+
 const titleProps = {
-  size: 2.7,
   fontWeight: 200,
+  color: Constants.colorSecondary.darken(0.6),
+  alpha: 0.9,
 }
 
 @view
 export default class HomeHeader {
   render() {
-    const ringFill = Constants.colorSecondary.darken(0.15).toString()
-
     return (
-      <View.Section darkInverse css={{ marginBottom: -Constants.ORA_PULL_UP }}>
+      <View.Section secondary>
         <View.SectionContent fullscreen>
           <View.Header />
 
-          <Stage if={false}>
-            <Scene>
-              <Item>thing</Item>
-            </Scene>
-            <Scene>
-              <Item>thing</Item>
-            </Scene>
-            <Scene>
-              <Item>thing</Item>
-            </Scene>
-          </Stage>
-
-          <View.Slant dark />
-
-          <content
-            $$row
+          <contents
             css={{
-              margin: ['auto', 0],
-              position: 'relative',
-              justifyContent: 'space-between',
+              flex: 1,
+              maxHeight: '84.6%',
+              justifyContent: 'space-around',
+              zIndex: 10,
             }}
           >
-            <section
-              css={{
-                position: 'relative',
-                zIndex: 11,
-                width: '45%',
-                // marginTop: -20,
-              }}
-            >
-              <View.Title
-                selectable
-                {...titleProps}
-                fontWeight={300}
-                textAlign="right"
-              >
-                <span css={{ marginRight: -10 }}>A new type of tool</span>
-                <br />
-                <span className="hlword">that understands you</span>
-              </View.Title>
-            </section>
+            <div $$flex css={{ minHeight: '4%' }} />
 
-            <section
+            <banner
               css={{
-                width: '45%',
-                zIndex: 20,
+                alignItems: 'center',
+                justifyContent: 'center',
+                textAlign: 'center',
               }}
             >
-              <inner
+              <UI.Text
+                selectable
+                color={Constants.colorSecondary.darken(0.75)}
+                size={2}
+                weight={900}
+              >
+                An always-on brain for your knowledge
+              </UI.Text>
+            </banner>
+
+            <div $$flex css={{ minHeight: 10 }} />
+
+            <UI.Title selectable size={2} {...titleProps} textAlign="center">
+              Orbit brings the cloud offline,
+              <br />
+              making you smarter as you work.
+            </UI.Title>
+
+            <div $$flex css={{ minHeight: 30 }} />
+
+            <desktop
+              css={{
+                margin: [0, -55],
+                // maxWidth: 2048 / 2,
+                justifyContent: 'center',
+                alignItems: 'center',
+                alignSelf: 'center',
+                zIndex: 10,
+              }}
+            >
+              <desktopChrome
                 css={{
-                  position: 'relative',
-                  zIndex: 11,
-                  height: 250,
-                  // left: 20,
-                  pointerEvents: 'none',
-                  userSelect: 'none',
+                  border: [5, Constants.colorMain],
+                  borderRadius: 4,
+                  left: 20,
+                  right: 20,
                 }}
               >
-                <text
-                  css={{
-                    position: 'absolute',
-                    // bottom: -220,
-                  }}
-                >
-                  <View.Title
-                    {...titleProps}
-                    textAlign="left"
-                    color={'#fff'}
-                    selectable
-                  >
-                    And augments your OS <br />
-                    <span css={{ marginLeft: -10 }}>
-                      with what you <span className="hlword">should know</span>
-                    </span>
-                  </View.Title>
-                </text>
-              </inner>
-            </section>
-          </content>
+                <video
+                  src="/tmp/try3.mp4"
+                  width={2048}
+                  height={1152}
+                  muted
+                  autoPlay
+                  loop
+                  css={{ maxWidth: '100%', height: 'auto' }}
+                />
+              </desktopChrome>
+              <stand
+                css={{
+                  position: 'relative',
+                  left: 0,
+                  height: 15,
+                  width: 5,
+                  background: Constants.colorMain,
+                  alignSelf: 'center',
+                  zIndex: 1000,
+                }}
+              />
+              <base
+                css={{
+                  position: 'relative',
+                  left: 0,
+                  height: 5,
+                  width: 190,
+                  background: Constants.colorMain,
+                  alignSelf: 'center',
+                  zIndex: 1000,
+                }}
+              />
+            </desktop>
+
+            <div $$flex />
+          </contents>
         </View.SectionContent>
       </View.Section>
     )

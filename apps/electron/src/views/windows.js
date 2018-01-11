@@ -55,11 +55,6 @@ export default class Windows extends React.Component {
       screenSize,
       oraPosition,
     })
-    this.on(this.props.rootStore, 'shortcut', x => {
-      if (x === 'Option+Space') {
-        this.toggleShown()
-      }
-    })
   }
 
   componentDidMount() {
@@ -77,6 +72,7 @@ export default class Windows extends React.Component {
 
   startOra = once(ref => {
     this.oraRef = ref
+    this.props.onOraRef(ref)
     // CLEAR DATA
     if (process.env.CLEAR_DATA) {
       this.oraRef.webContents.session.clearStorageData()
@@ -105,38 +101,8 @@ export default class Windows extends React.Component {
     this.on(ipcMain, 'open-settings', throttle(this.handlePreferences, 200))
   }
 
-  get appRef() {
-    return this.props.rootStore.appRef
-  }
-
-  toggleShown = throttle(async () => {
-    if (!this.appRef) {
-      console.log('no app ref :(')
-      return
-    }
-    if (!this.rootStore.oraState.hidden) {
-      console.log('send toggle')
-      await this.rootStore.sendOraSync('ora-toggle')
-      await Helpers.sleep(150)
-      console.log('now hide')
-      if (
-        !this.state.showSettings &&
-        !this.rootStore.oraState.preventElectronHide
-      ) {
-        this.appRef.hide()
-      }
-    } else {
-      this.appRef.show()
-      await Helpers.sleep(50)
-      await this.rootStore.sendOraSync('ora-toggle')
-      await Helpers.sleep(150)
-      this.appRef.focus()
-      this.oraRef.focus()
-    }
-  }, 200)
-
   handlePreferences = () => {
-    this.updateState({ showSettings: true })
+    this.handleSettingsVisibility(true)
   }
 
   handleMenuQuit = () => {
@@ -145,8 +111,13 @@ export default class Windows extends React.Component {
 
   handleMenuClose = () => {
     if (this.state.showSettings) {
-      this.updateState({ showSettings: false })
+      this.handleSettingsVisibility(false)
     }
+  }
+
+  updateSettingsVisibility = showSettings => {
+    this.updateState({ showSettings })
+    this.props.onSettingsVisibility(showSettings)
   }
 
   onBeforeQuit = () => console.log('hi')
@@ -161,7 +132,7 @@ export default class Windows extends React.Component {
   onSettingsClosed = e => {
     if (!this.isClosing && this.state.showSettings) {
       e.preventDefault()
-      this.updateState({ showSettings: false })
+      this.handleSettingsVisibility(false)
     }
   }
 

@@ -10,7 +10,7 @@ const wrapHighlights = (text: string, highlightWords: Array<string>) => {
   for (const word of highlightWords) {
     result = result.replace(
       new RegExp(`(${word})`, 'g'),
-      '<span style="color: yellow; font-weight: 500;">$1</span>'
+      '<span style="color: yellow; font-weight: 500;">$1</span>',
     )
   }
   return result
@@ -117,7 +117,7 @@ export default class Text extends React.Component<Props> {
             // })
           }
         },
-        true
+        true,
       )
     }
     // set props
@@ -320,7 +320,7 @@ export default class Text extends React.Component<Props> {
         lineHeight,
         textShadow: props.textShadow,
         display: props.display,
-        fontWeight: props.fontWeight,
+        fontWeight: props.fontWeight || props.weight,
         opacity: props.opacity,
       },
       ellipse: {

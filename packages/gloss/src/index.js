@@ -86,7 +86,11 @@ export default class Gloss {
         }
         return this.createElement(tagName, { glossUID: id, ...finalProps })
       }
-      this.attachStyles(id, { [tagName]: styles, ...optionalPropStyles })
+      try {
+        this.attachStyles(id, { [tagName]: styles, ...optionalPropStyles })
+      } catch (err) {
+        console.log('error attaching styles:', tagName, this, styles)
+      }
       glossComponent.displayName = tagName
       return glossComponent
     }

@@ -199,7 +199,7 @@ export default class UIStore {
 
   toggleHidden = throttle(
     () => this.setState({ hidden: !this.state.hidden }),
-    150,
+    50,
   )
 
   hide = () => {

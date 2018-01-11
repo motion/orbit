@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "test": "node --experimental-modules ./test",
-    "build": "cd swift && xcodebuild archive -derivedDataPath $(mktemp -d) -scheme aperture",
+    "build": "cd Swindler && xcodebuild archive -derivedDataPath $(mktemp -d) -scheme SwindlerCLI",
     "prepublish": "npm run build"
   },
   "files": [

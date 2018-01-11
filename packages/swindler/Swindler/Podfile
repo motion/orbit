@@ -23,3 +23,8 @@ target 'SwindlerExample' do
   pod 'PromiseKit/CorePromise', '4.4.0'
   pod 'AXSwift', '~> 0.2'
 end
+
+target 'SwindlerCLI' do
+  pod 'PromiseKit/CorePromise', '4.4.0'
+  pod 'AXSwift', '~> 0.2'
+end

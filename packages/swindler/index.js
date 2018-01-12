@@ -52,7 +52,7 @@ class Swindler {
               .map(x => +x)
           }
           // convert json
-          if (message[0] === '"') {
+          if (message[0] === '"' || message[0] === '{') {
             message = JSON.parse(message)
           }
           this.changeCB({

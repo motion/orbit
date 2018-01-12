@@ -23,7 +23,7 @@ apps/electron-build/app
 apps/crawler/build
 apps/search/build
 
-Swindler/Index
+packages/swindler/Swindler/Index/
 
 packages/screen/swift/aperture.xcodeproj
 !packages/screen/swift/aperture.xcodeproj/project.pbxproj

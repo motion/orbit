@@ -109,24 +109,27 @@ export default class ScreenState {
       console.log('setting context', context)
       this.updateState({ context })
     }
-    const reset = () => (context = {})
 
     this.swindler.onChange(({ event, message }) => {
       switch (event) {
-        case 'FrontmostApplicationChangedEvent':
-          reset()
+        case 'FrontmostWindowChangedEvent':
+          // id = new app
+          if (message.id) {
+            context = {}
+            context.id = message.id
+          }
+          context.title = message.title
+          context.offset = message.offset
+          context.bounds = message.bounds
+          context.appName = message.id
+            ? message.id.split('.')[2]
+            : message.title
           if (
-            message === 'com.google.Chrome' ||
-            message === 'com.apple.Safari'
+            message.id === 'com.google.Chrome' ||
+            message.id === 'com.apple.Safari'
           ) {
             console.log('is a browser')
           }
-          context.id = message
-          context.appName = message.split('.')[2]
-          update()
-          break
-        case 'FrontmostWindowChangedEvent':
-          context.title = message
           update()
           break
         case 'WindowSizeChangedEvent':

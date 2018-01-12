@@ -68,7 +68,8 @@ export default function hoverSettler({ enterDelay, onHovered }) {
     }
 
     function onMouseEnter(e) {
-      handleHover(e.currentTarget)
+      // settimeout to be sure its behind the leave event
+      setTimeout(() => handleHover(e.currentTarget))
     }
 
     function onMouseMove(e) {
@@ -77,6 +78,10 @@ export default function hoverSettler({ enterDelay, onHovered }) {
 
     function onMouseLeave() {
       clearTimeout(itemLastLeave)
+      // be sure to clear your own hovers
+      if (itemLastEnter === lastEnter) {
+        clearTimeout(lastEnter)
+      }
       lastLeave = itemLastLeave = setTimeout(() => {
         if (!lastEnter) {
           setHovered(null)

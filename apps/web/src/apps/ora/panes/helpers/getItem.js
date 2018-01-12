@@ -146,6 +146,7 @@ const getHoverProps = Helpers.hoverSettler({
           document.querySelector('.fade:last-child .list')
         ).scrollTop
     }
+    console.log('peekhovered, sending', object)
     Helpers.OS.send('peek-target', object)
   },
 })

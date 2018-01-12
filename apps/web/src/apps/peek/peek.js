@@ -201,6 +201,8 @@ export default class PeekPage {
     const arrowSize = SHADOW_PAD * 2
     let arrowPosition
 
+    console.log('Peek.render', 'target', target)
+
     switch (arrowTowards) {
       case 'right':
         arrowPosition = {
@@ -243,7 +245,7 @@ export default class PeekPage {
     return (
       <UI.Theme name="light">
         <peek
-          $peekVisible={target}
+          $peekVisible={!!target}
           $peekTorn={store.isTorn}
           onMouseEnter={store.handleMouseEnter}
           onMouseLeave={store.handleMouseLeave}

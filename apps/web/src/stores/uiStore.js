@@ -184,6 +184,7 @@ export default class UIStore {
   _watchHidePeek() {
     this.watch(function watchHidePeek() {
       if (!this.showOra) {
+        console.log('cancel peek on hide')
         Helpers.OS.send('peek-target', null)
       }
     })

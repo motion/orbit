@@ -73,7 +73,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     private func frontmostWindowChanged() {
         let window = swindler.frontmostApplication.value?.mainWindow.value
-        let when = DispatchTime.now() + 0.01 // change 2 to desired number of seconds
+        let when = DispatchTime.now() + 0.02 // change 2 to desired number of seconds
         DispatchQueue.main.asyncAfter(deadline: when) {
             self.emit(":FrontmostWindowChangedEvent '\(String(describing: window?.title.value ?? "null"))'")
         }

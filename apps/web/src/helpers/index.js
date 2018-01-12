@@ -9,18 +9,19 @@ export IndexDB from './indexDB'
 
 export const trimSingleLine = str => str.trim().replace(/\s{2,}/g, ' ')
 
-export const contextToResult = context => ({
-  id: context.url,
-  title: trimSingleLine(
-    context.selection
-      ? `${context.selection} | ${context.title}`
-      : context.title || context.appName,
-  ),
-  subtitle: `in ${context.appName.replace('Google ', '')} · ${context.url}`,
-  type: 'context',
-  image: context.favicon,
-  peek: false,
-})
+export const contextToResult = context => {
+  const pretitle = context.selection || context.title
+  return {
+    id: context.id,
+    title: trimSingleLine(
+      pretitle ? `${pretitle} | ${context.appName}` : context.appName,
+    ),
+    subtitle: `in ${context.appName.replace('Google ', '')} · ${context.url}`,
+    type: 'context',
+    image: context.favicon,
+    peek: false,
+  }
+}
 
 // because honestly, its easy to forget when writing jsx
 // maybe im missing something in flow

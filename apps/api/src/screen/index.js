@@ -4,7 +4,7 @@ import Fs from 'fs-extra'
 import { Server } from 'ws'
 import Screen from '@mcro/screen'
 import ocrScreenshot from '@mcro/ocr'
-import getContext from './helpers/getContext'
+import Swindler from '@mcro/swindler'
 import { isEqual, throttle } from 'lodash'
 import mouse from 'osx-mouse'
 import * as Constants from '~/constants'
@@ -49,6 +49,7 @@ export default class ScreenState {
   activeSockets = []
   id = 0
   nextOCR = null
+  swindler = new Swindler()
 
   state: TScreenState = {
     context: null,
@@ -97,14 +98,55 @@ export default class ScreenState {
   start = () => {
     this.watchMouse()
     this.stopped = false
-    this.watchApplication(async context => {
-      if (!isEqual(this.state.context, context)) {
-        console.log('new context, invalidate ocr', context && context.appName)
-        this.cancelCurrentOCR()
-        this.updateState({ context })
+    this.startSwindler()
+  }
+
+  startSwindler() {
+    this.swindler.start()
+    let context = {}
+
+    const update = () => {
+      console.log('setting context', context)
+      this.updateState({ context })
+    }
+    const reset = () => (context = {})
+
+    this.swindler.onChange(({ event, message }) => {
+      switch (event) {
+        case 'FrontmostApplicationChangedEvent':
+          reset()
+          if (
+            message === 'com.google.Chrome' ||
+            message === 'com.apple.Safari'
+          ) {
+            console.log('is a browser')
+          }
+          context.id = message
+          context.appName = message.split('.')[2]
+          update()
+          break
+        case 'FrontmostWindowChangedEvent':
+          context.title = message
+          update()
+          break
+        case 'WindowSizeChangedEvent':
+          context.bounds = message
+          update()
+          break
+        case 'WindowPosChangedEvent':
+          context.offset = message
+          update()
       }
     })
   }
+
+  // this.watchApplication(async context => {
+  //   if (!isEqual(this.state.context, context)) {
+  //     console.log('new context, invalidate ocr', context && context.appName)
+  //     this.cancelCurrentOCR()
+  //     this.updateState({ context })
+  //   }
+  // })
 
   watchMouse = () => {
     this.mouse = mouse()
@@ -168,7 +210,6 @@ export default class ScreenState {
   }
 
   watchApplication = async cb => {
-    const context = await getContext()
     await sleep(500)
     await cb(context)
     if (this.stopped) {

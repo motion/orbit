@@ -33,7 +33,33 @@ class Swindler {
     this.app.stderr.setEncoding('utf8')
     this.app.stderr.on('data', data => {
       if (data && this.changeCB) {
-        this.changeCB(data.trim())
+        const out = data.trim()
+        if (!out) {
+          return
+        }
+        if (out[0] === ':') {
+          let [event, ...message] = out.slice(1).split(' ')
+          message = message.join(' ').trim()
+          // convert swift strings
+          if (message[0] === '\'') {
+            message = `"${message.slice(1, message.length - 1)}"`
+          }
+          // convert swift tuples
+          if (message[0] === '(') {
+            message = message
+              .slice(1, message.length - 1)
+              .split(',')
+              .map(x => +x)
+          }
+          // convert json
+          if (message[0] === '"') {
+            message = JSON.parse(message)
+          }
+          this.changeCB({
+            event,
+            message,
+          })
+        }
       }
     })
     return this.app

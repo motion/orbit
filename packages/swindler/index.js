@@ -42,7 +42,7 @@ class Swindler {
           message = message.join(' ').trim()
           // convert swift strings
           if (message[0] === '\'') {
-            message = message.slice(1, message.length - 1)
+            message = `"${message.slice(1, message.length - 1)}"`
           }
           // convert swift tuples
           if (message[0] === '(') {
@@ -50,6 +50,10 @@ class Swindler {
               .slice(1, message.length - 1)
               .split(',')
               .map(x => +x)
+          }
+          // convert json
+          if (message[0] === '"') {
+            message = JSON.parse(message)
           }
           this.changeCB({
             event,

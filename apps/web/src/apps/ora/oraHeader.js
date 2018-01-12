@@ -87,9 +87,9 @@ export default class OraHeader extends React.Component {
   componentDidMount() {
     this.react(
       () => this.props.oraStore.ui.showOra,
-      hidden => {
+      shown => {
         // is toggling to shown
-        if (!hidden) {
+        if (shown) {
           this.props.oraStore.ui.focusBar()
         }
       },

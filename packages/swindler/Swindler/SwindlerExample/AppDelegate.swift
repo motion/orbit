@@ -10,6 +10,7 @@ import AXSwift
 import Cocoa
 import Swindler
 import PromiseKit
+import Darwin
 
 func dispatchAfter(delay: TimeInterval, block: DispatchWorkItem) {
     let time = DispatchTime.now() + delay
@@ -19,51 +20,52 @@ func dispatchAfter(delay: TimeInterval, block: DispatchWorkItem) {
 class AppDelegate: NSObject, NSApplicationDelegate {
     var swindler: Swindler.State!
 
+    func emit(_ firstThing: String) {
+        fputs(firstThing, __stderrp)
+    }
+
     func applicationDidFinishLaunching(_ aNotification: Notification) {
+        emit("Loading");
         guard AXSwift.checkIsProcessTrusted(prompt: true) else {
-            print("Not trusted as an AX process; please authorize and re-launch")
+            emit("Not trusted as an AX process; please authorize and re-launch")
             NSApp.terminate(self)
             return
         }
 
         swindler = Swindler.state
 
-        print("screens: \(swindler.screens)")
+//        emit("screens: \(swindler.screens)")
 
         swindler.on { (event: WindowCreatedEvent) in
             let window = event.window
-            print("new window: \(window.title.value)")
+            self.emit("new window: \(window.title.value)")
         }
         swindler.on { (event: WindowPosChangedEvent) in
-            print("Pos changed from \(event.oldValue) to \(event.newValue),",
-                  "external: \(event.external)")
+            self.emit("Pos changed from \(event.oldValue) to \(event.newValue), external: \(event.external)")
         }
         swindler.on { (event: WindowSizeChangedEvent) in
-            print("Size changed from \(event.oldValue) to \(event.newValue),",
-                  "external: \(event.external)")
+            self.emit("Size changed from \(event.oldValue) to \(event.newValue), external: \(event.external)")
         }
         swindler.on { (event: WindowDestroyedEvent) in
-            print("window destroyed: \(event.window.title.value)")
+            self.emit("window destroyed: \(event.window.title.value)")
         }
         swindler.on { (event: ApplicationMainWindowChangedEvent) in
-            print("new main window: \(String(describing: event.newValue?.title.value)).",
-                  "[old: \(String(describing: event.oldValue?.title.value))]")
+            self.emit("new main window: \(String(describing: event.newValue?.title.value)). [old: \(String(describing: event.oldValue?.title.value))]")
             self.frontmostWindowChanged()
         }
         swindler.on { (event: FrontmostApplicationChangedEvent) in
-            print("new frontmost app: \(event.newValue?.bundleIdentifier ?? "unknown").",
-                  "[old: \(event.oldValue?.bundleIdentifier ?? "unknown")]")
+            self.emit("new frontmost app: \(event.newValue?.bundleIdentifier ?? "unknown"). [old: \(event.oldValue?.bundleIdentifier ?? "unknown")]")
             self.frontmostWindowChanged()
         }
 
         //    dispatchAfter(10.0) {
         //      for window in self.swindler.knownWindows {
         //        let title = window.title.value
-        //        print("resizing \(title)")
+        //        emit("resizing \(title)")
         //        window.size.set(CGSize(width: 200, height: 200)).then { newValue in
-        //          print("done with \(title), valid: \(window.isValid), newValue: \(newValue)")
+        //          emit("done with \(title), valid: \(window.isValid), newValue: \(newValue)")
         //        }.error { error in
-        //          print("failed to resize \(title), valid: \(window.isValid), error: \(error)")
+        //          emit("failed to resize \(title), valid: \(window.isValid), error: \(error)")
         //        }
         //      }
         //    }
@@ -71,10 +73,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     private func frontmostWindowChanged() {
         let window = swindler.frontmostApplication.value?.mainWindow.value
-        print("new frontmost window: \(String(describing: window?.title.value))")
+        self.emit("new frontmost window: \(String(describing: window?.title.value))")
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {
         // Insert code here to tear down your application
+        self.emit("going to terminate yo");
     }
 }

@@ -7,6 +7,8 @@
 //
 
 import AXSwift
+import class AXSwift.Application
+import class AXSwift.Observer
 import Cocoa
 import Swindler
 import PromiseKit
@@ -19,6 +21,7 @@ func dispatchAfter(delay: TimeInterval, block: DispatchWorkItem) {
 
 class AppDelegate: NSObject, NSApplicationDelegate {
     var swindler: Swindler.State!
+    var observer: Observer!
 
     func emit(_ firstThing: String) {
         fputs("\(firstThing)\n", __stderrp)
@@ -59,6 +62,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 "\"id\": \"\(String(describing: id))\", " :
                 ""
             self.frontmostWindowChanged(idString)
+//            self.watchApp(id)
         }
         swindler.on { (event: WindowTitleChangedEvent) in
             self.frontmostWindowChanged("")
@@ -90,8 +94,23 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         self.emit(":FrontmostWindowChangedEvent { \(extraString) \"title\": \(titleString), \"offset\": [\(offset.x),\(offset.y)], \"bounds\": [\(bounds.width),\(bounds.height)] }")
     }
     
-//    func watchApp(_ app: AXSwift.Application) throws {
+//    private func watchApp(_ id: String) {
+//        let app = Application.allForBundleID(id).first!
+//        do {
+//            try self.watchApp(app)
+//        } catch let error {
+//            self.emit("Error: Could not watch app [\(app)]: \(error)")
+//        }
+//    }
+//
+//    func watchApp(_ app: Application) throws {
 //        var updated = false
+//        if (observer != nil) {
+//            observer.stop()
+//        }
+//        let send = self.emit
+//        let attributes = try! app.attributes()
+//        self.emit(":AppAttributes \(attributes)")
 //        observer = app.createObserver { (observer: Observer, element: UIElement, event: AXNotification, info: [String: AnyObject]?) in
 //            var elementDesc: String!
 //            if let role = try? element.role()!, role == .window {
@@ -99,31 +118,18 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 //            } else {
 //                elementDesc = "\(element)"
 //            }
-//            print("\(event) on \(elementDesc); info: \(info ?? [:])")
-//
-//            // Watch events on new windows
-//            if event == .windowCreated {
-//                do {
-//                    try observer.addNotification(.uiElementDestroyed, forElement: element)
-//                    try observer.addNotification(.moved, forElement: element)
-//                } catch let error {
-//                    NSLog("Error: Could not watch [\(element)]: \(error)")
-//                }
-//            }
+//            send(":Something \(event) on \(elementDesc); info: \(info ?? [:])")
 //
 //            // Group simultaneous events together with --- lines
 //            if !updated {
 //                updated = true
 //                // Set this code to run after the current run loop, which is dispatching all notifications.
 //                DispatchQueue.main.async {
-//                    print("---")
+//                    send("---")
 //                    updated = false
 //                }
 //            }
 //        }
-//
-//        try observer.addNotification(.windowCreated, forElement: app)
-//        try observer.addNotification(.mainWindowChanged, forElement: app)
 //    }
 
     func applicationWillTerminate(_ aNotification: Notification) {

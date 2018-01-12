@@ -151,8 +151,11 @@ export default class ListItem extends React.Component<Props> {
         glowProps={glowProps}
         sizeIcon={1.5}
         iconProps={{
-          alignSelf: children ? 'flex-start' : 'center',
+          alignSelf: 'flex-start',
           opacity: 0.6,
+          style: {
+            paddingTop: 5,
+          },
           ...iconProps,
         }}
         style={style}

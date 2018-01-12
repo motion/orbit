@@ -15,6 +15,7 @@ import { throttle } from 'lodash'
     sendOra = null
 
     // sync FROM ora app to here
+    // see web/src/stores/uiStore
     oraState = {}
     _oraStateGetters = []
 

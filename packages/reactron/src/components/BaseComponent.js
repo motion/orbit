@@ -46,7 +46,9 @@ export default class BaseComponent {
     const currentPropKeys = Object.keys(this.props)
     const newPropKeys = !prevProps
       ? currentPropKeys
-      : currentPropKeys.map(k => !isEqual(this.props[k], prevProps[k]) && k)
+      : currentPropKeys
+          .map(k => (!isEqual(this.props[k], prevProps[k]) ? k : '__NOT_NEW__'))
+          .filter(x => x !== '__NOT_NEW__')
     if (this.handleNewProps) {
       this.handleNewProps(newPropKeys, prevProps)
     }

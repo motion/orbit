@@ -30,14 +30,15 @@ export default class TrayElement extends BaseComponent {
   propHandlers = {
     image: image => this.tray.setImage(image || ''),
     pressedImage: pressedImage => this.tray.setPressedImage(pressedImage || ''),
-    title: title => this.tray.setTitle(title || ''),
+    title: title => {
+      this.tray.setTitle(title || '')
+    },
     tooltip: tooltip => this.tray.setToolTip(tooltip || ''),
     highlightMode: highlightMode =>
       this.tray.setHighlightMode(highlightMode || 'selection'),
   }
 
   handleNewProps(keys) {
-    console.log('Tray.handleNewProps', keys, !!this.tray)
     try {
       for (const key of keys) {
         const val = this.props[key]

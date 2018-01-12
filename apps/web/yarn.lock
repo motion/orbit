@@ -506,6 +506,10 @@ parse-int-x@^2.0.0:
     to-string-x "^1.4.2"
     trim-left-x "^3.0.0"
 
+pluralize@^7.0.0:
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/pluralize/-/pluralize-7.0.0.tgz#298b89df8b93b0221dbf421ad2b1b1ea23fc6777"
+
 pouchdb-abstract-mapreduce@6.4.1:
   version "6.4.1"
   resolved "https://registry.yarnpkg.com/pouchdb-abstract-mapreduce/-/pouchdb-abstract-mapreduce-6.4.1.tgz#b8ba3f9ff661ddb2b3e1cc1bd47c98142be1a4fe"

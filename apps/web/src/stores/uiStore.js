@@ -7,6 +7,7 @@ import { debounceIdle } from '~/helpers'
 import keycode from 'keycode'
 import * as Constants from '~/constants'
 import * as _ from 'lodash'
+import pluralize from 'pluralize'
 
 export SHORTCUTS from './shortcuts'
 
@@ -24,11 +25,13 @@ export default class UIStore {
   traps = {}
 
   // this is synced to electron!
+  // see electron/src/views/Root#RootStore.oraState
   state = {
     peeking: false,
     hidden: false,
     focused: true,
     preventElectronHide: true,
+    contextMessage: 'Orbit',
   }
 
   get inputRef() {
@@ -76,6 +79,7 @@ export default class UIStore {
     this._watchKeyEvents()
     this._watchContextMessage()
     this._watchContextOptionKey()
+    this._watchTrayTitle()
   }
 
   dispose() {
@@ -92,6 +96,31 @@ export default class UIStore {
   setTextboxVal = value => {
     this.textboxVal = value
     this.setSearch(value)
+  }
+
+  _watchTrayTitle() {
+    this.watch(() => {
+      const { stack } = this
+      const { store } = stack.last
+      const { results } = store
+      if (results && results.length) {
+        const counts = results.reduce((acc, cur) => {
+          const key = cur.data.type || cur.type
+          return {
+            ...acc,
+            // count similar to this type
+            [key]: (acc[key] || 0) + 1,
+          }
+        }, {})
+
+        const contextMessage = Object.keys(counts).map(
+          key => `${counts[key]} ${_.capitalize(pluralize(key))}`,
+        )
+        this.setState({
+          contextMessage: contextMessage.join(', '),
+        })
+      }
+    })
   }
 
   _watchContextOptionKey() {

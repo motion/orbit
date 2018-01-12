@@ -154,6 +154,7 @@ export default class OraStore {
     this.watch(function watchContext() {
       // determine navigation
       const { activeContext } = this
+      console.log('activeContext', activeContext)
       if (!activeContext) {
         return
       }

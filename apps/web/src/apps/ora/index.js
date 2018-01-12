@@ -126,10 +126,10 @@ export default class OraPage {
   handleOrbitClick = () => {
     const { oraStore } = this.props
     oraStore.ui.toggleHidden()
-    if (!oraStore.ui.showOra) {
+    if (oraStore.ui.showOra) {
       this.setTimeout(() => {
         oraStore.ui.focusBar()
-      }, 10)
+      }, 16)
     }
   }
 

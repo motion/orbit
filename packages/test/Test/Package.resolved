@@ -1,0 +1,25 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "AXSwift",
+        "repositoryURL": "/Users/nw/projects/motion/orbit/packages/test/AXSwift",
+        "state": {
+          "branch": null,
+          "revision": "0f2ea32182a53acf213f8d4f1730dd2b980f465f",
+          "version": "1.0.0"
+        }
+      },
+      {
+        "package": "PromiseKit",
+        "repositoryURL": "https://github.com/mxcl/PromiseKit",
+        "state": {
+          "branch": null,
+          "revision": "de638abca588be5fabcab0cb0d47e56156608fa5",
+          "version": "4.5.1"
+        }
+      }
+    ]
+  },
+  "version": 1
+}

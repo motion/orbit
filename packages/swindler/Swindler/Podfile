@@ -16,15 +16,10 @@ end
 
 target 'Swindler' do
   pod 'PromiseKit', '4.4.0'
-  pod 'AXSwift', '~> 0.2'
+  pod 'AXSwift', path: './AXSwift'
 end
 
 target 'SwindlerExample' do
   pod 'PromiseKit/CorePromise', '4.4.0'
-  pod 'AXSwift', '~> 0.2'
-end
-
-target 'SwindlerCLI' do
-  pod 'PromiseKit/CorePromise', '4.4.0'
-  pod 'AXSwift', '~> 0.2'
+  pod 'AXSwift', path: './AXSwift'
 end

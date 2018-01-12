@@ -4,7 +4,8 @@ const electronUtil = require('electron-util/node')
 
 const BIN = path.join(
   electronUtil.fixPathForAsarUnpack(__dirname),
-  'swindler-cli',
+  'Swindler',
+  'run'
 )
 
 class Swindler {

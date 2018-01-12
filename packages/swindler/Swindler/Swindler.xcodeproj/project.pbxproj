@@ -40,6 +40,8 @@
 		5F8646E6FD8695E9F0EF0ADE /* Pods_SwindlerExample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC881B514AADAF10E329E46D /* Pods_SwindlerExample.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		C9361445CC8A8C79F29D56D5 /* Pods_SwindlerCLI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB430814EB3BFC74D31810A7 /* Pods_SwindlerCLI.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		CF1651B92008208F0099A85D /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF1651B82008208F0099A85D /* main.swift */; };
+		CFAB994A2008293B003F5D7A /* Swindler.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2F86CEC61BD60117007E8C29 /* Swindler.framework */; };
+		CFAB994B2008293D003F5D7A /* AXSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CFAB994C2008293D003F5D7A /* AXSwift.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		CFBEF21220080CA3009DD8CE /* AXSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CFBEF21320080CA3009DD8CE /* AXSwift.framework */; };
 /* End PBXBuildFile section */
 
@@ -102,6 +104,7 @@
 		CF1651B82008208F0099A85D /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		CF1651BE2008239A0099A85D /* AXSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = AXSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CF1651C12008246D0099A85D /* AXSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = AXSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		CFAB994C2008293D003F5D7A /* AXSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = AXSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CFBEF21320080CA3009DD8CE /* AXSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = AXSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D090601ED8E6A3D5DC8F2D1F /* Pods-Swindler.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Swindler.release.xcconfig"; path = "Pods/Target Support Files/Pods-Swindler/Pods-Swindler.release.xcconfig"; sourceTree = "<group>"; };
 		DEE62EDB33150C982C2297B9 /* Pods-Swindler.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Swindler.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Swindler/Pods-Swindler.debug.xcconfig"; sourceTree = "<group>"; };
@@ -141,6 +144,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CFAB994B2008293D003F5D7A /* AXSwift.framework in Frameworks */,
+				CFAB994A2008293B003F5D7A /* Swindler.framework in Frameworks */,
 				C9361445CC8A8C79F29D56D5 /* Pods_SwindlerCLI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -261,6 +266,7 @@
 		9E4447A2F5E7EB6E92464F87 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				CFAB994C2008293D003F5D7A /* AXSwift.framework */,
 				CF1651C12008246D0099A85D /* AXSwift.framework */,
 				CF1651BE2008239A0099A85D /* AXSwift.framework */,
 				CFBEF21320080CA3009DD8CE /* AXSwift.framework */,

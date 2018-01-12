@@ -37,6 +37,7 @@ type TScreenState = {
   lastOCR: Number,
   lastScreenChange: Number,
   mousePosition: [Number, Number],
+  keyboard: Object,
 }
 
 export default class ScreenState {
@@ -58,6 +59,7 @@ export default class ScreenState {
     lastOCR: Date.now(),
     lastScreenChange: Date.now(),
     mousePosition: [0, 0],
+    keyboard: {},
   }
 
   constructor() {
@@ -141,24 +143,40 @@ export default class ScreenState {
           update()
           break
         case 'WindowSizeChangedEvent':
+          this.resetHighlights()
           context.bounds = message
           update()
           break
         case 'WindowPosChangedEvent':
+          this.resetHighlights()
           context.offset = message
           update()
       }
     })
   }
 
+  resetHighlights = () => {
+    this.updateState({
+      lastScreenChange: Date.now(),
+    })
+  }
+
   watchKeyboard = () => {
     const optionKey = 56
     iohook.on('keydown', ({ keycode }) => {
-      if (keycode === optionKey) {
+      const isOptionKey = keycode === optionKey
+      // clear option key if other key pressed during
+      if (this.state.keyboard.option && !isOptionKey) {
+        this.updateState({ keyboard: { option: false } })
+        return
+      }
+      // option on
+      if (isOptionKey) {
         this.updateState({ keyboard: { option: true } })
       }
     })
     iohook.on('keyup', ({ keycode }) => {
+      // option off
       if (keycode === optionKey) {
         this.updateState({ keyboard: { option: false } })
       }
@@ -218,7 +236,7 @@ export default class ScreenState {
     const newContext = newStateItems.context
     if (newContext || firstTimeOCR) {
       console.log(
-        're-run screen watch',
+        'got new context or first ocr',
         newContext && newContext.appName,
         'firstTimeOCR',
         firstTimeOCR,
@@ -351,9 +369,7 @@ export default class ScreenState {
     }
     // delays taking OCR for no movement
     this.nextOCR = setTimeout(this.runOCR, DEBOUNCE_OCR)
-    this.updateState({
-      lastScreenChange: Date.now(),
-    })
+    this.resetHighlights()
   }
 
   runOCR = async () => {

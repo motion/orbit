@@ -92,18 +92,46 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let offset = window.position.value
         let bounds = window.size.value
         self.emit(":FrontmostWindowChangedEvent { \(extraString) \"title\": \(titleString), \"offset\": [\(offset.x),\(offset.y)], \"bounds\": [\(bounds.width),\(bounds.height)] }")
+//        self.watchWindow(window)
     }
     
-//    private func watchApp(_ id: String) {
-//        let app = Application.allForBundleID(id).first!
+    private func watchWindow(_ window: Window) {
+//        self.emit("\(window.attributes)")
+    }
+    
+    private func watchApp(_ id: String) {
+        let app = Application.allForBundleID(id).first!
+        let window = try! app.windows()?.first
+        if (window == nil) {
+            return
+        }
+        let attributes = try! window?.attributesAsStrings()
+//        let element = window?.element
+//        self.emit(":Element \(element)")
+        let doc = try! window?.getMultipleAttributes(["AXDocument", "AXMain", "AXChildren", "AXSections"])
+        if (doc != nil) {
+            let val = doc?.description
+            self.emit(":Got \(val)")
+            let children = doc!["AXChildren"] as! Array<UIElement>
+            for child in children {
+//                let val = try! child.parameterizedAttributesAsStrings()
+                self.emit(":Child \(child)")
+            }
+        }
+        
+        for attr in attributes! {
+            self.emit(":Attr \(attr)")
+        }
+        
 //        do {
 //            try self.watchApp(app)
 //        } catch let error {
 //            self.emit("Error: Could not watch app [\(app)]: \(error)")
 //        }
-//    }
-//
-//    func watchApp(_ app: Application) throws {
+    }
+
+    func watchApp(_ app: Application) throws {
+        self.emit(":Element at 100,100: \(String(describing: try! app.elementAtPosition(100, 100)))")
 //        var updated = false
 //        if (observer != nil) {
 //            observer.stop()
@@ -130,7 +158,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 //                }
 //            }
 //        }
-//    }
+    }
 
     func applicationWillTerminate(_ aNotification: Notification) {
         // Insert code here to tear down your application

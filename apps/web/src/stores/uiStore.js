@@ -23,6 +23,14 @@ export default class UIStore {
   textboxVal = ''
   traps = {}
 
+  // this is synced to electron!
+  state = {
+    peeking: false,
+    hidden: false,
+    focused: true,
+    preventElectronHide: true,
+  }
+
   get inputRef() {
     this._inputRefVersion
     return this._inputRef
@@ -45,11 +53,9 @@ export default class UIStore {
     this._height = val
   }
 
-  // this is synced to electron!
-  state = {
-    hidden: false,
-    focused: true,
-    preventElectronHide: true,
+  get showOra() {
+    const { hidden, peeking, focused } = this.state
+    return peeking || (!hidden && focused)
   }
 
   constructor({ oraStore }) {
@@ -69,6 +75,7 @@ export default class UIStore {
     this._watchBlurBarOnHide()
     this._watchKeyEvents()
     this._watchContextMessage()
+    this._watchContextOptionKey()
   }
 
   dispose() {
@@ -85,6 +92,29 @@ export default class UIStore {
   setTextboxVal = value => {
     this.textboxVal = value
     this.setSearch(value)
+  }
+
+  _watchContextOptionKey() {
+    const SHOW_DELAY = 250
+    let showTimeout
+    this.react(
+      () => this.oraStore.context.keyboard || {},
+      ({ option }) => {
+        console.log('option', option)
+        clearTimeout(showTimeout)
+        const { peeking } = this.state
+        const shouldShow = option && !peeking
+        const shouldHide = !option && peeking
+        if (shouldShow) {
+          showTimeout = setTimeout(() => {
+            this.setState({ peeking: true })
+          }, SHOW_DELAY)
+        }
+        if (shouldHide) {
+          this.setState({ peeking: false })
+        }
+      },
+    )
   }
 
   _watchContextMessage() {

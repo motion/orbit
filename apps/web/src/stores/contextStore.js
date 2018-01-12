@@ -20,6 +20,7 @@ export default class ContextStore {
   lastScreenChange = null
   lastOCR = null
   mousePosition = null
+  keyboard = null
 
   pause() {
     this.start()
@@ -50,7 +51,17 @@ export default class ContextStore {
     }
   }
 
-  setState = ({ mousePosition, context, ocr, lastScreenChange, lastOCR }) => {
+  setState = ({
+    keyboard,
+    mousePosition,
+    context,
+    ocr,
+    lastScreenChange,
+    lastOCR,
+  }) => {
+    if (keyboard) {
+      this.keyboard = keyboard
+    }
     if (mousePosition) {
       this.mousePosition = mousePosition
     }

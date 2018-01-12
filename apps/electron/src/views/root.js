@@ -90,22 +90,30 @@ import { throttle } from 'lodash'
         return
       }
       if (!this.oraState.hidden) {
-        console.log('send toggle')
-        await this.sendOraSync('ora-toggle')
-        await Helpers.sleep(150)
-        console.log('now hide')
-        if (!this.settingsVisible && !this.oraState.preventElectronHide) {
-          this.appRef.hide()
-        }
+        this.hideOra()
       } else {
-        this.appRef.show()
-        await Helpers.sleep(50)
-        await this.sendOraSync('ora-toggle')
-        await Helpers.sleep(150)
-        this.appRef.focus()
-        this.oraRef.focus()
+        this.showOra()
       }
     }, 80)
+
+    async showOra() {
+      this.appRef.show()
+      await Helpers.sleep(50)
+      await this.sendOraSync('ora-toggle')
+      await Helpers.sleep(150)
+      this.appRef.focus()
+      this.oraRef.focus()
+    }
+
+    async hideOra() {
+      console.log('send toggle')
+      await this.sendOraSync('ora-toggle')
+      await Helpers.sleep(150)
+      console.log('now hide')
+      if (!this.settingsVisible && !this.oraState.preventElectronHide) {
+        this.appRef.hide()
+      }
+    }
 
     handleAppRef = ref => {
       if (ref) {

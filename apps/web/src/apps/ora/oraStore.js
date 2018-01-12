@@ -28,7 +28,10 @@ export default class OraStore {
   ui = new UIStore({ oraStore: this })
   pin = new PinStore()
   search = new SearchStore({ useWorker })
-  context = this.props.contextStore
+
+  get context() {
+    return this.props.contextStore
+  }
 
   // synced from electron
   // see @mcro/electron/src/views/Windows#Windows.state
@@ -164,6 +167,10 @@ export default class OraStore {
         return
       }
       const nextStackItem = contextToResult(activeContext)
+      if (!nextStackItem.id) {
+        console.log('no id for stackitem', nextStackItem)
+        return
+      }
       const isAlreadyOnResultsPane = this.stack.length > 1
       if (isAlreadyOnResultsPane) {
         this.stack.replaceInPlace(nextStackItem)

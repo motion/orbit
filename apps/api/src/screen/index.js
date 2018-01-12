@@ -7,6 +7,7 @@ import ocrScreenshot from '@mcro/ocr'
 import Swindler from '@mcro/swindler'
 import { isEqual, throttle } from 'lodash'
 import mouse from 'osx-mouse'
+import iohook from 'iohook'
 import * as Constants from '~/constants'
 
 const sleep = ms => new Promise(res => setTimeout(res, ms))
@@ -62,6 +63,7 @@ export default class ScreenState {
   constructor() {
     this.wss.on('connection', socket => {
       let uid = this.id++
+      console.log('socket connecting', uid)
       // send current state
       this.socketSend(socket, this.state)
       // add to active sockets
@@ -78,8 +80,11 @@ export default class ScreenState {
       socket.on('close', () => {
         this.removeSocket(uid)
       })
-      socket.on('error', (...args) => {
-        console.log('error', ...args)
+      socket.on('error', err => {
+        // ignore ECONNRESET throw anything else
+        if (err.code !== 'ECONNRESET') {
+          throw err
+        }
         this.removeSocket(uid)
       })
     })
@@ -99,6 +104,7 @@ export default class ScreenState {
     this.watchMouse()
     this.stopped = false
     this.startSwindler()
+    this.watchKeyboard()
   }
 
   startSwindler() {
@@ -107,6 +113,7 @@ export default class ScreenState {
 
     const update = () => {
       console.log('setting context', context)
+      this.cancelCurrentOCR()
       this.updateState({ context })
     }
 
@@ -143,13 +150,20 @@ export default class ScreenState {
     })
   }
 
-  // this.watchApplication(async context => {
-  //   if (!isEqual(this.state.context, context)) {
-  //     console.log('new context, invalidate ocr', context && context.appName)
-  //     this.cancelCurrentOCR()
-  //     this.updateState({ context })
-  //   }
-  // })
+  watchKeyboard = () => {
+    const optionKey = 56
+    iohook.on('keydown', ({ keycode }) => {
+      if (keycode === optionKey) {
+        this.updateState({ keyboard: { option: true } })
+      }
+    })
+    iohook.on('keyup', ({ keycode }) => {
+      if (keycode === optionKey) {
+        this.updateState({ keyboard: { option: false } })
+      }
+    })
+    iohook.start()
+  }
 
   watchMouse = () => {
     this.mouse = mouse()

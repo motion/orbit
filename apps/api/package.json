@@ -38,6 +38,7 @@
     "morgan": "^1.8.2",
     "node-osascript": "~2.0.0",
     "osx-mouse": "^1.2.1",
+    "iohook": "0.1.11",
     "passport": "^0.4.0",
     "passport-facebook": "^2.1.1",
     "passport-github": "^1.1.0",

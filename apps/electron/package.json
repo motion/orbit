@@ -11,6 +11,7 @@
   },
   "scripts": {
     "start": "NODE_ENV=development electron ./lib/start-app",
+    "postinstall": "electron-rebuild",
     "build": "CHUNK_COMMONS=false TARGET=electron NODE_ENV=production mcro-build",
     "watch": "npm run build -- --watch",
     "deploy": "cd ../electron-build && npm run deploy"
@@ -23,8 +24,10 @@
     "@mcro/r2": "^1.5.1",
     "@mcro/reactron": "^1.5.1",
     "babel-polyfill": "^6.26.0",
+    "iohook": "^0.1.11",
     "debug": "^3.1.0",
     "electron": "^1.7.9",
+    "electron-rebuild": "^1.7.3",
     "electron-context-menu": "^0.9.1",
     "electron-debug": "^1.4.0",
     "electron-localshortcut": "^2.0.2",

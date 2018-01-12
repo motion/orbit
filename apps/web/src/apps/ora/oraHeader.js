@@ -86,7 +86,7 @@ class BucketsDropdown {
 export default class OraHeader extends React.Component {
   componentDidMount() {
     this.react(
-      () => this.props.oraStore.ui.state.hidden,
+      () => this.props.oraStore.ui.showOra,
       hidden => {
         // is toggling to shown
         if (!hidden) {

@@ -53,7 +53,11 @@ class Swindler {
           }
           // convert json
           if (message[0] === '"' || message[0] === '{') {
-            message = JSON.parse(message)
+            try {
+              message = JSON.parse(message)
+            } catch (err) {
+              console.log('Swindler: error parsing json', message)
+            }
           }
           this.changeCB({
             event,

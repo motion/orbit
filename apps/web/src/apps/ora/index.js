@@ -126,7 +126,7 @@ export default class OraPage {
   handleOrbitClick = () => {
     const { oraStore } = this.props
     oraStore.ui.toggleHidden()
-    if (!oraStore.ui.state.hidden) {
+    if (!oraStore.ui.showOra) {
       this.setTimeout(() => {
         oraStore.ui.focusBar()
       }, 10)
@@ -134,12 +134,13 @@ export default class OraPage {
   }
 
   render({ oraStore }) {
-    const { hidden } = oraStore.ui.state
+    const { showOra } = oraStore.ui
+    console.log('showOra', showOra)
     return (
       <oraContainer>
         <UI.Theme name="dark">
           <ora
-            $visible={!hidden}
+            $visible={showOra}
             $oraFocused={oraStore.ui.barFocused}
             ref={oraStore.ref('barRef').set}
             $$draggable
@@ -151,19 +152,25 @@ export default class OraPage {
           </ora>
           <orbit
             if={false}
-            $orbitHidden={hidden}
+            $orbitHidden={!showOra}
             $orbitBarFocused={oraStore.ui.barFocused}
             onClick={this.handleOrbitClick}
           >
             <UI.Icon
               $icon
-              $show={!hidden}
+              $show={showOra}
               name="remove"
               size={16}
               color="inherit"
             />
             <UI.HoverGlow color="#fff" opacity={0.5} full scale={2} show />
-            <LogoIcon $icon $show={hidden} fill="#fff" width={22} height={22} />
+            <LogoIcon
+              $icon
+              $show={showOra}
+              fill="#fff"
+              width={22}
+              height={22}
+            />
           </orbit>
         </UI.Theme>
       </oraContainer>

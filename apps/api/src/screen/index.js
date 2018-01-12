@@ -112,12 +112,13 @@ export default class ScreenState {
     let context = {}
 
     const update = () => {
-      console.log('setting context', context)
       this.cancelCurrentOCR()
+      console.log('UpdateContext:', context)
       this.updateState({ context })
     }
 
     this.swindler.onChange(({ event, message }) => {
+      // console.log('Swindler: ', { event, message })
       switch (event) {
         case 'FrontmostWindowChangedEvent':
           // id = new app
@@ -226,20 +227,11 @@ export default class ScreenState {
     }
   }
 
-  watchApplication = async cb => {
-    await sleep(500)
-    await cb(context)
-    if (this.stopped) {
-      return
-    }
-    this.watchApplication(cb)
-  }
-
   handleNewContext = async () => {
     const { appName, offset, bounds } = this.state.context
 
     // test
-    if (appName !== 'Simplenote') {
+    if (appName !== 'SimplenoteMac') {
       console.log('not simplenote')
       return
     }

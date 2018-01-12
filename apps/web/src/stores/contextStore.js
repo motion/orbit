@@ -45,9 +45,19 @@ export default class ContextStore {
     this.ws.onmessage = ({ data }) => {
       if (data) {
         const res = JSON.parse(data)
+        // console.log('got data for contextStore', data)
         this.setState(res)
         this.cached = res
       }
+    }
+    this.ws.open = function() {
+      console.log('websocket open')
+    }
+    this.ws.onclose = function() {
+      console.log('websocket closed')
+    }
+    this.ws.onerror = function(err) {
+      console.log('error', err)
     }
   }
 

@@ -116,7 +116,8 @@ export default class ScreenState {
     const update = () => {
       this.cancelCurrentOCR()
       console.log('UpdateContext:', context)
-      this.updateState({ context })
+      // ensure new
+      this.updateState({ context: Object.assign({}, context) })
     }
 
     this.swindler.onChange(({ event, message }) => {
@@ -125,33 +126,34 @@ export default class ScreenState {
         case 'FrontmostWindowChangedEvent':
           // id = new app
           if (message.id) {
-            context = {}
-            context.id = message.id
+            context = {
+              id: message.id,
+            }
           }
           const { id } = context
           context.title = message.title
           context.offset = message.offset
           context.bounds = message.bounds
           context.appName = id ? id.split('.')[2] : context.title
-          if (id === 'com.google.Chrome' || id === 'com.apple.Safari') {
+          if (id === 'Chrome' || id === 'Safari') {
             console.log('is a browser')
           }
-          update()
           break
         case 'WindowSizeChangedEvent':
           this.resetHighlights()
           context.bounds = message
-          update()
           break
         case 'WindowPosChangedEvent':
           this.resetHighlights()
           context.offset = message
-          update()
       }
+
+      update()
     })
   }
 
   resetHighlights = () => {
+    console.log('reset highlights')
     this.updateState({
       lastScreenChange: Date.now(),
     })
@@ -198,6 +200,7 @@ export default class ScreenState {
 
   updateState = object => {
     if (this.stopped) {
+      console.log('stopped, dont send')
       return
     }
     let hasNewState = false
@@ -442,6 +445,7 @@ export default class ScreenState {
       try {
         socket.send(strData)
       } catch (err) {
+        console.log('failed to send to socket, removing', err, uid)
         this.removeSocket(uid)
       }
     }

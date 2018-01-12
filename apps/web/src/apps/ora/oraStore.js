@@ -58,13 +58,17 @@ export default class OraStore {
   get activeStore() {
     return this.stack.last.store
   }
+
   get activeContext() {
     const { context } = this.props.contextStore
     if (!context) {
       return null
     }
     // dont treat itself as a context source
-    if (context.appName === 'Electron' || context.appName === 'Orbit') {
+    if (
+      context.appName.toLowerCase() === 'electron' ||
+      context.appName.toLowerCase() === 'orbit'
+    ) {
       return null
     }
     return context
@@ -154,6 +158,7 @@ export default class OraStore {
   }
 
   _watchContext = () => {
+    let lastStackItem
     this.watch(function watchContext() {
       // determine navigation
       const { activeContext } = this
@@ -167,14 +172,18 @@ export default class OraStore {
       }
       const nextStackItem = contextToResult(activeContext)
       if (!nextStackItem.id) {
-        console.log('no id for stackitem', nextStackItem)
+        console.log('no good id to update', nextStackItem, lastId)
         return
       }
-      const isAlreadyOnResultsPane = this.stack.length > 1
-      if (isAlreadyOnResultsPane) {
-        this.stack.replaceInPlace(nextStackItem)
-      } else {
-        this.stack.navigate(nextStackItem)
+      if (!isEqual(lastStackItem, nextStackItem)) {
+        lastStackItem = nextStackItem
+        const isAlreadyOnResultsPane = this.stack.length > 1
+        console.log('updateContextStack', isAlreadyOnResultsPane, nextStackItem)
+        if (isAlreadyOnResultsPane) {
+          this.stack.replaceInPlace(nextStackItem)
+        } else {
+          this.stack.navigate(nextStackItem)
+        }
       }
     })
   }

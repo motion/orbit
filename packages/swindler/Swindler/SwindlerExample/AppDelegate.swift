@@ -21,7 +21,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var swindler: Swindler.State!
 
     func emit(_ firstThing: String) {
-        fputs(firstThing, __stderrp)
+        fputs("\(firstThing)\n", __stderrp)
     }
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
@@ -38,23 +38,23 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         swindler.on { (event: WindowCreatedEvent) in
             let window = event.window
-            self.emit("new window: \(window.title.value)")
+            self.emit(":WindowCreatedEvent \(window.title.value)")
         }
         swindler.on { (event: WindowPosChangedEvent) in
-            self.emit("Pos changed from \(event.oldValue) to \(event.newValue), external: \(event.external)")
+            self.emit(":WindowPosChangedEvent \(event.newValue)")
         }
         swindler.on { (event: WindowSizeChangedEvent) in
-            self.emit("Size changed from \(event.oldValue) to \(event.newValue), external: \(event.external)")
+            self.emit(":WindowSizeChangedEvent \(event.newValue)")
         }
         swindler.on { (event: WindowDestroyedEvent) in
-            self.emit("window destroyed: \(event.window.title.value)")
+            self.emit(":WindowDestroyedEvent \(event.window.title.value)")
         }
         swindler.on { (event: ApplicationMainWindowChangedEvent) in
-            self.emit("new main window: \(String(describing: event.newValue?.title.value)). [old: \(String(describing: event.oldValue?.title.value))]")
+            self.emit(":ApplicationMainWindowChangedEvent \(String(describing: event.newValue?.title.value))")
             self.frontmostWindowChanged()
         }
         swindler.on { (event: FrontmostApplicationChangedEvent) in
-            self.emit("new frontmost app: \(event.newValue?.bundleIdentifier ?? "unknown"). [old: \(event.oldValue?.bundleIdentifier ?? "unknown")]")
+            self.emit(":FrontmostApplicationChangedEvent \(event.newValue?.bundleIdentifier ?? "null")")
             self.frontmostWindowChanged()
         }
 
@@ -73,11 +73,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     private func frontmostWindowChanged() {
         let window = swindler.frontmostApplication.value?.mainWindow.value
-        self.emit("new frontmost window: \(String(describing: window?.title.value))")
+        let when = DispatchTime.now() + 0.01 // change 2 to desired number of seconds
+        DispatchQueue.main.asyncAfter(deadline: when) {
+            self.emit(":FrontmostWindowChangedEvent '\(String(describing: window?.title.value ?? "null"))'")
+        }
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {
         // Insert code here to tear down your application
-        self.emit("going to terminate yo");
+        emit("Exit");
     }
 }

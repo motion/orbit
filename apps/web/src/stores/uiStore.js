@@ -27,6 +27,7 @@ export default class UIStore {
   // see electron/src/views/Root#RootStore.oraState
   state = {
     peeking: false,
+    pinned: false,
     hidden: false,
     focused: true,
     preventElectronHide: true,
@@ -56,7 +57,10 @@ export default class UIStore {
   }
 
   get showOra() {
-    const { hidden, peeking, focused } = this.state
+    const { hidden, peeking, focused, pinned } = this.state
+    if (pinned) {
+      return true
+    }
     return peeking || (!hidden && focused)
   }
 
@@ -124,6 +128,10 @@ export default class UIStore {
         })
       }
     })
+  }
+
+  togglePinned = () => {
+    this.setState({ pinned: !this.state.pinned })
   }
 
   _watchContextOptionKey() {
@@ -288,8 +296,8 @@ export default class UIStore {
   }
 
   toggleHidden = _.throttle(
-    () => this.setState({ hidden: !this.state.hidden }),
-    50,
+    () => this.setState({ hidden: !this.state.hidden, pinned: false }),
+    40,
   )
 
   hide = () => {

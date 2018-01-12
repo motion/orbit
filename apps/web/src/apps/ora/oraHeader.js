@@ -184,7 +184,13 @@ export default class OraHeader extends React.Component {
                 {...iconProps}
                 opacity={0.1}
                 name="gear"
-                onClick={this.props.oraStore.actions.openSettings}
+                onClick={oraStore.actions.openSettings}
+              />
+              <UI.Icon
+                {...iconProps}
+                opacity={oraStore.ui.state.pinned ? 0.8 : 0.4}
+                name="pin"
+                onClick={oraStore.ui.togglePinned}
               />
               <UI.Icon
                 {...iconProps}

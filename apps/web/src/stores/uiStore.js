@@ -1,9 +1,8 @@
 import { store } from '@mcro/black'
 import { OS } from '~/helpers'
-import { throttle } from 'lodash'
 import SHORTCUTS from './shortcuts'
 import Mousetrap from 'mousetrap'
-import { debounceIdle } from '~/helpers'
+import * as Helpers from '~/helpers'
 import keycode from 'keycode'
 import * as Constants from '~/constants'
 import * as _ from 'lodash'
@@ -80,6 +79,7 @@ export default class UIStore {
     this._watchContextMessage()
     this._watchContextOptionKey()
     this._watchTrayTitle()
+    this._watchHidePeek()
   }
 
   dispose() {
@@ -99,13 +99,16 @@ export default class UIStore {
   }
 
   _watchTrayTitle() {
-    this.watch(() => {
+    this.watch(function watchTrayTitle() {
       const { stack } = this
+      if (!stack.last || !stack.last.store) {
+        return
+      }
       const { store } = stack.last
       const { results } = store
       if (results && results.length) {
         const counts = results.reduce((acc, cur) => {
-          const key = cur.data.type || cur.type
+          const key = (cur.data && cur.data.type) || cur.type
           return {
             ...acc,
             // count similar to this type
@@ -129,7 +132,6 @@ export default class UIStore {
     this.react(
       () => this.oraStore.context.keyboard || {},
       ({ option }) => {
-        console.log('option', option)
         clearTimeout(showTimeout)
         const { peeking } = this.state
         const shouldShow = option && !peeking
@@ -147,7 +149,7 @@ export default class UIStore {
   }
 
   _watchContextMessage() {
-    this.watch(() => {
+    this.watch(function watchContextMessage() {
       const { activeStore, hasContext } = this.oraStore
       if (hasContext && activeStore && activeStore.title) {
         if (activeStore.results.length === 0) {
@@ -179,6 +181,14 @@ export default class UIStore {
     })
   }
 
+  _watchHidePeek() {
+    this.watch(function watchHidePeek() {
+      if (!this.showOra) {
+        Helpers.OS.send('peek-target', null)
+      }
+    })
+  }
+
   setSearchImmediate = text => {
     this.search = text
     if (this.shouldFocus) {
@@ -187,7 +197,7 @@ export default class UIStore {
     }
   }
 
-  setSearch = debounceIdle(this.setSearchImmediate, 20)
+  setSearch = Helpers.debounceIdle(this.setSearchImmediate, 20)
 
   removeTrap(ns) {
     if (this.traps[ns]) {
@@ -276,7 +286,7 @@ export default class UIStore {
     })
   }
 
-  toggleHidden = throttle(
+  toggleHidden = _.throttle(
     () => this.setState({ hidden: !this.state.hidden }),
     50,
   )

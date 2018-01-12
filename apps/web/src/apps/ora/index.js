@@ -135,7 +135,6 @@ export default class OraPage {
 
   render({ oraStore }) {
     const { showOra } = oraStore.ui
-    console.log('showOra', showOra)
     return (
       <oraContainer>
         <UI.Theme name="dark">

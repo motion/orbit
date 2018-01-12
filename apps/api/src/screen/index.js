@@ -6,7 +6,6 @@ import Screen from '@mcro/screen'
 import ocrScreenshot from '@mcro/ocr'
 import Swindler from '@mcro/swindler'
 import { isEqual, throttle } from 'lodash'
-import mouse from 'osx-mouse'
 import iohook from 'iohook'
 import * as Constants from '~/constants'
 
@@ -103,10 +102,11 @@ export default class ScreenState {
   }
 
   start = () => {
-    this.watchMouse()
     this.stopped = false
     this.startSwindler()
+    this.watchMouse()
     this.watchKeyboard()
+    iohook.start()
   }
 
   startSwindler() {
@@ -128,16 +128,12 @@ export default class ScreenState {
             context = {}
             context.id = message.id
           }
+          const { id } = context
           context.title = message.title
           context.offset = message.offset
           context.bounds = message.bounds
-          context.appName = message.id
-            ? message.id.split('.')[2]
-            : message.title
-          if (
-            message.id === 'com.google.Chrome' ||
-            message.id === 'com.apple.Safari'
-          ) {
+          context.appName = id ? id.split('.')[2] : context.title
+          if (id === 'com.google.Chrome' || id === 'com.apple.Safari') {
             console.log('is a browser')
           }
           update()
@@ -181,14 +177,12 @@ export default class ScreenState {
         this.updateState({ keyboard: { option: false } })
       }
     })
-    iohook.start()
   }
 
   watchMouse = () => {
-    this.mouse = mouse()
-    this.mouse.on(
-      'move',
-      throttle((x, y) => {
+    iohook.on(
+      'mousemove',
+      throttle(({ x, y }) => {
         this.updateState({
           mousePosition: [x, y],
         })
@@ -459,6 +453,5 @@ export default class ScreenState {
 
   dispose() {
     this.stopDiff()
-    this.mouse.destroy()
   }
 }

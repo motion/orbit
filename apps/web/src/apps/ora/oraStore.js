@@ -60,6 +60,7 @@ export default class OraStore {
   }
   get activeContext() {
     const { context } = this.props.contextStore
+    console.log('activeContext.context', context)
     if (!context) {
       return null
     }

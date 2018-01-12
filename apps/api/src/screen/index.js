@@ -9,6 +9,7 @@ import { isEqual, throttle } from 'lodash'
 import mouse from 'osx-mouse'
 import * as Constants from '~/constants'
 
+const sleep = ms => new Promise(res => setTimeout(res, ms))
 const APP_ID = 'screen'
 const APP_SCREEN_PATH = Path.join(Constants.TMP_DIR, `${APP_ID}.png`)
 const DEBOUNCE_OCR = 1000
@@ -168,6 +169,7 @@ export default class ScreenState {
 
   watchApplication = async cb => {
     const context = await getContext()
+    await sleep(500)
     await cb(context)
     if (this.stopped) {
       return

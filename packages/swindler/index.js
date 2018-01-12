@@ -4,7 +4,8 @@ const electronUtil = require('electron-util/node')
 
 const BIN = path.join(
   electronUtil.fixPathForAsarUnpack(__dirname),
-  'swindler-cli',
+  'Swindler',
+  'run',
 )
 
 class Swindler {
@@ -29,11 +30,10 @@ class Swindler {
       console.log(err.stack)
       throw err
     })
-    this.app.stdout.setEncoding('utf8')
-    this.app.stdout.on('data', data => {
-      if (this.changeCB) {
-        const out = data.trim()
-        this.changeCB(out)
+    this.app.stderr.setEncoding('utf8')
+    this.app.stderr.on('data', data => {
+      if (data && this.changeCB) {
+        this.changeCB(data.trim())
       }
     })
     return this.app
@@ -48,7 +48,7 @@ class Swindler {
       // null if not recording
       return
     }
-    this.app.stdout.removeAllListeners()
+    this.app.stderr.removeAllListeners()
     this.app.kill()
     this.app.kill('SIGKILL')
     await this.app

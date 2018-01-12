@@ -13,6 +13,7 @@ process.on('unhandledRejection', function(error, p) {
 async function test() {
   const swindler = new Swindler()
   swindler.start()
+  console.log('started')
   swindler.onChange(data => {
     console.log('Changed!', data)
   })

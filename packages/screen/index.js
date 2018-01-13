@@ -94,12 +94,26 @@ class Screen {
       throw err
     })
 
+    this.recorder.stderr.setEncoding('utf8')
+    this.recorder.stderr.on('data', data => {
+      console.log('screen stderr:', data)
+    })
+
     this.recorder.stdout.setEncoding('utf8')
+
+    let contentArea
     this.recorder.stdout.on('data', data => {
       if (this.changedFrameCb) {
         const out = data.trim()
-        if (out[0] === '>') {
-          this.changedFrameCb(out.slice(1))
+        if (out[0] === '!') {
+          contentArea = JSON.parse(out.slice(1))
+        } else if (out[0] === '>') {
+          this.changedFrameCb({
+            id: out.slice(1),
+            contentArea,
+          })
+        } else {
+          console.log(out)
         }
       }
     })
@@ -117,6 +131,7 @@ class Screen {
       return
     }
     this.recorder.stdout.removeAllListeners()
+    this.recorder.stderr.removeAllListeners()
     this.recorder.kill()
     this.recorder.kill('SIGKILL')
     await this.recorder

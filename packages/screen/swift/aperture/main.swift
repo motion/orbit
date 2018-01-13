@@ -34,13 +34,14 @@ func record() throws {
 //    fps: 10,
 //    boxes: [
 //      Box(id: "0", x: 0, y: 0, width: 100, height: 50, screenDir: nil),
-//      Box(id: "1", x: 100, y: 100, width: 500, height: 500, screenDir: "/tmp")
+//      Box(id: "1", x: 100, y: 100, width: 800, height: 800, screenDir: "/tmp")
 //    ],
 //    showCursor: true,
 //    displayId: "main",
 //    videoCodec: "mp4",
 //    sampleSpacing: 5,
-//    sensitivity: 1
+//    sensitivity: 1,
+//    initialScreenshot: true
 //  )
   
   recorder = try Recorder(

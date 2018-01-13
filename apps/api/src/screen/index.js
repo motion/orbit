@@ -51,6 +51,7 @@ export default class ScreenState {
   id = 0
   nextOCR = null
   swindler = new Swindler()
+  curContext = {}
 
   state: TScreenState = {
     context: null,
@@ -111,13 +112,13 @@ export default class ScreenState {
 
   startSwindler() {
     this.swindler.start()
-    let context = {}
+    const { curContext } = this
 
     const update = () => {
       this.cancelCurrentOCR()
-      console.log('UpdateContext:', context)
+      console.log('UpdateContext:', curContext)
       // ensure new
-      this.updateState({ context: Object.assign({}, context) })
+      this.updateState({ context: Object.assign({}, curContext) })
     }
 
     this.swindler.onChange(({ event, message }) => {
@@ -125,31 +126,46 @@ export default class ScreenState {
       switch (event) {
         case 'FrontmostWindowChangedEvent':
           // id = new app
-          if (message.id) {
-            context = {
-              id: message.id,
-            }
-          }
-          const { id } = context
-          context.title = message.title
-          context.offset = message.offset
-          context.bounds = message.bounds
-          context.appName = id ? id.split('.')[2] : context.title
-          if (id === 'Chrome' || id === 'Safari') {
-            console.log('is a browser')
-          }
+          this.setCurrentContext(message)
+          // if (id === 'Chrome' || id === 'Safari') {
+          //   console.log('is a browser')
+          // }
           break
         case 'WindowSizeChangedEvent':
           this.resetHighlights()
-          context.bounds = message
+          curContext.bounds = message
           break
         case 'WindowPosChangedEvent':
           this.resetHighlights()
-          context.offset = message
+          curContext.offset = message
       }
 
       update()
     })
+  }
+
+  setCurrentContext = nextContext => {
+    // if given id, reset to new context
+    if (nextContext.id) {
+      this.curContext = {
+        id: nextContext.id,
+      }
+    }
+    const { curContext } = this
+    const { id } = curContext
+    curContext.title = nextContext.title
+    curContext.offset = nextContext.offset
+    curContext.bounds = nextContext.bounds
+    curContext.appName = id ? id.split('.')[2] : curContext.title
+    // adjust for more specifc content area found
+    if (this.contentArea) {
+      const [x, y, width, height] = this.contentArea
+      curContext.offset[0] += x
+      curContext.offset[1] += y
+      curContext.bounds[0] += width
+      curContext.bounds[1] += height
+      console.log('adjusting for content area', curContext)
+    }
   }
 
   resetHighlights = () => {
@@ -328,19 +344,19 @@ export default class ScreenState {
     this.video.onChangedFrame(this.handleChangedFrame)
   }
 
-  handleChangedFrame = async changedWord => {
+  handleChangedFrame = async ({ id, contentArea }) => {
     if (this.state.ocr) {
-      if (!changedWord) {
+      if (!id) {
         console.log('no word given in change event, but we have ocrs')
       } else {
-        if (changedWord !== APP_ID) {
-          console.log('got a change for word', changedWord)
+        if (id !== APP_ID) {
+          console.log('got a change for word', id)
           const beforeLen = this.state.ocr.length
-          const newOCR = this.state.ocr.filter(x => x.word !== changedWord)
+          const newOCR = this.state.ocr.filter(x => x.word !== id)
           if (newOCR.length === beforeLen) {
             console.log('weird this word isnt in ocr')
           } else {
-            console.log('removing word', changedWord)
+            console.log('removing word', id)
             this.updateState({ ocr: newOCR })
           }
           return
@@ -351,6 +367,8 @@ export default class ScreenState {
           return
         }
       }
+    } else {
+      this.contentArea = contentArea
     }
     clearTimeout(this.nextOCR)
     if (this.stopped) {

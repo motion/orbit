@@ -100,6 +100,8 @@ class Screen {
         const out = data.trim()
         if (out[0] === '>') {
           this.changedFrameCb(out.slice(1))
+        } else {
+          console.log(out)
         }
       }
     })

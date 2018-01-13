@@ -24,6 +24,7 @@ apps/crawler/build
 apps/search/build
 
 packages/swindler/Swindler/Index/
+**/*/Index
 
 packages/screen/swift/aperture.xcodeproj
 !packages/screen/swift/aperture.xcodeproj/project.pbxproj

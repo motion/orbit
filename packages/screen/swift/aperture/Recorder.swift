@@ -145,7 +145,7 @@ final class Recorder: NSObject {
     return CGImageDestinationFinalize(finalDestination)
   }
   
-  func screenshotBox(box: Box, buffer: CMSampleBuffer) {
+  func screenshotBox(box: Box, buffer: CMSampleBuffer, findContent: Bool = false) {
     if (box.screenDir != nil) {
       let cropRect = CGRect(
         x: box.x * 2,
@@ -154,12 +154,36 @@ final class Recorder: NSObject {
         height: Int(-box.height * 2)
       )
       guard let uiImage = imageFromSampleBuffer(sampleBuffer: buffer, cropRect: cropRect) else { return }
+      
+      print("find content? \(findContent)")
+      if (findContent) {
+        let cc = ConnectedComponents()
+        let result = cc.labelImageFast(image: uiImage, calculateBoundingBoxes: true)
+        print("found bounding boxes: \(result.boundingBoxes!)")
+      }
+      
       let outPath = "\(box.screenDir ?? "/tmp/screen-")/\(box.id).png"
       if (self.writeCGImage(image: uiImage, to: outPath)) {
         // good
       }
     }
   }
+  
+//  func findChrome(box: Box, buffer: UnsafeMutablePointer<UInt32>, perRow: Int) -> Box {
+//    let height = Int(box.height) / 2
+//    let width = Int(box.width) / 2
+//    let smallH = height
+//    let smallW = width
+//    let regions = [Int: Region]()
+//    for y in 0..<smallH {
+//      for x in 0..<smallW {
+//        let realY = y / 2 + box.y / 2
+//        let realX = x + box.x / 2
+//        let index = y * smallW + x
+//        let luma = buffer[realY * perRow + realX]
+//      }
+//    }
+//  }
   
   func hasBoxChanged(box: Box, buffer: UnsafeMutablePointer<UInt32>, perRow: Int) -> Bool {
     let lastBox = self.lastBoxes[box.id]
@@ -171,7 +195,6 @@ final class Recorder: NSObject {
     var curBox: Array<UInt32> = []
     var numChanged = 0
     var shouldFinish = false
-    
     let smallH = height/sampleSpacing
     let smallW = width/sampleSpacing
     if (lastBox != nil) {
@@ -179,7 +202,6 @@ final class Recorder: NSObject {
     }
 //    print("haslast \(hasLastBox)")
 //    var lastIndex = 0
-
     for y in 0..<smallH {
       // iterate col first
       for x in 0..<smallW {
@@ -203,9 +225,7 @@ final class Recorder: NSObject {
         break
       }
     }
-    
     self.lastBoxes[box.id] = curBox
-
     let hasChanged = shouldFinish
     if (hasChanged) {
       return true
@@ -226,7 +246,7 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
     for boxId in self.boxes.keys {
       let box = self.boxes[boxId]!
       if (self.initialScreenshot || hasBoxChanged(box: box, buffer: int32Buffer, perRow: int32PerRow)) {
-        screenshotBox(box: box, buffer: sampleBuffer)
+        screenshotBox(box: box, buffer: sampleBuffer, findContent: self.initialScreenshot)
         print(">\(box.id)")
       }
     }

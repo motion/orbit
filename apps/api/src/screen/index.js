@@ -452,7 +452,7 @@ export default class ScreenState {
   }
 
   removeSocket = uid => {
-    this.activeSockets = this.activeSockets.filter(s => s.uid === uid)
+    this.activeSockets = this.activeSockets.filter(s => s.uid !== uid)
   }
 
   dispose() {

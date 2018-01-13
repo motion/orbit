@@ -94,6 +94,11 @@ class Screen {
       throw err
     })
 
+    this.recorder.stderr.setEncoding('utf8')
+    this.recorder.stderr.on('data', data => {
+      console.log('screen stderr:', data)
+    })
+
     this.recorder.stdout.setEncoding('utf8')
     this.recorder.stdout.on('data', data => {
       if (this.changedFrameCb) {

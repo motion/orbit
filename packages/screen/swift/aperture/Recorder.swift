@@ -16,6 +16,64 @@ struct Box: Decodable {
   let screenDir: String?
 }
 
+//class ThresholdFilter: CIFilter
+//{
+//  var inputImage : CIImage?
+//  var threshold: CGFloat = 0.75
+//
+//  let thresholdKernel = CIColorKernel(source:
+//    "kernel vec4 thresholdFilter(__sample image, float threshold)" +
+//      "{" +
+//      "   float luma = (image.r * 0.2126) + (image.g * 0.7152) + (image.b * 0.0722);" +
+//      "   return (luma > threshold) ? vec4(1.0, 1.0, 1.0, 1.0) : vec4(0.0, 0.0, 0.0, 0.0);" +
+//    "}"
+//  )
+//
+//  override var outputImage : CIImage!
+//  {
+//    guard let inputImage = inputImage,
+//      let thresholdKernel = thresholdKernel else
+//    {
+//      return nil
+//    }
+//
+//    let extent = inputImage.extent
+//    let arguments = [inputImage, threshold] as [Any]
+//    return thresholdKernel.apply(extent: extent, arguments: arguments)
+//  }
+//}
+
+class ThresholdFilter: CIFilter
+{
+  @objc dynamic var inputImage : CIImage?
+  var threshold: CGFloat = 0.999
+  
+  var colorKernel = CIColorKernel(source:
+    "kernel vec4 color(__sample pixel, float threshold)" +
+      "{" +
+      "    float luma = dot(pixel.rgb, vec3(0.2126, 0.7152, 0.0722));" +
+//      "    float threshold = smoothstep(inputEdgeO, inputEdge1, luma);" +
+      "    return (luma > threshold) ? vec4(1.0, 1.0, 1.0, 1.0) : vec4(0.0, 0.0, 0.0, 1.0);" +
+    "}"
+  )
+  
+  override var outputImage: CIImage!
+  {
+    let inputImage = self.inputImage!
+    let colorKernel = self.colorKernel!
+    let extent = inputImage.extent
+    let arguments = [inputImage, threshold] as [Any]
+    return colorKernel.apply(extent: extent, arguments: arguments)
+  }
+}
+
+func applyFilter(_ filter: CIFilter?, for image: CIImage) -> CIImage {
+  guard let filter = filter else { return image }
+  filter.setValue(image, forKey: kCIInputImageKey)
+  guard let filteredImage = filter.value(forKey: kCIOutputImageKey) else { return image }
+  return filteredImage as! CIImage
+}
+
 final class Recorder: NSObject {
   private let input: AVCaptureScreenInput
   private var session: AVCaptureSession
@@ -101,15 +159,37 @@ final class Recorder: NSObject {
   }
   
   func scaleImage(cgImage: CGImage, divide: Int) -> CGImage {
-    let ccc = CIImage(cgImage: cgImage)
-    let filter = CIFilter(name: "CIPhotoEffectNoir")!
-    filter.setValue(ccc, forKey: "inputImage")
+    var outputImage = CIImage(cgImage: cgImage)
+    
+    var filter = CIFilter(name: "CIColorControls")!
+    filter.setValue(1.5, forKey: "inputContrast")
+    outputImage = applyFilter(filter, for: outputImage)
+
+    filter = CIFilter(name: "CIPhotoEffectNoir")!
+    outputImage = applyFilter(filter, for: outputImage)
+    
+    filter = CIFilter(name: "CIColorControls")!
+    filter.setValue(1.5, forKey: "inputContrast")
+    outputImage = applyFilter(filter, for: outputImage)
+
+//    filter = CIFilter(name: "CIColorMonochrome")!
+//    filter.setValue(2.0, forKey: "inputIntensity")
+//    outputImage = applyFilter(filter, for: outputImage)
+
+    filter = ThresholdFilter()
+    outputImage = applyFilter(filter, for: outputImage)
+
+
+//    outputImage = applyFilter(CIFilter(name: "CIColorControls"), for: inputImage)
+    
+//    let filter = CIFilter(name: "CIPhotoEffectNoir")!
+//    filter.setValue(ccc, forKey: "inputImage")
     // to scale it down in size, didnt work well with current ocr
     //    let filter = CIFilter(name: "CILanczosScaleTransform")!
     //    filter.setValue(
     //    filter.setValue(0.5, forKey: "inputScale")
     //    filter.setValue(1.0, forKey: "inputAspectRatio")
-    let outputImage = filter.value(forKey: "outputImage") as! CIImage
+//    let outputImage = filter.value(forKey: "outputImage") as! CIImage
     let context = CIContext(options: [kCIContextUseSoftwareRenderer: false])
     return context.createCGImage(outputImage, from: outputImage.extent)!
     // alt method, blurrier but bolder
@@ -153,17 +233,27 @@ final class Recorder: NSObject {
         width: box.width * 2,
         height: Int(-box.height * 2)
       )
-      guard let uiImage = imageFromSampleBuffer(sampleBuffer: buffer, cropRect: cropRect) else { return }
+      guard let cgImage = imageFromSampleBuffer(sampleBuffer: buffer, cropRect: cropRect) else { return }
       
       print("find content? \(findContent)")
       if (findContent) {
         let cc = ConnectedComponents()
-        let result = cc.labelImageFast(image: uiImage, calculateBoundingBoxes: true)
-        print("found bounding boxes: \(result.boundingBoxes!)")
+        let binarizedImage = scaleImage(cgImage: cgImage, divide: 2)
+        let result = cc.labelImageFast(image: binarizedImage, calculateBoundingBoxes: true)
+        let boxes = result.boundingBoxes
+        if (boxes != nil) {
+          var biggestBox = boxes![0]!
+          for box in boxes! {
+            if (box.value.getSize() > biggestBox.getSize()) {
+              biggestBox = box.value
+            }
+          }
+          print("found biggest box: \(biggestBox)")
+        }
       }
       
       let outPath = "\(box.screenDir ?? "/tmp/screen-")/\(box.id).png"
-      if (self.writeCGImage(image: uiImage, to: outPath)) {
+      if (self.writeCGImage(image: cgImage, to: outPath)) {
         // good
       }
     }

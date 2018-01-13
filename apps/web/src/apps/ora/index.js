@@ -123,16 +123,6 @@ const OraContent = () => (
 })
 @view
 export default class OraPage {
-  handleOrbitClick = () => {
-    const { oraStore } = this.props
-    oraStore.ui.toggleHidden()
-    this.setTimeout(() => {
-      if (oraStore.ui.showOra) {
-        oraStore.ui.focusBar()
-      }
-    }, 56)
-  }
-
   render({ oraStore }) {
     const { showOra } = oraStore.ui
     return (
@@ -153,7 +143,7 @@ export default class OraPage {
             if={false}
             $orbitHidden={!showOra}
             $orbitBarFocused={oraStore.ui.barFocused}
-            onClick={this.handleOrbitClick}
+            onClick={oraStore.ui.toggleHidden}
           >
             <UI.Icon
               $icon

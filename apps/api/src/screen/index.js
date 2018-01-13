@@ -112,20 +112,18 @@ export default class ScreenState {
 
   startSwindler() {
     this.swindler.start()
-    const { curContext } = this
 
     const update = () => {
       this.cancelCurrentOCR()
-      console.log('UpdateContext:', curContext)
+      console.log('UpdateContext:', this.curContext)
       // ensure new
-      this.updateState({ context: Object.assign({}, curContext) })
+      this.updateState({ context: Object.assign({}, this.curContext) })
     }
 
     this.swindler.onChange(({ event, message }) => {
       // console.log('Swindler: ', { event, message })
       switch (event) {
         case 'FrontmostWindowChangedEvent':
-          // id = new app
           this.setCurrentContext(message)
           // if (id === 'Chrome' || id === 'Safari') {
           //   console.log('is a browser')
@@ -133,18 +131,18 @@ export default class ScreenState {
           break
         case 'WindowSizeChangedEvent':
           this.resetHighlights()
-          curContext.bounds = message
+          this.curContext.bounds = message
           break
         case 'WindowPosChangedEvent':
           this.resetHighlights()
-          curContext.offset = message
+          this.curContext.offset = message
       }
 
       update()
     })
   }
 
-  setCurrentContext = nextContext => {
+  setCurrentContext = (nextContext = this.curContext) => {
     // if given id, reset to new context
     if (nextContext.id) {
       this.curContext = {
@@ -160,10 +158,11 @@ export default class ScreenState {
     // adjust for more specifc content area found
     if (this.contentArea) {
       const [x, y, width, height] = this.contentArea
-      curContext.offset[0] += x
-      curContext.offset[1] += y
-      curContext.bounds[0] += width
-      curContext.bounds[1] += height
+      // divide here for retina
+      curContext.offset[0] += x / 2
+      curContext.offset[1] += y / 2
+      curContext.bounds[0] += width / 2
+      curContext.bounds[1] += height / 2
       console.log('adjusting for content area', curContext)
     }
   }
@@ -344,7 +343,12 @@ export default class ScreenState {
     this.video.onChangedFrame(this.handleChangedFrame)
   }
 
-  handleChangedFrame = async ({ id, contentArea }) => {
+  handleChangedFrame = async whatChanged => {
+    console.log('whatchanged', whatChanged)
+    if (!whatChanged) {
+      return
+    }
+    const { id, contentArea } = whatChanged
     if (this.state.ocr) {
       if (!id) {
         console.log('no word given in change event, but we have ocrs')
@@ -368,7 +372,9 @@ export default class ScreenState {
         }
       }
     } else {
+      // update content area offset
       this.contentArea = contentArea
+      this.setCurrentContext()
     }
     clearTimeout(this.nextOCR)
     if (this.stopped) {

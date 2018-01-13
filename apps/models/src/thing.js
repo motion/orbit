@@ -115,8 +115,14 @@ export class Thing extends Model {
   }
 
   toResult(thing: Thing, extra): PaneResult {
+    const id = thing.id || (thing.data && thing.data.id)
+    if (typeof id === 'undefined') {
+      throw new Error(
+        `Thing with no id given: ${JSON.stringify(thing.toJSON())}`,
+      )
+    }
     return {
-      id: thing.id || thing.data.id,
+      id,
       title: thing.title,
       type: 'context',
       data: thing,
@@ -138,7 +144,7 @@ export class Thing extends Model {
       this.fromCrawl({
         ...result,
         integration: 'pin-site',
-      })
+      }),
     )
 
   createFromPin = result =>
@@ -146,7 +152,7 @@ export class Thing extends Model {
       this.fromCrawl({
         ...result,
         integration: 'pin',
-      })
+      }),
     )
 }
 

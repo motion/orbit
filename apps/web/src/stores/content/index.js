@@ -1,4 +1,4 @@
-import { uniq } from 'lodash'
+import { uniq, capitalize } from 'lodash'
 import rawTasks from './tasks'
 import rawConvos from './conversations'
 import rawDocs from './docs'
@@ -20,8 +20,9 @@ const docs = rawDocs.map(body => ({
 }))
 
 const convos = rawConvos.map(convo => {
-  const title =
-    'chat: ' + uniq(convo.messages.map(({ author }) => author)).join(', ')
+  const title = uniq(
+    convo.messages.map(({ author }) => capitalize(author)),
+  ).join(', ')
 
   return {
     title,

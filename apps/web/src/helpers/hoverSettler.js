@@ -69,7 +69,8 @@ export default function hoverSettler({ enterDelay, onHovered }) {
 
     function onMouseEnter(e) {
       // settimeout to be sure its behind the leave event
-      setTimeout(() => handleHover(e.currentTarget))
+      const target = e.currentTarget
+      setTimeout(() => handleHover(target))
     }
 
     function onMouseMove(e) {

@@ -8,28 +8,16 @@ const getDate = result =>
   result.data && result.data.updated ? UI.Date.format(result.data.updated) : ''
 
 const INTEGRATION_ICONS = {
+  pin: 'pin',
+  'pin-site': 'pin',
+  slack: 'social-slack',
   github: 'social-github',
   google: 'social-google',
-  'google-docs': 'social-google',
-  'pin-site': 'pin',
 }
 
 function getIcon(result) {
   if (result.data && INTEGRATION_ICONS[result.data.integration]) {
     return INTEGRATION_ICONS[result.data.integration]
-  }
-  if (result.data && result.data.image) {
-    return (
-      <img
-        style={{
-          width: 20,
-          height: 20,
-          borderRadius: 1000,
-          margin: 'auto',
-        }}
-        src={`/images/${result.data.image}`}
-      />
-    )
   }
   return result.icon
 }
@@ -44,7 +32,7 @@ function getChildren(result) {
         <messages style={{ margin: 5 }}>
           {messages.slice(0, showCount).map(({ author, message }) => (
             <message $$row style={{ marginTop: 5 }}>
-              <UI.Text size={0.9} ellipse={30}>
+              <UI.Text size={0.95} ellipse={30}>
                 <span style={{ fontWeight: 500, opacity: 0.9 }}>{author}</span>
                 <span style={{ opacity: 0.7, marginRight: 5 }}>:</span>
                 <span style={{ opacity: 0.7 }}>{message}</span>
@@ -52,7 +40,7 @@ function getChildren(result) {
             </message>
           ))}
         </messages>
-        <UI.Text opacity={0.7} size={0.9} alignSelf="center" if={more > 0}>
+        <UI.Text opacity={0.7} size={0.95} alignSelf="center" if={more > 0}>
           {more} more message{more === 1 ? '' : 's'}
         </UI.Text>
       </container>
@@ -71,14 +59,7 @@ const InlineIcon = props => (
   <UI.Icon css={{ display: 'inline' }} size={10} {...props} />
 )
 
-const ICON_NAME = {
-  pin: 'pin',
-  'pin-site': 'pin',
-  slack: 'social-slack',
-  github: 'social-github',
-}
-
-function location(thing) {
+function getLocation(thing) {
   switch (thing.integration) {
     case 'slack':
       return `#${thing.data.channel}`
@@ -92,15 +73,7 @@ function location(thing) {
 function getSecondary(result) {
   const thing = result.data
   let text = ''
-  let icon = null
-  if (thing) {
-    if (ICON_NAME[thing.integration]) {
-      icon = <InlineIcon name={ICON_NAME[thing.integration]} />
-    }
-    if (thing.updated) {
-      text = getDate(result)
-    }
-  }
+  let location = null
   if (result.subtitle) {
     // origin url is in data.integration
     if (text) {
@@ -109,14 +82,15 @@ function getSecondary(result) {
       text = result.subtitle
     }
   }
-  if (thing && location(thing)) {
+  if (thing && getLocation(thing)) {
     // origin url is in data.integration
-    text = `${location(thing)} · ${text}`
+    location = `${getLocation(thing)}`
   }
-  if (icon) {
+  if (location) {
     text = (
       <span $$ellipse>
-        via {icon} · {text}
+        in {location}
+        {text ? ` · ${text}` : ''}
       </span>
     )
   }
@@ -163,6 +137,14 @@ export default function getItem(result, index) {
 
   const itemProps = {
     key: `${index}${result.id}`,
+    beforePrimary: (
+      <InlineIcon
+        if={getIcon(result)}
+        size={16}
+        name={getIcon(result)}
+        css={{ alignSelf: 'flex-start', margin: [4, 8, 0, 0], opacity: 0.5 }}
+      />
+    ),
     primary: result.title,
     primaryEllipse: index === 0 ? 2 : true,
     primaryProps: {
@@ -179,8 +161,6 @@ export default function getItem(result, index) {
       size: 1.1,
       highlightWords: result.highlightWords,
     },
-    iconAfter: result.iconAfter,
-    icon: getIcon(result),
     date: result.date,
     after: result.after,
     before: result.before,

@@ -78,6 +78,7 @@ export default class ListItem extends React.Component<Props> {
       afterProps,
       below,
       before,
+      beforePrimary,
       beforeProps,
       borderRadius,
       children: _children,
@@ -169,6 +170,7 @@ export default class ListItem extends React.Component<Props> {
         </before>
         <content $overflowHidden={after || before}>
           <above if={primary || secondary || date}>
+            {beforePrimary}
             <prop if={primary || secondary}>
               <Text
                 $text

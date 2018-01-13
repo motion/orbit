@@ -46,7 +46,7 @@ struct Box: Decodable {
 class ThresholdFilter: CIFilter
 {
   @objc dynamic var inputImage : CIImage?
-  var threshold: CGFloat = 0.999
+  var threshold: CGFloat = 0.9
   
   var colorKernel = CIColorKernel(source:
     "kernel vec4 color(__sample pixel, float threshold)" +
@@ -161,20 +161,22 @@ final class Recorder: NSObject {
   func scaleImage(cgImage: CGImage, divide: Int) -> CGImage {
     var outputImage = CIImage(cgImage: cgImage)
     
-    var filter = CIFilter(name: "CIColorControls")!
-    filter.setValue(1.5, forKey: "inputContrast")
-    outputImage = applyFilter(filter, for: outputImage)
-
-    filter = CIFilter(name: "CIPhotoEffectNoir")!
-    outputImage = applyFilter(filter, for: outputImage)
+    var filter: CIFilter
     
     filter = CIFilter(name: "CIColorControls")!
-    filter.setValue(1.5, forKey: "inputContrast")
+    filter.setValue(1.0, forKey: "inputContrast")
     outputImage = applyFilter(filter, for: outputImage)
 
-//    filter = CIFilter(name: "CIColorMonochrome")!
-//    filter.setValue(2.0, forKey: "inputIntensity")
+//    filter = CIFilter(name: "CIPhotoEffectNoir")!
 //    outputImage = applyFilter(filter, for: outputImage)
+//
+//    filter = CIFilter(name: "CIColorControls")!
+//    filter.setValue(1.5, forKey: "inputContrast")
+//    outputImage = applyFilter(filter, for: outputImage)
+
+    filter = CIFilter(name: "CIColorMonochrome")!
+    filter.setValue(1.0, forKey: "inputIntensity")
+    outputImage = applyFilter(filter, for: outputImage)
 
     filter = ThresholdFilter()
     outputImage = applyFilter(filter, for: outputImage)
@@ -235,26 +237,34 @@ final class Recorder: NSObject {
       )
       guard let cgImage = imageFromSampleBuffer(sampleBuffer: buffer, cropRect: cropRect) else { return }
       
-      print("find content? \(findContent)")
+      var biggestBox: BoundingBox?
       if (findContent) {
         let cc = ConnectedComponents()
         let binarizedImage = scaleImage(cgImage: cgImage, divide: 2)
         let result = cc.labelImageFast(image: binarizedImage, calculateBoundingBoxes: true)
         let boxes = result.boundingBoxes
         if (boxes != nil) {
-          var biggestBox = boxes![0]!
+          biggestBox = boxes![0]!
           for box in boxes! {
-            if (box.value.getSize() > biggestBox.getSize()) {
+            if (box.value.getSize() > biggestBox!.getSize()) {
               biggestBox = box.value
             }
           }
-          print("found biggest box: \(biggestBox)")
         }
       }
       
       let outPath = "\(box.screenDir ?? "/tmp/screen-")/\(box.id).png"
-      if (self.writeCGImage(image: cgImage, to: outPath)) {
-        // good
+      
+      if (biggestBox != nil) {
+        let x = biggestBox!.x_start
+        let y = biggestBox!.y_start
+        let width = biggestBox!.getWidth()
+        let height = biggestBox!.getHeight()
+        print("! [\(x), \(y), \(width), \(height)]")
+        let croppedImage = cgImage.cropping(to: CGRect(x: x, y: y, width: width, height: height))
+        if (self.writeCGImage(image: croppedImage!, to: outPath)) {}
+      } else {
+        if (self.writeCGImage(image: cgImage, to: outPath)) {}
       }
     }
   }

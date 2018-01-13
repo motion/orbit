@@ -34,7 +34,7 @@ class ConnectedComponents {
       
       for col in 0 ..< width {
         // NOTE NOTE NOTE
-        // nate: i inverted this boolean, so its actually WHITE first, BLACK second (to find the largest background)
+        // from nate: i inverted this boolean, so its actually WHITE first, BLACK second (to find the largest background)
         if (!currentRow[col]) {
           // The pixel is black so it needs to be labelled.
           let sameColInPreviousRowLabel = (row > 0 ? previousOutputRow[col] : -1)

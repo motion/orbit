@@ -100,11 +100,19 @@ class Screen {
     })
 
     this.recorder.stdout.setEncoding('utf8')
+
+    let contentArea
     this.recorder.stdout.on('data', data => {
       if (this.changedFrameCb) {
         const out = data.trim()
+        if (out[0] === '!') {
+          contentArea = JSON.parse(out.slice(1))
+        }
         if (out[0] === '>') {
-          this.changedFrameCb(out.slice(1))
+          this.changedFrameCb({
+            id: out.slice(1),
+            contentArea,
+          })
         } else {
           console.log(out)
         }

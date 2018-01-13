@@ -46,7 +46,7 @@ struct Box: Decodable {
 class ThresholdFilter: CIFilter
 {
   @objc dynamic var inputImage : CIImage?
-  var threshold: CGFloat = 0.9
+  var threshold: CGFloat = 0.95
   
   var colorKernel = CIColorKernel(source:
     "kernel vec4 color(__sample pixel, float threshold)" +
@@ -242,12 +242,12 @@ final class Recorder: NSObject {
         let cc = ConnectedComponents()
         let binarizedImage = scaleImage(cgImage: cgImage, divide: 2)
         let result = cc.labelImageFast(image: binarizedImage, calculateBoundingBoxes: true)
-        let boxes = result.boundingBoxes
-        if (boxes != nil) {
-          biggestBox = boxes![0]!
-          for box in boxes! {
-            if (box.value.getSize() > biggestBox!.getSize()) {
-              biggestBox = box.value
+        if let boxes = result.boundingBoxes {
+          if (boxes.count > 0) {
+            for box in boxes {
+              if (biggestBox == nil || box.value.getSize() > biggestBox!.getSize()) {
+                biggestBox = box.value
+              }
             }
           }
         }

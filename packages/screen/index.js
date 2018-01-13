@@ -107,8 +107,7 @@ class Screen {
         const out = data.trim()
         if (out[0] === '!') {
           contentArea = JSON.parse(out.slice(1))
-        }
-        if (out[0] === '>') {
+        } else if (out[0] === '>') {
           this.changedFrameCb({
             id: out.slice(1),
             contentArea,
@@ -132,6 +131,7 @@ class Screen {
       return
     }
     this.recorder.stdout.removeAllListeners()
+    this.recorder.stderr.removeAllListeners()
     this.recorder.kill()
     this.recorder.kill('SIGKILL')
     await this.recorder

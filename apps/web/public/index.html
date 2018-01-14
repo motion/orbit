@@ -13,10 +13,12 @@
   <title>Orbit</title>
   <script>
     // fix electron: https://electronjs.org/docs/faq#i-can-not-use-jqueryrequirejsmeteorangularjs-in-electron
-    window.nodeRequire = require;
-    delete window.require;
-    delete window.exports;
-    delete window.module;
+    if (typeof require !== 'undefined') {
+      window.nodeRequire = require;
+      delete window.require;
+      delete window.exports;
+      delete window.module;
+    }
   </script>
 </head>
 

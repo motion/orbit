@@ -111,6 +111,7 @@ export default class ScreenState {
   }
 
   startSwindler() {
+    console.log('Starting swindler...')
     this.swindler.start()
 
     const update = () => {
@@ -121,7 +122,7 @@ export default class ScreenState {
     }
 
     this.swindler.onChange(({ event, message }) => {
-      // console.log('Swindler: ', { event, message })
+      console.log('Swindler: ', { event, message })
       switch (event) {
         case 'FrontmostWindowChangedEvent':
           this.setCurrentContext(message)
@@ -417,10 +418,16 @@ export default class ScreenState {
   }
 
   stop = () => {
-    console.log('RECEIVING STOP')
     this.stopped = true
+    this.dispose()
+  }
+
+  dispose() {
     if (this.video) {
       this.video.stopRecording()
+    }
+    if (this.swindler) {
+      this.swindler.stop()
     }
   }
 
@@ -477,9 +484,5 @@ export default class ScreenState {
 
   removeSocket = uid => {
     this.activeSockets = this.activeSockets.filter(s => s.uid !== uid)
-  }
-
-  dispose() {
-    this.stopDiff()
   }
 }

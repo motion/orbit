@@ -10,11 +10,11 @@ const BIN = path.join(
 
 class Swindler {
   constructor() {
-    const stop = () => this.stop()
-    process.on('exit', stop)
-    process.on('SIGINT', stop)
-    process.on('SIGUSR1', stop)
-    process.on('SIGUSR2', stop)
+    // const stop = () => this.stop()
+    // process.on('exit', stop)
+    // process.on('SIGINT', stop)
+    // process.on('SIGUSR1', stop)
+    // process.on('SIGUSR2', stop)
   }
 
   start() {

@@ -7,17 +7,10 @@
   "scripts": {
     "start": "node index.js",
     "start-prod": "NODE_ENV=production IS_PROD=true node lib/index.js",
-    "start-dev": "nodemon --inspect=0.0.0.0:5858 lib/index.js",
+    "start-dev": "../../node_modules/.bin/babel-watch --inspect=0.0.0.0:5858 lib/index.js",
     "build": "CHUNK_COMMONS=false MINIFY=true NODE_ENV=production BUILD_DIR=. ENTRY=./src mcro-build",
     "watch": "npm run build -- --watch",
     "test": "node lib/test.js"
-  },
-  "nodemonConfig": {
-    "ignore": [
-      "**/*.map",
-      "lib",
-      "dist"
-    ]
   },
   "dependencies": {
     "@mcro/screendump": "*",
@@ -30,7 +23,6 @@
     "screenshot-node": "^1.2.1"
   },
   "devDependencies": {
-    "@mcro/builder": "^1.5.1",
-    "nodemon": "^1.11.0"
+    "@mcro/builder": "^1.5.1"
   }
 }

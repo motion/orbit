@@ -16,7 +16,6 @@
         "bufferutil",
         "utf-8-validate",
         "vertx",
-        "nodemon",
         "ffi",
         "react-measure",
         "hostile",

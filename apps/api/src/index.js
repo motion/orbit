@@ -1,8 +1,6 @@
 import 'isomorphic-fetch'
 
-const IS_DEV = process.env.NODE_ENV === 'development'
-
-if (IS_DEV) {
+if (process.env.NODE_ENV === 'development') {
   require('source-map-support/register')
 }
 
@@ -10,6 +8,26 @@ if (!process.env.HAS_BABEL_POLYFILL) {
   require('babel-polyfill')
 }
 
+const API = require('./api').default
+const Api = new API()
+
+const exitHandler = code => {
+  Api.dispose()
+  process.exit(code)
+}
+
+// dont close instantly
+process.stdin.resume()
+// do something when app is closing
+process.on('exit', exitHandler)
+// ctrl+c event
+process.on('SIGINT', () => exitHandler(0))
+// "kill pid" (nodemon)
+process.on('SIGUSR1', exitHandler)
+process.on('SIGUSR2', exitHandler)
+// uncaught exceptions
+process.on('uncaughtException', exitHandler)
+// promise exceptions
 process.on('unhandledRejection', function(reason, promise) {
   console.log(
     'API: Possibly Unhandled Rejection at: Promise ',
@@ -20,12 +38,11 @@ process.on('unhandledRejection', function(reason, promise) {
   console.log(reason.stack)
 })
 
-const API = require('./api').default
-
 export async function run() {
-  const Api = new API()
   try {
     await Api.start()
+
+    // before exit, stop app
   } catch (err) {
     console.log('error', err)
   }

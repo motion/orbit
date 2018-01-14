@@ -31,8 +31,9 @@ export default class API {
   }
 
   dispose() {
-    this.server.dispose()
+    if (this.disposed) return
     this.screen.dispose()
+    this.disposed = true
   }
 
   async setupHosts() {

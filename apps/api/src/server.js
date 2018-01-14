@@ -60,10 +60,6 @@ export default class Server {
     return SERVER_PORT
   }
 
-  dispose() {
-    log('dispose server')
-  }
-
   cors() {
     const HEADER_ALLOWED =
       'Origin, X-Requested-With, Content-Type, Accept, Authorization, X-Token, Access-Control-Allow-Headers'

@@ -338,14 +338,17 @@ export default class PeekPage {
                     src={targetUrl.replace('deliverx.com', 'deliverx.com:5000')}
                     getRef={store.handlePageRef}
                   />
-                  <view
-                    $location
-                    css={{ width: '100%', borderTop: [1, '#eee'] }}
+                  <bottombar
+                    css={{
+                      width: '100%',
+                      borderTop: [1, '#eee'],
+                      alignItems: 'center',
+                    }}
                   >
                     <UI.Text size={0.8} alpha={0.5}>
                       {targetUrl}
                     </UI.Text>
-                  </view>
+                  </bottombar>
                 </tab>
               </tabs>
             </innerContent>

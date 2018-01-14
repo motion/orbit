@@ -22,6 +22,10 @@ const updateProps = Mobx.action('updateProps', (props, nextProps) => {
   }
 })
 
+module.hot.accept((...args) => {
+  console.log('accepting a storeprovidable', ...args)
+})
+
 export default function storeProvidable(options, Helpers) {
   return {
     name: 'store-providable',
@@ -142,7 +146,7 @@ export default function storeProvidable(options, Helpers) {
             const createStore = () => {
               if (!Store.prototype) {
                 throw new Error(
-                  `Store has no prototype from ${this.name}: ${cur}`
+                  `Store has no prototype from ${this.name}: ${cur}`,
                 )
               }
               Object.defineProperty(Store.prototype, 'props', getProps)
@@ -167,7 +171,7 @@ export default function storeProvidable(options, Helpers) {
                   stores[name],
                   name,
                   stores[name],
-                  this.props
+                  this.props,
                 ) || stores[name]
             }
           }
@@ -237,7 +241,7 @@ export default function storeProvidable(options, Helpers) {
                 console.log(
                   `Notice! You are overwriting an existing store in provide. This may be intentional: ${name} from ${
                     Klass.name
-                  }`
+                  }`,
                 )
               }
             })

@@ -3,7 +3,8 @@ import ReconnectingWebSocket from 'reconnecting-websocket'
 
 // attempt hmr data preserve
 let cached = null
-if (module && module.hot && module.hot.accept) {
+if (module && module.hot) {
+  console.log('hotting')
   module.hot.accept(() => {
     cached = module.hot.data.cached || null
   })

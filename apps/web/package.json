@@ -4,9 +4,8 @@
   "version": "1.5.38",
   "main": "index.js",
   "scripts": {
-    "start": "motion",
+    "start": "parcel -p 3002 ./public/index.html",
     "start-prod": "static-server -p 3002 -n build/index.html build",
-    "start-debug": "motion --debug",
     "build": "npm version patch && MINIFY=false NODE_ENV=production BUILD_DIR=. mcro-build",
     "watch": "NODE_ENV=development BUILD_DIR=. mcro-build --watch",
     "deploy": "surge ./build seemirai.com"

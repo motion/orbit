@@ -9,7 +9,7 @@ import RxDB from 'rxdb'
 import Rx from 'rxjs'
 import PouchDB from 'pouchdb-core'
 import * as Constants from '~/constants'
-import mobxFormatters from 'mobx-formatters'
+// import mobxFormatters from 'mobx-formatters'
 import _ from 'lodash'
 import * as Black from '@mcro/black'
 import color from 'color'
@@ -20,7 +20,7 @@ import * as Helpers from '~/helpers'
 // Mobx.useStrict(true)
 
 // install console formatters
-mobxFormatters(Mobx)
+// mobxFormatters(Mobx)
 
 // the heavy hitters
 window.React = React

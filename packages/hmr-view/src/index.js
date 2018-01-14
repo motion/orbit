@@ -27,7 +27,7 @@ export default function proxyReactComponents({
 
   if (!hot || typeof hot.accept !== 'function') {
     throw new Error(
-      'locals[0] does not appear to be a `module` object with Hot Module replacement API enabled. You should disable @mcro/view-hmr'
+      'locals[0] does not appear to be a `module` object with Hot Module replacement API enabled. You should disable @mcro/view-hmr',
     )
   }
 
@@ -66,6 +66,10 @@ export default function proxyReactComponents({
     } else {
       viewProxies[path] = createProxy(ReactClass)
     }
+
+    const view = viewProxies[path].get()
+
+    view.__react_path = path
 
     return viewProxies[path].get()
   }

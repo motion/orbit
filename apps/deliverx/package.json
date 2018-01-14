@@ -4,7 +4,7 @@
   "version": "1.5.1",
   "main": "lib/index.js",
   "scripts": {
-    "start": "motion watch",
+    "start": "parcel ./public/index.html",
     "start-prod": "static-server -p 4000 -n build/index.html build",
     "build": "MINIFY=true NODE_ENV=production BUILD_DIR=. mcro-build",
     "deploy": "surge ./build deliverx.com"
@@ -21,9 +21,10 @@
     "prop-types": "^15.5.10",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
-    "react-google-maps": "^9.4.2",
+    "react-google-maps": "^9.4.5",
     "recompose": "^0.26.0",
-    "redbox-react": "^1.5.0"
+    "redbox-react": "^1.5.0",
+    "babel-plugin-lodash": "^3.3.2"
   },
   "devDependencies": {
     "@mcro/builder": "^1.5.1"

@@ -52,6 +52,7 @@ ensure-dep "brew" -- /usr/bin/ruby -e "$(curl -fsSL https://raw.githubuserconten
 ensure-dep "npm" -- brew install node &
 ensure-dep "yarn" -- npm i -g yarn &
 ensure-dep "puma-dev" -- install-puma-dev &
+ensure-dep "parcel" -- yarn global add parcel-bundler &
 
 wait
 

@@ -179,7 +179,6 @@ export default class OraStore {
       if (!isEqual(lastStackItem, nextStackItem)) {
         lastStackItem = nextStackItem
         const isAlreadyOnResultsPane = this.stack.length > 1
-        console.log('updateContextStack', isAlreadyOnResultsPane, nextStackItem)
         if (isAlreadyOnResultsPane) {
           this.stack.replaceInPlace(nextStackItem)
         } else {

@@ -384,7 +384,6 @@ export default class UIStore {
   }
 
   calcHeight = _.debounce(([_, finishedLoading]) => {
-    console.log('calcHeight', _, finishedLoading, this.stack.last)
     if (finishedLoading === false) {
       return
     }

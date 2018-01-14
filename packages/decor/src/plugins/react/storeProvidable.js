@@ -22,10 +22,6 @@ const updateProps = Mobx.action('updateProps', (props, nextProps) => {
   }
 })
 
-module.hot.accept((...args) => {
-  console.log('accepting a storeprovidable', ...args)
-})
-
 export default function storeProvidable(options, Helpers) {
   return {
     name: 'store-providable',

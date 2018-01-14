@@ -1,5 +1,6 @@
 // @flow
 import decor from '@mcro/decor'
+import hydratable from '@mcro/decor/lib/plugins/core/hydratable'
 import emittable from '@mcro/decor/lib/plugins/core/emittable'
 import type { Emittable } from '@mcro/decor/lib/plugins/core/emittable'
 import automagical from '@mcro/automagical'
@@ -15,6 +16,7 @@ export const storeDecorator = decor([
   helpers,
   emittable,
   automagical,
+  hydratable,
 ])
 
 export const storeOptions = {

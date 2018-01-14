@@ -16,7 +16,18 @@ const BORDER_RADIUS = 6
 const SHOW_DELAY = 300
 const HIDE_DELAY = 100
 
-console.log('Constants', Constants)
+if (module && module.hot) {
+  module.hot.accept(data => {
+    if (data.storeValues) {
+      setTimeout(() => {
+        window.App.stores.PeekStore.hydrate(data.storeValues)
+      }, 100)
+    }
+  })
+  module.hot.dispose(data => {
+    data.storeValues = window.App.stores.PeekStore.dehydrate()
+  })
+}
 
 // const isSamePeek = (a, b) => a && b && a.id === b.id
 
@@ -51,15 +62,12 @@ class WebView {
   }
 }
 
-// for hmr
-window.cachedTarget = null
-
 @view({
   store: class PeekStore {
     peek = null
-    lastTarget: ?Peek = window.cachedTarget
-    curTarget: ?Peek = window.cachedTarget
-    isTorn = !!window.cachedTarget
+    lastTarget: ?Peek = null
+    curTarget: ?Peek = null
+    isTorn = false
     isHovered = false
     isPinned = false
     pageLoaded = false
@@ -133,7 +141,6 @@ window.cachedTarget = null
       this.curTarget = target
       if (target) {
         this.lastTarget = target
-        window.cachedTarget = target
       }
       if (!target) {
         this.leftTimeout = this.setTimeout(() => {

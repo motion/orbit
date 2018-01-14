@@ -12,7 +12,11 @@ export default class Embedding {
 
   async willMount() {
     this.vectors = await this.loadData()
-    this.dimensionality = this.vectors['test'].length
+    if (!this.vectors.test) {
+      console.log('no vectors')
+      return
+    }
+    this.dimensionality = this.vectors.test.length
   }
 
   loadData = async () => {
@@ -26,7 +30,7 @@ export default class Embedding {
       const split = line.split(' ')
       const word = split[0]
       const vsList = new Uint16Array(
-        split.slice(1).map(i => Math.floor(+i * 100))
+        split.slice(1).map(i => Math.floor(+i * 100)),
       )
       vectors[word] = vsList
     })

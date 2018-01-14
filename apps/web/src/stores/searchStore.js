@@ -83,7 +83,7 @@ export default class SearchStore {
 
   willMount() {
     if (this.useWorker) {
-      this.worker = new Worker(`${window.location.href}/search/app.js`)
+      this.worker = new Worker(`${window.location.href}search/app.js`)
       window.w = this.worker
       this.worker.onerror = err => {
         console.error(err)

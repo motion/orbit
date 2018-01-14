@@ -24,13 +24,11 @@ function run-api() {
 function run-web() {
   cd $ROOT/apps/web
   if [ "$ARG1" = "--clean" ]; then
-    motion watch --debug --disable-cache
+    npm start -- --no-cache
   elif [ "$ARG1" = "--prod" ]; then
     npm run start-prod
-  elif [ "$ARG1" = "--webpack" ]; then
-    node scripts/run.js
   else
-    motion watch --debug
+    npm start
   fi
 }
 

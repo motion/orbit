@@ -66,8 +66,9 @@ export default class OraStore {
     }
     // dont treat itself as a context source
     if (
-      context.appName.toLowerCase() === 'electron' ||
-      context.appName.toLowerCase() === 'orbit'
+      context.appName &&
+      (context.appName.toLowerCase() === 'electron' ||
+        context.appName.toLowerCase() === 'orbit')
     ) {
       return null
     }

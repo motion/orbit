@@ -1,4 +1,4 @@
-const electron = (window.require && window.require('electron')) || {}
+const electron = (window.nodeRequire && window.nodeRequire('electron')) || {}
 
 export const OS = (electron && electron.ipcRenderer) || {
   send() {

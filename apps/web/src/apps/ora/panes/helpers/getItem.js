@@ -107,6 +107,10 @@ const getHoverProps = Helpers.hoverSettler({
         return
       }
       const { oraPosition } = window.lastElectronState
+      if (!oraPosition) {
+        console.log('error no oraposition sent')
+        return
+      }
       const [oraX, oraY] = oraPosition
       // not all of pad because it looks nice slightly overlapped
       object.left = object.left + oraX + Constants.ORA_PAD * 0.8

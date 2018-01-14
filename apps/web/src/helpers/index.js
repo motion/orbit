@@ -3,6 +3,7 @@ import latinize from 'latinize'
 import * as React from 'react'
 import fuzzy_ from './fuzzy'
 
+export electron, { OS } from '~/helpers/electron'
 export hoverSettler from './hoverSettler'
 export logClass from './logClass'
 export IndexDB from './indexDB'
@@ -55,10 +56,6 @@ export const HotKeys = ({ style, ...props }: Props) => (
     {...props}
   />
 )
-
-import electron_, { OS as OS_ } from '~/helpers/electron'
-export const electron = electron_
-export const OS = OS_
 
 // alphanumeric and spacse
 export const cleanText = s => {

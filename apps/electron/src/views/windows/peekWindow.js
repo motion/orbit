@@ -163,6 +163,8 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
   handlePeekRef = ref => {
     if (ref) {
       this.peekRef = ref.window
+      // make sure its in front of the ora window
+      this.peekRef.focus()
     }
   }
 

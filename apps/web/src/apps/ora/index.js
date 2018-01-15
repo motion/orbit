@@ -142,28 +142,6 @@ export default class OraPage {
           >
             <OraContent />
           </ora>
-          <orbit
-            if={false}
-            $orbitHidden={!showOra}
-            $orbitBarFocused={oraStore.ui.barFocused}
-            onClick={oraStore.ui.toggleHidden}
-          >
-            <UI.Icon
-              $icon
-              $show={showOra}
-              name="remove"
-              size={16}
-              color="inherit"
-            />
-            <UI.HoverGlow color="#fff" opacity={0.5} full scale={2} show />
-            <LogoIcon
-              $icon
-              $show={showOra}
-              fill="#fff"
-              width={22}
-              height={22}
-            />
-          </orbit>
         </UI.Theme>
       </oraContainer>
     )
@@ -202,68 +180,6 @@ export default class OraPage {
       transform: {
         x: 0,
       },
-    },
-    orbit: {
-      overflow: 'hidden',
-      cursor: 'normal',
-      userSelect: 'none',
-      position: 'absolute',
-      top: 22,
-      right: 22,
-      background: `linear-gradient(to top, #222, #111)`,
-      boxShadow: [
-        ['inset', 0, 0, 0, 0.5, UI.color(Constants.oraBg).darken(0.4)],
-        // ['inset', 0, 1, 0, 0.5, UI.color(Constants.oraBg).lighten(0.15)],
-      ],
-      width: 32,
-      height: 32,
-      borderRadius: 100,
-      alignItems: 'center',
-      justifyContent: 'center',
-      color: 'transparent',
-      opacity: 1,
-      transition: 'all ease-in-out 100ms',
-      transformOrigin: 'top right',
-      transform: {
-        scale: 0.5,
-      },
-      '&:hover': {
-        opacity: 1,
-        color: '#fff',
-        // background: UI.color(Constants.oraBg).lighten(0.05),
-        transform: {
-          scale: 0.5,
-        },
-      },
-    },
-    orbitHidden: {
-      color: 'transparent',
-      background: `linear-gradient(to top, ${Constants.oraBg}, ${UI.color(
-        Constants.oraBg,
-      ).darken(0.1)})`,
-      boxShadow: [
-        ['inset', 0, 0, 0, 0.5, UI.color(Constants.oraBg).darken(0.4)],
-        ['inset', 1, 1, 0, 0.5, UI.color(Constants.oraBg).lighten(0.15)],
-        [0, 0, 15, 0, [0, 0, 0, 0.5]],
-      ],
-      transform: {
-        scale: 0.85,
-        y: -10,
-        x: 10,
-      },
-      '&:hover': {
-        background: `linear-gradient(to top, ${Constants.oraBg}, ${UI.color(
-          Constants.oraBg,
-        ).lighten(0.2)})`,
-        transform: {
-          scale: 0.85,
-          y: -10,
-          x: 10,
-        },
-      },
-    },
-    orbitBarFocused: {
-      top: 24,
     },
     icon: {
       position: 'absolute',

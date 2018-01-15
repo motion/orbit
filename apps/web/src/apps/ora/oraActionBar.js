@@ -23,27 +23,15 @@ export default class OraActionBar {
     }
     const actions = store && store.actions
     const isActionsArray = Array.isArray(actions)
-    const collapse = (
-      <collapseBar
-        if={store.results && store.results.length}
-        onClick={oraStore.ui.toggleCollapsed}
-      >
-        <UI.Arrow />
-        <UI.Icon name="menu" size={10} margin={[0, 0, 0, -16]} />
-      </collapseBar>
-    )
 
     return (
       <UI.Theme name="clear-dark">
         <actions>
-          {!actions && collapse}
-
           <actionbar
             if={actions && !oraStore.ui.collapsed}
             onMouseEnter={this.preventProp}
             onMouseMove={this.preventProp}
           >
-            {collapse}
             {!isActionsArray && actions}
             {isActionsArray &&
               actions

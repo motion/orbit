@@ -8,6 +8,15 @@ import MarkdownRender from './markdownRenderer'
 import Conversation from './conversation'
 import Mousetrap from 'mousetrap'
 import * as Constants from '~/constants'
+import controlX from '~/../public/images/control-x.png'
+import controlY from '~/../public/images/control-y.png'
+import controlZ from '~/../public/images/control-z.png'
+
+const icons = {
+  x: controlX,
+  y: controlY,
+  z: controlZ,
+}
 
 const keyParam = (window.location.search || '').match(/key=(.*)/)
 const KEY = keyParam && keyParam[1]
@@ -26,6 +35,35 @@ type Target = {
   width: number,
   height: number,
   id: number,
+}
+
+@view
+class ControlButton {
+  render({ store, background = '#ED6A5F', icon }) {
+    return (
+      <controlButton onClick={store.closePeek} css={{ background }}>
+        <img src={icons[icon]} />
+      </controlButton>
+    )
+  }
+
+  static style = {
+    controlButton: {
+      width: 12,
+      height: 12,
+      borderRadius: 100,
+      boxShadow: ['inset 0 0 0 0.5px rgba(0,0,0,0.15)'],
+      alignItems: 'center',
+      marginRight: 8,
+      justifyContent: 'center',
+      '& > img': {
+        opacity: 0,
+      },
+      '&:hover > img': {
+        opacity: 1,
+      },
+    },
+  }
 }
 
 @view
@@ -261,16 +299,9 @@ export default class PeekPage {
             <innerContent $$flex>
               <header $$draggable>
                 <buttons $$row if={store.isTorn} css={{ marginRight: 14 }}>
-                  <controlButton
-                    onClick={store.closePeek}
-                    css={{
-                      width: 12,
-                      height: 12,
-                      background: '#ED6A5F',
-                      borderRadius: 100,
-                      boxShadow: ['inset 0 0 0 0.5px rgba(0,0,0,0.15)'],
-                    }}
-                  />
+                  <ControlButton icon="x" store={store} />
+                  <ControlButton icon="y" store={store} background="#F6BE4F" />
+                  <ControlButton icon="z" store={store} background="#62C554" />
                 </buttons>
                 <title>
                   <UI.Title size={1} fontWeight={300}>

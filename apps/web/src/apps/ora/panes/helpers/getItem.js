@@ -22,13 +22,19 @@ function getIcon(result) {
   return result.icon
 }
 
+const childrenStyle = {
+  marginLeft: 10,
+  borderLeft: [1, 'dotted', [255, 255, 255, 0.15]],
+  padding: [0, 10],
+}
+
 function getChildren(result) {
   if (result.data && result.data.integration === 'slack') {
     const { messages } = result.data.data
     const showCount = 2
     const more = messages.length - showCount
     return (
-      <container>
+      <container css={childrenStyle}>
         <messages style={{ margin: 5 }}>
           {messages.slice(0, showCount).map(({ author, message }) => (
             <message $$row style={{ marginTop: 5 }}>
@@ -164,6 +170,7 @@ export default function getItem(result, index) {
       ellipse: index < 2 ? 3 : 2,
       size: 1.1,
       highlightWords: result.highlightWords,
+      css: childrenStyle,
     },
     date: result.date,
     after: result.after,

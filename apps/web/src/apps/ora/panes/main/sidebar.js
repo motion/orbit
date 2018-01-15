@@ -56,12 +56,9 @@ export default class MainSidebar {
     let results = []
     // results
     if (this.oraStore.contextResults.length) {
-      results = [
-        ...results,
-        ...this.oraStore.contextResults.map(item => ({
-          ...item,
-        })),
-      ]
+      results = this.oraStore.contextResults.map(item => ({
+        ...item,
+      }))
     } else {
       results = [
         ...results,

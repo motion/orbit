@@ -23,7 +23,7 @@ function getIcon(result) {
 }
 
 const childrenStyle = {
-  marginLeft: 10,
+  marginLeft: 6,
   borderLeft: [1, 'dotted', [255, 255, 255, 0.15]],
   padding: [0, 10],
 }
@@ -160,7 +160,7 @@ export default function getItem(result, index) {
     primaryProps: {
       // lower opacity as list items go down
       alpha: Math.max(0.5, (9 - index) / 8),
-      size: 1.25,
+      size: 1.2,
       fontWeight: 500,
     },
     secondary: getSecondary(result),

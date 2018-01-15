@@ -50,6 +50,7 @@ export default class SearchStore {
 
   setQuery = async search => {
     this.query = search
+    console.log('set query', search)
     const response = await this.getResults(search)
     if (response) {
       const results = response.results.map(result => ({

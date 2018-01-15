@@ -16,16 +16,12 @@ const BORDER_RADIUS = 6
 const SHOW_DELAY = 300
 const HIDE_DELAY = 100
 
+window.cache = window.cache || {}
+
 if (module && module.hot) {
-  module.hot.accept(data => {
-    if (data.storeValues) {
-      setTimeout(() => {
-        window.App.stores.PeekStore.hydrate(data.storeValues)
-      }, 100)
-    }
-  })
-  module.hot.dispose(data => {
-    data.storeValues = window.App.stores.PeekStore.dehydrate()
+  module.hot.dispose(() => {
+    console.log('dispose', arguments)
+    window.cache.peek = window.App.stores.PeekStore.dehydrate()
   })
 }
 
@@ -90,6 +86,9 @@ class WebView {
     }
 
     willMount() {
+      if (window.cache.peek) {
+        this.hydrate(window.cache.peek)
+      }
       OS.send('peek-start')
 
       this.watchTab()

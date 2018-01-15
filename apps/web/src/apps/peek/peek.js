@@ -16,17 +16,6 @@ const BORDER_RADIUS = 6
 const SHOW_DELAY = 300
 const HIDE_DELAY = 100
 
-window.cache = window.cache || {}
-
-if (module && module.hot) {
-  module.hot.dispose(() => {
-    console.log('dispose', arguments)
-    window.cache.peek = window.App.stores.PeekStore.dehydrate()
-  })
-}
-
-// const isSamePeek = (a, b) => a && b && a.id === b.id
-
 const background = '#fff'
 const peekShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.25]]]
 
@@ -86,9 +75,6 @@ class WebView {
     }
 
     willMount() {
-      if (window.cache.peek) {
-        this.hydrate(window.cache.peek)
-      }
       OS.send('peek-start')
 
       this.watchTab()

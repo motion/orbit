@@ -65,6 +65,20 @@ export default function storeProvidable(options, Helpers) {
         }
 
         allStores = allStores
+        storeHMRCache = {}
+
+        onWillReload() {
+          this.onWillReloadStores()
+          this.disposeStores()
+          this.setupProps()
+          this.setupStores()
+          this.mountStores()
+          this.forceUpdate()
+        }
+
+        onReload() {
+          this.onReloadStores()
+        }
 
         componentWillMount() {
           this.componentWillUpdate = this.componentWillUpdate.bind(this)
@@ -206,12 +220,37 @@ export default function storeProvidable(options, Helpers) {
           }
         }
 
-        hotReload() {
-          this.disposeStores()
-          this.setupProps()
-          this.setupStores()
-          this.mountStores()
-          this.forceUpdate()
+        onWillReloadStores() {
+          if (!this.stores) {
+            return
+          }
+          this.storeHMRCache = {}
+          for (const name of Object.keys(this.stores)) {
+            const store = this.stores[name]
+            // pass in state + auto dehydrate
+            this.storeHMRCache[name] = {
+              state: store.dehydrate(),
+            }
+            if (store.onWillReload) {
+              store.willReload(this.storeHMRCache[name])
+            }
+          }
+        }
+
+        onReloadStores() {
+          if (!this.stores) {
+            return
+          }
+          for (const name of Object.keys(this.stores)) {
+            const store = this.stores[name]
+            // auto rehydrate
+            if (this.storeHMRCache[name].state) {
+              store.hydrate(this.storeHMRCache[name].state)
+            }
+            if (store.onReload) {
+              store.onReload()
+            }
+          }
         }
 
         render() {

@@ -6,6 +6,7 @@ let reloaded = []
 let reloadedInstances = 0
 let lastHotReload = Date.now()
 
+// so you can hmr your hmr bro
 if (module && module.hot && module.hot.accept) {
   module.hot.accept(() => {
     viewProxies = module.hot.data.viewProxies || {}
@@ -15,6 +16,7 @@ if (module && module.hot && module.hot.accept) {
   })
 }
 
+// wraps each file
 export default function proxyReactComponents({
   filename,
   components,
@@ -31,18 +33,9 @@ export default function proxyReactComponents({
     )
   }
 
-  const doHotReload = instance => {
-    if (instance.hotReload) {
-      instance.hotReload(module)
-    }
-    deepForceUpdate(instance)
-    if (instance.forceUpdate) {
-      instance.forceUpdate()
-    }
-    reloadedInstances++
-  }
-
   return function wrapWithProxy(ReactClass, uid) {
+    // this code is wrapped around and run at runtime
+    // for every file that looks like it has a react class
     const { isInFunction, displayName = uid } = components[uid]
     const path = filename + '$' + uid
 
@@ -59,7 +52,19 @@ export default function proxyReactComponents({
       reloaded.push(displayName)
       const instances = viewProxies[path].update(ReactClass)
       setTimeout(() => {
-        instances.forEach(doHotReload)
+        instances.forEach(function hotReload(instance) {
+          if (instance.onWillReload) {
+            instance.onWillReload(module)
+          }
+          deepForceUpdate(instance)
+          if (instance.forceUpdate) {
+            instance.forceUpdate()
+          }
+          if (instance.onReload) {
+            instance.onReload(module)
+          }
+          reloadedInstances++
+        })
         lastHotReload = Date.now()
         window.lastHotReload = lastHotReload
       })

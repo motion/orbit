@@ -93,24 +93,29 @@ export default class Row extends React.Component<Props> {
     if (children) {
       const realChildren = React.Children.map(children, _ => _).filter(Boolean)
 
-      children = realChildren.map((child, index) => {
-        const finalChild =
-          typeof child === 'string' ? <span>{child}</span> : child
+      children = realChildren
+        .map((child, index) => {
+          if (!child) {
+            return false
+          }
+          const finalChild =
+            typeof child === 'string' ? <span>{child}</span> : child
 
-        return (
-          <Provider
-            key={index}
-            provide={getContext(index, realChildren.length)}
-          >
-            {itemProps
-              ? React.cloneElement(finalChild, {
-                  ...itemProps,
-                  ...finalChild.props,
-                }) /* merge child props so they can override */
-              : finalChild}
-          </Provider>
-        )
-      })
+          return (
+            <Provider
+              key={index}
+              provide={getContext(index, realChildren.length)}
+            >
+              {itemProps
+                ? React.cloneElement(finalChild, {
+                    ...itemProps,
+                    ...finalChild.props,
+                  }) /* merge child props so they can override */
+                : finalChild}
+            </Provider>
+          )
+        })
+        .filter(Boolean)
     } else if (Array.isArray(items)) {
       children = items.map((seg, index) => {
         const { text, id, icon, ...segmentProps } =

@@ -2,13 +2,16 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import OraStore from './oraStore'
-import ContextStore from '~/stores/contextStore'
 import Sidebar from './panes/sidebar'
 import OraHeader from './oraHeader'
 import OraDrawer from './oraDrawer'
 import OraActionBar from './oraActionBar'
 import * as Constants from '~/constants'
 import { OS } from '~/helpers'
+
+if (module.hot) {
+  module.hot.accept('./oraStore')
+}
 
 export const LogoIcon = ({ fill, ...props }) => (
   <svg viewBox="0 0 396 396" {...props}>

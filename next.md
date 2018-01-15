@@ -24,8 +24,8 @@ should handle token refreshing
 
 ## better data syncing structure
 
-should not sync stuff through electron
-should sync electron state to api first
+each window should sync its respective focus/blur/position from electron to the window itself
+should not sync stuff through electron but through api/socket
 should have ability to sync diff logical groups across on their own
 
 ## syncers v2

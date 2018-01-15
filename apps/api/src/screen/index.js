@@ -122,7 +122,7 @@ export default class ScreenState {
     }
 
     this.swindler.onChange(({ event, message }) => {
-      console.log('Swindler: ', { event, message })
+      console.log('Swindler: ', event)
       switch (event) {
         case 'FrontmostWindowChangedEvent':
           this.setCurrentContext(message)

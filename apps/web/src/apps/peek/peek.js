@@ -296,7 +296,7 @@ export default class PeekPage {
             />
           ))}
           <content>
-            <innerContent $$flex>
+            <contentInner $$flex>
               <header $$draggable>
                 <buttons $$row if={store.isTorn} css={{ marginRight: 14 }}>
                   <ControlButton icon="x" store={store} />
@@ -313,11 +313,19 @@ export default class PeekPage {
                   $$undraggable
                   itemProps={{
                     sizeIcon: 1,
-                    sizePadding: 1.9,
-                    sizeHeight: 0.9,
-                    sizeRadius: 1,
+                    sizePadding: 1.8,
+                    sizeHeight: 0.75,
+                    sizeRadius: 0.6,
                     borderWidth: 0,
-                    boxShadow: ['inset 0 0 0 0.5px #C9C9C9'],
+                    color: [0, 0, 0, 0.5],
+                    boxShadow: [
+                      'inset 0 0.5px 0 0px #fff',
+                      '0 0.25px 0.5px 0px rgba(0,0,0,0.35)',
+                    ],
+                    background: 'linear-gradient(#FDFDFD, #F1F1F1)',
+                    hover: {
+                      background: 'linear-gradient(#FDFDFD, #F1F1F1)',
+                    },
                   }}
                 >
                   <UI.Button
@@ -374,7 +382,7 @@ export default class PeekPage {
                   </bottombar>
                 </tab>
               </tabs>
-            </innerContent>
+            </contentInner>
           </content>
         </peek>
       </UI.Theme>
@@ -404,24 +412,26 @@ export default class PeekPage {
     },
     content: {
       flex: 1,
-      background,
-      border: [1, [0, 0, 0, 0.2]],
+      // border: [1, 'transparent'],
       borderRadius: BORDER_RADIUS,
       overflow: 'hidden',
       opacity: 1,
       transition: 'background ease-in 200ms',
-      boxShadow: [peekShadow],
+      boxShadow: [peekShadow, '0 0 0 0.5px rgba(0,0,0,0.25)'],
+    },
+    contentInner: {
+      background,
     },
     header: {
-      height: 38,
+      height: 37,
       flexFlow: 'row',
       alignItems: 'center',
-      padding: [4, 15],
+      padding: [4, 10],
       background: ['linear-gradient(#E6E6E6, #D9D9D9)'],
-      borderTopRadius: BORDER_RADIUS - 1,
+      borderTopRadius: BORDER_RADIUS,
       boxShadow: [
-        'inset 0 0.5px 0 rgba(255,255,255,0.7)',
-        'inset 0 -0.5px 0 #C2C2C2',
+        'inset 0 1px 0 rgba(255,255,255,0.4)',
+        'inset 0 -0.5px 0 #bbb',
       ],
     },
     controls: {

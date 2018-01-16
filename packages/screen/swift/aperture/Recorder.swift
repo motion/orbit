@@ -50,27 +50,6 @@ func applyFilter(_ filter: CIFilter?, for image: CIImage) -> CIImage {
   return filteredImage as! CIImage
 }
 
-func getAspectFitFrame(sizeImgView:CGSize, sizeImage:CGSize) -> CGRect{
-  let imageSize:CGSize  = sizeImage
-  let viewSize:CGSize = sizeImgView
-  let hfactor : CGFloat = imageSize.width/viewSize.width
-  let vfactor : CGFloat = imageSize.height/viewSize.height
-  let factor : CGFloat = max(hfactor, vfactor)
-  // Divide the size by the greater of the vertical or horizontal shrinkage factor
-  let newWidth : CGFloat = imageSize.width / factor
-  let newHeight : CGFloat = imageSize.height / factor
-  var x:CGFloat = 0.0
-  var y:CGFloat = 0.0
-  if newWidth > newHeight{
-    y = (sizeImgView.height - newHeight)/2
-  }
-  if newHeight > newWidth{
-    x = (sizeImgView.width - newWidth)/2
-  }
-  let newRect:CGRect = CGRect(x: x, y: y, width: newWidth, height: newHeight)
-  return newRect
-}
-
 final class Recorder: NSObject {
   private let input: AVCaptureScreenInput
   private var session: AVCaptureSession
@@ -262,11 +241,43 @@ final class Recorder: NSObject {
     if result.count > 0 {
       for (index, box) in result.enumerated() {
         let image = image.cropping(to: box.1)!
-        self.writeCGImage(image: image, to: "/tmp/\(index).png")
+        let image2 = self.resize(image, width: 28, height: 28)!
+        self.writeCGImage(image: image2, to: "/tmp/\(index).png")
       }
     }
   }
   
+  func resize(_ image: CGImage, width: Int, height: Int) -> CGImage? {
+    var ratio: Float = 0.0
+    let imageWidth = Float(image.width)
+    let imageHeight = Float(image.height)
+    let maxWidth: Float = Float(width)
+    let maxHeight: Float = Float(height)
+    // Get ratio (landscape or portrait)
+    if (imageWidth > imageHeight) {
+      ratio = maxWidth / imageWidth
+    } else {
+      ratio = maxHeight / imageHeight
+    }
+    // Calculate new size based on the ratio
+    if ratio > 1 {
+      ratio = 1
+    }
+    let mWidth = imageWidth * ratio
+    let mHeight = imageHeight * ratio
+    guard let colorSpace = image.colorSpace else { return nil }
+    guard let context = CGContext(data: nil, width: width, height: height, bitsPerComponent: image.bitsPerComponent, bytesPerRow: image.bytesPerRow, space: colorSpace, bitmapInfo: image.alphaInfo.rawValue) else { return nil }
+    context.clear(CGRect(x: 0, y: 0, width: width, height: height))
+    context.setFillColor(CGColor(gray: 1, alpha: 1))
+    context.fill(CGRect(x: 0, y: 0, width: width, height: height))
+    
+    // draw image to context (resizing it)
+    context.interpolationQuality = .high
+    context.draw(image, in: CGRect(x: 0, y: 0, width: Int(mWidth), height: Int(mHeight)))
+    // extract resulting image from context
+    return context.makeImage()
+  }
+
   func cropImage(box: BoundingBox, image: CGImage) -> CGImage {
     let x = box.x_start
     let y = box.y_start

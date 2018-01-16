@@ -111,7 +111,7 @@ class Screen {
     this.recorder.stdout.on('data', data => {
       if (this.changedFrameCb) {
         const out = data.trim()
-        console.log('out', out)
+        // console.log('out', out)
         if (out[0] === '!') {
           contentArea = JSON.parse(out.slice(1))
         } else if (out[0] === '>') {

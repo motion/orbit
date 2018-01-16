@@ -262,8 +262,8 @@ export default class ScreenState {
     const { appName, offset, bounds } = this.state.context
 
     // test
-    if (appName !== 'SimplenoteMac' && appName !== 'Chrome') {
-      console.log('not simplenote or chrome')
+    if (appName !== 'SimplenoteMac' && appName !== 'slackmacgap') {
+      console.log('not simplenote or slackmacgap')
       return
     }
 

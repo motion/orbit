@@ -21,7 +21,7 @@ struct Box: Decodable {
 class ThresholdFilter: CIFilter
 {
   @objc dynamic var inputImage : CIImage?
-  var threshold: CGFloat = 0.5
+  var threshold: CGFloat = 0.79
   
   var colorKernel = CIColorKernel(source:
     "kernel vec4 color(__sample pixel, float threshold)" +
@@ -133,19 +133,58 @@ final class Recorder: NSObject {
     return cgImage
   }
   
-  func scaleImage(cgImage: CGImage, divide: Int) -> CGImage {
+  func processImageBounds(cgImage: CGImage, divide: Int) -> CGImage {
     var outputImage = CIImage(cgImage: cgImage)
     
     var filter: CIFilter
+
+//    filter = CIFilter(name: "CIColorMonochrome")!
+//    filter.setValue(3.0, forKey: "inputIntensity")
+//    outputImage = applyFilter(filter, for: outputImage)
     
+    // make it black and white
+    filter = CIFilter(name: "CIPhotoEffectNoir")!
+    outputImage = applyFilter(filter, for: outputImage)
+    
+    // super lower contrast down to get rid of subtle color differences
+    // this generally will preserve outline data as well
     filter = CIFilter(name: "CIColorControls")!
-    filter.setValue(1.0, forKey: "inputContrast")
+    filter.setValue(1.5, forKey: "inputContrast")
+    outputImage = applyFilter(filter, for: outputImage)
+    
+    // this distinguishes things nicely for edge detection
+    // helps prevent finding edges of contiguous blocks
+    // while emphasizing edges of that have actual borders
+    filter = CIFilter(name: "CIUnsharpMask")!
+    filter.setValue(0.5, forKey: "inputIntensity")
+    filter.setValue(2.5, forKey: "inputRadius")
+    outputImage = applyFilter(filter, for: outputImage)
+    
+    // edge detecting with low contrast and unsharp mask
+    // gives really nice outlines
+    filter = CIFilter(name: "CIEdges")!
+    filter.setValue(10.0, forKey: "inputIntensity")
+    outputImage = applyFilter(filter, for: outputImage)
+    
+    // edges inversts everything basically, so lets un-invert
+    filter = CIFilter(name: "CIColorInvert")!
     outputImage = applyFilter(filter, for: outputImage)
 
-    filter = CIFilter(name: "CIColorMonochrome")!
-    filter.setValue(1.0, forKey: "inputIntensity")
+    // motion blur one pixel in each direction,
+    // this will ensure that rounded borders and sketchy outlines
+    // will still connect to each other for the component finding
+    filter = CIFilter(name: "CIMotionBlur")!
+    filter.setValue(1.0, forKey: "inputRadius")
+    filter.setValue(0.0, forKey: "inputAngle")
     outputImage = applyFilter(filter, for: outputImage)
 
+    // motion blur vertical
+    filter = CIFilter(name: "CIMotionBlur")!
+    filter.setValue(1.0, forKey: "inputRadius")
+    filter.setValue(0.5, forKey: "inputAngle")
+    outputImage = applyFilter(filter, for: outputImage)
+
+    // threshold binarizes the image
     filter = ThresholdFilter()
     outputImage = applyFilter(filter, for: outputImage)
 
@@ -154,7 +193,6 @@ final class Recorder: NSObject {
   }
   
   func writeCGImage(image: CGImage, to destination: String) -> Bool {
-    let cgImage = scaleImage(cgImage: image, divide: 2)
     let destinationURL = URL(fileURLWithPath: destination)
     guard let finalDestination = CGImageDestinationCreateWithURL(destinationURL as CFURL, kUTTypePNG, 1, nil) else { return false }
     let resolution = 300
@@ -163,7 +201,7 @@ final class Recorder: NSObject {
       kCGImagePropertyDPIHeight: resolution,
       kCGImagePropertyDPIWidth: resolution
     ]
-    CGImageDestinationAddImage(finalDestination, cgImage, properties)
+    CGImageDestinationAddImage(finalDestination, image, properties)
     return CGImageDestinationFinalize(finalDestination)
   }
   
@@ -178,10 +216,10 @@ final class Recorder: NSObject {
       guard let cgImage = imageFromSampleBuffer(sampleBuffer: buffer, cropRect: cropRect) else { return }
       
       var biggestBox: BoundingBox?
-      print("find contnt? \(findContent)")
+//      print("find contnt? \(findContent)")
       if (findContent) {
         let cc = ConnectedComponents()
-        let binarizedImage = scaleImage(cgImage: cgImage, divide: 2)
+        let binarizedImage = processImageBounds(cgImage: cgImage, divide: 2)
         let result = cc.labelImageFast(image: binarizedImage, calculateBoundingBoxes: true)
         if let boxes = result.boundingBoxes {
           if (boxes.count > 0) {

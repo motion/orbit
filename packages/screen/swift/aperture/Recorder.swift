@@ -14,39 +14,14 @@ struct Box: Decodable {
   let width: Int
   let height: Int
   let screenDir: String?
+  let findContent: Bool
+  let initialScreenshot: Bool
 }
-
-//class ThresholdFilter: CIFilter
-//{
-//  var inputImage : CIImage?
-//  var threshold: CGFloat = 0.75
-//
-//  let thresholdKernel = CIColorKernel(source:
-//    "kernel vec4 thresholdFilter(__sample image, float threshold)" +
-//      "{" +
-//      "   float luma = (image.r * 0.2126) + (image.g * 0.7152) + (image.b * 0.0722);" +
-//      "   return (luma > threshold) ? vec4(1.0, 1.0, 1.0, 1.0) : vec4(0.0, 0.0, 0.0, 0.0);" +
-//    "}"
-//  )
-//
-//  override var outputImage : CIImage!
-//  {
-//    guard let inputImage = inputImage,
-//      let thresholdKernel = thresholdKernel else
-//    {
-//      return nil
-//    }
-//
-//    let extent = inputImage.extent
-//    let arguments = [inputImage, threshold] as [Any]
-//    return thresholdKernel.apply(extent: extent, arguments: arguments)
-//  }
-//}
 
 class ThresholdFilter: CIFilter
 {
   @objc dynamic var inputImage : CIImage?
-  var threshold: CGFloat = 0.95
+  var threshold: CGFloat = 0.5
   
   var colorKernel = CIColorKernel(source:
     "kernel vec4 color(__sample pixel, float threshold)" +
@@ -80,7 +55,7 @@ final class Recorder: NSObject {
   private var output: AVCaptureVideoDataOutput
   private var sensitivity: Int
   private var sampleSpacing: Int
-  private var initialScreenshot: Bool
+  private var firstTime: Bool
   private let context = CIContext()
   private var boxes: [String: Box]
   private var lastBoxes: [String: Array<UInt32>]
@@ -102,12 +77,12 @@ final class Recorder: NSObject {
     print("captured")
   }
 
-  init(fps: Int, boxes: Array<Box>, showCursor: Bool, displayId: CGDirectDisplayID = CGMainDisplayID(), videoCodec: String? = nil, sampleSpacing: Int, sensitivity: Int, initialScreenshot: Bool) throws {
+  init(fps: Int, boxes: Array<Box>, showCursor: Bool, displayId: CGDirectDisplayID = CGMainDisplayID(), videoCodec: String? = nil, sampleSpacing: Int, sensitivity: Int) throws {
     self.displayId = displayId
     self.session = AVCaptureSession()
+    self.firstTime = true
     self.sampleSpacing = sampleSpacing
     self.sensitivity = sensitivity
-    self.initialScreenshot = initialScreenshot
     self.lastBoxes = [String: Array<UInt32>]()
     self.boxes = [String: Box]()
     for box in boxes {
@@ -167,13 +142,6 @@ final class Recorder: NSObject {
     filter.setValue(1.0, forKey: "inputContrast")
     outputImage = applyFilter(filter, for: outputImage)
 
-//    filter = CIFilter(name: "CIPhotoEffectNoir")!
-//    outputImage = applyFilter(filter, for: outputImage)
-//
-//    filter = CIFilter(name: "CIColorControls")!
-//    filter.setValue(1.5, forKey: "inputContrast")
-//    outputImage = applyFilter(filter, for: outputImage)
-
     filter = CIFilter(name: "CIColorMonochrome")!
     filter.setValue(1.0, forKey: "inputIntensity")
     outputImage = applyFilter(filter, for: outputImage)
@@ -181,36 +149,8 @@ final class Recorder: NSObject {
     filter = ThresholdFilter()
     outputImage = applyFilter(filter, for: outputImage)
 
-
-//    outputImage = applyFilter(CIFilter(name: "CIColorControls"), for: inputImage)
-    
-//    let filter = CIFilter(name: "CIPhotoEffectNoir")!
-//    filter.setValue(ccc, forKey: "inputImage")
-    // to scale it down in size, didnt work well with current ocr
-    //    let filter = CIFilter(name: "CILanczosScaleTransform")!
-    //    filter.setValue(
-    //    filter.setValue(0.5, forKey: "inputScale")
-    //    filter.setValue(1.0, forKey: "inputAspectRatio")
-//    let outputImage = filter.value(forKey: "outputImage") as! CIImage
     let context = CIContext(options: [kCIContextUseSoftwareRenderer: false])
     return context.createCGImage(outputImage, from: outputImage.extent)!
-    // alt method, blurrier but bolder
-    // todo, test which performs better (speed vs translation)
-    //    let width = cgImage.width / divide
-    //    let height = cgImage.height / divide
-    //    let cgRect = CGRect(origin: CGPoint.zero, size: CGSize(width: CGFloat(width), height: CGFloat(height)))
-    //    let context = CGContext(
-    //      data: nil,
-    //      width: width,
-    //      height: height,
-    //      bitsPerComponent: cgImage.bitsPerComponent,
-    //      bytesPerRow: cgImage.bytesPerRow,
-    //      space: cgImage.colorSpace!,
-    //      bitmapInfo: cgImage.bitmapInfo.rawValue
-    //    )!
-    //    context.interpolationQuality = CGInterpolationQuality.high
-    //    context.draw(cgImage, in: cgRect)
-    //    return context.makeImage()!
   }
   
   func writeCGImage(image: CGImage, to destination: String) -> Bool {
@@ -238,6 +178,7 @@ final class Recorder: NSObject {
       guard let cgImage = imageFromSampleBuffer(sampleBuffer: buffer, cropRect: cropRect) else { return }
       
       var biggestBox: BoundingBox?
+      print("find contnt? \(findContent)")
       if (findContent) {
         let cc = ConnectedComponents()
         let binarizedImage = scaleImage(cgImage: cgImage, divide: 2)
@@ -268,22 +209,6 @@ final class Recorder: NSObject {
       }
     }
   }
-  
-//  func findChrome(box: Box, buffer: UnsafeMutablePointer<UInt32>, perRow: Int) -> Box {
-//    let height = Int(box.height) / 2
-//    let width = Int(box.width) / 2
-//    let smallH = height
-//    let smallW = width
-//    let regions = [Int: Region]()
-//    for y in 0..<smallH {
-//      for x in 0..<smallW {
-//        let realY = y / 2 + box.y / 2
-//        let realX = x + box.x / 2
-//        let index = y * smallW + x
-//        let luma = buffer[realY * perRow + realX]
-//      }
-//    }
-//  }
   
   func hasBoxChanged(box: Box, buffer: UnsafeMutablePointer<UInt32>, perRow: Int) -> Bool {
     let lastBox = self.lastBoxes[box.id]
@@ -336,7 +261,7 @@ final class Recorder: NSObject {
 
 extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
   public func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-//    let start = DispatchTime.now()
+    // let start = DispatchTime.now()
     let pixelBuffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)!
     CVPixelBufferLockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0));
     let baseAddress = CVPixelBufferGetBaseAddress(pixelBuffer)
@@ -345,16 +270,15 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
     // loop over boxes and check
     for boxId in self.boxes.keys {
       let box = self.boxes[boxId]!
-      if (self.initialScreenshot || hasBoxChanged(box: box, buffer: int32Buffer, perRow: int32PerRow)) {
-        screenshotBox(box: box, buffer: sampleBuffer, findContent: self.initialScreenshot)
+      if (firstTime && box.initialScreenshot || hasBoxChanged(box: box, buffer: int32Buffer, perRow: int32PerRow)) {
+        screenshotBox(box: box, buffer: sampleBuffer, findContent: box.findContent)
         print(">\(box.id)")
       }
     }
-    
-    if (self.initialScreenshot) {
-      self.initialScreenshot = false
-    }
-    
+
+    // only true for first loop
+    self.firstTime = false
+
     // release
     CVPixelBufferUnlockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0))
 //    let end = DispatchTime.now()

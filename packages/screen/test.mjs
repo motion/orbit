@@ -19,15 +19,16 @@ async function test() {
     sampleSpacing: 10,
     sensitivity: 2,
     showCursor: true,
-    initialScreenshot: true,
     boxes: [
       {
         id: 'screen',
         x: 19,
-        y: 131,
-        width: 750,
-        height: 499,
-        screenDir: '/Users/nw/projects/motion/orbit/apps/api/tmp',
+        y: 20,
+        width: 600,
+        height: 800,
+        screenDir: '/tmp',
+        initialScreenshot: true,
+        findContent: true,
       },
     ],
   })

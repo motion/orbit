@@ -262,8 +262,8 @@ export default class ScreenState {
     const { appName, offset, bounds } = this.state.context
 
     // test
-    if (appName !== 'SimplenoteMac') {
-      console.log('not simplenote')
+    if (appName !== 'SimplenoteMac' && appName !== 'Chrome') {
+      console.log('not simplenote or chrome')
       return
     }
 
@@ -423,6 +423,7 @@ export default class ScreenState {
   }
 
   dispose() {
+    console.log('disposing screen...')
     if (this.video) {
       this.video.stopRecording()
     }

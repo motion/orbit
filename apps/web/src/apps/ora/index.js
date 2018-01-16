@@ -138,6 +138,13 @@ export default class OraPage {
             $$draggable
             css={{
               height: oraStore.ui.height,
+              boxShadow:
+                oraStore.ui.height !== 40
+                  ? [
+                      [0, 0, 15, 0, [0, 0, 0, 0.5]],
+                      ['inset', 0, 0, 0, 0.5, [255, 255, 255, 0.3]],
+                    ]
+                  : [['inset', 0, 0, 0, 0.5, [255, 255, 255, 0.3]]],
             }}
           >
             <OraContent />
@@ -158,10 +165,6 @@ export default class OraPage {
       // height: Constants.ORA_HEIGHT,
       background: Constants.ORA_BG,
       // border: [1, [255, 255, 255, 0.035]],
-      boxShadow: [
-        [0, 0, 15, 0, [0, 0, 0, 0.5]],
-        ['inset', 0, 0, 0, 0.5, [255, 255, 255, 0.3]],
-      ],
       margin: 10,
       borderRadius: 10,
       overflow: 'hidden',

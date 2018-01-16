@@ -116,7 +116,7 @@ export default class ScreenState {
 
     const update = () => {
       this.cancelCurrentOCR()
-      console.log('UpdateContext:', this.curContext)
+      console.log('UpdateContext:', this.curContext.id)
       // ensure new
       this.updateState({ context: Object.assign({}, this.curContext) })
     }

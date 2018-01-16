@@ -7,7 +7,6 @@ import { Thing } from '~/app'
 import MarkdownRender from './markdownRenderer'
 import Conversation from './conversation'
 import Mousetrap from 'mousetrap'
-import * as Constants from '~/constants'
 import controlX from '~/../public/images/control-x.png'
 import controlY from '~/../public/images/control-y.png'
 import controlZ from '~/../public/images/control-z.png'
@@ -405,6 +404,7 @@ export default class PeekPage {
       transition: 'all ease-out 100ms',
     },
     peekTorn: {
+      pointerEvents: 'all !important',
       opacity: 1,
       transform: {
         y: 0,

@@ -1,4 +1,5 @@
 import AVFoundation
+import AppKit
 
 enum ApertureError: Error {
   case invalidAudioDevice
@@ -47,6 +48,27 @@ func applyFilter(_ filter: CIFilter?, for image: CIImage) -> CIImage {
   filter.setValue(image, forKey: kCIInputImageKey)
   guard let filteredImage = filter.value(forKey: kCIOutputImageKey) else { return image }
   return filteredImage as! CIImage
+}
+
+func getAspectFitFrame(sizeImgView:CGSize, sizeImage:CGSize) -> CGRect{
+  let imageSize:CGSize  = sizeImage
+  let viewSize:CGSize = sizeImgView
+  let hfactor : CGFloat = imageSize.width/viewSize.width
+  let vfactor : CGFloat = imageSize.height/viewSize.height
+  let factor : CGFloat = max(hfactor, vfactor)
+  // Divide the size by the greater of the vertical or horizontal shrinkage factor
+  let newWidth : CGFloat = imageSize.width / factor
+  let newHeight : CGFloat = imageSize.height / factor
+  var x:CGFloat = 0.0
+  var y:CGFloat = 0.0
+  if newWidth > newHeight{
+    y = (sizeImgView.height - newHeight)/2
+  }
+  if newHeight > newWidth{
+    x = (sizeImgView.width - newWidth)/2
+  }
+  let newRect:CGRect = CGRect(x: x, y: y, width: newWidth, height: newHeight)
+  return newRect
 }
 
 final class Recorder: NSObject {
@@ -133,7 +155,7 @@ final class Recorder: NSObject {
     return cgImage
   }
   
-  func processImageBounds(cgImage: CGImage, divide: Int) -> CGImage {
+  func processImageBounds(cgImage: CGImage) -> CGImage {
     var outputImage = CIImage(cgImage: cgImage)
     var filter: CIFilter
     
@@ -226,6 +248,33 @@ final class Recorder: NSObject {
     return CGImageDestinationFinalize(finalDestination)
   }
   
+  func writeCharacters(image: CGImage) {
+    //    let cc = ConnectedComponents()
+    //    let result = cc.labelImageFast(image: image, calculateBoundingBoxes: true, invert: false)
+    //    let boxes = result.boundingBoxes!
+    //    if boxes.count > 0 {
+    //      for box in boxes {
+    //        self.writeCGImage(image: self.cropImage(box: box.value, image: image), to: "/tmp/\(box.value.label).png")
+    //      }
+    //    }
+    let cc = ConnectedComponentsSwiftOCR()
+    let result = cc.extractBlobs(NSImage.init(cgImage: image, size: NSZeroSize))
+    if result.count > 0 {
+      for (index, box) in result.enumerated() {
+        let image = image.cropping(to: box.1)!
+        self.writeCGImage(image: image, to: "/tmp/\(index).png")
+      }
+    }
+  }
+  
+  func cropImage(box: BoundingBox, image: CGImage) -> CGImage {
+    let x = box.x_start
+    let y = box.y_start
+    let width = box.getWidth()
+    let height = box.getHeight()
+    return image.cropping(to: CGRect(x: x, y: y, width: width, height: height))!
+  }
+  
   func screenshotBox(box: Box, buffer: CMSampleBuffer, findContent: Bool = false) {
     if (box.screenDir != nil) {
       let cropRect = CGRect(
@@ -240,8 +289,8 @@ final class Recorder: NSObject {
 //      print("find contnt? \(findContent)")
       if (findContent) {
         let cc = ConnectedComponents()
-        let binarizedImage = processImageBounds(cgImage: cgImage, divide: 2)
-        let result = cc.labelImageFast(image: binarizedImage, calculateBoundingBoxes: true)
+        let binarizedImage = processImageBounds(cgImage: cgImage)
+        let result = cc.labelImageFast(image: binarizedImage, calculateBoundingBoxes: true, invert: true)
         if let boxes = result.boundingBoxes {
           if (boxes.count > 0) {
             for box in boxes {
@@ -262,6 +311,7 @@ final class Recorder: NSObject {
         let height = biggestBox!.getHeight()
         print("! [\(x), \(y), \(width), \(height)]")
         let croppedImage = cgImage.cropping(to: CGRect(x: x, y: y, width: width, height: height))
+        self.writeCharacters(image: croppedImage!)
         if (self.writeCGImage(image: croppedImage!, to: outPath)) {}
       } else {
         if (self.writeCGImage(image: cgImage, to: outPath)) {}

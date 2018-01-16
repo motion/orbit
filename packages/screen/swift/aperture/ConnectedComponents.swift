@@ -12,12 +12,12 @@ class ConnectedComponents {
   // and identifying labels that should be merged. The first pass can also perform merging itself, under
   // certain circumstances, as an optimisation. The labels are then merged, and a second pass is performed
   // to apply the final (merged) labels to the content.
-  func labelImageFast(image: CGImage, calculateBoundingBoxes: Bool) -> LabelledData {
+  func labelImageFast(image: CGImage, calculateBoundingBoxes: Bool, invert: Bool = false) -> LabelledData {
     let rawImageData = getRawImageData(cgImage: image)
-    return labelImageFast(data: rawImageData, calculateBoundingBoxes: calculateBoundingBoxes)
+    return labelImageFast(data: rawImageData, calculateBoundingBoxes: calculateBoundingBoxes, invert: invert)
   }
   
-  func labelImageFast(data: [[Bool]], calculateBoundingBoxes: Bool) -> LabelledData {
+  func labelImageFast(data: [[Bool]], calculateBoundingBoxes: Bool, invert: Bool = false) -> LabelledData {
     let width = data[0].count
     let height = data.count
     var labelMerges = [Int: Set<Int>]()
@@ -33,9 +33,9 @@ class ConnectedComponents {
       var canMergeInPlace = false
       
       for col in 0 ..< width {
-        // NOTE NOTE NOTE
-        // from nate: i inverted this boolean, so its actually WHITE first, BLACK second (to find the largest background)
-        if (!currentRow[col]) {
+        let isFilledPixel = currentRow[col]
+        // invert lets you check for white or black
+        if (invert && !isFilledPixel || !invert && isFilledPixel) {
           // The pixel is black so it needs to be labelled.
           let sameColInPreviousRowLabel = (row > 0 ? previousOutputRow[col] : -1)
           var currentPixelLabel: Int

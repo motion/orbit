@@ -22,15 +22,19 @@ async function test() {
     boxes: [
       {
         id: 'screen',
-        x: 19,
-        y: 20,
-        width: 600,
-        height: 800,
+        x: 180,
+        y: 100,
+        width: 200,
+        height: 200,
         screenDir: '/tmp',
         initialScreenshot: true,
         findContent: true,
       },
     ],
+  })
+
+  process.on('SIGINT', () => {
+    video.stopRecording()
   })
 
   // video.startRecording({

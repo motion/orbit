@@ -135,12 +135,7 @@ final class Recorder: NSObject {
   
   func processImageBounds(cgImage: CGImage, divide: Int) -> CGImage {
     var outputImage = CIImage(cgImage: cgImage)
-    
     var filter: CIFilter
-
-//    filter = CIFilter(name: "CIColorMonochrome")!
-//    filter.setValue(3.0, forKey: "inputIntensity")
-//    outputImage = applyFilter(filter, for: outputImage)
     
     // make it black and white
     filter = CIFilter(name: "CIPhotoEffectNoir")!
@@ -192,6 +187,31 @@ final class Recorder: NSObject {
     return context.createCGImage(outputImage, from: outputImage.extent)!
   }
   
+  // sub-set of the edge finding, without all the edge finding fanciness
+  // meant to make the image as readable as possible for OCR
+  func binarizeImage(image: CGImage) -> CGImage {
+    var outputImage = CIImage(cgImage: image)
+    var filter: CIFilter
+    // noir
+    filter = CIFilter(name: "CIPhotoEffectNoir")!
+    outputImage = applyFilter(filter, for: outputImage)
+    // reduce contrast
+    filter = CIFilter(name: "CIColorControls")!
+    filter.setValue(1.5, forKey: "inputContrast")
+    outputImage = applyFilter(filter, for: outputImage)
+    // unsharpen
+    filter = CIFilter(name: "CIUnsharpMask")!
+    filter.setValue(0.5, forKey: "inputIntensity")
+    filter.setValue(2.5, forKey: "inputRadius")
+    outputImage = applyFilter(filter, for: outputImage)
+    // threshold binarizes the image
+    filter = ThresholdFilter()
+    outputImage = applyFilter(filter, for: outputImage)
+    // write
+    let context = CIContext(options: [kCIContextUseSoftwareRenderer: false])
+    return context.createCGImage(outputImage, from: outputImage.extent)!
+  }
+  
   func writeCGImage(image: CGImage, to destination: String) -> Bool {
     let destinationURL = URL(fileURLWithPath: destination)
     guard let finalDestination = CGImageDestinationCreateWithURL(destinationURL as CFURL, kUTTypePNG, 1, nil) else { return false }
@@ -201,7 +221,8 @@ final class Recorder: NSObject {
       kCGImagePropertyDPIHeight: resolution,
       kCGImagePropertyDPIWidth: resolution
     ]
-    CGImageDestinationAddImage(finalDestination, image, properties)
+    let finalImage = binarizeImage(image: image)
+    CGImageDestinationAddImage(finalDestination, finalImage, properties)
     return CGImageDestinationFinalize(finalDestination)
   }
   

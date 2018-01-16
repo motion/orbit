@@ -270,7 +270,6 @@ final class Recorder: NSObject {
     context.clear(CGRect(x: 0, y: 0, width: width, height: height))
     context.setFillColor(CGColor(gray: 1, alpha: 1))
     context.fill(CGRect(x: 0, y: 0, width: width, height: height))
-    
     // draw image to context (resizing it)
     context.interpolationQuality = .high
     context.draw(image, in: CGRect(x: 0, y: 0, width: Int(mWidth), height: Int(mHeight)))

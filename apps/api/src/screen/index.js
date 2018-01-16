@@ -282,6 +282,8 @@ export default class ScreenState {
       width: bounds[0],
       height: bounds[1],
       screenDir: this.screenDestination,
+      initialScreenshot: true,
+      findContent: true,
     }
 
     let settings
@@ -301,7 +303,6 @@ export default class ScreenState {
         sampleSpacing: 10,
         sensitivity: 2,
         showCursor: false,
-        initialScreenshot: true,
         boxes: [appBox],
       }
     } else {

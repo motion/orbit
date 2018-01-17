@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CF5D8416200FE58300A810FA /* ThresholdFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF5D8415200FE58300A810FA /* ThresholdFilter.swift */; };
+		CF5D8418200FE60800A810FA /* ThresholdBelowFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF5D8417200FE60800A810FA /* ThresholdBelowFilter.swift */; };
 		CF72D07120099C0C0001366D /* ConnectedComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF72D07020099C0C0001366D /* ConnectedComponents.swift */; };
 		CFA30D14200EB2B00087ABC7 /* ConnectedComponentsSwiftOCR.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFA30D13200EB2B00087ABC7 /* ConnectedComponentsSwiftOCR.swift */; };
 		CFA30D16200EB3510087ABC7 /* UnionFind.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFA30D15200EB3510087ABC7 /* UnionFind.swift */; };
@@ -18,6 +20,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		CF5D8415200FE58300A810FA /* ThresholdFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThresholdFilter.swift; sourceTree = "<group>"; };
+		CF5D8417200FE60800A810FA /* ThresholdBelowFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThresholdBelowFilter.swift; sourceTree = "<group>"; };
 		CF72D07020099C0C0001366D /* ConnectedComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectedComponents.swift; sourceTree = "<group>"; };
 		CFA30D13200EB2B00087ABC7 /* ConnectedComponentsSwiftOCR.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectedComponentsSwiftOCR.swift; sourceTree = "<group>"; };
 		CFA30D15200EB3510087ABC7 /* UnionFind.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnionFind.swift; sourceTree = "<group>"; };
@@ -70,6 +74,8 @@
 				CFA30D13200EB2B00087ABC7 /* ConnectedComponentsSwiftOCR.swift */,
 				CFA30D15200EB3510087ABC7 /* UnionFind.swift */,
 				CFA30D17200EB3FB0087ABC7 /* Extensions.swift */,
+				CF5D8415200FE58300A810FA /* ThresholdFilter.swift */,
+				CF5D8417200FE60800A810FA /* ThresholdBelowFilter.swift */,
 			);
 			path = aperture;
 			sourceTree = "<group>";
@@ -152,9 +158,11 @@
 				E3A3108A1E450DC800D314DD /* Recorder.swift in Sources */,
 				E3A310891E450DC800D314DD /* main.swift in Sources */,
 				CFA30D16200EB3510087ABC7 /* UnionFind.swift in Sources */,
+				CF5D8416200FE58300A810FA /* ThresholdFilter.swift in Sources */,
 				CFA30D18200EB3FB0087ABC7 /* Extensions.swift in Sources */,
 				CFA30D14200EB2B00087ABC7 /* ConnectedComponentsSwiftOCR.swift in Sources */,
 				E3A310881E450DC800D314DD /* DeviceList.swift in Sources */,
+				CF5D8418200FE60800A810FA /* ThresholdBelowFilter.swift in Sources */,
 				CF72D07120099C0C0001366D /* ConnectedComponents.swift in Sources */,
 				E3A8F9E11E46F9C000C6C5FC /* util.swift in Sources */,
 			);

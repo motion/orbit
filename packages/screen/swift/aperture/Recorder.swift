@@ -216,61 +216,46 @@ final class Recorder: NSObject {
     CGImageDestinationAddImage(finalDestination, image, properties)
     CGImageDestinationFinalize(finalDestination)
   }
-
-  func writeCharacters(binarizedImage: CGImage, outputImage: CGImage, to outDir: String) {
-    let cc = ConnectedComponentsSwiftOCR()
-    let result = cc.extractBlobs(NSImage.init(cgImage: binarizedImage, size: NSZeroSize))
-    print("found components: \(result.count)")
-    if result.count > 0 {
-      var pixelString = ""
-      for (index, box) in result.enumerated() {
-        let image = outputImage.cropping(to: box.1)!
-        let image2 = self.resize(image, width: 28, height: 28)!
-        // for testing, write out an image
-//        self.writeCGImage(image: image2, to: "\(outDir)/\(index).png")
-        // for python, write out a data file
-        let pixels = pixelValues(fromCGImage: image2).pixelValues!.map(String.init).joined(separator: " ")
-        pixelString += "\(pixels)\n"
-      }
-      do {
-        let path = NSURL.fileURL(withPath: "\(outDir)/characters.txt").absoluteURL
-        try pixelString.write(to: path, atomically: true, encoding: .utf8)
-      } catch {
-        print("couldnt write pixel string \(error)")
-      }
-    }
-  }
   
-  func resize(_ image: CGImage, width: Int, height: Int) -> CGImage? {
-    var ratio: Float = 0.0
-    let imageWidth = Float(image.width)
-    let imageHeight = Float(image.height)
-    let maxWidth: Float = Float(width)
-    let maxHeight: Float = Float(height)
-    // Get ratio (landscape or portrait)
-    if (imageWidth > imageHeight) {
-      ratio = maxWidth / imageWidth
-    } else {
-      ratio = maxHeight / imageHeight
-    }
-    // Calculate new size based on the ratio
-    // this would prevent sizing it up but we want that
-    //    if ratio > 1 {
-    //      ratio = 1
-    //    }
-    let mWidth = imageWidth * ratio
-    let mHeight = imageHeight * ratio
-    guard let colorSpace = image.colorSpace else { return nil }
-    guard let context = CGContext(data: nil, width: width, height: height, bitsPerComponent: image.bitsPerComponent, bytesPerRow: image.bytesPerRow, space: colorSpace, bitmapInfo: image.alphaInfo.rawValue) else { return nil }
-    // white background
-    context.clear(CGRect(x: 0, y: 0, width: width, height: height))
-    context.setFillColor(CGColor(gray: 1, alpha: 1))
-    context.fill(CGRect(x: 0, y: 0, width: width, height: height))
-    // draw image to context (resizing it)
-    context.interpolationQuality = .high
-    context.draw(image, in: CGRect(x: 0, y: 0, width: Int(mWidth), height: Int(mHeight)))
-    // call .makeImage to turn to image
-    return context.makeImage()
+//  func resize(_ image: CGImage, width: Int, height: Int) -> CGImage? {
+//    var ratio: Float = 0.0
+//    let imageWidth = Float(image.width)
+//    let imageHeight = Float(image.height)
+//    let maxWidth: Float = Float(width)
+//    let maxHeight: Float = Float(height)
+//    // Get ratio (landscape or portrait)
+//    if (imageWidth > imageHeight) {
+//      ratio = maxWidth / imageWidth
+//    } else {
+//      ratio = maxHeight / imageHeight
+//    }
+//    // Calculate new size based on the ratio
+//    // this would prevent sizing it up but we want that
+//    //    if ratio > 1 {
+//    //      ratio = 1
+//    //    }
+//    let mWidth = imageWidth * ratio
+//    let mHeight = imageHeight * ratio
+//    guard let colorSpace = image.colorSpace else { return nil }
+//    guard let context = CGContext(data: nil, width: width, height: height, bitsPerComponent: image.bitsPerComponent, bytesPerRow: image.bytesPerRow, space: colorSpace, bitmapInfo: image.alphaInfo.rawValue) else { return nil }
+//    // white background
+//    context.clear(CGRect(x: 0, y: 0, width: width, height: height))
+//    context.setFillColor(CGColor(gray: 1, alpha: 1))
+//    context.fill(CGRect(x: 0, y: 0, width: width, height: height))
+//    // draw image to context (resizing it)
+//    context.interpolationQuality = .high
+//    context.draw(image, in: CGRect(x: 0, y: 0, width: Int(mWidth), height: Int(mHeight)))
+//    // call .makeImage to turn to image
+//    return context.makeImage()
+//  }
+  func resize(_ image: NSImage, w: Int, h: Int) -> NSImage {
+    let destSize = NSMakeSize(CGFloat(w), CGFloat(h))
+    let newImage = NSImage(size: destSize)
+    newImage.lockFocus()
+    image.draw(in: NSMakeRect(0, 0, destSize.width, destSize.height), from: NSMakeRect(0, 0, image.size.width, image.size.height), operation: NSCompositingOperation.sourceOver, fraction: CGFloat(1))
+    newImage.unlockFocus()
+    newImage.size = destSize
+    return NSImage(data: newImage.tiffRepresentation!)!
   }
 
   func cropImage(_ image: CGImage, box: BoundingBox) -> CGImage {
@@ -282,6 +267,7 @@ final class Recorder: NSObject {
   }
   
   func screenshotBox(box: Box, buffer: CMSampleBuffer, findContent: Bool = false) {
+    let start = DispatchTime.now()
     if (box.screenDir != nil) {
       let outPath = "\(box.screenDir ?? "/tmp")/\(box.id).png"
       let cropRect = CGRect(
@@ -321,10 +307,47 @@ final class Recorder: NSObject {
         let ocrCharactersImage = self.cropImage(filterImageForOCRCharacterFinding(image: cgImage), box: cropBox)
         self.writeCharacters(binarizedImage: ocrCharactersImage, outputImage: ocrWriteImage, to: box.screenDir!)
         // for testing write out og image too
+        print("writing screenshot... \(outPath)")
         self.writeCGImage(image: ocrWriteImage, to: outPath)
         self.writeCGImage(image: ocrCharactersImage, to: "\(box.screenDir!)/\(box.id)-binarized.png")
       }
     }
+    let end = DispatchTime.now()
+    let nanoTime = end.uptimeNanoseconds - start.uptimeNanoseconds
+    let timeInterval = Double(nanoTime) / 1_000_000
+    print("screenshotBox: \(timeInterval) ms")
+  }
+  
+  func writeCharacters(binarizedImage: CGImage, outputImage: CGImage, to outDir: String) {
+    var start = DispatchTime.now()
+    let cc = ConnectedComponentsSwiftOCR()
+    let nsBinarizedImage = NSImage.init(cgImage: binarizedImage, size: NSZeroSize)
+    let rects = cc.extractBlobs(nsBinarizedImage)
+    print("found components: \(rects.count), \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+    start = DispatchTime.now()
+    let outputImageRep = NSBitmapImageRep.init(cgImage: outputImage)
+    if rects.count > 0 {
+      var pixelString = ""
+      // loop over component
+      for rect in rects {
+        // collect pixel values in component
+        for x in Int(rect.minX)..<Int(rect.maxX) {
+          for y in Int(rect.minY)..<Int(rect.maxY) {
+            let pixelColor = outputImageRep.colorAt(x: x, y: y)!
+            let luminance = (pixelColor.redComponent + pixelColor.greenComponent + pixelColor.blueComponent) / 3
+            pixelString += "\(luminance) "
+          }
+        }
+        pixelString += "\n"
+      }
+      do {
+        let path = NSURL.fileURL(withPath: "\(outDir)/characters.txt").absoluteURL
+        try pixelString.write(to: path, atomically: true, encoding: .utf8)
+      } catch {
+        print("couldnt write pixel string \(error)")
+      }
+    }
+    print("write characters.txt: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
   }
   
   func hasBoxChanged(box: Box, buffer: UnsafeMutablePointer<UInt32>, perRow: Int) -> Bool {

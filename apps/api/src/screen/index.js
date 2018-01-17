@@ -116,13 +116,13 @@ export default class ScreenState {
 
     const update = () => {
       this.cancelCurrentOCR()
-      console.log('UpdateContext:', this.curContext.id)
+      // console.log('UpdateContext:', this.curContext.id)
       // ensure new
       this.updateState({ context: Object.assign({}, this.curContext) })
     }
 
     this.swindler.onChange(({ event, message }) => {
-      console.log('Swindler: ', event)
+      // console.log('Swindler: ', event)
       switch (event) {
         case 'FrontmostWindowChangedEvent':
           this.setCurrentContext(message)
@@ -239,9 +239,9 @@ export default class ScreenState {
 
   onChangedState = async (oldState, newStateItems) => {
     // no listeners, no need to watch
-    if (!this.hasListeners) {
-      return
-    }
+    // if (!this.hasListeners) {
+    //   return
+    // }
     // const hasNewOCR = !isEqual(prevState.ocr, this.state.ocr)
     // re-watch on different context
     const firstTimeOCR =
@@ -253,12 +253,12 @@ export default class ScreenState {
   }
 
   handleNewContext = async () => {
-    console.log('handleNewContext')
+    // console.log('handleNewContext')
     const { appName, offset, bounds } = this.state.context
 
     // test
+    // TODO remove
     if (appName !== 'SimplenoteMac' && appName !== 'slackmacgap') {
-      console.log('  not simplenote or slackmacgap')
       return
     }
 

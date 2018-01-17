@@ -1,14 +1,12 @@
 import AppKit
 
-typealias OCRImage = NSImage
-
 class ConnectedComponentsSwiftOCR {
   ///Radius in x axis for merging blobs
   open      var xMergeRadius:CGFloat = 0
   ///Radius in y axis for merging blobs
   open      var yMergeRadius:CGFloat = 0
 
-  internal func extractBlobs(_ image: OCRImage) -> [(OCRImage, CGRect)] {
+  internal func extractBlobs(_ image: NSImage) -> [CGRect] {
     let bitmapRep = NSBitmapImageRep(data: image.tiffRepresentation!)!
     let bitmapData: UnsafeMutablePointer<UInt8> = bitmapRep.bitmapData!
     let cgImage   = bitmapRep.cgImage
@@ -217,16 +215,16 @@ class ConnectedComponentsSwiftOCR {
     
     mergeLabelRects = filteredMergeLabelRects
     
-    var outputImages = [(OCRImage, CGRect)]()
+//    var outputImages = [CGRect]()
     
     //MARK: Crop image to blob
-    for rect in mergeLabelRects {
-      if let croppedCGImage = cgImage?.cropping(to: rect) {
-        let croppedImage = NSImage(cgImage: croppedCGImage, size: rect.size)
-        outputImages.append((croppedImage, rect))
-      }
-    }
-    outputImages.sort { $0.1.origin.x < $1.1.origin.x }
-    return outputImages
+//    for rect in mergeLabelRects {
+//      if let croppedCGImage = cgImage?.cropping(to: rect) {
+//        let croppedImage = NSImage(cgImage: croppedCGImage, size: rect.size)
+//        outputImages.append((croppedImage, rect))
+//      }
+//    }
+//    outputImages.sort { $0.1.origin.x < $1.1.origin.x }
+    return mergeLabelRects
   }
 }

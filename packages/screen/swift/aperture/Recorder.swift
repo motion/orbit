@@ -405,7 +405,40 @@ final class Recorder: NSObject {
     var ciImage = CIImage(cvPixelBuffer: imageBuffer)
     ciImage = ciImage.cropped(to: cropRect)
     guard let cgImage = context.createCGImage(ciImage, from: ciImage.extent) else { return nil }
-    return cgImage
+    let resized = self.resize(cgImage, width: Int(cropRect.width / 2), height: Int(cropRect.height / 2))
+    return resized
+  }
+  
+  func resize(_ image: CGImage, width: Int, height: Int) -> CGImage? {
+    var ratio: Float = 0.0
+    let imageWidth = Float(image.width)
+    let imageHeight = Float(image.height)
+    let maxWidth: Float = Float(width)
+    let maxHeight: Float = Float(height)
+    // Get ratio (landscape or portrait)
+    if (imageWidth > imageHeight) {
+      ratio = maxWidth / imageWidth
+    } else {
+      ratio = maxHeight / imageHeight
+    }
+    // Calculate new size based on the ratio
+    // this would prevent sizing it up but we want that
+    //    if ratio > 1 {
+    //      ratio = 1
+    //    }
+    let mWidth = imageWidth * ratio
+    let mHeight = imageHeight * ratio
+    guard let colorSpace = image.colorSpace else { return nil }
+    guard let context = CGContext(data: nil, width: width, height: height, bitsPerComponent: image.bitsPerComponent, bytesPerRow: image.bytesPerRow, space: colorSpace, bitmapInfo: image.alphaInfo.rawValue) else { return nil }
+    // white background
+    context.clear(CGRect(x: 0, y: 0, width: width, height: height))
+    context.setFillColor(CGColor(gray: 1, alpha: 1))
+    context.fill(CGRect(x: 0, y: 0, width: width, height: height))
+    // draw image to context (resizing it)
+    context.interpolationQuality = .high
+    context.draw(image, in: CGRect(x: 0, y: 0, width: Int(mWidth), height: Int(mHeight)))
+    // call .makeImage to turn to image
+    return context.makeImage()
   }
 }
 

@@ -22,7 +22,6 @@ struct Options: Decodable {
   let videoCodec: String?
   let sampleSpacing: Int
   let sensitivity: Int
-  let initialScreenshot: Bool
 }
 
 func record() throws {
@@ -33,15 +32,14 @@ func record() throws {
 //  let options = Options(
 //    fps: 10,
 //    boxes: [
-//      Box(id: "0", x: 0, y: 0, width: 100, height: 50, screenDir: nil),
-//      Box(id: "1", x: 100, y: 100, width: 800, height: 800, screenDir: "/tmp")
+  //      Box(id: "0", x: 0, y: 0, width: 100, height: 50, screenDir: nil, initialScreenshot: true, findContent: false),
+  //      Box(id: "1", x: 100, y: 100, width: 800, height: 900, screenDir: "/tmp", initialScreenshot: true, findContent: true)
 //    ],
 //    showCursor: true,
 //    displayId: "main",
 //    videoCodec: "mp4",
 //    sampleSpacing: 5,
 //    sensitivity: 1,
-//    initialScreenshot: true
 //  )
   
   recorder = try Recorder(
@@ -51,8 +49,7 @@ func record() throws {
     displayId: options.displayId == "main" ? CGMainDisplayID() : CGDirectDisplayID(options.displayId)!,
     videoCodec: options.videoCodec,
     sampleSpacing: options.sampleSpacing,
-    sensitivity: options.sensitivity,
-    initialScreenshot: options.initialScreenshot
+    sensitivity: options.sensitivity
   )
 
   recorder.onStart = {

@@ -116,7 +116,7 @@ export default class ScreenState {
 
     const update = () => {
       this.cancelCurrentOCR()
-      console.log('UpdateContext:', this.curContext)
+      console.log('UpdateContext:', this.curContext.id)
       // ensure new
       this.updateState({ context: Object.assign({}, this.curContext) })
     }
@@ -262,8 +262,8 @@ export default class ScreenState {
     const { appName, offset, bounds } = this.state.context
 
     // test
-    if (appName !== 'SimplenoteMac') {
-      console.log('not simplenote')
+    if (appName !== 'SimplenoteMac' && appName !== 'slackmacgap') {
+      console.log('not simplenote or slackmacgap')
       return
     }
 
@@ -282,6 +282,8 @@ export default class ScreenState {
       width: bounds[0],
       height: bounds[1],
       screenDir: this.screenDestination,
+      initialScreenshot: true,
+      findContent: true,
     }
 
     let settings
@@ -301,7 +303,6 @@ export default class ScreenState {
         sampleSpacing: 10,
         sensitivity: 2,
         showCursor: false,
-        initialScreenshot: true,
         boxes: [appBox],
       }
     } else {
@@ -423,12 +424,14 @@ export default class ScreenState {
   }
 
   dispose() {
+    console.log('disposing screen...')
     if (this.video) {
       this.video.stopRecording()
     }
     if (this.swindler) {
       this.swindler.stop()
     }
+    console.log('screen disposed')
   }
 
   async getOCR() {

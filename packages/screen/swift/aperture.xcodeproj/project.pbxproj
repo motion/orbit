@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		CF72D07120099C0C0001366D /* ConnectedComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF72D07020099C0C0001366D /* ConnectedComponents.swift */; };
+		CFA30D14200EB2B00087ABC7 /* ConnectedComponentsSwiftOCR.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFA30D13200EB2B00087ABC7 /* ConnectedComponentsSwiftOCR.swift */; };
+		CFA30D16200EB3510087ABC7 /* UnionFind.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFA30D15200EB3510087ABC7 /* UnionFind.swift */; };
+		CFA30D18200EB3FB0087ABC7 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFA30D17200EB3FB0087ABC7 /* Extensions.swift */; };
 		E3A310881E450DC800D314DD /* DeviceList.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3A310851E450DC800D314DD /* DeviceList.swift */; };
 		E3A310891E450DC800D314DD /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3A310861E450DC800D314DD /* main.swift */; };
 		E3A3108A1E450DC800D314DD /* Recorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3A310871E450DC800D314DD /* Recorder.swift */; };
@@ -16,6 +19,9 @@
 
 /* Begin PBXFileReference section */
 		CF72D07020099C0C0001366D /* ConnectedComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectedComponents.swift; sourceTree = "<group>"; };
+		CFA30D13200EB2B00087ABC7 /* ConnectedComponentsSwiftOCR.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectedComponentsSwiftOCR.swift; sourceTree = "<group>"; };
+		CFA30D15200EB3510087ABC7 /* UnionFind.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnionFind.swift; sourceTree = "<group>"; };
+		CFA30D17200EB3FB0087ABC7 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		E3A3107B1E450D3600D314DD /* aperture */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = aperture; sourceTree = BUILT_PRODUCTS_DIR; };
 		E3A310851E450DC800D314DD /* DeviceList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceList.swift; sourceTree = "<group>"; };
 		E3A310861E450DC800D314DD /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
@@ -61,6 +67,9 @@
 				E3A310851E450DC800D314DD /* DeviceList.swift */,
 				E3A8F9E01E46F9C000C6C5FC /* util.swift */,
 				CF72D07020099C0C0001366D /* ConnectedComponents.swift */,
+				CFA30D13200EB2B00087ABC7 /* ConnectedComponentsSwiftOCR.swift */,
+				CFA30D15200EB3510087ABC7 /* UnionFind.swift */,
+				CFA30D17200EB3FB0087ABC7 /* Extensions.swift */,
 			);
 			path = aperture;
 			sourceTree = "<group>";
@@ -142,6 +151,9 @@
 			files = (
 				E3A3108A1E450DC800D314DD /* Recorder.swift in Sources */,
 				E3A310891E450DC800D314DD /* main.swift in Sources */,
+				CFA30D16200EB3510087ABC7 /* UnionFind.swift in Sources */,
+				CFA30D18200EB3FB0087ABC7 /* Extensions.swift in Sources */,
+				CFA30D14200EB2B00087ABC7 /* ConnectedComponentsSwiftOCR.swift in Sources */,
 				E3A310881E450DC800D314DD /* DeviceList.swift in Sources */,
 				CF72D07120099C0C0001366D /* ConnectedComponents.swift in Sources */,
 				E3A8F9E11E46F9C000C6C5FC /* util.swift in Sources */,

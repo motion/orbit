@@ -44,22 +44,28 @@ class Screen {
       // how many pixels to detect before triggering change
       sensitivity = 2,
       boxes,
-      initialScreenshot = false,
     } = {},
   ) {
     if (this.recorder !== undefined) {
       throw new Error('Call `.stopRecording()` first')
     }
 
+    // default box options
+    const finalBoxes = boxes.map(box => ({
+      initialScreenshot: false,
+      findContent: false,
+      screenDir: null,
+      ...box,
+    }))
+
     const recorderOpts = {
       fps,
       showCursor,
-      initialScreenshot,
       displayId,
       audioDeviceId,
       sampleSpacing,
       sensitivity,
-      boxes,
+      boxes: finalBoxes,
     }
 
     if (videoCodec) {
@@ -105,6 +111,7 @@ class Screen {
     this.recorder.stdout.on('data', data => {
       if (this.changedFrameCb) {
         const out = data.trim()
+        // console.log('out', out)
         if (out[0] === '!') {
           contentArea = JSON.parse(out.slice(1))
         } else if (out[0] === '>') {

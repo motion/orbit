@@ -19,17 +19,22 @@ async function test() {
     sampleSpacing: 10,
     sensitivity: 2,
     showCursor: true,
-    initialScreenshot: true,
     boxes: [
       {
         id: 'screen',
-        x: 19,
-        y: 131,
-        width: 750,
-        height: 499,
-        screenDir: '/Users/nw/projects/motion/orbit/apps/api/tmp',
+        x: 180,
+        y: 100,
+        width: 200,
+        height: 200,
+        screenDir: '/tmp',
+        initialScreenshot: true,
+        findContent: true,
       },
     ],
+  })
+
+  process.on('SIGINT', () => {
+    video.stopRecording()
   })
 
   // video.startRecording({

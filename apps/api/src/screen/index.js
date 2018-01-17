@@ -111,7 +111,7 @@ export default class ScreenState {
   }
 
   startSwindler() {
-    console.log('Starting swindler...')
+    console.log('Start swindling...')
     this.swindler.start()
 
     const update = () => {

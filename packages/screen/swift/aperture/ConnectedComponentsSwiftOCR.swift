@@ -181,23 +181,8 @@ class ConnectedComponentsSwiftOCR {
         let labelRect = CGRect(x: CGFloat(CGFloat(minX) - xMergeRadius), y: CGFloat(CGFloat(minY) - yMergeRadius), width: CGFloat(CGFloat(maxX - minX) + 2*xMergeRadius + 1), height: CGFloat(CGFloat(maxY - minY) + 2*yMergeRadius + 1))
         mergeLabelRects.append(labelRect)
       } else if minMaxCorrect && notToTall && notToShort && notToThin && notToSmall && positionIsOK && aspectRatio <= 2.5 && aspectRatio >= 1 {
-        // MARK: Connected components: Find thinnest part of connected components
-        guard minX + 2 < maxX - 2 else {
-          continue
-        }
-        let transposedData = Array(data[minY...maxY].map({ $0[(minX + 2)...(maxX - 2)]})).transpose() // [y][x] -> [x][y]
-        let reducedMaxIndexArray = transposedData.map({ $0.reduce(0, { UInt32($0) + UInt32($1) }) })
-        let maxIndex = reducedMaxIndexArray.enumerated().max(by: { $0.1 < $1.1})?.0 ?? 0
-        let cutXPosition   = minX + 2 + maxIndex
-        let firstLabelRect = CGRect(x: CGFloat(CGFloat(minX) - xMergeRadius), y: CGFloat(CGFloat(minY) - yMergeRadius), width: CGFloat(CGFloat(maxIndex) + 2 * xMergeRadius), height: CGFloat(CGFloat(maxY - minY) + 2 * yMergeRadius))
-        let secondLabelRect = CGRect(x: CGFloat(CGFloat(cutXPosition) - xMergeRadius), y: CGFloat(CGFloat(minY) - yMergeRadius), width: CGFloat(CGFloat(Int(maxX - minX) - maxIndex) + 2 * xMergeRadius), height: CGFloat(CGFloat(maxY - minY) + 2 * yMergeRadius))
-//        if firstLabelRect.width >= 5 + (2 * xMergeRadius) && secondLabelRect.width >= 5 + (2 * xMergeRadius) {
-//          mergeLabelRects.append(firstLabelRect)
-//          mergeLabelRects.append(secondLabelRect)
-//        } else {
-          let labelRect = CGRect(x: CGFloat(CGFloat(minX) - xMergeRadius), y: CGFloat(CGFloat(minY) - yMergeRadius), width: CGFloat(CGFloat(maxX - minX) + 2*xMergeRadius + 1), height: CGFloat(CGFloat(maxY - minY) + 2*yMergeRadius + 1))
-          mergeLabelRects.append(labelRect)
-//        }
+        let labelRect = CGRect(x: CGFloat(CGFloat(minX) - xMergeRadius), y: CGFloat(CGFloat(minY) - yMergeRadius), width: CGFloat(CGFloat(maxX - minX) + 2*xMergeRadius + 1), height: CGFloat(CGFloat(maxY - minY) + 2*yMergeRadius + 1))
+        mergeLabelRects.append(labelRect)
       }
     }
     

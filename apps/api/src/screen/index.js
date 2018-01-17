@@ -431,6 +431,7 @@ export default class ScreenState {
     if (this.swindler) {
       this.swindler.stop()
     }
+    console.log('screen disposed')
   }
 
   async getOCR() {

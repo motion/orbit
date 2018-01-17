@@ -248,22 +248,17 @@ export default class ScreenState {
       (!oldState.ocr || !oldState.ocr.length) && newStateItems.ocr
     const newContext = newStateItems.context
     if (newContext || firstTimeOCR) {
-      console.log(
-        'got new context or first ocr',
-        newContext && newContext.appName,
-        'firstTimeOCR',
-        firstTimeOCR,
-      )
       await this.handleNewContext()
     }
   }
 
   handleNewContext = async () => {
+    console.log('handleNewContext')
     const { appName, offset, bounds } = this.state.context
 
     // test
     if (appName !== 'SimplenoteMac' && appName !== 'slackmacgap') {
-      console.log('not simplenote or slackmacgap')
+      console.log('  not simplenote or slackmacgap')
       return
     }
 
@@ -346,7 +341,7 @@ export default class ScreenState {
   }
 
   handleChangedFrame = async whatChanged => {
-    console.log('whatchanged', whatChanged)
+    console.log('handleChangedFrame( whatChanged =', whatChanged, ')')
     if (!whatChanged) {
       return
     }

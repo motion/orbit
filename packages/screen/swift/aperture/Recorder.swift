@@ -227,7 +227,7 @@ final class Recorder: NSObject {
         let image = outputImage.cropping(to: box.1)!
         let image2 = self.resize(image, width: 28, height: 28)!
         // for testing, write out an image
-        self.writeCGImage(image: image2, to: "\(outDir)/\(index).png")
+//        self.writeCGImage(image: image2, to: "\(outDir)/\(index).png")
         // for python, write out a data file
         let pixels = pixelValues(fromCGImage: image2).pixelValues!.map(String.init).joined(separator: " ")
         pixelString += "\(pixels)\n"

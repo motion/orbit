@@ -246,7 +246,7 @@ final class Recorder: NSObject {
     return CGImageDestinationFinalize(finalDestination)
   }
   
-  func writeCharacters(image: CGImage) {
+  func writeCharacters(image: CGImage, to outDir: String) {
     //    let cc = ConnectedComponents()
     //    let result = cc.labelImageFast(image: image, calculateBoundingBoxes: true, invert: false)
     //    let boxes = result.boundingBoxes!
@@ -264,13 +264,13 @@ final class Recorder: NSObject {
         let image = image.cropping(to: box.1)!
         let image2 = self.resize(image, width: 28, height: 28)!
         // for testing, write out an image
-        self.writeCGImage(image: image2, to: "/tmp/\(index).png")
+        if (self.writeCGImage(image: image2, to: "\(outDir)/\(index).png")) {  }
         // for python, write out a data file
         let pixels = pixelValues(fromCGImage: image2).pixelValues!.map(String.init).joined(separator: " ")
         pixelString += "\(pixels)\n"
       }
       do {
-        let path = NSURL.fileURL(withPath: "/tmp/test.txt").absoluteURL
+        let path = NSURL.fileURL(withPath: "\(outDir)/characters.txt").absoluteURL
         try pixelString.write(to: path, atomically: true, encoding: .utf8)
       } catch {
         print("couldnt write pixel string \(error)")
@@ -343,7 +343,7 @@ final class Recorder: NSObject {
         }
       }
       
-      let outPath = "\(box.screenDir ?? "/tmp/screen-")/\(box.id).png"
+      let outPath = "\(box.screenDir ?? "/tmp")/\(box.id).png"
       
       if (biggestBox != nil) {
         let x = biggestBox!.x_start
@@ -352,7 +352,9 @@ final class Recorder: NSObject {
         let height = biggestBox!.getHeight()
         print("! [\(x), \(y), \(width), \(height)]")
         let croppedImage = cgImage.cropping(to: CGRect(x: x, y: y, width: width, height: height))
-        self.writeCharacters(image: croppedImage!)
+        if (box.screenDir != nil) {
+          self.writeCharacters(image: croppedImage!, to: box.screenDir!)
+        }
         if (self.writeCGImage(image: croppedImage!, to: outPath)) {}
       } else {
         if (self.writeCGImage(image: cgImage, to: outPath)) {}

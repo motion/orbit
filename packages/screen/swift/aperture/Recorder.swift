@@ -267,7 +267,7 @@ final class Recorder: NSObject {
   }
   
   func screenshotBox(box: Box, buffer: CMSampleBuffer, findContent: Bool = false) {
-    let start = DispatchTime.now()
+//    let start = DispatchTime.now()
     if (box.screenDir != nil) {
       let outPath = "\(box.screenDir ?? "/tmp")/\(box.id).png"
       let cropRect = CGRect(
@@ -284,7 +284,9 @@ final class Recorder: NSObject {
       var biggestBox: BoundingBox?
       let binarizedImage = filterImageForContentFinding(image: cgImage)
       let cc = ConnectedComponents()
+      let start = DispatchTime.now()
       let result = cc.labelImageFast(image: binarizedImage, calculateBoundingBoxes: true, invert: true)
+      print("1. content finding: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
       if let boxes = result.boundingBoxes {
         if (boxes.count > 0) {
           for box in boxes {
@@ -303,19 +305,19 @@ final class Recorder: NSObject {
       print("! [\(cropBox.x_start), \(cropBox.y_start), \(cropBox.getWidth()), \(cropBox.getHeight())]")
       // if we are writing out
       if (box.screenDir != nil) {
+        var start = DispatchTime.now()
         let ocrWriteImage = self.cropImage(filterImageForOCR(image: cgImage), box: cropBox)
         let ocrCharactersImage = self.cropImage(filterImageForOCRCharacterFinding(image: cgImage), box: cropBox)
+        print("2. filtering image for ocr: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+        start = DispatchTime.now()
         self.writeCharacters(binarizedImage: ocrCharactersImage, outputImage: ocrWriteImage, to: box.screenDir!)
         // for testing write out og image too
-        print("writing screenshot... \(outPath)")
+        print("writing screenshot to \(outPath): \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
         self.writeCGImage(image: ocrWriteImage, to: outPath)
         self.writeCGImage(image: ocrCharactersImage, to: "\(box.screenDir!)/\(box.id)-binarized.png")
       }
     }
-    let end = DispatchTime.now()
-    let nanoTime = end.uptimeNanoseconds - start.uptimeNanoseconds
-    let timeInterval = Double(nanoTime) / 1_000_000
-    print("screenshotBox: \(timeInterval) ms")
+//    print("screenshotBox total: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
   }
   
   func writeCharacters(binarizedImage: CGImage, outputImage: CGImage, to outDir: String) {
@@ -323,7 +325,7 @@ final class Recorder: NSObject {
     let cc = ConnectedComponentsSwiftOCR()
     let nsBinarizedImage = NSImage.init(cgImage: binarizedImage, size: NSZeroSize)
     let rects = cc.extractBlobs(nsBinarizedImage)
-    print("found components: \(rects.count), \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+    print("3. character finding: \(rects.count), \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     start = DispatchTime.now()
     let outputImageRep = NSBitmapImageRep.init(cgImage: outputImage)
     if rects.count > 0 {
@@ -347,7 +349,7 @@ final class Recorder: NSObject {
         print("couldnt write pixel string \(error)")
       }
     }
-    print("write characters.txt: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+    print("4. looping/writing characters.txt: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
   }
   
   func hasBoxChanged(box: Box, buffer: UnsafeMutablePointer<UInt32>, perRow: Int) -> Bool {

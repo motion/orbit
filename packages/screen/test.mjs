@@ -22,10 +22,10 @@ async function test() {
     boxes: [
       {
         id: 'screen',
-        x: 180,
-        y: 100,
-        width: 200,
-        height: 200,
+        x: 0,
+        y: 24,
+        width: 966,
+        height: 810,
         screenDir: '/tmp',
         initialScreenshot: true,
         findContent: true,

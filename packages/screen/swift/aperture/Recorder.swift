@@ -50,6 +50,25 @@ func applyFilter(_ filter: CIFilter?, for image: CIImage) -> CIImage {
   return filteredImage as! CIImage
 }
 
+func pixelValues(fromCGImage imageRef: CGImage?) -> (pixelValues: [UInt8]?, width: Int, height: Int) {
+  var width = 0
+  var height = 0
+  var pixelValues: [UInt8]?
+  if let imageRef = imageRef {
+    width = imageRef.width
+    height = imageRef.height
+    let bitsPerComponent = imageRef.bitsPerComponent
+    let bytesPerRow = imageRef.bytesPerRow
+    let totalBytes = height * bytesPerRow
+    let colorSpace = CGColorSpaceCreateDeviceGray()
+    var intensities = [UInt8](repeating: 0, count: totalBytes)
+    let contextRef = CGContext(data: &intensities, width: width, height: height, bitsPerComponent: bitsPerComponent, bytesPerRow: bytesPerRow, space: colorSpace, bitmapInfo: 0)
+    contextRef?.draw(imageRef, in: CGRect(x: 0.0, y: 0.0, width: CGFloat(width), height: CGFloat(height)))
+    pixelValues = intensities
+  }
+  return (pixelValues, width, height)
+}
+
 final class Recorder: NSObject {
   private let input: AVCaptureScreenInput
   private var session: AVCaptureSession
@@ -238,11 +257,23 @@ final class Recorder: NSObject {
     //    }
     let cc = ConnectedComponentsSwiftOCR()
     let result = cc.extractBlobs(NSImage.init(cgImage: image, size: NSZeroSize))
+    print("found components: \(result.count)")
     if result.count > 0 {
+      var pixelString = ""
       for (index, box) in result.enumerated() {
         let image = image.cropping(to: box.1)!
         let image2 = self.resize(image, width: 28, height: 28)!
+        // for testing, write out an image
         self.writeCGImage(image: image2, to: "/tmp/\(index).png")
+        // for python, write out a data file
+        let pixels = pixelValues(fromCGImage: image2).pixelValues!.map(String.init).joined(separator: " ")
+        pixelString += "\(pixels)\n"
+      }
+      do {
+        let path = NSURL.fileURL(withPath: "/tmp/test.txt").absoluteURL
+        try pixelString.write(to: path, atomically: true, encoding: .utf8)
+      } catch {
+        print("couldnt write pixel string \(error)")
       }
     }
   }
@@ -273,7 +304,7 @@ final class Recorder: NSObject {
     // draw image to context (resizing it)
     context.interpolationQuality = .high
     context.draw(image, in: CGRect(x: 0, y: 0, width: Int(mWidth), height: Int(mHeight)))
-    // extract resulting image from context
+    // call .makeImage to turn to image
     return context.makeImage()
   }
 

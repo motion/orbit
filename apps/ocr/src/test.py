@@ -1,22 +1,35 @@
 import time
-from torch import zeros, load, Tensor
+import torch
 # from get_letter import get_letter
 from constants import model_path, letters, ocr_path
 from torch.autograd import Variable
 import csv
 
 file = open(ocr_path, 'r') 
-lines = []
+tensors = []
+
 for line in file: 
-  lines.append([float(x) for x in line.split(' ')[:-1]])
+  vals = [float(x) for x in line.split(' ')[:-1]]
+  tensor = torch.Tensor(28, 28)
+  for row in range(28):
+    for col in range(28):
+      tensor[row, col] = vals[row * 28 + col]
 
-model = load(model_path)
+  tensors.append(tensor)
 
-x = zeros(1, 1, 28, 28)
-x[0, 0, :] = Tensor(lines)
+model = torch.load(model_path)
+
+x = torch.zeros(len(tensors), 1, 28, 28)
+for index, tensor in enumerate(tensors):
+  x[index, 0, :] = tensor
 
 data = Variable(x, volatile=True)
 output = model(data)
 pred = output.data.max(1, keepdim=True)[1] # get the index of the max log-probability
 predicted = [letters[letter[0]] for letter in pred.numpy()]
+
+file = open('./data/prediction.txt', "w") 
+file.write(''.join(predicted))
+file.close() 
+
 print('predicted', predicted)

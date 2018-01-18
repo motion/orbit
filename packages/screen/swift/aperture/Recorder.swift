@@ -170,30 +170,46 @@ final class Recorder: NSObject {
       print("2.1 get data: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
       start = DispatchTime.now()
       print("width is \(vWidth)")
-      // row => word streaks
-      var verticalBreaks = Dictionary<Int, Int>()
-      var wordStreaks = Dictionary<Int, Int>()
+      // first loop
+      // find vertical areas + store some word info
+      var verticalBreaks = Dictionary<Int, Int>() // used to track white streaks
+      var blacks = [[Int]](repeating: [Int](repeating: 0, count: Int(vWidth)), count: Int(vHeight)) // height (y) first
+      var verticalIgnore = Dictionary<Int, Bool>() // x => shouldIgnore
+//      var vWidthMin = vWidth
       for x in 0..<vWidth {
         verticalBreaks[x] = 0
         for y in 0..<vHeight {
           let isBlack = verticalImageRep.colorAt(x: x, y: y)!.brightnessComponent == 0.0
           if isBlack {
-            if wordStreaks[y] == nil {
-              wordStreaks[y] = 1
-            } else {
-              wordStreaks[y] = wordStreaks[y]! + 1
-            }
+            blacks[y][x] = 1
           } else {
             // is white
             if verticalBreaks[x] == y {
               verticalBreaks[x] = verticalBreaks[x]! + 1
             }
             if verticalBreaks[x] == vHeight {
+              verticalIgnore[x] = true
+//              vWidthMin -= 1
               print("found a vertical split at \(x)")
             }
           }
         }
       }
+      // second loop
+      // loop over vertical blocks and store lines
+      var streak = Dictionary<Int, Int>() // verticalSpaceIndex => number of black pixels
+      var currentVert = 0
+      for x in 0..<vWidth {
+        if x == 0 {
+          currentVert = 0
+        }
+        if verticalIgnore[x] == true {
+          currentVert += 1
+        }
+        for y in 0..<vHeight {
+        }
+      }
+      
       print("2.1. loop and check: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
       self.writeCharacters(binarizedImage: ocrCharactersImage, outputImage: ocrWriteImage, to: box.screenDir!)
       // for testing write out og image too

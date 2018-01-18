@@ -223,12 +223,8 @@ final class Recorder: NSObject {
     return NSImage(data: newImage.tiffRepresentation!)!
   }
 
-  func cropImage(_ image: CGImage, box: BoundingBox) -> CGImage {
-    let x = box.x_start
-    let y = box.y_start
-    let width = box.getWidth()
-    let height = box.getHeight()
-    return image.cropping(to: CGRect(x: x, y: y, width: width, height: height))!
+  func cropImage(_ image: CGImage, box: CGRect) -> CGImage {
+    return image.cropping(to: box)!
   }
   
   func screenshotBox(box: Box, buffer: CMSampleBuffer, findContent: Bool = false) {
@@ -267,12 +263,14 @@ final class Recorder: NSObject {
         self.writeCGImage(image: cgImage, to: outPath)
       }
       // found content
-      let cropBox = biggestBox!
-      print("! [\(cropBox.x_start), \(cropBox.y_start), \(cropBox.getWidth()), \(cropBox.getHeight())]")
+      let bb = biggestBox!
+      let cropBox = CGRect(x: bb.x_start, y: bb.y_start, width: bb.getWidth(), height: bb.getHeight())
+      let cropBoxLarge = CGRect(x: bb.x_start * 2, y: bb.y_start * 2, width: bb.getWidth() * 2, height: bb.getHeight() * 2)
+      print("! [\(cropBox.minX), \(cropBox.minY), \(cropBox.width), \(cropBox.height)]")
       // if we are writing out
       if (box.screenDir != nil) {
         var start = DispatchTime.now()
-        let ocrWriteImage = self.cropImage(filterImageForOCR(image: cgImageLarge), box: cropBox)
+        let ocrWriteImage = self.cropImage(filterImageForOCR(image: cgImageLarge), box: cropBoxLarge)
         let ocrCharactersImage = self.cropImage(filterImageForOCRCharacterFinding(image: cgImage), box: cropBox)
         print("2. filtering image for ocr: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
         start = DispatchTime.now()
@@ -306,30 +304,32 @@ final class Recorder: NSObject {
         // collect pixel values in component
         let minX = Int(rect.minX) * 2
         let minY = Int(rect.minY) * 2
-        let width = Int(rect.maxX) * 2 - minX
-        let height = Int(rect.maxY) * 2 - minY
+        let width = Double(Int(rect.maxX) * 2 - minX)
+        let height = Double(Int(rect.maxY) * 2 - minY)
         // make square
         var scaleW = 1.0
         var scaleH = 1.0
-//        if width > 28 {
-//          scaleW = width / 28
-//        } else if width < 28 {
-//          scaleW = 28 / width
-//        }
-//        if height > 28 {
-//          scaleH = height / 28
-//        } else if height < 28 {
-//          scaleH = 28 / height
-//        }
+        if width > 56 {
+          scaleW = 56 / width
+        } else if width < 56 {
+          scaleW = width / 56
+        }
+        if height > 56 {
+          scaleH = 56 / height
+        } else if height < 56 {
+          scaleH = height / 56
+        }
+        scaleW = scaleW * 2.0
+        scaleH = scaleH * 2.0
         // double for retina
         for x in 0..<56 {
           for y in 0..<56 {
             let realX = Int(Double(x) * scaleW + Double(minX))
             let realY = Int(Double(y) * scaleH + Double(minY))
             // debug info
-            //            print("rect is \(minX) \(minY) \(width) \(height)")
-            //            print("scaleW \(scaleW) scaleH \(scaleH)")
-            //            print("check \(realX) \(realY)")
+            // print("rect is \(minX) \(minY) \(width) \(height)")
+            // print("scaleW \(scaleW) scaleH \(scaleH)")
+            // print("check \(realX) \(realY)")
             var pColor = outputImageRep.colorAt(x: realX, y: realY)
             if pColor == nil {
               // this happens if we are at an edge, because we are checking a full 28x28

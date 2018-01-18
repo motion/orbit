@@ -314,61 +314,73 @@ final class Recorder: NSObject {
     start = DispatchTime.now()
     let outputImageRep = NSBitmapImageRep(cgImage: outputImage)
 //    print("dimensions [\(outputImageRep.pixelsWide), \(outputImageRep.pixelsHigh)]")
-    if rects.count > 0 {
-      var pixelString = ""
-      let writeRetina = 1
-      for (index, rect) in rects.enumerated() {
-        // testing: write out character image
-//        let image = binarizedImage.cropping(to: rect)!
-//        let image2 = self.resize(image, width: 28, height: 28)!
-//        let testImage = NSBitmapImageRep.init(cgImage: image2)
-        // collect pixel values in component
-        let minX = Double(rect.minX) * 2
-        let minY = Double(rect.minY) * 2
-        let width = Double(rect.maxX) * 2 - minX
-        let height = Double(rect.maxY) * 2 - minY
-        // make square
-        var scaleW = 1.0
-        var scaleH = 1.0
-        if width > 56 {
-          scaleW = 56 / width
-        } else if width < 56 {
-          scaleW = width / 56
-        }
-        if height > 56 {
-          scaleH = 56 / height
-        } else if height < 56 {
-          scaleH = height / 56
-        }
-        scaleW = scaleW * Double(writeRetina)
-        scaleH = scaleH * Double(writeRetina)
-        // double for retina
-        var str = ""
-        for x in 0..<(28 * writeRetina) {
-          for y in 0..<(28 * writeRetina) {
-            let realX = Double(x) * scaleW + minX
-            let realY = Double(y) * scaleH + minY
-            var luminance = 1.0 // white
-            let pColor = outputImageRep.colorAt(x: Int(realX), y: Int(realY))
-            if pColor != nil {
-//              testImage.setColor(pColor!, atX: x, y: y)
-              luminance = Double(pColor!.brightnessComponent)
-            }
-            str += luminance.description + " "
+    
+    var pixelString = ""
+    let threads = 2
+    let perThread = rects.count / threads
+    let queue = DispatchQueue(label: "asyncQueue", attributes: .concurrent)
+    let group = DispatchGroup()
+    var strings = [String].init(repeating: "", count: threads)
+      
+    for thread in 0..<threads {
+      group.enter()
+      queue.async {
+        let startIndex = thread * perThread
+        print("start thread \(thread)")
+        for index in startIndex..<(startIndex + perThread) {
+          let rect = rects[index]
+          let writeRetina = 1
+          let minX = Double(rect.minX) * 2
+          let minY = Double(rect.minY) * 2
+          let width = Double(rect.maxX) * 2 - minX
+          let height = Double(rect.maxY) * 2 - minY
+          // make square
+          var scaleW = 1.0
+          var scaleH = 1.0
+          if width > 56 {
+            scaleW = 56 / width
+          } else if width < 56 {
+            scaleW = width / 56
           }
+          if height > 56 {
+            scaleH = 56 / height
+          } else if height < 56 {
+            scaleH = height / 56
+          }
+          scaleW = scaleW * Double(writeRetina)
+          scaleH = scaleH * Double(writeRetina)
+          // double for retina
+          var str = ""
+          for x in 0..<(28 * writeRetina) {
+            for y in 0..<(28 * writeRetina) {
+              let realX = Double(x) * scaleW + minX
+              let realY = Double(y) * scaleH + minY
+              var luminance = 1.0 // white
+              let pColor = outputImageRep.colorAt(x: Int(realX), y: Int(realY))
+              if pColor != nil {
+                luminance = Double(pColor!.brightnessComponent)
+              }
+              str += luminance.description + " "
+            }
+          }
+          strings[thread] += str + "\n"
         }
-        // test write out our scaled image
-//        self.writeCGImage(image: testImage.cgImage!, to: "\(outDir)/\(index).png")
-        pixelString += str + "\n"
+        print("end thread \(thread)")
+        group.leave()
       }
-      print("4. characters => string: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
-      start = DispatchTime.now()
-      do {
-        let path = NSURL.fileURL(withPath: "\(outDir)/characters.txt").absoluteURL
-        try pixelString.write(to: path, atomically: true, encoding: .utf8)
-      } catch {
-        print("couldnt write pixel string \(error)")
-      }
+    }
+
+    print("waiting")
+    group.wait()
+    print("done now")
+      
+    print("4. characters => string: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+    start = DispatchTime.now()
+    do {
+      let path = NSURL.fileURL(withPath: "\(outDir)/characters.txt").absoluteURL
+      try pixelString.write(to: path, atomically: true, encoding: .utf8)
+    } catch {
+      print("couldnt write pixel string \(error)")
     }
     print("5. write string: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
   }

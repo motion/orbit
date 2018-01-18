@@ -204,6 +204,9 @@ final class Recorder: NSObject {
       // vId = MAX_SECTIONS = first index
       let MAX_SECTIONS = 8
       var streaks = [[Int]](repeating: [Int](repeating: 0, count: Int(vHeight)), count: MAX_SECTIONS)
+      typealias Lines = Dictionary<Int, Bool>
+      var allLines = [Lines]()
+      var lastLine: Lines? = nil
       var vID = 0 // tracks current vertical column id
       for x in 0..<vWidth {
         if verticalIgnore[x] == true {
@@ -211,17 +214,27 @@ final class Recorder: NSObject {
         }
         // coming out of a ignore area
         if verticalIgnore[x - 1] == true {
+          if lastLine != nil {
+            allLines.append(lastLine!)
+          }
+          lastLine = Lines()
           vID += 1
         }
         // were in a valid col
         for y in 0..<vHeight {
           if blacks[y][x] == 1 {
             streaks[vID][y] += 1
-            if streaks[vID][y] > 10 {
-              print("legit line at \(vID), col \(y)")
+            // this comparison is the low bound for the num of pixels until we consider it a word
+            if streaks[vID][y] > 6 {
+              lastLine![y] = true
             }
           }
         }
+      }
+      allLines.append(lastLine!)
+      print("we got our lines \(allLines.count)")
+      for line in allLines {
+        print("lines at: \(line.keys)")
       }
       
       print("2.1. loop and check: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")

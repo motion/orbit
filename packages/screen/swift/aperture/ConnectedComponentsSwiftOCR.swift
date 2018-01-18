@@ -102,7 +102,7 @@ class ConnectedComponentsSwiftOCR {
       }
     }
     
-    print("2. extractBlobs: first pass (currentLabel = \(currentLabel)) \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+    print("  extractBlobs: first pass (currentLabel = \(currentLabel)) \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     start = DispatchTime.now()
     
     //MARK: Second Pass
@@ -117,7 +117,7 @@ class ConnectedComponentsSwiftOCR {
       }
     }
     
-    print("2. extractBlobs: second pass loop 1 \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+    print("  extractBlobs: second pass loop 1 \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     start = DispatchTime.now()
     
     for y in 0..<Int(imageHeight!) {
@@ -132,7 +132,7 @@ class ConnectedComponentsSwiftOCR {
       }
     }
     
-    print("2. extractBlobs: second pass loop 2 \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+    print("  extractBlobs: second pass loop 2 \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     start = DispatchTime.now()
     
     //MARK: MinX, MaxX, MinY, MaxY
@@ -164,8 +164,7 @@ class ConnectedComponentsSwiftOCR {
       }
     }
     
-    print("2. extractBlobs: minmax \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
-    start = DispatchTime.now()
+    print("  extractBlobs: minmax \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     
     //MARK: Merge labels
     
@@ -202,9 +201,6 @@ class ConnectedComponentsSwiftOCR {
       }
     }
     
-    print("2. extractBlobs: merge labels \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
-    start = DispatchTime.now()
-    
     //Merge rects
     var filteredMergeLabelRects = [CGRect]()
     for rect in mergeLabelRects {
@@ -219,9 +215,6 @@ class ConnectedComponentsSwiftOCR {
         filteredMergeLabelRects.append(rect)
       }
     }
-    
-    print("2. extractBlobs: merge recs \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
-    start = DispatchTime.now()
     
     mergeLabelRects = filteredMergeLabelRects
     
@@ -249,8 +242,6 @@ class ConnectedComponentsSwiftOCR {
 //      }
 //    }
 //    outputImages.sort { $0.1.origin.x < $1.1.origin.x }
-    
-    print("2. extractBlobs: finish \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     
     return mergeLabelRects
   }

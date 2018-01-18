@@ -238,13 +238,17 @@ final class Recorder: NSObject {
         height: Int(-box.height * 2)
       )
       guard let cgImageLarge = imageFromSampleBuffer(sampleBuffer: buffer, cropRect: cropRect) else { return }
-      guard let cgImage = self.resize(cgImageLarge, width: Int(cropRect.width / 2), height: Int(cropRect.height / 2)) else { return }
+      let width = Int(cropRect.width / 2)
+      let height = Int(cropRect.height / 2)
+      guard let cgImage = self.resize(cgImageLarge, width: width, height: height) else { return }
       if (!findContent) {
         self.writeCGImage(image: cgImage, to: outPath)
         return
       }
       var biggestBox: BoundingBox?
-      let binarizedImage = filterImageForContentFinding(image: cgImage)
+      let boxFindScale = 4
+      let binarizedImageFiltered = filterImageForContentFinding(image: cgImage)
+      let binarizedImage = self.resize(binarizedImageFiltered, width: width / boxFindScale, height: height / boxFindScale)!
       let cc = ConnectedComponents()
       let start = DispatchTime.now()
       let result = cc.labelImageFast(image: binarizedImage, calculateBoundingBoxes: true, invert: true)
@@ -264,8 +268,13 @@ final class Recorder: NSObject {
       }
       // found content
       let bb = biggestBox!
-      let cropBox = CGRect(x: bb.x_start, y: bb.y_start, width: bb.getWidth(), height: bb.getHeight())
-      let cropBoxLarge = CGRect(x: bb.x_start * 2, y: bb.y_start * 2, width: bb.getWidth() * 2, height: bb.getHeight() * 2)
+      let bX = bb.x_start * boxFindScale
+      let bY = bb.y_start * boxFindScale
+      let bW = bb.getWidth() * boxFindScale
+      let bH = bb.getHeight() * boxFindScale
+      let cropBox = CGRect(x: bX, y: bY, width: bW, height: bH)
+      let cropBoxLarge = CGRect(x: bX * 2, y: bY * 2, width: bW * 2, height: bH * 2)
+      print("biggest box [\(cropBox.minX), \(cropBox.minY), \(cropBox.width), \(cropBox.height)]")
       print("! [\(cropBox.minX), \(cropBox.minY), \(cropBox.width), \(cropBox.height)]")
       // if we are writing out
       if (box.screenDir != nil) {
@@ -277,6 +286,7 @@ final class Recorder: NSObject {
         self.writeCharacters(binarizedImage: ocrCharactersImage, outputImage: ocrWriteImage, to: box.screenDir!)
         // for testing write out og image too
         print("writing screenshot to \(outPath): \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+        self.writeCGImage(image: binarizedImage, to: "\(box.screenDir!)/\(box.id)-full.png")
         self.writeCGImage(image: ocrWriteImage, to: outPath)
         self.writeCGImage(image: ocrCharactersImage, to: "\(box.screenDir!)/\(box.id)-binarized.png")
       }

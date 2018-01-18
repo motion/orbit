@@ -291,21 +291,21 @@ final class Recorder: NSObject {
     let rects = cc.extractBlobs(nsBinarizedImage)
     print("3. character finding: \(rects.count), \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     start = DispatchTime.now()
-    let outputImageRep = NSBitmapImageRep.init(cgImage: outputImage)
+    let outputImageRep = NSBitmapImageRep(cgImage: outputImage)
     print("dimensions [\(outputImageRep.pixelsWide), \(outputImageRep.pixelsHigh)]")
     if rects.count > 0 {
       var pixelString = ""
-      // loop over component
-      for rect in rects {
+      let writeRetina = 1
+      for (index, rect) in rects.enumerated() {
         // testing: write out character image
 //        let image = binarizedImage.cropping(to: rect)!
 //        let image2 = self.resize(image, width: 28, height: 28)!
 //        let testImage = NSBitmapImageRep.init(cgImage: image2)
         // collect pixel values in component
-        let minX = Int(rect.minX) * 2
-        let minY = Int(rect.minY) * 2
-        let width = Double(Int(rect.maxX) * 2 - minX)
-        let height = Double(Int(rect.maxY) * 2 - minY)
+        let minX = Double(rect.minX) * 2
+        let minY = Double(rect.minY) * 2
+        let width = Double(rect.maxX) * 2 - minX
+        let height = Double(rect.maxY) * 2 - minY
         // make square
         var scaleW = 1.0
         var scaleH = 1.0
@@ -319,19 +319,19 @@ final class Recorder: NSObject {
         } else if height < 56 {
           scaleH = height / 56
         }
-        scaleW = scaleW * 2.0
-        scaleH = scaleH * 2.0
-        let w = Int(scaleW)
-        let h = Int(scaleH)
+        scaleW = scaleW * Double(writeRetina)
+        scaleH = scaleH * Double(writeRetina)
         // double for retina
         var str = ""
-        for x in 0..<56 {
-          for y in 0..<56 {
-            let realX = x * w + minX
-            let realY = y * h + minY
+        for x in 0..<(28 * writeRetina) {
+          for y in 0..<(28 * writeRetina) {
+            let realX = Double(x) * scaleW + minX
+            let realY = Double(y) * scaleH + minY
             var luminance = 1.0 // white
-            if let color = outputImageRep.colorAt(x: realX, y: realY)?.brightnessComponent {
-              luminance = Double(color)
+            let pColor = outputImageRep.colorAt(x: Int(realX), y: Int(realY))
+            if pColor != nil {
+//              testImage.setColor(pColor!, atX: x, y: y)
+              luminance = Double(pColor!.brightnessComponent)
             }
             str += luminance.description + " "
           }

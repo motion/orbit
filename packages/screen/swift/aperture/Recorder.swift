@@ -197,7 +197,7 @@ final class Recorder: NSObject {
       }
       // second loop
       // loop over vertical blocks and store lines
-      var streak = Dictionary<Int, Int>() // verticalSpaceIndex => number of black pixels
+      var streaks = Dictionary<Int, Dictionary<Int, Int>>() // verticalSpaceIndex => row => number of black pixels
       var currentVert = 0
       for x in 0..<vWidth {
         if x == 0 {
@@ -207,6 +207,17 @@ final class Recorder: NSObject {
           currentVert += 1
         }
         for y in 0..<vHeight {
+          if blacks[y][x] == 1 {
+            if streaks[currentVert] == nil {
+              streaks[currentVert] = Dictionary<Int, Int>()
+            }
+            var streakForRow = streaks[currentVert]![y]
+            if streakForRow == nil {
+              streakForRow = 1
+            } else {
+              streakForRow! += 1
+            }
+          }
         }
       }
       

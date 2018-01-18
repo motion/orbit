@@ -324,6 +324,7 @@ final class Recorder: NSObject {
         let w = Int(scaleW)
         let h = Int(scaleH)
         // double for retina
+        var str = ""
         for x in 0..<56 {
           for y in 0..<56 {
             let realX = x * w + minX
@@ -332,14 +333,12 @@ final class Recorder: NSObject {
             if let color = outputImageRep.colorAt(x: realX, y: realY)?.brightnessComponent {
               luminance = Double(color)
             }
-//          testImage.setColor(pColor!, atX: x, y: y)
-//          pColor = NSColor.init(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0)
-            pixelString += luminance.description + " "
+            str += luminance.description + " "
           }
         }
         // test write out our scaled image
 //        self.writeCGImage(image: testImage.cgImage!, to: "\(outDir)/\(index).png")
-        pixelString += "\n"
+        pixelString += str + "\n"
       }
       print("4. characters => string: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
       start = DispatchTime.now()

@@ -131,19 +131,19 @@ final class Recorder: NSObject {
     // super lower contrast down to get rid of subtle color differences
     // this generally will preserve outline data as well
     filter = CIFilter(name: "CIColorControls")!
-    filter.setValue(1.5, forKey: "inputContrast")
+    filter.setValue(20.0, forKey: "inputContrast")
     outputImage = applyFilter(filter, for: outputImage)
     // this distinguishes things nicely for edge detection
     // helps prevent finding edges of contiguous blocks
     // while emphasizing edges of that have actual borders
     filter = CIFilter(name: "CIUnsharpMask")!
     filter.setValue(0.5, forKey: "inputIntensity")
-    filter.setValue(2.5, forKey: "inputRadius")
+    filter.setValue(5.5, forKey: "inputRadius")
     outputImage = applyFilter(filter, for: outputImage)
     // edge detecting with low contrast and unsharp mask
     // gives really nice outlines
     filter = CIFilter(name: "CIEdges")!
-    filter.setValue(10.0, forKey: "inputIntensity")
+    filter.setValue(2.0, forKey: "inputIntensity")
     outputImage = applyFilter(filter, for: outputImage)
     // edges inversts everything basically, so lets un-invert
     filter = CIFilter(name: "CIColorInvert")!
@@ -162,6 +162,17 @@ final class Recorder: NSObject {
     outputImage = applyFilter(filter, for: outputImage)
     // threshold binarizes the image
     outputImage = applyFilter(ThresholdFilter(), for: outputImage)
+    // write canvas
+    let context = CIContext(options: [kCIContextUseSoftwareRenderer: false])
+    return context.createCGImage(outputImage, from: outputImage.extent)!
+  }
+
+  // sharpens the big area once scaled down
+  func filterImageForContentFindingSecondPass(image: CGImage) -> CGImage {
+    var outputImage = CIImage(cgImage: image)
+    var filter: CIFilter
+    // threshold binarizes the image
+    outputImage = applyFilter(ThresholdFilterEasy(), for: outputImage)
     // write canvas
     let context = CIContext(options: [kCIContextUseSoftwareRenderer: false])
     return context.createCGImage(outputImage, from: outputImage.extent)!
@@ -246,9 +257,10 @@ final class Recorder: NSObject {
         return
       }
       var biggestBox: BoundingBox?
-      let boxFindScale = 4
-      let binarizedImageFiltered = filterImageForContentFinding(image: cgImage)
-      let binarizedImage = self.resize(binarizedImageFiltered, width: width / boxFindScale, height: height / boxFindScale)!
+      let boxFindScale = 8
+      var binarizedImage = filterImageForContentFinding(image: cgImage)
+      binarizedImage = self.resize(binarizedImage, width: width / boxFindScale, height: height / boxFindScale)!
+      binarizedImage = filterImageForContentFindingSecondPass(image: binarizedImage)
       let cc = ConnectedComponents()
       let start = DispatchTime.now()
       let result = cc.labelImageFast(image: binarizedImage, calculateBoundingBoxes: true, invert: true)

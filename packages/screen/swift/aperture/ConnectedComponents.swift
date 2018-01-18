@@ -56,7 +56,7 @@ class ConnectedComponents {
                 }
                 canMergeInPlace = false
               }
-              // disabled for speed (lower accuracy):
+              // disable for speed (lower accuracy):
 //              else {
 //                // If the same row in the previous column is not equal to the current
 //                // label then they must be merged. Add an entry to labelMerges.

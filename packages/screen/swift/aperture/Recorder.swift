@@ -326,7 +326,6 @@ final class Recorder: NSObject {
       group.enter()
       queue.async {
         let startIndex = thread * perThread
-        print("start thread \(thread)")
         for index in startIndex..<(startIndex + perThread) {
           let rect = rects[index]
           let writeRetina = 1
@@ -365,15 +364,13 @@ final class Recorder: NSObject {
           }
           strings[thread] += str + "\n"
         }
-        print("end thread \(thread)")
         group.leave()
       }
     }
 
-    print("waiting")
     group.wait()
-    print("done now")
-      
+    
+    pixelString = strings.joined(separator: "\n")
     print("4. characters => string: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     start = DispatchTime.now()
     do {

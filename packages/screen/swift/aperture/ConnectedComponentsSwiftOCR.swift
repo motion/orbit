@@ -26,28 +26,12 @@ class ConnectedComponentsSwiftOCR {
     let yBitmapDataIndexStride = Array(stride(from: 0, to: imageHeight!*bytesPerRow!, by: bytesPerRow!)).enumerated()
     let xBitmapDataIndexStride = Array(stride(from: 0, to: imageWidth*numberOfComponents, by: numberOfComponents)).enumerated()
 
-    //    let threads = UInt16(4)
-    //    let labelsPerThread = currentLabel / threads
-    //    let queue = DispatchQueue(label: "asyncQueue", attributes: .concurrent)
-    //    let group = DispatchGroup()
-    //    for thread in 0..<threads {
-    //      group.enter()
-    //      queue.async {
-    //        let startIndex = thread * labelsPerThread
-    //        for label in startIndex..<(startIndex + labelsPerThread) {
-
     for (y, yBitmapDataIndex) in yBitmapDataIndexStride {
       for (x, xBitmapDataIndex) in xBitmapDataIndexStride {
         let bitmapDataIndex = yBitmapDataIndex + xBitmapDataIndex
         data[y][x] = bitmapData[bitmapDataIndex] < 127 ? 0 : 255
       }
     }
-
-    //        print("done with thread \(thread)")
-    //        group.leave()
-    //      }
-    //    }
-    //    group.wait()
 
     // print("  extractBlobs: data gather \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     start = DispatchTime.now()

@@ -11,7 +11,7 @@ class ConnectedComponentsSwiftOCR {
     let bitmapRep = NSBitmapImageRep(data: image.tiffRepresentation!)!
     let bitmapData: UnsafeMutablePointer<UInt8> = bitmapRep.bitmapData!
     let cgImage   = bitmapRep.cgImage
-    print("1. extractBlobs: create image \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+    print("  extractBlobs: create image \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     start = DispatchTime.now()
     
     //data <- bitmapData
@@ -22,19 +22,6 @@ class ConnectedComponentsSwiftOCR {
     let imageWidth         = bytesPerRow! / numberOfComponents
     
     var data = [[UInt16]](repeating: [UInt16](repeating: 0, count: Int(imageWidth)), count: Int(imageHeight!))
-    
-    let yBitmapDataIndexStride = Array(stride(from: 0, to: imageHeight!*bytesPerRow!, by: bytesPerRow!)).enumerated()
-    let xBitmapDataIndexStride = Array(stride(from: 0, to: imageWidth*numberOfComponents, by: numberOfComponents)).enumerated()
-    
-    for (y, yBitmapDataIndex) in yBitmapDataIndexStride {
-      for (x, xBitmapDataIndex) in xBitmapDataIndexStride {
-        let bitmapDataIndex = yBitmapDataIndex + xBitmapDataIndex
-        data[y][x] = bitmapData[bitmapDataIndex] < 127 ? 0 : 255
-      }
-    }
-    
-    print("2. extractBlobs: data gather \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
-    start = DispatchTime.now()
     
     //MARK: First Pass
     
@@ -49,6 +36,7 @@ class ConnectedComponentsSwiftOCR {
     
     for y in 0..<Int(imageHeight!) {
       for x in 0..<Int(imageWidth) {
+        data[y][x] = UInt16(bitmapRep.colorAt(x: x, y: y)!.brightnessComponent) * 255
         
         if data[y][x] == 0 { //Is Black
           if x == 0 { //Left no pixel
@@ -111,13 +99,13 @@ class ConnectedComponentsSwiftOCR {
     
     var labelUnionSetOfXArray = Dictionary<UInt16, Int>()
     
-    for label in 0...currentLabel {
+    for label in 0..<currentLabel {
       if label != 255 {
         labelUnionSetOfXArray[label] = parentArray.index(of: labelsUnion.setOf(label) ?? 255)
       }
     }
-    
-    print("  extractBlobs: second pass loop 1 \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+
+    print("  extractBlobs: second pass loop 1 len \(currentLabel), \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     start = DispatchTime.now()
     
     for y in 0..<Int(imageHeight!) {

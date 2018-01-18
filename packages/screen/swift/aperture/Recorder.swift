@@ -239,7 +239,7 @@ final class Recorder: NSObject {
   }
   
   func screenshotBox(box: Box, buffer: CMSampleBuffer, findContent: Bool = false) {
-//    let start = DispatchTime.now()
+    let startAll = DispatchTime.now()
     if (box.screenDir != nil) {
       let outPath = "\(box.screenDir ?? "/tmp")/\(box.id).png"
       let cropRect = CGRect(
@@ -290,14 +290,13 @@ final class Recorder: NSObject {
       print("! [\(cropBox.minX), \(cropBox.minY), \(cropBox.width), \(cropBox.height)]")
       // if we are writing out
       if (box.screenDir != nil) {
-        var start = DispatchTime.now()
+        let start = DispatchTime.now()
         let ocrWriteImage = self.cropImage(filterImageForOCR(image: cgImageLarge), box: cropBoxLarge)
         let ocrCharactersImage = self.cropImage(filterImageForOCRCharacterFinding(image: cgImage), box: cropBox)
         print("2. filtering image for ocr: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
-        start = DispatchTime.now()
         self.writeCharacters(binarizedImage: ocrCharactersImage, outputImage: ocrWriteImage, to: box.screenDir!)
         // for testing write out og image too
-        print("writing screenshot to \(outPath): \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+        print("\ndone in \(Double(DispatchTime.now().uptimeNanoseconds - startAll.uptimeNanoseconds) / 1_000_000)ms\n")
         self.writeCGImage(image: binarizedImage, to: "\(box.screenDir!)/\(box.id)-full.png")
         self.writeCGImage(image: ocrWriteImage, to: outPath)
         self.writeCGImage(image: ocrCharactersImage, to: "\(box.screenDir!)/\(box.id)-binarized.png")
@@ -314,7 +313,7 @@ final class Recorder: NSObject {
     print("3. character finding: \(rects.count), \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     start = DispatchTime.now()
     let outputImageRep = NSBitmapImageRep(cgImage: outputImage)
-    print("dimensions [\(outputImageRep.pixelsWide), \(outputImageRep.pixelsHigh)]")
+//    print("dimensions [\(outputImageRep.pixelsWide), \(outputImageRep.pixelsHigh)]")
     if rects.count > 0 {
       var pixelString = ""
       let writeRetina = 1

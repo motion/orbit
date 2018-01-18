@@ -66,6 +66,30 @@ class Filters {
     return context.createCGImage(outputImage, from: outputImage.extent)!
   }
   
+  // specialized filter that is best for finding the big area of content
+  func filterForVerticalContentFinding(image: CGImage) -> CGImage {
+    var outputImage = CIImage(cgImage: image)
+    var filter: CIFilter
+    outputImage = applyFilter(ThresholdFilter(), for: outputImage)
+//    // motion blur vertical
+//    filter = CIFilter(name: "CIMotionBlur")!
+//    filter.setValue(10.0, forKey: "inputRadius")
+//    filter.setValue(1.5708, forKey: "inputAngle")
+//    outputImage = applyFilter(filter, for: outputImage)
+//    // threshold binarizes the image
+//    outputImage = applyFilter(ThresholdFilter(), for: outputImage)
+    // motion blur vertical
+//    filter = CIFilter(name: "CIMotionBlur")!
+//    filter.setValue(10.0, forKey: "inputRadius")
+//    filter.setValue(1.5708, forKey: "inputAngle")
+//    outputImage = applyFilter(filter, for: outputImage)
+//    // threshold binarizes the image
+//    outputImage = applyFilter(ThresholdFilter(), for: outputImage)
+    // write canvas
+    let context = CIContext(options: [kCIContextUseSoftwareRenderer: false])
+    return context.createCGImage(outputImage, from: outputImage.extent)!
+  }
+  
   // filter that binarizes for individual character finding
   func filterImageForOCRCharacterFinding(image: CGImage) -> CGImage {
     var outputImage = CIImage(cgImage: image)

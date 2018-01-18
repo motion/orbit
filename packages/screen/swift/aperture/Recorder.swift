@@ -116,13 +116,13 @@ final class Recorder: NSObject {
         images.writeCGImage(image: cgImage, to: outPath)
         return
       }
+      var start = DispatchTime.now()
       var biggestBox: BoundingBox?
       let boxFindScale = 8
       var binarizedImage = filters.filterImageForContentFinding(image: cgImage)
       binarizedImage = images.resize(binarizedImage, width: width / boxFindScale, height: height / boxFindScale)!
       binarizedImage = filters.filterImageForContentFindingSecondPass(image: binarizedImage)
       let cc = ConnectedComponents()
-      let start = DispatchTime.now()
       let result = cc.labelImageFast(image: binarizedImage, calculateBoundingBoxes: true, invert: true)
       print("1. content finding: \(result.boundingBoxes!.count) \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
       if let boxes = result.boundingBoxes {
@@ -135,8 +135,9 @@ final class Recorder: NSObject {
         }
       }
       // if no found content box, write full image
-      if (biggestBox == nil) {
+      if biggestBox == nil {
         images.writeCGImage(image: cgImage, to: outPath)
+        return
       }
       // found content
       let bb = biggestBox!
@@ -146,21 +147,60 @@ final class Recorder: NSObject {
       let bH = bb.getHeight() * boxFindScale
       let cropBox = CGRect(x: bX, y: bY, width: bW, height: bH)
       let cropBoxLarge = CGRect(x: bX * 2, y: bY * 2, width: bW * 2, height: bH * 2)
-      print("biggest box [\(cropBox.minX), \(cropBox.minY), \(cropBox.width), \(cropBox.height)]")
-      print("! [\(cropBox.minX), \(cropBox.minY), \(cropBox.width), \(cropBox.height)]")
-      // if we are writing out
-      if (box.screenDir != nil) {
-        let start = DispatchTime.now()
-        let ocrWriteImage = images.cropImage(filters.filterImageForOCR(image: cgImageLarge), box: cropBoxLarge)
-        let ocrCharactersImage = images.cropImage(filters.filterImageForOCRCharacterFinding(image: cgImage), box: cropBox)
-        print("2. filtering image for ocr: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
-        self.writeCharacters(binarizedImage: ocrCharactersImage, outputImage: ocrWriteImage, to: box.screenDir!)
-        // for testing write out og image too
-        print("\ndone in \(Double(DispatchTime.now().uptimeNanoseconds - startAll.uptimeNanoseconds) / 1_000_000)ms\n")
-        images.writeCGImage(image: binarizedImage, to: "\(box.screenDir!)/\(box.id)-full.png")
-        images.writeCGImage(image: ocrWriteImage, to: outPath)
-        images.writeCGImage(image: ocrCharactersImage, to: "\(box.screenDir!)/\(box.id)-binarized.png")
+      print("! [\(bX), \(bY), \(bW), \(bH)]")
+      if box.screenDir == nil {
+        return
       }
+      start = DispatchTime.now()
+      let ocrWriteImage = images.cropImage(filters.filterImageForOCR(image: cgImageLarge), box: cropBoxLarge)
+      let ocrCharactersImage = images.cropImage(filters.filterImageForOCRCharacterFinding(image: cgImage), box: cropBox)
+      print("2. filtering image for ocr: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+      start = DispatchTime.now()
+      // find vertical sections
+      let vScale = 8 // this is essentially the minimum font size we detect
+      let vWidth = bW / vScale
+      let vHeight = bH / vScale
+      let verticalImage = filters.filterForVerticalContentFinding(image: images.resize(ocrCharactersImage, width: vWidth, height: vHeight)!)
+      print("2.1 filter: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+      // test write image:
+      images.writeCGImage(image: verticalImage, to: "\(box.screenDir!)/\(box.id)-vertical-content-find.png")
+      start = DispatchTime.now()
+      let verticalImageRep = NSBitmapImageRep(cgImage: verticalImage)
+//      let verticalImageData: UnsafeMutablePointer<UInt8> = verticalImageRep.bitmapData!
+      print("2.1 get data: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+      start = DispatchTime.now()
+      print("width is \(vWidth)")
+      // row => word streaks
+      var verticalBreaks = Dictionary<Int, Int>()
+      var wordStreaks = Dictionary<Int, Int>()
+      for x in 0..<vWidth {
+        verticalBreaks[x] = 0
+        for y in 0..<vHeight {
+          let isBlack = verticalImageRep.colorAt(x: x, y: y)!.brightnessComponent == 0.0
+          if isBlack {
+            if wordStreaks[y] == nil {
+              wordStreaks[y] = 1
+            } else {
+              wordStreaks[y] = wordStreaks[y]! + 1
+            }
+          } else {
+            // is white
+            if verticalBreaks[x] == y {
+              verticalBreaks[x] = verticalBreaks[x]! + 1
+            }
+            if verticalBreaks[x] == vHeight {
+              print("found a vertical split at \(x)")
+            }
+          }
+        }
+      }
+      print("2.1. loop and check: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+      self.writeCharacters(binarizedImage: ocrCharactersImage, outputImage: ocrWriteImage, to: box.screenDir!)
+      // for testing write out og image too
+      print("\ndone in \(Double(DispatchTime.now().uptimeNanoseconds - startAll.uptimeNanoseconds) / 1_000_000)ms\n")
+      images.writeCGImage(image: binarizedImage, to: "\(box.screenDir!)/\(box.id)-full.png")
+      images.writeCGImage(image: ocrWriteImage, to: outPath)
+      images.writeCGImage(image: ocrCharactersImage, to: "\(box.screenDir!)/\(box.id)-binarized.png")
     }
 //    print("screenshotBox total: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
   }

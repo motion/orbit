@@ -183,39 +183,42 @@ final class Recorder: NSObject {
           if isBlack {
             blacks[y][x] = 1
           } else {
+            let leniancy = 3
             // is white
-            if verticalBreaks[x] == y {
+            if verticalBreaks[x]! > y - leniancy {
               verticalBreaks[x] = verticalBreaks[x]! + 1
             }
-            if verticalBreaks[x] == vHeight {
+            // count nearly empty columns as empty (subtract here determines leniancy)
+            if verticalBreaks[x]! > vHeight - leniancy {
               verticalIgnore[x] = true
 //              vWidthMin -= 1
               print("found a vertical split at \(x)")
+              break
             }
           }
         }
       }
       // second loop
       // loop over vertical blocks and store lines
-      var streaks = Dictionary<Int, Dictionary<Int, Int>>() // verticalSpaceIndex => row => number of black pixels
-      var currentVert = 0
+//      var streaks = Dictionary<Int, Dictionary<Int, Int>>() // verticalSpaceIndex => row => number of black pixels
+      // vId = MAX_SECTIONS = first index
+      let MAX_SECTIONS = 8
+      var streaks = [[Int]](repeating: [Int](repeating: 0, count: Int(vHeight)), count: MAX_SECTIONS)
+      var vID = 0 // tracks current vertical column id
       for x in 0..<vWidth {
-        if x == 0 {
-          currentVert = 0
-        }
         if verticalIgnore[x] == true {
-          currentVert += 1
+          continue
         }
+        // coming out of a ignore area
+        if verticalIgnore[x - 1] == true {
+          vID += 1
+        }
+        // were in a valid col
         for y in 0..<vHeight {
           if blacks[y][x] == 1 {
-            if streaks[currentVert] == nil {
-              streaks[currentVert] = Dictionary<Int, Int>()
-            }
-            var streakForRow = streaks[currentVert]![y]
-            if streakForRow == nil {
-              streakForRow = 1
-            } else {
-              streakForRow! += 1
+            streaks[vID][y] += 1
+            if streaks[vID][y] > 10 {
+              print("legit line at \(vID), col \(y)")
             }
           }
         }

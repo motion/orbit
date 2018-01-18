@@ -1,14 +1,12 @@
 import AppKit
 
-typealias OCRImage = NSImage
-
 class ConnectedComponentsSwiftOCR {
   ///Radius in x axis for merging blobs
   open      var xMergeRadius:CGFloat = 0
   ///Radius in y axis for merging blobs
   open      var yMergeRadius:CGFloat = 0
 
-  internal func extractBlobs(_ image: OCRImage) -> [(OCRImage, CGRect)] {
+  internal func extractBlobs(_ image: NSImage) -> [CGRect] {
     let bitmapRep = NSBitmapImageRep(data: image.tiffRepresentation!)!
     let bitmapData: UnsafeMutablePointer<UInt8> = bitmapRep.bitmapData!
     let cgImage   = bitmapRep.cgImage
@@ -167,10 +165,10 @@ class ConnectedComponentsSwiftOCR {
       
       let minMaxCorrect = (minX < maxX && minY < maxY)
       
-      let notToTall    = Double(maxY - minY) < Double(imageHeight!) * 1.0
-      let notToWide    = Double(maxX - minX) < Double(imageWidth ) * 2.5
-      let notToShort   = Double(maxY - minY) > Double(imageHeight!) * 0.008
-      let notToThin    = Double(maxX - minX) > Double(imageWidth ) * 0.001
+      let notToTall    = Double(maxY - minY) < Double(imageHeight!) * 0.5
+      let notToWide    = Double(maxX - minX) < Double(imageWidth ) * 0.5
+      let notToShort   = Double(maxY - minY) > 4
+      let notToThin    = Double(maxX - minX) > 4
       
       let notToSmall   = (maxX - minX)*(maxY - minY) > 2
       let positionIsOK = minY != 0 && minX != 0 && maxY != Int(imageHeight! - 1) && maxX != Int(imageWidth - 1)
@@ -204,12 +202,12 @@ class ConnectedComponentsSwiftOCR {
     mergeLabelRects = filteredMergeLabelRects
     
     //Filter rects: - Not to small
-    let insetMergeLabelRects = mergeLabelRects.map({return $0.insetBy(dx: CGFloat(xMergeRadius), dy: CGFloat(yMergeRadius))})
+    let insetMergeLabelRects = mergeLabelRects//.map({return $0.insetBy(dx: CGFloat(xMergeRadius), dy: CGFloat(yMergeRadius))})
     filteredMergeLabelRects.removeAll()
     for rect in insetMergeLabelRects {
       let widthOK  = rect.size.width  >= 3
       let heightOK = rect.size.height >= 8
-      
+
       if widthOK && heightOK {
         filteredMergeLabelRects.append(rect)
       }
@@ -217,16 +215,16 @@ class ConnectedComponentsSwiftOCR {
     
     mergeLabelRects = filteredMergeLabelRects
     
-    var outputImages = [(OCRImage, CGRect)]()
+//    var outputImages = [CGRect]()
     
     //MARK: Crop image to blob
-    for rect in mergeLabelRects {
-      if let croppedCGImage = cgImage?.cropping(to: rect) {
-        let croppedImage = NSImage(cgImage: croppedCGImage, size: rect.size)
-        outputImages.append((croppedImage, rect))
-      }
-    }
-    outputImages.sort { $0.1.origin.x < $1.1.origin.x }
-    return outputImages
+//    for rect in mergeLabelRects {
+//      if let croppedCGImage = cgImage?.cropping(to: rect) {
+//        let croppedImage = NSImage(cgImage: croppedCGImage, size: rect.size)
+//        outputImages.append((croppedImage, rect))
+//      }
+//    }
+//    outputImages.sort { $0.1.origin.x < $1.1.origin.x }
+    return mergeLabelRects
   }
 }

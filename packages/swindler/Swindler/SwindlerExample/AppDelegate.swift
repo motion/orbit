@@ -34,11 +34,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             NSApp.terminate(self)
             return
         }
-
         swindler = Swindler.state
-
-//        emit("screens: \(swindler.screens)")
-
         swindler.on { (event: WindowCreatedEvent) in
             let window = event.window
             self.emit(":WindowCreatedEvent \(window.title.value)")
@@ -57,111 +53,31 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             self.frontmostWindowChanged("")
         }
         swindler.on { (event: FrontmostApplicationChangedEvent) in
-            let id = (event.newValue!.bundleIdentifier ?? "").replacingOccurrences(of: "\"", with: "")
-            let idString = (id != "") ?
-                "\"id\": \"\(String(describing: id))\", " :
-                ""
-            self.frontmostWindowChanged(idString)
-//            self.watchApp(id)
+            if event.newValue != nil {
+                let id = (event.newValue!.bundleIdentifier ?? "").replacingOccurrences(of: "\"", with: "")
+                let idString = (id != "") ?
+                    "\"id\": \"\(String(describing: id))\", " : ""
+                self.frontmostWindowChanged(idString)
+            }
         }
         swindler.on { (event: WindowTitleChangedEvent) in
             self.frontmostWindowChanged("")
         }
-
-        //    dispatchAfter(10.0) {
-        //      for window in self.swindler.knownWindows {
-        //        let title = window.title.value
-        //        emit("resizing \(title)")
-        //        window.size.set(CGSize(width: 200, height: 200)).then { newValue in
-        //          emit("done with \(title), valid: \(window.isValid), newValue: \(newValue)")
-        //        }.error { error in
-        //          emit("failed to resize \(title), valid: \(window.isValid), error: \(error)")
-        //        }
-        //      }
-        //    }
     }
 
     private func frontmostWindowChanged(_ extraString: String) {
         let frontWindow = swindler.frontmostApplication.value?.mainWindow.value!
-        if (frontWindow == nil) {
-            return
-        }
+        if (frontWindow == nil) { return }
         let window = frontWindow!
         let title = String(window.title.value).replacingOccurrences(of: "\"", with: "")
         let titleString = "\"\(title)\"";
         let offset = window.position.value
         let bounds = window.size.value
         self.emit(":FrontmostWindowChangedEvent { \(extraString) \"title\": \(titleString), \"offset\": [\(offset.x),\(offset.y)], \"bounds\": [\(bounds.width),\(bounds.height)] }")
-//        self.watchWindow(window)
-    }
-    
-    private func watchWindow(_ window: Window) {
-//        self.emit("\(window.attributes)")
-    }
-    
-    private func watchApp(_ id: String) {
-        let app = Application.allForBundleID(id).first!
-        let window = try! app.windows()?.first
-        if (window == nil) {
-            return
-        }
-        let attributes = try! window?.attributesAsStrings()
-//        let element = window?.element
-//        self.emit(":Element \(element)")
-        let doc = try! window?.getMultipleAttributes(["AXDocument", "AXMain", "AXChildren", "AXSections"])
-        if (doc != nil) {
-            let val = doc?.description
-            self.emit(":Got \(val)")
-            let children = doc!["AXChildren"] as! Array<UIElement>
-            for child in children {
-//                let val = try! child.parameterizedAttributesAsStrings()
-                self.emit(":Child \(child)")
-            }
-        }
-        
-        for attr in attributes! {
-            self.emit(":Attr \(attr)")
-        }
-        
-//        do {
-//            try self.watchApp(app)
-//        } catch let error {
-//            self.emit("Error: Could not watch app [\(app)]: \(error)")
-//        }
-    }
-
-    func watchApp(_ app: Application) throws {
-        self.emit(":Element at 100,100: \(String(describing: try! app.elementAtPosition(100, 100)))")
-//        var updated = false
-//        if (observer != nil) {
-//            observer.stop()
-//        }
-//        let send = self.emit
-//        let attributes = try! app.attributes()
-//        self.emit(":AppAttributes \(attributes)")
-//        observer = app.createObserver { (observer: Observer, element: UIElement, event: AXNotification, info: [String: AnyObject]?) in
-//            var elementDesc: String!
-//            if let role = try? element.role()!, role == .window {
-//                elementDesc = "\(element) \"\(try! (element.attribute(.title) as String?)!)\""
-//            } else {
-//                elementDesc = "\(element)"
-//            }
-//            send(":Something \(event) on \(elementDesc); info: \(info ?? [:])")
-//
-//            // Group simultaneous events together with --- lines
-//            if !updated {
-//                updated = true
-//                // Set this code to run after the current run loop, which is dispatching all notifications.
-//                DispatchQueue.main.async {
-//                    send("---")
-//                    updated = false
-//                }
-//            }
-//        }
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {
-        // Insert code here to tear down your application
+        print("terminating swindelr")
         emit("Exit");
     }
 }

@@ -2,7 +2,7 @@ import AppKit
 
 class ThresholdBelowFilter: CIFilter {
   @objc dynamic var inputImage : CIImage?
-  var threshold: CGFloat = 0.4
+  var threshold: CGFloat = 0.2
   
   var colorKernel = CIColorKernel(source:
     "kernel vec4 color(__sample pixel, float threshold)" +

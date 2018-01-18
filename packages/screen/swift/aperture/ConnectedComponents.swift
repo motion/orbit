@@ -36,7 +36,7 @@ class ConnectedComponents {
         let isFilledPixel = currentRow[col]
         // invert lets you check for white or black
         if (invert && !isFilledPixel || !invert && isFilledPixel) {
-          // The pixel is black so it needs to be labelled.
+          // The pixel is component so it needs to be labelled.
           let sameColInPreviousRowLabel = (row > 0 ? previousOutputRow[col] : -1)
           var currentPixelLabel: Int
           if (previousPixelLabel >= 0) {
@@ -56,17 +56,17 @@ class ConnectedComponents {
                 }
                 canMergeInPlace = false
               }
-              else {
-                // If the same row in the previous column is not equal to the current
-                // label then they must be merged. Add an entry to labelMerges.
-                if var existingMerges = labelMerges[currentPixelLabel] {
-                  existingMerges.insert(sameColInPreviousRowLabel)
-                  labelMerges[currentPixelLabel] = existingMerges
-                }
-                else {
-                  labelMerges[currentPixelLabel] = [sameColInPreviousRowLabel]
-                }
-              }
+//              else {
+//                // If the same row in the previous column is not equal to the current
+//                // label then they must be merged. Add an entry to labelMerges.
+//                if var existingMerges = labelMerges[currentPixelLabel] {
+//                  existingMerges.insert(sameColInPreviousRowLabel)
+//                  labelMerges[currentPixelLabel] = existingMerges
+//                }
+//                else {
+//                  labelMerges[currentPixelLabel] = [sameColInPreviousRowLabel]
+//                }
+//              }
             }
           }
           else if (sameColInPreviousRowLabel >= 0) {

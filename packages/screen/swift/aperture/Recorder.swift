@@ -237,7 +237,7 @@ final class Recorder: NSObject {
         width: box.width * 2,
         height: Int(-box.height * 2)
       )
-      guard let cgImageLarge = imageFromSampleBuffer(sampleBuffer: buffer, cropRect: cropRect) else {return }
+      guard let cgImageLarge = imageFromSampleBuffer(sampleBuffer: buffer, cropRect: cropRect) else { return }
       guard let cgImage = self.resize(cgImageLarge, width: Int(cropRect.width / 2), height: Int(cropRect.height / 2)) else { return }
       if (!findContent) {
         self.writeCGImage(image: cgImage, to: outPath)
@@ -248,7 +248,7 @@ final class Recorder: NSObject {
       let cc = ConnectedComponents()
       let start = DispatchTime.now()
       let result = cc.labelImageFast(image: binarizedImage, calculateBoundingBoxes: true, invert: true)
-      print("1. content finding: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+      print("1. content finding: \(result.boundingBoxes!.count) \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
       if let boxes = result.boundingBoxes {
         if (boxes.count > 0) {
           for box in boxes {

@@ -36,7 +36,7 @@ class ConnectedComponents {
         let isFilledPixel = currentRow[col]
         // invert lets you check for white or black
         if (invert && !isFilledPixel || !invert && isFilledPixel) {
-          // The pixel is component so it needs to be labelled.
+          // count this pixel
           let sameColInPreviousRowLabel = (row > 0 ? previousOutputRow[col] : -1)
           var currentPixelLabel: Int
           if (previousPixelLabel >= 0) {
@@ -56,6 +56,7 @@ class ConnectedComponents {
                 }
                 canMergeInPlace = false
               }
+              // disabled for speed (lower accuracy):
 //              else {
 //                // If the same row in the previous column is not equal to the current
 //                // label then they must be merged. Add an entry to labelMerges.

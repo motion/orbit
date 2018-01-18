@@ -7,9 +7,12 @@ class ConnectedComponentsSwiftOCR {
   open      var yMergeRadius:CGFloat = 0
 
   internal func extractBlobs(_ image: NSImage) -> [CGRect] {
+    var start = DispatchTime.now()
     let bitmapRep = NSBitmapImageRep(data: image.tiffRepresentation!)!
     let bitmapData: UnsafeMutablePointer<UInt8> = bitmapRep.bitmapData!
     let cgImage   = bitmapRep.cgImage
+    print("1. extractBlobs: create image \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+    start = DispatchTime.now()
     
     //data <- bitmapData
     
@@ -29,6 +32,9 @@ class ConnectedComponentsSwiftOCR {
         data[y][x] = bitmapData[bitmapDataIndex] < 127 ? 0 : 255
       }
     }
+    
+    print("2. extractBlobs: data gather \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+    start = DispatchTime.now()
     
     //MARK: First Pass
     
@@ -96,6 +102,9 @@ class ConnectedComponentsSwiftOCR {
       }
     }
     
+    print("2. extractBlobs: first pass (currentLabel = \(currentLabel)) \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+    start = DispatchTime.now()
+    
     //MARK: Second Pass
     
     let parentArray = Array(Set(labelsUnion.parent))
@@ -108,6 +117,9 @@ class ConnectedComponentsSwiftOCR {
       }
     }
     
+    print("2. extractBlobs: second pass loop 1 \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+    start = DispatchTime.now()
+    
     for y in 0..<Int(imageHeight!) {
       for x in 0..<Int(imageWidth) {
         
@@ -119,6 +131,9 @@ class ConnectedComponentsSwiftOCR {
         
       }
     }
+    
+    print("2. extractBlobs: second pass loop 2 \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+    start = DispatchTime.now()
     
     //MARK: MinX, MaxX, MinY, MaxY
     
@@ -148,6 +163,9 @@ class ConnectedComponentsSwiftOCR {
         
       }
     }
+    
+    print("2. extractBlobs: minmax \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+    start = DispatchTime.now()
     
     //MARK: Merge labels
     
@@ -184,6 +202,9 @@ class ConnectedComponentsSwiftOCR {
       }
     }
     
+    print("2. extractBlobs: merge labels \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+    start = DispatchTime.now()
+    
     //Merge rects
     var filteredMergeLabelRects = [CGRect]()
     for rect in mergeLabelRects {
@@ -198,6 +219,9 @@ class ConnectedComponentsSwiftOCR {
         filteredMergeLabelRects.append(rect)
       }
     }
+    
+    print("2. extractBlobs: merge recs \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+    start = DispatchTime.now()
     
     mergeLabelRects = filteredMergeLabelRects
     
@@ -225,6 +249,9 @@ class ConnectedComponentsSwiftOCR {
 //      }
 //    }
 //    outputImages.sort { $0.1.origin.x < $1.1.origin.x }
+    
+    print("2. extractBlobs: finish \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+    
     return mergeLabelRects
   }
 }

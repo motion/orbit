@@ -174,10 +174,6 @@ final class Recorder: NSObject {
     // noir
     filter = CIFilter(name: "CIPhotoEffectNoir")!
     outputImage = applyFilter(filter, for: outputImage)
-    // reduce contrast
-    filter = CIFilter(name: "CIColorControls")!
-    filter.setValue(1.5, forKey: "inputContrast")
-    outputImage = applyFilter(filter, for: outputImage)
     // unsharpen
     filter = CIFilter(name: "CIUnsharpMask")!
     filter.setValue(0.5, forKey: "inputIntensity")
@@ -300,7 +296,11 @@ final class Recorder: NSObject {
     if rects.count > 0 {
       var pixelString = ""
       // loop over component
-      for rect in rects {
+      for (index, rect) in rects.enumerated() {
+        // testing: write out character image
+        let image = binarizedImage.cropping(to: rect)!
+        let image2 = self.resize(image, width: 28, height: 28)!
+        self.writeCGImage(image: image2, to: "\(outDir)/\(index).png")
         // collect pixel values in component
         for x in Int(rect.minX)..<Int(rect.maxX) {
           for y in Int(rect.minY)..<Int(rect.maxY) {

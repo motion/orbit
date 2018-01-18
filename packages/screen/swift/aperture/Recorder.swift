@@ -292,15 +292,15 @@ final class Recorder: NSObject {
     print("3. character finding: \(rects.count), \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     start = DispatchTime.now()
     let outputImageRep = NSBitmapImageRep.init(cgImage: outputImage)
-    print("image is \(outputImageRep.pixelsWide) wide \(outputImageRep.pixelsHigh) tall")
+    print("dimensions [\(outputImageRep.pixelsWide), \(outputImageRep.pixelsHigh)]")
     if rects.count > 0 {
       var pixelString = ""
       // loop over component
-      for (index, rect) in rects.enumerated() {
+      for rect in rects {
         // testing: write out character image
-        let image = binarizedImage.cropping(to: rect)!
-        let image2 = self.resize(image, width: 28, height: 28)!
-        let testImage = NSBitmapImageRep.init(cgImage: image2)
+//        let image = binarizedImage.cropping(to: rect)!
+//        let image2 = self.resize(image, width: 28, height: 28)!
+//        let testImage = NSBitmapImageRep.init(cgImage: image2)
         // collect pixel values in component
         let minX = Int(rect.minX) * 2
         let minY = Int(rect.minY) * 2
@@ -321,30 +321,28 @@ final class Recorder: NSObject {
         }
         scaleW = scaleW * 2.0
         scaleH = scaleH * 2.0
+        let w = Int(scaleW)
+        let h = Int(scaleH)
         // double for retina
         for x in 0..<56 {
           for y in 0..<56 {
-            let realX = Int(Double(x) * scaleW + Double(minX))
-            let realY = Int(Double(y) * scaleH + Double(minY))
-            // debug info
-            // print("rect is \(minX) \(minY) \(width) \(height)")
-            // print("scaleW \(scaleW) scaleH \(scaleH)")
-            // print("check \(realX) \(realY)")
-            var pColor = outputImageRep.colorAt(x: realX, y: realY)
-            if pColor == nil {
-              // this happens if we are at an edge, because we are checking a full 28x28
-              // we should just fill it in with white if not found
-              pColor = NSColor.init(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0)
+            let realX = x * w + minX
+            let realY = y * h + minY
+            var luminance = 1.0 // white
+            if let color = outputImageRep.colorAt(x: realX, y: realY)?.brightnessComponent {
+              luminance = Double(color)
             }
-            testImage.setColor(pColor!, atX: x, y: y)
-            let luminance = (pColor!.redComponent + pColor!.greenComponent + pColor!.blueComponent) / 3
-            pixelString += "\(luminance) "
+//          testImage.setColor(pColor!, atX: x, y: y)
+//          pColor = NSColor.init(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0)
+            pixelString += luminance.description + " "
           }
         }
         // test write out our scaled image
-        self.writeCGImage(image: testImage.cgImage!, to: "\(outDir)/\(index).png")
+//        self.writeCGImage(image: testImage.cgImage!, to: "\(outDir)/\(index).png")
         pixelString += "\n"
       }
+      print("4. characters => string: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+      start = DispatchTime.now()
       do {
         let path = NSURL.fileURL(withPath: "\(outDir)/characters.txt").absoluteURL
         try pixelString.write(to: path, atomically: true, encoding: .utf8)
@@ -352,7 +350,7 @@ final class Recorder: NSObject {
         print("couldnt write pixel string \(error)")
       }
     }
-    print("4. looping/writing characters.txt: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+    print("5. write string: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
   }
   
   func hasBoxChanged(box: Box, buffer: UnsafeMutablePointer<UInt32>, perRow: Int) -> Bool {

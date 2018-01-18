@@ -19,31 +19,8 @@ struct Box: Decodable {
   let initialScreenshot: Bool
 }
 
-func applyFilter(_ filter: CIFilter?, for image: CIImage) -> CIImage {
-  guard let filter = filter else { return image }
-  filter.setValue(image, forKey: kCIInputImageKey)
-  guard let filteredImage = filter.value(forKey: kCIOutputImageKey) else { return image }
-  return filteredImage as! CIImage
-}
-
-func pixelValues(fromCGImage imageRef: CGImage?) -> (pixelValues: [UInt8]?, width: Int, height: Int) {
-  var width = 0
-  var height = 0
-  var pixelValues: [UInt8]?
-  if let imageRef = imageRef {
-    width = imageRef.width
-    height = imageRef.height
-    let bitsPerComponent = imageRef.bitsPerComponent
-    let bytesPerRow = imageRef.bytesPerRow
-    let totalBytes = height * bytesPerRow
-    let colorSpace = CGColorSpaceCreateDeviceGray()
-    var intensities = [UInt8](repeating: 0, count: totalBytes)
-    let contextRef = CGContext(data: &intensities, width: width, height: height, bitsPerComponent: bitsPerComponent, bytesPerRow: bytesPerRow, space: colorSpace, bitmapInfo: 0)
-    contextRef?.draw(imageRef, in: CGRect(x: 0.0, y: 0.0, width: CGFloat(width), height: CGFloat(height)))
-    pixelValues = intensities
-  }
-  return (pixelValues, width, height)
-}
+let filters = Filters()
+let images = Images()
 
 final class Recorder: NSObject {
   private let input: AVCaptureScreenInput
@@ -120,123 +97,6 @@ final class Recorder: NSObject {
   func setFPS(fps: Int) {
     self.input.minFrameDuration = CMTimeMake(1, Int32(fps))
   }
-
-  // specialized filter that is best for finding the big area of content
-  func filterImageForContentFinding(image: CGImage) -> CGImage {
-    var outputImage = CIImage(cgImage: image)
-    var filter: CIFilter
-    // make it black and white
-    filter = CIFilter(name: "CIPhotoEffectNoir")!
-    outputImage = applyFilter(filter, for: outputImage)
-    // super lower contrast down to get rid of subtle color differences
-    // this generally will preserve outline data as well
-    filter = CIFilter(name: "CIColorControls")!
-    filter.setValue(20.0, forKey: "inputContrast")
-    outputImage = applyFilter(filter, for: outputImage)
-    // this distinguishes things nicely for edge detection
-    // helps prevent finding edges of contiguous blocks
-    // while emphasizing edges of that have actual borders
-    filter = CIFilter(name: "CIUnsharpMask")!
-    filter.setValue(0.5, forKey: "inputIntensity")
-    filter.setValue(5.5, forKey: "inputRadius")
-    outputImage = applyFilter(filter, for: outputImage)
-    // edge detecting with low contrast and unsharp mask
-    // gives really nice outlines
-    filter = CIFilter(name: "CIEdges")!
-    filter.setValue(2.0, forKey: "inputIntensity")
-    outputImage = applyFilter(filter, for: outputImage)
-    // edges inversts everything basically, so lets un-invert
-    filter = CIFilter(name: "CIColorInvert")!
-    outputImage = applyFilter(filter, for: outputImage)
-    // motion blur one pixel in each direction,
-    // this will ensure that rounded borders and sketchy outlines
-    // will still connect to each other for the component finding
-    filter = CIFilter(name: "CIMotionBlur")!
-    filter.setValue(1.0, forKey: "inputRadius")
-    filter.setValue(0.0, forKey: "inputAngle")
-    outputImage = applyFilter(filter, for: outputImage)
-    // motion blur vertical
-    filter = CIFilter(name: "CIMotionBlur")!
-    filter.setValue(1.0, forKey: "inputRadius")
-    filter.setValue(0.5, forKey: "inputAngle")
-    outputImage = applyFilter(filter, for: outputImage)
-    // threshold binarizes the image
-    outputImage = applyFilter(ThresholdFilter(), for: outputImage)
-    // write canvas
-    let context = CIContext(options: [kCIContextUseSoftwareRenderer: false])
-    return context.createCGImage(outputImage, from: outputImage.extent)!
-  }
-
-  // sharpens the big area once scaled down
-  func filterImageForContentFindingSecondPass(image: CGImage) -> CGImage {
-    var outputImage = CIImage(cgImage: image)
-    var filter: CIFilter
-    // threshold binarizes the image
-    outputImage = applyFilter(ThresholdFilterEasy(), for: outputImage)
-    // write canvas
-    let context = CIContext(options: [kCIContextUseSoftwareRenderer: false])
-    return context.createCGImage(outputImage, from: outputImage.extent)!
-  }
-  
-  // filter that binarizes for individual character finding
-  func filterImageForOCRCharacterFinding(image: CGImage) -> CGImage {
-    var outputImage = CIImage(cgImage: image)
-    var filter: CIFilter
-    // noir
-    filter = CIFilter(name: "CIPhotoEffectNoir")!
-    outputImage = applyFilter(filter, for: outputImage)
-    // unsharpen
-    filter = CIFilter(name: "CIUnsharpMask")!
-    filter.setValue(0.5, forKey: "inputIntensity")
-    filter.setValue(2.5, forKey: "inputRadius")
-    outputImage = applyFilter(filter, for: outputImage)
-    // threshold
-    outputImage = applyFilter(ThresholdFilter(), for: outputImage)
-    // write
-    let context = CIContext(options: [kCIContextUseSoftwareRenderer: false])
-    return context.createCGImage(outputImage, from: outputImage.extent)!
-  }
-  
-  // filter just for writing out, optimized for our OCR engine
-  func filterImageForOCR(image: CGImage) -> CGImage {
-    var outputImage = CIImage(cgImage: image)
-    var filter: CIFilter
-    // noir
-    filter = CIFilter(name: "CIPhotoEffectNoir")!
-    outputImage = applyFilter(filter, for: outputImage)
-    // threshold
-    outputImage = applyFilter(ThresholdBelowFilter(), for: outputImage)
-    // write
-    let context = CIContext(options: [kCIContextUseSoftwareRenderer: false])
-    return context.createCGImage(outputImage, from: outputImage.extent)!
-  }
-  
-  func writeCGImage(image: CGImage, to destination: String) {
-    let destinationURL = URL(fileURLWithPath: destination)
-    guard let finalDestination = CGImageDestinationCreateWithURL(destinationURL as CFURL, kUTTypePNG, 1, nil) else { return }
-    let resolution = 300
-    let properties: NSDictionary = [
-      kCGImageDestinationLossyCompressionQuality: 1,
-      kCGImagePropertyDPIHeight: resolution,
-      kCGImagePropertyDPIWidth: resolution
-    ]
-    CGImageDestinationAddImage(finalDestination, image, properties)
-    CGImageDestinationFinalize(finalDestination)
-  }
-
-  func resize(_ image: NSImage, w: Int, h: Int) -> NSImage {
-    let destSize = NSMakeSize(CGFloat(w), CGFloat(h))
-    let newImage = NSImage(size: destSize)
-    newImage.lockFocus()
-    image.draw(in: NSMakeRect(0, 0, destSize.width, destSize.height), from: NSMakeRect(0, 0, image.size.width, image.size.height), operation: NSCompositingOperation.sourceOver, fraction: CGFloat(1))
-    newImage.unlockFocus()
-    newImage.size = destSize
-    return NSImage(data: newImage.tiffRepresentation!)!
-  }
-
-  func cropImage(_ image: CGImage, box: CGRect) -> CGImage {
-    return image.cropping(to: box)!
-  }
   
   func screenshotBox(box: Box, buffer: CMSampleBuffer, findContent: Bool = false) {
     let startAll = DispatchTime.now()
@@ -248,19 +108,19 @@ final class Recorder: NSObject {
         width: box.width * 2,
         height: Int(-box.height * 2)
       )
-      guard let cgImageLarge = imageFromSampleBuffer(sampleBuffer: buffer, cropRect: cropRect) else { return }
+      guard let cgImageLarge = images.imageFromSampleBuffer(context, sampleBuffer: buffer, cropRect: cropRect) else { return }
       let width = Int(cropRect.width / 2)
       let height = Int(cropRect.height / 2)
-      guard let cgImage = self.resize(cgImageLarge, width: width, height: height) else { return }
+      guard let cgImage = images.resize(cgImageLarge, width: width, height: height) else { return }
       if (!findContent) {
-        self.writeCGImage(image: cgImage, to: outPath)
+        images.writeCGImage(image: cgImage, to: outPath)
         return
       }
       var biggestBox: BoundingBox?
       let boxFindScale = 8
-      var binarizedImage = filterImageForContentFinding(image: cgImage)
-      binarizedImage = self.resize(binarizedImage, width: width / boxFindScale, height: height / boxFindScale)!
-      binarizedImage = filterImageForContentFindingSecondPass(image: binarizedImage)
+      var binarizedImage = filters.filterImageForContentFinding(image: cgImage)
+      binarizedImage = images.resize(binarizedImage, width: width / boxFindScale, height: height / boxFindScale)!
+      binarizedImage = filters.filterImageForContentFindingSecondPass(image: binarizedImage)
       let cc = ConnectedComponents()
       let start = DispatchTime.now()
       let result = cc.labelImageFast(image: binarizedImage, calculateBoundingBoxes: true, invert: true)
@@ -276,7 +136,7 @@ final class Recorder: NSObject {
       }
       // if no found content box, write full image
       if (biggestBox == nil) {
-        self.writeCGImage(image: cgImage, to: outPath)
+        images.writeCGImage(image: cgImage, to: outPath)
       }
       // found content
       let bb = biggestBox!
@@ -291,15 +151,15 @@ final class Recorder: NSObject {
       // if we are writing out
       if (box.screenDir != nil) {
         let start = DispatchTime.now()
-        let ocrWriteImage = self.cropImage(filterImageForOCR(image: cgImageLarge), box: cropBoxLarge)
-        let ocrCharactersImage = self.cropImage(filterImageForOCRCharacterFinding(image: cgImage), box: cropBox)
+        let ocrWriteImage = images.cropImage(filters.filterImageForOCR(image: cgImageLarge), box: cropBoxLarge)
+        let ocrCharactersImage = images.cropImage(filters.filterImageForOCRCharacterFinding(image: cgImage), box: cropBox)
         print("2. filtering image for ocr: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
         self.writeCharacters(binarizedImage: ocrCharactersImage, outputImage: ocrWriteImage, to: box.screenDir!)
         // for testing write out og image too
         print("\ndone in \(Double(DispatchTime.now().uptimeNanoseconds - startAll.uptimeNanoseconds) / 1_000_000)ms\n")
-        self.writeCGImage(image: binarizedImage, to: "\(box.screenDir!)/\(box.id)-full.png")
-        self.writeCGImage(image: ocrWriteImage, to: outPath)
-        self.writeCGImage(image: ocrCharactersImage, to: "\(box.screenDir!)/\(box.id)-binarized.png")
+        images.writeCGImage(image: binarizedImage, to: "\(box.screenDir!)/\(box.id)-full.png")
+        images.writeCGImage(image: ocrWriteImage, to: outPath)
+        images.writeCGImage(image: ocrCharactersImage, to: "\(box.screenDir!)/\(box.id)-binarized.png")
       }
     }
 //    print("screenshotBox total: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
@@ -428,46 +288,6 @@ final class Recorder: NSObject {
       return true
     }
     return false
-  }
-  
-  private func imageFromSampleBuffer(sampleBuffer: CMSampleBuffer, cropRect: CGRect) -> CGImage? {
-    guard let imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return nil }
-    var ciImage = CIImage(cvPixelBuffer: imageBuffer)
-    ciImage = ciImage.cropped(to: cropRect)
-    guard let cgImage = context.createCGImage(ciImage, from: ciImage.extent) else { return nil }
-    return cgImage
-  }
-  
-  func resize(_ image: CGImage, width: Int, height: Int) -> CGImage? {
-    var ratio: Float = 0.0
-    let imageWidth = Float(image.width)
-    let imageHeight = Float(image.height)
-    let maxWidth: Float = Float(width)
-    let maxHeight: Float = Float(height)
-    // Get ratio (landscape or portrait)
-    if (imageWidth > imageHeight) {
-      ratio = maxWidth / imageWidth
-    } else {
-      ratio = maxHeight / imageHeight
-    }
-    // Calculate new size based on the ratio
-    // this would prevent sizing it up but we want that
-    //    if ratio > 1 {
-    //      ratio = 1
-    //    }
-    let mWidth = imageWidth * ratio
-    let mHeight = imageHeight * ratio
-    guard let colorSpace = image.colorSpace else { return nil }
-    guard let context = CGContext(data: nil, width: width, height: height, bitsPerComponent: image.bitsPerComponent, bytesPerRow: image.bytesPerRow, space: colorSpace, bitmapInfo: image.alphaInfo.rawValue) else { return nil }
-    // white background
-    context.clear(CGRect(x: 0, y: 0, width: width, height: height))
-    context.setFillColor(CGColor(gray: 1, alpha: 1))
-    context.fill(CGRect(x: 0, y: 0, width: width, height: height))
-    // draw image to context (resizing it)
-    context.interpolationQuality = .high
-    context.draw(image, in: CGRect(x: 0, y: 0, width: Int(mWidth), height: Int(mHeight)))
-    // call .makeImage to turn to image
-    return context.makeImage()
   }
 }
 

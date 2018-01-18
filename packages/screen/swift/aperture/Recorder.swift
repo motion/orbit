@@ -241,7 +241,8 @@ final class Recorder: NSObject {
         width: box.width * 2,
         height: Int(-box.height * 2)
       )
-      guard let cgImage = imageFromSampleBuffer(sampleBuffer: buffer, cropRect: cropRect) else {return }
+      guard let cgImageLarge = imageFromSampleBuffer(sampleBuffer: buffer, cropRect: cropRect) else {return }
+      guard let cgImage = self.resize(cgImageLarge, width: Int(cropRect.width / 2), height: Int(cropRect.height / 2)) else { return }
       if (!findContent) {
         self.writeCGImage(image: cgImage, to: outPath)
         return
@@ -271,7 +272,7 @@ final class Recorder: NSObject {
       // if we are writing out
       if (box.screenDir != nil) {
         var start = DispatchTime.now()
-        let ocrWriteImage = self.cropImage(filterImageForOCR(image: cgImage), box: cropBox)
+        let ocrWriteImage = self.cropImage(filterImageForOCR(image: cgImageLarge), box: cropBox)
         let ocrCharactersImage = self.cropImage(filterImageForOCRCharacterFinding(image: cgImage), box: cropBox)
         print("2. filtering image for ocr: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
         start = DispatchTime.now()
@@ -303,26 +304,28 @@ final class Recorder: NSObject {
         let image2 = self.resize(image, width: 28, height: 28)!
         let testImage = NSBitmapImageRep.init(cgImage: image2)
         // collect pixel values in component
-        let minX = Int(rect.minX)
-        let minY = Int(rect.minY)
-        let width = Int(rect.maxX) - minX
-        let height = Int(rect.maxY) - minY
-        var scaleW = 1
-        var scaleH = 1
-        if width > 28 {
-          scaleW = width / 28
-        } else if width < 28 {
-          scaleW = 28 / width
-        }
-        if height > 28 {
-          scaleH = height / 28
-        } else if height < 28 {
-          scaleH = 28 / height
-        }
-        for x in 0..<28 {
-          for y in 0..<28 {
-            let realX = x * scaleW + minX
-            let realY = y * scaleH + minY
+        let minX = Int(rect.minX) * 2
+        let minY = Int(rect.minY) * 2
+        let width = Int(rect.maxX) * 2 - minX
+        let height = Int(rect.maxY) * 2 - minY
+        // make square
+        var scaleW = 1.0
+        var scaleH = 1.0
+//        if width > 28 {
+//          scaleW = width / 28
+//        } else if width < 28 {
+//          scaleW = 28 / width
+//        }
+//        if height > 28 {
+//          scaleH = height / 28
+//        } else if height < 28 {
+//          scaleH = 28 / height
+//        }
+        // double for retina
+        for x in 0..<56 {
+          for y in 0..<56 {
+            let realX = Int(Double(x) * scaleW + Double(minX))
+            let realY = Int(Double(y) * scaleH + Double(minY))
             // debug info
             //            print("rect is \(minX) \(minY) \(width) \(height)")
             //            print("scaleW \(scaleW) scaleH \(scaleH)")
@@ -333,13 +336,13 @@ final class Recorder: NSObject {
               // we should just fill it in with white if not found
               pColor = NSColor.init(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0)
             }
-            testImage.setColor(pColor!, atX: realX, y: realY)
+            testImage.setColor(pColor!, atX: x, y: y)
             let luminance = (pColor!.redComponent + pColor!.greenComponent + pColor!.blueComponent) / 3
             pixelString += "\(luminance) "
           }
         }
         // test write out our scaled image
-        self.writeCGImage(image: image2, to: "\(outDir)/\(index).png")
+        self.writeCGImage(image: testImage.cgImage!, to: "\(outDir)/\(index).png")
         pixelString += "\n"
       }
       do {
@@ -405,8 +408,7 @@ final class Recorder: NSObject {
     var ciImage = CIImage(cvPixelBuffer: imageBuffer)
     ciImage = ciImage.cropped(to: cropRect)
     guard let cgImage = context.createCGImage(ciImage, from: ciImage.extent) else { return nil }
-    let resized = self.resize(cgImage, width: Int(cropRect.width / 2), height: Int(cropRect.height / 2))
-    return resized
+    return cgImage
   }
   
   func resize(_ image: CGImage, width: Int, height: Int) -> CGImage? {

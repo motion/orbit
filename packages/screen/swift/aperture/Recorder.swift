@@ -293,6 +293,7 @@ final class Recorder: NSObject {
     print("3. character finding: \(rects.count), \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     start = DispatchTime.now()
     let outputImageRep = NSBitmapImageRep.init(cgImage: outputImage)
+    print("image is \(outputImageRep.pixelsWide) wide \(outputImageRep.pixelsHigh) tall")
     if rects.count > 0 {
       var pixelString = ""
       // loop over component
@@ -300,15 +301,45 @@ final class Recorder: NSObject {
         // testing: write out character image
         let image = binarizedImage.cropping(to: rect)!
         let image2 = self.resize(image, width: 28, height: 28)!
-        self.writeCGImage(image: image2, to: "\(outDir)/\(index).png")
+        let testImage = NSBitmapImageRep.init(cgImage: image2)
         // collect pixel values in component
-        for x in Int(rect.minX)..<Int(rect.maxX) {
-          for y in Int(rect.minY)..<Int(rect.maxY) {
-            let pixelColor = outputImageRep.colorAt(x: x, y: y)!
-            let luminance = (pixelColor.redComponent + pixelColor.greenComponent + pixelColor.blueComponent) / 3
+        let minX = Int(rect.minX)
+        let minY = Int(rect.minY)
+        let width = Int(rect.maxX) - minX
+        let height = Int(rect.maxY) - minY
+        var scaleW = 1
+        var scaleH = 1
+        if width > 28 {
+          scaleW = width / 28
+        } else if width < 28 {
+          scaleW = 28 / width
+        }
+        if height > 28 {
+          scaleH = height / 28
+        } else if height < 28 {
+          scaleH = 28 / height
+        }
+        for x in 0..<28 {
+          for y in 0..<28 {
+            let realX = x * scaleW + minX
+            let realY = y * scaleH + minY
+            // debug info
+            //            print("rect is \(minX) \(minY) \(width) \(height)")
+            //            print("scaleW \(scaleW) scaleH \(scaleH)")
+            //            print("check \(realX) \(realY)")
+            var pColor = outputImageRep.colorAt(x: realX, y: realY)
+            if pColor == nil {
+              // this happens if we are at an edge, because we are checking a full 28x28
+              // we should just fill it in with white if not found
+              pColor = NSColor.init(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0)
+            }
+            testImage.setColor(pColor!, atX: realX, y: realY)
+            let luminance = (pColor!.redComponent + pColor!.greenComponent + pColor!.blueComponent) / 3
             pixelString += "\(luminance) "
           }
         }
+        // test write out our scaled image
+        self.writeCGImage(image: image2, to: "\(outDir)/\(index).png")
         pixelString += "\n"
       }
       do {

@@ -236,7 +236,6 @@ final class Recorder: NSObject {
       // third loop
       // for each VERTICAL SECTION, join together lines that need be
       // collects info into sectionLineBounds: section => line => [start, end, width, height]
-      var sectionLineBounds = [[[Int]]]()
       for (index, section) in sectionLines.enumerated() {
         let id = index + 1 // vId is always one above this
         let xOffset = sectionOffsets[id] * vScale - vScale

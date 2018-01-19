@@ -57,17 +57,17 @@ class ConnectedComponents {
                 canMergeInPlace = false
               }
               // disable for speed (lower accuracy):
-//              else {
-//                // If the same row in the previous column is not equal to the current
-//                // label then they must be merged. Add an entry to labelMerges.
-//                if var existingMerges = labelMerges[currentPixelLabel] {
-//                  existingMerges.insert(sameColInPreviousRowLabel)
-//                  labelMerges[currentPixelLabel] = existingMerges
-//                }
-//                else {
-//                  labelMerges[currentPixelLabel] = [sameColInPreviousRowLabel]
-//                }
-//              }
+              else {
+                // If the same row in the previous column is not equal to the current
+                // label then they must be merged. Add an entry to labelMerges.
+                if var existingMerges = labelMerges[currentPixelLabel] {
+                  existingMerges.insert(sameColInPreviousRowLabel)
+                  labelMerges[currentPixelLabel] = existingMerges
+                }
+                else {
+                  labelMerges[currentPixelLabel] = [sameColInPreviousRowLabel]
+                }
+              }
             }
           }
           else if (sameColInPreviousRowLabel >= 0) {

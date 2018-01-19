@@ -271,6 +271,7 @@ final class Recorder: NSObject {
         // 3.2 loop
         // cut lines (this could be joined into last loop for speed demons)
         let cc = ConnectedComponentsSwiftOCR()
+//        let cc = ConnectedComponents()
         let perThread = lines.count / threads
         let queue = DispatchQueue(label: "asyncQueue", attributes: .concurrent)
         let group = DispatchGroup()
@@ -291,10 +292,17 @@ final class Recorder: NSObject {
               let rect = CGRect(x: bounds[0], y: bounds[1], width: bounds[2], height: bounds[3])
               let lineImg = images.cropImage(ocrCharactersImage, box: rect)
               let nsBinarizedImage = NSImage.init(cgImage: lineImg, size: NSZeroSize)
+//              let rects = cc.labelImageFast(image: lineImg, calculateBoundingBoxes: true, invert: false)
               let rects = cc.extractBlobs(nsBinarizedImage)
               foundTotal += rects.count
+              images.writeCGImage(image: lineImg, to: "\(box.screenDir!)/\(box.id)-section-\(id)-line-\(index).png")
+              for (charIndex, bb) in rects.enumerated() {
+                let charRect = CGRect(x: bounds[0] + Int(bb.minX), y: bounds[1] + Int(bb.minY), width: Int(bb.width), height: Int(bb.height))
+                let charImg = images.cropImage(ocrCharactersImage, box: charRect)
+                images.writeCGImage(image: charImg, to: "\(box.screenDir!)/\(box.id)-section-\(id)-line-\(index)-char-\(charIndex).png")
+              }
 //              print("found chars \(id) \(index): \(rects.count)")
-//              images.writeCGImage(image: lineImg, to: "\(box.screenDir!)/\(box.id)-section-\(id)-line-\(index).png")
+
             }
             group.leave()
           }

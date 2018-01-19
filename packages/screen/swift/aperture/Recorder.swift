@@ -157,7 +157,7 @@ final class Recorder: NSObject {
       print("2. filtering image for ocr: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
       start = DispatchTime.now()
       // find vertical sections
-      let vScale = 8 // this is essentially the minimum font size we detect
+      let vScale = 4 // scale down amount
       let vWidth = bW / vScale
       let vHeight = bH / vScale
       let verticalImage = filters.filterForVerticalContentFinding(image: images.resize(ocrCharactersImage, width: vWidth, height: vHeight)!)
@@ -202,23 +202,26 @@ final class Recorder: NSObject {
       // loop over vertical blocks and store lines
 //      var streaks = Dictionary<Int, Dictionary<Int, Int>>() // verticalSpaceIndex => row => number of black pixels
       // vId = MAX_SECTIONS = first index
+      // max sections is the max number of vertical breaks itll find
       let MAX_SECTIONS = 8
       var streaks = [[Int]](repeating: [Int](repeating: 0, count: Int(vHeight)), count: MAX_SECTIONS)
+      var sectionOffsets = [Int](repeating: 0, count: MAX_SECTIONS) // vID => x
       typealias Lines = Dictionary<Int, Bool>
-      var allLines = [Lines]()
+      var sectionLines = [Lines]()
       var lastLine: Lines? = nil
       var vID = 0 // tracks current vertical column id
       for x in 0..<vWidth {
         if verticalIgnore[x] == true {
           continue
         }
-        // coming out of a ignore area
-        if verticalIgnore[x - 1] == true {
+        // coming out of a ignore area or first col is contentful
+        if x == 0 || verticalIgnore[x - 1] == true {
           if lastLine != nil {
-            allLines.append(lastLine!)
+            sectionLines.append(lastLine!)
           }
           lastLine = Lines()
           vID += 1
+          sectionOffsets[vID] = x
         }
         // were in a valid col
         for y in 0..<vHeight {
@@ -231,10 +234,50 @@ final class Recorder: NSObject {
           }
         }
       }
-      allLines.append(lastLine!)
-      print("we got our lines \(allLines.count)")
-      for line in allLines {
-        print("lines at: \(line.keys)")
+      sectionLines.append(lastLine!)
+      print("vertical sections \(sectionLines.count)")
+      let lHeight = 1 * vScale
+      // loop over each VERTICAL SECTION first
+      for (index, section) in sectionLines.enumerated() {
+        let id = index + 1 // vId is always one above this
+        let xOffset = sectionOffsets[id] * vScale - vScale
+        var lWidth: Int = 0
+        if sectionOffsets[id + 1] != 0 {
+          lWidth = sectionOffsets[id + 1] * vScale - xOffset
+        } else {
+          lWidth = vWidth * vScale - xOffset
+        }
+        // loop: find connected lines and join them
+        print("lines at: \(section.keys.sorted())")
+        let rawLines = section.keys.sorted()
+        var lines = [[Int]]()
+        var curIndex = 0
+        for (index, curVal) in rawLines.enumerated() {
+          if index == 0 { // first time
+            lines.append([curVal, curVal]) // [3, 3]
+            continue
+          }
+          // lineNum = [3, 4, 10, 11, ...]
+          var curLine = lines[curIndex] // [23, 24]
+          print("compare \(curVal) \(curLine)")
+          if curVal == curLine[1] + 1 {
+            curLine[1] = curVal
+            lines.insert(curLine, at: curIndex)
+          } else {
+            // not the same, start a new one
+            curIndex += 1
+            lines.append([curVal, curVal])
+          }
+        }
+        print("found contiguous lines: \(lines)")
+        for line in section.keys.sorted() {
+          let yOffset = line * vScale
+          print("line bounds: x \(xOffset) y \(yOffset) w \(lWidth) h \(lHeight)")
+          let vPadExtra = 6
+          let rect = CGRect(x: xOffset, y: yOffset - vPadExtra, width: lWidth, height: lHeight + vPadExtra * 2)
+          let lineImg = images.cropImage(ocrCharactersImage, box: rect)
+          images.writeCGImage(image: lineImg, to: "\(box.screenDir!)/\(box.id)-section-\(id)-line-\(line).png")
+        }
       }
       
       print("2.1. loop and check: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")

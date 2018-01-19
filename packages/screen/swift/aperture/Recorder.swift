@@ -236,7 +236,7 @@ final class Recorder: NSObject {
       }
       sectionLines.append(lastLine!)
       print("vertical sections \(sectionLines.count)")
-      let lHeight = 1 * vScale
+
       // loop over each VERTICAL SECTION first
       for (index, section) in sectionLines.enumerated() {
         let id = index + 1 // vId is always one above this
@@ -259,10 +259,9 @@ final class Recorder: NSObject {
           }
           // lineNum = [3, 4, 10, 11, ...]
           var curLine = lines[curIndex] // [23, 24]
-          print("compare \(curVal) \(curLine)")
           if curVal == curLine[1] + 1 {
             curLine[1] = curVal
-            lines.insert(curLine, at: curIndex)
+            lines[curIndex] = curLine
           } else {
             // not the same, start a new one
             curIndex += 1
@@ -270,13 +269,16 @@ final class Recorder: NSObject {
           }
         }
         print("found contiguous lines: \(lines)")
-        for line in section.keys.sorted() {
-          let yOffset = line * vScale
+        
+        // final loop, cut lines
+        for (index, lineRange) in lines.enumerated() {
+          let lHeight = (lineRange[1] - lineRange[0] + 1) * vScale
+          let yOffset = lineRange[0] * vScale
           print("line bounds: x \(xOffset) y \(yOffset) w \(lWidth) h \(lHeight)")
           let vPadExtra = 6
           let rect = CGRect(x: xOffset, y: yOffset - vPadExtra, width: lWidth, height: lHeight + vPadExtra * 2)
           let lineImg = images.cropImage(ocrCharactersImage, box: rect)
-          images.writeCGImage(image: lineImg, to: "\(box.screenDir!)/\(box.id)-section-\(id)-line-\(line).png")
+          images.writeCGImage(image: lineImg, to: "\(box.screenDir!)/\(box.id)-section-\(id)-line-\(index).png")
         }
       }
       

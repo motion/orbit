@@ -1,6 +1,8 @@
 import AVFoundation
 import AppKit
 
+let threads = 2
+
 enum ApertureError: Error {
   case invalidAudioDevice
   case couldNotAddScreen
@@ -191,7 +193,7 @@ final class Recorder: NSObject {
             if verticalBreaks[x]! > vHeight - leniancy {
               verticalIgnore[x] = true
 //              vWidthMin -= 1
-              print("found a vertical split at \(x)")
+//              print("found a vertical split at \(x)")
               break
             }
           }
@@ -235,7 +237,6 @@ final class Recorder: NSObject {
       print("vertical sections \(sectionLines.count)")
       // third loop
       // for each VERTICAL SECTION, join together lines that need be
-      // collects info into sectionLineBounds: section => line => [start, end, width, height]
       for (index, section) in sectionLines.enumerated() {
         let id = index + 1 // vId is always one above this
         let xOffset = sectionOffsets[id] * vScale - vScale
@@ -246,7 +247,7 @@ final class Recorder: NSObject {
           lWidth = vWidth * vScale - xOffset
         }
         // 3.1 loop: find connected lines and join them
-        print("lines at: \(section.keys.sorted())")
+//        print("lines at: \(section.keys.sorted())")
         let rawLines = section.keys.sorted()
         var lines = [[Int]]()
         var curIndex = 0
@@ -269,31 +270,48 @@ final class Recorder: NSObject {
         print("found contiguous lines: \(lines)")
         // 3.2 loop
         // cut lines (this could be joined into last loop for speed demons)
-        var lineBounds = [[Int]]()
-        for (index, lineRange) in lines.enumerated() {
-          let lHeight = (lineRange[1] - lineRange[0] + 1) * vScale
-          let yOffset = lineRange[0] * vScale
-          print("line bounds: x \(xOffset) y \(yOffset) w \(lWidth) h \(lHeight)")
-          let vPadExtra = 6
-          // get bounds
-          let bounds = [xOffset, yOffset - vPadExtra, lWidth, lHeight + vPadExtra * 2]
-          lineBounds.append(bounds)
-          // testing: write out image
-          let rect = CGRect(x: bounds[0], y: bounds[1], width: bounds[2], height: bounds[3])
-          let lineImg = images.cropImage(ocrCharactersImage, box: rect)
-          images.writeCGImage(image: lineImg, to: "\(box.screenDir!)/\(box.id)-section-\(id)-line-\(index).png")
+        let cc = ConnectedComponentsSwiftOCR()
+        let perThread = lines.count / threads
+        let queue = DispatchQueue(label: "asyncQueue", attributes: .concurrent)
+        let group = DispatchGroup()
+        var foundTotal = 0
+        for thread in 0..<threads {
+          group.enter()
+          queue.async {
+            let startIndex = thread * perThread
+            for index in startIndex..<(startIndex + perThread) {
+              let lineRange = lines[index]
+              let lHeight = (lineRange[1] - lineRange[0] + 1) * vScale
+              let yOffset = lineRange[0] * vScale
+              //          print("line bounds: x \(xOffset) y \(yOffset) w \(lWidth) h \(lHeight)")
+              let vPadExtra = 6
+              // get bounds
+              let bounds = [xOffset, yOffset - vPadExtra, lWidth, lHeight + vPadExtra * 2]
+              // testing: write out image
+              let rect = CGRect(x: bounds[0], y: bounds[1], width: bounds[2], height: bounds[3])
+              let lineImg = images.cropImage(ocrCharactersImage, box: rect)
+              let nsBinarizedImage = NSImage.init(cgImage: lineImg, size: NSZeroSize)
+              let rects = cc.extractBlobs(nsBinarizedImage)
+              foundTotal += rects.count
+//              print("found chars \(id) \(index): \(rects.count)")
+//              images.writeCGImage(image: lineImg, to: "\(box.screenDir!)/\(box.id)-section-\(id)-line-\(index).png")
+            }
+            group.leave()
+          }
         }
+        group.wait()
+        print("found \(foundTotal) total chars")
       }
-      print("2.1. line loop: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+      print("2.1. line loop \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
       
       // cut out characters
-      self.writeCharacters(binarizedImage: ocrCharactersImage, outputImage: ocrWriteImage, to: box.screenDir!)
+//      self.writeCharacters(binarizedImage: ocrCharactersImage, outputImage: ocrWriteImage, to: box.screenDir!)
       print("\ndone in \(Double(DispatchTime.now().uptimeNanoseconds - startAll.uptimeNanoseconds) / 1_000_000)ms\n")
 
       // for testing write out og images too
-      images.writeCGImage(image: binarizedImage, to: "\(box.screenDir!)/\(box.id)-full.png")
-      images.writeCGImage(image: ocrWriteImage, to: outPath)
-      images.writeCGImage(image: ocrCharactersImage, to: "\(box.screenDir!)/\(box.id)-binarized.png")
+//      images.writeCGImage(image: binarizedImage, to: "\(box.screenDir!)/\(box.id)-full.png")
+//      images.writeCGImage(image: ocrWriteImage, to: outPath)
+//      images.writeCGImage(image: ocrCharactersImage, to: "\(box.screenDir!)/\(box.id)-binarized.png")
     }
   }
   
@@ -308,7 +326,6 @@ final class Recorder: NSObject {
 //    print("dimensions [\(outputImageRep.pixelsWide), \(outputImageRep.pixelsHigh)]")
     
     var pixelString = ""
-    let threads = 2
     let perThread = rects.count / threads
     let queue = DispatchQueue(label: "asyncQueue", attributes: .concurrent)
     let group = DispatchGroup()

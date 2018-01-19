@@ -155,27 +155,26 @@ final class Recorder: NSObject {
       let ocrWriteImage = images.cropImage(filters.filterImageForOCR(image: cgImageLarge), box: cropBoxLarge)
       let ocrCharactersImage = images.cropImage(filters.filterImageForOCRCharacterFinding(image: cgImage), box: cropBox)
       print("2. filtering image for ocr: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
-      start = DispatchTime.now()
+      
       // find vertical sections
+      start = DispatchTime.now()
       let vScale = 4 // scale down amount
       let vWidth = bW / vScale
       let vHeight = bH / vScale
       let verticalImage = filters.filterForVerticalContentFinding(image: images.resize(ocrCharactersImage, width: vWidth, height: vHeight)!)
       print("2.1 filter: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+      
       // test write image:
       images.writeCGImage(image: verticalImage, to: "\(box.screenDir!)/\(box.id)-vertical-content-find.png")
+      
+      // find lines
       start = DispatchTime.now()
       let verticalImageRep = NSBitmapImageRep(cgImage: verticalImage)
-//      let verticalImageData: UnsafeMutablePointer<UInt8> = verticalImageRep.bitmapData!
-      print("2.1 get data: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
-      start = DispatchTime.now()
-      print("width is \(vWidth)")
       // first loop
       // find vertical areas + store some word info
       var verticalBreaks = Dictionary<Int, Int>() // used to track white streaks
       var blacks = [[Int]](repeating: [Int](repeating: 0, count: Int(vWidth)), count: Int(vHeight)) // height (y) first
       var verticalIgnore = Dictionary<Int, Bool>() // x => shouldIgnore
-//      var vWidthMin = vWidth
       for x in 0..<vWidth {
         verticalBreaks[x] = 0
         for y in 0..<vHeight {
@@ -200,8 +199,6 @@ final class Recorder: NSObject {
       }
       // second loop
       // loop over vertical blocks and store lines
-//      var streaks = Dictionary<Int, Dictionary<Int, Int>>() // verticalSpaceIndex => row => number of black pixels
-      // vId = MAX_SECTIONS = first index
       // max sections is the max number of vertical breaks itll find
       let MAX_SECTIONS = 8
       var streaks = [[Int]](repeating: [Int](repeating: 0, count: Int(vHeight)), count: MAX_SECTIONS)
@@ -236,8 +233,10 @@ final class Recorder: NSObject {
       }
       sectionLines.append(lastLine!)
       print("vertical sections \(sectionLines.count)")
-
-      // loop over each VERTICAL SECTION first
+      // third loop
+      // for each VERTICAL SECTION, join together lines that need be
+      // collects info into sectionLineBounds: section => line => [start, end, width, height]
+      var sectionLineBounds = [[[Int]]]()
       for (index, section) in sectionLines.enumerated() {
         let id = index + 1 // vId is always one above this
         let xOffset = sectionOffsets[id] * vScale - vScale
@@ -247,7 +246,7 @@ final class Recorder: NSObject {
         } else {
           lWidth = vWidth * vScale - xOffset
         }
-        // loop: find connected lines and join them
+        // 3.1 loop: find connected lines and join them
         print("lines at: \(section.keys.sorted())")
         let rawLines = section.keys.sorted()
         var lines = [[Int]]()
@@ -269,28 +268,34 @@ final class Recorder: NSObject {
           }
         }
         print("found contiguous lines: \(lines)")
-        
-        // final loop, cut lines
+        // 3.2 loop
+        // cut lines (this could be joined into last loop for speed demons)
+        var lineBounds = [[Int]]()
         for (index, lineRange) in lines.enumerated() {
           let lHeight = (lineRange[1] - lineRange[0] + 1) * vScale
           let yOffset = lineRange[0] * vScale
           print("line bounds: x \(xOffset) y \(yOffset) w \(lWidth) h \(lHeight)")
           let vPadExtra = 6
-          let rect = CGRect(x: xOffset, y: yOffset - vPadExtra, width: lWidth, height: lHeight + vPadExtra * 2)
+          // get bounds
+          let bounds = [xOffset, yOffset - vPadExtra, lWidth, lHeight + vPadExtra * 2]
+          lineBounds.append(bounds)
+          // testing: write out image
+          let rect = CGRect(x: bounds[0], y: bounds[1], width: bounds[2], height: bounds[3])
           let lineImg = images.cropImage(ocrCharactersImage, box: rect)
           images.writeCGImage(image: lineImg, to: "\(box.screenDir!)/\(box.id)-section-\(id)-line-\(index).png")
         }
       }
+      print("2.1. line loop: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
       
-      print("2.1. loop and check: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+      // cut out characters
       self.writeCharacters(binarizedImage: ocrCharactersImage, outputImage: ocrWriteImage, to: box.screenDir!)
-      // for testing write out og image too
       print("\ndone in \(Double(DispatchTime.now().uptimeNanoseconds - startAll.uptimeNanoseconds) / 1_000_000)ms\n")
+
+      // for testing write out og images too
       images.writeCGImage(image: binarizedImage, to: "\(box.screenDir!)/\(box.id)-full.png")
       images.writeCGImage(image: ocrWriteImage, to: outPath)
       images.writeCGImage(image: ocrCharactersImage, to: "\(box.screenDir!)/\(box.id)-binarized.png")
     }
-//    print("screenshotBox total: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
   }
   
   func writeCharacters(binarizedImage: CGImage, outputImage: CGImage, to outDir: String) {

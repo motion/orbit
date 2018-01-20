@@ -327,7 +327,7 @@ final class Recorder: NSObject {
               charRects.append(charRect)
             }
             // write characters
-            let chars = self.charToString(lineNum: index, bufferPointer: bufferPointer, perRow: perRow, rects: charRects, frameOffset: [bX, bY])
+            let chars = self.charToString(lineNum: index, bufferPointer: bufferPointer, perRow: perRow, rects: charRects, frameOffset: [bX, bY], outDir: box.screenDir!)
             lineStrings.insert(chars, at: index)
           }
           group.leave()
@@ -354,21 +354,22 @@ final class Recorder: NSObject {
     images.writeCGImage(image: ocrCharactersImage, to: "\(box.screenDir!)/\(box.id)-binarized.png")
   }
   
-  private let charSizeStride = stride(from: 0.0, to: 28.0, by: 1.0)
+  private let charSizeStride = stride(from: Float(0), to: Float(28), by: Float(1))
   
-  func charToString(lineNum: Int, bufferPointer: UnsafeMutablePointer<UInt32>, perRow: Int, rects: [CGRect], frameOffset: [Int]) -> String {
-    var start = DispatchTime.now()
+  func charToString(lineNum: Int, bufferPointer: UnsafeMutablePointer<UInt32>, perRow: Int, rects: [CGRect], frameOffset: [Int], outDir: String) -> String {
+    let start = DispatchTime.now()
     var output = ""
-    let dbl = 56.0
-    for index in 0..<rects.count {
-      let rect = rects[index]
-      let minX = Int(rect.minX / 2)
-      let minY = Int(rect.minY / 2)
-      let width = Double(rect.width)
-      let height = Double(rect.height)
+    let dbl = Float(56)
+    let frameX = CGFloat(frameOffset[0])
+    let frameY = CGFloat(frameOffset[1]) + 24  // 24 == titlebar??
+    for (index, rect) in rects.enumerated() {
+      let minX = rect.minX / 2
+      let minY = rect.minY / 2
+      let width = Float(rect.width)
+      let height = Float(rect.height)
       // make square
-      var scaleW = 1.0
-      var scaleH = 1.0
+      var scaleW = Float(1)
+      var scaleH = Float(1)
       if width > dbl {
         scaleW = dbl / width
       } else if width < dbl {
@@ -379,26 +380,24 @@ final class Recorder: NSObject {
       } else if height < dbl {
         scaleH = height / dbl
       }
-//          var pixels = [PixelData]()
-//          print("find char at \(rect)")
-      let realX = minX + frameOffset[0]
-      let realY = minY + frameOffset[1] + 24 // is this the titlebar??
+//      var pixels = [PixelData]() // write img
+      let realX = Int(minX + frameX)
+      let realY = Int(minY + frameY)
       let yScale = perRow / 2
-      for y in charSizeStride {
-        for x in charSizeStride {
-          let xS = Int(x * scaleW)
-          let yS = Int(y * scaleH)
+      for y in 0..<28 {
+        for x in 0..<28 {
+          let xS = Int(Float(x) * scaleW)
+          let yS = Int(Float(y) * scaleH)
           let luma = bufferPointer[(realY + yS) * yScale + (realX + xS)]
-          let lumaVal = Double(luma) / 3951094656
-          output += lumaVal.description + " "
-//              pixels.append(PixelData(a: 255, r: UInt8(lumaVal), g: UInt8(lumaVal), b: UInt8(lumaVal)))
+          let lumaVal = UInt8(Float(luma) / 3951094656 * 255)
+          output += String(lumaVal) + " "
+//          pixels.append(PixelData(a: 255, r: lumaVal, g: lumaVal, b: lumaVal))
         }
       }
       output += "\n"
-      // test: write out test char image
-//          images.writeCGImage(image: images.imageFromArray(pixels: pixels, width: 28, height: 28)!, to: "\(outDir)/x-line-\(lineNum)-char-\(index).png", resolution: 72)
+//      images.writeCGImage(image: images.imageFromArray(pixels: pixels, width: 28, height: 28)!, to: "\(outDir)/x-line-\(lineNum)-char-\(index).png", resolution: 72) // write img
     }
-    print(".. char => string: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+    print(".. char => string: \(rects.count) \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     return output
   }
   

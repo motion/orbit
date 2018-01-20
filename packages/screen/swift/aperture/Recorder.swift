@@ -1,3 +1,4 @@
+import Foundation
 import AVFoundation
 import AppKit
 
@@ -23,6 +24,14 @@ struct Box: Decodable {
 
 let filters = Filters()
 let images = Images()
+let fileManager = FileManager()
+
+func rmAllInside(_ pathUrl: URL) {
+  guard let filePaths = try? fileManager.contentsOfDirectory(at: pathUrl, includingPropertiesForKeys: nil, options: []) else { return }
+  for filePath in filePaths {
+    try? fileManager.removeItem(at: filePath)
+  }
+}
 
 final class Recorder: NSObject {
   private let input: AVCaptureScreenInput
@@ -100,7 +109,7 @@ final class Recorder: NSObject {
     self.input.minFrameDuration = CMTimeMake(1, Int32(fps))
   }
   
-  func screenshotBox(box: Box, buffer: CMSampleBuffer, findContent: Bool = false) {
+  func screenshotBox(box: Box, buffer: CMSampleBuffer, bufferPointer: UnsafeMutablePointer<UInt32>, perRow: Int, findContent: Bool = false) {
     let startAll = DispatchTime.now()
     // we use this at the end to write out everything
     var charRects = [CGRect]()
@@ -109,6 +118,9 @@ final class Recorder: NSObject {
       print("no screen dir")
       return
     }
+    // clear old files
+    rmAllInside(URL(fileURLWithPath: box.screenDir!))
+    // craete filtered images for content find
     let outPath = "\(box.screenDir ?? "/tmp")/\(box.id).png"
     let cropRect = CGRect(
       x: box.x * 2,
@@ -293,7 +305,7 @@ final class Recorder: NSObject {
             let lineRange = lines[index]
             let lHeight = (lineRange[1] - lineRange[0] + 1) * vScale
             let yOffset = lineRange[0] * vScale
-            print("line bounds: x \(xOffset) y \(yOffset) w \(lWidth) h \(lHeight)")
+//            print("line bounds: x \(xOffset) y \(yOffset) w \(lWidth) h \(lHeight)")
             let vPadExtra = 6
             // get bounds
             let bounds = [xOffset, yOffset - vPadExtra, lWidth, lHeight + vPadExtra * 2]
@@ -314,8 +326,8 @@ final class Recorder: NSObject {
                 height: Int(bb.height) * 2
               )
               charRects.append(charRect)
-              let charImg = images.resize(images.cropImage(ocrWriteImage, box: charRect), width: 28, height: 28)!
-              images.writeCGImage(image: charImg, to: "\(box.screenDir!)/\(box.id)-section-\(id)-line-\(index)-char-\(charIndex).png")
+//              let charImg = images.resize(images.cropImage(ocrWriteImage, box: charRect), width: 28, height: 28)!
+//              images.writeCGImage(image: charImg, to: "\(box.screenDir!)/\(box.id)-section-\(id)-line-\(index)-char-\(charIndex).png")
             }
           }
           group.leave()
@@ -327,7 +339,7 @@ final class Recorder: NSObject {
     print("2.1. line loop \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     
     // write characters
-    self.writeCharacters(image: ocrWriteImage, rects: charRects, to: box.screenDir!)
+    self.writeCharacters(testImg: ocrCharactersImage, bufferPointer: bufferPointer, perRow: perRow, rects: charRects, to: box.screenDir!)
     
     print("")
     print("done in \(Double(DispatchTime.now().uptimeNanoseconds - startAll.uptimeNanoseconds) / 1_000_000)ms")
@@ -338,24 +350,23 @@ final class Recorder: NSObject {
     images.writeCGImage(image: ocrCharactersImage, to: "\(box.screenDir!)/\(box.id)-binarized.png")
   }
   
-  func writeCharacters(image: CGImage, rects: [CGRect], to outDir: String) {
+  func writeCharacters(testImg: CGImage, bufferPointer: UnsafeMutablePointer<UInt32>, perRow: Int, rects: [CGRect], to outDir: String) {
     var start = DispatchTime.now()
-    let outputImageRep = NSBitmapImageRep(cgImage: image)
     var pixelString = ""
     let perThread = rects.count / threads
     let queue = DispatchQueue(label: "asyncQueue", attributes: .concurrent)
     let group = DispatchGroup()
-    var strings = [String].init(repeating: "", count: threads)
+    var strings = [String]()
 
     for thread in 0..<threads {
       group.enter()
       queue.async {
         let startIndex = thread * perThread
+        var lums = [String](repeating: "", count: 28 * 28)
         for index in startIndex..<(startIndex + perThread) {
           let rect = rects[index]
           // testing: write out character image
-          let testImage = NSBitmapImageRep.init(cgImage: images.resize(image.cropping(to: rect)!, width: 28, height: 28)!)
-          let writeRetina = 1
+          let testImage = NSBitmapImageRep.init(cgImage: images.resize(testImg, width: 28, height: 28)!)
           let minX = Double(rect.minX)
           let minY = Double(rect.minY)
           let width = Double(rect.width) * 2
@@ -373,26 +384,26 @@ final class Recorder: NSObject {
           } else if height < 56 {
             scaleH = height / 56
           }
-          scaleW = scaleW * Double(writeRetina)
-          scaleH = scaleH * Double(writeRetina)
           // double for retina
-          var str = ""
-          for x in 0..<(28 * writeRetina) {
-            for y in 0..<(28 * writeRetina) {
-              let realX = Double(x) * scaleW + minX
-              let realY = Double(y) * scaleH + minY
+          for x in 0..<28 {
+            for y in 0..<28 {
+              let realX = Int(Double(x) * scaleW + minX)
+              let realY = Int(Double(y) * scaleH + minY)
               var luminance = 1.0 // white
-              let pColor = outputImageRep.colorAt(x: Int(realX), y: Int(realY))
-              if pColor != nil {
-                testImage.setColor(pColor!, atX: x, y: y)
-                luminance = Double(pColor!.brightnessComponent)
-              }
-              str += luminance.description + " "
+              let luma = bufferPointer[realY * perRow + realX]
+              print("lum is \(luma)")
+              testImage.setColor(luma == 3951094656 ? NSColor.white : NSColor.black, atX: x, y: y)
+//              let pColor = outputImageRep.colorAt(x: Int(realX), y: Int(realY))
+//              if pColor != nil {
+////                testImage.setColor(pColor!, atX: x, y: y)
+//                luminance = Double(pColor!.brightnessComponent)
+//              }
+//              lums[x * y + y] = luminance.description + " "
             }
           }
           // test: write out test char image
           images.writeCGImage(image: testImage.cgImage!, to: "\(outDir)/-char-adjusted-\(index).png")
-          strings[thread] += str + "\n"
+          strings.append(lums.joined(separator: " "))
         }
         group.leave()
       }
@@ -473,7 +484,7 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
     for boxId in self.boxes.keys {
       let box = self.boxes[boxId]!
       if (firstTime && box.initialScreenshot || hasBoxChanged(box: box, buffer: int32Buffer, perRow: int32PerRow)) {
-        screenshotBox(box: box, buffer: sampleBuffer, findContent: box.findContent)
+        screenshotBox(box: box, buffer: sampleBuffer, bufferPointer: int32Buffer, perRow: int32PerRow, findContent: box.findContent)
         print(">\(box.id)")
       }
     }

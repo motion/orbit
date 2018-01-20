@@ -122,6 +122,8 @@ class Screen {
         } else {
           console.log(out)
         }
+      } else {
+        console.log(data)
       }
     })
 

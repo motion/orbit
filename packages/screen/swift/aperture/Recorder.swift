@@ -357,8 +357,6 @@ final class Recorder: NSObject {
     let queue = DispatchQueue(label: "asyncQueue", attributes: .concurrent)
     let group = DispatchGroup()
     var strings = [String]()
-    let white = PixelData.init(a: 255, r: 255, g: 255, b: 255)
-    let black = PixelData.init(a: 255, r: 0, g: 0, b: 0)
 
     for thread in 0..<threads {
       group.enter()
@@ -384,25 +382,15 @@ final class Recorder: NSObject {
           } else if height < 28 {
             scaleH = height / 28
           }
-          // double for retina
           var pixels = [PixelData]()
+          print("find char at \(rect)")
+          let realX = Int(minX) + frameOffset[0]
+          let realY = Int(minY) + frameOffset[1] + 20
           for y in 0..<28 {
             for x in 0..<28 {
-              let realX = Int(Double(x) * scaleW + minX) / 2 + frameOffset[0] / 2
-              let realY = Int(Double(y) * scaleH + minY) / 2 + frameOffset[1] / 2
-//              var luminance = 1.0 // white
-//              print("realx \(realX) realy \(realY)  \(realY * perRow + realX)")
-//              perRow / 4 = realwidth
               let luma = bufferPointer[(realY + y) * perRow / 2 + (realX + x)]
-//              print("lum is \(luma)")
               let lumaVal = UInt8(Double(luma) / 3951094656.0 * 255)
               pixels.append(PixelData(a: 255, r: lumaVal, g: lumaVal, b: lumaVal))
-//              let pColor = outputImageRep.colorAt(x: Int(realX), y: Int(realY))
-//              if pColor != nil {
-////                testImage.setColor(pColor!, atX: x, y: y)
-//                luminance = Double(pColor!.brightnessComponent)
-//              }
-//              lums[x * y + y] = luminance.description + " "
             }
           }
           // test: write out test char image

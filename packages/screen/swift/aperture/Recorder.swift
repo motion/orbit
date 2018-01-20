@@ -315,15 +315,17 @@ final class Recorder: NSObject {
             let nsBinarizedImage = NSImage.init(cgImage: lineImg, size: NSZeroSize)
             let rects = cc.extractBlobs(nsBinarizedImage)
             foundTotal += rects.count
-//              images.writeCGImage(image: lineImg, to: "\(box.screenDir!)/\(box.id)-section-\(id)-line-\(index).png")
+//            images.writeCGImage(image: lineImg, to: "\(box.screenDir!)/\(box.id)-section-\(id)-line-\(index).png")
             // gather char rects
-            for bb in rects {
+            for (charIndex, bb) in rects.enumerated() {
               let charRect = CGRect(
                 x: (bounds[0] + Int(bb.minX)) * 2,
                 y: (bounds[1] + Int(bb.minY)) * 2,
                 width: Int(bb.width) * 2,
                 height: Int(bb.height) * 2
               )
+//              let charImg = images.resize(images.cropImage(ocrWriteImage, box: charRect), width: 28, height: 28)!
+//              images.writeCGImage(image: charImg, to: "\(box.screenDir!)/\(box.id)-section-\(id)-line-\(index)-char-\(charIndex).png")
               charRects.append(charRect)
             }
             // write characters
@@ -380,7 +382,7 @@ final class Recorder: NSObject {
       } else if height < dbl {
         scaleH = height / dbl
       }
-//      var pixels = [PixelData]() // write img
+      var pixels = [PixelData]() // write img
       let realX = Int(minX + frameX)
       let realY = Int(minY + frameY)
       let yScale = perRow / 2
@@ -390,12 +392,12 @@ final class Recorder: NSObject {
           let yS = Int(Float(y) * scaleH)
           let luma = bufferPointer[(realY + yS) * yScale + (realX + xS)]
           let lumaVal = UInt8(Float(luma) / 3951094656 * 255)
-          output += String(lumaVal) + " "
-//          pixels.append(PixelData(a: 255, r: lumaVal, g: lumaVal, b: lumaVal))
+//          output += String(lumaVal) + " "
+          pixels.append(PixelData(a: 255, r: lumaVal, g: lumaVal, b: lumaVal))
         }
       }
       output += "\n"
-//      images.writeCGImage(image: images.imageFromArray(pixels: pixels, width: 28, height: 28)!, to: "\(outDir)/x-line-\(lineNum)-char-\(index).png", resolution: 72) // write img
+      images.writeCGImage(image: images.imageFromArray(pixels: pixels, width: 28, height: 28)!, to: "\(outDir)/x-line-\(lineNum)-char-\(index).png", resolution: 72) // write img
     }
     print(".. char => string: \(rects.count) \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     return output

@@ -111,8 +111,6 @@ final class Recorder: NSObject {
   
   func screenshotBox(box: Box, buffer: CMSampleBuffer, bufferPointer: UnsafeMutablePointer<UInt32>, perRow: Int, findContent: Bool = false) {
     let startAll = DispatchTime.now()
-    // we use this at the end to write out everything
-    var charRects = [CGRect]()
 
     if (box.screenDir == nil) {
       print("no screen dir")
@@ -302,10 +300,11 @@ final class Recorder: NSObject {
         queue.async {
           let startIndex = thread * perThread
           for index in startIndex..<(startIndex + perThread) {
+            // we use this at the end to write out everything
+            var charRects = [CGRect]()
             let lineRange = lines[index]
             let lHeight = (lineRange[1] - lineRange[0] + 1) * vScale
             let yOffset = lineRange[0] * vScale
-//            print("line bounds: x \(xOffset) y \(yOffset) w \(lWidth) h \(lHeight)")
             let vPadExtra = 6
             // get bounds
             let bounds = [xOffset, yOffset - vPadExtra, lWidth, lHeight + vPadExtra * 2]
@@ -313,12 +312,11 @@ final class Recorder: NSObject {
             let rect = CGRect(x: bounds[0], y: bounds[1], width: bounds[2], height: bounds[3])
             let lineImg = images.cropImage(ocrCharactersImage, box: rect)
             let nsBinarizedImage = NSImage.init(cgImage: lineImg, size: NSZeroSize)
-//              let rects = cc.labelImageFast(image: lineImg, calculateBoundingBoxes: true, invert: false)
             let rects = cc.extractBlobs(nsBinarizedImage)
             foundTotal += rects.count
 //              images.writeCGImage(image: lineImg, to: "\(box.screenDir!)/\(box.id)-section-\(id)-line-\(index).png")
             // gather char rects
-            for (charIndex, bb) in rects.enumerated() {
+            for bb in rects {
               let charRect = CGRect(
                 x: (bounds[0] + Int(bb.minX)) * 2,
                 y: (bounds[1] + Int(bb.minY)) * 2,
@@ -326,9 +324,9 @@ final class Recorder: NSObject {
                 height: Int(bb.height) * 2
               )
               charRects.append(charRect)
-//              let charImg = images.resize(images.cropImage(ocrWriteImage, box: charRect), width: 28, height: 28)!
-//              images.writeCGImage(image: charImg, to: "\(box.screenDir!)/\(box.id)-section-\(id)-line-\(index)-char-\(charIndex).png")
             }
+            // write characters
+            self.writeCharacters(lineNum: index, bufferPointer: bufferPointer, perRow: perRow, rects: charRects, frameOffset: [bX, bY], to: box.screenDir!)
           }
           group.leave()
         }
@@ -337,9 +335,6 @@ final class Recorder: NSObject {
       print("found \(foundTotal) total chars")
     }
     print("2.1. line loop \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
-    
-    // write characters
-    self.writeCharacters(testImg: ocrCharactersImage, bufferPointer: bufferPointer, perRow: perRow, rects: charRects, frameOffset: [bX, bY], to: box.screenDir!)
     
     print("")
     print("done in \(Double(DispatchTime.now().uptimeNanoseconds - startAll.uptimeNanoseconds) / 1_000_000)ms")
@@ -350,7 +345,7 @@ final class Recorder: NSObject {
     images.writeCGImage(image: ocrCharactersImage, to: "\(box.screenDir!)/\(box.id)-binarized.png")
   }
   
-  func writeCharacters(testImg: CGImage, bufferPointer: UnsafeMutablePointer<UInt32>, perRow: Int, rects: [CGRect], frameOffset: [Int], to outDir: String) {
+  func writeCharacters(lineNum: Int, bufferPointer: UnsafeMutablePointer<UInt32>, perRow: Int, rects: [CGRect], frameOffset: [Int], to outDir: String) {
     var start = DispatchTime.now()
     var pixelString = ""
     let perThread = rects.count / threads
@@ -372,29 +367,31 @@ final class Recorder: NSObject {
           // make square
           var scaleW = 1.0
           var scaleH = 1.0
-          if width > 28 {
-            scaleW = 28 / width
-          } else if width < 28 {
-            scaleW = width / 28
+          if width > 56 {
+            scaleW = 56 / width
+          } else if width < 56 {
+            scaleW = width / 56
           }
-          if height > 28 {
-            scaleH = 28 / height
-          } else if height < 28 {
-            scaleH = height / 28
+          if height > 56 {
+            scaleH = 56 / height
+          } else if height < 56 {
+            scaleH = height / 56
           }
           var pixels = [PixelData]()
-          print("find char at \(rect)")
+//          print("find char at \(rect)")
           let realX = Int(minX) + frameOffset[0]
-          let realY = Int(minY) + frameOffset[1] + 20
+          let realY = Int(minY) + frameOffset[1] + 24 // is this the titlebar??
           for y in 0..<28 {
             for x in 0..<28 {
-              let luma = bufferPointer[(realY + y) * perRow / 2 + (realX + x)]
+              let xS = Int(Double(x) * scaleW)
+              let yS = Int(Double(y) * scaleH)
+              let luma = bufferPointer[(realY + yS) * perRow / 2 + (realX + xS)]
               let lumaVal = UInt8(Double(luma) / 3951094656.0 * 255)
               pixels.append(PixelData(a: 255, r: lumaVal, g: lumaVal, b: lumaVal))
             }
           }
           // test: write out test char image
-          images.writeCGImage(image: images.imageFromArray(pixels: pixels, width: 28, height: 28)!, to: "\(outDir)/char-adjusted-\(index).png", resolution: 72)
+          images.writeCGImage(image: images.imageFromArray(pixels: pixels, width: 28, height: 28)!, to: "\(outDir)/x-line-\(lineNum)-char-\(index).png", resolution: 72)
           strings.append(lums.joined(separator: " "))
         }
         group.leave()

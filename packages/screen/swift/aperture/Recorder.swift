@@ -356,8 +356,6 @@ final class Recorder: NSObject {
     images.writeCGImage(image: ocrCharactersImage, to: "\(box.screenDir!)/\(box.id)-binarized.png")
   }
   
-  private let charSizeStride = stride(from: Float(0), to: Float(28), by: Float(1))
-  
   func charToString(lineNum: Int, bufferPointer: UnsafeMutablePointer<UInt32>, perRow: Int, rects: [CGRect], frameOffset: [Int], outDir: String) -> String {
     let start = DispatchTime.now()
     var output = ""
@@ -382,7 +380,7 @@ final class Recorder: NSObject {
       } else if height < dbl {
         scaleH = height / dbl
       }
-      var pixels = [PixelData]() // write img
+//      var pixels = [PixelData]() // write img
       let realX = Int(minX + frameX)
       let realY = Int(minY + frameY)
       let yScale = perRow / 2
@@ -391,13 +389,13 @@ final class Recorder: NSObject {
           let xS = Int(Float(x) * scaleW)
           let yS = Int(Float(y) * scaleH)
           let luma = bufferPointer[(realY + yS) * yScale + (realX + xS)]
-          let lumaVal = UInt8(Float(luma) / 3951094656 * 255)
-//          output += String(lumaVal) + " "
-          pixels.append(PixelData(a: 255, r: lumaVal, g: lumaVal, b: lumaVal))
+          let lumaVal = luma > 3555985190 ? "0 " : "255 " // warning, doing any sort of string conversion here slows it down bigly
+          output += lumaVal
+//          pixels.append(PixelData(a: 255, r: UInt8(lumaVal), g: UInt8(lumaVal), b: UInt8(lumaVal)))
         }
       }
       output += "\n"
-      images.writeCGImage(image: images.imageFromArray(pixels: pixels, width: 28, height: 28)!, to: "\(outDir)/x-line-\(lineNum)-char-\(index).png", resolution: 72) // write img
+//      images.writeCGImage(image: images.imageFromArray(pixels: pixels, width: 28, height: 28)!, to: "\(outDir)/x-line-\(lineNum)-char-\(index).png", resolution: 72) // write img
     }
     print(".. char => string: \(rects.count) \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     return output

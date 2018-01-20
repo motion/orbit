@@ -81,7 +81,7 @@ final class Recorder: NSObject {
     self.input.capturesCursor = showCursor
     
     output.alwaysDiscardsLateVideoFrames = true
-    let queue = DispatchQueue(label: "com.shu223.videosamplequeue")
+    let queue = DispatchQueue(label: "com.me.myqueue")
     output.setSampleBufferDelegate(self, queue: queue)
 
     if session.canAddInput(self.input) {
@@ -357,6 +357,8 @@ final class Recorder: NSObject {
     let queue = DispatchQueue(label: "asyncQueue", attributes: .concurrent)
     let group = DispatchGroup()
     var strings = [String]()
+    let white = PixelData.init(a: 255, r: 255, g: 255, b: 255)
+    let black = PixelData.init(a: 255, r: 0, g: 0, b: 0)
 
     for thread in 0..<threads {
       group.enter()
@@ -365,39 +367,36 @@ final class Recorder: NSObject {
         var lums = [String](repeating: "", count: 28 * 28)
         for index in startIndex..<(startIndex + perThread) {
           let rect = rects[index]
-          let minX = Double(rect.minX)
-          let minY = Double(rect.minY)
-          let width = Double(rect.width) * 2
-          let height = Double(rect.height) * 2
+          let minX = Double(rect.minX) / 2
+          let minY = Double(rect.minY) / 2
+          let width = Double(rect.width)
+          let height = Double(rect.height)
           // make square
           var scaleW = 1.0
           var scaleH = 1.0
-          if width > 56 {
-            scaleW = 56 / width
-          } else if width < 56 {
-            scaleW = width / 56
+          if width > 28 {
+            scaleW = 28 / width
+          } else if width < 28 {
+            scaleW = width / 28
           }
-          if height > 56 {
-            scaleH = 56 / height
-          } else if height < 56 {
-            scaleH = height / 56
+          if height > 28 {
+            scaleH = 28 / height
+          } else if height < 28 {
+            scaleH = height / 28
           }
           // double for retina
           var pixels = [PixelData]()
-          for x in 0..<28 {
-            for y in 0..<28 {
-              let realX = Int(Double(x) * scaleW + minX) + frameOffset[0]
-              let realY = Int(Double(y) * scaleH + minY) + frameOffset[1]
-              var luminance = 1.0 // white
+          for y in 0..<28 {
+            for x in 0..<28 {
+              let realX = Int(Double(x) * scaleW + minX) / 2 + frameOffset[0] / 2
+              let realY = Int(Double(y) * scaleH + minY) / 2 + frameOffset[1] / 2
+//              var luminance = 1.0 // white
 //              print("realx \(realX) realy \(realY)  \(realY * perRow + realX)")
-              let luma = bufferPointer[realY * perRow + realX]
+//              perRow / 4 = realwidth
+              let luma = bufferPointer[(realY + y) * perRow / 2 + (realX + x)]
 //              print("lum is \(luma)")
-              // its backwards yo
-              let white = PixelData.init(a: 255, r: 255, g: 255, b: 255)
-              let black = PixelData.init(a: 255, r: 0, g: 0, b: 0)
-              let color = luma == 3951094656 ? white : black
-              pixels.append(color)
-//              testImage.setColor(, atX: x, y: y)
+              let lumaVal = UInt8(Double(luma) / 3951094656.0 * 255)
+              pixels.append(PixelData(a: 255, r: lumaVal, g: lumaVal, b: lumaVal))
 //              let pColor = outputImageRep.colorAt(x: Int(realX), y: Int(realY))
 //              if pColor != nil {
 ////                testImage.setColor(pColor!, atX: x, y: y)
@@ -479,6 +478,13 @@ final class Recorder: NSObject {
 
 extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
   public func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+    // why doesnt this work :(
+//    if connection.videoOrientation.rawValue == 1 {
+//      connection.videoOrientation = .landscapeRight
+//      connection.isVideoMirrored = true
+//      return
+//    }
+    
     // let start = DispatchTime.now()
     let pixelBuffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)!
     CVPixelBufferLockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0));

@@ -356,18 +356,18 @@ final class Recorder: NSObject {
   
   func charToString(lineNum: Int, bufferPointer: UnsafeMutablePointer<UInt32>, perRow: Int, rects: [CGRect], frameOffset: [Int]) -> String {
     var start = DispatchTime.now()
-    var pixelString = ""
-    var strings = [String]()
+    var output = ""
+    let dbl = 56.0
+    let dblH = 28.0
     for index in 0..<rects.count {
       let rect = rects[index]
-      let minX = Double(rect.minX) / 2
-      let minY = Double(rect.minY) / 2
+      let minX = rect.minX / 2
+      let minY = rect.minY / 2
       let width = Double(rect.width)
       let height = Double(rect.height)
       // make square
       var scaleW = 1.0
       var scaleH = 1.0
-      let dbl = 56.0
       if width > dbl {
         scaleW = dbl / width
       } else if width < dbl {
@@ -382,25 +382,22 @@ final class Recorder: NSObject {
 //          print("find char at \(rect)")
       let realX = Int(minX) + frameOffset[0]
       let realY = Int(minY) + frameOffset[1] + 24 // is this the titlebar??
-      var lums = [String](repeating: "", count: 28 * 28)
-      for y in 0..<28 {
-        for x in 0..<28 {
-          let xS = Int(Double(x) * scaleW)
-          let yS = Int(Double(y) * scaleH)
-          let luma = bufferPointer[(realY + yS) * perRow / 2 + (realX + xS)]
-          let lumaVal = UInt8(Double(luma) / 3951094656.0 * 255)
-          lums.append(lumaVal.description + " ")
-//              pixels.append(PixelData(a: 255, r: lumaVal, g: lumaVal, b: lumaVal))
+      let maxX = Int(dblH * scaleW)
+      let maxY = Int(dblH * scaleH)
+      for y in 0..<maxY {
+        for x in 0..<maxX {
+          let luma = bufferPointer[(realY + y) * perRow / 2 + (realX + x)]
+          let lumaVal = Int(luma) / 3951094656 * 255
+          output += lumaVal.description + " "
+//              pixels.append(PixelData(a: 255, r: UInt8(lumaVal), g: UInt8(lumaVal), b: UInt8(lumaVal)))
         }
       }
-      strings.append(lums.joined(separator: " "))
+      output.append("\n")
       // test: write out test char image
 //          images.writeCGImage(image: images.imageFromArray(pixels: pixels, width: 28, height: 28)!, to: "\(outDir)/x-line-\(lineNum)-char-\(index).png", resolution: 72)
     }
-    
-    pixelString = strings.joined(separator: "\n")
-    print(".. char => string: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
-    return pixelString
+//    print(".. char => string: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+    return output
   }
   
   func hasBoxChanged(box: Box, buffer: UnsafeMutablePointer<UInt32>, perRow: Int) -> Bool {

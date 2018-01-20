@@ -137,9 +137,7 @@ final class Recorder: NSObject {
     var start = DispatchTime.now()
     var biggestBox: BoundingBox?
     let boxFindScale = 8
-    print("big width x height: \(cgImage.width) \(cgImage.height)")
     let binarizedImage = filters.filterImageForContentFinding(image: cgImage, scale: boxFindScale)
-    print("small width x height: \(binarizedImage.width) \(binarizedImage.height)")
     let cc = ConnectedComponents()
     let result = cc.labelImageFast(image: binarizedImage, calculateBoundingBoxes: true, invert: true)
     print("1. content finding: \(result.boundingBoxes!.count) \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
@@ -192,6 +190,7 @@ final class Recorder: NSObject {
     // find vertical areas + store some word info
     var verticalBreaks = Dictionary<Int, Int>() // used to track white streaks
     var blacks = [[Int]](repeating: [Int](repeating: 0, count: Int(vWidth)), count: Int(vHeight)) // height (y) first
+    var verticalClear = [Int]()
     var verticalIgnore = Dictionary<Int, Bool>() // x => shouldIgnore
     for x in 0..<vWidth {
       verticalBreaks[x] = 0
@@ -207,7 +206,8 @@ final class Recorder: NSObject {
           }
           // count nearly empty columns as empty (subtract here determines leniancy)
           if verticalBreaks[x]! > vHeight - leniancy {
-            verticalIgnore[x] = true
+            verticalClear.append(x)
+//            verticalIgnore[x] = true
 //              vWidthMin -= 1
 //              print("found a vertical split at \(x)")
             break
@@ -215,8 +215,32 @@ final class Recorder: NSObject {
         }
       }
     }
+    var curStreak = 1
+    print("vertclear \(verticalClear.count)")
+    for (index, cur) in verticalClear.enumerated() {
+      if index == 0 {
+        continue
+      }
+      let prev = verticalClear[index - 1]
+      if prev == cur {
+        print("streak \(cur)")
+        curStreak += 1
+      } else {
+        curStreak = 0
+        continue
+      }
+      if curStreak == 4 {
+        print("found a wide vertical gap at \(cur)")
+        // weve hit a streak, fill in the previous ignores
+        for x in (cur - 4)...cur {
+          verticalIgnore[x] = true
+        }
+      } else if curStreak > 4 {
+        verticalIgnore[cur] = true
+      }
+    }
     // TODO reenable, dont do vertical checks for now
-    verticalIgnore = Dictionary<Int, Bool>()
+    
     print("4. find verticals: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     start = DispatchTime.now()
     // second loop
@@ -254,7 +278,7 @@ final class Recorder: NSObject {
       }
     }
     sectionLines.append(lastLine!)
-    print("5. found \(sectionLines.count) lines: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+    print("5. found \(sectionLines.count) verticals: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     start = DispatchTime.now()
     // third loop
     // for each VERTICAL SECTION, join together lines that need be
@@ -314,16 +338,16 @@ final class Recorder: NSObject {
             // get bounds
             let bounds = [xOffset, yOffset - vPadExtra, lWidth, lHeight + vPadExtra * 2]
             // testing: write out image
-//            let rect = CGRect(x: bounds[0], y: bounds[1], width: bounds[2], height: bounds[3])
-//            let lineImg = images.cropImage(ocrCharactersImage, box: rect)
-//            let nsBinarizedImage = NSImage.init(cgImage: lineImg, size: NSZeroSize)
+            let rect = CGRect(x: bounds[0], y: bounds[1], width: bounds[2], height: bounds[3])
+            let lineImg = images.cropImage(ocrCharactersImage, box: rect)
             var innerTime = DispatchTime.now()
             let rects = self.components.extractBlobs(bounds: bounds, bufferPointer: bufferPointer, perRow: perRow, frameOffset: frameOffset, debug: false)
             // inner timer
             start2 += Double(DispatchTime.now().uptimeNanoseconds - innerTime.uptimeNanoseconds) / 1_000_000
             innerTime = DispatchTime.now()
             foundTotal += rects.count
-//            images.writeCGImage(image: lineImg, to: "\(box.screenDir!)/\(box.id)-section-\(id)-line-\(index).png")
+            // testing write out test image
+            images.writeCGImage(image: lineImg, to: "\(box.screenDir!)/\(box.id)-section-\(id)-line-\(index).png")
             // gather char rects
             for (charIndex, bb) in rects.enumerated() {
               let charRect = CGRect(

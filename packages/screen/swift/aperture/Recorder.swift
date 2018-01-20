@@ -319,7 +319,7 @@ final class Recorder: NSObject {
             let lineImg = images.cropImage(ocrCharactersImage, box: rect)
 //            let nsBinarizedImage = NSImage.init(cgImage: lineImg, size: NSZeroSize)
             var innerTime = DispatchTime.now()
-            let rects = self.components.extractBlobs(bounds: bounds, bufferPointer: bufferPointer, perRow: perRow, frameOffset: frameOffset)
+            let rects = self.components.extractBlobs(lineNum: index, bounds: bounds, bufferPointer: bufferPointer, perRow: perRow, frameOffset: frameOffset)
             // inner timer
             start2 += Double(DispatchTime.now().uptimeNanoseconds - innerTime.uptimeNanoseconds) / 1_000_000
             innerTime = DispatchTime.now()
@@ -407,7 +407,8 @@ final class Recorder: NSObject {
         }
       }
       output += "\n"
-      images.writeCGImage(image: images.imageFromArray(pixels: pixels, width: 28, height: 28)!, to: "\(outDir)/x-line-\(lineNum)-char-\(index).png", resolution: 72) // write img
+      print("\(outDir)")
+//      images.writeCGImage(image: images.imageFromArray(pixels: pixels, width: 28, height: 28)!, to: "\(outDir)/x-line-\(lineNum)-char-\(index).png", resolution: 72) // write img
     }
 //    print(".. char => string: \(rects.count) \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     return output

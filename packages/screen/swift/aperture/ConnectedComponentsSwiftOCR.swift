@@ -6,38 +6,26 @@ class ConnectedComponentsSwiftOCR {
   ///Radius in y axis for merging blobs
   open      var yMergeRadius:CGFloat = 0
 
-  internal func extractBlobs(bounds: [Int], bufferPointer: UnsafeMutablePointer<UInt32>, perRow: Int, frameOffset: [Int]) -> [CGRect] {
+  internal func extractBlobs(lineNum: Int, bounds: [Int], bufferPointer: UnsafeMutablePointer<UInt32>, perRow: Int, frameOffset: [Int]) -> [CGRect] {
     var start = DispatchTime.now()
-//    let bitmapRep = NSBitmapImageRep(data: image.tiffRepresentation!)!
-//    let bitmapData: UnsafeMutablePointer<UInt8> = bitmapRep.bitmapData!
-//    let cgImage   = bitmapRep.cgImage
-    
-    // timers
-    print("  extractBlobs: create image \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
-    start = DispatchTime.now()
 
-    //data <- bitmapData
-
-//    let numberOfComponents = (cgImage?.bitsPerPixel)! / (cgImage?.bitsPerComponent)!
-//    let bytesPerRow        = cgImage?.bytesPerRow
-//    let imageHeight        = cgImage?.height
-//    let imageWidth         = bytesPerRow! / numberOfComponents
-    let xOff = bounds[0]
-    let yOff = bounds[1]
-    let imageHeight = bounds[2]
-    let imageWidth = bounds[3]
+    let xOff = bounds[0] / 2 + frameOffset[0]
+    let yOff = bounds[1] / 2 + frameOffset[1]
+    let imageWidth = bounds[2]
+    let imageHeight = bounds[3]
     var data = [[UInt16]](repeating: [UInt16](repeating: 0, count: imageWidth), count: imageHeight)
     let yScale = perRow / 2
-    let xAdjust = xOff / 2 + frameOffset[0]
-    let yAdjust = yOff / 2 + frameOffset[1]
+    var pixels = [PixelData]() // write img
     for y in yOff..<(yOff + imageHeight) {
       for x in xOff..<(xOff + imageWidth) {
-        let luma = bufferPointer[(yAdjust + y) * yScale + (xAdjust + x)]
-        print("luma is \(luma)")
-//        let bitmapDataIndex = yBitmapDataIndex + xBitmapDataIndex
-//        data[y][x] = bitmapData[bitmapDataIndex] < 127 ? 0 : 255
+        let rawLuma = bufferPointer[y * yScale + x]
+        let luma = rawLuma / 3951094656 * 255
+        data[y - yOff][x - xOff] = UInt16(luma)
+        let brightness = UInt8(luma)
+        pixels.append(PixelData(a: 255, r: brightness, g: brightness, b: brightness))
       }
     }
+    Images().writeCGImage(image: images.imageFromArray(pixels: pixels, width: imageWidth, height: imageHeight)!, to: "/tmp/screen/a-line-\(lineNum).png", resolution: 72) // write img
 
     // timers
     print("  extractBlobs: setup data \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")

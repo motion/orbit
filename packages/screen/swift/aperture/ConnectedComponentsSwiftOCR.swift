@@ -6,11 +6,11 @@ class ConnectedComponentsSwiftOCR {
   ///Radius in y axis for merging blobs
   open      var yMergeRadius:CGFloat = 0
 
-  internal func extractBlobs(_ image: NSImage) -> [CGRect] {
+  internal func extractBlobs(bounds: [Int], bufferPointer: UnsafeMutablePointer<UInt32>, perRow: Int, frameOffset: [Int]) -> [CGRect] {
     var start = DispatchTime.now()
-    let bitmapRep = NSBitmapImageRep(data: image.tiffRepresentation!)!
-    let bitmapData: UnsafeMutablePointer<UInt8> = bitmapRep.bitmapData!
-    let cgImage   = bitmapRep.cgImage
+//    let bitmapRep = NSBitmapImageRep(data: image.tiffRepresentation!)!
+//    let bitmapData: UnsafeMutablePointer<UInt8> = bitmapRep.bitmapData!
+//    let cgImage   = bitmapRep.cgImage
     
     // timers
     print("  extractBlobs: create image \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
@@ -18,25 +18,29 @@ class ConnectedComponentsSwiftOCR {
 
     //data <- bitmapData
 
-    let numberOfComponents = (cgImage?.bitsPerPixel)! / (cgImage?.bitsPerComponent)!
-    let bytesPerRow        = cgImage?.bytesPerRow
-    let imageHeight        = cgImage?.height
-    let imageWidth         = bytesPerRow! / numberOfComponents
-
-    var data = [[UInt16]](repeating: [UInt16](repeating: 0, count: Int(imageWidth)), count: Int(imageHeight!))
-
-    let yBitmapDataIndexStride = Array(stride(from: 0, to: imageHeight!*bytesPerRow!, by: bytesPerRow!)).enumerated()
-    let xBitmapDataIndexStride = Array(stride(from: 0, to: imageWidth*numberOfComponents, by: numberOfComponents)).enumerated()
-
-    for (y, yBitmapDataIndex) in yBitmapDataIndexStride {
-      for (x, xBitmapDataIndex) in xBitmapDataIndexStride {
-        let bitmapDataIndex = yBitmapDataIndex + xBitmapDataIndex
-        data[y][x] = bitmapData[bitmapDataIndex] < 127 ? 0 : 255
+//    let numberOfComponents = (cgImage?.bitsPerPixel)! / (cgImage?.bitsPerComponent)!
+//    let bytesPerRow        = cgImage?.bytesPerRow
+//    let imageHeight        = cgImage?.height
+//    let imageWidth         = bytesPerRow! / numberOfComponents
+    let xOff = bounds[0]
+    let yOff = bounds[1]
+    let imageHeight = bounds[2]
+    let imageWidth = bounds[3]
+    var data = [[UInt16]](repeating: [UInt16](repeating: 0, count: imageWidth), count: imageHeight)
+    let yScale = perRow / 2
+    let xAdjust = xOff / 2 + frameOffset[0]
+    let yAdjust = yOff / 2 + frameOffset[1]
+    for y in yOff..<(yOff + imageHeight) {
+      for x in xOff..<(xOff + imageWidth) {
+        let luma = bufferPointer[(yAdjust + y) * yScale + (xAdjust + x)]
+        print("luma is \(luma)")
+//        let bitmapDataIndex = yBitmapDataIndex + xBitmapDataIndex
+//        data[y][x] = bitmapData[bitmapDataIndex] < 127 ? 0 : 255
       }
     }
 
     // timers
-    print("  extractBlobs: s \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+    print("  extractBlobs: setup data \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     start = DispatchTime.now()
 
     //MARK: First Pass
@@ -50,8 +54,8 @@ class ConnectedComponentsSwiftOCR {
     }
     var labelsUnion = UnionFind<UInt16>()
 
-    for y in 0..<Int(imageHeight!) {
-      for x in 0..<Int(imageWidth) {
+    for y in 0..<imageHeight {
+      for x in 0..<imageWidth {
 
         if data[y][x] == 0 { //Is Black
           if x == 0 { //Left no pixel
@@ -122,8 +126,8 @@ class ConnectedComponentsSwiftOCR {
     print("  extractBlobs: set labels \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     start = DispatchTime.now()
 
-    for y in 0..<Int(imageHeight!) {
-      for x in 0..<Int(imageWidth) {
+    for y in 0..<imageHeight {
+      for x in 0..<imageWidth {
         let luminosity = data[y][x]
         if luminosity != 255 {
           data[y][x] = UInt16(labelUnionSetOfXArray[luminosity] ?? 255)
@@ -138,10 +142,10 @@ class ConnectedComponentsSwiftOCR {
     //MARK: MinX, MaxX, MinY, MaxY
     var minMaxXYLabelDict = Dictionary<UInt16, (minX: Int, maxX: Int, minY: Int, maxY: Int)>()
     for label in 0..<parentArray.count {
-      minMaxXYLabelDict[UInt16(label)] = (minX: Int(imageWidth), maxX: 0, minY: Int(imageHeight!), maxY: 0)
+      minMaxXYLabelDict[UInt16(label)] = (minX: imageWidth, maxX: 0, minY: imageHeight, maxY: 0)
     }
-    for y in 0..<Int(imageHeight!) {
-      for x in 0..<Int(imageWidth) {
+    for y in 0..<imageHeight {
+      for x in 0..<imageWidth {
         let luminosity = data[y][x]
         if luminosity != 255 {
           var value = minMaxXYLabelDict[luminosity]!
@@ -168,12 +172,12 @@ class ConnectedComponentsSwiftOCR {
       let maxY = value.maxY
       //Filter blobs
       let minMaxCorrect = (minX < maxX && minY < maxY)
-      let notToTall    = Double(maxY - minY) < Double(imageHeight!) * 0.5
+      let notToTall    = Double(maxY - minY) < Double(imageHeight) * 0.5
       let notToWide    = Double(maxX - minX) < Double(imageWidth ) * 0.5
       let notToShort   = Double(maxY - minY) > 4
       let notToThin    = Double(maxX - minX) > 4
       let notToSmall   = (maxX - minX)*(maxY - minY) > 2
-      let positionIsOK = minY != 0 && minX != 0 && maxY != Int(imageHeight! - 1) && maxX != Int(imageWidth - 1)
+      let positionIsOK = minY != 0 && minX != 0 && maxY != Int(imageHeight - 1) && maxX != Int(imageWidth - 1)
       let aspectRatio  = Double(maxX - minX) / Double(maxY - minY)
       if minMaxCorrect && notToTall && notToWide && notToShort && notToThin && notToSmall && positionIsOK &&
         aspectRatio < 1 {

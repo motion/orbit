@@ -300,6 +300,7 @@ final class Recorder: NSObject {
       let group = DispatchGroup()
       var foundTotal = 0
       var lineStrings = [String](repeating: "", count: lines.count)
+      let frameOffset = [bX, bY + 24]
       for thread in 0..<lineThreads {
         group.enter()
         queue.async {
@@ -318,7 +319,7 @@ final class Recorder: NSObject {
             let lineImg = images.cropImage(ocrCharactersImage, box: rect)
 //            let nsBinarizedImage = NSImage.init(cgImage: lineImg, size: NSZeroSize)
             var innerTime = DispatchTime.now()
-            let rects = self.components.extractBlobs(bounds: bounds, bufferPointer: bufferPointer, perRow: perRow, frameOffset: [bX, bY])
+            let rects = self.components.extractBlobs(bounds: bounds, bufferPointer: bufferPointer, perRow: perRow, frameOffset: frameOffset)
             // inner timer
             start2 += Double(DispatchTime.now().uptimeNanoseconds - innerTime.uptimeNanoseconds) / 1_000_000
             innerTime = DispatchTime.now()
@@ -337,7 +338,7 @@ final class Recorder: NSObject {
               charRects.append(charRect)
             }
             // write characters
-            let chars = self.charToString(lineNum: index, bufferPointer: bufferPointer, perRow: perRow, rects: charRects, frameOffset: [bX, bY], outDir: box.screenDir!)
+            let chars = self.charToString(lineNum: index, bufferPointer: bufferPointer, perRow: perRow, rects: charRects, frameOffset: frameOffset, outDir: box.screenDir!)
             lineStrings.insert(chars, at: index)
             start3 += Double(DispatchTime.now().uptimeNanoseconds - innerTime.uptimeNanoseconds) / 1_000_000
           }
@@ -371,7 +372,7 @@ final class Recorder: NSObject {
     var output = ""
     let dbl = Float(56)
     let frameX = CGFloat(frameOffset[0])
-    let frameY = CGFloat(frameOffset[1]) + 24  // 24 == titlebar??
+    let frameY = CGFloat(frameOffset[1])
     for (index, rect) in rects.enumerated() {
       let minX = rect.minX / 2
       let minY = rect.minY / 2

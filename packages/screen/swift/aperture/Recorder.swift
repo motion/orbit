@@ -316,9 +316,9 @@ final class Recorder: NSObject {
             // testing: write out image
             let rect = CGRect(x: bounds[0], y: bounds[1], width: bounds[2], height: bounds[3])
             let lineImg = images.cropImage(ocrCharactersImage, box: rect)
-            let nsBinarizedImage = NSImage.init(cgImage: lineImg, size: NSZeroSize)
+//            let nsBinarizedImage = NSImage.init(cgImage: lineImg, size: NSZeroSize)
             var innerTime = DispatchTime.now()
-            let rects = self.components.extractBlobs(nsBinarizedImage)
+            let rects = self.components.extractBlobs(bounds: bounds, bufferPointer: bufferPointer, perRow: perRow, frameOffset: [bX, bY])
             // inner timer
             start2 += Double(DispatchTime.now().uptimeNanoseconds - innerTime.uptimeNanoseconds) / 1_000_000
             innerTime = DispatchTime.now()

@@ -36,7 +36,7 @@ class ConnectedComponentsSwiftOCR {
     }
 
     // timers
-    print("  extractBlobs: data gather \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+    print("  extractBlobs: s \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     start = DispatchTime.now()
 
     //MARK: First Pass

@@ -10,7 +10,7 @@ class Filters {
   }
 
   // specialized filter that is best for finding the big area of content
-  func filterImageForContentFinding(image: CGImage) -> CGImage {
+  func filterImageForContentFinding(image: CGImage, scale: Int) -> CGImage {
     var outputImage = CIImage(cgImage: image)
     var filter: CIFilter
     // make it black and white
@@ -31,36 +31,34 @@ class Filters {
     // edge detecting with low contrast and unsharp mask
     // gives really nice outlines
     filter = CIFilter(name: "CIEdges")!
-    filter.setValue(2.0, forKey: "inputIntensity")
+    filter.setValue(2.5, forKey: "inputIntensity")
     outputImage = applyFilter(filter, for: outputImage)
     // edges inversts everything basically, so lets un-invert
     filter = CIFilter(name: "CIColorInvert")!
     outputImage = applyFilter(filter, for: outputImage)
-    // motion blur one pixel in each direction,
+    // motion blur horizontal
     // this will ensure that rounded borders and sketchy outlines
     // will still connect to each other for the component finding
     filter = CIFilter(name: "CIMotionBlur")!
-    filter.setValue(1.0, forKey: "inputRadius")
+    filter.setValue(1.75, forKey: "inputRadius")
     filter.setValue(0.0, forKey: "inputAngle")
     outputImage = applyFilter(filter, for: outputImage)
     // motion blur vertical
     filter = CIFilter(name: "CIMotionBlur")!
-    filter.setValue(1.0, forKey: "inputRadius")
-    filter.setValue(0.5, forKey: "inputAngle")
+    filter.setValue(1.75, forKey: "inputRadius")
+    filter.setValue(1.5708, forKey: "inputAngle")
     outputImage = applyFilter(filter, for: outputImage)
     // threshold binarizes the image
     outputImage = applyFilter(ThresholdFilter(), for: outputImage)
-    // write canvas
-    let context = CIContext(options: [kCIContextUseSoftwareRenderer: false])
-    return context.createCGImage(outputImage, from: outputImage.extent)!
-  }
-  
-  // sharpens the big area once scaled down
-  func filterImageForContentFindingSecondPass(image: CGImage) -> CGImage {
-    var outputImage = CIImage(cgImage: image)
-    var filter: CIFilter
-    // threshold binarizes the image
+    
+    // resize
+    filter = CIFilter(name: "CILanczosScaleTransform")!
+    filter.setValue(1.0 / Double(scale), forKey: "inputScale")
+    outputImage = applyFilter(filter, for: outputImage)
+    
+    // final pass, clarifies resized image back to binary
     outputImage = applyFilter(ThresholdFilterEasy(), for: outputImage)
+    
     // write canvas
     let context = CIContext(options: [kCIContextUseSoftwareRenderer: false])
     return context.createCGImage(outputImage, from: outputImage.extent)!

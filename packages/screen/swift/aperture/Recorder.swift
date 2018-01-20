@@ -111,14 +111,13 @@ final class Recorder: NSObject {
   }
   
   func screenshotBox(box: Box, buffer: CMSampleBuffer, bufferPointer: UnsafeMutablePointer<UInt32>, perRow: Int, findContent: Bool = false) {
+    // clear old files
+    rmAllInside(URL(fileURLWithPath: box.screenDir!))
     let startAll = DispatchTime.now()
-
     if (box.screenDir == nil) {
       print("no screen dir")
       return
     }
-    // clear old files
-    rmAllInside(URL(fileURLWithPath: box.screenDir!))
     // craete filtered images for content find
     let outPath = "\(box.screenDir ?? "/tmp")/\(box.id).png"
     let cropRect = CGRect(
@@ -138,9 +137,9 @@ final class Recorder: NSObject {
     var start = DispatchTime.now()
     var biggestBox: BoundingBox?
     let boxFindScale = 8
-    var binarizedImage = filters.filterImageForContentFinding(image: cgImage)
-    binarizedImage = images.resize(binarizedImage, width: width / boxFindScale, height: height / boxFindScale)!
-    binarizedImage = filters.filterImageForContentFindingSecondPass(image: binarizedImage)
+    print("big width x height: \(cgImage.width) \(cgImage.height)")
+    let binarizedImage = filters.filterImageForContentFinding(image: cgImage, scale: boxFindScale)
+    print("small width x height: \(binarizedImage.width) \(binarizedImage.height)")
     let cc = ConnectedComponents()
     let result = cc.labelImageFast(image: binarizedImage, calculateBoundingBoxes: true, invert: true)
     print("1. content finding: \(result.boundingBoxes!.count) \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")

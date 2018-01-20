@@ -45,6 +45,21 @@ class Images {
   }
   
   func resize(_ image: CGImage, width: Int, height: Int) -> CGImage? {
+    let (mWidth, mHeight) = self.calcResize(image, width: width, height: height)
+    guard let colorSpace = image.colorSpace else { return nil }
+    guard let context = CGContext(data: nil, width: width, height: height, bitsPerComponent: image.bitsPerComponent, bytesPerRow: image.bytesPerRow, space: colorSpace, bitmapInfo: image.alphaInfo.rawValue) else { return nil }
+    // white background
+    context.clear(CGRect(x: 0, y: 0, width: width, height: height))
+    context.setFillColor(CGColor(gray: 1, alpha: 1))
+    context.fill(CGRect(x: 0, y: 0, width: width, height: height))
+    // draw image to context (resizing it)
+    context.interpolationQuality = .high
+    context.draw(image, in: CGRect(x: 0, y: 0, width: Int(mWidth), height: Int(mHeight)))
+    // call .makeImage to turn to image
+    return context.makeImage()
+  }
+  
+  func calcResize(_ image: CGImage, width: Int, height: Int) -> (Int, Int) {
     var ratio: Float = 0.0
     let imageWidth = Float(image.width)
     let imageHeight = Float(image.height)
@@ -57,23 +72,9 @@ class Images {
       ratio = maxHeight / imageHeight
     }
     // Calculate new size based on the ratio
-    // this would prevent sizing it up but we want that
-    //    if ratio > 1 {
-    //      ratio = 1
-    //    }
-    let mWidth = imageWidth * ratio
-    let mHeight = imageHeight * ratio
-    guard let colorSpace = image.colorSpace else { return nil }
-    guard let context = CGContext(data: nil, width: width, height: height, bitsPerComponent: image.bitsPerComponent, bytesPerRow: image.bytesPerRow, space: colorSpace, bitmapInfo: image.alphaInfo.rawValue) else { return nil }
-    // white background
-    context.clear(CGRect(x: 0, y: 0, width: width, height: height))
-    context.setFillColor(CGColor(gray: 1, alpha: 1))
-    context.fill(CGRect(x: 0, y: 0, width: width, height: height))
-    // draw image to context (resizing it)
-    context.interpolationQuality = .high
-    context.draw(image, in: CGRect(x: 0, y: 0, width: Int(mWidth), height: Int(mHeight)))
-    // call .makeImage to turn to image
-    return context.makeImage()
+    let mWidth = Int(imageWidth * ratio)
+    let mHeight = Int(imageHeight * ratio)
+    return (mWidth, mHeight)
   }
   
   func imageFromArray(pixels: [PixelData], width: Int, height: Int) -> CGImage? {

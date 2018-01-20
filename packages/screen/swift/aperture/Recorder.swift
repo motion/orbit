@@ -348,57 +348,46 @@ final class Recorder: NSObject {
   func writeCharacters(lineNum: Int, bufferPointer: UnsafeMutablePointer<UInt32>, perRow: Int, rects: [CGRect], frameOffset: [Int], to outDir: String) {
     var start = DispatchTime.now()
     var pixelString = ""
-    let perThread = rects.count / threads
-    let queue = DispatchQueue(label: "asyncQueue", attributes: .concurrent)
-    let group = DispatchGroup()
     var strings = [String]()
-
-    for thread in 0..<threads {
-      group.enter()
-      queue.async {
-        let startIndex = thread * perThread
-        var lums = [String](repeating: "", count: 28 * 28)
-        for index in startIndex..<(startIndex + perThread) {
-          let rect = rects[index]
-          let minX = Double(rect.minX) / 2
-          let minY = Double(rect.minY) / 2
-          let width = Double(rect.width)
-          let height = Double(rect.height)
-          // make square
-          var scaleW = 1.0
-          var scaleH = 1.0
-          if width > 56 {
-            scaleW = 56 / width
-          } else if width < 56 {
-            scaleW = width / 56
-          }
-          if height > 56 {
-            scaleH = 56 / height
-          } else if height < 56 {
-            scaleH = height / 56
-          }
-          var pixels = [PixelData]()
-//          print("find char at \(rect)")
-          let realX = Int(minX) + frameOffset[0]
-          let realY = Int(minY) + frameOffset[1] + 24 // is this the titlebar??
-          for y in 0..<28 {
-            for x in 0..<28 {
-              let xS = Int(Double(x) * scaleW)
-              let yS = Int(Double(y) * scaleH)
-              let luma = bufferPointer[(realY + yS) * perRow / 2 + (realX + xS)]
-              let lumaVal = UInt8(Double(luma) / 3951094656.0 * 255)
-              pixels.append(PixelData(a: 255, r: lumaVal, g: lumaVal, b: lumaVal))
-            }
-          }
-          // test: write out test char image
-          images.writeCGImage(image: images.imageFromArray(pixels: pixels, width: 28, height: 28)!, to: "\(outDir)/x-line-\(lineNum)-char-\(index).png", resolution: 72)
-          strings.append(lums.joined(separator: " "))
-        }
-        group.leave()
+    for index in 0..<rects.count {
+      let rect = rects[index]
+      let minX = Double(rect.minX) / 2
+      let minY = Double(rect.minY) / 2
+      let width = Double(rect.width)
+      let height = Double(rect.height)
+      // make square
+      var scaleW = 1.0
+      var scaleH = 1.0
+      let dbl = 56.0
+      if width > dbl {
+        scaleW = dbl / width
+      } else if width < dbl {
+        scaleW = width / dbl
       }
+      if height > dbl {
+        scaleH = dbl / height
+      } else if height < dbl {
+        scaleH = height / dbl
+      }
+//          var pixels = [PixelData]()
+//          print("find char at \(rect)")
+      let realX = Int(minX) + frameOffset[0]
+      let realY = Int(minY) + frameOffset[1] + 24 // is this the titlebar??
+      var lums = [String](repeating: "", count: 28 * 28)
+      for y in 0..<28 {
+        for x in 0..<28 {
+          let xS = Int(Double(x) * scaleW)
+          let yS = Int(Double(y) * scaleH)
+          let luma = bufferPointer[(realY + yS) * perRow / 2 + (realX + xS)]
+          let lumaVal = UInt8(Double(luma) / 3951094656.0 * 255)
+          lums.append(lumaVal.description + " ")
+//              pixels.append(PixelData(a: 255, r: lumaVal, g: lumaVal, b: lumaVal))
+        }
+      }
+      strings.append(lums.joined(separator: " "))
+      // test: write out test char image
+//          images.writeCGImage(image: images.imageFromArray(pixels: pixels, width: 28, height: 28)!, to: "\(outDir)/x-line-\(lineNum)-char-\(index).png", resolution: 72)
     }
-
-    group.wait()
     
     pixelString = strings.joined(separator: "\n")
     print("4. characters => string: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")

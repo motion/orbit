@@ -26,7 +26,7 @@ async function test() {
         y: 24,
         width: 1066,
         height: 910,
-        screenDir: '/tmp',
+        screenDir: '/tmp/screen',
         initialScreenshot: true,
         findContent: true,
       },

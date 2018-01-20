@@ -13,6 +13,8 @@
 		CFA30D14200EB2B00087ABC7 /* ConnectedComponentsSwiftOCR.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFA30D13200EB2B00087ABC7 /* ConnectedComponentsSwiftOCR.swift */; };
 		CFA30D16200EB3510087ABC7 /* UnionFind.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFA30D15200EB3510087ABC7 /* UnionFind.swift */; };
 		CFA30D18200EB3FB0087ABC7 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFA30D17200EB3FB0087ABC7 /* Extensions.swift */; };
+		CFBB310220112C86002D2115 /* Filters.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFBB310120112C86002D2115 /* Filters.swift */; };
+		CFBB310420112D16002D2115 /* Images.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFBB310320112D16002D2115 /* Images.swift */; };
 		E3A310881E450DC800D314DD /* DeviceList.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3A310851E450DC800D314DD /* DeviceList.swift */; };
 		E3A310891E450DC800D314DD /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3A310861E450DC800D314DD /* main.swift */; };
 		E3A3108A1E450DC800D314DD /* Recorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3A310871E450DC800D314DD /* Recorder.swift */; };
@@ -26,6 +28,8 @@
 		CFA30D13200EB2B00087ABC7 /* ConnectedComponentsSwiftOCR.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectedComponentsSwiftOCR.swift; sourceTree = "<group>"; };
 		CFA30D15200EB3510087ABC7 /* UnionFind.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnionFind.swift; sourceTree = "<group>"; };
 		CFA30D17200EB3FB0087ABC7 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		CFBB310120112C86002D2115 /* Filters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Filters.swift; sourceTree = "<group>"; };
+		CFBB310320112D16002D2115 /* Images.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Images.swift; sourceTree = "<group>"; };
 		E3A3107B1E450D3600D314DD /* aperture */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = aperture; sourceTree = BUILT_PRODUCTS_DIR; };
 		E3A310851E450DC800D314DD /* DeviceList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceList.swift; sourceTree = "<group>"; };
 		E3A310861E450DC800D314DD /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
@@ -76,6 +80,8 @@
 				CFA30D17200EB3FB0087ABC7 /* Extensions.swift */,
 				CF5D8415200FE58300A810FA /* ThresholdFilter.swift */,
 				CF5D8417200FE60800A810FA /* ThresholdBelowFilter.swift */,
+				CFBB310120112C86002D2115 /* Filters.swift */,
+				CFBB310320112D16002D2115 /* Images.swift */,
 			);
 			path = aperture;
 			sourceTree = "<group>";
@@ -156,9 +162,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				E3A3108A1E450DC800D314DD /* Recorder.swift in Sources */,
+				CFBB310420112D16002D2115 /* Images.swift in Sources */,
 				E3A310891E450DC800D314DD /* main.swift in Sources */,
 				CFA30D16200EB3510087ABC7 /* UnionFind.swift in Sources */,
 				CF5D8416200FE58300A810FA /* ThresholdFilter.swift in Sources */,
+				CFBB310220112C86002D2115 /* Filters.swift in Sources */,
 				CFA30D18200EB3FB0087ABC7 /* Extensions.swift in Sources */,
 				CFA30D14200EB2B00087ABC7 /* ConnectedComponentsSwiftOCR.swift in Sources */,
 				E3A310881E450DC800D314DD /* DeviceList.swift in Sources */,

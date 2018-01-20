@@ -295,6 +295,7 @@ final class Recorder: NSObject {
       let queue = DispatchQueue(label: "asyncQueue", attributes: .concurrent)
       let group = DispatchGroup()
       var foundTotal = 0
+      var lineStrings = [String](repeating: "", count: lines.count)
       for thread in 0..<lineThreads {
         group.enter()
         queue.async {
@@ -326,13 +327,21 @@ final class Recorder: NSObject {
               charRects.append(charRect)
             }
             // write characters
-            self.writeCharacters(lineNum: index, bufferPointer: bufferPointer, perRow: perRow, rects: charRects, frameOffset: [bX, bY], to: box.screenDir!)
+            let chars = self.charToString(lineNum: index, bufferPointer: bufferPointer, perRow: perRow, rects: charRects, frameOffset: [bX, bY])
+            lineStrings.insert(chars, at: index)
           }
           group.leave()
         }
       }
       group.wait()
       print("found \(foundTotal) total chars")
+      // write chars
+      do {
+        let path = NSURL.fileURL(withPath: "\(box.screenDir!)/characters.txt").absoluteURL
+        try lineStrings.joined(separator: "\n").write(to: path, atomically: true, encoding: .utf8)
+      } catch {
+        print("couldnt write pixel string \(error)")
+      }
     }
     print("2.1. line loop \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     
@@ -345,7 +354,7 @@ final class Recorder: NSObject {
     images.writeCGImage(image: ocrCharactersImage, to: "\(box.screenDir!)/\(box.id)-binarized.png")
   }
   
-  func writeCharacters(lineNum: Int, bufferPointer: UnsafeMutablePointer<UInt32>, perRow: Int, rects: [CGRect], frameOffset: [Int], to outDir: String) {
+  func charToString(lineNum: Int, bufferPointer: UnsafeMutablePointer<UInt32>, perRow: Int, rects: [CGRect], frameOffset: [Int]) -> String {
     var start = DispatchTime.now()
     var pixelString = ""
     var strings = [String]()
@@ -390,15 +399,8 @@ final class Recorder: NSObject {
     }
     
     pixelString = strings.joined(separator: "\n")
-    print("4. characters => string: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
-    start = DispatchTime.now()
-    do {
-      let path = NSURL.fileURL(withPath: "\(outDir)/characters.txt").absoluteURL
-      try pixelString.write(to: path, atomically: true, encoding: .utf8)
-    } catch {
-      print("couldnt write pixel string \(error)")
-    }
-    print("5. write string: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+    print(".. char => string: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+    return pixelString
   }
   
   func hasBoxChanged(box: Box, buffer: UnsafeMutablePointer<UInt32>, perRow: Int) -> Bool {

@@ -6,45 +6,33 @@ class ConnectedComponentsSwiftOCR {
   ///Radius in y axis for merging blobs
   open      var yMergeRadius:CGFloat = 0
 
-  internal func extractBlobs(lineNum: Int, bounds: [Int], bufferPointer: UnsafeMutablePointer<UInt32>, perRow: Int, frameOffset: [Int]) -> [CGRect] {
+  internal func extractBlobs(bounds: [Int], bufferPointer: UnsafeMutablePointer<UInt32>, perRow: Int, frameOffset: [Int], debug: Bool) -> [CGRect] {
     var start = DispatchTime.now()
 
-    let xOff = bounds[0] / 2 + frameOffset[0]
-    let yOff = bounds[1] / 2 + frameOffset[1]
+    let xOff = bounds[0] + frameOffset[0]
+    let yOff = bounds[1] + frameOffset[1]
     let imageWidth = bounds[2]
     let imageHeight = bounds[3]
     var data = [[UInt16]](repeating: [UInt16](repeating: 0, count: imageWidth), count: imageHeight)
     let yScale = perRow / 2
-    var pixels = [PixelData]() // write img
+//    var pixels = [PixelData]() // write img
     for y in yOff..<(yOff + imageHeight) {
       for x in xOff..<(xOff + imageWidth) {
-        let rawLuma = bufferPointer[y * yScale + x]
-        let luma = rawLuma / 3951094656 * 255
-        data[y - yOff][x - xOff] = UInt16(luma)
-        let brightness = UInt8(luma)
-        pixels.append(PixelData(a: 255, r: brightness, g: brightness, b: brightness))
+        let luma = bufferPointer[y * yScale + x] // 3951094656 == pure white
+        data[y - yOff][x - xOff] = luma > 1975547328 ? 255 : 0
+//        let brt = UInt8(Double(luma) / 3951094656 * 255)
+//        pixels.append(PixelData(a: 255, r: brt, g: brt, b: brt))
       }
     }
-    Images().writeCGImage(image: images.imageFromArray(pixels: pixels, width: imageWidth, height: imageHeight)!, to: "/tmp/screen/a-line-\(lineNum).png", resolution: 72) // write img
+//    Images().writeCGImage(image: images.imageFromArray(pixels: pixels, width: imageWidth, height: imageHeight)!, to: "/tmp/screen/a-line-\(lineNum).png", resolution: 72) // write img
 
-    // timers
-    print("  extractBlobs: setup data \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
-    start = DispatchTime.now()
+    if debug { print("  extractBlobs: setup data \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms"); start = DispatchTime.now() }
 
     //MARK: First Pass
-
-    var currentLabel:UInt16 = 0 {
-      didSet {
-        if currentLabel == 255 {
-          currentLabel = 256
-        }
-      }
-    }
+    var currentLabel:UInt16 = 256
     var labelsUnion = UnionFind<UInt16>()
-
     for y in 0..<imageHeight {
       for x in 0..<imageWidth {
-
         if data[y][x] == 0 { //Is Black
           if x == 0 { //Left no pixel
             if y == 0 { //Top no pixel
@@ -72,11 +60,9 @@ class ConnectedComponentsSwiftOCR {
             } else if y > 0 { //Top pixel
               if data[y][x - 1] != 255 { //Left Label
                 if data[y - 1][x] != 255 { //Top Label
-
                   if data[y - 1][x] != data[y][x - 1] {
                     labelsUnion.unionSetsContaining(data[y - 1][x], and: data[y][x - 1])
                   }
-
                   data[y][x] = data[y - 1][x]
                 } else { //Top no Label
                   data[y][x] = data[y][x - 1]
@@ -98,8 +84,7 @@ class ConnectedComponentsSwiftOCR {
     }
 
     // timers
-    print("  extractBlobs: first pass \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
-    start = DispatchTime.now()
+    if debug { print("  extractBlobs: first pass \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms"); start = DispatchTime.now() }
 
     //MARK: Second Pass
     let parentArray = Array(Set(labelsUnion.parent))
@@ -111,44 +96,35 @@ class ConnectedComponentsSwiftOCR {
     }
 
     // timers
-    print("  extractBlobs: set labels \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
-    start = DispatchTime.now()
+    if debug { print("  extractBlobs: set labels \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms"); start = DispatchTime.now() }
 
-    for y in 0..<imageHeight {
-      for x in 0..<imageWidth {
-        let luminosity = data[y][x]
-        if luminosity != 255 {
-          data[y][x] = UInt16(labelUnionSetOfXArray[luminosity] ?? 255)
-        }
-      }
-    }
-
-    // timer
-    print("  extractBlobs: gathering data \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
-    start = DispatchTime.now()
-
-    //MARK: MinX, MaxX, MinY, MaxY
     var minMaxXYLabelDict = Dictionary<UInt16, (minX: Int, maxX: Int, minY: Int, maxY: Int)>()
     for label in 0..<parentArray.count {
       minMaxXYLabelDict[UInt16(label)] = (minX: imageWidth, maxX: 0, minY: imageHeight, maxY: 0)
     }
+    
     for y in 0..<imageHeight {
       for x in 0..<imageWidth {
-        let luminosity = data[y][x]
+        var luminosity = data[y][x]
         if luminosity != 255 {
-          var value = minMaxXYLabelDict[luminosity]!
-          value.minX = min(value.minX, x)
-          value.maxX = max(value.maxX, x)
-          value.minY = min(value.minY, y)
-          value.maxY = max(value.maxY, y)
-          minMaxXYLabelDict[luminosity] = value
+          luminosity = UInt16(labelUnionSetOfXArray[luminosity] ?? 255)
+          data[y][x] = luminosity
+          if luminosity != 255 {
+            var value = minMaxXYLabelDict[luminosity]!
+            value.minX = min(value.minX, x)
+            value.maxX = max(value.maxX, x)
+            value.minY = min(value.minY, y)
+            value.maxY = max(value.maxY, y)
+            minMaxXYLabelDict[luminosity] = value
+          }
         }
       }
     }
 
     // timer
-    print("  extractBlobs: minmax \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
-    start = DispatchTime.now()
+    if debug { print("  extractBlobs: minmax \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms"); start = DispatchTime.now() }
+    
+    // rest is fast
 
     //MARK: Merge labels
     var mergeLabelRects = [CGRect]()
@@ -206,19 +182,6 @@ class ConnectedComponentsSwiftOCR {
       }
     }
 
-    mergeLabelRects = filteredMergeLabelRects
-
-//    var outputImages = [CGRect]()
-
-    //MARK: Crop image to blob
-//    for rect in mergeLabelRects {
-//      if let croppedCGImage = cgImage?.cropping(to: rect) {
-//        let croppedImage = NSImage(cgImage: croppedCGImage, size: rect.size)
-//        outputImages.append((croppedImage, rect))
-//      }
-//    }
-//    outputImages.sort { $0.1.origin.x < $1.1.origin.x }
-
-    return mergeLabelRects
+    return filteredMergeLabelRects
   }
 }

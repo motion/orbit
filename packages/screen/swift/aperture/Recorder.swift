@@ -315,16 +315,16 @@ final class Recorder: NSObject {
             // get bounds
             let bounds = [xOffset, yOffset - vPadExtra, lWidth, lHeight + vPadExtra * 2]
             // testing: write out image
-            let rect = CGRect(x: bounds[0], y: bounds[1], width: bounds[2], height: bounds[3])
-            let lineImg = images.cropImage(ocrCharactersImage, box: rect)
+//            let rect = CGRect(x: bounds[0], y: bounds[1], width: bounds[2], height: bounds[3])
+//            let lineImg = images.cropImage(ocrCharactersImage, box: rect)
 //            let nsBinarizedImage = NSImage.init(cgImage: lineImg, size: NSZeroSize)
             var innerTime = DispatchTime.now()
-            let rects = self.components.extractBlobs(lineNum: index, bounds: bounds, bufferPointer: bufferPointer, perRow: perRow, frameOffset: frameOffset)
+            let rects = self.components.extractBlobs(bounds: bounds, bufferPointer: bufferPointer, perRow: perRow, frameOffset: frameOffset, debug: false)
             // inner timer
             start2 += Double(DispatchTime.now().uptimeNanoseconds - innerTime.uptimeNanoseconds) / 1_000_000
             innerTime = DispatchTime.now()
             foundTotal += rects.count
-            images.writeCGImage(image: lineImg, to: "\(box.screenDir!)/\(box.id)-section-\(id)-line-\(index).png")
+//            images.writeCGImage(image: lineImg, to: "\(box.screenDir!)/\(box.id)-section-\(id)-line-\(index).png")
             // gather char rects
             for (charIndex, bb) in rects.enumerated() {
               let charRect = CGRect(
@@ -391,7 +391,7 @@ final class Recorder: NSObject {
       } else if height < dbl {
         scaleH = height / dbl
       }
-      var pixels = [PixelData]() // write img
+//      var pixels = [PixelData]() // write img
       let realX = Int(minX + frameX)
       let realY = Int(minY + frameY)
       let yScale = perRow / 2
@@ -402,12 +402,11 @@ final class Recorder: NSObject {
           let luma = bufferPointer[(realY + yS) * yScale + (realX + xS)]
           let lumaVal = luma > 3555985190 ? "0 " : "255 " // warning, doing any sort of string conversion here slows it down bigly
           output += lumaVal
-          let brightness = UInt8(luma / 3951094656 * 255)
-          pixels.append(PixelData(a: 255, r: brightness, g: brightness, b: brightness))
+//          let brightness = UInt8(luma / 3951094656 * 255)
+//          pixels.append(PixelData(a: 255, r: brightness, g: brightness, b: brightness))
         }
       }
       output += "\n"
-      print("\(outDir)")
 //      images.writeCGImage(image: images.imageFromArray(pixels: pixels, width: 28, height: 28)!, to: "\(outDir)/x-line-\(lineNum)-char-\(index).png", resolution: 72) // write img
     }
 //    print(".. char => string: \(rects.count) \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")

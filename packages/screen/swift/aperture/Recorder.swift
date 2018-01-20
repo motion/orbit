@@ -354,15 +354,16 @@ final class Recorder: NSObject {
     images.writeCGImage(image: ocrCharactersImage, to: "\(box.screenDir!)/\(box.id)-binarized.png")
   }
   
+  private let charSizeStride = stride(from: 0.0, to: 28.0, by: 1.0)
+  
   func charToString(lineNum: Int, bufferPointer: UnsafeMutablePointer<UInt32>, perRow: Int, rects: [CGRect], frameOffset: [Int]) -> String {
     var start = DispatchTime.now()
     var output = ""
     let dbl = 56.0
-    let dblH = 28.0
     for index in 0..<rects.count {
       let rect = rects[index]
-      let minX = rect.minX / 2
-      let minY = rect.minY / 2
+      let minX = Int(rect.minX / 2)
+      let minY = Int(rect.minY / 2)
       let width = Double(rect.width)
       let height = Double(rect.height)
       // make square
@@ -380,23 +381,24 @@ final class Recorder: NSObject {
       }
 //          var pixels = [PixelData]()
 //          print("find char at \(rect)")
-      let realX = Int(minX) + frameOffset[0]
-      let realY = Int(minY) + frameOffset[1] + 24 // is this the titlebar??
-      let maxX = Int(dblH * scaleW)
-      let maxY = Int(dblH * scaleH)
-      for y in 0..<maxY {
-        for x in 0..<maxX {
-          let luma = bufferPointer[(realY + y) * perRow / 2 + (realX + x)]
-          let lumaVal = Int(luma) / 3951094656 * 255
+      let realX = minX + frameOffset[0]
+      let realY = minY + frameOffset[1] + 24 // is this the titlebar??
+      let yScale = perRow / 2
+      for y in charSizeStride {
+        for x in charSizeStride {
+          let xS = Int(x * scaleW)
+          let yS = Int(y * scaleH)
+          let luma = bufferPointer[(realY + yS) * yScale + (realX + xS)]
+          let lumaVal = Double(luma) / 3951094656
           output += lumaVal.description + " "
 //              pixels.append(PixelData(a: 255, r: UInt8(lumaVal), g: UInt8(lumaVal), b: UInt8(lumaVal)))
         }
       }
-      output.append("\n")
+      output += "\n"
       // test: write out test char image
 //          images.writeCGImage(image: images.imageFromArray(pixels: pixels, width: 28, height: 28)!, to: "\(outDir)/x-line-\(lineNum)-char-\(index).png", resolution: 72)
     }
-//    print(".. char => string: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+    print(".. char => string: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     return output
   }
   

@@ -2,11 +2,17 @@ import Foundation
 import AppKit
 import AVFoundation
 
+public struct PixelData {
+  var a:UInt8 = 255
+  var r:UInt8
+  var g:UInt8
+  var b:UInt8
+}
+
 class Images {
-  func writeCGImage(image: CGImage, to destination: String) {
+  func writeCGImage(image: CGImage, to destination: String, resolution: Int = 300) {
     let destinationURL = URL(fileURLWithPath: destination)
     guard let finalDestination = CGImageDestinationCreateWithURL(destinationURL as CFURL, kUTTypePNG, 1, nil) else { return }
-    let resolution = 300
     let properties: NSDictionary = [
       kCGImageDestinationLossyCompressionQuality: 1,
       kCGImagePropertyDPIHeight: resolution,
@@ -68,5 +74,33 @@ class Images {
     context.draw(image, in: CGRect(x: 0, y: 0, width: Int(mWidth), height: Int(mHeight)))
     // call .makeImage to turn to image
     return context.makeImage()
+  }
+  
+  func imageFromArray(pixels: [PixelData], width: Int, height: Int) -> CGImage? {
+    assert(pixels.count == Int(width * height))
+    let pixelDataSize = MemoryLayout<PixelData>.size
+    let data: Data = pixels.withUnsafeBufferPointer {
+      return Data(buffer: $0)
+    }
+    let cfdata = NSData(data: data) as CFData
+    let provider: CGDataProvider! = CGDataProvider(data: cfdata)
+    if provider == nil {
+      print("CGDataProvider is not supposed to be nil")
+      return nil
+    }
+    let cgimage: CGImage! = CGImage(
+      width: width,
+      height: height,
+      bitsPerComponent: 8,
+      bitsPerPixel: 32,
+      bytesPerRow: width * pixelDataSize,
+      space: CGColorSpaceCreateDeviceRGB(),
+      bitmapInfo: CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedFirst.rawValue),
+      provider: provider,
+      decode: nil,
+      shouldInterpolate: false,
+      intent: .defaultIntent
+    )
+    return cgimage
   }
 }

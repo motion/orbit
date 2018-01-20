@@ -339,7 +339,7 @@ final class Recorder: NSObject {
     print("2.1. line loop \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     
     // write characters
-    self.writeCharacters(testImg: ocrCharactersImage, bufferPointer: bufferPointer, perRow: perRow, rects: charRects, to: box.screenDir!)
+    self.writeCharacters(testImg: ocrCharactersImage, bufferPointer: bufferPointer, perRow: perRow, rects: charRects, frameOffset: [bX, bY], to: box.screenDir!)
     
     print("")
     print("done in \(Double(DispatchTime.now().uptimeNanoseconds - startAll.uptimeNanoseconds) / 1_000_000)ms")
@@ -350,7 +350,7 @@ final class Recorder: NSObject {
     images.writeCGImage(image: ocrCharactersImage, to: "\(box.screenDir!)/\(box.id)-binarized.png")
   }
   
-  func writeCharacters(testImg: CGImage, bufferPointer: UnsafeMutablePointer<UInt32>, perRow: Int, rects: [CGRect], to outDir: String) {
+  func writeCharacters(testImg: CGImage, bufferPointer: UnsafeMutablePointer<UInt32>, perRow: Int, rects: [CGRect], frameOffset: [Int], to outDir: String) {
     var start = DispatchTime.now()
     var pixelString = ""
     let perThread = rects.count / threads
@@ -365,8 +365,6 @@ final class Recorder: NSObject {
         var lums = [String](repeating: "", count: 28 * 28)
         for index in startIndex..<(startIndex + perThread) {
           let rect = rects[index]
-          // testing: write out character image
-          let testImage = NSBitmapImageRep.init(cgImage: images.resize(testImg, width: 28, height: 28)!)
           let minX = Double(rect.minX)
           let minY = Double(rect.minY)
           let width = Double(rect.width) * 2
@@ -385,14 +383,21 @@ final class Recorder: NSObject {
             scaleH = height / 56
           }
           // double for retina
+          var pixels = [PixelData]()
           for x in 0..<28 {
             for y in 0..<28 {
-              let realX = Int(Double(x) * scaleW + minX)
-              let realY = Int(Double(y) * scaleH + minY)
+              let realX = Int(Double(x) * scaleW + minX) + frameOffset[0]
+              let realY = Int(Double(y) * scaleH + minY) + frameOffset[1]
               var luminance = 1.0 // white
+//              print("realx \(realX) realy \(realY)  \(realY * perRow + realX)")
               let luma = bufferPointer[realY * perRow + realX]
-              print("lum is \(luma)")
-              testImage.setColor(luma == 3951094656 ? NSColor.white : NSColor.black, atX: x, y: y)
+//              print("lum is \(luma)")
+              // its backwards yo
+              let white = PixelData.init(a: 255, r: 255, g: 255, b: 255)
+              let black = PixelData.init(a: 255, r: 0, g: 0, b: 0)
+              let color = luma == 3951094656 ? white : black
+              pixels.append(color)
+//              testImage.setColor(, atX: x, y: y)
 //              let pColor = outputImageRep.colorAt(x: Int(realX), y: Int(realY))
 //              if pColor != nil {
 ////                testImage.setColor(pColor!, atX: x, y: y)
@@ -402,7 +407,7 @@ final class Recorder: NSObject {
             }
           }
           // test: write out test char image
-          images.writeCGImage(image: testImage.cgImage!, to: "\(outDir)/-char-adjusted-\(index).png")
+          images.writeCGImage(image: images.imageFromArray(pixels: pixels, width: 28, height: 28)!, to: "\(outDir)/char-adjusted-\(index).png", resolution: 72)
           strings.append(lums.joined(separator: " "))
         }
         group.leave()

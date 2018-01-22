@@ -20,8 +20,6 @@ class Characters {
     let imgW = bounds[2]
     let imgH = bounds[3]
     var pixels = [PixelData]() // write img
-    var characters = [(x: Int, y: Int, w: Int, h: Int)]()
-    var cur = 0
     
     print("\(imgX) \(imgY) \(imgW) \(imgH)")
     for y in stride(from: imgY, to: imgY + imgH * 2, by: 2) {
@@ -31,6 +29,7 @@ class Characters {
         
         if isBlack {
           self.findCharacter(startX: x, startY: y)
+          return []
         }
         
         let binarized = UInt8(isBlack ? 0 : 255)
@@ -44,12 +43,16 @@ class Characters {
   }
   
   func findCharacter(startX: Int, startY: Int) {
+    var x = startX
+    var y = startY
     var startX = startX
     var startY = startY
     var endX = startX
     var endY = startY
     
-    
+    if buffer[x + 1] < 200 {
+      print("right one is black")
+    }
   }
 }
 

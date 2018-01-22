@@ -75,6 +75,15 @@ final class Recorder: NSObject {
     }
     self.input = AVCaptureScreenInput(displayID: displayId)
     output = AVCaptureVideoDataOutput()
+
+    output.videoSettings = [
+      kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_420YpCbCr8BiPlanarFullRange
+    ]
+    
+    print("output \(output.availableVideoPixelFormatTypes)")
+    print("output \(output.availableVideoCodecTypes)")
+    print("output \(output.videoSettings)")
+//    print("output \(output.orient)")
     
     super.init()
     
@@ -110,7 +119,7 @@ final class Recorder: NSObject {
     self.input.minFrameDuration = CMTimeMake(1, Int32(fps))
   }
   
-  func screenshotBox(box: Box, buffer: CMSampleBuffer, bufferPointer: UnsafeMutablePointer<UInt32>, perRow: Int, findContent: Bool = false) {
+  func screenshotBox(box: Box, buffer: CMSampleBuffer, bufferPointer: UnsafeMutablePointer<UInt8>, perRow: Int, findContent: Bool = false) {
     // clear old files
     rmAllInside(URL(fileURLWithPath: box.screenDir!))
     let startAll = DispatchTime.now()
@@ -118,6 +127,7 @@ final class Recorder: NSObject {
       print("no screen dir")
       return
     }
+    print("doing screen")
     // craete filtered images for content find
     let outPath = "\(box.screenDir ?? "/tmp")/\(box.id).png"
     let cropRect = CGRect(
@@ -131,9 +141,11 @@ final class Recorder: NSObject {
     let height = Int(cropRect.height / 2)
     guard let cgImage = images.resize(cgImageLarge, width: width, height: height) else { return }
     if (!findContent) {
+      print("dont find content")
       images.writeCGImage(image: cgImage, to: outPath)
       return
     }
+    print("find content")
     var start = DispatchTime.now()
     var biggestBox: BoundingBox?
     let boxFindScale = 8
@@ -189,7 +201,7 @@ final class Recorder: NSObject {
     // first loop
     // find vertical areas + store some word info
     var verticalBreaks = Dictionary<Int, Int>() // used to track white streaks
-    var blacks = [[Int]](repeating: [Int](repeating: 0, count: Int(vWidth)), count: Int(vHeight)) // height (y) first
+    var imgData = [[Int]](repeating: [Int](repeating: 0, count: Int(vWidth)), count: Int(vHeight)) // height (y) first
     var verticalClear = [Int]()
     var verticalIgnore = Dictionary<Int, Bool>() // x => shouldIgnore
     for x in 0..<vWidth {
@@ -197,7 +209,7 @@ final class Recorder: NSObject {
       for y in 0..<vHeight {
         let isBlack = verticalImageRep.colorAt(x: x, y: y)!.brightnessComponent == 0.0
         if isBlack {
-          blacks[y][x] = 1
+          imgData[y][x] = 1
         } else {
           let leniancy = 3
           // is white
@@ -268,7 +280,7 @@ final class Recorder: NSObject {
       }
       // were in a valid col
       for y in 0..<vHeight {
-        if blacks[y][x] == 1 {
+        if imgData[y][x] == 1 {
           streaks[vID][y] += 1
           // this comparison is the low bound for the num of pixels until we consider it a word
           if streaks[vID][y] > 6 {
@@ -313,6 +325,7 @@ final class Recorder: NSObject {
         }
       }
       print("6. join, \(lines.count) lines: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+      print("lines: \(lines)")
       start = DispatchTime.now()
       var start2 = 0.0
       var start3 = 0.0
@@ -341,7 +354,8 @@ final class Recorder: NSObject {
             let rect = CGRect(x: bounds[0], y: bounds[1], width: bounds[2], height: bounds[3])
             let lineImg = images.cropImage(ocrCharactersImage, box: rect)
             var innerTime = DispatchTime.now()
-            let rects = self.components.extractBlobs(bounds: bounds, bufferPointer: bufferPointer, perRow: perRow, frameOffset: frameOffset, debug: false)
+            let originalBounds = [bounds[0] + frameOffset[0], bounds[1] + frameOffset[1], bounds[2], bounds[3]]
+            let rects = Characters().find(id: index, data: bufferPointer, perRow: perRow, bounds: originalBounds)
             // inner timer
             start2 += Double(DispatchTime.now().uptimeNanoseconds - innerTime.uptimeNanoseconds) / 1_000_000
             innerTime = DispatchTime.now()
@@ -390,7 +404,7 @@ final class Recorder: NSObject {
     images.writeCGImage(image: ocrCharactersImage, to: "\(box.screenDir!)/\(box.id)-binarized.png")
   }
   
-  func charToString(lineNum: Int, bufferPointer: UnsafeMutablePointer<UInt32>, perRow: Int, rects: [CGRect], frameOffset: [Int], outDir: String) -> String {
+  func charToString(lineNum: Int, bufferPointer: UnsafeMutablePointer<UInt8>, perRow: Int, rects: [CGRect], frameOffset: [Int], outDir: String) -> String {
 //    let start = DispatchTime.now()
     var output = ""
     let dbl = Float(56)
@@ -436,7 +450,7 @@ final class Recorder: NSObject {
     return output
   }
   
-  func hasBoxChanged(box: Box, buffer: UnsafeMutablePointer<UInt32>, perRow: Int) -> Bool {
+  func hasBoxChanged(box: Box, buffer: UnsafeMutablePointer<UInt8>, perRow: Int) -> Bool {
     let lastBox = self.lastBoxes[box.id]
     var hasLastBox = false
     let boxX = box.x
@@ -469,7 +483,7 @@ final class Recorder: NSObject {
             }
           }
         }
-        curBox.insert(luma, at: index)
+        curBox.insert(UInt32(luma), at: index)
 //        lastIndex = index
       }
       if (shouldFinish) {
@@ -497,14 +511,14 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
     // let start = DispatchTime.now()
     let pixelBuffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)!
     CVPixelBufferLockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0));
-    let baseAddress = CVPixelBufferGetBaseAddress(pixelBuffer)
-    let int32Buffer = unsafeBitCast(baseAddress, to: UnsafeMutablePointer<UInt32>.self)
-    let int32PerRow = CVPixelBufferGetBytesPerRow(pixelBuffer)
+    let baseAddress = CVPixelBufferGetBaseAddressOfPlane(pixelBuffer, 0)
+    let buffer = unsafeBitCast(baseAddress, to: UnsafeMutablePointer<UInt8>.self)
+    let perRow = CVPixelBufferGetBytesPerRowOfPlane(pixelBuffer, 0)
     // loop over boxes and check
     for boxId in self.boxes.keys {
       let box = self.boxes[boxId]!
-      if (firstTime && box.initialScreenshot || hasBoxChanged(box: box, buffer: int32Buffer, perRow: int32PerRow)) {
-        screenshotBox(box: box, buffer: sampleBuffer, bufferPointer: int32Buffer, perRow: int32PerRow, findContent: box.findContent)
+      if (firstTime && box.initialScreenshot || hasBoxChanged(box: box, buffer: buffer, perRow: perRow)) {
+        screenshotBox(box: box, buffer: sampleBuffer, bufferPointer: buffer, perRow: perRow, findContent: box.findContent)
         print(">\(box.id)")
       }
     }

@@ -70,6 +70,7 @@ async function test() {
 
   video.onChangedFrame(data => {
     console.log('Changed!', data)
+    process.exit(0)
   })
 }
 

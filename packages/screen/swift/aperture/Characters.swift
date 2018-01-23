@@ -17,11 +17,10 @@ class Characters {
   }
 
   func find(id: Int, bounds: [Int]) -> [[Int]] {
-//    self.shouldDebug = id == 1
     let start = DispatchTime.now()
     let MAX_LUMA = 80 // higher == allow lighter
     let imgX = bounds[0] * 2
-    let imgY = bounds[1] * 2
+    let imgY = bounds[1] * 2 + 23
     let imgW = bounds[2]
     let imgH = bounds[3]
     var foundChars = [[Int]]()
@@ -33,7 +32,9 @@ class Characters {
     // we control the sticks for more speed
     var x = 0
     var y = 0
+    let maxHeightCheck = imgH - imgH / 4
     while true {
+      self.shouldDebug = curChar == 0
       // loop through from ltr, then ttb
       if y == imgH - 1 {
         x += 1
@@ -45,31 +46,41 @@ class Characters {
       if x >= imgW || y >= imgH || (x == imgW - 1 && y == imgH - 1) {
         break
       }
+      // dont start on pixels close to bottom
+      if y > maxHeightCheck {
+        x += 1
+        y = 0
+        continue
+      }
       // loop logic
       let xO = x * 2 + imgX
       let yO = y * 2 + imgY
       let luma = buffer[yO * perRow + xO]
       let isBlack = luma < MAX_LUMA ? true : false
-      if debugImg != nil {
+      if shouldDebug && debugImg != nil {
         pixels![x + y * imgW] = PixelData(a: 255, r: luma, g: luma, b: luma)
       }
       if isBlack {
-        if debugImg != nil {
+        if shouldDebug && debugImg != nil {
           let charImgIn = images.cropImage(debugImg!, box: CGRect(x: xO / 2, y: yO / 2 - 24, width: 50, height: 50))
           images.writeCGImage(image: charImgIn, to: "/tmp/screen/a-line-\(id)-charIN-\(curChar).png")
         }
-        let cb = self.findCharacter(startX: xO, startY: yO)
+        let cb = self.findCharacter(
+          startX: xO,
+          startY: yO,
+          maxHeight: imgH
+        )
         foundChars.append(cb)
-        if debugImg != nil {
+        if shouldDebug && debugImg != nil {
           images.writeCGImage(image: images.cropImage(debugImg!, box: CGRect(x: cb[0] / 2, y: cb[1] / 2 - 24, width: cb[2] / 2, height: cb[3] / 2)), to: "/tmp/screen/char-\(id)-\(curChar).png")
         }
         // after processing new char, move x to end of char
-        x += cb[2] / 2 + 1
+        x += cb[2] / 2 + 2
         y = 0
         curChar += 1
       }
     }
-    if debugImg != nil {
+    if shouldDebug && debugImg != nil {
       if let img = images.imageFromArray(pixels: pixels!, width: imgW, height: imgH) {
         Images().writeCGImage(image: img, to: "/tmp/screen/a-line-\(id).png", resolution: 72) // write img
       }
@@ -86,178 +97,48 @@ class Characters {
     }
   }
 
-  func findCharacter(startX: Int, startY: Int) -> [Int] {
-    let LEFT = 0
-    let UP = 1
-    let RIGHT = 2
-    let DOWN = 3
-    var startPoint = [startX, startY] // top left point
-    var endPoint = [startX, startY] // bottom right point
+  func findCharacter(startX: Int, startY: Int, maxHeight: Int) -> [Int] {
+    var maxY = startY
+    var maxX = startX
     var x = startX
-    var y = startY
-    let maxVenture = 50 // most amount to go without finding new bound before give up
     let blackLim = 125 // ensure breaks, lower = less black
-    var curTry = 0
-    var prevPos = -1
-    var prevDirection = DOWN
-    let PX = 1
-    while true {
-      curTry += 1
-      if curTry > maxVenture {
-        debug("max venture")
-        break
+    var foundAt = Dictionary<Int, Bool>()
+    var foundPixels = true
+    var firstLoop = true
+    while foundPixels {
+      print("move row")
+      if !firstLoop {
+        x += 1
       }
-      if curTry > 1 && x == startX && y == startY {
-        debug("back at begin")
-        break
-      }
-      let curPos = y * perRow + x
-      var rightBlack = false
-      var downBlack = false
-      var leftBlack = false
-      var upBlack = false
-      // left
-      let leftIndex = y * perRow + x - PX
-      if prevPos != leftIndex && buffer[leftIndex] < blackLim {
-        leftBlack = true
-        if x - PX < startPoint[0] {
-          curTry = 0
-          prevDirection = LEFT
-          x -= PX
-          startPoint[0] = x
-          prevPos = curPos
-          debug("left one")
-          continue
+      foundPixels = false
+      for yOff in 0...maxHeight {
+        let yP = yOff + startY
+        let curPos = yP * perRow + x
+        print("\(yP) \(maxY) \(yOff) \(buffer[curPos] < blackLim)")
+        if buffer[curPos] < blackLim {
+          // count it if the leftward pixels touch
+          let leftPx = foundAt[yP * perRow + x - 1]
+          let leftUpPx = foundAt[(yP - 1) * perRow + x - 1]
+          let leftDownPx = foundAt[(yP + 1) * perRow + x - 1]
+          if firstLoop || leftPx != nil || leftUpPx != nil || leftDownPx != nil {
+            foundAt[curPos] = true
+            foundPixels = true
+            maxX = x
+            if yP > maxY {
+              print("new bottom right \(x), \(maxHeight) \(startY)")
+              maxY = yP
+            }
+          }
         }
-      }
-      // up
-      let upIndex = (y - 2 * PX) * perRow + x
-      if prevPos != upIndex && buffer[upIndex] < blackLim {
-        upBlack = true
-        if y - 2 * PX < startPoint[1] {
-          curTry = 0
-          prevDirection = UP
-          y -= 2 * PX
-          startPoint[1] = y
-          prevPos = curPos
-          debug("up one")
-          continue
-        }
-      }
-      // right
-      let rightIndex = y * perRow + x + PX
-      if prevPos != rightIndex && buffer[rightIndex] < blackLim {
-        rightBlack = true
-        if x + PX > endPoint[0] {
-          curTry = 0
-          prevDirection = RIGHT
-          x += PX
-          endPoint[0] = x
-          prevPos = curPos
-          debug("right one")
-          continue
-        }
-      }
-      // down
-      let downIndex = (y + PX) * perRow + x
-      if prevPos != downIndex && buffer[downIndex] < blackLim {
-        downBlack = true
-        if y + PX > endPoint[1] && !rightBlack {
-          curTry = 0
-          prevDirection = DOWN
-          y += PX
-          endPoint[1] = y
-          prevPos = curPos
-          debug("down one")
-          continue
-        }
-      }
-      prevPos = curPos
-      // didnt expand the bounds
-      // still need to move the current
-      if prevDirection == LEFT {
-        if downBlack {
-          debug("move down")
-          prevDirection = DOWN
-          y += PX
-        } else if leftBlack {
-          debug("move left")
-          prevDirection = LEFT
-          x -= PX
-        } else if upBlack {
-          debug("move up")
-          prevDirection = UP
-          y -= PX
-        } else {
-          // back right
-          debug("move back right")
-          prevDirection = RIGHT
-          x += PX
-        }
-      }
-      if prevDirection == UP {
-        if leftBlack {
-          debug("move left")
-          prevDirection = LEFT
-          x -= PX
-        } else if upBlack {
-          debug("move up")
-          prevDirection = UP
-          y -= PX
-        } else if rightBlack {
-          debug("move right")
-          prevDirection = RIGHT
-          x += PX
-        } else {
-          // back down
-          debug("move back down")
-          prevDirection = DOWN
-          y += PX
-        }
-      }
-      if prevDirection == RIGHT {
-        if upBlack {
-          debug("move up")
-          prevDirection = UP
-          y -= PX
-        } else if rightBlack {
-          debug("move right")
-          prevDirection = RIGHT
-          x += PX
-        } else if downBlack {
-          debug("move down")
-          prevDirection = DOWN
-          y += PX
-        } else {
-          // back left
-          debug("move back left")
-          prevDirection = LEFT
-          x -= PX
-        }
-      }
-      if prevDirection == DOWN {
-        if rightBlack {
-          debug("move right")
-          prevDirection = RIGHT
-          x += PX
-        } else if downBlack {
-          debug("move down")
-          prevDirection = DOWN
-          y += PX
-        } else if leftBlack {
-          debug("move left")
-          prevDirection = LEFT
-          x -= PX
-        } else {
-          // back up
-          debug("move back up")
-          prevDirection = UP
-          y -= PX
-        }
+        firstLoop = false
       }
     }
-
-    return [startPoint[0], startPoint[1], endPoint[0] - startPoint[0], endPoint[1] - startPoint[1]]
+    return [
+      startX,
+      startY,
+      maxX - startX,
+      maxY - startY
+    ]
   }
 
   public func charsToString(rects: [[Int]], debugID: Int) -> String {
@@ -295,10 +176,11 @@ class Characters {
           let xS = Int(Float(x) * scaleX)
           let yS = Int(Float(y) * scaleY)
           let luma = buffer[(minY + yS) * perRow + minX + xS]
-          let lumaVal = luma < 200 ? "0 " : "255 " // warning, doing any sort of string conversion here slows it down bigly
+          let lumaVal = luma < 150 ? "0 " : "255 " // warning, doing any sort of string conversion here slows it down bigly
           output += lumaVal
           if debugID > -1 {
-            pixels!.append(PixelData(a: 255, r: luma, g: luma, b: luma))
+            let brt = UInt8(luma < 150 ? 0 : 255)
+            pixels!.append(PixelData(a: 255, r: brt, g: brt, b: brt))
           }
         }
       }

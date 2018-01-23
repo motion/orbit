@@ -7,8 +7,5 @@
   "dependencies": {
     "invariant": "^2.2.2",
     "prop-types": "^15.5.10"
-  },
-  "publishConfig": {
-    "access": "public"
   }
 }

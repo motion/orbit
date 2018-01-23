@@ -33,6 +33,16 @@ func rmAllInside(_ pathUrl: URL) {
   }
 }
 
+struct LinePositions {
+  var x: Int;
+  var y: Int;
+  var width: Int;
+  var height: Int;
+  var description: String {
+    return "x \(x), y \(y), width \(width), height \(height)"
+  }
+}
+
 final class Recorder: NSObject {
   private let input: AVCaptureScreenInput
   private var session: AVCaptureSession
@@ -189,8 +199,7 @@ final class Recorder: NSObject {
     print("3. filter vertical: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     // find lines
     start = DispatchTime.now()
-    // first loop
-    // find vertical areas + store some word info
+    // first loop - find vertical sections
     var imgData = [[Int]](repeating: [Int](repeating: 0, count: Int(vHeight)), count: Int(vWidth))
     var verticalSections = Dictionary<Int, Int>() // start => end
     let colHeightMin = 3
@@ -227,45 +236,43 @@ final class Recorder: NSObject {
     print("verticalSections \(verticalSections)")
     print("4. find verticals: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     start = DispatchTime.now()
-    // second loop
-    // loop over vertical blocks and store lines
-    struct LinePositions {
-      var x: Int;
-      var y: Int;
-      var width: Int;
-      var height: Int
-    }
+    // second loop - find lines in sections
     var sectionLines = Dictionary<Int, [LinePositions]>()
     let minLineWidth = 4
     for (start, end) in verticalSections {
       var lines = [LinePositions]()
-      var vStreak = 0
+      var lineStreak = 0
       for y in 0..<vHeight {
-        var streak = 0
+        var filled = 0
         var startLine = 0
         var endLine = 0
         for x in start...end {
           if imgData[x][y] == 1 {
-            streak += 1
+            filled += 1
             if startLine == 0 {
               startLine = x
             }
-            if streak > minLineWidth {
+            if filled > minLineWidth {
               endLine = x
             }
           }
         }
-        if streak > minLineWidth {
+        let isFilled = filled > minLineWidth
+        if !isFilled {
+          lineStreak = 0
+        } else {
           let x = startLine
           let width = endLine - startLine
-          vStreak += 1
-          print("\(streak) \(vStreak)")
-          if vStreak > 1 {
+          lineStreak += 1
+          print("startLine \(startLine) lineStreak \(lineStreak)")
+          if lineStreak > 1 {
             // update
             var last = lines[lines.count - 1]
+            print("update \(last)")
             last.height += 1
             last.width = max(last.width, width)
             last.x = min(last.x, x)
+            lines[lines.count - 1] = last
           } else {
             // insert
             lines.append(
@@ -282,7 +289,7 @@ final class Recorder: NSObject {
       sectionLines[start] = lines
     }
     print("5. found \(sectionLines.count) verticals: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
-    print("sectionLines \(sectionLines)")
+    print("sectionLines \(sectionLines.description)")
     start = DispatchTime.now()
     // third loop
     // for each VERTICAL SECTION, join together lines that need be

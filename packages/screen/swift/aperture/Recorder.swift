@@ -355,7 +355,7 @@ final class Recorder: NSObject {
             let lineImg = images.cropImage(ocrCharactersImage, box: rect)
             var innerTime = DispatchTime.now()
             let originalBounds = [bounds[0] + frameOffset[0], bounds[1] + frameOffset[1], bounds[2], bounds[3]]
-            let rects = Characters(data: bufferPointer, perRow: perRow).find(id: index, bounds: originalBounds)
+            let rects = Characters(data: bufferPointer, perRow: perRow).find(id: index, bounds: originalBounds, debugImg: cgImageLarge)
             // inner timer
             start2 += Double(DispatchTime.now().uptimeNanoseconds - innerTime.uptimeNanoseconds) / 1_000_000
             innerTime = DispatchTime.now()

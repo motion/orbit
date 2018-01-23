@@ -78,7 +78,7 @@ class Images {
   }
   
   func imageFromArray(pixels: [PixelData], width: Int, height: Int) -> CGImage? {
-    assert(pixels.count == Int(width * height))
+    assert(pixels.count == width * height)
     let pixelDataSize = MemoryLayout<PixelData>.size
     let data: Data = pixels.withUnsafeBufferPointer {
       return Data(buffer: $0)

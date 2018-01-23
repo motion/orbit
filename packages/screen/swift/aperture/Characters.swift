@@ -72,16 +72,6 @@ class Characters {
       var downBlack = false
       var leftBlack = false
       var upBlack = false
-      // right
-      if buffer[y * perRow + x + 2] < 200 {
-        rightBlack = true
-        if x + 2 > endPoint[0] {
-          x = x + 2
-          endPoint[0] = x
-          print("right one")
-          continue
-        }
-      }
       // up
       if buffer[(y - 2) * perRow + x] < 200 {
         upBlack = true
@@ -89,6 +79,16 @@ class Characters {
           y = y - 2
           startPoint[1] = y
           print("up one")
+          continue
+        }
+      }
+      // right
+      if buffer[y * perRow + x + 2] < 200 {
+        rightBlack = true
+        if x + 2 > endPoint[0] {
+          x = x + 2
+          endPoint[0] = x
+          print("right one")
           continue
         }
       }

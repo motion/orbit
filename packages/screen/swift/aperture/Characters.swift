@@ -57,7 +57,7 @@ class Characters {
           let charImgIn = images.cropImage(debugImg!, box: CGRect(x: xO / 2, y: yO / 2 - 24, width: 50, height: 50))
           images.writeCGImage(image: charImgIn, to: "/tmp/screen/a-line-\(id)-charIN-\(curChar).png")
         }
-        self.shouldDebug = id == 0 && curChar == 5
+        self.shouldDebug = id == 0 && curChar == 6
         let cb = self.findCharacter(startX: xO, startY: yO)
         foundChars.append(cb)
         if debugImg != nil {

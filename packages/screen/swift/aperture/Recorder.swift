@@ -33,6 +33,16 @@ func rmAllInside(_ pathUrl: URL) {
   }
 }
 
+struct LinePositions {
+  var x: Int;
+  var y: Int;
+  var width: Int;
+  var height: Int;
+  var description: String {
+    return "x \(x), y \(y), width \(width), height \(height)"
+  }
+}
+
 final class Recorder: NSObject {
   private let input: AVCaptureScreenInput
   private var session: AVCaptureSession
@@ -79,11 +89,6 @@ final class Recorder: NSObject {
     output.videoSettings = [
       kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_420YpCbCr8BiPlanarFullRange
     ]
-    
-    print("output \(output.availableVideoPixelFormatTypes)")
-    print("output \(output.availableVideoCodecTypes)")
-    print("output \(output.videoSettings)")
-//    print("output \(output.orient)")
     
     super.init()
     
@@ -143,7 +148,7 @@ final class Recorder: NSObject {
     }
     var start = DispatchTime.now()
     var biggestBox: BoundingBox?
-    let boxFindScale = 10
+    let boxFindScale = 8
     let binarizedImage = filters.filterImageForContentFinding(image: cgImage, scale: boxFindScale)
     let cc = ConnectedComponents()
     let result = cc.labelImageFast(image: binarizedImage, calculateBoundingBoxes: true, invert: true)
@@ -168,8 +173,9 @@ final class Recorder: NSObject {
     let bY = bb.y_start * boxFindScale
     let bW = bb.getWidth() * boxFindScale
     let bH = bb.getHeight() * boxFindScale
+    let frame = [bX, bY, bW, bH]
     let cropBox = CGRect(x: bX, y: bY, width: bW, height: bH)
-    let cropBoxLarge = CGRect(x: bX * 2, y: bY * 2, width: bW * 2, height: bH * 2)
+//    let cropBoxLarge = CGRect(x: bX * 2, y: bY * 2, width: bW * 2, height: bH * 2)
     print("! [\(bX), \(bY), \(bW), \(bH)]")
     if box.screenDir == nil {
       return
@@ -180,205 +186,171 @@ final class Recorder: NSObject {
     print("2. filter for ocr: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     
     // find vertical sections
+    let scale = 4 // scale down denominator
+    let vWidth = bW / scale
+    let vHeight = bH / scale
     start = DispatchTime.now()
-    let vScale = 4 // scale down amount
-    let vWidth = bW / vScale
-    let vHeight = bH / vScale
     let verticalImage = filters.filterForVerticalContentFinding(image: images.resize(ocrCharactersImage, width: vWidth, height: vHeight)!)
+    let verticalImageRep = NSBitmapImageRep(cgImage: verticalImage)
     print("3. filter vertical: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
-    
-    // test write image:
-    images.writeCGImage(image: verticalImage, to: "\(box.screenDir!)/\(box.id)-vertical-content-find.png")
-    
     // find lines
     start = DispatchTime.now()
-    let verticalImageRep = NSBitmapImageRep(cgImage: verticalImage)
-    // first loop
-    // find vertical areas + store some word info
-    var verticalBreaks = Dictionary<Int, Int>() // used to track white streaks
-    var imgData = [[Int]](repeating: [Int](repeating: 0, count: Int(vWidth)), count: Int(vHeight)) // height (y) first
-    var verticalClear = [Int]()
-    var verticalIgnore = Dictionary<Int, Bool>() // x => shouldIgnore
+    // first loop - find vertical sections
+    var imgData = [[Int]](repeating: [Int](repeating: 0, count: Int(vHeight)), count: Int(vWidth))
+    var verticalSections = Dictionary<Int, Int>() // start => end
+    let colHeightMin = 3
+    let colStreakMin = 4
+    var colStreak = 0
+    let colMissMax = 8
+    var colMiss = 0
+    var colStart = 0
     for x in 0..<vWidth {
-      verticalBreaks[x] = 0
+      var verticalFilled = 0
       for y in 0..<vHeight {
-        let isBlack = verticalImageRep.colorAt(x: x, y: y)!.brightnessComponent == 0.0
-        if isBlack {
-          imgData[y][x] = 1
-        } else {
-          let leniancy = 3
-          // is white
-          if verticalBreaks[x]! > y - leniancy {
-            verticalBreaks[x] = verticalBreaks[x]! + 1
-          }
-          // count nearly empty columns as empty (subtract here determines leniancy)
-          if verticalBreaks[x]! > vHeight - leniancy {
-            verticalClear.append(x)
-//            verticalIgnore[x] = true
-//              vWidthMin -= 1
-//              print("found a vertical split at \(x)")
-            break
+        if verticalImageRep.colorAt(x: x, y: y)!.brightnessComponent == 0.0 {
+          imgData[x][y] = 1
+          verticalFilled += 1
+          if colStart == 0 {
+            colStart = x
           }
         }
       }
-    }
-    var curStreak = 1
-    print("vertclear \(verticalClear.count)")
-    for (index, cur) in verticalClear.enumerated() {
-      if index == 0 {
-        continue
-      }
-      let prev = verticalClear[index - 1]
-      if prev == cur {
-        print("streak \(cur)")
-        curStreak += 1
+      let continueStreak = verticalFilled > colHeightMin
+      if continueStreak {
+        colStreak += 1
+        colMiss = 0
       } else {
-        curStreak = 0
-        continue
-      }
-      if curStreak == 4 {
-        print("found a wide vertical gap at \(cur)")
-        // weve hit a streak, fill in the previous ignores
-        for x in (cur - 4)...cur {
-          verticalIgnore[x] = true
+        colMiss += 1
+        if (colMiss > colMissMax || x == vWidth - 1) && colStreak - colMiss > colStreakMin { // set content block
+//          print("found section x \(x) colStreak \(colStreak)")
+          verticalSections[colStart] = x - colMiss
+          colStreak = 0
+          colMiss = 0
+          colStart = 0
+        } else {
+          if verticalSections.count > 0 {
+            colStreak += 1
+          }
         }
-      } else if curStreak > 4 {
-        verticalIgnore[cur] = true
       }
     }
-    // TODO reenable, dont do vertical checks for now
-    
     print("4. find verticals: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     start = DispatchTime.now()
-    // second loop
-    // loop over vertical blocks and store lines
-    // max sections is the max number of vertical breaks itll find
-    let MAX_SECTIONS = 80
-    var streaks = [[Int]](repeating: [Int](repeating: 0, count: Int(vHeight)), count: MAX_SECTIONS)
-    var sectionOffsets = [Int](repeating: 0, count: MAX_SECTIONS) // vID => x
-    typealias Lines = Dictionary<Int, Bool>
-    var sectionLines = [Lines]()
-    var lastLine: Lines? = nil
-    var vID = 0 // tracks current vertical column id
-    for x in 0..<vWidth {
-      if verticalIgnore[x] == true {
-        continue
-      }
-      // coming out of a ignore area or first col is contentful
-      if x == 0 || verticalIgnore[x - 1] == true {
-        if lastLine != nil {
-          sectionLines.append(lastLine!)
-        }
-        lastLine = Lines()
-        vID += 1
-        sectionOffsets[vID] = x
-      }
-      // were in a valid col
+    // second loop - find lines in sections
+    var sectionLines = Dictionary<Int, [LinePositions]>()
+    var total = 0
+    let minLineWidth = 2
+    for (start, end) in verticalSections {
+      var lines = [LinePositions]()
+      var lineStreak = 0
       for y in 0..<vHeight {
-        if imgData[y][x] == 1 {
-          streaks[vID][y] += 1
-          // this comparison is the low bound for the num of pixels until we consider it a word
-          if streaks[vID][y] > 6 {
-            lastLine![y] = true
+        var filled = 0
+        var startLine = 0
+        var endLine = 0
+        for x in start...end {
+          if imgData[x][y] == 1 {
+            filled += 1
+            endLine = x
+            if startLine == 0 {
+              startLine = x
+            }
+          }
+        }
+        let isFilled = filled > minLineWidth
+        if !isFilled {
+          lineStreak = 0
+        } else {
+          let x = startLine
+          let width = endLine - startLine
+          lineStreak += 1
+//          print("startLine \(startLine) lineStreak \(lineStreak) y \(y)")
+          if lineStreak > 1 {
+            // update
+            var last = lines[lines.count - 1]
+            last.height += 1
+            last.width = max(last.width, width)
+            last.x = min(last.x, x)
+            lines[lines.count - 1] = last
+          } else {
+            // insert
+            lines.append(
+              LinePositions(
+                x: x,
+                y: y,
+                width: width,
+                height: 1
+              )
+            )
           }
         }
       }
+      sectionLines[start] = lines
+      total += lines.count
     }
-    sectionLines.append(lastLine!)
-    print("5. found \(sectionLines.count) verticals: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+    print("5. found \(total) lines: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+//    print("sectionLines \(sectionLines.description)")
     start = DispatchTime.now()
     // third loop
     // for each VERTICAL SECTION, join together lines that need be
-    for (index, section) in sectionLines.enumerated() {
-      let id = index + 1 // vId is always one above this
-      let xOffset = max(0, sectionOffsets[id] * vScale - vScale)
-      var lWidth: Int = 0
-      if sectionOffsets[id + 1] != 0 {
-        lWidth = sectionOffsets[id + 1] * vScale - xOffset
-      } else {
-        lWidth = vWidth * vScale - xOffset
-      }
-      // 3.1 loop: find connected lines and join them
-//        print("lines at: \(section.keys.sorted())")
-      let rawLines = section.keys.sorted()
-      var lines = [[Int]]()
-      var curIndex = 0
-      for (index, curVal) in rawLines.enumerated() {
-        if index == 0 { // first time
-          lines.append([curVal, curVal]) // [3, 3]
-          continue
-        }
-        // lineNum = [3, 4, 10, 11, ...]
-        var curLine = lines[curIndex] // [23, 24]
-        if curVal == curLine[1] + 1 {
-          curLine[1] = curVal
-          lines[curIndex] = curLine
-        } else {
-          // not the same, start a new one
-          curIndex += 1
-          lines.append([curVal, curVal])
-        }
-      }
-      print("6. join, \(lines.count) lines: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
-      print("lines: \(lines)")
-      start = DispatchTime.now()
-      var start2 = 0.0
-      var start3 = 0.0
-      // 3.2 loop; cut lines (this could be joined into last loop for speed demons)
-      let lineThreads = lines.count % 2 == 0 ? threads : 1
-      let perThread = lines.count / lineThreads
+    for id in sectionLines.keys {
+      let lines = sectionLines[id]!
+      let perThread = max(1, lines.count / threads)
       let queue = DispatchQueue(label: "asyncQueue", attributes: .concurrent)
       let group = DispatchGroup()
       var foundTotal = 0
       var lineStrings = [String](repeating: "", count: lines.count)
-      let frameOffset = [bX, bY + 24]
-      for thread in 0..<lineThreads {
-        group.enter()
-        queue.async {
-          let startIndex = thread * perThread
-          for index in startIndex..<(startIndex + perThread) {
-            // we use this at the end to write out everything
-            let lineRange = lines[index]
-            let lHeight = (lineRange[1] - lineRange[0] + 1) * vScale
-            let yOffset = lineRange[0] * vScale
-            let vPadExtra = 6
-            // get bounds
-            let bounds = [xOffset, yOffset - vPadExtra, lWidth, lHeight + vPadExtra * 2]
-            // testing: write out image
-//            let rect = CGRect(x: bounds[0], y: bounds[1], width: bounds[2], height: bounds[3])
-//            let lineImg = images.cropImage(ocrCharactersImage, box: rect)
-            var innerTime = DispatchTime.now()
-            let originalBounds = [bounds[0] + frameOffset[0], bounds[1] + frameOffset[1], bounds[2], bounds[3]]
-            let rects = Characters(data: bufferPointer, perRow: perRow).find(id: index, bounds: originalBounds, debugImg: cgImage)
-//            print("got rects from characters \(rects)")
-            // inner timer
-            start2 += Double(DispatchTime.now().uptimeNanoseconds - innerTime.uptimeNanoseconds) / 1_000_000
-            innerTime = DispatchTime.now()
-            foundTotal += rects.count
-            // testing write out test image
-//            images.writeCGImage(image: lineImg, to: "\(box.screenDir!)/\(box.id)-section-\(id)-line-\(index).png")
-            // gather char rects
-//            for (charIndex, bb) in rects.enumerated() {
-//              let charRect = CGRect(
-//                x: bb[0],
-//                y: bb[1],
-//                width: bb[2],
-//                height: bb[3]
-//              )
-////              let charImg = images.resize(images.cropImage(ocrWriteImage, box: charRect), width: 28, height: 28)!
-////              images.writeCGImage(image: charImg, to: "\(box.screenDir!)/\(box.id)-section-\(id)-line-\(index)-char-\(charIndex).png")
-//              charRects.append(charRect)
-//            }
-            // write characters
-            let chars = self.charToString(lineNum: index, bufferPointer: bufferPointer, perRow: perRow, rects: rects, frameOffset: frameOffset, outDir: box.screenDir!)
-            lineStrings.insert(chars, at: index)
-            start3 += Double(DispatchTime.now().uptimeNanoseconds - innerTime.uptimeNanoseconds) / 1_000_000
-          }
-          group.leave()
-        }
+      let characters = Characters(
+        data: bufferPointer,
+        perRow: perRow,
+        debug: false,
+        debugDir: box.screenDir!,
+        debugImg: nil //cgImage
+      )
+      // find characters
+      func processLine(_ index: Int) {
+        let line = lines[index]
+        let pad = 6
+        // scale bounds for line
+        //        print("\(frame[2], line.width * scale + pad * 3)")
+        let bounds = [
+          line.x * scale - pad + frame[0],
+          line.y * scale - pad + frame[1],
+          min(frame[2], line.width * scale + pad * 3),
+          min(frame[3], line.height * scale + pad * 2)
+        ]
+        // finds characters
+        let rects = characters.find(id: index, bounds: bounds)
+        foundTotal += rects.count
+        // debug line
+//        images.writeCGImage(
+//          image: images.cropImage(ocrCharactersImage, box: CGRect(x: bounds[0] - frame[0], y: bounds[1] - frame[1], width: bounds[2], height: bounds[3])),
+//          to: "\(box.screenDir!)/\(box.id)-section-\(id)-line-\(index).png"
+//        )
+        // write characters
+        let chars = characters.charsToString(rects: rects, debugID: -1)// index) // index < 40 ? index : -1
+        lineStrings.insert(chars, at: index)
       }
-      group.wait()
-      print("7. found \(foundTotal) chars: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms (cc: \(start2), string: \(start3))")
+      // do async if can
+      if lines.count == 1 {
+        processLine(0)
+      } else {
+        for thread in 0..<threads {
+          group.enter()
+          queue.async {
+            let startIndex = thread * perThread
+            let end = startIndex + perThread
+            for index in startIndex..<end {
+              processLine(index)
+            }
+            if end + 1 < lines.count {
+              processLine(end + 1)
+            }
+            group.leave()
+          }
+        }
+        group.wait()
+      }
+      print("7. found \(foundTotal) chars: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
       start = DispatchTime.now()
       // write chars
       do {
@@ -393,52 +365,13 @@ final class Recorder: NSObject {
     print("")
     print("total \(Double(DispatchTime.now().uptimeNanoseconds - startAll.uptimeNanoseconds) / 1_000_000)ms")
 
-    // for testing write out og images too
-    images.writeCGImage(image: binarizedImage, to: "\(box.screenDir!)/\(box.id)-full.png")
-//    images.writeCGImage(image: ocrWriteImage, to: outPath)
-    images.writeCGImage(image: ocrCharactersImage, to: "\(box.screenDir!)/\(box.id)-binarized.png")
-//    images.writeCGImage(image: cgImageLarge, to: "\(box.screenDir!)/\(box.id)-cgimage-large.png")
-    images.writeCGImage(image: cgImage, to: "\(box.screenDir!)/\(box.id)-cgimage.png")
-  }
-  
-  func charToString(lineNum: Int, bufferPointer: UnsafeMutablePointer<UInt8>, perRow: Int, rects: [[Int]], frameOffset: [Int], outDir: String) -> String {
-//    let start = DispatchTime.now()
-    var output = ""
-    let dbl = Float(28)
-    for (index, rect) in rects.enumerated() {
-      let minX = rect[0]
-      let minY = rect[1]
-      let width = Float(rect[2])
-      let height = Float(rect[3])
-      // make square
-      var scaleW = Float(1)
-      var scaleH = Float(1)
-      if width > dbl {
-        scaleW = dbl / width
-      } else if width < dbl {
-        scaleW = width / dbl
-      }
-      if height > dbl {
-        scaleH = dbl / height
-      } else if height < dbl {
-        scaleH = height / dbl
-      }
-//      var pixels = [PixelData]() // write img
-      for y in 0..<28 {
-        for x in 0..<28 {
-          let xS = Int(Float(x) * scaleW)
-          let yS = Int(Float(y) * scaleH)
-          let luma = bufferPointer[(minY + yS) * perRow + minX + xS]
-          let lumaVal = luma < 200 ? "0 " : "255 " // warning, doing any sort of string conversion here slows it down bigly
-          output += lumaVal
-//          pixels.append(PixelData(a: 255, r: luma, g: luma, b: luma))
-        }
-      }
-      output += "\n"
-//      images.writeCGImage(image: images.imageFromArray(pixels: pixels, width: 28, height: 28)!, to: "\(outDir)/x-line-\(lineNum)-char-\(index).png", resolution: 72) // write img
-    }
-//    print(".. char => string: \(rects.count) \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
-    return output
+    // test write image:
+    images.writeCGImage(image: verticalImage, to: "\(box.screenDir!)/\(box.id)-content-find.png")
+    images.writeCGImage(image: binarizedImage, to: "\(box.screenDir!)/\(box.id)-binarized.png")
+    images.writeCGImage(image: ocrCharactersImage, to: "\(box.screenDir!)/\(box.id)-ocr-characters.png")
+    images.writeCGImage(image: cgImage, to: "\(box.screenDir!)/\(box.id)-original.png")
+    //    images.writeCGImage(image: ocrWriteImage, to: outPath)
+    //    images.writeCGImage(image: cgImageLarge, to: "\(box.screenDir!)/\(box.id)-cgimage-large.png")
   }
   
   func hasBoxChanged(box: Box, buffer: UnsafeMutablePointer<UInt8>, perRow: Int) -> Bool {
@@ -492,14 +425,6 @@ final class Recorder: NSObject {
 
 extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
   public func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-    // why doesnt this work :(
-//    if connection.videoOrientation.rawValue == 1 {
-//      connection.videoOrientation = .landscapeRight
-//      connection.isVideoMirrored = true
-//      return
-//    }
-    
-    // let start = DispatchTime.now()
     let pixelBuffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)!
     CVPixelBufferLockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0));
     let baseAddress = CVPixelBufferGetBaseAddressOfPlane(pixelBuffer, 0)
@@ -513,15 +438,9 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
         print(">\(box.id)")
       }
     }
-
     // only true for first loop
     self.firstTime = false
-
     // release
     CVPixelBufferUnlockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0))
-//    let end = DispatchTime.now()
-//    let nanoTime = end.uptimeNanoseconds - start.uptimeNanoseconds
-//    let timeInterval = Double(nanoTime) / 1_000_000
-//    print("frame \(timeInterval) ms")
   }
 }

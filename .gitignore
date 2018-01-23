@@ -1,5 +1,6 @@
-python/data
+ocr.csv
 data.csv
+prediction.txt
 __pycache__
 .cache
 node_modules

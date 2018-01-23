@@ -9,24 +9,16 @@ class Characters {
     self.perRow = perRow
   }
   
-  func find(id: Int, bounds: [Int], debugImg: CGImage) -> [CGRect] {
-    if id != 18 {
-      // hn line 18 is a good test
-      return []
-    }
+  func find(id: Int, bounds: [Int], debugImg: CGImage) -> [[Int]] {
     let start = DispatchTime.now()
     let imgX = bounds[0] * 2
     let imgY = bounds[1] * 2
     let imgW = bounds[2]
     let imgH = bounds[3]
-    var pixels = [PixelData](repeating: PixelData(a: 255, r: 0, g: 0, b: 0), count: imgW * imgH)
-    print("ccccc \(imgW * imgH) \(pixels.count)")
+    var foundChars = [[Int]]()
+//    var pixels = [PixelData](repeating: PixelData(a: 255, r: 0, g: 0, b: 0), count: imgW * imgH)
     var curChar = 0
-    
-    print("\(imgX) \(imgY) \(imgW) \(imgH)")
-    // stride(from: imgX, to: imgX + imgW * 2, by: 2)
-    // stride(from: imgY, to: imgY + imgH * 2, by: 2)
-    
+
     var x = 0
     var y = 0
     while true {
@@ -37,39 +29,39 @@ class Characters {
       } else {
         y += 1
       }
+      // if reached last pixel break
+      if x >= imgW || y >= imgH || (x == imgW - 1 && y == imgH - 1) {
+        break
+      }
       // loop logic
       let xO = x * 2 + imgX
       let yO = y * 2 + imgY
       let luma = buffer[yO * perRow + xO]
       let isBlack = luma < 200 ? true : false
+//      let binarized = UInt8(isBlack ? 0 : 255)
+//      pixels[x + y * imgW] = PixelData(a: 255, r: binarized, g: binarized, b: binarized)
       if isBlack {
-        let charImgIn = images.cropImage(debugImg, box: CGRect(x: xO, y: yO - 24 * 2, width: 25, height: 25))
-        images.writeCGImage(image: charImgIn, to: "/tmp/screen/a-line-\(id)-charIN-\(curChar).png")
+//        let charImgIn = images.cropImage(debugImg, box: CGRect(x: xO, y: yO - 24 * 2, width: 25, height: 25))
+//        images.writeCGImage(image: charImgIn, to: "/tmp/screen/a-line-\(id)-charIN-\(curChar).png")
         let cb = self.findCharacter(startX: xO, startY: yO)
-        print("char bounds \(cb) and were at \(x)")
-        let charImg = images.cropImage(debugImg, box: CGRect(x: cb[0], y: cb[1] - 24 * 2, width: cb[2], height: cb[3]))
-        images.writeCGImage(image: charImg, to: "/tmp/screen/a-line-\(id)-char-\(curChar).png")
+        foundChars.append(cb)
+//        print("char bounds \(cb) and were at \(x)")
+//        let charImg = images.cropImage(debugImg, box: CGRect(x: cb[0], y: cb[1] - 24 * 2, width: cb[2], height: cb[3]))
+//        images.writeCGImage(image: charImg, to: "/tmp/screen/a-line-\(id)-char-\(curChar).png")
         // after processing new char, move x to end of char
         x += cb[2] / 2 + 1
         y = 0
         curChar += 1
-//        break // debug: just do one char
-      }
-      let binarized = UInt8(isBlack ? 0 : 255)
-      pixels[x + y * imgW] = PixelData(a: 255, r: binarized, g: binarized, b: binarized)
-      // if reached last pixel break
-      if x == imgW - 1 && y == imgH - 1 {
-        break
       }
     }
 
-    print("ok \(pixels.count) \(imgW * imgH)  imgW \(imgW) imgH \(imgH)")
-    if let img = images.imageFromArray(pixels: pixels, width: imgW, height: imgH) {
-      Images().writeCGImage(image: img, to: "/tmp/screen/a-line-\(id).png", resolution: 72) // write img
-    }
+//    print("ok \(pixels.count) \(imgW * imgH)  imgW \(imgW) imgH \(imgH)")
+//    if let img = images.imageFromArray(pixels: pixels, width: imgW, height: imgH) {
+//      Images().writeCGImage(image: img, to: "/tmp/screen/a-line-\(id).png", resolution: 72) // write img
+//    }
     
-    print("  Characters.find(): \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
-    return []
+    print("  Characters.find() \(foundChars.count): \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+    return foundChars
   }
   
   func findCharacter(startX: Int, startY: Int) -> [Int] {
@@ -77,7 +69,7 @@ class Characters {
     let UP = 1
     let RIGHT = 2
     let DOWN = 3
-    print("finding character at \(startX) \(startY)")
+//    print("finding character at \(startX) \(startY)")
     var hasClosedChar = false
     var startPoint = [startX, startY] // top left point
     var endPoint = [startX, startY] // bottom right point
@@ -94,7 +86,7 @@ class Characters {
     while !hasClosedChar {
       curTry += 1
       if curTry > maxTries {
-        print("done trying")
+//        print("done trying")
         break
       }
       let curPos = y * perRow + x
@@ -111,7 +103,7 @@ class Characters {
             x -= PX
             startPoint[0] = x
             prevPos = curPos
-            print("up one")
+//            print("left one")
             continue
           }
 //        }
@@ -125,7 +117,7 @@ class Characters {
           y -= PX
           startPoint[1] = y
           prevPos = curPos
-          print("up one")
+//          print("up one")
           continue
         }
       }
@@ -138,7 +130,7 @@ class Characters {
           x += PX
           endPoint[0] = x
           prevPos = curPos
-          print("right one")
+//          print("right one")
           continue
         }
       }
@@ -151,7 +143,7 @@ class Characters {
           y += PX
           endPoint[1] = y
           prevPos = curPos
-          print("down one")
+//          print("down one")
           continue
         }
       }
@@ -160,13 +152,13 @@ class Characters {
       // still need to move the current
       if prevDirection == LEFT {
         if downBlack {
-          print("move down")
+//          print("move down")
           y += PX
         } else if leftBlack {
-          print("move left")
+//          print("move left")
           x -= PX
         } else if upBlack {
-          print("move up")
+//          print("move up")
           y -= PX
         } else {
           // back right
@@ -176,13 +168,13 @@ class Characters {
       }
       if prevDirection == UP {
         if leftBlack {
-          print("move left")
+//          print("move left")
           x -= PX
         } else if upBlack {
-          print("move up")
+//          print("move up")
           y -= PX
         } else if rightBlack {
-          print("move right")
+//          print("move right")
           x += PX
         } else {
           // back down
@@ -192,13 +184,13 @@ class Characters {
       }
       if prevDirection == RIGHT {
         if upBlack {
-          print("move up")
+//          print("move up")
           y -= PX
         } else if rightBlack {
-          print("move right")
+//          print("move right")
           x += PX
         } else if downBlack {
-          print("move down")
+//          print("move down")
           y += PX
         } else {
           // back left
@@ -208,13 +200,13 @@ class Characters {
       }
       if prevDirection == DOWN {
         if rightBlack {
-          print("move right")
+//          print("move right")
           x += PX
         } else if downBlack {
-          print("move down")
+//          print("move down")
           y += PX
         } else if leftBlack {
-          print("move left")
+//          print("move left")
           x -= PX
         } else {
           // back up

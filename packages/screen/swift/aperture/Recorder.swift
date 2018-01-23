@@ -343,7 +343,6 @@ final class Recorder: NSObject {
           let startIndex = thread * perThread
           for index in startIndex..<(startIndex + perThread) {
             // we use this at the end to write out everything
-            var charRects = [CGRect]()
             let lineRange = lines[index]
             let lHeight = (lineRange[1] - lineRange[0] + 1) * vScale
             let yOffset = lineRange[0] * vScale
@@ -351,31 +350,32 @@ final class Recorder: NSObject {
             // get bounds
             let bounds = [xOffset, yOffset - vPadExtra, lWidth, lHeight + vPadExtra * 2]
             // testing: write out image
-            let rect = CGRect(x: bounds[0], y: bounds[1], width: bounds[2], height: bounds[3])
-            let lineImg = images.cropImage(ocrCharactersImage, box: rect)
+//            let rect = CGRect(x: bounds[0], y: bounds[1], width: bounds[2], height: bounds[3])
+//            let lineImg = images.cropImage(ocrCharactersImage, box: rect)
             var innerTime = DispatchTime.now()
             let originalBounds = [bounds[0] + frameOffset[0], bounds[1] + frameOffset[1], bounds[2], bounds[3]]
             let rects = Characters(data: bufferPointer, perRow: perRow).find(id: index, bounds: originalBounds, debugImg: cgImageLarge)
+//            print("got rects from characters \(rects)")
             // inner timer
             start2 += Double(DispatchTime.now().uptimeNanoseconds - innerTime.uptimeNanoseconds) / 1_000_000
             innerTime = DispatchTime.now()
             foundTotal += rects.count
             // testing write out test image
-            images.writeCGImage(image: lineImg, to: "\(box.screenDir!)/\(box.id)-section-\(id)-line-\(index).png")
+//            images.writeCGImage(image: lineImg, to: "\(box.screenDir!)/\(box.id)-section-\(id)-line-\(index).png")
             // gather char rects
-            for (charIndex, bb) in rects.enumerated() {
-              let charRect = CGRect(
-                x: (bounds[0] + Int(bb.minX)) * 2,
-                y: (bounds[1] + Int(bb.minY)) * 2,
-                width: Int(bb.width) * 2,
-                height: Int(bb.height) * 2
-              )
-//              let charImg = images.resize(images.cropImage(ocrWriteImage, box: charRect), width: 28, height: 28)!
-//              images.writeCGImage(image: charImg, to: "\(box.screenDir!)/\(box.id)-section-\(id)-line-\(index)-char-\(charIndex).png")
-              charRects.append(charRect)
-            }
+//            for (charIndex, bb) in rects.enumerated() {
+//              let charRect = CGRect(
+//                x: bb[0],
+//                y: bb[1],
+//                width: bb[2],
+//                height: bb[3]
+//              )
+////              let charImg = images.resize(images.cropImage(ocrWriteImage, box: charRect), width: 28, height: 28)!
+////              images.writeCGImage(image: charImg, to: "\(box.screenDir!)/\(box.id)-section-\(id)-line-\(index)-char-\(charIndex).png")
+//              charRects.append(charRect)
+//            }
             // write characters
-            let chars = self.charToString(lineNum: index, bufferPointer: bufferPointer, perRow: perRow, rects: charRects, frameOffset: frameOffset, outDir: box.screenDir!)
+            let chars = self.charToString(lineNum: index, bufferPointer: bufferPointer, perRow: perRow, rects: rects, frameOffset: frameOffset, outDir: box.screenDir!)
             lineStrings.insert(chars, at: index)
             start3 += Double(DispatchTime.now().uptimeNanoseconds - innerTime.uptimeNanoseconds) / 1_000_000
           }
@@ -404,17 +404,15 @@ final class Recorder: NSObject {
     images.writeCGImage(image: ocrCharactersImage, to: "\(box.screenDir!)/\(box.id)-binarized.png")
   }
   
-  func charToString(lineNum: Int, bufferPointer: UnsafeMutablePointer<UInt8>, perRow: Int, rects: [CGRect], frameOffset: [Int], outDir: String) -> String {
+  func charToString(lineNum: Int, bufferPointer: UnsafeMutablePointer<UInt8>, perRow: Int, rects: [[Int]], frameOffset: [Int], outDir: String) -> String {
 //    let start = DispatchTime.now()
     var output = ""
-    let dbl = Float(56)
-    let frameX = CGFloat(frameOffset[0])
-    let frameY = CGFloat(frameOffset[1])
+    let dbl = Float(28)
     for (index, rect) in rects.enumerated() {
-      let minX = rect.minX / 2
-      let minY = rect.minY / 2
-      let width = Float(rect.width)
-      let height = Float(rect.height)
+      let minX = rect[0]
+      let minY = rect[1]
+      let width = Float(rect[2])
+      let height = Float(rect[3])
       // make square
       var scaleW = Float(1)
       var scaleH = Float(1)
@@ -429,18 +427,14 @@ final class Recorder: NSObject {
         scaleH = height / dbl
       }
 //      var pixels = [PixelData]() // write img
-      let realX = Int(minX + frameX)
-      let realY = Int(minY + frameY)
-      let yScale = perRow / 2
       for y in 0..<28 {
         for x in 0..<28 {
           let xS = Int(Float(x) * scaleW)
           let yS = Int(Float(y) * scaleH)
-          let luma = bufferPointer[(realY + yS) * yScale + (realX + xS)]
-          let lumaVal = luma > 3555985190 ? "0 " : "255 " // warning, doing any sort of string conversion here slows it down bigly
+          let luma = bufferPointer[(minY + yS) * perRow + minX + xS]
+          let lumaVal = luma < 200 ? "0 " : "255 " // warning, doing any sort of string conversion here slows it down bigly
           output += lumaVal
-//          let brightness = UInt8(luma / 3951094656 * 255)
-//          pixels.append(PixelData(a: 255, r: brightness, g: brightness, b: brightness))
+//          pixels.append(PixelData(a: 255, r: luma, g: luma, b: luma))
         }
       }
       output += "\n"

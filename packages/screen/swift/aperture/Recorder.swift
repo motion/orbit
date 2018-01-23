@@ -180,46 +180,51 @@ final class Recorder: NSObject {
     print("2. filter for ocr: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     
     // find vertical sections
-    start = DispatchTime.now()
     let scale = 4 // scale down denominator
     let vWidth = bW / scale
     let vHeight = bH / scale
+    start = DispatchTime.now()
     let verticalImage = filters.filterForVerticalContentFinding(image: images.resize(ocrCharactersImage, width: vWidth, height: vHeight)!)
+    let verticalImageRep = NSBitmapImageRep(cgImage: verticalImage)
     print("3. filter vertical: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
-    
     // find lines
     start = DispatchTime.now()
     // first loop
     // find vertical areas + store some word info
-    var imgData = [[Int]](repeating: [Int](repeating: 0, count: Int(vWidth)), count: Int(vHeight)) // height (y) first
+    var imgData = [[Int]](repeating: [Int](repeating: 0, count: Int(vHeight)), count: Int(vWidth))
     var verticalSections = Dictionary<Int, Int>() // start => end
-    let minContentWidth = 4
-    let leniancy = 3
-    var hStreak = 0
-    var vStreak = 0
+    let colHeightMin = 3
+    let colStreakMin = 4
+    var colStreak = 0
+    let colMissMax = 8
+    var colMiss = 0
     for x in 0..<vWidth {
+      var verticalFilled = 0
       for y in 0..<vHeight {
-        let isBlack = bufferPointer[y * perRow + x] < 200
-        if isBlack {
+        if verticalImageRep.colorAt(x: x, y: y)!.brightnessComponent == 0.0 {
           imgData[x][y] = 1
-          vStreak += 1
-        } else {
+          verticalFilled += 1
         }
-        // if at end of col
-        if y == vHeight - 1 {
-          let isFilled = vStreak > vHeight - leniancy
-          if isFilled {
-            hStreak += 1
-          } else {
-            if hStreak > minContentWidth {
-              verticalSections[x - vStreak] = x
-            }
-            hStreak = 0
+      }
+      let continueStreak = verticalFilled > colHeightMin
+      if continueStreak {
+        colStreak += 1
+        colMiss = 0
+      } else {
+        colMiss += 1
+        if colMiss > colMissMax && colStreak - colMiss > colStreakMin { // set content block
+          print("found section x \(x) colStreak \(colStreak)")
+          verticalSections[x - colStreak] = x - colMiss
+          colStreak = 0
+          colMiss = 0
+        } else {
+          if verticalSections.count > 0 {
+            colStreak += 1
           }
         }
       }
     }
-    print("")
+    print("verticalSections \(verticalSections)")
     print("4. find verticals: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     start = DispatchTime.now()
     // second loop
@@ -245,7 +250,6 @@ final class Recorder: NSObject {
             if startLine == 0 {
               startLine = x
             }
-          } else {
             if streak > minLineWidth {
               endLine = x
             }
@@ -255,6 +259,7 @@ final class Recorder: NSObject {
           let x = startLine
           let width = endLine - startLine
           vStreak += 1
+          print("\(streak) \(vStreak)")
           if vStreak > 1 {
             // update
             var last = lines[lines.count - 1]
@@ -277,6 +282,7 @@ final class Recorder: NSObject {
       sectionLines[start] = lines
     }
     print("5. found \(sectionLines.count) verticals: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+    print("sectionLines \(sectionLines)")
     start = DispatchTime.now()
     // third loop
     // for each VERTICAL SECTION, join together lines that need be
@@ -314,13 +320,12 @@ final class Recorder: NSObject {
             // write characters
             let chars = characters.charsToString(rects: rects, debugDir: box.screenDir!, lineNum: index)
             lineStrings.insert(chars, at: index)
-            start3 += Double(DispatchTime.now().uptimeNanoseconds - innerTime.uptimeNanoseconds) / 1_000_000
           }
           group.leave()
         }
       }
       group.wait()
-      print("7. found \(foundTotal) chars: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms (cc: \(start2), string: \(start3))")
+      print("7. found \(foundTotal) chars: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
       start = DispatchTime.now()
       // write chars
       do {

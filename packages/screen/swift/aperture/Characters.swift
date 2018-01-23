@@ -100,7 +100,7 @@ class Characters {
     var curTry = 0
     var prevPos = -1
     var prevDirection = DOWN
-    let blackLim = 200
+    let blackLim = 125 // ensure breaks, lower = less black
     let PX = 1
     while true {
       curTry += 1

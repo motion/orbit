@@ -89,7 +89,7 @@ class Images {
       print("CGDataProvider is not supposed to be nil")
       return nil
     }
-    let cgimage: CGImage! = CGImage(
+    return CGImage(
       width: width,
       height: height,
       bitsPerComponent: 8,
@@ -102,6 +102,5 @@ class Images {
       shouldInterpolate: false,
       intent: .defaultIntent
     )
-    return cgimage
   }
 }

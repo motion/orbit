@@ -26,33 +26,57 @@ class Characters {
     print("\(imgX) \(imgY) \(imgW) \(imgH)")
     // stride(from: imgX, to: imgX + imgW * 2, by: 2)
     // stride(from: imgY, to: imgY + imgH * 2, by: 2)
-    for x in 0..<imgW {
-      for y in 0..<imgH {
-        let xO = x * 2 + imgX
-        let yO = y * 2 + imgY
-        let luma = buffer[yO * perRow + xO]
-        let isBlack = luma < 200 ? true : false
-
-        if curChar == 0 && isBlack {
-          let cb = self.findCharacter(startX: xO, startY: yO)
-          print("char bounds \(cb)")
-          let charImg = images.cropImage(debugImg, box: CGRect(x: cb[0] - bounds[0], y: cb[1] - 24 * 2, width: 100, height: 100))
-          images.writeCGImage(image: charImg, to: "/tmp/screen/a-line-\(id)-char-\(curChar).png")
-          curChar += 1
-        }
-        
-        let binarized = UInt8(isBlack ? 0 : 255)
-        pixels[x + y * imgW] = PixelData(a: 255, r: binarized, g: binarized, b: binarized)
+    
+    var x = 0
+    var y = 0
+    while true {
+      // loop through from ltr, then ttb
+      if y == imgH - 1 {
+        x += 1
+        y = 0
+      } else {
+        y += 1
+      }
+      // loop logic
+      let xO = x * 2 + imgX
+      let yO = y * 2 + imgY
+      let luma = buffer[yO * perRow + xO]
+      let isBlack = luma < 200 ? true : false
+      if isBlack {
+        let charImgIn = images.cropImage(debugImg, box: CGRect(x: xO, y: yO - 24 * 2, width: 25, height: 25))
+        images.writeCGImage(image: charImgIn, to: "/tmp/screen/a-line-\(id)-charIN-\(curChar).png")
+        let cb = self.findCharacter(startX: xO, startY: yO)
+        print("char bounds \(cb)")
+        let charImg = images.cropImage(debugImg, box: CGRect(x: cb[0] - bounds[0], y: cb[1] - 24 * 2, width: cb[2] * 2, height: cb[3]))
+        images.writeCGImage(image: charImg, to: "/tmp/screen/a-line-\(id)-char-\(curChar).png")
+        // after processing new char, move x to end of char
+        x += cb[2]
+        y = 0
+        curChar += 1
+        break // debug: just do one char
+      }
+      let binarized = UInt8(isBlack ? 0 : 255)
+      pixels[x + y * imgW] = PixelData(a: 255, r: binarized, g: binarized, b: binarized)
+      // if reached last pixel break
+      if x == imgW - 1 && y == imgH - 1 {
+        break
       }
     }
+
     print("ok \(pixels.count) \(imgW * imgH)  imgW \(imgW) imgH \(imgH)")
-    Images().writeCGImage(image: images.imageFromArray(pixels: pixels, width: imgW, height: imgH)!, to: "/tmp/screen/a-line-\(id).png", resolution: 72) // write img
+    if let img = images.imageFromArray(pixels: pixels, width: imgW, height: imgH) {
+      Images().writeCGImage(image: img, to: "/tmp/screen/a-line-\(id).png", resolution: 72) // write img
+    }
     
     print("  Characters.find(): \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     return []
   }
   
   func findCharacter(startX: Int, startY: Int) -> [Int] {
+    let LEFT = 0
+    let UP = 1
+    let RIGHT = 2
+    let DOWN = 3
     print("finding character at \(startX) \(startY)")
     var hasClosedChar = false
     var startPoint = [startX, startY] // top left point
@@ -60,9 +84,12 @@ class Characters {
 //    var hasSeen = Dictionary<Int, Bool>()
     var x = startX
     var y = startY
-    let maxTries = 50
+    let maxTries = 150
     var curTry = 0
-    var prevMove = -1
+    var prevPos = -1
+    var prevDirection = DOWN
+    let blackLim = 200
+    let PX = 1
     
     while !hasClosedChar {
       curTry += 1
@@ -70,79 +97,102 @@ class Characters {
         print("done trying")
         break
       }
-      let curIndex = y * perRow + x
+      let curPos = y * perRow + x
       var rightBlack = false
       var downBlack = false
       var leftBlack = false
       var upBlack = false
       // left
-      let leftIndex = y * perRow + x - 2
-      if prevMove != leftIndex && buffer[leftIndex] < 200 {
-        leftBlack = true
-        if x - 2 < startPoint[0] {
-          prevMove = leftIndex
-          x = x - 2
-          startPoint[0] = x
-          print("up one")
-          continue
+      let leftIndex = y * perRow + x - PX
+      if prevPos != leftIndex && buffer[leftIndex] < blackLim {
+        let tl = buffer[(y - PX) * perRow + x - PX - PX] < blackLim
+        let cl = buffer[y * perRow + x - PX - PX] < blackLim
+        let bl = buffer[(y + PX) * perRow + x - PX - PX] < blackLim
+        if !tl && !cl && !bl {
+          leftBlack = true
+          if x - PX < startPoint[0] {
+            prevDirection = LEFT
+            x -= PX
+            startPoint[0] = x
+            prevPos = curPos
+            print("up one")
+            continue
+          }
         }
       }
       // up
-      let upIndex = (y - 2) * perRow + x
-      if prevMove != upIndex && buffer[upIndex] < 200 {
+      let upIndex = (y - PX) * perRow + x
+      if prevPos != upIndex && buffer[upIndex] < blackLim {
         upBlack = true
-        if y - 2 < startPoint[1] {
-          prevMove = upIndex
-          y = y - 2
+        if y - PX < startPoint[1] {
+          prevDirection = UP
+          y -= PX
           startPoint[1] = y
+          prevPos = curPos
           print("up one")
           continue
         }
       }
       // right
-      let rightIndex = y * perRow + x + 2
-      if prevMove != rightIndex && buffer[rightIndex] < 200 {
+      let rightIndex = y * perRow + x + PX
+      if prevPos != rightIndex && buffer[rightIndex] < blackLim {
         rightBlack = true
-        if x + 2 > endPoint[0] {
-          prevMove = rightIndex
-          x = x + 2
+        if x + PX > endPoint[0] {
+          prevDirection = RIGHT
+          x += PX
           endPoint[0] = x
+          prevPos = curPos
           print("right one")
           continue
         }
       }
       // down
-      let downIndex = (y + 2) * perRow + x
-      if prevMove != downIndex && buffer[downIndex] < 200 {
+      let downIndex = (y + PX) * perRow + x
+      if prevPos != downIndex && buffer[downIndex] < blackLim {
         downBlack = true
-        if y + 2 > endPoint[1] {
-          prevMove = downIndex
-          y = y + 2
+        if y + PX > endPoint[1] {
+          prevDirection = DOWN
+          y += PX
           endPoint[1] = y
+          prevPos = curPos
           print("down one")
           continue
         }
       }
+      prevPos = curPos
       // didnt expand the bounds
       // still need to move the current
-      if upBlack {
-        print("move up")
-        prevMove = curIndex
-        y = y - 2
-      } else if rightBlack {
-        print("move right")
-        prevMove = curIndex
-        x = x + 2
-      } else if downBlack {
-        print("move down")
-        prevMove = curIndex
-        y = y + 2
-      } else if leftBlack {
-        print("move left")
-        prevMove = curIndex
-        x = x - 2
+      if prevDirection == LEFT {
+        if downBlack {
+          print("move down")
+          y += PX
+        } else if leftBlack {
+          print("move left")
+          x -= PX
+        } else if upBlack {
+          print("move up")
+          y -= PX
+        } else {
+          print("move none")
+          break
+        }
       } else {
-        print("move none")
+        if leftBlack {
+          print("move left")
+          x -= PX
+        } else if upBlack {
+          print("move up")
+          y -= PX
+        } else if rightBlack {
+          print("move right")
+          x += PX
+        } else if downBlack {
+          print("move down")
+          y += PX
+        } else {
+          print("move none")
+          break
+        }
       }
     }
     

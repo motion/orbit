@@ -4,8 +4,10 @@ class Characters {
   private let images = Images()
   private var buffer: UnsafeMutablePointer<UInt8>
   private var perRow: Int
+  private var shouldDebug = false
   
-  init(data: UnsafeMutablePointer<UInt8>, perRow: Int) {
+  init(data: UnsafeMutablePointer<UInt8>, perRow: Int, debug: Bool) {
+    self.shouldDebug = debug
     self.buffer = data
     self.perRow = perRow
   }
@@ -64,6 +66,12 @@ class Characters {
     return foundChars
   }
   
+  func debug(_ str: String) {
+    if shouldDebug {
+      print(str)
+    }
+  }
+  
   func findCharacter(startX: Int, startY: Int) -> [Int] {
     let LEFT = 0
     let UP = 1
@@ -76,7 +84,7 @@ class Characters {
 //    var hasSeen = Dictionary<Int, Bool>()
     var x = startX
     var y = startY
-    let maxTries = 150
+    let maxTries = 250
     var curTry = 0
     var prevPos = -1
     var prevDirection = DOWN
@@ -86,7 +94,11 @@ class Characters {
     while !hasClosedChar {
       curTry += 1
       if curTry > maxTries {
-//        print("done trying")
+        debug("done trying")
+        break
+      }
+      if curTry > 1 && x == startX && y == startY {
+        debug("back at begin")
         break
       }
       let curPos = y * perRow + x
@@ -103,7 +115,7 @@ class Characters {
             x -= PX
             startPoint[0] = x
             prevPos = curPos
-//            print("left one")
+            debug("left one")
             continue
           }
 //        }
@@ -117,7 +129,7 @@ class Characters {
           y -= PX
           startPoint[1] = y
           prevPos = curPos
-//          print("up one")
+          debug("up one")
           continue
         }
       }
@@ -130,7 +142,7 @@ class Characters {
           x += PX
           endPoint[0] = x
           prevPos = curPos
-//          print("right one")
+          debug("right one")
           continue
         }
       }
@@ -143,7 +155,7 @@ class Characters {
           y += PX
           endPoint[1] = y
           prevPos = curPos
-//          print("down one")
+          debug("down one")
           continue
         }
       }
@@ -152,13 +164,13 @@ class Characters {
       // still need to move the current
       if prevDirection == LEFT {
         if downBlack {
-//          print("move down")
+          debug("move down")
           y += PX
         } else if leftBlack {
-//          print("move left")
+          debug("move left")
           x -= PX
         } else if upBlack {
-//          print("move up")
+          debug("move up")
           y -= PX
         } else {
           // back right
@@ -168,13 +180,13 @@ class Characters {
       }
       if prevDirection == UP {
         if leftBlack {
-//          print("move left")
+          debug("move left")
           x -= PX
         } else if upBlack {
-//          print("move up")
+          debug("move up")
           y -= PX
         } else if rightBlack {
-//          print("move right")
+          debug("move right")
           x += PX
         } else {
           // back down
@@ -184,13 +196,13 @@ class Characters {
       }
       if prevDirection == RIGHT {
         if upBlack {
-//          print("move up")
+          debug("move up")
           y -= PX
         } else if rightBlack {
-//          print("move right")
+          debug("move right")
           x += PX
         } else if downBlack {
-//          print("move down")
+          debug("move down")
           y += PX
         } else {
           // back left
@@ -200,13 +212,13 @@ class Characters {
       }
       if prevDirection == DOWN {
         if rightBlack {
-//          print("move right")
+          debug("move right")
           x += PX
         } else if downBlack {
-//          print("move down")
+          debug("move down")
           y += PX
         } else if leftBlack {
-//          print("move left")
+          debug("move left")
           x -= PX
         } else {
           // back up
@@ -228,6 +240,7 @@ class Characters {
       let minY = rect[1]
       let width = Float(rect[2])
       let height = Float(rect[3])
+      print("\(height) \(width)")
       // make square
       var scaleW = Float(1)
       var scaleH = Float(1)
@@ -241,6 +254,9 @@ class Characters {
       } else if height < dbl {
         scaleH = height / dbl
       }
+      scaleW = 1 / scaleW
+      scaleH = 1 / scaleH
+      print("scale \(scaleW) \(scaleH)")
       var pixels = [PixelData]() // write img
       for y in 0..<28 {
         for x in 0..<28 {

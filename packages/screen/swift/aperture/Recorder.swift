@@ -143,7 +143,7 @@ final class Recorder: NSObject {
     }
     var start = DispatchTime.now()
     var biggestBox: BoundingBox?
-    let boxFindScale = 10
+    let boxFindScale = 8
     let binarizedImage = filters.filterImageForContentFinding(image: cgImage, scale: boxFindScale)
     let cc = ConnectedComponents()
     let result = cc.labelImageFast(image: binarizedImage, calculateBoundingBoxes: true, invert: true)
@@ -169,7 +169,7 @@ final class Recorder: NSObject {
     let bW = bb.getWidth() * boxFindScale
     let bH = bb.getHeight() * boxFindScale
     let cropBox = CGRect(x: bX, y: bY, width: bW, height: bH)
-    let cropBoxLarge = CGRect(x: bX * 2, y: bY * 2, width: bW * 2, height: bH * 2)
+//    let cropBoxLarge = CGRect(x: bX * 2, y: bY * 2, width: bW * 2, height: bH * 2)
     print("! [\(bX), \(bY), \(bW), \(bH)]")
     if box.screenDir == nil {
       return
@@ -187,141 +187,102 @@ final class Recorder: NSObject {
     let verticalImage = filters.filterForVerticalContentFinding(image: images.resize(ocrCharactersImage, width: vWidth, height: vHeight)!)
     print("3. filter vertical: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     
-    // test write image:
-    images.writeCGImage(image: verticalImage, to: "\(box.screenDir!)/\(box.id)-vertical-content-find.png")
-    
     // find lines
     start = DispatchTime.now()
-    let verticalImageRep = NSBitmapImageRep(cgImage: verticalImage)
     // first loop
     // find vertical areas + store some word info
-    var verticalBreaks = Dictionary<Int, Int>() // used to track white streaks
     var imgData = [[Int]](repeating: [Int](repeating: 0, count: Int(vWidth)), count: Int(vHeight)) // height (y) first
-    var verticalClear = [Int]()
-    var verticalIgnore = Dictionary<Int, Bool>() // x => shouldIgnore
+    var verticalSections = Dictionary<Int, Int>() // start => end
+    let minContentWidth = 4
+    let leniancy = 3
+    var hStreak = 0
+    var vStreak = 0
     for x in 0..<vWidth {
-      verticalBreaks[x] = 0
       for y in 0..<vHeight {
-        let isBlack = verticalImageRep.colorAt(x: x, y: y)!.brightnessComponent == 0.0
+        let isBlack = bufferPointer[y * perRow + x] < 200
         if isBlack {
-          imgData[y][x] = 1
+          imgData[x][y] = 1
+          vStreak += 1
         } else {
-          let leniancy = 3
-          // is white
-          if verticalBreaks[x]! > y - leniancy {
-            verticalBreaks[x] = verticalBreaks[x]! + 1
-          }
-          // count nearly empty columns as empty (subtract here determines leniancy)
-          if verticalBreaks[x]! > vHeight - leniancy {
-            verticalClear.append(x)
-//            verticalIgnore[x] = true
-//              vWidthMin -= 1
-//              print("found a vertical split at \(x)")
-            break
+        }
+        // if at end of col
+        if y == vHeight - 1 {
+          let isFilled = vStreak > vHeight - leniancy
+          if isFilled {
+            hStreak += 1
+          } else {
+            if hStreak > minContentWidth {
+              verticalSections[x - vStreak] = x
+            }
+            hStreak = 0
           }
         }
       }
     }
-    var curStreak = 1
-    print("vertclear \(verticalClear.count)")
-    for (index, cur) in verticalClear.enumerated() {
-      if index == 0 {
-        continue
-      }
-      let prev = verticalClear[index - 1]
-      if prev == cur {
-        print("streak \(cur)")
-        curStreak += 1
-      } else {
-        curStreak = 0
-        continue
-      }
-      if curStreak == 4 {
-        print("found a wide vertical gap at \(cur)")
-        // weve hit a streak, fill in the previous ignores
-        for x in (cur - 4)...cur {
-          verticalIgnore[x] = true
-        }
-      } else if curStreak > 4 {
-        verticalIgnore[cur] = true
-      }
-    }
-    // TODO reenable, dont do vertical checks for now
-    
+    print("")
     print("4. find verticals: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     start = DispatchTime.now()
     // second loop
     // loop over vertical blocks and store lines
-    // max sections is the max number of vertical breaks itll find
-    let MAX_SECTIONS = 80
-    var streaks = [[Int]](repeating: [Int](repeating: 0, count: Int(vHeight)), count: MAX_SECTIONS)
-    var sectionOffsets = [Int](repeating: 0, count: MAX_SECTIONS) // vID => x
-    typealias Lines = Dictionary<Int, Bool>
-    var sectionLines = [Lines]()
-    var lastLine: Lines? = nil
-    var vID = 0 // tracks current vertical column id
-    for x in 0..<vWidth {
-      if verticalIgnore[x] == true {
-        continue
-      }
-      // coming out of a ignore area or first col is contentful
-      if x == 0 || verticalIgnore[x - 1] == true {
-        if lastLine != nil {
-          sectionLines.append(lastLine!)
-        }
-        lastLine = Lines()
-        vID += 1
-        sectionOffsets[vID] = x
-      }
-      // were in a valid col
+    struct LinePositions {
+      var x: Int;
+      var y: Int;
+      var width: Int;
+      var height: Int
+    }
+    var sectionLines = Dictionary<Int, [LinePositions]>()
+    let minLineWidth = 4
+    for (start, end) in verticalSections {
+      var lines = [LinePositions]()
+      var vStreak = 0
       for y in 0..<vHeight {
-        if imgData[y][x] == 1 {
-          streaks[vID][y] += 1
-          // this comparison is the low bound for the num of pixels until we consider it a word
-          if streaks[vID][y] > 6 {
-            lastLine![y] = true
+        var streak = 0
+        var startLine = 0
+        var endLine = 0
+        for x in start...end {
+          if imgData[x][y] == 1 {
+            streak += 1
+            if startLine == 0 {
+              startLine = x
+            }
+          } else {
+            if streak > minLineWidth {
+              endLine = x
+            }
+          }
+        }
+        if streak > minLineWidth {
+          let x = startLine
+          let width = endLine - startLine
+          vStreak += 1
+          if vStreak > 1 {
+            // update
+            var last = lines[lines.count - 1]
+            last.height += 1
+            last.width = max(last.width, width)
+            last.x = min(last.x, x)
+          } else {
+            // insert
+            lines.append(
+              LinePositions(
+                x: x,
+                y: y,
+                width: width,
+                height: 1
+              )
+            )
           }
         }
       }
+      sectionLines[start] = lines
     }
-    sectionLines.append(lastLine!)
     print("5. found \(sectionLines.count) verticals: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     start = DispatchTime.now()
     // third loop
     // for each VERTICAL SECTION, join together lines that need be
-    for (index, section) in sectionLines.enumerated() {
+    for (index, section) in verticalSections.enumerated() {
       let id = index + 1 // vId is always one above this
       let xOffset = max(0, sectionOffsets[id] * vScale - vScale)
-      var lWidth: Int = 0
-      if sectionOffsets[id + 1] != 0 {
-        lWidth = sectionOffsets[id + 1] * vScale - xOffset
-      } else {
-        lWidth = vWidth * vScale - xOffset
-      }
-      // 3.1 loop: find connected lines and join them
-//        print("lines at: \(section.keys.sorted())")
-      let rawLines = section.keys.sorted()
-      var lines = [[Int]]()
-      var curIndex = 0
-      for (index, curVal) in rawLines.enumerated() {
-        if index == 0 { // first time
-          lines.append([curVal, curVal]) // [3, 3]
-          continue
-        }
-        // lineNum = [3, 4, 10, 11, ...]
-        var curLine = lines[curIndex] // [23, 24]
-        if curVal == curLine[1] + 1 {
-          curLine[1] = curVal
-          lines[curIndex] = curLine
-        } else {
-          // not the same, start a new one
-          curIndex += 1
-          lines.append([curVal, curVal])
-        }
-      }
-      print("6. join, \(lines.count) lines: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
-      print("lines: \(lines)")
-      start = DispatchTime.now()
       var start2 = 0.0
       var start3 = 0.0
       // 3.2 loop; cut lines (this could be joined into last loop for speed demons)
@@ -332,7 +293,8 @@ final class Recorder: NSObject {
       var foundTotal = 0
       var lineStrings = [String](repeating: "", count: lines.count)
       let frameOffset = [bX, bY + 24]
-      let characters = Characters(data: bufferPointer, perRow: perRow)
+      let characters = Characters(data: bufferPointer, perRow: perRow, debug: false)
+      
       for thread in 0..<lineThreads {
         group.enter()
         queue.async {
@@ -346,8 +308,6 @@ final class Recorder: NSObject {
             // get bounds
             let bounds = [xOffset, yOffset - vPadExtra, lWidth, lHeight + vPadExtra * 2]
             // testing: write out image
-//            let rect = CGRect(x: bounds[0], y: bounds[1], width: bounds[2], height: bounds[3])
-//            let lineImg = images.cropImage(ocrCharactersImage, box: rect)
             var innerTime = DispatchTime.now()
             let originalBounds = [bounds[0] + frameOffset[0], bounds[1] + frameOffset[1], bounds[2], bounds[3]]
             let rects = characters.find(id: index, bounds: originalBounds, debugImg: cgImage)
@@ -357,7 +317,7 @@ final class Recorder: NSObject {
             innerTime = DispatchTime.now()
             foundTotal += rects.count
             // testing write out test image
-//            images.writeCGImage(image: lineImg, to: "\(box.screenDir!)/\(box.id)-section-\(id)-line-\(index).png")
+            images.writeCGImage(image: images.cropImage(ocrCharactersImage, box: CGRect(x: bounds[0], y: bounds[1], width: bounds[2], height: bounds[3])), to: "\(box.screenDir!)/\(box.id)-section-\(id)-line-\(index).png")
             // gather char rects
 //            for (charIndex, bb) in rects.enumerated() {
 //              let charRect = CGRect(
@@ -394,6 +354,8 @@ final class Recorder: NSObject {
     print("")
     print("total \(Double(DispatchTime.now().uptimeNanoseconds - startAll.uptimeNanoseconds) / 1_000_000)ms")
 
+    // test write image:
+    images.writeCGImage(image: verticalImage, to: "\(box.screenDir!)/\(box.id)-vertical-content-find.png")
     // for testing write out og images too
     images.writeCGImage(image: binarizedImage, to: "\(box.screenDir!)/\(box.id)-full.png")
 //    images.writeCGImage(image: ocrWriteImage, to: outPath)

@@ -181,9 +181,9 @@ final class Recorder: NSObject {
     
     // find vertical sections
     start = DispatchTime.now()
-    let vScale = 4 // scale down amount
-    let vWidth = bW / vScale
-    let vHeight = bH / vScale
+    let scale = 4 // scale down denominator
+    let vWidth = bW / scale
+    let vHeight = bH / scale
     let verticalImage = filters.filterForVerticalContentFinding(image: images.resize(ocrCharactersImage, width: vWidth, height: vHeight)!)
     print("3. filter vertical: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     
@@ -280,55 +280,36 @@ final class Recorder: NSObject {
     start = DispatchTime.now()
     // third loop
     // for each VERTICAL SECTION, join together lines that need be
-    for (index, section) in verticalSections.enumerated() {
-      let id = index + 1 // vId is always one above this
-      let xOffset = max(0, sectionOffsets[id] * vScale - vScale)
-      var start2 = 0.0
-      var start3 = 0.0
-      // 3.2 loop; cut lines (this could be joined into last loop for speed demons)
-      let lineThreads = lines.count % 2 == 0 ? threads : 1
-      let perThread = lines.count / lineThreads
+    for (id, lines) in sectionLines {
+      let perThread = lines.count / threads
       let queue = DispatchQueue(label: "asyncQueue", attributes: .concurrent)
       let group = DispatchGroup()
       var foundTotal = 0
       var lineStrings = [String](repeating: "", count: lines.count)
       let frameOffset = [bX, bY + 24]
       let characters = Characters(data: bufferPointer, perRow: perRow, debug: false)
-      
-      for thread in 0..<lineThreads {
+      for thread in 0..<threads {
         group.enter()
         queue.async {
           let startIndex = thread * perThread
           for index in startIndex..<(startIndex + perThread) {
             // we use this at the end to write out everything
-            let lineRange = lines[index]
-            let lHeight = (lineRange[1] - lineRange[0] + 1) * vScale
-            let yOffset = lineRange[0] * vScale
-            let vPadExtra = 6
+            let line = lines[index]
+            let pad = 6
             // get bounds
-            let bounds = [xOffset, yOffset - vPadExtra, lWidth, lHeight + vPadExtra * 2]
+            let bounds = [line.x * scale, line.y * scale - pad, line.width * scale, line.height * scale + pad * 2]
             // testing: write out image
-            var innerTime = DispatchTime.now()
             let originalBounds = [bounds[0] + frameOffset[0], bounds[1] + frameOffset[1], bounds[2], bounds[3]]
             let rects = characters.find(id: index, bounds: originalBounds, debugImg: cgImage)
 //            print("got rects from characters \(rects)")
             // inner timer
-            start2 += Double(DispatchTime.now().uptimeNanoseconds - innerTime.uptimeNanoseconds) / 1_000_000
-            innerTime = DispatchTime.now()
             foundTotal += rects.count
             // testing write out test image
             images.writeCGImage(image: images.cropImage(ocrCharactersImage, box: CGRect(x: bounds[0], y: bounds[1], width: bounds[2], height: bounds[3])), to: "\(box.screenDir!)/\(box.id)-section-\(id)-line-\(index).png")
             // gather char rects
 //            for (charIndex, bb) in rects.enumerated() {
-//              let charRect = CGRect(
-//                x: bb[0],
-//                y: bb[1],
-//                width: bb[2],
-//                height: bb[3]
-//              )
-////              let charImg = images.resize(images.cropImage(ocrWriteImage, box: charRect), width: 28, height: 28)!
-////              images.writeCGImage(image: charImg, to: "\(box.screenDir!)/\(box.id)-section-\(id)-line-\(index)-char-\(charIndex).png")
-//              charRects.append(charRect)
+//              let charRect = CGRect(x: bb[0], y: bb[1], width: bb[2], height: bb[3])
+//              images.writeCGImage(image: images.resize(images.cropImage(ocrWriteImage, box: charRect), width: 28, height: 28)!, to: "\(box.screenDir!)/\(box.id)-section-\(id)-line-\(index)-char-\(charIndex).png")
 //            }
             // write characters
             let chars = characters.charsToString(rects: rects, debugDir: box.screenDir!, lineNum: index)
@@ -415,14 +396,6 @@ final class Recorder: NSObject {
 
 extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
   public func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-    // why doesnt this work :(
-//    if connection.videoOrientation.rawValue == 1 {
-//      connection.videoOrientation = .landscapeRight
-//      connection.isVideoMirrored = true
-//      return
-//    }
-    
-    // let start = DispatchTime.now()
     let pixelBuffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)!
     CVPixelBufferLockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0));
     let baseAddress = CVPixelBufferGetBaseAddressOfPlane(pixelBuffer, 0)
@@ -436,15 +409,9 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
         print(">\(box.id)")
       }
     }
-
     // only true for first loop
     self.firstTime = false
-
     // release
     CVPixelBufferUnlockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0))
-//    let end = DispatchTime.now()
-//    let nanoTime = end.uptimeNanoseconds - start.uptimeNanoseconds
-//    let timeInterval = Double(nanoTime) / 1_000_000
-//    print("frame \(timeInterval) ms")
   }
 }

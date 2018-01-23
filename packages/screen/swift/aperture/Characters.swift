@@ -1,6 +1,7 @@
 import AppKit
 
 class Characters {
+  private let images = Images()
   private var buffer: UnsafeMutablePointer<UInt8>
   private var perRow: Int
   
@@ -46,8 +47,7 @@ class Characters {
         let cb = self.findCharacter(startX: xO, startY: yO)
         foundChars.append(cb)
 //        print("char bounds \(cb) and were at \(x)")
-//        let charImg = images.cropImage(debugImg, box: CGRect(x: cb[0], y: cb[1] - 24 * 2, width: cb[2], height: cb[3]))
-//        images.writeCGImage(image: charImg, to: "/tmp/screen/a-line-\(id)-char-\(curChar).png")
+//        images.writeCGImage(image: images.cropImage(debugImg, box: CGRect(x: cb[0], y: cb[1] - 24 * 2, width: cb[2] + 100, height: cb[3] + 100)), to: "/tmp/screen/char-\(id)-\(curChar).png")
         // after processing new char, move x to end of char
         x += cb[2] / 2 + 1
         y = 0
@@ -217,6 +217,52 @@ class Characters {
     }
     
     return [startPoint[0], startPoint[1], endPoint[0] - startPoint[0], endPoint[1] - startPoint[1]]
+  }
+  
+  public func charsToString(rects: [[Int]], debugDir: String?, lineNum: Int?) -> String {
+    //    let start = DispatchTime.now()
+    var output = ""
+    let dbl = Float(28)
+    for (index, rect) in rects.enumerated() {
+      let minX = rect[0]
+      let minY = rect[1]
+      let width = Float(rect[2])
+      let height = Float(rect[3])
+      // make square
+      var scaleW = Float(1)
+      var scaleH = Float(1)
+      if width > dbl {
+        scaleW = dbl / width
+      } else if width < dbl {
+        scaleW = width / dbl
+      }
+      if height > dbl {
+        scaleH = dbl / height
+      } else if height < dbl {
+        scaleH = height / dbl
+      }
+      var pixels = [PixelData]() // write img
+      for y in 0..<28 {
+        for x in 0..<28 {
+          let xS = Int(Float(x) * scaleW)
+          let yS = Int(Float(y) * scaleH)
+          let luma = buffer[(minY + yS) * perRow + minX + xS]
+          let lumaVal = luma < 200 ? "0 " : "255 " // warning, doing any sort of string conversion here slows it down bigly
+          output += lumaVal
+          if debugDir != nil {
+            pixels.append(PixelData(a: 255, r: luma, g: luma, b: luma))
+          }
+        }
+      }
+      output += "\n"
+      if debugDir != nil {
+        let outFile = "\(debugDir!)/x-line-\(lineNum!)-char-\(index).png"
+        print("write \(outFile)")
+        images.writeCGImage(image: images.imageFromArray(pixels: pixels, width: 28, height: 28)!, to: outFile, resolution: 72) // write img
+      }
+    }
+    //    print(".. char => string: \(rects.count) \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+    return output
   }
 }
 

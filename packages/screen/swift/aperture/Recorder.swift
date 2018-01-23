@@ -332,6 +332,7 @@ final class Recorder: NSObject {
       var foundTotal = 0
       var lineStrings = [String](repeating: "", count: lines.count)
       let frameOffset = [bX, bY + 24]
+      let characters = Characters(data: bufferPointer, perRow: perRow)
       for thread in 0..<lineThreads {
         group.enter()
         queue.async {
@@ -349,7 +350,7 @@ final class Recorder: NSObject {
 //            let lineImg = images.cropImage(ocrCharactersImage, box: rect)
             var innerTime = DispatchTime.now()
             let originalBounds = [bounds[0] + frameOffset[0], bounds[1] + frameOffset[1], bounds[2], bounds[3]]
-            let rects = Characters(data: bufferPointer, perRow: perRow).find(id: index, bounds: originalBounds, debugImg: cgImage)
+            let rects = characters.find(id: index, bounds: originalBounds, debugImg: cgImage)
 //            print("got rects from characters \(rects)")
             // inner timer
             start2 += Double(DispatchTime.now().uptimeNanoseconds - innerTime.uptimeNanoseconds) / 1_000_000
@@ -370,7 +371,7 @@ final class Recorder: NSObject {
 //              charRects.append(charRect)
 //            }
             // write characters
-            let chars = self.charToString(lineNum: index, bufferPointer: bufferPointer, perRow: perRow, rects: rects, frameOffset: frameOffset, outDir: box.screenDir!)
+            let chars = characters.charsToString(rects: rects, debugDir: box.screenDir!, lineNum: index)
             lineStrings.insert(chars, at: index)
             start3 += Double(DispatchTime.now().uptimeNanoseconds - innerTime.uptimeNanoseconds) / 1_000_000
           }
@@ -399,46 +400,6 @@ final class Recorder: NSObject {
     images.writeCGImage(image: ocrCharactersImage, to: "\(box.screenDir!)/\(box.id)-binarized.png")
 //    images.writeCGImage(image: cgImageLarge, to: "\(box.screenDir!)/\(box.id)-cgimage-large.png")
     images.writeCGImage(image: cgImage, to: "\(box.screenDir!)/\(box.id)-cgimage.png")
-  }
-  
-  func charToString(lineNum: Int, bufferPointer: UnsafeMutablePointer<UInt8>, perRow: Int, rects: [[Int]], frameOffset: [Int], outDir: String) -> String {
-//    let start = DispatchTime.now()
-    var output = ""
-    let dbl = Float(28)
-    for (index, rect) in rects.enumerated() {
-      let minX = rect[0]
-      let minY = rect[1]
-      let width = Float(rect[2])
-      let height = Float(rect[3])
-      // make square
-      var scaleW = Float(1)
-      var scaleH = Float(1)
-      if width > dbl {
-        scaleW = dbl / width
-      } else if width < dbl {
-        scaleW = width / dbl
-      }
-      if height > dbl {
-        scaleH = dbl / height
-      } else if height < dbl {
-        scaleH = height / dbl
-      }
-//      var pixels = [PixelData]() // write img
-      for y in 0..<28 {
-        for x in 0..<28 {
-          let xS = Int(Float(x) * scaleW)
-          let yS = Int(Float(y) * scaleH)
-          let luma = bufferPointer[(minY + yS) * perRow + minX + xS]
-          let lumaVal = luma < 200 ? "0 " : "255 " // warning, doing any sort of string conversion here slows it down bigly
-          output += lumaVal
-//          pixels.append(PixelData(a: 255, r: luma, g: luma, b: luma))
-        }
-      }
-      output += "\n"
-//      images.writeCGImage(image: images.imageFromArray(pixels: pixels, width: 28, height: 28)!, to: "\(outDir)/x-line-\(lineNum)-char-\(index).png", resolution: 72) // write img
-    }
-//    print(".. char => string: \(rects.count) \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
-    return output
   }
   
   func hasBoxChanged(box: Box, buffer: UnsafeMutablePointer<UInt8>, perRow: Int) -> Bool {

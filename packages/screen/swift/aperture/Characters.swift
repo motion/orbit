@@ -46,14 +46,14 @@ class Characters {
         let charImgIn = images.cropImage(debugImg, box: CGRect(x: xO, y: yO - 24 * 2, width: 25, height: 25))
         images.writeCGImage(image: charImgIn, to: "/tmp/screen/a-line-\(id)-charIN-\(curChar).png")
         let cb = self.findCharacter(startX: xO, startY: yO)
-        print("char bounds \(cb)")
-        let charImg = images.cropImage(debugImg, box: CGRect(x: cb[0] - bounds[0], y: cb[1] - 24 * 2, width: cb[2] * 2, height: cb[3]))
+        print("char bounds \(cb) and were at \(x)")
+        let charImg = images.cropImage(debugImg, box: CGRect(x: cb[0], y: cb[1] - 24 * 2, width: cb[2], height: cb[3]))
         images.writeCGImage(image: charImg, to: "/tmp/screen/a-line-\(id)-char-\(curChar).png")
         // after processing new char, move x to end of char
-        x += cb[2]
+        x += cb[2] / 2 + 1
         y = 0
         curChar += 1
-        break // debug: just do one char
+//        break // debug: just do one char
       }
       let binarized = UInt8(isBlack ? 0 : 255)
       pixels[x + y * imgW] = PixelData(a: 255, r: binarized, g: binarized, b: binarized)
@@ -105,10 +105,6 @@ class Characters {
       // left
       let leftIndex = y * perRow + x - PX
       if prevPos != leftIndex && buffer[leftIndex] < blackLim {
-//        let tl = buffer[(y - PX) * perRow + x - PX - PX] < blackLim
-//        let cl = buffer[y * perRow + x - PX - PX] < blackLim
-//        let bl = buffer[(y + PX) * perRow + x - PX - PX] < blackLim
-//        if !tl && !cl && !bl {
           leftBlack = true
           if x - PX < startPoint[0] {
             prevDirection = LEFT

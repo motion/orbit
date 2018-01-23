@@ -304,7 +304,7 @@ final class Recorder: NSObject {
         perRow: perRow,
         debug: false,
         debugDir: box.screenDir!,
-        debugImg: cgImage
+        debugImg: nil //cgImage
       )
       // find characters
       func processLine(_ index: Int) {
@@ -322,12 +322,12 @@ final class Recorder: NSObject {
         let rects = characters.find(id: index, bounds: bounds)
         foundTotal += rects.count
         // debug line
-        images.writeCGImage(
-          image: images.cropImage(ocrCharactersImage, box: CGRect(x: bounds[0] - frame[0], y: bounds[1] - frame[1], width: bounds[2], height: bounds[3])),
-          to: "\(box.screenDir!)/\(box.id)-section-\(id)-line-\(index).png"
-        )
+//        images.writeCGImage(
+//          image: images.cropImage(ocrCharactersImage, box: CGRect(x: bounds[0] - frame[0], y: bounds[1] - frame[1], width: bounds[2], height: bounds[3])),
+//          to: "\(box.screenDir!)/\(box.id)-section-\(id)-line-\(index).png"
+//        )
         // write characters
-        let chars = characters.charsToString(rects: rects, debugID: index) // index < 40 ? index : -1
+        let chars = characters.charsToString(rects: rects, debugID: -1)// index) // index < 40 ? index : -1
         lineStrings.insert(chars, at: index)
       }
       // do async if can

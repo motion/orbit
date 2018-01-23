@@ -17,7 +17,9 @@ class Characters {
   }
 
   func find(id: Int, bounds: [Int]) -> [[Int]] {
+//    self.shouldDebug = id == 1
     let start = DispatchTime.now()
+    let MAX_LUMA = 80 // higher == allow lighter
     let imgX = bounds[0] * 2
     let imgY = bounds[1] * 2
     let imgW = bounds[2]
@@ -47,7 +49,7 @@ class Characters {
       let xO = x * 2 + imgX
       let yO = y * 2 + imgY
       let luma = buffer[yO * perRow + xO]
-      let isBlack = luma < 3 ? true : false
+      let isBlack = luma < MAX_LUMA ? true : false
       if debugImg != nil {
         pixels![x + y * imgW] = PixelData(a: 255, r: luma, g: luma, b: luma)
       }
@@ -56,7 +58,6 @@ class Characters {
           let charImgIn = images.cropImage(debugImg!, box: CGRect(x: xO / 2, y: yO / 2 - 24, width: 50, height: 50))
           images.writeCGImage(image: charImgIn, to: "/tmp/screen/a-line-\(id)-charIN-\(curChar).png")
         }
-        self.shouldDebug = id == 0 && curChar == 6
         let cb = self.findCharacter(startX: xO, startY: yO)
         foundChars.append(cb)
         if debugImg != nil {
@@ -65,7 +66,6 @@ class Characters {
         // after processing new char, move x to end of char
         x += cb[2] / 2 + 1
         y = 0
-        print("char \(curChar) bounds \(cb), x now \(x)")
         curChar += 1
       }
     }
@@ -75,7 +75,7 @@ class Characters {
       }
     }
     if shouldDebug {
-      print("  Characters.find() \(foundChars.count): \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+      print("Characters.find() \(foundChars.count): \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     }
     return foundChars
   }
@@ -92,20 +92,19 @@ class Characters {
     let RIGHT = 2
     let DOWN = 3
     var startPoint = [startX, startY] // top left point
-    debug("startPoint \(startPoint)")
     var endPoint = [startX, startY] // bottom right point
     var x = startX
     var y = startY
-    let maxVenture = 80
+    let maxVenture = 50 // most amount to go without finding new bound before give up
+    let blackLim = 125 // ensure breaks, lower = less black
     var curTry = 0
     var prevPos = -1
     var prevDirection = DOWN
-    let blackLim = 125 // ensure breaks, lower = less black
     let PX = 1
     while true {
       curTry += 1
       if curTry > maxVenture {
-        print("max venture")
+        debug("max venture")
         break
       }
       if curTry > 1 && x == startX && y == startY {
@@ -269,7 +268,7 @@ class Characters {
       let minX = rect[0]
       let minY = rect[1]
       if rect[3] == 0 || rect[2] == 0 {
-        print("empty char")
+        debug("empty char")
         continue
       }
       let width = Float(rect[2])

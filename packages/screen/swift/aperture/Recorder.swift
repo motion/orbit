@@ -145,10 +145,9 @@ final class Recorder: NSObject {
       images.writeCGImage(image: cgImage, to: outPath)
       return
     }
-    print("find content")
     var start = DispatchTime.now()
     var biggestBox: BoundingBox?
-    let boxFindScale = 8
+    let boxFindScale = 10
     let binarizedImage = filters.filterImageForContentFinding(image: cgImage, scale: boxFindScale)
     let cc = ConnectedComponents()
     let result = cc.labelImageFast(image: binarizedImage, calculateBoundingBoxes: true, invert: true)

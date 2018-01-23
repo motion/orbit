@@ -300,22 +300,26 @@ final class Recorder: NSObject {
       var foundTotal = 0
       var lineStrings = [String](repeating: "", count: lines.count)
       let characters = Characters(data: bufferPointer, perRow: perRow, debug: false, debugDir: box.screenDir!)
-      // for each line
+      // find characters
       func processLine(_ index: Int) {
         let line = lines[index]
         let pad = 6
         // scale bounds for line
+        //        print("\(frame[2], line.width * scale + pad * 3)")
         let bounds = [
-          line.x * scale - pad * 2 + frame[0],
+          line.x * scale - pad + frame[0],
           line.y * scale - pad + frame[1],
-          min(frame[2], line.width * scale + pad * 4),
+          min(frame[2], line.width * scale + pad * 3),
           min(frame[3], line.height * scale + pad * 2)
         ]
         // finds characters
         let rects = characters.find(id: index, bounds: bounds)
         foundTotal += rects.count
-        // debug
-        images.writeCGImage(image: images.cropImage(ocrCharactersImage, box: CGRect(x: bounds[0] - frame[0], y: bounds[1] - frame[1], width: bounds[2], height: bounds[3])), to: "\(box.screenDir!)/\(box.id)-section-\(id)-line-\(index).png")
+        // debug line
+        images.writeCGImage(
+          image: images.cropImage(ocrCharactersImage, box: CGRect(x: bounds[0] - frame[0], y: bounds[1] - frame[1], width: bounds[2], height: bounds[3])),
+          to: "\(box.screenDir!)/\(box.id)-section-\(id)-line-\(index).png"
+        )
         // write characters
         let chars = characters.charsToString(rects: rects, debugID: index) // index < 40 ? index : -1
         lineStrings.insert(chars, at: index)
@@ -357,12 +361,11 @@ final class Recorder: NSObject {
 
     // test write image:
     images.writeCGImage(image: verticalImage, to: "\(box.screenDir!)/\(box.id)-content-find.png")
-    // for testing write out og images too
-    images.writeCGImage(image: binarizedImage, to: "\(box.screenDir!)/\(box.id)-full.png")
-//    images.writeCGImage(image: ocrWriteImage, to: outPath)
-    images.writeCGImage(image: ocrCharactersImage, to: "\(box.screenDir!)/\(box.id)-binarized.png")
-//    images.writeCGImage(image: cgImageLarge, to: "\(box.screenDir!)/\(box.id)-cgimage-large.png")
-    images.writeCGImage(image: cgImage, to: "\(box.screenDir!)/\(box.id)-cgimage.png")
+    images.writeCGImage(image: binarizedImage, to: "\(box.screenDir!)/\(box.id)-binarized.png")
+    images.writeCGImage(image: ocrCharactersImage, to: "\(box.screenDir!)/\(box.id)-ocr-characters.png")
+    images.writeCGImage(image: cgImage, to: "\(box.screenDir!)/\(box.id)-original.png")
+    //    images.writeCGImage(image: ocrWriteImage, to: outPath)
+    //    images.writeCGImage(image: cgImageLarge, to: "\(box.screenDir!)/\(box.id)-cgimage-large.png")
   }
   
   func hasBoxChanged(box: Box, buffer: UnsafeMutablePointer<UInt8>, perRow: Int) -> Bool {

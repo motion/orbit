@@ -178,6 +178,7 @@ final class Recorder: NSObject {
     let bY = bb.y_start * boxFindScale
     let bW = bb.getWidth() * boxFindScale
     let bH = bb.getHeight() * boxFindScale
+    let frameOffset = [bX, bY]
     let cropBox = CGRect(x: bX, y: bY, width: bW, height: bH)
 //    let cropBoxLarge = CGRect(x: bX * 2, y: bY * 2, width: bW * 2, height: bH * 2)
     print("! [\(bX), \(bY), \(bW), \(bH)]")
@@ -207,12 +208,16 @@ final class Recorder: NSObject {
     var colStreak = 0
     let colMissMax = 8
     var colMiss = 0
+    var colStart = 0
     for x in 0..<vWidth {
       var verticalFilled = 0
       for y in 0..<vHeight {
         if verticalImageRep.colorAt(x: x, y: y)!.brightnessComponent == 0.0 {
           imgData[x][y] = 1
           verticalFilled += 1
+          if colStart == 0 {
+            colStart = x
+          }
         }
       }
       let continueStreak = verticalFilled > colHeightMin
@@ -223,9 +228,10 @@ final class Recorder: NSObject {
         colMiss += 1
         if (colMiss > colMissMax || x == vWidth - 1) && colStreak - colMiss > colStreakMin { // set content block
           print("found section x \(x) colStreak \(colStreak)")
-          verticalSections[x - colStreak] = x - colMiss
+          verticalSections[colStart] = x - colMiss
           colStreak = 0
           colMiss = 0
+          colStart = 0
         } else {
           if verticalSections.count > 0 {
             colStreak += 1
@@ -238,7 +244,7 @@ final class Recorder: NSObject {
     start = DispatchTime.now()
     // second loop - find lines in sections
     var sectionLines = Dictionary<Int, [LinePositions]>()
-    let minLineWidth = 3
+    let minLineWidth = 2
     for (start, end) in verticalSections {
       var lines = [LinePositions]()
       var lineStreak = 0
@@ -262,7 +268,7 @@ final class Recorder: NSObject {
           let x = startLine
           let width = endLine - startLine
           lineStreak += 1
-          print("startLine \(startLine) lineStreak \(lineStreak)")
+          print("startLine \(startLine) lineStreak \(lineStreak) y \(y)")
           if lineStreak > 1 {
             // update
             var last = lines[lines.count - 1]
@@ -297,14 +303,13 @@ final class Recorder: NSObject {
       let group = DispatchGroup()
       var foundTotal = 0
       var lineStrings = [String](repeating: "", count: lines.count)
-      let frameOffset = [bX, bY + 24]
       let characters = Characters(data: bufferPointer, perRow: perRow, debug: false) //  && id == 42
       func processLine(_ index: Int) {
         // we use this at the end to write out everything
         let line = lines[index]
         let pad = 6
         // get bounds
-        let bounds = [line.x * scale, line.y * scale - pad, line.width * scale, line.height * scale + pad * 2]
+        let bounds = [line.x * scale - pad, line.y * scale - pad, line.width * scale + pad * 2, line.height * scale + pad * 2]
         // testing: write out image
         let originalBounds = [bounds[0] + frameOffset[0], bounds[1] + frameOffset[1], bounds[2], bounds[3]]
         print("originalBounds \(originalBounds)")

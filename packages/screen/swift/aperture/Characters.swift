@@ -57,10 +57,12 @@ class Characters {
     var hasClosedChar = false
     var startPoint = [startX, startY] // top left point
     var endPoint = [startX, startY] // bottom right point
+//    var hasSeen = Dictionary<Int, Bool>()
     var x = startX
     var y = startY
-    var maxTries = 500
+    let maxTries = 50
     var curTry = 0
+    var prevMove = -1
     
     while !hasClosedChar {
       curTry += 1
@@ -68,14 +70,29 @@ class Characters {
         print("done trying")
         break
       }
+      let curIndex = y * perRow + x
       var rightBlack = false
       var downBlack = false
       var leftBlack = false
       var upBlack = false
+      // left
+      let leftIndex = y * perRow + x - 2
+      if prevMove != leftIndex && buffer[leftIndex] < 200 {
+        leftBlack = true
+        if x - 2 < startPoint[0] {
+          prevMove = leftIndex
+          x = x - 2
+          startPoint[0] = x
+          print("up one")
+          continue
+        }
+      }
       // up
-      if buffer[(y - 2) * perRow + x] < 200 {
+      let upIndex = (y - 2) * perRow + x
+      if prevMove != upIndex && buffer[upIndex] < 200 {
         upBlack = true
         if y - 2 < startPoint[1] {
+          prevMove = upIndex
           y = y - 2
           startPoint[1] = y
           print("up one")
@@ -83,9 +100,11 @@ class Characters {
         }
       }
       // right
-      if buffer[y * perRow + x + 2] < 200 {
+      let rightIndex = y * perRow + x + 2
+      if prevMove != rightIndex && buffer[rightIndex] < 200 {
         rightBlack = true
         if x + 2 > endPoint[0] {
+          prevMove = rightIndex
           x = x + 2
           endPoint[0] = x
           print("right one")
@@ -93,35 +112,37 @@ class Characters {
         }
       }
       // down
-      if buffer[(y + 2) * perRow + x] < 200 {
+      let downIndex = (y + 2) * perRow + x
+      if prevMove != downIndex && buffer[downIndex] < 200 {
         downBlack = true
         if y + 2 > endPoint[1] {
+          prevMove = downIndex
           y = y + 2
           endPoint[1] = y
           print("down one")
           continue
         }
       }
-      // left
-      if buffer[y * perRow + x - 2] < 200 {
-        leftBlack = true
-        if x - 2 < startPoint[0] {
-          x = x - 2
-          startPoint[0] = x
-          print("up one")
-          continue
-        }
-      }
       // didnt expand the bounds
       // still need to move the current
-      if rightBlack {
-        x = x + 2
-      } else if upBlack {
+      if upBlack {
+        print("move up")
+        prevMove = curIndex
         y = y - 2
+      } else if rightBlack {
+        print("move right")
+        prevMove = curIndex
+        x = x + 2
       } else if downBlack {
-        x = x - 2
-      } else if leftBlack {
+        print("move down")
+        prevMove = curIndex
         y = y + 2
+      } else if leftBlack {
+        print("move left")
+        prevMove = curIndex
+        x = x - 2
+      } else {
+        print("move none")
       }
     }
     

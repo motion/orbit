@@ -47,10 +47,9 @@ class Characters {
       let xO = x * 2 + imgX
       let yO = y * 2 + imgY
       let luma = buffer[yO * perRow + xO]
-      let isBlack = luma < 190 ? true : false
+      let isBlack = luma < 3 ? true : false
       if debugImg != nil {
-        let binarized = UInt8(isBlack ? 0 : 255)
-        pixels![x + y * imgW] = PixelData(a: 255, r: binarized, g: binarized, b: binarized)
+        pixels![x + y * imgW] = PixelData(a: 255, r: luma, g: luma, b: luma)
       }
       if isBlack {
         if debugImg != nil {
@@ -101,7 +100,7 @@ class Characters {
     var curTry = 0
     var prevPos = -1
     var prevDirection = DOWN
-    let blackLim = 255
+    let blackLim = 200
     let PX = 1
     while true {
       curTry += 1

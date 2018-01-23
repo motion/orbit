@@ -105,10 +105,10 @@ class Characters {
       // left
       let leftIndex = y * perRow + x - PX
       if prevPos != leftIndex && buffer[leftIndex] < blackLim {
-        let tl = buffer[(y - PX) * perRow + x - PX - PX] < blackLim
-        let cl = buffer[y * perRow + x - PX - PX] < blackLim
-        let bl = buffer[(y + PX) * perRow + x - PX - PX] < blackLim
-        if !tl && !cl && !bl {
+//        let tl = buffer[(y - PX) * perRow + x - PX - PX] < blackLim
+//        let cl = buffer[y * perRow + x - PX - PX] < blackLim
+//        let bl = buffer[(y + PX) * perRow + x - PX - PX] < blackLim
+//        if !tl && !cl && !bl {
           leftBlack = true
           if x - PX < startPoint[0] {
             prevDirection = LEFT
@@ -118,7 +118,7 @@ class Characters {
             print("up one")
             continue
           }
-        }
+//        }
       }
       // up
       let upIndex = (y - PX) * perRow + x
@@ -173,10 +173,12 @@ class Characters {
           print("move up")
           y -= PX
         } else {
-          print("move none")
-          break
+          // back right
+          prevDirection = RIGHT
+          x += PX
         }
-      } else {
+      }
+      if prevDirection == UP {
         if leftBlack {
           print("move left")
           x -= PX
@@ -186,12 +188,42 @@ class Characters {
         } else if rightBlack {
           print("move right")
           x += PX
+        } else {
+          // back down
+          prevDirection = DOWN
+          y += PX
+        }
+      }
+      if prevDirection == RIGHT {
+        if upBlack {
+          print("move up")
+          y -= PX
+        } else if rightBlack {
+          print("move right")
+          x += PX
         } else if downBlack {
           print("move down")
           y += PX
         } else {
-          print("move none")
-          break
+          // back left
+          prevDirection = LEFT
+          x -= PX
+        }
+      }
+      if prevDirection == DOWN {
+        if rightBlack {
+          print("move right")
+          x += PX
+        } else if downBlack {
+          print("move down")
+          y += PX
+        } else if leftBlack {
+          print("move left")
+          x -= PX
+        } else {
+          // back up
+          prevDirection = UP
+          y -= PX
         }
       }
     }

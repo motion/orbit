@@ -173,7 +173,7 @@ final class Recorder: NSObject {
     let bY = bb.y_start * boxFindScale
     let bW = bb.getWidth() * boxFindScale
     let bH = bb.getHeight() * boxFindScale
-    let frameOffset = [bX, bY]
+    let frame = [bX, bY, bW, bH]
     let cropBox = CGRect(x: bX, y: bY, width: bW, height: bH)
 //    let cropBoxLarge = CGRect(x: bX * 2, y: bY * 2, width: bW * 2, height: bH * 2)
     print("! [\(bX), \(bY), \(bW), \(bH)]")
@@ -238,6 +238,7 @@ final class Recorder: NSObject {
     start = DispatchTime.now()
     // second loop - find lines in sections
     var sectionLines = Dictionary<Int, [LinePositions]>()
+    var total = 0
     let minLineWidth = 2
     for (start, end) in verticalSections {
       var lines = [LinePositions]()
@@ -284,8 +285,9 @@ final class Recorder: NSObject {
         }
       }
       sectionLines[start] = lines
+      total += lines.count
     }
-    print("5. found \(sectionLines.count) verticals: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+    print("5. found \(total) lines: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
 //    print("sectionLines \(sectionLines.description)")
     start = DispatchTime.now()
     // third loop
@@ -298,28 +300,27 @@ final class Recorder: NSObject {
       var foundTotal = 0
       var lineStrings = [String](repeating: "", count: lines.count)
       let characters = Characters(data: bufferPointer, perRow: perRow, debug: false, debugDir: box.screenDir!)
+      // for each line
       func processLine(_ index: Int) {
-        // we use this at the end to write out everything
         let line = lines[index]
         let pad = 6
-        // get bounds
-        let bounds = [line.x * scale - pad, line.y * scale - pad, line.width * scale + pad * 2, line.height * scale + pad * 2]
-        // testing: write out image
-        let originalBounds = [bounds[0] + frameOffset[0], bounds[1] + frameOffset[1], bounds[2], bounds[3]]
-        let rects = characters.find(id: index, bounds: originalBounds)
-        // inner timer
+        // scale bounds for line
+        let bounds = [
+          line.x * scale - pad * 2 + frame[0],
+          line.y * scale - pad + frame[1],
+          min(frame[2], line.width * scale + pad * 4),
+          min(frame[3], line.height * scale + pad * 2)
+        ]
+        // finds characters
+        let rects = characters.find(id: index, bounds: bounds)
         foundTotal += rects.count
-        // testing write out test image
-//        images.writeCGImage(image: images.cropImage(ocrCharactersImage, box: CGRect(x: bounds[0], y: bounds[1], width: bounds[2], height: bounds[3])), to: "\(box.screenDir!)/\(box.id)-section-\(id)-line-\(index).png")
-        // gather char rects
-        //            for (charIndex, bb) in rects.enumerated() {
-        //              let charRect = CGRect(x: bb[0], y: bb[1], width: bb[2], height: bb[3])
-        //              images.writeCGImage(image: images.resize(images.cropImage(ocrWriteImage, box: charRect), width: 28, height: 28)!, to: "\(box.screenDir!)/\(box.id)-section-\(id)-line-\(index)-char-\(charIndex).png")
-        //            }
+        // debug
+        images.writeCGImage(image: images.cropImage(ocrCharactersImage, box: CGRect(x: bounds[0] - frame[0], y: bounds[1] - frame[1], width: bounds[2], height: bounds[3])), to: "\(box.screenDir!)/\(box.id)-section-\(id)-line-\(index).png")
         // write characters
-        let chars = characters.charsToString(rects: rects, debugID: -1) // index < 40 ? index : -1
+        let chars = characters.charsToString(rects: rects, debugID: index) // index < 40 ? index : -1
         lineStrings.insert(chars, at: index)
       }
+      // do async if can
       if lines.count == 1 {
         processLine(0)
       } else {

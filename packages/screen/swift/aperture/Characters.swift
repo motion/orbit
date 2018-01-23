@@ -83,16 +83,16 @@ class Characters {
     var endPoint = [startX, startY] // bottom right point
     var x = startX
     var y = startY
-    let maxTries = 250
+    let maxTries = 400
     var curTry = 0
     var prevPos = -1
     var prevDirection = DOWN
-    let blackLim = 200
+    let blackLim = 255
     let PX = 1
     while true {
       curTry += 1
       if curTry > maxTries {
-        debug("done trying")
+        print("reached max")
         break
       }
       if curTry > 1 && x == startX && y == startY {

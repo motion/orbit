@@ -221,7 +221,7 @@ final class Recorder: NSObject {
         colMiss = 0
       } else {
         colMiss += 1
-        if colMiss > colMissMax && colStreak - colMiss > colStreakMin { // set content block
+        if (colMiss > colMissMax || x == vWidth - 1) && colStreak - colMiss > colStreakMin { // set content block
           print("found section x \(x) colStreak \(colStreak)")
           verticalSections[x - colStreak] = x - colMiss
           colStreak = 0
@@ -264,16 +264,16 @@ final class Recorder: NSObject {
           let x = startLine
           let width = endLine - startLine
           lineStreak += 1
-          print("startLine \(startLine) lineStreak \(lineStreak)")
           if lineStreak > 1 {
             // update
             var last = lines[lines.count - 1]
-            print("update \(last)")
             last.height += 1
             last.width = max(last.width, width)
             last.x = min(last.x, x)
             lines[lines.count - 1] = last
           } else {
+            
+            print("startLine \(startLine) lineStreak \(lineStreak)")
             // insert
             lines.append(
               LinePositions(
@@ -300,7 +300,7 @@ final class Recorder: NSObject {
       var foundTotal = 0
       var lineStrings = [String](repeating: "", count: lines.count)
       let frameOffset = [bX, bY + 24]
-      let characters = Characters(data: bufferPointer, perRow: perRow, debug: false)
+      let characters = Characters(data: bufferPointer, perRow: perRow, debug: id == 42)
       for thread in 0..<threads {
         group.enter()
         queue.async {
@@ -348,7 +348,7 @@ final class Recorder: NSObject {
     print("total \(Double(DispatchTime.now().uptimeNanoseconds - startAll.uptimeNanoseconds) / 1_000_000)ms")
 
     // test write image:
-    images.writeCGImage(image: verticalImage, to: "\(box.screenDir!)/\(box.id)-vertical-content-find.png")
+    images.writeCGImage(image: verticalImage, to: "\(box.screenDir!)/\(box.id)-content-find.png")
     // for testing write out og images too
     images.writeCGImage(image: binarizedImage, to: "\(box.screenDir!)/\(box.id)-full.png")
 //    images.writeCGImage(image: ocrWriteImage, to: outPath)

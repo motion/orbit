@@ -84,7 +84,7 @@ class Characters {
 //    var hasSeen = Dictionary<Int, Bool>()
     var x = startX
     var y = startY
-    let maxTries = 250
+    let maxTries = 1000
     var curTry = 0
     var prevPos = -1
     var prevDirection = DOWN
@@ -256,7 +256,6 @@ class Characters {
       }
       scaleW = 1 / scaleW
       scaleH = 1 / scaleH
-      print("scale \(scaleW) \(scaleH)")
       var pixels = [PixelData]() // write img
       for y in 0..<28 {
         for x in 0..<28 {

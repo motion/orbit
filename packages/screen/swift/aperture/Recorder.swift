@@ -238,7 +238,7 @@ final class Recorder: NSObject {
     start = DispatchTime.now()
     // second loop - find lines in sections
     var sectionLines = Dictionary<Int, [LinePositions]>()
-    let minLineWidth = 4
+    let minLineWidth = 3
     for (start, end) in verticalSections {
       var lines = [LinePositions]()
       var lineStreak = 0
@@ -294,39 +294,47 @@ final class Recorder: NSObject {
     // third loop
     // for each VERTICAL SECTION, join together lines that need be
     for (id, lines) in sectionLines {
-      let perThread = lines.count / threads
+      let perThread = max(1, lines.count / threads)
       let queue = DispatchQueue(label: "asyncQueue", attributes: .concurrent)
       let group = DispatchGroup()
       var foundTotal = 0
       var lineStrings = [String](repeating: "", count: lines.count)
       let frameOffset = [bX, bY + 24]
-      let characters = Characters(data: bufferPointer, perRow: perRow, debug: id == 42)
+      let characters = Characters(data: bufferPointer, perRow: perRow, debug: false) //  && id == 42
+      func processLine(_ index: Int) {
+        // we use this at the end to write out everything
+        let line = lines[index]
+        let pad = 6
+        // get bounds
+        let bounds = [line.x * scale, line.y * scale - pad, line.width * scale, line.height * scale + pad * 2]
+        // testing: write out image
+        let originalBounds = [bounds[0] + frameOffset[0], bounds[1] + frameOffset[1], bounds[2], bounds[3]]
+        print("originalBounds \(originalBounds)")
+        let rects = characters.find(id: index, bounds: originalBounds, debugImg: cgImage)
+        //            print("got rects from characters \(rects)")
+        // inner timer
+        foundTotal += rects.count
+        // testing write out test image
+        images.writeCGImage(image: images.cropImage(ocrCharactersImage, box: CGRect(x: bounds[0], y: bounds[1], width: bounds[2], height: bounds[3])), to: "\(box.screenDir!)/\(box.id)-section-\(id)-line-\(index).png")
+        // gather char rects
+        //            for (charIndex, bb) in rects.enumerated() {
+        //              let charRect = CGRect(x: bb[0], y: bb[1], width: bb[2], height: bb[3])
+        //              images.writeCGImage(image: images.resize(images.cropImage(ocrWriteImage, box: charRect), width: 28, height: 28)!, to: "\(box.screenDir!)/\(box.id)-section-\(id)-line-\(index)-char-\(charIndex).png")
+        //            }
+        // write characters
+        let chars = characters.charsToString(rects: rects, debugDir: box.screenDir!, lineNum: index)
+        lineStrings.insert(chars, at: index)
+      }
       for thread in 0..<threads {
         group.enter()
         queue.async {
           let startIndex = thread * perThread
-          for index in startIndex..<(startIndex + perThread) {
-            // we use this at the end to write out everything
-            let line = lines[index]
-            let pad = 6
-            // get bounds
-            let bounds = [line.x * scale, line.y * scale - pad, line.width * scale, line.height * scale + pad * 2]
-            // testing: write out image
-            let originalBounds = [bounds[0] + frameOffset[0], bounds[1] + frameOffset[1], bounds[2], bounds[3]]
-            let rects = characters.find(id: index, bounds: originalBounds, debugImg: cgImage)
-//            print("got rects from characters \(rects)")
-            // inner timer
-            foundTotal += rects.count
-            // testing write out test image
-            images.writeCGImage(image: images.cropImage(ocrCharactersImage, box: CGRect(x: bounds[0], y: bounds[1], width: bounds[2], height: bounds[3])), to: "\(box.screenDir!)/\(box.id)-section-\(id)-line-\(index).png")
-            // gather char rects
-//            for (charIndex, bb) in rects.enumerated() {
-//              let charRect = CGRect(x: bb[0], y: bb[1], width: bb[2], height: bb[3])
-//              images.writeCGImage(image: images.resize(images.cropImage(ocrWriteImage, box: charRect), width: 28, height: 28)!, to: "\(box.screenDir!)/\(box.id)-section-\(id)-line-\(index)-char-\(charIndex).png")
-//            }
-            // write characters
-            let chars = characters.charsToString(rects: rects, debugDir: box.screenDir!, lineNum: index)
-            lineStrings.insert(chars, at: index)
+          let end = startIndex + perThread
+          for index in startIndex..<end {
+            processLine(index)
+          }
+          if end + 1 < lines.count {
+            processLine(lines.count - 1)
           }
           group.leave()
         }

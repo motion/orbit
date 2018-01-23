@@ -77,11 +77,8 @@ class Characters {
     let UP = 1
     let RIGHT = 2
     let DOWN = 3
-//    print("finding character at \(startX) \(startY)")
-    var hasClosedChar = false
     var startPoint = [startX, startY] // top left point
     var endPoint = [startX, startY] // bottom right point
-//    var hasSeen = Dictionary<Int, Bool>()
     var x = startX
     var y = startY
     let maxTries = 1000
@@ -90,8 +87,7 @@ class Characters {
     var prevDirection = DOWN
     let blackLim = 200
     let PX = 1
-    
-    while !hasClosedChar {
+    while true {
       curTry += 1
       if curTry > maxTries {
         debug("done trying")

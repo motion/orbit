@@ -45,24 +45,7 @@ class Images {
   }
   
   func resize(_ image: CGImage, width: Int, height: Int) -> CGImage? {
-    var ratio: Float = 0.0
-    let imageWidth = Float(image.width)
-    let imageHeight = Float(image.height)
-    let maxWidth: Float = Float(width)
-    let maxHeight: Float = Float(height)
-    // Get ratio (landscape or portrait)
-    if (imageWidth > imageHeight) {
-      ratio = maxWidth / imageWidth
-    } else {
-      ratio = maxHeight / imageHeight
-    }
-    // Calculate new size based on the ratio
-    // this would prevent sizing it up but we want that
-    //    if ratio > 1 {
-    //      ratio = 1
-    //    }
-    let mWidth = imageWidth * ratio
-    let mHeight = imageHeight * ratio
+    let (mWidth, mHeight) = self.calcResize(image, width: width, height: height)
     guard let colorSpace = image.colorSpace else { return nil }
     guard let context = CGContext(data: nil, width: width, height: height, bitsPerComponent: image.bitsPerComponent, bytesPerRow: image.bytesPerRow, space: colorSpace, bitmapInfo: image.alphaInfo.rawValue) else { return nil }
     // white background
@@ -76,8 +59,26 @@ class Images {
     return context.makeImage()
   }
   
+  func calcResize(_ image: CGImage, width: Int, height: Int) -> (Int, Int) {
+    var ratio: Float = 0.0
+    let imageWidth = Float(image.width)
+    let imageHeight = Float(image.height)
+    let maxWidth: Float = Float(width)
+    let maxHeight: Float = Float(height)
+    // Get ratio (landscape or portrait)
+    if (imageWidth > imageHeight) {
+      ratio = maxWidth / imageWidth
+    } else {
+      ratio = maxHeight / imageHeight
+    }
+    // Calculate new size based on the ratio
+    let mWidth = Int(imageWidth * ratio)
+    let mHeight = Int(imageHeight * ratio)
+    return (mWidth, mHeight)
+  }
+  
   func imageFromArray(pixels: [PixelData], width: Int, height: Int) -> CGImage? {
-    assert(pixels.count == Int(width * height))
+    assert(pixels.count == width * height)
     let pixelDataSize = MemoryLayout<PixelData>.size
     let data: Data = pixels.withUnsafeBufferPointer {
       return Data(buffer: $0)
@@ -88,7 +89,7 @@ class Images {
       print("CGDataProvider is not supposed to be nil")
       return nil
     }
-    let cgimage: CGImage! = CGImage(
+    return CGImage(
       width: width,
       height: height,
       bitsPerComponent: 8,
@@ -101,6 +102,5 @@ class Images {
       shouldInterpolate: false,
       intent: .defaultIntent
     )
-    return cgimage
   }
 }

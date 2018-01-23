@@ -1,7 +1,7 @@
 import Screen from '.'
 
 process.on('unhandledRejection', function(error, p) {
-  console.log('Screen PromiseFail:')
+  console.log('OCR PromiseFail:')
   if (error.stack) {
     console.log(error.message)
     console.log(error.stack)

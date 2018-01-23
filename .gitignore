@@ -1,3 +1,5 @@
+data.csv
+__pycache__
 .cache
 node_modules
 tmp

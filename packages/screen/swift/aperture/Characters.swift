@@ -81,7 +81,7 @@ class Characters {
     var endPoint = [startX, startY] // bottom right point
     var x = startX
     var y = startY
-    let maxTries = 1000
+    let maxTries = 500
     var curTry = 0
     var prevPos = -1
     var prevDirection = DOWN
@@ -234,9 +234,12 @@ class Characters {
     for (index, rect) in rects.enumerated() {
       let minX = rect[0]
       let minY = rect[1]
+      if rect[3] == 0 || rect[2] == 0 {
+        print("empty char")
+        continue
+      }
       let width = Float(rect[2])
       let height = Float(rect[3])
-      print("\(height) \(width)")
       // make square
       var scaleW = Float(1)
       var scaleH = Float(1)
@@ -260,15 +263,15 @@ class Characters {
           let luma = buffer[(minY + yS) * perRow + minX + xS]
           let lumaVal = luma < 200 ? "0 " : "255 " // warning, doing any sort of string conversion here slows it down bigly
           output += lumaVal
-          if debugDir != nil {
+          if shouldDebug {
             pixels.append(PixelData(a: 255, r: luma, g: luma, b: luma))
           }
         }
       }
       output += "\n"
-      if debugDir != nil {
+      if shouldDebug {
         let outFile = "\(debugDir!)/x-line-\(lineNum!)-char-\(index).png"
-        print("write \(outFile)")
+        debug("write \(outFile)")
         images.writeCGImage(image: images.imageFromArray(pixels: pixels, width: 28, height: 28)!, to: outFile, resolution: 72) // write img
       }
     }

@@ -90,11 +90,6 @@ final class Recorder: NSObject {
       kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_420YpCbCr8BiPlanarFullRange
     ]
     
-    print("output \(output.availableVideoPixelFormatTypes)")
-    print("output \(output.availableVideoCodecTypes)")
-    print("output \(output.videoSettings)")
-//    print("output \(output.orient)")
-    
     super.init()
     
     self.setFPS(fps: fps)
@@ -227,7 +222,7 @@ final class Recorder: NSObject {
       } else {
         colMiss += 1
         if (colMiss > colMissMax || x == vWidth - 1) && colStreak - colMiss > colStreakMin { // set content block
-          print("found section x \(x) colStreak \(colStreak)")
+//          print("found section x \(x) colStreak \(colStreak)")
           verticalSections[colStart] = x - colMiss
           colStreak = 0
           colMiss = 0
@@ -239,7 +234,6 @@ final class Recorder: NSObject {
         }
       }
     }
-    print("verticalSections \(verticalSections)")
     print("4. find verticals: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     start = DispatchTime.now()
     // second loop - find lines in sections
@@ -268,7 +262,7 @@ final class Recorder: NSObject {
           let x = startLine
           let width = endLine - startLine
           lineStreak += 1
-          print("startLine \(startLine) lineStreak \(lineStreak) y \(y)")
+//          print("startLine \(startLine) lineStreak \(lineStreak) y \(y)")
           if lineStreak > 1 {
             // update
             var last = lines[lines.count - 1]
@@ -292,7 +286,7 @@ final class Recorder: NSObject {
       sectionLines[start] = lines
     }
     print("5. found \(sectionLines.count) verticals: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
-    print("sectionLines \(sectionLines.description)")
+//    print("sectionLines \(sectionLines.description)")
     start = DispatchTime.now()
     // third loop
     // for each VERTICAL SECTION, join together lines that need be
@@ -303,7 +297,7 @@ final class Recorder: NSObject {
       let group = DispatchGroup()
       var foundTotal = 0
       var lineStrings = [String](repeating: "", count: lines.count)
-      let characters = Characters(data: bufferPointer, perRow: perRow, debug: false) //  && id == 42
+      let characters = Characters(data: bufferPointer, perRow: perRow, debug: false)
       func processLine(_ index: Int) {
         // we use this at the end to write out everything
         let line = lines[index]
@@ -312,13 +306,12 @@ final class Recorder: NSObject {
         let bounds = [line.x * scale - pad, line.y * scale - pad, line.width * scale + pad * 2, line.height * scale + pad * 2]
         // testing: write out image
         let originalBounds = [bounds[0] + frameOffset[0], bounds[1] + frameOffset[1], bounds[2], bounds[3]]
-        print("originalBounds \(originalBounds)")
         let rects = characters.find(id: index, bounds: originalBounds, debugImg: cgImage)
-        //            print("got rects from characters \(rects)")
+//                    print("got rects from characters \(rects)")
         // inner timer
         foundTotal += rects.count
         // testing write out test image
-        images.writeCGImage(image: images.cropImage(ocrCharactersImage, box: CGRect(x: bounds[0], y: bounds[1], width: bounds[2], height: bounds[3])), to: "\(box.screenDir!)/\(box.id)-section-\(id)-line-\(index).png")
+//        images.writeCGImage(image: images.cropImage(ocrCharactersImage, box: CGRect(x: bounds[0], y: bounds[1], width: bounds[2], height: bounds[3])), to: "\(box.screenDir!)/\(box.id)-section-\(id)-line-\(index).png")
         // gather char rects
         //            for (charIndex, bb) in rects.enumerated() {
         //              let charRect = CGRect(x: bb[0], y: bb[1], width: bb[2], height: bb[3])

@@ -249,11 +249,9 @@ final class Recorder: NSObject {
         for x in start...end {
           if imgData[x][y] == 1 {
             filled += 1
+            endLine = x
             if startLine == 0 {
               startLine = x
-            }
-            if filled > minLineWidth {
-              endLine = x
             }
           }
         }
@@ -264,6 +262,7 @@ final class Recorder: NSObject {
           let x = startLine
           let width = endLine - startLine
           lineStreak += 1
+          print("startLine \(startLine) lineStreak \(lineStreak)")
           if lineStreak > 1 {
             // update
             var last = lines[lines.count - 1]
@@ -272,8 +271,6 @@ final class Recorder: NSObject {
             last.x = min(last.x, x)
             lines[lines.count - 1] = last
           } else {
-            
-            print("startLine \(startLine) lineStreak \(lineStreak)")
             // insert
             lines.append(
               LinePositions(
@@ -293,7 +290,8 @@ final class Recorder: NSObject {
     start = DispatchTime.now()
     // third loop
     // for each VERTICAL SECTION, join together lines that need be
-    for (id, lines) in sectionLines {
+    for id in sectionLines.keys {
+      let lines = sectionLines[id]!
       let perThread = max(1, lines.count / threads)
       let queue = DispatchQueue(label: "asyncQueue", attributes: .concurrent)
       let group = DispatchGroup()
@@ -325,21 +323,25 @@ final class Recorder: NSObject {
         let chars = characters.charsToString(rects: rects, debugDir: box.screenDir!, lineNum: index)
         lineStrings.insert(chars, at: index)
       }
-      for thread in 0..<threads {
-        group.enter()
-        queue.async {
-          let startIndex = thread * perThread
-          let end = startIndex + perThread
-          for index in startIndex..<end {
-            processLine(index)
+      if lines.count == 1 {
+        processLine(0)
+      } else {
+        for thread in 0..<threads {
+          group.enter()
+          queue.async {
+            let startIndex = thread * perThread
+            let end = startIndex + perThread
+            for index in startIndex..<end {
+              processLine(index)
+            }
+            if end + 1 < lines.count {
+              processLine(end + 1)
+            }
+            group.leave()
           }
-          if end + 1 < lines.count {
-            processLine(lines.count - 1)
-          }
-          group.leave()
         }
+        group.wait()
       }
-      group.wait()
       print("7. found \(foundTotal) chars: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
       start = DispatchTime.now()
       // write chars

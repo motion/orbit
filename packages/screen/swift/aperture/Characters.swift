@@ -10,7 +10,7 @@ class Characters {
   }
   
   func find(id: Int, bounds: [Int], debugImg: CGImage) -> [[Int]] {
-    let start = DispatchTime.now()
+//    let start = DispatchTime.now()
     let imgX = bounds[0] * 2
     let imgY = bounds[1] * 2
     let imgW = bounds[2]
@@ -60,7 +60,7 @@ class Characters {
 //      Images().writeCGImage(image: img, to: "/tmp/screen/a-line-\(id).png", resolution: 72) // write img
 //    }
     
-    print("  Characters.find() \(foundChars.count): \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+//    print("  Characters.find() \(foundChars.count): \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     return foundChars
   }
   

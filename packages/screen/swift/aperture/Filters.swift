@@ -1,5 +1,6 @@
 import Foundation
 import AppKit
+import AVFoundation
 
 class Filters {
   func applyFilter(_ filter: CIFilter?, for image: CIImage) -> CIImage {
@@ -7,6 +8,19 @@ class Filters {
     filter.setValue(image, forKey: kCIInputImageKey)
     guard let filteredImage = filter.value(forKey: kCIOutputImageKey) else { return image }
     return filteredImage as! CIImage
+  }
+  
+  func imageFromBuffer(_ context: CIContext, sampleBuffer: CMSampleBuffer, cropRect: CGRect) -> CGImage? {
+    guard let imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return nil }
+    var outputImage = CIImage(cvPixelBuffer: imageBuffer)
+    // crop
+    outputImage = outputImage.cropped(to: cropRect)
+    // resize
+    let filter = CIFilter(name: "CILanczosScaleTransform")!
+    filter.setValue(1.0 / Double(2.0), forKey: "inputScale")
+    outputImage = applyFilter(filter, for: outputImage)
+    guard let cgImage = context.createCGImage(outputImage, from: outputImage.extent) else { return nil }
+    return cgImage
   }
 
   // specialized filter that is best for finding the big area of content

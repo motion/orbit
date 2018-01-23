@@ -127,7 +127,6 @@ final class Recorder: NSObject {
       print("no screen dir")
       return
     }
-    print("doing screen")
     // craete filtered images for content find
     let outPath = "\(box.screenDir ?? "/tmp")/\(box.id).png"
     let cropRect = CGRect(
@@ -136,10 +135,7 @@ final class Recorder: NSObject {
       width: box.width * 2,
       height: Int(-box.height * 2)
     )
-    guard let cgImageLarge = images.imageFromSampleBuffer(context, sampleBuffer: buffer, cropRect: cropRect) else { return }
-    let width = Int(cropRect.width / 2)
-    let height = Int(cropRect.height / 2)
-    guard let cgImage = images.resize(cgImageLarge, width: width, height: height) else { return }
+    let cgImage = filters.imageFromBuffer(context, sampleBuffer: buffer, cropRect: cropRect)!
     if (!findContent) {
       print("dont find content")
       images.writeCGImage(image: cgImage, to: outPath)
@@ -179,7 +175,7 @@ final class Recorder: NSObject {
       return
     }
     start = DispatchTime.now()
-    let ocrWriteImage = images.cropImage(filters.filterImageForOCR(image: cgImageLarge), box: cropBoxLarge)
+//    let ocrWriteImage = images.cropImage(filters.filterImageForOCR(image: cgImageLarge), box: cropBoxLarge)
     let ocrCharactersImage = images.cropImage(filters.filterImageForOCRCharacterFinding(image: cgImage), box: cropBox)
     print("2. filter for ocr: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     
@@ -353,7 +349,7 @@ final class Recorder: NSObject {
 //            let lineImg = images.cropImage(ocrCharactersImage, box: rect)
             var innerTime = DispatchTime.now()
             let originalBounds = [bounds[0] + frameOffset[0], bounds[1] + frameOffset[1], bounds[2], bounds[3]]
-            let rects = Characters(data: bufferPointer, perRow: perRow).find(id: index, bounds: originalBounds, debugImg: cgImageLarge)
+            let rects = Characters(data: bufferPointer, perRow: perRow).find(id: index, bounds: originalBounds, debugImg: cgImage)
 //            print("got rects from characters \(rects)")
             // inner timer
             start2 += Double(DispatchTime.now().uptimeNanoseconds - innerTime.uptimeNanoseconds) / 1_000_000
@@ -399,8 +395,10 @@ final class Recorder: NSObject {
 
     // for testing write out og images too
     images.writeCGImage(image: binarizedImage, to: "\(box.screenDir!)/\(box.id)-full.png")
-    images.writeCGImage(image: ocrWriteImage, to: outPath)
+//    images.writeCGImage(image: ocrWriteImage, to: outPath)
     images.writeCGImage(image: ocrCharactersImage, to: "\(box.screenDir!)/\(box.id)-binarized.png")
+//    images.writeCGImage(image: cgImageLarge, to: "\(box.screenDir!)/\(box.id)-cgimage-large.png")
+    images.writeCGImage(image: cgImage, to: "\(box.screenDir!)/\(box.id)-cgimage.png")
   }
   
   func charToString(lineNum: Int, bufferPointer: UnsafeMutablePointer<UInt8>, perRow: Int, rects: [[Int]], frameOffset: [Int], outDir: String) -> String {

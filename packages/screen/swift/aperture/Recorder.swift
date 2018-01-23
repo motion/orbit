@@ -299,7 +299,13 @@ final class Recorder: NSObject {
       let group = DispatchGroup()
       var foundTotal = 0
       var lineStrings = [String](repeating: "", count: lines.count)
-      let characters = Characters(data: bufferPointer, perRow: perRow, debug: false, debugDir: box.screenDir!)
+      let characters = Characters(
+        data: bufferPointer,
+        perRow: perRow,
+        debug: false,
+        debugDir: box.screenDir!,
+        debugImg: cgImage
+      )
       // find characters
       func processLine(_ index: Int) {
         let line = lines[index]

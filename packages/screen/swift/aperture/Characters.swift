@@ -5,25 +5,30 @@ class Characters {
   private var buffer: UnsafeMutablePointer<UInt8>
   private var perRow: Int
   private var shouldDebug = false
+  private var debugImg: CGImage? = nil
   private var debugDir = ""
 
-  init(data: UnsafeMutablePointer<UInt8>, perRow: Int, debug: Bool, debugDir: String?) {
+  init(data: UnsafeMutablePointer<UInt8>, perRow: Int, debug: Bool, debugDir: String?, debugImg: CGImage?) {
     self.shouldDebug = debug
     self.buffer = data
     self.perRow = perRow
     self.debugDir = debugDir ?? ""
+    self.debugImg = debugImg
   }
 
   func find(id: Int, bounds: [Int]) -> [[Int]] {
-//    let start = DispatchTime.now()
+    let start = DispatchTime.now()
     let imgX = bounds[0] * 2
     let imgY = bounds[1] * 2
     let imgW = bounds[2]
     let imgH = bounds[3]
     var foundChars = [[Int]]()
-//    var pixels = [PixelData](repeating: PixelData(a: 255, r: 0, g: 0, b: 0), count: imgW * imgH)
+    var pixels: [PixelData]? = nil
+    if debugImg != nil {
+       pixels = [PixelData](repeating: PixelData(a: 255, r: 255, g: 255, b: 255), count: imgW * imgH)
+    }
     var curChar = 0
-
+    // we control the sticks for more speed
     var x = 0
     var y = 0
     while true {
@@ -34,7 +39,7 @@ class Characters {
       } else {
         y += 1
       }
-      // if reached last pixel break
+      // if reached last pixel, break
       if x >= imgW || y >= imgH || (x == imgW - 1 && y == imgH - 1) {
         break
       }
@@ -42,29 +47,37 @@ class Characters {
       let xO = x * 2 + imgX
       let yO = y * 2 + imgY
       let luma = buffer[yO * perRow + xO]
-      let isBlack = luma < 200 ? true : false
-//      let binarized = UInt8(isBlack ? 0 : 255)
-//      pixels[x + y * imgW] = PixelData(a: 255, r: binarized, g: binarized, b: binarized)
+      let isBlack = luma < 190 ? true : false
+      if debugImg != nil {
+        let binarized = UInt8(isBlack ? 0 : 255)
+        pixels![x + y * imgW] = PixelData(a: 255, r: binarized, g: binarized, b: binarized)
+      }
       if isBlack {
-//        let charImgIn = images.cropImage(debugImg, box: CGRect(x: xO, y: yO - 24 * 2, width: 25, height: 25))
-//        images.writeCGImage(image: charImgIn, to: "/tmp/screen/a-line-\(id)-charIN-\(curChar).png")
+        if debugImg != nil {
+          let charImgIn = images.cropImage(debugImg!, box: CGRect(x: xO / 2, y: yO / 2 - 24, width: 50, height: 50))
+          images.writeCGImage(image: charImgIn, to: "/tmp/screen/a-line-\(id)-charIN-\(curChar).png")
+        }
+        self.shouldDebug = id == 0 && curChar == 5
         let cb = self.findCharacter(startX: xO, startY: yO)
         foundChars.append(cb)
-//        print("char bounds \(cb) and were at \(x)")
-//        images.writeCGImage(image: images.cropImage(debugImg, box: CGRect(x: cb[0], y: cb[1] - 24 * 2, width: cb[2] + 100, height: cb[3] + 100)), to: "/tmp/screen/char-\(id)-\(curChar).png")
+        if debugImg != nil {
+          images.writeCGImage(image: images.cropImage(debugImg!, box: CGRect(x: cb[0] / 2, y: cb[1] / 2 - 24, width: cb[2] / 2, height: cb[3] / 2)), to: "/tmp/screen/char-\(id)-\(curChar).png")
+        }
         // after processing new char, move x to end of char
         x += cb[2] / 2 + 1
         y = 0
+        print("char \(curChar) bounds \(cb), x now \(x)")
         curChar += 1
       }
     }
-
-//    print("ok \(pixels.count) \(imgW * imgH)  imgW \(imgW) imgH \(imgH)")
-//    if let img = images.imageFromArray(pixels: pixels, width: imgW, height: imgH) {
-//      Images().writeCGImage(image: img, to: "/tmp/screen/a-line-\(id).png", resolution: 72) // write img
-//    }
-
-//    print("  Characters.find() \(foundChars.count): \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+    if debugImg != nil {
+      if let img = images.imageFromArray(pixels: pixels!, width: imgW, height: imgH) {
+        Images().writeCGImage(image: img, to: "/tmp/screen/a-line-\(id).png", resolution: 72) // write img
+      }
+    }
+    if shouldDebug {
+      print("  Characters.find() \(foundChars.count): \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+    }
     return foundChars
   }
 
@@ -80,10 +93,11 @@ class Characters {
     let RIGHT = 2
     let DOWN = 3
     var startPoint = [startX, startY] // top left point
+    debug("startPoint \(startPoint)")
     var endPoint = [startX, startY] // bottom right point
     var x = startX
     var y = startY
-    let maxTries = 400
+    let maxVenture = 80
     var curTry = 0
     var prevPos = -1
     var prevDirection = DOWN
@@ -91,8 +105,8 @@ class Characters {
     let PX = 1
     while true {
       curTry += 1
-      if curTry > maxTries {
-        print("reached max")
+      if curTry > maxVenture {
+        print("max venture")
         break
       }
       if curTry > 1 && x == startX && y == startY {
@@ -109,6 +123,7 @@ class Characters {
       if prevPos != leftIndex && buffer[leftIndex] < blackLim {
         leftBlack = true
         if x - PX < startPoint[0] {
+          curTry = 0
           prevDirection = LEFT
           x -= PX
           startPoint[0] = x
@@ -118,12 +133,13 @@ class Characters {
         }
       }
       // up
-      let upIndex = (y - PX) * perRow + x
+      let upIndex = (y - 2 * PX) * perRow + x
       if prevPos != upIndex && buffer[upIndex] < blackLim {
         upBlack = true
-        if y - PX < startPoint[1] {
+        if y - 2 * PX < startPoint[1] {
+          curTry = 0
           prevDirection = UP
-          y -= PX
+          y -= 2 * PX
           startPoint[1] = y
           prevPos = curPos
           debug("up one")
@@ -135,6 +151,7 @@ class Characters {
       if prevPos != rightIndex && buffer[rightIndex] < blackLim {
         rightBlack = true
         if x + PX > endPoint[0] {
+          curTry = 0
           prevDirection = RIGHT
           x += PX
           endPoint[0] = x
@@ -148,6 +165,7 @@ class Characters {
       if prevPos != downIndex && buffer[downIndex] < blackLim {
         downBlack = true
         if y + PX > endPoint[1] && !rightBlack {
+          curTry = 0
           prevDirection = DOWN
           y += PX
           endPoint[1] = y
@@ -160,7 +178,6 @@ class Characters {
       // didnt expand the bounds
       // still need to move the current
       if prevDirection == LEFT {
-        debug("prev LEFT")
         if downBlack {
           debug("move down")
           prevDirection = DOWN
@@ -181,8 +198,7 @@ class Characters {
         }
       }
       if prevDirection == UP {
-        debug("prev UP")
-        if leftBlack && buffer[(y + PX) * perRow + x - PX] >= blackLim {
+        if leftBlack {
           debug("move left")
           prevDirection = LEFT
           x -= PX
@@ -202,7 +218,6 @@ class Characters {
         }
       }
       if prevDirection == RIGHT {
-        debug("prev RIGHT")
         if upBlack {
           debug("move up")
           prevDirection = UP
@@ -223,7 +238,6 @@ class Characters {
         }
       }
       if prevDirection == DOWN {
-        debug("prev DOWN")
         if rightBlack {
           debug("move right")
           prevDirection = RIGHT

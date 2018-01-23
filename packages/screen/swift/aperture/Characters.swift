@@ -5,14 +5,16 @@ class Characters {
   private var buffer: UnsafeMutablePointer<UInt8>
   private var perRow: Int
   private var shouldDebug = false
-  
-  init(data: UnsafeMutablePointer<UInt8>, perRow: Int, debug: Bool) {
+  private var debugDir = ""
+
+  init(data: UnsafeMutablePointer<UInt8>, perRow: Int, debug: Bool, debugDir: String?) {
     self.shouldDebug = debug
     self.buffer = data
     self.perRow = perRow
+    self.debugDir = debugDir ?? ""
   }
-  
-  func find(id: Int, bounds: [Int], debugImg: CGImage) -> [[Int]] {
+
+  func find(id: Int, bounds: [Int]) -> [[Int]] {
 //    let start = DispatchTime.now()
     let imgX = bounds[0] * 2
     let imgY = bounds[1] * 2
@@ -61,17 +63,17 @@ class Characters {
 //    if let img = images.imageFromArray(pixels: pixels, width: imgW, height: imgH) {
 //      Images().writeCGImage(image: img, to: "/tmp/screen/a-line-\(id).png", resolution: 72) // write img
 //    }
-    
+
 //    print("  Characters.find() \(foundChars.count): \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     return foundChars
   }
-  
+
   func debug(_ str: String) {
     if shouldDebug {
       print(str)
     }
   }
-  
+
   func findCharacter(startX: Int, startY: Int) -> [Int] {
     let LEFT = 0
     let UP = 1
@@ -81,7 +83,7 @@ class Characters {
     var endPoint = [startX, startY] // bottom right point
     var x = startX
     var y = startY
-    let maxTries = 500
+    let maxTries = 250
     var curTry = 0
     var prevPos = -1
     var prevDirection = DOWN
@@ -105,16 +107,15 @@ class Characters {
       // left
       let leftIndex = y * perRow + x - PX
       if prevPos != leftIndex && buffer[leftIndex] < blackLim {
-          leftBlack = true
-          if x - PX < startPoint[0] {
-            prevDirection = LEFT
-            x -= PX
-            startPoint[0] = x
-            prevPos = curPos
-            debug("left one")
-            continue
-          }
-//        }
+        leftBlack = true
+        if x - PX < startPoint[0] {
+          prevDirection = LEFT
+          x -= PX
+          startPoint[0] = x
+          prevPos = curPos
+          debug("left one")
+          continue
+        }
       }
       // up
       let upIndex = (y - PX) * perRow + x
@@ -146,7 +147,7 @@ class Characters {
       let downIndex = (y + PX) * perRow + x
       if prevPos != downIndex && buffer[downIndex] < blackLim {
         downBlack = true
-        if y + PX > endPoint[1] {
+        if y + PX > endPoint[1] && !rightBlack {
           prevDirection = DOWN
           y += PX
           endPoint[1] = y
@@ -159,75 +160,95 @@ class Characters {
       // didnt expand the bounds
       // still need to move the current
       if prevDirection == LEFT {
+        debug("prev LEFT")
         if downBlack {
           debug("move down")
+          prevDirection = DOWN
           y += PX
         } else if leftBlack {
           debug("move left")
+          prevDirection = LEFT
           x -= PX
         } else if upBlack {
           debug("move up")
+          prevDirection = UP
           y -= PX
         } else {
           // back right
+          debug("move back right")
           prevDirection = RIGHT
           x += PX
         }
       }
       if prevDirection == UP {
-        if leftBlack {
+        debug("prev UP")
+        if leftBlack && buffer[(y + PX) * perRow + x - PX] >= blackLim {
           debug("move left")
+          prevDirection = LEFT
           x -= PX
         } else if upBlack {
           debug("move up")
+          prevDirection = UP
           y -= PX
         } else if rightBlack {
           debug("move right")
+          prevDirection = RIGHT
           x += PX
         } else {
           // back down
+          debug("move back down")
           prevDirection = DOWN
           y += PX
         }
       }
       if prevDirection == RIGHT {
+        debug("prev RIGHT")
         if upBlack {
           debug("move up")
+          prevDirection = UP
           y -= PX
         } else if rightBlack {
           debug("move right")
+          prevDirection = RIGHT
           x += PX
         } else if downBlack {
           debug("move down")
+          prevDirection = DOWN
           y += PX
         } else {
           // back left
+          debug("move back left")
           prevDirection = LEFT
           x -= PX
         }
       }
       if prevDirection == DOWN {
+        debug("prev DOWN")
         if rightBlack {
           debug("move right")
+          prevDirection = RIGHT
           x += PX
         } else if downBlack {
           debug("move down")
+          prevDirection = DOWN
           y += PX
         } else if leftBlack {
           debug("move left")
+          prevDirection = LEFT
           x -= PX
         } else {
           // back up
+          debug("move back up")
           prevDirection = UP
           y -= PX
         }
       }
     }
-    
+
     return [startPoint[0], startPoint[1], endPoint[0] - startPoint[0], endPoint[1] - startPoint[1]]
   }
-  
-  public func charsToString(rects: [[Int]], debugDir: String?, lineNum: Int?) -> String {
+
+  public func charsToString(rects: [[Int]], debugID: Int) -> String {
     //    let start = DispatchTime.now()
     var output = ""
     let dbl = Float(28)
@@ -241,38 +262,39 @@ class Characters {
       let width = Float(rect[2])
       let height = Float(rect[3])
       // make square
-      var scaleW = Float(1)
-      var scaleH = Float(1)
+      var scaleX = Float(1)
+      var scaleY = Float(1)
       if width > dbl {
-        scaleW = dbl / width
+        scaleX = width / dbl
       } else if width < dbl {
-        scaleW = width / dbl
+        scaleX = 1 / (dbl / width)
       }
       if height > dbl {
-        scaleH = dbl / height
+        scaleY = height / dbl
       } else if height < dbl {
-        scaleH = height / dbl
+        scaleY = 1 / (dbl / height)
       }
-      scaleW = 1 / scaleW
-      scaleH = 1 / scaleH
-      var pixels = [PixelData]() // write img
+      var pixels: [PixelData]? = nil
+      if debugID > -1 {
+        pixels = [PixelData]()
+      }
       for y in 0..<28 {
         for x in 0..<28 {
-          let xS = Int(Float(x) * scaleW)
-          let yS = Int(Float(y) * scaleH)
+          let xS = Int(Float(x) * scaleX)
+          let yS = Int(Float(y) * scaleY)
           let luma = buffer[(minY + yS) * perRow + minX + xS]
           let lumaVal = luma < 200 ? "0 " : "255 " // warning, doing any sort of string conversion here slows it down bigly
           output += lumaVal
-          if shouldDebug {
-            pixels.append(PixelData(a: 255, r: luma, g: luma, b: luma))
+          if debugID > -1 {
+            pixels!.append(PixelData(a: 255, r: luma, g: luma, b: luma))
           }
         }
       }
       output += "\n"
-      if shouldDebug {
-        let outFile = "\(debugDir!)/x-line-\(lineNum!)-char-\(index).png"
-        debug("write \(outFile)")
-        images.writeCGImage(image: images.imageFromArray(pixels: pixels, width: 28, height: 28)!, to: outFile, resolution: 72) // write img
+      if debugID > -1 {
+        let outFile = "\(debugDir)/x-line-\(debugID)-char-\(index).png"
+        self.debug("write \(outFile)")
+        images.writeCGImage(image: images.imageFromArray(pixels: pixels!, width: 28, height: 28)!, to: outFile, resolution: 72) // write img
       }
     }
     //    print(".. char => string: \(rects.count) \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")

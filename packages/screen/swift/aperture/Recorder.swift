@@ -297,7 +297,7 @@ final class Recorder: NSObject {
       let group = DispatchGroup()
       var foundTotal = 0
       var lineStrings = [String](repeating: "", count: lines.count)
-      let characters = Characters(data: bufferPointer, perRow: perRow, debug: false)
+      let characters = Characters(data: bufferPointer, perRow: perRow, debug: false, debugDir: box.screenDir!)
       func processLine(_ index: Int) {
         // we use this at the end to write out everything
         let line = lines[index]
@@ -306,8 +306,7 @@ final class Recorder: NSObject {
         let bounds = [line.x * scale - pad, line.y * scale - pad, line.width * scale + pad * 2, line.height * scale + pad * 2]
         // testing: write out image
         let originalBounds = [bounds[0] + frameOffset[0], bounds[1] + frameOffset[1], bounds[2], bounds[3]]
-        let rects = characters.find(id: index, bounds: originalBounds, debugImg: cgImage)
-//                    print("got rects from characters \(rects)")
+        let rects = characters.find(id: index, bounds: originalBounds)
         // inner timer
         foundTotal += rects.count
         // testing write out test image
@@ -318,7 +317,7 @@ final class Recorder: NSObject {
         //              images.writeCGImage(image: images.resize(images.cropImage(ocrWriteImage, box: charRect), width: 28, height: 28)!, to: "\(box.screenDir!)/\(box.id)-section-\(id)-line-\(index)-char-\(charIndex).png")
         //            }
         // write characters
-        let chars = characters.charsToString(rects: rects, debugDir: box.screenDir!, lineNum: index)
+        let chars = characters.charsToString(rects: rects, debugID: -1) // index < 40 ? index : -1
         lineStrings.insert(chars, at: index)
       }
       if lines.count == 1 {

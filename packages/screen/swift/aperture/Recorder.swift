@@ -125,7 +125,7 @@ final class Recorder: NSObject {
   }
   
   func screenshotBox(box: Box, buffer: CMSampleBuffer, bufferPointer: UnsafeMutablePointer<UInt8>, perRow: Int, findContent: Bool = false) {
-    let shouldDebug = true
+    let shouldDebug = false
     // clear old files
     rmAllInside(URL(fileURLWithPath: box.screenDir!))
     let startAll = DispatchTime.now()
@@ -135,13 +135,12 @@ final class Recorder: NSObject {
     }
     // craete filtered images for content find
     let outPath = "\(box.screenDir ?? "/tmp")/\(box.id).png"
-    let cropRect = CGRect(
+    let cgImage = filters.imageFromBuffer(context, sampleBuffer: buffer, cropRect: CGRect(
       x: box.x * 2,
       y: Int(CGDisplayPixelsHigh(self.displayId) * 2 - Int(box.y * 2)),
       width: box.width * 2,
       height: Int(-box.height * 2)
-    )
-    let cgImage = filters.imageFromBuffer(context, sampleBuffer: buffer, cropRect: cropRect)!
+    ))!
     if shouldDebug {
       print("box \(box)")
       print("cgImage size \(cgImage.width) \(cgImage.height)")

@@ -157,17 +157,8 @@ class Characters {
         else if x < startPoint[0] { curTry = 0; startPoint[0] = x }
         if y > endPoint[1]        { curTry = 0; endPoint[1] = y }
         else if y < startPoint[1] { curTry = 0; startPoint[1] = y }
-        // update big move
-        if attempt.count == 3 {
-          if attempt[2] == 1 { // big x
-            lastMove = [attempt[0] / 2, attempt[1]]
-          } else { // big y
-            lastMove = [attempt[0], attempt[1] / 2]
-          }
-        } else {
-          // update normal move
-          lastMove = attempt
-        }
+        // update last move
+        lastMove = attempt
         break
       }
     }

@@ -156,9 +156,11 @@ final class Recorder: NSObject {
     var biggestBox: BoundingBox?
     let boxFindScale = 8
     let binarizedImage = filters.filterImageForContentFinding(image: cgImage, scale: boxFindScale)
+    print("1. content find filter: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+    start = DispatchTime.now()
     let cc = ConnectedComponents()
     let result = cc.labelImageFast(image: binarizedImage, calculateBoundingBoxes: true, invert: true)
-    print("1. content finding: \(result.boundingBoxes!.count) \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+    print("1. content CC: \(result.boundingBoxes!.count) \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     if let boxes = result.boundingBoxes {
       if (boxes.count > 0) {
         for box in boxes {
@@ -195,7 +197,7 @@ final class Recorder: NSObject {
     print("2. filter for ocr: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
 
     // find vertical sections
-    let lineFindScaling = 2 // scale down denominator
+    let lineFindScaling = 4 // scale down denominator
     let vWidth = frame[2] / lineFindScaling
     let vHeight = frame[3] / lineFindScaling
     start = DispatchTime.now()
@@ -306,22 +308,21 @@ final class Recorder: NSObject {
     // third loop
     // for each VERTICAL SECTION, get characters
     var foundTotal = 0
-    var lineStrings = [String]()
+    var allLineStrings = [String]()
+    let characters = Characters(
+      data: bufferPointer,
+      perRow: perRow,
+      maxLuma: 200,
+      debug: shouldDebug,
+      debugDir: box.screenDir!,
+      debugImg: cgImageBinarized
+    )
     for id in sectionLines.keys {
       let lines = sectionLines[id]!
-      var lineString = ""
-      let characters = Characters(
-        data: bufferPointer,
-        perRow: perRow,
-        maxLuma: 200,
-        debug: shouldDebug,
-        debugDir: box.screenDir!,
-        debugImg: cgImageBinarized
-      )
       let scl = lineFindScaling
       let padX = 6
       let padY = 10
-      for (index, line) in lines.enumerated() {
+      let lineStrings: [String] = lines.pmap(transformer: {(line, index) in
         let lineBounds = [
           line.x * scl - padX + frame[0],
           line.y * scl - padY + frame[1],
@@ -345,9 +346,11 @@ final class Recorder: NSObject {
         // write characters
         characters.shouldDebug = shouldDebug
         let chars = characters.charsToString(rects: rects, debugID: index)// index) // index < 40 ? index : -1
-        lineString += chars + "\n"
-      }
-      lineStrings.append(lineString)
+        return chars
+      })
+      allLineStrings.append(
+        lineStrings.joined(separator: "\n")
+      )
     }
 
     print("7. found \(foundTotal) chars: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
@@ -355,7 +358,7 @@ final class Recorder: NSObject {
     // write chars
     do {
       let path = NSURL.fileURL(withPath: "\(box.screenDir!)/characters.txt").absoluteURL
-      try lineStrings.joined(separator: "\n").write(to: path, atomically: true, encoding: .utf8)
+      try allLineStrings.joined(separator: "\n").write(to: path, atomically: true, encoding: .utf8)
     } catch {
       print("couldnt write pixel string \(error)")
     }

@@ -9,7 +9,7 @@ class Moves {
     let down = [0, px]
     let downright = [px, px]
     let left = [-px, 0]
-    let upleft = [-px, px]
+    let upleft = [-px, -px]
     let up = [0, -px]
     let upright = [px, -px]
     let right = [px, 0]
@@ -25,7 +25,7 @@ class Moves {
     let uprightright = [2 * px, -px, 1]
     // clockwise sequences
     let fromupleft = [
-      down,
+//      down,
       downdownleft,
       downleft,
       left,
@@ -37,9 +37,11 @@ class Moves {
       upright,
       uprightright,
       right,
+      downrightright,
+      downright,
     ]
     let fromleft = [
-      downright,
+//      downright,
       downdownright,
       down,
       downdownleft,
@@ -52,9 +54,11 @@ class Moves {
       up,
       upupright,
       upright,
+      uprightright,
+      right,
     ]
     let fromdownleft = [
-      right,
+//      right,
       downrightright,
       downright,
       downdownright,
@@ -67,9 +71,11 @@ class Moves {
       upleft,
       upupleft,
       up,
+      upupright,
+      upright,
     ]
     let fromup = [
-      downleft,
+//      downleft,
       downleftleft,
       left,
       upleftleft,
@@ -82,9 +88,11 @@ class Moves {
       right,
       downrightright,
       downright,
+      downdownright,
+      down,
     ]
     let fromdown = [
-      upright,
+//      upright,
       uprightright,
       right,
       downrightright,
@@ -97,23 +105,12 @@ class Moves {
       left,
       upleftleft,
       upleft,
+      upupleft,
+      up,
     ]
     let fromupright = [
-      left,
+//      left,
       upleftleft,
-      upleft,
-      upupleft,
-      up,
-      upupright,
-      upright,
-      uprightright,
-      right,
-      downrightright,
-      downright,
-      downdownright,
-      down,
-    ]
-    let fromright = [
       upleft,
       upupleft,
       up,
@@ -128,7 +125,9 @@ class Moves {
       downdownleft,
       downleft,
     ]
-    let fromdownright = [
+    let fromright = [
+//      upleft,
+      upupleft,
       up,
       upupright,
       upright,
@@ -142,6 +141,23 @@ class Moves {
       downleft,
       downleftleft,
       left,
+    ]
+    let fromdownright = [
+//      up,
+      upupright,
+      upright,
+      uprightright,
+      right,
+      downrightright,
+      downright,
+      downdownright,
+      down,
+      downdownleft,
+      downleft,
+      downleftleft,
+      left,
+      upleftleft,
+      upleft,
     ]
     clockwise = [
       -px: [

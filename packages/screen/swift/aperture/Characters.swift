@@ -151,7 +151,7 @@ class Characters {
         break
       }
       var success = false
-      for attempt in clockwise[lastMove[0]]![lastMove[1]]! {
+      for (index, attempt) in clockwise[lastMove[0]]![lastMove[1]]!.enumerated() {
         let next = curPos + attempt[0] + attempt[1] * perRow
         if curTry > 10 && x == startX && y == startY {
           debug("found end")
@@ -196,7 +196,7 @@ class Characters {
         if sdebug() {
           let xdir = lastMove[0] == -1 ? "left" : lastMove[0] == 0 ? "   " : "right"
           let ydir = lastMove[1] == -1 ? "up  " : lastMove[1] == 0 ? "   " : "down"
-          print(" .. \(xdir) \(ydir) | \(lastMove[0]) \(lastMove[1])")
+          print(" .. \(xdir) \(ydir) | \(lastMove[0]) \(lastMove[1]) | attempt \(index)")
         }
         break
       }

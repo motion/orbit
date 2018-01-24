@@ -4,7 +4,7 @@ class ThresholdFilter: CIFilter {
   @objc dynamic var inputImage : CIImage?
   // lower = more whitespace
   // higher = bolder characters
-  var threshold: CGFloat = 0.55
+  var threshold: CGFloat = 0.7
   
   var colorKernel = CIColorKernel(source:
     "kernel vec4 color(__sample pixel, float threshold)" +

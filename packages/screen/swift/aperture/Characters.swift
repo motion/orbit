@@ -129,7 +129,7 @@ class Characters {
   }
 
   func findCharacter(startX: Int, startY: Int, maxHeight: Int) -> [Int] {
-    let exhaust = 200 / moves.px // most amount to go without finding new bound before give up
+    let exhaust = 10000 / moves.px // most amount to go without finding new bound before give up
     var visited = Dictionary<Int, Bool?>()
     var startPoint = [startX, startY] // top left point
     var endPoint = [startX, startY] // bottom right point
@@ -150,6 +150,7 @@ class Characters {
         foundEnd = true
         break
       }
+      var success = false
       for attempt in clockwise[lastMove[0]]![lastMove[1]]! {
         let next = curPos + attempt[0] + attempt[1] * perRow
         if curTry > 10 && x == startX && y == startY {
@@ -161,21 +162,25 @@ class Characters {
         if visited[next] != nil { continue }
         // not black
         if buffer[next] >= maxLuma { continue }
-        if sdebug() {
-          let xdir = attempt[0] == -1 ? "left" : attempt[0] == 0 ? "" : "right"
-          let ydir = attempt[1] == -1 ? "up" : attempt[1] == 0 ? "" : "down"
-          print(" .. \(xdir) \(ydir)")
-        }
+        // found a valid next move
+        success = true
         // update pos
         x += attempt[0]
         y += attempt[1]
         // update bounds
-        if x > endPoint[0]        { curTry = 0; endPoint[0] = x }
-        else if x < startPoint[0] { curTry = 0; startPoint[0] = x }
-        if y > endPoint[1]        { curTry = 0; endPoint[1] = y }
-        else if y < startPoint[1] { curTry = 0; startPoint[1] = y }
+        let newEndX = x > endPoint[0]
+        let newStartX = x < startPoint[0]
+        let newStartY = y < startPoint[1]
+        let newEndY = y > endPoint[1]
+        if newEndX { curTry = 0; endPoint[0] = x }
+        else if newStartX { curTry = 0; startPoint[0] = x }
+        if newStartY { curTry = 0; startPoint[1] = y }
+        else if newEndY { curTry = 0; endPoint[1] = y }
         if sdebug() && curTry == 0 {
-          print("found new bounds at \(x) \(y)")
+          if newEndX { print("new endX \(x / 2)") }
+          if newStartX { print("new startX \(x / 2)") }
+          if newStartY { print("new startY \(y / 2)") }
+          if newEndY { print("new endY \(y / 2)") }
         }
         // update big move
         if attempt.count == 3 {
@@ -188,6 +193,14 @@ class Characters {
           // update normal move
             lastMove = attempt
         }
+        if sdebug() {
+          let xdir = lastMove[0] == -1 ? "left" : lastMove[0] == 0 ? "   " : "right"
+          let ydir = lastMove[1] == -1 ? "up  " : lastMove[1] == 0 ? "   " : "down"
+          print(" .. \(xdir) \(ydir) | \(lastMove[0]) \(lastMove[1])")
+        }
+        break
+      }
+      if !success {
         break
       }
     }

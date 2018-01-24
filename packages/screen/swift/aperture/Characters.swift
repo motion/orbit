@@ -36,7 +36,7 @@ class Characters {
     var y = 0
     let maxHeightCheck = imgH - imgH / 4
     while true {
-      self.shouldDebug = id == 0 && curChar == 0
+//      self.shouldDebug = id == 0 && curChar == 0
       // loop through from ltr, then ttb
       if y == imgH - 1 {
         x += 1
@@ -68,7 +68,7 @@ class Characters {
           // todo need to handle frame offset here
           let box = CGRect(x: xO / 2, y: yO / 2, width: 50, height: 50)
           let charImgIn = images.cropImage(debugImg!, box: box)
-          images.writeCGImage(image: charImgIn, to: "/tmp/screen/testinline-\(id)-char-\(curChar).png")
+          images.writeCGImage(image: charImgIn, to: "/tmp/screen/tp\(id)-\(curChar).png")
         }
         let cb = self.findCharacter(
           startX: xO,
@@ -99,7 +99,7 @@ class Characters {
     }
     if shouldDebug && debugImg != nil {
       if let img = images.imageFromArray(pixels: pixels!, width: imgW, height: imgH) {
-        Images().writeCGImage(image: img, to: "/tmp/screen/edgehits-\(id).png", resolution: 72) // write img
+        Images().writeCGImage(image: img, to: "/tmp/screen/edge\(id).png", resolution: 72) // write img
       }
     }
     debug("Characters.find() \(foundChars.count): \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
@@ -181,7 +181,7 @@ class Characters {
     return [
       startPoint[0],
       startPoint[1],
-      endPoint[0] - startPoint[0],
+      (endPoint[0] - startPoint[0]) * 2,
       endPoint[1] - startPoint[1]
     ]
   }
@@ -231,7 +231,7 @@ class Characters {
       }
       output += "\n"
       if shouldDebug && debugID > -1 {
-        let outFile = "\(debugDir)/x-line-\(debugID)-char-\(index).png"
+        let outFile = "\(debugDir)/xa\(debugID)-\(index).png"
         images.writeCGImage(image: images.imageFromArray(pixels: pixels!, width: 28, height: 28)!, to: outFile, resolution: 72) // write img
       }
     }

@@ -292,7 +292,7 @@ final class Recorder: NSObject {
     start = DispatchTime.now()
     // third loop
     // for each VERTICAL SECTION, get characters
-    let shouldDebug = true
+    let shouldDebug = false
     for id in sectionLines.keys {
       let lines = sectionLines[id]!
       let perThread = max(1, lines.count / threads)

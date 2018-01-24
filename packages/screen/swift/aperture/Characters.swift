@@ -119,7 +119,7 @@ class Characters {
       let firstLoop = x <= startX + 2
       x += 1
       noPixelStreak += 1
-      for yOff in 0...(maxHeight * 2) {
+      for yOff in stride(from: 0, to: maxHeight * 2, by: 2) {
         let yP = yOff + startY
         let curPos = yP * perRow + x
         if buffer[curPos] < maxLuma {
@@ -128,10 +128,9 @@ class Characters {
           let hasConnection =
             firstLoop
             || foundAt[yP * perRow + x - 1] // left one
-            ?? foundAt[yP * perRow + x - 2] // left two
             ?? foundAt[(yP - 1) * perRow + x - 1] // left up
-            ?? foundAt[(yP - 2) * perRow + x - 1] // left up two
             ?? foundAt[(yP + 2) * perRow + x - 1] // left down
+            ?? foundAt[(yP - 2) * perRow + x - 1] // left up two
             ?? foundAt[(yP + 1) * perRow + x - 2] // left down two
             ?? false
           if hasConnection {

@@ -84,6 +84,9 @@ class Characters {
           let tooTall = cb[2] / cb[3] > 20
           if tooSmall || tooWide || tooTall {
             print("misfit \(cb)")
+            x += 2
+            y = 0
+            continue
           } else {
             foundChars.append(cb)
             if shouldDebug && debugImg != nil {
@@ -114,7 +117,7 @@ class Characters {
   }
   
   func findCharacter(startX: Int, startY: Int, maxHeight: Int) -> [Int] {
-    let exaust = 50 // most amount to go without finding new bound before give up
+    let exaust = 450 // most amount to go without finding new bound before give up
     var visited = Dictionary<Int, Bool?>()
     var startPoint = [startX, startY] // top left point
     var endPoint = [startX, startY] // bottom right point
@@ -140,8 +143,8 @@ class Characters {
 
       func tryMove(_ attempt: [Int], avoidVisited: Bool) -> Bool {
         let next = move(attempt)
-        if avoidVisited && visited[next] != nil { debug("visited \(next)"); return false }
-        if !isBlack(next) { debug("noblack \(attempt)"); return false }
+        if avoidVisited && visited[next] != nil { return false }
+        if !isBlack(next) { return false }
         if attempt[0] == -lastMove[0] && attempt[1] == -lastMove[1] {
           debug("backtrack \(attempt)")
         } else {
@@ -165,10 +168,11 @@ class Characters {
           }
         }
         if !success {
-          // expand radius y
+          // expand radius 2
           for attempt in moves.clockwise[lastMove[0]]![lastMove[1]]! {
-            let bigAttempt = [attempt[0], attempt[1] * 2]
+            let bigAttempt = [attempt[0] * 2, attempt[1] * 2]
             if tryMove(bigAttempt, avoidVisited: avoidVisited) {
+              debug("big move")
               lastMove = attempt
               success = true
               break
@@ -179,6 +183,17 @@ class Characters {
           // expand radius x
           for attempt in moves.clockwise[lastMove[0]]![lastMove[1]]! {
             let bigAttempt = [attempt[0] * 2, attempt[1]]
+            if tryMove(bigAttempt, avoidVisited: avoidVisited) {
+              lastMove = attempt
+              success = true
+              break
+            }
+          }
+        }
+        if !success {
+          // expand radius x
+          for attempt in moves.clockwise[lastMove[0]]![lastMove[1]]! {
+            let bigAttempt = [attempt[0], attempt[1] * 2]
             if tryMove(bigAttempt, avoidVisited: avoidVisited) {
               lastMove = attempt
               success = true

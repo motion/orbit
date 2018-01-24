@@ -309,7 +309,7 @@ final class Recorder: NSObject {
       let characters = Characters(
         data: bufferPointer,
         perRow: perRow,
-        maxLuma: 250,
+        maxLuma: 240,
         debug: shouldDebug,
         debugDir: box.screenDir!,
         debugImg: cgImage

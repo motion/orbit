@@ -87,7 +87,7 @@ class Characters {
             foundChars.append(cb)
             if shouldDebug && debugImg != nil {
               print("crop \(cb)")
-              images.writeCGImage(image: images.cropImage(debugImg!, box: CGRect(x: cb[0] / 2, y: cb[1] / 2, width: cb[2], height: cb[3])), to: "/tmp/screen/testchar-\(id)-\(curChar).png")
+              images.writeCGImage(image: images.cropImage(debugImg!, box: CGRect(x: cb[0] / 2, y: cb[1] / 2, width: cb[2] / 2, height: cb[3] / 2)), to: "/tmp/screen/testchar-\(id)-\(curChar).png")
             }
 //          }
           // after processing new char, move x to end of char
@@ -163,9 +163,20 @@ class Characters {
           }
         }
         if !success {
-          // expand radius
+          // expand radius y
           for attempt in moves.clockwise[lastMove[0]]![lastMove[1]]! {
             let bigAttempt = [attempt[0], attempt[1] * 2]
+            if tryMove(bigAttempt, avoidVisited: avoidVisited) {
+              lastMove = attempt
+              success = true
+              break
+            }
+          }
+        }
+        if !success {
+          // expand radius x
+          for attempt in moves.clockwise[lastMove[0]]![lastMove[1]]! {
+            let bigAttempt = [attempt[0] * 2, attempt[1]]
             if tryMove(bigAttempt, avoidVisited: avoidVisited) {
               lastMove = attempt
               success = true
@@ -181,7 +192,7 @@ class Characters {
     return [
       startPoint[0],
       startPoint[1],
-      (endPoint[0] - startPoint[0]) * 2,
+      endPoint[0] - startPoint[0],
       endPoint[1] - startPoint[1]
     ]
   }

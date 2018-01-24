@@ -37,6 +37,10 @@ class Characters {
     var y = 0
     let maxHeightCheck = imgH - imgH / 4
     while true {
+      // DISABLE ME PLEASE
+      if curChar > 2 {
+        break
+      }
 //      self.shouldDebug = id == 0 && curChar == 0
       // loop through from ltr, then ttb
       if y == imgH - 1 {
@@ -82,20 +86,21 @@ class Characters {
           let tooSmall = cb[2] < 5 && cb[3] < 5 || cb[2] < 2 || cb[3] < 2
           let tooWide = cb[3] / cb[2] > 10
           let tooTall = cb[2] / cb[3] > 20
-          if tooSmall || tooWide || tooTall {
+          let misfit = tooSmall || tooWide || tooTall
+          if shouldDebug && debugImg != nil {
+            images.writeCGImage(image: images.cropImage(debugImg!, box: CGRect(x: cb[0] / 2, y: cb[1] / 2, width: cb[2] / 2, height: cb[3] / 2)), to: "/tmp/screen/\(misfit ? "fitmiss-" : "fit")-\(id)-\(curChar).png")
+          }
+          if misfit {
             print("misfit \(cb)")
             x += 2
             y = 0
             continue
           } else {
             foundChars.append(cb)
-            if shouldDebug && debugImg != nil {
-              print("crop \(cb)")
-              images.writeCGImage(image: images.cropImage(debugImg!, box: CGRect(x: cb[0] / 2, y: cb[1] / 2, width: cb[2] / 2, height: cb[3] / 2)), to: "/tmp/screen/testchar-\(id)-\(curChar).png")
-            }
           }
-          // after processing new char, move x to end of char
-          x += cb[2] / 2 + 1
+          // done w new char
+          print("cb3 x \(x) \(cb[3])")
+          x = cb[3] + 10 // add endX
           y = 0
           curChar += 1
         }
@@ -141,14 +146,13 @@ class Characters {
       if curTry > exaust { debug("max venture"); break }
       if curTry > 1 && x == startX && y == startY - 1 { debug("bounded"); break }
 
-      func tryMove(_ attempt: [Int], avoidVisited: Bool) -> Bool {
+      func tryMove(_ attempt: [Int], avoidVisited: Bool, avoidBacktrack: Bool) -> Bool {
         let next = move(attempt)
         if avoidVisited && visited[next] != nil { return false }
         if !isBlack(next) { return false }
-        if attempt[0] == -lastMove[0] && attempt[1] == -lastMove[1] {
-          debug("backtrack \(attempt)")
-        } else {
-          debug("move \(attempt)")
+        let backtrack = attempt[0] == -lastMove[0] && attempt[1] == -lastMove[1]
+        if avoidBacktrack && backtrack {
+          return false
         }
         x += attempt[0]
         y += attempt[1]
@@ -160,57 +164,48 @@ class Characters {
       }
       var success = false
       for avoidVisited in [true, false] {
-        for attempt in moves.clockwise[lastMove[0]]![lastMove[1]]! {
-          if tryMove(attempt, avoidVisited: avoidVisited) {
-            lastMove = attempt
-            success = true
+        for avoidBacktrack in [true, false] {
+          for attempt in moves.clockwise[lastMove[0]]![lastMove[1]]! {
+            if tryMove(attempt, avoidVisited: avoidVisited, avoidBacktrack: avoidBacktrack) {
+              lastMove = attempt
+              success = true
+              break
+            }
+          }
+          if !success {
+            // expand radius y
+            for attempt in moves.clockwise[lastMove[0]]![lastMove[1]]! {
+              let bigAttempt = [attempt[0], attempt[1] * 2]
+              if tryMove(bigAttempt, avoidVisited: avoidVisited, avoidBacktrack: avoidBacktrack) {
+                lastMove = attempt
+                success = true
+                break
+              }
+            }
+          }
+          if !success {
+            // expand radius x
+            for attempt in moves.clockwise[lastMove[0]]![lastMove[1]]! {
+              let bigAttempt = [attempt[0] * 2, attempt[1]]
+              if tryMove(bigAttempt, avoidVisited: avoidVisited, avoidBacktrack: avoidBacktrack) {
+                lastMove = attempt
+                success = true
+                break
+              }
+            }
+          }
+          if success {
             break
           }
-        }
-        if !success {
-          // expand radius 2
-          for attempt in moves.clockwise[lastMove[0]]![lastMove[1]]! {
-            let bigAttempt = [attempt[0] * 2, attempt[1] * 2]
-            if tryMove(bigAttempt, avoidVisited: avoidVisited) {
-              debug("big move")
-              lastMove = attempt
-              success = true
-              break
-            }
-          }
-        }
-        if !success {
-          // expand radius y
-          for attempt in moves.clockwise[lastMove[0]]![lastMove[1]]! {
-            let bigAttempt = [attempt[0], attempt[1] * 2]
-            if tryMove(bigAttempt, avoidVisited: avoidVisited) {
-              lastMove = attempt
-              success = true
-              break
-            }
-          }
-        }
-        if !success {
-          // expand radius x
-          for attempt in moves.clockwise[lastMove[0]]![lastMove[1]]! {
-            let bigAttempt = [attempt[0] * 2, attempt[1]]
-            if tryMove(bigAttempt, avoidVisited: avoidVisited) {
-              lastMove = attempt
-              success = true
-              break
-            }
-          }
-        }
-        if success {
-          break
         }
       }
     }
     return [
       startPoint[0], // x
       startPoint[1], // y
-      endPoint[0] - startPoint[0] + 2, // width
-      endPoint[1] - startPoint[1] // height
+      endPoint[0] - startPoint[0], // width
+      endPoint[1] - startPoint[1], // height
+      endPoint[0] // endX
     ]
   }
 

@@ -10,6 +10,13 @@ class Characters {
   private var debugDir = ""
   private var maxLuma = 0
   private let moves = Moves()
+  private let specialDebug = [0, 0]
+  private var curChar = 0
+  private var id = 0
+
+  func sdebug() -> Bool {
+    return specialDebug[0] == id && specialDebug[1] == curChar
+  }
 
   init(data: UnsafeMutablePointer<UInt8>, perRow: Int, maxLuma: Int, debug: Bool, debugDir: String?, debugImg: CGImage?) {
     self.maxLuma = maxLuma // higher == allow lighter
@@ -28,12 +35,12 @@ class Characters {
     let imgH = bounds[3]
     var foundChars = [[Int]]()
     var pixels: [PixelData]? = nil
-    var curChar = 0
+    self.id = id
+    self.curChar = 0
     // we control the sticks for more speed
     var x = 0
     var y = 0
     while true {
-//      self.shouldDebug = id == 0 && curChar == 0
       if shouldDebug && pixels == nil && debugImg != nil {
         pixels = [PixelData](repeating: PixelData(a: 255, r: 255, g: 255, b: 255), count: imgW * imgH)
       }
@@ -116,13 +123,13 @@ class Characters {
       print(str)
     }
   }
-  
+
   func isBlack(_ pos: Int) -> Bool {
     return buffer[pos] < maxLuma
   }
-  
+
   func findCharacter(startX: Int, startY: Int, maxHeight: Int) -> [Int] {
-    let exhaust = 30 // most amount to go without finding new bound before give up
+    let exhaust = 200 / moves.px // most amount to go without finding new bound before give up
     var visited = Dictionary<Int, Bool?>()
     var startPoint = [startX, startY] // top left point
     var endPoint = [startX, startY] // bottom right point
@@ -138,10 +145,15 @@ class Characters {
       curPos = y * perRow + x
       visited[curPos] = true
       curTry += 1
-      if curTry > exhaust { debug("exhausted"); break }
+      if curTry > exhaust {
+        debug("exhausted")
+        foundEnd = true
+        break
+      }
       for attempt in clockwise[lastMove[0]]![lastMove[1]]! {
         let next = curPos + attempt[0] + attempt[1] * perRow
         if curTry > 10 && x == startX && y == startY {
+          debug("found end")
           foundEnd = true
           break
         }
@@ -149,6 +161,11 @@ class Characters {
         if visited[next] != nil { continue }
         // not black
         if buffer[next] >= maxLuma { continue }
+        if sdebug() {
+          let xdir = attempt[0] == -1 ? "left" : attempt[0] == 0 ? "" : "right"
+          let ydir = attempt[1] == -1 ? "up" : attempt[1] == 0 ? "" : "down"
+          print(" .. \(xdir) \(ydir)")
+        }
         // update pos
         x += attempt[0]
         y += attempt[1]
@@ -157,8 +174,20 @@ class Characters {
         else if x < startPoint[0] { curTry = 0; startPoint[0] = x }
         if y > endPoint[1]        { curTry = 0; endPoint[1] = y }
         else if y < startPoint[1] { curTry = 0; startPoint[1] = y }
-        // update last move
-        lastMove = attempt
+        if sdebug() && curTry == 0 {
+          print("found new bounds at \(x) \(y)")
+        }
+        // update big move
+        if attempt.count == 3 {
+          if attempt[2] == 1 { // big x
+              lastMove = [attempt[0] / 2, attempt[1]]
+            } else { // big y
+              lastMove = [attempt[0], attempt[1] / 2]
+            }
+        } else {
+          // update normal move
+            lastMove = attempt
+        }
         break
       }
     }

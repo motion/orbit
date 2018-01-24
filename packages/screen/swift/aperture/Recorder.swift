@@ -125,7 +125,7 @@ final class Recorder: NSObject {
   }
   
   func screenshotBox(box: Box, buffer: CMSampleBuffer, bufferPointer: UnsafeMutablePointer<UInt8>, perRow: Int, findContent: Bool = false) {
-    let shouldDebug = false
+    let shouldDebug = true
     // clear old files
     rmAllInside(URL(fileURLWithPath: box.screenDir!))
     let startAll = DispatchTime.now()
@@ -141,7 +141,9 @@ final class Recorder: NSObject {
       width: box.width * 2,
       height: Int(-box.height * 2)
     ))!
+    var cgImageBinarized: CGImage? = nil
     if shouldDebug {
+      cgImageBinarized = filters.filterImageForOCRCharacterFinding(image: cgImage)
       print("box \(box)")
       print("cgImage size \(cgImage.width) \(cgImage.height)")
     }
@@ -309,7 +311,7 @@ final class Recorder: NSObject {
         maxLuma: 220,
         debug: shouldDebug,
         debugDir: box.screenDir!,
-        debugImg: cgImage
+        debugImg: cgImageBinarized
       )
       let scl = lineFindScaling
       let padX = 6

@@ -2,123 +2,161 @@ typealias MoveDict = Dictionary<Int, [[Int]]>
 
 class Moves {
   public var clockwise: Dictionary<Int, MoveDict>
-  public var px = 2
+  public var px = 1
 
   init() {
+    // corners and sides
     let down = [0, px]
-    let rightdown = [px, px]
+    let downright = [px, px]
     let left = [-px, 0]
     let upleft = [-px, px]
     let up = [0, -px]
     let upright = [px, -px]
     let right = [px, 0]
     let downleft = [-px, px]
-    // let rightdowndown = [px, 2 * px, -1]
-    // let leftdowndown = [-px, 2 * px, -1]
-    let fromleftup = [
+    // steep diagonals
+    let downdownright = [px, 2 * px, -1]
+    let downdownleft = [-px, 2 * px, -1]
+    let downrightright = [2 * px, px, 1]
+    let downleftleft = [2 * -px, px, 1]
+    let upupleft = [-px, 2 * -px, -1]
+    let upupright = [px, 2 * -px, -1]
+    let upleftleft = [2 * -px, -px, 1]
+    let uprightright = [2 * px, -px, 1]
+    // clockwise sequences
+    let fromupleft = [
       down,
+      downdownleft,
       downleft,
-      // leftdowndown,
       left,
+      upleftleft,
       upleft,
+      upupleft,
       up,
+      upupright,
       upright,
+      uprightright,
       right,
-      // rightdown,
     ]
     let fromleft = [
-      rightdown,
+      downright,
+      downdownright,
+      down,
+      downdownleft,
       downleft,
-      // leftdowndown,
+      downleftleft,
       left,
+      upleftleft,
       upleft,
+      upupleft,
       up,
+      upupright,
       upright,
-      down,
-      // right,
     ]
-    let fromleftdown = [
+    let fromdownleft = [
       right,
+      downrightright,
+      downright,
+      downdownright,
       down,
+      downdownleft,
       downleft,
-      // leftdowndown,
+      downleftleft,
       left,
+      upleftleft,
       upleft,
+      upupleft,
       up,
-      rightdown,
-      // upright,
     ]
     let fromup = [
       downleft,
-      // leftdowndown,
-      upleft,
-      up,
-      upright,
-      right,
-      rightdown,
+      downleftleft,
       left,
-      // down,
+      upleftleft,
+      upleft,
+      upupleft,
+      up,
+      upupright,
+      upright,
+      uprightright,
+      right,
+      downrightright,
+      downright,
     ]
     let fromdown = [
       upright,
-      rightdown,
-      // rightdowndown,
+      uprightright,
+      right,
+      downrightright,
+      downright,
+      downdownright,
       down,
+      downdownleft,
       downleft,
-      // leftdowndown,
+      downleftleft,
       left,
+      upleftleft,
       upleft,
-      right,
-      // up,
     ]
-    let fromrightup = [
-      upleft,
-      up,
-      upright,
-      right,
-      rightdown,
-      down,
+    let fromupright = [
       left,
-      // downleft,
+      upleftleft,
+      upleft,
+      upupleft,
+      up,
+      upupright,
+      upright,
+      uprightright,
+      right,
+      downrightright,
+      downright,
+      downdownright,
+      down,
     ]
     let fromright = [
-      up,
-      upright,
-      right,
-      rightdown,
-      // rightdowndown,
-      down,
-      downleft,
-      // leftdowndown,
       upleft,
-      // left,
-    ]
-    let fromrightdown = [
-      upright,
-      right,
-      rightdown,
-      // rightdowndown,
-      down,
-      downleft,
-      // leftdowndown,
-      left,
+      upupleft,
       up,
-      // upleft,
+      upupright,
+      upright,
+      uprightright,
+      right,
+      downrightright,
+      downright,
+      downdownright,
+      down,
+      downdownleft,
+      downleft,
+    ]
+    let fromdownright = [
+      up,
+      upupright,
+      upright,
+      uprightright,
+      right,
+      downrightright,
+      downright,
+      downdownright,
+      down,
+      downdownleft,
+      downleft,
+      downleftleft,
+      left,
     ]
     clockwise = [
       -px: [
-        -px: fromleftup,
+        -px: fromupleft,
         0: fromleft,
-        px: fromleftdown
+        px: fromdownleft
       ],
       0: [
         -px: fromup,
         px: fromdown,
       ],
       px: [
-        -px: fromrightup,
+        -px: fromupright,
         0: fromright,
-        px: fromrightdown
+        px: fromdownright
       ]
     ]
   }

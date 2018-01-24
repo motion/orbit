@@ -96,8 +96,8 @@ class Characters {
           }
           // done w new char
           debug("x \(x) \(cb)")
-          var nextX = cb[3]  // add endX
-          while nextX <= x + 2 {
+          var nextX = cb[4] / 2  // add endX
+          while nextX <= x {
             nextX += 1
           }
           x = nextX

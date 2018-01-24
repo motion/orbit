@@ -98,7 +98,7 @@ class Characters {
     }
     if pixels != nil && pixels!.count > 0 && debugImg != nil {
       if let img = images.imageFromArray(pixels: pixels!, width: imgW, height: imgH) {
-        Images().writeCGImage(image: img, to: "/tmp/screen/edge\(id).png", resolution: 72) // write img
+        Images().writeCGImage(image: img, to: "/tmp/screen/hit\(id).png", resolution: 72) // write img
       }
     }
     debug("Characters.find() \(foundChars.count): \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
@@ -129,14 +129,19 @@ class Characters {
     func move(_ dir: [Int]) -> Int {
       return curPos + dir[0] + dir[1] * perRow
     }
-    while true {
+    var foundEnd = false
+    while !foundEnd {
       curPos = y * perRow + x
       visited[curPos] = true
       curTry += 1
       if curTry > exaust { debug("max venture \(x, y)"); break }
-      if curTry > 1 && x == startX && y == startY { debug("bounded"); break }
       func tryMove(_ attempt: [Int], avoidVisited: Bool, avoidBacktrack: Bool) -> Bool {
         let next = move(attempt)
+        if curTry > 10 && x == startX && y == startY {
+          debug("bounded")
+          foundEnd = true
+          return true
+        }
         if avoidVisited && visited[next] != nil { return false }
         if !isBlack(next) { return false }
         if avoidBacktrack && attempt[0] == -lastMove[0] && attempt[1] == -lastMove[1] {
@@ -150,9 +155,19 @@ class Characters {
         if y < startPoint[1] { curTry = 0; startPoint[1] = y }
         return true
       }
-      for attempt in moves.clockwise[lastMove[0]]![lastMove[1]]! {
+      let clockwise = moves.clockwise
+      for attempt in clockwise[lastMove[0]]![lastMove[1]]! {
         if tryMove(attempt, avoidVisited: true, avoidBacktrack: true) {
-          lastMove = attempt
+          let bigX = attempt[0] > 1 || attempt[0] < -1
+          let bigY = attempt[1] > 1 || attempt[1] < -1
+          if bigX || bigY {
+            lastMove = [
+              bigX ? attempt[0] / 2 : attempt[0],
+              bigY ? attempt[1] / 2 : attempt[1]
+            ]
+          } else {
+            lastMove = attempt
+          }
           break
         }
       }

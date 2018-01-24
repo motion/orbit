@@ -56,6 +56,7 @@ class Moves {
         1: [
           [1, -1],  // upright
           [1, 1],   // rightdown
+          [1, 2],   // rightdowndown
           [0, 1],   // down
           [-1, 1],  // downleft
           [-1, 0],  // left
@@ -82,6 +83,7 @@ class Moves {
           [1, -1],  // upright
           [1, 0],   // right
           [1, 1],   // rightdown
+          [1, 2],   // rightdowndown
           [0, 1],   // down
           [-1, 1],  // downleft
           [-1, 1],  // upleft
@@ -92,6 +94,7 @@ class Moves {
           [1, -1],  // upright
           [1, 0],   // right
           [1, 1],   // rightdown
+          [1, 2],   // rightdowndown
           [0, 1],   // down
           [-1, 1],  // downleft
           [-1, 0],  // left

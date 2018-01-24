@@ -366,13 +366,13 @@ final class Recorder: NSObject {
     print("")
     print("total \(Double(DispatchTime.now().uptimeNanoseconds - startAll.uptimeNanoseconds) / 1_000_000)ms")
 
-    // test write image:
-    images.writeCGImage(image: verticalImage, to: "\(box.screenDir!)/\(box.id)-content-find.png")
-    images.writeCGImage(image: binarizedImage, to: "\(box.screenDir!)/\(box.id)-binarized.png")
-    images.writeCGImage(image: ocrCharactersImage, to: "\(box.screenDir!)/\(box.id)-ocr-characters.png")
-    images.writeCGImage(image: cgImage, to: "\(box.screenDir!)/\(box.id)-original.png")
-    //    images.writeCGImage(image: ocrWriteImage, to: outPath)
-    //    images.writeCGImage(image: cgImageLarge, to: "\(box.screenDir!)/\(box.id)-cgimage-large.png")
+    // test write images:
+    if shouldDebug {
+      images.writeCGImage(image: verticalImage, to: "\(box.screenDir!)/\(box.id)-content-find.png")
+      images.writeCGImage(image: binarizedImage, to: "\(box.screenDir!)/\(box.id)-binarized.png")
+      images.writeCGImage(image: ocrCharactersImage, to: "\(box.screenDir!)/\(box.id)-ocr-characters.png")
+      images.writeCGImage(image: cgImage, to: "\(box.screenDir!)/\(box.id)-original.png")
+    }
   }
   
   func hasBoxChanged(box: Box, buffer: UnsafeMutablePointer<UInt8>, perRow: Int) -> Bool {

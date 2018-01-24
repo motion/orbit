@@ -204,7 +204,6 @@ final class Recorder: NSObject {
     let verticalImage = filters.filterForVerticalContentFinding(image: images.resize(ocrCharactersImage, width: vWidth, height: vHeight)!)
     let verticalImageRep = NSBitmapImageRep(cgImage: verticalImage)
     print("3. filter vertical: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
-    // find lines
     start = DispatchTime.now()
     // first loop - find vertical sections
     var imgData = [[Int]](repeating: [Int](repeating: 0, count: Int(vHeight)), count: Int(vWidth))

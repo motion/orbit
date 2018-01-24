@@ -7,8 +7,10 @@ class Characters {
   private var shouldDebug = false
   private var debugImg: CGImage? = nil
   private var debugDir = ""
+  private var maxLuma = 0
 
-  init(data: UnsafeMutablePointer<UInt8>, perRow: Int, debug: Bool, debugDir: String?, debugImg: CGImage?) {
+  init(data: UnsafeMutablePointer<UInt8>, perRow: Int, maxLuma: Int, debug: Bool, debugDir: String?, debugImg: CGImage?) {
+    self.maxLuma = maxLuma // higher == allow lighter
     self.shouldDebug = debug
     self.buffer = data
     self.perRow = perRow
@@ -18,7 +20,6 @@ class Characters {
 
   func find(id: Int, bounds: [Int]) -> [[Int]] {
     let start = DispatchTime.now()
-    let MAX_LUMA = 80 // higher == allow lighter
     let imgX = bounds[0] * 2
     let imgY = bounds[1] * 2 + 23
     let imgW = bounds[2]
@@ -57,13 +58,13 @@ class Characters {
       let xO = x * 2 + imgX
       let yO = y * 2 + imgY
       let luma = buffer[yO * perRow + xO]
-      let isBlack = luma < MAX_LUMA ? true : false
+      let isBlack = luma < maxLuma ? true : false
       if shouldDebug && debugImg != nil {
         pixels![x + y * imgW] = PixelData(a: 255, r: luma, g: luma, b: luma)
       }
       if isBlack {
         if shouldDebug && debugImg != nil {
-          let charImgIn = images.cropImage(debugImg!, box: CGRect(x: xO / 2, y: yO / 2 - 24, width: 50, height: 50))
+          let charImgIn = images.cropImage(debugImg!, box: CGRect(x: xO / 2, y: yO / 2 - 24 * 2, width: 50, height: 50))
           images.writeCGImage(image: charImgIn, to: "/tmp/screen/testin-line-\(id)-char-\(curChar).png")
         }
         minYO = min(yO, minYO)
@@ -114,32 +115,30 @@ class Characters {
     var maxY = startY
     var maxX = startX
     var x = startX - 1
-    let blackLim = 185 // ensure breaks, lower = less black
     var foundAt = Dictionary<Int, Bool>()
-    var foundPixels = true
-    while foundPixels {
+    var noPixelStreak = 0
+    let maxNoPixels = 2
+    while noPixelStreak <= maxNoPixels {
       let firstLoop = x <= startX + 2
       x += 1
-      foundPixels = false
+      noPixelStreak += 1
       for yOff in 0...maxHeight {
         let yP = yOff + startY
         let curPos = yP * perRow + x
-        if buffer[curPos] < blackLim {
+        if buffer[curPos] < maxLuma {
           foundAt[curPos] = true
-          if firstLoop {
-            foundPixels = true
-            continue
-          }
           // count it if the leftward pixels touch
           let hasConnection =
-            foundAt[yP * perRow + x - 1] // left one
+            firstLoop
+            || foundAt[yP * perRow + x - 1] // left one
             ?? foundAt[yP * perRow + x - 2] // left two
             ?? foundAt[(yP - 1) * perRow + x - 1] // left up
             ?? foundAt[(yP - 2) * perRow + x - 1] // left up two
             ?? foundAt[(yP + 2) * perRow + x - 1] // left down
             ?? foundAt[(yP + 1) * perRow + x - 2] // left down two
-          if hasConnection != nil {
-            foundPixels = true
+            ?? false
+          if hasConnection {
+            noPixelStreak = 0
             maxX = x
             if yP > minY {
               minY = yP
@@ -150,14 +149,15 @@ class Characters {
           }
         }
       }
-      if !foundPixels {
+      if noPixelStreak == maxNoPixels + 1 {
         print("didnt find pixels \(x)")
       }
     }
+    print("foundAt \(foundAt)")
     return [
       startX,
       minY - 23,
-      maxX - startX + 4,
+      maxX - startX,
       min(maxY / 3 + 2, maxHeight * 2)
     ]
   }

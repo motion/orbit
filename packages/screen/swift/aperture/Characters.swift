@@ -213,7 +213,6 @@ class Characters {
   }
 
   public func charsToString(rects: [[Int]], debugID: Int) -> String {
-    //    let start = DispatchTime.now()
     var output = ""
     let dbl = Float(28)
     for (index, rect) in rects.enumerated() {
@@ -247,8 +246,19 @@ class Characters {
           let xS = Int(Float(x) * scaleX)
           let yS = Int(Float(y) * scaleY)
           let luma = buffer[(minY + yS) * perRow + minX + xS]
-          let lumaVal = luma < 150 ? "0 " : "255 " // warning, doing any sort of string conversion here slows it down bigly
-          output += lumaVal
+          // luminance to intensity means we have to inverse it
+          // warning, doing any sort of Int => String conversion here slows it down Bigly
+          if luma < 50 { // white
+            output += "0.2 "
+          } else if luma < 100 {
+            output += "0.4 "
+          } else if luma < 150 {
+            output += "0.6 "
+          } else if luma < 200 {
+            output += "0.8 "
+          } else {  // black
+            output += "1.0 "
+          }
           if shouldDebug {
             let brt = UInt8(luma < self.maxLuma ? 0 : 255)
             pixels!.append(PixelData(a: 255, r: brt, g: brt, b: brt))
@@ -261,7 +271,6 @@ class Characters {
         images.writeCGImage(image: images.imageFromArray(pixels: pixels!, width: 28, height: 28)!, to: outFile, resolution: 72) // write img
       }
     }
-    //    print(".. char => string: \(rects.count) \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     return output
   }
 }

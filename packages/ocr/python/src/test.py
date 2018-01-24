@@ -16,7 +16,6 @@ for line in file:
     tensor = torch.Tensor(28, 28)
     for row in range(28):
         for col in range(28):
-            # print('got', vals[row * 28 + col] / 255.0)
             tensor[row, col] = vals[row * 28 + col]
 
     tensors.append(tensor)

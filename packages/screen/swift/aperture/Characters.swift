@@ -75,8 +75,8 @@ class Characters {
         )
         let tooThin = cb[2] < 5
         let tooShort = cb[3] < 5
-        let tooWide = cb[2] > 200
-        let tooTall = cb[3] > 200
+        let tooWide = cb[3] / cb[2] > 6
+        let tooTall = cb[2] / cb[3] > 10
         if tooThin || tooShort || tooWide || tooTall {
           debug("misfit \(cb)")
         } else {
@@ -115,11 +115,12 @@ class Characters {
     var foundAt = Dictionary<Int, Bool>()
     var noPixelStreak = 0
     let maxNoPixels = 2
+    let yColStride = stride(from: 0, to: maxHeight * 2, by: 2)
     while noPixelStreak <= maxNoPixels {
       let firstLoop = x <= startX + 2
       x += 1
       noPixelStreak += 1
-      for yOff in stride(from: 0, to: maxHeight * 2, by: 2) {
+      for yOff in yColStride {
         let yP = yOff + startY
         let curPos = yP * perRow + x
         if buffer[curPos] < maxLuma {
@@ -148,9 +149,9 @@ class Characters {
     }
     return [
       startX,
-      minY - 24 * 2 - maxHeight / 2 - 2,
+      minY - 24 * 2,
       maxX - startX + 2,
-      min(maxY / 3 + 2, maxHeight * 2)
+      maxY / 4
     ]
   }
 

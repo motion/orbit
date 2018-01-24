@@ -292,7 +292,7 @@ final class Recorder: NSObject {
     start = DispatchTime.now()
     // third loop
     // for each VERTICAL SECTION, get characters
-    let shouldDebug = false
+    let shouldDebug = true
     for id in sectionLines.keys {
       let lines = sectionLines[id]!
       let perThread = max(1, lines.count / threads)
@@ -311,14 +311,14 @@ final class Recorder: NSObject {
       // find characters
       func processLine(_ index: Int) {
         let line = lines[index]
-        let pad = 6
+        let pad = line.height / scale
         // scale bounds for line
         //        print("\(frame[2], line.width * scale + pad * 3)")
         let bounds = [
-          line.x * scale - pad + frame[0],
-          line.y * scale - pad + frame[1],
-          min(frame[2], line.width * scale + pad * 3),
-          min(frame[3], line.height * scale + pad * 2)
+          line.x * scale - pad * 2 + frame[0],
+          line.y * scale - pad * 2 + frame[1],
+          min(frame[2], line.width * scale + pad * 4),
+          min(frame[3], line.height * scale + pad * 4)
         ]
         // finds characters
         let rects = characters.find(id: index, bounds: bounds)

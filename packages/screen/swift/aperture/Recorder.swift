@@ -299,13 +299,11 @@ final class Recorder: NSObject {
     start = DispatchTime.now()
     // third loop
     // for each VERTICAL SECTION, get characters
+    var foundTotal = 0
+    var lineStrings = [String]()
     for id in sectionLines.keys {
       let lines = sectionLines[id]!
-      let perThread = max(1, lines.count / threads)
-      let queue = DispatchQueue(label: "asyncQueue", attributes: .concurrent)
-      let group = DispatchGroup()
-      var foundTotal = 0
-      var lineStrings = [String](repeating: "", count: lines.count)
+      var lineString = ""
       let characters = Characters(
         data: bufferPointer,
         perRow: perRow,
@@ -314,12 +312,10 @@ final class Recorder: NSObject {
         debugDir: box.screenDir!,
         debugImg: cgImage
       )
-      // find characters
-      func processLine(_ index: Int) {
-        let line = lines[index]
-        let scl = lineFindScaling
-        let padX = 6
-        let padY = 10
+      let scl = lineFindScaling
+      let padX = 6
+      let padY = 10
+      for (index, line) in lines.enumerated() {
         let lineBounds = [
           line.x * scl - padX + frame[0],
           line.y * scl - padY + frame[1],
@@ -328,7 +324,7 @@ final class Recorder: NSObject {
           min(frame[3], line.height * scl + padY * 2)
         ]
         if shouldDebug {
-          print("process line at bounds \(lineBounds)")
+          print("process line \(index) \(lineBounds)")
         }
         // finds characters
         let rects = characters.find(id: index, bounds: lineBounds)
@@ -343,39 +339,21 @@ final class Recorder: NSObject {
         // write characters
         characters.shouldDebug = shouldDebug
         let chars = characters.charsToString(rects: rects, debugID: index)// index) // index < 40 ? index : -1
-        lineStrings.insert(chars, at: index)
+        lineString += chars + "\n"
       }
-      // do async if can
-      if lines.count == 1 {
-        processLine(0)
-      } else {
-        for thread in 0..<threads {
-          group.enter()
-          queue.async {
-            let startIndex = thread * perThread
-            let end = startIndex + perThread
-            for index in startIndex..<end {
-              processLine(index)
-            }
-            if end + 1 < lines.count {
-              processLine(end + 1)
-            }
-            group.leave()
-          }
-        }
-        group.wait()
-      }
-      print("7. found \(foundTotal) chars: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
-      start = DispatchTime.now()
-      // write chars
-      do {
-        let path = NSURL.fileURL(withPath: "\(box.screenDir!)/characters.txt").absoluteURL
-        try lineStrings.joined(separator: "\n").write(to: path, atomically: true, encoding: .utf8)
-      } catch {
-        print("couldnt write pixel string \(error)")
-      }
-      print("8. characters.txt: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+      lineStrings.append(lineString)
     }
+
+    print("7. found \(foundTotal) chars: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+    start = DispatchTime.now()
+    // write chars
+    do {
+      let path = NSURL.fileURL(withPath: "\(box.screenDir!)/characters.txt").absoluteURL
+      try lineStrings.joined(separator: "\n").write(to: path, atomically: true, encoding: .utf8)
+    } catch {
+      print("couldnt write pixel string \(error)")
+    }
+    print("8. characters.txt: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     
     print("")
     print("total \(Double(DispatchTime.now().uptimeNanoseconds - startAll.uptimeNanoseconds) / 1_000_000)ms")

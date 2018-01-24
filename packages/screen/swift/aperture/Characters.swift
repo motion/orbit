@@ -122,8 +122,7 @@ class Characters {
   }
   
   func findCharacter(startX: Int, startY: Int, maxHeight: Int) -> [Int] {
-    let exhaust = 100 // most amount to go without finding new bound before give up
-    var visited = Dictionary<Int, Bool?>()
+    let exhaust = 20 // most amount to go without finding new bound before give up
     var startPoint = [startX, startY] // top left point
     var endPoint = [startX, startY] // bottom right point
     // start going down as we came
@@ -136,7 +135,6 @@ class Characters {
     let clockwise = moves.clockwise
     while !foundEnd {
       curPos = y * perRow + x
-      visited[curPos] = true
       curTry += 1
       if curTry > exhaust { debug("exhausted"); break }
       for attempt in clockwise[lastMove[0]]![lastMove[1]]! {
@@ -145,7 +143,6 @@ class Characters {
           foundEnd = true
           break
         }
-        if visited[next] != nil { continue }
         if buffer[next] >= maxLuma { continue }
         // update pos
         x += attempt[0]
@@ -156,13 +153,10 @@ class Characters {
         if y > endPoint[1]        { curTry = 0; endPoint[1] = y }
         else if y < startPoint[1] { curTry = 0; startPoint[1] = y }
         // update last move
-        let bigX = attempt[0] > 1 || attempt[0] < -1
-        let bigY = attempt[1] > 1 || attempt[1] < -1
-        if bigX || bigY {
-          lastMove = [
-            bigX ? attempt[0] / 2 : attempt[0],
-            bigY ? attempt[1] / 2 : attempt[1]
-          ]
+        if attempt[0] > 1 || attempt[0] < -1 {
+          lastMove = [attempt[0] / 2, attempt[1]]
+        } else if attempt[1] > 1 || attempt[1] < -1 {
+          lastMove = [attempt[0], attempt[1] / 2]
         } else {
           lastMove = attempt
         }

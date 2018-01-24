@@ -118,29 +118,28 @@ class Characters {
     var x = startX - 1
     var foundAt = Dictionary<Int, Bool>()
     var noPixelStreak = 0
-    let strideAmt = maxHeight > 30 ? 2 : 1 // more precise on smaller lines
-    let maxNoPixels = strideAmt + 1
-    let yColStride = stride(from: 0, to: maxHeight * 2, by: strideAmt)
+    let px = maxHeight > 30 ? 2 : 1 // more precise on smaller lines
+    let maxNoPixels = px * 2
+    let yColStride = stride(from: 0 + startY, to: maxHeight * 2 + startY, by: px)
     while noPixelStreak <= maxNoPixels {
-      let firstLoop = x <= startX + 2
-      x += 1
+      let firstLoop = x <= startX + 2 * px
+      x += px
       noPixelStreak += 1
-      for yOff in yColStride {
-        let yP = yOff + startY
+      for yP in yColStride {
         let curPos = yP * perRow + x
         if buffer[curPos] < maxLuma {
           foundAt[curPos] = true
-          let touchingPrevious = yP + strideAmt >= foundHeight
-          let foundClose = foundAt[yP * perRow + x - 1] // left one
-            ?? foundAt[(yP - 1) * perRow + x - 1] // left up
-            ?? foundAt[(yP + 1) * perRow + x - 1] // left down
+          let touchingPrevious = yP + px >= foundHeight
+          let foundClose = foundAt[yP * perRow + x - px] // left one
+            ?? foundAt[(yP - px) * perRow + x - px] // left up
+            ?? foundAt[(yP + px) * perRow + x - px] // left down
             ?? foundAt[yP * perRow + x - 1] // left
             ?? false
           let foundFar = foundClose
-            || foundAt[(yP + 2) * perRow + x - 1] // down down left
-            ?? foundAt[(yP + 1) * perRow + x - 2] // down left left
-            ?? foundAt[(yP - 2) * perRow + x - 1] // up up left
-            ?? foundAt[(yP - 1) * perRow + x - 2] // up left left
+            || foundAt[(yP + 2 * px) * perRow + x - px] // down down left
+            ?? foundAt[(yP + px) * perRow + x - 2 * px] // down left left
+            ?? foundAt[(yP - 2 * px) * perRow + x - px] // up up left
+            ?? foundAt[(yP - px) * perRow + x - 2 * px] // up left left
             //            ?? foundAt[yP * perRow + x - 2] // left left
             ?? false
           if firstLoop || touchingPrevious && (foundClose || foundFar) {

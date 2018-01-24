@@ -69,29 +69,35 @@ class Characters {
           maxHeight: imgH * 2
         )
         if cb[3] == 0 || cb[2] == 0 {
-          print("0 size")
+          debug("0 size")
         } else {
           let tooSmall = cb[2] < 5 && cb[3] < 5 || cb[2] < 2 || cb[3] < 2
-          let tooWide = cb[3] / cb[2] > 10
-          let tooTall = cb[2] / cb[3] > 20
-          let misfit = tooSmall || tooWide || tooTall
+          let tooThin = cb[3] / cb[2] > 25
+          let tooWide = cb[2] / cb[3] > 25
+          let misfit = tooSmall || tooThin || tooWide
           if shouldDebug && debugImg != nil {
             if let img = images.cropImage(debugImg!, box: CGRect(x: cb[0] / 2, y: cb[1] / 2, width: cb[2] / 2, height: cb[3] / 2)) {
               images.writeCGImage(image: img, to: "/tmp/screen/\(misfit ? "fitmiss-" : "fit")-\(id)-\(curChar).png")
             }
           }
+          y = 0
           if misfit {
-            print("misfit \(cb)")
+            debug("misfit \(cb)")
             x += 2
-            y = 0
             continue
           } else {
             foundChars.append(cb)
           }
-          // done w new char
-          debug("x \(x) \(cb)")
-          x = cb[4] / 2 + 1  // add endX
-          y = 0
+          // width - backtracks + 2
+          let fwd = (cb[2] / 2 - cb[4] / 2 + 2)
+          let nextX = x + fwd
+          debug("move: \(x) fwd \(fwd) [w \(cb[2]) back \(cb[4])]")
+          if nextX < x {
+            x += 2
+          } else {
+            x = nextX
+          }
+          debug("   => \(x)")
           curChar += 1
         }
       }
@@ -116,7 +122,7 @@ class Characters {
   }
   
   func findCharacter(startX: Int, startY: Int, maxHeight: Int) -> [Int] {
-    let exaust = 450 // most amount to go without finding new bound before give up
+    let exhaust = 100 // most amount to go without finding new bound before give up
     var visited = Dictionary<Int, Bool?>()
     var startPoint = [startX, startY] // top left point
     var endPoint = [startX, startY] // bottom right point
@@ -126,63 +132,49 @@ class Characters {
     var y = startY - 1
     var curTry = 0
     var curPos = 0
-    func move(_ dir: [Int]) -> Int {
-      return curPos + dir[0] + dir[1] * perRow
-    }
     var foundEnd = false
+    let clockwise = moves.clockwise
     while !foundEnd {
       curPos = y * perRow + x
       visited[curPos] = true
       curTry += 1
-      if curTry > exaust { debug("max venture \(x, y)"); break }
-      func tryMove(_ attempt: [Int], avoidVisited: Bool, avoidBacktrack: Bool) -> Bool {
-        let next = move(attempt)
-        if curTry > 10 && x == startX && y == startY {
-          debug("bounded")
-          foundEnd = true
-          return true
-        }
-        if avoidVisited && visited[next] != nil { return false }
-        if !isBlack(next) { return false }
-        if avoidBacktrack && attempt[0] == -lastMove[0] && attempt[1] == -lastMove[1] {
-          return false
-        }
-        x += attempt[0]
-        y += attempt[1]
-        if x > endPoint[0]   { curTry = 0; endPoint[0] = x }
-        if x < startPoint[0] { curTry = 0; startPoint[0] = x }
-        if y > endPoint[1]   { curTry = 0; endPoint[1] = y }
-        if y < startPoint[1] { curTry = 0; startPoint[1] = y }
-        return true
-      }
-      let clockwise = moves.clockwise
+      if curTry > exhaust { debug("exhausted"); break }
       for attempt in clockwise[lastMove[0]]![lastMove[1]]! {
-        if tryMove(attempt, avoidVisited: true, avoidBacktrack: true) {
-          let bigX = attempt[0] > 1 || attempt[0] < -1
-          let bigY = attempt[1] > 1 || attempt[1] < -1
-          if bigX || bigY {
-            lastMove = [
-              bigX ? attempt[0] / 2 : attempt[0],
-              bigY ? attempt[1] / 2 : attempt[1]
-            ]
-          } else {
-            lastMove = attempt
-          }
+        let next = curPos + attempt[0] + attempt[1] * perRow
+        if curTry > 10 && x == startX && y == startY {
+          foundEnd = true
           break
         }
+        if visited[next] != nil { continue }
+        if buffer[next] >= maxLuma { continue }
+        // update pos
+        x += attempt[0]
+        y += attempt[1]
+        // update bounds
+        if x > endPoint[0]        { curTry = 0; endPoint[0] = x }
+        else if x < startPoint[0] { curTry = 0; startPoint[0] = x }
+        if y > endPoint[1]        { curTry = 0; endPoint[1] = y }
+        else if y < startPoint[1] { curTry = 0; startPoint[1] = y }
+        // update last move
+        let bigX = attempt[0] > 1 || attempt[0] < -1
+        let bigY = attempt[1] > 1 || attempt[1] < -1
+        if bigX || bigY {
+          lastMove = [
+            bigX ? attempt[0] / 2 : attempt[0],
+            bigY ? attempt[1] / 2 : attempt[1]
+          ]
+        } else {
+          lastMove = attempt
+        }
+        break
       }
-    }
-    let diff = startX - startPoint[0]
-    var backmoves = 0
-    if diff > 0 {
-      backmoves += diff
     }
     return [
       startPoint[0], // x
       startPoint[1], // y
       endPoint[0] - startPoint[0], // width
       endPoint[1] - startPoint[1], // height
-      endPoint[0] - backmoves, // endX
+      startX - startPoint[0], // backwards moves
     ]
   }
 

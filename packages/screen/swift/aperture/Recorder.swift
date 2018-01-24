@@ -125,7 +125,7 @@ final class Recorder: NSObject {
   }
   
   func screenshotBox(box: Box, buffer: CMSampleBuffer, bufferPointer: UnsafeMutablePointer<UInt8>, perRow: Int, findContent: Bool = false) {
-    let shouldDebug = true
+    let shouldDebug = false
     // clear old files
     rmAllInside(URL(fileURLWithPath: box.screenDir!))
     let startAll = DispatchTime.now()

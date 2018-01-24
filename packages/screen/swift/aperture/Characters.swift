@@ -80,7 +80,6 @@ class Characters {
         if tooThin || tooShort || tooWide || tooTall {
           debug("misfit \(cb)")
         } else {
-          debug("looks good \(cb)")
           foundChars.append(cb)
           if shouldDebug && debugImg != nil {
             images.writeCGImage(image: images.cropImage(debugImg!, box: CGRect(x: cb[0] / 2, y: cb[1] / 2 - 24, width: cb[2] / 2, height: cb[3] / 2)), to: "/tmp/screen/testchar-\(id)-\(curChar).png")
@@ -98,9 +97,7 @@ class Characters {
         Images().writeCGImage(image: img, to: "/tmp/screen/testinline-\(id).png", resolution: 72) // write img
       }
     }
-    if shouldDebug {
-      print("Characters.find() \(foundChars.count): \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
-    }
+    debug("Characters.find() \(foundChars.count): \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     return foundChars
   }
 
@@ -122,7 +119,7 @@ class Characters {
       let firstLoop = x <= startX + 2
       x += 1
       noPixelStreak += 1
-      for yOff in 0...maxHeight {
+      for yOff in 0...(maxHeight * 2) {
         let yP = yOff + startY
         let curPos = yP * perRow + x
         if buffer[curPos] < maxLuma {
@@ -149,15 +146,11 @@ class Characters {
           }
         }
       }
-      if noPixelStreak == maxNoPixels + 1 {
-        print("didnt find pixels \(x)")
-      }
     }
-    print("foundAt \(foundAt)")
     return [
       startX,
-      minY - 23,
-      maxX - startX,
+      minY - 24 * 2 - maxHeight / 2 - 2,
+      maxX - startX + 2,
       min(maxY / 3 + 2, maxHeight * 2)
     ]
   }

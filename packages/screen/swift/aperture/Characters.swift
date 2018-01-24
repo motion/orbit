@@ -21,7 +21,7 @@ class Characters {
   func find(id: Int, bounds: [Int]) -> [[Int]] {
     let start = DispatchTime.now()
     let imgX = bounds[0] * 2
-    let imgY = bounds[1] * 2 + 23
+    let imgY = bounds[1] * 2
     let imgW = bounds[2]
     let imgH = bounds[3]
     var foundChars = [[Int]]()
@@ -59,12 +59,15 @@ class Characters {
       let luma = buffer[yO * perRow + xO]
       let isBlack = luma < maxLuma ? true : false
       if shouldDebug && debugImg != nil {
-        pixels![x + y * imgW] = PixelData(a: 255, r: luma, g: luma, b: luma)
+        print("-- \(luma) < \(maxLuma)")
+        let val = UInt8(isBlack ? 0 : 255)
+        pixels![x + y * imgW] = PixelData(a: 255, r: val, g: val, b: val)
       }
       if isBlack {
         if shouldDebug && debugImg != nil {
-          debug("-- line \(id), char \(curChar) starts \(x, y)")
-          let charImgIn = images.cropImage(debugImg!, box: CGRect(x: xO / 2, y: yO / 2 - 24, width: 50, height: 50))
+          // todo need to handle frame offset here
+          let box = CGRect(x: xO / 2, y: yO / 2, width: 50, height: 50)
+          let charImgIn = images.cropImage(debugImg!, box: box)
           images.writeCGImage(image: charImgIn, to: "/tmp/screen/testinline-\(id)-char-\(curChar).png")
         }
         let cb = self.findCharacter(
@@ -72,26 +75,30 @@ class Characters {
           startY: imgY,
           maxHeight: imgH * 2
         )
-        let tooSmall = cb[2] < 5 && cb[3] < 5
-        let tooWide = cb[3] / cb[2] > 10
-        let tooTall = cb[2] / cb[3] > 20
-        if tooSmall || tooWide || tooTall {
-          print("misfit \(cb)")
+        if cb[3] == 0 || cb[2] == 0 {
+          print("0 size")
         } else {
-          foundChars.append(cb)
-          if shouldDebug && debugImg != nil {
-            images.writeCGImage(image: images.cropImage(debugImg!, box: CGRect(x: cb[0] / 2, y: cb[1] / 2 - 24, width: cb[2] / 2, height: cb[3] / 2)), to: "/tmp/screen/testchar-\(id)-\(curChar).png")
+          let tooSmall = cb[2] < 5 && cb[3] < 5
+          let tooWide = cb[3] / cb[2] > 10
+          let tooTall = cb[2] / cb[3] > 20
+          if tooSmall || tooWide || tooTall {
+            print("misfit \(cb)")
+          } else {
+            foundChars.append(cb)
+            if shouldDebug && debugImg != nil {
+              images.writeCGImage(image: images.cropImage(debugImg!, box: CGRect(x: cb[0] / 2, y: cb[1] / 2, width: cb[2] / 2, height: cb[3] / 2)), to: "/tmp/screen/testchar-\(id)-\(curChar).png")
+            }
           }
+          // after processing new char, move x to end of char
+          x += cb[2] / 2 + 1
+          y = 0
+          curChar += 1
         }
-        // after processing new char, move x to end of char
-        x += cb[2] / 2
-        y = 0
-        curChar += 1
       }
     }
     if shouldDebug && debugImg != nil {
       if let img = images.imageFromArray(pixels: pixels!, width: imgW, height: imgH) {
-        Images().writeCGImage(image: img, to: "/tmp/screen/testoutline-\(id).png", resolution: 72) // write img
+        Images().writeCGImage(image: img, to: "/tmp/screen/edgehits-\(id).png", resolution: 72) // write img
       }
     }
     debug("Characters.find() \(foundChars.count): \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
@@ -106,13 +113,13 @@ class Characters {
 
   func findCharacter(startX: Int, startY: Int, maxHeight: Int) -> [Int] {
     var minY = startY + maxHeight
-    var maxHeight = startY
+    var foundHeight = startY
     var maxX = startX
     var x = startX - 1
     var foundAt = Dictionary<Int, Bool>()
     var noPixelStreak = 0
-    let strideAmt = maxHeight > 14 ? 2 : 1 // more precise on smaller lines
-    let maxNoPixels = strideAmt
+    let strideAmt = maxHeight > 30 ? 2 : 1 // more precise on smaller lines
+    let maxNoPixels = strideAmt + 1
     let yColStride = stride(from: 0, to: maxHeight * 2, by: strideAmt)
     while noPixelStreak <= maxNoPixels {
       let firstLoop = x <= startX + 2
@@ -123,42 +130,45 @@ class Characters {
         let curPos = yP * perRow + x
         if buffer[curPos] < maxLuma {
           foundAt[curPos] = true
-          // count it if the leftward pixels touch
-          let hasNeighbor = firstLoop ||
-            foundAt[yP * perRow + x - 1] // left one
+          let touchingPrevious = yP + strideAmt >= foundHeight
+          let foundClose = foundAt[yP * perRow + x - 1] // left one
             ?? foundAt[(yP - 1) * perRow + x - 1] // left up
             ?? foundAt[(yP + 1) * perRow + x - 1] // left down
             ?? foundAt[yP * perRow + x - 1] // left
             ?? false
-          
-          let hasConnection = hasNeighbor && yP + strideAmt >= maxHeight
-          if firstLoop || hasConnection {
+          let foundFar = foundClose
+            || foundAt[(yP + 2) * perRow + x - 1] // down down left
+            ?? foundAt[(yP + 1) * perRow + x - 2] // down left left
+            ?? foundAt[(yP - 2) * perRow + x - 1] // up up left
+            ?? foundAt[(yP - 1) * perRow + x - 2] // up left left
+            //            ?? foundAt[yP * perRow + x - 2] // left left
+            ?? false
+          if firstLoop || touchingPrevious && (foundClose || foundFar) {
             noPixelStreak = 0
             maxX = x
             if yP < minY {
               minY = yP
             }
-            if yP > maxHeight {
-              maxHeight = yP
+            if yP > foundHeight {
+              foundHeight = yP
             }
           }
         }
       }
     }
-//    if shouldDebug {
-//      debug("broke streak")
-//      for yOff in yColStride {
-//        let yP = yOff + startY
-//        let curPos = yP * perRow + x
-//        let lastPos = yP * perRow + x - 1
-//        debug("\(foundAt[lastPos] ?? false) | \(foundAt[curPos] ?? false)")
-//      }
-//    }
+    if shouldDebug {
+      debug("end on \(x)")
+      for yOff in yColStride {
+        let yP = yOff + startY
+        let curPos = yP * perRow + x
+        debug("\(foundAt[curPos - 3] ?? false) |\(foundAt[curPos - 2] ?? false) | \(foundAt[curPos - 1] ?? false) | \(foundAt[curPos] ?? false) .. \(curPos - 1) | \(curPos)")
+      }
+    }
     return [
       startX,
       minY,
       maxX - startX + 2,
-      maxHeight - startY - 24
+      foundHeight - startY
     ]
   }
 
@@ -200,7 +210,7 @@ class Characters {
           let lumaVal = luma < 150 ? "0 " : "255 " // warning, doing any sort of string conversion here slows it down bigly
           output += lumaVal
           if shouldDebug && debugID > -1 {
-            let brt = UInt8(luma < 150 ? 0 : 255)
+            let brt = UInt8(luma < self.maxLuma ? 0 : 255)
             pixels!.append(PixelData(a: 255, r: brt, g: brt, b: brt))
           }
         }

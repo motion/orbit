@@ -125,6 +125,7 @@ final class Recorder: NSObject {
   }
   
   func screenshotBox(box: Box, buffer: CMSampleBuffer, bufferPointer: UnsafeMutablePointer<UInt8>, perRow: Int, findContent: Bool = false) {
+    let shouldDebug = true
     // clear old files
     rmAllInside(URL(fileURLWithPath: box.screenDir!))
     let startAll = DispatchTime.now()
@@ -141,6 +142,10 @@ final class Recorder: NSObject {
       height: Int(-box.height * 2)
     )
     let cgImage = filters.imageFromBuffer(context, sampleBuffer: buffer, cropRect: cropRect)!
+    if shouldDebug {
+      print("box \(box)")
+      print("cgImage size \(cgImage.width) \(cgImage.height)")
+    }
     if (!findContent) {
       print("dont find content")
       images.writeCGImage(image: cgImage, to: outPath)
@@ -169,14 +174,16 @@ final class Recorder: NSObject {
     }
     // found content
     let bb = biggestBox!
-    let bX = bb.x_start * boxFindScale
-    let bY = bb.y_start * boxFindScale
-    let bW = bb.getWidth() * boxFindScale
-    let bH = bb.getHeight() * boxFindScale
-    let frame = [bX, bY, bW, bH]
-    let cropBox = CGRect(x: bX, y: bY, width: bW, height: bH)
-//    let cropBoxLarge = CGRect(x: bX * 2, y: bY * 2, width: bW * 2, height: bH * 2)
-    print("! [\(bX), \(bY), \(bW), \(bH)]")
+    // full sizes
+    let frame = [
+      bb.x_start * boxFindScale + box.x,
+      bb.y_start * boxFindScale + box.y,
+      bb.getWidth() * boxFindScale,
+      bb.getHeight() * boxFindScale
+    ]
+    let cropBox = CGRect(x: frame[0] - box.x, y: frame[1] - box.y, width: frame[2], height: frame[3])
+    // send out to world frame offset
+    print("! [\(frame[0]), \(frame[1]), \(frame[2]), \(frame[3]))]")
     if box.screenDir == nil {
       return
     }
@@ -184,11 +191,11 @@ final class Recorder: NSObject {
 //    let ocrWriteImage = images.cropImage(filters.filterImageForOCR(image: cgImageLarge), box: cropBoxLarge)
     let ocrCharactersImage = images.cropImage(filters.filterImageForOCRCharacterFinding(image: cgImage), box: cropBox)
     print("2. filter for ocr: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
-    
+
     // find vertical sections
-    let scale = 2 // scale down denominator
-    let vWidth = bW / scale
-    let vHeight = bH / scale
+    let lineFindScaling = 2 // scale down denominator
+    let vWidth = frame[2] / lineFindScaling
+    let vHeight = frame[3] / lineFindScaling
     start = DispatchTime.now()
     let verticalImage = filters.filterForVerticalContentFinding(image: images.resize(ocrCharactersImage, width: vWidth, height: vHeight)!)
     let verticalImageRep = NSBitmapImageRep(cgImage: verticalImage)
@@ -234,7 +241,7 @@ final class Recorder: NSObject {
         }
       }
     }
-    print("4. find verticals \(verticalSections.count): \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+    print("4. find verticals: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms --  \(verticalSections.description)")
     start = DispatchTime.now()
     // second loop - find lines in sections
     var sectionLines = Dictionary<Int, [LinePositions]>()
@@ -292,7 +299,6 @@ final class Recorder: NSObject {
     start = DispatchTime.now()
     // third loop
     // for each VERTICAL SECTION, get characters
-    let shouldDebug = true
     for id in sectionLines.keys {
       let lines = sectionLines[id]!
       let perThread = max(1, lines.count / threads)
@@ -303,7 +309,7 @@ final class Recorder: NSObject {
       let characters = Characters(
         data: bufferPointer,
         perRow: perRow,
-        maxLuma: 100,
+        maxLuma: 240,
         debug: shouldDebug,
         debugDir: box.screenDir!,
         debugImg: cgImage
@@ -311,24 +317,27 @@ final class Recorder: NSObject {
       // find characters
       func processLine(_ index: Int) {
         let line = lines[index]
-        let padX = max(6, scale * 2)
-        let padY = max(8, scale / 2)
-        // scale bounds for line
-        //        print("\(frame[2], line.width * scale + pad * 3)")
-        let bounds = [
-          line.x * scale - padX + frame[0],
-          line.y * scale - padY + frame[1],
-          min(frame[2], line.width * scale + padX * 2),
-          min(frame[3], line.height * scale + padY * 2)
+        let scl = lineFindScaling
+        let padX = 6
+        let padY = 10
+        let lineBounds = [
+          line.x * scl - padX + frame[0],
+          line.y * scl - padY + frame[1],
+          // add min in case padX/padY go too far
+          min(frame[2], line.width * scl + padX * 2),
+          min(frame[3], line.height * scl + padY * 2)
         ]
+        if shouldDebug {
+          print("process line at bounds \(lineBounds)")
+        }
         // finds characters
-        let rects = characters.find(id: index, bounds: bounds)
+        let rects = characters.find(id: index, bounds: lineBounds)
         foundTotal += rects.count
         // debug line
         if shouldDebug {
           images.writeCGImage(
-            image: images.cropImage(ocrCharactersImage, box: CGRect(x: bounds[0] - frame[0], y: bounds[1] - frame[1], width: bounds[2], height: bounds[3])),
-            to: "\(box.screenDir!)/sectionin-\(box.id)-\(id)-line-\(index).png"
+            image: images.cropImage(ocrCharactersImage, box: CGRect(x: lineBounds[0] - frame[0], y: lineBounds[1] - frame[1], width: lineBounds[2], height: lineBounds[3])),
+            to: "\(box.screenDir!)/linein-\(box.id)-\(id)-\(index).png"
           )
         }
         // write characters
@@ -377,6 +386,9 @@ final class Recorder: NSObject {
     images.writeCGImage(image: cgImage, to: "\(box.screenDir!)/\(box.id)-original.png")
     //    images.writeCGImage(image: ocrWriteImage, to: outPath)
     //    images.writeCGImage(image: cgImageLarge, to: "\(box.screenDir!)/\(box.id)-cgimage-large.png")
+    
+    session.stopRunning()
+    exit(0)
   }
   
   func hasBoxChanged(box: Box, buffer: UnsafeMutablePointer<UInt8>, perRow: Int) -> Bool {

@@ -26,20 +26,20 @@ struct Options: Decodable {
 
 func record() throws {
   // for release
-  let json = arguments.first!.data(using: .utf8)!
-  let options = try JSONDecoder().decode(Options.self, from: json)
+//  let json = arguments.first!.data(using: .utf8)!
+//  let options = try JSONDecoder().decode(Options.self, from: json)
   // for testing
-//  let options = Options(
-//    fps: 10,
-//    boxes: [
-//      Box(id: "screen", x: 0, y: 24, width: 1166, height: 980, screenDir: "/tmp/screen", findContent: true, initialScreenshot: true)
-//    ],
-//    showCursor: true,
-//    displayId: "main",
-//    videoCodec: "mp4",
-//    sampleSpacing: 10,
-//    sensitivity: 2
-//  )
+  let options = Options(
+    fps: 10,
+    boxes: [
+      Box(id: "screen", x: 0, y: 0, width: 1000, height: 900, screenDir: "/tmp/screen", findContent: true, initialScreenshot: true)
+    ],
+    showCursor: true,
+    displayId: "main",
+    videoCodec: "mp4",
+    sampleSpacing: 10,
+    sensitivity: 2
+  )
   
   recorder = try Recorder(
     fps: options.fps,

@@ -8,7 +8,7 @@ class Characters {
   private var debugImg: CGImage? = nil
   private var debugDir = ""
   private var maxLuma = 0
-
+  private let moves = Moves()
 
   init(data: UnsafeMutablePointer<UInt8>, perRow: Int, maxLuma: Int, debug: Bool, debugDir: String?, debugImg: CGImage?) {
     self.maxLuma = maxLuma // higher == allow lighter
@@ -121,9 +121,6 @@ class Characters {
     let maxVenture = 250 // most amount to go without finding new bound before give up
     var curTry = 0
     var lastMove = [0, 1] // start going down
-    
-    let wheel = clockwise + clockwise
-    let maxAttempts = clockwise.count - 2
     while true {
       curTry += 1
       if curTry > maxVenture {
@@ -142,46 +139,18 @@ class Characters {
       func isBlack(_ pos: Int) -> Bool {
         return buffer[pos] < maxLuma
       }
-      let preferredDirection = wheel[]
-      for attempt in preferredDirection {
+      for attempt in moves.clockwise[lastMove[0]]![lastMove[1]]! {
         let next = move(attempt)
-        if visited[next] { continue }
-        if isBlack(next) {
-          x += next[0]
-          y += next[1]
-        }
+        if visited[next] != nil { continue }
+        if !isBlack(next) { continue }
+        lastMove = attempt
+        x += attempt[0]
+        y += attempt[1]
+        if x > endPoint[0] { endPoint[0] = x }
+        if x < startPoint[0] { startPoint[0] = x }
+        if y > endPoint[1] { endPoint[1] = y }
+        if y < startPoint[1] { startPoint[1] = y }
       }
-      
-      outerloop: for x in -1...1 {
-        for y in -1...1 {
-          // avoid stillness
-          if x == 0 && y == 0 { continue }
-          let backwards = [-lastMove[0], -lastMove[1]]
-          // avoid backtracking
-          if x == backwards[0] && y == backwards[0] { continue }
-          let attempt = [x, y]
-          let filled = isBlack(x, y: y)
-          if filled {
-            // try going in preferred direction
-            while !happy {
-              
-            }
-            
-            // else go forward
-            if attempt == lastMove {
-              nextPos = attempt
-              break outerloop
-            }
-          }
-        }
-      }
-      print("decided on \(nextPos)")
-      x += nextPos[0]
-      y += nextPos[1]
-      if x > endPoint[0] { endPoint[0] = x }
-      if x < startPoint[0] { startPoint[0] = x }
-      if y > endPoint[1] { endPoint[1] = y }
-      if y < startPoint[1] { startPoint[1] = y }
     }
     return [
       startPoint[0],

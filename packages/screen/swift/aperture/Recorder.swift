@@ -198,7 +198,7 @@ final class Recorder: NSObject {
     // first loop - find vertical sections
     var imgData = [[Int]](repeating: [Int](repeating: 0, count: Int(vHeight)), count: Int(vWidth))
     var verticalSections = Dictionary<Int, Int>() // start => end
-    let colHeightMin = 3
+    let colHeightMin = 4
     let colStreakMin = 4
     var colStreak = 0
     let colMissMax = 8
@@ -234,7 +234,7 @@ final class Recorder: NSObject {
         }
       }
     }
-    print("4. find verticals: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+    print("4. find verticals \(verticalSections.count): \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     start = DispatchTime.now()
     // second loop - find lines in sections
     var sectionLines = Dictionary<Int, [LinePositions]>()
@@ -303,7 +303,7 @@ final class Recorder: NSObject {
       let characters = Characters(
         data: bufferPointer,
         perRow: perRow,
-        maxLuma: 255,
+        maxLuma: 130,
         debug: shouldDebug,
         debugDir: box.screenDir!,
         debugImg: cgImage

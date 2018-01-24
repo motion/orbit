@@ -34,9 +34,8 @@ class Characters {
     var x = 0
     var y = 0
     let maxHeightCheck = imgH - imgH / 4
-    var minYO = 10000
     while true {
-      //self.shouldDebug = id == 0 && curChar == 2
+//      self.shouldDebug = id == 1 && curChar == 2
       // loop through from ltr, then ttb
       if y == imgH - 1 {
         x += 1
@@ -63,22 +62,21 @@ class Characters {
         pixels![x + y * imgW] = PixelData(a: 255, r: luma, g: luma, b: luma)
       }
       if isBlack {
+        debug("-- line \(id), char \(curChar) starts \(x, y)")
         if shouldDebug && debugImg != nil {
           let charImgIn = images.cropImage(debugImg!, box: CGRect(x: xO / 2, y: yO / 2 - 24, width: 50, height: 50))
           images.writeCGImage(image: charImgIn, to: "/tmp/screen/testinline-\(id)-char-\(curChar).png")
         }
-        minYO = min(yO, minYO)
         let cb = self.findCharacter(
           startX: xO,
           startY: imgY,
-          maxHeight: imgH
+          maxHeight: imgH * 2
         )
-        let tooThin = cb[2] < 5
-        let tooShort = cb[3] < 5
-        let tooWide = cb[3] / cb[2] > 6
-        let tooTall = cb[2] / cb[3] > 10
-        if tooThin || tooShort || tooWide || tooTall {
-          debug("misfit \(cb)")
+        let tooSmall = cb[2] < 5 && cb[3] < 5
+        let tooWide = cb[3] / cb[2] > 10
+        let tooTall = cb[2] / cb[3] > 20
+        if tooSmall || tooWide || tooTall {
+          print("misfit \(cb)")
         } else {
           foundChars.append(cb)
           if shouldDebug && debugImg != nil {
@@ -89,7 +87,6 @@ class Characters {
         x += cb[2] / 2
         y = 0
         curChar += 1
-        debug("-- line \(id), char \(curChar) starts \(x, y)")
       }
     }
     if shouldDebug && debugImg != nil {
@@ -114,7 +111,7 @@ class Characters {
     var x = startX - 1
     var foundAt = Dictionary<Int, Bool>()
     var noPixelStreak = 0
-    let strideAmt = maxHeight > 30 ? 2 : 1 // more precise on smaller lines
+    let strideAmt = maxHeight > 14 ? 2 : 1 // more precise on smaller lines
     let maxNoPixels = strideAmt
     let yColStride = stride(from: 0, to: maxHeight * 2, by: strideAmt)
     while noPixelStreak <= maxNoPixels {
@@ -127,17 +124,11 @@ class Characters {
         if buffer[curPos] < maxLuma {
           foundAt[curPos] = true
           // count it if the leftward pixels touch
-          let foundNear = firstLoop ||
+          let hasConnection = firstLoop ||
             foundAt[yP * perRow + x - 1] // left one
             ?? foundAt[(yP - 1) * perRow + x - 1] // left up
-            ?? foundAt[(yP + 2) * perRow + x - 1] // left down
-            ?? false
-          let hasConnection = foundNear
-            || foundAt[yP * perRow + x - 2] // left two
-            ?? foundAt[(yP - 2) * perRow + x - 2] // left two
-            ?? foundAt[(yP + 2) * perRow + x - 2] // left two
-            ?? foundAt[(yP - 2) * perRow + x - 1] // left up two
-            ?? foundAt[(yP + 1) * perRow + x - 2] // left down two
+            ?? foundAt[(yP + 1) * perRow + x - 1] // left down
+            ?? foundAt[yP * perRow + x - 1] // left
             ?? false
           if hasConnection {
             noPixelStreak = 0
@@ -152,11 +143,20 @@ class Characters {
         }
       }
     }
+//    if shouldDebug {
+//      debug("broke streak")
+//      for yOff in yColStride {
+//        let yP = yOff + startY
+//        let curPos = yP * perRow + x
+//        let lastPos = yP * perRow + x - 1
+//        debug("\(foundAt[lastPos] ?? false) | \(foundAt[curPos] ?? false)")
+//      }
+//    }
     return [
       startX,
       minY,
       maxX - startX + 2,
-      maxY - startY - 2
+      maxY - startY - 24
     ]
   }
 

@@ -159,17 +159,6 @@ class Characters {
             break
           }
         }
-        if !success {
-          // expand radius y
-          for attempt in moves.clockwise[lastMove[0]]![lastMove[1]]! {
-            let bigAttempt = [attempt[0], attempt[1] * 2]
-            if tryMove(bigAttempt, avoidVisited: avoidVisited, avoidBacktrack: true) {
-              lastMove = attempt
-              success = true
-              break
-            }
-          }
-        }
         if success {
           break
         }

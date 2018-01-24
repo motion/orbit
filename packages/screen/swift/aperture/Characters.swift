@@ -72,14 +72,24 @@ class Characters {
           startY: imgY,
           maxHeight: imgH
         )
-        foundChars.append(cb)
-        if shouldDebug && debugImg != nil {
-          images.writeCGImage(image: images.cropImage(debugImg!, box: CGRect(x: cb[0] / 2, y: cb[1] / 2 - 24, width: cb[2] / 2, height: cb[3] / 2)), to: "/tmp/screen/testchar-\(id)-\(curChar).png")
+        let tooThin = cb[2] < 5
+        let tooShort = cb[3] < 5
+        let tooWide = cb[2] > 200
+        let tooTall = cb[3] > 200
+        if tooThin || tooShort || tooWide || tooTall {
+          debug("misfit \(cb)")
+        } else {
+          debug("looks good \(cb)")
+          foundChars.append(cb)
+          if shouldDebug && debugImg != nil {
+            images.writeCGImage(image: images.cropImage(debugImg!, box: CGRect(x: cb[0] / 2, y: cb[1] / 2 - 24, width: cb[2] / 2, height: cb[3] / 2)), to: "/tmp/screen/testchar-\(id)-\(curChar).png")
+          }
         }
         // after processing new char, move x to end of char
         x += cb[2] / 2 + 1
         y = 0
         curChar += 1
+        debug("-- line \(id), char \(curChar) starts \(x, y)")
       }
     }
     if shouldDebug && debugImg != nil {
@@ -103,28 +113,32 @@ class Characters {
     var minY = startY + maxHeight
     var maxY = startY
     var maxX = startX
-    var x = startX
-    let blackLim = 125 // ensure breaks, lower = less black
+    var x = startX - 1
+    let blackLim = 185 // ensure breaks, lower = less black
     var foundAt = Dictionary<Int, Bool>()
     var foundPixels = true
-    var firstLoop = true
     while foundPixels {
+      let firstLoop = x <= startX + 2
       x += 1
       foundPixels = false
       for yOff in 0...maxHeight {
         let yP = yOff + startY
         let curPos = yP * perRow + x
         if buffer[curPos] < blackLim {
-//          debug("foundPixel \(yP) \(minY) \(yOff) \(buffer[curPos] < blackLim)")
           foundAt[curPos] = true
+          if firstLoop {
+            foundPixels = true
+            continue
+          }
           // count it if the leftward pixels touch
-          let hasConnection = foundAt[yP * perRow + x - 1] // left one
+          let hasConnection =
+            foundAt[yP * perRow + x - 1] // left one
             ?? foundAt[yP * perRow + x - 2] // left two
             ?? foundAt[(yP - 1) * perRow + x - 1] // left up
             ?? foundAt[(yP - 2) * perRow + x - 1] // left up two
             ?? foundAt[(yP + 2) * perRow + x - 1] // left down
-            ?? foundAt[(yP + 2) * perRow + x - 2] // left down two
-          if firstLoop || hasConnection != nil {
+            ?? foundAt[(yP + 1) * perRow + x - 2] // left down two
+          if hasConnection != nil {
             foundPixels = true
             maxX = x
             if yP > minY {
@@ -136,7 +150,9 @@ class Characters {
           }
         }
       }
-      firstLoop = false
+      if !foundPixels {
+        print("didnt find pixels \(x)")
+      }
     }
     return [
       startX,

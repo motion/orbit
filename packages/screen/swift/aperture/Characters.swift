@@ -9,7 +9,7 @@ class Characters {
   private var debugImg: CGImage? = nil
   private var debugDir = ""
   private var maxLuma = 0
-  private let moves = Moves()
+  private let clockwise = Moves().clockwise
 
   init(data: UnsafeMutablePointer<UInt8>, perRow: Int, maxLuma: Int, debug: Bool, debugDir: String?, debugImg: CGImage?) {
     self.maxLuma = maxLuma // higher == allow lighter
@@ -132,7 +132,6 @@ class Characters {
     var curTry = 0
     var curPos = 0
     var foundEnd = false
-    let clockwise = moves.clockwise
     while !foundEnd {
       curPos = y * perRow + x
       curTry += 1
@@ -143,6 +142,7 @@ class Characters {
           foundEnd = true
           break
         }
+        // not black
         if buffer[next] >= maxLuma { continue }
         // update pos
         x += attempt[0]
@@ -152,12 +152,15 @@ class Characters {
         else if x < startPoint[0] { curTry = 0; startPoint[0] = x }
         if y > endPoint[1]        { curTry = 0; endPoint[1] = y }
         else if y < startPoint[1] { curTry = 0; startPoint[1] = y }
-        // update last move
-        if attempt[0] > 1 || attempt[0] < -1 {
-          lastMove = [attempt[0] / 2, attempt[1]]
-        } else if attempt[1] > 1 || attempt[1] < -1 {
-          lastMove = [attempt[0], attempt[1] / 2]
+        // update big move
+        if attempt.count == 3 {
+          if attempt[2] == 1 { // big x
+            lastMove = [attempt[0] / 2, attempt[1]]
+          } else { // big y
+            lastMove = [attempt[0], attempt[1] / 2]
+          }
         } else {
+          // update normal move
           lastMove = attempt
         }
         break

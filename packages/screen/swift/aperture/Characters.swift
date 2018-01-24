@@ -37,10 +37,6 @@ class Characters {
     var y = 0
     let maxHeightCheck = imgH - imgH / 4
     while true {
-      // DISABLE ME PLEASE
-      if curChar > 2 {
-        break
-      }
 //      self.shouldDebug = id == 0 && curChar == 0
       // loop through from ltr, then ttb
       if y == imgH - 1 {
@@ -99,11 +95,19 @@ class Characters {
             foundChars.append(cb)
           }
           // done w new char
-          print("cb3 x \(x) \(cb[3])")
-          x = cb[3] + 10 // add endX
+          debug("x \(x) \(cb)")
+          var nextX = cb[3]  // add endX
+          while nextX <= x + 2 {
+            nextX += 1
+          }
+          x = nextX
           y = 0
           curChar += 1
         }
+      }
+      if curChar > 10 {
+        print("todo dsiabled")
+        break
       }
     }
     if pixels != nil && pixels!.count > 0 && debugImg != nil {
@@ -146,14 +150,11 @@ class Characters {
       if curTry > exaust { debug("max venture"); break }
       if curTry > 1 && x == startX && y == startY - 1 { debug("bounded"); break }
 
-      func tryMove(_ attempt: [Int], avoidVisited: Bool, avoidBacktrack: Bool) -> Bool {
+      func tryMove(_ attempt: [Int], avoidVisited: Bool) -> Bool {
         let next = move(attempt)
         if avoidVisited && visited[next] != nil { return false }
         if !isBlack(next) { return false }
         let backtrack = attempt[0] == -lastMove[0] && attempt[1] == -lastMove[1]
-        if avoidBacktrack && backtrack {
-          return false
-        }
         x += attempt[0]
         y += attempt[1]
         if x > endPoint[0]   { curTry = 0; endPoint[0] = x }
@@ -164,39 +165,37 @@ class Characters {
       }
       var success = false
       for avoidVisited in [true, false] {
-        for avoidBacktrack in [true, false] {
+        for attempt in moves.clockwise[lastMove[0]]![lastMove[1]]! {
+          if tryMove(attempt, avoidVisited: avoidVisited) {
+            lastMove = attempt
+            success = true
+            break
+          }
+        }
+        if !success {
+          // expand radius y
           for attempt in moves.clockwise[lastMove[0]]![lastMove[1]]! {
-            if tryMove(attempt, avoidVisited: avoidVisited, avoidBacktrack: avoidBacktrack) {
+            let bigAttempt = [attempt[0], attempt[1] * 2]
+            if tryMove(bigAttempt, avoidVisited: avoidVisited) {
               lastMove = attempt
               success = true
               break
             }
           }
-          if !success {
-            // expand radius y
-            for attempt in moves.clockwise[lastMove[0]]![lastMove[1]]! {
-              let bigAttempt = [attempt[0], attempt[1] * 2]
-              if tryMove(bigAttempt, avoidVisited: avoidVisited, avoidBacktrack: avoidBacktrack) {
-                lastMove = attempt
-                success = true
-                break
-              }
+        }
+        if !success {
+          // expand radius x
+          for attempt in moves.clockwise[lastMove[0]]![lastMove[1]]! {
+            let bigAttempt = [attempt[0] * 2, attempt[1]]
+            if tryMove(bigAttempt, avoidVisited: avoidVisited) {
+              lastMove = attempt
+              success = true
+              break
             }
           }
-          if !success {
-            // expand radius x
-            for attempt in moves.clockwise[lastMove[0]]![lastMove[1]]! {
-              let bigAttempt = [attempt[0] * 2, attempt[1]]
-              if tryMove(bigAttempt, avoidVisited: avoidVisited, avoidBacktrack: avoidBacktrack) {
-                lastMove = attempt
-                success = true
-                break
-              }
-            }
-          }
-          if success {
-            break
-          }
+        }
+        if success {
+          break
         }
       }
     }

@@ -183,7 +183,7 @@ final class Recorder: NSObject {
     ]
     let cropBox = CGRect(x: frame[0] - box.x, y: frame[1] - box.y, width: frame[2], height: frame[3])
     // send out to world frame offset
-    print("! [\(frame[0]), \(frame[1]), \(frame[2]), \(frame[3]))]")
+    print("! [\(frame[0]), \(frame[1]), \(frame[2]), \(frame[3])]")
     if box.screenDir == nil {
       return
     }

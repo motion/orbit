@@ -28,15 +28,15 @@ class Characters {
     let imgH = bounds[3]
     var foundChars = [[Int]]()
     var pixels: [PixelData]? = nil
-    if debugImg != nil {
-       pixels = [PixelData](repeating: PixelData(a: 255, r: 255, g: 255, b: 255), count: imgW * imgH)
-    }
     var curChar = 0
     // we control the sticks for more speed
     var x = 0
     var y = 0
     while true {
 //      self.shouldDebug = id == 0 && curChar == 0
+      if shouldDebug && pixels == nil && debugImg != nil {
+        pixels = [PixelData](repeating: PixelData(a: 255, r: 255, g: 255, b: 255), count: imgW * imgH)
+      }
       // loop through from ltr, then ttb
       if y == imgH - 1 {
         x += 1
@@ -111,6 +111,10 @@ class Characters {
     }
   }
   
+  func isBlack(_ pos: Int) -> Bool {
+    return buffer[pos] < maxLuma
+  }
+  
   func findCharacter(startX: Int, startY: Int, maxHeight: Int) -> [Int] {
     let exaust = 450 // most amount to go without finding new bound before give up
     var visited = Dictionary<Int, Bool?>()
@@ -125,9 +129,6 @@ class Characters {
     func move(_ dir: [Int]) -> Int {
       return curPos + dir[0] + dir[1] * perRow
     }
-    func isBlack(_ pos: Int) -> Bool {
-      return buffer[pos] < maxLuma
-    }
     while true {
       curPos = y * perRow + x
       visited[curPos] = true
@@ -139,7 +140,6 @@ class Characters {
         if avoidVisited && visited[next] != nil { return false }
         if !isBlack(next) { return false }
         if avoidBacktrack && attempt[0] == -lastMove[0] && attempt[1] == -lastMove[1] {
-          print("backtracka avoid")
           return false
         }
         x += attempt[0]
@@ -150,16 +150,9 @@ class Characters {
         if y < startPoint[1] { curTry = 0; startPoint[1] = y }
         return true
       }
-      var success = false
-      for avoidVisited in [true, false] {
-        for attempt in moves.clockwise[lastMove[0]]![lastMove[1]]! {
-          if tryMove(attempt, avoidVisited: avoidVisited, avoidBacktrack: true) {
-            lastMove = attempt
-            success = true
-            break
-          }
-        }
-        if success {
+      for attempt in moves.clockwise[lastMove[0]]![lastMove[1]]! {
+        if tryMove(attempt, avoidVisited: true, avoidBacktrack: true) {
+          lastMove = attempt
           break
         }
       }

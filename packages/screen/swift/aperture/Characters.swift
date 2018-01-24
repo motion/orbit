@@ -33,8 +33,9 @@ class Characters {
     var x = 0
     var y = 0
     let maxHeightCheck = imgH - imgH / 4
+    var minYO = 10000
     while true {
-      self.shouldDebug = curChar == 0
+      //self.shouldDebug = id == 0 && curChar == 2
       // loop through from ltr, then ttb
       if y == imgH - 1 {
         x += 1
@@ -65,9 +66,10 @@ class Characters {
           let charImgIn = images.cropImage(debugImg!, box: CGRect(x: xO / 2, y: yO / 2 - 24, width: 50, height: 50))
           images.writeCGImage(image: charImgIn, to: "/tmp/screen/testin-line-\(id)-char-\(curChar).png")
         }
+        minYO = min(yO, minYO)
         let cb = self.findCharacter(
           startX: xO,
-          startY: yO,
+          startY: imgY,
           maxHeight: imgH
         )
         foundChars.append(cb)
@@ -75,7 +77,7 @@ class Characters {
           images.writeCGImage(image: images.cropImage(debugImg!, box: CGRect(x: cb[0] / 2, y: cb[1] / 2 - 24, width: cb[2] / 2, height: cb[3] / 2)), to: "/tmp/screen/testchar-\(id)-\(curChar).png")
         }
         // after processing new char, move x to end of char
-        x += cb[2] / 2 + 2
+        x += cb[2] / 2 + 1
         y = 0
         curChar += 1
       }
@@ -98,6 +100,7 @@ class Characters {
   }
 
   func findCharacter(startX: Int, startY: Int, maxHeight: Int) -> [Int] {
+    var minY = startY + maxHeight
     var maxY = startY
     var maxX = startX
     var x = startX
@@ -106,38 +109,40 @@ class Characters {
     var foundPixels = true
     var firstLoop = true
     while foundPixels {
-      print("move row")
-      if !firstLoop {
-        x += 1
-      }
+      x += 1
       foundPixels = false
       for yOff in 0...maxHeight {
         let yP = yOff + startY
         let curPos = yP * perRow + x
         if buffer[curPos] < blackLim {
-          print("\(yP) \(maxY) \(yOff) \(buffer[curPos] < blackLim)")
+//          debug("foundPixel \(yP) \(minY) \(yOff) \(buffer[curPos] < blackLim)")
+          foundAt[curPos] = true
           // count it if the leftward pixels touch
-          let leftPx = foundAt[yP * perRow + x - 1]
-          let leftUpPx = foundAt[(yP - 1) * perRow + x - 1]
-          let leftDownPx = foundAt[(yP + 1) * perRow + x - 1]
-          if firstLoop || leftPx != nil || leftUpPx != nil || leftDownPx != nil {
-            foundAt[curPos] = true
+          let hasConnection = foundAt[yP * perRow + x - 1] // left one
+            ?? foundAt[yP * perRow + x - 2] // left two
+            ?? foundAt[(yP - 1) * perRow + x - 1] // left up
+            ?? foundAt[(yP - 2) * perRow + x - 1] // left up two
+            ?? foundAt[(yP + 2) * perRow + x - 1] // left down
+            ?? foundAt[(yP + 2) * perRow + x - 2] // left down two
+          if firstLoop || hasConnection != nil {
             foundPixels = true
             maxX = x
-            if yP > maxY {
-              print("new bottom right \(x), \(maxHeight) \(startY)")
+            if yP > minY {
+              minY = yP
+            }
+            if yP < maxY {
               maxY = yP
             }
           }
         }
-        firstLoop = false
       }
+      firstLoop = false
     }
     return [
       startX,
-      startY,
-      maxX - startX,
-      startY + maxHeight
+      minY - 23,
+      maxX - startX + 4,
+      min(maxY / 3 + 2, maxHeight * 2)
     ]
   }
 
@@ -168,7 +173,7 @@ class Characters {
         scaleY = 1 / (dbl / height)
       }
       var pixels: [PixelData]? = nil
-      if debugID > -1 {
+      if shouldDebug && debugID > -1 {
         pixels = [PixelData]()
       }
       for y in 0..<28 {
@@ -178,14 +183,14 @@ class Characters {
           let luma = buffer[(minY + yS) * perRow + minX + xS]
           let lumaVal = luma < 150 ? "0 " : "255 " // warning, doing any sort of string conversion here slows it down bigly
           output += lumaVal
-          if debugID > -1 {
+          if shouldDebug && debugID > -1 {
             let brt = UInt8(luma < 150 ? 0 : 255)
             pixels!.append(PixelData(a: 255, r: brt, g: brt, b: brt))
           }
         }
       }
       output += "\n"
-      if debugID > -1 {
+      if shouldDebug && debugID > -1 {
         let outFile = "\(debugDir)/x-line-\(debugID)-char-\(index).png"
         self.debug("write \(outFile)")
         images.writeCGImage(image: images.imageFromArray(pixels: pixels!, width: 28, height: 28)!, to: outFile, resolution: 72) // write img

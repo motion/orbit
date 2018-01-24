@@ -292,6 +292,7 @@ final class Recorder: NSObject {
     start = DispatchTime.now()
     // third loop
     // for each VERTICAL SECTION, get characters
+    let shouldDebug = true
     for id in sectionLines.keys {
       let lines = sectionLines[id]!
       let perThread = max(1, lines.count / threads)
@@ -302,7 +303,7 @@ final class Recorder: NSObject {
       let characters = Characters(
         data: bufferPointer,
         perRow: perRow,
-        debug: false,
+        debug: shouldDebug,
         debugDir: box.screenDir!,
         debugImg: cgImage
       )
@@ -322,10 +323,12 @@ final class Recorder: NSObject {
         let rects = characters.find(id: index, bounds: bounds)
         foundTotal += rects.count
         // debug line
-        images.writeCGImage(
-          image: images.cropImage(ocrCharactersImage, box: CGRect(x: bounds[0] - frame[0], y: bounds[1] - frame[1], width: bounds[2], height: bounds[3])),
-          to: "\(box.screenDir!)/\(box.id)-section-\(id)-line-\(index).png"
-        )
+        if shouldDebug {
+          images.writeCGImage(
+            image: images.cropImage(ocrCharactersImage, box: CGRect(x: bounds[0] - frame[0], y: bounds[1] - frame[1], width: bounds[2], height: bounds[3])),
+            to: "\(box.screenDir!)/sectionin-\(box.id)-\(id)-line-\(index).png"
+          )
+        }
         // write characters
         let chars = characters.charsToString(rects: rects, debugID: index)// index) // index < 40 ? index : -1
         lineStrings.insert(chars, at: index)

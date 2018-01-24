@@ -67,8 +67,8 @@ class Characters {
       if isBlack {
         if shouldDebug && debugImg != nil {
           // todo need to handle frame offset here
-          let box = CGRect(x: xO / 2, y: yO / 2, width: 50, height: 50)
-          images.writeCGImage(image: images.cropImage(debugImg!, box: box)!, to: "/tmp/screen/view\(id)-\(curChar).png")
+//          let box = CGRect(x: xO / 2, y: yO / 2, width: 50, height: 50)
+//          images.writeCGImage(image: images.cropImage(debugImg!, box: box)!, to: "/tmp/screen/view\(id)-\(curChar).png")
         }
         let cb = self.findCharacter(
           startX: xO,
@@ -207,8 +207,8 @@ class Characters {
     return [
       startPoint[0], // x
       startPoint[1], // y
-      endPoint[0] - startPoint[0], // width
-      endPoint[1] - startPoint[1], // height
+      endPoint[0] - startPoint[0] + 2, // width
+      endPoint[1] - startPoint[1] + 2, // height
       startX - startPoint[0], // backwards moves
     ]
   }

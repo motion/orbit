@@ -9,6 +9,7 @@ class Characters {
   private var debugDir = ""
   private var maxLuma = 0
 
+
   init(data: UnsafeMutablePointer<UInt8>, perRow: Int, maxLuma: Int, debug: Bool, debugDir: String?, debugImg: CGImage?) {
     self.maxLuma = maxLuma // higher == allow lighter
     self.shouldDebug = debug
@@ -35,7 +36,7 @@ class Characters {
     var y = 0
     let maxHeightCheck = imgH - imgH / 4
     while true {
-//      self.shouldDebug = id == 0 && curChar == 1
+      self.shouldDebug = id == 0 && curChar == 0
       // loop through from ltr, then ttb
       if y == imgH - 1 {
         x += 1
@@ -110,22 +111,19 @@ class Characters {
       print(str)
     }
   }
-
+  
   func findCharacter(startX: Int, startY: Int, maxHeight: Int) -> [Int] {
     var visited = Dictionary<Int, Bool?>()
-    let PX = 1
-    let LEFT = 0
-    let UP = 1
-    let RIGHT = 2
-    let DOWN = 3
     var startPoint = [startX, startY] // top left point
     var endPoint = [startX, startY] // bottom right point
     var x = startX
-    var y = startY - PX
-    let maxVenture = 100 // most amount to go without finding new bound before give up
+    var y = startY - 1
+    let maxVenture = 250 // most amount to go without finding new bound before give up
     var curTry = 0
-    var prevPos = -1
-    var prevDirection = DOWN
+    var lastMove = [0, 1] // start going down
+    
+    let wheel = clockwise + clockwise
+    let maxAttempts = clockwise.count - 2
     while true {
       curTry += 1
       if curTry > maxVenture {
@@ -136,151 +134,54 @@ class Characters {
         debug("back at begin")
         break
       }
-      let curPos = y * perRow + x
+      var curPos = y * perRow + x
       visited[curPos] = true
-      var rightBlack = false
-      var downBlack = false
-      var leftBlack = false
-      var upBlack = false
-      // left
-      let leftIndex = y * perRow + x - PX
-      if visited[leftIndex] == nil && prevPos != leftIndex && buffer[leftIndex] < maxLuma {
-        leftBlack = true
-        if x - PX < startPoint[0] {
-          curTry = 0
-          prevDirection = LEFT
-          x -= PX
-          startPoint[0] = x
-          prevPos = curPos
-          debug("left one")
-//          continue
+      func move(_ dir: [Int]) -> Int {
+        return curPos + dir[0] + dir[1] * perRow
+      }
+      func isBlack(_ pos: Int) -> Bool {
+        return buffer[pos] < maxLuma
+      }
+      let preferredDirection = wheel[]
+      for attempt in preferredDirection {
+        let next = move(attempt)
+        if visited[next] { continue }
+        if isBlack(next) {
+          x += next[0]
+          y += next[1]
         }
       }
-      // up
-      let upIndex = (y - 2 * PX) * perRow + x
-      if visited[upIndex] == nil && prevPos != upIndex && buffer[upIndex] < maxLuma {
-        upBlack = true
-        if y - PX < startPoint[1] {
-          curTry = 0
-          prevDirection = UP
-          y -= PX
-          startPoint[1] = y
-          prevPos = curPos
-          debug("up one")
-//          continue
+      
+      outerloop: for x in -1...1 {
+        for y in -1...1 {
+          // avoid stillness
+          if x == 0 && y == 0 { continue }
+          let backwards = [-lastMove[0], -lastMove[1]]
+          // avoid backtracking
+          if x == backwards[0] && y == backwards[0] { continue }
+          let attempt = [x, y]
+          let filled = isBlack(x, y: y)
+          if filled {
+            // try going in preferred direction
+            while !happy {
+              
+            }
+            
+            // else go forward
+            if attempt == lastMove {
+              nextPos = attempt
+              break outerloop
+            }
+          }
         }
       }
-      // right
-      let rightIndex = y * perRow + x + PX
-      if visited[rightIndex] == nil && prevPos != rightIndex && buffer[rightIndex] < maxLuma {
-        rightBlack = true
-        if x + PX > endPoint[0] {
-          curTry = 0
-          prevDirection = RIGHT
-          x += PX
-          endPoint[0] = x
-          prevPos = curPos
-          debug("right one")
-          continue
-        }
-      }
-      // down
-      let downIndex = (y + PX) * perRow + x
-      if visited[downIndex] == nil && prevPos != downIndex && buffer[downIndex] < maxLuma {
-        downBlack = true
-        if y + PX > endPoint[1] {
-          curTry = 0
-          prevDirection = DOWN
-          y += PX
-          endPoint[1] = y
-          prevPos = curPos
-          debug("down one")
-          continue
-        }
-      }
-      prevPos = curPos
-      // didnt expand the bounds
-      // still need to move the current
-      if prevDirection == LEFT {
-        if downBlack {
-          debug("move down")
-          prevDirection = DOWN
-          y += PX
-        } else if leftBlack {
-          debug("move left")
-          prevDirection = LEFT
-          x -= PX
-        } else if upBlack {
-          debug("move up")
-          prevDirection = UP
-          y -= PX
-        } else {
-          // back right
-          debug("move back right")
-          prevDirection = RIGHT
-          x += PX
-        }
-      }
-      if prevDirection == UP {
-        if leftBlack {
-          debug("move left")
-          prevDirection = LEFT
-          x -= PX
-        } else if upBlack {
-          debug("move up")
-          prevDirection = UP
-          y -= PX
-        } else if rightBlack {
-          debug("move right")
-          prevDirection = RIGHT
-          x += PX
-        } else {
-          // back down
-          debug("move back down")
-          prevDirection = DOWN
-          y += PX
-        }
-      }
-      if prevDirection == RIGHT {
-        if upBlack {
-          debug("move up")
-          prevDirection = UP
-          y -= PX
-        } else if rightBlack {
-          debug("move right")
-          prevDirection = RIGHT
-          x += PX
-        } else if downBlack {
-          debug("move down")
-          prevDirection = DOWN
-          y += PX
-        } else {
-          // back left
-          debug("move back left")
-          prevDirection = LEFT
-          x -= PX
-        }
-      }
-      if prevDirection == DOWN {
-        if rightBlack {
-          debug("move right")
-          prevDirection = RIGHT
-          x += PX
-        } else if downBlack {
-          debug("move down")
-          prevDirection = DOWN
-          y += PX
-        } else if leftBlack {
-          debug("move left")
-          prevDirection = LEFT
-          x -= PX
-        } else {
-          // back up
-          debug("move back up")
-          prevDirection = UP
-          y -= PX
-        }
-      }
+      print("decided on \(nextPos)")
+      x += nextPos[0]
+      y += nextPos[1]
+      if x > endPoint[0] { endPoint[0] = x }
+      if x < startPoint[0] { startPoint[0] = x }
+      if y > endPoint[1] { endPoint[1] = y }
+      if y < startPoint[1] { startPoint[1] = y }
     }
     return [
       startPoint[0],

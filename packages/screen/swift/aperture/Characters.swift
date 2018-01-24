@@ -15,7 +15,7 @@ class Characters {
   private var id = 0
 
   func sdebug() -> Bool {
-    return specialDebug[0] == id && specialDebug[1] == curChar
+    return shouldDebug && specialDebug[0] == id && specialDebug[1] == curChar
   }
 
   init(data: UnsafeMutablePointer<UInt8>, perRow: Int, maxLuma: Int, debug: Bool, debugDir: String?, debugImg: CGImage?) {
@@ -129,8 +129,8 @@ class Characters {
   }
 
   func findCharacter(startX: Int, startY: Int, maxHeight: Int) -> [Int] {
-    let exhaust = 10000 / moves.px // most amount to go without finding new bound before give up
-    var visited = Dictionary<Int, Bool?>()
+    let exhaust = maxHeight / moves.px // most amount to go without finding new bound before give up
+    var visited = Dictionary<Int, Bool?>() // track where we went
     var startPoint = [startX, startY] // top left point
     var endPoint = [startX, startY] // bottom right point
     // start going down as we came
@@ -151,17 +151,17 @@ class Characters {
         break
       }
       var success = false
-      for (index, attempt) in clockwise[lastMove[0]]![lastMove[1]]!.enumerated() {
+      for attempt in clockwise[lastMove[0]]![lastMove[1]]! {
         let next = curPos + attempt[0] + attempt[1] * perRow
         if curTry > 10 && x == startX && y == startY {
           debug("found end")
           foundEnd = true
           break
         }
-        // already visited
-        if visited[next] != nil { continue }
         // not black
         if buffer[next] >= maxLuma { continue }
+        // already visited
+        if visited[next] != nil { continue }
         // found a valid next move
         success = true
         // update pos
@@ -176,13 +176,13 @@ class Characters {
         else if newStartX { curTry = 0; startPoint[0] = x }
         if newStartY { curTry = 0; startPoint[1] = y }
         else if newEndY { curTry = 0; endPoint[1] = y }
-        if sdebug() && curTry == 0 {
-          if newEndX { print("new endX \(x / 2)") }
-          if newStartX { print("new startX \(x / 2)") }
-          if newStartY { print("new startY \(y / 2)") }
-          if newEndY { print("new endY \(y / 2)") }
-        }
-        // update big move
+//        if sdebug() && curTry == 0 {
+//          if newEndX { print("new endX \(x / 2)") }
+//          if newStartX { print("new startX \(x / 2)") }
+//          if newStartY { print("new startY \(y / 2)") }
+//          if newEndY { print("new endY \(y / 2)") }
+//        }
+        // update move
         if attempt.count == 3 {
           if attempt[2] == 1 { // big x
               lastMove = [attempt[0] / 2, attempt[1]]
@@ -190,14 +190,13 @@ class Characters {
               lastMove = [attempt[0], attempt[1] / 2]
             }
         } else {
-          // update normal move
-            lastMove = attempt
+          lastMove = attempt
         }
-        if sdebug() {
-          let xdir = lastMove[0] == -1 ? "left" : lastMove[0] == 0 ? "   " : "right"
-          let ydir = lastMove[1] == -1 ? "up  " : lastMove[1] == 0 ? "   " : "down"
-          print(" .. \(xdir) \(ydir) | \(lastMove[0]) \(lastMove[1]) | attempt \(index)")
-        }
+//        if sdebug() {
+//          let xdir = lastMove[0] == -1 ? "left" : lastMove[0] == 0 ? "   " : "right"
+//          let ydir = lastMove[1] == -1 ? "up  " : lastMove[1] == 0 ? "   " : "down"
+//          print(" .. \(xdir) \(ydir) | \(lastMove[0]) \(lastMove[1]) | attempt \(index)")
+//        }
         break
       }
       if !success {

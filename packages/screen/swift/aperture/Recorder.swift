@@ -366,9 +366,6 @@ final class Recorder: NSObject {
     images.writeCGImage(image: cgImage, to: "\(box.screenDir!)/\(box.id)-original.png")
     //    images.writeCGImage(image: ocrWriteImage, to: outPath)
     //    images.writeCGImage(image: cgImageLarge, to: "\(box.screenDir!)/\(box.id)-cgimage-large.png")
-    
-    session.stopRunning()
-    exit(0)
   }
   
   func hasBoxChanged(box: Box, buffer: UnsafeMutablePointer<UInt8>, perRow: Int) -> Bool {

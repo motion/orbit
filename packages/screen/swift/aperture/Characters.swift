@@ -62,8 +62,8 @@ class Characters {
         pixels![x + y * imgW] = PixelData(a: 255, r: luma, g: luma, b: luma)
       }
       if isBlack {
-        debug("-- line \(id), char \(curChar) starts \(x, y)")
         if shouldDebug && debugImg != nil {
+          debug("-- line \(id), char \(curChar) starts \(x, y)")
           let charImgIn = images.cropImage(debugImg!, box: CGRect(x: xO / 2, y: yO / 2 - 24, width: 50, height: 50))
           images.writeCGImage(image: charImgIn, to: "/tmp/screen/testinline-\(id)-char-\(curChar).png")
         }
@@ -106,7 +106,7 @@ class Characters {
 
   func findCharacter(startX: Int, startY: Int, maxHeight: Int) -> [Int] {
     var minY = startY + maxHeight
-    var maxY = startY
+    var maxHeight = startY
     var maxX = startX
     var x = startX - 1
     var foundAt = Dictionary<Int, Bool>()
@@ -124,20 +124,22 @@ class Characters {
         if buffer[curPos] < maxLuma {
           foundAt[curPos] = true
           // count it if the leftward pixels touch
-          let hasConnection = firstLoop ||
+          let hasNeighbor = firstLoop ||
             foundAt[yP * perRow + x - 1] // left one
             ?? foundAt[(yP - 1) * perRow + x - 1] // left up
             ?? foundAt[(yP + 1) * perRow + x - 1] // left down
             ?? foundAt[yP * perRow + x - 1] // left
             ?? false
-          if hasConnection {
+          
+          let hasConnection = hasNeighbor && yP + strideAmt >= maxHeight
+          if firstLoop || hasConnection {
             noPixelStreak = 0
             maxX = x
             if yP < minY {
               minY = yP
             }
-            if yP > maxY {
-              maxY = yP
+            if yP > maxHeight {
+              maxHeight = yP
             }
           }
         }
@@ -156,7 +158,7 @@ class Characters {
       startX,
       minY,
       maxX - startX + 2,
-      maxY - startY - 24
+      maxHeight - startY - 24
     ]
   }
 

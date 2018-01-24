@@ -186,7 +186,7 @@ final class Recorder: NSObject {
     print("2. filter for ocr: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     
     // find vertical sections
-    let scale = 4 // scale down denominator
+    let scale = 2 // scale down denominator
     let vWidth = bW / scale
     let vHeight = bH / scale
     start = DispatchTime.now()
@@ -303,7 +303,7 @@ final class Recorder: NSObject {
       let characters = Characters(
         data: bufferPointer,
         perRow: perRow,
-        maxLuma: 130,
+        maxLuma: 100,
         debug: shouldDebug,
         debugDir: box.screenDir!,
         debugImg: cgImage
@@ -311,14 +311,15 @@ final class Recorder: NSObject {
       // find characters
       func processLine(_ index: Int) {
         let line = lines[index]
-        let pad = line.height / scale
+        let padX = max(6, scale * 2)
+        let padY = max(8, scale / 2)
         // scale bounds for line
         //        print("\(frame[2], line.width * scale + pad * 3)")
         let bounds = [
-          line.x * scale - pad * 2 + frame[0],
-          line.y * scale - pad * 2 + frame[1],
-          min(frame[2], line.width * scale + pad * 4),
-          min(frame[3], line.height * scale + pad * 4)
+          line.x * scale - padX + frame[0],
+          line.y * scale - padY + frame[1],
+          min(frame[2], line.width * scale + padX * 2),
+          min(frame[3], line.height * scale + padY * 2)
         ]
         // finds characters
         let rects = characters.find(id: index, bounds: bounds)

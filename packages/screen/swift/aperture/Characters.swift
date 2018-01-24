@@ -86,7 +86,7 @@ class Characters {
           }
         }
         // after processing new char, move x to end of char
-        x += cb[2] / 2 + 1
+        x += cb[2] / 2
         y = 0
         curChar += 1
         debug("-- line \(id), char \(curChar) starts \(x, y)")
@@ -142,10 +142,10 @@ class Characters {
           if hasConnection {
             noPixelStreak = 0
             maxX = x
-            if yP > minY {
+            if yP < minY {
               minY = yP
             }
-            if yP < maxY {
+            if yP > maxY {
               maxY = yP
             }
           }
@@ -154,9 +154,9 @@ class Characters {
     }
     return [
       startX,
-      minY - 24 * 2,
+      minY,
       maxX - startX + 2,
-      maxY / 4
+      maxY - startY - 2
     ]
   }
 
@@ -206,7 +206,6 @@ class Characters {
       output += "\n"
       if shouldDebug && debugID > -1 {
         let outFile = "\(debugDir)/x-line-\(debugID)-char-\(index).png"
-        self.debug("write \(outFile)")
         images.writeCGImage(image: images.imageFromArray(pixels: pixels!, width: 28, height: 28)!, to: outFile, resolution: 72) // write img
       }
     }

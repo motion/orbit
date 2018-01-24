@@ -113,7 +113,7 @@ class Characters {
   }
   
   func findCharacter(startX: Int, startY: Int, maxHeight: Int) -> [Int] {
-    let exaust = 250 // most amount to go without finding new bound before give up
+    let exaust = 50 // most amount to go without finding new bound before give up
     var visited = Dictionary<Int, Bool?>()
     var startPoint = [startX, startY] // top left point
     var endPoint = [startX, startY] // bottom right point
@@ -135,23 +135,47 @@ class Characters {
       curTry += 1
       if curTry > exaust { debug("max venture"); break }
       if curTry > 1 && x == startX && y == startY - 1 { debug("bounded"); break }
-      for attempt in moves.clockwise[lastMove[0]]![lastMove[1]]! {
+
+      func tryMove(_ attempt: [Int], avoidVisited: Bool) -> Bool {
         let next = move(attempt)
-        if visited[next] != nil { debug("visited \(next)"); continue }
-        if !isBlack(next) { debug("noblack \(attempt)"); continue }
+        if avoidVisited && visited[next] != nil { debug("visited \(next)"); return false }
+        if !isBlack(next) { debug("noblack \(attempt)"); return false }
         if attempt[0] == -lastMove[0] && attempt[1] == -lastMove[1] {
           debug("backtrack \(attempt)")
         } else {
           debug("move \(attempt)")
         }
-        lastMove = attempt
         x += attempt[0]
         y += attempt[1]
-        if x > endPoint[0] { endPoint[0] = x }
-        if x < startPoint[0] { startPoint[0] = x }
-        if y > endPoint[1] { endPoint[1] = y }
-        if y < startPoint[1] { startPoint[1] = y }
-        break
+        if x > endPoint[0]   { curTry = 0; endPoint[0] = x }
+        if x < startPoint[0] { curTry = 0; startPoint[0] = x }
+        if y > endPoint[1]   { curTry = 0; endPoint[1] = y }
+        if y < startPoint[1] { curTry = 0; startPoint[1] = y }
+        return true
+      }
+      var success = false
+      for avoidVisited in [true, false] {
+        for attempt in moves.clockwise[lastMove[0]]![lastMove[1]]! {
+          if tryMove(attempt, avoidVisited: avoidVisited) {
+            lastMove = attempt
+            success = true
+            break
+          }
+        }
+        if !success {
+          // expand radius
+          for attempt in moves.clockwise[lastMove[0]]![lastMove[1]]! {
+            let bigAttempt = [attempt[0], attempt[1] * 2]
+            if tryMove(bigAttempt, avoidVisited: avoidVisited) {
+              lastMove = attempt
+              success = true
+              break
+            }
+          }
+        }
+        if success {
+          break
+        }
       }
     }
     return [

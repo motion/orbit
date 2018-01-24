@@ -9,7 +9,7 @@ class Characters {
   private var debugImg: CGImage? = nil
   private var debugDir = ""
   private var maxLuma = 0
-  private let clockwise = Moves().clockwise
+  private let moves = Moves()
 
   init(data: UnsafeMutablePointer<UInt8>, perRow: Int, maxLuma: Int, debug: Bool, debugDir: String?, debugImg: CGImage?) {
     self.maxLuma = maxLuma // higher == allow lighter
@@ -127,12 +127,13 @@ class Characters {
     var startPoint = [startX, startY] // top left point
     var endPoint = [startX, startY] // bottom right point
     // start going down as we came
-    var lastMove = [0, 1]
+    var lastMove = [0, moves.px]
     var x = startX
-    var y = startY - 1
+    var y = startY - moves.px
     var curTry = 0
     var curPos = 0
     var foundEnd = false
+    let clockwise = moves.clockwise
     while !foundEnd {
       curPos = y * perRow + x
       visited[curPos] = true

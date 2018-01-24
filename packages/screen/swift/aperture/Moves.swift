@@ -2,105 +2,123 @@ typealias MoveDict = Dictionary<Int, [[Int]]>
 
 class Moves {
   public var clockwise: Dictionary<Int, MoveDict>
+  public var px = 2
 
   init() {
+    let down = [0, px]
+    let rightdown = [px, px]
+    let left = [-px, 0]
+    let upleft = [-px, px]
+    let up = [0, -px]
+    let upright = [px, -px]
+    let right = [px, 0]
+    let downleft = [-px, px]
+    // let rightdowndown = [px, 2 * px, -1]
+    // let leftdowndown = [-px, 2 * px, -1]
+    let fromleftup = [
+      down,
+      downleft,
+      // leftdowndown,
+      left,
+      upleft,
+      up,
+      upright,
+      right,
+      // rightdown,
+    ]
+    let fromleft = [
+      rightdown,
+      downleft,
+      // leftdowndown,
+      left,
+      upleft,
+      up,
+      upright,
+      down,
+      // right,
+    ]
+    let fromleftdown = [
+      right,
+      down,
+      downleft,
+      // leftdowndown,
+      left,
+      upleft,
+      up,
+      rightdown,
+      // upright,
+    ]
+    let fromup = [
+      downleft,
+      // leftdowndown,
+      upleft,
+      up,
+      upright,
+      right,
+      rightdown,
+      left,
+      // down,
+    ]
+    let fromdown = [
+      upright,
+      rightdown,
+      // rightdowndown,
+      down,
+      downleft,
+      // leftdowndown,
+      left,
+      upleft,
+      right,
+      // up,
+    ]
+    let fromrightup = [
+      upleft,
+      up,
+      upright,
+      right,
+      rightdown,
+      down,
+      left,
+      // downleft,
+    ]
+    let fromright = [
+      up,
+      upright,
+      right,
+      rightdown,
+      // rightdowndown,
+      down,
+      downleft,
+      // leftdowndown,
+      upleft,
+      // left,
+    ]
+    let fromrightdown = [
+      upright,
+      right,
+      rightdown,
+      // rightdowndown,
+      down,
+      downleft,
+      // leftdowndown,
+      left,
+      up,
+      // upleft,
+    ]
     clockwise = [
-      -1: [
-        // leftup
-        -1: [
-          [0, 1],   // down
-          [-1, 0],  // left
-          [-1, 1],  // upleft
-          [0, -1],  // up
-          [1, -1],  // upright
-          [1, 0],   // right
-          [-1, 1],  // downleft
-          [1, 1],   // rightdown
-        ],
-        // left
-        0: [
-          [1, 1],   // rightdown
-          [-1, 1],  // downleft
-          [-1, 0],  // left
-          [-1, 1],  // upleft
-          [0, -1],  // up
-          [1, -1],  // upright
-          [0, 1],   // down
-          [1, 0],   // right
-        ],
-        // leftdown
-        1: [
-          [1, 0],   // right
-          [0, 1],   // down
-          [-1, 1],  // downleft
-          [-1, 0],  // left
-          [-1, 1],  // upleft
-          [0, -1],  // up
-          [1, 1],   // rightdown
-          [1, -1],  // upright
-        ]
+      -px: [
+        -px: fromleftup,
+        0: fromleft,
+        px: fromleftdown
       ],
       0: [
-        // up
-        -1: [
-          [-1, 1],  // downleft
-          [-1, 1],  // upleft
-          [0, -1],  // up
-          [1, -1],  // upright
-          [1, 0],   // right
-          [1, 1],   // rightdown
-          [-1, 0],  // left
-          [0, 1],   // down
-        ],
-        // down
-        1: [
-          [1, -1],  // upright
-          [1, 1],   // rightdown
-          [1, 2, -1],   // rightdowndown
-          [0, 1],   // down
-          [-1, 1],  // downleft
-          [-1, 0],  // left
-          [-1, 1],  // upleft
-          [1, 0],   // right
-          [0, -1],  // up
-        ],
+        -px: fromup,
+        px: fromdown,
       ],
-      1: [
-        // rightup
-        -1: [
-          [-1, 1],  // upleft
-          [0, -1],  // up
-          [1, -1],  // upright
-          [1, 0],   // right
-          [1, 1],   // rightdown
-          [0, 1],   // down
-          [-1, 0],  // left
-          [-1, 1],  // downleft
-        ],
-        // right
-        0: [
-          [0, -1],  // up
-          [1, -1],  // upright
-          [1, 0],   // right
-          [1, 1],   // rightdown
-          [1, 2, -1],   // rightdowndown
-          [0, 1],   // down
-          [-1, 1],  // downleft
-          [-1, 1],  // upleft
-          [-1, 0],  // left
-        ],
-        // rightdown
-        1: [
-          [1, -1],  // upright
-          [1, 0],   // right
-          [1, 1],   // rightdown
-          [1, 2, -1],   // rightdowndown
-          [0, 1],   // down
-          [-1, 1],  // downleft
-          [-1, 0],  // left
-          [0, -1],  // up
-          [-1, 1],  // upleft
-        ]
+      px: [
+        -px: fromrightup,
+        0: fromright,
+        px: fromrightdown
       ]
     ]
   }

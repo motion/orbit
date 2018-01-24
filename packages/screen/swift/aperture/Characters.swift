@@ -63,7 +63,7 @@ class Characters {
       if isBlack {
         if shouldDebug && debugImg != nil {
           let charImgIn = images.cropImage(debugImg!, box: CGRect(x: xO / 2, y: yO / 2 - 24, width: 50, height: 50))
-          images.writeCGImage(image: charImgIn, to: "/tmp/screen/a-line-\(id)-charIN-\(curChar).png")
+          images.writeCGImage(image: charImgIn, to: "/tmp/screen/testin-line-\(id)-char-\(curChar).png")
         }
         let cb = self.findCharacter(
           startX: xO,
@@ -72,7 +72,7 @@ class Characters {
         )
         foundChars.append(cb)
         if shouldDebug && debugImg != nil {
-          images.writeCGImage(image: images.cropImage(debugImg!, box: CGRect(x: cb[0] / 2, y: cb[1] / 2 - 24, width: cb[2] / 2, height: cb[3] / 2)), to: "/tmp/screen/char-\(id)-\(curChar).png")
+          images.writeCGImage(image: images.cropImage(debugImg!, box: CGRect(x: cb[0] / 2, y: cb[1] / 2 - 24, width: cb[2] / 2, height: cb[3] / 2)), to: "/tmp/screen/testchar-\(id)-\(curChar).png")
         }
         // after processing new char, move x to end of char
         x += cb[2] / 2 + 2
@@ -82,7 +82,7 @@ class Characters {
     }
     if shouldDebug && debugImg != nil {
       if let img = images.imageFromArray(pixels: pixels!, width: imgW, height: imgH) {
-        Images().writeCGImage(image: img, to: "/tmp/screen/a-line-\(id).png", resolution: 72) // write img
+        Images().writeCGImage(image: img, to: "/tmp/screen/testinline-\(id).png", resolution: 72) // write img
       }
     }
     if shouldDebug {
@@ -114,8 +114,8 @@ class Characters {
       for yOff in 0...maxHeight {
         let yP = yOff + startY
         let curPos = yP * perRow + x
-        print("\(yP) \(maxY) \(yOff) \(buffer[curPos] < blackLim)")
         if buffer[curPos] < blackLim {
+          print("\(yP) \(maxY) \(yOff) \(buffer[curPos] < blackLim)")
           // count it if the leftward pixels touch
           let leftPx = foundAt[yP * perRow + x - 1]
           let leftUpPx = foundAt[(yP - 1) * perRow + x - 1]
@@ -137,7 +137,7 @@ class Characters {
       startX,
       startY,
       maxX - startX,
-      maxY - startY
+      startY + maxHeight
     ]
   }
 

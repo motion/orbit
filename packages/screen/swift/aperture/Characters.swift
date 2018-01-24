@@ -35,7 +35,6 @@ class Characters {
     // we control the sticks for more speed
     var x = 0
     var y = 0
-    let maxHeightCheck = imgH - imgH / 4
     while true {
 //      self.shouldDebug = id == 0 && curChar == 0
       // loop through from ltr, then ttb
@@ -48,12 +47,6 @@ class Characters {
       // if reached last pixel, break
       if x >= imgW || y >= imgH || (x == imgW - 1 && y == imgH - 1) {
         break
-      }
-      // dont start on pixels close to bottom
-      if y > maxHeightCheck {
-        x += 1
-        y = 0
-        continue
       }
       // loop logic
       let xO = x * 2 + imgX
@@ -69,7 +62,7 @@ class Characters {
           // todo need to handle frame offset here
           let box = CGRect(x: xO / 2, y: yO / 2, width: 50, height: 50)
           let charImgIn = images.cropImage(debugImg!, box: box)
-          images.writeCGImage(image: charImgIn, to: "/tmp/screen/tp\(id)-\(curChar).png")
+          images.writeCGImage(image: charImgIn, to: "/tmp/screen/view\(id)-\(curChar).png")
         }
         let cb = self.findCharacter(
           startX: xO,
@@ -96,18 +89,10 @@ class Characters {
           }
           // done w new char
           debug("x \(x) \(cb)")
-          var nextX = cb[4] / 2  // add endX
-          while nextX <= x {
-            nextX += 1
-          }
-          x = nextX
+          x = cb[4] / 2 + 2  // add endX
           y = 0
           curChar += 1
         }
-      }
-      if curChar > 10 {
-        print("todo dsiabled")
-        break
       }
     }
     if pixels != nil && pixels!.count > 0 && debugImg != nil {
@@ -142,19 +127,20 @@ class Characters {
     func isBlack(_ pos: Int) -> Bool {
       return buffer[pos] < maxLuma
     }
-
     while true {
       curPos = y * perRow + x
       visited[curPos] = true
       curTry += 1
       if curTry > exaust { debug("max venture"); break }
       if curTry > 1 && x == startX && y == startY - 1 { debug("bounded"); break }
-
-      func tryMove(_ attempt: [Int], avoidVisited: Bool) -> Bool {
+      func tryMove(_ attempt: [Int], avoidVisited: Bool, avoidBacktrack: Bool) -> Bool {
         let next = move(attempt)
         if avoidVisited && visited[next] != nil { return false }
         if !isBlack(next) { return false }
-        let backtrack = attempt[0] == -lastMove[0] && attempt[1] == -lastMove[1]
+        if avoidBacktrack && attempt[0] == -lastMove[0] && attempt[1] == -lastMove[1] {
+          print("backtracka avoid")
+          return false
+        }
         x += attempt[0]
         y += attempt[1]
         if x > endPoint[0]   { curTry = 0; endPoint[0] = x }
@@ -166,7 +152,7 @@ class Characters {
       var success = false
       for avoidVisited in [true, false] {
         for attempt in moves.clockwise[lastMove[0]]![lastMove[1]]! {
-          if tryMove(attempt, avoidVisited: avoidVisited) {
+          if tryMove(attempt, avoidVisited: avoidVisited, avoidBacktrack: true) {
             lastMove = attempt
             success = true
             break
@@ -176,18 +162,7 @@ class Characters {
           // expand radius y
           for attempt in moves.clockwise[lastMove[0]]![lastMove[1]]! {
             let bigAttempt = [attempt[0], attempt[1] * 2]
-            if tryMove(bigAttempt, avoidVisited: avoidVisited) {
-              lastMove = attempt
-              success = true
-              break
-            }
-          }
-        }
-        if !success {
-          // expand radius x
-          for attempt in moves.clockwise[lastMove[0]]![lastMove[1]]! {
-            let bigAttempt = [attempt[0] * 2, attempt[1]]
-            if tryMove(bigAttempt, avoidVisited: avoidVisited) {
+            if tryMove(bigAttempt, avoidVisited: avoidVisited, avoidBacktrack: true) {
               lastMove = attempt
               success = true
               break
@@ -199,12 +174,17 @@ class Characters {
         }
       }
     }
+    let diff = startX - startPoint[0]
+    var backmoves = 0
+    if diff > 0 {
+      backmoves += diff
+    }
     return [
       startPoint[0], // x
       startPoint[1], // y
       endPoint[0] - startPoint[0], // width
       endPoint[1] - startPoint[1], // height
-      endPoint[0] // endX
+      endPoint[0] - backmoves, // endX
     ]
   }
 

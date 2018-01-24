@@ -16,7 +16,7 @@ for line in file:
     tensor = torch.Tensor(28, 28)
     for row in range(28):
         for col in range(28):
-            tensor[row, col] = vals[row * 28 + col]
+            tensor[row, col] = vals[col * 28 + row]
 
     tensors.append(tensor)
 

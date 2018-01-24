@@ -35,7 +35,7 @@ class Characters {
     var y = 0
     let maxHeightCheck = imgH - imgH / 4
     while true {
-//      self.shouldDebug = id == 1 && curChar == 2
+      self.shouldDebug = id == 0 && curChar == 1
       // loop through from ltr, then ttb
       if y == imgH - 1 {
         x += 1
@@ -59,7 +59,6 @@ class Characters {
       let luma = buffer[yO * perRow + xO]
       let isBlack = luma < maxLuma ? true : false
       if shouldDebug && debugImg != nil {
-        print("-- \(luma) < \(maxLuma)")
         let val = UInt8(isBlack ? 0 : 255)
         pixels![x + y * imgW] = PixelData(a: 255, r: val, g: val, b: val)
       }
@@ -112,61 +111,73 @@ class Characters {
   }
 
   func findCharacter(startX: Int, startY: Int, maxHeight: Int) -> [Int] {
-    var minY = startY + maxHeight
+    var filled = Dictionary<Int, Bool>() // address => good pixel
+    let maxY = startY + maxHeight
+    var foundMinY = maxY
     var foundHeight = startY
-    var maxX = startX
-    var x = startX - 1
-    var foundAt = Dictionary<Int, Bool>()
+    var foundMaxX = startX
+    let px = 1 //maxHeight > 30 ? 4 : 2 // more precise on smaller lines
+    let maxNoPixels = 2
+    var x = startX - px
     var noPixelStreak = 0
-    let px = maxHeight > 30 ? 2 : 1 // more precise on smaller lines
-    let maxNoPixels = px * 2
-    let yColStride = stride(from: 0 + startY, to: maxHeight * 2 + startY, by: px)
+    let yPixels = stride(from: 0 + startY, to: maxY, by: px)
+    if shouldDebug {
+      print("start on x \(startX), scan y \(startY) to \(maxY) by \(px)")
+    }
+    // loop through left to right
     while noPixelStreak <= maxNoPixels {
       let firstLoop = x <= startX + 2 * px
       x += px
       noPixelStreak += 1
-      for yP in yColStride {
+      // then top to bottom
+      for yP in yPixels {
         let curPos = yP * perRow + x
         if buffer[curPos] < maxLuma {
-          foundAt[curPos] = true
-          let touchingPrevious = yP + px >= foundHeight
-          let foundClose = foundAt[yP * perRow + x - px] // left one
-            ?? foundAt[(yP - px) * perRow + x - px] // left up
-            ?? foundAt[(yP + px) * perRow + x - px] // left down
-            ?? foundAt[yP * perRow + x - 1] // left
-            ?? false
-          let foundFar = foundClose
-            || foundAt[(yP + 2 * px) * perRow + x - px] // down down left
-            ?? foundAt[(yP + px) * perRow + x - 2 * px] // down left left
-            ?? foundAt[(yP - 2 * px) * perRow + x - px] // up up left
-            ?? foundAt[(yP - px) * perRow + x - 2 * px] // up left left
-            //            ?? foundAt[yP * perRow + x - 2] // left left
-            ?? false
-          if firstLoop || touchingPrevious && (foundClose || foundFar) {
-            noPixelStreak = 0
-            maxX = x
-            if yP < minY {
-              minY = yP
+          filled[curPos] = true
+          func finish() {
+            foundMaxX = x
+            if yP < foundMinY {
+              foundMinY = yP
             }
             if yP > foundHeight {
               foundHeight = yP
             }
+            noPixelStreak = 0
+          }
+          let connectedPoint = yP + px >= foundHeight
+          let touchingPoint = filled[yP * perRow + x - px] // left one
+            ?? filled[(yP - px) * perRow + x - px] // left up
+            ?? filled[(yP + px) * perRow + x - px] // left down
+            ?? filled[(yP + 2 * px) * perRow + x - px] // left down diagonal
+            ?? filled[(yP - 2 * px) * perRow + x - px] // up left diagonal
+            ?? false
+          if connectedPoint && touchingPoint {
+//            print("\(firstLoop, connectedPoint, touchingPoint) \(x) \(yP)")
+            finish(); continue
+          }
+          let maybeTouchingPoint = filled[yP * perRow + x - px * 2] // left one
+            ?? filled[(yP - 2 * px) * perRow + x - px * 2] // left up
+            ?? filled[(yP + 2 * px) * perRow + x - px * 2] // left down
+            ?? false
+          if connectedPoint && maybeTouchingPoint {
+            print("maybe touched \(firstLoop, connectedPoint, touchingPoint) \(x) \(yP)")
+            finish(); continue
           }
         }
       }
     }
     if shouldDebug {
       debug("end on \(x)")
-      for yOff in yColStride {
+      for yOff in yPixels {
         let yP = yOff + startY
         let curPos = yP * perRow + x
-        debug("\(foundAt[curPos - 3] ?? false) |\(foundAt[curPos - 2] ?? false) | \(foundAt[curPos - 1] ?? false) | \(foundAt[curPos] ?? false) .. \(curPos - 1) | \(curPos)")
+        debug("\(filled[curPos - 3] ?? false) |\(filled[curPos - 2] ?? false) | \(filled[curPos - 1] ?? false) | \(filled[curPos] ?? false) .. \(curPos - 1) | \(curPos)")
       }
     }
     return [
       startX,
-      minY,
-      maxX - startX + 2,
+      foundMinY,
+      foundMaxX - startX + 2,
       foundHeight - startY
     ]
   }

@@ -2,6 +2,7 @@ import Foundation
 import AVFoundation
 import AppKit
 
+let shouldDebug = false
 let threads = 2
 
 enum ApertureError: Error {
@@ -125,7 +126,6 @@ final class Recorder: NSObject {
   }
   
   func screenshotBox(box: Box, buffer: CMSampleBuffer, bufferPointer: UnsafeMutablePointer<UInt8>, perRow: Int, findContent: Bool = false) {
-    let shouldDebug = true
     // clear old files
     rmAllInside(URL(fileURLWithPath: box.screenDir!))
     let startAll = DispatchTime.now()
@@ -175,12 +175,13 @@ final class Recorder: NSObject {
     }
     // found content
     let bb = biggestBox!
-    // full sizes
+    let innerPad = boxFindScale / 2 // make it a bit smaller to avoid grabbing edge stuff
+    // scale to full size
     let frame = [
-      bb.x_start * boxFindScale + box.x,
-      bb.y_start * boxFindScale + box.y,
-      bb.getWidth() * boxFindScale,
-      bb.getHeight() * boxFindScale
+      bb.x_start * boxFindScale + box.x + innerPad,
+      bb.y_start * boxFindScale + box.y + innerPad,
+      bb.getWidth() * boxFindScale - innerPad * 2,
+      bb.getHeight() * boxFindScale - innerPad * 2
     ]
     let cropBox = CGRect(x: frame[0] - box.x, y: frame[1] - box.y, width: frame[2], height: frame[3])
     // send out to world frame offset
@@ -241,6 +242,10 @@ final class Recorder: NSObject {
           }
         }
       }
+    }
+    // none found, just do whole thing
+    if verticalSections.count == 0 {
+      verticalSections[0] = vWidth - 1
     }
     print("4. find verticals: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms --  \(verticalSections.description)")
     start = DispatchTime.now()

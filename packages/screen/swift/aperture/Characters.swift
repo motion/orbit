@@ -37,7 +37,7 @@ class Characters {
     var y = 0
     let maxHeightCheck = imgH - imgH / 4
     while true {
-      self.shouldDebug = id == 0 && curChar == 0
+//      self.shouldDebug = id == 0 && curChar == 0
       // loop through from ltr, then ttb
       if y == imgH - 1 {
         x += 1
@@ -180,9 +180,9 @@ class Characters {
           }
         }
         if !success {
-          // expand radius x
+          // expand radius y
           for attempt in moves.clockwise[lastMove[0]]![lastMove[1]]! {
-            let bigAttempt = [attempt[0] * 2, attempt[1]]
+            let bigAttempt = [attempt[0], attempt[1] * 2]
             if tryMove(bigAttempt, avoidVisited: avoidVisited) {
               lastMove = attempt
               success = true
@@ -193,7 +193,7 @@ class Characters {
         if !success {
           // expand radius x
           for attempt in moves.clockwise[lastMove[0]]![lastMove[1]]! {
-            let bigAttempt = [attempt[0], attempt[1] * 2]
+            let bigAttempt = [attempt[0] * 2, attempt[1]]
             if tryMove(bigAttempt, avoidVisited: avoidVisited) {
               lastMove = attempt
               success = true
@@ -207,10 +207,10 @@ class Characters {
       }
     }
     return [
-      startPoint[0],
-      startPoint[1],
-      endPoint[0] - startPoint[0],
-      endPoint[1] - startPoint[1]
+      startPoint[0], // x
+      startPoint[1], // y
+      endPoint[0] - startPoint[0] + 2, // width
+      endPoint[1] - startPoint[1] // height
     ]
   }
 

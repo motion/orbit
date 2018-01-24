@@ -35,7 +35,7 @@ class Characters {
     var y = 0
     let maxHeightCheck = imgH - imgH / 4
     while true {
-      self.shouldDebug = id == 0 && curChar == 1
+//      self.shouldDebug = id == 0 && curChar == 1
       // loop through from ltr, then ttb
       if y == imgH - 1 {
         x += 1
@@ -71,13 +71,13 @@ class Characters {
         }
         let cb = self.findCharacter(
           startX: xO,
-          startY: imgY,
+          startY: yO,
           maxHeight: imgH * 2
         )
         if cb[3] == 0 || cb[2] == 0 {
           print("0 size")
         } else {
-          let tooSmall = cb[2] < 5 && cb[3] < 5
+          let tooSmall = cb[2] < 5 && cb[3] < 5 || cb[2] < 2 || cb[3] < 2
           let tooWide = cb[3] / cb[2] > 10
           let tooTall = cb[2] / cb[3] > 20
           if tooSmall || tooWide || tooTall {
@@ -85,6 +85,7 @@ class Characters {
           } else {
             foundChars.append(cb)
             if shouldDebug && debugImg != nil {
+              print("crop \(cb)")
               images.writeCGImage(image: images.cropImage(debugImg!, box: CGRect(x: cb[0] / 2, y: cb[1] / 2, width: cb[2] / 2, height: cb[3] / 2)), to: "/tmp/screen/testchar-\(id)-\(curChar).png")
             }
           }
@@ -111,74 +112,181 @@ class Characters {
   }
 
   func findCharacter(startX: Int, startY: Int, maxHeight: Int) -> [Int] {
-    var filled = Dictionary<Int, Bool>() // address => good pixel
-    let maxY = startY + maxHeight
-    var foundMinY = maxY
-    var foundHeight = startY
-    var foundMaxX = startX
-    let px = 1 //maxHeight > 30 ? 4 : 2 // more precise on smaller lines
-    let maxNoPixels = 2
-    var x = startX - px
-    var noPixelStreak = 0
-    let yPixels = stride(from: 0 + startY, to: maxY, by: px)
-    if shouldDebug {
-      print("start on x \(startX), scan y \(startY) to \(maxY) by \(px)")
-    }
-    // loop through left to right
-    while noPixelStreak <= maxNoPixels {
-      let firstLoop = x <= startX + 2 * px
-      x += px
-      noPixelStreak += 1
-      // then top to bottom
-      for yP in yPixels {
-        let curPos = yP * perRow + x
-        if buffer[curPos] < maxLuma {
-          filled[curPos] = true
-          func finish() {
-            foundMaxX = x
-            if yP < foundMinY {
-              foundMinY = yP
-            }
-            if yP > foundHeight {
-              foundHeight = yP
-            }
-            noPixelStreak = 0
-          }
-          let connectedPoint = yP + px >= foundHeight
-          let touchingPoint = filled[yP * perRow + x - px] // left one
-            ?? filled[(yP - px) * perRow + x - px] // left up
-            ?? filled[(yP + px) * perRow + x - px] // left down
-            ?? filled[(yP + 2 * px) * perRow + x - px] // left down diagonal
-            ?? filled[(yP - 2 * px) * perRow + x - px] // up left diagonal
-            ?? false
-          if connectedPoint && touchingPoint {
-//            print("\(firstLoop, connectedPoint, touchingPoint) \(x) \(yP)")
-            finish(); continue
-          }
-          let maybeTouchingPoint = filled[yP * perRow + x - px * 2] // left one
-            ?? filled[(yP - 2 * px) * perRow + x - px * 2] // left up
-            ?? filled[(yP + 2 * px) * perRow + x - px * 2] // left down
-            ?? false
-          if connectedPoint && maybeTouchingPoint {
-            print("maybe touched \(firstLoop, connectedPoint, touchingPoint) \(x) \(yP)")
-            finish(); continue
-          }
+    var visited = Dictionary<Int, Bool?>()
+    let PX = 1
+    let LEFT = 0
+    let UP = 1
+    let RIGHT = 2
+    let DOWN = 3
+    var startPoint = [startX, startY] // top left point
+    var endPoint = [startX, startY] // bottom right point
+    var x = startX
+    var y = startY - PX
+    let maxVenture = 100 // most amount to go without finding new bound before give up
+    var curTry = 0
+    var prevPos = -1
+    var prevDirection = DOWN
+    while true {
+      curTry += 1
+      if curTry > maxVenture {
+        debug("max venture")
+        break
+      }
+      if curTry > 1 && x == startX && y == startY {
+        debug("back at begin")
+        break
+      }
+      let curPos = y * perRow + x
+      visited[curPos] = true
+      var rightBlack = false
+      var downBlack = false
+      var leftBlack = false
+      var upBlack = false
+      // left
+      let leftIndex = y * perRow + x - PX
+      if visited[leftIndex] == nil && prevPos != leftIndex && buffer[leftIndex] < maxLuma {
+        leftBlack = true
+        if x - PX < startPoint[0] {
+          curTry = 0
+          prevDirection = LEFT
+          x -= PX
+          startPoint[0] = x
+          prevPos = curPos
+          debug("left one")
+//          continue
+        }
+      }
+      // up
+      let upIndex = (y - 2 * PX) * perRow + x
+      if visited[upIndex] == nil && prevPos != upIndex && buffer[upIndex] < maxLuma {
+        upBlack = true
+        if y - PX < startPoint[1] {
+          curTry = 0
+          prevDirection = UP
+          y -= PX
+          startPoint[1] = y
+          prevPos = curPos
+          debug("up one")
+//          continue
+        }
+      }
+      // right
+      let rightIndex = y * perRow + x + PX
+      if visited[rightIndex] == nil && prevPos != rightIndex && buffer[rightIndex] < maxLuma {
+        rightBlack = true
+        if x + PX > endPoint[0] {
+          curTry = 0
+          prevDirection = RIGHT
+          x += PX
+          endPoint[0] = x
+          prevPos = curPos
+          debug("right one")
+          continue
+        }
+      }
+      // down
+      let downIndex = (y + PX) * perRow + x
+      if visited[downIndex] == nil && prevPos != downIndex && buffer[downIndex] < maxLuma {
+        downBlack = true
+        if y + PX > endPoint[1] {
+          curTry = 0
+          prevDirection = DOWN
+          y += PX
+          endPoint[1] = y
+          prevPos = curPos
+          debug("down one")
+          continue
+        }
+      }
+      prevPos = curPos
+      // didnt expand the bounds
+      // still need to move the current
+      if prevDirection == LEFT {
+        if downBlack {
+          debug("move down")
+          prevDirection = DOWN
+          y += PX
+        } else if leftBlack {
+          debug("move left")
+          prevDirection = LEFT
+          x -= PX
+        } else if upBlack {
+          debug("move up")
+          prevDirection = UP
+          y -= PX
+        } else {
+          // back right
+          debug("move back right")
+          prevDirection = RIGHT
+          x += PX
+        }
+      }
+      if prevDirection == UP {
+        if leftBlack {
+          debug("move left")
+          prevDirection = LEFT
+          x -= PX
+        } else if upBlack {
+          debug("move up")
+          prevDirection = UP
+          y -= PX
+        } else if rightBlack {
+          debug("move right")
+          prevDirection = RIGHT
+          x += PX
+        } else {
+          // back down
+          debug("move back down")
+          prevDirection = DOWN
+          y += PX
+        }
+      }
+      if prevDirection == RIGHT {
+        if upBlack {
+          debug("move up")
+          prevDirection = UP
+          y -= PX
+        } else if rightBlack {
+          debug("move right")
+          prevDirection = RIGHT
+          x += PX
+        } else if downBlack {
+          debug("move down")
+          prevDirection = DOWN
+          y += PX
+        } else {
+          // back left
+          debug("move back left")
+          prevDirection = LEFT
+          x -= PX
+        }
+      }
+      if prevDirection == DOWN {
+        if rightBlack {
+          debug("move right")
+          prevDirection = RIGHT
+          x += PX
+        } else if downBlack {
+          debug("move down")
+          prevDirection = DOWN
+          y += PX
+        } else if leftBlack {
+          debug("move left")
+          prevDirection = LEFT
+          x -= PX
+        } else {
+          // back up
+          debug("move back up")
+          prevDirection = UP
+          y -= PX
         }
       }
     }
-    if shouldDebug {
-      debug("end on \(x)")
-      for yOff in yPixels {
-        let yP = yOff + startY
-        let curPos = yP * perRow + x
-        debug("\(filled[curPos - 3] ?? false) |\(filled[curPos - 2] ?? false) | \(filled[curPos - 1] ?? false) | \(filled[curPos] ?? false) .. \(curPos - 1) | \(curPos)")
-      }
-    }
     return [
-      startX,
-      foundMinY,
-      foundMaxX - startX + 2,
-      foundHeight - startY
+      startPoint[0],
+      startPoint[1],
+      endPoint[0] - startPoint[0],
+      endPoint[1] - startPoint[1]
     ]
   }
 

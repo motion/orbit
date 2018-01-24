@@ -15,6 +15,7 @@ class Moves {
           [0, -1],  // up
           [1, -1],  // upright
           [1, 0],   // right
+          [1, 1],   // rightdown
         ],
         // left
         0: [
@@ -25,6 +26,7 @@ class Moves {
           [-1, 1],  // upleft
           [0, -1],  // up
           [1, -1],  // upright
+          [1, 0],   // right
         ],
         // leftdown
         1: [
@@ -35,6 +37,7 @@ class Moves {
           [-1, 0],  // left
           [-1, 1],  // upleft
           [0, -1],  // up
+          [1, -1],  // upright
         ]
       ],
       0: [
@@ -47,6 +50,7 @@ class Moves {
           [1, -1],  // upright
           [1, 0],   // right
           [1, 1],   // rightdown
+          [0, 1],   // down
         ],
         // down
         1: [
@@ -57,6 +61,7 @@ class Moves {
           [-1, 1],  // downleft
           [-1, 0],  // left
           [-1, 1],  // upleft
+          [0, -1],  // up
         ],
       ],
       1: [
@@ -69,6 +74,7 @@ class Moves {
           [1, 0],   // right
           [1, 1],   // rightdown
           [0, 1],   // down
+          [-1, 1],  // downleft
         ],
         // right
         0: [
@@ -79,6 +85,7 @@ class Moves {
           [1, 1],   // rightdown
           [0, 1],   // down
           [-1, 1],  // downleft
+          [-1, 0],  // left
         ],
         // rightdown
         1: [
@@ -89,6 +96,7 @@ class Moves {
           [0, 1],   // down
           [-1, 1],  // downleft
           [-1, 0],  // left
+          [-1, 1],  // upleft
         ]
       ]
     ]

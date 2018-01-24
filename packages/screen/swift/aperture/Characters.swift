@@ -78,18 +78,18 @@ class Characters {
         if cb[3] == 0 || cb[2] == 0 {
           print("0 size")
         } else {
-          let tooSmall = cb[2] < 5 && cb[3] < 5 || cb[2] < 2 || cb[3] < 2
-          let tooWide = cb[3] / cb[2] > 10
-          let tooTall = cb[2] / cb[3] > 20
-          if tooSmall || tooWide || tooTall {
-            print("misfit \(cb)")
-          } else {
+//          let tooSmall = cb[2] < 5 && cb[3] < 5 || cb[2] < 2 || cb[3] < 2
+//          let tooWide = cb[3] / cb[2] > 10
+//          let tooTall = cb[2] / cb[3] > 20
+//          if tooSmall || tooWide || tooTall {
+//            print("misfit \(cb)")
+//          } else {
             foundChars.append(cb)
             if shouldDebug && debugImg != nil {
               print("crop \(cb)")
               images.writeCGImage(image: images.cropImage(debugImg!, box: CGRect(x: cb[0] / 2, y: cb[1] / 2, width: cb[2] / 2, height: cb[3] / 2)), to: "/tmp/screen/testchar-\(id)-\(curChar).png")
             }
-          }
+//          }
           // after processing new char, move x to end of char
           x += cb[2] / 2 + 1
           y = 0
@@ -113,36 +113,33 @@ class Characters {
   }
   
   func findCharacter(startX: Int, startY: Int, maxHeight: Int) -> [Int] {
+    let exaust = 250 // most amount to go without finding new bound before give up
     var visited = Dictionary<Int, Bool?>()
     var startPoint = [startX, startY] // top left point
     var endPoint = [startX, startY] // bottom right point
+    // start going down as we came
+    var lastMove = [0, 1]
     var x = startX
     var y = startY - 1
-    let maxVenture = 250 // most amount to go without finding new bound before give up
     var curTry = 0
-    var lastMove = [0, 1] // start going down
+    var curPos = 0
+    func move(_ dir: [Int]) -> Int {
+      return curPos + dir[0] + dir[1] * perRow
+    }
+    func isBlack(_ pos: Int) -> Bool {
+      return buffer[pos] < maxLuma
+    }
     while true {
-      curTry += 1
-      if curTry > maxVenture {
-        debug("max venture")
-        break
-      }
-      if curTry > 1 && x == startX && y == startY {
-        debug("back at begin")
-        break
-      }
-      var curPos = y * perRow + x
+      curPos = y * perRow + x
       visited[curPos] = true
-      func move(_ dir: [Int]) -> Int {
-        return curPos + dir[0] + dir[1] * perRow
-      }
-      func isBlack(_ pos: Int) -> Bool {
-        return buffer[pos] < maxLuma
-      }
+      curTry += 1
+      if curTry > exaust { debug("max venture"); break }
+      if curTry > 1 && x == startX && y == startY { debug("bounded"); break }
       for attempt in moves.clockwise[lastMove[0]]![lastMove[1]]! {
         let next = move(attempt)
         if visited[next] != nil { continue }
         if !isBlack(next) { continue }
+        debug("move \(attempt)")
         lastMove = attempt
         x += attempt[0]
         y += attempt[1]
@@ -151,6 +148,7 @@ class Characters {
         if y > endPoint[1] { endPoint[1] = y }
         if y < startPoint[1] { startPoint[1] = y }
       }
+      debug("?? \(x - startX) \(y - startY)")
     }
     return [
       startPoint[0],

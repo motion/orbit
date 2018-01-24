@@ -341,6 +341,7 @@ final class Recorder: NSObject {
           )
         }
         // write characters
+        characters.shouldDebug = shouldDebug
         let chars = characters.charsToString(rects: rects, debugID: index)// index) // index < 40 ? index : -1
         lineStrings.insert(chars, at: index)
       }

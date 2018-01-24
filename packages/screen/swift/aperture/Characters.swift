@@ -1,10 +1,11 @@
 import AppKit
 
 class Characters {
+  var shouldDebug = false
+
   private let images = Images()
   private var buffer: UnsafeMutablePointer<UInt8>
   private var perRow: Int
-  private var shouldDebug = false
   private var debugImg: CGImage? = nil
   private var debugDir = ""
   private var maxLuma = 0
@@ -36,7 +37,7 @@ class Characters {
     var y = 0
     let maxHeightCheck = imgH - imgH / 4
     while true {
-//      self.shouldDebug = id == 0 && curChar == 0
+      self.shouldDebug = id == 0 && curChar == 0
       // loop through from ltr, then ttb
       if y == imgH - 1 {
         x += 1
@@ -59,7 +60,7 @@ class Characters {
       let yO = y * 2 + imgY
       let luma = buffer[yO * perRow + xO]
       let isBlack = luma < maxLuma ? true : false
-      if shouldDebug && debugImg != nil {
+      if shouldDebug {
         let val = UInt8(isBlack ? 0 : 255)
         pixels![x + y * imgW] = PixelData(a: 255, r: val, g: val, b: val)
       }
@@ -78,18 +79,18 @@ class Characters {
         if cb[3] == 0 || cb[2] == 0 {
           print("0 size")
         } else {
-//          let tooSmall = cb[2] < 5 && cb[3] < 5 || cb[2] < 2 || cb[3] < 2
-//          let tooWide = cb[3] / cb[2] > 10
-//          let tooTall = cb[2] / cb[3] > 20
-//          if tooSmall || tooWide || tooTall {
-//            print("misfit \(cb)")
-//          } else {
+          let tooSmall = cb[2] < 5 && cb[3] < 5 || cb[2] < 2 || cb[3] < 2
+          let tooWide = cb[3] / cb[2] > 10
+          let tooTall = cb[2] / cb[3] > 20
+          if tooSmall || tooWide || tooTall {
+            print("misfit \(cb)")
+          } else {
             foundChars.append(cb)
             if shouldDebug && debugImg != nil {
               print("crop \(cb)")
               images.writeCGImage(image: images.cropImage(debugImg!, box: CGRect(x: cb[0] / 2, y: cb[1] / 2, width: cb[2] / 2, height: cb[3] / 2)), to: "/tmp/screen/testchar-\(id)-\(curChar).png")
             }
-//          }
+          }
           // after processing new char, move x to end of char
           x += cb[2] / 2 + 1
           y = 0
@@ -97,7 +98,7 @@ class Characters {
         }
       }
     }
-    if shouldDebug && debugImg != nil {
+    if pixels != nil && pixels!.count > 0 && debugImg != nil {
       if let img = images.imageFromArray(pixels: pixels!, width: imgW, height: imgH) {
         Images().writeCGImage(image: img, to: "/tmp/screen/edge\(id).png", resolution: 72) // write img
       }
@@ -129,6 +130,7 @@ class Characters {
     func isBlack(_ pos: Int) -> Bool {
       return buffer[pos] < maxLuma
     }
+
     while true {
       curPos = y * perRow + x
       visited[curPos] = true
@@ -224,7 +226,7 @@ class Characters {
         scaleY = 1 / (dbl / height)
       }
       var pixels: [PixelData]? = nil
-      if shouldDebug && debugID > -1 {
+      if shouldDebug {
         pixels = [PixelData]()
       }
       for y in 0..<28 {
@@ -234,14 +236,14 @@ class Characters {
           let luma = buffer[(minY + yS) * perRow + minX + xS]
           let lumaVal = luma < 150 ? "0 " : "255 " // warning, doing any sort of string conversion here slows it down bigly
           output += lumaVal
-          if shouldDebug && debugID > -1 {
+          if shouldDebug {
             let brt = UInt8(luma < self.maxLuma ? 0 : 255)
             pixels!.append(PixelData(a: 255, r: brt, g: brt, b: brt))
           }
         }
       }
       output += "\n"
-      if shouldDebug && debugID > -1 {
+      if shouldDebug {
         let outFile = "\(debugDir)/xa\(debugID)-\(index).png"
         images.writeCGImage(image: images.imageFromArray(pixels: pixels!, width: 28, height: 28)!, to: outFile, resolution: 72) // write img
       }

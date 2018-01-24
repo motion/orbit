@@ -32,8 +32,8 @@ class Images {
     return NSImage(data: newImage.tiffRepresentation!)!
   }
   
-  func cropImage(_ image: CGImage, box: CGRect) -> CGImage {
-    return image.cropping(to: box)!
+  func cropImage(_ image: CGImage, box: CGRect) -> CGImage? {
+    return image.cropping(to: box)
   }
 
   func imageFromSampleBuffer(_ context: CIContext, sampleBuffer: CMSampleBuffer, cropRect: CGRect) -> CGImage? {

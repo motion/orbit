@@ -61,8 +61,7 @@ class Characters {
         if shouldDebug && debugImg != nil {
           // todo need to handle frame offset here
           let box = CGRect(x: xO / 2, y: yO / 2, width: 50, height: 50)
-          let charImgIn = images.cropImage(debugImg!, box: box)
-          images.writeCGImage(image: charImgIn, to: "/tmp/screen/view\(id)-\(curChar).png")
+          images.writeCGImage(image: images.cropImage(debugImg!, box: box)!, to: "/tmp/screen/view\(id)-\(curChar).png")
         }
         let cb = self.findCharacter(
           startX: xO,
@@ -77,7 +76,9 @@ class Characters {
           let tooTall = cb[2] / cb[3] > 20
           let misfit = tooSmall || tooWide || tooTall
           if shouldDebug && debugImg != nil {
-            images.writeCGImage(image: images.cropImage(debugImg!, box: CGRect(x: cb[0] / 2, y: cb[1] / 2, width: cb[2] / 2, height: cb[3] / 2)), to: "/tmp/screen/\(misfit ? "fitmiss-" : "fit")-\(id)-\(curChar).png")
+            if let img = images.cropImage(debugImg!, box: CGRect(x: cb[0] / 2, y: cb[1] / 2, width: cb[2] / 2, height: cb[3] / 2)) {
+              images.writeCGImage(image: img, to: "/tmp/screen/\(misfit ? "fitmiss-" : "fit")-\(id)-\(curChar).png")
+            }
           }
           if misfit {
             print("misfit \(cb)")
@@ -131,8 +132,8 @@ class Characters {
       curPos = y * perRow + x
       visited[curPos] = true
       curTry += 1
-      if curTry > exaust { debug("max venture"); break }
-      if curTry > 1 && x == startX && y == startY - 1 { debug("bounded"); break }
+      if curTry > exaust { debug("max venture \(x, y)"); break }
+      if curTry > 1 && x == startX && y == startY { debug("bounded"); break }
       func tryMove(_ attempt: [Int], avoidVisited: Bool, avoidBacktrack: Bool) -> Bool {
         let next = move(attempt)
         if avoidVisited && visited[next] != nil { return false }

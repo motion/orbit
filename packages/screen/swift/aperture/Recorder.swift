@@ -189,7 +189,7 @@ final class Recorder: NSObject {
     }
     start = DispatchTime.now()
 //    let ocrWriteImage = images.cropImage(filters.filterImageForOCR(image: cgImageLarge), box: cropBoxLarge)
-    let ocrCharactersImage = images.cropImage(filters.filterImageForOCRCharacterFinding(image: cgImage), box: cropBox)
+    let ocrCharactersImage = images.cropImage(filters.filterImageForOCRCharacterFinding(image: cgImage), box: cropBox)!
     print("2. filter for ocr: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
 
     // find vertical sections
@@ -336,7 +336,7 @@ final class Recorder: NSObject {
         // debug line
         if shouldDebug {
           images.writeCGImage(
-            image: images.cropImage(ocrCharactersImage, box: CGRect(x: lineBounds[0] - frame[0], y: lineBounds[1] - frame[1], width: lineBounds[2], height: lineBounds[3])),
+            image: images.cropImage(ocrCharactersImage, box: CGRect(x: lineBounds[0] - frame[0], y: lineBounds[1] - frame[1], width: lineBounds[2], height: lineBounds[3]))!,
             to: "\(box.screenDir!)/linein-\(box.id)-\(id)-\(index).png"
           )
         }

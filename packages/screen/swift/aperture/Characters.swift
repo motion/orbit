@@ -64,8 +64,8 @@ class Characters {
       }
       if isBlack {
         if shouldDebug && debugImg != nil {
-          let charImgIn = images.cropImage(debugImg!, box: CGRect(x: xO / 2, y: yO / 2 - 24 * 2, width: 50, height: 50))
-          images.writeCGImage(image: charImgIn, to: "/tmp/screen/testin-line-\(id)-char-\(curChar).png")
+          let charImgIn = images.cropImage(debugImg!, box: CGRect(x: xO / 2, y: yO / 2 - 24, width: 50, height: 50))
+          images.writeCGImage(image: charImgIn, to: "/tmp/screen/testinline-\(id)-char-\(curChar).png")
         }
         minYO = min(yO, minYO)
         let cb = self.findCharacter(
@@ -94,7 +94,7 @@ class Characters {
     }
     if shouldDebug && debugImg != nil {
       if let img = images.imageFromArray(pixels: pixels!, width: imgW, height: imgH) {
-        Images().writeCGImage(image: img, to: "/tmp/screen/testinline-\(id).png", resolution: 72) // write img
+        Images().writeCGImage(image: img, to: "/tmp/screen/testoutline-\(id).png", resolution: 72) // write img
       }
     }
     debug("Characters.find() \(foundChars.count): \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
@@ -114,8 +114,9 @@ class Characters {
     var x = startX - 1
     var foundAt = Dictionary<Int, Bool>()
     var noPixelStreak = 0
-    let maxNoPixels = 2
-    let yColStride = stride(from: 0, to: maxHeight * 2, by: 2)
+    let strideAmt = maxHeight > 30 ? 2 : 1 // more precise on smaller lines
+    let maxNoPixels = strideAmt
+    let yColStride = stride(from: 0, to: maxHeight * 2, by: strideAmt)
     while noPixelStreak <= maxNoPixels {
       let firstLoop = x <= startX + 2
       x += 1
@@ -126,11 +127,15 @@ class Characters {
         if buffer[curPos] < maxLuma {
           foundAt[curPos] = true
           // count it if the leftward pixels touch
-          let hasConnection =
-            firstLoop
-            || foundAt[yP * perRow + x - 1] // left one
+          let foundNear = firstLoop ||
+            foundAt[yP * perRow + x - 1] // left one
             ?? foundAt[(yP - 1) * perRow + x - 1] // left up
             ?? foundAt[(yP + 2) * perRow + x - 1] // left down
+            ?? false
+          let hasConnection = foundNear
+            || foundAt[yP * perRow + x - 2] // left two
+            ?? foundAt[(yP - 2) * perRow + x - 2] // left two
+            ?? foundAt[(yP + 2) * perRow + x - 2] // left two
             ?? foundAt[(yP - 2) * perRow + x - 1] // left up two
             ?? foundAt[(yP + 1) * perRow + x - 2] // left down two
             ?? false

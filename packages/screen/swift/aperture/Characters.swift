@@ -87,7 +87,7 @@ class Characters {
             foundChars.append(cb)
             if shouldDebug && debugImg != nil {
               print("crop \(cb)")
-              images.writeCGImage(image: images.cropImage(debugImg!, box: CGRect(x: cb[0] / 2, y: cb[1] / 2, width: cb[2] / 2, height: cb[3] / 2)), to: "/tmp/screen/testchar-\(id)-\(curChar).png")
+              images.writeCGImage(image: images.cropImage(debugImg!, box: CGRect(x: cb[0] / 2, y: cb[1] / 2, width: cb[2], height: cb[3])), to: "/tmp/screen/testchar-\(id)-\(curChar).png")
             }
 //          }
           // after processing new char, move x to end of char
@@ -134,12 +134,16 @@ class Characters {
       visited[curPos] = true
       curTry += 1
       if curTry > exaust { debug("max venture"); break }
-      if curTry > 1 && x == startX && y == startY { debug("bounded"); break }
+      if curTry > 1 && x == startX && y == startY - 1 { debug("bounded"); break }
       for attempt in moves.clockwise[lastMove[0]]![lastMove[1]]! {
         let next = move(attempt)
-        if visited[next] != nil { continue }
-        if !isBlack(next) { continue }
-        debug("move \(attempt)")
+        if visited[next] != nil { debug("visited \(next)"); continue }
+        if !isBlack(next) { debug("noblack \(attempt)"); continue }
+        if attempt[0] == -lastMove[0] && attempt[1] == -lastMove[1] {
+          debug("backtrack \(attempt)")
+        } else {
+          debug("move \(attempt)")
+        }
         lastMove = attempt
         x += attempt[0]
         y += attempt[1]
@@ -147,8 +151,8 @@ class Characters {
         if x < startPoint[0] { startPoint[0] = x }
         if y > endPoint[1] { endPoint[1] = y }
         if y < startPoint[1] { startPoint[1] = y }
+        break
       }
-      debug("?? \(x - startX) \(y - startY)")
     }
     return [
       startPoint[0],

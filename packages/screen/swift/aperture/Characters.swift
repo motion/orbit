@@ -89,7 +89,7 @@ class Characters {
           }
           // done w new char
           debug("x \(x) \(cb)")
-          x = cb[4] / 2 + 2  // add endX
+          x = cb[4] / 2 + 1  // add endX
           y = 0
           curChar += 1
         }

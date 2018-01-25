@@ -12,7 +12,6 @@ process.on('unhandledRejection', function(error, p) {
 
 async function test() {
   const video = new Screen()
-  console.log('start')
 
   video.startRecording({
     debug: !!process.argv.find(x => x === '--debug'),

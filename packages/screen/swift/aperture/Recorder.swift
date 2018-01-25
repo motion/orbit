@@ -196,7 +196,7 @@ final class Recorder: NSObject {
     print("2. filter for ocr: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
 
     // find vertical sections
-    let lineFindScaling = 3 // scale down denominator
+    let lineFindScaling = 4 // scale down denominator
     let vWidth = frame[2] / lineFindScaling
     let vHeight = frame[3] / lineFindScaling
     start = DispatchTime.now()

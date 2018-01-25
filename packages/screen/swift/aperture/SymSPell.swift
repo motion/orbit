@@ -7,20 +7,21 @@
 //
 import Foundation
 
-func slice(_ string: String, bounds: CountableClosedRange<Int>) -> String {
-  let start = string.index(string.startIndex, offsetBy: bounds.lowerBound)
-  let end = string.index(string.startIndex, offsetBy: bounds.upperBound)
-  return String(string[start...end])
-}
-
-func slice(_ string: String, bounds: CountableRange<Int>) -> String {
-  let start = string.index(string.startIndex, offsetBy: bounds.lowerBound)
-  let end = string.index(string.startIndex, offsetBy: bounds.upperBound)
-  return String(string[start..<end])
+extension String {
+  subscript (bounds: CountableClosedRange<Int>) -> String {
+    let start = index(startIndex, offsetBy: bounds.lowerBound)
+    let end = index(startIndex, offsetBy: bounds.upperBound)
+    return String(self[start...end])
+  }
+  
+  subscript (bounds: CountableRange<Int>) -> String {
+    let start = index(startIndex, offsetBy: bounds.lowerBound)
+    let end = index(startIndex, offsetBy: bounds.upperBound)
+    return String(self[start..<end])
+  }
 }
 
 class SymSpell {
-  
   var editDistanceMax = 2 as Int
   var verbose = 1 as Int
   
@@ -45,7 +46,6 @@ class SymSpell {
     var term = "" as String
     var distance = 0 as Int
     var count = 0 as Int
-    
     func isEqual(object: AnyObject?) -> Bool {
       if let object = object as? SuggestItem {
         return term == object.term
@@ -53,7 +53,6 @@ class SymSpell {
         return false
       }
     }
-    
     var hash: Int {
       return term.hashValue
     }
@@ -87,9 +86,69 @@ class SymSpell {
   
   var maxLength = 0 as Int
   
+  // For every word provided, all deletes with an edit distance of 1...editDistanceMax is created and added to the dictionary. Every delete entry has a suggestion list which points to the original term or terms it was created from. Dictionary items are dynamically updated.
+  func createDictionaryEntry(_ key: String, language: String) -> Bool {
+    var result = false
+    var value = DictionaryItem()
+    // Int or DictionaryItem existed before word
+    if let valueo = dictionary[language + key] {
+      if valueo is Int {
+        let tmp = valueo as! Int
+        value = DictionaryItem()
+        value.suggestions.append(tmp)
+        dictionary[language + key] = value
+      } else { //Already exists: word appears several times, word1==deletes(word2)
+        value = valueo as! DictionaryItem
+      }
+      // prevent overflow
+      if value.count < Int.max {
+        value.count += 1
+      }
+    } else if wordList.count < Int.max {
+      value.count += 1
+      dictionary[language + key] = value
+      if key.count > maxLength {
+        maxLength = key.count
+      }
+    }
+    
+    /*  Edits/suggestions are created only once, no matter how often word occurs.
+     Edits/suggestions are created only as soon as the word occurs in the corpus, even if the same term existed before in the dictionary as an edit from another word
+     A treshold might be specified, when a term occurs so frequently in the corpus that it is considered a valid word for spelling correction
+     */
+    if value.count == 1 {
+      //word2index
+      wordList.append(key)
+      let keyint = Int(wordList.count - 1)
+      result = true
+      //create deletes
+      for delete in edits(key, editDistance: 0, deletes: []) {
+        if let value2 = dictionary[language+(delete as! String)] {
+          //Already exists: word1==deletes(word2), deletes(word1)==deletes(word2) or because Int/DictionaryItem single delete existed before
+          if value2 is Int {
+            let tmp = value2 as! Int
+            let di = DictionaryItem()
+            di.suggestions.append(tmp)
+            dictionary[language+(delete as! String)] = di
+            
+            if !di.suggestions.contains(keyint) {
+              di.suggestions.append(keyint)
+              addLowestDistance(di, suggestion: key, suggestionint: keyint, delete: delete as! String)
+            }
+          } else if !(value2 as! DictionaryItem).suggestions.contains(keyint) {
+            (value2 as! DictionaryItem).suggestions.append(keyint)
+            addLowestDistance(value2 as! DictionaryItem, suggestion: key, suggestionint: keyint, delete: delete as! String)
+          }
+        } else {
+          dictionary[language+(delete as! String)] = keyint as AnyObject
+        }
+      }
+    }
+    return result
+  }
   
   // Save some time and space
-  func addLowestDistance(item: DictionaryItem, suggestion: String, suggestionint: Int, delete: String) {
+  func addLowestDistance(_ item: DictionaryItem, suggestion: String, suggestionint: Int, delete: String) {
     //remove all existing suggestions of higher distance, if verbose<2
     if (verbose < 2) && (item.suggestions.count > 0) && (wordList[item.suggestions[0]].count - delete.count) > (suggestion.count - delete.count) {
       item.suggestions = []
@@ -101,28 +160,26 @@ class SymSpell {
   }
   
   //inexpensive and language independent: only deletes, no transposes + replaces + inserts
-  //  //replaces and inserts are expensive and language dependent
-    func edits(word: String, editDistance: Int, deletes: NSMutableSet) -> NSMutableSet {
-      let editDistance = editDistance + 1
-      if word.count > 1 {
-        for i in 0..<word.count {
-          //delete ith character
-          let index: String.Index = word.index(word.startIndex, offsetBy: 0)
-//          let delete = slice(word, bounds: word.startIndex..<index) + slice(word, bounds: (i + 1)..<Int(word.count))
-//          if !deletes.contains(delete) {
-//            deletes.add(delete)
-//            //recursion, if maximum edit distance not yet reached
-//            if editDistance < editDistanceMax {
-//  //            edits(word: delete, editDistance: editDistance, deletes: deletes)
-//            }
-//          }
+  //replaces and inserts are expensive and language dependent
+  func edits(_ word: String, editDistance: Int, deletes: NSMutableSet) -> NSMutableSet {
+    let editDistance = editDistance + 1
+    if word.count > 1 {
+      for i in 0..<word.count {
+        //delete ith character
+        let delete = String(word[0...i]) + String(word[(i + 1)...(word.count - 1)])
+        if !deletes.contains(delete) {
+          deletes.add(delete)
+          //recursion, if maximum edit distance not yet reached
+          if editDistance < editDistanceMax {
+            return edits(delete, editDistance: editDistance, deletes: deletes)
+          }
         }
       }
-      return deletes
     }
+    return deletes
+  }
   
-  
-  func lookup(input: String, language: String, editDistanceMax: Int) -> [SuggestItem] {
+  func lookup(_ input: String, language: String, editDistanceMax: Int) -> [SuggestItem] {
     //save some time
     if (input.count - editDistanceMax > maxLength) {
       return [SuggestItem]()
@@ -209,9 +266,9 @@ class SymSpell {
                 }
                 
                 if ii > 0 || jj > 0 {
-                  distance = damerauLevenshteinDistance(source: (suggestion as NSString).substring(with: NSMakeRange(ii, suggestion.count - ii - jj)), target: (input as NSString).substring(with: NSMakeRange(ii, input.count - ii - jj)))
+                  distance = damerauLevenshteinDistance((suggestion as NSString).substring(with: NSMakeRange(ii, suggestion.count - ii - jj)), target: (input as NSString).substring(with: NSMakeRange(ii, input.count - ii - jj)))
                 } else {
-                  distance = damerauLevenshteinDistance(source: suggestion, target: input)
+                  distance = damerauLevenshteinDistance(suggestion, target: input)
                 }
               }
             }
@@ -251,9 +308,7 @@ class SymSpell {
           continue
         }
         for i in 0..<candidate.count {
-          let start = slice(candidate, bounds: i..<candidate.count)
-          let end = slice(candidate, bounds: (i+1)..<candidate.count)
-          let delete = start + end
+          let delete = String(candidate[i..<candidate.count]) + String(candidate[(i+1)..<candidate.count])
           if !hashSet1.contains(delete) {
             hashSet1.add(delete)
             candidates.append(delete)
@@ -278,13 +333,13 @@ class SymSpell {
     }
   }
   
-  func correct(input: String, language: String) -> [SuggestItem] {
+  func correct(_ input: String, language: String) -> [SuggestItem] {
     var suggestions: [SuggestItem] = []
-    suggestions = lookup(input: input, language: language, editDistanceMax: editDistanceMax)
+    suggestions = lookup(input, language: language, editDistanceMax: editDistanceMax)
     return suggestions
   }
   
-  func damerauLevenshteinDistance(source: String, target: String) -> Int {
+  func damerauLevenshteinDistance(_ source: String, target: String) -> Int {
     return Int((source as NSString).mdc_damerauLevenshteinDistance(to: target))
   }
 }

@@ -108,14 +108,14 @@ class SymSpell {
         for i in 0..<word.count {
           //delete ith character
           let index: String.Index = word.index(word.startIndex, offsetBy: 0)
-          let delete = slice(word, bounds: word.startIndex..<index) + slice(word, bounds: (i + 1)..<Int(word.count))
-          if !deletes.contains(delete) {
-            deletes.add(delete)
-            //recursion, if maximum edit distance not yet reached
-            if editDistance < editDistanceMax {
-  //            edits(word: delete, editDistance: editDistance, deletes: deletes)
-            }
-          }
+//          let delete = slice(word, bounds: word.startIndex..<index) + slice(word, bounds: (i + 1)..<Int(word.count))
+//          if !deletes.contains(delete) {
+//            deletes.add(delete)
+//            //recursion, if maximum edit distance not yet reached
+//            if editDistance < editDistanceMax {
+//  //            edits(word: delete, editDistance: editDistance, deletes: deletes)
+//            }
+//          }
         }
       }
       return deletes

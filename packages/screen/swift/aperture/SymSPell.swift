@@ -342,7 +342,6 @@ class SymSpell {
   }
   
   func damerauLevenshteinDistance(_ source: String, target: String) -> Int {
-    print("damerauLevenshteinDistance source \(source) target \(target)")
     return Int((source as NSString).mdc_damerauLevenshteinDistance(to: target))
   }
 }

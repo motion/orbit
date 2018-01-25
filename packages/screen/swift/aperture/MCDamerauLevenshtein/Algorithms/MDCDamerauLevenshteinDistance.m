@@ -14,6 +14,7 @@
 #pragma mark - Public Interface
 
 extern NSUInteger mdc_damerauLevenshteinDistance(NSString *left, NSString *right) {
+    printf("start this shit off");
     mdc_normalizeDistanceParameters(&left, &right);
     if ([right length] == 0) {
         return [left length];

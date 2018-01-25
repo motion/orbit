@@ -141,10 +141,10 @@ export default class OraPage {
               boxShadow:
                 oraStore.ui.height !== 40
                   ? [
-                      [0, 0, 15, 0, [0, 0, 0, 0.5]],
-                      ['inset', 0, 0, 0, 0.5, [255, 255, 255, 0.3]],
+                      [0, 0, 5, 0, [0, 0, 0, 0.15]],
+                      ['inset', 0, 0, 0, 0.5, [255, 255, 255, 0.2]],
                     ]
-                  : [['inset', 0, 0, 0, 0.5, [255, 255, 255, 0.3]]],
+                  : [['inset', 0, 0, 0, 0.5, [255, 255, 255, 0.2]]],
             }}
           >
             <OraContent />
@@ -165,7 +165,7 @@ export default class OraPage {
       // height: Constants.ORA_HEIGHT,
       background: Constants.ORA_BG,
       // border: [1, [255, 255, 255, 0.035]],
-      margin: 10,
+      margin: 5,
       borderRadius: 10,
       overflow: 'hidden',
       transition: 'all ease-in 120ms',

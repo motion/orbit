@@ -20,7 +20,7 @@ const chromeStyle = {
   marginRight: TAB_SLANT_X,
   position: 'absolute',
   top: 0,
-  left: -2.5,
+  left: -4,
   right: 0,
   bottom: -2,
   zIndex: 0,
@@ -54,23 +54,6 @@ class Tab {
         onMouseEnter={store.ref('showGlow').setter(true)}
         onMouseLeave={store.ref('showGlow').setter(false)}
       >
-        <leftBorder
-          css={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            bottom: 0,
-            right: TAB_SLANT_X + BORDER_LEFT_SIZE,
-            background: Constants.ORA_BG_MAIN,
-            borderTopLeftRadius: BORDER_LEFT_SIZE,
-            borderTopRightRadius: 0,
-            zIndex: 2,
-            boxShadow: ['inset 0.5px 0.5px rgba(255,255,255,0.15)'],
-            transform: {
-              x: -0.5,
-            },
-          }}
-        />
         <chrome
           css={{
             ...chromeStyle,
@@ -98,7 +81,6 @@ class Tab {
             css={{
               ...chromeStyle,
               overflow: 'hidden',
-              left: -4,
             }}
           >
             <UI.HoverGlow {...glowProps} show={store.showGlow} />

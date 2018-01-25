@@ -170,7 +170,7 @@ export default class Windows extends React.Component {
           show
           alwaysOnTop
           hasShadow={false}
-          showDevTools={true || this.state.showDevTools}
+          showDevTools={this.state.showDevTools}
           size={[Constants.ORA_WIDTH, 1000]}
           file={`${Constants.APP_URL}`}
           position={this.state.oraPosition}

@@ -41,6 +41,7 @@ if (module && module.hot) {
   const restart = () => {
     require('./app').start(true)
   }
-  module.hot.accept(restart)
+  module.hot.accept('.', restart)
   module.hot.accept('@mcro/models', restart)
+  module.hot.accept('./constants', restart)
 }

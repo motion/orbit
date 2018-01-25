@@ -102,24 +102,24 @@ class SymSpell {
   
   //inexpensive and language independent: only deletes, no transposes + replaces + inserts
   //  //replaces and inserts are expensive and language dependent
-  //  func edits(word: String, editDistance: Int, deletes: NSMutableSet) -> NSMutableSet {
-  //    let editDistance = editDistance + 1
-  //    if word.count > 1 {
-  //      for i in 0..<word.count {
-  //        //delete ith character
-  //        let index: String.Index = word.index(word.startIndex, offsetBy: 0)
-  //        let delete = String(word.subscript(..<index)) + String(word.subscript((i + 1)..<word.count))
-  //        if !deletes.contains(delete) {
-  //          deletes.add(delete)
-  //          //recursion, if maximum edit distance not yet reached
-  //          if editDistance < editDistanceMax {
-  ////            edits(word: delete, editDistance: editDistance, deletes: deletes)
-  //          }
-  //        }
-  //      }
-  //    }
-  //    return deletes
-  //  }
+    func edits(word: String, editDistance: Int, deletes: NSMutableSet) -> NSMutableSet {
+      let editDistance = editDistance + 1
+      if word.count > 1 {
+        for i in 0..<word.count {
+          //delete ith character
+          let index: String.Index = word.index(word.startIndex, offsetBy: 0)
+          let delete = slice(word, bounds: word.startIndex..<index) + slice(word, bounds: (i + 1)..<Int(word.count))
+          if !deletes.contains(delete) {
+            deletes.add(delete)
+            //recursion, if maximum edit distance not yet reached
+            if editDistance < editDistanceMax {
+  //            edits(word: delete, editDistance: editDistance, deletes: deletes)
+            }
+          }
+        }
+      }
+      return deletes
+    }
   
   
   func lookup(input: String, language: String, editDistanceMax: Int) -> [SuggestItem] {

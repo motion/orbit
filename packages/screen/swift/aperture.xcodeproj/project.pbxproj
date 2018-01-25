@@ -13,6 +13,7 @@
 		CF72D07120099C0C0001366D /* ConnectedComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF72D07020099C0C0001366D /* ConnectedComponents.swift */; };
 		CF85A92120186D270067DCF2 /* Moves.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF85A92020186D270067DCF2 /* Moves.swift */; };
 		CF9AEB742019446F00D29367 /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF9AEB732019446F00D29367 /* Array.swift */; };
+		CF9AEB78201969E200D29367 /* SymSPell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF9AEB77201969E200D29367 /* SymSPell.swift */; };
 		CFA30D14200EB2B00087ABC7 /* ConnectedComponentsSwiftOCR.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFA30D13200EB2B00087ABC7 /* ConnectedComponentsSwiftOCR.swift */; };
 		CFA30D16200EB3510087ABC7 /* UnionFind.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFA30D15200EB3510087ABC7 /* UnionFind.swift */; };
 		CFA30D18200EB3FB0087ABC7 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFA30D17200EB3FB0087ABC7 /* Extensions.swift */; };
@@ -31,6 +32,9 @@
 		CF72D07020099C0C0001366D /* ConnectedComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectedComponents.swift; sourceTree = "<group>"; };
 		CF85A92020186D270067DCF2 /* Moves.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Moves.swift; sourceTree = "<group>"; };
 		CF9AEB732019446F00D29367 /* Array.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Array.swift; sourceTree = "<group>"; };
+		CF9AEB77201969E200D29367 /* SymSPell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SymSPell.swift; sourceTree = "<group>"; };
+		CF9AEB7920196B7A00D29367 /* MCDamerauLevenshtein */ = {isa = PBXFileReference; lastKnownFileType = folder; path = MCDamerauLevenshtein; sourceTree = "<group>"; };
+		CF9AEB7A20196BEA00D29367 /* ApertureBridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ApertureBridge.h; sourceTree = "<group>"; };
 		CFA30D13200EB2B00087ABC7 /* ConnectedComponentsSwiftOCR.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectedComponentsSwiftOCR.swift; sourceTree = "<group>"; };
 		CFA30D15200EB3510087ABC7 /* UnionFind.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnionFind.swift; sourceTree = "<group>"; };
 		CFA30D17200EB3FB0087ABC7 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
@@ -76,6 +80,7 @@
 		E3A3107D1E450D3600D314DD /* aperture */ = {
 			isa = PBXGroup;
 			children = (
+				CF9AEB7920196B7A00D29367 /* MCDamerauLevenshtein */,
 				E3A310861E450DC800D314DD /* main.swift */,
 				E3A310871E450DC800D314DD /* Recorder.swift */,
 				CF21068A2016966700C41019 /* Characters.swift */,
@@ -91,6 +96,8 @@
 				CFBB310320112D16002D2115 /* Images.swift */,
 				CF85A92020186D270067DCF2 /* Moves.swift */,
 				CF9AEB732019446F00D29367 /* Array.swift */,
+				CF9AEB77201969E200D29367 /* SymSPell.swift */,
+				CF9AEB7A20196BEA00D29367 /* ApertureBridge.h */,
 			);
 			path = aperture;
 			sourceTree = "<group>";
@@ -172,6 +179,7 @@
 			files = (
 				E3A3108A1E450DC800D314DD /* Recorder.swift in Sources */,
 				CFBB310420112D16002D2115 /* Images.swift in Sources */,
+				CF9AEB78201969E200D29367 /* SymSPell.swift in Sources */,
 				CF85A92120186D270067DCF2 /* Moves.swift in Sources */,
 				E3A310891E450DC800D314DD /* main.swift in Sources */,
 				CFA30D16200EB3510087ABC7 /* UnionFind.swift in Sources */,
@@ -298,11 +306,12 @@
 		E3A310831E450D3600D314DD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_ENABLE_MODULES = NO;
+				CLANG_ENABLE_MODULES = YES;
 				INSTALL_PATH = "";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = aperture/ApertureBridge.h;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 4.0;
@@ -312,11 +321,12 @@
 		E3A310841E450D3600D314DD /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_ENABLE_MODULES = NO;
+				CLANG_ENABLE_MODULES = YES;
 				INSTALL_PATH = "";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = aperture/ApertureBridge.h;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 4.0;

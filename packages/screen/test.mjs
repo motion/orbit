@@ -1,4 +1,5 @@
 import Screen from '.'
+import Fs from 'fs'
 
 process.on('unhandledRejection', function(error, p) {
   console.log('OCR PromiseFail:')
@@ -9,6 +10,12 @@ process.on('unhandledRejection', function(error, p) {
     console.log(error)
   }
 })
+
+const dir = './tmp'
+
+if (!Fs.existsSync(dir)) {
+  Fs.mkdirSync(dir)
+}
 
 async function test() {
   const video = new Screen()
@@ -26,7 +33,7 @@ async function test() {
         y: 48,
         width: 1166,
         height: 980,
-        screenDir: '/tmp/screen',
+        screenDir: dir,
         initialScreenshot: true,
         findContent: true,
       },
@@ -69,7 +76,10 @@ async function test() {
   // })
 
   video.onChangedFrame(data => {
-    console.log('Changed!', data)
+    console.log('test got data', data)
+    console.log('\nto do it full speed: npm run test-fast')
+    console.log('\nto see output:')
+    console.log('$ open ./tmp')
     process.exit(0)
   })
 }

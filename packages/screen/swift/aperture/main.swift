@@ -47,8 +47,10 @@ func record() throws {
   let autocorrect = SymSpell(editDistance: 2, verbose: 1)
 //  autocorrect.createDictionary("corpus", language: "en")
   autocorrect.createDictionaryEntry("hellooo", language: "en")
-  let out = autocorrect.correct("helloo", language: "en")
+  print("test word")
+  let out = autocorrect.correct("hellooe", language: "en")
   print("out \(out)")
+  exit(0)
   
   recorder = try Recorder(
     fps: options.fps,

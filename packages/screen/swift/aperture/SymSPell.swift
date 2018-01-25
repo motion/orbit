@@ -162,16 +162,16 @@ class SymSpell {
   //inexpensive and language independent: only deletes, no transposes + replaces + inserts
   //replaces and inserts are expensive and language dependent
   func edits(_ word: String, editDistance: Int, deletes: NSMutableSet) -> NSMutableSet {
-    let editDistance = editDistance + 1
-    if word.count > 1 {
-      for i in 0..<word.count {
-        //delete ith character
-        let delete = String(word[0...i]) + String(word[(i + 1)...(word.count - 1)])
-        if !deletes.contains(delete) {
-          deletes.add(delete)
-          //recursion, if maximum edit distance not yet reached
-          if editDistance < editDistanceMax {
-            return edits(delete, editDistance: editDistance, deletes: deletes)
+    var editDistance = editDistance
+    while editDistance < editDistanceMax {
+      editDistance += 1
+      if word.count > 1 {
+        for i in 0..<(word.count - 1) {
+          //delete ith character
+          let delete = String(word[0..<i]) + String(word[(i+1)..<word.count])
+          print("delete \(delete)")
+          if !deletes.contains(delete) {
+            deletes.add(delete)
           }
         }
       }
@@ -197,6 +197,7 @@ class SymSpell {
     while candidates.count > 0 {
       let candidate = candidates[0]
       candidates.remove(at: 0)
+      print("candidate = \(candidate)")
       
       //save some time
       //early termination
@@ -308,7 +309,8 @@ class SymSpell {
           continue
         }
         for i in 0..<candidate.count {
-          let delete = String(candidate[i..<candidate.count]) + String(candidate[(i+1)..<candidate.count])
+          let delete = String(candidate[0..<i]) + String(candidate[(i+1)..<candidate.count])
+          print("delete \(delete)")
           if !hashSet1.contains(delete) {
             hashSet1.add(delete)
             candidates.append(delete)
@@ -340,6 +342,7 @@ class SymSpell {
   }
   
   func damerauLevenshteinDistance(_ source: String, target: String) -> Int {
+    print("damerauLevenshteinDistance source \(source) target \(target)")
     return Int((source as NSString).mdc_damerauLevenshteinDistance(to: target))
   }
 }

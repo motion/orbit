@@ -10,22 +10,22 @@ struct Character {
 }
 
 class Characters {
+  // public
+  var frameOffset: [Int] = [0, 0]
   var shouldDebug = false
+  var debugImg: CGImage? = nil
+  var debugDir = ""
 
   private let dict = SymSpell(editDistance: 2, verbose: 1)
   private var answers = [String: String]()
   private let images = Images()
   private var buffer: UnsafeMutablePointer<UInt8>
   private var perRow: Int
-  var debugImg: CGImage? = nil
-  var debugDir = ""
   private var maxLuma = 0
   private let moves = Moves()
   private let specialDebug = [0, 0]
   private var curChar = 0
   private var id = 0
-  // allow adjust as it runs
-  var frameOffset: [Int]
 
   func sdebug() -> Bool {
     return shouldDebug && specialDebug[0] == id && specialDebug[1] == curChar
@@ -138,16 +138,15 @@ class Characters {
     // async add dictionary items
     Async.background {
       let ans = ["h", "e", "l", "l", "o", "w", "o", "r", "l", "d"]
-      print("answers is \(self.answers)")
       for (index, char) in foundChars.enumerated() {
         let outlineStr = char.outline.joined()
         if self.answers[outlineStr] != nil {
           print("found letter directly \(self.answers[outlineStr]!)")
         } else {
           let found = self.dict.correct(outlineStr, language: "en")
-          print("close? \(found.count)")
           if found.count > 0 {
-            print("found answers from dict \(found)")
+            let closest = found[0].term
+            print("found answers from dict! \(self.answers[closest]!)")
           } else {
             self.answers[outlineStr] = ans[index]
             if self.dict.createDictionaryEntry(outlineStr, language: "en") {

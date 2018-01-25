@@ -435,17 +435,17 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
     
     if self.characters == nil {
       characters = Characters(
-        data: pixelBuffer,
+        data: buffer,
         perRow: perRow,
         maxLuma: 200
       )
-      characters.debug = shouldDebug
-      characters.debugDir = box.screenDir!
+      characters!.shouldDebug = shouldDebug
     }
     
     // loop over boxes and check
     for boxId in self.boxes.keys {
       let box = self.boxes[boxId]!
+      characters!.debugDir = box.screenDir!
       if (firstTime && box.initialScreenshot || hasBoxChanged(box: box, buffer: buffer, perRow: perRow)) {
         screenshotBox(box: box, buffer: sampleBuffer, bufferPointer: buffer, perRow: perRow, findContent: box.findContent)
         print(">\(box.id)")

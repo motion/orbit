@@ -82,7 +82,7 @@ class Filters {
   func filterForVerticalContentFinding(image: CGImage) -> CGImage {
     var outputImage = CIImage(cgImage: image)
     // threshold
-    outputImage = applyFilter(ThresholdFilter(), for: outputImage)
+    outputImage = applyFilter(ThresholdFilterEasy(), for: outputImage)
     // write canvas
     let context = CIContext(options: [kCIContextUseSoftwareRenderer: false])
     return context.createCGImage(outputImage, from: outputImage.extent)!

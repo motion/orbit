@@ -205,7 +205,6 @@ final class Recorder: NSObject {
     print("3. filter vertical: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     start = DispatchTime.now()
     // first loop - find vertical sections
-    var imgData = [[Int]](repeating: [Int](repeating: 0, count: Int(vHeight)), count: Int(vWidth))
     var verticalSections = Dictionary<Int, Int>() // start => end
     let colHeightMin = 4
     let colStreakMin = 4
@@ -213,11 +212,14 @@ final class Recorder: NSObject {
     let colMissMax = 8
     var colMiss = 0
     var colStart = 0
+    var imgData = [[Int]]()
     for x in 0..<vWidth {
+      imgData.append([Int]())
       var verticalFilled = 0
       for y in 0..<vHeight {
-        if verticalImageRep.colorAt(x: x, y: y)!.brightnessComponent == 0.0 {
-          imgData[x][y] = 1
+        let filled = verticalImageRep.colorAt(x: x, y: y)!.brightnessComponent == 0.0
+        imgData[x].append(filled ? 1 : 0)
+        if filled {
           verticalFilled += 1
           if colStart == 0 {
             colStart = x

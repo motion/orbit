@@ -42,20 +42,23 @@ class Characters {
     // we control the sticks for more speed
     var x = 0
     var y = 0
-    let maxHeightCheck = lineH - lineH / 2
+    let maxY = lineH - lineH / 3
+    let minY = lineH / 3
     while true {
       if shouldDebug && pixels == nil && debugImg != nil {
         pixels = [PixelData](repeating: PixelData(a: 255, r: 255, g: 255, b: 255), count: lineW * lineH)
       }
-      // this first loop can be pretty inaccurate, as long as it finds a good pixel
-      if y == lineH - 1 {
+      // find start of char
+      if y >= lineH - 1 {
         x += 1
         y = 0
       } else {
-        y += lineH / 5 // x checks per line
+        y += lineH / 5 // move height/x, spaced out, just needs one good pixel
       }
-      // no need to go all the way down
-      if y > maxHeightCheck {
+      if y < minY { // loop until past min
+        continue
+      }
+      if y > maxY { // once past maxY, go to next col
         x += 1
         y = 0
         continue
@@ -66,7 +69,7 @@ class Characters {
       }
       let xO = x * 2 + lineX
       // rewind to topmost filled px if we passed it
-      while true { if buffer[((y - 1) * 2 + lineY) * perRow + xO] < maxLuma { y -= 1 } else { break } }
+      while y > 0 { if buffer[((y - 1) * 2 + lineY) * perRow + xO] < maxLuma { y -= 1 } else { break } }
       let yO = y * 2 + lineY
       let luma = buffer[yO * perRow + xO]
       let isBlack = luma < maxLuma ? true : false
@@ -86,7 +89,7 @@ class Characters {
           maxHeight: lineH * 2
         )
         if cb[3] == 0 || cb[2] == 0 {
-          debug("0 size")
+//          debug("0 size")
         } else {
           let tooSmall = cb[2] < 5 && cb[3] < 5 || cb[2] < 2 || cb[3] < 2
           let tooThin = cb[3] / cb[2] > 25
@@ -100,7 +103,7 @@ class Characters {
           }
           y = 0
           if misfit {
-            debug("misfit \(cb)")
+//            debug("misfit \(cb)")
             x += 2
             continue
           } else {
@@ -109,13 +112,13 @@ class Characters {
           // width - backtracks + 2
           let fwd = (cb[2] / 2 - cb[4] / 2 + 2)
           let nextX = x + fwd
-          debug("move: \(x) fwd \(fwd) [w \(cb[2]) back \(cb[4])]")
-          if nextX < x {
+//          debug("move: \(x) fwd \(fwd) [w \(cb[2]) back \(cb[4])]")
+          if nextX <= x {
             x += 2
           } else {
             x = nextX
           }
-          debug("   => \(x)")
+//          debug("   => \(x)")
           curChar += 1
         } // end if
       } // end if

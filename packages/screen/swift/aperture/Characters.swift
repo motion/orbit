@@ -31,10 +31,10 @@ class Characters {
 
   func find(id: Int, bounds: [Int]) -> [[Int]] {
     let start = DispatchTime.now()
-    let imgX = bounds[0] * 2
-    let imgY = bounds[1] * 2
-    let imgW = bounds[2]
-    let imgH = bounds[3]
+    let lineX = bounds[0] * 2
+    let lineY = bounds[1] * 2
+    let lineW = bounds[2]
+    let lineH = bounds[3]
     var foundChars = [[Int]]()
     var pixels: [PixelData]? = nil
     self.id = id
@@ -42,40 +42,48 @@ class Characters {
     // we control the sticks for more speed
     var x = 0
     var y = 0
+    let maxHeightCheck = lineH - lineH / 2
     while true {
       if shouldDebug && pixels == nil && debugImg != nil {
-        pixels = [PixelData](repeating: PixelData(a: 255, r: 255, g: 255, b: 255), count: imgW * imgH)
+        pixels = [PixelData](repeating: PixelData(a: 255, r: 255, g: 255, b: 255), count: lineW * lineH)
       }
-      // loop through from ltr, then ttb
-      if y == imgH - 1 {
+      // this first loop can be pretty inaccurate, as long as it finds a good pixel
+      if y == lineH - 1 {
         x += 1
         y = 0
       } else {
-        y += 1
+        y += lineH / 5 // x checks per line
+      }
+      // no need to go all the way down
+      if y > maxHeightCheck {
+        x += 1
+        y = 0
+        continue
       }
       // if reached last pixel, break
-      if x >= imgW || y >= imgH || (x == imgW - 1 && y == imgH - 1) {
+      if x >= lineW || y >= lineH || (x == lineW - 1 && y == lineH - 1) {
         break
       }
-      // loop logic
-      let xO = x * 2 + imgX
-      let yO = y * 2 + imgY
+      let xO = x * 2 + lineX
+      // rewind to topmost filled px if we passed it
+      while true { if buffer[((y - 1) * 2 + lineY) * perRow + xO] < maxLuma { y -= 1 } else { break } }
+      let yO = y * 2 + lineY
       let luma = buffer[yO * perRow + xO]
       let isBlack = luma < maxLuma ? true : false
       if shouldDebug {
         let val = UInt8(isBlack ? 0 : 255)
-        pixels![x + y * imgW] = PixelData(a: 255, r: val, g: val, b: val)
+        pixels![x + y * lineW] = PixelData(a: 255, r: val, g: val, b: val)
       }
       if isBlack {
-        if shouldDebug && debugImg != nil {
-          // todo need to handle frame offset here
-          let box = CGRect(x: xO / 2, y: yO / 2, width: 50, height: 50)
-          images.writeCGImage(image: images.cropImage(debugImg!, box: box)!, to: "/tmp/screen/view\(id)-\(curChar).png")
-        }
+//        if shouldDebug && debugImg != nil {
+          // this just helps to debug if you are cropping wrong somewhere else
+//          let box = CGRect(x: xO / 2, y: yO / 2, width: 50, height: 50)
+//          images.writeCGImage(image: images.cropImage(debugImg!, box: box)!, to: "/tmp/screen/view\(id)-\(curChar).png")
+//        }
         let cb = self.findCharacter(
           startX: xO,
           startY: yO,
-          maxHeight: imgH * 2
+          maxHeight: lineH * 2
         )
         if cb[3] == 0 || cb[2] == 0 {
           debug("0 size")
@@ -109,11 +117,11 @@ class Characters {
           }
           debug("   => \(x)")
           curChar += 1
-        }
-      }
-    }
+        } // end if
+      } // end if
+    } // end while
     if pixels != nil && pixels!.count > 0 && debugImg != nil {
-      if let img = images.imageFromArray(pixels: pixels!, width: imgW, height: imgH) {
+      if let img = images.imageFromArray(pixels: pixels!, width: lineW, height: lineH) {
         Images().writeCGImage(image: img, to: "/tmp/screen/hit\(id).png", resolution: 72) // write img
       }
     }
@@ -132,14 +140,13 @@ class Characters {
   }
 
   func findCharacter(startX: Int, startY: Int, maxHeight: Int) -> [Int] {
-    let exhaust = maxHeight / moves.px // most amount to go without finding new bound before give up
-    var visited = Dictionary<Int, Bool?>() // track where we went
-    var startPoint = [startX, startY] // top left point
-    var endPoint = [startX, startY] // bottom right point
-    // start going down as we came
-    var lastMove = [0, moves.px]
+    let exhaust = maxHeight / 2 / moves.px // most amount to go without finding new bound before give up
+    var visited = Dictionary<Int, Bool?>() // for preventing crossing over at thin interections
+    var topLeftBound = [startX, startY]
+    var bottomRightBound = [startX, startY]
+    var lastMove = [0, moves.px] // we begin going down
     var x = startX
-    var y = startY - moves.px
+    var y = startY - moves.px // and one above where we found the first black px
     var curTry = 0
     var curPos = 0
     var foundEnd = false
@@ -149,7 +156,7 @@ class Characters {
       visited[curPos] = true
       curTry += 1
       if curTry > exhaust {
-        debug("exhausted")
+//        debug("exhausted")
         foundEnd = true
         break
       }
@@ -157,7 +164,7 @@ class Characters {
       for attempt in clockwise[lastMove[0]]![lastMove[1]]! {
         let next = curPos + attempt[0] + attempt[1] * perRow
         if curTry > 10 && x == startX && y == startY {
-          debug("found end")
+//          debug("found end")
           foundEnd = true
           break
         }
@@ -171,14 +178,14 @@ class Characters {
         x += attempt[0]
         y += attempt[1]
         // update bounds
-        let newEndX = x > endPoint[0]
-        let newStartX = x < startPoint[0]
-        let newStartY = y < startPoint[1]
-        let newEndY = y > endPoint[1]
-        if newEndX { curTry = 0; endPoint[0] = x }
-        else if newStartX { curTry = 0; startPoint[0] = x }
-        if newStartY { curTry = 0; startPoint[1] = y }
-        else if newEndY { curTry = 0; endPoint[1] = y }
+        let newEndX = x > bottomRightBound[0]
+        let newStartX = x < topLeftBound[0]
+        let newStartY = y < topLeftBound[1]
+        let newEndY = y > bottomRightBound[1]
+        if newEndX { curTry = 0; bottomRightBound[0] = x }
+        else if newStartX { curTry = 0; topLeftBound[0] = x }
+        if newStartY { curTry = 0; topLeftBound[1] = y }
+        else if newEndY { curTry = 0; bottomRightBound[1] = y }
 //        if sdebug() && curTry == 0 {
 //          if newEndX { print("new endX \(x / 2)") }
 //          if newStartX { print("new startX \(x / 2)") }
@@ -207,11 +214,11 @@ class Characters {
       }
     }
     return [
-      startPoint[0], // x
-      startPoint[1], // y
-      endPoint[0] - startPoint[0] + 2, // width
-      endPoint[1] - startPoint[1] + 2, // height
-      startX - startPoint[0], // backwards moves
+      topLeftBound[0], // x
+      topLeftBound[1], // y
+      bottomRightBound[0] - topLeftBound[0] + 2, // width
+      bottomRightBound[1] - topLeftBound[1] + 2, // height
+      startX - topLeftBound[0], // backwards moves
     ]
   }
 

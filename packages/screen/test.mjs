@@ -80,7 +80,9 @@ async function test() {
     console.log('\nto do it full speed: npm run test-fast')
     console.log('\nto see output:')
     console.log('$ open ./tmp')
-    process.exit(0)
+    setTimeout(() => {
+      process.exit(0)
+    }, 200)
   })
 }
 

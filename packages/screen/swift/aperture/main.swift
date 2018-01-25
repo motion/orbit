@@ -39,7 +39,7 @@ func record() throws {
 //    displayId: "main",
 //    videoCodec: "mp4",
 //    sampleSpacing: 10,
-//    sensitivity: 2
+//    sensitivity: 2,
 //    debug: true
 //  )
   

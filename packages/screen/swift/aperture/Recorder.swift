@@ -196,7 +196,7 @@ final class Recorder: NSObject {
     print("2. filter for ocr: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
 
     // find vertical sections
-    let lineFindScaling = 4 // scale down denominator
+    let lineFindScaling = 3 // scale down denominator
     let vWidth = frame[2] / lineFindScaling
     let vHeight = frame[3] / lineFindScaling
     start = DispatchTime.now()
@@ -319,15 +319,15 @@ final class Recorder: NSObject {
     for id in sectionLines.keys {
       let lines = sectionLines[id]!
       let scl = lineFindScaling
-      let padX = 6
-      let padY = 10
       let lineStrings: [String] = lines.pmap(transformer: {(line, index) in
+        let padX = 6
+        let padY = max(3, min(12, line.height / 10))
         let lineBounds = [
           line.x * scl - padX + frame[0],
           line.y * scl - padY + frame[1],
           // add min in case padX/padY go too far
           min(frame[2], line.width * scl + padX * 2),
-          min(frame[3], line.height * scl + padY * 2)
+          min(frame[3], line.height * scl + padY * 3)
         ]
         if self.shouldDebug {
           print("process line \(index) \(lineBounds)")

@@ -169,7 +169,7 @@ class SymSpell {
         for i in 0..<(word.count - 1) {
           //delete ith character
           let delete = String(word[0..<i]) + String(word[(i+1)..<word.count])
-          print("delete \(delete)")
+//          print("delete \(delete)")
           if !deletes.contains(delete) {
             deletes.add(delete)
           }
@@ -197,7 +197,7 @@ class SymSpell {
     while candidates.count > 0 {
       let candidate = candidates[0]
       candidates.remove(at: 0)
-      print("candidate = \(candidate)")
+//      print("candidate = \(candidate)")
       
       //save some time
       //early termination
@@ -310,7 +310,7 @@ class SymSpell {
         }
         for i in 0..<candidate.count {
           let delete = String(candidate[0..<i]) + String(candidate[(i+1)..<candidate.count])
-          print("delete \(delete)")
+//          print("delete \(delete)")
           if !hashSet1.contains(delete) {
             hashSet1.add(delete)
             candidates.append(delete)

@@ -1,41 +1,49 @@
 import AppKit
 
+struct Character {
+  var x: Int
+  var y: Int
+  var width: Int
+  var height: Int
+  var backMoves: Int
+  var outline: [String]
+}
+
 class Characters {
   var shouldDebug = false
 
+  private let dict = SymSpell(editDistance: 2, verbose: 1)
+  private var answers = [String: String]()
   private let images = Images()
   private var buffer: UnsafeMutablePointer<UInt8>
   private var perRow: Int
-  private var debugImg: CGImage? = nil
-  private var debugDir = ""
+  var debugImg: CGImage? = nil
+  var debugDir = ""
   private var maxLuma = 0
   private let moves = Moves()
   private let specialDebug = [0, 0]
   private var curChar = 0
   private var id = 0
-  private var frameOffset: [Int]
+  // allow adjust as it runs
+  var frameOffset: [Int]
 
   func sdebug() -> Bool {
     return shouldDebug && specialDebug[0] == id && specialDebug[1] == curChar
   }
 
-  init(data: UnsafeMutablePointer<UInt8>, perRow: Int, maxLuma: Int, frameOffset: [Int], debug: Bool, debugDir: String?, debugImg: CGImage?) {
+  init(data: UnsafeMutablePointer<UInt8>, perRow: Int, maxLuma: Int) {
     self.maxLuma = maxLuma // higher == allow lighter
-    self.shouldDebug = debug
     self.buffer = data
     self.perRow = perRow
-    self.debugDir = debugDir ?? ""
-    self.debugImg = debugImg
-    self.frameOffset = frameOffset
   }
 
-  func find(id: Int, bounds: [Int]) -> [[Int]] {
+  func find(id: Int, bounds: [Int]) -> [Character] {
     let start = DispatchTime.now()
     let lineX = bounds[0] * 2
     let lineY = bounds[1] * 2
     let lineW = bounds[2]
     let lineH = bounds[3]
-    var foundChars = [[Int]]()
+    var foundChars = [Character]()
     var pixels: [PixelData]? = nil
     self.id = id
     self.curChar = 0
@@ -83,51 +91,73 @@ class Characters {
 //          let box = CGRect(x: xO / 2, y: yO / 2, width: 50, height: 50)
 //          images.writeCGImage(image: images.cropImage(debugImg!, box: box)!, to: "/tmp/screen/view\(id)-\(curChar).png")
 //        }
-        let cb = self.findCharacter(
+        let char = self.findCharacter(
           startX: xO,
           startY: yO,
           maxHeight: lineH * 2
         )
-        if cb[3] == 0 || cb[2] == 0 {
-//          debug("0 size")
+        if char.width == 0 || char.height == 0 {
+          debug("0 size")
         } else {
-          let tooSmall = cb[2] < 5 && cb[3] < 5 || cb[2] < 2 || cb[3] < 2
-          let tooThin = cb[3] / cb[2] > 25
-          let tooWide = cb[2] / cb[3] > 25
+          let tooSmall = char.width < 5 && char.height < 5 || char.width < 2 || char.height < 2
+          let tooThin = char.height / char.width > 25
+          let tooWide = char.width / char.height > 25
           let misfit = tooSmall || tooThin || tooWide
           if shouldDebug && debugImg != nil {
-            let box = CGRect(x: cb[0] / 2 - frameOffset[0] * 2, y: cb[1] / 2 - frameOffset[1] * 2, width: cb[2] / 2, height: cb[3] / 2)
+            let box = CGRect(x: char.x / 2 - frameOffset[0] * 2, y: char.y / 2 - frameOffset[1] * 2, width: char.width / 2, height: char.height / 2)
             if let img = images.cropImage(debugImg!, box: box) {
               images.writeCGImage(image: img, to: "/tmp/screen/\(misfit ? "charmiss-" : "char")\(id)-\(curChar).png")
             }
           }
           y = 0
           if misfit {
-//            debug("misfit \(cb)")
+            debug("misfit \(char.width) \(char.height)")
             x += 2
             continue
-          } else {
-            foundChars.append(cb)
           }
-          // width - backtracks + 2
-          let fwd = (cb[2] / 2 - cb[4] / 2 + 2)
+          curChar += 1
+          foundChars.append(char)
+          let fwd = (char.width / 2 - char.backMoves / 2 + 2) // width - backtracks + 2
           let nextX = x + fwd
-//          debug("move: \(x) fwd \(fwd) [w \(cb[2]) back \(cb[4])]")
           if nextX <= x {
             x += 2
           } else {
             x = nextX
           }
-//          debug("   => \(x)")
-          curChar += 1
         } // end if
       } // end if
     } // end while
+
+    // finish, write string
     if pixels != nil && pixels!.count > 0 && debugImg != nil {
       if let img = images.imageFromArray(pixels: pixels!, width: lineW, height: lineH) {
         Images().writeCGImage(image: img, to: "/tmp/screen/hit\(id).png", resolution: 72) // write img
       }
     }
+    
+    // async add dictionary items
+    Async.background {
+      let ans = ["h", "e", "l", "l", "o", "w", "o", "r", "l", "d"]
+      print("answers is \(self.answers)")
+      for (index, char) in foundChars.enumerated() {
+        let outlineStr = char.outline.joined()
+        if self.answers[outlineStr] != nil {
+          print("found letter directly \(self.answers[outlineStr]!)")
+        } else {
+          let found = self.dict.correct(outlineStr, language: "en")
+          print("close? \(found.count)")
+          if found.count > 0 {
+            print("found answers from dict \(found)")
+          } else {
+            self.answers[outlineStr] = ans[index]
+            if self.dict.createDictionaryEntry(outlineStr, language: "en") {
+              print("add to dict: char at pos \(index) = \(ans[index]), outline = \(outlineStr)")
+            }
+          }
+        }
+      }
+    }
+
     debug("Characters.find() \(foundChars.count): \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     return foundChars
   }
@@ -142,12 +172,14 @@ class Characters {
     return buffer[pos] < maxLuma
   }
 
-  func findCharacter(startX: Int, startY: Int, maxHeight: Int) -> [Int] {
+  func findCharacter(startX: Int, startY: Int, maxHeight: Int) -> Character {
     let exhaust = maxHeight / 2 / moves.px // most amount to go without finding new bound before give up
     var visited = Dictionary<Int, Bool?>() // for preventing crossing over at thin interections
     var topLeftBound = [startX, startY]
     var bottomRightBound = [startX, startY]
     var lastMove = [0, moves.px] // we begin going down
+    var outline: [String] = []
+    var iteration = 0
     var x = startX
     var y = startY - moves.px // and one above where we found the first black px
     var curTry = 0
@@ -155,6 +187,10 @@ class Characters {
     var foundEnd = false
     let clockwise = moves.clockwise
     while !foundEnd {
+      iteration += 1
+      if iteration % 5 == 0 {
+        outline.append(String(lastMove[0] + 4) + String(lastMove[1] + 4))
+      }
       curPos = y * perRow + x
       visited[curPos] = true
       curTry += 1
@@ -216,27 +252,27 @@ class Characters {
         break
       }
     }
-    return [
-      topLeftBound[0], // x
-      topLeftBound[1], // y
-      bottomRightBound[0] - topLeftBound[0] + 2, // width
-      bottomRightBound[1] - topLeftBound[1] + 2, // height
-      startX - topLeftBound[0], // backwards moves
-    ]
+
+    return Character(
+      x: topLeftBound[0],
+      y: topLeftBound[1],
+      width: bottomRightBound[0] - topLeftBound[0] + 2,
+      height: bottomRightBound[1] - topLeftBound[1] + 2,
+      backMoves: startX - topLeftBound[0],
+      outline: outline
+    )
   }
 
-  public func charsToString(rects: [[Int]], debugID: Int) -> String {
+  public func charsToString(_ characters: [Character], debugID: Int) -> String {
     var output = ""
     let dbl = Float(28)
-    for (index, rect) in rects.enumerated() {
-      let minX = rect[0]
-      let minY = rect[1]
-      if rect[3] == 0 || rect[2] == 0 {
+    for (index, char) in characters.enumerated() {
+      if char.width == 0 || char.height == 0 {
         debug("empty char")
         continue
       }
-      let width = Float(rect[2])
-      let height = Float(rect[3])
+      let width = Float(char.width)
+      let height = Float(char.height)
       // make square
       var scaleX = Float(1)
       var scaleY = Float(1)
@@ -258,7 +294,7 @@ class Characters {
         for x in 0..<28 {
           let xS = Int(Float(x) * scaleX)
           let yS = Int(Float(y) * scaleY)
-          let luma = buffer[(minY + yS) * perRow + minX + xS]
+          let luma = buffer[(char.y + yS) * perRow + char.x + xS]
           // luminance to intensity means we have to inverse it
           // warning, doing any sort of Int => String conversion here slows it down Bigly
           if luma < 50 { // white

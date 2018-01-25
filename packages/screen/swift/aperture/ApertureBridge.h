@@ -9,6 +9,6 @@
 #ifndef MCDamerauLevenshtein_h
 #define MCDamerauLevenshtein_h
 
-#import "./MCDamerauLevenshtein/MDCDamerauLevenshtein.h"
+#import "MDCDamerauLevenshtein.h"
 
 #endif /* MCDamerauLevenshtein_h */

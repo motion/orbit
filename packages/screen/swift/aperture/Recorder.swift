@@ -54,6 +54,7 @@ final class Recorder: NSObject {
   private var lastBoxes: [String: Array<UInt32>]
   private let displayId: CGDirectDisplayID
   private let components = ConnectedComponentsSwiftOCR()
+  private var characters: Characters?
 
   var onStart: (() -> Void)?
   var onFinish: (() -> Void)?
@@ -80,6 +81,7 @@ final class Recorder: NSObject {
     self.sensitivity = sensitivity
     self.lastBoxes = [String: Array<UInt32>]()
     self.boxes = [String: Box]()
+    
     for box in boxes {
       self.boxes[box.id] = box
     }
@@ -125,6 +127,7 @@ final class Recorder: NSObject {
   }
   
   func screenshotBox(box: Box, buffer: CMSampleBuffer, bufferPointer: UnsafeMutablePointer<UInt8>, perRow: Int, findContent: Bool = false) {
+    let chars = self.characters!
     // clear old files
     rmAllInside(URL(fileURLWithPath: box.screenDir!))
     let startAll = DispatchTime.now()
@@ -143,6 +146,7 @@ final class Recorder: NSObject {
     var cgImageBinarized: CGImage? = nil
     if shouldDebug {
       cgImageBinarized = filters.filterImageForOCRCharacterFinding(image: cgImage)
+      chars.debugImg = cgImageBinarized
       print("box \(box)")
       print("cgImage size \(cgImage.width) \(cgImage.height)")
     }
@@ -184,6 +188,10 @@ final class Recorder: NSObject {
       bb.getWidth() * boxFindScale - innerPad * 2,
       bb.getHeight() * boxFindScale - innerPad * 2
     ]
+    
+    // adjust frame for character finder
+    chars.frameOffset = frame
+    
     let cropBox = CGRect(x: frame[0] - box.x, y: frame[1] - box.y, width: frame[2], height: frame[3])
     // send out to world frame offset
     print("! [\(frame[0]), \(frame[1]), \(frame[2]), \(frame[3])]")
@@ -309,15 +317,6 @@ final class Recorder: NSObject {
     // for each VERTICAL SECTION, get characters
     var foundTotal = 0
     var allLineStrings = [String]()
-    let characters = Characters(
-      data: bufferPointer,
-      perRow: perRow,
-      maxLuma: 200,
-      frameOffset: frame,
-      debug: shouldDebug,
-      debugDir: box.screenDir!,
-      debugImg: cgImageBinarized
-    )
     for id in sectionLines.keys {
       let lines = sectionLines[id]!
       let scl = lineFindScaling
@@ -335,8 +334,8 @@ final class Recorder: NSObject {
           print("process line \(index) \(lineBounds)")
         }
         // finds characters
-        let rects = characters.find(id: index, bounds: lineBounds)
-        foundTotal += rects.count
+        let foundChars = chars.find(id: index, bounds: lineBounds)
+        foundTotal += foundChars.count
         // debug line
         if self.shouldDebug {
           images.writeCGImage(
@@ -345,9 +344,9 @@ final class Recorder: NSObject {
           )
         }
         // write characters
-        characters.shouldDebug = self.shouldDebug
-        let chars = characters.charsToString(rects: rects, debugID: index)// index) // index < 40 ? index : -1
-        return chars
+        chars.shouldDebug = self.shouldDebug
+        let charsString = chars.charsToString(foundChars, debugID: index)// index) // index < 40 ? index : -1
+        return charsString
       })
       allLineStrings.append(
         lineStrings.joined(separator: "\n")
@@ -433,6 +432,17 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
     let baseAddress = CVPixelBufferGetBaseAddressOfPlane(pixelBuffer, 0)
     let buffer = unsafeBitCast(baseAddress, to: UnsafeMutablePointer<UInt8>.self)
     let perRow = CVPixelBufferGetBytesPerRowOfPlane(pixelBuffer, 0)
+    
+    if self.characters == nil {
+      characters = Characters(
+        data: pixelBuffer,
+        perRow: perRow,
+        maxLuma: 200
+      )
+      characters.debug = shouldDebug
+      characters.debugDir = box.screenDir!
+    }
+    
     // loop over boxes and check
     for boxId in self.boxes.keys {
       let box = self.boxes[boxId]!

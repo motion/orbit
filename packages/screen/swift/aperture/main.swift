@@ -22,6 +22,7 @@ struct Options: Decodable {
   let videoCodec: String?
   let sampleSpacing: Int
   let sensitivity: Int
+  let debug: Bool
 }
 
 func record() throws {
@@ -39,6 +40,7 @@ func record() throws {
 //    videoCodec: "mp4",
 //    sampleSpacing: 10,
 //    sensitivity: 2
+//    debug: true
 //  )
   
   recorder = try Recorder(
@@ -48,7 +50,8 @@ func record() throws {
     displayId: options.displayId == "main" ? CGMainDisplayID() : CGDirectDisplayID(options.displayId)!,
     videoCodec: options.videoCodec,
     sampleSpacing: options.sampleSpacing,
-    sensitivity: options.sensitivity
+    sensitivity: options.sensitivity,
+    debug: options.debug
   )
 
   recorder.onStart = {

@@ -15,6 +15,7 @@ async function test() {
   console.log('start')
 
   video.startRecording({
+    debug: !!process.argv.find(x => x === '--debug'),
     fps: 2,
     sampleSpacing: 10,
     sensitivity: 2,

@@ -17,9 +17,10 @@ let screenDir = Path.join(__dirname, '..', 'tmp')
 
 async function test() {
   const video = new Screen()
-  console.log('start')
+  console.log('start', process.argv)
 
   video.startRecording({
+    debug: !!process.argv.find(x => x === '--debug'),
     fps: 2,
     sampleSpacing: 10,
     sensitivity: 2,

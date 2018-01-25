@@ -2,9 +2,6 @@ import Foundation
 import AVFoundation
 import AppKit
 
-let shouldDebug = false
-let threads = 2
-
 enum ApertureError: Error {
   case invalidAudioDevice
   case couldNotAddScreen
@@ -51,6 +48,7 @@ final class Recorder: NSObject {
   private var sensitivity: Int
   private var sampleSpacing: Int
   private var firstTime: Bool
+  private var shouldDebug: Bool
   private let context = CIContext()
   private var boxes: [String: Box]
   private var lastBoxes: [String: Array<UInt32>]
@@ -73,7 +71,8 @@ final class Recorder: NSObject {
     print("captured")
   }
 
-  init(fps: Int, boxes: Array<Box>, showCursor: Bool, displayId: CGDirectDisplayID = CGMainDisplayID(), videoCodec: String? = nil, sampleSpacing: Int, sensitivity: Int) throws {
+  init(fps: Int, boxes: Array<Box>, showCursor: Bool, displayId: CGDirectDisplayID = CGMainDisplayID(), videoCodec: String? = nil, sampleSpacing: Int, sensitivity: Int, debug: Bool) throws {
+    self.shouldDebug = debug
     self.displayId = displayId
     self.session = AVCaptureSession()
     self.firstTime = true
@@ -329,21 +328,21 @@ final class Recorder: NSObject {
           min(frame[2], line.width * scl + padX * 2),
           min(frame[3], line.height * scl + padY * 2)
         ]
-        if shouldDebug {
+        if self.shouldDebug {
           print("process line \(index) \(lineBounds)")
         }
         // finds characters
         let rects = characters.find(id: index, bounds: lineBounds)
         foundTotal += rects.count
         // debug line
-        if shouldDebug {
+        if self.shouldDebug {
           images.writeCGImage(
             image: images.cropImage(ocrCharactersImage, box: CGRect(x: lineBounds[0] - frame[0], y: lineBounds[1] - frame[1], width: lineBounds[2], height: lineBounds[3]))!,
             to: "\(box.screenDir!)/linein-\(box.id)-\(id)-\(index).png"
           )
         }
         // write characters
-        characters.shouldDebug = shouldDebug
+        characters.shouldDebug = self.shouldDebug
         let chars = characters.charsToString(rects: rects, debugID: index)// index) // index < 40 ? index : -1
         return chars
       })
@@ -367,7 +366,7 @@ final class Recorder: NSObject {
     print("total \(Double(DispatchTime.now().uptimeNanoseconds - startAll.uptimeNanoseconds) / 1_000_000)ms")
 
     // test write images:
-    if shouldDebug {
+    if self.shouldDebug {
       images.writeCGImage(image: verticalImage, to: "\(box.screenDir!)/\(box.id)-content-find.png")
       images.writeCGImage(image: binarizedImage, to: "\(box.screenDir!)/\(box.id)-binarized.png")
       images.writeCGImage(image: ocrCharactersImage, to: "\(box.screenDir!)/\(box.id)-ocr-characters.png")

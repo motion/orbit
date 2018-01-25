@@ -34,6 +34,7 @@ class Screen {
 
   startRecording(
     {
+      debug = false,
       fps = 25,
       showCursor = true,
       displayId = 'main',
@@ -59,6 +60,7 @@ class Screen {
     }))
 
     const recorderOpts = {
+      debug,
       fps,
       showCursor,
       displayId,

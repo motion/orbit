@@ -13,18 +13,20 @@ class Characters {
   private let specialDebug = [0, 0]
   private var curChar = 0
   private var id = 0
+  private var frameOffset: [Int]
 
   func sdebug() -> Bool {
     return shouldDebug && specialDebug[0] == id && specialDebug[1] == curChar
   }
 
-  init(data: UnsafeMutablePointer<UInt8>, perRow: Int, maxLuma: Int, debug: Bool, debugDir: String?, debugImg: CGImage?) {
+  init(data: UnsafeMutablePointer<UInt8>, perRow: Int, maxLuma: Int, frameOffset: [Int], debug: Bool, debugDir: String?, debugImg: CGImage?) {
     self.maxLuma = maxLuma // higher == allow lighter
     self.shouldDebug = debug
     self.buffer = data
     self.perRow = perRow
     self.debugDir = debugDir ?? ""
     self.debugImg = debugImg
+    self.frameOffset = frameOffset
   }
 
   func find(id: Int, bounds: [Int]) -> [[Int]] {
@@ -67,8 +69,8 @@ class Characters {
       if isBlack {
         if shouldDebug && debugImg != nil {
           // todo need to handle frame offset here
-//          let box = CGRect(x: xO / 2, y: yO / 2, width: 50, height: 50)
-//          images.writeCGImage(image: images.cropImage(debugImg!, box: box)!, to: "/tmp/screen/view\(id)-\(curChar).png")
+          let box = CGRect(x: xO / 2, y: yO / 2, width: 50, height: 50)
+          images.writeCGImage(image: images.cropImage(debugImg!, box: box)!, to: "/tmp/screen/view\(id)-\(curChar).png")
         }
         let cb = self.findCharacter(
           startX: xO,
@@ -83,8 +85,9 @@ class Characters {
           let tooWide = cb[2] / cb[3] > 25
           let misfit = tooSmall || tooThin || tooWide
           if shouldDebug && debugImg != nil {
-            if let img = images.cropImage(debugImg!, box: CGRect(x: cb[0] / 2, y: cb[1] / 2, width: cb[2] / 2, height: cb[3] / 2)) {
-              images.writeCGImage(image: img, to: "/tmp/screen/\(misfit ? "fitmiss-" : "fit")-\(id)-\(curChar).png")
+            let box = CGRect(x: cb[0] / 2 - frameOffset[0] * 2, y: cb[1] / 2 - frameOffset[1] * 2, width: cb[2] / 2, height: cb[3] / 2)
+            if let img = images.cropImage(debugImg!, box: box) {
+              images.writeCGImage(image: img, to: "/tmp/screen/\(misfit ? "charmiss-" : "char")\(id)-\(curChar).png")
             }
           }
           y = 0

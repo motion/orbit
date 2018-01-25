@@ -24,7 +24,7 @@ async function test() {
       {
         id: 'screen',
         x: 0,
-        y: 24,
+        y: 48,
         width: 1166,
         height: 980,
         screenDir: '/tmp/screen',

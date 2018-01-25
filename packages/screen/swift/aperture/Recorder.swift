@@ -311,6 +311,7 @@ final class Recorder: NSObject {
       data: bufferPointer,
       perRow: perRow,
       maxLuma: 200,
+      frameOffset: frame,
       debug: shouldDebug,
       debugDir: box.screenDir!,
       debugImg: cgImageBinarized

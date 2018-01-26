@@ -227,7 +227,7 @@ final class Recorder: NSObject {
     start = DispatchTime.now()
     // first loop - find vertical sections
     var verticalSections = Dictionary<Int, Int>() // start => end
-    let colHeightMin = 4
+    let colHeightMin = 1
     let colStreakMin = 4
     var colStreak = 0
     let colMissMax = 8
@@ -247,7 +247,7 @@ final class Recorder: NSObject {
           }
         }
       }
-      let continueStreak = verticalFilled > colHeightMin
+      let continueStreak = verticalFilled >= colHeightMin
       if continueStreak {
         colStreak += 1
         colMiss = 0
@@ -328,12 +328,10 @@ final class Recorder: NSObject {
     start = DispatchTime.now()
     // third loop
     // for each VERTICAL SECTION, get characters
-    var foundTotal = 0
-    var allLineStrings = [String]()
+    var allLines = [[Word]]() // store all lines
     for id in sectionLines.keys {
-      let lines = sectionLines[id]!
       let scl = lineFindScaling
-      let lineStrings: [String] = lines.pmap(transformer: {(line, index) in
+      let sectionLines: [[Word]] = sectionLines[id]!.pmap(transformer: {(line, index) in
         let padX = 6
         let padY = max(3, min(12, line.height / 10))
         let lineBounds = [
@@ -344,8 +342,7 @@ final class Recorder: NSObject {
           min(frame[3], line.height * scl + padY * 3)
         ]
         // finds characters
-        let foundChars = chars.find(id: index, bounds: lineBounds)
-        foundTotal += foundChars.count
+        let foundWords: [Word] = chars.find(id: index, bounds: lineBounds)
         // debug line
         if self.shouldDebug {
           images.writeCGImage(
@@ -355,20 +352,33 @@ final class Recorder: NSObject {
         }
         // write characters
         chars.shouldDebug = self.shouldDebug
-        let charsString = chars.charsToString(foundChars, debugID: index)// index) // index < 40 ? index : -1
-        return charsString
+        return foundWords
       })
-      allLineStrings.append(
-        lineStrings.joined(separator: "\n")
-      )
+      allLines = allLines + sectionLines
     }
 
-    print("7. found \(foundTotal) chars: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+    print("7. found chars: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     start = DispatchTime.now()
+    
+    // print out positions
+    for (index, line) in allLines.enumerated() {
+      print("line \(index) has \(line.count) words")
+      for (wordIndex, word) in line.enumerated() {
+        print(" .. \(word.characters.count) length: [\(word.x), \(word.y), \(word.width), \(word.height)]")
+      }
+    }
+    
     // write chars
+    var string = ""
+    for (index, line) in allLines.enumerated() {
+      for (wordIndex, word) in line.enumerated() {
+        string += chars.charsToString(word.characters, debugID: shouldDebug ? "\(index)\(wordIndex)" : "")
+      }
+      string += "\n"
+    }
     do {
       let path = NSURL.fileURL(withPath: "/tmp/characters.txt").absoluteURL
-      try allLineStrings.joined(separator: "\n").write(to: path, atomically: true, encoding: .utf8)
+      try string.write(to: path, atomically: true, encoding: .utf8)
     } catch {
       print("couldnt write pixel string \(error)")
     }

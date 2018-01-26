@@ -9,6 +9,14 @@ struct Character {
   var outline: [String]
 }
 
+struct Word {
+  var x: Int
+  var y: Int
+  var width: Int
+  var height: Int
+  var characters: [Character]
+}
+
 class Characters {
   // public
   var frameOffset: [Int] = [0, 0]
@@ -37,12 +45,13 @@ class Characters {
     self.perRow = perRow
   }
 
-  func find(id: Int, bounds: [Int]) -> [Character] {
+  func find(id: Int, bounds: [Int]) -> [Word] {
     let start = DispatchTime.now()
     let lineX = bounds[0] * 2
     let lineY = bounds[1] * 2
     let lineW = bounds[2]
     let lineH = bounds[3]
+    var foundWords = [Word]()
     var foundChars = [Character]()
     var pixels: [PixelData]? = nil
     self.id = id
@@ -52,24 +61,34 @@ class Characters {
     var y = 0
     let maxY = lineH - lineH / 3
     let minY = lineH / 3
+    let spaceWidth = lineH / 6
+    print("spaceWidth \(spaceWidth)")
+    var pxBetweenChars = 0
+    
+    func addWord() {
+      foundWords.append(
+        Word(
+          x: foundChars.first!.x,
+          y: foundChars.first!.y,
+          width: foundChars.last!.x - foundChars.first!.x,
+          height: foundChars.last!.y - foundChars.first!.y,
+          characters: foundChars
+        )
+      )
+      foundChars = []
+    }
+    
+    // finds starts of chars and then pass to char outliner
     while true {
       if shouldDebug && pixels == nil && debugImg != nil {
         pixels = [PixelData](repeating: PixelData(a: 255, r: 255, g: 255, b: 255), count: lineW * lineH)
       }
-      // find start of char
-      if y >= lineH - 1 {
-        x += 1
-        y = 0
-      } else {
+      if y > maxY  { // next col
+        pxBetweenChars += 2 // sync with x
+        x += 2
+        y = minY
+      } else { // next row
         y += lineH / 5 // move height/x, spaced out, just needs one good pixel
-      }
-      if y < minY { // loop until past min
-        continue
-      }
-      if y > maxY { // once past maxY, go to next col
-        x += 1
-        y = 0
-        continue
       }
       // if reached last pixel, break
       if x >= lineW || y >= lineH || (x == lineW - 1 && y == lineH - 1) {
@@ -109,14 +128,21 @@ class Characters {
               images.writeCGImage(image: img, to: "/tmp/screen/\(misfit ? "charmiss-" : "char")\(id)-\(curChar).png")
             }
           }
-          y = 0
+          // go to next
+          y = minY
           if misfit {
             debug("misfit \(char.width) \(char.height)")
             x += 2
             continue
           }
           curChar += 1
-          foundChars.append(char)
+          // found word
+          if pxBetweenChars > spaceWidth && foundChars.count > 0 {
+            print("found a space \(id)")
+            addWord()
+          } else {
+            foundChars.append(char)
+          }
           let fwd = (char.width / 2 - char.backMoves / 2 + 2) // width - backtracks + 2
           let nextX = x + fwd
           if nextX <= x {
@@ -124,9 +150,15 @@ class Characters {
           } else {
             x = nextX
           }
+          pxBetweenChars = 0
         } // end if
       } // end if
     } // end while
+    
+    // add final word
+    if foundChars.count > 0 {
+      addWord()
+    }
 
     // finish, write string
     if pixels != nil && pixels!.count > 0 && debugImg != nil {
@@ -158,7 +190,7 @@ class Characters {
 //    }
 
     debug("Characters.find() \(foundChars.count): \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
-    return foundChars
+    return foundWords
   }
 
   func debug(_ str: String) {
@@ -262,7 +294,7 @@ class Characters {
     )
   }
 
-  public func charsToString(_ characters: [Character], debugID: Int) -> String {
+  public func charsToString(_ characters: [Character], debugID: String) -> String {
     var output = ""
     let dbl = Float(28)
     for (index, char) in characters.enumerated() {

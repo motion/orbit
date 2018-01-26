@@ -369,23 +369,38 @@ final class Recorder: NSObject {
     }
     
     // write chars
-    var string = ""
+    var ocrStr = ""
     for (index, line) in allLines.enumerated() {
       for (wordIndex, word) in line.enumerated() {
-        string += chars.charsToString(word.characters, debugID: shouldDebug ? "\(index)\(wordIndex)" : "")
+        for (charIndex, character) in word.characters.enumerated() {
+          if character.letter == nil {
+            ocrStr += chars.charToString(character, debugID: shouldDebug ? "\(index)-\(wordIndex)-\(charIndex)" : "")
+          }
+        }
+        ocrStr += "\n"
       }
-      string += "\n"
     }
     do {
       let path = NSURL.fileURL(withPath: "/tmp/characters.txt").absoluteURL
-      try string.write(to: path, atomically: true, encoding: .utf8)
+      try ocrStr.write(to: path, atomically: true, encoding: .utf8)
     } catch {
       print("couldnt write pixel string \(error)")
     }
     print("8. characters.txt: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     
-    let foundCharacters = ocr!.ocrCharacters()
+    var foundCharacters = ocr!.ocrCharacters()
     print("predict \(foundCharacters)")
+    
+    // get all answers
+    var answers = [String]()
+    for line in allLines {
+      for word in line {
+        for character in word.characters {
+          let answer = character.letter ?? foundCharacters.remove(at: 0)
+          print("answer \(answer) \(character.x)")
+        }
+      }
+    }
     
     print("")
     print("total \(Double(DispatchTime.now().uptimeNanoseconds - startAll.uptimeNanoseconds) / 1_000_000)ms")

@@ -6,7 +6,8 @@ struct Character {
   var width: Int
   var height: Int
   var backMoves: Int
-  var outline: [String]
+  var outline: String
+  var letter: String?
 }
 
 struct Word {
@@ -24,8 +25,8 @@ class Characters {
   var debugImg: CGImage? = nil
   var debugDir = ""
 
-  private let dict = SymSpell(editDistance: 2, verbose: 1)
-  private var answers = [String: String]()
+  private let dict = SymSpell(editDistance: 2, verbose: 1) // outline => close-answer
+  private var answers = [String: String]() // outline => answer
   private let images = Images()
   private var buffer: UnsafeMutablePointer<UInt8>
   private var perRow: Int
@@ -110,7 +111,7 @@ class Characters {
 //          let box = CGRect(x: xO / 2, y: yO / 2, width: 50, height: 50)
 //          images.writeCGImage(image: images.cropImage(debugImg!, box: box)!, to: "/tmp/screen/view\(id)-\(curChar).png")
 //        }
-        let char = self.findCharacter(
+        var char = self.findCharacter(
           startX: xO,
           startY: yO,
           maxHeight: lineH * 2
@@ -136,12 +137,14 @@ class Characters {
             continue
           }
           curChar += 1
+          if answers[char.outline] != nil {
+            char.letter = answers[char.outline]
+          }
+          foundChars.append(char)
           // found word
           if pxBetweenChars > spaceWidth && foundChars.count > 0 {
             print("found a space \(id)")
             addWord()
-          } else {
-            foundChars.append(char)
           }
           let fwd = (char.width / 2 - char.backMoves / 2 + 2) // width - backtracks + 2
           let nextX = x + fwd
@@ -256,12 +259,6 @@ class Characters {
         else if newStartX { curTry = 0; topLeftBound[0] = x }
         if newStartY { curTry = 0; topLeftBound[1] = y }
         else if newEndY { curTry = 0; bottomRightBound[1] = y }
-//        if sdebug() && curTry == 0 {
-//          if newEndX { print("new endX \(x / 2)") }
-//          if newStartX { print("new startX \(x / 2)") }
-//          if newStartY { print("new startY \(y / 2)") }
-//          if newEndY { print("new endY \(y / 2)") }
-//        }
         // update move
         if attempt.count == 3 {
           if attempt[2] == 1 { // big x
@@ -272,84 +269,76 @@ class Characters {
         } else {
           lastMove = attempt
         }
-//        if sdebug() {
-//          let xdir = lastMove[0] == -1 ? "left" : lastMove[0] == 0 ? "   " : "right"
-//          let ydir = lastMove[1] == -1 ? "up  " : lastMove[1] == 0 ? "   " : "down"
-//          print(" .. \(xdir) \(ydir) | \(lastMove[0]) \(lastMove[1]) | attempt \(index)")
-//        }
         break
       }
       if !success {
         break
       }
     }
-
     return Character(
       x: topLeftBound[0],
       y: topLeftBound[1],
       width: bottomRightBound[0] - topLeftBound[0] + 2,
       height: bottomRightBound[1] - topLeftBound[1] + 2,
       backMoves: startX - topLeftBound[0],
-      outline: outline
+      outline: outline.joined(),
+      letter: nil
     )
   }
-
-  public func charsToString(_ characters: [Character], debugID: String) -> String {
+  
+  public func charToString(_ char: Character, debugID: String) -> String {
     var output = ""
     let dbl = Float(28)
-    for (index, char) in characters.enumerated() {
-      if char.width == 0 || char.height == 0 {
-        debug("empty char")
-        continue
-      }
-      let width = Float(char.width)
-      let height = Float(char.height)
-      // make square
-      var scaleX = Float(1)
-      var scaleY = Float(1)
-      if width > dbl {
-        scaleX = width / dbl
-      } else if width < dbl {
-        scaleX = 1 / (dbl / width)
-      }
-      if height > dbl {
-        scaleY = height / dbl
-      } else if height < dbl {
-        scaleY = 1 / (dbl / height)
-      }
-      var pixels: [PixelData]? = nil
-      if shouldDebug {
-        pixels = [PixelData]()
-      }
-      for y in 0..<28 {
-        for x in 0..<28 {
-          let xS = Int(Float(x) * scaleX)
-          let yS = Int(Float(y) * scaleY)
-          let luma = buffer[(char.y + yS) * perRow + char.x + xS]
-          // luminance to intensity means we have to inverse it
-          // warning, doing any sort of Int => String conversion here slows it down Bigly
-          if luma < 50 { // white
-            output += "0.2 "
-          } else if luma < 100 {
-            output += "0.4 "
-          } else if luma < 150 {
-            output += "0.6 "
-          } else if luma < 200 {
-            output += "0.8 "
-          } else {  // black
-            output += "1.0 "
-          }
-          if shouldDebug {
-            let brt = UInt8(luma < self.maxLuma ? 0 : 255)
-            pixels!.append(PixelData(a: 255, r: brt, g: brt, b: brt))
-          }
+    if char.width == 0 || char.height == 0 {
+      return ""
+    }
+    let width = Float(char.width)
+    let height = Float(char.height)
+    // make square
+    var scaleX = Float(1)
+    var scaleY = Float(1)
+    if width > dbl {
+      scaleX = width / dbl
+    } else if width < dbl {
+      scaleX = 1 / (dbl / width)
+    }
+    if height > dbl {
+      scaleY = height / dbl
+    } else if height < dbl {
+      scaleY = 1 / (dbl / height)
+    }
+    var pixels: [PixelData]? = nil
+    if shouldDebug {
+      pixels = [PixelData]()
+    }
+    for y in 0..<28 {
+      for x in 0..<28 {
+        let xS = Int(Float(x) * scaleX)
+        let yS = Int(Float(y) * scaleY)
+        let luma = buffer[(char.y + yS) * perRow + char.x + xS]
+        // luminance to intensity means we have to inverse it
+        // warning, doing any sort of Int => String conversion here slows it down Bigly
+        if luma < 50 { // white
+          output += "0.2 "
+        } else if luma < 100 {
+          output += "0.4 "
+        } else if luma < 150 {
+          output += "0.6 "
+        } else if luma < 200 {
+          output += "0.8 "
+        } else {  // black
+          output += "1.0 "
+        }
+        if shouldDebug {
+          let brt = UInt8(luma < self.maxLuma ? 0 : 255)
+          pixels!.append(PixelData(a: 255, r: brt, g: brt, b: brt))
         }
       }
-      output += "\n"
-      if shouldDebug {
-        let outFile = "\(debugDir)/xa\(debugID)-\(index).png"
-        images.writeCGImage(image: images.imageFromArray(pixels: pixels!, width: 28, height: 28)!, to: outFile, resolution: 72) // write img
-      }
+    }
+    output += "\n"
+    if shouldDebug {
+      let outFile = "\(debugDir)/xa\(debugID)-\(index).png"
+      images.writeCGImage(image: images.imageFromArray(pixels: pixels!, width: 28, height: 28)!, to: outFile, resolution: 72) // write img
     }
     return output
   }

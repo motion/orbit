@@ -195,7 +195,7 @@ class Screen {
     this.recorder.kill('SIGKILL')
     await this.recorder
     // sleep to avoid issues
-    await sleep(80)
+    await sleep(20)
     delete this.recorder
   }
 

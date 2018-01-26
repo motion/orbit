@@ -274,7 +274,9 @@ class Characters {
     if answers[outline] != nil {
       return answers[outline]!
     }
+    let start = DispatchTime.now()
     let closeOutlines = dict.correct(outline, language: "en")
+    print(" checked lcache: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     if closeOutlines.count > 0 {
       print("found a close outline!")
       return answers[closeOutlines[0].term]
@@ -284,12 +286,14 @@ class Characters {
   
   public func updateCache(_ cache: [String: String]) {
     Async.background {
+      let start = DispatchTime.now()
       for entry in cache {
         let (outline, letter) = entry
         self.answers[outline] = letter
         if self.dict.createDictionaryEntry(outline, language: "en") {
         }
       }
+      print(" updated lcache: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     }
   }
   

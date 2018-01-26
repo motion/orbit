@@ -41,8 +41,11 @@ async function test() {
     ],
   })
 
-  process.on('SIGINT', () => {
-    screen.stop()
+  process.on('SIGINT', async () => {
+    console.log('stopping screen')
+    await screen.stop()
+    console.log('stoped')
+    process.exit(0)
   })
 
   screen.onWords(data => {

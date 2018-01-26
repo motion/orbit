@@ -55,7 +55,7 @@ final class Recorder: NSObject {
   private let displayId: CGDirectDisplayID
   private let components = ConnectedComponentsSwiftOCR()
   private var characters: Characters?
-  private var ocr: OCRInterface
+  private var ocr: OCRInterface?
 
   var onStart: (() -> Void)?
   var onFinish: (() -> Void)?
@@ -84,13 +84,17 @@ final class Recorder: NSObject {
     self.boxes = [String: Box]()
 
     // load python ocr
-    let path = Bundle.main.path(forResource: "Bridge", ofType: "plugin")
-    guard let pluginbundle = Bundle(path: path!) else { fatalError("Could not load python plugin bundle") }
-    pluginbundle.load()
-    guard let pc = pluginbundle.principalClass as? OCRInterface.Type else { fatalError("Could not load principal class from python bundle") }
-    let interface = pc.createInstance()
-    Bridge.setSharedInstance(to: interface)
-    self.ocr = Bridge.sharedInstance()
+    print("looking for stuff")
+    if let path = Bundle.main.path(forResource: "Bridge", ofType: "plugin") {
+      guard let pluginbundle = Bundle(path: path) else { fatalError("Could not load python plugin bundle") }
+      pluginbundle.load()
+      guard let pc = pluginbundle.principalClass as? OCRInterface.Type else { fatalError("Could not load principal class from python bundle") }
+      let interface = pc.createInstance()
+      Bridge.setSharedInstance(to: interface)
+      self.ocr = Bridge.sharedInstance()
+    } else {
+      print("no bundle meh")
+    }
     
     for box in boxes {
       self.boxes[box.id] = box
@@ -339,9 +343,6 @@ final class Recorder: NSObject {
           min(frame[2], line.width * scl + padX * 2),
           min(frame[3], line.height * scl + padY * 3)
         ]
-        if self.shouldDebug {
-          print("process line \(index) \(lineBounds)")
-        }
         // finds characters
         let foundChars = chars.find(id: index, bounds: lineBounds)
         foundTotal += foundChars.count
@@ -373,8 +374,7 @@ final class Recorder: NSObject {
     }
     print("8. characters.txt: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     
-    let foundCharacters = ocr.ocrCharacters()
-    
+    let foundCharacters = ocr!.ocrCharacters()
     print("predict \(foundCharacters)")
     
     print("")

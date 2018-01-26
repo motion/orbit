@@ -1,6 +1,5 @@
 import Foundation
 import AVFoundation
-import Cocoa
 
 var recorder: Recorder!
 let arguments = CommandLine.arguments.dropFirst()
@@ -41,21 +40,10 @@ func record() throws {
       videoCodec: "mp4",
       sampleSpacing: 10,
       sensitivity: 2,
-      debug: true
+      debug: false
     )
   }
-  
-  // test spellcheck
-//  let autocorrect = SymSpell(editDistance: 2, verbose: 1)
-//  autocorrect.createDictionaryEntry("53535454545545454545353434343333434343", language: "en")
-//  autocorrect.createDictionaryEntry("43535354555545454534343434344555545354453534343333334343", language: "en")
-//  // find
-//  let suggestions = autocorrect.correct("53535454545545454545353434343333434343", language: "en")
-//  print("got suggestions \(suggestions.count)")
-//  for suggestion in suggestions {
-//    print("out \(suggestion.term) distance \(suggestion.distance)")
-//  }
-  
+
   recorder = try Recorder(
     fps: options.fps,
     boxes: options.boxes,
@@ -91,22 +79,8 @@ func record() throws {
   RunLoop.main.run()
 }
 
-func usage() {
-  print(
-    """
-    Usage:
-      aperture <options>
-      aperture list-audio-devices
-    """
-  )
-}
-
-if arguments.first != nil {
-  try record()
-  exit(0)
-}
-
 try record()
-//usage()
 exit(1)
+
+
 

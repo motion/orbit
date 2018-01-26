@@ -136,26 +136,26 @@ class Characters {
     }
     
     // async add dictionary items
-    Async.background {
-      let ans = ["h", "e", "l", "l", "o", "w", "o", "r", "l", "d"]
-      for (index, char) in foundChars.enumerated() {
-        let outlineStr = char.outline.joined()
-        if self.answers[outlineStr] != nil {
-          print("found letter directly \(self.answers[outlineStr]!)")
-        } else {
-          let found = self.dict.correct(outlineStr, language: "en")
-          if found.count > 0 {
-            let closest = found[0].term
-            print("found answers from dict! \(self.answers[closest]!)")
-          } else {
-            self.answers[outlineStr] = ans[index]
-            if self.dict.createDictionaryEntry(outlineStr, language: "en") {
-              print("add to dict: char at pos \(index) = \(ans[index]), outline = \(outlineStr)")
-            }
-          }
-        }
-      }
-    }
+//    Async.background {
+//      let ans = ["h", "e", "l", "l", "o", "w", "o", "r", "l", "d"]
+//      for (index, char) in foundChars.enumerated() {
+//        let outlineStr = char.outline.joined()
+//        if self.answers[outlineStr] != nil {
+//          print("found letter directly \(self.answers[outlineStr]!)")
+//        } else {
+//          let found = self.dict.correct(outlineStr, language: "en")
+//          if found.count > 0 {
+//            let closest = found[0].term
+//            print("found answers from dict! \(self.answers[closest]!)")
+//          } else {
+//            self.answers[outlineStr] = ans[index]
+//            if self.dict.createDictionaryEntry(outlineStr, language: "en") {
+//              print("add to dict: char at pos \(index) = \(ans[index]), outline = \(outlineStr)")
+//            }
+//          }
+//        }
+//      }
+//    }
 
     debug("Characters.find() \(foundChars.count): \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     return foundChars

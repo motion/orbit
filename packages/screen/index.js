@@ -4,8 +4,6 @@ const execa = require('execa')
 const macosVersion = require('macos-version')
 const electronUtil = require('electron-util/node')
 
-// Workaround for https://github.com/electron/electron/issues/9459
-const BIN = path.join(electronUtil.fixPathForAsarUnpack(__dirname), 'aperture')
 const sleep = ms => new Promise(res => setTimeout(res, ms))
 
 const supportsHevcHardwareEncoding = (() => {
@@ -91,6 +89,16 @@ class Screen {
     }
 
     const args = JSON.stringify(recorderOpts)
+    console.log(args)
+
+    const BIN = path.join(
+      electronUtil.fixPathForAsarUnpack(__dirname),
+      'swift',
+      'Build',
+      'Products',
+      debug ? 'Debug' : 'Release',
+      'aperture',
+    )
 
     this.recorder = execa(BIN, [args], {
       reject: false,

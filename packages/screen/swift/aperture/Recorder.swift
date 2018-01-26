@@ -55,6 +55,7 @@ final class Recorder: NSObject {
   private let displayId: CGDirectDisplayID
   private let components = ConnectedComponentsSwiftOCR()
   private var characters: Characters?
+  private var ocr: OCRInterface
 
   var onStart: (() -> Void)?
   var onFinish: (() -> Void)?
@@ -81,6 +82,15 @@ final class Recorder: NSObject {
     self.sensitivity = sensitivity
     self.lastBoxes = [String: Array<UInt32>]()
     self.boxes = [String: Box]()
+
+    // load python ocr
+    let path = Bundle.main.path(forResource: "Bridge", ofType: "plugin")
+    guard let pluginbundle = Bundle(path: path!) else { fatalError("Could not load python plugin bundle") }
+    pluginbundle.load()
+    guard let pc = pluginbundle.principalClass as? OCRInterface.Type else { fatalError("Could not load principal class from python bundle") }
+    let interface = pc.createInstance()
+    Bridge.setSharedInstance(to: interface)
+    self.ocr = Bridge.sharedInstance()
     
     for box in boxes {
       self.boxes[box.id] = box
@@ -106,7 +116,6 @@ final class Recorder: NSObject {
     } else {
       throw ApertureError.couldNotAddScreen
     }
-
     if session.canAddOutput(output) {
       session.addOutput(output)
     } else {
@@ -357,12 +366,16 @@ final class Recorder: NSObject {
     start = DispatchTime.now()
     // write chars
     do {
-      let path = NSURL.fileURL(withPath: "\(box.screenDir!)/characters.txt").absoluteURL
+      let path = NSURL.fileURL(withPath: "/tmp/characters.txt").absoluteURL
       try allLineStrings.joined(separator: "\n").write(to: path, atomically: true, encoding: .utf8)
     } catch {
       print("couldnt write pixel string \(error)")
     }
     print("8. characters.txt: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+    
+    let foundCharacters = ocr.ocrCharacters()
+    
+    print("predict \(foundCharacters)")
     
     print("")
     print("total \(Double(DispatchTime.now().uptimeNanoseconds - startAll.uptimeNanoseconds) / 1_000_000)ms")

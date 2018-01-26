@@ -1,5 +1,6 @@
 import Foundation
 import AVFoundation
+import Cocoa
 
 var recorder: Recorder!
 let arguments = CommandLine.arguments.dropFirst()

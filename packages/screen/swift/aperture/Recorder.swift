@@ -84,7 +84,6 @@ final class Recorder: NSObject {
     self.boxes = [String: Box]()
 
     // load python ocr
-    print("looking for stuff")
     if let path = Bundle.main.path(forResource: "Bridge", ofType: "plugin") {
       guard let pluginbundle = Bundle(path: path) else { fatalError("Could not load python plugin bundle") }
       pluginbundle.load()
@@ -95,6 +94,7 @@ final class Recorder: NSObject {
     } else {
       print("no bundle meh")
     }
+    print("imported python")
     
     for box in boxes {
       self.boxes[box.id] = box
@@ -129,6 +129,36 @@ final class Recorder: NSObject {
 
   func start() {
     session.startRunning()
+
+    // socket bridge
+    let ws = WebSocket("ws://localhost:40510")
+    var messageNum = 0
+    let send : ()->() = {
+      messageNum += 1
+      let msg = "\(messageNum): \(NSDate().description)"
+      print("send: \(msg)")
+      ws.send(msg)
+    }
+    ws.event.open = {
+      print("opened")
+      send()
+    }
+    ws.event.close = { code, reason, clean in
+      print("close")
+    }
+    ws.event.error = { error in
+      print("error \(error)")
+    }
+    ws.event.message = { message in
+      if let text = message as? String {
+        print("recv: \(text)")
+        if messageNum == 10 {
+          ws.close()
+        } else {
+          send()
+        }
+      }
+    }
   }
 
   func stop() {
@@ -358,37 +388,44 @@ final class Recorder: NSObject {
     }
 
     print("7. found chars: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
-    start = DispatchTime.now()
     
-    // write chars
+    // check for unsolved outlines
     let allCharacters: [Character] = allLines.flatMap { $0.flatMap { $0.characters } }
     let unsolvedCharacters = allCharacters.filter { $0.letter == nil }
     let uniqCharacters = Set(unsolvedCharacters)
-    let ocrCharacters = uniqCharacters.enumerated().map({ item in
-      return chars.charToString(item.element, debugID: shouldDebug ? "\(item.offset)" : "")
-    })
-    print("found \(uniqCharacters.count) uniq out of \(allCharacters.count) total")
-    let ocrString = ocrCharacters.joined(separator: "\n")
+    var foundCharacters: [String]? = nil
     
-    do {
-      let path = NSURL.fileURL(withPath: "/tmp/characters.txt").absoluteURL
-      try ocrString.write(to: path, atomically: true, encoding: .utf8)
-    } catch {
-      print("couldnt write pixel string \(error)")
+    // if necessary, run ocr
+    if unsolvedCharacters.count > 0 {
+      start = DispatchTime.now()
+      // write ocr string
+      let ocrCharacters = uniqCharacters.enumerated().map({ item in
+        return chars.charToString(item.element, debugID: shouldDebug ? "\(item.offset)" : "")
+      })
+      print("found \(uniqCharacters.count) uniq out of \(allCharacters.count) total")
+      let ocrString = ocrCharacters.joined(separator: "\n")
+      do {
+        let path = NSURL.fileURL(withPath: "/tmp/characters.txt").absoluteURL
+        try ocrString.write(to: path, atomically: true, encoding: .utf8)
+      } catch {
+        print("couldnt write pixel string \(error)")
+      }
+      
+      print("8. characters.txt: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+      start = DispatchTime.now()
+      
+      // run ocr
+      foundCharacters = ocr!.ocrCharacters()
+      
+      print("9. ocr: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     }
-    
-    print("8. characters.txt: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
-    start = DispatchTime.now()
-    
-    var foundCharacters = ocr!.ocrCharacters()
-    
-    print("9. ocr: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+
     start = DispatchTime.now()
     
     // get all answers
     var words = [String]()
     var lines = [String]()
-    var cache = [String: String]()
+    var cache = [String: String]() // outline => letter
     for line in allLines {
       var minY = 10000
       var maxH = 0
@@ -404,8 +441,8 @@ final class Recorder: NSObject {
           if cache[char.outline] != nil {
             return cache[char.outline]!
           }
-          if uniqCharacters.contains(char) {
-            let answer = foundCharacters.remove(at: 0)
+          if foundCharacters != nil && uniqCharacters.contains(char) {
+            let answer = foundCharacters!.remove(at: 0)
             cache[char.outline] = answer
             return answer
           }
@@ -418,6 +455,11 @@ final class Recorder: NSObject {
       let width = lastWord.x + lastWord.width - firstWord.x
       lines.append("[\(firstWord.x),\(minY),\(width),\(maxH)]")
     }
+    
+    // update character cache
+    chars.updateCache(cache)
+    
+    // send to world
     print("!words [\(words.joined(separator: ","))]")
 //    print("!lines [\(lines.joined(separator: ","))]")
     

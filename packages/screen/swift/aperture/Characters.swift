@@ -32,9 +32,9 @@ class Characters {
   var shouldDebug = false
   var debugImg: CGImage? = nil
   var debugDir = ""
+  var answers = [String: String]() // outline => answer
 
   private let dict = SymSpell(editDistance: 2, verbose: 1) // outline => close-answer
-  private var answers = [String: String]() // outline => answer
   private let images = Images()
   private var buffer: UnsafeMutablePointer<UInt8>
   private var perRow: Int
@@ -144,9 +144,8 @@ class Characters {
             continue
           }
           curChar += 1
-          if answers[char.outline] != nil {
-            print("found answer")
-            char.letter = answers[char.outline]
+          if let answer = outlineToLetter(char.outline) {
+            char.letter = answer
           }
           // do this before adding next word
           if pxBetweenChars > spaceWidth && foundChars.count > 0 {
@@ -176,28 +175,6 @@ class Characters {
         Images().writeCGImage(image: img, to: "/tmp/screen/hit\(id).png", resolution: 72) // write img
       }
     }
-    
-    // async add dictionary items
-//    Async.background {
-//      let ans = ["h", "e", "l", "l", "o", "w", "o", "r", "l", "d"]
-//      for (index, char) in foundChars.enumerated() {
-//        let outlineStr = char.outline.joined()
-//        if self.answers[outlineStr] != nil {
-//          print("found letter directly \(self.answers[outlineStr]!)")
-//        } else {
-//          let found = self.dict.correct(outlineStr, language: "en")
-//          if found.count > 0 {
-//            let closest = found[0].term
-//            print("found answers from dict! \(self.answers[closest]!)")
-//          } else {
-//            self.answers[outlineStr] = ans[index]
-//            if self.dict.createDictionaryEntry(outlineStr, language: "en") {
-//              print("add to dict: char at pos \(index) = \(ans[index]), outline = \(outlineStr)")
-//            }
-//          }
-//        }
-//      }
-//    }
 
     debug("Characters.find() \(foundChars.count): \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     return foundWords
@@ -291,6 +268,29 @@ class Characters {
       outline: outline.joined(),
       letter: nil
     )
+  }
+  
+  public func outlineToLetter(_ outline: String) -> String? {
+    if answers[outline] != nil {
+      return answers[outline]!
+    }
+    let closeOutlines = dict.correct(outline, language: "en")
+    if closeOutlines.count > 0 {
+      print("found a close outline!")
+      return answers[closeOutlines[0].term]
+    }
+    return nil
+  }
+  
+  public func updateCache(_ cache: [String: String]) {
+    Async.background {
+      for entry in cache {
+        let (outline, letter) = entry
+        self.answers[outline] = letter
+        if self.dict.createDictionaryEntry(outline, language: "en") {
+        }
+      }
+    }
   }
   
   public func charToString(_ char: Character, debugID: String) -> String {

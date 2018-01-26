@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CF19EC1D201BB1C50087044E /* WebSockets.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF19EC1C201BB1C50087044E /* WebSockets.swift */; };
+		CF19EC20201BB33E0087044E /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = CF19EC1F201BB33E0087044E /* libz.tbd */; };
 		CF21068B2016966700C41019 /* Characters.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF21068A2016966700C41019 /* Characters.swift */; };
 		CF40D7C7201A9EDA00D215B9 /* OCRInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF40D7C6201A9EDA00D215B9 /* OCRInterface.swift */; };
 		CF40D7C9201AA05C00D215B9 /* Bridge.plugin in Resources */ = {isa = PBXBuildFile; fileRef = CF40D7C8201AA05C00D215B9 /* Bridge.plugin */; };
@@ -36,6 +38,24 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		CF19EBB6201BAAF20087044E /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CF19EBBF201BACAD0087044E /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CF40D7BA201A9A0000D215B9 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -49,6 +69,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		CF19EC1C201BB1C50087044E /* WebSockets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSockets.swift; sourceTree = "<group>"; };
+		CF19EC1F201BB33E0087044E /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		CF21068A2016966700C41019 /* Characters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Characters.swift; sourceTree = "<group>"; };
 		CF40D7C6201A9EDA00D215B9 /* OCRInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OCRInterface.swift; sourceTree = "<group>"; };
 		CF40D7C8201AA05C00D215B9 /* Bridge.plugin */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = Bridge.plugin; path = ../../ocr/python/dist/Bridge.plugin; sourceTree = "<group>"; };
@@ -90,18 +112,28 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CF19EC20201BB33E0087044E /* libz.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		CF19EC1E201BB33D0087044E /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				CF19EC1F201BB33E0087044E /* libz.tbd */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		E3A310721E450D3600D314DD = {
 			isa = PBXGroup;
 			children = (
 				E3A3107D1E450D3600D314DD /* aperture */,
 				E3A3107C1E450D3600D314DD /* Products */,
 				CF40D7C8201AA05C00D215B9 /* Bridge.plugin */,
+				CF19EC1E201BB33D0087044E /* Frameworks */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -151,6 +183,7 @@
 				CF9AEB7A20196BEA00D29367 /* ApertureBridge.h */,
 				CF6E7CA1201A71CC00E40B1A /* Async.swift */,
 				CF40D7C6201A9EDA00D215B9 /* OCRInterface.swift */,
+				CF19EC1C201BB1C50087044E /* WebSockets.swift */,
 			);
 			path = aperture;
 			sourceTree = "<group>";
@@ -167,6 +200,8 @@
 				E325A4461E450E5E0016DB84 /* ShellScript */,
 				CFC5196D201A91DF00AEB15E /* Resources */,
 				CF40D7BA201A9A0000D215B9 /* CopyFiles */,
+				CF19EBBF201BACAD0087044E /* CopyFiles */,
+				CF19EBB6201BAAF20087044E /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -248,6 +283,7 @@
 				CF6E7C9F201A6BB600E40B1A /* MDCDistanceMatrix.m in Sources */,
 				CF9AEB78201969E200D29367 /* SymSPell.swift in Sources */,
 				CF85A92120186D270067DCF2 /* Moves.swift in Sources */,
+				CF19EC1D201BB1C50087044E /* WebSockets.swift in Sources */,
 				E3A310891E450DC800D314DD /* main.swift in Sources */,
 				CF6E7CA0201A6BB600E40B1A /* NSString+MDCCompare.m in Sources */,
 				CF6E7C99201A6BAF00E40B1A /* MDCDamerauLevenshteinDistance.m in Sources */,
@@ -380,10 +416,16 @@
 		E3A310831E450D3600D314DD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				APPLY_RULES_IN_COPY_FILES = YES;
 				CLANG_ENABLE_MODULES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+				);
 				INSTALL_PATH = "";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks @executable_path/swift/Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = aperture/ApertureBridge.h;
@@ -396,10 +438,16 @@
 		E3A310841E450D3600D314DD /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				APPLY_RULES_IN_COPY_FILES = YES;
 				CLANG_ENABLE_MODULES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+				);
 				INSTALL_PATH = "";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks @executable_path/swift/Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = aperture/ApertureBridge.h;

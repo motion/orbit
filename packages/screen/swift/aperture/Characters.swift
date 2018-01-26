@@ -62,8 +62,7 @@ class Characters {
     var y = 0
     let maxY = lineH - lineH / 3
     let minY = lineH / 3
-    let spaceWidth = lineH / 6
-    print("spaceWidth \(spaceWidth)")
+    let spaceWidth = lineH / 5 // adjust based on line height
     var pxBetweenChars = 0
     
     func addWord() {
@@ -140,12 +139,11 @@ class Characters {
           if answers[char.outline] != nil {
             char.letter = answers[char.outline]
           }
-          foundChars.append(char)
-          // found word
+          // do this before adding next word
           if pxBetweenChars > spaceWidth && foundChars.count > 0 {
-            print("found a space \(id)")
             addWord()
           }
+          foundChars.append(char)
           let fwd = (char.width / 2 - char.backMoves / 2 + 2) // width - backtracks + 2
           let nextX = x + fwd
           if nextX <= x {

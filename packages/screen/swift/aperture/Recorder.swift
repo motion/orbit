@@ -360,14 +360,6 @@ final class Recorder: NSObject {
     print("7. found chars: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     start = DispatchTime.now()
     
-    // print out positions
-    for (index, line) in allLines.enumerated() {
-      print("line \(index) has \(line.count) words")
-      for (wordIndex, word) in line.enumerated() {
-        print(" .. \(word.characters.count) length: [\(word.x), \(word.y), \(word.width), \(word.height)]")
-      }
-    }
-    
     // write chars
     var ocrStr = ""
     for (index, line) in allLines.enumerated() {
@@ -387,20 +379,25 @@ final class Recorder: NSObject {
       print("couldnt write pixel string \(error)")
     }
     print("8. characters.txt: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+    start = DispatchTime.now()
     
     var foundCharacters = ocr!.ocrCharacters()
-    print("predict \(foundCharacters)")
+    
+    print("9. ocr: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+    start = DispatchTime.now()
     
     // get all answers
-    var answers = [String]()
     for line in allLines {
       for word in line {
-        for character in word.characters {
-          let answer = character.letter ?? foundCharacters.remove(at: 0)
-          print("answer \(answer) \(character.x)")
-        }
+        let characters = word.characters.map({
+          (char) in char.letter ?? foundCharacters.remove(at: 0)
+        }).joined()
+        print("word [\(word.x), \(word.y), \(word.width), \(word.height), '\(characters)']")
       }
     }
+    
+    print("10. answer string: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+    start = DispatchTime.now()
     
     print("")
     print("total \(Double(DispatchTime.now().uptimeNanoseconds - startAll.uptimeNanoseconds) / 1_000_000)ms")

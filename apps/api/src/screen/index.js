@@ -105,6 +105,14 @@ export default class ScreenState {
   start = () => {
     this.stopped = false
     this.startSwindler()
+    this.screenOCR.start()
+    this.screenOCR.onWords(words => {
+      console.log('got words', words)
+      this.updateState({ ocrWords: words })
+    })
+    this.screenOCR.onClearWord(word => {
+      console.log('clear', word)
+    })
     this.watchMouse()
     this.watchKeyboard()
     iohook.start()
@@ -260,8 +268,6 @@ export default class ScreenState {
       return
     }
 
-    await this.screenOCR.stopRecording()
-
     const appBox = {
       id: APP_ID,
       x: offset[0],
@@ -317,22 +323,14 @@ export default class ScreenState {
       }
     }
 
+    console.log('ocr with settings', settings)
+
     try {
-      this.screenOCR.start(settings)
+      this.screenOCR.watchBounds(settings)
     } catch (err) {
       console.log('Error starting recorder:', err.message)
       console.log(err.stack)
     }
-
-    // start watching for diffs too
-
-    this.screenOCR.onWords(words => {
-      this.updateState({ ocrWords: words })
-    })
-
-    this.screenOCR.onClearWord(word => {
-      console.log('clear', word)
-    })
   }
 
   stop = () => {
@@ -343,7 +341,7 @@ export default class ScreenState {
   dispose() {
     console.log('disposing screen...')
     if (this.screenOCR) {
-      this.screenOCR.stopRecording()
+      this.screenOCR.stop()
     }
     if (this.swindler) {
       this.swindler.stop()

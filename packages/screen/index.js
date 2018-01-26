@@ -19,7 +19,7 @@ const supportsHevcHardwareEncoding = (() => {
 })()
 
 class Screen {
-  constructor() {
+  constructor({ debug = true } = {}) {
     console.log('creating screen')
     this.awaitingSocket = []
     this.activeSocket = null
@@ -35,7 +35,9 @@ class Screen {
       this.activeSocket = socket
       // send queued messages
       if (this.awaitingSocket.length) {
-        this.awaitingSocket.forEach(data => this.socketSend(data))
+        this.awaitingSocket.forEach(({ action, data }) =>
+          this.socketSend(action, data),
+        )
         this.awaitingSocket = []
       }
       // listen for incoming
@@ -54,28 +56,7 @@ class Screen {
     this.wss.on('error', (...args) => {
       console.log('wss error', args)
     })
-  }
 
-  handleSocketMessage(str) {
-    const { action, value } = JSON.parse(str)
-    try {
-      // clear is fast
-      if (action === 'clearWord') {
-        this.onClearWordCB(value)
-      }
-      if (action === 'words') {
-        this.onWordsCB(value)
-      }
-      if (action === 'lines') {
-        this.onLinesCB(value)
-      }
-    } catch (err) {
-      console.log('error sending reply', action, 'value', value)
-      console.log(err)
-    }
-  }
-
-  start({ debug = false } = {}) {
     if (this.recorder !== undefined) {
       throw new Error('Call `.stop()` first')
     }
@@ -105,8 +86,29 @@ class Screen {
       const out = data.trim()
       console.log(out)
     })
+  }
 
-    return this.recorder
+  handleSocketMessage(str) {
+    const { action, value } = JSON.parse(str)
+    try {
+      // clear is fast
+      if (action === 'clearWord') {
+        this.onClearWordCB(value)
+      }
+      if (action === 'words') {
+        this.onWordsCB(value)
+      }
+      if (action === 'lines') {
+        this.onLinesCB(value)
+      }
+    } catch (err) {
+      console.log('error sending reply', action, 'value', value)
+      console.log(err)
+    }
+  }
+
+  start() {
+    this.socketSend('start')
   }
 
   watchBounds(
@@ -163,13 +165,11 @@ class Screen {
       console.log('recorderOpts.videoCodec', recorderOpts.videoCodec)
     }
 
-    this.socketSend({
-      start: recorderOpts,
-    })
+    this.socketSend('watch', recorderOpts)
   }
 
   pause() {
-    this.socketSend({ pause: true })
+    this.socketSend('pause')
   }
 
   onClearWord(cb) {
@@ -199,14 +199,13 @@ class Screen {
     delete this.recorder
   }
 
-  socketSend(data) {
+  socketSend(action, data) {
     if (!this.activeSocket) {
-      this.awaitingSocket.push(data)
+      this.awaitingSocket.push({ action, data })
       return
     }
-    const strData = JSON.stringify(data)
     try {
-      this.activeSocket.send(strData)
+      this.activeSocket.send(`${action} ${data ? JSON.stringify(data) : ''}`)
     } catch (err) {
       console.log('failed to send to socket, removing', err, uid)
       this.removeSocket()

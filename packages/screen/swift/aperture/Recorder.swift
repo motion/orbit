@@ -53,7 +53,7 @@ final class Recorder: NSObject {
   private let context = CIContext()
   private var boxes: [String: Box]
   private var lastBoxes: [String: Array<UInt32>]
-  private let displayId: CGDirectDisplayID
+  private var displayId: CGDirectDisplayID
   private let components = ConnectedComponentsSwiftOCR()
   private var characters: Characters?
   private var ocr: OCRInterface?
@@ -73,17 +73,8 @@ final class Recorder: NSObject {
   func onFrame(image: CGImage) {
     print("captured")
   }
-
-  init(fps: Int, boxes: Array<Box>, showCursor: Bool, displayId: CGDirectDisplayID = CGMainDisplayID(), videoCodec: String? = nil, sampleSpacing: Int, sensitivity: Int, debug: Bool) throws {
-    self.shouldDebug = debug
-    self.displayId = displayId
-    self.session = AVCaptureSession()
-    self.firstTime = true
-    self.sampleSpacing = sampleSpacing
-    self.sensitivity = sensitivity
-    self.lastBoxes = [String: Array<UInt32>]()
-    self.boxes = [String: Box]()
-
+  
+  init(displayId: CGDirectDisplayID = CGMainDisplayID()) throws {
     // load python ocr
     if let path = Bundle.main.path(forResource: "Bridge", ofType: "plugin") {
       guard let pluginbundle = Bundle(path: path) else { fatalError("Could not load python plugin bundle") }
@@ -97,27 +88,29 @@ final class Recorder: NSObject {
     }
     print("imported python")
     
-    for box in boxes {
-      self.boxes[box.id] = box
-    }
+    // start video
+    self.displayId = displayId
+    self.session = AVCaptureSession()
     self.input = AVCaptureScreenInput(displayID: displayId)
     output = AVCaptureVideoDataOutput()
-
+    
     output.videoSettings = [
       kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_420YpCbCr8BiPlanarFullRange
     ]
-
-//    self.send = {(msg: String) in print("not connected, cant send \(msg)")}
+    
+    self.shouldDebug = false
+    self.firstTime = true
+    self.sampleSpacing = 0
+    self.sensitivity = 1
+    self.boxes = [String: Box]()
+    self.lastBoxes = [String: Array<UInt32>]()
 
     super.init()
     
-    self.setFPS(fps: fps)
-    self.input.capturesCursor = showCursor
-    
+    // setup recorder
     output.alwaysDiscardsLateVideoFrames = true
     let queue = DispatchQueue(label: "com.me.myqueue")
     output.setSampleBufferDelegate(self, queue: queue)
-
     if session.canAddInput(self.input) {
       session.addInput(self.input)
     } else {
@@ -128,10 +121,6 @@ final class Recorder: NSObject {
     } else {
       throw ApertureError.couldNotAddOutput
     }
-  }
-
-  func start() {
-    session.startRunning()
 
     // socket bridge
     let ws = WebSocket("ws://localhost:40512")
@@ -149,11 +138,55 @@ final class Recorder: NSObject {
     ws.event.error = { error in
       print("error \(error)")
     }
-    ws.event.message = { message in
+    ws.event.message = { (message) in
       if let text = message as? String {
-        print("recv: \(text)")
+        if text[0...4] == "start" {
+          self.start()
+          return
+        }
+        if text[0...4] == "watch" {
+          self.start()
+          do {
+            let options = try JSONDecoder().decode(Options.self, from: text[5..<text.count].data(using: .utf8)!)
+            self.watchBounds(
+              fps: options.fps,
+              boxes: options.boxes,
+              showCursor: options.showCursor,
+              videoCodec: options.videoCodec,
+              sampleSpacing: options.sampleSpacing,
+              sensitivity: options.sensitivity,
+              debug: options.debug
+            )
+          } catch {
+            print("Error parsing arguments \(text)")
+          }
+          return
+        }
+        if text[0...4] == "pause" {
+          self.stop()
+          return
+        }
+        print("received unknown message: \(text)")
       }
     }
+  }
+  
+  func start() {
+    session.startRunning()
+  }
+
+  func watchBounds(fps: Int, boxes: Array<Box>, showCursor: Bool, videoCodec: String? = nil, sampleSpacing: Int, sensitivity: Int, debug: Bool) {
+    self.shouldDebug = debug
+    self.firstTime = true
+    self.sampleSpacing = sampleSpacing
+    self.sensitivity = sensitivity
+    self.lastBoxes = [String: Array<UInt32>]()
+    self.boxes = [String: Box]()
+    for box in boxes {
+      self.boxes[box.id] = box
+    }
+    self.setFPS(fps: fps)
+    self.input.capturesCursor = showCursor
   }
 
   func stop() {

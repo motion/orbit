@@ -27,33 +27,24 @@ struct Options: Decodable {
 
 func record() throws {
   var options: Options
-  if arguments.first != nil {
-    options = try JSONDecoder().decode(Options.self, from: arguments.first!.data(using: .utf8)!)
-  } else {
-    options = Options(
-      fps: 10,
-      boxes: [
-        Box(id: "screen", x: 0, y: 0, width: 1000, height: 900, screenDir: "/tmp/screen", findContent: true, initialScreenshot: true)
-      ],
-      showCursor: true,
-      displayId: "main",
-      videoCodec: "mp4",
-      sampleSpacing: 10,
-      sensitivity: 2,
-      debug: false
-    )
-  }
 
   recorder = try Recorder(
-    fps: options.fps,
-    boxes: options.boxes,
-    showCursor: options.showCursor,
-    displayId: options.displayId == "main" ? CGMainDisplayID() : CGDirectDisplayID(options.displayId)!,
-    videoCodec: options.videoCodec,
-    sampleSpacing: options.sampleSpacing,
-    sensitivity: options.sensitivity,
-    debug: options.debug
+    displayId: CGMainDisplayID() // : CGDirectDisplayID(options.displayId)!
   )
+  
+  if arguments.first != nil {
+    options = try JSONDecoder().decode(Options.self, from: arguments.first!.data(using: .utf8)!)
+    try recorder.watchBounds(
+      fps: options.fps,
+      boxes: options.boxes,
+      showCursor: options.showCursor,
+      videoCodec: options.videoCodec,
+      sampleSpacing: options.sampleSpacing,
+      sensitivity: options.sensitivity,
+      debug: options.debug
+    )
+    recorder.start()
+  }
 
   recorder.onStart = {
     print("R")
@@ -73,7 +64,6 @@ func record() throws {
   signal(SIGTERM, quit)
   signal(SIGQUIT, quit)
 
-  recorder.start()
   setbuf(__stdoutp, nil)
 
   RunLoop.main.run()

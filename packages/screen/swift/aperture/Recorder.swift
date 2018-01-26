@@ -178,7 +178,6 @@ final class Recorder: NSObject {
     
     let cc = ConnectedComponents()
     let result = cc.labelImageFast(image: binarizedImage, calculateBoundingBoxes: true, invert: true)
-    print("1. content CC: \(result.boundingBoxes!.count) \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     if let boxes = result.boundingBoxes {
       if (boxes.count > 0) {
         for box in boxes {
@@ -327,9 +326,6 @@ final class Recorder: NSObject {
       total += lines.count
     }
     
-    print("5. found \(total) lines: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
-    start = DispatchTime.now()
-    
     // third loop
     // for each VERTICAL SECTION, get characters
     var allLines = [[Word]]() // store all lines
@@ -365,20 +361,18 @@ final class Recorder: NSObject {
     start = DispatchTime.now()
     
     // write chars
-    var ocrStr = ""
-    for (index, line) in allLines.enumerated() {
-      for (wordIndex, word) in line.enumerated() {
-        for (charIndex, character) in word.characters.enumerated() {
-          if character.letter == nil {
-            ocrStr += chars.charToString(character, debugID: shouldDebug ? "\(index)-\(wordIndex)-\(charIndex)" : "")
-          }
-        }
-        ocrStr += "\n"
-      }
-    }
+    let allCharacters: [Character] = allLines.flatMap { $0.flatMap { $0.characters } }
+    let unsolvedCharacters = allCharacters.filter { $0.letter == nil }
+    let uniqCharacters = Set(unsolvedCharacters)
+    let ocrCharacters = uniqCharacters.enumerated().map({ item in
+      return chars.charToString(item.element, debugID: shouldDebug ? "\(item.offset)" : "")
+    })
+    print("found \(uniqCharacters.count) uniq out of \(allCharacters.count) total")
+    let ocrString = ocrCharacters.joined(separator: "\n")
+    
     do {
       let path = NSURL.fileURL(withPath: "/tmp/characters.txt").absoluteURL
-      try ocrStr.write(to: path, atomically: true, encoding: .utf8)
+      try ocrString.write(to: path, atomically: true, encoding: .utf8)
     } catch {
       print("couldnt write pixel string \(error)")
     }
@@ -394,14 +388,28 @@ final class Recorder: NSObject {
     // get all answers
     var words = [String]()
     var lines = [String]()
+    var cache = [String: String]()
     for line in allLines {
       var minY = 10000
       var maxH = 0
       for word in line {
         let characters = word.characters.map({(char) in
+          // calculate line position
           if char.y < minY { minY = char.y }
           if char.height > maxH { maxH = char.height }
-          return char.letter ?? foundCharacters.remove(at: 0)
+          // retrieve letter
+          if char.letter != nil {
+            return char.letter!
+          }
+          if cache[char.outline] != nil {
+            return cache[char.outline]!
+          }
+          if uniqCharacters.contains(char) {
+            let answer = foundCharacters.remove(at: 0)
+            cache[char.outline] = answer
+            return answer
+          }
+          return ""
         }).joined()
         words.append("[\(word.x),\(word.y),\(word.width),\(word.height),\"\(characters)\"]")
       }

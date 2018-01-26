@@ -1,6 +1,14 @@
 import AppKit
 
-struct Character {
+struct Character: Hashable {
+  var hashValue: Int {
+    return outline.hashValue
+  }
+  
+  static func ==(lhs: Character, rhs: Character) -> Bool {
+    return lhs.outline == rhs.outline
+  }
+  
   var x: Int
   var y: Int
   var width: Int
@@ -137,6 +145,7 @@ class Characters {
           }
           curChar += 1
           if answers[char.outline] != nil {
+            print("found answer")
             char.letter = answers[char.outline]
           }
           // do this before adding next word

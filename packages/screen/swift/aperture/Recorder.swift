@@ -42,6 +42,7 @@ struct LinePositions {
 }
 
 final class Recorder: NSObject {
+  private var send: ((String)->Bool)?
   private let input: AVCaptureScreenInput
   private var session: AVCaptureSession
   private var output: AVCaptureVideoDataOutput
@@ -105,7 +106,9 @@ final class Recorder: NSObject {
     output.videoSettings = [
       kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_420YpCbCr8BiPlanarFullRange
     ]
-    
+
+//    self.send = {(msg: String) in print("not connected, cant send \(msg)")}
+
     super.init()
     
     self.setFPS(fps: fps)
@@ -131,17 +134,14 @@ final class Recorder: NSObject {
     session.startRunning()
 
     // socket bridge
-    let ws = WebSocket("ws://localhost:40510")
-    var messageNum = 0
-    let send : ()->() = {
-      messageNum += 1
-      let msg = "\(messageNum): \(NSDate().description)"
-      print("send: \(msg)")
+    let ws = WebSocket("ws://localhost:40512")
+    self.send = { (msg) in
+      print("sending: \(msg)")
       ws.send(msg)
+      return true
     }
     ws.event.open = {
       print("opened")
-      send()
     }
     ws.event.close = { code, reason, clean in
       print("close")
@@ -152,11 +152,6 @@ final class Recorder: NSObject {
     ws.event.message = { message in
       if let text = message as? String {
         print("recv: \(text)")
-        if messageNum == 10 {
-          ws.close()
-        } else {
-          send()
-        }
       }
     }
   }
@@ -460,7 +455,7 @@ final class Recorder: NSObject {
     chars.updateCache(cache)
     
     // send to world
-    print("!words [\(words.joined(separator: ","))]")
+    self.send!("{ \"action\": \"words\", \"value\": [\(words.joined(separator: ","))] }")
 //    print("!lines [\(lines.joined(separator: ","))]")
     
     print("10. answer string: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
@@ -548,7 +543,7 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
       let box = self.boxes[boxId]!
       characters!.debugDir = box.screenDir!
       if (firstTime && box.initialScreenshot || hasBoxChanged(box: box, buffer: buffer, perRow: perRow)) {
-        print("! \(box.id)")
+        self.send!("{ \"action\": \"clearWord\", \"value\": \"\(box.id)\" }")
         handleChangedArea(box: box, buffer: sampleBuffer, bufferPointer: buffer, perRow: perRow, findContent: box.findContent)
       }
     }

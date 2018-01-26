@@ -318,7 +318,7 @@ export default class ScreenState {
     }
 
     try {
-      this.screenOCR.startRecording(settings)
+      this.screenOCR.start(settings)
     } catch (err) {
       console.log('Error starting recorder:', err.message)
       console.log(err.stack)

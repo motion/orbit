@@ -139,7 +139,7 @@ final class Recorder: NSObject {
     self.input.minFrameDuration = CMTimeMake(1, Int32(fps))
   }
   
-  func screenshotBox(box: Box, buffer: CMSampleBuffer, bufferPointer: UnsafeMutablePointer<UInt8>, perRow: Int, findContent: Bool = false) {
+  func handleChangedArea(box: Box, buffer: CMSampleBuffer, bufferPointer: UnsafeMutablePointer<UInt8>, perRow: Int, findContent: Bool = false) {
     let chars = self.characters!
     // clear old files
     rmAllInside(URL(fileURLWithPath: box.screenDir!))
@@ -172,8 +172,10 @@ final class Recorder: NSObject {
     var biggestBox: BoundingBox?
     let boxFindScale = 8
     let binarizedImage = filters.filterImageForContentFinding(image: cgImage, scale: boxFindScale)
+    
     print("1. content find filter: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     start = DispatchTime.now()
+    
     let cc = ConnectedComponents()
     let result = cc.labelImageFast(image: binarizedImage, calculateBoundingBoxes: true, invert: true)
     print("1. content CC: \(result.boundingBoxes!.count) \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
@@ -201,30 +203,29 @@ final class Recorder: NSObject {
       bb.getWidth() * boxFindScale - innerPad * 2,
       bb.getHeight() * boxFindScale - innerPad * 2
     ]
-    
     // adjust frame for character finder
     chars.frameOffset = frame
-    
-    let cropBox = CGRect(x: frame[0] - box.x, y: frame[1] - box.y, width: frame[2], height: frame[3])
-    // send out to world frame offset
-    print("! [\(frame[0]), \(frame[1]), \(frame[2]), \(frame[3])]")
     if box.screenDir == nil {
       return
     }
     start = DispatchTime.now()
-//    let ocrWriteImage = images.cropImage(filters.filterImageForOCR(image: cgImageLarge), box: cropBoxLarge)
+    // crop
+    let cropBox = CGRect(x: frame[0] - box.x, y: frame[1] - box.y, width: frame[2], height: frame[3])
     let ocrCharactersImage = images.cropImage(filters.filterImageForOCRCharacterFinding(image: cgImage), box: cropBox)!
+    
     print("2. filter for ocr: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
-
+    start = DispatchTime.now()
+    
     // find vertical sections
     let lineFindScaling = 4 // scale down denominator
     let vWidth = frame[2] / lineFindScaling
     let vHeight = frame[3] / lineFindScaling
-    start = DispatchTime.now()
     let verticalImage = filters.filterForVerticalContentFinding(image: images.resize(ocrCharactersImage, width: vWidth, height: vHeight)!)
     let verticalImageRep = NSBitmapImageRep(cgImage: verticalImage)
+    
     print("3. filter vertical: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     start = DispatchTime.now()
+    
     // first loop - find vertical sections
     var verticalSections = Dictionary<Int, Int>() // start => end
     let colHeightMin = 1
@@ -270,8 +271,10 @@ final class Recorder: NSObject {
     if verticalSections.count == 0 {
       verticalSections[0] = vWidth - 1
     }
+    
     print("4. find verticals: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms --  \(verticalSections.description)")
     start = DispatchTime.now()
+    
     // second loop - find lines in sections
     var sectionLines = Dictionary<Int, [LinePositions]>()
     var total = 0
@@ -323,9 +326,10 @@ final class Recorder: NSObject {
       sectionLines[start] = lines
       total += lines.count
     }
+    
     print("5. found \(total) lines: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
-//    print("sectionLines \(sectionLines.description)")
     start = DispatchTime.now()
+    
     // third loop
     // for each VERTICAL SECTION, get characters
     var allLines = [[Word]]() // store all lines
@@ -378,6 +382,7 @@ final class Recorder: NSObject {
     } catch {
       print("couldnt write pixel string \(error)")
     }
+    
     print("8. characters.txt: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     start = DispatchTime.now()
     
@@ -387,18 +392,29 @@ final class Recorder: NSObject {
     start = DispatchTime.now()
     
     // get all answers
+    var words = [String]()
+    var lines = [String]()
     for line in allLines {
+      var minY = 10000
+      var maxH = 0
       for word in line {
-        let characters = word.characters.map({
-          (char) in char.letter ?? foundCharacters.remove(at: 0)
+        let characters = word.characters.map({(char) in
+          if char.y < minY { minY = char.y }
+          if char.height > maxH { maxH = char.height }
+          return char.letter ?? foundCharacters.remove(at: 0)
         }).joined()
-        print("word [\(word.x), \(word.y), \(word.width), \(word.height), '\(characters)']")
+        words.append("[\(word.x),\(word.y),\(word.width),\(word.height),\"\(characters)\"]")
       }
+      let firstWord = line.first!
+      let lastWord = line.last!
+      let width = lastWord.x + lastWord.width - firstWord.x
+      lines.append("[\(firstWord.x),\(minY),\(width),\(maxH)]")
     }
+    print("!words [\(words.joined(separator: ","))]")
+//    print("!lines [\(lines.joined(separator: ","))]")
     
     print("10. answer string: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     start = DispatchTime.now()
-    
     print("")
     print("total \(Double(DispatchTime.now().uptimeNanoseconds - startAll.uptimeNanoseconds) / 1_000_000)ms")
 
@@ -482,8 +498,8 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
       let box = self.boxes[boxId]!
       characters!.debugDir = box.screenDir!
       if (firstTime && box.initialScreenshot || hasBoxChanged(box: box, buffer: buffer, perRow: perRow)) {
-        screenshotBox(box: box, buffer: sampleBuffer, bufferPointer: buffer, perRow: perRow, findContent: box.findContent)
-        print(">\(box.id)")
+        print("! \(box.id)")
+        handleChangedArea(box: box, buffer: sampleBuffer, bufferPointer: buffer, perRow: perRow, findContent: box.findContent)
       }
     }
     // only true for first loop

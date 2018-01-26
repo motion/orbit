@@ -75,15 +75,16 @@ async function test() {
   //   ],
   // })
 
-  video.onChangedFrame(data => {
-    console.log('test got data', data)
+  video.onWords(data => {
+    console.log(data)
     console.log('\nto do it full speed: npm run test-fast')
     console.log('\nto see output:')
     console.log('$ open ./tmp')
     setTimeout(() => {
       process.exit(0)
-    }, 200)
+    }, 20)
   })
+  video.onClearWord(console.log)
 }
 
 try {

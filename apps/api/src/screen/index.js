@@ -2,7 +2,7 @@
 import Path from 'path'
 import Fs from 'fs-extra'
 import { Server } from 'ws'
-import Screen from '@mcro/screen'
+import ScreenOCR from '@mcro/screen'
 import ocrScreenshot from '@mcro/ocr'
 import Swindler from '@mcro/swindler'
 import { isEqual, throttle } from 'lodash'
@@ -45,7 +45,7 @@ export default class ScreenState {
   hasNewOCR = false
   runningOCR = false
   screenDestination = Constants.TMP_DIR
-  video = new Screen()
+  screenOCR = new ScreenOCR()
   wss = new Server({ port: 40510 })
   activeSockets = []
   id = 0
@@ -143,7 +143,7 @@ export default class ScreenState {
     })
   }
 
-  setCurrentContext = (nextContext = this.curContext) => {
+  setCurrentContext = nextContext => {
     // if given id, reset to new context
     if (nextContext.id) {
       this.curContext = {
@@ -253,22 +253,14 @@ export default class ScreenState {
   }
 
   handleNewContext = async () => {
-    // console.log('handleNewContext')
     const { appName, offset, bounds } = this.state.context
-
-    // test
-    // TODO remove
-    if (appName !== 'SimplenoteMac' && appName !== 'slackmacgap') {
-      return
-    }
-
-    console.log('watchScreen', appName, { offset, bounds })
+    console.log('handleNewContext', appName, { offset, bounds })
     if (!offset || !bounds) {
       console.log('didnt get offset/bounds')
       return
     }
 
-    await this.video.stopRecording()
+    await this.screenOCR.stopRecording()
 
     const appBox = {
       id: APP_ID,
@@ -282,10 +274,10 @@ export default class ScreenState {
     }
 
     let settings
-    const { ocr } = this.state
+    const { ocrWords } = this.state
 
     // watch settings
-    if (!ocr) {
+    if (!ocrWords) {
       // remove old screen
       try {
         await Fs.remove(APP_SCREEN_PATH)
@@ -294,7 +286,7 @@ export default class ScreenState {
       }
       // we are watching the whole app for words
       settings = {
-        fps: ocr ? 30 : 2,
+        fps: ocrWords ? 30 : 2,
         sampleSpacing: 10,
         sensitivity: 2,
         showCursor: false,
@@ -302,7 +294,7 @@ export default class ScreenState {
       }
     } else {
       const boxes = [
-        ...ocr.map(({ word, top, left, width, height }) => {
+        ...ocrWords.map(({ word, top, left, width, height }) => {
           return {
             id: word,
             x: left,
@@ -328,7 +320,7 @@ export default class ScreenState {
     console.log('settings', settings)
 
     try {
-      this.video.startRecording(settings)
+      this.screenOCR.startRecording(settings)
     } catch (err) {
       console.log('Error starting recorder:', err.message)
       console.log(err.stack)
@@ -337,80 +329,14 @@ export default class ScreenState {
     // start a debounced ocr
     this.handleChangedFrame()
     // start watching for diffs too
-    this.video.onChangedFrame(this.handleChangedFrame)
-  }
 
-  handleChangedFrame = async whatChanged => {
-    console.log('handleChangedFrame( whatChanged =', whatChanged, ')')
-    if (!whatChanged) {
-      return
-    }
-    const { id, contentArea } = whatChanged
-    if (this.state.ocr) {
-      if (!id) {
-        console.log('no word given in change event, but we have ocrs')
-      } else {
-        if (id !== APP_ID) {
-          console.log('got a change for word', id)
-          const beforeLen = this.state.ocr.length
-          const newOCR = this.state.ocr.filter(x => x.word !== id)
-          if (newOCR.length === beforeLen) {
-            console.log('weird this word isnt in ocr')
-          } else {
-            console.log('removing word', id)
-            this.updateState({ ocr: newOCR })
-          }
-          return
-        } else {
-          console.log(
-            'ERROR< shouldnt be reachable (screen diff during ocr words)',
-          )
-          return
-        }
-      }
-    } else {
-      // update content area offset
-      this.contentArea = contentArea
-      this.setCurrentContext()
-    }
-    clearTimeout(this.nextOCR)
-    if (this.stopped) {
-      return
-    }
-    if (Date.now() - this.hasNewOCR < 1000) {
-      console.log('ocr happened recently so ignore frame diff')
-      return
-    }
-    // this cancels running ocr due to frame change before scheduling next
-    if (this.runningOCR) {
-      this.cancelCurrentOCR()
-    }
-    // delays taking OCR for no movement
-    this.nextOCR = setTimeout(this.runOCR, DEBOUNCE_OCR)
-    this.resetHighlights()
-  }
-
-  runOCR = async () => {
-    if (this.runningOCR) {
-      console.log('already running ocr, todo: make this wait or something')
-      return
-    }
-    console.log('runOCR')
-    let resolveRunningOCR
-    this.runningOCR = new Promise(res => {
-      resolveRunningOCR = res
+    this.screenOCR.onWords(words => {
+      this.updateState({ ocrWords: words })
     })
-    const dateStarted = Date.now()
-    const ocr = await this.getOCR()
-    console.log('runOCR highlights length:', ocr && ocr.length)
-    resolveRunningOCR()
-    this.runningOCR = null
-    if (this.invalidRunningOCR > dateStarted) {
-      console.log('app has changed since this ocr, invalid')
-      return
-    }
-    this.hasNewOCR = Date.now()
-    this.updateState({ ocr, lastOCR: Date.now() })
+
+    this.screenOCR.onClearWord(word => {
+      console.log('clear', word)
+    })
   }
 
   stop = () => {
@@ -420,8 +346,8 @@ export default class ScreenState {
 
   dispose() {
     console.log('disposing screen...')
-    if (this.video) {
-      this.video.stopRecording()
+    if (this.screenOCR) {
+      this.screenOCR.stopRecording()
     }
     if (this.swindler) {
       this.swindler.stop()

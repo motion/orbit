@@ -19,7 +19,9 @@ const supportsHevcHardwareEncoding = (() => {
 
 class Screen {
   constructor() {
-    this.changedFrameCb = null
+    this.onLinesCB = _ => _
+    this.onWordsCB = _ => _
+    this.onClearWordCB = _ => _
     macosVersion.assertGreaterThanOrEqualTo('10.12')
 
     // handle exits to ensure killing swift sub-process
@@ -118,31 +120,45 @@ class Screen {
 
     this.recorder.stdout.setEncoding('utf8')
 
-    let contentArea
     this.recorder.stdout.on('data', data => {
-      if (this.changedFrameCb) {
-        const out = data.trim()
-        // console.log('out', out)
-        if (out[0] === '!') {
-          contentArea = JSON.parse(out.slice(1))
-        } else if (out[0] === '>') {
-          this.changedFrameCb({
-            id: out.slice(1),
-            contentArea,
-          })
-        } else {
-          console.log(out)
+      const out = data.trim()
+      const isMessage = out[0] === '!'
+      if (!isMessage) {
+        console.log(out)
+        return
+      }
+      let [title, ...value] = out.split(' ')
+      value = value.join(' ').trim()
+      try {
+        // clear is fast
+        if (title === '!') {
+          this.onClearWordCB(value)
         }
-      } else {
-        console.log(data)
+        if (title === '!words') {
+          this.onWordsCB(JSON.parse(value))
+        }
+        if (title === '!lines') {
+          this.onLinesCB(JSON.parse(value))
+        }
+      } catch (err) {
+        console.log('error sending reply', title, 'value', value)
+        console.log(err)
       }
     })
 
     return this.recorder
   }
 
-  onChangedFrame(cb) {
-    this.changedFrameCb = cb
+  onClearWord(cb) {
+    this.onClearWordCB = cb
+  }
+
+  onWords(cb) {
+    this.onWordsCB = cb
+  }
+
+  onLines(cb) {
+    this.onLinesCB = cb
   }
 
   async stopRecording() {

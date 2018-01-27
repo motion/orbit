@@ -19,8 +19,9 @@ const supportsHevcHardwareEncoding = (() => {
 })()
 
 class Screen {
-  constructor({ debug = true } = {}) {
+  constructor({ debug = false } = {}) {
     console.log('creating screen')
+    this.debug = debug
     this.awaitingSocket = []
     this.activeSocket = null
     this.wss = new Server({ port: 40512 })
@@ -113,7 +114,6 @@ class Screen {
 
   watchBounds(
     {
-      debug = false,
       fps = 25,
       showCursor = true,
       displayId = 'main',
@@ -135,7 +135,7 @@ class Screen {
     }))
 
     const recorderOpts = {
-      debug,
+      debug: this.debug,
       fps,
       showCursor,
       displayId,

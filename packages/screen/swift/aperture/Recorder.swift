@@ -86,7 +86,6 @@ final class Recorder: NSObject {
     } else {
       print("no bundle meh")
     }
-    print("imported python")
     
     // start video
     self.displayId = displayId
@@ -125,7 +124,6 @@ final class Recorder: NSObject {
     // socket bridge
     let ws = WebSocket("ws://localhost:40512")
     self.send = { (msg) in
-      print("sending: \(msg)")
       ws.send(msg)
       return true
     }
@@ -419,19 +417,20 @@ final class Recorder: NSObject {
     
     // check for unsolved outlines
     let allCharacters: [Character] = allLines.flatMap { $0.flatMap { $0.characters } }
-    let unsolvedCharacters = allCharacters.filter { $0.letter == nil }
-    let uniqCharacters = Set(unsolvedCharacters)
-    var foundCharacters: [String]? = nil
+    // set filters unique outlines
+    let unsolvedCharacters = Set(allCharacters.filter { $0.letter == nil })
+    var foundCharacters = [String]()
+    
+    print("unsolvedCharacters.count == \(unsolvedCharacters.count)")
     
     // if necessary, run ocr
     if unsolvedCharacters.count > 0 {
       start = DispatchTime.now()
       // write ocr string
-      let ocrCharacters = uniqCharacters.enumerated().map({ item in
+      print("found \(unsolvedCharacters.count) uniq out of \(allCharacters.count) total")
+      let ocrString = unsolvedCharacters.enumerated().map({ item in
         return chars.charToString(item.element, debugID: shouldDebug ? "\(item.offset)" : "")
-      })
-      print("found \(uniqCharacters.count) uniq out of \(allCharacters.count) total")
-      let ocrString = ocrCharacters.joined(separator: "\n")
+      }).joined(separator: "\n")
       do {
         let path = NSURL.fileURL(withPath: "/tmp/characters.txt").absoluteURL
         try ocrString.write(to: path, atomically: true, encoding: .utf8)
@@ -447,13 +446,22 @@ final class Recorder: NSObject {
       
       print("9. ocr: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     }
+    
+    // collect ocr results
+    var ocrResults = [String: String]() // outline => letter
+    if foundCharacters.count != unsolvedCharacters.count {
+      print("mismatch from in/out to ocr")
+      return
+    }
+    for char in unsolvedCharacters {
+      ocrResults[char.outline] = foundCharacters.remove(at: 0)
+    }
 
     start = DispatchTime.now()
     
     // get all answers
     var words = [String]()
     var lines = [String]()
-    var cache = [String: String]() // outline => letter
     for line in allLines {
       var minY = 10000
       var maxH = 0
@@ -463,15 +471,12 @@ final class Recorder: NSObject {
           if char.y < minY { minY = char.y }
           if char.height > maxH { maxH = char.height }
           // retrieve letter
+          // was returned from characters cache:
           if char.letter != nil {
             return char.letter!
           }
-          if cache[char.outline] != nil {
-            return cache[char.outline]!
-          }
-          if foundCharacters != nil && uniqCharacters.contains(char) {
-            let answer = foundCharacters!.remove(at: 0)
-            cache[char.outline] = answer
+          // was returned from the ocr:
+          if let answer = ocrResults[char.outline] {
             return answer
           }
           return ""
@@ -485,7 +490,7 @@ final class Recorder: NSObject {
     }
     
     // update character cache
-    chars.updateCache(cache)
+    chars.updateCache(ocrResults)
     
     // send to world
     self.send!("{ \"action\": \"words\", \"value\": [\(words.joined(separator: ","))] }")

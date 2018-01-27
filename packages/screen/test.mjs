@@ -18,11 +18,10 @@ if (!Fs.existsSync(dir)) {
 }
 
 async function test() {
-  const screen = new Screen()
   const debug = !!process.argv.find(x => x === '--debug')
-  screen.start({ debug })
+  const screen = new Screen({ debug })
+  screen.start()
   screen.watchBounds({
-    debug,
     fps: 2,
     sampleSpacing: 10,
     sensitivity: 2,

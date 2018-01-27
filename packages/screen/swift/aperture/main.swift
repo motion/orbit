@@ -10,6 +10,18 @@ func quit(_: Int32) {
   exit(0)
 }
 
+// test dictionary stuff
+//let dict = SymSpell(editDistance: 2, verbose: 2)
+//dict.createDictionaryEntry("reallylongthingslong", language: "en")
+//dict.createDictionaryEntry("hi", language: "en")
+//dict.createDictionaryEntry("hii", language: "en")
+//dict.createDictionaryEntry("hiii", language: "en")
+//dict.createDictionaryEntry("hooo", language: "en")
+//dict.createDictionaryEntry("hell", language: "en")
+//let ans = dict.correct("reallylongthingslo", language: "en")
+//print("\(ans.map { "\($0.term)\($0.distance)" })")
+//exit(0)
+
 // sensitivity = how many pixels need to change before it triggers
 //    you want this lower because allows loop to break sooner
 // sampleSpacing = dithering basically, how many pixels to skip before checking the next
@@ -26,22 +38,22 @@ struct Options: Decodable {
 }
 
 func record() throws {
-  var options: Options
-
   recorder = try Recorder(
     displayId: CGMainDisplayID() // : CGDirectDisplayID(options.displayId)!
   )
   
-  if arguments.first != nil {
-    options = try JSONDecoder().decode(Options.self, from: arguments.first!.data(using: .utf8)!)
-    try recorder.watchBounds(
-      fps: options.fps,
-      boxes: options.boxes,
-      showCursor: options.showCursor,
-      videoCodec: options.videoCodec,
-      sampleSpacing: options.sampleSpacing,
-      sensitivity: options.sensitivity,
-      debug: options.debug
+  if arguments.first == "--test" {
+    print("running in test mode...")
+    recorder.watchBounds(
+      fps: 10,
+      boxes: [
+        Box(id: "screen", x: 0, y: 0, width: 1000, height: 900, screenDir: "/tmp/screen", findContent: true, initialScreenshot: true)
+      ],
+      showCursor: true,
+      videoCodec: "mp4",
+      sampleSpacing: 10,
+      sensitivity: 2,
+      debug: true
     )
     recorder.start()
   }

@@ -17,7 +17,7 @@ class Filters {
     outputImage = outputImage.cropped(to: cropRect)
     // resize
     let filter = CIFilter(name: "CILanczosScaleTransform")!
-    filter.setValue(1.0 / Double(2.0), forKey: "inputScale")
+    filter.setValue(0.5, forKey: "inputScale")
     outputImage = applyFilter(filter, for: outputImage)
     guard let cgImage = context.createCGImage(outputImage, from: outputImage.extent) else { return nil }
     return cgImage

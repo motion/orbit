@@ -33,7 +33,7 @@ pred = output.data.max(1, keepdim=True)[1]
 predicted = [letters[letter[0]] for letter in pred.numpy()]
 
 file = open('./data/prediction.txt', "w")
-file.write(''.join(predicted))
+file.write("\n".join(predicted))
 file.close()
 
 print('predicted', predicted)

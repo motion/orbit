@@ -13,6 +13,7 @@
 #pragma mark - Public Interface
 
 NSUInteger mdc_levenshteinDistance(NSString *left, NSString *right) {
+    printf("am i alive");
     mdc_normalizeDistanceParameters(&left, &right);
     if ([right length] == 0) {
         return [left length];

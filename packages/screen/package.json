@@ -13,6 +13,7 @@
     "aperture"
   ],
   "dependencies": {
+    "reconnecting-websocket": "^3.2.2",
     "electron-util": "^0.2.1",
     "execa": "^0.8.0",
     "macos-version": "^4.0.1"

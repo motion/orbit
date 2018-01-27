@@ -3,9 +3,8 @@ const path = require('path')
 const execa = require('execa')
 const macosVersion = require('macos-version')
 const electronUtil = require('electron-util/node')
+const { Server } = require('ws')
 
-// Workaround for https://github.com/electron/electron/issues/9459
-const BIN = path.join(electronUtil.fixPathForAsarUnpack(__dirname), 'aperture')
 const sleep = ms => new Promise(res => setTimeout(res, ms))
 
 const supportsHevcHardwareEncoding = (() => {
@@ -20,21 +19,101 @@ const supportsHevcHardwareEncoding = (() => {
 })()
 
 class Screen {
-  constructor() {
-    this.changedFrameCb = null
+  constructor({ debug = false } = {}) {
+    console.log('creating screen')
+    this.debug = debug
+    this.awaitingSocket = []
+    this.activeSocket = null
+    this.wss = new Server({ port: 40512 })
+    this.onLinesCB = _ => _
+    this.onWordsCB = _ => _
+    this.onClearWordCB = _ => _
     macosVersion.assertGreaterThanOrEqualTo('10.12')
 
-    // handle exits to ensure killing swift sub-process
-    // const stopRecording = () => this.stopRecording()
-    // process.on('exit', stopRecording)
-    // process.on('SIGINT', stopRecording)
-    // process.on('SIGUSR1', stopRecording)
-    // process.on('SIGUSR2', stopRecording)
+    // handle socket between swift
+    this.wss.on('connection', socket => {
+      // add to active sockets
+      this.activeSocket = socket
+      // send queued messages
+      if (this.awaitingSocket.length) {
+        this.awaitingSocket.forEach(({ action, data }) =>
+          this.socketSend(action, data),
+        )
+        this.awaitingSocket = []
+      }
+      // listen for incoming
+      socket.on('message', x => this.handleSocketMessage(x))
+      // handle events
+      socket.on('close', () => {
+        this.removeSocket()
+      })
+      socket.on('error', err => {
+        if (err.code !== 'ECONNRESET') {
+          throw err
+        }
+        this.removeSocket()
+      })
+    })
+    this.wss.on('error', (...args) => {
+      console.log('wss error', args)
+    })
+
+    if (this.recorder !== undefined) {
+      throw new Error('Call `.stop()` first')
+    }
+    const BIN = path.join(
+      electronUtil.fixPathForAsarUnpack(__dirname),
+      'swift',
+      'Build',
+      'Products',
+      debug ? 'Debug' : 'Release',
+      'aperture',
+    )
+    this.recorder = execa(BIN, [], {
+      reject: false,
+    })
+    this.recorder.catch((err, ...rest) => {
+      console.log('screen err:', ...rest)
+      console.log(err)
+      console.log(err.stack)
+      throw err
+    })
+    this.recorder.stderr.setEncoding('utf8')
+    this.recorder.stderr.on('data', data => {
+      console.log('screen stderr:', data)
+    })
+    this.recorder.stdout.setEncoding('utf8')
+    this.recorder.stdout.on('data', data => {
+      const out = data.trim()
+      console.log(out)
+    })
   }
 
-  startRecording(
+  handleSocketMessage(str) {
+    const { action, value } = JSON.parse(str)
+    try {
+      // clear is fast
+      if (action === 'clearWord') {
+        this.onClearWordCB(value)
+      }
+      if (action === 'words') {
+        this.onWordsCB(value)
+      }
+      if (action === 'lines') {
+        this.onLinesCB(value)
+      }
+    } catch (err) {
+      console.log('error sending reply', action, 'value', value)
+      console.log(err)
+    }
+  }
+
+  start() {
+    this.socketSend('start')
+  }
+
+  watchBounds(
     {
-      debug = false,
       fps = 25,
       showCursor = true,
       displayId = 'main',
@@ -47,10 +126,6 @@ class Screen {
       boxes,
     } = {},
   ) {
-    if (this.recorder !== undefined) {
-      throw new Error('Call `.stopRecording()` first')
-    }
-
     // default box options
     const finalBoxes = boxes.map(box => ({
       initialScreenshot: false,
@@ -60,7 +135,7 @@ class Screen {
     }))
 
     const recorderOpts = {
-      debug,
+      debug: this.debug,
       fps,
       showCursor,
       displayId,
@@ -90,54 +165,26 @@ class Screen {
       console.log('recorderOpts.videoCodec', recorderOpts.videoCodec)
     }
 
-    const args = JSON.stringify(recorderOpts)
-
-    this.recorder = execa(BIN, [args], {
-      reject: false,
-    })
-
-    this.recorder.catch((err, ...rest) => {
-      console.log('screen err:', ...rest)
-      console.log(err)
-      console.log(err.stack)
-      throw err
-    })
-
-    this.recorder.stderr.setEncoding('utf8')
-    this.recorder.stderr.on('data', data => {
-      console.log('screen stderr:', data)
-    })
-
-    this.recorder.stdout.setEncoding('utf8')
-
-    let contentArea
-    this.recorder.stdout.on('data', data => {
-      if (this.changedFrameCb) {
-        const out = data.trim()
-        // console.log('out', out)
-        if (out[0] === '!') {
-          contentArea = JSON.parse(out.slice(1))
-        } else if (out[0] === '>') {
-          this.changedFrameCb({
-            id: out.slice(1),
-            contentArea,
-          })
-        } else {
-          console.log(out)
-        }
-      } else {
-        console.log(data)
-      }
-    })
-
-    return this.recorder
+    this.socketSend('watch', recorderOpts)
   }
 
-  onChangedFrame(cb) {
-    this.changedFrameCb = cb
+  pause() {
+    this.socketSend('pause')
   }
 
-  async stopRecording() {
+  onClearWord(cb) {
+    this.onClearWordCB = cb
+  }
+
+  onWords(cb) {
+    this.onWordsCB = cb
+  }
+
+  onLines(cb) {
+    this.onLinesCB = cb
+  }
+
+  async stop() {
     if (this.recorder === undefined) {
       // null if not recording
       return
@@ -148,8 +195,25 @@ class Screen {
     this.recorder.kill('SIGKILL')
     await this.recorder
     // sleep to avoid issues
-    await sleep(80)
+    await sleep(20)
     delete this.recorder
+  }
+
+  socketSend(action, data) {
+    if (!this.activeSocket) {
+      this.awaitingSocket.push({ action, data })
+      return
+    }
+    try {
+      this.activeSocket.send(`${action} ${data ? JSON.stringify(data) : ''}`)
+    } catch (err) {
+      console.log('failed to send to socket, removing', err, uid)
+      this.removeSocket()
+    }
+  }
+
+  removeSocket() {
+    this.activeSocket = null
   }
 }
 

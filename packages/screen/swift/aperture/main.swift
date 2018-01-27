@@ -10,6 +10,18 @@ func quit(_: Int32) {
   exit(0)
 }
 
+// test dictionary stuff
+//let dict = SymSpell(editDistance: 2, verbose: 2)
+//dict.createDictionaryEntry("reallylongthingslong", language: "en")
+//dict.createDictionaryEntry("hi", language: "en")
+//dict.createDictionaryEntry("hii", language: "en")
+//dict.createDictionaryEntry("hiii", language: "en")
+//dict.createDictionaryEntry("hooo", language: "en")
+//dict.createDictionaryEntry("hell", language: "en")
+//let ans = dict.correct("reallylongthingslo", language: "en")
+//print("\(ans.map { "\($0.term)\($0.distance)" })")
+//exit(0)
+
 // sensitivity = how many pixels need to change before it triggers
 //    you want this lower because allows loop to break sooner
 // sampleSpacing = dithering basically, how many pixels to skip before checking the next
@@ -26,40 +38,25 @@ struct Options: Decodable {
 }
 
 func record() throws {
-  var options: Options
-  if arguments.first != nil {
-    options = try JSONDecoder().decode(Options.self, from: arguments.first!.data(using: .utf8)!)
-  } else {
-    options = Options(
+  recorder = try Recorder(
+    displayId: CGMainDisplayID() // : CGDirectDisplayID(options.displayId)!
+  )
+  
+  if arguments.first == "--test" {
+    print("running in test mode...")
+    recorder.watchBounds(
       fps: 10,
       boxes: [
         Box(id: "screen", x: 0, y: 0, width: 1000, height: 900, screenDir: "/tmp/screen", findContent: true, initialScreenshot: true)
       ],
       showCursor: true,
-      displayId: "main",
       videoCodec: "mp4",
       sampleSpacing: 10,
       sensitivity: 2,
       debug: true
     )
+    recorder.start()
   }
-  
-  let autocorrect = SymSpell(editDistance: 2, verbose: 1)
-//  autocorrect.createDictionary("corpus", language: "en")
-  autocorrect.createDictionaryEntry("hellooo", language: "en")
-  let out = autocorrect.correct("helloo", language: "en")
-  print("out \(out)")
-  
-  recorder = try Recorder(
-    fps: options.fps,
-    boxes: options.boxes,
-    showCursor: options.showCursor,
-    displayId: options.displayId == "main" ? CGMainDisplayID() : CGDirectDisplayID(options.displayId)!,
-    videoCodec: options.videoCodec,
-    sampleSpacing: options.sampleSpacing,
-    sensitivity: options.sensitivity,
-    debug: options.debug
-  )
 
   recorder.onStart = {
     print("R")
@@ -79,28 +76,13 @@ func record() throws {
   signal(SIGTERM, quit)
   signal(SIGQUIT, quit)
 
-  recorder.start()
   setbuf(__stdoutp, nil)
 
   RunLoop.main.run()
 }
 
-func usage() {
-  print(
-    """
-    Usage:
-      aperture <options>
-      aperture list-audio-devices
-    """
-  )
-}
-
-if arguments.first != nil {
-  try record()
-  exit(0)
-}
-
 try record()
-//usage()
 exit(1)
+
+
 

@@ -122,7 +122,7 @@ class SymSpell {
       let keyint = Int(wordList.count - 1)
       result = true
       //create deletes
-      for delete in edits(key, editDistance: 0, deletes: []) {
+      for delete in edits(key[key.startIndex..<key.endIndex], editDistance: 0, deletes: []) {
         if let value2 = dictionary[language+(delete as! String)] {
           //Already exists: word1==deletes(word2), deletes(word1)==deletes(word2) or because Int/DictionaryItem single delete existed before
           if value2 is Int {
@@ -161,17 +161,19 @@ class SymSpell {
   
   //inexpensive and language independent: only deletes, no transposes + replaces + inserts
   //replaces and inserts are expensive and language dependent
-  func edits(_ word: String, editDistance: Int, deletes: NSMutableSet) -> NSMutableSet {
+  func edits(_ word: Substring, editDistance: Int, deletes: NSMutableSet) -> NSMutableSet {
     let editDistance = editDistance + 1
     if word.count > 1 {
-      for i in 0..<word.count {
+      for i in 0..<(word.count - 1) {
         //delete ith character
-        let delete = String(word[0...i]) + String(word[(i + 1)...(word.count - 1)])
+        let start = word[word.startIndex..<word.index(word.startIndex, offsetBy: i)]
+        let end = word[word.index(word.startIndex, offsetBy: i + 1)..<word.endIndex]
+        let delete = start + end
         if !deletes.contains(delete) {
           deletes.add(delete)
           //recursion, if maximum edit distance not yet reached
           if editDistance < editDistanceMax {
-            return edits(delete, editDistance: editDistance, deletes: deletes)
+            edits(delete, editDistance: editDistance, deletes: deletes)
           }
         }
       }
@@ -185,14 +187,14 @@ class SymSpell {
       return [SuggestItem]()
     }
     
-    var candidates = [String]()
+    var candidates = [Substring]()
     let hashSet1 = NSMutableSet()
     
     var suggestions = [SuggestItem]()
     let hashSet2 = NSMutableSet()
     
     //add original term
-    candidates.append(input)
+    candidates.append(input[input.startIndex..<input.endIndex])
     
     while candidates.count > 0 {
       let candidate = candidates[0]
@@ -216,14 +218,12 @@ class SymSpell {
         //if count>0 then candidate entry is correct dictionary term, not only delete item
         if value.count > 0 && !hashSet2.contains(candidate) {
           hashSet2.add(candidate)
-          
           //add correct dictionary term term to suggestion list
           let si = SuggestItem()
-          si.term = candidate
+          si.term = String(candidate)
           si.count = value.count
           si.distance = input.count - candidate.count
           suggestions.append(si)
-          
           //early termination
           if verbose < 2 && input.count - candidate.count == 0 {
             break
@@ -283,7 +283,6 @@ class SymSpell {
               continue
             }
             
-            
             if distance <= editDistanceMax {
               if let value2 = dictionary[language+suggestion] {
                 let si = SuggestItem()
@@ -307,8 +306,11 @@ class SymSpell {
         if verbose < 2 && suggestions.count > 0 && input.count - candidate.count >= suggestions[0].distance {
           continue
         }
+
         for i in 0..<candidate.count {
-          let delete = String(candidate[i..<candidate.count]) + String(candidate[(i+1)..<candidate.count])
+          let start = candidate[candidate.startIndex..<candidate.index(candidate.startIndex, offsetBy: i)]
+          let end = candidate[candidate.index(candidate.startIndex, offsetBy: i + 1)..<candidate.endIndex]
+          let delete = start + end
           if !hashSet1.contains(delete) {
             hashSet1.add(delete)
             candidates.append(delete)

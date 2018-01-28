@@ -24,14 +24,12 @@
 		CF6E7CA2201A71CC00E40B1A /* Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF6E7CA1201A71CC00E40B1A /* Async.swift */; };
 		CF72D07120099C0C0001366D /* ConnectedComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF72D07020099C0C0001366D /* ConnectedComponents.swift */; };
 		CF85A92120186D270067DCF2 /* Moves.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF85A92020186D270067DCF2 /* Moves.swift */; };
-		CF9AEB742019446F00D29367 /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF9AEB732019446F00D29367 /* Array.swift */; };
 		CF9AEB78201969E200D29367 /* SymSPell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF9AEB77201969E200D29367 /* SymSPell.swift */; };
 		CFA30D14200EB2B00087ABC7 /* ConnectedComponentsSwiftOCR.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFA30D13200EB2B00087ABC7 /* ConnectedComponentsSwiftOCR.swift */; };
 		CFA30D16200EB3510087ABC7 /* UnionFind.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFA30D15200EB3510087ABC7 /* UnionFind.swift */; };
 		CFA30D18200EB3FB0087ABC7 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFA30D17200EB3FB0087ABC7 /* Extensions.swift */; };
 		CFBB310220112C86002D2115 /* Filters.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFBB310120112C86002D2115 /* Filters.swift */; };
 		CFBB310420112D16002D2115 /* Images.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFBB310320112D16002D2115 /* Images.swift */; };
-		E3A310881E450DC800D314DD /* DeviceList.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3A310851E450DC800D314DD /* DeviceList.swift */; };
 		E3A310891E450DC800D314DD /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3A310861E450DC800D314DD /* main.swift */; };
 		E3A3108A1E450DC800D314DD /* Recorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3A310871E450DC800D314DD /* Recorder.swift */; };
 		E3A8F9E11E46F9C000C6C5FC /* util.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3A8F9E01E46F9C000C6C5FC /* util.swift */; };
@@ -92,7 +90,6 @@
 		CF6E7CA1201A71CC00E40B1A /* Async.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Async.swift; sourceTree = "<group>"; };
 		CF72D07020099C0C0001366D /* ConnectedComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectedComponents.swift; sourceTree = "<group>"; };
 		CF85A92020186D270067DCF2 /* Moves.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Moves.swift; sourceTree = "<group>"; };
-		CF9AEB732019446F00D29367 /* Array.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Array.swift; sourceTree = "<group>"; };
 		CF9AEB77201969E200D29367 /* SymSPell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SymSPell.swift; sourceTree = "<group>"; };
 		CF9AEB7A20196BEA00D29367 /* ApertureBridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ApertureBridge.h; sourceTree = "<group>"; };
 		CFA30D13200EB2B00087ABC7 /* ConnectedComponentsSwiftOCR.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectedComponentsSwiftOCR.swift; sourceTree = "<group>"; };
@@ -101,7 +98,6 @@
 		CFBB310120112C86002D2115 /* Filters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Filters.swift; sourceTree = "<group>"; };
 		CFBB310320112D16002D2115 /* Images.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Images.swift; sourceTree = "<group>"; };
 		E3A3107B1E450D3600D314DD /* aperture */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = aperture; sourceTree = BUILT_PRODUCTS_DIR; };
-		E3A310851E450DC800D314DD /* DeviceList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceList.swift; sourceTree = "<group>"; };
 		E3A310861E450DC800D314DD /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		E3A310871E450DC800D314DD /* Recorder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Recorder.swift; sourceTree = "<group>"; };
 		E3A8F9E01E46F9C000C6C5FC /* util.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = util.swift; sourceTree = "<group>"; };
@@ -167,7 +163,6 @@
 				E3A310861E450DC800D314DD /* main.swift */,
 				E3A310871E450DC800D314DD /* Recorder.swift */,
 				CF21068A2016966700C41019 /* Characters.swift */,
-				E3A310851E450DC800D314DD /* DeviceList.swift */,
 				E3A8F9E01E46F9C000C6C5FC /* util.swift */,
 				CF72D07020099C0C0001366D /* ConnectedComponents.swift */,
 				CFA30D13200EB2B00087ABC7 /* ConnectedComponentsSwiftOCR.swift */,
@@ -178,7 +173,6 @@
 				CFBB310120112C86002D2115 /* Filters.swift */,
 				CFBB310320112D16002D2115 /* Images.swift */,
 				CF85A92020186D270067DCF2 /* Moves.swift */,
-				CF9AEB732019446F00D29367 /* Array.swift */,
 				CF9AEB77201969E200D29367 /* SymSPell.swift */,
 				CF9AEB7A20196BEA00D29367 /* ApertureBridge.h */,
 				CF6E7CA1201A71CC00E40B1A /* Async.swift */,
@@ -291,13 +285,11 @@
 				CFA30D16200EB3510087ABC7 /* UnionFind.swift in Sources */,
 				CF40D7C7201A9EDA00D215B9 /* OCRInterface.swift in Sources */,
 				CF21068B2016966700C41019 /* Characters.swift in Sources */,
-				CF9AEB742019446F00D29367 /* Array.swift in Sources */,
 				CF5D8416200FE58300A810FA /* ThresholdFilter.swift in Sources */,
 				CFBB310220112C86002D2115 /* Filters.swift in Sources */,
 				CF6E7CA2201A71CC00E40B1A /* Async.swift in Sources */,
 				CFA30D18200EB3FB0087ABC7 /* Extensions.swift in Sources */,
 				CFA30D14200EB2B00087ABC7 /* ConnectedComponentsSwiftOCR.swift in Sources */,
-				E3A310881E450DC800D314DD /* DeviceList.swift in Sources */,
 				CF5D8418200FE60800A810FA /* ThresholdBelowFilter.swift in Sources */,
 				CF72D07120099C0C0001366D /* ConnectedComponents.swift in Sources */,
 				E3A8F9E11E46F9C000C6C5FC /* util.swift in Sources */,

@@ -33,19 +33,19 @@ class Filters {
     // super lower contrast down to get rid of subtle color differences
     // this generally will preserve outline data as well
     filter = CIFilter(name: "CIColorControls")!
-    filter.setValue(20.0, forKey: "inputContrast")
+    filter.setValue(8.0, forKey: "inputContrast")
     outputImage = applyFilter(filter, for: outputImage)
     // this distinguishes things nicely for edge detection
     // helps prevent finding edges of contiguous blocks
     // while emphasizing edges of that have actual borders
     filter = CIFilter(name: "CIUnsharpMask")!
-    filter.setValue(0.5, forKey: "inputIntensity")
+    filter.setValue(0.9, forKey: "inputIntensity")
     filter.setValue(5.5, forKey: "inputRadius")
     outputImage = applyFilter(filter, for: outputImage)
     // edge detecting with low contrast and unsharp mask
     // gives really nice outlines
     filter = CIFilter(name: "CIEdges")!
-    filter.setValue(2.5, forKey: "inputIntensity")
+    filter.setValue(10.5, forKey: "inputIntensity")
     outputImage = applyFilter(filter, for: outputImage)
     // edges inversts everything basically, so lets un-invert
     filter = CIFilter(name: "CIColorInvert")!

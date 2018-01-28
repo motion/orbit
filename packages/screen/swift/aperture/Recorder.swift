@@ -31,11 +31,13 @@ func rmAllInside(_ pathUrl: URL) {
   }
 }
 
-struct LinePositions {
-  var x: Int;
-  var y: Int;
-  var width: Int;
-  var height: Int;
+struct LinePosition {
+  var x: Int
+  var y: Int
+  var width: Int
+  var height: Int
+  var topFillAmt: Int
+  var bottomFillAmt: Int
   var description: String {
     return "x \(x), y \(y), width \(width), height \(height)"
   }
@@ -272,7 +274,7 @@ final class Recorder: NSObject {
     start = DispatchTime.now()
     
     // find vertical sections
-    let lineFindScaling = 4 // scale down denominator
+    let lineFindScaling = 3 // scale down denominator
     let vWidth = frame[2] / lineFindScaling
     let vHeight = frame[3] / lineFindScaling
     let verticalImage = filters.filterForVerticalContentFinding(image: images.resize(ocrCharactersImage, width: vWidth, height: vHeight)!)
@@ -331,26 +333,26 @@ final class Recorder: NSObject {
     start = DispatchTime.now()
     
     // second loop - find lines in sections
-    var sectionLines = Dictionary<Int, [LinePositions]>()
+    var sectionLines = Dictionary<Int, [LinePosition]>()
     var total = 0
-    let minLineWidth = 2
+    let minLineWidth = 1
     for (start, end) in verticalSections {
-      var lines = [LinePositions]()
+      var lines = [LinePosition]()
       var lineStreak = 0
       for y in 0..<vHeight {
-        var filled = 0
+        var lineFilledPx = 0
         var startLine = 0
         var endLine = 0
         for x in start...end {
           if imgData[x][y] == 1 {
-            filled += 1
+            lineFilledPx += 1
             endLine = x
             if startLine == 0 {
               startLine = x
             }
           }
         }
-        let isFilled = filled > minLineWidth
+        let isFilled = lineFilledPx > minLineWidth
         if !isFilled {
           lineStreak = 0
         } else {
@@ -363,16 +365,19 @@ final class Recorder: NSObject {
             var last = lines[lines.count - 1]
             last.height += 1
             last.width = max(last.width, width)
+            last.bottomFillAmt = lineFilledPx
             last.x = min(last.x, x)
             lines[lines.count - 1] = last
           } else {
             // insert
             lines.append(
-              LinePositions(
+              LinePosition(
                 x: x,
                 y: y,
                 width: width,
-                height: 1
+                height: 1,
+                topFillAmt: lineFilledPx,
+                bottomFillAmt: lineFilledPx
               )
             )
           }
@@ -390,11 +395,13 @@ final class Recorder: NSObject {
       let sectionLines: [[Word]] = sectionLines[id]!.pmap(transformer: {(line, index) in
         let padX = 6
         let padY = max(3, min(12, line.height / 10))
+        let shiftUp = line.topFillAmt * 10 / line.bottomFillAmt * 10
+        print("shiftUp \(shiftUp)")
         let lineBounds = [
           line.x * scl - padX + frame[0],
           line.y * scl - padY + frame[1],
           // add min in case padX/padY go too far
-          min(frame[2], line.width * scl + padX * 2),
+          min(frame[2], line.width * scl + padX * 3),
           min(frame[3], line.height * scl + padY * 3)
         ]
         // finds characters
@@ -418,7 +425,7 @@ final class Recorder: NSObject {
     // check for unsolved outlines
     let allCharacters: [Character] = allLines.flatMap { $0.flatMap { $0.characters } }
     // set filters unique outlines
-    let unsolvedCharacters = Set(allCharacters.filter { $0.letter == nil })
+    let unsolvedCharacters = allCharacters.filter { $0.letter == nil }.unique()
     var foundCharacters = [String]()
     
     print("unsolvedCharacters.count == \(unsolvedCharacters.count)")

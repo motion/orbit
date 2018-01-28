@@ -16,6 +16,14 @@ struct Character: Hashable {
   var backMoves: Int
   var outline: String
   var letter: String?
+  var spaceBefore: Int
+}
+
+func standardDeviation(_ arr: [Double]) -> Double {
+  let length = Double(arr.count)
+  let avg = arr.reduce(0, +) / length
+  let sumOfSquaredAvgDiff = arr.map { pow($0 - avg, 2.0)}.reduce(0, +)
+  return sqrt(sumOfSquaredAvgDiff / length)
 }
 
 struct Word {
@@ -60,7 +68,6 @@ class Characters {
     let lineY = bounds[1] * 2
     let lineW = bounds[2]
     let lineH = bounds[3]
-    var foundWords = [Word]()
     var foundChars = [Character]()
     var pixels: [PixelData]? = nil
     self.id = id
@@ -70,21 +77,8 @@ class Characters {
     var y = 0
     let maxY = lineH - lineH / 3
     let minY = lineH / 3
-    let spaceWidth = lineH / 5 // adjust based on line height
-    var pxBetweenChars = 0
-    
-    func addWord() {
-      foundWords.append(
-        Word(
-          x: foundChars.first!.x,
-          y: foundChars.first!.y,
-          width: foundChars.last!.x - foundChars.first!.x,
-          height: foundChars.last!.y - foundChars.first!.y,
-          characters: foundChars
-        )
-      )
-      foundChars = []
-    }
+    var spaceBefore = 0
+    var spaces = [Double]()
     
     // finds starts of chars and then pass to char outliner
     while true {
@@ -92,7 +86,7 @@ class Characters {
         pixels = [PixelData](repeating: PixelData(a: 255, r: 255, g: 255, b: 255), count: lineW * lineH)
       }
       if y > maxY  { // next col
-        pxBetweenChars += 2 // sync with x
+        spaceBefore += 2 // sync with x
         x += 2
         y = minY
       } else { // next row
@@ -146,26 +140,40 @@ class Characters {
           if let answer = outlineToLetter(char.outline) {
             char.letter = answer
           }
-          // do this before adding next word
-          if pxBetweenChars > spaceWidth && foundChars.count > 0 {
-            addWord()
-          }
           foundChars.append(char)
-          let fwd = (char.width / 2 - char.backMoves / 2 + 2) // width - backtracks + 2
-          let nextX = x + fwd
+          spaces.append(Double(spaceBefore))
+          spaceBefore = 0
+          let nextX = x + (char.width / 2 - char.backMoves / 2 + 2) // width - backtracks + 2
           if nextX <= x {
             x += 2
           } else {
             x = nextX
           }
-          pxBetweenChars = 0
         } // end if
       } // end if
     } // end while
     
-    // add final word
-    if foundChars.count > 0 {
-      addWord()
+    // find words
+    var foundWords = [Word]()
+    // calculate std dev of space
+    let avg = spaces.reduce(0, +) / Double(spaces.count)
+    let stdDev = standardDeviation(spaces)
+    var wordChars = [Character]()
+    // chop out words
+    for (index, char) in foundChars.enumerated() {
+      // one deviation above avg
+      if wordChars.count > 0 && (spaces[index] > avg + stdDev || index == foundChars.count - 1) {
+        foundWords.append(Word(
+          x: wordChars.first!.x,
+          y: wordChars.first!.y,
+          width: wordChars.last!.x - wordChars.first!.x,
+          height: wordChars.last!.y - wordChars.first!.y,
+          characters: wordChars
+        ))
+        wordChars = []
+      }
+      // append char after so we keep index
+      wordChars.append(char)
     }
 
     // finish, write string
@@ -265,7 +273,8 @@ class Characters {
       height: bottomRightBound[1] - topLeftBound[1] + 2,
       backMoves: startX - topLeftBound[0],
       outline: outline.joined(),
-      letter: nil
+      letter: nil,
+      spaceBefore: 0
     )
   }
   
@@ -354,7 +363,7 @@ class Characters {
     }
     output += "\n"
     if shouldDebug {
-      let outFile = "\(debugDir)/xa\(debugID)-\(index).png"
+      let outFile = "\(debugDir)/xa\(debugID).png"
       images.writeCGImage(image: images.imageFromArray(pixels: pixels!, width: 28, height: 28)!, to: outFile, resolution: 72) // write img
     }
     return output

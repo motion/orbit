@@ -225,7 +225,8 @@ class Characters {
         break
       }
       var success = false
-      for attempt in clockwise[lastMove[0]]![lastMove[1]]! {
+      let moves = clockwise[lastMove[0]]![lastMove[1]]!
+      for (index, attempt) in moves.enumerated() {
         let next = curPos + attempt[0] + attempt[1] * perRow
         if curTry > 10 && x == startX && y == startY {
 //          debug("found end")
@@ -236,6 +237,14 @@ class Characters {
         if buffer[next] >= maxLuma { continue }
         // already visited
         if visited[next] != nil { continue }
+        // if super thin, ignore
+        if index + 1 < moves.count {
+          let attempt2 = moves[index + 1]
+          let nextnext = curPos + attempt2[0] + attempt2[1] * perRow
+          if buffer[nextnext] >= maxLuma {
+            continue
+          }
+        }
         // found a valid next move
         success = true
         // update pos

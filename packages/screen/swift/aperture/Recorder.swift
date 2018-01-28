@@ -395,8 +395,8 @@ final class Recorder: NSObject {
       let sectionLines: [[Word]] = sectionLines[id]!.pmap(transformer: {(line, index) in
         let padX = 6
         let padY = max(3, min(12, line.height / 10))
-        let shiftUp = line.topFillAmt * 10 / line.bottomFillAmt * 10
-        print("shiftUp \(shiftUp)")
+//        let shiftUp = line.topFillAmt * 10 / line.bottomFillAmt * 10
+//        print("shiftUp \(shiftUp)")
         let lineBounds = [
           line.x * scl - padX + frame[0],
           line.y * scl - padY + frame[1],
@@ -428,15 +428,13 @@ final class Recorder: NSObject {
     let unsolvedCharacters = allCharacters.filter { $0.letter == nil }.unique()
     var foundCharacters = [String]()
     
-    print("unsolvedCharacters.count == \(unsolvedCharacters.count)")
-    
     // if necessary, run ocr
     if unsolvedCharacters.count > 0 {
       start = DispatchTime.now()
       // write ocr string
       print("found \(unsolvedCharacters.count) uniq out of \(allCharacters.count) total")
       let ocrString = unsolvedCharacters.enumerated().map({ item in
-        return chars.charToString(item.element, debugID: shouldDebug ? "\(item.offset)" : "")
+        return chars.charToString(item.element, debugID: "")
       }).joined(separator: "\n")
       do {
         let path = NSURL.fileURL(withPath: "/tmp/characters.txt").absoluteURL
@@ -469,11 +467,11 @@ final class Recorder: NSObject {
     // get all answers
     var words = [String]()
     var lines = [String]()
-    for line in allLines {
+    for (lineIndex, line) in allLines.enumerated() {
       var minY = 10000
       var maxH = 0
-      for word in line {
-        let characters = word.characters.map({(char) in
+      for (wordIndex, word) in line.enumerated() {
+        let characters: [String] = word.characters.map({(char) in
           // calculate line position
           if char.y < minY { minY = char.y }
           if char.height > maxH { maxH = char.height }
@@ -487,8 +485,15 @@ final class Recorder: NSObject {
             return answer
           }
           return ""
-        }).joined()
-        words.append("[\(word.x),\(word.y),\(word.width),\(word.height),\"\(characters)\"]")
+        })
+        // debug: print out all characters
+        if shouldDebug {
+          for (index, char) in word.characters.enumerated() {
+            chars.charToString(char, debugID: "\(lineIndex)-\(wordIndex)-\(index)-\(characters[index])")
+          }
+        }
+        let wordStr = characters.joined()
+        words.append("[\(word.x),\(word.y),\(word.width),\(word.height),\"\(wordStr)\"]")
       }
       let firstWord = line.first!
       let lastWord = line.last!

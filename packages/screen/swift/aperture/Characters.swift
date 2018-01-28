@@ -162,14 +162,20 @@ class Characters {
     // chop out words
     for (index, char) in foundChars.enumerated() {
       // one deviation above avg
-      if wordChars.count > 0 && (spaces[index] > avg + stdDev || index == foundChars.count - 1) {
-        foundWords.append(Word(
-          x: wordChars.first!.x,
-          y: wordChars.first!.y,
-          width: wordChars.last!.x - wordChars.first!.x,
-          height: wordChars.last!.y - wordChars.first!.y,
-          characters: wordChars
-        ))
+      let isLast =  index == foundChars.count - 1
+      if wordChars.count > 0 && (spaces[index] > avg + stdDev || isLast) {
+        if isLast {
+          wordChars.append(char)
+        }
+        foundWords.append(
+          Word(
+            x: wordChars.first!.x,
+            y: wordChars.first!.y,
+            width: wordChars.last!.x - wordChars.first!.x,
+            height: wordChars.last!.y - wordChars.first!.y,
+            characters: wordChars
+          )
+        )
         wordChars = []
       }
       // append char after so we keep index
@@ -237,14 +243,13 @@ class Characters {
         if buffer[next] >= maxLuma { continue }
         // already visited
         if visited[next] != nil { continue }
-        // if super thin, ignore
-        if index + 1 < moves.count {
-          let attempt2 = moves[index + 1]
-          let nextnext = curPos + attempt2[0] + attempt2[1] * perRow
-          if buffer[nextnext] >= maxLuma {
-            continue
-          }
-        }
+        // ensure x next pixels clockwise are also black
+        // ensures we dont have a really thin connector
+//        for x in 1...3 {
+//          let nextAttempt = moves[(index + x) % moves.count]
+//          let nextPixel = curPos + nextAttempt[0] + nextAttempt[1] * perRow
+//          if buffer[nextPixel] >= maxLuma { continue }
+//        }
         // found a valid next move
         success = true
         // update pos
@@ -365,14 +370,14 @@ class Characters {
           output += "1.0 "
         }
         if shouldDebug {
-          let brt = UInt8(luma < self.maxLuma ? 0 : 255)
+          let brt = UInt8(luma)
           pixels!.append(PixelData(a: 255, r: brt, g: brt, b: brt))
         }
       }
     }
     output += "\n"
-    if shouldDebug {
-      let outFile = "\(debugDir)/xa\(debugID).png"
+    if debugID != "" {
+      let outFile = "\(debugDir)/c-\(debugID).png"
       images.writeCGImage(image: images.imageFromArray(pixels: pixels!, width: 28, height: 28)!, to: outFile, resolution: 72) // write img
     }
     return output

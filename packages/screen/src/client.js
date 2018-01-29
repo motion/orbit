@@ -31,12 +31,12 @@ export default class ScreenClient {
       constructor: WebSocket,
     })
     this.ws.onmessage = ({ data }) => {
-      console.log('screen got data', data)
-      if (data && data.state) {
-        for (const key of Object.keys(data.state)) {
-          this[key] = data.state[key]
-        }
-      }
+      console.log('screen.client got data', typeof data, data)
+      // if (data && data.state) {
+      //   for (const key of Object.keys(data.state)) {
+      //     this[key] = data.state[key]
+      //   }
+      // }
     }
     this.ws.onopen = () => {
       this.isOpen = true

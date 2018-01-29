@@ -5,8 +5,8 @@
   "license": "MIT",
   "main": "es6/index",
   "scripts": {
-    "test": "node --experimental-modules ./test --debug && open ./tmp",
-    "test-fast": "node --experimental-modules ./test",
+    "test": "node ./test --debug && open ./tmp",
+    "test-fast": "node ./test",
     "build": "cd swift && xcodebuild archive -derivedDataPath $(mktemp -d) -scheme aperture",
     "prepublish": "npm run build"
   },

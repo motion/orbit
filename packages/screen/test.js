@@ -1,5 +1,5 @@
-import Screen from '.'
-import Fs from 'fs'
+const Screen = require('./es6').default
+const Fs = require('fs')
 
 process.on('unhandledRejection', function(error, p) {
   console.log('OCR PromiseFail:')

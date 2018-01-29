@@ -14,6 +14,9 @@ public extension Array {
     guard !self.isEmpty else {
       return []
     }
+    if count == 0 {
+      return []
+    }
     let coreCount = ProcessInfo.processInfo.activeProcessorCount
     let sampleSize = Int(ceil(Double(count) / Double(coreCount)))
     let group = DispatchGroup()

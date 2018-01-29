@@ -36,6 +36,7 @@ export default class Screen {
     // handle socket between swift
     let id = 0
     this.wss.on('connection', socket => {
+      console.log('got socket connection')
       // add to active sockets
       this.listeners.push({ id: id++, socket })
       // send initial state
@@ -48,7 +49,7 @@ export default class Screen {
         this.awaitingSocket = []
       }
       // listen for incoming
-      socket.on('message', x => this.handleSocketMessage(x))
+      socket.on('message', this.handleSocketMessage)
       // handle events
       socket.on('close', () => {
         this.removeSocket()
@@ -69,12 +70,10 @@ export default class Screen {
     }
     const BIN = path.join(
       electronUtil.fixPathForAsarUnpack(__dirname),
-      'swift',
-      'Build',
-      'Products',
-      debug ? 'Debug' : 'Release',
-      'aperture',
+      '..',
+      debug ? 'aperture-debug' : 'aperture-release',
     )
+    console.log('exec', BIN)
     this.recorder = execa(BIN, [], {
       reject: false,
     })
@@ -90,12 +89,13 @@ export default class Screen {
     })
     this.recorder.stdout.setEncoding('utf8')
     this.recorder.stdout.on('data', data => {
+      console.log('recorder stdout')
       const out = data.trim()
       console.log(out)
     })
   }
 
-  handleSocketMessage(str) {
+  handleSocketMessage = str => {
     console.log('handleSocketMessage', str)
     const { action, value, state } = JSON.parse(str)
     try {
@@ -135,7 +135,6 @@ export default class Screen {
       fps = 25,
       showCursor = true,
       displayId = 'main',
-      audioDeviceId = undefined,
       videoCodec = undefined,
       // how far between pixels to check
       sampleSpacing = 10,
@@ -157,7 +156,6 @@ export default class Screen {
       fps,
       showCursor,
       displayId,
-      audioDeviceId,
       sampleSpacing,
       sensitivity,
       boxes: finalBoxes,
@@ -222,7 +220,9 @@ export default class Screen {
       this.awaitingSocket.push({ action, data })
       return
     }
-    const strData = JSON.stringify(data)
+    console.log('screen.socketSend', action, data)
+    // send format is `action data`
+    const strData = `${action} ${JSON.stringify(data)}`
     for (const { socket, id } of this.listeners) {
       try {
         socket.send(strData)

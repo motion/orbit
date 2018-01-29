@@ -9,10 +9,11 @@
 /* Begin PBXBuildFile section */
 		CF19EC1D201BB1C50087044E /* WebSockets.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF19EC1C201BB1C50087044E /* WebSockets.swift */; };
 		CF19EC20201BB33E0087044E /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = CF19EC1F201BB33E0087044E /* libz.tbd */; };
+		CF19EC29201FB3570087044E /* Bridge.plugin in Resources */ = {isa = PBXBuildFile; fileRef = CF19EC27201FB34B0087044E /* Bridge.plugin */; };
+		CF19EC2B201FB3610087044E /* Bridge.plugin in CopyFiles */ = {isa = PBXBuildFile; fileRef = CF19EC27201FB34B0087044E /* Bridge.plugin */; };
+		CF19EC2D201FB4A40087044E /* Bridge.plugin in CopyFiles */ = {isa = PBXBuildFile; fileRef = CF19EC27201FB34B0087044E /* Bridge.plugin */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		CF21068B2016966700C41019 /* Characters.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF21068A2016966700C41019 /* Characters.swift */; };
 		CF40D7C7201A9EDA00D215B9 /* OCRInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF40D7C6201A9EDA00D215B9 /* OCRInterface.swift */; };
-		CF40D7C9201AA05C00D215B9 /* Bridge.plugin in Resources */ = {isa = PBXBuildFile; fileRef = CF40D7C8201AA05C00D215B9 /* Bridge.plugin */; };
-		CF40D7CA201AA06500D215B9 /* Bridge.plugin in CopyFiles */ = {isa = PBXBuildFile; fileRef = CF40D7C8201AA05C00D215B9 /* Bridge.plugin */; };
 		CF5D8416200FE58300A810FA /* ThresholdFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF5D8415200FE58300A810FA /* ThresholdFilter.swift */; };
 		CF5D8418200FE60800A810FA /* ThresholdBelowFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF5D8417200FE60800A810FA /* ThresholdBelowFilter.swift */; };
 		CF6E7C93201A6BA600E40B1A /* NSString+MDCDamerauLevenshteinDistance.m in Sources */ = {isa = PBXBuildFile; fileRef = CF6E7C90201A6BA600E40B1A /* NSString+MDCDamerauLevenshteinDistance.m */; };
@@ -36,31 +37,23 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		CF19EBB6201BAAF20087044E /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		CF19EBBF201BACAD0087044E /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 16;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		CF40D7BA201A9A0000D215B9 /* CopyFiles */ = {
+		CF19EC2A201FB35A0087044E /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 7;
 			files = (
-				CF40D7CA201AA06500D215B9 /* Bridge.plugin in CopyFiles */,
+				CF19EC2B201FB3610087044E /* Bridge.plugin in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CF19EC2C201FB49C0087044E /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				CF19EC2D201FB4A40087044E /* Bridge.plugin in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -69,9 +62,9 @@
 /* Begin PBXFileReference section */
 		CF19EC1C201BB1C50087044E /* WebSockets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSockets.swift; sourceTree = "<group>"; };
 		CF19EC1F201BB33E0087044E /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
+		CF19EC27201FB34B0087044E /* Bridge.plugin */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = Bridge.plugin; path = pyocr/dist/Bridge.plugin; sourceTree = "<group>"; };
 		CF21068A2016966700C41019 /* Characters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Characters.swift; sourceTree = "<group>"; };
 		CF40D7C6201A9EDA00D215B9 /* OCRInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OCRInterface.swift; sourceTree = "<group>"; };
-		CF40D7C8201AA05C00D215B9 /* Bridge.plugin */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = Bridge.plugin; path = ../../ocr/python/dist/Bridge.plugin; sourceTree = "<group>"; };
 		CF5D8415200FE58300A810FA /* ThresholdFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThresholdFilter.swift; sourceTree = "<group>"; };
 		CF5D8417200FE60800A810FA /* ThresholdBelowFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThresholdBelowFilter.swift; sourceTree = "<group>"; };
 		CF6E7C8E201A6B9D00E40B1A /* MDCDamerauLevenshtein.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MDCDamerauLevenshtein.h; path = MCDamerauLevenshtein/MDCDamerauLevenshtein.h; sourceTree = "<group>"; };
@@ -126,9 +119,9 @@
 		E3A310721E450D3600D314DD = {
 			isa = PBXGroup;
 			children = (
+				CF19EC27201FB34B0087044E /* Bridge.plugin */,
 				E3A3107D1E450D3600D314DD /* aperture */,
 				E3A3107C1E450D3600D314DD /* Products */,
-				CF40D7C8201AA05C00D215B9 /* Bridge.plugin */,
 				CF19EC1E201BB33D0087044E /* Frameworks */,
 			);
 			indentWidth = 2;
@@ -192,10 +185,9 @@
 				E3A310771E450D3600D314DD /* Sources */,
 				E3A310781E450D3600D314DD /* Frameworks */,
 				E325A4461E450E5E0016DB84 /* ShellScript */,
-				CFC5196D201A91DF00AEB15E /* Resources */,
-				CF40D7BA201A9A0000D215B9 /* CopyFiles */,
-				CF19EBBF201BACAD0087044E /* CopyFiles */,
-				CF19EBB6201BAAF20087044E /* CopyFiles */,
+				CF19EC2A201FB35A0087044E /* CopyFiles */,
+				CF19EC28201FB3520087044E /* Resources */,
+				CF19EC2C201FB49C0087044E /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -241,11 +233,11 @@
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		CFC5196D201A91DF00AEB15E /* Resources */ = {
+		CF19EC28201FB3520087044E /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CF40D7C9201AA05C00D215B9 /* Bridge.plugin in Resources */,
+				CF19EC29201FB3570087044E /* Bridge.plugin in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -411,10 +403,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				APPLY_RULES_IN_COPY_FILES = YES;
 				CLANG_ENABLE_MODULES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/Mac",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INSTALL_PATH = "";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks @executable_path/swift/Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
@@ -433,10 +422,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				APPLY_RULES_IN_COPY_FILES = YES;
 				CLANG_ENABLE_MODULES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/Mac",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INSTALL_PATH = "";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks @executable_path/swift/Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.13;

@@ -125,6 +125,7 @@ final class Recorder: NSObject {
     }
 
     // socket bridge
+    print("swift connecting to websocket on 40512")
     let ws = WebSocket("ws://localhost:40512")
     self.send = { (msg) in
       ws.send(msg)
@@ -139,6 +140,11 @@ final class Recorder: NSObject {
     }
     ws.event.message = { (message) in
       if let text = message as? String {
+        print("received message with action \(text)")
+        if text.count < 5 {
+          print("weird text")
+          return
+        }
         if text[0...4] == "start" {
           self.start()
           return
@@ -171,11 +177,13 @@ final class Recorder: NSObject {
   }
   
   func start() {
+    print("screen: starting...")
     session.startRunning()
     self.send!("{ \"state\": { \"isRunning\": true } }")
   }
   
   func stop() {
+    print("screen: stopping...")
     session.stopRunning()
     self.send!("{ \"state\": { \"isRunning\": false } }")
   }
@@ -595,6 +603,9 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
   public func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
     // todo: use this per-box
     if self.isScanning {
+      return
+    }
+    if self.boxes.count == 0 {
       return
     }
 

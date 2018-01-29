@@ -16,7 +16,7 @@ export default class ScreenClient {
     this._send({ action: 'pause' })
   }
 
-  resume = () => {
+  start = () => {
     this._send({ action: 'start' })
   }
 
@@ -24,7 +24,7 @@ export default class ScreenClient {
     if (this.isRunning) {
       this.pause()
     } else {
-      this.resume()
+      this.start()
     }
   }
 

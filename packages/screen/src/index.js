@@ -89,7 +89,6 @@ export default class Screen {
     })
     this.recorder.stdout.setEncoding('utf8')
     this.recorder.stdout.on('data', data => {
-      console.log('recorder stdout')
       const out = data.trim()
       console.log(out)
     })
@@ -117,7 +116,7 @@ export default class Screen {
       if (action === 'pause') {
         this.pause()
       }
-      if (action === 'resume') {
+      if (action === 'start') {
         this.start()
       }
     } catch (err) {
@@ -127,6 +126,7 @@ export default class Screen {
   }
 
   start = () => {
+    console.log('called start')
     this.socketSend('start')
   }
 

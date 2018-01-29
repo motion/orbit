@@ -140,7 +140,6 @@ final class Recorder: NSObject {
     }
     ws.event.message = { (message) in
       if let text = message as? String {
-        print("received message with action \(text)")
         if text.count < 5 {
           print("weird text")
           return

@@ -19,7 +19,6 @@ export default class ScreenClient {
   }
 
   toggle = () => {
-    console.log('toggling')
     if (this.isRunning) {
       this.pause()
     } else {
@@ -39,7 +38,7 @@ export default class ScreenClient {
         }
       }
     }
-    this.ws.open = () => {
+    this.ws.onopen = () => {
       this.isOpen = true
       if (this.queuedMessages.length) {
         for (const message of this.queuedMessages) {
@@ -58,6 +57,7 @@ export default class ScreenClient {
   }
 
   _send(object) {
+    console.log('this.isOpen', this.isOpen)
     if (this.isOpen) {
       this.ws.send(JSON.stringify(object))
     } else {

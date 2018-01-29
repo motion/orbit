@@ -233,7 +233,7 @@ export default class Screen {
     }
   }
 
-  removeSocket = uid => {
+  removeSocket = id => {
     this.listeners = this.listeners.filter(s => s.id !== id)
   }
 }

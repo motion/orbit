@@ -12,6 +12,7 @@ const API = require('./api').default
 const Api = new API()
 
 const exitHandler = code => {
+  console.log('exitHandler', code)
   Api.dispose()
   process.exit(code)
 }
@@ -27,7 +28,7 @@ process.on('SIGUSR1', exitHandler)
 process.on('SIGUSR2', exitHandler)
 // uncaught exceptions
 process.on('uncaughtException', (...args) => {
-  console.log(...args)
+  console.log('uncaughtException', ...args)
   process.exit(0)
 })
 // promise exceptions

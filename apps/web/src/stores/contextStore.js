@@ -32,7 +32,7 @@ export default class ContextStore {
         this.setState(res)
       }
     }
-    this.ws.open = function() {
+    this.ws.onopen = function() {
       console.log('websocket open')
     }
     this.ws.onclose = function() {

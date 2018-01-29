@@ -46,7 +46,6 @@ export default class ScreenState {
   screenOCR = new ScreenOCR()
   wss = new Server({ port: 40510 })
   activeSockets = []
-  id = 0
   nextOCR = null
   swindler = new Swindler()
   curContext = {}
@@ -61,8 +60,9 @@ export default class ScreenState {
   }
 
   constructor() {
+    const id = 0
     this.wss.on('connection', socket => {
-      let uid = this.id++
+      let uid = id++
       console.log('socket connecting', uid)
       // send current state
       this.socketSend(socket, this.state)
@@ -305,7 +305,6 @@ export default class ScreenState {
 
   stop = () => {
     this.stopped = true
-    this.dispose()
   }
 
   dispose() {

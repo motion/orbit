@@ -166,7 +166,12 @@ export default class Root extends React.Component {
           onOraRef={rootStore.handleOraRef}
           onSettingsVisibility={rootStore.handleSettingsVisibility}
         />
-        <Tray onClick={rootStore.screenClient.toggle} />
+        <Tray
+          onClick={() => {
+            console.log('tray was clicked')
+            rootStore.screenClient.toggle()
+          }}
+        />
       </App>
     )
   }

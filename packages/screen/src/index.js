@@ -96,6 +96,7 @@ export default class Screen {
   }
 
   handleSocketMessage(str) {
+    console.log('handleSocketMessage', str)
     const { action, value, state } = JSON.parse(str)
     try {
       // clear is fast

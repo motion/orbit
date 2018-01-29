@@ -24,6 +24,7 @@ export default class API {
   }
 
   async start() {
+    log('starting api...')
     this.setupHosts()
     const port = this.server.start()
     log('On port', port)

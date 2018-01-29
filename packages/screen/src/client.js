@@ -19,6 +19,7 @@ export default class ScreenClient {
   }
 
   toggle = () => {
+    console.log('toggling')
     if (this.isRunning) {
       this.pause()
     } else {

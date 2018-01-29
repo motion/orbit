@@ -3,7 +3,7 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import * as Helpers from '~/helpers'
 
-const HL_PAD = 5
+const HL_PAD = 2
 const TOP_BAR_SIZE = 22
 
 const getHoverProps = Helpers.hoverSettler({
@@ -60,8 +60,8 @@ class HighlightsStore {
       () => this.context.lastScreenChange,
       () => {
         if (this.context.lastScreenChange > this.context.lastOCR) {
-          console.log('diff, hide highlights, DISABLED FOR NOW')
-          // this.showHighlights = false
+          console.log('diff, hide highlights')
+          this.showHighlights = false
         }
       },
     )
@@ -156,10 +156,10 @@ export default class HighlightsPage {
               key={key}
               $hovered={hoveredWord && key === hoveredWord.key}
               style={{
-                top: top - HL_PAD,
+                top: top - HL_PAD - 24,
                 left: left - HL_PAD,
                 width: width + HL_PAD * 2,
-                height: height / 2 + HL_PAD * 2,
+                height: height + HL_PAD * 2,
               }}
             >
               <word>{word}</word>

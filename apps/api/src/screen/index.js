@@ -107,7 +107,7 @@ export default class ScreenState {
     this.startSwindler()
     this.screenOCR.start()
     this.screenOCR.onWords(words => {
-      console.log('got words', words)
+      console.log('got words', words ? words.length : 0)
       this.updateState({ ocrWords: words })
     })
     this.screenOCR.onClearWord(word => {
@@ -279,48 +279,13 @@ export default class ScreenState {
       findContent: true,
     }
 
-    let settings
-    const { ocrWords } = this.state
-
-    // watch settings
-    if (!ocrWords) {
-      // remove old screen
-      try {
-        await Fs.remove(APP_SCREEN_PATH)
-      } catch (err) {
-        console.log(err)
-      }
-      // we are watching the whole app for words
-      settings = {
-        fps: ocrWords ? 30 : 2,
-        sampleSpacing: 10,
-        sensitivity: 2,
-        showCursor: false,
-        boxes: [appBox],
-      }
-    } else {
-      const boxes = [
-        ...ocrWords.map(({ word, top, left, width, height }) => {
-          return {
-            id: word,
-            x: left,
-            y: top + TOP_BAR_HEIGHT,
-            width,
-            height,
-            // to test what boxes its capturing
-            // screenDir: this.screenDestination,
-          }
-        }),
-      ]
-      // watch just the words to see clears
-      settings = {
-        fps: 20,
-        sampleSpacing: 2,
-        sensitivity: 1,
-        // show cursor for now to test
-        showCursor: true,
-        boxes,
-      }
+    // we are watching the whole app for words
+    const settings = {
+      fps: 10,
+      sampleSpacing: 10,
+      sensitivity: 2,
+      showCursor: false,
+      boxes: [appBox],
     }
 
     console.log('ocr with settings', settings)
@@ -347,37 +312,6 @@ export default class ScreenState {
       this.swindler.stop()
     }
     console.log('screen disposed')
-  }
-
-  async getOCR() {
-    if (!this.state.context) {
-      return
-    }
-    console.log('running ocr', this.state.context)
-    const { offset } = this.state.context
-    if (!offset) {
-      return
-    }
-    try {
-      const res = await ocrScreenshot({
-        inputFile: APP_SCREEN_PATH,
-      })
-      const { boxes } = res
-      const [screenX, screenY] = offset
-      return boxes.map(({ name, weight, box }) => {
-        // box => { x, y, width, height }
-        return {
-          word: name,
-          weight,
-          top: Math.round(box.y / 2 + screenY - TOP_BAR_HEIGHT),
-          left: Math.round(box.x / 2 + screenX),
-          width: Math.round(box.width / 2),
-          height: Math.round(box.height / 2),
-        }
-      })
-    } catch (err) {
-      console.log('error with ocr', err.message, err.stack)
-    }
   }
 
   socketSend = (socket, data) => {

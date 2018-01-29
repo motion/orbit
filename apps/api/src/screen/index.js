@@ -274,6 +274,7 @@ export default class ScreenState {
     if (appName !== 'Chrome') {
       console.log('only scanning chrome for now')
       // turn off
+      this.resetHighlights()
       this.screenOCR.watchBounds({
         fps: 1,
         sampleSpacing: 100,

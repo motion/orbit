@@ -4,7 +4,7 @@ import { view } from '@mcro/black'
 import * as Helpers from '~/helpers'
 
 const HL_PAD = 2
-const TOP_BAR_SIZE = 22
+const TOP_BAR_PAD = 22
 
 const getHoverProps = Helpers.hoverSettler({
   enterDelay: 400,
@@ -100,7 +100,7 @@ class HighlightsStore {
         if (!x || !_y) {
           return
         }
-        let y = _y - TOP_BAR_SIZE
+        let y = _y
         let hovered = null
         for (const word of highlights) {
           // outside of x
@@ -157,7 +157,7 @@ export default class HighlightsPage {
               key={key}
               $hovered={hoveredWord && key === hoveredWord.key}
               style={{
-                top: top - HL_PAD,
+                top: top - HL_PAD - TOP_BAR_PAD,
                 left: left - HL_PAD,
                 width: width + HL_PAD * 2,
                 height: height + HL_PAD * 2,

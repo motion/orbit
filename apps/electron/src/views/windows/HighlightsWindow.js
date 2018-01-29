@@ -25,7 +25,6 @@ export default class HighlightsWindow extends React.Component {
   render() {
     return (
       <Window
-        kiosk
         alwaysOnTop
         ignoreMouseEvents
         file={`${Constants.APP_URL}/highlights`}

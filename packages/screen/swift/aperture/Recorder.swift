@@ -59,6 +59,7 @@ final class Recorder: NSObject {
   private let components = ConnectedComponentsSwiftOCR()
   private var characters: Characters?
   private var ocr: OCRInterface?
+  private var isScanning = false
 
   var onStart: (() -> Void)?
   var onFinish: (() -> Void)?
@@ -198,6 +199,7 @@ final class Recorder: NSObject {
   }
   
   func handleChangedArea(box: Box, buffer: CMSampleBuffer, bufferPointer: UnsafeMutablePointer<UInt8>, perRow: Int, findContent: Bool = false) {
+    self.isScanning = true
     let chars = self.characters!
     // clear old files
     rmAllInside(URL(fileURLWithPath: box.screenDir!))
@@ -520,6 +522,12 @@ final class Recorder: NSObject {
     self.send!("{ \"action\": \"words\", \"value\": [\(words.joined(separator: ","))] }")
 //    print("!lines [\(lines.joined(separator: ","))]")
     
+    // after x seconds, re-enable watching
+    // this is because screen needs time to update highlight boxes
+    Async.background(after: 1) {
+      self.isScanning = false
+    }
+    
     print("10. answer string: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     start = DispatchTime.now()
     print("")
@@ -585,12 +593,18 @@ final class Recorder: NSObject {
 
 extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
   public func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+    // todo: use this per-box
+    if self.isScanning {
+      return
+    }
+
     let pixelBuffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)!
     CVPixelBufferLockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0));
     let baseAddress = CVPixelBufferGetBaseAddressOfPlane(pixelBuffer, 0)
     let buffer = unsafeBitCast(baseAddress, to: UnsafeMutablePointer<UInt8>.self)
     let perRow = CVPixelBufferGetBytesPerRowOfPlane(pixelBuffer, 0)
     
+    // one time setup
     if self.characters == nil {
       characters = Characters(
         data: buffer,
@@ -603,7 +617,7 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
     // loop over boxes and check
     for boxId in self.boxes.keys {
       let box = self.boxes[boxId]!
-      characters!.debugDir = box.screenDir!
+      if shouldDebug { characters!.debugDir = box.screenDir! }
       if (firstTime && box.initialScreenshot || hasBoxChanged(box: box, buffer: buffer, perRow: perRow)) {
         if self.send!("{ \"action\": \"clearWord\", \"value\": \"\(box.id)\" }") { }
         handleChangedArea(box: box, buffer: sampleBuffer, bufferPointer: buffer, perRow: perRow, findContent: box.findContent)

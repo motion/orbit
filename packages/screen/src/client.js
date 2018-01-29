@@ -1,6 +1,8 @@
 import WebSocket from 'html5-websocket'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 
+const splitAt = index => x => [x.slice(0, index), x.slice(index)]
+
 export default class ScreenClient {
   isOpen = false
   isRunning = false
@@ -32,11 +34,21 @@ export default class ScreenClient {
     })
     this.ws.onmessage = ({ data }) => {
       console.log('screen.client got data', typeof data, data)
-      // if (data && data.state) {
-      //   for (const key of Object.keys(data.state)) {
-      //     this[key] = data.state[key]
-      //   }
-      // }
+      try {
+        const [action, rawValue] = splitAt(data.indexOf(' '))(data)
+        let value = rawValue.trim()
+        if (value && value.length) {
+          value = JSON.parse(value)
+        }
+        if (action === 'state') {
+          // set state values here
+          for (const key of Object.keys(value)) {
+            this[key] = value[key]
+          }
+        }
+      } catch (err) {
+        console.log(`client receiving message error`, err.message)
+      }
     }
     this.ws.onopen = () => {
       this.isOpen = true

@@ -222,14 +222,19 @@ export default class Screen {
     }
     console.log('screen.socketSend', action, data)
     // send format is `action data`
-    const strData = `${action} ${JSON.stringify(data)}`
-    for (const { socket, id } of this.listeners) {
-      try {
-        socket.send(strData)
-      } catch (err) {
-        console.log('failed to send to socket, removing', err, id)
-        this.removeSocket(id)
+    try {
+      const strData =
+        typeof data === 'object' ? `${action} ${JSON.stringify(data)}` : action
+      for (const { socket, id } of this.listeners) {
+        try {
+          socket.send(strData)
+        } catch (err) {
+          console.log('failed to send to socket, removing', err, id)
+          this.removeSocket(id)
+        }
       }
+    } catch (err) {
+      console.log('screen error parsing socket message', err.message)
     }
   }
 

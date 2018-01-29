@@ -8,7 +8,6 @@
     * may also help with ux for letting us use large font size
     * better than highlighting a snippet if works wells
 * tech
-  * easy way to pause/resume the ocr loop (click tray)
   * restart screen process when highlights dont come back quickly
   * debug slow char fetching after a few loops
   * make clearing quicker

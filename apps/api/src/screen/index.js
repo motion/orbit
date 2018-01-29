@@ -7,11 +7,7 @@ import { isEqual, throttle } from 'lodash'
 import iohook from 'iohook'
 import * as Constants from '~/constants'
 
-const sleep = ms => new Promise(res => setTimeout(res, ms))
 const APP_ID = 'screen'
-const APP_SCREEN_PATH = Path.join(Constants.TMP_DIR, `${APP_ID}.png`)
-const DEBOUNCE_OCR = 1000
-const TOP_BAR_HEIGHT = 23
 
 type TContext = {
   appName: string,
@@ -42,7 +38,6 @@ export default class ScreenState {
   invalidRunningOCR = Date.now()
   hasNewOCR = false
   runningOCR = false
-  screenDestination = Constants.TMP_DIR
   screenOCR = new ScreenOCR()
   wss = new Server({ port: 40510 })
   activeSockets = []
@@ -60,7 +55,7 @@ export default class ScreenState {
   }
 
   constructor() {
-    const id = 0
+    let id = 0
     this.wss.on('connection', socket => {
       let uid = id++
       console.log('socket connecting', uid)
@@ -106,6 +101,7 @@ export default class ScreenState {
     this.screenOCR.start()
     this.screenOCR.onWords(words => {
       console.log('got words', words ? words.length : 0)
+      this.hasResolvedOCR = true
       this.updateState({
         ocrWords: words,
         lastOCR: Date.now(),
@@ -133,14 +129,16 @@ export default class ScreenState {
       })
     }
 
+    let lastId = null
     this.swindler.onChange(({ event, message }) => {
-      console.log('Swindler: ', event)
       switch (event) {
         case 'FrontmostWindowChangedEvent':
-          this.setCurrentContext(message)
-          // if (id === 'Chrome' || id === 'Safari') {
-          //   console.log('is a browser')
-          // }
+          const value = {
+            id: lastId,
+            ...message,
+          }
+          lastId = value.id
+          this.setCurrentContext(value)
           break
         case 'WindowSizeChangedEvent':
           this.resetHighlights()
@@ -293,14 +291,24 @@ export default class ScreenState {
           y: offset[1],
           width: bounds[0],
           height: bounds[1],
-          screenDir: this.screenDestination,
+          screenDir: Constants.TMP_DIR,
           initialScreenshot: true,
           findContent: true,
         },
       ],
     }
     console.log('ocr with settings', settings)
+    this.hasResolvedOCR = false
     this.screenOCR.watchBounds(settings)
+
+    setTimeout(async () => {
+      if (!this.hasResolvedOCR) {
+        console.log('seems like ocr has stopped working, restarting...')
+        await this.screenOCR.stop()
+        this.screenOCR.start()
+        this.screenOCR.watchBounds(settings)
+      }
+    }, 1000)
   }
 
   stop = () => {

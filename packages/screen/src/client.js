@@ -52,7 +52,7 @@ export default class ScreenClient {
       this.isOpen = true
       if (this.queuedMessages.length) {
         for (const message of this.queuedMessages) {
-          this.send(message)
+          this._send(message)
         }
         this.queuedMessages = []
       }
@@ -61,8 +61,11 @@ export default class ScreenClient {
       this.isOpen = false
     }
     this.ws.onerror = err => {
-      console.log('error', err.message)
-      this.isOpen = false
+      if (err.code === 'ECONNRESET' || err.code === 'ECONNREFUSED') {
+        // ignore
+        return
+      }
+      console.log('client ws error', err.message)
     }
   }
 

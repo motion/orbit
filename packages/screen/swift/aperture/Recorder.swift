@@ -183,13 +183,13 @@ final class Recorder: NSObject {
   func start() {
     print("screen: starting...")
     session.startRunning()
-    self.send!("{ \"state\": { \"isRunning\": true } }")
+    _ = self.send!("{ \"state\": { \"isRunning\": true } }")
   }
   
   func stop() {
     print("screen: stopping...")
     session.stopRunning()
-    self.send!("{ \"state\": { \"isRunning\": false } }")
+    _ = self.send!("{ \"state\": { \"isRunning\": false } }")
   }
 
   func watchBounds(fps: Int, boxes: Array<Box>, showCursor: Bool, videoCodec: String? = nil, sampleSpacing: Int, sensitivity: Int, debug: Bool) {
@@ -508,7 +508,7 @@ final class Recorder: NSObject {
         // debug: print out all characters
         if shouldDebug {
           for (index, char) in word.characters.enumerated() {
-            chars.charToString(char, debugID: "\(lineIndex)-\(wordIndex)-\(index)-\(characters[index])")
+            _ = chars.charToString(char, debugID: "\(lineIndex)-\(wordIndex)-\(index)-\(characters[index])")
           }
         }
         let wordStr = characters.joined()
@@ -529,9 +529,9 @@ final class Recorder: NSObject {
     Async.background {
       chars.updateCache(ocrResults)
     }
-    
+
     // send to world
-    self.send!("{ \"action\": \"words\", \"value\": [\(words.joined(separator: ","))] }")
+    _ = self.send!("{ \"action\": \"words\", \"value\": [\(words.joined(separator: ","))] }")
 //    print("!lines [\(lines.joined(separator: ","))]")
     
     // after x seconds, re-enable watching

@@ -468,6 +468,10 @@ final class Recorder: NSObject {
     var words = [String]()
     var lines = [String]()
     for (lineIndex, line) in allLines.enumerated() {
+      if line.count == 0 {
+        print("empty line \(lineIndex)")
+        continue
+      }
       var minY = 10000
       var maxH = 0
       for (wordIndex, word) in line.enumerated() {
@@ -583,7 +587,7 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
       characters = Characters(
         data: buffer,
         perRow: perRow,
-        maxLuma: 200
+        maxLuma: 230
       )
       characters!.shouldDebug = shouldDebug
     }

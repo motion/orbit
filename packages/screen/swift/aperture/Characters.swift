@@ -245,11 +245,11 @@ class Characters {
         if visited[next] != nil { continue }
         // ensure x next pixels clockwise are also black
         // ensures we dont have a really thin connector
-//        for x in 1...3 {
-//          let nextAttempt = moves[(index + x) % moves.count]
-//          let nextPixel = curPos + nextAttempt[0] + nextAttempt[1] * perRow
-//          if buffer[nextPixel] >= maxLuma { continue }
-//        }
+        for x in 1...1 {
+          let nextAttempt = moves[(index + x) % moves.count]
+          let nextPixel = curPos + nextAttempt[0] + nextAttempt[1] * perRow
+          if buffer[nextPixel] >= maxLuma { continue }
+        }
         // found a valid next move
         success = true
         // update pos
@@ -283,8 +283,8 @@ class Characters {
     return Character(
       x: topLeftBound[0],
       y: topLeftBound[1],
-      width: bottomRightBound[0] - topLeftBound[0] + 2,
-      height: bottomRightBound[1] - topLeftBound[1] + 2,
+      width: bottomRightBound[0] - topLeftBound[0] + 1,
+      height: bottomRightBound[1] - topLeftBound[1] + 1,
       backMoves: startX - topLeftBound[0],
       outline: outline.joined(),
       letter: nil,
@@ -370,7 +370,7 @@ class Characters {
           output += "1.0 "
         }
         if shouldDebug {
-          let brt = UInt8(luma)
+          let brt = UInt8(luma < maxLuma ? luma : 255)
           pixels!.append(PixelData(a: 255, r: brt, g: brt, b: brt))
         }
       }

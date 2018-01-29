@@ -122,10 +122,11 @@ class Characters {
           debug("0 size")
           continue
         }
+        let tooBig = char.width > 300 || char.height > 300
         let tooSmall = char.width < 5 && char.height < 5 || char.width < 2 || char.height < 2
         let tooThin = char.height / char.width > 25
         let tooWide = char.width / char.height > 25
-        let misfit = tooSmall || tooThin || tooWide
+        let misfit = tooBig || tooSmall || tooThin || tooWide
         if shouldDebug && debugImg != nil {
           let box = CGRect(x: char.x / 2 - frameOffset[0] * 2, y: char.y / 2 - frameOffset[1] * 2, width: char.width / 2, height: char.height / 2)
           if let img = images.cropImage(debugImg!, box: box) {

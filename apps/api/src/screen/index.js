@@ -108,10 +108,14 @@ export default class ScreenState {
     this.screenOCR.start()
     this.screenOCR.onWords(words => {
       console.log('got words', words ? words.length : 0)
-      this.updateState({ ocrWords: words })
+      this.updateState({
+        ocrWords: words,
+        lastOCR: Date.now(),
+      })
     })
     this.screenOCR.onClearWord(word => {
-      console.log('clear', word)
+      console.log('!!!!!!!! clear word', word)
+      this.resetHighlights()
     })
     this.watchMouse()
     this.watchKeyboard()

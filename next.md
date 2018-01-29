@@ -1,3 +1,13 @@
+## next
+
+* fix i's j's by going continuing downwards from middle of found outline
+  * needs: skipping bottom black
+* fix recognition
+  * dont crop/contain just center and scale down
+    * think: apostrophe vs comma, period vs middot, 0 vs o, l vs 1
+  * swap numbers in words by if prevword is letter then swap using simplenumtoletterdict
+  * train with more deversity
+
 ## functionality
 
 * focus an area using your mouse + option

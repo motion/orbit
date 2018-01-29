@@ -419,11 +419,12 @@ final class Recorder: NSObject {
       })
       allLines = allLines + sectionLines
     }
-
-    print("7. found chars: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     
     // check for unsolved outlines
     let allCharacters: [Character] = allLines.flatMap { $0.flatMap { $0.characters } }
+
+    print("7. gather characters \(allCharacters.count): \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+    
     // set filters unique outlines
     let unsolvedCharacters = allCharacters.filter { $0.letter == nil }.unique()
     var foundCharacters = [String]()
@@ -500,13 +501,20 @@ final class Recorder: NSObject {
         words.append("[\(word.x),\(word.y),\(word.width),\(word.height),\"\(wordStr)\"]")
       }
       let firstWord = line.first!
-      let lastWord = line.last!
-      let width = lastWord.x + lastWord.width - firstWord.x
+      var width: Int
+      if line.count > 1 {
+        let lastWord = line.last!
+        width = lastWord.x + lastWord.width - firstWord.x
+      } else {
+        width = firstWord.x + firstWord.width
+      }
       lines.append("[\(firstWord.x),\(minY),\(width),\(maxH)]")
     }
     
     // update character cache
-    chars.updateCache(ocrResults)
+    Async.background {
+      chars.updateCache(ocrResults)
+    }
     
     // send to world
     self.send!("{ \"action\": \"words\", \"value\": [\(words.joined(separator: ","))] }")
@@ -597,7 +605,7 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
       let box = self.boxes[boxId]!
       characters!.debugDir = box.screenDir!
       if (firstTime && box.initialScreenshot || hasBoxChanged(box: box, buffer: buffer, perRow: perRow)) {
-        self.send!("{ \"action\": \"clearWord\", \"value\": \"\(box.id)\" }")
+        if self.send!("{ \"action\": \"clearWord\", \"value\": \"\(box.id)\" }") { }
         handleChangedArea(box: box, buffer: sampleBuffer, bufferPointer: buffer, perRow: perRow, findContent: box.findContent)
       }
     }

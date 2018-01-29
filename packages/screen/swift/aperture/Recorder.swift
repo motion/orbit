@@ -154,7 +154,6 @@ final class Recorder: NSObject {
           return
         }
         if action == "watch" {
-          self.start()
           do {
             let options = try JSONDecoder().decode(Options.self, from: text[5..<text.count].data(using: .utf8)!)
             self.watchBounds(

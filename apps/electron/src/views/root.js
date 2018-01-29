@@ -12,6 +12,8 @@ import { ScreenClient } from '@mcro/screen'
 
 @view.provide({
   rootStore: class RootStore {
+    // our api to the screen
+    screenState = {}
     // used to generically talk to browser
     sendOra = null
 
@@ -44,7 +46,11 @@ import { ScreenClient } from '@mcro/screen'
     }
 
     setupScreenLink() {
-      this.screenClient = new ScreenClient()
+      this.screenClient = new ScreenClient({
+        onStateChange: state => {
+          this.screenState = state
+        },
+      })
     }
 
     sendOraSync = async (...args) => {

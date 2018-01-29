@@ -33,10 +33,10 @@ export function listenForCrawlerInject() {
 }
 
 export function injectRepl(object) {
-  // const replInstance = repl.start({
-  //   prompt: 'electron > ',
-  // })
-  // Object.assign(replInstance.context, object)
+  const replInstance = repl.start({
+    prompt: 'electron > ',
+  })
+  Object.assign(replInstance.context, object)
 }
 
 export function handleOpenSettings() {

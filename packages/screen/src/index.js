@@ -95,7 +95,7 @@ export default class Screen {
   }
 
   handleSocketMessage = str => {
-    console.log('handleSocketMessage', str)
+    // console.log('handleSocketMessage', str)
     const { action, value, state } = JSON.parse(str)
     try {
       // clear is fast
@@ -220,7 +220,7 @@ export default class Screen {
       this.awaitingSocket.push({ action, data })
       return
     }
-    console.log('screen.socketSend', action, data)
+    // console.log('screen.socketSend', action, data)
     // send format is `action data`
     try {
       const strData =
@@ -229,7 +229,7 @@ export default class Screen {
         try {
           socket.send(strData)
         } catch (err) {
-          console.log('failed to send to socket, removing', err, id)
+          console.log('failed to send to socket, removing', id)
           this.removeSocket(id)
         }
       }

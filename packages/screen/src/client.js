@@ -5,10 +5,14 @@ const splitAt = index => x => [x.slice(0, index), x.slice(index)]
 
 export default class ScreenClient {
   isOpen = false
-  isRunning = false
+  state = {
+    isRunning: false,
+  }
   queuedMessages = []
+  onStateChange = _ => _
 
-  constructor() {
+  constructor({ onStateChange } = {}) {
+    this.onStateChange = onStateChange
     this._setupLink()
   }
 
@@ -21,7 +25,7 @@ export default class ScreenClient {
   }
 
   toggle = () => {
-    if (this.isRunning) {
+    if (this.state.isRunning) {
       this.pause()
     } else {
       this.start()
@@ -41,9 +45,9 @@ export default class ScreenClient {
         }
         if (action === 'state') {
           console.log('got state', value)
-          // set state values here
-          for (const key of Object.keys(value)) {
-            this[key] = value[key]
+          this.state = value
+          if (this.onStateChange) {
+            this.onStateChange(this.state)
           }
         }
       } catch (err) {
@@ -69,7 +73,7 @@ export default class ScreenClient {
   }
 
   _send(object) {
-    console.log('this.isOpen', this.isOpen)
+    console.log('this.isOpen', this.isOpen, object)
     if (this.isOpen) {
       this.ws.send(JSON.stringify(object))
     } else {

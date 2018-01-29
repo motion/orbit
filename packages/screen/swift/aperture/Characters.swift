@@ -179,11 +179,12 @@ class Characters {
             width = (lastChar.x + lastChar.width) - firstChar.x
           }
           foundWords.append(
+            // adjust for retina
             Word(
-              x: firstChar.x,
-              y: minYL,
-              width: width,
-              height: maxYL - minYL,
+              x: firstChar.x / 2,
+              y: minYL / 2,
+              width: width / 2,
+              height: (maxYL - minYL) / 2,
               characters: wordChars
             )
           )

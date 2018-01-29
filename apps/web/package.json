@@ -4,7 +4,7 @@
   "version": "1.5.38",
   "main": "index.js",
   "scripts": {
-    "start": "parcel -p 3002 ./public/index.html",
+    "start": "./start.sh",
     "start-prod": "static-server -p 3002 -n build/index.html build",
     "build": "npm version patch && MINIFY=false NODE_ENV=production BUILD_DIR=. mcro-build",
     "watch": "NODE_ENV=development BUILD_DIR=. mcro-build --watch",

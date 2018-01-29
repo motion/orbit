@@ -10,7 +10,7 @@ const getHoverProps = Helpers.hoverSettler({
   enterDelay: 400,
   onHovered: object => {
     console.log('SEND PEEK', object)
-    Helpers.OS.send('peek-target', object)
+    // Helpers.OS.send('peek-target', object)
   },
 })
 
@@ -148,6 +148,7 @@ export default class HighlightsPage {
   render({ store }) {
     const { highlights, hoveredWord } = store
     console.log('render highlights', highlights)
+
     return (
       <contain $highlights>
         <highlights if={store.showHighlights}>
@@ -156,7 +157,7 @@ export default class HighlightsPage {
               key={key}
               $hovered={hoveredWord && key === hoveredWord.key}
               style={{
-                top: top - HL_PAD - 24,
+                top: top - HL_PAD,
                 left: left - HL_PAD,
                 width: width + HL_PAD * 2,
                 height: height + HL_PAD * 2,

@@ -46,7 +46,7 @@ class Characters {
   private let images = Images()
   private var buffer: UnsafeMutablePointer<UInt8>
   private var perRow: Int
-  private var maxLuma = 0
+  private var isBlackIfUnder = 0
   private let moves = Moves()
   private let specialDebug = [0, 0]
   private var curChar = 0
@@ -56,8 +56,8 @@ class Characters {
     return shouldDebug && specialDebug[0] == id && specialDebug[1] == curChar
   }
 
-  init(data: UnsafeMutablePointer<UInt8>, perRow: Int, maxLuma: Int) {
-    self.maxLuma = maxLuma // higher == allow lighter
+  init(data: UnsafeMutablePointer<UInt8>, perRow: Int, isBlackIfUnder: Int) {
+    self.isBlackIfUnder = isBlackIfUnder // higher == allow lighter
     self.buffer = data
     self.perRow = perRow
   }
@@ -98,10 +98,10 @@ class Characters {
       }
       let xO = x * 2 + lineX
       // rewind to topmost filled px if we passed it
-      while y > 0 { if buffer[((y - 1) * 2 + lineY) * perRow + xO] < maxLuma { y -= 1 } else { break } }
+      while y > 0 { if buffer[((y - 1) * 2 + lineY) * perRow + xO] < isBlackIfUnder { y -= 1 } else { break } }
       let yO = y * 2 + lineY
       let luma = buffer[yO * perRow + xO]
-      let isBlack = luma < maxLuma ? true : false
+      let isBlack = luma < isBlackIfUnder ? true : false
       if shouldDebug {
         let val = UInt8(isBlack ? 0 : 255)
         pixels![x + y * lineW] = PixelData(a: 255, r: val, g: val, b: val)
@@ -200,7 +200,7 @@ class Characters {
   }
 
   func isBlack(_ pos: Int) -> Bool {
-    return buffer[pos] < maxLuma
+    return buffer[pos] < isBlackIfUnder
   }
 
   func findCharacter(startX: Int, startY: Int, maxHeight: Int) -> Character {
@@ -240,7 +240,7 @@ class Characters {
           break
         }
         // not black
-        if buffer[next] >= maxLuma { continue }
+        if buffer[next] >= isBlackIfUnder { continue }
         // already visited
         if visited[next] != nil { continue }
         // ensure x next pixels clockwise are also black
@@ -248,7 +248,7 @@ class Characters {
         for x in 1...1 {
           let nextAttempt = moves[(index + x) % moves.count]
           let nextPixel = curPos + nextAttempt[0] + nextAttempt[1] * perRow
-          if buffer[nextPixel] >= maxLuma { continue }
+          if buffer[nextPixel] >= isBlackIfUnder { continue }
         }
         // found a valid next move
         success = true
@@ -370,7 +370,7 @@ class Characters {
           output += "1.0 "
         }
         if shouldDebug {
-          let brt = UInt8(luma < maxLuma ? luma : 255)
+          let brt = UInt8(luma < isBlackIfUnder ? luma : 255)
           pixels!.append(PixelData(a: 255, r: brt, g: brt, b: brt))
         }
       }

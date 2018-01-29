@@ -587,7 +587,7 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
       characters = Characters(
         data: buffer,
         perRow: perRow,
-        maxLuma: 230
+        isBlackIfUnder: 180
       )
       characters!.shouldDebug = shouldDebug
     }

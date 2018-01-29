@@ -317,19 +317,19 @@ class Characters {
       return answers[outline]!
     }
     // optimize: only look for smaller chars
-    if outline.count < 25 {
-      let start = DispatchTime.now()
-      let closeOutlines = dict.correct(outline, language: "en")
-      let end = Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000
-      if end > 10 {
-        print(" slow lcache check: \(end)ms")
-        print(" \(dict.dictionary.count)  \(dict.wordList.count) ")
-      }
-      if closeOutlines.count > 0 {
-        print("found a close outline!")
-        return answers[closeOutlines[0].term]
-      }
-    }
+//    if outline.count < 25 {
+//      let start = DispatchTime.now()
+//      let closeOutlines = dict.correct(outline, language: "en")
+//      let end = Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000
+//      if end > 10 {
+//        print(" slow lcache check: \(end)ms")
+//        print(" \(dict.dictionary.count)  \(dict.wordList.count) ")
+//      }
+//      if closeOutlines.count > 0 {
+//        print("found a close outline!")
+//        return answers[closeOutlines[0].term]
+//      }
+//    }
     return nil
   }
   
@@ -337,10 +337,10 @@ class Characters {
     for entry in cache {
       let (outline, letter) = entry
       self.answers[outline] = letter
-      if outline.count < 25 {
-        if self.dict.createDictionaryEntry(outline, language: "en") {
-        }
-      }
+//      if outline.count < 25 {
+//        if self.dict.createDictionaryEntry(outline, language: "en") {
+//        }
+//      }
     }
   }
   

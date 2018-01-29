@@ -524,7 +524,7 @@ final class Recorder: NSObject {
     
     // after x seconds, re-enable watching
     // this is because screen needs time to update highlight boxes
-    Async.background(after: 1) {
+    Async.background(after: 0.2) {
       self.isScanning = false
     }
     

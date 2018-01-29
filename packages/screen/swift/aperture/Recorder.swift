@@ -31,11 +31,13 @@ func rmAllInside(_ pathUrl: URL) {
   }
 }
 
-struct LinePositions {
-  var x: Int;
-  var y: Int;
-  var width: Int;
-  var height: Int;
+struct LinePosition {
+  var x: Int
+  var y: Int
+  var width: Int
+  var height: Int
+  var topFillAmt: Int
+  var bottomFillAmt: Int
   var description: String {
     return "x \(x), y \(y), width \(width), height \(height)"
   }
@@ -57,6 +59,7 @@ final class Recorder: NSObject {
   private let components = ConnectedComponentsSwiftOCR()
   private var characters: Characters?
   private var ocr: OCRInterface?
+  private var isScanning = false
 
   var onStart: (() -> Void)?
   var onFinish: (() -> Void)?
@@ -85,6 +88,7 @@ final class Recorder: NSObject {
       self.ocr = Bridge.sharedInstance()
     } else {
       print("no bundle meh")
+      exit(0)
     }
     
     // start video
@@ -122,14 +126,13 @@ final class Recorder: NSObject {
     }
 
     // socket bridge
+    print("swift connecting to websocket on 40512")
     let ws = WebSocket("ws://localhost:40512")
     self.send = { (msg) in
       ws.send(msg)
       return true
     }
-    ws.event.open = {
-      print("opened")
-    }
+    ws.event.open = {}
     ws.event.close = { code, reason, clean in
       print("close")
     }
@@ -138,12 +141,20 @@ final class Recorder: NSObject {
     }
     ws.event.message = { (message) in
       if let text = message as? String {
-        if text[0...4] == "start" {
+        if text.count < 5 {
+          print("weird text")
+          return
+        }
+        let action = text[0...4]
+        if action == "state" {
+          // coming from us, ignore
+          return
+        }
+        if action == "start" {
           self.start()
           return
         }
-        if text[0...4] == "watch" {
-          self.start()
+        if action == "watch" {
           do {
             let options = try JSONDecoder().decode(Options.self, from: text[5..<text.count].data(using: .utf8)!)
             self.watchBounds(
@@ -160,7 +171,7 @@ final class Recorder: NSObject {
           }
           return
         }
-        if text[0...4] == "pause" {
+        if action == "pause" {
           self.stop()
           return
         }
@@ -170,7 +181,15 @@ final class Recorder: NSObject {
   }
   
   func start() {
+    print("screen: starting...")
     session.startRunning()
+    self.send!("{ \"state\": { \"isRunning\": true } }")
+  }
+  
+  func stop() {
+    print("screen: stopping...")
+    session.stopRunning()
+    self.send!("{ \"state\": { \"isRunning\": false } }")
   }
 
   func watchBounds(fps: Int, boxes: Array<Box>, showCursor: Bool, videoCodec: String? = nil, sampleSpacing: Int, sensitivity: Int, debug: Bool) {
@@ -186,16 +205,13 @@ final class Recorder: NSObject {
     self.setFPS(fps: fps)
     self.input.capturesCursor = showCursor
   }
-
-  func stop() {
-    session.stopRunning()
-  }
   
   func setFPS(fps: Int) {
     self.input.minFrameDuration = CMTimeMake(1, Int32(fps))
   }
   
   func handleChangedArea(box: Box, buffer: CMSampleBuffer, bufferPointer: UnsafeMutablePointer<UInt8>, perRow: Int, findContent: Bool = false) {
+    self.isScanning = true
     let chars = self.characters!
     // clear old files
     rmAllInside(URL(fileURLWithPath: box.screenDir!))
@@ -272,7 +288,7 @@ final class Recorder: NSObject {
     start = DispatchTime.now()
     
     // find vertical sections
-    let lineFindScaling = 4 // scale down denominator
+    let lineFindScaling = 3 // scale down denominator
     let vWidth = frame[2] / lineFindScaling
     let vHeight = frame[3] / lineFindScaling
     let verticalImage = filters.filterForVerticalContentFinding(image: images.resize(ocrCharactersImage, width: vWidth, height: vHeight)!)
@@ -331,26 +347,26 @@ final class Recorder: NSObject {
     start = DispatchTime.now()
     
     // second loop - find lines in sections
-    var sectionLines = Dictionary<Int, [LinePositions]>()
+    var sectionLines = Dictionary<Int, [LinePosition]>()
     var total = 0
-    let minLineWidth = 2
+    let minLineWidth = 1
     for (start, end) in verticalSections {
-      var lines = [LinePositions]()
+      var lines = [LinePosition]()
       var lineStreak = 0
       for y in 0..<vHeight {
-        var filled = 0
+        var lineFilledPx = 0
         var startLine = 0
         var endLine = 0
         for x in start...end {
           if imgData[x][y] == 1 {
-            filled += 1
+            lineFilledPx += 1
             endLine = x
             if startLine == 0 {
               startLine = x
             }
           }
         }
-        let isFilled = filled > minLineWidth
+        let isFilled = lineFilledPx > minLineWidth
         if !isFilled {
           lineStreak = 0
         } else {
@@ -363,16 +379,19 @@ final class Recorder: NSObject {
             var last = lines[lines.count - 1]
             last.height += 1
             last.width = max(last.width, width)
+            last.bottomFillAmt = lineFilledPx
             last.x = min(last.x, x)
             lines[lines.count - 1] = last
           } else {
             // insert
             lines.append(
-              LinePositions(
+              LinePosition(
                 x: x,
                 y: y,
                 width: width,
-                height: 1
+                height: 1,
+                topFillAmt: lineFilledPx,
+                bottomFillAmt: lineFilledPx
               )
             )
           }
@@ -390,11 +409,13 @@ final class Recorder: NSObject {
       let sectionLines: [[Word]] = sectionLines[id]!.pmap(transformer: {(line, index) in
         let padX = 6
         let padY = max(3, min(12, line.height / 10))
+//        let shiftUp = line.topFillAmt * 10 / line.bottomFillAmt * 10
+//        print("shiftUp \(shiftUp)")
         let lineBounds = [
           line.x * scl - padX + frame[0],
           line.y * scl - padY + frame[1],
           // add min in case padX/padY go too far
-          min(frame[2], line.width * scl + padX * 2),
+          min(frame[2], line.width * scl + padX * 3),
           min(frame[3], line.height * scl + padY * 3)
         ]
         // finds characters
@@ -412,16 +433,15 @@ final class Recorder: NSObject {
       })
       allLines = allLines + sectionLines
     }
-
-    print("7. found chars: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     
     // check for unsolved outlines
     let allCharacters: [Character] = allLines.flatMap { $0.flatMap { $0.characters } }
-    // set filters unique outlines
-    let unsolvedCharacters = Set(allCharacters.filter { $0.letter == nil })
-    var foundCharacters = [String]()
+
+    print("7. gather characters \(allCharacters.count): \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     
-    print("unsolvedCharacters.count == \(unsolvedCharacters.count)")
+    // set filters unique outlines
+    let unsolvedCharacters = allCharacters.filter { $0.letter == nil }.unique()
+    var foundCharacters = [String]()
     
     // if necessary, run ocr
     if unsolvedCharacters.count > 0 {
@@ -429,7 +449,7 @@ final class Recorder: NSObject {
       // write ocr string
       print("found \(unsolvedCharacters.count) uniq out of \(allCharacters.count) total")
       let ocrString = unsolvedCharacters.enumerated().map({ item in
-        return chars.charToString(item.element, debugID: shouldDebug ? "\(item.offset)" : "")
+        return chars.charToString(item.element, debugID: "")
       }).joined(separator: "\n")
       do {
         let path = NSURL.fileURL(withPath: "/tmp/characters.txt").absoluteURL
@@ -462,11 +482,15 @@ final class Recorder: NSObject {
     // get all answers
     var words = [String]()
     var lines = [String]()
-    for line in allLines {
+    for (lineIndex, line) in allLines.enumerated() {
+      if line.count == 0 {
+        print("empty line \(lineIndex)")
+        continue
+      }
       var minY = 10000
       var maxH = 0
-      for word in line {
-        let characters = word.characters.map({(char) in
+      for (wordIndex, word) in line.enumerated() {
+        let characters: [String] = word.characters.map({(char) in
           // calculate line position
           if char.y < minY { minY = char.y }
           if char.height > maxH { maxH = char.height }
@@ -480,21 +504,41 @@ final class Recorder: NSObject {
             return answer
           }
           return ""
-        }).joined()
-        words.append("[\(word.x),\(word.y),\(word.width),\(word.height),\"\(characters)\"]")
+        })
+        // debug: print out all characters
+        if shouldDebug {
+          for (index, char) in word.characters.enumerated() {
+            chars.charToString(char, debugID: "\(lineIndex)-\(wordIndex)-\(index)-\(characters[index])")
+          }
+        }
+        let wordStr = characters.joined()
+        words.append("[\(word.x),\(word.y),\(word.width),\(word.height),\"\(wordStr)\"]")
       }
       let firstWord = line.first!
-      let lastWord = line.last!
-      let width = lastWord.x + lastWord.width - firstWord.x
+      var width: Int
+      if line.count > 1 {
+        let lastWord = line.last!
+        width = lastWord.x + lastWord.width - firstWord.x
+      } else {
+        width = firstWord.x + firstWord.width
+      }
       lines.append("[\(firstWord.x),\(minY),\(width),\(maxH)]")
     }
     
     // update character cache
-    chars.updateCache(ocrResults)
+    Async.background {
+      chars.updateCache(ocrResults)
+    }
     
     // send to world
     self.send!("{ \"action\": \"words\", \"value\": [\(words.joined(separator: ","))] }")
 //    print("!lines [\(lines.joined(separator: ","))]")
+    
+    // after x seconds, re-enable watching
+    // this is because screen needs time to update highlight boxes
+    Async.background(after: 0.2) {
+      self.isScanning = false
+    }
     
     print("10. answer string: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     start = DispatchTime.now()
@@ -561,17 +605,26 @@ final class Recorder: NSObject {
 
 extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
   public func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+    // todo: use this per-box
+    if self.isScanning {
+      return
+    }
+    if self.boxes.count == 0 {
+      return
+    }
+
     let pixelBuffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)!
     CVPixelBufferLockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0));
     let baseAddress = CVPixelBufferGetBaseAddressOfPlane(pixelBuffer, 0)
     let buffer = unsafeBitCast(baseAddress, to: UnsafeMutablePointer<UInt8>.self)
     let perRow = CVPixelBufferGetBytesPerRowOfPlane(pixelBuffer, 0)
     
+    // one time setup
     if self.characters == nil {
       characters = Characters(
         data: buffer,
         perRow: perRow,
-        maxLuma: 200
+        isBlackIfUnder: 180
       )
       characters!.shouldDebug = shouldDebug
     }
@@ -579,9 +632,9 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
     // loop over boxes and check
     for boxId in self.boxes.keys {
       let box = self.boxes[boxId]!
-      characters!.debugDir = box.screenDir!
+      if shouldDebug { characters!.debugDir = box.screenDir! }
       if (firstTime && box.initialScreenshot || hasBoxChanged(box: box, buffer: buffer, perRow: perRow)) {
-        self.send!("{ \"action\": \"clearWord\", \"value\": \"\(box.id)\" }")
+        if self.send!("{ \"action\": \"clearWord\", \"value\": \"\(box.id)\" }") { }
         handleChangedArea(box: box, buffer: sampleBuffer, bufferPointer: buffer, perRow: perRow, findContent: box.findContent)
       }
     }

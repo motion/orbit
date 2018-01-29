@@ -1,5 +1,5 @@
-import Screen from '.'
-import Fs from 'fs'
+const Screen = require('./es6').default
+const Fs = require('fs')
 
 process.on('unhandledRejection', function(error, p) {
   console.log('OCR PromiseFail:')
@@ -20,6 +20,7 @@ if (!Fs.existsSync(dir)) {
 async function test() {
   const debug = !!process.argv.find(x => x === '--debug')
   const screen = new Screen({ debug })
+  console.log('running...')
   screen.start()
   screen.watchBounds({
     fps: 2,

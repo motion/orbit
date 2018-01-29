@@ -38,9 +38,16 @@ struct Options: Decodable {
 }
 
 func record() throws {
-  recorder = try Recorder(
-    displayId: CGMainDisplayID() // : CGDirectDisplayID(options.displayId)!
-  )
+  print("starting screen")
+  
+  do {
+    recorder = try Recorder(
+      displayId: CGMainDisplayID() // : CGDirectDisplayID(options.displayId)!
+    )
+  } catch let error as NSError {
+    print("Error \(error.domain)")
+    print(Thread.callStackSymbols)
+  }
   
   if arguments.first == "--test" {
     print("running in test mode...")
@@ -67,6 +74,7 @@ func record() throws {
   }
 
   recorder.onError = {
+    print(Thread.callStackSymbols)
     printErr($0)
     exit(1)
   }

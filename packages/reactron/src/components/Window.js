@@ -31,6 +31,8 @@ export default class Window extends BaseComponent {
       backgroundColor: props.backgroundColor,
       alwaysOnTop: !!props.alwaysOnTop,
       frame: !!props.frame,
+      kiosk: !!props.kiosk,
+      fullScreen: !!props.fullScreen,
     }
     this.window = new BrowserWindow(this.options)
 
@@ -46,6 +48,8 @@ export default class Window extends BaseComponent {
     ignoreMouseEvents(props.ignoreMouseEvents)
 
     this.propHandlers = {
+      kiosk: v => this.window.setKiosk(v),
+      fullScreen: v => this.window.setFullScreen(v),
       ignoreMouseEvents,
       devToolsExtensions: () => {
         configureExtensions.call(this, this.props)

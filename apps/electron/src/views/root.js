@@ -8,9 +8,12 @@ import Tray from './Tray'
 import { ipcMain } from 'electron'
 import * as Helpers from '~/helpers'
 import { throttle } from 'lodash'
+import { ScreenClient } from '@mcro/screen'
 
 @view.provide({
   rootStore: class RootStore {
+    // our api to the screen
+    screenState = {}
     // used to generically talk to browser
     sendOra = null
 
@@ -33,12 +36,20 @@ import { throttle } from 'lodash'
       RootHelpers.listenForOpenBrowser.call(this)
       RootHelpers.listenForCrawlerInject.call(this)
       RootHelpers.injectRepl({ rootStore: this })
+      this.setupScreenLink()
       this.setupOraLink()
-
       this.on('shortcut', shortcut => {
         if (shortcut === 'Option+Space') {
           this.toggleShown()
         }
+      })
+    }
+
+    setupScreenLink() {
+      this.screenClient = new ScreenClient({
+        onStateChange: state => {
+          this.screenState = state
+        },
       })
     }
 
@@ -129,6 +140,15 @@ import { throttle } from 'lodash'
     handleOraRef = ref => {
       this.oraRef = ref
     }
+
+    handleBeforeQuit = () => {
+      console.log('before quit')
+    }
+
+    handleQuit = () => {
+      console.log('handling quit')
+      process.exit(0)
+    }
   },
 })
 @view.electron
@@ -143,12 +163,21 @@ export default class Root extends React.Component {
       return null
     }
     return (
-      <App onBeforeQuit={rootStore.onBeforeQuit} ref={rootStore.handleAppRef}>
+      <App
+        onBeforeQuit={rootStore.handleBeforeQuit}
+        onQuit={rootStore.handleQuit}
+        ref={rootStore.handleAppRef}
+      >
         <Windows
           onOraRef={rootStore.handleOraRef}
           onSettingsVisibility={rootStore.handleSettingsVisibility}
         />
-        <Tray onClick={rootStore.toggleShown} />
+        <Tray
+          onClick={() => {
+            console.log('tray was clicked')
+            rootStore.screenClient.toggle()
+          }}
+        />
       </App>
     )
   }

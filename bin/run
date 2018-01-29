@@ -11,57 +11,9 @@ killgroup() {
   kill 0
 }
 
-function run-api() {
-  cd $ROOT/apps/api
-  if [ "$ARG1" = "--prod" ]; then
-    # this is really test-prod
-    npm run start-prod
-  else
-    npm run start
-  fi
-}
-
-function run-web() {
-  cd $ROOT/apps/web
-  if [ "$ARG1" = "--clean" ]; then
-    npm start -- --no-cache
-  elif [ "$ARG1" = "--prod" ]; then
-    npm run start-prod
-  else
-    npm start
-  fi
-}
-
-function run-site() {
-  cd apps/site
-  npm start
-}
-
 if [ "$ACTION" = "backend" ]; then
   echo "Open about:inspect in Chrome to debug Node"
   compose up ${@:2}
-elif [ "$ACTION" = "electron" ]; then
-  if [ "$ARG1" = "--prod" ]; then
-    cd apps/electron-build
-    npm run start-prod &
-    wait
-  else
-    cd apps/electron
-    npm start
-  fi
-elif [ "$ACTION" =  "site" ]; then
-  run-site ${@:2} &
-  wait
-elif [ "$ACTION" =  "api" ]; then
-  run-api ${@:2}
-elif [ "$ACTION" =  "web" ]; then
-  if [ ! -d "$ROOT/packages/ui/lib" ]; then
-    echo "Make sure to run 'build' once before running web"
-    exit 0
-  fi
-  run-web ${@:2} &
-  run-api ${@:2} &
-  wait
 else
   cd apps/$1
   npm run start ${@:2}

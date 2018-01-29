@@ -3,14 +3,14 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import * as Helpers from '~/helpers'
 
-const HL_PAD = 5
-const TOP_BAR_SIZE = 22
+const HL_PAD = 2
+const TOP_BAR_PAD = 22
 
 const getHoverProps = Helpers.hoverSettler({
   enterDelay: 400,
   onHovered: object => {
     console.log('SEND PEEK', object)
-    Helpers.OS.send('peek-target', object)
+    // Helpers.OS.send('peek-target', object)
   },
 })
 
@@ -37,10 +37,16 @@ class HighlightsStore {
 
   // [ { top, left, height, width }, ... ]
   get highlights() {
-    return ((this.context && this.context.ocr) || []).map((word, index) => ({
-      ...word,
-      key: `${index}-${word.word}-${word.top}-${word.left}`,
-    }))
+    return ((this.context && this.context.ocrWords) || []).map(
+      ([left, top, width, height, word], index) => ({
+        top,
+        left,
+        width,
+        height,
+        word,
+        key: `${index}-${word}-${top}-${left}`,
+      }),
+    )
   }
 
   willMount() {
@@ -94,7 +100,7 @@ class HighlightsStore {
         if (!x || !_y) {
           return
         }
-        let y = _y - TOP_BAR_SIZE
+        let y = _y
         let hovered = null
         for (const word of highlights) {
           // outside of x
@@ -141,16 +147,23 @@ class HighlightsStore {
 export default class HighlightsPage {
   render({ store }) {
     const { highlights, hoveredWord } = store
+    console.log('render highlights', highlights)
+
     return (
       <contain $highlights>
         <highlights if={store.showHighlights}>
-          {store.highlights.map(hl => (
+          {store.highlights.map(({ key, top, left, width, height, word }) => (
             <highlight
-              key={hl.key}
-              $hlPosition={hl}
-              $hovered={hoveredWord && hl.key === hoveredWord.key}
+              key={key}
+              $hovered={hoveredWord && key === hoveredWord.key}
+              style={{
+                top: top - HL_PAD - TOP_BAR_PAD,
+                left: left - HL_PAD,
+                width: width + HL_PAD * 2,
+                height: height + HL_PAD * 2,
+              }}
             >
-              <word>{hl.word}</word>
+              <word>{word}</word>
             </highlight>
           ))}
         </highlights>
@@ -173,12 +186,6 @@ export default class HighlightsPage {
       borderRadius: 8,
       background: [200, 200, 200, 0.5],
     },
-    hlPosition: ({ top, left, width, height }) => ({
-      top: top - HL_PAD + 4,
-      left: left - HL_PAD,
-      width: width + HL_PAD * 2,
-      height: height / 2 + HL_PAD * 2,
-    }),
     hovered: {
       background: [180, 180, 180, 0.3],
     },

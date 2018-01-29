@@ -1,5 +1,7 @@
 import 'isomorphic-fetch'
 
+console.log('process.env.NODE_ENV', process.env.NODE_ENV)
+
 if (process.env.NODE_ENV === 'development') {
   require('source-map-support/register')
 }
@@ -12,6 +14,7 @@ const API = require('./api').default
 const Api = new API()
 
 const exitHandler = code => {
+  console.log('exitHandler', code)
   Api.dispose()
   process.exit(code)
 }
@@ -26,7 +29,10 @@ process.on('SIGINT', () => exitHandler(0))
 process.on('SIGUSR1', exitHandler)
 process.on('SIGUSR2', exitHandler)
 // uncaught exceptions
-process.on('uncaughtException', exitHandler)
+process.on('uncaughtException', (...args) => {
+  console.log('uncaughtException', ...args)
+  process.exit(0)
+})
 // promise exceptions
 process.on('unhandledRejection', function(reason, promise) {
   console.log(
@@ -41,9 +47,9 @@ process.on('unhandledRejection', function(reason, promise) {
 export async function run() {
   try {
     await Api.start()
-
-    // before exit, stop app
   } catch (err) {
     console.log('error', err)
   }
 }
+
+run()

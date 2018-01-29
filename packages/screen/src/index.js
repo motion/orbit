@@ -1,9 +1,11 @@
-const os = require('os')
-const path = require('path')
-const execa = require('execa')
-const macosVersion = require('macos-version')
-const electronUtil = require('electron-util/node')
-const { Server } = require('ws')
+import os from 'os'
+import path from 'path'
+import execa from 'execa'
+import macosVersion from 'macos-version'
+import electronUtil from 'electron-util/node'
+import { Server } from 'ws'
+
+export ScreenClient from './client'
 
 const sleep = ms => new Promise(res => setTimeout(res, ms))
 
@@ -18,22 +20,27 @@ const supportsHevcHardwareEncoding = (() => {
   return result && Number(result[1]) >= 6
 })()
 
-class Screen {
+export default class Screen {
+  awaitingSocket = []
+  listeners = []
+  wss = new Server({ port: 40512 })
+  onLinesCB = _ => _
+  onWordsCB = _ => _
+  onClearWordCB = _ => _
+  state = {}
+
   constructor({ debug = false } = {}) {
-    console.log('creating screen')
     this.debug = debug
-    this.awaitingSocket = []
-    this.activeSocket = null
-    this.wss = new Server({ port: 40512 })
-    this.onLinesCB = _ => _
-    this.onWordsCB = _ => _
-    this.onClearWordCB = _ => _
     macosVersion.assertGreaterThanOrEqualTo('10.12')
 
     // handle socket between swift
+    let id = 0
     this.wss.on('connection', socket => {
+      console.log('got socket connection')
       // add to active sockets
-      this.activeSocket = socket
+      this.listeners.push({ id: id++, socket })
+      // send initial state
+      this.socketSend('state', this.state)
       // send queued messages
       if (this.awaitingSocket.length) {
         this.awaitingSocket.forEach(({ action, data }) =>
@@ -42,7 +49,7 @@ class Screen {
         this.awaitingSocket = []
       }
       // listen for incoming
-      socket.on('message', x => this.handleSocketMessage(x))
+      socket.on('message', this.handleSocketMessage)
       // handle events
       socket.on('close', () => {
         this.removeSocket()
@@ -63,12 +70,10 @@ class Screen {
     }
     const BIN = path.join(
       electronUtil.fixPathForAsarUnpack(__dirname),
-      'swift',
-      'Build',
-      'Products',
-      debug ? 'Debug' : 'Release',
-      'aperture',
+      '..',
+      debug ? 'run-debug' : 'run-release',
     )
+    console.log('exec', BIN)
     this.recorder = execa(BIN, [], {
       reject: false,
     })
@@ -89,12 +94,18 @@ class Screen {
     })
   }
 
-  handleSocketMessage(str) {
-    const { action, value } = JSON.parse(str)
+  handleSocketMessage = str => {
+    // console.log('handleSocketMessage', str)
+    const { action, value, state } = JSON.parse(str)
     try {
       // clear is fast
       if (action === 'clearWord') {
         this.onClearWordCB(value)
+      }
+      // state goes out to clients
+      if (state) {
+        this.state = state
+        this.socketSend('state', this.state)
       }
       if (action === 'words') {
         this.onWordsCB(value)
@@ -102,22 +113,28 @@ class Screen {
       if (action === 'lines') {
         this.onLinesCB(value)
       }
+      if (action === 'pause') {
+        this.pause()
+      }
+      if (action === 'start') {
+        this.start()
+      }
     } catch (err) {
       console.log('error sending reply', action, 'value', value)
       console.log(err)
     }
   }
 
-  start() {
+  start = () => {
+    console.log('called start')
     this.socketSend('start')
   }
 
-  watchBounds(
+  watchBounds = (
     {
       fps = 25,
       showCursor = true,
       displayId = 'main',
-      audioDeviceId = undefined,
       videoCodec = undefined,
       // how far between pixels to check
       sampleSpacing = 10,
@@ -125,7 +142,7 @@ class Screen {
       sensitivity = 2,
       boxes,
     } = {},
-  ) {
+  ) => {
     // default box options
     const finalBoxes = boxes.map(box => ({
       initialScreenshot: false,
@@ -139,7 +156,6 @@ class Screen {
       fps,
       showCursor,
       displayId,
-      audioDeviceId,
       sampleSpacing,
       sensitivity,
       boxes: finalBoxes,
@@ -168,23 +184,23 @@ class Screen {
     this.socketSend('watch', recorderOpts)
   }
 
-  pause() {
+  pause = () => {
     this.socketSend('pause')
   }
 
-  onClearWord(cb) {
+  onClearWord = cb => {
     this.onClearWordCB = cb
   }
 
-  onWords(cb) {
+  onWords = cb => {
     this.onWordsCB = cb
   }
 
-  onLines(cb) {
+  onLines = cb => {
     this.onLinesCB = cb
   }
 
-  async stop() {
+  stop = async () => {
     if (this.recorder === undefined) {
       // null if not recording
       return
@@ -200,21 +216,29 @@ class Screen {
   }
 
   socketSend(action, data) {
-    if (!this.activeSocket) {
+    if (!this.listeners.length) {
       this.awaitingSocket.push({ action, data })
       return
     }
+    // console.log('screen.socketSend', action, data)
+    // send format is `action data`
     try {
-      this.activeSocket.send(`${action} ${data ? JSON.stringify(data) : ''}`)
+      const strData =
+        typeof data === 'object' ? `${action} ${JSON.stringify(data)}` : action
+      for (const { socket, id } of this.listeners) {
+        try {
+          socket.send(strData)
+        } catch (err) {
+          console.log('failed to send to socket, removing', id)
+          this.removeSocket(id)
+        }
+      }
     } catch (err) {
-      console.log('failed to send to socket, removing', err, uid)
-      this.removeSocket()
+      console.log('screen error parsing socket message', err.message)
     }
   }
 
-  removeSocket() {
-    this.activeSocket = null
+  removeSocket = id => {
+    this.listeners = this.listeners.filter(s => s.id !== id)
   }
 }
-
-module.exports = Screen

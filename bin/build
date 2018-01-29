@@ -49,8 +49,6 @@ function build-es6() {
     --ignore @mcro/electron-build \
     --ignore @mcro/electron \
     --ignore @mcro/crawler \
-    --ignore @mcro/ocr \
-    --ignore @mcro/screen \
     --ignore @mcro/search \
     --ignore @mcro/constants \
     --ignore @mcro/screendump \
@@ -63,7 +61,7 @@ function build-es6() {
     --ignore @mcro/r2 \
     --ignore @mcro/css \
     --ignore @mcro/reactron \
-    --ignore @mcro/tunnel \
+    --ignore @mcro/react-tunnel \
       -- \
         BABEL_ENV=es6 babel src --out-dir es6 -s true ${@:1}
 }
@@ -78,7 +76,6 @@ function build-prod() {
     --ignore @mcro/crawler \
     --ignore @mcro/constants \
     --ignore @mcro/search \
-    --ignore @mcro/screen \
     --ignore @mcro/electron \
     --ignore @mcro/electron-build \
     --ignore @mcro/builder \

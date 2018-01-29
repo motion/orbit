@@ -1,9 +1,7 @@
 // @flow
 import Path from 'path'
-import Fs from 'fs-extra'
 import { Server } from 'ws'
 import ScreenOCR from '@mcro/screen'
-import ocrScreenshot from '@mcro/ocr'
 import Swindler from '@mcro/swindler'
 import { isEqual, throttle } from 'lodash'
 import iohook from 'iohook'
@@ -48,14 +46,13 @@ export default class ScreenState {
   screenOCR = new ScreenOCR()
   wss = new Server({ port: 40510 })
   activeSockets = []
-  id = 0
   nextOCR = null
   swindler = new Swindler()
   curContext = {}
 
   state: TScreenState = {
     context: null,
-    ocr: null,
+    ocrWords: null,
     lastOCR: Date.now(),
     lastScreenChange: Date.now(),
     mousePosition: [0, 0],
@@ -63,8 +60,9 @@ export default class ScreenState {
   }
 
   constructor() {
+    const id = 0
     this.wss.on('connection', socket => {
-      let uid = this.id++
+      let uid = id++
       console.log('socket connecting', uid)
       // send current state
       this.socketSend(socket, this.state)
@@ -107,11 +105,15 @@ export default class ScreenState {
     this.startSwindler()
     this.screenOCR.start()
     this.screenOCR.onWords(words => {
-      console.log('got words', words)
-      this.updateState({ ocrWords: words })
+      console.log('got words', words ? words.length : 0)
+      this.updateState({
+        ocrWords: words,
+        lastOCR: Date.now(),
+      })
     })
     this.screenOCR.onClearWord(word => {
-      console.log('clear', word)
+      console.log('!!!!!!!! clear word', word)
+      this.resetHighlights()
     })
     this.watchMouse()
     this.watchKeyboard()
@@ -126,11 +128,13 @@ export default class ScreenState {
       this.cancelCurrentOCR()
       // console.log('UpdateContext:', this.curContext.id)
       // ensure new
-      this.updateState({ context: Object.assign({}, this.curContext) })
+      this.updateState({
+        context: Object.assign({}, this.curContext),
+      })
     }
 
     this.swindler.onChange(({ event, message }) => {
-      // console.log('Swindler: ', event)
+      console.log('Swindler: ', event)
       switch (event) {
         case 'FrontmostWindowChangedEvent':
           this.setCurrentContext(message)
@@ -246,14 +250,10 @@ export default class ScreenState {
   }
 
   onChangedState = async (oldState, newStateItems) => {
-    // no listeners, no need to watch
-    // if (!this.hasListeners) {
-    //   return
-    // }
-    // const hasNewOCR = !isEqual(prevState.ocr, this.state.ocr)
-    // re-watch on different context
     const firstTimeOCR =
-      (!oldState.ocr || !oldState.ocr.length) && newStateItems.ocr
+      (!oldState.ocrWords || !oldState.ocrWords.length) &&
+      newStateItems.ocrWords
+
     const newContext = newStateItems.context
     if (newContext || firstTimeOCR) {
       await this.handleNewContext()
@@ -267,75 +267,44 @@ export default class ScreenState {
       console.log('didnt get offset/bounds')
       return
     }
-
-    const appBox = {
-      id: APP_ID,
-      x: offset[0],
-      y: offset[1],
-      width: bounds[0],
-      height: bounds[1],
-      screenDir: this.screenDestination,
-      initialScreenshot: true,
-      findContent: true,
-    }
-
-    let settings
-    const { ocrWords } = this.state
-
-    // watch settings
-    if (!ocrWords) {
-      // remove old screen
-      try {
-        await Fs.remove(APP_SCREEN_PATH)
-      } catch (err) {
-        console.log(err)
-      }
-      // we are watching the whole app for words
-      settings = {
-        fps: ocrWords ? 30 : 2,
-        sampleSpacing: 10,
+    if (appName !== 'Chrome') {
+      console.log('only scanning chrome for now')
+      // turn off
+      this.resetHighlights()
+      this.screenOCR.watchBounds({
+        fps: 1,
+        sampleSpacing: 100,
         sensitivity: 2,
         showCursor: false,
-        boxes: [appBox],
-      }
-    } else {
-      const boxes = [
-        ...ocrWords.map(({ word, top, left, width, height }) => {
-          return {
-            id: word,
-            x: left,
-            y: top + TOP_BAR_HEIGHT,
-            width,
-            height,
-            // to test what boxes its capturing
-            // screenDir: this.screenDestination,
-          }
-        }),
-      ]
-      // watch just the words to see clears
-      settings = {
-        fps: 20,
-        sampleSpacing: 2,
-        sensitivity: 1,
-        // show cursor for now to test
-        showCursor: true,
-        boxes,
-      }
+        boxes: [],
+      })
+      return
     }
-
+    // we are watching the whole app for words
+    const settings = {
+      fps: 10,
+      sampleSpacing: 10,
+      sensitivity: 2,
+      showCursor: false,
+      boxes: [
+        {
+          id: APP_ID,
+          x: offset[0],
+          y: offset[1],
+          width: bounds[0],
+          height: bounds[1],
+          screenDir: this.screenDestination,
+          initialScreenshot: true,
+          findContent: true,
+        },
+      ],
+    }
     console.log('ocr with settings', settings)
-
-    try {
-      this.screenOCR.watchBounds(settings)
-    } catch (err) {
-      console.log('Error starting recorder:', err.message)
-      console.log(err.stack)
-    }
+    this.screenOCR.watchBounds(settings)
   }
 
   stop = () => {
     this.stopped = true
-    this.dispose()
   }
 
   dispose() {
@@ -347,37 +316,6 @@ export default class ScreenState {
       this.swindler.stop()
     }
     console.log('screen disposed')
-  }
-
-  async getOCR() {
-    if (!this.state.context) {
-      return
-    }
-    console.log('running ocr', this.state.context)
-    const { offset } = this.state.context
-    if (!offset) {
-      return
-    }
-    try {
-      const res = await ocrScreenshot({
-        inputFile: APP_SCREEN_PATH,
-      })
-      const { boxes } = res
-      const [screenX, screenY] = offset
-      return boxes.map(({ name, weight, box }) => {
-        // box => { x, y, width, height }
-        return {
-          word: name,
-          weight,
-          top: Math.round(box.y / 2 + screenY - TOP_BAR_HEIGHT),
-          left: Math.round(box.x / 2 + screenX),
-          width: Math.round(box.width / 2),
-          height: Math.round(box.height / 2),
-        }
-      })
-    } catch (err) {
-      console.log('error with ocr', err.message, err.stack)
-    }
   }
 
   socketSend = (socket, data) => {
@@ -394,7 +332,7 @@ export default class ScreenState {
       try {
         socket.send(strData)
       } catch (err) {
-        console.log('failed to send to socket, removing', err, uid)
+        console.log('failed to send to socket, removing', uid)
         this.removeSocket(uid)
       }
     }

@@ -17,10 +17,3 @@ export async function startAPI() {
 if (!process.env.DISABLE_API) {
   startAPI()
 }
-
-process.on('SIGINT', () => {
-  console.log('we should exit')
-  setTimeout(() => {
-    process.exit(0)
-  })
-})

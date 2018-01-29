@@ -6,6 +6,8 @@ import hoistStatics from 'hoist-non-react-statics'
 import Redbox from 'redbox-react'
 import global from 'global'
 
+const isBrowser = typeof document !== 'undefined'
+
 // keep action out of class directly because of hmr bug
 const updateProps = Mobx.action('updateProps', (props, nextProps) => {
   const curPropKeys = Object.keys(props)
@@ -254,11 +256,13 @@ export default function storeProvidable(options, Helpers) {
         }
 
         render() {
-          if (this.state.error) {
-            return <Redbox $$draggable error={this.state.error} />
-          }
-          if (this.failed || !this.state) {
-            return <Redbox $$draggable error={{ message: 'Failed view' }} />
+          if (isBrowser) {
+            if (this.state.error) {
+              return <Redbox $$draggable error={this.state.error} />
+            }
+            if (this.failed || !this.state) {
+              return <Redbox $$draggable error={{ message: 'Failed view' }} />
+            }
           }
           return <Klass {...this.props} {...this.stores} />
         }

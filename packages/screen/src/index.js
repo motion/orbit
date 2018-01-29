@@ -221,6 +221,7 @@ export default class Screen {
       this.awaitingSocket.push({ action, data })
       return
     }
+    const strData = JSON.stringify(data)
     for (const { socket, id } of this.listeners) {
       try {
         socket.send(strData)

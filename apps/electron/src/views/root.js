@@ -10,8 +10,6 @@ import * as Helpers from '~/helpers'
 import { throttle } from 'lodash'
 import { ScreenClient } from '@mcro/screen'
 
-console.log('ScreenClient', ScreenClient)
-
 @view.provide({
   rootStore: class RootStore {
     // used to generically talk to browser
@@ -136,6 +134,15 @@ console.log('ScreenClient', ScreenClient)
     handleOraRef = ref => {
       this.oraRef = ref
     }
+
+    handleBeforeQuit = () => {
+      console.log('before quit')
+    }
+
+    handleQuit = () => {
+      console.log('handling quit')
+      process.exit(0)
+    }
   },
 })
 @view.electron
@@ -150,12 +157,16 @@ export default class Root extends React.Component {
       return null
     }
     return (
-      <App onBeforeQuit={rootStore.onBeforeQuit} ref={rootStore.handleAppRef}>
+      <App
+        onBeforeQuit={rootStore.handleBeforeQuit}
+        onQuit={rootStore.handleQuit}
+        ref={rootStore.handleAppRef}
+      >
         <Windows
           onOraRef={rootStore.handleOraRef}
           onSettingsVisibility={rootStore.handleSettingsVisibility}
         />
-        <Tray onClick={store.screenClient.toggle} />
+        <Tray onClick={rootStore.screenClient.toggle} />
       </App>
     )
   }

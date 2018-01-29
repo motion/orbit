@@ -3,6 +3,8 @@ import BaseComponent from './BaseComponent'
 const EVENT_KEYS = {
   onReady: 'on-ready',
   onBeforeQuit: 'on-before-quit',
+  onWillQuit: 'will-quit',
+  onQuit: 'quit',
 }
 
 export default class App extends BaseComponent {

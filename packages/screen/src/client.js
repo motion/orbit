@@ -1,3 +1,4 @@
+import WebSocket from 'html5-websocket'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 
 export default class ScreenClient {
@@ -26,7 +27,9 @@ export default class ScreenClient {
   }
 
   _setupLink() {
-    this.ws = new ReconnectingWebSocket('ws://localhost:40512')
+    this.ws = new ReconnectingWebSocket('ws://localhost:40512', undefined, {
+      constructor: WebSocket,
+    })
     this.ws.onmessage = ({ data }) => {
       console.log('screen got data', data)
       if (data && data.state) {
@@ -48,7 +51,7 @@ export default class ScreenClient {
       this.isOpen = false
     }
     this.ws.onerror = err => {
-      console.log('error', err)
+      console.log('error', err.message)
       this.isOpen = false
     }
   }

@@ -20,7 +20,7 @@ const supportsHevcHardwareEncoding = (() => {
   return result && Number(result[1]) >= 6
 })()
 
-class Screen {
+export default class Screen {
   awaitingSocket = []
   listeners = []
   wss = new Server({ port: 40512 })
@@ -30,7 +30,6 @@ class Screen {
   state = {}
 
   constructor({ debug = false } = {}) {
-    console.log('creating screen')
     this.debug = debug
     macosVersion.assertGreaterThanOrEqualTo('10.12')
 
@@ -126,11 +125,11 @@ class Screen {
     }
   }
 
-  start() {
+  start = () => {
     this.socketSend('start')
   }
 
-  watchBounds(
+  watchBounds = (
     {
       fps = 25,
       showCursor = true,
@@ -143,7 +142,7 @@ class Screen {
       sensitivity = 2,
       boxes,
     } = {},
-  ) {
+  ) => {
     // default box options
     const finalBoxes = boxes.map(box => ({
       initialScreenshot: false,
@@ -186,23 +185,23 @@ class Screen {
     this.socketSend('watch', recorderOpts)
   }
 
-  pause() {
+  pause = () => {
     this.socketSend('pause')
   }
 
-  onClearWord(cb) {
+  onClearWord = cb => {
     this.onClearWordCB = cb
   }
 
-  onWords(cb) {
+  onWords = cb => {
     this.onWordsCB = cb
   }
 
-  onLines(cb) {
+  onLines = cb => {
     this.onLinesCB = cb
   }
 
-  async stop() {
+  stop = async () => {
     if (this.recorder === undefined) {
       // null if not recording
       return
@@ -236,5 +235,3 @@ class Screen {
     this.listeners = this.listeners.filter(s => s.id !== id)
   }
 }
-
-module.exports = Screen

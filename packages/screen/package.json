@@ -1,8 +1,9 @@
 {
   "name": "@mcro/screen",
+  "private": true,
   "version": "4.0.0",
   "license": "MIT",
-  "main": "dist/index",
+  "main": "es6/index",
   "scripts": {
     "test": "node --experimental-modules ./test --debug && open ./tmp",
     "test-fast": "node --experimental-modules ./test",
@@ -17,6 +18,7 @@
     "reconnecting-websocket": "^3.2.2",
     "electron-util": "^0.2.1",
     "execa": "^0.8.0",
-    "macos-version": "^4.0.1"
+    "macos-version": "^4.0.1",
+    "ws": "^4.0.0"
   }
 }

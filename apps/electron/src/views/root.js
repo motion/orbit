@@ -10,6 +10,8 @@ import * as Helpers from '~/helpers'
 import { throttle } from 'lodash'
 import { ScreenClient } from '@mcro/screen'
 
+console.log('ScreenClient', ScreenClient)
+
 @view.provide({
   rootStore: class RootStore {
     // used to generically talk to browser

@@ -2,9 +2,9 @@
   "name": "@mcro/api",
   "private": true,
   "version": "1.5.1",
-  "main": "index.js",
+  "main": "es6/index.js",
   "scripts": {
-    "start": "NODE_ENV=development DEBUG=api,crawler,crawler:*,api:* ../../node_modules/.bin/babel-watch index.js",
+    "start": "NODE_ENV=development DEBUG=api,crawler,crawler:*,api:* ../../node_modules/.bin/babel-watch es6/index.js",
     "start-prod": "NODE_ENV=production node index.js"
   },
   "dependencies": {

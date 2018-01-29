@@ -49,7 +49,6 @@ function build-es6() {
     --ignore @mcro/electron-build \
     --ignore @mcro/electron \
     --ignore @mcro/crawler \
-    --ignore @mcro/screen \
     --ignore @mcro/search \
     --ignore @mcro/constants \
     --ignore @mcro/screendump \

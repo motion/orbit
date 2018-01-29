@@ -19,7 +19,7 @@ export function listenForOpenBrowser() {
   this.on(
     ipcMain,
     'open-browser',
-    throttle((event, url) => Helpers.open(url), 200)
+    throttle((event, url) => Helpers.open(url), 200),
   )
 }
 
@@ -28,15 +28,15 @@ export function listenForCrawlerInject() {
   this.on(
     ipcMain,
     'uninject-crawler',
-    throttle(Injections.uninjectCrawler, 1000)
+    throttle(Injections.uninjectCrawler, 1000),
   )
 }
 
 export function injectRepl(object) {
-  const replInstance = repl.start({
-    prompt: 'electron > ',
-  })
-  Object.assign(replInstance.context, object)
+  // const replInstance = repl.start({
+  //   prompt: 'electron > ',
+  // })
+  // Object.assign(replInstance.context, object)
 }
 
 export function handleOpenSettings() {

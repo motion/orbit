@@ -7,6 +7,12 @@
     * think: apostrophe vs comma, period vs middot, 0 vs o, l vs 1
   * swap numbers in words by if prevword is letter then swap using simplenumtoletterdict
   * train with more deversity
+* highlight lines/words on screen
+* fix bugs moving between apps/clearing ocr etc
+* polish hovering over words so its perfect
+* fix bug peek popping up all the time
+* fix clearing boxes quickly
+* ? fix clearing boxes granularly
 
 ## functionality
 

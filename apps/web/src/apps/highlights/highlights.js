@@ -37,10 +37,16 @@ class HighlightsStore {
 
   // [ { top, left, height, width }, ... ]
   get highlights() {
-    return ((this.context && this.context.ocr) || []).map((word, index) => ({
-      ...word,
-      key: `${index}-${word.word}-${word.top}-${word.left}`,
-    }))
+    return ((this.context && this.context.ocrWords) || []).map(
+      ([left, top, width, height, word], index) => ({
+        top,
+        left,
+        width,
+        height,
+        word,
+        key: `${index}-${word}-${top}-${left}`,
+      }),
+    )
   }
 
   willMount() {
@@ -54,8 +60,8 @@ class HighlightsStore {
       () => this.context.lastScreenChange,
       () => {
         if (this.context.lastScreenChange > this.context.lastOCR) {
-          console.log('diff, hide highlights')
-          this.showHighlights = false
+          console.log('diff, hide highlights, DISABLED FOR NOW')
+          // this.showHighlights = false
         }
       },
     )
@@ -141,16 +147,22 @@ class HighlightsStore {
 export default class HighlightsPage {
   render({ store }) {
     const { highlights, hoveredWord } = store
+    console.log('render highlights', highlights)
     return (
       <contain $highlights>
         <highlights if={store.showHighlights}>
-          {store.highlights.map(hl => (
+          {store.highlights.map(({ key, top, left, width, height, word }) => (
             <highlight
-              key={hl.key}
-              $hlPosition={hl}
-              $hovered={hoveredWord && hl.key === hoveredWord.key}
+              key={key}
+              $hovered={hoveredWord && key === hoveredWord.key}
+              style={{
+                top: top - HL_PAD,
+                left: left - HL_PAD,
+                width: width + HL_PAD * 2,
+                height: height / 2 + HL_PAD * 2,
+              }}
             >
-              <word>{hl.word}</word>
+              <word>{word}</word>
             </highlight>
           ))}
         </highlights>
@@ -173,12 +185,6 @@ export default class HighlightsPage {
       borderRadius: 8,
       background: [200, 200, 200, 0.5],
     },
-    hlPosition: ({ top, left, width, height }) => ({
-      top: top - HL_PAD + 4,
-      left: left - HL_PAD,
-      width: width + HL_PAD * 2,
-      height: height / 2 + HL_PAD * 2,
-    }),
     hovered: {
       background: [180, 180, 180, 0.3],
     },

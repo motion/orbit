@@ -267,35 +267,39 @@ export default class ScreenState {
       console.log('didnt get offset/bounds')
       return
     }
-
-    const appBox = {
-      id: APP_ID,
-      x: offset[0],
-      y: offset[1],
-      width: bounds[0],
-      height: bounds[1],
-      screenDir: this.screenDestination,
-      initialScreenshot: true,
-      findContent: true,
+    if (appName !== 'Chrome') {
+      console.log('only scanning chrome for now')
+      // turn off
+      this.screenOCR.watchBounds({
+        fps: 1,
+        sampleSpacing: 100,
+        sensitivity: 2,
+        showCursor: false,
+        boxes: [],
+      })
+      return
     }
-
     // we are watching the whole app for words
     const settings = {
       fps: 10,
       sampleSpacing: 10,
       sensitivity: 2,
       showCursor: false,
-      boxes: [appBox],
+      boxes: [
+        {
+          id: APP_ID,
+          x: offset[0],
+          y: offset[1],
+          width: bounds[0],
+          height: bounds[1],
+          screenDir: this.screenDestination,
+          initialScreenshot: true,
+          findContent: true,
+        },
+      ],
     }
-
     console.log('ocr with settings', settings)
-
-    try {
-      this.screenOCR.watchBounds(settings)
-    } catch (err) {
-      console.log('Error starting recorder:', err.message)
-      console.log(err.stack)
-    }
+    this.screenOCR.watchBounds(settings)
   }
 
   stop = () => {

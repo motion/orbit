@@ -1,8 +1,6 @@
 import WebSocket from 'html5-websocket'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 
-const splitAt = index => x => [x.slice(0, index), x.slice(index)]
-
 export default class ScreenClient {
   isOpen = false
   state = {
@@ -38,12 +36,8 @@ export default class ScreenClient {
     })
     this.ws.onmessage = ({ data }) => {
       try {
-        const [action, rawValue] = splitAt(data.indexOf(' '))(data)
-        let value = rawValue.trim()
-        if (value && value.length) {
-          value = JSON.parse(value)
-        }
-        if (action === 'state') {
+        if (data.slice(0, 5) === 'state') {
+          const value = JSON.parse(data.slice(6))
           console.log('got state', value)
           this.state = value
           if (this.onStateChange) {
@@ -51,7 +45,7 @@ export default class ScreenClient {
           }
         }
       } catch (err) {
-        console.log(`client receiving message error`, err.message)
+        console.log(`client receiving message error`, data)
       }
     }
     this.ws.onopen = () => {

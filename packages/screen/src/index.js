@@ -71,7 +71,7 @@ export default class Screen {
     const BIN = path.join(
       electronUtil.fixPathForAsarUnpack(__dirname),
       '..',
-      debug ? 'aperture-debug' : 'aperture-release',
+      debug ? 'run-debug' : 'run-release',
     )
     console.log('exec', BIN)
     this.recorder = execa(BIN, [], {

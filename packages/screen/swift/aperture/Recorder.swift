@@ -88,6 +88,7 @@ final class Recorder: NSObject {
       self.ocr = Bridge.sharedInstance()
     } else {
       print("no bundle meh")
+      exit(0)
     }
     
     // start video

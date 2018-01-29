@@ -163,7 +163,7 @@ export default class Windows extends React.Component {
         {/* HIGHLIGHTS: */}
         <HighlightsWindow />
         {/* APP: */}
-        <Window
+        {/* <Window
           {...appWindow}
           ref={this.handleOraRef}
           transparent
@@ -179,30 +179,31 @@ export default class Windows extends React.Component {
           onBlur={this.onOraBlur}
           onFocus={this.onOraFocus}
           devToolsExtensions={Helpers.getExtensions(['mobx', 'react'])}
-        />
-        <PeekWindow
+        /> */}
+        {/* <PeekWindow
           appPosition={this.state.oraPosition}
           onWindows={this.handlePeekWindows}
-        />
+        /> */}
         {/* SETTINGS PANE: */}
-        {this.state.loadSettings && (
-          <Window
-            {...appWindow}
-            show={this.state.showSettings}
-            showDevTools={this.state.showSettingsDevTools}
-            transparent
-            hasShadow
-            titleBarStyle="hiddenInset"
-            defaultSize={this.state.size}
-            size={this.state.size}
-            file={`${Constants.APP_URL}/settings`}
-            position={this.state.settingsPosition}
-            onResize={this.onSettingsSized}
-            onMoved={this.onSettingsMoved}
-            onMove={this.onSettingsMoved}
-            onClose={this.onSettingsClosed}
-          />
-        )}
+        {false &&
+          this.state.loadSettings && (
+            <Window
+              {...appWindow}
+              show={this.state.showSettings}
+              showDevTools={this.state.showSettingsDevTools}
+              transparent
+              hasShadow
+              titleBarStyle="hiddenInset"
+              defaultSize={this.state.size}
+              size={this.state.size}
+              file={`${Constants.APP_URL}/settings`}
+              position={this.state.settingsPosition}
+              onResize={this.onSettingsSized}
+              onMoved={this.onSettingsMoved}
+              onMove={this.onSettingsMoved}
+              onClose={this.onSettingsClosed}
+            />
+          )}
       </React.Fragment>
     )
   }

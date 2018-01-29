@@ -130,9 +130,7 @@ final class Recorder: NSObject {
       ws.send(msg)
       return true
     }
-    ws.event.open = {
-      print("opened")
-    }
+    ws.event.open = {}
     ws.event.close = { code, reason, clean in
       print("close")
     }
@@ -174,6 +172,12 @@ final class Recorder: NSObject {
   
   func start() {
     session.startRunning()
+    self.send!("{ \"state\": { \"isRunning\": true } }")
+  }
+  
+  func stop() {
+    session.stopRunning()
+    self.send!("{ \"state\": { \"isRunning\": false } }")
   }
 
   func watchBounds(fps: Int, boxes: Array<Box>, showCursor: Bool, videoCodec: String? = nil, sampleSpacing: Int, sensitivity: Int, debug: Bool) {
@@ -188,10 +192,6 @@ final class Recorder: NSObject {
     }
     self.setFPS(fps: fps)
     self.input.capturesCursor = showCursor
-  }
-
-  func stop() {
-    session.stopRunning()
   }
   
   func setFPS(fps: Int) {

@@ -1,9 +1,7 @@
 // @flow
 import Path from 'path'
-import Fs from 'fs-extra'
 import { Server } from 'ws'
 import ScreenOCR from '@mcro/screen'
-import ocrScreenshot from '@mcro/ocr'
 import Swindler from '@mcro/swindler'
 import { isEqual, throttle } from 'lodash'
 import iohook from 'iohook'
@@ -55,7 +53,7 @@ export default class ScreenState {
 
   state: TScreenState = {
     context: null,
-    ocr: null,
+    ocrWords: null,
     lastOCR: Date.now(),
     lastScreenChange: Date.now(),
     mousePosition: [0, 0],

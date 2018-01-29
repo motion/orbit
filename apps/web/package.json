@@ -43,7 +43,6 @@
     "pouchdb-adapter-idb": "^6.3.4",
     "pouchdb-core": "^6.3.4",
     "pouchdb-mapreduce-utils": "^6.3.4",
-    "prop-types": "^15.5.10",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-hotkeys": "^0.10.0",

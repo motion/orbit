@@ -1,9 +1,11 @@
-const os = require('os')
-const path = require('path')
-const execa = require('execa')
-const macosVersion = require('macos-version')
-const electronUtil = require('electron-util/node')
-const { Server } = require('ws')
+import os from 'os'
+import path from 'path'
+import execa from 'execa'
+import macosVersion from 'macos-version'
+import electronUtil from 'electron-util/node'
+import { Server } from 'ws'
+
+export ScreenClient from './client'
 
 const sleep = ms => new Promise(res => setTimeout(res, ms))
 
@@ -19,21 +21,26 @@ const supportsHevcHardwareEncoding = (() => {
 })()
 
 class Screen {
+  awaitingSocket = []
+  listeners = []
+  wss = new Server({ port: 40512 })
+  onLinesCB = _ => _
+  onWordsCB = _ => _
+  onClearWordCB = _ => _
+  state = {}
+
   constructor({ debug = false } = {}) {
     console.log('creating screen')
     this.debug = debug
-    this.awaitingSocket = []
-    this.activeSocket = null
-    this.wss = new Server({ port: 40512 })
-    this.onLinesCB = _ => _
-    this.onWordsCB = _ => _
-    this.onClearWordCB = _ => _
     macosVersion.assertGreaterThanOrEqualTo('10.12')
 
     // handle socket between swift
+    let id = 0
     this.wss.on('connection', socket => {
       // add to active sockets
-      this.activeSocket = socket
+      this.listeners.push({ id: id++, socket })
+      // send initial state
+      this.socketSend('state', this.state)
       // send queued messages
       if (this.awaitingSocket.length) {
         this.awaitingSocket.forEach(({ action, data }) =>
@@ -90,17 +97,28 @@ class Screen {
   }
 
   handleSocketMessage(str) {
-    const { action, value } = JSON.parse(str)
+    const { action, value, state } = JSON.parse(str)
     try {
       // clear is fast
       if (action === 'clearWord') {
         this.onClearWordCB(value)
+      }
+      // state goes out to clients
+      if (state) {
+        this.state = state
+        this.socketSend('state', this.state)
       }
       if (action === 'words') {
         this.onWordsCB(value)
       }
       if (action === 'lines') {
         this.onLinesCB(value)
+      }
+      if (action === 'pause') {
+        this.pause()
+      }
+      if (action === 'resume') {
+        this.start()
       }
     } catch (err) {
       console.log('error sending reply', action, 'value', value)
@@ -200,20 +218,22 @@ class Screen {
   }
 
   socketSend(action, data) {
-    if (!this.activeSocket) {
+    if (!this.listeners.length) {
       this.awaitingSocket.push({ action, data })
       return
     }
-    try {
-      this.activeSocket.send(`${action} ${data ? JSON.stringify(data) : ''}`)
-    } catch (err) {
-      console.log('failed to send to socket, removing', err, uid)
-      this.removeSocket()
+    for (const { socket, id } of this.listeners) {
+      try {
+        socket.send(strData)
+      } catch (err) {
+        console.log('failed to send to socket, removing', err, id)
+        this.removeSocket(id)
+      }
     }
   }
 
-  removeSocket() {
-    this.activeSocket = null
+  removeSocket = uid => {
+    this.listeners = this.listeners.filter(s => s.id !== id)
   }
 }
 

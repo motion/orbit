@@ -36,7 +36,7 @@ export default function createProvider(React) {
       const { provided } = this.state
       const nextProvided = this.providedFromPropsAndContext(
         nextProps,
-        nextContext
+        nextContext,
       )
       if (shallowEqual(provided, nextProvided)) {
         return
@@ -53,7 +53,7 @@ export default function createProvider(React) {
           isPlainObject(parentProvided),
           'This Provider appears to be nested inside another provider but received a parent `provided` ' +
             'is not a plain Object. `provided` must be always be a plain Object. %s',
-          parentProvided
+          parentProvided,
         )
       }
 
@@ -71,7 +71,7 @@ export default function createProvider(React) {
         'This Provider is attempting to provide something other than a plain Object. ' +
           'the `provide` prop must either be a plain object itself or a function that returns ' +
           'a plain Object. `provide` is or returned %s',
-        provided
+        provided,
       )
 
       return provided

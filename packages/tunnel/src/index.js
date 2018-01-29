@@ -1,4 +1,4 @@
-import React from 'react';
-import createAll from './components/createAll';
+import React from 'react'
+import createAll from './components/createAll'
 
-export const { Provider, inject } = createAll(React);
+export const { Provider, inject } = createAll(React)

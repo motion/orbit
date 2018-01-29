@@ -105,7 +105,6 @@
         "global",
         "kontur",
         "pouchdb-core",
-        "prop-types",
         "rxjs",
         "autobind-decorator",
         "hoist-non-react-statics",

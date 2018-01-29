@@ -33,7 +33,6 @@ export default class ScreenClient {
       constructor: WebSocket,
     })
     this.ws.onmessage = ({ data }) => {
-      console.log('screen.client got data', typeof data, data)
       try {
         const [action, rawValue] = splitAt(data.indexOf(' '))(data)
         let value = rawValue.trim()
@@ -41,6 +40,7 @@ export default class ScreenClient {
           value = JSON.parse(value)
         }
         if (action === 'state') {
+          console.log('got state', value)
           // set state values here
           for (const key of Object.keys(value)) {
             this[key] = value[key]

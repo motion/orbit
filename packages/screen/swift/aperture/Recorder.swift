@@ -145,11 +145,16 @@ final class Recorder: NSObject {
           print("weird text")
           return
         }
-        if text[0...4] == "start" {
+        let action = text[0...4]
+        if action == "state" {
+          // coming from us, ignore
+          return
+        }
+        if action == "start" {
           self.start()
           return
         }
-        if text[0...4] == "watch" {
+        if action == "watch" {
           self.start()
           do {
             let options = try JSONDecoder().decode(Options.self, from: text[5..<text.count].data(using: .utf8)!)
@@ -167,7 +172,7 @@ final class Recorder: NSObject {
           }
           return
         }
-        if text[0...4] == "pause" {
+        if action == "pause" {
           self.stop()
           return
         }

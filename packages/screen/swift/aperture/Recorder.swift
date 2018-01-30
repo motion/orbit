@@ -54,12 +54,14 @@ final class Recorder: NSObject {
   private var shouldDebug: Bool
   private let context = CIContext()
   private var boxes: [String: Box]
-  private var lastBoxes: [String: Array<UInt32>]
+  private var lastBoxes: [String: [UInt8]]
   private var displayId: CGDirectDisplayID
   private let components = ConnectedComponentsSwiftOCR()
   private var characters: Characters?
   private var ocr: OCRInterface?
+  private var changeHandle: AsyncBlock<Void, ()>?
   private var isScanning = false
+  private var fps = 0
 
   var onStart: (() -> Void)?
   var onFinish: (() -> Void)?
@@ -72,11 +74,11 @@ final class Recorder: NSObject {
   var isPaused: Bool {
     return false
   }
-  
+
   func onFrame(image: CGImage) {
     print("captured")
   }
-  
+
   init(displayId: CGDirectDisplayID = CGMainDisplayID()) throws {
     // load python ocr
     if let path = Bundle.main.path(forResource: "Bridge", ofType: "plugin") {
@@ -90,26 +92,26 @@ final class Recorder: NSObject {
       print("no bundle meh")
       exit(0)
     }
-    
+
     // start video
     self.displayId = displayId
     self.session = AVCaptureSession()
     self.input = AVCaptureScreenInput(displayID: displayId)
     output = AVCaptureVideoDataOutput()
-    
+
     output.videoSettings = [
       kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_420YpCbCr8BiPlanarFullRange
     ]
-    
+
     self.shouldDebug = false
     self.firstTime = true
     self.sampleSpacing = 0
     self.sensitivity = 1
     self.boxes = [String: Box]()
-    self.lastBoxes = [String: Array<UInt32>]()
+    self.lastBoxes = [String: [UInt8]]()
 
     super.init()
-    
+
     // setup recorder
     output.alwaysDiscardsLateVideoFrames = true
     let queue = DispatchQueue(label: "com.me.myqueue")
@@ -126,7 +128,6 @@ final class Recorder: NSObject {
     }
 
     // socket bridge
-    print("swift connecting to websocket on 40512")
     let ws = WebSocket("ws://localhost:40512")
     self.send = { (msg) in
       ws.send(msg)
@@ -179,13 +180,13 @@ final class Recorder: NSObject {
       }
     }
   }
-  
+
   func start() {
     print("screen: starting...")
     session.startRunning()
     _ = self.send!("{ \"state\": { \"isRunning\": true } }")
   }
-  
+
   func stop() {
     print("screen: stopping...")
     session.stopRunning()
@@ -197,7 +198,7 @@ final class Recorder: NSObject {
     self.firstTime = true
     self.sampleSpacing = sampleSpacing
     self.sensitivity = sensitivity
-    self.lastBoxes = [String: Array<UInt32>]()
+    self.lastBoxes = [String: [UInt8]]()
     self.boxes = [String: Box]()
     for box in boxes {
       self.boxes[box.id] = box
@@ -205,11 +206,12 @@ final class Recorder: NSObject {
     self.setFPS(fps: fps)
     self.input.capturesCursor = showCursor
   }
-  
+
   func setFPS(fps: Int) {
+    self.fps = fps
     self.input.minFrameDuration = CMTimeMake(1, Int32(fps))
   }
-  
+
   func handleChangedArea(box: Box, buffer: CMSampleBuffer, bufferPointer: UnsafeMutablePointer<UInt8>, perRow: Int, findContent: Bool = false) {
     self.isScanning = true
     let chars = self.characters!
@@ -244,10 +246,10 @@ final class Recorder: NSObject {
     var biggestBox: BoundingBox?
     let boxFindScale = 8
     let binarizedImage = filters.filterImageForContentFinding(image: cgImage, scale: boxFindScale)
-    
+
     print("1. content find filter: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     start = DispatchTime.now()
-    
+
     let cc = ConnectedComponents()
     let result = cc.labelImageFast(image: binarizedImage, calculateBoundingBoxes: true, invert: true)
     if let boxes = result.boundingBoxes {
@@ -283,20 +285,20 @@ final class Recorder: NSObject {
     // crop
     let cropBox = CGRect(x: frame[0] - box.x, y: frame[1] - box.y, width: frame[2], height: frame[3])
     let ocrCharactersImage = images.cropImage(filters.filterImageForOCRCharacterFinding(image: cgImage), box: cropBox)!
-    
+
     print("2. filter for ocr: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     start = DispatchTime.now()
-    
+
     // find vertical sections
     let lineFindScaling = 3 // scale down denominator
     let vWidth = frame[2] / lineFindScaling
     let vHeight = frame[3] / lineFindScaling
     let verticalImage = filters.filterForVerticalContentFinding(image: images.resize(ocrCharactersImage, width: vWidth, height: vHeight)!)
     let verticalImageRep = NSBitmapImageRep(cgImage: verticalImage)
-    
+
     print("3. filter vertical: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     start = DispatchTime.now()
-    
+
     // first loop - find vertical sections
     var verticalSections = Dictionary<Int, Int>() // start => end
     let colHeightMin = 1
@@ -342,10 +344,10 @@ final class Recorder: NSObject {
     if verticalSections.count == 0 {
       verticalSections[0] = vWidth - 1
     }
-    
+
     print("4. find verticals: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms --  \(verticalSections.description)")
     start = DispatchTime.now()
-    
+
     // second loop - find lines in sections
     var sectionLines = Dictionary<Int, [LinePosition]>()
     var total = 0
@@ -400,7 +402,7 @@ final class Recorder: NSObject {
       sectionLines[start] = lines
       total += lines.count
     }
-    
+
     // third loop
     // for each VERTICAL SECTION, get characters
     var allLines = [[Word]]() // store all lines
@@ -433,16 +435,16 @@ final class Recorder: NSObject {
       })
       allLines = allLines + sectionLines
     }
-    
+
     // check for unsolved outlines
     let allCharacters: [Character] = allLines.flatMap { $0.flatMap { $0.characters } }
 
     print("7. gather characters \(allCharacters.count): \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
-    
+
     // set filters unique outlines
     let unsolvedCharacters = allCharacters.filter { $0.letter == nil }.unique()
     var foundCharacters = [String]()
-    
+
     // if necessary, run ocr
     if unsolvedCharacters.count > 0 {
       start = DispatchTime.now()
@@ -457,16 +459,16 @@ final class Recorder: NSObject {
       } catch {
         print("couldnt write pixel string \(error)")
       }
-      
+
       print("8. characters.txt: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
       start = DispatchTime.now()
-      
+
       // run ocr
       foundCharacters = ocr!.ocrCharacters()
-      
+
       print("9. ocr: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     }
-    
+
     // collect ocr results
     var ocrResults = [String: String]() // outline => letter
     if foundCharacters.count != unsolvedCharacters.count {
@@ -478,7 +480,7 @@ final class Recorder: NSObject {
     }
 
     start = DispatchTime.now()
-    
+
     // get all answers
     var words = [String]()
     var lines = [String]()
@@ -524,7 +526,7 @@ final class Recorder: NSObject {
       }
       lines.append("[\(firstWord.x),\(minY),\(width),\(maxH)]")
     }
-    
+
     // update character cache
     Async.background {
       chars.updateCache(ocrResults)
@@ -533,13 +535,13 @@ final class Recorder: NSObject {
     // send to world
     _ = self.send!("{ \"action\": \"words\", \"value\": [\(words.joined(separator: ","))] }")
     _ = self.send!("{ \"action\": \"lines\", \"value\": [\(lines.joined(separator: ","))] }")
-    
+
     // after x seconds, re-enable watching
     // this is because screen needs time to update highlight boxes
     Async.background(after: 0.2) {
       self.isScanning = false
     }
-    
+
     print("10. answer string: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     start = DispatchTime.now()
     print("")
@@ -553,7 +555,7 @@ final class Recorder: NSObject {
       images.writeCGImage(image: cgImage, to: "\(box.screenDir!)/\(box.id)-original.png")
     }
   }
-  
+
   func hasBoxChanged(box: Box, buffer: UnsafeMutablePointer<UInt8>, perRow: Int) -> Bool {
     let lastBox = self.lastBoxes[box.id]
     var hasLastBox = false
@@ -561,7 +563,7 @@ final class Recorder: NSObject {
     let boxY = box.y
     let height = Int(box.height) / 2
     let width = Int(box.width) / 2
-    var curBox: Array<UInt32> = []
+    var curBox: [UInt8] = []
     var numChanged = 0
     var shouldFinish = false
     let smallH = height/sampleSpacing
@@ -587,7 +589,7 @@ final class Recorder: NSObject {
             }
           }
         }
-        curBox.insert(UInt32(luma), at: index)
+        curBox.insert(luma, at: index)
 //        lastIndex = index
       }
       if (shouldFinish) {
@@ -618,7 +620,7 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
     let baseAddress = CVPixelBufferGetBaseAddressOfPlane(pixelBuffer, 0)
     let buffer = unsafeBitCast(baseAddress, to: UnsafeMutablePointer<UInt8>.self)
     let perRow = CVPixelBufferGetBytesPerRowOfPlane(pixelBuffer, 0)
-    
+
     // one time setup
     if self.characters == nil {
       characters = Characters(
@@ -629,13 +631,27 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
       characters!.shouldDebug = shouldDebug
     }
     
+    let fpsInSeconds = 60 / 60 / self.fps // gives you fps => x  (60 => 0.16) and (2 => 0.5)
+
     // loop over boxes and check
     for boxId in self.boxes.keys {
       let box = self.boxes[boxId]!
       if shouldDebug { characters!.debugDir = box.screenDir! }
-      if (firstTime && box.initialScreenshot || hasBoxChanged(box: box, buffer: buffer, perRow: perRow)) {
+      let changedBox = hasBoxChanged(box: box, buffer: buffer, perRow: perRow)
+      if (firstTime && box.initialScreenshot || changedBox) {
         if self.send!("{ \"action\": \"clearWord\", \"value\": \"\(box.id)\" }") { }
-        handleChangedArea(box: box, buffer: sampleBuffer, bufferPointer: buffer, perRow: perRow, findContent: box.findContent)
+        // debounce
+        if (self.changeHandle != nil) {
+          print("canceling last")
+          self.changeHandle!.cancel()
+          self.changeHandle = nil
+        }
+        // wait for 2 frames of clear
+        let delayHandleChange = fpsInSeconds * 2
+        self.changeHandle = Async.main(after: changedBox ? 0.5 : 0) { // debounce (seconds)
+          // handle new frame
+          self.handleChangedArea(box: box, buffer: sampleBuffer, bufferPointer: buffer, perRow: perRow, findContent: box.findContent)
+        }
       }
     }
     // only true for first loop

@@ -20,7 +20,6 @@ if (!Fs.existsSync(dir)) {
 async function test() {
   const debug = !!process.argv.find(x => x === '--debug')
   const screen = new Screen({ debug })
-  console.log('running...')
   screen.start()
   screen.watchBounds({
     fps: 2,

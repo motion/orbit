@@ -58,7 +58,6 @@ export default class Screen {
     // handle socket between swift
     let id = 0
     this.wss.on('connection', socket => {
-      console.log('got socket connection')
       // add to active sockets
       this.listeners.push({ id: id++, socket })
       // send initial state
@@ -120,7 +119,6 @@ export default class Screen {
   }
 
   start = () => {
-    console.log('called start')
     this.socketSend('start')
   }
 
@@ -218,7 +216,7 @@ export default class Screen {
         try {
           socket.send(strData)
         } catch (err) {
-          console.log('failed to send to socket, removing', id)
+          console.log('failed to send to socket, removing', err.message, id)
           this.removeSocket(id)
         }
       }

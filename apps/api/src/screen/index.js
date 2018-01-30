@@ -99,6 +99,7 @@ export default class ScreenState {
   }
 
   start = () => {
+    this.resetHighlights() // clear old highlights if theyre still up
     this.stopped = false
     this.startSwindler()
     this.screenOCR.start()

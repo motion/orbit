@@ -219,7 +219,9 @@ final class Recorder: NSObject {
 
   // returns the frame it found
   func handleChangedArea(box: Box, buffer: CMSampleBuffer, bufferPointer: UnsafeMutablePointer<UInt8>, perRow: Int, findContent: Bool = false) -> Box? {
-    self.isScanning = true
+    // debug
+    print("box \(box.x) \(box.y) \(box.width) \(box.height)")
+    
     let chars = self.characters!
     // clear old files
     if shouldDebug {
@@ -566,13 +568,6 @@ final class Recorder: NSObject {
     _ = self.send!("{ \"action\": \"words\", \"value\": [\(words.joined(separator: ","))] }")
     _ = self.send!("{ \"action\": \"lines\", \"value\": [\(lines.joined(separator: ","))] }")
 
-    // after x seconds, re-enable watching
-    // this is because screen needs time to update highlight boxes
-    Async.background(after: 0.5) {
-      print("re-enable scan after last")
-      self.isScanning = false
-    }
-
     if shouldDebug {
       print("10. answer string: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
       start = DispatchTime.now()
@@ -681,7 +676,8 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
 
     // loop over boxes and check
     for boxId in self.boxes.keys {
-      let box = self.frames[boxId] ?? self.boxes[boxId]!
+//      let frame = self.frames[boxId]
+      let box = self.boxes[boxId]!
       if shouldDebug { characters!.debugDir = box.screenDir! }
       let changedBox = hasBoxChanged(box: box, buffer: buffer, perRow: perRow)
       if (firstTime && box.initialScreenshot || changedBox) {
@@ -694,7 +690,8 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
         }
         // wait for 2 frames of clear
         self.changeHandle = Async.main(after: changedBox ? delayHandleChange : 0) { // debounce (seconds)
-          print("start scanning for ocr")
+          self.isScanning = true
+          
           // get new frame now
           let pixelBuffer2: CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)!
           CVPixelBufferLockBaseAddress(pixelBuffer2, CVPixelBufferLockFlags(rawValue: 0));
@@ -708,6 +705,13 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
           }
 
           CVPixelBufferUnlockBaseAddress(pixelBuffer2, CVPixelBufferLockFlags(rawValue: 0))
+          
+          // after x seconds, re-enable watching
+          // this is because screen needs time to update highlight boxes
+          Async.background(after: 1) {
+            print("re-enable scan after last")
+            self.isScanning = false
+          }
         }
       }
     }

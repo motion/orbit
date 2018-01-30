@@ -64,7 +64,11 @@ class HighlightsStore {
   watchForHoverWord = () => {
     // update hoverEvents for use in hover logic
     this.react(
-      () => [...this.context.ocrWords, ...this.context.linePositions] || [],
+      () =>
+        [
+          ...(this.context.ocrWords || []),
+          ...(this.context.linePositions || []),
+        ] || [],
       hls => {
         const hoverEvents = {}
         for (const { key } of hls) {

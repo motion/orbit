@@ -289,6 +289,7 @@ export default class ScreenState {
       console.log('didnt get offset/bounds')
       return
     }
+    this.screenOCR.cancelCurrent()
     clearTimeout(this.clearOCRTimeout)
     // TODO disable
     if (appName !== 'Chrome') {
@@ -319,16 +320,15 @@ export default class ScreenState {
 
     this.screenSettings = settings
     this.hasResolvedOCR = false
-    console.log('resume')
-    this.screenOCR.watchBounds(settings)
     this.screenOCR.resume()
+    this.screenOCR.watchBounds(settings)
 
     this.clearOCRTimeout = setTimeout(async () => {
       if (!this.hasResolvedOCR) {
         console.log('seems like ocr has stopped working, restarting...')
         this.restartScreen()
       }
-    }, 5000)
+    }, 15000)
   }
 
   stop = () => {

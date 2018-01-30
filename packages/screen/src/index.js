@@ -186,6 +186,10 @@ export default class Screen {
     this.socketSend('start')
   }
 
+  cancelCurrent = () => {
+    this.socketSend('clear')
+  }
+
   onClearWord = cb => {
     this.onClearWordCB = cb
   }

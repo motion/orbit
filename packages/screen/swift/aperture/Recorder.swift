@@ -64,6 +64,7 @@ final class Recorder: NSObject {
   private var isScanning = false
   private var fps = 0
   private var ignoreNextScan = false
+  private var shouldCancel = false
 
   var onStart: (() -> Void)?
   var onFinish: (() -> Void)?
@@ -179,6 +180,16 @@ final class Recorder: NSObject {
           self.stop()
           return
         }
+        if action == "clear" {
+          if self.isScanning {
+            self.shouldCancel = true
+          }
+          if let handle = self.changeHandle {
+            handle.cancel()
+            self.changeHandle = nil
+          }
+          return
+        }
         print("received unknown message: \(text)")
       }
     }
@@ -199,6 +210,7 @@ final class Recorder: NSObject {
   func watchBounds(fps: Int, boxes: Array<Box>, showCursor: Bool, videoCodec: String? = nil, sampleSpacing: Int, sensitivity: Int, debug: Bool) {
     if let handle = self.changeHandle {
       handle.cancel()
+      self.changeHandle = nil
     }
     self.shouldDebug = debug
     if shouldDebug {
@@ -220,6 +232,13 @@ final class Recorder: NSObject {
   func setFPS(fps: Int) {
     self.fps = fps
     self.input.minFrameDuration = CMTimeMake(1, Int32(fps))
+  }
+  
+  func handleCancel() -> Bool {
+    let val = self.shouldCancel
+    if val { print("canceled") }
+    self.shouldCancel = false
+    return val
   }
 
   // returns the frame it found
@@ -265,6 +284,8 @@ final class Recorder: NSObject {
     var biggestBox: BoundingBox?
     let boxFindScale = 8
     let binarizedImage = filters.filterImageForContentFinding(image: cgImage, scale: boxFindScale)
+    
+    if handleCancel() { return nil }
 
     if shouldDebug {
       print("1. content find filter: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
@@ -379,6 +400,8 @@ final class Recorder: NSObject {
       print("4. find verticals: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms --  \(verticalSections.description)")
       start = DispatchTime.now()
     }
+    
+    if handleCancel() { return nil }
 
     // second loop - find lines in sections
     var sectionLines = Dictionary<Int, [LinePosition]>()
@@ -471,6 +494,8 @@ final class Recorder: NSObject {
     }
     
     print("got chars")
+    
+    if handleCancel() { return nil }
 
     // check for unsolved outlines
     let allCharacters: [Character] = allLines.flatMap { $0.flatMap { $0.characters } }
@@ -512,6 +537,8 @@ final class Recorder: NSObject {
         print("9. ocr: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
       }
     }
+    
+    if handleCancel() { return nil }
 
     // collect ocr results
     var ocrResults = [String: String]() // outline => letter
@@ -713,6 +740,8 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
           print("canceling last")
           self.changeHandle!.cancel()
           self.changeHandle = nil
+          self.isScanning = false
+          self.ignoreNextScan = false
         }
         // wait for 2 frames of clear
         self.changeHandle = Async.main(after: changedBox ? delayHandleChange : 0) { // debounce (seconds)

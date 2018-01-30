@@ -31,7 +31,7 @@ async function test() {
       {
         id: 'screen',
         x: 0,
-        y: 48,
+        y: 0,
         width: 1166,
         height: 980,
         screenDir: dir,

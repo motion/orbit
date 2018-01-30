@@ -5,6 +5,7 @@ import ReconnectingWebSocket from 'reconnecting-websocket'
 export default class ContextStore {
   context = null
   ocrWords = null
+  linePositions = null
   lastScreenChange = null
   lastOCR = null
   mousePosition = null
@@ -50,6 +51,7 @@ export default class ContextStore {
     ocrWords,
     lastScreenChange,
     lastOCR,
+    linePositions,
   }) => {
     if (keyboard) {
       this.keyboard = keyboard
@@ -69,6 +71,9 @@ export default class ContextStore {
     }
     if (lastOCR) {
       this.lastOCR = lastOCR
+    }
+    if (linePositions) {
+      this.linePositions = linePositions
     }
   }
 }

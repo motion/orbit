@@ -1,4 +1,3 @@
-import os from 'os'
 import path from 'path'
 import execa from 'execa'
 import macosVersion from 'macos-version'
@@ -8,17 +7,6 @@ import { Server } from 'ws'
 export ScreenClient from './client'
 
 const sleep = ms => new Promise(res => setTimeout(res, ms))
-
-const supportsHevcHardwareEncoding = (() => {
-  if (!macosVersion.isGreaterThanOrEqualTo('10.13')) {
-    return false
-  }
-  // Get the Intel Core generation, the `4` in `Intel(R) Core(TM) i7-4850HQ CPU @ 2.30GHz`
-  // More info: https://www.intel.com/content/www/us/en/processors/processor-numbers.html
-  const result = /Intel.*Core.*i(?:7|5)-(\d)/.exec(os.cpus()[0].model)
-  // Intel Core generation 6 or higher supports HEVC hardware encoding
-  return result && Number(result[1]) >= 6
-})()
 
 export default class Screen {
   awaitingSocket = []
@@ -32,7 +20,41 @@ export default class Screen {
   constructor({ debug = false } = {}) {
     this.debug = debug
     macosVersion.assertGreaterThanOrEqualTo('10.12')
+    this.setupSocket()
+    this.setupRecorder()
+  }
 
+  setupRecorder() {
+    if (this.recorder !== undefined) {
+      throw new Error('Call `.stop()` first')
+    }
+    const BIN = path.join(
+      electronUtil.fixPathForAsarUnpack(__dirname),
+      '..',
+      this.debug ? 'run-debug' : 'run-release',
+    )
+    console.log('exec', BIN)
+    this.recorder = execa(BIN, [], {
+      reject: false,
+    })
+    this.recorder.catch((err, ...rest) => {
+      console.log('screen err:', ...rest)
+      console.log(err)
+      console.log(err.stack)
+      throw err
+    })
+    this.recorder.stderr.setEncoding('utf8')
+    this.recorder.stderr.on('data', data => {
+      console.log('screen stderr:', data)
+    })
+    this.recorder.stdout.setEncoding('utf8')
+    this.recorder.stdout.on('data', data => {
+      const out = data.trim()
+      console.log(out)
+    })
+  }
+
+  setupSocket() {
     // handle socket between swift
     let id = 0
     this.wss.on('connection', socket => {
@@ -63,34 +85,6 @@ export default class Screen {
     })
     this.wss.on('error', (...args) => {
       console.log('wss error', args)
-    })
-
-    if (this.recorder !== undefined) {
-      throw new Error('Call `.stop()` first')
-    }
-    const BIN = path.join(
-      electronUtil.fixPathForAsarUnpack(__dirname),
-      '..',
-      debug ? 'run-debug' : 'run-release',
-    )
-    console.log('exec', BIN)
-    this.recorder = execa(BIN, [], {
-      reject: false,
-    })
-    this.recorder.catch((err, ...rest) => {
-      console.log('screen err:', ...rest)
-      console.log(err)
-      console.log(err.stack)
-      throw err
-    })
-    this.recorder.stderr.setEncoding('utf8')
-    this.recorder.stderr.on('data', data => {
-      console.log('screen stderr:', data)
-    })
-    this.recorder.stdout.setEncoding('utf8')
-    this.recorder.stdout.on('data', data => {
-      const out = data.trim()
-      console.log(out)
     })
   }
 
@@ -164,14 +158,9 @@ export default class Screen {
     if (videoCodec) {
       const codecMap = new Map([
         ['h264', 'avc1'],
-        ['hevc', 'hvc1'],
         ['proRes422', 'apcn'],
         ['proRes4444', 'ap4h'],
       ])
-
-      if (!supportsHevcHardwareEncoding) {
-        codecMap.delete('hevc')
-      }
 
       if (!codecMap.has(videoCodec)) {
         throw new Error(`Unsupported video codec specified: ${videoCodec}`)

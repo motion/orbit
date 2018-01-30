@@ -532,7 +532,7 @@ final class Recorder: NSObject {
 
     // send to world
     _ = self.send!("{ \"action\": \"words\", \"value\": [\(words.joined(separator: ","))] }")
-//    print("!lines [\(lines.joined(separator: ","))]")
+    _ = self.send!("{ \"action\": \"lines\", \"value\": [\(lines.joined(separator: ","))] }")
     
     // after x seconds, re-enable watching
     // this is because screen needs time to update highlight boxes

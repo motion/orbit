@@ -107,6 +107,11 @@ export default class ScreenState {
         lastOCR: Date.now(),
       })
     })
+    this.screenOCR.onLines(lines => {
+      this.updateState({
+        lines,
+      })
+    })
     this.screenOCR.onClearWord(word => {
       console.log('!!!!!!!! clear word', word)
       this.resetHighlights()
@@ -220,6 +225,7 @@ export default class ScreenState {
 
   cancelCurrentOCR = () => {
     // cancel next OCR if we have a new context
+    clearTimeout(this.clearOCRTimeout)
     clearTimeout(this.nextOCR)
     this.invalidRunningOCR = Date.now()
   }
@@ -265,6 +271,7 @@ export default class ScreenState {
       console.log('didnt get offset/bounds')
       return
     }
+    clearTimeout(this.clearOCRTimeout)
     if (appName !== 'Chrome') {
       console.log('only scanning chrome for now')
       // turn off
@@ -301,14 +308,14 @@ export default class ScreenState {
     this.hasResolvedOCR = false
     this.screenOCR.watchBounds(settings)
 
-    setTimeout(async () => {
+    this.clearOCRTimeout = setTimeout(async () => {
       if (!this.hasResolvedOCR) {
         console.log('seems like ocr has stopped working, restarting...')
         await this.screenOCR.stop()
         this.screenOCR.start()
         this.screenOCR.watchBounds(settings)
       }
-    }, 1000)
+    }, 15000)
   }
 
   stop = () => {

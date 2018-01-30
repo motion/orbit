@@ -177,10 +177,10 @@ export default class HighlightsPage {
                 key={key}
                 $hoveredLine={hoveredLine && key === hoveredLine.key}
                 style={{
-                  left: x - TOP_BAR_PAD,
-                  top: x,
+                  top: y / 2 - TOP_BAR_PAD,
+                  left: x,
                   width: width,
-                  height: height,
+                  height: height / 2 + 5, // add some padding
                 }}
               />
             )
@@ -218,7 +218,7 @@ export default class HighlightsPage {
     },
     line: {
       position: 'absolute',
-      borderBottom: [2, '#eee', [0, 0, 0, 0.2]],
+      borderBottom: [2, [0, 0, 0, 0.2]],
     },
     hoveredLine: {
       borderBottomColor: 'blue',

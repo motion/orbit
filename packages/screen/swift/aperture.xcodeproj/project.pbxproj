@@ -184,10 +184,11 @@
 			buildPhases = (
 				E3A310771E450D3600D314DD /* Sources */,
 				E3A310781E450D3600D314DD /* Frameworks */,
-				E325A4461E450E5E0016DB84 /* ShellScript */,
 				CF19EC2A201FB35A0087044E /* CopyFiles */,
 				CF19EC28201FB3520087044E /* Resources */,
 				CF19EC2C201FB49C0087044E /* CopyFiles */,
+				E325A4461E450E5E0016DB84 /* Run Script */,
+				CF19EC2E2020EAE00087044E /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -244,7 +245,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		E325A4461E450E5E0016DB84 /* ShellScript */ = {
+		CF19EC2E2020EAE00087044E /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -254,8 +255,22 @@
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "touch ../../../apps/api/src/index.js";
+		};
+		E325A4461E450E5E0016DB84 /* Run Script */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Run Script";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/bash;
-			shellScript = "cp \"${BUILT_PRODUCTS_DIR}/${EXECUTABLE_NAME}\" ../aperture";
+			shellScript = "# ln -s \"${BUILT_PRODUCTS_DIR}/${EXECUTABLE_NAME}\" ../screen-${CONFIGURATION}";
 		};
 /* End PBXShellScriptBuildPhase section */
 

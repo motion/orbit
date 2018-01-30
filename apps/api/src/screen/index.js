@@ -48,6 +48,7 @@ export default class ScreenState {
   state: TScreenState = {
     context: null,
     ocrWords: null,
+    linePositions: null,
     lastOCR: Date.now(),
     lastScreenChange: Date.now(),
     mousePosition: [0, 0],
@@ -107,9 +108,9 @@ export default class ScreenState {
         lastOCR: Date.now(),
       })
     })
-    this.screenOCR.onLines(lines => {
+    this.screenOCR.onLines(linePositions => {
       this.updateState({
-        lines,
+        linePositions,
       })
     })
     this.screenOCR.onClearWord(word => {

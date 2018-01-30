@@ -122,7 +122,7 @@ class Characters {
           debug("0 size")
           continue
         }
-        let tooBig = char.width > 300 || char.height > 300
+        let tooBig = char.width * char.height > 1500
         let tooSmall = char.width < 5 && char.height < 5 || char.width < 2 || char.height < 2
         let tooThin = char.height / char.width > 25
         let tooWide = char.width / char.height > 25

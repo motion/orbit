@@ -702,6 +702,8 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
       let changedBox = hasBoxChanged(box: box, buffer: buffer, perRow: perRow)
       if (firstTime && box.initialScreenshot || changedBox) {
         if ignoreNextScan {
+          self.ignoreNextScan = false
+          print("ignored this scan")
           return
         }
         print("changed! \(box.id)")

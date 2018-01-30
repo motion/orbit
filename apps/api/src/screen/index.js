@@ -139,7 +139,6 @@ export default class ScreenState {
 
     const update = () => {
       this.resetHighlights()
-      console.log('window change', this.curContext.id)
       this.cancelCurrentOCR()
       // console.log('UpdateContext:', this.curContext.id)
       // ensure new

@@ -63,6 +63,7 @@ final class Recorder: NSObject {
   private var changeHandle: AsyncBlock<Void, ()>?
   private var isScanning = false
   private var fps = 0
+  private var ignoreNextScan = false
 
   var onStart: (() -> Void)?
   var onFinish: (() -> Void)?
@@ -153,7 +154,7 @@ final class Recorder: NSObject {
           // coming from us, ignore
           return
         }
-        if action == "start" {
+        if action == "start" || action == "resume" {
           self.start()
           return
         }
@@ -196,6 +197,9 @@ final class Recorder: NSObject {
   }
 
   func watchBounds(fps: Int, boxes: Array<Box>, showCursor: Bool, videoCodec: String? = nil, sampleSpacing: Int, sensitivity: Int, debug: Bool) {
+    if let handle = self.changeHandle {
+      handle.cancel()
+    }
     self.shouldDebug = debug
     if shouldDebug {
       print("running in debug mode...")
@@ -204,6 +208,7 @@ final class Recorder: NSObject {
     self.sampleSpacing = sampleSpacing
     self.sensitivity = sensitivity
     self.lastBoxes = [String: [UInt8]]()
+    self.frames = [String: Box]()
     self.boxes = [String: Box]()
     for box in boxes {
       self.boxes[box.id] = box
@@ -220,7 +225,7 @@ final class Recorder: NSObject {
   // returns the frame it found
   func handleChangedArea(box: Box, buffer: CMSampleBuffer, bufferPointer: UnsafeMutablePointer<UInt8>, perRow: Int, findContent: Bool = false) -> Box? {
     // debug
-    print("box \(box.x) \(box.y) \(box.width) \(box.height)")
+    print("handleChangedArea \(box.x) \(box.y) \(box.width) \(box.height)")
     
     let chars = self.characters!
     // clear old files
@@ -306,6 +311,8 @@ final class Recorder: NSObject {
       print("2. filter for ocr: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
       start = DispatchTime.now()
     }
+    
+    print("got content")
 
     // find vertical sections
     let lineFindScaling = 3 // scale down denominator
@@ -427,6 +434,8 @@ final class Recorder: NSObject {
       sectionLines[start] = lines
       total += lines.count
     }
+    
+    print("got lines")
 
     // third loop
     // for each VERTICAL SECTION, get characters
@@ -460,6 +469,8 @@ final class Recorder: NSObject {
       })
       allLines = allLines + sectionLines
     }
+    
+    print("got chars")
 
     // check for unsolved outlines
     let allCharacters: [Character] = allLines.flatMap { $0.flatMap { $0.characters } }
@@ -558,9 +569,11 @@ final class Recorder: NSObject {
       }
       lines.append("[\(firstWord.x),\(minY),\(width),\(maxH)]")
     }
+    
+    print("got ocr")
 
     // update character cache
-    Async.background {
+    Async.background(after: 0.04) {
       chars.updateCache(ocrResults)
     }
 
@@ -646,6 +659,18 @@ final class Recorder: NSObject {
 }
 
 extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
+  private func getBufferFrame(_ sampleBuffer: CMSampleBuffer) -> (UnsafeMutablePointer<UInt8>, Int, () -> Void) {
+    let pixelBuffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)!
+    CVPixelBufferLockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0));
+    let baseAddress = CVPixelBufferGetBaseAddressOfPlane(pixelBuffer, 0)
+    let buffer = unsafeBitCast(baseAddress, to: UnsafeMutablePointer<UInt8>.self)
+    let perRow = CVPixelBufferGetBytesPerRowOfPlane(pixelBuffer, 0)
+    let release: () -> Void = {
+      CVPixelBufferUnlockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0))
+    }
+    return (buffer, perRow, release)
+  }
+  
   public func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
     // todo: use this per-box
     if self.isScanning {
@@ -655,11 +680,7 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
       return
     }
 
-    let pixelBuffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)!
-    CVPixelBufferLockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0));
-    let baseAddress = CVPixelBufferGetBaseAddressOfPlane(pixelBuffer, 0)
-    let buffer = unsafeBitCast(baseAddress, to: UnsafeMutablePointer<UInt8>.self)
-    let perRow = CVPixelBufferGetBytesPerRowOfPlane(pixelBuffer, 0)
+    let (buffer, perRow, release) = self.getBufferFrame(sampleBuffer)
 
     // one time setup
     if self.characters == nil {
@@ -676,11 +697,14 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
 
     // loop over boxes and check
     for boxId in self.boxes.keys {
-//      let frame = self.frames[boxId]
-      let box = self.boxes[boxId]!
+      let box = self.frames[boxId] ?? self.boxes[boxId]!
       if shouldDebug { characters!.debugDir = box.screenDir! }
       let changedBox = hasBoxChanged(box: box, buffer: buffer, perRow: perRow)
       if (firstTime && box.initialScreenshot || changedBox) {
+        if ignoreNextScan {
+          return
+        }
+        print("changed! \(box.id)")
         if self.send!("{ \"action\": \"clearWord\", \"value\": \"\(box.id)\" }") { }
         // debounce
         if (self.changeHandle != nil) {
@@ -692,25 +716,20 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
         self.changeHandle = Async.main(after: changedBox ? delayHandleChange : 0) { // debounce (seconds)
           self.isScanning = true
           
-          // get new frame now
-          let pixelBuffer2: CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)!
-          CVPixelBufferLockBaseAddress(pixelBuffer2, CVPixelBufferLockFlags(rawValue: 0));
-          let baseAddress = CVPixelBufferGetBaseAddressOfPlane(pixelBuffer2, 0)
-          let buffer = unsafeBitCast(baseAddress, to: UnsafeMutablePointer<UInt8>.self)
-          let perRow = CVPixelBufferGetBytesPerRowOfPlane(pixelBuffer2, 0)
+          let (buffer, perRow, release) = self.getBufferFrame(sampleBuffer)
 
           // handle new frame
-          if let frame = self.handleChangedArea(box: box, buffer: sampleBuffer, bufferPointer: buffer, perRow: perRow, findContent: box.findContent) {
-            self.frames[boxId] = frame
-          }
+          let frame = self.handleChangedArea(box: box, buffer: sampleBuffer, bufferPointer: buffer, perRow: perRow, findContent: box.findContent)
+          self.frames[boxId] = frame
 
-          CVPixelBufferUnlockBaseAddress(pixelBuffer2, CVPixelBufferLockFlags(rawValue: 0))
+          release()
           
           // after x seconds, re-enable watching
           // this is because screen needs time to update highlight boxes
-          Async.background(after: 1) {
+          Async.background(after: 0.5) {
             print("re-enable scan after last")
             self.isScanning = false
+            self.ignoreNextScan = true
           }
         }
       }
@@ -718,6 +737,6 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
     // only true for first loop
     self.firstTime = false
     // release
-    CVPixelBufferUnlockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0))
+    release()
   }
 }

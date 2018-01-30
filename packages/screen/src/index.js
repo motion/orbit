@@ -120,7 +120,11 @@ export default class Screen {
     }
   }
 
-  start = () => {
+  start = async () => {
+    if (!this.recorder) {
+      this.setupRecorder()
+      await sleep(100)
+    }
     this.socketSend('start')
   }
 
@@ -178,6 +182,10 @@ export default class Screen {
     this.socketSend('pause')
   }
 
+  resume = () => {
+    this.socketSend('start')
+  }
+
   onClearWord = cb => {
     this.onClearWordCB = cb
   }
@@ -201,12 +209,14 @@ export default class Screen {
     }
     this.recorder.stdout.removeAllListeners()
     this.recorder.stderr.removeAllListeners()
-    this.recorder.kill()
-    this.recorder.kill('SIGKILL')
+    setTimeout(() => {
+      this.recorder.kill()
+      this.recorder.kill('SIGKILL')
+    })
     await this.recorder
-    // sleep to avoid issues
-    await sleep(20)
     delete this.recorder
+    // sleep to avoid issues
+    await sleep(40)
   }
 
   socketSend(action, data) {

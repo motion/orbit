@@ -129,7 +129,7 @@ export default class ScreenState {
 
   async restartScreen() {
     await this.screenOCR.stop()
-    this.screenOCR.start()
+    await this.screenOCR.start()
     this.screenOCR.watchBounds(this.screenSettings)
   }
 
@@ -138,11 +138,13 @@ export default class ScreenState {
     this.swindler.start()
 
     const update = () => {
+      this.resetHighlights()
+      console.log('window change', this.curContext.id)
       this.cancelCurrentOCR()
       // console.log('UpdateContext:', this.curContext.id)
       // ensure new
       this.updateState({
-        context: Object.assign({}, this.curContext),
+        context: JSON.parse(JSON.stringify(this.curContext)),
       })
     }
 
@@ -151,6 +153,7 @@ export default class ScreenState {
       switch (event) {
         case 'FrontmostWindowChangedEvent':
           const value = {
+            ...this.curContext,
             id: lastId,
             ...message,
           }
@@ -158,11 +161,9 @@ export default class ScreenState {
           this.setCurrentContext(value)
           break
         case 'WindowSizeChangedEvent':
-          this.resetHighlights()
           this.curContext.bounds = message
           break
         case 'WindowPosChangedEvent':
-          this.resetHighlights()
           this.curContext.offset = message
       }
 
@@ -280,6 +281,7 @@ export default class ScreenState {
 
   handleNewContext = async () => {
     if (this.stopped) {
+      console.log('is stopped')
       return
     }
     const { appName, offset, bounds } = this.state.context
@@ -293,13 +295,7 @@ export default class ScreenState {
     if (appName !== 'Chrome') {
       // turn off
       this.resetHighlights()
-      this.screenOCR.watchBounds({
-        fps: 1,
-        sampleSpacing: 100,
-        sensitivity: 2,
-        showCursor: false,
-        boxes: [],
-      })
+      this.screenOCR.pause()
       return
     }
     // we are watching the whole app for words
@@ -324,14 +320,16 @@ export default class ScreenState {
 
     this.screenSettings = settings
     this.hasResolvedOCR = false
+    console.log('resume')
     this.screenOCR.watchBounds(settings)
+    this.screenOCR.resume()
 
     this.clearOCRTimeout = setTimeout(async () => {
       if (!this.hasResolvedOCR) {
         console.log('seems like ocr has stopped working, restarting...')
         this.restartScreen()
       }
-    }, 15000)
+    }, 5000)
   }
 
   stop = () => {

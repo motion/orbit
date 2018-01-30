@@ -15,6 +15,7 @@ export default class Screen {
   onLinesCB = _ => _
   onWordsCB = _ => _
   onClearWordCB = _ => _
+  onErrorCB = _ => _
   state = {}
 
   constructor({ debugBuild = false } = {}) {
@@ -46,6 +47,7 @@ export default class Screen {
     this.recorder.stderr.setEncoding('utf8')
     this.recorder.stderr.on('data', data => {
       console.log('screen stderr:', data)
+      this.onErrorCB(data)
     })
     this.recorder.stdout.setEncoding('utf8')
     this.recorder.stdout.on('data', data => {
@@ -186,6 +188,10 @@ export default class Screen {
 
   onLines = cb => {
     this.onLinesCB = cb
+  }
+
+  onError = cb => {
+    this.onErrorCB = cb
   }
 
   stop = async () => {

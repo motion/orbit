@@ -54,6 +54,7 @@ final class Recorder: NSObject {
   private var shouldDebug: Bool
   private let context = CIContext()
   private var boxes: [String: Box]
+  private var frames: [String: Box]
   private var lastBoxes: [String: [UInt8]]
   private var displayId: CGDirectDisplayID
   private let components = ConnectedComponentsSwiftOCR()
@@ -109,6 +110,7 @@ final class Recorder: NSObject {
     self.sensitivity = 1
     self.boxes = [String: Box]()
     self.lastBoxes = [String: [UInt8]]()
+    self.frames = [String: Box]()
 
     super.init()
 
@@ -215,7 +217,8 @@ final class Recorder: NSObject {
     self.input.minFrameDuration = CMTimeMake(1, Int32(fps))
   }
 
-  func handleChangedArea(box: Box, buffer: CMSampleBuffer, bufferPointer: UnsafeMutablePointer<UInt8>, perRow: Int, findContent: Bool = false) {
+  // returns the frame it found
+  func handleChangedArea(box: Box, buffer: CMSampleBuffer, bufferPointer: UnsafeMutablePointer<UInt8>, perRow: Int, findContent: Bool = false) -> Box? {
     self.isScanning = true
     let chars = self.characters!
     // clear old files
@@ -223,7 +226,7 @@ final class Recorder: NSObject {
     let startAll = DispatchTime.now()
     if (box.screenDir == nil) {
       print("no screen dir")
-      return
+      return nil
     }
     // create filtered images for content find
     let outPath = "\(box.screenDir ?? "/tmp")/\(box.id).png"
@@ -243,15 +246,17 @@ final class Recorder: NSObject {
     if (!findContent) {
       print("dont find content")
       images.writeCGImage(image: cgImage, to: outPath)
-      return
+      return nil
     }
     var start = DispatchTime.now()
     var biggestBox: BoundingBox?
     let boxFindScale = 8
     let binarizedImage = filters.filterImageForContentFinding(image: cgImage, scale: boxFindScale)
 
-    print("1. content find filter: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
-    start = DispatchTime.now()
+    if shouldDebug {
+      print("1. content find filter: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+      start = DispatchTime.now()
+    }
 
     let cc = ConnectedComponents()
     let result = cc.labelImageFast(image: binarizedImage, calculateBoundingBoxes: true, invert: true)
@@ -267,7 +272,7 @@ final class Recorder: NSObject {
     // if no found content box, write full image
     if biggestBox == nil {
       images.writeCGImage(image: cgImage, to: outPath)
-      return
+      return nil
     }
     // found content
     let bb = biggestBox!
@@ -282,15 +287,17 @@ final class Recorder: NSObject {
     // adjust frame for character finder
     chars.frameOffset = frame
     if box.screenDir == nil {
-      return
+      return nil
     }
     start = DispatchTime.now()
     // crop
     let cropBox = CGRect(x: frame[0] - box.x, y: frame[1] - box.y, width: frame[2], height: frame[3])
     let ocrCharactersImage = images.cropImage(filters.filterImageForOCRCharacterFinding(image: cgImage), box: cropBox)!
 
-    print("2. filter for ocr: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
-    start = DispatchTime.now()
+    if shouldDebug {
+      print("2. filter for ocr: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+      start = DispatchTime.now()
+    }
 
     // find vertical sections
     let lineFindScaling = 3 // scale down denominator
@@ -299,8 +306,10 @@ final class Recorder: NSObject {
     let verticalImage = filters.filterForVerticalContentFinding(image: images.resize(ocrCharactersImage, width: vWidth, height: vHeight)!)
     let verticalImageRep = NSBitmapImageRep(cgImage: verticalImage)
 
-    print("3. filter vertical: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
-    start = DispatchTime.now()
+    if shouldDebug {
+      print("3. filter vertical: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+      start = DispatchTime.now()
+    }
 
     // first loop - find vertical sections
     var verticalSections = Dictionary<Int, Int>() // start => end
@@ -348,8 +357,10 @@ final class Recorder: NSObject {
       verticalSections[0] = vWidth - 1
     }
 
-    print("4. find verticals: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms --  \(verticalSections.description)")
-    start = DispatchTime.now()
+    if shouldDebug {
+      print("4. find verticals: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms --  \(verticalSections.description)")
+      start = DispatchTime.now()
+    }
 
     // second loop - find lines in sections
     var sectionLines = Dictionary<Int, [LinePosition]>()
@@ -442,7 +453,9 @@ final class Recorder: NSObject {
     // check for unsolved outlines
     let allCharacters: [Character] = allLines.flatMap { $0.flatMap { $0.characters } }
 
-    print("7. gather characters \(allCharacters.count): \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+    if shouldDebug {
+      print("7. gather characters \(allCharacters.count): \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+    }
 
     // set filters unique outlines
     let unsolvedCharacters = allCharacters.filter { $0.letter == nil }.unique()
@@ -452,7 +465,9 @@ final class Recorder: NSObject {
     if unsolvedCharacters.count > 0 {
       start = DispatchTime.now()
       // write ocr string
-      print("found \(unsolvedCharacters.count) uniq out of \(allCharacters.count) total")
+      if shouldDebug {
+        print("found \(unsolvedCharacters.count) uniq out of \(allCharacters.count) total")
+      }
       let ocrString = unsolvedCharacters.enumerated().map({ item in
         return chars.charToString(item.element, debugID: "")
       }).joined(separator: "\n")
@@ -463,20 +478,24 @@ final class Recorder: NSObject {
         print("couldnt write pixel string \(error)")
       }
 
-      print("8. characters.txt: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
-      start = DispatchTime.now()
+      if shouldDebug {
+        print("8. characters.txt: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+        start = DispatchTime.now()
+      }
 
       // run ocr
       foundCharacters = ocr!.ocrCharacters()
 
-      print("9. ocr: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+      if shouldDebug {
+        print("9. ocr: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+      }
     }
 
     // collect ocr results
     var ocrResults = [String: String]() // outline => letter
     if foundCharacters.count != unsolvedCharacters.count {
       print("mismatch from in/out to ocr")
-      return
+      return nil
     }
     for char in unsolvedCharacters {
       ocrResults[char.outline] = foundCharacters.remove(at: 0)
@@ -489,7 +508,6 @@ final class Recorder: NSObject {
     var lines = [String]()
     for (lineIndex, line) in allLines.enumerated() {
       if line.count == 0 {
-        print("empty line \(lineIndex)")
         continue
       }
       var minY = 10000
@@ -541,14 +559,18 @@ final class Recorder: NSObject {
 
     // after x seconds, re-enable watching
     // this is because screen needs time to update highlight boxes
-    Async.background(after: 0.2) {
+    Async.background(after: 0.5) {
+      print("re-enable scan after last")
       self.isScanning = false
     }
 
-    print("10. answer string: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
-    start = DispatchTime.now()
-    print("")
-    print("total \(Double(DispatchTime.now().uptimeNanoseconds - startAll.uptimeNanoseconds) / 1_000_000)ms")
+    if shouldDebug {
+      print("10. answer string: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+      start = DispatchTime.now()
+      print("")
+    }
+
+    print("finish scan in \(Double(DispatchTime.now().uptimeNanoseconds - startAll.uptimeNanoseconds) / 1_000_000)ms")
 
     // test write images:
     if self.shouldDebug {
@@ -557,6 +579,18 @@ final class Recorder: NSObject {
       images.writeCGImage(image: ocrCharactersImage, to: "\(box.screenDir!)/\(box.id)-ocr-characters.png")
       images.writeCGImage(image: cgImage, to: "\(box.screenDir!)/\(box.id)-original.png")
     }
+    
+    // return new box with content adjusted frame
+    return Box(
+      id: box.id,
+      x: frame[0],
+      y: frame[1],
+      width: frame[2],
+      height: frame[3],
+      screenDir: box.screenDir,
+      findContent: box.findContent,
+      initialScreenshot: box.initialScreenshot
+    )
   }
 
   func hasBoxChanged(box: Box, buffer: UnsafeMutablePointer<UInt8>, perRow: Int) -> Bool {
@@ -633,13 +667,13 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
       )
       characters!.shouldDebug = shouldDebug
     }
-    
+
     let fpsInSeconds = 60 / 60 / self.fps // gives you fps => x  (60 => 0.16) and (2 => 0.5)
     let delayHandleChange = Double(fpsInSeconds * 2)
 
     // loop over boxes and check
     for boxId in self.boxes.keys {
-      let box = self.boxes[boxId]!
+      let box = self.frames[boxId] ?? self.boxes[boxId]!
       if shouldDebug { characters!.debugDir = box.screenDir! }
       let changedBox = hasBoxChanged(box: box, buffer: buffer, perRow: perRow)
       if (firstTime && box.initialScreenshot || changedBox) {
@@ -652,17 +686,20 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
         }
         // wait for 2 frames of clear
         self.changeHandle = Async.main(after: changedBox ? delayHandleChange : 0) { // debounce (seconds)
+          print("start scanning for ocr")
           // get new frame now
-//          let pixelBuffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)!
-//          CVPixelBufferLockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0));
-//          let baseAddress = CVPixelBufferGetBaseAddressOfPlane(pixelBuffer, 0)
-//          let buffer = unsafeBitCast(baseAddress, to: UnsafeMutablePointer<UInt8>.self)
-//          let perRow = CVPixelBufferGetBytesPerRowOfPlane(pixelBuffer, 0)
-          
+          let pixelBuffer2: CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)!
+          CVPixelBufferLockBaseAddress(pixelBuffer2, CVPixelBufferLockFlags(rawValue: 0));
+          let baseAddress = CVPixelBufferGetBaseAddressOfPlane(pixelBuffer2, 0)
+          let buffer = unsafeBitCast(baseAddress, to: UnsafeMutablePointer<UInt8>.self)
+          let perRow = CVPixelBufferGetBytesPerRowOfPlane(pixelBuffer2, 0)
+
           // handle new frame
-          self.handleChangedArea(box: box, buffer: sampleBuffer, bufferPointer: buffer, perRow: perRow, findContent: box.findContent)
-          
-//          CVPixelBufferUnlockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0))
+          if let frame = self.handleChangedArea(box: box, buffer: sampleBuffer, bufferPointer: buffer, perRow: perRow, findContent: box.findContent) {
+            self.frames[boxId] = frame
+          }
+
+          CVPixelBufferUnlockBaseAddress(pixelBuffer2, CVPixelBufferLockFlags(rawValue: 0))
         }
       }
     }

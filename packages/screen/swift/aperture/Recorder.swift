@@ -181,6 +181,7 @@ final class Recorder: NSObject {
           return
         }
         if action == "clear" {
+          print("got a clear")
           if self.isScanning {
             self.shouldCancel = true
           }
@@ -196,15 +197,19 @@ final class Recorder: NSObject {
   }
 
   func start() {
-    print("screen: starting...")
-    session.startRunning()
-    _ = self.send!("{ \"state\": { \"isRunning\": true } }")
+    if !session.isRunning {
+      print("screen: starting...")
+      session.startRunning()
+      _ = self.send!("{ \"state\": { \"isRunning\": true } }")
+    }
   }
 
   func stop() {
-    print("screen: stopping...")
-    session.stopRunning()
-    _ = self.send!("{ \"state\": { \"isRunning\": false } }")
+    if session.isRunning {
+      print("screen: stopping...")
+      session.stopRunning()
+      _ = self.send!("{ \"state\": { \"isRunning\": false } }")
+    }
   }
 
   func watchBounds(fps: Int, boxes: Array<Box>, showCursor: Bool, videoCodec: String? = nil, sampleSpacing: Int, sensitivity: Int, debug: Bool) {

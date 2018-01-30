@@ -289,13 +289,16 @@ export default class ScreenState {
       console.log('didnt get offset/bounds')
       return
     }
-    this.screenOCR.cancelCurrent()
     clearTimeout(this.clearOCRTimeout)
     // TODO disable
     if (appName !== 'Chrome') {
       // turn off
       this.resetHighlights()
       this.screenOCR.pause()
+      return
+    }
+    // avoid pause
+    if (this.screenOCR.isPaused) {
       return
     }
     // we are watching the whole app for words
@@ -320,6 +323,7 @@ export default class ScreenState {
 
     this.screenSettings = settings
     this.hasResolvedOCR = false
+    this.screenOCR.cancelCurrent()
     this.screenOCR.resume()
     this.screenOCR.watchBounds(settings)
 

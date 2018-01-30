@@ -18,6 +18,10 @@ export default class Screen {
   onErrorCB = _ => _
   state = {}
 
+  get isPaused() {
+    return !this.state.isRunning
+  }
+
   constructor({ debugBuild = false } = {}) {
     this.debugBuild = debugBuild
     macosVersion.assertGreaterThanOrEqualTo('10.12')
@@ -179,14 +183,17 @@ export default class Screen {
   }
 
   pause = () => {
+    console.log('screenOCR.pause')
     this.socketSend('pause')
   }
 
   resume = () => {
+    console.log('screenOCR.resume')
     this.socketSend('start')
   }
 
   cancelCurrent = () => {
+    console.log('screenOCR.cancel')
     this.socketSend('clear')
   }
 

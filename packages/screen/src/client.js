@@ -14,6 +14,10 @@ export default class ScreenClient {
     this._setupLink()
   }
 
+  clear = () => {
+    this._send({ action: 'clear' })
+  }
+
   pause = () => {
     this._send({ action: 'pause' })
   }

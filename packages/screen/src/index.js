@@ -16,11 +16,9 @@ export default class Screen {
   onWordsCB = _ => _
   onClearWordCB = _ => _
   onErrorCB = _ => _
+  onClearCB = _ => _
   state = {}
-
-  get isPaused() {
-    return !this.state.isRunning
-  }
+  isPaused = false
 
   constructor({ debugBuild = false } = {}) {
     this.debugBuild = debugBuild
@@ -118,6 +116,9 @@ export default class Screen {
       if (action === 'start') {
         this.start()
       }
+      if (action === 'clear') {
+        this.onClearCB()
+      }
     } catch (err) {
       console.log('error sending reply', action, 'value', value)
       console.log(err)
@@ -125,6 +126,7 @@ export default class Screen {
   }
 
   start = async () => {
+    this.isPaused = false
     if (!this.recorder) {
       this.setupRecorder()
       await sleep(100)
@@ -183,18 +185,21 @@ export default class Screen {
   }
 
   pause = () => {
-    console.log('screenOCR.pause')
+    this.isPaused = true
     this.socketSend('pause')
   }
 
   resume = () => {
-    console.log('screenOCR.resume')
+    this.isPaused = false
     this.socketSend('start')
   }
 
   cancelCurrent = () => {
-    console.log('screenOCR.cancel')
     this.socketSend('clear')
+  }
+
+  onClear = cb => {
+    this.onClearCB = cb
   }
 
   onClearWord = cb => {

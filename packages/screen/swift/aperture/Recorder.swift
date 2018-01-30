@@ -44,6 +44,7 @@ struct LinePosition {
 }
 
 final class Recorder: NSObject {
+  private var currentSampleBuffer: CMSampleBuffer?
   private var send: ((String)->Bool)?
   private let input: AVCaptureScreenInput
   private var session: AVCaptureSession
@@ -247,7 +248,7 @@ final class Recorder: NSObject {
   }
 
   // returns the frame it found
-  func handleChangedArea(box: Box, buffer: CMSampleBuffer, bufferPointer: UnsafeMutablePointer<UInt8>, perRow: Int, findContent: Bool = false) -> Box? {
+  func handleChangedArea(box: Box, sampleBuffer: CMSampleBuffer, perRow: Int, findContent: Bool = false) -> Box? {
     // debug
     print("handleChangedArea \(box.x) \(box.y) \(box.width) \(box.height)")
     
@@ -263,7 +264,7 @@ final class Recorder: NSObject {
     }
     // create filtered images for content find
     let outPath = "\(box.screenDir ?? "/tmp")/\(box.id).png"
-    let cgImage = filters.imageFromBuffer(context, sampleBuffer: buffer, cropRect: CGRect(
+    let cgImage = filters.imageFromBuffer(context, sampleBuffer: sampleBuffer, cropRect: CGRect(
       x: box.x * 2,
       y: Int(CGDisplayPixelsHigh(self.displayId) * 2 - Int(box.y * 2)),
       width: box.width * 2,
@@ -704,6 +705,9 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
   }
   
   public func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+    // keep this always in sync
+    self.currentSampleBuffer = sampleBuffer
+    
     // todo: use this per-box
     if self.isScanning {
       return
@@ -717,11 +721,13 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
     // one time setup
     if self.characters == nil {
       characters = Characters(
-        data: buffer,
+        buffer: buffer,
         perRow: perRow,
         isBlackIfUnder: 180
       )
       characters!.shouldDebug = shouldDebug
+    } else {
+      self.characters!.buffer = buffer
     }
 
     let fpsInSeconds = 60 / 60 / self.fps // gives you fps => x  (60 => 0.16) and (2 => 0.5)
@@ -747,15 +753,15 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
           self.changeHandle = nil
           self.isScanning = false
           self.ignoreNextScan = false
+          self.shouldCancel = false
         }
         // wait for 2 frames of clear
-        self.changeHandle = Async.main(after: changedBox ? delayHandleChange : 0) { // debounce (seconds)
+        // small delay by default to not pick up old highlights that havent cleared yet
+        self.changeHandle = Async.main(after: changedBox ? delayHandleChange : 0.05) { // debounce (seconds)
           self.isScanning = true
-          
-          let (buffer, perRow, release) = self.getBufferFrame(sampleBuffer)
 
           // handle new frame
-          let frame = self.handleChangedArea(box: box, buffer: sampleBuffer, bufferPointer: buffer, perRow: perRow, findContent: box.findContent)
+          let frame = self.handleChangedArea(box: box, sampleBuffer: self.currentSampleBuffer!, perRow: perRow, findContent: box.findContent)
           self.frames[boxId] = frame
 
           release()
@@ -764,6 +770,7 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
           // this is because screen needs time to update highlight boxes
           Async.background(after: 0.5) {
             print("re-enable scan after last")
+            self.shouldCancel = false
             self.isScanning = false
             self.ignoreNextScan = true
           }

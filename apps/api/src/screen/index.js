@@ -115,6 +115,9 @@ export default class ScreenState {
         linePositions,
       })
     })
+    this.screenOCR.onClear(() => {
+      this.resetHighlights()
+    })
     this.screenOCR.onClearWord(word => {
       this.resetHighlights()
     })

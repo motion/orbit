@@ -41,10 +41,10 @@ class Characters {
   var debugImg: CGImage? = nil
   var debugDir = ""
   var answers = [String: String]() // outline => answer
+  var buffer: UnsafeMutablePointer<UInt8>
 
   private let dict = SymSpell(editDistance: 2, verbose: 1) // outline => close-answer
   private let images = Images()
-  private var buffer: UnsafeMutablePointer<UInt8>
   private var perRow: Int
   private var isBlackIfUnder = 0
   private let moves = Moves()
@@ -56,9 +56,9 @@ class Characters {
     return shouldDebug && specialDebug[0] == id && specialDebug[1] == curChar
   }
 
-  init(data: UnsafeMutablePointer<UInt8>, perRow: Int, isBlackIfUnder: Int) {
+  init(buffer: UnsafeMutablePointer<UInt8>, perRow: Int, isBlackIfUnder: Int) {
     self.isBlackIfUnder = isBlackIfUnder // higher == allow lighter
-    self.buffer = data
+    self.buffer = buffer
     self.perRow = perRow
   }
 

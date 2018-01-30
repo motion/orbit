@@ -4,14 +4,12 @@
   * summarizing
     * chunking slack conversations (use topic models?)
     * summarize convos to one short sentence each
-    * helpful for ux for showing things you may have missed
-    * may also help with ux for letting us use large font size
-    * better than highlighting a snippet if works wells
 * tech
-  * restart screen process when highlights dont come back quickly
+  * fix flicker loop
+  * fix bad lines
+  * check after move if it hasnt changed
   * debug slow char fetching after a few loops
   * make clearing quicker
-  * on tab change it scans old tab somehow
   * fix i's j's by going continuing downwards from middle of found outline
     * needs: skipping bottom black
   * recognition

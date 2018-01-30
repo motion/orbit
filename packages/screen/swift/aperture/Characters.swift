@@ -152,7 +152,8 @@ class Characters {
     var foundWords = [Word]()
     // calculate std dev of space
     let avg = spaces.reduce(0, +) / Double(spaces.count)
-    let stdDev = standardDeviation(spaces)
+    // space = half std dev
+    let spaceWidth = standardDeviation(spaces) / 2
     var wordChars = [Character]()
     // chop out words
     var minYL = 1000000000
@@ -166,7 +167,7 @@ class Characters {
       }
       // one deviation above avg
       let isLast =  index == foundChars.count - 1
-      if spaces[index] > avg + stdDev || isLast {
+      if spaces[index] > avg + spaceWidth || isLast {
         if isLast {
           wordChars.append(char)
         }

@@ -17,8 +17,8 @@ export default class Screen {
   onClearWordCB = _ => _
   state = {}
 
-  constructor({ debug = false } = {}) {
-    this.debug = debug
+  constructor({ debugBuild = false } = {}) {
+    this.debugBuild = debugBuild
     macosVersion.assertGreaterThanOrEqualTo('10.12')
     this.setupSocket()
     this.setupRecorder()
@@ -31,7 +31,7 @@ export default class Screen {
     const BIN = path.join(
       electronUtil.fixPathForAsarUnpack(__dirname),
       '..',
-      this.debug ? 'run-debug' : 'run-release',
+      this.debugBuild ? 'run-debug' : 'run-release',
     )
     console.log('exec', BIN)
     this.recorder = execa(BIN, [], {
@@ -133,6 +133,7 @@ export default class Screen {
       // how many pixels to detect before triggering change
       sensitivity = 2,
       boxes,
+      debug = false,
     } = {},
   ) => {
     // default box options
@@ -144,7 +145,7 @@ export default class Screen {
     }))
 
     const recorderOpts = {
-      debug: this.debug,
+      debug,
       fps,
       showCursor,
       displayId,

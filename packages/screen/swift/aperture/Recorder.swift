@@ -195,6 +195,9 @@ final class Recorder: NSObject {
 
   func watchBounds(fps: Int, boxes: Array<Box>, showCursor: Bool, videoCodec: String? = nil, sampleSpacing: Int, sensitivity: Int, debug: Bool) {
     self.shouldDebug = debug
+    if shouldDebug {
+      print("running in debug mode...")
+    }
     self.firstTime = true
     self.sampleSpacing = sampleSpacing
     self.sensitivity = sensitivity
@@ -632,6 +635,7 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
     }
     
     let fpsInSeconds = 60 / 60 / self.fps // gives you fps => x  (60 => 0.16) and (2 => 0.5)
+    let delayHandleChange = Double(fpsInSeconds * 2)
 
     // loop over boxes and check
     for boxId in self.boxes.keys {
@@ -647,10 +651,18 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
           self.changeHandle = nil
         }
         // wait for 2 frames of clear
-        let delayHandleChange = fpsInSeconds * 2
-        self.changeHandle = Async.main(after: changedBox ? 0.5 : 0) { // debounce (seconds)
+        self.changeHandle = Async.main(after: changedBox ? delayHandleChange : 0) { // debounce (seconds)
+          // get new frame now
+//          let pixelBuffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)!
+//          CVPixelBufferLockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0));
+//          let baseAddress = CVPixelBufferGetBaseAddressOfPlane(pixelBuffer, 0)
+//          let buffer = unsafeBitCast(baseAddress, to: UnsafeMutablePointer<UInt8>.self)
+//          let perRow = CVPixelBufferGetBytesPerRowOfPlane(pixelBuffer, 0)
+          
           // handle new frame
           self.handleChangedArea(box: box, buffer: sampleBuffer, bufferPointer: buffer, perRow: perRow, findContent: box.findContent)
+          
+//          CVPixelBufferUnlockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0))
         }
       }
     }

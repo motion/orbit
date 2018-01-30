@@ -9,6 +9,8 @@ import * as Constants from '~/constants'
 
 const APP_ID = 'screen'
 
+console.log('writing screenshots to', Constants.TMP_DIR)
+
 type TContext = {
   appName: string,
   offset: [Number, Number],

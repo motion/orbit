@@ -222,7 +222,9 @@ final class Recorder: NSObject {
     self.isScanning = true
     let chars = self.characters!
     // clear old files
-    rmAllInside(URL(fileURLWithPath: box.screenDir!))
+    if shouldDebug {
+      rmAllInside(URL(fileURLWithPath: box.screenDir!))
+    }
     let startAll = DispatchTime.now()
     if (box.screenDir == nil) {
       print("no screen dir")
@@ -236,6 +238,10 @@ final class Recorder: NSObject {
       width: box.width * 2,
       height: Int(-box.height * 2)
     ))!
+    
+    // debug
+    images.writeCGImage(image: cgImage, to: "\(box.screenDir!)/\(box.id)-original.png")
+    
     var cgImageBinarized: CGImage? = nil
     if shouldDebug {
       cgImageBinarized = filters.filterImageForOCRCharacterFinding(image: cgImage)
@@ -305,6 +311,9 @@ final class Recorder: NSObject {
     let vHeight = frame[3] / lineFindScaling
     let verticalImage = filters.filterForVerticalContentFinding(image: images.resize(ocrCharactersImage, width: vWidth, height: vHeight)!)
     let verticalImageRep = NSBitmapImageRep(cgImage: verticalImage)
+    
+    // debug
+    images.writeCGImage(image: verticalImage, to: "\(box.screenDir!)/\(box.id)-content-find.png")
 
     if shouldDebug {
       print("3. filter vertical: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
@@ -574,7 +583,6 @@ final class Recorder: NSObject {
 
     // test write images:
     if self.shouldDebug {
-      images.writeCGImage(image: verticalImage, to: "\(box.screenDir!)/\(box.id)-content-find.png")
       images.writeCGImage(image: binarizedImage, to: "\(box.screenDir!)/\(box.id)-binarized.png")
       images.writeCGImage(image: ocrCharactersImage, to: "\(box.screenDir!)/\(box.id)-ocr-characters.png")
       images.writeCGImage(image: cgImage, to: "\(box.screenDir!)/\(box.id)-original.png")

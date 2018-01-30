@@ -152,8 +152,8 @@ class Characters {
     var foundWords = [Word]()
     // calculate std dev of space
     let avg = spaces.reduce(0, +) / Double(spaces.count)
-    // space = half std dev
-    let spaceWidth = standardDeviation(spaces) / 2
+    // space = % of a std dev
+    let spaceWidth = standardDeviation(spaces) / 1.5
     var wordChars = [Character]()
     // chop out words
     var minYL = 1000000000

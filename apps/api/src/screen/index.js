@@ -1,5 +1,4 @@
 // @flow
-import Path from 'path'
 import { Server } from 'ws'
 import ScreenOCR from '@mcro/screen'
 import Swindler from '@mcro/swindler'
@@ -263,6 +262,9 @@ export default class ScreenState {
     this.onChangedState(oldState, object, this.state)
     // only send the changed things to reduce overhead
     this.socketSendAll(object)
+    if (object.ocrWords) {
+      console.log('sent ocr words state to highlights')
+    }
   }
 
   onChangedState = async (oldState, newStateItems) => {
@@ -277,6 +279,9 @@ export default class ScreenState {
   }
 
   handleNewContext = async () => {
+    if (this.stopped) {
+      return
+    }
     const { appName, offset, bounds } = this.state.context
     // console.log('handleNewContext', appName, { offset, bounds })
     if (!offset || !bounds) {

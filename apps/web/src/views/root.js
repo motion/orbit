@@ -33,6 +33,7 @@ export default class Root extends React.Component {
   }
 
   render({ contextStore }) {
+    console.log('window.location.pathname', window.location.pathname)
     if (this.state.error && window.location.pathname !== '/highlights') {
       return (
         <aboveredbox

@@ -36,13 +36,9 @@ type TScreenState = {
 
 export default class ScreenState {
   stopped = false
-  invalidRunningOCR = Date.now()
-  hasNewOCR = false
-  runningOCR = false
   screenOCR = new ScreenOCR()
   wss = new Server({ port: 40510 })
   activeSockets = []
-  nextOCR = null
   swindler = new Swindler()
   curContext = {}
   screenSettings = {}
@@ -142,7 +138,7 @@ export default class ScreenState {
 
     const update = () => {
       this.resetHighlights()
-      this.cancelCurrentOCR()
+      this.screenOCR.clear()
       // console.log('UpdateContext:', this.curContext.id)
       // ensure new
       this.updateState({
@@ -237,13 +233,6 @@ export default class ScreenState {
     )
   }
 
-  cancelCurrentOCR = () => {
-    // cancel next OCR if we have a new context
-    clearTimeout(this.clearOCRTimeout)
-    clearTimeout(this.nextOCR)
-    this.invalidRunningOCR = Date.now()
-  }
-
   updateState = object => {
     if (this.stopped) {
       console.log('stopped, dont send')
@@ -326,7 +315,7 @@ export default class ScreenState {
 
     this.screenSettings = settings
     this.hasResolvedOCR = false
-    this.screenOCR.cancelCurrent()
+    this.screenOCR.clear()
     this.screenOCR.resume()
     this.screenOCR.watchBounds(settings)
 

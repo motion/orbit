@@ -731,7 +731,7 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
     }
 
     let fpsInSeconds = 60 / 60 / self.fps // gives you fps => x  (60 => 0.16) and (2 => 0.5)
-    let delayHandleChange = Double(fpsInSeconds * 2)
+    let delayHandleChange = 0.05
 
     // loop over boxes and check
     for boxId in self.boxes.keys {
@@ -757,7 +757,7 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
         }
         // wait for 2 frames of clear
         // small delay by default to not pick up old highlights that havent cleared yet
-        self.changeHandle = Async.main(after: changedBox ? delayHandleChange : 0.05) { // debounce (seconds)
+        self.changeHandle = Async.main(after: changedBox ? delayHandleChange : 0) { // debounce (seconds)
           self.isScanning = true
 
           // handle new frame

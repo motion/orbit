@@ -194,7 +194,7 @@ export default class Screen {
     this.socketSend('start')
   }
 
-  cancelCurrent = () => {
+  clear = () => {
     this.socketSend('clear')
   }
 

@@ -199,6 +199,7 @@ final class Recorder: NSObject {
 
   func start() {
     if !session.isRunning {
+      self.shouldCancel = false
       print("screen: starting...")
       session.startRunning()
       _ = self.send!("{ \"state\": { \"isRunning\": true } }")
@@ -731,7 +732,7 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
     }
 
     let fpsInSeconds = 60 / 60 / self.fps // gives you fps => x  (60 => 0.16) and (2 => 0.5)
-    let delayHandleChange = 0.05
+    let delayHandleChange = 0.1
 
     // loop over boxes and check
     for boxId in self.boxes.keys {
@@ -760,11 +761,15 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
         self.changeHandle = Async.main(after: changedBox ? delayHandleChange : 0) { // debounce (seconds)
           self.isScanning = true
 
-          // handle new frame
-          let frame = self.handleChangedArea(box: box, sampleBuffer: self.currentSampleBuffer!, perRow: perRow, findContent: box.findContent)
-          self.frames[boxId] = frame
-
+          // update characters buffer
+          let (buffer, _, release) = self.getBufferFrame(sampleBuffer)
+          self.characters!.buffer = buffer
           release()
+
+          // handle change
+          if let frame = self.handleChangedArea(box: box, sampleBuffer: self.currentSampleBuffer!, perRow: perRow, findContent: box.findContent) {
+            self.frames[boxId] = frame
+          }
           
           // after x seconds, re-enable watching
           // this is because screen needs time to update highlight boxes

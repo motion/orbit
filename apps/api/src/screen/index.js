@@ -266,7 +266,11 @@ export default class ScreenState {
 
     const newContext = newStateItems.context
     if (newContext || firstTimeOCR) {
-      await this.handleNewContext()
+      // delay a bit to let highlights clear
+      clearTimeout(this.nextHandleContext)
+      this.nextHandleContext = setTimeout(() => {
+        this.handleNewContext()
+      }, 16 * 3)
     }
   }
 

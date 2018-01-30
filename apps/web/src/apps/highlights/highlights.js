@@ -214,9 +214,9 @@ export default class HighlightsPage {
     },
     line: {
       position: 'absolute',
-      borderBottom: [2, [0, 0, 0, 0.2]],
+      borderBottom: [2, '#eee', [0, 0, 0, 0.2]],
     },
-    lineHovered: {
+    hoveredLine: {
       borderBottomColor: 'blue',
     },
   }

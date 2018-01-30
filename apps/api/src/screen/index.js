@@ -347,7 +347,7 @@ export default class ScreenState {
       try {
         socket.send(strData)
       } catch (err) {
-        console.log('failed to send to socket, removing', uid)
+        console.log('failed to send to socket, removing', err.message, uid)
         this.removeSocket(uid)
       }
     }

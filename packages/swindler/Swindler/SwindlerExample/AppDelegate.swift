@@ -66,13 +66,22 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     private func frontmostWindowChanged(_ extraString: String) {
-        let frontWindow = swindler.frontmostApplication.value?.mainWindow.value!
+        let app = swindler.frontmostApplication.value!
+        let frontWindow = app.mainWindow.value
         if (frontWindow == nil) { return }
         let window = frontWindow!
         let title = String(window.title.value).replacingOccurrences(of: "\"", with: "")
         let titleString = "\"\(title)\"";
         let offset = window.position.value
         let bounds = window.size.value
+        
+//        print("OK")
+//        if let application = NSWorkspace.shared.frontmostApplication {
+//            let uiApp = Application(application)!
+//            let el = try! uiApp.elementAtPosition(100, 100)!
+//            print("el \(el) \(el.element) \(try! el.actionsAsStrings())")
+//        }
+        
         self.emit(":FrontmostWindowChangedEvent { \(extraString) \"title\": \(titleString), \"offset\": [\(offset.x),\(offset.y)], \"bounds\": [\(bounds.width),\(bounds.height)] }")
     }
 

@@ -5,10 +5,8 @@
     * chunking slack conversations (use topic models?)
     * summarize convos to one short sentence each
 * tech
-  * fix flicker loop
   * fix bad lines
   * check after move if it hasnt changed
-  * debug slow char fetching after a few loops
   * make clearing quicker
   * fix i's j's by going continuing downwards from middle of found outline
     * needs: skipping bottom black

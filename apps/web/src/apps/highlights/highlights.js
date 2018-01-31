@@ -173,7 +173,7 @@ export default class HighlightsPage {
           {(context.linePositions || []).map(([x, y, width, height]) => {
             const key = `${x}${y}${width}${height}`
             return (
-              <line
+              <ocrLine
                 key={key}
                 $hoveredLine={hoveredLine && key === hoveredLine.key}
                 style={{
@@ -216,7 +216,7 @@ export default class HighlightsPage {
       wordWrap: 'no-wrap',
       whiteSpace: 'pre',
     },
-    line: {
+    ocrLine: {
       position: 'absolute',
       borderBottom: [2, [0, 0, 0, 0.2]],
     },

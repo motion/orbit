@@ -235,6 +235,7 @@ export default class Screen {
     this.recorder.stdout.removeAllListeners()
     this.recorder.stderr.removeAllListeners()
     setTimeout(() => {
+      if (!this.recorder) return
       this.recorder.kill()
       this.recorder.kill('SIGKILL')
     })

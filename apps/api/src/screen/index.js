@@ -136,10 +136,9 @@ export default class ScreenState {
 
   startSwindler() {
     console.log('Start swindling...')
-    // this.swindler.start()
+    this.swindler.start()
 
     const update = () => {
-      // console.log('UpdateContext:', this.curContext.id)
       // ensure new
       this.updateState({
         context: JSON.parse(JSON.stringify(this.curContext)),
@@ -270,11 +269,7 @@ export default class ScreenState {
 
     const newContext = newStateItems.context
     if (newContext || firstTimeOCR) {
-      // delay a bit to let highlights clear
-      clearTimeout(this.nextHandleContext)
-      this.nextHandleContext = setTimeout(() => {
-        this.handleNewContext()
-      }, 16 * 3)
+      this.handleNewContext()
     }
   }
 
@@ -290,13 +285,6 @@ export default class ScreenState {
       return
     }
     clearTimeout(this.clearOCRTimeout)
-    // TODO disable
-    if (appName !== 'Chrome') {
-      // turn off
-      this.resetHighlights()
-      this.screenOCR.pause()
-      return
-    }
     // avoid pause
     if (this.screenOCR.isPaused) {
       return

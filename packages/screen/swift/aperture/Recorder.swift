@@ -70,6 +70,7 @@ final class Recorder: NSObject {
   private var ignoreNextScan = false
   private var shouldCancel = false
   private var shouldRunNextTime = false
+  private let queue = AsyncGroup()
 
   var onStart: (() -> Void)?
   var onFinish: (() -> Void)?
@@ -149,9 +150,10 @@ final class Recorder: NSObject {
     ws.event.error = { error in
       print("error \(error)")
     }
-    Async.background {
+    self.queue.background {
       ws.event.message = { (message) in
         if let text = message as? String {
+          print("msg")
           if text.count < 5 {
             print("weird text")
             return
@@ -187,7 +189,7 @@ final class Recorder: NSObject {
             return
           }
           if action == "clear" {
-            print("got a clear")
+            print("got a clear \(self.isScanning)")
             if self.isScanning {
               self.shouldCancel = true
             }
@@ -252,7 +254,8 @@ final class Recorder: NSObject {
 
   func handleCancel() -> Bool {
     let val = self.shouldCancel
-    if val { print("canceled") }
+    print("handleCancel \(val)")
+//    if val { print("canceled") }
     self.shouldCancel = false
     return val
   }
@@ -545,17 +548,17 @@ final class Recorder: NSObject {
     let vHeight = frame[3] / lineFindScaling
     let (verticalSections, imgData) = getVerticalSections(box, cgImage: cgImage, frame: frame, vWidth: vWidth, vHeight: vHeight)
     print("got sections")
-    /* check continuation */ do { var c = false; Async.background { c = self.handleCancel() }.wait(); if c { return nil } }
+    /* check continuation */ queue.wait(); if handleCancel() { return nil }
     print("start")
     let sectionLines = getLines(verticalSections, vWidth: vWidth, vHeight: vHeight, imgData: imgData)
     print("got lines")
-    /* check continuation */ do { var c = false; Async.background { c = self.handleCancel() }.wait(); if c { return nil } }
+    /* check continuation */ queue.wait(); if handleCancel() { return nil }
     let characterLines = getCharactersByLine(sectionLines, frame: frame)
     print("got chars")
-    /* check continuation */ do { var c = false; Async.background { c = self.handleCancel() }.wait(); if c { return nil } }
+    /* check continuation */ queue.wait(); if handleCancel() { return nil }
     guard let ocrResults = getOCR(characterLines) else { return nil }
     print("got ocr")
-    /* check continuation */ do { var c = false; Async.background { c = self.handleCancel() }.wait(); if c { return nil } }
+    /* check continuation */ queue.wait(); if handleCancel() { return nil }
 
     start = DispatchTime.now()
 
@@ -764,7 +767,7 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
         }
         // wait for 2 frames of clear
         // small delay by default to not pick up old highlights that havent cleared yet
-        self.changeHandle = Async.main(after: changedBox ? delayHandleChange : 0) { // debounce (seconds)
+        self.changeHandle = Async.userInteractive(after: changedBox ? delayHandleChange : 0) { // debounce (seconds)
           self.isScanning = true
 
           // update characters buffer

@@ -543,16 +543,17 @@ final class Recorder: NSObject {
     let vHeight = frame[3] / lineFindScaling
     let (verticalSections, imgData) = getVerticalSections(box, cgImage: cgImage, frame: frame, vWidth: vWidth, vHeight: vHeight)
     print("got sections")
-    /* check continuation */ do { var c = false; Async.main { c = self.handleCancel() }.wait(); if c { return nil } }
+    /* check continuation */ do { var c = false; Async.background { c = self.handleCancel() }.wait(); if c { return nil } }
+    print("start")
     let sectionLines = getLines(verticalSections, vWidth: vWidth, vHeight: vHeight, imgData: imgData)
     print("got lines")
-    /* check continuation */ do { var c = false; Async.main { c = self.handleCancel() }.wait(); if c { return nil } }
+    /* check continuation */ do { var c = false; Async.background { c = self.handleCancel() }.wait(); if c { return nil } }
     let characterLines = getCharactersByLine(sectionLines, frame: frame)
     print("got chars")
-    /* check continuation */ do { var c = false; Async.main { c = self.handleCancel() }.wait(); if c { return nil } }
+    /* check continuation */ do { var c = false; Async.background { c = self.handleCancel() }.wait(); if c { return nil } }
     guard let ocrResults = getOCR(characterLines) else { return nil }
     print("got ocr")
-    /* check continuation */ do { var c = false; Async.main { c = self.handleCancel() }.wait(); if c { return nil } }
+    /* check continuation */ do { var c = false; Async.background { c = self.handleCancel() }.wait(); if c { return nil } }
 
     start = DispatchTime.now()
 

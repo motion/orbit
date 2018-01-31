@@ -633,7 +633,7 @@ final class Recorder: NSObject {
       width: frame[2],
       height: frame[3],
       screenDir: box.screenDir,
-      findContent: box.findContent,
+      findContent: false, // now false on finding new content
       initialScreenshot: box.initialScreenshot
     )
   }
@@ -724,7 +724,8 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
       self.characters!.buffer = buffer
     }
 //    let fpsInSeconds = 60 / 60 / self.fps // gives you fps => x  (60 => 0.16) and (2 => 0.5)
-    let delayHandleChange = 0.1
+    // debounce while scrolling amt in seconds:
+    let delayHandleChange = 0.6
     // loop over boxes and check
     for boxId in self.boxes.keys {
       let box = self.frames[boxId] ?? self.boxes[boxId]!
@@ -759,12 +760,18 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
           // update characters buffer
           let (buffer, _, release) = self.getBufferFrame(sampleBuffer)
           self.characters!.buffer = buffer
-          release()
 
           // handle change
-          if let frame = self.handleChangedArea(box: box, sampleBuffer: self.currentSampleBuffer!, perRow: perRow, findContent: box.findContent) {
+          if let frame = self.handleChangedArea(
+            box: box,
+            sampleBuffer: self.currentSampleBuffer!,
+            perRow: perRow,
+            findContent: box.findContent
+          ) {
             self.frames[boxId] = frame
           }
+          
+          release()
 
           // after x seconds, re-enable watching
           // this is because screen needs time to update highlight boxes

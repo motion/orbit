@@ -148,7 +148,6 @@ export default class ScreenState {
     let lastId = null
     this.swindler.onChange(({ event, message }) => {
       // immediately cancel stuff
-      console.log('should clear')
       this.resetHighlights()
       this.screenOCR.clear()
 

@@ -188,7 +188,6 @@ final class Recorder: NSObject {
             return
           }
           if action == "clear" {
-            print("got a clear \(self.isScanning)")
             if self.isScanning {
               self.shouldCancel = true
             }
@@ -257,7 +256,7 @@ final class Recorder: NSObject {
     self.shouldCancel = false
     return val
   }
-  
+
   func getOCR(_ characterLines: [[Word]]) -> [String: String]? {
     var ocrResults = [String: String]() // outline => letter
     let start = DispatchTime.now()
@@ -300,7 +299,7 @@ final class Recorder: NSObject {
     }
     return ocrResults
   }
-  
+
   func getCharactersByLine(_ sectionLines: Dictionary<Int, [LinePosition]>, frame: [Int]) -> [[Word]] {
     // third loop
     // for each VERTICAL SECTION, get characters
@@ -337,7 +336,7 @@ final class Recorder: NSObject {
     }
     return allLines
   }
-  
+
   func getVerticalSections(_ box: Box, cgImage: CGImage, frame: [Int], vWidth: Int, vHeight: Int) -> (Dictionary<Int, Int>, [[Int]]) {
     var start = DispatchTime.now()
     // crop
@@ -541,7 +540,7 @@ final class Recorder: NSObject {
     if box.screenDir == nil {
       return nil
     }
-    
+
     let vWidth = frame[2] / lineFindScaling
     let vHeight = frame[3] / lineFindScaling
     let (verticalSections, imgData) = getVerticalSections(box, cgImage: cgImage, frame: frame, vWidth: vWidth, vHeight: vHeight)

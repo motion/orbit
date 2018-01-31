@@ -128,6 +128,7 @@ export default class ScreenState {
   }
 
   async restartScreen() {
+    console.log('restartScreen')
     await this.screenOCR.stop()
     await this.screenOCR.start()
     this.screenOCR.watchBounds(this.screenSettings)
@@ -135,7 +136,7 @@ export default class ScreenState {
 
   startSwindler() {
     console.log('Start swindling...')
-    this.swindler.start()
+    // this.swindler.start()
 
     const update = () => {
       // console.log('UpdateContext:', this.curContext.id)

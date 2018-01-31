@@ -48,7 +48,7 @@ struct LinePosition {
 
 final class Recorder: NSObject {
   private var currentSampleBuffer: CMSampleBuffer?
-  private var send: ((String)->Bool)?
+  private var send: ((String)->Void) = { _ in print("not opened") }
   private let input: AVCaptureScreenInput
   private var session: AVCaptureSession
   private var output: AVCaptureVideoDataOutput
@@ -139,10 +139,7 @@ final class Recorder: NSObject {
 
     // socket bridge
     let ws = WebSocket("ws://localhost:40512")
-    self.send = { (msg) in
-      ws.send(msg)
-      return true
-    }
+    self.send = { (msg) in ws.send(msg) }
     ws.event.open = {}
     ws.event.close = { code, reason, clean in
       print("close")
@@ -153,6 +150,7 @@ final class Recorder: NSObject {
     self.queue.background {
       ws.event.message = { (message) in
         if let text = message as? String {
+//          print("msg \(text)")
           if text.count < 5 {
             print("weird text")
             return
@@ -211,7 +209,7 @@ final class Recorder: NSObject {
       self.shouldCancel = false
       print("screen: starting...")
       session.startRunning()
-      _ = self.send!("{ \"state\": { \"isRunning\": true } }")
+      self.send("{ \"state\": { \"isRunning\": true } }")
     }
   }
 
@@ -219,7 +217,7 @@ final class Recorder: NSObject {
     if session.isRunning {
       print("screen: stopping...")
       session.stopRunning()
-      _ = self.send!("{ \"state\": { \"isRunning\": false } }")
+      self.send("{ \"state\": { \"isRunning\": false } }")
     }
   }
 
@@ -609,8 +607,8 @@ final class Recorder: NSObject {
     if handleCancel() { return nil }
 
     // send to world
-    _ = self.send!("{ \"action\": \"words\", \"value\": [\(words.joined(separator: ","))] }")
-    _ = self.send!("{ \"action\": \"lines\", \"value\": [\(lines.joined(separator: ","))] }")
+    self.send("{ \"action\": \"words\", \"value\": [\(words.joined(separator: ","))] }")
+    self.send("{ \"action\": \"lines\", \"value\": [\(lines.joined(separator: ","))] }")
 
     if shouldDebug {
       print("10. answer string: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
@@ -705,7 +703,6 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
   public func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
     // keep this always in sync
     self.currentSampleBuffer = sampleBuffer
-
     // todo: use this per-box
     if self.isScanning {
       return
@@ -713,9 +710,8 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
     if self.boxes.count == 0 {
       return
     }
-
+    // get frame
     let (buffer, perRow, release) = self.getBufferFrame(sampleBuffer)
-
     // one time setup
     if self.characters == nil {
       characters = Characters(
@@ -727,10 +723,8 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
     } else {
       self.characters!.buffer = buffer
     }
-
 //    let fpsInSeconds = 60 / 60 / self.fps // gives you fps => x  (60 => 0.16) and (2 => 0.5)
     let delayHandleChange = 0.1
-
     // loop over boxes and check
     for boxId in self.boxes.keys {
       let box = self.frames[boxId] ?? self.boxes[boxId]!
@@ -747,7 +741,7 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
           self.shouldRunNextTime = false
         }
         print("changed! \(box.id)")
-        if self.send!("{ \"action\": \"clearWord\", \"value\": \"\(box.id)\" }") { }
+        self.send("{ \"action\": \"clearWord\", \"value\": \"\(box.id)\" }")
         // debounce
         if (self.changeHandle != nil) {
           print("canceling last")

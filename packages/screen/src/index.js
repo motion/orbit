@@ -132,6 +132,7 @@ export default class Screen {
   }
 
   start = async () => {
+    console.log('start')
     this.setState({
       isPaused: false,
     })

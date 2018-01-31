@@ -491,39 +491,26 @@ final class Recorder: NSObject {
 
   // returns the frame it found
   func handleChangedArea(box: Box, sampleBuffer: CMSampleBuffer, perRow: Int, findContent: Bool = false) -> Box? {
-    // debug
-    print("handleChangedArea \(box.x) \(box.y) \(box.width) \(box.height)")
-
+    let startAll = DispatchTime.now()
     let chars = self.characters!
     // clear old files
     if shouldDebug {
       rmAllInside(URL(fileURLWithPath: box.screenDir!))
     }
-    let startAll = DispatchTime.now()
-    if (box.screenDir == nil) {
-      print("no screen dir")
-      return nil
-    }
     // create filtered images for content find
-    let outPath = "\(box.screenDir ?? "/tmp")/\(box.id).png"
     let cgImage = filters.imageFromBuffer(context, sampleBuffer: sampleBuffer, cropRect: CGRect(
       x: box.x * 2,
       y: Int(CGDisplayPixelsHigh(self.displayId) * 2 - Int(box.y * 2)),
       width: box.width * 2,
       height: Int(-box.height * 2)
     ))!
-
+    /* check continuation */ queue.wait(); if handleCancel() { return nil }
     // debug
-    Async.background { images.writeCGImage(image: cgImage, to: "\(box.screenDir!)/\(box.id)-original.png") }
-
-    var cgImageBinarized: CGImage? = nil
     if shouldDebug {
-      cgImageBinarized = filters.filterImageForOCRCharacterFinding(image: cgImage)
-      chars.debugImg = cgImageBinarized
-      print("box \(box)")
-      print("cgImage size \(cgImage.width) \(cgImage.height)")
+      chars.debugImg = filters.filterImageForOCRCharacterFinding(image: cgImage)
+      Async.background { images.writeCGImage(image: cgImage, to: "\(box.screenDir!)/\(box.id)-original.png") }
     }
-    
+    /* check continuation */ queue.wait(); if handleCancel() { return nil }
     // content find
     var frame = [box.x, box.y, box.width, box.height]
     if findContent {
@@ -599,21 +586,19 @@ final class Recorder: NSObject {
       chars.updateCache(ocrResults)
     }
 
-    if handleCancel() { return nil }
+    /* check continuation */ queue.wait(); if handleCancel() { return nil }
 
     // send to world
     self.send("{ \"action\": \"words\", \"value\": [\(words.joined(separator: ","))] }")
     self.send("{ \"action\": \"lines\", \"value\": [\(lines.joined(separator: ","))] }")
 
-    print("finish scan in \(Double(DispatchTime.now().uptimeNanoseconds - startAll.uptimeNanoseconds) / 1_000_000)ms")
-
     // test write images:
     if self.shouldDebug {
-//      images.writeCGImage(image: ocrCharactersImage, to: "\(box.screenDir!)/\(box.id)-ocr-characters.png")
       images.writeCGImage(image: cgImage, to: "\(box.screenDir!)/\(box.id)-original.png")
     }
 
     // return new box with content adjusted frame
+    print("finish scan in \(Double(DispatchTime.now().uptimeNanoseconds - startAll.uptimeNanoseconds) / 1_000_000)ms")
     return Box(
       id: box.id,
       x: frame[0],

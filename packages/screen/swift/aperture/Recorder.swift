@@ -153,7 +153,6 @@ final class Recorder: NSObject {
     self.queue.background {
       ws.event.message = { (message) in
         if let text = message as? String {
-          print("msg")
           if text.count < 5 {
             print("weird text")
             return
@@ -254,8 +253,7 @@ final class Recorder: NSObject {
 
   func handleCancel() -> Bool {
     let val = self.shouldCancel
-    print("handleCancel \(val)")
-//    if val { print("canceled") }
+    if val { print("canceled") }
     self.shouldCancel = false
     return val
   }
@@ -547,17 +545,12 @@ final class Recorder: NSObject {
     let vWidth = frame[2] / lineFindScaling
     let vHeight = frame[3] / lineFindScaling
     let (verticalSections, imgData) = getVerticalSections(box, cgImage: cgImage, frame: frame, vWidth: vWidth, vHeight: vHeight)
-    print("got sections")
     /* check continuation */ queue.wait(); if handleCancel() { return nil }
-    print("start")
     let sectionLines = getLines(verticalSections, vWidth: vWidth, vHeight: vHeight, imgData: imgData)
-    print("got lines")
     /* check continuation */ queue.wait(); if handleCancel() { return nil }
     let characterLines = getCharactersByLine(sectionLines, frame: frame)
-    print("got chars")
     /* check continuation */ queue.wait(); if handleCancel() { return nil }
     guard let ocrResults = getOCR(characterLines) else { return nil }
-    print("got ocr")
     /* check continuation */ queue.wait(); if handleCancel() { return nil }
 
     start = DispatchTime.now()

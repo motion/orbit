@@ -20,6 +20,9 @@ struct Box: Decodable {
   let initialScreenshot: Bool
 }
 
+// constants
+let lineFindScaling = 3 // scale down denominator
+
 let filters = Filters()
 let images = Images()
 let fileManager = FileManager()
@@ -251,6 +254,207 @@ final class Recorder: NSObject {
     self.shouldCancel = false
     return val
   }
+  
+  func getOCR(_ characterLines: [[Word]]) -> [String: String]? {
+    var ocrResults = [String: String]() // outline => letter
+    let start = DispatchTime.now()
+    let chars = self.characters!
+    let allCharacters: [Character] = characterLines.flatMap { $0.flatMap { $0.characters } }
+    // set filters unique outlines
+    let unsolvedCharacters = allCharacters.filter { $0.letter == nil }.unique()
+    var foundCharacters = [String]()
+    // if necessary, run ocr
+    if unsolvedCharacters.count > 0 {
+      // write ocr string
+      if shouldDebug {
+        print("found \(unsolvedCharacters.count) uniq out of \(allCharacters.count) total")
+      }
+      let ocrString = unsolvedCharacters.enumerated().map({ item in
+        return chars.charToString(item.element, debugID: "")
+      }).joined(separator: "\n")
+      do {
+        let path = NSURL.fileURL(withPath: "/tmp/characters.txt").absoluteURL
+        try ocrString.write(to: path, atomically: true, encoding: .utf8)
+      } catch {
+        print("couldnt write pixel string \(error)")
+      }
+      if shouldDebug {
+        print("8. characters.txt: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+      }
+      // run ocr
+      foundCharacters = ocr!.ocrCharacters()
+      if shouldDebug {
+        print("9. ocr: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+      }
+    }
+    // collect ocr results
+    if foundCharacters.count != unsolvedCharacters.count {
+      print("mismatch from in/out to ocr")
+      return nil
+    }
+    for char in unsolvedCharacters {
+      ocrResults[char.outline] = foundCharacters.remove(at: 0)
+    }
+    return ocrResults
+  }
+  
+  func getCharactersByLine(_ sectionLines: Dictionary<Int, [LinePosition]>, frame: [Int]) -> [[Word]] {
+    // third loop
+    // for each VERTICAL SECTION, get characters
+    var allLines = [[Word]]() // store all lines
+    let chars = self.characters!
+    for id in sectionLines.keys {
+      let scl = lineFindScaling
+      let sectionLines: [[Word]] = sectionLines[id]!.pmap(transformer: {(line, index) in
+        let padX = 6
+        let padY = max(3, min(12, line.height / 10))
+        //        let shiftUp = line.topFillAmt * 10 / line.bottomFillAmt * 10
+        //        print("shiftUp \(shiftUp)")
+        let lineBounds = [
+          line.x * scl - padX + frame[0],
+          line.y * scl - padY + frame[1],
+          // add min in case padX/padY go too far
+          min(frame[2], line.width * scl + padX * 3),
+          min(frame[3], line.height * scl + padY * 3)
+        ]
+        // finds characters
+        let foundWords: [Word] = chars.find(id: index, bounds: lineBounds)
+        // debug line
+//        if self.shouldDebug {
+//          images.writeCGImage(
+//            image: images.cropImage(ocrCharactersImage, box: CGRect(x: lineBounds[0] - frame[0], y: lineBounds[1] - frame[1], width: lineBounds[2], height: lineBounds[3]))!,
+//            to: "\(box.screenDir!)/linein-\(box.id)-\(id)-\(index).png"
+//          )
+//        }
+        // write characters
+        chars.shouldDebug = self.shouldDebug
+        return foundWords
+      })
+      allLines = allLines + sectionLines
+    }
+    return allLines
+  }
+  
+  func getVerticalSections(_ box: Box, cgImage: CGImage, frame: [Int], vWidth: Int, vHeight: Int) -> (Dictionary<Int, Int>, [[Int]]) {
+    var start = DispatchTime.now()
+    // crop
+    let cropBox = CGRect(x: frame[0] - box.x, y: frame[1] - box.y, width: frame[2], height: frame[3])
+    let ocrCharactersImage = images.cropImage(filters.filterImageForOCRCharacterFinding(image: cgImage), box: cropBox)!
+    // find vertical sections
+    let verticalImage = filters.filterForVerticalContentFinding(image: images.resize(ocrCharactersImage, width: vWidth, height: vHeight)!)
+    let verticalImageRep = NSBitmapImageRep(cgImage: verticalImage)
+    // debug
+    images.writeCGImage(image: verticalImage, to: "\(box.screenDir!)/\(box.id)-content-find.png")
+    if shouldDebug {
+      print("3. filter vertical: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+      start = DispatchTime.now()
+    }
+    // first loop - find vertical sections
+    var verticalSections = Dictionary<Int, Int>() // start => end
+    let colHeightMin = 1
+    let colStreakMin = 4
+    var colStreak = 0
+    let colMissMax = 8
+    var colMiss = 0
+    var colStart = 0
+    var imgData = [[Int]]()
+    for x in 0..<vWidth {
+      imgData.append([Int]())
+      var verticalFilled = 0
+      for y in 0..<vHeight {
+        let filled = verticalImageRep.colorAt(x: x, y: y)!.brightnessComponent == 0.0
+        imgData[x].append(filled ? 1 : 0)
+        if filled {
+          verticalFilled += 1
+          if colStart == 0 {
+            colStart = x
+          }
+        }
+      }
+      let continueStreak = verticalFilled >= colHeightMin
+      if continueStreak {
+        colStreak += 1
+        colMiss = 0
+      } else {
+        colMiss += 1
+        if (colMiss > colMissMax || x == vWidth - 1) && colStreak - colMiss > colStreakMin { // set content block
+          //          print("found section x \(x) colStreak \(colStreak)")
+          verticalSections[colStart] = x - colMiss
+          colStreak = 0
+          colMiss = 0
+          colStart = 0
+        } else {
+          if verticalSections.count > 0 {
+            colStreak += 1
+          }
+        }
+      }
+    }
+    // none found, just do whole thing
+    if verticalSections.count == 0 {
+      verticalSections[0] = vWidth - 1
+    }
+    return (verticalSections, imgData)
+  }
+
+  // sections to lines
+  func getLines(_ verticalSections: Dictionary<Int, Int>, vWidth: Int, vHeight: Int, imgData: [[Int]]) -> Dictionary<Int, [LinePosition]> {
+    // second loop - find lines in sections
+    var sectionLines = Dictionary<Int, [LinePosition]>()
+    var total = 0
+    let minLineWidth = 1
+    for (start, end) in verticalSections {
+      var lines = [LinePosition]()
+      var lineStreak = 0
+      for y in 0..<vHeight {
+        var lineFilledPx = 0
+        var startLine = 0
+        var endLine = 0
+        for x in start...end {
+          if imgData[x][y] == 1 {
+            lineFilledPx += 1
+            endLine = x
+            if startLine == 0 {
+              startLine = x
+            }
+          }
+        }
+        let isFilled = lineFilledPx > minLineWidth
+        if !isFilled {
+          lineStreak = 0
+        } else {
+          let x = startLine
+          let width = endLine - startLine
+          lineStreak += 1
+          //          print("startLine \(startLine) lineStreak \(lineStreak) y \(y)")
+          if lineStreak > 1 {
+            // update
+            var last = lines[lines.count - 1]
+            last.height += 1
+            last.width = max(last.width, width)
+            last.bottomFillAmt = lineFilledPx
+            last.x = min(last.x, x)
+            lines[lines.count - 1] = last
+          } else {
+            // insert
+            lines.append(
+              LinePosition(
+                x: x,
+                y: y,
+                width: width,
+                height: 1,
+                topFillAmt: lineFilledPx,
+                bottomFillAmt: lineFilledPx
+              )
+            )
+          }
+        }
+      }
+      sectionLines[start] = lines
+      total += lines.count
+    }
+    return sectionLines
+  }
 
   // returns the frame it found
   func handleChangedArea(box: Box, sampleBuffer: CMSampleBuffer, perRow: Int, findContent: Bool = false) -> Box? {
@@ -334,239 +538,28 @@ final class Recorder: NSObject {
     if box.screenDir == nil {
       return nil
     }
-    start = DispatchTime.now()
-    // crop
-    let cropBox = CGRect(x: frame[0] - box.x, y: frame[1] - box.y, width: frame[2], height: frame[3])
-    let ocrCharactersImage = images.cropImage(filters.filterImageForOCRCharacterFinding(image: cgImage), box: cropBox)!
-
-    if shouldDebug {
-      print("2. filter for ocr: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
-      start = DispatchTime.now()
-    }
-
-    print("got content")
-
-    // find vertical sections
-    let lineFindScaling = 3 // scale down denominator
+    
     let vWidth = frame[2] / lineFindScaling
     let vHeight = frame[3] / lineFindScaling
-    let verticalImage = filters.filterForVerticalContentFinding(image: images.resize(ocrCharactersImage, width: vWidth, height: vHeight)!)
-    let verticalImageRep = NSBitmapImageRep(cgImage: verticalImage)
-
-    // debug
-    images.writeCGImage(image: verticalImage, to: "\(box.screenDir!)/\(box.id)-content-find.png")
-
-    if shouldDebug {
-      print("3. filter vertical: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
-      start = DispatchTime.now()
-    }
-
-    // first loop - find vertical sections
-    var verticalSections = Dictionary<Int, Int>() // start => end
-    let colHeightMin = 1
-    let colStreakMin = 4
-    var colStreak = 0
-    let colMissMax = 8
-    var colMiss = 0
-    var colStart = 0
-    var imgData = [[Int]]()
-    for x in 0..<vWidth {
-      imgData.append([Int]())
-      var verticalFilled = 0
-      for y in 0..<vHeight {
-        let filled = verticalImageRep.colorAt(x: x, y: y)!.brightnessComponent == 0.0
-        imgData[x].append(filled ? 1 : 0)
-        if filled {
-          verticalFilled += 1
-          if colStart == 0 {
-            colStart = x
-          }
-        }
-      }
-      let continueStreak = verticalFilled >= colHeightMin
-      if continueStreak {
-        colStreak += 1
-        colMiss = 0
-      } else {
-        colMiss += 1
-        if (colMiss > colMissMax || x == vWidth - 1) && colStreak - colMiss > colStreakMin { // set content block
-//          print("found section x \(x) colStreak \(colStreak)")
-          verticalSections[colStart] = x - colMiss
-          colStreak = 0
-          colMiss = 0
-          colStart = 0
-        } else {
-          if verticalSections.count > 0 {
-            colStreak += 1
-          }
-        }
-      }
-    }
-    // none found, just do whole thing
-    if verticalSections.count == 0 {
-      verticalSections[0] = vWidth - 1
-    }
-
-    if shouldDebug {
-      print("4. find verticals: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms --  \(verticalSections.description)")
-      start = DispatchTime.now()
-    }
-
-    if handleCancel() { return nil }
-
-    // second loop - find lines in sections
-    var sectionLines = Dictionary<Int, [LinePosition]>()
-    var total = 0
-    let minLineWidth = 1
-    for (start, end) in verticalSections {
-      var lines = [LinePosition]()
-      var lineStreak = 0
-      for y in 0..<vHeight {
-        var lineFilledPx = 0
-        var startLine = 0
-        var endLine = 0
-        for x in start...end {
-          if imgData[x][y] == 1 {
-            lineFilledPx += 1
-            endLine = x
-            if startLine == 0 {
-              startLine = x
-            }
-          }
-        }
-        let isFilled = lineFilledPx > minLineWidth
-        if !isFilled {
-          lineStreak = 0
-        } else {
-          let x = startLine
-          let width = endLine - startLine
-          lineStreak += 1
-//          print("startLine \(startLine) lineStreak \(lineStreak) y \(y)")
-          if lineStreak > 1 {
-            // update
-            var last = lines[lines.count - 1]
-            last.height += 1
-            last.width = max(last.width, width)
-            last.bottomFillAmt = lineFilledPx
-            last.x = min(last.x, x)
-            lines[lines.count - 1] = last
-          } else {
-            // insert
-            lines.append(
-              LinePosition(
-                x: x,
-                y: y,
-                width: width,
-                height: 1,
-                topFillAmt: lineFilledPx,
-                bottomFillAmt: lineFilledPx
-              )
-            )
-          }
-        }
-      }
-      sectionLines[start] = lines
-      total += lines.count
-    }
-
+    let (verticalSections, imgData) = getVerticalSections(box, cgImage: cgImage, frame: frame, vWidth: vWidth, vHeight: vHeight)
+    print("got sections")
+    /* check continuation */ do { var c = false; Async.main { c = self.handleCancel() }.wait(); if c { return nil } }
+    let sectionLines = getLines(verticalSections, vWidth: vWidth, vHeight: vHeight, imgData: imgData)
     print("got lines")
-
-    // third loop
-    // for each VERTICAL SECTION, get characters
-    var allLines = [[Word]]() // store all lines
-    for id in sectionLines.keys {
-      let scl = lineFindScaling
-      let sectionLines: [[Word]] = sectionLines[id]!.pmap(transformer: {(line, index) in
-        let padX = 6
-        let padY = max(3, min(12, line.height / 10))
-//        let shiftUp = line.topFillAmt * 10 / line.bottomFillAmt * 10
-//        print("shiftUp \(shiftUp)")
-        let lineBounds = [
-          line.x * scl - padX + frame[0],
-          line.y * scl - padY + frame[1],
-          // add min in case padX/padY go too far
-          min(frame[2], line.width * scl + padX * 3),
-          min(frame[3], line.height * scl + padY * 3)
-        ]
-        // finds characters
-        let foundWords: [Word] = chars.find(id: index, bounds: lineBounds)
-        // debug line
-        if self.shouldDebug {
-          images.writeCGImage(
-            image: images.cropImage(ocrCharactersImage, box: CGRect(x: lineBounds[0] - frame[0], y: lineBounds[1] - frame[1], width: lineBounds[2], height: lineBounds[3]))!,
-            to: "\(box.screenDir!)/linein-\(box.id)-\(id)-\(index).png"
-          )
-        }
-        // write characters
-        chars.shouldDebug = self.shouldDebug
-        return foundWords
-      })
-      allLines = allLines + sectionLines
-    }
-
+    /* check continuation */ do { var c = false; Async.main { c = self.handleCancel() }.wait(); if c { return nil } }
+    let characterLines = getCharactersByLine(sectionLines, frame: frame)
     print("got chars")
-
-    if handleCancel() { return nil }
-
-    // check for unsolved outlines
-    let allCharacters: [Character] = allLines.flatMap { $0.flatMap { $0.characters } }
-
-    if shouldDebug {
-      print("7. gather characters \(allCharacters.count): \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
-    }
-
-    // set filters unique outlines
-    let unsolvedCharacters = allCharacters.filter { $0.letter == nil }.unique()
-    var foundCharacters = [String]()
-
-    // if necessary, run ocr
-    if unsolvedCharacters.count > 0 {
-      start = DispatchTime.now()
-      // write ocr string
-      if shouldDebug {
-        print("found \(unsolvedCharacters.count) uniq out of \(allCharacters.count) total")
-      }
-      let ocrString = unsolvedCharacters.enumerated().map({ item in
-        return chars.charToString(item.element, debugID: "")
-      }).joined(separator: "\n")
-      do {
-        let path = NSURL.fileURL(withPath: "/tmp/characters.txt").absoluteURL
-        try ocrString.write(to: path, atomically: true, encoding: .utf8)
-      } catch {
-        print("couldnt write pixel string \(error)")
-      }
-
-      if shouldDebug {
-        print("8. characters.txt: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
-        start = DispatchTime.now()
-      }
-
-      // run ocr
-      foundCharacters = ocr!.ocrCharacters()
-
-      if shouldDebug {
-        print("9. ocr: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
-      }
-    }
-
-    if handleCancel() { return nil }
-
-    // collect ocr results
-    var ocrResults = [String: String]() // outline => letter
-    if foundCharacters.count != unsolvedCharacters.count {
-      print("mismatch from in/out to ocr")
-      return nil
-    }
-    for char in unsolvedCharacters {
-      ocrResults[char.outline] = foundCharacters.remove(at: 0)
-    }
+    /* check continuation */ do { var c = false; Async.main { c = self.handleCancel() }.wait(); if c { return nil } }
+    guard let ocrResults = getOCR(characterLines) else { return nil }
+    print("got ocr")
+    /* check continuation */ do { var c = false; Async.main { c = self.handleCancel() }.wait(); if c { return nil } }
 
     start = DispatchTime.now()
 
     // get all answers
     var words = [String]()
     var lines = [String]()
-    for (lineIndex, line) in allLines.enumerated() {
+    for (lineIndex, line) in characterLines.enumerated() {
       if line.count == 0 {
         continue
       }
@@ -632,7 +625,7 @@ final class Recorder: NSObject {
     // test write images:
     if self.shouldDebug {
       images.writeCGImage(image: binarizedImage, to: "\(box.screenDir!)/\(box.id)-binarized.png")
-      images.writeCGImage(image: ocrCharactersImage, to: "\(box.screenDir!)/\(box.id)-ocr-characters.png")
+//      images.writeCGImage(image: ocrCharactersImage, to: "\(box.screenDir!)/\(box.id)-ocr-characters.png")
       images.writeCGImage(image: cgImage, to: "\(box.screenDir!)/\(box.id)-original.png")
     }
 

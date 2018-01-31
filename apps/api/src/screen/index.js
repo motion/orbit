@@ -2,11 +2,16 @@
 import { Server } from 'ws'
 import ScreenOCR from '@mcro/screen'
 import Swindler from '@mcro/swindler'
-import { isEqual, throttle } from 'lodash'
+import { isEqual, throttle, last } from 'lodash'
 import iohook from 'iohook'
 import * as Constants from '~/constants'
 
 const APP_ID = 'screen'
+const BLACKLIST = {
+  iterm2: true,
+  VSCode: true,
+  Xcode: true,
+}
 
 console.log('writing screenshots to', Constants.TMP_DIR)
 
@@ -184,7 +189,8 @@ export default class ScreenState {
     curContext.title = nextContext.title
     curContext.offset = nextContext.offset
     curContext.bounds = nextContext.bounds
-    curContext.appName = id ? id.split('.')[2] : curContext.title
+    console.log('id', id)
+    curContext.appName = id ? last(id.split('.')) : curContext.title
     // adjust for more specifc content area found
     if (this.contentArea) {
       const [x, y, width, height] = this.contentArea
@@ -257,15 +263,13 @@ export default class ScreenState {
     this.onChangedState(oldState, object, this.state)
     // only send the changed things to reduce overhead
     this.socketSendAll(object)
-    if (object.ocrWords) {
-      console.log('sent ocr words state to highlights')
-    }
   }
 
   onChangedState = async (oldState, newStateItems) => {
     const firstTimeOCR =
       (!oldState.ocrWords || !oldState.ocrWords.length) &&
-      newStateItems.ocrWords
+      newStateItems.ocrWords &&
+      newStateItems.ocrWords.length
 
     const newContext = newStateItems.context
     if (newContext || firstTimeOCR) {
@@ -279,16 +283,15 @@ export default class ScreenState {
       return
     }
     const { appName, offset, bounds } = this.state.context
-    // console.log('handleNewContext', appName, { offset, bounds })
     if (!offset || !bounds) {
       console.log('didnt get offset/bounds')
       return
     }
     clearTimeout(this.clearOCRTimeout)
-    // avoid pause
-    if (this.screenOCR.isPaused) {
+    if (BLACKLIST[appName]) {
       return
     }
+    console.log('>', appName)
     // we are watching the whole app for words
     const settings = {
       fps: 10,
@@ -311,16 +314,24 @@ export default class ScreenState {
 
     this.screenSettings = settings
     this.hasResolvedOCR = false
-    this.screenOCR.clear()
-    this.screenOCR.resume()
+
+    // not paused, clear and resume
+    if (!this.screenOCR.state.isPaused) {
+      this.screenOCR.clear()
+      this.screenOCR.resume()
+    }
+
     this.screenOCR.watchBounds(settings)
 
-    this.clearOCRTimeout = setTimeout(async () => {
-      if (!this.hasResolvedOCR) {
-        console.log('seems like ocr has stopped working, restarting...')
-        this.restartScreen()
-      }
-    }, 15000)
+    // not paused, check if finished
+    if (!this.screenOCR.state.isPaused) {
+      this.clearOCRTimeout = setTimeout(async () => {
+        if (!this.hasResolvedOCR) {
+          console.log('seems like ocr has stopped working, restarting...')
+          this.restartScreen()
+        }
+      }, 15000)
+    }
   }
 
   stop = () => {

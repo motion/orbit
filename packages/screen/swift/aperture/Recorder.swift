@@ -455,6 +455,39 @@ final class Recorder: NSObject {
     }
     return sectionLines
   }
+  
+  func getContent(_ cgImage: CGImage, box: Box) -> [Int]? {
+    var biggestBox: BoundingBox?
+    let boxFindScale = 8
+    let binarizedImage = filters.filterImageForContentFinding(image: cgImage, scale: boxFindScale)
+    if shouldDebug {
+      Async.background { images.writeCGImage(image: binarizedImage, to: "\(box.screenDir!)/\(box.id)-binarized.png") }
+    }
+    let cc = ConnectedComponents()
+    let result = cc.labelImageFast(image: binarizedImage, calculateBoundingBoxes: true, invert: true)
+    if let boxes = result.boundingBoxes {
+      if (boxes.count > 0) {
+        for box in boxes {
+          if (biggestBox == nil || box.value.getSize() > biggestBox!.getSize()) {
+            biggestBox = box.value
+          }
+        }
+      }
+    }
+    // if no found content box, write full image
+    if biggestBox == nil {
+      return nil
+    }
+    // found content
+    let bb = biggestBox!
+    let innerPad = boxFindScale / 2 // make it a bit smaller to avoid grabbing edge stuff
+    // scale to full size
+    let x = bb.x_start * boxFindScale + box.x + innerPad
+    let y = bb.y_start * boxFindScale + box.y + innerPad
+    let width = bb.getWidth() * boxFindScale - innerPad * 2
+    let height = bb.getHeight() * boxFindScale - innerPad * 2
+    return [ x, y, width, height ]
+  }
 
   // returns the frame it found
   func handleChangedArea(box: Box, sampleBuffer: CMSampleBuffer, perRow: Int, findContent: Bool = false) -> Box? {
@@ -481,7 +514,7 @@ final class Recorder: NSObject {
     ))!
 
     // debug
-    images.writeCGImage(image: cgImage, to: "\(box.screenDir!)/\(box.id)-original.png")
+    Async.background { images.writeCGImage(image: cgImage, to: "\(box.screenDir!)/\(box.id)-original.png") }
 
     var cgImageBinarized: CGImage? = nil
     if shouldDebug {
@@ -490,57 +523,21 @@ final class Recorder: NSObject {
       print("box \(box)")
       print("cgImage size \(cgImage.width) \(cgImage.height)")
     }
-    if (!findContent) {
-      print("dont find content")
-      images.writeCGImage(image: cgImage, to: outPath)
-      return nil
-    }
-    var start = DispatchTime.now()
-    var biggestBox: BoundingBox?
-    let boxFindScale = 8
-    let binarizedImage = filters.filterImageForContentFinding(image: cgImage, scale: boxFindScale)
-
-    if handleCancel() { return nil }
-
-    if shouldDebug {
-      print("1. content find filter: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
-      start = DispatchTime.now()
-    }
-
-    let cc = ConnectedComponents()
-    let result = cc.labelImageFast(image: binarizedImage, calculateBoundingBoxes: true, invert: true)
-    if let boxes = result.boundingBoxes {
-      if (boxes.count > 0) {
-        for box in boxes {
-          if (biggestBox == nil || box.value.getSize() > biggestBox!.getSize()) {
-            biggestBox = box.value
-          }
-        }
+    
+    // content find
+    var frame = [box.x, box.y, box.width, box.height]
+    if findContent {
+      if let newFrame = self.getContent(cgImage, box: box) {
+        frame = newFrame
+      } else {
+        print("no content")
+        return nil
       }
     }
-    // if no found content box, write full image
-    if biggestBox == nil {
-      images.writeCGImage(image: cgImage, to: outPath)
-      return nil
-    }
-    // found content
-    let bb = biggestBox!
-    let innerPad = boxFindScale / 2 // make it a bit smaller to avoid grabbing edge stuff
-    // scale to full size
-    let frame = [
-      bb.x_start * boxFindScale + box.x + innerPad,
-      bb.y_start * boxFindScale + box.y + innerPad,
-      bb.getWidth() * boxFindScale - innerPad * 2,
-      bb.getHeight() * boxFindScale - innerPad * 2
-    ]
-    // adjust frame for character finder
     chars.frameOffset = frame
-    if box.screenDir == nil {
-      return nil
-    }
-
     let vWidth = frame[2] / lineFindScaling
     let vHeight = frame[3] / lineFindScaling
+    /* check continuation */ queue.wait(); if handleCancel() { return nil }
     let (verticalSections, imgData) = getVerticalSections(box, cgImage: cgImage, frame: frame, vWidth: vWidth, vHeight: vHeight)
     /* check continuation */ queue.wait(); if handleCancel() { return nil }
     let sectionLines = getLines(verticalSections, vWidth: vWidth, vHeight: vHeight, imgData: imgData)
@@ -549,8 +546,6 @@ final class Recorder: NSObject {
     /* check continuation */ queue.wait(); if handleCancel() { return nil }
     guard let ocrResults = getOCR(characterLines) else { return nil }
     /* check continuation */ queue.wait(); if handleCancel() { return nil }
-
-    start = DispatchTime.now()
 
     // get all answers
     var words = [String]()
@@ -600,7 +595,7 @@ final class Recorder: NSObject {
     print("got ocr")
 
     // update character cache
-    Async.background(after: 0.04) {
+    Async.utility(after: 0.04) {
       chars.updateCache(ocrResults)
     }
 
@@ -610,17 +605,10 @@ final class Recorder: NSObject {
     self.send("{ \"action\": \"words\", \"value\": [\(words.joined(separator: ","))] }")
     self.send("{ \"action\": \"lines\", \"value\": [\(lines.joined(separator: ","))] }")
 
-    if shouldDebug {
-      print("10. answer string: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
-      start = DispatchTime.now()
-      print("")
-    }
-
     print("finish scan in \(Double(DispatchTime.now().uptimeNanoseconds - startAll.uptimeNanoseconds) / 1_000_000)ms")
 
     // test write images:
     if self.shouldDebug {
-      images.writeCGImage(image: binarizedImage, to: "\(box.screenDir!)/\(box.id)-binarized.png")
 //      images.writeCGImage(image: ocrCharactersImage, to: "\(box.screenDir!)/\(box.id)-ocr-characters.png")
       images.writeCGImage(image: cgImage, to: "\(box.screenDir!)/\(box.id)-original.png")
     }
@@ -725,7 +713,7 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
     }
 //    let fpsInSeconds = 60 / 60 / self.fps // gives you fps => x  (60 => 0.16) and (2 => 0.5)
     // debounce while scrolling amt in seconds:
-    let delayHandleChange = 0.6
+    let delayHandleChange = 0.3
     // loop over boxes and check
     for boxId in self.boxes.keys {
       let box = self.frames[boxId] ?? self.boxes[boxId]!
@@ -775,7 +763,7 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
 
           // after x seconds, re-enable watching
           // this is because screen needs time to update highlight boxes
-          Async.background(after: 0.05) {
+          Async.main(after: 0.05) {
             print("re-enable scan after last")
             self.shouldCancel = false
             self.isScanning = false

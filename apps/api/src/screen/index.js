@@ -27,7 +27,8 @@ type Word = {
 
 type TScreenState = {
   context?: TContext,
-  ocr?: Array<Word>,
+  ocrWords?: [Word],
+  linePositions?: [Number],
   lastOCR: Number,
   lastScreenChange: Number,
   mousePosition: [Number, Number],
@@ -137,8 +138,6 @@ export default class ScreenState {
     this.swindler.start()
 
     const update = () => {
-      this.resetHighlights()
-      this.screenOCR.clear()
       // console.log('UpdateContext:', this.curContext.id)
       // ensure new
       this.updateState({
@@ -148,6 +147,10 @@ export default class ScreenState {
 
     let lastId = null
     this.swindler.onChange(({ event, message }) => {
+      // immediately cancel stuff
+      this.resetHighlights()
+      this.screenOCR.clear()
+
       switch (event) {
         case 'FrontmostWindowChangedEvent':
           const value = {

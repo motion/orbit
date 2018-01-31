@@ -17,8 +17,14 @@ export default class Screen {
   onClearWordCB = _ => _
   onErrorCB = _ => _
   onClearCB = _ => _
-  state = {}
-  isPaused = false
+  state = {
+    isPaused: false,
+  }
+
+  setState = nextState => {
+    this.state = { ...this.state, ...nextState }
+    this.socketSend('state', this.state)
+  }
 
   constructor({ debugBuild = false } = {}) {
     this.debugBuild = debugBuild
@@ -65,7 +71,7 @@ export default class Screen {
       // add to active sockets
       this.listeners.push({ id: id++, socket })
       // send initial state
-      this.socketSend('state', this.state)
+      this.setState(this.state)
       // send queued messages
       if (this.awaitingSocket.length) {
         this.awaitingSocket.forEach(({ action, data }) =>
@@ -126,7 +132,9 @@ export default class Screen {
   }
 
   start = async () => {
-    this.isPaused = false
+    this.setState({
+      isPaused: false,
+    })
     if (!this.recorder) {
       this.setupRecorder()
       await sleep(100)
@@ -185,12 +193,12 @@ export default class Screen {
   }
 
   pause = () => {
-    this.isPaused = true
+    this.setState({ isPaused: true })
     this.socketSend('pause')
   }
 
   resume = () => {
-    this.isPaused = false
+    this.setState({ isPaused: true })
     this.socketSend('start')
   }
 

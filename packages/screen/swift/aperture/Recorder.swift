@@ -66,6 +66,7 @@ final class Recorder: NSObject {
   private var fps = 0
   private var ignoreNextScan = false
   private var shouldCancel = false
+  private var shouldRunNextTime = false
 
   var onStart: (() -> Void)?
   var onFinish: (() -> Void)?
@@ -198,6 +199,9 @@ final class Recorder: NSObject {
   }
 
   func start() {
+    if self.shouldCancel {
+      self.shouldRunNextTime = true
+    }
     if !session.isRunning {
       self.shouldCancel = false
       print("screen: starting...")
@@ -240,7 +244,7 @@ final class Recorder: NSObject {
     self.fps = fps
     self.input.minFrameDuration = CMTimeMake(1, Int32(fps))
   }
-  
+
   func handleCancel() -> Bool {
     let val = self.shouldCancel
     if val { print("canceled") }
@@ -252,7 +256,7 @@ final class Recorder: NSObject {
   func handleChangedArea(box: Box, sampleBuffer: CMSampleBuffer, perRow: Int, findContent: Bool = false) -> Box? {
     // debug
     print("handleChangedArea \(box.x) \(box.y) \(box.width) \(box.height)")
-    
+
     let chars = self.characters!
     // clear old files
     if shouldDebug {
@@ -271,10 +275,10 @@ final class Recorder: NSObject {
       width: box.width * 2,
       height: Int(-box.height * 2)
     ))!
-    
+
     // debug
     images.writeCGImage(image: cgImage, to: "\(box.screenDir!)/\(box.id)-original.png")
-    
+
     var cgImageBinarized: CGImage? = nil
     if shouldDebug {
       cgImageBinarized = filters.filterImageForOCRCharacterFinding(image: cgImage)
@@ -291,7 +295,7 @@ final class Recorder: NSObject {
     var biggestBox: BoundingBox?
     let boxFindScale = 8
     let binarizedImage = filters.filterImageForContentFinding(image: cgImage, scale: boxFindScale)
-    
+
     if handleCancel() { return nil }
 
     if shouldDebug {
@@ -339,7 +343,7 @@ final class Recorder: NSObject {
       print("2. filter for ocr: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
       start = DispatchTime.now()
     }
-    
+
     print("got content")
 
     // find vertical sections
@@ -348,7 +352,7 @@ final class Recorder: NSObject {
     let vHeight = frame[3] / lineFindScaling
     let verticalImage = filters.filterForVerticalContentFinding(image: images.resize(ocrCharactersImage, width: vWidth, height: vHeight)!)
     let verticalImageRep = NSBitmapImageRep(cgImage: verticalImage)
-    
+
     // debug
     images.writeCGImage(image: verticalImage, to: "\(box.screenDir!)/\(box.id)-content-find.png")
 
@@ -407,7 +411,7 @@ final class Recorder: NSObject {
       print("4. find verticals: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms --  \(verticalSections.description)")
       start = DispatchTime.now()
     }
-    
+
     if handleCancel() { return nil }
 
     // second loop - find lines in sections
@@ -464,7 +468,7 @@ final class Recorder: NSObject {
       sectionLines[start] = lines
       total += lines.count
     }
-    
+
     print("got lines")
 
     // third loop
@@ -499,9 +503,9 @@ final class Recorder: NSObject {
       })
       allLines = allLines + sectionLines
     }
-    
+
     print("got chars")
-    
+
     if handleCancel() { return nil }
 
     // check for unsolved outlines
@@ -544,7 +548,7 @@ final class Recorder: NSObject {
         print("9. ocr: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
       }
     }
-    
+
     if handleCancel() { return nil }
 
     // collect ocr results
@@ -603,13 +607,15 @@ final class Recorder: NSObject {
       }
       lines.append("[\(firstWord.x),\(minY),\(width),\(maxH)]")
     }
-    
+
     print("got ocr")
 
     // update character cache
     Async.background(after: 0.04) {
       chars.updateCache(ocrResults)
     }
+
+    if handleCancel() { return nil }
 
     // send to world
     _ = self.send!("{ \"action\": \"words\", \"value\": [\(words.joined(separator: ","))] }")
@@ -629,7 +635,7 @@ final class Recorder: NSObject {
       images.writeCGImage(image: ocrCharactersImage, to: "\(box.screenDir!)/\(box.id)-ocr-characters.png")
       images.writeCGImage(image: cgImage, to: "\(box.screenDir!)/\(box.id)-original.png")
     }
-    
+
     // return new box with content adjusted frame
     return Box(
       id: box.id,
@@ -704,11 +710,11 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
     }
     return (buffer, perRow, release)
   }
-  
+
   public func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
     // keep this always in sync
     self.currentSampleBuffer = sampleBuffer
-    
+
     // todo: use this per-box
     if self.isScanning {
       return
@@ -731,7 +737,7 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
       self.characters!.buffer = buffer
     }
 
-    let fpsInSeconds = 60 / 60 / self.fps // gives you fps => x  (60 => 0.16) and (2 => 0.5)
+//    let fpsInSeconds = 60 / 60 / self.fps // gives you fps => x  (60 => 0.16) and (2 => 0.5)
     let delayHandleChange = 0.1
 
     // loop over boxes and check
@@ -740,10 +746,14 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
       if shouldDebug { characters!.debugDir = box.screenDir! }
       let changedBox = hasBoxChanged(box: box, buffer: buffer, perRow: perRow)
       if (firstTime && box.initialScreenshot || changedBox) {
-        if ignoreNextScan {
+        // options to ignore next or to force next
+        if ignoreNextScan && !shouldRunNextTime {
           self.ignoreNextScan = false
           print("ignored this scan")
           return
+        }
+        if shouldRunNextTime {
+          self.shouldRunNextTime = false
         }
         print("changed! \(box.id)")
         if self.send!("{ \"action\": \"clearWord\", \"value\": \"\(box.id)\" }") { }
@@ -770,10 +780,10 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
           if let frame = self.handleChangedArea(box: box, sampleBuffer: self.currentSampleBuffer!, perRow: perRow, findContent: box.findContent) {
             self.frames[boxId] = frame
           }
-          
+
           // after x seconds, re-enable watching
           // this is because screen needs time to update highlight boxes
-          Async.background(after: 0.5) {
+          Async.background(after: 0.05) {
             print("re-enable scan after last")
             self.shouldCancel = false
             self.isScanning = false

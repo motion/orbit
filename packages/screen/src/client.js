@@ -5,6 +5,7 @@ export default class ScreenClient {
   isOpen = false
   state = {
     isRunning: false,
+    isPaused: false,
   }
   queuedMessages = []
   onStateChange = _ => _
@@ -27,7 +28,7 @@ export default class ScreenClient {
   }
 
   toggle = () => {
-    if (this.state.isRunning) {
+    if (!this.state.isPaused) {
       this.pause()
     } else {
       this.start()

@@ -149,54 +149,56 @@ final class Recorder: NSObject {
     ws.event.error = { error in
       print("error \(error)")
     }
-    ws.event.message = { (message) in
-      if let text = message as? String {
-        if text.count < 5 {
-          print("weird text")
-          return
-        }
-        let action = text[0...4]
-        if action == "state" {
-          // coming from us, ignore
-          return
-        }
-        if action == "start" || action == "resume" {
-          self.start()
-          return
-        }
-        if action == "watch" {
-          do {
-            let options = try JSONDecoder().decode(Options.self, from: text[5..<text.count].data(using: .utf8)!)
-            self.watchBounds(
-              fps: options.fps,
-              boxes: options.boxes,
-              showCursor: options.showCursor,
-              videoCodec: options.videoCodec,
-              sampleSpacing: options.sampleSpacing,
-              sensitivity: options.sensitivity,
-              debug: options.debug
-            )
-          } catch {
-            print("Error parsing arguments \(text)")
+    Async.background {
+      ws.event.message = { (message) in
+        if let text = message as? String {
+          if text.count < 5 {
+            print("weird text")
+            return
           }
-          return
-        }
-        if action == "pause" {
-          self.stop()
-          return
-        }
-        if action == "clear" {
-          print("got a clear")
-          if self.isScanning {
-            self.shouldCancel = true
+          let action = text[0...4]
+          if action == "state" {
+            // coming from us, ignore
+            return
           }
-          if let handle = self.changeHandle {
-            handle.cancel()
-            self.changeHandle = nil
+          if action == "start" || action == "resume" {
+            self.start()
+            return
           }
-          return
+          if action == "watch" {
+            do {
+              let options = try JSONDecoder().decode(Options.self, from: text[5..<text.count].data(using: .utf8)!)
+              self.watchBounds(
+                fps: options.fps,
+                boxes: options.boxes,
+                showCursor: options.showCursor,
+                videoCodec: options.videoCodec,
+                sampleSpacing: options.sampleSpacing,
+                sensitivity: options.sensitivity,
+                debug: options.debug
+              )
+            } catch {
+              print("Error parsing arguments \(text)")
+            }
+            return
+          }
+          if action == "pause" {
+            self.stop()
+            return
+          }
+          if action == "clear" {
+            print("got a clear")
+            if self.isScanning {
+              self.shouldCancel = true
+            }
+            if let handle = self.changeHandle {
+              handle.cancel()
+              self.changeHandle = nil
+            }
+            return
+          }
+          print("received unknown message: \(text)")
         }
-        print("received unknown message: \(text)")
       }
     }
   }

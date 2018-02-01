@@ -5,7 +5,6 @@ import * as Helpers from '~/helpers'
 
 const HL_PAD = 2
 const TOP_BAR_PAD = 22
-
 const getHoverProps = Helpers.hoverSettler({
   enterDelay: 400,
   onHovered: object => {
@@ -13,8 +12,7 @@ const getHoverProps = Helpers.hoverSettler({
     // Helpers.OS.send('peek-target', object)
   },
 })
-
-function toEvent({ top, left, width, height }) {
+const toEvent = ([left, top, width, height]) => {
   return {
     currentTarget: {
       offsetTop: top,
@@ -28,25 +26,12 @@ function toEvent({ top, left, width, height }) {
 class HighlightsStore {
   electronState = {}
   hoveredWord = null
+  hoveredLine = null
   hoverEvents = {}
-  showHighlights = true
+  showAll = true
 
   get context() {
     return this.props.contextStore
-  }
-
-  // [ { top, left, height, width }, ... ]
-  get highlights() {
-    return ((this.context && this.context.ocrWords) || []).map(
-      ([left, top, width, height, word], index) => ({
-        top,
-        left,
-        width,
-        height,
-        word,
-        key: `${index}-${word}-${top}-${left}`,
-      }),
-    )
   }
 
   willMount() {
@@ -61,7 +46,7 @@ class HighlightsStore {
       () => {
         if (this.context.lastScreenChange > this.context.lastOCR) {
           console.log('diff, hide highlights')
-          this.showHighlights = false
+          this.showAll = false
         }
       },
     )
@@ -71,7 +56,7 @@ class HighlightsStore {
       () => this.context.lastOCR,
       () => {
         console.log('show highlights')
-        this.showHighlights = true
+        this.showAll = true
       },
     )
   }
@@ -79,7 +64,11 @@ class HighlightsStore {
   watchForHoverWord = () => {
     // update hoverEvents for use in hover logic
     this.react(
-      () => this.highlights,
+      () =>
+        [
+          ...(this.context.ocrWords || []),
+          ...(this.context.linePositions || []),
+        ] || [],
       hls => {
         const hoverEvents = {}
         for (const { key } of hls) {
@@ -89,54 +78,68 @@ class HighlightsStore {
       },
     )
 
+    // track hovers on words
     this.react(
       () => [
         this.context.mousePosition || [],
         // update when hover event handlers change
         this.hoverEvents,
-        this.highlights,
+        this.context.ocrWords || [],
       ],
-      ([[x, _y], hoverEvents, highlights]) => {
-        if (!x || !_y) {
-          return
-        }
-        let y = _y
-        let hovered = null
-        for (const word of highlights) {
-          // outside of x
-          if (x < word.left || x > word.left + word.width) {
-            continue
-          }
-          // outside of y
-          if (y < word.top || y > word.top + word.height) {
-            continue
-          }
-          // we good tho
-          hovered = word
-          break
-        }
-        // before update, handle hover logic
-        // mouseLeave
-        if (!hovered && this.hoveredWord) {
-          if (hoverEvents[this.hoveredWord.key]) {
-            hoverEvents[this.hoveredWord.key].onMouseLeave()
-          }
-        } else if (hovered && !this.hoveredWord) {
-          console.log('hovered', hovered)
-          // mouseEnter
-          if (hoverEvents[hovered.key]) {
-            hoverEvents[hovered.key].onMouseEnter(toEvent(hovered))
-          }
-        } else if (hovered) {
-          // mouseMove
-          if (hoverEvents[hovered.key]) {
-            hoverEvents[hovered.key].onMouseMove(toEvent(hovered))
-          }
-        }
-        // update state
-        this.hoveredWord = hovered
-      },
+      this.handleHoverOn('hoveredWord'),
     )
+
+    // track hovers on lines
+    this.react(
+      () => [
+        this.context.mousePosition || [],
+        // update when hover event handlers change
+        this.hoverEvents,
+        this.context.linePositions || [],
+      ],
+      this.handleHoverOn('hoveredLine'),
+    )
+  }
+
+  handleHoverOn = prop => ([[x, _y], hoverEvents, positions]) => {
+    if (!x || !_y) {
+      return
+    }
+    let y = _y
+    let hovered = null
+    for (const pos of positions) {
+      // outside of x
+      if (x < pos[1] || x > pos[1] + pos[2]) {
+        continue
+      }
+      // outside of y
+      if (y < pos[1] || y > pos[1] + pos[3]) {
+        continue
+      }
+      // we good tho
+      hovered = pos
+      break
+    }
+    // before update, handle hover logic
+    // mouseLeave
+    if (!hovered && this[prop]) {
+      if (hoverEvents[this[prop].key]) {
+        hoverEvents[this[prop].key].onMouseLeave()
+      }
+    } else if (hovered && !this[prop]) {
+      console.log('hovered', hovered)
+      // mouseEnter
+      if (hoverEvents[hovered.key]) {
+        hoverEvents[hovered.key].onMouseEnter(toEvent(hovered))
+      }
+    } else if (hovered) {
+      // mouseMove
+      if (hoverEvents[hovered.key]) {
+        hoverEvents[hovered.key].onMouseMove(toEvent(hovered))
+      }
+    }
+    // update state
+    this[prop] = hovered
   }
 }
 
@@ -146,33 +149,49 @@ class HighlightsStore {
 })
 export default class HighlightsPage {
   render({ store }) {
-    const { highlights, hoveredWord } = store
-    console.log('render highlights', highlights)
-
+    const { showAll, context, hoveredWord, hoveredLine } = store
     return (
       <contain $highlights>
-        <highlights if={store.showHighlights}>
-          {store.highlights.map(({ key, top, left, width, height, word }) => (
-            <highlight
-              key={key}
-              $hovered={hoveredWord && key === hoveredWord.key}
-              style={{
-                top: top - HL_PAD - TOP_BAR_PAD,
-                left: left - HL_PAD,
-                width: width + HL_PAD * 2,
-                height: height + HL_PAD * 2,
-              }}
-            >
-              <word>{word}</word>
-            </highlight>
-          ))}
-        </highlights>
+        <frame if={showAll}>
+          {(context.ocrWords || []).map(([x, y, width, height, word]) => {
+            const key = `${x}${y}${width}${height}`
+            return (
+              <word
+                key={key}
+                $hovered={hoveredWord && key === hoveredWord.key}
+                style={{
+                  top: y - HL_PAD - TOP_BAR_PAD,
+                  left: x - HL_PAD,
+                  width: width + HL_PAD * 2,
+                  height: height + HL_PAD * 2,
+                }}
+              >
+                <wordInner>{word}</wordInner>
+              </word>
+            )
+          })}
+          {(context.linePositions || []).map(([x, y, width, height]) => {
+            const key = `${x}${y}${width}${height}`
+            return (
+              <ocrLine
+                key={key}
+                $hoveredLine={hoveredLine && key === hoveredLine.key}
+                style={{
+                  top: y / 2 - TOP_BAR_PAD,
+                  left: x,
+                  width: width,
+                  height: height / 2 + 5, // add some padding
+                }}
+              />
+            )
+          })}
+        </frame>
       </contain>
     )
   }
 
   static style = {
-    highlights: {
+    frame: {
       width: '100%',
       height: '100%',
       pointerEvents: 'none',
@@ -180,22 +199,33 @@ export default class HighlightsPage {
       position: 'relative',
       // background: [0, 255, 0, 0.1],
     },
-    highlight: {
+    word: {
       position: 'absolute',
       padding: HL_PAD,
-      borderRadius: 8,
-      background: [200, 200, 200, 0.5],
+      borderRadius: 3,
+      background: [200, 200, 200, 0.15],
+      // borderBottom: [1, [200, 200, 200, 0.2]],
     },
     hovered: {
-      background: [180, 180, 180, 0.3],
+      background: [250, 0, 0, 0.5],
     },
-    word: {
-      opacity: 0,
+    wordInner: {
+      opacity: 0.7,
+      top: -12,
+      left: -4,
+      fontSize: 8,
+      height: 10,
       position: 'absolute',
-      top: 0,
-      left: HL_PAD,
       wordWrap: 'no-wrap',
       whiteSpace: 'pre',
+    },
+    ocrLine: {
+      marginTop: -4,
+      position: 'absolute',
+      borderBottom: [1, [0, 0, 0, 0.2]],
+    },
+    hoveredLine: {
+      borderBottomColor: 'blue',
     },
   }
 }

@@ -6,27 +6,25 @@ class ConnectedComponentsSwiftOCR {
   ///Radius in y axis for merging blobs
   open      var yMergeRadius:CGFloat = 0
 
-  internal func extractBlobs(bounds: [Int], bufferPointer: UnsafeMutablePointer<UInt32>, perRow: Int, frameOffset: [Int], debug: Bool) -> [CGRect] {
+  internal func extractBlobs(_ image: CGImage, debug: Bool) -> [CGRect] {
     var start = DispatchTime.now()
+    
+    let imageRep = NSBitmapImageRep(cgImage: image)
+    let imageWidth = imageRep.pixelsWide
+    let imageHeight = imageRep.pixelsHigh
+    print("width, height \(imageWidth) \(imageHeight)")
 
-    let xOff = bounds[0] + frameOffset[0]
-    let yOff = bounds[1] + frameOffset[1]
-    let imageWidth = bounds[2]
-    let imageHeight = bounds[3]
+    // fill data
     var data = [[UInt16]](repeating: [UInt16](repeating: 0, count: imageWidth), count: imageHeight)
-    let yScale = perRow / 2
-//    var pixels = [PixelData]() // write img
-    for y in yOff..<(yOff + imageHeight) {
-      for x in xOff..<(xOff + imageWidth) {
-        let luma = bufferPointer[y * yScale + x] // 3951094656 == pure white
-        data[y - yOff][x - xOff] = luma > 1975547328 ? 255 : 0
-//        let brt = UInt8(Double(luma) / 3951094656 * 255)
-//        pixels.append(PixelData(a: 255, r: brt, g: brt, b: brt))
+    for y in 0..<imageHeight {
+      for x in 0..<imageWidth {
+        let isBlack = imageRep.colorAt(x: x, y: y)!.brightnessComponent == 0.0
+        data[y][x] = isBlack ? 255 : 0 // invert
       }
     }
-//    Images().writeCGImage(image: images.imageFromArray(pixels: pixels, width: imageWidth, height: imageHeight)!, to: "/tmp/screen/a-line-\(lineNum).png", resolution: 72) // write img
 
-    if debug { print("  extractBlobs: setup data \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms"); start = DispatchTime.now() }
+    print("  extractBlobs: setup data \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+    start = DispatchTime.now()
 
     //MARK: First Pass
     var currentLabel:UInt16 = 256
@@ -134,54 +132,30 @@ class ConnectedComponentsSwiftOCR {
       let maxX = value.maxX
       let minY = value.minY
       let maxY = value.maxY
-      //Filter blobs
-      let minMaxCorrect = (minX < maxX && minY < maxY)
-      let notToTall    = Double(maxY - minY) < Double(imageHeight) * 0.5
-      let notToWide    = Double(maxX - minX) < Double(imageWidth ) * 0.5
-      let notToShort   = Double(maxY - minY) > 4
-      let notToThin    = Double(maxX - minX) > 4
-      let notToSmall   = (maxX - minX)*(maxY - minY) > 2
-      let positionIsOK = minY != 0 && minX != 0 && maxY != Int(imageHeight - 1) && maxX != Int(imageWidth - 1)
-      let aspectRatio  = Double(maxX - minX) / Double(maxY - minY)
-      if minMaxCorrect && notToTall && notToWide && notToShort && notToThin && notToSmall && positionIsOK &&
-        aspectRatio < 1 {
-        let labelRect = CGRect(x: CGFloat(CGFloat(minX) - xMergeRadius), y: CGFloat(CGFloat(minY) - yMergeRadius), width: CGFloat(CGFloat(maxX - minX) + 2*xMergeRadius + 1), height: CGFloat(CGFloat(maxY - minY) + 2*yMergeRadius + 1))
-        mergeLabelRects.append(labelRect)
-      } else if minMaxCorrect && notToTall && notToShort && notToThin && notToSmall && positionIsOK && aspectRatio <= 2.5 && aspectRatio >= 1 {
-        let labelRect = CGRect(x: CGFloat(CGFloat(minX) - xMergeRadius), y: CGFloat(CGFloat(minY) - yMergeRadius), width: CGFloat(CGFloat(maxX - minX) + 2*xMergeRadius + 1), height: CGFloat(CGFloat(maxY - minY) + 2*yMergeRadius + 1))
-        mergeLabelRects.append(labelRect)
-      }
+      let labelRect = CGRect(
+        x: CGFloat(CGFloat(minX) - xMergeRadius),
+        y: CGFloat(CGFloat(minY) - yMergeRadius),
+        width: CGFloat(CGFloat(maxX - minX) + 2*xMergeRadius + 1),
+        height: CGFloat(CGFloat(maxY - minY) + 2*yMergeRadius + 1)
+      )
+      mergeLabelRects.append(labelRect)
     }
 
-    //Merge rects
-    var filteredMergeLabelRects = [CGRect]()
-    for rect in mergeLabelRects {
-      var intersectCount = 0
-      for (filteredRectIndex, filteredRect) in filteredMergeLabelRects.enumerated() {
-        if rect.intersects(filteredRect) {
-          intersectCount += 1
-          filteredMergeLabelRects[filteredRectIndex] = filteredRect.union(rect)
-        }
-      }
-      if intersectCount == 0 {
-        filteredMergeLabelRects.append(rect)
-      }
-    }
+//    //Merge rects
+//    var filteredMergeLabelRects = [CGRect]()
+//    for rect in mergeLabelRects {
+//      var intersectCount = 0
+//      for (filteredRectIndex, filteredRect) in filteredMergeLabelRects.enumerated() {
+//        if rect.intersects(filteredRect) {
+//          intersectCount += 1
+//          filteredMergeLabelRects[filteredRectIndex] = filteredRect.union(rect)
+//        }
+//      }
+//      if intersectCount == 0 {
+//        filteredMergeLabelRects.append(rect)
+//      }
+//    }
 
-    mergeLabelRects = filteredMergeLabelRects
-
-    //Filter rects: - Not to small
-    let insetMergeLabelRects = mergeLabelRects//.map({return $0.insetBy(dx: CGFloat(xMergeRadius), dy: CGFloat(yMergeRadius))})
-    filteredMergeLabelRects.removeAll()
-    for rect in insetMergeLabelRects {
-      let widthOK  = rect.size.width  >= 3
-      let heightOK = rect.size.height >= 8
-
-      if widthOK && heightOK {
-        filteredMergeLabelRects.append(rect)
-      }
-    }
-
-    return filteredMergeLabelRects
+    return mergeLabelRects
   }
 }

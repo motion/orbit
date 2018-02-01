@@ -3,7 +3,7 @@ import * as Mobx from 'mobx'
 import { object } from 'prop-types'
 import { pickBy, difference, isEqual } from 'lodash'
 import hoistStatics from 'hoist-non-react-statics'
-import Redbox from 'redbox-react'
+// import Redbox from 'redbox-react'
 import global from 'global'
 
 const isBrowser = typeof document !== 'undefined'
@@ -256,14 +256,6 @@ export default function storeProvidable(options, Helpers) {
         }
 
         render() {
-          if (isBrowser) {
-            if (this.state.error) {
-              return <Redbox $$draggable error={this.state.error} />
-            }
-            if (this.failed || !this.state) {
-              return <Redbox $$draggable error={{ message: 'Failed view' }} />
-            }
-          }
           return <Klass {...this.props} {...this.stores} />
         }
       }

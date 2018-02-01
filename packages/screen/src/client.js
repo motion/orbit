@@ -5,6 +5,7 @@ export default class ScreenClient {
   isOpen = false
   state = {
     isRunning: false,
+    isPaused: false,
   }
   queuedMessages = []
   onStateChange = _ => _
@@ -12,6 +13,10 @@ export default class ScreenClient {
   constructor({ onStateChange } = {}) {
     this.onStateChange = onStateChange
     this._setupLink()
+  }
+
+  clear = () => {
+    this._send({ action: 'clear' })
   }
 
   pause = () => {
@@ -23,7 +28,7 @@ export default class ScreenClient {
   }
 
   toggle = () => {
-    if (this.state.isRunning) {
+    if (!this.state.isPaused) {
       this.pause()
     } else {
       this.start()
@@ -52,7 +57,7 @@ export default class ScreenClient {
       this.isOpen = true
       if (this.queuedMessages.length) {
         for (const message of this.queuedMessages) {
-          this.send(message)
+          this._send(message)
         }
         this.queuedMessages = []
       }
@@ -61,8 +66,11 @@ export default class ScreenClient {
       this.isOpen = false
     }
     this.ws.onerror = err => {
-      console.log('error', err.message)
-      this.isOpen = false
+      if (err.code === 'ECONNRESET' || err.code === 'ECONNREFUSED') {
+        // ignore
+        return
+      }
+      console.log('client ws error', err.message)
     }
   }
 

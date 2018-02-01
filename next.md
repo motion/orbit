@@ -4,15 +4,10 @@
   * summarizing
     * chunking slack conversations (use topic models?)
     * summarize convos to one short sentence each
-    * helpful for ux for showing things you may have missed
-    * may also help with ux for letting us use large font size
-    * better than highlighting a snippet if works wells
 * tech
-  * easy way to pause/resume the ocr loop (click tray)
-  * restart screen process when highlights dont come back quickly
-  * debug slow char fetching after a few loops
+  * fix bad lines
+  * check after move if it hasnt changed
   * make clearing quicker
-  * on tab change it scans old tab somehow
   * fix i's j's by going continuing downwards from middle of found outline
     * needs: skipping bottom black
   * recognition

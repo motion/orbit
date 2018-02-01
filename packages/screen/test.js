@@ -1,5 +1,6 @@
 const Screen = require('./es6').default
 const Fs = require('fs')
+const Path = require('path')
 
 process.on('unhandledRejection', function(error, p) {
   console.log('OCR PromiseFail:')
@@ -11,7 +12,8 @@ process.on('unhandledRejection', function(error, p) {
   }
 })
 
-const dir = './tmp'
+const dir = Path.join(__dirname, 'tmp')
+console.log('debug dir', dir)
 
 if (!Fs.existsSync(dir)) {
   Fs.mkdirSync(dir)
@@ -19,10 +21,10 @@ if (!Fs.existsSync(dir)) {
 
 async function test() {
   const debug = !!process.argv.find(x => x === '--debug')
-  const screen = new Screen({ debug })
-  console.log('running...')
+  const screen = new Screen({ debugBuild: debug })
   screen.start()
   screen.watchBounds({
+    debug,
     fps: 2,
     sampleSpacing: 10,
     sensitivity: 2,
@@ -31,7 +33,7 @@ async function test() {
       {
         id: 'screen',
         x: 0,
-        y: 48,
+        y: 0,
         width: 1166,
         height: 980,
         screenDir: dir,
@@ -49,7 +51,7 @@ async function test() {
   })
 
   screen.onWords(data => {
-    console.log('got words', data)
+    console.log('got', data.length, 'words, first 20:', data.slice(0, 20))
     console.log('\nto do it full speed: npm run test-fast')
     console.log('\nto see output:')
     console.log('$ open ./tmp')

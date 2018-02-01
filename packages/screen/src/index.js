@@ -1,4 +1,3 @@
-import os from 'os'
 import path from 'path'
 import execa from 'execa'
 import macosVersion from 'macos-version'
@@ -9,17 +8,6 @@ export ScreenClient from './client'
 
 const sleep = ms => new Promise(res => setTimeout(res, ms))
 
-const supportsHevcHardwareEncoding = (() => {
-  if (!macosVersion.isGreaterThanOrEqualTo('10.13')) {
-    return false
-  }
-  // Get the Intel Core generation, the `4` in `Intel(R) Core(TM) i7-4850HQ CPU @ 2.30GHz`
-  // More info: https://www.intel.com/content/www/us/en/processors/processor-numbers.html
-  const result = /Intel.*Core.*i(?:7|5)-(\d)/.exec(os.cpus()[0].model)
-  // Intel Core generation 6 or higher supports HEVC hardware encoding
-  return result && Number(result[1]) >= 6
-})()
-
 export default class Screen {
   awaitingSocket = []
   listeners = []
@@ -27,20 +15,63 @@ export default class Screen {
   onLinesCB = _ => _
   onWordsCB = _ => _
   onClearWordCB = _ => _
-  state = {}
+  onErrorCB = _ => _
+  onClearCB = _ => _
+  state = {
+    isPaused: false,
+  }
 
-  constructor({ debug = false } = {}) {
-    this.debug = debug
+  setState = nextState => {
+    this.state = { ...this.state, ...nextState }
+    this.socketSend('state', this.state)
+  }
+
+  constructor({ debugBuild = false } = {}) {
+    this.debugBuild = debugBuild
     macosVersion.assertGreaterThanOrEqualTo('10.12')
+    this.setupSocket()
+    this.setupRecorder()
+  }
 
+  setupRecorder() {
+    if (this.recorder !== undefined) {
+      throw new Error('Call `.stop()` first')
+    }
+    const BIN = path.join(
+      electronUtil.fixPathForAsarUnpack(__dirname),
+      '..',
+      this.debugBuild ? 'run-debug' : 'run-release',
+    )
+    console.log('exec', BIN)
+    this.recorder = execa(BIN, [], {
+      reject: false,
+    })
+    this.recorder.catch((err, ...rest) => {
+      console.log('screen err:', ...rest)
+      console.log(err)
+      console.log(err.stack)
+      throw err
+    })
+    this.recorder.stderr.setEncoding('utf8')
+    this.recorder.stderr.on('data', data => {
+      console.log('screen stderr:', data)
+      this.onErrorCB(data)
+    })
+    this.recorder.stdout.setEncoding('utf8')
+    this.recorder.stdout.on('data', data => {
+      const out = data.trim()
+      console.log(out)
+    })
+  }
+
+  setupSocket() {
     // handle socket between swift
     let id = 0
     this.wss.on('connection', socket => {
-      console.log('got socket connection')
       // add to active sockets
       this.listeners.push({ id: id++, socket })
       // send initial state
-      this.socketSend('state', this.state)
+      this.setState(this.state)
       // send queued messages
       if (this.awaitingSocket.length) {
         this.awaitingSocket.forEach(({ action, data }) =>
@@ -63,34 +94,6 @@ export default class Screen {
     })
     this.wss.on('error', (...args) => {
       console.log('wss error', args)
-    })
-
-    if (this.recorder !== undefined) {
-      throw new Error('Call `.stop()` first')
-    }
-    const BIN = path.join(
-      electronUtil.fixPathForAsarUnpack(__dirname),
-      '..',
-      debug ? 'run-debug' : 'run-release',
-    )
-    console.log('exec', BIN)
-    this.recorder = execa(BIN, [], {
-      reject: false,
-    })
-    this.recorder.catch((err, ...rest) => {
-      console.log('screen err:', ...rest)
-      console.log(err)
-      console.log(err.stack)
-      throw err
-    })
-    this.recorder.stderr.setEncoding('utf8')
-    this.recorder.stderr.on('data', data => {
-      console.log('screen stderr:', data)
-    })
-    this.recorder.stdout.setEncoding('utf8')
-    this.recorder.stdout.on('data', data => {
-      const out = data.trim()
-      console.log(out)
     })
   }
 
@@ -119,6 +122,9 @@ export default class Screen {
       if (action === 'start') {
         this.start()
       }
+      if (action === 'clear') {
+        this.onClearCB()
+      }
     } catch (err) {
       console.log('error sending reply', action, 'value', value)
       console.log(err)
@@ -126,8 +132,21 @@ export default class Screen {
   }
 
   start = () => {
-    console.log('called start')
-    this.socketSend('start')
+    this.setState({
+      isPaused: false,
+    })
+    if (!this.recorder) {
+      this.setupRecorder()
+    }
+    return new Promise(res => {
+      let startWait = setInterval(() => {
+        if (this.listeners.length) {
+          clearInterval(startWait)
+          this.socketSend('start')
+          res()
+        }
+      }, 10)
+    })
   }
 
   watchBounds = (
@@ -141,6 +160,7 @@ export default class Screen {
       // how many pixels to detect before triggering change
       sensitivity = 2,
       boxes,
+      debug = false,
     } = {},
   ) => {
     // default box options
@@ -152,7 +172,7 @@ export default class Screen {
     }))
 
     const recorderOpts = {
-      debug: this.debug,
+      debug,
       fps,
       showCursor,
       displayId,
@@ -164,14 +184,9 @@ export default class Screen {
     if (videoCodec) {
       const codecMap = new Map([
         ['h264', 'avc1'],
-        ['hevc', 'hvc1'],
         ['proRes422', 'apcn'],
         ['proRes4444', 'ap4h'],
       ])
-
-      if (!supportsHevcHardwareEncoding) {
-        codecMap.delete('hevc')
-      }
 
       if (!codecMap.has(videoCodec)) {
         throw new Error(`Unsupported video codec specified: ${videoCodec}`)
@@ -182,10 +197,28 @@ export default class Screen {
     }
 
     this.socketSend('watch', recorderOpts)
+    return this
   }
 
   pause = () => {
+    this.setState({ isPaused: true })
     this.socketSend('pause')
+    return this
+  }
+
+  resume = () => {
+    this.setState({ isPaused: true })
+    this.socketSend('start')
+    return this
+  }
+
+  clear = () => {
+    this.socketSend('clear')
+    return this
+  }
+
+  onClear = cb => {
+    this.onClearCB = cb
   }
 
   onClearWord = cb => {
@@ -200,6 +233,10 @@ export default class Screen {
     this.onLinesCB = cb
   }
 
+  onError = cb => {
+    this.onErrorCB = cb
+  }
+
   stop = async () => {
     if (this.recorder === undefined) {
       // null if not recording
@@ -207,12 +244,15 @@ export default class Screen {
     }
     this.recorder.stdout.removeAllListeners()
     this.recorder.stderr.removeAllListeners()
-    this.recorder.kill()
-    this.recorder.kill('SIGKILL')
+    setTimeout(() => {
+      if (!this.recorder) return
+      this.recorder.kill()
+      this.recorder.kill('SIGKILL')
+    })
     await this.recorder
-    // sleep to avoid issues
-    await sleep(20)
     delete this.recorder
+    // sleep to avoid issues
+    await sleep(40)
   }
 
   socketSend(action, data) {
@@ -229,7 +269,7 @@ export default class Screen {
         try {
           socket.send(strData)
         } catch (err) {
-          console.log('failed to send to socket, removing', id)
+          console.log('failed to send to socket, removing', err.message, id)
           this.removeSocket(id)
         }
       }

@@ -39,31 +39,38 @@ class Filters {
     // helps prevent finding edges of contiguous blocks
     // while emphasizing edges of that have actual borders
     filter = CIFilter(name: "CIUnsharpMask")!
-    filter.setValue(0.9, forKey: "inputIntensity")
-    filter.setValue(5.5, forKey: "inputRadius")
+    filter.setValue(1.0, forKey: "inputIntensity")
+    filter.setValue(2.5, forKey: "inputRadius")
     outputImage = applyFilter(filter, for: outputImage)
     // edge detecting with low contrast and unsharp mask
     // gives really nice outlines
     filter = CIFilter(name: "CIEdges")!
-    filter.setValue(10.5, forKey: "inputIntensity")
+    filter.setValue(2.0, forKey: "inputIntensity")
     outputImage = applyFilter(filter, for: outputImage)
     // edges inversts everything basically, so lets un-invert
     filter = CIFilter(name: "CIColorInvert")!
     outputImage = applyFilter(filter, for: outputImage)
+    
     // motion blur horizontal
     // this will ensure that rounded borders and sketchy outlines
     // will still connect to each other for the component finding
     filter = CIFilter(name: "CIMotionBlur")!
-    filter.setValue(1.75, forKey: "inputRadius")
+    filter.setValue(1.5, forKey: "inputRadius")
     filter.setValue(0.0, forKey: "inputAngle")
     outputImage = applyFilter(filter, for: outputImage)
     // motion blur vertical
     filter = CIFilter(name: "CIMotionBlur")!
-    filter.setValue(1.75, forKey: "inputRadius")
+    filter.setValue(1.25, forKey: "inputRadius")
     filter.setValue(1.5708, forKey: "inputAngle")
     outputImage = applyFilter(filter, for: outputImage)
+    
+    filter = CIFilter(name: "CIUnsharpMask")!
+    filter.setValue(0.5, forKey: "inputIntensity")
+    filter.setValue(1.25, forKey: "inputRadius")
+    outputImage = applyFilter(filter, for: outputImage)
+
     // threshold binarizes the image
-    outputImage = applyFilter(ThresholdFilter(), for: outputImage)
+    outputImage = applyFilter(ThresholdFilterStrong(), for: outputImage)
     
     // resize
     filter = CIFilter(name: "CILanczosScaleTransform")!

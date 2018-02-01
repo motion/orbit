@@ -41,10 +41,10 @@ class Characters {
   var debugImg: CGImage? = nil
   var debugDir = ""
   var answers = [String: String]() // outline => answer
+  var buffer: UnsafeMutablePointer<UInt8>
 
   private let dict = SymSpell(editDistance: 2, verbose: 1) // outline => close-answer
   private let images = Images()
-  private var buffer: UnsafeMutablePointer<UInt8>
   private var perRow: Int
   private var isBlackIfUnder = 0
   private let moves = Moves()
@@ -56,9 +56,9 @@ class Characters {
     return shouldDebug && specialDebug[0] == id && specialDebug[1] == curChar
   }
 
-  init(data: UnsafeMutablePointer<UInt8>, perRow: Int, isBlackIfUnder: Int) {
+  init(buffer: UnsafeMutablePointer<UInt8>, perRow: Int, isBlackIfUnder: Int) {
     self.isBlackIfUnder = isBlackIfUnder // higher == allow lighter
-    self.buffer = data
+    self.buffer = buffer
     self.perRow = perRow
   }
 
@@ -122,7 +122,7 @@ class Characters {
           debug("0 size")
           continue
         }
-        let tooBig = char.width > 300 || char.height > 300
+        let tooBig = char.width * char.height > 1500
         let tooSmall = char.width < 5 && char.height < 5 || char.width < 2 || char.height < 2
         let tooThin = char.height / char.width > 25
         let tooWide = char.width / char.height > 25
@@ -152,7 +152,8 @@ class Characters {
     var foundWords = [Word]()
     // calculate std dev of space
     let avg = spaces.reduce(0, +) / Double(spaces.count)
-    let stdDev = standardDeviation(spaces)
+    // space = % of a std dev
+    let spaceWidth = standardDeviation(spaces) / 1.5
     var wordChars = [Character]()
     // chop out words
     var minYL = 1000000000
@@ -166,7 +167,7 @@ class Characters {
       }
       // one deviation above avg
       let isLast =  index == foundChars.count - 1
-      if spaces[index] > avg + stdDev || isLast {
+      if spaces[index] > avg + spaceWidth || isLast {
         if isLast {
           wordChars.append(char)
         }

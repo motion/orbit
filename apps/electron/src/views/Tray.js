@@ -32,7 +32,7 @@ export default class TrayEl {
           'orbitTemplate.png',
         )}
         title={
-          rootStore.screenState.isRunning === false
+          rootStore.screenState.isPaused
             ? 'Paused'
             : rootStore.oraState.contextMessage || 'Orbit'
         }

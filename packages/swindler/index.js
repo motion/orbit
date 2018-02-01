@@ -5,7 +5,13 @@ const electronUtil = require('electron-util/node')
 const BIN = path.join(
   electronUtil.fixPathForAsarUnpack(__dirname),
   'Swindler',
-  'run',
+  'Build',
+  'Products',
+  'Release',
+  'SwindlerExample.app',
+  'Contents',
+  'MacOS',
+  'SwindlerExample',
 )
 
 class Swindler {
@@ -30,6 +36,7 @@ class Swindler {
       console.log(err.stack)
       throw err
     })
+
     this.app.stderr.setEncoding('utf8')
     this.app.stderr.on('data', data => {
       if (data && this.changeCB) {

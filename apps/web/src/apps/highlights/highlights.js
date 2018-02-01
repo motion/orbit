@@ -6,10 +6,9 @@ import * as Helpers from '~/helpers'
 const HL_PAD = 2
 const TOP_BAR_PAD = 22
 const getHoverProps = Helpers.hoverSettler({
-  enterDelay: 400,
+  enterDelay: 0,
   onHovered: object => {
-    console.log('SEND PEEK', object)
-    // Helpers.OS.send('peek-target', object)
+    Helpers.OS.send('peek-target', object)
   },
 })
 const toEvent = ([left, top, width, height]) => {
@@ -71,7 +70,8 @@ class HighlightsStore {
         ] || [],
       hls => {
         const hoverEvents = {}
-        for (const { key } of hls) {
+        for (const item of hls) {
+          const key = this.getKey(item)
           hoverEvents[key] = getHoverProps({ key, id: key })
         }
         this.hoverEvents = hoverEvents
@@ -101,19 +101,19 @@ class HighlightsStore {
     )
   }
 
-  handleHoverOn = prop => ([[x, _y], hoverEvents, positions]) => {
-    if (!x || !_y) {
+  handleHoverOn = prop => ([[x, y], hoverEvents, positions]) => {
+    if (!x || !y) {
       return
     }
-    let y = _y
     let hovered = null
     for (const pos of positions) {
+      const [x1, y1, w1, h1] = pos
       // outside of x
-      if (x < pos[1] || x > pos[1] + pos[2]) {
+      if (x < x1 || x > x1 + w1) {
         continue
       }
       // outside of y
-      if (y < pos[1] || y > pos[1] + pos[3]) {
+      if (y < y1 || y > y1 + h1) {
         continue
       }
       // we good tho
@@ -122,25 +122,27 @@ class HighlightsStore {
     }
     // before update, handle hover logic
     // mouseLeave
-    if (!hovered && this[prop]) {
-      if (hoverEvents[this[prop].key]) {
-        hoverEvents[this[prop].key].onMouseLeave()
+    const current = this[prop]
+    if (!hovered && current) {
+      if (hoverEvents[current]) {
+        hoverEvents[current].onMouseLeave()
       }
-    } else if (hovered && !this[prop]) {
-      console.log('hovered', hovered)
+    } else if (hovered && !current) {
       // mouseEnter
-      if (hoverEvents[hovered.key]) {
-        hoverEvents[hovered.key].onMouseEnter(toEvent(hovered))
+      if (hoverEvents[hovered]) {
+        hoverEvents[hovered].onMouseEnter(toEvent(hovered))
       }
     } else if (hovered) {
       // mouseMove
-      if (hoverEvents[hovered.key]) {
-        hoverEvents[hovered.key].onMouseMove(toEvent(hovered))
+      if (hoverEvents[hovered]) {
+        hoverEvents[hovered].onMouseMove(toEvent(hovered))
       }
     }
     // update state
-    this[prop] = hovered
+    this[prop] = hovered ? this.getKey(hovered) : null
   }
+
+  getKey = ([x, y, w, h]) => `${x}${y}${w}${h}`
 }
 
 @view.attach('contextStore')
@@ -153,12 +155,13 @@ export default class HighlightsPage {
     return (
       <contain $highlights>
         <frame if={showAll}>
-          {(context.ocrWords || []).map(([x, y, width, height, word]) => {
-            const key = `${x}${y}${width}${height}`
+          {(context.ocrWords || []).map(item => {
+            const [x, y, width, height, word] = item
+            const key = store.getKey(item)
             return (
               <word
                 key={key}
-                $hovered={hoveredWord && key === hoveredWord.key}
+                $hovered={hoveredWord && key === hoveredWord}
                 style={{
                   top: y - HL_PAD - TOP_BAR_PAD,
                   left: x - HL_PAD,
@@ -170,12 +173,13 @@ export default class HighlightsPage {
               </word>
             )
           })}
-          {(context.linePositions || []).map(([x, y, width, height]) => {
-            const key = `${x}${y}${width}${height}`
+          {(context.linePositions || []).map(item => {
+            const [x, y, width, height] = item
+            const key = store.getKey(item)
             return (
               <ocrLine
                 key={key}
-                $hoveredLine={hoveredLine && key === hoveredLine.key}
+                $hoveredLine={hoveredLine && key === hoveredLine}
                 style={{
                   top: y / 2 - TOP_BAR_PAD,
                   left: x,
@@ -203,15 +207,16 @@ export default class HighlightsPage {
       position: 'absolute',
       padding: HL_PAD,
       borderRadius: 3,
-      background: [200, 200, 200, 0.15],
-      // borderBottom: [1, [200, 200, 200, 0.2]],
+      // background: [200, 200, 200, 0.15],
+      // borderBottom: [1, 'dotted', [200, 200, 200, 0.4]],
     },
     hovered: {
-      background: [250, 0, 0, 0.5],
+      background: 'red',
+      opacity: 1,
     },
     wordInner: {
-      opacity: 0.7,
-      top: -12,
+      opacity: 0.4,
+      top: -14,
       left: -4,
       fontSize: 8,
       height: 10,
@@ -222,10 +227,11 @@ export default class HighlightsPage {
     ocrLine: {
       marginTop: -4,
       position: 'absolute',
-      borderBottom: [1, [0, 0, 0, 0.2]],
+      borderBottom: [1, [0, 0, 0, 0.02]],
     },
     hoveredLine: {
       borderBottomColor: 'blue',
+      opacity: 1,
     },
   }
 }

@@ -32,6 +32,15 @@ function ensure-dir {
   echo "directory exists: $1"
 }
 
+function ensure-file {
+  cmd=${@:3}
+  if [ ! -f "$1" ]; then
+    echo "$1 doesnt exist, running... $cmd"
+    $($cmd)
+  fi
+  echo "exists: $1"
+}
+
 function ensure-symlink {
   cmd=${@:3}
   if [ ! -L "$1" ]; then
@@ -93,6 +102,10 @@ function link-ts-configs() {
   # npx lerna exec --parallel -- ln -s ../../tsconfig.package.json ./tsconfig.json
 }
 
+function copy-bootstrap-hook() {
+  cp ./bin/post-merge ./.git/hooks
+}
+
 # function link-buildconfig() {
 #   npx lerna exec --parallel -- ln -s ../../buildconfig .
 # }
@@ -103,6 +116,7 @@ ensure-symlink ./node_modules/@mcro/gloss -- link-root-modules
 ensure-dir ./packages/gloss/lib -- build
 # ensure-symlink ./packages/gloss/tsconfig.json -- link-ts-configs
 # ensure-symlink ./packages/gloss/buildconfig -- link-buildconfigs
+ensure-file ./.git/hooks/post-merge -- copy-bootstrap-hook
 
 echo ""
 echo "done! be sure to run build --watch before running stuff"

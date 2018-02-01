@@ -29,14 +29,15 @@ apps/electron-build/app
 apps/crawler/build
 packages/search/build
 
-packages/swindler/Swindler/Index/
+packages/screen/swift/Build/Intermediates.noindex
 packages/swindler/Swindler/Build/Intermediates.noindex
+
+
 **/*/Index
 
 packages/screen/swift/aperture.xcodeproj
 !packages/screen/swift/aperture.xcodeproj/project.pbxproj
 !packages/screen/swift/aperture.xcodeproj/contents.xcworkspacedata
-packages/screen/swift/build
 packages/screen/aperture
 
 # keep these lib folders because these are babel plugins

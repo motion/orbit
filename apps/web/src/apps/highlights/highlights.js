@@ -162,6 +162,7 @@ export default class HighlightsPage {
             <word
               key={key}
               $hovered={hoveredWord && key === hoveredWord}
+              $highlighted={context.highlightWords[word]}
               style={{
                 top: y - HL_PAD - TOP_BAR_PAD,
                 left: x - HL_PAD,
@@ -207,7 +208,11 @@ export default class HighlightsPage {
       padding: HL_PAD,
       borderRadius: 3,
       // background: [200, 200, 200, 0.15],
-      // borderBottom: [1, 'dotted', [200, 200, 200, 0.4]],
+      borderBottom: [2, 'dotted', [200, 200, 200, 0.4]],
+    },
+    highlighted: {
+      background: 'red',
+      borderColor: 'yellow',
     },
     hovered: {
       background: [100, 100, 100, 0.1],

@@ -120,9 +120,20 @@ export default class Screen {
     const children = await ptree(this.process.pid)
     const maxSecondsSpinning = 10
     let secondsSpinning = 0
-    const resourceCheckInt = setInterval(async () => {
+    let i = 0
+    this.resourceCheckInt = setInterval(async () => {
+      i++
       for (const child of children) {
         const usage = await pusage(child.PID)
+        const memoryMB = Math.round(usage.memory / 1000 / 1000) // start at byte
+        if ((i % 60) * 3 === 0) {
+          // every 3 minute
+          console.log('Current memory usage', memoryMB, 'MB')
+        }
+        if (memoryMB > 250) {
+          console.log('Memory usage of swift above 250mb, restarting')
+          this.restart()
+        }
         if (usage.cpu > 90) {
           if (secondsSpinning > 5) {
             console.log('High cpu usage for', secondsSpinning, 'seconds')
@@ -132,13 +143,17 @@ export default class Screen {
           secondsSpinning = 0
         }
         if (secondsSpinning > maxSecondsSpinning) {
-          clearInterval(resourceCheckInt)
-          console.log('Screen burning far too long, restarting...')
-          await this.stop()
-          await this.start()
+          console.log('CPU usage above 90% for 10 seconds, restarting')
+          this.restart()
         }
       }
     }, 1000)
+  }
+
+  async restart() {
+    clearInterval(this.resourceCheckInt)
+    await this.stop()
+    await this.start()
   }
 
   connectToScreenProcess() {

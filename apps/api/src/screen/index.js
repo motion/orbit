@@ -43,6 +43,7 @@ type TScreenState = {
   lastScreenChange: Number,
   mousePosition: [Number, Number],
   keyboard: Object,
+  highlightWords: { [String]: boolean },
 }
 
 export default class ScreenState {
@@ -62,6 +63,17 @@ export default class ScreenState {
     lastScreenChange: Date.now(),
     mousePosition: [0, 0],
     keyboard: {},
+    // some test highlight words
+    highlightWords: {
+      seen: true,
+      for: true,
+      the: true,
+      has: true,
+      are: true,
+      is: true,
+      then: true,
+      with: true,
+    },
   }
 
   constructor() {

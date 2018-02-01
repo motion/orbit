@@ -10,6 +10,7 @@ export default class ContextStore {
   lastOCR = null
   mousePosition = null
   keyboard = null
+  highlightWords = null || {}
 
   pause() {
     this.start()
@@ -52,6 +53,7 @@ export default class ContextStore {
     lastScreenChange,
     lastOCR,
     linePositions,
+    highlightWords,
   }) => {
     if (keyboard) {
       this.keyboard = keyboard
@@ -74,6 +76,9 @@ export default class ContextStore {
     }
     if (linePositions) {
       this.linePositions = linePositions
+    }
+    if (highlightWords) {
+      this.highlightWords = highlightWords
     }
   }
 }

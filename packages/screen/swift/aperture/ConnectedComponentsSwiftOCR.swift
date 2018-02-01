@@ -141,7 +141,7 @@ class ConnectedComponentsSwiftOCR {
       mergeLabelRects.append(labelRect)
     }
 
-    //Merge rects
+//    //Merge rects
 //    var filteredMergeLabelRects = [CGRect]()
 //    for rect in mergeLabelRects {
 //      var intersectCount = 0

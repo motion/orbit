@@ -11,6 +11,7 @@ const BLACKLIST = {
   iterm2: true,
   VSCode: true,
   Xcode: true,
+  finder: true,
 }
 
 console.log('writing screenshots to', Constants.TMP_DIR)

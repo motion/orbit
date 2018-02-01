@@ -4,7 +4,7 @@ import * as Helpers from '~/helpers'
 import { ipcMain, screen } from 'electron'
 import * as Constants from '~/constants'
 import { throttle, once } from 'lodash'
-import MenuItems from './menuItems'
+import MenuItems from './MenuItems'
 import { view } from '@mcro/black'
 import PeekWindow from './windows/PeekWindow'
 import HighlightsWindow from './windows/HighlightsWindow'
@@ -180,10 +180,10 @@ export default class Windows extends React.Component {
           onFocus={this.onOraFocus}
           devToolsExtensions={Helpers.getExtensions(['mobx', 'react'])}
         />
-        <PeekWindow
+        {/* <PeekWindow
           appPosition={this.state.oraPosition}
           onWindows={this.handlePeekWindows}
-        />
+        /> */}
         {/* SETTINGS PANE: */}
         {this.state.loadSettings && (
           <Window

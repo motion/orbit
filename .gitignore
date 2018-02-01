@@ -25,6 +25,7 @@ apps/web/build
 apps/api/es6
 apps/api/build
 apps/site/build
+apps/electron/build
 apps/electron-build/app
 apps/crawler/build
 packages/search/build

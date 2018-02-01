@@ -10,7 +10,7 @@
     "url": "https://raw.githubusercontent.com/motion/orbit-updates/master/updates.json"
   },
   "scripts": {
-    "start": "NODE_ENV=development electron ./lib/start-app",
+    "start": "./start.sh",
     "postinstall": "electron-rebuild",
     "build": "CHUNK_COMMONS=false TARGET=electron NODE_ENV=production mcro-build",
     "watch": "npm run build -- --watch",
@@ -43,6 +43,7 @@
     "react-dom": "^16.2.0",
     "sb-promisify": "^2.0.2",
     "source-map-support": "^0.5.0",
-    "usage": "^0.7.1"
+    "usage": "^0.7.1",
+    "watch": "^1.0.2"
   }
 }

@@ -14,6 +14,26 @@ if (process.env.NODE_ENV !== 'production') {
   require('source-map-support/register')
 }
 
+// exit handling
+const exitHandler = code => {
+  console.log('got exit', code)
+  process.exit(code)
+}
+// dont close instantly
+process.stdin.resume()
+// do something when app is closing
+process.on('exit', exitHandler)
+process.on('SIGINT', () => exitHandler(0))
+process.on('SIGUSR1', exitHandler)
+process.on('SIGUSR2', exitHandler)
+process.on('uncaughtException', (...args) => {
+  console.log('uncaughtException', ...args)
+})
+process.on('unhandledRejection', function(reason, promise) {
+  console.log('Electron: Unhandled Rejection Promise ', promise, reason)
+  console.log(reason.stack)
+})
+
 // share state because node loads multiple copies
 extras.shareGlobalState()
 

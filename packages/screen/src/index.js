@@ -126,8 +126,8 @@ export default class Screen {
       for (const child of children) {
         const usage = await pusage(child.PID)
         const memoryMB = Math.round(usage.memory / 1000 / 1000) // start at byte
-        if ((i % 60) * 3 === 0) {
-          // every 3 minute
+        if (i % 120 === 0) {
+          //     ^ seconds
           console.log('Current memory usage', memoryMB, 'MB')
         }
         if (memoryMB > 250) {

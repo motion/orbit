@@ -8,10 +8,9 @@ export default class ScreenClient {
     isPaused: false,
   }
   queuedMessages = []
-  onStateChange = _ => _
 
   constructor({ onStateChange } = {}) {
-    this.onStateChange = onStateChange
+    this.onStateChange = onStateChange || (_ => _)
     this._setupLink()
   }
 
@@ -42,12 +41,12 @@ export default class ScreenClient {
     this.ws.onmessage = ({ data }) => {
       try {
         if (data.slice(0, 5) === 'state') {
-          const value = JSON.parse(data.slice(6))
-          console.log('got state', value)
-          this.state = value
-          if (this.onStateChange) {
-            this.onStateChange(this.state)
+          const newState = JSON.parse(data.slice(6))
+          this.state = {
+            ...this.state,
+            ...newState,
           }
+          this.onStateChange(this.state)
         }
       } catch (err) {
         console.log(`client receiving message error`, data)

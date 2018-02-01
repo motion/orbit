@@ -160,7 +160,12 @@ final class Recorder: NSObject {
             // coming from us, ignore
             return
           }
-          if action == "start" || action == "resume" {
+          if action == "resume" {
+            self.start()
+            self.resume()
+            return
+          }
+          if action == "start" {
             self.start()
             return
           }
@@ -183,6 +188,7 @@ final class Recorder: NSObject {
           }
           if action == "pause" {
             self.stop()
+            self.pause()
             return
           }
           if action == "clear" {
@@ -219,6 +225,14 @@ final class Recorder: NSObject {
       session.stopRunning()
       self.send("{ \"state\": { \"isRunning\": false } }")
     }
+  }
+  
+  func resume() {
+    self.send("{ \"state\": { \"isPaused\": false } }")
+  }
+  
+  func pause() {
+    self.send("{ \"state\": { \"isPaused\": true } }")
   }
 
   func watchBounds(fps: Int, boxes: Array<Box>, showCursor: Bool, videoCodec: String? = nil, sampleSpacing: Int, sensitivity: Int, debug: Bool) {

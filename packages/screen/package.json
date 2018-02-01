@@ -15,10 +15,13 @@
     "aperture"
   ],
   "dependencies": {
+    "ps-tree": "^1.1.0",
+    "pidusage": "^1.2.0",
     "reconnecting-websocket": "^3.2.2",
     "html5-websocket": "^2.0.2",
     "electron-util": "^0.2.1",
     "execa": "^0.8.0",
+    "sb-promisify": "^2.0.2",
     "macos-version": "^4.0.1",
     "ws": "^4.0.0"
   }

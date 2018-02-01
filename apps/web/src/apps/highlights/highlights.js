@@ -153,44 +153,42 @@ export default class HighlightsPage {
   render({ store }) {
     const { showAll, context, hoveredWord, hoveredLine } = store
     return (
-      <contain $highlights>
-        <frame if={showAll}>
-          {(context.ocrWords || []).map(item => {
-            const [x, y, width, height, word] = item
-            const key = store.getKey(item)
-            return (
-              <word
-                key={key}
-                $hovered={hoveredWord && key === hoveredWord}
-                style={{
-                  top: y - HL_PAD - TOP_BAR_PAD,
-                  left: x - HL_PAD,
-                  width: width + HL_PAD * 2,
-                  height: height + HL_PAD * 2,
-                }}
-              >
-                <wordInner>{word}</wordInner>
-              </word>
-            )
-          })}
-          {(context.linePositions || []).map(item => {
-            const [x, y, width, height] = item
-            const key = store.getKey(item)
-            return (
-              <ocrLine
-                key={key}
-                $hoveredLine={hoveredLine && key === hoveredLine}
-                style={{
-                  top: y / 2 - TOP_BAR_PAD,
-                  left: x,
-                  width: width,
-                  height: height / 2 + 5, // add some padding
-                }}
-              />
-            )
-          })}
-        </frame>
-      </contain>
+      <frame if={showAll}>
+        {(context.ocrWords || []).map(item => {
+          const [x, y, width, height, word] = item
+          const key = store.getKey(item)
+          return (
+            <word
+              key={key}
+              $hovered={hoveredWord && key === hoveredWord}
+              style={{
+                top: y - HL_PAD - TOP_BAR_PAD,
+                left: x - HL_PAD,
+                width: width + HL_PAD * 2,
+                height: height + HL_PAD * 2,
+              }}
+            >
+              <wordInner>{word}</wordInner>
+            </word>
+          )
+        })}
+        {(context.linePositions || []).map(item => {
+          const [x, y, width, height] = item
+          const key = store.getKey(item)
+          return (
+            <ocrLine
+              key={key}
+              $hoveredLine={hoveredLine && key === hoveredLine}
+              style={{
+                top: y / 2 - TOP_BAR_PAD,
+                left: x,
+                width: width,
+                height: height / 2 + 5, // add some padding
+              }}
+            />
+          )
+        })}
+      </frame>
     )
   }
 

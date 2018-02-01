@@ -5,6 +5,10 @@ import Swindler from '@mcro/swindler'
 import { isEqual, throttle, last } from 'lodash'
 import iohook from 'iohook'
 import * as Constants from '~/constants'
+import cp from 'child_process'
+
+// just to be sure, kill any hanging old aperture processes
+cp.exec('pkill -9 aperture')
 
 const APP_ID = 'screen'
 const BLACKLIST = {

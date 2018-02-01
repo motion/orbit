@@ -160,7 +160,7 @@ final class Recorder: NSObject {
             // coming from us, ignore
             return
           }
-          if action == "resume" {
+          if action == "resum" {
             self.start()
             self.resume()
             return
@@ -213,25 +213,27 @@ final class Recorder: NSObject {
     }
     if !session.isRunning {
       self.shouldCancel = false
-      print("screen: starting...")
       session.startRunning()
-      self.send("{ \"state\": { \"isRunning\": true } }")
+      self.send("{ \"state\": { \"isRunning\": true, \"isPaused\": false } }")
     }
   }
 
   func stop() {
     if session.isRunning {
-      print("screen: stopping...")
       session.stopRunning()
       self.send("{ \"state\": { \"isRunning\": false } }")
     }
   }
   
   func resume() {
+    print("screen: resuming...")
+    self.start()
     self.send("{ \"state\": { \"isPaused\": false } }")
   }
   
   func pause() {
+    print("screen: pausing...")
+    self.stop()
     self.send("{ \"state\": { \"isPaused\": true } }")
   }
 

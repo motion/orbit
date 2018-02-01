@@ -22,15 +22,15 @@ export default class ScreenClient {
     this._send({ action: 'pause' })
   }
 
-  start = () => {
-    this._send({ action: 'start' })
+  resume = () => {
+    this._send({ action: 'resume' })
   }
 
   toggle = () => {
     if (!this.state.isPaused) {
       this.pause()
     } else {
-      this.start()
+      this.resume()
     }
   }
 

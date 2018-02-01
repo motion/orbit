@@ -93,6 +93,9 @@ export default class Screen {
       if (action === 'pause') {
         this.pause()
       }
+      if (action === 'resume') {
+        this.resume()
+      }
       if (action === 'start') {
         this.start()
       }

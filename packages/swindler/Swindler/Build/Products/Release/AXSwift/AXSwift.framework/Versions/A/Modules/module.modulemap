@@ -1,0 +1,11 @@
+framework module AXSwift {
+  umbrella header "AXSwift-umbrella.h"
+
+  export *
+  module * { export * }
+}
+
+module AXSwift.Swift {
+    header "AXSwift-Swift.h"
+    requires objc
+}

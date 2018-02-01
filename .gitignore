@@ -32,7 +32,7 @@ apps/ocr/data
 packages/search/build
 
 packages/swindler/Swindler/Index/
-!packages/swindler/Swindler/Build
+packages/swindler/Swindler/Build/Intermediates.noindex
 **/*/Index
 
 packages/screen/swift/aperture.xcodeproj

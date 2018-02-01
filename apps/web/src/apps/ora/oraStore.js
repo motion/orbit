@@ -173,7 +173,7 @@ export default class OraStore {
       }
       const nextStackItem = contextToResult(activeContext)
       if (!nextStackItem.id) {
-        console.log('no good id to update', nextStackItem, lastId)
+        console.log('no good id to update', nextStackItem)
         return
       }
       if (!isEqual(lastStackItem, nextStackItem)) {

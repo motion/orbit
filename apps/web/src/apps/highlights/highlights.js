@@ -6,8 +6,9 @@ import * as Helpers from '~/helpers'
 const HL_PAD = 2
 const TOP_BAR_PAD = 22
 const getHoverProps = Helpers.hoverSettler({
-  enterDelay: 0,
+  enterDelay: 600,
   onHovered: object => {
+    console.log('send peek', object)
     Helpers.OS.send('peek-target', object)
   },
 })
@@ -129,13 +130,13 @@ class HighlightsStore {
       }
     } else if (hovered && !current) {
       // mouseEnter
-      if (hoverEvents[hovered]) {
-        hoverEvents[hovered].onMouseEnter(toEvent(hovered))
+      if (hoverEvents[current]) {
+        hoverEvents[current].onMouseEnter(toEvent(hovered))
       }
     } else if (hovered) {
       // mouseMove
-      if (hoverEvents[hovered]) {
-        hoverEvents[hovered].onMouseMove(toEvent(hovered))
+      if (hoverEvents[current]) {
+        hoverEvents[current].onMouseMove(toEvent(hovered))
       }
     }
     // update state
@@ -209,7 +210,7 @@ export default class HighlightsPage {
       // borderBottom: [1, 'dotted', [200, 200, 200, 0.4]],
     },
     hovered: {
-      background: 'red',
+      background: [100, 100, 100, 0.1],
       opacity: 1,
     },
     wordInner: {

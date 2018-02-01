@@ -164,7 +164,8 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
     if (ref) {
       this.peekRef = ref.window
       // make sure its in front of the ora window
-      this.peekRef.focus()
+      // console.log('handlepeek ref, focusing')
+      // this.peekRef.focus()
     }
   }
 
@@ -223,18 +224,18 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
       <React.Fragment>
         {this.state.peeks.map((peek, index) => {
           // peek always in front
-          const isPeek = index === 0
+          const isAttached = index === 0
           const { key, size } = peek
           const position = peek.position
           return (
             <Window
               key={key}
-              showDevTools={true || peek.showDevTools}
-              alwaysOnTop={isPeek || peek.alwaysOnTop}
+              showDevTools={peek.showDevTools}
+              alwaysOnTop={isAttached || peek.alwaysOnTop}
               animatePosition={this.state.wasShowing}
               show={peek.show}
               file={`${Constants.APP_URL}/peek?key=${key}`}
-              ref={isPeek ? ref => this.handlePeekRef(ref, peek) : _ => _}
+              ref={isAttached ? ref => this.handlePeekRef(ref, peek) : _ => _}
               onReadyToShow={() => this.handleReadyToShow(peek)}
               {...windowProps}
               size={size}

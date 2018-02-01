@@ -175,7 +175,7 @@ class WebView {
 
     handleMouseEnter = () => {
       if (!this.isTorn) {
-        OS.send('peek-focus')
+        // OS.send('peek-focus')
         clearTimeout(this.leftTimeout)
         this.isHovered = true
       }

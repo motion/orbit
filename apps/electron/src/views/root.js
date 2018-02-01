@@ -86,8 +86,6 @@ import { ScreenClient } from '@mcro/screen'
             getter(state)
           }
           this._oraStateGetters = []
-        } else {
-          console.log('nothing is listening for state')
         }
       })
     }
@@ -109,6 +107,7 @@ import { ScreenClient } from '@mcro/screen'
     }, 80)
 
     async showOra() {
+      console.log('showOra')
       this.appRef.show()
       await Helpers.sleep(50)
       await this.sendOraSync('ora-toggle')
@@ -118,10 +117,9 @@ import { ScreenClient } from '@mcro/screen'
     }
 
     async hideOra() {
-      console.log('send toggle')
+      console.log('hideOra')
       await this.sendOraSync('ora-toggle')
       await Helpers.sleep(150)
-      console.log('now hide')
       if (!this.settingsVisible && !this.oraState.preventElectronHide) {
         this.appRef.hide()
       }

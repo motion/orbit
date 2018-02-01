@@ -31,7 +31,7 @@ process.on('SIGUSR2', exitHandler)
 // uncaught exceptions
 process.on('uncaughtException', (...args) => {
   console.log('uncaughtException', ...args)
-  process.exit(0)
+  // process.exit(0)
 })
 // promise exceptions
 process.on('unhandledRejection', function(reason, promise) {

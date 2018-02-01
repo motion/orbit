@@ -160,8 +160,11 @@ final class Recorder: NSObject {
             // coming from us, ignore
             return
           }
+          if action == "pause" {
+            self.pause()
+            return
+          }
           if action == "resum" {
-            self.start()
             self.resume()
             return
           }
@@ -184,11 +187,6 @@ final class Recorder: NSObject {
             } catch {
               print("Error parsing arguments \(text)")
             }
-            return
-          }
-          if action == "pause" {
-            self.stop()
-            self.pause()
             return
           }
           if action == "clear" {

@@ -174,8 +174,6 @@ export default class Root extends React.Component {
         />
         <Tray
           onClick={() => {
-            console.log('tray was clicked')
-            rootStore.screenClient.clear()
             rootStore.screenClient.toggle()
           }}
         />

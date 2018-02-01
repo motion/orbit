@@ -72,8 +72,8 @@ export default class Screen {
   }
 
   handleSocketMessage = str => {
-    // console.log('handleSocketMessage', str)
     const { action, value, state } = JSON.parse(str)
+    // console.log('screen.action', action)
     try {
       // clear is fast
       if (action === 'clearWord') {
@@ -81,8 +81,7 @@ export default class Screen {
       }
       // state goes out to clients
       if (state) {
-        this.state = state
-        this.socketSend('state', this.state)
+        this.setState(state)
       }
       if (action === 'words') {
         this.onWordsCB(value)
@@ -109,9 +108,37 @@ export default class Screen {
   }
 
   start = async () => {
+    console.log('starting screen')
     this.setState({ isPaused: false })
     await this.runScreenProcess()
     await this.connectToScreenProcess()
+    this.monitorScreenProcess()
+  }
+
+  async monitorScreenProcess() {
+    // monitor cpu usage
+    const children = await ptree(this.process.pid)
+    const maxSecondsSpinning = 10
+    let secondsSpinning = 0
+    const resourceCheckInt = setInterval(async () => {
+      for (const child of children) {
+        const usage = await pusage(child.PID)
+        if (usage.cpu > 90) {
+          if (secondsSpinning > 5) {
+            console.log('High cpu usage for', secondsSpinning, 'seconds')
+          }
+          secondsSpinning += 1
+        } else {
+          secondsSpinning = 0
+        }
+        if (secondsSpinning > maxSecondsSpinning) {
+          clearInterval(resourceCheckInt)
+          console.log('Screen burning far too long, restarting...')
+          await this.stop()
+          await this.start()
+        }
+      }
+    }, 1000)
   }
 
   connectToScreenProcess() {
@@ -156,29 +183,6 @@ export default class Screen {
       const out = data.trim()
       console.log(out)
     })
-
-    // monitor cpu usage
-    const children = await ptree(this.process.pid)
-    const maxSecondsSpinning = 10
-    let secondsSpinning = 0
-    setInterval(async () => {
-      for (const child of children) {
-        const usage = await pusage(child.PID)
-        if (usage.cpu > 90) {
-          if (secondsSpinning > 5) {
-            console.log('High cpu usage for', secondsSpinning, 'seconds')
-          }
-          secondsSpinning += 1
-        } else {
-          secondsSpinning = 0
-        }
-        if (secondsSpinning > maxSecondsSpinning) {
-          console.log('Screen burning far too long, restarting...')
-          await this.stop()
-          await this.start()
-        }
-      }
-    }, 1000)
   }
 
   watchBounds = (
@@ -239,7 +243,7 @@ export default class Screen {
   }
 
   resume = () => {
-    this.setState({ isPaused: true })
+    this.setState({ isPaused: false })
     this.socketSend('start')
     return this
   }
@@ -277,11 +281,11 @@ export default class Screen {
     this.process.stdout.removeAllListeners()
     this.process.stderr.removeAllListeners()
     setTimeout(() => {
-      if (!this.process) return
       this.process.kill()
       this.process.kill('SIGKILL')
     })
     await this.process
+    console.log('killed process')
     delete this.process
     // sleep to avoid issues
     await sleep(40)

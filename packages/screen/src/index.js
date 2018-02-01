@@ -3,6 +3,12 @@ import execa from 'execa'
 import macosVersion from 'macos-version'
 import electronUtil from 'electron-util/node'
 import { Server } from 'ws'
+import promisify from 'sb-promisify'
+import pusage_ from 'pidusage'
+import ptree_ from 'ps-tree'
+
+const pusage = promisify(pusage_.stat)
+const ptree = promisify(ptree_)
 
 export ScreenClient from './client'
 
@@ -30,38 +36,6 @@ export default class Screen {
     this.debugBuild = debugBuild
     macosVersion.assertGreaterThanOrEqualTo('10.12')
     this.setupSocket()
-    this.setupRecorder()
-  }
-
-  setupRecorder() {
-    if (this.recorder !== undefined) {
-      throw new Error('Call `.stop()` first')
-    }
-    const BIN = path.join(
-      electronUtil.fixPathForAsarUnpack(__dirname),
-      '..',
-      this.debugBuild ? 'run-debug' : 'run-release',
-    )
-    console.log('exec', BIN)
-    this.recorder = execa(BIN, [], {
-      reject: false,
-    })
-    this.recorder.catch((err, ...rest) => {
-      console.log('screen err:', ...rest)
-      console.log(err)
-      console.log(err.stack)
-      throw err
-    })
-    this.recorder.stderr.setEncoding('utf8')
-    this.recorder.stderr.on('data', data => {
-      console.log('screen stderr:', data)
-      this.onErrorCB(data)
-    })
-    this.recorder.stdout.setEncoding('utf8')
-    this.recorder.stdout.on('data', data => {
-      const out = data.trim()
-      console.log(out)
-    })
   }
 
   setupSocket() {
@@ -98,8 +72,8 @@ export default class Screen {
   }
 
   handleSocketMessage = str => {
-    // console.log('handleSocketMessage', str)
     const { action, value, state } = JSON.parse(str)
+    // console.log('screen.action', action)
     try {
       // clear is fast
       if (action === 'clearWord') {
@@ -107,8 +81,7 @@ export default class Screen {
       }
       // state goes out to clients
       if (state) {
-        this.state = state
-        this.socketSend('state', this.state)
+        this.setState(state)
       }
       if (action === 'words') {
         this.onWordsCB(value)
@@ -118,6 +91,9 @@ export default class Screen {
       }
       if (action === 'pause') {
         this.pause()
+      }
+      if (action === 'resume') {
+        this.resume()
       }
       if (action === 'start') {
         this.start()
@@ -131,14 +107,43 @@ export default class Screen {
     }
   }
 
-  start = () => {
-    this.setState({
-      isPaused: false,
-    })
-    if (!this.recorder) {
-      this.setupRecorder()
-    }
+  start = async () => {
+    console.log('starting screen')
+    this.setState({ isPaused: false })
+    await this.runScreenProcess()
+    await this.connectToScreenProcess()
+    this.monitorScreenProcess()
+  }
+
+  async monitorScreenProcess() {
+    // monitor cpu usage
+    const children = await ptree(this.process.pid)
+    const maxSecondsSpinning = 10
+    let secondsSpinning = 0
+    const resourceCheckInt = setInterval(async () => {
+      for (const child of children) {
+        const usage = await pusage(child.PID)
+        if (usage.cpu > 90) {
+          if (secondsSpinning > 5) {
+            console.log('High cpu usage for', secondsSpinning, 'seconds')
+          }
+          secondsSpinning += 1
+        } else {
+          secondsSpinning = 0
+        }
+        if (secondsSpinning > maxSecondsSpinning) {
+          clearInterval(resourceCheckInt)
+          console.log('Screen burning far too long, restarting...')
+          await this.stop()
+          await this.start()
+        }
+      }
+    }, 1000)
+  }
+
+  connectToScreenProcess() {
     return new Promise(res => {
+      // wait for connection to socket before sending start
       let startWait = setInterval(() => {
         if (this.listeners.length) {
           clearInterval(startWait)
@@ -146,6 +151,37 @@ export default class Screen {
           res()
         }
       }, 10)
+    })
+  }
+
+  async runScreenProcess() {
+    if (this.process !== undefined) {
+      throw new Error('Call `.stop()` first')
+    }
+    const BIN = path.join(
+      electronUtil.fixPathForAsarUnpack(__dirname),
+      '..',
+      this.debugBuild ? 'run-debug' : 'run-release',
+    )
+    console.log('exec', BIN)
+    this.process = execa(BIN, [], {
+      reject: false,
+    })
+    this.process.catch((err, ...rest) => {
+      console.log('screen err:', ...rest)
+      console.log(err)
+      console.log(err.stack)
+      throw err
+    })
+    this.process.stderr.setEncoding('utf8')
+    this.process.stderr.on('data', data => {
+      console.log('screen stderr:', data)
+      this.onErrorCB(data)
+    })
+    this.process.stdout.setEncoding('utf8')
+    this.process.stdout.on('data', data => {
+      const out = data.trim()
+      console.log(out)
     })
   }
 
@@ -207,7 +243,7 @@ export default class Screen {
   }
 
   resume = () => {
-    this.setState({ isPaused: true })
+    this.setState({ isPaused: false })
     this.socketSend('start')
     return this
   }
@@ -238,19 +274,19 @@ export default class Screen {
   }
 
   stop = async () => {
-    if (this.recorder === undefined) {
+    if (this.process === undefined) {
       // null if not recording
       return
     }
-    this.recorder.stdout.removeAllListeners()
-    this.recorder.stderr.removeAllListeners()
+    this.process.stdout.removeAllListeners()
+    this.process.stderr.removeAllListeners()
     setTimeout(() => {
-      if (!this.recorder) return
-      this.recorder.kill()
-      this.recorder.kill('SIGKILL')
+      this.process.kill()
+      this.process.kill('SIGKILL')
     })
-    await this.recorder
-    delete this.recorder
+    await this.process
+    console.log('killed process')
+    delete this.process
     // sleep to avoid issues
     await sleep(40)
   }

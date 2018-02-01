@@ -160,7 +160,15 @@ final class Recorder: NSObject {
             // coming from us, ignore
             return
           }
-          if action == "start" || action == "resume" {
+          if action == "pause" {
+            self.pause()
+            return
+          }
+          if action == "resum" {
+            self.resume()
+            return
+          }
+          if action == "start" {
             self.start()
             return
           }
@@ -179,10 +187,6 @@ final class Recorder: NSObject {
             } catch {
               print("Error parsing arguments \(text)")
             }
-            return
-          }
-          if action == "pause" {
-            self.stop()
             return
           }
           if action == "clear" {
@@ -207,18 +211,28 @@ final class Recorder: NSObject {
     }
     if !session.isRunning {
       self.shouldCancel = false
-      print("screen: starting...")
       session.startRunning()
-      self.send("{ \"state\": { \"isRunning\": true } }")
+      self.send("{ \"state\": { \"isRunning\": true, \"isPaused\": false } }")
     }
   }
 
   func stop() {
     if session.isRunning {
-      print("screen: stopping...")
       session.stopRunning()
       self.send("{ \"state\": { \"isRunning\": false } }")
     }
+  }
+  
+  func resume() {
+    print("screen: resuming...")
+    self.start()
+    self.send("{ \"state\": { \"isPaused\": false } }")
+  }
+  
+  func pause() {
+    print("screen: pausing...")
+    self.stop()
+    self.send("{ \"state\": { \"isPaused\": true } }")
   }
 
   func watchBounds(fps: Int, boxes: Array<Box>, showCursor: Bool, videoCodec: String? = nil, sampleSpacing: Int, sensitivity: Int, debug: Bool) {

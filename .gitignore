@@ -32,6 +32,7 @@ apps/ocr/data
 packages/search/build
 
 packages/swindler/Swindler/Index/
+!packages/swindler/Swindler/Build
 **/*/Index
 
 packages/screen/swift/aperture.xcodeproj

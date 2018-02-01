@@ -344,7 +344,7 @@ final class Recorder: NSObject {
     let verticalImage = filters.filterForVerticalContentFinding(image: images.resize(ocrCharactersImage, width: vWidth, height: vHeight)!)
     let verticalImageRep = NSBitmapImageRep(cgImage: verticalImage)
     // debug
-    images.writeCGImage(image: verticalImage, to: "\(box.screenDir!)/\(box.id)-content-find.png")
+    Async.background { images.writeCGImage(image: verticalImage, to: "\(box.screenDir!)/\(box.id)-section-find.png") }
     if shouldDebug {
       print("3. filter vertical: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
       start = DispatchTime.now()
@@ -455,37 +455,37 @@ final class Recorder: NSObject {
     }
     return sectionLines
   }
-  
+
   func getContent(_ cgImage: CGImage, box: Box) -> [Int]? {
-    var biggestBox: BoundingBox?
-    let boxFindScale = 8
+    var big = CGRect(x: 0, y: 0, width: 0, height: 0)
+    let boxFindScale = 6
     let binarizedImage = filters.filterImageForContentFinding(image: cgImage, scale: boxFindScale)
-    if shouldDebug {
+//    if shouldDebug {
       Async.background { images.writeCGImage(image: binarizedImage, to: "\(box.screenDir!)/\(box.id)-binarized.png") }
-    }
-    let cc = ConnectedComponents()
-    let result = cc.labelImageFast(image: binarizedImage, calculateBoundingBoxes: true, invert: true)
-    if let boxes = result.boundingBoxes {
-      if (boxes.count > 0) {
-        for box in boxes {
-          if (biggestBox == nil || box.value.getSize() > biggestBox!.getSize()) {
-            biggestBox = box.value
-          }
+//    }
+    let cc = ConnectedComponentsSwiftOCR()
+    let boxes = cc.extractBlobs(binarizedImage, debug: false)
+    if boxes.count > 0 {
+      for box in boxes {
+        if Int(box.minX) == 1 && Int(box.minY) == 1 {
+          // skip box that contains entire frame
+          continue
+        }
+        if (Int(box.width) * Int(box.height) > Int(big.width) * Int(big.height)) {
+          big = box
         }
       }
-    }
-    // if no found content box, write full image
-    if biggestBox == nil {
+    } else {
+      print("no biggest box found")
       return nil
     }
     // found content
-    let bb = biggestBox!
     let innerPad = boxFindScale / 2 // make it a bit smaller to avoid grabbing edge stuff
     // scale to full size
-    let x = bb.x_start * boxFindScale + box.x + innerPad
-    let y = bb.y_start * boxFindScale + box.y + innerPad
-    let width = bb.getWidth() * boxFindScale - innerPad * 2
-    let height = bb.getHeight() * boxFindScale - innerPad * 2
+    let x = Int(big.minX) * boxFindScale + box.x + innerPad
+    let y = Int(big.minY) * boxFindScale + box.y + innerPad
+    let width = Int(big.width) * boxFindScale - innerPad * 2
+    let height = Int(big.height) * boxFindScale - innerPad * 2
     return [ x, y, width, height ]
   }
 
@@ -727,7 +727,7 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
         }
         // wait for 2 frames of clear
         // small delay by default to not pick up old highlights that havent cleared yet
-        self.changeHandle = Async.userInteractive(after: changedBox ? delayHandleChange : 0) { // debounce (seconds)
+        self.changeHandle = Async.userInteractive(after: changedBox ? delayHandleChange : 0.02) { // debounce (seconds)
           self.isScanning = true
 
           // update characters buffer
@@ -743,7 +743,7 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
           ) {
             self.frames[boxId] = frame
           }
-          
+
           release()
 
           // after x seconds, re-enable watching

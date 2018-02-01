@@ -49,15 +49,14 @@ class ConnectedComponents {
               // the value inherited from the previous row. We can only do this if we have not
               // done an in-place merge already for this component in this row, and if we started
               // this component with a new label.
-              if (canMergeInPlace) {
-                currentPixelLabel = sameColInPreviousRowLabel
-                for i in startColForCurrentLabel ..< col {
-                  outputRow[i] = currentPixelLabel
-                }
-                canMergeInPlace = false
-              }
-              // optimization
-              else {
+//              if (canMergeInPlace) {
+//                currentPixelLabel = sameColInPreviousRowLabel
+//                for i in startColForCurrentLabel ..< col {
+//                  outputRow[i] = currentPixelLabel
+//                }
+//                canMergeInPlace = false
+//              }
+//              else {
                 // If the same row in the previous column is not equal to the current
                 // label then they must be merged. Add an entry to labelMerges.
                 if var existingMerges = labelMerges[currentPixelLabel] {
@@ -67,7 +66,7 @@ class ConnectedComponents {
                 else {
                   labelMerges[currentPixelLabel] = [sameColInPreviousRowLabel]
                 }
-              }
+//              }
             }
           }
           else if (sameColInPreviousRowLabel >= 0) {

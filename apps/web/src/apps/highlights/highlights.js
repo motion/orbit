@@ -202,25 +202,27 @@ export default class HighlightsPage {
     word: {
       position: 'absolute',
       padding: HL_PAD,
-      borderRadius: 8,
-      background: [200, 200, 200, 0.5],
+      borderRadius: 3,
+      background: [200, 200, 200, 0.15],
+      // borderBottom: [1, [200, 200, 200, 0.2]],
     },
     hovered: {
       background: [250, 0, 0, 0.5],
     },
     wordInner: {
+      opacity: 0.7,
       top: -12,
-      left: -12,
-      fontSize: 9,
+      left: -4,
+      fontSize: 8,
       height: 10,
-      opacity: 1,
       position: 'absolute',
       wordWrap: 'no-wrap',
       whiteSpace: 'pre',
     },
     ocrLine: {
+      marginTop: -4,
       position: 'absolute',
-      borderBottom: [2, [0, 0, 0, 0.2]],
+      borderBottom: [1, [0, 0, 0, 0.2]],
     },
     hoveredLine: {
       borderBottomColor: 'blue',

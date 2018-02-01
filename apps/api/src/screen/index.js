@@ -65,6 +65,8 @@ export default class ScreenState {
       let uid = id++
       // send current state
       this.socketSend(socket, this.state)
+      // clear old highlights if theyre still up
+      this.resetHighlights()
       // add to active sockets
       this.activeSockets.push({ uid, socket })
       // listen for incoming
@@ -99,11 +101,9 @@ export default class ScreenState {
     return !!this.activeSockets.length
   }
 
-  start = () => {
-    this.resetHighlights() // clear old highlights if theyre still up
+  start = async () => {
     this.stopped = false
     this.startSwindler()
-    this.screenOCR.start()
     this.screenOCR.onWords(words => {
       console.log('got words', words ? words.length : 0)
       this.hasResolvedOCR = true
@@ -130,6 +130,8 @@ export default class ScreenState {
     this.watchMouse()
     this.watchKeyboard()
     iohook.start()
+    await this.screenOCR.start()
+    this.resetHighlights() // clear old highlights if theyre still up
   }
 
   async restartScreen() {
@@ -154,7 +156,15 @@ export default class ScreenState {
     this.swindler.onChange(({ event, message }) => {
       // immediately cancel stuff
       this.resetHighlights()
-      this.screenOCR.clear()
+
+      // prevent from running until we update bounds
+      this.screenOCR.clear().watchBounds({
+        fps: 1,
+        sampleSpacing: 100,
+        sensitivity: 20,
+        showCursor: false,
+        boxes: [],
+      })
 
       switch (event) {
         case 'FrontmostWindowChangedEvent':
@@ -291,12 +301,12 @@ export default class ScreenState {
     if (BLACKLIST[appName]) {
       return
     }
-    console.log('>', appName)
+
     // we are watching the whole app for words
     const settings = {
       fps: 10,
       sampleSpacing: 10,
-      sensitivity: 2,
+      sensitivity: 1,
       showCursor: false,
       boxes: [
         {
@@ -314,24 +324,22 @@ export default class ScreenState {
 
     this.screenSettings = settings
     this.hasResolvedOCR = false
-
-    // not paused, clear and resume
-    if (!this.screenOCR.state.isPaused) {
-      this.screenOCR.clear()
-      this.screenOCR.resume()
-    }
-
     this.screenOCR.watchBounds(settings)
 
-    // not paused, check if finished
-    if (!this.screenOCR.state.isPaused) {
-      this.clearOCRTimeout = setTimeout(async () => {
-        if (!this.hasResolvedOCR) {
-          console.log('seems like ocr has stopped working, restarting...')
-          this.restartScreen()
-        }
-      }, 15000)
+    if (this.screenOCR.state.isPaused) {
+      console.log('ispaused')
+      return
     }
+
+    // not paused, clear and resume
+    this.screenOCR.clear()
+    this.screenOCR.resume()
+    this.clearOCRTimeout = setTimeout(async () => {
+      if (!this.hasResolvedOCR) {
+        console.log('seems like ocr has stopped working, restarting...')
+        this.restartScreen()
+      }
+    }, 15000)
   }
 
   stop = () => {

@@ -131,16 +131,22 @@ export default class Screen {
     }
   }
 
-  start = async () => {
-    console.log('start')
+  start = () => {
     this.setState({
       isPaused: false,
     })
     if (!this.recorder) {
       this.setupRecorder()
-      await sleep(100)
     }
-    this.socketSend('start')
+    return new Promise(res => {
+      let startWait = setInterval(() => {
+        if (this.listeners.length) {
+          clearInterval(startWait)
+          this.socketSend('start')
+          res()
+        }
+      }, 10)
+    })
   }
 
   watchBounds = (
@@ -191,20 +197,24 @@ export default class Screen {
     }
 
     this.socketSend('watch', recorderOpts)
+    return this
   }
 
   pause = () => {
     this.setState({ isPaused: true })
     this.socketSend('pause')
+    return this
   }
 
   resume = () => {
     this.setState({ isPaused: true })
     this.socketSend('start')
+    return this
   }
 
   clear = () => {
     this.socketSend('clear')
+    return this
   }
 
   onClear = cb => {

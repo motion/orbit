@@ -54,12 +54,12 @@ class Filters {
     // this will ensure that rounded borders and sketchy outlines
     // will still connect to each other for the component finding
     filter = CIFilter(name: "CIMotionBlur")!
-    filter.setValue(1.75, forKey: "inputRadius")
+    filter.setValue(1.5, forKey: "inputRadius")
     filter.setValue(0.0, forKey: "inputAngle")
     outputImage = applyFilter(filter, for: outputImage)
     // motion blur vertical
     filter = CIFilter(name: "CIMotionBlur")!
-    filter.setValue(1.75, forKey: "inputRadius")
+    filter.setValue(1.5, forKey: "inputRadius")
     filter.setValue(1.5708, forKey: "inputAngle")
     outputImage = applyFilter(filter, for: outputImage)
     // threshold binarizes the image

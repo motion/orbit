@@ -160,6 +160,7 @@ export default class ScreenState {
   async restartScreen() {
     console.log('restartScreen')
     await this.screenOCR.stop()
+    console.log('starting back up')
     await this.screenOCR.start()
     this.screenOCR.watchBounds(this.screenSettings)
   }

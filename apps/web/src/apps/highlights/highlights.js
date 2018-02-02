@@ -206,20 +206,18 @@ export default class HighlightsPage {
     word: {
       position: 'absolute',
       padding: HL_PAD,
-      borderRadius: 3,
+      // borderRadius: 3,
       // background: [200, 200, 200, 0.15],
-      borderBottom: [2, 'dotted', [200, 200, 200, 0.4]],
     },
     highlighted: {
-      background: 'red',
-      borderColor: 'yellow',
+      borderBottom: [2, 'solid', '#EDD71E'],
     },
     hovered: {
       background: [100, 100, 100, 0.1],
       opacity: 1,
     },
     wordInner: {
-      opacity: 0.4,
+      opacity: 0.14,
       top: -14,
       left: -4,
       fontSize: 8,

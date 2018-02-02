@@ -113,15 +113,18 @@ export default class Screen {
   }
 
   start = async () => {
+    console.log('Starting screen')
     // kill old ones
     await killPort(PORT)
-    this.wss = new Server({ port: PORT })
-    this.setupSocket()
-    console.log('starting screen')
+    if (!this.wss) {
+      this.wss = new Server({ port: PORT })
+      this.setupSocket()
+    }
     this.setState({ isPaused: false })
     await this.runScreenProcess()
     await this.connectToScreenProcess()
     this.monitorScreenProcess()
+    console.log('Started screen')
   }
 
   async monitorScreenProcess() {
@@ -158,7 +161,10 @@ export default class Screen {
           }
         } catch (err) {
           console.log('error getting process info', err.message)
-          process.exit(0)
+          if (!this.process) {
+            console.log('restarting,')
+            await this.start()
+          }
         }
       }
     }, 1000)

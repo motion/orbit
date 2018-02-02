@@ -24,19 +24,20 @@ Powered by what people pay attention to.
 
 ## Steps
 
-* prod app comes preconfigured with our integrations hardcoded and working
-  * slack sync all our conversations into the feed
-  * make sure google docs / github are syncing well + hardcode a few
-  * add mock data sources (twitter => slack, medium => docs)
-* have easy process to cut production builds that update on both our computers auto
 * be able to always run those apps without trouble (debug perf and uptime)
-* get base features working (basic highlights + peek + interaction with tray smooth)
-* debug the OCR system so we can keep it running at all times without problems
-* sync attention data between our clients
-* improve the UX so the app feels good, doesnt crash, and tracks various apps well
-* iterate on the feed to make it more helpful until were happy
-* summarize items for notifications nicely
-* then get more real integrations working and iterate on everything
+* get dev experience to be good for both
+* preconfigured with our integrations hardcoded / working
+  * slack, google docs, github
+  * twitter => slack, medium => docs
+* easy way to cut prod builds that download
+* highlights
+* peek
+* tray ux
+* improve ocr
+* sync attention
+* feeds
+* summarization ?
+* ...
 
 ## Micro
 

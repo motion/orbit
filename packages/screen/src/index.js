@@ -55,7 +55,7 @@ export default class Screen {
     this.setState({ isPaused: false })
     await this.runScreenProcess()
     await this.connectToScreenProcess()
-    this.monitorScreenProcess()
+    // this.monitorScreenProcess()
     console.log('Started screen')
   }
 

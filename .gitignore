@@ -29,8 +29,8 @@ apps/electron-build/app
 apps/crawler/build
 packages/search/build
 
-packages/screen/swift/Build/Intermediates.noindex
-packages/swindler/Swindler/Build/Intermediates.noindex
+packages/screen/swift/Build
+packages/swindler/Swindler/Build
 
 
 **/*/Index

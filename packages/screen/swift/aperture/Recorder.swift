@@ -208,6 +208,7 @@ final class Recorder: NSObject {
   }
 
   func start() {
+    debug("screen.start()")
     if self.shouldCancel {
       self.shouldRunNextTime = true
     }
@@ -240,7 +241,8 @@ final class Recorder: NSObject {
   func debug(_ str: String) {
     if shouldDebugTiming {
       if curTime != nil {
-        print("\(str) \(Double(DispatchTime.now().uptimeNanoseconds - curTime!.uptimeNanoseconds) / 1_000_000)ms")
+        let timeEnd = Int(Double(DispatchTime.now().uptimeNanoseconds - curTime!.uptimeNanoseconds) / 1_000_000)
+        print("\(str.padding(toLength: 30, withPad: " ", startingAt: 0)) \(timeEnd)ms")
         curTime = DispatchTime.now()
       } else {
         print(str)
@@ -298,7 +300,6 @@ final class Recorder: NSObject {
     // if necessary, run ocr
     if unsolvedCharacters.count > 0 {
       // write ocr string
-      debug("found \(unsolvedCharacters.count) uniq out of \(allCharacters.count) total")
       let ocrString = unsolvedCharacters.enumerated().map({ item in
         return chars.charToString(item.element, debugID: "")
       }).joined(separator: "\n")
@@ -308,10 +309,9 @@ final class Recorder: NSObject {
       } catch {
         print("couldnt write pixel string \(error)")
       }
-      debug("getOCR characters.txt")
+      debug("getOCR - characters.txt")
       // run ocr
       foundCharacters = ocr!.ocrCharacters()
-      debug("getOCR ocr")
     }
     // collect ocr results
     if foundCharacters.count != unsolvedCharacters.count {
@@ -321,6 +321,7 @@ final class Recorder: NSObject {
     for (index, char) in unsolvedCharacters.enumerated() {
       ocrResults[char.outline] = foundCharacters[index]
     }
+    debug("getOCR - ocr \(unsolvedCharacters.count) uniq / \(allCharacters.count)")
     return ocrResults
   }
 
@@ -488,7 +489,7 @@ final class Recorder: NSObject {
       sectionLines[start] = lines
       total += lines.count
     }
-    debug("getLines")
+//    debug("getLines") // is 1.5ms
     return sectionLines
   }
 
@@ -522,11 +523,12 @@ final class Recorder: NSObject {
     let y = Int(big.minY) * boxFindScale + box.y + innerPad
     let width = Int(big.width) * boxFindScale - innerPad * 2
     let height = Int(big.height) * boxFindScale - innerPad * 2
-    debug("getContent connected-components, boxes \(boxes.count)")
+    debug("getContent - \(boxes.count) boxes")
     return [ x, y, width, height ]
   }
   
   func getWordsAndLines(_ ocrResults: [String: String], characterLines: [[Word]]) -> ([String], [String]) {
+    startTime()
     let chars = self.characters!
     var words = [String]()
     var lines = [String]()
@@ -571,6 +573,7 @@ final class Recorder: NSObject {
       }
       lines.append("[\(firstWord.x),\(minY),\(width),\(maxH)]")
     }
+//    debug("getWordsAndLines") // its 1.5ms
     return (words, lines)
   }
 
@@ -594,7 +597,7 @@ final class Recorder: NSObject {
     }
     /* check continuation */ queue.wait(); if handleCancel() { return nil }
     // content find
-    var frame = [0, 0, cgImage.width, cgImage.height]
+    var frame = [box.x, box.y, box.width, box.height]
     if findContent {
       if let newFrame = self.getContent(cgImage, box: box) {
         frame = newFrame
@@ -632,7 +635,7 @@ final class Recorder: NSObject {
       images.writeCGImage(image: cgImage, to: "\(box.screenDir!)/\(box.id)-original.png")
     }
     // return new box with content adjusted frame
-    print("got \(words.count) words in \(Double(DispatchTime.now().uptimeNanoseconds - startAll.uptimeNanoseconds) / 1_000_000)ms")
+    print("done! \(words.count) words                \(Int(Double(DispatchTime.now().uptimeNanoseconds - startAll.uptimeNanoseconds) / 1_000_000))ms")
     return Box(
       id: box.id,
       x: frame[0],
@@ -732,7 +735,7 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
     }
 //    let fpsInSeconds = 60 / 60 / self.fps // gives you fps => x  (60 => 0.16) and (2 => 0.5)
     // debounce while scrolling amt in seconds:
-    let delayHandleChange = 0.3
+    let delayHandleChange = 0.25
     // loop over boxes and check
     for boxId in self.boxes.keys {
       let box = self.frames[boxId] ?? self.boxes[boxId]!
@@ -747,7 +750,6 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
         if shouldRunNextTime {
           self.shouldRunNextTime = false
         }
-        print("changed! \(box.id)")
         self.send("{ \"action\": \"clearWord\", \"value\": \"\(box.id)\" }")
         // debounce
         if (self.changeHandle != nil) {

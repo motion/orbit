@@ -162,7 +162,6 @@ export default class Screen {
       throw new Error('Call `.stop()` first')
     }
     const binDir = this.debugBuild ? DEBUG_PATH : RELEASE_PATH
-    console.log('exec', binDir)
     this.process = execa('./aperture', [], {
       cwd: binDir,
       reject: false,

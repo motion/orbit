@@ -87,7 +87,6 @@ export default class ScreenState {
     this.wss = new Server({ port: PORT })
     this.setupSocket()
     this.stopped = false
-    this.startSwindler()
     this.screenOCR.onWords(words => {
       this.hasResolvedOCR = true
       this.updateState({
@@ -114,7 +113,10 @@ export default class ScreenState {
     this.watchKeyboard()
     iohook.start()
     await this.screenOCR.start()
-    this.resetHighlights() // clear old highlights if theyre still up
+    // clear old highlights if theyre still up
+    this.resetHighlights()
+    // swindler after ocr to ensure its ready
+    this.startSwindler()
   }
 
   setupSocket() {

@@ -3,6 +3,7 @@ import AVFoundation
 import AppKit
 
 let shouldDebugTiming = true
+let simpleDebugImages = false
 
 enum ApertureError: Error {
   case invalidAudioDevice
@@ -348,7 +349,7 @@ final class Recorder: NSObject {
         // finds characters
         let foundWords: [Word] = chars.find(id: index, bounds: lineBounds)
         // debug line
-        if self.shouldDebug {
+        if simpleDebugImages || self.shouldDebug {
           images.writeCGImage(
             image: images.cropImage(cgImage, box: CGRect(x: lineBounds[0], y: lineBounds[1], width: lineBounds[2], height: lineBounds[3]))!,
             to: "\(box.screenDir!)/linein-\(box.id)-\(id)-\(index).png"
@@ -384,8 +385,8 @@ final class Recorder: NSObject {
       imgData.append([Int]())
       var verticalFilled = 0
       for y in 0..<vHeight {
-        let x0 = min(maxWidth, frame[0] + x * scale)
-        let y0 = min(maxHeight, frame[1] + y * scale)
+        let x0 = max(0, min(maxWidth, frame[0] - box.x + x * scale))
+        let y0 = max(0, min(maxHeight, frame[1] - box.y + y * scale))
         let filled = verticalImageRep.colorAt(x: x0, y: y0)!.brightnessComponent < 0.95
         imgData[x].append(filled ? 1 : 0)
         if filled {
@@ -420,7 +421,7 @@ final class Recorder: NSObject {
     if verticalSections.count == 0 {
       verticalSections[0] = vWidth - 1
     }
-    if shouldDebug {
+    if simpleDebugImages || shouldDebug {
       var pixels = [PixelData]()
       for y in 0..<vHeight {
         for x in 0..<vWidth {
@@ -436,11 +437,11 @@ final class Recorder: NSObject {
 
   // sections to lines
   func getLines(_ verticalSections: Dictionary<Int, Int>, vWidth: Int, vHeight: Int, imgData: [[Int]]) -> Dictionary<Int, [LinePosition]> {
-//    startTime()
+    startTime()
     // second loop - find lines in sections
     var sectionLines = Dictionary<Int, [LinePosition]>()
     var total = 0
-    let minLineWidth = 2
+    let minLineWidth = 4
     for (start, end) in verticalSections {
       var lines = [LinePosition]()
       var lineStreak = 0
@@ -491,7 +492,7 @@ final class Recorder: NSObject {
       sectionLines[start] = lines
       total += lines.count
     }
-//    debug("getLines \(sectionLines.count)")
+    debug("getLines")
     return sectionLines
   }
 
@@ -501,7 +502,9 @@ final class Recorder: NSObject {
     let boxFindScale = 6
     let binarizedImage = filters.filterImageForContentFinding(image: cgImage, scale: boxFindScale)
     debug("getContent filter")
-    if shouldDebug { Async.background { images.writeCGImage(image: binarizedImage, to: "\(box.screenDir!)/\(box.id)-binarized.png") } }
+    if simpleDebugImages || shouldDebug {
+      Async.background { images.writeCGImage(image: binarizedImage, to: "\(box.screenDir!)/\(box.id)-content-in.png") }
+    }
     let cc = ConnectedComponentsSwiftOCR()
     let boxes = cc.extractBlobs(binarizedImage, debug: false)
     if boxes.count > 0 {
@@ -519,7 +522,7 @@ final class Recorder: NSObject {
       return nil
     }
     // found content
-    let innerPad = boxFindScale / 3 // make it a bit smaller to avoid grabbing edge stuff
+    let innerPad = boxFindScale / 2 // make it a bit smaller to avoid grabbing edge stuff
     // scale to full size
     let x = Int(big.minX) * boxFindScale + box.x + innerPad
     let y = Int(big.minY) * boxFindScale + box.y + innerPad
@@ -778,7 +781,7 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
             perRow: perRow,
             findContent: true
           ) {
-//            self.frames[boxId] = frame
+            self.frames[boxId] = frame
           }
 
           release()

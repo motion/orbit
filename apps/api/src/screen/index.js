@@ -87,7 +87,6 @@ export default class ScreenState {
     this.stopped = false
     this.startSwindler()
     this.screenOCR.onWords(words => {
-      console.log('got words', words ? words.length : 0)
       this.hasResolvedOCR = true
       this.updateState({
         ocrWords: words,

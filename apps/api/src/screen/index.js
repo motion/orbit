@@ -17,6 +17,7 @@ const BLACKLIST = {
   Xcode: true,
   finder: true,
   electron: true,
+  ActivityMonitor: true,
 }
 
 console.log('writing screenshots to', Constants.TMP_DIR)

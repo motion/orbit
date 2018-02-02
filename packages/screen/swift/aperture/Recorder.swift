@@ -494,7 +494,7 @@ final class Recorder: NSObject {
       sectionLines[start] = lines
       total += lines.count
     }
-    debug("getLines")
+//    debug("getLines") // 0ms
     return sectionLines
   }
 
@@ -535,7 +535,6 @@ final class Recorder: NSObject {
   }
   
   func getWordsAndLines(_ ocrResults: [String: String], characterLines: [[Word]]) -> ([String], [String]) {
-    print("??")
     startTime()
     let chars = self.characters!
     var words = [String]()

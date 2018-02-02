@@ -20,6 +20,7 @@
     "@mcro/router": "^1.5.1",
     "@mcro/search": "^1.5.1",
     "@mcro/ui": "^1.5.1",
+    "kill-port": "^1.1.0",
     "apollo-fetch": "^0.6.0",
     "babel-polyfill": "^6.23.0",
     "color": "^2.0.1",

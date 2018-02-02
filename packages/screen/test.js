@@ -59,6 +59,11 @@ async function test() {
   screen.onClearWord(word => {
     console.log('clear word', word)
   })
+
+  setTimeout(() => {
+    console.log('now stop')
+    screen.stop()
+  }, 2000)
 }
 
 try {

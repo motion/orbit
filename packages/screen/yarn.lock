@@ -60,6 +60,10 @@ get-stream@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/get-stream/-/get-stream-3.0.0.tgz#8e943d1358dc37555054ecbe2edb05aa174ede14"
 
+get-them-args@^1.2.1:
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/get-them-args/-/get-them-args-1.3.1.tgz#ac1aeca013fda7db12591aaac129c58118e3daa8"
+
 html5-websocket@^2.0.2:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/html5-websocket/-/html5-websocket-2.0.2.tgz#52bff70507b61c7457ed693fed47ad9244dab438"
@@ -73,6 +77,13 @@ is-stream@^1.1.0:
 isexe@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/isexe/-/isexe-2.0.0.tgz#e8fbf374dc556ff8947a10dcb0572d633f2cfa10"
+
+kill-port@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/kill-port/-/kill-port-1.1.0.tgz#f80bee0f242ff03aa38b364cda50694d41544e6a"
+  dependencies:
+    execa "^0.8.0"
+    get-them-args "^1.2.1"
 
 lru-cache@^4.0.1:
   version "4.1.1"

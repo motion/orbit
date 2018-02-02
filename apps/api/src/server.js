@@ -11,8 +11,12 @@ import Passport from 'passport'
 import Crawler from '@mcro/crawler'
 import debug from 'debug'
 import path from 'path'
+import killPort from 'kill-port'
 
 const { SERVER_PORT } = Constants
+
+// kill old processes
+killPort(SERVER_PORT)
 
 const log = debug('api')
 

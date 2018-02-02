@@ -5,10 +5,16 @@ import Swindler from '@mcro/swindler'
 import { isEqual, throttle, last } from 'lodash'
 import iohook from 'iohook'
 import * as Constants from '~/constants'
-import cp from 'child_process'
+import execa from 'execa'
+import killPort from 'kill-port'
 
 // just to be sure, kill any hanging old aperture processes
-cp.exec('pkill -9 aperture')
+execa('pkill -9 aperture')
+
+const PORT = 40510
+
+// and kill anything on this port
+killPort(PORT)
 
 const APP_ID = 'screen'
 const BLACKLIST = {
@@ -49,7 +55,7 @@ type TScreenState = {
 export default class ScreenState {
   stopped = false
   screenOCR = new ScreenOCR()
-  wss = new Server({ port: 40510 })
+  wss = new Server({ port: PORT })
   activeSockets = []
   swindler = new Swindler()
   curContext = {}

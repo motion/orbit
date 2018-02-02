@@ -15,6 +15,7 @@
     "aperture"
   ],
   "dependencies": {
+    "kill-port": "^1.1.0",
     "ps-tree": "^1.1.0",
     "pidusage": "^1.2.0",
     "reconnecting-websocket": "^3.2.2",

@@ -6,6 +6,12 @@ import { Server } from 'ws'
 import promisify from 'sb-promisify'
 import pusage_ from 'pidusage'
 import ptree_ from 'ps-tree'
+import killPort from 'kill-port'
+
+const PORT = 40512
+
+// kill old ones
+killPort(PORT)
 
 const pusage = promisify(pusage_.stat)
 const ptree = promisify(ptree_)
@@ -17,7 +23,7 @@ const sleep = ms => new Promise(res => setTimeout(res, ms))
 export default class Screen {
   awaitingSocket = []
   listeners = []
-  wss = new Server({ port: 40512 })
+  wss = new Server({ port: PORT })
   onLinesCB = _ => _
   onWordsCB = _ => _
   onClearWordCB = _ => _
@@ -179,9 +185,7 @@ export default class Screen {
       this.debugBuild ? 'run-debug' : 'run-release',
     )
     console.log('exec', BIN)
-    this.process = execa(BIN, [], {
-      reject: false,
-    })
+    this.process = execa(BIN, [])
     this.process.catch((err, ...rest) => {
       console.log('screen err:', ...rest)
       console.log(err)
@@ -293,12 +297,13 @@ export default class Screen {
       // null if not recording
       return
     }
+    // this.process.kill()
+    this.process.kill('SIGINT')
+    this.process.kill('SIGKILL')
+    this.process.kill('SIGTERM')
     this.process.stdout.removeAllListeners()
     this.process.stderr.removeAllListeners()
-    setTimeout(() => {
-      this.process.kill()
-      this.process.kill('SIGKILL')
-    })
+    console.log('killing process...')
     await this.process
     console.log('killed process')
     delete this.process

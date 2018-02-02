@@ -72,8 +72,8 @@ class HighlightsStore {
   getHoverProps = Helpers.hoverSettler({
     enterDelay: 600,
     onHovered: object => {
-      console.log('send peek', object)
-      Helpers.OS.send('peek-target', object)
+      console.log('peek', object)
+      // Helpers.OS.send('peek-target', object)
     },
   })
 
@@ -235,7 +235,7 @@ export default class HighlightsPage {
       borderBottom: [2, 'solid', '#EDD71E'],
     },
     hovered: {
-      background: '#000 !important',
+      background: 'rgba(0,0,0,0.1) !important',
       opacity: 1,
     },
     wordInner: {

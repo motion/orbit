@@ -16,6 +16,7 @@ const BLACKLIST = {
   VSCode: true,
   Xcode: true,
   finder: true,
+  electron: true,
 }
 
 console.log('writing screenshots to', Constants.TMP_DIR)

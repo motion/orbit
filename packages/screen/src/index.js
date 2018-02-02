@@ -130,8 +130,8 @@ export default class Screen {
           //     ^ seconds
           console.log('Current memory usage', memoryMB, 'MB')
         }
-        if (memoryMB > 250) {
-          console.log('Memory usage of swift above 250mb, restarting')
+        if (memoryMB > 500) {
+          console.log('Memory usage of swift above 500MB, restarting')
           this.restart()
         }
         if (usage.cpu > 90) {

@@ -216,7 +216,6 @@ export default class ScreenState {
     curContext.title = nextContext.title
     curContext.offset = nextContext.offset
     curContext.bounds = nextContext.bounds
-    console.log('id', id)
     curContext.appName = id ? last(id.split('.')) : curContext.title
     // adjust for more specifc content area found
     if (this.contentArea) {

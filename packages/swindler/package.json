@@ -3,7 +3,8 @@
   "version": "4.0.0",
   "license": "MIT",
   "scripts": {
-    "test": "node --experimental-modules ./test"
+    "test": "node --experimental-modules ./test",
+    "build": "cd Swindler && xcodebuild archive -derivedDataPath $(mktemp -d) -scheme SwindlerExample -configuration Release -workspace Swindler.xcworkspace"
   },
   "files": [
     "index.js",

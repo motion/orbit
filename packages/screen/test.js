@@ -34,7 +34,7 @@ async function test() {
         id: 'screen',
         x: 0,
         y: 0,
-        width: 1166,
+        width: 1066,
         height: 980,
         screenDir: dir,
         initialScreenshot: true,

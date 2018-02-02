@@ -72,6 +72,16 @@ class Filters {
     // threshold binarizes the image
     outputImage = applyFilter(ThresholdFilterStrong(), for: outputImage)
     
+//    let halfScale = 1.0 / Double(scale) * 2.0
+    
+    // resize
+//    filter = CIFilter(name: "CILanczosScaleTransform")!
+//    filter.setValue(halfScale, forKey: "inputScale")
+//    outputImage = applyFilter(filter, for: outputImage)
+//
+//    // threshold binarizes the image
+//    outputImage = applyFilter(ThresholdFilter(), for: outputImage)
+    
     // resize
     filter = CIFilter(name: "CILanczosScaleTransform")!
     filter.setValue(1.0 / Double(scale), forKey: "inputScale")

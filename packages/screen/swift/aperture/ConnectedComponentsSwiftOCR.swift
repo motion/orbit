@@ -22,8 +22,8 @@ class ConnectedComponentsSwiftOCR {
       }
     }
 
-    print("  extractBlobs: setup data \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
-    start = DispatchTime.now()
+//    print("  extractBlobs: setup data \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+//    start = DispatchTime.now()
 
     //MARK: First Pass
     var currentLabel:UInt16 = 256

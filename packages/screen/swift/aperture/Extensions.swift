@@ -9,7 +9,7 @@ import Foundation
 
 
 public extension Array {
-  func pmap<T>(transformer: @escaping (Element, Int) -> T) -> [T] {
+  func pmap<T>(_ transformer: @escaping (Element, Int) -> T) -> [T] {
     var result: [Int: T] = [:]
     guard !self.isEmpty else {
       return []
@@ -32,7 +32,7 @@ public extension Array {
       }
     }
     group.wait()
-    return result.sorted(by: { $0.0 < $1.0 }).map { $0.1 }
+    return result.keys.sorted().map { result[$0]! }
   }
 }
 

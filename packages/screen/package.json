@@ -7,7 +7,7 @@
   "scripts": {
     "test": "node ./test --debug && open ./tmp",
     "test-fast": "node ./test",
-    "build": "cd swift && xcodebuild archive -derivedDataPath $(mktemp -d) -scheme aperture",
+    "build": "cd swift && xcodebuild archive -derivedDataPath $(mktemp -d) -scheme aperture -configuration Release",
     "prepublish": "npm run build"
   },
   "files": [

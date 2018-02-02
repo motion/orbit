@@ -17,7 +17,6 @@ shrinkwrap.yaml
 values.yaml
 *.tgz
 kubeconfig
-.vscode/**/*
 packages/screendump/build
 apps/web/public/_/*
 apps/site/public/_/*

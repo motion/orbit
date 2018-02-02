@@ -28,19 +28,20 @@ class HighlightsStore {
     return this.props.contextStore
   }
 
-  // get ocrWords() {
-  //   return this.context.ocrWords
-  // }
-
   get ocrWords() {
-    return [
-      [100, 60, 120, 10, 'xx', 'red'],
-      [1500, 60, 120, 10, 'xx', 'red'],
-      [1500, 1000, 120, 10, 'xx', 'red'],
-      [100, 1000, 120, 10, 'xx', 'red'],
-      [800, 500, 120, 10, 'xx', 'red'],
-    ]
+    return this.context.ocrWords
   }
+
+  // test words
+  // get ocrWords() {
+  //   return [
+  //     [100, 60, 120, 10, 'xx', 'red'],
+  //     [1500, 60, 120, 10, 'xx', 'red'],
+  //     [1500, 1000, 120, 10, 'xx', 'red'],
+  //     [100, 1000, 120, 10, 'xx', 'red'],
+  //     [800, 500, 120, 10, 'xx', 'red'],
+  //   ]
+  // }
 
   willMount() {
     // start context watching
@@ -52,7 +53,7 @@ class HighlightsStore {
       () => {
         if (this.context.lastScreenChange > this.context.lastOCR) {
           console.log('diff, hide highlights')
-          // this.showAll = false
+          this.showAll = false
         }
       },
       true,

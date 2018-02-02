@@ -33,9 +33,9 @@ async function test() {
       {
         id: 'screen',
         x: 0,
-        y: 0,
-        width: 1066,
-        height: 980,
+        y: 23,
+        width: 900,
+        height: 1028,
         screenDir: dir,
         initialScreenshot: true,
         findContent: true,
@@ -56,9 +56,9 @@ async function test() {
     console.log('\nto see output:')
     console.log('$ open ./tmp')
 
-    // console.log('now stop')
-    // await screen.stop()
-    // process.exit(0)
+    console.log('now stop')
+    await screen.stop()
+    process.exit(0)
   })
   screen.onClearWord(word => {
     console.log('clear word', word)

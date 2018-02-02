@@ -205,7 +205,7 @@ class Characters {
       }
     }
 
-//    print("Characters.find() \(foundChars.count): \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+//    print("Characters.find \(id): found \(foundChars.count) in \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     return foundWords
   }
 
@@ -393,7 +393,7 @@ class Characters {
     }
     output += "\n"
     if debugID != "" {
-      let outFile = "\(debugDir)/c-\(debugID).png"
+      let outFile = "\(debugDir)/zc-\(debugID).png"
       images.writeCGImage(image: images.imageFromArray(pixels: pixels!, width: 28, height: 28)!, to: outFile, resolution: 72) // write img
     }
     return output

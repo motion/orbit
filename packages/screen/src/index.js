@@ -150,6 +150,7 @@ export default class Screen {
       let startWait = setInterval(() => {
         if (this.listeners.length) {
           clearInterval(startWait)
+          console.log('sending start')
           this.socketSend('start')
           res()
         }
@@ -162,6 +163,7 @@ export default class Screen {
       throw new Error('Call `.stop()` first')
     }
     const binDir = this.debugBuild ? DEBUG_PATH : RELEASE_PATH
+    console.log('binDir', binDir)
     this.process = execa('./aperture', [], {
       cwd: binDir,
       reject: false,

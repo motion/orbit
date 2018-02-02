@@ -143,12 +143,14 @@ final class Recorder: NSObject {
     // socket bridge
     let ws = WebSocket("ws://localhost:40512")
     self.send = { (msg) in ws.send(msg) }
-    ws.event.open = {}
+    ws.event.open = {
+      print("screen.ws.opened")
+    }
     ws.event.close = { code, reason, clean in
-      print("close")
+      print("screen.ws.close")
     }
     ws.event.error = { error in
-      print("error \(error)")
+      print("screen.ws.error \(error)")
     }
     self.queue.background {
       ws.event.message = { (message) in
@@ -340,8 +342,8 @@ final class Recorder: NSObject {
         //        let shiftUp = line.topFillAmt * 10 / line.bottomFillAmt * 10
         //        print("shiftUp \(shiftUp)")
         let lineBounds = [
-          line.x * scl - box.x - padX + frame[0],
-          line.y * scl - box.y - padY + frame[1],
+          line.x * scl - padX + frame[0],
+          line.y * scl - padY + frame[1],
           // add min in case padX/padY go too far
           min(frame[2], line.width * scl + padX * 3),
           min(frame[3], line.height * scl + padY * 3)
@@ -351,7 +353,7 @@ final class Recorder: NSObject {
         // debug line
         if simpleDebugImages || self.shouldDebug {
           images.writeCGImage(
-            image: images.cropImage(cgImage, box: CGRect(x: lineBounds[0], y: lineBounds[1], width: lineBounds[2], height: lineBounds[3]))!,
+            image: images.cropImage(cgImage, box: CGRect(x: lineBounds[0] - box.x, y: lineBounds[1] - box.y, width: lineBounds[2], height: lineBounds[3]))!,
             to: "\(box.screenDir!)/linein-\(box.id)-\(id)-\(index).png"
           )
         }
@@ -533,6 +535,7 @@ final class Recorder: NSObject {
   }
   
   func getWordsAndLines(_ ocrResults: [String: String], characterLines: [[Word]]) -> ([String], [String]) {
+    print("??")
     startTime()
     let chars = self.characters!
     var words = [String]()
@@ -578,7 +581,7 @@ final class Recorder: NSObject {
       }
       lines.append("[\(firstWord.x),\(minY),\(width),\(maxH)]")
     }
-//    debug("getWordsAndLines") // its 1.5ms
+    debug("getWordsAndLines")
     return (words, lines)
   }
 
@@ -627,10 +630,7 @@ final class Recorder: NSObject {
     /* check continuation */ queue.wait(); if handleCancel() { return nil }
     guard let ocrResults = getOCR(characterLines) else { return nil }
     /* check continuation */ queue.wait(); if handleCancel() { return nil }
-
     let (words, lines) = getWordsAndLines(ocrResults, characterLines: characterLines)
-    // update character cache
-    Async.utility(after: 0.04) { chars.updateCache(ocrResults) }
     /* check continuation */ queue.wait(); if handleCancel() { return nil }
     // send to world
     self.send("{ \"action\": \"words\", \"value\": [\(words.joined(separator: ","))] }")
@@ -639,6 +639,8 @@ final class Recorder: NSObject {
     if self.shouldDebug {
       images.writeCGImage(image: cgImage, to: "\(box.screenDir!)/\(box.id)-original.png")
     }
+    // update character cache
+    Async.utility(after: 0.04) { chars.updateCache(ocrResults) }
     // return new box with content adjusted frame
     print("done! \(lines.count) lines, \(words.count) words                \(Int(Double(DispatchTime.now().uptimeNanoseconds - startAll.uptimeNanoseconds) / 1_000_000))ms")
     return Box(

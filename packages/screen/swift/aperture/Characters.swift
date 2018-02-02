@@ -321,7 +321,7 @@ class Characters {
       return answers[outline]!
     }
     // optimize: only look for smaller chars
-//    if outline.count < 25 {
+//    if outline.count < 20 {
 //      let start = DispatchTime.now()
 //      let closeOutlines = dict.correct(outline, language: "en")
 //      let end = Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000
@@ -341,9 +341,8 @@ class Characters {
     for entry in cache {
       let (outline, letter) = entry
       self.answers[outline] = letter
-//      if outline.count < 25 {
-//        if self.dict.createDictionaryEntry(outline, language: "en") {
-//        }
+//      if outline.count < 20 {
+//        _ = self.dict.createDictionaryEntry(outline, language: "en")
 //      }
     }
   }

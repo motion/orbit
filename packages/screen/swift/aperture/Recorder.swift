@@ -774,7 +774,7 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
             box: box,
             sampleBuffer: self.currentSampleBuffer!,
             perRow: perRow,
-            findContent: box.findContent
+            findContent: true
           ) {
             self.frames[boxId] = frame
           }

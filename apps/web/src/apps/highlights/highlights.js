@@ -129,7 +129,7 @@ class HighlightsStore {
         continue
       }
       // outside of y
-      if (y < y1 || y > y1 + h1) {
+      if (y < y1 || y > y1 + h1 + 3) {
         continue
       }
       // we good tho

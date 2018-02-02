@@ -11,7 +11,7 @@ class TrayStore {
 
   willMount() {
     this.watch(() => {
-      console.log('got new oraState', this.rootStore.oraState)
+      // console.log('got new oraState', this.rootStore.oraState)
     })
   }
 }

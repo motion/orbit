@@ -4,7 +4,7 @@ import * as Constants from '~/constants'
 import { ipcMain } from 'electron'
 import { view } from '@mcro/black'
 import { Window } from '@mcro/reactron'
-import { isEqual } from 'lodash'
+import { isEqual, memoize } from 'lodash'
 import * as Helpers from '~/helpers'
 
 type PeekStateItem = {
@@ -105,6 +105,7 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
     this.on(ipcMain, 'peek-target', (event, target: PeekTarget) => {
       const peeks = [...this.state.peeks]
       const peek = peeks[0]
+      console.log('got peek-target', target, 'for peek', peek)
 
       // update peek y
       // TODO: add conditional to ignore if same peek sent as last
@@ -173,7 +174,7 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
     }
   }
 
-  handlePeekMove = (peek, newPosition) => {
+  handlePeekMove = memoize(peek => newPosition => {
     if (!this.mounted) {
       return
     }
@@ -181,8 +182,11 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
       this.isAnimatingPeek = true // bug test fix
       peek.position = newPosition
       this.tearPeek()
+    } else {
+      peek.position = newPosition
+      this.setState({})
     }
-  }
+  })
 
   tearPeek = () => {
     this.peekSend('peek-tear')
@@ -237,7 +241,7 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
               {...windowProps}
               size={size}
               position={[position[0], position[1]]}
-              onMove={([x, y]) => this.handlePeekMove(peek, [x, y])}
+              onMove={this.handlePeekMove(peek)}
             />
           )
         })}

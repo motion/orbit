@@ -129,11 +129,14 @@ export default class Screen {
 
   async monitorScreenProcess() {
     // monitor cpu usage
-    const children = [this.process.pid]
     const maxSecondsSpinning = 10
     let secondsSpinning = 0
     let i = 0
     this.resourceCheckInt = setInterval(async () => {
+      if (!this.process) {
+        return
+      }
+      const children = [this.process.pid]
       i++
       for (const pid of children) {
         try {

@@ -10,7 +10,7 @@
     "url": "https://raw.githubusercontent.com/motion/orbit-updates/master/updates.json"
   },
   "scripts": {
-    "start": "./start.sh",
+    "start": "watch './start.sh' src",
     "postinstall": "electron-rebuild",
     "build": "CHUNK_COMMONS=false TARGET=electron NODE_ENV=production mcro-build",
     "watch": "npm run build -- --watch",

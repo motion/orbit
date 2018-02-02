@@ -7,6 +7,8 @@ import { Window } from '@mcro/reactron'
 import { isEqual, memoize } from 'lodash'
 import * as Helpers from '~/helpers'
 
+const idFn = _ => _
+
 type PeekStateItem = {
   key: number,
   position: Array<number | boolean>,
@@ -158,21 +160,22 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
     })
   }
 
-  handlePeekRef = ref => {
+  handlePeekRef = memoize(peek => ref => {
     if (ref) {
       this.peekRef = ref.window
       // make sure its in front of the ora window
-      // console.log('handlepeek ref, focusing')
-      // this.peekRef.focus()
+      if (!peek.isTorn) {
+        this.peekRef.focus()
+      }
     }
-  }
+  })
 
-  handleReadyToShow = peek => {
+  handleReadyToShow = memoize(peek => () => {
     if (!peek.show) {
       peek.show = true
       this.setState({ peeks: this.state.peeks })
     }
-  }
+  })
 
   handlePeekMove = memoize(peek => newPosition => {
     if (!this.mounted) {
@@ -236,8 +239,8 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
               animatePosition={this.state.wasShowing}
               show={peek.show}
               file={`${Constants.APP_URL}/peek?key=${key}`}
-              ref={isAttached ? ref => this.handlePeekRef(ref, peek) : _ => _}
-              onReadyToShow={() => this.handleReadyToShow(peek)}
+              ref={isAttached ? this.handlePeekRef(peek) : idFn}
+              onReadyToShow={this.handleReadyToShow(peek)}
               {...windowProps}
               size={size}
               position={[position[0], position[1]]}

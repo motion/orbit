@@ -340,8 +340,8 @@ final class Recorder: NSObject {
         //        let shiftUp = line.topFillAmt * 10 / line.bottomFillAmt * 10
         //        print("shiftUp \(shiftUp)")
         let lineBounds = [
-          line.x * scl - padX + frame[0],
-          line.y * scl - padY + frame[1],
+          line.x * scl - box.x - padX + frame[0],
+          line.y * scl - box.y - padY + frame[1],
           // add min in case padX/padY go too far
           min(frame[2], line.width * scl + padX * 3),
           min(frame[3], line.height * scl + padY * 3)
@@ -387,7 +387,7 @@ final class Recorder: NSObject {
       for y in 0..<vHeight {
         let x0 = max(0, min(maxWidth, frame[0] - box.x + x * scale))
         let y0 = max(0, min(maxHeight, frame[1] - box.y + y * scale))
-        let filled = verticalImageRep.colorAt(x: x0, y: y0)!.brightnessComponent < 0.95
+        let filled = verticalImageRep.colorAt(x: x0, y: y0)!.brightnessComponent < 0.9
         imgData[x].append(filled ? 1 : 0)
         if filled {
           verticalFilled += 1

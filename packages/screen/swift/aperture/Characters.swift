@@ -205,7 +205,7 @@ class Characters {
       }
     }
 
-    debug("Characters.find() \(foundChars.count): \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+//    print("Characters.find() \(foundChars.count): \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     return foundWords
   }
 
@@ -224,7 +224,7 @@ class Characters {
     var visited = Dictionary<Int, Bool?>() // for preventing crossing over at thin interections
     var topLeftBound = [startX, startY]
     var bottomRightBound = [startX, startY]
-    var lastMove = [0, moves.px] // start move
+    var lastMove = [-moves.px, moves.px] // start move
     var outline: [String] = []
     var iteration = 0
     var x = startX

@@ -222,13 +222,13 @@ final class Recorder: NSObject {
       self.send("{ \"state\": { \"isRunning\": false } }")
     }
   }
-  
+
   func resume() {
     print("screen: resuming...")
     self.start()
     self.send("{ \"state\": { \"isPaused\": false } }")
   }
-  
+
   func pause() {
     print("screen: pausing...")
     self.stop()
@@ -472,7 +472,7 @@ final class Recorder: NSObject {
 
   func getContent(_ cgImage: CGImage, box: Box) -> [Int]? {
     var big = CGRect(x: 0, y: 0, width: 0, height: 0)
-    let boxFindScale = 6
+    let boxFindScale = 7
     let binarizedImage = filters.filterImageForContentFinding(image: cgImage, scale: boxFindScale)
 //    if shouldDebug {
       Async.background { images.writeCGImage(image: binarizedImage, to: "\(box.screenDir!)/\(box.id)-binarized.png") }
@@ -593,8 +593,6 @@ final class Recorder: NSObject {
       lines.append("[\(firstWord.x),\(minY),\(width),\(maxH)]")
     }
 
-    print("got ocr")
-
     // update character cache
     Async.utility(after: 0.04) {
       chars.updateCache(ocrResults)
@@ -612,7 +610,8 @@ final class Recorder: NSObject {
     }
 
     // return new box with content adjusted frame
-    print("finish scan in \(Double(DispatchTime.now().uptimeNanoseconds - startAll.uptimeNanoseconds) / 1_000_000)ms")
+    print("got \(words.count) words in \(Double(DispatchTime.now().uptimeNanoseconds - startAll.uptimeNanoseconds) / 1_000_000)ms")
+
     return Box(
       id: box.id,
       x: frame[0],
@@ -722,7 +721,6 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
         // options to ignore next or to force next
         if ignoreNextScan && !shouldRunNextTime {
           self.ignoreNextScan = false
-          print("ignored this scan")
           return
         }
         if shouldRunNextTime {

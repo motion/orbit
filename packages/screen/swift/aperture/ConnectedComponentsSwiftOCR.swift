@@ -8,11 +8,10 @@ class ConnectedComponentsSwiftOCR {
 
   internal func extractBlobs(_ image: CGImage, debug: Bool) -> [CGRect] {
     var start = DispatchTime.now()
-    
+
     let imageRep = NSBitmapImageRep(cgImage: image)
     let imageWidth = imageRep.pixelsWide
     let imageHeight = imageRep.pixelsHigh
-    print("width, height \(imageWidth) \(imageHeight)")
 
     // fill data
     var data = [[UInt16]](repeating: [UInt16](repeating: 0, count: imageWidth), count: imageHeight)
@@ -100,7 +99,7 @@ class ConnectedComponentsSwiftOCR {
     for label in 0..<parentArray.count {
       minMaxXYLabelDict[UInt16(label)] = (minX: imageWidth, maxX: 0, minY: imageHeight, maxY: 0)
     }
-    
+
     for y in 0..<imageHeight {
       for x in 0..<imageWidth {
         var luminosity = data[y][x]
@@ -121,7 +120,7 @@ class ConnectedComponentsSwiftOCR {
 
     // timer
     if debug { print("  extractBlobs: minmax \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms"); start = DispatchTime.now() }
-    
+
     // rest is fast
 
     //MARK: Merge labels

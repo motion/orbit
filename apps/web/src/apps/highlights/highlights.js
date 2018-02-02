@@ -5,13 +5,6 @@ import * as Helpers from '~/helpers'
 
 const HL_PAD = 2
 const TOP_BAR_PAD = 22
-const getHoverProps = Helpers.hoverSettler({
-  enterDelay: 600,
-  onHovered: object => {
-    console.log('send peek', object)
-    Helpers.OS.send('peek-target', object)
-  },
-})
 const toEvent = ([left, top, width, height]) => {
   return {
     currentTarget: {
@@ -24,6 +17,7 @@ const toEvent = ([left, top, width, height]) => {
 }
 
 class HighlightsStore {
+  version = 0
   electronState = {}
   hoveredWord = null
   hoveredLine = null
@@ -35,14 +29,18 @@ class HighlightsStore {
   }
 
   get ocrWords() {
-    return [
-      [100, 60, 120, 10, 'tl'],
-      [1500, 60, 120, 10, 'tr'],
-      [1500, 1000, 120, 10, 'br'],
-      [100, 1000, 120, 10, 'bl'],
-      [800, 500, 120, 10, 'c'],
-    ]
+    return this.context.ocrWords
   }
+
+  // get ocrWords() {
+  //   return [
+  //     [100, 60, 120, 10, 'xx', 'red'],
+  //     [1500, 60, 120, 10, 'xx', 'red'],
+  //     [1500, 1000, 120, 10, 'xx', 'red'],
+  //     [100, 1000, 120, 10, 'xx', 'red'],
+  //     [800, 500, 120, 10, 'xx', 'red'],
+  //   ]
+  // }
 
   willMount() {
     // start context watching
@@ -56,7 +54,7 @@ class HighlightsStore {
       () => {
         if (this.context.lastScreenChange > this.context.lastOCR) {
           console.log('diff, hide highlights')
-          // this.showAll = false
+          this.showAll = false
         }
       },
     )
@@ -71,6 +69,14 @@ class HighlightsStore {
     )
   }
 
+  getHoverProps = Helpers.hoverSettler({
+    enterDelay: 600,
+    onHovered: object => {
+      console.log('send peek', object)
+      Helpers.OS.send('peek-target', object)
+    },
+  })
+
   watchForHoverWord = () => {
     // update hoverEvents for use in hover logic
     this.react(
@@ -80,7 +86,7 @@ class HighlightsStore {
         const hoverEvents = {}
         for (const item of hls) {
           const key = this.getKey(item)
-          hoverEvents[key] = getHoverProps({ key, id: key })
+          hoverEvents[key] = this.getHoverProps({ key, id: key })
         }
         this.hoverEvents = hoverEvents
       },
@@ -112,13 +118,13 @@ class HighlightsStore {
     )
   }
 
-  handleHoverOn = prop => ([[x, y], hoverEvents, positions]) => {
+  handleHoverOn = prop => ([[x, y], hoverEvents, items]) => {
     if (!x || !y) {
       return
     }
     let hovered = null
-    for (const pos of positions) {
-      const [x1, y1, w1, h1] = pos
+    for (const item of items) {
+      const [x1, y1, w1, h1] = item
       // outside of x
       if (x < x1 || x > x1 + w1) {
         continue
@@ -128,9 +134,14 @@ class HighlightsStore {
         continue
       }
       // we good tho
-      hovered = pos
+      hovered = item
       break
     }
+
+    // TODO REMOVE BEFORE MERGE
+    // only do peeks on test squares
+    if (!hovered || !hovered[5]) return
+
     // before update, handle hover logic
     // mouseLeave
     const current = this[prop]
@@ -166,7 +177,7 @@ export default class HighlightsPage {
     return (
       <frame if={showAll}>
         {(ocrWords || []).map(item => {
-          const [x, y, width, height, word] = item
+          const [x, y, width, height, word, color] = item
           const key = store.getKey(item)
           return (
             <word
@@ -178,6 +189,7 @@ export default class HighlightsPage {
                 left: x - HL_PAD,
                 width: width + HL_PAD * 2,
                 height: height + HL_PAD * 2,
+                background: color,
               }}
             >
               <wordInner>{word}</wordInner>
@@ -216,7 +228,6 @@ export default class HighlightsPage {
     word: {
       position: 'absolute',
       padding: HL_PAD,
-      background: 'red',
       // borderRadius: 3,
       // background: [200, 200, 200, 0.15],
     },
@@ -224,11 +235,11 @@ export default class HighlightsPage {
       borderBottom: [2, 'solid', '#EDD71E'],
     },
     hovered: {
-      background: [100, 100, 100, 0.1],
+      background: '#000 !important',
       opacity: 1,
     },
     wordInner: {
-      opacity: 0.14,
+      opacity: 0.2,
       top: -14,
       left: -4,
       fontSize: 8,

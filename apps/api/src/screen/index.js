@@ -8,9 +8,6 @@ import * as Constants from '~/constants'
 import execa from 'execa'
 import killPort from 'kill-port'
 
-// just to be sure, kill any hanging old aperture processes
-execa('pkill -9 aperture')
-
 const PORT = 40510
 
 const APP_ID = 'screen'
@@ -90,7 +87,6 @@ export default class ScreenState {
     this.stopped = false
     this.startSwindler()
     this.screenOCR.onWords(words => {
-      console.log('got words', words ? words.length : 0)
       this.hasResolvedOCR = true
       this.updateState({
         ocrWords: words,
@@ -324,7 +320,7 @@ export default class ScreenState {
     if (BLACKLIST[appName]) {
       return
     }
-
+    console.log('appName', appName)
     // we are watching the whole app for words
     const settings = {
       fps: 10,
@@ -394,7 +390,7 @@ export default class ScreenState {
       try {
         socket.send(strData)
       } catch (err) {
-        console.log('failed to send to socket, removing', err.message, uid)
+        console.log('API: failed to send to socket, removing', err.message, uid)
         this.removeSocket(uid)
       }
     }

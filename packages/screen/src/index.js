@@ -5,7 +5,6 @@ import electronUtil from 'electron-util/node'
 import { Server } from 'ws'
 import promisify from 'sb-promisify'
 import pusage_ from 'pidusage'
-import ptree_ from 'ps-tree'
 import killPort from 'kill-port'
 
 const PORT = 40512
@@ -15,7 +14,6 @@ const RELEASE_PATH = Path.join(buildPath, 'Release')
 const DEBUG_PATH = Path.join(buildPath, 'Debug')
 
 const pusage = promisify(pusage_.stat)
-const ptree = promisify(ptree_)
 
 export ScreenClient from './client'
 
@@ -43,37 +41,22 @@ export default class Screen {
     macosVersion.assertGreaterThanOrEqualTo('10.12')
   }
 
-  setupSocket() {
-    // handle socket between swift
-    let id = 0
-    this.wss.on('connection', socket => {
-      // add to active sockets
-      this.listeners.push({ id: id++, socket })
-      // send initial state
-      this.setState(this.state)
-      // send queued messages
-      if (this.awaitingSocket.length) {
-        this.awaitingSocket.forEach(({ action, data }) =>
-          this.socketSend(action, data),
-        )
-        this.awaitingSocket = []
-      }
-      // listen for incoming
-      socket.on('message', this.handleSocketMessage)
-      // handle events
-      socket.on('close', () => {
-        this.removeSocket()
-      })
-      socket.on('error', err => {
-        if (err.code !== 'ECONNRESET') {
-          throw err
-        }
-        this.removeSocket()
-      })
-    })
-    this.wss.on('error', (...args) => {
-      console.log('wss error', args)
-    })
+  start = async () => {
+    // kill old apertures
+    try {
+      await execa('kill', ['-9', 'aperture'])
+    } catch (err) {}
+    if (!this.wss) {
+      // kill old ones
+      await killPort(PORT)
+      this.wss = new Server({ port: PORT })
+      this.setupSocket()
+    }
+    this.setState({ isPaused: false })
+    await this.runScreenProcess()
+    await this.connectToScreenProcess()
+    this.monitorScreenProcess()
+    console.log('Started screen')
   }
 
   handleSocketMessage = str => {
@@ -112,21 +95,6 @@ export default class Screen {
     }
   }
 
-  start = async () => {
-    console.log('Starting screen')
-    // kill old ones
-    await killPort(PORT)
-    if (!this.wss) {
-      this.wss = new Server({ port: PORT })
-      this.setupSocket()
-    }
-    this.setState({ isPaused: false })
-    await this.runScreenProcess()
-    await this.connectToScreenProcess()
-    this.monitorScreenProcess()
-    console.log('Started screen')
-  }
-
   async monitorScreenProcess() {
     // monitor cpu usage
     const maxSecondsSpinning = 10
@@ -163,11 +131,8 @@ export default class Screen {
             this.restart()
           }
         } catch (err) {
-          console.log('error getting process info', err.message)
-          if (!this.process) {
-            console.log('restarting,')
-            await this.start()
-          }
+          console.log('error getting process info, restarting', err.message)
+          this.restart()
         }
       }
     }, 1000)
@@ -318,12 +283,19 @@ export default class Screen {
     this.process.stderr.removeAllListeners()
     // kill process
     this.process.kill()
-    // this.process.kill('SIGTERM')
+    this.process.kill('SIGKILL')
+    let hasResolved = false
+    setTimeout(() => {
+      if (!hasResolved) {
+        console.log('still hasnt stopped?')
+      }
+    }, 5000)
     await this.process
+    hasResolved = true
     console.log('killed process')
     delete this.process
     // sleep to avoid issues
-    await sleep(10)
+    await sleep(20)
   }
 
   socketSend(action, data) {
@@ -340,7 +312,11 @@ export default class Screen {
         try {
           socket.send(strData)
         } catch (err) {
-          console.log('failed to send to socket, removing', err.message, id)
+          console.log(
+            'Screen: failed to send to socket, removing',
+            err.message,
+            id,
+          )
           this.removeSocket(id)
         }
       }
@@ -351,5 +327,38 @@ export default class Screen {
 
   removeSocket = id => {
     this.listeners = this.listeners.filter(s => s.id !== id)
+  }
+
+  setupSocket() {
+    // handle socket between swift
+    let id = 0
+    this.wss.on('connection', socket => {
+      // add to active sockets
+      this.listeners.push({ id: id++, socket })
+      // send initial state
+      this.setState(this.state)
+      // send queued messages
+      if (this.awaitingSocket.length) {
+        this.awaitingSocket.forEach(({ action, data }) =>
+          this.socketSend(action, data),
+        )
+        this.awaitingSocket = []
+      }
+      // listen for incoming
+      socket.on('message', this.handleSocketMessage)
+      // handle events
+      socket.on('close', () => {
+        this.removeSocket()
+      })
+      socket.on('error', err => {
+        if (err.code !== 'ECONNRESET') {
+          throw err
+        }
+        this.removeSocket()
+      })
+    })
+    this.wss.on('error', (...args) => {
+      console.log('wss error', args)
+    })
   }
 }

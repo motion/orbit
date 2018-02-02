@@ -29,7 +29,9 @@ class HighlightsStore {
   }
 
   get ocrWords() {
-    return this.context.ocrWords
+    return this.context.ocrWords.filter(
+      (_, index) => !this.context.clearWords[index],
+    )
   }
 
   // test words

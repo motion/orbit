@@ -64,7 +64,7 @@ class Characters {
   }
 
   func find(id: Int, bounds: [Int]) -> [Word] {
-    let start = DispatchTime.now()
+//    let start = DispatchTime.now()
     let lineX = bounds[0] * 2
     let lineY = bounds[1] * 2
     let lineW = bounds[2]

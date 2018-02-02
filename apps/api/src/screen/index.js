@@ -103,8 +103,22 @@ export default class ScreenState {
     this.screenOCR.onClear(() => {
       this.resetHighlights()
     })
-    this.screenOCR.onClearWord(word => {
-      this.resetHighlights()
+    this.screenOCR.onClearWord(id => {
+      if (id === APP_ID) {
+        this.resetHighlights()
+        return
+      }
+      this.socketSendAll({
+        clearWord: id,
+      })
+      // hacky just ignore for now
+      // if (Date.now() - this.lastWordsSet < 400) {
+      //   return
+      // }
+      // id is index otherwise
+      // const ocrWords = this.state.ocrWords.splice(id, 1)
+      // this.updateState({ ocrWords })
+      // console.log('got clear word', id)
     })
     this.screenOCR.onError(async error => {
       console.log('screen ran into err, restart', error)
@@ -118,44 +132,6 @@ export default class ScreenState {
     this.resetHighlights()
     // swindler after ocr to ensure its ready
     this.startSwindler()
-  }
-
-  setupSocket() {
-    let id = 0
-    this.wss.on('connection', socket => {
-      let uid = id++
-      // send current state
-      this.socketSend(socket, this.state)
-      // clear old highlights if theyre still up
-      this.resetHighlights()
-      // add to active sockets
-      this.activeSockets.push({ uid, socket })
-      // listen for incoming
-      socket.on('message', str => {
-        const { action, value } = JSON.parse(str)
-        if (this[action]) {
-          console.log('received action:', action)
-          this[action].call(this, value)
-        }
-      })
-      // handle events
-      socket.on('close', () => {
-        this.removeSocket(uid)
-      })
-      socket.on('error', err => {
-        // ignore ECONNRESET throw anything else
-        if (err.code !== 'ECONNRESET') {
-          throw err
-        }
-        this.removeSocket(uid)
-      })
-    })
-    this.wss.on('close', () => {
-      console.log('WE SHOULD HANDLE THIS CLOSE', ...arguments)
-    })
-    this.wss.on('error', (...args) => {
-      console.log('wss error', args)
-    })
   }
 
   setExtraAppState = state => {
@@ -303,10 +279,13 @@ export default class ScreenState {
     this.socketSendAll(object)
   }
 
-  onChangedState = async (oldState, newStateItems) => {
-    const newAppState = newStateItems.appState
-    if (newAppState) {
+  onChangedState = async (oldState, newState) => {
+    if (newState.appState) {
       this.handleAppState()
+      return
+    }
+    if (newState.ocrWords) {
+      this.handleOCRWords()
     }
   }
 
@@ -324,11 +303,11 @@ export default class ScreenState {
     if (BLACKLIST[name]) {
       return
     }
-    console.log('name', name)
+    console.log('> ', name)
     // we are watching the whole app for words
     const settings = {
       fps: 10,
-      sampleSpacing: 10,
+      sampleSpacing: 100,
       sensitivity: 1,
       showCursor: false,
       boxes: [
@@ -338,22 +317,20 @@ export default class ScreenState {
           y: offset[1],
           width: bounds[0],
           height: bounds[1],
-          screenDir: Constants.TMP_DIR,
+          // screenDir: Constants.TMP_DIR,
           initialScreenshot: true,
           findContent: true,
         },
       ],
     }
-
+    this.isWatching = 'App'
     this.screenSettings = settings
     this.hasResolvedOCR = false
     this.screenOCR.watchBounds(settings)
-
     if (this.screenOCR.state.isPaused) {
       console.log('ispaused')
       return
     }
-
     // not paused, clear and resume
     this.screenOCR.clear()
     this.screenOCR.resume()
@@ -363,6 +340,28 @@ export default class ScreenState {
         this.restartScreen()
       }
     }, 15000)
+  }
+
+  handleOCRWords = () => {
+    this.isWatching = 'OCR'
+    this.lastWordsSet = Date.now()
+    const settings = {
+      fps: 12,
+      sampleSpacing: 2,
+      sensitivity: 1,
+      showCursor: true,
+      boxes: this.state.ocrWords.map(([x, y, width, height, word], index) => ({
+        id: `${index}`,
+        x,
+        y,
+        width,
+        height,
+        initialScreenshot: false,
+        findContent: false,
+      })),
+    }
+    this.screenSettings = settings
+    this.screenOCR.watchBounds(settings)
   }
 
   stop = () => {
@@ -388,7 +387,7 @@ export default class ScreenState {
     }
   }
 
-  socketSendAll = data => {
+  socketSendAll = (data: Object) => {
     const strData = JSON.stringify(data)
     for (const { socket, uid } of this.activeSockets) {
       try {
@@ -402,5 +401,43 @@ export default class ScreenState {
 
   removeSocket = uid => {
     this.activeSockets = this.activeSockets.filter(s => s.uid !== uid)
+  }
+
+  setupSocket() {
+    let id = 0
+    this.wss.on('connection', socket => {
+      let uid = id++
+      // send current state
+      this.socketSend(socket, this.state)
+      // clear old highlights if theyre still up
+      this.resetHighlights()
+      // add to active sockets
+      this.activeSockets.push({ uid, socket })
+      // listen for incoming
+      socket.on('message', str => {
+        const { action, value } = JSON.parse(str)
+        if (this[action]) {
+          console.log('received action:', action)
+          this[action].call(this, value)
+        }
+      })
+      // handle events
+      socket.on('close', () => {
+        this.removeSocket(uid)
+      })
+      socket.on('error', err => {
+        // ignore ECONNRESET throw anything else
+        if (err.code !== 'ECONNRESET') {
+          throw err
+        }
+        this.removeSocket(uid)
+      })
+    })
+    this.wss.on('close', () => {
+      console.log('WE SHOULD HANDLE THIS CLOSE', ...arguments)
+    })
+    this.wss.on('error', (...args) => {
+      console.log('wss error', args)
+    })
   }
 }

@@ -11,6 +11,7 @@ export default class ContextStore {
   mousePosition = null
   keyboard = null
   highlightWords = null || {}
+  clearWords = {}
 
   pause() {
     this.start()
@@ -31,7 +32,6 @@ export default class ContextStore {
     this.ws.onmessage = ({ data }) => {
       if (data) {
         const res = JSON.parse(data)
-        // console.log('got data for contextStore', data)
         this.setState(res)
       }
     }
@@ -55,6 +55,8 @@ export default class ContextStore {
     lastOCR,
     linePositions,
     highlightWords,
+    clearWord,
+    restoreWord,
   }) => {
     if (keyboard) {
       this.keyboard = keyboard
@@ -68,6 +70,7 @@ export default class ContextStore {
     if (ocrWords) {
       console.log('got new ocr', ocrWords)
       this.ocrWords = ocrWords
+      this.clearWords = {}
     }
     if (lastScreenChange) {
       this.lastScreenChange = lastScreenChange
@@ -80,6 +83,18 @@ export default class ContextStore {
     }
     if (highlightWords) {
       this.highlightWords = highlightWords
+    }
+    if (clearWord) {
+      this.clearWords = {
+        ...this.clearWords,
+        [clearWord]: true,
+      }
+    }
+    if (restoreWord) {
+      this.clearWords = {
+        ...this.clearWords,
+        [restoreWord]: false,
+      }
     }
   }
 }

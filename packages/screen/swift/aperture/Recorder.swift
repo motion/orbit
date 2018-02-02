@@ -659,43 +659,39 @@ final class Recorder: NSObject {
     var hasLastBox = false
     let boxX = box.x
     let boxY = box.y
-    let height = Int(box.height) / 2
-    let width = Int(box.width) / 2
+    let height = Int(box.height)
+    let width = Int(box.width)
     var curBox: [UInt8] = []
     var numChanged = 0
-    var shouldFinish = false
+    var hasChanged = false
     let smallH = height/sampleSpacing
     let smallW = width/sampleSpacing
     if (lastBox != nil) {
       hasLastBox = lastBox?.count == smallW * smallH
     }
-//    print("haslast \(hasLastBox)")
-//    var lastIndex = 0
     for y in 0..<smallH {
       // iterate col first
       for x in 0..<smallW {
-        let realY = y * sampleSpacing / 2 + boxY / 2
-        let realX = x * sampleSpacing + boxX / 2
+        let realY = y * sampleSpacing * 2 + boxY * 2
+        let realX = x * sampleSpacing * 2 + boxX * 2
         let index = y * smallW + x
         let luma = buffer[realY * perRow + realX]
         if (hasLastBox) {
           if (lastBox![index] != luma) {
             numChanged = numChanged + 1
-            if (numChanged > sensitivity) {
-              shouldFinish = true
+            if (numChanged >= sensitivity) {
+              hasChanged = true
               break
             }
           }
         }
         curBox.insert(luma, at: index)
-//        lastIndex = index
       }
-      if (shouldFinish) {
+      if (hasChanged) {
         break
       }
     }
     self.lastBoxes[box.id] = curBox
-    let hasChanged = shouldFinish
     if (hasChanged) {
       return true
     }
@@ -717,13 +713,11 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
   }
 
   public func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+    return
     // keep this always in sync
     self.currentSampleBuffer = sampleBuffer
     // todo: use this per-box
-    if self.isScanning {
-      return
-    }
-    if self.boxes.count == 0 {
+    if self.isScanning || self.boxes.count == 0 {
       return
     }
     // get frame
@@ -751,12 +745,17 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
         // options to ignore next or to force next
         if ignoreNextScan && !shouldRunNextTime {
           self.ignoreNextScan = false
-          return
+          return // todo should work better with multiple boxes
         }
         if shouldRunNextTime {
           self.shouldRunNextTime = false
         }
+        // send clear on change
         self.send("{ \"action\": \"clearWord\", \"value\": \"\(box.id)\" }")
+        if !box.findContent {
+          continue
+        }
+        // content/ocr related stuff:
         // debounce
         if (self.changeHandle != nil) {
           print("canceling last")
@@ -770,11 +769,9 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
         // small delay by default to not pick up old highlights that havent cleared yet
         self.changeHandle = Async.userInteractive(after: changedBox ? delayHandleChange : 0.02) { // debounce (seconds)
           self.isScanning = true
-
           // update characters buffer
           let (buffer, _, release) = self.getBufferFrame(sampleBuffer)
           self.characters!.buffer = buffer
-
           // handle change
           if let frame = self.handleChangedArea(
             box: box,
@@ -784,9 +781,7 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
           ) {
             self.frames[boxId] = frame
           }
-
           release()
-
           // after x seconds, re-enable watching
           // this is because screen needs time to update highlight boxes
           Async.main(after: 0.05) {

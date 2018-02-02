@@ -5,7 +5,7 @@
   "license": "MIT",
   "main": "es6/index",
   "scripts": {
-    "test": "node ./test --debug && open ./tmp",
+    "test": "node ./test --debug",
     "test-fast": "node ./test",
     "build": "cd swift && xcodebuild -configuration Release -derivedDataPath $(mktemp -d) -scheme aperture && touch ../../../apps/api/src/index.js",
     "prepublish": "npm run build"

@@ -318,12 +318,12 @@ export default class Screen {
     this.process.stderr.removeAllListeners()
     // kill process
     this.process.kill()
-    // this.process.kill('SIGTERM')
+    this.process.kill('SIGKILL')
     await this.process
     console.log('killed process')
     delete this.process
     // sleep to avoid issues
-    await sleep(10)
+    await sleep(20)
   }
 
   socketSend(action, data) {

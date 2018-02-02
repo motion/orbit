@@ -29,25 +29,22 @@ type PeekTarget = {
 function getPeekPosition(peekTarget: PeekTarget) {
   const [peekW, peekH] = Constants.PEEK_DIMENSIONS
   const [screenW, screenH] = Helpers.getScreenSize()
-  // find best position for peek
+  const halfHeight = screenH / 2
+  const halfWidth = screenW / 2
+
+  // start: target is to right
   let x = peekTarget.left - peekW
   let y = peekTarget.top - 20
   let arrowTowards = 'right'
 
-  // TODO: while(!goodFit) { findNextFit(); testFit(); }
-
-  if (x < 0) {
+  if (x < halfWidth) {
+    // target is to left
     x = peekTarget.left + peekTarget.width
     arrowTowards = 'left'
-  } else if (x + peekW > screenW) {
-    console.log('should go left')
   }
-  if (y < 0) {
-    console.log('peek faces below')
+  if (y + peekH > screenH) {
+    // target is below
     arrowTowards = 'top'
-  } else if (y + peekH > screenH) {
-    y = peekTarget.top - peekH
-    arrowTowards = 'bottom'
   }
   x = Math.round(x)
   y = Math.round(y)

@@ -8,9 +8,6 @@ import * as Constants from '~/constants'
 import execa from 'execa'
 import killPort from 'kill-port'
 
-// just to be sure, kill any hanging old aperture processes
-execa('pkill -9 aperture')
-
 const PORT = 40510
 
 const APP_ID = 'screen'
@@ -83,6 +80,8 @@ export default class ScreenState {
   }
 
   start = async () => {
+    // just to be sure, kill any hanging old aperture processes
+    await execa('pkill', ['-9', 'aperture'])
     // and kill anything on this port
     await killPort(PORT)
     this.wss = new Server({ port: PORT })

@@ -5,13 +5,6 @@ import * as Helpers from '~/helpers'
 
 const HL_PAD = 2
 const TOP_BAR_PAD = 22
-const getHoverProps = Helpers.hoverSettler({
-  enterDelay: 600,
-  onHovered: object => {
-    console.log('send peek', object)
-    Helpers.OS.send('peek-target', object)
-  },
-})
 const toEvent = ([left, top, width, height]) => {
   return {
     currentTarget: {
@@ -24,6 +17,7 @@ const toEvent = ([left, top, width, height]) => {
 }
 
 class HighlightsStore {
+  version = 0
   electronState = {}
   hoveredWord = null
   hoveredLine = null
@@ -36,11 +30,12 @@ class HighlightsStore {
 
   get ocrWords() {
     return [
-      [100, 60, 120, 10, 'tl'],
-      [1500, 60, 120, 10, 'tr'],
-      [1500, 1000, 120, 10, 'br'],
-      [100, 1000, 120, 10, 'bl'],
-      [800, 500, 120, 10, 'c'],
+      ...(this.context.ocrWords || []),
+      // [100, 60, 120, 10, 'tl', 'red'],
+      // [1500, 60, 120, 10, 'tr', 'red'],
+      // [1500, 1000, 120, 10, 'br', 'red'],
+      // [100, 1000, 120, 10, 'bl', 'red'],
+      // [800, 500, 120, 10, 'c', 'red'],
     ]
   }
 
@@ -71,6 +66,14 @@ class HighlightsStore {
     )
   }
 
+  getHoverProps = Helpers.hoverSettler({
+    enterDelay: 600,
+    onHovered: object => {
+      console.log('send peek', object)
+      Helpers.OS.send('peek-target', object)
+    },
+  })
+
   watchForHoverWord = () => {
     // update hoverEvents for use in hover logic
     this.react(
@@ -80,7 +83,7 @@ class HighlightsStore {
         const hoverEvents = {}
         for (const item of hls) {
           const key = this.getKey(item)
-          hoverEvents[key] = getHoverProps({ key, id: key })
+          hoverEvents[key] = this.getHoverProps({ key, id: key })
         }
         this.hoverEvents = hoverEvents
       },
@@ -166,7 +169,7 @@ export default class HighlightsPage {
     return (
       <frame if={showAll}>
         {(ocrWords || []).map(item => {
-          const [x, y, width, height, word] = item
+          const [x, y, width, height, word, color] = item
           const key = store.getKey(item)
           return (
             <word
@@ -178,6 +181,7 @@ export default class HighlightsPage {
                 left: x - HL_PAD,
                 width: width + HL_PAD * 2,
                 height: height + HL_PAD * 2,
+                background: color,
               }}
             >
               <wordInner>{word}</wordInner>
@@ -216,7 +220,6 @@ export default class HighlightsPage {
     word: {
       position: 'absolute',
       padding: HL_PAD,
-      background: 'red',
       // borderRadius: 3,
       // background: [200, 200, 200, 0.15],
     },

@@ -28,37 +28,35 @@ class HighlightsStore {
     return this.props.contextStore
   }
 
-  get ocrWords() {
-    return this.context.ocrWords
-  }
-
   // get ocrWords() {
-  //   return [
-  //     [100, 60, 120, 10, 'xx', 'red'],
-  //     [1500, 60, 120, 10, 'xx', 'red'],
-  //     [1500, 1000, 120, 10, 'xx', 'red'],
-  //     [100, 1000, 120, 10, 'xx', 'red'],
-  //     [800, 500, 120, 10, 'xx', 'red'],
-  //   ]
+  //   return this.context.ocrWords
   // }
+
+  get ocrWords() {
+    return [
+      [100, 60, 120, 10, 'xx', 'red'],
+      [1500, 60, 120, 10, 'xx', 'red'],
+      [1500, 1000, 120, 10, 'xx', 'red'],
+      [100, 1000, 120, 10, 'xx', 'red'],
+      [800, 500, 120, 10, 'xx', 'red'],
+    ]
+  }
 
   willMount() {
     // start context watching
     this.props.contextStore.start()
-
     this.watchForHoverWord()
-
     // hide highlights on screen diff
     this.react(
       () => this.context.lastScreenChange,
       () => {
         if (this.context.lastScreenChange > this.context.lastOCR) {
           console.log('diff, hide highlights')
-          this.showAll = false
+          // this.showAll = false
         }
       },
+      true,
     )
-
     // show highlights on new ocr
     this.react(
       () => this.context.lastOCR,
@@ -66,6 +64,7 @@ class HighlightsStore {
         console.log('show highlights')
         this.showAll = true
       },
+      true,
     )
   }
 
@@ -73,7 +72,7 @@ class HighlightsStore {
     enterDelay: 600,
     onHovered: object => {
       console.log('peek', object)
-      // Helpers.OS.send('peek-target', object)
+      Helpers.OS.send('peek-target', object)
     },
   })
 

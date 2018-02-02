@@ -10,16 +10,16 @@ export IndexDB from './indexDB'
 
 export const trimSingleLine = str => str.trim().replace(/\s{2,}/g, ' ')
 
-export const contextToResult = context => {
-  const pretitle = context.selection || context.title
+export const contextToResult = state => {
+  const pretitle = state.selection || state.title
   return {
-    id: context.id,
+    id: state.id,
     title: trimSingleLine(
-      pretitle ? `${pretitle} | ${context.appName}` : context.appName,
+      pretitle ? `${pretitle} | ${state.name}` : state.name,
     ),
-    subtitle: `in ${context.appName.replace('Google ', '')} · ${context.url}`,
+    subtitle: `in ${state.name.replace('Google ', '')} · ${state.url}`,
     type: 'context',
-    image: context.favicon,
+    image: state.favicon,
     peek: false,
   }
 }

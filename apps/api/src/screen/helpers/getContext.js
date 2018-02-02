@@ -32,7 +32,7 @@ export default async function getContext(currentContext) {
     const { application, offset, bounds } = res
 
     let context = {
-      appName: application,
+      name: application,
       offset,
       bounds,
     }

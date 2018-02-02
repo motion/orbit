@@ -23,8 +23,8 @@ const getDefaultDepth = url => {
 
 export default class ContextSidebar {
   @watch
-  isPinned = () => this.osContext && Thing.findOne({ url: this.osContext.url })
-  osContext = null
+  isPinned = () => this.appState && Thing.findOne({ url: this.appState.url })
+  appState = null
   previewCrawler = new CrawlerStore()
   crawlerSettings = {
     maxPages: 10000,
@@ -33,14 +33,14 @@ export default class ContextSidebar {
 
   willMount() {
     this.watch(function watchSidebarContext() {
-      // prevent appName from triggered changes
-      const { appName, ...context } = this.oraStore.osContext || {}
-      idFn(appName)
-      if (context && context.url && !isEqual(context, this.osContext)) {
-        this.osContext = context
+      // prevent name from triggered changes
+      const { name, ...state } = this.oraStore.appState || {}
+      idFn(name)
+      if (state && state.url && !isEqual(state, this.appState)) {
+        this.appState = state
         this.handleChangeSettings({
-          entry: context.url,
-          depth: getDefaultDepth(context.url),
+          entry: state.url,
+          depth: getDefaultDepth(state.url),
         })
       }
     })
@@ -71,10 +71,10 @@ export default class ContextSidebar {
 
   // can customize the shown title here
   get title() {
-    if (!this.osContext) return
+    if (!this.appState) return
     return {
       title: this.result.title.trim().slice(0, 100),
-      image: this.osContext.favicon,
+      image: this.appState.favicon,
     }
   }
 

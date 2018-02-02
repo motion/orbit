@@ -3,7 +3,7 @@ import ReconnectingWebSocket from 'reconnecting-websocket'
 
 @store
 export default class ContextStore {
-  context = null
+  appState = null
   ocrWords = null
   linePositions = null
   lastScreenChange = null
@@ -23,6 +23,7 @@ export default class ContextStore {
   }
 
   start() {
+    window.contextStore = this
     if (this.ws) {
       return
     }
@@ -48,7 +49,7 @@ export default class ContextStore {
   setState = ({
     keyboard,
     mousePosition,
-    context,
+    appState,
     ocrWords,
     lastScreenChange,
     lastOCR,
@@ -61,8 +62,8 @@ export default class ContextStore {
     if (mousePosition) {
       this.mousePosition = mousePosition
     }
-    if (context) {
-      this.context = context
+    if (appState) {
+      this.appState = appState
     }
     if (ocrWords) {
       console.log('got new ocr', ocrWords)

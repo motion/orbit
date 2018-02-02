@@ -5,7 +5,6 @@ import Swindler from '@mcro/swindler'
 import { isEqual, throttle, last } from 'lodash'
 import iohook from 'iohook'
 import * as Constants from '~/constants'
-import execa from 'execa'
 import killPort from 'kill-port'
 
 const PORT = 40510
@@ -22,8 +21,8 @@ const BLACKLIST = {
 
 console.log('writing screenshots to', Constants.TMP_DIR)
 
-type TContext = {
-  appName: string,
+type TAppState = {
+  name: string,
   offset: [Number, Number],
   bounds: [Number, Number],
 }
@@ -38,7 +37,7 @@ type Word = {
 }
 
 type TScreenState = {
-  context?: TContext,
+  appState?: TAppState,
   ocrWords?: [Word],
   linePositions?: [Number],
   lastOCR: Number,
@@ -53,11 +52,11 @@ export default class ScreenState {
   screenOCR = new ScreenOCR()
   activeSockets = []
   swindler = new Swindler()
-  curContext = {}
+  cutAppState = {}
   screenSettings = {}
 
   state: TScreenState = {
-    context: null,
+    appState: null,
     ocrWords: null,
     linePositions: null,
     lastOCR: Date.now(),
@@ -172,7 +171,7 @@ export default class ScreenState {
     const update = () => {
       // ensure new
       this.updateState({
-        context: JSON.parse(JSON.stringify(this.curContext)),
+        appState: JSON.parse(JSON.stringify(this.cutAppState)),
       })
     }
 
@@ -193,46 +192,46 @@ export default class ScreenState {
       switch (event) {
         case 'FrontmostWindowChangedEvent':
           const value = {
-            ...this.curContext,
+            ...this.cutAppState,
             id: lastId,
             ...message,
           }
           lastId = value.id
-          this.setCurrentContext(value)
+          this.setCurrenTAppState(value)
           break
         case 'WindowSizeChangedEvent':
-          this.curContext.bounds = message
+          this.cutAppState.bounds = message
           break
         case 'WindowPosChangedEvent':
-          this.curContext.offset = message
+          this.cutAppState.offset = message
       }
 
       update()
     })
   }
 
-  setCurrentContext = nextContext => {
-    // if given id, reset to new context
-    if (nextContext.id) {
-      this.curContext = {
-        id: nextContext.id,
+  setCurrenTAppState = nextAppState => {
+    // if given id, reset to new appState
+    if (nextAppState.id) {
+      this.cutAppState = {
+        id: nextAppState.id,
       }
     }
-    const { curContext } = this
-    const { id } = curContext
-    curContext.title = nextContext.title
-    curContext.offset = nextContext.offset
-    curContext.bounds = nextContext.bounds
-    curContext.appName = id ? last(id.split('.')) : curContext.title
+    const { cutAppState } = this
+    const { id } = cutAppState
+    cutAppState.title = nextAppState.title
+    cutAppState.offset = nextAppState.offset
+    cutAppState.bounds = nextAppState.bounds
+    cutAppState.name = id ? last(id.split('.')) : cutAppState.title
     // adjust for more specifc content area found
     if (this.contentArea) {
       const [x, y, width, height] = this.contentArea
       // divide here for retina
-      curContext.offset[0] += x / 2
-      curContext.offset[1] += y / 2
-      curContext.bounds[0] += width / 2
-      curContext.bounds[1] += height / 2
-      console.log('adjusting for content area', curContext)
+      cutAppState.offset[0] += x / 2
+      cutAppState.offset[1] += y / 2
+      cutAppState.bounds[0] += width / 2
+      cutAppState.bounds[1] += height / 2
+      console.log('adjusting for content area', cutAppState)
     }
   }
 
@@ -304,27 +303,27 @@ export default class ScreenState {
       newStateItems.ocrWords &&
       newStateItems.ocrWords.length
 
-    const newContext = newStateItems.context
-    if (newContext || firstTimeOCR) {
-      this.handleNewContext()
+    const newAppState = newStateItems.appState
+    if (newAppState || firstTimeOCR) {
+      this.handleAppState()
     }
   }
 
-  handleNewContext = async () => {
+  handleAppState = async () => {
     if (this.stopped) {
       console.log('is stopped')
       return
     }
-    const { appName, offset, bounds } = this.state.context
+    const { name, offset, bounds } = this.state.appState
     if (!offset || !bounds) {
       console.log('didnt get offset/bounds')
       return
     }
     clearTimeout(this.clearOCRTimeout)
-    if (BLACKLIST[appName]) {
+    if (BLACKLIST[name]) {
       return
     }
-    console.log('appName', appName)
+    console.log('name', name)
     // we are watching the whole app for words
     const settings = {
       fps: 10,

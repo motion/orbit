@@ -50,20 +50,19 @@ async function test() {
     process.exit(0)
   })
 
-  screen.onWords(data => {
+  screen.onWords(async data => {
     console.log('got', data.length, 'words, first 20:', data.slice(0, 20))
     console.log('\nto do it full speed: npm run test-fast')
     console.log('\nto see output:')
     console.log('$ open ./tmp')
+
+    // console.log('now stop')
+    // await screen.stop()
+    // process.exit(0)
   })
   screen.onClearWord(word => {
     console.log('clear word', word)
   })
-
-  setTimeout(() => {
-    console.log('now stop')
-    screen.stop()
-  }, 2000)
 }
 
 try {

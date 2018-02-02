@@ -13,9 +13,6 @@ execa('pkill -9 aperture')
 
 const PORT = 40510
 
-// and kill anything on this port
-killPort(PORT)
-
 const APP_ID = 'screen'
 const BLACKLIST = {
   iterm2: true,
@@ -55,7 +52,6 @@ type TScreenState = {
 export default class ScreenState {
   stopped = false
   screenOCR = new ScreenOCR()
-  wss = new Server({ port: PORT })
   activeSockets = []
   swindler = new Swindler()
   curContext = {}
@@ -82,7 +78,48 @@ export default class ScreenState {
     },
   }
 
-  constructor() {
+  get hasListeners() {
+    return !!this.activeSockets.length
+  }
+
+  start = async () => {
+    // and kill anything on this port
+    await killPort(PORT)
+    this.wss = new Server({ port: PORT })
+    this.setupSocket()
+    this.stopped = false
+    this.startSwindler()
+    this.screenOCR.onWords(words => {
+      console.log('got words', words ? words.length : 0)
+      this.hasResolvedOCR = true
+      this.updateState({
+        ocrWords: words,
+        lastOCR: Date.now(),
+      })
+    })
+    this.screenOCR.onLines(linePositions => {
+      this.updateState({
+        linePositions,
+      })
+    })
+    this.screenOCR.onClear(() => {
+      this.resetHighlights()
+    })
+    this.screenOCR.onClearWord(word => {
+      this.resetHighlights()
+    })
+    this.screenOCR.onError(async error => {
+      console.log('screen ran into err, restart', error)
+      this.restartScreen()
+    })
+    this.watchMouse()
+    this.watchKeyboard()
+    iohook.start()
+    await this.screenOCR.start()
+    this.resetHighlights() // clear old highlights if theyre still up
+  }
+
+  setupSocket() {
     let id = 0
     this.wss.on('connection', socket => {
       let uid = id++
@@ -118,43 +155,6 @@ export default class ScreenState {
     this.wss.on('error', (...args) => {
       console.log('wss error', args)
     })
-  }
-
-  get hasListeners() {
-    return !!this.activeSockets.length
-  }
-
-  start = async () => {
-    this.stopped = false
-    this.startSwindler()
-    this.screenOCR.onWords(words => {
-      console.log('got words', words ? words.length : 0)
-      this.hasResolvedOCR = true
-      this.updateState({
-        ocrWords: words,
-        lastOCR: Date.now(),
-      })
-    })
-    this.screenOCR.onLines(linePositions => {
-      this.updateState({
-        linePositions,
-      })
-    })
-    this.screenOCR.onClear(() => {
-      this.resetHighlights()
-    })
-    this.screenOCR.onClearWord(word => {
-      this.resetHighlights()
-    })
-    this.screenOCR.onError(async error => {
-      console.log('screen ran into err, restart', error)
-      this.restartScreen()
-    })
-    this.watchMouse()
-    this.watchKeyboard()
-    iohook.start()
-    await this.screenOCR.start()
-    this.resetHighlights() // clear old highlights if theyre still up
   }
 
   async restartScreen() {

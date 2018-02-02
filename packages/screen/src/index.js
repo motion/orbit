@@ -1,4 +1,4 @@
-import path from 'path'
+import Path from 'path'
 import execa from 'execa'
 import macosVersion from 'macos-version'
 import electronUtil from 'electron-util/node'
@@ -9,9 +9,10 @@ import ptree_ from 'ps-tree'
 import killPort from 'kill-port'
 
 const PORT = 40512
-
-// kill old ones
-killPort(PORT)
+const dir = electronUtil.fixPathForAsarUnpack(__dirname)
+const buildPath = Path.join(dir, '..', 'swift', 'Build', 'Products')
+const RELEASE_PATH = Path.join(buildPath, 'Release')
+const DEBUG_PATH = Path.join(buildPath, 'Debug')
 
 const pusage = promisify(pusage_.stat)
 const ptree = promisify(ptree_)
@@ -23,7 +24,6 @@ const sleep = ms => new Promise(res => setTimeout(res, ms))
 export default class Screen {
   awaitingSocket = []
   listeners = []
-  wss = new Server({ port: PORT })
   onLinesCB = _ => _
   onWordsCB = _ => _
   onClearWordCB = _ => _
@@ -41,7 +41,6 @@ export default class Screen {
   constructor({ debugBuild = false } = {}) {
     this.debugBuild = debugBuild
     macosVersion.assertGreaterThanOrEqualTo('10.12')
-    this.setupSocket()
   }
 
   setupSocket() {
@@ -114,6 +113,10 @@ export default class Screen {
   }
 
   start = async () => {
+    // kill old ones
+    await killPort(PORT)
+    this.wss = new Server({ port: PORT })
+    this.setupSocket()
     console.log('starting screen')
     this.setState({ isPaused: false })
     await this.runScreenProcess()
@@ -123,34 +126,39 @@ export default class Screen {
 
   async monitorScreenProcess() {
     // monitor cpu usage
-    const children = await ptree(this.process.pid)
+    const children = [this.process.pid]
     const maxSecondsSpinning = 10
     let secondsSpinning = 0
     let i = 0
     this.resourceCheckInt = setInterval(async () => {
       i++
-      for (const child of children) {
-        const usage = await pusage(child.PID)
-        const memoryMB = Math.round(usage.memory / 1000 / 1000) // start at byte
-        if (i % 120 === 0) {
-          //     ^ seconds
-          console.log('Current memory usage', memoryMB, 'MB')
-        }
-        if (memoryMB > 500) {
-          console.log('Memory usage of swift above 500MB, restarting')
-          this.restart()
-        }
-        if (usage.cpu > 90) {
-          if (secondsSpinning > 5) {
-            console.log('High cpu usage for', secondsSpinning, 'seconds')
+      for (const pid of children) {
+        try {
+          const usage = await pusage(pid)
+          const memoryMB = Math.round(usage.memory / 1000 / 1000) // start at byte
+          if (i % 30 === 0) {
+            // every x seconds
+            console.log('Current memory usage', memoryMB, 'MB')
           }
-          secondsSpinning += 1
-        } else {
-          secondsSpinning = 0
-        }
-        if (secondsSpinning > maxSecondsSpinning) {
-          console.log('CPU usage above 90% for 10 seconds, restarting')
-          this.restart()
+          if (memoryMB > 500) {
+            console.log('Memory usage of swift above 500MB, restarting')
+            this.restart()
+          }
+          if (usage.cpu > 90) {
+            if (secondsSpinning > 5) {
+              console.log('High cpu usage for', secondsSpinning, 'seconds')
+            }
+            secondsSpinning += 1
+          } else {
+            secondsSpinning = 0
+          }
+          if (secondsSpinning > maxSecondsSpinning) {
+            console.log('CPU usage above 90% for 10 seconds, restarting')
+            this.restart()
+          }
+        } catch (err) {
+          console.log('error getting process info', err.message)
+          process.exit(0)
         }
       }
     }, 1000)
@@ -179,13 +187,11 @@ export default class Screen {
     if (this.process !== undefined) {
       throw new Error('Call `.stop()` first')
     }
-    const BIN = path.join(
-      electronUtil.fixPathForAsarUnpack(__dirname),
-      '..',
-      this.debugBuild ? 'run-debug' : 'run-release',
-    )
-    console.log('exec', BIN)
-    this.process = execa(BIN, [])
+    const binDir = this.debugBuild ? DEBUG_PATH : RELEASE_PATH
+    console.log('exec', binDir)
+    this.process = execa('./aperture', [], {
+      cwd: binDir,
+    })
     this.process.catch((err, ...rest) => {
       console.log('screen err:', ...rest)
       console.log(err)
@@ -293,22 +299,21 @@ export default class Screen {
   }
 
   stop = async () => {
+    clearInterval(this.resourceCheckInt)
     if (this.process === undefined) {
       // null if not recording
       return
     }
-    // this.process.kill()
-    this.process.kill('SIGINT')
-    this.process.kill('SIGKILL')
-    this.process.kill('SIGTERM')
     this.process.stdout.removeAllListeners()
     this.process.stderr.removeAllListeners()
-    console.log('killing process...')
+    // kill process
+    this.process.kill()
+    // this.process.kill('SIGTERM')
     await this.process
     console.log('killed process')
     delete this.process
     // sleep to avoid issues
-    await sleep(40)
+    await sleep(10)
   }
 
   socketSend(action, data) {

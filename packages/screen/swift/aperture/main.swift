@@ -5,8 +5,9 @@ var recorder: Recorder!
 let arguments = CommandLine.arguments.dropFirst()
 
 func quit(_: Int32) {
+  print("telling recorder to stop...")
   recorder.stop()
-  print("received quit, quitting...")
+  print("recorder stopped, exiting...")
   exit(0)
 }
 

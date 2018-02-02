@@ -15,9 +15,6 @@ import killPort from 'kill-port'
 
 const { SERVER_PORT } = Constants
 
-// kill old processes
-killPort(SERVER_PORT)
-
 const log = debug('api')
 
 export default class Server {
@@ -59,7 +56,9 @@ export default class Server {
     this.setupProxy()
   }
 
-  start() {
+  async start() {
+    // kill old processes
+    await killPort(SERVER_PORT)
     http.createServer(this.app).listen(SERVER_PORT)
     return SERVER_PORT
   }

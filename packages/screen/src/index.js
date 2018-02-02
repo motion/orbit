@@ -340,7 +340,11 @@ export default class Screen {
         try {
           socket.send(strData)
         } catch (err) {
-          console.log('failed to send to socket, removing', err.message, id)
+          console.log(
+            'Screen: failed to send to socket, removing',
+            err.message,
+            id,
+          )
           this.removeSocket(id)
         }
       }

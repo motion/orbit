@@ -137,7 +137,7 @@ class HighlightsStore {
 
     // TODO REMOVE BEFORE MERGE
     // only do peeks on test squares
-    if (!hovered || !hovered[4]) return
+    if (!hovered || !hovered[5]) return
 
     // before update, handle hover logic
     // mouseLeave

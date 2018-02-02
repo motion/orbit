@@ -81,7 +81,9 @@ export default class ScreenState {
 
   start = async () => {
     // just to be sure, kill any hanging old aperture processes
-    await execa('pkill', ['-9', 'aperture'])
+    try {
+      await execa('pkill', ['-9', 'aperture'])
+    } catch (err) {}
     // and kill anything on this port
     await killPort(PORT)
     this.wss = new Server({ port: PORT })
@@ -323,7 +325,7 @@ export default class ScreenState {
     if (BLACKLIST[appName]) {
       return
     }
-
+    console.log('appName', appName)
     // we are watching the whole app for words
     const settings = {
       fps: 10,
@@ -393,7 +395,7 @@ export default class ScreenState {
       try {
         socket.send(strData)
       } catch (err) {
-        console.log('failed to send to socket, removing', err.message, uid)
+        console.log('API: failed to send to socket, removing', err.message, uid)
         this.removeSocket(uid)
       }
     }

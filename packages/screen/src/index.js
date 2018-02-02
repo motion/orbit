@@ -191,6 +191,7 @@ export default class Screen {
     console.log('exec', binDir)
     this.process = execa('./aperture', [], {
       cwd: binDir,
+      reject: false,
     })
     this.process.catch((err, ...rest) => {
       console.log('screen err:', ...rest)

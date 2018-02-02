@@ -242,7 +242,7 @@ final class Recorder: NSObject {
     if shouldDebugTiming {
       if curTime != nil {
         let timeEnd = Int(Double(DispatchTime.now().uptimeNanoseconds - curTime!.uptimeNanoseconds) / 1_000_000)
-        print("\(str.padding(toLength: 30, withPad: " ", startingAt: 0)) \(timeEnd)ms")
+        print("\(str.padding(toLength: 36, withPad: " ", startingAt: 0)) \(timeEnd)ms")
         curTime = DispatchTime.now()
       } else {
         print(str)
@@ -321,11 +321,11 @@ final class Recorder: NSObject {
     for (index, char) in unsolvedCharacters.enumerated() {
       ocrResults[char.outline] = foundCharacters[index]
     }
-    debug("getOCR - ocr \(unsolvedCharacters.count) uniq / \(allCharacters.count)")
+    debug("getOCR - \(unsolvedCharacters.count) uniq / \(allCharacters.count), \(allCharacters.map({ return $0.completedOutline ? 0 : 1 }).reduce(0, +)) exhaust")
     return ocrResults
   }
 
-  func getCharactersByLine(_ sectionLines: Dictionary<Int, [LinePosition]>, frame: [Int]) -> [[Word]] {
+  func getCharactersByLine(_ sectionLines: Dictionary<Int, [LinePosition]>, box: Box, cgImage: CGImage, frame: [Int]) -> [[Word]] {
     startTime()
     // third loop
     // for each VERTICAL SECTION, get characters
@@ -348,12 +348,12 @@ final class Recorder: NSObject {
         // finds characters
         let foundWords: [Word] = chars.find(id: index, bounds: lineBounds)
         // debug line
-//        if self.shouldDebug {
-//          images.writeCGImage(
-//            image: images.cropImage(ocrCharactersImage!, box: CGRect(x: lineBounds[0] - frame[0], y: lineBounds[1] - frame[1], width: lineBounds[2], height: lineBounds[3]))!,
-//            to: "\(box.screenDir!)/linein-\(box.id)-\(id)-\(index).png"
-//          )
-//        }
+        if self.shouldDebug {
+          images.writeCGImage(
+            image: images.cropImage(cgImage, box: CGRect(x: lineBounds[0], y: lineBounds[1], width: lineBounds[2], height: lineBounds[3]))!,
+            to: "\(box.screenDir!)/linein-\(box.id)-\(id)-\(index).png"
+          )
+        }
         // write characters
         if self.shouldDebug { chars.shouldDebug = true }
         return foundWords
@@ -386,7 +386,7 @@ final class Recorder: NSObject {
       for y in 0..<vHeight {
         let x0 = min(maxWidth, frame[0] + x * scale)
         let y0 = min(maxHeight, frame[1] + y * scale)
-        let filled = verticalImageRep.colorAt(x: x0, y: y0)!.brightnessComponent < 0.8
+        let filled = verticalImageRep.colorAt(x: x0, y: y0)!.brightnessComponent < 0.95
         imgData[x].append(filled ? 1 : 0)
         if filled {
           verticalFilled += 1
@@ -401,7 +401,9 @@ final class Recorder: NSObject {
         colMiss = 0
       } else {
         colMiss += 1
-        if (colMiss > colMissMax || x == vWidth - 1) && colStreak - colMiss > colStreakMin { // set content block
+        let enoughWhitespace = colMiss > colMissMax
+        let reachedEOL = x == vWidth - 1
+        if (enoughWhitespace || reachedEOL) && colStreak - colMiss > colStreakMin { // set content block
           //          print("found section x \(x) colStreak \(colStreak)")
           verticalSections[colStart] = x - colMiss
           colStreak = 0
@@ -434,11 +436,11 @@ final class Recorder: NSObject {
 
   // sections to lines
   func getLines(_ verticalSections: Dictionary<Int, Int>, vWidth: Int, vHeight: Int, imgData: [[Int]]) -> Dictionary<Int, [LinePosition]> {
-    startTime()
+//    startTime()
     // second loop - find lines in sections
     var sectionLines = Dictionary<Int, [LinePosition]>()
     var total = 0
-    let minLineWidth = 1
+    let minLineWidth = 2
     for (start, end) in verticalSections {
       var lines = [LinePosition]()
       var lineStreak = 0
@@ -465,7 +467,7 @@ final class Recorder: NSObject {
           //          print("startLine \(startLine) lineStreak \(lineStreak) y \(y)")
           if lineStreak > 1 {
             // update
-            var last = lines[lines.count - 1]
+            var last = lines.last!
             last.height += 1
             last.width = max(last.width, width)
             last.bottomFillAmt = lineFilledPx
@@ -489,7 +491,7 @@ final class Recorder: NSObject {
       sectionLines[start] = lines
       total += lines.count
     }
-//    debug("getLines") // is 1.5ms
+//    debug("getLines \(sectionLines.count)")
     return sectionLines
   }
 
@@ -517,7 +519,7 @@ final class Recorder: NSObject {
       return nil
     }
     // found content
-    let innerPad = boxFindScale / 2 // make it a bit smaller to avoid grabbing edge stuff
+    let innerPad = boxFindScale / 3 // make it a bit smaller to avoid grabbing edge stuff
     // scale to full size
     let x = Int(big.minX) * boxFindScale + box.x + innerPad
     let y = Int(big.minY) * boxFindScale + box.y + innerPad
@@ -618,7 +620,7 @@ final class Recorder: NSObject {
     /* check continuation */ queue.wait(); if handleCancel() { return nil }
     let sectionLines = getLines(verticalSections, vWidth: vWidth, vHeight: vHeight, imgData: imgData)
     /* check continuation */ queue.wait(); if handleCancel() { return nil }
-    let characterLines = getCharactersByLine(sectionLines, frame: frame)
+    let characterLines = getCharactersByLine(sectionLines, box: box, cgImage: cgImage, frame: frame)
     /* check continuation */ queue.wait(); if handleCancel() { return nil }
     guard let ocrResults = getOCR(characterLines) else { return nil }
     /* check continuation */ queue.wait(); if handleCancel() { return nil }
@@ -635,7 +637,7 @@ final class Recorder: NSObject {
       images.writeCGImage(image: cgImage, to: "\(box.screenDir!)/\(box.id)-original.png")
     }
     // return new box with content adjusted frame
-    print("done! \(words.count) words                \(Int(Double(DispatchTime.now().uptimeNanoseconds - startAll.uptimeNanoseconds) / 1_000_000))ms")
+    print("done! \(lines.count) lines, \(words.count) words                \(Int(Double(DispatchTime.now().uptimeNanoseconds - startAll.uptimeNanoseconds) / 1_000_000))ms")
     return Box(
       id: box.id,
       x: frame[0],

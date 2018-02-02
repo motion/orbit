@@ -17,6 +17,7 @@ struct Character: Hashable {
   var outline: String
   var letter: String?
   var spaceBefore: Int
+  var completedOutline: Bool
 }
 
 func standardDeviation(_ arr: [Double]) -> Double {
@@ -223,7 +224,7 @@ class Characters {
     var visited = Dictionary<Int, Bool?>() // for preventing crossing over at thin interections
     var topLeftBound = [startX, startY]
     var bottomRightBound = [startX, startY]
-    var lastMove = [-moves.px, moves.px] // we begin going left/down
+    var lastMove = [0, moves.px] // start move
     var outline: [String] = []
     var iteration = 0
     var x = startX
@@ -233,6 +234,7 @@ class Characters {
     var foundEnd = false
     let clockwise = moves.clockwise
     let backwardsRange = stride(from: 1, to: 7, by: 2)
+    var exhausted = false
     while !foundEnd {
       iteration += 1
       if iteration % 8 == 0 {
@@ -242,7 +244,7 @@ class Characters {
       visited[curPos] = true
       curTry += 1
       if curTry > exhaust {
-        debug("exhausted")
+        exhausted = true
         foundEnd = true
         break
       }
@@ -309,7 +311,8 @@ class Characters {
       backMoves: startX - topLeftBound[0],
       outline: outline.joined(),
       letter: nil,
-      spaceBefore: 0
+      spaceBefore: 0,
+      completedOutline: !exhausted
     )
   }
   

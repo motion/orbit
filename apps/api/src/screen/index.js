@@ -25,6 +25,7 @@ type TAppState = {
   name: string,
   offset: [Number, Number],
   bounds: [Number, Number],
+  screen: [Number, Number],
 }
 
 type Word = {
@@ -54,6 +55,7 @@ export default class ScreenState {
   swindler = new Swindler()
   cutAppState = {}
   screenSettings = {}
+  extraAppState = {}
 
   state: TScreenState = {
     appState: null,
@@ -156,6 +158,10 @@ export default class ScreenState {
     })
   }
 
+  setExtraAppState = state => {
+    this.extraAppState = state
+  }
+
   async restartScreen() {
     console.log('restartScreen')
     await this.screenOCR.stop()
@@ -171,7 +177,10 @@ export default class ScreenState {
     const update = () => {
       // ensure new
       this.updateState({
-        appState: JSON.parse(JSON.stringify(this.cutAppState)),
+        appState: {
+          ...JSON.parse(JSON.stringify(this.cutAppState)),
+          ...this.extraAppState, // from electron
+        },
       })
     }
 
@@ -179,7 +188,6 @@ export default class ScreenState {
     this.swindler.onChange(({ event, message }) => {
       // immediately cancel stuff
       this.resetHighlights()
-
       // prevent from running until we update bounds
       this.screenOCR.clear().watchBounds({
         fps: 1,
@@ -188,7 +196,6 @@ export default class ScreenState {
         showCursor: false,
         boxes: [],
       })
-
       switch (event) {
         case 'FrontmostWindowChangedEvent':
           const value = {
@@ -197,7 +204,7 @@ export default class ScreenState {
             ...message,
           }
           lastId = value.id
-          this.setCurrenTAppState(value)
+          this.setAppState(value)
           break
         case 'WindowSizeChangedEvent':
           this.cutAppState.bounds = message
@@ -205,12 +212,11 @@ export default class ScreenState {
         case 'WindowPosChangedEvent':
           this.cutAppState.offset = message
       }
-
       update()
     })
   }
 
-  setCurrenTAppState = nextAppState => {
+  setAppState = nextAppState => {
     // if given id, reset to new appState
     if (nextAppState.id) {
       this.cutAppState = {

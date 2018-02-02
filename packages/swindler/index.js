@@ -63,7 +63,8 @@ class Swindler {
             try {
               message = JSON.parse(message)
             } catch (err) {
-              console.log('Swindler: error parsing json', message)
+              console.log('Swindler: error parsing json', err.message)
+              console.log(message)
             }
           }
           this.changeCB({

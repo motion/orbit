@@ -53,7 +53,7 @@ export default class ScreenState {
   screenOCR = new ScreenOCR()
   activeSockets = []
   swindler = new Swindler()
-  cutAppState = {}
+  curAppState = {}
   screenSettings = {}
   extraAppState = {}
 
@@ -178,7 +178,7 @@ export default class ScreenState {
       // ensure new
       this.updateState({
         appState: {
-          ...JSON.parse(JSON.stringify(this.cutAppState)),
+          ...JSON.parse(JSON.stringify(this.curAppState)),
           ...this.extraAppState, // from electron
         },
       })
@@ -199,7 +199,7 @@ export default class ScreenState {
       switch (event) {
         case 'FrontmostWindowChangedEvent':
           const value = {
-            ...this.cutAppState,
+            ...this.curAppState,
             id: lastId,
             ...message,
           }
@@ -207,10 +207,10 @@ export default class ScreenState {
           this.setAppState(value)
           break
         case 'WindowSizeChangedEvent':
-          this.cutAppState.bounds = message
+          this.curAppState.bounds = message
           break
         case 'WindowPosChangedEvent':
-          this.cutAppState.offset = message
+          this.curAppState.offset = message
       }
       update()
     })
@@ -219,25 +219,25 @@ export default class ScreenState {
   setAppState = nextAppState => {
     // if given id, reset to new appState
     if (nextAppState.id) {
-      this.cutAppState = {
+      this.curAppState = {
         id: nextAppState.id,
       }
     }
-    const { cutAppState } = this
-    const { id } = cutAppState
-    cutAppState.title = nextAppState.title
-    cutAppState.offset = nextAppState.offset
-    cutAppState.bounds = nextAppState.bounds
-    cutAppState.name = id ? last(id.split('.')) : cutAppState.title
+    const { curAppState } = this
+    const { id } = curAppState
+    curAppState.title = nextAppState.title
+    curAppState.offset = nextAppState.offset
+    curAppState.bounds = nextAppState.bounds
+    curAppState.name = id ? last(id.split('.')) : curAppState.title
     // adjust for more specifc content area found
     if (this.contentArea) {
       const [x, y, width, height] = this.contentArea
       // divide here for retina
-      cutAppState.offset[0] += x / 2
-      cutAppState.offset[1] += y / 2
-      cutAppState.bounds[0] += width / 2
-      cutAppState.bounds[1] += height / 2
-      console.log('adjusting for content area', cutAppState)
+      curAppState.offset[0] += x / 2
+      curAppState.offset[1] += y / 2
+      curAppState.bounds[0] += width / 2
+      curAppState.bounds[1] += height / 2
+      console.log('adjusting for content area', curAppState)
     }
   }
 
@@ -304,13 +304,8 @@ export default class ScreenState {
   }
 
   onChangedState = async (oldState, newStateItems) => {
-    const firstTimeOCR =
-      (!oldState.ocrWords || !oldState.ocrWords.length) &&
-      newStateItems.ocrWords &&
-      newStateItems.ocrWords.length
-
     const newAppState = newStateItems.appState
-    if (newAppState || firstTimeOCR) {
+    if (newAppState) {
       this.handleAppState()
     }
   }

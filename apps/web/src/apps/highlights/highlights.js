@@ -34,6 +34,16 @@ class HighlightsStore {
     return this.props.contextStore
   }
 
+  get ocrWords() {
+    return [
+      [100, 60, 120, 10, 'tl'],
+      [1500, 60, 120, 10, 'tr'],
+      [1500, 1000, 120, 10, 'br'],
+      [100, 1000, 120, 10, 'bl'],
+      [800, 500, 120, 10, 'c'],
+    ]
+  }
+
   willMount() {
     // start context watching
     this.props.contextStore.start()
@@ -46,7 +56,7 @@ class HighlightsStore {
       () => {
         if (this.context.lastScreenChange > this.context.lastOCR) {
           console.log('diff, hide highlights')
-          this.showAll = false
+          // this.showAll = false
         }
       },
     )
@@ -65,10 +75,7 @@ class HighlightsStore {
     // update hoverEvents for use in hover logic
     this.react(
       () =>
-        [
-          ...(this.context.ocrWords || []),
-          ...(this.context.linePositions || []),
-        ] || [],
+        [...(this.ocrWords || []), ...(this.context.linePositions || [])] || [],
       hls => {
         const hoverEvents = {}
         for (const item of hls) {
@@ -77,6 +84,7 @@ class HighlightsStore {
         }
         this.hoverEvents = hoverEvents
       },
+      true,
     )
 
     // track hovers on words
@@ -85,9 +93,10 @@ class HighlightsStore {
         this.context.mousePosition || [],
         // update when hover event handlers change
         this.hoverEvents,
-        this.context.ocrWords || [],
+        this.ocrWords || [],
       ],
       this.handleHoverOn('hoveredWord'),
+      true,
     )
 
     // track hovers on lines
@@ -99,6 +108,7 @@ class HighlightsStore {
         this.context.linePositions || [],
       ],
       this.handleHoverOn('hoveredLine'),
+      true,
     )
   }
 
@@ -152,10 +162,10 @@ class HighlightsStore {
 })
 export default class HighlightsPage {
   render({ store }) {
-    const { showAll, context, hoveredWord, hoveredLine } = store
+    const { showAll, context, ocrWords, hoveredWord, hoveredLine } = store
     return (
       <frame if={showAll}>
-        {(context.ocrWords || []).map(item => {
+        {(ocrWords || []).map(item => {
           const [x, y, width, height, word] = item
           const key = store.getKey(item)
           return (
@@ -206,6 +216,7 @@ export default class HighlightsPage {
     word: {
       position: 'absolute',
       padding: HL_PAD,
+      background: 'red',
       // borderRadius: 3,
       // background: [200, 200, 200, 0.15],
     },

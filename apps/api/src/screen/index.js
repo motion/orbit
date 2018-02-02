@@ -80,10 +80,6 @@ export default class ScreenState {
   }
 
   start = async () => {
-    // just to be sure, kill any hanging old aperture processes
-    try {
-      await execa('pkill', ['-9', 'aperture'])
-    } catch (err) {}
     // and kill anything on this port
     await killPort(PORT)
     this.wss = new Server({ port: PORT })

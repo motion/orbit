@@ -31,11 +31,11 @@ class HighlightsStore {
   get ocrWords() {
     return [
       ...(this.context.ocrWords || []),
-      // [100, 60, 120, 10, 'tl', 'red'],
-      // [1500, 60, 120, 10, 'tr', 'red'],
-      // [1500, 1000, 120, 10, 'br', 'red'],
-      // [100, 1000, 120, 10, 'bl', 'red'],
-      // [800, 500, 120, 10, 'c', 'red'],
+      [100, 60, 120, 10, 'xx', 'red'],
+      [1500, 60, 120, 10, 'xx', 'red'],
+      [1500, 1000, 120, 10, 'xx', 'red'],
+      [100, 1000, 120, 10, 'xx', 'red'],
+      [800, 500, 120, 10, 'xx', 'red'],
     ]
   }
 
@@ -115,13 +115,13 @@ class HighlightsStore {
     )
   }
 
-  handleHoverOn = prop => ([[x, y], hoverEvents, positions]) => {
+  handleHoverOn = prop => ([[x, y], hoverEvents, items]) => {
     if (!x || !y) {
       return
     }
     let hovered = null
-    for (const pos of positions) {
-      const [x1, y1, w1, h1] = pos
+    for (const item of items) {
+      const [x1, y1, w1, h1] = item
       // outside of x
       if (x < x1 || x > x1 + w1) {
         continue
@@ -131,9 +131,14 @@ class HighlightsStore {
         continue
       }
       // we good tho
-      hovered = pos
+      hovered = item
       break
     }
+
+    // TODO REMOVE BEFORE MERGE
+    // only do peeks on test squares
+    if (!hovered || !hovered[4]) return
+
     // before update, handle hover logic
     // mouseLeave
     const current = this[prop]
@@ -227,11 +232,11 @@ export default class HighlightsPage {
       borderBottom: [2, 'solid', '#EDD71E'],
     },
     hovered: {
-      background: [100, 100, 100, 0.1],
+      background: '#000 !important',
       opacity: 1,
     },
     wordInner: {
-      opacity: 0.14,
+      opacity: 0.2,
       top: -14,
       left: -4,
       fontSize: 8,

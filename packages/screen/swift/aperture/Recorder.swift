@@ -23,7 +23,7 @@ struct Box: Decodable {
 }
 
 // constants
-let lineFindScaling = 3 // scale down denominator
+let lineFindScaling = 4 // scale down denominator
 
 let filters = Filters()
 let images = Images()
@@ -290,7 +290,6 @@ final class Recorder: NSObject {
   func getOCR(_ characterLines: [[Word]]) -> [String: String]? {
     startTime()
     var ocrResults = [String: String]() // outline => letter
-    let start = DispatchTime.now()
     let chars = self.characters!
     let allCharacters: [Character] = characterLines.flatMap { $0.flatMap { $0.characters } }
     // set filters unique outlines
@@ -299,9 +298,7 @@ final class Recorder: NSObject {
     // if necessary, run ocr
     if unsolvedCharacters.count > 0 {
       // write ocr string
-      if shouldDebug {
-        print("found \(unsolvedCharacters.count) uniq out of \(allCharacters.count) total")
-      }
+      debug("found \(unsolvedCharacters.count) uniq out of \(allCharacters.count) total")
       let ocrString = unsolvedCharacters.enumerated().map({ item in
         return chars.charToString(item.element, debugID: "")
       }).joined(separator: "\n")
@@ -357,7 +354,7 @@ final class Recorder: NSObject {
 //          )
 //        }
         // write characters
-        chars.shouldDebug = self.shouldDebug
+        if self.shouldDebug { chars.shouldDebug = true }
         return foundWords
       })
       allLines = allLines + sectionLines
@@ -370,13 +367,9 @@ final class Recorder: NSObject {
     startTime()
     let vWidth = frame[2] / scale
     let vHeight = frame[3] / scale
-    // crop
-//    let cropBox = CGRect(x: frame[0] - box.x, y: frame[1] - box.y, width: frame[2], height: frame[3])
-//    let ocrCharactersImage = images.cropImage(filters.filterImageForOCRCharacterFinding(image: cgImage), box: cropBox)!
-//    // find vertical sections
-//    let verticalImage = filters.filterForVerticalContentFinding(image: images.resize(ocrCharactersImage, width: vWidth, height: vHeight)!)
+    let maxWidth = cgImage.width - 1
+    let maxHeight = cgImage.height - 1
     let verticalImageRep = NSBitmapImageRep(cgImage: cgImage)
-    debug("getVerticalSections image")
     // first loop - find vertical sections
     var verticalSections = Dictionary<Int, Int>() // start => end
     let colHeightMin = 1
@@ -390,9 +383,9 @@ final class Recorder: NSObject {
       imgData.append([Int]())
       var verticalFilled = 0
       for y in 0..<vHeight {
-        let x0 = frame[0] + x * scale - 1
-        let y0 = frame[1] + y * scale - 1
-        let filled = verticalImageRep.colorAt(x: x0, y: y0)!.brightnessComponent < 0.7
+        let x0 = min(maxWidth, frame[0] + x * scale)
+        let y0 = min(maxHeight, frame[1] + y * scale)
+        let filled = verticalImageRep.colorAt(x: x0, y: y0)!.brightnessComponent < 0.8
         imgData[x].append(filled ? 1 : 0)
         if filled {
           verticalFilled += 1
@@ -424,7 +417,6 @@ final class Recorder: NSObject {
     if verticalSections.count == 0 {
       verticalSections[0] = vWidth - 1
     }
-    debug("getVerticalSections pixels")
     if shouldDebug {
       var pixels = [PixelData]()
       for y in 0..<vHeight {
@@ -435,6 +427,7 @@ final class Recorder: NSObject {
       }
       images.writeCGImage(image: images.imageFromArray(pixels: pixels, width: vWidth, height: vHeight)!, to: "\(box.screenDir!)/\(box.id)-section-find.png", resolution: 72) // write img
     }
+    debug("getVerticalSections")
     return (verticalSections, imgData)
   }
 

@@ -740,7 +740,7 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
     let delayHandleChange = 0.25
     // loop over boxes and check
     for boxId in self.boxes.keys {
-      let box = self.frames[boxId] ?? self.boxes[boxId]!
+      let box = self.boxes[boxId]!
       if shouldDebug { characters!.debugDir = box.screenDir! }
       let changedBox = hasBoxChanged(box: box, buffer: buffer, perRow: perRow)
       if (firstTime && box.initialScreenshot || changedBox) {
@@ -778,7 +778,7 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
             perRow: perRow,
             findContent: true
           ) {
-            self.frames[boxId] = frame
+//            self.frames[boxId] = frame
           }
 
           release()

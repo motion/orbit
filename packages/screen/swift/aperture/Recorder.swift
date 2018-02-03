@@ -50,6 +50,7 @@ struct LinePosition {
 }
 
 final class Recorder: NSObject {
+  var isCleared = [String: Bool]()
   var currentSampleBuffer: CMSampleBuffer?
   var send: ((String)->Void) = { _ in print("not opened") }
   let input: AVCaptureScreenInput
@@ -270,6 +271,7 @@ final class Recorder: NSObject {
     self.firstTime = true
     self.sampleSpacing = sampleSpacing
     self.sensitivity = sensitivity
+    self.isCleared = [String: Bool]()
     self.lastBoxes = [String: [UInt8]]()
     self.originalBoxes = [String: [UInt8]]()
     self.boxes = [String: Box]()

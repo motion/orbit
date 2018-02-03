@@ -20,7 +20,7 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
     }
     let originalBox = self.originalBoxes[box.id]
     let hasOriginalBox = originalBox != nil
-    var isOriginal = true
+    var isRestored = hasOriginalBox && self.isCleared[box.id] == true
 //    var uid = 0
     for y in 0..<smallH {
       // iterate col first
@@ -33,9 +33,9 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
 //        let filled = luma < 200 ? 1 : 2
 //        uid += filled * ((x + boxX) + (y + boxY)) * 3 + ((boxY + y) * 5) + ((boxX + x) * 2)
         // only if exact match
-        if hasOriginalBox {
+        if isRestored {
           if originalBox![index] != luma {
-            isOriginal = false
+            isRestored = false
           }
         }
         if (hasLastBox) {
@@ -58,7 +58,7 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
     if !hasOriginalBox {
       self.originalBoxes[box.id] = curBox
     }
-    return (hasChanged, isOriginal)
+    return (hasChanged, isRestored)
   }
   
   private func getBufferFrame(_ sampleBuffer: CMSampleBuffer) -> (UnsafeMutablePointer<UInt8>, Int, () -> Void) {
@@ -94,27 +94,30 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
       self.characters!.buffer = buffer
       if shouldDebug { characters!.debugDir = self.boxes.first!.value.screenDir! }
     }
+    var clearIgnoreNext = false
     // debounce while scrolling amt in seconds:
     let delayHandleChange = 0.25
     // loop over boxes and check
     for boxId in self.boxes.keys {
       let box = self.boxes[boxId]!
-      let (hasChanged, isOriginal) = hasBoxChanged(box: box, buffer: buffer, perRow: perRow)
-      if isOriginal {
+      let (hasChanged, isRestored) = hasBoxChanged(box: box, buffer: buffer, perRow: perRow)
+      if isRestored {
         self.send("{ \"action\": \"restoreWord\", \"value\": \"\(box.id)\" }")
+        self.isCleared[boxId] = false
         continue
       }
       if (firstTime && box.initialScreenshot || !firstTime && hasChanged) {
         // options to ignore next or to force next
         if ignoreNextScan && !shouldRunNextTime {
-          self.ignoreNextScan = false
-          return // todo should work better with multiple boxes
+          clearIgnoreNext = true
+          continue
         }
         if shouldRunNextTime {
           self.shouldRunNextTime = false
         }
         // send clear on change
         self.send("{ \"action\": \"clearWord\", \"value\": \"\(box.id)\" }")
+        self.isCleared[boxId] = true
         if !box.findContent {
           continue
         }
@@ -153,6 +156,9 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
           }
         }
       }
+    }
+    if clearIgnoreNext {
+      self.ignoreNextScan = false
     }
     // only true for first loop
     self.firstTime = false

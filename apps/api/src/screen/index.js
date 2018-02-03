@@ -122,6 +122,7 @@ export default class ScreenState {
       // console.log('got clear word', id)
     })
     this.screenOCR.onRestoreWord(id => {
+      console.log('restore', id)
       this.socketSendAll({
         restoreWord: id,
       })
@@ -375,10 +376,12 @@ export default class ScreenState {
     this.stopped = true
   }
 
-  dispose() {
+  async dispose() {
+    // clear highlights on quit
+    this.resetHighlights()
     console.log('disposing screen...')
     if (this.screenOCR) {
-      this.screenOCR.stop()
+      await this.screenOCR.stop()
     }
     if (this.swindler) {
       this.swindler.stop()

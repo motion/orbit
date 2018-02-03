@@ -583,7 +583,7 @@ final class Recorder: NSObject {
       } else {
         width = firstWord.x + firstWord.width
       }
-      lines.append("[\(firstWord.x),\(minY),\(width),\(maxH)]")
+      lines.append("[\(firstWord.x),\(minY / 2),\(width),\(maxH)]")
     }
     debug("getWordsAndLines")
     return (words, lines)

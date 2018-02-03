@@ -20,12 +20,15 @@ export ScreenClient from './client'
 const sleep = ms => new Promise(res => setTimeout(res, ms))
 
 export default class Screen {
+  settings = null
+  changedIds = null
+  restoredIds = null
   awaitingSocket = []
   listeners = []
   onLinesCB = _ => _
   onWordsCB = _ => _
   onChangedCB = _ => _
-  onRestoreCB = _ => _
+  onRestoredCB = _ => _
   onErrorCB = _ => _
   onClearCB = _ => _
   state = {
@@ -61,15 +64,25 @@ export default class Screen {
   }
 
   handleSocketMessage = str => {
+    // console.log('got', str)
     const { action, value, state } = JSON.parse(str)
     // console.log('screen.action', action)
     try {
-      // clear is fast
       if (action === 'changed') {
-        this.onChangedCB(value)
+        setTimeout(() => {
+          this.onChangedCB(value)
+        })
+      }
+      if (action === 'changedIds') {
+        this.changedIds = value
       }
       if (action === 'restored') {
-        this.onRestoreCB(value)
+        setTimeout(() => {
+          this.onRestoredCB(value)
+        })
+      }
+      if (action === 'restoredIds') {
+        this.restoredIds = value
       }
       // state goes out to clients
       if (state) {
@@ -212,7 +225,7 @@ export default class Screen {
       ...box,
     }))
 
-    const recorderOpts = {
+    const settings = {
       debug,
       fps,
       showCursor,
@@ -233,11 +246,11 @@ export default class Screen {
         throw new Error(`Unsupported video codec specified: ${videoCodec}`)
       }
 
-      recorderOpts.videoCodec = codecMap.get(videoCodec)
-      console.log('recorderOpts.videoCodec', recorderOpts.videoCodec)
+      settings.videoCodec = codecMap.get(videoCodec)
+      console.log('settings.videoCodec', settings.videoCodec)
     }
-
-    this.socketSend('watch', recorderOpts)
+    this.settings = settings
+    this.socketSend('watch', settings)
     return this
   }
 
@@ -262,12 +275,16 @@ export default class Screen {
     this.onClearCB = cb
   }
 
+  onChangedIds = cb => {
+    this.onChangedIdsCB = cb
+  }
+
   onChanged = cb => {
     this.onChangedCB = cb
   }
 
-  onRestore = cb => {
-    this.onRestoreCB = cb
+  onRestored = cb => {
+    this.onRestoredCB = cb
   }
 
   onWords = cb => {

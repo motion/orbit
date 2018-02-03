@@ -2,6 +2,9 @@ import Foundation
 import AVFoundation
 import AppKit
 
+var restored = [Int]()
+var changed = [Int]()
+
 extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
   func hasBoxChanged(box: Box, buffer: UnsafeMutablePointer<UInt8>, perRow: Int) -> (Bool, Bool) {
     let lastBox = self.lastBoxes[box.id]
@@ -98,8 +101,8 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
     // debounce while scrolling amt in seconds:
     let delayHandleChange = 0.25
     // loop over boxes and check
-    var restored = [String]()
-    var changed = [String]()
+    restored = [Int]()
+    changed = [Int]()
     for boxId in self.boxes.keys {
       let box = self.boxes[boxId]!
       let (hasChanged, isRestored) = hasBoxChanged(box: box, buffer: buffer, perRow: perRow)
@@ -158,9 +161,14 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
         }
       }
     }
+    // emit
+    if changed.count > 0 {
+      self.send("{ \"action\": \"changed\", \"value\": \(changed.count) }")
+      self.send("{ \"action\": \"changedIds\", \"value\": [\(changed.map({ String($0) }).joined(separator: ","))] }")
+    }
     if restored.count > 0 {
-      self.send("{ \"action\": \"changed\", \"value\": [\(changed.joined(separator: ","))] }")
-      self.send("{ \"action\": \"restored\", \"value\": [\(restored.joined(separator: ","))] }")
+      self.send("{ \"action\": \"restored\", \"value\": \(restored.count) }")
+      self.send("{ \"action\": \"changedIds\", \"value\": [\(restored.map({ String($0) }).joined(separator: ","))] }")
     }
     if clearIgnoreNext {
       self.ignoreNextScan = false

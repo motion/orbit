@@ -13,7 +13,7 @@ enum ApertureError: Error {
 }
 
 struct Box: Decodable {
-  let id: String
+  let id: Int
   let x: Int
   let y: Int
   let width: Int
@@ -50,7 +50,7 @@ struct LinePosition {
 }
 
 final class Recorder: NSObject {
-  var isCleared = [String: Bool]()
+  var isCleared = [Int: Bool]()
   var currentSampleBuffer: CMSampleBuffer?
   var send: ((String)->Void) = { _ in print("not opened") }
   let input: AVCaptureScreenInput
@@ -61,9 +61,9 @@ final class Recorder: NSObject {
   var firstTime: Bool
   var shouldDebug: Bool
   let context = CIContext()
-  var boxes: [String: Box]
-  var lastBoxes: [String: [UInt8]]
-  var originalBoxes: [String: [UInt8]]
+  var boxes: [Int: Box]
+  var lastBoxes: [Int: [UInt8]]
+  var originalBoxes: [Int: [UInt8]]
   var displayId: CGDirectDisplayID
   let components = ConnectedComponentsSwiftOCR()
   var characters: Characters?
@@ -119,9 +119,9 @@ final class Recorder: NSObject {
     self.firstTime = true
     self.sampleSpacing = 0
     self.sensitivity = 1
-    self.boxes = [String: Box]()
-    self.lastBoxes = [String: [UInt8]]()
-    self.originalBoxes = [String: [UInt8]]()
+    self.boxes = [Int: Box]()
+    self.lastBoxes = [Int: [UInt8]]()
+    self.originalBoxes = [Int: [UInt8]]()
 
     super.init()
 
@@ -142,7 +142,10 @@ final class Recorder: NSObject {
 
     // socket bridge
     let ws = WebSocket("ws://localhost:40512")
-    self.send = { (msg) in ws.send(msg) }
+    self.send = { (msg) in
+      print(msg)
+      ws.send(msg)
+    }
     ws.event.open = {
       print("screen.ws.opened")
     }
@@ -271,10 +274,10 @@ final class Recorder: NSObject {
     self.firstTime = true
     self.sampleSpacing = sampleSpacing
     self.sensitivity = sensitivity
-    self.isCleared = [String: Bool]()
-    self.lastBoxes = [String: [UInt8]]()
-    self.originalBoxes = [String: [UInt8]]()
-    self.boxes = [String: Box]()
+    self.isCleared = [Int: Bool]()
+    self.lastBoxes = [Int: [UInt8]]()
+    self.originalBoxes = [Int: [UInt8]]()
+    self.boxes = [Int: Box]()
     for box in boxes {
       self.boxes[box.id] = box
     }

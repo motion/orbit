@@ -9,7 +9,7 @@ import killPort from 'kill-port'
 
 const PORT = 40510
 
-const APP_ID = 'screen'
+const APP_ID = -1
 const BLACKLIST = {
   iterm2: true,
   VSCode: true,
@@ -54,7 +54,7 @@ export default class ScreenState {
   activeSockets = []
   swindler = new Swindler()
   curAppState = {}
-  screenSettings = {}
+  watchSettings = {}
   extraAppState = {}
 
   state: TScreenState = {
@@ -103,29 +103,34 @@ export default class ScreenState {
     this.screenOCR.onClear(() => {
       this.resetHighlights()
     })
-    this.screenOCR.onChanged(id => {
-      console.log('clear', id)
-      if (id === APP_ID) {
+    this.screenOCR.onChanged(count => {
+      console.log('clear count', count)
+      const isApp = this.watchSettings.name === 'App'
+      if (isApp) {
         this.resetHighlights()
+        this.socketSendAll({ clearWord: APP_ID })
+      } else {
+        // for not many clears, try it
+        if (count < 10) {
+          this.socketSendAll({ clearWord: this.screenOCR.changedIds })
+        } else {
+          // else just clear it all
+          this.resetHighlights()
+          this.rescanApp()
+        }
+      }
+    })
+    this.screenOCR.onChangedIds(ids => {
+      console.log('clear ids', ids)
+      const isOCR = this.watchSettings.name === 'OCR'
+      if (isOCR) {
+        this.socketSendAll({ clearWords: ids })
         return
       }
-      this.socketSendAll({
-        clearWord: id,
-      })
-      // hacky just ignore for now
-      // if (Date.now() - this.lastWordsSet < 400) {
-      //   return
-      // }
-      // id is index otherwise
-      // const ocrWords = this.state.ocrWords.splice(id, 1)
-      // this.updateState({ ocrWords })
-      // console.log('got clear word', id)
     })
-    this.screenOCR.onRestore(id => {
-      console.log('restore', id)
-      this.socketSendAll({
-        restoreWord: id,
-      })
+    this.screenOCR.onRestored(count => {
+      console.log('restore', count)
+      this.socketSendAll({ restoreWord: this.screenOCR.restoredIds })
     })
     this.screenOCR.onError(async error => {
       console.log('screen ran into err, restart', error)
@@ -150,7 +155,7 @@ export default class ScreenState {
     await this.screenOCR.stop()
     console.log('starting back up')
     await this.screenOCR.start()
-    this.screenOCR.watchBounds(this.screenSettings)
+    this.watchBounds(this.watchSettings.name, this.watchSettings.settings)
   }
 
   startSwindler() {
@@ -174,8 +179,8 @@ export default class ScreenState {
       // prevent from running until we update bounds
       this.screenOCR.clear().watchBounds({
         fps: 1,
-        sampleSpacing: 100,
-        sensitivity: 20,
+        sampleSpacing: 3,
+        sensitivity: 2,
         showCursor: false,
         boxes: [],
       })
@@ -288,7 +293,7 @@ export default class ScreenState {
 
   onChangedState = async (oldState, newState) => {
     if (newState.appState) {
-      this.handleAppState()
+      this.rescanApp()
       return
     }
     if (newState.ocrWords) {
@@ -296,7 +301,7 @@ export default class ScreenState {
     }
   }
 
-  handleAppState = async () => {
+  rescanApp = async () => {
     if (this.stopped) {
       console.log('is stopped')
       return
@@ -312,7 +317,7 @@ export default class ScreenState {
     }
     console.log('> ', name)
     // we are watching the whole app for words
-    const settings = {
+    this.watchBounds('App', {
       fps: 10,
       sampleSpacing: 100,
       sensitivity: 1,
@@ -329,11 +334,8 @@ export default class ScreenState {
           findContent: true,
         },
       ],
-    }
-    this.isWatching = 'App'
-    this.screenSettings = settings
+    })
     this.hasResolvedOCR = false
-    this.screenOCR.watchBounds(settings)
     if (this.screenOCR.state.isPaused) {
       console.log('ispaused')
       return
@@ -349,16 +351,22 @@ export default class ScreenState {
     }, 15000)
   }
 
+  watchBounds(name: String, settings: Object) {
+    this.isWatching = name
+    this.watchSettings = { name, settings }
+    this.screenOCR.watchBounds(settings)
+  }
+
   handleOCRWords = () => {
-    this.isWatching = 'OCR'
     this.lastWordsSet = Date.now()
-    const settings = {
+    console.log(`> ${this.state.ocrWords.length} words`)
+    this.watchBounds('OCR', {
       fps: 12,
       sampleSpacing: 2,
       sensitivity: 1,
       showCursor: true,
-      boxes: this.state.ocrWords.map(([x, y, width, height, word], index) => ({
-        id: `${index}`,
+      boxes: this.state.ocrWords.map(([x, y, width, height, word], id) => ({
+        id,
         x,
         y,
         width,
@@ -366,10 +374,7 @@ export default class ScreenState {
         initialScreenshot: false,
         findContent: false,
       })),
-    }
-    this.screenSettings = settings
-    console.log(`> ${this.state.ocrWords.length} words`)
-    this.screenOCR.watchBounds(settings)
+    })
   }
 
   stop = () => {

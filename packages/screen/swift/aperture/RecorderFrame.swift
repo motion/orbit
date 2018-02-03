@@ -3,6 +3,64 @@ import AVFoundation
 import AppKit
 
 extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
+  func hasBoxChanged(box: Box, buffer: UnsafeMutablePointer<UInt8>, perRow: Int) -> (Bool, Bool) {
+    let lastBox = self.lastBoxes[box.id]
+    var hasLastBox = false
+    let boxX = box.x
+    let boxY = box.y
+    let height = Int(box.height)
+    let width = Int(box.width)
+    var curBox: [UInt8] = []
+    var numChanged = 0
+    var hasChanged = false
+    let smallH = height/sampleSpacing
+    let smallW = width/sampleSpacing
+    if (lastBox != nil) {
+      hasLastBox = lastBox?.count == smallW * smallH
+    }
+    let originalBox = self.originalBoxes[box.id]
+    let hasOriginalBox = originalBox != nil
+    var isOriginal = true
+//    var uid = 0
+    for y in 0..<smallH {
+      // iterate col first
+      for x in 0..<smallW {
+        let realY = y * sampleSpacing * 2 + boxY * 2
+        let realX = x * sampleSpacing * 2 + boxX * 2
+        let index = y * smallW + x
+        let luma = buffer[realY * perRow + realX]
+        // uid calc
+//        let filled = luma < 200 ? 1 : 2
+//        uid += filled * ((x + boxX) + (y + boxY)) * 3 + ((boxY + y) * 5) + ((boxX + x) * 2)
+        // only if exact match
+        if hasOriginalBox {
+          if originalBox![index] != luma {
+            isOriginal = false
+          }
+        }
+        if (hasLastBox) {
+          if (lastBox![index] != luma) {
+            numChanged = numChanged + 1
+            if (numChanged >= sensitivity) {
+              hasChanged = true
+              break
+            }
+          }
+        }
+        curBox.insert(luma, at: index)
+      }
+      if (hasChanged) {
+        break
+      }
+    }
+    self.lastBoxes[box.id] = curBox
+    // store first seen box only
+    if !hasOriginalBox {
+      self.originalBoxes[box.id] = curBox
+    }
+    return (hasChanged, isOriginal)
+  }
+  
   private func getBufferFrame(_ sampleBuffer: CMSampleBuffer) -> (UnsafeMutablePointer<UInt8>, Int, () -> Void) {
     let pixelBuffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)!
     CVPixelBufferLockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0));
@@ -41,8 +99,12 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
     // loop over boxes and check
     for boxId in self.boxes.keys {
       let box = self.boxes[boxId]!
-      let changedBox = hasBoxChanged(box: box, buffer: buffer, perRow: perRow)
-      if (firstTime && box.initialScreenshot || !firstTime && changedBox) {
+      let (hasChanged, isOriginal) = hasBoxChanged(box: box, buffer: buffer, perRow: perRow)
+      if isOriginal {
+        self.send("{ \"action\": \"restoreWord\", \"value\": \"\(box.id)\" }")
+        continue
+      }
+      if (firstTime && box.initialScreenshot || !firstTime && hasChanged) {
         // options to ignore next or to force next
         if ignoreNextScan && !shouldRunNextTime {
           self.ignoreNextScan = false
@@ -68,20 +130,18 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
         }
         // wait for 2 frames of clear
         // small delay by default to not pick up old highlights that havent cleared yet
-        self.changeHandle = Async.userInteractive(after: changedBox ? delayHandleChange : 0.02) { // debounce (seconds)
+        self.changeHandle = Async.userInteractive(after: hasChanged ? delayHandleChange : 0.02) { // debounce (seconds)
           self.isScanning = true
           // update characters buffer
           let (buffer, _, release) = self.getBufferFrame(sampleBuffer)
           self.characters!.buffer = buffer
           // handle change
-          if let frame = self.handleChangedArea(
+          _ = self.handleChangedArea(
             box: box,
             sampleBuffer: self.currentSampleBuffer!,
             perRow: perRow,
             findContent: true
-            ) {
-            self.frames[boxId] = frame
-          }
+          )
           release()
           // after x seconds, re-enable watching
           // this is because screen needs time to update highlight boxes

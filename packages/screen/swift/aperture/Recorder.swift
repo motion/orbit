@@ -61,8 +61,8 @@ final class Recorder: NSObject {
   var shouldDebug: Bool
   let context = CIContext()
   var boxes: [String: Box]
-  var frames: [String: Box]
   var lastBoxes: [String: [UInt8]]
+  var originalBoxes: [String: [UInt8]]
   var displayId: CGDirectDisplayID
   let components = ConnectedComponentsSwiftOCR()
   var characters: Characters?
@@ -120,7 +120,7 @@ final class Recorder: NSObject {
     self.sensitivity = 1
     self.boxes = [String: Box]()
     self.lastBoxes = [String: [UInt8]]()
-    self.frames = [String: Box]()
+    self.originalBoxes = [String: [UInt8]]()
 
     super.init()
 
@@ -271,7 +271,7 @@ final class Recorder: NSObject {
     self.sampleSpacing = sampleSpacing
     self.sensitivity = sensitivity
     self.lastBoxes = [String: [UInt8]]()
-    self.frames = [String: Box]()
+    self.originalBoxes = [String: [UInt8]]()
     self.boxes = [String: Box]()
     for box in boxes {
       self.boxes[box.id] = box
@@ -652,50 +652,6 @@ final class Recorder: NSObject {
       findContent: false, // now false on finding new content
       initialScreenshot: box.initialScreenshot
     )
-  }
-
-  func hasBoxChanged(box: Box, buffer: UnsafeMutablePointer<UInt8>, perRow: Int) -> Bool {
-    let lastBox = self.lastBoxes[box.id]
-    var hasLastBox = false
-    let boxX = box.x
-    let boxY = box.y
-    let height = Int(box.height)
-    let width = Int(box.width)
-    var curBox: [UInt8] = []
-    var numChanged = 0
-    var hasChanged = false
-    let smallH = height/sampleSpacing
-    let smallW = width/sampleSpacing
-    if (lastBox != nil) {
-      hasLastBox = lastBox?.count == smallW * smallH
-    }
-    for y in 0..<smallH {
-      // iterate col first
-      for x in 0..<smallW {
-        let realY = y * sampleSpacing * 2 + boxY * 2
-        let realX = x * sampleSpacing * 2 + boxX * 2
-        let index = y * smallW + x
-        let luma = buffer[realY * perRow + realX]
-        if (hasLastBox) {
-          if (lastBox![index] != luma) {
-            numChanged = numChanged + 1
-            if (numChanged >= sensitivity) {
-              hasChanged = true
-              break
-            }
-          }
-        }
-        curBox.insert(luma, at: index)
-      }
-      if (hasChanged) {
-        break
-      }
-    }
-    self.lastBoxes[box.id] = curBox
-    if (hasChanged) {
-      return true
-    }
-    return false
   }
 }
 

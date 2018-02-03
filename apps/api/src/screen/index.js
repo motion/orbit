@@ -121,6 +121,11 @@ export default class ScreenState {
       // this.updateState({ ocrWords })
       // console.log('got clear word', id)
     })
+    this.screenOCR.onRestoreWord(id => {
+      this.socketSendAll({
+        restoreWord: id,
+      })
+    })
     this.screenOCR.onError(async error => {
       console.log('screen ran into err, restart', error)
       this.restartScreen()

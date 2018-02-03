@@ -24,7 +24,6 @@
 		CF6E7C9F201A6BB600E40B1A /* MDCDistanceMatrix.m in Sources */ = {isa = PBXBuildFile; fileRef = CF6E7C9D201A6BB600E40B1A /* MDCDistanceMatrix.m */; };
 		CF6E7CA0201A6BB600E40B1A /* NSString+MDCCompare.m in Sources */ = {isa = PBXBuildFile; fileRef = CF6E7C9E201A6BB600E40B1A /* NSString+MDCCompare.m */; };
 		CF6E7CA2201A71CC00E40B1A /* Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF6E7CA1201A71CC00E40B1A /* Async.swift */; };
-		CF72D07120099C0C0001366D /* ConnectedComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF72D07020099C0C0001366D /* ConnectedComponents.swift */; };
 		CF85A92120186D270067DCF2 /* Moves.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF85A92020186D270067DCF2 /* Moves.swift */; };
 		CF9AEB78201969E200D29367 /* SymSPell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF9AEB77201969E200D29367 /* SymSPell.swift */; };
 		CFA30D14200EB2B00087ABC7 /* ConnectedComponentsSwiftOCR.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFA30D13200EB2B00087ABC7 /* ConnectedComponentsSwiftOCR.swift */; };
@@ -83,7 +82,6 @@
 		CF6E7C9D201A6BB600E40B1A /* MDCDistanceMatrix.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDCDistanceMatrix.m; sourceTree = "<group>"; };
 		CF6E7C9E201A6BB600E40B1A /* NSString+MDCCompare.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+MDCCompare.m"; sourceTree = "<group>"; };
 		CF6E7CA1201A71CC00E40B1A /* Async.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Async.swift; sourceTree = "<group>"; };
-		CF72D07020099C0C0001366D /* ConnectedComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectedComponents.swift; sourceTree = "<group>"; };
 		CF85A92020186D270067DCF2 /* Moves.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Moves.swift; sourceTree = "<group>"; };
 		CF9AEB77201969E200D29367 /* SymSPell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SymSPell.swift; sourceTree = "<group>"; };
 		CF9AEB7A20196BEA00D29367 /* ApertureBridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ApertureBridge.h; sourceTree = "<group>"; };
@@ -154,7 +152,6 @@
 			children = (
 				CFA30D15200EB3510087ABC7 /* UnionFind.swift */,
 				CFA30D13200EB2B00087ABC7 /* ConnectedComponentsSwiftOCR.swift */,
-				CF72D07020099C0C0001366D /* ConnectedComponents.swift */,
 			);
 			path = ConnectedComponents;
 			sourceTree = "<group>";
@@ -333,7 +330,6 @@
 				CFA30D18200EB3FB0087ABC7 /* Extensions.swift in Sources */,
 				CFA30D14200EB2B00087ABC7 /* ConnectedComponentsSwiftOCR.swift in Sources */,
 				CF5D8418200FE60800A810FA /* ThresholdBelowFilter.swift in Sources */,
-				CF72D07120099C0C0001366D /* ConnectedComponents.swift in Sources */,
 				E3A8F9E11E46F9C000C6C5FC /* util.swift in Sources */,
 				CF6E7C94201A6BA600E40B1A /* NSString+MDCLevenshteinDistance.m in Sources */,
 				CF6E7C9A201A6BAF00E40B1A /* MDCLevenshteinDistance.m in Sources */,

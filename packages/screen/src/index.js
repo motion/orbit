@@ -25,6 +25,7 @@ export default class Screen {
   onLinesCB = _ => _
   onWordsCB = _ => _
   onClearWordCB = _ => _
+  onRestoreWordCB = _ => _
   onErrorCB = _ => _
   onClearCB = _ => _
   state = {
@@ -66,6 +67,9 @@ export default class Screen {
       // clear is fast
       if (action === 'clearWord') {
         this.onClearWordCB(value)
+      }
+      if (action === 'restoreWord') {
+        this.onRestoreWordCB(value)
       }
       // state goes out to clients
       if (state) {
@@ -260,6 +264,10 @@ export default class Screen {
 
   onClearWord = cb => {
     this.onClearWordCB = cb
+  }
+
+  onRestoreWord = cb => {
+    this.onRestoreWordCB = cb
   }
 
   onWords = cb => {

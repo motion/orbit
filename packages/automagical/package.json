@@ -11,7 +11,7 @@
     "mobx-utils": "^3.2.1"
   },
   "peerDependencies": {
-    "mobx": "^3.3.1"
+    "mobx": "^3.4.1"
   },
   "publishConfig": {
     "access": "public"

@@ -103,7 +103,7 @@ export default class ScreenState {
     this.screenOCR.onClear(() => {
       this.resetHighlights()
     })
-    this.screenOCR.onClearWord(id => {
+    this.screenOCR.onChanged(id => {
       console.log('clear', id)
       if (id === APP_ID) {
         this.resetHighlights()
@@ -121,7 +121,7 @@ export default class ScreenState {
       // this.updateState({ ocrWords })
       // console.log('got clear word', id)
     })
-    this.screenOCR.onRestoreWord(id => {
+    this.screenOCR.onRestore(id => {
       console.log('restore', id)
       this.socketSendAll({
         restoreWord: id,

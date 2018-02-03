@@ -6,8 +6,7 @@
   },
   "dependencies": {
     "react": "^16.2.0",
-    "react-dom": "^16.2.0",
-    "mobx": "~3.3.0"
+    "react-dom": "^16.2.0"
   },
   "devDependencies": {
     "@mcro/preset-motion": "^1.2.0",

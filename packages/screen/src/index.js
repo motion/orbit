@@ -24,8 +24,8 @@ export default class Screen {
   listeners = []
   onLinesCB = _ => _
   onWordsCB = _ => _
-  onClearWordCB = _ => _
-  onRestoreWordCB = _ => _
+  onChangedCB = _ => _
+  onRestoreCB = _ => _
   onErrorCB = _ => _
   onClearCB = _ => _
   state = {
@@ -65,11 +65,11 @@ export default class Screen {
     // console.log('screen.action', action)
     try {
       // clear is fast
-      if (action === 'clearWord') {
-        this.onClearWordCB(value)
+      if (action === 'changed') {
+        this.onChangedCB(value)
       }
-      if (action === 'restoreWord') {
-        this.onRestoreWordCB(value)
+      if (action === 'restored') {
+        this.onRestoreCB(value)
       }
       // state goes out to clients
       if (state) {
@@ -262,12 +262,12 @@ export default class Screen {
     this.onClearCB = cb
   }
 
-  onClearWord = cb => {
-    this.onClearWordCB = cb
+  onChanged = cb => {
+    this.onChangedCB = cb
   }
 
-  onRestoreWord = cb => {
-    this.onRestoreWordCB = cb
+  onRestore = cb => {
+    this.onRestoreCB = cb
   }
 
   onWords = cb => {

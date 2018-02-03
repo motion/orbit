@@ -96,7 +96,7 @@ async function test() {
     await screen.stop()
     process.exit(0)
   })
-  screen.onClearWord(word => {
+  screen.onChanged(word => {
     console.log('clear word', word)
   })
 }

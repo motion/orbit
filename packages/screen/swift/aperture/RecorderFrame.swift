@@ -98,11 +98,13 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
     // debounce while scrolling amt in seconds:
     let delayHandleChange = 0.25
     // loop over boxes and check
+    var restored = [String]()
+    var changed = [String]()
     for boxId in self.boxes.keys {
       let box = self.boxes[boxId]!
       let (hasChanged, isRestored) = hasBoxChanged(box: box, buffer: buffer, perRow: perRow)
       if isRestored {
-        self.send("{ \"action\": \"restoreWord\", \"value\": \"\(box.id)\" }")
+        restored.append(box.id)
         self.isCleared[boxId] = false
         continue
       }
@@ -115,8 +117,7 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
         if shouldRunNextTime {
           self.shouldRunNextTime = false
         }
-        // send clear on change
-        self.send("{ \"action\": \"clearWord\", \"value\": \"\(box.id)\" }")
+        changed.append(box.id)
         self.isCleared[boxId] = true
         if !box.findContent {
           continue
@@ -156,6 +157,10 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
           }
         }
       }
+    }
+    if restored.count > 0 {
+      self.send("{ \"action\": \"changed\", \"value\": [\(changed.joined(separator: ","))] }")
+      self.send("{ \"action\": \"restored\", \"value\": [\(restored.joined(separator: ","))] }")
     }
     if clearIgnoreNext {
       self.ignoreNextScan = false

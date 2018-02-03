@@ -2,73 +2,54 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as Helpers from '~/helpers'
+import quadtree from 'simple-quadtree'
 
 const HL_PAD = 2
 const TOP_BAR_PAD = 22
-const toEvent = ([left, top, width, height]) => {
-  return {
-    currentTarget: {
-      offsetTop: top,
-      offsetLeft: left,
-      clientHeight: height,
-      clientWidth: width,
-    },
-  }
-}
 
 class HighlightsStore {
+  tree = quadtree(0, 0, window.innerWidth, window.innerHeight + 23)
   version = 0
   electronState = {}
-  hoveredWord = null
-  hoveredLine = null
   hoverEvents = {}
-  showAll = true
 
   get context() {
     return this.props.contextStore
   }
 
-  get ocrWords() {
-    return (this.context.ocrWords || []).filter(
-      (_, index) => !this.context.clearWords[index],
-    )
+  // get ocrWords() {
+  //   return (this.context.ocrWords || []).filter(
+  //     (_, index) => !this.context.clearWords[index],
+  //   )
+  // }
+
+  get hovered() {
+    const [x, y] = this.context.mousePosition || []
+    const res = (this.tree && this.tree.get({ x, y, w: 0, h: 0 })) || []
+    return res
   }
 
   // test words
-  // get ocrWords() {
-  //   return [
-  //     [100, 60, 120, 10, 'xx', 'red'],
-  //     [1500, 60, 120, 10, 'xx', 'red'],
-  //     [1500, 1000, 120, 10, 'xx', 'red'],
-  //     [100, 1000, 120, 10, 'xx', 'red'],
-  //     [800, 500, 120, 10, 'xx', 'red'],
-  //   ]
-  // }
+  get ocrWords() {
+    return [
+      [100, 60, 120, 10, 'xx', 'red'],
+      [1500, 60, 120, 10, 'xx', 'red'],
+      [1500, 1000, 120, 10, 'xx', 'red'],
+      [100, 1000, 120, 10, 'xx', 'red'],
+      [800, 500, 120, 10, 'xx', 'red'],
+    ]
+  }
+
+  get showAll() {
+    return true || this.context.lastOCR > this.context.lastScreenChange
+      ? true
+      : false
+  }
 
   willMount() {
     // start context watching
     this.props.contextStore.start()
-    this.watchForHoverWord()
-    // hide highlights on screen diff
-    this.react(
-      () => this.context.lastScreenChange,
-      () => {
-        if (this.context.lastScreenChange > this.context.lastOCR) {
-          console.log('diff, hide highlights')
-          this.showAll = false
-        }
-      },
-      true,
-    )
-    // show highlights on new ocr
-    this.react(
-      () => this.context.lastOCR,
-      () => {
-        console.log('show highlights')
-        this.showAll = true
-      },
-      true,
-    )
+    this.setupHoverEvents()
   }
 
   getHoverProps = Helpers.hoverSettler({
@@ -79,91 +60,30 @@ class HighlightsStore {
     },
   })
 
-  watchForHoverWord = () => {
-    // update hoverEvents for use in hover logic
+  setupHoverEvents = () => {
     this.react(
       () =>
         [...(this.ocrWords || []), ...(this.context.linePositions || [])] || [],
-      hls => {
-        const hoverEvents = {}
-        for (const item of hls) {
+      function newPositions(items) {
+        this.tree.clear()
+        this.hoverEvents = items.reduce((acc, item) => {
           const key = this.getKey(item)
-          hoverEvents[key] = this.getHoverProps({ key, id: key })
-        }
-        this.hoverEvents = hoverEvents
+          // side effect
+          this.tree.put({
+            x: item[0],
+            y: item[1],
+            w: item[2],
+            h: item[3],
+            string: key,
+          })
+          return {
+            ...acc,
+            [key]: this.getHoverProps({ key, id: key }),
+          }
+        }, {})
       },
       true,
     )
-
-    // track hovers on words
-    this.react(
-      () => [
-        this.context.mousePosition || [],
-        // update when hover event handlers change
-        this.hoverEvents,
-        this.ocrWords || [],
-      ],
-      this.handleHoverOn('hoveredWord'),
-      true,
-    )
-
-    // track hovers on lines
-    this.react(
-      () => [
-        this.context.mousePosition || [],
-        // update when hover event handlers change
-        this.hoverEvents,
-        this.context.linePositions || [],
-      ],
-      this.handleHoverOn('hoveredLine'),
-      true,
-    )
-  }
-
-  handleHoverOn = prop => ([[x, y], hoverEvents, items]) => {
-    if (!x || !y) {
-      return
-    }
-    let hovered = null
-    for (const item of items) {
-      const [x1, y1, w1, h1] = item
-      // outside of x
-      if (x < x1 || x > x1 + w1) {
-        continue
-      }
-      // outside of y
-      if (y < y1 || y > y1 + h1 + 3) {
-        continue
-      }
-      // we good tho
-      hovered = item
-      break
-    }
-
-    // // TODO REMOVE BEFORE MERGE
-    // // only do peeks on test squares
-    // if (!hovered || !hovered[5]) return
-
-    // before update, handle hover logic
-    // mouseLeave
-    const current = this[prop]
-    if (!hovered && current) {
-      if (hoverEvents[current]) {
-        hoverEvents[current].onMouseLeave()
-      }
-    } else if (hovered && !current) {
-      // mouseEnter
-      if (hoverEvents[current]) {
-        hoverEvents[current].onMouseEnter(toEvent(hovered))
-      }
-    } else if (hovered) {
-      // mouseMove
-      if (hoverEvents[current]) {
-        hoverEvents[current].onMouseMove(toEvent(hovered))
-      }
-    }
-    // update state
-    this[prop] = hovered ? this.getKey(hovered) : null
   }
 
   getKey = ([x, y, w, h]) => `${x}${y}${w}${h}`
@@ -175,7 +95,7 @@ class HighlightsStore {
 })
 export default class HighlightsPage {
   render({ store }) {
-    const { showAll, context, ocrWords, hoveredWord, hoveredLine } = store
+    const { showAll, context, ocrWords, hovered } = store
     return (
       <frame if={showAll}>
         {(ocrWords || []).map(item => {
@@ -184,7 +104,7 @@ export default class HighlightsPage {
           return (
             <word
               key={key}
-              $hovered={hoveredWord && key === hoveredWord}
+              $hovered={hovered.findIndex(x => x.string === key) >= 0}
               $highlighted={context.highlightWords[word]}
               style={{
                 top: y - HL_PAD - TOP_BAR_PAD,
@@ -204,7 +124,7 @@ export default class HighlightsPage {
           return (
             <ocrLine
               key={key}
-              $hoveredLine={hoveredLine && key === hoveredLine}
+              $hoveredLine={hovered.findIndex(x => x.string === key) >= 0}
               style={{
                 top: y / 2 - TOP_BAR_PAD,
                 left: x,

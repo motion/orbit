@@ -111,7 +111,7 @@ export default class ScreenState {
         this.socketSendAll({ clearWord: APP_ID })
       } else {
         // for not many clears, try it
-        if (count < 10) {
+        if (count < 20) {
           this.socketSendAll({ clearWord: this.screenOCR.changedIds })
         } else {
           // else just clear it all

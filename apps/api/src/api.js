@@ -24,10 +24,9 @@ export default class API {
   }
 
   async start() {
-    log('starting api...')
     this.setupHosts()
-    const port = this.server.start()
-    log('On port', port)
+    const port = await this.server.start()
+    log(`starting api on ${port}`)
     this.screen.start()
   }
 
@@ -41,9 +40,9 @@ export default class API {
     const lines = await hostile.get(true)
     const exists = lines.map(line => line[1]).indexOf(Constants.API_HOST) > -1
     if (!exists) {
-      log('Adding host entry', Constants.API_HOST)
+      log(`Adding host entry`, Constants.API_HOST)
       await sudoPrompt.exec(`npx hostile set 127.0.0.1 ${Constants.API_HOST}`, {
-        name: 'Orbit',
+        name: `Orbit`,
       })
     }
   }

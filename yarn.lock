@@ -3540,9 +3540,9 @@ mixin-deep@^1.2.0:
   dependencies:
     minimist "0.0.8"
 
-mobx@~3.3.0:
-  version "3.3.3"
-  resolved "https://registry.yarnpkg.com/mobx/-/mobx-3.3.3.tgz#8fa7db64be92f5fdbdaebf6ec44d85e664b20c22"
+mobx@^3.4.1:
+  version "3.4.1"
+  resolved "https://registry.yarnpkg.com/mobx/-/mobx-3.4.1.tgz#37abe5ee882d401828d9f26c6c1a2f47614bbbef"
 
 modify-babel-preset@^3.2.1:
   version "3.2.1"

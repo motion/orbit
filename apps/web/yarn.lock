@@ -474,7 +474,7 @@ mobx-utils@^3.2.2:
   version "3.2.2"
   resolved "https://registry.yarnpkg.com/mobx-utils/-/mobx-utils-3.2.2.tgz#1979fe85a27df496d4f17af288813ac4fd356fd5"
 
-mobx@^3.3.1:
+mobx@^3.4.1:
   version "3.4.1"
   resolved "https://registry.yarnpkg.com/mobx/-/mobx-3.4.1.tgz#37abe5ee882d401828d9f26c6c1a2f47614bbbef"
 
@@ -954,6 +954,10 @@ sherlockjs@*:
 signal-exit@^3.0.0:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-3.0.2.tgz#b5fdc08f1287ea1178628e415e25132b73646c6d"
+
+simple-quadtree@^0.1.3:
+  version "0.1.3"
+  resolved "https://registry.yarnpkg.com/simple-quadtree/-/simple-quadtree-0.1.3.tgz#91159078d3a6081c889db05a335d4c9b5a5e3888"
 
 simple-swizzle@^0.2.2:
   version "0.2.2"

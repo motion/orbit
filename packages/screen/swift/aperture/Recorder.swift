@@ -2,6 +2,9 @@ import Foundation
 import AVFoundation
 import AppKit
 
+let shouldDebugTiming = true
+let simpleDebugImages = false
+
 enum ApertureError: Error {
   case invalidAudioDevice
   case couldNotAddScreen
@@ -10,7 +13,7 @@ enum ApertureError: Error {
 }
 
 struct Box: Decodable {
-  let id: String
+  let id: Int
   let x: Int
   let y: Int
   let width: Int
@@ -21,7 +24,7 @@ struct Box: Decodable {
 }
 
 // constants
-let lineFindScaling = 3 // scale down denominator
+let lineFindScaling = 4 // scale down denominator
 
 let filters = Filters()
 let images = Images()
@@ -47,31 +50,31 @@ struct LinePosition {
 }
 
 final class Recorder: NSObject {
-  private var currentSampleBuffer: CMSampleBuffer?
-  private var send: ((String)->Void) = { _ in print("not opened") }
-  private let input: AVCaptureScreenInput
-  private var session: AVCaptureSession
-  private var output: AVCaptureVideoDataOutput
-  private var sensitivity: Int
-  private var sampleSpacing: Int
-  private var firstTime: Bool
-  private var shouldDebug: Bool
-  private let context = CIContext()
-  private var boxes: [String: Box]
-  private var frames: [String: Box]
-  private var lastBoxes: [String: [UInt8]]
-  private var displayId: CGDirectDisplayID
-  private let components = ConnectedComponentsSwiftOCR()
-  private var characters: Characters?
-  private var ocr: OCRInterface?
-  private var changeHandle: AsyncBlock<Void, ()>?
-  private var isScanning = false
-  private var fps = 0
-  private var ignoreNextScan = false
-  private var shouldCancel = false
-  private var shouldRunNextTime = false
-  private let queue = AsyncGroup()
-
+  var isCleared = [Int: Bool]()
+  var currentSampleBuffer: CMSampleBuffer?
+  var send: ((String)->Void) = { _ in print("not opened") }
+  let input: AVCaptureScreenInput
+  var session: AVCaptureSession
+  var output: AVCaptureVideoDataOutput
+  var sensitivity: Int
+  var sampleSpacing: Int
+  var firstTime: Bool
+  var shouldDebug: Bool
+  let context = CIContext()
+  var boxes: [Int: Box]
+  var lastBoxes: [Int: [UInt8]]
+  var originalBoxes: [Int: [UInt8]]
+  var displayId: CGDirectDisplayID
+  let components = ConnectedComponentsSwiftOCR()
+  var characters: Characters?
+  var ocr: OCRInterface?
+  var changeHandle: AsyncBlock<Void, ()>?
+  var isScanning = false
+  var fps = 0
+  var ignoreNextScan = false
+  var shouldCancel = false
+  var shouldRunNextTime = false
+  let queue = AsyncGroup()
   var onStart: (() -> Void)?
   var onFinish: (() -> Void)?
   var onError: ((Error) -> Void)?
@@ -116,9 +119,9 @@ final class Recorder: NSObject {
     self.firstTime = true
     self.sampleSpacing = 0
     self.sensitivity = 1
-    self.boxes = [String: Box]()
-    self.lastBoxes = [String: [UInt8]]()
-    self.frames = [String: Box]()
+    self.boxes = [Int: Box]()
+    self.lastBoxes = [Int: [UInt8]]()
+    self.originalBoxes = [Int: [UInt8]]()
 
     super.init()
 
@@ -139,13 +142,18 @@ final class Recorder: NSObject {
 
     // socket bridge
     let ws = WebSocket("ws://localhost:40512")
-    self.send = { (msg) in ws.send(msg) }
-    ws.event.open = {}
+    self.send = { (msg) in
+//      print(msg)
+      ws.send(msg)
+    }
+    ws.event.open = {
+//      print("screen.ws.opened")
+    }
     ws.event.close = { code, reason, clean in
-      print("close")
+//      print("screen.ws.close")
     }
     ws.event.error = { error in
-      print("error \(error)")
+      print("screen.ws.error \(error)")
     }
     self.queue.background {
       ws.event.message = { (message) in
@@ -206,6 +214,7 @@ final class Recorder: NSObject {
   }
 
   func start() {
+    debug("screen.start()")
     if self.shouldCancel {
       self.shouldRunNextTime = true
     }
@@ -234,6 +243,23 @@ final class Recorder: NSObject {
     self.stop()
     self.send("{ \"state\": { \"isPaused\": true } }")
   }
+  
+  func debug(_ str: String) {
+    if shouldDebugTiming {
+      if curTime != nil {
+        let timeEnd = Int(Double(DispatchTime.now().uptimeNanoseconds - curTime!.uptimeNanoseconds) / 1_000_000)
+        print("\(str.padding(toLength: 36, withPad: " ", startingAt: 0)) \(timeEnd)ms")
+        curTime = DispatchTime.now()
+      } else {
+        print(str)
+      }
+    }
+  }
+
+  private var curTime: DispatchTime?
+  func startTime() {
+    curTime = DispatchTime.now()
+  }
 
   func watchBounds(fps: Int, boxes: Array<Box>, showCursor: Bool, videoCodec: String? = nil, sampleSpacing: Int, sensitivity: Int, debug: Bool) {
     if let handle = self.changeHandle {
@@ -244,12 +270,14 @@ final class Recorder: NSObject {
     if shouldDebug {
       print("running in debug mode...")
     }
+    print("reset first time to true")
     self.firstTime = true
     self.sampleSpacing = sampleSpacing
     self.sensitivity = sensitivity
-    self.lastBoxes = [String: [UInt8]]()
-    self.frames = [String: Box]()
-    self.boxes = [String: Box]()
+    self.isCleared = [Int: Bool]()
+    self.lastBoxes = [Int: [UInt8]]()
+    self.originalBoxes = [Int: [UInt8]]()
+    self.boxes = [Int: Box]()
     for box in boxes {
       self.boxes[box.id] = box
     }
@@ -270,8 +298,8 @@ final class Recorder: NSObject {
   }
 
   func getOCR(_ characterLines: [[Word]]) -> [String: String]? {
+    startTime()
     var ocrResults = [String: String]() // outline => letter
-    let start = DispatchTime.now()
     let chars = self.characters!
     let allCharacters: [Character] = characterLines.flatMap { $0.flatMap { $0.characters } }
     // set filters unique outlines
@@ -280,9 +308,6 @@ final class Recorder: NSObject {
     // if necessary, run ocr
     if unsolvedCharacters.count > 0 {
       // write ocr string
-      if shouldDebug {
-        print("found \(unsolvedCharacters.count) uniq out of \(allCharacters.count) total")
-      }
       let ocrString = unsolvedCharacters.enumerated().map({ item in
         return chars.charToString(item.element, debugID: "")
       }).joined(separator: "\n")
@@ -292,34 +317,31 @@ final class Recorder: NSObject {
       } catch {
         print("couldnt write pixel string \(error)")
       }
-      if shouldDebug {
-        print("8. characters.txt: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
-      }
+      debug("getOCR - characters.txt")
       // run ocr
       foundCharacters = ocr!.ocrCharacters()
-      if shouldDebug {
-        print("9. ocr: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
-      }
     }
     // collect ocr results
     if foundCharacters.count != unsolvedCharacters.count {
       print("mismatch from in/out to ocr")
       return nil
     }
-    for char in unsolvedCharacters {
-      ocrResults[char.outline] = foundCharacters.remove(at: 0)
+    for (index, char) in unsolvedCharacters.enumerated() {
+      ocrResults[char.outline] = foundCharacters[index]
     }
+    debug("getOCR - \(unsolvedCharacters.count) uniq / \(allCharacters.count), \(allCharacters.map({ return $0.completedOutline ? 0 : 1 }).reduce(0, +)) exhaust")
     return ocrResults
   }
 
-  func getCharactersByLine(_ sectionLines: Dictionary<Int, [LinePosition]>, frame: [Int]) -> [[Word]] {
+  func getCharactersByLine(_ sectionLines: Dictionary<Int, [LinePosition]>, box: Box, cgImage: CGImage, frame: [Int]) -> [[Word]] {
+    startTime()
     // third loop
     // for each VERTICAL SECTION, get characters
     var allLines = [[Word]]() // store all lines
     let chars = self.characters!
     for id in sectionLines.keys {
       let scl = lineFindScaling
-      let sectionLines: [[Word]] = sectionLines[id]!.pmap(transformer: {(line, index) in
+      let sectionLines: [[Word]] = sectionLines[id]!.pmap({(line, index) in
         let padX = 6
         let padY = max(3, min(12, line.height / 10))
         //        let shiftUp = line.topFillAmt * 10 / line.bottomFillAmt * 10
@@ -334,35 +356,29 @@ final class Recorder: NSObject {
         // finds characters
         let foundWords: [Word] = chars.find(id: index, bounds: lineBounds)
         // debug line
-//        if self.shouldDebug {
-//          images.writeCGImage(
-//            image: images.cropImage(ocrCharactersImage, box: CGRect(x: lineBounds[0] - frame[0], y: lineBounds[1] - frame[1], width: lineBounds[2], height: lineBounds[3]))!,
-//            to: "\(box.screenDir!)/linein-\(box.id)-\(id)-\(index).png"
-//          )
-//        }
+        if simpleDebugImages || self.shouldDebug {
+          images.writeCGImage(
+            image: images.cropImage(cgImage, box: CGRect(x: lineBounds[0] - box.x, y: lineBounds[1] - box.y, width: lineBounds[2], height: lineBounds[3]))!,
+            to: "\(box.screenDir!)/linein-\(box.id)-\(id)-\(index).png"
+          )
+        }
         // write characters
-        chars.shouldDebug = self.shouldDebug
+        if self.shouldDebug { chars.shouldDebug = true }
         return foundWords
       })
       allLines = allLines + sectionLines
     }
+    debug("getCharactersByLine")
     return allLines
   }
 
-  func getVerticalSections(_ box: Box, cgImage: CGImage, frame: [Int], vWidth: Int, vHeight: Int) -> (Dictionary<Int, Int>, [[Int]]) {
-    var start = DispatchTime.now()
-    // crop
-    let cropBox = CGRect(x: frame[0] - box.x, y: frame[1] - box.y, width: frame[2], height: frame[3])
-    let ocrCharactersImage = images.cropImage(filters.filterImageForOCRCharacterFinding(image: cgImage), box: cropBox)!
-    // find vertical sections
-    let verticalImage = filters.filterForVerticalContentFinding(image: images.resize(ocrCharactersImage, width: vWidth, height: vHeight)!)
-    let verticalImageRep = NSBitmapImageRep(cgImage: verticalImage)
-    // debug
-    Async.background { images.writeCGImage(image: verticalImage, to: "\(box.screenDir!)/\(box.id)-section-find.png") }
-    if shouldDebug {
-      print("3. filter vertical: \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
-      start = DispatchTime.now()
-    }
+  func getVerticalSections(_ cgImage: CGImage, box: Box, frame: [Int], scale: Int) -> (Dictionary<Int, Int>, [[Int]]) {
+    startTime()
+    let vWidth = frame[2] / scale
+    let vHeight = frame[3] / scale
+    let maxWidth = cgImage.width - 1
+    let maxHeight = cgImage.height - 1
+    let verticalImageRep = NSBitmapImageRep(cgImage: cgImage)
     // first loop - find vertical sections
     var verticalSections = Dictionary<Int, Int>() // start => end
     let colHeightMin = 1
@@ -376,7 +392,9 @@ final class Recorder: NSObject {
       imgData.append([Int]())
       var verticalFilled = 0
       for y in 0..<vHeight {
-        let filled = verticalImageRep.colorAt(x: x, y: y)!.brightnessComponent == 0.0
+        let x0 = max(0, min(maxWidth, frame[0] - box.x + x * scale))
+        let y0 = max(0, min(maxHeight, frame[1] - box.y + y * scale))
+        let filled = verticalImageRep.colorAt(x: x0, y: y0)!.brightnessComponent < 0.9
         imgData[x].append(filled ? 1 : 0)
         if filled {
           verticalFilled += 1
@@ -391,7 +409,9 @@ final class Recorder: NSObject {
         colMiss = 0
       } else {
         colMiss += 1
-        if (colMiss > colMissMax || x == vWidth - 1) && colStreak - colMiss > colStreakMin { // set content block
+        let enoughWhitespace = colMiss > colMissMax
+        let reachedEOL = x == vWidth - 1
+        if (enoughWhitespace || reachedEOL) && colStreak - colMiss > colStreakMin { // set content block
           //          print("found section x \(x) colStreak \(colStreak)")
           verticalSections[colStart] = x - colMiss
           colStreak = 0
@@ -408,15 +428,27 @@ final class Recorder: NSObject {
     if verticalSections.count == 0 {
       verticalSections[0] = vWidth - 1
     }
+    if simpleDebugImages || shouldDebug {
+      var pixels = [PixelData]()
+      for y in 0..<vHeight {
+        for x in 0..<vWidth {
+          let brt = UInt8(imgData[x][y] == 1 ? 0 : 255)
+          pixels.append(PixelData(a: 255, r: brt, g: brt, b: brt))
+        }
+      }
+      images.writeCGImage(image: images.imageFromArray(pixels: pixels, width: vWidth, height: vHeight)!, to: "\(box.screenDir!)/\(box.id)-section-find.png", resolution: 72) // write img
+    }
+    debug("getVerticalSections")
     return (verticalSections, imgData)
   }
 
   // sections to lines
   func getLines(_ verticalSections: Dictionary<Int, Int>, vWidth: Int, vHeight: Int, imgData: [[Int]]) -> Dictionary<Int, [LinePosition]> {
+    startTime()
     // second loop - find lines in sections
     var sectionLines = Dictionary<Int, [LinePosition]>()
     var total = 0
-    let minLineWidth = 1
+    let minLineWidth = 4
     for (start, end) in verticalSections {
       var lines = [LinePosition]()
       var lineStreak = 0
@@ -443,7 +475,7 @@ final class Recorder: NSObject {
           //          print("startLine \(startLine) lineStreak \(lineStreak) y \(y)")
           if lineStreak > 1 {
             // update
-            var last = lines[lines.count - 1]
+            var last = lines.last!
             last.height += 1
             last.width = max(last.width, width)
             last.bottomFillAmt = lineFilledPx
@@ -467,16 +499,19 @@ final class Recorder: NSObject {
       sectionLines[start] = lines
       total += lines.count
     }
+//    debug("getLines") // 0ms
     return sectionLines
   }
 
   func getContent(_ cgImage: CGImage, box: Box) -> [Int]? {
+    startTime()
     var big = CGRect(x: 0, y: 0, width: 0, height: 0)
-    let boxFindScale = 7
+    let boxFindScale = 6
     let binarizedImage = filters.filterImageForContentFinding(image: cgImage, scale: boxFindScale)
-//    if shouldDebug {
-      Async.background { images.writeCGImage(image: binarizedImage, to: "\(box.screenDir!)/\(box.id)-binarized.png") }
-//    }
+    debug("getContent filter")
+    if simpleDebugImages || shouldDebug {
+      Async.background { images.writeCGImage(image: binarizedImage, to: "\(box.screenDir!)/\(box.id)-content-in.png") }
+    }
     let cc = ConnectedComponentsSwiftOCR()
     let boxes = cc.extractBlobs(binarizedImage, debug: false)
     if boxes.count > 0 {
@@ -500,55 +535,13 @@ final class Recorder: NSObject {
     let y = Int(big.minY) * boxFindScale + box.y + innerPad
     let width = Int(big.width) * boxFindScale - innerPad * 2
     let height = Int(big.height) * boxFindScale - innerPad * 2
+    debug("getContent - \(boxes.count) boxes")
     return [ x, y, width, height ]
   }
-
-  // returns the frame it found
-  func handleChangedArea(box: Box, sampleBuffer: CMSampleBuffer, perRow: Int, findContent: Bool = false) -> Box? {
-    let startAll = DispatchTime.now()
+  
+  func getWordsAndLines(_ ocrResults: [String: String], characterLines: [[Word]]) -> ([String], [String]) {
+    startTime()
     let chars = self.characters!
-    // clear old files
-    if shouldDebug {
-      rmAllInside(URL(fileURLWithPath: box.screenDir!))
-    }
-    // create filtered images for content find
-    let cgImage = filters.imageFromBuffer(context, sampleBuffer: sampleBuffer, cropRect: CGRect(
-      x: box.x * 2,
-      y: Int(CGDisplayPixelsHigh(self.displayId) * 2 - Int(box.y * 2)),
-      width: box.width * 2,
-      height: Int(-box.height * 2)
-    ))!
-    /* check continuation */ queue.wait(); if handleCancel() { return nil }
-    // debug
-    if shouldDebug {
-      chars.debugImg = filters.filterImageForOCRCharacterFinding(image: cgImage)
-      Async.background { images.writeCGImage(image: cgImage, to: "\(box.screenDir!)/\(box.id)-original.png") }
-    }
-    /* check continuation */ queue.wait(); if handleCancel() { return nil }
-    // content find
-    var frame = [box.x, box.y, box.width, box.height]
-    if findContent {
-      if let newFrame = self.getContent(cgImage, box: box) {
-        frame = newFrame
-      } else {
-        print("no content")
-        return nil
-      }
-    }
-    chars.frameOffset = frame
-    let vWidth = frame[2] / lineFindScaling
-    let vHeight = frame[3] / lineFindScaling
-    /* check continuation */ queue.wait(); if handleCancel() { return nil }
-    let (verticalSections, imgData) = getVerticalSections(box, cgImage: cgImage, frame: frame, vWidth: vWidth, vHeight: vHeight)
-    /* check continuation */ queue.wait(); if handleCancel() { return nil }
-    let sectionLines = getLines(verticalSections, vWidth: vWidth, vHeight: vHeight, imgData: imgData)
-    /* check continuation */ queue.wait(); if handleCancel() { return nil }
-    let characterLines = getCharactersByLine(sectionLines, frame: frame)
-    /* check continuation */ queue.wait(); if handleCancel() { return nil }
-    guard let ocrResults = getOCR(characterLines) else { return nil }
-    /* check continuation */ queue.wait(); if handleCancel() { return nil }
-
-    // get all answers
     var words = [String]()
     var lines = [String]()
     for (lineIndex, line) in characterLines.enumerated() {
@@ -590,28 +583,70 @@ final class Recorder: NSObject {
       } else {
         width = firstWord.x + firstWord.width
       }
-      lines.append("[\(firstWord.x),\(minY),\(width),\(maxH)]")
+      lines.append("[\(firstWord.x),\(minY / 2),\(width),\(maxH)]")
     }
+    debug("getWordsAndLines")
+    return (words, lines)
+  }
 
-    // update character cache
-    Async.utility(after: 0.04) {
-      chars.updateCache(ocrResults)
+  // returns the frame it found
+  func handleChangedArea(box: Box, sampleBuffer: CMSampleBuffer, perRow: Int, findContent: Bool = false) -> Box? {
+    let startAll = DispatchTime.now()
+    let chars = self.characters!
+    // clear old files
+    if shouldDebug { rmAllInside(URL(fileURLWithPath: box.screenDir!)) }
+    // create filtered images for content find
+    let cgImage = filters.imageFromBuffer(context, sampleBuffer: sampleBuffer, cropRect: CGRect(
+      x: box.x * 2,
+      y: Int(CGDisplayPixelsHigh(self.displayId) * 2 - Int(box.y * 2)),
+      width: box.width * 2,
+      height: Int(-box.height * 2)
+    ))!
+    // debug
+    if shouldDebug {
+      chars.debugImg = filters.filterImageForOCRCharacterFinding(image: cgImage)
+      Async.background { images.writeCGImage(image: cgImage, to: "\(box.screenDir!)/\(box.id)-original.png") }
     }
-
     /* check continuation */ queue.wait(); if handleCancel() { return nil }
-
+    // content find
+    var frame = [box.x, box.y, box.width, box.height]
+    if findContent {
+      if let newFrame = self.getContent(cgImage, box: box) {
+        frame = newFrame
+      } else {
+        print("no content")
+        return nil
+      }
+    }
+    if frame[2] < 10 || frame[3] < 10 {
+      print("frame too small")
+      return nil
+    }
+    chars.frameOffset = frame
+    let vWidth = frame[2] / lineFindScaling
+    let vHeight = frame[3] / lineFindScaling
+    /* check continuation */ queue.wait(); if handleCancel() { return nil }
+    let (verticalSections, imgData) = getVerticalSections(cgImage, box: box, frame: frame, scale: lineFindScaling)
+    /* check continuation */ queue.wait(); if handleCancel() { return nil }
+    let sectionLines = getLines(verticalSections, vWidth: vWidth, vHeight: vHeight, imgData: imgData)
+    /* check continuation */ queue.wait(); if handleCancel() { return nil }
+    let characterLines = getCharactersByLine(sectionLines, box: box, cgImage: cgImage, frame: frame)
+    /* check continuation */ queue.wait(); if handleCancel() { return nil }
+    guard let ocrResults = getOCR(characterLines) else { return nil }
+    /* check continuation */ queue.wait(); if handleCancel() { return nil }
+    let (words, lines) = getWordsAndLines(ocrResults, characterLines: characterLines)
+    /* check continuation */ queue.wait(); if handleCancel() { return nil }
     // send to world
     self.send("{ \"action\": \"words\", \"value\": [\(words.joined(separator: ","))] }")
     self.send("{ \"action\": \"lines\", \"value\": [\(lines.joined(separator: ","))] }")
-
     // test write images:
     if self.shouldDebug {
       images.writeCGImage(image: cgImage, to: "\(box.screenDir!)/\(box.id)-original.png")
     }
-
+    // update character cache
+    Async.utility(after: 0.04) { chars.updateCache(ocrResults) }
     // return new box with content adjusted frame
-    print("got \(words.count) words in \(Double(DispatchTime.now().uptimeNanoseconds - startAll.uptimeNanoseconds) / 1_000_000)ms")
-
+    print("done! \(lines.count) lines, \(words.count) words                \(Int(Double(DispatchTime.now().uptimeNanoseconds - startAll.uptimeNanoseconds) / 1_000_000))ms")
     return Box(
       id: box.id,
       x: frame[0],
@@ -623,155 +658,5 @@ final class Recorder: NSObject {
       initialScreenshot: box.initialScreenshot
     )
   }
-
-  func hasBoxChanged(box: Box, buffer: UnsafeMutablePointer<UInt8>, perRow: Int) -> Bool {
-    let lastBox = self.lastBoxes[box.id]
-    var hasLastBox = false
-    let boxX = box.x
-    let boxY = box.y
-    let height = Int(box.height) / 2
-    let width = Int(box.width) / 2
-    var curBox: [UInt8] = []
-    var numChanged = 0
-    var shouldFinish = false
-    let smallH = height/sampleSpacing
-    let smallW = width/sampleSpacing
-    if (lastBox != nil) {
-      hasLastBox = lastBox?.count == smallW * smallH
-    }
-//    print("haslast \(hasLastBox)")
-//    var lastIndex = 0
-    for y in 0..<smallH {
-      // iterate col first
-      for x in 0..<smallW {
-        let realY = y * sampleSpacing / 2 + boxY / 2
-        let realX = x * sampleSpacing + boxX / 2
-        let index = y * smallW + x
-        let luma = buffer[realY * perRow + realX]
-        if (hasLastBox) {
-          if (lastBox![index] != luma) {
-            numChanged = numChanged + 1
-            if (numChanged > sensitivity) {
-              shouldFinish = true
-              break
-            }
-          }
-        }
-        curBox.insert(luma, at: index)
-//        lastIndex = index
-      }
-      if (shouldFinish) {
-        break
-      }
-    }
-    self.lastBoxes[box.id] = curBox
-    let hasChanged = shouldFinish
-    if (hasChanged) {
-      return true
-    }
-    return false
-  }
 }
 
-extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
-  private func getBufferFrame(_ sampleBuffer: CMSampleBuffer) -> (UnsafeMutablePointer<UInt8>, Int, () -> Void) {
-    let pixelBuffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)!
-    CVPixelBufferLockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0));
-    let baseAddress = CVPixelBufferGetBaseAddressOfPlane(pixelBuffer, 0)
-    let buffer = unsafeBitCast(baseAddress, to: UnsafeMutablePointer<UInt8>.self)
-    let perRow = CVPixelBufferGetBytesPerRowOfPlane(pixelBuffer, 0)
-    let release: () -> Void = {
-      CVPixelBufferUnlockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0))
-    }
-    return (buffer, perRow, release)
-  }
-
-  public func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-    // keep this always in sync
-    self.currentSampleBuffer = sampleBuffer
-    // todo: use this per-box
-    if self.isScanning {
-      return
-    }
-    if self.boxes.count == 0 {
-      return
-    }
-    // get frame
-    let (buffer, perRow, release) = self.getBufferFrame(sampleBuffer)
-    // one time setup
-    if self.characters == nil {
-      characters = Characters(
-        buffer: buffer,
-        perRow: perRow,
-        isBlackIfUnder: 180
-      )
-      characters!.shouldDebug = shouldDebug
-    } else {
-      self.characters!.buffer = buffer
-    }
-//    let fpsInSeconds = 60 / 60 / self.fps // gives you fps => x  (60 => 0.16) and (2 => 0.5)
-    // debounce while scrolling amt in seconds:
-    let delayHandleChange = 0.3
-    // loop over boxes and check
-    for boxId in self.boxes.keys {
-      let box = self.frames[boxId] ?? self.boxes[boxId]!
-      if shouldDebug { characters!.debugDir = box.screenDir! }
-      let changedBox = hasBoxChanged(box: box, buffer: buffer, perRow: perRow)
-      if (firstTime && box.initialScreenshot || changedBox) {
-        // options to ignore next or to force next
-        if ignoreNextScan && !shouldRunNextTime {
-          self.ignoreNextScan = false
-          return
-        }
-        if shouldRunNextTime {
-          self.shouldRunNextTime = false
-        }
-        print("changed! \(box.id)")
-        self.send("{ \"action\": \"clearWord\", \"value\": \"\(box.id)\" }")
-        // debounce
-        if (self.changeHandle != nil) {
-          print("canceling last")
-          self.changeHandle!.cancel()
-          self.changeHandle = nil
-          self.isScanning = false
-          self.ignoreNextScan = false
-          self.shouldCancel = false
-        }
-        // wait for 2 frames of clear
-        // small delay by default to not pick up old highlights that havent cleared yet
-        self.changeHandle = Async.userInteractive(after: changedBox ? delayHandleChange : 0.02) { // debounce (seconds)
-          self.isScanning = true
-
-          // update characters buffer
-          let (buffer, _, release) = self.getBufferFrame(sampleBuffer)
-          self.characters!.buffer = buffer
-
-          // handle change
-          if let frame = self.handleChangedArea(
-            box: box,
-            sampleBuffer: self.currentSampleBuffer!,
-            perRow: perRow,
-            findContent: box.findContent
-          ) {
-            self.frames[boxId] = frame
-          }
-
-          release()
-
-          // after x seconds, re-enable watching
-          // this is because screen needs time to update highlight boxes
-          Async.main(after: 0.05) {
-            print("re-enable scan after last")
-            self.shouldCancel = false
-            self.isScanning = false
-            self.ignoreNextScan = true
-          }
-        }
-      }
-    }
-    // only true for first loop
-    self.firstTime = false
-    // release
-    release()
-  }
-}

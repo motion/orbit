@@ -16,6 +16,7 @@
 		CF40D7C7201A9EDA00D215B9 /* OCRInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF40D7C6201A9EDA00D215B9 /* OCRInterface.swift */; };
 		CF5D8416200FE58300A810FA /* ThresholdFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF5D8415200FE58300A810FA /* ThresholdFilter.swift */; };
 		CF5D8418200FE60800A810FA /* ThresholdBelowFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF5D8417200FE60800A810FA /* ThresholdBelowFilter.swift */; };
+		CF6424042025533500363861 /* RecorderFrame.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF6424032025533500363861 /* RecorderFrame.swift */; };
 		CF6E7C93201A6BA600E40B1A /* NSString+MDCDamerauLevenshteinDistance.m in Sources */ = {isa = PBXBuildFile; fileRef = CF6E7C90201A6BA600E40B1A /* NSString+MDCDamerauLevenshteinDistance.m */; };
 		CF6E7C94201A6BA600E40B1A /* NSString+MDCLevenshteinDistance.m in Sources */ = {isa = PBXBuildFile; fileRef = CF6E7C91201A6BA600E40B1A /* NSString+MDCLevenshteinDistance.m */; };
 		CF6E7C99201A6BAF00E40B1A /* MDCDamerauLevenshteinDistance.m in Sources */ = {isa = PBXBuildFile; fileRef = CF6E7C96201A6BAF00E40B1A /* MDCDamerauLevenshteinDistance.m */; };
@@ -23,7 +24,6 @@
 		CF6E7C9F201A6BB600E40B1A /* MDCDistanceMatrix.m in Sources */ = {isa = PBXBuildFile; fileRef = CF6E7C9D201A6BB600E40B1A /* MDCDistanceMatrix.m */; };
 		CF6E7CA0201A6BB600E40B1A /* NSString+MDCCompare.m in Sources */ = {isa = PBXBuildFile; fileRef = CF6E7C9E201A6BB600E40B1A /* NSString+MDCCompare.m */; };
 		CF6E7CA2201A71CC00E40B1A /* Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF6E7CA1201A71CC00E40B1A /* Async.swift */; };
-		CF72D07120099C0C0001366D /* ConnectedComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF72D07020099C0C0001366D /* ConnectedComponents.swift */; };
 		CF85A92120186D270067DCF2 /* Moves.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF85A92020186D270067DCF2 /* Moves.swift */; };
 		CF9AEB78201969E200D29367 /* SymSPell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF9AEB77201969E200D29367 /* SymSPell.swift */; };
 		CFA30D14200EB2B00087ABC7 /* ConnectedComponentsSwiftOCR.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFA30D13200EB2B00087ABC7 /* ConnectedComponentsSwiftOCR.swift */; };
@@ -67,21 +67,21 @@
 		CF40D7C6201A9EDA00D215B9 /* OCRInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OCRInterface.swift; sourceTree = "<group>"; };
 		CF5D8415200FE58300A810FA /* ThresholdFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThresholdFilter.swift; sourceTree = "<group>"; };
 		CF5D8417200FE60800A810FA /* ThresholdBelowFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThresholdBelowFilter.swift; sourceTree = "<group>"; };
-		CF6E7C8E201A6B9D00E40B1A /* MDCDamerauLevenshtein.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MDCDamerauLevenshtein.h; path = MCDamerauLevenshtein/MDCDamerauLevenshtein.h; sourceTree = "<group>"; };
-		CF6E7C8F201A6BA600E40B1A /* NSString+MDCDamerauLevenshteinDistance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+MDCDamerauLevenshteinDistance.h"; path = "MCDamerauLevenshtein/Categories/NSString+MDCDamerauLevenshteinDistance.h"; sourceTree = "<group>"; };
-		CF6E7C90201A6BA600E40B1A /* NSString+MDCDamerauLevenshteinDistance.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+MDCDamerauLevenshteinDistance.m"; path = "MCDamerauLevenshtein/Categories/NSString+MDCDamerauLevenshteinDistance.m"; sourceTree = "<group>"; };
-		CF6E7C91201A6BA600E40B1A /* NSString+MDCLevenshteinDistance.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+MDCLevenshteinDistance.m"; path = "MCDamerauLevenshtein/Categories/NSString+MDCLevenshteinDistance.m"; sourceTree = "<group>"; };
-		CF6E7C92201A6BA600E40B1A /* NSString+MDCLevenshteinDistance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+MDCLevenshteinDistance.h"; path = "MCDamerauLevenshtein/Categories/NSString+MDCLevenshteinDistance.h"; sourceTree = "<group>"; };
-		CF6E7C95201A6BAF00E40B1A /* MDCLevenshteinDistance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MDCLevenshteinDistance.h; path = MCDamerauLevenshtein/Algorithms/MDCLevenshteinDistance.h; sourceTree = "<group>"; };
-		CF6E7C96201A6BAF00E40B1A /* MDCDamerauLevenshteinDistance.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MDCDamerauLevenshteinDistance.m; path = MCDamerauLevenshtein/Algorithms/MDCDamerauLevenshteinDistance.m; sourceTree = "<group>"; };
-		CF6E7C97201A6BAF00E40B1A /* MDCDamerauLevenshteinDistance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MDCDamerauLevenshteinDistance.h; path = MCDamerauLevenshtein/Algorithms/MDCDamerauLevenshteinDistance.h; sourceTree = "<group>"; };
-		CF6E7C98201A6BAF00E40B1A /* MDCLevenshteinDistance.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MDCLevenshteinDistance.m; path = MCDamerauLevenshtein/Algorithms/MDCLevenshteinDistance.m; sourceTree = "<group>"; };
-		CF6E7C9B201A6BB600E40B1A /* MDCDistanceMatrix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MDCDistanceMatrix.h; path = "MCDamerauLevenshtein/Algorithms/Data Structures/MDCDistanceMatrix.h"; sourceTree = "<group>"; };
-		CF6E7C9C201A6BB600E40B1A /* NSString+MDCCompare.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+MDCCompare.h"; path = "MCDamerauLevenshtein/Algorithms/Data Structures/NSString+MDCCompare.h"; sourceTree = "<group>"; };
-		CF6E7C9D201A6BB600E40B1A /* MDCDistanceMatrix.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MDCDistanceMatrix.m; path = "MCDamerauLevenshtein/Algorithms/Data Structures/MDCDistanceMatrix.m"; sourceTree = "<group>"; };
-		CF6E7C9E201A6BB600E40B1A /* NSString+MDCCompare.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+MDCCompare.m"; path = "MCDamerauLevenshtein/Algorithms/Data Structures/NSString+MDCCompare.m"; sourceTree = "<group>"; };
+		CF6424032025533500363861 /* RecorderFrame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecorderFrame.swift; sourceTree = "<group>"; };
+		CF6E7C8E201A6B9D00E40B1A /* MDCDamerauLevenshtein.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDCDamerauLevenshtein.h; sourceTree = "<group>"; };
+		CF6E7C8F201A6BA600E40B1A /* NSString+MDCDamerauLevenshteinDistance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+MDCDamerauLevenshteinDistance.h"; sourceTree = "<group>"; };
+		CF6E7C90201A6BA600E40B1A /* NSString+MDCDamerauLevenshteinDistance.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+MDCDamerauLevenshteinDistance.m"; sourceTree = "<group>"; };
+		CF6E7C91201A6BA600E40B1A /* NSString+MDCLevenshteinDistance.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+MDCLevenshteinDistance.m"; sourceTree = "<group>"; };
+		CF6E7C92201A6BA600E40B1A /* NSString+MDCLevenshteinDistance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+MDCLevenshteinDistance.h"; sourceTree = "<group>"; };
+		CF6E7C95201A6BAF00E40B1A /* MDCLevenshteinDistance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDCLevenshteinDistance.h; sourceTree = "<group>"; };
+		CF6E7C96201A6BAF00E40B1A /* MDCDamerauLevenshteinDistance.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDCDamerauLevenshteinDistance.m; sourceTree = "<group>"; };
+		CF6E7C97201A6BAF00E40B1A /* MDCDamerauLevenshteinDistance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDCDamerauLevenshteinDistance.h; sourceTree = "<group>"; };
+		CF6E7C98201A6BAF00E40B1A /* MDCLevenshteinDistance.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDCLevenshteinDistance.m; sourceTree = "<group>"; };
+		CF6E7C9B201A6BB600E40B1A /* MDCDistanceMatrix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDCDistanceMatrix.h; sourceTree = "<group>"; };
+		CF6E7C9C201A6BB600E40B1A /* NSString+MDCCompare.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+MDCCompare.h"; sourceTree = "<group>"; };
+		CF6E7C9D201A6BB600E40B1A /* MDCDistanceMatrix.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDCDistanceMatrix.m; sourceTree = "<group>"; };
+		CF6E7C9E201A6BB600E40B1A /* NSString+MDCCompare.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+MDCCompare.m"; sourceTree = "<group>"; };
 		CF6E7CA1201A71CC00E40B1A /* Async.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Async.swift; sourceTree = "<group>"; };
-		CF72D07020099C0C0001366D /* ConnectedComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectedComponents.swift; sourceTree = "<group>"; };
 		CF85A92020186D270067DCF2 /* Moves.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Moves.swift; sourceTree = "<group>"; };
 		CF9AEB77201969E200D29367 /* SymSPell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SymSPell.swift; sourceTree = "<group>"; };
 		CF9AEB7A20196BEA00D29367 /* ApertureBridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ApertureBridge.h; sourceTree = "<group>"; };
@@ -116,6 +116,55 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		CF2A214E202506DD00E5816A /* DamerauLevenshtein */ = {
+			isa = PBXGroup;
+			children = (
+				CF6E7C9B201A6BB600E40B1A /* MDCDistanceMatrix.h */,
+				CF6E7C9D201A6BB600E40B1A /* MDCDistanceMatrix.m */,
+				CF6E7C9C201A6BB600E40B1A /* NSString+MDCCompare.h */,
+				CF6E7C9E201A6BB600E40B1A /* NSString+MDCCompare.m */,
+				CF6E7C8E201A6B9D00E40B1A /* MDCDamerauLevenshtein.h */,
+				CF6E7C97201A6BAF00E40B1A /* MDCDamerauLevenshteinDistance.h */,
+				CF6E7C96201A6BAF00E40B1A /* MDCDamerauLevenshteinDistance.m */,
+				CF6E7C95201A6BAF00E40B1A /* MDCLevenshteinDistance.h */,
+				CF6E7C98201A6BAF00E40B1A /* MDCLevenshteinDistance.m */,
+				CF6E7C8F201A6BA600E40B1A /* NSString+MDCDamerauLevenshteinDistance.h */,
+				CF6E7C90201A6BA600E40B1A /* NSString+MDCDamerauLevenshteinDistance.m */,
+				CF6E7C92201A6BA600E40B1A /* NSString+MDCLevenshteinDistance.h */,
+				CF6E7C91201A6BA600E40B1A /* NSString+MDCLevenshteinDistance.m */,
+			);
+			path = DamerauLevenshtein;
+			sourceTree = "<group>";
+		};
+		CF2A214F2025072000E5816A /* utils */ = {
+			isa = PBXGroup;
+			children = (
+				CFA30D17200EB3FB0087ABC7 /* Extensions.swift */,
+				CF6E7CA1201A71CC00E40B1A /* Async.swift */,
+				E3A8F9E01E46F9C000C6C5FC /* util.swift */,
+				CF19EC1C201BB1C50087044E /* WebSockets.swift */,
+			);
+			path = utils;
+			sourceTree = "<group>";
+		};
+		CF2A21502025074000E5816A /* ConnectedComponents */ = {
+			isa = PBXGroup;
+			children = (
+				CFA30D15200EB3510087ABC7 /* UnionFind.swift */,
+				CFA30D13200EB2B00087ABC7 /* ConnectedComponentsSwiftOCR.swift */,
+			);
+			path = ConnectedComponents;
+			sourceTree = "<group>";
+		};
+		CF2A21512025076600E5816A /* SymSpell */ = {
+			isa = PBXGroup;
+			children = (
+				CF2A214E202506DD00E5816A /* DamerauLevenshtein */,
+				CF9AEB77201969E200D29367 /* SymSPell.swift */,
+			);
+			path = SymSpell;
+			sourceTree = "<group>";
+		};
 		E3A310721E450D3600D314DD = {
 			isa = PBXGroup;
 			children = (
@@ -140,37 +189,20 @@
 		E3A3107D1E450D3600D314DD /* aperture */ = {
 			isa = PBXGroup;
 			children = (
-				CF6E7C9B201A6BB600E40B1A /* MDCDistanceMatrix.h */,
-				CF6E7C9D201A6BB600E40B1A /* MDCDistanceMatrix.m */,
-				CF6E7C9C201A6BB600E40B1A /* NSString+MDCCompare.h */,
-				CF6E7C9E201A6BB600E40B1A /* NSString+MDCCompare.m */,
-				CF6E7C8E201A6B9D00E40B1A /* MDCDamerauLevenshtein.h */,
-				CF6E7C97201A6BAF00E40B1A /* MDCDamerauLevenshteinDistance.h */,
-				CF6E7C96201A6BAF00E40B1A /* MDCDamerauLevenshteinDistance.m */,
-				CF6E7C95201A6BAF00E40B1A /* MDCLevenshteinDistance.h */,
-				CF6E7C98201A6BAF00E40B1A /* MDCLevenshteinDistance.m */,
-				CF6E7C8F201A6BA600E40B1A /* NSString+MDCDamerauLevenshteinDistance.h */,
-				CF6E7C90201A6BA600E40B1A /* NSString+MDCDamerauLevenshteinDistance.m */,
-				CF6E7C92201A6BA600E40B1A /* NSString+MDCLevenshteinDistance.h */,
-				CF6E7C91201A6BA600E40B1A /* NSString+MDCLevenshteinDistance.m */,
+				CF2A21512025076600E5816A /* SymSpell */,
+				CF2A21502025074000E5816A /* ConnectedComponents */,
+				CF2A214F2025072000E5816A /* utils */,
 				E3A310861E450DC800D314DD /* main.swift */,
 				E3A310871E450DC800D314DD /* Recorder.swift */,
+				CF6424032025533500363861 /* RecorderFrame.swift */,
 				CF21068A2016966700C41019 /* Characters.swift */,
-				E3A8F9E01E46F9C000C6C5FC /* util.swift */,
-				CF72D07020099C0C0001366D /* ConnectedComponents.swift */,
-				CFA30D13200EB2B00087ABC7 /* ConnectedComponentsSwiftOCR.swift */,
-				CFA30D15200EB3510087ABC7 /* UnionFind.swift */,
-				CFA30D17200EB3FB0087ABC7 /* Extensions.swift */,
 				CF5D8415200FE58300A810FA /* ThresholdFilter.swift */,
 				CF5D8417200FE60800A810FA /* ThresholdBelowFilter.swift */,
 				CFBB310120112C86002D2115 /* Filters.swift */,
 				CFBB310320112D16002D2115 /* Images.swift */,
 				CF85A92020186D270067DCF2 /* Moves.swift */,
-				CF9AEB77201969E200D29367 /* SymSPell.swift */,
 				CF9AEB7A20196BEA00D29367 /* ApertureBridge.h */,
-				CF6E7CA1201A71CC00E40B1A /* Async.swift */,
 				CF40D7C6201A9EDA00D215B9 /* OCRInterface.swift */,
-				CF19EC1C201BB1C50087044E /* WebSockets.swift */,
 			);
 			path = aperture;
 			sourceTree = "<group>";
@@ -298,10 +330,10 @@
 				CFA30D18200EB3FB0087ABC7 /* Extensions.swift in Sources */,
 				CFA30D14200EB2B00087ABC7 /* ConnectedComponentsSwiftOCR.swift in Sources */,
 				CF5D8418200FE60800A810FA /* ThresholdBelowFilter.swift in Sources */,
-				CF72D07120099C0C0001366D /* ConnectedComponents.swift in Sources */,
 				E3A8F9E11E46F9C000C6C5FC /* util.swift in Sources */,
 				CF6E7C94201A6BA600E40B1A /* NSString+MDCLevenshteinDistance.m in Sources */,
 				CF6E7C9A201A6BAF00E40B1A /* MDCLevenshteinDistance.m in Sources */,
+				CF6424042025533500363861 /* RecorderFrame.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

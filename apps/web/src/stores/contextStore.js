@@ -3,7 +3,7 @@ import ReconnectingWebSocket from 'reconnecting-websocket'
 
 @store
 export default class ContextStore {
-  context = null
+  appState = null
   ocrWords = null
   linePositions = null
   lastScreenChange = null
@@ -11,6 +11,7 @@ export default class ContextStore {
   mousePosition = null
   keyboard = null
   highlightWords = null || {}
+  clearWords = {}
 
   pause() {
     this.start()
@@ -23,6 +24,7 @@ export default class ContextStore {
   }
 
   start() {
+    window.contextStore = this
     if (this.ws) {
       return
     }
@@ -30,7 +32,6 @@ export default class ContextStore {
     this.ws.onmessage = ({ data }) => {
       if (data) {
         const res = JSON.parse(data)
-        // console.log('got data for contextStore', data)
         this.setState(res)
       }
     }
@@ -48,12 +49,14 @@ export default class ContextStore {
   setState = ({
     keyboard,
     mousePosition,
-    context,
+    appState,
     ocrWords,
     lastScreenChange,
     lastOCR,
     linePositions,
     highlightWords,
+    clearWord,
+    restoreWord,
   }) => {
     if (keyboard) {
       this.keyboard = keyboard
@@ -61,12 +64,13 @@ export default class ContextStore {
     if (mousePosition) {
       this.mousePosition = mousePosition
     }
-    if (context) {
-      this.context = context
+    if (appState) {
+      this.appState = appState
     }
     if (ocrWords) {
       console.log('got new ocr', ocrWords)
       this.ocrWords = ocrWords
+      this.clearWords = {}
     }
     if (lastScreenChange) {
       this.lastScreenChange = lastScreenChange
@@ -79,6 +83,18 @@ export default class ContextStore {
     }
     if (highlightWords) {
       this.highlightWords = highlightWords
+    }
+    if (clearWord) {
+      this.clearWords = {
+        ...this.clearWords,
+        [clearWord]: true,
+      }
+    }
+    if (restoreWord) {
+      this.clearWords = {
+        ...this.clearWords,
+        [restoreWord]: false,
+      }
     }
   }
 }

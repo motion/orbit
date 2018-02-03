@@ -20,11 +20,15 @@ export ScreenClient from './client'
 const sleep = ms => new Promise(res => setTimeout(res, ms))
 
 export default class Screen {
+  settings = null
+  changedIds = null
+  restoredIds = null
   awaitingSocket = []
   listeners = []
   onLinesCB = _ => _
   onWordsCB = _ => _
-  onClearWordCB = _ => _
+  onChangedCB = _ => _
+  onRestoredCB = _ => _
   onErrorCB = _ => _
   onClearCB = _ => _
   state = {
@@ -60,12 +64,25 @@ export default class Screen {
   }
 
   handleSocketMessage = str => {
+    // console.log('got', str)
     const { action, value, state } = JSON.parse(str)
     // console.log('screen.action', action)
     try {
-      // clear is fast
-      if (action === 'clearWord') {
-        this.onClearWordCB(value)
+      if (action === 'changed') {
+        setTimeout(() => {
+          this.onChangedCB(value)
+        })
+      }
+      if (action === 'changedIds') {
+        this.changedIds = value
+      }
+      if (action === 'restored') {
+        setTimeout(() => {
+          this.onRestoredCB(value)
+        })
+      }
+      if (action === 'restoredIds') {
+        this.restoredIds = value
       }
       // state goes out to clients
       if (state) {
@@ -114,8 +131,8 @@ export default class Screen {
             // every x seconds
             console.log('Current memory usage', memoryMB, 'MB')
           }
-          if (memoryMB > 500) {
-            console.log('Memory usage of swift above 500MB, restarting')
+          if (memoryMB > 750) {
+            console.log('Memory usage of swift above 750MB, restarting')
             this.restart()
           }
           if (usage.cpu > 90) {
@@ -150,6 +167,7 @@ export default class Screen {
       let startWait = setInterval(() => {
         if (this.listeners.length) {
           clearInterval(startWait)
+          console.log('sending start')
           this.socketSend('start')
           res()
         }
@@ -162,7 +180,7 @@ export default class Screen {
       throw new Error('Call `.stop()` first')
     }
     const binDir = this.debugBuild ? DEBUG_PATH : RELEASE_PATH
-    console.log('exec', binDir)
+    console.log('binDir', binDir)
     this.process = execa('./aperture', [], {
       cwd: binDir,
       reject: false,
@@ -207,7 +225,7 @@ export default class Screen {
       ...box,
     }))
 
-    const recorderOpts = {
+    const settings = {
       debug,
       fps,
       showCursor,
@@ -228,11 +246,11 @@ export default class Screen {
         throw new Error(`Unsupported video codec specified: ${videoCodec}`)
       }
 
-      recorderOpts.videoCodec = codecMap.get(videoCodec)
-      console.log('recorderOpts.videoCodec', recorderOpts.videoCodec)
+      settings.videoCodec = codecMap.get(videoCodec)
+      console.log('settings.videoCodec', settings.videoCodec)
     }
-
-    this.socketSend('watch', recorderOpts)
+    this.settings = settings
+    this.socketSend('watch', settings)
     return this
   }
 
@@ -257,8 +275,16 @@ export default class Screen {
     this.onClearCB = cb
   }
 
-  onClearWord = cb => {
-    this.onClearWordCB = cb
+  onChangedIds = cb => {
+    this.onChangedIdsCB = cb
+  }
+
+  onChanged = cb => {
+    this.onChangedCB = cb
+  }
+
+  onRestored = cb => {
+    this.onRestoredCB = cb
   }
 
   onWords = cb => {

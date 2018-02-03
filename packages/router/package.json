@@ -12,7 +12,7 @@
     "url-pattern": "^1.0.3"
   },
   "peerDependencies": {
-    "mobx": "^3.3.1"
+    "mobx": "^3.4.1"
   },
   "publishConfig": {
     "access": "public"

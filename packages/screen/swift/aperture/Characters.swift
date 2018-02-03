@@ -17,6 +17,7 @@ struct Character: Hashable {
   var outline: String
   var letter: String?
   var spaceBefore: Int
+  var completedOutline: Bool
 }
 
 func standardDeviation(_ arr: [Double]) -> Double {
@@ -63,7 +64,7 @@ class Characters {
   }
 
   func find(id: Int, bounds: [Int]) -> [Word] {
-    let start = DispatchTime.now()
+//    let start = DispatchTime.now()
     let lineX = bounds[0] * 2
     let lineY = bounds[1] * 2
     let lineW = bounds[2]
@@ -204,7 +205,7 @@ class Characters {
       }
     }
 
-    debug("Characters.find() \(foundChars.count): \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+//    print("Characters.find \(id): found \(foundChars.count) in \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     return foundWords
   }
 
@@ -223,7 +224,7 @@ class Characters {
     var visited = Dictionary<Int, Bool?>() // for preventing crossing over at thin interections
     var topLeftBound = [startX, startY]
     var bottomRightBound = [startX, startY]
-    var lastMove = [-moves.px, moves.px] // we begin going left/down
+    var lastMove = [-moves.px, moves.px] // start move
     var outline: [String] = []
     var iteration = 0
     var x = startX
@@ -233,6 +234,7 @@ class Characters {
     var foundEnd = false
     let clockwise = moves.clockwise
     let backwardsRange = stride(from: 1, to: 7, by: 2)
+    var exhausted = false
     while !foundEnd {
       iteration += 1
       if iteration % 8 == 0 {
@@ -242,7 +244,7 @@ class Characters {
       visited[curPos] = true
       curTry += 1
       if curTry > exhaust {
-        debug("exhausted")
+        exhausted = true
         foundEnd = true
         break
       }
@@ -309,7 +311,8 @@ class Characters {
       backMoves: startX - topLeftBound[0],
       outline: outline.joined(),
       letter: nil,
-      spaceBefore: 0
+      spaceBefore: 0,
+      completedOutline: !exhausted
     )
   }
   
@@ -318,7 +321,7 @@ class Characters {
       return answers[outline]!
     }
     // optimize: only look for smaller chars
-//    if outline.count < 25 {
+//    if outline.count < 20 {
 //      let start = DispatchTime.now()
 //      let closeOutlines = dict.correct(outline, language: "en")
 //      let end = Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000
@@ -338,9 +341,8 @@ class Characters {
     for entry in cache {
       let (outline, letter) = entry
       self.answers[outline] = letter
-//      if outline.count < 25 {
-//        if self.dict.createDictionaryEntry(outline, language: "en") {
-//        }
+//      if outline.count < 20 {
+//        _ = self.dict.createDictionaryEntry(outline, language: "en")
 //      }
     }
   }
@@ -390,7 +392,7 @@ class Characters {
     }
     output += "\n"
     if debugID != "" {
-      let outFile = "\(debugDir)/c-\(debugID).png"
+      let outFile = "\(debugDir)/zc-\(debugID).png"
       images.writeCGImage(image: images.imageFromArray(pixels: pixels!, width: 28, height: 28)!, to: outFile, resolution: 72) // write img
     }
     return output

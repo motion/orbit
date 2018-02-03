@@ -6,11 +6,11 @@
   },
   "dependencies": {
     "react": "^16.2.0",
-    "react-dom": "^16.2.0",
-    "mobx": "~3.3.0"
+    "react-dom": "^16.2.0"
   },
   "devDependencies": {
     "@mcro/preset-motion": "^1.2.0",
+    "mobx": "^3.4.1",
     "babel-cli": "^6.23.0",
     "babel-eslint": "^7.2.3",
     "check-dependencies": "^1.0.1",

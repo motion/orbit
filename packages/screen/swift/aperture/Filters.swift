@@ -16,9 +16,15 @@ class Filters {
     // crop
     outputImage = outputImage.cropped(to: cropRect)
     // resize
-    let filter = CIFilter(name: "CILanczosScaleTransform")!
+    var filter = CIFilter(name: "CILanczosScaleTransform")!
     filter.setValue(0.5, forKey: "inputScale")
     outputImage = applyFilter(filter, for: outputImage)
+    // contrast boost
+    filter = CIFilter(name: "CIColorControls")!
+    filter.setValue(1.0, forKey: "inputContrast")
+//    filter.setValue(0.3, forKey: "inputBrightness")
+    outputImage = applyFilter(filter, for: outputImage)
+    // return
     guard let cgImage = context.createCGImage(outputImage, from: outputImage.extent) else { return nil }
     return cgImage
   }
@@ -71,6 +77,16 @@ class Filters {
 
     // threshold binarizes the image
     outputImage = applyFilter(ThresholdFilterStrong(), for: outputImage)
+    
+//    let halfScale = 1.0 / Double(scale) * 2.0
+    
+    // resize
+//    filter = CIFilter(name: "CILanczosScaleTransform")!
+//    filter.setValue(halfScale, forKey: "inputScale")
+//    outputImage = applyFilter(filter, for: outputImage)
+//
+//    // threshold binarizes the image
+//    outputImage = applyFilter(ThresholdFilter(), for: outputImage)
     
     // resize
     filter = CIFilter(name: "CILanczosScaleTransform")!

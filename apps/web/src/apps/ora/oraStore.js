@@ -59,20 +59,20 @@ export default class OraStore {
     return this.stack.last.store
   }
 
-  get activeContext() {
-    const { context } = this.props.contextStore
-    if (!context) {
+  get activeAppState() {
+    const { appState } = this.props.contextStore
+    if (!appState) {
       return null
     }
-    // dont treat itself as a context source
+    // dont treat itself as a appState source
     if (
-      context.appName &&
-      (context.appName.toLowerCase() === 'electron' ||
-        context.appName.toLowerCase() === 'orbit')
+      appState.name &&
+      (appState.name.toLowerCase() === 'electron' ||
+        appState.name.toLowerCase() === 'orbit')
     ) {
       return null
     }
-    return context
+    return appState
   }
 
   @watch
@@ -100,18 +100,18 @@ export default class OraStore {
     }, 16)
     // watch and set active search
     this.watch(function setSearchQuery() {
-      const { activeContext } = this
-      if (activeContext && !this.ui.barFocused) {
-        if (activeContext.selection) {
-          this.search.setQuery(activeContext.selection)
+      const { activeAppState } = this
+      if (activeAppState && !this.ui.barFocused) {
+        if (activeAppState.selection) {
+          this.search.setQuery(activeAppState.selection)
           return
         }
-        if (activeContext.title) {
-          this.search.setQuery(activeContext.title)
+        if (activeAppState.title) {
+          this.search.setQuery(activeAppState.title)
           return
         }
-        if (activeContext.appName) {
-          this.search.setQuery(activeContext.appName)
+        if (activeAppState.name) {
+          this.search.setQuery(activeAppState.name)
           return
         }
       } else {
@@ -162,16 +162,16 @@ export default class OraStore {
     let lastStackItem
     this.watch(function watchContext() {
       // determine navigation
-      const { activeContext } = this
-      if (!activeContext) {
+      const { activeAppState } = this
+      if (!activeAppState) {
         return
       }
-      const title = activeContext.title || activeContext.appName
+      const title = activeAppState.title || activeAppState.name
       if (!title) {
-        log('no context title', activeContext)
+        log('no context title', activeAppState)
         return
       }
-      const nextStackItem = contextToResult(activeContext)
+      const nextStackItem = contextToResult(activeAppState)
       if (!nextStackItem.id) {
         console.log('no good id to update', nextStackItem)
         return

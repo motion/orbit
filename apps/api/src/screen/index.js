@@ -104,6 +104,7 @@ export default class ScreenState {
       this.resetHighlights()
     })
     this.screenOCR.onClearWord(id => {
+      console.log('clear', id)
       if (id === APP_ID) {
         this.resetHighlights()
         return
@@ -361,6 +362,7 @@ export default class ScreenState {
       })),
     }
     this.screenSettings = settings
+    console.log(`> ${this.state.ocrWords.length} words`)
     this.screenOCR.watchBounds(settings)
   }
 

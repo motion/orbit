@@ -50,31 +50,30 @@ struct LinePosition {
 }
 
 final class Recorder: NSObject {
-  private var currentSampleBuffer: CMSampleBuffer?
-  private var send: ((String)->Void) = { _ in print("not opened") }
-  private let input: AVCaptureScreenInput
-  private var session: AVCaptureSession
-  private var output: AVCaptureVideoDataOutput
-  private var sensitivity: Int
-  private var sampleSpacing: Int
-  private var firstTime: Bool
-  private var shouldDebug: Bool
-  private let context = CIContext()
-  private var boxes: [String: Box]
-  private var frames: [String: Box]
-  private var lastBoxes: [String: [UInt8]]
-  private var displayId: CGDirectDisplayID
-  private let components = ConnectedComponentsSwiftOCR()
-  private var characters: Characters?
-  private var ocr: OCRInterface?
-  private var changeHandle: AsyncBlock<Void, ()>?
-  private var isScanning = false
-  private var fps = 0
-  private var ignoreNextScan = false
-  private var shouldCancel = false
-  private var shouldRunNextTime = false
-  private let queue = AsyncGroup()
-
+  var currentSampleBuffer: CMSampleBuffer?
+  var send: ((String)->Void) = { _ in print("not opened") }
+  let input: AVCaptureScreenInput
+  var session: AVCaptureSession
+  var output: AVCaptureVideoDataOutput
+  var sensitivity: Int
+  var sampleSpacing: Int
+  var firstTime: Bool
+  var shouldDebug: Bool
+  let context = CIContext()
+  var boxes: [String: Box]
+  var frames: [String: Box]
+  var lastBoxes: [String: [UInt8]]
+  var displayId: CGDirectDisplayID
+  let components = ConnectedComponentsSwiftOCR()
+  var characters: Characters?
+  var ocr: OCRInterface?
+  var changeHandle: AsyncBlock<Void, ()>?
+  var isScanning = false
+  var fps = 0
+  var ignoreNextScan = false
+  var shouldCancel = false
+  var shouldRunNextTime = false
+  let queue = AsyncGroup()
   var onStart: (() -> Void)?
   var onFinish: (() -> Void)?
   var onError: ((Error) -> Void)?
@@ -267,6 +266,7 @@ final class Recorder: NSObject {
     if shouldDebug {
       print("running in debug mode...")
     }
+    print("reset first time to true")
     self.firstTime = true
     self.sampleSpacing = sampleSpacing
     self.sensitivity = sensitivity
@@ -699,103 +699,3 @@ final class Recorder: NSObject {
   }
 }
 
-extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
-  private func getBufferFrame(_ sampleBuffer: CMSampleBuffer) -> (UnsafeMutablePointer<UInt8>, Int, () -> Void) {
-    let pixelBuffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)!
-    CVPixelBufferLockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0));
-    let baseAddress = CVPixelBufferGetBaseAddressOfPlane(pixelBuffer, 0)
-    let buffer = unsafeBitCast(baseAddress, to: UnsafeMutablePointer<UInt8>.self)
-    let perRow = CVPixelBufferGetBytesPerRowOfPlane(pixelBuffer, 0)
-    let release: () -> Void = {
-      CVPixelBufferUnlockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0))
-    }
-    return (buffer, perRow, release)
-  }
-
-  public func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-    return
-    // keep this always in sync
-    self.currentSampleBuffer = sampleBuffer
-    // todo: use this per-box
-    if self.isScanning || self.boxes.count == 0 {
-      return
-    }
-    // get frame
-    let (buffer, perRow, release) = self.getBufferFrame(sampleBuffer)
-    // one time setup
-    if self.characters == nil {
-      characters = Characters(
-        buffer: buffer,
-        perRow: perRow,
-        isBlackIfUnder: 180
-      )
-      characters!.shouldDebug = shouldDebug
-    } else {
-      self.characters!.buffer = buffer
-    }
-//    let fpsInSeconds = 60 / 60 / self.fps // gives you fps => x  (60 => 0.16) and (2 => 0.5)
-    // debounce while scrolling amt in seconds:
-    let delayHandleChange = 0.25
-    // loop over boxes and check
-    for boxId in self.boxes.keys {
-      let box = self.boxes[boxId]!
-      if shouldDebug { characters!.debugDir = box.screenDir! }
-      let changedBox = hasBoxChanged(box: box, buffer: buffer, perRow: perRow)
-      if (firstTime && box.initialScreenshot || changedBox) {
-        // options to ignore next or to force next
-        if ignoreNextScan && !shouldRunNextTime {
-          self.ignoreNextScan = false
-          return // todo should work better with multiple boxes
-        }
-        if shouldRunNextTime {
-          self.shouldRunNextTime = false
-        }
-        // send clear on change
-        self.send("{ \"action\": \"clearWord\", \"value\": \"\(box.id)\" }")
-        if !box.findContent {
-          continue
-        }
-        // content/ocr related stuff:
-        // debounce
-        if (self.changeHandle != nil) {
-          print("canceling last")
-          self.changeHandle!.cancel()
-          self.changeHandle = nil
-          self.isScanning = false
-          self.ignoreNextScan = false
-          self.shouldCancel = false
-        }
-        // wait for 2 frames of clear
-        // small delay by default to not pick up old highlights that havent cleared yet
-        self.changeHandle = Async.userInteractive(after: changedBox ? delayHandleChange : 0.02) { // debounce (seconds)
-          self.isScanning = true
-          // update characters buffer
-          let (buffer, _, release) = self.getBufferFrame(sampleBuffer)
-          self.characters!.buffer = buffer
-          // handle change
-          if let frame = self.handleChangedArea(
-            box: box,
-            sampleBuffer: self.currentSampleBuffer!,
-            perRow: perRow,
-            findContent: true
-          ) {
-            self.frames[boxId] = frame
-          }
-          release()
-          // after x seconds, re-enable watching
-          // this is because screen needs time to update highlight boxes
-          Async.main(after: 0.05) {
-            print("re-enable scan after last")
-            self.shouldCancel = false
-            self.isScanning = false
-            self.ignoreNextScan = true
-          }
-        }
-      }
-    }
-    // only true for first loop
-    self.firstTime = false
-    // release
-    release()
-  }
-}

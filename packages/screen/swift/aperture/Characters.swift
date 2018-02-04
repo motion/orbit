@@ -4,11 +4,12 @@ struct Character: Hashable {
   var hashValue: Int {
     return outline.hashValue
   }
-  
   static func ==(lhs: Character, rhs: Character) -> Bool {
     return lhs.outline == rhs.outline
   }
-  
+  mutating func setLineBounds(_ bounds: [Int]) {
+    lineBounds = bounds
+  }
   var x: Int
   var y: Int
   var width: Int
@@ -18,6 +19,7 @@ struct Character: Hashable {
   var letter: String?
   var spaceBefore: Int
   var completedOutline: Bool
+  var lineBounds: [Int]?
 }
 
 func standardDeviation(_ arr: [Double]) -> Double {
@@ -312,7 +314,8 @@ class Characters {
       outline: outline.joined(),
       letter: nil,
       spaceBefore: 0,
-      completedOutline: !exhausted
+      completedOutline: !exhausted,
+      lineBounds: nil
     )
   }
   

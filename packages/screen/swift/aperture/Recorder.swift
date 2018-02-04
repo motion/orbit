@@ -337,7 +337,7 @@ final class Recorder: NSObject {
     return ocrResults
   }
 
-  func getCharactersByLine(_ sectionLines: Dictionary<Int, [LinePosition]>, box: Box, cgImage: CGImage, frame: [Int]) -> [[Word]] {
+  func getCharacters(_ sectionLines: Dictionary<Int, [LinePosition]>, box: Box, cgImage: CGImage, frame: [Int]) -> [[Word]] {
     startTime()
     // third loop
     // for each VERTICAL SECTION, get characters
@@ -350,7 +350,7 @@ final class Recorder: NSObject {
         let padY = max(3, min(12, line.height / 10))
         //        let shiftUp = line.topFillAmt * 10 / line.bottomFillAmt * 10
         //        print("shiftUp \(shiftUp)")
-        let lineBounds = [
+        let lineFrame = [
           line.x * scl - padX + frame[0],
           line.y * scl - padY + frame[1],
           // add min in case padX/padY go too far
@@ -358,11 +358,11 @@ final class Recorder: NSObject {
           min(frame[3], line.height * scl + padY * 3)
         ]
         // finds characters
-        let foundWords: [Word] = chars.find(id: index, bounds: lineBounds)
+        let foundWords: [Word] = chars.find(id: index, bounds: lineFrame)
         // debug line
         if simpleDebugImages || self.shouldDebug {
           images.writeCGImage(
-            image: images.cropImage(cgImage, box: CGRect(x: lineBounds[0] - box.x, y: lineBounds[1] - box.y, width: lineBounds[2], height: lineBounds[3]))!,
+            image: images.cropImage(cgImage, box: CGRect(x: lineFrame[0] - box.x, y: lineFrame[1] - box.y, width: lineFrame[2], height: lineFrame[3]))!,
             to: "\(box.screenDir!)/linein-\(box.id)-\(id)-\(index).png"
           )
         }
@@ -555,7 +555,7 @@ final class Recorder: NSObject {
       var minY = 10000
       var maxH = 0
       for (wordIndex, word) in line.enumerated() {
-        let characters: [String] = word.characters.map({(char) in
+        let characters: [String] = word.characters.pmap({(char, _) in
           // calculate line position
           if char.y < minY { minY = char.y }
           if char.height > maxH { maxH = char.height }
@@ -634,11 +634,44 @@ final class Recorder: NSObject {
     /* check continuation */ queue.wait(); if handleCancel() { return nil }
     let sectionLines = getLines(verticalSections, vWidth: vWidth, vHeight: vHeight, imgData: imgData)
     /* check continuation */ queue.wait(); if handleCancel() { return nil }
-    let characterLines = getCharactersByLine(sectionLines, box: box, cgImage: cgImage, frame: frame)
+    let charactersByLine = getCharacters(sectionLines, box: box, cgImage: cgImage, frame: frame)
+    // find line bounds now so we can use them for nice OCR cropping
+    startTime()
+    _ = charactersByLine.pmap({ (line, index) in
+      let x = line.first!.x
+      var y = 100000
+      var width = 0
+      var height = 0
+      if line.count == 1 {
+        width = line.first!.width
+      } else {
+        width = line.last!.x + line.last!.width - line.first!.x
+      }
+      // find min y and max height
+      for word in line {
+        if word.height > height { height = word.height }
+        if word.y > y { y = word.y }
+      }
+      let lineBounds = [x, y, width, height]
+      
+      return line.map { $0.characters.map {
+        var newChar = $0
+        newChar.lineBounds = lineBounds
+        return newChar
+      } }
+      
+      // hacky but for now lets see how it works
+//      for word in line {
+//        for char in word.characters {
+//          char.setLineBounds(lineBounds)
+//        }
+//      }
+    })
+    debug("process line bounds onto chars")
     /* check continuation */ queue.wait(); if handleCancel() { return nil }
-    guard let ocrResults = getOCR(characterLines) else { return nil }
+    guard let ocrResults = getOCR(charactersByLine) else { return nil }
     /* check continuation */ queue.wait(); if handleCancel() { return nil }
-    let (words, lines) = getWordsAndLines(ocrResults, characterLines: characterLines)
+    let (words, lines) = getWordsAndLines(ocrResults, characterLines: charactersByLine)
     /* check continuation */ queue.wait(); if handleCancel() { return nil }
     // send to world
     self.send("{ \"action\": \"words\", \"value\": [\(words.joined(separator: ","))] }")

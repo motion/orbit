@@ -14,17 +14,17 @@ import Swindler
 import PromiseKit
 import Darwin
 
-func dispatchAfter(delay: TimeInterval, block: DispatchWorkItem) {
-    let time = DispatchTime.now() + delay
-    DispatchQueue.main.asyncAfter(deadline: time, execute: block)
-}
-
 class AppDelegate: NSObject, NSApplicationDelegate {
     var swindler: Swindler.State!
     var observer: Observer!
+    
+    private var lastSent = ""
 
-    func emit(_ firstThing: String) {
-        fputs("\(firstThing)\n", __stderrp)
+    func emit(_ msg: String) {
+        if msg != lastSent {
+            fputs("\(msg)\n", __stderrp)
+        }
+        lastSent = msg
     }
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
@@ -34,6 +34,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             NSApp.terminate(self)
             return
         }
+        
         swindler = Swindler.state
         swindler.on { (event: WindowCreatedEvent) in
             let window = event.window
@@ -49,23 +50,24 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             self.emit(":WindowDestroyedEvent \(event.window.title.value)")
         }
         swindler.on { (event: ApplicationMainWindowChangedEvent) in
-//            self.emit(":ApplicationMainWindowChangedEvent \(String(describing: event.newValue?.title.value))")
-            self.frontmostWindowChanged("")
+            self.frontmostWindowChanged()
         }
         swindler.on { (event: FrontmostApplicationChangedEvent) in
             if event.newValue != nil {
-                let id = (event.newValue!.bundleIdentifier ?? "").replacingOccurrences(of: "\"", with: "")
-                let idString = (id != "") ?
-                    "\"id\": \"\(String(describing: id))\", " : ""
-                self.frontmostWindowChanged(idString)
+                self.frontmostWindowChanged()
             }
         }
         swindler.on { (event: WindowTitleChangedEvent) in
-            self.frontmostWindowChanged("")
+            self.frontmostWindowChanged()
+        }
+        
+        // send current app immediately
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+            self.frontmostWindowChanged()
         }
     }
 
-    private func frontmostWindowChanged(_ extraString: String) {
+    private func frontmostWindowChanged() {
         let app = swindler.frontmostApplication.value!
         let frontWindow = app.mainWindow.value
         if (frontWindow == nil) { return }
@@ -74,15 +76,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let titleString = "\"\(title)\"";
         let offset = window.position.value
         let bounds = window.size.value
-        
-//        print("OK")
-//        if let application = NSWorkspace.shared.frontmostApplication {
-//            let uiApp = Application(application)!
-//            let el = try! uiApp.elementAtPosition(100, 100)!
-//            print("el \(el) \(el.element) \(try! el.actionsAsStrings())")
-//        }
-        
-        self.emit(":FrontmostWindowChangedEvent { \(extraString) \"title\": \(titleString), \"offset\": [\(offset.x),\(offset.y)], \"bounds\": [\(bounds.width),\(bounds.height)] }")
+        let id = app.bundleIdentifier
+        self.emit(":FrontmostWindowChangedEvent { \"id\": \"\(id ?? "")\", \"title\": \(titleString), \"offset\": [\(offset.x),\(offset.y)], \"bounds\": [\(bounds.width),\(bounds.height)] }")
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {

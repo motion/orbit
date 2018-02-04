@@ -173,7 +173,7 @@ class SymSpell {
           deletes.add(delete)
           //recursion, if maximum edit distance not yet reached
           if editDistance < editDistanceMax {
-            edits(delete, editDistance: editDistance, deletes: deletes)
+            let _ = edits(delete, editDistance: editDistance, deletes: deletes)
           }
         }
       }

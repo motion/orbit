@@ -110,6 +110,8 @@ final class Recorder: NSObject {
     self.session = AVCaptureSession()
     self.input = AVCaptureScreenInput(displayID: displayId)
     output = AVCaptureVideoDataOutput()
+    
+    print("output types: \(output.availableVideoCodecTypes) \(output.availableVideoPixelFormatTypes)")
 
     output.videoSettings = [
       kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_420YpCbCr8BiPlanarFullRange
@@ -128,7 +130,9 @@ final class Recorder: NSObject {
     // setup recorder
     output.alwaysDiscardsLateVideoFrames = true
     let queue = DispatchQueue(label: "com.me.myqueue")
+    
     output.setSampleBufferDelegate(self, queue: queue)
+    
     if session.canAddInput(self.input) {
       session.addInput(self.input)
     } else {

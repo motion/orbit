@@ -159,19 +159,8 @@ export default class ScreenState {
   }
 
   startSwindler() {
-    console.log('Start swindling...')
+    console.log('Start watching window changes...')
     this.swindler.start()
-
-    const update = () => {
-      // ensure new
-      this.updateState({
-        appState: {
-          ...JSON.parse(JSON.stringify(this.curAppState)),
-          ...this.extraAppState, // from electron
-        },
-      })
-    }
-
     let lastId = null
     this.swindler.onChange(({ event, message }) => {
       // immediately cancel stuff
@@ -186,13 +175,15 @@ export default class ScreenState {
       })
       switch (event) {
         case 'FrontmostWindowChangedEvent':
-          const value = {
-            ...this.curAppState,
-            id: lastId,
-            ...message,
+          const id = message.id || lastId
+          this.curAppState = {
+            id,
+            title: message.title,
+            offset: message.offset,
+            bounds: message.bounds,
+            name: id ? last(id.split('.')) : message.title,
           }
-          lastId = value.id
-          this.setAppState(value)
+          lastId = id
           break
         case 'WindowSizeChangedEvent':
           this.curAppState.bounds = message
@@ -200,33 +191,13 @@ export default class ScreenState {
         case 'WindowPosChangedEvent':
           this.curAppState.offset = message
       }
-      update()
+      this.updateState({
+        appState: {
+          ...JSON.parse(JSON.stringify(this.curAppState)),
+          ...this.extraAppState, // from electron
+        },
+      })
     })
-  }
-
-  setAppState = nextAppState => {
-    // if given id, reset to new appState
-    if (nextAppState.id) {
-      this.curAppState = {
-        id: nextAppState.id,
-      }
-    }
-    const { curAppState } = this
-    const { id } = curAppState
-    curAppState.title = nextAppState.title
-    curAppState.offset = nextAppState.offset
-    curAppState.bounds = nextAppState.bounds
-    curAppState.name = id ? last(id.split('.')) : curAppState.title
-    // adjust for more specifc content area found
-    if (this.contentArea) {
-      const [x, y, width, height] = this.contentArea
-      // divide here for retina
-      curAppState.offset[0] += x / 2
-      curAppState.offset[1] += y / 2
-      curAppState.bounds[0] += width / 2
-      curAppState.bounds[1] += height / 2
-      console.log('adjusting for content area', curAppState)
-    }
   }
 
   resetHighlights = () => {

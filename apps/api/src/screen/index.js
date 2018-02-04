@@ -152,6 +152,7 @@ export default class ScreenState {
 
   async restartScreen() {
     console.log('restartScreen')
+    this.resetHighlights()
     await this.screenOCR.stop()
     console.log('starting back up')
     await this.screenOCR.start()

@@ -93,10 +93,9 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
         isBlackIfUnder: 180
       )
       characters!.shouldDebug = shouldDebug
-    } else {
-      self.characters!.buffer = buffer
-      if shouldDebug { characters!.debugDir = self.boxes.first!.value.screenDir! }
     }
+    let chars = self.characters!
+    chars.buffer = buffer
     var clearIgnoreNext = false
     // debounce while scrolling amt in seconds:
     let delayHandleChange = 0.25
@@ -124,6 +123,9 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
         self.isCleared[boxId] = true
         if !box.findContent {
           continue
+        }
+        if shouldDebug {
+          chars.debugDir = box.screenDir!
         }
         // content/ocr related stuff:
         // debounce

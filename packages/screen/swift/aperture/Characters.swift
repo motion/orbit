@@ -133,7 +133,7 @@ class Characters {
         if shouldDebug && debugImg != nil {
           let box = CGRect(x: char.x / 2 - frameOffset[0] * 2, y: char.y / 2 - frameOffset[1] * 2, width: char.width / 2, height: char.height / 2)
           if let img = images.cropImage(debugImg!, box: box) {
-            images.writeCGImage(image: img, to: "/tmp/screen/\(misfit ? "charmiss-" : "char")\(id)-\(curChar).png")
+            images.writeCGImage(image: img, to: "/tmp/screen/\(misfit ? "c-miss-" : "c-")\(id)-\(curChar).png")
           }
         }
         if misfit {
@@ -203,7 +203,7 @@ class Characters {
     // finish, write string
     if pixels != nil && pixels!.count > 0 && debugImg != nil {
       if let img = images.imageFromArray(pixels: pixels!, width: lineW, height: lineH) {
-        Images().writeCGImage(image: img, to: "/tmp/screen/hit\(id).png", resolution: 72) // write img
+        Images().writeCGImage(image: img, to: "/tmp/screen/b-hit\(id).png", resolution: 72) // write img
       }
     }
 
@@ -351,7 +351,20 @@ class Characters {
   }
   
   public func charToString(_ char: Character, debugID: String) -> String {
-    print("char linebounds \(char.lineBounds)")
+    // right now char is in retina and line isnt :/ need to do this but it requires some attention
+    // so for now just scaling them to match
+    if char.lineBounds == nil {
+      print("weird no bounds")
+      return ""
+    }
+    let retinaLineBounds = char.lineBounds!.map { $0 * 2 }
+    let charFrame = [
+      char.x,
+      retinaLineBounds[1],
+      char.width,
+      retinaLineBounds[3]
+    ]
+    print("charFrame \(charFrame)")
     var output = ""
     let dbl = Float(28)
     if char.width == 0 || char.height == 0 {
@@ -359,18 +372,14 @@ class Characters {
     }
     let width = Float(char.width)
     let height = Float(char.height)
-    // make square
-    var scaleX = Float(1)
-    var scaleY = Float(1)
-    if width > dbl {
+    var scaleX = Float(1.0)
+    var scaleY = Float(1.0)
+    if width > height {
       scaleX = width / dbl
-    } else if width < dbl {
-      scaleX = 1 / (dbl / width)
-    }
-    if height > dbl {
-      scaleY = height / dbl
-    } else if height < dbl {
-      scaleY = 1 / (dbl / height)
+      scaleY = height / (width * scaleX)
+    } else {
+      scaleX = width / dbl
+      scaleY = height / width * scaleX
     }
     var pixels: [PixelData]? = nil
     if shouldDebug {
@@ -396,7 +405,7 @@ class Characters {
     }
     output += "\n"
     if debugID != "" {
-      let outFile = "\(debugDir)/zc-\(debugID).png"
+      let outFile = "\(debugDir)/c--\(debugID).png"
       images.writeCGImage(image: images.imageFromArray(pixels: pixels!, width: 28, height: 28)!, to: outFile, resolution: 72) // write img
     }
     return output

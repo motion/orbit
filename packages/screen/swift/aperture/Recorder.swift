@@ -363,7 +363,7 @@ final class Recorder: NSObject {
         if simpleDebugImages || self.shouldDebug {
           images.writeCGImage(
             image: images.cropImage(cgImage, box: CGRect(x: lineFrame[0] - box.x, y: lineFrame[1] - box.y, width: lineFrame[2], height: lineFrame[3]))!,
-            to: "\(box.screenDir!)/linein-\(box.id)-\(id)-\(index).png"
+            to: "\(box.screenDir!)/a-line-\(box.id)-\(id)-\(index).png"
           )
         }
         // write characters
@@ -555,7 +555,7 @@ final class Recorder: NSObject {
       var minY = 10000
       var maxH = 0
       for (wordIndex, word) in line.enumerated() {
-        let characters: [String] = word.characters.pmap({(char, _) in
+        let characters: [String] = word.characters.map({(char) in
           // calculate line position
           if char.y < minY { minY = char.y }
           if char.height > maxH { maxH = char.height }
@@ -570,12 +570,6 @@ final class Recorder: NSObject {
           }
           return ""
         })
-        // debug: print out all characters
-        if shouldDebug {
-          for (index, char) in word.characters.enumerated() {
-            _ = chars.charToString(char, debugID: "\(lineIndex)-\(wordIndex)-\(index)-\(characters[index])")
-          }
-        }
         let wordStr = characters.joined()
         words.append("[\(word.x),\(word.y),\(word.width),\(word.height),\"\(wordStr)\"]")
       }
@@ -639,9 +633,9 @@ final class Recorder: NSObject {
     startTime()
     let charactersByLineWithBounds: [[Word]] = charactersByLine.pmap({ (line, index) in
       let x = line.first!.x
-      var y = 100000
+      var minY = 100000
       var width = 0
-      var height = 0
+      var maxY = 0
       if line.count == 1 {
         width = line.first!.width
       } else {
@@ -649,16 +643,20 @@ final class Recorder: NSObject {
       }
       // find min y and max height
       for word in line {
-        if word.height > height { height = word.height }
-        if word.y > y { y = word.y }
+        if word.y + word.height > maxY { maxY = word.y + word.height }
+        if word.y < minY { minY = word.y }
       }
-      let lineBounds = [x, y, width, height]
+      let height = maxY - minY
+      let lineBounds = [x, minY, width, height]
       // hacky af
-      return line.map { word in
+      return line.enumerated().map { (wordIndex, word) in
         var word = word
-        word.characters = word.characters.map {
-          var newChar = $0
+        word.characters = word.characters.enumerated().map { (charIndex, char) in
+          var newChar = char
           newChar.lineBounds = lineBounds
+          if self.shouldDebug { // debug: print out all characters
+            _ = chars.charToString(newChar, debugID: "\(index)-\(wordIndex)-\(charIndex)")
+          }
           return newChar
         }
         return word

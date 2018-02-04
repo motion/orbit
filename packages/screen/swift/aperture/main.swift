@@ -53,7 +53,7 @@ func record() throws {
     recorder.watchBounds(
       fps: 10,
       boxes: [
-        Box(id: 1, x: 0, y: 23, width: 843, height: 1028, screenDir: "/tmp/screen", findContent: true, initialScreenshot: true)
+        Box(id: 1, x: 0, y: 23, width: 543, height: 928, screenDir: "/tmp/screen", findContent: true, initialScreenshot: true)
       ],
       showCursor: true,
       videoCodec: "mp4",

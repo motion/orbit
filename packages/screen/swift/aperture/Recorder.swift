@@ -637,7 +637,7 @@ final class Recorder: NSObject {
     let charactersByLine = getCharacters(sectionLines, box: box, cgImage: cgImage, frame: frame)
     // find line bounds now so we can use them for nice OCR cropping
     startTime()
-    _ = charactersByLine.pmap({ (line, index) in
+    let charactersByLineWithBounds: [[Word]] = charactersByLine.pmap({ (line, index) in
       let x = line.first!.x
       var y = 100000
       var width = 0
@@ -653,23 +653,20 @@ final class Recorder: NSObject {
         if word.y > y { y = word.y }
       }
       let lineBounds = [x, y, width, height]
-      
-      return line.map { $0.characters.map {
-        var newChar = $0
-        newChar.lineBounds = lineBounds
-        return newChar
-      } }
-      
-      // hacky but for now lets see how it works
-//      for word in line {
-//        for char in word.characters {
-//          char.setLineBounds(lineBounds)
-//        }
-//      }
+      // hacky af
+      return line.map { word in
+        var word = word
+        word.characters = word.characters.map {
+          var newChar = $0
+          newChar.lineBounds = lineBounds
+          return newChar
+        }
+        return word
+      }
     })
     debug("process line bounds onto chars")
     /* check continuation */ queue.wait(); if handleCancel() { return nil }
-    guard let ocrResults = getOCR(charactersByLine) else { return nil }
+    guard let ocrResults = getOCR(charactersByLineWithBounds) else { return nil }
     /* check continuation */ queue.wait(); if handleCancel() { return nil }
     let (words, lines) = getWordsAndLines(ocrResults, characterLines: charactersByLine)
     /* check continuation */ queue.wait(); if handleCancel() { return nil }

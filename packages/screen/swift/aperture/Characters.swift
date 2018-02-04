@@ -351,6 +351,7 @@ class Characters {
   }
   
   public func charToString(_ char: Character, debugID: String) -> String {
+    print("char linebounds \(char.lineBounds)")
     var output = ""
     let dbl = Float(28)
     if char.width == 0 || char.height == 0 {

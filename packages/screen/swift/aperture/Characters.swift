@@ -125,11 +125,11 @@ class Characters {
           debug("0 size")
           continue
         }
-        let tooBig = char.width * char.height > 1500
-        let tooSmall = char.width < 5 && char.height < 5 || char.width < 2 || char.height < 2
+        let tooBig = char.width * char.height > 2500
+//        let tooSmall = char.width < 5 && char.height < 5 || char.width < 2 || char.height < 2
         let tooThin = char.height / char.width > 25
         let tooWide = char.width / char.height > 25
-        let misfit = tooBig || tooSmall || tooThin || tooWide
+        let misfit = tooBig || tooThin || tooWide
         if shouldDebug && debugImg != nil {
           let box = CGRect(x: char.x / 2 - frameOffset[0] * 2, y: char.y / 2 - frameOffset[1] * 2, width: char.width / 2, height: char.height / 2)
           if let img = images.cropImage(debugImg!, box: box) {
@@ -137,6 +137,7 @@ class Characters {
           }
         }
         if misfit {
+          print("misfit \(tooBig) \(tooThin) \(tooWide)")
           continue
         }
         curChar += 1
@@ -226,7 +227,7 @@ class Characters {
     var visited = Dictionary<Int, Bool?>() // for preventing crossing over at thin interections
     var topLeftBound = [startX, startY]
     var bottomRightBound = [startX, startY]
-    var lastMove = [-moves.px, moves.px] // start move
+    var lastMove = [0, moves.px] // start move
     var outline: [String] = []
     var iteration = 0
     var x = startX
@@ -235,7 +236,7 @@ class Characters {
     var curPos = 0
     var foundEnd = false
     let clockwise = moves.clockwise
-    let backwardsRange = stride(from: 1, to: 7, by: 2)
+    let backwardsRange = stride(from: 1, to: 7, by: 2) // could increase potenitally
     var exhausted = false
     while !foundEnd {
       iteration += 1
@@ -294,11 +295,11 @@ class Characters {
         } else {
           lastMove = attempt
         }
-        if sdebug() {
-          let xdir = lastMove[0] == -1 ? "l" : lastMove[0] == 0 ? "x" : "r"
-          let ydir = lastMove[1] == -1 ? "u" : lastMove[1] == 0 ? "x" : "d"
-          print(".. \(xdir) \(ydir) | \(lastMove[0]) \(lastMove[1]) | attempt \(index)")
-        }
+//        if sdebug() {
+//          let xdir = lastMove[0] == -1 ? "l" : lastMove[0] == 0 ? "x" : "r"
+//          let ydir = lastMove[1] == -1 ? "u" : lastMove[1] == 0 ? "x" : "d"
+//          print(".. \(xdir) \(ydir) | \(lastMove[0]) \(lastMove[1]) | attempt \(index)")
+//        }
         break
       }
       if !success {
@@ -360,54 +361,70 @@ class Characters {
     let retinaLineBounds = char.lineBounds!.map { $0 * 2 }
     let charFrame = [
       char.x,
-      retinaLineBounds[1],
+      retinaLineBounds[1], // use line Y
       char.width,
-      retinaLineBounds[3]
+      retinaLineBounds[3]  // use line Height
     ]
-    print("charFrame \(charFrame)")
-    var output = ""
     let dbl = Float(28)
     if char.width == 0 || char.height == 0 {
       return ""
     }
-    let width = Float(char.width)
-    let height = Float(char.height)
+    let width = Float(charFrame[2])
+    let height = Float(charFrame[3])
     var scaleX = Float(1.0)
     var scaleY = Float(1.0)
+    var endX = 28
     if width > height {
       scaleX = width / dbl
       scaleY = height / (width * scaleX)
     } else {
-      scaleX = width / dbl
-      scaleY = height / width * scaleX
+      // small "i": 2x20
+      // scaleY: 0.7
+      // scaleX: 2.8
+      // scale up...
+      // endX: 5.6
+      // scaleX: 0.35
+      scaleY = height / dbl
+      scaleX = width * (1/scaleY)
+      // scale up
+      if scaleX * width < dbl {
+        endX = Int(scaleX * width)
+        scaleX = 1 / scaleX
+      } else {
+        scaleX = width / dbl
+      }
     }
-    var pixels: [PixelData]? = nil
-    if shouldDebug {
-      pixels = [PixelData]()
-    }
+    var output = ""
     for y in 0..<28 {
       for x in 0..<28 {
-        let xS = Int(Float(x) * scaleX)
-        let yS = Int(Float(y) * scaleY)
-        let luma = buffer[(char.y + yS) * perRow + char.x + xS]
-        // luminance to intensity means we have to inverse it
-        // warning, doing any sort of Int => String conversion here slows it down Bigly
-        if luma < isBlackIfUnder {
-          output += "0.0 "
-        } else {
+        // past end of char, just fill with white
+        if x > endX {
           output += "1.0 "
-        }
-        if shouldDebug {
-          let brt = UInt8(luma < isBlackIfUnder ? 0 : 255)
-          pixels!.append(PixelData(a: 255, r: brt, g: brt, b: brt))
+        } else {
+          let xS = Int(Float(x) * scaleX)
+          let yS = Int(Float(y) * scaleY)
+          let luma = buffer[(charFrame[1] + yS) * perRow + char.x + xS]
+          // luminance to intensity means we have to inverse it
+          // warning, doing any sort of Int => String conversion here slows it down Bigly
+          if luma < isBlackIfUnder {
+            output += "0.0 "
+          } else {
+            output += "1.0 "
+          }
         }
       }
     }
-    output += "\n"
-    if debugID != "" {
+    if shouldDebug && debugID != "" {
+      var pixels = [PixelData]()
+      for char in output.split(separator: " ") {
+        let brt = UInt8(char == "0.0" ? 0 : 255)
+        pixels.append(PixelData(a: 255, r: brt, g: brt, b: brt))
+      }
       let outFile = "\(debugDir)/c--\(debugID).png"
-      images.writeCGImage(image: images.imageFromArray(pixels: pixels!, width: 28, height: 28)!, to: outFile, resolution: 72) // write img
+      let img = images.imageFromArray(pixels: pixels, width: 28, height: 28)!
+      images.writeCGImage(image: img, to: outFile, resolution: 72)
     }
+    output += "\n"
     return output
   }
 }

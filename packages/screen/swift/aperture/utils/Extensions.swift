@@ -32,7 +32,6 @@ public extension Array {
       }
     }
     group.wait()
-    print("result is \(result.keys) \(result.count)")
     return result.keys.sorted().map { result[$0]! }
   }
 }

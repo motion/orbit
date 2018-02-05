@@ -69,7 +69,7 @@ async function test() {
     }
   })
   screen.onChanged(word => {
-    console.log('clear word', word)
+    // console.log('clear word', word)
   })
 }
 

@@ -348,7 +348,7 @@ final class Recorder: NSObject {
       let sectionLines: [[Word]] = sectionLines[id]!.pmap({ line, index in
         let padX = 12
         let padY = max(3, min(16, line.height / 8))
-        print("section \(id) line \(index) topfill \(line.topFillAmt) bottomfill \(line.bottomFillAmt)")
+//        print("section \(id) line \(index) topfill \(line.topFillAmt) bottomfill \(line.bottomFillAmt)")
         //        let shiftUp = line.topFillAmt * 10 / line.bottomFillAmt * 10
         //        print("shiftUp \(shiftUp)")
         let lineFrame = [
@@ -593,7 +593,8 @@ final class Recorder: NSObject {
   
   func charactersWithLineBounds(_ charactersByLine: [[Word]]) -> [[Word]] {
     startTime()
-    let result = charactersByLine.enumerated().map({ index, line in
+    let result: [[Word]] = charactersByLine.enumerated().map({ arg in
+      let (index, line) = arg
       if line.count == 0 {
         return []
       }
@@ -620,7 +621,7 @@ final class Recorder: NSObject {
           var newChar = char
           newChar.lineBounds = lineBounds
           if self.shouldDebug { // debug: print out all characters
-            _ = chars.charToString(newChar, debugID: "\(index)-\(wordIndex)-\(charIndex)")
+            _ = self.characters!.charToString(newChar, debugID: "\(index)-\(wordIndex)-\(charIndex)")
           }
           return newChar
         }
@@ -684,9 +685,7 @@ final class Recorder: NSObject {
     self.send("{ \"action\": \"words\", \"value\": [\(words.joined(separator: ","))] }")
     self.send("{ \"action\": \"lines\", \"value\": [\(lines.joined(separator: ","))] }")
     // test write images:
-    if self.shouldDebug {
-      images.writeCGImage(image: cgImage, to: "\(box.screenDir!)/\(box.id)-original.png")
-    }
+    if self.shouldDebug { images.writeCGImage(image: cgImage, to: "\(box.screenDir!)/\(box.id)-original.png") }
     // update character cache
     Async.utility(after: 0.04) { chars.updateCache(ocrResults) }
     // return new box with content adjusted frame

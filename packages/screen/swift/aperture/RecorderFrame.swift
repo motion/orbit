@@ -63,7 +63,7 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
     }
     return (hasChanged, isRestored)
   }
-  
+
   private func getBufferFrame(_ sampleBuffer: CMSampleBuffer) -> (UnsafeMutablePointer<UInt8>, Int, () -> Void) {
     let pixelBuffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)!
     CVPixelBufferLockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0));
@@ -75,7 +75,7 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
     }
     return (buffer, perRow, release)
   }
-  
+
   public func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
     // keep this always in sync
     self.currentSampleBuffer = sampleBuffer
@@ -130,7 +130,7 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
         // content/ocr related stuff:
         // debounce
         if (self.changeHandle != nil) {
-          print("canceling last")
+          print("cancel last")
           self.changeHandle!.cancel()
           self.changeHandle = nil
           self.isScanning = false

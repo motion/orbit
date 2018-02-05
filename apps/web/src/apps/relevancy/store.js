@@ -1,44 +1,68 @@
-import SearchStore from '~/stores/searchStore'
-import * as ContentStore from '~/stores/contentStore'
+import article from "./article"
+import { store } from "@mcro/black"
+import { uniqBy, sortBy, reverse, includes } from "lodash"
 
-const hasString = (string, word) => string.indexOf(word) > -1
-const useWorker = !hasString(window.location + '', '?noWorker')
-const useDemo = true
+// const entityFinder = require('entity-finder')
+const terms = [
+  "bitcoin",
+  "ethereum",
+  "ripple",
+  "stellar",
+  "monero",
+  "litecoin",
+  "blockchain",
+  "cryptocurrency",
+  "cryptocurrencies"
+]
+
+const q = `${terms.join(" OR ")}`
+const apiKey = `6f7abaf1d01a4ca6bf53fa573e6a3aab`
+const pageSize = 5
+const urlBase = `https://newsapi.org/v2/everything`
 
 export default class RelevancyStore {
-  query = ''
-  textboxVal = ''
-  results = []
-  search = new SearchStore({ useWorker })
-  autocomplete = []
+  article = article
+  highlight = null
+  entities = []
+  version = 0
 
-  async willMount() {
+  getEntities = async texts => {
+    const url = `${urlBase}?language=en&pageSize=${pageSize}&q=${q}&apiKey=${apiKey}`
+    console.log("url is", url)
+    // const { articles } = await (await fetch(url)).json()
+    // const titles = articles.map(_ => _.title)
+    const json = JSON.stringify(texts)
+    const python = `http://localhost:5000?news=${json}`
+    const values = await (await fetch(python)).json()
+    console.log("values are", values)
+    return values
+  }
+
+  wiki = async text => {
+    const url =
+      "https://en.wikipedia.org/w/api.php?action=query&format=json&limit=15&callback=?&titles=doge"
+    const vals = (await fetch(url)).json()
+    console.log("vals are", vals)
+  }
+
+  async fetch() {
     window.relevancy = this
 
-    await this.getData()
-    this.react(
-      () => this.query,
-      async () => {
-        const val = await this.search.getResults(this.query)
-        if (val === false) {
-          return false
-        }
-        this.results = val.results
-        this.autocomplete = val.autocomplete
-      },
-      true
-    )
+    let entities = await this.getEntities([this.article])
+    entities = entities[0]
+    entities = uniqBy(entities, "text")
+    const labels = ["gpe", "person", "org", "person"]
+    console.log("raw entities are", entities)
+    const names = entities
+      .filter(({ label }) => includes(labels, label.toLowerCase()))
+      .map(_ => _.text.toLowerCase())
+    console.log("names are", names)
+
+    this.entities = reverse(sortBy(names, word => word.split(" ").length))
+    this.version += 1
   }
 
-  async getDropboxData() {
-    return await (await fetch('/dropbox.json')).json()
-  }
-
-  async getData() {
-    const documents = useDemo
-      ? ContentStore.things
-      : await this.getDropboxData()
-    this.documents = documents
-    this.search.setDocuments(documents)
+  constructor() {
+    this.fetch()
   }
 }

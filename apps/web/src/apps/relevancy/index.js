@@ -1,116 +1,104 @@
-import * as React from 'react'
-import { view } from '@mcro/black'
-import * as UI from '@mcro/ui'
-import RelevancyStore from './store'
-
-const makeBold = (input, toBold) => {
-  return input.replace(
-    new RegExp('(\\b)(' + toBold.join('|') + ')(\\b)', 'ig'),
-    '$1<b style="display: inline;">$2</b>$3'
-  )
-}
+import * as React from "react"
+import { view, store } from "@mcro/black"
+import { includes } from "lodash"
+import * as UI from "@mcro/ui"
+import RelevancyStore from "./store"
+import { observer } from "mobx-react"
 
 @view({
-  store: RelevancyStore,
+  store: RelevancyStore
 })
 export default class RelevancyPage {
   render({ store }) {
+    store.entities
+    store.version
+    let article = store.article
+    store.entities
+      .filter(i => i.length > 2)
+      .map(name => name.trim().replace(/\n/gi, ""))
+      .forEach(name => {
+        console.log("replacing", name)
+        article = article.replace(
+          new RegExp(name + "([^a-zA-Zds:])", "gi"),
+          (_, char) => {
+            return "::" + name.replace(/\ /g, "-") + "::" + char
+          }
+        )
+      })
+
+    const lines = article.split("\n")
+
     return (
-      <UI.Theme name="light">
-        <relevancy $$draggable>
-          <UI.Title size={2}>Relevancy</UI.Title>
-          <content>
-            <input
-              value={store.query}
-              onChange={e => {
-                store.query = e.target.value
-              }}
-            />
-            <autocomplete>
-              <UI.Title>autocomplete</UI.Title>
-              {(store.autocomplete || []).map(i => (
-                <UI.Text>
-                  {i.word} - {i.weight}
-                </UI.Text>
-              ))}
-            </autocomplete>
-            {(store.results || []).map(
-              (
-                { debug, item, toBold, matched, similarity, snippet },
-                index
-              ) => (
-                <item key={Math.random()}>
-                  <UI.Title
-                    fontWeight={400}
-                    size={1.2}
-                    onClick={() => open(item.url)}
-                  >
-                    <text
-                      style={{ display: 'inline' }}
-                      $$row
-                      dangerouslySetInnerHTML={{
-                        __html: makeBold(
-                          item.title + ' - ' + similarity,
-                          toBold
-                        ),
-                      }}
-                    />
-                  </UI.Title>
-                  <UI.Title
-                    fontWeight={500}
-                    size={1.1}
-                    opacity={1}
-                    onClick={() => open(item.url)}
-                  >
-                    <text
-                      style={{ display: 'inline' }}
-                      $$row
-                      dangerouslySetInnerHTML={{
-                        __html: makeBold(item.subtitle, toBold),
-                      }}
-                    />
-                  </UI.Title>
-                  <snippet>
-                    <text
-                      style={{ display: 'inline' }}
-                      $$row
-                      dangerouslySetInnerHTML={{
-                        __html: makeBold(snippet, toBold),
-                      }}
-                    />
-                  </snippet>
-                  <br />
-                  <UI.Title>matched: {JSON.stringify(matched)}</UI.Title>
-                </item>
+      <outer $$row>
+        <container>
+          <lines>
+            {lines.map(line => {
+              let highlighted = null
+              return (
+                <line $$row>
+                  {line.split(" ").map(word => {
+                    const highlight = word.indexOf("::") > -1
+                    if (highlight) {
+                      console.log("highlighting", word)
+                    }
+                    word = word.replace(/::/g, "")
+                    word = word.replace(/-/g, " ")
+
+                    return (
+                      <word
+                        onMouseOver={() => {
+                          if (highlight) {
+                            store.highlight = word
+                          }
+                        }}
+                        onMouseLeave={() => (store.highlight = null)}
+                        $highlight={highlight}
+                      >
+                        {word}
+                      </word>
+                    )
+                  })}
+                </line>
               )
-            )}
-          </content>
-        </relevancy>
-      </UI.Theme>
+            })}
+          </lines>
+        </container>
+        <UI.Title size={3} $title>
+          {store.highlight || "nothing selected"}
+        </UI.Title>
+      </outer>
     )
   }
 
   static style = {
-    relevancy: {
-      margin: 20,
-      height: '100%',
-      overflow: 'scroll',
+    outer: {},
+    container: {
+      height: "100%",
+      overflow: "scroll",
+      pointerEvents: "all",
+      marginLeft: 35
     },
-    autocomplete: {
-      margin: 20,
-      background: `rgba(0,0,0,0.05)`,
-      padding: 20,
+    title: {
+      marginTop: 20,
+      marginLeft: 20
+    },
+    lines: {
+      flex: 1,
+      marginTop: 20
+    },
+    word: {
+      marginLeft: 5,
+      opacity: 0.7
+    },
+    highlight: {
+      opacity: "1 !important",
+      fontWeight: 800
+    },
+    line: {
+      flex: 1,
+      flexWrap: "wrap",
       width: 600,
-    },
-    item: {
-      marginTop: 5,
-      padding: 10,
-      borderBottom: '1px solid rgba(0,0,0,.1)',
-    },
-    input: {
-      fontSize: 24,
-      width: 700,
-      padding: 6,
-    },
+      marginTop: 5
+    }
   }
 }

@@ -66,7 +66,7 @@ def _path_inject(paths):
     sys.path[:0] = paths
 
 
-_path_inject(['/Users/nw/projects/motion/orbit/packages/screen/swift/pyocr/src'])
+_path_inject(['/Users/nick/orbit/packages/screen/swift/pyocr/src'])
 
 
 import re
@@ -122,7 +122,7 @@ def _run():
     exec(compile(source, script, 'exec'), globals(), globals())
 
 
-DEFAULT_SCRIPT='/Users/nw/projects/motion/orbit/packages/screen/swift/pyocr/src/Bridge.py'
+DEFAULT_SCRIPT='/Users/nick/orbit/packages/screen/swift/pyocr/src/Bridge.py'
 SCRIPT_MAP={}
 try:
     _run()

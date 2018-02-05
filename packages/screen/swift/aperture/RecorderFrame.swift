@@ -63,7 +63,7 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
     }
     return (hasChanged, isRestored)
   }
-  
+
   private func getBufferFrame(_ sampleBuffer: CMSampleBuffer) -> (UnsafeMutablePointer<UInt8>, Int, () -> Void) {
     let pixelBuffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)!
     CVPixelBufferLockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0));
@@ -75,12 +75,10 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
     }
     return (buffer, perRow, release)
   }
-  
+
   public func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-    // keep this always in sync
-    self.currentSampleBuffer = sampleBuffer
     // todo: use this per-box
-    if self.isScanning || self.boxes.count == 0 {
+    if self.boxes.count == 0 {
       return
     }
     // get frame
@@ -93,10 +91,9 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
         isBlackIfUnder: 180
       )
       characters!.shouldDebug = shouldDebug
-    } else {
-      self.characters!.buffer = buffer
-      if shouldDebug { characters!.debugDir = self.boxes.first!.value.screenDir! }
     }
+    let chars = self.characters!
+    chars.buffer = buffer
     var clearIgnoreNext = false
     // debounce while scrolling amt in seconds:
     let delayHandleChange = 0.25
@@ -111,7 +108,7 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
         self.isCleared[boxId] = false
         continue
       }
-      if (firstTime && box.initialScreenshot || !firstTime && hasChanged) {
+      if (shouldRunNextTime || firstTime && box.initialScreenshot || !firstTime && hasChanged) {
         // options to ignore next or to force next
         if ignoreNextScan && !shouldRunNextTime {
           clearIgnoreNext = true
@@ -120,15 +117,25 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
         if shouldRunNextTime {
           self.shouldRunNextTime = false
         }
+        // should cancel right away if currently running
+        if self.isScanning {
+          self.shouldCancel = true
+          self.shouldRunNextTime = true
+          continue
+        }
+        // send out changed boxes
         changed.append(box.id)
         self.isCleared[boxId] = true
         if !box.findContent {
           continue
         }
+        if shouldDebug {
+          chars.debugDir = box.screenDir!
+        }
         // content/ocr related stuff:
         // debounce
         if (self.changeHandle != nil) {
-          print("canceling last")
+          print("cancel last")
           self.changeHandle!.cancel()
           self.changeHandle = nil
           self.isScanning = false
@@ -138,6 +145,8 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
         // wait for 2 frames of clear
         // small delay by default to not pick up old highlights that havent cleared yet
         self.changeHandle = Async.userInteractive(after: hasChanged ? delayHandleChange : 0.02) { // debounce (seconds)
+          // keep this always in sync
+          self.currentSampleBuffer = sampleBuffer
           self.isScanning = true
           // update characters buffer
           let (buffer, _, release) = self.getBufferFrame(sampleBuffer)
@@ -153,7 +162,6 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
           // after x seconds, re-enable watching
           // this is because screen needs time to update highlight boxes
           Async.main(after: 0.05) {
-            print("re-enable scan after last")
             self.shouldCancel = false
             self.isScanning = false
             self.ignoreNextScan = true

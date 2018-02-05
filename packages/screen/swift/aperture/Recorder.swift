@@ -24,7 +24,7 @@ struct Box: Decodable {
 }
 
 // constants
-let lineFindScaling = 4 // scale down denominator
+let lineFindScaling = 5 // scale down denominator
 
 let filters = Filters()
 let images = Images()
@@ -111,6 +111,8 @@ final class Recorder: NSObject {
     self.input = AVCaptureScreenInput(displayID: displayId)
     output = AVCaptureVideoDataOutput()
 
+    print("output types: \(output.availableVideoCodecTypes) \(output.availableVideoPixelFormatTypes)")
+
     output.videoSettings = [
       kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_420YpCbCr8BiPlanarFullRange
     ]
@@ -128,7 +130,9 @@ final class Recorder: NSObject {
     // setup recorder
     output.alwaysDiscardsLateVideoFrames = true
     let queue = DispatchQueue(label: "com.me.myqueue")
+
     output.setSampleBufferDelegate(self, queue: queue)
+
     if session.canAddInput(self.input) {
       session.addInput(self.input)
     } else {
@@ -158,7 +162,6 @@ final class Recorder: NSObject {
     self.queue.background {
       ws.event.message = { (message) in
         if let text = message as? String {
-//          print("msg \(text)")
           if text.count < 5 {
             print("weird text")
             return
@@ -243,7 +246,7 @@ final class Recorder: NSObject {
     self.stop()
     self.send("{ \"state\": { \"isPaused\": true } }")
   }
-  
+
   func debug(_ str: String) {
     if shouldDebugTiming {
       if curTime != nil {
@@ -270,7 +273,6 @@ final class Recorder: NSObject {
     if shouldDebug {
       print("running in debug mode...")
     }
-    print("reset first time to true")
     self.firstTime = true
     self.sampleSpacing = sampleSpacing
     self.sensitivity = sensitivity
@@ -290,9 +292,10 @@ final class Recorder: NSObject {
     self.input.minFrameDuration = CMTimeMake(1, Int32(fps))
   }
 
-  func handleCancel() -> Bool {
+  func shouldBreak() -> Bool {
+    queue.wait()
     let val = self.shouldCancel
-    if val { print("canceled") }
+    if val { print("---------------------- canceling! ---------------------") }
     self.shouldCancel = false
     return val
   }
@@ -333,7 +336,7 @@ final class Recorder: NSObject {
     return ocrResults
   }
 
-  func getCharactersByLine(_ sectionLines: Dictionary<Int, [LinePosition]>, box: Box, cgImage: CGImage, frame: [Int]) -> [[Word]] {
+  func getCharacters(_ sectionLines: Dictionary<Int, [LinePosition]>, box: Box, cgImage: CGImage, frame: [Int]) -> [[Word]] {
     startTime()
     // third loop
     // for each VERTICAL SECTION, get characters
@@ -341,12 +344,13 @@ final class Recorder: NSObject {
     let chars = self.characters!
     for id in sectionLines.keys {
       let scl = lineFindScaling
-      let sectionLines: [[Word]] = sectionLines[id]!.pmap({(line, index) in
-        let padX = 6
-        let padY = max(3, min(12, line.height / 10))
+      let sectionLines: [[Word]] = sectionLines[id]!.pmap({ line, index in
+        let padX = 12
+        let padY = max(3, min(16, line.height / 8))
+//        print("section \(id) line \(index) topfill \(line.topFillAmt) bottomfill \(line.bottomFillAmt)")
         //        let shiftUp = line.topFillAmt * 10 / line.bottomFillAmt * 10
         //        print("shiftUp \(shiftUp)")
-        let lineBounds = [
+        let lineFrame = [
           line.x * scl - padX + frame[0],
           line.y * scl - padY + frame[1],
           // add min in case padX/padY go too far
@@ -354,12 +358,12 @@ final class Recorder: NSObject {
           min(frame[3], line.height * scl + padY * 3)
         ]
         // finds characters
-        let foundWords: [Word] = chars.find(id: index, bounds: lineBounds)
+        let foundWords: [Word] = chars.find(id: index, bounds: lineFrame)
         // debug line
         if simpleDebugImages || self.shouldDebug {
           images.writeCGImage(
-            image: images.cropImage(cgImage, box: CGRect(x: lineBounds[0] - box.x, y: lineBounds[1] - box.y, width: lineBounds[2], height: lineBounds[3]))!,
-            to: "\(box.screenDir!)/linein-\(box.id)-\(id)-\(index).png"
+            image: images.cropImage(cgImage, box: CGRect(x: lineFrame[0] - box.x, y: lineFrame[1] - box.y, width: lineFrame[2], height: lineFrame[3]))!,
+            to: "\(box.screenDir!)/a-line-\(box.id)-\(id)-\(index).png"
           )
         }
         // write characters
@@ -394,7 +398,7 @@ final class Recorder: NSObject {
       for y in 0..<vHeight {
         let x0 = max(0, min(maxWidth, frame[0] - box.x + x * scale))
         let y0 = max(0, min(maxHeight, frame[1] - box.y + y * scale))
-        let filled = verticalImageRep.colorAt(x: x0, y: y0)!.brightnessComponent < 0.9
+        let filled = verticalImageRep.colorAt(x: x0, y: y0)!.brightnessComponent < 0.93
         imgData[x].append(filled ? 1 : 0)
         if filled {
           verticalFilled += 1
@@ -447,7 +451,6 @@ final class Recorder: NSObject {
     startTime()
     // second loop - find lines in sections
     var sectionLines = Dictionary<Int, [LinePosition]>()
-    var total = 0
     let minLineWidth = 4
     for (start, end) in verticalSections {
       var lines = [LinePosition]()
@@ -496,8 +499,13 @@ final class Recorder: NSObject {
           }
         }
       }
+      // remove last line if its cut off by frame
+      if lines.count > 0 {
+        if lines.last!.y + lines.last!.height >= vHeight {
+          lines.remove(at: lines.count - 1)
+        }
+      }
       sectionLines[start] = lines
-      total += lines.count
     }
 //    debug("getLines") // 0ms
     return sectionLines
@@ -538,19 +546,18 @@ final class Recorder: NSObject {
     debug("getContent - \(boxes.count) boxes")
     return [ x, y, width, height ]
   }
-  
+
   func getWordsAndLines(_ ocrResults: [String: String], characterLines: [[Word]]) -> ([String], [String]) {
     startTime()
-    let chars = self.characters!
     var words = [String]()
     var lines = [String]()
-    for (lineIndex, line) in characterLines.enumerated() {
+    for line in characterLines {
       if line.count == 0 {
         continue
       }
       var minY = 10000
       var maxH = 0
-      for (wordIndex, word) in line.enumerated() {
+      for word in line {
         let characters: [String] = word.characters.map({(char) in
           // calculate line position
           if char.y < minY { minY = char.y }
@@ -566,12 +573,6 @@ final class Recorder: NSObject {
           }
           return ""
         })
-        // debug: print out all characters
-        if shouldDebug {
-          for (index, char) in word.characters.enumerated() {
-            _ = chars.charToString(char, debugID: "\(lineIndex)-\(wordIndex)-\(index)-\(characters[index])")
-          }
-        }
         let wordStr = characters.joined()
         words.append("[\(word.x),\(word.y),\(word.width),\(word.height),\"\(wordStr)\"]")
       }
@@ -587,6 +588,47 @@ final class Recorder: NSObject {
     }
     debug("getWordsAndLines")
     return (words, lines)
+  }
+
+  func charactersWithLineBounds(_ charactersByLine: [[Word]]) -> [[Word]] {
+    startTime()
+    let result: [[Word]] = charactersByLine.enumerated().map({ arg in
+      let (index, line) = arg
+      if line.count == 0 {
+        return []
+      }
+      let x = line.first!.x
+      var minY = 100000
+      var width = 0
+      var maxY = 0
+      if line.count == 1 {
+        width = line.first!.width
+      } else {
+        width = line.last!.x + line.last!.width - line.first!.x
+      }
+      // find min y and max height
+      for word in line {
+        if word.y + word.height > maxY { maxY = word.y + word.height }
+        if word.y < minY { minY = word.y }
+      }
+      let height = maxY - minY
+      let lineBounds = [x, minY, width, height]
+      // hacky af
+      return line.enumerated().map { (wordIndex, word) in
+        var word = word
+        word.characters = word.characters.enumerated().map { (charIndex, char) in
+          var newChar = char
+          newChar.lineBounds = lineBounds
+          if self.shouldDebug { // debug: print out all characters
+            _ = self.characters!.charToString(newChar, debugID: "\(index)-\(wordIndex)-\(charIndex)")
+          }
+          return newChar
+        }
+        return word
+      }
+    })
+    debug("charactersWithLineBounds")
+    return result
   }
 
   // returns the frame it found
@@ -607,7 +649,7 @@ final class Recorder: NSObject {
       chars.debugImg = filters.filterImageForOCRCharacterFinding(image: cgImage)
       Async.background { images.writeCGImage(image: cgImage, to: "\(box.screenDir!)/\(box.id)-original.png") }
     }
-    /* check continuation */ queue.wait(); if handleCancel() { return nil }
+    if shouldBreak() { return nil }
     // content find
     var frame = [box.x, box.y, box.width, box.height]
     if findContent {
@@ -625,24 +667,24 @@ final class Recorder: NSObject {
     chars.frameOffset = frame
     let vWidth = frame[2] / lineFindScaling
     let vHeight = frame[3] / lineFindScaling
-    /* check continuation */ queue.wait(); if handleCancel() { return nil }
+    if shouldBreak() { return nil }
     let (verticalSections, imgData) = getVerticalSections(cgImage, box: box, frame: frame, scale: lineFindScaling)
-    /* check continuation */ queue.wait(); if handleCancel() { return nil }
-    let sectionLines = getLines(verticalSections, vWidth: vWidth, vHeight: vHeight, imgData: imgData)
-    /* check continuation */ queue.wait(); if handleCancel() { return nil }
-    let characterLines = getCharactersByLine(sectionLines, box: box, cgImage: cgImage, frame: frame)
-    /* check continuation */ queue.wait(); if handleCancel() { return nil }
-    guard let ocrResults = getOCR(characterLines) else { return nil }
-    /* check continuation */ queue.wait(); if handleCancel() { return nil }
-    let (words, lines) = getWordsAndLines(ocrResults, characterLines: characterLines)
-    /* check continuation */ queue.wait(); if handleCancel() { return nil }
+    if shouldBreak() { return nil }
+    let sectionLines: Dictionary<Int, [LinePosition]> = getLines(verticalSections, vWidth: vWidth, vHeight: vHeight, imgData: imgData)
+    if shouldBreak() { return nil }
+    let charactersByLine: [[Word]] = getCharacters(sectionLines, box: box, cgImage: cgImage, frame: frame)
+    // find line bounds now so we can use them for nice OCR cropping
+    let charactersByLineWithBounds: [[Word]] = charactersWithLineBounds(charactersByLine)
+    if shouldBreak() { return nil }
+    guard let ocrResults = getOCR(charactersByLineWithBounds) else { return nil }
+    if shouldBreak() { return nil }
+    let (words, lines) = getWordsAndLines(ocrResults, characterLines: charactersByLine)
+    if shouldBreak() { return nil }
     // send to world
     self.send("{ \"action\": \"words\", \"value\": [\(words.joined(separator: ","))] }")
     self.send("{ \"action\": \"lines\", \"value\": [\(lines.joined(separator: ","))] }")
     // test write images:
-    if self.shouldDebug {
-      images.writeCGImage(image: cgImage, to: "\(box.screenDir!)/\(box.id)-original.png")
-    }
+    if self.shouldDebug { images.writeCGImage(image: cgImage, to: "\(box.screenDir!)/\(box.id)-original.png") }
     // update character cache
     Async.utility(after: 0.04) { chars.updateCache(ocrResults) }
     // return new box with content adjusted frame

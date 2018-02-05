@@ -2,7 +2,7 @@ const path = require('path')
 const execa = require('execa')
 const electronUtil = require('electron-util/node')
 
-const BIN = path.join(
+const CWD = path.join(
   electronUtil.fixPathForAsarUnpack(__dirname),
   'Swindler',
   'Build',
@@ -11,24 +11,17 @@ const BIN = path.join(
   'SwindlerExample.app',
   'Contents',
   'MacOS',
-  'SwindlerExample',
 )
+const BIN = './SwindlerExample'
 
 class Swindler {
-  constructor() {
-    // const stop = () => this.stop()
-    // process.on('exit', stop)
-    // process.on('SIGINT', stop)
-    // process.on('SIGUSR1', stop)
-    // process.on('SIGUSR2', stop)
-  }
-
   start() {
     if (this.app !== undefined) {
       throw new Error('Call `.stop()` first')
     }
     this.app = execa(BIN, [], {
       reject: false,
+      cwd: CWD,
     })
     this.app.catch((err, ...rest) => {
       console.log('Swindler err:', ...rest)
@@ -71,6 +64,9 @@ class Swindler {
             event,
             message,
           })
+        } else {
+          // pass through logs from swindler
+          // console.log(out)
         }
       }
     })

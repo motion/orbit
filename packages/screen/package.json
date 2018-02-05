@@ -8,6 +8,7 @@
     "test": "node ./test --debug",
     "test-fast": "node ./test",
     "build": "cd swift && xcodebuild -configuration Release -derivedDataPath $(mktemp -d) -scheme aperture && touch ../../../apps/api/src/index.js",
+    "edit": "open ./swift/aperture.xcodeproj",
     "prepublish": "npm run build"
   },
   "files": [

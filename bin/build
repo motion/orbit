@@ -108,7 +108,6 @@ elif [ "$APP" = "web" ]; then
     echo "finished build web"
   fi
 else
-  rm -r node_modules/mobx &
   rm -r packages/decor/node_modules/mobx &
   rm -r packages/black/node_modules/mobx &
   rm -r packages/automagical/node_modules/mobx &

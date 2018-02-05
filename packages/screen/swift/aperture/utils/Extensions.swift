@@ -16,7 +16,7 @@ public extension Array {
     if count == 0 {
       return []
     }
-    let cores = ProcessInfo.processInfo.activeProcessorCount
+    let cores = Swift.max(1, ProcessInfo.processInfo.activeProcessorCount / 2)
     let sampleSize = Int(ceil(Double(count) / Double(cores)))
     let group = DispatchGroup()
     for index in 0..<sampleSize {

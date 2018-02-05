@@ -345,7 +345,7 @@ final class Recorder: NSObject {
     let chars = self.characters!
     for id in sectionLines.keys {
       let scl = lineFindScaling
-      let sectionLines: [[Word]] = sectionLines[id]!.pmap({(line, index) in
+      let sectionLines: [[Word]] = sectionLines[id]!.pmap({ line, index in
         let padX = 6
         let padY = max(3, min(12, line.height / 10))
         //        let shiftUp = line.topFillAmt * 10 / line.bottomFillAmt * 10
@@ -451,7 +451,6 @@ final class Recorder: NSObject {
     startTime()
     // second loop - find lines in sections
     var sectionLines = Dictionary<Int, [LinePosition]>()
-    var total = 0
     let minLineWidth = 4
     for (start, end) in verticalSections {
       var lines = [LinePosition]()
@@ -500,8 +499,13 @@ final class Recorder: NSObject {
           }
         }
       }
+      if lines.count > 0 {
+        if lines.last!.y + lines.last!.height >= vHeight {
+          print("removing last line, it touches edge of frame")
+          lines.remove(at: lines.count - 1)
+        }
+      }
       sectionLines[start] = lines
-      total += lines.count
     }
 //    debug("getLines") // 0ms
     return sectionLines
@@ -631,6 +635,9 @@ final class Recorder: NSObject {
     // find line bounds now so we can use them for nice OCR cropping
     startTime()
     let charactersByLineWithBounds: [[Word]] = charactersByLine.enumerated().map({ index, line in
+      if line.count == 0 {
+        return []
+      }
       let x = line.first!.x
       var minY = 100000
       var width = 0

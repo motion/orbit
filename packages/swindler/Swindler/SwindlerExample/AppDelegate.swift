@@ -17,7 +17,7 @@ import Darwin
 class AppDelegate: NSObject, NSApplicationDelegate {
     var swindler: Swindler.State!
     var observer: Observer!
-    
+
     private var lastSent = ""
 
     func emit(_ msg: String) {
@@ -28,13 +28,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
-        emit("Loading");
-        guard AXSwift.checkIsProcessTrusted(prompt: true) else {
+        if !AXSwift.checkIsProcessTrusted(prompt: true) {
             emit("Not trusted as an AX process; please authorize and re-launch")
             NSApp.terminate(self)
-            return
         }
         
+        emit("loaded swindler")
+        sleep(1)
+
         swindler = Swindler.state
         swindler.on { (event: WindowCreatedEvent) in
             let window = event.window
@@ -53,14 +54,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             self.frontmostWindowChanged()
         }
         swindler.on { (event: FrontmostApplicationChangedEvent) in
-            if event.newValue != nil {
-                self.frontmostWindowChanged()
-            }
+            if event.newValue == nil { return }
+            self.frontmostWindowChanged()
         }
         swindler.on { (event: WindowTitleChangedEvent) in
             self.frontmostWindowChanged()
         }
-        
+
         // send current app immediately
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
             self.frontmostWindowChanged()

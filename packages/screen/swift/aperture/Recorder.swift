@@ -110,7 +110,7 @@ final class Recorder: NSObject {
     self.session = AVCaptureSession()
     self.input = AVCaptureScreenInput(displayID: displayId)
     output = AVCaptureVideoDataOutput()
-    
+
     print("output types: \(output.availableVideoCodecTypes) \(output.availableVideoPixelFormatTypes)")
 
     output.videoSettings = [
@@ -130,9 +130,9 @@ final class Recorder: NSObject {
     // setup recorder
     output.alwaysDiscardsLateVideoFrames = true
     let queue = DispatchQueue(label: "com.me.myqueue")
-    
+
     output.setSampleBufferDelegate(self, queue: queue)
-    
+
     if session.canAddInput(self.input) {
       session.addInput(self.input)
     } else {
@@ -247,7 +247,7 @@ final class Recorder: NSObject {
     self.stop()
     self.send("{ \"state\": { \"isPaused\": true } }")
   }
-  
+
   func debug(_ str: String) {
     if shouldDebugTiming {
       if curTime != nil {
@@ -294,7 +294,8 @@ final class Recorder: NSObject {
     self.input.minFrameDuration = CMTimeMake(1, Int32(fps))
   }
 
-  func handleCancel() -> Bool {
+  func shouldBreak() -> Bool {
+    queue.wait()
     let val = self.shouldCancel
     if val { print("canceled") }
     self.shouldCancel = false
@@ -547,7 +548,7 @@ final class Recorder: NSObject {
     debug("getContent - \(boxes.count) boxes")
     return [ x, y, width, height ]
   }
-  
+
   func getWordsAndLines(_ ocrResults: [String: String], characterLines: [[Word]]) -> ([String], [String]) {
     startTime()
     var words = [String]()
@@ -590,7 +591,7 @@ final class Recorder: NSObject {
     debug("getWordsAndLines")
     return (words, lines)
   }
-  
+
   func charactersWithLineBounds(_ charactersByLine: [[Word]]) -> [[Word]] {
     startTime()
     let result: [[Word]] = charactersByLine.enumerated().map({ arg in
@@ -650,7 +651,7 @@ final class Recorder: NSObject {
       chars.debugImg = filters.filterImageForOCRCharacterFinding(image: cgImage)
       Async.background { images.writeCGImage(image: cgImage, to: "\(box.screenDir!)/\(box.id)-original.png") }
     }
-    /* check continuation */ queue.wait(); if handleCancel() { return nil }
+    if shouldBreak() { return nil }
     // content find
     var frame = [box.x, box.y, box.width, box.height]
     if findContent {
@@ -668,19 +669,19 @@ final class Recorder: NSObject {
     chars.frameOffset = frame
     let vWidth = frame[2] / lineFindScaling
     let vHeight = frame[3] / lineFindScaling
-    /* check continuation */ queue.wait(); if handleCancel() { return nil }
+    if shouldBreak() { return nil }
     let (verticalSections, imgData) = getVerticalSections(cgImage, box: box, frame: frame, scale: lineFindScaling)
-    /* check continuation */ queue.wait(); if handleCancel() { return nil }
+    if shouldBreak() { return nil }
     let sectionLines: Dictionary<Int, [LinePosition]> = getLines(verticalSections, vWidth: vWidth, vHeight: vHeight, imgData: imgData)
-    /* check continuation */ queue.wait(); if handleCancel() { return nil }
+    if shouldBreak() { return nil }
     let charactersByLine: [[Word]] = getCharacters(sectionLines, box: box, cgImage: cgImage, frame: frame)
     // find line bounds now so we can use them for nice OCR cropping
     let charactersByLineWithBounds: [[Word]] = charactersWithLineBounds(charactersByLine)
-    /* check continuation */ queue.wait(); if handleCancel() { return nil }
+    if shouldBreak() { return nil }
     guard let ocrResults = getOCR(charactersByLineWithBounds) else { return nil }
-    /* check continuation */ queue.wait(); if handleCancel() { return nil }
+    if shouldBreak() { return nil }
     let (words, lines) = getWordsAndLines(ocrResults, characterLines: charactersByLine)
-    /* check continuation */ queue.wait(); if handleCancel() { return nil }
+    if shouldBreak() { return nil }
     // send to world
     self.send("{ \"action\": \"words\", \"value\": [\(words.joined(separator: ","))] }")
     self.send("{ \"action\": \"lines\", \"value\": [\(lines.joined(separator: ","))] }")

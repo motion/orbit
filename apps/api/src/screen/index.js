@@ -164,6 +164,7 @@ export default class ScreenState {
     this.swindler.start()
     let lastId = null
     this.swindler.onChange(({ event, message }) => {
+      console.log('Swindler got', event, message)
       // immediately cancel stuff
       this.resetHighlights()
       // prevent from running until we update bounds

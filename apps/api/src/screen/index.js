@@ -169,9 +169,9 @@ export default class ScreenState {
       this.resetHighlights()
       // prevent from running until we update bounds
       this.screenOCR.clear().watchBounds({
-        fps: 1,
+        fps: 20, // keep fps high so it clears nicely as you scroll
         sampleSpacing: 3,
-        sensitivity: 2,
+        sensitivity: 1,
         showCursor: false,
         boxes: [],
       })

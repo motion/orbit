@@ -15,6 +15,17 @@ class ConnectedComponentsSwiftOCR {
 
     // fill data
     var data = [[UInt16]](repeating: [UInt16](repeating: 0, count: imageWidth), count: imageHeight)
+    
+//    data = data.pmap({ row, y in
+//      return row.enumerated().map { x, _ in
+//        let isBlack = imageRep.colorAt(x: x, y: y)!.brightnessComponent == 0.0
+//        return isBlack ? 255 : 0
+//      }
+//    })
+    
+    print("  extractBlobs: init data \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+    start = DispatchTime.now()
+    
     for y in 0..<imageHeight {
       for x in 0..<imageWidth {
         let isBlack = imageRep.colorAt(x: x, y: y)!.brightnessComponent == 0.0
@@ -22,9 +33,9 @@ class ConnectedComponentsSwiftOCR {
       }
     }
 
-//    print("  extractBlobs: setup data \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
-//    start = DispatchTime.now()
-
+    print("  extractBlobs: fill data \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+    start = DispatchTime.now()
+    
     //MARK: First Pass
     var currentLabel:UInt16 = 256
     var labelsUnion = UnionFind<UInt16>()
@@ -119,7 +130,7 @@ class ConnectedComponentsSwiftOCR {
     }
 
     // timer
-    if debug { print("  extractBlobs: minmax \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms"); start = DispatchTime.now() }
+    print("  extractBlobs: rest \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms"); start = DispatchTime.now()
 
     // rest is fast
 

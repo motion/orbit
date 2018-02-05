@@ -545,16 +545,15 @@ final class Recorder: NSObject {
   
   func getWordsAndLines(_ ocrResults: [String: String], characterLines: [[Word]]) -> ([String], [String]) {
     startTime()
-    let chars = self.characters!
     var words = [String]()
     var lines = [String]()
-    for (lineIndex, line) in characterLines.enumerated() {
+    for line in characterLines {
       if line.count == 0 {
         continue
       }
       var minY = 10000
       var maxH = 0
-      for (wordIndex, word) in line.enumerated() {
+      for word in line {
         let characters: [String] = word.characters.map({(char) in
           // calculate line position
           if char.y < minY { minY = char.y }
@@ -631,7 +630,7 @@ final class Recorder: NSObject {
     let charactersByLine = getCharacters(sectionLines, box: box, cgImage: cgImage, frame: frame)
     // find line bounds now so we can use them for nice OCR cropping
     startTime()
-    let charactersByLineWithBounds: [[Word]] = charactersByLine.pmap({ (line, index) in
+    let charactersByLineWithBounds: [[Word]] = charactersByLine.enumerated().map({ index, line in
       let x = line.first!.x
       var minY = 100000
       var width = 0

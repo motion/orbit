@@ -7,7 +7,6 @@
 //
 import Foundation
 
-
 public extension Array {
   func pmap<T>(_ transformer: @escaping (Element, Int) -> T) -> [T] {
     var result: [Int: T] = [:]
@@ -17,12 +16,12 @@ public extension Array {
     if count == 0 {
       return []
     }
-    let coreCount = ProcessInfo.processInfo.activeProcessorCount
-    let sampleSize = Int(ceil(Double(count) / Double(coreCount)))
+    let cores = ProcessInfo.processInfo.activeProcessorCount
+    let sampleSize = Int(ceil(Double(count) / Double(cores)))
     let group = DispatchGroup()
     for index in 0..<sampleSize {
-      let startIndex = index * coreCount
-      let endIndex = Swift.min((startIndex + (coreCount - 1)), count - 1)
+      let startIndex = index * cores
+      let endIndex = Swift.min((startIndex + (cores - 1)), count - 1)
       group.enter()
       DispatchQueue.global().async {
         for index in startIndex...endIndex {

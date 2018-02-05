@@ -348,7 +348,7 @@ final class Recorder: NSObject {
       let sectionLines: [[Word]] = sectionLines[id]!.pmap({ line, index in
         let padX = 12
         let padY = max(3, min(16, line.height / 8))
-        print("line \(id) topfill \(line.topFillAmt) bottomfill \(line.bottomFillAmt)")
+        print("section \(id) line \(index) topfill \(line.topFillAmt) bottomfill \(line.bottomFillAmt)")
         //        let shiftUp = line.topFillAmt * 10 / line.bottomFillAmt * 10
         //        print("shiftUp \(shiftUp)")
         let lineFrame = [

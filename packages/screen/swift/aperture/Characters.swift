@@ -392,7 +392,7 @@ class Characters {
     var endX = 28
     var endY = 28
     // this is the bottom padding
-    let heightDiff = retinaLineBounds[3] - char.height
+    let heightDiff = (retinaLineBounds[3] - char.height) / 2
     let totalHeight = Float(char.height + offsetY + heightDiff)
     // scale it
     if char.width > char.height {
@@ -408,9 +408,9 @@ class Characters {
     }
     endX = Int(charW / scaleX)
     endY = Int(Float(char.height + offsetY) / scaleY)
-    if debugID == "0-0-0" {
-      print("thin large l: \(scaleX) \(scaleY) \(endX) \(offsetY) \(char) \(retinaLineBounds)")
-    }
+//    if debugID == "0-0-0" {
+//      print("thin large l: \(scaleX) \(scaleY) \(endX) \(offsetY) \(char) \(retinaLineBounds)")
+//    }
     var output = ""
     for y in 0..<28 {
       for x in 0..<28 {

@@ -77,10 +77,8 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
   }
 
   public func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-    // keep this always in sync
-    self.currentSampleBuffer = sampleBuffer
     // todo: use this per-box
-    if self.isScanning || self.boxes.count == 0 {
+    if self.boxes.count == 0 {
       return
     }
     // get frame
@@ -110,7 +108,7 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
         self.isCleared[boxId] = false
         continue
       }
-      if (firstTime && box.initialScreenshot || !firstTime && hasChanged) {
+      if (shouldRunNextTime || firstTime && box.initialScreenshot || !firstTime && hasChanged) {
         // options to ignore next or to force next
         if ignoreNextScan && !shouldRunNextTime {
           clearIgnoreNext = true
@@ -119,6 +117,13 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
         if shouldRunNextTime {
           self.shouldRunNextTime = false
         }
+        // should cancel right away if currently running
+        if self.isScanning {
+          self.shouldCancel = true
+          self.shouldRunNextTime = true
+          continue
+        }
+        // send out changed boxes
         changed.append(box.id)
         self.isCleared[boxId] = true
         if !box.findContent {
@@ -140,6 +145,8 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
         // wait for 2 frames of clear
         // small delay by default to not pick up old highlights that havent cleared yet
         self.changeHandle = Async.userInteractive(after: hasChanged ? delayHandleChange : 0.02) { // debounce (seconds)
+          // keep this always in sync
+          self.currentSampleBuffer = sampleBuffer
           self.isScanning = true
           // update characters buffer
           let (buffer, _, release) = self.getBufferFrame(sampleBuffer)
@@ -155,7 +162,6 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
           // after x seconds, re-enable watching
           // this is because screen needs time to update highlight boxes
           Async.main(after: 0.05) {
-            print("re-enable scan after last")
             self.shouldCancel = false
             self.isScanning = false
             self.ignoreNextScan = true

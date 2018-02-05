@@ -66,7 +66,7 @@ class Swindler {
           })
         } else {
           // pass through logs from swindler
-          console.log(out)
+          // console.log(out)
         }
       }
     })

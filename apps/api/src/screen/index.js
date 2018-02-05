@@ -164,17 +164,8 @@ export default class ScreenState {
     this.swindler.start()
     let lastId = null
     this.swindler.onChange(({ event, message }) => {
-      console.log('Swindler got', event, message)
       // immediately cancel stuff
       this.resetHighlights()
-      // prevent from running until we update bounds
-      this.screenOCR.clear().watchBounds({
-        fps: 20, // keep fps high so it clears nicely as you scroll
-        sampleSpacing: 3,
-        sensitivity: 1,
-        showCursor: false,
-        boxes: [],
-      })
       switch (event) {
         case 'FrontmostWindowChangedEvent':
           const id = message.id || lastId

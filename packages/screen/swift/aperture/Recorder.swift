@@ -162,7 +162,6 @@ final class Recorder: NSObject {
     self.queue.background {
       ws.event.message = { (message) in
         if let text = message as? String {
-          print("msg \(text)")
           if text.count < 5 {
             print("weird text")
             return
@@ -274,7 +273,6 @@ final class Recorder: NSObject {
     if shouldDebug {
       print("running in debug mode...")
     }
-    print("reset first time to true")
     self.firstTime = true
     self.sampleSpacing = sampleSpacing
     self.sensitivity = sensitivity
@@ -297,7 +295,7 @@ final class Recorder: NSObject {
   func shouldBreak() -> Bool {
     queue.wait()
     let val = self.shouldCancel
-    if val { print("canceled") }
+    if val { print("---------------------- canceling! ---------------------") }
     self.shouldCancel = false
     return val
   }

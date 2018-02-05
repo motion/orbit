@@ -383,36 +383,28 @@ class Characters {
     // so for now just scaling them to match
     let retinaLineBounds = char.lineBounds!.map { $0 * 2 }
     // all in retina
-    let charX = char.x
     let charY = retinaLineBounds[1] // use line Y
-    let charW = char.width
     let charH = retinaLineBounds[3]  // use line Height
     let dbl = Float(28)
-//    let width = Float(char.width)
-//    let height = Float(char.height)
     let offsetY = charH - char.height // lineheight - charheight
-//    let widthToHeightRatio = Float(charW) / Float(char.height)
     let offsetX = 0//Int(widthToHeightRatio < 1 ? (1/widthToHeightRatio) * dbl / 2 : 0
     var scaleX = Float(1.0)
     var scaleY = Float(1.0)
     var endX = 28
-    
-    // 44 x 44
     if char.width > char.height {
       scaleX = Float(char.width) / dbl
-      scaleY = 1.0
       if Float(char.height) > dbl { // big/wide
         scaleY = Float(char.height + offsetY) / dbl
       }
     } else {
       scaleY = Float(char.height + offsetY) / dbl
-      scaleX = 1.0
-      //        endX
+      if Float(char.width) > dbl { // big/wide
+        scaleX = Float(char.width + offsetX) / dbl
+      }
     }
-    
-    endX = char.width + offsetX
-    if debugID == "0-0-5" {
-      print("thin large l: \(scaleX) \(scaleY) \(endX)")
+    endX = Int(Float(char.width) / scaleX) + offsetX
+    if debugID == "1-1-2" {
+      print("thin large l: \(scaleX) \(scaleY) \(endX) \(char) \(retinaLineBounds)")
     }
     var output = ""
     for y in 0..<28 {

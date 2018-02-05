@@ -499,9 +499,9 @@ final class Recorder: NSObject {
           }
         }
       }
+      // remove last line if its cut off by frame
       if lines.count > 0 {
         if lines.last!.y + lines.last!.height >= vHeight {
-          print("removing last line, it touches edge of frame")
           lines.remove(at: lines.count - 1)
         }
       }

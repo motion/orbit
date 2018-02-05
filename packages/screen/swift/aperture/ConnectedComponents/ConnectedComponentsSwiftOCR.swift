@@ -7,7 +7,7 @@ class ConnectedComponentsSwiftOCR {
   open      var yMergeRadius:CGFloat = 0
 
   internal func extractBlobs(_ image: CGImage, debug: Bool) -> [CGRect] {
-    var start = DispatchTime.now()
+//    var start = DispatchTime.now()
 
     let imageRep = NSBitmapImageRep(cgImage: image)
     let imageWidth = imageRep.pixelsWide
@@ -23,8 +23,8 @@ class ConnectedComponentsSwiftOCR {
 //      }
 //    })
     
-    print("  extractBlobs: init data \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
-    start = DispatchTime.now()
+//    print("  extractBlobs: init data \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+//    start = DispatchTime.now()
     
     for y in 0..<imageHeight {
       for x in 0..<imageWidth {
@@ -33,8 +33,8 @@ class ConnectedComponentsSwiftOCR {
       }
     }
 
-    print("  extractBlobs: fill data \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
-    start = DispatchTime.now()
+//    print("  extractBlobs: fill data \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
+//    start = DispatchTime.now()
     
     //MARK: First Pass
     var currentLabel:UInt16 = 256
@@ -92,7 +92,7 @@ class ConnectedComponentsSwiftOCR {
     }
 
     // timers
-    if debug { print("  extractBlobs: first pass \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms"); start = DispatchTime.now() }
+//    if debug { print("  extractBlobs: first pass \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms"); start = DispatchTime.now() }
 
     //MARK: Second Pass
     let parentArray = Array(Set(labelsUnion.parent))
@@ -104,7 +104,7 @@ class ConnectedComponentsSwiftOCR {
     }
 
     // timers
-    if debug { print("  extractBlobs: set labels \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms"); start = DispatchTime.now() }
+//    if debug { print("  extractBlobs: set labels \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms"); start = DispatchTime.now() }
 
     var minMaxXYLabelDict = Dictionary<UInt16, (minX: Int, maxX: Int, minY: Int, maxY: Int)>()
     for label in 0..<parentArray.count {

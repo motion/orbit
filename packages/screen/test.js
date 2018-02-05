@@ -101,9 +101,9 @@ async function test() {
     console.log('\nto see output:')
     console.log('$ open ./tmp')
 
-    console.log('now stop')
-    await screen.stop()
-    process.exit(0)
+    // console.log('now stop')
+    // await screen.stop()
+    // process.exit(0)
   })
   screen.onChanged(word => {
     console.log('clear word', word)

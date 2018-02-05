@@ -71,6 +71,9 @@ class Characters {
     let lineY = bounds[1] * 2
     let lineW = bounds[2]
     let lineH = bounds[3]
+    // roughly, dont allow chars that take up more area than
+    // lineheight * line height * x (one square frame times x)
+    let MAX_CHAR_AREA = lineH * lineH * 3
     var foundChars = [Character]()
     var pixels: [PixelData]? = nil
     self.id = id
@@ -83,6 +86,10 @@ class Characters {
     var spaceBefore = 0
     let moveXBy = 1
     var spaces = [Double]()
+    var misfits = 0
+    var misfitBig = 0
+    var misfitWide = 0
+    var misfitThin = 0
     
     // finds starts of chars and then pass to char outliner
     while true {
@@ -96,7 +103,7 @@ class Characters {
       } else { // next row
         // could optimize this by skipping more
         // but that sacrifices space-finding accuracy
-        y += 2
+        y += 4
       }
       // if reached last pixel, break
       if x >= lineW || y >= lineH || (x == lineW - 1 && y == lineH - 1) {
@@ -125,7 +132,7 @@ class Characters {
           debug("0 size")
           continue
         }
-        let tooBig = char.width * char.height > 2500
+        let tooBig = char.width * char.height > MAX_CHAR_AREA
 //        let tooSmall = char.width < 5 && char.height < 5 || char.width < 2 || char.height < 2
         let tooThin = char.height / char.width > 25
         let tooWide = char.width / char.height > 25
@@ -137,7 +144,10 @@ class Characters {
           }
         }
         if misfit {
-          print("misfit \(tooBig) \(tooThin) \(tooWide)")
+          misfits += 1
+          if tooBig { misfitBig += 1 }
+          if tooWide { misfitWide += 1 }
+          if tooThin { misfitThin += 1 }
           continue
         }
         curChar += 1
@@ -151,7 +161,10 @@ class Characters {
         x = x + (char.width / 2 - char.backMoves / 2)
       } // end if
     } // end while
-    
+    // help watch misfit counts
+    if misfits > 0 {
+      print("misfits on line \(id): \(misfits) total (\(misfitBig) big, \(misfitThin) thin, \(misfitWide) wide)")
+    }
     // find words
     var foundWords = [Word]()
     // calculate std dev of space

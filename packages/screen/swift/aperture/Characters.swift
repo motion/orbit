@@ -372,47 +372,47 @@ class Characters {
   }
   
   public func charToString(_ char: Character, debugID: String) -> String {
-    // right now char is in retina and line isnt :/ need to do this but it requires some attention
-    // so for now just scaling them to match
     if char.lineBounds == nil {
       print("weird no bounds")
       return ""
     }
-    let retinaLineBounds = char.lineBounds!.map { $0 * 2 }
-    let charFrame = [
-      char.x,
-      retinaLineBounds[1], // use line Y
-      char.width,
-      retinaLineBounds[3]  // use line Height
-    ]
-    let dbl = Float(28)
     if char.width == 0 || char.height == 0 {
       return ""
     }
-    let width = Float(charFrame[2])
-    let height = Float(charFrame[3])
+    // right now char is in retina and line isnt :/ need to do this but it requires some attention
+    // so for now just scaling them to match
+    let retinaLineBounds = char.lineBounds!.map { $0 * 2 }
+    // all in retina
+    let charX = char.x
+    let charY = retinaLineBounds[1] // use line Y
+    let charW = char.width
+    let charH = retinaLineBounds[3]  // use line Height
+    let dbl = Float(28)
+//    let width = Float(char.width)
+//    let height = Float(char.height)
+    let offsetY = charH - char.height // lineheight - charheight
+//    let widthToHeightRatio = Float(charW) / Float(char.height)
+    let offsetX = 0//Int(widthToHeightRatio < 1 ? (1/widthToHeightRatio) * dbl / 2 : 0
     var scaleX = Float(1.0)
     var scaleY = Float(1.0)
     var endX = 28
-    if width > height {
-      scaleX = width / dbl
-      scaleY = height / (width * scaleX)
-    } else {
-      // small "i": 2x20
-      // scaleY: 0.7
-      // scaleX: 2.8
-      // scale up...
-      // endX: 5.6
-      // scaleX: 0.35
-      scaleY = height / dbl
-      scaleX = width * (1/scaleY)
-      // scale up
-      if scaleX * width < dbl {
-        endX = Int(scaleX * width)
-        scaleX = 1 / scaleX
-      } else {
-        scaleX = width / dbl
+    
+    // 44 x 44
+    if char.width > char.height {
+      scaleX = Float(char.width) / dbl
+      scaleY = 1.0
+      if Float(char.height) > dbl { // big/wide
+        scaleY = Float(char.height + offsetY) / dbl
       }
+    } else {
+      scaleY = Float(char.height + offsetY) / dbl
+      scaleX = 1.0
+      //        endX
+    }
+    
+    endX = char.width + offsetX
+    if debugID == "0-0-5" {
+      print("thin large l: \(scaleX) \(scaleY) \(endX)")
     }
     var output = ""
     for y in 0..<28 {
@@ -423,7 +423,7 @@ class Characters {
         } else {
           let xS = Int(Float(x) * scaleX)
           let yS = Int(Float(y) * scaleY)
-          let luma = buffer[(charFrame[1] + yS) * perRow + char.x + xS]
+          let luma = buffer[(charY + yS) * perRow + char.x + xS + offsetX]
           // luminance to intensity means we have to inverse it
           // warning, doing any sort of Int => String conversion here slows it down Bigly
           if luma < isBlackIfUnder {

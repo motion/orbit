@@ -162,7 +162,7 @@ final class Recorder: NSObject {
     self.queue.background {
       ws.event.message = { (message) in
         if let text = message as? String {
-//          print("msg \(text)")
+          print("msg \(text)")
           if text.count < 5 {
             print("weird text")
             return
@@ -346,8 +346,9 @@ final class Recorder: NSObject {
     for id in sectionLines.keys {
       let scl = lineFindScaling
       let sectionLines: [[Word]] = sectionLines[id]!.pmap({ line, index in
-        let padX = 6
-        let padY = max(3, min(12, line.height / 10))
+        let padX = 12
+        let padY = max(3, min(16, line.height / 8))
+        print("line \(id) topfill \(line.topFillAmt) bottomfill \(line.bottomFillAmt)")
         //        let shiftUp = line.topFillAmt * 10 / line.bottomFillAmt * 10
         //        print("shiftUp \(shiftUp)")
         let lineFrame = [
@@ -398,7 +399,7 @@ final class Recorder: NSObject {
       for y in 0..<vHeight {
         let x0 = max(0, min(maxWidth, frame[0] - box.x + x * scale))
         let y0 = max(0, min(maxHeight, frame[1] - box.y + y * scale))
-        let filled = verticalImageRep.colorAt(x: x0, y: y0)!.brightnessComponent < 0.9
+        let filled = verticalImageRep.colorAt(x: x0, y: y0)!.brightnessComponent < 0.93
         imgData[x].append(filled ? 1 : 0)
         if filled {
           verticalFilled += 1

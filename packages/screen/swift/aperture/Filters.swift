@@ -19,6 +19,9 @@ class Filters {
     var filter = CIFilter(name: "CILanczosScaleTransform")!
     filter.setValue(0.5, forKey: "inputScale")
     outputImage = applyFilter(filter, for: outputImage)
+    // make it black and white
+    filter = CIFilter(name: "CIPhotoEffectNoir")!
+    outputImage = applyFilter(filter, for: outputImage)
     // contrast boost
     filter = CIFilter(name: "CIColorControls")!
     filter.setValue(1.0, forKey: "inputContrast")
@@ -33,9 +36,6 @@ class Filters {
   func filterImageForContentFinding(image: CGImage, scale: Int) -> CGImage {
     var outputImage = CIImage(cgImage: image)
     var filter: CIFilter
-    // make it black and white
-    filter = CIFilter(name: "CIPhotoEffectNoir")!
-    outputImage = applyFilter(filter, for: outputImage)
     // super lower contrast down to get rid of subtle color differences
     // this generally will preserve outline data as well
     filter = CIFilter(name: "CIColorControls")!

@@ -167,8 +167,9 @@ export default class Screen {
       let startWait = setInterval(() => {
         if (this.listeners.length) {
           clearInterval(startWait)
-          console.log('sending start')
-          this.socketSend('start')
+          setTimeout(() => {
+            this.socketSend('start')
+          }, 10)
           res()
         }
       }, 10)
@@ -326,6 +327,7 @@ export default class Screen {
 
   socketSend(action, data) {
     if (!this.listeners.length) {
+      console.log('wait for connect')
       this.awaitingSocket.push({ action, data })
       return
     }

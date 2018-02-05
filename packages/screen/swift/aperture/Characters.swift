@@ -386,31 +386,36 @@ class Characters {
     let frameSize = Float(28)
     let charY = retinaLineBounds[1] // use line Y
     let charW = Float(char.width)
-    let offsetY = retinaLineBounds[3] - char.height // lineheight - charheight
+    let offsetY = char.y - retinaLineBounds[1] // chary - liney
     var scaleX = Float(1.0)
     var scaleY = Float(1.0)
     var endX = 28
+    var endY = 28
+    // this is the bottom padding
+    let heightDiff = retinaLineBounds[3] - char.height
+    let totalHeight = Float(char.height + offsetY + heightDiff)
     // scale it
     if char.width > char.height {
       scaleX = charW / frameSize
-      if Float(char.height) > frameSize { // big/wide
-        scaleY = Float(char.height + offsetY) / frameSize
+      if Float(char.height + offsetY) > frameSize { // big/wide
+        scaleY = totalHeight / frameSize
       }
     } else {
-      scaleY = Float(char.height + offsetY) / frameSize
+      scaleY = totalHeight / frameSize
       if charW > frameSize { // big/wide
         scaleX = charW / frameSize
       }
     }
     endX = Int(charW / scaleX)
-    if debugID == "1-1-2" {
-      print("thin large l: \(scaleX) \(scaleY) \(endX) \(char) \(retinaLineBounds)")
+    endY = Int(Float(char.height + offsetY) / scaleY)
+    if debugID == "0-0-0" {
+      print("thin large l: \(scaleX) \(scaleY) \(endX) \(offsetY) \(char) \(retinaLineBounds)")
     }
     var output = ""
     for y in 0..<28 {
       for x in 0..<28 {
         // past end of char, just fill with checkerboard
-        if x > endX {
+        if x > endX || y < offsetY / 2 || y > endY {
           output += (x + y * x) % 2 == 0 ? "1.0 " : "0.0 "
           continue
         }

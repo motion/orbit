@@ -4,7 +4,8 @@
   "license": "MIT",
   "scripts": {
     "test": "node --experimental-modules ./test",
-    "build": "cd Swindler && xcodebuild archive -derivedDataPath $(mktemp -d) -scheme SwindlerExample -configuration Release -workspace Swindler.xcworkspace && touch ../../../apps/api/src/index.js"
+    "build": "cd Swindler && xcodebuild archive -derivedDataPath $(mktemp -d) -scheme SwindlerExample -configuration Release -workspace Swindler.xcworkspace && touch ../../../apps/api/src/index.js",
+    "edit": "open ./Swindler/Swindler.xcworkspace"
   },
   "files": [
     "index.js",

@@ -590,6 +590,46 @@ final class Recorder: NSObject {
     debug("getWordsAndLines")
     return (words, lines)
   }
+  
+  func charactersWithLineBounds(_ charactersByLine: [[Word]]) -> [[Word]] {
+    startTime()
+    let result = charactersByLine.enumerated().map({ index, line in
+      if line.count == 0 {
+        return []
+      }
+      let x = line.first!.x
+      var minY = 100000
+      var width = 0
+      var maxY = 0
+      if line.count == 1 {
+        width = line.first!.width
+      } else {
+        width = line.last!.x + line.last!.width - line.first!.x
+      }
+      // find min y and max height
+      for word in line {
+        if word.y + word.height > maxY { maxY = word.y + word.height }
+        if word.y < minY { minY = word.y }
+      }
+      let height = maxY - minY
+      let lineBounds = [x, minY, width, height]
+      // hacky af
+      return line.enumerated().map { (wordIndex, word) in
+        var word = word
+        word.characters = word.characters.enumerated().map { (charIndex, char) in
+          var newChar = char
+          newChar.lineBounds = lineBounds
+          if self.shouldDebug { // debug: print out all characters
+            _ = chars.charToString(newChar, debugID: "\(index)-\(wordIndex)-\(charIndex)")
+          }
+          return newChar
+        }
+        return word
+      }
+    })
+    debug("charactersWithLineBounds")
+    return result
+  }
 
   // returns the frame it found
   func handleChangedArea(box: Box, sampleBuffer: CMSampleBuffer, perRow: Int, findContent: Bool = false) -> Box? {
@@ -630,46 +670,11 @@ final class Recorder: NSObject {
     /* check continuation */ queue.wait(); if handleCancel() { return nil }
     let (verticalSections, imgData) = getVerticalSections(cgImage, box: box, frame: frame, scale: lineFindScaling)
     /* check continuation */ queue.wait(); if handleCancel() { return nil }
-    let sectionLines = getLines(verticalSections, vWidth: vWidth, vHeight: vHeight, imgData: imgData)
+    let sectionLines: Dictionary<Int, [LinePosition]> = getLines(verticalSections, vWidth: vWidth, vHeight: vHeight, imgData: imgData)
     /* check continuation */ queue.wait(); if handleCancel() { return nil }
-    let charactersByLine = getCharacters(sectionLines, box: box, cgImage: cgImage, frame: frame)
+    let charactersByLine: [[Word]] = getCharacters(sectionLines, box: box, cgImage: cgImage, frame: frame)
     // find line bounds now so we can use them for nice OCR cropping
-    startTime()
-    let charactersByLineWithBounds: [[Word]] = charactersByLine.enumerated().map({ index, line in
-      if line.count == 0 {
-        return []
-      }
-      let x = line.first!.x
-      var minY = 100000
-      var width = 0
-      var maxY = 0
-      if line.count == 1 {
-        width = line.first!.width
-      } else {
-        width = line.last!.x + line.last!.width - line.first!.x
-      }
-      // find min y and max height
-      for word in line {
-        if word.y + word.height > maxY { maxY = word.y + word.height }
-        if word.y < minY { minY = word.y }
-      }
-      let height = maxY - minY
-      let lineBounds = [x, minY, width, height]
-      // hacky af
-      return line.enumerated().map { (wordIndex, word) in
-        var word = word
-        word.characters = word.characters.enumerated().map { (charIndex, char) in
-          var newChar = char
-          newChar.lineBounds = lineBounds
-          if self.shouldDebug { // debug: print out all characters
-            _ = chars.charToString(newChar, debugID: "\(index)-\(wordIndex)-\(charIndex)")
-          }
-          return newChar
-        }
-        return word
-      }
-    })
-    debug("process line bounds onto chars")
+    let charactersByLineWithBounds: [[Word]] = charactersWithLineBounds(charactersByLine)
     /* check continuation */ queue.wait(); if handleCancel() { return nil }
     guard let ocrResults = getOCR(charactersByLineWithBounds) else { return nil }
     /* check continuation */ queue.wait(); if handleCancel() { return nil }

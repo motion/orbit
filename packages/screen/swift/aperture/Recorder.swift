@@ -24,7 +24,7 @@ struct Box: Decodable {
 }
 
 // constants
-let lineFindScaling = 6 // scale down denominator
+let lineFindScaling = 5 // scale down denominator
 
 let filters = Filters()
 let images = Images()

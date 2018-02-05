@@ -383,46 +383,46 @@ class Characters {
     // so for now just scaling them to match
     let retinaLineBounds = char.lineBounds!.map { $0 * 2 }
     // all in retina
+    let frameSize = Float(28)
     let charY = retinaLineBounds[1] // use line Y
-    let charH = retinaLineBounds[3]  // use line Height
-    let dbl = Float(28)
-    let offsetY = charH - char.height // lineheight - charheight
-    let offsetX = 0//Int(widthToHeightRatio < 1 ? (1/widthToHeightRatio) * dbl / 2 : 0
+    let charW = Float(char.width)
+    let offsetY = retinaLineBounds[3] - char.height // lineheight - charheight
     var scaleX = Float(1.0)
     var scaleY = Float(1.0)
     var endX = 28
+    // scale it
     if char.width > char.height {
-      scaleX = Float(char.width) / dbl
-      if Float(char.height) > dbl { // big/wide
-        scaleY = Float(char.height + offsetY) / dbl
+      scaleX = charW / frameSize
+      if Float(char.height) > frameSize { // big/wide
+        scaleY = Float(char.height + offsetY) / frameSize
       }
     } else {
-      scaleY = Float(char.height + offsetY) / dbl
-      if Float(char.width) > dbl { // big/wide
-        scaleX = Float(char.width + offsetX) / dbl
+      scaleY = Float(char.height + offsetY) / frameSize
+      if charW > frameSize { // big/wide
+        scaleX = charW / frameSize
       }
     }
-    endX = Int(Float(char.width) / scaleX) + offsetX
+    endX = Int(charW / scaleX)
     if debugID == "1-1-2" {
       print("thin large l: \(scaleX) \(scaleY) \(endX) \(char) \(retinaLineBounds)")
     }
     var output = ""
     for y in 0..<28 {
       for x in 0..<28 {
-        // past end of char, just fill with white
+        // past end of char, just fill with checkerboard
         if x > endX {
-          output += "1.0 "
+          output += (x + y * x) % 2 == 0 ? "1.0 " : "0.0 "
+          continue
+        }
+        let xS = Int(Float(x) * scaleX)
+        let yS = Int(Float(y) * scaleY)
+        let luma = buffer[(charY + yS) * perRow + char.x + xS]
+        // luminance to intensity means we have to inverse it
+        // warning, doing any sort of Int => String conversion here slows it down Bigly
+        if luma < isBlackIfUnder {
+          output += "0.0 "
         } else {
-          let xS = Int(Float(x) * scaleX)
-          let yS = Int(Float(y) * scaleY)
-          let luma = buffer[(charY + yS) * perRow + char.x + xS + offsetX]
-          // luminance to intensity means we have to inverse it
-          // warning, doing any sort of Int => String conversion here slows it down Bigly
-          if luma < isBlackIfUnder {
-            output += "0.0 "
-          } else {
-            output += "1.0 "
-          }
+          output += "1.0 "
         }
       }
     }

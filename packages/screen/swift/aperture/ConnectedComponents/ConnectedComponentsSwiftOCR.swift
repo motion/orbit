@@ -130,7 +130,7 @@ class ConnectedComponentsSwiftOCR {
     }
 
     // timer
-    print("  extractBlobs: rest \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms"); start = DispatchTime.now()
+//    print("  extractBlobs: rest \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms"); start = DispatchTime.now()
 
     // rest is fast
 

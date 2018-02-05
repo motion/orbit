@@ -1,6 +1,17 @@
 const Screen = require('./es6').default
 const Fs = require('fs')
 const Path = require('path')
+const execa = require('execa')
+
+const debug = !!process.argv.find(x => x === '--debug')
+const debugDir = debug ? Path.join(__dirname, 'tmp') : null
+
+if (debug) {
+  console.log('Running in debug mode')
+  if (!Fs.existsSync(debugDir)) {
+    Fs.mkdirSync(debugDir)
+  }
+}
 
 process.on('unhandledRejection', function(error, p) {
   console.log('OCR PromiseFail:')
@@ -12,78 +23,27 @@ process.on('unhandledRejection', function(error, p) {
   }
 })
 
-const dir = Path.join(__dirname, 'tmp')
-console.log('debug dir', dir)
-
-if (!Fs.existsSync(dir)) {
-  Fs.mkdirSync(dir)
-}
-
 const settings = {
   fps: 10,
   sampleSpacing: 1,
   sensitivity: 1,
-  showCursor: true,
+  showCursor: false,
+  debug,
   boxes: [
     {
       id: 0,
       x: 0,
-      y: 24,
+      y: 0,
       width: 850,
-      height: 1100,
+      height: 1200,
       initialScreenshot: true,
       findContent: true,
+      screenDir: debugDir,
     },
-    // {
-    //   id: '0',
-    //   x: 42,
-    //   y: 142,
-    //   width: 64,
-    //   height: 22,
-    //   initialScreenshot: false,
-    //   findContent: false,
-    // },
-    // {
-    //   id: '1',
-    //   x: 115,
-    //   y: 142,
-    //   width: 68,
-    //   height: 22,
-    //   initialScreenshot: false,
-    //   findContent: false,
-    // },
-    // {
-    //   id: '2',
-    //   x: 196,
-    //   y: 142,
-    //   width: 59,
-    //   height: 22,
-    //   initialScreenshot: false,
-    //   findContent: false,
-    // },
-    // {
-    //   id: '3',
-    //   x: 42,
-    //   y: 176,
-    //   width: 59,
-    //   height: 22,
-    //   initialScreenshot: false,
-    //   findContent: false,
-    // },
-    // {
-    //   id: '4',
-    //   x: 111,
-    //   y: 176,
-    //   width: 68,
-    //   height: 27,
-    //   initialScreenshot: false,
-    //   findContent: false,
-    // },
   ],
 }
 
 async function test() {
-  const debug = !!process.argv.find(x => x === '--debug')
   const screen = new Screen({ debugBuild: debug })
   await screen.start()
   screen.watchBounds(settings)
@@ -101,9 +61,12 @@ async function test() {
     console.log('\nto see output:')
     console.log('$ open ./tmp')
 
-    // console.log('now stop')
-    // await screen.stop()
-    // process.exit(0)
+    if (debug) {
+      console.log('now stop')
+      await screen.stop()
+      await execa('open', ['./tmp'])
+      process.exit(0)
+    }
   })
   screen.onChanged(word => {
     console.log('clear word', word)

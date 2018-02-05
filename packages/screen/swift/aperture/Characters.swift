@@ -76,6 +76,9 @@ class Characters {
     let MAX_CHAR_AREA = lineH * lineH * 3
     var foundChars = [Character]()
     var pixels: [PixelData]? = nil
+    if shouldDebug && pixels == nil && debugImg != nil {
+      pixels = [PixelData](repeating: PixelData(a: 255, r: 255, g: 255, b: 255), count: lineW * lineH)
+    }
     self.id = id
     self.curChar = 0
     // we control the sticks for more speed
@@ -93,9 +96,6 @@ class Characters {
     
     // finds starts of chars and then pass to char outliner
     while true {
-      if shouldDebug && pixels == nil && debugImg != nil {
-        pixels = [PixelData](repeating: PixelData(a: 255, r: 255, g: 255, b: 255), count: lineW * lineH)
-      }
       if y > maxY  { // next col
         spaceBefore += moveXBy // sync with x
         x += moveXBy
@@ -213,14 +213,12 @@ class Characters {
       // append char after so we keep index
       wordChars.append(char)
     }
-
     // finish, write string
     if pixels != nil && pixels!.count > 0 && debugImg != nil {
       if let img = images.imageFromArray(pixels: pixels!, width: lineW, height: lineH) {
-        Images().writeCGImage(image: img, to: "/tmp/screen/b-hit\(id).png", resolution: 72) // write img
+        Images().writeCGImage(image: img, to: "\(debugDir)/b-hit\(id).png", resolution: 72) // write img
       }
     }
-
 //    print("Characters.find \(id): found \(foundChars.count) in \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     return foundWords
   }
@@ -251,6 +249,7 @@ class Characters {
     let clockwise = moves.clockwise
     let backwardsRange = stride(from: 1, to: 7, by: 2) // could increase potenitally
     var exhausted = false
+    var rightMoves = 0 // to detect if ran into underline and are moving right a ton
     while !foundEnd {
       iteration += 1
       if iteration % 8 == 0 {
@@ -265,11 +264,10 @@ class Characters {
         break
       }
       var success = false
-      let moves = clockwise[lastMove[0]]![lastMove[1]]!
-      for (index, attempt) in moves.enumerated() {
+      let fwdMoves = clockwise[lastMove[0]]![lastMove[1]]!
+      for (index, attempt) in fwdMoves.enumerated() {
         let next = curPos + attempt[0] + attempt[1] * perRow
-        if curTry > 10 && x == startX && y == startY {
-//          debug("found end")
+        if curTry > 10 && x == startX && y == startY { // found end!
           foundEnd = true
           break
         }
@@ -280,9 +278,18 @@ class Characters {
         // ensure backwards x pixels are also black
         // avoids small connections
         for x in backwardsRange {
-          let nextAttempt = moves[(index + x) % moves.count]
+          let nextAttempt = fwdMoves[(index + x) % fwdMoves.count]
           let nextPixel = curPos + nextAttempt[0] + nextAttempt[1] * perRow
           if buffer[nextPixel] >= isBlackIfUnder { continue }
+        }
+        // prevent underlines from being found by tracking right moves
+        if attempt[0] == moves.px && attempt[1] == 0 {
+          rightMoves += 1
+        } else {
+          rightMoves = 0
+        }
+        if rightMoves > 25 { // found underline
+          break
         }
         // found a valid next move
         success = true

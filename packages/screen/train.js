@@ -26,9 +26,10 @@ function getPage(fontName) {
         padding: 20px;
         font-family: ${fontName};
         font-size: 27px;
-        letter-spacing: 3px;
-        line-height: 60px;
+        letter-spacing: 2px;
+        line-height: 50px;
       }
+      .light { font-weight: 300; }
       p { margin: 0; }
     </style>
   </head>
@@ -55,9 +56,9 @@ function getPage(fontName) {
     <p>
       <i>Im stll skeptcalxzr</i> MY BIG SPHINX OF QUARTZ
     </p>
-    <p>promising than any oxen maneuver</p>
-    <p>incentivizes dating sites to keep you single</p>
-    <p>safter all the longer youre single</p>
+    <p class="light">promising than any oxen maneuver</p>
+    <p class="light">incentivizes dating sites to keep you single</p>
+    <p class="light">safter all the longer youre single</p>
     <p>
       *a'b,c;d:e.f?g!h#i$j[k]l(m)
     </p>

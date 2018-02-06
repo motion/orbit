@@ -358,14 +358,14 @@ final class Recorder: NSObject {
           min(frame[3], line.height * scl + padY * 3)
         ]
         // finds characters
-        let foundWords: [Word] = chars.find(id: index, bounds: lineFrame)
+        let foundWords: [Word] = chars.find(id: allLines.flatMap { $0.count }.reduce(0, +) + index, bounds: lineFrame)
         // debug line
-        if simpleDebugImages || self.shouldDebug {
-          images.writeCGImage(
-            image: images.cropImage(cgImage, box: CGRect(x: lineFrame[0] - box.x, y: lineFrame[1] - box.y, width: lineFrame[2], height: lineFrame[3]))!,
-            to: "\(box.screenDir!)/a-line-\(box.id)-\(id)-\(index).png"
-          )
-        }
+//        if simpleDebugImages || self.shouldDebug {
+//          images.writeCGImage(
+//            image: images.cropImage(cgImage, box: CGRect(x: lineFrame[0] - box.x, y: lineFrame[1] - box.y, width: lineFrame[2], height: lineFrame[3]))!,
+//            to: "\(box.screenDir!)/a-line-\(box.id)-\(id)-\(index).png"
+//          )
+//        }
         // write characters
         if self.shouldDebug { chars.shouldDebug = true }
         return foundWords

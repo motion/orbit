@@ -141,7 +141,7 @@ class Characters {
           let bckwdMovement = lastCharEndX - char.x
           let fwdMovement = newCharEndX - lastCharEndX
           if fwdMovement < bckwdMovement * 3 || bckwdMovement > 16  {
-            print("absorb \(id)")
+            print("absorb line \(id) char \(foundChars.count)")
             // have last one eat it up
             last.width += char.x + char.width
             // and move on
@@ -359,21 +359,27 @@ class Characters {
       }
     }
     // shared variables for hanger finding
-    let width = bottomRightBound[0] - topLeftBound[0] + 1
+    let minX = topLeftBound[0]
+    var width = bottomRightBound[0] - topLeftBound[0] + 1
     var minY = topLeftBound[1]
     var height = bottomRightBound[1] - topLeftBound[1] + 1
     // now we have our character, lets see if theres a
     // blob above/below, to get i's and j's and ?'s
     if findHangers {
       let centerX = topLeftBound[0] + (width / 2)
+//      let rightX = bottomRightBound[0] - (width / 4)
+//      let leftX = topLeftBound[0] + (width / 4)
       let maxPxOffset = max(2, lineHeight)
       let maxY = bottomRightBound[1]
       for y in 1...maxPxOffset {
         // go up
         if buffer[(minY - y) * perRow + centerX] < isBlackIfUnder {
           if let aboveChar = self.findCharacter(startX: centerX, startY: minY - y, lineHeight: lineHeight, maxMoves: lineHeight * 20, initialMove: [0, -moves.px], findHangers: false) {
+            print("merge above \(startX / 2) \(startY / 2)")
             height += minY - aboveChar.y
             minY = aboveChar.y
+            let widthWithChar = aboveChar.x + aboveChar.width - minX
+            width = max(widthWithChar, width)
             break
           }
         }
@@ -381,6 +387,8 @@ class Characters {
         if buffer[(maxY + y) * perRow + centerX] < isBlackIfUnder {
           if let belowChar = self.findCharacter(startX: centerX, startY: maxY + y, lineHeight: lineHeight, maxMoves: lineHeight * 20, initialMove: [0, moves.px], findHangers: false) {
             height += belowChar.height + (belowChar.y - maxY)
+            let widthWithChar = belowChar.x + belowChar.width - minX
+            width = max(widthWithChar, width)
             break
           }
         }
@@ -388,7 +396,7 @@ class Characters {
     }
     // return char
     return Character(
-      x: topLeftBound[0],
+      x: minX,
       y: minY,
       width: width,
       height: height,
@@ -458,17 +466,17 @@ class Characters {
     // scale it
     if char.width > char.height {
       scaleX = charW / frameSize
-      if Float(char.height + offsetY) > frameSize { // big/wide
-        scaleY = totalHeight / frameSize
-      }
     } else {
       scaleY = totalHeight / frameSize
-      if charW > frameSize { // big/wide
-        scaleX = charW / frameSize
-      }
+    }
+    if Float(char.height + offsetY) > frameSize { // big/wide
+      scaleY = totalHeight / frameSize
+    }
+    if charW > frameSize { // big/wide
+      scaleX = charW / frameSize
     }
     endX = Int(charW / scaleX)
-    endY = Int(Float(char.height + offsetY) / scaleY)
+    endY = Int(Float(char.height + offsetY) / scaleY) + 1
 //    if debugID == "0-0-0" {
 //      print("thin large l: \(scaleX) \(scaleY) \(endX) \(offsetY) \(char) \(retinaLineBounds)")
 //    }
@@ -477,15 +485,15 @@ class Characters {
       for x in 0..<28 {
         // pattern nes ends
         if x > endX {
-          output += "1.0 "
+          output += "0.2 "
           continue
         }
-        if y < offsetY / 2 {
-          output += "1.0 "
+        if y < offsetY / 2 - 1 {
+          output += "0.4 "
           continue
         }
-        if y > endY {
-          output += (x + y * x) % 4 == 0 ? "0.0 " : "1.0 "
+        if y + 1 > endY {
+          output += "0.6 "
           continue
         }
         let xS = Int(Float(x) * scaleX)

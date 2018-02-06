@@ -87,7 +87,34 @@ async function train() {
 
   await screen.start()
 
-  const fonts = ['arial', 'georgia', 'helvetica']
+  const fonts = [
+    'arial',
+    'georgia',
+    'verdana',
+    'helvetica',
+    'rockwell',
+    'avenir',
+    'century gothic',
+    'century schoolbook',
+    'consolas',
+    'eurostile',
+    'garamond regular',
+    'gill sans light',
+    'goudy old style',
+    'gulim',
+    'helvetica neue',
+    'hiragino sans',
+    'kefa regular',
+    'lucida bright',
+    'lucida sans',
+    'myriad pro',
+    'optima regular',
+    'pt sans',
+    'tekton pro',
+    'times new roman',
+    'trebuchet ms',
+    'adobe hebrew',
+  ]
 
   while (fonts.length) {
     const font = fonts.pop()

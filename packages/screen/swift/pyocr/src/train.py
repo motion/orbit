@@ -48,9 +48,9 @@ for font_index, font in enumerate(test_fonts):
 train_set = torch.utils.data.TensorDataset(train_x, train_y)
 test_set = torch.utils.data.TensorDataset(test_x, test_y)
 train_loader = torch.utils.data.DataLoader(
-    train_set, batch_size=4, shuffle=True, num_workers=2)
+    train_set, batch_size=10, shuffle=True, num_workers=2)
 test_loader = torch.utils.data.DataLoader(
-    test_set, batch_size=4, shuffle=True, num_workers=2)
+    test_set, batch_size=10, shuffle=True, num_workers=2)
 
 model = Net()
 
@@ -92,7 +92,7 @@ def train(epoch):
         loss = F.nll_loss(output, target)
         loss.backward()
         optimizer.step()
-        if batch_idx % 10 == 0:
+        if batch_idx % 15 == 0:
             print('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
                 epoch, batch_idx * len(data), len(train_loader.dataset),
 
@@ -104,7 +104,7 @@ def test():
     test_loss = 0
     correct = 0
     for batch_idx, (data, target) in enumerate(test_loader):
-        # data, target = data.cuda(async=True), target.cuda(async=True) # On GPU
+        # data, target = data.cuda(async=True), target.cuda(async=True)  # On GPU
         data = Variable(data, volatile=True)
         target = Variable(target, volatile=True)
         output = model(data)
@@ -115,16 +115,18 @@ def test():
         correct += pred.eq(target.data.view_as(pred)).cpu().sum()
 
     test_loss /= len(test_x)
-    run_words('BOXWITH#!@$[];:(fivedozenliquorjugs')
+    run_words(
+        'BOXWITH#!@$[];:(fivedozenliquorjugs)#!@$[];:Jackdawslove,JACKDAWSLOVE,')
     print('\nTest set: Average loss: {:.4f}, Accuracy: {}/{} ({:.0f}%)\n'.format(
         test_loss, correct, len(test_x),
         100. * correct / len(test_x)))
 
 
-epochs = args.epochs + 1
+epochs = 300
 print('epochs', epochs)
 for epoch in range(1, epochs):
     train(epoch)
     test()
     torch.save(model, model_path)
-    run_words('BOXWITH#!@$[];:(fivedozenliquorjugs')
+    run_words(
+        'BOXWITH#!@$[];:(fivedozenliquorjugs)#!@$[];:Jackdawslove,JACKDAWSLOVE,')

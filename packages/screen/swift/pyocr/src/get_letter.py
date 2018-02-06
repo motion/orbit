@@ -26,4 +26,5 @@ def get_letter(font, letterIndex, save=False):
             b = b / 255
             # intensity out of one
             t[0, row, col] = (r + b + b) / 3
+    # img.save('./letters/' + letterIndex + '.png')
     return t

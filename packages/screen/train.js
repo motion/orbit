@@ -94,12 +94,13 @@ async function train() {
     await sleep(500)
     await new Promise(resolve => {
       screen.onWords(async data => {
-        console.log('finished ocr', data.length)
         screen.pause()
         await sleep(350) // wait for fs to write all files
         const fontDir = Path.join(trainDir, font)
+        console.log('fontDir', fontDir)
         await execa('mkdir', [fontDir])
-        await execa('cp', ['-r', Path.join(tmpDir, '.'), fontDir])
+        await execa('cp', ['-r', tmpDir, fontDir])
+        // await execa('mv', [Path.join(fontDir, 'tmp'), fontDir])
         resolve()
       })
       screen.resume()
@@ -131,16 +132,6 @@ try {
 } catch (err) {
   console.log('error', err)
 }
-
-process.on('unhandledRejection', function(error, p) {
-  console.log('OCR PromiseFail:')
-  if (error.stack) {
-    console.log(error.message)
-    console.log(error.stack)
-  } else {
-    console.log(error)
-  }
-})
 
 process.on('SIGINT', async () => {
   console.log('stopping screen')

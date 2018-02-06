@@ -168,7 +168,7 @@ class Characters {
     } // end while
     // help watch misfit counts
     if misfits > 0 {
-      print("misfits on line \(id): \(misfits) total (\(misfitBig) big, \(misfitThin) thin, \(misfitWide) wide)")
+      print("\(misfits) miss on \(id) \(misfitBig)b, \(misfitThin)t, \(misfitWide)w")
     }
     // find words
     var foundWords = [Word]()
@@ -347,12 +347,12 @@ class Characters {
     // blob above/below, to get i's and j's and ?'s
     if findHangers {
       let centerX = topLeftBound[0] + (width / 2)
-      let maxPxOffset = lineHeight / 8
+      let maxPxOffset = lineHeight / 5
       let maxY = bottomRightBound[1]
       for y in 1...maxPxOffset {
         // go up
         if buffer[(minY - y) * perRow + centerX] < isBlackIfUnder {
-          if let aboveChar = self.findCharacter(startX: centerX, startY: minY - y, lineHeight: lineHeight / 2, maxMoves: 80, initialMove: [0, -moves.px], findHangers: false) {
+          if let aboveChar = self.findCharacter(startX: centerX, startY: minY - y, lineHeight: lineHeight / 2, maxMoves: exhaust / 2, initialMove: [0, -moves.px], findHangers: false) {
             height += minY - aboveChar.y
             minY = aboveChar.y
             break
@@ -360,7 +360,7 @@ class Characters {
         }
         // go down
         if buffer[(maxY + y) * perRow + centerX] < isBlackIfUnder {
-          if let belowChar = self.findCharacter(startX: centerX, startY: maxY + y, lineHeight: lineHeight / 2, maxMoves: 80, initialMove: [0, moves.px], findHangers: false) {
+          if let belowChar = self.findCharacter(startX: centerX, startY: maxY + y, lineHeight: lineHeight / 2, maxMoves: exhaust / 2, initialMove: [0, moves.px], findHangers: false) {
             height += belowChar.height + (belowChar.y - maxY)
             break
           }

@@ -689,7 +689,7 @@ final class Recorder: NSObject {
     // update character cache
     Async.utility(after: 0.04) { chars.updateCache(ocrResults) }
     // return new box with content adjusted frame
-    print("done! \(lines.count) lines, \(words.count) words                \(Int(Double(DispatchTime.now().uptimeNanoseconds - startAll.uptimeNanoseconds) / 1_000_000))ms")
+    print("done! \(lines.count) lines, \(words.count) words             \(Int(Double(DispatchTime.now().uptimeNanoseconds - startAll.uptimeNanoseconds) / 1_000_000))ms")
     return Box(
       id: box.id,
       x: frame[0],

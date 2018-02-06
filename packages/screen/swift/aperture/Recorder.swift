@@ -24,7 +24,7 @@ struct Box: Decodable {
 }
 
 // constants
-let lineFindScaling = 3 // scale down denominator
+let lineFindScaling = 4 // scale down denominator
 
 let filters = Filters()
 let images = Images()
@@ -201,13 +201,7 @@ final class Recorder: NSObject {
             return
           }
           if action == "clear" {
-            if self.isScanning {
-              self.shouldCancel = true
-            }
-            if let handle = self.changeHandle {
-              handle.cancel()
-              self.changeHandle = nil
-            }
+            self.clear()
             return
           }
           print("received unknown message: \(text)")
@@ -263,16 +257,21 @@ final class Recorder: NSObject {
   func startTime() {
     curTime = DispatchTime.now()
   }
-
-  func watchBounds(fps: Int, boxes: Array<Box>, showCursor: Bool, videoCodec: String? = nil, sampleSpacing: Int, sensitivity: Int, debug: Bool) {
+  
+  func clear() {
+    self.ignoreNextScan = false
+    if self.isScanning {
+      self.shouldCancel = true
+    }
     if let handle = self.changeHandle {
       handle.cancel()
       self.changeHandle = nil
     }
+  }
+
+  func watchBounds(fps: Int, boxes: Array<Box>, showCursor: Bool, videoCodec: String? = nil, sampleSpacing: Int, sensitivity: Int, debug: Bool) {
+    self.clear()
     self.shouldDebug = debug
-    if shouldDebug {
-      print("running in debug mode...")
-    }
     self.firstTime = true
     self.sampleSpacing = sampleSpacing
     self.sensitivity = sensitivity
@@ -398,7 +397,7 @@ final class Recorder: NSObject {
       for y in 0..<vHeight {
         let x0 = max(0, min(maxWidth, frame[0] - box.x + x * scale))
         let y0 = max(0, min(maxHeight, frame[1] - box.y + y * scale))
-        let filled = verticalImageRep.colorAt(x: x0, y: y0)!.brightnessComponent < 0.93
+        let filled = verticalImageRep.colorAt(x: x0, y: y0)!.brightnessComponent < 0.95
         imgData[x].append(filled ? 1 : 0)
         if filled {
           verticalFilled += 1
@@ -451,7 +450,7 @@ final class Recorder: NSObject {
     startTime()
     // second loop - find lines in sections
     var sectionLines = Dictionary<Int, [LinePosition]>()
-    let minLineWidth = 2
+    let minLineWidth = 1
     for (start, end) in verticalSections {
       var lines = [LinePosition]()
       var lineStreak = 0
@@ -468,7 +467,7 @@ final class Recorder: NSObject {
             }
           }
         }
-        let isFilled = lineFilledPx > minLineWidth
+        let isFilled = lineFilledPx >= minLineWidth
         if !isFilled {
           lineStreak = 0
         } else {

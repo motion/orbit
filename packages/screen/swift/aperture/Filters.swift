@@ -23,8 +23,8 @@ class Filters {
     filter = CIFilter(name: "CIPhotoEffectNoir")!
     outputImage = applyFilter(filter, for: outputImage)
     // contrast boost
-    filter = CIFilter(name: "CIColorControls")!
-    filter.setValue(1.0, forKey: "inputContrast")
+//    filter = CIFilter(name: "CIColorControls")!
+//    filter.setValue(4.0, forKey: "inputContrast")
 //    filter.setValue(0.3, forKey: "inputBrightness")
     outputImage = applyFilter(filter, for: outputImage)
     // return

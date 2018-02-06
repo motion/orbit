@@ -87,7 +87,7 @@ class Characters {
     let maxY = lineH - lineH / 6
     let minY = lineH / 3
     var spaceBefore = 0
-    let moveXBy = 2
+    let moveXBy = 1
     var spaces = [Double]()
     var misfits = 0
     var misfitBig = 0
@@ -354,7 +354,7 @@ class Characters {
     // blob above/below, to get i's and j's and ?'s
     if findHangers {
       let centerX = topLeftBound[0] + (width / 2)
-      let maxPxOffset = max(2, lineHeight - height)
+      let maxPxOffset = max(2, lineHeight - height / 2)
       let maxY = bottomRightBound[1]
       for y in 1...maxPxOffset {
         // go up

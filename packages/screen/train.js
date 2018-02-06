@@ -42,19 +42,19 @@ function getPage(fontName) {
       Cwm FJORD BANK GLyphs VEXT Quiz!
     </p>
     <p>
-      pack my box with #!@$*[];:
+      pack my box with #!@$[];:
     </p>
     <p>
-      PACK MY BOX WITH #!@$*[];:
+      PACK MY BOX WITH #!@$[];:
     </p>
     <p>
-      (five dozen liquor jugs) #!@$*[];:
+      (five dozen liquor jugs) #!@$[];:
     </p>
     <p>
       <b>Jackdaws' love,</b>
     </p>
     <p>
-      JACKDAWS' LOVE,
+      JACKDAWS LOVE,
     </p>
     <p>
       <b>my big sphinx of quartz</b>

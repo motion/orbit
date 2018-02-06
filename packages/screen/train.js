@@ -69,7 +69,7 @@ function getPage(fontName) {
       <b>promising than any'</b>
     </p>
     <p>
-      <b><i>incentivizes dating sites to keep you single, after all, the longer you’re single</i></b>
+      <b><i>incentivizes dating sites to keep you single, after all, the longer youre single</i></b>
     </p>
   </body>
 </html>

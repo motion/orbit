@@ -7,9 +7,6 @@ struct Character: Hashable {
   static func ==(lhs: Character, rhs: Character) -> Bool {
     return lhs.outline == rhs.outline
   }
-  mutating func setLineBounds(_ bounds: [Int]) {
-    lineBounds = bounds
-  }
   var x: Int
   var y: Int
   var width: Int
@@ -247,7 +244,7 @@ class Characters {
   // maxMoves - moves to go total before giving up
   //    if maxMoves reached, will return nil
   func findCharacter(startX: Int, startY: Int, lineHeight: Int, maxMoves: Int, initialMove: [Int], findHangers: Bool) -> Character? {
-    let exhaust = lineHeight * 5 // distance to go without finding new bound before finishing character
+    let exhaust = lineHeight * 6 // distance to go without finding new bound before finishing character
     var visited = Dictionary<Int, Bool?>() // for preventing crossing over at thin interections
     var topLeftBound = [startX, startY]
     var bottomRightBound = [startX, startY]

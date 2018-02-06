@@ -120,11 +120,16 @@ class Characters {
         pixels![x + y * lineW] = PixelData(a: 255, r: val, g: val, b: val)
       }
       if isBlack {
-        var char = self.findCharacter(
+        guard var char = self.findCharacter(
           startX: xO,
           startY: yO,
-          maxHeight: lineH * 2
-        )
+          exhaust: lineH * 8,
+          maxMoves: lineH * 60,
+          initialMove: [0, moves.px], // we find it by going down vertically
+          findHangers: true
+        ) else {
+          continue
+        }
         // after find character, always move to next x
         y = maxY + 1
         char.spaceBefore = spaceBefore
@@ -233,12 +238,15 @@ class Characters {
     return buffer[pos] < isBlackIfUnder
   }
 
-  func findCharacter(startX: Int, startY: Int, maxHeight: Int) -> Character {
-    let exhaust = maxHeight * 4 // most amount to go without finding new bound before give up
+  // exhaust - moves to go without finding new bound before giving up
+  //    if exhausted, still will return a character
+  // maxMoves - moves to go total before giving up
+  //    if maxMoves reached, will return nil
+  func findCharacter(startX: Int, startY: Int, exhaust: Int, maxMoves: Int, initialMove: [Int], findHangers: Bool) -> Character? {
     var visited = Dictionary<Int, Bool?>() // for preventing crossing over at thin interections
     var topLeftBound = [startX, startY]
     var bottomRightBound = [startX, startY]
-    var lastMove = [0, moves.px] // start move
+    var lastMove = initialMove // start move
     var outline: [String] = []
     var iteration = 0
     var x = startX
@@ -252,6 +260,10 @@ class Characters {
     var rightMoves = 0 // to detect if ran into underline and are moving right a ton
     while !foundEnd {
       iteration += 1
+      if iteration > maxMoves {
+        print("too many moves \(startX) \(startY)")
+        return nil
+      }
       if iteration % 8 == 0 {
         outline.append(String(lastMove[0] + 4) + String(lastMove[1] + 4))
       }
@@ -315,22 +327,51 @@ class Characters {
         } else {
           lastMove = attempt
         }
-        if sdebug() {
-          let xdir = lastMove[0] == -1 ? "l" : lastMove[0] == 0 ? "x" : "r"
-          let ydir = lastMove[1] == -1 ? "u" : lastMove[1] == 0 ? "x" : "d"
-          print(".. \(xdir) \(ydir) | \(lastMove[0]) \(lastMove[1]) | attempt \(index)")
-        }
+//        if sdebug() {
+//          let xdir = lastMove[0] == -1 ? "l" : lastMove[0] == 0 ? "x" : "r"
+//          let ydir = lastMove[1] == -1 ? "u" : lastMove[1] == 0 ? "x" : "d"
+//          print(".. \(xdir) \(ydir) | \(lastMove[0]) \(lastMove[1]) | attempt \(index)")
+//        }
         break
       }
       if !success {
         break
       }
     }
+    // shared variables for hanger finding
+    let width = bottomRightBound[0] - topLeftBound[0] + 1
+    var minY = topLeftBound[1]
+    var height = bottomRightBound[1] - topLeftBound[1] + 1
+    // now we have our character, lets see if theres a
+    // blob above/below, to get i's and j's and ?'s
+    if findHangers {
+      let centerX = topLeftBound[0] + (width / 2)
+      let maxPxOffset = 15
+      let maxY = bottomRightBound[1]
+      for y in 1...maxPxOffset {
+        // go up
+        if buffer[(minY - y) * perRow + centerX] < isBlackIfUnder {
+          if let aboveChar = self.findCharacter(startX: centerX, startY: minY - y, exhaust: 400, maxMoves: 80, initialMove: [0, -moves.px], findHangers: false) {
+            height += minY - aboveChar.y
+            minY = aboveChar.y
+            break
+          }
+        }
+        // go down
+        if buffer[(maxY + y) * perRow + centerX] < isBlackIfUnder {
+          if let belowChar = self.findCharacter(startX: centerX, startY: maxY + y, exhaust: 400, maxMoves: 80, initialMove: [0, moves.px], findHangers: false) {
+            height += belowChar.height + (belowChar.y - maxY)
+            break
+          }
+        }
+      }
+    }
+    // return char
     return Character(
       x: topLeftBound[0],
-      y: topLeftBound[1],
-      width: bottomRightBound[0] - topLeftBound[0] + 1,
-      height: bottomRightBound[1] - topLeftBound[1] + 1,
+      y: minY,
+      width: width,
+      height: height,
       backMoves: startX - topLeftBound[0],
       outline: outline.joined(),
       letter: nil,

@@ -13,6 +13,7 @@ server.get('/:font', (req, res) => {
   console.log('got req', req.params)
   res.send(getPage(req.params.font))
 })
+
 server.listen(3003)
 
 function getPage(fontName) {
@@ -24,7 +25,7 @@ function getPage(fontName) {
       body {
         padding: 20px;
         font-family: ${fontName};
-        font-size: 26px;
+        font-size: 27px;
         letter-spacing: 3px;
         line-height: 60px;
       }
@@ -33,44 +34,33 @@ function getPage(fontName) {
   </head>
   <body>
     <p>
-      The quick brown fox*
+      *a'b,c;d:e.f?g!h#i$j[k]l(m)
     </p>
     <p>
-      jumped, over the lazy dog.
+      <b>*a'b,c;d:e.f?g!h#i$j[k]l(m)</b>
     </p>
     <p>
-      Cwm FJORD BANK GLyphs VEXT Quiz!
+     <b><i>the quick brown fox jumps over the lazy dog</i></b>
     </p>
     <p>
-      pack my box with #!@$[];:
+      <b>Cwm FJORD BANK GLyphs VEXT Quiz</b>
+    </p>
+    <p>pack my box with</p>
+    <p>
+      five dozen liuor usxcs PACK MY BOX WITH
     </p>
     <p>
-      PACK MY BOX WITH #!@$[];:
+      <b>Jackdaws love</b>
     </p>
     <p>
-      (five dozen liquor jugs) #!@$[];:
+      JACKDAWS LOVE my big sphinx of quartz
     </p>
     <p>
-      <b>Jackdaws' love,</b>
+      <i>Im still skeptical</i> MY BIG SPHINX OF QUARTZ
     </p>
-    <p>
-      JACKDAWS LOVE,
-    </p>
-    <p>
-      <b>my big sphinx of quartz</b>
-    </p>
-    <p>
-      <i>MY BIG SPHINX of quartz</i>
-    </p>
-    <p>
-      <i>I’m still skeptical.</i>
-    </p>
-    <p>
-      <b>promising than any oxen maneuver</b>
-    </p>
-    <p>
-      <b><i>incentivizes dating sites to keep you single, after all, the longer youre single</i></b>
-    </p>
+    <p>promising than any oxen maneuver</p>
+    <p>incentivizes dating sites to keep you single</p>
+    <p>safter all the longer youre single</p>
   </body>
 </html>
   `
@@ -126,7 +116,7 @@ async function train() {
             id: 0,
             x: 0,
             y: 24,
-            width: 800,
+            width: 850,
             height: 1200,
             initialScreenshot: true,
             findContent: true,

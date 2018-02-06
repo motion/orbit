@@ -48,9 +48,9 @@ for font_index, font in enumerate(test_fonts):
 train_set = torch.utils.data.TensorDataset(train_x, train_y)
 test_set = torch.utils.data.TensorDataset(test_x, test_y)
 train_loader = torch.utils.data.DataLoader(
-    train_set, batch_size=6, shuffle=True, num_workers=2)
+    train_set, batch_size=12, shuffle=True, num_workers=4)
 test_loader = torch.utils.data.DataLoader(
-    test_set, batch_size=6, shuffle=True, num_workers=2)
+    test_set, batch_size=12, shuffle=True, num_workers=4)
 
 model = Net()
 
@@ -58,10 +58,10 @@ optimizer = optim.SGD(model.parameters(), lr=args.lr, momentum=args.momentum)
 
 
 def run_words(s):
-    print('predicting', s)
+    print('predict: ', s)
     x = torch.Tensor(len(s), 1, 28, 28)
     for index, c in enumerate(list(s)):
-        x[index, :] = get_letter('helvetica', str(index + 93), True)
+        x[index, :] = get_letter('helvetica', str(index), True)
 
     model.eval()
     correct = 0
@@ -71,13 +71,14 @@ def run_words(s):
     # get the index of the max log-probability
     pred = output.data.max(1, keepdim=True)[1]
     out_str = [letters[letter[0]] for letter in pred.numpy()]
-    print('predicted', ''.join(out_str))
+    print('    got: ', ''.join(out_str))
 
     correct = 0
     for i in range(len(s)):
         if s[i] == out_str[i]:
             correct += 1
 
+    print('')
     print('correct', correct / len(s) * 100, '%', 'took', time.time() - start)
 
 
@@ -92,7 +93,7 @@ def train(epoch):
         loss = F.nll_loss(output, target)
         loss.backward()
         optimizer.step()
-        if batch_idx % 15 == 0:
+        if batch_idx % 20 == 0:
             print('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
                 epoch, batch_idx * len(data), len(train_loader.dataset),
 
@@ -115,18 +116,16 @@ def test():
         correct += pred.eq(target.data.view_as(pred)).cpu().sum()
 
     test_loss /= len(test_x)
-    run_words(
-        'BOXWITH#!@$[];:(fivedozenliquorjugs)#!@$[];:Jackdawslove,JACKDAWSLOVE,mybigsphinxofquartzMYBIG')
-    print('\nTest set: Average loss: {:.4f}, Accuracy: {}/{} ({:.0f}%)\n'.format(
+    run_words(letters[0:200])
+    print('\n      avg loss {:.4f}, accuracy {}/{} ({:.0f}%)\n'.format(
         test_loss, correct, len(test_x),
         100. * correct / len(test_x)))
 
 
-epochs = 600
+epochs = 350
 print('epochs', epochs)
 for epoch in range(1, epochs):
     train(epoch)
     test()
     torch.save(model, model_path)
-    run_words(
-        'BOXWITH#!@$[];:(fivedozenliquorjugs)#!@$[];:Jackdawslove,JACKDAWSLOVE,mybigsphinxofquartzMYBIG')
+    run_words(letters[0:201])

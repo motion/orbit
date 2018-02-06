@@ -460,9 +460,17 @@ class Characters {
     var output = ""
     for y in 0..<28 {
       for x in 0..<28 {
-        // past end of char, just fill with checkerboard
-        if x > endX || y < offsetY / 2 || y > endY {
+        // pattern nes ends
+        if x > endX {
+          output += "1.0 "
+          continue
+        }
+        if y < offsetY / 2 {
           output += (x + y * x) % 2 == 0 ? "1.0 " : "0.0 "
+          continue
+        }
+        if y > endY {
+          output += (x + y * x) % 4 == 0 ? "0.0 " : "1.0 "
           continue
         }
         let xS = Int(Float(x) * scaleX)

@@ -211,6 +211,7 @@ final class Recorder: NSObject {
   }
 
   func start() {
+    print("1234")
     debug("screen.start()")
     if self.shouldCancel {
       self.shouldRunNextTime = true

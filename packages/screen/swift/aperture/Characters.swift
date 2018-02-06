@@ -140,7 +140,7 @@ class Characters {
           let newCharEndX = char.x + char.width
           let bckwdMovement = lastCharEndX - char.x
           let fwdMovement = newCharEndX - lastCharEndX
-          if fwdMovement < bckwdMovement  {
+          if fwdMovement < bckwdMovement * 3 || bckwdMovement > 16  {
             print("absorb \(id)")
             // have last one eat it up
             last.width += char.x + char.width
@@ -235,11 +235,11 @@ class Characters {
       wordChars.append(char)
     }
     // finish, write string
-    if pixels != nil && pixels!.count > 0 && debugImg != nil {
-      if let img = images.imageFromArray(pixels: pixels!, width: lineW, height: lineH) {
-        Images().writeCGImage(image: img, to: "\(debugDir)/b-hit\(id).png", resolution: 72) // write img
-      }
-    }
+//    if pixels != nil && pixels!.count > 0 && debugImg != nil {
+//      if let img = images.imageFromArray(pixels: pixels!, width: lineW, height: lineH) {
+//        Images().writeCGImage(image: img, to: "\(debugDir)/b-hit\(id).png", resolution: 72) // write img
+//      }
+//    }
 //    print("Characters.find \(id): found \(foundChars.count) in \(Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)ms")
     return foundWords
   }

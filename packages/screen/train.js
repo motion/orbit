@@ -34,13 +34,10 @@ function getPage(fontName) {
   </head>
   <body>
     <p>
-      *a'b,c;d:e.f?g!h#i$j[k]l(m)
-    </p>
-    <p>
       <b>*a'b,c;d:e.f?g!h#i$j[k]l(m)</b>
     </p>
     <p>
-     <b><i>the quick brown fox jumps over the lazy dog</i></b>
+     <b>the quick brown fox jumps over the lazy dog</b>
     </p>
     <p>
       <b>Cwm FJORD BANK GLyphs VEXT Quiz</b>
@@ -56,11 +53,14 @@ function getPage(fontName) {
       JACKDAWS LOVE my big sphinx of quartz
     </p>
     <p>
-      <i>Im still skeptical</i> MY BIG SPHINX OF QUARTZ
+      <i>Im stll skeptcalxzr</i> MY BIG SPHINX OF QUARTZ
     </p>
     <p>promising than any oxen maneuver</p>
     <p>incentivizes dating sites to keep you single</p>
     <p>safter all the longer youre single</p>
+    <p>
+      *a'b,c;d:e.f?g!h#i$j[k]l(m)
+    </p>
   </body>
 </html>
   `
@@ -88,6 +88,21 @@ async function train() {
     'century schoolbook',
     'eurostile',
     'helvetica neue',
+    'abraham lincoln',
+    'atlas grotesk',
+    'aw conqueror sans',
+    'axis',
+    'bernard mt condensed',
+    'bookman old style',
+    'calenda plus',
+    'cambria',
+    'chalkboard',
+    'chaparral pro',
+    'chochin',
+    'consolas',
+    'times new roman',
+    'fira mono',
+    'franklin gothic medium',
   ]
 
   while (fonts.length) {

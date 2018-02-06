@@ -19,6 +19,10 @@ from torch.autograd import Variable
 from PIL import Image
 from get_letter import get_letter
 
+epochs = 40
+BATCH_SIZE = 3
+TEST_LETTERS = letters[0:100]
+
 
 def letter_index(letter):
     return list(letters).index(letter)
@@ -48,9 +52,9 @@ for font_index, font in enumerate(test_fonts):
 train_set = torch.utils.data.TensorDataset(train_x, train_y)
 test_set = torch.utils.data.TensorDataset(test_x, test_y)
 train_loader = torch.utils.data.DataLoader(
-    train_set, batch_size=12, shuffle=True, num_workers=4)
+    train_set, batch_size=BATCH_SIZE, shuffle=True, num_workers=4)
 test_loader = torch.utils.data.DataLoader(
-    test_set, batch_size=12, shuffle=True, num_workers=4)
+    test_set, batch_size=BATCH_SIZE, shuffle=True, num_workers=4)
 
 model = Net()
 
@@ -93,7 +97,7 @@ def train(epoch):
         loss = F.nll_loss(output, target)
         loss.backward()
         optimizer.step()
-        if batch_idx % 20 == 0:
+        if batch_idx % 40 == 0:
             print('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
                 epoch, batch_idx * len(data), len(train_loader.dataset),
 
@@ -116,16 +120,15 @@ def test():
         correct += pred.eq(target.data.view_as(pred)).cpu().sum()
 
     test_loss /= len(test_x)
-    run_words(letters[0:200])
+    run_words(TEST_LETTERS)
     print('\n      avg loss {:.4f}, accuracy {}/{} ({:.0f}%)\n'.format(
         test_loss, correct, len(test_x),
         100. * correct / len(test_x)))
 
 
-epochs = 350
 print('epochs', epochs)
 for epoch in range(1, epochs):
     train(epoch)
     test()
     torch.save(model, model_path)
-    run_words(letters[0:201])
+    run_words(TEST_LETTERS)

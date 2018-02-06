@@ -485,15 +485,15 @@ class Characters {
       for x in 0..<28 {
         // pattern nes ends
         if x > endX {
-          output += "0.2 "
+          output += "1.0 "
           continue
         }
         if y < offsetY / 2 - 1 {
-          output += "0.4 "
+          output += "1.0 "
           continue
         }
         if y + 1 > endY {
-          output += "0.6 "
+          output += (x + y * x) % 2 == 0 ? "0.0 " : "1.0 "
           continue
         }
         let xS = Int(Float(x) * scaleX)

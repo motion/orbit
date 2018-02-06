@@ -20,7 +20,7 @@ from PIL import Image
 from get_letter import get_letter
 
 epochs = 60
-BATCH_SIZE = 4
+BATCH_SIZE = 8
 TEST_LETTERS = letters[0:100]
 
 

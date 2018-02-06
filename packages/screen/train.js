@@ -66,7 +66,7 @@ function getPage(fontName) {
       <i>I’m still skeptical.</i>
     </p>
     <p>
-      <b>promising than any'</b>
+      <b>promising than any oxen maneuver</b>
     </p>
     <p>
       <b><i>incentivizes dating sites to keep you single, after all, the longer youre single</i></b>
@@ -87,7 +87,7 @@ async function train() {
 
   await screen.start()
 
-  const fonts = ['arial', 'georgia']
+  const fonts = ['arial', 'georgia', 'helvetica']
 
   while (fonts.length) {
     const font = fonts.pop()

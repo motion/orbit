@@ -31,18 +31,18 @@ train_y = torch.LongTensor(train_len)
 test_x = torch.Tensor(test_len, 1, 28, 28)
 test_y = torch.LongTensor(test_len)
 
-print('loading letters...')
+print('loading letters...' + str(len(letters)))
 
 for font_index, font in enumerate(train_fonts):
     for index, letter in enumerate(letters):
         _index = font_index * len(letters) + index
-        train_x[_index, :] = get_letter(font, letter)
+        train_x[_index, :] = get_letter(font, str(index))
         train_y[_index] = index
 
 for font_index, font in enumerate(test_fonts):
     for index, letter in enumerate(letters):
         _index = font_index * len(letters) + index
-        test_x[_index, :] = get_letter(font, letter)
+        test_x[_index, :] = get_letter(font, str(index))
         test_y[_index] = index
 
 train_set = torch.utils.data.TensorDataset(train_x, train_y)
@@ -61,8 +61,7 @@ def run_words(s):
     print('predicting', s)
     x = torch.Tensor(len(s), 1, 28, 28)
     for index, c in enumerate(list(s)):
-        choice = random.choice(test_fonts)
-        x[index, :] = get_letter('helvetica.ttf', c, True)
+        x[index, :] = get_letter('helvetica', str(index + 93), True)
 
     model.eval()
     correct = 0
@@ -116,7 +115,7 @@ def test():
         correct += pred.eq(target.data.view_as(pred)).cpu().sum()
 
     test_loss /= len(test_x)
-    run_words('thequickbrownfoxjumpedoverthelazydog')
+    run_words('BOXWITH#!@$[];:(fivedozenliquorjugs')
     print('\nTest set: Average loss: {:.4f}, Accuracy: {}/{} ({:.0f}%)\n'.format(
         test_loss, correct, len(test_x),
         100. * correct / len(test_x)))
@@ -128,4 +127,4 @@ for epoch in range(1, epochs):
     train(epoch)
     test()
     torch.save(model, model_path)
-    run_words('thequickbrownfoxjumpedoverthelazydog')
+    run_words('BOXWITH#!@$[];:(fivedozenliquorjugs')

@@ -30,6 +30,7 @@ apps/crawler/build
 apps/search/build
 
 packages/screen/swift/Build
+packages/screen/train
 packages/swindler/Swindler/Build
 
 

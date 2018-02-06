@@ -54,6 +54,9 @@ function getPage(fontName) {
       JACKDAWS LOVE my big sphinx of quartz
     </p>
     <p>
+      1234567890 <b>1234567890</b>
+    </p>
+    <p>
       <i>Im stll skeptcalxzr</i> MY BIG SPHINX OF QUARTZ
     </p>
     <p class="light">promising than any oxen maneuver</p>
@@ -89,11 +92,19 @@ async function train() {
     'century schoolbook',
     'eurostile',
     'helvetica neue',
+    'abraham lincoln',
     'atlas grotesk',
+    // 'aw conqueror sans',
+    // 'axis',
     'bernard mt condensed',
     'bookman old style',
+    // 'calenda plus',
     'cambria',
+    // 'chalkboard',
+    // 'chaparral pro',
+    // 'chochin',
     'consolas',
+    // 'times new roman',
     'fira mono',
     'franklin gothic medium',
   ]

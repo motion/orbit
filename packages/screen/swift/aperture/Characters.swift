@@ -466,14 +466,14 @@ class Characters {
     // scale it
     if char.width > char.height {
       scaleX = charW / frameSize
+      if Float(char.height + offsetY) > frameSize { // big/wide
+        scaleY = totalHeight / frameSize
+      }
     } else {
       scaleY = totalHeight / frameSize
-    }
-    if Float(char.height + offsetY) > frameSize { // big/wide
-      scaleY = totalHeight / frameSize
-    }
-    if charW > frameSize { // big/wide
-      scaleX = charW / frameSize
+      if charW > frameSize { // big/wide
+        scaleX = charW / frameSize
+      }
     }
     endX = Int(charW / scaleX)
     endY = Int(Float(char.height + offsetY) / scaleY) + 1

@@ -398,7 +398,7 @@ final class Recorder: NSObject {
       for y in 0..<vHeight {
         let x0 = max(0, min(maxWidth, frame[0] - box.x + x * scale))
         let y0 = max(0, min(maxHeight, frame[1] - box.y + y * scale))
-        let filled = verticalImageRep.colorAt(x: x0, y: y0)!.brightnessComponent < 0.95
+        let filled = verticalImageRep.colorAt(x: x0, y: y0)!.brightnessComponent < 0.975
         imgData[x].append(filled ? 1 : 0)
         if filled {
           verticalFilled += 1

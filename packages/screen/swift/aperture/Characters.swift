@@ -283,7 +283,7 @@ class Characters {
         }
         return nil
       }
-      if iteration % 3 == 0 {
+      if iteration % 8 == 0 {
         outline += String(lastMove[0] + 4) + String(lastMove[1] + 4)
       }
       curPos = y * perRow + x

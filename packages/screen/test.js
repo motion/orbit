@@ -34,7 +34,7 @@ const settings = {
       id: 0,
       x: 0,
       y: 0,
-      width: 850,
+      width: 800,
       height: 1200,
       initialScreenshot: true,
       findContent: true,

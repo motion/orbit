@@ -24,7 +24,7 @@ struct Box: Decodable {
 }
 
 // constants
-let lineFindScaling = 5 // scale down denominator
+let lineFindScaling = 2 // scale down denominator
 
 let filters = Filters()
 let images = Images()
@@ -592,8 +592,8 @@ final class Recorder: NSObject {
 
   func charactersWithLineBounds(_ charactersByLine: [[Word]]) -> [[Word]] {
     startTime()
-    let result: [[Word]] = charactersByLine.enumerated().map({ arg in
-      let (index, line) = arg
+    var i = 0
+    let result: [[Word]] = charactersByLine.map({ line in
       if line.count == 0 {
         return []
       }
@@ -620,7 +620,8 @@ final class Recorder: NSObject {
           var newChar = char
           newChar.lineBounds = lineBounds
           if self.shouldDebug { // debug: print out all characters
-            _ = self.characters!.charToString(newChar, debugID: "\(index)-\(wordIndex)-\(charIndex)")
+            _ = self.characters!.charToString(newChar, debugID: "\(i)")
+            i += 1
           }
           return newChar
         }

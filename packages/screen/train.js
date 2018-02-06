@@ -24,8 +24,9 @@ function getPage(fontName) {
       body {
         padding: 20px;
         font-family: ${fontName};
-        font-size: 28px;
+        font-size: 29px;
         letter-spacing: 2px;
+        line-height: 31px;
       }
     </style>
   </head>
@@ -60,6 +61,15 @@ function getPage(fontName) {
     <p>
       MY BIG SPHINX of quartz
     </p>
+    <p>
+      I’m still skeptical.
+    </p>
+    <p>
+      promising than any
+    </p>
+    <p>
+      incentivizes dating sites to keep you single, after all, the longer you’re single
+    </p>
   </body>
 </html>
   `
@@ -81,7 +91,7 @@ async function train() {
   while (fonts.length) {
     const font = fonts.pop()
     await execa(`open`, [`http://localhost:3003/${font}`])
-    await sleep(400)
+    await sleep(500)
     await new Promise(resolve => {
       screen.onWords(async data => {
         console.log('finished ocr', data.length)

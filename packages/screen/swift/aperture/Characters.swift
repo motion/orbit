@@ -234,7 +234,7 @@ class Characters {
   }
 
   func findCharacter(startX: Int, startY: Int, maxHeight: Int) -> Character {
-    let exhaust = maxHeight * 2 // most amount to go without finding new bound before give up
+    let exhaust = maxHeight * 4 // most amount to go without finding new bound before give up
     var visited = Dictionary<Int, Bool?>() // for preventing crossing over at thin interections
     var topLeftBound = [startX, startY]
     var bottomRightBound = [startX, startY]
@@ -288,7 +288,7 @@ class Characters {
         } else {
           rightMoves = 0
         }
-        if rightMoves > 25 { // found underline
+        if rightMoves > exhaust / 2 { // found underline
           break
         }
         // found a valid next move
@@ -315,11 +315,11 @@ class Characters {
         } else {
           lastMove = attempt
         }
-//        if sdebug() {
-//          let xdir = lastMove[0] == -1 ? "l" : lastMove[0] == 0 ? "x" : "r"
-//          let ydir = lastMove[1] == -1 ? "u" : lastMove[1] == 0 ? "x" : "d"
-//          print(".. \(xdir) \(ydir) | \(lastMove[0]) \(lastMove[1]) | attempt \(index)")
-//        }
+        if sdebug() {
+          let xdir = lastMove[0] == -1 ? "l" : lastMove[0] == 0 ? "x" : "r"
+          let ydir = lastMove[1] == -1 ? "u" : lastMove[1] == 0 ? "x" : "d"
+          print(".. \(xdir) \(ydir) | \(lastMove[0]) \(lastMove[1]) | attempt \(index)")
+        }
         break
       }
       if !success {
@@ -392,8 +392,8 @@ class Characters {
     var endX = 28
     var endY = 28
     // this is the bottom padding
-    let heightDiff = (retinaLineBounds[3] - char.height) / 2
-    let totalHeight = Float(char.height + offsetY + heightDiff)
+    let heightDiff = retinaLineBounds[3] - char.height
+    let totalHeight = Float(char.height + heightDiff)
     // scale it
     if char.width > char.height {
       scaleX = charW / frameSize
@@ -437,7 +437,7 @@ class Characters {
         let brt = UInt8(char == "0.0" ? 0 : 255)
         pixels.append(PixelData(a: 255, r: brt, g: brt, b: brt))
       }
-      let outFile = "\(debugDir)/c--\(debugID).png"
+      let outFile = "\(debugDir)/c-\(debugID).png"
       let img = images.imageFromArray(pixels: pixels, width: 28, height: 28)!
       images.writeCGImage(image: img, to: outFile, resolution: 72)
     }

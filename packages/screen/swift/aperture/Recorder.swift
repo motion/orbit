@@ -360,12 +360,12 @@ final class Recorder: NSObject {
         // finds characters
         let foundWords: [Word] = chars.find(id: index, bounds: lineFrame)
         // debug line
-//        if simpleDebugImages || self.shouldDebug {
-//          images.writeCGImage(
-//            image: images.cropImage(cgImage, box: CGRect(x: lineFrame[0] - box.x, y: lineFrame[1] - box.y, width: lineFrame[2], height: lineFrame[3]))!,
-//            to: "\(box.screenDir!)/a-line-\(box.id)-\(id)-\(index).png"
-//          )
-//        }
+        if simpleDebugImages || self.shouldDebug {
+          images.writeCGImage(
+            image: images.cropImage(cgImage, box: CGRect(x: lineFrame[0] - box.x, y: lineFrame[1] - box.y, width: lineFrame[2], height: lineFrame[3]))!,
+            to: "\(box.screenDir!)/a-line-\(box.id)-\(id)-\(index).png"
+          )
+        }
         // write characters
         if self.shouldDebug { chars.shouldDebug = true }
         return foundWords
@@ -677,20 +677,19 @@ final class Recorder: NSObject {
     // find line bounds now so we can use them for nice OCR cropping
     let charactersByLineWithBounds: [[Word]] = charactersWithLineBounds(charactersByLine)
     if shouldBreak() { return nil }
-//    guard let ocrResults = getOCR(charactersByLineWithBounds) else { return nil }
-//    if shouldBreak() { return nil }
-//    let (words, lines) = getWordsAndLines(ocrResults, characterLines: charactersByLine)
-//    if shouldBreak() { return nil }
+    guard let ocrResults = getOCR(charactersByLineWithBounds) else { return nil }
+    if shouldBreak() { return nil }
+    let (words, lines) = getWordsAndLines(ocrResults, characterLines: charactersByLine)
+    if shouldBreak() { return nil }
     // send to world
-    self.send("{ \"action\": \"words\", \"value\": [\(["0"].joined(separator: ","))] }")
-//    self.send("{ \"action\": \"lines\", \"value\": [\(lines.joined(separator: ","))] }")
+    self.send("{ \"action\": \"words\", \"value\": [\(words.joined(separator: ","))] }")
+    self.send("{ \"action\": \"lines\", \"value\": [\(lines.joined(separator: ","))] }")
     // test write images:
-    let allCharacters: [Character] = charactersByLineWithBounds.flatMap { $0.flatMap { $0.characters } }
-//    if self.shouldDebug { images.writeCGImage(image: cgImage, to: "\(box.screenDir!)/\(box.id)-original.png") }
+    if self.shouldDebug { images.writeCGImage(image: cgImage, to: "\(box.screenDir!)/\(box.id)-original.png") }
     // update character cache
-//    Async.utility(after: 0.01) { chars.updateCache(ocrResults) }
+    Async.utility(after: 0.04) { chars.updateCache(ocrResults) }
     // return new box with content adjusted frame
-    print("done! \(allCharacters.count) characteds \(Int(Double(DispatchTime.now().uptimeNanoseconds - startAll.uptimeNanoseconds) / 1_000_000))ms")
+    print("done! \(lines.count) lines, \(words.count) words             \(Int(Double(DispatchTime.now().uptimeNanoseconds - startAll.uptimeNanoseconds) / 1_000_000))ms")
     return Box(
       id: box.id,
       x: frame[0],

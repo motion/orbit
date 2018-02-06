@@ -19,8 +19,8 @@ from torch.autograd import Variable
 from PIL import Image
 from get_letter import get_letter
 
-epochs = 40
-BATCH_SIZE = 3
+epochs = 60
+BATCH_SIZE = 4
 TEST_LETTERS = letters[0:100]
 
 

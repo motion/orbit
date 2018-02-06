@@ -92,7 +92,7 @@ async function train() {
     'century schoolbook',
     'eurostile',
     'helvetica neue',
-    'abraham lincoln',
+    // 'abraham lincoln',
     'atlas grotesk',
     // 'aw conqueror sans',
     // 'axis',

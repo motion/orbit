@@ -16,7 +16,6 @@ fonts = [
     'century schoolbook',
     'eurostile',
     'helvetica neue',
-    'abraham lincoln',
     'atlas grotesk',
     'bernard mt condensed',
     'bookman old style',

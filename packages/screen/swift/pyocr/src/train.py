@@ -19,9 +19,9 @@ from torch.autograd import Variable
 from PIL import Image
 from get_letter import get_letter
 
-epochs = 60
-BATCH_SIZE = 8
-TEST_LETTERS = letters[0:100]
+epochs = 100
+BATCH_SIZE = 12
+TEST_LETTERS = letters[0:185]
 
 
 def letter_index(letter):

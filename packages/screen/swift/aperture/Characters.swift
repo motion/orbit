@@ -264,7 +264,7 @@ class Characters {
     var topLeftBound = [startX, startY]
     var bottomRightBound = [startX, startY]
     var lastMove = initialMove // start move
-    var outline: [String] = []
+    var outline = ""
     var iteration = 0
     var x = startX
     var y = startY - moves.px // subtracting here fixes bugs for real
@@ -283,8 +283,8 @@ class Characters {
         }
         return nil
       }
-      if iteration % 4 == 0 {
-        outline.append(String(lastMove[0] + 4) + String(lastMove[1] + 4))
+      if iteration % 3 == 0 {
+        outline += String(lastMove[0] + 4) + String(lastMove[1] + 4)
       }
       curPos = y * perRow + x
       visited[curPos] = true
@@ -380,6 +380,7 @@ class Characters {
             minY = aboveChar.y
             let widthWithChar = aboveChar.x + aboveChar.width - minX
             width = max(widthWithChar, width)
+            outline += aboveChar.outline
             break
           }
         }
@@ -389,6 +390,7 @@ class Characters {
             height += belowChar.height + (belowChar.y - maxY)
             let widthWithChar = belowChar.x + belowChar.width - minX
             width = max(widthWithChar, width)
+            outline += belowChar.outline
             break
           }
         }
@@ -401,7 +403,7 @@ class Characters {
       width: width,
       height: height,
       backMoves: startX - topLeftBound[0],
-      outline: outline.joined(),
+      outline: outline,
       letter: nil,
       spaceBefore: 0,
       completedOutline: !exhausted,
@@ -493,7 +495,7 @@ class Characters {
           continue
         }
         if y + 1 > endY {
-          output += (x + y * x) % 2 == 0 ? "0.0 " : "1.0 "
+          output += "1.0 "
           continue
         }
         let xS = Int(Float(x) * scaleX)

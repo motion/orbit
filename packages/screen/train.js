@@ -24,10 +24,11 @@ function getPage(fontName) {
       body {
         padding: 20px;
         font-family: ${fontName};
-        font-size: 29px;
-        letter-spacing: 2px;
-        line-height: 31px;
+        font-size: 26px;
+        letter-spacing: 3px;
+        line-height: 60px;
       }
+      p { margin: 0; }
     </style>
   </head>
   <body>
@@ -35,40 +36,40 @@ function getPage(fontName) {
       The quick brown fox*
     </p>
     <p>
-      jumped over the lazy dog.
+      jumped, over the lazy dog.
     </p>
     <p>
-      Cwm fjord BANK GLyphs Vext Quiz!
+      Cwm FJORD BANK GLyphs VEXT Quiz!
     </p>
     <p>
-      pack my box with? #!@$*=+[]"';:
+      pack my box with #!@$*[];:
     </p>
     <p>
-      PACK MY BOX WITH? #!@$*=+[]"';:
+      PACK MY BOX WITH #!@$*[];:
     </p>
     <p>
-      (five dozen liquor jugs) #!@$*=+[]"';:
+      (five dozen liquor jugs) #!@$*[];:
     </p>
     <p>
-      Jackdaws' love,
+      <b>Jackdaws' love,</b>
     </p>
     <p>
       JACKDAWS' LOVE,
     </p>
     <p>
-      my big sphinx of quartz
+      <b>my big sphinx of quartz</b>
     </p>
     <p>
-      MY BIG SPHINX of quartz
+      <i>MY BIG SPHINX of quartz</i>
     </p>
     <p>
-      I’m still skeptical.
+      <i>I’m still skeptical.</i>
     </p>
     <p>
-      promising than any
+      <b>promising than any'</b>
     </p>
     <p>
-      incentivizes dating sites to keep you single, after all, the longer you’re single
+      <b><i>incentivizes dating sites to keep you single, after all, the longer you’re single</i></b>
     </p>
   </body>
 </html>
@@ -91,13 +92,12 @@ async function train() {
   while (fonts.length) {
     const font = fonts.pop()
     await execa(`open`, [`http://localhost:3003/${font}`])
-    await sleep(500)
+    await sleep(800)
     await new Promise(resolve => {
       screen.onWords(async data => {
         screen.pause()
         await sleep(350) // wait for fs to write all files
         const fontDir = Path.join(trainDir, font)
-        console.log('fontDir', fontDir)
         await execa('mkdir', [fontDir])
         await execa('cp', ['-r', tmpDir, fontDir])
         // await execa('mv', [Path.join(fontDir, 'tmp'), fontDir])

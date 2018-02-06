@@ -87,7 +87,7 @@ class Characters {
     let maxY = lineH - lineH / 6
     let minY = lineH / 3
     var spaceBefore = 0
-    let moveXBy = 1
+    let moveXBy = 2
     var spaces = [Double]()
     var misfits = 0
     var misfitBig = 0
@@ -111,7 +111,10 @@ class Characters {
       }
       let xO = x * 2 + lineX
       // rewind to topmost filled px if we passed it
-      while y > 0 { if buffer[((y - 1) * 2 + lineY) * perRow + xO] < isBlackIfUnder { y -= 1 } else { break } }
+      while y > 0 {
+        let isBlackAbove = buffer[((y - 1) * 2 + lineY) * perRow + xO] < isBlackIfUnder
+        if  isBlackAbove { y -= 1 } else { break }
+      }
       let yO = y * 2 + lineY
       let luma = buffer[yO * perRow + xO]
       let isBlack = luma < isBlackIfUnder ? true : false
@@ -124,10 +127,11 @@ class Characters {
           startX: xO,
           startY: yO,
           lineHeight: lineH,
-          maxMoves: lineH * 60,
+          maxMoves: lineH * 200, // not needed for first time
           initialMove: [0, moves.px], // we find it by going down vertically
           findHangers: true
         ) else {
+          print("no char")
           continue
         }
         // after find character, always move to next x
@@ -243,7 +247,7 @@ class Characters {
   // maxMoves - moves to go total before giving up
   //    if maxMoves reached, will return nil
   func findCharacter(startX: Int, startY: Int, lineHeight: Int, maxMoves: Int, initialMove: [Int], findHangers: Bool) -> Character? {
-    let exhaust = lineHeight * 6 // distance to go without finding new bound before finishing character
+    let exhaust = lineHeight * 5 // distance to go without finding new bound before finishing character
     var visited = Dictionary<Int, Bool?>() // for preventing crossing over at thin interections
     var topLeftBound = [startX, startY]
     var bottomRightBound = [startX, startY]
@@ -251,7 +255,7 @@ class Characters {
     var outline: [String] = []
     var iteration = 0
     var x = startX
-    var y = startY - moves.px // and one above where we found the first black px
+    var y = startY - moves.px // subtracting here fixes bugs for real
     var curTry = 0
     var curPos = 0
     var foundEnd = false
@@ -262,7 +266,9 @@ class Characters {
     while !foundEnd {
       iteration += 1
       if iteration > maxMoves {
-        print("too many moves \(startX) \(startY)")
+        if findHangers {
+          print("too many moves on regular char \(findHangers)")
+        }
         return nil
       }
       if iteration % 8 == 0 {
@@ -301,7 +307,8 @@ class Characters {
         } else {
           rightMoves = 0
         }
-        if rightMoves > exhaust / 2 { // found underline
+        if rightMoves > exhaust { // found underline
+          print("breaking due to right")
           break
         }
         // found a valid next move
@@ -347,12 +354,12 @@ class Characters {
     // blob above/below, to get i's and j's and ?'s
     if findHangers {
       let centerX = topLeftBound[0] + (width / 2)
-      let maxPxOffset = lineHeight / 5
+      let maxPxOffset = max(2, lineHeight - height)
       let maxY = bottomRightBound[1]
       for y in 1...maxPxOffset {
         // go up
         if buffer[(minY - y) * perRow + centerX] < isBlackIfUnder {
-          if let aboveChar = self.findCharacter(startX: centerX, startY: minY - y, lineHeight: lineHeight / 2, maxMoves: exhaust / 2, initialMove: [0, -moves.px], findHangers: false) {
+          if let aboveChar = self.findCharacter(startX: centerX, startY: minY - y, lineHeight: lineHeight, maxMoves: lineHeight, initialMove: [0, -moves.px], findHangers: false) {
             height += minY - aboveChar.y
             minY = aboveChar.y
             break
@@ -360,7 +367,7 @@ class Characters {
         }
         // go down
         if buffer[(maxY + y) * perRow + centerX] < isBlackIfUnder {
-          if let belowChar = self.findCharacter(startX: centerX, startY: maxY + y, lineHeight: lineHeight / 2, maxMoves: exhaust / 2, initialMove: [0, moves.px], findHangers: false) {
+          if let belowChar = self.findCharacter(startX: centerX, startY: maxY + y, lineHeight: lineHeight, maxMoves: lineHeight, initialMove: [0, moves.px], findHangers: false) {
             height += belowChar.height + (belowChar.y - maxY)
             break
           }

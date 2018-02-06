@@ -24,7 +24,7 @@ struct Box: Decodable {
 }
 
 // constants
-let lineFindScaling = 2 // scale down denominator
+let lineFindScaling = 3 // scale down denominator
 
 let filters = Filters()
 let images = Images()
@@ -451,7 +451,7 @@ final class Recorder: NSObject {
     startTime()
     // second loop - find lines in sections
     var sectionLines = Dictionary<Int, [LinePosition]>()
-    let minLineWidth = 4
+    let minLineWidth = 2
     for (start, end) in verticalSections {
       var lines = [LinePosition]()
       var lineStreak = 0

@@ -56,7 +56,7 @@ async function test() {
   })
 
   screen.onWords(async data => {
-    console.log('first 20:', data.slice(0, 20))
+    console.log('first 40 of', data.length, data.slice(0, 40))
     console.log('\nto do it full speed: npm run test-fast')
     console.log('\nto see output:')
     console.log('$ open ./tmp')

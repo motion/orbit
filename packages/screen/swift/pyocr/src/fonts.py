@@ -13,7 +13,7 @@ fonts = [
     'rockwell',
     'avenir',
     'century gothic',
-    'century schoolbook',
+    # 'century schoolbook',
     'eurostile',
     'helvetica neue',
     'atlas grotesk',

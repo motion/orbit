@@ -14,7 +14,7 @@ def trim(im, border):
 
 def get_letter(font, letterIndex, save=False):
     img = Image.open("/Users/nw/projects/motion/orbit/packages/screen/train/" +
-                     font + "/tmp/c-" + letterIndex + ".png")
+                     font + "/c-" + letterIndex + ".png")
     rgb = img.convert('RGB')
     t = torch.zeros(1, 28, 28)
     output = []

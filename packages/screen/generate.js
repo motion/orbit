@@ -39,6 +39,9 @@ function getPage(fontName) {
   </head>
   <body>
     <p>
+      123 *',;:.?!#$
+    </p>
+    <p>
       <b>*a'b,c;d:e.f?g!h#i$j[k]l(m)</b>
     </p>
     <p>
@@ -66,9 +69,6 @@ function getPage(fontName) {
     <p class="light">promising than any oxen maneuver</p>
     <p class="light">incentivizes dating sites to keep you single</p>
     <p class="light">safter all the longer youre single</p>
-    <p>
-      *a'b,c;d:e.f?g!h#i$j[k]l(m)
-    </p>
 
     <small>
     <p>
@@ -102,11 +102,11 @@ function getPage(fontName) {
 const screen = new Screen({ debugBuild: false })
 
 async function train() {
-  // reset train dir
-  if (Fs.existsSync(trainDir)) {
-    await execa('rm', ['-r', trainDir])
-  }
-  await execa('mkdir', [trainDir])
+  // // reset train dir
+  // if (Fs.existsSync(trainDir)) {
+  //   await execa('rm', ['-r', trainDir])
+  // }
+  // await execa('mkdir', [trainDir])
 
   await screen.start()
 
@@ -118,7 +118,7 @@ async function train() {
     'rockwell',
     'avenir',
     'century gothic',
-    'century schoolbook',
+    // 'century schoolbook',
     'eurostile',
     'helvetica neue',
     'atlas grotesk',
@@ -133,15 +133,14 @@ async function train() {
   while (fonts.length) {
     const font = fonts.pop()
     await execa(`open`, [`http://localhost:3003/${font}`])
-    await sleep(800)
+    await sleep(1000)
     await new Promise(resolve => {
       screen.onWords(async data => {
         screen.pause()
         await sleep(350) // wait for fs to write all files
         const fontDir = Path.join(trainDir, font)
-        await execa('mkdir', [fontDir])
-        await execa('cp', ['-r', tmpDir, fontDir])
-        // await execa('mv', [Path.join(fontDir, 'tmp'), fontDir])
+        await execa('cp', ['-r', tmpDir, trainDir])
+        await execa('mv', [Path.join(trainDir, 'tmp'), fontDir])
         resolve()
       })
       screen.resume()

@@ -3,7 +3,7 @@ import AVFoundation
 import AppKit
 
 let shouldDebugTiming = true
-let simpleDebugImages = false
+let simpleDebugImages = true
 
 enum ApertureError: Error {
   case invalidAudioDevice
@@ -21,6 +21,7 @@ struct Box: Decodable {
   let screenDir: String?
   let findContent: Bool
   let initialScreenshot: Bool
+  let ocr: Bool
 }
 
 // constants
@@ -360,12 +361,12 @@ final class Recorder: NSObject {
         // finds characters
         let foundWords: [Word] = chars.find(id: allLines.flatMap { $0.count }.reduce(0, +) + index, bounds: lineFrame)
         // debug line
-//        if simpleDebugImages || self.shouldDebug {
-//          images.writeCGImage(
-//            image: images.cropImage(cgImage, box: CGRect(x: lineFrame[0] - box.x, y: lineFrame[1] - box.y, width: lineFrame[2], height: lineFrame[3]))!,
-//            to: "\(box.screenDir!)/a-line-\(box.id)-\(id)-\(index).png"
-//          )
-//        }
+        if simpleDebugImages {
+          images.writeCGImage(
+            image: images.cropImage(cgImage, box: CGRect(x: lineFrame[0] - box.x, y: lineFrame[1] - box.y, width: lineFrame[2], height: lineFrame[3]))!,
+            to: "\(box.screenDir!)/a-line-\(box.id)-\(id)-\(index).png"
+          )
+        }
         // write characters
         if self.shouldDebug { chars.shouldDebug = true }
         return foundWords
@@ -451,7 +452,7 @@ final class Recorder: NSObject {
     startTime()
     // second loop - find lines in sections
     var sectionLines = Dictionary<Int, [LinePosition]>()
-    let minLineWidth = 1
+    let minLineWidth = 3
     for (start, end) in verticalSections {
       var lines = [LinePosition]()
       var lineStreak = 0
@@ -702,7 +703,8 @@ final class Recorder: NSObject {
       height: frame[3],
       screenDir: box.screenDir,
       findContent: false, // now false on finding new content
-      initialScreenshot: box.initialScreenshot
+      initialScreenshot: box.initialScreenshot,
+      ocr: box.ocr
     )
   }
 }

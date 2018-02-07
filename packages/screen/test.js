@@ -38,6 +38,7 @@ const settings = {
       height: 1200,
       initialScreenshot: true,
       findContent: true,
+      ocr: true,
       screenDir: debugDir,
     },
   ],

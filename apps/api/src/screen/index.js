@@ -296,6 +296,7 @@ export default class ScreenState {
           // screenDir: Constants.TMP_DIR,
           initialScreenshot: true,
           findContent: true,
+          ocr: true,
         },
       ],
     })

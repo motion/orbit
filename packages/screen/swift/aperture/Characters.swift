@@ -259,7 +259,7 @@ class Characters {
   // maxMoves - moves to go total before giving up
   //    if maxMoves reached, will return nil
   func findCharacter(startX: Int, startY: Int, lineHeight: Int, maxMoves: Int, initialMove: [Int], findHangers: Bool) -> Character? {
-    let exhaust = lineHeight * 6 // distance to go without finding new bound before finishing character
+    let exhaust = lineHeight * 8 // distance to go without finding new bound before finishing character
     var visited = Dictionary<Int, Bool?>() // for preventing crossing over at thin interections
     var topLeftBound = [startX, startY]
     var bottomRightBound = [startX, startY]
@@ -475,16 +475,15 @@ class Characters {
     // scale it
     if char.width > char.height {
       scaleX = charW / frameSize
-      
+      if Float(char.height + offsetY) > frameSize { // big/wide
+        scaleY = totalHeight / frameSize
+      }
     } else {
       scaleY = totalHeight / frameSize
-      
-    }
-    if Float(char.height + offsetY) > frameSize { // big/wide
-      scaleY = totalHeight / frameSize
-    }
-    if charW > frameSize { // big/tall
-      scaleX = 1 / scaleY
+      if charW > frameSize { // big/tall
+        scaleX = charW / frameSize
+//        offsetY = Int(Float(offsetY) * scaleX)
+      }
     }
     
     endX = Int(charW / scaleX)

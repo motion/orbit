@@ -25,9 +25,13 @@ function getPage(fontName) {
       body {
         padding: 20px;
         font-family: ${fontName};
-        font-size: 27px;
+        font-size: 29px;
         letter-spacing: 2px;
-        line-height: 50px;
+        line-height: 36px;
+      }
+      small {
+        font-size: 22px;
+        line-height: 30px;
       }
       .light { font-weight: 300; }
       p { margin: 0; }
@@ -65,6 +69,31 @@ function getPage(fontName) {
     <p>
       *a'b,c;d:e.f?g!h#i$j[k]l(m)
     </p>
+
+    <small>
+    <p>
+    <b>*a'b,c;d:e.f?g!h#i$j[k]l(m)</b>
+  </p>
+  <p>
+   <b>the quick brown fox jumps over the lazy dog</b>
+  </p>
+  <p>
+    <b>Cwm FJORD BANK GLyphs VEXT Quiz</b>
+  </p>
+  <p>pack my box with</p>
+  <p>
+    five dozen liuor usxcs PACK MY BOX WITH
+  </p>
+  <p>
+    <b>Jackdaws love</b>
+  </p>
+  <p>
+    JACKDAWS LOVE my big sphinx of quartz
+  </p>
+  <p>
+    1234567890 <b>1234567890</b>
+  </p>
+    </small>
   </body>
 </html>
   `
@@ -92,21 +121,13 @@ async function train() {
     'century schoolbook',
     'eurostile',
     'helvetica neue',
-    // 'abraham lincoln',
     'atlas grotesk',
-    // 'aw conqueror sans',
-    // 'axis',
     'bernard mt condensed',
     'bookman old style',
-    // 'calenda plus',
     'cambria',
-    // 'chalkboard',
-    // 'chaparral pro',
-    // 'chochin',
     'consolas',
-    // 'times new roman',
-    'fira mono',
     'franklin gothic medium',
+    'lao mn',
   ]
 
   while (fonts.length) {

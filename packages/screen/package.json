@@ -7,7 +7,7 @@
   "scripts": {
     "train": "cd ./swift/pyocr/src && python3 train.py",
     "generate": "node ./generate",
-    "test": "node ./test --debug",
+    "test": "DEBUG_IMAGES=true node ./test --debug",
     "test-fast": "node ./test",
     "build":
       "cd swift && xcodebuild -configuration Release -derivedDataPath $(mktemp -d) -scheme aperture && touch ../../../apps/api/src/index.js",

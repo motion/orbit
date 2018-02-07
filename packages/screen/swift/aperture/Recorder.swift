@@ -3,7 +3,7 @@ import AVFoundation
 import AppKit
 
 let shouldDebugTiming = true
-let simpleDebugImages = false
+
 
 enum ApertureError: Error {
   case invalidAudioDevice
@@ -25,7 +25,7 @@ struct Box: Decodable {
 }
 
 // constants
-let lineFindScaling = 3 // scale down denominator
+let lineFindScaling = 4 // scale down denominator
 
 let filters = Filters()
 let images = Images()
@@ -79,6 +79,8 @@ final class Recorder: NSObject {
   var onStart: (() -> Void)?
   var onFinish: (() -> Void)?
   var onError: ((Error) -> Void)?
+  
+  private let simpleDebugImages = ProcessInfo.processInfo.environment["DEBUG_IMAGES"] == "true"
 
   var isRecording: Bool {
     return false
@@ -346,12 +348,10 @@ final class Recorder: NSObject {
     for id in sectionLines.keys {
       let scl = lineFindScaling
       let sectionLines: [[Word]] = sectionLines[id]!.pmap({ line, index in
-        print("process line \(index)")
         let padX = 12
         let padY = max(3, min(16, line.height / 10))
 //        print("section \(id) line \(index) topfill \(line.topFillAmt) bottomfill \(line.bottomFillAmt)")
-        //        let shiftUp = line.topFillAmt * 10 / line.bottomFillAmt * 10
-        //        print("shiftUp \(shiftUp)")
+//        print("shiftUp \(line.topFillAmt) shiftDown \(line.bottomFillAmt)")
         let lineFrame = [
           line.x * scl - padX + frame[0],
           line.y * scl - padY + frame[1],
@@ -362,7 +362,7 @@ final class Recorder: NSObject {
         // finds characters
         let foundWords: [Word] = chars.find(id: index, bounds: lineFrame)
         // debug line
-        if simpleDebugImages {
+        if self.simpleDebugImages {
           images.writeCGImage(
             image: images.cropImage(cgImage, box: CGRect(x: lineFrame[0] - box.x, y: lineFrame[1] - box.y, width: lineFrame[2], height: lineFrame[3]))!,
             to: "\(box.screenDir!)/a-line-\(box.id)-\(id)-\(index).png"
@@ -400,7 +400,7 @@ final class Recorder: NSObject {
       for y in 0..<vHeight {
         let x0 = max(0, min(maxWidth, frame[0] - box.x + x * scale))
         let y0 = max(0, min(maxHeight, frame[1] - box.y + y * scale))
-        let filled = verticalImageRep.colorAt(x: x0, y: y0)!.brightnessComponent < 0.975
+        let filled = verticalImageRep.colorAt(x: x0, y: y0)!.brightnessComponent < 0.99
         imgData[x].append(filled ? 1 : 0)
         if filled {
           verticalFilled += 1
@@ -457,6 +457,7 @@ final class Recorder: NSObject {
     for (start, end) in verticalSections {
       var lines = [LinePosition]()
       var lineStreak = 0
+      var lastLineFillPx = 0
       for y in 0..<vHeight {
         var lineFilledPx = 0
         var startLine = 0
@@ -472,7 +473,16 @@ final class Recorder: NSObject {
         }
         let isFilled = lineFilledPx >= minLineWidth
         if !isFilled {
+          lastLineFillPx = lineFilledPx
           lineStreak = 0
+          // when we find a clear line, update last line with its trailing pixels
+          if lineFilledPx > 0, var lastLine = lines.last {
+            if lastLine.y + lastLine.height == y - 1 {
+              lastLine.bottomFillAmt = lineFilledPx
+              print("add bottom fill (not working currently)")
+              lines[lines.count - 1] = lastLine
+            }
+          }
         } else {
           let x = startLine
           let width = endLine - startLine
@@ -483,7 +493,6 @@ final class Recorder: NSObject {
             var last = lines.last!
             last.height += 1
             last.width = max(last.width, width)
-            last.bottomFillAmt = lineFilledPx
             last.x = min(last.x, x)
             lines[lines.count - 1] = last
           } else {
@@ -494,12 +503,14 @@ final class Recorder: NSObject {
                 y: y,
                 width: width,
                 height: 1,
-                topFillAmt: lineFilledPx,
-                bottomFillAmt: lineFilledPx
+                topFillAmt: lastLineFillPx,
+                bottomFillAmt: 0
               )
             )
           }
         }
+        // update last line filled after filling in
+        lastLineFillPx = lineFilledPx
       }
       // remove last line if its cut off by frame
       if lines.count > 0 {
@@ -695,6 +706,7 @@ final class Recorder: NSObject {
       Async.utility(after: 0.04) { chars.updateCache(ocrResults) }
       print("recognized \(lines.count) lines, \(words.count) words")
     } else {
+      print("found \(charactersByLineWithBounds.flatMap { $0.flatMap { $0.characters } }.count) characters")
       self.send("{ \"action\": \"words\", \"value\": [] }")
     }
     // test write images:

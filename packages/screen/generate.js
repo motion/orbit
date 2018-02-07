@@ -27,11 +27,11 @@ function getPage(fontName) {
         font-family: ${fontName};
         font-size: 29px;
         letter-spacing: 2px;
-        line-height: 36px;
+        line-height: 38px;
       }
       small {
         font-size: 22px;
-        line-height: 30px;
+        line-height: 35px;
       }
       .light { font-weight: 300; }
       p { margin: 0; }
@@ -156,7 +156,7 @@ async function train() {
             x: 0,
             y: 24,
             width: 850,
-            height: 1200,
+            height: 1400,
             initialScreenshot: true,
             findContent: true,
             screenDir: tmpDir,

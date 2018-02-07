@@ -482,8 +482,8 @@ class Characters {
     let width = Float(char.width)
     var height = Float(char.height)
     if bottomPadding > 0 || topPadding > 0 {
-//      height = height + Float(bottomPadding) - Float(topPadding)
-//      offsetY = topPadding
+      height = height + Float(bottomPadding / 2) + Float(topPadding)
+      offsetY = -topPadding
     }
     var scaleX = Float(1)
     var scaleY = Float(1)

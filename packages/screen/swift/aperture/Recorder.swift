@@ -452,7 +452,7 @@ final class Recorder: NSObject {
     startTime()
     // second loop - find lines in sections
     var sectionLines = Dictionary<Int, [LinePosition]>()
-    let minLineWidth = 3
+    let minLineWidth = 5
     for (start, end) in verticalSections {
       var lines = [LinePosition]()
       var lineStreak = 0

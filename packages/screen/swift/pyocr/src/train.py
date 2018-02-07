@@ -33,7 +33,11 @@ train_y = torch.LongTensor(train_len)
 test_x = torch.Tensor(test_len, 1, 28, 28)
 test_y = torch.LongTensor(test_len)
 
-print('loading letters...' + str(len(letters)))
+print('loading ' + str(len(train_fonts)) +
+      ' fonts with ' + str(len(letters)) + ' letters...')
+print('train len...' + str(train_len))
+print('epochs...' + str(args.epochs))
+print('batch_size...' + str(args.batch_size))
 
 for font_index, font in enumerate(train_fonts):
     for index, letter in enumerate(letters):
@@ -124,7 +128,6 @@ def test():
         100. * correct / len(test_x)))
 
 
-print('epochs', epochs)
 for epoch in range(1, args.epochs):
     train(epoch)
     test()

@@ -13,7 +13,7 @@ fonts = [
     'rockwell',
     'avenir',
     'century gothic',
-    # 'century schoolbook',
+    'century schoolbook',
     'eurostile',
     'helvetica neue',
     'atlas grotesk',
@@ -22,7 +22,6 @@ fonts = [
     'cambria',
     'consolas',
     'franklin gothic medium',
-    'lao mn',
 ]
 
 random.shuffle(fonts)

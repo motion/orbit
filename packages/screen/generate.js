@@ -127,7 +127,7 @@ async function train() {
     'cambria',
     'consolas',
     'franklin gothic medium',
-    'lao mn',
+    // 'lao mn',
   ]
 
   while (fonts.length) {

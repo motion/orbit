@@ -93,7 +93,7 @@ class Characters {
       } else { // next row
         // could optimize this by skipping more
         // but that sacrifices space-finding accuracy
-        y += lineH / 12
+        y += max(1, lineH / 12)
       }
       // if reached last pixel, break
       if x >= lineW || y >= lineH || (x == lineW - 1 && y == lineH - 1) {
@@ -114,15 +114,16 @@ class Characters {
       }
       if isBlack {
         let percentDownLine = Float(y) / Float(lineH)
+        let debugID = "\(id)-\(curChar)"
         guard var char = self.findCharacter(
           startX: xO,
           startY: yO,
           lineHeight: lineH * 2, // in retina
-          maxMoves: lineH * 200, // not needed for first time
+          maxMoves: lineH * 100, // not needed for first time really
           initialMove: [0, moves.px], // we find it by going down vertically
           findHangers: true,
           percentDownLine: percentDownLine,
-          debugID: "\(id)-\(curChar)"
+          debugID: debugID
         ) else {
           print("no char")
           continue
@@ -288,6 +289,7 @@ class Characters {
       visited[curPos] = true
       curTry += 1
       if curTry > exhaust {
+        print("exhaust \(debugID)")
         exhausted = true
         foundEnd = true
         break

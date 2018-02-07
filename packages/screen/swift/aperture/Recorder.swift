@@ -25,7 +25,7 @@ struct Box: Decodable {
 }
 
 // constants
-let lineFindScaling = 4 // scale down denominator
+let lineFindScaling = 3 // scale down denominator
 
 let filters = Filters()
 let images = Images()
@@ -346,6 +346,7 @@ final class Recorder: NSObject {
     for id in sectionLines.keys {
       let scl = lineFindScaling
       let sectionLines: [[Word]] = sectionLines[id]!.pmap({ line, index in
+        print("process line \(index)")
         let padX = 12
         let padY = max(3, min(16, line.height / 10))
 //        print("section \(id) line \(index) topfill \(line.topFillAmt) bottomfill \(line.bottomFillAmt)")
@@ -359,7 +360,7 @@ final class Recorder: NSObject {
           min(frame[3], line.height * scl + padY * 3)
         ]
         // finds characters
-        let foundWords: [Word] = chars.find(id: allLines.flatMap { $0.count }.reduce(0, +) + index, bounds: lineFrame)
+        let foundWords: [Word] = chars.find(id: index, bounds: lineFrame)
         // debug line
         if simpleDebugImages {
           images.writeCGImage(

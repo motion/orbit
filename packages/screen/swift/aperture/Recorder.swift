@@ -505,7 +505,11 @@ final class Recorder: NSObject {
           lines.remove(at: lines.count - 1)
         }
       }
-      sectionLines[start] = lines
+      let filteredLines = lines.filter { $0.height < vHeight / 10 }
+      if filteredLines.count < lines.count {
+        debug("filtered \(lines.count - filteredLines.count) big lines")
+      }
+      sectionLines[start] = filteredLines
     }
 //    debug("getLines") // 0ms
     return sectionLines

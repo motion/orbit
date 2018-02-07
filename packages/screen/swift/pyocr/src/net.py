@@ -10,7 +10,7 @@ print("uniqueLetters" + str(uniqueLetters))
 class Net(nn.Module):
     def __init__(self):
         super(Net, self).__init__()
-        self.conv1 = nn.Conv2d(1, uniqueLetters, kernel_size=5)
+        self.conv1 = nn.Conv2d(1, uniqueLetters, kernel_size=2)
         self.conv2 = nn.Conv2d(uniqueLetters, 20, kernel_size=5)
         self.conv2_drop = nn.Dropout2d()
         self.fc1 = nn.Linear(320, 50)
@@ -21,6 +21,6 @@ class Net(nn.Module):
         x = F.relu(F.max_pool2d(self.conv2_drop(self.conv2(x)), 2))
         x = x.view(-1, 320)
         x = F.relu(self.fc1(x))
-        x = F.dropout(x, p=0.5, training=self.training)
+        x = F.dropout(x, p=0.35, training=self.training)
         x = F.relu(self.fc2(x))
         return F.log_softmax(x, dim=None)

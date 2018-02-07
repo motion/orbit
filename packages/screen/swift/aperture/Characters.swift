@@ -369,12 +369,15 @@ class Characters {
       let centerX = topLeftBound[0] + (width / 2)
 //      let rightX = bottomRightBound[0] - (width / 4)
 //      let leftX = topLeftBound[0] + (width / 4)
-      let maxPxOffset = max(2, lineHeight)
+      let maxPxOffset = max(2, lineHeight / 5)
       let maxY = bottomRightBound[1]
       for y in 1...maxPxOffset {
         // go up
         if buffer[(minY - y) * perRow + centerX] < isBlackIfUnder {
           if let aboveChar = self.findCharacter(startX: centerX, startY: minY - y, lineHeight: lineHeight, maxMoves: lineHeight * 20, initialMove: [0, -moves.px], findHangers: false) {
+            if aboveChar.width * aboveChar.height > lineHeight * lineHeight / 2 {
+              break
+            }
             print("merge above \(startX / 2) \(startY / 2)")
             height += minY - aboveChar.y
             minY = aboveChar.y
@@ -387,6 +390,10 @@ class Characters {
         // go down
         if buffer[(maxY + y) * perRow + centerX] < isBlackIfUnder {
           if let belowChar = self.findCharacter(startX: centerX, startY: maxY + y, lineHeight: lineHeight, maxMoves: lineHeight * 20, initialMove: [0, moves.px], findHangers: false) {
+            if belowChar.width * belowChar.height > lineHeight * lineHeight / 2 {
+              break
+            }
+            print("merge below \(startX / 2) \(startY / 2)")
             height += belowChar.height + (belowChar.y - maxY)
             let widthWithChar = belowChar.x + belowChar.width - minX
             width = max(widthWithChar, width)
@@ -457,7 +464,7 @@ class Characters {
     let frameSize = Float(28)
     let charY = retinaLineBounds[1] // use line Y
     let charW = Float(char.width)
-    let offsetY = char.y - retinaLineBounds[1] // chary - liney
+    var offsetY = char.y - retinaLineBounds[1] // chary - liney
     var scaleX = Float(1.0)
     var scaleY = Float(1.0)
     var endX = 28
@@ -468,17 +475,20 @@ class Characters {
     // scale it
     if char.width > char.height {
       scaleX = charW / frameSize
-      if Float(char.height + offsetY) > frameSize { // big/wide
-        scaleY = totalHeight / frameSize
-      }
+      
     } else {
       scaleY = totalHeight / frameSize
-      if charW > frameSize { // big/wide
-        scaleX = charW / frameSize
-      }
+      
     }
+    if Float(char.height + offsetY) > frameSize { // big/wide
+      scaleY = totalHeight / frameSize
+    }
+    if charW > frameSize { // big/tall
+      scaleX = 1 / scaleY
+    }
+    
     endX = Int(charW / scaleX)
-    endY = Int(Float(char.height + offsetY) / scaleY) + 1
+    endY = Int(Float(char.height + offsetY) / scaleY * 2)
 //    if debugID == "0-0-0" {
 //      print("thin large l: \(scaleX) \(scaleY) \(endX) \(offsetY) \(char) \(retinaLineBounds)")
 //    }

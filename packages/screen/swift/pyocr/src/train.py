@@ -20,8 +20,8 @@ from PIL import Image
 from get_letter import get_letter
 
 epochs = 100
-BATCH_SIZE = 12
-TEST_LETTERS = letters[0:185]
+BATCH_SIZE = 30
+TEST_LETTERS = letters[0:190]
 
 
 def letter_index(letter):

@@ -255,7 +255,7 @@ class Characters {
   // maxMoves - moves to go total before giving up
   //    if maxMoves reached, will return nil
   func findCharacter(startX: Int, startY: Int, lineHeight: Int, maxMoves: Int, initialMove: [Int], findHangers: Bool, percentDownLine: Float, debugID: String) -> Character? {
-    let exhaust = lineHeight * 4 // distance to go without finding new bound before finishing character
+    let exhaust = lineHeight * 6 // distance to go without finding new bound before finishing character
     var visited = Dictionary<Int, Bool?>() // for preventing crossing over at thin interections
     var topLeftBound = [startX, startY]
     var bottomRightBound = [startX, startY]
@@ -368,14 +368,15 @@ class Characters {
       let centerX = topLeftBound[0] + (width / 2)
       let maxDownPx = Int((1.0 - percentDownLine) * Float(lineHeight / 2)) // pxs left in line downwards
       let maxUpPx = Int(percentDownLine * Float(lineHeight / 2)) // pxs left in line upwards
-      print("line \(debugID) maxup \(maxUpPx) maxdown \(maxDownPx)")
+//      print("line \(debugID) maxup \(maxUpPx) maxdown \(maxDownPx)")
       let maxY = bottomRightBound[1]
       if maxUpPx > 2 {
         // go up
         for y in 1...maxUpPx {
           if buffer[(minY - y) * perRow + centerX] < isBlackIfUnder {
             if let c = self.findCharacter(startX: centerX, startY: minY - y, lineHeight: lineHeight, maxMoves: lineHeight * 10, initialMove: [0, -moves.px], findHangers: false, percentDownLine: percentDownLine, debugID: debugID + "-hangar") {
-              if c.width * c.height > maxUpPx * maxUpPx / 2 { break }
+              if c.width * c.height > maxUpPx * maxUpPx / 3 { break } // too big
+              if c.height > maxUpPx { break } // too tall
               height += minY - c.y
               minY = c.y
               let widthWithChar = c.x + c.width - minX
@@ -391,7 +392,8 @@ class Characters {
         for y in 1...maxDownPx {
           if buffer[(maxY + y) * perRow + centerX] < isBlackIfUnder {
             if let c = self.findCharacter(startX: centerX, startY: maxY + y, lineHeight: lineHeight, maxMoves: lineHeight * 10, initialMove: [0, moves.px], findHangers: false, percentDownLine: percentDownLine, debugID: debugID + "-hangar") {
-              if c.width * c.height > maxDownPx * maxDownPx / 2 { break }
+              if c.width * c.height > maxDownPx * maxDownPx / 3 { break } // too big
+              if c.height > maxDownPx { break } // too tall
               height += c.height + (c.y - maxY)
               let widthWithChar = c.x + c.width - minX
               width = max(widthWithChar, width)
@@ -487,10 +489,13 @@ class Characters {
     }
     var scaleX = Float(1)
     var scaleY = Float(1)
+    var endX = 28
     if width > dbl {
       scaleX = width / dbl
     } else if width < dbl {
-      scaleX = 1 / (dbl / width)
+      // multiply by two so it doesnt stretch all the way
+      scaleX = 1 / (dbl / width) * 2
+      endX = 28 / 2
     }
     if height > dbl {
       scaleY = height / dbl
@@ -500,6 +505,7 @@ class Characters {
     var output = ""
     for y in 0..<28 {
       for x in 0..<28 {
+        if x > endX { output += "1.0 "; continue }
         let xS = Int(Float(x) * scaleX)
         let yS = Int(Float(y) * scaleY)
 //        if yS > 28 - offsetY {

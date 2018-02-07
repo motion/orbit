@@ -102,11 +102,11 @@ function getPage(fontName) {
 const screen = new Screen({ debugBuild: false })
 
 async function train() {
-  // // reset train dir
-  // if (Fs.existsSync(trainDir)) {
-  //   await execa('rm', ['-r', trainDir])
-  // }
-  // await execa('mkdir', [trainDir])
+  // reset train dir
+  if (Fs.existsSync(trainDir)) {
+    await execa('rm', ['-r', trainDir])
+  }
+  await execa('mkdir', [trainDir])
 
   await screen.start()
 
@@ -118,7 +118,7 @@ async function train() {
     'rockwell',
     'avenir',
     'century gothic',
-    // 'century schoolbook',
+    'century schoolbook',
     'eurostile',
     'helvetica neue',
     'atlas grotesk',
@@ -160,6 +160,7 @@ async function train() {
             initialScreenshot: true,
             findContent: true,
             screenDir: tmpDir,
+            ocr: false,
           },
         ],
       })

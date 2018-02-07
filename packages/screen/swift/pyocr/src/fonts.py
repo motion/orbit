@@ -21,8 +21,8 @@ fonts = [
     'bookman old style',
     'cambria',
     'consolas',
-    'fira mono',
     'franklin gothic medium',
+    'lao mn',
 ]
 
 random.shuffle(fonts)

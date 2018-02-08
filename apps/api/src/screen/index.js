@@ -205,25 +205,41 @@ export default class ScreenState {
   }
 
   watchKeyboard = () => {
-    const optionKey = 56
+    const codes = {
+      option: 56,
+      up: 57416,
+      down: 57424,
+      space: 57,
+      pgUp: 3657,
+      pgDown: 3665,
+    }
     const updateKeyboard = newState =>
       this.updateState({ keyboard: { ...this.state.keyboard, ...newState } })
 
+    // keydown
     iohook.on('keydown', ({ keycode }) => {
-      const isOptionKey = keycode === optionKey
-      // clear option key if other key pressed during
-      if (this.state.keyboard.option && !isOptionKey) {
-        updateKeyboard({ optionCleared: true })
-        return
+      // console.log('keycode', keycode)
+      if (keycode === codes.option) {
+        return updateKeyboard({ option: true, optionCleared: false })
       }
-      // option on
-      if (isOptionKey) {
-        updateKeyboard({ option: true, optionCleared: false })
+      // clear option key if other key pressed during
+      if (this.state.keyboard.option) {
+        return updateKeyboard({ optionCleared: true })
+      }
+      switch (keycode) {
+        // clear highlights keys
+        case codes.up:
+        case codes.down:
+        case codes.pgUp:
+        case codes.pgDown:
+          return this.resetHighlights()
       }
     })
+
+    // keyup
     iohook.on('keyup', ({ keycode }) => {
       // option off
-      if (keycode === optionKey) {
+      if (keycode === codes.option) {
         updateKeyboard({ option: false, optionCleared: false })
       }
     })

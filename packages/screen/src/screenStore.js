@@ -1,6 +1,7 @@
 import { store } from '@mcro/black/store'
 import SwiftBridge from './swiftBridge'
 import ReconnectingWebSocket from 'reconnecting-websocket'
+import WebSocket from 'ws'
 
 @store
 export default class ScreenStore {
@@ -32,11 +33,12 @@ export default class ScreenStore {
 
   // note: you have to call start to make it explicitly connect
   start() {
-    window.screen = this
     if (this.ws) {
       return
     }
-    this.ws = new ReconnectingWebSocket('ws://localhost:40510')
+    this.ws = new ReconnectingWebSocket('ws://localhost:40510', undefined, {
+      constructor: WebSocket,
+    })
     this.ws.onmessage = ({ data }) => {
       if (data) {
         const res = JSON.parse(data)

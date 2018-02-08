@@ -1,4 +1,4 @@
-import WebSocket from 'html5-websocket'
+import WebSocket from 'ws'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 
 export default class ScreenClient {

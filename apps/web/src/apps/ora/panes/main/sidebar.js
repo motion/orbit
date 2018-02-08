@@ -5,10 +5,16 @@ import * as Constants from '~/constants'
 import * as UI from '@mcro/ui'
 
 export default class MainSidebar {
-  ora = this.props.oraStore
   finishedLoading = true
 
+  get ora() {
+    return this.props.oraStore
+  }
+
   get context() {
+    if (!this.ora.appState) {
+      return null
+    }
     return this.ora.appState.context
   }
 

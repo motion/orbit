@@ -370,8 +370,8 @@ class Characters {
     // blob above/below, to get i's and j's and ?'s
     if findHangers {
       let centerX = topLeftBound[0] + (width / 2)
-      let maxDownPx = Int((1.0 - percentDownLine) * Float(lineHeight) / 3) // pxs left in line downwards
-      let maxUpPx = Int(percentDownLine * Float(lineHeight) / 3) // pxs left in line upwards
+      let maxDownPx = Int((1.0 - percentDownLine) * Float(lineHeight) / 2.5) // pxs left in line downwards
+      let maxUpPx = Int(percentDownLine * Float(lineHeight) / 2.5) // pxs left in line upwards
 //      print("line \(debugID) maxup \(maxUpPx) maxdown \(maxDownPx)")
       let maxY = bottomRightBound[1]
       if maxUpPx > 2 {
@@ -501,7 +501,7 @@ class Characters {
     }
     var output = ""
     let smallSize = Float(retinaLineBounds[3]) / 5
-    let bigSize = Float(retinaLineBounds[3]) / 1.5
+    let bigSize = Float(retinaLineBounds[3]) / 2
     for y in 0..<28 {
       for x in 0..<28 {
         if x < offset {
@@ -539,13 +539,13 @@ class Characters {
         if y < offset {
           if x < 12 && x >= 8 {
             // encode a dot for mediumtoppad
-            if topPad > retinaLineBounds[3] / 4 {
+            if topPad > retinaLineBounds[3] / 6 {
               output += "0.0 "
               continue
             }
           }
           if x < 20 && x >= 16 {
-            // encode a dot for reallybig
+            // encode a dot for squarishly big
             if width > bigSize && height > bigSize {
               output += "0.0 "
               continue

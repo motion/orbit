@@ -27,11 +27,11 @@ function getPage(fontName) {
         font-family: ${fontName};
         font-size: 29px;
         letter-spacing: 2.5px;
-        line-height: 40px;
+        line-height: 44px;
       }
       small {
         font-size: 20px;
-        line-height: 35px;
+        line-height: 32px;
       }
       .light { font-weight: 300; font-smooth: antialiased; }
       p { margin: 0; }

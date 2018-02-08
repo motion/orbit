@@ -62,7 +62,7 @@ export default class OraStore {
   get appState() {
     const { appState } = this.props.screen
     if (!appState) {
-      return null
+      return {}
     }
     // dont treat itself as a appState source
     if (
@@ -101,7 +101,7 @@ export default class OraStore {
     // watch and set active search
     this.watch(function setSearchQuery() {
       const { appState } = this
-      if (appState && !this.ui.barFocused) {
+      if (Object.keys(appState).length && !this.ui.barFocused) {
         if (appState.selection) {
           this.search.setQuery(appState.selection)
           return

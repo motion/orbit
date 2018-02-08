@@ -6,19 +6,21 @@ import * as UI from '@mcro/ui'
 
 export default class MainSidebar {
   ora = this.props.oraStore
-  context = this.ora.appState.context
   finishedLoading = true
+
+  get context() {
+    return this.ora.appState.context
+  }
 
   get search() {
     return this.ora.ui.search
   }
 
   get title() {
-    const { context } = this.ora
-    if (!context) {
+    if (!this.context) {
       return null
     }
-    const result = contextToResult(context)
+    const result = contextToResult(this.context)
     return {
       title: <div css={{ width: 100 }} />,
       after: (

@@ -11,7 +11,7 @@ export default class ScreenStore {
   lastScreenChange = null
   lastOCR = null
   mousePosition = null
-  keyboard = null
+  keyboard = {}
   highlightWords = null || {}
   clearWords = {}
   swiftBridge = new SwiftBridge({
@@ -30,6 +30,7 @@ export default class ScreenStore {
     this.ws.send(JSON.stringify({ action: 'start' }))
   }
 
+  // note: you have to call start to make it explicitly connect
   start() {
     window.screen = this
     if (this.ws) {

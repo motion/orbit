@@ -3,7 +3,6 @@ import * as Injections from '~/helpers/injections'
 import * as Helpers from '~/helpers'
 import { ipcMain } from 'electron'
 import { throttle } from 'lodash'
-import repl from 'repl'
 
 export function listenForAuth() {
   const getAuthUrl = service => `${Constants.APP_URL}/auth?service=` + service
@@ -30,13 +29,6 @@ export function listenForCrawlerInject() {
     'uninject-crawler',
     throttle(Injections.uninjectCrawler, 1000),
   )
-}
-
-export function injectRepl(object) {
-  // const replInstance = repl.start({
-  //   prompt: 'electron > ',
-  // })
-  // Object.assign(replInstance.context, object)
 }
 
 export function handleOpenSettings() {

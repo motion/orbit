@@ -12,8 +12,7 @@
     "test-scroll": "node ./test --scroll",
     "build":
       "cd swift && xcodebuild -configuration Release -derivedDataPath $(mktemp -d) -scheme aperture && touch ../../../apps/api/src/index.js",
-    "edit": "open ./swift/aperture.xcodeproj",
-    "prepublish": "npm run build"
+    "edit": "open ./swift/aperture.xcodeproj"
   },
   "files": ["index.js", "aperture"],
   "dependencies": {

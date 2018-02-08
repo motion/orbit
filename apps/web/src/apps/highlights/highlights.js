@@ -55,6 +55,14 @@ class HighlightsStore {
     this.props.screen.start()
     this.react(() => ['word', this.ocrWords], this.setupHover, true)
     this.react(() => ['line', this.screen.linePositions], this.setupHover, true)
+
+    // watch option hold
+    this.react(
+      () => this.screen.keyboard.option,
+      val => {
+        console.log('seeing screen keyboard option', val)
+      },
+    )
   }
 
   setupHover([name, items]) {

@@ -43,7 +43,13 @@ import ScreenStore from '@mcro/screen-store'
         }
       })
       // watch option hold
-      this.react(() => this.screen.keyboard.option, this.toggleShown)
+      this.react(
+        () => this.screen.keyboard.option,
+        val => {
+          console.log('seeing screen keyboard option', val)
+          this.toggleShown()
+        },
+      )
     }
 
     sendOraSync = async (...args) => {

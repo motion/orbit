@@ -1,4 +1,3 @@
-export runAppleScript from './runAppleScript'
 export getAppSize from './getAppSize'
 export getScreenSize from './getScreenSize'
 export open from 'opn'

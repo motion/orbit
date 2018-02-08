@@ -2,7 +2,6 @@ import * as React from 'react'
 import { App } from '@mcro/reactron'
 import ShortcutsStore from '~/stores/shortcutsStore'
 import { view } from '@mcro/black'
-import * as RootHelpers from './rootHelpers'
 import Windows from './Windows'
 import Tray from './Tray'
 import { ipcMain } from 'electron'
@@ -32,10 +31,6 @@ import ScreenStore from '@mcro/screen-store'
         console.log('emit shortcut', shortcut)
         this.emit('shortcut', shortcut)
       })
-      RootHelpers.listenForAuth.call(this)
-      RootHelpers.listenForOpenBrowser.call(this)
-      RootHelpers.listenForCrawlerInject.call(this)
-      RootHelpers.injectRepl({ rootStore: this })
       this.setupOraLink()
       this.on('shortcut', shortcut => {
         if (shortcut === 'Option+Space') {

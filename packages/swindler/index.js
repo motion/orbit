@@ -42,7 +42,6 @@ class Swindler {
         if (out[0] === ':') {
           let [event, ...message] = out.slice(1).split(' ')
           message = message.join(' ').trim()
-          console.log('got em', message)
           // convert swift strings
           if (message[0] === '\'') {
             message = `"${message.slice(1, message.length - 1)}"`

@@ -4,7 +4,7 @@ import Redbox from 'redbox-react'
 import * as UI from '@mcro/ui'
 import NotFound from '~/views/404'
 import Router from '~/router'
-import { ScreenStore } from '@mcro/screen/store'
+import ScreenStore from '@mcro/screen-store'
 
 console.log('ScreenStore is', ScreenStore)
 

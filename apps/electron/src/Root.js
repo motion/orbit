@@ -8,7 +8,7 @@ import Tray from './Tray'
 import { ipcMain } from 'electron'
 import * as Helpers from '~/helpers'
 import { throttle } from 'lodash'
-import { ScreenStore } from '@mcro/screen/store'
+import ScreenStore from '@mcro/screen-store'
 
 @view.provide({
   rootStore: class RootStore {

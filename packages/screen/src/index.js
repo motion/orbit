@@ -16,7 +16,6 @@ const DEBUG_PATH = Path.join(buildPath, 'Debug')
 const pusage = promisify(pusage_.stat)
 
 export SwiftBridge from './swiftBridge'
-export ScreenStore from './screenStore'
 
 const sleep = ms => new Promise(res => setTimeout(res, ms))
 

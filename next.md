@@ -1,23 +1,33 @@
 # next
 
+* quick clear using key/scroll events
+* correctness
+
+  * recurrent net corrections
+  * experiment: swirly bits for convnet
+  * fix section/line finding (hough transforms gpuswift?)
+  * long line/char finding breaking
+
+* make app fun to use
+  * ux roll through for option show fixes
+  * hover to see line/sentence highlight
+  * exact character matching
 * preconfigured with our integrations hardcoded / working
   * slack, google docs, github
   * twitter => slack, medium => docs
-* easy way to cut prod builds that download
+* prod builds
+  * fix port overlap issues
+  * get it building again
+  * easy script to cut them
 * highlights
 * peek
 * sync attention
 * feeds
-* summarization ?
 * ...
 
 ## Micro
 
-* fix bad lines
-* make clearing quicker
-* highlight lines on screen
 * peek bugs popping up all the time
-* highlight sentence you are focused on
 * crawler dont use node readability
 * more forgiving markdown parser
 * drive sync pane / drive sync

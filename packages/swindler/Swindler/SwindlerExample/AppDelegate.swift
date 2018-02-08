@@ -33,6 +33,19 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             NSApp.terminate(self)
         }
         
+        var lastScroll = DispatchTime.now()
+        NSEvent.addGlobalMonitorForEvents(matching: NSEvent.EventTypeMask.scrollWheel, handler: { event in
+            let msSinceLast = Int(Double(DispatchTime.now().uptimeNanoseconds - lastScroll.uptimeNanoseconds) / 1_000_000)
+            if msSinceLast > 200 {
+                self.emit(":ScrollEvent \(DispatchTime.now().rawValue)")
+                lastScroll = DispatchTime.now()
+            }
+        })
+        
+//        NSEvent.addGlobalMonitorForEvents(matching: NSEvent.EventTypeMask.any, handler: { event in
+//            self.emit("got event \(event)")
+//        })
+        
         emit("loaded swindler")
         sleep(1)
 

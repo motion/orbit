@@ -35,6 +35,10 @@ import ScreenStore from '@mcro/screen-store'
       this.setupOraLink()
       this.on('shortcut', shortcut => {
         if (shortcut === 'Option+Space') {
+          if (this.screen.keyboard.option) {
+            console.log('avoid toggle while holding option')
+            return
+          }
           this.toggleShown()
         }
       })

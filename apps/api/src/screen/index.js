@@ -169,6 +169,7 @@ export default class ScreenState {
     this.swindler.start()
     let lastId = null
     this.swindler.onChange(({ event, message }) => {
+      console.log('got event', event)
       // immediately cancel stuff
       this.resetHighlights()
       switch (event) {

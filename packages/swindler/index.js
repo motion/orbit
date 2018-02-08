@@ -2,6 +2,8 @@ const path = require('path')
 const execa = require('execa')
 const electronUtil = require('electron-util/node')
 
+console.log('process.env.DEBUG', process.env.DEBUG)
+
 const CWD = path.join(
   electronUtil.fixPathForAsarUnpack(__dirname),
   'Swindler',
@@ -40,6 +42,7 @@ class Swindler {
         if (out[0] === ':') {
           let [event, ...message] = out.slice(1).split(' ')
           message = message.join(' ').trim()
+          console.log('got em', message)
           // convert swift strings
           if (message[0] === '\'') {
             message = `"${message.slice(1, message.length - 1)}"`
@@ -66,7 +69,7 @@ class Swindler {
           })
         } else {
           // pass through logs from swindler
-          // console.log(out)
+          console.log(out)
         }
       }
     })

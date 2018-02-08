@@ -170,7 +170,7 @@ export default class OraHeader extends React.Component {
               getRef={oraStore.ui.handleInputRef}
               borderRadius={0}
               onBlur={this.handleInputBlur}
-              onChange={oraStore.ui.handleSearchChange}
+              onKeyDown={oraStore.ui.handleSearchKeyDown}
               value={oraStore.ui.textboxVal}
               borderWidth={0}
               background="transparent"

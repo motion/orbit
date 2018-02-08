@@ -925,10 +925,6 @@ sb-event-kit@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/sb-event-kit/-/sb-event-kit-3.0.0.tgz#0deab6e8a2d9ddad73375e7b83da80bfc9105d24"
 
-screen-record@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/screen-record/-/screen-record-1.0.1.tgz#4fb1121f23252509646cd31b39acc25d3495cb97"
-
 sdp@^1.0.0:
   version "1.5.4"
   resolved "https://registry.yarnpkg.com/sdp/-/sdp-1.5.4.tgz#8e038f6ddb14bd765ae1f4b5216e12094511e0d0"
@@ -946,10 +942,6 @@ shebang-command@^1.2.0:
 shebang-regex@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/shebang-regex/-/shebang-regex-1.0.0.tgz#da42f49740c0b42db2ca9728571cb190c98efea3"
-
-sherlockjs@*:
-  version "1.3.7"
-  resolved "https://registry.yarnpkg.com/sherlockjs/-/sherlockjs-1.3.7.tgz#40bffa8fe3122ad958b032b9e852629ad00aff31"
 
 signal-exit@^3.0.0:
   version "3.0.2"
@@ -1077,10 +1069,6 @@ to-string-x@^1.4.2:
   dependencies:
     is-symbol "^1.0.1"
 
-triangulr@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/triangulr/-/triangulr-1.0.0.tgz#8413de73717cb643c3a1f2c92324feec140f8127"
-
 trim-left-x@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/trim-left-x/-/trim-left-x-3.0.0.tgz#356cf055896726b9754425e841398842e90b4cdf"
@@ -1143,6 +1131,10 @@ webrtc-adapter@^2.0.2:
   resolved "https://registry.yarnpkg.com/webrtc-adapter/-/webrtc-adapter-2.1.0.tgz#612b5bc6ce8e73c9d0660038a21f9255a867bf3e"
   dependencies:
     sdp "^1.0.0"
+
+whatkey@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/whatkey/-/whatkey-2.0.1.tgz#41e56b2b1058acd1550d487748a6068e58128688"
 
 whatwg-fetch@>=0.10.0, whatwg-fetch@^2.0.3:
   version "2.0.3"

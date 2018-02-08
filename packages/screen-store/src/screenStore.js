@@ -1,14 +1,7 @@
 import { store } from '@mcro/black/store'
 import SwiftBridge from './swiftBridge'
 import ReconnectingWebSocket from 'reconnecting-websocket'
-
-let WebSocket
-
-if (typeof window !== 'undefined') {
-  WebSocket = window.WebSocket
-} else {
-  WebSocket = require('ws')
-}
+import WebSocket from './websocket'
 
 export SwiftBridge from './swiftBridge'
 

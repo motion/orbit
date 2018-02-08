@@ -1,4 +1,4 @@
-import WebSocket from 'ws'
+import WebSocket from './websocket'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 
 export default class ScreenClient {

@@ -8,12 +8,11 @@ import Tray from './Tray'
 import { ipcMain } from 'electron'
 import * as Helpers from '~/helpers'
 import { throttle } from 'lodash'
-import { ScreenClient } from '@mcro/screen'
+import { ScreenStore } from '@mcro/screen/store'
 
 @view.provide({
   rootStore: class RootStore {
-    // our api to the screen
-    screenState = {}
+    screen = new ScreenStore()
     // used to generically talk to browser
     sendOra = null
 
@@ -36,20 +35,11 @@ import { ScreenClient } from '@mcro/screen'
       RootHelpers.listenForOpenBrowser.call(this)
       RootHelpers.listenForCrawlerInject.call(this)
       RootHelpers.injectRepl({ rootStore: this })
-      this.setupScreenLink()
       this.setupOraLink()
       this.on('shortcut', shortcut => {
         if (shortcut === 'Option+Space') {
           this.toggleShown()
         }
-      })
-    }
-
-    setupScreenLink() {
-      this.screenClient = new ScreenClient({
-        onStateChange: state => {
-          this.screenState = state
-        },
       })
     }
 
@@ -170,11 +160,7 @@ export default class Root extends React.Component {
           onOraRef={rootStore.handleOraRef}
           onSettingsVisibility={rootStore.handleSettingsVisibility}
         />
-        <Tray
-          onClick={() => {
-            rootStore.screenClient.toggle()
-          }}
-        />
+        <Tray onClick={rootStore.screen.swiftBridge.toggle} />
       </App>
     )
   }

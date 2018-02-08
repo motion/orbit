@@ -1,8 +1,10 @@
-import { store } from '@mcro/black'
+import { store } from '@mcro/black/store'
+import SwiftBridge from './swiftBridge'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 
 @store
 export default class ScreenStore {
+  swiftState = null
   appState = null
   ocrWords = null
   linePositions = null
@@ -12,6 +14,11 @@ export default class ScreenStore {
   keyboard = null
   highlightWords = null || {}
   clearWords = {}
+  swiftBridge = new SwiftBridge({
+    onStateChange: state => {
+      this.swiftState = state
+    },
+  })
 
   pause() {
     this.start()

@@ -7,7 +7,7 @@ import promisify from 'sb-promisify'
 import pusage_ from 'pidusage'
 import killPort from 'kill-port'
 
-const PORT = 40512
+const WEBSOCKET_PORT = 40512
 const dir = electronUtil.fixPathForAsarUnpack(__dirname)
 const buildPath = Path.join(dir, '..', 'swift', 'Build', 'Products')
 const RELEASE_PATH = Path.join(buildPath, 'Release')
@@ -15,7 +15,8 @@ const DEBUG_PATH = Path.join(buildPath, 'Debug')
 
 const pusage = promisify(pusage_.stat)
 
-export ScreenClient from './client'
+export SwiftBridge from './swiftBridge'
+export ScreenStore from './screenStore'
 
 const sleep = ms => new Promise(res => setTimeout(res, ms))
 
@@ -53,8 +54,8 @@ export default class Screen {
     } catch (err) {}
     if (!this.wss) {
       // kill old ones
-      await killPort(PORT)
-      this.wss = new Server({ port: PORT })
+      await killPort(WEBSOCKET_PORT)
+      this.wss = new Server({ port: WEBSOCKET_PORT })
       this.setupSocket()
     }
     this.setState({ isPaused: false })

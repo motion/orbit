@@ -1,11 +1,16 @@
 # next
 
-* quick clear using key/scroll events
+* hold option to see highlights
+* quick clear using key events
+* debounce more when it notices lots of changes (video)
+
+  * ideally, remove areas that keep changing, just scan rest
+
 * correctness
 
+  * line finding (hough transforms gpuswift?)
   * recurrent net corrections
   * experiment: swirly bits for convnet
-  * fix section/line finding (hough transforms gpuswift?)
   * long line/char finding breaking
 
 * make app fun to use

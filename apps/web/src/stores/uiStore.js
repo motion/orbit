@@ -138,7 +138,7 @@ export default class UIStore {
     const SHOW_DELAY = 250
     let showTimeout
     this.react(
-      () => this.oraStore.context.keyboard || {},
+      () => this.oraStore.screen.keyboard || {},
       ({ option }) => {
         clearTimeout(showTimeout)
         const { peeking } = this.state

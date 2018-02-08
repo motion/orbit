@@ -28,6 +28,7 @@ export default class OraStore {
   ui = new UIStore({ oraStore: this })
   pin = new PinStore()
   search = new SearchStore({ useWorker })
+  screen = this.props.screen
 
   // synced from electron
   // see @mcro/electron/src/views/Windows#Windows.state

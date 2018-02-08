@@ -121,6 +121,7 @@ const OraContent = () => (
   </React.Fragment>
 )
 
+@view.attach('screen')
 @view.provide({
   oraStore: OraStore,
 })

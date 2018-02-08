@@ -5,6 +5,8 @@ import WebSocket from './websocket'
 
 export SwiftBridge from './swiftBridge'
 
+// this is essentially a proxy store for api/screen
+
 @store
 export default class ScreenStore {
   swiftState = null

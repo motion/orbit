@@ -206,22 +206,25 @@ export default class ScreenState {
 
   watchKeyboard = () => {
     const optionKey = 56
+    const updateKeyboard = newState =>
+      this.updateState({ keyboard: { ...this.state.keyboard, ...newState } })
+
     iohook.on('keydown', ({ keycode }) => {
       const isOptionKey = keycode === optionKey
       // clear option key if other key pressed during
       if (this.state.keyboard.option && !isOptionKey) {
-        this.updateState({ keyboard: { option: false } })
+        updateKeyboard({ optionCleared: true })
         return
       }
       // option on
       if (isOptionKey) {
-        this.updateState({ keyboard: { option: true } })
+        updateKeyboard({ option: true, optionCleared: false })
       }
     })
     iohook.on('keyup', ({ keycode }) => {
       // option off
       if (keycode === optionKey) {
-        this.updateState({ keyboard: { option: false } })
+        updateKeyboard({ option: false, optionCleared: false })
       }
     })
   }

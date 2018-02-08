@@ -39,11 +39,33 @@ import ScreenStore from '@mcro/screen-store'
         }
       })
       // watch option hold
+      let lastKeyboard = {}
+      let optionDelay
       this.react(
-        () => this.screen.keyboard.option,
-        val => {
-          console.log('seeing screen keyboard option', val)
-          this.toggleShown()
+        () => this.screen.keyboard,
+        keyboard => {
+          if (!keyboard) {
+            return
+          }
+          console.log('got keyboard', keyboard, lastKeyboard)
+          const { option, optionCleared } = keyboard
+          if (this.oraState.hidden) {
+            // HIDDEN
+            // clear last if not opened yet
+            if (optionCleared) {
+              clearTimeout(optionDelay)
+            }
+            // delay before opening on option
+            if (!lastKeyboard.option && option) {
+              optionDelay = setTimeout(this.toggleShown, 300)
+            }
+          } else {
+            // SHOWN
+            if (lastKeyboard.option && !option) {
+              this.toggleShown()
+            }
+          }
+          lastKeyboard = keyboard
         },
       )
     }

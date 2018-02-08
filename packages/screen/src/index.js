@@ -14,9 +14,6 @@ const RELEASE_PATH = Path.join(buildPath, 'Release')
 const DEBUG_PATH = Path.join(buildPath, 'Debug')
 
 const pusage = promisify(pusage_.stat)
-
-export SwiftBridge from './swiftBridge'
-
 const sleep = ms => new Promise(res => setTimeout(res, ms))
 
 export default class Screen {

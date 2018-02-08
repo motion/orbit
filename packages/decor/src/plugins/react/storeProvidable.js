@@ -1,11 +1,11 @@
 import React from 'react'
 import * as Mobx from 'mobx'
-import { object } from 'prop-types'
 import { pickBy, difference, isEqual } from 'lodash'
 import hoistStatics from 'hoist-non-react-statics'
 // import Redbox from 'redbox-react'
 import global from 'global'
 
+const object = 'SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED'
 const isBrowser = typeof document !== 'undefined'
 
 // keep action out of class directly because of hmr bug

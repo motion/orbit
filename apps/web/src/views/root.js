@@ -4,10 +4,10 @@ import Redbox from 'redbox-react'
 import * as UI from '@mcro/ui'
 import NotFound from '~/views/404'
 import Router from '~/router'
-import ContextStore from '~/stores/contextStore'
+import { Screen } from '@mcro/models'
 
 @view.provide({
-  contextStore: ContextStore,
+  screen: Screen,
 })
 @view
 export default class Root extends React.Component {
@@ -32,7 +32,7 @@ export default class Root extends React.Component {
     view.emit('hmr')
   }
 
-  render({ contextStore }) {
+  render() {
     console.log('window.location.pathname', window.location.pathname)
     if (this.state.error && window.location.pathname !== '/highlights') {
       return (
@@ -65,11 +65,7 @@ export default class Root extends React.Component {
     const CurrentPage = Router.activeView || NotFound
     return (
       <UI.Theme name="light">
-        <CurrentPage
-          key={Router.key}
-          contextStore={contextStore}
-          {...Router.params}
-        />
+        <CurrentPage key={Router.key} {...Router.params} />
       </UI.Theme>
     )
   }

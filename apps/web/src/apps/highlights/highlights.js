@@ -17,24 +17,21 @@ class HighlightsStore {
   version = 0
   electronState = {}
   hoverEvents = {}
-
-  get context() {
-    return this.props.contextStore
-  }
+  screen = this.props.screen
 
   get ocrWords() {
-    return (this.context.ocrWords || []).filter(
-      (_, index) => !this.context.clearWords[index],
+    return (this.screen.ocrWords || []).filter(
+      (_, index) => !this.screen.clearWords[index],
     )
   }
 
   get wordHovered() {
-    const [x, y] = this.context.mousePosition || []
+    const [x, y] = this.screen.mousePosition || []
     return this.trees.word.get({ x, y, w: 0, h: 0 })
   }
 
   get lineHovered() {
-    const [x, y] = this.context.mousePosition || []
+    const [x, y] = this.screen.mousePosition || []
     return this.trees.line.get({ x, y: y - LINE_Y_ADJ, w: 0, h: 0 })
   }
 
@@ -50,18 +47,14 @@ class HighlightsStore {
   // }
 
   get showAll() {
-    return this.context.lastOCR > this.context.lastScreenChange ? true : false
+    return this.screen.lastOCR > this.screen.lastScreenChange ? true : false
   }
 
   willMount() {
-    // start context watching
-    this.props.contextStore.start()
+    // start screen watching
+    this.props.screen.start()
     this.react(() => ['word', this.ocrWords], this.setupHover, true)
-    this.react(
-      () => ['line', this.context.linePositions],
-      this.setupHover,
-      true,
-    )
+    this.react(() => ['line', this.screen.linePositions], this.setupHover, true)
   }
 
   setupHover([name, items]) {
@@ -96,13 +89,13 @@ class HighlightsStore {
 
 @view
 class OCRWord {
-  render({ item, store: { wordHovered, context } }) {
+  render({ item, store: { wordHovered, screen } }) {
     const [x, y, width, height, word, color] = item
     const key = getKey(item)
     return (
       <word
         $hovered={wordHovered.findIndex(x => x.string === key) >= 0}
-        $highlighted={context.highlightWords[word]}
+        $highlighted={screen.highlightWords[word]}
         style={{
           top: y - HL_PAD - TOP_BAR_PAD,
           left: x - HL_PAD,
@@ -186,13 +179,13 @@ class OCRLine {
 @view
 class Lines {
   render({ store }) {
-    return (store.context.linePositions || []).map(item => (
+    return (store.screen.linePositions || []).map(item => (
       <OCRLine key={getKey(item)} item={item} store={store} />
     ))
   }
 }
 
-@view.attach('contextStore')
+@view.attach('screen')
 @view({
   store: HighlightsStore,
 })

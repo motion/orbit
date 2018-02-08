@@ -29,10 +29,6 @@ export default class OraStore {
   pin = new PinStore()
   search = new SearchStore({ useWorker })
 
-  get context() {
-    return this.props.contextStore
-  }
-
   // synced from electron
   // see @mcro/electron/src/views/Windows#Windows.state
   electronState = {}
@@ -41,7 +37,8 @@ export default class OraStore {
   get results() {
     return this.stack.last.results
   }
-  get contextResults() {
+
+  get searchResults() {
     return this.search.results
       .slice(0, 6)
       .map(({ subtitle, highlightWords, document, snippet }) => ({
@@ -52,15 +49,17 @@ export default class OraStore {
         after: <After navigate={this.stack.navigate} thing={document} />,
       }))
   }
+
   get hasContext() {
     return this.stack.length > 1
   }
+
   get activeStore() {
     return this.stack.last.store
   }
 
-  get activeAppState() {
-    const { appState } = this.props.contextStore
+  get appState() {
+    const { appState } = this.props.screen
     if (!appState) {
       return null
     }
@@ -87,31 +86,31 @@ export default class OraStore {
 
   async willMount() {
     // start watching for context
-    this.props.contextStore.start()
+    this.props.screen.start()
     // helper
     window.oraStore = this
     // listeners/watchers
     this._listenForElectronState()
     this._listenForKeyEvents()
-    this._watchContext()
+    this._watchScreenForContext()
     this._watchClickPrevent()
     this.watch(function setDocuments() {
       this.search.setDocuments(this.things || [])
     }, 16)
     // watch and set active search
     this.watch(function setSearchQuery() {
-      const { activeAppState } = this
-      if (activeAppState && !this.ui.barFocused) {
-        if (activeAppState.selection) {
-          this.search.setQuery(activeAppState.selection)
+      const { appState } = this
+      if (appState && !this.ui.barFocused) {
+        if (appState.selection) {
+          this.search.setQuery(appState.selection)
           return
         }
-        if (activeAppState.title) {
-          this.search.setQuery(activeAppState.title)
+        if (appState.title) {
+          this.search.setQuery(appState.title)
           return
         }
-        if (activeAppState.name) {
-          this.search.setQuery(activeAppState.name)
+        if (appState.name) {
+          this.search.setQuery(appState.name)
           return
         }
       } else {
@@ -158,20 +157,20 @@ export default class OraStore {
     })
   }
 
-  _watchContext = () => {
+  _watchScreenForContext = () => {
     let lastStackItem
-    this.watch(function watchContext() {
+    this.watch(function watchScreen() {
       // determine navigation
-      const { activeAppState } = this
-      if (!activeAppState) {
+      const { appState } = this
+      if (!appState) {
         return
       }
-      const title = activeAppState.title || activeAppState.name
+      const title = appState.title || appState.name
       if (!title) {
-        log('no context title', activeAppState)
+        log('no context title', appState)
         return
       }
-      const nextStackItem = contextToResult(activeAppState)
+      const nextStackItem = contextToResult(appState)
       if (!nextStackItem.id) {
         console.log('no good id to update', nextStackItem)
         return

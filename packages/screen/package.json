@@ -9,6 +9,7 @@
     "generate": "node ./generate",
     "test": "DEBUG_IMAGES=true node ./test --debug",
     "test-fast": "node ./test",
+    "test-scroll": "node ./test --scroll",
     "build":
       "cd swift && xcodebuild -configuration Release -derivedDataPath $(mktemp -d) -scheme aperture && touch ../../../apps/api/src/index.js",
     "edit": "open ./swift/aperture.xcodeproj",

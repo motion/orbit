@@ -3,6 +3,7 @@ const Fs = require('fs')
 const Path = require('path')
 const execa = require('execa')
 
+const scroll = !!process.argv.find(x => x === '--scroll')
 const debug = !!process.argv.find(x => x === '--debug')
 const debugDir = debug ? Path.join(__dirname, 'tmp') : null
 
@@ -47,6 +48,12 @@ const settings = {
 async function test() {
   const screen = new Screen({ debugBuild: debug })
   await screen.start()
+
+  if (scroll) {
+    screen.onScroll(x => console.log(x))
+    return // just have it wait
+  }
+
   screen.watchBounds(settings)
 
   process.on('SIGINT', async () => {

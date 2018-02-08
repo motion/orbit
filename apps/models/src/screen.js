@@ -2,7 +2,7 @@ import { store } from '@mcro/black'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 
 @store
-export default class ContextStore {
+export default class ScreenStore {
   appState = null
   ocrWords = null
   linePositions = null
@@ -24,7 +24,7 @@ export default class ContextStore {
   }
 
   start() {
-    window.contextStore = this
+    window.screen = this
     if (this.ws) {
       return
     }

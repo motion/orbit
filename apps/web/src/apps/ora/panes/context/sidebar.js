@@ -107,11 +107,11 @@ export default class ContextSidebar {
   }
 
   pinCurrent = () => {
-    this.oraStore.pin.add(this.oraStore.activeContext)
+    this.oraStore.pin.add(this.oraStore.appState)
   }
 
   unpinCurrent = () => {
-    this.oraStore.pin.remove(this.oraStore.activeContext)
+    this.oraStore.pin.remove(this.oraStore.appState)
   }
 
   get actions() {
@@ -137,7 +137,7 @@ export default class ContextSidebar {
       ]
     }
     let websiteActions = []
-    if (this.oraStore.activeContext && this.oraStore.activeContext.url) {
+    if (this.oraStore.appState && this.oraStore.appState.url) {
       websiteActions = [
         this.isPinned && {
           icon: 'check',
@@ -166,7 +166,7 @@ export default class ContextSidebar {
   }
 
   get results() {
-    let results = this.oraStore.contextResults
+    let results = this.oraStore.searchResults
     if (!results.length) {
       results = [
         {

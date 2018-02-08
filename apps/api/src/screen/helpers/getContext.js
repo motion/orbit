@@ -1,66 +1,10 @@
 import runAppleScript from './runAppleScript'
 import escapeAppleScriptString from 'escape-string-applescript'
 import getContextInjection from './getContextInjection'
-import getActiveWindow from './getActiveWindow'
-import { isEqual } from 'lodash'
-
-let lastContextError = null
-
-export default async function getContext(currentContext) {
-  let res
-  try {
-    res = await getActiveWindow()
-  } catch (err) {
-    if (err.message.indexOf(`Can't get window 1 of`)) {
-      // super hacky but if it fails it usually gives an error like:
-      //   execution error: System Events got an error: Can’t get window 1 of process "Slack"
-      // so we can find it:
-      const name = err.message.match(/process "([^"]+)"/)
-      if (name && name.length) {
-        res = { application: name[1], title: name[1] }
-      }
-    }
-    if (!res) {
-      if (lastContextError !== err.message) {
-        console.log('error watching context', err.message)
-        lastContextError = err.message
-      }
-    }
-  }
-
-  if (res) {
-    const { application, offset, bounds } = res
-
-    let context = {
-      name: application,
-      offset,
-      bounds,
-    }
-
-    switch (application) {
-      case 'Google Chrome':
-        context = {
-          ...context,
-          ...(await getChromeContext()),
-        }
-        break
-      case 'Safari':
-        context = {
-          ...context,
-          ...(await getSafariContext()),
-        }
-        break
-    }
-
-    if (!isEqual(currentContext, context)) {
-      return context
-    }
-  }
-}
 
 const CONTEXT_JS = `(${getContextInjection.toString()})()`
 
-async function getChromeContext() {
+export async function getChromeContext() {
   return parseContextRes(
     await runAppleScript(`
     global res
@@ -74,7 +18,7 @@ async function getChromeContext() {
   )
 }
 
-async function getSafariContext() {
+export async function getSafariContext() {
   return parseContextRes(
     await runAppleScript(`
     global res

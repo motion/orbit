@@ -84,9 +84,9 @@ class BucketsDropdown {
 @view.attach('oraStore')
 @view
 export default class OraHeader extends React.Component {
-  componentDidMount() {
+  componentDidMount({ oraStore }) {
     this.react(
-      () => this.props.oraStore.ui.showOra,
+      () => oraStore.ui.showOra,
       shown => {
         // is toggling to shown
         if (shown) {

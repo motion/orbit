@@ -19,6 +19,14 @@ export default () => ({
     Klass.prototype.render = function() {
       return or.call(this, this.props, this.state, this.context)
     }
+    const ocDM = Klass.prototype.componentDidMount
+    Klass.prototype.componentDidMount = function() {
+      return ocDM.call(this, this.props, this.state, this.context)
+    }
+    const ocWM = Klass.prototype.componentWillMount
+    Klass.prototype.componentWillMount = function() {
+      return ocWM.call(this, this.props, this.state, this.context)
+    }
 
     return Klass
   },

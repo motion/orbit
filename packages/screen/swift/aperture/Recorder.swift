@@ -107,6 +107,11 @@ final class Recorder: NSObject {
       print("no bundle meh")
       exit(0)
     }
+    
+    print("add event")
+    NSEvent.addGlobalMonitorForEvents(matching: NSEvent.EventTypeMask.scrollWheel, handler: { event in
+      print("got event \(event)")
+    })
 
     // start video
     self.displayId = displayId

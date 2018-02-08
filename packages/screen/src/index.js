@@ -26,6 +26,7 @@ export default class Screen {
   awaitingSocket = []
   listeners = []
   onLinesCB = _ => _
+  onScrollCB = _ => _
   onWordsCB = _ => _
   onChangedCB = _ => _
   onRestoredCB = _ => _
@@ -84,6 +85,9 @@ export default class Screen {
       if (action === 'restoredIds') {
         this.restoredIds = value
       }
+      if (action === 'clear') {
+        this.onClearCB()
+      }
       // state goes out to clients
       if (state) {
         this.setState(state)
@@ -102,9 +106,6 @@ export default class Screen {
       }
       if (action === 'start') {
         this.start()
-      }
-      if (action === 'clear') {
-        this.onClearCB()
       }
     } catch (err) {
       console.log('error sending reply', action, 'value', value)
@@ -289,6 +290,10 @@ export default class Screen {
 
   onWords = cb => {
     this.onWordsCB = cb
+  }
+
+  onScroll = cb => {
+    this.onScrollCB = cb
   }
 
   onLines = cb => {

@@ -35,6 +35,7 @@ export default class ScreenStore {
 
   // note: you have to call start to make it explicitly connect
   start() {
+    console.log('starting screen-store...')
     if (this.ws) {
       return
     }

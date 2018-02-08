@@ -393,6 +393,7 @@ export default class ScreenState {
     let id = 0
     this.wss.on('connection', socket => {
       let uid = id++
+      console.log('screen-master received connection', uid)
       // send current state
       this.socketSend(socket, this.state)
       // clear old highlights if theyre still up

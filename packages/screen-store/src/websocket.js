@@ -1,10 +1,7 @@
 let WebSocket
-
 if (typeof window !== 'undefined') {
   WebSocket = window.WebSocket
 } else {
-  // avoid parcel
-  WebSocket = eval(`require('ws')`)
+  WebSocket = eval(`require('html5-websocket')`)
 }
-
 export default WebSocket

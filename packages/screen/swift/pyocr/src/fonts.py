@@ -5,7 +5,7 @@ import os
 from os.path import isfile, join
 from constants import font_path
 
-fonts = [x[1] for x in os.walk(font_path)][0]
+fonts = ['helvetica', 'georgia']  # [x[1] for x in os.walk(font_path)][0]
 
 print("fonts are" + str(fonts))
 

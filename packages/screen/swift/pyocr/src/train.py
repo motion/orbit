@@ -19,7 +19,9 @@ from torch.autograd import Variable
 from PIL import Image
 from get_letter import get_letter
 
-TEST_LETTERS = letters[0:390]
+uniqueLetters = set(letters)
+TEST_LETTER_INDEX = list(map(lambda x: letters.find(x), uniqueLetters))
+print(str(TEST_LETTER_INDEX))
 
 
 def letter_index(letter):
@@ -64,11 +66,13 @@ model = Net()
 optimizer = optim.SGD(model.parameters(), lr=args.lr, momentum=args.momentum)
 
 
-def run_words(s):
-    print('predict: ', s)
-    x = torch.Tensor(len(s), 1, 28, 28)
-    for index, c in enumerate(list(s)):
-        x[index, :] = get_letter(random.choice(test_fonts), str(index), False)
+def run_words(l_index):
+    test_string = ''.join(map(lambda x: letters[x], l_index))
+    print('predict: ', test_string)
+    x = torch.Tensor(len(l_index), 1, 28, 28)
+    for letterIndex in l_index:
+        x[letterIndex, :] = get_letter(random.choice(
+            test_fonts), str(letterIndex), False)
 
     model.eval()
     correct = 0
@@ -81,12 +85,13 @@ def run_words(s):
     print('    got: ', ''.join(out_str))
 
     correct = 0
-    for i in range(len(s)):
-        if s[i] == out_str[i]:
+    for i in range(len(test_string)):
+        if test_string[i] == out_str[i]:
             correct += 1
 
     print('')
-    print('correct', correct / len(s) * 100, '%', 'took', time.time() - start)
+    print('correct', correct / len(test_string) * 100,
+          '%', 'took', time.time() - start)
 
 
 def train(epoch):
@@ -123,7 +128,7 @@ def test():
         correct += pred.eq(target.data.view_as(pred)).cpu().sum()
 
     test_loss /= len(test_x)
-    run_words(TEST_LETTERS)
+    run_words(TEST_LETTER_INDEX)
     print('\n      avg loss {:.4f}, accuracy {}/{} ({:.0f}%)\n'.format(
         test_loss, correct, len(test_x),
         100. * correct / len(test_x)))

@@ -19,7 +19,7 @@ from torch.autograd import Variable
 from PIL import Image
 from get_letter import get_letter
 
-TEST_LETTERS = letters[0:390]
+TEST_LETTERS = letters[0:250]
 
 
 def letter_index(letter):
@@ -55,9 +55,9 @@ for font_index, font in enumerate(test_fonts):
 train_set = torch.utils.data.TensorDataset(train_x, train_y)
 test_set = torch.utils.data.TensorDataset(test_x, test_y)
 train_loader = torch.utils.data.DataLoader(
-    train_set, batch_size=args.batch_size, shuffle=True, num_workers=1)
+    train_set, batch_size=args.batch_size, shuffle=True, num_workers=2)
 test_loader = torch.utils.data.DataLoader(
-    test_set, batch_size=args.batch_size, shuffle=True, num_workers=1)
+    test_set, batch_size=args.batch_size, shuffle=True, num_workers=2)
 
 model = Net()
 

@@ -7,16 +7,13 @@ import promisify from 'sb-promisify'
 import pusage_ from 'pidusage'
 import killPort from 'kill-port'
 
-const PORT = 40512
+const WEBSOCKET_PORT = 40512
 const dir = electronUtil.fixPathForAsarUnpack(__dirname)
 const buildPath = Path.join(dir, '..', 'swift', 'Build', 'Products')
 const RELEASE_PATH = Path.join(buildPath, 'Release')
 const DEBUG_PATH = Path.join(buildPath, 'Debug')
 
 const pusage = promisify(pusage_.stat)
-
-export ScreenClient from './client'
-
 const sleep = ms => new Promise(res => setTimeout(res, ms))
 
 export default class Screen {
@@ -26,6 +23,7 @@ export default class Screen {
   awaitingSocket = []
   listeners = []
   onLinesCB = _ => _
+  onScrollCB = _ => _
   onWordsCB = _ => _
   onChangedCB = _ => _
   onRestoredCB = _ => _
@@ -52,8 +50,8 @@ export default class Screen {
     } catch (err) {}
     if (!this.wss) {
       // kill old ones
-      await killPort(PORT)
-      this.wss = new Server({ port: PORT })
+      await killPort(WEBSOCKET_PORT)
+      this.wss = new Server({ port: WEBSOCKET_PORT })
       this.setupSocket()
     }
     this.setState({ isPaused: false })
@@ -84,6 +82,9 @@ export default class Screen {
       if (action === 'restoredIds') {
         this.restoredIds = value
       }
+      if (action === 'clear') {
+        this.onClearCB()
+      }
       // state goes out to clients
       if (state) {
         this.setState(state)
@@ -102,9 +103,6 @@ export default class Screen {
       }
       if (action === 'start') {
         this.start()
-      }
-      if (action === 'clear') {
-        this.onClearCB()
       }
     } catch (err) {
       console.log('error sending reply', action, 'value', value)
@@ -289,6 +287,10 @@ export default class Screen {
 
   onWords = cb => {
     this.onWordsCB = cb
+  }
+
+  onScroll = cb => {
+    this.onScrollCB = cb
   }
 
   onLines = cb => {

@@ -84,9 +84,9 @@ class BucketsDropdown {
 @view.attach('oraStore')
 @view
 export default class OraHeader extends React.Component {
-  componentDidMount() {
+  componentDidMount({ oraStore }) {
     this.react(
-      () => this.props.oraStore.ui.showOra,
+      () => oraStore.ui.showOra,
       shown => {
         // is toggling to shown
         if (shown) {
@@ -170,7 +170,7 @@ export default class OraHeader extends React.Component {
               getRef={oraStore.ui.handleInputRef}
               borderRadius={0}
               onBlur={this.handleInputBlur}
-              onChange={oraStore.ui.handleSearchChange}
+              onKeyDown={oraStore.ui.handleSearchKeyDown}
               value={oraStore.ui.textboxVal}
               borderWidth={0}
               background="transparent"

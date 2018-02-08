@@ -2,18 +2,16 @@ import * as React from 'react'
 import { App } from '@mcro/reactron'
 import ShortcutsStore from '~/stores/shortcutsStore'
 import { view } from '@mcro/black'
-import * as RootHelpers from './rootHelpers'
 import Windows from './Windows'
 import Tray from './Tray'
 import { ipcMain } from 'electron'
 import * as Helpers from '~/helpers'
 import { throttle } from 'lodash'
-import { ScreenClient } from '@mcro/screen'
+import ScreenStore from '@mcro/screen-store'
 
 @view.provide({
   rootStore: class RootStore {
-    // our api to the screen
-    screenState = {}
+    screen = new ScreenStore()
     // used to generically talk to browser
     sendOra = null
 
@@ -28,29 +26,52 @@ import { ScreenClient } from '@mcro/screen'
     settingsVisible = false
 
     willMount() {
+      global.rootStore = this
+      this.screen.start()
       new ShortcutsStore().emitter.on('shortcut', shortcut => {
         console.log('emit shortcut', shortcut)
         this.emit('shortcut', shortcut)
       })
-      RootHelpers.listenForAuth.call(this)
-      RootHelpers.listenForOpenBrowser.call(this)
-      RootHelpers.listenForCrawlerInject.call(this)
-      RootHelpers.injectRepl({ rootStore: this })
-      this.setupScreenLink()
       this.setupOraLink()
       this.on('shortcut', shortcut => {
         if (shortcut === 'Option+Space') {
+          if (this.screen.keyboard.option) {
+            console.log('avoid toggle while holding option')
+            return
+          }
           this.toggleShown()
         }
       })
-    }
-
-    setupScreenLink() {
-      this.screenClient = new ScreenClient({
-        onStateChange: state => {
-          this.screenState = state
+      // watch option hold
+      let lastKeyboard = {}
+      let optionDelay
+      this.react(
+        () => this.screen.keyboard,
+        keyboard => {
+          if (!keyboard) {
+            return
+          }
+          console.log('got keyboard', keyboard, lastKeyboard)
+          const { option, optionCleared } = keyboard
+          if (this.oraState.hidden) {
+            // HIDDEN
+            // clear last if not opened yet
+            if (optionCleared) {
+              clearTimeout(optionDelay)
+            }
+            // delay before opening on option
+            if (!lastKeyboard.option && option) {
+              optionDelay = setTimeout(this.toggleShown, 300)
+            }
+          } else {
+            // SHOWN
+            if (lastKeyboard.option && !option) {
+              this.toggleShown()
+            }
+          }
+          lastKeyboard = keyboard
         },
-      })
+      )
     }
 
     sendOraSync = async (...args) => {
@@ -170,11 +191,7 @@ export default class Root extends React.Component {
           onOraRef={rootStore.handleOraRef}
           onSettingsVisibility={rootStore.handleSettingsVisibility}
         />
-        <Tray
-          onClick={() => {
-            rootStore.screenClient.toggle()
-          }}
-        />
+        <Tray onClick={rootStore.screen.swiftBridge.toggle} />
       </App>
     )
   }

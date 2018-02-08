@@ -5,18 +5,28 @@ import * as Constants from '~/constants'
 import * as UI from '@mcro/ui'
 
 export default class MainSidebar {
-  get oraStore() {
+  finishedLoading = true
+
+  get ora() {
     return this.props.oraStore
   }
-  get search() {
-    return this.oraStore.ui.search
-  }
-  get title() {
-    const { lastContext } = this.oraStore
-    if (!lastContext) {
+
+  get context() {
+    if (!this.ora.appState) {
       return null
     }
-    const result = contextToResult(lastContext)
+    return this.ora.appState.context
+  }
+
+  get search() {
+    return this.ora.ui.search
+  }
+
+  get title() {
+    if (!this.context) {
+      return null
+    }
+    const result = contextToResult(this.context)
     return {
       title: <div css={{ width: 100 }} />,
       after: (
@@ -28,7 +38,7 @@ export default class MainSidebar {
           icon="arrow-min-right"
           iconAfter
           onClick={() => {
-            this.oraStore.stack.navigate(result)
+            this.ora.stack.navigate(result)
           }}
           glow
           alpha={0.5}
@@ -48,15 +58,12 @@ export default class MainSidebar {
       ),
     }
   }
-  get finishedLoading() {
-    return true
-  }
 
   get rawResults() {
     let results = []
     // results
-    if (this.oraStore.contextResults.length) {
-      results = this.oraStore.contextResults.map(item => ({
+    if (this.ora.searchResults.length) {
+      results = this.ora.searchResults.map(item => ({
         ...item,
       }))
     } else {
@@ -65,7 +72,7 @@ export default class MainSidebar {
         {
           title: 'Welcome to Orbit',
           category: 'Setup',
-          onClick: this.oraStore.actions.openSettings,
+          onClick: this.ora.actions.openSettings,
           children:
             'You can add content two ways. Navigate to a website, or click here to setup integrations.',
         },
@@ -111,19 +118,5 @@ export default class MainSidebar {
             category: 'Search Results',
           },
         ]
-  }
-
-  get actions() {
-    return null
-    return (
-      <React.Fragment>
-        <UI.Button onClick={() => this.props.contextStore.pause()}>
-          Pause OCR
-        </UI.Button>
-        <UI.Button onClick={() => this.props.contextStore.resume()}>
-          Resume OCR
-        </UI.Button>
-      </React.Fragment>
-    )
   }
 }

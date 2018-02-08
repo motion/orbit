@@ -7,6 +7,7 @@ import quadtree from 'simple-quadtree'
 const HL_PAD = 2
 const TOP_BAR_PAD = 22
 const LINE_Y_ADJ = -5
+const getKey = ([x, y, w, h]) => `${x}${y}${w}${h}`
 
 class HighlightsStore {
   trees = {
@@ -16,24 +17,21 @@ class HighlightsStore {
   version = 0
   electronState = {}
   hoverEvents = {}
-
-  get context() {
-    return this.props.contextStore
-  }
+  screen = this.props.screen
 
   get ocrWords() {
-    return (this.context.ocrWords || []).filter(
-      (_, index) => !this.context.clearWords[index],
+    return (this.screen.ocrWords || []).filter(
+      (_, index) => !this.screen.clearWords[index],
     )
   }
 
   get wordHovered() {
-    const [x, y] = this.context.mousePosition || []
+    const [x, y] = this.screen.mousePosition || []
     return this.trees.word.get({ x, y, w: 0, h: 0 })
   }
 
   get lineHovered() {
-    const [x, y] = this.context.mousePosition || []
+    const [x, y] = this.screen.mousePosition || []
     return this.trees.line.get({ x, y: y - LINE_Y_ADJ, w: 0, h: 0 })
   }
 
@@ -49,17 +47,21 @@ class HighlightsStore {
   // }
 
   get showAll() {
-    return this.context.lastOCR > this.context.lastScreenChange ? true : false
+    return this.screen.lastOCR > this.screen.lastScreenChange ? true : false
   }
 
   willMount() {
-    // start context watching
-    this.props.contextStore.start()
+    // start screen watching
+    this.props.screen.start()
     this.react(() => ['word', this.ocrWords], this.setupHover, true)
+    this.react(() => ['line', this.screen.linePositions], this.setupHover, true)
+
+    // watch option hold
     this.react(
-      () => ['line', this.context.linePositions],
-      this.setupHover,
-      true,
+      () => this.screen.keyboard.option,
+      val => {
+        console.log('seeing screen keyboard option', val)
+      },
     )
   }
 
@@ -68,7 +70,7 @@ class HighlightsStore {
     if (!items.length) return
     this.trees[name].clear()
     this.hoverEvents = items.reduce((acc, item) => {
-      const key = this.getKey(item)
+      const key = getKey(item)
       // side effect
       this.trees[name].put({
         x: item[0],
@@ -91,38 +93,38 @@ class HighlightsStore {
       Helpers.OS.send('peek-target', object)
     },
   })
-
-  getKey = ([x, y, w, h]) => `${x}${y}${w}${h}`
 }
 
 @view
-class Words {
-  render({ store, store: { ocrWords, wordHovered, context } }) {
-    return (ocrWords || []).map(item => {
-      const [x, y, width, height, word, color] = item
-      const key = store.getKey(item)
-      return (
-        <word
-          key={key}
-          $hovered={wordHovered.findIndex(x => x.string === key) >= 0}
-          $highlighted={context.highlightWords[word]}
-          style={{
-            top: y - HL_PAD - TOP_BAR_PAD,
-            left: x - HL_PAD,
-            width: width + HL_PAD * 2,
-            height: height + HL_PAD * 2,
-            background: color,
-          }}
-        >
-          <wordInner>{word}</wordInner>
-        </word>
-      )
-    })
+class OCRWord {
+  render({ item, store: { wordHovered, screen } }) {
+    const [x, y, width, height, word, color] = item
+    const key = getKey(item)
+    return (
+      <word
+        $hovered={wordHovered.findIndex(x => x.string === key) >= 0}
+        $highlighted={screen.highlightWords[word]}
+        style={{
+          top: y - HL_PAD - TOP_BAR_PAD,
+          left: x - HL_PAD,
+          width: width + HL_PAD * 2,
+          height: height + HL_PAD * 2,
+          background: color,
+          fontSize: 14,
+        }}
+      >
+        <wordInner>{word}</wordInner>
+      </word>
+    )
   }
   static style = {
     word: {
+      fontFamily: 'helvetica',
       position: 'absolute',
       padding: HL_PAD,
+      // letterSpacing: -2,
+      color: '#000', //'blue',
+      fontWeight: 200,
       // borderRadius: 3,
       // background: [200, 200, 200, 0.15],
     },
@@ -134,11 +136,9 @@ class Words {
       opacity: 1,
     },
     wordInner: {
-      opacity: 0.3,
+      opacity: 0.5,
       top: -14,
       left: -4,
-      fontSize: 9,
-      height: 10,
       position: 'absolute',
       wordWrap: 'no-wrap',
       whiteSpace: 'pre',
@@ -147,24 +147,30 @@ class Words {
 }
 
 @view
-class Lines {
-  render({ store, store: { lineHovered, context } }) {
-    return (context.linePositions || []).map(item => {
-      const [x, y, width, height] = item
-      const key = store.getKey(item)
-      return (
-        <ocrLine
-          key={key}
-          $hoveredLine={lineHovered.findIndex(x => x.string === key) >= 0}
-          style={{
-            top: y - TOP_BAR_PAD + LINE_Y_ADJ,
-            left: x,
-            width: width,
-            height: height, // add some padding
-          }}
-        />
-      )
-    })
+class Words {
+  render({ store, store: { ocrWords } }) {
+    return (ocrWords || []).map(item => (
+      <OCRWord key={getKey(item)} item={item} store={store} />
+    ))
+  }
+}
+
+@view
+class OCRLine {
+  render({ item, store }) {
+    const [x, y, width, height] = item
+    const key = getKey(item)
+    return (
+      <ocrLine
+        $hoveredLine={store.lineHovered.findIndex(x => x.string === key) >= 0}
+        style={{
+          top: y - TOP_BAR_PAD + LINE_Y_ADJ,
+          left: x,
+          width: width,
+          height: height, // add some padding
+        }}
+      />
+    )
   }
   static style = {
     ocrLine: {
@@ -178,7 +184,16 @@ class Lines {
   }
 }
 
-@view.attach('contextStore')
+@view
+class Lines {
+  render({ store }) {
+    return (store.screen.linePositions || []).map(item => (
+      <OCRLine key={getKey(item)} item={item} store={store} />
+    ))
+  }
+}
+
+@view.attach('screen')
 @view({
   store: HighlightsStore,
 })

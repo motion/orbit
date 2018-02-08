@@ -2,6 +2,8 @@ const path = require('path')
 const execa = require('execa')
 const electronUtil = require('electron-util/node')
 
+console.log('process.env.DEBUG', process.env.DEBUG)
+
 const CWD = path.join(
   electronUtil.fixPathForAsarUnpack(__dirname),
   'Swindler',
@@ -66,7 +68,7 @@ class Swindler {
           })
         } else {
           // pass through logs from swindler
-          // console.log(out)
+          console.log(out)
         }
       }
     })

@@ -1,9 +1,9 @@
 import React from 'react'
 import * as Mobx from 'mobx'
-import { object } from 'prop-types'
 import { pickBy, difference, isEqual } from 'lodash'
 import hoistStatics from 'hoist-non-react-statics'
 // import Redbox from 'redbox-react'
+import { object } from 'prop-types'
 import global from 'global'
 
 const isBrowser = typeof document !== 'undefined'

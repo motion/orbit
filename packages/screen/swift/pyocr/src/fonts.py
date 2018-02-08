@@ -1,28 +1,13 @@
 import random
 import math
 
-from os import listdir
+import os
 from os.path import isfile, join
 from constants import font_path
 
-fonts = [
-    'arial',
-    'georgia',
-    'verdana',
-    # 'helvetica',
-    'rockwell',
-    'avenir',
-    'century gothic',
-    'century schoolbook',
-    'eurostile',
-    'helvetica neue',
-    'atlas grotesk',
-    'bernard mt condensed',
-    'bookman old style',
-    'cambria',
-    'consolas',
-    'franklin gothic medium',
-]
+fonts = [x[1] for x in os.walk(font_path)][0]
+
+print("fonts are" + str(fonts))
 
 random.shuffle(fonts)
 train_count = math.floor(len(fonts) * .9)

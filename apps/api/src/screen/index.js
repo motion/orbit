@@ -6,6 +6,8 @@ import { isEqual, throttle, last } from 'lodash'
 import iohook from 'iohook'
 import * as Constants from '~/constants'
 import killPort from 'kill-port'
+import Auth from './auth'
+// import Crawl from './crawl'
 
 const PORT = 40510
 
@@ -50,12 +52,14 @@ type TScreenState = {
 
 export default class ScreenState {
   stopped = false
+  // crawl = new Crawl()
   screenOCR = new ScreenOCR()
   activeSockets = []
   swindler = new Swindler()
   curAppState = {}
   watchSettings = {}
   extraAppState = {}
+  auth = null
 
   state: TScreenState = {
     appState: null,
@@ -86,6 +90,7 @@ export default class ScreenState {
     // and kill anything on this port
     await killPort(PORT)
     this.wss = new Server({ port: PORT })
+    this.auth = new Auth({ socket: this.wss })
     this.setupSocket()
     this.stopped = false
     this.screenOCR.onWords(words => {
@@ -201,22 +206,25 @@ export default class ScreenState {
 
   watchKeyboard = () => {
     const optionKey = 56
+    const updateKeyboard = newState =>
+      this.updateState({ keyboard: { ...this.state.keyboard, ...newState } })
+
     iohook.on('keydown', ({ keycode }) => {
       const isOptionKey = keycode === optionKey
       // clear option key if other key pressed during
       if (this.state.keyboard.option && !isOptionKey) {
-        this.updateState({ keyboard: { option: false } })
+        updateKeyboard({ optionCleared: true })
         return
       }
       // option on
       if (isOptionKey) {
-        this.updateState({ keyboard: { option: true } })
+        updateKeyboard({ option: true, optionCleared: false })
       }
     })
     iohook.on('keyup', ({ keycode }) => {
       // option off
       if (keycode === optionKey) {
-        this.updateState({ keyboard: { option: false } })
+        updateKeyboard({ option: false, optionCleared: false })
       }
     })
   }
@@ -388,6 +396,7 @@ export default class ScreenState {
     let id = 0
     this.wss.on('connection', socket => {
       let uid = id++
+      console.log('screen-master received connection', uid)
       // send current state
       this.socketSend(socket, this.state)
       // clear old highlights if theyre still up

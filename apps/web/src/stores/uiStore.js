@@ -7,6 +7,7 @@ import keycode from 'keycode'
 import * as Constants from '~/constants'
 import * as _ from 'lodash'
 import pluralize from 'pluralize'
+import whatKey from 'whatkey'
 
 export SHORTCUTS from './shortcuts'
 
@@ -93,8 +94,20 @@ export default class UIStore {
     }
   }
 
-  handleSearchChange = e => {
-    this.setTextboxVal(e.target.value)
+  handleSearchKeyDown = e => {
+    e.preventDefault()
+    const { key, char } = whatKey(e)
+    console.log('got', key, char)
+    if (!key) {
+      return
+    }
+    if (key === 'backspace') {
+      this.setTextboxVal(this.textboxVal.slice(0, this.textboxVal.length - 1))
+    } else {
+      if (key.length === 1) {
+        this.setTextboxVal((this.textboxVal += char))
+      }
+    }
   }
 
   setTextboxVal = value => {
@@ -138,7 +151,7 @@ export default class UIStore {
     const SHOW_DELAY = 250
     let showTimeout
     this.react(
-      () => this.oraStore.context.keyboard || {},
+      () => this.oraStore.screen.keyboard || {},
       ({ option }) => {
         clearTimeout(showTimeout)
         const { peeking } = this.state

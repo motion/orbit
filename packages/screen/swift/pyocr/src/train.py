@@ -19,9 +19,7 @@ from torch.autograd import Variable
 from PIL import Image
 from get_letter import get_letter
 
-uniqueLetters = set(letters)
-TEST_LETTER_INDEX = list(map(lambda x: letters.find(x), uniqueLetters))
-print(str(TEST_LETTER_INDEX))
+TEST_LETTERS = letters[0:250]
 
 
 def letter_index(letter):
@@ -57,22 +55,20 @@ for font_index, font in enumerate(test_fonts):
 train_set = torch.utils.data.TensorDataset(train_x, train_y)
 test_set = torch.utils.data.TensorDataset(test_x, test_y)
 train_loader = torch.utils.data.DataLoader(
-    train_set, batch_size=args.batch_size, shuffle=True, num_workers=1)
+    train_set, batch_size=args.batch_size, shuffle=True, num_workers=2)
 test_loader = torch.utils.data.DataLoader(
-    test_set, batch_size=args.batch_size, shuffle=True, num_workers=1)
+    test_set, batch_size=args.batch_size, shuffle=True, num_workers=2)
 
 model = Net()
 
 optimizer = optim.SGD(model.parameters(), lr=args.lr, momentum=args.momentum)
 
 
-def run_words(l_index):
-    test_string = ''.join(map(lambda x: letters[x], l_index))
-    print('predict: ', test_string)
-    x = torch.Tensor(len(l_index), 1, 28, 28)
-    for letterIndex in l_index:
-        x[letterIndex, :] = get_letter(random.choice(
-            test_fonts), str(letterIndex), False)
+def run_words(s):
+    print('predict: ', s)
+    x = torch.Tensor(len(s), 1, 28, 28)
+    for index, c in enumerate(list(s)):
+        x[index, :] = get_letter(random.choice(test_fonts), str(index), False)
 
     model.eval()
     correct = 0
@@ -85,13 +81,12 @@ def run_words(l_index):
     print('    got: ', ''.join(out_str))
 
     correct = 0
-    for i in range(len(test_string)):
-        if test_string[i] == out_str[i]:
+    for i in range(len(s)):
+        if s[i] == out_str[i]:
             correct += 1
 
     print('')
-    print('correct', correct / len(test_string) * 100,
-          '%', 'took', time.time() - start)
+    print('correct', correct / len(s) * 100, '%', 'took', time.time() - start)
 
 
 def train(epoch):
@@ -128,7 +123,7 @@ def test():
         correct += pred.eq(target.data.view_as(pred)).cpu().sum()
 
     test_loss /= len(test_x)
-    run_words(TEST_LETTER_INDEX)
+    run_words(TEST_LETTERS)
     print('\n      avg loss {:.4f}, accuracy {}/{} ({:.0f}%)\n'.format(
         test_loss, correct, len(test_x),
         100. * correct / len(test_x)))

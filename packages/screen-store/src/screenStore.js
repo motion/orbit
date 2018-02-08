@@ -81,7 +81,6 @@ export default class ScreenStore {
       this.appState = appState
     }
     if (ocrWords) {
-      console.log('got new ocr', ocrWords)
       this.ocrWords = ocrWords
       this.clearWords = {}
     }

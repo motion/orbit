@@ -1,7 +1,9 @@
+import { store } from '@mcro/black/store'
 import WebSocket from './websocket'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 
-export default class ScreenClient {
+@store
+export default class SwiftBridge {
   isOpen = false
   state = {
     isRunning: false,

@@ -1,5 +1,6 @@
 # next
 
+* Combine screen + swindler so can use GPUImage/...
 * hold option to see highlights
 * quick clear using key events
 * debounce more when it notices lots of changes (video)

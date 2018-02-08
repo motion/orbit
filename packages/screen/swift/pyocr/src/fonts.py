@@ -25,6 +25,6 @@ fonts = [
 ]
 
 random.shuffle(fonts)
-train_count = math.floor(len(fonts) * .8)
+train_count = math.floor(len(fonts) * .9)
 train_fonts = fonts[:train_count]
 test_fonts = fonts[train_count:]

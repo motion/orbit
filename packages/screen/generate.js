@@ -26,14 +26,14 @@ function getPage(fontName) {
         padding: 20px;
         font-family: ${fontName};
         font-size: 29px;
-        letter-spacing: 2px;
-        line-height: 38px;
+        letter-spacing: 2.5px;
+        line-height: 40px;
       }
       small {
-        font-size: 22px;
+        font-size: 20px;
         line-height: 35px;
       }
-      .light { font-weight: 300; }
+      .light { font-weight: 300; font-smooth: antialiased; }
       p { margin: 0; }
     </style>
   </head>
@@ -42,20 +42,20 @@ function getPage(fontName) {
       123 *',;:.?!#$
     </p>
     <p>
+     <b>the quick brown fox jumps over the</b>
+    </p>
+    <p>
       <b>*a'b,c;d:e.f?g!h#i$j[k]l(m)</b>
     </p>
     <p>
-     <b>the quick brown fox jumps over the lazy dog</b>
+      <b>Cwm FJORD BANK GLyphs VEXT</b>
     </p>
-    <p>
-      <b>Cwm FJORD BANK GLyphs VEXT Quiz</b>
-    </p>
-    <p>pack my box with</p>
+    <p>lazy dog pack my box with</p>
     <p>
       five dozen liuor usxcs PACK MY BOX WITH
     </p>
     <p>
-      <b>Jackdaws love</b>
+      <b>Quiz Jackdaws love</b>
     </p>
     <p>
       JACKDAWS LOVE my big sphinx of quartz
@@ -64,9 +64,9 @@ function getPage(fontName) {
       1234567890 <b>1234567890</b>
     </p>
     <p>
-      <i>Im stll skeptcalxzr</i> MY BIG SPHINX OF QUARTZ
+      <i>Im stll skeptcalxzr MY BIG</i>
     </p>
-    <p class="light">promising than any oxen maneuver</p>
+    <p class="light"><i>promis thzn oxen maneuver SPHINX OF QUARTZ</i></p>
     <p class="light">incentivizes dating sites to keep you single</p>
     <p class="light">safter all the longer youre single</p>
 
@@ -127,7 +127,7 @@ async function train() {
     'cambria',
     'consolas',
     'franklin gothic medium',
-    // 'lao mn',
+    'lao mn',
   ]
 
   while (fonts.length) {

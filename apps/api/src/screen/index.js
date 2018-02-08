@@ -338,6 +338,7 @@ export default class ScreenState {
         height,
         initialScreenshot: false,
         findContent: false,
+        ocr: false,
       })),
     })
   }

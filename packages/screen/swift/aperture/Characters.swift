@@ -163,6 +163,7 @@ class Characters {
         }
         if misfit {
           misfits += 1
+          print("misfit \(id)-\(curChar) \(misfitBig)b, \(misfitThin)t, \(misfitWide)w")
           if tooBig { misfitBig += 1 }
           if tooWide { misfitWide += 1 }
           if tooThin { misfitThin += 1 }
@@ -180,9 +181,9 @@ class Characters {
       } // end if
     } // end while
     // help watch misfit counts
-    if misfits > 0 {
-      print("\(misfits) miss on \(id) \(misfitBig)b, \(misfitThin)t, \(misfitWide)w")
-    }
+//    if misfits > 0 {
+//      print("\(misfits) miss on \(id)")
+//    }
     // find words
     var foundWords = [Word]()
     // calculate std dev of space
@@ -368,17 +369,17 @@ class Characters {
     // blob above/below, to get i's and j's and ?'s
     if findHangers {
       let centerX = topLeftBound[0] + (width / 2)
-      let maxDownPx = Int((1.0 - percentDownLine) * Float(lineHeight / 2)) // pxs left in line downwards
-      let maxUpPx = Int(percentDownLine * Float(lineHeight / 2)) // pxs left in line upwards
+      let maxDownPx = Int((1.0 - percentDownLine) * Float(lineHeight) / 3) // pxs left in line downwards
+      let maxUpPx = Int(percentDownLine * Float(lineHeight) / 3) // pxs left in line upwards
 //      print("line \(debugID) maxup \(maxUpPx) maxdown \(maxDownPx)")
       let maxY = bottomRightBound[1]
       if maxUpPx > 2 {
         // go up
         for y in 1...maxUpPx {
           if buffer[(minY - y) * perRow + centerX] < isBlackIfUnder {
-            if let c = self.findCharacter(startX: centerX, startY: minY - y, lineHeight: lineHeight, maxMoves: lineHeight * 10, initialMove: [0, -moves.px], findHangers: false, percentDownLine: percentDownLine, debugID: debugID + "-hangar") {
-              if c.width * c.height > maxUpPx * maxUpPx / 3 { break } // too big
-              if c.height > maxUpPx { break } // too tall
+            if let c = self.findCharacter(startX: centerX, startY: minY - y, lineHeight: lineHeight, maxMoves: lineHeight * 10, initialMove: [0, -moves.px], findHangers: false, percentDownLine: percentDownLine, debugID: debugID + "-hanger") {
+              if c.width * c.height > maxUpPx * maxUpPx * 4 { print("hanger above area big \(debugID)"); break } // too big
+              if c.height > maxUpPx * 4 { print("hanger above tall \(debugID)"); break } // too tall
               height += minY - c.y
               minY = c.y
               let widthWithChar = c.x + c.width - minX
@@ -394,8 +395,8 @@ class Characters {
         for y in 1...maxDownPx {
           if buffer[(maxY + y) * perRow + centerX] < isBlackIfUnder {
             if let c = self.findCharacter(startX: centerX, startY: maxY + y, lineHeight: lineHeight, maxMoves: lineHeight * 10, initialMove: [0, moves.px], findHangers: false, percentDownLine: percentDownLine, debugID: debugID + "-hangar") {
-              if c.width * c.height > maxDownPx * maxDownPx / 3 { break } // too big
-              if c.height > maxDownPx { break } // too tall
+              if c.width * c.height > maxDownPx * maxDownPx * 4 { break } // too big
+              if c.height > maxDownPx * 4 { break } // too tall
               height += c.height + (c.y - maxY)
               let widthWithChar = c.x + c.width - minX
               width = max(widthWithChar, width)
@@ -476,28 +477,21 @@ class Characters {
     if char.width == 0 || char.height == 0 {
       return ""
     }
-    let dbl = Float(28)
+    let offset = 4
+    let dbl = Float(28 - offset)
     let retinaLineBounds = char.lineBounds!.map { $0 * 2 }
     let lineMaxY = (retinaLineBounds[1] + retinaLineBounds[3])
     let charMaxY = (char.y + char.height)
-    let topPadding = max(0, char.y - retinaLineBounds[1])
-    let bottomPadding = max(0, lineMaxY - charMaxY)
-    var offsetY = 0
+    let topPad = max(0, char.y - retinaLineBounds[1])
+    let bottomPad = max(0, lineMaxY - charMaxY)
     let width = Float(char.width)
-    var height = Float(char.height)
-    if bottomPadding > 0 || topPadding > 0 {
-      height = height + Float(bottomPadding / 2) + Float(topPadding)
-      offsetY = -topPadding
-    }
+    let height = Float(char.height)
     var scaleX = Float(1)
     var scaleY = Float(1)
-    var endX = 28
     if width > dbl {
       scaleX = width / dbl
     } else if width < dbl {
-      // multiply by two so it doesnt stretch all the way
-      scaleX = 1 / (dbl / width) * 2
-      endX = 28 / 2
+      scaleX = 1 / (dbl / width)
     }
     if height > dbl {
       scaleY = height / dbl
@@ -505,16 +499,48 @@ class Characters {
       scaleY = 1 / (dbl / height)
     }
     var output = ""
+    let smallSize = Float(retinaLineBounds[3] / 5)
     for y in 0..<28 {
       for x in 0..<28 {
-        if x > endX { output += "1.0 "; continue }
-        let xS = Int(Float(x) * scaleX)
-        let yS = Int(Float(y) * scaleY)
-//        if yS > 28 - offsetY {
-//          output += "1.0 "
-//          continue
-//        }
-        let luma = buffer[(char.y + yS + offsetY) * perRow + char.x + xS]
+        if x < offset {
+          // encode a dot for toppadded
+          if y < 4 {
+            if topPad > retinaLineBounds[3] / 2 {
+              output += "0.0 "
+              continue
+            }
+          }
+          // encode a dot for bottompadded
+          if y < 12 && y >= 8 {
+            if bottomPad > retinaLineBounds[3] / 2 {
+              output += "0.0 "
+              continue
+            }
+          }
+          // encode a dot for small
+          if y < 20 && y >= 16 {
+            if width < smallSize && height < smallSize {
+              output += "0.0 "
+              continue
+            }
+          }
+          // encode a dot for thin
+          if y < 28 && y >= 24 {
+            if width < smallSize {
+              output += "0.0 "
+              continue
+            }
+          }
+          output += "1.0 "
+          continue
+        }
+        if y < offset {
+          output += "1.0 "
+          continue
+        }
+        let xS = Int(Float(x - offset) * scaleX)
+        let yS = Int(Float(y - offset) * scaleY)
+        let luma = buffer[(char.y + yS) * perRow + char.x + xS]
         // luminance to intensity means we have to inverse it
         // warning, doing any sort of Int => String conversion here slows it down Bigly
         if luma < isBlackIfUnder {
@@ -526,7 +552,8 @@ class Characters {
     }
     if shouldDebug && debugID != "" {
       var pixels = [PixelData]()
-      for char in output.split(separator: " ") {
+      let values = output.split(separator: " ")
+      for char in values {
         let brt = UInt8(char == "0.0" ? 0 : 255)
         pixels.append(PixelData(a: 255, r: brt, g: brt, b: brt))
       }

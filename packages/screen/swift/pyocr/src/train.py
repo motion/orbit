@@ -38,6 +38,7 @@ print('loading ' + str(len(train_fonts)) +
 print('train len...' + str(train_len))
 print('epochs...' + str(args.epochs))
 print('batch_size...' + str(args.batch_size))
+print('learning_rate...' + str(args.lr))
 
 for font_index, font in enumerate(train_fonts):
     for index, letter in enumerate(letters):
@@ -54,9 +55,9 @@ for font_index, font in enumerate(test_fonts):
 train_set = torch.utils.data.TensorDataset(train_x, train_y)
 test_set = torch.utils.data.TensorDataset(test_x, test_y)
 train_loader = torch.utils.data.DataLoader(
-    train_set, batch_size=args.batch_size, shuffle=True, num_workers=4)
+    train_set, batch_size=args.batch_size, shuffle=True, num_workers=1)
 test_loader = torch.utils.data.DataLoader(
-    test_set, batch_size=args.batch_size, shuffle=True, num_workers=4)
+    test_set, batch_size=args.batch_size, shuffle=True, num_workers=1)
 
 model = Net()
 
@@ -67,7 +68,7 @@ def run_words(s):
     print('predict: ', s)
     x = torch.Tensor(len(s), 1, 28, 28)
     for index, c in enumerate(list(s)):
-        x[index, :] = get_letter('helvetica', str(index), True)
+        x[index, :] = get_letter(random.choice(test_fonts), str(index), False)
 
     model.eval()
     correct = 0
@@ -129,7 +130,8 @@ def test():
 
 
 for epoch in range(1, args.epochs):
+    start = time.time()
     train(epoch)
     test()
     torch.save(model, model_path)
-    run_words(TEST_LETTERS)
+    print('epoch took', time.time() - start, 's')

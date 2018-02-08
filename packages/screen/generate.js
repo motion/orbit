@@ -66,7 +66,7 @@ function getPage(fontName) {
     <p>
       <i>Im stll skeptcalxzr MY BIG</i>
     </p>
-    <p class="light"><i>promis thzn oxen maneuver SPHINX OF QUARTZ</i></p>
+    <p class="light"><i>proms thzn oxen maneuver SPHINX OF QUARTZ</i></p>
     <p class="light">incentivizes dating sites to keep you single</p>
     <p class="light">safter all the longer youre single</p>
 
@@ -127,7 +127,7 @@ async function train() {
     'cambria',
     'consolas',
     'franklin gothic medium',
-    'lao mn',
+    // 'lao mn',
   ]
 
   while (fonts.length) {

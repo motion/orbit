@@ -126,6 +126,7 @@ class Characters {
           debugID: debugID
         ) else {
           print("no char")
+          y = maxY + 1 // move to next
           continue
         }
         // after find character, always move to next x
@@ -499,32 +500,33 @@ class Characters {
       scaleY = 1 / (dbl / height)
     }
     var output = ""
-    let smallSize = Float(retinaLineBounds[3] / 5)
+    let smallSize = Float(retinaLineBounds[3]) / 5
+    let bigSize = Float(retinaLineBounds[3]) / 1.5
     for y in 0..<28 {
       for x in 0..<28 {
         if x < offset {
-          // encode a dot for toppadded
+          // encode a dot for bigtoppad
           if y < 4 {
             if topPad > retinaLineBounds[3] / 2 {
               output += "0.0 "
               continue
             }
           }
-          // encode a dot for bottompadded
+          // encode a dot for bigbottompad
           if y < 12 && y >= 8 {
             if bottomPad > retinaLineBounds[3] / 2 {
               output += "0.0 "
               continue
             }
           }
-          // encode a dot for small
+          // encode a dot for reallysmall
           if y < 20 && y >= 16 {
             if width < smallSize && height < smallSize {
               output += "0.0 "
               continue
             }
           }
-          // encode a dot for thin
+          // encode a dot for reallythin
           if y < 28 && y >= 24 {
             if width < smallSize {
               output += "0.0 "
@@ -535,6 +537,20 @@ class Characters {
           continue
         }
         if y < offset {
+          if x < 12 && x >= 8 {
+            // encode a dot for mediumtoppad
+            if topPad > retinaLineBounds[3] / 4 {
+              output += "0.0 "
+              continue
+            }
+          }
+          if x < 20 && x >= 16 {
+            // encode a dot for reallybig
+            if width > bigSize && height > bigSize {
+              output += "0.0 "
+              continue
+            }
+          }
           output += "1.0 "
           continue
         }

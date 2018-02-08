@@ -26,6 +26,7 @@ import ScreenStore from '@mcro/screen-store'
     settingsVisible = false
 
     willMount() {
+      global.rootStore = this
       this.screen.start()
       new ShortcutsStore().emitter.on('shortcut', shortcut => {
         console.log('emit shortcut', shortcut)

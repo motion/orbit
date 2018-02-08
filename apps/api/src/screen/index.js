@@ -6,6 +6,8 @@ import { isEqual, throttle, last } from 'lodash'
 import iohook from 'iohook'
 import * as Constants from '~/constants'
 import killPort from 'kill-port'
+import Auth from './auth'
+// import Crawl from './crawl'
 
 const PORT = 40510
 
@@ -50,12 +52,14 @@ type TScreenState = {
 
 export default class ScreenState {
   stopped = false
+  // crawl = new Crawl()
   screenOCR = new ScreenOCR()
   activeSockets = []
   swindler = new Swindler()
   curAppState = {}
   watchSettings = {}
   extraAppState = {}
+  auth = null
 
   state: TScreenState = {
     appState: null,
@@ -86,6 +90,7 @@ export default class ScreenState {
     // and kill anything on this port
     await killPort(PORT)
     this.wss = new Server({ port: PORT })
+    this.auth = new Auth({ socket: this.wss })
     this.setupSocket()
     this.stopped = false
     this.screenOCR.onWords(words => {

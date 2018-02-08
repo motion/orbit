@@ -1,5 +1,5 @@
 import * as Constants from '~/constants'
-import * as Injections from '~/helpers/injections'
+import * as Injections from './injections'
 import * as Helpers from '~/helpers'
 import { throttle } from 'lodash'
 import { store } from '@mcro/black/store'
@@ -24,27 +24,27 @@ export default class Auth {
   }
 
   listenForOpenBrowser() {
-    this.on(
-      this.socket,
-      'open-browser',
-      throttle((event, url) => Helpers.open(url), 200),
-    )
+    // this.on(
+    //   this.socket,
+    //   'open-browser',
+    //   throttle((event, url) => Helpers.open(url), 200),
+    // )
   }
 
   listenForCrawlerInject() {
-    this.on(
-      this.socket,
-      'inject-crawler',
-      throttle(Injections.injectCrawler, 1000),
-    )
-    this.on(
-      this.socket,
-      'uninject-crawler',
-      throttle(Injections.uninjectCrawler, 1000),
-    )
+    // this.on(
+    //   this.socket,
+    //   'inject-crawler',
+    //   throttle(Injections.injectCrawler, 1000),
+    // )
+    // this.on(
+    //   this.socket,
+    //   'uninject-crawler',
+    //   throttle(Injections.uninjectCrawler, 1000),
+    // )
   }
 
   handleOpenSettings() {
-    this.on(this.socket, 'open-settings', throttle(this.handlePreferences, 200))
+    // this.on(this.socket, 'open-settings', throttle(this.handlePreferences, 200))
   }
 }

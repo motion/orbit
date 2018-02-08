@@ -8,6 +8,7 @@
     "start-prod": "NODE_ENV=production node index.js"
   },
   "dependencies": {
+    "@mcro/black": "*",
     "@mcro/crawler": "^1.5.1",
     "@mcro/swindler": "*",
     "@mcro/passport-slack": "^1.5.1",

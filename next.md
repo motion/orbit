@@ -33,6 +33,7 @@
 
 ## Micro
 
+* highlights needs to ensure its full screen every so often (display changes mess it up)
 * peek bugs popping up all the time
 * crawler dont use node readability
 * more forgiving markdown parser

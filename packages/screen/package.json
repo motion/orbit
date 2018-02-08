@@ -5,17 +5,18 @@
   "license": "MIT",
   "main": "es6/index",
   "scripts": {
-    "test": "node ./test --debug",
+    "train": "cd ./swift/pyocr/src && python3 train.py",
+    "generate": "node ./generate",
+    "test": "DEBUG_IMAGES=true node ./test --debug",
     "test-fast": "node ./test",
-    "build": "cd swift && xcodebuild -configuration Release -derivedDataPath $(mktemp -d) -scheme aperture && touch ../../../apps/api/src/index.js",
+    "build":
+      "cd swift && xcodebuild -configuration Release -derivedDataPath $(mktemp -d) -scheme aperture && touch ../../../apps/api/src/index.js",
     "edit": "open ./swift/aperture.xcodeproj",
     "prepublish": "npm run build"
   },
-  "files": [
-    "index.js",
-    "aperture"
-  ],
+  "files": ["index.js", "aperture"],
   "dependencies": {
+    "express": "^4.16.2",
     "kill-port": "^1.1.0",
     "ps-tree": "^1.1.0",
     "pidusage": "^1.2.0",

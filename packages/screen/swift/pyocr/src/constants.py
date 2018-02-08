@@ -3,11 +3,9 @@ import os
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
 font_path = dir_path + '/../fonts'
-letters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
-# letters = 'acemnorsuvwxz-;:<>+=~'
-# letters_low = 'gjypq'
-# letters_tall = 'bdfhijkltABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789()[]?@&$#!'
-# letters_bottom = '_.,'
-# letters_top = '\'"*'
+# letters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+
+letters = "123*',;:.?!#$thequickbrownfoxjumpsoverthe*a'b,c;d:e.f?g!h#i$j[k]l(m)CwmFJORDBANKGLyphsVEXTlazydogpackmyboxwithfivedozenliuorusxcsPACKMYBOXWITHQuizJackdawsloveJACKDAWSLOVEmybigsphinxofquartz12345678901234567890ImstllskeptcalxzrMYBIGpromsthznoxenmaneuverSPHINXOFQUARTZincentivizesdatingsitestokeepyousinglesafterallthelongeryouresingle*a'b,c;d:e.f?g!h#i$j[k]l(m)thequickbrownfoxjumpsoverthelazydogCwmFJORDBANKGLyphsVEXTQuizpackmyboxwithfivedozenliuorusxcsPACKMYBOXWITHJackdawsloveJACKDAWSLOVEmybigsphinxofquartz12345678901234567890"
+
 ocr_path = dir_path + '/../data/ocr.csv'
 model_path = dir_path + '/../models/model.pyt'

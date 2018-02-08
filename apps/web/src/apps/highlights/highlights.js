@@ -127,17 +127,17 @@ class Words {
       // background: [200, 200, 200, 0.15],
     },
     highlighted: {
-      borderBottom: [2, 'solid', '#EDD71E'],
+      borderBottom: [1, 'solid', [0, 0, 0, 0.1]],
     },
     hovered: {
       background: 'rgba(0,0,0,0.1) !important',
       opacity: 1,
     },
     wordInner: {
-      opacity: 0.2,
+      opacity: 0.3,
       top: -14,
       left: -4,
-      fontSize: 8,
+      fontSize: 9,
       height: 10,
       position: 'absolute',
       wordWrap: 'no-wrap',
@@ -168,12 +168,12 @@ class Lines {
   }
   static style = {
     ocrLine: {
-      borderBottom: [2, 'dotted', [0, 0, 0, 0.1]],
+      borderBottom: [2, '#EDD71E'],
       position: 'absolute',
-      opacity: 1,
+      opacity: 0.5,
     },
     hoveredLine: {
-      borderBottom: [2, 'solid', '#EDD71E'],
+      borderBottom: [3, '#EDD71E'],
     },
   }
 }

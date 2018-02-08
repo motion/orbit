@@ -6,7 +6,8 @@ function kill-electron() {
 
 if [[ "$(lsof -i TCP:3001 | wc -c)" -ne 0 ]]; then
   kill-electron
-  NODE_ENV=development electron ./lib/start-app
+  NODE_ENV=development electron ./lib/start-app &
+  wait
 else
   echo "before electron run:"
   echo "$ run api"

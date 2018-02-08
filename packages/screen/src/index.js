@@ -204,24 +204,23 @@ export default class Screen {
     })
   }
 
-  watchBounds = (
-    {
-      fps = 25,
-      showCursor = true,
-      displayId = 'main',
-      videoCodec = undefined,
-      // how far between pixels to check
-      sampleSpacing = 10,
-      // how many pixels to detect before triggering change
-      sensitivity = 2,
-      boxes,
-      debug = false,
-    } = {},
-  ) => {
+  watchBounds = ({
+    fps = 25,
+    showCursor = true,
+    displayId = 'main',
+    videoCodec = undefined,
+    // how far between pixels to check
+    sampleSpacing = 10,
+    // how many pixels to detect before triggering change
+    sensitivity = 2,
+    boxes,
+    debug = false,
+  } = {}) => {
     // default box options
     const finalBoxes = boxes.map(box => ({
       initialScreenshot: false,
       findContent: false,
+      ocr: false,
       screenDir: null,
       ...box,
     }))

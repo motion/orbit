@@ -22,10 +22,18 @@ class Filters {
     // make it black and white
     filter = CIFilter(name: "CIPhotoEffectNoir")!
     outputImage = applyFilter(filter, for: outputImage)
-    // contrast boost
-    filter = CIFilter(name: "CIColorControls")!
-    filter.setValue(1.0, forKey: "inputContrast")
-//    filter.setValue(0.3, forKey: "inputBrightness")
+    // while emphasizing edges of that have actual borders
+    filter = CIFilter(name: "CIUnsharpMask")!
+    filter.setValue(1.0, forKey: "inputIntensity")
+    filter.setValue(2.5, forKey: "inputRadius")
+    outputImage = applyFilter(filter, for: outputImage)
+    // edge detecting with low contrast and unsharp mask
+    // gives really nice outlines
+    filter = CIFilter(name: "CIEdges")!
+    filter.setValue(2.0, forKey: "inputIntensity")
+    outputImage = applyFilter(filter, for: outputImage)
+    // edges inversts everything basically, so lets un-invert
+    filter = CIFilter(name: "CIColorInvert")!
     outputImage = applyFilter(filter, for: outputImage)
     // return
     guard let cgImage = context.createCGImage(outputImage, from: outputImage.extent) else { return nil }

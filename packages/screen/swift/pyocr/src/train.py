@@ -19,6 +19,8 @@ from torch.autograd import Variable
 from PIL import Image
 from get_letter import get_letter
 
+TEST_LETTERS = letters[0:390]
+
 
 def letter_index(letter):
     return list(letters).index(letter)
@@ -31,26 +33,31 @@ train_y = torch.LongTensor(train_len)
 test_x = torch.Tensor(test_len, 1, 28, 28)
 test_y = torch.LongTensor(test_len)
 
-print('loading letters...')
+print('loading ' + str(len(train_fonts)) +
+      ' fonts with ' + str(len(letters)) + ' letters...')
+print('train len...' + str(train_len))
+print('epochs...' + str(args.epochs))
+print('batch_size...' + str(args.batch_size))
+print('learning_rate...' + str(args.lr))
 
 for font_index, font in enumerate(train_fonts):
     for index, letter in enumerate(letters):
         _index = font_index * len(letters) + index
-        train_x[_index, :] = get_letter(font, letter)
+        train_x[_index, :] = get_letter(font, str(index))
         train_y[_index] = index
 
 for font_index, font in enumerate(test_fonts):
     for index, letter in enumerate(letters):
         _index = font_index * len(letters) + index
-        test_x[_index, :] = get_letter(font, letter)
+        test_x[_index, :] = get_letter(font, str(index))
         test_y[_index] = index
 
 train_set = torch.utils.data.TensorDataset(train_x, train_y)
 test_set = torch.utils.data.TensorDataset(test_x, test_y)
 train_loader = torch.utils.data.DataLoader(
-    train_set, batch_size=4, shuffle=True, num_workers=2)
+    train_set, batch_size=args.batch_size, shuffle=True, num_workers=1)
 test_loader = torch.utils.data.DataLoader(
-    test_set, batch_size=4, shuffle=True, num_workers=2)
+    test_set, batch_size=args.batch_size, shuffle=True, num_workers=1)
 
 model = Net()
 
@@ -58,11 +65,10 @@ optimizer = optim.SGD(model.parameters(), lr=args.lr, momentum=args.momentum)
 
 
 def run_words(s):
-    print('predicting', s)
+    print('predict: ', s)
     x = torch.Tensor(len(s), 1, 28, 28)
     for index, c in enumerate(list(s)):
-        choice = random.choice(test_fonts)
-        x[index, :] = get_letter('helvetica.ttf', c, True)
+        x[index, :] = get_letter(random.choice(test_fonts), str(index), False)
 
     model.eval()
     correct = 0
@@ -72,13 +78,14 @@ def run_words(s):
     # get the index of the max log-probability
     pred = output.data.max(1, keepdim=True)[1]
     out_str = [letters[letter[0]] for letter in pred.numpy()]
-    print('predicted', ''.join(out_str))
+    print('    got: ', ''.join(out_str))
 
     correct = 0
     for i in range(len(s)):
         if s[i] == out_str[i]:
             correct += 1
 
+    print('')
     print('correct', correct / len(s) * 100, '%', 'took', time.time() - start)
 
 
@@ -93,7 +100,7 @@ def train(epoch):
         loss = F.nll_loss(output, target)
         loss.backward()
         optimizer.step()
-        if batch_idx % 10 == 0:
+        if batch_idx % 40 == 0:
             print('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
                 epoch, batch_idx * len(data), len(train_loader.dataset),
 
@@ -105,7 +112,7 @@ def test():
     test_loss = 0
     correct = 0
     for batch_idx, (data, target) in enumerate(test_loader):
-        # data, target = data.cuda(async=True), target.cuda(async=True) # On GPU
+        # data, target = data.cuda(async=True), target.cuda(async=True)  # On GPU
         data = Variable(data, volatile=True)
         target = Variable(target, volatile=True)
         output = model(data)
@@ -116,16 +123,15 @@ def test():
         correct += pred.eq(target.data.view_as(pred)).cpu().sum()
 
     test_loss /= len(test_x)
-    run_words('thequickbrownfoxjumpedoverthelazydog')
-    print('\nTest set: Average loss: {:.4f}, Accuracy: {}/{} ({:.0f}%)\n'.format(
+    run_words(TEST_LETTERS)
+    print('\n      avg loss {:.4f}, accuracy {}/{} ({:.0f}%)\n'.format(
         test_loss, correct, len(test_x),
         100. * correct / len(test_x)))
 
 
-epochs = args.epochs + 1
-print('epochs', epochs)
-for epoch in range(1, epochs):
+for epoch in range(1, args.epochs):
+    start = time.time()
     train(epoch)
     test()
     torch.save(model, model_path)
-    run_words('thequickbrownfoxjumpedoverthelazydog')
+    print('epoch took', time.time() - start, 's')

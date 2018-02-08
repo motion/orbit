@@ -370,8 +370,8 @@ class Characters {
     // blob above/below, to get i's and j's and ?'s
     if findHangers {
       let centerX = topLeftBound[0] + (width / 2)
-      let maxDownPx = Int((1.0 - percentDownLine) * Float(lineHeight) / 2.5) // pxs left in line downwards
-      let maxUpPx = Int(percentDownLine * Float(lineHeight) / 2.5) // pxs left in line upwards
+      let maxDownPx = Int((1.0 - percentDownLine) * Float(lineHeight) / 2.2) // pxs left in line downwards
+      let maxUpPx = Int(percentDownLine * Float(lineHeight) / 2.2) // pxs left in line upwards
 //      print("line \(debugID) maxup \(maxUpPx) maxdown \(maxDownPx)")
       let maxY = bottomRightBound[1]
       if maxUpPx > 2 {
@@ -500,7 +500,7 @@ class Characters {
       scaleY = 1 / (dbl / height)
     }
     var output = ""
-    let smallSize = Float(retinaLineBounds[3]) / 5
+    let smallSize = Float(retinaLineBounds[3]) / 4
     let bigSize = Float(retinaLineBounds[3]) / 2
     for y in 0..<28 {
       for x in 0..<28 {

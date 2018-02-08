@@ -23,15 +23,16 @@ function getPage(fontName) {
   <head>
     <style>
       body {
-        padding: 20px;
+        padding: 10px 20px;
         font-family: ${fontName};
         font-size: 29px;
-        letter-spacing: 2.5px;
-        line-height: 44px;
+        letter-spacing: 3px;
+        line-height: 47px;
       }
       small {
         font-size: 20px;
-        line-height: 32px;
+        line-height: 34px;
+        letter-spacing: 3px;
       }
       .light { font-weight: 300; font-smooth: antialiased; }
       p { margin: 0; }
@@ -45,50 +46,43 @@ function getPage(fontName) {
      <b>the quick brown fox jumps over the</b>
     </p>
     <p>
-      <b>*a'b,c;d:e.f?g!h#i$j[k]l(m)</b>
+      <b>*a'b,c;d:e.f?g!h#i$j[k]l(m) lazy dog</b>
     </p>
     <p>
       <b>Cwm FJORD BANK GLyphs VEXT</b>
     </p>
-    <p>lazy dog pack my box with</p>
+    <p>lazy dog pack my box with PACK MY BOX</p>
     <p>
-      five dozen liuor usxcs PACK MY BOX WITH
-    </p>
-    <p>
-      <b>Quiz Jackdaws love</b>
+      <b>Quiz Jackdaws love foive dozen liuor</b>
     </p>
     <p>
       JACKDAWS LOVE my big sphinx of quartz
     </p>
     <p>
-      1234567890 <b>1234567890</b>
+      1234567890 <i>1234567890</i> <i><b>1234567890</b></i>
     </p>
     <p>
-      <i>Im stll skeptcalxzr MY BIG</i>
+      <i><b>abcdegh#$[k]l(m)opqrstuvwxyz</b></i>
     </p>
-    <p class="light"><i>proms thzn oxen maneuver SPHINX OF QUARTZ</i></p>
-    <p class="light">incentivizes dating sites to keep you single</p>
-    <p class="light">safter all the longer youre single</p>
-
+    <p class="light"><i>1234567890 abcdefehklmnorstuvwxz</i></p>
+    <p class="light"><i>ABCDEFGHIJKLMNOPQRSTUVWXYZ</i></p>
+    <p class="light">1234567890 abcdefeghijklmnopqrstuvwxyz</p>
+    <p class="light">ABCDEFGHIJKLMNOPQRSTUVWXYZ</p>
     <small>
     <p>
-    <b>*a'b,c;d:e.f?g!h#i$j[k]l(m)</b>
+    <b>*a'b,c;d:e.f?g!h#i$j[k]l(m)opqrstuvwxyz</b>
   </p>
   <p>
-   <b>the quick brown fox jumps over the lazy dog</b>
+   <b><i>the quck brown fox umps over the lazy dog</i></b>
   </p>
   <p>
     <b>Cwm FJORD BANK GLyphs VEXT Quiz</b>
   </p>
-  <p>pack my box with</p>
   <p>
-    five dozen liuor usxcs PACK MY BOX WITH
+    foive dozen liuor usxcs PACK MY BOX WITH
   </p>
   <p>
-    <b>Jackdaws love</b>
-  </p>
-  <p>
-    JACKDAWS LOVE my big sphinx of quartz
+    <b>Jackdaws love</b> JACKDAWS LOVE my big sphinx of quartz
   </p>
   <p>
     1234567890 <b>1234567890</b>
@@ -127,6 +121,40 @@ async function train() {
     'cambria',
     'consolas',
     'franklin gothic medium',
+    'open sans',
+    'roboto',
+    'roboto slab',
+    'baskerville',
+    'comic sans',
+    'infinity',
+    'league gothic',
+    'legion slab',
+    'lucida grande',
+    'minion pro',
+    'museo',
+    'nevis',
+    'otama.ep',
+    'patua one',
+    'pingfang hk',
+    'pt sans',
+    'pt serif',
+    'raleway',
+    'satellite',
+    'sathu',
+    'simsun',
+    'sinhala mn',
+    'source code pro',
+    'springsteel',
+    'stsong',
+    'times',
+    'times new roman',
+    'trebuchet ms',
+    'adobe caslon pro',
+    'apple chancery',
+    'apple symbols',
+    'bitstream vera sans mono',
+    'monotype corsiva',
+    'adobe fangsong std',
     // 'lao mn',
   ]
 

@@ -27,7 +27,6 @@ export default class UIStore {
   // this is synced to electron!
   // see electron/src/views/Root#RootStore.oraState
   state = {
-    peeking: false,
     pinned: false,
     hidden: false,
     focused: true,
@@ -58,11 +57,11 @@ export default class UIStore {
   }
 
   get showOra() {
-    const { hidden, peeking, focused, pinned } = this.state
+    const { hidden, focused, pinned } = this.state
     if (pinned) {
       return true
     }
-    return peeking || (!hidden && focused)
+    return !hidden && focused
   }
 
   constructor({ oraStore }) {
@@ -82,9 +81,7 @@ export default class UIStore {
     this._watchBlurBarOnHide()
     this._watchKeyEvents()
     this._watchContextMessage()
-    this._watchContextOptionKey()
     this._watchTrayTitle()
-    this._watchHidePeek()
   }
 
   dispose() {
@@ -147,28 +144,6 @@ export default class UIStore {
     this.setState({ pinned: !this.state.pinned })
   }
 
-  _watchContextOptionKey() {
-    const SHOW_DELAY = 250
-    let showTimeout
-    this.react(
-      () => this.oraStore.screen.keyboard || {},
-      ({ option }) => {
-        clearTimeout(showTimeout)
-        const { peeking } = this.state
-        const shouldShow = option && !peeking
-        const shouldHide = !option && peeking
-        if (shouldShow) {
-          showTimeout = setTimeout(() => {
-            this.setState({ peeking: true })
-          }, SHOW_DELAY)
-        }
-        if (shouldHide) {
-          this.setState({ peeking: false })
-        }
-      },
-    )
-  }
-
   _watchContextMessage() {
     this.watch(function watchContextMessage() {
       const { activeStore, hasContext } = this.oraStore
@@ -199,15 +174,6 @@ export default class UIStore {
           this.shouldFocus = false
         }
       }, 150)
-    })
-  }
-
-  _watchHidePeek() {
-    this.watch(function watchHidePeek() {
-      if (!this.showOra) {
-        console.log('cancel peek on hide')
-        Helpers.OS.send('peek-target', null)
-      }
     })
   }
 

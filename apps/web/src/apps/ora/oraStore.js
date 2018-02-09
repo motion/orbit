@@ -101,7 +101,7 @@ export default class OraStore {
     // watch and set active search
     this.watch(function setSearchQuery() {
       const { appState } = this
-      if (Object.keys(appState).length && !this.ui.barFocused) {
+      if (Object.keys(appState || {}).length && !this.ui.barFocused) {
         if (appState.selection) {
           this.search.setQuery(appState.selection)
           return

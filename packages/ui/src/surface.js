@@ -120,13 +120,6 @@ export default class Surface extends React.PureComponent<Props> {
 
   uniq = `SRFC-${Math.round(Math.random() * 100000000)}`
 
-  onClick = (e: Event) => {
-    e.preventDefault()
-    if (this.props.onClick) {
-      this.props.onClick(e)
-    }
-  }
-
   get uiContext() {
     return this.context.provided.uiContext
   }
@@ -252,56 +245,53 @@ export default class Surface extends React.PureComponent<Props> {
 
     const glowColor = (this.theme && themeValues.color) || DEFAULT_GLOW_COLOR
 
-    const contents = [
-      <Glint
-        if={glint}
-        key={0}
-        size={size}
-        borderLeftRadius={borderLeftRadius - 1}
-        borderRightRadius={borderRightRadius - 1}
-      />,
-      <badge if={badge} key={1} {...badgeProps}>
-        {typeof badge !== 'boolean' ? badge : ''}
-      </badge>,
-      <icon if={icon && !stringIcon} key={2} $iconAfter={hasIconAfter}>
-        {icon}
-      </icon>,
-      <Icon
-        if={icon && stringIcon}
-        key={3}
-        $icon
-        $iconAfter={hasIconAfter}
-        name={icon}
-        size={themeValues.iconSize}
-        {...iconProps}
-      />,
-      <HoverGlow
-        key={4}
-        if={glow && !dimmed && !disabled}
-        full
-        scale={1.1}
-        show={hovered}
-        color={glowColor}
-        opacity={0.35}
-        borderLeftRadius={borderLeftRadius - 1}
-        borderRightRadius={borderRightRadius - 1}
-        {...glowProps}
-      />,
-      <element
-        key={5}
-        if={!noElement || (noElement && !noWrap && hasChildren(children))}
-        {...wrapElement && passProps}
-        {...elementProps}
-        disabled={disabled}
-        $hasIconBefore={hasIconBefore}
-        $hasIconAfter={hasIconAfter}
-      >
-        {children}
-      </element>,
-      noElement && noWrap && hasChildren(children) && children,
-      tooltip && (
+    const contents = (
+      <React.Fragment>
+        <Glint
+          if={glint}
+          key={0}
+          size={size}
+          borderLeftRadius={borderLeftRadius - 1}
+          borderRightRadius={borderRightRadius - 1}
+        />
+        <badge if={badge} {...badgeProps}>
+          {typeof badge !== 'boolean' ? badge : ''}
+        </badge>
+        <icon if={icon && !stringIcon} $iconAfter={hasIconAfter}>
+          {icon}
+        </icon>
+        <Icon
+          if={icon && stringIcon}
+          $icon
+          $iconAfter={hasIconAfter}
+          name={icon}
+          size={themeValues.iconSize}
+          {...iconProps}
+        />
+        <HoverGlow
+          if={glow && !dimmed && !disabled}
+          full
+          scale={1.1}
+          show={hovered}
+          color={glowColor}
+          opacity={0.35}
+          borderLeftRadius={borderLeftRadius - 1}
+          borderRightRadius={borderRightRadius - 1}
+          {...glowProps}
+        />
+        <element
+          if={!noElement || (noElement && !noWrap && hasChildren(children))}
+          {...wrapElement && passProps}
+          {...elementProps}
+          disabled={disabled}
+          $hasIconBefore={hasIconBefore}
+          $hasIconAfter={hasIconAfter}
+        >
+          {children}
+        </element>
+        {noElement && noWrap && hasChildren(children) && children}
         <Popover
-          key={6}
+          if={tooltip}
           theme="dark"
           background
           openOnHover
@@ -321,14 +311,14 @@ export default class Surface extends React.PureComponent<Props> {
         >
           {tooltip}
         </Popover>
-      ),
-    ].filter(Boolean)
+      </React.Fragment>
+    )
 
     const surface = (
       <surface
         className={`${this.uniq} ${className || ''}`}
         ref={this.ref('surfaceRef').set}
-        onClick={this.onClick}
+        onClick={onClick}
         {...!wrapElement && passProps}
       >
         {after && (

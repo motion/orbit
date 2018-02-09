@@ -1,0 +1,2 @@
+github "mxcl/PromiseKit" ~> 4.4
+github "tmandry/AXSwift" ~> 0.2

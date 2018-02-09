@@ -1,0 +1,4 @@
+github "duemunk/Async" "2.0.4"
+github "mxcl/PromiseKit" "4.5.2"
+github "tidwall/SwiftWebSocket" "2.6.5"
+github "tmandry/AXSwift" "0.2.1"

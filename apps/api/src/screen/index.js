@@ -1,13 +1,11 @@
 // @flow
 import { Server } from 'ws'
-import ScreenOCR from '@mcro/screen'
-import Swindler from '@mcro/swindler'
+import Oracle from '@mcro/oracle'
 import { isEqual, throttle, last } from 'lodash'
 import iohook from 'iohook'
 import * as Constants from '~/constants'
 import killPort from 'kill-port'
 import Auth from './auth'
-// import Crawl from './crawl'
 
 const PORT = 40510
 
@@ -52,10 +50,8 @@ type TScreenState = {
 
 export default class ScreenState {
   stopped = false
-  // crawl = new Crawl()
-  screenOCR = new ScreenOCR()
+  oracle = new Oracle()
   activeSockets = []
-  swindler = new Swindler()
   curAppState = {}
   watchSettings = {}
   extraAppState = {}
@@ -93,22 +89,51 @@ export default class ScreenState {
     this.auth = new Auth({ socket: this.wss })
     this.setupSocket()
     this.stopped = false
-    this.screenOCR.onWords(words => {
+    this.oracle.onWords(words => {
       this.hasResolvedOCR = true
       this.updateState({
         ocrWords: words,
         lastOCR: Date.now(),
       })
     })
-    this.screenOCR.onLines(linePositions => {
+    this.oracle.onLines(linePositions => {
       this.updateState({
         linePositions,
       })
     })
-    this.screenOCR.onClear(() => {
+    this.oracle.onClear(() => {
       this.resetHighlights()
     })
-    this.screenOCR.onChanged(count => {
+    let lastId = null
+    this.oracle.onWindowChange((event, value) => {
+      // immediately cancel stuff
+      this.resetHighlights()
+      switch (event) {
+        case 'FrontmostWindowChangedEvent':
+          const id = value.id || lastId
+          this.curAppState = {
+            id,
+            title: value.title,
+            offset: value.offset,
+            bounds: value.bounds,
+            name: id ? last(id.split('.')) : value.title,
+          }
+          lastId = id
+          break
+        case 'WindowSizeChangedEvent':
+          this.curAppState.bounds = value
+          break
+        case 'WindowPosChangedEvent':
+          this.curAppState.offset = value
+      }
+      this.updateState({
+        appState: {
+          ...JSON.parse(JSON.stringify(this.curAppState)),
+          ...this.extraAppState, // from electron
+        },
+      })
+    })
+    this.oracle.onBoxChanged(count => {
       const isApp = this.watchSettings.name === 'App'
       if (isApp) {
         this.resetHighlights()
@@ -116,7 +141,7 @@ export default class ScreenState {
       } else {
         // for not many clears, try it
         if (count < 20) {
-          this.socketSendAll({ clearWord: this.screenOCR.changedIds })
+          this.socketSendAll({ clearWord: this.oracle.changedIds })
         } else {
           // else just clear it all
           this.resetHighlights()
@@ -124,7 +149,7 @@ export default class ScreenState {
         }
       }
     })
-    this.screenOCR.onChangedIds(ids => {
+    this.oracle.onChangedIds(ids => {
       console.log('clear ids', ids)
       const isOCR = this.watchSettings.name === 'OCR'
       if (isOCR) {
@@ -132,22 +157,20 @@ export default class ScreenState {
         return
       }
     })
-    this.screenOCR.onRestored(count => {
+    this.oracle.onRestored(count => {
       console.log('restore', count)
-      this.socketSendAll({ restoreWord: this.screenOCR.restoredIds })
+      this.socketSendAll({ restoreWord: this.oracle.restoredIds })
     })
-    this.screenOCR.onError(async error => {
+    this.oracle.onError(async error => {
       console.log('screen ran into err, restart', error)
       this.restartScreen()
     })
     this.watchMouse()
     this.watchKeyboard()
     iohook.start()
-    await this.screenOCR.start()
+    await this.oracle.start()
     // clear old highlights if theyre still up
     this.resetHighlights()
-    // swindler after ocr to ensure its ready
-    this.startSwindler()
   }
 
   setExtraAppState = state => {
@@ -157,44 +180,10 @@ export default class ScreenState {
   async restartScreen() {
     console.log('restartScreen')
     this.resetHighlights()
-    await this.screenOCR.stop()
+    await this.oracle.stop()
     console.log('starting back up')
-    await this.screenOCR.start()
+    await this.oracle.start()
     this.watchBounds(this.watchSettings.name, this.watchSettings.settings)
-  }
-
-  startSwindler() {
-    console.log('Start watching window changes...')
-    this.swindler.start()
-    let lastId = null
-    this.swindler.onChange(({ event, message }) => {
-      // immediately cancel stuff
-      this.resetHighlights()
-      switch (event) {
-        case 'FrontmostWindowChangedEvent':
-          const id = message.id || lastId
-          this.curAppState = {
-            id,
-            title: message.title,
-            offset: message.offset,
-            bounds: message.bounds,
-            name: id ? last(id.split('.')) : message.title,
-          }
-          lastId = id
-          break
-        case 'WindowSizeChangedEvent':
-          this.curAppState.bounds = message
-          break
-        case 'WindowPosChangedEvent':
-          this.curAppState.offset = message
-      }
-      this.updateState({
-        appState: {
-          ...JSON.parse(JSON.stringify(this.curAppState)),
-          ...this.extraAppState, // from electron
-        },
-      })
-    })
   }
 
   resetHighlights = () => {
@@ -324,13 +313,13 @@ export default class ScreenState {
       ],
     })
     this.hasResolvedOCR = false
-    if (this.screenOCR.state.isPaused) {
+    if (this.oracle.state.isPaused) {
       console.log('ispaused')
       return
     }
     // not paused, clear and resume
-    this.screenOCR.clear()
-    this.screenOCR.resume()
+    this.oracle.clear()
+    this.oracle.resume()
     this.clearOCRTimeout = setTimeout(async () => {
       if (!this.hasResolvedOCR) {
         console.log('seems like ocr has stopped working, restarting...')
@@ -342,7 +331,7 @@ export default class ScreenState {
   watchBounds(name: String, settings: Object) {
     this.isWatching = name
     this.watchSettings = { name, settings }
-    this.screenOCR.watchBounds(settings)
+    this.oracle.watchBounds(settings)
   }
 
   handleOCRWords = () => {
@@ -374,11 +363,8 @@ export default class ScreenState {
     // clear highlights on quit
     this.resetHighlights()
     console.log('disposing screen...')
-    if (this.screenOCR) {
-      await this.screenOCR.stop()
-    }
-    if (this.swindler) {
-      this.swindler.stop()
+    if (this.oracle) {
+      await this.oracle.stop()
     }
     console.log('screen disposed')
   }

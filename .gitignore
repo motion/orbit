@@ -29,17 +29,13 @@ apps/electron-build/app
 apps/crawler/build
 apps/search/build
 
-packages/screen/swift/Build
-packages/screen/train
-packages/swindler/Swindler/Build
-
+apps/oracle/orbit/orbit.xcodeproj/project.xcworkspace
+apps/oracle/orbit/Carthage
+apps/oracle/orbit/Build
+apps/oracle/swindler/Carthage
+apps/oracle/swindler/Build
 
 **/*/Index
-
-packages/screen/swift/aperture.xcodeproj
-!packages/screen/swift/aperture.xcodeproj/project.pbxproj
-!packages/screen/swift/aperture.xcodeproj/contents.xcworkspacedata
-packages/screen/aperture
 
 # keep these lib folders because these are babel plugins
 !packages/hmr/lib

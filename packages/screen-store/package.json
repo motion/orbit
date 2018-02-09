@@ -3,15 +3,9 @@
   "private": true,
   "version": "4.0.0",
   "main": "es6/screenStore",
-  "scripts": {
-    "postinstall": "electron-rebuild"
-  },
   "dependencies": {
     "@mcro/black": "*",
     "reconnecting-websocket": "^3.2.2",
     "html5-websocket": "^2.0.2"
-  },
-  "devDependencies": {
-    "electron-rebuild": "^1.7.3"
   }
 }

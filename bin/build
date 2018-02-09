@@ -33,7 +33,7 @@ function build-dev() {
     --ignore @mcro/web \
     --ignore @mcro/deliverx \
     --ignore @mcro/site \
-    --ignore @mcro/screen \
+    --ignore @mcro/oracle \
     --ignore @mcro/api \
     --ignore @mcro/builder \
     --ignore @mcro/swindler \

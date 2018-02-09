@@ -16,7 +16,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   @IBOutlet weak var window: NSWindow!
   
   private func emit(_ msg: String) {
-    print("sending to bridge... \(msg)")
     self.socketBridge.send(msg)
   }
 

@@ -75,54 +75,56 @@ export default class Oracle {
     console.log('Started screen')
   }
 
+  actionHandlers = {
+    changed: value => {
+      setTimeout(() => this.onBoxChangedCB(value))
+    },
+    changedIds: value => {
+      this.changedIds = value
+    },
+    restored: value => {
+      setTimeout(() => this.onRestoredCB(value))
+    },
+    restoredIds: value => {
+      this.restoredIds = value
+    },
+    clear: () => {
+      this.onClearCB()
+    },
+    words: value => {
+      this.onWordsCB(value)
+    },
+    lines: value => {
+      this.onLinesCB(value)
+    },
+    pause: () => {
+      this.pause()
+    },
+    resume: () => {
+      this.resume()
+    },
+    start: () => {
+      this.start()
+    },
+    ScrollEvent: () => {
+      this.onScrollCB()
+    },
+  }
+
   handleSocketMessage = str => {
     // console.log('got', str)
     const { action, value, state } = JSON.parse(str)
     // console.log('screen.action', action)
     try {
-      if (action === 'changed') {
-        setTimeout(() => {
-          this.onBoxChangedCB(value)
-        })
-      }
-      if (action === 'changedIds') {
-        this.changedIds = value
-      }
-      if (action === 'restored') {
-        setTimeout(() => {
-          this.onRestoredCB(value)
-        })
-      }
-      if (action === 'restoredIds') {
-        this.restoredIds = value
-      }
-      if (action === 'clear') {
-        this.onClearCB()
-      }
-      // state goes out to clients
       if (state) {
         this.setState(state)
       }
-      if (action === 'words') {
-        this.onWordsCB(value)
+      if (this.actionHandlers[action]) {
+        this.actionHandlers[action](value)
+      } else {
+        // otherwise its a window change event
+        this.onWindowChangeCB(action, value)
       }
-      if (action === 'lines') {
-        this.onLinesCB(value)
-      }
-      if (action === 'pause') {
-        this.pause()
-      }
-      if (action === 'resume') {
-        this.resume()
-      }
-      if (action === 'start') {
-        this.start()
-      }
-      if (action == 'scroll') {
-        this.onScrollCB()
-      }
-      // otherwise its a window change event
-      this.onWindowChangeCB(action, value)
     } catch (err) {
       console.log('error sending reply', action, 'value', value)
       console.log(err)

@@ -22,8 +22,8 @@
 		CF0BCD8D202E0E230012723C /* Structs.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0BCD8C202E0E230012723C /* Structs.swift */; };
 		CF0BCD8F202E0E260012723C /* Moves.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0BCD8E202E0E260012723C /* Moves.swift */; };
 		CF0BCD91202E0E290012723C /* OCRInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0BCD90202E0E290012723C /* OCRInterface.swift */; };
-		CF0BCD93202E0E2D0012723C /* Recorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0BCD92202E0E2D0012723C /* Recorder.swift */; };
-		CF0BCD95202E0E310012723C /* RecorderFrame.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0BCD94202E0E310012723C /* RecorderFrame.swift */; };
+		CF0BCD93202E0E2D0012723C /* Screen.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0BCD92202E0E2D0012723C /* Screen.swift */; };
+		CF0BCD95202E0E310012723C /* ScreenFrame.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0BCD94202E0E310012723C /* ScreenFrame.swift */; };
 		CF0BCD97202E0E330012723C /* ThresholdBelowFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0BCD96202E0E330012723C /* ThresholdBelowFilter.swift */; };
 		CF0BCD99202E0E360012723C /* ThresholdFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0BCD98202E0E360012723C /* ThresholdFilter.swift */; };
 		CF0BCD9D202E0E3D0012723C /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0BCD9C202E0E3C0012723C /* Extensions.swift */; };
@@ -36,6 +36,7 @@
 		CF0BCDAD202E11140012723C /* Async.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = CF0BCDAB202E11140012723C /* Async.framework.dSYM */; };
 		CF0BCDAF202E13310012723C /* Bridge.plugin in Resources */ = {isa = PBXBuildFile; fileRef = CF0BCDAE202E13310012723C /* Bridge.plugin */; };
 		CF0BCDB5202E189F0012723C /* Windo.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0BCDB4202E189F0012723C /* Windo.swift */; };
+		CF0BCDB7202E1BBB0012723C /* SocketBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0BCDB6202E1BBB0012723C /* SocketBridge.swift */; };
 		CFBEEE1F202D838D005F925A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFBEEE1E202D838D005F925A /* AppDelegate.swift */; };
 		CFBEEE21202D838D005F925A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CFBEEE20202D838D005F925A /* Assets.xcassets */; };
 		CFBEEE24202D838D005F925A /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = CFBEEE22202D838D005F925A /* MainMenu.xib */; };
@@ -102,8 +103,8 @@
 		CF0BCD8C202E0E230012723C /* Structs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Structs.swift; sourceTree = "<group>"; };
 		CF0BCD8E202E0E260012723C /* Moves.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Moves.swift; sourceTree = "<group>"; };
 		CF0BCD90202E0E290012723C /* OCRInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OCRInterface.swift; sourceTree = "<group>"; };
-		CF0BCD92202E0E2D0012723C /* Recorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Recorder.swift; sourceTree = "<group>"; };
-		CF0BCD94202E0E310012723C /* RecorderFrame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecorderFrame.swift; sourceTree = "<group>"; };
+		CF0BCD92202E0E2D0012723C /* Screen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Screen.swift; sourceTree = "<group>"; };
+		CF0BCD94202E0E310012723C /* ScreenFrame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenFrame.swift; sourceTree = "<group>"; };
 		CF0BCD96202E0E330012723C /* ThresholdBelowFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThresholdBelowFilter.swift; sourceTree = "<group>"; };
 		CF0BCD98202E0E360012723C /* ThresholdFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThresholdFilter.swift; sourceTree = "<group>"; };
 		CF0BCD9C202E0E3C0012723C /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
@@ -114,6 +115,7 @@
 		CF0BCDAB202E11140012723C /* Async.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = Async.framework.dSYM; path = Carthage/Build/Mac/Async.framework.dSYM; sourceTree = "<group>"; };
 		CF0BCDAE202E13310012723C /* Bridge.plugin */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = Bridge.plugin; path = ../pyocr/dist/Bridge.plugin; sourceTree = "<group>"; };
 		CF0BCDB4202E189F0012723C /* Windo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Windo.swift; sourceTree = "<group>"; };
+		CF0BCDB6202E1BBB0012723C /* SocketBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketBridge.swift; sourceTree = "<group>"; };
 		CFBEEE1B202D838D005F925A /* orbit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = orbit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CFBEEE1E202D838D005F925A /* AppDelegate.swift */ = {isa = PBXFileReference; indentWidth = 2; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; tabWidth = 2; };
 		CFBEEE20202D838D005F925A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -160,15 +162,15 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		CF0BCDA3202E0E770012723C /* screen */ = {
+		CF0BCDA3202E0E770012723C /* Screen */ = {
 			isa = PBXGroup;
 			children = (
 				CF0BCD9E202E0E3E0012723C /* util.swift */,
 				CF0BCD9C202E0E3C0012723C /* Extensions.swift */,
 				CF0BCD98202E0E360012723C /* ThresholdFilter.swift */,
 				CF0BCD96202E0E330012723C /* ThresholdBelowFilter.swift */,
-				CF0BCD94202E0E310012723C /* RecorderFrame.swift */,
-				CF0BCD92202E0E2D0012723C /* Recorder.swift */,
+				CF0BCD94202E0E310012723C /* ScreenFrame.swift */,
+				CF0BCD92202E0E2D0012723C /* Screen.swift */,
 				CF0BCD90202E0E290012723C /* OCRInterface.swift */,
 				CF0BCD8E202E0E260012723C /* Moves.swift */,
 				CF0BCD8C202E0E230012723C /* Structs.swift */,
@@ -178,7 +180,7 @@
 				CF0BCD84202E0E140012723C /* ConnectedComponentsSwiftOCR.swift */,
 				CF0BCD82202E0E0F0012723C /* Characters.swift */,
 			);
-			path = screen;
+			path = Screen;
 			sourceTree = "<group>";
 		};
 		CF0BCDB3202E188D0012723C /* Windo */ = {
@@ -214,8 +216,9 @@
 			isa = PBXGroup;
 			children = (
 				CF0BCDB3202E188D0012723C /* Windo */,
-				CF0BCDA3202E0E770012723C /* screen */,
+				CF0BCDA3202E0E770012723C /* Screen */,
 				CFBEEE1E202D838D005F925A /* AppDelegate.swift */,
+				CF0BCDB6202E1BBB0012723C /* SocketBridge.swift */,
 				CFBEEE20202D838D005F925A /* Assets.xcassets */,
 				CFBEEE22202D838D005F925A /* MainMenu.xib */,
 				CFBEEE25202D838D005F925A /* Info.plist */,
@@ -337,6 +340,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CF0BCDB7202E1BBB0012723C /* SocketBridge.swift in Sources */,
 				CFBEEE1F202D838D005F925A /* AppDelegate.swift in Sources */,
 				CF0BCD83202E0E0F0012723C /* Characters.swift in Sources */,
 				CF0BCD85202E0E140012723C /* ConnectedComponentsSwiftOCR.swift in Sources */,
@@ -346,13 +350,13 @@
 				CF0BCD8D202E0E230012723C /* Structs.swift in Sources */,
 				CF0BCD91202E0E290012723C /* OCRInterface.swift in Sources */,
 				CF0BCD8F202E0E260012723C /* Moves.swift in Sources */,
-				CF0BCD93202E0E2D0012723C /* Recorder.swift in Sources */,
+				CF0BCD93202E0E2D0012723C /* Screen.swift in Sources */,
 				CF0BCD99202E0E360012723C /* ThresholdFilter.swift in Sources */,
 				CF0BCD97202E0E330012723C /* ThresholdBelowFilter.swift in Sources */,
 				CF0BCD9D202E0E3D0012723C /* Extensions.swift in Sources */,
 				CF0BCD9F202E0E3E0012723C /* util.swift in Sources */,
 				CF0BCDB5202E189F0012723C /* Windo.swift in Sources */,
-				CF0BCD95202E0E310012723C /* RecorderFrame.swift in Sources */,
+				CF0BCD95202E0E310012723C /* ScreenFrame.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

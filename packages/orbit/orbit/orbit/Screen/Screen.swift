@@ -2,7 +2,6 @@ import Foundation
 import AVFoundation
 import AppKit
 import Async
-import SwiftWebSocket
 
 let shouldDebugTiming = true
 
@@ -51,10 +50,11 @@ struct LinePosition {
   }
 }
 
-final class Recorder: NSObject {
+final class Screen: NSObject {
+  var emit: (String)->Void
+  var queue: AsyncGroup
   var isCleared = [Int: Bool]()
   var currentSampleBuffer: CMSampleBuffer?
-  var send: ((String)->Void) = { _ in print("not opened") }
   let input: AVCaptureScreenInput
   var session: AVCaptureSession
   var output: AVCaptureVideoDataOutput
@@ -76,7 +76,7 @@ final class Recorder: NSObject {
   var ignoreNextScan = false
   var shouldCancel = false
   var shouldRunNextTime = false
-  let queue = AsyncGroup()
+  
   var onStart: (() -> Void)?
   var onFinish: (() -> Void)?
   var onError: ((Error) -> Void)?
@@ -95,7 +95,7 @@ final class Recorder: NSObject {
     print("captured")
   }
 
-  init(displayId: CGDirectDisplayID = CGMainDisplayID()) throws {
+  init(emit: @escaping (String)->Void, queue: AsyncGroup, displayId: CGDirectDisplayID = CGMainDisplayID()) throws {
     // load python ocr
     if let path = Bundle.main.path(forResource: "Bridge", ofType: "plugin") {
       guard let pluginbundle = Bundle(path: path) else { fatalError("Could not load python plugin bundle") }
@@ -108,6 +108,9 @@ final class Recorder: NSObject {
       print("no bundle meh")
       exit(0)
     }
+    
+    self.emit = emit
+    self.queue = queue
 
     // start video
     self.displayId = displayId
@@ -147,71 +150,6 @@ final class Recorder: NSObject {
     } else {
       throw ApertureError.couldNotAddOutput
     }
-
-    // socket bridge
-    let ws = WebSocket("ws://localhost:40512")
-    self.send = { (msg) in
-//      print(msg)
-      ws.send(msg)
-    }
-    ws.event.open = {
-//      print("screen.ws.opened")
-    }
-    ws.event.close = { code, reason, clean in
-//      print("screen.ws.close")
-    }
-    ws.event.error = { error in
-      print("screen.ws.error \(error)")
-    }
-    self.queue.background {
-      ws.event.message = { (message) in
-        if let text = message as? String {
-          if text.count < 5 {
-            print("weird text")
-            return
-          }
-          let action = text[0...4]
-          if action == "state" {
-            // coming from us, ignore
-            return
-          }
-          if action == "pause" {
-            self.pause()
-            return
-          }
-          if action == "resum" {
-            self.resume()
-            return
-          }
-          if action == "start" {
-            self.start()
-            return
-          }
-          if action == "watch" {
-            do {
-              let options = try JSONDecoder().decode(Options.self, from: text[5..<text.count].data(using: .utf8)!)
-              self.watchBounds(
-                fps: options.fps,
-                boxes: options.boxes,
-                showCursor: options.showCursor,
-                videoCodec: options.videoCodec,
-                sampleSpacing: options.sampleSpacing,
-                sensitivity: options.sensitivity,
-                debug: options.debug
-              )
-            } catch {
-              print("Error parsing arguments \(text)")
-            }
-            return
-          }
-          if action == "clear" {
-            self.clear()
-            return
-          }
-          print("received unknown message: \(text)")
-        }
-      }
-    }
   }
 
   func start() {
@@ -223,27 +161,27 @@ final class Recorder: NSObject {
     if !session.isRunning {
       self.shouldCancel = false
       session.startRunning()
-      self.send("{ \"state\": { \"isRunning\": true, \"isPaused\": false } }")
+      self.emit("{ \"state\": { \"isRunning\": true, \"isPaused\": false } }")
     }
   }
 
   func stop() {
     if session.isRunning {
       session.stopRunning()
-      self.send("{ \"state\": { \"isRunning\": false } }")
+      self.emit("{ \"state\": { \"isRunning\": false } }")
     }
   }
 
   func resume() {
     print("screen: resuming...")
     self.start()
-    self.send("{ \"state\": { \"isPaused\": false } }")
+    self.emit("{ \"state\": { \"isPaused\": false } }")
   }
 
   func pause() {
     print("screen: pausing...")
     self.stop()
-    self.send("{ \"state\": { \"isPaused\": true } }")
+    self.emit("{ \"state\": { \"isPaused\": true } }")
   }
 
   func debug(_ str: String) {
@@ -701,14 +639,14 @@ final class Recorder: NSObject {
       let (words, lines) = getWordsAndLines(ocrResults, characterLines: charactersByLine)
       if shouldBreak() { return nil }
       // send to world
-      self.send("{ \"action\": \"words\", \"value\": [\(words.joined(separator: ","))] }")
-      self.send("{ \"action\": \"lines\", \"value\": [\(lines.joined(separator: ","))] }")
+      self.emit("{ \"action\": \"words\", \"value\": [\(words.joined(separator: ","))] }")
+      self.emit("{ \"action\": \"lines\", \"value\": [\(lines.joined(separator: ","))] }")
       // update character cache
       Async.utility(after: 0.04) { chars.updateCache(ocrResults) }
       print("recognized \(lines.count) lines, \(words.count) words")
     } else {
       print("found \(charactersByLineWithBounds.flatMap { $0.flatMap { $0.characters } }.count) characters")
-      self.send("{ \"action\": \"words\", \"value\": [] }")
+      self.emit("{ \"action\": \"words\", \"value\": [] }")
     }
     // test write images:
     if self.shouldDebug { images.writeCGImage(image: cgImage, to: "\(box.screenDir!)/\(box.id)-original.png") }

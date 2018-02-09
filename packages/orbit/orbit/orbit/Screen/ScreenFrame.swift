@@ -6,7 +6,7 @@ import Async
 var restored = [Int]()
 var changed = [Int]()
 
-extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
+extension Screen: AVCaptureVideoDataOutputSampleBufferDelegate {
   func hasBoxChanged(box: Box, buffer: UnsafeMutablePointer<UInt8>, perRow: Int) -> (Bool, Bool) {
     let lastBox = self.lastBoxes[box.id]
     var hasLastBox = false
@@ -172,12 +172,12 @@ extension Recorder: AVCaptureVideoDataOutputSampleBufferDelegate {
     }
     // emit
     if changed.count > 0 {
-      self.send("{ \"action\": \"changed\", \"value\": \(changed.count) }")
-      self.send("{ \"action\": \"changedIds\", \"value\": [\(changed.map({ String($0) }).joined(separator: ","))] }")
+      self.emit("{ \"action\": \"changed\", \"value\": \(changed.count) }")
+      self.emit("{ \"action\": \"changedIds\", \"value\": [\(changed.map({ String($0) }).joined(separator: ","))] }")
     }
     if restored.count > 0 {
-      self.send("{ \"action\": \"restored\", \"value\": \(restored.count) }")
-      self.send("{ \"action\": \"changedIds\", \"value\": [\(restored.map({ String($0) }).joined(separator: ","))] }")
+      self.emit("{ \"action\": \"restored\", \"value\": \(restored.count) }")
+      self.emit("{ \"action\": \"changedIds\", \"value\": [\(restored.map({ String($0) }).joined(separator: ","))] }")
     }
     if clearIgnoreNext {
       self.ignoreNextScan = false

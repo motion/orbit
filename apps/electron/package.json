@@ -19,6 +19,17 @@
     "runtime": "electron",
     "runtimeVersion": "1.7.10"
   },
+  "iohook": {
+    "targets": [
+      "electron-54"
+    ],
+    "platforms": [
+      "darwin"
+    ],
+    "arches": [
+      "x64"
+    ]
+  },
   "dependencies": {
     "@mcro/api": "^1.5.1",
     "@mcro/black": "^1.5.1",
@@ -29,7 +40,7 @@
     "babel-polyfill": "^6.26.0",
     "iohook": "^0.1.11",
     "debug": "^3.1.0",
-    "electron": "^1.7.10",
+    "electron": "1.7.10",
     "electron-rebuild": "^1.7.3",
     "electron-context-menu": "^0.9.1",
     "electron-debug": "^1.4.0",

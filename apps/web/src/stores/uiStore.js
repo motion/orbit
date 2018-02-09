@@ -418,7 +418,7 @@ export default class UIStore {
     }
     const height = refs.map(ref => ref.clientHeight).reduce((a, b) => a + b, 0)
 
-    const newHeight = Math.min(Constants.ORA_HEIGHT, height)
+    const newHeight = Math.min(1000, height)
     if (this.height !== newHeight) {
       this.height = newHeight
     }

@@ -1,3 +1,4 @@
+// @flow
 import { store } from '@mcro/black/store'
 import SwiftBridge from './swiftBridge'
 import ReconnectingWebSocket from 'reconnecting-websocket'
@@ -6,6 +7,7 @@ import WebSocket from './websocket'
 export SwiftBridge from './swiftBridge'
 
 // this is essentially a proxy store for api/screen
+// TODO make this more centralized
 
 @store
 export default class ScreenStore {
@@ -25,14 +27,23 @@ export default class ScreenStore {
     },
   })
 
+  get x() {}
+  set x(state) {
+    this.send({ state })
+  }
+
   pause() {
     this.start()
-    this.ws.send(JSON.stringify({ action: 'stop' }))
+    this.send({ action: 'stop' })
   }
 
   resume() {
     this.start()
-    this.ws.send(JSON.stringify({ action: 'start' }))
+    this.send({ action: 'start' })
+  }
+
+  send(object: Object) {
+    return this.ws.send(JSON.stringify(object))
   }
 
   // note: you have to call start to make it explicitly connect
@@ -47,7 +58,7 @@ export default class ScreenStore {
     this.ws.onmessage = ({ data }) => {
       if (data) {
         const res = JSON.parse(data)
-        this.setState(res)
+        this.updateState(res)
       }
     }
     this.ws.onopen = function() {
@@ -61,7 +72,7 @@ export default class ScreenStore {
     }
   }
 
-  setState = ({
+  updateState = ({
     keyboard,
     mousePosition,
     appState,

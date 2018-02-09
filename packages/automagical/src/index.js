@@ -6,7 +6,7 @@ import * as Mobx from 'mobx'
 import { Observable } from 'rxjs'
 
 if (module && module.hot) {
-  module.hot.accept(_ => _) // prevent aggressive hmrs
+  module.hot.accept('.', _ => _) // prevent aggressive hmrs
 }
 
 const isObservable = x => {
@@ -82,14 +82,14 @@ const FILTER_KEYS = {
 
 function collectGetterPropertyDescriptors(proto) {
   const fproto = Object.getOwnPropertyNames(proto).filter(
-    x => !FILTER_KEYS[x] && x[0] !== '_'
+    x => !FILTER_KEYS[x] && x[0] !== '_',
   )
   return fproto.reduce(
     (acc, cur) => ({
       ...acc,
       [cur]: Object.getOwnPropertyDescriptor(proto, cur),
     }),
-    {}
+    {},
   )
 }
 
@@ -286,7 +286,7 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
           currentObservable.mobxStream.currentVersion
         }
         update(
-          currentObservable.get ? currentObservable.get() : currentObservable
+          currentObservable.get ? currentObservable.get() : currentObservable,
         )
       }
     })

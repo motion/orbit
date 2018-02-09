@@ -115,6 +115,9 @@ class Characters {
       if isBlack {
         let percentDownLine = Float(y) / Float(lineH)
         let debugID = "\(id)-\(curChar)"
+        
+        // todo: line detection/removal here
+        
         guard var char = self.findCharacter(
           startX: xO,
           startY: yO,
@@ -164,7 +167,7 @@ class Characters {
         }
         if misfit {
           misfits += 1
-          print("misfit \(id)-\(curChar) \(misfitBig)b, \(misfitThin)t, \(misfitWide)w")
+//          print("misfit \(id)-\(curChar) \(misfitBig)b, \(misfitThin)t, \(misfitWide)w")
           if tooBig { misfitBig += 1 }
           if tooWide { misfitWide += 1 }
           if tooThin { misfitThin += 1 }
@@ -277,7 +280,7 @@ class Characters {
     while !foundEnd {
       iteration += 1
       if iteration > maxMoves {
-        if findHangers {
+        if !findHangers {
           print("too many moves on regular char \(findHangers)")
         }
         return nil
@@ -322,7 +325,7 @@ class Characters {
           rightMoves = 0
         }
         if rightMoves > exhaust { // found underline
-          print("breaking due to right")
+//          print("breaking due to right")
           break
         }
         // found a valid next move

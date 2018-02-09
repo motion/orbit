@@ -6,7 +6,7 @@ import Windows from './Windows'
 import Tray from './Tray'
 import { ipcMain } from 'electron'
 import * as Helpers from '~/helpers'
-import { throttle } from 'lodash'
+import { debounce } from 'lodash'
 import ScreenStore from '@mcro/screen-store'
 
 @view.provide({
@@ -45,6 +45,7 @@ import ScreenStore from '@mcro/screen-store'
       // watch option hold
       let lastKeyboard = {}
       let optionDelay
+      let justCleared = false
       this.react(
         () => this.screen.keyboard,
         keyboard => {
@@ -61,10 +62,20 @@ import ScreenStore from '@mcro/screen-store'
             }
             // delay before opening on option
             if (!lastKeyboard.option && option) {
-              optionDelay = setTimeout(this.toggleShown, 300)
+              optionDelay = setTimeout(this.toggleShown, 50)
             }
           } else {
             // SHOWN
+            if (optionCleared) {
+              justCleared = true
+              // dont toggle
+              return
+            }
+            if (justCleared) {
+              justCleared = false
+              // an option event comes again after cleared saying its false
+              return
+            }
             if (lastKeyboard.option && !option) {
               this.toggleShown()
             }
@@ -115,7 +126,10 @@ import ScreenStore from '@mcro/screen-store'
       this.oraState = { ...state }
     }
 
-    toggleShown = throttle(async () => {
+    toggleShown = debounce(async () => {
+      if (this.oraState.pinned) {
+        return
+      }
       if (!this.appRef) {
         console.log('no app ref :(')
         return

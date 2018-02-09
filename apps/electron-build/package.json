@@ -1,7 +1,7 @@
 {
   "name": "@mcro/electron-build",
   "productName": "Orbit",
-  "version": "1.5.79",
+  "version": "1.5.81",
   "private": true,
   "updater": {
     "url": "https://raw.githubusercontent.com/motion/orbit-updates/master/updates.json"
@@ -18,6 +18,10 @@
     "prepare-publish": "if [ ! -f \"./app/Orbit-$npm_package_version.dmg\" ]; then cp ./app/Orbit.dmg ./app/Orbit-$npm_package_version.dmg && zip -r -X -8 -q ./app/Orbit-$npm_package_version-mac.zip ./app/Orbit-darwin-x64/Orbit.app; fi",
     "publish-clean": "rm -r ./app/Orbit-$npm_package_version-mac.zip && mkdir -p ./app/releases && mv ./app/Orbit-$npm_package_version.dmg ./app/releases",
     "sign-app": "electron-osx-sign --ignore puppeteer/\\.local-chromium ./app/Orbit-darwin-x64/Orbit.app"
+  },
+  "cmake-js": {
+    "runtime": "electron",
+    "runtimeVersion": "1.7.10"
   },
   "devDependencies": {
     "execa": "^0.9.0",

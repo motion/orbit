@@ -418,7 +418,7 @@ electron-simple-updater@^1.2.1:
     httpreq "^0.4.22"
     semver "*"
 
-electron@^1.8.2:
+electron@^1.7.10:
   version "1.8.2"
   resolved "https://registry.yarnpkg.com/electron/-/electron-1.8.2.tgz#a817cd733c2972b3c7cc4f777caf6e424b88014d"
   dependencies:

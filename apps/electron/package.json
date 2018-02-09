@@ -15,6 +15,10 @@
     "deploy": "cd ../electron-build && npm run deploy",
     "postinstall": "electron-rebuild"
   },
+  "cmake-js": {
+    "runtime": "electron",
+    "runtimeVersion": "1.7.10"
+  },
   "dependencies": {
     "@mcro/api": "^1.5.1",
     "@mcro/black": "^1.5.1",

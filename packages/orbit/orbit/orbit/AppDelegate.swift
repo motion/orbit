@@ -18,10 +18,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   @IBOutlet weak var window: NSWindow!
   
   private func emit(_ msg: String) {
-    print("emitting... \(msg)")
+    print("sending to bridge... \(msg)")
+    self.socketBridge.send(msg)
   }
-  
-  
+
   func applicationDidFinishLaunching(_ aNotification: Notification) {
     if !AXSwift.checkIsProcessTrusted(prompt: true) {
       print("Not trusted as an AX process; please authorize and re-launch")

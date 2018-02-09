@@ -9,7 +9,7 @@ import killPort from 'kill-port'
 
 const WEBSOCKET_PORT = 40512
 const dir = electronUtil.fixPathForAsarUnpack(__dirname)
-const buildPath = Path.join(dir, '..', 'swift', 'Build', 'Products')
+const buildPath = Path.join(dir, '..', 'orbit', 'Build', 'Products')
 const RELEASE_PATH = Path.join(buildPath, 'Release')
 const DEBUG_PATH = Path.join(buildPath, 'Debug')
 
@@ -24,6 +24,7 @@ export default class Screen {
   listeners = []
   onLinesCB = _ => _
   onScrollCB = _ => _
+  onWindowChangeCB = _ => _
   onWordsCB = _ => _
   onChangedCB = _ => _
   onRestoredCB = _ => _
@@ -104,6 +105,11 @@ export default class Screen {
       if (action === 'start') {
         this.start()
       }
+      if (action == 'scroll') {
+        this.onScrollCB()
+      }
+      // otherwise its a window change event
+      this.onWindowChangeCB(action, value)
     } catch (err) {
       console.log('error sending reply', action, 'value', value)
       console.log(err)
@@ -295,6 +301,10 @@ export default class Screen {
 
   onLines = cb => {
     this.onLinesCB = cb
+  }
+
+  onWindowChange = cb => {
+    this.onWindowChangeCB = cb
   }
 
   onError = cb => {

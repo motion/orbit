@@ -24,6 +24,10 @@ ultron@~1.1.0:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/ultron/-/ultron-1.1.1.tgz#9fe1536a10a664a65266a1e3ccf85fd36302bc9c"
 
+wait-for-port@^0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/wait-for-port/-/wait-for-port-0.0.2.tgz#bb5ff253436b9933ab9d65c00d584dc68c4d531a"
+
 ws@^3.1.0:
   version "3.3.3"
   resolved "https://registry.yarnpkg.com/ws/-/ws-3.3.3.tgz#f1cf84fe2d5e901ebce94efaece785f187a228f2"

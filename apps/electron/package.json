@@ -11,7 +11,6 @@
   },
   "scripts": {
     "start": "watch './start.sh' src",
-    "build": "electron-rebuild",
     "watch": "npm run build -- --watch",
     "deploy": "cd ../electron-build && npm run deploy",
     "postinstall": "electron-rebuild"
@@ -26,7 +25,7 @@
     "babel-polyfill": "^6.26.0",
     "iohook": "^0.1.11",
     "debug": "^3.1.0",
-    "electron": "^1.7.9",
+    "electron": "^1.8.2",
     "electron-rebuild": "^1.7.3",
     "electron-context-menu": "^0.9.1",
     "electron-debug": "^1.4.0",

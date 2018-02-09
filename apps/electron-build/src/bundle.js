@@ -3,7 +3,9 @@
 import Path from 'path'
 import rm from 'rimraf'
 import electronPackager from 'electron-packager'
+import rebuild from 'electron-rebuild'
 import debug from 'debug'
+import execa from 'execa'
 
 const log = {
   bundle: debug('electron-build:bundle'),
@@ -85,8 +87,21 @@ async function bundle() {
       // log.bundle(`bundling path: ${path}`)
       return false
     },
+    afterCopy: [
+      (buildPath, electronVersion, platform, arch, callback) => {
+        console.log('rebuilding for electron...')
+        rebuild({ buildPath, electronVersion, arch })
+          .then(() => callback())
+          .catch(error => callback(error))
+      },
+    ],
   })
   console.log('wrote app to', paths)
+  // this is necessary for high sierra to be able to sign
+  console.log('removing metadata for signing...')
+  await execa('xattr', ['-cr', 'Orbit.app'], {
+    cwd: Path.join(ROOT, 'app', 'Orbit-darwin-x64'),
+  })
 }
 
 bundle()

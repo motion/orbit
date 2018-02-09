@@ -1,7 +1,7 @@
 {
   "name": "@mcro/electron-build",
   "productName": "Orbit",
-  "version": "1.5.77",
+  "version": "1.5.78",
   "private": true,
   "updater": {
     "url": "https://raw.githubusercontent.com/motion/orbit-updates/master/updates.json"
@@ -20,11 +20,13 @@
     "sign-app": "electron-osx-sign --ignore puppeteer/\\.local-chromium ./app/Orbit-darwin-x64/Orbit.app"
   },
   "devDependencies": {
+    "execa": "^0.9.0",
     "electron": "^1.8.2",
     "electron-installer-dmg": "^0.2.1",
     "electron-osx-sign": "^0.4.8",
     "electron-packager": "^11.0.0",
     "electron-simple-publisher": "^0.4.9",
+    "electron-rebuild": "^1.7.3",
     "rimraf": "^2.6.2"
   },
   "dependencies": {

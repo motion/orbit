@@ -7,11 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		CF0BCD71202E0A860012723C /* Swindler.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = CF0BCD6D202E0A620012723C /* Swindler.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		CF0BCD71202E0A860012723C /* Swindler.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = CF0BCD6D202E0A620012723C /* Swindler.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		CF0BCD76202E0C060012723C /* PromiseKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CF0BCD74202E0C050012723C /* PromiseKit.framework */; };
-		CF0BCD77202E0C060012723C /* PromiseKit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = CF0BCD74202E0C050012723C /* PromiseKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		CF0BCD77202E0C060012723C /* PromiseKit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = CF0BCD74202E0C050012723C /* PromiseKit.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		CF0BCD78202E0C060012723C /* AXSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CF0BCD75202E0C060012723C /* AXSwift.framework */; };
-		CF0BCD79202E0C060012723C /* AXSwift.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = CF0BCD75202E0C060012723C /* AXSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		CF0BCD79202E0C060012723C /* AXSwift.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = CF0BCD75202E0C060012723C /* AXSwift.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		CF0BCD7D202E0C260012723C /* AXSwift.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = CF0BCD7B202E0C250012723C /* AXSwift.framework.dSYM */; };
 		CF0BCD7E202E0C260012723C /* PromiseKit.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = CF0BCD7C202E0C250012723C /* PromiseKit.framework.dSYM */; };
 		CF0BCD83202E0E0F0012723C /* Characters.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0BCD82202E0E0F0012723C /* Characters.swift */; };
@@ -29,9 +29,9 @@
 		CF0BCD9D202E0E3D0012723C /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0BCD9C202E0E3C0012723C /* Extensions.swift */; };
 		CF0BCD9F202E0E3E0012723C /* util.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0BCD9E202E0E3E0012723C /* util.swift */; };
 		CF0BCDA6202E10FB0012723C /* SwiftWebSocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CF0BCDA4202E10FB0012723C /* SwiftWebSocket.framework */; };
-		CF0BCDA7202E10FB0012723C /* SwiftWebSocket.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = CF0BCDA4202E10FB0012723C /* SwiftWebSocket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		CF0BCDA7202E10FB0012723C /* SwiftWebSocket.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = CF0BCDA4202E10FB0012723C /* SwiftWebSocket.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		CF0BCDA8202E10FB0012723C /* Async.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CF0BCDA5202E10FB0012723C /* Async.framework */; };
-		CF0BCDA9202E10FB0012723C /* Async.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = CF0BCDA5202E10FB0012723C /* Async.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		CF0BCDA9202E10FB0012723C /* Async.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = CF0BCDA5202E10FB0012723C /* Async.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		CF0BCDAC202E11140012723C /* SwiftWebSocket.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = CF0BCDAA202E11140012723C /* SwiftWebSocket.framework.dSYM */; };
 		CF0BCDAD202E11140012723C /* Async.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = CF0BCDAB202E11140012723C /* Async.framework.dSYM */; };
 		CF0BCDB5202E189F0012723C /* Windo.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0BCDB4202E189F0012723C /* Windo.swift */; };

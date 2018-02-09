@@ -15,7 +15,7 @@
         [
           "@mcro/preset-motion",
           {
-            "targets": { "electron": "1.7.9" },
+            "targets": { "electron": "1.8.2" },
             "disable": [
               "@mcro/hmr",
               "@mcro/hmr-view",

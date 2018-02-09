@@ -1,9 +1,10 @@
 import Foundation
 import AVFoundation
 import AppKit
+import Async
+import SwiftWebSocket
 
 let shouldDebugTiming = true
-
 
 enum ApertureError: Error {
   case invalidAudioDevice

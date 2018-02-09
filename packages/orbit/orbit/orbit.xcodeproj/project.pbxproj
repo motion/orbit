@@ -28,6 +28,12 @@
 		CF0BCD99202E0E360012723C /* ThresholdFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0BCD98202E0E360012723C /* ThresholdFilter.swift */; };
 		CF0BCD9D202E0E3D0012723C /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0BCD9C202E0E3C0012723C /* Extensions.swift */; };
 		CF0BCD9F202E0E3E0012723C /* util.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0BCD9E202E0E3E0012723C /* util.swift */; };
+		CF0BCDA6202E10FB0012723C /* SwiftWebSocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CF0BCDA4202E10FB0012723C /* SwiftWebSocket.framework */; };
+		CF0BCDA7202E10FB0012723C /* SwiftWebSocket.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = CF0BCDA4202E10FB0012723C /* SwiftWebSocket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		CF0BCDA8202E10FB0012723C /* Async.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CF0BCDA5202E10FB0012723C /* Async.framework */; };
+		CF0BCDA9202E10FB0012723C /* Async.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = CF0BCDA5202E10FB0012723C /* Async.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		CF0BCDAC202E11140012723C /* SwiftWebSocket.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = CF0BCDAA202E11140012723C /* SwiftWebSocket.framework.dSYM */; };
+		CF0BCDAD202E11140012723C /* Async.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = CF0BCDAB202E11140012723C /* Async.framework.dSYM */; };
 		CFBEEE1F202D838D005F925A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFBEEE1E202D838D005F925A /* AppDelegate.swift */; };
 		CFBEEE21202D838D005F925A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CFBEEE20202D838D005F925A /* Assets.xcassets */; };
 		CFBEEE24202D838D005F925A /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = CFBEEE22202D838D005F925A /* MainMenu.xib */; };
@@ -57,9 +63,11 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				CF0BCDA7202E10FB0012723C /* SwiftWebSocket.framework in CopyFiles */,
 				CF0BCD71202E0A860012723C /* Swindler.framework in CopyFiles */,
 				CF0BCD79202E0C060012723C /* AXSwift.framework in CopyFiles */,
 				CF0BCD77202E0C060012723C /* PromiseKit.framework in CopyFiles */,
+				CF0BCDA9202E10FB0012723C /* Async.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -71,6 +79,8 @@
 			files = (
 				CF0BCD7D202E0C260012723C /* AXSwift.framework.dSYM in CopyFiles */,
 				CF0BCD7E202E0C260012723C /* PromiseKit.framework.dSYM in CopyFiles */,
+				CF0BCDAC202E11140012723C /* SwiftWebSocket.framework.dSYM in CopyFiles */,
+				CF0BCDAD202E11140012723C /* Async.framework.dSYM in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -96,6 +106,10 @@
 		CF0BCD98202E0E360012723C /* ThresholdFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThresholdFilter.swift; sourceTree = "<group>"; };
 		CF0BCD9C202E0E3C0012723C /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		CF0BCD9E202E0E3E0012723C /* util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = util.swift; sourceTree = "<group>"; };
+		CF0BCDA4202E10FB0012723C /* SwiftWebSocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftWebSocket.framework; path = Carthage/Build/Mac/SwiftWebSocket.framework; sourceTree = "<group>"; };
+		CF0BCDA5202E10FB0012723C /* Async.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Async.framework; path = Carthage/Build/Mac/Async.framework; sourceTree = "<group>"; };
+		CF0BCDAA202E11140012723C /* SwiftWebSocket.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = SwiftWebSocket.framework.dSYM; path = Carthage/Build/Mac/SwiftWebSocket.framework.dSYM; sourceTree = "<group>"; };
+		CF0BCDAB202E11140012723C /* Async.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = Async.framework.dSYM; path = Carthage/Build/Mac/Async.framework.dSYM; sourceTree = "<group>"; };
 		CFBEEE1B202D838D005F925A /* orbit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = orbit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CFBEEE1E202D838D005F925A /* AppDelegate.swift */ = {isa = PBXFileReference; indentWidth = 2; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; tabWidth = 2; };
 		CFBEEE20202D838D005F925A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -110,7 +124,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				CF0BCD76202E0C060012723C /* PromiseKit.framework in Frameworks */,
+				CF0BCDA8202E10FB0012723C /* Async.framework in Frameworks */,
 				CF0BCD78202E0C060012723C /* AXSwift.framework in Frameworks */,
+				CF0BCDA6202E10FB0012723C /* SwiftWebSocket.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -156,6 +172,10 @@
 		CFBEEE12202D838D005F925A = {
 			isa = PBXGroup;
 			children = (
+				CF0BCDAB202E11140012723C /* Async.framework.dSYM */,
+				CF0BCDAA202E11140012723C /* SwiftWebSocket.framework.dSYM */,
+				CF0BCDA5202E10FB0012723C /* Async.framework */,
+				CF0BCDA4202E10FB0012723C /* SwiftWebSocket.framework */,
 				CF0BCD7B202E0C250012723C /* AXSwift.framework.dSYM */,
 				CF0BCD7C202E0C250012723C /* PromiseKit.framework.dSYM */,
 				CF0BCD75202E0C060012723C /* AXSwift.framework */,

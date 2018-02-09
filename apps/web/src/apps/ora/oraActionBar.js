@@ -88,7 +88,7 @@ export default class OraActionBar {
       flex: 1,
       alignItems: 'center',
       padding: [0, 7],
-      background: Constants.ORA_BG_MAIN_OPAQUE,
+      background: Constants.ORA_BG_MAIN,
       position: 'relative',
       zIndex: 10001,
       flexFlow: 'row',

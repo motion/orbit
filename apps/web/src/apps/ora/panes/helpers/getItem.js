@@ -120,10 +120,12 @@ const getHoverProps = Helpers.hoverSettler({
       const [oraX, oraY] = oraPosition
       // not all of pad because it looks nice slightly overlapped
       object.left = object.left + oraX + Constants.ORA_PAD * 0.8
+      const contents = document.querySelector('.header > .contents')
+      const contentsHeight = contents ? contents.clientHeight : 0
       object.top =
         object.top +
         oraY +
-        document.querySelector('.header > .contents').clientHeight +
+        contentsHeight +
         document.querySelector('.fade:last-child .pane .content').offsetTop -
         (
           document.querySelector('.fade:last-child .ReactVirtualized__Grid') ||

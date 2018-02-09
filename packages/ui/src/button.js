@@ -7,7 +7,7 @@ import { view } from '@mcro/black'
 @inject(context => ({ uiContext: context.uiContext }))
 @injectTheme
 @view.ui
-export default class Button extends React.PureComponent {
+export default class Button extends React.Component {
   render({
     uiContext,
     badge,
@@ -20,19 +20,16 @@ export default class Button extends React.PureComponent {
     glowProps,
     badgeProps,
     hovered,
-    onClick: _onClick,
     ...props
   }) {
-    let onClick = _onClick
-
     // patch until figure out why this doesnt trigger onSubmit
-    if (type === 'submit') {
-      const ogOnClick = onClick
-      onClick = function(...args) {
-        uiContext.form.submit()
-        return (ogOnClick && ogOnClick(...args)) || null
-      }
-    }
+    // if (type === 'submit') {
+    //   const ogOnClick = onClick
+    //   onClick = function(...args) {
+    //     uiContext.form.submit()
+    //     return (ogOnClick && ogOnClick(...args)) || null
+    //   }
+    // }
 
     return (
       <SizedSurface
@@ -61,7 +58,6 @@ export default class Button extends React.PureComponent {
           ...glowProps,
           ...(theme && theme.glow),
         }}
-        onClick={onClick}
         noElement
         after={
           <badge

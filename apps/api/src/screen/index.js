@@ -109,7 +109,6 @@ export default class ScreenState {
       this.resetHighlights()
     })
     this.screenOCR.onChanged(count => {
-      console.log('clear count', count)
       const isApp = this.watchSettings.name === 'App'
       if (isApp) {
         this.resetHighlights()

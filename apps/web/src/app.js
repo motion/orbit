@@ -32,7 +32,10 @@ export async function start(recreate?: boolean) {
 }
 
 if (module && module.hot) {
-  module.hot.accept(async () => {
+  module.hot.accept('./stores/appStore', async () => {
+    await start(true)
+  })
+  module.hot.accept('.', async () => {
     await start(true)
   })
 }
@@ -89,7 +92,7 @@ class App {
       <ThemeProvide {...Themes}>
         <Root />
       </ThemeProvide>,
-      ROOT
+      ROOT,
     )
   }
 

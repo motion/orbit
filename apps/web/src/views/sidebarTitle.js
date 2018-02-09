@@ -11,7 +11,7 @@ const glowProps = {
   color: '#fff',
   scale: 0.7,
   blur: 70,
-  opacity: 0.05,
+  opacity: 0.1,
   resist: 20,
   zIndex: 1,
 }

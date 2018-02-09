@@ -1,23 +1,29 @@
 # next
 
+"shared highlights"
+
+ux
+
+easy highlight words non-contiguous and see search
+
 * Combine screen + swindler so can use GPUImage/...
 * hold option to see highlights
 * quick clear using key events
 * debounce more when it notices lots of changes (video)
-
   * ideally, remove areas that keep changing, just scan rest
 
-* correctness
+correctness
 
-  * line finding (hough transforms gpuswift?)
-  * recurrent net corrections
-  * experiment: swirly bits for convnet
-  * long line/char finding breaking
+* line finding (hough transforms gpuswift?)
+* recurrent net corrections
+* experiment: swirly bits for convnet
+* long line/char finding breaking
 
-* make app fun to use
-  * ux roll through for option show fixes
-  * hover to see line/sentence highlight
-  * exact character matching
+fun
+
+* ux roll through for option show fixes
+* hover to see line/sentence highlight
+* exact character matching
 * preconfigured with our integrations hardcoded / working
   * slack, google docs, github
   * twitter => slack, medium => docs

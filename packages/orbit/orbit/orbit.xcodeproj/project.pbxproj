@@ -34,6 +34,8 @@
 		CF0BCDA9202E10FB0012723C /* Async.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = CF0BCDA5202E10FB0012723C /* Async.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		CF0BCDAC202E11140012723C /* SwiftWebSocket.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = CF0BCDAA202E11140012723C /* SwiftWebSocket.framework.dSYM */; };
 		CF0BCDAD202E11140012723C /* Async.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = CF0BCDAB202E11140012723C /* Async.framework.dSYM */; };
+		CF0BCDAF202E13310012723C /* Bridge.plugin in Resources */ = {isa = PBXBuildFile; fileRef = CF0BCDAE202E13310012723C /* Bridge.plugin */; };
+		CF0BCDB5202E189F0012723C /* Windo.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0BCDB4202E189F0012723C /* Windo.swift */; };
 		CFBEEE1F202D838D005F925A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFBEEE1E202D838D005F925A /* AppDelegate.swift */; };
 		CFBEEE21202D838D005F925A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CFBEEE20202D838D005F925A /* Assets.xcassets */; };
 		CFBEEE24202D838D005F925A /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = CFBEEE22202D838D005F925A /* MainMenu.xib */; };
@@ -110,6 +112,8 @@
 		CF0BCDA5202E10FB0012723C /* Async.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Async.framework; path = Carthage/Build/Mac/Async.framework; sourceTree = "<group>"; };
 		CF0BCDAA202E11140012723C /* SwiftWebSocket.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = SwiftWebSocket.framework.dSYM; path = Carthage/Build/Mac/SwiftWebSocket.framework.dSYM; sourceTree = "<group>"; };
 		CF0BCDAB202E11140012723C /* Async.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = Async.framework.dSYM; path = Carthage/Build/Mac/Async.framework.dSYM; sourceTree = "<group>"; };
+		CF0BCDAE202E13310012723C /* Bridge.plugin */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = Bridge.plugin; path = ../pyocr/dist/Bridge.plugin; sourceTree = "<group>"; };
+		CF0BCDB4202E189F0012723C /* Windo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Windo.swift; sourceTree = "<group>"; };
 		CFBEEE1B202D838D005F925A /* orbit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = orbit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CFBEEE1E202D838D005F925A /* AppDelegate.swift */ = {isa = PBXFileReference; indentWidth = 2; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; tabWidth = 2; };
 		CFBEEE20202D838D005F925A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -136,6 +140,14 @@
 		CF0BCD61202E0A2E0012723C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				CF0BCDAB202E11140012723C /* Async.framework.dSYM */,
+				CF0BCDAA202E11140012723C /* SwiftWebSocket.framework.dSYM */,
+				CF0BCD7B202E0C250012723C /* AXSwift.framework.dSYM */,
+				CF0BCD7C202E0C250012723C /* PromiseKit.framework.dSYM */,
+				CF0BCDA5202E10FB0012723C /* Async.framework */,
+				CF0BCDA4202E10FB0012723C /* SwiftWebSocket.framework */,
+				CF0BCD75202E0C060012723C /* AXSwift.framework */,
+				CF0BCD74202E0C050012723C /* PromiseKit.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -169,17 +181,18 @@
 			path = screen;
 			sourceTree = "<group>";
 		};
+		CF0BCDB3202E188D0012723C /* Windo */ = {
+			isa = PBXGroup;
+			children = (
+				CF0BCDB4202E189F0012723C /* Windo.swift */,
+			);
+			path = Windo;
+			sourceTree = "<group>";
+		};
 		CFBEEE12202D838D005F925A = {
 			isa = PBXGroup;
 			children = (
-				CF0BCDAB202E11140012723C /* Async.framework.dSYM */,
-				CF0BCDAA202E11140012723C /* SwiftWebSocket.framework.dSYM */,
-				CF0BCDA5202E10FB0012723C /* Async.framework */,
-				CF0BCDA4202E10FB0012723C /* SwiftWebSocket.framework */,
-				CF0BCD7B202E0C250012723C /* AXSwift.framework.dSYM */,
-				CF0BCD7C202E0C250012723C /* PromiseKit.framework.dSYM */,
-				CF0BCD75202E0C060012723C /* AXSwift.framework */,
-				CF0BCD74202E0C050012723C /* PromiseKit.framework */,
+				CF0BCDAE202E13310012723C /* Bridge.plugin */,
 				CF0BCD68202E0A620012723C /* Swindler.xcodeproj */,
 				CFBEEE1D202D838D005F925A /* orbit */,
 				CFBEEE1C202D838D005F925A /* Products */,
@@ -200,6 +213,7 @@
 		CFBEEE1D202D838D005F925A /* orbit */ = {
 			isa = PBXGroup;
 			children = (
+				CF0BCDB3202E188D0012723C /* Windo */,
 				CF0BCDA3202E0E770012723C /* screen */,
 				CFBEEE1E202D838D005F925A /* AppDelegate.swift */,
 				CFBEEE20202D838D005F925A /* Assets.xcassets */,
@@ -222,6 +236,7 @@
 				CFBEEE19202D838D005F925A /* Resources */,
 				CF0BCD70202E0A790012723C /* CopyFiles */,
 				CF0BCD7A202E0C120012723C /* CopyFiles */,
+				CF0BCDB2202E139F0012723C /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -246,6 +261,11 @@
 					CFBEEE1A202D838D005F925A = {
 						CreatedOnToolsVersion = 9.2;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.Sandbox = {
+								enabled = 0;
+							};
+						};
 					};
 				};
 			};
@@ -290,10 +310,27 @@
 			files = (
 				CFBEEE21202D838D005F925A /* Assets.xcassets in Resources */,
 				CFBEEE24202D838D005F925A /* MainMenu.xib in Resources */,
+				CF0BCDAF202E13310012723C /* Bridge.plugin in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		CF0BCDB2202E139F0012723C /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "touch ../../../apps/api/src/index.js";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		CFBEEE17202D838D005F925A /* Sources */ = {
@@ -314,6 +351,7 @@
 				CF0BCD97202E0E330012723C /* ThresholdBelowFilter.swift in Sources */,
 				CF0BCD9D202E0E3D0012723C /* Extensions.swift in Sources */,
 				CF0BCD9F202E0E3E0012723C /* util.swift in Sources */,
+				CF0BCDB5202E189F0012723C /* Windo.swift in Sources */,
 				CF0BCD95202E0E310012723C /* RecorderFrame.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -450,7 +488,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = orbit/orbit.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -469,7 +506,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = orbit/orbit.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (

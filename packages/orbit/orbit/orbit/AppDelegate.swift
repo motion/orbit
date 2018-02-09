@@ -9,26 +9,26 @@ import Darwin
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
   let shouldRunTest = ProcessInfo.processInfo.environment["TEST_RUN"] == "true"
-  var swindler: Swindler.State!
-  var observer: Observer!
+  var watcher: Windo!
   var recorder: Recorder!
   private var lastSent = ""
-  //    @IBOutlet weak var window: NSWindow!
-
-  private func emit(_ str: String) {
-    
+  @IBOutlet weak var window: NSWindow!
+  
+  private func emit(_ msg: String) {
+    print("emitting... \(msg)")
   }
+  
   
   func applicationDidFinishLaunching(_ aNotification: Notification) {
     if !AXSwift.checkIsProcessTrusted(prompt: true) {
-      emit("Not trusted as an AX process; please authorize and re-launch")
+      print("Not trusted as an AX process; please authorize and re-launch")
       NSApp.terminate(self)
     }
+    
+    watcher = Windo(emit: self.emit)
 
     do {
-      recorder = try Recorder(
-        displayId: CGMainDisplayID() // : CGDirectDisplayID(options.displayId)!
-      )
+      recorder = try Recorder(displayId: CGMainDisplayID())
     } catch let error as NSError {
       print("Error \(error.domain)")
       print(Thread.callStackSymbols)
@@ -51,80 +51,18 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     recorder.onStart = {
-      print("R")
+      print("screen started")
     }
-    
     recorder.onFinish = {
       exit(0)
     }
-    
     recorder.onError = {
       print(Thread.callStackSymbols)
       printErr($0)
       exit(1)
     }
+  }
 
-    
-    var lastScroll = DispatchTime.now()
-    NSEvent.addGlobalMonitorForEvents(matching: NSEvent.EventTypeMask.scrollWheel, handler: { event in
-      let msSinceLast = Int(Double(DispatchTime.now().uptimeNanoseconds - lastScroll.uptimeNanoseconds) / 1_000_000)
-      if msSinceLast > 200 {
-        self.emit(":ScrollEvent \(DispatchTime.now().rawValue)")
-        lastScroll = DispatchTime.now()
-      }
-    })
-    
-    //        NSEvent.addGlobalMonitorForEvents(matching: NSEvent.EventTypeMask.any, handler: { event in
-    //            self.emit("got event \(event)")
-    //        })
-    
-    emit("loaded swindler")
-    sleep(1)
-    
-    swindler = Swindler.state
-    swindler.on { (event: WindowCreatedEvent) in
-      let window = event.window
-      self.emit(":WindowCreatedEvent \(window.title.value)")
-    }
-    swindler.on { (event: WindowPosChangedEvent) in
-      self.emit(":WindowPosChangedEvent \(event.newValue)")
-    }
-    swindler.on { (event: WindowSizeChangedEvent) in
-      self.emit(":WindowSizeChangedEvent \(event.newValue)")
-    }
-    swindler.on { (event: WindowDestroyedEvent) in
-      self.emit(":WindowDestroyedEvent \(event.window.title.value)")
-    }
-    swindler.on { (event: ApplicationMainWindowChangedEvent) in
-      self.frontmostWindowChanged()
-    }
-    swindler.on { (event: FrontmostApplicationChangedEvent) in
-      if event.newValue == nil { return }
-      self.frontmostWindowChanged()
-    }
-    swindler.on { (event: WindowTitleChangedEvent) in
-      self.frontmostWindowChanged()
-    }
-    
-    // send current app immediately
-    DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
-      self.frontmostWindowChanged()
-    }
-  }
-  
-  private func frontmostWindowChanged() {
-    let app = swindler.frontmostApplication.value!
-    let frontWindow = app.mainWindow.value
-    if (frontWindow == nil) { return }
-    let window = frontWindow!
-    let title = String(window.title.value).replacingOccurrences(of: "\"", with: "")
-    let titleString = "\"\(title)\"";
-    let offset = window.position.value
-    let bounds = window.size.value
-    let id = app.bundleIdentifier
-    self.emit(":FrontmostWindowChangedEvent { \"id\": \"\(id ?? "")\", \"title\": \(titleString), \"offset\": [\(offset.x),\(offset.y)], \"bounds\": [\(bounds.width),\(bounds.height)] }")
-  }
-  
   func applicationWillTerminate(_ aNotification: Notification) {
     print("telling recorder to stop...")
     recorder.stop()

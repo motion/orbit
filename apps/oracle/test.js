@@ -76,8 +76,9 @@ async function test() {
       process.exit(0)
     }
   })
-  screen.onChanged(word => {
-    // console.log('clear word', word)
+
+  screen.onWindowChange((name, value) => {
+    console.log('window change', name, value)
   })
 }
 

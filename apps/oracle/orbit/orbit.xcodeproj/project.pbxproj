@@ -34,9 +34,9 @@
 		CF0BCDA9202E10FB0012723C /* Async.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = CF0BCDA5202E10FB0012723C /* Async.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		CF0BCDAC202E11140012723C /* SwiftWebSocket.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = CF0BCDAA202E11140012723C /* SwiftWebSocket.framework.dSYM */; };
 		CF0BCDAD202E11140012723C /* Async.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = CF0BCDAB202E11140012723C /* Async.framework.dSYM */; };
-		CF0BCDAF202E13310012723C /* Bridge.plugin in Resources */ = {isa = PBXBuildFile; fileRef = CF0BCDAE202E13310012723C /* Bridge.plugin */; };
 		CF0BCDB5202E189F0012723C /* Windo.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0BCDB4202E189F0012723C /* Windo.swift */; };
 		CF0BCDB7202E1BBB0012723C /* SocketBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0BCDB6202E1BBB0012723C /* SocketBridge.swift */; };
+		CF0BCDBB202E282E0012723C /* Bridge.plugin in Resources */ = {isa = PBXBuildFile; fileRef = CF0BCDBA202E282E0012723C /* Bridge.plugin */; };
 		CFBEEE1F202D838D005F925A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFBEEE1E202D838D005F925A /* AppDelegate.swift */; };
 		CFBEEE21202D838D005F925A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CFBEEE20202D838D005F925A /* Assets.xcassets */; };
 		CFBEEE24202D838D005F925A /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = CFBEEE22202D838D005F925A /* MainMenu.xib */; };
@@ -113,9 +113,9 @@
 		CF0BCDA5202E10FB0012723C /* Async.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Async.framework; path = Carthage/Build/Mac/Async.framework; sourceTree = "<group>"; };
 		CF0BCDAA202E11140012723C /* SwiftWebSocket.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = SwiftWebSocket.framework.dSYM; path = Carthage/Build/Mac/SwiftWebSocket.framework.dSYM; sourceTree = "<group>"; };
 		CF0BCDAB202E11140012723C /* Async.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = Async.framework.dSYM; path = Carthage/Build/Mac/Async.framework.dSYM; sourceTree = "<group>"; };
-		CF0BCDAE202E13310012723C /* Bridge.plugin */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = Bridge.plugin; path = ../pyocr/dist/Bridge.plugin; sourceTree = "<group>"; };
 		CF0BCDB4202E189F0012723C /* Windo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Windo.swift; sourceTree = "<group>"; };
 		CF0BCDB6202E1BBB0012723C /* SocketBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketBridge.swift; sourceTree = "<group>"; };
+		CF0BCDBA202E282E0012723C /* Bridge.plugin */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = Bridge.plugin; path = ../pyocr/dist/Bridge.plugin; sourceTree = "<group>"; };
 		CFBEEE1B202D838D005F925A /* orbit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = orbit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CFBEEE1E202D838D005F925A /* AppDelegate.swift */ = {isa = PBXFileReference; indentWidth = 2; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; tabWidth = 2; };
 		CFBEEE20202D838D005F925A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -194,7 +194,7 @@
 		CFBEEE12202D838D005F925A = {
 			isa = PBXGroup;
 			children = (
-				CF0BCDAE202E13310012723C /* Bridge.plugin */,
+				CF0BCDBA202E282E0012723C /* Bridge.plugin */,
 				CF0BCD68202E0A620012723C /* Swindler.xcodeproj */,
 				CFBEEE1D202D838D005F925A /* orbit */,
 				CFBEEE1C202D838D005F925A /* Products */,
@@ -313,7 +313,7 @@
 			files = (
 				CFBEEE21202D838D005F925A /* Assets.xcassets in Resources */,
 				CFBEEE24202D838D005F925A /* MainMenu.xib in Resources */,
-				CF0BCDAF202E13310012723C /* Bridge.plugin in Resources */,
+				CF0BCDBB202E282E0012723C /* Bridge.plugin in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

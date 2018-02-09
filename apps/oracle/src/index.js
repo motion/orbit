@@ -20,7 +20,6 @@ const appPath = bundle =>
     'orbit.app',
     'Contents',
     'MacOS',
-    'orbit',
   )
 const RELEASE_PATH = appPath('Release')
 const DEBUG_PATH = appPath('Debug')
@@ -200,7 +199,7 @@ export default class Screen {
     }
     const binDir = this.debugBuild ? DEBUG_PATH : RELEASE_PATH
     console.log('binDir', binDir)
-    this.process = execa('./aperture', [], {
+    this.process = execa('./orbit', [], {
       cwd: binDir,
       reject: false,
     })
@@ -386,6 +385,7 @@ export default class Screen {
     // handle socket between swift
     let id = 0
     this.wss.on('connection', socket => {
+      console.log('connected')
       // add to active sockets
       this.listeners.push({ id: id++, socket })
       // send initial state

@@ -37,6 +37,7 @@
 		CF0BCDB5202E189F0012723C /* Windo.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0BCDB4202E189F0012723C /* Windo.swift */; };
 		CF0BCDB7202E1BBB0012723C /* SocketBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0BCDB6202E1BBB0012723C /* SocketBridge.swift */; };
 		CF0BCDBB202E282E0012723C /* Bridge.plugin in Resources */ = {isa = PBXBuildFile; fileRef = CF0BCDBA202E282E0012723C /* Bridge.plugin */; };
+		CF0BCDBD202E2A640012723C /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0BCDBC202E2A640012723C /* main.swift */; };
 		CFBEEE1F202D838D005F925A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFBEEE1E202D838D005F925A /* AppDelegate.swift */; };
 		CFBEEE21202D838D005F925A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CFBEEE20202D838D005F925A /* Assets.xcassets */; };
 		CFBEEE24202D838D005F925A /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = CFBEEE22202D838D005F925A /* MainMenu.xib */; };
@@ -116,6 +117,7 @@
 		CF0BCDB4202E189F0012723C /* Windo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Windo.swift; sourceTree = "<group>"; };
 		CF0BCDB6202E1BBB0012723C /* SocketBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketBridge.swift; sourceTree = "<group>"; };
 		CF0BCDBA202E282E0012723C /* Bridge.plugin */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = Bridge.plugin; path = ../pyocr/dist/Bridge.plugin; sourceTree = "<group>"; };
+		CF0BCDBC202E2A640012723C /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		CFBEEE1B202D838D005F925A /* orbit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = orbit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CFBEEE1E202D838D005F925A /* AppDelegate.swift */ = {isa = PBXFileReference; indentWidth = 2; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; tabWidth = 2; };
 		CFBEEE20202D838D005F925A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -215,10 +217,11 @@
 		CFBEEE1D202D838D005F925A /* orbit */ = {
 			isa = PBXGroup;
 			children = (
+				CF0BCDBC202E2A640012723C /* main.swift */,
+				CF0BCDB6202E1BBB0012723C /* SocketBridge.swift */,
+				CFBEEE1E202D838D005F925A /* AppDelegate.swift */,
 				CF0BCDB3202E188D0012723C /* Windo */,
 				CF0BCDA3202E0E770012723C /* Screen */,
-				CFBEEE1E202D838D005F925A /* AppDelegate.swift */,
-				CF0BCDB6202E1BBB0012723C /* SocketBridge.swift */,
 				CFBEEE20202D838D005F925A /* Assets.xcassets */,
 				CFBEEE22202D838D005F925A /* MainMenu.xib */,
 				CFBEEE25202D838D005F925A /* Info.plist */,
@@ -342,6 +345,7 @@
 			files = (
 				CF0BCDB7202E1BBB0012723C /* SocketBridge.swift in Sources */,
 				CFBEEE1F202D838D005F925A /* AppDelegate.swift in Sources */,
+				CF0BCDBD202E2A640012723C /* main.swift in Sources */,
 				CF0BCD83202E0E0F0012723C /* Characters.swift in Sources */,
 				CF0BCD85202E0E140012723C /* ConnectedComponentsSwiftOCR.swift in Sources */,
 				CF0BCD87202E0E170012723C /* UnionFind.swift in Sources */,

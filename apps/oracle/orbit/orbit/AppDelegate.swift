@@ -7,7 +7,7 @@ import PromiseKit
 import Darwin
 import Async
 
-@NSApplicationMain
+//@NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
   let shouldRunTest = ProcessInfo.processInfo.environment["TEST_RUN"] == "true"
   let queue = AsyncGroup()

@@ -34,7 +34,6 @@ export default class Oracle {
   awaitingSocket = []
   listeners = []
   onLinesCB = _ => _
-  onScrollCB = _ => _
   onWindowChangeCB = _ => _
   onWordsCB = _ => _
   onBoxChangedCB = _ => _
@@ -105,9 +104,6 @@ export default class Oracle {
     },
     start: () => {
       this.start()
-    },
-    ScrollEvent: () => {
-      this.onScrollCB()
     },
   }
 
@@ -311,10 +307,6 @@ export default class Oracle {
 
   onWords = cb => {
     this.onWordsCB = cb
-  }
-
-  onScroll = cb => {
-    this.onScrollCB = cb
   }
 
   onLines = cb => {

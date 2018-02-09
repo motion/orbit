@@ -418,7 +418,6 @@ final class Screen: NSObject {
           if lineFilledPx > 0, var lastLine = lines.last {
             if lastLine.y + lastLine.height == y - 1 {
               lastLine.bottomFillAmt = lineFilledPx
-              print("add bottom fill (not working currently)")
               lines[lines.count - 1] = lastLine
             }
           }

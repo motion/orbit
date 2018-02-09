@@ -43,7 +43,6 @@ class Characters {
   var answers = [String: String]() // outline => answer
   var buffer: UnsafeMutablePointer<UInt8>
 
-  private let dict = SymSpell(editDistance: 2, verbose: 1) // outline => close-answer
   private let images = Images()
   private var perRow: Int
   private var isBlackIfUnder = 0

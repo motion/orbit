@@ -29,6 +29,10 @@ apps/electron-build/app
 apps/crawler/build
 apps/search/build
 
+packages/orbit/orbit/Carthage
+packages/orbit/swindler/Carthage
+packages/orbit/orbit/Build
+packages/orbit/swindler/Build
 packages/screen/swift/Build
 packages/screen/train
 packages/swindler/Swindler/Build

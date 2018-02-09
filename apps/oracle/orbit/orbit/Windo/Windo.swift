@@ -8,13 +8,14 @@ import Darwin
 
 final class Windo {
   var emit: (String)->Void
-  var swindler: Swindler.State!
+  var swindler: Swindler.State
   var observer: Observer!
   private var lastSent = ""
   @IBOutlet weak var window: NSWindow!
-
+  
   init(emit: @escaping (String)->Void) {
     self.emit = emit
+    self.swindler = Swindler.state
 
     var lastScroll = DispatchTime.now()
     NSEvent.addGlobalMonitorForEvents(matching: NSEvent.EventTypeMask.scrollWheel, handler: { event in
@@ -25,41 +26,38 @@ final class Windo {
       }
     })
 
-    sleep(1)
-
-    swindler = Swindler.state
-    swindler.on { (event: WindowCreatedEvent) in
-      let window = event.window
-      self.emit("{ \"action\": \"WindowCreatedEvent\", \"value\": \"\(window.title.value)\" }")
+    // swindler bugs if started too quickly :/
+    DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+      self.frontmostWindowChanged()
+      
+      self.swindler.on { (event: WindowCreatedEvent) in
+        let window = event.window
+        self.emit("{ \"action\": \"WindowCreatedEvent\", \"value\": \"\(window.title.value)\" }")
+      }
+      self.swindler.on { (event: WindowPosChangedEvent) in
+        let val = event.newValue
+        self.emit("{ \"action\": \"WindowPosChangedEvent\", \"value\": [\(val.x), \(val.y)] }")
+      }
+      self.swindler.on { (event: WindowSizeChangedEvent) in
+        let val = event.newValue
+        self.emit("{ \"action\": \"WindowSizeChangedEvent\", \"value\": [\(val.width), \(val.height)] }")
+      }
+      self.swindler.on { (event: WindowDestroyedEvent) in
+        self.emit("{ \"action\": \"WindowDestroyedEvent\", \"value\": \"\(event.window.title.value)\" }")
+      }
+      self.swindler.on { (event: ApplicationMainWindowChangedEvent) in
+        //      self.frontmostWindowChanged()
+      }
+      self.swindler.on { (event: FrontmostApplicationChangedEvent) in
+        if event.newValue == nil { return }
+        self.frontmostWindowChanged()
+      }
+      self.swindler.on { (event: WindowTitleChangedEvent) in
+        self.frontmostWindowChanged()
+      }
     }
-    swindler.on { (event: WindowPosChangedEvent) in
-      let val = event.newValue
-      self.emit("{ \"action\": \"WindowPosChangedEvent\", \"value\": [\(val.x), \(val.y)] }")
-    }
-    swindler.on { (event: WindowSizeChangedEvent) in
-      let val = event.newValue
-      self.emit("{ \"action\": \"WindowSizeChangedEvent\", \"value\": [\(val.width), \(val.height)] }")
-    }
-    swindler.on { (event: WindowDestroyedEvent) in
-      self.emit("{ \"action\": \"WindowDestroyedEvent\", \"value\": \"\(event.window.title.value)\" }")
-    }
-    swindler.on { (event: ApplicationMainWindowChangedEvent) in
-      //      self.frontmostWindowChanged()
-    }
-    swindler.on { (event: FrontmostApplicationChangedEvent) in
-      if event.newValue == nil { return }
-      //      self.frontmostWindowChanged()
-    }
-    swindler.on { (event: WindowTitleChangedEvent) in
-      //      self.frontmostWindowChanged()
-    }
-
-    // send current app immediately
-    //    DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
-    //      self.frontmostWindowChanged()
-    //    }
   }
-
+  
   private func frontmostWindowChanged() {
     guard let app = swindler.frontmostApplication.value else {
       print("no frontmost window")
@@ -75,7 +73,7 @@ final class Windo {
     let id = app.bundleIdentifier
     self.emit("{ \"action\": \"FrontmostWindowChangedEvent\", \"value\": { \"id\": \"\(id ?? "")\", \"title\": \(titleString), \"offset\": [\(offset.x),\(offset.y)], \"bounds\": [\(bounds.width),\(bounds.height)] } }")
   }
-
+  
 }
 
 

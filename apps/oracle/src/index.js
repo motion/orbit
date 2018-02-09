@@ -27,7 +27,7 @@ const DEBUG_PATH = appPath('Debug')
 const pusage = promisify(pusage_.stat)
 const sleep = ms => new Promise(res => setTimeout(res, ms))
 
-export default class Screen {
+export default class Oracle {
   settings = null
   changedIds = null
   restoredIds = null
@@ -211,6 +211,9 @@ export default class Screen {
     })
     this.process.stderr.setEncoding('utf8')
     this.process.stderr.on('data', data => {
+      if (data.indexOf('<Notice>')) {
+        return
+      }
       console.log('screen stderr:', data)
       this.onErrorCB(data)
     })
@@ -230,7 +233,7 @@ export default class Screen {
     sampleSpacing = 10,
     // how many pixels to detect before triggering change
     sensitivity = 2,
-    boxes,
+    boxes = [],
     debug = false,
   } = {}) => {
     // default box options

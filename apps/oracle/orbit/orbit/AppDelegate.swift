@@ -2,12 +2,10 @@ import AXSwift
 import class AXSwift.Application
 import class AXSwift.Observer
 import Cocoa
-import Swindler
 import PromiseKit
 import Darwin
 import Async
 
-//@NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
   let shouldRunTest = ProcessInfo.processInfo.environment["TEST_RUN"] == "true"
   let queue = AsyncGroup()
@@ -23,11 +21,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   }
 
   func applicationDidFinishLaunching(_ aNotification: Notification) {
-    if !AXSwift.checkIsProcessTrusted(prompt: true) {
-      print("Not trusted as an AX process; please authorize and re-launch")
-      NSApp.terminate(self)
-    }
-
     socketBridge = SocketBridge(queue: self.queue, onMessage: self.onMessage)
     watcher = Windo(emit: self.emit)
 

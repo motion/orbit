@@ -14,6 +14,17 @@ const log = {
 const ROOT = Path.join(__dirname, '..')
 const ELECTRON_DIR = Path.join(ROOT, '..', 'electron')
 const ignorePaths = [
+  // exclude extra dirs for xcode
+  'oracle/orbit/Carthage',
+  'oracle/orbit/Index',
+  'oracle/orbit/Build/Intermediates',
+  'oracle/orbit/Build/Products/Debug',
+  'oracle/orbit/orbit.xcodeproj',
+  'oracle/swindler/Carthage',
+  'oracle/swindler/Index',
+  'oracle/swindler/Swindler.xcodeproj',
+  'oracle/swindler/Build/Intermediates',
+  'oracle/swindler/Build/Products/Debug',
   // this avoids duplicating the chromium build,
   // since it derefs the subling Versions/Current symlink it still copies
   'Framework.framework/Versions/A',
@@ -34,7 +45,7 @@ async function bundle() {
   console.log('bundling', ELECTRON_DIR)
   console.log('remove old app')
   await new Promise(resolve =>
-    rm(Path.join(ROOT, 'app', 'Orbit-darwin-x64'), resolve)
+    rm(Path.join(ROOT, 'app', 'Orbit-darwin-x64'), resolve),
   )
   await new Promise(resolve => rm(Path.join(ROOT, 'app', 'Orbit.dmg'), resolve))
   console.log('bundle new app')
@@ -62,3 +73,12 @@ async function bundle() {
 }
 
 bundle()
+
+process.on('uncaughtException', (...args) => {
+  console.log('uncaughtException', ...args)
+  process.exit(0)
+})
+process.on('unhandledRejection', function(reason) {
+  console.log(reason)
+  process.exit(0)
+})

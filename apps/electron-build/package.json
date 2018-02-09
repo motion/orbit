@@ -1,7 +1,7 @@
 {
   "name": "@mcro/electron-build",
   "productName": "Orbit",
-  "version": "1.5.61",
+  "version": "1.5.67",
   "private": true,
   "updater": {
     "url": "https://raw.githubusercontent.com/motion/orbit-updates/master/updates.json"
@@ -11,7 +11,7 @@
     "pack": "npm run sign-app && npm run pack-app",
     "pack-app": "electron-installer-dmg --overwrite --out ./app --icon ./resources/icon.icns ./app/Orbit-darwin-x64/Orbit.app Orbit",
     "build": "npm version patch && npm run bundle && npm run pack",
-    "bundle": "node ./lib/bundle.js",
+    "bundle": "node --trace-warnings ./lib/bundle.js",
     "bundle-debug": "DEBUG=electron-packager,electron-build:* npm run bundle",
     "start-prod": "DEBUG=api,crawler,crawler:* app/Orbit-darwin-x64/Orbit.app/Contents/MacOS/Orbit",
     "publish-app": "publish -p ./app",

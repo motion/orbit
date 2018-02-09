@@ -11,7 +11,7 @@
   },
   "scripts": {
     "start": "watch './start.sh' src",
-    "build": "electron-rebuild && CHUNK_COMMONS=false TARGET=electron NODE_ENV=production mcro-build",
+    "build": "electron-rebuild",
     "watch": "npm run build -- --watch",
     "deploy": "cd ../electron-build && npm run deploy",
     "postinstall": "electron-rebuild"

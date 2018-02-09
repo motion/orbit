@@ -29,6 +29,7 @@ apps/electron-build/app
 apps/crawler/build
 apps/search/build
 
+apps/oracle/orbit/orbit.xcodeproj/project.xcworkspace
 apps/oracle/orbit/Carthage
 apps/oracle/orbit/Build
 apps/oracle/swindler/Carthage

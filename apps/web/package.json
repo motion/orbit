@@ -6,7 +6,7 @@
   "scripts": {
     "start": "kill-port 3002 && parcel -p 3002",
     "start-prod": "static-server -p 3002 -n dist/index.html dist",
-    "build": "parcel build --public-url ./",
+    "build": "parcel build --public-url ./dist",
     "deploy": "./deploy.sh"
   },
   "dependencies": {

@@ -89,7 +89,7 @@ async function bundle() {
     },
     afterCopy: [
       (buildPath, electronVersion, platform, arch, callback) => {
-        console.log('rebuilding for electron...')
+        console.log('rebuilding for electron...', buildPath, electronVersion)
         rebuild({ buildPath, electronVersion, arch })
           .then(() => callback())
           .catch(error => callback(error))

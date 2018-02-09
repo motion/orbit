@@ -16,16 +16,12 @@ const ELECTRON_DIR = Path.join(ROOT, '..', 'electron')
 const ignorePaths = [
   // exclude extra dirs for xcode
   'oracle/pyocr',
+  'oracle/swindler',
   'oracle/orbit/Carthage',
   'oracle/orbit/Index',
   'oracle/orbit/Build/Intermediates',
   'oracle/orbit/Build/Products/Debug',
   'oracle/orbit/orbit.xcodeproj',
-  'oracle/swindler/Carthage',
-  'oracle/swindler/Index',
-  'oracle/swindler/Swindler.xcodeproj',
-  'oracle/swindler/Build/Intermediates',
-  'oracle/swindler/Build/Products/Debug',
   // this avoids duplicating the chromium build,
   // since it derefs the subling Versions/Current symlink it still copies
   'Framework.framework/Versions/A',
@@ -48,6 +44,26 @@ async function bundle() {
   await new Promise(resolve =>
     rm(Path.join(ROOT, 'app', 'Orbit-darwin-x64'), resolve),
   )
+  await new Promise(resolve =>
+    rm(
+      Path.join(
+        ROOT,
+        '..',
+        'oracle/orbit/Build/Products/Release/orbit.app/Contents/Resources/Bridge.plugin/Contents/Resources/lib/python3.5/config',
+      ),
+      resolve,
+    ),
+  )
+  await new Promise(resolve =>
+    rm(
+      Path.join(
+        ROOT,
+        '..',
+        'oracle/orbit/Build/Products/Release/orbit.app/Contents/Resources/Bridge.plugin/Contents/Resources/lib/python3.5/site.pyc',
+      ),
+      resolve,
+    ),
+  )
   await new Promise(resolve => rm(Path.join(ROOT, 'app', 'Orbit.dmg'), resolve))
   console.log('bundle new app')
   const paths = await electronPackager({
@@ -55,7 +71,7 @@ async function bundle() {
     out: Path.join(ROOT, 'app'),
     icon: Path.join(ROOT, 'resources', 'icon.icns'),
     overwrite: true,
-    // tmpdir: false,
+    tmpdir: false,
     derefSymlinks: true,
     prune: false,
     packageManager: false,

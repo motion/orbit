@@ -106,7 +106,6 @@ export default class ScreenState {
     })
     let lastId = null
     this.oracle.onWindowChange((event, value) => {
-      console.log('GOT A WINDOW CHANGE YO', event, value)
       // immediately cancel stuff
       this.resetHighlights()
       switch (event) {

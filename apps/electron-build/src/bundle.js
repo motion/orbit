@@ -15,6 +15,7 @@ const ROOT = Path.join(__dirname, '..')
 const ELECTRON_DIR = Path.join(ROOT, '..', 'electron')
 const ignorePaths = [
   // exclude extra dirs for xcode
+  'oracle/pyocr',
   'oracle/orbit/Carthage',
   'oracle/orbit/Index',
   'oracle/orbit/Build/Intermediates',
@@ -54,7 +55,7 @@ async function bundle() {
     out: Path.join(ROOT, 'app'),
     icon: Path.join(ROOT, 'resources', 'icon.icns'),
     overwrite: true,
-    tmpdir: false,
+    // tmpdir: false,
     derefSymlinks: true,
     prune: false,
     packageManager: false,

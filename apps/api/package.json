@@ -10,7 +10,6 @@
   "dependencies": {
     "@mcro/black": "*",
     "@mcro/crawler": "^1.5.1",
-    "@mcro/swindler": "*",
     "@mcro/passport-slack": "^1.5.1",
     "@mcro/oracle": "*",
     "@mcro/search": "^1.5.1",

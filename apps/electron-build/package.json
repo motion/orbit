@@ -1,7 +1,7 @@
 {
   "name": "@mcro/electron-build",
   "productName": "Orbit",
-  "version": "1.5.67",
+  "version": "1.5.72",
   "private": true,
   "updater": {
     "url": "https://raw.githubusercontent.com/motion/orbit-updates/master/updates.json"
@@ -11,7 +11,7 @@
     "pack": "npm run sign-app && npm run pack-app",
     "pack-app": "electron-installer-dmg --overwrite --out ./app --icon ./resources/icon.icns ./app/Orbit-darwin-x64/Orbit.app Orbit",
     "build": "npm version patch && npm run bundle && npm run pack",
-    "bundle": "node --trace-warnings ./lib/bundle.js",
+    "bundle": "DEBUG=electron-packager node --trace-warnings ./lib/bundle.js",
     "bundle-debug": "DEBUG=electron-packager,electron-build:* npm run bundle",
     "start-prod": "DEBUG=api,crawler,crawler:* app/Orbit-darwin-x64/Orbit.app/Contents/MacOS/Orbit",
     "publish-app": "publish -p ./app",
@@ -20,11 +20,11 @@
     "sign-app": "electron-osx-sign --ignore puppeteer/\\.local-chromium ./app/Orbit-darwin-x64/Orbit.app"
   },
   "devDependencies": {
-    "electron": "^1.7.9",
+    "electron": "^1.8.2",
     "electron-installer-dmg": "^0.2.1",
-    "electron-osx-sign": "^0.4.7",
-    "electron-packager": "malept/electron-packager#fs-extra-v5-experimental",
-    "electron-simple-publisher": "^0.4.7",
+    "electron-osx-sign": "^0.4.8",
+    "electron-packager": "^11.0.0",
+    "electron-simple-publisher": "^0.4.9",
     "rimraf": "^2.6.2"
   },
   "dependencies": {

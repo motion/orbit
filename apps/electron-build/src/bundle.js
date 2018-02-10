@@ -3,7 +3,9 @@
 import Path from 'path'
 import rm from 'rimraf'
 import electronPackager from 'electron-packager'
+import rebuild from 'electron-rebuild'
 import debug from 'debug'
+import execa from 'execa'
 
 const log = {
   bundle: debug('electron-build:bundle'),
@@ -14,6 +16,14 @@ const log = {
 const ROOT = Path.join(__dirname, '..')
 const ELECTRON_DIR = Path.join(ROOT, '..', 'electron')
 const ignorePaths = [
+  // exclude extra dirs for xcode
+  'oracle/pyocr',
+  'oracle/swindler',
+  'oracle/orbit/Carthage',
+  'oracle/orbit/Index',
+  'oracle/orbit/Build/Intermediates',
+  'oracle/orbit/Build/Products/Debug',
+  'oracle/orbit/orbit.xcodeproj',
   // this avoids duplicating the chromium build,
   // since it derefs the subling Versions/Current symlink it still copies
   'Framework.framework/Versions/A',
@@ -34,7 +44,27 @@ async function bundle() {
   console.log('bundling', ELECTRON_DIR)
   console.log('remove old app')
   await new Promise(resolve =>
-    rm(Path.join(ROOT, 'app', 'Orbit-darwin-x64'), resolve)
+    rm(Path.join(ROOT, 'app', 'Orbit-darwin-x64'), resolve),
+  )
+  await new Promise(resolve =>
+    rm(
+      Path.join(
+        ROOT,
+        '..',
+        'oracle/orbit/Build/Products/Release/orbit.app/Contents/Resources/Bridge.plugin/Contents/Resources/lib/python3.5/config',
+      ),
+      resolve,
+    ),
+  )
+  await new Promise(resolve =>
+    rm(
+      Path.join(
+        ROOT,
+        '..',
+        'oracle/orbit/Build/Products/Release/orbit.app/Contents/Resources/Bridge.plugin/Contents/Resources/lib/python3.5/site.pyc',
+      ),
+      resolve,
+    ),
   )
   await new Promise(resolve => rm(Path.join(ROOT, 'app', 'Orbit.dmg'), resolve))
   console.log('bundle new app')
@@ -57,8 +87,30 @@ async function bundle() {
       // log.bundle(`bundling path: ${path}`)
       return false
     },
+    afterCopy: [
+      (buildPath, electronVersion, platform, arch, callback) => {
+        console.log('rebuilding for electron...', buildPath, electronVersion)
+        rebuild({ buildPath, electronVersion, arch })
+          .then(() => callback())
+          .catch(error => callback(error))
+      },
+    ],
   })
   console.log('wrote app to', paths)
+  // this is necessary for high sierra to be able to sign
+  console.log('removing metadata for signing...')
+  await execa('xattr', ['-cr', 'Orbit.app'], {
+    cwd: Path.join(ROOT, 'app', 'Orbit-darwin-x64'),
+  })
 }
 
 bundle()
+
+process.on('uncaughtException', (...args) => {
+  console.log('uncaughtException', ...args)
+  process.exit(0)
+})
+process.on('unhandledRejection', function(reason) {
+  console.log(reason)
+  process.exit(0)
+})

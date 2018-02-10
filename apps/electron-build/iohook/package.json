@@ -1,0 +1,25 @@
+{
+  "name": "iohook-built",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "postinstall": "electron-rebuild -v 1.8.2"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "iohook": "^0.1.11"
+  },
+  "iohook": {
+    "targets": [
+      "node-59",
+      "electron-54"
+    ],
+    "platforms": [
+      "darwin"
+    ],
+    "arches": [
+      "x64"
+    ]
+  }
+}

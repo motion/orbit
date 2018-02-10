@@ -36,7 +36,6 @@ function build-dev() {
     --ignore @mcro/oracle \
     --ignore @mcro/api \
     --ignore @mcro/builder \
-    --ignore @mcro/swindler \
     --ignore @mcro/hmr \
     --ignore @mcro/hmr-view \
     --ignore @mcro/preset-motion \
@@ -54,7 +53,6 @@ function build-es6() {
     --ignore @mcro/search \
     --ignore @mcro/constants \
     --ignore @mcro/screendump \
-    --ignore @mcro/swindler \
     --ignore @mcro/site \
     --ignore @mcro/preset-motion \
     --ignore @mcro/ui \
@@ -73,7 +71,6 @@ function build-prod() {
     --ignore @mcro/web \
     --ignore @mcro/deliverx \
     --ignore @mcro/site \
-    --ignore @mcro/swindler \
     --ignore @mcro/api \
     --ignore @mcro/crawler \
     --ignore @mcro/constants \

@@ -1,14 +1,13 @@
 {
   "name": "@mcro/web",
   "private": true,
-  "version": "1.5.39",
+  "version": "1.5.40",
   "main": "index.js",
   "scripts": {
-    "start": "./start.sh",
-    "start-prod": "static-server -p 3002 -n build/index.html build",
-    "build": "npm version patch && MINIFY=false NODE_ENV=production BUILD_DIR=. mcro-build",
-    "watch": "NODE_ENV=development BUILD_DIR=. mcro-build --watch",
-    "deploy": "surge ./build seemirai.com"
+    "start": "kill-port 3002 && parcel -p 3002",
+    "start-prod": "static-server -p 3002 -n dist/index.html dist",
+    "build": "rm -r dist && parcel build --public-url /",
+    "deploy": "./deploy.sh"
   },
   "dependencies": {
     "@mcro/black": "^1.5.1",

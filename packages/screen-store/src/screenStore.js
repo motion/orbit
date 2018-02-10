@@ -3,6 +3,7 @@ import { store } from '@mcro/black/store'
 import SwiftBridge from './swiftBridge'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 import WebSocket from './websocket'
+import waitForPort from 'wait-for-port'
 
 export SwiftBridge from './swiftBridge'
 
@@ -27,18 +28,13 @@ export default class ScreenStore {
     },
   })
 
-  get x() {}
-  set x(state) {
-    this.send({ state })
-  }
-
-  pause() {
-    this.start()
+  async pause() {
+    await this.start()
     this.send({ action: 'stop' })
   }
 
-  resume() {
-    this.start()
+  async resume() {
+    await this.start()
     this.send({ action: 'start' })
   }
 
@@ -52,24 +48,30 @@ export default class ScreenStore {
     if (this.ws) {
       return
     }
-    this.ws = new ReconnectingWebSocket('ws://localhost:40510', undefined, {
-      constructor: WebSocket,
-    })
-    this.ws.onmessage = ({ data }) => {
-      if (data) {
-        const res = JSON.parse(data)
-        this.updateState(res)
+    waitForPort('localhost', 40510, err => {
+      if (err) {
+        console.log('error waiting for port', err)
+        return
       }
-    }
-    this.ws.onopen = function() {
-      console.log('websocket open')
-    }
-    this.ws.onclose = function() {
-      console.log('websocket closed')
-    }
-    this.ws.onerror = function(err) {
-      console.log('error', err)
-    }
+      this.ws = new ReconnectingWebSocket('ws://localhost:40510', undefined, {
+        constructor: WebSocket,
+      })
+      this.ws.onmessage = ({ data }) => {
+        if (data) {
+          const res = JSON.parse(data)
+          this.updateState(res)
+        }
+      }
+      this.ws.onopen = function() {
+        console.log('screenStore websocket open')
+      }
+      this.ws.onclose = function() {
+        console.log('screenStore websocket closed')
+      }
+      this.ws.onerror = function(err) {
+        console.log('screenStore error', err)
+      }
+    })
   }
 
   updateState = ({

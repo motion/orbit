@@ -2,12 +2,15 @@
 
 cd dist
 
+index=$(find . -name "*.html")
+ln -s $index ./index.html
+
 # for surge add links for clean urls
 # see web/router
-ln -s ./index.html ./settings.html
-ln -s ./index.html ./peek.html
-ln -s ./index.html ./highlights.html
-ln -s ./index.html ./relevancy.html
-ln -s ./index.html ./auth.html
+ln -s .$index ./settings.html
+ln -s .$index ./peek.html
+ln -s .$index ./highlights.html
+ln -s .$index ./relevancy.html
+ln -s .$index ./auth.html
 
 surge . seemirai.com

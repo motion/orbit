@@ -159,7 +159,7 @@ export default class ScreenState {
     })
     this.oracle.onRestored(count => {
       console.log('restore', count)
-      this.socketSendAll({ restoreWord: this.oracle.restoredIds })
+      this.socketSendAll({ restoreWords: this.oracle.restoredIds })
     })
     this.oracle.onError(async error => {
       console.log('screen ran into err, restart', error)
@@ -406,8 +406,12 @@ export default class ScreenState {
       this.activeSockets.push({ uid, socket })
       // listen for incoming
       socket.on('message', str => {
-        const { action, value } = JSON.parse(str)
-        if (this[action]) {
+        const { action, value, state } = JSON.parse(str)
+        if (state) {
+          console.log('received state:', state)
+          this.socketSendAll(state)
+        }
+        if (action && this[action]) {
           console.log('received action:', action)
           this[action].call(this, value)
         }

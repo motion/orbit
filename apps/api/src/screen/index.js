@@ -54,7 +54,6 @@ export default class ScreenState {
   activeSockets = []
   curDesktopState = {}
   watchSettings = {}
-  extraDesktopState = {}
   auth = null
 
   state: TScreenState = {
@@ -127,10 +126,7 @@ export default class ScreenState {
           this.curDesktopState.offset = value
       }
       this.updateState({
-        desktopState: {
-          ...JSON.parse(JSON.stringify(this.curDesktopState)),
-          ...this.extraDesktopState, // from electron
-        },
+        desktopState: JSON.parse(JSON.stringify(this.curDesktopState)),
       })
     })
     this.oracle.onBoxChanged(count => {
@@ -171,10 +167,6 @@ export default class ScreenState {
     await this.oracle.start()
     // clear old highlights if theyre still up
     this.resetHighlights()
-  }
-
-  setExtraDesktopState = state => {
-    this.extraDesktopState = state
   }
 
   async restartScreen() {

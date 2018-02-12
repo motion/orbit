@@ -26,7 +26,10 @@ export default class OraStore {
   ui = new UIStore({ oraStore: this })
   pin = new PinStore()
   search = new SearchStore({ useWorker })
-  screen = this.props.screen
+
+  get screen() {
+    return this.props.screen
+  }
 
   // helpers
   get results() {
@@ -57,9 +60,10 @@ export default class OraStore {
     const { desktopState } = this.props.screen
     // dont treat itself as a desktopState source
     if (
-      desktopState.name &&
-      (desktopState.name.toLowerCase() === 'electron' ||
-        desktopState.name.toLowerCase() === 'orbit')
+      !desktopState ||
+      (desktopState.name &&
+        (desktopState.name.toLowerCase() === 'electron' ||
+          desktopState.name.toLowerCase() === 'orbit'))
     ) {
       return null
     }

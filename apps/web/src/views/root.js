@@ -6,8 +6,6 @@ import NotFound from '~/views/404'
 import Router from '~/router'
 import ScreenStore from '@mcro/screen-store'
 
-console.log('ScreenStore is', ScreenStore)
-
 @view.provide({
   screen: ScreenStore,
 })

@@ -15,7 +15,6 @@ export SHORTCUTS from './shortcuts'
 export default class UIStore {
   _inputRefVersion = 0
   _inputRef = null
-  wasBlurred = false
   barFocused = false
   collapsed = false
   lastHeight = 'auto'
@@ -27,8 +26,8 @@ export default class UIStore {
   // sync this to screenStore.appState
   state = {
     pinned: false,
+    // TODO: this can likely be removed and just use screenStore.electronState.focused
     hidden: false,
-    focused: true,
     preventElectronHide: true,
     contextMessage: 'Orbit',
   }
@@ -56,19 +55,16 @@ export default class UIStore {
   }
 
   get showOra() {
-    const { hidden, focused, pinned } = this.state
-    if (pinned) {
-      return true
-    }
-    return !hidden && focused
+    const { hidden, pinned } = this.state
+    return pinned || !hidden
   }
 
   constructor({ oraStore }) {
+    console.log('constructo ui', oraStore)
     this.oraStore = oraStore
     this.stack = oraStore.stack
     this.attachTrap('window', window)
     this.on(OS, 'ora-toggle', this.toggleHidden)
-    this._listenForFocus()
     this.setState({}) // trigger first send
   }
 
@@ -76,7 +72,6 @@ export default class UIStore {
     this._watchHeight()
     this._watchKeyboardFocus()
     this._watchBarFocus()
-    this._watchWasBlurred()
     this._watchBlurBarOnHide()
     this._watchKeyEvents()
     this._watchContextMessage()
@@ -266,16 +261,6 @@ export default class UIStore {
 
   emitKeyCode = e => this.emit('keydown', keycode(e.keyCode))
 
-  _listenForFocus() {
-    this.on(OS, 'ora-focus', () => {
-      this.focusedAt = Date.now()
-      this.setState({ focused: true })
-    })
-    this.on(OS, 'ora-blur', () => {
-      this.setState({ focused: false })
-    })
-  }
-
   toggleHidden = _.throttle(
     () => this.setState({ hidden: !this.state.hidden, pinned: false }),
     40,
@@ -341,16 +326,6 @@ export default class UIStore {
         lastCol = col
       },
     )
-  }
-
-  _watchWasBlurred() {
-    this.watch(function watchWasBlurred() {
-      const { focused } = this.state
-      // one frame later
-      this.setTimeout(() => {
-        this.wasBlurred = !focused
-      }, 16)
-    })
   }
 
   _watchHeight = () => {

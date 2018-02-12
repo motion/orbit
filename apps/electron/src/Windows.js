@@ -68,13 +68,6 @@ export default class Windows extends React.Component {
       this.oraRef.webContents.session.clearStorageData()
     }
     this.listenToApps()
-    // send initial state
-    this.watch(function sendInitialState() {
-      if (this.rootStore.sendOra) {
-        console.log('send init electron state')
-        this.rootStore.sendOra('electron-state', this.state)
-      }
-    })
   })
 
   onAppWindow = win => electron => {
@@ -111,8 +104,8 @@ export default class Windows extends React.Component {
   }
 
   onBeforeQuit = () => console.log('hi')
-  onOraBlur = () => this.rootStore.sendOra('ora-blur')
-  onOraFocus = () => this.rootStore.sendOra('ora-focus')
+  onOraBlur = () => this.updateState({ focused: false })
+  onOraFocus = () => this.updateState({ focused: true })
   onOraMoved = oraPosition => {
     this.updateState({ oraPosition, lastMove: Date.now() })
   }
@@ -171,10 +164,10 @@ export default class Windows extends React.Component {
           onFocus={this.onOraFocus}
           devToolsExtensions={Helpers.getExtensions(['mobx', 'react'])}
         />
-        {/* <PeekWindow
+        <PeekWindow
           appPosition={this.state.oraPosition}
           onWindows={this.handlePeekWindows}
-        /> */}
+        />
         {/* SETTINGS PANE: */}
         {this.state.loadSettings && (
           <Window

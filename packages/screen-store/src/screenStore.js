@@ -20,7 +20,7 @@ export default class ScreenStore {
   // things we expect to by synced must be defined here
 
   // state of mac windows
-  desktopState = {}
+  desktopState = null
   // state of electron
   electronState = {}
   // state of app
@@ -45,6 +45,9 @@ export default class ScreenStore {
     },
   })
 
+  _queuedState = []
+  _wsOpen = false
+
   // public
 
   // note: you have to call start to make it explicitly connect
@@ -68,19 +71,27 @@ export default class ScreenStore {
         }
       }
     }
-    this.ws.onopen = function() {
-      console.log('screenStore websocket open')
+    this.ws.onopen = () => {
+      this._wsOpen = true
+      for (const object of this._queuedState) {
+        this.setState(object)
+      }
+      this._queuedState = []
     }
-    this.ws.onclose = function() {
-      console.log('screenStore websocket closed')
+    this.ws.onclose = () => {
+      this._wsOpen = false
     }
-    this.ws.onerror = function(err) {
+    this.ws.onerror = err => {
       console.log('screenStore error', err)
     }
   }
 
   // this will go up to api and back down to all screen stores
   setState(object: Object) {
+    if (!this._wsOpen) {
+      this._queuedState.push(object)
+      return
+    }
     return this.ws.send(JSON.stringify({ state: object }))
   }
 

@@ -24,8 +24,7 @@ export default class UIStore {
   textboxVal = ''
   traps = {}
 
-  // this is synced to electron!
-  // see electron/src/views/Root#RootStore.oraState
+  // sync this to screenStore.appState
   state = {
     pinned: false,
     hidden: false,
@@ -239,7 +238,10 @@ export default class UIStore {
       ...this.state,
       ...newState,
     }
-    OS.send('set-state', this.state)
+    // send screenStore.appState
+    this.oraStore.screen.setState({
+      appState: this.state,
+    })
   }
 
   handleInputRef = ref => {

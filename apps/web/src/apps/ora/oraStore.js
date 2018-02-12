@@ -19,8 +19,6 @@ const useWorker = window.location.href.indexOf('?noWorker')
 let dragListeners = []
 window.addDragListener = window.addDragListener || (x => dragListeners.push(x))
 
-window.lastElectronState = {}
-
 export default class OraStore {
   // stores
   crawler = new CrawlerStore()
@@ -29,10 +27,6 @@ export default class OraStore {
   pin = new PinStore()
   search = new SearchStore({ useWorker })
   screen = this.props.screen
-
-  // synced from electron
-  // see @mcro/electron/src/views/Windows#Windows.state
-  electronState = {}
 
   // helpers
   get results() {
@@ -59,20 +53,17 @@ export default class OraStore {
     return this.stack.last.store
   }
 
-  get appState() {
-    const { appState } = this.props.screen
-    if (!appState) {
-      return {}
-    }
-    // dont treat itself as a appState source
+  get desktopState() {
+    const { desktopState } = this.props.screen
+    // dont treat itself as a desktopState source
     if (
-      appState.name &&
-      (appState.name.toLowerCase() === 'electron' ||
-        appState.name.toLowerCase() === 'orbit')
+      desktopState.name &&
+      (desktopState.name.toLowerCase() === 'electron' ||
+        desktopState.name.toLowerCase() === 'orbit')
     ) {
       return null
     }
-    return appState
+    return desktopState
   }
 
   @watch
@@ -91,7 +82,6 @@ export default class OraStore {
     // helper
     window.oraStore = this
     // listeners/watchers
-    this._listenForElectronState()
     this._listenForKeyEvents()
     this._watchScreenForContext()
     this._watchClickPrevent()
@@ -100,18 +90,18 @@ export default class OraStore {
     }, 16)
     // watch and set active search
     this.watch(function setSearchQuery() {
-      const { appState } = this
-      if (Object.keys(appState || {}).length && !this.ui.barFocused) {
-        if (appState.selection) {
-          this.search.setQuery(appState.selection)
+      const { desktopState } = this
+      if (Object.keys(desktopState || {}).length && !this.ui.barFocused) {
+        if (desktopState.selection) {
+          this.search.setQuery(desktopState.selection)
           return
         }
-        if (appState.title) {
-          this.search.setQuery(appState.title)
+        if (desktopState.title) {
+          this.search.setQuery(desktopState.title)
           return
         }
-        if (appState.name) {
-          this.search.setQuery(appState.name)
+        if (desktopState.name) {
+          this.search.setQuery(desktopState.name)
           return
         }
       } else {
@@ -130,48 +120,37 @@ export default class OraStore {
     this.search.dispose()
   }
 
-  _listenForElectronState() {
-    // allows electron to ask for updated app state
-    this.on(OS, 'get-state', () => {
-      OS.send('got-state', this.state)
-    })
-    // allows us to get updated electron state
-    this.on(OS, 'electron-state', (event, state) => {
-      this.electronState = state
-      window.lastElectronState = state
-    })
-  }
-
   _watchClickPrevent = () => {
-    let iters = 0
-    let resetItersTO
-    this.watch(() => {
-      clearTimeout(resetItersTO)
-      iters++
-      this.electronState.lastMove
-      if (iters > 3) {
-        dragListeners.forEach(x => x(this.electronState.lastMove))
-        resetItersTO = setTimeout(() => {
-          iters = 0
-        }, 500)
-      }
-    })
+    // todo: re-enable if needed
+    // let iters = 0
+    // let resetItersTO
+    // this.watch(() => {
+    //   clearTimeout(resetItersTO)
+    //   iters++
+    //   this.electronState.lastMove
+    //   if (iters > 3) {
+    //     dragListeners.forEach(x => x(this.electronState.lastMove))
+    //     resetItersTO = setTimeout(() => {
+    //       iters = 0
+    //     }, 500)
+    //   }
+    // })
   }
 
   _watchScreenForContext = () => {
     let lastStackItem
     this.watch(function watchScreen() {
       // determine navigation
-      const { appState } = this
-      if (!appState) {
+      const { desktopState } = this
+      if (!desktopState) {
         return
       }
-      const title = appState.title || appState.name
+      const title = desktopState.title || desktopState.name
       if (!title) {
-        log('no context title', appState)
+        log('no context title', desktopState)
         return
       }
-      const nextStackItem = contextToResult(appState)
+      const nextStackItem = contextToResult(desktopState)
       if (!nextStackItem.id) {
         console.log('no good id to update', nextStackItem)
         return

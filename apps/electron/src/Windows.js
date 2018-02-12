@@ -16,8 +16,6 @@ export default class Windows extends React.Component {
     return this.props.rootStore
   }
 
-  // this gets synced down to the browser
-  // see oraStore 'electron-state'
   state = {
     showDevTools: false,
     restart: false,
@@ -30,17 +28,10 @@ export default class Windows extends React.Component {
     lastMove: Date.now(),
   }
 
-  stateUpdate = []
-
+  // sync local state here to screenStore.electronState
   async updateState(state) {
     await new Promise(res => this.setState(state, res))
-    this.sendOraState()
-  }
-
-  sendOraState() {
-    if (this.rootStore.sendOra) {
-      this.rootStore.sendOra('electron-state', this.state)
-    }
+    this.rootStore.screen.setState({ electronState: this.state })
   }
 
   componentWillMount() {
@@ -120,8 +111,8 @@ export default class Windows extends React.Component {
   }
 
   onBeforeQuit = () => console.log('hi')
-  onOraBlur = () => this.rootStore.sendOraSync('ora-blur')
-  onOraFocus = () => this.rootStore.sendOraSync('ora-focus')
+  onOraBlur = () => this.rootStore.sendOra('ora-blur')
+  onOraFocus = () => this.rootStore.sendOra('ora-focus')
   onOraMoved = oraPosition => {
     this.updateState({ oraPosition, lastMove: Date.now() })
   }

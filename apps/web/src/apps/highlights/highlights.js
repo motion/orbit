@@ -15,7 +15,6 @@ class HighlightsStore {
     line: quadtree(0, 0, window.innerWidth, window.innerHeight),
   }
   version = 0
-  electronState = {}
   hoverEvents = {}
   screen = this.props.screen
 

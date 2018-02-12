@@ -18,14 +18,21 @@ export SwiftBridge from './swiftBridge'
 @store
 export default class ScreenStore {
   // things we expect to by synced must be defined here
-  appState = null
+
+  // state of mac windows
+  desktopState = {}
+  // state of electron
+  electronState = {}
+  // state of app
+  appState = {}
+  // state of everything else...
   ocrWords = null
   linePositions = null
   lastScreenChange = null
   lastOCR = null
   mousePosition = null
   keyboard = {}
-  highlightWords = null || {}
+  highlightWords = {}
   clearWords = {}
   restoreWords = {}
 

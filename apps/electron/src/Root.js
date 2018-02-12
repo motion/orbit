@@ -15,11 +15,6 @@ import ScreenStore from '@mcro/screen-store'
     // used to generically talk to browser
     sendOra = null
 
-    // sync FROM ora app to here
-    // see web/src/stores/uiStore
-    oraState = {}
-    _oraStateGetters = []
-
     error = null
     appRef = null
     oraRef = null
@@ -54,7 +49,7 @@ import ScreenStore from '@mcro/screen-store'
           }
           console.log('got keyboard', keyboard, lastKeyboard)
           const { option, optionCleared } = keyboard
-          if (this.oraState.hidden) {
+          if (this.screen.oraState.hidden) {
             // HIDDEN
             // clear last if not opened yet
             if (optionCleared) {
@@ -85,19 +80,6 @@ import ScreenStore from '@mcro/screen-store'
       )
     }
 
-    sendOraSync = async (...args) => {
-      if (this.sendOra) {
-        this.sendOra(...args)
-        return await this.getOraState()
-      }
-    }
-
-    getOraState = () =>
-      new Promise(res => {
-        this._oraStateGetters.push(res)
-        this.sendOra('get-state')
-      })
-
     setupOraLink() {
       this.on(ipcMain, 'start-ora', event => {
         this.sendOra = (...args) => {
@@ -108,33 +90,17 @@ import ScreenStore from '@mcro/screen-store'
           }
         }
       })
-
-      // if you call this.getOraState() this will handle it
-      this.on(ipcMain, 'set-state', (event, state) => {
-        // update state
-        this.updateOraState(state)
-        if (this._oraStateGetters.length) {
-          for (const getter of this._oraStateGetters) {
-            getter(state)
-          }
-          this._oraStateGetters = []
-        }
-      })
-    }
-
-    updateOraState = state => {
-      this.oraState = { ...state }
     }
 
     toggleShown = debounce(async () => {
-      if (this.oraState.pinned) {
+      if (this.screen.oraState.pinned) {
         return
       }
       if (!this.appRef) {
         console.log('no app ref :(')
         return
       }
-      if (!this.oraState.hidden) {
+      if (!this.screen.oraState.hidden) {
         this.hideOra()
       } else {
         this.showOra()
@@ -145,7 +111,7 @@ import ScreenStore from '@mcro/screen-store'
       console.log('showOra')
       this.appRef.show()
       await Helpers.sleep(50)
-      await this.sendOraSync('ora-toggle')
+      await this.sendOra('ora-toggle')
       await Helpers.sleep(150)
       this.appRef.focus()
       this.oraRef.focus()
@@ -153,9 +119,9 @@ import ScreenStore from '@mcro/screen-store'
 
     async hideOra() {
       console.log('hideOra')
-      await this.sendOraSync('ora-toggle')
+      await this.sendOra('ora-toggle')
       await Helpers.sleep(150)
-      if (!this.settingsVisible && !this.oraState.preventElectronHide) {
+      if (!this.settingsVisible && !this.screen.oraState.preventElectronHide) {
         this.appRef.hide()
       }
     }

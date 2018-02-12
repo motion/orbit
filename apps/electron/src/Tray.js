@@ -4,25 +4,10 @@ import { view } from '@mcro/black'
 import Path from 'path'
 import * as Constants from '~/constants'
 
-class TrayStore {
-  get rootStore() {
-    return this.props.rootStore
-  }
-
-  willMount() {
-    this.watch(() => {
-      // console.log('got new oraState', this.rootStore.oraState)
-    })
-  }
-}
-
 @view.attach('rootStore')
-@view.provide({
-  trayStore: TrayStore,
-})
 @view.electron
 export default class TrayEl {
-  render({ rootStore, trayStore, ...props }) {
+  render({ rootStore, ...props }) {
     return (
       <Tray
         image={Path.join(
@@ -34,7 +19,7 @@ export default class TrayEl {
         title={
           rootStore.screen.swiftBridge.state.isPaused
             ? 'Paused'
-            : rootStore.oraState.contextMessage || 'Orbit'
+            : rootStore.screen.oraState.contextMessage || 'Orbit'
         }
         {...props}
       />

@@ -21,7 +21,7 @@ const BLACKLIST = {
 
 console.log('writing screenshots to', Constants.TMP_DIR)
 
-type TAppState = {
+type TDesktopState = {
   name: string,
   offset: [Number, Number],
   bounds: [Number, Number],
@@ -38,7 +38,7 @@ type Word = {
 }
 
 type TScreenState = {
-  appState?: TAppState,
+  desktopState?: TDesktopState,
   ocrWords?: [Word],
   linePositions?: [Number],
   lastOCR: Number,
@@ -52,13 +52,13 @@ export default class ScreenState {
   stopped = false
   oracle = new Oracle()
   activeSockets = []
-  curAppState = {}
+  curDesktopState = {}
   watchSettings = {}
-  extraAppState = {}
+  extraDesktopState = {}
   auth = null
 
   state: TScreenState = {
-    appState: null,
+    desktopState: null,
     ocrWords: null,
     linePositions: null,
     lastOCR: Date.now(),
@@ -111,7 +111,7 @@ export default class ScreenState {
       switch (event) {
         case 'FrontmostWindowChangedEvent':
           const id = value.id || lastId
-          this.curAppState = {
+          this.curDesktopState = {
             id,
             title: value.title,
             offset: value.offset,
@@ -121,15 +121,15 @@ export default class ScreenState {
           lastId = id
           break
         case 'WindowSizeChangedEvent':
-          this.curAppState.bounds = value
+          this.curDesktopState.bounds = value
           break
         case 'WindowPosChangedEvent':
-          this.curAppState.offset = value
+          this.curDesktopState.offset = value
       }
       this.updateState({
-        appState: {
-          ...JSON.parse(JSON.stringify(this.curAppState)),
-          ...this.extraAppState, // from electron
+        desktopState: {
+          ...JSON.parse(JSON.stringify(this.curDesktopState)),
+          ...this.extraDesktopState, // from electron
         },
       })
     })
@@ -173,8 +173,8 @@ export default class ScreenState {
     this.resetHighlights()
   }
 
-  setExtraAppState = state => {
-    this.extraAppState = state
+  setExtraDesktopState = state => {
+    this.extraDesktopState = state
   }
 
   async restartScreen() {
@@ -268,7 +268,7 @@ export default class ScreenState {
   }
 
   onChangedState = async (oldState, newState) => {
-    if (newState.appState) {
+    if (newState.desktopState) {
       this.rescanApp()
       return
     }
@@ -282,7 +282,7 @@ export default class ScreenState {
       console.log('is stopped')
       return
     }
-    const { name, offset, bounds } = this.state.appState
+    const { name, offset, bounds } = this.state.desktopState
     if (!offset || !bounds) {
       console.log('didnt get offset/bounds')
       return

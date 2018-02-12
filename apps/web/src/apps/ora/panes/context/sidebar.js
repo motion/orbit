@@ -23,8 +23,9 @@ const getDefaultDepth = url => {
 
 export default class ContextSidebar {
   @watch
-  isPinned = () => this.appState && Thing.findOne({ url: this.appState.url })
-  appState = null
+  isPinned = () =>
+    this.desktopState && Thing.findOne({ url: this.desktopState.url })
+  desktopState = null
   previewCrawler = new CrawlerStore()
   crawlerSettings = {
     maxPages: 10000,
@@ -34,10 +35,10 @@ export default class ContextSidebar {
   willMount() {
     this.watch(function watchSidebarContext() {
       // prevent name from triggered changes
-      const { name, ...state } = this.oraStore.appState || {}
+      const { name, ...state } = this.oraStore.desktopState || {}
       idFn(name)
-      if (state && state.url && !isEqual(state, this.appState)) {
-        this.appState = state
+      if (state && state.url && !isEqual(state, this.desktopState)) {
+        this.desktopState = state
         this.handleChangeSettings({
           entry: state.url,
           depth: getDefaultDepth(state.url),
@@ -71,10 +72,10 @@ export default class ContextSidebar {
 
   // can customize the shown title here
   get title() {
-    if (!this.appState) return
+    if (!this.desktopState) return
     return {
       title: this.result.title.trim().slice(0, 100),
-      image: this.appState.favicon,
+      image: this.desktopState.favicon,
     }
   }
 
@@ -107,11 +108,11 @@ export default class ContextSidebar {
   }
 
   pinCurrent = () => {
-    this.oraStore.pin.add(this.oraStore.appState)
+    this.oraStore.pin.add(this.oraStore.desktopState)
   }
 
   unpinCurrent = () => {
-    this.oraStore.pin.remove(this.oraStore.appState)
+    this.oraStore.pin.remove(this.oraStore.desktopState)
   }
 
   get actions() {
@@ -137,7 +138,7 @@ export default class ContextSidebar {
       ]
     }
     let websiteActions = []
-    if (this.oraStore.appState && this.oraStore.appState.url) {
+    if (this.oraStore.desktopState && this.oraStore.desktopState.url) {
       websiteActions = [
         this.isPinned && {
           icon: 'check',

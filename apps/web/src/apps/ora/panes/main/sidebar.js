@@ -11,22 +11,15 @@ export default class MainSidebar {
     return this.props.oraStore
   }
 
-  get context() {
-    if (!this.ora.appState) {
-      return null
-    }
-    return this.ora.appState.context
-  }
-
   get search() {
     return this.ora.ui.search
   }
 
   get title() {
-    if (!this.context) {
+    if (!this.ora.desktopState) {
       return null
     }
-    const result = contextToResult(this.context)
+    const result = contextToResult(this.ora.desktopState)
     return {
       title: <div css={{ width: 100 }} />,
       after: (

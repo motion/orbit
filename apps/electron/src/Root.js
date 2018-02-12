@@ -49,7 +49,7 @@ import ScreenStore from '@mcro/screen-store'
           }
           console.log('got keyboard', keyboard, lastKeyboard)
           const { option, optionCleared } = keyboard
-          if (this.screen.oraState.hidden) {
+          if (this.screen.appState.hidden) {
             // HIDDEN
             // clear last if not opened yet
             if (optionCleared) {
@@ -93,14 +93,14 @@ import ScreenStore from '@mcro/screen-store'
     }
 
     toggleShown = debounce(async () => {
-      if (this.screen.oraState.pinned) {
+      if (this.screen.appState.pinned) {
         return
       }
       if (!this.appRef) {
         console.log('no app ref :(')
         return
       }
-      if (!this.screen.oraState.hidden) {
+      if (!this.screen.appState.hidden) {
         this.hideOra()
       } else {
         this.showOra()
@@ -121,7 +121,7 @@ import ScreenStore from '@mcro/screen-store'
       console.log('hideOra')
       await this.sendOra('ora-toggle')
       await Helpers.sleep(150)
-      if (!this.settingsVisible && !this.screen.oraState.preventElectronHide) {
+      if (!this.settingsVisible && !this.screen.appState.preventElectronHide) {
         this.appRef.hide()
       }
     }

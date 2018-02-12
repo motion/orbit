@@ -19,7 +19,7 @@ export default class TrayEl {
         title={
           rootStore.screen.swiftBridge.state.isPaused
             ? 'Paused'
-            : rootStore.screen.oraState.contextMessage || 'Orbit'
+            : rootStore.screen.appState.contextMessage || 'Orbit'
         }
         {...props}
       />

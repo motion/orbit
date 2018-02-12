@@ -47,7 +47,7 @@ export default class ScreenStore {
       console.log('already started')
       return
     }
-    if (typeof window !== 'undefined') {
+    if (typeof window === 'undefined') {
       await waitForPort('localhost', 40510)
     }
     this.ws = new ReconnectingWebSocket('ws://localhost:40510', undefined, {

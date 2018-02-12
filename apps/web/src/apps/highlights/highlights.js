@@ -3,6 +3,7 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import * as Helpers from '~/helpers'
 import quadtree from 'simple-quadtree'
+import Screen from '@mcro/screen-store'
 
 const HL_PAD = 2
 const TOP_BAR_PAD = 22
@@ -16,21 +17,20 @@ class HighlightsStore {
   }
   version = 0
   hoverEvents = {}
-  screen = this.props.screen
 
   get ocrWords() {
-    return (this.screen.ocrWords || []).filter(
-      (_, index) => !this.screen.clearWords[index],
+    return (Screen.apiState.ocrWords || []).filter(
+      (_, index) => !Screen.apiState.clearWords[index],
     )
   }
 
   get wordHovered() {
-    const [x, y] = this.screen.mousePosition || []
+    const [x, y] = Screen.apiState.mousePosition || []
     return this.trees.word.get({ x, y, w: 0, h: 0 })
   }
 
   get lineHovered() {
-    const [x, y] = this.screen.mousePosition || []
+    const [x, y] = Screen.apiState.mousePosition || []
     return this.trees.line.get({ x, y: y - LINE_Y_ADJ, w: 0, h: 0 })
   }
 
@@ -46,18 +46,24 @@ class HighlightsStore {
   // }
 
   get showAll() {
-    return this.screen.lastOCR > this.screen.lastScreenChange ? true : false
+    return Screen.apiState.lastOCR > Screen.apiState.lastScreenChange
+      ? true
+      : false
   }
 
   willMount() {
     // start screen watching
-    this.props.screen.start()
+    Screen.start('app')
     this.react(() => ['word', this.ocrWords], this.setupHover, true)
-    this.react(() => ['line', this.screen.linePositions], this.setupHover, true)
+    this.react(
+      () => ['line', Screen.apiState.linePositions],
+      this.setupHover,
+      true,
+    )
 
     // watch option hold
     this.react(
-      () => this.screen.keyboard.option,
+      () => Screen.apiState.keyboard.option,
       val => {
         console.log('seeing screen keyboard option', val)
       },
@@ -88,21 +94,21 @@ class HighlightsStore {
   getHoverProps = Helpers.hoverSettler({
     enterDelay: 300,
     onHovered: object => {
-      console.log('peek', object)
-      Helpers.OS.send('peek-target', object)
+      console.log('Screen.hoveredWord', object)
+      Screen.setState({ hoveredWord: object })
     },
   })
 }
 
 @view
 class OCRWord {
-  render({ item, store: { wordHovered, screen } }) {
+  render({ item, store: { wordHovered } }) {
     const [x, y, width, height, word, color] = item
     const key = getKey(item)
     return (
       <word
         $hovered={wordHovered.findIndex(x => x.string === key) >= 0}
-        $highlighted={screen.highlightWords[word]}
+        $highlighted={Screen.apiState.highlightWords[word]}
         style={{
           top: y - HL_PAD - TOP_BAR_PAD,
           left: x - HL_PAD,
@@ -186,13 +192,12 @@ class OCRLine {
 @view
 class Lines {
   render({ store }) {
-    return (store.screen.linePositions || []).map(item => (
+    return (Screen.apiState.linePositions || []).map(item => (
       <OCRLine key={getKey(item)} item={item} store={store} />
     ))
   }
 }
 
-@view.attach('screen')
 @view({
   store: HighlightsStore,
 })

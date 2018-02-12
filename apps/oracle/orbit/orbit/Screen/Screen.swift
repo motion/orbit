@@ -76,11 +76,11 @@ final class Screen: NSObject {
   var ignoreNextScan = false
   var shouldCancel = false
   var shouldRunNextTime = false
-  
+
   var onStart: (() -> Void)?
   var onFinish: (() -> Void)?
   var onError: ((Error) -> Void)?
-  
+
   private let simpleDebugImages = ProcessInfo.processInfo.environment["DEBUG_IMAGES"] == "true"
 
   var isRecording: Bool {
@@ -108,7 +108,7 @@ final class Screen: NSObject {
       print("no bundle meh")
       exit(0)
     }
-    
+
     self.emit = emit
     self.queue = queue
 
@@ -153,8 +153,7 @@ final class Screen: NSObject {
   }
 
   func start() {
-    print("1234")
-    debug("screen.start()")
+    debug("oracle.start()")
     if self.shouldCancel {
       self.shouldRunNextTime = true
     }
@@ -200,7 +199,7 @@ final class Screen: NSObject {
   func startTime() {
     curTime = DispatchTime.now()
   }
-  
+
   func clear() {
     self.ignoreNextScan = false
     if self.isScanning {

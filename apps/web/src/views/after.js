@@ -9,7 +9,7 @@ export default class After {
     return (
       <after
         onClick={e => {
-          OS.send('peek-target', null)
+          console.log('should call peek clear here')
           e.preventDefault()
           e.stopPropagation()
           navigate({

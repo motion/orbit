@@ -7,11 +7,11 @@ import Tray from './Tray'
 import { ipcMain } from 'electron'
 import * as Helpers from '~/helpers'
 import { debounce } from 'lodash'
-import ScreenStore from '@mcro/screen-store'
+import screenStore from '@mcro/screen-store'
 
 @view.provide({
   rootStore: class RootStore {
-    screen = new ScreenStore()
+    screen = screenStore
     // used to generically talk to browser
     sendOra = null
 
@@ -22,7 +22,7 @@ import ScreenStore from '@mcro/screen-store'
 
     willMount() {
       global.rootStore = this
-      this.screen.start()
+      this.screen.start('electron')
       new ShortcutsStore().emitter.on('shortcut', shortcut => {
         console.log('emit shortcut', shortcut)
         this.emit('shortcut', shortcut)

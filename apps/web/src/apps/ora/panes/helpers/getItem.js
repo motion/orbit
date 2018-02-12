@@ -3,9 +3,7 @@ import * as React from 'react'
 import * as UI from '@mcro/ui'
 import * as Helpers from '~/helpers'
 import * as Constants from '~/constants'
-
-const getDate = result =>
-  result.data && result.data.updated ? UI.Date.format(result.data.updated) : ''
+import screenStore from '@mcro/screen-store'
 
 const INTEGRATION_ICONS = {
   pin: 'pin',
@@ -132,8 +130,8 @@ const getHoverProps = Helpers.hoverSettler({
           document.querySelector('.fade:last-child .list')
         ).scrollTop
     }
-    console.log('peekhovered, sending', object)
-    Helpers.OS.send('peek-target', object)
+    console.log('test: peek', object)
+    screenStore.setState({ hoveredWord: object })
   },
 })
 

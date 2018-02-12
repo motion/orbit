@@ -6,6 +6,7 @@ import { view } from '@mcro/black'
 import { Window } from '@mcro/reactron'
 import { isEqual, memoize } from 'lodash'
 import * as Helpers from '~/helpers'
+import screenStore from '@mcro/screen-store'
 
 const idFn = _ => _
 
@@ -82,7 +83,7 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
   }
 
   componentWillMount() {
-    this.listen()
+    this.watchHovers()
   }
 
   componentWillReceiveProps({ appPosition }) {
@@ -102,12 +103,19 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
 
   peekSend = () => console.log('peekSend, not started yet')
 
-  listen() {
+  watchHovers() {
+    this.react(
+      () => screenStore.appState.hoveredWord,
+      hovered => {
+        console.log('we got a peek yo', hovered)
+      },
+    )
+
     // peek stuff
     this.on(ipcMain, 'peek-target', (event, target: PeekTarget) => {
       const peeks = [...this.state.peeks]
       const peek = peeks[0]
-      console.log('got peek-target', target, 'for peek', peek)
+      console.log('got peek', target, 'for peek', peek)
 
       // update peek y
       // TODO: add conditional to ignore if same peek sent as last

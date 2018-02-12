@@ -12,29 +12,26 @@ const waitForPort = (domain, port) =>
 
 export SwiftBridge from './swiftBridge'
 
-// this is essentially a proxy store for api/screen
-// TODO make this more centralized
-
 @store
-export default class ScreenStore {
+class ScreenStore {
   // things we expect to by synced must be defined here
-
-  // state of mac windows
-  desktopState = null
   // state of electron
   electronState = {}
   // state of app
   appState = {}
-  // state of everything else...
-  ocrWords = null
-  linePositions = null
-  lastScreenChange = null
-  lastOCR = null
-  mousePosition = null
-  keyboard = {}
-  highlightWords = {}
-  clearWords = {}
-  restoreWords = {}
+  // state of api
+  apiState = {
+    desktopState: null,
+    ocrWords: null,
+    linePositions: null,
+    lastScreenChange: null,
+    lastOCR: null,
+    mousePosition: null,
+    keyboard: {},
+    highlightWords: {},
+    clearWords: {},
+    restoreWords: {},
+  }
 
   // direct connect to the swift process
   // should safeguard these somehow
@@ -47,11 +44,20 @@ export default class ScreenStore {
 
   _queuedState = []
   _wsOpen = false
+  _source = null
 
   // public
 
   // note: you have to call start to make it explicitly connect
-  async start() {
+  async start(source: String) {
+    if (!source) {
+      throw new Error(`No source given for starting screen store`)
+    }
+    const APP_SOURCE = ['desktop', 'electron', 'app', 'api']
+    if (APP_SOURCE.indexOf(source) === -1) {
+      throw new Error(`Source must match one of the apps: ${APP_SOURCE}`)
+    }
+    this._source = source
     console.log('starting screen-store...')
     if (this.ws) {
       console.log('already started')
@@ -64,11 +70,24 @@ export default class ScreenStore {
       constructor: WebSocket,
     })
     this.ws.onmessage = ({ data }) => {
-      if (data) {
-        const res = JSON.parse(data)
-        if (res && typeof res === 'object') {
-          this._update(res)
+      if (!data) {
+        console.log(`No data received over socket`)
+        return
+      }
+      try {
+        const messageObj = JSON.parse(data)
+        if (messageObj && typeof messageObj === 'object') {
+          const { source, state } = messageObj
+          this._update(source, state)
+        } else {
+          throw new Error(`Non-object received`)
         }
+      } catch (err) {
+        console.log(
+          `ScreenStore error receiving message: ${
+            err.message
+          } from data ${data}`,
+        )
       }
     }
     this.ws.onopen = () => {
@@ -87,18 +106,26 @@ export default class ScreenStore {
   }
 
   // this will go up to api and back down to all screen stores
-  setState(object: Object) {
+  // set is only allowed from the source its set as initially
+  setState(state: Object) {
     if (!this._wsOpen) {
-      this._queuedState.push(object)
+      this._queuedState.push(state)
       return
     }
-    return this.ws.send(JSON.stringify({ state: object }))
+    return this.ws.send(JSON.stringify({ state, source: this._source }))
   }
 
   // private
-  _update = object => {
-    for (const key of Object.keys(object)) {
-      this[key] = object[key]
+  _update = (source: string, state: Object) => {
+    if (!source) {
+      throw new Error(`No source provided in screenStore state update`)
+    }
+    for (const key of Object.keys(state)) {
+      this[`${source}State`][key] = state[key]
     }
   }
 }
+
+// singleton because
+
+export default new ScreenStore()

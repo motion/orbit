@@ -7,7 +7,7 @@ import OraHeader from './oraHeader'
 import OraDrawer from './oraDrawer'
 import OraActionBar from './oraActionBar'
 import * as Constants from '~/constants'
-import { OS } from '~/helpers'
+import screenStore from '@mcro/screen-store'
 
 if (module.hot) {
   module.hot.accept('./oraStore')
@@ -70,7 +70,8 @@ const listProps = {
   groupBy: 'category',
   onScroll: () => {
     // TODO clear all popovers
-    OS.send('peek-target', null)
+    console.log('test: should clear peek')
+    screenStore.setState({ hoveredWord: null })
   },
 }
 
@@ -121,7 +122,6 @@ const OraContent = () => (
   </React.Fragment>
 )
 
-@view.attach('screen')
 @view.provide({
   oraStore: OraStore,
 })

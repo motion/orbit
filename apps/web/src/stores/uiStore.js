@@ -4,10 +4,10 @@ import SHORTCUTS from './shortcuts'
 import Mousetrap from 'mousetrap'
 import * as Helpers from '~/helpers'
 import keycode from 'keycode'
-import * as Constants from '~/constants'
 import * as _ from 'lodash'
 import pluralize from 'pluralize'
 import whatKey from 'whatkey'
+import screenStore from '@mcro/screen-store'
 
 export SHORTCUTS from './shortcuts'
 
@@ -206,7 +206,7 @@ export default class UIStore {
   actions = {
     esc: e => {
       if (!this.barFocused) {
-        OS.send('peek-target', null)
+        screenStore.setState({ hoveredWord: null })
       }
       if (this.inputRef === document.activeElement) {
         if (this.textboxVal !== '') {
@@ -234,7 +234,7 @@ export default class UIStore {
       ...newState,
     }
     // send screenStore.appState
-    this.oraStore.screen.setState({
+    screenStore.setState({
       appState: this.state,
     })
   }
@@ -307,7 +307,7 @@ export default class UIStore {
       if (this.state.hidden) {
         // timeout based on animation
         this.setTimeout(this.blurBar, 150)
-        OS.send('peek-target', null)
+        screenStore.setState({ hoveredWord: null })
       }
     })
   }

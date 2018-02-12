@@ -133,11 +133,11 @@ export default class ScreenState {
       const isApp = this.watchSettings.name === 'App'
       if (isApp) {
         this.resetHighlights()
-        this.socketSendAll({ clearWord: APP_ID })
+        this.socketSendAll('api', { clearWord: APP_ID })
       } else {
         // for not many clears, try it
         if (count < 20) {
-          this.socketSendAll({ clearWord: this.oracle.changedIds })
+          this.socketSendAll('api', { clearWord: this.oracle.changedIds })
         } else {
           // else just clear it all
           this.resetHighlights()
@@ -149,13 +149,13 @@ export default class ScreenState {
       console.log('clear ids', ids)
       const isOCR = this.watchSettings.name === 'OCR'
       if (isOCR) {
-        this.socketSendAll({ clearWords: ids })
+        this.socketSendAll('api', { clearWords: ids })
         return
       }
     })
     this.oracle.onRestored(count => {
       console.log('restore', count)
-      this.socketSendAll({ restoreWords: this.oracle.restoredIds })
+      this.socketSendAll('api', { restoreWords: this.oracle.restoredIds })
     })
     this.oracle.onError(async error => {
       console.log('screen ran into err, restart', error)
@@ -256,7 +256,7 @@ export default class ScreenState {
     // sends over (oldState, changedState, newState)
     this.onChangedState(oldState, object, this.state)
     // only send the changed things to reduce overhead
-    this.socketSendAll(object)
+    this.socketSendAll('api', object)
   }
 
   onChangedState = async (oldState, newState) => {
@@ -361,16 +361,19 @@ export default class ScreenState {
     console.log('screen disposed')
   }
 
-  socketSend = (socket, data) => {
+  socketSend = (socket, state: Object) => {
     try {
-      socket.send(JSON.stringify(data))
+      socket.send(JSON.stringify({ source: 'api', state }))
     } catch (err) {
       console.log('error with scoket', err.message, err.stack)
     }
   }
 
-  socketSendAll = (data: Object) => {
-    const strData = JSON.stringify(data)
+  socketSendAll = (source: string, state: Object) => {
+    if (!source) {
+      throw new Error(`No source provided to state message`)
+    }
+    const strData = JSON.stringify({ state, source })
     for (const { socket, uid } of this.activeSockets) {
       try {
         socket.send(strData)
@@ -398,10 +401,10 @@ export default class ScreenState {
       this.activeSockets.push({ uid, socket })
       // listen for incoming
       socket.on('message', str => {
-        const { action, value, state } = JSON.parse(str)
+        const { action, value, state, source } = JSON.parse(str)
         if (state) {
           console.log('received state:', state)
-          this.socketSendAll(state)
+          this.socketSendAll(source, state)
         }
         if (action && this[action]) {
           console.log('received action:', action)

@@ -4,15 +4,6 @@ import * as UI from '@mcro/ui'
 @view
 export default class PaneList {
   render({ index, paneStore, shouldMeasure, listProps, stackItem }) {
-    // if (index === 1) {
-    //   console.log(
-    //     'PaneList.render',
-    //     index,
-    //     shouldMeasure(),
-    //     paneStore.items && paneStore.items.length,
-    //     paneStore.contentVersion
-    //   )
-    // }
     if (stackItem && typeof stackItem.id === 'undefined') {
       return null
     }

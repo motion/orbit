@@ -31,7 +31,7 @@ export default class Windows extends React.Component {
   // sync local state here to screenStore.electronState
   async updateState(state) {
     await new Promise(res => this.setState(state, res))
-    this.rootStore.screen.setState({ electronState: this.state })
+    this.rootStore.screen.setState(this.state)
   }
 
   componentWillMount() {

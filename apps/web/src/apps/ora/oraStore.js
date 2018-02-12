@@ -10,6 +10,7 @@ import { CurrentUser } from '~/app'
 import debug from 'debug'
 import After from '~/views/after'
 import { isEqual } from 'lodash'
+import screenStore from '@mcro/screen-store'
 
 const log = _ => _ || debug('ora')
 const useWorker = window.location.href.indexOf('?noWorker')
@@ -26,10 +27,6 @@ export default class OraStore {
   ui = new UIStore({ oraStore: this })
   pin = new PinStore()
   search = new SearchStore({ useWorker })
-
-  get screen() {
-    return this.props.screen
-  }
 
   // helpers
   get results() {
@@ -57,7 +54,7 @@ export default class OraStore {
   }
 
   get desktopState() {
-    const { desktopState } = this.props.screen
+    const { desktopState } = screenStore
     // dont treat itself as a desktopState source
     if (
       !desktopState ||
@@ -82,7 +79,7 @@ export default class OraStore {
 
   async willMount() {
     // start watching for context
-    this.props.screen.start()
+    screenStore.start()
     // helper
     window.oraStore = this
     // listeners/watchers

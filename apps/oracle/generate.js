@@ -1,4 +1,4 @@
-const Screen = require('./es6').default
+const Oracle = require('./es6').default
 const Fs = require('fs')
 const Path = require('path')
 const execa = require('execa')
@@ -93,7 +93,7 @@ function getPage(fontName) {
   `
 }
 
-const screen = new Screen({ debugBuild: false })
+const oracle = new Oracle({ debugBuild: false })
 
 async function train() {
   // reset train dir
@@ -102,7 +102,7 @@ async function train() {
   }
   await execa('mkdir', [trainDir])
 
-  await screen.start()
+  await oracle.start()
 
   const fonts = [
     'adobe fangsong std',
@@ -164,16 +164,16 @@ async function train() {
     await execa(`open`, [`http://localhost:3003/${font}`])
     await sleep(1000)
     await new Promise(resolve => {
-      screen.onWords(async data => {
-        screen.pause()
+      oracle.onWords(async data => {
+        oracle.pause()
         await sleep(350) // wait for fs to write all files
         const fontDir = Path.join(trainDir, font)
         await execa('cp', ['-r', tmpDir, trainDir])
         await execa('mv', [Path.join(trainDir, 'tmp'), fontDir])
         resolve()
       })
-      screen.resume()
-      screen.watchBounds({
+      oracle.resume()
+      oracle.watchBounds({
         fps: 1,
         sampleSpacing: 1,
         sensitivity: 1,
@@ -204,7 +204,7 @@ try {
 }
 
 process.on('SIGINT', async () => {
-  console.log('stopping screen')
+  console.log('stopping oracle')
   await screen.stop()
   console.log('stoped')
   process.exit(0)

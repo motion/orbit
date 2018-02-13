@@ -8,7 +8,7 @@ import killPort from 'kill-port'
 import Auth from './auth'
 
 const PORT = 40510
-
+const DESKTOP_KEY = 'desktop'
 const APP_ID = -1
 const BLACKLIST = {
   iterm2: true,
@@ -133,11 +133,11 @@ export default class ScreenState {
       const isApp = this.watchSettings.name === 'App'
       if (isApp) {
         this.resetHighlights()
-        this.socketSendAll('api', { clearWord: APP_ID })
+        this.socketSendAll(DESKTOP_KEY, { clearWord: APP_ID })
       } else {
         // for not many clears, try it
         if (count < 20) {
-          this.socketSendAll('api', { clearWord: this.oracle.changedIds })
+          this.socketSendAll(DESKTOP_KEY, { clearWord: this.oracle.changedIds })
         } else {
           // else just clear it all
           this.resetHighlights()
@@ -149,13 +149,13 @@ export default class ScreenState {
       console.log('clear ids', ids)
       const isOCR = this.watchSettings.name === 'OCR'
       if (isOCR) {
-        this.socketSendAll('api', { clearWords: ids })
+        this.socketSendAll(DESKTOP_KEY, { clearWords: ids })
         return
       }
     })
     this.oracle.onRestored(count => {
       console.log('restore', count)
-      this.socketSendAll('api', { restoreWords: this.oracle.restoredIds })
+      this.socketSendAll(DESKTOP_KEY, { restoreWords: this.oracle.restoredIds })
     })
     this.oracle.onError(async error => {
       console.log('screen ran into err, restart', error)
@@ -256,7 +256,7 @@ export default class ScreenState {
     // sends over (oldState, changedState, newState)
     this.onChangedState(oldState, object, this.state)
     // only send the changed things to reduce overhead
-    this.socketSendAll('api', object)
+    this.socketSendAll(DESKTOP_KEY, object)
   }
 
   onChangedState = async (oldState, newState) => {
@@ -363,7 +363,7 @@ export default class ScreenState {
 
   socketSend = (socket, state: Object) => {
     try {
-      socket.send(JSON.stringify({ source: 'api', state }))
+      socket.send(JSON.stringify({ source: DESKTOP_KEY, state }))
     } catch (err) {
       console.log('error with scoket', err.message, err.stack)
     }

@@ -15,7 +15,7 @@ import killPort from 'kill-port'
 
 const { SERVER_PORT } = Constants
 
-const log = debug('api')
+const log = debug('desktop')
 
 export default class Server {
   login = null

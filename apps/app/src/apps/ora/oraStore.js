@@ -79,7 +79,7 @@ export default class OraStore {
 
   async willMount() {
     // start watching for context
-    Screen.start()
+    Screen.start('app')
     // helper
     window.oraStore = this
     // listeners/watchers

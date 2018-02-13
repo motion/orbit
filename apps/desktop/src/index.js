@@ -11,11 +11,11 @@ if (!process.env.HAS_BABEL_POLYFILL) {
 }
 
 const Desktop = require('./desktop').default
-const Desktop = new Desktop()
+const dTop = new Desktop()
 
 const exitHandler = code => {
   console.log('exitHandler', code)
-  Desktop.dispose()
+  dTop.dispose()
   process.exit(code)
 }
 
@@ -46,7 +46,7 @@ process.on('unhandledRejection', function(reason, promise) {
 
 export async function run() {
   try {
-    await Desktop.start()
+    await dTop.start()
   } catch (err) {
     console.log('error', err)
   }

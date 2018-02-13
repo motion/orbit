@@ -7,7 +7,7 @@ import sudoPrompt_ from 'sudo-prompt'
 import debug from 'debug'
 import Screen from './screen'
 
-const log = debug('api')
+const log = debug('desktop')
 
 log('IS_PROD', Constants.IS_PROD)
 
@@ -26,7 +26,7 @@ export default class Desktop {
   async start() {
     this.setupHosts()
     const port = await this.server.start()
-    log(`starting api on ${port}`)
+    log(`starting desktop on ${port}`)
     this.screen.start()
   }
 

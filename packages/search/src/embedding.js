@@ -1,6 +1,6 @@
 import { minKBy, cosineSimilarity } from './helpers'
 import { store, watch } from '@mcro/black/store'
-import vectorsText from './vectors50k.txt'
+// import vectorsText from './vectors50k.txt'
 
 let vectorCache = null
 
@@ -25,14 +25,14 @@ export default class Embedding {
       return vectorCache
     }
     const vectors = {}
-    vectorsText.split('\n').forEach(line => {
-      const split = line.split(' ')
-      const word = split[0]
-      const vsList = new Uint16Array(
-        split.slice(1).map(i => Math.floor(+i * 100)),
-      )
-      vectors[word] = vsList
-    })
+    // vectorsText.split('\n').forEach(line => {
+    //   const split = line.split(' ')
+    //   const word = split[0]
+    //   const vsList = new Uint16Array(
+    //     split.slice(1).map(i => Math.floor(+i * 100)),
+    //   )
+    //   vectors[word] = vsList
+    // })
 
     vectorCache = vectors
 

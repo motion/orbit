@@ -34,8 +34,8 @@ class ScreenStore {
   appState = {}
 
   // state of api
-  apiState = {
-    desktopState: null,
+  desktopState = {
+    appState: null,
     ocrWords: null,
     linePositions: null,
     lastScreenChange: null,
@@ -68,7 +68,7 @@ class ScreenStore {
     if (!source) {
       throw new Error(`No source given for starting screen store`)
     }
-    const APP_SOURCE = ['desktop', 'electron', 'app', 'api']
+    const APP_SOURCE = ['desktop', 'electron', 'app']
     if (APP_SOURCE.indexOf(source) === -1) {
       throw new Error(`Source must match one of the apps: ${APP_SOURCE}`)
     }

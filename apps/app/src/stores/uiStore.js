@@ -65,8 +65,10 @@ export default class UIStore {
     this._watchTrayTitle()
     this.react(
       () => Screen.electronState.shouldHide,
-      hidden => Screen.setState({ hidden }),
-      true,
+      hidden => {
+        console.log('app is doing a thing', hidden)
+        Screen.setState({ hidden })
+      },
     )
   }
 

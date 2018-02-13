@@ -75,14 +75,14 @@ class ScreenStore {
   _queuedState = []
   _wsOpen = false
   _source = ''
-  _started = false
+  started = false
   _initialStateKeys = []
 
   // public
 
   // note: you have to call start to make it explicitly connect
   start(source: String, initialState: object) {
-    if (this._started) {
+    if (this.started) {
       throw new Error(`Already started screen`)
     }
     if (!source) {
@@ -97,7 +97,7 @@ class ScreenStore {
       console.log('already started')
       return
     }
-    this._started = true
+    this.started = true
     // set initial state synchronously before
     if (initialState) {
       this._initialStateKeys = Object.keys(initialState)
@@ -109,7 +109,7 @@ class ScreenStore {
   // this will go up to api and back down to all screen stores
   // set is only allowed from the source its set as initially
   setState(state: Object, internal = false): [String] {
-    if (!this._started) {
+    if (!this.started) {
       throw new Error(`Called Screen.setState before calling Screen.start`)
     }
     // update our own state immediately so its sync

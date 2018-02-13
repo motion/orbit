@@ -1,7 +1,9 @@
 #!/bin/bash
 
 function kill-electron() {
-  kill -9 $(ps aux | grep 'node electron' | awk '{print $2}')
+  electron_pid=$(ps aux | grep 'node electron' | awk '{print $2}')
+  echo "electron pid: $electron_pid"
+  kill -9 "$electron_pid"
 }
 
 WEB_ON=$(lsof -i TCP:3002 | wc -c)

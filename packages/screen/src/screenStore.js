@@ -16,47 +16,28 @@ export SwiftBridge from './swiftBridge'
 
 @store
 class ScreenStore {
-  // things we expect to by synced must be defined here
   // state of electron
-  electronState = {
-    peekState: {},
-    showDevTools: null,
-    restart: null,
-    loadSettings: null,
-    showSettings: null,
-    showSettingsDevTools: null,
-    size: null,
-    settingsPosition: null,
-    oraPosition: null,
-    lastMove: null,
-  }
-
+  electronState = {}
   // state of app
-  appState = {
-    pinned: false,
-    hidden: false,
-    preventElectronHide: true,
-    contextMessage: 'Orbit',
-    hoveredWord: null,
-  }
-
-  // state of api
+  appState = {}
+  // state of desktop
   desktopState = {
     appState: null,
     ocrWords: null,
     linePositions: null,
-    lastScreenChange: null,
     lastOCR: null,
+    lastScreenChange: null,
     mousePosition: {},
     keyboard: {},
-    highlightWords: {},
     clearWords: {},
     restoreWords: {},
+    // some test highlight words
+    highlightWords: {},
   }
-
   // swift state
   swiftState = {}
 
+  // this routes the current app state
   get state() {
     return this[`${this._source}State`]
   }
@@ -71,11 +52,15 @@ class ScreenStore {
   _queuedState = []
   _wsOpen = false
   _source = ''
+  _started = false
 
   // public
 
   // note: you have to call start to make it explicitly connect
-  async start(source: String) {
+  start(source: String, initialState: object) {
+    if (this._started) {
+      throw new Error(`Already started screen`)
+    }
     if (!source) {
       throw new Error(`No source given for starting screen store`)
     }
@@ -88,6 +73,50 @@ class ScreenStore {
       console.log('already started')
       return
     }
+    this._started = true
+    // set initial state synchronously before
+    if (initialState) {
+      this.setState(initialState)
+    }
+    this._setupSocket()
+  }
+
+  // this will go up to api and back down to all screen stores
+  // set is only allowed from the source its set as initially
+  setState(state: Object): [String] {
+    if (!this._started) {
+      throw new Error(`Called Screen.setState before calling Screen.start`)
+    }
+    // update our own state immediately so its sync
+    const changed = this._update(this._source, state)
+    if (!this._wsOpen) {
+      this._queuedState.push(state)
+      return []
+    }
+    if (changed.length) {
+      this.ws.send(JSON.stringify({ state, source: this._source }))
+    }
+    return changed
+  }
+
+  // private
+  // return keys of changed items
+  _update = (source: string, state: Object): [String] => {
+    if (!source) {
+      throw new Error(`No source provided in screenStore state update`)
+    }
+    const changed = []
+    for (const key of Object.keys(state)) {
+      const stateObj = this[`${source}State`]
+      if (!isEqual(stateObj[key], state[key])) {
+        stateObj[key] = state[key]
+        changed.push(key)
+      }
+    }
+    return changed
+  }
+
+  _setupSocket = async () => {
     if (typeof window === 'undefined') {
       await waitForPort('localhost', 40510)
     }
@@ -133,37 +162,6 @@ class ScreenStore {
       if (err.message.indexOf('ERR_CONNECTION_REFUSED')) return
       console.log('screenStore error', err)
     }
-  }
-
-  // this will go up to api and back down to all screen stores
-  // set is only allowed from the source its set as initially
-  setState(state: Object) {
-    if (!this._wsOpen) {
-      this._queuedState.push(state)
-      return
-    }
-    // update our own state immediately so its sync
-    if (this._update(this._source, state)) {
-      this.ws.send(JSON.stringify({ state, source: this._source }))
-    }
-    return this[`${this._source}State`]
-  }
-
-  // private
-  // return true if new value
-  _update = (source: string, state: Object) => {
-    if (!source) {
-      throw new Error(`No source provided in screenStore state update`)
-    }
-    let didUpdate = false
-    for (const key of Object.keys(state)) {
-      const stateObj = this[`${source}State`]
-      if (!isEqual(stateObj[key], state[key])) {
-        stateObj[key] = state[key]
-        didUpdate = true
-      }
-    }
-    return didUpdate
   }
 }
 

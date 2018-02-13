@@ -4,7 +4,27 @@ import { view } from '@mcro/black'
 
 @view.electron
 export default class MenuEl {
-  render(props) {
+  handleShowDevTools = () => {
+    if (Screen.state.showSettings) {
+      Screen.setState({
+        showSettingsDevTools: !Screen.state.showSettingsDevTools,
+      })
+    } else {
+      Screen.setState({ showDevTools: !Screen.state.showDevTools })
+    }
+  }
+
+  handleQuit = () => {
+    this.isClosing = true
+  }
+
+  handleClose = () => {
+    if (Screen.state.showSettings) {
+      this.handleSettingsVisibility(false)
+    }
+  }
+
+  render() {
     return (
       <Menu>
         <SubMenu label="Orbit">
@@ -12,14 +32,14 @@ export default class MenuEl {
           <MenuItem
             label="Preferences"
             accelerator="CmdOrCtrl+,"
-            onClick={props.onPreferences}
+            onClick={this.handlePreferences}
           />
           <MenuItems.Separator />
           <MenuItems.Hide />
           <MenuItems.HideOthers />
           <MenuItems.Unhide />
           <MenuItems.Separator />
-          <MenuItems.Quit onClick={props.onQuit} />
+          <MenuItems.Quit onClick={this.handleQuit} />
         </SubMenu>
         <SubMenu label="Edit">
           <MenuItems.Undo />
@@ -32,12 +52,15 @@ export default class MenuEl {
         </SubMenu>
         <SubMenu label="Window">
           <MenuItems.ToggleFullscreen />
-          <MenuItems.Close accelerator="CmdOrCtrl+w" onClick={props.onClose} />
+          <MenuItems.Close
+            accelerator="CmdOrCtrl+w"
+            onClick={this.handleClose}
+          />
           <MenuItems.Minimize />
           <MenuItem
             label="Show Dev Tools"
             accelerator="CmdOrCtrl+Option+i"
-            onClick={props.onShowDevTools}
+            onClick={this.handleShowDevTools}
           />
         </SubMenu>
       </Menu>

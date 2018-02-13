@@ -62,6 +62,8 @@ export default class ScreenState {
     lastScreenChange: Date.now(),
     mousePosition: { x: 0, y: 0 },
     keyboard: {},
+    clearWords: {},
+    restoreWords: {},
     // some test highlight words
     highlightWords: {
       seen: true,
@@ -140,14 +142,6 @@ export default class ScreenState {
           this.resetHighlights()
           this.rescanApp()
         }
-      }
-    })
-    this.oracle.onChangedIds(ids => {
-      console.log('clear ids', ids)
-      const isOCR = this.watchSettings.name === 'OCR'
-      if (isOCR) {
-        this.socketSendAll(DESKTOP_KEY, { clearWords: ids })
-        return
       }
     })
     this.oracle.onRestored(count => {

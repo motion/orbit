@@ -2,21 +2,46 @@ import * as React from 'react'
 import { App } from '@mcro/reactron'
 import ShortcutsStore from '~/stores/shortcutsStore'
 import { view } from '@mcro/black'
-import Windows from './Windows'
-import Tray from './Tray'
+import Tray from './views/Tray'
+import MenuItems from './views/MenuItems'
+import HighlightsWindow from './views/HighlightsWindow'
+import OraWindow from './views/OraWindow'
+import PeekWindow from './views/PeekWindow'
+import SettingsWindow from './views/SettingsWindow'
 import * as Helpers from '~/helpers'
 import Screen from '@mcro/screen'
+import global from 'global'
+import { screen } from 'electron'
+import * as Constants from '~/constants'
 
 @view.provide({
   rootStore: class RootStore {
     error = null
     appRef = null
     oraRef = null
-    settingsVisible = false
 
     willMount() {
       global.rootStore = this
-      Screen.start('electron')
+
+      // setup initial state
+      const { position, size } = Helpers.getAppSize()
+      const screenSize = screen.getPrimaryDisplay().workAreaSize
+      const oraPosition = [screenSize.width - Constants.ORA_WIDTH, 20]
+      console.log('setting oraPosition', oraPosition)
+      Screen.start('electron', {
+        showDevTools: false,
+        restart: false,
+        loadSettings: false,
+        showSettings: false,
+        showSettingsDevTools: false,
+        lastMove: Date.now(),
+        show: true,
+        settingsPosition: position,
+        size,
+        screenSize,
+        oraPosition,
+      })
+
       new ShortcutsStore().emitter.on('shortcut', shortcut => {
         console.log('emit shortcut', shortcut)
         if (shortcut === 'Option+Space') {
@@ -27,6 +52,7 @@ import Screen from '@mcro/screen'
           this.toggleShown()
         }
       })
+
       // watch option hold
       let lastKeyboard = {}
       let optionDelay
@@ -99,7 +125,10 @@ import Screen from '@mcro/screen'
       console.log('hideOra')
       Screen.setState({ shouldHide: true })
       await Helpers.sleep(150) // animate
-      if (!this.settingsVisible && !Screen.appState.preventElectronHide) {
+      if (
+        !Screen.state.settingsVisible &&
+        !Screen.appState.preventElectronHide
+      ) {
         this.appRef.hide()
       }
     }
@@ -108,10 +137,6 @@ import Screen from '@mcro/screen'
       if (ref) {
         this.appRef = ref.app
       }
-    }
-
-    handleSettingsVisibility = isVisible => {
-      this.settingsVisible = isVisible
     }
 
     handleOraRef = ref => {
@@ -145,10 +170,11 @@ export default class Root extends React.Component {
         onQuit={rootStore.handleQuit}
         ref={rootStore.handleAppRef}
       >
-        <Windows
-          onOraRef={rootStore.handleOraRef}
-          onSettingsVisibility={rootStore.handleSettingsVisibility}
-        />
+        <MenuItems />
+        <HighlightsWindow />
+        <OraWindow onRef={rootStore.handleOraRef} />
+        <PeekWindow appPosition={Screen.state.oraPosition} />
+        <SettingsWindow />
         <Tray onClick={Screen.swiftBridge.toggle} />
       </App>
     )

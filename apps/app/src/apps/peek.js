@@ -2,10 +2,9 @@
 import * as React from 'react'
 import { view, watch } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { OS } from '~/helpers'
 import { Thing } from '~/app'
-import MarkdownRender from './markdownRenderer'
-import Conversation from './conversation'
+import MarkdownRender from './peek/markdownRenderer'
+import Conversation from './peek/conversation'
 import Mousetrap from 'mousetrap'
 import controlX from '~/../public/images/control-x.png'
 import controlY from '~/../public/images/control-y.png'
@@ -113,8 +112,10 @@ class WebView {
     }
 
     willMount() {
+      Screen.start('app')
       this.watchTab()
       this.watch(function watchPeek() {
+        console.log('Screen.appState.hoveredWord', Screen.appState.hoveredWord)
         this.handleNewPeek(Screen.appState.hoveredWord)
       })
       this.watch(function watchTear() {
@@ -142,7 +143,7 @@ class WebView {
       this.trap.reset()
     }
 
-    updateTarget = (target: Target) => {
+    handleNewPeek = (target: Target) => {
       this.curTarget = target
       if (target) {
         this.lastTarget = target

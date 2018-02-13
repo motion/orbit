@@ -2,7 +2,7 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import PaneView from '~/apps/ora/panes/pane'
-import * as CategoryPanes from './panes'
+import * as CategoryPanes from './settings/panes'
 import * as Constants from '~/constants'
 
 const itemProps = {

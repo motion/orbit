@@ -18,6 +18,7 @@
     "@mcro/passport-slack": "^1.5.1",
     "@mcro/oracle": "*",
     "@mcro/search": "^1.5.1",
+    "@mcro/screen": "*",
     "execa": "^0.9.0",
     "kill-port": "^1.1.0",
     "babel-polyfill": "^6.23.0",
@@ -49,6 +50,7 @@
     "source-map-support": "^0.4.16",
     "sudo-prompt": "^7.1.1",
     "wait-for-port": "^0.0.2",
-    "ws": "^3.3.3"
+    "ws": "^3.3.3",
+    "global": "^4.3.2"
   }
 }

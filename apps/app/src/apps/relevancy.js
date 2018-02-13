@@ -1,17 +1,58 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import RelevancyStore from './store'
+import SearchStore from '~/stores/searchStore'
+import * as ContentStore from '~/stores/contentStore'
+
+const hasString = (string, word) => string.indexOf(word) > -1
+const useWorker = !hasString(window.location + '', '?noWorker')
+const useDemo = true
 
 const makeBold = (input, toBold) => {
   return input.replace(
     new RegExp('(\\b)(' + toBold.join('|') + ')(\\b)', 'ig'),
-    '$1<b style="display: inline;">$2</b>$3'
+    '$1<b style="display: inline;">$2</b>$3',
   )
 }
 
 @view({
-  store: RelevancyStore,
+  store: class RelevancyStore {
+    query = ''
+    textboxVal = ''
+    results = []
+    search = new SearchStore({ useWorker })
+    autocomplete = []
+
+    async willMount() {
+      window.relevancy = this
+
+      await this.getData()
+      this.react(
+        () => this.query,
+        async () => {
+          const val = await this.search.getResults(this.query)
+          if (val === false) {
+            return false
+          }
+          this.results = val.results
+          this.autocomplete = val.autocomplete
+        },
+        true,
+      )
+    }
+
+    async getDropboxData() {
+      return await (await fetch('/dropbox.json')).json()
+    }
+
+    async getData() {
+      const documents = useDemo
+        ? ContentStore.things
+        : await this.getDropboxData()
+      this.documents = documents
+      this.search.setDocuments(documents)
+    }
+  },
 })
 export default class RelevancyPage {
   render({ store }) {
@@ -37,7 +78,7 @@ export default class RelevancyPage {
             {(store.results || []).map(
               (
                 { debug, item, toBold, matched, similarity, snippet },
-                index
+                index,
               ) => (
                 <item key={Math.random()}>
                   <UI.Title
@@ -51,7 +92,7 @@ export default class RelevancyPage {
                       dangerouslySetInnerHTML={{
                         __html: makeBold(
                           item.title + ' - ' + similarity,
-                          toBold
+                          toBold,
                         ),
                       }}
                     />
@@ -82,7 +123,7 @@ export default class RelevancyPage {
                   <br />
                   <UI.Title>matched: {JSON.stringify(matched)}</UI.Title>
                 </item>
-              )
+              ),
             )}
           </content>
         </relevancy>

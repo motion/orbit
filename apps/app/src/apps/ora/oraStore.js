@@ -78,8 +78,14 @@ export default class OraStore {
           .sort({ updatedAt: 'desc' })
 
   async willMount() {
-    // start watching for context
-    Screen.start('app')
+    // set initial state
+    Screen.start('app', {
+      pinned: false,
+      hidden: false,
+      preventElectronHide: true,
+      contextMessage: 'Orbit',
+      hoveredWord: null,
+    })
     // helper
     window.oraStore = this
     // listeners/watchers

@@ -2,6 +2,23 @@
 # yarn lockfile v1
 
 
+"@mcro/babel-preset-motion@*":
+  version "1.5.2"
+  resolved "https://registry.yarnpkg.com/@mcro/babel-preset-motion/-/babel-preset-motion-1.5.2.tgz#e511130096c4cb447532878973d503b646db2377"
+  dependencies:
+    "@mcro/gloss" "^1.5.1"
+    "@mcro/hmr" "^1.5.1"
+    "@mcro/hmr-view" "^1.5.1"
+    babel-plugin-root-import "^5.1.0"
+    babel-plugin-sitrep "^1.2.3"
+    babel-plugin-transform-class-properties "^6.24.1"
+    babel-plugin-transform-decorators-legacy-without-clutter "^1.3.4"
+    babel-plugin-transform-runtime "^6.23.0"
+    babel-preset-env "^1.6.0"
+    babel-preset-react "^6.24.1"
+    babel-preset-stage-1 "^6.24.1"
+    babel-preset-stage-1-without-async "^1.0.0"
+
 "@mcro/css@^1.5.1":
   version "1.5.1"
   resolved "https://registry.yarnpkg.com/@mcro/css/-/css-1.5.1.tgz#7f6017e3d2c4f9ccd59756df09cbe8e816bcad2f"
@@ -34,23 +51,6 @@
   resolved "https://registry.yarnpkg.com/@mcro/hmr/-/hmr-1.5.1.tgz#791be412772e843b20c909667544525dc03e5240"
   dependencies:
     lodash "^4.17.4"
-
-"@mcro/preset-motion@^1.2.0":
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/@mcro/preset-motion/-/preset-motion-1.5.1.tgz#6b889b6ac5842cd5a6321b46db6bef946620f595"
-  dependencies:
-    "@mcro/gloss" "^1.5.1"
-    "@mcro/hmr" "^1.5.1"
-    "@mcro/hmr-view" "^1.5.1"
-    babel-plugin-root-import "^5.1.0"
-    babel-plugin-sitrep "^1.2.3"
-    babel-plugin-transform-class-properties "^6.24.1"
-    babel-plugin-transform-decorators-legacy-without-clutter "^1.3.4"
-    babel-plugin-transform-runtime "^6.23.0"
-    babel-preset-env "^1.6.0"
-    babel-preset-react "^6.24.1"
-    babel-preset-stage-1 "^6.24.1"
-    babel-preset-stage-1-without-async "^1.0.0"
 
 "@most/multicast@^1.2.5":
   version "1.3.0"

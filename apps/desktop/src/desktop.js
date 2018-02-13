@@ -5,8 +5,10 @@ import * as Constants from '~/constants'
 import { promisifyAll } from 'sb-promisify'
 import sudoPrompt_ from 'sudo-prompt'
 import debug from 'debug'
-import Screen from './screen'
+import ScreenMaster from './screenMaster'
+import Screen from '@mcro/screen'
 import * as Helpers from '~/helpers'
+import { store } from '@mcro/black/store'
 
 const log = debug('desktop')
 
@@ -15,20 +17,21 @@ log('IS_PROD', Constants.IS_PROD)
 const hostile = promisifyAll(hostile_)
 const sudoPrompt = promisifyAll(sudoPrompt_)
 
+@store
 export default class Desktop {
   server: Server
   screen: Screen
 
   constructor() {
     this.server = new Server()
-    this.screen = new Screen()
+    this.screenMaster = new ScreenMaster()
   }
 
   async start() {
     this.setupHosts()
     const port = await this.server.start()
     log(`starting desktop on ${port}`)
-    this.screen.start()
+    this.screenMaster.start()
     this.watchBrowserOpen()
   }
 
@@ -38,7 +41,7 @@ export default class Desktop {
 
   dispose() {
     if (this.disposed) return
-    this.screen.dispose()
+    this.screenMaster.dispose()
     this.disposed = true
   }
 

@@ -2,10 +2,10 @@
 import Router from '@mcro/router'
 import SettingsPage from './apps/settings'
 import AuthPage from './apps/auth'
-import PeekPage from './apps/peek/peek'
+import PeekPage from './apps/peek'
 import OraPage from './apps/ora'
 import RelevancyPage from './apps/relevancy'
-import HighlightsPage from './apps/highlights/highlights'
+import HighlightsPage from './apps/highlights'
 
 function runRouter() {
   return new Router({

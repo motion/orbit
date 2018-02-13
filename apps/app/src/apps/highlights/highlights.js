@@ -1,7 +1,6 @@
 // @flow
 import * as React from 'react'
 import { view } from '@mcro/black'
-import * as Helpers from '~/helpers'
 import quadtree from 'simple-quadtree'
 import Screen from '@mcro/screen'
 
@@ -17,6 +16,8 @@ class HighlightsStore {
   }
   version = 0
   hoverEvents = {}
+  hoveredWord = null
+  hoveredLine = null
 
   // get ocrWords() {
   //   return (Screen.desktopState.ocrWords || []).filter(
@@ -35,16 +36,6 @@ class HighlightsStore {
     ]
   }
 
-  get wordHovered() {
-    const [x, y] = Screen.desktopState.mousePosition || []
-    return this.trees.word.get({ x, y, w: 0, h: 0 })
-  }
-
-  get lineHovered() {
-    const [x, y] = Screen.desktopState.mousePosition || []
-    return this.trees.line.get({ x, y: y - LINE_Y_ADJ, w: 0, h: 0 })
-  }
-
   get showAll() {
     const isTesting = this.ocrWords.length && this.ocrWords[0][5] === 'red'
     return isTesting ||
@@ -56,13 +47,31 @@ class HighlightsStore {
   willMount() {
     // start screen watching
     Screen.start('app')
+    // setup hover events
     this.react(() => ['word', this.ocrWords], this.setupHover, true)
     this.react(
       () => ['line', Screen.desktopState.linePositions],
       this.setupHover,
       true,
     )
-
+    // set hovered word/line
+    this.react(
+      () => Screen.desktopState.mousePosition || [],
+      ([x, y]) => {
+        this.hoveredWord = this.trees.word.get({ x, y, w: 0, h: 0 })
+        this.hoveredLine = this.trees.line.get({
+          x,
+          y: y - LINE_Y_ADJ,
+          w: 0,
+          h: 0,
+        })
+        Screen.setState({
+          hoveredWord: this.hoveredWord,
+          hoveredLine: this.hoveredLine,
+        })
+      },
+      true,
+    )
     // watch option hold
     this.react(
       () => Screen.desktopState.keyboard.option,
@@ -76,40 +85,26 @@ class HighlightsStore {
     if (!items) return
     if (!items.length) return
     this.trees[name].clear()
-    this.hoverEvents = items.reduce((acc, item) => {
-      const key = getKey(item)
-      // side effect
+    for (const item of items) {
       this.trees[name].put({
         x: item[0],
         y: item[1],
         w: item[2],
         h: item[3],
-        string: key,
+        string: getKey(item),
       })
-      return {
-        ...acc,
-        [key]: this.getHoverProps({ key, id: key }),
-      }
-    }, {})
+    }
   }
-
-  getHoverProps = Helpers.hoverSettler({
-    enterDelay: 300,
-    onHovered: object => {
-      console.log('Screen.hoveredWord', object)
-      Screen.setState({ hoveredWord: object })
-    },
-  })
 }
 
 @view
 class OCRWord {
-  render({ item, store: { wordHovered } }) {
+  render({ item, store: { hoveredWord } }) {
     const [x, y, width, height, word, color] = item
     const key = getKey(item)
     return (
       <word
-        $hovered={wordHovered.findIndex(x => x.string === key) >= 0}
+        $hovered={hoveredWord.findIndex(x => x.string === key) >= 0}
         $highlighted={Screen.desktopState.highlightWords[word]}
         style={{
           top: y - HL_PAD - TOP_BAR_PAD,
@@ -169,7 +164,7 @@ class OCRLine {
     const key = getKey(item)
     return (
       <ocrLine
-        $hoveredLine={store.lineHovered.findIndex(x => x.string === key) >= 0}
+        $hoveredLine={store.hoveredLine.findIndex(x => x.string === key) >= 0}
         style={{
           top: y - TOP_BAR_PAD + LINE_Y_ADJ,
           left: x,

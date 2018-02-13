@@ -30,6 +30,7 @@ export default class UIStore {
     hidden: false,
     preventElectronHide: true,
     contextMessage: 'Orbit',
+    hoveredWord: null,
   }
 
   get inputRef() {
@@ -234,9 +235,7 @@ export default class UIStore {
       ...newState,
     }
     // send screenStore.appState
-    screenStore.setState({
-      appState: this.state,
-    })
+    screenStore.setState(this.state)
   }
 
   handleInputRef = ref => {

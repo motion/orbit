@@ -31,6 +31,7 @@ class ScreenStore {
     screenSize: [],
     oraPosition: [],
     peekState: {},
+    shouldHide: null,
   }
   // state of app
   appState = {
@@ -194,8 +195,9 @@ class ScreenStore {
 }
 
 // singleton because
-
 const screenStore = new ScreenStore()
-global.screenStore = screenStore
+
+// yes were overwriting a global
+global.Screen = screenStore
 
 export default screenStore

@@ -64,8 +64,8 @@ export default class UIStore {
     this._watchContextMessage()
     this._watchTrayTitle()
     this.react(
-      () => Screen.electronStore.shouldHide,
-      val => (this.hidden = val),
+      () => Screen.electronState.shouldHide,
+      hidden => Screen.setState({ hidden }),
       true,
     )
   }
@@ -78,6 +78,12 @@ export default class UIStore {
   }
 
   handleSearchKeyDown = e => {
+    if (!Screen.desktopState.keyboard.option) {
+      console.log('setting to', e.target.value)
+      this.setTextboxVal(e.target.value)
+      return
+    }
+    // if holding option, translate from weird chars
     e.preventDefault()
     const { key, char } = whatKey(e)
     console.log('got', key, char)
@@ -240,6 +246,10 @@ export default class UIStore {
   }
 
   emitKeyCode = e => this.emit('keydown', keycode(e.keyCode))
+
+  toggleHidden = () => {
+    Screen.setState({ hidden: !Screen.state.hidden })
+  }
 
   hide = () => {
     Screen.setState({ hidden: true })

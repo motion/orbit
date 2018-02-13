@@ -31,6 +31,9 @@ class HighlightsStore {
   hoveredLine = null
 
   get ocrWords() {
+    if (Screen.swiftState.isPaused) {
+      return []
+    }
     return (Screen.desktopState.ocrWords || []).filter(
       (_, index) => !Screen.desktopState.clearWords[index],
     )
@@ -48,6 +51,9 @@ class HighlightsStore {
   // }
 
   get showAll() {
+    if (Screen.swiftState.isPaused) {
+      return false
+    }
     const isTesting = this.ocrWords.length && this.ocrWords[0][5] === 'red'
     return isTesting ||
       Screen.desktopState.lastOCR > Screen.desktopState.lastScreenChange

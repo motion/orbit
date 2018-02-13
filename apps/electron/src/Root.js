@@ -29,6 +29,7 @@ import * as Constants from '~/constants'
       const oraPosition = [screenSize.width - Constants.ORA_WIDTH, 20]
       console.log('setting oraPosition', oraPosition)
       Screen.start('electron', {
+        shouldHide: false,
         peekState: {},
         focused: false,
         showDevTools: false,
@@ -66,7 +67,6 @@ import * as Constants from '~/constants'
         if (!keyboard) {
           return
         }
-        console.log('got keyboard', keyboard, lastKeyboard)
         const { option, optionCleared } = keyboard
         if (Screen.appState.hidden) {
           // HIDDEN
@@ -99,13 +99,8 @@ import * as Constants from '~/constants'
     }
 
     toggleShown = async () => {
-      if (Screen.appState.pinned) {
-        return
-      }
-      if (!this.appRef) {
-        console.log('no app ref :(')
-        return
-      }
+      if (Screen.appState.pinned) return
+      if (!this.appRef) return
       if (!Screen.appState.hidden) {
         this.hideOra()
       } else {

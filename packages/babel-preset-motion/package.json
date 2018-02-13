@@ -1,7 +1,7 @@
 {
-  "name": "@mcro/preset-motion",
+  "name": "@mcro/babel-preset-motion",
   "main": "index.js",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "dependencies": {
     "@mcro/gloss": "^1.5.1",
     "@mcro/hmr": "^1.5.1",

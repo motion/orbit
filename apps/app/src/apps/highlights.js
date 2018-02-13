@@ -54,7 +54,7 @@ class HighlightsStore {
     if (Screen.swiftState.isPaused) {
       return false
     }
-    const isTesting = this.ocrWords.length && this.ocrWords[0][5] === 'red'
+    const isTesting = this.ocrWords.length && this.ocrWords[0].length === 4
     return isTesting ||
       Screen.desktopState.lastOCR > Screen.desktopState.lastScreenChange
       ? true

@@ -112,8 +112,14 @@ class WebView {
     }
 
     willMount() {
-      Screen.start('app')
-      this.watchTab()
+      Screen.start('app', {
+        closePeek: null,
+      })
+      this.watch(function watchTab() {
+        if (this.thing && !this.thing.body && this.thing.url) {
+          this.tab = 'webview'
+        }
+      })
       this.watch(function watchPeek() {
         console.log('Screen.appState.hoveredWord', Screen.appState.hoveredWord)
         this.handleNewPeek(Screen.appState.hoveredWord)
@@ -129,14 +135,6 @@ class WebView {
       this.setTimeout(() => {
         this.showWebview = true
       }, 150)
-    }
-
-    watchTab() {
-      this.watch(function watchTab() {
-        if (this.thing && !this.thing.body && this.thing.url) {
-          this.tab = 'webview'
-        }
-      })
     }
 
     willUnmount() {

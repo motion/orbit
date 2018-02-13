@@ -84,7 +84,6 @@ export default class OraStore {
       hidden: false,
       preventElectronHide: true,
       contextMessage: 'Orbit',
-      hoveredWord: null,
     })
     // helper
     window.oraStore = this

@@ -44,7 +44,7 @@ export default class Windows {
         showDevTools={Screen.state.showDevTools}
         size={[Constants.ORA_WIDTH, 1000]}
         file={`${Constants.APP_URL}`}
-        position={Screen.state.oraPosition}
+        position={Screen.state.oraPosition.slice(0)}
         onMoved={this.onOraMoved}
         onMove={this.onOraMoved}
         onBlur={this.onOraBlur}

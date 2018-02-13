@@ -5,7 +5,7 @@ import ReconnectingWebSocket from 'reconnecting-websocket'
 import WebSocket from './websocket'
 import _waitForPort from 'wait-for-port'
 import global from 'global'
-import { isEqual } from 'lodash'
+import { isEqual, difference } from 'lodash'
 
 const waitForPort = (domain, port) =>
   new Promise((res, rej) =>
@@ -17,9 +17,31 @@ export SwiftBridge from './swiftBridge'
 @store
 class ScreenStore {
   // state of electron
-  electronState = {}
+  electronState = {
+    show: null,
+    focused: null,
+    showDevTools: null,
+    restart: null,
+    loadSettings: null,
+    showSettings: null,
+    showSettingsDevTools: null,
+    lastMove: null,
+    settingsPosition: [],
+    size: [],
+    screenSize: [],
+    oraPosition: [],
+    peekState: {},
+  }
   // state of app
-  appState = {}
+  appState = {
+    hoveredWord: null,
+    hoveredLine: null,
+    pinned: null,
+    hidden: null,
+    preventElectronHide: null,
+    contextMessage: null,
+    closePeek: null,
+  }
   // state of desktop
   desktopState = {
     appState: null,
@@ -53,6 +75,7 @@ class ScreenStore {
   _wsOpen = false
   _source = ''
   _started = false
+  _initialStateKeys = []
 
   // public
 
@@ -76,6 +99,7 @@ class ScreenStore {
     this._started = true
     // set initial state synchronously before
     if (initialState) {
+      this._initialStateKeys = Object.keys(initialState)
       this.setState(initialState)
     }
     this._setupSocket()
@@ -83,12 +107,19 @@ class ScreenStore {
 
   // this will go up to api and back down to all screen stores
   // set is only allowed from the source its set as initially
-  setState(state: Object): [String] {
+  setState(state: Object, internal = false): [String] {
     if (!this._started) {
       throw new Error(`Called Screen.setState before calling Screen.start`)
     }
     // update our own state immediately so its sync
-    const changed = this._update(this._source, state)
+    const changed = this._update(this._source, state, internal)
+    // safety: only set what you start with
+    const outOfBoundsKeys = difference(changed, this._initialStateKeys)
+    if (outOfBoundsKeys.length) {
+      throw new Error(
+        `Screen.setState: set keys not set in the Screen.start() initial state: ${outOfBoundsKeys}`,
+      )
+    }
     if (!this._wsOpen) {
       this._queuedState.push(state)
       return []
@@ -132,9 +163,6 @@ class ScreenStore {
         const messageObj = JSON.parse(data)
         if (messageObj && typeof messageObj === 'object') {
           const { source, state } = messageObj
-          if (source === this._source) {
-            return // we already updated in setState
-          }
           this._update(source, state)
         } else {
           throw new Error(`Non-object received`)
@@ -150,7 +178,7 @@ class ScreenStore {
     this.ws.onopen = () => {
       this._wsOpen = true
       for (const object of this._queuedState) {
-        this.setState(object)
+        this.setState(object, true)
       }
       this._queuedState = []
     }

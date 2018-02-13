@@ -29,6 +29,8 @@ import * as Constants from '~/constants'
       const oraPosition = [screenSize.width - Constants.ORA_WIDTH, 20]
       console.log('setting oraPosition', oraPosition)
       Screen.start('electron', {
+        peekState: {},
+        focused: false,
         showDevTools: false,
         restart: false,
         loadSettings: false,
@@ -173,7 +175,7 @@ export default class Root extends React.Component {
         <MenuItems />
         <HighlightsWindow />
         <OraWindow onRef={rootStore.handleOraRef} />
-        <PeekWindow appPosition={Screen.state.oraPosition} />
+        <PeekWindow appPosition={Screen.state.oraPosition.slice(0)} />
         <SettingsWindow />
         <Tray onClick={Screen.swiftBridge.toggle} />
       </App>

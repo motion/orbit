@@ -3,7 +3,6 @@ import latinize from 'latinize'
 import * as React from 'react'
 import fuzzy_ from './fuzzy'
 
-export electron, { OS } from '~/helpers/electron'
 export hoverSettler from './hoverSettler'
 export logClass from './logClass'
 export IndexDB from './indexDB'

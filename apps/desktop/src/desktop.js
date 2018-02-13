@@ -6,6 +6,7 @@ import { promisifyAll } from 'sb-promisify'
 import sudoPrompt_ from 'sudo-prompt'
 import debug from 'debug'
 import Screen from './screen'
+import * as Helpers from '~/helpers'
 
 const log = debug('desktop')
 
@@ -28,6 +29,11 @@ export default class Desktop {
     const port = await this.server.start()
     log(`starting desktop on ${port}`)
     this.screen.start()
+    this.watchBrowserOpen()
+  }
+
+  watchBrowserOpen() {
+    this.react(() => Screen.appState.openBrowser, url => Helpers.open(url))
   }
 
   dispose() {

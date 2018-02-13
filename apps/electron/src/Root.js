@@ -4,9 +4,7 @@ import ShortcutsStore from '~/stores/shortcutsStore'
 import { view } from '@mcro/black'
 import Windows from './Windows'
 import Tray from './Tray'
-import { ipcMain } from 'electron'
 import * as Helpers from '~/helpers'
-import { debounce } from 'lodash'
 import Screen from '@mcro/screen'
 
 @view.provide({
@@ -29,7 +27,6 @@ import Screen from '@mcro/screen'
           this.toggleShown()
         }
       })
-      this.setupOraLink()
       // watch option hold
       let lastKeyboard = {}
       let optionDelay
@@ -70,18 +67,6 @@ import Screen from '@mcro/screen'
           }
         }
         lastKeyboard = keyboard
-      })
-    }
-
-    setupOraLink() {
-      this.on(ipcMain, 'start-ora', event => {
-        this.sendOra = (...args) => {
-          try {
-            event.sender.send(...args)
-          } catch (err) {
-            console.log('error sending ora message', err.message)
-          }
-        }
       })
     }
 

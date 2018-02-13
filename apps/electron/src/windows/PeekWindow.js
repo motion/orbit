@@ -1,7 +1,6 @@
 // @flow
 import * as React from 'react'
 import * as Constants from '~/constants'
-import { ipcMain } from 'electron'
 import { view } from '@mcro/black'
 import { Window } from '@mcro/reactron'
 import { isEqual, memoize } from 'lodash'

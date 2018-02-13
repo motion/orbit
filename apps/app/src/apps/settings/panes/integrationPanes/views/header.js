@@ -2,12 +2,12 @@ import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
 import { CurrentUser, Job } from '~/app'
-import { OS } from '~/helpers'
 import Logo from './logo'
 import { formatDistance } from 'date-fns'
 import { includes } from 'lodash'
 import r2 from '@mcro/r2'
 import * as Constants from '~/constants'
+import Screen from '@mcro/screen'
 
 class IntegrationHeaderStore {
   typeToJob = {
@@ -50,7 +50,7 @@ class IntegrationHeaderStore {
 
   checkAuths = async () => {
     const { error, ...authorizations } = await r2.get(
-      `${Constants.API_URL}/getCreds`
+      `${Constants.API_URL}/getCreds`,
     ).json
     if (error) {
       console.log('no creds')
@@ -61,7 +61,7 @@ class IntegrationHeaderStore {
 
   startOauth(integration) {
     if (Constants.IS_ELECTRON) {
-      OS.send('auth-open', integration)
+      Screen.setState({ authOpen: integration })
     } else {
       window.open(`${Constants.API_URL}/auth?service=${integration}`)
     }
@@ -69,7 +69,7 @@ class IntegrationHeaderStore {
       const authorizations = await this.checkAuths()
       if (authorizations && authorizations[integration]) {
         await CurrentUser.setAuthorizations(authorizations)
-        OS.send('auth-close', integration)
+        Screen.setState({ authClose: integration })
         clearInterval(checker)
       }
     }, 1000)

@@ -158,7 +158,6 @@ class WebView {
 
     handleMouseEnter = () => {
       if (!this.isTorn) {
-        // OS.send('peek-focus')
         clearTimeout(this.leftTimeout)
         this.isHovered = true
       }
@@ -202,7 +201,6 @@ class WebView {
 
     closePeek = () => {
       Screen.setState({ closePeek: KEY })
-      // OS.send('peek-close', KEY)
     }
   },
 })

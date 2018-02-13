@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { Window } from '@mcro/reactron'
 import * as Helpers from '~/helpers'
-import { ipcMain, screen } from 'electron'
+import { screen } from 'electron'
 import * as Constants from '~/constants'
-import { throttle, once } from 'lodash'
+import { once } from 'lodash'
 import MenuItems from './MenuItems'
 import { view } from '@mcro/black'
 import PeekWindow from './windows/PeekWindow'
@@ -73,11 +73,10 @@ export default class Windows extends React.Component {
   }
 
   listenToApps = () => {
-    this.on(ipcMain, 'open-settings', throttle(this.handlePreferences, 200))
-  }
-
-  handlePreferences = () => {
-    this.handleSettingsVisibility(true)
+    this.react(
+      () => Screen.appState.openSettings,
+      () => this.handleSettingsVisibility(true),
+    )
   }
 
   handleMenuQuit = () => {

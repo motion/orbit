@@ -1,6 +1,6 @@
 import { watch } from '@mcro/black'
 import { Thing } from '~/app'
-import { OS, contextToResult } from '~/helpers'
+import { contextToResult } from '~/helpers'
 import StackStore from '~/stores/stackStore'
 import CrawlerStore from '~/stores/crawlerStore'
 import PinStore from '~/stores/pinStore'
@@ -109,8 +109,6 @@ export default class OraStore {
         this.search.setQuery(this.ui.search)
       }
     })
-
-    OS.send('start-ora')
   }
 
   willUnmount() {
@@ -178,7 +176,7 @@ export default class OraStore {
 
   actions = {
     openSettings: () => {
-      OS.send('open-settings')
+      Screen.setState({ openSettings: Date.now() })
     },
     down: e => {
       if (this.stack.col === 0) {

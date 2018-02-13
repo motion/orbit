@@ -30,22 +30,22 @@ class HighlightsStore {
   hoveredWord = null
   hoveredLine = null
 
-  // get ocrWords() {
-  //   return (Screen.desktopState.ocrWords || []).filter(
-  //     (_, index) => !Screen.desktopState.clearWords[index],
-  //   )
-  // }
+  get ocrWords() {
+    return (Screen.desktopState.ocrWords || []).filter(
+      (_, index) => !Screen.desktopState.clearWords[index],
+    )
+  }
 
   // test words
-  get ocrWords() {
-    return [
-      [100, 60, 120, 10, 'xx', 'red'],
-      [1500, 60, 120, 10, 'xx', 'red'],
-      [1500, 1000, 120, 10, 'xx', 'red'],
-      [100, 1000, 120, 10, 'xx', 'red'],
-      [800, 500, 120, 10, 'xx', 'red'],
-    ]
-  }
+  // get ocrWords() {
+  //   return [
+  //     [100, 60, 120, 10, 'xx', 'red'],
+  //     [1500, 60, 120, 10, 'xx', 'red'],
+  //     [1500, 1000, 120, 10, 'xx', 'red'],
+  //     [100, 1000, 120, 10, 'xx', 'red'],
+  //     [800, 500, 120, 10, 'xx', 'red'],
+  //   ]
+  // }
 
   get showAll() {
     const isTesting = this.ocrWords.length && this.ocrWords[0][5] === 'red'

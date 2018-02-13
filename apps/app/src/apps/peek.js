@@ -125,7 +125,14 @@ class WebView {
         this.handleNewPeek(Screen.appState.hoveredWord)
       })
       this.watch(function watchTear() {
-        this.isTorn = Screen.electronState.peekState
+        if (!this.isTorn) {
+          const { peek } = Screen.electronState.peekState
+          console.log('i see peeks', peek)
+          if (peek && peek.isTorn) {
+            console.log('tearing!', Screen.electronState.peekState)
+            this.isTorn = true
+          }
+        }
       })
       this.trap = new Mousetrap(window)
       this.trap.bind('esc', () => {

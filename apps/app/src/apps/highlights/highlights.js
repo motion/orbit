@@ -71,12 +71,13 @@ class HighlightsStore {
         ...this.trees,
         ...Screen.desktopState.mousePosition,
       }),
-      ({ word, line, x, y }) => {
-        const hoveredWord = word.get({ x, y, w: 0, h: 0 })[0] || null
-        const hoveredLine =
-          line.get({ x, y: y - LINE_Y_ADJ, w: 0, h: 0 })[0] || null
-        this.hoveredWord = toTarget(hoveredWord)
-        this.hoveredLine = toTarget(hoveredLine)
+      function updateHovers({ word, line, x, y }) {
+        const hoveredWord = toTarget(word.get({ x, y, w: 0, h: 0 })[0])
+        const hoveredLine = toTarget(
+          line.get({ x, y: y - LINE_Y_ADJ, w: 0, h: 0 })[0],
+        )
+        this.hoveredWord = hoveredWord
+        this.hoveredLine = hoveredLine
         Screen.setState({ hoveredWord, hoveredLine })
         if (hoveredWord) {
           console.log('hoveredWord', hoveredWord)

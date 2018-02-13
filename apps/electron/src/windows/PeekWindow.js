@@ -142,9 +142,9 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
 
         this.setState({
           windows,
-          target,
           wasShowing,
           lastTarget: this.state.target,
+          target: hoveredWord,
         })
       },
     )

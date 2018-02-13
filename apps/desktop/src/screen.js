@@ -42,7 +42,7 @@ type TScreenState = {
   linePositions?: [Number],
   lastOCR: Number,
   lastScreenChange: Number,
-  mousePosition: [Number, Number],
+  mousePosition: { x: Number, y: Number },
   keyboard: Object,
   highlightWords: { [String]: boolean },
 }
@@ -60,7 +60,7 @@ export default class ScreenState {
     linePositions: null,
     lastOCR: Date.now(),
     lastScreenChange: Date.now(),
-    mousePosition: [0, 0],
+    mousePosition: { x: 0, y: 0 },
     keyboard: {},
     // some test highlight words
     highlightWords: {
@@ -227,7 +227,7 @@ export default class ScreenState {
       'mousemove',
       throttle(({ x, y }) => {
         this.updateState({
-          mousePosition: [x, y],
+          mousePosition: { x, y },
         })
       }, 64),
     )

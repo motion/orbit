@@ -55,8 +55,8 @@ module.exports = function(context, givenOpts) {
               ? ['transform-regenerator', 'transform-async-to-generator']
               : [],
           },
-          opts.env
-        )
+          opts.env,
+        ),
       ),
       getPlugin('babel-preset-react'),
       isAsync && getPlugin('babel-preset-stage-1-without-async'),

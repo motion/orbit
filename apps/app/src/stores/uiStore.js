@@ -61,7 +61,6 @@ export default class UIStore {
   }
 
   constructor({ oraStore }) {
-    console.log('constructo ui', oraStore)
     this.oraStore = oraStore
     this.stack = oraStore.stack
     this.attachTrap('window', window)

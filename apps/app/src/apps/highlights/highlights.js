@@ -56,19 +56,20 @@ class HighlightsStore {
     )
     // set hovered word/line
     this.react(
-      () => Screen.desktopState.mousePosition || [],
-      ([x, y]) => {
-        this.hoveredWord = this.trees.word.get({ x, y, w: 0, h: 0 })
-        this.hoveredLine = this.trees.line.get({
-          x,
-          y: y - LINE_Y_ADJ,
-          w: 0,
-          h: 0,
-        })
-        Screen.setState({
-          hoveredWord: this.hoveredWord,
-          hoveredLine: this.hoveredLine,
-        })
+      () => ({
+        ...this.trees,
+        ...Screen.desktopState.mousePosition,
+      }),
+      ({ word, line, x, y }) => {
+        const hoveredWord = word.get({ x, y, w: 0, h: 0 })[0] || null
+        const hoveredLine =
+          line.get({ x, y: y - LINE_Y_ADJ, w: 0, h: 0 })[0] || null
+        this.hoveredWord = hoveredWord
+        this.hoveredLine = hoveredLine
+        Screen.setState({ hoveredWord, hoveredLine })
+        if (hoveredWord) {
+          console.log('hoveredWord', hoveredWord)
+        }
       },
       true,
     )
@@ -104,7 +105,7 @@ class OCRWord {
     const key = getKey(item)
     return (
       <word
-        $hovered={hoveredWord.findIndex(x => x.string === key) >= 0}
+        $hovered={hoveredWord && hoveredWord.string === key}
         $highlighted={Screen.desktopState.highlightWords[word]}
         style={{
           top: y - HL_PAD - TOP_BAR_PAD,
@@ -159,12 +160,12 @@ class Words {
 
 @view
 class OCRLine {
-  render({ item, store }) {
+  render({ item, store: { hoveredLine } }) {
     const [x, y, width, height] = item
     const key = getKey(item)
     return (
       <ocrLine
-        $hoveredLine={store.hoveredLine.findIndex(x => x.string === key) >= 0}
+        $hoveredLine={hoveredLine && hoveredLine.string === key}
         style={{
           top: y - TOP_BAR_PAD + LINE_Y_ADJ,
           left: x,

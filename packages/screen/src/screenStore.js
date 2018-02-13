@@ -41,7 +41,7 @@ class ScreenStore {
     linePositions: null,
     lastScreenChange: null,
     lastOCR: null,
-    mousePosition: null,
+    mousePosition: {},
     keyboard: {},
     highlightWords: {},
     clearWords: {},
@@ -74,7 +74,6 @@ class ScreenStore {
       throw new Error(`Source must match one of the apps: ${APP_SOURCE}`)
     }
     this._source = source
-    console.log('starting screen...')
     if (this.ws) {
       console.log('already started')
       return

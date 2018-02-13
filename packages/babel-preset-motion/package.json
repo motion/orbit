@@ -1,6 +1,6 @@
 {
   "name": "@mcro/preset-motion",
-  "main": "src/index.js",
+  "main": "index.js",
   "version": "1.5.1",
   "dependencies": {
     "@mcro/gloss": "^1.5.1",

@@ -53,7 +53,6 @@ export default class UIStore {
     this.oraStore = oraStore
     this.stack = oraStore.stack
     this.attachTrap('window', window)
-    this.setState({}) // trigger first send
   }
 
   willMount() {
@@ -120,7 +119,7 @@ export default class UIStore {
         const contextMessage = Object.keys(counts).map(
           key => `${counts[key]} ${_.capitalize(pluralize(key))}`,
         )
-        this.setState({
+        Screen.setState({
           contextMessage: contextMessage.join(', '),
         })
       }
@@ -128,7 +127,7 @@ export default class UIStore {
   }
 
   togglePinned = () => {
-    this.setState({ pinned: !Screen.state.pinned })
+    Screen.setState({ pinned: !Screen.state.pinned })
   }
 
   _watchContextMessage() {
@@ -141,10 +140,9 @@ export default class UIStore {
         const contextMessage = `${activeStore.title}: ${
           activeStore.results.length
         } items`
-        Screen.state = {
-          ...Screen.state,
+        Screen.setState({
           contextMessage,
-        }
+        })
       }
     })
   }
@@ -221,15 +219,6 @@ export default class UIStore {
     },
   }
 
-  setState = newState => {
-    Screen.state = {
-      ...Screen.state,
-      ...newState,
-    }
-    // send Screen.appState
-    Screen.setState(Screen.state)
-  }
-
   handleInputRef = ref => {
     if (ref && this.inputRef !== ref) {
       this.inputRef = ref
@@ -253,7 +242,7 @@ export default class UIStore {
   emitKeyCode = e => this.emit('keydown', keycode(e.keyCode))
 
   hide = () => {
-    this.setState({ hidden: true })
+    Screen.setState({ hidden: true })
   }
 
   _watchBarFocus() {

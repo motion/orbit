@@ -80,7 +80,7 @@ function compile-root-modules() {
     --scope @mcro/css \
     --scope @mcro/hmr \
     --scope @mcro/hmr-view \
-    --scope @mcro/preset-motion \
+    --scope @mcro/babel-preset-motion \
     --scope @mcro/builder \
       -- \
         BABEL_ENV=es6 babel src --out-dir es6 -s true
@@ -92,7 +92,7 @@ function link-root-modules() {
   yarn link @mcro/css &
   yarn link @mcro/hmr &
   yarn link @mcro/hmr-view &
-  yarn link @mcro/preset-motion &
+  yarn link @mcro/babel-preset-motion &
   wait
 }
 

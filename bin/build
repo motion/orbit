@@ -38,7 +38,7 @@ function build-dev() {
     --ignore @mcro/builder \
     --ignore @mcro/hmr \
     --ignore @mcro/hmr-view \
-    --ignore @mcro/preset-motion \
+    --ignore @mcro/babel-preset-motion \
       -- \
       babel src --out-dir lib -s true ${@:1}
 }
@@ -54,7 +54,7 @@ function build-es6() {
     --ignore @mcro/constants \
     --ignore @mcro/screendump \
     --ignore @mcro/site \
-    --ignore @mcro/preset-motion \
+    --ignore @mcro/babel-preset-motion \
     --ignore @mcro/ui \
     --ignore @mcro/router \
     --ignore @mcro/automagical \
@@ -80,7 +80,7 @@ function build-prod() {
     --ignore @mcro/builder \
     --ignore @mcro/hmr \
     --ignore @mcro/hmr-view \
-    --ignore @mcro/preset-motion \
+    --ignore @mcro/babel-preset-motion \
       -- \
         BABEL_ENV=production babel src --out-dir dist -s true ${@:1}
 }

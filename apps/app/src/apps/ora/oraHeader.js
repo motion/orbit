@@ -4,7 +4,7 @@ import * as UI from '@mcro/ui'
 import { CurrentUser } from '~/app'
 import * as Constants from '~/constants'
 import OraBanner from './oraBanner'
-import Screen from '@mcro/screen-store'
+import Screen from '@mcro/screen'
 
 const iconProps = {
   color: [255, 255, 255, 0.5],

@@ -5,14 +5,13 @@ import Screen from '@mcro/screen'
 
 @view.electron
 export default class MenuEl {
-  handleShowDevTools = () => {
-    if (Screen.state.showSettings) {
-      Screen.setState({
-        showSettingsDevTools: !Screen.state.showSettingsDevTools,
-      })
-    } else {
-      Screen.setState({ showDevTools: !Screen.state.showDevTools })
-    }
+  toggleDevTools = appName => () => {
+    Screen.setState({
+      showDevTools: {
+        ...Screen.state.showDevTools,
+        [appName]: !Screen.state.showDevTools[appName],
+      },
+    })
   }
 
   handleQuit = () => {
@@ -59,9 +58,17 @@ export default class MenuEl {
           />
           <MenuItems.Minimize />
           <MenuItem
-            label="Show Dev Tools"
+            label="Show Dev Tools [App]"
             accelerator="CmdOrCtrl+Option+i"
-            onClick={this.handleShowDevTools}
+            onClick={this.toggleDevTools('app')}
+          />
+          <MenuItem
+            label="Show Dev Tools [Peek]"
+            onClick={this.toggleDevTools('peek')}
+          />
+          <MenuItem
+            label="Show Dev Tools [Highlights]"
+            onClick={this.toggleDevTools('highlights')}
           />
         </SubMenu>
       </Menu>

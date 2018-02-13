@@ -1,18 +1,15 @@
+// @flow
 import { observable, computed, action, autorun } from 'mobx'
 import Router from './router'
 import browserHistory from 'history/createBrowserHistory'
 
-export Router from './router'
-
 const properRoute = path => (path.indexOf('/') === 0 ? path : `/${path}`)
-
 const LENGTH_KEY = 'router.historyLength'
-
 const historyLength = 0 //Number(localStorage.getItem(LENGTH_KEY)) || 0
 const historyDirection = val =>
   localStorage.setItem(
     LENGTH_KEY,
-    Number(localStorage.getItem(LENGTH_KEY)) + val
+    Number(localStorage.getItem(LENGTH_KEY)) + val,
   )
 
 export class ObservableRouter {
@@ -29,20 +26,25 @@ export class ObservableRouter {
   constructor({ routes, history }) {
     this.routes = routes
     this.history = history || browserHistory()
-
-    const routeHandlers = Object.keys(routes).reduce(
-      (acc, path) => ({
-        ...acc,
-        [properRoute(path)]: params => this.setRoute(path, params),
-      }),
-      {}
-    )
-
+    // setup router
     this.router = new Router({
-      routes: routeHandlers,
       history: this.history,
+      routes: Object.keys(routes).reduce(
+        (acc, path) => ({
+          ...acc,
+          [properRoute(path)]: async params => {
+            // support async routes
+            if (routes[path] instanceof Promise) {
+              console.log('await route')
+              await routes[path]
+            }
+            this.setRoute(path, params)
+          },
+        }),
+        {},
+      ),
     })
-
+    // watch to update routes
     autorun(() => {
       if (this.path !== window.location.pathname || this.forceUpdate) {
         historyDirection(1)
@@ -100,7 +102,6 @@ export class ObservableRouter {
   @action
   go = (...segments) => {
     let path = segments.join('/')
-
     if (path.indexOf(window.location.origin) === 0) {
       path = path.replace(window.location.origin, '')
     } else {
@@ -119,16 +120,13 @@ export class ObservableRouter {
   @action
   set = (key, val) => {
     const Route = this.router.routeTable[`/${this.route}`]
-
     const params =
       typeof key === 'object' ? this.setObject(key) : this.setParam(key, val)
-
     const newPath = Route.stringify(params)
-
     if (newPath !== this.path) {
       this.path = newPath
     }
-  };
+  }
 
   normalizeParams = (params: Object): Object => {
     // remove false/null

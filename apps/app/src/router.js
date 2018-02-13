@@ -1,21 +1,15 @@
 // @flow
 import Router from '@mcro/router'
-import SettingsPage from './apps/settings'
-import AuthPage from './apps/auth'
-import PeekPage from './apps/peek'
-import OraPage from './apps/ora'
-import RelevancyPage from './apps/relevancy'
-import HighlightsPage from './apps/highlights'
 
 function runRouter() {
   return new Router({
     routes: {
-      '/': OraPage,
-      '/settings': SettingsPage,
-      '/relevancy': RelevancyPage,
-      '/auth': AuthPage,
-      '/peek': PeekPage,
-      '/highlights': HighlightsPage,
+      '/': require('./apps/ora').default,
+      '/settings': require('./apps/settings').default,
+      '/relevancy': require('./apps/relevancy').default,
+      '/auth': require('./apps/auth').default,
+      '/peek': require('./apps/peek').default,
+      '/highlights': require('./apps/highlights').default,
     },
   })
 }

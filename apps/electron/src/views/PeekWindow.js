@@ -229,7 +229,9 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
           return (
             <Window
               key={key}
-              showDevTools={true || peek.showDevTools}
+              showDevTools={
+                isAttached ? Screen.state.showDevTools.peek : peek.showDevTools
+              }
               alwaysOnTop={isAttached || peek.alwaysOnTop}
               animatePosition={this.state.wasShowing}
               show={peek.show}

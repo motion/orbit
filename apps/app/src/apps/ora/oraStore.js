@@ -20,21 +20,10 @@ const useWorker = window.location.href.indexOf('?noWorker')
 let dragListeners = []
 window.addDragListener = window.addDragListener || (x => dragListeners.push(x))
 
-// set initial state
-if (!Screen.started) {
-  Screen.start('app', {
-    pinned: false,
-    hidden: false,
-    preventElectronHide: true,
-    contextMessage: 'Orbit',
-  })
-}
-
 export default class OraStore {
   // stores
   crawler = new CrawlerStore()
   stack = new StackStore([{ type: 'main', id: 0 }])
-  ui = new UIStore({ oraStore: this })
   pin = new PinStore()
   search = new SearchStore({ useWorker })
 
@@ -88,6 +77,19 @@ export default class OraStore {
           .sort({ updatedAt: 'desc' })
 
   async willMount() {
+    // set initial state
+    if (!Screen.started) {
+      Screen.start('app', {
+        pinned: false,
+        hidden: false,
+        preventElectronHide: true,
+        contextMessage: 'Orbit',
+      })
+    }
+
+    // start this after screen
+    this.ui = new UIStore({ oraStore: this })
+
     // helper
     window.oraStore = this
     // listeners/watchers

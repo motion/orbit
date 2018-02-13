@@ -41,7 +41,7 @@ export default class Windows {
         show
         alwaysOnTop
         hasShadow={false}
-        showDevTools={true || Screen.state.showDevTools}
+        showDevTools={Screen.state.showDevTools.app}
         size={[Constants.ORA_WIDTH, 1000]}
         file={`${Constants.APP_URL}`}
         position={Screen.state.oraPosition.slice(0)}

@@ -20,11 +20,10 @@ class ScreenStore {
   electronState = {
     show: null,
     focused: null,
-    showDevTools: null,
     restart: null,
     loadSettings: null,
     showSettings: null,
-    showSettingsDevTools: null,
+    showDevTools: {},
     lastMove: null,
     settingsPosition: [],
     size: [],

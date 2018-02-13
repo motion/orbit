@@ -11,7 +11,7 @@
     "react-dom": "^16.2.0"
   },
   "devDependencies": {
-    "@mcro/babel-preset-motion": "^1.2.0",
+    "@mcro/babel-preset-motion": "*",
     "babel-cli": "^6.23.0",
     "babel-eslint": "^7.2.3",
     "babel-plugin-transform-es3-member-expression-literals": "^6.22.0",

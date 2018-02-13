@@ -5,6 +5,7 @@ import ReconnectingWebSocket from 'reconnecting-websocket'
 import WebSocket from './websocket'
 import _waitForPort from 'wait-for-port'
 import global from 'global'
+import { isEqual } from 'lodash'
 
 const waitForPort = (domain, port) =>
   new Promise((res, rej) =>
@@ -93,6 +94,9 @@ class ScreenStore {
         const messageObj = JSON.parse(data)
         if (messageObj && typeof messageObj === 'object') {
           const { source, state } = messageObj
+          if (source === this._source) {
+            return // we already updated in setState
+          }
           this._update(source, state)
         } else {
           throw new Error(`Non-object received`)
@@ -129,17 +133,29 @@ class ScreenStore {
       this._queuedState.push(state)
       return
     }
-    return this.ws.send(JSON.stringify({ state, source: this._source }))
+    // update our own state immediately so its sync
+    const updated = this._update(this._source, state)
+    if (updated) {
+      this.ws.send(JSON.stringify({ state, source: this._source }))
+    }
+    return this[`${this._source}State`]
   }
 
   // private
+  // return true if new value
   _update = (source: string, state: Object) => {
     if (!source) {
       throw new Error(`No source provided in screenStore state update`)
     }
+    let didUpdate = false
     for (const key of Object.keys(state)) {
-      this[`${source}State`][key] = state[key]
+      const stateObj = this[`${source}State`]
+      if (!isEqual(stateObj[key], state[key])) {
+        stateObj[key] = state[key]
+        didUpdate = true
+      }
     }
+    return didUpdate
   }
 }
 

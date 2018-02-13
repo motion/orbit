@@ -5,7 +5,6 @@ import { isEqual, throttle, last } from 'lodash'
 import iohook from 'iohook'
 import * as Constants from '~/constants'
 import killPort from 'kill-port'
-import Auth from './auth'
 
 const PORT = 40510
 const DESKTOP_KEY = 'desktop'
@@ -54,7 +53,6 @@ export default class ScreenState {
   activeSockets = []
   curState = {}
   watchSettings = {}
-  auth = null
 
   state: TScreenState = {
     appState: null,
@@ -85,7 +83,6 @@ export default class ScreenState {
     // and kill anything on this port
     await killPort(PORT)
     this.wss = new Server({ port: PORT })
-    this.auth = new Auth({ socket: this.wss })
     this.setupSocket()
     this.stopped = false
     this.oracle.onWords(words => {

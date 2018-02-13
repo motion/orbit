@@ -3,11 +3,11 @@ import { Tray } from '@mcro/reactron'
 import { view } from '@mcro/black'
 import Path from 'path'
 import * as Constants from '~/constants'
+import Screen from '@mcro/screen'
 
-@view.attach('rootStore')
 @view.electron
 export default class TrayEl {
-  render({ rootStore, ...props }) {
+  render(props) {
     return (
       <Tray
         image={Path.join(
@@ -17,9 +17,9 @@ export default class TrayEl {
           'orbitTemplate.png',
         )}
         title={
-          rootStore.screen.swiftBridge.state.isPaused
+          Screen.swiftState.isPaused
             ? 'Paused'
-            : rootStore.screen.appState.contextMessage || 'Orbit'
+            : Screen.appState.contextMessage || 'Orbit'
         }
         {...props}
       />

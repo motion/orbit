@@ -7,11 +7,10 @@ import Tray from './Tray'
 import { ipcMain } from 'electron'
 import * as Helpers from '~/helpers'
 import { debounce } from 'lodash'
-import screenStore from '@mcro/screen-store'
+import Screen from '@mcro/screen'
 
 @view.provide({
   rootStore: class RootStore {
-    screen = screenStore
     // used to generically talk to browser
     sendOra = null
 
@@ -22,34 +21,31 @@ import screenStore from '@mcro/screen-store'
 
     willMount() {
       global.rootStore = this
-      this.screen.start('electron')
+      Screen.start('electron')
       new ShortcutsStore().emitter.on('shortcut', shortcut => {
         console.log('emit shortcut', shortcut)
-        this.emit('shortcut', shortcut)
-      })
-      this.setupOraLink()
-      this.on('shortcut', shortcut => {
         if (shortcut === 'Option+Space') {
-          if (this.screen.keyboard.option) {
+          if (Screen.desktopState.keyboard.option) {
             console.log('avoid toggle while holding option')
             return
           }
           this.toggleShown()
         }
       })
+      this.setupOraLink()
       // watch option hold
       let lastKeyboard = {}
       let optionDelay
       let justCleared = false
       this.react(
-        () => this.screen.keyboard,
+        () => Screen.desktopState.keyboard,
         keyboard => {
           if (!keyboard) {
             return
           }
           console.log('got keyboard', keyboard, lastKeyboard)
           const { option, optionCleared } = keyboard
-          if (this.screen.appState.hidden) {
+          if (Screen.appState.hidden) {
             // HIDDEN
             // clear last if not opened yet
             if (optionCleared) {
@@ -93,14 +89,14 @@ import screenStore from '@mcro/screen-store'
     }
 
     toggleShown = debounce(async () => {
-      if (this.screen.appState.pinned) {
+      if (Screen.appState.pinned) {
         return
       }
       if (!this.appRef) {
         console.log('no app ref :(')
         return
       }
-      if (!this.screen.appState.hidden) {
+      if (!Screen.appState.hidden) {
         this.hideOra()
       } else {
         this.showOra()
@@ -121,7 +117,7 @@ import screenStore from '@mcro/screen-store'
       console.log('hideOra')
       await this.sendOra('ora-toggle')
       await Helpers.sleep(150)
-      if (!this.settingsVisible && !this.screen.appState.preventElectronHide) {
+      if (!this.settingsVisible && !Screen.appState.preventElectronHide) {
         this.appRef.hide()
       }
     }
@@ -171,7 +167,7 @@ export default class Root extends React.Component {
           onOraRef={rootStore.handleOraRef}
           onSettingsVisibility={rootStore.handleSettingsVisibility}
         />
-        <Tray onClick={rootStore.screen.swiftBridge.toggle} />
+        <Tray onClick={Screen.swiftBridge.toggle} />
       </App>
     )
   }

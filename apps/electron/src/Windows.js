@@ -8,14 +8,10 @@ import MenuItems from './MenuItems'
 import { view } from '@mcro/black'
 import PeekWindow from './windows/PeekWindow'
 import HighlightsWindow from './windows/HighlightsWindow'
+import Screen from '@mcro/screen'
 
-@view.attach('rootStore')
 @view.electron
 export default class Windows extends React.Component {
-  get rootStore() {
-    return this.props.rootStore
-  }
-
   state = {
     showDevTools: false,
     restart: false,
@@ -31,7 +27,7 @@ export default class Windows extends React.Component {
   // sync local state here to screenStore.electronState
   async updateState(state) {
     await new Promise(res => this.setState(state, res))
-    this.rootStore.screen.setState(this.state)
+    Screen.setState(this.state)
   }
 
   componentWillMount() {
@@ -74,10 +70,6 @@ export default class Windows extends React.Component {
     if (win && electron && !win.ref) {
       win.ref = electron
     }
-  }
-
-  handlePeekWindows = peekWindows => {
-    this.updateState({ peekWindows })
   }
 
   listenToApps = () => {
@@ -164,10 +156,7 @@ export default class Windows extends React.Component {
           onFocus={this.onOraFocus}
           devToolsExtensions={Helpers.getExtensions(['mobx', 'react'])}
         />
-        <PeekWindow
-          appPosition={this.state.oraPosition}
-          onWindows={this.handlePeekWindows}
-        />
+        <PeekWindow appPosition={this.state.oraPosition} />
         {/* SETTINGS PANE: */}
         {this.state.loadSettings && (
           <Window

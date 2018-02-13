@@ -6,7 +6,7 @@ import { view } from '@mcro/black'
 import { Window } from '@mcro/reactron'
 import { isEqual, memoize } from 'lodash'
 import * as Helpers from '~/helpers'
-import screenStore from '@mcro/screen-store'
+import Screen from '@mcro/screen'
 
 const idFn = _ => _
 
@@ -32,7 +32,6 @@ type PeekTarget = {
 function getPeekPosition(peekTarget: PeekTarget) {
   const [peekW, peekH] = Constants.PEEK_DIMENSIONS
   const [screenW, screenH] = Helpers.getScreenSize()
-  const halfHeight = screenH / 2
   const halfWidth = screenW / 2
 
   // start: target is to right
@@ -65,7 +64,7 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
   isAnimatingPeek = true
 
   state = {
-    peeks: [
+    windows: [
       {
         key: this.peekKey,
         size: Constants.PEEK_DIMENSIONS,
@@ -92,20 +91,22 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
     }
   }
 
-  lastSent = this.state.peeks
+  lastSent = this.state.windows
 
   componentDidUpdate() {
-    if (!isEqual(this.lastSent, this.state.peeks)) {
-      this.props.onWindows(this.state.peeks)
-      this.lastSent = this.state.peeks
+    if (!isEqual(this.lastSent, this.state.windows)) {
+      this.props.onWindows(this.state.windows)
+      this.lastSent = this.state.windows
     }
+    // update electronApp.peekState
+    Screen.setState({ peekState: this.state })
   }
 
   peekSend = () => console.log('peekSend, not started yet')
 
   watchHovers() {
     this.react(
-      () => screenStore.appState.hoveredWord,
+      () => Screen.appState.hoveredWord,
       hovered => {
         console.log('we got a peek yo', hovered)
       },
@@ -113,7 +114,7 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
 
     // peek stuff
     this.on(ipcMain, 'peek-target', (event, target: PeekTarget) => {
-      const peeks = [...this.state.peeks]
+      const windows = [...this.state.peeks]
       const peek = peeks[0]
       console.log('got peek', target, 'for peek', peek)
 
@@ -140,31 +141,24 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
       }, 350)
 
       this.setState({
-        peeks,
+        windows,
         target,
         wasShowing,
         lastTarget: this.state.target,
       })
-      this.peekSend('peek-to', { target, peek })
+      // this.peekSend('peek-to', { target, peek })
     })
-    this.on(ipcMain, 'peek-start', event => {
-      this.peekSend = (name, val) => {
-        try {
-          event.sender.send(name, val)
-        } catch (err) {
-          console.log('peeksenderr', err)
-        }
-      }
-    })
-    this.on(ipcMain, 'peek-focus', () => {
-      console.log('focusing peek')
-      if (this.peekRef) {
-        this.peekRef.focus()
-      }
-    })
-    this.on(ipcMain, 'peek-close', (event, key) => {
-      const peeks = this.state.peeks.filter(p => `${p.key}` !== `${key}`)
-      this.setState({ peeks })
+    // this.on(ipcMain, 'peek-focus', () => {
+    //   console.log('focusing peek')
+    //   if (this.peekRef) {
+    //     this.peekRef.focus()
+    //   }
+    // })
+    this.watch(function() {
+      const key = Screen.appState.peekClose
+      if (!key) return
+      const peeks = this.state.windows.filter(p => `${p.key}` !== `${key}`)
+      this.setState({ windows })
     })
   }
 
@@ -181,7 +175,7 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
   handleReadyToShow = memoize(peek => () => {
     if (!peek.show) {
       peek.show = true
-      this.setState({ peeks: this.state.peeks })
+      this.setState({ windows: this.state.windows })
     }
   })
 
@@ -200,10 +194,9 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
   })
 
   tearPeek = () => {
-    this.peekSend('peek-tear')
-    const [peek, ...otherPeeks] = this.state.peeks
+    const [peek, ...otherPeeks] = this.state.windows
     this.peekKey++
-    const peeks = [
+    const windows = [
       // new hidden peek window
       {
         ...peek,
@@ -218,7 +211,7 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
       // keep the rest
       ...otherPeeks,
     ]
-    this.setState({ peeks })
+    this.setState({ windows })
   }
 
   render() {
@@ -230,11 +223,11 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
       transparent: true,
     }
 
-    console.log('peeks = ', JSON.stringify(this.state.peeks))
+    console.log('windows = ', JSON.stringify(this.state.windows))
 
     return (
       <React.Fragment>
-        {this.state.peeks.map((peek, index) => {
+        {this.state.windows.map((peek, index) => {
           // peek always in front
           const isAttached = index === 0
           const { key, size } = peek

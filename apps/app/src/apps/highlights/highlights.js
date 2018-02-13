@@ -9,6 +9,16 @@ const TOP_BAR_PAD = 22
 const LINE_Y_ADJ = -5
 const getKey = ([x, y, w, h]) => `${x}${y}${w}${h}`
 
+function toTarget(quadTreeItem: Object) {
+  return {
+    left: quadTreeItem.x,
+    top: quadTreeItem.y,
+    width: quadTreeItem.w,
+    height: quadTreeItem.h,
+    key: quadTreeItem.string,
+  }
+}
+
 class HighlightsStore {
   trees = {
     word: quadtree(0, 0, window.innerWidth, window.innerHeight),
@@ -64,8 +74,8 @@ class HighlightsStore {
         const hoveredWord = word.get({ x, y, w: 0, h: 0 })[0] || null
         const hoveredLine =
           line.get({ x, y: y - LINE_Y_ADJ, w: 0, h: 0 })[0] || null
-        this.hoveredWord = hoveredWord
-        this.hoveredLine = hoveredLine
+        this.hoveredWord = toTarget(hoveredWord)
+        this.hoveredLine = toTarget(hoveredLine)
         Screen.setState({ hoveredWord, hoveredLine })
         if (hoveredWord) {
           console.log('hoveredWord', hoveredWord)
@@ -105,7 +115,7 @@ class OCRWord {
     const key = getKey(item)
     return (
       <word
-        $hovered={hoveredWord && hoveredWord.string === key}
+        $hovered={hoveredWord && hoveredWord.key === key}
         $highlighted={Screen.desktopState.highlightWords[word]}
         style={{
           top: y - HL_PAD - TOP_BAR_PAD,

@@ -13,6 +13,6 @@ if [[ "$WEB_ON" -ne 0 && "$API_ON" -ne 0 ]]; then
   wait
 else
   echo "before electron run:"
-  echo "$ run web"
-  echo "$ run api"
+  echo "$ run app"
+  echo "$ run desktop"
 fi

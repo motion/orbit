@@ -17,7 +17,5 @@ export const PUBLIC_URL = IS_DEV
   : 'http://seemirai.com'
 
 export const API_HOST = IS_DEV ? 'orbit.dev' : 'app.seemirai.com'
-
 export const SERVER_PORT = process.env.PORT || IS_DEV ? 3001 : 3009
-
 export const TMP_DIR = Path.join(__dirname, '..', 'tmp')

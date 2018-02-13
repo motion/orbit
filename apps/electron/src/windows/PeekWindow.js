@@ -22,7 +22,7 @@ type PeekWindowState = {
 }
 
 type PeekTarget = {
-  url: string,
+  key: string,
   top: number,
   left: number,
   width: number,
@@ -107,57 +107,46 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
   watchHovers() {
     this.react(
       () => Screen.appState.hoveredWord,
-      hovered => {
-        console.log('we got a peek yo', hovered)
+      hoveredWord => {
+        const windows = [...this.state.windows]
+        const peek = windows[0]
+        console.log('got peek', hoveredWord, 'for peek', peek)
+
+        // update peek y
+        // TODO: add conditional to ignore if same peek sent as last
+        if (hoveredWord) {
+          const { position, arrowTowards } = getPeekPosition(hoveredWord)
+          console.log('getPeekPosition', { position, arrowTowards })
+          // peek.hasNewTarget = true
+          peek.position = position
+          peek.arrowTowards = arrowTowards
+        }
+
+        const wasShowing = !!this.state.lastTarget
+        console.log('wasShowing', wasShowing)
+
+        // this handles avoiding tears during animation
+        clearTimeout(this.animatePeekTimeout)
+        this.isAnimatingPeek = true
+        // need to figure out how long electron animates for
+        // for now, be conservative
+        this.animatePeekTimeout = this.setTimeout(() => {
+          this.isAnimatingPeek = false
+        }, 350)
+
+        this.setState({
+          windows,
+          target,
+          wasShowing,
+          lastTarget: this.state.target,
+        })
       },
     )
 
-    // peek stuff
-    this.on(ipcMain, 'peek-target', (event, target: PeekTarget) => {
-      const windows = [...this.state.peeks]
-      const peek = peeks[0]
-      console.log('got peek', target, 'for peek', peek)
-
-      // update peek y
-      // TODO: add conditional to ignore if same peek sent as last
-      if (target) {
-        const { position, arrowTowards } = getPeekPosition(target)
-        console.log('getPeekPosition', { position, arrowTowards })
-        // peek.hasNewTarget = true
-        peek.position = position
-        peek.arrowTowards = arrowTowards
-      }
-
-      const wasShowing = !!this.state.lastTarget
-      console.log('wasShowing', wasShowing)
-
-      // this handles avoiding tears during animation
-      clearTimeout(this.animatePeekTimeout)
-      this.isAnimatingPeek = true
-      // need to figure out how long electron animates for
-      // for now, be conservative
-      this.animatePeekTimeout = this.setTimeout(() => {
-        this.isAnimatingPeek = false
-      }, 350)
-
-      this.setState({
-        windows,
-        target,
-        wasShowing,
-        lastTarget: this.state.target,
-      })
-      // this.peekSend('peek-to', { target, peek })
-    })
-    // this.on(ipcMain, 'peek-focus', () => {
-    //   console.log('focusing peek')
-    //   if (this.peekRef) {
-    //     this.peekRef.focus()
-    //   }
-    // })
     this.watch(function() {
       const key = Screen.appState.peekClose
       if (!key) return
-      const peeks = this.state.windows.filter(p => `${p.key}` !== `${key}`)
+      const windows = this.state.windows.filter(p => `${p.key}` !== `${key}`)
       this.setState({ windows })
     })
   }

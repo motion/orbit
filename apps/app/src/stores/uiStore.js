@@ -1,5 +1,4 @@
 import { store } from '@mcro/black'
-import { OS } from '~/helpers'
 import SHORTCUTS from './shortcuts'
 import Mousetrap from 'mousetrap'
 import * as Helpers from '~/helpers'
@@ -7,7 +6,7 @@ import keycode from 'keycode'
 import * as _ from 'lodash'
 import pluralize from 'pluralize'
 import whatKey from 'whatkey'
-import screenStore from '@mcro/screen'
+import Screen from '@mcro/screen'
 
 export SHORTCUTS from './shortcuts'
 
@@ -22,16 +21,6 @@ export default class UIStore {
   search = ''
   textboxVal = ''
   traps = {}
-
-  // sync this to screenStore.appState
-  state = {
-    pinned: false,
-    // TODO: this can likely be removed and just use screenStore.electronState.focused
-    hidden: false,
-    preventElectronHide: true,
-    contextMessage: 'Orbit',
-    hoveredWord: null,
-  }
 
   get inputRef() {
     this._inputRefVersion
@@ -56,7 +45,7 @@ export default class UIStore {
   }
 
   get showOra() {
-    const { hidden, pinned } = this.state
+    const { pinned, hidden } = Screen.state
     return pinned || !hidden
   }
 
@@ -64,7 +53,6 @@ export default class UIStore {
     this.oraStore = oraStore
     this.stack = oraStore.stack
     this.attachTrap('window', window)
-    this.on(OS, 'ora-toggle', this.toggleHidden)
     this.setState({}) // trigger first send
   }
 
@@ -76,6 +64,11 @@ export default class UIStore {
     this._watchKeyEvents()
     this._watchContextMessage()
     this._watchTrayTitle()
+    this.react(
+      () => Screen.electronStore.shouldHide,
+      val => (this.hidden = val),
+      true,
+    )
   }
 
   dispose() {
@@ -135,7 +128,7 @@ export default class UIStore {
   }
 
   togglePinned = () => {
-    this.setState({ pinned: !this.state.pinned })
+    this.setState({ pinned: !Screen.state.pinned })
   }
 
   _watchContextMessage() {
@@ -148,8 +141,8 @@ export default class UIStore {
         const contextMessage = `${activeStore.title}: ${
           activeStore.results.length
         } items`
-        this.state = {
-          ...this.state,
+        Screen.state = {
+          ...Screen.state,
           contextMessage,
         }
       }
@@ -206,7 +199,7 @@ export default class UIStore {
   actions = {
     esc: e => {
       if (!this.barFocused) {
-        screenStore.setState({ hoveredWord: null })
+        Screen.setState({ hoveredWord: null })
       }
       if (this.inputRef === document.activeElement) {
         if (this.textboxVal !== '') {
@@ -229,12 +222,12 @@ export default class UIStore {
   }
 
   setState = newState => {
-    this.state = {
-      ...this.state,
+    Screen.state = {
+      ...Screen.state,
       ...newState,
     }
-    // send screenStore.appState
-    screenStore.setState(this.state)
+    // send Screen.appState
+    Screen.setState(Screen.state)
   }
 
   handleInputRef = ref => {
@@ -258,11 +251,6 @@ export default class UIStore {
   }
 
   emitKeyCode = e => this.emit('keydown', keycode(e.keyCode))
-
-  toggleHidden = _.throttle(
-    () => this.setState({ hidden: !this.state.hidden, pinned: false }),
-    40,
-  )
 
   hide = () => {
     this.setState({ hidden: true })
@@ -302,10 +290,10 @@ export default class UIStore {
 
   _watchBlurBarOnHide = () => {
     this.watch(function watchBlurBar() {
-      if (this.state.hidden) {
+      if (Screen.state.hidden) {
         // timeout based on animation
         this.setTimeout(this.blurBar, 150)
-        screenStore.setState({ hoveredWord: null })
+        Screen.setState({ hoveredWord: null })
       }
     })
   }

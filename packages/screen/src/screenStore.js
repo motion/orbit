@@ -32,7 +32,13 @@ class ScreenStore {
   }
 
   // state of app
-  appState = {}
+  appState = {
+    pinned: false,
+    hidden: false,
+    preventElectronHide: true,
+    contextMessage: 'Orbit',
+    hoveredWord: null,
+  }
 
   // state of api
   desktopState = {
@@ -51,6 +57,10 @@ class ScreenStore {
   // swift state
   swiftState = {}
 
+  get state() {
+    return this[`${this._source}State`]
+  }
+
   // direct connect to the swift process
   swiftBridge = new SwiftBridge({
     onStateChange: state => {
@@ -60,7 +70,7 @@ class ScreenStore {
 
   _queuedState = []
   _wsOpen = false
-  _source = null
+  _source = ''
 
   // public
 
@@ -133,8 +143,7 @@ class ScreenStore {
       return
     }
     // update our own state immediately so its sync
-    const updated = this._update(this._source, state)
-    if (updated) {
+    if (this._update(this._source, state)) {
       this.ws.send(JSON.stringify({ state, source: this._source }))
     }
     return this[`${this._source}State`]

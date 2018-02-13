@@ -11,9 +11,6 @@ import Screen from '@mcro/screen'
 
 @view.provide({
   rootStore: class RootStore {
-    // used to generically talk to browser
-    sendOra = null
-
     error = null
     appRef = null
     oraRef = null
@@ -37,43 +34,43 @@ import Screen from '@mcro/screen'
       let lastKeyboard = {}
       let optionDelay
       let justCleared = false
-      this.react(
-        () => Screen.desktopState.keyboard,
-        keyboard => {
-          if (!keyboard) {
+      this.react(() => Screen.appState, x => console.log('appState', x))
+      this.react(() => Screen.desktopState.keyboard, function watchKeyboard(
+        keyboard,
+      ) {
+        if (!keyboard) {
+          return
+        }
+        console.log('got keyboard', keyboard, lastKeyboard)
+        const { option, optionCleared } = keyboard
+        if (Screen.appState.hidden) {
+          // HIDDEN
+          // clear last if not opened yet
+          if (optionCleared) {
+            clearTimeout(optionDelay)
+          }
+          // delay before opening on option
+          if (!lastKeyboard.option && option) {
+            optionDelay = setTimeout(this.toggleShown, 50)
+          }
+        } else {
+          // SHOWN
+          if (optionCleared) {
+            justCleared = true
+            // dont toggle
             return
           }
-          console.log('got keyboard', keyboard, lastKeyboard)
-          const { option, optionCleared } = keyboard
-          if (Screen.appState.hidden) {
-            // HIDDEN
-            // clear last if not opened yet
-            if (optionCleared) {
-              clearTimeout(optionDelay)
-            }
-            // delay before opening on option
-            if (!lastKeyboard.option && option) {
-              optionDelay = setTimeout(this.toggleShown, 50)
-            }
-          } else {
-            // SHOWN
-            if (optionCleared) {
-              justCleared = true
-              // dont toggle
-              return
-            }
-            if (justCleared) {
-              justCleared = false
-              // an option event comes again after cleared saying its false
-              return
-            }
-            if (lastKeyboard.option && !option) {
-              this.toggleShown()
-            }
+          if (justCleared) {
+            justCleared = false
+            // an option event comes again after cleared saying its false
+            return
           }
-          lastKeyboard = keyboard
-        },
-      )
+          if (lastKeyboard.option && !option) {
+            this.toggleShown()
+          }
+        }
+        lastKeyboard = keyboard
+      })
     }
 
     setupOraLink() {
@@ -88,7 +85,7 @@ import Screen from '@mcro/screen'
       })
     }
 
-    toggleShown = debounce(async () => {
+    toggleShown = async () => {
       if (Screen.appState.pinned) {
         return
       }
@@ -101,22 +98,22 @@ import Screen from '@mcro/screen'
       } else {
         this.showOra()
       }
-    }, 80)
+    }
 
     async showOra() {
       console.log('showOra')
       this.appRef.show()
       await Helpers.sleep(50)
-      await this.sendOra('ora-toggle')
-      await Helpers.sleep(150)
+      Screen.setState({ shouldHide: false })
+      await Helpers.sleep(150) // animate
       this.appRef.focus()
       this.oraRef.focus()
     }
 
     async hideOra() {
       console.log('hideOra')
-      await this.sendOra('ora-toggle')
-      await Helpers.sleep(150)
+      Screen.setState({ shouldHide: true })
+      await Helpers.sleep(150) // animate
       if (!this.settingsVisible && !Screen.appState.preventElectronHide) {
         this.appRef.hide()
       }

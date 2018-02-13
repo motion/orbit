@@ -4,6 +4,7 @@ import * as UI from '@mcro/ui'
 import { CurrentUser } from '~/app'
 import * as Constants from '~/constants'
 import OraBanner from './oraBanner'
+import Screen from '@mcro/screen-store'
 
 const iconProps = {
   color: [255, 255, 255, 0.5],
@@ -188,7 +189,7 @@ export default class OraHeader extends React.Component {
               />
               <UI.Icon
                 {...iconProps}
-                opacity={oraStore.ui.state.pinned ? 0.8 : 0.4}
+                opacity={Screen.state.pinned ? 0.8 : 0.4}
                 name="pin"
                 onClick={oraStore.ui.togglePinned}
               />

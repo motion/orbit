@@ -9,7 +9,8 @@ const TOP_BAR_PAD = 22
 const LINE_Y_ADJ = -5
 const getKey = ([x, y, w, h]) => `${x}${y}${w}${h}`
 
-function toTarget(quadTreeItem: Object) {
+function toTarget(quadTreeItem: Object | null) {
+  if (!quadTreeItem) return null
   return {
     left: quadTreeItem.x,
     top: quadTreeItem.y,

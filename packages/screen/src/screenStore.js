@@ -227,3 +227,8 @@ const screenStore = new Screen()
 global.Screen = screenStore
 
 export default screenStore
+
+export const desktopState = screenStore.desktopState
+export const appState = screenStore.appState
+export const electronState = screenStore.electronState
+export const swiftState = screenStore.swiftState

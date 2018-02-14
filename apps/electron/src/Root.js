@@ -82,7 +82,7 @@ import * as Constants from '~/constants'
           }
           // delay before opening on option
           if (!lastKeyboard.option && option) {
-            optnEnter = setTimeout(this.toggleShown, 250)
+            optnEnter = setTimeout(this.showOra, 150)
           }
         } else {
           // SHOWN
@@ -97,7 +97,7 @@ import * as Constants from '~/constants'
             return
           }
           if (lastKeyboard.option && !option) {
-            optnLeave = setTimeout(this.toggleShown, 40)
+            optnLeave = setTimeout(this.hideOra, 40)
           }
         }
         lastKeyboard = keyboard

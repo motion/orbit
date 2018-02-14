@@ -4,128 +4,85 @@
 
 # TODO move this into each package and just have this npm run build in each
 
-# helpers to build inside a dir
-if [ "$1" = "prod" ]; then
-  BABEL_ENV=production babel src --out-dir dist -s true  ${@:2}
+if [ "$1" = "" ]; then
+  npx oao all "npm run build"
   exit 0
-elif [ "$1" = "dev" ]; then
-  babel src --out-dir lib -s true ${@:2}
-  exit 0
-elif [ "$1" = "es6" ]; then
-  BABEL_ENV=es6 babel src --out-dir es6 -s true ${@:2}
+fi
+if [ "$1" = "--watch" ]; then
+  npx oao all "npm run watch"
   exit 0
 fi
 
-cd $ROOT
+MODES="$1"
+WATCH="$2"
 
-APP=$1
-ARG1=$2
-
-echo $ARG1
-
-trap killgroup SIGINT
-killgroup() {
-  kill 0
-}
-
-function build-dev() {
-  npx lerna exec --parallel \
-    --ignore @mcro/app \
-    --ignore @mcro/deliverx \
-    --ignore @mcro/site \
-    --ignore @mcro/oracle \
-    --ignore @mcro/desktop \
-    --ignore @mcro/builder \
-    --ignore @mcro/hmr \
-    --ignore @mcro/hmr-view \
-    --ignore @mcro/babel-preset-motion \
-      -- \
-      babel src --out-dir lib -s true ${@:1}
-}
-
-function build-es6() {
-  npx lerna exec --parallel \
-    --ignore @mcro/app \
-    --ignore @mcro/deliverx \
-    --ignore @mcro/electron-build \
-    --ignore @mcro/electron \
-    --ignore @mcro/crawler \
-    --ignore @mcro/search \
-    --ignore @mcro/constants \
-    --ignore @mcro/screendump \
-    --ignore @mcro/site \
-    --ignore @mcro/babel-preset-motion \
-    --ignore @mcro/ui \
-    --ignore @mcro/router \
-    --ignore @mcro/automagical \
-    --ignore @mcro/r2 \
-    --ignore @mcro/css \
-    --ignore @mcro/reactron \
-    --ignore @mcro/react-tunnel \
-      -- \
-        BABEL_ENV=es6 babel src --out-dir es6 -s true ${@:1}
-}
-
-function build-prod() {
-  npx lerna exec --parallel \
-    --ignore @mcro/app \
-    --ignore @mcro/deliverx \
-    --ignore @mcro/site \
-    --ignore @mcro/desktop \
-    --ignore @mcro/crawler \
-    --ignore @mcro/constants \
-    --ignore @mcro/search \
-    --ignore @mcro/electron \
-    --ignore @mcro/electron-build \
-    --ignore @mcro/builder \
-    --ignore @mcro/hmr \
-    --ignore @mcro/hmr-view \
-    --ignore @mcro/babel-preset-motion \
-      -- \
-        BABEL_ENV=production babel src --out-dir dist -s true ${@:1}
-}
-
-if [ "$APP" = "build-dev" ]; then
-  build-dev
-elif [ "$APP" = "build-es6" ]; then
-  build-es6
-elif [ "$APP" = "build-prod" ]; then
-  build-prod
-elif [ "$APP" = "electron" ]; then
-  cd $ROOT/apps/electron-build
-  npm run build
-elif [ "$APP" = "site" ]; then
-  cd $ROOT/apps/site
-  npm run build
-elif [ "$APP" = "web" ]; then
-  cd $ROOT/apps/web
-  rm -rf build
-  if [ "$ARG1" = "--watch" ]; then
-    npm run build -- --watch
-  else
-    npm run build
-    echo "finished build web"
+for i in ${MODES//,/$IFS}; do
+  if [ "$i" = "prod" ]; then
+    BABEL_ENV=production babel src --out-dir dist -s true &
   fi
-else
-  rm -r packages/decor/node_modules/mobx &
-  rm -r packages/black/node_modules/mobx &
-  rm -r packages/automagical/node_modules/mobx &
-  rm -r packages/router/node_modules/mobx &
-  if [ "$APP" = "--watch" ]; then
-    # only build modern during dev-watch
-    build-es6 --watch --skip-initial-build &
-    build-dev --watch --skip-initial-build &
-    build-prod --watch --skip-initial-build &
-    (cd packages/search && npm run watch) &
-    wait
-  elif [ "$APP" = "" ]; then
-    build-es6 &
-    build-dev &
-    build-prod &
-    wait
-    (cd packages/search && npm run build)
-  else
-    echo "should be able to build individual apps"
+  if [ "$i" = "dev" ]; then
+    babel src --out-dir lib -s true &
   fi
-fi
+  if [ "$i" = "es6" ]; then
+    BABEL_ENV=es6 babel src --out-dir es6 -s true &
+  fi
+done
 
+wait
+
+# function build-dev() {
+#   npx lerna exec --parallel \
+#     --ignore @mcro/app \
+#     --ignore @mcro/deliverx \
+#     --ignore @mcro/site \
+#     --ignore @mcro/oracle \
+#     --ignore @mcro/desktop \
+#     --ignore @mcro/builder \
+#     --ignore @mcro/hmr \
+#     --ignore @mcro/hmr-view \
+#     --ignore @mcro/babel-preset-motion \
+#       -- \
+#       babel src --out-dir lib -s true ${@:1}
+# }
+
+# function build-es6() {
+#   npx lerna exec --parallel \
+#     --ignore @mcro/app \
+#     --ignore @mcro/deliverx \
+#     --ignore @mcro/electron-build \
+#     --ignore @mcro/electron \
+#     --ignore @mcro/crawler \
+#     --ignore @mcro/search \
+#     --ignore @mcro/constants \
+#     --ignore @mcro/screendump \
+#     --ignore @mcro/site \
+#     --ignore @mcro/babel-preset-motion \
+#     --ignore @mcro/ui \
+#     --ignore @mcro/router \
+#     --ignore @mcro/automagical \
+#     --ignore @mcro/r2 \
+#     --ignore @mcro/css \
+#     --ignore @mcro/reactron \
+#     --ignore @mcro/react-tunnel \
+#       -- \
+#         BABEL_ENV=es6 babel src --out-dir es6 -s true ${@:1}
+# }
+
+# function build-prod() {
+#   npx lerna exec --parallel \
+#     --ignore @mcro/app \
+#     --ignore @mcro/deliverx \
+#     --ignore @mcro/site \
+#     --ignore @mcro/desktop \
+#     --ignore @mcro/crawler \
+#     --ignore @mcro/constants \
+#     --ignore @mcro/search \
+#     --ignore @mcro/electron \
+#     --ignore @mcro/electron-build \
+#     --ignore @mcro/builder \
+#     --ignore @mcro/hmr \
+#     --ignore @mcro/hmr-view \
+#     --ignore @mcro/babel-preset-motion \
+#       -- \
+#         BABEL_ENV=production babel src --out-dir dist -s true ${@:1}
+# }

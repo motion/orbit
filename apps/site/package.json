@@ -6,7 +6,8 @@
   "scripts": {
     "start": "motion watch",
     "start-prod": "static-server -p 4000 -n build/index.html build",
-    "build": "MINIFY=true NODE_ENV=production BUILD_DIR=. mcro-build",
+    "build-app": "MINIFY=true NODE_ENV=production BUILD_DIR=. mcro-build",
+    "watch-app": "npm run build -- --watch",
     "deploy": "surge ./build tryorbit.com"
   },
   "dependencies": {

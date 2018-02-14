@@ -7,6 +7,10 @@
   "module:production": "dist/index.js",
   "author": "Motion (motion.io)",
   "license": "MIT",
+  "scripts": {
+    "build": "build prod,dev,es6",
+    "watch": "npm run build -- --watch"
+  },
   "dependencies": {
     "global": "^4.3.2",
     "disposable-event": "^1.0.3",

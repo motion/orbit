@@ -2,6 +2,10 @@
   "name": "@mcro/hmr-view",
   "version": "1.5.1",
   "main": "es6/index.js",
+  "scripts": {
+    "build": "build es6",
+    "watch": "npm run build -- --watch"
+  },
   "dependencies": {
     "global": "^4.3.2",
     "lodash": "^4.17.4",

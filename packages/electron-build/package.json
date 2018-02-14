@@ -7,10 +7,12 @@
     "url": "https://raw.githubusercontent.com/motion/orbit-updates/master/updates.json"
   },
   "scripts": {
+    "build": "build dev",
+    "watch": "npm run build -- --watch",
     "deploy": "npm run prepare-publish && npm run publish-app && npm run publish-clean",
     "pack": "npm run sign-app && npm run pack-app",
     "pack-app": "electron-installer-dmg --overwrite --out ./app --icon ./resources/icon.icns ./app/Orbit-darwin-x64/Orbit.app Orbit",
-    "build": "npm version patch && npm run bundle && npm run pack",
+    "build-app": "npm version patch && npm run bundle && npm run pack",
     "bundle": "DEBUG=electron-packager node --trace-warnings ./lib/bundle.js && npm run fix-bundle",
     "fix-bundle": "./fixBundle.sh",
     "bundle-debug": "DEBUG=electron-packager,electron-build:* npm run bundle",

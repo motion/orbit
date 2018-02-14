@@ -4,6 +4,10 @@
   "module": "lib/index.js",
   "module:production": "dist/index.js",
   "version": "1.5.1",
+  "scripts": {
+    "build": "build prod,dev",
+    "watch": "npm run build -- --watch"
+  },
   "dependencies": {
     "caseless": "^0.12.0",
     "isomorphic-fetch": "^2.2.1",

@@ -4,7 +4,10 @@
   "module": "lib/index.js",
   "module:production": "dist/index.js",
   "version": "1.5.1",
-  "scripts": {},
+  "scripts": {
+    "build": "build prod,dev,es6",
+    "watch": "npm run build -- --watch"
+  },
   "dependencies": {
     "@mcro/automagical": "^1.5.1",
     "@mcro/decor": "^1.5.1",

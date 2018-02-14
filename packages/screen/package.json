@@ -3,6 +3,10 @@
   "private": true,
   "version": "4.0.0",
   "main": "es6/screenStore",
+  "scripts": {
+    "build": "build prod,dev,es6",
+    "watch": "npm run build -- --watch"
+  },
   "dependencies": {
     "@mcro/black": "*",
     "reconnecting-websocket": "^3.2.2",

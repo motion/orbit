@@ -10,7 +10,7 @@
     "test": "DEBUG_IMAGES=true node ./test --debug",
     "test-fast": "node ./test",
     "test-scroll": "node ./test --scroll",
-    "build": "./build.sh",
+    "build-app": "./build.sh",
     "edit": "open ./orbit/orbit.xcodeproj"
   },
   "files": ["index.js", "aperture"],

@@ -6,10 +6,6 @@ import createElement from '@mcro/black/lib/createElement'
 import React from 'react'
 import * as Constants from './constants'
 import debug from 'debug'
-import { extras } from 'mobx'
-
-// for now
-extras.shareGlobalState()
 
 // $FlowIgnore
 React.createElement = createElement // any <tag /> can use $$style

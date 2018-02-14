@@ -11,6 +11,7 @@
   },
   "scripts": {
     "start": "watch './start.sh' src",
+    "build": "build dev",
     "watch": "npm run build -- --watch",
     "deploy": "cd ../electron-build && npm run deploy",
     "postinstall": "electron-rebuild"

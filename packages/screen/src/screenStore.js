@@ -187,7 +187,7 @@ class ScreenStore {
     }
     this.ws.onerror = err => {
       if (err.code === 'ECONNREFUSED') return
-      if (err.message.indexOf('ERR_CONNECTION_REFUSED')) return
+      if (err.message && err.message.indexOf('ERR_CONNECTION_REFUSED')) return
       console.log('screenStore error', err)
     }
   }

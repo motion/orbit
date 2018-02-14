@@ -4,6 +4,10 @@
   "version": "1.5.1",
   "main": "lib/index.js",
   "module": "lib/index.js",
+  "scripts": {
+    "build": "build prod,dev,es6",
+    "watch": "npm run build -- --watch"
+  },
   "dependencies": {
     "@mcro/model": "^1.5.1",
     "debug": "^3.1.0",

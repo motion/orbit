@@ -10,6 +10,8 @@
     "node-exec-promise": "1.0.2"
   },
   "scripts": {
+    "build": "build prod,dev",
+    "watch": "npm run build -- --watch",
     "install": "neon build",
     "test": "node lib/test.js"
   }

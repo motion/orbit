@@ -68,7 +68,7 @@ export default class SwiftBridge {
     }
     this.ws.onerror = err => {
       if (err.code === 'ECONNRESET' || err.code === 'ECONNREFUSED') return
-      if (err.message.indexOf('ERR_CONNECTION_REFUSED')) return
+      if (err.message && err.message.indexOf('ERR_CONNECTION_REFUSED')) return
       console.log('swiftbridge ws error', err)
     }
   }

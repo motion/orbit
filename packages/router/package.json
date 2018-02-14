@@ -5,7 +5,7 @@
   "main": "lib/index.js",
   "module": "lib/index.js",
   "module:production": "dist/index.js",
-  "author": "Motion (motion.io)",
+  "author": "Motion (http://motion.io)",
   "license": "MIT",
   "scripts": {
     "build": "build prod,dev",

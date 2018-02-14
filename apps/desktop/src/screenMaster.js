@@ -3,7 +3,6 @@ import { Server } from 'ws'
 import Oracle from '@mcro/oracle'
 import { isEqual, throttle, last } from 'lodash'
 import iohook from 'iohook'
-import * as Constants from '~/constants'
 import killPort from 'kill-port'
 
 const PORT = 40510
@@ -20,8 +19,6 @@ const PREVENT_SCANNING = {
   electron: true,
   ActivityMonitor: true,
 }
-
-console.log('writing screenshots to', Constants.TMP_DIR)
 
 export default class ScreenState {
   stopped = false
@@ -253,7 +250,7 @@ export default class ScreenState {
     }
     const { name, offset, bounds } = this.state.appState
     if (!offset || !bounds) {
-      console.log('didnt get offset/bounds')
+      console.log('todo: initial offset/bounds')
       return
     }
     clearTimeout(this.clearOCRTimeout)

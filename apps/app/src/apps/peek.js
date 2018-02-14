@@ -6,16 +6,9 @@ import { Thing } from '~/app'
 import MarkdownRender from './peek/markdownRenderer'
 import Conversation from './peek/conversation'
 import Mousetrap from 'mousetrap'
-import controlX from '~/../public/images/control-x.png'
-import controlY from '~/../public/images/control-y.png'
-import controlZ from '~/../public/images/control-z.png'
 import Screen from '@mcro/screen'
-
-const icons = {
-  x: controlX,
-  y: controlY,
-  z: controlZ,
-}
+import WebView from '~/views/webview'
+import ControlButton from '~/views/controlButton'
 
 const keyParam = (window.location.search || '').match(/key=(.*)/)
 const KEY = keyParam && keyParam[1]
@@ -23,7 +16,6 @@ const SHADOW_PAD = 15
 const BORDER_RADIUS = 6
 const SHOW_DELAY = 300
 const HIDE_DELAY = 100
-
 const background = '#fff'
 const peekShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.25]]]
 
@@ -34,54 +26,6 @@ type Target = {
   width: number,
   height: number,
   id: number,
-}
-
-@view
-class ControlButton {
-  render({ store, background = '#ED6A5F', icon }) {
-    return (
-      <controlButton onClick={store.closePeek} css={{ background }}>
-        <img src={icons[icon]} />
-      </controlButton>
-    )
-  }
-
-  static style = {
-    controlButton: {
-      width: 12,
-      height: 12,
-      borderRadius: 100,
-      boxShadow: ['inset 0 0 0 0.5px rgba(0,0,0,0.15)'],
-      alignItems: 'center',
-      marginRight: 8,
-      justifyContent: 'center',
-      '& > img': {
-        opacity: 0,
-      },
-      '&:hover > img': {
-        opacity: 1,
-      },
-    },
-  }
-}
-
-@view
-class WebView {
-  render({ getRef, ...props }) {
-    return (
-      <webview
-        ref={getRef}
-        css={{ width: '100%', height: '100%' }}
-        {...props}
-      />
-    )
-  }
-
-  static style = {
-    location: {
-      padding: 3,
-    },
-  }
 }
 
 @view({
@@ -112,28 +56,11 @@ class WebView {
     }
 
     willMount() {
-      Screen.start('app', {
-        closePeek: null,
-      })
-      this.watch(function watchTab() {
-        if (this.thing && !this.thing.body && this.thing.url) {
-          this.tab = 'webview'
-        }
-      })
-      this.watch(function watchPeek() {
-        console.log('Screen.appState.hoveredWord', Screen.appState.hoveredWord)
-        this.handleNewPeek(Screen.appState.hoveredWord)
-      })
-      this.watch(function watchTear() {
-        if (!this.isTorn) {
-          const { peek } = Screen.electronState.peekState
-          console.log('i see peeks', peek)
-          if (peek && peek.isTorn) {
-            console.log('tearing!', Screen.electronState.peekState)
-            this.isTorn = true
-          }
-        }
-      })
+      if (!Screen.started) {
+        Screen.start('app', {
+          closePeek: null,
+        })
+      }
       this.trap = new Mousetrap(window)
       this.trap.bind('esc', () => {
         console.log('esc')
@@ -142,6 +69,30 @@ class WebView {
       this.setTimeout(() => {
         this.showWebview = true
       }, 150)
+    }
+
+    @watch
+    watchPeek = () => {
+      console.log('Screen.appState.hoveredWord', Screen.appState.hoveredWord)
+      this.handleNewPeek(Screen.appState.hoveredWord)
+    }
+
+    @watch
+    watchTab = () => {
+      if (this.thing && !this.thing.body && this.thing.url) {
+        this.tab = 'webview'
+      }
+    }
+
+    @watch
+    watchTear = () => {
+      if (this.isTorn) return
+      const { peek } = Screen.electronState.peekState
+      console.log('i see peeks', peek)
+      if (peek && peek.isTorn) {
+        console.log('tearing!', Screen.electronState.peekState)
+        this.isTorn = true
+      }
     }
 
     willUnmount() {

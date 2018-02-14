@@ -3,7 +3,7 @@
   "private": true,
   "version": "4.0.0",
   "license": "MIT",
-  "main": "es6/index",
+  "main": "src/index",
   "scripts": {
     "build": "echo nil",
     "watch": "echo nil",

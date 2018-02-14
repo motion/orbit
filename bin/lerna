@@ -1,8 +1,0 @@
-#!/bin/bash
-
-. $(dirname $0)/__/common
-cd $ROOT
-
-# this keeps accidental bad lerna versions out
-
-./node_modules/.bin/lerna ${@:1}

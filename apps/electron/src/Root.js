@@ -22,12 +22,11 @@ import * as Constants from '~/constants'
 
     willMount() {
       global.rootStore = this
-
-      // setup initial state
+      // initial state
       const { position, size } = Helpers.getAppSize()
       const screenSize = screen.getPrimaryDisplay().workAreaSize
       const oraPosition = [screenSize.width - Constants.ORA_WIDTH, 20]
-      console.log('setting oraPosition', oraPosition)
+      // setup screen
       Screen.start('electron', {
         shouldHide: false,
         peekState: {},
@@ -75,9 +74,13 @@ import * as Constants from '~/constants'
         clearTimeout(optnLeave)
         const { option, optionCleared } = keyboard
         console.log(
-          'Root.keyboard option, optionCleared',
+          'react to keyboard',
+          'option',
           option,
+          'optionCleared',
           optionCleared,
+          'Screen.appState.hidden',
+          Screen.appState.hidden,
         )
         if (Screen.appState.hidden) {
           // HIDDEN

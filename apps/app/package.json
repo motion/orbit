@@ -4,6 +4,8 @@
   "version": "1.5.40",
   "main": "index.js",
   "scripts": {
+    "build": "echo nil",
+    "watch": "echo nil",
     "start": "kill-port 3002 && parcel -p 3002",
     "start-prod": "static-server -p 3002 -n dist/index.html dist",
     "build-app": "rm -r dist && parcel build --public-url /",

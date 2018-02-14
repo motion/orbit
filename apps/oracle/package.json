@@ -5,6 +5,8 @@
   "license": "MIT",
   "main": "es6/index",
   "scripts": {
+    "build": "echo nil",
+    "watch": "echo nil",
     "train": "cd ./pyocr/src && python3 train.py",
     "generate": "node ./generate",
     "test": "DEBUG_IMAGES=true node ./test --debug",

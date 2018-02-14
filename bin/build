@@ -5,26 +5,39 @@
 # TODO move this into each package and just have this npm run build in each
 
 if [ "$1" = "" ]; then
-  npx oao all "npm run build"
+  npx oao all "yarn run build" --parallel
   exit 0
 fi
 if [ "$1" = "--watch" ]; then
-  npx oao all "npm run watch"
+  npx oao all "yarn run watch" --parallel --no-parallel-logs
   exit 0
 fi
 
+function build-prod() {
+  BABEL_ENV=production babel src --out-dir dist -s true ${@:1}
+}
+function build-dev() {
+  babel src --out-dir lib -s true ${@:1}
+}
+function build-es6() {
+  BABEL_ENV=es6 babel src --out-dir es6 -s true ${@:1}
+}
+
 MODES="$1"
-WATCH="$2"
+FLAGS=""
+if [ "$2" = "--watch" ]; then
+  FLAGS="--watch --skip-initial-build"
+fi
 
 for i in ${MODES//,/$IFS}; do
   if [ "$i" = "prod" ]; then
-    BABEL_ENV=production babel src --out-dir dist -s true &
+    build-prod $FLAGS &
   fi
   if [ "$i" = "dev" ]; then
-    babel src --out-dir lib -s true &
+    build-dev $FLAGS &
   fi
   if [ "$i" = "es6" ]; then
-    BABEL_ENV=es6 babel src --out-dir es6 -s true &
+    build-es6 $FLAGS &
   fi
 done
 

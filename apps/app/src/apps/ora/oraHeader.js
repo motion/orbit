@@ -5,6 +5,7 @@ import { CurrentUser } from '~/app'
 import * as Constants from '~/constants'
 import OraBanner from './oraBanner'
 import Screen from '@mcro/screen'
+import whatKey from 'whatkey'
 
 const iconProps = {
   color: [255, 255, 255, 0.5],
@@ -22,6 +23,7 @@ const iconProps = {
 @view
 export default class OraHeader extends React.Component {
   componentDidMount({ oraStore }) {
+    this.watchBarFocus()
     this.react(
       () => oraStore.ui.showOra,
       shown => {
@@ -31,6 +33,46 @@ export default class OraHeader extends React.Component {
         }
       },
     )
+  }
+
+  watchBarFocus() {
+    const { oraStore } = this.props
+    let lastState = oraStore.ui.barFocused
+    this.watch(() => {
+      const { inputRef, barFocused } = oraStore.ui
+      if (barFocused === lastState) return
+      lastState = barFocused
+      console.log('barfoucss', barFocused, inputRef)
+      if (!inputRef) return
+      if (barFocused) {
+        inputRef.focus()
+        inputRef.select()
+      } else {
+        inputRef.blur()
+      }
+    })
+  }
+
+  handleInputRef = ref => {
+    if (ref && this.inputRef !== ref) {
+      this.inputRef = ref
+      this.props.oraStore.ui.inputRef = ref
+      this.attachInputHandlers(ref)
+      ref.focus()
+    }
+  }
+
+  inputDisposables = []
+  attachInputHandlers = ref => {
+    // reset old ones before attaching new ones
+    this.inputDisposables.map(x => x())
+    const { ui } = this.props.oraStore
+    this.inputDisposables = [
+      this.on(ref, 'focus', ui.focusBar),
+      this.on(ref, 'blur', ui.blurBar),
+      this.on(ref, 'keydown', ui.emitKeyCode),
+      this.props.oraStore.ui.attachTrap('bar', ref),
+    ]
   }
 
   handleHeaderClick = e => {
@@ -72,6 +114,30 @@ export default class OraHeader extends React.Component {
     this.props.oraStore.ui.hide()
   }
 
+  handleChange = e => {
+    if (Screen.desktopState.keyboard.option) return
+    this.props.oraStore.ui.setTextboxVal(e.target.value)
+  }
+
+  handleKeyDown = e => {
+    const { ui } = this.props.oraStore
+    // ignore if option down
+    if (!Screen.desktopState.keyboard.option) return
+    e.preventDefault()
+    const { key, char } = whatKey(e)
+    console.log('got', key, char)
+    if (!key) {
+      return
+    }
+    if (key === 'backspace') {
+      ui.setTextboxVal(ui.textboxVal.slice(0, ui.textboxVal.length - 1))
+    } else {
+      if (key.length === 1) {
+        ui.setTextboxVal((this.textboxVal += char))
+      }
+    }
+  }
+
   preventPropagation = e => {
     e.stopPropagation()
   }
@@ -104,10 +170,11 @@ export default class OraHeader extends React.Component {
               $searchInput
               $searchFont
               size={1}
-              getRef={oraStore.ui.handleInputRef}
+              getRef={this.handleInputRef}
               borderRadius={0}
               onBlur={this.handleInputBlur}
-              onKeyDown={oraStore.ui.handleSearchKeyDown}
+              onKeyDown={this.handleKeyDown}
+              onChange={this.handleChange}
               value={oraStore.ui.textboxVal}
               borderWidth={0}
               background="transparent"

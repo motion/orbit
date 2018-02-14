@@ -5,15 +5,13 @@ import * as Helpers from '~/helpers'
 import keycode from 'keycode'
 import * as _ from 'lodash'
 import pluralize from 'pluralize'
-import whatKey from 'whatkey'
 import Screen from '@mcro/screen'
 
 export SHORTCUTS from './shortcuts'
 
 @store
 export default class UIStore {
-  _inputRefVersion = 0
-  _inputRef = null
+  inputRef = null
   barFocused = false
   collapsed = false
   lastHeight = 'auto'
@@ -21,16 +19,6 @@ export default class UIStore {
   search = ''
   textboxVal = ''
   traps = {}
-
-  get inputRef() {
-    this._inputRefVersion
-    return this._inputRef
-  }
-
-  set inputRef(val) {
-    this._inputRefVersion++
-    this._inputRef = val
-  }
 
   get height() {
     if (this.collapsed) {
@@ -58,7 +46,6 @@ export default class UIStore {
   willMount() {
     this._watchHeight()
     this._watchKeyboardFocus()
-    this._watchBarFocus()
     this._watchBlurBarOnHide()
     this._watchKeyEvents()
     this._watchContextMessage()
@@ -76,28 +63,6 @@ export default class UIStore {
     Mousetrap.reset()
     if (super.dispose) {
       super.dispose()
-    }
-  }
-
-  handleSearchKeyDown = e => {
-    if (!Screen.desktopState.keyboard.option) {
-      console.log('setting to', e.target.value)
-      this.setTextboxVal(e.target.value)
-      return
-    }
-    // if holding option, translate from weird chars
-    e.preventDefault()
-    const { key, char } = whatKey(e)
-    console.log('got', key, char)
-    if (!key) {
-      return
-    }
-    if (key === 'backspace') {
-      this.setTextboxVal(this.textboxVal.slice(0, this.textboxVal.length - 1))
-    } else {
-      if (key.length === 1) {
-        this.setTextboxVal((this.textboxVal += char))
-      }
     }
   }
 
@@ -227,26 +192,6 @@ export default class UIStore {
     },
   }
 
-  handleInputRef = ref => {
-    if (ref && this.inputRef !== ref) {
-      this.inputRef = ref
-      this.attachInputHandlers(ref)
-    }
-  }
-
-  attachInputHandlers = ref => {
-    // reset before attach
-    if (this.inputDisposables) {
-      this.inputDisposables.map(x => x())
-    }
-    this.inputDisposables = [
-      this.on(ref, 'focus', this.focusBar),
-      this.on(ref, 'blur', this.blurBar),
-      this.on(ref, 'keydown', this.emitKeyCode),
-      this.attachTrap('bar', ref),
-    ]
-  }
-
   emitKeyCode = e => this.emit('keydown', keycode(e.keyCode))
 
   toggleHidden = () => {
@@ -255,26 +200,6 @@ export default class UIStore {
 
   hide = () => {
     Screen.setState({ hidden: true })
-  }
-
-  _watchBarFocus() {
-    let lastState = this.barFocused
-    this.watch(() => {
-      const { inputRef, barFocused } = this
-      if (barFocused === lastState) {
-        return
-      }
-      lastState = barFocused
-      if (!inputRef) {
-        return
-      }
-      if (barFocused) {
-        inputRef.focus()
-        inputRef.select()
-      } else {
-        inputRef.blur()
-      }
-    })
   }
 
   focusBar = () => {

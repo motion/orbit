@@ -119,7 +119,7 @@ import * as Constants from '~/constants'
       this.appRef.show()
       await Helpers.sleep(50)
       Screen.setState({ shouldHide: false })
-      await Helpers.sleep(150) // animate
+      await Helpers.sleep(250) // animate
       this.appRef.focus()
       this.oraRef.focus()
     }

@@ -81,10 +81,6 @@ export function compile(obj) {
   return compiled
 }
 
-if (module && module.hot) {
-  module.hot.accept('.', () => {})
-}
-
 // TEST :)
 // console.log(
 //   compile({

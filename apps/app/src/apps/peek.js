@@ -73,7 +73,6 @@ type Target = {
 
     @watch
     watchPeek = () => {
-      console.log('Screen.appState.hoveredWord', Screen.appState.hoveredWord)
       this.handleNewPeek(Screen.appState.hoveredWord)
     }
 

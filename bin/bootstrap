@@ -74,12 +74,12 @@ echo "bootstrap"
 npx oao bootstrap
 
 function compile-modules-for-building() {
-  cd packages/gloss && npm run build &
-  cd packages/css && npm run build &
-  cd packages/hmr && npm run build &
-  cd packages/hmr-view && npm run build &
-  cd packages/babel-preset-motion && npm run build &
-  cd packages/builder && npm run build &
+  (cd packages/gloss && npm run build) &
+  (cd packages/css && npm run build) &
+  (cd packages/hmr && npm run build) &
+  (cd packages/hmr-view && npm run build) &
+  (cd packages/babel-preset-motion && npm run build) &
+  (cd packages/builder && npm run build) &
   wait
 }
 

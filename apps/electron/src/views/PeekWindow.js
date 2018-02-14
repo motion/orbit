@@ -203,6 +203,11 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
   }
 
   render() {
+    console.log('peek render disabled?', Screen.appState.disablePeek)
+    if (Screen.appState.disablePeek) {
+      return null
+    }
+
     const windowProps = {
       frame: false,
       hasShadow: false,

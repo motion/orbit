@@ -80,6 +80,7 @@ export default class OraStore {
     // set initial state
     if (!Screen.started) {
       Screen.start('app', {
+        disablePeek: false,
         pinned: false,
         hidden: false,
         preventElectronHide: true,

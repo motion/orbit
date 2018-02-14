@@ -68,6 +68,7 @@ class Screen {
     preventElectronHide: null,
     contextMessage: null,
     closePeek: null,
+    disablePeek: null,
   }
   // state of desktop
   desktopState: DesktopState = {

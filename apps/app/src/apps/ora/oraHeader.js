@@ -192,6 +192,14 @@ export default class OraHeader extends React.Component {
               />
               <UI.Icon
                 {...iconProps}
+                opacity={Screen.state.disablePeek ? 0.8 : 0.4}
+                name="app"
+                onClick={() =>
+                  Screen.setState({ disablePeek: !Screen.state.disablePeek })
+                }
+              />
+              <UI.Icon
+                {...iconProps}
                 opacity={Screen.state.pinned ? 0.8 : 0.4}
                 name="pin"
                 onClick={oraStore.ui.togglePinned}

@@ -62,10 +62,12 @@ class HighlightsStore {
 
   willMount() {
     // start screen watching
-    Screen.start('app', {
-      hoveredWord: null,
-      hoveredLine: null,
-    })
+    if (!Screen.started) {
+      Screen.start('app', {
+        hoveredWord: null,
+        hoveredLine: null,
+      })
+    }
     // setup hover events
     this.react(() => ['word', this.ocrWords], this.setupHover, true)
     this.react(

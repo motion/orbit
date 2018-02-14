@@ -42,7 +42,7 @@ export type DesktopState = {
 }
 
 @store
-class ScreenStore {
+class Screen {
   // state of electron
   electronState = {
     show: null,
@@ -221,7 +221,7 @@ class ScreenStore {
 }
 
 // singleton because
-const screenStore = new ScreenStore()
+const screenStore = new Screen()
 
 // yes were overwriting a global
 global.Screen = screenStore

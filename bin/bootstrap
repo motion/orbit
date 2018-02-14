@@ -72,7 +72,7 @@ yarn install
 
 echo "lerna bootstrap"
 rm lerna_debug.json &> /dev/null
-npx lerna bootstrap
+npx oao bootstrap
 
 function compile-root-modules() {
   npx lerna exec --parallel \

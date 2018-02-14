@@ -6799,7 +6799,7 @@ le-table@4.0.0:
     overlap "2.0.0"
     ul "5.0.0"
 
-lerna@^2.5.1:
+lerna@^2.8.0:
   version "2.8.0"
   resolved "https://registry.yarnpkg.com/lerna/-/lerna-2.8.0.tgz#309a816fca5c73ea38f9f20e314a836e99b54cf0"
   dependencies:

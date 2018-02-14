@@ -2,7 +2,7 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import quadtree from 'simple-quadtree'
-import Screen from '@mcro/screen'
+import Screen, { desktopState, swiftState } from '@mcro/screen'
 
 const HL_PAD = 2
 const TOP_BAR_PAD = 22
@@ -31,11 +31,11 @@ class HighlightsStore {
   hoveredLine = null
 
   get ocrWords() {
-    // if (Screen.swiftState.isPaused) {
+    // if (swiftState.isPaused) {
     //   return []
     // }
-    return (Screen.desktopState.ocrWords || []).filter(
-      (_, index) => !Screen.desktopState.clearWords[index],
+    return (desktopState.ocrWords || []).filter(
+      (_, index) => !desktopState.clearWords[index],
     )
   }
 
@@ -51,12 +51,11 @@ class HighlightsStore {
   // }
 
   get showAll() {
-    if (Screen.swiftState.isPaused) {
+    if (swiftState.isPaused) {
       return true
     }
     const isTesting = this.ocrWords.length && this.ocrWords[0].length === 4
-    return isTesting ||
-      Screen.desktopState.lastOCR > Screen.desktopState.lastScreenChange
+    return isTesting || desktopState.lastOCR > desktopState.lastScreenChange
       ? true
       : false
   }
@@ -70,7 +69,7 @@ class HighlightsStore {
     // setup hover events
     this.react(() => ['word', this.ocrWords], this.setupHover, true)
     this.react(
-      () => ['line', Screen.desktopState.linePositions],
+      () => ['line', desktopState.linePositions],
       this.setupHover,
       true,
     )
@@ -78,9 +77,12 @@ class HighlightsStore {
     this.react(
       () => ({
         ...this.trees,
-        ...Screen.desktopState.mousePosition,
+        ...desktopState.mousePosition,
       }),
       function updateHovers({ word, line, x, y }) {
+        if (swiftState.isPaused) {
+          return
+        }
         const hoveredWord = toTarget(word.get({ x, y, w: 0, h: 0 })[0])
         const hoveredLine = toTarget(
           line.get({ x, y: y - LINE_Y_ADJ, w: 0, h: 0 })[0],
@@ -96,7 +98,7 @@ class HighlightsStore {
     )
     // watch option hold
     this.react(
-      () => Screen.desktopState.keyboard.option,
+      () => desktopState.keyboard.option,
       val => {
         console.log('screen.keyboard option', val)
       },
@@ -127,7 +129,7 @@ class OCRWord {
     return (
       <word
         $hovered={hoveredWord && hoveredWord.key === key}
-        $highlighted={Screen.desktopState.highlightWords[word]}
+        $highlighted={desktopState.highlightWords[word]}
         style={{
           top: y - HL_PAD - TOP_BAR_PAD,
           left: x - HL_PAD,
@@ -211,7 +213,7 @@ class OCRLine {
 @view
 class Lines {
   render({ store }) {
-    return (Screen.desktopState.linePositions || []).map(item => (
+    return (desktopState.linePositions || []).map(item => (
       <OCRLine key={getKey(item)} item={item} store={store} />
     ))
   }

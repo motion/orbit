@@ -109,8 +109,11 @@ export default class ScreenState {
       this.curAppName = nextState.name
 
       if (PREVENT_WATCHING[nextState.name]) {
+        this.oracle.pause()
         console.log('dont watch', nextState.name)
         return
+      } else {
+        this.oracle.resume()
       }
 
       // clear old stuff

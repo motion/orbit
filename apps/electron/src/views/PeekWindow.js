@@ -100,12 +100,6 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
   peekSend = () => console.log('peekSend, not started yet')
 
   watchHovers() {
-    setInterval(
-      () =>
-        console.log('Screen.appState.hoveredWord', Screen.appState.hoveredWord),
-      3000,
-    )
-
     this.react(
       () => Screen.appState.hoveredWord,
       hoveredWord => {
@@ -205,7 +199,6 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
   }
 
   render() {
-    console.log('peek render disabled?', Screen.appState.disablePeek)
     if (Screen.appState.disablePeek) {
       return null
     }

@@ -2,6 +2,10 @@
   "name": "@mcro/passport-slack",
   "version": "1.5.1",
   "main": "lib/index.js",
+  "scripts": {
+    "build": "build prod,dev,es6",
+    "watch": "npm run build -- --watch"
+  },
   "dependencies": {
     "passport-oauth": "^1.0.0",
     "pkginfo": "^0.4.0"

@@ -43,7 +43,7 @@ export default function automagical() {
         Klass.prototype.automagic ||
         function() {
           if (!this._isAutomagical) {
-            automagic(this)
+            decorateClassWithAutomagic(this)
             this._isAutomagical = true
           }
         }
@@ -148,19 +148,23 @@ type MagicalObject = {
   subscriptions: { add: (fn: Function) => void },
 }
 
-function automagic(obj: MagicalObject) {
+function decorateClassWithAutomagic(obj: MagicalObject) {
   const descriptors = {
     ...Object.getOwnPropertyDescriptors(obj),
     ...collectGetterPropertyDescriptors(Object.getPrototypeOf(obj)),
   }
   // mutate to be mobx observables
   for (const method of Object.keys(descriptors)) {
-    mobxify(obj, method, descriptors[method])
+    decorateMethodWithAutomagic(obj, method, descriptors[method])
   }
 }
 
 // * => mobx
-function mobxify(target: Object, method: string, descriptor: Object) {
+function decorateMethodWithAutomagic(
+  target: Object,
+  method: string,
+  descriptor: Object,
+) {
   // @computed get (do first to avoid hitting the getter on next line)
   if (descriptor && (!!descriptor.get || !!descriptor.set)) {
     if (descriptor.get) {
@@ -218,7 +222,7 @@ function mobxify(target: Object, method: string, descriptor: Object) {
     return target[method]
   }
   // @observable.ref
-  Mobx.extendShallowObservable(target, { [method]: value })
+  Mobx.extendObservable(target, { [method]: value })
   return value
 }
 

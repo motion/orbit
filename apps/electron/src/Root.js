@@ -2,160 +2,136 @@ import * as React from 'react'
 import { App } from '@mcro/reactron'
 import ShortcutsStore from '~/stores/shortcutsStore'
 import { view } from '@mcro/black'
-import Windows from './Windows'
-import Tray from './Tray'
-import { ipcMain } from 'electron'
+import Tray from './views/Tray'
+import MenuItems from './views/MenuItems'
+import HighlightsWindow from './views/HighlightsWindow'
+import OraWindow from './views/OraWindow'
+import PeekWindow from './views/PeekWindow'
+import SettingsWindow from './views/SettingsWindow'
 import * as Helpers from '~/helpers'
-import { debounce } from 'lodash'
-import ScreenStore from '@mcro/screen-store'
+import Screen from '@mcro/screen'
+import global from 'global'
+import { screen } from 'electron'
+import * as Constants from '~/constants'
 
 @view.provide({
   rootStore: class RootStore {
-    screen = new ScreenStore()
-    // used to generically talk to browser
-    sendOra = null
-
-    // sync FROM ora app to here
-    // see web/src/stores/uiStore
-    oraState = {}
-    _oraStateGetters = []
-
     error = null
     appRef = null
     oraRef = null
-    settingsVisible = false
 
     willMount() {
       global.rootStore = this
-      this.screen.start()
+
+      // setup initial state
+      const { position, size } = Helpers.getAppSize()
+      const screenSize = screen.getPrimaryDisplay().workAreaSize
+      const oraPosition = [screenSize.width - Constants.ORA_WIDTH, 20]
+      console.log('setting oraPosition', oraPosition)
+      Screen.start('electron', {
+        shouldHide: false,
+        peekState: {},
+        focused: false,
+        restart: false,
+        loadSettings: false,
+        showSettings: false,
+        showDevTools: {
+          app: false,
+          peek: false,
+          highlights: false,
+        },
+        lastMove: Date.now(),
+        show: true,
+        settingsPosition: position,
+        size,
+        screenSize,
+        oraPosition,
+      })
+
       new ShortcutsStore().emitter.on('shortcut', shortcut => {
         console.log('emit shortcut', shortcut)
-        this.emit('shortcut', shortcut)
-      })
-      this.setupOraLink()
-      this.on('shortcut', shortcut => {
         if (shortcut === 'Option+Space') {
-          if (this.screen.keyboard.option) {
+          if (Screen.desktopState.keyboard.option) {
             console.log('avoid toggle while holding option')
             return
           }
           this.toggleShown()
         }
       })
+
       // watch option hold
       let lastKeyboard = {}
-      let optionDelay
       let justCleared = false
-      this.react(
-        () => this.screen.keyboard,
-        keyboard => {
-          if (!keyboard) {
+      this.react(() => Screen.appState, x => console.log('appState', x))
+
+      let optnEnter
+      let optnLeave
+      this.react(() => Screen.desktopState.keyboard, function watchKeyboard(
+        keyboard,
+      ) {
+        if (!keyboard) {
+          return
+        }
+        clearTimeout(optnLeave)
+        const { option, optionCleared } = keyboard
+        if (Screen.appState.hidden) {
+          // HIDDEN
+          // clear last if not opened yet
+          if (optionCleared) {
+            clearTimeout(optnEnter)
+          }
+          // delay before opening on option
+          if (!lastKeyboard.option && option) {
+            optnEnter = setTimeout(this.showOra, 150)
+          }
+        } else {
+          // SHOWN
+          if (optionCleared) {
+            justCleared = true
+            // dont toggle
             return
           }
-          console.log('got keyboard', keyboard, lastKeyboard)
-          const { option, optionCleared } = keyboard
-          if (this.oraState.hidden) {
-            // HIDDEN
-            // clear last if not opened yet
-            if (optionCleared) {
-              clearTimeout(optionDelay)
-            }
-            // delay before opening on option
-            if (!lastKeyboard.option && option) {
-              optionDelay = setTimeout(this.toggleShown, 50)
-            }
-          } else {
-            // SHOWN
-            if (optionCleared) {
-              justCleared = true
-              // dont toggle
-              return
-            }
-            if (justCleared) {
-              justCleared = false
-              // an option event comes again after cleared saying its false
-              return
-            }
-            if (lastKeyboard.option && !option) {
-              this.toggleShown()
-            }
+          if (justCleared) {
+            justCleared = false
+            // an option event comes again after cleared saying its false
+            return
           }
-          lastKeyboard = keyboard
-        },
-      )
-    }
-
-    sendOraSync = async (...args) => {
-      if (this.sendOra) {
-        this.sendOra(...args)
-        return await this.getOraState()
-      }
-    }
-
-    getOraState = () =>
-      new Promise(res => {
-        this._oraStateGetters.push(res)
-        this.sendOra('get-state')
-      })
-
-    setupOraLink() {
-      this.on(ipcMain, 'start-ora', event => {
-        this.sendOra = (...args) => {
-          try {
-            event.sender.send(...args)
-          } catch (err) {
-            console.log('error sending ora message', err.message)
+          if (lastKeyboard.option && !option) {
+            optnLeave = setTimeout(this.hideOra, 40)
           }
         }
-      })
-
-      // if you call this.getOraState() this will handle it
-      this.on(ipcMain, 'set-state', (event, state) => {
-        // update state
-        this.updateOraState(state)
-        if (this._oraStateGetters.length) {
-          for (const getter of this._oraStateGetters) {
-            getter(state)
-          }
-          this._oraStateGetters = []
-        }
+        lastKeyboard = keyboard
       })
     }
 
-    updateOraState = state => {
-      this.oraState = { ...state }
-    }
-
-    toggleShown = debounce(async () => {
-      if (this.oraState.pinned) {
-        return
-      }
-      if (!this.appRef) {
-        console.log('no app ref :(')
-        return
-      }
-      if (!this.oraState.hidden) {
+    toggleShown = async () => {
+      if (Screen.appState.pinned) return
+      if (!this.appRef) return
+      if (!Screen.appState.hidden) {
         this.hideOra()
       } else {
         this.showOra()
       }
-    }, 80)
+    }
 
     async showOra() {
       console.log('showOra')
       this.appRef.show()
       await Helpers.sleep(50)
-      await this.sendOraSync('ora-toggle')
-      await Helpers.sleep(150)
+      Screen.setState({ shouldHide: false })
+      await Helpers.sleep(250) // animate
       this.appRef.focus()
       this.oraRef.focus()
     }
 
     async hideOra() {
       console.log('hideOra')
-      await this.sendOraSync('ora-toggle')
-      await Helpers.sleep(150)
-      if (!this.settingsVisible && !this.oraState.preventElectronHide) {
+      Screen.setState({ shouldHide: true })
+      await Helpers.sleep(150) // animate
+      if (
+        !Screen.state.settingsVisible &&
+        !Screen.appState.preventElectronHide
+      ) {
         this.appRef.hide()
       }
     }
@@ -164,10 +140,6 @@ import ScreenStore from '@mcro/screen-store'
       if (ref) {
         this.appRef = ref.app
       }
-    }
-
-    handleSettingsVisibility = isVisible => {
-      this.settingsVisible = isVisible
     }
 
     handleOraRef = ref => {
@@ -201,11 +173,15 @@ export default class Root extends React.Component {
         onQuit={rootStore.handleQuit}
         ref={rootStore.handleAppRef}
       >
-        <Windows
-          onOraRef={rootStore.handleOraRef}
-          onSettingsVisibility={rootStore.handleSettingsVisibility}
+        <MenuItems />
+        <HighlightsWindow />
+        <OraWindow onRef={rootStore.handleOraRef} />
+        <PeekWindow
+          if={false}
+          appPosition={Screen.state.oraPosition.slice(0)}
         />
-        <Tray onClick={rootStore.screen.swiftBridge.toggle} />
+        <SettingsWindow />
+        <Tray />
       </App>
     )
   }

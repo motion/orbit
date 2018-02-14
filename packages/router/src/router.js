@@ -11,7 +11,7 @@ export default class Router {
         ...acc,
         [path]: new Route(path),
       }),
-      {}
+      {},
     )
 
     // for easy looping

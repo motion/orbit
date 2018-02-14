@@ -5,6 +5,10 @@
   "bin": {
     "mcro-build": "./mcro-build.js"
   },
+  "scripts": {
+    "build": "build es6",
+    "watch": "npm run build -- --watch"
+  },
   "devDependencies": {
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",

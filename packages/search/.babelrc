@@ -1,0 +1,3 @@
+{
+  "presets": ["@mcro/babel-preset-motion"]
+}

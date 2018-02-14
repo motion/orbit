@@ -14,7 +14,7 @@ export async function startAPI() {
   console.log('starting api')
   const sleep = ms => new Promise(res => setTimeout(res, ms))
   await sleep(100)
-  require('@mcro/api')
+  require('@mcro/desktop')
 }
 
 if (!process.env.DISABLE_API) {

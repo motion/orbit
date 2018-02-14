@@ -1,7 +1,7 @@
 module.exports = {
   env: {
     browser: true,
-    es6: true,
+    node: true,
   },
   extends: [
     'eslint:recommended',
@@ -14,12 +14,6 @@ module.exports = {
   parser: 'babel-eslint',
   parserOptions: {
     ecmaVersion: 8,
-    ecmaFeatures: {
-      impliedStrict: true,
-      classes: true,
-      experimentalObjectRestSpread: true,
-      jsx: true,
-    },
     sourceType: 'module',
   },
   rules: {
@@ -47,5 +41,6 @@ module.exports = {
     __dirname: true,
     exports: true,
     BroadcastChannel: true,
+    Promise: true,
   },
 }

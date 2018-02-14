@@ -199,9 +199,8 @@ function configurePosition({
   defaultPosition,
   animatePosition,
 }: Object) {
-  if (this.unmounted) {
-    return
-  }
+  if (this.unmounted) return
+  if (!this.window) return
   // window.setPosition(x, y[, animate])
   if (typeof animatePosition === 'boolean') {
     position[2] = animatePosition

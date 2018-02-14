@@ -57,3 +57,4 @@ fun
 * onboarding
 * prod build is downloading even if its older version
 * prod build is much bigger now
+* hydrating a store should check if initial states changed, and then use new default state if so

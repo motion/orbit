@@ -1,0 +1,29 @@
+{
+  "name": "@mcro/search",
+  "private": true,
+  "version": "1.5.1",
+  "main": "lib/index.js",
+  "module": "src/index.js",
+  "scripts": {
+    "start": "node index.js",
+    "start-prod": "NODE_ENV=production IS_PROD=true node lib/index.js",
+    "start-dev": "../../node_modules/.bin/babel-watch --inspect=0.0.0.0:5858 lib/index.js",
+    "build": "build dev & npm run bundle",
+    "watch": "build dev --watch && npm run bundle -- --watch",
+    "bundle":
+      "CHUNK_COMMONS=false MINIFY=true NODE_ENV=production BUILD_DIR=. ENTRY=./src mcro-build"
+  },
+  "dependencies": {
+    "@mcro/black": "*",
+    "@mcro/ui": "*",
+    "debug": "^3.1.0",
+    "lodash": "^4.17.4",
+    "wink-nlp-utils": "^1.7.0"
+  },
+  "peerDependencies": {
+    "mobx": "^3.4.1"
+  },
+  "devDependencies": {
+    "@mcro/builder": "^1.5.1"
+  }
+}

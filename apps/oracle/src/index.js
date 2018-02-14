@@ -293,10 +293,6 @@ export default class Oracle {
     this.onClearCB = cb
   }
 
-  onChangedIds = cb => {
-    this.onChangedIdsCB = cb
-  }
-
   onBoxChanged = cb => {
     this.onBoxChangedCB = cb
   }

@@ -7,6 +7,8 @@
   "module:production": "dist/index.js",
   "license": "MIT",
   "scripts": {
+    "build": "build prod,dev",
+    "watch": "npm run build -- --watch",
     "test": "electron lib/tests"
   },
   "peerDependencies": {

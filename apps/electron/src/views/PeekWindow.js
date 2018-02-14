@@ -218,7 +218,7 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
       transparent: true,
     }
 
-    console.log('windows = ', JSON.stringify(this.state.windows))
+    // console.log('windows = ', JSON.stringify(this.state.windows))
 
     return (
       <React.Fragment>

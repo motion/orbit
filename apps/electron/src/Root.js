@@ -126,6 +126,7 @@ import * as Constants from '~/constants'
       console.log('showOra')
       this.appRef.show()
       await Helpers.sleep(50)
+      console.log('set should hide false')
       Screen.setState({ shouldHide: false })
       await Helpers.sleep(250) // animate
       this.appRef.focus()
@@ -134,6 +135,7 @@ import * as Constants from '~/constants'
 
     async hideOra() {
       console.log('hideOra')
+      console.log('set should hide true')
       Screen.setState({ shouldHide: true })
       await Helpers.sleep(150) // animate
       if (

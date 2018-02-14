@@ -8,9 +8,16 @@ import killPort from 'kill-port'
 const PORT = 40510
 const DESKTOP_KEY = 'desktop'
 const APP_ID = -1
+
+// prevent apps from clearing highlights
+const PREVENT_CLEARING = {
+  electron: true,
+}
+// prevent apps from triggering appState updates
 const PREVENT_WATCHING = {
   electron: true,
 }
+// prevent apps from OCR
 const PREVENT_SCANNING = {
   iterm2: true,
   VSCode: true,
@@ -25,6 +32,7 @@ export default class ScreenState {
   oracle = new Oracle()
   activeSockets = []
   curState = {}
+  curAppName = null
   watchSettings = {}
 
   state: TScreenState = {
@@ -97,6 +105,9 @@ export default class ScreenState {
           nextState.offset = value
       }
 
+      // update before prevent_watching
+      this.curAppName = nextState.name
+
       if (PREVENT_WATCHING[nextState.name]) {
         console.log('dont watch', nextState.name)
         return
@@ -153,6 +164,9 @@ export default class ScreenState {
   }
 
   resetHighlights = () => {
+    if (PREVENT_CLEARING[this.curAppName]) {
+      return
+    }
     this.updateState({
       lastScreenChange: Date.now(),
     })

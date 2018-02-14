@@ -55,9 +55,10 @@ class HighlightsStore {
       return true
     }
     const isTesting = this.ocrWords.length && this.ocrWords[0].length === 4
-    return isTesting || desktopState.lastOCR > desktopState.lastScreenChange
-      ? true
-      : false
+    if (desktopState.keyboard.option) {
+      return desktopState.lastOCR > desktopState.lastScreenChange
+    }
+    return isTesting
   }
 
   willMount() {
@@ -69,12 +70,8 @@ class HighlightsStore {
       })
     }
     // setup hover events
-    this.react(() => ['word', this.ocrWords], this.setupHover, true)
-    this.react(
-      () => ['line', desktopState.linePositions],
-      this.setupHover,
-      true,
-    )
+    this.react(() => this.ocrWords, this.setupHover('word'), true)
+    this.react(() => desktopState.linePositions, this.setupHover('line'), true)
     // set hovered word/line
     this.react(
       () => ({
@@ -98,16 +95,9 @@ class HighlightsStore {
       },
       true,
     )
-    // watch option hold
-    this.react(
-      () => desktopState.keyboard.option,
-      val => {
-        console.log('screen.keyboard option', val)
-      },
-    )
   }
 
-  setupHover([name, items]) {
+  setupHover = name => items => {
     if (!items) return
     if (!items.length) return
     this.trees[name].clear()

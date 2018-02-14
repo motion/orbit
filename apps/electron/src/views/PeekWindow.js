@@ -90,9 +90,11 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
     }
   }
 
-  componentDidUpdate() {
-    // update electronApp.peekState
-    Screen.setState({ peekState: this.state })
+  componentWillUpdate(nextProps, nextState) {
+    if (!isEqual(nextState, this.state)) {
+      // update electronApp.peekState
+      Screen.setState({ peekState: this.state })
+    }
   }
 
   peekSend = () => console.log('peekSend, not started yet')

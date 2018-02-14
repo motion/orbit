@@ -74,6 +74,11 @@ import * as Constants from '~/constants'
         }
         clearTimeout(optnLeave)
         const { option, optionCleared } = keyboard
+        console.log(
+          'Root.keyboard option, optionCleared',
+          option,
+          optionCleared,
+        )
         if (Screen.appState.hidden) {
           // HIDDEN
           // clear last if not opened yet

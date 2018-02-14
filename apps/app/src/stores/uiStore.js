@@ -34,6 +34,7 @@ export default class UIStore {
 
   get showOra() {
     const { pinned, hidden } = Screen.state
+    console.log('showOra', 'pinned, hidden', pinned, hidden)
     return pinned || !hidden
   }
 

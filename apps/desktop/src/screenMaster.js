@@ -80,11 +80,7 @@ export default class ScreenState {
     })
     let lastId = null
     this.oracle.onWindowChange((event, value) => {
-      // immediately cancel stuff
-      this.resetHighlights()
-
       let nextState = { ...this.curState }
-
       switch (event) {
         case 'FrontmostWindowChangedEvent':
           const id = value.id || lastId
@@ -108,6 +104,9 @@ export default class ScreenState {
         console.log('dont watch', nextState.name)
         return
       }
+
+      // clear old stuff
+      this.resetHighlights()
 
       // update
       this.curState = nextState

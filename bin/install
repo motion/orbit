@@ -7,8 +7,7 @@ echo "install: $ARGS"
 if [ -z "$ARGS" ]; then
   npx oao bootstrap
 else
-  NAME=$(grep '"name":' package.json | cut -d\" -f4)
-  echo "oao add $NAME $ARGS"
-  npx oao add $NAME $ARGS
+  echo "yarn add $ARGS"
+  yarn add $ARGS
 fi
 

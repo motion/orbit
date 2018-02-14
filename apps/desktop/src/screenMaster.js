@@ -9,7 +9,10 @@ import killPort from 'kill-port'
 const PORT = 40510
 const DESKTOP_KEY = 'desktop'
 const APP_ID = -1
-const BLACKLIST = {
+const PREVENT_WATCHING = {
+  electron: true,
+}
+const PREVENT_SCANNING = {
   iterm2: true,
   VSCode: true,
   Xcode: true,
@@ -79,10 +82,13 @@ export default class ScreenState {
     this.oracle.onWindowChange((event, value) => {
       // immediately cancel stuff
       this.resetHighlights()
+
+      let nextState = { ...this.curState }
+
       switch (event) {
         case 'FrontmostWindowChangedEvent':
           const id = value.id || lastId
-          this.curState = {
+          nextState = {
             id,
             title: value.title,
             offset: value.offset,
@@ -92,11 +98,19 @@ export default class ScreenState {
           lastId = id
           break
         case 'WindowSizeChangedEvent':
-          this.curState.bounds = value
+          nextState.bounds = value
           break
         case 'WindowPosChangedEvent':
-          this.curState.offset = value
+          nextState.offset = value
       }
+
+      if (PREVENT_WATCHING[nextState.name]) {
+        console.log('dont watch', nextState.name)
+        return
+      }
+
+      // update
+      this.curState = nextState
       this.updateState({
         appState: JSON.parse(JSON.stringify(this.curState)),
       })
@@ -244,7 +258,7 @@ export default class ScreenState {
       return
     }
     clearTimeout(this.clearOCRTimeout)
-    if (BLACKLIST[name]) {
+    if (PREVENT_SCANNING[name]) {
       return
     }
     console.log('> ', name)

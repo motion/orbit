@@ -1,6 +1,6 @@
 // @flow
 import { CompositeDisposable } from 'sb-event-kit'
-import { autorun, observable } from 'mobx'
+import { action, autorun, observable } from 'mobx'
 import { compile } from './properties'
 import type RxDB, { RxCollection, RxQuery } from 'rxdb'
 import { isRxQuery } from 'rxdb'
@@ -322,7 +322,7 @@ export default class Model {
               return worm(target)
             }
           },
-        }
+        },
       )
       return result
     }
@@ -403,7 +403,12 @@ export default class Model {
     this._collection.watchForChanges()
 
     // AND NOW
-    this.connected = true
+    this.setConnected(true)
+  }
+
+  @action
+  setConnected(val) {
+    this.connected = val
   }
 
   onConnection = (): Promise<void> => {
@@ -450,7 +455,7 @@ export default class Model {
 
   syncQuery = (
     queryish: Queryish,
-    options: Object = { live: true, retry: false }
+    options: Object = { live: true, retry: false },
   ): Promise<boolean> => {
     const { shouldSyncPull } = this
 
@@ -464,7 +469,7 @@ export default class Model {
     }
     if (!isRxQuery(query)) {
       throw new Error(
-        'Could not sync query, does not look like a proper RxQuery object.'
+        'Could not sync query, does not look like a proper RxQuery object.',
       )
     }
     if (!this.remote) {
@@ -577,7 +582,7 @@ export default class Model {
   get = async (query: string | Object) => {
     await this.onConnection()
     return await this.findOne(query).exec()
-  };
+  }
 
   getAll = async (query: string | Object) => {
     await this.onConnection()

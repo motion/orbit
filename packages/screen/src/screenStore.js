@@ -214,9 +214,9 @@ class Screen {
       this._wsOpen = false
     }
     this.ws.onerror = err => {
-      if (err.code === 'ECONNREFUSED') return
-      if (err.message && err.message.indexOf('ERR_CONNECTION_REFUSED')) return
-      console.log('screenStore error', err)
+      if (this.ws.readyState == 1) {
+        console.log('swift ws error', err)
+      }
     }
   }
 }

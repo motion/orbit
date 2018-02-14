@@ -43,7 +43,8 @@ window.Helpers = Helpers
 let runners = (window.__mlogRunners = window.__mlogRunners || [])
 
 window.mlog = fn => {
-  if (fn.constructor) {
+  const isClass = fn.toString().indexOf('class') === 0
+  if (isClass) {
     Object.keys(fn).forEach(key => {
       runners.push(
         Mobx.autorun(() => {
@@ -53,7 +54,6 @@ window.mlog = fn => {
     })
     return
   }
-
   runners.push(
     Mobx.autorun(() => {
       console.log(fn())

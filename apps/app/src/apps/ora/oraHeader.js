@@ -42,7 +42,6 @@ export default class OraHeader extends React.Component {
       const { inputRef, barFocused } = oraStore.ui
       if (barFocused === lastState) return
       lastState = barFocused
-      console.log('barfoucss', barFocused, inputRef)
       if (!inputRef) return
       if (barFocused) {
         inputRef.focus()

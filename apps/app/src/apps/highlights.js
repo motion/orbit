@@ -31,9 +31,6 @@ class HighlightsStore {
   hoveredLine = null
 
   get ocrWords() {
-    // if (swiftState.isPaused) {
-    //   return []
-    // }
     return (desktopState.ocrWords || []).filter(
       (_, index) => !desktopState.clearWords[index],
     )

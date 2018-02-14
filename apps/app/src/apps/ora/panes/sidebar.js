@@ -80,7 +80,7 @@ class SidebarContainer {
         }
         if (this.version !== stack.version) {
           if (!this.nextStack) {
-            this.nextStack = stack
+            this.setNextStack(stack)
           }
         }
       })
@@ -99,6 +99,8 @@ class SidebarContainer {
         }
       })
     }
+
+    setNextStack = stack => (this.nextStack = stack)
 
     loadNext = () => {
       this.items = [...this.stack.items]

@@ -5,7 +5,6 @@ import fuzzy_ from './fuzzy'
 
 export hoverSettler from './hoverSettler'
 export logClass from './logClass'
-export IndexDB from './indexDB'
 
 export const trimSingleLine = str => str.trim().replace(/\s{2,}/g, ' ')
 

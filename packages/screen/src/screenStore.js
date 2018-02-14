@@ -12,7 +12,34 @@ const waitForPort = (domain, port) =>
     _waitForPort(domain, port, err => (err ? rej(err) : res())),
   )
 
-export SwiftBridge from './swiftBridge'
+type TappState = {
+  name: string,
+  offset: [Number, Number],
+  bounds: [Number, Number],
+  screen: [Number, Number],
+}
+
+type Word = {
+  word: string,
+  weight: Number,
+  top: Number,
+  left: Number,
+  width: Number,
+  height: Number,
+}
+
+export type DesktopState = {
+  appState?: TappState,
+  ocrWords?: [Word],
+  linePositions?: [Number],
+  lastOCR: Number,
+  lastScreenChange: Number,
+  mousePosition: { x: Number, y: Number },
+  keyboard: Object,
+  highlightWords: { [String]: boolean },
+  clearWords: { [String]: Numbe },
+  restoreWords: { [String]: Numbe },
+}
 
 @store
 class ScreenStore {
@@ -43,7 +70,7 @@ class ScreenStore {
     closePeek: null,
   }
   // state of desktop
-  desktopState = {
+  desktopState: DesktopState = {
     appState: null,
     ocrWords: null,
     linePositions: null,
@@ -80,7 +107,7 @@ class ScreenStore {
   // public
 
   // note: you have to call start to make it explicitly connect
-  start(source: String, initialState: object) {
+  start(source, initialState) {
     if (this.started) {
       throw new Error(`Already started screen`)
     }
@@ -107,7 +134,7 @@ class ScreenStore {
 
   // this will go up to api and back down to all screen stores
   // set is only allowed from the source its set as initially
-  setState(state: Object, internal = false): [String] {
+  setState(state, internal = false) {
     if (!this.started) {
       throw new Error(`Called Screen.setState before calling Screen.start`)
     }
@@ -132,7 +159,7 @@ class ScreenStore {
 
   // private
   // return keys of changed items
-  _update = (source: string, state: Object): [String] => {
+  _update = (source, state) => {
     if (!source) {
       throw new Error(`No source provided in screenStore state update`)
     }

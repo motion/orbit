@@ -41,5 +41,6 @@ module.exports = {
     __dirname: true,
     exports: true,
     BroadcastChannel: true,
+    Promise: true,
   },
 }

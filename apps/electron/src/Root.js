@@ -61,25 +61,28 @@ import * as Constants from '~/constants'
 
       // watch option hold
       let lastKeyboard = {}
-      let optionDelay
       let justCleared = false
       this.react(() => Screen.appState, x => console.log('appState', x))
+
+      let optnEnter
+      let optnLeave
       this.react(() => Screen.desktopState.keyboard, function watchKeyboard(
         keyboard,
       ) {
         if (!keyboard) {
           return
         }
+        clearTimeout(optnLeave)
         const { option, optionCleared } = keyboard
         if (Screen.appState.hidden) {
           // HIDDEN
           // clear last if not opened yet
           if (optionCleared) {
-            clearTimeout(optionDelay)
+            clearTimeout(optnEnter)
           }
           // delay before opening on option
           if (!lastKeyboard.option && option) {
-            optionDelay = setTimeout(this.toggleShown, 50)
+            optnEnter = setTimeout(this.toggleShown, 250)
           }
         } else {
           // SHOWN
@@ -94,7 +97,7 @@ import * as Constants from '~/constants'
             return
           }
           if (lastKeyboard.option && !option) {
-            this.toggleShown()
+            optnLeave = setTimeout(this.toggleShown, 40)
           }
         }
         lastKeyboard = keyboard
@@ -173,7 +176,10 @@ export default class Root extends React.Component {
         <MenuItems />
         <HighlightsWindow />
         <OraWindow onRef={rootStore.handleOraRef} />
-        <PeekWindow appPosition={Screen.state.oraPosition.slice(0)} />
+        <PeekWindow
+          if={false}
+          appPosition={Screen.state.oraPosition.slice(0)}
+        />
         <SettingsWindow />
         <Tray />
       </App>

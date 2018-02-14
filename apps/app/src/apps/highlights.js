@@ -9,7 +9,7 @@ const TOP_BAR_PAD = 22
 const LINE_Y_ADJ = -5
 const getKey = ([x, y, w, h]) => `${x}${y}${w}${h}`
 
-function toTarget(quadTreeItem: Object | null) {
+function toTarget(quadTreeItem) {
   if (!quadTreeItem) return null
   return {
     left: quadTreeItem.x,
@@ -31,9 +31,9 @@ class HighlightsStore {
   hoveredLine = null
 
   get ocrWords() {
-    if (Screen.swiftState.isPaused) {
-      return []
-    }
+    // if (Screen.swiftState.isPaused) {
+    //   return []
+    // }
     return (Screen.desktopState.ocrWords || []).filter(
       (_, index) => !Screen.desktopState.clearWords[index],
     )
@@ -52,7 +52,7 @@ class HighlightsStore {
 
   get showAll() {
     if (Screen.swiftState.isPaused) {
-      return false
+      return true
     }
     const isTesting = this.ocrWords.length && this.ocrWords[0].length === 4
     return isTesting ||

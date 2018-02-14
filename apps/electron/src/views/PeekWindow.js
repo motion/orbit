@@ -90,13 +90,7 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
     }
   }
 
-  lastSent = this.state.windows
-
   componentDidUpdate() {
-    if (!isEqual(this.lastSent, this.state.windows)) {
-      this.props.onWindows(this.state.windows)
-      this.lastSent = this.state.windows
-    }
     // update electronApp.peekState
     Screen.setState({ peekState: this.state })
   }

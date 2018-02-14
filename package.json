@@ -7,7 +7,10 @@
   "scripts": {
     "start": "See: bin/* for commands available"
   },
-  "workspaces": ["apps/*", "packages/*"],
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "dependencies": {
     "global": "^4.3.2",
     "react": "^16.2.0",
@@ -15,8 +18,6 @@
   },
   "devDependencies": {
     "@mcro/babel-preset-motion": "*",
-    "lerna": "^2.8.0",
-    "oao": "^1.3.1",
     "babel-cli": "^6.26.0",
     "babel-eslint": "^8.2.1",
     "babel-plugin-transform-es2015-arrow-functions": "6.22.0",
@@ -34,7 +35,9 @@
     "eslint-plugin-prettier": "^2.6.0",
     "eslint-plugin-react": "^7.6.1",
     "flow-bin": "^0.65.0",
+    "lerna": "^2.8.0",
     "mobx": "^3.4.1",
+    "oao": "^1.3.1",
     "prettier": "^1.10.2"
   }
 }

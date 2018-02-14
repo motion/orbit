@@ -20,33 +20,6 @@ const BLACKLIST = {
 
 console.log('writing screenshots to', Constants.TMP_DIR)
 
-type TappState = {
-  name: string,
-  offset: [Number, Number],
-  bounds: [Number, Number],
-  screen: [Number, Number],
-}
-
-type Word = {
-  word: string,
-  weight: Number,
-  top: Number,
-  left: Number,
-  width: Number,
-  height: Number,
-}
-
-type TScreenState = {
-  appState?: TappState,
-  ocrWords?: [Word],
-  linePositions?: [Number],
-  lastOCR: Number,
-  lastScreenChange: Number,
-  mousePosition: { x: Number, y: Number },
-  keyboard: Object,
-  highlightWords: { [String]: boolean },
-}
-
 export default class ScreenState {
   stopped = false
   oracle = new Oracle()

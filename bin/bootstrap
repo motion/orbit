@@ -111,4 +111,4 @@ ensure-dir ./packages/gloss/lib -- build
 ensure-file ./.git/hooks/post-merge -- copy-bootstrap-hook
 
 echo ""
-echo "done! run `build --watch` before developing"
+echo "done! run 'build --watch' before developing"

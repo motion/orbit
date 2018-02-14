@@ -175,7 +175,7 @@ export default class Root extends React.Component {
         <OraWindow onRef={rootStore.handleOraRef} />
         <PeekWindow appPosition={Screen.state.oraPosition.slice(0)} />
         <SettingsWindow />
-        <Tray onClick={Screen.swiftBridge.toggle} />
+        <Tray />
       </App>
     )
   }

@@ -7,9 +7,10 @@ import Screen from '@mcro/screen'
 
 @view.electron
 export default class TrayEl {
-  render(props) {
+  render() {
     return (
       <Tray
+        onClick={Screen.swiftBridge.toggle}
         image={Path.join(
           Constants.ROOT_PATH,
           'resources',
@@ -21,7 +22,6 @@ export default class TrayEl {
             ? 'Paused'
             : Screen.appState.contextMessage || 'Orbit'
         }
-        {...props}
       />
     )
   }

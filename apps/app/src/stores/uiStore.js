@@ -34,7 +34,6 @@ export default class UIStore {
 
   get showOra() {
     const { pinned, hidden } = Screen.state
-    console.log('showOra', 'pinned, hidden', pinned, hidden)
     return pinned || !hidden
   }
 
@@ -52,11 +51,15 @@ export default class UIStore {
     this._watchContextMessage()
     this._watchTrayTitle()
     this.react(
-      () => Screen.electronState.shouldHide,
-      hidden => {
-        console.log('app is doing a thing', hidden)
+      () => [
+        Screen.electronState.shouldHide || 0,
+        Screen.electronState.shouldShow || 0,
+      ],
+      ([shouldHide, shouldShow]) => {
+        const hidden = shouldHide > shouldShow
         Screen.setState({ hidden })
       },
+      true,
     )
   }
 

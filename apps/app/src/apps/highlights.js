@@ -52,9 +52,10 @@ class HighlightsStore {
       return true
     }
     const isTesting = this.ocrWords.length && this.ocrWords[0].length === 4
-    if (desktopState.keyboard.option) {
-      return desktopState.lastOCR > desktopState.lastScreenChange
-    }
+    return desktopState.lastOCR > desktopState.lastScreenChange
+    // if (desktopState.keyboard.option) {
+
+    // }
     return isTesting
   }
 

@@ -70,24 +70,21 @@ echo 3001 > ~/.puma-dev/orbit
 
 yarn install
 
-echo "lerna bootstrap"
-rm lerna_debug.json &> /dev/null
+echo "bootstrap"
 npx oao bootstrap
 
-function compile-root-modules() {
-  npx lerna exec --parallel \
-    --scope @mcro/gloss \
-    --scope @mcro/css \
-    --scope @mcro/hmr \
-    --scope @mcro/hmr-view \
-    --scope @mcro/babel-preset-motion \
-    --scope @mcro/builder \
-      -- \
-        BABEL_ENV=es6 babel src --out-dir es6 -s true
+function compile-modules-for-building() {
+  (cd packages/gloss && npm run build) &
+  (cd packages/css && npm run build) &
+  (cd packages/hmr && npm run build) &
+  (cd packages/hmr-view && npm run build) &
+  (cd packages/babel-preset-motion && npm run build) &
+  (cd packages/builder && npm run build) &
+  wait
 }
 
 function link-root-modules() {
-  npx lerna exec --parallel -- yarn link
+  npx oao all "yarn link" --parallel
   yarn link @mcro/gloss &
   yarn link @mcro/css &
   yarn link @mcro/hmr &
@@ -99,24 +96,19 @@ function link-root-modules() {
 function link-ts-configs() {
   echo "link tsconfig"
   # TODO once we can get this fuckin wroking
-  # npx lerna exec --parallel -- ln -s ../../tsconfig.package.json ./tsconfig.json
+  # npx oao all "ln -s ../../tsconfig.package.json ./tsconfig.json" --parallel
 }
 
 function copy-bootstrap-hook() {
   cp ./bin/post-merge ./.git/hooks
 }
 
-# function link-buildconfig() {
-#   npx lerna exec --parallel -- ln -s ../../buildconfig .
-# }
-
 # internal tools
-ensure-dir ./packages/gloss/es6 -- compile-root-modules
+ensure-dir ./packages/gloss/es6 -- compile-modules-for-building
 ensure-symlink ./node_modules/@mcro/gloss -- link-root-modules
 ensure-dir ./packages/gloss/lib -- build
 # ensure-symlink ./packages/gloss/tsconfig.json -- link-ts-configs
-# ensure-symlink ./packages/gloss/buildconfig -- link-buildconfigs
 ensure-file ./.git/hooks/post-merge -- copy-bootstrap-hook
 
 echo ""
-echo "done! be sure to run build --watch before running stuff"
+echo "done! run build --watch before developing"

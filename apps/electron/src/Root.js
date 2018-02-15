@@ -22,14 +22,14 @@ import * as Constants from '~/constants'
 
     willMount() {
       global.rootStore = this
-
-      // setup initial state
+      // initial state
       const { position, size } = Helpers.getAppSize()
       const screenSize = screen.getPrimaryDisplay().workAreaSize
       const oraPosition = [screenSize.width - Constants.ORA_WIDTH, 20]
-      console.log('setting oraPosition', oraPosition)
+      // setup screen
       Screen.start('electron', {
-        shouldHide: false,
+        shouldHide: null,
+        shouldShow: null,
         peekState: {},
         focused: false,
         restart: false,
@@ -75,9 +75,13 @@ import * as Constants from '~/constants'
         clearTimeout(optnLeave)
         const { option, optionCleared } = keyboard
         console.log(
-          'Root.keyboard option, optionCleared',
+          'react to keyboard',
+          'option',
           option,
+          'optionCleared',
           optionCleared,
+          'Screen.appState.hidden',
+          Screen.appState.hidden,
         )
         if (Screen.appState.hidden) {
           // HIDDEN
@@ -123,7 +127,7 @@ import * as Constants from '~/constants'
       console.log('showOra')
       this.appRef.show()
       await Helpers.sleep(50)
-      Screen.setState({ shouldHide: false })
+      Screen.setState({ shouldShow: Date.now() })
       await Helpers.sleep(250) // animate
       this.appRef.focus()
       this.oraRef.focus()
@@ -131,7 +135,7 @@ import * as Constants from '~/constants'
 
     async hideOra() {
       console.log('hideOra')
-      Screen.setState({ shouldHide: true })
+      Screen.setState({ shouldHide: Date.now() })
       await Helpers.sleep(150) // animate
       if (
         !Screen.state.settingsVisible &&

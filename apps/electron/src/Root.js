@@ -28,7 +28,8 @@ import * as Constants from '~/constants'
       const oraPosition = [screenSize.width - Constants.ORA_WIDTH, 20]
       // setup screen
       Screen.start('electron', {
-        shouldHide: false,
+        shouldHide: null,
+        shouldShow: null,
         peekState: {},
         focused: false,
         restart: false,
@@ -126,8 +127,7 @@ import * as Constants from '~/constants'
       console.log('showOra')
       this.appRef.show()
       await Helpers.sleep(50)
-      console.log('set should hide false')
-      Screen.setState({ shouldHide: false })
+      Screen.setState({ shouldShow: Date.now() })
       await Helpers.sleep(250) // animate
       this.appRef.focus()
       this.oraRef.focus()
@@ -135,8 +135,7 @@ import * as Constants from '~/constants'
 
     async hideOra() {
       console.log('hideOra')
-      console.log('set should hide true')
-      Screen.setState({ shouldHide: true })
+      Screen.setState({ shouldHide: Date.now() })
       await Helpers.sleep(150) // animate
       if (
         !Screen.state.settingsVisible &&

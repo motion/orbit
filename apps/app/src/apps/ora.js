@@ -92,7 +92,6 @@ const OraContent = () => (
 export default class Ora {
   render({ oraStore }) {
     const { showOra } = oraStore.ui
-    console.log('Ora.render showOra', showOra)
     return (
       <oraContainer>
         <UI.Theme name="dark">

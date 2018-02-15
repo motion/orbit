@@ -58,6 +58,7 @@ class Screen {
     oraPosition: [],
     peekState: {},
     shouldHide: null,
+    shouldShow: null,
   }
   // state of app
   appState = {
@@ -165,10 +166,11 @@ class Screen {
       throw new Error(`No source provided in screenStore state update`)
     }
     const changed = []
+    const stateObj = this[`${source}State`]
     for (const key of Object.keys(state)) {
-      const stateObj = this[`${source}State`]
+      // console.log('isEqual', key, stateObj[key], state[key])
       if (!isEqual(stateObj[key], state[key])) {
-        stateObj[key] = state[key]
+        this[`${source}State`][key] = state[key]
         changed.push(key)
       }
     }

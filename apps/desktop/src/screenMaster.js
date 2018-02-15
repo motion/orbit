@@ -128,6 +128,7 @@ export default class ScreenState {
     this.oracle.onBoxChanged(count => {
       const isApp = this.watchSettings.name === 'App'
       if (isApp) {
+        console.log('app detected change, clearing...')
         this.resetHighlights()
         this.socketSendAll(DESKTOP_KEY, { clearWord: APP_ID })
       } else {
@@ -386,8 +387,6 @@ export default class ScreenState {
       console.log('screen-master received connection', uid)
       // send current state
       this.socketSend(socket, this.state)
-      // clear old highlights if theyre still up
-      this.resetHighlights()
       // add to active sockets
       this.activeSockets.push({ uid, socket })
       // listen for incoming

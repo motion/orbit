@@ -79,8 +79,7 @@ export default class Server {
   }
 
   setupSearch() {
-    const searchIndex = require.resolve('@mcro/search')
-    const searchDist = path.join(searchIndex, '..', '..', 'build')
+    const searchDist = require.resolve('@mcro/search/bundle')
     log('setting up search')
     this.app.use('/search', express.static(searchDist))
   }

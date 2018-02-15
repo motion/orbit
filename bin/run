@@ -11,10 +11,5 @@ killgroup() {
   kill 0
 }
 
-if [ "$ACTION" = "backend" ]; then
-  echo "Open about:inspect in Chrome to debug Node"
-  compose up ${@:2}
-else
-  cd apps/$1
-  npm run start ${@:2}
-fi
+cd apps/$1
+npm run start ${@:2}

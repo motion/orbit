@@ -11,6 +11,6 @@ check_run() {
 }
 
 check_run package.json "bootstrap"
-check_run apps/api/package.json "in api install"
-check_run apps/web/package.json "in web install"
-check_run apps/electron/package.json "in electron install"
+check_run apps/desktop/package.json "in desktop npm run build"
+check_run apps/app/package.json "in app npm run build"
+check_run apps/electron/package.json "in electron npm run build"

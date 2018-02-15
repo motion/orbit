@@ -3,15 +3,21 @@ import { Server } from 'ws'
 import Oracle from '@mcro/oracle'
 import { isEqual, throttle, last } from 'lodash'
 import iohook from 'iohook'
-import * as Constants from '~/constants'
 import killPort from 'kill-port'
 
 const PORT = 40510
 const DESKTOP_KEY = 'desktop'
 const APP_ID = -1
+
+// prevent apps from clearing highlights
+const PREVENT_CLEARING = {
+  electron: true,
+}
+// prevent apps from triggering appState updates
 const PREVENT_WATCHING = {
   electron: true,
 }
+// prevent apps from OCR
 const PREVENT_SCANNING = {
   iterm2: true,
   VSCode: true,
@@ -21,13 +27,12 @@ const PREVENT_SCANNING = {
   ActivityMonitor: true,
 }
 
-console.log('writing screenshots to', Constants.TMP_DIR)
-
 export default class ScreenState {
   stopped = false
   oracle = new Oracle()
   activeSockets = []
   curState = {}
+  curAppName = null
   watchSettings = {}
 
   state: TScreenState = {
@@ -100,9 +105,15 @@ export default class ScreenState {
           nextState.offset = value
       }
 
+      // update before prevent_watching
+      this.curAppName = nextState.name
+
       if (PREVENT_WATCHING[nextState.name]) {
+        this.oracle.pause()
         console.log('dont watch', nextState.name)
         return
+      } else {
+        this.oracle.resume()
       }
 
       // clear old stuff
@@ -156,6 +167,9 @@ export default class ScreenState {
   }
 
   resetHighlights = () => {
+    if (PREVENT_CLEARING[this.curAppName]) {
+      return
+    }
     this.updateState({
       lastScreenChange: Date.now(),
     })
@@ -253,7 +267,7 @@ export default class ScreenState {
     }
     const { name, offset, bounds } = this.state.appState
     if (!offset || !bounds) {
-      console.log('didnt get offset/bounds')
+      console.log('todo: initial offset/bounds')
       return
     }
     clearTimeout(this.clearOCRTimeout)

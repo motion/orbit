@@ -6,9 +6,9 @@
   "scripts": {
     "build": "echo nil",
     "watch": "echo nil",
-    "start": "kill-port 3002 && parcel -p 3002",
+    "start": "kill-port 3002 && ../../node_modules/.bin/parcel -p 3002",
     "start-prod": "static-server -p 3002 -n dist/index.html dist",
-    "build-app": "rm -r dist && parcel build --public-url /",
+    "build-app": "rm -r dist && ../../node_modules/.bin/parcel build --public-url /",
     "deploy": "./deploy.sh"
   },
   "dependencies": {
@@ -65,8 +65,5 @@
     "wink-bm25-text-search": "2.0.1",
     "wink-helpers": "^1.2.0",
     "wink-nlp-utils": "^1.7.0"
-  },
-  "devDependencies": {
-    "@mcro/builder": "^1.5.1"
   }
 }

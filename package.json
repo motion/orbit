@@ -1,11 +1,8 @@
 {
-  "name": "motion-starter",
+  "name": "orbit",
   "private": true,
   "npmClient": "yarn",
   "useWorkspaces": true,
-  "scripts": {
-    "start": "See: bin/* for commands available"
-  },
   "workspaces": ["apps/*", "packages/*"],
   "dependencies": {
     "global": "^4.3.2",
@@ -16,6 +13,7 @@
     "@mcro/babel-preset-motion": "*",
     "babel-cli": "^6.26.0",
     "babel-eslint": "^8.2.1",
+    "parcel-bundler": "^1.6.0",
     "babel-plugin-transform-es2015-arrow-functions": "6.22.0",
     "babel-plugin-transform-es3-member-expression-literals": "^6.22.0",
     "babel-plugin-transform-es3-property-literals": "^6.22.0",

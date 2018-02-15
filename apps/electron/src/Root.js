@@ -62,27 +62,14 @@ import * as Constants from '~/constants'
       // watch option hold
       let lastKeyboard = {}
       let justCleared = false
-      this.react(() => Screen.appState, x => console.log('appState', x))
-
       let optnEnter
       let optnLeave
       this.react(() => Screen.desktopState.keyboard, function watchKeyboard(
         keyboard,
       ) {
-        if (!keyboard) {
-          return
-        }
+        if (!keyboard) return
         clearTimeout(optnLeave)
         const { option, optionCleared } = keyboard
-        console.log(
-          'react to keyboard',
-          'option',
-          option,
-          'optionCleared',
-          optionCleared,
-          'Screen.appState.hidden',
-          Screen.appState.hidden,
-        )
         if (Screen.appState.hidden) {
           // HIDDEN
           // clear last if not opened yet
@@ -94,15 +81,16 @@ import * as Constants from '~/constants'
             optnEnter = setTimeout(this.showOra, 150)
           }
         } else {
+          console.log('lets hide', optionCleared, justCleared)
           // SHOWN
+          // dont toggle
           if (optionCleared) {
             justCleared = true
-            // dont toggle
             return
           }
+          // an option event comes again after cleared saying its false
           if (justCleared) {
             justCleared = false
-            // an option event comes again after cleared saying its false
             return
           }
           if (lastKeyboard.option && !option) {

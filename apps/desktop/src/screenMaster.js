@@ -81,14 +81,16 @@ export default class ScreenState {
       })
     })
     this.oracle.onClear(() => {
+      console.log('RESET oracle onClear')
       this.resetHighlights()
     })
     let lastId = null
     this.oracle.onWindowChange((event, value) => {
       let nextState = { ...this.curState }
+      let id = lastId
       switch (event) {
         case 'FrontmostWindowChangedEvent':
-          const id = value.id || lastId
+          id = value.id
           nextState = {
             id,
             title: value.title,
@@ -96,7 +98,6 @@ export default class ScreenState {
             bounds: value.bounds,
             name: id ? last(id.split('.')) : value.title,
           }
-          lastId = id
           break
         case 'WindowSizeChangedEvent':
           nextState.bounds = value
@@ -117,7 +118,10 @@ export default class ScreenState {
       }
 
       // clear old stuff
-      this.resetHighlights()
+      if (lastId !== id) {
+        console.log('RESET oracle onWindowChange', nextState.name)
+        this.resetHighlights()
+      }
 
       // update
       this.curState = nextState
@@ -128,7 +132,7 @@ export default class ScreenState {
     this.oracle.onBoxChanged(count => {
       const isApp = this.watchSettings.name === 'App'
       if (isApp) {
-        console.log('app detected change, clearing...')
+        console.log('RESET oracle boxChanged (App)')
         this.resetHighlights()
         this.socketSendAll(DESKTOP_KEY, { clearWord: APP_ID })
       } else {
@@ -137,6 +141,7 @@ export default class ScreenState {
           this.socketSendAll(DESKTOP_KEY, { clearWord: this.oracle.changedIds })
         } else {
           // else just clear it all
+          console.log('RESET oracle boxChanged (Not App)')
           this.resetHighlights()
           this.rescanApp()
         }
@@ -169,6 +174,7 @@ export default class ScreenState {
 
   resetHighlights = () => {
     if (PREVENT_CLEARING[this.curAppName]) {
+      console.log('resetHighlights prevented clear')
       return
     }
     this.updateState({

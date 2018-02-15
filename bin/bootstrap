@@ -106,7 +106,7 @@ function copy-bootstrap-hook() {
 # internal tools
 ensure-dir ./packages/gloss/es6 -- compile-modules-for-building
 ensure-symlink ./node_modules/@mcro/gloss -- link-root-modules
-ensure-dir ./packages/gloss/lib -- build
+ensure-dir ./packages/gloss/lib -- npm run build
 # ensure-symlink ./packages/gloss/tsconfig.json -- link-ts-configs
 ensure-file ./.git/hooks/post-merge -- copy-bootstrap-hook
 

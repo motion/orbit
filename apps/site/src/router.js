@@ -23,7 +23,7 @@ window.Router = AppRouter
 
 // for hmr
 if (module.hot) {
-  module.hot.accept(() => {
+  module.hot.accept('.', () => {
     AppRouter = runRouter()
     window.App.render()
   })

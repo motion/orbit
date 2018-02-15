@@ -1,0 +1,10 @@
+framework module Swindler {
+  umbrella header "Swindler.h"
+
+  export *
+  module * { export * }
+}
+
+module Swindler.__Swift {
+    exclude header "Swindler-Swift.h"
+}

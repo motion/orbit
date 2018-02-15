@@ -7,12 +7,14 @@
   "module:production": "dist/index.js",
   "license": "MIT",
   "scripts": {
+    "build": "build prod,dev",
+    "watch": "npm run build -- --watch",
     "test": "electron lib/tests"
   },
   "peerDependencies": {
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
-    "electron": "^1.7.9"
+    "electron": "1.7.10"
   },
   "dependencies": {
     "react-reconciler": "^0.7.0",

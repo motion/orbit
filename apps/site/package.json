@@ -4,9 +4,12 @@
   "version": "1.5.1",
   "main": "index.js",
   "scripts": {
+    "build": "echo nil",
+    "watch": "echo nil",
     "start": "motion watch",
     "start-prod": "static-server -p 4000 -n build/index.html build",
-    "build": "MINIFY=true NODE_ENV=production BUILD_DIR=. mcro-build",
+    "build-app": "MINIFY=true NODE_ENV=production BUILD_DIR=. mcro-build",
+    "watch-app": "npm run build -- --watch",
     "deploy": "surge ./build tryorbit.com"
   },
   "dependencies": {
@@ -17,9 +20,8 @@
     "add": "^2.0.6",
     "animated": "^0.2.1",
     "babel-polyfill": "^6.23.0",
-    "lerna": "^2.5.1",
     "lodash": "^4.17.4",
-    "mobx": "^3.3.1",
+    "mobx": "^3.4.1",
     "mobx-formatters": "^1.0.0",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",

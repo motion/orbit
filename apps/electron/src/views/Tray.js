@@ -3,28 +3,14 @@ import { Tray } from '@mcro/reactron'
 import { view } from '@mcro/black'
 import Path from 'path'
 import * as Constants from '~/constants'
+import Screen from '@mcro/screen'
 
-class TrayStore {
-  get rootStore() {
-    return this.props.rootStore
-  }
-
-  willMount() {
-    this.watch(() => {
-      console.log('got new oraState', this.rootStore.oraState)
-    })
-  }
-}
-
-@view.attach('rootStore')
-@view.provide({
-  trayStore: TrayStore,
-})
 @view.electron
 export default class TrayEl {
-  render({ rootStore, trayStore, ...props }) {
+  render() {
     return (
       <Tray
+        onClick={Screen.swiftBridge.toggle}
         image={Path.join(
           Constants.ROOT_PATH,
           'resources',
@@ -32,11 +18,10 @@ export default class TrayEl {
           'orbitTemplate.png',
         )}
         title={
-          rootStore.screenState.isPaused
+          Screen.swiftState.isPaused
             ? 'Paused'
-            : rootStore.oraState.contextMessage || 'Orbit'
+            : Screen.appState.contextMessage || 'Orbit'
         }
-        {...props}
       />
     )
   }

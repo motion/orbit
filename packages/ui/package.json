@@ -8,6 +8,10 @@
   "module:production": "dist/index.js",
   "author": "Motion (motion.io)",
   "license": "MIT",
+  "scripts": {
+    "build": "build prod,dev",
+    "watch": "npm run build -- --watch"
+  },
   "dependencies": {
     "@mcro/black": "^1.5.1",
     "@mcro/gloss": "^1.5.1",
@@ -24,7 +28,7 @@
     "raf-throttle": "^2.0.3"
   },
   "peerDependencies": {
-    "mobx": "*",
+    "mobx": "^3.4.1",
     "lodash": "*",
     "react": "^0.14.0 || ^15.0.0 || ^16.0.0",
     "react-dom": "^0.14.0 || ^15.0.0 || ^16.0.0"

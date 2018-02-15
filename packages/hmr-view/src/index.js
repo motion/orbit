@@ -7,14 +7,14 @@ let reloadedInstances = 0
 let lastHotReload = Date.now()
 
 // so you can hmr your hmr bro
-if (module && module.hot && module.hot.accept) {
-  module.hot.accept(() => {
-    viewProxies = module.hot.data.viewProxies || {}
-  })
-  module.hot.dispose(data => {
-    data.viewProxies = viewProxies
-  })
-}
+// if (module && module.hot && module.hot.accept) {
+//   module.hot.accept('.', () => {
+//     viewProxies = module.hot.data.viewProxies || {}
+//   })
+//   module.hot.dispose(data => {
+//     data.viewProxies = viewProxies
+//   })
+// }
 
 // wraps each file
 export default function proxyReactComponents({
@@ -44,7 +44,7 @@ export default function proxyReactComponents({
     }
 
     if (module && module.hot && module.hot.accept) {
-      module.hot.accept(() => {}) // to make it a fast hmr
+      module.hot.accept('.', () => {}) // to make it a fast hmr
     }
 
     // if existing proxy

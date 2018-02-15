@@ -3,6 +3,10 @@
   "main": "lib/index.js",
   "module": "lib/index.js",
   "version": "1.5.1",
+  "scripts": {
+    "build": "build prod,dev",
+    "watch": "npm run build -- --watch"
+  },
   "dependencies": {
     "invariant": "^2.2.2",
     "prop-types": "^15.5.10"

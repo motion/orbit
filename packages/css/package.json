@@ -7,6 +7,10 @@
   "module:production": "dist/index.js",
   "author": "Motion",
   "license": "MIT",
+  "scripts": {
+    "build": "build prod,dev,es6",
+    "watch": "npm run build -- --watch"
+  },
   "publishConfig": {
     "access": "public"
   }

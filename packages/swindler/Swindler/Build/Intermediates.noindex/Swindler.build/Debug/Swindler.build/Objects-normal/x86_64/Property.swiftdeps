@@ -1,0 +1,361 @@
+### Swift dependencies file v0 ###
+provides-top-level:
+- "PropertyNotifier"
+- "PropertyDelegate"
+- "PropertyError"
+- "PropertyTypeSpec"
+- "OfType"
+- "OfOptionalType"
+- "Property"
+- "WriteableProperty"
+provides-nominal:
+- "8Swindler16PropertyNotifierP"
+- "8Swindler16PropertyDelegateP"
+- "8Swindler13PropertyErrorO"
+- "8Swindler16PropertyTypeSpecP"
+- "8Swindler6OfTypeV"
+- "8Swindler14OfOptionalTypeV"
+- "8Swindler8PropertyC"
+- "8Swindler17WriteablePropertyC"
+provides-member:
+- ["8Swindler16PropertyNotifierP", ""]
+- ["8Swindler16PropertyDelegateP", ""]
+- ["8Swindler13PropertyErrorO", ""]
+- ["8Swindler16PropertyTypeSpecP", ""]
+- ["8Swindler6OfTypeV", ""]
+- ["8Swindler14OfOptionalTypeV", ""]
+- ["8Swindler8PropertyC", ""]
+- ["8Swindler17WriteablePropertyC", ""]
+provides-dynamic-lookup:
+depends-top-level:
+- !private "+"
+- !private "=="
+- "AnyObject"
+- "AssignmentPrecedence"
+- "Bool"
+- !private "CastingPrecedence"
+- "DispatchQueue"
+- "Equatable"
+- "Error"
+- "NSLock"
+- "OfOptionalType"
+- "OfType"
+- !private "Optional"
+- "Promise"
+- "Property"
+- "PropertyDelegate"
+- "PropertyDelegateThunk"
+- "PropertyError"
+- "PropertyEventType"
+- "PropertyNotifier"
+- "PropertyNotifierThunk"
+- "PropertyTypeSpec"
+- !private "String"
+- !private "StringLiteralType"
+- "TimeInterval"
+- !private "Void"
+- "WriteableProperty"
+- !private "assert"
+- !private "log"
+depends-member:
+- !private ["s23BidirectionalCollectionP", "init"]
+- ["s7CVarArgP", "global"]
+- ["s7CVarArgP", "init"]
+- !private ["s7CVarArgP", "lock"]
+- !private ["s7CVarArgP", "unlock"]
+- !private ["s10CollectionP", "init"]
+- !private ["s10ComparableP", "init"]
+- ["s28CustomDebugStringConvertibleP", "global"]
+- ["s28CustomDebugStringConvertibleP", "init"]
+- !private ["s28CustomDebugStringConvertibleP", "lock"]
+- !private ["s28CustomDebugStringConvertibleP", "unlock"]
+- !private ["s29CustomPlaygroundQuickLookableP", "init"]
+- !private ["s17CustomReflectableP", "init"]
+- ["s23CustomStringConvertibleP", "global"]
+- ["s23CustomStringConvertibleP", "init"]
+- !private ["s23CustomStringConvertibleP", "lock"]
+- !private ["s23CustomStringConvertibleP", "unlock"]
+- !private ["s9DecodableP", "init"]
+- ["So14DispatchObjectC", "global"]
+- ["So13DispatchQueueC", "global"]
+- !private ["s9EncodableP", "init"]
+- ["s9EquatableP", "default"]
+- ["s9EquatableP", "global"]
+- ["s9EquatableP", "init"]
+- !private ["s9EquatableP", "lock"]
+- !private ["s9EquatableP", "unlock"]
+- ["s5ErrorP", "_code"]
+- ["s5ErrorP", "_domain"]
+- ["s5ErrorP", "_getEmbeddedNSError"]
+- ["s5ErrorP", "_userInfo"]
+- !private ["s5ErrorP", "invalidObject"]
+- !private ["s5ErrorP", "missingValue"]
+- ["s5ErrorP", ""]
+- !private ["s43ExpressibleByExtendedGraphemeClusterLiteralP", "init"]
+- !private ["s26ExpressibleByStringLiteralP", "init"]
+- !private ["s33ExpressibleByUnicodeScalarLiteralP", "init"]
+- ["s8HashableP", "default"]
+- ["s8HashableP", "global"]
+- ["s8HashableP", "init"]
+- !private ["s8HashableP", "lock"]
+- !private ["s8HashableP", "unlock"]
+- !private ["8Swindler3LogV", "debug"]
+- !private ["8Swindler3LogV", "error"]
+- !private ["8Swindler3LogV", "warn"]
+- !private ["s25LosslessStringConvertibleP", "init"]
+- !private ["s10MirrorPathP", "init"]
+- !private ["So8NSCodingP", "init"]
+- !private ["So9NSCopyingP", "init"]
+- !private ["So21NSItemProviderReadingP", "init"]
+- !private ["So21NSItemProviderWritingP", "init"]
+- ["So6NSLockC", "init"]
+- !private ["So6NSLockC", "lock"]
+- !private ["So6NSLockC", "unlock"]
+- ["So9NSLockingP", "init"]
+- !private ["So9NSLockingP", "lock"]
+- !private ["So9NSLockingP", "unlock"]
+- !private ["So16NSMutableCopyingP", "init"]
+- ["So8NSObjectC", "global"]
+- ["So8NSObjectC", "init"]
+- !private ["So8NSObjectC", "lock"]
+- !private ["So8NSObjectC", "unlock"]
+- ["So16NSObjectProtocolP", "global"]
+- ["So16NSObjectProtocolP", "init"]
+- !private ["So16NSObjectProtocolP", "lock"]
+- !private ["So16NSObjectProtocolP", "unlock"]
+- !private ["So19NSPasteboardReadingP", "init"]
+- !private ["So19NSPasteboardWritingP", "init"]
+- !private ["So14NSSecureCodingP", "init"]
+- !private ["So8NSStringC", "init"]
+- ["So9OS_objectC", "global"]
+- ["8Swindler14OfOptionalTypeV", "Bool"]
+- ["8Swindler14OfOptionalTypeV", "NonOptionalType"]
+- ["8Swindler14OfOptionalTypeV", "PropertyType"]
+- ["8Swindler14OfOptionalTypeV", "T"]
+- ["8Swindler14OfOptionalTypeV", "deinit"]
+- ["8Swindler14OfOptionalTypeV", "equal"]
+- ["8Swindler14OfOptionalTypeV", "init"]
+- ["8Swindler14OfOptionalTypeV", "toOptionalType"]
+- ["8Swindler14OfOptionalTypeV", "toPropertyType"]
+- ["8Swindler6OfTypeV", "Bool"]
+- ["8Swindler6OfTypeV", "NonOptionalType"]
+- !private ["8Swindler6OfTypeV", "PropertyError"]
+- ["8Swindler6OfTypeV", "PropertyType"]
+- !private ["8Swindler6OfTypeV", "String"]
+- ["8Swindler6OfTypeV", "T"]
+- ["8Swindler6OfTypeV", "deinit"]
+- ["8Swindler6OfTypeV", "equal"]
+- ["8Swindler6OfTypeV", "init"]
+- !private ["8Swindler6OfTypeV", "log"]
+- ["8Swindler6OfTypeV", "toOptionalType"]
+- ["8Swindler6OfTypeV", "toPropertyType"]
+- ["8Swindler8PropertyC", "DispatchQueue"]
+- !private ["8Swindler8PropertyC", "Error"]
+- ["8Swindler8PropertyC", "NSLock"]
+- ["8Swindler8PropertyC", "NonOptionalType"]
+- ["8Swindler8PropertyC", "OptionalType"]
+- ["8Swindler8PropertyC", "Promise"]
+- ["8Swindler8PropertyC", "PropertyDelegate"]
+- ["8Swindler8PropertyC", "PropertyDelegateThunk"]
+- !private ["8Swindler8PropertyC", "PropertyError"]
+- ["8Swindler8PropertyC", "PropertyEventType"]
+- ["8Swindler8PropertyC", "PropertyNotifier"]
+- ["8Swindler8PropertyC", "PropertyNotifierThunk"]
+- ["8Swindler8PropertyC", "PropertyType"]
+- ["8Swindler8PropertyC", "TypeSpec"]
+- !private ["8Swindler8PropertyC", "Void"]
+- !private ["8Swindler8PropertyC", "assert"]
+- ["8Swindler8PropertyC", "backgroundQueue"]
+- !private ["8Swindler8PropertyC", "backingStoreLock"]
+- ["8Swindler8PropertyC", "deinit"]
+- ["8Swindler8PropertyC", "delegate"]
+- !private ["8Swindler8PropertyC", "delegate_"]
+- !private ["8Swindler8PropertyC", "handleError"]
+- ["8Swindler8PropertyC", "init"]
+- !private ["8Swindler8PropertyC", "initialized"]
+- !private ["8Swindler8PropertyC", "log"]
+- !private ["8Swindler8PropertyC", "notifier"]
+- !private ["8Swindler8PropertyC", "requestLock"]
+- !private ["8Swindler8PropertyC", "set"]
+- !private ["8Swindler8PropertyC", "updateBackingStore"]
+- ["8Swindler8PropertyC", "value"]
+- !private ["8Swindler8PropertyC", "value_"]
+- ["8Swindler8PropertyC", ""]
+- ["8Swindler16PropertyDelegateP", "Equatable"]
+- ["8Swindler16PropertyDelegateP", "Promise"]
+- ["8Swindler16PropertyDelegateP", "T"]
+- !private ["8Swindler16PropertyDelegateP", "initialize"]
+- ["8Swindler16PropertyDelegateP", "readValue"]
+- ["8Swindler16PropertyDelegateP", "writeValue"]
+- ["8Swindler13PropertyErrorO", "Error"]
+- ["8Swindler13PropertyErrorO", "TimeInterval"]
+- ["8Swindler13PropertyErrorO", "_code"]
+- ["8Swindler13PropertyErrorO", "_domain"]
+- ["8Swindler13PropertyErrorO", "_getEmbeddedNSError"]
+- ["8Swindler13PropertyErrorO", "_userInfo"]
+- ["8Swindler13PropertyErrorO", "deinit"]
+- ["8Swindler13PropertyErrorO", "failure"]
+- ["8Swindler13PropertyErrorO", "illegalValue"]
+- ["8Swindler13PropertyErrorO", "invalidObject"]
+- ["8Swindler13PropertyErrorO", "missingValue"]
+- ["8Swindler13PropertyErrorO", "timeout"]
+- ["8Swindler16PropertyNotifierP", "Bool"]
+- ["8Swindler16PropertyNotifierP", "Object"]
+- ["8Swindler16PropertyNotifierP", "PropertyEventType"]
+- ["8Swindler16PropertyNotifierP", "notify"]
+- ["8Swindler16PropertyNotifierP", "notifyInvalid"]
+- ["8Swindler12PropertyTypeP", "DispatchQueue"]
+- ["8Swindler12PropertyTypeP", "NSLock"]
+- ["8Swindler12PropertyTypeP", "Promise"]
+- !private ["8Swindler12PropertyTypeP", "PropertyDelegateThunk"]
+- !private ["8Swindler12PropertyTypeP", "PropertyNotifierThunk"]
+- !private ["8Swindler12PropertyTypeP", "PropertyType"]
+- !private ["8Swindler12PropertyTypeP", "TypeSpec"]
+- !private ["8Swindler12PropertyTypeP", "assert"]
+- !private ["8Swindler12PropertyTypeP", "backingStoreLock"]
+- !private ["8Swindler12PropertyTypeP", "delegate"]
+- !private ["8Swindler12PropertyTypeP", "delegate_"]
+- !private ["8Swindler12PropertyTypeP", "init"]
+- !private ["8Swindler12PropertyTypeP", "initialized"]
+- !private ["8Swindler12PropertyTypeP", "log"]
+- !private ["8Swindler12PropertyTypeP", "notifier"]
+- !private ["8Swindler12PropertyTypeP", "set"]
+- !private ["8Swindler12PropertyTypeP", "value"]
+- !private ["8Swindler12PropertyTypeP", "value_"]
+- ["8Swindler12PropertyTypeP", ""]
+- ["8Swindler16PropertyTypeSpecP", "Bool"]
+- ["8Swindler16PropertyTypeSpecP", "Equatable"]
+- ["8Swindler16PropertyTypeSpecP", "NonOptionalType"]
+- !private ["8Swindler16PropertyTypeSpecP", "PropertyError"]
+- ["8Swindler16PropertyTypeSpecP", "PropertyType"]
+- !private ["8Swindler16PropertyTypeSpecP", "String"]
+- !private ["8Swindler16PropertyTypeSpecP", "T"]
+- ["8Swindler16PropertyTypeSpecP", "equal"]
+- !private ["8Swindler16PropertyTypeSpecP", "log"]
+- ["8Swindler16PropertyTypeSpecP", "toOptionalType"]
+- ["8Swindler16PropertyTypeSpecP", "toPropertyType"]
+- ["8Swindler16PropertyTypeSpecP", ""]
+- ["8Dispatch0A3QoSV0B6SClassO", "default"]
+- !private ["s26RangeReplaceableCollectionP", "init"]
+- !private ["s8SequenceP", "init"]
+- !private ["s12StaticStringV", "init"]
+- !private ["SS", "init"]
+- !private ["s14StringProtocolP", "init"]
+- !private ["s16TextOutputStreamP", "init"]
+- !private ["s20TextOutputStreamableP", "init"]
+- ["8Swindler17WriteablePropertyC", "NonOptionalType"]
+- ["8Swindler17WriteablePropertyC", "Promise"]
+- ["8Swindler17WriteablePropertyC", "PropertyDelegate"]
+- ["8Swindler17WriteablePropertyC", "PropertyNotifier"]
+- ["8Swindler17WriteablePropertyC", "PropertyType"]
+- !private ["8Swindler17WriteablePropertyC", "TypeSpec"]
+- ["8Swindler17WriteablePropertyC", "deinit"]
+- ["8Swindler17WriteablePropertyC", "init"]
+- !private ["8Swindler17WriteablePropertyC", "log"]
+- !private ["8Swindler17WriteablePropertyC", "set"]
+- ["8Swindler17WriteablePropertyC", "value"]
+- !private ["s23_BidirectionalIndexableP", "init"]
+- !private ["s51_ExpressibleByBuiltinExtendedGraphemeClusterLiteralP", "init"]
+- !private ["s34_ExpressibleByBuiltinStringLiteralP", "init"]
+- !private ["s39_ExpressibleByBuiltinUTF16StringLiteralP", "init"]
+- !private ["s41_ExpressibleByBuiltinUnicodeScalarLiteralP", "init"]
+- !private ["s33_ExpressibleByStringInterpolationP", "init"]
+- !private ["s35_HasCustomAnyHashableRepresentationP", "init"]
+- !private ["s10_IndexableP", "init"]
+- !private ["s14_IndexableBaseP", "init"]
+- ["10Foundation27_KeyValueCodingAndObservingP", "global"]
+- ["10Foundation27_KeyValueCodingAndObservingP", "init"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "lock"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "unlock"]
+- !private ["s21_ObjectiveCBridgeableP", "init"]
+- !private ["s26_RangeReplaceableIndexableP", "init"]
+- !private ["s16_SwiftStringViewP", "init"]
+depends-nominal:
+- !private "s23BidirectionalCollectionP"
+- "s7CVarArgP"
+- !private "s10CollectionP"
+- !private "s10ComparableP"
+- "s28CustomDebugStringConvertibleP"
+- !private "s29CustomPlaygroundQuickLookableP"
+- !private "s17CustomReflectableP"
+- "s23CustomStringConvertibleP"
+- !private "s9DecodableP"
+- "So14DispatchObjectC"
+- "So13DispatchQueueC"
+- !private "s9EncodableP"
+- "s9EquatableP"
+- "s5ErrorP"
+- !private "s43ExpressibleByExtendedGraphemeClusterLiteralP"
+- !private "s26ExpressibleByStringLiteralP"
+- !private "s33ExpressibleByUnicodeScalarLiteralP"
+- "s8HashableP"
+- !private "8Swindler3LogV"
+- !private "s25LosslessStringConvertibleP"
+- !private "s10MirrorPathP"
+- !private "So8NSCodingP"
+- !private "So9NSCopyingP"
+- !private "So21NSItemProviderReadingP"
+- !private "So21NSItemProviderWritingP"
+- "So6NSLockC"
+- "So9NSLockingP"
+- !private "So16NSMutableCopyingP"
+- "So8NSObjectC"
+- "So16NSObjectProtocolP"
+- !private "So19NSPasteboardReadingP"
+- !private "So19NSPasteboardWritingP"
+- !private "So14NSSecureCodingP"
+- !private "So8NSStringC"
+- "So9OS_objectC"
+- "8Swindler14OfOptionalTypeV"
+- "8Swindler6OfTypeV"
+- "8Swindler8PropertyC"
+- "8Swindler16PropertyDelegateP"
+- "8Swindler13PropertyErrorO"
+- "8Swindler16PropertyNotifierP"
+- "8Swindler12PropertyTypeP"
+- "8Swindler16PropertyTypeSpecP"
+- "8Dispatch0A3QoSV0B6SClassO"
+- !private "s26RangeReplaceableCollectionP"
+- !private "s8SequenceP"
+- !private "s12StaticStringV"
+- !private "SS"
+- !private "s14StringProtocolP"
+- !private "s16TextOutputStreamP"
+- !private "s20TextOutputStreamableP"
+- "8Swindler17WriteablePropertyC"
+- !private "s23_BidirectionalIndexableP"
+- !private "s51_ExpressibleByBuiltinExtendedGraphemeClusterLiteralP"
+- !private "s34_ExpressibleByBuiltinStringLiteralP"
+- !private "s39_ExpressibleByBuiltinUTF16StringLiteralP"
+- !private "s41_ExpressibleByBuiltinUnicodeScalarLiteralP"
+- !private "s33_ExpressibleByStringInterpolationP"
+- !private "s35_HasCustomAnyHashableRepresentationP"
+- !private "s10_IndexableP"
+- !private "s14_IndexableBaseP"
+- "10Foundation27_KeyValueCodingAndObservingP"
+- !private "s21_ObjectiveCBridgeableP"
+- !private "s26_RangeReplaceableIndexableP"
+- !private "s16_SwiftStringViewP"
+depends-dynamic-lookup:
+depends-external:
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Dispatch.apinotesc"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/XPC.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/ObjectiveC.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreData.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreImage.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/QuartzCore.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Dispatch.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Metal.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Darwin.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Foundation.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreFoundation.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreGraphics.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Swift.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/IOKit.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/AppKit.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/SwiftOnoneSupport.swiftmodule"
+- "/Users/nick/orbit/packages/swindler/Swindler/Swindler/ASLLog/ASLLog.h"
+- "/Users/nick/orbit/packages/swindler/Swindler/Swindler/Swindler.h"
+- "/Users/nick/orbit/packages/swindler/Swindler/Build/Intermediates.noindex/Swindler.build/Debug/Swindler.build/unextended-module.modulemap"
+- "/Users/nick/orbit/packages/swindler/Swindler/Swindler/ASLLog/module.modulemap"
+interface-hash: "682e2316487c40c8a1cdb12c0acc8459"

@@ -7,12 +7,16 @@
   "module:production": "dist/index.js",
   "author": "Motion (motion.io)",
   "license": "MIT",
+  "scripts": {
+    "build": "build prod,dev",
+    "watch": "npm run build -- --watch"
+  },
   "dependencies": {
     "history": "^4.7.2",
     "url-pattern": "^1.0.3"
   },
   "peerDependencies": {
-    "mobx": "^3.3.1"
+    "mobx": "^3.4.1"
   },
   "publishConfig": {
     "access": "public"

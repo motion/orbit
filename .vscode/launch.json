@@ -2,11 +2,17 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Debug Main Process",
       "type": "node",
-      "request": "attach",
-      "address": "192.168.99.100",
-      "name": "Attach to Process",
-      "port": 30006
+      "request": "launch",
+      "cwd": "${workspaceRoot}/apps/electron",
+      "runtimeExecutable":
+        "${workspaceRoot}/apps/electron/node_modules/.bin/electron",
+      "windows": {
+        "runtimeExecutable":
+          "${workspaceRoot}/apps/electron/node_modules/.bin/electron.cmd"
+      },
+      "args": ["."]
     }
   ]
 }

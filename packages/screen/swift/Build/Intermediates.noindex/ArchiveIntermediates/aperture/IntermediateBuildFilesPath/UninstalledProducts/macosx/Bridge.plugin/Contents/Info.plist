@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleDisplayName</key>
+	<string>Bridge</string>
+	<key>CFBundleExecutable</key>
+	<string>Bridge</string>
+	<key>CFBundleIconFile</key>
+	<string>PythonApplet.icns</string>
+	<key>CFBundleIdentifier</key>
+	<string>org.pythonmac.unspecified.Bridge</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>Bridge</string>
+	<key>CFBundlePackageType</key>
+	<string>BNDL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>0.0.0</string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>0.0.0</string>
+	<key>LSHasLocalizedDisplayName</key>
+	<false/>
+	<key>NSAppleScriptEnabled</key>
+	<false/>
+	<key>NSHumanReadableCopyright</key>
+	<string>Copyright not specified</string>
+	<key>NSMainNibFile</key>
+	<string>MainMen</string>
+	<key>NSPrincipalClass</key>
+	<string>Bridge</string>
+	<key>PyMainFileNames</key>
+	<array>
+		<string>__boot__</string>
+	</array>
+	<key>PyOptions</key>
+	<dict>
+		<key>alias</key>
+		<true/>
+		<key>argv_emulation</key>
+		<false/>
+		<key>emulate_shell_environment</key>
+		<false/>
+		<key>no_chdir</key>
+		<false/>
+		<key>prefer_ppc</key>
+		<false/>
+		<key>site_packages</key>
+		<false/>
+		<key>use_faulthandler</key>
+		<false/>
+		<key>use_pythonpath</key>
+		<false/>
+		<key>verbose</key>
+		<false/>
+	</dict>
+	<key>PyResourcePackages</key>
+	<array>
+		<string>lib/python3.6</string>
+		<string>lib/python3.6/lib-dynload</string>
+		<string>lib/python3.6/site-packages.zip</string>
+		<string>lib/python36.zip</string>
+	</array>
+	<key>PyRuntimeLocations</key>
+	<array>
+		<string>@executable_path/../Frameworks/Python.framework/Versions/3.6/Python</string>
+		<string>/Library/Frameworks/Python.framework/Versions/3.6/Python</string>
+	</array>
+	<key>PythonInfoDict</key>
+	<dict>
+		<key>PythonExecutable</key>
+		<string>/Library/Frameworks/Python.framework/Versions/3.6/bin/python3</string>
+		<key>PythonLongVersion</key>
+		<string>3.6.3 (v3.6.3:2c5fed86e0, Oct  3 2017, 00:32:08) 
+[GCC 4.2.1 (Apple Inc. build 5666) (dot 3)]</string>
+		<key>PythonShortVersion</key>
+		<string>3.6</string>
+		<key>py2app</key>
+		<dict>
+			<key>template</key>
+			<string>bundle</string>
+			<key>version</key>
+			<string>0.14</string>
+		</dict>
+	</dict>
+</dict>
+</plist>

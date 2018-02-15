@@ -1,0 +1,21 @@
+version: "Apple Swift version 4.0.3 (swiftlang-900.0.74.1 clang-900.0.39.2)"
+options: "43bfcf50ae84e2426c9c80b3669470d1"
+build_time: [1517537945, 498063000]
+inputs:
+  "/Users/nick/orbit/packages/screen/swift/aperture/Recorder.swift": [9223372036, 854775807]
+  "/Users/nick/orbit/packages/screen/swift/aperture/Images.swift": [9223372036, 854775807]
+  "/Users/nick/orbit/packages/screen/swift/aperture/SymSPell.swift": [9223372036, 854775807]
+  "/Users/nick/orbit/packages/screen/swift/aperture/Moves.swift": [9223372036, 854775807]
+  "/Users/nick/orbit/packages/screen/swift/aperture/WebSockets.swift": [9223372036, 854775807]
+  "/Users/nick/orbit/packages/screen/swift/aperture/main.swift": [9223372036, 854775807]
+  "/Users/nick/orbit/packages/screen/swift/aperture/UnionFind.swift": [9223372036, 854775807]
+  "/Users/nick/orbit/packages/screen/swift/aperture/OCRInterface.swift": [9223372036, 854775807]
+  "/Users/nick/orbit/packages/screen/swift/aperture/Characters.swift": [9223372036, 854775807]
+  "/Users/nick/orbit/packages/screen/swift/aperture/ThresholdFilter.swift": [9223372036, 854775807]
+  "/Users/nick/orbit/packages/screen/swift/aperture/Filters.swift": [9223372036, 854775807]
+  "/Users/nick/orbit/packages/screen/swift/aperture/Async.swift": [9223372036, 854775807]
+  "/Users/nick/orbit/packages/screen/swift/aperture/Extensions.swift": [9223372036, 854775807]
+  "/Users/nick/orbit/packages/screen/swift/aperture/ConnectedComponentsSwiftOCR.swift": [9223372036, 854775807]
+  "/Users/nick/orbit/packages/screen/swift/aperture/ThresholdBelowFilter.swift": [9223372036, 854775807]
+  "/Users/nick/orbit/packages/screen/swift/aperture/ConnectedComponents.swift": [9223372036, 854775807]
+  "/Users/nick/orbit/packages/screen/swift/aperture/util.swift": [9223372036, 854775807]

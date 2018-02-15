@@ -4,14 +4,17 @@
   "module": "lib/index.js",
   "module:production": "dist/index.js",
   "version": "1.5.1",
-  "scripts": {},
+  "scripts": {
+    "build": "build prod,dev,es6",
+    "watch": "npm run build -- --watch"
+  },
   "dependencies": {
     "global": "^4.3.2",
     "rxjs": "^5.5.5",
     "mobx-utils": "^3.2.1"
   },
   "peerDependencies": {
-    "mobx": "^3.3.1"
+    "mobx": "^3.4.1"
   },
   "publishConfig": {
     "access": "public"

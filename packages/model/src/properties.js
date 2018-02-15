@@ -31,7 +31,7 @@ function setProp(Target, prop) {
 
 const Properties = Object.keys(Kontur).reduce(
   (acc, cur) => ({ ...acc, [cur]: proxyProperty(Kontur[cur]) }),
-  {}
+  {},
 )
 
 export const { bool, array, object, str, nil, number, int } = Properties
@@ -79,10 +79,6 @@ export function compile(obj) {
     }
   }
   return compiled
-}
-
-if (module && module.hot) {
-  module.hot.accept(() => {})
 }
 
 // TEST :)

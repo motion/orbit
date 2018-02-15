@@ -1,3 +1,6 @@
+// this is what starts in built app
+// runs both api and electron
+
 import 'babel-polyfill'
 import { setTimeout } from 'core-js/library/web/timers'
 
@@ -11,7 +14,7 @@ export async function startAPI() {
   console.log('starting api')
   const sleep = ms => new Promise(res => setTimeout(res, ms))
   await sleep(100)
-  require('@mcro/api')
+  require('@mcro/desktop')
 }
 
 if (!process.env.DISABLE_API) {

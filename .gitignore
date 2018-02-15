@@ -36,6 +36,6 @@ packages/search/build
 
 **/*/Index
 
-# keep these lib folders because these are babel plugins
-!packages/hmr/lib
-!packages/hmr-view/lib
+# keep these folders because these are babel plugins
+!packages/hmr/es6
+!packages/hmr-view/es6

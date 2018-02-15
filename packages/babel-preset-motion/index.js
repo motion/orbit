@@ -17,7 +17,7 @@ module.exports = function(context, givenOpts) {
       // order important here
       getPlugin('babel-plugin-transform-decorators-legacy-without-clutter'),
       getPlugin('babel-plugin-transform-class-properties'),
-      getPlugin('babel-plugin-sitrep'),
+      // getPlugin('babel-plugin-sitrep'),
       getPlugin('@mcro/gloss/transform', {
         decoratorName: opts.decorator || 'view',
         jsxIf: opts.jsxIf || true,
@@ -42,14 +42,14 @@ module.exports = function(context, givenOpts) {
     ],
     presets: opts.presets || [
       getPlugin(
-        'babel-preset-env',
+        '@babel/preset-env',
         Object.assign(
           {
             // this could avoid building es6 altogether, but lets fix stack before testing
             // modules: process.env.MODULES ? false : true,
             useBuiltIns: 'usage',
             targets: opts.targets || {
-              node: opts.nodeTarget || 'current',
+              node: opts.nodeTarget || '8',
             },
             exclude: isAsync
               ? ['transform-regenerator', 'transform-async-to-generator']
@@ -58,9 +58,9 @@ module.exports = function(context, givenOpts) {
           opts.env,
         ),
       ),
-      getPlugin('babel-preset-react'),
-      isAsync && getPlugin('babel-preset-stage-1-without-async'),
-      noAsync && getPlugin('babel-preset-stage-1'),
+      getPlugin('@babel/preset-typescript'),
+      getPlugin('@babel/preset-react'),
+      getPlugin('@babel/preset-stage-1'),
     ],
   }
 

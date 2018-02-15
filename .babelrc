@@ -24,7 +24,7 @@
               "@mcro/hmr",
               "@mcro/hmr-view",
               "babel-plugin-sitrep",
-              "babel-preset-env"
+              "@babel/preset-env"
             ]
           }
         ]

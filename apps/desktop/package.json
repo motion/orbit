@@ -6,7 +6,7 @@
   "scripts": {
     "build": "build es6",
     "watch": "npm run build -- --watch",
-    "start": "NODE_ENV=development DEBUG=api,crawler,crawler:*,api:* ../../node_modules/.bin/babel-watch es6/index.js",
+    "start": "NODE_ENV=development DEBUG=api,crawler,crawler:*,api:* ../../node_modules/.bin/parcel --target=node src/index.js",
     "start-prod": "NODE_ENV=production node index.js",
     "postinstall": "electron-rebuild -v 1.7.10"
   },

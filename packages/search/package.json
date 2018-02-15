@@ -7,11 +7,10 @@
   "scripts": {
     "start": "node index.js",
     "start-prod": "NODE_ENV=production IS_PROD=true node lib/index.js",
-    "start-dev": "../../node_modules/.bin/babel-watch --inspect=0.0.0.0:5858 lib/index.js",
+    "start-dev": "npx nodemon --inspect=0.0.0.0:5858 lib/index.js",
     "build": "build dev & npm run bundle",
     "watch": "build dev --watch && npm run bundle -- --watch",
-    "bundle":
-      "CHUNK_COMMONS=false MINIFY=true NODE_ENV=production BUILD_DIR=. ENTRY=./src mcro-build"
+    "bundle": "npx parcel build ./src/index"
   },
   "dependencies": {
     "@mcro/black": "*",
@@ -22,8 +21,5 @@
   },
   "peerDependencies": {
     "mobx": "^3.4.1"
-  },
-  "devDependencies": {
-    "@mcro/builder": "^1.5.1"
   }
 }

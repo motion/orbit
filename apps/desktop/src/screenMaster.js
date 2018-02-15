@@ -3,15 +3,21 @@ import { Server } from 'ws'
 import Oracle from '@mcro/oracle'
 import { isEqual, throttle, last } from 'lodash'
 import iohook from 'iohook'
-import * as Constants from '~/constants'
 import killPort from 'kill-port'
 
 const PORT = 40510
 const DESKTOP_KEY = 'desktop'
 const APP_ID = -1
+
+// prevent apps from clearing highlights
+const PREVENT_CLEARING = {
+  electron: true,
+}
+// prevent apps from triggering appState updates
 const PREVENT_WATCHING = {
   electron: true,
 }
+// prevent apps from OCR
 const PREVENT_SCANNING = {
   iterm2: true,
   VSCode: true,
@@ -21,13 +27,12 @@ const PREVENT_SCANNING = {
   ActivityMonitor: true,
 }
 
-console.log('writing screenshots to', Constants.TMP_DIR)
-
 export default class ScreenState {
   stopped = false
   oracle = new Oracle()
   activeSockets = []
   curState = {}
+  curAppName = null
   watchSettings = {}
 
   state: TScreenState = {
@@ -76,14 +81,16 @@ export default class ScreenState {
       })
     })
     this.oracle.onClear(() => {
+      console.log('RESET oracle onClear')
       this.resetHighlights()
     })
     let lastId = null
     this.oracle.onWindowChange((event, value) => {
       let nextState = { ...this.curState }
+      let id = lastId
       switch (event) {
         case 'FrontmostWindowChangedEvent':
-          const id = value.id || lastId
+          id = value.id
           nextState = {
             id,
             title: value.title,
@@ -91,7 +98,6 @@ export default class ScreenState {
             bounds: value.bounds,
             name: id ? last(id.split('.')) : value.title,
           }
-          lastId = id
           break
         case 'WindowSizeChangedEvent':
           nextState.bounds = value
@@ -100,13 +106,22 @@ export default class ScreenState {
           nextState.offset = value
       }
 
+      // update before prevent_watching
+      this.curAppName = nextState.name
+
       if (PREVENT_WATCHING[nextState.name]) {
+        this.oracle.pause()
         console.log('dont watch', nextState.name)
         return
+      } else {
+        this.oracle.resume()
       }
 
       // clear old stuff
-      this.resetHighlights()
+      if (lastId !== id) {
+        console.log('RESET oracle onWindowChange', nextState.name)
+        this.resetHighlights()
+      }
 
       // update
       this.curState = nextState
@@ -117,6 +132,7 @@ export default class ScreenState {
     this.oracle.onBoxChanged(count => {
       const isApp = this.watchSettings.name === 'App'
       if (isApp) {
+        console.log('RESET oracle boxChanged (App)')
         this.resetHighlights()
         this.socketSendAll(DESKTOP_KEY, { clearWord: APP_ID })
       } else {
@@ -125,6 +141,7 @@ export default class ScreenState {
           this.socketSendAll(DESKTOP_KEY, { clearWord: this.oracle.changedIds })
         } else {
           // else just clear it all
+          console.log('RESET oracle boxChanged (Not App)')
           this.resetHighlights()
           this.rescanApp()
         }
@@ -156,6 +173,10 @@ export default class ScreenState {
   }
 
   resetHighlights = () => {
+    if (PREVENT_CLEARING[this.curAppName]) {
+      console.log('resetHighlights prevented clear')
+      return
+    }
     this.updateState({
       lastScreenChange: Date.now(),
     })
@@ -253,7 +274,7 @@ export default class ScreenState {
     }
     const { name, offset, bounds } = this.state.appState
     if (!offset || !bounds) {
-      console.log('didnt get offset/bounds')
+      console.log('todo: initial offset/bounds')
       return
     }
     clearTimeout(this.clearOCRTimeout)
@@ -372,8 +393,6 @@ export default class ScreenState {
       console.log('screen-master received connection', uid)
       // send current state
       this.socketSend(socket, this.state)
-      // clear old highlights if theyre still up
-      this.resetHighlights()
       // add to active sockets
       this.activeSockets.push({ uid, socket })
       // listen for incoming

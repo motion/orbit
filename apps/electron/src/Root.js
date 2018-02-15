@@ -22,14 +22,14 @@ import * as Constants from '~/constants'
 
     willMount() {
       global.rootStore = this
-
-      // setup initial state
+      // initial state
       const { position, size } = Helpers.getAppSize()
       const screenSize = screen.getPrimaryDisplay().workAreaSize
       const oraPosition = [screenSize.width - Constants.ORA_WIDTH, 20]
-      console.log('setting oraPosition', oraPosition)
+      // setup screen
       Screen.start('electron', {
-        shouldHide: false,
+        shouldHide: null,
+        shouldShow: null,
         peekState: {},
         focused: false,
         restart: false,
@@ -62,23 +62,14 @@ import * as Constants from '~/constants'
       // watch option hold
       let lastKeyboard = {}
       let justCleared = false
-      this.react(() => Screen.appState, x => console.log('appState', x))
-
       let optnEnter
       let optnLeave
       this.react(() => Screen.desktopState.keyboard, function watchKeyboard(
         keyboard,
       ) {
-        if (!keyboard) {
-          return
-        }
+        if (!keyboard) return
         clearTimeout(optnLeave)
         const { option, optionCleared } = keyboard
-        console.log(
-          'Root.keyboard option, optionCleared',
-          option,
-          optionCleared,
-        )
         if (Screen.appState.hidden) {
           // HIDDEN
           // clear last if not opened yet
@@ -90,15 +81,16 @@ import * as Constants from '~/constants'
             optnEnter = setTimeout(this.showOra, 150)
           }
         } else {
+          console.log('lets hide', optionCleared, justCleared)
           // SHOWN
+          // dont toggle
           if (optionCleared) {
             justCleared = true
-            // dont toggle
             return
           }
+          // an option event comes again after cleared saying its false
           if (justCleared) {
             justCleared = false
-            // an option event comes again after cleared saying its false
             return
           }
           if (lastKeyboard.option && !option) {
@@ -123,7 +115,7 @@ import * as Constants from '~/constants'
       console.log('showOra')
       this.appRef.show()
       await Helpers.sleep(50)
-      Screen.setState({ shouldHide: false })
+      Screen.setState({ shouldShow: Date.now() })
       await Helpers.sleep(250) // animate
       this.appRef.focus()
       this.oraRef.focus()
@@ -131,7 +123,7 @@ import * as Constants from '~/constants'
 
     async hideOra() {
       console.log('hideOra')
-      Screen.setState({ shouldHide: true })
+      Screen.setState({ shouldHide: Date.now() })
       await Helpers.sleep(150) // animate
       if (
         !Screen.state.settingsVisible &&

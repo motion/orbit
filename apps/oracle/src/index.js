@@ -71,7 +71,6 @@ export default class Oracle {
     await this.runScreenProcess()
     await this.connectToScreenProcess()
     this.monitorScreenProcess()
-    console.log('Started screen')
   }
 
   actionHandlers = {
@@ -196,7 +195,6 @@ export default class Oracle {
       throw new Error('Call `.stop()` first')
     }
     const binDir = this.debugBuild ? DEBUG_PATH : RELEASE_PATH
-    console.log('binDir', binDir)
     this.process = execa('./orbit', [], {
       cwd: binDir,
       reject: false,
@@ -344,7 +342,6 @@ export default class Oracle {
 
   socketSend(action, data) {
     if (!this.listeners.length) {
-      console.log('wait for connect')
       this.awaitingSocket.push({ action, data })
       return
     }
@@ -378,7 +375,6 @@ export default class Oracle {
     // handle socket between swift
     let id = 0
     this.wss.on('connection', socket => {
-      console.log('connected')
       // add to active sockets
       this.listeners.push({ id: id++, socket })
       // send initial state

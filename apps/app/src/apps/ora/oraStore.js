@@ -88,6 +88,11 @@ export default class OraStore {
       })
     }
 
+    // todo: setting in initial state isnt working... queudState initial sync bug
+    setTimeout(() => {
+      Screen.setState({ disablePeek: true })
+    }, 1000)
+
     // start this after screen
     this.ui = new UIStore({ oraStore: this })
 

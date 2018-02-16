@@ -68,10 +68,10 @@ wait
 echo "3001 > ~/.puma-dev/orbit"
 echo 3001 > ~/.puma-dev/orbit
 
+echo "yarn install"
 yarn install
-
-echo "bootstrap"
-npx oao bootstrap
+echo "rush install"
+rush install
 
 function link-root-modules() {
   npx oao all "yarn link" --parallel

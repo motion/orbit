@@ -334,7 +334,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "touch ../../../apps/api/src/index.js";
+			shellScript = "touch ../../../apps/desktop/src/index.js";
 		};
 /* End PBXShellScriptBuildPhase section */
 

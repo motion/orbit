@@ -153,7 +153,7 @@ class Characters {
           let bckwdMovement = lastCharEndX - char.x
           let fwdMovement = newCharEndX - lastCharEndX
           if fwdMovement < bckwdMovement * 3 || bckwdMovement > 16  {
-            print("absorb line \(id) char \(foundChars.count)")
+//            print("absorb line \(id) char \(foundChars.count)")
             // have last one eat it up
             last.width += char.x + char.width
             // and move on

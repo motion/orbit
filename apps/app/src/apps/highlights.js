@@ -134,7 +134,7 @@ class OCRWord {
           width: width + HL_PAD * 2,
           height: height + HL_PAD * 2,
           background: color,
-          fontSize: 14,
+          fontSize: 10,
         }}
       >
         <wordInner>{word}</wordInner>

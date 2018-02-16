@@ -1,6 +1,7 @@
 #!/bin/bash
 
 (cd swindler && carthage update --platform mac)
+(cd pyocr && ./build.sh)
 
 cd orbit
 carthage update --platform mac

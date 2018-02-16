@@ -2,13 +2,14 @@
   "name": "@mcro/css",
   "version": "1.5.1",
   "description": "",
-  "main": "lib/index.js",
+  "main": "es6/index.js",
   "module": "lib/index.js",
   "module:production": "dist/index.js",
   "author": "Motion",
   "license": "MIT",
   "scripts": {
     "build": "build prod,dev,es6",
+    "prebuild": "build es6",
     "watch": "npm run build -- --watch"
   },
   "publishConfig": {

@@ -78,7 +78,7 @@ export default function({ types: t, template }) {
   function getDisplayName(node) {
     const property = find(
       node.arguments[0].properties,
-      node => node.key.name === 'displayName'
+      node => node.key.name === 'displayName',
     )
     return property && property.value.value
   }
@@ -91,7 +91,7 @@ export default function({ types: t, template }) {
   function wrapComponent(node, componentId, wrapperFunctionId) {
     return t.callExpression(
       t.callExpression(wrapperFunctionId, [t.stringLiteral(componentId)]),
-      [node]
+      [node],
     )
   }
 
@@ -144,7 +144,7 @@ export default function({ types: t, template }) {
       let wrapped = wrapComponent(
         expression,
         componentId,
-        this.wrapperFunctionId
+        this.wrapperFunctionId,
       )
       let constId
 
@@ -187,7 +187,7 @@ export default function({ types: t, template }) {
       })
 
       path.replaceWith(
-        wrapComponent(path.node, componentId, this.wrapperFunctionId)
+        wrapComponent(path.node, componentId, this.wrapperFunctionId),
       )
     },
   }
@@ -209,7 +209,7 @@ export default function({ types: t, template }) {
         throw new Error(
           'babel-plugin-react-transform requires that you specify options ' +
             'in .babelrc or from the Babel Node API, and that it is an object ' +
-            'with a transforms property which is an array.'
+            'with a transforms property which is an array.',
         )
       }
     }
@@ -231,10 +231,10 @@ export default function({ types: t, template }) {
 
     build() {
       const componentsDeclarationId = this.file.scope.generateUidIdentifier(
-        'components'
+        'components',
       )
       const wrapperFunctionId = this.file.scope.generateUidIdentifier(
-        'wrapComponent'
+        'wrapComponent',
       )
 
       const components = this.collectAndWrapComponents(wrapperFunctionId)
@@ -245,10 +245,10 @@ export default function({ types: t, template }) {
 
       const componentsDeclaration = this.initComponentsDeclaration(
         componentsDeclarationId,
-        components
+        components,
       )
       const configuredTransforms = this.initTransformers(
-        componentsDeclarationId
+        componentsDeclarationId,
       )
       const wrapperFunction = this.initWrapperFunction(wrapperFunctionId)
 
@@ -299,8 +299,8 @@ export default function({ types: t, template }) {
           componentProps.push(
             t.objectProperty(
               t.identifier('displayName'),
-              t.stringLiteral(component.name)
-            )
+              t.stringLiteral(component.name),
+            ),
           )
         }
 
@@ -308,8 +308,8 @@ export default function({ types: t, template }) {
           componentProps.push(
             t.objectProperty(
               t.identifier('isInFunction'),
-              t.booleanLiteral(true)
-            )
+              t.booleanLiteral(true),
+            ),
           )
         }
 
@@ -327,7 +327,7 @@ export default function({ types: t, template }) {
       return t.variableDeclaration('const', [
         t.variableDeclarator(
           componentsDeclarationId,
-          t.objectExpression(props)
+          t.objectExpression(props),
         ),
       ])
     }
@@ -348,7 +348,7 @@ export default function({ types: t, template }) {
         const transformImportId = this.file.addImport(
           transformName,
           'default',
-          transformName
+          transformName,
         )
 
         const transformLocals = transform.locals.map(local => {
@@ -360,7 +360,7 @@ export default function({ types: t, template }) {
         })
 
         const configuredTransformId = this.file.scope.generateUidIdentifier(
-          transformName
+          transformName,
         )
         const configuredTransform = t.variableDeclaration('const', [
           t.variableDeclarator(
@@ -372,7 +372,7 @@ export default function({ types: t, template }) {
                 locals: t.arrayExpression(transformLocals),
                 imports: t.arrayExpression(transformImports),
               }),
-            ])
+            ]),
           ),
         ])
 

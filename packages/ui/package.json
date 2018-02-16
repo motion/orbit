@@ -25,7 +25,9 @@
     "react-tilt": "^0.1.4",
     "react-virtualized": "^9.13.0",
     "time-ago": "^0.1.0",
-    "raf-throttle": "^2.0.3"
+    "raf-throttle": "^2.0.3",
+    "prop-types": "^15.6.0",
+    "batch-processor": "^1.0.0"
   },
   "peerDependencies": {
     "mobx": "^3.4.1",

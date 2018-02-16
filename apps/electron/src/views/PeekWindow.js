@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react'
 import * as Constants from '~/constants'
-import { view } from '@mcro/black'
+import { view, watch } from '@mcro/black'
 import { Window } from '@mcro/reactron'
 import { isEqual, memoize } from 'lodash'
 import * as Helpers from '~/helpers'
@@ -83,6 +83,29 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
   componentWillMount() {
     this.watchHovers()
   }
+
+  @watch
+  alignPeekWithLinePositions = [
+    () => Screen.desktopState.linePositions || [],
+    lines => {
+      console.log('i see line positions')
+      let minX = 100000
+      let maxX = 0
+      let minY = 100000
+      let maxY = 0
+      // found place for window to go
+      for (const [lx, ly, lw, lh] of lines) {
+        if (lx + lw > maxX) maxX = lx + lw
+        if (lx < minX) minX = lx
+        if (ly < minY) minY = ly
+        if (ly + lh > maxY) maxY = ly + lh
+      }
+      const linesBoundingBox = [minX, minY, maxX - minX, maxY - minY]
+      console.log('got line bounding box!', linesBoundingBox)
+      // Screen.setState({ linesBoundingBox })
+    },
+    true,
+  ]
 
   componentWillReceiveProps({ appPosition }) {
     if (!isEqual(appPosition, this.props.appPosition)) {
@@ -178,6 +201,10 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
   })
 
   tearPeek = () => {
+    if (true) {
+      console.log('want to tear this damn peek')
+      return
+    }
     const [peek, ...otherPeeks] = this.state.windows
     this.peekKey++
     const windows = [

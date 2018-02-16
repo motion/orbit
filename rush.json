@@ -1,0 +1,115 @@
+{
+  "rushVersion": "4.2.5",
+  "npmVersion": "5.6.0",
+  "nodeSupportedVersionRange": ">=8.9.0 <9.5.0",
+  "projects": [
+    {
+      "packageName": "@mcro/automagical",
+      "projectFolder": "packages/automagical"
+    },
+    {
+      "packageName": "@mcro/babel-preset-motion",
+      "projectFolder": "packages/babel-preset-motion"
+    },
+    {
+      "packageName": "@mcro/black",
+      "projectFolder": "packages/black"
+    },
+    {
+      "packageName": "@mcro/builder",
+      "projectFolder": "packages/builder"
+    },
+    {
+      "packageName": "@mcro/constants",
+      "projectFolder": "packages/constants"
+    },
+    {
+      "packageName": "@mcro/crawler",
+      "projectFolder": "packages/crawler"
+    },
+    {
+      "packageName": "@mcro/css",
+      "projectFolder": "packages/css"
+    },
+    {
+      "packageName": "@mcro/decor",
+      "projectFolder": "packages/decor"
+    },
+    {
+      "packageName": "@mcro/gloss",
+      "projectFolder": "packages/gloss"
+    },
+    {
+      "packageName": "@mcro/helpers",
+      "projectFolder": "packages/helpers"
+    },
+    {
+      "packageName": "@mcro/hmr",
+      "projectFolder": "packages/hmr"
+    },
+    {
+      "packageName": "@mcro/hmr-view",
+      "projectFolder": "packages/hmr-view"
+    },
+    {
+      "packageName": "@mcro/model",
+      "projectFolder": "packages/model"
+    },
+    {
+      "packageName": "@mcro/passport-slack",
+      "projectFolder": "packages/passport-slack"
+    },
+    {
+      "packageName": "@mcro/r2",
+      "projectFolder": "packages/r2"
+    },
+    {
+      "packageName": "@mcro/reactron",
+      "projectFolder": "packages/reactron"
+    },
+    {
+      "packageName": "@mcro/router",
+      "projectFolder": "packages/router"
+    },
+    {
+      "packageName": "@mcro/screen",
+      "projectFolder": "packages/screen"
+    },
+    {
+      "packageName": "@mcro/search",
+      "projectFolder": "packages/search"
+    },
+    {
+      "packageName": "@mcro/react-tunnel",
+      "projectFolder": "packages/react-tunnel"
+    },
+    {
+      "packageName": "@mcro/ui",
+      "projectFolder": "packages/ui"
+    },
+    {
+      "packageName": "@mcro/app",
+      "projectFolder": "apps/app"
+    },
+    {
+      "packageName": "@mcro/desktop",
+      "projectFolder": "apps/desktop"
+    },
+    {
+      "packageName": "@mcro/electron",
+      "projectFolder": "apps/electron"
+    },
+    {
+      "packageName": "@mcro/models",
+      "projectFolder": "apps/models"
+    },
+    {
+      "packageName": "@mcro/oracle",
+      "projectFolder": "apps/oracle"
+    },
+    {
+      "packageName": "@mcro/site",
+      "projectFolder": "apps/site"
+    }
+  ]
+}

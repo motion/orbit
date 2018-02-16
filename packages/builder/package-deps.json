@@ -1,0 +1,16 @@
+{
+  "files": {
+    "packages/builder/.yarnclean": "b591611ea7ac935fc14ec90f4ffeffd1bf7058d8",
+    "packages/builder/mcro-build.js": "347ee707449ff0182e0001242708561ae8440c41",
+    "packages/builder/package-deps.json": "0796a745a98cabba45e735aabb4cd705a68eb08b",
+    "packages/builder/package.json": "660a9f7196db5f97e3d870ebeb3fb5b24626a490",
+    "packages/builder/src/config/build.config.js": "47f268a797ce2dc141878e575bd035408b870102",
+    "packages/builder/src/config/build.log.js": "604b4b05146c407b57a5d06ecac5e45ccbac7449",
+    "packages/builder/src/config/env.js": "82d80a0d19ec9192e9c800b4a20133789c0b7535",
+    "packages/builder/src/config/paths.js": "25efab546155c234a35c041df6df9b0ab43a2406",
+    "packages/builder/src/index.js": "d671ac1e77a7786d23fc82ad17407780e0bd0288",
+    "packages/builder/src/run.js": "c7ba2415882dfd97b265df998f986ce6599e284b",
+    "packages/builder/yarn.lock": "ea7e3037117d33b49b464f18b1bbc7f5df264d0f"
+  },
+  "arguments": "build es6 "
+}

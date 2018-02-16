@@ -65,9 +65,10 @@
     "whatkey": "^2.0.1",
     "wink-bm25-text-search": "2.0.1",
     "wink-helpers": "^1.2.0",
-    "wink-nlp-utils": "^1.7.0"
+    "wink-nlp-utils": "^1.7.0",
+    "regenerator-runtime": "^0.11.1"
   },
   "devDependencies": {
-    "@mcro/builder": "^1.5.1"
+    "babel-core": "^6.26.0"
   }
 }

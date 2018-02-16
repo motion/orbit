@@ -9,72 +9,18 @@ set +e
 file-exists ".env"
 file-exists ".env.dev"
 
-function ensure-dep {
-  cmd=${@:3}
-  if [ "$(bin-exists $1)" = "" ]; then
-    echo "$1 is not installed, installing..."
-    if [ "$cmd" = "" ]; then
-      echo "please install first!"
-      exit 1
-    else
-      $($cmd)
-    fi
-  fi
-  echo "installed: $1"
-}
-
-function ensure-dir {
-  cmd=${@:3}
-  if [ ! -d "$1" ]; then
-    echo "$1 doesnt exist, running... $cmd"
-    $($cmd)
-  fi
-  echo "directory exists: $1"
-}
-
-function ensure-file {
-  cmd=${@:3}
-  if [ ! -f "$1" ]; then
-    echo "$1 doesnt exist, running... $cmd"
-    $($cmd)
-  fi
-  echo "exists: $1"
-}
-
-function ensure-symlink {
-  cmd=${@:3}
-  if [ ! -L "$1" ]; then
-    echo "$1 doesnt exist, running... $cmd"
-    $($cmd)
-  fi
-  echo "symlink exists: $1"
-}
-
-function install-puma-dev {
-  brew install puma/puma/puma-dev
-  sudo puma-dev -setup
-  puma-dev -install
-}
-
 xcode-select --install 2> /dev/null
 ensure-dep "brew" -- /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 ensure-dep "npm" -- brew install node &
 ensure-dep "yarn" -- npm i -g yarn &
-ensure-dep "puma-dev" -- install-puma-dev &
-ensure-dep "parcel" -- yarn global add parcel-bundler &
 
 wait
 
-echo "3001 > ~/.puma-dev/orbit"
-echo 3001 > ~/.puma-dev/orbit
-
 yarn install
-
-echo "bootstrap"
-npx oao bootstrap
+npx lerna bootstrap
 
 function link-root-modules() {
-  npx oao all "yarn link" --parallel
+  lerna exec -- yarn link
   yarn link @mcro/gloss &
   yarn link @mcro/css &
   yarn link @mcro/hmr &
@@ -83,20 +29,28 @@ function link-root-modules() {
   wait
 }
 
-function link-ts-configs() {
-  echo "link tsconfig"
-  # TODO once we can get this fuckin wroking
-  # npx oao all "ln -s ../../tsconfig.package.json ./tsconfig.json" --parallel
-}
-
 function copy-bootstrap-hook() {
+  rm ./.git/hooks/post-merge
   cp ./bin/post-merge ./.git/hooks
 }
 
+function build-builder-modules() {
+  (cd packages/gloss && npm run prebuild) &
+  (cd packages/css && npm run prebuild) &
+  (cd packages/hmr && npm run prebuild) &
+  (cd packages/hmr-view && npm run prebuild) &
+  wait
+}
+
 # internal tools
+# build first
+ensure-file ./packages/hmr/es6/index.js -- build-builder-modules
+ensure-file ./packages/hmr-view/es6/index.js -- build-builder-modules
+ensure-file ./packages/gloss/es6/index.js -- build-builder-modules
+ensure-file ./packages/css/es6/index.js -- build-builder-modules
+# link second
 ensure-symlink ./node_modules/@mcro/gloss -- link-root-modules
-# ensure-symlink ./packages/gloss/tsconfig.json -- link-ts-configs
-ensure-file ./.git/hooks/post-merge -- copy-bootstrap-hook
+copy-bootstrap-hook
 
 echo ""
 echo "done! run build --watch before developing"

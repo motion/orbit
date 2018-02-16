@@ -12,7 +12,8 @@
     "@mcro/automagical": "^1.5.1",
     "@mcro/decor": "^1.5.1",
     "@mcro/gloss": "^1.5.1",
-    "global": "^4.3.0"
+    "global": "^4.3.0",
+    "prop-types": "^15.6.0"
   },
   "peerDependencies": {
     "react": "^0.14.0 || ^15.0.0 || ^16.0.0"

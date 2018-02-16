@@ -1,9 +1,6 @@
 module.exports = function(context, givenOpts) {
   const opts = givenOpts || {}
   const disable = opts.disable || []
-  const noAsync = opts.async === false
-  const isAsync = !noAsync
-
   const getPlugin = (name, opts) => {
     if (disable.find(x => x === name)) {
       return null
@@ -34,7 +31,7 @@ module.exports = function(context, givenOpts) {
         decoratorName: opts.decorator || 'view',
         transforms: [
           {
-            transform: require.resolve('@mcro/hmr-view'),
+            transform: getPlugin('@mcro/hmr-view'),
             imports: ['react'],
             locals: ['module'],
           },
@@ -48,20 +45,17 @@ module.exports = function(context, givenOpts) {
           {
             // this could avoid building es6 altogether, but lets fix stack before testing
             // modules: process.env.MODULES ? false : true,
-            useBuiltIns: 'usage',
+            useBuiltIns: 'entry',
             targets: opts.targets || {
-              node: opts.nodeTarget || 'current',
+              node: opts.nodeTarget || '8',
             },
-            exclude: isAsync
-              ? ['transform-regenerator', 'transform-async-to-generator']
-              : [],
+            exclude: ['transform-regenerator'],
           },
-          opts.env
-        )
+          opts.env,
+        ),
       ),
       getPlugin('babel-preset-react'),
-      isAsync && getPlugin('babel-preset-stage-1-without-async'),
-      noAsync && getPlugin('babel-preset-stage-1'),
+      getPlugin('babel-preset-stage-1'),
     ],
   }
 

@@ -1,16 +1,15 @@
 {
   "env": {
     "development": {
-      "presets": ["@mcro/babel-preset-motion"]
+      "presets": [["@mcro/babel-preset-motion"]]
     },
     "es6": {
       "presets": [
-        "es2015",
         [
           "@mcro/babel-preset-motion",
           {
             "nodeTarget": 8,
-            "disable": ["@mcro/hmr", "@mcro/hmr-view"]
+            "disable": ["@mcro/gloss/transform", "@mcro/hmr", "@mcro/hmr-view"]
           }
         ]
       ]
@@ -20,6 +19,7 @@
         [
           "@mcro/babel-preset-motion",
           {
+            "nodeTarget": 8,
             "disable": [
               "@mcro/hmr",
               "@mcro/hmr-view",

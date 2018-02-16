@@ -6,6 +6,12 @@ cd $ROOT
 ACTION=$1
 ARG1=$2
 
+# just in case
+rm -rf ./packages/decor/node_modules/mobx 2> /dev/null
+rm -rf ./packages/router/node_modules/mobx 2> /dev/null
+rm -rf ./packages/black/node_modules/mobx 2> /dev/null
+rm -rf ./packages/automagical/node_modules/mobx 2> /dev/null
+
 trap killgroup SIGINT
 killgroup() {
   kill 0

@@ -29,6 +29,7 @@
     "apps/oracle/orbit/orbit/Windo/Windo.swift": "e6663db2906599e02d79a9204327c99f3fcf1b04",
     "apps/oracle/orbit/orbit/main.swift": "792c54c1d825c19f2d76cf6c29ee48172562bb75",
     "apps/oracle/orbit/orbit/orbit.entitlements": "0c67376ebacb410fd873cac1d8d8dd431b262c02",
+    "apps/oracle/package-deps.json": "fcf4973cd6e6ea709597d6780baf8c33704bec02",
     "apps/oracle/package.json": "8194efa83af399def5cd42b75c4a4dc12150d510",
     "apps/oracle/pyocr/bridge.py": "76c1a5d611269b5fdb60f58df99980f108685c9d",
     "apps/oracle/pyocr/build.sh": "23a7ae3d04ab482e432f4534124c54e769ab93a3",
@@ -82,8 +83,7 @@
     "apps/oracle/swindler/Swindler/SwindlerExample": "0f7232fd0773e990c3482baaa1e5fec1c7383af8",
     "apps/oracle/swindler/Swindler/Window.swift": "a2e3cf38b9b0a95fc9816a89766d70e040dc9072",
     "apps/oracle/test.js": "c3e257c34513d5fccbc36f864db36991649a7cd0",
-    "apps/oracle/yarn.lock": "340a2f16257851138bfcdd27dbd2c5d4048657ba",
-    "apps/oracle/package-deps.json": "6aec15b6f7d3f64e891f4d11f4a0d9f8d89a3d2f"
+    "apps/oracle/yarn.lock": "340a2f16257851138bfcdd27dbd2c5d4048657ba"
   },
   "arguments": "echo nil "
 }

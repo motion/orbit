@@ -3,11 +3,11 @@
     "packages/automagical/.flowconfig": "ec099624459f4ee8e97bcf1327f18a9f12fc515e",
     "packages/automagical/.npmrc": "43c97e719a5a824700932f72e6e7e6748ce45d01",
     "packages/automagical/.yarnclean": "b591611ea7ac935fc14ec90f4ffeffd1bf7058d8",
+    "packages/automagical/package-deps.json": "9d26b560044990f5d8e1527bb0933911d6e4d825",
     "packages/automagical/package.json": "41105590011095a98eaa86a72458179f0de5d0cd",
     "packages/automagical/src/fromStream.js": "2fe1d86c32efc188435f7496262792afa78e64a0",
     "packages/automagical/src/index.js": "3573f397e40fa5b8d5bf394e3a5a5894fd111f47",
-    "packages/automagical/yarn.lock": "b9cbe6341202b4a1ed6693104f75291caddb35df",
-    "packages/automagical/package-deps.json": "e22d9cbdd8dc020b11db995221acb4b84bd0223b"
+    "packages/automagical/yarn.lock": "b9cbe6341202b4a1ed6693104f75291caddb35df"
   },
   "arguments": "build prod,dev,es6 "
 }

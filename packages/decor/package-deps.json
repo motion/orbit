@@ -4,6 +4,7 @@
     "packages/decor/.npmrc": "43c97e719a5a824700932f72e6e7e6748ce45d01",
     "packages/decor/.yarnclean": "b591611ea7ac935fc14ec90f4ffeffd1bf7058d8",
     "packages/decor/README.md": "a5ef0128e38122f16cf0e1d7edd987db70d2710d",
+    "packages/decor/package-deps.json": "3f0c0c99ad8e03cccee447a78a60d5b66304c76e",
     "packages/decor/package.json": "52497aabe79b11718c32a565a8724dacf3691f16",
     "packages/decor/src/index.js": "fcb3ed77a0fa7aeda77664b133841f30973100eb",
     "packages/decor/src/plugins/core/autobound.js": "1cb00ba798834f6e4f0b45c68e07942b74ee1bd8",
@@ -19,8 +20,7 @@
     "packages/decor/src/plugins/react/reactRenderArgs.js": "01c2f8ff4cc63af3147c022cae88043a9ec6890a",
     "packages/decor/src/plugins/react/storeProvidable.js": "41aa66161df307b12f172b0d84d8aad1d7547c36",
     "packages/decor/src/plugins/react/subscribable.js": "0a2d48e8af3139cdf52542be7eb083f952a005a2",
-    "packages/decor/yarn.lock": "34b73d5f9ffa40894ee1f75e8d42eb76daabaece",
-    "packages/decor/package-deps.json": "74876e77278f25c7564fbca774523c9573ae73da"
+    "packages/decor/yarn.lock": "34b73d5f9ffa40894ee1f75e8d42eb76daabaece"
   },
   "arguments": "build prod,dev,es6 "
 }

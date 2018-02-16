@@ -4,6 +4,7 @@
     "packages/black/.npmrc": "43c97e719a5a824700932f72e6e7e6748ce45d01",
     "packages/black/.yarnclean": "b591611ea7ac935fc14ec90f4ffeffd1bf7058d8",
     "packages/black/README.md": "a5e61065c21ec9f678c83e8c72ca5154ee1df3b3",
+    "packages/black/package-deps.json": "d44c73032f778bfd2ef92a40ebbd4bb3a711b9a0",
     "packages/black/package.json": "06ab9c51cb8359de21d4ed7298f6a9d412b5bd83",
     "packages/black/src/baseStyles.js": "cc2830f827656f514e5c1ef5e7822ac5f2671765",
     "packages/black/src/constants.js": "fceead2d8d54963d7b1048ec545a30926fc84a0f",
@@ -16,8 +17,7 @@
     "packages/black/src/store.js": "4595fd60df895c1e976578c953c9d531b567971f",
     "packages/black/src/view.js": "5b44db7160528fb14beb68e50f8b5d0ad91011b0",
     "packages/black/store.js": "e76e9812b73a1cac8d50b53cfb31993748396467",
-    "packages/black/yarn.lock": "0ad6823bbc4ab4aa9c638d4f0216d350fd804c23",
-    "packages/black/package-deps.json": "431fec8e7df9866c9ee26ff6a8d94cfca63a374f"
+    "packages/black/yarn.lock": "0ad6823bbc4ab4aa9c638d4f0216d350fd804c23"
   },
   "arguments": "build prod,dev,es6 "
 }

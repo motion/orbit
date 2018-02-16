@@ -7,6 +7,7 @@
     "apps/app/index.html": "1a2f86d9f036ac63b6f3bea97801adb6a3e52719",
     "apps/app/nginx/nginx.dev.conf": "94dcd6eee4e44d3c525f1ddd232db80bad243455",
     "apps/app/nginx/nginx.prod.conf": "96a6e9e0283c32a11d8856ba505d227b0035c1b8",
+    "apps/app/package-deps.json": "25c74a523ca0645c1158af33a3448fe01f811b8a",
     "apps/app/package.json": "459a830c9cb836014fd7df27da1fdb2802c68f6d",
     "apps/app/public/favicon.png": "ddf9176eb0d228971bc3968aa1655158a5f7cee1",
     "apps/app/public/fonts/nucleo-mini.eot": "e8bc6c036e5730394857a47970beaf87230b3614",
@@ -160,8 +161,7 @@
     "apps/app/src/views/sidebarTitle.js": "79a005c340e6df902ca5a3f532867480eff6835a",
     "apps/app/src/views/splash.js": "8b9f93d5dffef00b23316c19defa0bff3c6d4388",
     "apps/app/src/views/webview.js": "af4dac11850e60f7129020331be88836f1b29cb7",
-    "apps/app/yarn.lock": "85f4abceea502a852bf3f2682f89db7f83d6e4e6",
-    "apps/app/package-deps.json": "ee4d88aac07a0f6c90097579b287f5c4ff8c20c6"
+    "apps/app/yarn.lock": "85f4abceea502a852bf3f2682f89db7f83d6e4e6"
   },
   "arguments": "echo nil "
 }

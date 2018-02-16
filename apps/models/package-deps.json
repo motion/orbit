@@ -3,6 +3,7 @@
     "apps/models/.flowconfig": "08c108a5e920a76a7d21db6453e4553448b6346b",
     "apps/models/.npmrc": "43c97e719a5a824700932f72e6e7e6748ce45d01",
     "apps/models/.yarnclean": "b591611ea7ac935fc14ec90f4ffeffd1bf7058d8",
+    "apps/models/package-deps.json": "6ca8a286631eab76942d22b5fe58e59c77c405a8",
     "apps/models/package.json": "0ce17da8c63efa364978d9d2454eb0d3862834ab",
     "apps/models/src/constants.js": "0928be2c213249707c3f2bfce7f9400b03835e28",
     "apps/models/src/event.js": "4a553993ea0aa78bb3bdfec9cf42376a1c8ba9da",
@@ -16,8 +17,7 @@
     "apps/models/src/setting.js": "8b7e30950ee9ddf029108dab6878347a31031605",
     "apps/models/src/thing.js": "02458d62f2690a1bb8ad48b7230eca45c10c9c2c",
     "apps/models/src/user.js": "d2e4eb9f5486384249c6ec15d956d82f078b7c2e",
-    "apps/models/yarn.lock": "eac452009e52c95a02990323cede3a699d5b3289",
-    "apps/models/package-deps.json": "35e770e937d2d7e7b36d84b09a0a5f9f59638ade"
+    "apps/models/yarn.lock": "eac452009e52c95a02990323cede3a699d5b3289"
   },
   "arguments": "build prod,dev,es6 "
 }

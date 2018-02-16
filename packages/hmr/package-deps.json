@@ -5,10 +5,10 @@
     "packages/hmr/.yarnclean": "b591611ea7ac935fc14ec90f4ffeffd1bf7058d8",
     "packages/hmr/es6/index.js": "231783e1b30681534c2c0f7a6b3056e4eeccc7ac",
     "packages/hmr/es6/index.js.map": "b9bc221db4bb3b30dd14e77b3f7fbeccadc4128e",
+    "packages/hmr/package-deps.json": "9c83e2bec554e75db8ce9e327e800a1e54cd81d5",
     "packages/hmr/package.json": "fb1551154b48f99eec9d66f2e5a7efab36187c9d",
     "packages/hmr/src/index.js": "a01444b5dfc3a17459972b79ac712060bc669b0d",
-    "packages/hmr/yarn.lock": "3552a40465aed6aa615719e4d7e4aee555922ccd",
-    "packages/hmr/package-deps.json": "05752b3962f7fedeaf3b09b7e024939749106f7b"
+    "packages/hmr/yarn.lock": "3552a40465aed6aa615719e4d7e4aee555922ccd"
   },
   "arguments": "build es6 "
 }

@@ -2,11 +2,11 @@
   "files": {
     "packages/passport-slack/.npmrc": "43c97e719a5a824700932f72e6e7e6748ce45d01",
     "packages/passport-slack/.yarnclean": "b591611ea7ac935fc14ec90f4ffeffd1bf7058d8",
+    "packages/passport-slack/package-deps.json": "41c046ca22a951e0131a330aefb7ca7cc49cd727",
     "packages/passport-slack/package.json": "27dbdefd0e7b972a27d0f599edb433f67fe95b27",
     "packages/passport-slack/src/index.js": "0253955e96ac80aaf84e03a1b591e613c86c8cda",
     "packages/passport-slack/src/strategy.js": "69b9e93dd845860d6e6e5fdd290c09be501cbbbc",
-    "packages/passport-slack/yarn.lock": "35df5208665c4d6b5fc937e48942db6e7c6dc46d",
-    "packages/passport-slack/package-deps.json": "3ca83f86cc65a42d5e33ee5059714c97ce259519"
+    "packages/passport-slack/yarn.lock": "35df5208665c4d6b5fc937e48942db6e7c6dc46d"
   },
   "arguments": "build prod,dev,es6 "
 }

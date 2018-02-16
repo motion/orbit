@@ -3,6 +3,7 @@
     "packages/ui/.flowconfig": "dedf4ac206fe5483eb204352a42dd9032043d888",
     "packages/ui/.npmrc": "43c97e719a5a824700932f72e6e7e6748ce45d01",
     "packages/ui/.yarnclean": "b591611ea7ac935fc14ec90f4ffeffd1bf7058d8",
+    "packages/ui/package-deps.json": "79fc5d13f2655cdb5d634e119851faf47b9dbdad",
     "packages/ui/package.json": "94c357cc543381871d9af21cb21c40708064f7be",
     "packages/ui/src/arrow.js": "e419955f3172cb07443c613f02db712a7dfb86ac",
     "packages/ui/src/badge.js": "113e680cd47585e537e13b11f499fc8863f68597",
@@ -63,8 +64,7 @@
     "packages/ui/src/tag.js": "3529dd84c248776124a0069782539a425550d131",
     "packages/ui/src/text.js": "3e16047dd83faceeb8db2796fea464429617a8d9",
     "packages/ui/src/title.js": "811db385cbab59c6a5a7ced2e0688a71f8aa7b55",
-    "packages/ui/yarn.lock": "e490d0b85a8652e2dd32d64c94a68edf06eb4a36",
-    "packages/ui/package-deps.json": "768e1d6486119fb9699674b8add497df9c3b5073"
+    "packages/ui/yarn.lock": "e490d0b85a8652e2dd32d64c94a68edf06eb4a36"
   },
   "arguments": "build prod,dev "
 }

@@ -3,9 +3,9 @@
     "packages/babel-preset-motion/.npmrc": "43c97e719a5a824700932f72e6e7e6748ce45d01",
     "packages/babel-preset-motion/.yarnclean": "b591611ea7ac935fc14ec90f4ffeffd1bf7058d8",
     "packages/babel-preset-motion/index.js": "d278ae8cab3434ebd17b93de23cbbdaa11f4ddb4",
+    "packages/babel-preset-motion/package-deps.json": "00567a2348a8e04fad2554ab68ce281f3d1759b5",
     "packages/babel-preset-motion/package.json": "d5251f2803997cd064209d6cf497156b87d72119",
-    "packages/babel-preset-motion/yarn.lock": "a9127bc732a8de11828319e356f8679831a259b1",
-    "packages/babel-preset-motion/package-deps.json": "9ecfa07e8a2bc61df91b650b9772136480880f9d"
+    "packages/babel-preset-motion/yarn.lock": "a9127bc732a8de11828319e356f8679831a259b1"
   },
   "arguments": "echo nil "
 }

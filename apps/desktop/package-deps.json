@@ -3,6 +3,7 @@
     "apps/desktop/.npmrc": "43c97e719a5a824700932f72e6e7e6748ce45d01",
     "apps/desktop/.yarnclean": "b591611ea7ac935fc14ec90f4ffeffd1bf7058d8",
     "apps/desktop/config.json": "061ae5aa094138c89d2431a29e48fe2053a34088",
+    "apps/desktop/package-deps.json": "43130318741d644d66ddadb2b0822d28c3d26592",
     "apps/desktop/package.json": "a3ee7c267cb69ddb3d9e61bec859283808c1a483",
     "apps/desktop/src/auth.js": "1aa63b5f9e6c82c2dfd2f1997014c585b2ad7815",
     "apps/desktop/src/constants.js": "241bd5d322e31c898607ee1460a971e89ea27605",
@@ -21,8 +22,7 @@
     "apps/desktop/src/server/passportSlack.js": "4a2cdad60ac27ec147df84b56c668cbceba81f17",
     "apps/desktop/src/server/superlogin.config.js": "ce69bbb71702f027c6fc9d7dba0533e5793eff53",
     "apps/desktop/src/types.js": "4c5a0d9cdbfbbfebe5f898670a304c9b1750cd3d",
-    "apps/desktop/yarn.lock": "a3adf952a7ef04b100464eb6b9db1049d371069c",
-    "apps/desktop/package-deps.json": "406e5f6b007b27a353bb34b1db2e228229d02bb0"
+    "apps/desktop/yarn.lock": "a3adf952a7ef04b100464eb6b9db1049d371069c"
   },
   "arguments": "build es6 "
 }

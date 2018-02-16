@@ -4,6 +4,7 @@
     "apps/site/.motion.json": "a95aadf6ef55ac89db4e807a00d503f589ea5c01",
     "apps/site/.yarnclean": "b591611ea7ac935fc14ec90f4ffeffd1bf7058d8",
     "apps/site/index.html": "74df006bcadc56d7207970e86b19a97110761ba6",
+    "apps/site/package-deps.json": "443c1f602843bb10c330706029c34466cac7df76",
     "apps/site/package.json": "a0c58ed94d7a5a72c2c34e599604d12f69799d1a",
     "apps/site/public/4-point-stars.svg": "566906052da3933488acd0091f35a97c44ca526a",
     "apps/site/public/bubble.svg": "9134a4996c35f17607a93eae5fe0557bee00a7e3",
@@ -118,8 +119,7 @@
     "apps/site/src/views/stage/item.js": "f2a259ad3f0a6425fa1919e1a0f6abb11d77ac2f",
     "apps/site/src/views/stage/scene.js": "1357f157f541944af8e28b29157382bfbd8b9682",
     "apps/site/src/views/stage/stage.js": "3a6369b8ec8bf78d87a6e08b803c471629975409",
-    "apps/site/yarn.lock": "5e6e8d009fcd242f771bbff163a24a182837013a",
-    "apps/site/package-deps.json": "2863f7d58047892463e5fbb4b463be774f541c96"
+    "apps/site/yarn.lock": "5e6e8d009fcd242f771bbff163a24a182837013a"
   },
   "arguments": "echo nil "
 }

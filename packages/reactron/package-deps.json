@@ -3,6 +3,7 @@
     "packages/reactron/.npmrc": "43c97e719a5a824700932f72e6e7e6748ce45d01",
     "packages/reactron/.yarnclean": "b591611ea7ac935fc14ec90f4ffeffd1bf7058d8",
     "packages/reactron/LICENSE": "1f12b4e49436fa7e491824770aab4aef6364c946",
+    "packages/reactron/package-deps.json": "a01b12127bad5a58912d4ef84bdce4f3c078e656",
     "packages/reactron/package.json": "2b3a47cf3f331ba231f3c037d2f745950a7b851a",
     "packages/reactron/src/components/App.js": "aa0bdb9f92dce4c9c4cc50dfd2d9cd7844618737",
     "packages/reactron/src/components/BaseComponent.js": "173be7f6bddabc7fc009a4b0d1ed6132904ec23a",
@@ -22,8 +23,7 @@
     "packages/reactron/src/utils/configureEventHandler.js": "99c0b66ed794f6059319ee55acd95444a1a767cf",
     "packages/reactron/src/utils/createElement.js": "c48f796b6aac59d13d4f97642f881697e8667032",
     "packages/reactron/src/utils/renderUtils.js": "86b13452380fb1a1654f341c79d8a8ceb18b0047",
-    "packages/reactron/yarn.lock": "4f5f1f7be665406019344ee94e728f3270495ce9",
-    "packages/reactron/package-deps.json": "e98d8c4294ce411d2c8e0dacf9a9836abd722501"
+    "packages/reactron/yarn.lock": "4f5f1f7be665406019344ee94e728f3270495ce9"
   },
   "arguments": "build prod,dev "
 }

@@ -15,6 +15,7 @@
     "packages/hmr-view/es6/proxyProto.js.map": "67ef68d6a3c9de6abaf29605bafa7cc5645739de",
     "packages/hmr-view/es6/supportsProtoAssignment.js": "51c3308cb11dc9b117bf12079807d2dc753813a1",
     "packages/hmr-view/es6/supportsProtoAssignment.js.map": "79d579127a00c241a9efd1da2c04d3e68443bc0c",
+    "packages/hmr-view/package-deps.json": "44467c8cd0c052deda47ff960d508456d6301394",
     "packages/hmr-view/package.json": "9a06240393c83d3a573110679eddcb4e06fa60d6",
     "packages/hmr-view/src/bindAutoBindMethods.js": "f70cab936b0a8530b7fe4c2430ed2606ec37132f",
     "packages/hmr-view/src/deleteUnknownAutoBindMethods.js": "ef6fe1cee2a5c0b0ed05c17193fcf74e60c7e851",
@@ -22,8 +23,7 @@
     "packages/hmr-view/src/proxyClass.js": "4c66faef9f22e5d1505a2d22fc5acdae9ac2e3e9",
     "packages/hmr-view/src/proxyProto.js": "f12989094caabf5f7e844f0e8e7c5d171ad1d016",
     "packages/hmr-view/src/supportsProtoAssignment.js": "ae7d614886bc20be1dae409b7981f0af9c7ecf42",
-    "packages/hmr-view/yarn.lock": "8f7bf871b74cb3f6c4935186bcefc8d62ae45858",
-    "packages/hmr-view/package-deps.json": "2e6bfc557b472a3653c80693e5a758e0aa595bea"
+    "packages/hmr-view/yarn.lock": "8f7bf871b74cb3f6c4935186bcefc8d62ae45858"
   },
   "arguments": "build es6 "
 }

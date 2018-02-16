@@ -20,6 +20,7 @@
     "packages/gloss/es6/transform/extractStatics.js.map": "8d3950673b9e5165cdbff2d049295927e8d00930",
     "packages/gloss/es6/transform/index.js": "bc3dec6c4a481931562c8b0a6aec8b8ae0507664",
     "packages/gloss/es6/transform/index.js.map": "309cd10c9522f983245d465e1308e5f637aed13d",
+    "packages/gloss/package-deps.json": "8a49db2f24f58eceecf34884b29ae8e004c46788",
     "packages/gloss/package.json": "f7ca8fc26aa79d0944079f20ba5154bbc0cc7746",
     "packages/gloss/src/components/theme.js": "824b9ea79a2412a1ae3e5c09551dca3858de554f",
     "packages/gloss/src/components/themeProvide.js": "c723e9f7c086af48239597cbe52ab45870d7b1d5",
@@ -30,8 +31,7 @@
     "packages/gloss/src/transform/extractStatics.js": "c49540d16a5d6f8b2e2d14578b78837ef86b80b9",
     "packages/gloss/src/transform/index.js": "e706617ddb1c2e2b57d4b29f67a902ab937be892",
     "packages/gloss/transform.js": "cd666ec7f96651819e4a0a2b6dcb7a57437f3cc9",
-    "packages/gloss/yarn.lock": "16aaab1c8eb1df394af5c6175ab53d1f179b8356",
-    "packages/gloss/package-deps.json": "1f44eebe71b8a14c040c2956707d229fd978d2b1"
+    "packages/gloss/yarn.lock": "16aaab1c8eb1df394af5c6175ab53d1f179b8356"
   },
   "arguments": "build prod,dev,es6 "
 }

@@ -29,6 +29,7 @@ export default class SwiftBridge {
   }
 
   toggle = () => {
+    console.log('will toggle, isPaused?', this.state.isPaused)
     if (!this.state.isPaused) {
       this.pause()
     } else {

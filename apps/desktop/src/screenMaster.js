@@ -16,6 +16,7 @@ const PREVENT_CLEARING = {
 // prevent apps from triggering appState updates
 const PREVENT_WATCHING = {
   electron: true,
+  iterm2: true,
 }
 // prevent apps from OCR
 const PREVENT_SCANNING = {
@@ -106,16 +107,20 @@ export default class ScreenState {
           nextState.offset = value
       }
 
-      // update before prevent_watching
-      this.curAppName = nextState.name
-
+      console.log('nextState.name', nextState.name)
+      if (!nextState.name) {
+        console.log('no name recevied', value)
+        return
+      }
       if (PREVENT_WATCHING[nextState.name]) {
         this.oracle.pause()
         console.log('dont watch', nextState.name)
         return
-      } else {
-        this.oracle.resume()
       }
+
+      // update before prevent_watching
+      this.curAppName = nextState.name
+      this.oracle.resume()
 
       // clear old stuff
       if (lastId !== id) {

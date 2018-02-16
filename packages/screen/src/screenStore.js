@@ -48,7 +48,6 @@ class Screen {
     show: null,
     focused: null,
     restart: null,
-    loadSettings: null,
     showSettings: null,
     showDevTools: {},
     lastMove: null,

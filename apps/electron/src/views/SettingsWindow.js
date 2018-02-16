@@ -13,9 +13,8 @@ export default class SettingsWindow {
     )
   }
 
-  updateSettingsVisibility = showSettings => {
+  handleSettingsVisibility = showSettings => {
     Screen.setState({ showSettings })
-    this.props.onSettingsVisibility(showSettings)
   }
 
   onSettingsSized = size => Screen.setState({ size })
@@ -28,7 +27,8 @@ export default class SettingsWindow {
   }
 
   render() {
-    if (!Screen.state.loadSettings) {
+    console.log('settings', Screen.state.showSettings)
+    if (!Screen.state.showSettings) {
       return null
     }
     return (
@@ -38,7 +38,7 @@ export default class SettingsWindow {
         backgroundColor="#00000000"
         webPreferences={Constants.WEB_PREFERENCES}
         show={Screen.state.showSettings}
-        showDevTools={Screen.state.showSettingsDevTools}
+        showDevTools={Screen.state.showDevTools.settings}
         transparent
         hasShadow
         titleBarStyle="hiddenInset"

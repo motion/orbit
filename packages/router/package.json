@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "history": "^4.7.2",
+    "resolve-pathname": "^2.2.0",
     "url-pattern": "^1.0.3"
   },
   "peerDependencies": {

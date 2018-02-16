@@ -117,8 +117,10 @@ export default class Oracle {
       if (this.actionHandlers[action]) {
         this.actionHandlers[action](value)
       } else {
-        // otherwise its a window change event
-        this.onWindowChangeCB(action, value)
+        if (action) {
+          // otherwise its a window change event
+          this.onWindowChangeCB(action, value)
+        }
       }
     } catch (err) {
       console.log('error sending reply', action, 'value', value)

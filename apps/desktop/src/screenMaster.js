@@ -86,6 +86,11 @@ export default class ScreenState {
     })
     let lastId = null
     this.oracle.onWindowChange((event, value) => {
+      if (event === 'ScrollEvent') {
+        this.resetHighlights()
+        return
+      }
+      console.log('onWindowChange', event, value)
       let nextState = { ...this.curState }
       let id = lastId
       switch (event) {
@@ -106,16 +111,19 @@ export default class ScreenState {
           nextState.offset = value
       }
 
-      // update before prevent_watching
-      this.curAppName = nextState.name
-
+      if (!nextState.name) {
+        console.log('no name recevied', value)
+        return
+      }
       if (PREVENT_WATCHING[nextState.name]) {
         this.oracle.pause()
         console.log('dont watch', nextState.name)
         return
-      } else {
-        this.oracle.resume()
       }
+
+      // update before prevent_watching
+      this.curAppName = nextState.name
+      this.oracle.resume()
 
       // clear old stuff
       if (lastId !== id) {

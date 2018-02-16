@@ -33,7 +33,6 @@ import * as Constants from '~/constants'
         peekState: {},
         focused: false,
         restart: false,
-        loadSettings: false,
         showSettings: false,
         showDevTools: {
           app: false,

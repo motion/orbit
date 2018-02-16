@@ -70,3 +70,45 @@ function file-exists {
     exit 1
   fi
 }
+
+function ensure-dep {
+  cmd=${@:3}
+  if [ "$(bin-exists $1)" = "" ]; then
+    echo "$1 is not installed, installing..."
+    if [ "$cmd" = "" ]; then
+      echo "please install first!"
+      exit 1
+    else
+      $($cmd)
+    fi
+  fi
+  echo "installed: $1"
+}
+
+function ensure-dir {
+  cmd=${@:3}
+  if [ ! -d "$1" ]; then
+    echo "$1 doesnt exist, running... $cmd"
+    $($cmd)
+  fi
+  echo "directory exists: $1"
+}
+
+function ensure-file {
+  cmd=${@:3}
+  if [ ! -f "$1" ]; then
+    echo "$1 doesnt exist, running... $cmd"
+    $($cmd)
+  fi
+  echo "exists: $1"
+}
+
+function ensure-symlink {
+  cmd=${@:3}
+  if [ ! -L "$1" ]; then
+    echo "$1 doesnt exist, running... $cmd"
+    $($cmd)
+  fi
+  echo "symlink exists: $1"
+}
+

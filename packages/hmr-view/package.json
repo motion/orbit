@@ -4,6 +4,7 @@
   "main": "es6/index.js",
   "scripts": {
     "build": "build es6",
+    "prebuild": "build es6",
     "watch": "npm run build -- --watch"
   },
   "dependencies": {

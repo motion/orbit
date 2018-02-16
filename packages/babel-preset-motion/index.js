@@ -1,8 +1,6 @@
 module.exports = function(context, givenOpts) {
   const opts = givenOpts || {}
   const disable = opts.disable || []
-  const noAsync = opts.async === false
-  const isAsync = !noAsync
   const getPlugin = (name, opts) => {
     if (disable.find(x => x === name)) {
       return null
@@ -33,7 +31,7 @@ module.exports = function(context, givenOpts) {
         decoratorName: opts.decorator || 'view',
         transforms: [
           {
-            transform: require.resolve('@mcro/hmr-view'),
+            transform: getPlugin('@mcro/hmr-view'),
             imports: ['react'],
             locals: ['module'],
           },
@@ -57,8 +55,7 @@ module.exports = function(context, givenOpts) {
         ),
       ),
       getPlugin('babel-preset-react'),
-      isAsync && getPlugin('babel-preset-stage-1-without-async'),
-      noAsync && getPlugin('babel-preset-stage-1'),
+      getPlugin('babel-preset-stage-1'),
     ],
   }
 

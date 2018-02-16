@@ -10,7 +10,7 @@
           "@mcro/babel-preset-motion",
           {
             "nodeTarget": 8,
-            "disable": ["@mcro/hmr", "@mcro/hmr-view"]
+            "disable": ["@mcro/gloss/transform", "@mcro/hmr", "@mcro/hmr-view"]
           }
         ]
       ]

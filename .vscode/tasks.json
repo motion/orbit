@@ -2,26 +2,12 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "Build Swindler",
+      "label": "Build Oracle",
       "type": "shell",
-      "command": "npm run build",
+      "command": "npm run build-app",
       "group": "build",
       "options": {
-        "cwd": "${workspaceFolder}/packages/swindler"
-      },
-      "presentation": {
-        "reveal": "always",
-        "panel": "new"
-      },
-      "problemMatcher": []
-    },
-    {
-      "label": "Build Screen",
-      "type": "shell",
-      "command": "npm run build",
-      "group": "build",
-      "options": {
-        "cwd": "${workspaceFolder}/packages/screen"
+        "cwd": "${workspaceFolder}/apps/oracle"
       },
       "presentation": {
         "reveal": "always",

@@ -6,13 +6,13 @@
   "main": "lib/index",
   "scripts": {
     "build": "build dev",
+    "build-app": "./build.sh",
     "watch": "npm run build -- --watch",
     "train": "cd ./pyocr/src && python3 train.py",
     "generate": "node ./generate",
     "test": "DEBUG_IMAGES=true node ./test --debug",
     "test-fast": "node ./test",
     "test-scroll": "node ./test --scroll",
-    "build-app": "./build.sh",
     "edit": "open ./orbit/orbit.xcodeproj"
   },
   "files": [

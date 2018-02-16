@@ -16,7 +16,6 @@ const PREVENT_CLEARING = {
 // prevent apps from triggering appState updates
 const PREVENT_WATCHING = {
   electron: true,
-  iterm2: true,
 }
 // prevent apps from OCR
 const PREVENT_SCANNING = {
@@ -87,6 +86,11 @@ export default class ScreenState {
     })
     let lastId = null
     this.oracle.onWindowChange((event, value) => {
+      if (event === 'ScrollEvent') {
+        this.resetHighlights()
+        return
+      }
+      console.log('onWindowChange', event, value)
       let nextState = { ...this.curState }
       let id = lastId
       switch (event) {
@@ -107,7 +111,6 @@ export default class ScreenState {
           nextState.offset = value
       }
 
-      console.log('nextState.name', nextState.name)
       if (!nextState.name) {
         console.log('no name recevied', value)
         return

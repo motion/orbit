@@ -207,6 +207,11 @@ export default class Oracle {
     })
     this.process.stderr.setEncoding('utf8')
     this.process.stderr.on('data', data => {
+      // weird ass workaround for stdout not being captured
+      if (data && data[0] === '!') {
+        console.log(data.slice(1).trim())
+        return
+      }
       if (data.indexOf('<Notice>')) {
         return
       }

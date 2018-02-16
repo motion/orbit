@@ -134,13 +134,13 @@ class Characters {
             percentDownLine: percentDownLine,
             debugID: debugID
           )
-          if (tmpChar == nil) {
-            emptyChars += 1
-            y = maxY + 1 // move to next
-            continue
-          }
         } catch {
           tooManyMoveChars += 1
+        }
+        if tmpChar == nil {
+          emptyChars += 1
+          y = maxY + 1 // move to next
+          continue
         }
         var char = tmpChar!
         // after find character, always move to next x
@@ -153,7 +153,7 @@ class Characters {
           let bckwdMovement = lastCharEndX - char.x
           let fwdMovement = newCharEndX - lastCharEndX
           if fwdMovement < bckwdMovement * 3 || bckwdMovement > 16  {
-            print("absorb line \(id) char \(foundChars.count)")
+//            print("absorb line \(id) char \(foundChars.count)")
             // have last one eat it up
             last.width += char.x + char.width
             // and move on

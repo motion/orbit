@@ -187,10 +187,11 @@ final class Screen: NSObject {
     if shouldDebugTiming {
       if curTime != nil {
         let timeEnd = Int(Double(DispatchTime.now().uptimeNanoseconds - curTime!.uptimeNanoseconds) / 1_000_000)
-        print("\(str.padding(toLength: 36, withPad: " ", startingAt: 0)) \(timeEnd)ms")
+//        print("\(str.padding(toLength: 36, withPad: " ", startingAt: 0)) \(timeEnd)ms")
+        fputs("!\(str.padding(toLength: 36, withPad: " ", startingAt: 0)) \(timeEnd)ms", __stderrp)
         curTime = DispatchTime.now()
       } else {
-        print(str)
+        fputs("!\(str)", __stderrp)
       }
     }
   }

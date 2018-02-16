@@ -138,7 +138,9 @@ export default class ScreenState {
       } else {
         // for not many clears, try it
         if (count < 20) {
-          this.socketSendAll(DESKTOP_KEY, { clearWord: this.oracle.changedIds })
+          this.socketSendAll(DESKTOP_KEY, {
+            clearWord: this.oracle.changedIds,
+          })
         } else {
           // else just clear it all
           console.log('RESET oracle boxChanged (Not App)')
@@ -149,7 +151,9 @@ export default class ScreenState {
     })
     this.oracle.onRestored(count => {
       console.log('restore', count)
-      this.socketSendAll(DESKTOP_KEY, { restoreWords: this.oracle.restoredIds })
+      this.socketSendAll(DESKTOP_KEY, {
+        restoreWords: this.oracle.restoredIds,
+      })
     })
     this.oracle.onError(async error => {
       console.log('screen ran into err, restart', error)
@@ -399,7 +403,6 @@ export default class ScreenState {
       socket.on('message', str => {
         const { action, value, state, source } = JSON.parse(str)
         if (state) {
-          console.log('received state:', state)
           this.socketSendAll(source, state)
         }
         if (action && this[action]) {

@@ -1,5 +1,9 @@
 import AppKit
 
+enum CharError: Error {
+  case tooManyMoves
+}
+
 struct Character: Hashable {
   var hashValue: Int {
     return outline.hashValue
@@ -81,6 +85,8 @@ class Characters {
     var misfitBig = 0
     var misfitWide = 0
     var misfitThin = 0
+    var emptyChars = 0
+    var tooManyMoveChars = 0
     var curChar = 0
     
     // finds starts of chars and then pass to char outliner
@@ -116,21 +122,27 @@ class Characters {
         let debugID = "\(id)-\(curChar)"
         
         // todo: line detection/removal here
-        
-        guard var char = self.findCharacter(
-          startX: xO,
-          startY: yO,
-          lineHeight: lineH * 2, // in retina
-          maxMoves: lineH * 100, // not needed for first time really
-          initialMove: [0, moves.px], // we find it by going down vertically
-          findHangers: true,
-          percentDownLine: percentDownLine,
-          debugID: debugID
-        ) else {
-          print("no char")
-          y = maxY + 1 // move to next
-          continue
+        var tmpChar: Character?
+        do {
+          tmpChar = try self.findCharacter(
+            startX: xO,
+            startY: yO,
+            lineHeight: lineH * 2, // in retina
+            maxMoves: lineH * 100, // not needed for first time really
+            initialMove: [0, moves.px], // we find it by going down vertically
+            findHangers: true,
+            percentDownLine: percentDownLine,
+            debugID: debugID
+          )
+          if (tmpChar == nil) {
+            emptyChars += 1
+            y = maxY + 1 // move to next
+            continue
+          }
+        } catch {
+          tooManyMoveChars += 1
         }
+        var char = tmpChar!
         // after find character, always move to next x
         y = maxY + 1 // next step itll move both x and y
         // try and merge weird overhanging i'ss
@@ -183,10 +195,10 @@ class Characters {
         x = x + (char.width / 2 - char.backMoves / 2)
       } // end if
     } // end while
-    // help watch misfit counts
-//    if misfits > 0 {
-//      print("\(misfits) miss on \(id)")
-//    }
+    // help watch weird char counts
+    if misfits > 0 || tooManyMoveChars > 0 || emptyChars > 0 {
+      print("tricky characters: \(misfits) misfits, \(tooManyMoveChars) tooManyMoves, \(emptyChars) empty")
+    }
     // find words
     var foundWords = [Word]()
     // calculate std dev of space
@@ -259,7 +271,7 @@ class Characters {
   //    if exhausted, still will return a character
   // maxMoves - moves to go total before giving up
   //    if maxMoves reached, will return nil
-  func findCharacter(startX: Int, startY: Int, lineHeight: Int, maxMoves: Int, initialMove: [Int], findHangers: Bool, percentDownLine: Float, debugID: String) -> Character? {
+  func findCharacter(startX: Int, startY: Int, lineHeight: Int, maxMoves: Int, initialMove: [Int], findHangers: Bool, percentDownLine: Float, debugID: String) throws -> Character? {
     let exhaust = lineHeight * 6 // distance to go without finding new bound before finishing character
     var visited = Dictionary<Int, Bool?>() // for preventing crossing over at thin interections
     var topLeftBound = [startX, startY]
@@ -280,7 +292,7 @@ class Characters {
       iteration += 1
       if iteration > maxMoves {
         if !findHangers {
-          print("too many moves on regular char \(findHangers)")
+          throw CharError.tooManyMoves
         }
         return nil
       }
@@ -293,7 +305,6 @@ class Characters {
       visited[curPos] = true
       curTry += 1
       if curTry > exhaust {
-        print("exhaust \(debugID)")
         exhausted = true
         foundEnd = true
         break
@@ -380,7 +391,7 @@ class Characters {
         // go up
         for y in 1...maxUpPx {
           if buffer[(minY - y) * perRow + centerX] < isBlackIfUnder {
-            if let c = self.findCharacter(startX: centerX, startY: minY - y, lineHeight: lineHeight, maxMoves: lineHeight * 10, initialMove: [0, -moves.px], findHangers: false, percentDownLine: percentDownLine, debugID: debugID + "-hanger") {
+            if let c = try self.findCharacter(startX: centerX, startY: minY - y, lineHeight: lineHeight, maxMoves: lineHeight * 10, initialMove: [0, -moves.px], findHangers: false, percentDownLine: percentDownLine, debugID: debugID + "-hanger") {
               if c.width * c.height > maxUpPx * maxUpPx * 4 { print("hanger above area big \(debugID)"); break } // too big
               if c.height > maxUpPx * 4 { print("hanger above tall \(debugID)"); break } // too tall
               height += minY - c.y
@@ -397,7 +408,7 @@ class Characters {
         // go down
         for y in 1...maxDownPx {
           if buffer[(maxY + y) * perRow + centerX] < isBlackIfUnder {
-            if let c = self.findCharacter(startX: centerX, startY: maxY + y, lineHeight: lineHeight, maxMoves: lineHeight * 10, initialMove: [0, moves.px], findHangers: false, percentDownLine: percentDownLine, debugID: debugID + "-hangar") {
+            if let c = try self.findCharacter(startX: centerX, startY: maxY + y, lineHeight: lineHeight, maxMoves: lineHeight * 10, initialMove: [0, moves.px], findHangers: false, percentDownLine: percentDownLine, debugID: debugID + "-hangar") {
               if c.width * c.height > maxDownPx * maxDownPx * 4 { break } // too big
               if c.height > maxDownPx * 4 { break } // too tall
               height += c.height + (c.y - maxY)

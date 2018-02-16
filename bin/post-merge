@@ -4,4 +4,4 @@
 # git hook to run a command after `git pull` if a specified file was changed
 # Run `chmod +x post-merge` to make it executable then put it into `.git/hooks/`.
 
-rush install
+# rush install

@@ -59,27 +59,22 @@ function install-puma-dev {
 xcode-select --install 2> /dev/null
 ensure-dep "brew" -- /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 ensure-dep "npm" -- brew install node &
-ensure-dep "yarn" -- npm i -g yarn &
-ensure-dep "puma-dev" -- install-puma-dev &
-ensure-dep "parcel" -- yarn global add parcel-bundler &
+ensure-dep "pnpm" -- npm i -g pnpm &
 
 wait
 
-echo "3001 > ~/.puma-dev/orbit"
-echo 3001 > ~/.puma-dev/orbit
-
-echo "yarn install"
-yarn install
-echo "rush install"
-rush install
+echo "pnpm install"
+pnpm install
+echo "pnpm recursive install"
+pnpm recursive install
 
 function link-root-modules() {
-  npx oao all "yarn link" --parallel
-  yarn link @mcro/gloss &
-  yarn link @mcro/css &
-  yarn link @mcro/hmr &
-  yarn link @mcro/hmr-view &
-  yarn link @mcro/babel-preset-motion &
+  pnpm recursive link
+  pnpm link @mcro/gloss &
+  pnpm link @mcro/css &
+  pnpm link @mcro/hmr &
+  pnpm link @mcro/hmr-view &
+  pnpm link @mcro/babel-preset-motion &
   wait
 }
 

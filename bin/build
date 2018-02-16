@@ -4,14 +4,19 @@
 
 # TODO move this into each package and just have this npm run build in each
 
+# build
 if [ "$1" = "" ]; then
-  rush build
+  npx oao all "npm run build" --parallel
   exit 0
 fi
+
+# build --watch
 if [ "$1" = "--watch" ]; then
   npx oao all "npm run watch" --parallel --no-parallel-logs
   exit 0
 fi
+
+# this runs in sub-directories
 
 function build-prod() {
   BABEL_ENV=production babel src --out-dir dist -s true ${@:1}

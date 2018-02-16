@@ -104,7 +104,7 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
       console.log('got line bounding box!', linesBoundingBox)
       // Screen.setState({ linesBoundingBox })
     },
-    tru,
+    true,
   ]
 
   componentWillReceiveProps({ appPosition }) {

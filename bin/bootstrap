@@ -98,6 +98,7 @@ function copy-bootstrap-hook() {
 ensure-symlink ./node_modules/@mcro/gloss -- link-root-modules
 # ensure-symlink ./packages/gloss/tsconfig.json -- link-ts-configs
 copy-bootstrap-hook
+ensure-dep rush -- npm i -g @microsoft/rush
 
 echo ""
 echo "done! run build --watch before developing"

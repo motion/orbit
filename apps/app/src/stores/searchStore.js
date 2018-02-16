@@ -1,7 +1,7 @@
 // @flow
 import { store } from '@mcro/black'
 import debug from 'debug'
-import Search from '@mcro/search'
+// import Search from '@mcro/search'
 
 const log = debug('search')
 log.enabled = true

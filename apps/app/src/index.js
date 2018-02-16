@@ -1,5 +1,7 @@
 // @flow
+import 'regenerator-runtime/runtime'
 import 'babel-polyfill'
+
 import 'isomorphic-fetch'
 import createElement from '@mcro/black/lib/createElement'
 // dont import * as React, we need to overwrite createElement

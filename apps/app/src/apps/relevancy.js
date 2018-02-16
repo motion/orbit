@@ -1,8 +1,10 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
+import { last } from 'lodash'
 import * as UI from '@mcro/ui'
 import RelevancyStore from '~/stores/relevancy'
-import { decodeEntity } from './utils'
+import { decodeEntity } from '~/stores/relevancy/utils'
+console.log('in relevancy')
 
 @view({
   store: RelevancyStore,
@@ -34,10 +36,8 @@ export default class RelevancyPage {
 
                       if (highlight) {
                         const middle = decodeEntity(word)
-                        store
-                          .query(middle)
-                          .filter(({ index }) => index !== store.articleIndex)
-                          .length > 0
+                        normal = last(word.split('::'))
+                        highlightWord = middle
                       }
 
                       return (

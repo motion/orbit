@@ -3,10 +3,10 @@
   "private": true,
   "version": "4.0.0",
   "license": "MIT",
-  "main": "src/index",
+  "main": "lib/index",
   "scripts": {
-    "build": "echo nil",
-    "watch": "echo nil",
+    "build": "build dev",
+    "watch": "npm run build -- --watch",
     "train": "cd ./pyocr/src && python3 train.py",
     "generate": "node ./generate",
     "test": "DEBUG_IMAGES=true node ./test --debug",

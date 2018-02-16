@@ -4,58 +4,48 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-exports.default = function (_ref) {
-  var t = _ref.types;
-
+exports.default = function ({ types: t }) {
   // convert React.createElement() => this.glossElement()
 
   // todo this is horrible and lame
-  var isIf = function isIf(attribute) {
-    return attribute.type === 'JSXAttribute' && attribute.name.name === 'if';
-  };
-  var isntIf = function isntIf(x) {
-    return !isIf(x);
-  };
-  var jsxIfPlugin = function jsxIfPlugin(path) {
-    var node = path.node;
-
-    var attributes = node.openingElement.attributes;
+  const isIf = attribute => attribute.type === 'JSXAttribute' && attribute.name.name === 'if';
+  const isntIf = x => !isIf(x);
+  const jsxIfPlugin = path => {
+    const { node } = path;
+    const attributes = node.openingElement.attributes;
     if (!attributes) return;
-    var ifAttribute = attributes.filter(isIf)[0];
+    const ifAttribute = attributes.filter(isIf)[0];
     if (ifAttribute) {
-      var opening = t.JSXOpeningElement(node.openingElement.name, attributes.filter(isntIf));
-      var tag = t.JSXElement(opening, node.closingElement, node.children);
-      var conditional = t.conditionalExpression(ifAttribute.value.expression, tag, t.nullLiteral());
+      const opening = t.JSXOpeningElement(node.openingElement.name, attributes.filter(isntIf));
+      const tag = t.JSXElement(opening, node.closingElement, node.children);
+      const conditional = t.conditionalExpression(ifAttribute.value.expression, tag, t.nullLiteral());
       path.replaceWith(conditional);
     }
   };
 
-  var classBodyVisitor = {
-    ClassMethod: function ClassMethod(path, state) {
-      var GLOSS_ID = path.scope.generateUidIdentifier('gloss');
-      var hasJSX = false;
+  const classBodyVisitor = {
+    ClassMethod(path, state) {
+      const GLOSS_ID = path.scope.generateUidIdentifier('gloss');
+      let hasJSX = false;
 
-      var _helper = (0, _babelHelperBuilderReactJsx2.default)({
-        post: function post(state) {
+      const { JSXNamespacedName, JSXElement } = (0, _babelHelperBuilderReactJsx2.default)({
+        post(state) {
           // need path to determine if variable or tag
-          var stupidIsTag = state.tagName && state.tagName[0].toLowerCase() === state.tagName[0];
+          const stupidIsTag = state.tagName && state.tagName[0].toLowerCase() === state.tagName[0];
 
-          state.call = t.callExpression(GLOSS_ID, [stupidIsTag ? t.stringLiteral(state.tagName) : state.tagExpr].concat(_toConsumableArray(state.args)));
+          state.call = t.callExpression(GLOSS_ID, [stupidIsTag ? t.stringLiteral(state.tagName) : state.tagExpr, ...state.args]);
         }
-      }),
-          JSXNamespacedName = _helper.JSXNamespacedName,
-          JSXElement = _helper.JSXElement;
+      });
 
       path.traverse({
-        JSXNamespacedName: JSXNamespacedName,
+        JSXNamespacedName,
         JSXElement: {
-          enter: function enter(path) {
+          enter(path) {
             if (state.opts.jsxIf) {
               jsxIfPlugin(path);
             }
             hasJSX = true;
           },
-
           exit: JSXElement.exit
         }
       }, state);
@@ -67,9 +57,9 @@ exports.default = function (_ref) {
     }
   };
 
-  var programVisitor = {
-    Class: function Class(path, state) {
-      var node = path.node;
+  const programVisitor = {
+    Class(path, state) {
+      const node = path.node;
 
       if (!node.decorators || !node.decorators.length) {
         return;
@@ -79,9 +69,9 @@ exports.default = function (_ref) {
       //    has some flexibility, looks for any of:
       //       @x  @x()  @x.y  @x.y()
 
-      var decoratorName = state.opts && state.opts.decoratorName || 'style';
+      const decoratorName = state.opts && state.opts.decoratorName || 'style';
 
-      var foundDecorator = node.decorators.some(function (item) {
+      const foundDecorator = node.decorators.some(item => {
         if (!item.expression) {
           return false;
         }
@@ -114,10 +104,10 @@ exports.default = function (_ref) {
 
   return {
     visitor: {
-      Program: function Program(path, state) {
+      Program(path, state) {
         path.traverse(programVisitor, state);
       },
-      JSXElement: function JSXElement(path, state) {
+      JSXElement(path, state) {
         if (state.opts.jsxIf) {
           jsxIfPlugin(path);
         }
@@ -131,6 +121,4 @@ var _babelHelperBuilderReactJsx = require('babel-helper-builder-react-jsx');
 var _babelHelperBuilderReactJsx2 = _interopRequireDefault(_babelHelperBuilderReactJsx);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 //# sourceMappingURL=index.js.map

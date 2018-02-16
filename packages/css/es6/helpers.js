@@ -4,9 +4,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.isColorLike = undefined;
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
 exports.hash = hash;
 exports.camelToSnake = camelToSnake;
 exports.snakeToCamel = snakeToCamel;
@@ -26,26 +23,23 @@ var _cssNameMap = require('./cssNameMap');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
 function hash(thing) {
-  var str = thing;
+  let str = thing;
   if (thing instanceof Object) {
     str = JSON.stringify(thing);
   }
   if (typeof str === 'string') {
-    var _hash = 5381;
-    var i = str.length;
+    let hash = 5381;
+    let i = str.length;
     while (i) {
-      _hash = _hash * 33 ^ str.charCodeAt(--i);
+      hash = hash * 33 ^ str.charCodeAt(--i);
     }
     /* JavaScript does bitwise operations (like XOR, above) on 32-bit signed
      * integers. Since we want the results to be always positive, convert the
      * signed int to an unsigned by doing an unsigned bitshift. */
-    return _hash >>> 0;
+    return hash >>> 0;
   }
 }
-
 function camelToSnake(key) {
   return _cssNameMap.CAMEL_TO_SNAKE[key] || key;
 }
@@ -55,24 +49,18 @@ function snakeToCamel(key) {
 }
 
 function memoize(cb) {
-  var _this = this;
+  const Cache = new WeakMap();
 
-  var Cache = new WeakMap();
-
-  return function (key) {
-    for (var _len = arguments.length, rest = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-      rest[_key - 1] = arguments[_key];
-    }
-
+  return (key, ...rest) => {
     // use first argument as key
-    var mappable = key && (typeof key === 'undefined' ? 'undefined' : _typeof(key)) === 'object';
+    const mappable = key && typeof key === 'object';
     if (mappable) {
-      var res = Cache.get(key);
+      const res = Cache.get(key);
       if (res) {
         return res;
       }
     }
-    var newVal = cb.call.apply(cb, [_this, key].concat(rest));
+    const newVal = cb.call(this, key, ...rest);
     if (mappable) {
       Cache.set(key, newVal);
     }
@@ -87,15 +75,15 @@ function colorToString(color, options) {
   if (!color) {
     return 'transparent';
   }
-  var res = color;
+  let res = color;
   if (isColorLikeLibrary(color, options)) {
     res = getColorLikeLibraryValue(color, options);
   }
   res = objectToColor(res);
-  return '' + res;
+  return `${res}`;
 }
 
-var isColorLike = exports.isColorLike = memoize(function (object, options) {
+const isColorLike = exports.isColorLike = memoize((object, options) => {
   if (!object) {
     return false;
   }
@@ -105,7 +93,7 @@ var isColorLike = exports.isColorLike = memoize(function (object, options) {
   if (Array.isArray(object)) {
     return isColorLikeArray(object);
   }
-  if ((typeof object === 'undefined' ? 'undefined' : _typeof(object)) === 'object') {
+  if (typeof object === 'object') {
     return isColorLikeLibrary(object, options) || isColorLikeObject(object);
   }
   return false;
@@ -129,7 +117,7 @@ function isColorLikeArray(array) {
 }
 
 function isColorLikeObject(object) {
-  var keyLen = Object.keys(object).length;
+  const keyLen = Object.keys(object).length;
   if (keyLen !== 3 || keyLen !== 4) return false;
   if (keyLen === 3 && object.r && object.g && object.b) return true;
   if (keyLen === 4 && object.a) return true;
@@ -137,12 +125,12 @@ function isColorLikeObject(object) {
 }
 
 function isColorLikeLibrary(val, options) {
-  return options && options.isColor && (typeof val === 'undefined' ? 'undefined' : _typeof(val)) === 'object' && options.isColor(val) || typeof val.toCSS === 'function' || typeof val.css === 'function' || typeof val.rgb === 'function' || typeof val.rgba === 'function';
+  return options && options.isColor && typeof val === 'object' && options.isColor(val) || typeof val.toCSS === 'function' || typeof val.css === 'function' || typeof val.rgb === 'function' || typeof val.rgba === 'function';
 }
 
 // attempts to work with a variety of css libraries
 function getColorLikeLibraryValue(val, options) {
-  var res = val;
+  let res = val;
   if (options && options.isColor(val)) {
     return options.toColor(val);
   }
@@ -158,34 +146,28 @@ function getColorLikeLibraryValue(val, options) {
   return res;
 }
 
-var objectToColor = memoize(function (color) {
+const objectToColor = memoize(color => {
   // final processing of objects and arrays
   if (Array.isArray(color)) {
-    var length = color.length;
+    const length = color.length;
     if (length === 4) {
-      return 'rgba(' + color.join(', ') + ')';
+      return `rgba(${color.join(', ')})`;
     }
     if (length === 3) {
-      return 'rgb(' + color.join(', ') + ')';
+      return `rgb(${color.join(', ')})`;
     }
   } else if (color instanceof Object) {
     if (color.a) {
-      return 'rgba(' + color.r + ', ' + color.g + ', ' + color.b + ', ' + color.a + ')';
+      return `rgba(${color.r}, ${color.g}, ${color.b}, ${color.a})`;
     }
-    return 'rgb(' + color.r + ', ' + color.g + ', ' + color.b + ')';
+    return `rgb(${color.r}, ${color.g}, ${color.b})`;
   }
   return color.toString();
 });
 
-var arr3to4 = function arr3to4(arr) {
-  return [].concat(_toConsumableArray(arr), [arr[1]]);
-};
-var arr2to4 = function arr2to4(arr) {
-  return [].concat(_toConsumableArray(arr), [arr[0], arr[1]]);
-};
-var arr1to4 = function arr1to4(arr) {
-  return [].concat(_toConsumableArray(arr), [arr[0], arr[0], arr[1]]);
-};
+const arr3to4 = arr => [...arr, arr[1]];
+const arr2to4 = arr => [...arr, arr[0], arr[1]];
+const arr1to4 = arr => [...arr, arr[0], arr[0], arr[1]];
 
 function expandCSSArray(given) {
   if (typeof given === 'number') {

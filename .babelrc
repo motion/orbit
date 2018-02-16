@@ -1,11 +1,10 @@
 {
   "env": {
     "development": {
-      "presets": [["@mcro/babel-preset-motion", { "async": false }]]
+      "presets": [["@mcro/babel-preset-motion"]]
     },
     "es6": {
       "presets": [
-        "es2015",
         [
           "@mcro/babel-preset-motion",
           {
@@ -20,7 +19,7 @@
         [
           "@mcro/babel-preset-motion",
           {
-            "async": false,
+            "nodeTarget": 8,
             "disable": [
               "@mcro/hmr",
               "@mcro/hmr-view",

@@ -14,5 +14,8 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.0"
   }
 }

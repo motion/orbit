@@ -28,7 +28,7 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var jss = JSS.create();
+const jss = JSS.create();
 
 jss.use((0, _jssNested2.default)(), (0, _jssDefaultUnit2.default)(), (0, _jssPropsSort2.default)(), (0, _jssIsolate2.default)({ isolate: false }));
 

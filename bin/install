@@ -5,9 +5,8 @@ ARGS=${@:1}
 echo "install: $ARGS"
 
 if [ -z "$ARGS" ]; then
-  npx oao bootstrap
+  pnpm install
 else
-  echo "yarn add $ARGS"
-  yarn add $ARGS
+  pnpm install --save $ARGS
 fi
 

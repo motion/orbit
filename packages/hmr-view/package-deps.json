@@ -1,0 +1,29 @@
+{
+  "files": {
+    "packages/hmr-view/.flowconfig": "cab5ffba46c97001325615d46541dd66a2c4ec49",
+    "packages/hmr-view/.npmrc": "43c97e719a5a824700932f72e6e7e6748ce45d01",
+    "packages/hmr-view/.yarnclean": "b591611ea7ac935fc14ec90f4ffeffd1bf7058d8",
+    "packages/hmr-view/es6/bindAutoBindMethods.js": "51bae4f519415bf0915e658698fa0078af929489",
+    "packages/hmr-view/es6/bindAutoBindMethods.js.map": "593f72d549c24d3e3654c32d6c2d601d9b11a572",
+    "packages/hmr-view/es6/deleteUnknownAutoBindMethods.js": "925ac8bc9fc43181c40477bc4d5eecc21ccc8b41",
+    "packages/hmr-view/es6/deleteUnknownAutoBindMethods.js.map": "0a766309ac351c78081446df20129eb6dbc2f777",
+    "packages/hmr-view/es6/index.js": "fb6a2bf423bc0068d9281a81e68db15ffb097fcb",
+    "packages/hmr-view/es6/index.js.map": "6a2a25288d89211cfca611241921d4f028bafb23",
+    "packages/hmr-view/es6/proxyClass.js": "d6316e257e107e62a6f4e45a6a1e27ff316b359b",
+    "packages/hmr-view/es6/proxyClass.js.map": "c541a0dc173115ad3efc07b3f513c2d84ffead34",
+    "packages/hmr-view/es6/proxyProto.js": "2785f66d92a79ca41860ea2ba3fa9b38a508324f",
+    "packages/hmr-view/es6/proxyProto.js.map": "67ef68d6a3c9de6abaf29605bafa7cc5645739de",
+    "packages/hmr-view/es6/supportsProtoAssignment.js": "51c3308cb11dc9b117bf12079807d2dc753813a1",
+    "packages/hmr-view/es6/supportsProtoAssignment.js.map": "79d579127a00c241a9efd1da2c04d3e68443bc0c",
+    "packages/hmr-view/package.json": "9a06240393c83d3a573110679eddcb4e06fa60d6",
+    "packages/hmr-view/src/bindAutoBindMethods.js": "f70cab936b0a8530b7fe4c2430ed2606ec37132f",
+    "packages/hmr-view/src/deleteUnknownAutoBindMethods.js": "ef6fe1cee2a5c0b0ed05c17193fcf74e60c7e851",
+    "packages/hmr-view/src/index.js": "ce697dba0c8ee700e5ceb81c7b9b077dab943f13",
+    "packages/hmr-view/src/proxyClass.js": "4c66faef9f22e5d1505a2d22fc5acdae9ac2e3e9",
+    "packages/hmr-view/src/proxyProto.js": "f12989094caabf5f7e844f0e8e7c5d171ad1d016",
+    "packages/hmr-view/src/supportsProtoAssignment.js": "ae7d614886bc20be1dae409b7981f0af9c7ecf42",
+    "packages/hmr-view/yarn.lock": "8f7bf871b74cb3f6c4935186bcefc8d62ae45858",
+    "packages/hmr-view/package-deps.json": "2e6bfc557b472a3653c80693e5a758e0aa595bea"
+  },
+  "arguments": "build es6 "
+}

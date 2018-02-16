@@ -1,0 +1,17 @@
+{
+  "files": {
+    "packages/crawler/.yarnclean": "b591611ea7ac935fc14ec90f4ffeffd1bf7058d8",
+    "packages/crawler/build/app.js": "096258555e33a6811bb16c04e25dccce775f0600",
+    "packages/crawler/build/js/app.js": "0a72f031fad1a2e4a065efba23beb689fb6473a2",
+    "packages/crawler/build/js/app.js.map": "ff7d73d3a2ddfac9cbf464916e4787ddd4f45afd",
+    "packages/crawler/package.json": "78bd23a32b5dc24739840240d7c8465bb445debe",
+    "packages/crawler/src/crawler.js": "80e1a96c104c9124002ba9f971b518bc9acdc9bc",
+    "packages/crawler/src/crawlerDB.js": "a9a99707e237712904ece0f7e2367d8936064fed",
+    "packages/crawler/src/index.js": "05a55047525c9d2d1f1cf56a3a5b9089c8100dc6",
+    "packages/crawler/src/types.js": "3459d2f08e7052fb9ee17008df0f3dba844dd1f4",
+    "packages/crawler/test.js": "ee1b4fa67116b48714625f3b3384534aae6ddc8a",
+    "packages/crawler/yarn.lock": "54232bb7b871c866d33c19c4346ca80040daa3e0",
+    "packages/crawler/package-deps.json": "2284bd59d26efeb3a1828fe13feaaf91f2e4d861"
+  },
+  "arguments": "build dev "
+}

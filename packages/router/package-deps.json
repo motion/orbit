@@ -1,0 +1,12 @@
+{
+  "files": {
+    "packages/router/.npmrc": "43c97e719a5a824700932f72e6e7e6748ce45d01",
+    "packages/router/.yarnclean": "b591611ea7ac935fc14ec90f4ffeffd1bf7058d8",
+    "packages/router/package.json": "c231682e4e996fa4256225cab6051da7f221c081",
+    "packages/router/src/index.js": "a74be29e535098b1c2c5d925f8c2f66a71501db0",
+    "packages/router/src/router.js": "a76529a147a7077dfe36d059f6d68c5bad4c6d80",
+    "packages/router/yarn.lock": "3827c2aeed0146980775d4f9dca1fd6b26602ba6",
+    "packages/router/package-deps.json": "0cacb65ed119de269b3f6da991998ac0bec7e04a"
+  },
+  "arguments": "build prod,dev "
+}

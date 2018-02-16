@@ -1,0 +1,11 @@
+{
+  "files": {
+    "packages/screen/package.json": "de657e13cd5842e7575d2f37ad32bdc67109fc49",
+    "packages/screen/src/screenStore.js": "040424b8ccbb0f65364159a0afc63ce4640331b7",
+    "packages/screen/src/swiftBridge.js": "a5bfc34f1911ce97767c59fcf1f96068f93f821f",
+    "packages/screen/src/websocket.js": "1a6a10b30bf5b9f2fee97201d16d8043b41518e5",
+    "packages/screen/yarn.lock": "3d4c082ecd8c7d77cd7c5b054a6ddc1b9723984b",
+    "packages/screen/package-deps.json": "69f287d5600cb668685b663bb43deb9edb216ae7"
+  },
+  "arguments": "build prod,dev,es6 "
+}

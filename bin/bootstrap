@@ -90,13 +90,14 @@ function link-ts-configs() {
 }
 
 function copy-bootstrap-hook() {
+  rm ./.git/hooks/post-merge
   cp ./bin/post-merge ./.git/hooks
 }
 
 # internal tools
 ensure-symlink ./node_modules/@mcro/gloss -- link-root-modules
 # ensure-symlink ./packages/gloss/tsconfig.json -- link-ts-configs
-ensure-file ./.git/hooks/post-merge -- copy-bootstrap-hook
+copy-bootstrap-hook
 
 echo ""
 echo "done! run build --watch before developing"

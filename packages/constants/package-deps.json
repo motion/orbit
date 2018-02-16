@@ -1,0 +1,8 @@
+{
+  "files": {
+    "packages/constants/package.json": "7ecf71d0ca9a535fb2140d9e660ac2ec47bc4350",
+    "packages/constants/src/constants.js": "66ad5149d2bddb57e68480cd9d6affa3c4396a90",
+    "packages/constants/package-deps.json": "2e446f0606b118941db608217db7b3463779694a"
+  },
+  "arguments": "build dev "
+}

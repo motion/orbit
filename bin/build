@@ -5,11 +5,11 @@
 # TODO move this into each package and just have this npm run build in each
 
 if [ "$1" = "" ]; then
-  npx oao all "yarn run build" --parallel
+  rush rebuild
   exit 0
 fi
 if [ "$1" = "--watch" ]; then
-  npx oao all "yarn run watch" --parallel --no-parallel-logs
+  rush watch -p 100 -v
   exit 0
 fi
 

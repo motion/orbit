@@ -1,0 +1,23 @@
+{
+  "files": {
+    "packages/black/.flowconfig": "a1e54048419fd08cf31b20bc6fc77f996cbb4d02",
+    "packages/black/.npmrc": "43c97e719a5a824700932f72e6e7e6748ce45d01",
+    "packages/black/.yarnclean": "b591611ea7ac935fc14ec90f4ffeffd1bf7058d8",
+    "packages/black/README.md": "a5e61065c21ec9f678c83e8c72ca5154ee1df3b3",
+    "packages/black/package.json": "06ab9c51cb8359de21d4ed7298f6a9d412b5bd83",
+    "packages/black/src/baseStyles.js": "cc2830f827656f514e5c1ef5e7822ac5f2671765",
+    "packages/black/src/constants.js": "fceead2d8d54963d7b1048ec545a30926fc84a0f",
+    "packages/black/src/createElement.js": "9468525e1df0762dfe055c6042994bed45caddd3",
+    "packages/black/src/gloss.js": "88d02304b49bca566058251863f365f654b6087c",
+    "packages/black/src/helpers/log.js": "f87fd5f68be80eb18f72eaada68558adc4fa6e92",
+    "packages/black/src/helpers/watch.js": "71e4aaea330377d9fda7d0ccd4fe1f02c660e6cb",
+    "packages/black/src/index.js": "a5eadf7d80f2b2d15a54f447e590b5ffae7c3920",
+    "packages/black/src/provideStore.js": "4995af1686cd17e4e177828dd57faa6e332ed392",
+    "packages/black/src/store.js": "4595fd60df895c1e976578c953c9d531b567971f",
+    "packages/black/src/view.js": "5b44db7160528fb14beb68e50f8b5d0ad91011b0",
+    "packages/black/store.js": "e76e9812b73a1cac8d50b53cfb31993748396467",
+    "packages/black/yarn.lock": "0ad6823bbc4ab4aa9c638d4f0216d350fd804c23",
+    "packages/black/package-deps.json": "431fec8e7df9866c9ee26ff6a8d94cfca63a374f"
+  },
+  "arguments": "build prod,dev,es6 "
+}

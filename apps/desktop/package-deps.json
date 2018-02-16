@@ -1,0 +1,28 @@
+{
+  "files": {
+    "apps/desktop/.npmrc": "43c97e719a5a824700932f72e6e7e6748ce45d01",
+    "apps/desktop/.yarnclean": "b591611ea7ac935fc14ec90f4ffeffd1bf7058d8",
+    "apps/desktop/config.json": "061ae5aa094138c89d2431a29e48fe2053a34088",
+    "apps/desktop/package.json": "a3ee7c267cb69ddb3d9e61bec859283808c1a483",
+    "apps/desktop/src/auth.js": "1aa63b5f9e6c82c2dfd2f1997014c585b2ad7815",
+    "apps/desktop/src/constants.js": "241bd5d322e31c898607ee1460a971e89ea27605",
+    "apps/desktop/src/desktop.js": "cf4b0365cbc8ce1c8a77434f74293e1251b77a05",
+    "apps/desktop/src/helpers/getContext.js": "f2ed9efb04cbb14f57036910727999ec3d4040b4",
+    "apps/desktop/src/helpers/getContextInjection.js": "5e6fdef30c0bb6433c8fb6e1377d7f02d3665330",
+    "apps/desktop/src/helpers/getCrawler.js": "56b9ad7fb370aa59c0c6126b9582021b56d23395",
+    "apps/desktop/src/helpers/index.js": "aafbf547346a86718dc5357f4631969a47ba5edc",
+    "apps/desktop/src/helpers/injections.js": "d9b5e75218747eb76912ac0f5c3b62fb9f0b23b1",
+    "apps/desktop/src/helpers/runAppleScript.js": "d4006d970aa17e4ee3fb03e82a68abd1b10b7ef5",
+    "apps/desktop/src/index.js": "8c7752cd309065bdd30f028d0e15a7c4806e27b5",
+    "apps/desktop/src/screenMaster.js": "d8b6de4c7a2d797a7b251de3341071f9a3043d62",
+    "apps/desktop/src/server.js": "15d77fd57645848dad85d25d56fc028e968589c1",
+    "apps/desktop/src/server/oauth.js": "70b978a235f8f78a0982b51af8c947f3e317343b",
+    "apps/desktop/src/server/oauth.strategies.js": "8ab724fe9e438eae2d9b280a7203ab7cdaba37c2",
+    "apps/desktop/src/server/passportSlack.js": "4a2cdad60ac27ec147df84b56c668cbceba81f17",
+    "apps/desktop/src/server/superlogin.config.js": "ce69bbb71702f027c6fc9d7dba0533e5793eff53",
+    "apps/desktop/src/types.js": "4c5a0d9cdbfbbfebe5f898670a304c9b1750cd3d",
+    "apps/desktop/yarn.lock": "a3adf952a7ef04b100464eb6b9db1049d371069c",
+    "apps/desktop/package-deps.json": "406e5f6b007b27a353bb34b1db2e228229d02bb0"
+  },
+  "arguments": "build es6 "
+}

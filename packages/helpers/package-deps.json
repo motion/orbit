@@ -1,0 +1,17 @@
+{
+  "files": {
+    "packages/helpers/.flowconfig": "c05f198804564dd02d6f4a371ec034c1070cc8e3",
+    "packages/helpers/.npmrc": "43c97e719a5a824700932f72e6e7e6748ce45d01",
+    "packages/helpers/.yarnclean": "b591611ea7ac935fc14ec90f4ffeffd1bf7058d8",
+    "packages/helpers/package.json": "f9b83fdae1f7da0c589d1c20694ea59f45335f71",
+    "packages/helpers/src/events.js": "3c6c63d7d7d65744ea0f110f81f6abee6be40e14",
+    "packages/helpers/src/index.js": "225a4947e56e00f48644237d2b68c3c18e2a240a",
+    "packages/helpers/src/on.js": "ea721f1a416ce20d31e6becb50e71394d6f9947e",
+    "packages/helpers/src/ref.js": "4ecc0da567dc1f3bf054032041069f1b68c45e98",
+    "packages/helpers/src/requestAnimationFrame.js": "0a2729e77d2112863052ccda85bf431c86c2cefe",
+    "packages/helpers/src/types.js": "be31f746ee42d9a0390ea357f9772520f0d22fde",
+    "packages/helpers/yarn.lock": "2641fde917b02ba4edbe35442328cc45399cfb2e",
+    "packages/helpers/package-deps.json": "0f6ddd69e0b243f9ac3da585df2227caace11904"
+  },
+  "arguments": "build prod,dev,es6 "
+}

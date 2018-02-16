@@ -1,6 +1,5 @@
 .eggs
-ocr.csv
-data.csv
+*.csv
 prediction.txt
 __pycache__
 .cache
@@ -17,6 +16,8 @@ shrinkwrap.yaml
 values.yaml
 *.tgz
 kubeconfig
+
+common/temp/**
 
 apps/oracle/orbit/orbit.xcodeproj/project.xcworkspace
 apps/oracle/orbit/Carthage

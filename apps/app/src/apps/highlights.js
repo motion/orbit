@@ -20,6 +20,15 @@ function toTarget(quadTreeItem) {
   }
 }
 
+const highlightWords = {
+  the: true,
+  and: true,
+  to: true,
+  be: true,
+  used: true,
+  this: true,
+}
+
 class HighlightsStore {
   trees = {
     word: quadtree(0, 0, window.innerWidth, window.innerHeight),
@@ -54,7 +63,6 @@ class HighlightsStore {
     const isTesting = this.ocrWords.length && this.ocrWords[0].length === 4
     return desktopState.lastOCR > desktopState.lastScreenChange
     // if (desktopState.keyboard.option) {
-
     // }
     return isTesting
   }
@@ -119,7 +127,7 @@ class OCRWord {
     return (
       <word
         $hovered={hoveredWord && hoveredWord.key === key}
-        $highlighted={desktopState.highlightWords[word]}
+        $highlighted={highlightWords[word]}
         style={{
           top: y - HL_PAD - TOP_BAR_PAD,
           left: x - HL_PAD,
@@ -138,21 +146,18 @@ class OCRWord {
       fontFamily: 'helvetica',
       position: 'absolute',
       padding: HL_PAD,
-      // letterSpacing: -2,
-      color: '#000', //'blue',
+      color: '#000',
       fontWeight: 200,
-      // borderRadius: 3,
-      // background: [200, 200, 200, 0.15],
     },
     highlighted: {
-      borderBottom: [1, 'solid', [0, 0, 0, 0.1]],
+      borderBottom: [3, '#EDD71E'],
     },
     hovered: {
       background: 'rgba(0,0,0,0.1) !important',
       opacity: 1,
     },
     wordInner: {
-      opacity: 0.5,
+      opacity: 0.15,
       top: -14,
       left: -4,
       position: 'absolute',
@@ -192,7 +197,7 @@ class OCRLine {
     ocrLine: {
       borderBottom: [2, '#EDD71E'],
       position: 'absolute',
-      opacity: 0.5,
+      opacity: 0.05,
     },
     hoveredLine: {
       borderBottom: [3, '#EDD71E'],
@@ -221,7 +226,6 @@ export default class HighlightsPage {
       </frame>
     )
   }
-
   static style = {
     frame: {
       width: '100%',
@@ -229,7 +233,6 @@ export default class HighlightsPage {
       pointerEvents: 'none',
       userSelect: 'none',
       position: 'relative',
-      // background: [0, 255, 0, 0.1],
     },
   }
 }

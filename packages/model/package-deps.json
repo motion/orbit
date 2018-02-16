@@ -1,0 +1,16 @@
+{
+  "files": {
+    "packages/model/.flowconfig": "62b72b68541713b4ce79d1a0f7baeda9b46b6e4a",
+    "packages/model/.npmrc": "43c97e719a5a824700932f72e6e7e6748ce45d01",
+    "packages/model/.yarnclean": "b591611ea7ac935fc14ec90f4ffeffd1bf7058d8",
+    "packages/model/package.json": "7a2a1f02809f1e858ce8d27a83449ba8825e8627",
+    "packages/model/src/helpers.js": "c9fc77dfc1b82af271e1605fd7b5dd3cd209f0ef",
+    "packages/model/src/index.js": "c4ca4683222d86b1290a044ca228cfad15b2a439",
+    "packages/model/src/indexDB.js": "16828355d3f8fdff6823b30ae401f2595e5aa9f5",
+    "packages/model/src/model.js": "aeb83e36d175f9c97605ac305cd30993bc32aaa7",
+    "packages/model/src/properties.js": "92c6deae0c4dc264fe6c60e05d4eb7bba78159ab",
+    "packages/model/yarn.lock": "b24d7fa6e46f61d3ebcf3598957d38192164ab4f",
+    "packages/model/package-deps.json": "95d4aa76273fe8a326024a28dce79b67b806652f"
+  },
+  "arguments": "build prod,dev,es6 "
+}

@@ -49,11 +49,9 @@ module.exports = function(context, givenOpts) {
             // modules: process.env.MODULES ? false : true,
             useBuiltIns: 'usage',
             targets: opts.targets || {
-              node: opts.nodeTarget || 'current',
+              node: opts.nodeTarget || '9',
             },
-            exclude: isAsync
-              ? ['transform-regenerator', 'transform-async-to-generator']
-              : [],
+            exclude: ['transform-regenerator', 'transform-async-to-generator'],
           },
           opts.env,
         ),

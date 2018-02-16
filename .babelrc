@@ -1,7 +1,7 @@
 {
   "env": {
     "development": {
-      "presets": ["@mcro/babel-preset-motion"]
+      "presets": [["@mcro/babel-preset-motion", { "async": false }]]
     },
     "es6": {
       "presets": [
@@ -20,6 +20,7 @@
         [
           "@mcro/babel-preset-motion",
           {
+            "async": false,
             "disable": [
               "@mcro/hmr",
               "@mcro/hmr-view",

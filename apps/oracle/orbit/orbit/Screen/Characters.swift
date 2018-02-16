@@ -134,13 +134,13 @@ class Characters {
             percentDownLine: percentDownLine,
             debugID: debugID
           )
-          if (tmpChar == nil) {
-            emptyChars += 1
-            y = maxY + 1 // move to next
-            continue
-          }
         } catch {
           tooManyMoveChars += 1
+        }
+        if tmpChar == nil {
+          emptyChars += 1
+          y = maxY + 1 // move to next
+          continue
         }
         var char = tmpChar!
         // after find character, always move to next x

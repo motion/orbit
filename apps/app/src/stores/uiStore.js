@@ -65,9 +65,6 @@ export default class UIStore {
 
   dispose() {
     Mousetrap.reset()
-    if (super.dispose) {
-      super.dispose()
-    }
   }
 
   setTextboxVal = value => {

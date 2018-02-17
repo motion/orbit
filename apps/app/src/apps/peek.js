@@ -19,20 +19,9 @@ const HIDE_DELAY = 100
 const background = '#fff'
 const peekShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.25]]]
 
-type Target = {
-  url?: string,
-  top?: number,
-  left: number,
-  width: number,
-  height: number,
-  id: number,
-}
-
 @view({
   store: class PeekStore {
     peek = null
-    lastTarget: ?Peek = null
-    curTarget: ?Peek = null
     isTorn = false
     isHovered = false
     isPinned = false
@@ -40,16 +29,7 @@ type Target = {
     showWebview = false
     tab = 'readability'
 
-    @watch thing = () => this.target && Thing.get(this.target.id)
-
-    get target() {
-      // during hover its null so show it cached
-      if (this.isHovered || this.isPinned || this.isTorn) {
-        return this.lastTarget // || {}
-      }
-      // current
-      return this.curTarget
-    }
+    @watch thing = () => this.target && Thing.get()
 
     get isConversation() {
       return this.thing && this.thing.type === 'conversation'
@@ -72,11 +52,6 @@ type Target = {
     }
 
     @watch
-    watchPeek = () => {
-      this.handleNewPeek(Screen.appState.hoveredWord)
-    }
-
-    @watch
     watchTab = () => {
       if (this.thing && !this.thing.body && this.thing.url) {
         this.tab = 'webview'
@@ -96,20 +71,6 @@ type Target = {
 
     willUnmount() {
       this.trap.reset()
-    }
-
-    handleNewPeek = (target: Target) => {
-      this.curTarget = target
-      if (target) {
-        this.lastTarget = target
-      }
-      if (!target) {
-        this.leftTimeout = this.setTimeout(() => {
-          if (!this.isHovered) {
-            this.lastTarget = null
-          }
-        }, SHOW_DELAY)
-      }
     }
 
     handleMouseEnter = () => {
@@ -162,13 +123,10 @@ type Target = {
 })
 export default class PeekPage {
   render({ store }) {
-    const { peek, target, showWebview } = store
-    const targetUrl = target && target.url
+    const { peek, showWebview } = store
     const arrowTowards = (peek && peek.arrowTowards) || 'right'
     const arrowSize = SHADOW_PAD * 2
     let arrowPosition
-
-    console.log('Peek.render', 'target', target)
 
     switch (arrowTowards) {
       case 'right':
@@ -212,7 +170,7 @@ export default class PeekPage {
     return (
       <UI.Theme name="light">
         <peek
-          $peekVisible={!!target}
+          $peekVisible
           $peekTorn={store.isTorn}
           onMouseEnter={store.handleMouseEnter}
           onMouseLeave={store.handleMouseLeave}
@@ -266,7 +224,7 @@ export default class PeekPage {
                   }}
                 >
                   <UI.Button
-                    if={targetUrl}
+                    if={false}
                     icon="globe"
                     onClick={store.toggleWebview}
                     highlight={store.tab === 'webview'}
@@ -299,11 +257,9 @@ export default class PeekPage {
                     <UI.Text color="#000">Loading</UI.Text>
                   </loading>
                   <WebView
-                    if={targetUrl && showWebview}
+                    if={false && showWebview}
                     $contentLoading={!store.pageLoaded}
                     $webview
-                    key={targetUrl}
-                    src={targetUrl.replace('deliverx.com', 'deliverx.com:5000')}
                     getRef={store.handlePageRef}
                   />
                   <bottombar
@@ -314,7 +270,7 @@ export default class PeekPage {
                     }}
                   >
                     <UI.Text size={0.8} alpha={0.5}>
-                      {targetUrl}
+                      no url
                     </UI.Text>
                   </bottombar>
                 </tab>

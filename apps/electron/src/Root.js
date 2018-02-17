@@ -32,12 +32,12 @@ import * as Constants from '~/constants'
         shouldShow: null,
         peekState: {},
         focused: false,
-        restart: false,
         showSettings: false,
         showDevTools: {
           app: false,
           peek: false,
           highlights: false,
+          settings: true,
         },
         lastMove: Date.now(),
         show: true,

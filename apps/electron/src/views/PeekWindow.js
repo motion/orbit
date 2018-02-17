@@ -8,6 +8,7 @@ import * as Helpers from '~/helpers'
 import Screen from '@mcro/screen'
 
 const idFn = _ => _
+const PEEK_ANIMATE_TIME = 350
 
 type PeekStateItem = {
   key: number,
@@ -28,16 +29,18 @@ type PeekTarget = {
   height: number,
 }
 
+function toTarget([top, left, width, height]) {
+  return { top, left, width, height }
+}
+
 function getPeekPosition(peekTarget: PeekTarget) {
   const [peekW, peekH] = Constants.PEEK_DIMENSIONS
   const [screenW, screenH] = Helpers.getScreenSize()
   const halfWidth = screenW / 2
-
   // start: target is to right
   let x = peekTarget.left - peekW
   let y = peekTarget.top - 20
   let arrowTowards = 'right'
-
   if (x < halfWidth) {
     // target is to left
     x = peekTarget.left + peekTarget.width
@@ -55,6 +58,28 @@ function getPeekPosition(peekTarget: PeekTarget) {
   }
 }
 
+@view.provide({
+  store: class PeekStore {
+    @watch
+    linesBoundingBox = () => {
+      const { linePositions } = Screen.desktopState
+      console.log('react to desktopstate', linePositions)
+      if (!linePositions) return null
+      let minX = 100000
+      let maxX = 0
+      let minY = 100000
+      let maxY = 0
+      // found place for window to go
+      for (const [lx, ly, lw, lh] of linePositions) {
+        if (lx + lw > maxX) maxX = lx + lw
+        if (lx < minX) minX = lx
+        if (ly < minY) minY = ly
+        if (ly + lh > maxY) maxY = ly + lh
+      }
+      return [minX, minY, maxX - minX, maxY - minY]
+    }
+  },
+})
 @view.electron
 export default class PeekWindow extends React.Component<{}, PeekWindowState> {
   lastAppPositionMove = Date.now()
@@ -81,31 +106,38 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
   }
 
   componentWillMount() {
-    this.watchHovers()
+    this.react(
+      () => this.props.store.linesBoundingBox,
+      function watchPeekPosition(linesBoundingBox) {
+        console.log('linesBoundingBox', linesBoundingBox)
+        if (!linesBoundingBox) return
+        const windows = [...this.state.windows]
+        const peek = windows[0]
+        const { position, arrowTowards } = getPeekPosition(
+          toTarget(linesBoundingBox),
+        )
+        peek.position = position
+        peek.arrowTowards = arrowTowards
+        clearTimeout(this.animatePeekTimeout)
+        this.isAnimatingPeek = true
+        this.animatePeekTimeout = this.setTimeout(() => {
+          this.isAnimatingPeek = false
+        }, PEEK_ANIMATE_TIME)
+        console.log('updating peek position now', peek)
+        this.setState({
+          windows,
+          lastTarget: this.state.target,
+          target: linesBoundingBox,
+        })
+      },
+    )
+    this.watch(function watchPeekClose() {
+      const key = Screen.appState.peekClose
+      if (!key) return
+      const windows = this.state.windows.filter(p => `${p.key}` !== `${key}`)
+      this.setState({ windows })
+    })
   }
-
-  @watch
-  alignPeekWithLinePositions = [
-    () => Screen.desktopState.linePositions || [],
-    lines => {
-      console.log('i see line positions')
-      let minX = 100000
-      let maxX = 0
-      let minY = 100000
-      let maxY = 0
-      // found place for window to go
-      for (const [lx, ly, lw, lh] of lines) {
-        if (lx + lw > maxX) maxX = lx + lw
-        if (lx < minX) minX = lx
-        if (ly < minY) minY = ly
-        if (ly + lh > maxY) maxY = ly + lh
-      }
-      const linesBoundingBox = [minX, minY, maxX - minX, maxY - minY]
-      console.log('got line bounding box!', linesBoundingBox)
-      // Screen.setState({ linesBoundingBox })
-    },
-    true,
-  ]
 
   componentWillReceiveProps({ appPosition }) {
     if (!isEqual(appPosition, this.props.appPosition)) {
@@ -123,50 +155,39 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
   peekSend = () => console.log('peekSend, not started yet')
 
   watchHovers() {
-    this.react(
-      () => Screen.appState.hoveredWord,
-      hoveredWord => {
-        const windows = [...this.state.windows]
-        const peek = windows[0]
-        console.log('got peek', hoveredWord, 'for peek', peek)
-
-        // update peek y
-        // TODO: add conditional to ignore if same peek sent as last
-        if (hoveredWord) {
-          const { position, arrowTowards } = getPeekPosition(hoveredWord)
-          console.log('getPeekPosition', { position, arrowTowards })
-          // peek.hasNewTarget = true
-          peek.position = position
-          peek.arrowTowards = arrowTowards
-        }
-
-        const wasShowing = !!this.state.lastTarget
-        console.log('wasShowing', wasShowing)
-
-        // this handles avoiding tears during animation
-        clearTimeout(this.animatePeekTimeout)
-        this.isAnimatingPeek = true
-        // need to figure out how long electron animates for
-        // for now, be conservative
-        this.animatePeekTimeout = this.setTimeout(() => {
-          this.isAnimatingPeek = false
-        }, 350)
-
-        this.setState({
-          windows,
-          wasShowing,
-          lastTarget: this.state.target,
-          target: hoveredWord,
-        })
-      },
-    )
-
-    this.watch(function() {
-      const key = Screen.appState.peekClose
-      if (!key) return
-      const windows = this.state.windows.filter(p => `${p.key}` !== `${key}`)
-      this.setState({ windows })
-    })
+    // this.react(
+    //   () => Screen.appState.hoveredWord,
+    //   hoveredWord => {
+    //     const windows = [...this.state.windows]
+    //     const peek = windows[0]
+    //     console.log('got peek', hoveredWord, 'for peek', peek)
+    //     // update peek y
+    //     // TODO: add conditional to ignore if same peek sent as last
+    //     if (hoveredWord) {
+    //       const { position, arrowTowards } = getPeekPosition(hoveredWord)
+    //       console.log('getPeekPosition', { position, arrowTowards })
+    //       // peek.hasNewTarget = true
+    //       peek.position = position
+    //       peek.arrowTowards = arrowTowards
+    //     }
+    //     const wasShowing = !!this.state.lastTarget
+    //     console.log('wasShowing', wasShowing)
+    //     // this handles avoiding tears during animation
+    // clearTimeout(this.animatePeekTimeout)
+    // this.isAnimatingPeek = true
+    // // need to figure out how long electron animates for
+    // // for now, be conservative
+    // this.animatePeekTimeout = this.setTimeout(() => {
+    //   this.isAnimatingPeek = false
+    // }, 350)
+    // this.setState({
+    //   windows,
+    //   wasShowing,
+    //   lastTarget: this.state.target,
+    //   target: hoveredWord,
+    // })
+    //   },
+    // )
   }
 
   handlePeekRef = memoize(peek => ref => {
@@ -227,6 +248,7 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
 
   render() {
     if (Screen.appState.disablePeek) {
+      console.log('PEEK IS DISABLED')
       return null
     }
 
@@ -238,7 +260,10 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
       transparent: true,
     }
 
-    // console.log('windows = ', JSON.stringify(this.state.windows))
+    console.log(
+      'Screen.peekState.windows = ',
+      JSON.stringify(this.state.windows),
+    )
 
     return (
       <React.Fragment>

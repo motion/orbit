@@ -28,12 +28,5 @@ export default () => ({
         return this.__subscriptions
       },
     })
-    const ogDispose = Klass.prototype.dispose
-    Klass.prototype.dispose = function(...args) {
-      this.subscriptions.dispose()
-      if (ogDispose) {
-        ogDispose.call(this, ...args)
-      }
-    }
   },
 })

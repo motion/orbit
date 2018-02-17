@@ -1,6 +1,7 @@
 // @flow
 // 🐛 note: dont import router or app here
 // it causes the entire app to be imported before boot
+import '@mcro/black/mlog'
 import * as React from 'react'
 import * as Mobx from 'mobx'
 import * as MobxUtils from 'mobx-utils'
@@ -39,31 +40,6 @@ window.Black = Black
 window.debug = debug
 window.r2 = r2
 window.Helpers = Helpers
-
-let runners = (window.__mlogRunners = window.__mlogRunners || [])
-
-window.mlog = fn => {
-  const isClass = fn.toString().indexOf('class') === 0
-  if (isClass) {
-    Object.keys(fn).forEach(key => {
-      runners.push(
-        Mobx.autorun(() => {
-          console.log(fn.constructor.name, key, fn[key])
-        }),
-      )
-    })
-    return
-  }
-  runners.push(
-    Mobx.autorun(() => {
-      console.log(fn())
-    }),
-  )
-}
-window.mlog.clear = () => {
-  runners.forEach(r => r())
-  runners = []
-}
 
 // TODO check if this is needed and fix the global thing if so
 // PATCH: ignore octocat

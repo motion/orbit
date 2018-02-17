@@ -70,9 +70,6 @@ export default class Sync {
 
   async dispose() {
     await this.disposeSyncers()
-    if (super.dispose) {
-      super.dispose()
-    }
   }
 
   async disposeSyncers() {
@@ -126,13 +123,13 @@ export default class Sync {
             if (this.locks.has(job.lock)) {
               log(
                 'unlock job that was removed/completed/failed outside sync',
-                job.lock
+                job.lock,
               )
               this.locks.delete(job.lock)
             }
           }
         }
-      }
+      },
     )
 
     this.react(
@@ -179,7 +176,7 @@ export default class Sync {
           this.locks.delete(job.lock)
         }
       },
-      true
+      true,
     )
   }
 

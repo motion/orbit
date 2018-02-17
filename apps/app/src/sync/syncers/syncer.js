@@ -33,7 +33,7 @@ export default class Syncer {
     // every so often
     this.jobWatcher = setInterval(
       () => this.check(false),
-      this.settings.checkInterval || DEFAULT_CHECK_INTERVAL
+      this.settings.checkInterval || DEFAULT_CHECK_INTERVAL,
     )
     this.check(false)
   }
@@ -142,9 +142,6 @@ export default class Syncer {
   dispose() {
     if (this.jobWatcher) {
       clearInterval(this.jobWatcher)
-    }
-    if (super.dispose) {
-      super.dispose()
     }
   }
 }

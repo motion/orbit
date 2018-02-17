@@ -1,13 +1,13 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import OraStore from './ora/oraStore'
-import Sidebar from './ora/panes/sidebar'
-import OraHeader from './ora/oraHeader'
-import OraDrawer from './ora/oraDrawer'
-import OraActionBar from './ora/oraActionBar'
+import OraStore from './oraStore'
+import Sidebar from './panes/sidebar'
+import OraHeader from './oraHeader'
+import OraDrawer from './oraDrawer'
+import OraActionBar from './oraActionBar'
 import * as Constants from '~/constants'
-import screenStore from '@mcro/screen'
+import Screen from '@mcro/screen'
 
 const listProps = {
   virtualized: false,
@@ -34,7 +34,7 @@ const listProps = {
   onScroll: () => {
     // TODO clear all popovers
     console.log('test: should clear peek')
-    screenStore.setState({ hoveredWord: null })
+    Screen.setState({ hoveredWord: null })
   },
 }
 

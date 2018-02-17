@@ -45,17 +45,6 @@ export default class ScreenState {
     keyboard: {},
     clearWords: {},
     restoreWords: {},
-    // some test highlight words
-    highlightWords: {
-      seen: true,
-      for: true,
-      the: true,
-      has: true,
-      are: true,
-      is: true,
-      then: true,
-      with: true,
-    },
   }
 
   get hasListeners() {
@@ -86,11 +75,6 @@ export default class ScreenState {
     })
     let lastId = null
     this.oracle.onWindowChange((event, value) => {
-      if (event === 'ScrollEvent') {
-        this.resetHighlights()
-        return
-      }
-      console.log('onWindowChange', event, value)
       let nextState = { ...this.curState }
       let id = lastId
       switch (event) {
@@ -110,9 +94,14 @@ export default class ScreenState {
         case 'WindowPosChangedEvent':
           nextState.offset = value
       }
-
       if (!nextState.name) {
         console.log('no name recevied', value)
+        return
+      }
+      // update before prevent_watching
+      this.curAppName = nextState.name
+      if (event === 'ScrollEvent') {
+        this.resetHighlights()
         return
       }
       if (PREVENT_WATCHING[nextState.name]) {
@@ -121,8 +110,7 @@ export default class ScreenState {
         return
       }
 
-      // update before prevent_watching
-      this.curAppName = nextState.name
+      console.log('onWindowChange', event, value)
       this.oracle.resume()
 
       // clear old stuff

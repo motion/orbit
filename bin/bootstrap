@@ -13,6 +13,7 @@ xcode-select --install 2> /dev/null
 ensure-dep "brew" -- /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 ensure-dep "npm" -- brew install node &
 ensure-dep "yarn" -- npm i -g yarn &
+ensure-dep "chrome-cli" -- brew install chrome-cli &
 
 wait
 

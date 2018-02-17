@@ -99,7 +99,7 @@ class Screen {
     },
   })
 
-  _queuedState = []
+  _queuedState = false
   _wsOpen = false
   _source = ''
   started = false
@@ -149,8 +149,8 @@ class Screen {
       )
     }
     if (!this._wsOpen) {
-      this._queuedState.push(state)
-      return []
+      this._queuedState = true
+      return changed
     }
     if (changed.length) {
       this.ws.send(JSON.stringify({ state, source: this._source }))
@@ -206,10 +206,13 @@ class Screen {
     }
     this.ws.onopen = () => {
       this._wsOpen = true
-      for (const object of this._queuedState) {
-        this.setState(object, true)
+      // send state that hasnt been synced yet
+      if (this._queuedState) {
+        this.ws.send(
+          JSON.stringify({ state: this.state, source: this._source }),
+        )
+        this._queuedState = false
       }
-      this._queuedState = []
     }
     this.ws.onclose = () => {
       this._wsOpen = false

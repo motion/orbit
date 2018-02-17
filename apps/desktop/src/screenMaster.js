@@ -75,7 +75,6 @@ export default class ScreenState {
     })
     let lastId = null
     this.oracle.onWindowChange((event, value) => {
-      console.log('onWindowChange', event, value)
       let nextState = { ...this.curState }
       let id = lastId
       switch (event) {
@@ -111,6 +110,7 @@ export default class ScreenState {
         return
       }
 
+      console.log('onWindowChange', event, value)
       this.oracle.resume()
 
       // clear old stuff

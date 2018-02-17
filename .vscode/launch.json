@@ -2,17 +2,20 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Debug Main Process",
       "type": "node",
-      "request": "launch",
-      "cwd": "${workspaceRoot}/apps/electron",
-      "runtimeExecutable":
-        "${workspaceRoot}/apps/electron/node_modules/.bin/electron",
-      "windows": {
-        "runtimeExecutable":
-          "${workspaceRoot}/apps/electron/node_modules/.bin/electron.cmd"
-      },
-      "args": ["."]
+      "request": "attach",
+      "name": "Attach to Desktop",
+      "port": 9229,
+      "localRoot": "${workspaceFolder}/apps/desktop",
+      "outFiles": ["${workspaceRoot}/apps/desktop/lib/**/*.js"]
+    },
+    {
+      "type": "node",
+      "request": "attach",
+      "name": "Attach to Electron",
+      "port": 5959,
+      "localRoot": "${workspaceFolder}/apps/electron",
+      "outFiles": ["${workspaceRoot}/apps/electron/lib/**/*.js"]
     }
   ]
 }

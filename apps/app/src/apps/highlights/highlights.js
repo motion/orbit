@@ -2,7 +2,9 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import quadtree from 'simple-quadtree'
 import Screen, { desktopState, swiftState } from '@mcro/screen'
-import { toTarget, getKey } from './helpers'
+import { LINE_Y_ADJ, toTarget, getKey } from './helpers'
+import OCRWord from './ocrWord'
+import OCRLine from './ocrLine'
 
 @view({
   store: class HighlightsStore {

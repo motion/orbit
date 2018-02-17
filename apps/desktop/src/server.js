@@ -79,7 +79,7 @@ export default class Server {
       res.header('Access-Control-Allow-Headers', HEADER_ALLOWED)
       res.header(
         'Access-Control-Allow-Methods',
-        'GET,HEAD,POST,PUT,DELETE,OPTIONS'
+        'GET,HEAD,POST,PUT,DELETE,OPTIONS',
       )
       next()
     }
@@ -97,7 +97,7 @@ export default class Server {
       const oneMonth = 2.628e9
       const resources = await fetcher(
         req.query.users.split(','),
-        Date.now() - oneMonth
+        Date.now() - oneMonth,
       )
       res.json(resources)
     })
@@ -231,7 +231,7 @@ export default class Server {
 
   setupProxy() {
     const router = {
-      [Constants.API_HOST]: Constants.PUBLIC_URL,
+      'http://localhost:3001': Constants.PUBLIC_URL,
     }
     log('proxying', router)
     this.app.use(
@@ -243,14 +243,14 @@ export default class Server {
         ws: true,
         logLevel: 'warn',
         router,
-      })
+      }),
     )
   }
 
   setupPassportRoutes() {
     this.app.use(
       '/auth', // TODO change secret
-      session({ secret: 'orbit', resave: false, saveUninitialized: true })
+      session({ secret: 'orbit', resave: false, saveUninitialized: true }),
     )
     this.app.use('/auth', Passport.initialize())
     this.app.use('/auth', Passport.session())
@@ -309,7 +309,7 @@ export default class Server {
 </body>
 </html>
           `)
-        }
+        },
       )
     }
   }

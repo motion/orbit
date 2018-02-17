@@ -24,6 +24,12 @@ export default class MenuEl {
     }
   }
 
+  handlePreferences = () => {
+    Screen.setState({
+      showSettings: !Screen.state.showSettings,
+    })
+  }
+
   render() {
     return (
       <Menu>
@@ -69,6 +75,10 @@ export default class MenuEl {
           <MenuItem
             label="Show Dev Tools [Highlights]"
             onClick={this.toggleDevTools('highlights')}
+          />
+          <MenuItem
+            label="Show Dev Tools [Settings]"
+            onClick={this.toggleDevTools('settings')}
           />
         </SubMenu>
       </Menu>

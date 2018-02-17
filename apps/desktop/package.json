@@ -6,7 +6,8 @@
   "scripts": {
     "build": "build dev",
     "watch": "npm run build -- --watch",
-    "start": "NODE_ENV=development DEBUG=api,crawler,crawler:*,api:* npx nodemon es6/index.js",
+    "start":
+      "NODE_ENV=development DEBUG=desktop,crawler,crawler:*,desktop:* npx nodemon es6/index.js",
     "start-prod": "NODE_ENV=production node index.js",
     "build-electron": "electron-rebuild -v 1.7.10"
   },

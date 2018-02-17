@@ -13,7 +13,7 @@ export const IS_DEV = process.env.NODE_ENV === 'development'
 export const IS_PROD = !IS_DEV
 
 export const PUBLIC_URL = IS_DEV
-  ? 'http://localhost:3001'
+  ? 'http://localhost:3002'
   : 'http://seemirai.com'
 
 export const API_HOST = IS_DEV ? 'orbit.dev' : 'app.seemirai.com'

@@ -247,13 +247,21 @@ final class Screen: NSObject {
     var ocrResults = [String: String]() // outline => letter
     let chars = self.characters!
     let allCharacters: [Character] = characterLines.flatMap { $0.flatMap { $0.characters } }
-    let unsolvedCharacters = allCharacters.filter { $0.letter == nil }.unique()
+    let uniqCharacters = allCharacters.unique()
+    let unsolvedCharacters = uniqCharacters.filter { $0.letter == nil }
+    // return early! every char is already known
+    if unsolvedCharacters.count == 0 {
+      for char in uniqCharacters {
+        ocrResults[char.outline] = char.letter
+      }
+      return ocrResults
+    }
     // write id string
     var idString = ""
     for word in characterLines.flatMap({ $0 }) {
       for char in word.characters {
-        let uid = unsolvedCharacters.index(of: char)!
-        idString += "\(uid.description) "
+        let uid = char.letter != nil ? "$\(char.letter!) " : "\(unsolvedCharacters.index(of: char)!) "
+        idString += uid
       }
       idString += "-1 "
     }

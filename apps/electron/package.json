@@ -35,6 +35,7 @@
     "@mcro/desktop": "^1.5.1",
     "@mcro/black": "^1.5.1",
     "@mcro/constants": "^1.5.1",
+    "@mcro/debug-apps": "*",
     "@mcro/screen": "*",
     "@mcro/r2": "^1.5.1",
     "@mcro/reactron": "^1.5.1",

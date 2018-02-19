@@ -18,20 +18,6 @@ const ENV = {
 
 console.log('Starting Electron App', ENTRY)
 
-function parseURL(str) {
-  const prefix = 'ws://'
-  const devtools =
-    'chrome-devtools://devtools/bundled/inspector.html?experiments=true&v8only=true&ws='
-  let re = /(\b(ws?|chrome-devtools):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi
-  let matches = str.match(re)
-  let link = matches ? matches[0] : null
-  let gotURL = link && link.indexOf(prefix) >= 0
-  if (gotURL) {
-    const url = `${devtools}${link.replace(prefix, '')}`
-    fs.writeFileSync(Path.join(ROOT, 'tmp', 'devurl.txt'), url)
-  }
-}
-
 // handled by startApp()
 let child
 let settings
@@ -47,7 +33,6 @@ function startApp() {
   })
   child.stdout.pipe(process.stdout)
   child.stderr.pipe(process.stderr)
-  child.stderr.on('data', parseURL)
   child.on('exit', () => {
     process.exit()
   })

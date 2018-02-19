@@ -1,19 +1,17 @@
 {
-  "name": "@mcro/detective",
+  "name": "@mcro/debug-apps",
   "main": "index.js",
   "version": "1.5.1",
   "bin": {
-    "detective": "index"
+    "debug-apps": "./index.mjs"
   },
   "scripts": {
     "build": "echo nil",
-    "watch": "echo nil",
+    "watch": "npm run build -- --watch",
     "start": "node --experimental-modules index"
   },
-  "peerDependencies": {
-    "electron": "*"
-  },
   "dependencies": {
-    "watch": "^1.0.2"
+    "puppeteer": "^1.1.0",
+    "@mcro/r2": "*"
   }
 }

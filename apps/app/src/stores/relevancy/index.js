@@ -68,7 +68,7 @@ export default class RelevancyStore {
           ...acc,
           [word.toLowerCase()]: countOf(words, word.toLowerCase()),
         }),
-        {}
+        {},
       )
     })
   }
@@ -86,7 +86,7 @@ export default class RelevancyStore {
             this.tfs[docIndex][word.toLowerCase()] /
             this.idfs[word.toLowerCase()],
         }),
-        {}
+        {},
       )
     })
 
@@ -120,7 +120,7 @@ export default class RelevancyStore {
         try {
           text = text.replace(
             new RegExp('[^:-]' + name + '([^a-zA-Z-:])', 'i'),
-            () => ` ` + encodeEntity(name) + ` `
+            () => ` ` + encodeEntity(name) + ` `,
           )
         } catch (err) {}
       })
@@ -130,7 +130,7 @@ export default class RelevancyStore {
   @watch
   docCombinedWithEntities = () =>
     this.docTextsWithEntities.map(
-      (text, index) => `${this.documents[index].title} ${text}`
+      (text, index) => `${this.documents[index].title} ${text}`,
     )
 
   @watch
@@ -151,7 +151,7 @@ export default class RelevancyStore {
     window.rel = this
     let documents = marginalDocs.filter(({ title, text }) => title && text)
     this.outerDocuments = JSON.parse(
-      localStorage.getItem('outerDocuments') || '[]'
+      localStorage.getItem('outerDocuments') || '[]',
     )
     if (this.firstDoc) {
       documents = [this.firstDoc, ...documents]
@@ -166,7 +166,7 @@ export default class RelevancyStore {
 
     this.outerEntities = this.outerDocuments.map(({ text }) => this.ner(text))
     this.entities = this.documents.map(({ title, text }) =>
-      this.ner(title + ' ' + text)
+      this.ner(title + ' ' + text),
     )
     this.articleIndex = 0
   }
@@ -188,7 +188,7 @@ export default class RelevancyStore {
 
   snippet = (index, entity) => {
     const matches = sentences(this.documents[index].text).filter(
-      text => text.indexOf(entity) > -1
+      text => text.indexOf(entity) > -1,
     )
 
     const truncate = s => s
@@ -198,7 +198,7 @@ export default class RelevancyStore {
 
   getKnowledge = memoize(async word => {
     const json = await (await fetch(
-      `${API_URL}/knowledge?entity=${word}`
+      `${API_URL}/knowledge?entity=${word}`,
     )).json()
 
     return json

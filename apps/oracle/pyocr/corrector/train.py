@@ -71,6 +71,7 @@ decoder = CharRNN(
     model=args.model,
     n_layers=args.n_layers,
 )
+
 decoder_optimizer = torch.optim.Adam(decoder.parameters(), lr=args.learning_rate)
 criterion = nn.CrossEntropyLoss()
 

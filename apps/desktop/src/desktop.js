@@ -9,6 +9,7 @@ import ScreenMaster from './screenMaster'
 import Screen from '@mcro/screen'
 import * as Helpers from '~/helpers'
 import { store } from '@mcro/black/store'
+import global from 'global'
 
 const log = debug('desktop')
 
@@ -19,19 +20,15 @@ const sudoPrompt = promisifyAll(sudoPrompt_)
 
 @store
 export default class Desktop {
-  server: Server
-  screen: Screen
-
-  constructor() {
-    this.server = new Server()
-    this.screenMaster = new ScreenMaster()
-  }
+  server = new Server()
+  screen = new ScreenMaster()
 
   async start() {
+    global.App = this
     this.setupHosts()
     const port = await this.server.start()
     log(`starting desktop on ${port}`)
-    this.screenMaster.start()
+    this.screen.start()
     this.watchBrowserOpen()
   }
 
@@ -41,7 +38,7 @@ export default class Desktop {
 
   dispose() {
     if (this.disposed) return
-    this.screenMaster.dispose()
+    this.screen.dispose()
     this.disposed = true
   }
 

@@ -48,7 +48,7 @@ async function buildPackage(name, dir) {
   } else {
     args = ['npm', 'run', shouldWatch ? 'watch' : 'build']
   }
-  console.log(`run: ${args[0]} ${args.slice(1).join(' ')}`)
+  console.log(`${name}: ${args[0]} ${args.slice(1).join(' ')}`)
   uid++
   const child = spawnStreaming(args[0], args.slice(1), { cwd: dir }, name)
   await new Promise(res => child.on('exit', res))

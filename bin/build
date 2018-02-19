@@ -6,13 +6,13 @@
 
 # build
 if [ "$1" = "" ]; then
-  npx lerna exec --parallel -- npm run build
+  build-all
   exit 0
 fi
 
 # build --watch
 if [ "$1" = "--watch" ]; then
-  npx lerna exec --parallel -- npm run watch
+  build-all --watch
   exit 0
 fi
 

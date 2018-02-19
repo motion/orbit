@@ -1,0 +1,81 @@
+#!/usr/bin/env node
+
+const Path = require('path')
+const Fs = require('fs-extra')
+const { spawn } = require('child_process')
+const logTransformer = require('strong-log-transformer')
+const chalk = require('chalk')
+
+const flatten = arr => arr.reduce((acc, arr) => [...acc, ...arr], [])
+const subDirs = ['apps', 'packages']
+const shouldWatch = process.argv.indexOf('--watch') > -1
+
+// avoid possible memory leak message
+process.stderr.setMaxListeners(10000)
+process.stdout.setMaxListeners(10000)
+
+let uid = 0
+
+const colorWheel = ['cyan', 'magenta', 'blue', 'yellow', 'green', 'red']
+const NUM_COLORS = colorWheel.length
+function spawnStreaming(command, args, opts, prefix, callback) {
+  const options = Object.assign({}, opts)
+  options.stdio = ['ignore', 'pipe', 'pipe']
+  const colorName = colorWheel[uid % NUM_COLORS]
+  const color = chalk[colorName]
+  const spawned = spawn(command, args, options, callback)
+  const prefixedStdout = logTransformer({ tag: `${color.bold(prefix)}:` })
+  const prefixedStderr = logTransformer({
+    tag: `${color(prefix)}:`,
+    mergeMultiline: true,
+  })
+  spawned.stdout.pipe(prefixedStdout).pipe(process.stdout)
+  spawned.stderr.pipe(prefixedStderr).pipe(process.stderr)
+  return spawned
+}
+
+async function buildPackage(name, dir) {
+  const { scripts } = await Fs.readJSON(Path.join(dir, 'package.json'))
+  if (!scripts) return
+  if (!scripts.build) return
+  // our handy dandy less memory builds by avoiding npm
+  let args
+  if (scripts.build.indexOf('build ') === 0) {
+    args = ['build', ...scripts.build.split(' ').slice(1)]
+    if (shouldWatch) {
+      args.push('--watch')
+    }
+  } else {
+    args = ['npm', 'run', shouldWatch ? 'watch' : 'build']
+  }
+  console.log(`run: ${args[0]} ${args.slice(1).join(' ')}`)
+  uid++
+  const child = spawnStreaming(args[0], args.slice(1), { cwd: dir }, name)
+  await new Promise(res => child.on('exit', res))
+}
+
+async function getPackages(dir) {
+  const allFiles = (await Fs.readdir(Path.join(dir))).map(name =>
+    Path.join(dir, name),
+  )
+  const allDirs = await Promise.all(
+    allFiles.map(async x => ((await Fs.stat(x)).isDirectory() ? x : null)),
+  )
+  return allDirs.filter(Boolean)
+}
+
+async function main() {
+  const packageDirs = flatten(await Promise.all(subDirs.map(getPackages)))
+  try {
+    await Promise.all(
+      packageDirs.map(dir => buildPackage(Path.basename(dir), dir)),
+    )
+    console.log('done!')
+  } catch (err) {
+    console.error('build error')
+    console.error(err.stack)
+    process.exit(1)
+  }
+}
+
+main()

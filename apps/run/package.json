@@ -1,0 +1,13 @@
+{
+  "name": "@mcro/orbit",
+  "main": "index.js",
+  "version": "1.5.1",
+  "scripts": {
+    "build": "echo nil",
+    "watch": "npm run build -- --watch",
+    "start": "node --experimental-modules index"
+  },
+  "dependencies": {
+    "puppeteer": "^1.1.0"
+  }
+}

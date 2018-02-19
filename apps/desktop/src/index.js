@@ -6,9 +6,6 @@ console.log('process.env.NODE_ENV', process.env.NODE_ENV)
 if (process.env.NODE_ENV === 'development') {
   require('source-map-support/register')
 }
-// if (!process.env.HAS_BABEL_POLYFILL) {
-//   require()
-// }
 
 const Desktop = require('./desktop').default
 const dTop = new Desktop()

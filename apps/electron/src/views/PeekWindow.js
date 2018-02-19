@@ -223,7 +223,7 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
 
   tearPeek = () => {
     if (true) {
-      console.log('want to tear this damn peek')
+      console.log('want to tear this damn peek 123')
       return
     }
     const [peek, ...otherPeeks] = this.state.windows

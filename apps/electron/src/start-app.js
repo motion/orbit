@@ -15,11 +15,10 @@ if (process.env.NODE_ENV !== 'production') {
   require('source-map-support/register')
 }
 
+console.log('test2')
+
 // exit handling
-const exitHandler = code => {
-  console.log('got exit', code)
-  process.exit(code)
-}
+const exitHandler = code => process.exit(code)
 // dont close instantly
 process.stdin.resume()
 // do something when app is closing

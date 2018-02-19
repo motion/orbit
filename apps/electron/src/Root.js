@@ -160,6 +160,7 @@ export default class Root extends React.Component {
   }
 
   render({ rootStore }) {
+    console.log('hi world')
     if (rootStore.error) {
       return null
     }

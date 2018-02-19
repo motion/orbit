@@ -1,0 +1,19 @@
+{
+  "name": "@mcro/detective",
+  "main": "index.js",
+  "version": "1.5.1",
+  "bin": {
+    "detective": "index"
+  },
+  "scripts": {
+    "build": "echo nil",
+    "watch": "echo nil",
+    "start": "node --experimental-modules index"
+  },
+  "peerDependencies": {
+    "electron": "*"
+  },
+  "dependencies": {
+    "watch": "^1.0.2"
+  }
+}

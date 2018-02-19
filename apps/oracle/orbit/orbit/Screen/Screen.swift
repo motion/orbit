@@ -242,13 +242,23 @@ final class Screen: NSObject {
     return val
   }
 
-  func getOCR(_ characterLines: [[Word]]) -> [String: String]? {
+  func getOCR(_ characterLines: [[Word]]) throws -> [String: String]? {
     startTime()
     var ocrResults = [String: String]() // outline => letter
     let chars = self.characters!
     let allCharacters: [Character] = characterLines.flatMap { $0.flatMap { $0.characters } }
-    // set filters unique outlines
     let unsolvedCharacters = allCharacters.filter { $0.letter == nil }.unique()
+    // write id string
+    var idString = ""
+    for word in characterLines.flatMap({ $0 }) {
+      for char in word.characters {
+        let uid = unsolvedCharacters.index(of: char)!
+        idString += "\(uid.description) "
+      }
+      idString += "-1 "
+    }
+    try idString.write(to: NSURL.fileURL(withPath: "/tmp/characters-full.txt").absoluteURL, atomically: true, encoding: .utf8)
+    // set filters unique outlines
     var foundCharacters = [String]()
     // if necessary, run ocr
     if unsolvedCharacters.count > 0 {
@@ -256,12 +266,7 @@ final class Screen: NSObject {
       let ocrString = unsolvedCharacters.enumerated().map({ item in
         return chars.charToString(item.element, debugID: "")
       }).joined(separator: "\n")
-      do {
-        let path = NSURL.fileURL(withPath: "/tmp/characters.txt").absoluteURL
-        try ocrString.write(to: path, atomically: true, encoding: .utf8)
-      } catch {
-        print("couldnt write pixel string \(error)")
-      }
+      try ocrString.write(to: NSURL.fileURL(withPath: "/tmp/characters.txt").absoluteURL, atomically: true, encoding: .utf8)
       debug("getOCR - characters.txt")
       // run ocr
       foundCharacters = ocr!.ocrCharacters()
@@ -633,16 +638,20 @@ final class Screen: NSObject {
     let charactersByLineWithBounds: [[Word]] = charactersWithLineBounds(charactersByLine)
     if shouldBreak() { return nil }
     if box.ocr {
-      guard let ocrResults = getOCR(charactersByLineWithBounds) else { return nil }
-      if shouldBreak() { return nil }
-      let (words, lines) = getWordsAndLines(ocrResults, characterLines: charactersByLine)
-      if shouldBreak() { return nil }
-      // send to world
-      self.emit("{ \"action\": \"words\", \"value\": [\(words.joined(separator: ","))] }")
-      self.emit("{ \"action\": \"lines\", \"value\": [\(lines.joined(separator: ","))] }")
-      // update character cache
-      Async.utility(after: 0.04) { chars.updateCache(ocrResults) }
-      print("recognized \(lines.count) lines, \(words.count) words")
+      do {
+        guard let ocrResults = try getOCR(charactersByLineWithBounds) else { return nil }
+        if shouldBreak() { return nil }
+        let (words, lines) = getWordsAndLines(ocrResults, characterLines: charactersByLine)
+        if shouldBreak() { return nil }
+        // send to world
+        self.emit("{ \"action\": \"words\", \"value\": [\(words.joined(separator: ","))] }")
+        self.emit("{ \"action\": \"lines\", \"value\": [\(lines.joined(separator: ","))] }")
+        // update character cache
+        Async.utility(after: 0.04) { chars.updateCache(ocrResults) }
+        print("recognized \(lines.count) lines, \(words.count) words")
+      } catch {
+        print("ocr failed...")
+      }
     } else {
       print("found \(charactersByLineWithBounds.flatMap { $0.flatMap { $0.characters } }.count) characters")
       self.emit("{ \"action\": \"words\", \"value\": [] }")

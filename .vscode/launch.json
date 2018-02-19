@@ -5,7 +5,7 @@
       "type": "node",
       "request": "attach",
       "name": "Attach to Desktop",
-      "port": 9229,
+      "port": 9000,
       "localRoot": "${workspaceFolder}/apps/desktop",
       "outFiles": ["${workspaceRoot}/apps/desktop/lib/**/*.js"]
     },
@@ -13,7 +13,7 @@
       "type": "node",
       "request": "attach",
       "name": "Attach to Electron",
-      "port": 5959,
+      "port": 9001,
       "localRoot": "${workspaceFolder}/apps/electron",
       "outFiles": ["${workspaceRoot}/apps/electron/lib/**/*.js"]
     }

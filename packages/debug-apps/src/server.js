@@ -122,7 +122,7 @@ export default class DebugServer {
       }
       const id = names[names.length - 1]
       Relay.handleUpgrade(request, socket, head, conn => {
-        console.log('upgrading...', id)
+        log('upgrading...', id)
         handleConnection(id, conn)
       })
     })

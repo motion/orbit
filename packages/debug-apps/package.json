@@ -10,6 +10,7 @@
     "start": "node --experimental-modules index"
   },
   "dependencies": {
+    "kill-port": "^1.1.0",
     "puppeteer": "^1.1.0",
     "@mcro/r2": "*",
     "express": "^4.12.3",

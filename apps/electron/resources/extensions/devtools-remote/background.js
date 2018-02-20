@@ -154,7 +154,6 @@ async function run() {
     app.getURL(sessionId)
   }
 
-  chrome.runtime.onMessage.addListener(app.onRuntimeMessage)
   chrome.debugger.onEvent.addListener(app.onDebuggerEvent)
   chrome.debugger.onDetach.addListener(app.onDebuggerDetach)
   chrome.runtime.onConnect.addListener(function(port) {
@@ -168,3 +167,5 @@ let int = setInterval(async () => {
     clearInterval(int)
   }
 }, 500)
+
+window.run = run

@@ -6,7 +6,7 @@ import killPort from 'kill-port'
 async function start({
   sessions = [{ port: '9000' }, { port: '9001' }],
   port = 8000,
-}) {
+} = {}) {
   await killPort(port)
   let allSessions = sessions
   const browser = new Browser({

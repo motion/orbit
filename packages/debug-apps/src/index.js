@@ -4,7 +4,7 @@ import Browser from './debugBrowser'
 import killPort from 'kill-port'
 
 async function start({
-  sessions = [{ port: '9000' }, { port: '9001' }],
+  sessions = [{ port: '9000' }, { port: '9001' }, { port: '9002' }],
   port = 8000,
 } = {}) {
   await killPort(port)

@@ -1,21 +1,10 @@
 /* global chrome io */
 
-function getCurrentTab() {
-  return new Promise(res => {
-    chrome.tabs.query({ currentWindow: true, active: true }, function(
-      tabArray,
-    ) {
-      res(tabArray[0])
-    })
-  })
-}
-
+window.chrome = chrome
+console.log('starting devtools-remote2')
 const server = 'http://localhost:8000/'
 
-async function run() {
-  const tab = await getCurrentTab()
-  if (!tab) return
-
+async function run(tab) {
   let debuggee = {}
   let app = {}
   let tabRef
@@ -156,16 +145,20 @@ async function run() {
 
   chrome.debugger.onEvent.addListener(app.onDebuggerEvent)
   chrome.debugger.onDetach.addListener(app.onDebuggerDetach)
-  chrome.runtime.onConnect.addListener(function(port) {
-    console.log('whats this', port)
-  })
   return true
 }
 
-let int = setInterval(async () => {
-  if (await run()) {
-    clearInterval(int)
-  }
-}, 500)
+chrome.runtime.onConnect.addListener(port => {
+  console.log('WE GOT A PROT', port)
+  run({ id: port.name })
+})
 
-window.run = run
+// chrome.tabs.onUpdated.addListener(x => console.log('updated', x))
+// chrome.runtime.onMessage.addListener(x => console.log('onMessage', x))
+// chrome.runtime.onConnect.addListener(function(port) {
+//   console.log('got connect', port)
+//   run({ id: +port.name })
+// })
+// chrome.runtime.onInstalled.addListener(() => {
+//   console.log('is installed')
+// })

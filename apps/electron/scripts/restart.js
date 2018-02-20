@@ -11,7 +11,7 @@ const Path = require('path')
 const ROOT = Path.join(__dirname, '..')
 const ENTRY = Path.join(ROOT, 'lib', 'start-app')
 const WATCH_DIR = Path.join(ROOT, 'lib')
-const CHILD_ARGS = ['--inspect=9001', ENTRY]
+const CHILD_ARGS = ['--inspect=9001', '--remote-debugging-port=9002', ENTRY]
 const ENV = {
   NODE_ENV: 'development',
   DEBUG: 'server,server:*',

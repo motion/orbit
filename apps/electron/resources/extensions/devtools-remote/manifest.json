@@ -11,18 +11,11 @@
   "background": {
     "page": "background.html"
   },
+  "content_security_policy": "script-src 'self'; object-src 'self'",
   "web_accessible_resources": [
     "background.html",
     "background.js",
     "socketio.js"
   ],
-  "permissions": [
-    "tabs",
-    "activeTab",
-    "debugger",
-    "<all_urls>",
-    "file:///*",
-    "http://*/*",
-    "https://*/*"
-  ]
+  "permissions": ["debugger", "file:///*", "http://*/*", "https://*/*"]
 }

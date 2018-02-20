@@ -1,6 +1,6 @@
 {
   "name": "@mcro/debug-apps",
-  "main": "index.js",
+  "main": "es6/index.js",
   "version": "1.5.1",
   "bin": {
     "debug-apps": "./es6/index.js"

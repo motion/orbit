@@ -32,7 +32,6 @@ export default class DebugApps {
     })
     // one less because it starts with a tab already open
     await Promise.all(this.sessions.slice(1).map(() => this.browser.newPage()))
-    this.pages = await this.browser.pages()
     setInterval(this.render, 500)
   }
 
@@ -60,6 +59,7 @@ export default class DebugApps {
   render = async () => {
     if (exited) return
     const urls = await this.getSessions()
+    let pages = await this.browser.pages()
     for (const [index, url] of urls.entries()) {
       if (this.urls[index] === url) {
         continue
@@ -67,13 +67,11 @@ export default class DebugApps {
       this.urls[index] = url
       console.log('>>', index, url)
       if (!url) continue
-      if (!this.pages[index]) {
-        console.log('loading new page')
+      if (!pages[index]) {
         await this.browser.newPage()
-        this.pages = await this.browser.pages()
-        console.log('done')
+        pages = await this.browser.pages()
       }
-      const page = this.pages[index]
+      const page = pages[index]
       await Promise.all([
         page.waitForNavigation({ timeout: 5000, waitUntil: 'load' }),
         page.goto(url),

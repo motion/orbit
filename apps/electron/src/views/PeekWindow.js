@@ -257,8 +257,6 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
       transparent: true,
     }
 
-    return null
-
     return (
       <React.Fragment>
         {this.state.windows.map((peek, index) => {

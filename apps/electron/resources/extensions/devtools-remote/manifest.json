@@ -20,7 +20,6 @@
     "tabs",
     "activeTab",
     "debugger",
-    "clipboardWrite",
     "<all_urls>",
     "file:///*",
     "http://*/*",

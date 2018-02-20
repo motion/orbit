@@ -14,9 +14,9 @@ export const ORA_WIDTH = 320
 export const ROOT_PATH = Path.join(__dirname, '..')
 
 export const DEV_TOOLS_EXTENSIONS = getExtensions([
+  'remoteDevtools',
   'mobx',
   'react',
-  'remoteDevtools',
 ])
 
 export const WEB_PREFERENCES = {

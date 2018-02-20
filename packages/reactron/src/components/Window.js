@@ -18,7 +18,7 @@ const EVENT_KEYS = {
 const properCase = str => `${str[0].toUpperCase()}${str.slice(1)}`
 
 // these should only load once, even across many windows
-const devExtensions = new Set()
+const ALL_EXTENSIONS = new Set()
 
 export default class Window extends BaseComponent {
   mount() {
@@ -56,7 +56,7 @@ export default class Window extends BaseComponent {
       kiosk: v => this.window.setKiosk(v),
       fullScreen: v => this.window.setFullScreen(v),
       ignoreMouseEvents,
-      devToolsExtensions: this.configureExtensions,
+      devToolsExtensions: () => configureExtensions.call(this, this.props),
       showDevTools: propVal => {
         if (propVal) {
           this.window.webContents.openDevTools()
@@ -138,25 +138,24 @@ export default class Window extends BaseComponent {
       console.log(e)
     }
   }
+}
 
-  configureExtensions = () => {
-    if (this.unmounted) return
-    const { devToolsExtensions } = this.props
-    const incoming = new Set(devToolsExtensions)
-    const newExtensions = new Set(
-      [...incoming].filter(x => !devExtensions.has(x)),
-    )
-    const oldExtensions = [...devExtensions].filter(x => !incoming.has(x))
-    for (const path of oldExtensions) {
-      BrowserWindow.removeDevToolsExtension(this.extensionNames[path])
-      devExtensions.delete(path)
-      delete this.extensionNames[path]
-    }
-    for (const path of newExtensions) {
-      const name = BrowserWindow.addDevToolsExtension(path)
-      devExtensions.add(path)
-      this.extensionNames[path] = name
-    }
+function configureExtensions({ devToolsExtensions }) {
+  if (this.unmounted) return
+  const incoming = new Set(devToolsExtensions)
+  const newExtensions = new Set(
+    [...incoming].filter(x => !ALL_EXTENSIONS.has(x)),
+  )
+  const oldExtensions = [...ALL_EXTENSIONS].filter(x => !incoming.has(x))
+  for (const path of oldExtensions) {
+    BrowserWindow.removeDevToolsExtension(this.extensionNames[path])
+    ALL_EXTENSIONS.delete(path)
+    delete this.extensionNames[path]
+  }
+  for (const path of newExtensions) {
+    const name = BrowserWindow.addDevToolsExtension(path)
+    ALL_EXTENSIONS.add(path)
+    this.extensionNames[path] = name
   }
 }
 

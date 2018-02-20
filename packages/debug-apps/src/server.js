@@ -4,6 +4,7 @@ import { Server } from 'ws'
 import uuid from 'node-uuid'
 import debug from 'debug'
 import url from 'url'
+import socketio from 'socket.io'
 
 const log = debug('server')
 
@@ -73,7 +74,7 @@ export default class DebugServer {
     // Socket IO for Chrome Extension
     log('socket:booting')
 
-    var io = require('socket.io')(server)
+    var io = socketio(server)
     io.sockets.on('connection', function(socket) {
       var sessionId = uuid()
       log('socket:connection', sessionId)
@@ -99,6 +100,7 @@ export default class DebugServer {
       })
 
       socket.on('hello', data => {
+        console.log('got hello')
         log('socket:hello', data)
         var webSocketUrl =
           (process.env.WEBSOCKET_DOMAIN
@@ -138,17 +140,19 @@ export default class DebugServer {
     server.on('upgrade', (request, socket, head) => {
       const { pathname } = url.parse(request.url)
       const names = pathname.split('/')
+      console.log('got upgrade from', names)
       if (names[1] !== 'devtools') {
         socket.destroy()
         return
       }
       const id = names[names.length - 1]
-      ws.handleUpgrade(request, socket, head, ws => {
-        handleConnection(id, ws)
+      ws.handleUpgrade(request, socket, head, conn => {
+        console.log('upgrading...', id)
+        handleConnection(id, conn)
       })
     })
 
-    function handleConnection(pageId, connection) {
+    ws.on('connection',  (connection, req) {
       const socket = sockets[pageId]
       if (!socket) {
         return connection.close(1011, 'Matching socket not found :/')

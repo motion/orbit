@@ -42,10 +42,9 @@ export default class DebugApps {
   }
 
   async getDevUrl({ port, id }) {
+    const url = `http://127.0.0.1:${port}/${id ? `${id}/` : ''}json`
     try {
-      const [firstAnswer, ...rest] = await r2.get(
-        `http://127.0.0.1:${port}/${id ? `${id}/` : ''}json`,
-      ).json
+      const [firstAnswer, ...rest] = await r2.get(url).json
       if (rest.length) console.log('rest', rest)
       const { webSocketDebuggerUrl } = firstAnswer
       if (!webSocketDebuggerUrl) {
@@ -53,7 +52,7 @@ export default class DebugApps {
       }
       return `${DEV_URL}/${webSocketDebuggerUrl.replace(`ws://`, '')}`
     } catch (err) {
-      console.log('got errrr', err)
+      console.log('error fetching', url)
       return null
     }
   }
@@ -87,13 +86,19 @@ export default class DebugApps {
       }
       const page = pages[index]
       await Promise.all([
-        page.waitForNavigation({ timeout: 5000, waitUntil: 'load' }),
+        page.waitForNavigation({
+          timeout: 5000,
+          waitUntil: 'domcontentloaded',
+        }),
         page.goto(url),
       ])
       await page.evaluate(() => {
         // open console
         let x = document.getElementById('tab-console')
         if (x) x.click()
+        else {
+          console.log('no element')
+        }
       })
     }
   }

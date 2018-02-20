@@ -14,15 +14,13 @@ var log = function(...args) {
   console.log(...args)
 }
 
-log('huuuu')
+const server = 'http://localhost:8000/'
+log('huuuu', server)
 
 async function run() {
   const tab = await getCurrentTab()
   if (!tab) return
   console.log('got tab', tab)
-
-  // const server = 'https://remote.devtools.rocks/'
-  const server = 'http://localhost:8000/'
 
   var debuggee = {}
   var app = {}
@@ -34,24 +32,23 @@ async function run() {
 
   resetSockets(tab)
 
-  function resetSockets(tab) {
+  async function resetSockets(tab) {
     tabRef = tab
     debuggee.tabId = tab.id
 
-    getDebuggerTarget().then(target => {
-      if (target.attached) {
-        console.warn('debuggee.already attached')
-        chrome.debugger.detach(debuggee)
-      }
-      if (target.url.startsWith('chrome://')) {
-        return log('ERR')
-      }
-      log('oo0')
-      attachDebuggerAndSocket(debuggee, tab)
-    })
+    const target = await getDebuggerTarget()
+    if (target.attached) {
+      console.warn('debuggee.already attached')
+      chrome.debugger.detach(debuggee)
+    }
+    if (target.url.startsWith('chrome://')) {
+      return log('ERR ischrome')
+    }
+    log('oo0')
+    attachDebuggerAndSocket(debuggee, tab)
   }
 
-  function getDebuggerTarget(fn) {
+  function getDebuggerTarget() {
     return new Promise(resolve =>
       chrome.debugger.getTargets(targetsArr => {
         var arr = targetsArr.filter(t => t.tabId === debuggee.tabId)
@@ -65,7 +62,6 @@ async function run() {
     chrome.debugger.attach(debuggee, '1.1', function() {
       log('debugger.attached')
     })
-
     if (connection && connection.connected) {
       log('socket.disconnecting previous socket')
       connection.disconnect()
@@ -78,10 +74,8 @@ async function run() {
   app.onSocketConnect = function() {
     log('socket.connect')
     socketRef = this
-
     this.on('data.request', app.onSocketDataRequest)
     this.on('sessionCreated', app.onSessionCreated)
-
     this.emit('hello', {
       title: tabRef.title,
       url: tabRef.url,
@@ -91,12 +85,9 @@ async function run() {
 
   app.onSocketDisconnect = function() {
     log('socket.disconnect')
-
     this.off('data.request')
     this.off('sessionCreated')
-
     socketRef = null
-
     getDebuggerTarget().then(target => {
       if (target && target.attached) {
         chrome.debugger.detach(debuggee, _ => log('debugger.detached'))
@@ -106,7 +97,6 @@ async function run() {
 
   app.onSocketDataRequest = function(data) {
     log('socket.data.request', data.id, data)
-
     if (data.method === 'Page.canScreencast') {
       var reply = {
         id: data.id,
@@ -114,23 +104,19 @@ async function run() {
           result: true,
         },
       }
-
       this.emit('data.response', reply)
       return
     }
-
     chrome.debugger.sendCommand(
       debuggee,
       data.method,
       data.params,
       function(response) {
         log('debugger.command.sent', data.id, response)
-
         var reply = {
           id: data.id,
           result: response,
         }
-
         log('socket.data.response', reply.id, reply)
         this.emit('data.response', reply)
       }.bind(this),
@@ -160,29 +146,12 @@ async function run() {
           log('%c%s', 'font-weight: bold;', t.title)
           log('\t %c%s', 'color: gray; font-size: 90%;', t.url)
           log('\t Inspection URL: %c%s', 'color: blue;', t.devtoolsUrl)
-
-          if (t.url === tabRef.url) {
-            app.copyToClipboard(t.devtoolsUrl)
-          }
         })
       })
   }
 
   connection.on('connect', app.onSocketConnect)
   connection.on('disconnect', app.onSocketDisconnect)
-
-  app.copyToClipboard = function(text) {
-    var input = document.createElement('input')
-    document.body.appendChild(input)
-    input.value = text
-    input.focus()
-    input.select()
-    document.execCommand('copy')
-    input.remove()
-
-    log('copied')
-    setTimeout(log, 600)
-  }
 
   // chrome-side
   app.onBrowserAction = function(tab) {
@@ -221,6 +190,7 @@ async function run() {
 }
 
 let int = setInterval(async () => {
-  console.log('do it yo')
-  if (await run()) clearInterval(int)
+  if (await run()) {
+    clearInterval(int)
+  }
 }, 500)

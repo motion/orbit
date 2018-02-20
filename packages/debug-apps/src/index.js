@@ -12,6 +12,7 @@ browser.start()
 
 new Server({
   onTargets(targets = []) {
+    console.log('on targets', targets)
     if (!Array.isArray(targets)) {
       return
     }

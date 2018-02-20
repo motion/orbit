@@ -3,6 +3,7 @@ import http from 'http'
 import { Server } from 'ws'
 import uuid from 'node-uuid'
 import debug from 'debug'
+import url from 'url'
 
 const log = debug('server')
 
@@ -126,42 +127,48 @@ export default class DebugServer {
     // Native WebSockets for DevTools
     log('websocket:booting')
 
-    var extractPageId = function(str) {
-      return str.match(/\/devtools\/page\/(.*)/)[1]
-    }
-
     var ws = new Server({
       server: server,
-      path: /\/devtools\/page\/(.*)/,
     })
 
     ws.on('error', function(err) {
-      log('websocket:error', err)
+      console.log('websocket:error2', err)
     })
 
-    ws.on('connection', function(connection) {
-      log('connection')
-      var pageId = extractPageId(connection.upgradeReq.url)
+    server.on('upgrade', (request, socket, head) => {
+      const { pathname } = url.parse(request.url)
+      const names = pathname.split('/')
+      if (names[1] !== 'devtools') {
+        socket.destroy()
+        return
+      }
+      const id = names[names.length - 1]
+      ws.handleUpgrade(request, socket, head, ws => {
+        handleConnection(id, ws)
+      })
+    })
+
+    function handleConnection(pageId, connection) {
       var socket = sockets[pageId]
       if (!socket) {
         return connection.close(1011, 'Matching socket not found :/')
       }
+      console.log('websocket:connected', pageId)
       var forwardMessage = function(data) {
         var response = JSON.stringify(data)
-        log('forwardMessage:', data.id)
+        console.log('forwardMessage:', data.id)
         connection.send(response)
       }
       socket.on('data.response', function(data) {
-        log('data:response', data.id)
+        console.log('data:response', data.id)
         forwardMessage(data)
       })
       socket.on('data.event', function(data) {
-        log('data:event', data.method)
+        console.log('data:event', data.method)
         forwardMessage(data)
       })
-      log('websocket:connected', pageId)
       connection.on('close', function() {
-        log('websocket:close')
+        console.log('websocket:close')
         socket.removeAllListeners('data.response')
         socket.removeAllListeners('data.event')
       })
@@ -169,7 +176,7 @@ export default class DebugServer {
         console.log('websocket:error', err)
       })
       connection.on('message', function(data) {
-        log('websocket:message')
+        console.log('websocket:message')
         var message
         try {
           message = JSON.parse(data)
@@ -177,6 +184,6 @@ export default class DebugServer {
         if (!message) return
         socket.emit('data.request', message)
       })
-    })
+    }
   }
 }

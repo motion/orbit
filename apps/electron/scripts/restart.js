@@ -14,6 +14,7 @@ const WATCH_DIR = Path.join(ROOT, 'lib')
 const CHILD_ARGS = ['--inspect=9001', ENTRY]
 const ENV = {
   NODE_ENV: 'development',
+  DEBUG: 'server,server:*',
 }
 
 // handled by startApp()

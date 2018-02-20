@@ -3,7 +3,7 @@
   "main": "es6/index.js",
   "version": "1.5.1",
   "bin": {
-    "debug-apps": "./es6/index.js"
+    "debug-apps": "DEBUG= server,server:* ./es6/index.js"
   },
   "scripts": {
     "build": "build es6",

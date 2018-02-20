@@ -1,6 +1,8 @@
 import r2 from '@mcro/r2'
 import puppeteer from 'puppeteer'
 
+const sleep = ms => new Promise(res => setTimeout(res, ms))
+
 process.on('unhandledRejection', function(reason) {
   console.log(reason)
   process.exit(0)
@@ -59,17 +61,29 @@ export default class DebugApps {
   render = async () => {
     if (exited) return
     const urls = await this.getSessions()
+    if (!this.browser) {
+      console.log('error no browser wierd')
+      return
+    }
     let pages = await this.browser.pages()
+    if (!pages) {
+      console.log('Error DebugBrowser.render: no pages')
+      return
+    }
     for (const [index, url] of urls.entries()) {
       if (this.urls[index] === url) {
         continue
       }
       this.urls[index] = url
-      console.log('>>', index, url)
       if (!url) continue
       if (!pages[index]) {
         await this.browser.newPage()
+        await sleep(20)
         pages = await this.browser.pages()
+        if (!pages) {
+          console.log('weird no pages............')
+          return
+        }
       }
       const page = pages[index]
       await Promise.all([

@@ -6,8 +6,9 @@
   "scripts": {
     "build": "build dev",
     "watch": "npm run build -- --watch",
+    "start": "dev-apps & npm run start-monitoring & wait",
+    "start-monitoring": "nodemon --delay 50ms --ignore src --exec 'npm run start-app'",
     "start-app": "kill-port 3001 && kill-port 9000 && NODE_ENV=development DEBUG=api,crawler,crawler:*,api:* node --inspect=127.0.0.1:9000 lib/index.js",
-    "start": "nodemon --delay 50ms --ignore src --exec 'npm run start-app'",
     "start-prod": "NODE_ENV=production node index.js",
     "build-electron": "electron-rebuild -v 1.7.10"
   },
@@ -54,6 +55,8 @@
     "ws": "^3.3.3"
   },
   "devDependencies": {
+    "touch": "^3.1.0",
+    "@mcro/dev": "*",
     "nodemon": "^1.15.0"
   }
 }

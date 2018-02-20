@@ -67,7 +67,8 @@ export default class DebugApps {
       this.cache[url] = res
       return res
     } catch (err) {
-      console.log('error fetching', url)
+      if (err.message.indexOf('ECONNREFUSED') !== -1) return
+      console.log('dev-apps err', err.message, err.stack)
       return null
     }
   }

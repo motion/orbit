@@ -2,6 +2,9 @@
   "name": "@mcro/dev",
   "private": true,
   "version": "1.5.40",
+  "bin": {
+    "dev-apps": "./dev-apps.js"
+  },
   "scripts": {
     "start": "./start-apps.sh",
     "start-debug": "node es6/start",
@@ -13,9 +16,6 @@
   },
   "devDependencies": {
     "@mcro/debug-apps": "*",
-    "@mcro/app": "*",
-    "@mcro/desktop": "*",
-    "@mcro/electron": "*",
     "execa": "^0.9.0"
   }
 }

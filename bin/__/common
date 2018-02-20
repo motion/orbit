@@ -82,7 +82,6 @@ function ensure-dep {
       $($cmd)
     fi
   fi
-  echo "installed: $1"
 }
 
 function ensure-dir {
@@ -91,7 +90,6 @@ function ensure-dir {
     echo "$1 doesnt exist, running... $cmd"
     $($cmd)
   fi
-  echo "directory exists: $1"
 }
 
 function ensure-file {
@@ -100,7 +98,6 @@ function ensure-file {
     echo "$1 doesnt exist, running... $cmd"
     $($cmd)
   fi
-  echo "exists: $1"
 }
 
 function ensure-symlink {
@@ -109,6 +106,5 @@ function ensure-symlink {
     echo "$1 doesnt exist, running... $cmd"
     $($cmd)
   fi
-  echo "symlink exists: $1"
 }
 

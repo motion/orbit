@@ -10,6 +10,7 @@ import Screen from '@mcro/screen'
 import * as Helpers from '~/helpers'
 import { store } from '@mcro/black/store'
 import global from 'global'
+import Path from 'path'
 
 const log = debug('desktop')
 
@@ -24,12 +25,16 @@ export default class Desktop {
   screen = new ScreenMaster()
 
   async start() {
-    global.Desktop = this
+    global.App = this
     this.setupHosts()
     const port = await this.server.start()
     log(`starting desktop on ${port}`)
     this.screen.start()
     this.watchBrowserOpen()
+  }
+
+  restart() {
+    require('touch')(Path.join(__dirname, '..', 'package.json'))
   }
 
   watchBrowserOpen() {

@@ -10,73 +10,63 @@ function getCurrentTab() {
   })
 }
 
-var log = function(...args) {
-  console.log(...args)
-}
-
 const server = 'http://localhost:8000/'
-log('huuuu', server)
 
 async function run() {
   const tab = await getCurrentTab()
   if (!tab) return
-  console.log('got tab', tab)
 
-  var debuggee = {}
-  var app = {}
-  var tabRef
-  var socketRef
-  var connection = io(server, {
+  let debuggee = {}
+  let app = {}
+  let tabRef
+  let socket = io(server, {
     autoConnect: false,
   })
 
   resetSockets(tab)
 
   async function resetSockets(tab) {
+    console.log('resetSockets', tab)
     tabRef = tab
     debuggee.tabId = tab.id
-
     const target = await getDebuggerTarget()
     if (target.attached) {
       console.warn('debuggee.already attached')
       chrome.debugger.detach(debuggee)
     }
     if (target.url.startsWith('chrome://')) {
-      return log('ERR ischrome')
+      return console.log('ERR ischrome')
     }
-    log('oo0')
     attachDebuggerAndSocket(debuggee, tab)
   }
 
   function getDebuggerTarget() {
     return new Promise(resolve =>
       chrome.debugger.getTargets(targetsArr => {
-        var arr = targetsArr.filter(t => t.tabId === debuggee.tabId)
+        const arr = targetsArr.filter(t => t.tabId === debuggee.tabId)
         resolve(arr && arr[0])
       }),
     )
   }
 
   function attachDebuggerAndSocket(debuggee, tab) {
-    log('debugger.attach', tab)
+    console.log('debugger.attach', tab)
     chrome.debugger.attach(debuggee, '1.1', function() {
-      log('debugger.attached')
+      console.log('debugger.attached')
     })
-    if (connection && connection.connected) {
-      log('socket.disconnecting previous socket')
-      connection.disconnect()
+    if (socket && socket.connected) {
+      console.log('socket.disconnecting previous socket')
+      socket.disconnect()
     }
-    log('socket.connecting')
-    connection.connect()
+    socket.connect()
   }
 
   // socket-side
   app.onSocketConnect = function() {
-    log('socket.connect')
-    socketRef = this
-    this.on('data.request', app.onSocketDataRequest)
-    this.on('sessionCreated', app.onSessionCreated)
-    this.emit('hello', {
+    console.log('socket.connect')
+    socket.on('data.request', app.onSocketDataRequest)
+    socket.on('sessionCreated', app.onSessionCreated)
+    socket.emit('hello', {
       title: tabRef.title,
       url: tabRef.url,
       userAgent: navigator.userAgent,
@@ -84,27 +74,25 @@ async function run() {
   }
 
   app.onSocketDisconnect = function() {
-    log('socket.disconnect')
-    this.off('data.request')
-    this.off('sessionCreated')
-    socketRef = null
+    console.log('socket.disconnect')
+    socket.off('data.request')
+    socket.off('sessionCreated')
     getDebuggerTarget().then(target => {
       if (target && target.attached) {
-        chrome.debugger.detach(debuggee, _ => log('debugger.detached'))
+        chrome.debugger.detach(debuggee, _ => console.log('debugger.detached'))
       }
     })
   }
 
   app.onSocketDataRequest = function(data) {
-    log('socket.data.request', data.id, data)
+    console.log('socket.data.request', data.id, data)
     if (data.method === 'Page.canScreencast') {
-      var reply = {
+      socket.emit('data.response', {
         id: data.id,
         result: {
           result: true,
         },
-      }
-      this.emit('data.response', reply)
+      })
       return
     }
     chrome.debugger.sendCommand(
@@ -112,25 +100,21 @@ async function run() {
       data.method,
       data.params,
       function(response) {
-        log('debugger.command.sent', data.id, response)
-        var reply = {
+        console.log('debugger.command.sent', data.id, response)
+        socket.emit('data.response', {
           id: data.id,
           result: response,
-        }
-        log('socket.data.response', reply.id, reply)
-        this.emit('data.response', reply)
+        })
       }.bind(this),
     )
   }
 
   app.getURL = function(sessionId) {
-    log('ooo')
-
     window
       .fetch(server + sessionId + '/json')
       .then(r => r.json())
       .then(targets => {
-        log('Inspectable targets on ', server, ':')
+        console.log('Inspectable targets on ', server, ':')
         targets.forEach(t => {
           /* t looks like: {
           description: "",
@@ -142,41 +126,31 @@ async function run() {
           url: "https://developer.chrome.com/extensions/debugger#type-TargetInfo",
           webSocketDebuggerUrl: "ws://devtoolsremote.com/devtools/page/lQOtx1HAAC"
         } */
-
-          log('%c%s', 'font-weight: bold;', t.title)
-          log('\t %c%s', 'color: gray; font-size: 90%;', t.url)
-          log('\t Inspection URL: %c%s', 'color: blue;', t.devtoolsUrl)
+          console.log('%c%s', 'font-weight: bold;', t.title)
+          console.log('\t %c%s', 'color: gray; font-size: 90%;', t.url)
+          console.log('\t Inspection URL: %c%s', 'color: blue;', t.devtoolsUrl)
         })
       })
   }
 
-  connection.on('connect', app.onSocketConnect)
-  connection.on('disconnect', app.onSocketDisconnect)
-
-  // chrome-side
-  app.onBrowserAction = function(tab) {
-    log('ooo')
-    resetSockets(tab)
-  }
+  socket.on('connect', app.onSocketConnect)
+  socket.on('disconnect', app.onSocketDisconnect)
 
   app.onDebuggerEvent = function(source, method, params) {
-    log('debugger.event.recieved', source, method, params)
-    socketRef.emit('data.event', {
+    console.log('debugger.event.recieved', source, method, params)
+    socket.emit('data.event', {
       method: method,
       params: params,
     })
   }
 
   app.onDebuggerDetach = function(debuggee, reason) {
-    log('debugger.detached', reason)
-    connection.disconnect()
-
-    log('clear')
-    setTimeout(log, 500)
+    console.log('debugger.detached', reason)
+    socket.disconnect()
   }
 
   app.onSessionCreated = function(sessionId) {
-    log('sessionId', sessionId)
+    console.log('sessionId', sessionId)
     app.getURL(sessionId)
   }
 
@@ -184,7 +158,7 @@ async function run() {
   chrome.debugger.onEvent.addListener(app.onDebuggerEvent)
   chrome.debugger.onDetach.addListener(app.onDebuggerDetach)
   chrome.runtime.onConnect.addListener(function(port) {
-    log('whats this', port)
+    console.log('whats this', port)
   })
   return true
 }

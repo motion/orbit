@@ -2,7 +2,8 @@
 import Server from './server'
 import Browser from './debugBrowser'
 
-const sessions = [{ port: '9000' }, { port: '9001' }]
+// const sessions = [{ port: '9000' }, { port: '9001' }]
+const sessions = []
 
 const browser = new Browser({
   sessions,

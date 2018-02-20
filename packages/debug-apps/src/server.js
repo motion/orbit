@@ -18,14 +18,8 @@ export default class DebugServer {
       onTargets(Object.keys(targets))
     }
 
-    log('server:booting')
-
-    // HTTP for /json endpoint
-    log('http:booting')
-
     var app = express()
     app.set('port', process.env.PORT || 8000)
-
     app.use(express.static('web'))
 
     app.get('/', function(req, res) {
@@ -36,7 +30,6 @@ export default class DebugServer {
     })
 
     app.get('/sessions', function(req, res) {
-      log('http:sessions')
       res.json(sessions)
     })
 
@@ -54,16 +47,12 @@ export default class DebugServer {
     app.get('/:session/json', function(req, res) {
       var sessionId = req.params.session
       var sessionTargets = targets[sessionId]
-      log('http:targets', {
-        targets: sessionTargets,
-      })
       res.send(sessionTargets)
     })
 
-    var server = http.Server(app)
-
+    // server
+    const server = http.Server(app)
     server.listen(app.get('port'), function() {
-      log('http:listening')
       log(
         '-:listening on port %d in %s mode',
         app.get('port'),
@@ -71,12 +60,10 @@ export default class DebugServer {
       )
     })
 
-    // Socket IO for Chrome Extension
-    log('socket:booting')
-
-    var io = socketio(server)
+    // handle connection from browser socket
+    const io = socketio(server)
     io.sockets.on('connection', function(socket) {
-      var sessionId = uuid()
+      const sessionId = uuid()
       log('socket:connection', sessionId)
       targets[sessionId] = []
       sockets[sessionId] = socket
@@ -94,13 +81,10 @@ export default class DebugServer {
         delete sessions[sessionId]
         callOnTargets()
       })
-
       socket.on('error', function(err) {
         log('socket:error', err)
       })
-
       socket.on('hello', data => {
-        console.log('got hello')
         log('socket:hello', data)
         var webSocketUrl =
           (process.env.WEBSOCKET_DOMAIN
@@ -126,67 +110,52 @@ export default class DebugServer {
       })
     })
 
-    // Native WebSockets for DevTools
-    log('websocket:booting')
-
-    var ws = new Server({
-      server: server,
-    })
-
-    ws.on('error', function(err) {
-      console.log('websocket:error2', err)
-    })
-
+    // relay to other devtools
+    const Relay = new Server({ noServer: true })
+    Relay.on('error', err => console.log('Relay:err', err))
     server.on('upgrade', (request, socket, head) => {
       const { pathname } = url.parse(request.url)
       const names = pathname.split('/')
-      console.log('got upgrade from', names)
       if (names[1] !== 'devtools') {
         socket.destroy()
         return
       }
       const id = names[names.length - 1]
-      ws.handleUpgrade(request, socket, head, conn => {
+      Relay.handleUpgrade(request, socket, head, conn => {
         console.log('upgrading...', id)
         handleConnection(id, conn)
       })
     })
-
-    function handleConnection(pageId, connection) {
+    function handleConnection(pageId, conn) {
       const socket = sockets[pageId]
       if (!socket) {
-        return connection.close(1011, 'Matching socket not found :/')
+        console.log('closing with 1011')
+        return conn.close(1011, 'Matching socket not found :/')
       }
-      console.log('websocket:connected', pageId)
-      const forwardMessage = data => {
-        const response = JSON.stringify(data)
-        console.log('forwardMessage:', data.id)
-        connection.send(response)
-      }
-      socket.on('data.response', function(data) {
-        console.log('data:response', data.id)
+      log('relay:connected', pageId)
+      const forwardMessage = data => conn.send(JSON.stringify(data))
+      socket.on('data.response', data => {
+        log('relay:data:response', data.id)
         forwardMessage(data)
       })
-      socket.on('data.event', function(data) {
-        console.log('data:event', data.method)
+      socket.on('data.event', data => {
+        log('relay:data:event', data.method)
         forwardMessage(data)
       })
-      connection.on('close', function() {
-        console.log('websocket:close')
+      conn.on('close', () => {
+        log('relay:close')
         socket.removeAllListeners('data.response')
         socket.removeAllListeners('data.event')
       })
-      connection.on('error', function(err) {
-        console.log('websocket:error', err)
-      })
-      connection.on('message', function(data) {
-        console.log('websocket:message')
-        var message
+      conn.on('error', err => log('relay:error', err))
+      conn.on('message', data => {
+        log('relay:message')
         try {
-          message = JSON.parse(data)
-        } catch (e) {}
-        if (!message) return
-        socket.emit('data.request', message)
+          const message = JSON.parse(data)
+          socket.emit('data.request', message)
+        } catch (e) {
+          log('relay:err:parsing', data)
+        }
       })
     }
   }

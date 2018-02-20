@@ -18,10 +18,10 @@ let uid = 0
 
 const colorWheel = ['cyan', 'magenta', 'blue', 'yellow', 'green', 'red']
 const NUM_COLORS = colorWheel.length
-function spawnStreaming(command, args, opts, prefix, callback) {
+function spawnStreaming(index, command, args, opts, prefix, callback) {
   const options = Object.assign({}, opts)
   options.stdio = ['ignore', 'pipe', 'pipe']
-  const colorName = colorWheel[uid % NUM_COLORS]
+  const colorName = colorWheel[index % NUM_COLORS]
   const color = chalk[colorName]
   const spawned = spawn(command, args, options, callback)
   const prefixedStdout = logTransformer({ tag: `${color.bold(prefix)}:` })
@@ -49,8 +49,13 @@ async function buildPackage(name, dir) {
     args = ['npm', 'run', shouldWatch ? 'watch' : 'build']
   }
   console.log(`${name}: ${args[0]} ${args.slice(1).join(' ')}`)
-  uid++
-  const child = spawnStreaming(args[0], args.slice(1), { cwd: dir }, name)
+  const child = spawnStreaming(
+    uid++,
+    args[0],
+    args.slice(1),
+    { cwd: dir },
+    name,
+  )
   await new Promise(res => child.on('exit', res))
 }
 

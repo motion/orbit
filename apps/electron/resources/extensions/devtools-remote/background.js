@@ -19,6 +19,7 @@ log('huuuu')
 async function run() {
   const tab = await getCurrentTab()
   if (!tab) return
+  console.log('got tab', tab)
 
   // const server = 'https://remote.devtools.rocks/'
   const server = 'http://localhost:8000/'
@@ -31,7 +32,6 @@ async function run() {
     autoConnect: false,
   })
 
-  console.log('got tab', tab)
   resetSockets(tab)
 
   function resetSockets(tab) {
@@ -64,7 +64,6 @@ async function run() {
     log('debugger.attach', tab)
     chrome.debugger.attach(debuggee, '1.1', function() {
       log('debugger.attached')
-      log('o0o')
     })
 
     if (connection && connection.connected) {

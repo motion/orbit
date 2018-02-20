@@ -30,7 +30,6 @@ export default class SettingsWindow {
     if (!Screen.state.showSettings) {
       return null
     }
-    return null
     return (
       <Window
         frame={false}

@@ -8,14 +8,12 @@ import electronDebug from 'electron-debug'
 import React from 'react'
 import { render } from '@mcro/reactron'
 import { extras } from 'mobx'
-import Root from './Root'
+import Desktop from './Desktop'
 
 if (process.env.NODE_ENV !== 'production') {
   require('./helpers/monitorResourceUsage')
   require('source-map-support/register')
 }
-
-console.log('test2')
 
 // exit handling
 const exitHandler = code => process.exit(code)
@@ -43,7 +41,7 @@ export function start() {
   if (started) return
   started = true
   console.log('starting electron', process.env.NODE_ENV)
-  render(<Root />)
+  render(<Desktop />)
   electronContextMenu()
   electronDebug()
 }

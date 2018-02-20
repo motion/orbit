@@ -3,21 +3,23 @@
   "version": "1.1.0",
   "manifest_version": 2,
   "description": "Debug your user's browser remotely via Chrome DevTools.",
-  "homepage_url": "https://remote.devtools.rocks",
-  "browser_action": {
-    "default_icon": "icons/icon128.png",
-    "default_title": "DevTools-Remote"
+  "icons": {
+    "16": "icons/Icon-16.png",
+    "48": "icons/Icon-48.png",
+    "128": "icons/Icon-128.png"
   },
-  "background": {
-    "page": "background.html"
-  },
+  "devtools_page": "panel.html",
   "content_security_policy":
     "script-src 'self' https://cdnjs.cloudflare.com; object-src 'self'",
+  "web_accessible_resources": ["panel.html", "panel.js"],
   "permissions": [
     "tabs",
     "activeTab",
     "debugger",
     "clipboardWrite",
-    "<all_urls>"
+    "<all_urls>",
+    "file:///*",
+    "http://*/*",
+    "https://*/*"
   ]
 }

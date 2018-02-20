@@ -50,6 +50,7 @@ export default class SettingsWindow {
         onMoved={this.onSettingsMoved}
         onMove={this.onSettingsMoved}
         onClose={this.onSettingsClosed}
+        devToolsExtensions={Constants.DEV_TOOLS_EXTENSIONS}
       />
     )
   }

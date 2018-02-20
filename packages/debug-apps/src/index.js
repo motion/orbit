@@ -1,10 +1,17 @@
 #!/usr/bin/env node
-const r2 = require('@mcro/r2')
-const puppeteer = require('puppeteer')
+import r2 from '@mcro/r2'
+import puppeteer from 'puppeteer'
+// start listening for browser debuggers
+import './server'
 
 process.on('unhandledRejection', function(reason) {
   console.log(reason)
   process.exit(0)
+})
+
+let exited = false
+process.on('beforeExit', () => {
+  exited = true
 })
 
 const DEV_URL =
@@ -37,13 +44,13 @@ class DebugApps {
       }
       return `${DEV_URL}/${webSocketDebuggerUrl.replace(`ws://`, '')}`
     } catch (err) {
-      console.log('err is', err)
       return null
     }
   }
 
   watchForNewDevUrls() {
     setInterval(async () => {
+      if (exited) return
       const urls = await this.getDevUrls()
       for (const [index, url] of urls.entries()) {
         if (this.urls[index] !== url) {

@@ -3,15 +3,21 @@
   "main": "index.js",
   "version": "1.5.1",
   "bin": {
-    "debug-apps": "./index.mjs"
+    "debug-apps": "./es6/index.js"
   },
   "scripts": {
-    "build": "echo nil",
-    "watch": "npm run build -- --watch",
+    "build": "build es6",
     "start": "node --experimental-modules index"
   },
   "dependencies": {
     "puppeteer": "^1.1.0",
-    "@mcro/r2": "*"
+    "@mcro/r2": "*",
+    "express": "^4.12.3",
+    "guid": "0.0.12",
+    "node-uuid": "^1.4.7",
+    "request": "^2.67.0",
+    "socket.io": "^1.3.5",
+    "winston": "^1.0.0",
+    "ws": "^4.0.0"
   }
 }

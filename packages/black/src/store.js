@@ -36,7 +36,6 @@ export const storeOptions = {
     if (store.subscriptions) {
       store.subscriptions.dispose()
     }
-    store.dispose()
   },
 }
 

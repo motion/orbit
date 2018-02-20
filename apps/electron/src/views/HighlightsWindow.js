@@ -40,6 +40,7 @@ export default class HighlightsWindow extends React.Component {
         position={this.state.position}
         size={Helpers.getScreenSize()}
         onMove={this.handleMove}
+        devToolsExtensions={Constants.DEV_TOOLS_EXTENSIONS}
       />
     )
   }

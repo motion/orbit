@@ -2,10 +2,6 @@
   "name": "@mcro/babel-preset-motion",
   "main": "index.js",
   "version": "1.5.2",
-  "scripts": {
-    "build": "echo nil",
-    "watch": "echo nil"
-  },
   "dependencies": {
     "@mcro/gloss": "^1.5.1",
     "@mcro/hmr": "^1.5.1",

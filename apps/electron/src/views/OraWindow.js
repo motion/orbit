@@ -49,7 +49,7 @@ export default class Windows {
         onMove={this.onOraMoved}
         onBlur={this.onOraBlur}
         onFocus={this.onOraFocus}
-        devToolsExtensions={Helpers.getExtensions(['mobx', 'react'])}
+        devToolsExtensions={Constants.DEV_TOOLS_EXTENSIONS}
       />
     )
   }

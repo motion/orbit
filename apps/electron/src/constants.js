@@ -1,6 +1,7 @@
 export * from '@mcro/constants'
 
 import Path from 'path'
+import getExtensions from '~/helpers/getExtensions'
 
 export const IS_PROD = process.env.NODE_ENV !== 'development'
 export const IS_DEV = !IS_PROD
@@ -11,6 +12,12 @@ export const APP_HOME = '/'
 export const IS_MAC = process.platform === 'darwin'
 export const ORA_WIDTH = 320
 export const ROOT_PATH = Path.join(__dirname, '..')
+
+export const DEV_TOOLS_EXTENSIONS = getExtensions([
+  'mobx',
+  'react',
+  'remoteDevtools',
+])
 
 export const WEB_PREFERENCES = {
   nativeWindowOpen: true,

@@ -288,6 +288,7 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
               size={size}
               position={[position[0], position[1]]}
               onMove={this.handlePeekMove(peek)}
+              devToolsExtensions={Constants.DEV_TOOLS_EXTENSIONS}
             />
           )
         })}

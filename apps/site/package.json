@@ -4,8 +4,6 @@
   "version": "1.5.1",
   "main": "index.js",
   "scripts": {
-    "build": "echo nil",
-    "watch": "echo nil",
     "start": "motion watch",
     "start-prod": "static-server -p 4000 -n build/index.html build",
     "build-app": "MINIFY=true NODE_ENV=production BUILD_DIR=. mcro-build",

@@ -2,6 +2,10 @@
 
 "shared highlights"
 
+dev
+
+* could easily make our build-all script watch package.json and kill/restart that individual watcher, so we avoid restarting the entire build --watch every time you update a build config
+
 ux
 
 easy highlight words non-contiguous and see search

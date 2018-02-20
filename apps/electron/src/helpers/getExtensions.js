@@ -2,6 +2,7 @@ import Path from 'path'
 import * as Constants from '~/constants'
 
 const EXTENSIONS = {
+  remoteDevtools: 'devtools-remote',
   mobx: 'fmkadmapgofadopljbjfkapdkoienihi',
   react: 'pfgnfdagidkfgccljigdamigbcnndkod',
 }

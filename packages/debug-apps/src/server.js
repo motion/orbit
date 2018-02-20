@@ -152,7 +152,7 @@ export default class DebugServer {
       })
     })
 
-    ws.on('connection',  (connection, req) {
+    function handleConnection(pageId, connection) {
       const socket = sockets[pageId]
       if (!socket) {
         return connection.close(1011, 'Matching socket not found :/')

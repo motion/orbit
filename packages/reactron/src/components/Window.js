@@ -17,10 +17,12 @@ const EVENT_KEYS = {
 
 const properCase = str => `${str[0].toUpperCase()}${str.slice(1)}`
 
+// these should only load once, even across many windows
+const devExtensions = new Set()
+
 export default class Window extends BaseComponent {
   mount() {
     this.extensionNames = {}
-    this.devExtensions = new Set()
 
     const { props } = this
     this.options = {
@@ -54,9 +56,7 @@ export default class Window extends BaseComponent {
       kiosk: v => this.window.setKiosk(v),
       fullScreen: v => this.window.setFullScreen(v),
       ignoreMouseEvents,
-      devToolsExtensions: () => {
-        configureExtensions.call(this, this.props)
-      },
+      devToolsExtensions: this.configureExtensions,
       showDevTools: propVal => {
         if (propVal) {
           this.window.webContents.openDevTools()
@@ -136,6 +136,26 @@ export default class Window extends BaseComponent {
     } catch (e) {
       log('error with prop handlers')
       console.log(e)
+    }
+  }
+
+  configureExtensions = () => {
+    if (this.unmounted) return
+    const { devToolsExtensions } = this.props
+    const incoming = new Set(devToolsExtensions)
+    const newExtensions = new Set(
+      [...incoming].filter(x => !devExtensions.has(x)),
+    )
+    const oldExtensions = [...devExtensions].filter(x => !incoming.has(x))
+    for (const path of oldExtensions) {
+      BrowserWindow.removeDevToolsExtension(this.extensionNames[path])
+      devExtensions.delete(path)
+      delete this.extensionNames[path]
+    }
+    for (const path of newExtensions) {
+      const name = BrowserWindow.addDevToolsExtension(path)
+      devExtensions.add(path)
+      this.extensionNames[path] = name
     }
   }
 }
@@ -244,27 +264,5 @@ function configurePosition({
       this.window.setMovable(false)
       return
     }
-  }
-}
-
-function configureExtensions({ devToolsExtensions }) {
-  if (this.unmounted) {
-    return
-  }
-  const incoming = new Set(devToolsExtensions)
-
-  const newExtensions = new Set(
-    [...incoming].filter(x => !this.devExtensions.has(x)),
-  )
-  const oldExtensions = [...this.devExtensions].filter(x => !incoming.has(x))
-  for (const path of oldExtensions) {
-    BrowserWindow.removeDevToolsExtension(this.extensionNames[path])
-    this.devExtensions.delete(path)
-    delete this.extensionNames[path]
-  }
-  for (const path of newExtensions) {
-    const name = BrowserWindow.addDevToolsExtension(path)
-    this.devExtensions.add(path)
-    this.extensionNames[path] = name
   }
 }

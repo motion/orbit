@@ -42,5 +42,6 @@ module.exports = {
     exports: true,
     BroadcastChannel: true,
     Promise: true,
+    Set: true,
   },
 }

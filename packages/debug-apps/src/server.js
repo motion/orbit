@@ -149,13 +149,13 @@ export default class DebugServer {
     })
 
     function handleConnection(pageId, connection) {
-      var socket = sockets[pageId]
+      const socket = sockets[pageId]
       if (!socket) {
         return connection.close(1011, 'Matching socket not found :/')
       }
       console.log('websocket:connected', pageId)
-      var forwardMessage = function(data) {
-        var response = JSON.stringify(data)
+      const forwardMessage = data => {
+        const response = JSON.stringify(data)
         console.log('forwardMessage:', data.id)
         connection.send(response)
       }

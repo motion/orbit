@@ -51,11 +51,9 @@ export default class UIStore {
     this._watchContextMessage()
     this._watchTrayTitle()
     this.react(
-      () => [
-        Screen.electronState.shouldHide || 0,
-        Screen.electronState.shouldShow || 0,
-      ],
+      () => [Screen.electronState.shouldHide, Screen.electronState.shouldShow],
       ([shouldHide, shouldShow]) => {
+        if (!shouldHide && !shouldShow) return
         const hidden = shouldHide > shouldShow
         Screen.setState({ hidden })
       },
@@ -196,10 +194,12 @@ export default class UIStore {
   emitKeyCode = e => this.emit('keydown', keycode(e.keyCode))
 
   toggleHidden = () => {
+    console.log('toggleHidden')
     Screen.setState({ hidden: !Screen.state.hidden })
   }
 
   hide = () => {
+    console.log('ui.hide')
     Screen.setState({ hidden: true })
   }
 

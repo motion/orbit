@@ -10,7 +10,8 @@
     "url": "https://raw.githubusercontent.com/motion/orbit-updates/master/updates.json"
   },
   "scripts": {
-    "start": "./scripts/start.sh",
+    "start": "nodemon --delay 50ms --ignore src --exec 'npm run start-app'",
+    "start-app": "kill-port --port 9001 && NODE_ENV=development electron --inspect=9001 --remote-debugging-port=9002 lib/start-app",
     "build": "build dev",
     "watch": "npm run build -- --watch",
     "deploy": "cd ../electron-build && npm run deploy",
@@ -39,6 +40,7 @@
     "@mcro/r2": "^1.5.1",
     "@mcro/reactron": "^1.5.1",
     "babel-polyfill": "^6.26.0",
+    "kill-port": "^1.1.0",
     "iohook": "^0.1.11",
     "debug": "^3.1.0",
     "electron": "1.7.10",
@@ -59,6 +61,6 @@
     "@mcro/debug-apps": "*",
     "node-loader": "^0.6.0",
     "electron-rebuild": "^1.7.3",
-    "watch": "^1.0.2"
+    "nodemon": "^1.15.1"
   }
 }

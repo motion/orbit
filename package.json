@@ -1,6 +1,9 @@
 {
   "name": "orbit",
   "private": true,
+  "scripts": {
+    "start": "cd apps/dev && npm start"
+  },
   "dependencies": {
     "global": "^4.3.2",
     "react": "^16.2.0",

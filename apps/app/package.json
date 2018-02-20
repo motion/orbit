@@ -2,7 +2,7 @@
   "name": "@mcro/app",
   "private": true,
   "version": "1.5.40",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "start": "kill-port 3002 && parcel -p 3002",
     "start-prod": "static-server -p 3002 -n dist/index.html dist",

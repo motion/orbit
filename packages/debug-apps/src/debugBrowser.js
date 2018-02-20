@@ -59,6 +59,7 @@ export default class DebugApps {
             if (title && title.indexOf('chrome-extension://') === 0) {
               return null
             }
+            console.log('got title', title)
             return `${DEV_URL}/${webSocketDebuggerUrl.replace(`ws://`, '')}`
           })
           .filter(Boolean),

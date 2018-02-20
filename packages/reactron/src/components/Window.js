@@ -1,6 +1,9 @@
 // @flow
 import BaseComponent from './BaseComponent'
 import { BrowserWindow } from 'electron'
+import debug from 'debug'
+
+const log = debug('reactron')
 
 // TODO: document/type props this takes
 
@@ -101,7 +104,7 @@ export default class Window extends BaseComponent {
       if (this.options[key] !== newVal) {
         const setter = this.window[`set${properCase(key)}`]
         if (setter) {
-          console.log('update window, set', key, newVal)
+          log('update window, set', key, newVal)
           setter.call(this.window, newVal)
           this.options[key] = newVal
         }
@@ -110,13 +113,13 @@ export default class Window extends BaseComponent {
   }
 
   unmount() {
-    console.log('unmounting', this.props)
+    log('unmounting', this.props)
     this.window.close()
   }
 
   handleNewProps(keys: Array<string>) {
     if (!this.window) {
-      console.log('no window ey')
+      log('no window ey')
       return
     }
     try {
@@ -131,7 +134,7 @@ export default class Window extends BaseComponent {
         }
       }
     } catch (e) {
-      console.log('error with prop handlers')
+      log('error with prop handlers')
       console.log(e)
     }
   }
@@ -188,7 +191,7 @@ function configureSize({
       return
     }
   } catch (e) {
-    console.log('error in configureSize', e)
+    log('error in configureSize', e)
   }
 }
 

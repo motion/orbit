@@ -63,7 +63,6 @@ function getPeekPosition(peekTarget: PeekTarget) {
     @watch
     linesBoundingBox = () => {
       const { linePositions } = Screen.desktopState
-      console.log('react to desktopstate', linePositions)
       if (!linePositions) return null
       let minX = 100000
       let maxX = 0
@@ -109,7 +108,6 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
     this.react(
       () => this.props.store.linesBoundingBox,
       function watchPeekPosition(linesBoundingBox) {
-        console.log('linesBoundingBox', linesBoundingBox)
         if (!linesBoundingBox) return
         const windows = [...this.state.windows]
         const peek = windows[0]
@@ -123,7 +121,6 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
         this.animatePeekTimeout = this.setTimeout(() => {
           this.isAnimatingPeek = false
         }, PEEK_ANIMATE_TIME)
-        console.log('updating peek position now', peek)
         this.setState({
           windows,
           lastTarget: this.state.target,
@@ -259,11 +256,6 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
       webPreferences: Constants.WEB_PREFERENCES,
       transparent: true,
     }
-
-    console.log(
-      'Screen.peekState.windows = ',
-      JSON.stringify(this.state.windows),
-    )
 
     return null
 

@@ -16,8 +16,6 @@ const ENV = {
   NODE_ENV: 'development',
 }
 
-console.log('Starting Electron App', ENTRY)
-
 // handled by startApp()
 let child
 let settings

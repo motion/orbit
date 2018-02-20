@@ -27,7 +27,6 @@ export default class SettingsWindow {
   }
 
   render() {
-    console.log('settings', Screen.state.showSettings)
     if (!Screen.state.showSettings) {
       return null
     }

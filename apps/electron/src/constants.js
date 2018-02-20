@@ -27,6 +27,3 @@ export const WEB_PREFERENCES = {
   plugins: true,
   // offscreen: true,
 }
-
-console.log('Constants.APP_URL', APP_URL)
-console.log('Constants.ROOT_PATH', ROOT_PATH)

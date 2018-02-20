@@ -6,7 +6,7 @@ const log = debug('monitor')
 const { pid } = process
 
 // stupid but useful
-const SECONDS_BETWEEN_MEMORY_LOG = 30
+const SECONDS_BETWEEN_MEMORY_LOG = 120
 // seconds before start monitoring
 const STARTUP_WAIT = 1000 * 10
 // this option will give us cpu usage since last check, each time

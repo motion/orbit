@@ -80,7 +80,6 @@ import * as Constants from '~/constants'
             optnEnter = setTimeout(this.showOra, 150)
           }
         } else {
-          console.log('lets hide', optionCleared, justCleared)
           // SHOWN
           // dont toggle
           if (optionCleared) {
@@ -160,7 +159,6 @@ export default class Root extends React.Component {
   }
 
   render({ rootStore }) {
-    console.log('hi world')
     if (rootStore.error) {
       return null
     }

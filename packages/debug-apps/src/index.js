@@ -16,6 +16,8 @@ new Server({
       return
     }
     const targetSessions = targets.map(id => ({ id, port: 8000 }))
-    browser.setSessions([...sessions, ...targetSessions])
+    const next = [...sessions, ...targetSessions]
+    console.log('setSessions', next)
+    browser.setSessions(next)
   },
 })

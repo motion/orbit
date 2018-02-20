@@ -22,7 +22,7 @@ export default class DebugApps {
 
   setSessions(next) {
     this.sessions = next
-    this.getNewDevUrls()
+    this.render()
   }
 
   async start() {
@@ -33,55 +33,56 @@ export default class DebugApps {
     // one less because it starts with a tab already open
     await Promise.all(this.sessions.slice(1).map(() => this.browser.newPage()))
     this.pages = await this.browser.pages()
-    this.watchForNewDevUrls()
+    setInterval(this.render, 500)
   }
 
-  async getDevUrls() {
+  async getSessions() {
     return await Promise.all(this.sessions.map(this.getDevUrl))
   }
 
   async getDevUrl({ port, id }) {
     try {
-      const [firstAnswer] = await r2.get(
-        `http://127.0.0.1:${port}/${id ? `/${id}` : ''}json`,
+      const [firstAnswer, ...rest] = await r2.get(
+        `http://127.0.0.1:${port}/${id ? `${id}/` : ''}json`,
       ).json
+      if (rest.length) console.log('rest', rest)
       const { webSocketDebuggerUrl } = firstAnswer
       if (!webSocketDebuggerUrl) {
         return null
       }
       return `${DEV_URL}/${webSocketDebuggerUrl.replace(`ws://`, '')}`
     } catch (err) {
+      console.log('got errrr', err)
       return null
     }
   }
 
-  watchForNewDevUrls() {
-    setInterval(this.getNewDevUrls, 500)
-  }
-
-  getNewDevUrls = async () => {
+  render = async () => {
     if (exited) return
-    const urls = await this.getDevUrls()
+    const urls = await this.getSessions()
     for (const [index, url] of urls.entries()) {
-      if (this.urls[index] !== url) {
-        this.urls[index] = url
-        if (url) {
-          if (!this.pages[index]) {
-            await this.browser.newPage()
-            this.pages = await this.browser.pages()
-          }
-          const page = this.pages[index]
-          await Promise.all([
-            page.waitForNavigation({ timeout: 5000, waitUntil: 'load' }),
-            page.goto(url),
-          ])
-          await page.evaluate(() => {
-            // open console
-            let x = document.getElementById('tab-console')
-            if (x) x.click()
-          })
-        }
+      if (this.urls[index] === url) {
+        continue
       }
+      this.urls[index] = url
+      console.log('>>', index, url)
+      if (!url) continue
+      if (!this.pages[index]) {
+        console.log('loading new page')
+        await this.browser.newPage()
+        this.pages = await this.browser.pages()
+        console.log('done')
+      }
+      const page = this.pages[index]
+      await Promise.all([
+        page.waitForNavigation({ timeout: 5000, waitUntil: 'load' }),
+        page.goto(url),
+      ])
+      await page.evaluate(() => {
+        // open console
+        let x = document.getElementById('tab-console')
+        if (x) x.click()
+      })
     }
   }
 }

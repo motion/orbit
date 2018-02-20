@@ -140,6 +140,7 @@ export default class DebugServer {
     })
 
     ws.on('connection', function(connection) {
+      log('connection')
       var pageId = extractPageId(connection.upgradeReq.url)
       var socket = sockets[pageId]
       if (!socket) {
@@ -159,13 +160,13 @@ export default class DebugServer {
         forwardMessage(data)
       })
       log('websocket:connected', pageId)
-      connection.on('close', function(data) {
+      connection.on('close', function() {
         log('websocket:close')
         socket.removeAllListeners('data.response')
         socket.removeAllListeners('data.event')
       })
       connection.on('error', function(err) {
-        log('websocket:error', err)
+        console.log('websocket:error', err)
       })
       connection.on('message', function(data) {
         log('websocket:message')

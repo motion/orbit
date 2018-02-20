@@ -8,10 +8,14 @@
     "48": "icons/Icon-48.png",
     "128": "icons/Icon-128.png"
   },
-  "devtools_page": "panel.html",
-  "content_security_policy":
-    "script-src 'self' https://cdnjs.cloudflare.com; object-src 'self'",
-  "web_accessible_resources": ["panel.html", "panel.js"],
+  "background": {
+    "page": "background.html"
+  },
+  "web_accessible_resources": [
+    "background.html",
+    "background.js",
+    "socketio.js"
+  ],
   "permissions": [
     "tabs",
     "activeTab",

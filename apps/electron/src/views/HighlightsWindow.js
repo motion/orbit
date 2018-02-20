@@ -32,7 +32,7 @@ export default class HighlightsWindow extends React.Component {
         show={this.state.show}
         frame={false}
         hasShadow={false}
-        showDevTools={Screen.state.showDevTools.highlights}
+        showDevTools={true || Screen.state.showDevTools.highlights}
         transparent
         background="#00000000"
         webPreferences={Constants.WEB_PREFERENCES}
@@ -40,6 +40,7 @@ export default class HighlightsWindow extends React.Component {
         position={this.state.position}
         size={Helpers.getScreenSize()}
         onMove={this.handleMove}
+        devToolsExtensions={Constants.DEV_TOOLS_EXTENSIONS}
       />
     )
   }

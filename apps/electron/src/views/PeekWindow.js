@@ -265,6 +265,8 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
       JSON.stringify(this.state.windows),
     )
 
+    return null
+
     return (
       <React.Fragment>
         {this.state.windows.map((peek, index) => {

@@ -1,7 +1,24 @@
 /* global chrome io */
 
-chrome.devtools.panels.create('RemoteInspect', '', 'panel.html', function() {
-  console.log('hiiiiiiiiiiiiiiiiiiiiiiii')
+function getCurrentTab() {
+  return new Promise(res => {
+    chrome.tabs.query({ currentWindow: true, active: true }, function(
+      tabArray,
+    ) {
+      res(tabArray[0])
+    })
+  })
+}
+
+var log = function(...args) {
+  console.log(...args)
+}
+
+log('huuuu')
+
+async function run() {
+  const tab = await getCurrentTab()
+  if (!tab) return
 
   // const server = 'https://remote.devtools.rocks/'
   const server = 'http://localhost:8000/'
@@ -10,10 +27,12 @@ chrome.devtools.panels.create('RemoteInspect', '', 'panel.html', function() {
   var app = {}
   var tabRef
   var socketRef
-
   var connection = io(server, {
     autoConnect: false,
   })
+
+  console.log('got tab', tab)
+  resetSockets(tab)
 
   function resetSockets(tab) {
     tabRef = tab
@@ -24,12 +43,10 @@ chrome.devtools.panels.create('RemoteInspect', '', 'panel.html', function() {
         console.warn('debuggee.already attached')
         chrome.debugger.detach(debuggee)
       }
-
       if (target.url.startsWith('chrome://')) {
-        return console.log('ERR')
+        return log('ERR')
       }
-
-      console.log('oo0')
+      log('oo0')
       attachDebuggerAndSocket(debuggee, tab)
     })
   }
@@ -44,23 +61,23 @@ chrome.devtools.panels.create('RemoteInspect', '', 'panel.html', function() {
   }
 
   function attachDebuggerAndSocket(debuggee, tab) {
-    console.log('debugger.attach', tab)
+    log('debugger.attach', tab)
     chrome.debugger.attach(debuggee, '1.1', function() {
-      console.log('debugger.attached')
-      console.log('o0o')
+      log('debugger.attached')
+      log('o0o')
     })
 
     if (connection && connection.connected) {
-      console.log('socket.disconnecting previous socket')
+      log('socket.disconnecting previous socket')
       connection.disconnect()
     }
-    console.log('socket.connecting')
+    log('socket.connecting')
     connection.connect()
   }
 
   // socket-side
   app.onSocketConnect = function() {
-    console.log('socket.connect')
+    log('socket.connect')
     socketRef = this
 
     this.on('data.request', app.onSocketDataRequest)
@@ -74,7 +91,7 @@ chrome.devtools.panels.create('RemoteInspect', '', 'panel.html', function() {
   }
 
   app.onSocketDisconnect = function() {
-    console.log('socket.disconnect')
+    log('socket.disconnect')
 
     this.off('data.request')
     this.off('sessionCreated')
@@ -83,13 +100,13 @@ chrome.devtools.panels.create('RemoteInspect', '', 'panel.html', function() {
 
     getDebuggerTarget().then(target => {
       if (target && target.attached) {
-        chrome.debugger.detach(debuggee, _ => console.log('debugger.detached'))
+        chrome.debugger.detach(debuggee, _ => log('debugger.detached'))
       }
     })
   }
 
   app.onSocketDataRequest = function(data) {
-    console.log('socket.data.request', data.id, data)
+    log('socket.data.request', data.id, data)
 
     if (data.method === 'Page.canScreencast') {
       var reply = {
@@ -108,27 +125,27 @@ chrome.devtools.panels.create('RemoteInspect', '', 'panel.html', function() {
       data.method,
       data.params,
       function(response) {
-        console.log('debugger.command.sent', data.id, response)
+        log('debugger.command.sent', data.id, response)
 
         var reply = {
           id: data.id,
           result: response,
         }
 
-        console.log('socket.data.response', reply.id, reply)
+        log('socket.data.response', reply.id, reply)
         this.emit('data.response', reply)
       }.bind(this),
     )
   }
 
   app.getURL = function(sessionId) {
-    console.log('ooo')
+    log('ooo')
 
     window
       .fetch(server + sessionId + '/json')
       .then(r => r.json())
       .then(targets => {
-        console.log('Inspectable targets on ', server, ':')
+        log('Inspectable targets on ', server, ':')
         targets.forEach(t => {
           /* t looks like: {
           description: "",
@@ -141,9 +158,9 @@ chrome.devtools.panels.create('RemoteInspect', '', 'panel.html', function() {
           webSocketDebuggerUrl: "ws://devtoolsremote.com/devtools/page/lQOtx1HAAC"
         } */
 
-          console.log('%c%s', 'font-weight: bold;', t.title)
-          console.log('\t %c%s', 'color: gray; font-size: 90%;', t.url)
-          console.log('\t Inspection URL: %c%s', 'color: blue;', t.devtoolsUrl)
+          log('%c%s', 'font-weight: bold;', t.title)
+          log('\t %c%s', 'color: gray; font-size: 90%;', t.url)
+          log('\t Inspection URL: %c%s', 'color: blue;', t.devtoolsUrl)
 
           if (t.url === tabRef.url) {
             app.copyToClipboard(t.devtoolsUrl)
@@ -164,18 +181,18 @@ chrome.devtools.panels.create('RemoteInspect', '', 'panel.html', function() {
     document.execCommand('copy')
     input.remove()
 
-    console.log('copied')
-    setTimeout(console.log, 600)
+    log('copied')
+    setTimeout(log, 600)
   }
 
   // chrome-side
   app.onBrowserAction = function(tab) {
-    console.log('ooo')
+    log('ooo')
     resetSockets(tab)
   }
 
   app.onDebuggerEvent = function(source, method, params) {
-    console.log('debugger.event.recieved', source, method, params)
+    log('debugger.event.recieved', source, method, params)
     socketRef.emit('data.event', {
       method: method,
       params: params,
@@ -183,24 +200,28 @@ chrome.devtools.panels.create('RemoteInspect', '', 'panel.html', function() {
   }
 
   app.onDebuggerDetach = function(debuggee, reason) {
-    console.log('debugger.detached', reason)
+    log('debugger.detached', reason)
     connection.disconnect()
 
-    console.log('clear')
-    setTimeout(console.log, 500)
+    log('clear')
+    setTimeout(log, 500)
   }
 
   app.onSessionCreated = function(sessionId) {
-    console.log('sessionId', sessionId)
+    log('sessionId', sessionId)
     app.getURL(sessionId)
   }
 
-  chrome.browserAction.onClicked.addListener(app.onBrowserAction)
   chrome.runtime.onMessage.addListener(app.onRuntimeMessage)
   chrome.debugger.onEvent.addListener(app.onDebuggerEvent)
   chrome.debugger.onDetach.addListener(app.onDebuggerDetach)
-
   chrome.runtime.onConnect.addListener(function(port) {
-    console.log('whats this', port)
+    log('whats this', port)
   })
-})
+  return true
+}
+
+let int = setInterval(async () => {
+  console.log('do it yo')
+  if (await run()) clearInterval(int)
+}, 500)

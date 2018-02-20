@@ -30,6 +30,7 @@ export default class Windows {
   }
 
   render() {
+    return null
     return (
       <Window
         frame={false}

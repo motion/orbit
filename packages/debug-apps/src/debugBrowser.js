@@ -107,11 +107,12 @@ export default class DebugApps {
             }),
             page.goto(url),
           ])
-          await sleep(400)
+          await sleep(500)
           if (!this.pages[index]) return
-          await page.mouse.click(110, 10)
-          // await page.mouse.click(110, 55)
-          // await page.mouse.click(110, 70)
+          // in iframe so simulate
+          await page.mouse.click(110, 10) // click console
+          await page.mouse.click(110, 70) // click into console
+          await page.keyboard.press('PageDown') // page down to bottom
         } catch (err) {
           console.log('puppeteer.err', err)
         }

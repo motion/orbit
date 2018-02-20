@@ -12,10 +12,12 @@ const APP_ID = -1
 // prevent apps from clearing highlights
 const PREVENT_CLEARING = {
   electron: true,
+  Chromium: true,
 }
 // prevent apps from triggering appState updates
 const PREVENT_WATCHING = {
   electron: true,
+  Chromium: true,
 }
 // prevent apps from OCR
 const PREVENT_SCANNING = {
@@ -24,6 +26,7 @@ const PREVENT_SCANNING = {
   Xcode: true,
   finder: true,
   electron: true,
+  Chromium: true,
   ActivityMonitor: true,
 }
 
@@ -106,7 +109,6 @@ export default class ScreenState {
       }
       if (PREVENT_WATCHING[nextState.name]) {
         this.oracle.pause()
-        console.log('dont watch', nextState.name)
         return
       }
 

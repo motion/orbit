@@ -15,13 +15,13 @@ import { screen } from 'electron'
 import * as Constants from '~/constants'
 
 @view.provide({
-  desktop: class DesktopStore {
+  electron: class ElectronStore {
     error = null
     appRef = null
     oraRef = null
 
     willMount() {
-      global.desktop = this
+      global.electron = this
       // initial state
       const { position, size } = Helpers.getAppSize()
       const screenSize = screen.getPrimaryDisplay().workAreaSize
@@ -155,22 +155,22 @@ import * as Constants from '~/constants'
 export default class Root extends React.Component {
   componentDidCatch(error) {
     console.error(error)
-    this.props.desktop.error = error
+    this.props.electron.error = error
   }
 
-  render({ desktop }) {
-    if (desktop.error) {
+  render({ electron }) {
+    if (electron.error) {
       return null
     }
     return (
       <App
-        onBeforeQuit={desktop.handleBeforeQuit}
-        onQuit={desktop.handleQuit}
-        ref={desktop.handleAppRef}
+        onBeforeQuit={electron.handleBeforeQuit}
+        onQuit={electron.handleQuit}
+        ref={electron.handleAppRef}
       >
         <MenuItems />
         <HighlightsWindow />
-        <OraWindow onRef={desktop.handleOraRef} />
+        <OraWindow onRef={electron.handleOraRef} />
         <PeekWindow appPosition={Screen.state.oraPosition.slice(0)} />
         {/* <SettingsWindow /> */}
         <Tray />

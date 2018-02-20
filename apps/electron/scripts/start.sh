@@ -11,7 +11,7 @@ if [[ "$WEB_ON" -ne 0 && "$API_ON" -ne 0 ]]; then
   debugPID=$!
   ./scripts/restart.js &
   wait $! # wait for electron to quit
-  kill $!
+  kill $! # ensure quit
   kill $debugPID # then quit our debugger
 else
   echo "before electron run:"

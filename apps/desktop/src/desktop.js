@@ -24,7 +24,7 @@ export default class Desktop {
   screen = new ScreenMaster()
 
   async start() {
-    global.App = this
+    global.Desktop = this
     this.setupHosts()
     const port = await this.server.start()
     log(`starting desktop on ${port}`)

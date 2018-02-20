@@ -26,9 +26,8 @@ process.on('SIGINT', () => exitHandler(0))
 process.on('SIGUSR1', exitHandler)
 process.on('SIGUSR2', exitHandler)
 // uncaught exceptions
-process.on('uncaughtException', (...args) => {
-  console.log('uncaughtException', ...args)
-  // process.exit(0)
+process.on('uncaughtException', err => {
+  console.log('uncaughtException', err.stack)
 })
 // promise exceptions
 process.on('unhandledRejection', function(reason, promise) {

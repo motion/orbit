@@ -30,6 +30,7 @@ import * as Constants from '~/constants'
       Screen.start('electron', {
         shouldHide: null,
         shouldShow: null,
+        shouldPause: null,
         peekState: {},
         focused: false,
         showSettings: false,

@@ -4,10 +4,15 @@ import Oracle from '@mcro/oracle'
 import { isEqual, throttle, last } from 'lodash'
 import iohook from 'iohook'
 import killPort from 'kill-port'
+import { store } from '@mcro/black/store'
+import Screen from '@mcro/screen'
 
 const PORT = 40510
 const DESKTOP_KEY = 'desktop'
 const APP_ID = -1
+
+Screen.start('desktop')
+// TODO make this go through the screenStore
 
 // prevent apps from clearing highlights
 const PREVENT_CLEARING = {
@@ -30,6 +35,7 @@ const PREVENT_SCANNING = {
   ActivityMonitor: true,
 }
 
+@store
 export default class ScreenState {
   stopped = false
   oracle = new Oracle()
@@ -38,7 +44,8 @@ export default class ScreenState {
   curAppName = null
   watchSettings = {}
 
-  state: TScreenState = {
+  state = {
+    paused: false,
     appState: null,
     ocrWords: null,
     linePositions: null,
@@ -62,13 +69,20 @@ export default class ScreenState {
     this.stopped = false
     this.oracle.onWords(words => {
       this.hasResolvedOCR = true
-      this.updateState({
+      this.setState({
         ocrWords: words,
         lastOCR: Date.now(),
       })
     })
+
+    // watch paused
+    this.react(
+      () => Screen.electronState.shouldPause,
+      () => this.setState({ paused: !this.state.paused }),
+    )
+
     this.oracle.onLines(linePositions => {
-      this.updateState({
+      this.setState({
         linePositions,
       })
     })
@@ -78,6 +92,9 @@ export default class ScreenState {
     })
     let lastId = null
     this.oracle.onWindowChange((event, value) => {
+      if (this.state.paused) {
+        return
+      }
       let nextState = { ...this.curState }
       let id = lastId
       switch (event) {
@@ -123,7 +140,7 @@ export default class ScreenState {
 
       // update
       this.curState = nextState
-      this.updateState({
+      this.setState({
         appState: JSON.parse(JSON.stringify(this.curState)),
       })
     })
@@ -132,11 +149,11 @@ export default class ScreenState {
       if (isApp) {
         console.log('RESET oracle boxChanged (App)')
         this.resetHighlights()
-        this.socketSendAll(DESKTOP_KEY, { clearWord: APP_ID })
+        this.setState({ clearWord: APP_ID })
       } else {
         // for not many clears, try it
         if (count < 20) {
-          this.socketSendAll(DESKTOP_KEY, {
+          this.setState({
             clearWord: this.oracle.changedIds,
           })
         } else {
@@ -149,7 +166,7 @@ export default class ScreenState {
     })
     this.oracle.onRestored(count => {
       console.log('restore', count)
-      this.socketSendAll(DESKTOP_KEY, {
+      this.setState({
         restoreWords: this.oracle.restoredIds,
       })
     })
@@ -179,7 +196,7 @@ export default class ScreenState {
       console.log('resetHighlights prevented clear')
       return
     }
-    this.updateState({
+    this.setState({
       lastScreenChange: Date.now(),
     })
   }
@@ -194,7 +211,7 @@ export default class ScreenState {
       pgDown: 3665,
     }
     const updateKeyboard = newState =>
-      this.updateState({ keyboard: { ...this.state.keyboard, ...newState } })
+      this.setState({ keyboard: { ...this.state.keyboard, ...newState } })
 
     // keydown
     iohook.on('keydown', ({ keycode }) => {
@@ -229,14 +246,14 @@ export default class ScreenState {
     iohook.on(
       'mousemove',
       throttle(({ x, y }) => {
-        this.updateState({
+        this.setState({
           mousePosition: { x, y },
         })
       }, 64),
     )
   }
 
-  updateState = object => {
+  setState = object => {
     if (this.stopped) {
       console.log('stopped, dont send')
       return
@@ -260,6 +277,9 @@ export default class ScreenState {
   }
 
   onChangedState = async (oldState, newState) => {
+    if (this.state.paused) {
+      return
+    }
     if (newState.appState) {
       this.rescanApp()
       return
@@ -305,10 +325,6 @@ export default class ScreenState {
       ],
     })
     this.hasResolvedOCR = false
-    if (this.oracle.state.isPaused) {
-      console.log('ispaused')
-      return
-    }
     // not paused, clear and resume
     this.oracle.clear()
     this.oracle.resume()

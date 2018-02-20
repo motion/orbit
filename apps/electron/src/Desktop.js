@@ -170,11 +170,9 @@ export default class Root extends React.Component {
       >
         <MenuItems />
         <HighlightsWindow />
-        {/* <OraWindow onRef={desktop.handleOraRef} />
-        <PeekWindow
-          appPosition={Screen.state.oraPosition.slice(0)}
-        />
-        <SettingsWindow /> */}
+        <OraWindow onRef={desktop.handleOraRef} />
+        <PeekWindow appPosition={Screen.state.oraPosition.slice(0)} />
+        {/* <SettingsWindow /> */}
         <Tray />
       </App>
     )

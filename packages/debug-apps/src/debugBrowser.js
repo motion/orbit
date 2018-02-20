@@ -34,7 +34,7 @@ export default class DebugApps {
       headless: false,
       args: [`--window-size=${800},${720}`],
     })
-    setInterval(this.render, 1000)
+    setInterval(this.render, 2000)
   }
 
   getSessions = async () => {
@@ -71,39 +71,44 @@ export default class DebugApps {
     }
   }
 
+  pages = []
+
+  getPages = async () => {
+    this.pages = (await this.browser.pages()) || []
+  }
+
   render = async () => {
     if (exited) return
     const urls = await this.getSessions()
     if (!this.browser) return
-    let pages = (await this.browser.pages()) || []
-    const extraPages = pages.length - urls.length
+    await this.getPages()
+    const extraPages = this.pages.length - urls.length
     if (extraPages > 0) {
       // close extras
-      for (const page of pages.slice(pages.length - extraPages)) {
+      for (const page of this.pages.slice(this.pages.length - extraPages)) {
         await page.close()
       }
+      await this.getPages()
     }
     for (const [index, url] of urls.entries()) {
-      if (!pages[index]) {
+      if (!this.pages[index]) {
         await this.browser.newPage()
         await sleep(100)
-        pages = (await this.browser.pages()) || []
+        await this.getPages()
       }
-      const page = pages[index]
-      if (!page) {
-        console.log('no page... err')
-        return
-      }
+      const page = this.pages[index]
+      if (!page) return
       if (page.url() !== url) {
         try {
           await Promise.all([
             page.waitForNavigation({
-              timeout: 30000,
+              timeout: 0,
               waitUntil: 'domcontentloaded',
             }),
             page.goto(url),
           ])
           await sleep(400)
+          if (!this.pages[index]) return
           await page.mouse.click(110, 10)
           // await page.mouse.click(110, 55)
           // await page.mouse.click(110, 70)

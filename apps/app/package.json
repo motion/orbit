@@ -4,7 +4,7 @@
   "version": "1.5.40",
   "main": "src/index.js",
   "scripts": {
-    "start": "kill-port 3002 && parcel -p 3002",
+    "start": "kill-port 3002 && ../../node_modules/.bin/parcel -p 3002 index.html",
     "start-prod": "static-server -p 3002 -n dist/index.html dist",
     "build-app": "rm -r dist && parcel build --public-url /",
     "deploy": "./deploy.sh"

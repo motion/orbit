@@ -4,10 +4,8 @@
   "version": "1.5.1",
   "main": "index.js",
   "scripts": {
-    "start": "motion watch",
+    "start": "../../node_modules/.bin/parcel index.html",
     "start-prod": "static-server -p 4000 -n build/index.html build",
-    "build-app": "MINIFY=true NODE_ENV=production BUILD_DIR=. mcro-build",
-    "watch-app": "npm run build -- --watch",
     "deploy": "surge ./build tryorbit.com"
   },
   "dependencies": {

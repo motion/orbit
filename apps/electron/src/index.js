@@ -2,7 +2,6 @@
 // runs both api and electron
 
 import 'babel-polyfill'
-import '@mcro/debug/inject'
 import { setTimeout } from 'core-js/library/web/timers'
 
 process.env.HAS_BABEL_POLYFILL = true

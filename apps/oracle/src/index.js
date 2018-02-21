@@ -143,10 +143,6 @@ export default class Oracle {
         try {
           const usage = await pusage(pid)
           const memoryMB = Math.round(usage.memory / 1000 / 1000) // start at byte
-          if (i % 30 === 0) {
-            // every x seconds
-            console.log('Current memory usage', memoryMB, 'MB')
-          }
           if (memoryMB > 750) {
             console.log('Memory usage of swift above 750MB, restarting')
             this.restart()

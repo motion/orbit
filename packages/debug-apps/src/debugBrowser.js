@@ -88,7 +88,11 @@ export default class DebugApps {
     if (extraPages > 0) {
       // close extras
       for (const page of this.pages.slice(this.pages.length - extraPages)) {
-        await page.close()
+        try {
+          await page.close()
+        } catch (err) {
+          console.log('page already closed')
+        }
       }
       await this.getPages()
     }

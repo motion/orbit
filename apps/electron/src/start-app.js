@@ -1,5 +1,6 @@
 import 'source-map-support/register'
 import 'raf/polyfill'
+import '@mcro/debug/inject'
 import './helpers/handlePromiseErrors'
 import './helpers/updateChecker'
 import '@mcro/black/mlog'

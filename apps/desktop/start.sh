@@ -8,7 +8,7 @@ npx forever start \
   -c /bin/bash \
     ./start-debug.sh > /dev/null &
 ./follow-logs.sh &
-(sleep 3 && build --watch) &
+(sleep 4 && build --watch) &
 npm run start-monitoring
 echo "quitting debug..."
 kill -9 $(pidof start-debug.sh) > /dev/null

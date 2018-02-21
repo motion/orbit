@@ -49,7 +49,7 @@ async function buildPackage(name, dir) {
   } else {
     args = ['npm', 'run', shouldWatch ? 'watch' : 'build']
   }
-  console.log(`${name}: ${args[0]} ${args.slice(1).join(' ')}`)
+  // console.log(`${name}: ${args[0]} ${args.slice(1).join(' ')}`)
   const child = spawnStreaming(
     uid++,
     args[0],
@@ -79,7 +79,7 @@ async function main() {
         buildPackage(Path.basename(dir), dir)
         // sleep a bit every 10 processes started
         if (i % 10 === 0) {
-          await sleep(2000)
+          await sleep(5000)
         }
         i++
       }

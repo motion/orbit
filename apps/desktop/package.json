@@ -7,8 +7,7 @@
     "build": "build dev",
     "watch": "npm run build -- --watch",
     "start": "./start.sh",
-    "start-monitoring": "nodemon --delay 200ms --ignore src --exec 'npm run start-app'",
-    "start-debug": "npx kill-port 8001 && dev-apps",
+    "start-debug": "kill-port 8001 && dev-apps",
     "start-app": "kill-port 3001 && kill-port 9000 && NODE_ENV=development DEBUG=api,api:* node --inspect=127.0.0.1:9000 lib/index.js",
     "start-prod": "NODE_ENV=production node index.js",
     "build-electron": "electron-rebuild -v 1.7.10"

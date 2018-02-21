@@ -3,13 +3,20 @@ import puppeteer from 'puppeteer'
 import { uniq, flatten, isEqual } from 'lodash'
 const sleep = ms => new Promise(res => setTimeout(res, ms))
 
+// quiet exit handling
+let exiting = false
+const setExiting = () => {
+  console.log('Exiting debug browser...')
+  exiting = true
+}
 process.on('unhandledRejection', function(reason) {
-  console.log(reason)
+  if (exiting) return
+  console.log('debug.unhandledRejection', reason)
   process.exit(0)
 })
-
-let exiting = false
-const setExiting = () => (exiting = true)
+process.on('SIGUSR1', setExiting)
+process.on('SIGUSR2', setExiting)
+process.on('SIGSEGV', setExiting)
 process.on('SIGINT', setExiting)
 process.on('exit', setExiting)
 

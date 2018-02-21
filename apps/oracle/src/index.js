@@ -357,12 +357,11 @@ export default class Oracle {
         try {
           socket.send(strData)
         } catch (err) {
-          console.log(
-            'Screen: failed to send to socket, removing',
-            err.message,
-            id,
-          )
-          this.removeSocket(id)
+          if (err.message.indexOf('CLOSED')) {
+            this.removeSocket(id)
+          } else {
+            console.log('Screen.socketSend Err', err.stack)
+          }
         }
       }
     } catch (err) {

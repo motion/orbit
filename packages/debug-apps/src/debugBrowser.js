@@ -26,7 +26,6 @@ export default class DebugApps {
   }
 
   async start() {
-    console.log('start')
     this.browser = await puppeteer.launch({
       headless: false,
       args: [`--window-size=${800},${720}`],
@@ -36,14 +35,12 @@ export default class DebugApps {
 
   renderLoop = async () => {
     while (true) {
-      console.log('rendering')
       await this.render()
       await sleep(2000)
     }
   }
 
   getSessions = async () => {
-    console.log('getSessions')
     return uniq(
       flatten(await Promise.all(this.sessions.map(this.getDevUrl))).filter(
         Boolean,

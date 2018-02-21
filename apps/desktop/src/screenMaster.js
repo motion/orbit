@@ -20,13 +20,12 @@ Screen.start('desktop')
 const PREVENT_CLEARING = {
   electron: true,
   Chromium: true,
+  iterm2: true,
 }
 // prevent apps from triggering appState updates
 const PREVENT_WATCHING = {
   electron: true,
   Chromium: true,
-  iterm2: true,
-  VSCode: true
 }
 // prevent apps from OCR
 const PREVENT_SCANNING = {
@@ -141,7 +140,7 @@ export default class ScreenState {
         return
       }
 
-      log('onWindowChange', event, value)
+      log('onWindowChange', event, nextState.name)
       this.oracle.resume()
 
       // clear old stuff
@@ -381,7 +380,6 @@ export default class ScreenState {
   async dispose() {
     // clear highlights on quit
     this.resetHighlights()
-    log('disposing screen...')
     if (this.oracle) {
       await this.oracle.stop()
     }
@@ -419,11 +417,11 @@ export default class ScreenState {
     let id = 0
     this.wss.on('connection', socket => {
       let uid = id++
-      log('screen-master received connection', uid)
       // send current state
       this.socketSend(socket, this.state)
       // add to active sockets
       this.activeSockets.push({ uid, socket })
+      log('screen-master:', this.activeSockets.length, 'connections')
       // listen for incoming
       socket.on('message', str => {
         const { action, value, state, source } = JSON.parse(str)

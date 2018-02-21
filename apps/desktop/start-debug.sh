@@ -6,6 +6,8 @@ npx nodemon \
   --exec 'npm run start-debug' \
     ./node_modules/@mcro/dev &
 
+nodemonPID=$!
 wait
-trap "trap - SIGTERM && kill -- -$$" SIGINT SIGTERM EXIT > /dev/null &
+kill $nodemonPID > /dev/null
+kill -9 $nodemonPID > /dev/null
 echo "bye debugbrowser"

@@ -40,9 +40,9 @@ export default class Desktop {
     this.react(() => Screen.appState.openBrowser, url => Helpers.open(url))
   }
 
-  dispose() {
+  async dispose() {
     if (this.disposed) return
-    this.screen.dispose()
+    await this.screen.dispose()
     this.disposed = true
   }
 

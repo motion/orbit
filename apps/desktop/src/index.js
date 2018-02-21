@@ -13,10 +13,11 @@ if (process.env.NODE_ENV === 'development') {
 const Desktop = require('./desktop').default
 const dTop = new Desktop()
 
-const exitHandler = code => {
-  console.log('exitHandler', code)
-  dTop.dispose()
-  process.exit(code)
+const exitHandler = async code => {
+  await dTop.dispose()
+  await new Promise(res => setTimeout(res, 200))
+  console.log('quit')
+  process.exit(code === 1 ? 1 : 0)
 }
 
 // dont close instantly

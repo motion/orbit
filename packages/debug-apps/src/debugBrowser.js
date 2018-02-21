@@ -26,6 +26,7 @@ export default class DebugApps {
   }
 
   async start() {
+    console.log('start')
     this.browser = await puppeteer.launch({
       headless: false,
       args: [`--window-size=${800},${720}`],
@@ -35,12 +36,14 @@ export default class DebugApps {
 
   renderLoop = async () => {
     while (true) {
+      console.log('rendering')
       await this.render()
       await sleep(2000)
     }
   }
 
   getSessions = async () => {
+    console.log('getSessions')
     return uniq(
       flatten(await Promise.all(this.sessions.map(this.getDevUrl))).filter(
         Boolean,
@@ -48,24 +51,27 @@ export default class DebugApps {
     )
   }
 
+  lastUrl = {}
+
   getDevUrl = async ({ port, id }) => {
     const url = `http://127.0.0.1:${port}/${id ? `${id}/` : ''}json`
     try {
       const answers = await r2.get(url).json
       const res = flatten(
         answers
-          .map(({ title, webSocketDebuggerUrl }) => {
-            if (!webSocketDebuggerUrl) {
-              return this.cache[url] || null
-            }
-            // dont debug chrome extensions (TODO MAKE AN OPTION)
-            if (title && title.indexOf('chrome-extension://') === 0) {
+          .map(({ webSocketDebuggerUrl, url }) => {
+            if (`${url}`.indexOf('chrome-extension') === 0) {
               return null
             }
-            return `chrome-devtools://devtools/bundled/inspector.html?experiments=true&v8only=true&ws=${webSocketDebuggerUrl.replace(
+            if (!webSocketDebuggerUrl) {
+              return this.lastUrl[url] || null
+            }
+            const fullUrl = `chrome-devtools://devtools/bundled/inspector.html?experiments=true&v8only=true&ws=${webSocketDebuggerUrl.replace(
               `ws://`,
               '',
             )}`
+            this.lastUrl[url] = fullUrl
+            return fullUrl
           })
           .filter(Boolean),
       )

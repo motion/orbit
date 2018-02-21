@@ -103,6 +103,10 @@ export default class ScreenState {
     })
     let lastId = null
     this.oracle.onWindowChange((event, value) => {
+      if (event === 'ScrollEvent') {
+        this.resetHighlights()
+        return
+      }
       if (this.state.paused) {
         return
       }
@@ -131,10 +135,6 @@ export default class ScreenState {
       }
       // update before prevent_watching
       this.curAppName = nextState.name
-      if (event === 'ScrollEvent') {
-        this.resetHighlights()
-        return
-      }
       if (PREVENT_WATCHING[nextState.name]) {
         this.oracle.pause()
         return

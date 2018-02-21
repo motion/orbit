@@ -34,9 +34,10 @@ export default class DebugApps {
   }
 
   async start() {
+    console.log('puppeteer.defaultArgs()', puppeteer.defaultArgs())
     this.browser = await puppeteer.launch({
       headless: false,
-      args: [`--window-size=${800},${720}`],
+      args: ['--disable-infobars', `--window-size=${800},${680}`],
     })
     this.renderLoop()
   }

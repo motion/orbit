@@ -1,6 +1,6 @@
 import r2 from '@mcro/r2'
 import puppeteer from 'puppeteer'
-import { uniq, flatten } from 'lodash'
+import { uniq, flatten, isEqual } from 'lodash'
 
 const sleep = ms => new Promise(res => setTimeout(res, ms))
 
@@ -89,6 +89,9 @@ export default class DebugApps {
     if (this.isRunning) return
     if (exited) return
     const urls = await this.getSessions()
+    // memory overflow protect: only run if needed
+    if (isEqual(urls, this.urls)) return
+    this.urls = urls
     if (!this.browser) return
     // YO watch out:
     this.isRunning = true

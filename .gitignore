@@ -19,6 +19,7 @@ kubeconfig
 
 common/temp/**
 
+apps/oracle/train
 apps/oracle/orbit/orbit.xcodeproj/project.xcworkspace
 apps/oracle/orbit/Carthage
 apps/oracle/orbit/Build

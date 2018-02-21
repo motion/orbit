@@ -6,6 +6,9 @@ import iohook from 'iohook'
 import killPort from 'kill-port'
 import { store } from '@mcro/black/store'
 import Screen from '@mcro/screen'
+import debug from 'debug'
+
+const log = debug('api:screenMaster')
 
 const PORT = 40510
 const DESKTOP_KEY = 'desktop'
@@ -44,8 +47,9 @@ export default class ScreenState {
   curAppName = null
   watchSettings = {}
 
-  state = {
-    paused: false,
+  state = Object.freeze({
+    // start paused
+    paused: true,
     appState: null,
     ocrWords: null,
     linePositions: null,
@@ -55,7 +59,7 @@ export default class ScreenState {
     keyboard: {},
     clearWords: {},
     restoreWords: {},
-  }
+  })
 
   get hasListeners() {
     return !!this.activeSockets.length
@@ -87,7 +91,6 @@ export default class ScreenState {
       })
     })
     this.oracle.onClear(() => {
-      console.log('RESET oracle onClear')
       this.resetHighlights()
     })
     let lastId = null
@@ -115,7 +118,7 @@ export default class ScreenState {
           nextState.offset = value
       }
       if (!nextState.name) {
-        console.log('no name recevied', value)
+        log('no name recevied', value)
         return
       }
       // update before prevent_watching
@@ -129,12 +132,11 @@ export default class ScreenState {
         return
       }
 
-      console.log('onWindowChange', event, value)
+      log('onWindowChange', event, value)
       this.oracle.resume()
 
       // clear old stuff
       if (lastId !== id) {
-        console.log('RESET oracle onWindowChange', nextState.name)
         this.resetHighlights()
       }
 
@@ -147,7 +149,7 @@ export default class ScreenState {
     this.oracle.onBoxChanged(count => {
       const isApp = this.watchSettings.name === 'App'
       if (isApp) {
-        console.log('RESET oracle boxChanged (App)')
+        log('RESET oracle boxChanged (App)')
         this.resetHighlights()
         this.setState({ clearWord: APP_ID })
       } else {
@@ -158,20 +160,20 @@ export default class ScreenState {
           })
         } else {
           // else just clear it all
-          console.log('RESET oracle boxChanged (Not App)')
+          log('RESET oracle boxChanged (Not App)')
           this.resetHighlights()
           this.rescanApp()
         }
       }
     })
     this.oracle.onRestored(count => {
-      console.log('restore', count)
+      log('restore', count)
       this.setState({
         restoreWords: this.oracle.restoredIds,
       })
     })
     this.oracle.onError(async error => {
-      console.log('screen ran into err, restart', error)
+      log('screen ran into err, restart', error)
       this.restartScreen()
     })
     this.watchMouse()
@@ -183,17 +185,17 @@ export default class ScreenState {
   }
 
   async restartScreen() {
-    console.log('restartScreen')
+    log('restartScreen')
     this.resetHighlights()
     await this.oracle.stop()
-    console.log('starting back up')
+    log('starting back up')
     await this.oracle.start()
     this.watchBounds(this.watchSettings.name, this.watchSettings.settings)
   }
 
   resetHighlights = () => {
     if (PREVENT_CLEARING[this.curAppName]) {
-      console.log('resetHighlights prevented clear')
+      log('resetHighlights prevented clear')
       return
     }
     this.setState({
@@ -215,7 +217,7 @@ export default class ScreenState {
 
     // keydown
     iohook.on('keydown', ({ keycode }) => {
-      // console.log('keycode', keycode)
+      // log('keycode', keycode)
       if (keycode === codes.option) {
         return updateKeyboard({ option: true, optionCleared: false })
       }
@@ -255,7 +257,7 @@ export default class ScreenState {
 
   setState = object => {
     if (this.stopped) {
-      console.log('stopped, dont send')
+      log('stopped, dont send')
       return
     }
     let hasNewState = false
@@ -269,7 +271,7 @@ export default class ScreenState {
       return
     }
     const oldState = this.state
-    this.state = { ...this.state, ...object }
+    this.state = Object.freeze({ ...this.state, ...object })
     // sends over (oldState, changedState, newState)
     this.onChangedState(oldState, object, this.state)
     // only send the changed things to reduce overhead
@@ -291,19 +293,19 @@ export default class ScreenState {
 
   rescanApp = async () => {
     if (this.stopped) {
-      console.log('is stopped')
+      log('is stopped')
       return
     }
     const { name, offset, bounds } = this.state.appState
     if (!offset || !bounds) {
-      console.log('todo: initial offset/bounds')
+      log('todo: initial offset/bounds')
       return
     }
     clearTimeout(this.clearOCRTimeout)
     if (PREVENT_SCANNING[name]) {
       return
     }
-    console.log('> ', name)
+    log('> ', name)
     // we are watching the whole app for words
     this.watchBounds('App', {
       fps: 10,
@@ -330,7 +332,7 @@ export default class ScreenState {
     this.oracle.resume()
     this.clearOCRTimeout = setTimeout(async () => {
       if (!this.hasResolvedOCR) {
-        console.log('seems like ocr has stopped working, restarting...')
+        log('seems like ocr has stopped working, restarting...')
         this.restartScreen()
       }
     }, 15000)
@@ -344,7 +346,7 @@ export default class ScreenState {
 
   handleOCRWords = () => {
     this.lastWordsSet = Date.now()
-    console.log(`> ${this.state.ocrWords.length} words`)
+    log(`> ${this.state.ocrWords.length} words`)
     this.watchBounds('OCR', {
       fps: 12,
       sampleSpacing: 2,
@@ -370,18 +372,18 @@ export default class ScreenState {
   async dispose() {
     // clear highlights on quit
     this.resetHighlights()
-    console.log('disposing screen...')
+    log('disposing screen...')
     if (this.oracle) {
       await this.oracle.stop()
     }
-    console.log('screen disposed')
+    log('screen disposed')
   }
 
   socketSend = (socket, state: Object) => {
     try {
       socket.send(JSON.stringify({ source: DESKTOP_KEY, state }))
     } catch (err) {
-      console.log('error with scoket', err.message, err.stack)
+      log('error with scoket', err.message, err.stack)
     }
   }
 
@@ -394,7 +396,7 @@ export default class ScreenState {
       try {
         socket.send(strData)
       } catch (err) {
-        console.log('API: failed to send to socket, removing', err.message, uid)
+        log('API: failed to send to socket, removing', err.message, uid)
         this.removeSocket(uid)
       }
     }
@@ -408,7 +410,7 @@ export default class ScreenState {
     let id = 0
     this.wss.on('connection', socket => {
       let uid = id++
-      console.log('screen-master received connection', uid)
+      log('screen-master received connection', uid)
       // send current state
       this.socketSend(socket, this.state)
       // add to active sockets
@@ -420,7 +422,7 @@ export default class ScreenState {
           this.socketSendAll(source, state)
         }
         if (action && this[action]) {
-          console.log('received action:', action)
+          log('received action:', action)
           this[action].call(this, value)
         }
       })
@@ -437,10 +439,10 @@ export default class ScreenState {
       })
     })
     this.wss.on('close', () => {
-      console.log('WE SHOULD HANDLE THIS CLOSE', ...arguments)
+      log('WE SHOULD HANDLE THIS CLOSE', ...arguments)
     })
     this.wss.on('error', (...args) => {
-      console.log('wss error', args)
+      log('wss error', args)
     })
   }
 }

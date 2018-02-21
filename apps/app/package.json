@@ -10,6 +10,7 @@
     "deploy": "./deploy.sh"
   },
   "dependencies": {
+    "@mcro/macros": "*",
     "@mcro/black": "^1.5.1",
     "@mcro/constants": "^1.5.1",
     "@mcro/gloss": "^1.5.1",

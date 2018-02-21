@@ -6,12 +6,14 @@
 
 # build
 if [ "$1" = "" ]; then
+  cd $ROOT
   build-all
   exit 0
 fi
 
 # build --watch
 if [ "$1" = "--watch" ]; then
+  cd $ROOT
   build-all --watch
   exit 0
 fi

@@ -41,6 +41,7 @@ process.on('unhandledRejection', function(reason, promise) {
 })
 
 export async function run() {
+  scope('running yo')
   try {
     await dTop.start()
   } catch (err) {

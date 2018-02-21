@@ -2,6 +2,10 @@ import 'babel-polyfill'
 import 'isomorphic-fetch'
 import '@mcro/debug/inject'
 import '@mcro/black/mlog'
+import global from 'global'
+import * as Mobx from 'mobx'
+
+global.Mobx = Mobx
 
 const log = debug('index')
 

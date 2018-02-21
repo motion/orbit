@@ -78,7 +78,7 @@ class App {
     this.started = true
   }
 
-  reload() {
+  restart() {
     window.location = window.location
   }
 

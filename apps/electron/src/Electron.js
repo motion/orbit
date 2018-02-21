@@ -106,7 +106,7 @@ import * as Constants from '~/constants'
       })
     }
 
-    reload() {
+    restart() {
       if (process.env.NODE_ENV === 'development') {
         require('touch')(require('path').join(__dirname, '..', 'package.json'))
       }

@@ -35,7 +35,7 @@ export default class Desktop {
   }
 
   restart() {
-    require('touch')(Path.join(__dirname, '..', 'package.json'))
+    require('touch')(Path.join(__dirname, '..', 'lib', 'index.js'))
   }
 
   watchBrowserOpen() {

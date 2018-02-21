@@ -13,6 +13,7 @@ npx nodemon \
   --watch $(realpath node_modules/@mcro/dev) \
   --watch $(realpath node_modules/@mcro/macros) \
   --watch $(realpath node_modules/@mcro/screen) \
+  --watch ../../packages/automagical \
   --exec 'npm run start-app'
 
 trap "trap - SIGTERM && kill -- -$$" SIGINT SIGTERM EXIT > /dev/null

@@ -45,24 +45,23 @@ export function debugState(callback) {
       state.mountedVersion++
     }
   }
+  const reduced = object =>
+    Object.keys(object).reduce((acc, key) => {
+      const entries = []
+      object[key].forEach(store => {
+        entries.push(store)
+      })
+      return {
+        ...acc,
+        // nice helper: turn just one array into a singular item
+        [key]: entries.length === 1 ? entries[0] : entries,
+      }
+    }, {})
   // watch things
   autorunAsync(() => {
     state.mountedVersion
-    const reduce = object =>
-      Object.keys(object).reduce((acc, key) => {
-        const entries = []
-        object[key].forEach(store => {
-          entries.push(store)
-        })
-        return {
-          ...acc,
-          // nice helper: turn just one array into a singular item
-          [key]: entries.length === 1 ? entries[0] : entries,
-        }
-      }, {})
-
-    const stores = reduce(state.mounted.stores)
-    const views = reduce(state.mounted.views)
+    const stores = reduced(state.mounted.stores)
+    const views = reduced(state.mounted.views)
     callback({ stores, views })
   }, 100)
   view.on('store.mount', mount('stores'))

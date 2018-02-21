@@ -337,7 +337,6 @@ export default class Oracle {
     }, 5000)
     await this.process
     hasResolved = true
-    console.log('killed process')
     delete this.process
     // sleep to avoid issues
     await sleep(20)

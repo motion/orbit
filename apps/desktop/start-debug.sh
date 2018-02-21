@@ -7,4 +7,5 @@ npx nodemon \
     ./node_modules/@mcro/dev &
 
 wait
-trap "trap - SIGTERM && kill -- -$$" SIGINT SIGTERM EXIT
+trap "trap - SIGTERM && kill -- -$$" SIGINT SIGTERM EXIT > /dev/null &
+echo "bye debugbrowser"

@@ -8,10 +8,10 @@ process.on('unhandledRejection', function(reason) {
   process.exit(0)
 })
 
-let exited = false
-process.on('beforeExit', () => {
-  exited = true
-})
+let exiting = false
+const setExiting = () => (exiting = true)
+process.on('SIGINT', setExiting)
+process.on('exit', setExiting)
 
 export default class DebugApps {
   cache = {}
@@ -89,7 +89,7 @@ export default class DebugApps {
 
   render = async () => {
     if (this.isRunning) return
-    if (exited) return
+    if (exiting) return
     const urls = await this.getSessions()
     // memory overflow protect: only run if needed
     if (isEqual(urls, this.urls)) return
@@ -110,16 +110,16 @@ export default class DebugApps {
       }
       await this.getPages()
     }
-    for (const [index, url] of urls.entries()) {
-      if (!this.pages[index]) {
-        await this.browser.newPage()
-        await sleep(50)
-        await this.getPages()
-      }
-      const page = this.pages[index]
-      if (!page) continue
-      if (page.url() !== url) {
-        try {
+    try {
+      for (const [index, url] of urls.entries()) {
+        if (!this.pages[index]) {
+          await this.browser.newPage()
+          await sleep(50)
+          await this.getPages()
+        }
+        const page = this.pages[index]
+        if (!page) continue
+        if (page.url() !== url) {
           await Promise.all([
             page.waitForNavigation({
               timeout: 0,
@@ -133,9 +133,11 @@ export default class DebugApps {
           await page.mouse.click(110, 10) // click console
           await page.mouse.click(110, 70) // click into console
           await page.keyboard.press('PageDown') // page down to bottom
-        } catch (err) {
-          console.log('puppeteer.err', err)
         }
+      }
+    } catch (err) {
+      if (!exiting) {
+        console.log('puppeteer.err', err)
       }
     }
     this.isRunning = false

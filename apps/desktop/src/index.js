@@ -16,7 +16,6 @@ const dTop = new Desktop()
 const exitHandler = async code => {
   await dTop.dispose()
   await new Promise(res => setTimeout(res, 200))
-  console.log('quit')
   process.exit(code === 1 ? 1 : 0)
 }
 

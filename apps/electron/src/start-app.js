@@ -49,4 +49,20 @@ export function start() {
 
 if (process.env.NODE_ENV === 'development') {
   start()
+
+  // watch for parcel restarts, then restart electron
+  const { check } = require('tcp-port-used')
+  let shouldRestart = false
+  const int = setInterval(async () => {
+    const webRunning = await check(3002, '127.0.0.1')
+    if (!webRunning && !shouldRestart) {
+      console.log('parcel down, will restart on next start')
+      shouldRestart = true
+    }
+    if (shouldRestart && webRunning) {
+      console.log('restarting after parcel cycle...')
+      require('touch')(require('path').join(__dirname, '..', 'package.json'))
+      clearInterval(int)
+    }
+  }, 1000)
 }

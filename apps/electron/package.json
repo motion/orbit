@@ -62,6 +62,8 @@
   "devDependencies": {
     "node-loader": "^0.6.0",
     "electron-rebuild": "^1.7.3",
-    "nodemon": "^1.15.1"
+    "nodemon": "^1.15.1",
+    "touch": "^3.1.0",
+    "tcp-port-used": "0.1.2"
   }
 }

@@ -15,8 +15,8 @@ const dTop = new Desktop()
 
 const exitHandler = async code => {
   await dTop.dispose()
-  await new Promise(res => setTimeout(res, 200))
   process.exit(code === 1 ? 1 : 0)
+  process.kill(process.pid)
 }
 
 // dont close instantly
@@ -28,6 +28,10 @@ process.on('SIGINT', () => exitHandler(0))
 // "kill pid" (nodemon)
 process.on('SIGUSR1', exitHandler)
 process.on('SIGUSR2', exitHandler)
+process.on('SIGSEGV', () => {
+  console.log('Segmentation fault on exit')
+  exitHandler(1)
+})
 // uncaught exceptions
 process.on('uncaughtException', err => {
   console.log('uncaughtException', err.stack)

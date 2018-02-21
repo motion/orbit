@@ -81,7 +81,16 @@ export default class ScreenState {
     // watch paused
     this.react(
       () => Screen.electronState.shouldPause,
-      () => this.setState({ paused: !this.state.paused }),
+      () => {
+        const paused = !this.state.paused
+        this.setState({ paused })
+        if (paused) {
+          console.log('pausing swift')
+          Screen.swiftBridge.stop()
+        } else {
+          Screen.swiftBridge.start()
+        }
+      },
     )
 
     this.oracle.onLines(linePositions => {

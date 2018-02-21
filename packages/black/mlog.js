@@ -4,10 +4,7 @@ const Mobx = require('mobx')
 let runners = (global.__mlogRunners = global.__mlogRunners || [])
 
 function deepMobxToJS(_thing) {
-  let thing = _thing
-  if (thing && thing.toJS) {
-    thing = thing.toJS()
-  }
+  let thing = Mobx.toJS(_thing)
   if (Array.isArray(thing)) {
     return thing.map(deepMobxToJS)
   }

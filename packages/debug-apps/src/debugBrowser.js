@@ -22,14 +22,12 @@ process.on('SIGSEGV', setExiting)
 process.on('SIGINT', setExiting)
 process.on('exit', setExiting)
 
-const extensions = flatten(
-  getExtensions(['mobx', 'react']).map(ext => [
-    `--disable-extensions-except=${ext}`,
-    `--load-extension=${ext}`,
-  ]),
-)
-
-console.log('extensions', extensions)
+// const extensions = flatten(
+//   getExtensions(['mobx', 'react']).map(ext => [
+//     `--disable-extensions-except=${ext}`,
+//     `--load-extension=${ext}`,
+//   ]),
+// )
 
 export default class DebugApps {
   constructor({ sessions = [] }) {
@@ -44,7 +42,7 @@ export default class DebugApps {
   async start() {
     this.browser = await puppeteer.launch({
       headless: false,
-      args: [`--window-size=${800},${720}`, ...extensions],
+      args: [`--window-size=${800},${720}`],
     })
     this.renderLoop()
   }

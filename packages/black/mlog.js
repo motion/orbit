@@ -1,8 +1,6 @@
 const global = require('global')
 const Mobx = require('mobx')
 
-console.log('Injecting mlog...')
-
 // warning! patch console for now
 const ogLog = console.log.bind(console)
 console.log = function(...args) {

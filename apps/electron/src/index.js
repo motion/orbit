@@ -7,7 +7,8 @@ import { setTimeout } from 'core-js/library/web/timers'
 process.env.HAS_BABEL_POLYFILL = true
 process.env.NODE_ENV = 'production'
 
-console.log('starting app')
+console.log('starting app AND API together')
+
 require('./start-app').start()
 
 export async function startAPI() {

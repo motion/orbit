@@ -14,7 +14,6 @@ import mobxFormatters from 'mobx-formatters'
 import _ from 'lodash'
 import * as Black from '@mcro/black'
 import color from 'color'
-import debug from 'debug'
 import r2 from '@mcro/r2'
 import * as Helpers from '~/helpers'
 
@@ -37,7 +36,6 @@ window._ = _
 window.log = Black.log
 window.$ = color
 window.Black = Black
-window.debug = debug
 window.r2 = r2
 window.Helpers = Helpers
 

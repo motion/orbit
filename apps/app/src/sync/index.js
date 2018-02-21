@@ -2,9 +2,8 @@
 import { store, watch } from '@mcro/black'
 import * as Syncers from './syncers'
 import { Job, CurrentUser } from '~/app'
-import debug from 'debug'
 
-const log = _ => _ || debug('sync')
+const log = debug('sync')
 
 function getRxError(error: Error) {
   const { message, stack } = error

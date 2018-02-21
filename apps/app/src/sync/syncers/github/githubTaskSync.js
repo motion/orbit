@@ -3,9 +3,8 @@ import { Thing } from '~/app'
 import { createApolloFetch } from 'apollo-fetch'
 import { omit, flatten } from 'lodash'
 import { createInChunks } from '~/sync/helpers'
-import debug from 'debug'
 
-const log = _ => _ || debug('sync')
+const log = debug('sync')
 const issueGet = `
 edges {
   node {
@@ -76,7 +75,7 @@ export default class GithubIssueSync {
       (repos || Object.keys(this.setting.values.repos || {})).map(repo => {
         const split = repo.split('/')
         return this.syncRepo(split[0], split[1])
-      })
+      }),
     )
   }
 
@@ -111,7 +110,7 @@ export default class GithubIssueSync {
     return await createInChunks(
       issues,
       item => this.createIssue(item, org),
-      chunk
+      chunk,
     )
   }
 

@@ -19,7 +19,7 @@
     "wink-nlp-utils": "^1.7.0"
   },
   "peerDependencies": {
-    "mobx": "^3.4.1"
+    "mobx": "^3.5.0"
   },
   "devDependencies": {
     "@mcro/builder": "^1.5.1"

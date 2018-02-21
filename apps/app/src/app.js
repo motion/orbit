@@ -11,7 +11,6 @@ import AppStore from './stores/appStore'
 import adapter from 'pouchdb-adapter-idb'
 import Services from './services'
 import CurrentUser_ from './stores/currentUserStore'
-import debug from 'debug'
 
 let app = window.App
 
@@ -79,6 +78,10 @@ class App {
     this.started = true
   }
 
+  reload() {
+    window.location = window.location
+  }
+
   async dispose() {
     await this.store.dispose()
     if (this.sync) {
@@ -119,20 +122,6 @@ class App {
 
   get models(): Object {
     return this.store && this.store.models
-  }
-
-  debug(setting) {
-    if (setting === false) {
-      console.log('Disabling debug...')
-      localStorage.debug = 'none'
-      debug.enable('none')
-      debug.instances.forEach(instance => {
-        debug.disable(instance)
-      })
-    } else {
-      localStorage.debug = setting
-      debug.enable(setting)
-    }
   }
 }
 

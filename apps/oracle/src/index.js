@@ -143,10 +143,6 @@ export default class Oracle {
         try {
           const usage = await pusage(pid)
           const memoryMB = Math.round(usage.memory / 1000 / 1000) // start at byte
-          if (i % 30 === 0) {
-            // every x seconds
-            console.log('Current memory usage', memoryMB, 'MB')
-          }
           if (memoryMB > 750) {
             console.log('Memory usage of swift above 750MB, restarting')
             this.restart()
@@ -361,12 +357,11 @@ export default class Oracle {
         try {
           socket.send(strData)
         } catch (err) {
-          console.log(
-            'Screen: failed to send to socket, removing',
-            err.message,
-            id,
-          )
-          this.removeSocket(id)
+          if (err.message.indexOf('CLOSED')) {
+            this.removeSocket(id)
+          } else {
+            console.log('Screen.socketSend Err', err.stack)
+          }
         }
       }
     } catch (err) {

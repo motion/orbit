@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { Window } from '@mcro/reactron'
-import * as Helpers from '~/helpers'
 import * as Constants from '~/constants'
 import { once } from 'lodash'
 import { view } from '@mcro/black'
@@ -49,7 +48,7 @@ export default class Windows {
         onMove={this.onOraMoved}
         onBlur={this.onOraBlur}
         onFocus={this.onOraFocus}
-        devToolsExtensions={Helpers.getExtensions(['mobx', 'react'])}
+        devToolsExtensions={Constants.DEV_TOOLS_EXTENSIONS}
       />
     )
   }

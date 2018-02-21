@@ -1,14 +1,14 @@
 import 'babel-polyfill'
 import 'isomorphic-fetch'
+import '@mcro/debug/inject'
 
-console.log('process.env.NODE_ENV', process.env.NODE_ENV)
+const log = debug('index')
+
+log('process.env.NODE_ENV', process.env.NODE_ENV)
 
 if (process.env.NODE_ENV === 'development') {
   require('source-map-support/register')
 }
-// if (!process.env.HAS_BABEL_POLYFILL) {
-//   require()
-// }
 
 const Desktop = require('./desktop').default
 const dTop = new Desktop()
@@ -29,9 +29,8 @@ process.on('SIGINT', () => exitHandler(0))
 process.on('SIGUSR1', exitHandler)
 process.on('SIGUSR2', exitHandler)
 // uncaught exceptions
-process.on('uncaughtException', (...args) => {
-  console.log('uncaughtException', ...args)
-  // process.exit(0)
+process.on('uncaughtException', err => {
+  console.log('uncaughtException', err.stack)
 })
 // promise exceptions
 process.on('unhandledRejection', function(reason, promise) {
@@ -48,7 +47,7 @@ export async function run() {
   try {
     await dTop.start()
   } catch (err) {
-    console.log('error', err)
+    log('error', err)
   }
 }
 

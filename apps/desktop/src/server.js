@@ -9,7 +9,6 @@ import OAuth from './server/oauth'
 import OAuthStrategies from './server/oauth.strategies'
 import Passport from 'passport'
 import Crawler from '@mcro/crawler'
-import debug from 'debug'
 import path from 'path'
 import killPort from 'kill-port'
 

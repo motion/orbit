@@ -1,9 +1,8 @@
 // @flow
 import { Person } from '~/app'
-import debug from 'debug'
 import { createInChunks } from '~/sync/helpers'
 
-const log = _ => _ || debug('sync')
+const log = debug('sync')
 
 export default class GithubPeopleSync {
   constructor({ setting, token, helpers }) {
@@ -29,7 +28,7 @@ export default class GithubPeopleSync {
       return null
     }
     const fullPeople = await Promise.all(
-      people.map(person => this.helpers.fetch(`/users/${person.login}`))
+      people.map(person => this.helpers.fetch(`/users/${person.login}`)),
     )
     return await createInChunks(fullPeople, this.createPerson)
   }

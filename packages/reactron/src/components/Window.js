@@ -1,6 +1,9 @@
 // @flow
 import BaseComponent from './BaseComponent'
 import { BrowserWindow } from 'electron'
+import debug from 'debug'
+
+const log = debug('reactron')
 
 // TODO: document/type props this takes
 
@@ -14,10 +17,12 @@ const EVENT_KEYS = {
 
 const properCase = str => `${str[0].toUpperCase()}${str.slice(1)}`
 
+// these should only load once, even across many windows
+const ALL_EXTENSIONS = new Set()
+
 export default class Window extends BaseComponent {
   mount() {
     this.extensionNames = {}
-    this.devExtensions = new Set()
 
     const { props } = this
     this.options = {
@@ -51,9 +56,7 @@ export default class Window extends BaseComponent {
       kiosk: v => this.window.setKiosk(v),
       fullScreen: v => this.window.setFullScreen(v),
       ignoreMouseEvents,
-      devToolsExtensions: () => {
-        configureExtensions.call(this, this.props)
-      },
+      devToolsExtensions: () => configureExtensions.call(this, this.props),
       showDevTools: propVal => {
         if (propVal) {
           this.window.webContents.openDevTools()
@@ -101,7 +104,7 @@ export default class Window extends BaseComponent {
       if (this.options[key] !== newVal) {
         const setter = this.window[`set${properCase(key)}`]
         if (setter) {
-          console.log('update window, set', key, newVal)
+          log('update window, set', key, newVal)
           setter.call(this.window, newVal)
           this.options[key] = newVal
         }
@@ -110,13 +113,13 @@ export default class Window extends BaseComponent {
   }
 
   unmount() {
-    console.log('unmounting', this.props)
+    log('unmounting', this.props)
     this.window.close()
   }
 
   handleNewProps(keys: Array<string>) {
     if (!this.window) {
-      console.log('no window ey')
+      log('no window ey')
       return
     }
     try {
@@ -131,9 +134,28 @@ export default class Window extends BaseComponent {
         }
       }
     } catch (e) {
-      console.log('error with prop handlers')
+      log('error with prop handlers')
       console.log(e)
     }
+  }
+}
+
+function configureExtensions({ devToolsExtensions }) {
+  if (this.unmounted) return
+  const incoming = new Set(devToolsExtensions)
+  const newExtensions = new Set(
+    [...incoming].filter(x => !ALL_EXTENSIONS.has(x)),
+  )
+  const oldExtensions = [...ALL_EXTENSIONS].filter(x => !incoming.has(x))
+  for (const path of oldExtensions) {
+    BrowserWindow.removeDevToolsExtension(this.extensionNames[path])
+    ALL_EXTENSIONS.delete(path)
+    delete this.extensionNames[path]
+  }
+  for (const path of newExtensions) {
+    const name = BrowserWindow.addDevToolsExtension(path)
+    ALL_EXTENSIONS.add(path)
+    this.extensionNames[path] = name
   }
 }
 
@@ -188,7 +210,7 @@ function configureSize({
       return
     }
   } catch (e) {
-    console.log('error in configureSize', e)
+    log('error in configureSize', e)
   }
 }
 
@@ -241,27 +263,5 @@ function configurePosition({
       this.window.setMovable(false)
       return
     }
-  }
-}
-
-function configureExtensions({ devToolsExtensions }) {
-  if (this.unmounted) {
-    return
-  }
-  const incoming = new Set(devToolsExtensions)
-
-  const newExtensions = new Set(
-    [...incoming].filter(x => !this.devExtensions.has(x)),
-  )
-  const oldExtensions = [...this.devExtensions].filter(x => !incoming.has(x))
-  for (const path of oldExtensions) {
-    BrowserWindow.removeDevToolsExtension(this.extensionNames[path])
-    this.devExtensions.delete(path)
-    delete this.extensionNames[path]
-  }
-  for (const path of newExtensions) {
-    const name = BrowserWindow.addDevToolsExtension(path)
-    this.devExtensions.add(path)
-    this.extensionNames[path] = name
   }
 }

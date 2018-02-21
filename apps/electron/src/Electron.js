@@ -15,13 +15,13 @@ import { screen } from 'electron'
 import * as Constants from '~/constants'
 
 @view.provide({
-  rootStore: class RootStore {
+  electron: class ElectronStore {
     error = null
     appRef = null
     oraRef = null
 
     willMount() {
-      global.rootStore = this
+      global.App = this
       // initial state
       const { position, size } = Helpers.getAppSize()
       const screenSize = screen.getPrimaryDisplay().workAreaSize
@@ -30,6 +30,7 @@ import * as Constants from '~/constants'
       Screen.start('electron', {
         shouldHide: null,
         shouldShow: null,
+        shouldPause: null,
         peekState: {},
         focused: false,
         showSettings: false,
@@ -80,7 +81,6 @@ import * as Constants from '~/constants'
             optnEnter = setTimeout(this.showOra, 150)
           }
         } else {
-          console.log('lets hide', optionCleared, justCleared)
           // SHOWN
           // dont toggle
           if (optionCleared) {
@@ -100,6 +100,12 @@ import * as Constants from '~/constants'
       })
     }
 
+    reload() {
+      if (process.env.NODE_ENV === 'development') {
+        require('touch')(require('path').join(__dirname, '..', 'package.json'))
+      }
+    }
+
     toggleShown = async () => {
       if (Screen.appState.pinned) return
       if (!this.appRef) return
@@ -111,7 +117,6 @@ import * as Constants from '~/constants'
     }
 
     async showOra() {
-      console.log('showOra')
       this.appRef.show()
       await Helpers.sleep(50)
       Screen.setState({ shouldShow: Date.now() })
@@ -121,7 +126,6 @@ import * as Constants from '~/constants'
     }
 
     async hideOra() {
-      console.log('hideOra')
       Screen.setState({ shouldHide: Date.now() })
       await Helpers.sleep(150) // animate
       if (
@@ -156,27 +160,24 @@ import * as Constants from '~/constants'
 export default class Root extends React.Component {
   componentDidCatch(error) {
     console.error(error)
-    this.props.rootStore.error = error
+    this.props.electron.error = error
   }
 
-  render({ rootStore }) {
-    if (rootStore.error) {
+  render({ electron }) {
+    if (electron.error) {
       return null
     }
     return (
       <App
-        onBeforeQuit={rootStore.handleBeforeQuit}
-        onQuit={rootStore.handleQuit}
-        ref={rootStore.handleAppRef}
+        onBeforeQuit={electron.handleBeforeQuit}
+        onQuit={electron.handleQuit}
+        ref={electron.handleAppRef}
       >
         <MenuItems />
         <HighlightsWindow />
-        <OraWindow onRef={rootStore.handleOraRef} />
-        <PeekWindow
-          if={false}
-          appPosition={Screen.state.oraPosition.slice(0)}
-        />
-        <SettingsWindow />
+        <OraWindow onRef={electron.handleOraRef} />
+        <PeekWindow appPosition={Screen.state.oraPosition.slice(0)} />
+        {/* <SettingsWindow /> */}
         <Tray />
       </App>
     )

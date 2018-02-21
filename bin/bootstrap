@@ -17,8 +17,8 @@ ensure-dep "chrome-cli" -- brew install chrome-cli &
 
 wait
 
-yarn install
-npx lerna bootstrap
+yarn install --silent
+npx lerna --loglevel=error bootstrap
 
 function link-root-modules() {
   lerna exec -- yarn link

@@ -6,11 +6,19 @@ import WebSocket from './websocket'
 import _waitForPort from 'wait-for-port'
 import global from 'global'
 import { isEqual, difference } from 'lodash'
+import * as desktopActions from './desktopActions'
 
 const waitForPort = (domain, port) =>
   new Promise((res, rej) =>
     _waitForPort(domain, port, err => (err ? rej(err) : res())),
   )
+
+function bindAll(scope, namedActions) {
+  return Object.keys(namedActions).reduce(
+    (acc, cur) => ({ ...acc, [cur]: namedActions[cur].bind(scope) }),
+    {},
+  )
+}
 
 type TappState = {
   name: string,
@@ -58,6 +66,7 @@ class Screen {
     peekState: {},
     shouldHide: null,
     shouldShow: null,
+    shouldPause: null,
   }
   // state of app
   appState = {
@@ -68,10 +77,11 @@ class Screen {
     preventElectronHide: null,
     contextMessage: null,
     closePeek: null,
-    disablePeek: null,
+    disablePeek: true,
   }
   // state of desktop
   desktopState: DesktopState = {
+    paused: null,
     appState: null,
     ocrWords: null,
     linePositions: null,
@@ -91,6 +101,8 @@ class Screen {
   get state() {
     return this[`${this._source}State`]
   }
+
+  desktopActions = bindAll(this, desktopActions)
 
   // direct connect to the swift process
   swiftBridge = new SwiftBridge({

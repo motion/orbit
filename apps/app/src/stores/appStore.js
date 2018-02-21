@@ -46,7 +46,7 @@ export default class AppStore {
     if (!quiet) {
       console.log(
         '%cUse App.* (models, stores, sync, debug(false)...))',
-        'background: yellow'
+        'background: yellow',
       )
       console.time('start')
     }

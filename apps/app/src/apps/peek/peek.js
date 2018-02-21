@@ -14,7 +14,6 @@ const keyParam = (window.location.search || '').match(/key=(.*)/)
 const KEY = keyParam && keyParam[1]
 const SHADOW_PAD = 15
 const BORDER_RADIUS = 6
-const SHOW_DELAY = 300
 const HIDE_DELAY = 100
 const background = '#fff'
 const peekShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.25]]]

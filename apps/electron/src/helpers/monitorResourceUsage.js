@@ -1,12 +1,11 @@
 import usage from 'usage'
-import debug from 'debug'
 
 const log = debug('monitor')
 
 const { pid } = process
 
 // stupid but useful
-const SECONDS_BETWEEN_MEMORY_LOG = 30
+const SECONDS_BETWEEN_MEMORY_LOG = 60
 // seconds before start monitoring
 const STARTUP_WAIT = 1000 * 10
 // this option will give us cpu usage since last check, each time
@@ -41,6 +40,9 @@ setTimeout(() => {
 
 setInterval(() => {
   usage.lookup(pid, options, (err, res) => {
-    console.log('memory usage:', res.memory / 1024 / 1024, 'gb')
+    const memoryUsedMb = res.memory / 1024 / 1024
+    if (memoryUsedMb > 200) {
+      console.log('memory usage high:', memoryUsedMb, 'Mb')
+    }
   })
 }, SECONDS_BETWEEN_MEMORY_LOG * 1000)

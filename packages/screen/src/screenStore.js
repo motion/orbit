@@ -3,15 +3,10 @@ import { store } from '@mcro/black/store'
 import SwiftBridge from './swiftBridge'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 import WebSocket from './websocket'
-import _waitForPort from 'wait-for-port'
+import waitForPort from 'wait-port'
 import global from 'global'
 import { isEqual, difference } from 'lodash'
 import * as desktopActions from './desktopActions'
-
-const waitForPort = (domain, port) =>
-  new Promise((res, rej) =>
-    _waitForPort(domain, port, err => (err ? rej(err) : res())),
-  )
 
 function bindAll(scope, namedActions) {
   return Object.keys(namedActions).reduce(
@@ -190,7 +185,7 @@ class Screen {
 
   _setupSocket = async () => {
     if (typeof window === 'undefined') {
-      await waitForPort('localhost', 40510)
+      await waitForPort({ host: 'localhost', port: 40510 })
     }
     this.ws = new ReconnectingWebSocket('ws://localhost:40510', undefined, {
       constructor: WebSocket,

@@ -52,7 +52,6 @@
     "sb-promisify": "^2.0.2",
     "source-map-support": "^0.4.16",
     "sudo-prompt": "^7.1.1",
-    "wait-for-port": "^0.0.2",
     "ws": "^3.3.3"
   },
   "devDependencies": {

@@ -11,7 +11,7 @@ npx forever start \
 (sleep 3 && build --watch) &
 npm run start-monitoring
 echo "quitting debug..."
-kill -9 $(pidof start-debug.sh)
+kill -9 $(pidof start-debug.sh) > /dev/null
 echo "quitting processes..."
-kill $(jobs -p)
-forever stopall
+kill $(jobs -p) > /dev/null
+forever stopall > /dev/null

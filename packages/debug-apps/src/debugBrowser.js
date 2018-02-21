@@ -34,7 +34,14 @@ export default class DebugApps {
       headless: false,
       args: [`--window-size=${800},${720}`],
     })
-    setInterval(this.render, 2000)
+    this.renderLoop()
+  }
+
+  renderLoop = async () => {
+    while (true) {
+      await this.render()
+      await sleep(2000)
+    }
   }
 
   getSessions = async () => {
@@ -59,7 +66,6 @@ export default class DebugApps {
             if (title && title.indexOf('chrome-extension://') === 0) {
               return null
             }
-            console.log('got title', title)
             return `${DEV_URL}/${webSocketDebuggerUrl.replace(`ws://`, '')}`
           })
           .filter(Boolean),
@@ -80,9 +86,12 @@ export default class DebugApps {
   }
 
   render = async () => {
+    if (this.isRunning) return
     if (exited) return
     const urls = await this.getSessions()
     if (!this.browser) return
+    // YO watch out:
+    this.isRunning = true
     await this.getPages()
     const extraPages = this.pages.length - urls.length
     if (extraPages > 0) {
@@ -91,7 +100,7 @@ export default class DebugApps {
         try {
           await page.close()
         } catch (err) {
-          console.log('page already closed')
+          console.log('page already closed', err.message)
         }
       }
       await this.getPages()
@@ -99,11 +108,11 @@ export default class DebugApps {
     for (const [index, url] of urls.entries()) {
       if (!this.pages[index]) {
         await this.browser.newPage()
-        await sleep(100)
+        await sleep(50)
         await this.getPages()
       }
       const page = this.pages[index]
-      if (!page) return
+      if (!page) continue
       if (page.url() !== url) {
         try {
           await Promise.all([
@@ -114,7 +123,7 @@ export default class DebugApps {
             page.goto(url),
           ])
           await sleep(500)
-          if (!this.pages[index]) return
+          if (!this.pages[index]) continue
           // in iframe so simulate
           await page.mouse.click(110, 10) // click console
           await page.mouse.click(110, 70) // click into console
@@ -124,5 +133,6 @@ export default class DebugApps {
         }
       }
     }
+    this.isRunning = false
   }
 }

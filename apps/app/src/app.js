@@ -78,6 +78,10 @@ class App {
     this.started = true
   }
 
+  reload() {
+    window.location = window.location
+  }
+
   async dispose() {
     await this.store.dispose()
     if (this.sync) {

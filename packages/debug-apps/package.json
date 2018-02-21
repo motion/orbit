@@ -7,7 +7,7 @@
   },
   "scripts": {
     "build": "build es6",
-    "start": "node --experimental-modules index"
+    "start": "node --experimental-modules --max_old_space_size=4096 index"
   },
   "dependencies": {
     "kill-port": "^1.1.0",

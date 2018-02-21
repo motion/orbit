@@ -10,7 +10,7 @@
     "url": "https://raw.githubusercontent.com/motion/orbit-updates/master/updates.json"
   },
   "scripts": {
-    "start": "nodemon --delay 50ms --watch lib --watch node_modules/*.js --exec 'npm run start-app'",
+    "start": "nodemon --delay 50ms --ignore src --exec 'npm run start-app'",
     "start-app": "wait-port 3002 && wait-port 3001 && kill-port 9001 && NODE_ENV=development electron --inspect=9001 --remote-debugging-port=9002 lib/start-app",
     "build": "build dev",
     "watch": "npm run build -- --watch",

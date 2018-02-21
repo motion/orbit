@@ -21,7 +21,7 @@ import * as Constants from '~/constants'
     oraRef = null
 
     willMount() {
-      global.electron = this
+      global.App = this
       // initial state
       const { position, size } = Helpers.getAppSize()
       const screenSize = screen.getPrimaryDisplay().workAreaSize
@@ -98,6 +98,12 @@ import * as Constants from '~/constants'
         }
         lastKeyboard = keyboard
       })
+    }
+
+    reload() {
+      if (process.env.NODE_ENV === 'development') {
+        require('touch')(require('path').join(__dirname, '..', 'package.json'))
+      }
     }
 
     toggleShown = async () => {

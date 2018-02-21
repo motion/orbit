@@ -1,10 +1,13 @@
 #!/bin/bash
 
-dev-apps &
-npm run start-monitoring &
-wait $!
-echo "done"
-for job in `jobs -p`; do
-  echo $job
-  kill $job
-done
+npx forever start \
+  --killTree \
+  -o /tmp/orbit-desktop-out.log \
+  -e /tmp/orbit-desktop-err.log \
+  -c /bin/bash \
+    ./start-debug.sh > /dev/null &
+
+./follow-logs.sh &
+npm run start-monitoring
+echo "quitting app..."
+forever stopall

@@ -58,6 +58,7 @@
   "devDependencies": {
     "touch": "^3.1.0",
     "@mcro/dev": "*",
-    "nodemon": "^1.15.0"
+    "nodemon": "^1.15.0",
+    "forever": "0.15.3"
   }
 }

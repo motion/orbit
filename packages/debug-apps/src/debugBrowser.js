@@ -1,21 +1,32 @@
 import r2 from '@mcro/r2'
 import puppeteer from 'puppeteer'
 import { uniq, flatten, isEqual } from 'lodash'
-
+import express from 'express'
+import proxy from 'http-proxy-middleware'
 const sleep = ms => new Promise(res => setTimeout(res, ms))
+
+const DEV_PATH = '/bundled/inspector.html?experiments=true&v8only=true&ws='
+// for proxy
+const API_URL = 'localhost:8001'
+const TARGET_URL = 'chrome-devtools://devtools'
 
 process.on('unhandledRejection', function(reason) {
   console.log(reason)
   process.exit(0)
 })
 
+const app = express()
+const proxyMid = proxy({ target: TARGET_URL, changeOrigin: true })
+// proxyMid.onError(console.log.bind(console))
+// proxyMid.onProxyRes(console.log.bind(console))
+// proxyMid.onProxyReq(console.log.bind(console))
+app.use('/', proxyMid)
+app.listen(8001)
+
 let exited = false
 process.on('beforeExit', () => {
   exited = true
 })
-
-const DEV_URL =
-  'chrome-devtools://devtools/bundled/inspector.html?experiments=true&v8only=true&ws='
 
 export default class DebugApps {
   cache = {}
@@ -66,7 +77,10 @@ export default class DebugApps {
             if (title && title.indexOf('chrome-extension://') === 0) {
               return null
             }
-            return `${DEV_URL}/${webSocketDebuggerUrl.replace(`ws://`, '')}`
+            return `${API_URL}${DEV_PATH}${webSocketDebuggerUrl.replace(
+              `ws://`,
+              '',
+            )}`
           })
           .filter(Boolean),
       )

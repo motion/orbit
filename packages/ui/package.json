@@ -30,7 +30,7 @@
     "batch-processor": "^1.0.0"
   },
   "peerDependencies": {
-    "mobx": "^3.4.1",
+    "mobx": "^3.5.0",
     "lodash": "*",
     "react": "^0.14.0 || ^15.0.0 || ^16.0.0",
     "react-dom": "^0.14.0 || ^15.0.0 || ^16.0.0"

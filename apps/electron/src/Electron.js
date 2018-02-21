@@ -117,7 +117,6 @@ import * as Constants from '~/constants'
     }
 
     async showOra() {
-      console.log('showOra')
       this.appRef.show()
       await Helpers.sleep(50)
       Screen.setState({ shouldShow: Date.now() })
@@ -127,7 +126,6 @@ import * as Constants from '~/constants'
     }
 
     async hideOra() {
-      console.log('hideOra')
       Screen.setState({ shouldHide: Date.now() })
       await Helpers.sleep(150) // animate
       if (

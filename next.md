@@ -1,11 +1,7 @@
 # next
 
-"shared highlights"
-
-dev
-
-* could easily make our build-all script watch package.json and kill/restart that individual watcher, so we avoid restarting the entire build --watch every time you update a build config
-* also could integrate a .cache type dir to do automatic rebuilds only if needed
+* auto smart mobx logger + frequency filter
+* .cache type cached rebuilds
 
 ux
 

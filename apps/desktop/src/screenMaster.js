@@ -25,6 +25,8 @@ const PREVENT_CLEARING = {
 const PREVENT_WATCHING = {
   electron: true,
   Chromium: true,
+  iterm2: true,
+  VSCode: true
 }
 // prevent apps from OCR
 const PREVENT_SCANNING = {
@@ -85,10 +87,9 @@ export default class ScreenState {
         const paused = !this.state.paused
         this.setState({ paused })
         if (paused) {
-          console.log('pausing swift')
-          Screen.swiftBridge.stop()
+          Screen.swiftBridge.pause()
         } else {
-          Screen.swiftBridge.start()
+          Screen.swiftBridge.resume()
         }
       },
     )

@@ -151,42 +151,6 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
 
   peekSend = () => console.log('peekSend, not started yet')
 
-  watchHovers() {
-    // this.react(
-    //   () => Screen.appState.hoveredWord,
-    //   hoveredWord => {
-    //     const windows = [...this.state.windows]
-    //     const peek = windows[0]
-    //     console.log('got peek', hoveredWord, 'for peek', peek)
-    //     // update peek y
-    //     // TODO: add conditional to ignore if same peek sent as last
-    //     if (hoveredWord) {
-    //       const { position, arrowTowards } = getPeekPosition(hoveredWord)
-    //       console.log('getPeekPosition', { position, arrowTowards })
-    //       // peek.hasNewTarget = true
-    //       peek.position = position
-    //       peek.arrowTowards = arrowTowards
-    //     }
-    //     const wasShowing = !!this.state.lastTarget
-    //     console.log('wasShowing', wasShowing)
-    //     // this handles avoiding tears during animation
-    // clearTimeout(this.animatePeekTimeout)
-    // this.isAnimatingPeek = true
-    // // need to figure out how long electron animates for
-    // // for now, be conservative
-    // this.animatePeekTimeout = this.setTimeout(() => {
-    //   this.isAnimatingPeek = false
-    // }, 350)
-    // this.setState({
-    //   windows,
-    //   wasShowing,
-    //   lastTarget: this.state.target,
-    //   target: hoveredWord,
-    // })
-    //   },
-    // )
-  }
-
   handlePeekRef = memoize(peek => ref => {
     if (ref) {
       this.peekRef = ref.window

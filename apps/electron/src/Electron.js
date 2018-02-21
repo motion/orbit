@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { App } from '@mcro/reactron'
 import ShortcutsStore from '~/stores/shortcutsStore'
-import { view } from '@mcro/black'
+import { view, debugState } from '@mcro/black'
 import Tray from './views/Tray'
 import MenuItems from './views/MenuItems'
 import HighlightsWindow from './views/HighlightsWindow'
@@ -19,9 +19,15 @@ import * as Constants from '~/constants'
     error = null
     appRef = null
     oraRef = null
+    stores = null
+    views = null
 
     willMount() {
       global.App = this
+      debugState(({ stores, views }) => {
+        this.stores = stores
+        this.views = views
+      })
       // initial state
       const { position, size } = Helpers.getAppSize()
       const screenSize = screen.getPrimaryDisplay().workAreaSize

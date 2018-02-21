@@ -7,7 +7,7 @@ import sudoPrompt_ from 'sudo-prompt'
 import ScreenMaster from './screenMaster'
 import Screen from '@mcro/screen'
 import * as Helpers from '~/helpers'
-import { store } from '@mcro/black/store'
+import { store, debugState } from '@mcro/black'
 import global from 'global'
 import Path from 'path'
 
@@ -20,6 +20,7 @@ const sudoPrompt = promisifyAll(sudoPrompt_)
 export default class Desktop {
   server = new Server()
   screen = new ScreenMaster()
+  stores = null
 
   async start() {
     global.App = this
@@ -28,6 +29,9 @@ export default class Desktop {
     log(`starting desktop on ${port}`)
     this.screen.start()
     this.watchBrowserOpen()
+    debugState(({ stores }) => {
+      this.stores = stores
+    })
   }
 
   restart() {

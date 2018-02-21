@@ -1,7 +1,6 @@
 // @flow
 import { Event } from '~/app'
 import { createInChunks } from '~/sync/helpers'
-import debug from 'debug'
 
 const log = debug('sync')
 
@@ -72,7 +71,7 @@ export default class GoogleCalSync {
     const allEvents = await this.getEvents(calendar)
     log('cal got all events', calendar, allEvents, 'creating...')
     const created = await createInChunks(allEvents, item =>
-      this.createEvent(calendar, item)
+      this.createEvent(calendar, item),
     )
     log('created events, updating sync token')
     await this.setting.mergeUpdate({
@@ -110,7 +109,7 @@ export default class GoogleCalSync {
     calendarId: string,
     query = {},
     fetchAll = true,
-    tries = 0
+    tries = 0,
   ): Promise<Array<Object>> {
     const finalQuery = { ...query }
     const syncToken = this.setting.values.syncTokens[calendarId]
@@ -139,7 +138,7 @@ export default class GoogleCalSync {
             calendarId,
             { ...query, pageToken: lastQuery.nextPageToken },
             fetchAll,
-            tries
+            tries,
           )),
         ]
       }

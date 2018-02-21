@@ -13,6 +13,7 @@
     "build-electron": "electron-rebuild -v 1.7.10"
   },
   "dependencies": {
+    "@mcro/debug": "*",
     "@mcro/black": "*",
     "@mcro/crawler": "^1.5.1",
     "@mcro/oracle": "*",
@@ -24,7 +25,6 @@
     "body-parser": "^1.16.1",
     "clean-stacktrace": "^1.1.0",
     "cors": "^2.8.3",
-    "debug": "^3.1.0",
     "escape-string-applescript": "^2.0.0",
     "execa": "^0.9.0",
     "express": "^4.15.2",

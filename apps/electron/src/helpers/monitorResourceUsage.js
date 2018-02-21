@@ -1,5 +1,4 @@
 import usage from 'usage'
-import debug from 'debug'
 
 const log = debug('monitor')
 

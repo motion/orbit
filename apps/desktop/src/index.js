@@ -1,7 +1,10 @@
 import 'babel-polyfill'
 import 'isomorphic-fetch'
+import '@mcro/debug/inject'
 
-console.log('process.env.NODE_ENV', process.env.NODE_ENV)
+const log = debug('index')
+
+log('process.env.NODE_ENV', process.env.NODE_ENV)
 
 if (process.env.NODE_ENV === 'development') {
   require('source-map-support/register')
@@ -44,7 +47,7 @@ export async function run() {
   try {
     await dTop.start()
   } catch (err) {
-    console.log('error', err)
+    log('error', err)
   }
 }
 

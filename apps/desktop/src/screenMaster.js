@@ -6,9 +6,8 @@ import iohook from 'iohook'
 import killPort from 'kill-port'
 import { store } from '@mcro/black/store'
 import Screen from '@mcro/screen'
-import debug from 'debug'
 
-const log = debug('api:screenMaster')
+const log = debug('screenMaster')
 
 const PORT = 40510
 const DESKTOP_KEY = 'desktop'

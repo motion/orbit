@@ -43,5 +43,6 @@ module.exports = {
     BroadcastChannel: true,
     Promise: true,
     Set: true,
+    debug: true,
   },
 }

@@ -1,7 +1,6 @@
 // @flow
 import { Thing } from '~/app'
 import { createInChunks } from '~/sync/helpers'
-import debug from 'debug'
 
 const log = debug('sync')
 const sleep = ms => new Promise(res => setTimeout(res, ms))
@@ -61,7 +60,7 @@ export default class GoogleDriveSync {
       },
     })
     return await Promise.all(
-      revisions.map(({ id }) => this.getRevision(fileId, id))
+      revisions.map(({ id }) => this.getRevision(fileId, id)),
     )
   }
 
@@ -110,7 +109,7 @@ export default class GoogleDriveSync {
     const files = await this.getFilesBasic(pages, query)
     // just docs
     const docs = files.filter(
-      file => file.mimeType === 'application/vnd.google-apps.document'
+      file => file.mimeType === 'application/vnd.google-apps.document',
     )
     const fileIds = docs.map(file => file.id)
     const perSecond = 5
@@ -119,7 +118,7 @@ export default class GoogleDriveSync {
     while (fetched < fileIds.length) {
       const next = await this.getFilesWithAllInfo(
         fileIds.slice(fetched, fetched + perSecond),
-        fileQuery
+        fileQuery,
       )
       log('getFiles', next, fetched)
       response = [...response, ...next]

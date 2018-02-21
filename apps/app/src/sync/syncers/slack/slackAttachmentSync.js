@@ -1,12 +1,11 @@
 // @flow
 import App, { Thing } from '~/app'
-import debug from 'debug'
 import * as _ from 'lodash'
 import * as r2 from '@mcro/r2'
 import { createInChunks } from '~/sync/helpers'
 import * as Constants from '~/constants'
 
-const log = _ => _ || debug('sync')
+const log = debug('sync')
 
 export default class SlackAttachmentSync {
   constructor({ setting, token, helpers }) {
@@ -46,7 +45,7 @@ export default class SlackAttachmentSync {
             link
               .slice(1, link.length)
               .slice(0, link.length - 2)
-              .replace(/\|.*$/g, '')
+              .replace(/\|.*$/g, ''),
           )
           .value()
 
@@ -66,7 +65,7 @@ export default class SlackAttachmentSync {
                   json: {
                     options: { entries },
                   },
-                }
+                },
               ).json
               console.log('got results', results)
               if (results && results.length) {
@@ -80,8 +79,8 @@ export default class SlackAttachmentSync {
                         channelId: channel,
                         channel: info.channel.name_normalized,
                       },
-                    })
-                  )
+                    }),
+                  ),
                 )
                 console.log('created', created)
               }

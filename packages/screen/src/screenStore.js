@@ -105,7 +105,7 @@ class Screen {
   desktopActions = bindAll(this, desktopActions)
 
   // direct connect to the swift process
-  swiftBridge = new SwiftBridge({
+  swiftBridge: SwiftBridge = new SwiftBridge({
     onStateChange: state => {
       this.swiftState = state
     },

@@ -1,6 +1,5 @@
 const global = require('global')
 const stringify = require('stringify-object')
-// const chalk = require('chalk')
 
 if (!global.__shouldLog) {
   global.__shouldLog = {

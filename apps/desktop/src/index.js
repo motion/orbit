@@ -15,8 +15,8 @@ const dTop = new Desktop()
 
 const exitHandler = async code => {
   await dTop.dispose()
-  await new Promise(res => setTimeout(res, 64))
   process.exit(code === 1 ? 1 : 0)
+  process.kill(process.pid)
 }
 
 // dont close instantly

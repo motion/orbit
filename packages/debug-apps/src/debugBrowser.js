@@ -8,6 +8,7 @@ let exiting = false
 const setExiting = () => {
   console.log('Exiting debug browser...')
   exiting = true
+  process.kill(process.pid)
 }
 process.on('unhandledRejection', function(reason) {
   if (exiting) return

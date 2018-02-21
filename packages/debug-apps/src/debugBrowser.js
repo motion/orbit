@@ -22,8 +22,6 @@ process.on('SIGINT', setExiting)
 process.on('exit', setExiting)
 
 export default class DebugApps {
-  cache = {}
-
   constructor({ sessions = [] }) {
     this.sessions = sessions
   }
@@ -56,7 +54,7 @@ export default class DebugApps {
     )
   }
 
-  lastUrl = {}
+  lastRes = {}
 
   getDevUrl = async ({ port, id }) => {
     const url = `http://127.0.0.1:${port}/${id ? `${id}/` : ''}json`
@@ -69,18 +67,18 @@ export default class DebugApps {
               return null
             }
             if (!webSocketDebuggerUrl) {
-              return this.lastUrl[url] || null
+              return this.lastRes[url] || null
             }
-            const fullUrl = `chrome-devtools://devtools/bundled/inspector.html?experiments=true&v8only=true&ws=${webSocketDebuggerUrl.replace(
+            const debugUrl = `chrome-devtools://devtools/bundled/inspector.html?experiments=true&v8only=true&ws=${webSocketDebuggerUrl.replace(
               `ws://`,
               '',
             )}`
-            this.lastUrl[url] = fullUrl
-            return fullUrl
+            const res = { debugUrl, url, port }
+            this.lastRes[url] = res
+            return res
           })
           .filter(Boolean),
       )
-      this.cache[url] = res
       return res
     } catch (err) {
       if (err.message.indexOf('ECONNREFUSED') !== -1) return
@@ -98,15 +96,15 @@ export default class DebugApps {
   render = async () => {
     if (this.isRunning) return
     if (exiting) return
-    const urls = await this.getSessions()
+    const current = await this.getSessions()
     // memory overflow protect: only run if needed
-    if (isEqual(urls, this.urls)) return
-    this.urls = urls
+    if (isEqual(current, this.current)) return
+    this.current = current
     if (!this.browser) return
     // YO watch out:
     this.isRunning = true
     await this.getPages()
-    const extraPages = this.pages.length - urls.length
+    const extraPages = this.pages.length - current.length
     if (extraPages > 0) {
       // close extras
       for (const page of this.pages.slice(this.pages.length - extraPages)) {
@@ -119,7 +117,8 @@ export default class DebugApps {
       await this.getPages()
     }
     try {
-      for (const [index, url] of urls.entries()) {
+      console.log('current', current)
+      for (const [index, { debugUrl, url, port }] of current.entries()) {
         if (!this.pages[index]) {
           await this.browser.newPage()
           await sleep(50)
@@ -127,16 +126,30 @@ export default class DebugApps {
         }
         const page = this.pages[index]
         if (!page) continue
-        if (page.url() !== url) {
+        if (page.url() !== debugUrl) {
           await Promise.all([
             page.waitForNavigation({
               timeout: 0,
               waitUntil: 'domcontentloaded',
             }),
-            page.goto(url),
+            page.goto(debugUrl),
           ])
           await sleep(500)
           if (!this.pages[index]) continue
+          await page.evaluate(
+            (port, url) => {
+              const PORT_NAMES = {
+                9000: 'Desktop',
+                9001: 'Electron',
+              }
+              const title = document.createElement('title')
+              title.innerHTML =
+                PORT_NAMES[port] || url.replace('http://localhost:3001', '')
+              document.head.appendChild(title)
+            },
+            port,
+            url,
+          )
           // in iframe so simulate
           await page.mouse.click(110, 10) // click console
           await page.mouse.click(110, 70) // click into console

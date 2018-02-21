@@ -117,7 +117,6 @@ export default class DebugApps {
       await this.getPages()
     }
     try {
-      console.log('current', current)
       for (const [index, { debugUrl, url, port }] of current.entries()) {
         if (!this.pages[index]) {
           await this.browser.newPage()
@@ -136,6 +135,7 @@ export default class DebugApps {
           ])
           await sleep(500)
           if (!this.pages[index]) continue
+          await page.focus('body')
           await page.evaluate(
             (port, url) => {
               const PORT_NAMES = {

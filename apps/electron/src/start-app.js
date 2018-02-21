@@ -41,7 +41,7 @@ let started = false
 export function start() {
   if (started) return
   started = true
-  console.log('starting electron', process.env.NODE_ENV)
+  console.warn(`$ NODE_ENV=${process.env.NODE_ENV} run electron`)
   render(<Electron />)
   electronContextMenu()
   electronDebug()

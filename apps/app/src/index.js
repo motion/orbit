@@ -8,6 +8,10 @@ import createElement from '@mcro/black/lib/createElement'
 import React from 'react'
 import * as Constants from './constants'
 
+console.warn(
+  `$ NODE_ENV=${process.env.NODE_ENV} run app ${window.location.pathname}`,
+)
+
 // $FlowIgnore
 React.createElement = createElement // any <tag /> can use $$style
 

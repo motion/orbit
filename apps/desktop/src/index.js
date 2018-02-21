@@ -4,7 +4,7 @@ import '@mcro/debug/inject'
 
 const log = debug('index')
 
-log('process.env.NODE_ENV', process.env.NODE_ENV)
+console.warn(`$ NODE_ENV=${process.env.NODE_ENV} run desktop`)
 
 if (process.env.NODE_ENV === 'development') {
   require('source-map-support/register')

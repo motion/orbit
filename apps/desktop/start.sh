@@ -5,6 +5,7 @@ if [[ "$1" == "--build" ]]; then
 fi
 
 npx nodemon \
+  --quiet \
   --ignore src \
   --watch lib \
   --watch $(realpath node_modules/@mcro/black) \

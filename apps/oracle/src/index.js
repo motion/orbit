@@ -328,16 +328,16 @@ export default class Oracle {
     this.process.stderr.removeAllListeners()
     // kill process
     this.process.kill()
-    this.process.kill('SIGKILL')
-    let hasResolved = false
-    setTimeout(() => {
-      if (!hasResolved) {
-        console.log('still hasnt stopped?')
-      }
+    let atimer = setTimeout(() => {
+      this.process.kill('SIGKILL')
+    })
+    let btimer = setTimeout(() => {
+      console.log('still hasnt stopped?')
     }, 5000)
     await this.process
-    hasResolved = true
     delete this.process
+    clearTimeout(atimer)
+    clearTimeout(btimer)
     // sleep to avoid issues
     await sleep(20)
   }

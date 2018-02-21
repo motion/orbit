@@ -4,7 +4,7 @@ import '@mcro/debug/inject'
 
 const log = debug('index')
 
-log('process.env.NODE_ENV', process.env.NODE_ENV)
+console.warn(`$ NODE_ENV=${process.env.NODE_ENV} run desktop`)
 
 if (process.env.NODE_ENV === 'development') {
   require('source-map-support/register')
@@ -14,17 +14,17 @@ const Desktop = require('./desktop').default
 const dTop = new Desktop()
 
 const exitHandler = async code => {
-  await dTop.dispose()
-  process.exit(code === 1 ? 1 : 0)
-  process.kill(process.pid)
+  console.log('handling exit', code)
+  if (await dTop.dispose()) {
+    // otherwise it wont exit :/
+    process.kill(process.pid)
+  }
 }
 
-// dont close instantly
-process.stdin.resume()
 // do something when app is closing
 process.on('exit', exitHandler)
 // ctrl+c event
-process.on('SIGINT', () => exitHandler(0))
+process.on('SIGINT', exitHandler)
 // "kill pid" (nodemon)
 process.on('SIGUSR1', exitHandler)
 process.on('SIGUSR2', exitHandler)

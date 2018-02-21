@@ -1,5 +1,6 @@
 #!/bin/bash
 ./start-debug.sh &
+debugPID=$!
 if [[ "$1" == "--build" ]]; then
   (sleep 4 && build --watch) &
 fi
@@ -12,10 +13,10 @@ npx nodemon \
   --watch $(realpath node_modules/@mcro/debug) \
   --watch $(realpath node_modules/@mcro/dev) \
   --watch $(realpath node_modules/@mcro/macros) \
-  --watch $(realpath node_modules/@mcro/oracle) \
   --watch $(realpath node_modules/@mcro/screen) \
-  --watch $(realpath node_modules/@mcro/search) \
   --exec 'npm run start-app'
 
-trap "trap - SIGTERM && kill -- -$$" SIGINT SIGTERM EXIT > /dev/null &
+echo "killing debug browser $debugPID"
+kill -9 $debugPID
+trap "trap - SIGTERM && kill -- -$$" SIGINT SIGTERM EXIT > /dev/null
 echo "done done"

@@ -48,6 +48,10 @@ function colorfulLog(id, namespace, messages) {
   if (!isBrowser) {
     console.log(`${namespace} -- ${messages.map(nodeStringify).join(' ')}`)
   } else {
-    console.log(`%c${namespace}: ${messages.join(' ')}`, `color:${colorName};`)
+    console.log(
+      `%c${namespace}%c -- ${messages.map(nodeStringify).join(' ')}`,
+      `color:${colorName};`,
+      'color:black;',
+    )
   }
 }

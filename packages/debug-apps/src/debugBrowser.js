@@ -6,7 +6,7 @@ const sleep = ms => new Promise(res => setTimeout(res, ms))
 // quiet exit handling
 let exiting = false
 const setExiting = () => {
-  console.log('Exiting debug browser...')
+  console.log('Exit debugbrowser...')
   exiting = true
   process.kill(process.pid)
 }
@@ -44,7 +44,7 @@ export default class DebugApps {
   renderLoop = async () => {
     while (true) {
       await this.render()
-      await sleep(2000)
+      await sleep(1000)
     }
   }
 

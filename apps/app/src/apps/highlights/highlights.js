@@ -6,6 +6,8 @@ import { LINE_Y_ADJ, toTarget, getKey } from './helpers'
 import OCRWord from './ocrWord'
 import OCRLine from './ocrLine'
 
+const log = debug('highlights')
+
 @view({
   store: class HighlightsStore {
     trees = {
@@ -78,7 +80,7 @@ import OCRLine from './ocrLine'
           this.hoveredLine = hoveredLine
           Screen.setState({ hoveredWord, hoveredLine })
           if (hoveredWord) {
-            console.log('hoveredWord', hoveredWord)
+            log('hoveredWord', hoveredWord)
           }
         },
         true,

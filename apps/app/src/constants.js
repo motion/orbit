@@ -6,13 +6,7 @@ export const IS_ELECTRON = Constants.IS_ELECTRON
 export const IS_PROD =
   process.env.NODE_ENV === 'production' || process.env.IS_PROD
 export const IS_DEV = !IS_PROD
-
-if (process.env.IS_PROD) {
-  console.log('IS_PROD!')
-}
-
 export const VERSION = require('../package.json').version
-
 export const oraBg = '#fff'
 export const ORA_BG = [0, 0, 0]
 export const ORA_BG_FOCUSED = [0, 0, 0, 0.89]

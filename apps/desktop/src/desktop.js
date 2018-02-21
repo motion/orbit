@@ -13,8 +13,6 @@ import Path from 'path'
 
 const log = debug('desktop')
 
-log('IS_PROD', Constants.IS_PROD)
-
 const hostile = promisifyAll(hostile_)
 const sudoPrompt = promisifyAll(sudoPrompt_)
 
@@ -40,10 +38,12 @@ export default class Desktop {
     this.react(() => Screen.appState.openBrowser, url => Helpers.open(url))
   }
 
-  async dispose() {
-    if (this.disposed) return
+  dispose = async () => {
+    if (this.disposed) return false
     await this.screen.dispose()
     this.disposed = true
+    log('screen disposed, returning...')
+    return true
   }
 
   async setupHosts() {

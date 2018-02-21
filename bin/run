@@ -22,5 +22,5 @@ if [ "$ACTION" = "backend" ]; then
   compose up ${@:2}
 else
   cd apps/$1
-  npm run start ${@:2}
+  npm run start -- ${@:2}
 fi

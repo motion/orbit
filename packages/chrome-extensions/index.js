@@ -1,5 +1,4 @@
-import Path from 'path'
-import * as Constants from '~/constants'
+const Path = require('path')
 
 const EXTENSIONS = {
   remoteDevtools: 'devtools-remote',
@@ -8,10 +7,9 @@ const EXTENSIONS = {
 }
 
 const extensionToID = name => EXTENSIONS[name]
-const extensionIDToPath = id =>
-  Path.join(Constants.ROOT_PATH, 'resources', 'extensions', id)
+const extensionIDToPath = id => Path.join(__dirname, 'extensions', id)
 
-export default function getExtensions(names) {
+module.exports = function getExtensions(names) {
   const extensions = names.map(extensionToID).map(extensionIDToPath)
   return extensions
 }

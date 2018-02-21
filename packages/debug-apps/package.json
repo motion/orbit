@@ -10,6 +10,7 @@
     "start": "node --experimental-modules --max_old_space_size=4096 index"
   },
   "dependencies": {
+    "@mcro/chrome-extensions": "*",
     "kill-port": "^1.1.0",
     "puppeteer": "^1.1.0",
     "@mcro/r2": "*",

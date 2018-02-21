@@ -33,6 +33,7 @@
     ]
   },
   "dependencies": {
+    "@mcro/chrome-extensions": "*",
     "@mcro/debug": "*",
     "@mcro/macros": "*",
     "@mcro/desktop": "^1.5.1",

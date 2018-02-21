@@ -2,6 +2,7 @@ import r2 from '@mcro/r2'
 import puppeteer from 'puppeteer'
 import { uniq, flatten, isEqual } from 'lodash'
 const sleep = ms => new Promise(res => setTimeout(res, ms))
+import getExtensions from '@mcro/chrome-extensions'
 
 // quiet exit handling
 let exiting = false
@@ -21,6 +22,15 @@ process.on('SIGSEGV', setExiting)
 process.on('SIGINT', setExiting)
 process.on('exit', setExiting)
 
+const extensions = flatten(
+  getExtensions(['mobx', 'react']).map(ext => [
+    `--disable-extensions-except=${ext}`,
+    `--load-extension=${ext}`,
+  ]),
+)
+
+console.log('extensions', extensions)
+
 export default class DebugApps {
   constructor({ sessions = [] }) {
     this.sessions = sessions
@@ -34,7 +44,7 @@ export default class DebugApps {
   async start() {
     this.browser = await puppeteer.launch({
       headless: false,
-      args: [`--window-size=${800},${720}`],
+      args: [`--window-size=${800},${720}`, ...extensions],
     })
     this.renderLoop()
   }

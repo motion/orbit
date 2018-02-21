@@ -1,6 +1,9 @@
 #!/bin/bash
 ./start-debug.sh &
-if [[ "$1" -ne "--no-build" ]]; then
+
+echo $1
+
+if [[ "$1" != "--no-build" ]]; then
   (build --watch) &
 fi
 

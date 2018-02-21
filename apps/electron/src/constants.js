@@ -1,7 +1,7 @@
 export * from '@mcro/constants'
 
 import Path from 'path'
-import getExtensions from '~/helpers/getExtensions'
+import getExtensions from '@mcro/chrome-extensions'
 
 export const IS_PROD = process.env.NODE_ENV !== 'development'
 export const IS_DEV = !IS_PROD

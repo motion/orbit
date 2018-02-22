@@ -1,6 +1,7 @@
 const global = require('global')
 const Mobx = require('mobx')
 const { deepObserve } = require('mobx-deep-observer')
+const { enableLogging } = require('mobx-logger')
 // toJSONPatch
 
 let runners = (global.__mlogRunners = global.__mlogRunners || [])
@@ -21,7 +22,7 @@ function deepMobxToJS(_thing) {
 
 let cur
 
-global.mlog = (fn, ...rest) => {
+const mlog = (fn, ...rest) => {
   // regular log
   if (typeof fn !== 'function') {
     cur = fn
@@ -49,7 +50,25 @@ global.mlog = (fn, ...rest) => {
     }),
   )
 }
-global.mlog.clear = () => {
+
+mlog.clear = () => {
   runners.forEach(r => r())
   runners = []
 }
+
+let logMobx = false
+enableLogging({
+  predicate: () => logMobx,
+  action: true,
+  reaction: true,
+  transaction: true,
+  compute: true,
+})
+mlog.enable = () => {
+  logMobx = true
+}
+mlog.disable = () => {
+  logMobx = false
+}
+
+global.mlog = mlog

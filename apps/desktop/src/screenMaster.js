@@ -121,29 +121,25 @@ export default class ScreenState {
           if (this.curAppID !== id) {
             this.resetHighlights()
           }
+          // update these now so we can use to track
           this.curAppID = id
           this.curAppName = nextState.name
           break
         case 'WindowSizeChangedEvent':
-          console.log('sizeevent', value.id, id)
           if (value.id !== id) return
           nextState.bounds = value.size
           break
         case 'WindowPosChangedEvent':
-          console.log('posevent', value.id, id)
           if (value.id !== id) return
           nextState.offset = value.pos
       }
       if (PREVENT_APP_STATE[this.curAppName]) {
-        log('preventState', this.curAppName)
         this.oracle.pause()
         return
-        // prevent other events except change window
       }
       if (!this.state.paused) {
         this.oracle.resume()
       }
-      // update
       const appState = JSON.parse(JSON.stringify(nextState))
       log('set.appState', appState)
       this.setState({

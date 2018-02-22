@@ -9,6 +9,7 @@ import Screen from '@mcro/screen'
 
 const idFn = _ => _
 const PEEK_ANIMATE_MS = 350
+const INITIAL_SIZE = [560, 450]
 
 type PeekStateItem = {
   key: number,
@@ -65,7 +66,7 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
     windows: [
       {
         key: this.peekKey,
-        size: Constants.PEEK_DIMENSIONS,
+        size: INITIAL_SIZE,
         position: [0, 0],
         show: false,
       },
@@ -79,27 +80,23 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
     this.mounted = true
   }
 
-  getPeekPosition(peekTarget: PeekTarget) {
-    const [peekW, peekH] = Constants.PEEK_DIMENSIONS
-    const [screenW, screenH] = Helpers.getScreenSize()
-    const halfWidth = screenW / 2
-    // start: target is to right
-    let x = peekTarget.left - peekW
-    let y = peekTarget.top - 20
+  getPeekPosition({ left, top, width, height }: PeekTarget) {
+    const [peekW] = INITIAL_SIZE
+    // const [screenW, screenH] = Helpers.getScreenSize()
+    // start: peek to left
     let arrowTowards = 'right'
-    if (x < halfWidth) {
-      // target is to left
-      x = peekTarget.left + peekTarget.width
+    let x = left - peekW
+    let y = top
+    if (x < 0) {
+      // peek to right
+      x = left + width
       arrowTowards = 'left'
-    }
-    if (y + peekH > screenH) {
-      // target is below
-      arrowTowards = 'top'
     }
     x = Math.round(x)
     y = Math.round(y)
     return {
       position: [x, y],
+      size: [peekW, height],
       arrowTowards,
     }
   }
@@ -127,6 +124,7 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
         const peek = windows[0]
         const pp = this.getPeekPosition({ top, left, width, height })
         peek.position = pp.position
+        peek.size = pp.size
         peek.arrowTowards = pp.arrowTowards
         this.setState({ windows })
       },
@@ -234,7 +232,6 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
     if (Screen.appState.disablePeek) {
       return null
     }
-
     const windowProps = {
       frame: false,
       hasShadow: false,
@@ -242,29 +239,26 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
       webPreferences: Constants.WEB_PREFERENCES,
       transparent: true,
     }
-
     return (
       <React.Fragment>
         {this.state.windows.map((peek, index) => {
           // peek always in front
           const isAttached = index === 0
-          const { key, size } = peek
-          const position = peek.position
           return (
             <Window
-              key={key}
+              key={peek.key}
               showDevTools={
                 isAttached ? Screen.state.showDevTools.peek : peek.showDevTools
               }
               alwaysOnTop={isAttached || peek.alwaysOnTop}
               animatePosition={this.state.wasShowing}
               show={peek.show}
-              file={`${Constants.APP_URL}/peek?key=${key}`}
+              file={`${Constants.APP_URL}/peek?key=${peek.key}`}
               ref={isAttached ? this.handlePeekRef(peek) : idFn}
               onReadyToShow={this.handleReadyToShow(peek)}
               {...windowProps}
-              size={size}
-              position={[position[0], position[1]]}
+              size={peek.size}
+              position={peek.position}
               onMove={this.handlePeekMove(peek)}
             />
           )

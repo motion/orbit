@@ -36,11 +36,11 @@ final class Windo {
       }
       self.swindler.on { (event: WindowPosChangedEvent) in
         let val = event.newValue
-        self.emit("{ \"action\": \"WindowPosChangedEvent\", \"value\": [\(val.x), \(val.y)] }")
+        self.emit("{ \"action\": \"WindowPosChangedEvent\", \"value\": { \"id\": \"\(event.window.application.bundleIdentifier ?? "")\", \"pos\": [\(val.x), \(val.y)] } }")
       }
       self.swindler.on { (event: WindowSizeChangedEvent) in
         let val = event.newValue
-        self.emit("{ \"action\": \"WindowSizeChangedEvent\", \"value\": [\(val.width), \(val.height)] }")
+        self.emit("{ \"action\": \"WindowSizeChangedEvent\", \"value\": { \"id\": \"\(event.window.application.bundleIdentifier ?? "")\", \"size\": [\(val.width), \(val.height)] } }")
       }
       self.swindler.on { (event: WindowDestroyedEvent) in
         self.emit("{ \"action\": \"WindowDestroyedEvent\", \"value\": \"\(event.window.title.value)\" }")

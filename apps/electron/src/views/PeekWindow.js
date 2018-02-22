@@ -118,13 +118,14 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
   positionPeekBasedOnWindow = () => {
     this.react(
       () => Screen.desktopState.appState,
-      ({ offset, bounds }) => {
-        const [top, left] = offset
+      ({ name, offset, bounds }) => {
+        if (!offset || !bounds) return
+        const [left, top] = offset
+        console.log('appState', name, top, left)
         const [width, height] = bounds
         const windows = [...this.state.windows]
         const peek = windows[0]
         const pp = this.getPeekPosition({ top, left, width, height })
-        console.log('appState', top, left, width, height, pp)
         peek.position = pp.position
         peek.arrowTowards = pp.arrowTowards
         this.setState({ windows })

@@ -181,7 +181,7 @@ export default class Root extends React.Component {
       >
         <MenuItems />
         <HighlightsWindow />
-        <OraWindow onRef={electron.handleOraRef} />
+        {/* <OraWindow onRef={electron.handleOraRef} /> */}
         <PeekWindow appPosition={Screen.state.oraPosition.slice(0)} />
         {/* <SettingsWindow /> */}
         <Tray />

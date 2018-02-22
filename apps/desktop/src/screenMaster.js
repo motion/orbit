@@ -24,6 +24,7 @@ const PREVENT_CLEARING = {
 }
 // prevent apps from triggering appState updates
 const PREVENT_APP_STATE = {
+  iterm2: true,
   electron: true,
   Chromium: true,
 }
@@ -100,14 +101,13 @@ export default class ScreenState {
     this.oracle.onClear(() => {
       this.resetHighlights()
     })
-    let lastId = null
     this.oracle.onWindowChange((event, value) => {
       if (event === 'ScrollEvent') {
         this.resetHighlights()
         return
       }
       let nextState = { ...this.state.appState }
-      let id = lastId
+      let id = this.curAppID
       switch (event) {
         case 'FrontmostWindowChangedEvent':
           id = value.id
@@ -118,31 +118,36 @@ export default class ScreenState {
             bounds: value.bounds,
             name: id ? last(id.split('.')) : value.title,
           }
+          if (this.curAppID !== id) {
+            this.resetHighlights()
+          }
+          this.curAppID = id
+          this.curAppName = nextState.name
           break
         case 'WindowSizeChangedEvent':
-          nextState.bounds = value
+          console.log('sizeevent', value.id, id)
+          if (value.id !== id) return
+          nextState.bounds = value.size
           break
         case 'WindowPosChangedEvent':
-          nextState.offset = value
+          console.log('posevent', value.id, id)
+          if (value.id !== id) return
+          nextState.offset = value.pos
       }
-      if (PREVENT_APP_STATE[nextState.name]) {
+      if (PREVENT_APP_STATE[this.curAppName]) {
+        log('preventState', this.curAppName)
         this.oracle.pause()
         return
-      }
-      if (lastId !== id) {
-        this.resetHighlights()
-      }
-      if (!nextState.name) {
-        log('no name recevied', value)
-        return
+        // prevent other events except change window
       }
       if (!this.state.paused) {
         this.oracle.resume()
       }
       // update
-      log('onWindowChange', event, nextState.name)
+      const appState = JSON.parse(JSON.stringify(nextState))
+      log('set.appState', appState)
       this.setState({
-        appState: JSON.parse(JSON.stringify(nextState)),
+        appState,
       })
     })
     this.oracle.onBoxChanged(count => {
@@ -296,14 +301,14 @@ export default class ScreenState {
       return
     }
     const { name, offset, bounds } = this.state.appState
+    if (PREVENT_SCANNING[name] || PREVENT_APP_STATE[name]) {
+      return
+    }
     if (!offset || !bounds) {
       log('todo: initial offset/bounds')
       return
     }
     clearTimeout(this.clearOCRTimeout)
-    if (PREVENT_SCANNING[name]) {
-      return
-    }
     log('> ', name)
     // we are watching the whole app for words
     this.watchBounds('App', {

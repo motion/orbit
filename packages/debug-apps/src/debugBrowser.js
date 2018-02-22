@@ -144,16 +144,18 @@ export default class DebugApps {
           await sleep(100)
           if (!this.pages[index]) continue
           await page.focus('body')
-          await page.evaluate(
+          page.evaluate(
             (port, url) => {
-              const PORT_NAMES = {
-                9000: 'Desktop',
-                9001: 'Electron',
-              }
-              const title = document.createElement('title')
-              title.innerHTML =
-                PORT_NAMES[port] || url.replace('http://localhost:3001', '')
-              document.head.appendChild(title)
+              setTimeout(() => {
+                const PORT_NAMES = {
+                  9000: 'Desktop',
+                  9001: 'Electron',
+                }
+                const title = document.createElement('title')
+                title.innerHTML =
+                  PORT_NAMES[port] || url.replace('http://localhost:3001', '')
+                document.head.appendChild(title)
+              }, 500)
             },
             port,
             url,

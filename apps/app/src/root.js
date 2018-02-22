@@ -4,7 +4,39 @@ import Redbox from 'redbox-react'
 import * as UI from '@mcro/ui'
 import NotFound from '~/views/404'
 import Router from '~/router'
+import Screen from '@mcro/screen'
 
+@view.provide({
+  rootStore: class RootStore {
+    willMount() {
+      if (!Screen.started) {
+        Screen.start('app', {
+          hoveredWord: null,
+          hoveredLine: null,
+          disablePeek: false,
+          pinned: false,
+          preventElectronHide: true,
+          contextMessage: 'Orbit',
+          closePeek: null,
+          hidden: true,
+        })
+      }
+
+      this.react(
+        () => [
+          Screen.electronState.shouldHide,
+          Screen.electronState.shouldShow,
+        ],
+        function handleHidden([shouldHide, shouldShow]) {
+          if (!shouldHide && !shouldShow) return
+          const hidden = shouldHide > shouldShow
+          Screen.setState({ hidden })
+        },
+        true,
+      )
+    }
+  },
+})
 @view
 export default class Root extends React.Component {
   state = {

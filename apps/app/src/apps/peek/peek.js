@@ -42,11 +42,6 @@ const peekShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.25]]]
     }
 
     willMount() {
-      if (!Screen.started) {
-        Screen.start('app', {
-          closePeek: null,
-        })
-      }
       this.trap = new Mousetrap(window)
       this.trap.bind('esc', () => {
         console.log('esc')
@@ -176,7 +171,7 @@ export default class PeekPage {
     return (
       <UI.Theme name="light">
         <peek
-          $peekVisible
+          $peekVisible={!Screen.state.hidden}
           $peekTorn={store.isTorn}
           onMouseEnter={store.handleMouseEnter}
           onMouseLeave={store.handleMouseLeave}

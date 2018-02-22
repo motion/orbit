@@ -76,17 +76,6 @@ export default class OraStore {
           .sort({ updatedAt: 'desc' })
 
   async willMount() {
-    // set initial state
-    if (!Screen.started) {
-      Screen.start('app', {
-        disablePeek: false,
-        pinned: false,
-        hidden: true,
-        preventElectronHide: true,
-        contextMessage: 'Orbit',
-      })
-    }
-
     // start this after screen
     this.ui = new UIStore({ oraStore: this })
 

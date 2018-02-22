@@ -125,22 +125,21 @@ import * as Constants from '~/constants'
 
     async showOra() {
       this.appRef.show()
-      await Helpers.sleep(50)
       Screen.setState({ shouldShow: Date.now() })
-      await Helpers.sleep(250) // animate
-      this.appRef && this.appRef.focus()
-      this.oraRef && this.oraRef.focus()
+      // await Helpers.sleep(250) // animate
+      // this.appRef && this.appRef.focus()
+      // this.oraRef && this.oraRef.focus()
     }
 
     async hideOra() {
       Screen.setState({ shouldHide: Date.now() })
-      await Helpers.sleep(150) // animate
-      if (
-        !Screen.state.settingsVisible &&
-        !Screen.appState.preventElectronHide
-      ) {
-        this.appRef.hide()
-      }
+      // await Helpers.sleep(150) // animate
+      // if (
+      //   !Screen.state.settingsVisible &&
+      //   !Screen.appState.preventElectronHide
+      // ) {
+      //   this.appRef.hide()
+      // }
     }
 
     handleAppRef = ref => {

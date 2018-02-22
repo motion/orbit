@@ -160,7 +160,7 @@ export default class Oracle {
             this.restart()
           }
         } catch (err) {
-          console.log('error getting process info, restarting', err.message)
+          console.log('error getting process info, restarting')
           this.restart()
         }
       }

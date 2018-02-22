@@ -134,8 +134,8 @@ class Screen {
     }
     this.started = true
     // set initial state synchronously before
+    this._initialStateKeys = Object.keys(initialState || {})
     if (initialState) {
-      this._initialStateKeys = Object.keys(initialState)
       this.setState(initialState)
     }
     this._setupSocket()
@@ -153,7 +153,9 @@ class Screen {
     const outOfBoundsKeys = difference(changed, this._initialStateKeys)
     if (outOfBoundsKeys.length) {
       throw new Error(
-        `Screen.setState: set keys not set in the Screen.start() initial state: ${outOfBoundsKeys}`,
+        `Screen.setState: set keys not set in the Screen.start() initial state:
+        Initial state keys: ${this._initialStateKeys || `[]`}
+        Updated keys: ${outOfBoundsKeys}`,
       )
     }
     if (!this._wsOpen) {
@@ -206,9 +208,10 @@ class Screen {
         }
       } catch (err) {
         console.log(
-          `ScreenStore error receiving message: ${
-            err.message
-          } from data ${data}`,
+          `ScreenStore error receiving or reacting to message:
+          ${err.message}\n
+          from initial message:
+          ${data}`,
         )
       }
     }

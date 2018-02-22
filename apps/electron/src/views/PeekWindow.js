@@ -30,10 +30,6 @@ type PeekTarget = {
   height: number,
 }
 
-function toTarget([top, left, width, height]) {
-  return { top, left, width, height }
-}
-
 @view.provide({
   store: class PeekStore {
     @watch
@@ -51,7 +47,7 @@ function toTarget([top, left, width, height]) {
         if (ly < minY) minY = ly
         if (ly + lh > maxY) maxY = ly + lh
       }
-      return [minX, minY, maxX - minX, maxY - minY]
+      return { left: minX, top: minY, width: maxX - minX, height: maxY - minY }
     }
   },
 })
@@ -121,46 +117,29 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
   }
 
   positionPeekBasedOnWindow = () => {
+    const appTarget = ({ offset, bounds }) => {
+      if (!offset || !bounds) return null
+      const [left, top] = offset
+      const [width, height] = bounds
+      return { top, left, width, height }
+    }
     this.react(
-      () => Screen.desktopState.appState,
-      ({ offset, bounds }) => {
-        if (!offset || !bounds) return
-        const [left, top] = offset
-        const [width, height] = bounds
+      () => [
+        appTarget(Screen.desktopState.appState || {}),
+        this.props.store.linesBoundingBox,
+      ],
+      ([appTarget, linesTarget]) => {
+        console.log('we got em', appTarget, linesTarget)
+        const box = linesTarget || appTarget
+        if (!box) return
         const [peek, ...rest] = this.state.windows
         const newPeek = {
           ...peek,
-          ...this.peekPosition({ top, left, width, height }),
+          ...this.peekPosition(box),
         }
         if (!isEqual(newPeek, peek)) {
           this.setState({ windows: [newPeek, ...rest] })
         }
-      },
-    )
-  }
-
-  positionPeekBasedOnLines = () => {
-    this.react(
-      () => this.props.store.linesBoundingBox,
-      function watchPeekPosition(bbx) {
-        if (!bbx) return
-        console.log('bbx', bbx)
-        clearTimeout(this.animatePeekTimeout)
-        const windows = [...this.state.windows]
-        const peek = windows[0]
-        const pp = this.peekPosition(toTarget(bbx))
-        peek.position = pp.position
-        peek.arrowTowards = pp.arrowTowards
-        this.isAnimatingPeek = true
-        this.animatePeekTimeout = setTimeout(
-          () => (this.isAnimatingPeek = false),
-          PEEK_ANIMATE_MS,
-        )
-        this.setState({
-          windows,
-          lastTarget: this.state.target,
-          target: bbx,
-        })
       },
     )
   }

@@ -21,6 +21,7 @@ const PREVENT_CLEARING = {
   electron: true,
   Chromium: true,
   iterm2: true,
+  VSCode: true,
 }
 // prevent apps from triggering appState updates
 const PREVENT_APP_STATE = {

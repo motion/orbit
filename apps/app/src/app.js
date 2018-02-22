@@ -3,7 +3,7 @@ import * as React from 'react'
 import ReactDOM from 'react-dom'
 import { ThemeProvide } from '@mcro/ui'
 import Themes from './themes'
-import Root from './views/root'
+import Root from './root'
 import Sync from './sync'
 import { Models } from '@mcro/models'
 import * as Constants from '~/constants'
@@ -11,33 +11,6 @@ import AppStore from './stores/appStore'
 import adapter from 'pouchdb-adapter-idb'
 import Services from './services'
 import CurrentUser_ from './stores/currentUserStore'
-
-let app = window.App
-
-export async function start(recreate?: boolean) {
-  if (window.appDisposing) {
-    return
-  }
-  window.appDisposing = true
-  if (app) {
-    await app.dispose()
-  }
-  if (recreate || !app) {
-    app = new App()
-    window.App = app
-    await app.start({ quiet: recreate })
-  }
-  window.appDisposing = false
-}
-
-if (module && module.hot) {
-  module.hot.accept('./stores/appStore', async () => {
-    await start(true)
-  })
-  module.hot.accept('.', async () => {
-    await start(true)
-  })
-}
 
 // ugly but we want to export these all here
 // this prevents hmr from going nuts when we edit models
@@ -125,8 +98,32 @@ class App {
   }
 }
 
-if (!window.App) {
-  start()
+let app = window.App
+export async function start(recreate?: boolean) {
+  if (window.App || window.appDisposing) return
+  window.appDisposing = true
+  if (app) {
+    await app.dispose()
+  }
+  if (recreate || !app) {
+    app = new App()
+    window.App = app
+    await app.start({ quiet: recreate })
+  }
+  window.appDisposing = false
 }
 
+// start!
+start()
+
 export default app
+
+// HMR
+if (module && module.hot) {
+  module.hot.accept('./stores/appStore', async () => {
+    await start(true)
+  })
+  module.hot.accept('.', async () => {
+    await start(true)
+  })
+}

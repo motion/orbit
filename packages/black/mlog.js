@@ -5,17 +5,14 @@ let runners = (global.__mlogRunners = global.__mlogRunners || [])
 
 function deepMobxToJS(_thing) {
   let thing = Mobx.toJS(_thing)
+  if (!thing) return thing
   if (Array.isArray(thing)) {
     return thing.map(deepMobxToJS)
   }
-  if (thing && typeof thing === 'object') {
-    return Object.keys(thing).reduce(
-      (acc, cur) =>
-        Object.assign(acc, {
-          [cur]: deepMobxToJS(thing[cur]),
-        }),
-      {},
-    )
+  if (thing instanceof Object) {
+    for (const key of Object.keys(thing)) {
+      thing[key] = deepMobxToJS(thing[key])
+    }
   }
   return thing
 }

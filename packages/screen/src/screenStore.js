@@ -72,7 +72,7 @@ class Screen {
     preventElectronHide: null,
     contextMessage: null,
     closePeek: null,
-    disablePeek: true,
+    disablePeek: null,
   }
   // state of desktop
   desktopState: DesktopState = {
@@ -180,6 +180,7 @@ class Screen {
         changed.push(key)
       }
     }
+    this[`${source}State`] = this[`${source}State`] // trigger root level change?
     return changed
   }
 

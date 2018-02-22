@@ -393,6 +393,9 @@ export default class Oracle {
       socket.on('close', () => {
         this.removeSocket()
       })
+      socket.onerror = err => {
+        console.log('socket.onerror', err)
+      }
       socket.on('error', err => {
         if (err.code !== 'ECONNRESET') {
           throw err

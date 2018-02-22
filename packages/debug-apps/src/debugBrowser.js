@@ -160,6 +160,9 @@ export default class DebugApps {
             port,
             url,
           )
+          page.on('load', () => {
+            console.log('got a page load event for page at', index)
+          })
           // in iframe so simulate
           await page.mouse.click(110, 10) // click console
           await page.mouse.click(110, 70) // click into console

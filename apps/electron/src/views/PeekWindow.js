@@ -80,27 +80,6 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
     this.mounted = true
   }
 
-  getPeekPosition({ left, top, width, height }: PeekTarget) {
-    const [peekW] = INITIAL_SIZE
-    // const [screenW, screenH] = Helpers.getScreenSize()
-    // start: peek to left
-    let arrowTowards = 'right'
-    let x = left - peekW
-    let y = top
-    if (x < 0) {
-      // peek to right
-      x = left + width
-      arrowTowards = 'left'
-    }
-    x = Math.round(x)
-    y = Math.round(y)
-    return {
-      position: [x, y],
-      size: [peekW, height],
-      arrowTowards,
-    }
-  }
-
   componentWillMount() {
     // this.positionPeekBasedOnLines()
     this.positionPeekBasedOnWindow()
@@ -112,21 +91,44 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
     })
   }
 
+  peekPosition({ left, top, width, height }: PeekTarget) {
+    let [peekW] = INITIAL_SIZE
+    const [screenW /*, screenH*/] = Helpers.getScreenSize()
+    const leftSpace = left
+    const rightSpace = screenW - (left + width)
+    const peekOnLeft = leftSpace > rightSpace
+    let x
+    let y = top
+    if (peekOnLeft) {
+      x = left - peekW
+      if (peekW > leftSpace) {
+        peekW = leftSpace
+        x = 0
+      }
+    } else {
+      x = left + width
+      if (peekW > rightSpace) {
+        peekW = rightSpace
+      }
+    }
+    return {
+      position: [Math.round(x), Math.round(y)],
+      size: [peekW, height],
+      arrowTowards: peekOnLeft ? 'right' : 'left',
+    }
+  }
+
   positionPeekBasedOnWindow = () => {
     this.react(
       () => Screen.desktopState.appState,
       ({ name, offset, bounds }) => {
         if (!offset || !bounds) return
         const [left, top] = offset
-        console.log('appState', name, top, left)
         const [width, height] = bounds
-        const windows = [...this.state.windows]
-        const peek = windows[0]
-        const pp = this.getPeekPosition({ top, left, width, height })
-        peek.position = pp.position
-        peek.size = pp.size
-        peek.arrowTowards = pp.arrowTowards
-        this.setState({ windows })
+        console.log('appState', name, top, left)
+        const [peek, ...rest] = this.state.windows
+        Object.assign(peek, this.peekPosition({ top, left, width, height }))
+        this.setState({ windows: [peek, ...rest] })
       },
     )
   }
@@ -140,7 +142,7 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
         clearTimeout(this.animatePeekTimeout)
         const windows = [...this.state.windows]
         const peek = windows[0]
-        const pp = this.getPeekPosition(toTarget(bbx))
+        const pp = this.peekPosition(toTarget(bbx))
         peek.position = pp.position
         peek.arrowTowards = pp.arrowTowards
         this.isAnimatingPeek = true

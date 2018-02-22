@@ -15,12 +15,19 @@ const KEY = keyParam && keyParam[1]
 const SHADOW_PAD = 15
 const BORDER_RADIUS = 6
 const HIDE_DELAY = 100
-const background = '#fff'
+const background = 'rgba(255,255,255,0.2)'
 const peekShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.25]]]
 
 @view({
   store: class PeekStore {
-    peek = null
+    get peek() {
+      return (
+        Screen.electronState.peekState &&
+        Screen.electronState.peekState.windows &&
+        Screen.electronState.peekState.windows[0]
+      )
+    }
+
     isTorn = false
     isHovered = false
     isPinned = false
@@ -126,7 +133,7 @@ export default class PeekPage {
     const arrowTowards = (peek && peek.arrowTowards) || 'right'
     const arrowSize = SHADOW_PAD * 2
     let arrowPosition
-
+    console.log('arrowTowards', arrowTowards)
     switch (arrowTowards) {
       case 'right':
         arrowPosition = {
@@ -200,6 +207,7 @@ export default class PeekPage {
                 <title>
                   <UI.Title size={1} fontWeight={300}>
                     {(store.thing && store.thing.title) || ''}
+                    {arrowTowards}
                   </UI.Title>
                 </title>
                 <UI.Row
@@ -359,7 +367,7 @@ export default class PeekPage {
     webview: {
       height: '94%',
       width: '100%',
-      background: '#fff',
+      // background: '#fff',
     },
     visible: {
       opacity: 1,

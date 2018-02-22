@@ -3,7 +3,7 @@ import { store } from '@mcro/black/store'
 import SwiftBridge from './swiftBridge'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 import WebSocket from './websocket'
-import waitForPort from 'wait-port'
+import waitPort from 'wait-port'
 import global from 'global'
 import { isEqual, difference } from 'lodash'
 import * as desktopActions from './desktopActions'
@@ -186,7 +186,7 @@ class Screen {
 
   _setupSocket = async () => {
     if (typeof window === 'undefined') {
-      await waitForPort({ host: 'localhost', port: 40510 })
+      await waitPort({ host: 'localhost', port: 40510 })
     }
     this.ws = new ReconnectingWebSocket('ws://localhost:40510', undefined, {
       constructor: WebSocket,
@@ -226,9 +226,9 @@ class Screen {
       this._wsOpen = false
     }
     this.ws.onerror = err => {
-      if (this.ws.readyState == 1) {
-        console.log('swift ws error', err)
-      }
+      // if (this.ws.readyState == 1) {
+      console.log('swift ws error', err)
+      // }
     }
   }
 }

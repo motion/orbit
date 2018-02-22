@@ -44,5 +44,6 @@ module.exports = {
     Promise: true,
     Set: true,
     debug: true,
+    Screen: false, // we want this to be our @mcro/Screen
   },
 }

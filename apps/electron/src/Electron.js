@@ -32,6 +32,7 @@ import * as Constants from '~/constants'
       const { position, size } = Helpers.getAppSize()
       const screenSize = screen.getPrimaryDisplay().workAreaSize
       const oraPosition = [screenSize.width - Constants.ORA_WIDTH, 20]
+
       // setup screen
       Screen.start('electron', {
         shouldHide: null,
@@ -127,8 +128,8 @@ import * as Constants from '~/constants'
       await Helpers.sleep(50)
       Screen.setState({ shouldShow: Date.now() })
       await Helpers.sleep(250) // animate
-      this.appRef.focus()
-      this.oraRef.focus()
+      this.appRef && this.appRef.focus()
+      this.oraRef && this.oraRef.focus()
     }
 
     async hideOra() {

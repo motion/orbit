@@ -8,6 +8,10 @@ export default function hydratable() {
     decorator: (Klass, { filter = x => x !== 'props' } = {}) => {
       Klass.prototype.hydrate = function hydrate(state) {
         for (const key of Object.keys(state).filter(filter)) {
+          // changed to computed, ignore
+          if (Mobx.isComputed(this, key)) {
+            continue
+          }
           this[key] = state[key]
         }
       }

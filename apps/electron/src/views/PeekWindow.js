@@ -57,7 +57,7 @@ function toTarget([top, left, width, height]) {
 })
 @view.electron
 export default class PeekWindow extends React.Component<{}, PeekWindowState> {
-  lastAppPositionMove = Date.now()
+  peekRefs = {}
   peekKey = 0
   mounted = false
   isAnimatingPeek = true
@@ -71,16 +71,12 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
         show: false,
       },
     ],
-    peek: {},
     lastTarget: null,
     wasShowing: false,
   }
 
   componentDidMount() {
     this.mounted = true
-  }
-
-  componentWillMount() {
     // this.positionPeekBasedOnLines()
     this.positionPeekBasedOnWindow()
     this.watch(function watchPeekClose() {
@@ -89,6 +85,12 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
       const windows = this.state.windows.filter(p => `${p.key}` !== `${key}`)
       this.setState({ windows })
     })
+  }
+
+  componentWillUpdate(nextProps, nextState) {
+    if (!isEqual(nextState, this.state)) {
+      Screen.setState({ peekState: nextState })
+    }
   }
 
   peekPosition({ left, top, width, height }: PeekTarget) {
@@ -121,14 +123,18 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
   positionPeekBasedOnWindow = () => {
     this.react(
       () => Screen.desktopState.appState,
-      ({ name, offset, bounds }) => {
+      ({ offset, bounds }) => {
         if (!offset || !bounds) return
         const [left, top] = offset
         const [width, height] = bounds
-        console.log('appState', name, top, left)
         const [peek, ...rest] = this.state.windows
-        Object.assign(peek, this.peekPosition({ top, left, width, height }))
-        this.setState({ windows: [peek, ...rest] })
+        const newPeek = {
+          ...peek,
+          ...this.peekPosition({ top, left, width, height }),
+        }
+        if (!isEqual(newPeek, peek)) {
+          this.setState({ windows: [newPeek, ...rest] })
+        }
       },
     )
   }
@@ -159,28 +165,15 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
     )
   }
 
-  componentWillReceiveProps({ appPosition }) {
-    if (!isEqual(appPosition, this.props.appPosition)) {
-      this.lastAppPositionMove = Date.now()
-    }
-  }
-
-  componentWillUpdate(nextProps, nextState) {
-    if (!isEqual(nextState, this.state)) {
-      // update electronApp.peekState
-      Screen.setState({ peekState: this.state })
-    }
-  }
-
   peekSend = () => console.log('peekSend, not started yet')
 
   handlePeekRef = memoize(peek => ref => {
-    if (ref) {
-      this.peekRef = ref.window
-      // make sure its in front of the ora window
-      if (!peek.isTorn) {
-        this.peekRef.focus()
-      }
+    if (!ref) return
+    if (this.peekRefs[peek.key]) return
+    this.peekRefs[peek.key] = ref.window
+    // make sure its in front of the ora window
+    if (!peek.isTorn) {
+      this.peekRefs[peek.key].focus()
     }
   })
 

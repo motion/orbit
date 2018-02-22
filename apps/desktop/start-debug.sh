@@ -8,6 +8,6 @@ npx nodemon \
 
 nodemonPID=$!
 wait
-kill $nodemonPID > /dev/null
-kill -9 $nodemonPID > /dev/null
+kill $nodemonPID 2> /dev/null
+kill -9 $nodemonPID 2> /dev/null
 echo "bye debugbrowser"

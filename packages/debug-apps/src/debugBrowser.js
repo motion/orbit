@@ -141,7 +141,7 @@ export default class DebugApps {
             }),
             page.goto(debugUrl),
           ])
-          await sleep(500)
+          await sleep(100)
           if (!this.pages[index]) continue
           await page.focus('body')
           await page.evaluate(

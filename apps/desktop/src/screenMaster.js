@@ -23,7 +23,7 @@ const PREVENT_CLEARING = {
   iterm2: true,
 }
 // prevent apps from triggering appState updates
-const PREVENT_WATCHING = {
+const PREVENT_APP_STATE = {
   electron: true,
   Chromium: true,
 }
@@ -44,13 +44,12 @@ export default class ScreenState {
   oracle = new Oracle()
   activeSockets = []
   curState = {}
-  curAppName = null
   watchSettings = {}
 
   state = Object.freeze({
     // start paused
     paused: true,
-    appState: null,
+    appState: {},
     ocrWords: null,
     linePositions: null,
     lastOCR: Date.now(),
@@ -107,10 +106,7 @@ export default class ScreenState {
         this.resetHighlights()
         return
       }
-      if (this.state.paused) {
-        return
-      }
-      let nextState = { ...this.curState }
+      let nextState = { ...this.state.appState }
       let id = lastId
       switch (event) {
         case 'FrontmostWindowChangedEvent':
@@ -129,29 +125,24 @@ export default class ScreenState {
         case 'WindowPosChangedEvent':
           nextState.offset = value
       }
+      if (PREVENT_APP_STATE[nextState.name]) {
+        this.oracle.pause()
+        return
+      }
+      if (lastId !== id) {
+        this.resetHighlights()
+      }
       if (!nextState.name) {
         log('no name recevied', value)
         return
       }
-      // update before prevent_watching
-      this.curAppName = nextState.name
-      if (PREVENT_WATCHING[nextState.name]) {
-        this.oracle.pause()
-        return
+      if (!this.state.paused) {
+        this.oracle.resume()
       }
-
-      log('onWindowChange', event, nextState.name)
-      this.oracle.resume()
-
-      // clear old stuff
-      if (lastId !== id) {
-        this.resetHighlights()
-      }
-
       // update
-      this.curState = nextState
+      log('onWindowChange', event, nextState.name)
       this.setState({
-        appState: JSON.parse(JSON.stringify(this.curState)),
+        appState: JSON.parse(JSON.stringify(nextState)),
       })
     })
     this.oracle.onBoxChanged(count => {
@@ -202,7 +193,7 @@ export default class ScreenState {
   }
 
   resetHighlights = () => {
-    if (PREVENT_CLEARING[this.curAppName]) {
+    if (PREVENT_CLEARING[this.state.appState.name]) {
       log('resetHighlights prevented clear')
       return
     }

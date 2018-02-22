@@ -97,8 +97,6 @@ class Screen {
     return this[`${this._source}State`]
   }
 
-  desktopActions = bindAll(this, desktopActions)
-
   // direct connect to the swift process
   swiftBridge: SwiftBridge = new SwiftBridge({
     onStateChange: state => {
@@ -118,6 +116,9 @@ class Screen {
   start(source, initialState) {
     if (this.started) {
       throw new Error(`Already started screen`)
+    }
+    this.actions = {
+      desktop: bindAll(this, desktopActions),
     }
     if (!source) {
       throw new Error(`No source given for starting screen store`)

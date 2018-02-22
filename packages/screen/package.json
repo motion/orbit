@@ -2,7 +2,7 @@
   "name": "@mcro/screen",
   "private": true,
   "version": "4.0.0",
-  "main": "es6/screenStore",
+  "main": "es6/Screen",
   "scripts": {
     "build": "build prod,dev,es6",
     "watch": "npm run build -- --watch"

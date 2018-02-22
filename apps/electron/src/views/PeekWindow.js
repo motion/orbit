@@ -8,7 +8,7 @@ import * as Helpers from '~/helpers'
 import Screen from '@mcro/screen'
 
 const idFn = _ => _
-const PEEK_ANIMATE_TIME = 350
+const PEEK_ANIMATE_MS = 350
 
 type PeekStateItem = {
   key: number,
@@ -31,31 +31,6 @@ type PeekTarget = {
 
 function toTarget([top, left, width, height]) {
   return { top, left, width, height }
-}
-
-function getPeekPosition(peekTarget: PeekTarget) {
-  const [peekW, peekH] = Constants.PEEK_DIMENSIONS
-  const [screenW, screenH] = Helpers.getScreenSize()
-  const halfWidth = screenW / 2
-  // start: target is to right
-  let x = peekTarget.left - peekW
-  let y = peekTarget.top - 20
-  let arrowTowards = 'right'
-  if (x < halfWidth) {
-    // target is to left
-    x = peekTarget.left + peekTarget.width
-    arrowTowards = 'left'
-  }
-  if (y + peekH > screenH) {
-    // target is below
-    arrowTowards = 'top'
-  }
-  x = Math.round(x)
-  y = Math.round(y)
-  return {
-    position: [x, y],
-    arrowTowards,
-  }
 }
 
 @view.provide({
@@ -104,36 +79,83 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
     this.mounted = true
   }
 
+  getPeekPosition(peekTarget: PeekTarget) {
+    const [peekW, peekH] = Constants.PEEK_DIMENSIONS
+    const [screenW, screenH] = Helpers.getScreenSize()
+    const halfWidth = screenW / 2
+    // start: target is to right
+    let x = peekTarget.left - peekW
+    let y = peekTarget.top - 20
+    let arrowTowards = 'right'
+    if (x < halfWidth) {
+      // target is to left
+      x = peekTarget.left + peekTarget.width
+      arrowTowards = 'left'
+    }
+    if (y + peekH > screenH) {
+      // target is below
+      arrowTowards = 'top'
+    }
+    x = Math.round(x)
+    y = Math.round(y)
+    return {
+      position: [x, y],
+      arrowTowards,
+    }
+  }
+
   componentWillMount() {
-    this.react(
-      () => this.props.store.linesBoundingBox,
-      function watchPeekPosition(linesBoundingBox) {
-        if (!linesBoundingBox) return
-        const windows = [...this.state.windows]
-        const peek = windows[0]
-        const { position, arrowTowards } = getPeekPosition(
-          toTarget(linesBoundingBox),
-        )
-        peek.position = position
-        peek.arrowTowards = arrowTowards
-        clearTimeout(this.animatePeekTimeout)
-        this.isAnimatingPeek = true
-        this.animatePeekTimeout = this.setTimeout(() => {
-          this.isAnimatingPeek = false
-        }, PEEK_ANIMATE_TIME)
-        this.setState({
-          windows,
-          lastTarget: this.state.target,
-          target: linesBoundingBox,
-        })
-      },
-    )
+    // this.positionPeekBasedOnLines()
+    this.positionPeekBasedOnWindow()
     this.watch(function watchPeekClose() {
       const key = Screen.appState.peekClose
       if (!key) return
       const windows = this.state.windows.filter(p => `${p.key}` !== `${key}`)
       this.setState({ windows })
     })
+  }
+
+  positionPeekBasedOnWindow = () => {
+    this.react(
+      () => Screen.desktopState.appState,
+      ({ offset, bounds }) => {
+        const [top, left] = offset
+        const [width, height] = bounds
+        const windows = [...this.state.windows]
+        const peek = windows[0]
+        const pp = this.getPeekPosition({ top, left, width, height })
+        console.log('appState', top, left, width, height, pp)
+        peek.position = pp.position
+        peek.arrowTowards = pp.arrowTowards
+        this.setState({ windows })
+      },
+    )
+  }
+
+  positionPeekBasedOnLines = () => {
+    this.react(
+      () => this.props.store.linesBoundingBox,
+      function watchPeekPosition(bbx) {
+        if (!bbx) return
+        console.log('bbx', bbx)
+        clearTimeout(this.animatePeekTimeout)
+        const windows = [...this.state.windows]
+        const peek = windows[0]
+        const pp = this.getPeekPosition(toTarget(bbx))
+        peek.position = pp.position
+        peek.arrowTowards = pp.arrowTowards
+        this.isAnimatingPeek = true
+        this.animatePeekTimeout = setTimeout(
+          () => (this.isAnimatingPeek = false),
+          PEEK_ANIMATE_MS,
+        )
+        this.setState({
+          windows,
+          lastTarget: this.state.target,
+          target: bbx,
+        })
+      },
+    )
   }
 
   componentWillReceiveProps({ appPosition }) {

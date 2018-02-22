@@ -180,7 +180,6 @@ class Screen {
         changed.push(key)
       }
     }
-    this[`${source}State`] = this[`${source}State`] // trigger root level change?
     return changed
   }
 

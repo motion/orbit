@@ -1,5 +1,7 @@
 const global = require('global')
 const Mobx = require('mobx')
+const { deepObserve } = require('mobx-deep-observer')
+// toJSONPatch
 
 let runners = (global.__mlogRunners = global.__mlogRunners || [])
 
@@ -17,9 +19,17 @@ function deepMobxToJS(_thing) {
   return thing
 }
 
+let cur
+
 global.mlog = (fn, ...rest) => {
   // regular log
   if (typeof fn !== 'function') {
+    cur = fn
+    deepObserve(fn, (change, type, path) => {
+      if (cur === fn) {
+        console.log(change, type, path)
+      }
+    })
     return console.log(...[fn, ...rest].map(deepMobxToJS))
   }
   const isClass = fn.toString().indexOf('class') === 0
@@ -35,7 +45,7 @@ global.mlog = (fn, ...rest) => {
   }
   runners.push(
     Mobx.autorun(() => {
-      console.log(fn())
+      console.log(deepMobxToJS(fn()))
     }),
   )
 }

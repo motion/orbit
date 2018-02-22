@@ -39,19 +39,12 @@ function nodeStringify(thing) {
   return `${thing}`
 }
 
-const colorWheel = ['cyan', 'magenta', 'blue', 'yellow', 'green', 'red']
-const NUM_COLORS = colorWheel.length
 const isBrowser = typeof window !== 'undefined'
 
 function colorfulLog(id, namespace, messages) {
-  const colorName = colorWheel[id % NUM_COLORS]
   if (!isBrowser) {
     console.log(`${namespace} -- ${messages.map(nodeStringify).join(' ')}`)
   } else {
-    console.log(
-      `%c${namespace}%c -- ${messages.map(nodeStringify).join(' ')}`,
-      `color:${colorName};`,
-      'color:black;',
-    )
+    console.log(`${namespace}:`, ...messages)
   }
 }

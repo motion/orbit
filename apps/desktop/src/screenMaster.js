@@ -304,23 +304,16 @@ export default class ScreenState {
   }
 
   rescanApp = async () => {
-    if (this.stopped) {
-      log('is stopped')
-      return
-    }
-    const { name, offset, bounds } = this.state.appState
-    if (PREVENT_SCANNING[name] || PREVENT_APP_STATE[name]) {
-      return
-    }
-    if (!offset || !bounds) {
-      log('todo: initial offset/bounds')
-      return
-    }
     clearTimeout(this.clearOCRTimeout)
+    if (this.stopped) return
+    const { name, offset, bounds } = this.state.appState
+    if (PREVENT_SCANNING[name] || PREVENT_APP_STATE[name]) return
+    if (!offset || !bounds) return
     log('rescanApp', name)
     this.resetHighlights()
     // we are watching the whole app for words
-    this.watchBounds('App', {
+    await this.oracle.pause()
+    await this.watchBounds('App', {
       fps: 10,
       sampleSpacing: 100,
       sensitivity: 1,
@@ -341,8 +334,8 @@ export default class ScreenState {
     })
     this.hasResolvedOCR = false
     // not paused, clear and resume
-    this.oracle.clear()
-    this.oracle.resume()
+    await this.oracle.clear()
+    await this.oracle.resume()
     this.clearOCRTimeout = setTimeout(async () => {
       if (!this.hasResolvedOCR) {
         log('seems like ocr has stopped working, restarting...')
@@ -354,6 +347,7 @@ export default class ScreenState {
   watchBounds(name: String, settings: Object) {
     this.isWatching = name
     this.watchSettings = { name, settings }
+    this.oracle.pause()
     this.oracle.watchBounds(settings)
   }
 

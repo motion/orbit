@@ -3,9 +3,9 @@ import execa from 'execa'
 import macosVersion from 'macos-version'
 import electronUtil from 'electron-util/node'
 import { Server } from 'ws'
-import promisify from 'sb-promisify'
-import pusage_ from 'pidusage'
 import killPort from 'kill-port'
+import monitorScreenProcess from './monitorProcess'
+const sleep = ms => new Promise(res => setTimeout(res, ms))
 
 // swift itself
 // and the swiftBridge
@@ -28,9 +28,6 @@ const appPath = bundle =>
 const RELEASE_PATH = appPath('Release')
 const DEBUG_PATH = appPath('Debug')
 
-const pusage = promisify(pusage_.stat)
-const sleep = ms => new Promise(res => setTimeout(res, ms))
-
 export default class Oracle {
   settings = null
   changedIds = null
@@ -48,9 +45,9 @@ export default class Oracle {
     isPaused: false,
   }
 
-  setState = nextState => {
+  setState = async nextState => {
     this.state = { ...this.state, ...nextState }
-    this.socketSend('state', this.state)
+    await this.socketSend('state', this.state)
   }
 
   constructor({ debugBuild = false } = {}) {
@@ -71,71 +68,31 @@ export default class Oracle {
       this.wss = new Server({ port: ORACLE_ROOT })
       this.setupSocket()
     }
-    this.setState({ isPaused: false })
-    await this.runScreenProcess()
-    await this.connectToScreenProcess()
-    this.monitorScreenProcess()
+    await this.setState({ isPaused: false })
+    await this._runScreenProcess()
+    await this._connectToScreenProcess()
+    monitorScreenProcess(this.process, this.restart)
   }
 
-  async monitorScreenProcess() {
-    // monitor cpu usage
-    const maxSecondsSpinning = 10
-    let secondsSpinning = 0
-    this.resourceCheckInt = setInterval(async () => {
-      if (!this.process) {
-        return
-      }
-      const children = [this.process.pid]
-      for (const pid of children) {
-        try {
-          const usage = await pusage(pid)
-          const memoryMB = Math.round(usage.memory / 1000 / 1000) // start at byte
-          if (memoryMB > 750) {
-            console.log('Memory usage of swift above 750MB, restarting')
-            this.restart()
-          }
-          if (usage.cpu > 90) {
-            if (secondsSpinning > 5) {
-              console.log('High cpu usage for', secondsSpinning, 'seconds')
-            }
-            secondsSpinning += 1
-          } else {
-            secondsSpinning = 0
-          }
-          if (secondsSpinning > maxSecondsSpinning) {
-            console.log('CPU usage above 90% for 10 seconds, restarting')
-            this.restart()
-          }
-        } catch (err) {
-          console.log('error getting process info, restarting')
-          this.restart()
-        }
-      }
-    }, 1000)
-  }
-
-  async restart() {
-    clearInterval(this.resourceCheckInt)
+  restart = async () => {
     await this.stop()
     await this.start()
   }
 
-  connectToScreenProcess() {
+  _connectToScreenProcess() {
     return new Promise(res => {
       // wait for connection to socket before sending start
       let startWait = setInterval(() => {
         if (this.listeners.length) {
           clearInterval(startWait)
-          setTimeout(() => {
-            this.socketSend('start')
-          }, 10)
+          setTimeout(() => this.socketSend('start'), 10)
           res()
         }
       }, 10)
     })
   }
 
-  async runScreenProcess() {
+  async _runScreenProcess() {
     if (this.process !== undefined) {
       throw new Error('Call `.stop()` first')
     }
@@ -174,27 +131,17 @@ export default class Oracle {
     })
   }
 
-  watchBounds = ({
+  watchBounds = async ({
     fps = 25,
     showCursor = true,
     displayId = 'main',
-    videoCodec = undefined,
     // how far between pixels to check
     sampleSpacing = 10,
-    // how many pixels to detect before triggering change
+    // how many pixels have to detect diff before triggering onClear
     sensitivity = 2,
     boxes = [],
     debug = false,
   } = {}) => {
-    // default box options
-    const finalBoxes = boxes.map(box => ({
-      initialScreenshot: false,
-      findContent: false,
-      ocr: false,
-      screenDir: null,
-      ...box,
-    }))
-
     const settings = {
       debug,
       fps,
@@ -202,47 +149,38 @@ export default class Oracle {
       displayId,
       sampleSpacing,
       sensitivity,
-      boxes: finalBoxes,
-    }
-
-    if (videoCodec) {
-      const codecMap = new Map([
-        ['h264', 'avc1'],
-        ['proRes422', 'apcn'],
-        ['proRes4444', 'ap4h'],
-      ])
-
-      if (!codecMap.has(videoCodec)) {
-        throw new Error(`Unsupported video codec specified: ${videoCodec}`)
-      }
-
-      settings.videoCodec = codecMap.get(videoCodec)
-      console.log('settings.videoCodec', settings.videoCodec)
+      boxes: boxes.map(box => ({
+        initialScreenshot: false,
+        findContent: false,
+        ocr: false,
+        screenDir: null,
+        ...box,
+      })),
     }
     this.settings = settings
-    this.socketSend('watch', settings)
+    await this.socketSend('watch', settings)
     return this
   }
 
-  pause = () => {
-    this.setState({ isPaused: true })
-    this.socketSend('pause')
+  pause = async () => {
+    await this.setState({ isPaused: true })
+    await this.socketSend('pause')
     return this
   }
 
-  resume = () => {
-    this.setState({ isPaused: false })
-    this.socketSend('start')
+  resume = async () => {
+    await this.setState({ isPaused: false })
+    await this.socketSend('start')
     return this
   }
 
-  clear = () => {
-    this.socketSend('clear')
+  clear = async () => {
+    await this.socketSend('clear')
     return this
   }
 
-  defocus = () => {
-    this.socketSend('defoc')
+  defocus = async () => {
+    await this.socketSend('defoc')
     return this
   }
 
@@ -275,11 +213,7 @@ export default class Oracle {
   }
 
   stop = async () => {
-    clearInterval(this.resourceCheckInt)
-    if (this.process === undefined) {
-      // null if not recording
-      return
-    }
+    if (!this.process) return
     this.process.stdout.removeAllListeners()
     this.process.stderr.removeAllListeners()
     // kill process
@@ -295,10 +229,10 @@ export default class Oracle {
     clearTimeout(atimer)
     clearTimeout(btimer)
     // sleep to avoid issues
-    await sleep(20)
+    await sleep(32)
   }
 
-  socketSend(action, data) {
+  async socketSend(action, data) {
     if (!this.listeners.length) {
       this.awaitingSocket.push({ action, data })
       return
@@ -322,6 +256,8 @@ export default class Oracle {
     } catch (err) {
       console.log('screen error parsing socket message', err.message)
     }
+    // for now just simulate this async thing actually awaiting receive
+    await new Promise(res => setTimeout(res))
   }
 
   removeSocket = id => {

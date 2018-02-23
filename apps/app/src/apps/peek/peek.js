@@ -16,7 +16,7 @@ const SHADOW_PAD = 15
 const BORDER_RADIUS = 6
 const HIDE_DELAY = 100
 const background = 'rgb(255,255,255)'
-const peekShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.25]]]
+const peekShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.05]]]
 
 @view({
   store: class PeekStore {
@@ -320,7 +320,7 @@ export default class PeekPage {
       flexFlow: 'row',
       alignItems: 'center',
       padding: [4, 10],
-      background: ['linear-gradient(#E6E6E6, #D9D9D9)'],
+      background: ['linear-gradient(#fff, #fff)'],
       borderTopRadius: BORDER_RADIUS,
       boxShadow: [
         'inset 0 1px 0 rgba(255,255,255,0.4)',

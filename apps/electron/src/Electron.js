@@ -66,7 +66,6 @@ import * as Constants from '~/constants'
       })
 
       this.watchOptionPress()
-      this.watchMouseEnter()
     }
 
     watchOptionPress = () => {
@@ -111,37 +110,6 @@ import * as Constants from '~/constants'
       })
     }
 
-    focused = false
-
-    watchMouseEnter = () => {
-      this.react(
-        () => Screen.desktopState.mousePosition,
-        ({ x, y }) => {
-          if (!Screen.state.peekState.windows) return
-          const peek = Screen.state.peekState.windows[0]
-          if (!peek) return
-          const { position, size } = peek
-          const withinX = x > position[0] && x < position[0] + size[0]
-          const withinY = y > position[1] && y < position[1] + size[1]
-          this.focused = withinX && withinY
-        },
-      )
-      this.react(
-        () => this.focused,
-        shouldFocus => {
-          if (Screen.appState.hidden) {
-            return
-          }
-          console.log('handling focus', shouldFocus)
-          if (shouldFocus) {
-            this.peekRef && this.peekRef.focus()
-          } else {
-            Screen.swiftBridge.defocus()
-          }
-        },
-      )
-    }
-
     restart() {
       if (process.env.NODE_ENV === 'development') {
         require('touch')(require('path').join(__dirname, '..', 'package.json'))
@@ -179,7 +147,6 @@ import * as Constants from '~/constants'
 
     handleAppRef = ref => ref && (this.appRef = ref.app)
     handleOraRef = ref => (this.oraRef = ref)
-    handlePeekRef = ref => (this.peekRef = ref)
     handleBeforeQuit = () => console.log('before quit')
     handleQuit = () => {
       console.log('handling quit')
@@ -207,10 +174,7 @@ export default class Root extends React.Component {
         <MenuItems />
         <HighlightsWindow />
         {/* <OraWindow onRef={electron.handleOraRef} /> */}
-        <PeekWindow
-          onPeekRef={electron.handlePeekRef}
-          appPosition={Screen.state.oraPosition.slice(0)}
-        />
+        <PeekWindow appPosition={Screen.state.oraPosition.slice(0)} />
         {/* <SettingsWindow /> */}
         <Tray />
       </App>

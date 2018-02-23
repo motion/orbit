@@ -90,6 +90,7 @@ export default class ScreenState {
           Screen.swiftBridge.pause()
         } else {
           Screen.swiftBridge.resume()
+          this.rescanApp()
         }
       },
     )
@@ -153,8 +154,7 @@ export default class ScreenState {
       })
     })
     this.oracle.onBoxChanged(count => {
-      const isApp = this.watchSettings.name === 'App'
-      if (isApp) {
+      if (!Screen.state.ocrWords) {
         log('RESET oracle boxChanged (App)')
         this.resetHighlights()
         this.setState({ clearWord: APP_ID })
@@ -316,7 +316,7 @@ export default class ScreenState {
       return
     }
     clearTimeout(this.clearOCRTimeout)
-    log('> ', name)
+    log('rescanApp', name)
     // we are watching the whole app for words
     this.watchBounds('App', {
       fps: 10,

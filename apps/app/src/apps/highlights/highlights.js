@@ -62,9 +62,7 @@ const log = debug('highlights')
           ...desktopState.mousePosition,
         }),
         function updateHovers({ word, line, x, y }) {
-          if (swiftState.isPaused) {
-            return
-          }
+          if (swiftState.isPaused) return
           const hoveredWord = toTarget(word.get({ x, y, w: 0, h: 0 })[0])
           const hoveredLine = toTarget(
             line.get({ x, y: y - LINE_Y_ADJ, w: 0, h: 0 })[0],
@@ -72,9 +70,6 @@ const log = debug('highlights')
           this.hoveredWord = hoveredWord
           this.hoveredLine = hoveredLine
           Screen.setState({ hoveredWord, hoveredLine })
-          if (hoveredWord) {
-            log('hoveredWord', hoveredWord)
-          }
         },
         true,
       )

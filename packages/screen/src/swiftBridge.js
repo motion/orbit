@@ -28,6 +28,11 @@ export default class SwiftBridge {
     this._send({ action: 'resume' })
   }
 
+  defocus = () => {
+    console.log('sending defocus')
+    this._send({ action: 'defocus' })
+  }
+
   toggle = () => {
     console.log('will toggle, isPaused?', this.state.isPaused)
     if (!this.state.isPaused) {

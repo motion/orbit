@@ -16,8 +16,6 @@ class SocketBridge {
   
   init(queue: AsyncGroup, onMessage: @escaping (String)->Void) {
     self.onMessage = onMessage
-    
-    print("connecting to socket...")
 
     // socket bridge
     let ws = WebSocket("ws://localhost:40512")
@@ -25,10 +23,10 @@ class SocketBridge {
       ws.send(msg)
     }
     ws.event.open = {
-      print("screen.ws.opened")
+//      print("screen.ws.opened")
     }
     ws.event.close = { code, reason, clean in
-      print("screen.ws.close")
+//      print("screen.ws.close")
     }
     ws.event.error = { error in
       print("screen.ws.error \(error)")

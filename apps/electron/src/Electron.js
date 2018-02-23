@@ -28,12 +28,11 @@ import * as Constants from '~/constants'
         this.stores = stores
         this.views = views
       })
-      // initial state
+
+      // setup screen
       const { position, size } = Helpers.getAppSize()
       const screenSize = screen.getPrimaryDisplay().workAreaSize
       const oraPosition = [screenSize.width - Constants.ORA_WIDTH, 20]
-
-      // setup screen
       Screen.start('electron', {
         shouldHide: null,
         shouldShow: null,
@@ -66,12 +65,17 @@ import * as Constants from '~/constants'
         }
       })
 
+      this.watchOptionPress()
+      this.watchMouseEnter()
+    }
+
+    watchOptionPress = () => {
       // watch option hold
       let lastKeyboard = {}
       let justCleared = false
       let optnEnter
       let optnLeave
-      this.react(() => Screen.desktopState.keyboard, function watchKeyboard(
+      this.react(() => Screen.desktopState.keyboard, function reactToKeyboard(
         keyboard,
       ) {
         if (!keyboard) return
@@ -105,6 +109,34 @@ import * as Constants from '~/constants'
         }
         lastKeyboard = keyboard
       })
+    }
+
+    focused = false
+
+    watchMouseEnter = () => {
+      this.react(
+        () => Screen.desktopState.mousePosition,
+        ({ x, y }) => {
+          if (!Screen.state.peekState.windows) return
+          const peek = Screen.state.peekState.windows[0]
+          if (!peek) return
+          const { position, size } = peek
+          const withinX = x > position[0] && x < position[0] + size[0]
+          const withinY = y > position[1] && y < position[1] + size[1]
+          this.focused = withinX && withinY
+        },
+      )
+      this.react(
+        () => this.focused,
+        shouldFocus => {
+          console.log('handling focus', shouldFocus)
+          if (shouldFocus) {
+            this.peekRef && this.peekRef.focus()
+          } else {
+            Screen.swiftBridge.defocus()
+          }
+        },
+      )
     }
 
     restart() {
@@ -142,20 +174,10 @@ import * as Constants from '~/constants'
       // }
     }
 
-    handleAppRef = ref => {
-      if (ref) {
-        this.appRef = ref.app
-      }
-    }
-
-    handleOraRef = ref => {
-      this.oraRef = ref
-    }
-
-    handleBeforeQuit = () => {
-      console.log('before quit')
-    }
-
+    handleAppRef = ref => ref && (this.appRef = ref.app)
+    handleOraRef = ref => (this.oraRef = ref)
+    handlePeekRef = ref => (this.peekRef = ref)
+    handleBeforeQuit = () => console.log('before quit')
     handleQuit = () => {
       console.log('handling quit')
       process.exit(0)
@@ -182,7 +204,10 @@ export default class Root extends React.Component {
         <MenuItems />
         <HighlightsWindow />
         {/* <OraWindow onRef={electron.handleOraRef} /> */}
-        <PeekWindow appPosition={Screen.state.oraPosition.slice(0)} />
+        <PeekWindow
+          onPeekRef={electron.handlePeekRef}
+          appPosition={Screen.state.oraPosition.slice(0)}
+        />
         {/* <SettingsWindow /> */}
         <Tray />
       </App>

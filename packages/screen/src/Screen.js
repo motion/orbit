@@ -208,9 +208,8 @@ class Screen {
         }
       } catch (err) {
         console.log(
-          `ScreenStore error receiving or reacting to message:
-          ${err.message}\n
-          from initial message:
+          `${err.message}:\n${err.stack}\n
+        ScreenStore error receiving or reacting to message. Initial message:
           ${data}`,
         )
       }
@@ -229,9 +228,9 @@ class Screen {
       this._wsOpen = false
     }
     this.ws.onerror = err => {
-      // if (this.ws.readyState == 1) {
-      console.log('swift ws error', err)
-      // }
+      if (this.ws.readyState == 1) {
+        console.log('swift ws error', err)
+      }
     }
   }
 }

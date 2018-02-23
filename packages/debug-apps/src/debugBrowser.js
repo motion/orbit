@@ -1,8 +1,8 @@
 import r2 from '@mcro/r2'
 import puppeteer from 'puppeteer'
-import { uniq, flatten, isEqual } from 'lodash'
+import { debounce, uniq, flatten, isEqual } from 'lodash'
 const sleep = ms => new Promise(res => setTimeout(res, ms))
-import getExtensions from '@mcro/chrome-extensions'
+// import getExtensions from '@mcro/chrome-extensions'
 
 // quiet exit handling
 let exiting = false
@@ -143,26 +143,28 @@ export default class DebugApps {
           ])
           await sleep(100)
           if (!this.pages[index]) continue
+          const injectTitle = debounce(() => {
+            page.evaluate(
+              (port, url) => {
+                setTimeout(() => {
+                  const PORT_NAMES = {
+                    9000: 'Desktop',
+                    9001: 'Electron',
+                  }
+                  const title = document.createElement('title')
+                  title.innerHTML =
+                    PORT_NAMES[port] || url.replace('http://localhost:3001', '')
+                  document.head.appendChild(title)
+                }, 500)
+              },
+              port,
+              url,
+            )
+          }, 100)
+          page.on('load', injectTitle)
           await page.focus('body')
-          page.evaluate(
-            (port, url) => {
-              setTimeout(() => {
-                const PORT_NAMES = {
-                  9000: 'Desktop',
-                  9001: 'Electron',
-                }
-                const title = document.createElement('title')
-                title.innerHTML =
-                  PORT_NAMES[port] || url.replace('http://localhost:3001', '')
-                document.head.appendChild(title)
-              }, 500)
-            },
-            port,
-            url,
-          )
-          page.on('load', () => {
-            console.log('got a page load event for page at', index)
-          })
+          // delay to account for delayed title change on connect to debugger
+          setTimeout(injectTitle, 500)
           // in iframe so simulate
           await page.mouse.click(110, 10) // click console
           await page.mouse.click(110, 70) // click into console

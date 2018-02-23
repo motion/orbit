@@ -142,7 +142,7 @@ export default class ScreenState {
         this.oracle.resume()
       }
       const appState = JSON.parse(JSON.stringify(nextState))
-      log('set.appState', appState)
+      // log('set.appState', appState)
       this.setState({
         appState,
       })

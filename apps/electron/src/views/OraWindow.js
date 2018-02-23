@@ -7,11 +7,7 @@ import Screen from '@mcro/screen'
 
 @view.electron
 export default class Windows {
-  handleOraRef = ref => {
-    if (ref && !this.oraRef) {
-      this.startOra(ref.window)
-    }
-  }
+  handleOraRef = ref => ref && this.startOra(ref.window)
 
   startOra = once(ref => {
     this.oraRef = ref

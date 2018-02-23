@@ -129,7 +129,6 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
         this.props.store.linesBoundingBox,
       ],
       ([appTarget, linesTarget]) => {
-        console.log('we got em', appTarget, linesTarget)
         const box = linesTarget || appTarget
         if (!box) return
         const [peek, ...rest] = this.state.windows
@@ -150,6 +149,7 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
     if (!ref) return
     if (this.peekRefs[peek.key]) return
     this.peekRefs[peek.key] = ref.window
+    this.props.onPeekRef(ref.window)
     // make sure its in front of the ora window
     if (!peek.isTorn) {
       this.peekRefs[peek.key].focus()

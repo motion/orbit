@@ -197,16 +197,18 @@ export default class Oracle {
       cwd: binDir,
       reject: false,
     })
-    this.process.catch((err, ...rest) => {
-      console.log('screen err:', ...rest)
-      console.log(err)
-      console.log(err.stack)
-      throw err
+    // never logs :( (tried with spawn too)...
+    this.process.stdout.setEncoding('utf8')
+    this.process.stdout.on('data', data => {
+      console.log('stdout from oracle', data)
     })
     this.process.stderr.setEncoding('utf8')
     this.process.stderr.on('data', data => {
+      if (!data) return
       // weird ass workaround for stdout not being captured
-      if (data && data[0] === '!') {
+      const isPurposefulLog = data[0] === '!'
+      const isLikelyError = data[0] === ' '
+      if (isPurposefulLog || isLikelyError) {
         console.log(data.slice(1).trim())
         return
       }
@@ -216,10 +218,11 @@ export default class Oracle {
       console.log('screen stderr:', data)
       this.onErrorCB(data)
     })
-    this.process.stdout.setEncoding('utf8')
-    this.process.stdout.on('data', data => {
-      const out = data.trim()
-      console.log(out)
+    this.process.catch((err, ...rest) => {
+      console.log('screen err:', ...rest)
+      console.log(err)
+      console.log(err.stack)
+      throw err
     })
   }
 
@@ -287,6 +290,11 @@ export default class Oracle {
 
   clear = () => {
     this.socketSend('clear')
+    return this
+  }
+
+  defocus = () => {
+    this.socketSend('defoc')
     return this
   }
 

@@ -201,7 +201,6 @@ export default class ScreenState {
 
   resetHighlights = () => {
     if (PREVENT_CLEARING[this.state.appState.name]) {
-      log('resetHighlights prevented clear')
       return
     }
     this.setState({

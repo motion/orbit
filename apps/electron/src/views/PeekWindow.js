@@ -8,8 +8,8 @@ import * as Helpers from '~/helpers'
 import Screen from '@mcro/screen'
 
 const idFn = _ => _
-const PEEK_ANIMATE_MS = 350
-const INITIAL_SIZE = [560, 450]
+// const PEEK_ANIMATE_MS = 350
+const INITIAL_SIZE = [480, 420]
 
 type PeekStateItem = {
   key: number,
@@ -133,7 +133,7 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
         if (!box) return
         const newProps = this.peekPosition(box)
         if (appTarget) {
-          newProps.position[0] += newProps.arrowTowards === 'right' ? 10 : -10
+          newProps.position[0] += newProps.arrowTowards === 'right' ? 15 : -15
         }
         const [peek, ...rest] = this.state.windows
         const newPeek = {

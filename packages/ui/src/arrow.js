@@ -20,34 +20,33 @@ export default class Arrow extends React.Component<> {
     towards: 'bottom',
   }
 
-  getRotation = (towards: string) => {
-    switch (towards) {
-      case 'left':
-        return '-90deg'
-      case 'right':
-        return '0deg'
-    }
-    return '0deg'
-  }
-
-  getOuterRotation = (towards: string) => {
-    switch (towards) {
-      case 'right':
-        return '90deg'
-      case 'bottom':
-        return '0deg'
-    }
-  }
-
-  render({ size, towards, theme, boxShadow, color, opacity, ...props }: Props) {
+  render({
+    size,
+    towards,
+    onClick,
+    background,
+    boxShadow,
+    opacity,
+    style,
+  }: Props) {
     const onBottom = towards === 'bottom'
     const innerTop = size * (onBottom ? -1 : 1)
-
-    // add padding so big shadows work
+    const transform = {
+      right: { rotate: '90deg' },
+      bottom: { rotate: '0deg' },
+      left: { rotate: '-90deg', x: 0, y: -10 },
+      top: { rotate: '0deg' },
+    }[towards]
+    const rotate = {
+      left: '0deg',
+      right: '0deg',
+      bottom: '0deg',
+      top: '0deg',
+    }[towards]
     return (
-      <arrowContain {...props}>
+      <arrowContain onClick={onClick} style={style}>
         <arrowOuter
-          css={{ transform: { rotate: this.getOuterRotation(towards) } }}
+          css={{ transform }}
           style={{
             width: size,
             height: size,
@@ -55,14 +54,19 @@ export default class Arrow extends React.Component<> {
         >
           <arrow
             css={{
-              transform: { rotate: this.getRotation(towards) },
+              transform: { rotate: rotate },
+              width: size,
+              height: size,
             }}
           >
             <arrowInner
-              style={{
+              css={{
                 top: innerTop * 0.75,
                 width: size,
                 height: size,
+                background: background || '#fff',
+                boxShadow,
+                opacity,
               }}
             />
           </arrow>
@@ -84,16 +88,4 @@ export default class Arrow extends React.Component<> {
       transform: 'rotate(45deg)',
     },
   }
-
-  static theme = ({ size, color, boxShadow, opacity, background }, theme) => ({
-    arrowInner: {
-      background: background || theme.base.background,
-      boxShadow,
-      opacity,
-    },
-    arrow: {
-      width: size,
-      height: size,
-    },
-  })
 }

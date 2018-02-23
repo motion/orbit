@@ -126,7 +126,7 @@ export default class PeekPage {
   render({ store }) {
     const { peek, showWebview } = store
     const arrowTowards = (peek && peek.arrowTowards) || 'right'
-    const arrowSize = SHADOW_PAD * 2
+    const arrowSize = 28
     let arrowPosition
     switch (arrowTowards) {
       case 'right':
@@ -137,8 +137,8 @@ export default class PeekPage {
         break
       case 'left':
         arrowPosition = {
-          top: 35,
-          left: -SHADOW_PAD,
+          top: 53,
+          left: 0,
         }
         break
       case 'bottom':
@@ -154,16 +154,6 @@ export default class PeekPage {
         }
         break
     }
-
-    const arrowStyles = [
-      {
-        boxShadow: peekShadow,
-        zIndex: -1,
-      },
-      {
-        zIndex: 100,
-      },
-    ]
 
     const hasBody = store.thing && store.thing.body
 
@@ -186,7 +176,15 @@ export default class PeekPage {
               css={{
                 position: 'absolute',
                 ...arrowPosition,
-                ...arrowStyles[key],
+                ...[
+                  {
+                    boxShadow: peekShadow,
+                    zIndex: -1,
+                  },
+                  {
+                    zIndex: 100,
+                  },
+                ][key],
               }}
             />
           ))}

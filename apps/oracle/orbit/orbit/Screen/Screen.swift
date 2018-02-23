@@ -178,7 +178,6 @@ final class Screen: NSObject {
   }
 
   func pause() {
-    print("screen: pausing...")
     self.stop()
     self.emit("{ \"state\": { \"isPaused\": true } }")
   }

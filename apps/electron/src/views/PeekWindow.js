@@ -32,10 +32,11 @@ type PeekTarget = {
 
 @view.provide({
   store: class PeekStore {
-    @watch
-    linesBoundingBox = () => {
+    get linesBoundingBox() {
       const { linePositions } = Screen.desktopState
-      if (!linePositions) return null
+      if (!linePositions) {
+        return null
+      }
       let minX = 100000
       let maxX = 0
       let minY = 100000
@@ -129,6 +130,7 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
         this.props.store.linesBoundingBox,
       ],
       ([appTarget: Object, linesTarget: Object]) => {
+        console.log('at', appTarget, 'lt', linesTarget)
         const box = linesTarget || appTarget
         if (!box) return
         const newProps = this.peekPosition(box)

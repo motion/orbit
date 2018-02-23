@@ -1,7 +1,7 @@
 // @flow
 import { Server } from 'ws'
 import Oracle from '@mcro/oracle'
-import { isEqual, throttle, last } from 'lodash'
+import { debounce, isEqual, throttle, last } from 'lodash'
 import iohook from 'iohook'
 import killPort from 'kill-port'
 import { store } from '@mcro/black/store'
@@ -186,8 +186,6 @@ export default class ScreenState {
     this.watchKeyboard()
     iohook.start()
     await this.oracle.start()
-    // clear old highlights if theyre still up
-    this.resetHighlights()
   }
 
   async restartScreen() {
@@ -203,10 +201,18 @@ export default class ScreenState {
     if (PREVENT_CLEARING[this.state.appState.name]) {
       return
     }
+    this.clearOCRState()
     this.setState({
       lastScreenChange: Date.now(),
     })
   }
+
+  clearOCRState = debounce(() => {
+    this.setState({
+      linePositions: null,
+      ocrWords: null,
+    })
+  }, 32)
 
   watchKeyboard = () => {
     const codes = {

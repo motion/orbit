@@ -8,8 +8,8 @@ import * as Helpers from '~/helpers'
 import Screen from '@mcro/screen'
 
 const idFn = _ => _
-const PEEK_ANIMATE_MS = 350
-const INITIAL_SIZE = [560, 450]
+// const PEEK_ANIMATE_MS = 350
+const INITIAL_SIZE = [480, 420]
 
 type PeekStateItem = {
   key: number,
@@ -30,10 +30,6 @@ type PeekTarget = {
   height: number,
 }
 
-function toTarget([top, left, width, height]) {
-  return { top, left, width, height }
-}
-
 @view.provide({
   store: class PeekStore {
     @watch
@@ -51,13 +47,13 @@ function toTarget([top, left, width, height]) {
         if (ly < minY) minY = ly
         if (ly + lh > maxY) maxY = ly + lh
       }
-      return [minX, minY, maxX - minX, maxY - minY]
+      return { left: minX, top: minY, width: maxX - minX, height: maxY - minY }
     }
   },
 })
 @view.electron
 export default class PeekWindow extends React.Component<{}, PeekWindowState> {
-  lastAppPositionMove = Date.now()
+  peekRefs = {}
   peekKey = 0
   mounted = false
   isAnimatingPeek = true
@@ -71,37 +67,12 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
         show: false,
       },
     ],
-    peek: {},
     lastTarget: null,
     wasShowing: false,
   }
 
   componentDidMount() {
     this.mounted = true
-  }
-
-  getPeekPosition({ left, top, width, height }: PeekTarget) {
-    const [peekW] = INITIAL_SIZE
-    // const [screenW, screenH] = Helpers.getScreenSize()
-    // start: peek to left
-    let arrowTowards = 'right'
-    let x = left - peekW
-    let y = top
-    if (x < 0) {
-      // peek to right
-      x = left + width
-      arrowTowards = 'left'
-    }
-    x = Math.round(x)
-    y = Math.round(y)
-    return {
-      position: [x, y],
-      size: [peekW, height],
-      arrowTowards,
-    }
-  }
-
-  componentWillMount() {
     // this.positionPeekBasedOnLines()
     this.positionPeekBasedOnWindow()
     this.watch(function watchPeekClose() {
@@ -112,73 +83,80 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
     })
   }
 
-  positionPeekBasedOnWindow = () => {
-    this.react(
-      () => Screen.desktopState.appState,
-      ({ name, offset, bounds }) => {
-        if (!offset || !bounds) return
-        const [left, top] = offset
-        console.log('appState', name, top, left)
-        const [width, height] = bounds
-        const windows = [...this.state.windows]
-        const peek = windows[0]
-        const pp = this.getPeekPosition({ top, left, width, height })
-        peek.position = pp.position
-        peek.size = pp.size
-        peek.arrowTowards = pp.arrowTowards
-        this.setState({ windows })
-      },
-    )
-  }
-
-  positionPeekBasedOnLines = () => {
-    this.react(
-      () => this.props.store.linesBoundingBox,
-      function watchPeekPosition(bbx) {
-        if (!bbx) return
-        console.log('bbx', bbx)
-        clearTimeout(this.animatePeekTimeout)
-        const windows = [...this.state.windows]
-        const peek = windows[0]
-        const pp = this.getPeekPosition(toTarget(bbx))
-        peek.position = pp.position
-        peek.arrowTowards = pp.arrowTowards
-        this.isAnimatingPeek = true
-        this.animatePeekTimeout = setTimeout(
-          () => (this.isAnimatingPeek = false),
-          PEEK_ANIMATE_MS,
-        )
-        this.setState({
-          windows,
-          lastTarget: this.state.target,
-          target: bbx,
-        })
-      },
-    )
-  }
-
-  componentWillReceiveProps({ appPosition }) {
-    if (!isEqual(appPosition, this.props.appPosition)) {
-      this.lastAppPositionMove = Date.now()
-    }
-  }
-
   componentWillUpdate(nextProps, nextState) {
     if (!isEqual(nextState, this.state)) {
-      // update electronApp.peekState
-      Screen.setState({ peekState: this.state })
+      Screen.setState({ peekState: nextState })
     }
+  }
+
+  peekPosition({ left, top, width, height }: PeekTarget) {
+    let [peekW] = INITIAL_SIZE
+    const [screenW /*, screenH*/] = Helpers.getScreenSize()
+    const leftSpace = left
+    const rightSpace = screenW - (left + width)
+    const peekOnLeft = leftSpace > rightSpace
+    let x
+    let y = top
+    if (peekOnLeft) {
+      x = left - peekW
+      if (peekW > leftSpace) {
+        peekW = leftSpace
+        x = 0
+      }
+    } else {
+      x = left + width
+      if (peekW > rightSpace) {
+        peekW = rightSpace
+      }
+    }
+    return {
+      position: [Math.round(x), Math.round(y)],
+      size: [peekW, height],
+      arrowTowards: peekOnLeft ? 'right' : 'left',
+    }
+  }
+
+  positionPeekBasedOnWindow = () => {
+    const appTarget = ({ offset, bounds }) => {
+      if (!offset || !bounds) return null
+      const [left, top] = offset
+      const [width, height] = bounds
+      return { top, left, width, height }
+    }
+    this.react(
+      () => [
+        appTarget(Screen.desktopState.appState || {}),
+        this.props.store.linesBoundingBox,
+      ],
+      ([appTarget: Object, linesTarget: Object]) => {
+        const box = linesTarget || appTarget
+        if (!box) return
+        const newProps = this.peekPosition(box)
+        if (appTarget) {
+          newProps.position[0] += newProps.arrowTowards === 'right' ? 15 : -15
+        }
+        const [peek, ...rest] = this.state.windows
+        const newPeek = {
+          ...peek,
+          ...newProps,
+        }
+        if (!isEqual(newPeek, peek)) {
+          this.setState({ windows: [newPeek, ...rest] })
+        }
+      },
+    )
   }
 
   peekSend = () => console.log('peekSend, not started yet')
 
   handlePeekRef = memoize(peek => ref => {
-    if (ref) {
-      this.peekRef = ref.window
-      // make sure its in front of the ora window
-      if (!peek.isTorn) {
-        this.peekRef.focus()
-      }
+    if (!ref) return
+    if (this.peekRefs[peek.key]) return
+    this.peekRefs[peek.key] = ref.window
+    this.props.onPeekRef(ref.window)
+    // make sure its in front of the ora window
+    if (!peek.isTorn) {
+      this.peekRefs[peek.key].focus()
     }
   })
 

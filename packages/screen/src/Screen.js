@@ -3,7 +3,7 @@ import { store } from '@mcro/black/store'
 import SwiftBridge from './swiftBridge'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 import WebSocket from './websocket'
-import waitForPort from 'wait-port'
+import waitPort from 'wait-port'
 import global from 'global'
 import { isEqual, difference } from 'lodash'
 import * as desktopActions from './desktopActions'
@@ -134,8 +134,8 @@ class Screen {
     }
     this.started = true
     // set initial state synchronously before
+    this._initialStateKeys = Object.keys(initialState || {})
     if (initialState) {
-      this._initialStateKeys = Object.keys(initialState)
       this.setState(initialState)
     }
     this._setupSocket()
@@ -153,7 +153,9 @@ class Screen {
     const outOfBoundsKeys = difference(changed, this._initialStateKeys)
     if (outOfBoundsKeys.length) {
       throw new Error(
-        `Screen.setState: set keys not set in the Screen.start() initial state: ${outOfBoundsKeys}`,
+        `Screen.setState: set keys not set in the Screen.start() initial state:
+        Initial state keys: ${this._initialStateKeys || `[]`}
+        Updated keys: ${outOfBoundsKeys}`,
       )
     }
     if (!this._wsOpen) {
@@ -186,7 +188,7 @@ class Screen {
 
   _setupSocket = async () => {
     if (typeof window === 'undefined') {
-      await waitForPort({ host: 'localhost', port: 40510 })
+      await waitPort({ host: 'localhost', port: 40510 })
     }
     this.ws = new ReconnectingWebSocket('ws://localhost:40510', undefined, {
       constructor: WebSocket,
@@ -206,9 +208,9 @@ class Screen {
         }
       } catch (err) {
         console.log(
-          `ScreenStore error receiving message: ${
-            err.message
-          } from data ${data}`,
+          `${err.message}:\n${err.stack}\n
+        ScreenStore error receiving or reacting to message. Initial message:
+          ${data}`,
         )
       }
     }

@@ -28,6 +28,10 @@ export default class SwiftBridge {
     this._send({ action: 'resume' })
   }
 
+  defocus = () => {
+    this._send({ action: 'defocus' })
+  }
+
   toggle = () => {
     console.log('will toggle, isPaused?', this.state.isPaused)
     if (!this.state.isPaused) {
@@ -75,7 +79,6 @@ export default class SwiftBridge {
   }
 
   _send(object) {
-    console.log('this.isOpen', this.isOpen, object)
     if (this.isOpen) {
       this.ws.send(JSON.stringify(object))
     } else {

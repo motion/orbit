@@ -223,45 +223,50 @@ function configurePosition({
 }: Object) {
   if (this.unmounted) return
   if (!this.window) return
-  // window.setPosition(x, y[, animate])
-  if (typeof animatePosition === 'boolean') {
-    position[2] = animatePosition
-  }
-  const end = m => {
-    throw new Error(`position ${position} ended with error of: ${m}`)
-  }
-  this.handleEvent(this.window, 'move', onMove, rawHandler => {
-    const position = this.window.getPosition()
-    rawHandler(position)
-  })
+  try {
+    // window.setPosition(x, y[, animate])
+    if (typeof animatePosition === 'boolean') {
+      position[2] = animatePosition
+    }
+    const end = m => {
+      throw new Error(`position ${position} ended with error of: ${m}`)
+    }
+    this.handleEvent(this.window, 'move', onMove, rawHandler => {
+      const position = this.window.getPosition()
+      rawHandler(position)
+    })
 
-  this.handleEvent(this.window, 'moved', onMoved, rawHandler => {
-    const position = this.window.getPosition()
-    rawHandler(position)
-  })
+    this.handleEvent(this.window, 'moved', onMoved, rawHandler => {
+      const position = this.window.getPosition()
+      rawHandler(position)
+    })
 
-  if (!position && defaultPosition) {
-    this.window.setPosition(...defaultPosition)
-    this.window.setMovable(true)
-    return
-  }
-  if (!position && !defaultPosition) {
-    this.window.setMovable(true)
-    return
-  }
-  if (position) {
-    if (!Array.isArray(position)) end(`not array`)
-    if (typeof position[0] !== 'number' || typeof position[1] !== 'number')
-      end(`not number`)
-    if (onMove || onMoved) {
-      this.window.setPosition(...position)
+    if (!position && defaultPosition) {
+      this.window.setPosition(...defaultPosition)
       this.window.setMovable(true)
       return
     }
-    if (!onMove && !onMoved) {
-      this.window.setPosition(...position)
-      this.window.setMovable(false)
+    if (!position && !defaultPosition) {
+      this.window.setMovable(true)
       return
     }
+    if (position) {
+      if (!Array.isArray(position)) end(`not array`)
+      if (typeof position[0] !== 'number' || typeof position[1] !== 'number')
+        end(`not number`)
+      if (onMove || onMoved) {
+        this.window.setPosition(...position)
+        this.window.setMovable(true)
+        return
+      }
+      if (!onMove && !onMoved) {
+        this.window.setPosition(...position)
+        this.window.setMovable(false)
+        return
+      }
+    }
+  } catch (err) {
+    if (err.stack.indexOf('Object has been destroyed')) return
+    console.log('Window configure error', err.stack)
   }
 }

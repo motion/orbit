@@ -57,9 +57,7 @@ async function test() {
   oracle.watchBounds(settings)
 
   process.on('SIGINT', async () => {
-    console.log('stopping oracle')
     await oracle.stop()
-    console.log('stoped')
     process.exit(0)
   })
 

@@ -21,12 +21,13 @@ const PREVENT_CLEARING = {
   electron: true,
   Chromium: true,
   iterm2: true,
+  VSCode: true,
 }
 // prevent apps from triggering appState updates
 const PREVENT_APP_STATE = {
-  iterm2: true,
+  // iterm2: true,
   electron: true,
-  Chromium: true,
+  // Chromium: true,
 }
 // prevent apps from OCR
 const PREVENT_SCANNING = {
@@ -119,7 +120,12 @@ export default class ScreenState {
             name: id ? last(id.split('.')) : value.title,
           }
           if (this.curAppID !== id) {
-            this.resetHighlights()
+            if (
+              !PREVENT_APP_STATE[this.curAppName] &&
+              !PREVENT_APP_STATE[nextState.name]
+            ) {
+              this.resetHighlights()
+            }
           }
           // update these now so we can use to track
           this.curAppID = id
@@ -141,7 +147,7 @@ export default class ScreenState {
         this.oracle.resume()
       }
       const appState = JSON.parse(JSON.stringify(nextState))
-      log('set.appState', appState)
+      // log('set.appState', appState)
       this.setState({
         appState,
       })
@@ -195,7 +201,6 @@ export default class ScreenState {
 
   resetHighlights = () => {
     if (PREVENT_CLEARING[this.state.appState.name]) {
-      log('resetHighlights prevented clear')
       return
     }
     this.setState({

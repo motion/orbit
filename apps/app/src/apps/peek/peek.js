@@ -15,12 +15,19 @@ const KEY = keyParam && keyParam[1]
 const SHADOW_PAD = 15
 const BORDER_RADIUS = 6
 const HIDE_DELAY = 100
-const background = '#fff'
+const background = 'rgb(255,255,255)'
 const peekShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.25]]]
 
 @view({
   store: class PeekStore {
-    peek = null
+    get peek() {
+      return (
+        Screen.electronState.peekState &&
+        Screen.electronState.peekState.windows &&
+        Screen.electronState.peekState.windows[0]
+      )
+    }
+
     isTorn = false
     isHovered = false
     isPinned = false
@@ -35,11 +42,6 @@ const peekShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.25]]]
     }
 
     willMount() {
-      if (!Screen.started) {
-        Screen.start('app', {
-          closePeek: null,
-        })
-      }
       this.trap = new Mousetrap(window)
       this.trap.bind('esc', () => {
         console.log('esc')
@@ -124,9 +126,8 @@ export default class PeekPage {
   render({ store }) {
     const { peek, showWebview } = store
     const arrowTowards = (peek && peek.arrowTowards) || 'right'
-    const arrowSize = SHADOW_PAD * 2
+    const arrowSize = 28
     let arrowPosition
-
     switch (arrowTowards) {
       case 'right':
         arrowPosition = {
@@ -136,8 +137,8 @@ export default class PeekPage {
         break
       case 'left':
         arrowPosition = {
-          top: 35,
-          left: -SHADOW_PAD,
+          top: 53,
+          left: 0,
         }
         break
       case 'bottom':
@@ -154,22 +155,12 @@ export default class PeekPage {
         break
     }
 
-    const arrowStyles = [
-      {
-        boxShadow: peekShadow,
-        zIndex: -1,
-      },
-      {
-        zIndex: 100,
-      },
-    ]
-
     const hasBody = store.thing && store.thing.body
 
     return (
       <UI.Theme name="light">
         <peek
-          $peekVisible
+          $peekVisible={!Screen.state.hidden}
           $peekTorn={store.isTorn}
           onMouseEnter={store.handleMouseEnter}
           onMouseLeave={store.handleMouseLeave}
@@ -185,7 +176,15 @@ export default class PeekPage {
               css={{
                 position: 'absolute',
                 ...arrowPosition,
-                ...arrowStyles[key],
+                ...[
+                  {
+                    boxShadow: peekShadow,
+                    zIndex: -1,
+                  },
+                  {
+                    zIndex: 100,
+                  },
+                ][key],
               }}
             />
           ))}
@@ -200,6 +199,7 @@ export default class PeekPage {
                 <title>
                   <UI.Title size={1} fontWeight={300}>
                     {(store.thing && store.thing.title) || ''}
+                    {arrowTowards}
                   </UI.Title>
                 </title>
                 <UI.Row
@@ -359,7 +359,7 @@ export default class PeekPage {
     webview: {
       height: '94%',
       width: '100%',
-      background: '#fff',
+      // background: '#fff',
     },
     visible: {
       opacity: 1,

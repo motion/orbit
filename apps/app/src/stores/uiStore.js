@@ -50,15 +50,6 @@ export default class UIStore {
     this._watchKeyEvents()
     this._watchContextMessage()
     this._watchTrayTitle()
-    this.react(
-      () => [Screen.electronState.shouldHide, Screen.electronState.shouldShow],
-      ([shouldHide, shouldShow]) => {
-        if (!shouldHide && !shouldShow) return
-        const hidden = shouldHide > shouldShow
-        Screen.setState({ hidden })
-      },
-      true,
-    )
   }
 
   dispose() {

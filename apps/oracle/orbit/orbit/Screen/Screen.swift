@@ -118,7 +118,7 @@ final class Screen: NSObject {
     self.input = AVCaptureScreenInput(displayID: displayId)
     output = AVCaptureVideoDataOutput()
 
-    print("output types: \(output.availableVideoCodecTypes) \(output.availableVideoPixelFormatTypes)")
+//    print("output types: \(output.availableVideoCodecTypes) \(output.availableVideoPixelFormatTypes)")
 
     output.videoSettings = [
       kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_420YpCbCr8BiPlanarFullRange
@@ -153,7 +153,7 @@ final class Screen: NSObject {
   }
 
   func start() {
-    debug("oracle.start()")
+//    debug("oracle.start()")
     if self.shouldCancel {
       self.shouldRunNextTime = true
     }
@@ -188,10 +188,10 @@ final class Screen: NSObject {
       if curTime != nil {
         let timeEnd = Int(Double(DispatchTime.now().uptimeNanoseconds - curTime!.uptimeNanoseconds) / 1_000_000)
 //        print("\(str.padding(toLength: 36, withPad: " ", startingAt: 0)) \(timeEnd)ms")
-        fputs("!\(str.padding(toLength: 36, withPad: " ", startingAt: 0)) \(timeEnd)ms", __stderrp)
+        print("\(str.padding(toLength: 36, withPad: " ", startingAt: 0)) \(timeEnd)ms")
         curTime = DispatchTime.now()
       } else {
-        fputs("!\(str)", __stderrp)
+        print("\(str)")
       }
     }
   }
@@ -516,7 +516,7 @@ final class Screen: NSObject {
   }
 
   func getWordsAndLines(_ ocrResults: [String: String], characterLines: [[Word]]) -> ([String], [String]) {
-    startTime()
+//    startTime()
     var words = [String]()
     var lines = [String]()
     for line in characterLines {
@@ -554,12 +554,12 @@ final class Screen: NSObject {
       }
       lines.append("[\(firstWord.x),\(minY / 2),\(width),\(maxH)]")
     }
-    debug("getWordsAndLines")
+//    debug("getWordsAndLines")
     return (words, lines)
   }
 
   func charactersWithLineBounds(_ charactersByLine: [[Word]]) -> [[Word]] {
-    startTime()
+//    startTime()
     var i = 0
     let result: [[Word]] = charactersByLine.map({ line in
       if line.count == 0 {
@@ -596,7 +596,7 @@ final class Screen: NSObject {
         return word
       }
     })
-    debug("charactersWithLineBounds")
+//    debug("charactersWithLineBounds")
     return result
   }
 
@@ -656,7 +656,7 @@ final class Screen: NSObject {
         self.emit("{ \"action\": \"lines\", \"value\": [\(lines.joined(separator: ","))] }")
         // update character cache
         Async.utility(after: 0.04) { chars.updateCache(ocrResults) }
-        print("recognized \(lines.count) lines, \(words.count) words")
+//        print("recognized \(lines.count) lines, \(words.count) words")
       } catch {
         print("ocr failed...")
       }

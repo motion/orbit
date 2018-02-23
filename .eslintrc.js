@@ -43,6 +43,8 @@ module.exports = {
     BroadcastChannel: true,
     Promise: true,
     Set: true,
+    Map: true,
     debug: true,
+    Screen: false, // we want this to be our @mcro/Screen
   },
 }

@@ -48,13 +48,6 @@ const log = debug('highlights')
     }
 
     willMount() {
-      // start screen watching
-      if (!Screen.started) {
-        Screen.start('app', {
-          hoveredWord: null,
-          hoveredLine: null,
-        })
-      }
       // setup hover events
       this.react(() => this.ocrWords, this.setupHover('word'), true)
       this.react(

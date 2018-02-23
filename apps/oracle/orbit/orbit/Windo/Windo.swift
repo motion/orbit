@@ -10,6 +10,8 @@ final class Windo {
   var emit: (String)->Void
   var swindler: Swindler.State
   var observer: Observer!
+  private var lastApp: NSRunningApplication?
+  private var currentApp: NSRunningApplication?
   private var lastSent = ""
   @IBOutlet weak var window: NSWindow!
   
@@ -50,11 +52,21 @@ final class Windo {
       }
       self.swindler.on { (event: FrontmostApplicationChangedEvent) in
         if event.newValue == nil { return }
+        self.lastApp = self.currentApp
+        self.currentApp = NSWorkspace.shared.frontmostApplication
         self.frontmostWindowChanged()
       }
       self.swindler.on { (event: WindowTitleChangedEvent) in
         self.frontmostWindowChanged()
       }
+    }
+  }
+  
+  // sends focus to last app besides our app
+  public func defocus() {
+//    print("defocus \(self.lastApp?.bundleIdentifier ?? "") \(self.currentApp?.bundleIdentifier ?? "")")
+    if let app = self.lastApp {
+      app.activate(options: .activateIgnoringOtherApps)
     }
   }
   

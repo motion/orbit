@@ -29,7 +29,7 @@ final class Windo {
     })
 
     // swindler bugs if started too quickly :/
-    DispatchQueue.main.asyncAfter(deadline: .now() + 4.0) {
+    DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
       self.frontmostWindowChanged()
       
       self.swindler.on { (event: WindowCreatedEvent) in

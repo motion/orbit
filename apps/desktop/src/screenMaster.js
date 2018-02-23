@@ -6,6 +6,7 @@ import iohook from 'iohook'
 import killPort from 'kill-port'
 import { store } from '@mcro/black/store'
 import Screen from '@mcro/screen'
+import * as Mobx from 'mobx'
 
 const log = debug('screenMaster')
 
@@ -108,6 +109,7 @@ export default class ScreenState {
         this.resetHighlights()
         return
       }
+      // if current app is a prevented app, treat like nothing happened
       let nextState = { ...this.state.appState }
       let id = this.curAppID
       switch (event) {
@@ -120,13 +122,12 @@ export default class ScreenState {
             bounds: value.bounds,
             name: id ? last(id.split('.')) : value.title,
           }
-          if (this.curAppID !== id) {
-            if (
-              !PREVENT_APP_STATE[this.curAppName] &&
-              !PREVENT_APP_STATE[nextState.name]
-            ) {
-              this.resetHighlights()
-            }
+          const hasNewID = this.curAppID !== id
+          const shouldntPreventClear =
+            !PREVENT_APP_STATE[this.curAppName] &&
+            !PREVENT_APP_STATE[nextState.name]
+          if (hasNewID && shouldntPreventClear) {
+            this.resetHighlights()
           }
           // update these now so we can use to track
           this.curAppID = id
@@ -140,6 +141,7 @@ export default class ScreenState {
           if (value.id !== id) return
           nextState.offset = value.pos
       }
+      // when were moving into focus prevent app, store its appName, pause then return
       if (PREVENT_APP_STATE[this.curAppName]) {
         this.oracle.pause()
         return
@@ -148,7 +150,7 @@ export default class ScreenState {
         this.oracle.resume()
       }
       const appState = JSON.parse(JSON.stringify(nextState))
-      // log('set.appState', appState)
+      log('set.appState', appState)
       this.setState({
         appState,
       })
@@ -157,7 +159,10 @@ export default class ScreenState {
       if (!Screen.state.ocrWords) {
         log('RESET oracle boxChanged (App)')
         this.resetHighlights()
-        this.setState({ clearWord: APP_ID })
+        if (this.isWatching === 'OCR') {
+          log('reset is watching ocr to set back to app')
+          this.rescanApp()
+        }
       } else {
         // for not many clears, try it
         if (count < 20) {
@@ -166,7 +171,7 @@ export default class ScreenState {
           })
         } else {
           // else just clear it all
-          log('RESET oracle boxChanged (Not App)')
+          log('RESET oracle boxChanged (NOTTTTTTT App)')
           this.resetHighlights()
           this.rescanApp()
         }
@@ -267,13 +272,10 @@ export default class ScreenState {
   }
 
   setState = object => {
-    if (this.stopped) {
-      log('stopped, dont send')
-      return
-    }
+    if (this.stopped) return
     let hasNewState = false
     for (const key of Object.keys(object)) {
-      if (!isEqual(this.state[key], object[key])) {
+      if (!isEqual(Mobx.toJS(this.state[key]), object[key])) {
         hasNewState = true
         break
       }
@@ -294,6 +296,7 @@ export default class ScreenState {
       return
     }
     if (newState.appState) {
+      console.log('got new app state')
       this.rescanApp()
       return
     }

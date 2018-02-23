@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react'
 import * as Constants from '~/constants'
-import { view, watch } from '@mcro/black'
+import { view } from '@mcro/black'
 import { Window } from '@mcro/reactron'
 import { isEqual, memoize } from 'lodash'
 import * as Helpers from '~/helpers'

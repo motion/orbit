@@ -74,61 +74,25 @@ export default class Oracle {
     monitorScreenProcess(this.process, this.restart)
   }
 
+  stop = async () => {
+    if (!this.process) return
+    this.process.stdout.removeAllListeners()
+    this.process.stderr.removeAllListeners()
+    // kill process
+    this.process.kill()
+    const killExtra = setTimeout(() => {
+      this.process.kill('SIGKILL')
+    }, 16)
+    await this.process
+    delete this.process
+    clearTimeout(killExtra)
+    // sleep to avoid issues
+    await sleep(32)
+  }
+
   restart = async () => {
     await this.stop()
     await this.start()
-  }
-
-  _connectToScreenProcess() {
-    return new Promise(res => {
-      // wait for connection to socket before sending start
-      let startWait = setInterval(() => {
-        if (this.listeners.length) {
-          clearInterval(startWait)
-          setTimeout(() => this.socketSend('start'), 10)
-          res()
-        }
-      }, 10)
-    })
-  }
-
-  async _runScreenProcess() {
-    if (this.process !== undefined) {
-      throw new Error('Call `.stop()` first')
-    }
-    const binDir = this.debugBuild ? DEBUG_PATH : RELEASE_PATH
-    this.process = execa('./orbit', [], {
-      cwd: binDir,
-      reject: false,
-    })
-    // never logs :( (tried with spawn too)...
-    this.process.stdout.setEncoding('utf8')
-    this.process.stdout.on('data', data => {
-      console.log('stdout from oracle', data)
-    })
-    this.process.stderr.setEncoding('utf8')
-    this.process.stderr.on('data', data => {
-      if (!data) return
-      // weird ass workaround for stdout not being captured
-      const isLikelyError = data[0] === ' '
-      const out = data.trim()
-      const isPurposefulLog = out[0] === '!'
-      if (isPurposefulLog || isLikelyError) {
-        console.log('swift >', out.slice(1))
-        return
-      }
-      if (data.indexOf('<Notice>')) {
-        return
-      }
-      console.log('screen stderr:', data)
-      this.onErrorCB(data)
-    })
-    this.process.catch((err, ...rest) => {
-      console.log('screen err:', ...rest)
-      console.log(err)
-      console.log(err.stack)
-      throw err
-    })
   }
 
   watchBounds = async ({
@@ -210,26 +174,6 @@ export default class Oracle {
 
   onError = cb => {
     this.onErrorCB = cb
-  }
-
-  stop = async () => {
-    if (!this.process) return
-    this.process.stdout.removeAllListeners()
-    this.process.stderr.removeAllListeners()
-    // kill process
-    this.process.kill()
-    let atimer = setTimeout(() => {
-      this.process.kill('SIGKILL')
-    })
-    let btimer = setTimeout(() => {
-      console.log('still hasnt stopped?')
-    }, 5000)
-    await this.process
-    delete this.process
-    clearTimeout(atimer)
-    clearTimeout(btimer)
-    // sleep to avoid issues
-    await sleep(32)
   }
 
   async socketSend(action, data) {
@@ -339,6 +283,58 @@ export default class Oracle {
     })
     this.wss.on('error', (...args) => {
       console.log('wss error', args)
+    })
+  }
+
+  _connectToScreenProcess() {
+    return new Promise(res => {
+      // wait for connection to socket before sending start
+      let startWait = setInterval(() => {
+        if (this.listeners.length) {
+          clearInterval(startWait)
+          setTimeout(() => this.socketSend('start'), 10)
+          res()
+        }
+      }, 10)
+    })
+  }
+
+  async _runScreenProcess() {
+    if (this.process !== undefined) {
+      throw new Error('Call `.stop()` first')
+    }
+    const binDir = this.debugBuild ? DEBUG_PATH : RELEASE_PATH
+    this.process = execa('./orbit', [], {
+      cwd: binDir,
+      reject: false,
+    })
+    // never logs :( (tried with spawn too)...
+    this.process.stdout.setEncoding('utf8')
+    this.process.stdout.on('data', data => {
+      console.log('stdout from oracle', data)
+    })
+    this.process.stderr.setEncoding('utf8')
+    this.process.stderr.on('data', data => {
+      if (!data) return
+      // weird ass workaround for stdout not being captured
+      const isLikelyError = data[0] === ' '
+      const out = data.trim()
+      const isPurposefulLog = out[0] === '!'
+      if (isPurposefulLog || isLikelyError) {
+        console.log('swift >', out.slice(1))
+        return
+      }
+      if (data.indexOf('<Notice>')) {
+        return
+      }
+      console.log('screen stderr:', data)
+      this.onErrorCB(data)
+    })
+    this.process.catch((err, ...rest) => {
+      console.log('screen err:', ...rest)
+      console.log(err)
+      console.log(err.stack)
+      throw err
     })
   }
 }

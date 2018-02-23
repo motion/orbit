@@ -72,7 +72,7 @@ type PeekTarget = {
     }
 
     willMount() {
-      this.watchMouseForFocus()
+      this.watchMouseForPeekFocus()
     }
 
     handlePeekRef = memoize(peek => ref => {
@@ -99,10 +99,11 @@ type PeekTarget = {
         if (ly < top) top = ly
         if (ly + lh > maxY) maxY = ly + lh
       }
-      return { left, top, width: maxX - top, height: maxY - top }
+      return { left, top, width: maxX - left, height: maxY - top }
     }
 
-    watchMouseForFocus = () => {
+    watchMouseForPeekFocus = () => {
+      // if mouse within bounds + not hidden, focus peek
       this.react(
         () => [Screen.desktopState.mousePosition, Screen.appState.hidden],
         ([{ x, y }, isHidden]) => {
@@ -116,7 +117,7 @@ type PeekTarget = {
           this.focused = withinX && withinY
         },
       )
-      // react to focus so it only triggers if value changes
+      // second reaction so it only triggers if value changes
       this.react(
         () => this.focused,
         shouldFocus => {

@@ -25,10 +25,15 @@ import Screen from '@mcro/screen'
       this.react(
         () => [
           Screen.electronState.shouldHide,
+          Screen.desktopState.lastScreenChange,
           Screen.electronState.shouldShow,
         ],
-        function handleHidden([shouldHide, shouldShow]) {
+        function handleHidden([shouldHide, lastChange, shouldShow]) {
           if (!shouldHide && !shouldShow) return
+          if (lastChange && lastChange > shouldShow) {
+            Screen.setState({ hidden: true })
+            return
+          }
           const hidden = shouldHide > shouldShow
           Screen.setState({ hidden })
         },

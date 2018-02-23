@@ -128,13 +128,17 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
         appTarget(Screen.desktopState.appState || {}),
         this.props.store.linesBoundingBox,
       ],
-      ([appTarget, linesTarget]) => {
+      ([appTarget: Object, linesTarget: Object]) => {
         const box = linesTarget || appTarget
         if (!box) return
+        const newProps = this.peekPosition(box)
+        if (appTarget) {
+          newProps.position[0] += newProps.arrowTowards === 'right' ? 10 : -10
+        }
         const [peek, ...rest] = this.state.windows
         const newPeek = {
           ...peek,
-          ...this.peekPosition(box),
+          ...newProps,
         }
         if (!isEqual(newPeek, peek)) {
           this.setState({ windows: [newPeek, ...rest] })

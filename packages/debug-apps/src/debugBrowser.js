@@ -144,6 +144,7 @@ export default class DebugApps {
           await sleep(100)
           if (!this.pages[index]) continue
           const injectTitle = debounce(() => {
+            // TODO can restart app on browser refresh here if wanted
             page.evaluate(
               (port, url) => {
                 setTimeout(() => {

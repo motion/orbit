@@ -29,7 +29,6 @@ export default class SwiftBridge {
   }
 
   defocus = () => {
-    console.log('sending defocus')
     this._send({ action: 'defocus' })
   }
 
@@ -80,7 +79,6 @@ export default class SwiftBridge {
   }
 
   _send(object) {
-    console.log('this.isOpen', this.isOpen, object)
     if (this.isOpen) {
       this.ws.send(JSON.stringify(object))
     } else {

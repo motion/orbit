@@ -7,7 +7,11 @@ import promisify from 'sb-promisify'
 import pusage_ from 'pidusage'
 import killPort from 'kill-port'
 
-const WEBSOCKET_PORT = 40512
+// swift itself
+// and the swiftBridge
+// both connect to here:
+const ORACLE_ROOT = 40512
+
 const dir = electronUtil.fixPathForAsarUnpack(__dirname)
 const appPath = bundle =>
   Path.join(
@@ -63,8 +67,8 @@ export default class Oracle {
     }
     if (!this.wss) {
       // kill old ones
-      await killPort(WEBSOCKET_PORT)
-      this.wss = new Server({ port: WEBSOCKET_PORT })
+      await killPort(ORACLE_ROOT)
+      this.wss = new Server({ port: ORACLE_ROOT })
       this.setupSocket()
     }
     this.setState({ isPaused: false })
@@ -73,72 +77,15 @@ export default class Oracle {
     this.monitorScreenProcess()
   }
 
-  actionHandlers = {
-    changed: value => {
-      setTimeout(() => this.onBoxChangedCB(value))
-    },
-    changedIds: value => {
-      this.changedIds = value
-    },
-    restored: value => {
-      setTimeout(() => this.onRestoredCB(value))
-    },
-    restoredIds: value => {
-      this.restoredIds = value
-    },
-    clear: () => {
-      this.onClearCB()
-    },
-    words: value => {
-      this.onWordsCB(value)
-    },
-    lines: value => {
-      this.onLinesCB(value)
-    },
-    pause: () => {
-      this.pause()
-    },
-    resume: () => {
-      this.resume()
-    },
-    start: () => {
-      this.start()
-    },
-  }
-
-  handleSocketMessage = str => {
-    // console.log('got', str)
-    const { action, value, state } = JSON.parse(str)
-    // console.log('screen.action', action)
-    try {
-      if (state) {
-        this.setState(state)
-      }
-      if (this.actionHandlers[action]) {
-        this.actionHandlers[action](value)
-      } else {
-        if (action) {
-          // otherwise its a window change event
-          this.onWindowChangeCB(action, value)
-        }
-      }
-    } catch (err) {
-      console.log('error sending reply', action, 'value', value)
-      console.log(err)
-    }
-  }
-
   async monitorScreenProcess() {
     // monitor cpu usage
     const maxSecondsSpinning = 10
     let secondsSpinning = 0
-    let i = 0
     this.resourceCheckInt = setInterval(async () => {
       if (!this.process) {
         return
       }
       const children = [this.process.pid]
-      i++
       for (const pid of children) {
         try {
           const usage = await pusage(pid)
@@ -206,10 +153,11 @@ export default class Oracle {
     this.process.stderr.on('data', data => {
       if (!data) return
       // weird ass workaround for stdout not being captured
-      const isPurposefulLog = data[0] === '!'
       const isLikelyError = data[0] === ' '
+      const out = data.trim()
+      const isPurposefulLog = out[0] === '!'
       if (isPurposefulLog || isLikelyError) {
-        console.log(data.slice(1).trim())
+        console.log('swift >', out.slice(1))
         return
       }
       if (data.indexOf('<Notice>')) {
@@ -395,8 +343,49 @@ export default class Oracle {
         )
         this.awaitingSocket = []
       }
-      // listen for incoming
-      socket.on('message', this.handleSocketMessage)
+      // call up to swiftbridge
+      const actions = {
+        changed: value => {
+          setTimeout(() => this.onBoxChangedCB(value))
+        },
+        changedIds: value => {
+          this.changedIds = value
+        },
+        restored: value => {
+          setTimeout(() => this.onRestoredCB(value))
+        },
+        restoredIds: value => {
+          this.restoredIds = value
+        },
+        // up to listeners of this class
+        clear: this.onClearCB,
+        words: this.onWordsCB,
+        lines: this.onLinesCB,
+        // relay down to swift process
+        pause: this.pause,
+        resume: this.resume,
+        start: this.start,
+        defocus: this.defocus,
+      }
+      // coming from swift
+      socket.on('message', str => {
+        const { action, value, state } = JSON.parse(str)
+        try {
+          if (state) {
+            this.setState(state)
+          }
+          if (actions[action]) {
+            actions[action](value)
+          } else {
+            // otherwise its a window change event
+            if (!action) return
+            this.onWindowChangeCB(action, value)
+          }
+        } catch (err) {
+          console.log('!&!&@*&@*error sending reply', action, 'value', value)
+          console.log(err)
+        }
+      })
       // handle events
       socket.on('close', () => {
         this.removeSocket()

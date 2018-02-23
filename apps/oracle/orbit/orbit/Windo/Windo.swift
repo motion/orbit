@@ -64,7 +64,7 @@ final class Windo {
   
   // sends focus to last app besides our app
   public func defocus() {
-    print("defocus")
+//    print("defocus \(self.lastApp?.bundleIdentifier ?? "") \(self.currentApp?.bundleIdentifier ?? "")")
     if let app = self.lastApp {
       app.activate(options: .activateIgnoringOtherApps)
     }

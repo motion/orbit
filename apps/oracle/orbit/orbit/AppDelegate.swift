@@ -60,6 +60,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   }
   
   func onMessage(_ text: String) {
+//    print("Swift.onMessage \(text)")
     if text.count < 5 {
       print("weird text")
       return

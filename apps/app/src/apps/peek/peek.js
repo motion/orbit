@@ -15,7 +15,7 @@ const KEY = keyParam && keyParam[1]
 const SHADOW_PAD = 15
 const BORDER_RADIUS = 6
 const HIDE_DELAY = 100
-const background = 'rgba(255,255,255,0.2)'
+const background = 'rgb(255,255,255)'
 const peekShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.25]]]
 
 @view({
@@ -128,7 +128,6 @@ export default class PeekPage {
     const arrowTowards = (peek && peek.arrowTowards) || 'right'
     const arrowSize = SHADOW_PAD * 2
     let arrowPosition
-    console.log('arrowTowards', arrowTowards)
     switch (arrowTowards) {
       case 'right':
         arrowPosition = {

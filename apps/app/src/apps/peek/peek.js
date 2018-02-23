@@ -138,7 +138,7 @@ export default class PeekPage {
       case 'left':
         arrowPosition = {
           top: 53,
-          left: 0,
+          left: -3,
         }
         break
       case 'bottom':
@@ -173,6 +173,7 @@ export default class PeekPage {
               size={arrowSize}
               towards={arrowTowards}
               background={background}
+              border={key === 1 ? '1px solid #ccc' : null}
               css={{
                 position: 'absolute',
                 ...arrowPosition,

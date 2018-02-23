@@ -28,6 +28,7 @@ export default class Arrow extends React.Component<> {
     boxShadow,
     opacity,
     style,
+    border,
   }: Props) {
     const onBottom = towards === 'bottom'
     const innerTop = size * (onBottom ? -1 : 1)
@@ -67,6 +68,7 @@ export default class Arrow extends React.Component<> {
                 background: background || '#fff',
                 boxShadow,
                 opacity,
+                border,
               }}
             />
           </arrow>

@@ -37,14 +37,9 @@ const log = debug('highlights')
     // }
 
     get showAll() {
-      if (swiftState.isPaused) {
-        return true
-      }
+      if (swiftState.isPaused) return true
       const isTesting = this.ocrWords.length && this.ocrWords[0].length === 4
-      return desktopState.lastOCR > desktopState.lastScreenChange
-      // if (desktopState.keyboard.option) {
-      // }
-      return isTesting
+      return isTesting || desktopState.lastOCR > desktopState.lastScreenChange
     }
 
     willMount() {

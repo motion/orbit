@@ -65,7 +65,7 @@ type PeekTarget = {
     peekRefs = {}
     focused = false
     get peek() {
-      return Screen.state.peekState.windows[0]
+      return Screen.state.peekState.windows && Screen.state.peekState.windows[0]
     }
     get peekRef() {
       return this.peekRefs[this.peek && this.peek.key]

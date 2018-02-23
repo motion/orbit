@@ -18,7 +18,7 @@ Screen.start('desktop')
 // TODO make this go through the screenStore
 
 // prevent apps from clearing highlights
-const PREVENT_CLEARING = {
+const PREVENT_CLEAR = {
   electron: true,
   Chromium: true,
   iterm2: true,
@@ -123,10 +123,9 @@ export default class ScreenState {
             name: id ? last(id.split('.')) : value.title,
           }
           const hasNewID = this.curAppID !== id
-          const shouldntPreventClear =
-            !PREVENT_APP_STATE[this.curAppName] &&
-            !PREVENT_APP_STATE[nextState.name]
-          if (hasNewID && shouldntPreventClear) {
+          const shouldClear =
+            !PREVENT_CLEAR[this.curAppName] && !PREVENT_CLEAR[nextState.name]
+          if (hasNewID && shouldClear) {
             this.resetHighlights()
           }
           // update these now so we can use to track
@@ -203,7 +202,7 @@ export default class ScreenState {
   }
 
   resetHighlights = () => {
-    if (PREVENT_CLEARING[this.state.appState.name]) {
+    if (PREVENT_CLEAR[this.state.appState.name]) {
       return
     }
     this.clearOCRState()
@@ -296,7 +295,6 @@ export default class ScreenState {
       return
     }
     if (newState.appState) {
-      console.log('got new app state')
       this.rescanApp()
       return
     }
@@ -320,6 +318,7 @@ export default class ScreenState {
     }
     clearTimeout(this.clearOCRTimeout)
     log('rescanApp', name)
+    this.resetHighlights()
     // we are watching the whole app for words
     this.watchBounds('App', {
       fps: 10,

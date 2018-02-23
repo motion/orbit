@@ -129,7 +129,7 @@ import * as Constants from '~/constants'
       this.react(
         () => this.focused,
         shouldFocus => {
-          if (Screen.desktopState.hidden) {
+          if (Screen.appState.hidden) {
             return
           }
           console.log('handling focus', shouldFocus)

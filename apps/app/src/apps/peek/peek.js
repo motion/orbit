@@ -56,9 +56,18 @@ const peekShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.05]]]
         console.log('esc')
         this.isHovered = false
       })
-      this.setTimeout(() => {
-        this.showWebview = true
-      }, 150)
+
+      let hoverShow
+      this.react(
+        () => this.hoveredWord,
+        word => {
+          clearTimeout(hoverShow)
+          const hidden = !word
+          hoverShow = setTimeout(() => {
+            Screen.setState({ hidden })
+          }, hidden ? 50 : 500)
+        },
+      )
     }
 
     @watch

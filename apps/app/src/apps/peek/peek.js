@@ -3,12 +3,10 @@ import * as React from 'react'
 import { view, watch } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { Thing } from '~/app'
-import MarkdownRender from './markdownRenderer'
-import Conversation from './conversation'
 import Mousetrap from 'mousetrap'
 import Screen from '@mcro/screen'
-import WebView from '~/views/webview'
 import ControlButton from '~/views/controlButton'
+import { wordKey } from '~/helpers'
 
 const keyParam = (window.location.search || '').match(/key=(.*)/)
 const KEY = keyParam && keyParam[1]
@@ -25,6 +23,17 @@ const peekShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.05]]]
         Screen.electronState.peekState &&
         Screen.electronState.peekState.windows &&
         Screen.electronState.peekState.windows[0]
+      )
+    }
+
+    get hoveredWord() {
+      return (
+        (Screen.state.hoveredWord &&
+          Screen.desktopState.ocrWords &&
+          Screen.desktopState.ocrWords.find(
+            w => wordKey(w) === Screen.state.hoveredWord.key,
+          )) ||
+        null
       )
     }
 
@@ -239,42 +248,12 @@ export default class PeekPage {
                   />
                 </UI.Row>
               </header>
-              <tabs if={store.thing}>
-                <tab $visible={store.tab === 'readability'}>
-                  <readability>
-                    <MarkdownRender
-                      if={!store.isConversation && store.thing.body}
-                      markdown={store.thing.body}
-                    />
-                    <Conversation
-                      if={store.isConversation}
-                      thing={store.thing}
-                    />
-                  </readability>
-                </tab>
-                <tab $visible={store.tab === 'webview'}>
-                  <loading if={!store.pageLoaded}>
-                    <UI.Text color="#000">Loading</UI.Text>
-                  </loading>
-                  <WebView
-                    if={false && showWebview}
-                    $contentLoading={!store.pageLoaded}
-                    $webview
-                    getRef={store.handlePageRef}
-                  />
-                  <bottombar
-                    css={{
-                      width: '100%',
-                      borderTop: [1, '#eee'],
-                      alignItems: 'center',
-                    }}
-                  >
-                    <UI.Text size={0.8} alpha={0.5}>
-                      no url
-                    </UI.Text>
-                  </bottombar>
-                </tab>
-              </tabs>
+              <content>
+                Hovered word:
+                <hlword if={store.hoveredWord}>
+                  {JSON.stringify(store.hoveredWord)}
+                </hlword>
+              </content>
             </contentInner>
           </content>
         </peek>

@@ -8,8 +8,9 @@ import * as Helpers from '~/helpers'
 import Screen from '@mcro/screen'
 
 const idFn = _ => _
-// const PEEK_ANIMATE_MS = 350
+const PAD = 15
 const INITIAL_SIZE = [400, 420]
+
 const peekPosition = ({ left, top, width, height }: PeekTarget) => {
   const EDGE_PAD = 20
   let [peekW] = INITIAL_SIZE
@@ -99,6 +100,15 @@ type PeekTarget = {
         if (ly < top) top = ly
         if (ly + lh > maxY) maxY = ly + lh
       }
+      // maxX should never be past right edge of window frame
+      // this fixes logical issues in line finding from swift for now
+      if (Screen.desktopState.appState) {
+        const { offset, bounds } = Screen.desktopState.appState
+        maxX = Math.min(
+          offset[0] + bounds[0] - PAD * 2 /* reverse linepad */,
+          maxX,
+        )
+      }
       return { left, top, width: maxX - left, height: maxY - top }
     }
 
@@ -186,10 +196,10 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
         const newProps = peekPosition(box)
         if (linesTarget) {
           // add padding
-          newProps.position[0] += newProps.arrowTowards === 'left' ? 15 : -15
+          newProps.position[0] += newProps.arrowTowards === 'left' ? PAD : -PAD
         } else {
           // remove padding
-          newProps.position[0] += newProps.arrowTowards === 'right' ? 15 : -15
+          newProps.position[0] += newProps.arrowTowards === 'right' ? PAD : -PAD
         }
         const [peek, ...rest] = this.state.windows
         const newPeek = {

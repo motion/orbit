@@ -2,7 +2,8 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import quadtree from 'simple-quadtree'
 import Screen, { desktopState, swiftState } from '@mcro/screen'
-import { LINE_Y_ADJ, toTarget, getKey } from './helpers'
+import { wordKey } from '~/helpers'
+import { LINE_Y_ADJ, toTarget } from './helpers'
 import OCRWord from './ocrWord'
 import OCRLine from './ocrLine'
 import ner from '~/stores/language/ner'
@@ -49,14 +50,9 @@ const log = debug('highlights')
     // }
 
     get showAll() {
-      if (swiftState.isPaused) {
-        return true
-      }
+      if (swiftState.isPaused) return true
       const isTesting = this.ocrWords.length && this.ocrWords[0].length === 4
-      return desktopState.lastOCR > desktopState.lastScreenChange
-      // if (desktopState.keyboard.option) {
-      // }
-      return isTesting
+      return isTesting || desktopState.lastOCR > desktopState.lastScreenChange
     }
 
     willMount() {
@@ -66,7 +62,6 @@ const log = debug('highlights')
       this.react(
         () => this.hoveredWord,
         () => {
-          console.log('hovered is', this.hoveredWord)
           if (this.hoveredWord) {
             this.knowledge.word = this.hoveredWord
           }
@@ -108,7 +103,7 @@ const log = debug('highlights')
           y: item[1],
           w: item[2],
           h: item[3],
-          string: getKey(item),
+          string: wordKey(item),
         })
       }
     }
@@ -120,14 +115,14 @@ export default class HighlightsPage {
       <frame if={store.showAll}>
         {(ocrWords || []).map(item => (
           <OCRWord
-            key={getKey(item)}
+            key={wordKey(item)}
             highlighted={includes(store.entities, item[4])}
             item={item}
             store={store}
           />
         ))}
         {(desktopState.linePositions || []).map(item => (
-          <OCRLine key={getKey(item)} item={item} store={store} />
+          <OCRLine key={wordKey(item)} item={item} store={store} />
         ))}
       </frame>
     )

@@ -3,12 +3,10 @@ import * as React from 'react'
 import { view, watch } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { Thing } from '~/app'
-import MarkdownRender from './markdownRenderer'
-import Conversation from './conversation'
 import Mousetrap from 'mousetrap'
 import Screen from '@mcro/screen'
-import WebView from '~/views/webview'
 import ControlButton from '~/views/controlButton'
+import { wordKey } from '~/helpers'
 
 const keyParam = (window.location.search || '').match(/key=(.*)/)
 const KEY = keyParam && keyParam[1]
@@ -25,6 +23,26 @@ const peekShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.05]]]
         Screen.electronState.peekState &&
         Screen.electronState.peekState.windows &&
         Screen.electronState.peekState.windows[0]
+      )
+    }
+
+    // sitrep
+    get hoveredWord() {
+      // only if highlighted
+      console.log(
+        Screen.state.hoveredWord,
+        Screen.desktopState.ocrWords,
+        Screen.state.highlightWords,
+      )
+      return (
+        (Screen.state.hoveredWord &&
+          Screen.desktopState.ocrWords &&
+          Screen.desktopState.ocrWords.find(
+            w =>
+              Screen.state.highlightWords[w[4]] &&
+              wordKey(w) === Screen.state.hoveredWord.key,
+          )) ||
+        null
       )
     }
 
@@ -47,9 +65,19 @@ const peekShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.05]]]
         console.log('esc')
         this.isHovered = false
       })
-      this.setTimeout(() => {
-        this.showWebview = true
-      }, 150)
+
+      let hoverShow
+      this.watch(() => {
+        const word = this.hoveredWord
+        console.log('hoveredWord >>>', word)
+        // ignore if holding option
+        if (Screen.desktopState.keyboard.option) return
+        clearTimeout(hoverShow)
+        const hidden = !word
+        hoverShow = setTimeout(() => {
+          Screen.setState({ hidden })
+        }, hidden ? 50 : 500)
+      }, true)
     }
 
     @watch
@@ -138,7 +166,7 @@ export default class PeekPage {
       case 'left':
         arrowPosition = {
           top: 53,
-          left: 0,
+          left: -3,
         }
         break
       case 'bottom':
@@ -173,6 +201,7 @@ export default class PeekPage {
               size={arrowSize}
               towards={arrowTowards}
               background={background}
+              border={key === 1 ? '1px solid #ccc' : null}
               css={{
                 position: 'absolute',
                 ...arrowPosition,
@@ -238,42 +267,12 @@ export default class PeekPage {
                   />
                 </UI.Row>
               </header>
-              <tabs if={store.thing}>
-                <tab $visible={store.tab === 'readability'}>
-                  <readability>
-                    <MarkdownRender
-                      if={!store.isConversation && store.thing.body}
-                      markdown={store.thing.body}
-                    />
-                    <Conversation
-                      if={store.isConversation}
-                      thing={store.thing}
-                    />
-                  </readability>
-                </tab>
-                <tab $visible={store.tab === 'webview'}>
-                  <loading if={!store.pageLoaded}>
-                    <UI.Text color="#000">Loading</UI.Text>
-                  </loading>
-                  <WebView
-                    if={false && showWebview}
-                    $contentLoading={!store.pageLoaded}
-                    $webview
-                    getRef={store.handlePageRef}
-                  />
-                  <bottombar
-                    css={{
-                      width: '100%',
-                      borderTop: [1, '#eee'],
-                      alignItems: 'center',
-                    }}
-                  >
-                    <UI.Text size={0.8} alpha={0.5}>
-                      no url
-                    </UI.Text>
-                  </bottombar>
-                </tab>
-              </tabs>
+              <content>
+                Hovered word:
+                <hlword if={store.hoveredWord}>
+                  {JSON.stringify(store.hoveredWord)}
+                </hlword>
+              </content>
             </contentInner>
           </content>
         </peek>

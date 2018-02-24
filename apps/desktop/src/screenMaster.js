@@ -8,7 +8,7 @@ import { store } from '@mcro/black/store'
 import Screen from '@mcro/screen'
 import * as Mobx from 'mobx'
 
-const log = debug('screenMaster')
+const log = debug('scrn')
 
 const PORT = 40510
 const DESKTOP_KEY = 'desktop'
@@ -101,12 +101,10 @@ export default class ScreenState {
         linePositions,
       })
     })
-    this.oracle.onClear(() => {
-      this.resetHighlights()
-    })
     this.oracle.onWindowChange((event, value) => {
       if (event === 'ScrollEvent') {
         this.resetHighlights()
+        this.rescanApp()
         return
       }
       // if current app is a prevented app, treat like nothing happened
@@ -149,7 +147,7 @@ export default class ScreenState {
         this.oracle.resume()
       }
       const appState = JSON.parse(JSON.stringify(nextState))
-      log('set.appState', appState)
+      // log('set.appState', appState)
       this.setState({
         appState,
       })
@@ -197,18 +195,19 @@ export default class ScreenState {
     this.resetHighlights()
     await this.oracle.stop()
     log('starting back up')
-    await this.oracle.start()
     this.watchBounds(this.watchSettings.name, this.watchSettings.settings)
+    await this.oracle.start()
   }
 
   resetHighlights = () => {
     if (PREVENT_CLEAR[this.state.appState.name]) {
       return
     }
-    this.clearOCRState()
     this.setState({
       lastScreenChange: Date.now(),
     })
+    // after fast clear, empty data
+    this.clearOCRState()
   }
 
   clearOCRState = debounce(() => {
@@ -303,24 +302,15 @@ export default class ScreenState {
     }
   }
 
-  rescanApp = async () => {
-    if (this.stopped) {
-      log('is stopped')
-      return
-    }
-    const { name, offset, bounds } = this.state.appState
-    if (PREVENT_SCANNING[name] || PREVENT_APP_STATE[name]) {
-      return
-    }
-    if (!offset || !bounds) {
-      log('todo: initial offset/bounds')
-      return
-    }
+  rescanApp = debounce(async () => {
     clearTimeout(this.clearOCRTimeout)
-    log('rescanApp', name)
+    if (this.stopped) return
+    const { name, offset, bounds } = this.state.appState
+    if (PREVENT_SCANNING[name] || PREVENT_APP_STATE[name]) return
+    if (!offset || !bounds) return
     this.resetHighlights()
     // we are watching the whole app for words
-    this.watchBounds('App', {
+    await this.watchBounds('App', {
       fps: 10,
       sampleSpacing: 100,
       sensitivity: 1,
@@ -340,20 +330,23 @@ export default class ScreenState {
       ],
     })
     this.hasResolvedOCR = false
-    // not paused, clear and resume
-    this.oracle.clear()
-    this.oracle.resume()
+    if (Screen.state.paused) {
+      return
+    }
+    log('rescanApp.resume', name)
+    await this.oracle.resume()
     this.clearOCRTimeout = setTimeout(async () => {
       if (!this.hasResolvedOCR) {
         log('seems like ocr has stopped working, restarting...')
         this.restartScreen()
       }
     }, 15000)
-  }
+  }, 32)
 
-  watchBounds(name: String, settings: Object) {
+  watchBounds = async (name: String, settings: Object) => {
     this.isWatching = name
     this.watchSettings = { name, settings }
+    await this.oracle.pause()
     this.oracle.watchBounds(settings)
   }
 
@@ -420,13 +413,19 @@ export default class ScreenState {
 
   setupSocket() {
     let id = 0
+    // log connections
+    let lastCount = 0
+    setInterval(() => {
+      const count = this.activeSockets.length
+      if (lastCount != count) log(count, 'connections')
+      lastCount = count
+    }, 5000)
     this.wss.on('connection', socket => {
       let uid = id++
       // send current state
       this.socketSend(socket, this.state)
       // add to active sockets
       this.activeSockets.push({ uid, socket })
-      log('screen-master:', this.activeSockets.length, 'connections')
       // listen for incoming
       socket.on('message', str => {
         const { action, value, state, source } = JSON.parse(str)

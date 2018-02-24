@@ -11,6 +11,14 @@ import Screen from '@mcro/screen'
     willMount() {
       if (!Screen.started) {
         Screen.start('app', {
+          highlightWords: {
+            the: true,
+            and: true,
+            to: true,
+            be: true,
+            used: true,
+            this: true,
+          },
           hoveredWord: null,
           hoveredLine: null,
           disablePeek: false,
@@ -69,6 +77,7 @@ export default class Root extends React.Component {
     if (this.state.error && window.location.pathname !== '/highlights') {
       return (
         <aboveredbox
+          $$draggable
           css={{
             position: 'absolute',
             top: 0,
@@ -89,7 +98,7 @@ export default class Root extends React.Component {
               Refresh
             </UI.Button>
           </UI.Portal>
-          <Redbox $$draggable error={this.state.error} />
+          <Redbox error={this.state.error} />
         </aboveredbox>
       )
     }

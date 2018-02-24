@@ -65,6 +65,7 @@ class Screen {
   }
   // state of app
   appState = {
+    highlightWords: {},
     hoveredWord: null,
     hoveredLine: null,
     pinned: null,

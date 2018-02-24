@@ -27,11 +27,14 @@ const peekShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.05]]]
     }
 
     get hoveredWord() {
+      // only if highlighted
       return (
         (Screen.state.hoveredWord &&
           Screen.desktopState.ocrWords &&
           Screen.desktopState.ocrWords.find(
-            w => wordKey(w) === Screen.state.hoveredWord.key,
+            w =>
+              Screen.state.highlightWords[w[4]] &&
+              wordKey(w) === Screen.state.hoveredWord.key,
           )) ||
         null
       )
@@ -61,6 +64,8 @@ const peekShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.05]]]
       this.react(
         () => this.hoveredWord,
         word => {
+          // ignore if holding option
+          if (Screen.desktopState.keyboard.option) return
           clearTimeout(hoverShow)
           const hidden = !word
           hoverShow = setTimeout(() => {

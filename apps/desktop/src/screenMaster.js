@@ -308,7 +308,6 @@ export default class ScreenState {
     const { name, offset, bounds } = this.state.appState
     if (PREVENT_SCANNING[name] || PREVENT_APP_STATE[name]) return
     if (!offset || !bounds) return
-    log('rescanApp', name)
     this.resetHighlights()
     // we are watching the whole app for words
     await this.watchBounds('App', {
@@ -331,6 +330,10 @@ export default class ScreenState {
       ],
     })
     this.hasResolvedOCR = false
+    if (Screen.state.paused) {
+      return
+    }
+    log('rescanApp.resume', name)
     await this.oracle.resume()
     this.clearOCRTimeout = setTimeout(async () => {
       if (!this.hasResolvedOCR) {
@@ -344,7 +347,6 @@ export default class ScreenState {
     this.isWatching = name
     this.watchSettings = { name, settings }
     await this.oracle.pause()
-    log('watching bounds', name)
     this.oracle.watchBounds(settings)
   }
 

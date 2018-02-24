@@ -9,9 +9,8 @@ bin/bootstrap
 ```sh
 build # only need to do this once
 # in separate tabs, run
-build --watch
-run app
 run desktop
+run app
 run electron
 ```
 

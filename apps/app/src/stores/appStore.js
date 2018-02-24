@@ -1,17 +1,11 @@
 // @flow
-import { view, store } from '@mcro/black'
-import { autorunAsync } from 'mobx'
+import { store, debugState } from '@mcro/black'
 import { uniqBy } from 'lodash'
 import Database from '@mcro/models'
 
 type Options = {
   config: Object,
   models: Object,
-}
-
-type ThingRef = {
-  name: string,
-  thing: Class<any>,
 }
 
 @store
@@ -22,31 +16,24 @@ export default class AppStore {
   started = false
   connected = false
   errors = []
-  mounted = {
-    stores: {},
-    views: {},
-  }
-  mountedVersion = 0
-  stores: ?Object = null
-  views: ?Object = null
+  stores = null
+  views = null
 
   constructor({ config, models }: Options) {
     this.config = config
     this.models = models
     // listen for stuff, attach here
-    view.on('store.mount', this.mount('stores'))
-    view.on('store.unmount', this.unmount('stores'))
-    view.on('view.mount', this.mount('views'))
-    view.on('view.unmount', this.unmount('views'))
-    view.provide.on('store.mount', this.mount('stores'))
-    view.provide.on('store.unmount', this.unmount('stores'))
+    debugState(({ stores, views }) => {
+      this.stores = stores
+      this.views = views
+    })
   }
 
   async start({ quiet = true } = {}) {
     if (!quiet) {
       console.log(
         '%cUse App.* (models, stores, sync, debug(false)...))',
-        'background: yellow'
+        'background: yellow',
       )
       console.time('start')
     }
@@ -63,7 +50,6 @@ export default class AppStore {
     })
     this.connected = true
     this.catchErrors()
-    this.trackMounts()
     if (!quiet) {
       console.timeEnd('start')
     }
@@ -73,46 +59,6 @@ export default class AppStore {
   async dispose() {
     if (this.database) {
       await this.database.dispose()
-    }
-  }
-
-  trackMounts = () => {
-    // auto Object<string, Set> => Object<string, []>
-    autorunAsync(() => {
-      this.mountedVersion
-      const reduce = object =>
-        Object.keys(object).reduce((acc, key) => {
-          const entries = []
-          object[key].forEach(store => {
-            entries.push(store)
-          })
-          return {
-            ...acc,
-            // nice helper: turn just one array into a singular item
-            [key]: entries.length === 1 ? entries[0] : entries,
-          }
-        }, {})
-
-      this.stores = reduce(this.mounted.stores)
-      this.views = reduce(this.mounted.views)
-    }, 100)
-  }
-
-  key = (name: string, thing: Class<any>) =>
-    name === 'store' ? thing.constructor.name : name
-
-  mount = (type: string) => ({ name, thing }: ThingRef) => {
-    const key = this.key(name, thing)
-    this.mounted[type][key] = this.mounted[type][key] || new Set()
-    this.mounted[type][key].add(thing)
-    this.mountedVersion++
-  }
-
-  unmount = (type: string) => ({ name, thing }: ThingRef) => {
-    const key = this.key(name, thing)
-    if (this.mounted[type][key]) {
-      this.mounted[type][key].delete(thing)
-      this.mountedVersion++
     }
   }
 

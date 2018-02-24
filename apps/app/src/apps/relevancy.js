@@ -2,12 +2,12 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import { last } from 'lodash'
 import * as UI from '@mcro/ui'
-import RelevancyStore from '~/stores/relevancy'
-import { decodeEntity } from '~/stores/relevancy/utils'
+import LanguageStore from '~/stores/language'
+import { decodeEntity } from '~/stores/language/utils'
 console.log('in relevancy')
 
 @view({
-  store: RelevancyStore,
+  store: LanguageStore,
 })
 export default class RelevancyPage {
   render({ store }) {
@@ -130,7 +130,7 @@ export default class RelevancyPage {
                       </docType>
                     </result>
                   )
-                }
+                },
               )}
             </results>
             <UI.Title
@@ -305,9 +305,9 @@ export default class RelevancyPage {
       opacity: 0.7,
     },
     highlight: {
-      opacity: '1 !important',
-      borderBottom: '1px solid rgba(0,0,0,0.2)',
-      fontWeight: 400,
+      // opacity: '1 !important',
+      // borderBottom: '1px solid rgba(0,0,0,0.2)',
+      // fontWeight: 400,
     },
     line: {
       flexWrap: 'wrap',

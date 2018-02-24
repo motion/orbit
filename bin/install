@@ -5,8 +5,8 @@ ARGS=${@:1}
 echo "install: $ARGS"
 
 if [ -z "$ARGS" ]; then
-  pnpm install
+  npx lerna bootstrap
 else
-  pnpm install --save $ARGS
+  npx lerna add $ARGS
 fi
 

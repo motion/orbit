@@ -33,7 +33,9 @@ export const storeOptions = {
     if (store.willUnmount) {
       store.willUnmount(store)
     }
-    store.dispose()
+    if (store.subscriptions) {
+      store.subscriptions.dispose()
+    }
   },
 }
 

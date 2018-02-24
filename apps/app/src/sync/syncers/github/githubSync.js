@@ -4,9 +4,8 @@ import Syncer from '../syncer'
 import GithubFeedSync from './githubFeedSync'
 import GithubTaskSync from './githubTaskSync'
 import GithubPeopleSync from './githubPeopleSync'
-import debug from 'debug'
 
-const log = _ => _ || debug('sync')
+const log = debug('sync')
 
 @store
 export default class GithubSync extends Syncer {
@@ -50,7 +49,7 @@ export default class GithubSync extends Syncer {
       // setup options
       const syncDate = Date.now()
       const requestSearch = new URLSearchParams(
-        Object.entries({ ...search, access_token: this.token })
+        Object.entries({ ...search, access_token: this.token }),
       )
       const uri = `https://api.github.com${path}?${requestSearch.toString()}`
 

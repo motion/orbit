@@ -1,0 +1,12 @@
+{
+  "name": "@mcro/debug",
+  "version": "1.5.1",
+  "description": "",
+  "main": "index.js",
+  "author": "Motion",
+  "license": "MIT",
+  "dependencies": {
+    "global": "4.3.2",
+    "stringify-object": "^3.2.2"
+  }
+}

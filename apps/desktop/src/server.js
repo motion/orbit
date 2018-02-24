@@ -9,11 +9,9 @@ import OAuth from './server/oauth'
 import OAuthStrategies from './server/oauth.strategies'
 import Passport from 'passport'
 import Crawler from '@mcro/crawler'
-import debug from 'debug'
 import path from 'path'
 import killPort from 'kill-port'
 import KGSearch from 'google-kgsearch'
-import fetcher from './fetcher'
 
 const { SERVER_PORT } = Constants
 
@@ -54,7 +52,6 @@ export default class Server {
     this.setupCrawler()
     this.setupSearch()
     this.setupKnowledge()
-    this.setupFetcher()
     this.setupCredPass()
     this.setupPassportRoutes()
     this.setupProxy()
@@ -85,24 +82,6 @@ export default class Server {
     }
   }
 
-  setupSearch() {
-    // const searchIndex = require.resolve('@mcro/search')
-    // const searchDist = path.join(searchIndex, '..', '..', 'build')
-    // log('setting up search')
-    // this.app.use('/search', express.static(searchDist))
-  }
-
-  setupFetcher() {
-    this.app.get('/fetcher', async (req, res) => {
-      const oneMonth = 2.628e9
-      const resources = await fetcher(
-        req.query.users.split(','),
-        Date.now() - oneMonth,
-      )
-      res.json(resources)
-    })
-  }
-
   setupKnowledge() {
     const apiKey = `AIzaSyARmEgX6uX-6ZDI9fKK0jUX00nLGcOMxR0`
     const kGraph = KGSearch(apiKey)
@@ -119,6 +98,12 @@ export default class Server {
         res.json(items)
       })
     })
+  }
+
+  setupSearch() {
+    const searchIndex = require.resolve('@mcro/search')
+    const searchDist = path.join(searchIndex, '..', '..', 'build')
+    this.app.use('/search', express.static(searchDist))
   }
 
   setupCrawler() {

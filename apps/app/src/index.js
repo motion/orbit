@@ -3,11 +3,15 @@ import 'regenerator-runtime/runtime'
 import 'babel-polyfill'
 
 import 'isomorphic-fetch'
+import '@mcro/debug/inject'
 import createElement from '@mcro/black/lib/createElement'
 // dont import * as React, we need to overwrite createElement
 import React from 'react'
 import * as Constants from './constants'
-import debug from 'debug'
+
+console.warn(
+  `$ NODE_ENV=${process.env.NODE_ENV} run app ${window.location.pathname}`,
+)
 
 // $FlowIgnore
 React.createElement = createElement // any <tag /> can use $$style
@@ -17,9 +21,6 @@ if (Constants.IS_PROD) {
 } else {
   require('./helpers/installDevTools')
 }
-
-const DEBUG_FLAG = localStorage.getItem('debug') || 'app,sync,model'
-debug.enable(DEBUG_FLAG)
 
 export function start() {
   console.timeEnd('splash')

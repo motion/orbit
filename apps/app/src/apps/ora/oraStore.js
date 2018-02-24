@@ -7,12 +7,11 @@ import PinStore from '~/stores/pinStore'
 import UIStore from '~/stores/uiStore'
 import SearchStore from '~/stores/searchStore'
 import { CurrentUser } from '~/app'
-import debug from 'debug'
 import After from '~/views/after'
 import { isEqual } from 'lodash'
 import Screen from '@mcro/screen'
 
-const log = _ => _ || debug('ora')
+const log = debug('ora')
 const useWorker = window.location.href.indexOf('?noWorker')
 
 // hacky
@@ -77,22 +76,6 @@ export default class OraStore {
           .sort({ updatedAt: 'desc' })
 
   async willMount() {
-    // set initial state
-    if (!Screen.started) {
-      Screen.start('app', {
-        disablePeek: false,
-        pinned: false,
-        hidden: false,
-        preventElectronHide: true,
-        contextMessage: 'Orbit',
-      })
-    }
-
-    // todo: setting in initial state isnt working... queudState initial sync bug
-    setTimeout(() => {
-      Screen.setState({ disablePeek: true })
-    }, 1000)
-
     // start this after screen
     this.ui = new UIStore({ oraStore: this })
 

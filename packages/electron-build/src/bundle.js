@@ -106,8 +106,8 @@ async function bundle() {
 
 bundle()
 
-process.on('uncaughtException', (...args) => {
-  console.log('uncaughtException', ...args)
+process.on('uncaughtException', err => {
+  console.log('uncaughtException', err.stack)
   process.exit(0)
 })
 process.on('unhandledRejection', function(reason) {

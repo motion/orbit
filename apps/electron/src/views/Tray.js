@@ -10,7 +10,7 @@ export default class TrayEl {
   render() {
     return (
       <Tray
-        onClick={Screen.swiftBridge.toggle}
+        onClick={() => Screen.setState({ shouldPause: Date.now() })}
         image={Path.join(
           Constants.ROOT_PATH,
           'resources',
@@ -18,7 +18,7 @@ export default class TrayEl {
           'orbitTemplate.png',
         )}
         title={
-          Screen.swiftState.isPaused
+          Screen.desktopState.paused
             ? 'Paused'
             : Screen.appState.contextMessage || 'Orbit'
         }

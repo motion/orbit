@@ -11,7 +11,7 @@ module.exports = function(context, givenOpts) {
 
   const config = {
     plugins: [
-      // getPlugin('babel-plugin-transform-runtime'),
+      getPlugin('babel-plugin-macros'),
       // order important here
       getPlugin('babel-plugin-transform-decorators-legacy-without-clutter'),
       getPlugin('babel-plugin-transform-class-properties'),

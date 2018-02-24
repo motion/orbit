@@ -1,0 +1,8 @@
+{
+  "name": "@mcro/chrome-extensions",
+  "version": "1.5.1",
+  "description": "",
+  "main": "index.js",
+  "author": "Motion",
+  "license": "MIT"
+}

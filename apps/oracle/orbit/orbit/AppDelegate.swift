@@ -10,7 +10,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   let shouldRunTest = ProcessInfo.processInfo.environment["TEST_RUN"] == "true"
   let queue = AsyncGroup()
   var socketBridge: SocketBridge!
-  var watcher: Windo!
+  var windo: Windo!
   var screen: Screen!
   private var lastSent = ""
   @IBOutlet weak var window: NSWindow!
@@ -21,7 +21,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
   func applicationDidFinishLaunching(_ aNotification: Notification) {
     socketBridge = SocketBridge(queue: self.queue, onMessage: self.onMessage)
-    watcher = Windo(emit: self.emit)
+    windo = Windo(emit: self.emit)
 
     do {
       screen = try Screen(emit: self.emit, queue: self.queue, displayId: CGMainDisplayID())
@@ -60,6 +60,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   }
   
   func onMessage(_ text: String) {
+//    print("Swift.onMessage \(text)")
     if text.count < 5 {
       print("weird text")
       return
@@ -100,6 +101,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     if action == "clear" {
       screen.clear()
+      return
+    }
+    if action == "defoc" {
+      windo.defocus()
       return
     }
     print("received unknown message: \(text)")

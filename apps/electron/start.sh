@@ -1,20 +1,13 @@
 #!/bin/bash
 
-function kill-electron() {
-  electron_pid=$(ps aux | grep 'node electron' | awk '{print $2}')
-  echo "electron pid: $electron_pid"
-  kill -9 "$electron_pid"
-}
-
-WEB_ON=$(lsof -i TCP:3002 | wc -c)
-API_ON=$(lsof -i TCP:3001 | wc -c)
-
-if [[ "$WEB_ON" -ne 0 && "$API_ON" -ne 0 ]]; then
-  kill-electron
-  NODE_ENV=development electron --inspect=5959 ./lib/start-app
-  wait
-else
-  echo "before electron run:"
-  echo "$ run app"
-  echo "$ run desktop"
-fi
+npx nodemon \
+  --quiet \
+  --ignore src \
+  --watch lib \
+  --watch $(realpath node_modules/@mcro/screen) \
+  --watch $(realpath node_modules/@mcro/black) \
+  --watch $(realpath node_modules/@mcro/constants)  \
+  --watch $(realpath node_modules/@mcro/reaction)  \
+  --watch $(realpath node_modules/@mcro/debug)  \
+  --watch $(realpath node_modules/@mcro/macros) \
+  --exec 'npx wait-port 3002 && npx wait-port 3001 && npx kill-port 9001 && NODE_ENV=development electron --inspect=9001 --remote-debugging-port=9002 lib/start-app'

@@ -1,6 +1,7 @@
 # next
 
-"shared highlights"
+* auto smart mobx logger + frequency filter
+* .cache type cached rebuilds
 
 ux
 

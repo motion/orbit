@@ -6,23 +6,23 @@
   "scripts": {
     "build": "build dev",
     "watch": "npm run build -- --watch",
-    "start":
-      "NODE_ENV=development DEBUG=desktop,crawler,crawler:*,desktop:* npx nodemon es6/index.js",
+    "start": "./start.sh",
     "start-prod": "NODE_ENV=production node index.js",
     "build-electron": "electron-rebuild -v 1.7.10"
   },
   "dependencies": {
+    "@mcro/debug": "*",
     "@mcro/black": "*",
     "@mcro/crawler": "^1.5.1",
     "@mcro/oracle": "*",
     "@mcro/passport-slack": "^1.5.1",
     "@mcro/screen": "*",
     "@mcro/search": "^1.5.1",
+    "@mcro/macros": "*",
     "babel-polyfill": "^6.23.0",
     "body-parser": "^1.16.1",
     "clean-stacktrace": "^1.1.0",
     "cors": "^2.8.3",
-    "debug": "^3.1.0",
     "escape-string-applescript": "^2.0.0",
     "execa": "^0.9.0",
     "express": "^4.15.2",
@@ -51,11 +51,12 @@
     "sb-promisify": "^2.0.2",
     "source-map-support": "^0.4.16",
     "sudo-prompt": "^7.1.1",
-    "twit": "^2.2.9",
-    "wait-for-port": "^0.0.2",
     "ws": "^3.3.3"
   },
   "devDependencies": {
-    "nodemon": "1.15.0"
+    "touch": "^3.1.0",
+    "@mcro/dev": "*",
+    "nodemon": "^1.15.0",
+    "watch": "^1.0.2"
   }
 }

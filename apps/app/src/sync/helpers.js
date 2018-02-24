@@ -1,8 +1,7 @@
 // @flow
 import { Job } from '@mcro/models'
-import debug from 'debug'
 
-const log = _ => _ || debug('sync')
+const log = debug('sync')
 
 const SECONDS_UNTIL_JOB_STALE = 60 * 10
 const UNITS_SECOND = 1000
@@ -18,7 +17,7 @@ export async function ensureJob(
   type: string,
   action: string,
   options: Object = {},
-  force?: boolean
+  force?: boolean,
 ): ?Job {
   const createJob = () => Job.create({ type, action })
   if (force) {
@@ -31,9 +30,7 @@ export async function ensureJob(
       (Date.now() - Date.parse(lastPending.createdAt)) / UNITS_SECOND
     if (secondsAgo > SECONDS_UNTIL_JOB_STALE) {
       log(
-        `Stale job, removing... ${type} ${action}, ${secondsAgo} seconds ago (${
-          SECONDS_UNTIL_JOB_STALE
-        } until stale)`
+        `Stale job, removing... ${type} ${action}, ${secondsAgo} seconds ago (${SECONDS_UNTIL_JOB_STALE} until stale)`,
       )
       try {
         await lastPending.update({
@@ -65,7 +62,7 @@ export async function ensureJob(
 export async function createInChunks(
   items: Array<any>,
   callback: () => Promise<any>,
-  chunk = 10
+  chunk = 10,
 ) {
   if (!callback) {
     throw new Error('Need to provide a function that handles creation')

@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { Window } from '@mcro/reactron'
-import * as Helpers from '~/helpers'
 import * as Constants from '~/constants'
 import { once } from 'lodash'
 import { view } from '@mcro/black'
@@ -8,11 +7,7 @@ import Screen from '@mcro/screen'
 
 @view.electron
 export default class Windows {
-  handleOraRef = ref => {
-    if (ref && !this.oraRef) {
-      this.startOra(ref.window)
-    }
-  }
+  handleOraRef = ref => ref && this.startOra(ref.window)
 
   startOra = once(ref => {
     this.oraRef = ref
@@ -49,7 +44,7 @@ export default class Windows {
         onMove={this.onOraMoved}
         onBlur={this.onOraBlur}
         onFocus={this.onOraFocus}
-        devToolsExtensions={Helpers.getExtensions(['mobx', 'react'])}
+        devToolsExtensions={Constants.DEV_TOOLS_EXTENSIONS}
       />
     )
   }

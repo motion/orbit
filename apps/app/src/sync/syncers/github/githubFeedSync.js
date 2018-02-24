@@ -1,8 +1,7 @@
 // @flow
 import { Event, Thing } from '~/app'
-import debug from 'debug'
 
-const log = _ => _ || debug('sync')
+const log = debug('sync')
 
 export default class GithubFeedSync {
   constructor({ setting, token, helpers }) {
@@ -18,7 +17,7 @@ export default class GithubFeedSync {
   run = async () => {
     if (this.repos.length) {
       await Promise.all(
-        this.repos.map(([org, repo]) => this.syncFeed(org, repo))
+        this.repos.map(([org, repo]) => this.syncFeed(org, repo)),
       )
     } else {
       log('No repos selected')
@@ -41,13 +40,13 @@ export default class GithubFeedSync {
   getRepoEventsPage = async (
     org: string,
     repoName: string,
-    page: number
+    page: number,
   ): Promise<Array<Object>> => {
     const events = await this.helpers.fetch(
       `/repos/${org}/${repoName}/events`,
       {
         search: { page },
-      }
+      },
     )
     if (events && Array.isArray(events)) {
       return events
@@ -58,7 +57,7 @@ export default class GithubFeedSync {
   getRepoEvents = async (
     org: string,
     repoName: string,
-    page: number = 0
+    page: number = 0,
   ): Promise<Array<Object>> => {
     let events = await this.getRepoEventsPage(org, repoName, page)
 
@@ -84,7 +83,7 @@ export default class GithubFeedSync {
           const nextEvents = await this.getRepoEventsPage(
             org,
             repoName,
-            page + 1
+            page + 1,
           )
           if (nextEvents) {
             if (nextEvents.message) {
@@ -135,7 +134,7 @@ export default class GithubFeedSync {
             updated,
             data: event,
           })
-        })
+        }),
       )
     }
     const all = await Promise.all(creating)

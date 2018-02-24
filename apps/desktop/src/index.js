@@ -1,37 +1,45 @@
 import 'babel-polyfill'
 import 'isomorphic-fetch'
+import '@mcro/debug/inject'
+import '@mcro/black/mlog'
+import global from 'global'
+import * as Mobx from 'mobx'
 
-console.log('process.env.NODE_ENV', process.env.NODE_ENV)
+global.Mobx = Mobx
+
+const log = debug('index')
+
+console.warn(`$ NODE_ENV=${process.env.NODE_ENV} run desktop`)
 
 if (process.env.NODE_ENV === 'development') {
   require('source-map-support/register')
 }
-// if (!process.env.HAS_BABEL_POLYFILL) {
-//   require()
-// }
 
 const Desktop = require('./desktop').default
 const dTop = new Desktop()
 
-const exitHandler = code => {
-  console.log('exitHandler', code)
-  dTop.dispose()
-  process.exit(code)
+const exitHandler = async code => {
+  console.log('handling exit', code)
+  if (await dTop.dispose()) {
+    // otherwise it wont exit :/
+    process.kill(process.pid)
+  }
 }
 
-// dont close instantly
-process.stdin.resume()
 // do something when app is closing
 process.on('exit', exitHandler)
 // ctrl+c event
-process.on('SIGINT', () => exitHandler(0))
+process.on('SIGINT', exitHandler)
 // "kill pid" (nodemon)
 process.on('SIGUSR1', exitHandler)
 process.on('SIGUSR2', exitHandler)
+process.on('SIGSEGV', () => {
+  console.log('Segmentation fault on exit')
+  exitHandler(1)
+})
 // uncaught exceptions
-process.on('uncaughtException', (...args) => {
-  console.log('uncaughtException', ...args)
-  // process.exit(0)
+process.on('uncaughtException', err => {
+  console.log('uncaughtException', err.stack)
 })
 // promise exceptions
 process.on('unhandledRejection', function(reason, promise) {
@@ -48,7 +56,7 @@ export async function run() {
   try {
     await dTop.start()
   } catch (err) {
-    console.log('error', err)
+    log('error', err)
   }
 }
 

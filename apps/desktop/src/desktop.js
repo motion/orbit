@@ -4,45 +4,50 @@ import hostile_ from 'hostile'
 import * as Constants from '~/constants'
 import { promisifyAll } from 'sb-promisify'
 import sudoPrompt_ from 'sudo-prompt'
-import debug from 'debug'
 import ScreenMaster from './screenMaster'
 import Screen from '@mcro/screen'
 import * as Helpers from '~/helpers'
-import { store } from '@mcro/black/store'
+import { store, debugState } from '@mcro/black'
+import global from 'global'
+import Path from 'path'
 
 const log = debug('desktop')
-
-log('IS_PROD', Constants.IS_PROD)
 
 const hostile = promisifyAll(hostile_)
 const sudoPrompt = promisifyAll(sudoPrompt_)
 
 @store
 export default class Desktop {
-  server: Server
-  screen: Screen
-
-  constructor() {
-    this.server = new Server()
-    this.screenMaster = new ScreenMaster()
-  }
+  server = new Server()
+  screen = new ScreenMaster()
+  stores = null
 
   async start() {
+    global.App = this
     this.setupHosts()
     const port = await this.server.start()
     log(`starting desktop on ${port}`)
-    this.screenMaster.start()
+    this.screen.start()
     this.watchBrowserOpen()
+    debugState(({ stores }) => {
+      this.stores = stores
+    })
+  }
+
+  restart() {
+    require('touch')(Path.join(__dirname, '..', 'lib', 'index.js'))
   }
 
   watchBrowserOpen() {
     this.react(() => Screen.appState.openBrowser, url => Helpers.open(url))
   }
 
-  dispose() {
-    if (this.disposed) return
-    this.screenMaster.dispose()
+  dispose = async () => {
+    if (this.disposed) return false
+    await this.screen.dispose()
     this.disposed = true
+    log('screen disposed, returning...')
+    return true
   }
 
   async setupHosts() {

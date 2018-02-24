@@ -1,9 +1,8 @@
 // @flow
 import * as Helpers from '../helpers'
 import type { Setting } from '@mcro/models'
-import debug from 'debug'
 
-const log = _ => _ || debug('sync')
+const log = debug('sync')
 const DEFAULT_CHECK_INTERVAL = 1000 * 60 // 1 minute
 
 export default class Syncer {
@@ -33,7 +32,7 @@ export default class Syncer {
     // every so often
     this.jobWatcher = setInterval(
       () => this.check(false),
-      this.settings.checkInterval || DEFAULT_CHECK_INTERVAL
+      this.settings.checkInterval || DEFAULT_CHECK_INTERVAL,
     )
     this.check(false)
   }
@@ -142,9 +141,6 @@ export default class Syncer {
   dispose() {
     if (this.jobWatcher) {
       clearInterval(this.jobWatcher)
-    }
-    if (super.dispose) {
-      super.dispose()
     }
   }
 }

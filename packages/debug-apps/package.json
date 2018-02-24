@@ -1,0 +1,27 @@
+{
+  "name": "@mcro/debug-apps",
+  "main": "es6/index.js",
+  "version": "1.5.1",
+  "bin": {
+    "debug-apps": "./es6/index.js"
+  },
+  "scripts": {
+    "build": "build es6",
+    "start": "node --experimental-modules --max_old_space_size=4096 index"
+  },
+  "dependencies": {
+    "@mcro/chrome-extensions": "*",
+    "kill-port": "^1.1.0",
+    "puppeteer": "^1.1.0",
+    "@mcro/r2": "*",
+    "express": "^4.12.3",
+    "guid": "0.0.12",
+    "node-uuid": "^1.4.7",
+    "request": "^2.67.0",
+    "socket.io": "^2.0.4",
+    "debug": "^3.1.0",
+    "ws": "^4.0.0",
+    "lodash": "^4.17.5",
+    "http-proxy-middleware": "^0.17.4"
+  }
+}

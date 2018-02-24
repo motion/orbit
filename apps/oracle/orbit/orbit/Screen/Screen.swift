@@ -118,7 +118,7 @@ final class Screen: NSObject {
     self.input = AVCaptureScreenInput(displayID: displayId)
     output = AVCaptureVideoDataOutput()
 
-    print("output types: \(output.availableVideoCodecTypes) \(output.availableVideoPixelFormatTypes)")
+//    print("output types: \(output.availableVideoCodecTypes) \(output.availableVideoPixelFormatTypes)")
 
     output.videoSettings = [
       kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_420YpCbCr8BiPlanarFullRange
@@ -153,7 +153,7 @@ final class Screen: NSObject {
   }
 
   func start() {
-    debug("oracle.start()")
+//    debug("oracle.start()")
     if self.shouldCancel {
       self.shouldRunNextTime = true
     }
@@ -178,7 +178,6 @@ final class Screen: NSObject {
   }
 
   func pause() {
-    print("screen: pausing...")
     self.stop()
     self.emit("{ \"state\": { \"isPaused\": true } }")
   }
@@ -188,10 +187,10 @@ final class Screen: NSObject {
       if curTime != nil {
         let timeEnd = Int(Double(DispatchTime.now().uptimeNanoseconds - curTime!.uptimeNanoseconds) / 1_000_000)
 //        print("\(str.padding(toLength: 36, withPad: " ", startingAt: 0)) \(timeEnd)ms")
-        fputs("!\(str.padding(toLength: 36, withPad: " ", startingAt: 0)) \(timeEnd)ms", __stderrp)
+        print("\(str.padding(toLength: 36, withPad: " ", startingAt: 0)) \(timeEnd)ms")
         curTime = DispatchTime.now()
       } else {
-        fputs("!\(str)", __stderrp)
+        print("\(str)")
       }
     }
   }
@@ -242,13 +241,31 @@ final class Screen: NSObject {
     return val
   }
 
-  func getOCR(_ characterLines: [[Word]]) -> [String: String]? {
+  func getOCR(_ characterLines: [[Word]]) throws -> [String: String]? {
     startTime()
     var ocrResults = [String: String]() // outline => letter
     let chars = self.characters!
     let allCharacters: [Character] = characterLines.flatMap { $0.flatMap { $0.characters } }
+    let uniqCharacters = allCharacters.unique()
+    let unsolvedCharacters = uniqCharacters.filter { $0.letter == nil }
+    // return early! every char is already known
+    if unsolvedCharacters.count == 0 {
+      for char in uniqCharacters {
+        ocrResults[char.outline] = char.letter
+      }
+      return ocrResults
+    }
+    // write id string
+    var idString = ""
+    for word in characterLines.flatMap({ $0 }) {
+      for char in word.characters {
+        let uid = char.letter != nil ? "$\(char.letter!) " : "\(unsolvedCharacters.index(of: char)!) "
+        idString += uid
+      }
+      idString += "-1 "
+    }
+    try idString.write(to: NSURL.fileURL(withPath: "/tmp/characters-full.txt").absoluteURL, atomically: true, encoding: .utf8)
     // set filters unique outlines
-    let unsolvedCharacters = allCharacters.filter { $0.letter == nil }.unique()
     var foundCharacters = [String]()
     // if necessary, run ocr
     if unsolvedCharacters.count > 0 {
@@ -256,12 +273,7 @@ final class Screen: NSObject {
       let ocrString = unsolvedCharacters.enumerated().map({ item in
         return chars.charToString(item.element, debugID: "")
       }).joined(separator: "\n")
-      do {
-        let path = NSURL.fileURL(withPath: "/tmp/characters.txt").absoluteURL
-        try ocrString.write(to: path, atomically: true, encoding: .utf8)
-      } catch {
-        print("couldnt write pixel string \(error)")
-      }
+      try ocrString.write(to: NSURL.fileURL(withPath: "/tmp/characters.txt").absoluteURL, atomically: true, encoding: .utf8)
       debug("getOCR - characters.txt")
       // run ocr
       foundCharacters = ocr!.ocrCharacters()
@@ -503,7 +515,7 @@ final class Screen: NSObject {
   }
 
   func getWordsAndLines(_ ocrResults: [String: String], characterLines: [[Word]]) -> ([String], [String]) {
-    startTime()
+//    startTime()
     var words = [String]()
     var lines = [String]()
     for line in characterLines {
@@ -541,12 +553,12 @@ final class Screen: NSObject {
       }
       lines.append("[\(firstWord.x),\(minY / 2),\(width),\(maxH)]")
     }
-    debug("getWordsAndLines")
+//    debug("getWordsAndLines")
     return (words, lines)
   }
 
   func charactersWithLineBounds(_ charactersByLine: [[Word]]) -> [[Word]] {
-    startTime()
+//    startTime()
     var i = 0
     let result: [[Word]] = charactersByLine.map({ line in
       if line.count == 0 {
@@ -583,7 +595,7 @@ final class Screen: NSObject {
         return word
       }
     })
-    debug("charactersWithLineBounds")
+//    debug("charactersWithLineBounds")
     return result
   }
 
@@ -633,16 +645,20 @@ final class Screen: NSObject {
     let charactersByLineWithBounds: [[Word]] = charactersWithLineBounds(charactersByLine)
     if shouldBreak() { return nil }
     if box.ocr {
-      guard let ocrResults = getOCR(charactersByLineWithBounds) else { return nil }
-      if shouldBreak() { return nil }
-      let (words, lines) = getWordsAndLines(ocrResults, characterLines: charactersByLine)
-      if shouldBreak() { return nil }
-      // send to world
-      self.emit("{ \"action\": \"words\", \"value\": [\(words.joined(separator: ","))] }")
-      self.emit("{ \"action\": \"lines\", \"value\": [\(lines.joined(separator: ","))] }")
-      // update character cache
-      Async.utility(after: 0.04) { chars.updateCache(ocrResults) }
-      print("recognized \(lines.count) lines, \(words.count) words")
+      do {
+        guard let ocrResults = try getOCR(charactersByLineWithBounds) else { return nil }
+        if shouldBreak() { return nil }
+        let (words, lines) = getWordsAndLines(ocrResults, characterLines: charactersByLine)
+        if shouldBreak() { return nil }
+        // send to world
+        self.emit("{ \"action\": \"words\", \"value\": [\(words.joined(separator: ","))] }")
+        self.emit("{ \"action\": \"lines\", \"value\": [\(lines.joined(separator: ","))] }")
+        // update character cache
+        Async.utility(after: 0.04) { chars.updateCache(ocrResults) }
+//        print("recognized \(lines.count) lines, \(words.count) words")
+      } catch {
+        print("ocr failed...")
+      }
     } else {
       print("found \(charactersByLineWithBounds.flatMap { $0.flatMap { $0.characters } }.count) characters")
       self.emit("{ \"action\": \"words\", \"value\": [] }")

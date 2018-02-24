@@ -10,6 +10,8 @@ final class Windo {
   var emit: (String)->Void
   var swindler: Swindler.State
   var observer: Observer!
+  private var lastApp: NSRunningApplication?
+  private var currentApp: NSRunningApplication?
   private var lastSent = ""
   @IBOutlet weak var window: NSWindow!
   
@@ -36,11 +38,11 @@ final class Windo {
       }
       self.swindler.on { (event: WindowPosChangedEvent) in
         let val = event.newValue
-        self.emit("{ \"action\": \"WindowPosChangedEvent\", \"value\": [\(val.x), \(val.y)] }")
+        self.emit("{ \"action\": \"WindowPosChangedEvent\", \"value\": { \"id\": \"\(event.window.application.bundleIdentifier ?? "")\", \"pos\": [\(val.x), \(val.y)] } }")
       }
       self.swindler.on { (event: WindowSizeChangedEvent) in
         let val = event.newValue
-        self.emit("{ \"action\": \"WindowSizeChangedEvent\", \"value\": [\(val.width), \(val.height)] }")
+        self.emit("{ \"action\": \"WindowSizeChangedEvent\", \"value\": { \"id\": \"\(event.window.application.bundleIdentifier ?? "")\", \"size\": [\(val.width), \(val.height)] } }")
       }
       self.swindler.on { (event: WindowDestroyedEvent) in
         self.emit("{ \"action\": \"WindowDestroyedEvent\", \"value\": \"\(event.window.title.value)\" }")
@@ -50,11 +52,21 @@ final class Windo {
       }
       self.swindler.on { (event: FrontmostApplicationChangedEvent) in
         if event.newValue == nil { return }
+        self.lastApp = self.currentApp
+        self.currentApp = NSWorkspace.shared.frontmostApplication
         self.frontmostWindowChanged()
       }
       self.swindler.on { (event: WindowTitleChangedEvent) in
         self.frontmostWindowChanged()
       }
+    }
+  }
+  
+  // sends focus to last app besides our app
+  public func defocus() {
+//    print("defocus \(self.lastApp?.bundleIdentifier ?? "") \(self.currentApp?.bundleIdentifier ?? "")")
+    if let app = self.lastApp {
+      app.activate(options: .activateIgnoringOtherApps)
     }
   }
   

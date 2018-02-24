@@ -1,5 +1,4 @@
 import { isEqual } from 'lodash'
-import debug from 'debug'
 
 const log = debug('hoverSettler')
 

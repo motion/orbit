@@ -37,7 +37,6 @@ const DEFAULT_VALUE = undefined
 export default function automagical() {
   return {
     name: 'automagical',
-    onlyClass: true,
     decorator: (Klass: Class<any> | Function) => {
       Klass.prototype.automagic =
         Klass.prototype.automagic ||

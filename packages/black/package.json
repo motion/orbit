@@ -13,6 +13,8 @@
     "@mcro/decor": "^1.5.1",
     "@mcro/gloss": "^1.5.1",
     "global": "^4.3.0",
+    "mobx-deep-observer": "^0.0.4",
+    "mobx-logger": "^0.6.0",
     "prop-types": "^15.6.0"
   },
   "peerDependencies": {

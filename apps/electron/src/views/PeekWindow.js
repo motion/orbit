@@ -131,7 +131,6 @@ type PeekTarget = {
       this.react(
         () => this.focused,
         shouldFocus => {
-          console.log('handling focus', shouldFocus, this.peekRef)
           if (shouldFocus) {
             this.peekRef && this.peekRef.focus()
           } else {

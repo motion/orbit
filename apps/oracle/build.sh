@@ -4,6 +4,6 @@
 (cd pyocr && ./build.sh)
 
 cd orbit
-carthage update --platform mac
+carthage update --cache-builds --platform mac
 xcodebuild -configuration Release -derivedDataPath $(mktemp -d) -scheme orbit
-touch ../apps/desktop/src/index.js
+touch ../desktop/src/index.js

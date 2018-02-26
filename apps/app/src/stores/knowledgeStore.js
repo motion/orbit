@@ -4,8 +4,6 @@ import { API_URL } from '~/constants'
 import Screen from '@mcro/screen'
 import marginal from './language/marginal.json'
 
-window.marg = marginal
-
 @store
 export default class KnowledgeStore {
   knowledge = null
@@ -20,8 +18,6 @@ export default class KnowledgeStore {
   })
 
   willMount() {
-    console.log('in mount')
-    window.power = this
     this.react(
       () => Screen.hoveredWordName,
       async () => {
@@ -34,7 +30,6 @@ export default class KnowledgeStore {
           if (knowledge.length === 0) {
             return false
           }
-          console.log('knowledge is', knowledge)
           knowledge = knowledge[0].result
           knowledge.results = marginal
             .filter(

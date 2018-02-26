@@ -8,6 +8,8 @@ import global from 'global'
 import { isEqual, difference } from 'lodash'
 import * as desktopActions from './desktopActions'
 
+const wordKey = ([x, y, w, h]) => `${x}${y}${w}${h}`
+
 function bindAll(scope, namedActions) {
   return Object.keys(namedActions).reduce(
     (acc, cur) => ({ ...acc, [cur]: namedActions[cur].bind(scope) }),
@@ -74,6 +76,7 @@ class Screen {
     contextMessage: null,
     closePeek: null,
     disablePeek: null,
+    knowledge: null,
   }
   // state of desktop
   desktopState: DesktopState = {
@@ -112,6 +115,17 @@ class Screen {
   _initialStateKeys = []
 
   // public
+  get hoveredWordName() {
+    const word =
+      (this.state.hoveredWord &&
+        this.desktopState.ocrWords &&
+        this.desktopState.ocrWords.find(
+          w => wordKey(w) === this.state.hoveredWord.key,
+        )) ||
+      null
+
+    return word ? word[4] : null
+  }
 
   // note: you have to call start to make it explicitly connect
   start(source, initialState) {

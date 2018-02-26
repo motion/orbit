@@ -1,6 +1,10 @@
 import { memoize } from 'lodash'
 import { store } from '@mcro/black'
 import { API_URL } from '~/constants'
+import Screen from '@mcro/screen'
+import marginal from './language/marginal.json'
+
+window.marg = marginal
 
 @store
 export default class KnowledgeStore {
@@ -16,12 +20,32 @@ export default class KnowledgeStore {
   })
 
   willMount() {
+    console.log('in mount')
+    window.power = this
     this.react(
-      () => {
-        this.word
-      },
+      () => Screen.hoveredWordName,
       async () => {
-        this.knowledge = this.getKnowledge(word)
+        if (
+          Screen.hoveredWordName &&
+          Screen.appState.highlightWords[Screen.hoveredWordName]
+        ) {
+          this.word = Screen.hoveredWordName
+          let knowledge = await this.getKnowledge(Screen.hoveredWordName)
+          if (knowledge.length === 0) {
+            return false
+          }
+          console.log('knowledge is', knowledge)
+          knowledge = knowledge[0].result
+          knowledge.results = marginal
+            .filter(
+              ({ title }) =>
+                (title || '')
+                  .toLowerCase()
+                  .indexOf(Screen.hoveredWordName.toLowerCase()) > -1,
+            )
+            .slice(0, 3)
+          Screen.setState({ knowledge })
+        }
       },
     )
   }

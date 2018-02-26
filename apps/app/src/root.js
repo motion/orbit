@@ -27,6 +27,7 @@ import Screen from '@mcro/screen'
           contextMessage: 'Orbit',
           closePeek: null,
           hidden: true,
+          knowledge: null,
         })
       }
 

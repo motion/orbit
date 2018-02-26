@@ -5,8 +5,6 @@ import ner from './ner'
 import { watch, store } from '@mcro/black'
 import marginalDocs from './marginal.json'
 
-console.log('marginal is', marginalDocs)
-
 const countOf = (xs, x) => xs.filter(_x => _x === x).length
 import { API_URL } from '~/constants'
 

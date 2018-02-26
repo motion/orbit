@@ -8,7 +8,6 @@ import OCRWord from './ocrWord'
 import OCRLine from './ocrLine'
 import ner from '~/stores/language/ner'
 import KnowledgeStore from '~/stores/knowledgeStore'
-import { includes } from 'lodash'
 
 const log = debug('highlights')
 
@@ -34,10 +33,6 @@ const log = debug('highlights')
       return this.ocrWords.map(i => i[4]).join(' ')
     }
 
-    get entities() {
-      return ner(this.content)
-    }
-
     // test words
     // get ocrWords() {
     //   return [
@@ -57,16 +52,20 @@ const log = debug('highlights')
 
     willMount() {
       // setup hover events
-      console.log('hello')
       this.knowledge = new KnowledgeStore()
+
       this.react(
-        () => this.hoveredWord,
+        () => this.content,
         () => {
-          if (this.hoveredWord) {
-            this.knowledge.word = this.hoveredWord
-          }
+          Screen.setState({
+            highlightWords: ner(this.content).reduce(
+              (acc, item) => ({ ...acc, [item]: true }),
+              {},
+            ),
+          })
         },
       )
+
       this.react(() => this.ocrWords, this.setupHover('word'), true)
       this.react(
         () => desktopState.linePositions,
@@ -114,12 +113,7 @@ export default class HighlightsPage {
     return (
       <frame if={store.showAll}>
         {(ocrWords || []).map(item => (
-          <OCRWord
-            key={wordKey(item)}
-            highlighted={includes(store.entities, item[4])}
-            item={item}
-            store={store}
-          />
+          <OCRWord key={wordKey(item)} item={item} store={store} />
         ))}
         {(desktopState.linePositions || []).map(item => (
           <OCRLine key={wordKey(item)} item={item} store={store} />

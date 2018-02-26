@@ -6,10 +6,11 @@ import Screen from '@mcro/screen'
 
 @view
 export default class OCRWord {
-  render({ item, highlighted, store: { hoveredWord } }) {
+  render({ item, store: { hoveredWord } }) {
     const [x, y, width, height, word, color] = item
     const key = wordKey(item)
     const isHoldingOption = Screen.desktopState.keyboard.option
+    const highlighted = Screen.state.highlightWords[word]
 
     return (
       <word

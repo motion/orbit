@@ -19,7 +19,7 @@ const sudoPrompt = promisifyAll(sudoPrompt_)
 @store
 export default class Desktop {
   server = new Server()
-  screen = new ScreenMaster()
+  screenMaster = new ScreenMaster()
   stores = null
 
   async start() {
@@ -27,7 +27,7 @@ export default class Desktop {
     this.setupHosts()
     const port = await this.server.start()
     log(`starting desktop on ${port}`)
-    this.screen.start()
+    this.screenMaster.start()
     this.watchBrowserOpen()
     debugState(({ stores }) => {
       this.stores = stores
@@ -44,9 +44,8 @@ export default class Desktop {
 
   dispose = async () => {
     if (this.disposed) return false
-    await this.screen.dispose()
+    await this.screenMaster.dispose()
     this.disposed = true
-    log('screen disposed, returning...')
     return true
   }
 

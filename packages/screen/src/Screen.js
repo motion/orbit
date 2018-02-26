@@ -105,6 +105,7 @@ class Screen {
     },
   })
 
+  options = {}
   _queuedState = false
   _wsOpen = false
   _source = ''
@@ -114,10 +115,11 @@ class Screen {
   // public
 
   // note: you have to call start to make it explicitly connect
-  start(source, initialState) {
+  start(source, initialState, options = {}) {
     if (this.started) {
       throw new Error(`Already started screen`)
     }
+    this.options = options
     this.actions = {
       desktop: bindAll(this, desktopActions),
     }
@@ -147,6 +149,9 @@ class Screen {
   setState(state, internal = false) {
     if (!this.started) {
       throw new Error(`Called Screen.setState before calling Screen.start`)
+    }
+    if (!state) {
+      throw new Error(`No state passed to Screen.setState: ${state}`)
     }
     // update our own state immediately so its sync
     const changed = this._update(this._source, state, internal)
@@ -203,6 +208,12 @@ class Screen {
         const messageObj = JSON.parse(data)
         if (messageObj && typeof messageObj === 'object') {
           const { source, state } = messageObj
+          if (this.options.ignoreSource && this.options.ignoreSource[source]) {
+            return
+          }
+          if (!state) {
+            throw new Error(`No state received from message: ${data}`)
+          }
           this._update(source, state)
         } else {
           throw new Error(`Non-object received`)

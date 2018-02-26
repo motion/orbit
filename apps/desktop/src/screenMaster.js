@@ -1,21 +1,22 @@
 // @flow
-import { Server } from 'ws'
 import Oracle from '@mcro/oracle'
 import { debounce, isEqual, throttle, last } from 'lodash'
 import iohook from 'iohook'
-import killPort from 'kill-port'
+
 import { store } from '@mcro/black/store'
 import Screen from '@mcro/screen'
+import SocketManager from './helpers/socketManager'
 import * as Mobx from 'mobx'
 
-const log = debug('scrn')
+// this is the desktop screen master
+// acts as the desktop Screen which is "special"
+// because it relays messages around for the other screen stores
+// this file only handles the state related to Screen.desktopState
+// the socket management is in SocketManager
 
-const PORT = 40510
+const log = debug('screenMaster')
 const DESKTOP_KEY = 'desktop'
 const APP_ID = -1
-
-Screen.start('desktop')
-// TODO make this go through the screenStore
 
 // prevent apps from clearing highlights
 const PREVENT_CLEAR = {
@@ -42,11 +43,16 @@ const PREVENT_SCANNING = {
 }
 
 @store
-export default class ScreenState {
-  stopped = false
+export default class ScreenMaster {
   oracle = new Oracle()
-  activeSockets = []
-  curState = {}
+  socketManager = new SocketManager({
+    port: 40510,
+    source: 'desktop',
+    onConnection: socket => {
+      // send current state
+      this.socketManager.send(socket, this.state)
+    },
+  })
   watchSettings = {}
 
   state = Object.freeze({
@@ -63,16 +69,18 @@ export default class ScreenState {
     restoreWords: {},
   })
 
-  get hasListeners() {
-    return !!this.activeSockets.length
-  }
-
   start = async () => {
-    // and kill anything on this port
-    await killPort(PORT)
-    this.wss = new Server({ port: PORT })
-    this.setupSocket()
-    this.stopped = false
+    // TODO make this go through the screenStore
+    Screen.start(
+      'desktop',
+      {},
+      {
+        ignoreSource: {
+          desktop: true,
+        },
+      },
+    )
+    await this.socketManager.start()
     this.oracle.onWords(words => {
       this.hasResolvedOCR = true
       this.setState({
@@ -194,7 +202,6 @@ export default class ScreenState {
     log('restartScreen')
     this.resetHighlights()
     await this.oracle.stop()
-    log('starting back up')
     this.watchBounds(this.watchSettings.name, this.watchSettings.settings)
     await this.oracle.start()
   }
@@ -270,7 +277,6 @@ export default class ScreenState {
   }
 
   setState = object => {
-    if (this.stopped) return
     let hasNewState = false
     for (const key of Object.keys(object)) {
       if (!isEqual(Mobx.toJS(this.state[key]), object[key])) {
@@ -286,7 +292,7 @@ export default class ScreenState {
     // sends over (oldState, changedState, newState)
     this.onChangedState(oldState, object, this.state)
     // only send the changed things to reduce overhead
-    this.socketSendAll(DESKTOP_KEY, object)
+    this.socketManager.sendAll(DESKTOP_KEY, object)
   }
 
   onChangedState = async (oldState, newState) => {
@@ -304,7 +310,6 @@ export default class ScreenState {
 
   rescanApp = debounce(async () => {
     clearTimeout(this.clearOCRTimeout)
-    if (this.stopped) return
     const { name, offset, bounds } = this.state.appState
     if (PREVENT_SCANNING[name] || PREVENT_APP_STATE[name]) return
     if (!offset || !bounds) return
@@ -330,7 +335,7 @@ export default class ScreenState {
       ],
     })
     this.hasResolvedOCR = false
-    if (Screen.state.paused) {
+    if (this.state.paused) {
       return
     }
     log('rescanApp.resume', name)
@@ -371,10 +376,6 @@ export default class ScreenState {
     })
   }
 
-  stop = () => {
-    this.stopped = true
-  }
-
   async dispose() {
     // clear highlights on quit
     this.resetHighlights()
@@ -382,78 +383,5 @@ export default class ScreenState {
       await this.oracle.stop()
     }
     log('screen disposed')
-  }
-
-  socketSend = (socket, state: Object) => {
-    try {
-      socket.send(JSON.stringify({ source: DESKTOP_KEY, state }))
-    } catch (err) {
-      log('error with scoket', err.message, err.stack)
-    }
-  }
-
-  socketSendAll = (source: string, state: Object) => {
-    if (!source) {
-      throw new Error(`No source provided to state message`)
-    }
-    const strData = JSON.stringify({ state, source })
-    for (const { socket, uid } of this.activeSockets) {
-      try {
-        socket.send(strData)
-      } catch (err) {
-        log('API: failed to send to socket, removing', err.message, uid)
-        this.removeSocket(uid)
-      }
-    }
-  }
-
-  removeSocket = uid => {
-    this.activeSockets = this.activeSockets.filter(s => s.uid !== uid)
-  }
-
-  setupSocket() {
-    let id = 0
-    // log connections
-    let lastCount = 0
-    setInterval(() => {
-      const count = this.activeSockets.length
-      if (lastCount != count) log(count, 'connections')
-      lastCount = count
-    }, 5000)
-    this.wss.on('connection', socket => {
-      let uid = id++
-      // send current state
-      this.socketSend(socket, this.state)
-      // add to active sockets
-      this.activeSockets.push({ uid, socket })
-      // listen for incoming
-      socket.on('message', str => {
-        const { action, value, state, source } = JSON.parse(str)
-        if (state) {
-          this.socketSendAll(source, state)
-        }
-        if (action && this[action]) {
-          log('received action:', action)
-          this[action].call(this, value)
-        }
-      })
-      // handle events
-      socket.on('close', () => {
-        this.removeSocket(uid)
-      })
-      socket.on('error', err => {
-        // ignore ECONNRESET throw anything else
-        if (err.code !== 'ECONNRESET') {
-          throw err
-        }
-        this.removeSocket(uid)
-      })
-    })
-    this.wss.on('close', () => {
-      log('WE SHOULD HANDLE THIS CLOSE', ...arguments)
-    })
-    this.wss.on('error', (...args) => {
-      log('wss error', args)
-    })
   }
 }

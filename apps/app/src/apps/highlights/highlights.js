@@ -2,7 +2,6 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import quadtree from 'simple-quadtree'
 import Screen, { desktopState, swiftState } from '@mcro/screen'
-import { wordKey } from '~/helpers'
 import { LINE_Y_ADJ, toTarget } from './helpers'
 import OCRWord from './ocrWord'
 import OCRLine from './ocrLine'
@@ -102,7 +101,7 @@ const log = debug('highlights')
           y: item[1],
           w: item[2],
           h: item[3],
-          string: wordKey(item),
+          string: Screen.wordKey(item),
         })
       }
     }
@@ -113,10 +112,10 @@ export default class HighlightsPage {
     return (
       <frame if={store.showAll}>
         {(ocrWords || []).map(item => (
-          <OCRWord key={wordKey(item)} item={item} store={store} />
+          <OCRWord key={Screen.wordKey(item)} item={item} store={store} />
         ))}
         {(desktopState.linePositions || []).map(item => (
-          <OCRLine key={wordKey(item)} item={item} store={store} />
+          <OCRLine key={Screen.wordKey(item)} item={item} store={store} />
         ))}
       </frame>
     )

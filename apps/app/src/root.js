@@ -11,14 +11,7 @@ import Screen from '@mcro/screen'
     willMount() {
       if (!Screen.started) {
         Screen.start('app', {
-          highlightWords: {
-            the: true,
-            and: true,
-            to: true,
-            be: true,
-            used: true,
-            this: true,
-          },
+          highlightWords: {},
           hoveredWord: null,
           hoveredLine: null,
           disablePeek: false,

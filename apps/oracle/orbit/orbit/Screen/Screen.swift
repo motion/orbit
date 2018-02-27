@@ -2,6 +2,7 @@ import Foundation
 import AVFoundation
 import AppKit
 import Async
+import GPUImage
 
 // TODO:
 // 1. Add GPUImage2 here
@@ -161,15 +162,46 @@ final class Screen: NSObject {
   }
 
   func start() {
+    session.startRunning()
+    
+    do {
+      print("hi")
+      let url = NSURL.fileURL(withPath: "/tmp/image.jpg").absoluteURL
+      let pictureOutput = PictureOutput()
+      pictureOutput.encodedImageFormat = .jpeg
+      pictureOutput.encodedImageAvailableCallback = {imageData in
+        print("writing")
+        do {
+          try imageData.write(to: url)
+        } catch {
+          print("wtf")
+        }
+      }
+      print("start cam")
+      let camera = try Camera(input: self.input)
+      let filter = SaturationAdjustment()
+      print("apply iflter")
+      camera --> filter --> pictureOutput
+      print("start capture")
+      camera.startCapture()
+      Async.main(after: 1, {
+        print("save next frame")
+        filter.saveNextFrameToURL(url, format: .jpeg)
+      })
+    } catch {
+      fatalError("Could not initialize rendering pipeline: \(error)")
+    }
+    
+    
 //    debug("oracle.start()")
-    if self.shouldCancel {
-      self.shouldRunNextTime = true
-    }
-    if !session.isRunning {
-      self.shouldCancel = false
-      session.startRunning()
-      self.emit("{ \"state\": { \"isRunning\": true, \"isPaused\": false } }")
-    }
+//    if self.shouldCancel {
+//      self.shouldRunNextTime = true
+//    }
+//    if !session.isRunning {
+//      self.shouldCancel = false
+//      session.startRunning()
+//      self.emit("{ \"state\": { \"isRunning\": true, \"isPaused\": false } }")
+//    }
   }
 
   func stop() {

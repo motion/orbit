@@ -38,6 +38,7 @@
 		CF0BCDB7202E1BBB0012723C /* SocketBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0BCDB6202E1BBB0012723C /* SocketBridge.swift */; };
 		CF0BCDBB202E282E0012723C /* Bridge.plugin in Resources */ = {isa = PBXBuildFile; fileRef = CF0BCDBA202E282E0012723C /* Bridge.plugin */; };
 		CF0BCDBD202E2A640012723C /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0BCDBC202E2A640012723C /* main.swift */; };
+		CF84CA4D2045DF46009F2FEC /* GPUImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CF84CA442045DF3E009F2FEC /* GPUImage.framework */; };
 		CFBEEE1F202D838D005F925A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFBEEE1E202D838D005F925A /* AppDelegate.swift */; };
 		CFBEEE21202D838D005F925A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CFBEEE20202D838D005F925A /* Assets.xcassets */; };
 		CFBEEE24202D838D005F925A /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = CFBEEE22202D838D005F925A /* MainMenu.xib */; };
@@ -57,6 +58,41 @@
 			proxyType = 1;
 			remoteGlobalIDString = 2F86CEC51BD60117007E8C29;
 			remoteInfo = Swindler;
+		};
+		CF84CA432045DF3E009F2FEC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CF84CA3C2045DF3D009F2FEC /* GPUImage.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = BC6E7CAB1C39A9D8006DF678;
+			remoteInfo = GPUImage_macOS;
+		};
+		CF84CA452045DF3E009F2FEC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CF84CA3C2045DF3D009F2FEC /* GPUImage.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = BC6E7CB51C39A9D8006DF678;
+			remoteInfo = GPUImageTests_macOS;
+		};
+		CF84CA472045DF3E009F2FEC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CF84CA3C2045DF3D009F2FEC /* GPUImage.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = BC9E34E91E524A2200B8604F;
+			remoteInfo = GPUImage_iOS;
+		};
+		CF84CA492045DF3E009F2FEC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CF84CA3C2045DF3D009F2FEC /* GPUImage.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = BC9E34F11E524A2200B8604F;
+			remoteInfo = GPUImageTests_iOS;
+		};
+		CF84CA4B2045DF42009F2FEC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CF84CA3C2045DF3D009F2FEC /* GPUImage.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = BC6E7CAA1C39A9D8006DF678;
+			remoteInfo = GPUImage_macOS;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -118,6 +154,7 @@
 		CF0BCDB6202E1BBB0012723C /* SocketBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketBridge.swift; sourceTree = "<group>"; };
 		CF0BCDBA202E282E0012723C /* Bridge.plugin */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = Bridge.plugin; path = ../pyocr/dist/Bridge.plugin; sourceTree = "<group>"; };
 		CF0BCDBC202E2A640012723C /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		CF84CA3C2045DF3D009F2FEC /* GPUImage.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = GPUImage.xcodeproj; path = ../GPUImage2/framework/GPUImage.xcodeproj; sourceTree = "<group>"; };
 		CFBEEE1B202D838D005F925A /* orbit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = orbit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CFBEEE1E202D838D005F925A /* AppDelegate.swift */ = {isa = PBXFileReference; indentWidth = 2; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; tabWidth = 2; };
 		CFBEEE20202D838D005F925A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -131,6 +168,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CF84CA4D2045DF46009F2FEC /* GPUImage.framework in Frameworks */,
 				CF0BCD76202E0C060012723C /* PromiseKit.framework in Frameworks */,
 				CF0BCDA8202E10FB0012723C /* Async.framework in Frameworks */,
 				CF0BCD78202E0C060012723C /* AXSwift.framework in Frameworks */,
@@ -193,10 +231,22 @@
 			path = Windo;
 			sourceTree = "<group>";
 		};
+		CF84CA3D2045DF3D009F2FEC /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				CF84CA442045DF3E009F2FEC /* GPUImage.framework */,
+				CF84CA462045DF3E009F2FEC /* GPUImageTests_macOS.xctest */,
+				CF84CA482045DF3E009F2FEC /* GPUImage.framework */,
+				CF84CA4A2045DF3E009F2FEC /* GPUImageTests_iOS.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		CFBEEE12202D838D005F925A = {
 			isa = PBXGroup;
 			children = (
 				CF0BCDBA202E282E0012723C /* Bridge.plugin */,
+				CF84CA3C2045DF3D009F2FEC /* GPUImage.xcodeproj */,
 				CF0BCD68202E0A620012723C /* Swindler.xcodeproj */,
 				CFBEEE1D202D838D005F925A /* orbit */,
 				CFBEEE1C202D838D005F925A /* Products */,
@@ -247,6 +297,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				CF84CA4C2045DF42009F2FEC /* PBXTargetDependency */,
 				CF0BCD6F202E0A750012723C /* PBXTargetDependency */,
 			);
 			name = orbit;
@@ -288,6 +339,10 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
+					ProductGroup = CF84CA3D2045DF3D009F2FEC /* Products */;
+					ProjectRef = CF84CA3C2045DF3D009F2FEC /* GPUImage.xcodeproj */;
+				},
+				{
 					ProductGroup = CF0BCD69202E0A620012723C /* Products */;
 					ProjectRef = CF0BCD68202E0A620012723C /* Swindler.xcodeproj */;
 				},
@@ -305,6 +360,34 @@
 			fileType = wrapper.framework;
 			path = Swindler.framework;
 			remoteRef = CF0BCD6C202E0A620012723C /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		CF84CA442045DF3E009F2FEC /* GPUImage.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = GPUImage.framework;
+			remoteRef = CF84CA432045DF3E009F2FEC /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		CF84CA462045DF3E009F2FEC /* GPUImageTests_macOS.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = GPUImageTests_macOS.xctest;
+			remoteRef = CF84CA452045DF3E009F2FEC /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		CF84CA482045DF3E009F2FEC /* GPUImage.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = GPUImage.framework;
+			remoteRef = CF84CA472045DF3E009F2FEC /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		CF84CA4A2045DF3E009F2FEC /* GPUImageTests_iOS.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = GPUImageTests_iOS.xctest;
+			remoteRef = CF84CA492045DF3E009F2FEC /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -371,6 +454,11 @@
 			isa = PBXTargetDependency;
 			name = Swindler;
 			targetProxy = CF0BCD6E202E0A750012723C /* PBXContainerItemProxy */;
+		};
+		CF84CA4C2045DF42009F2FEC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = GPUImage_macOS;
+			targetProxy = CF84CA4B2045DF42009F2FEC /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 

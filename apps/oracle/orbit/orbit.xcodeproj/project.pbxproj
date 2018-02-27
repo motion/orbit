@@ -168,13 +168,13 @@
 			isa = PBXGroup;
 			children = (
 				CF0BCD92202E0E2D0012723C /* Screen.swift */,
+				CF0BCD94202E0E310012723C /* ScreenFrame.swift */,
 				CF0BCD82202E0E0F0012723C /* Characters.swift */,
 				CF0BCD88202E0E1B0012723C /* Filters.swift */,
 				CF0BCD9E202E0E3E0012723C /* util.swift */,
 				CF0BCD9C202E0E3C0012723C /* Extensions.swift */,
 				CF0BCD98202E0E360012723C /* ThresholdFilter.swift */,
 				CF0BCD96202E0E330012723C /* ThresholdBelowFilter.swift */,
-				CF0BCD94202E0E310012723C /* ScreenFrame.swift */,
 				CF0BCD90202E0E290012723C /* OCRInterface.swift */,
 				CF0BCD8E202E0E260012723C /* Moves.swift */,
 				CF0BCD8C202E0E230012723C /* Structs.swift */,

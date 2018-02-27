@@ -1,0 +1,113 @@
+### Swift dependencies file v0 ###
+provides-top-level:
+- "ColourFASTFeatureDetection"
+provides-nominal:
+- "8GPUImage26ColourFASTFeatureDetectionC"
+provides-member:
+- ["8GPUImage26ColourFASTFeatureDetectionC", ""]
+provides-dynamic-lookup:
+depends-top-level:
+- !private "-->"
+- "AssignmentPrecedence"
+- "BoxBlur"
+- "ColourFASTDecriptorFragmentShader"
+- "ColourFASTDecriptorVertexShader"
+- "ColourFASTFeatureDetection"
+- "Float"
+- "OperationGroup"
+- "TextureSamplingOperation"
+depends-member:
+- !private ["8GPUImage14BasicOperationC", "blurRadiusInPixels"]
+- !private ["8GPUImage7BoxBlurC", "blurRadiusInPixels"]
+- !private ["8GPUImage7BoxBlurC", "deinit"]
+- ["8GPUImage7BoxBlurC", "init"]
+- ["8GPUImage26ColourFASTFeatureDetectionC", "BoxBlur"]
+- ["8GPUImage26ColourFASTFeatureDetectionC", "ColourFASTDecriptorFragmentShader"]
+- ["8GPUImage26ColourFASTFeatureDetectionC", "ColourFASTDecriptorVertexShader"]
+- ["8GPUImage26ColourFASTFeatureDetectionC", "Float"]
+- ["8GPUImage26ColourFASTFeatureDetectionC", "TextureSamplingOperation"]
+- ["8GPUImage26ColourFASTFeatureDetectionC", "blurRadiusInPixels"]
+- ["8GPUImage26ColourFASTFeatureDetectionC", "boxBlur"]
+- ["8GPUImage26ColourFASTFeatureDetectionC", "colourFASTFeatureDescriptors"]
+- !private ["8GPUImage26ColourFASTFeatureDetectionC", "configureGroup"]
+- ["8GPUImage26ColourFASTFeatureDetectionC", "deinit"]
+- ["8GPUImage26ColourFASTFeatureDetectionC", "init"]
+- ["8GPUImage13ImageConsumerP", "BoxBlur"]
+- ["8GPUImage13ImageConsumerP", "ColourFASTDecriptorFragmentShader"]
+- ["8GPUImage13ImageConsumerP", "ColourFASTDecriptorVertexShader"]
+- ["8GPUImage13ImageConsumerP", "TextureSamplingOperation"]
+- !private ["8GPUImage13ImageConsumerP", "blurRadiusInPixels"]
+- !private ["8GPUImage13ImageConsumerP", "boxBlur"]
+- !private ["8GPUImage13ImageConsumerP", "colourFASTFeatureDescriptors"]
+- !private ["8GPUImage13ImageConsumerP", "configureGroup"]
+- ["8GPUImage13ImageConsumerP", "init"]
+- ["8GPUImage13ImageConsumerP", ""]
+- ["8GPUImage24ImageProcessingOperationP", "BoxBlur"]
+- ["8GPUImage24ImageProcessingOperationP", "ColourFASTDecriptorFragmentShader"]
+- ["8GPUImage24ImageProcessingOperationP", "ColourFASTDecriptorVertexShader"]
+- ["8GPUImage24ImageProcessingOperationP", "TextureSamplingOperation"]
+- !private ["8GPUImage24ImageProcessingOperationP", "blurRadiusInPixels"]
+- !private ["8GPUImage24ImageProcessingOperationP", "boxBlur"]
+- !private ["8GPUImage24ImageProcessingOperationP", "colourFASTFeatureDescriptors"]
+- !private ["8GPUImage24ImageProcessingOperationP", "configureGroup"]
+- ["8GPUImage24ImageProcessingOperationP", "init"]
+- ["8GPUImage24ImageProcessingOperationP", ""]
+- !private ["8GPUImage10ImageRelayC", "deinit"]
+- ["8GPUImage11ImageSourceP", "BoxBlur"]
+- ["8GPUImage11ImageSourceP", "ColourFASTDecriptorFragmentShader"]
+- ["8GPUImage11ImageSourceP", "ColourFASTDecriptorVertexShader"]
+- ["8GPUImage11ImageSourceP", "TextureSamplingOperation"]
+- !private ["8GPUImage11ImageSourceP", "blurRadiusInPixels"]
+- !private ["8GPUImage11ImageSourceP", "boxBlur"]
+- !private ["8GPUImage11ImageSourceP", "colourFASTFeatureDescriptors"]
+- !private ["8GPUImage11ImageSourceP", "configureGroup"]
+- ["8GPUImage11ImageSourceP", "init"]
+- ["8GPUImage11ImageSourceP", ""]
+- ["8GPUImage14OperationGroupC", "BoxBlur"]
+- ["8GPUImage14OperationGroupC", "ColourFASTDecriptorFragmentShader"]
+- ["8GPUImage14OperationGroupC", "ColourFASTDecriptorVertexShader"]
+- ["8GPUImage14OperationGroupC", "Float"]
+- ["8GPUImage14OperationGroupC", "TextureSamplingOperation"]
+- ["8GPUImage14OperationGroupC", "blurRadiusInPixels"]
+- ["8GPUImage14OperationGroupC", "boxBlur"]
+- ["8GPUImage14OperationGroupC", "colourFASTFeatureDescriptors"]
+- !private ["8GPUImage14OperationGroupC", "configureGroup"]
+- ["8GPUImage14OperationGroupC", "init"]
+- ["8GPUImage14OperationGroupC", ""]
+- !private ["8GPUImage24TextureSamplingOperationC", "deinit"]
+- ["8GPUImage24TextureSamplingOperationC", "init"]
+- !private ["8GPUImage17TwoStageOperationC", "blurRadiusInPixels"]
+depends-nominal:
+- !private "8GPUImage14BasicOperationC"
+- "8GPUImage7BoxBlurC"
+- "8GPUImage26ColourFASTFeatureDetectionC"
+- "8GPUImage13ImageConsumerP"
+- "8GPUImage24ImageProcessingOperationP"
+- !private "8GPUImage10ImageRelayC"
+- "8GPUImage11ImageSourceP"
+- "8GPUImage14OperationGroupC"
+- "8GPUImage24TextureSamplingOperationC"
+- !private "8GPUImage17TwoStageOperationC"
+depends-dynamic-lookup:
+depends-external:
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Dispatch.apinotesc"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/XPC.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/ObjectiveC.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreMedia.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreData.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/simd.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreImage.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/QuartzCore.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Dispatch.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Metal.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Darwin.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Foundation.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/AVFoundation.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreFoundation.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreAudio.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreGraphics.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Swift.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/IOKit.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/AppKit.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/SwiftOnoneSupport.swiftmodule"
+interface-hash: "a2bb3d6cf46648d84c6e9def5c5ddd92"

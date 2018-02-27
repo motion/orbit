@@ -1,0 +1,28 @@
+{
+  'version': 0,
+  'case-sensitive': 'false',
+  'roots': [
+    {
+      'type': 'directory',
+      'name': "/Users/nw/projects/motion/orbit/apps/oracle/GPUImage2/framework/Build/Products/Debug/GPUImage.framework/Headers",
+      'contents': [
+        {
+          'type': 'file',
+          'name': "GPUImage-Swift.h",
+          'external-contents': "/Users/nw/projects/motion/orbit/apps/oracle/GPUImage2/framework/Build/Products/Debug/GPUImage.framework/Versions/A/Headers/GPUImage-Swift.h"
+        }
+      ]
+    },
+    {
+      'type': 'directory',
+      'name': "/Users/nw/projects/motion/orbit/apps/oracle/GPUImage2/framework/Build/Products/Debug/GPUImage.framework/Modules",
+      'contents': [
+        {
+          'type': 'file',
+          'name': "module.modulemap",
+          'external-contents': "/Users/nw/projects/motion/orbit/apps/oracle/GPUImage2/framework/Build/Intermediates.noindex/GPUImage.build/Debug/GPUImage_macOS.build/module.modulemap"
+        }
+      ]
+    }
+  ]
+}

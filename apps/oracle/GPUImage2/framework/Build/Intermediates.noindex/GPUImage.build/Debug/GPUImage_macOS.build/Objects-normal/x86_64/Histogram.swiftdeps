@@ -1,0 +1,487 @@
+### Swift dependencies file v0 ###
+provides-top-level:
+- "HistogramType"
+- "Histogram"
+provides-nominal:
+- "8GPUImage13HistogramTypeO"
+- "8GPUImage9HistogramC"
+provides-member:
+- ["8GPUImage13HistogramTypeO", ""]
+- ["8GPUImage9HistogramC", ""]
+provides-dynamic-lookup:
+depends-top-level:
+- !private "!="
+- !private "*"
+- !private "-"
+- !private "/"
+- "=="
+- "AssignmentPrecedence"
+- "BasicOperation"
+- !private "Color"
+- "FloatLiteralType"
+- !private "GLSize"
+- !private "GL_POINTS"
+- !private "GL_RGBA"
+- !private "GL_UNSIGNED_BYTE"
+- !private "GLenum"
+- !private "GLint"
+- "Histogram"
+- !private "HistogramAccumulationFragmentShader"
+- !private "HistogramBlueSamplingVertexShader"
+- !private "HistogramGreenSamplingVertexShader"
+- !private "HistogramLuminanceSamplingVertexShader"
+- !private "HistogramRedSamplingVertexShader"
+- "HistogramType"
+- !private "Int"
+- "IntegerLiteralType"
+- "ShaderProgram"
+- "UInt"
+- !private "UInt8"
+- !private "UnsafeMutablePointer"
+- !private "clearFramebufferWithColor"
+- !private "crashOnShaderCompileFailure"
+- !private "disableBlending"
+- !private "enableAdditiveBlending"
+- !private "fatalError"
+- !private "glDrawArrays"
+- !private "glReadPixels"
+- !private "glVertexAttribPointer"
+- !private "sharedImageProcessingContext"
+depends-member:
+- !private ["8GPUImage14BasicOperationC", "Color"]
+- !private ["8GPUImage14BasicOperationC", "GLSize"]
+- !private ["8GPUImage14BasicOperationC", "GL_POINTS"]
+- !private ["8GPUImage14BasicOperationC", "GL_RGBA"]
+- !private ["8GPUImage14BasicOperationC", "GL_UNSIGNED_BYTE"]
+- !private ["8GPUImage14BasicOperationC", "GLenum"]
+- !private ["8GPUImage14BasicOperationC", "GLint"]
+- !private ["8GPUImage14BasicOperationC", "HistogramAccumulationFragmentShader"]
+- !private ["8GPUImage14BasicOperationC", "HistogramBlueSamplingVertexShader"]
+- !private ["8GPUImage14BasicOperationC", "HistogramGreenSamplingVertexShader"]
+- !private ["8GPUImage14BasicOperationC", "HistogramLuminanceSamplingVertexShader"]
+- !private ["8GPUImage14BasicOperationC", "HistogramRedSamplingVertexShader"]
+- ["8GPUImage14BasicOperationC", "HistogramType"]
+- !private ["8GPUImage14BasicOperationC", "Int"]
+- ["8GPUImage14BasicOperationC", "ShaderProgram"]
+- ["8GPUImage14BasicOperationC", "UInt"]
+- !private ["8GPUImage14BasicOperationC", "UInt8"]
+- !private ["8GPUImage14BasicOperationC", "UnsafeMutablePointer"]
+- !private ["8GPUImage14BasicOperationC", "clearFramebufferWithColor"]
+- !private ["8GPUImage14BasicOperationC", "crashOnShaderCompileFailure"]
+- !private ["8GPUImage14BasicOperationC", "disableBlending"]
+- ["8GPUImage14BasicOperationC", "downsamplingFactor"]
+- !private ["8GPUImage14BasicOperationC", "enableAdditiveBlending"]
+- !private ["8GPUImage14BasicOperationC", "fatalError"]
+- !private ["8GPUImage14BasicOperationC", "glDrawArrays"]
+- !private ["8GPUImage14BasicOperationC", "glReadPixels"]
+- !private ["8GPUImage14BasicOperationC", "glVertexAttribPointer"]
+- ["8GPUImage14BasicOperationC", "init"]
+- !private ["8GPUImage14BasicOperationC", "inputFramebuffers"]
+- !private ["8GPUImage14BasicOperationC", "mask"]
+- !private ["8GPUImage14BasicOperationC", "releaseIncomingFramebuffers"]
+- ["8GPUImage14BasicOperationC", "renderFrame"]
+- !private ["8GPUImage14BasicOperationC", "renderFramebuffer"]
+- !private ["8GPUImage14BasicOperationC", "shader"]
+- ["8GPUImage14BasicOperationC", "shader2"]
+- ["8GPUImage14BasicOperationC", "shader3"]
+- !private ["8GPUImage14BasicOperationC", "sharedImageProcessingContext"]
+- !private ["8GPUImage14BasicOperationC", "sizeOfInitialStageBasedOnFramebuffer"]
+- ["8GPUImage14BasicOperationC", ""]
+- !private ["s23BidirectionalCollectionP", "init"]
+- !private ["s13BinaryIntegerP", "hashValue"]
+- !private ["s13BinaryIntegerP", "init"]
+- !private ["s7CVarArgP", "allocate"]
+- !private ["s7CVarArgP", "deallocate"]
+- !private ["s7CVarArgP", "hashValue"]
+- !private ["s7CVarArgP", "init"]
+- !private ["s7CVarArgP", "subscript"]
+- !private ["s10CollectionP", "init"]
+- !private ["s10CollectionP", "subscript"]
+- !private ["8GPUImage5ColorV", "black"]
+- !private ["s10ComparableP", "allocate"]
+- !private ["s10ComparableP", "deallocate"]
+- !private ["s10ComparableP", "hashValue"]
+- !private ["s10ComparableP", "init"]
+- !private ["s28CustomDebugStringConvertibleP", "allocate"]
+- !private ["s28CustomDebugStringConvertibleP", "deallocate"]
+- !private ["s28CustomDebugStringConvertibleP", "init"]
+- !private ["s28CustomDebugStringConvertibleP", "subscript"]
+- !private ["s29CustomPlaygroundQuickLookableP", "allocate"]
+- !private ["s29CustomPlaygroundQuickLookableP", "deallocate"]
+- !private ["s29CustomPlaygroundQuickLookableP", "hashValue"]
+- !private ["s29CustomPlaygroundQuickLookableP", "init"]
+- !private ["s17CustomReflectableP", "allocate"]
+- !private ["s17CustomReflectableP", "deallocate"]
+- !private ["s17CustomReflectableP", "hashValue"]
+- !private ["s17CustomReflectableP", "init"]
+- !private ["s17CustomReflectableP", "subscript"]
+- !private ["s23CustomStringConvertibleP", "hashValue"]
+- !private ["s23CustomStringConvertibleP", "init"]
+- !private ["s23CustomStringConvertibleP", "subscript"]
+- !private ["s9DecodableP", "hashValue"]
+- !private ["s9DecodableP", "init"]
+- !private ["s9DecodableP", "subscript"]
+- !private ["s10DictionaryV", "subscript"]
+- !private ["s9EncodableP", "hashValue"]
+- !private ["s9EncodableP", "init"]
+- !private ["s9EncodableP", "subscript"]
+- !private ["s9EquatableP", "allocate"]
+- ["s9EquatableP", "blue"]
+- !private ["s9EquatableP", "deallocate"]
+- ["s9EquatableP", "green"]
+- ["s9EquatableP", "hashValue"]
+- !private ["s9EquatableP", "init"]
+- ["s9EquatableP", "luminance"]
+- !private ["s9EquatableP", "portrait"]
+- ["s9EquatableP", "red"]
+- ["s9EquatableP", "rgb"]
+- ["s9EquatableP", ""]
+- !private ["s30ExpressibleByDictionaryLiteralP", "subscript"]
+- !private ["s43ExpressibleByExtendedGraphemeClusterLiteralP", "init"]
+- !private ["s27ExpressibleByIntegerLiteralP", "hashValue"]
+- !private ["s27ExpressibleByIntegerLiteralP", "init"]
+- !private ["s26ExpressibleByStringLiteralP", "init"]
+- !private ["s33ExpressibleByUnicodeScalarLiteralP", "init"]
+- !private ["s17FixedWidthIntegerP", "hashValue"]
+- !private ["s17FixedWidthIntegerP", "init"]
+- !private ["8GPUImage11FramebufferC", "activateFramebufferForRendering"]
+- !private ["8GPUImage16FramebufferCacheC", "requestFramebufferWithProperties"]
+- !private ["8GPUImage6GLSizeV", "height"]
+- !private ["8GPUImage6GLSizeV", "init"]
+- !private ["8GPUImage6GLSizeV", "width"]
+- !private ["s8HashableP", "allocate"]
+- ["s8HashableP", "blue"]
+- !private ["s8HashableP", "deallocate"]
+- ["s8HashableP", "green"]
+- ["s8HashableP", "hashValue"]
+- !private ["s8HashableP", "init"]
+- ["s8HashableP", "luminance"]
+- !private ["s8HashableP", "portrait"]
+- ["s8HashableP", "red"]
+- ["s8HashableP", "rgb"]
+- ["s8HashableP", ""]
+- !private ["8GPUImage9HistogramC", "Color"]
+- !private ["8GPUImage9HistogramC", "GLSize"]
+- !private ["8GPUImage9HistogramC", "GL_POINTS"]
+- !private ["8GPUImage9HistogramC", "GL_RGBA"]
+- !private ["8GPUImage9HistogramC", "GL_UNSIGNED_BYTE"]
+- !private ["8GPUImage9HistogramC", "GLenum"]
+- !private ["8GPUImage9HistogramC", "GLint"]
+- !private ["8GPUImage9HistogramC", "HistogramAccumulationFragmentShader"]
+- !private ["8GPUImage9HistogramC", "HistogramBlueSamplingVertexShader"]
+- !private ["8GPUImage9HistogramC", "HistogramGreenSamplingVertexShader"]
+- !private ["8GPUImage9HistogramC", "HistogramLuminanceSamplingVertexShader"]
+- !private ["8GPUImage9HistogramC", "HistogramRedSamplingVertexShader"]
+- ["8GPUImage9HistogramC", "HistogramType"]
+- !private ["8GPUImage9HistogramC", "Int"]
+- ["8GPUImage9HistogramC", "ShaderProgram"]
+- ["8GPUImage9HistogramC", "UInt"]
+- !private ["8GPUImage9HistogramC", "UInt8"]
+- !private ["8GPUImage9HistogramC", "UnsafeMutablePointer"]
+- !private ["8GPUImage9HistogramC", "clearFramebufferWithColor"]
+- !private ["8GPUImage9HistogramC", "crashOnShaderCompileFailure"]
+- ["8GPUImage9HistogramC", "deinit"]
+- !private ["8GPUImage9HistogramC", "disableBlending"]
+- ["8GPUImage9HistogramC", "downsamplingFactor"]
+- !private ["8GPUImage9HistogramC", "enableAdditiveBlending"]
+- !private ["8GPUImage9HistogramC", "fatalError"]
+- !private ["8GPUImage9HistogramC", "glDrawArrays"]
+- !private ["8GPUImage9HistogramC", "glReadPixels"]
+- !private ["8GPUImage9HistogramC", "glVertexAttribPointer"]
+- ["8GPUImage9HistogramC", "init"]
+- !private ["8GPUImage9HistogramC", "inputFramebuffers"]
+- !private ["8GPUImage9HistogramC", "mask"]
+- !private ["8GPUImage9HistogramC", "releaseIncomingFramebuffers"]
+- ["8GPUImage9HistogramC", "renderFrame"]
+- !private ["8GPUImage9HistogramC", "renderFramebuffer"]
+- !private ["8GPUImage9HistogramC", "shader"]
+- ["8GPUImage9HistogramC", "shader2"]
+- ["8GPUImage9HistogramC", "shader3"]
+- !private ["8GPUImage9HistogramC", "sharedImageProcessingContext"]
+- !private ["8GPUImage9HistogramC", "sizeOfInitialStageBasedOnFramebuffer"]
+- ["8GPUImage13HistogramTypeO", "__derived_enum_equals"]
+- ["8GPUImage13HistogramTypeO", "blue"]
+- ["8GPUImage13HistogramTypeO", "deinit"]
+- ["8GPUImage13HistogramTypeO", "green"]
+- ["8GPUImage13HistogramTypeO", "hashValue"]
+- ["8GPUImage13HistogramTypeO", "luminance"]
+- ["8GPUImage13HistogramTypeO", "red"]
+- ["8GPUImage13HistogramTypeO", "rgb"]
+- !private ["8GPUImage13ImageConsumerP", "Color"]
+- !private ["8GPUImage13ImageConsumerP", "GLSize"]
+- !private ["8GPUImage13ImageConsumerP", "GL_POINTS"]
+- !private ["8GPUImage13ImageConsumerP", "GL_RGBA"]
+- !private ["8GPUImage13ImageConsumerP", "GL_UNSIGNED_BYTE"]
+- !private ["8GPUImage13ImageConsumerP", "GLenum"]
+- !private ["8GPUImage13ImageConsumerP", "GLint"]
+- !private ["8GPUImage13ImageConsumerP", "HistogramAccumulationFragmentShader"]
+- !private ["8GPUImage13ImageConsumerP", "HistogramBlueSamplingVertexShader"]
+- !private ["8GPUImage13ImageConsumerP", "HistogramGreenSamplingVertexShader"]
+- !private ["8GPUImage13ImageConsumerP", "HistogramLuminanceSamplingVertexShader"]
+- !private ["8GPUImage13ImageConsumerP", "HistogramRedSamplingVertexShader"]
+- !private ["8GPUImage13ImageConsumerP", "Int"]
+- !private ["8GPUImage13ImageConsumerP", "UnsafeMutablePointer"]
+- !private ["8GPUImage13ImageConsumerP", "clearFramebufferWithColor"]
+- !private ["8GPUImage13ImageConsumerP", "crashOnShaderCompileFailure"]
+- !private ["8GPUImage13ImageConsumerP", "disableBlending"]
+- !private ["8GPUImage13ImageConsumerP", "downsamplingFactor"]
+- !private ["8GPUImage13ImageConsumerP", "enableAdditiveBlending"]
+- !private ["8GPUImage13ImageConsumerP", "fatalError"]
+- !private ["8GPUImage13ImageConsumerP", "glDrawArrays"]
+- !private ["8GPUImage13ImageConsumerP", "glReadPixels"]
+- !private ["8GPUImage13ImageConsumerP", "glVertexAttribPointer"]
+- !private ["8GPUImage13ImageConsumerP", "init"]
+- !private ["8GPUImage13ImageConsumerP", "inputFramebuffers"]
+- !private ["8GPUImage13ImageConsumerP", "mask"]
+- !private ["8GPUImage13ImageConsumerP", "releaseIncomingFramebuffers"]
+- !private ["8GPUImage13ImageConsumerP", "renderFramebuffer"]
+- !private ["8GPUImage13ImageConsumerP", "shader"]
+- !private ["8GPUImage13ImageConsumerP", "shader2"]
+- !private ["8GPUImage13ImageConsumerP", "shader3"]
+- !private ["8GPUImage13ImageConsumerP", "sharedImageProcessingContext"]
+- !private ["8GPUImage13ImageConsumerP", "sizeOfInitialStageBasedOnFramebuffer"]
+- ["8GPUImage13ImageConsumerP", ""]
+- !private ["8GPUImage16ImageOrientationO", "portrait"]
+- !private ["8GPUImage24ImageProcessingOperationP", "Color"]
+- !private ["8GPUImage24ImageProcessingOperationP", "GLSize"]
+- !private ["8GPUImage24ImageProcessingOperationP", "GL_POINTS"]
+- !private ["8GPUImage24ImageProcessingOperationP", "GL_RGBA"]
+- !private ["8GPUImage24ImageProcessingOperationP", "GL_UNSIGNED_BYTE"]
+- !private ["8GPUImage24ImageProcessingOperationP", "GLenum"]
+- !private ["8GPUImage24ImageProcessingOperationP", "GLint"]
+- !private ["8GPUImage24ImageProcessingOperationP", "HistogramAccumulationFragmentShader"]
+- !private ["8GPUImage24ImageProcessingOperationP", "HistogramBlueSamplingVertexShader"]
+- !private ["8GPUImage24ImageProcessingOperationP", "HistogramGreenSamplingVertexShader"]
+- !private ["8GPUImage24ImageProcessingOperationP", "HistogramLuminanceSamplingVertexShader"]
+- !private ["8GPUImage24ImageProcessingOperationP", "HistogramRedSamplingVertexShader"]
+- !private ["8GPUImage24ImageProcessingOperationP", "Int"]
+- !private ["8GPUImage24ImageProcessingOperationP", "UnsafeMutablePointer"]
+- !private ["8GPUImage24ImageProcessingOperationP", "clearFramebufferWithColor"]
+- !private ["8GPUImage24ImageProcessingOperationP", "crashOnShaderCompileFailure"]
+- !private ["8GPUImage24ImageProcessingOperationP", "disableBlending"]
+- !private ["8GPUImage24ImageProcessingOperationP", "downsamplingFactor"]
+- !private ["8GPUImage24ImageProcessingOperationP", "enableAdditiveBlending"]
+- !private ["8GPUImage24ImageProcessingOperationP", "fatalError"]
+- !private ["8GPUImage24ImageProcessingOperationP", "glDrawArrays"]
+- !private ["8GPUImage24ImageProcessingOperationP", "glReadPixels"]
+- !private ["8GPUImage24ImageProcessingOperationP", "glVertexAttribPointer"]
+- !private ["8GPUImage24ImageProcessingOperationP", "init"]
+- !private ["8GPUImage24ImageProcessingOperationP", "inputFramebuffers"]
+- !private ["8GPUImage24ImageProcessingOperationP", "mask"]
+- !private ["8GPUImage24ImageProcessingOperationP", "releaseIncomingFramebuffers"]
+- !private ["8GPUImage24ImageProcessingOperationP", "renderFramebuffer"]
+- !private ["8GPUImage24ImageProcessingOperationP", "shader"]
+- !private ["8GPUImage24ImageProcessingOperationP", "shader2"]
+- !private ["8GPUImage24ImageProcessingOperationP", "shader3"]
+- !private ["8GPUImage24ImageProcessingOperationP", "sharedImageProcessingContext"]
+- !private ["8GPUImage24ImageProcessingOperationP", "sizeOfInitialStageBasedOnFramebuffer"]
+- ["8GPUImage24ImageProcessingOperationP", ""]
+- !private ["8GPUImage11ImageSourceP", "Color"]
+- !private ["8GPUImage11ImageSourceP", "GLSize"]
+- !private ["8GPUImage11ImageSourceP", "GL_POINTS"]
+- !private ["8GPUImage11ImageSourceP", "GL_RGBA"]
+- !private ["8GPUImage11ImageSourceP", "GL_UNSIGNED_BYTE"]
+- !private ["8GPUImage11ImageSourceP", "GLenum"]
+- !private ["8GPUImage11ImageSourceP", "GLint"]
+- !private ["8GPUImage11ImageSourceP", "HistogramAccumulationFragmentShader"]
+- !private ["8GPUImage11ImageSourceP", "HistogramBlueSamplingVertexShader"]
+- !private ["8GPUImage11ImageSourceP", "HistogramGreenSamplingVertexShader"]
+- !private ["8GPUImage11ImageSourceP", "HistogramLuminanceSamplingVertexShader"]
+- !private ["8GPUImage11ImageSourceP", "HistogramRedSamplingVertexShader"]
+- !private ["8GPUImage11ImageSourceP", "Int"]
+- !private ["8GPUImage11ImageSourceP", "UnsafeMutablePointer"]
+- !private ["8GPUImage11ImageSourceP", "clearFramebufferWithColor"]
+- !private ["8GPUImage11ImageSourceP", "crashOnShaderCompileFailure"]
+- !private ["8GPUImage11ImageSourceP", "disableBlending"]
+- !private ["8GPUImage11ImageSourceP", "downsamplingFactor"]
+- !private ["8GPUImage11ImageSourceP", "enableAdditiveBlending"]
+- !private ["8GPUImage11ImageSourceP", "fatalError"]
+- !private ["8GPUImage11ImageSourceP", "glDrawArrays"]
+- !private ["8GPUImage11ImageSourceP", "glReadPixels"]
+- !private ["8GPUImage11ImageSourceP", "glVertexAttribPointer"]
+- !private ["8GPUImage11ImageSourceP", "init"]
+- !private ["8GPUImage11ImageSourceP", "inputFramebuffers"]
+- !private ["8GPUImage11ImageSourceP", "mask"]
+- !private ["8GPUImage11ImageSourceP", "releaseIncomingFramebuffers"]
+- !private ["8GPUImage11ImageSourceP", "renderFramebuffer"]
+- !private ["8GPUImage11ImageSourceP", "shader"]
+- !private ["8GPUImage11ImageSourceP", "shader2"]
+- !private ["8GPUImage11ImageSourceP", "shader3"]
+- !private ["8GPUImage11ImageSourceP", "sharedImageProcessingContext"]
+- !private ["8GPUImage11ImageSourceP", "sizeOfInitialStageBasedOnFramebuffer"]
+- ["8GPUImage11ImageSourceP", ""]
+- !private ["Si", "hashValue"]
+- !private ["Si", "init"]
+- !private ["s5Int32V", "init"]
+- !private ["s25LosslessStringConvertibleP", "hashValue"]
+- !private ["s25LosslessStringConvertibleP", "init"]
+- !private ["s10MirrorPathP", "hashValue"]
+- !private ["s10MirrorPathP", "init"]
+- !private ["So8NSCodingP", "init"]
+- !private ["So9NSCopyingP", "init"]
+- !private ["So21NSItemProviderReadingP", "init"]
+- !private ["So21NSItemProviderWritingP", "init"]
+- !private ["So16NSMutableCopyingP", "init"]
+- !private ["So16NSObjectProtocolP", "init"]
+- !private ["So19NSPasteboardReadingP", "init"]
+- !private ["So19NSPasteboardWritingP", "init"]
+- !private ["So14NSSecureCodingP", "init"]
+- !private ["So8NSStringC", "init"]
+- !private ["s7NumericP", "hashValue"]
+- !private ["s7NumericP", "init"]
+- !private ["8GPUImage13OpenGLContextC", "framebufferCache"]
+- !private ["8GPUImage13OpenGLContextC", "programForVertexShader"]
+- !private ["s26RangeReplaceableCollectionP", "init"]
+- !private ["s8SequenceP", "init"]
+- !private ["s8SequenceP", "subscript"]
+- !private ["8GPUImage14SerialDispatchP", "framebufferCache"]
+- !private ["8GPUImage14SerialDispatchP", "programForVertexShader"]
+- !private ["8GPUImage13ShaderProgramC", "attributeIndex"]
+- !private ["8GPUImage13ShaderProgramC", "use"]
+- !private ["s13SignedIntegerP", "hashValue"]
+- !private ["s13SignedIntegerP", "init"]
+- !private ["s13SignedNumericP", "hashValue"]
+- !private ["s13SignedNumericP", "init"]
+- !private ["s12StaticStringV", "init"]
+- !private ["s10StrideableP", "allocate"]
+- !private ["s10StrideableP", "deallocate"]
+- !private ["s10StrideableP", "hashValue"]
+- !private ["s10StrideableP", "init"]
+- !private ["SS", "init"]
+- !private ["s14StringProtocolP", "init"]
+- !private ["s16TextOutputStreamP", "init"]
+- !private ["s20TextOutputStreamableP", "init"]
+- !private ["s6UInt32V", "init"]
+- !private ["Sp", "allocate"]
+- !private ["Sp", "deallocate"]
+- !private ["s15UnsignedIntegerP", "init"]
+- !private ["s23_BidirectionalIndexableP", "init"]
+- !private ["s18_BitwiseOperationsP", "hashValue"]
+- !private ["s18_BitwiseOperationsP", "init"]
+- !private ["s51_ExpressibleByBuiltinExtendedGraphemeClusterLiteralP", "init"]
+- !private ["s35_ExpressibleByBuiltinIntegerLiteralP", "hashValue"]
+- !private ["s35_ExpressibleByBuiltinIntegerLiteralP", "init"]
+- !private ["s34_ExpressibleByBuiltinStringLiteralP", "init"]
+- !private ["s39_ExpressibleByBuiltinUTF16StringLiteralP", "init"]
+- !private ["s41_ExpressibleByBuiltinUnicodeScalarLiteralP", "init"]
+- !private ["s33_ExpressibleByStringInterpolationP", "init"]
+- !private ["s35_HasCustomAnyHashableRepresentationP", "init"]
+- !private ["s10_IndexableP", "init"]
+- !private ["s10_IndexableP", "subscript"]
+- !private ["s14_IndexableBaseP", "init"]
+- !private ["s14_IndexableBaseP", "subscript"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "init"]
+- !private ["s21_ObjectiveCBridgeableP", "hashValue"]
+- !private ["s21_ObjectiveCBridgeableP", "init"]
+- !private ["s21_ObjectiveCBridgeableP", "subscript"]
+- !private ["s8_PointerP", "allocate"]
+- !private ["s8_PointerP", "deallocate"]
+- !private ["s26_RangeReplaceableIndexableP", "init"]
+- !private ["s11_StrideableP", "allocate"]
+- !private ["s11_StrideableP", "deallocate"]
+- !private ["s11_StrideableP", "hashValue"]
+- !private ["s11_StrideableP", "init"]
+- !private ["s16_SwiftStringViewP", "init"]
+depends-nominal:
+- "8GPUImage14BasicOperationC"
+- !private "s23BidirectionalCollectionP"
+- !private "s13BinaryIntegerP"
+- !private "s7CVarArgP"
+- !private "s10CollectionP"
+- !private "8GPUImage5ColorV"
+- !private "s10ComparableP"
+- !private "s28CustomDebugStringConvertibleP"
+- !private "s29CustomPlaygroundQuickLookableP"
+- !private "s17CustomReflectableP"
+- !private "s23CustomStringConvertibleP"
+- !private "s9DecodableP"
+- !private "s10DictionaryV"
+- !private "s9EncodableP"
+- "s9EquatableP"
+- !private "s30ExpressibleByDictionaryLiteralP"
+- !private "s43ExpressibleByExtendedGraphemeClusterLiteralP"
+- !private "s27ExpressibleByIntegerLiteralP"
+- !private "s26ExpressibleByStringLiteralP"
+- !private "s33ExpressibleByUnicodeScalarLiteralP"
+- !private "s17FixedWidthIntegerP"
+- !private "8GPUImage11FramebufferC"
+- !private "8GPUImage16FramebufferCacheC"
+- !private "8GPUImage6GLSizeV"
+- "s8HashableP"
+- "8GPUImage9HistogramC"
+- "8GPUImage13HistogramTypeO"
+- "8GPUImage13ImageConsumerP"
+- !private "8GPUImage16ImageOrientationO"
+- "8GPUImage24ImageProcessingOperationP"
+- "8GPUImage11ImageSourceP"
+- !private "Si"
+- !private "s5Int32V"
+- !private "s25LosslessStringConvertibleP"
+- !private "s10MirrorPathP"
+- !private "So8NSCodingP"
+- !private "So9NSCopyingP"
+- !private "So21NSItemProviderReadingP"
+- !private "So21NSItemProviderWritingP"
+- !private "So16NSMutableCopyingP"
+- !private "So16NSObjectProtocolP"
+- !private "So19NSPasteboardReadingP"
+- !private "So19NSPasteboardWritingP"
+- !private "So14NSSecureCodingP"
+- !private "So8NSStringC"
+- !private "s7NumericP"
+- !private "8GPUImage13OpenGLContextC"
+- !private "s26RangeReplaceableCollectionP"
+- !private "s8SequenceP"
+- !private "8GPUImage14SerialDispatchP"
+- !private "8GPUImage13ShaderProgramC"
+- !private "s13SignedIntegerP"
+- !private "s13SignedNumericP"
+- !private "s12StaticStringV"
+- !private "s10StrideableP"
+- !private "SS"
+- !private "s14StringProtocolP"
+- !private "s16TextOutputStreamP"
+- !private "s20TextOutputStreamableP"
+- !private "s6UInt32V"
+- !private "Sp"
+- !private "s15UnsignedIntegerP"
+- !private "s23_BidirectionalIndexableP"
+- !private "s18_BitwiseOperationsP"
+- !private "s51_ExpressibleByBuiltinExtendedGraphemeClusterLiteralP"
+- !private "s35_ExpressibleByBuiltinIntegerLiteralP"
+- !private "s34_ExpressibleByBuiltinStringLiteralP"
+- !private "s39_ExpressibleByBuiltinUTF16StringLiteralP"
+- !private "s41_ExpressibleByBuiltinUnicodeScalarLiteralP"
+- !private "s33_ExpressibleByStringInterpolationP"
+- !private "s35_HasCustomAnyHashableRepresentationP"
+- !private "s10_IndexableP"
+- !private "s14_IndexableBaseP"
+- !private "10Foundation27_KeyValueCodingAndObservingP"
+- !private "s21_ObjectiveCBridgeableP"
+- !private "s8_PointerP"
+- !private "s26_RangeReplaceableIndexableP"
+- !private "s11_StrideableP"
+- !private "s16_SwiftStringViewP"
+depends-dynamic-lookup:
+depends-external:
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Dispatch.apinotesc"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/XPC.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/ObjectiveC.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreMedia.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreData.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/simd.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreImage.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/QuartzCore.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Dispatch.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Metal.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Darwin.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Foundation.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/AVFoundation.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreFoundation.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreAudio.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreGraphics.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Swift.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/IOKit.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/AppKit.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/SwiftOnoneSupport.swiftmodule"
+interface-hash: "7c6e468ad43f744f02a381dbd9898525"

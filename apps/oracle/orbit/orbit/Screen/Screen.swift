@@ -3,6 +3,14 @@ import AVFoundation
 import AppKit
 import Async
 
+// TODO:
+// 1. Add GPUImage2 here
+// 2. See if it works with screen recording
+// 3. See if it works with this hough line finding PR: https://github.com/BradLarson/GPUImage2/pull/94/files
+// 4. Upgrade it to swift 4 (if needed): https://github.com/andrewcampoli/GPUImage2/commit/148c84e6b4194daeba122e77449f5ee9c8188161
+// 5. Test line finding to see if it works for content finding
+// 6. Integrate into our screenrecord loop
+
 let shouldDebugTiming = true
 
 enum ApertureError: Error {

@@ -112,7 +112,9 @@ import * as Constants from '~/constants'
 
     restart() {
       if (process.env.NODE_ENV === 'development') {
-        require('touch')(require('path').join(__dirname, '..', 'package.json'))
+        require('touch')(
+          require('path').join(__dirname, '..', 'lib', 'index.js'),
+        )
       }
     }
 

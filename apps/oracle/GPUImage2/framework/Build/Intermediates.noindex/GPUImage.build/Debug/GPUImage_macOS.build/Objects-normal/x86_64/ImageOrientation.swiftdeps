@@ -1,0 +1,141 @@
+### Swift dependencies file v0 ###
+provides-top-level:
+- "ImageOrientation"
+- "Rotation"
+provides-nominal:
+- "8GPUImage16ImageOrientationO"
+- "8GPUImage8RotationO"
+provides-member:
+- ["8GPUImage16ImageOrientationO", ""]
+- ["8GPUImage8RotationO", ""]
+provides-dynamic-lookup:
+depends-top-level:
+- "=="
+- "Bool"
+- !private "BooleanLiteralType"
+- !private "FloatLiteralType"
+- "ImageOrientation"
+- !private "IntegerLiteralType"
+- "Rotation"
+depends-member:
+- !private ["s13BinaryIntegerP", "hashValue"]
+- !private ["s7CVarArgP", "hashValue"]
+- !private ["s10ComparableP", "hashValue"]
+- !private ["s29CustomPlaygroundQuickLookableP", "hashValue"]
+- !private ["s17CustomReflectableP", "hashValue"]
+- !private ["s23CustomStringConvertibleP", "hashValue"]
+- !private ["s9DecodableP", "hashValue"]
+- !private ["s9EncodableP", "hashValue"]
+- ["s9EquatableP", "flipHorizontally"]
+- ["s9EquatableP", "flipVertically"]
+- ["s9EquatableP", "hashValue"]
+- ["s9EquatableP", "landscapeLeft"]
+- ["s9EquatableP", "landscapeRight"]
+- ["s9EquatableP", "noRotation"]
+- ["s9EquatableP", "portrait"]
+- ["s9EquatableP", "portraitUpsideDown"]
+- ["s9EquatableP", "rotate180"]
+- ["s9EquatableP", "rotateClockwise"]
+- ["s9EquatableP", "rotateClockwiseAndFlipHorizontally"]
+- ["s9EquatableP", "rotateClockwiseAndFlipVertically"]
+- ["s9EquatableP", "rotateCounterclockwise"]
+- ["s9EquatableP", ""]
+- !private ["s27ExpressibleByIntegerLiteralP", "hashValue"]
+- !private ["s17FixedWidthIntegerP", "hashValue"]
+- ["s8HashableP", "flipHorizontally"]
+- ["s8HashableP", "flipVertically"]
+- ["s8HashableP", "hashValue"]
+- ["s8HashableP", "landscapeLeft"]
+- ["s8HashableP", "landscapeRight"]
+- ["s8HashableP", "noRotation"]
+- ["s8HashableP", "portrait"]
+- ["s8HashableP", "portraitUpsideDown"]
+- ["s8HashableP", "rotate180"]
+- ["s8HashableP", "rotateClockwise"]
+- ["s8HashableP", "rotateClockwiseAndFlipHorizontally"]
+- ["s8HashableP", "rotateClockwiseAndFlipVertically"]
+- ["s8HashableP", "rotateCounterclockwise"]
+- ["s8HashableP", ""]
+- ["8GPUImage16ImageOrientationO", "ImageOrientation"]
+- ["8GPUImage16ImageOrientationO", "Rotation"]
+- ["8GPUImage16ImageOrientationO", "__derived_enum_equals"]
+- ["8GPUImage16ImageOrientationO", "deinit"]
+- ["8GPUImage16ImageOrientationO", "hashValue"]
+- ["8GPUImage16ImageOrientationO", "landscapeLeft"]
+- ["8GPUImage16ImageOrientationO", "landscapeRight"]
+- ["8GPUImage16ImageOrientationO", "portrait"]
+- ["8GPUImage16ImageOrientationO", "portraitUpsideDown"]
+- ["8GPUImage16ImageOrientationO", "rotationNeededForOrientation"]
+- !private ["Si", "hashValue"]
+- !private ["s25LosslessStringConvertibleP", "hashValue"]
+- !private ["s10MirrorPathP", "hashValue"]
+- !private ["s7NumericP", "hashValue"]
+- ["8GPUImage8RotationO", "Bool"]
+- ["8GPUImage8RotationO", "__derived_enum_equals"]
+- ["8GPUImage8RotationO", "deinit"]
+- ["8GPUImage8RotationO", "flipHorizontally"]
+- ["8GPUImage8RotationO", "flipVertically"]
+- ["8GPUImage8RotationO", "flipsDimensions"]
+- ["8GPUImage8RotationO", "hashValue"]
+- ["8GPUImage8RotationO", "noRotation"]
+- ["8GPUImage8RotationO", "rotate180"]
+- ["8GPUImage8RotationO", "rotateClockwise"]
+- ["8GPUImage8RotationO", "rotateClockwiseAndFlipHorizontally"]
+- ["8GPUImage8RotationO", "rotateClockwiseAndFlipVertically"]
+- ["8GPUImage8RotationO", "rotateCounterclockwise"]
+- !private ["s13SignedIntegerP", "hashValue"]
+- !private ["s13SignedNumericP", "hashValue"]
+- !private ["s10StrideableP", "hashValue"]
+- !private ["s18_BitwiseOperationsP", "hashValue"]
+- !private ["s35_ExpressibleByBuiltinIntegerLiteralP", "hashValue"]
+- !private ["s21_ObjectiveCBridgeableP", "hashValue"]
+- !private ["s11_StrideableP", "hashValue"]
+depends-nominal:
+- !private "s13BinaryIntegerP"
+- !private "s7CVarArgP"
+- !private "s10ComparableP"
+- !private "s29CustomPlaygroundQuickLookableP"
+- !private "s17CustomReflectableP"
+- !private "s23CustomStringConvertibleP"
+- !private "s9DecodableP"
+- !private "s9EncodableP"
+- "s9EquatableP"
+- !private "s27ExpressibleByIntegerLiteralP"
+- !private "s17FixedWidthIntegerP"
+- "s8HashableP"
+- "8GPUImage16ImageOrientationO"
+- !private "Si"
+- !private "s25LosslessStringConvertibleP"
+- !private "s10MirrorPathP"
+- !private "s7NumericP"
+- "8GPUImage8RotationO"
+- !private "s13SignedIntegerP"
+- !private "s13SignedNumericP"
+- !private "s10StrideableP"
+- !private "s18_BitwiseOperationsP"
+- !private "s35_ExpressibleByBuiltinIntegerLiteralP"
+- !private "s21_ObjectiveCBridgeableP"
+- !private "s11_StrideableP"
+depends-dynamic-lookup:
+depends-external:
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Dispatch.apinotesc"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/XPC.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/ObjectiveC.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreMedia.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreData.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/simd.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreImage.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/QuartzCore.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Dispatch.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Metal.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Darwin.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Foundation.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/AVFoundation.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreFoundation.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreAudio.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreGraphics.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Swift.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/IOKit.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/AppKit.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/SwiftOnoneSupport.swiftmodule"
+interface-hash: "a1bb23bd0dda5c48e842a737840c4a5e"

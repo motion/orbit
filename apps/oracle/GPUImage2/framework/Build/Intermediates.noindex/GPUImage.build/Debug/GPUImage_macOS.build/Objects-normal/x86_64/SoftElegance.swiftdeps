@@ -1,0 +1,226 @@
+### Swift dependencies file v0 ###
+provides-top-level:
+- "SoftElegance"
+provides-nominal:
+- "8GPUImage12SoftEleganceC"
+provides-member:
+- ["8GPUImage12SoftEleganceC", ""]
+provides-dynamic-lookup:
+depends-top-level:
+- !private "-->"
+- "AlphaBlend"
+- !private "AssignmentPrecedence"
+- "GaussianBlur"
+- "LookupFilter"
+- "OperationGroup"
+- !private "PictureInput"
+- "SoftElegance"
+- "StringLiteralType"
+depends-member:
+- !private ["8GPUImage10AlphaBlendC", "deinit"]
+- ["8GPUImage10AlphaBlendC", "init"]
+- !private ["8GPUImage10AlphaBlendC", "mix"]
+- !private ["8GPUImage14BasicOperationC", "blurRadiusInPixels"]
+- !private ["8GPUImage14BasicOperationC", "lookupImage"]
+- !private ["8GPUImage14BasicOperationC", "mix"]
+- !private ["s23BidirectionalCollectionP", "init"]
+- !private ["s7CVarArgP", "init"]
+- !private ["s10CollectionP", "init"]
+- !private ["s10ComparableP", "init"]
+- !private ["s28CustomDebugStringConvertibleP", "init"]
+- !private ["s29CustomPlaygroundQuickLookableP", "init"]
+- !private ["s17CustomReflectableP", "init"]
+- !private ["s23CustomStringConvertibleP", "init"]
+- !private ["s9DecodableP", "init"]
+- !private ["s9EncodableP", "init"]
+- !private ["s9EquatableP", "init"]
+- !private ["s43ExpressibleByExtendedGraphemeClusterLiteralP", "init"]
+- !private ["s26ExpressibleByStringLiteralP", "init"]
+- !private ["s33ExpressibleByUnicodeScalarLiteralP", "init"]
+- !private ["8GPUImage12GaussianBlurC", "blurRadiusInPixels"]
+- !private ["8GPUImage12GaussianBlurC", "deinit"]
+- ["8GPUImage12GaussianBlurC", "init"]
+- !private ["s8HashableP", "init"]
+- ["8GPUImage13ImageConsumerP", "AlphaBlend"]
+- ["8GPUImage13ImageConsumerP", "GaussianBlur"]
+- ["8GPUImage13ImageConsumerP", "LookupFilter"]
+- !private ["8GPUImage13ImageConsumerP", "PictureInput"]
+- !private ["8GPUImage13ImageConsumerP", "alphaBlend"]
+- !private ["8GPUImage13ImageConsumerP", "blurRadiusInPixels"]
+- !private ["8GPUImage13ImageConsumerP", "configureGroup"]
+- !private ["8GPUImage13ImageConsumerP", "gaussianBlur"]
+- ["8GPUImage13ImageConsumerP", "init"]
+- !private ["8GPUImage13ImageConsumerP", "lookup1"]
+- !private ["8GPUImage13ImageConsumerP", "lookup2"]
+- !private ["8GPUImage13ImageConsumerP", "lookupImage"]
+- !private ["8GPUImage13ImageConsumerP", "mix"]
+- ["8GPUImage13ImageConsumerP", ""]
+- ["8GPUImage24ImageProcessingOperationP", "AlphaBlend"]
+- ["8GPUImage24ImageProcessingOperationP", "GaussianBlur"]
+- ["8GPUImage24ImageProcessingOperationP", "LookupFilter"]
+- !private ["8GPUImage24ImageProcessingOperationP", "PictureInput"]
+- !private ["8GPUImage24ImageProcessingOperationP", "alphaBlend"]
+- !private ["8GPUImage24ImageProcessingOperationP", "blurRadiusInPixels"]
+- !private ["8GPUImage24ImageProcessingOperationP", "configureGroup"]
+- !private ["8GPUImage24ImageProcessingOperationP", "gaussianBlur"]
+- ["8GPUImage24ImageProcessingOperationP", "init"]
+- !private ["8GPUImage24ImageProcessingOperationP", "lookup1"]
+- !private ["8GPUImage24ImageProcessingOperationP", "lookup2"]
+- !private ["8GPUImage24ImageProcessingOperationP", "lookupImage"]
+- !private ["8GPUImage24ImageProcessingOperationP", "mix"]
+- ["8GPUImage24ImageProcessingOperationP", ""]
+- !private ["8GPUImage10ImageRelayC", "deinit"]
+- ["8GPUImage11ImageSourceP", "AlphaBlend"]
+- ["8GPUImage11ImageSourceP", "GaussianBlur"]
+- ["8GPUImage11ImageSourceP", "LookupFilter"]
+- !private ["8GPUImage11ImageSourceP", "PictureInput"]
+- !private ["8GPUImage11ImageSourceP", "alphaBlend"]
+- !private ["8GPUImage11ImageSourceP", "blurRadiusInPixels"]
+- !private ["8GPUImage11ImageSourceP", "configureGroup"]
+- !private ["8GPUImage11ImageSourceP", "gaussianBlur"]
+- ["8GPUImage11ImageSourceP", "init"]
+- !private ["8GPUImage11ImageSourceP", "lookup1"]
+- !private ["8GPUImage11ImageSourceP", "lookup2"]
+- !private ["8GPUImage11ImageSourceP", "lookupImage"]
+- !private ["8GPUImage11ImageSourceP", "mix"]
+- ["8GPUImage11ImageSourceP", ""]
+- !private ["8GPUImage12LookupFilterC", "deinit"]
+- ["8GPUImage12LookupFilterC", "init"]
+- !private ["8GPUImage12LookupFilterC", "lookupImage"]
+- !private ["s25LosslessStringConvertibleP", "init"]
+- !private ["s10MirrorPathP", "init"]
+- !private ["So8NSCodingP", "init"]
+- !private ["So9NSCopyingP", "init"]
+- !private ["So21NSItemProviderReadingP", "init"]
+- !private ["So21NSItemProviderWritingP", "init"]
+- !private ["So16NSMutableCopyingP", "init"]
+- !private ["So16NSObjectProtocolP", "init"]
+- !private ["So19NSPasteboardReadingP", "init"]
+- !private ["So19NSPasteboardWritingP", "init"]
+- !private ["So14NSSecureCodingP", "init"]
+- !private ["So8NSStringC", "init"]
+- ["8GPUImage14OperationGroupC", "AlphaBlend"]
+- ["8GPUImage14OperationGroupC", "GaussianBlur"]
+- ["8GPUImage14OperationGroupC", "LookupFilter"]
+- !private ["8GPUImage14OperationGroupC", "PictureInput"]
+- ["8GPUImage14OperationGroupC", "alphaBlend"]
+- !private ["8GPUImage14OperationGroupC", "configureGroup"]
+- ["8GPUImage14OperationGroupC", "gaussianBlur"]
+- ["8GPUImage14OperationGroupC", "init"]
+- ["8GPUImage14OperationGroupC", "lookup1"]
+- ["8GPUImage14OperationGroupC", "lookup2"]
+- ["8GPUImage14OperationGroupC", ""]
+- !private ["8GPUImage12PictureInputC", "init"]
+- !private ["s26RangeReplaceableCollectionP", "init"]
+- !private ["s8SequenceP", "init"]
+- ["8GPUImage12SoftEleganceC", "AlphaBlend"]
+- ["8GPUImage12SoftEleganceC", "GaussianBlur"]
+- ["8GPUImage12SoftEleganceC", "LookupFilter"]
+- !private ["8GPUImage12SoftEleganceC", "PictureInput"]
+- ["8GPUImage12SoftEleganceC", "alphaBlend"]
+- !private ["8GPUImage12SoftEleganceC", "configureGroup"]
+- ["8GPUImage12SoftEleganceC", "deinit"]
+- ["8GPUImage12SoftEleganceC", "gaussianBlur"]
+- ["8GPUImage12SoftEleganceC", "init"]
+- ["8GPUImage12SoftEleganceC", "lookup1"]
+- ["8GPUImage12SoftEleganceC", "lookup2"]
+- !private ["SS", "init"]
+- !private ["s14StringProtocolP", "init"]
+- !private ["s16TextOutputStreamP", "init"]
+- !private ["s20TextOutputStreamableP", "init"]
+- !private ["8GPUImage17TwoStageOperationC", "blurRadiusInPixels"]
+- !private ["s23_BidirectionalIndexableP", "init"]
+- !private ["s51_ExpressibleByBuiltinExtendedGraphemeClusterLiteralP", "init"]
+- !private ["s34_ExpressibleByBuiltinStringLiteralP", "init"]
+- !private ["s39_ExpressibleByBuiltinUTF16StringLiteralP", "init"]
+- !private ["s41_ExpressibleByBuiltinUnicodeScalarLiteralP", "init"]
+- !private ["s33_ExpressibleByStringInterpolationP", "init"]
+- !private ["s35_HasCustomAnyHashableRepresentationP", "init"]
+- !private ["s10_IndexableP", "init"]
+- !private ["s14_IndexableBaseP", "init"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "init"]
+- !private ["s21_ObjectiveCBridgeableP", "init"]
+- !private ["s26_RangeReplaceableIndexableP", "init"]
+- !private ["s16_SwiftStringViewP", "init"]
+depends-nominal:
+- "8GPUImage10AlphaBlendC"
+- !private "8GPUImage14BasicOperationC"
+- !private "s23BidirectionalCollectionP"
+- !private "s7CVarArgP"
+- !private "s10CollectionP"
+- !private "s10ComparableP"
+- !private "s28CustomDebugStringConvertibleP"
+- !private "s29CustomPlaygroundQuickLookableP"
+- !private "s17CustomReflectableP"
+- !private "s23CustomStringConvertibleP"
+- !private "s9DecodableP"
+- !private "s9EncodableP"
+- !private "s9EquatableP"
+- !private "s43ExpressibleByExtendedGraphemeClusterLiteralP"
+- !private "s26ExpressibleByStringLiteralP"
+- !private "s33ExpressibleByUnicodeScalarLiteralP"
+- "8GPUImage12GaussianBlurC"
+- !private "s8HashableP"
+- "8GPUImage13ImageConsumerP"
+- "8GPUImage24ImageProcessingOperationP"
+- !private "8GPUImage10ImageRelayC"
+- "8GPUImage11ImageSourceP"
+- "8GPUImage12LookupFilterC"
+- !private "s25LosslessStringConvertibleP"
+- !private "s10MirrorPathP"
+- !private "So8NSCodingP"
+- !private "So9NSCopyingP"
+- !private "So21NSItemProviderReadingP"
+- !private "So21NSItemProviderWritingP"
+- !private "So16NSMutableCopyingP"
+- !private "So16NSObjectProtocolP"
+- !private "So19NSPasteboardReadingP"
+- !private "So19NSPasteboardWritingP"
+- !private "So14NSSecureCodingP"
+- !private "So8NSStringC"
+- "8GPUImage14OperationGroupC"
+- !private "8GPUImage12PictureInputC"
+- !private "s26RangeReplaceableCollectionP"
+- !private "s8SequenceP"
+- "8GPUImage12SoftEleganceC"
+- !private "SS"
+- !private "s14StringProtocolP"
+- !private "s16TextOutputStreamP"
+- !private "s20TextOutputStreamableP"
+- !private "8GPUImage17TwoStageOperationC"
+- !private "s23_BidirectionalIndexableP"
+- !private "s51_ExpressibleByBuiltinExtendedGraphemeClusterLiteralP"
+- !private "s34_ExpressibleByBuiltinStringLiteralP"
+- !private "s39_ExpressibleByBuiltinUTF16StringLiteralP"
+- !private "s41_ExpressibleByBuiltinUnicodeScalarLiteralP"
+- !private "s33_ExpressibleByStringInterpolationP"
+- !private "s35_HasCustomAnyHashableRepresentationP"
+- !private "s10_IndexableP"
+- !private "s14_IndexableBaseP"
+- !private "10Foundation27_KeyValueCodingAndObservingP"
+- !private "s21_ObjectiveCBridgeableP"
+- !private "s26_RangeReplaceableIndexableP"
+- !private "s16_SwiftStringViewP"
+depends-dynamic-lookup:
+depends-external:
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Dispatch.apinotesc"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/XPC.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/ObjectiveC.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreMedia.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreData.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/simd.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreImage.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/QuartzCore.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Dispatch.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Metal.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Darwin.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Foundation.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/AVFoundation.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreFoundation.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreAudio.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreGraphics.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Swift.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/IOKit.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/AppKit.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/SwiftOnoneSupport.swiftmodule"
+interface-hash: "b4eb9447bb9bf092a6a6952480da1a77"

@@ -1,0 +1,87 @@
+### Swift dependencies file v0 ###
+provides-top-level:
+- "EmbossFilter"
+provides-nominal:
+- "8GPUImage12EmbossFilterC"
+provides-member:
+- ["8GPUImage12EmbossFilterC", ""]
+provides-dynamic-lookup:
+depends-top-level:
+- !private "*"
+- !private "-"
+- !private "Array"
+- "AssignmentPrecedence"
+- "Convolution3x3"
+- "EmbossFilter"
+- "Float"
+- "FloatLiteralType"
+- !private "Matrix3x3"
+depends-member:
+- ["8GPUImage14BasicOperationC", "Float"]
+- !private ["8GPUImage14BasicOperationC", "Matrix3x3"]
+- !private ["8GPUImage14BasicOperationC", "convolutionKernel"]
+- ["8GPUImage14BasicOperationC", "intensity"]
+- ["8GPUImage14Convolution3x3C", "Float"]
+- !private ["8GPUImage14Convolution3x3C", "Matrix3x3"]
+- !private ["8GPUImage14Convolution3x3C", "convolutionKernel"]
+- ["8GPUImage14Convolution3x3C", "init"]
+- ["8GPUImage14Convolution3x3C", "intensity"]
+- ["8GPUImage14Convolution3x3C", ""]
+- ["8GPUImage12EmbossFilterC", "Float"]
+- !private ["8GPUImage12EmbossFilterC", "Matrix3x3"]
+- !private ["8GPUImage12EmbossFilterC", "convolutionKernel"]
+- ["8GPUImage12EmbossFilterC", "deinit"]
+- ["8GPUImage12EmbossFilterC", "init"]
+- ["8GPUImage12EmbossFilterC", "intensity"]
+- !private ["8GPUImage13ImageConsumerP", "Matrix3x3"]
+- !private ["8GPUImage13ImageConsumerP", "convolutionKernel"]
+- !private ["8GPUImage13ImageConsumerP", "init"]
+- !private ["8GPUImage13ImageConsumerP", "intensity"]
+- ["8GPUImage13ImageConsumerP", ""]
+- !private ["8GPUImage24ImageProcessingOperationP", "Matrix3x3"]
+- !private ["8GPUImage24ImageProcessingOperationP", "convolutionKernel"]
+- !private ["8GPUImage24ImageProcessingOperationP", "init"]
+- !private ["8GPUImage24ImageProcessingOperationP", "intensity"]
+- ["8GPUImage24ImageProcessingOperationP", ""]
+- !private ["8GPUImage11ImageSourceP", "Matrix3x3"]
+- !private ["8GPUImage11ImageSourceP", "convolutionKernel"]
+- !private ["8GPUImage11ImageSourceP", "init"]
+- !private ["8GPUImage11ImageSourceP", "intensity"]
+- ["8GPUImage11ImageSourceP", ""]
+- !private ["8GPUImage9Matrix3x3V", "init"]
+- ["8GPUImage24TextureSamplingOperationC", "Float"]
+- !private ["8GPUImage24TextureSamplingOperationC", "Matrix3x3"]
+- !private ["8GPUImage24TextureSamplingOperationC", "convolutionKernel"]
+- ["8GPUImage24TextureSamplingOperationC", "intensity"]
+depends-nominal:
+- "8GPUImage14BasicOperationC"
+- "8GPUImage14Convolution3x3C"
+- "8GPUImage12EmbossFilterC"
+- "8GPUImage13ImageConsumerP"
+- "8GPUImage24ImageProcessingOperationP"
+- "8GPUImage11ImageSourceP"
+- !private "8GPUImage9Matrix3x3V"
+- "8GPUImage24TextureSamplingOperationC"
+depends-dynamic-lookup:
+depends-external:
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Dispatch.apinotesc"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/XPC.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/ObjectiveC.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreMedia.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreData.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/simd.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreImage.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/QuartzCore.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Dispatch.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Metal.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Darwin.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Foundation.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/AVFoundation.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreFoundation.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreAudio.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreGraphics.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Swift.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/IOKit.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/AppKit.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/SwiftOnoneSupport.swiftmodule"
+interface-hash: "21e57de92ae5eaf7eeeca884afd281b3"

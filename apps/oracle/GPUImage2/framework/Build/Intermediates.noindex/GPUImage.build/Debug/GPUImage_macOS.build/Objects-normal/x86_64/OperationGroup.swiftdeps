@@ -1,0 +1,101 @@
+### Swift dependencies file v0 ###
+provides-top-level:
+- "OperationGroup"
+provides-nominal:
+- "8GPUImage14OperationGroupC"
+provides-member:
+- ["8GPUImage14OperationGroupC", ""]
+provides-dynamic-lookup:
+depends-top-level:
+- "FloatLiteralType"
+- "Framebuffer"
+- "ImageConsumer"
+- "ImageProcessingOperation"
+- "ImageRelay"
+- "IntegerLiteralType"
+- "OperationGroup"
+- "SourceContainer"
+- "TargetContainer"
+- "UInt"
+depends-member:
+- ["8GPUImage13ImageConsumerP", "ImageRelay"]
+- ["8GPUImage13ImageConsumerP", "init"]
+- !private ["8GPUImage13ImageConsumerP", "inputImageRelay"]
+- ["8GPUImage13ImageConsumerP", "maximumInputs"]
+- ["8GPUImage13ImageConsumerP", "newFramebufferAvailable"]
+- !private ["8GPUImage13ImageConsumerP", "outputImageRelay"]
+- ["8GPUImage13ImageConsumerP", "sources"]
+- ["8GPUImage13ImageConsumerP", "targets"]
+- ["8GPUImage13ImageConsumerP", "transmitPreviousImage"]
+- ["8GPUImage13ImageConsumerP", ""]
+- ["8GPUImage24ImageProcessingOperationP", "ImageRelay"]
+- ["8GPUImage24ImageProcessingOperationP", "init"]
+- !private ["8GPUImage24ImageProcessingOperationP", "inputImageRelay"]
+- ["8GPUImage24ImageProcessingOperationP", "maximumInputs"]
+- ["8GPUImage24ImageProcessingOperationP", "newFramebufferAvailable"]
+- !private ["8GPUImage24ImageProcessingOperationP", "outputImageRelay"]
+- ["8GPUImage24ImageProcessingOperationP", "sources"]
+- ["8GPUImage24ImageProcessingOperationP", "targets"]
+- ["8GPUImage24ImageProcessingOperationP", "transmitPreviousImage"]
+- ["8GPUImage24ImageProcessingOperationP", ""]
+- !private ["8GPUImage10ImageRelayC", "deinit"]
+- ["8GPUImage10ImageRelayC", "init"]
+- !private ["8GPUImage10ImageRelayC", "newFramebufferAvailable"]
+- !private ["8GPUImage10ImageRelayC", "sources"]
+- !private ["8GPUImage10ImageRelayC", "targets"]
+- !private ["8GPUImage10ImageRelayC", "transmitPreviousImage"]
+- ["8GPUImage11ImageSourceP", "ImageRelay"]
+- ["8GPUImage11ImageSourceP", "init"]
+- !private ["8GPUImage11ImageSourceP", "inputImageRelay"]
+- ["8GPUImage11ImageSourceP", "maximumInputs"]
+- ["8GPUImage11ImageSourceP", "newFramebufferAvailable"]
+- !private ["8GPUImage11ImageSourceP", "outputImageRelay"]
+- ["8GPUImage11ImageSourceP", "sources"]
+- ["8GPUImage11ImageSourceP", "targets"]
+- ["8GPUImage11ImageSourceP", "transmitPreviousImage"]
+- ["8GPUImage11ImageSourceP", ""]
+- ["8GPUImage14OperationGroupC", "Framebuffer"]
+- ["8GPUImage14OperationGroupC", "ImageConsumer"]
+- ["8GPUImage14OperationGroupC", "ImageRelay"]
+- ["8GPUImage14OperationGroupC", "SourceContainer"]
+- ["8GPUImage14OperationGroupC", "TargetContainer"]
+- ["8GPUImage14OperationGroupC", "UInt"]
+- ["8GPUImage14OperationGroupC", "configureGroup"]
+- ["8GPUImage14OperationGroupC", "deinit"]
+- ["8GPUImage14OperationGroupC", "init"]
+- ["8GPUImage14OperationGroupC", "inputImageRelay"]
+- ["8GPUImage14OperationGroupC", "maximumInputs"]
+- ["8GPUImage14OperationGroupC", "newFramebufferAvailable"]
+- ["8GPUImage14OperationGroupC", "outputImageRelay"]
+- ["8GPUImage14OperationGroupC", "sources"]
+- ["8GPUImage14OperationGroupC", "targets"]
+- ["8GPUImage14OperationGroupC", "transmitPreviousImage"]
+depends-nominal:
+- "8GPUImage13ImageConsumerP"
+- "8GPUImage24ImageProcessingOperationP"
+- "8GPUImage10ImageRelayC"
+- "8GPUImage11ImageSourceP"
+- "8GPUImage14OperationGroupC"
+depends-dynamic-lookup:
+depends-external:
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Dispatch.apinotesc"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/XPC.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/ObjectiveC.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreMedia.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreData.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/simd.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreImage.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/QuartzCore.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Dispatch.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Metal.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Darwin.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Foundation.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/AVFoundation.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreFoundation.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreAudio.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreGraphics.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Swift.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/IOKit.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/AppKit.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/SwiftOnoneSupport.swiftmodule"
+interface-hash: "a3aa4ded56a9f26645247941c58aef8b"

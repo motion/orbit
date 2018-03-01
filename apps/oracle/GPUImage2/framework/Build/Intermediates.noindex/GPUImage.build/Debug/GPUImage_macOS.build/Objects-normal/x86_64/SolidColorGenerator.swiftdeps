@@ -1,0 +1,62 @@
+### Swift dependencies file v0 ###
+provides-top-level:
+- "SolidColorGenerator"
+provides-nominal:
+- "8GPUImage19SolidColorGeneratorC"
+provides-member:
+- ["8GPUImage19SolidColorGeneratorC", ""]
+provides-dynamic-lookup:
+depends-top-level:
+- "Color"
+- "ImageGenerator"
+- "SolidColorGenerator"
+- !private "clearFramebufferWithColor"
+depends-member:
+- !private ["8GPUImage11FramebufferC", "activateFramebufferForRendering"]
+- ["8GPUImage14ImageGeneratorC", "Color"]
+- !private ["8GPUImage14ImageGeneratorC", "clearFramebufferWithColor"]
+- !private ["8GPUImage14ImageGeneratorC", "imageFramebuffer"]
+- ["8GPUImage14ImageGeneratorC", "init"]
+- !private ["8GPUImage14ImageGeneratorC", "notifyTargets"]
+- ["8GPUImage14ImageGeneratorC", "renderColor"]
+- ["8GPUImage14ImageGeneratorC", ""]
+- !private ["8GPUImage11ImageSourceP", "clearFramebufferWithColor"]
+- !private ["8GPUImage11ImageSourceP", "imageFramebuffer"]
+- !private ["8GPUImage11ImageSourceP", "init"]
+- !private ["8GPUImage11ImageSourceP", "notifyTargets"]
+- ["8GPUImage11ImageSourceP", ""]
+- ["8GPUImage19SolidColorGeneratorC", "Color"]
+- !private ["8GPUImage19SolidColorGeneratorC", "clearFramebufferWithColor"]
+- ["8GPUImage19SolidColorGeneratorC", "deinit"]
+- !private ["8GPUImage19SolidColorGeneratorC", "imageFramebuffer"]
+- ["8GPUImage19SolidColorGeneratorC", "init"]
+- !private ["8GPUImage19SolidColorGeneratorC", "notifyTargets"]
+- ["8GPUImage19SolidColorGeneratorC", "renderColor"]
+depends-nominal:
+- !private "8GPUImage11FramebufferC"
+- "8GPUImage14ImageGeneratorC"
+- "8GPUImage11ImageSourceP"
+- "8GPUImage19SolidColorGeneratorC"
+depends-dynamic-lookup:
+depends-external:
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Dispatch.apinotesc"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/XPC.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/ObjectiveC.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreMedia.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreData.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/simd.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreImage.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/QuartzCore.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Dispatch.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Metal.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Darwin.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Foundation.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/AVFoundation.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreFoundation.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreAudio.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreGraphics.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Swift.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/IOKit.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/AppKit.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/SwiftOnoneSupport.swiftmodule"
+interface-hash: "14c231d13f86f3328bb447b722c45f0c"

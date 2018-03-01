@@ -2,6 +2,15 @@ import Foundation
 import AVFoundation
 import AppKit
 import Async
+import GPUImage
+
+// TODO:
+// 1. Add GPUImage2 here
+// 2. See if it works with screen recording
+// 3. See if it works with this hough line finding PR: https://github.com/BradLarson/GPUImage2/pull/94/files
+// 4. Upgrade it to swift 4 (if needed): https://github.com/andrewcampoli/GPUImage2/commit/148c84e6b4194daeba122e77449f5ee9c8188161
+// 5. Test line finding to see if it works for content finding
+// 6. Integrate into our screenrecord loop
 
 let shouldDebugTiming = true
 
@@ -153,15 +162,46 @@ final class Screen: NSObject {
   }
 
   func start() {
+    session.startRunning()
+    
+    do {
+      print("hi")
+      let url = NSURL.fileURL(withPath: "/tmp/image.jpg").absoluteURL
+      let pictureOutput = PictureOutput()
+      pictureOutput.encodedImageFormat = .jpeg
+      pictureOutput.encodedImageAvailableCallback = {imageData in
+        print("writing")
+        do {
+          try imageData.write(to: url)
+        } catch {
+          print("wtf")
+        }
+      }
+      print("start cam")
+      let camera = try Camera(input: self.input)
+      let filter = SaturationAdjustment()
+      print("apply iflter")
+      camera --> filter --> pictureOutput
+      print("start capture")
+      camera.startCapture()
+      Async.main(after: 1, {
+        print("save next frame")
+        filter.saveNextFrameToURL(url, format: .jpeg)
+      })
+    } catch {
+      fatalError("Could not initialize rendering pipeline: \(error)")
+    }
+    
+    
 //    debug("oracle.start()")
-    if self.shouldCancel {
-      self.shouldRunNextTime = true
-    }
-    if !session.isRunning {
-      self.shouldCancel = false
-      session.startRunning()
-      self.emit("{ \"state\": { \"isRunning\": true, \"isPaused\": false } }")
-    }
+//    if self.shouldCancel {
+//      self.shouldRunNextTime = true
+//    }
+//    if !session.isRunning {
+//      self.shouldCancel = false
+//      session.startRunning()
+//      self.emit("{ \"state\": { \"isRunning\": true, \"isPaused\": false } }")
+//    }
   }
 
   func stop() {

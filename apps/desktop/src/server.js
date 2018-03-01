@@ -11,6 +11,7 @@ import Passport from 'passport'
 import Crawler from '@mcro/crawler'
 import path from 'path'
 import killPort from 'kill-port'
+import KGSearch from 'google-kgsearch'
 
 const { SERVER_PORT } = Constants
 
@@ -50,6 +51,7 @@ export default class Server {
     this.app.use(bodyParser.urlencoded({ limit: '2048mb', extended: true }))
     this.setupCrawler()
     this.setupSearch()
+    this.setupKnowledge()
     this.setupCredPass()
     this.setupPassportRoutes()
     this.setupProxy()
@@ -58,7 +60,10 @@ export default class Server {
   async start() {
     // kill old processes
     await killPort(SERVER_PORT)
-    http.createServer(this.app).listen(SERVER_PORT)
+    this.app.listen(SERVER_PORT, () => {
+      log('listening at port', SERVER_PORT)
+    })
+
     return SERVER_PORT
   }
 
@@ -75,6 +80,24 @@ export default class Server {
       )
       next()
     }
+  }
+
+  setupKnowledge() {
+    const apiKey = `AIzaSyARmEgX6uX-6ZDI9fKK0jUX00nLGcOMxR0`
+    const kGraph = KGSearch(apiKey)
+    log('setting up knowledge')
+
+    this.app.get('/knowledge', (req, res) => {
+      let params = {
+        query: req.query.entity,
+        limit: 1,
+      }
+
+      kGraph.search(params, (err, items) => {
+        if (err) console.error(err)
+        res.json(items)
+      })
+    })
   }
 
   setupSearch() {
@@ -193,7 +216,7 @@ export default class Server {
 
   setupProxy() {
     const router = {
-      [Constants.API_HOST]: Constants.PUBLIC_URL,
+      'http://localhost:3001': Constants.PUBLIC_URL,
     }
     log('proxying', router)
     this.app.use(

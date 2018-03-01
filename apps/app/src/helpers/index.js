@@ -6,8 +6,6 @@ import fuzzy_ from './fuzzy'
 export hoverSettler from './hoverSettler'
 export logClass from './logClass'
 
-export const wordKey = ([x, y, w, h]) => `${x}${y}${w}${h}`
-
 export const trimSingleLine = str => str.trim().replace(/\s{2,}/g, ' ')
 
 export const contextToResult = state => {

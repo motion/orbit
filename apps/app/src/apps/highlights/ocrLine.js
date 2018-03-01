@@ -1,13 +1,13 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import { wordKey } from '~/helpers'
+import Screen from '@mcro/screen'
 import { LINE_Y_ADJ, TOP_BAR_PAD } from './helpers'
 
 @view
 export default class OCRLine {
   render({ item, store: { hoveredLine } }) {
     const [x, y, width, height] = item
-    const key = wordKey(item)
+    const key = Screen.wordKey(item)
     return (
       <ocrLine
         $hoveredLine={hoveredLine && hoveredLine.string === key}

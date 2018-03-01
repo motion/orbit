@@ -1,6 +1,6 @@
-import winkNlp from 'wink-nlp-utils'
-import bm25f from './bm25f'
-import { store, watch } from '@mcro/black/store'
+import winkNlp from "wink-nlp-utils"
+import bm25f from "./bm25f"
+import { store, watch } from "@mcro/black/store"
 import {
   includes,
   reverse,
@@ -12,9 +12,9 @@ import {
   uniq,
   flatten,
   capitalize,
-} from 'lodash'
-import debug from 'debug'
-import stopwords from './stopwords'
+} from "lodash"
+import debug from "debug"
+import stopwords from "./stopwords"
 import {
   minKBy,
   wordMoversDistance,
@@ -22,9 +22,9 @@ import {
   isAlphaNum,
   vectorsToCentroid,
   cosineSimilarity,
-} from '../helpers'
-import namedEntityRecognition from './namedEntityRecognition'
-import getFragments from './getFragments'
+} from "../helpers"
+import namedEntityRecognition from "./namedEntityRecognition"
+import getFragments from "./getFragments"
 
 const allIndexesString = (string, finding) => {
   const indexes = []
@@ -40,7 +40,7 @@ const allIndexesString = (string, finding) => {
   }
 }
 
-const log = debug('indexer')
+const log = debug("indexer")
 log.enabled = true
 
 const sleep = ms => new Promise(res => setTimeout(res, ms))
@@ -91,8 +91,8 @@ ${doc.body}`
 
     return text
       .toLowerCase()
-      .replace(/[^a-zA-Z ]/g, '')
-      .split(' ')
+      .replace(/[^a-zA-Z ]/g, "")
+      .split(" ")
       .filter(valid)
   }
 
@@ -135,7 +135,7 @@ ${doc.body}`
 
     const smallest = minKBy(distances, 1, _ => _.distance)[0]
     if (!smallest) {
-      return ''
+      return ""
     }
     return smallest.sentence
   }
@@ -153,7 +153,7 @@ ${doc.body}`
 
   fragmentToCentroid = fragment => {
     const { title, subtitle, body } = fragment
-    const combined = [title || '', subtitle || '', body].join(' ')
+    const combined = [title || "", subtitle || "", body].join(" ")
 
     const words = uniq(this.toWords(combined)).filter(
       word => this.embedding.vectors[word]
@@ -190,7 +190,7 @@ ${doc.body}`
   wordWeight = (fragment, word) => {
     const { prepareInput, documents, token2Index } = this.engine
 
-    const docToken = prepareInput(word, 'search')
+    const docToken = prepareInput(word, "search")
     const id = token2Index[docToken]
     if (!id) {
       return false
@@ -201,7 +201,7 @@ ${doc.body}`
   }
 
   fullText = fragment =>
-    [fragment.title, fragment.subtitle || '', fragment.body].join(' ')
+    [fragment.title, fragment.subtitle || "", fragment.body].join(" ")
 
   autocomplete = (queryWords, fragments) => {
     const cooccur = {}
@@ -232,7 +232,7 @@ ${doc.body}`
             weight: cooccur[word].weight, // * totalWeight(word),
             word,
           })),
-        'weight'
+        "weight"
       )
     ).filter(_ => !isNaN(_.weight))
 
@@ -279,7 +279,7 @@ ${doc.body}`
     }
 
     const titlesDistance = await runWmd(fragments.map(_ => _.title))
-    const subtitlesDistance = await runWmd(fragments.map(_ => _.subtitle || ''))
+    const subtitlesDistance = await runWmd(fragments.map(_ => _.subtitle || ""))
     const bodyDistance = await runWmd(fragments.map(_ => _.body))
 
     // console.log('sub distance', subtitlesDistance)
@@ -311,13 +311,13 @@ ${doc.body}`
       const debugInfo = { nearest: [] }
       results[currentFragentIndex] = 0
 
-      if (fragment.title.indexOf('conver') === 0) {
-        console.log('frag is', fragment, titlesDistance[currentFragentIndex])
+      if (fragment.title.indexOf("conver") === 0) {
+        console.log("frag is", fragment, titlesDistance[currentFragentIndex])
       }
 
       range(words.length).forEach(termIndex => {
         if (!titlesDistance[currentFragentIndex]) {
-          console.log('no distance found')
+          console.log("no distance found")
           return
         }
         const titleTerm = titlesDistance[currentFragentIndex][termIndex]
@@ -352,14 +352,14 @@ ${doc.body}`
           ],
           debug: debugInfos[index],
         })),
-        'distance'
+        "distance"
       )
     ).slice(0, Math.max(count * 3, 1))
 
     const resultsByDistance = fragmentsByDistance
       .map(({ distance, closestWords, fragment, debug }) => {
         const matchedWords = sortedUniqBy(
-          sortBy(closestWords, 'weight'),
+          sortBy(closestWords, "weight"),
           _ => _.word
         ).slice(0, 5)
 
@@ -392,7 +392,7 @@ ${doc.body}`
     return {
       results: finalResults,
       autocomplete: this.autocomplete(
-        query.split(' '),
+        query.split(" "),
         resultsByDistance.map(_ => _.item)
       ).slice(0, 10),
     }

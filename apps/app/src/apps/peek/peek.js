@@ -6,7 +6,7 @@ import { Thing } from '~/app'
 import Mousetrap from 'mousetrap'
 import Screen from '@mcro/screen'
 import ControlButton from '~/views/controlButton'
-import { wordKey } from '~/helpers'
+import Knowledge from './knowledge'
 
 const keyParam = (window.location.search || '').match(/key=(.*)/)
 const KEY = keyParam && keyParam[1]
@@ -23,20 +23,6 @@ const peekShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.05]]]
         Screen.electronState.peekState &&
         Screen.electronState.peekState.windows &&
         Screen.electronState.peekState.windows[0]
-      )
-    }
-
-    get hoveredWord() {
-      // only if highlighted
-      return (
-        (Screen.state.hoveredWord &&
-          Screen.desktopState.ocrWords &&
-          Screen.desktopState.ocrWords.find(
-            w =>
-              Screen.state.highlightWords[w[4]] &&
-              wordKey(w) === Screen.state.hoveredWord.key,
-          )) ||
-        null
       )
     }
 
@@ -61,18 +47,16 @@ const peekShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.05]]]
       })
 
       let hoverShow
-      this.react(
-        () => this.hoveredWord,
-        word => {
-          // ignore if holding option
-          if (Screen.desktopState.keyboard.option) return
-          clearTimeout(hoverShow)
-          const hidden = !word
-          hoverShow = setTimeout(() => {
-            Screen.setState({ hidden })
-          }, hidden ? 50 : 500)
-        },
-      )
+      this.watch(() => {
+        const word = Screen.hoveredWordName
+        // ignore if holding option
+        if (Screen.desktopState.keyboard.option) return
+        clearTimeout(hoverShow)
+        const hidden = !word
+        hoverShow = setTimeout(() => {
+          Screen.setState({ hidden })
+        }, hidden ? 50 : 500)
+      }, true)
     }
 
     @watch
@@ -86,7 +70,6 @@ const peekShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.05]]]
     watchTear = () => {
       if (this.isTorn) return
       const { peek } = Screen.electronState.peekState
-      console.log('i see peeks', peek)
       if (peek && peek.isTorn) {
         console.log('tearing!', Screen.electronState.peekState)
         this.isTorn = true
@@ -223,7 +206,6 @@ export default class PeekPage {
                 <title>
                   <UI.Title size={1} fontWeight={300}>
                     {(store.thing && store.thing.title) || ''}
-                    {arrowTowards}
                   </UI.Title>
                 </title>
                 <UI.Row
@@ -263,10 +245,10 @@ export default class PeekPage {
                 </UI.Row>
               </header>
               <content>
-                Hovered word:
-                <hlword if={store.hoveredWord}>
-                  {JSON.stringify(store.hoveredWord)}
-                </hlword>
+                <Knowledge
+                  if={Screen.appState.knowledge}
+                  data={Screen.appState.knowledge}
+                />
               </content>
             </contentInner>
           </content>

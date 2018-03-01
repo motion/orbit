@@ -7,8 +7,8 @@ const { enableLogging } = require('mobx-logger')
 let runners = (global.__mlogRunners = global.__mlogRunners || [])
 
 function deepMobxToJS(_thing) {
+  if (!_thing) return _thing
   let thing = Mobx.toJS(_thing)
-  if (!thing) return thing
   if (Array.isArray(thing)) {
     return thing.map(deepMobxToJS)
   }

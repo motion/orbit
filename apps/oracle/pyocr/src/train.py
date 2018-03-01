@@ -88,7 +88,6 @@ def run_words(s):
     print('')
     print('correct', correct / len(s) * 100, '%', 'took', time.time() - start)
 
-
 def train(epoch):
     model.train()
     for batch_idx, (data, target) in enumerate(train_loader):
@@ -105,7 +104,6 @@ def train(epoch):
                 epoch, batch_idx * len(data), len(train_loader.dataset),
 
                 100. * batch_idx / len(train_loader), loss.data[0]))
-
 
 def test():
     model.eval()

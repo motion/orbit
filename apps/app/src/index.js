@@ -1,6 +1,7 @@
 // @flow
 import 'regenerator-runtime/runtime'
 import 'babel-polyfill'
+
 import 'isomorphic-fetch'
 import '@mcro/debug/inject'
 import createElement from '@mcro/black/lib/createElement'

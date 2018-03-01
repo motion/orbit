@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import { wordKey } from '~/helpers'
 import { HL_PAD, TOP_BAR_PAD } from './helpers'
 import Screen from '@mcro/screen'
 
@@ -8,9 +7,10 @@ import Screen from '@mcro/screen'
 export default class OCRWord {
   render({ item, store: { hoveredWord } }) {
     const [x, y, width, height, word, color] = item
-    const key = wordKey(item)
+    const key = Screen.wordKey(item)
     const isHoldingOption = Screen.desktopState.keyboard.option
     const highlighted = Screen.state.highlightWords[word]
+
     return (
       <word
         $hovered={hoveredWord && hoveredWord.key === key}

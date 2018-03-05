@@ -27,30 +27,6 @@ const childrenStyle = {
 }
 
 function getChildren(result) {
-  if (result.data && result.data.integration === 'slack') {
-    const { messages } = result.data.data
-    const showCount = 2
-    const more = messages.length - showCount
-    return (
-      <container css={childrenStyle}>
-        <messages style={{ margin: 5 }}>
-          {messages.slice(0, showCount).map(({ author, message }) => (
-            <message $$row style={{ marginTop: 5 }}>
-              <UI.Text size={0.95} ellipse={30}>
-                <span style={{ fontWeight: 500, opacity: 0.9 }}>{author}</span>
-                <span style={{ opacity: 0.7, marginRight: 5 }}>:</span>
-                <span style={{ opacity: 0.7 }}>{message}</span>
-              </UI.Text>
-            </message>
-          ))}
-        </messages>
-        <UI.Text opacity={0.7} size={0.95} alignSelf="center" if={more > 0}>
-          {more} more message{more === 1 ? '' : 's'}
-        </UI.Text>
-      </container>
-    )
-  }
-
   if (typeof result.children === 'string') {
     return result.children.slice(0, 200).replace(/\s{2,}|\w{30,}/g, ' ... ')
   }
@@ -144,7 +120,6 @@ export default function getItem(result, index) {
       id: result.id,
     })
   }
-
   const itemProps = {
     key: `${index}${result.id}`,
     beforePrimary: (
@@ -183,10 +158,5 @@ export default function getItem(result, index) {
     ...hoverProps,
     ...result.props,
   }
-
-  if (index === 0) {
-    itemProps.highlightBackground = [255, 255, 255, 0.035]
-  }
-
   return itemProps
 }

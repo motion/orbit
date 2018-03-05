@@ -4,7 +4,7 @@ import Fade from '~/views/fade'
 import * as Sidebars from './sidebars'
 import PaneView from './pane'
 import { ORA_WIDTH } from '~/constants'
-import getItem from './helpers/getItem'
+import getItem from '~/helpers/getItem'
 import Screen from '@mcro/screen'
 
 // passes through all props to <PaneView />

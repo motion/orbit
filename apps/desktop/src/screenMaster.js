@@ -237,18 +237,18 @@ export default class ScreenMaster {
     const updateKeyboard = newState =>
       this.setState({ keyboard: { ...this.state.keyboard, ...newState } })
 
-    let keysDown = 0
+    const KeysDown = new Set()
 
     // keydown
     iohook.on('keydown', ({ keycode }) => {
-      keysDown++
+      KeysDown.add(keycode)
       // log(`keydown: ${keycode}`)
       if (keycode === codes.esc) {
         return updateKeyboard({ esc: Date.now() })
       }
       const isOption = keycode === codes.option
-      if (keysDown > 1 && isOption) {
-        log(`option: already holding ${keysDown} keys`)
+      if (KeysDown.size > 1 && isOption) {
+        log(`option: already holding ${KeysDown.size} keys`)
         return updateKeyboard({ optionUp: Date.now() })
       }
       if (isOption) {
@@ -271,7 +271,7 @@ export default class ScreenMaster {
 
     // keyup
     iohook.on('keyup', ({ keycode }) => {
-      keysDown--
+      KeysDown.delete(keycode)
       // option off
       if (keycode === codes.option) {
         updateKeyboard({ optionUp: Date.now() })

@@ -10,7 +10,6 @@ export default class PaneList {
     if (!paneStore.items) {
       return null
     }
-
     const itemsKey = `${index}${paneStore.contentVersion}${
       paneStore.items.length
     }`

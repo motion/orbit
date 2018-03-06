@@ -6,7 +6,7 @@ import Mousetrap from 'mousetrap'
 import Screen from '@mcro/screen'
 import ControlButton from '~/views/controlButton'
 import Knowledge from './knowledge'
-import getItem from '~/helpers/getItem'
+import PeekContent from './peekContent'
 
 const keyParam = (window.location.search || '').match(/key=(.*)/)
 const KEY = keyParam && keyParam[1]
@@ -169,38 +169,7 @@ export default class PeekPage {
               </UI.Row>
             </header>
             <contentInner>
-              <UI.List
-                getItem={getItem}
-                items={[
-                  {
-                    id: 0,
-                    title: 'Something',
-                    date: Date.now(),
-                    children: 'lorem ipsum dolor sit amet',
-                    data: {
-                      integration: 'github',
-                    },
-                  },
-                  {
-                    id: 1,
-                    title: 'Something',
-                    date: Date.now(),
-                    children: 'lorem ipsum dolor sit amet',
-                    data: {
-                      integration: 'github',
-                    },
-                  },
-                  {
-                    id: 2,
-                    title: 'Something',
-                    date: Date.now(),
-                    children: 'lorem ipsum dolor sit amet',
-                    data: {
-                      integration: 'github',
-                    },
-                  },
-                ]}
-              />
+              <PeekContent />
               <Knowledge
                 if={Screen.appState.knowledge}
                 data={Screen.appState.knowledge}

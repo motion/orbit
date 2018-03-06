@@ -4,7 +4,7 @@ import * as UI from '@mcro/ui'
 import { CurrentUser } from '~/app'
 import * as Constants from '~/constants'
 import OraBanner from './oraBanner'
-import Screen from '@mcro/screen'
+import { App, Desktop } from '@mcro/screen'
 import whatKey from 'whatkey'
 
 const iconProps = {
@@ -114,14 +114,14 @@ export default class OraHeader extends React.Component {
   }
 
   handleChange = e => {
-    if (Screen.desktopState.keyboard.option) return
+    if (Desktop.state.keyboard.option) return
     this.props.oraStore.ui.setTextboxVal(e.target.value)
   }
 
   handleKeyDown = e => {
     const { ui } = this.props.oraStore
     // ignore if option down
-    if (!Screen.desktopState.keyboard.option) return
+    if (!Desktop.state.keyboard.option) return
     e.preventDefault()
     const { key, char } = whatKey(e)
     console.log('got', key, char)
@@ -191,15 +191,13 @@ export default class OraHeader extends React.Component {
               />
               <UI.Icon
                 {...iconProps}
-                opacity={Screen.state.disablePeek ? 0.3 : 0.9}
+                opacity={App.state.disablePeek ? 0.3 : 0.9}
                 name="app"
-                onClick={() =>
-                  Screen.setState({ disablePeek: !Screen.state.disablePeek })
-                }
+                onClick={App.actions.togglePeek}
               />
               <UI.Icon
                 {...iconProps}
-                opacity={Screen.state.pinned ? 0.9 : 0.3}
+                opacity={App.state.pinned ? 0.9 : 0.3}
                 name="pin"
                 onClick={oraStore.ui.togglePinned}
               />

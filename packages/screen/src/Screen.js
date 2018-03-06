@@ -1,51 +1,33 @@
 // @flow
 import { store } from '@mcro/black/store'
 import SwiftBridge from './swiftBridge'
-import ReconnectingWebSocket from 'reconnecting-websocket'
-import WebSocket from './websocket'
-import waitPort from 'wait-port'
 import global from 'global'
 import { isEqual, difference } from 'lodash'
-import * as desktopActions from './desktopActions'
+import setupSocket from './helpers/setupSocket'
+import type { DesktopState } from './Desktop'
+import * as Helpers from './screenHelpers'
 
-function bindAll(scope, namedActions) {
-  return Object.keys(namedActions).reduce(
-    (acc, cur) => ({ ...acc, [cur]: namedActions[cur].bind(scope) }),
-    {},
-  )
-}
-
-type TappState = {
-  name: string,
-  offset: [Number, Number],
-  bounds: [Number, Number],
-  screen: [Number, Number],
-}
-
-type Word = {
-  word: string,
-  weight: Number,
-  top: Number,
-  left: Number,
-  width: Number,
-  height: Number,
-}
-
-export type DesktopState = {
-  appState?: TappState,
-  ocrWords?: [Word],
-  linePositions?: [Number],
-  lastOCR: Number,
-  lastScreenChange: Number,
-  mousePosition: { x: Number, y: Number },
-  keyboard: Object,
-  highlightWords: { [String]: boolean },
-  clearWords: { [String]: Numbe },
-  restoreWords: { [String]: Numbe },
-}
+export Desktop from './Desktop'
+export Electron from './Electron'
+export App from './App'
 
 @store
 class Screen {
+  desktopState: DesktopState = {
+    paused: null,
+    appState: null,
+    ocrWords: null,
+    linePositions: null,
+    lastOCR: null,
+    lastScreenChange: null,
+    mousePosition: {},
+    keyboard: {},
+    clearWords: {},
+    restoreWords: {},
+    // some test highlight words
+    highlightWords: {},
+  }
+
   // state of electron
   electronState = {
     showSettings: null,
@@ -70,28 +52,9 @@ class Screen {
     closePeek: null,
     disablePeek: null,
   }
-  // state of desktop
-  desktopState: DesktopState = {
-    paused: null,
-    appState: null,
-    ocrWords: null,
-    linePositions: null,
-    lastOCR: null,
-    lastScreenChange: null,
-    mousePosition: {},
-    keyboard: {},
-    clearWords: {},
-    restoreWords: {},
-    // some test highlight words
-    highlightWords: {},
-  }
+
   // swift state
   swiftState = {}
-
-  // this routes the current app state
-  get state() {
-    return this[`${this._source}State`]
-  }
 
   // direct connect to the swift process
   swiftBridge: SwiftBridge = new SwiftBridge({
@@ -101,13 +64,14 @@ class Screen {
   })
 
   options = {}
+  started = false
   _queuedState = false
   _wsOpen = false
   _source = ''
-  started = false
   _initialStateKeys = []
 
   // public
+  helpers = Helpers
 
   // note: you have to call start to make it explicitly connect
   start(source, initialState, options = {}) {
@@ -115,9 +79,6 @@ class Screen {
       throw new Error(`Already started screen`)
     }
     this.options = options
-    this.actions = {
-      desktop: bindAll(this, desktopActions),
-    }
     if (!source) {
       throw new Error(`No source given for starting screen store`)
     }
@@ -134,14 +95,14 @@ class Screen {
     // set initial state synchronously before
     this._initialStateKeys = Object.keys(initialState || {})
     if (initialState) {
-      this.setState(initialState)
+      this._setState(initialState)
     }
-    this._setupSocket()
+    setupSocket.call(this)
   }
 
   // this will go up to api and back down to all screen stores
   // set is only allowed from the source its set as initially
-  setState(state, internal = false) {
+  _setState(state, internal = false) {
     if (!this.started) {
       throw new Error(`Called Screen.setState before calling Screen.start`)
     }
@@ -186,60 +147,6 @@ class Screen {
     }
     return changed
   }
-
-  _setupSocket = async () => {
-    if (typeof window === 'undefined') {
-      await waitPort({ host: 'localhost', port: 40510 })
-    }
-    this.ws = new ReconnectingWebSocket('ws://localhost:40510', undefined, {
-      constructor: WebSocket,
-    })
-    this.ws.onmessage = ({ data }) => {
-      if (!data) {
-        console.log(`No data received over socket`)
-        return
-      }
-      try {
-        const messageObj = JSON.parse(data)
-        if (messageObj && typeof messageObj === 'object') {
-          const { source, state } = messageObj
-          if (this.options.ignoreSource && this.options.ignoreSource[source]) {
-            return
-          }
-          if (!state) {
-            throw new Error(`No state received from message: ${data}`)
-          }
-          this._update(source, state)
-        } else {
-          throw new Error(`Non-object received`)
-        }
-      } catch (err) {
-        console.log(
-          `${err.message}:\n${err.stack}\n
-        ScreenStore error receiving or reacting to message. Initial message:
-          ${data}`,
-        )
-      }
-    }
-    this.ws.onopen = () => {
-      this._wsOpen = true
-      // send state that hasnt been synced yet
-      if (this._queuedState) {
-        this.ws.send(
-          JSON.stringify({ state: this.state, source: this._source }),
-        )
-        this._queuedState = false
-      }
-    }
-    this.ws.onclose = () => {
-      this._wsOpen = false
-    }
-    this.ws.onerror = err => {
-      if (this.ws.readyState == 1) {
-        console.log('swift ws error', err)
-      }
-    }
-  }
 }
 
 // singleton because
@@ -249,8 +156,3 @@ const screenStore = new Screen()
 global.Screen = screenStore
 
 export default screenStore
-
-export const desktopState = screenStore.desktopState
-export const appState = screenStore.appState
-export const electronState = screenStore.electronState
-export const swiftState = screenStore.swiftState

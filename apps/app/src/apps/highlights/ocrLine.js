@@ -7,7 +7,7 @@ import { LINE_Y_ADJ, TOP_BAR_PAD } from './helpers'
 export default class OCRLine {
   render({ item, store: { hoveredLine } }) {
     const [x, y, width, height] = item
-    const key = Screen.wordKey(item)
+    const key = Screen.helpers.wordKey(item)
     return (
       <ocrLine
         $hoveredLine={hoveredLine && hoveredLine.string === key}

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { App } from '@mcro/reactron'
+import { App as AppWindow } from '@mcro/reactron'
 import ShortcutsStore from '~/stores/shortcutsStore'
 import { view, debugState } from '@mcro/black'
 import Tray from './views/Tray'
@@ -8,7 +8,7 @@ import HighlightsWindow from './views/HighlightsWindow'
 import PeekWindow from './views/PeekWindow'
 import SettingsWindow from './views/SettingsWindow'
 import * as Helpers from '~/helpers'
-import Screen from '@mcro/screen'
+import Screen, { App, Electron, Desktop } from '@mcro/screen'
 import global from 'global'
 import { screen } from 'electron'
 import { debounce } from 'lodash'
@@ -19,7 +19,6 @@ const log = debug('Electron')
   electron: class ElectronStore {
     error = null
     appRef = null
-    oraRef = null
     stores = null
     views = null
 
@@ -61,7 +60,7 @@ const log = debug('Electron')
       new ShortcutsStore().emitter.on('shortcut', shortcut => {
         console.log('emit shortcut', shortcut)
         if (shortcut === 'Option+Space') {
-          // if (Screen.desktopState.keyboard.option) {
+          // if (Desktop.state.keyboard.option) {
           //   console.log('avoid toggle while holding option')
           //   return
           // }
@@ -72,10 +71,7 @@ const log = debug('Electron')
       })
 
       this.react(
-        () => [
-          Screen.desktopState.keyboard.option,
-          Screen.desktopState.keyboard.optionUp,
-        ],
+        () => [Desktop.state.keyboard.option, Desktop.state.keyboard.optionUp],
         this.handleOptionKey,
       )
     }
@@ -89,15 +85,19 @@ const log = debug('Electron')
         return
       }
       const isHolding = option > optionUp
-      log(`isHolding: ${isHolding}`)
+      log(
+        `handleOptionKey option (${option}) optionUp (${optionUp}) isHolding (${isHolding}) peekHidden (${
+          App.state.peekHidden
+        })`,
+      )
       if (!isHolding) {
-        if (Screen.electronState.peekFocused) {
+        if (Electron.state.peekFocused) {
           log('mouse is over peek, dont hide')
         }
         this.hideOra()
         return
       }
-      if (Screen.appState.peekHidden) {
+      if (App.state.peekHidden) {
         // SHOW
         this.optnEnter = setTimeout(this.showOra, 150)
       }
@@ -112,26 +112,28 @@ const log = debug('Electron')
     }
 
     toggleShown = async () => {
-      if (Screen.appState.pinned) return
+      if (App.state.pinned) return
       if (!this.appRef) return
-      if (!Screen.appState.peekHidden) {
+      if (!App.state.peekHidden) {
         this.hideOra()
       } else {
         this.showOra()
+        this.appRef.focus()
       }
     }
 
     async showOra() {
+      log('showOra')
       this.appRef.show()
-      Screen.setState({ shouldShow: Date.now() })
+      Electron.setState({ shouldShow: Date.now() })
     }
 
     async hideOra() {
-      Screen.setState({ shouldHide: Date.now() })
+      log('hideOra')
+      Electron.setState({ shouldHide: Date.now() })
     }
 
     handleAppRef = ref => ref && (this.appRef = ref.app)
-    handleOraRef = ref => (this.oraRef = ref)
     handleBeforeQuit = () => console.log('before quit')
     handleQuit = () => {
       console.log('handling quit')
@@ -140,7 +142,7 @@ const log = debug('Electron')
   },
 })
 @view.electron
-export default class Electron extends React.Component {
+export default class ElectronWindow extends React.Component {
   componentDidCatch(error) {
     console.error(error)
     this.props.electron.error = error
@@ -151,7 +153,7 @@ export default class Electron extends React.Component {
       return null
     }
     return (
-      <App
+      <AppWindow
         onBeforeQuit={electron.handleBeforeQuit}
         onQuit={electron.handleQuit}
         ref={electron.handleAppRef}
@@ -161,7 +163,7 @@ export default class Electron extends React.Component {
         <PeekWindow />
         {/* <SettingsWindow /> */}
         <Tray />
-      </App>
+      </AppWindow>
     )
   }
 }

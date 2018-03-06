@@ -4,7 +4,7 @@ import { debounce } from 'lodash'
 import { view, watch } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import Mousetrap from 'mousetrap'
-import Screen from '@mcro/screen'
+import { App, Desktop, Electron } from '@mcro/screen'
 import ControlButton from '~/views/controlButton'
 import Knowledge from './knowledge'
 import PeekContent from './peekContent'
@@ -36,14 +36,6 @@ const peekShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.05]]]
       this.results = results
     }, 150)
 
-    get peek() {
-      return (
-        Screen.electronState.peekState &&
-        Screen.electronState.peekState.windows &&
-        Screen.electronState.peekState.windows[0]
-      )
-    }
-
     willMount() {
       this.searchStore = new Search()
       this.searchStore.onDocuments(PaulGraham)
@@ -62,15 +54,15 @@ const peekShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.05]]]
 
       let hoverShow
       this.react(
-        () => Screen.hoveredWordName,
+        () => App.hoveredWordName,
         word => {
           // ignore if holding option
-          if (Screen.desktopState.keyboard.option) return
+          if (Desktop.state.keyboard.option) return
           clearTimeout(hoverShow)
           const peekHidden = !word
           hoverShow = setTimeout(() => {
             console.log('sethidden based on word', peekHidden)
-            Screen.setState({ peekHidden })
+            App.setState({ peekHidden })
           }, peekHidden ? 50 : 500)
         },
       )
@@ -79,9 +71,9 @@ const peekShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.05]]]
     @watch
     watchTear = () => {
       if (this.isTorn) return
-      const { peek } = Screen.electronState.peekState
-      if (peek && peek.isTorn) {
-        console.log('tearing!', Screen.electronState.peekState)
+      const { peekWindow } = Electron
+      if (peekWindow && peekWindow.isTorn) {
+        console.log('tearing!', peekWindow)
         this.isTorn = true
       }
     }
@@ -91,14 +83,14 @@ const peekShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.05]]]
     }
 
     closePeek = () => {
-      Screen.setState({ closePeek: KEY })
+      App.setState({ closePeek: KEY })
     }
   },
 })
 export default class PeekPage {
   render({ store }) {
-    const { peek } = store
-    const arrowTowards = (peek && peek.arrowTowards) || 'right'
+    const { peekWindow } = Electron
+    const arrowTowards = (peekWindow && peekWindow.arrowTowards) || 'right'
     const arrowSize = 28
     let arrowStyle
     let peekStyle
@@ -124,11 +116,7 @@ export default class PeekPage {
     }
     return (
       <UI.Theme name="dark">
-        <peek
-          css={peekStyle}
-          $peekVisible={!Screen.state.peekHidden}
-          $peekTorn={store.isTorn}
-        >
+        <peek css={peekStyle} $peekVisible={!App.state.peekHidden}>
           {/* first is arrow (above), second is arrow shadow (below) */}
           {[1, 2].map(key => (
             <UI.Arrow
@@ -198,10 +186,7 @@ export default class PeekPage {
             </header>
             <contentInner>
               <PeekContent store={store} />
-              <Knowledge
-                if={Screen.appState.knowledge}
-                data={Screen.appState.knowledge}
-              />
+              <Knowledge if={App.state.knowledge} data={App.state.knowledge} />
             </contentInner>
           </content>
         </peek>

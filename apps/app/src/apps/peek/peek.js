@@ -36,16 +36,19 @@ const peekShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.05]]]
       })
 
       let hoverShow
-      this.watch(() => {
-        const word = Screen.hoveredWordName
-        // ignore if holding option
-        if (Screen.desktopState.keyboard.option) return
-        clearTimeout(hoverShow)
-        const hidden = !word
-        hoverShow = setTimeout(() => {
-          Screen.setState({ hidden })
-        }, hidden ? 50 : 500)
-      })
+      this.react(
+        () => Screen.hoveredWordName,
+        word => {
+          // ignore if holding option
+          if (Screen.desktopState.keyboard.option) return
+          clearTimeout(hoverShow)
+          const peekHidden = !word
+          hoverShow = setTimeout(() => {
+            console.log('sethidden based on word', peekHidden)
+            Screen.setState({ peekHidden })
+          }, peekHidden ? 50 : 500)
+        },
+      )
     }
 
     @watch
@@ -98,7 +101,7 @@ export default class PeekPage {
       <UI.Theme name="dark">
         <peek
           css={peekStyle}
-          $peekVisible={!Screen.state.hidden}
+          $peekVisible={!Screen.state.peekHidden}
           $peekTorn={store.isTorn}
         >
           {/* first is arrow (above), second is arrow shadow (below) */}

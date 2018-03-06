@@ -48,16 +48,12 @@ export type DesktopState = {
 class Screen {
   // state of electron
   electronState = {
-    show: null,
-    focused: null,
-    restart: null,
     showSettings: null,
     showDevTools: {},
     lastMove: null,
     settingsPosition: [],
-    size: [],
     screenSize: [],
-    oraPosition: [],
+    peekFocused: false,
     peekState: {},
     shouldHide: null,
     shouldShow: null,
@@ -68,8 +64,7 @@ class Screen {
     highlightWords: {},
     hoveredWord: null,
     hoveredLine: null,
-    pinned: null,
-    hidden: null,
+    peekHidden: null,
     preventElectronHide: null,
     contextMessage: null,
     closePeek: null,

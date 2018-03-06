@@ -2,5 +2,6 @@
   "compilerOptions": {
     "experimentalDecorators": true
   },
+  "include": ["apps/*/src", "packages/*/src"],
   "exclude": ["node_modules", "Build", "infra", "assets"]
 }

@@ -19,7 +19,7 @@ import Screen from '@mcro/screen'
           preventElectronHide: true,
           contextMessage: 'Orbit',
           closePeek: null,
-          hidden: true,
+          peekHidden: true,
           knowledge: null,
         })
       }
@@ -33,11 +33,13 @@ import Screen from '@mcro/screen'
         function handleHidden([shouldHide, lastChange, shouldShow]) {
           if (!shouldHide && !shouldShow) return
           if (lastChange && lastChange > shouldShow) {
-            Screen.setState({ hidden: true })
+            console.log('do peek hide')
+            Screen.setState({ peekHidden: true })
             return
           }
-          const hidden = shouldHide > shouldShow
-          Screen.setState({ hidden })
+          const peekHidden = shouldHide > shouldShow
+          console.log('peekHidden', peekHidden)
+          Screen.setState({ peekHidden })
         },
         true,
       )

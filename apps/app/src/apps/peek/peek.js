@@ -98,7 +98,7 @@ export default class PeekPage {
       <UI.Theme name="dark">
         <peek
           css={peekStyle}
-          $peekVisible={true || !Screen.state.hidden}
+          $peekVisible={!Screen.state.hidden}
           $peekTorn={store.isTorn}
         >
           {/* first is arrow (above), second is arrow shadow (below) */}

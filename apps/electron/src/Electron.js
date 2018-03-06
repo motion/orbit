@@ -32,6 +32,9 @@ const log = debug('Electron')
       // setup screen
       const { position } = Helpers.getAppSize()
       const screenSize = screen.getPrimaryDisplay().workAreaSize
+
+      console.log('STARTING SCREEN')
+
       Screen.start('electron', {
         shouldHide: null,
         shouldShow: null,

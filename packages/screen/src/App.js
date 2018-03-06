@@ -16,13 +16,16 @@ class App {
     return 'none for now'
   }
 
-  actions = {
-    togglePeek: () => {
-      this.setState({ disablePeek: !this.state.disablePeek })
-    },
-    openSettings: () => {
-      this.setState({ openSettings: Date.now() })
-    },
+  togglePeek = () => {
+    this.setState({ disablePeek: !this.state.disablePeek })
+  }
+
+  toggleHidden = () => {
+    this.setState({ hidden: !this.state.hidden })
+  }
+
+  openSettings = () => {
+    this.setState({ openSettings: Date.now() })
   }
 }
 

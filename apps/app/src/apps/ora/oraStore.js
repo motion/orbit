@@ -175,7 +175,7 @@ export default class OraStore {
 
   actions = {
     openSettings: () => {
-      App.actions.openSettings()
+      App.openSettings()
     },
     down: e => {
       if (this.stack.col === 0) {

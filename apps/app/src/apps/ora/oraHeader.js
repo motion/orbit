@@ -193,7 +193,7 @@ export default class OraHeader extends React.Component {
                 {...iconProps}
                 opacity={App.state.disablePeek ? 0.3 : 0.9}
                 name="app"
-                onClick={App.actions.togglePeek}
+                onClick={App.togglePeek}
               />
               <UI.Icon
                 {...iconProps}

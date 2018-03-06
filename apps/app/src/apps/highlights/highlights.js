@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import quadtree from 'simple-quadtree'
-import Screen, { Desktop } from '@mcro/screen'
+import Screen, { App, Desktop } from '@mcro/screen'
 import { LINE_Y_ADJ, toTarget } from './helpers'
 import OCRWord from './ocrWord'
 import OCRLine from './ocrLine'
@@ -44,7 +44,10 @@ const log = debug('highlights')
     // }
 
     get showAll() {
-      if (Screen.swiftState.isPaused) return true
+      if (Screen.swiftState.isPaused) {
+        log('swiftPaused')
+        return true
+      }
       const isTesting = this.ocrWords.length && this.ocrWords[0].length === 4
       return isTesting || Desktop.state.lastOCR > Desktop.state.lastScreenChange
     }
@@ -56,7 +59,7 @@ const log = debug('highlights')
       this.react(
         () => this.content,
         () => {
-          Screen.setState({
+          App.setState({
             highlightWords: ner(this.content).reduce(
               (acc, item) => ({ ...acc, [item]: true }),
               {},
@@ -85,7 +88,7 @@ const log = debug('highlights')
           )
           this.hoveredWord = hoveredWord
           this.hoveredLine = hoveredLine
-          Screen.setState({ hoveredWord, hoveredLine })
+          App.setState({ hoveredWord, hoveredLine })
         },
         true,
       )

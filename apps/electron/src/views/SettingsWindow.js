@@ -2,32 +2,32 @@ import * as React from 'react'
 import { Window } from '@mcro/reactron'
 import * as Constants from '~/constants'
 import { view } from '@mcro/black'
-import Screen from '@mcro/screen'
+import { App, Electron } from '@mcro/screen'
 
 @view.electron
 export default class SettingsWindow {
   componentDidMount() {
     this.react(
-      () => Screen.appState.openSettings,
+      () => App.state.openSettings,
       () => this.handleSettingsVisibility(true),
     )
   }
 
   handleSettingsVisibility = showSettings => {
-    Screen.setState({ showSettings })
+    Electron.setState({ showSettings })
   }
 
-  onSettingsSized = size => Screen.setState({ size })
-  onSettingsMoved = settingsPosition => Screen.setState({ settingsPosition })
+  onSettingsSized = size => Electron.setState({ size })
+  onSettingsMoved = settingsPosition => Electron.setState({ settingsPosition })
   onSettingsClosed = e => {
-    if (!this.isClosing && Screen.state.showSettings) {
+    if (!this.isClosing && Electron.state.showSettings) {
       e.preventDefault()
       this.handleSettingsVisibility(false)
     }
   }
 
   render() {
-    if (!Screen.state.showSettings) {
+    if (!Electron.state.showSettings) {
       return null
     }
     return (
@@ -36,15 +36,15 @@ export default class SettingsWindow {
         defaultSize={[700, 500]}
         backgroundColor="#00000000"
         webPreferences={Constants.WEB_PREFERENCES}
-        show={Screen.state.showSettings}
-        showDevTools={Screen.state.showDevTools.settings}
+        show={Electron.state.showSettings}
+        showDevTools={Electron.state.showDevTools.settings}
         transparent
         hasShadow
         titleBarStyle="hiddenInset"
-        defaultSize={Screen.state.size}
-        size={Screen.state.size}
+        defaultSize={Electron.state.size}
+        size={Electron.state.size}
         file={`${Constants.APP_URL}/settings`}
-        position={Screen.state.settingsPosition}
+        position={Electron.state.settingsPosition}
         onResize={this.onSettingsSized}
         onMoved={this.onSettingsMoved}
         onMove={this.onSettingsMoved}

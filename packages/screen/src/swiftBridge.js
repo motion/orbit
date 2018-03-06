@@ -1,5 +1,5 @@
 import { store } from '@mcro/black/store'
-import WebSocket from './websocket'
+import WebSocket from './helpers/websocket'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 
 @store

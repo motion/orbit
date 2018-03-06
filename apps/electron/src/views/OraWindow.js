@@ -3,7 +3,7 @@ import { Window } from '@mcro/reactron'
 import * as Constants from '~/constants'
 import { once } from 'lodash'
 import { view } from '@mcro/black'
-import Screen from '@mcro/screen'
+import { Electron } from '@mcro/screen'
 
 @view.electron
 export default class Windows {
@@ -18,10 +18,10 @@ export default class Windows {
     }
   })
 
-  onOraBlur = () => Screen.setState({ focused: false })
-  onOraFocus = () => Screen.setState({ focused: true })
+  onOraBlur = () => Electron.setState({ focused: false })
+  onOraFocus = () => Electron.setState({ focused: true })
   onOraMoved = oraPosition => {
-    Screen.setState({ oraPosition, lastMove: Date.now() })
+    Electron.setState({ oraPosition, lastMove: Date.now() })
   }
 
   render() {
@@ -36,10 +36,10 @@ export default class Windows {
         show
         alwaysOnTop
         hasShadow={false}
-        showDevTools={Screen.state.showDevTools.app}
+        showDevTools={Electron.state.showDevTools.app}
         size={[Constants.ORA_WIDTH, 1000]}
         file={`${Constants.APP_URL}`}
-        position={Screen.state.oraPosition.slice(0)}
+        position={Electron.state.oraPosition.slice(0)}
         onMoved={this.onOraMoved}
         onMove={this.onOraMoved}
         onBlur={this.onOraBlur}

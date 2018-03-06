@@ -11,6 +11,9 @@ import * as Helpers from '~/helpers'
 import Screen from '@mcro/screen'
 import global from 'global'
 import { screen } from 'electron'
+import { debounce } from 'lodash'
+
+const log = debug('Electron')
 
 @view.provide({
   electron: class ElectronStore {
@@ -48,67 +51,57 @@ import { screen } from 'electron'
         screenSize,
       })
 
-      new ShortcutsStore().emitter.on('shortcut', shortcut => {
-        console.log('emit shortcut', shortcut)
-        if (shortcut === 'Option+Space') {
-          if (Screen.desktopState.keyboard.option) {
-            console.log('avoid toggle while holding option')
-            return
-          }
-          this.toggleShown()
-        }
-      })
-
       this.watchOptionPress()
     }
 
     watchOptionPress = () => {
       // watch option hold
-      let lastKeyboard = {}
-      let justCleared = false
-      let optnEnter
-      let optnLeave
-      this.react(() => Screen.desktopState.keyboard, function reactToKeyboard(
-        keyboard,
-      ) {
-        if (!keyboard) return
-        clearTimeout(optnLeave)
-        const { option, optionCleared } = keyboard
-        if (Screen.appState.peekHidden) {
-          // HIDDEN
-          // clear last if not opened yet
-          if (optionCleared) {
-            clearTimeout(optnEnter)
-          }
-          // delay before opening on option
-          if (!lastKeyboard.option && option) {
-            optnEnter = setTimeout(this.showOra, 150)
-          }
-        } else {
-          // SHOWN
-          // dont toggle
-          if (optionCleared) {
-            justCleared = true
-            return
-          }
-          // for some reason an option event comes again
-          // after it just cleared (saying its false), so ignore
-          if (justCleared) {
-            justCleared = false
-            return
-          }
-          // dont hide if mouse is currently on window
-          if (Screen.electronState.peekFocused) {
-            console.log('mouse is over peek, dont hide')
-            return
-          }
-          if (lastKeyboard.option && !option) {
-            optnLeave = setTimeout(this.hideOra, 40)
-          }
+      this.lastToggle = Date.now()
+
+      new ShortcutsStore().emitter.on('shortcut', shortcut => {
+        console.log('emit shortcut', shortcut)
+        if (shortcut === 'Option+Space') {
+          // if (Screen.desktopState.keyboard.option) {
+          //   console.log('avoid toggle while holding option')
+          //   return
+          // }
+          this.lastToggle = Date.now()
+          console.log('got a toggle')
+          this.toggleShown()
         }
-        lastKeyboard = keyboard
       })
+
+      this.react(
+        () => [
+          Screen.desktopState.keyboard.option,
+          Screen.desktopState.keyboard.optionUp,
+        ],
+        this.handleOptionKey,
+      )
     }
+
+    // debounced so it comes after toggles
+    handleOptionKey = debounce(([option, optionUp]) => {
+      clearTimeout(this.optnLeave)
+      clearTimeout(this.optnEnter)
+      const isHolding = option > optionUp
+      if (!isHolding) {
+        if (Screen.electronState.peekFocused) {
+          log('mouse is over peek, dont hide')
+        }
+        this.hideOra()
+        return
+      }
+      if (Screen.appState.peekHidden) {
+        // SHOW
+        if (optionUp) {
+          clearTimeout(this.optnEnter)
+        }
+        if (isHolding) {
+          this.optnEnter = setTimeout(this.showOra, 150)
+        }
+      }
+    }, 16)
 
     restart() {
       if (process.env.NODE_ENV === 'development') {

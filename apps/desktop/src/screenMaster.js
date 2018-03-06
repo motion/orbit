@@ -236,15 +236,23 @@ export default class ScreenMaster {
     const updateKeyboard = newState =>
       this.setState({ keyboard: { ...this.state.keyboard, ...newState } })
 
+    let keysDown = 0
+
     // keydown
     iohook.on('keydown', ({ keycode }) => {
-      // log('keycode', keycode)
-      if (keycode === codes.option) {
-        return updateKeyboard({ option: true, optionCleared: false })
+      keysDown++
+      const isOption = keycode === codes.option
+      if (keysDown > 1 && isOption) {
+        log('was already holding key before option')
+        return updateKeyboard({ optionUp: Date.now() })
       }
-      // clear option key if other key pressed during
+      if (isOption) {
+        log('option down')
+        return updateKeyboard({ option: Date.now() })
+      }
       if (this.state.keyboard.option) {
-        return updateKeyboard({ optionCleared: true })
+        log('pressed key after option')
+        return updateKeyboard({ optionUp: Date.now() })
       }
       switch (keycode) {
         // clear highlights keys
@@ -258,9 +266,10 @@ export default class ScreenMaster {
 
     // keyup
     iohook.on('keyup', ({ keycode }) => {
+      keysDown--
       // option off
       if (keycode === codes.option) {
-        updateKeyboard({ option: false, optionCleared: false })
+        updateKeyboard({ optionUp: Date.now() })
       }
     })
   }

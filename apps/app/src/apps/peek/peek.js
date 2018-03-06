@@ -12,7 +12,7 @@ const keyParam = (window.location.search || '').match(/key=(.*)/)
 const KEY = keyParam && keyParam[1]
 const SHADOW_PAD = 15
 const BORDER_RADIUS = 12
-const BORDER_COLOR = `rgba(255,255,255,0.25)`
+// const BORDER_COLOR = `rgba(255,255,255,0.25)`
 const background = 'rgba(0,0,0,0.9)'
 const peekShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.05]]]
 
@@ -77,7 +77,7 @@ export default class PeekPage {
     switch (arrowTowards) {
       case 'right':
         peekStyle = {
-          marginRight: -4,
+          // marginRight: -4,
         }
         arrowStyle = {
           top: 53,
@@ -86,7 +86,7 @@ export default class PeekPage {
         break
       case 'left':
         peekStyle = {
-          marginLeft: -2,
+          // marginLeft: -2,
         }
         arrowStyle = {
           top: 53,
@@ -109,7 +109,6 @@ export default class PeekPage {
               size={arrowSize}
               towards={arrowTowards}
               background={background}
-              border={key === 1 ? `1px solid ${BORDER_COLOR}` : null}
               css={{
                 position: 'absolute',
                 ...arrowStyle,
@@ -212,7 +211,7 @@ export default class PeekPage {
       overflow: 'hidden',
       opacity: 1,
       transition: 'background ease-in 200ms',
-      boxShadow: [peekShadow, `0 0 0 0.5px ${BORDER_COLOR}`],
+      // boxShadow: [peekShadow, `0 0 0 0.5px ${BORDER_COLOR}`],
     },
     header: {
       flexFlow: 'row',
@@ -220,7 +219,7 @@ export default class PeekPage {
       justifyContent: 'center',
       padding: [10, 10],
       borderTopRadius: BORDER_RADIUS,
-      boxShadow: [`inset 0 1px 0 ${BORDER_COLOR}`],
+      // boxShadow: [`inset 0 1px 0 ${BORDER_COLOR}`],
     },
     title: {
       flex: 1,

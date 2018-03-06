@@ -20,7 +20,7 @@ const Item = ({ title, type, subtitle, content }) => (
     padding={[10, 18]}
   >
     <UI.Title
-      size={1.65}
+      size={1.6}
       ellipse
       css={{ alignItems: 'center', justifyContent: 'center' }}
     >

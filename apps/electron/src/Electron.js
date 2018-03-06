@@ -5,14 +5,12 @@ import { view, debugState } from '@mcro/black'
 import Tray from './views/Tray'
 import MenuItems from './views/MenuItems'
 import HighlightsWindow from './views/HighlightsWindow'
-import OraWindow from './views/OraWindow'
 import PeekWindow from './views/PeekWindow'
 import SettingsWindow from './views/SettingsWindow'
 import * as Helpers from '~/helpers'
 import Screen from '@mcro/screen'
 import global from 'global'
 import { screen } from 'electron'
-import * as Constants from '~/constants'
 
 @view.provide({
   electron: class ElectronStore {
@@ -133,21 +131,10 @@ import * as Constants from '~/constants'
     async showOra() {
       this.appRef.show()
       Screen.setState({ shouldShow: Date.now() })
-      // await Helpers.sleep(250) // animate
-      // this.appRef && this.appRef.focus()
-      // this.oraRef && this.oraRef.focus()
     }
 
     async hideOra() {
-      console.trace('hiding ora')
       Screen.setState({ shouldHide: Date.now() })
-      // await Helpers.sleep(150) // animate
-      // if (
-      //   !Screen.state.settingsVisible &&
-      //   !Screen.appState.preventElectronHide
-      // ) {
-      //   this.appRef.hide()
-      // }
     }
 
     handleAppRef = ref => ref && (this.appRef = ref.app)

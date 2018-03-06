@@ -82,9 +82,14 @@ const log = debug('Electron')
 
     // debounced so it comes after toggles
     handleOptionKey = debounce(([option, optionUp]) => {
-      clearTimeout(this.optnLeave)
       clearTimeout(this.optnEnter)
+      // just toggled, ignore this
+      if (this.lastToggle > option) {
+        log(`just toggled, avoid option handle`)
+        return
+      }
       const isHolding = option > optionUp
+      log(`isHolding: ${isHolding}`)
       if (!isHolding) {
         if (Screen.electronState.peekFocused) {
           log('mouse is over peek, dont hide')
@@ -94,12 +99,7 @@ const log = debug('Electron')
       }
       if (Screen.appState.peekHidden) {
         // SHOW
-        if (optionUp) {
-          clearTimeout(this.optnEnter)
-        }
-        if (isHolding) {
-          this.optnEnter = setTimeout(this.showOra, 150)
-        }
+        this.optnEnter = setTimeout(this.showOra, 150)
       }
     }, 16)
 

@@ -226,6 +226,7 @@ export default class ScreenMaster {
 
   watchKeyboard = () => {
     const codes = {
+      esc: 1,
       option: 56,
       up: 57416,
       down: 57424,
@@ -241,9 +242,13 @@ export default class ScreenMaster {
     // keydown
     iohook.on('keydown', ({ keycode }) => {
       keysDown++
+      // log(`keydown: ${keycode}`)
+      if (keycode === codes.esc) {
+        return updateKeyboard({ esc: Date.now() })
+      }
       const isOption = keycode === codes.option
       if (keysDown > 1 && isOption) {
-        log('was already holding key before option')
+        log(`option: already holding ${keysDown} keys`)
         return updateKeyboard({ optionUp: Date.now() })
       }
       if (isOption) {

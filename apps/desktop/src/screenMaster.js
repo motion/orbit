@@ -161,7 +161,7 @@ export default class ScreenMaster {
       })
     })
     this.oracle.onBoxChanged(count => {
-      if (!Screen.state.ocrWords) {
+      if (!this.state.ocrWords) {
         log('RESET oracle boxChanged (App)')
         this.resetHighlights()
         if (this.isWatching === 'OCR') {
@@ -245,11 +245,22 @@ export default class ScreenMaster {
       }
     }
 
+    // this is imperfect, iohook doesn't always match events perfectly
+    // so in cases of errors, we clear it after a little delay
     const KeysDown = new Set()
+
+    let pauseTm
+    const clearDownKeysAfterPause = () => {
+      clearTimeout(pauseTm)
+      pauseTm = setTimeout(() => {
+        KeysDown.clear()
+      }, 3000)
+    }
 
     // keydown
     iohook.on('keydown', ({ keycode }) => {
       KeysDown.add(keycode)
+      clearDownKeysAfterPause()
       // log(`keydown: ${keycode}`)
       if (keycode === codes.esc) {
         return updateKeyboard({ esc: Date.now() })
@@ -280,6 +291,7 @@ export default class ScreenMaster {
     // keyup
     iohook.on('keyup', ({ keycode }) => {
       KeysDown.delete(keycode)
+      clearDownKeysAfterPause()
       // option off
       if (keycode === codes.option) {
         clearOption()

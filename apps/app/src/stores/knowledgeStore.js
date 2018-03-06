@@ -2,7 +2,7 @@ import { memoize } from 'lodash'
 import { store } from '@mcro/black'
 import { API_URL } from '~/constants'
 import Screen from '@mcro/screen'
-import marginal from './language/marginal.json'
+import dataset from './language/pg.json'
 
 @store
 export default class KnowledgeStore {
@@ -31,7 +31,7 @@ export default class KnowledgeStore {
             return false
           }
           knowledge = knowledge[0].result
-          knowledge.results = marginal
+          knowledge.results = dataset
             .filter(
               ({ title }) =>
                 (title || '')

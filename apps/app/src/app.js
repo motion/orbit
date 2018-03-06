@@ -98,19 +98,19 @@ class App {
   }
 }
 
-let app = window.App
+let app = window.Root
 export async function start(recreate?: boolean) {
-  if (window.App || window.appDisposing) return
-  window.appDisposing = true
+  if (window.Root || window._isDisposing) return
+  window._isDisposing = true
   if (app) {
     await app.dispose()
   }
   if (recreate || !app) {
     app = new App()
-    window.App = app
+    window.Root = app
     await app.start({ quiet: recreate })
   }
-  window.appDisposing = false
+  window._isDisposing = false
 }
 
 // start!

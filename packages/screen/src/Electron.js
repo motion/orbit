@@ -1,6 +1,7 @@
 // @flow
 import Screen from './Screen'
 import { store } from '@mcro/black/store'
+import global from 'global'
 
 @store
 class Electron {
@@ -22,4 +23,7 @@ class Electron {
   }
 }
 
-export default new Electron()
+const electron = new Electron()
+global.Electron = electron
+
+export default electron

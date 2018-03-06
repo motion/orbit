@@ -23,7 +23,7 @@ export default class Desktop {
   stores = null
 
   async start() {
-    global.App = this
+    global.Root = this
     this.setupHosts()
     const port = await this.server.start()
     log(`starting desktop on ${port}`)

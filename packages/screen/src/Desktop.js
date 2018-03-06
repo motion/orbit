@@ -1,6 +1,7 @@
 // @flow
 import Screen from './Screen'
 import { store } from '@mcro/black/store'
+import global from 'global'
 
 type TappState = {
   name: string,
@@ -46,4 +47,7 @@ class Desktop {
   }
 }
 
-export default new Desktop()
+const desktop = new Desktop()
+global.Desktop = desktop
+
+export default desktop

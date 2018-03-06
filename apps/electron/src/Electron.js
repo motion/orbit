@@ -23,7 +23,7 @@ const log = debug('Electron')
     views = null
 
     willMount() {
-      global.App = this
+      global.Root = this
       debugState(({ stores, views }) => {
         this.stores = stores
         this.views = views

@@ -1,6 +1,7 @@
 // @flow
 import Screen from './Screen'
 import { store } from '@mcro/black/store'
+import global from 'global'
 
 @store
 class App {
@@ -29,4 +30,7 @@ class App {
   }
 }
 
-export default new App()
+const app = new App()
+global.App = app
+
+export default app

@@ -33,6 +33,7 @@ const log = debug('root')
           Desktop.state.lastScreenChange,
         ],
         function handleHidden([shouldHide, shouldShow, lastChange]) {
+          log(`handleHidden: ${shouldHide} ${shouldShow} ${lastChange}`)
           if (!shouldHide && !shouldShow) {
             return
           }

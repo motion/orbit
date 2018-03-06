@@ -237,6 +237,14 @@ export default class ScreenMaster {
     const updateKeyboard = newState =>
       this.setState({ keyboard: { ...this.state.keyboard, ...newState } })
 
+    // only clear if necessary
+    const clearOption = () => {
+      const { option, optionUp } = this.state
+      if (!option || !optionUp || option > optionUp) {
+        updateKeyboard({ optionUp: Date.now() })
+      }
+    }
+
     const KeysDown = new Set()
 
     // keydown
@@ -249,15 +257,15 @@ export default class ScreenMaster {
       const isOption = keycode === codes.option
       if (KeysDown.size > 1 && isOption) {
         log(`option: already holding ${KeysDown.size} keys`)
-        return updateKeyboard({ optionUp: Date.now() })
+        return clearOption()
       }
       if (isOption) {
         log('option down')
         return updateKeyboard({ option: Date.now() })
       }
-      if (this.state.keyboard.option) {
+      if (KeysDown.has(codes.option)) {
         log('pressed key after option')
-        return updateKeyboard({ optionUp: Date.now() })
+        return clearOption()
       }
       switch (keycode) {
         // clear highlights keys
@@ -274,7 +282,7 @@ export default class ScreenMaster {
       KeysDown.delete(keycode)
       // option off
       if (keycode === codes.option) {
-        updateKeyboard({ optionUp: Date.now() })
+        clearOption()
       }
     })
   }

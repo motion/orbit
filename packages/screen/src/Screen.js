@@ -74,7 +74,7 @@ class Screen {
   helpers = Helpers
 
   // note: you have to call start to make it explicitly connect
-  start(source, initialState, options = {}) {
+  start = (source, initialState, options = {}) => {
     if (this.started) {
       throw new Error(`Already started screen`)
     }
@@ -91,6 +91,8 @@ class Screen {
       console.log('already started')
       return
     }
+    this.uid = Math.random()
+    console.log('WE STARTED', source, this.uid)
     this.started = true
     // set initial state synchronously before
     this._initialStateKeys = Object.keys(initialState || {})
@@ -102,7 +104,7 @@ class Screen {
 
   // this will go up to api and back down to all screen stores
   // set is only allowed from the source its set as initially
-  _setState(state, internal = false) {
+  _setState = (state, internal = false) => {
     if (!this.started) {
       throw new Error(`Called Screen.setState before calling Screen.start`)
     }
@@ -111,15 +113,6 @@ class Screen {
     }
     // update our own state immediately so its sync
     const changed = this._update(this._source, state, internal)
-    // safety: only set what you start with
-    const outOfBoundsKeys = difference(changed, this._initialStateKeys)
-    if (outOfBoundsKeys.length) {
-      throw new Error(
-        `Screen.setState: set keys not set in the Screen.start() initial state:
-        Initial state keys: ${this._initialStateKeys || `[]`}
-        Updated keys: ${outOfBoundsKeys}`,
-      )
-    }
     if (!this._wsOpen) {
       this._queuedState = true
       return changed
@@ -132,16 +125,24 @@ class Screen {
 
   // private
   // return keys of changed items
-  _update = (source, state) => {
+  _update = (source, state, isInternal) => {
     if (!source) {
       throw new Error(`No source provided in screenStore state update`)
     }
     const changed = []
     const stateObj = this[`${source}State`]
     for (const key of Object.keys(state)) {
+      if (isInternal && this._initialStateKeys.indexOf(key) === -1) {
+        console.error(
+          `Screen.setState: set keys not set in the Screen.start() initial state:
+          Initial state keys: ${this._initialStateKeys || `[]`}
+          Bad key: ${key}`,
+        )
+        return changed
+      }
       // console.log('isEqual', key, stateObj[key], state[key])
       if (!isEqual(stateObj[key], state[key])) {
-        this[`${source}State`][key] = state[key]
+        stateObj[key] = state[key]
         changed.push(key)
       }
     }

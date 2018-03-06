@@ -9,7 +9,7 @@ import Screen from '@mcro/screen'
 
 const idFn = _ => _
 const PAD = 15
-const INITIAL_SIZE = [400, 420]
+const INITIAL_SIZE = [350, 420]
 
 const peekPosition = ({ left, top, width, height }: PeekTarget) => {
   const EDGE_PAD = 20

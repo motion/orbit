@@ -5,7 +5,7 @@ import * as Sidebars from './sidebars'
 import PaneView from './pane'
 import { ORA_WIDTH } from '~/constants'
 import getItem from '~/helpers/getItem'
-import Screen from '@mcro/screen'
+import { App } from '@mcro/screen'
 
 // passes through all props to <PaneView />
 @view({
@@ -175,7 +175,7 @@ export default class Sidebar {
                       return item.onClick()
                     }
                     if (item.data && item.data.url) {
-                      Screen.setState({ openBrowser: item.data.url })
+                      App.setState({ openBrowser: item.data.url })
                       return
                     }
                     stackItem.onSelect(item, index)

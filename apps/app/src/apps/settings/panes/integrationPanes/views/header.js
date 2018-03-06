@@ -7,7 +7,7 @@ import { formatDistance } from 'date-fns'
 import { includes } from 'lodash'
 import r2 from '@mcro/r2'
 import * as Constants from '~/constants'
-import Screen from '@mcro/screen'
+import { App } from '@mcro/screen'
 
 class IntegrationHeaderStore {
   typeToJob = {
@@ -61,7 +61,7 @@ class IntegrationHeaderStore {
 
   startOauth(integration) {
     if (Constants.IS_ELECTRON) {
-      Screen.setState({ authOpen: integration })
+      App.setState({ authOpen: integration })
     } else {
       window.open(`${Constants.API_URL}/auth?service=${integration}`)
     }
@@ -69,7 +69,7 @@ class IntegrationHeaderStore {
       const authorizations = await this.checkAuths()
       if (authorizations && authorizations[integration]) {
         await CurrentUser.setAuthorizations(authorizations)
-        Screen.setState({ authClose: integration })
+        App.setState({ authClose: integration })
         clearInterval(checker)
       }
     }, 1000)

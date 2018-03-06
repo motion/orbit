@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react'
+import { debounce } from 'lodash'
 import { view, watch } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import Mousetrap from 'mousetrap'
@@ -7,6 +8,8 @@ import Screen from '@mcro/screen'
 import ControlButton from '~/views/controlButton'
 import Knowledge from './knowledge'
 import PeekContent from './peekContent'
+import PaulGraham from '~/stores/language/pg.json'
+import Search from '@mcro/search'
 
 const keyParam = (window.location.search || '').match(/key=(.*)/)
 const KEY = keyParam && keyParam[1]
@@ -21,6 +24,18 @@ const peekShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.05]]]
     isTorn = false
     isPinned = false
 
+    query = ''
+    results = []
+
+    onChangeQuery = e => {
+      this.query = e.target.value
+    }
+
+    search = debounce(async () => {
+      const { results } = await this.searchStore.search.search(this.query)
+      this.results = results
+    }, 150)
+
     get peek() {
       return (
         Screen.electronState.peekState &&
@@ -30,6 +45,16 @@ const peekShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.05]]]
     }
 
     willMount() {
+      this.searchStore = new Search()
+      this.searchStore.onDocuments(PaulGraham)
+
+      this.react(
+        () => this.query,
+        () => {
+          this.search()
+        },
+      )
+
       this.trap = new Mousetrap(window)
       this.trap.bind('esc', () => {
         console.log('esc')
@@ -133,8 +158,9 @@ export default class PeekPage {
               </buttons>
               <title>
                 <UI.Input
-                  value="Something"
+                  value={store.query}
                   size={1.1}
+                  onChange={store.onChangeQuery}
                   css={{ width: '100%' }}
                 />
               </title>
@@ -168,7 +194,7 @@ export default class PeekPage {
               </UI.Row>
             </header>
             <contentInner>
-              <PeekContent />
+              <PeekContent store={store} />
               <Knowledge
                 if={Screen.appState.knowledge}
                 data={Screen.appState.knowledge}

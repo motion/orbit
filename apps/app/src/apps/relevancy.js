@@ -4,7 +4,6 @@ import { last } from 'lodash'
 import * as UI from '@mcro/ui'
 import LanguageStore from '~/stores/language'
 import { decodeEntity } from '~/stores/language/utils'
-console.log('in relevancy')
 
 @view({
   store: LanguageStore,

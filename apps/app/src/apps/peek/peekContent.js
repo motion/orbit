@@ -47,51 +47,17 @@ const Item = ({ title, type, subtitle, content }) => (
 
 @view
 export default class PeekContent {
-  render() {
+  render({ store }) {
     return (
       <list>
-        <Item
-          type="gmail"
-          title="Your Monday afternoon trip with Uber"
-          subtitle="Uber Receipts"
-          content="$3.83 Thanks for choosing Uber, Nathan March 5, 2018 | Express POOL"
-        />
-        <Item
-          type="gmail"
-          title="Scavolini Kitchen cabinet door"
-          subtitle="Chris Galota (me, cammarata.nick)"
-          content="Hi guys. In order to decide how to proceed with the kitchen cabinet, we need a bit more clarity on the issue and so we need your help."
-        />
-        <Item
-          type="gmail"
-          title="Fwd: 5-Bullet Friday"
-          subtitle="Andrew Herren (Potluck)"
-          content="Yeah, this is cool! It's illuminating to get a peek into the process of how a study like this proceeds, the timeline of approvals"
-        />
-        <Item
-          type="gdocs"
-          title="Fwd: 5-Bullet Friday"
-          subtitle="Andrew Herren (Potluck)"
-          content="Yeah, this is cool! It's illuminating to get a peek into the process of how a study like this proceeds, the timeline of approvals"
-        />
-        <Item
-          type="gcalendar"
-          title="Fwd: 5-Bullet Friday"
-          subtitle="Andrew Herren (Potluck)"
-          content="Yeah, this is cool! It's illuminating to get a peek into the process of how a study like this proceeds, the timeline of approvals"
-        />
-        <Item
-          type="gsheets"
-          title="Fwd: 5-Bullet Friday"
-          subtitle="Andrew Herren (Potluck)"
-          content="Yeah, this is cool! It's illuminating to get a peek into the process of how a study like this proceeds, the timeline of approvals"
-        />
-        <Item
-          type="slack"
-          title="Fwd: 5-Bullet Friday"
-          subtitle="Andrew Herren (Potluck)"
-          content="Yeah, this is cool! It's illuminating to get a peek into the process of how a study like this proceeds, the timeline of approvals"
-        />
+        {store.results.map(result => (
+          <Item
+            type="gmail"
+            title={result.item.title}
+            subtitle="Uber Receipts"
+            content={result.snippet}
+          />
+        ))}
       </list>
     )
   }

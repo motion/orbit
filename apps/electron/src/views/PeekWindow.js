@@ -115,7 +115,7 @@ type PeekTarget = {
     watchMouseForPeekFocus = () => {
       // if mouse within bounds + not hidden, focus peek
       this.react(
-        () => [Screen.desktopState.mousePosition, Screen.appState.hidden],
+        () => [Screen.desktopState.mousePosition, Screen.appState.peekHidden],
         ([{ x, y }, isHidden]) => {
           if (isHidden || !this.peek) {
             this.focused = false
@@ -130,8 +130,9 @@ type PeekTarget = {
       // second reaction so it only triggers if value changes
       this.react(
         () => this.focused,
-        shouldFocus => {
-          if (shouldFocus) {
+        focused => {
+          Screen.setState({ peekFocused: focused })
+          if (focused) {
             this.peekRef && this.peekRef.focus()
           } else {
             Screen.swiftBridge.defocus()

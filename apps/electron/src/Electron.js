@@ -30,16 +30,15 @@ import * as Constants from '~/constants'
       })
 
       // setup screen
-      const { position, size } = Helpers.getAppSize()
+      const { position } = Helpers.getAppSize()
       const screenSize = screen.getPrimaryDisplay().workAreaSize
-      const oraPosition = [screenSize.width - Constants.ORA_WIDTH, 20]
       Screen.start('electron', {
         shouldHide: null,
         shouldShow: null,
         shouldPause: null,
         peekState: {},
-        focused: false,
         showSettings: false,
+        peekFocused: false,
         showDevTools: {
           app: false,
           peek: false,
@@ -47,11 +46,8 @@ import * as Constants from '~/constants'
           settings: true,
         },
         lastMove: Date.now(),
-        show: true,
         settingsPosition: position,
-        size,
         screenSize,
-        oraPosition,
       })
 
       new ShortcutsStore().emitter.on('shortcut', shortcut => {
@@ -80,7 +76,7 @@ import * as Constants from '~/constants'
         if (!keyboard) return
         clearTimeout(optnLeave)
         const { option, optionCleared } = keyboard
-        if (Screen.appState.hidden) {
+        if (Screen.appState.peekHidden) {
           // HIDDEN
           // clear last if not opened yet
           if (optionCleared) {
@@ -97,9 +93,15 @@ import * as Constants from '~/constants'
             justCleared = true
             return
           }
-          // an option event comes again after cleared saying its false
+          // for some reason an option event comes again
+          // after it just cleared (saying its false), so ignore
           if (justCleared) {
             justCleared = false
+            return
+          }
+          // dont hide if mouse is currently on window
+          if (Screen.electronState.peekFocused) {
+            console.log('mouse is over peek, dont hide')
             return
           }
           if (lastKeyboard.option && !option) {
@@ -121,7 +123,7 @@ import * as Constants from '~/constants'
     toggleShown = async () => {
       if (Screen.appState.pinned) return
       if (!this.appRef) return
-      if (!Screen.appState.hidden) {
+      if (!Screen.appState.peekHidden) {
         this.hideOra()
       } else {
         this.showOra()
@@ -137,6 +139,7 @@ import * as Constants from '~/constants'
     }
 
     async hideOra() {
+      console.trace('hiding ora')
       Screen.setState({ shouldHide: Date.now() })
       // await Helpers.sleep(150) // animate
       // if (
@@ -157,7 +160,7 @@ import * as Constants from '~/constants'
   },
 })
 @view.electron
-export default class Root extends React.Component {
+export default class Electron extends React.Component {
   componentDidCatch(error) {
     console.error(error)
     this.props.electron.error = error
@@ -175,8 +178,7 @@ export default class Root extends React.Component {
       >
         <MenuItems />
         <HighlightsWindow />
-        {/* <OraWindow onRef={electron.handleOraRef} /> */}
-        <PeekWindow appPosition={Screen.state.oraPosition.slice(0)} />
+        <PeekWindow />
         {/* <SettingsWindow /> */}
         <Tray />
       </App>

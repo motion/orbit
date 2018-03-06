@@ -40,7 +40,9 @@ export default async function setupSocket() {
     this._wsOpen = true
     // send state that hasnt been synced yet
     if (this._queuedState) {
-      this.ws.send(JSON.stringify({ state: this.state, source: this._source }))
+      this.ws.send(
+        JSON.stringify({ state: this.getState(), source: this._source }),
+      )
       this._queuedState = false
     }
   }

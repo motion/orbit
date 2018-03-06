@@ -2,7 +2,7 @@
 import { store } from '@mcro/black/store'
 import SwiftBridge from './swiftBridge'
 import global from 'global'
-import { isEqual, difference } from 'lodash'
+import { isEqual } from 'lodash'
 import setupSocket from './helpers/setupSocket'
 import type { DesktopState } from './Desktop'
 import * as Helpers from './screenHelpers'
@@ -88,11 +88,9 @@ class Screen {
     }
     this._source = source
     if (this.ws) {
-      console.log('already started')
+      console.warn('already started')
       return
     }
-    this.uid = Math.random()
-    console.log('WE STARTED', source, this.uid)
     this.started = true
     // set initial state synchronously before
     this._initialStateKeys = Object.keys(initialState || {})
@@ -100,6 +98,10 @@ class Screen {
       this._setState(initialState)
     }
     setupSocket.call(this)
+  }
+
+  getState() {
+    return this[`${this._source}State`]
   }
 
   // this will go up to api and back down to all screen stores

@@ -29,7 +29,8 @@ class Bridge {
       throw new Error(`No source given for starting screen store`)
     }
     if (this.store || this._socket) {
-      throw new Error(`Already started`)
+      console.warn(`Already started ${this._source}`)
+      return
     }
     this._socket = new ReconnectingWebSocket(
       'ws://localhost:40510',

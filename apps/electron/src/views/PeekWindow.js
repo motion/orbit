@@ -120,9 +120,8 @@ type PeekTarget = {
       this.react(
         () => [Desktop.state.mousePosition, App.state.peekHidden],
         ([{ x, y }, isHidden]) => {
-          log(`watchMouseForPeekFocus ${isHidden}`)
           if (isHidden) {
-            Electron.setState({ peekFocused: true })
+            Electron.setState({ peekFocused: false })
             return
           }
           if (!this.peek) return
@@ -131,6 +130,13 @@ type PeekTarget = {
           const withinY = y > position[1] && y < position[1] + size[1]
           const peekFocused = withinX && withinY
           Electron.setState({ peekFocused })
+        },
+      )
+
+      // separate react to only call actions if value changes
+      this.react(
+        () => Electron.state.peekFocused,
+        peekFocused => {
           if (peekFocused) {
             this.peekRef && this.peekRef.focus()
           } else {

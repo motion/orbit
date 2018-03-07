@@ -37,6 +37,10 @@ const log = debug('root')
           if (!shouldHide && !shouldShow) {
             return
           }
+          if (Electron.state.peekFocused) {
+            log(`Peek is focused, ignore`)
+            return
+          }
           if (lastChange && lastChange > shouldShow) {
             log('do peek hide')
             App.setState({ peekHidden: true })

@@ -10,6 +10,7 @@ import { App, Desktop, Electron } from '@mcro/screen'
 const idFn = _ => _
 const PAD = 15
 const INITIAL_SIZE = [350, 420]
+const log = debug('PeekWindow')
 
 const peekPosition = ({ left, top, width, height }: PeekTarget) => {
   const EDGE_PAD = 20
@@ -33,7 +34,8 @@ const peekPosition = ({ left, top, width, height }: PeekTarget) => {
     }
   }
   if (height + y + EDGE_PAD > screenH) {
-    height = screenH - EDGE_PAD - y
+    // height = screenH - EDGE_PAD - y
+    log(`too big, adjusting height ${height} screenH ${screenH}`)
   }
   return {
     position: [Math.round(x), Math.round(y)],
@@ -196,11 +198,12 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
         appTarget(Desktop.state.appState || {}),
         this.props.store.linesBoundingBox,
       ],
-      ([appTarget: Object, linesTarget: Object]) => {
-        const box = linesTarget || appTarget
+      ([appBB, linesBB]) => {
+        // prefer using lines bounding box, fall back to app
+        const box = linesBB || appBB
         if (!box) return
         const newProps = peekPosition(box)
-        if (linesTarget) {
+        if (linesBB) {
           // add padding
           newProps.position[0] += newProps.arrowTowards === 'left' ? PAD : -PAD
         } else {

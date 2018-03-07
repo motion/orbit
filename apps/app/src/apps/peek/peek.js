@@ -3,7 +3,6 @@ import * as React from 'react'
 import { debounce } from 'lodash'
 import { view, watch } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import Mousetrap from 'mousetrap'
 import { App, Desktop, Electron } from '@mcro/screen'
 import ControlButton from '~/views/controlButton'
 import Knowledge from './knowledge'
@@ -23,7 +22,6 @@ const peekShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.05]]]
   store: class PeekStore {
     isTorn = false
     isPinned = false
-
     query = ''
     results = []
 
@@ -40,30 +38,30 @@ const peekShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.05]]]
       this.searchStore = new Search()
       this.searchStore.onDocuments(PaulGraham)
 
-      this.react(
-        () => this.query,
-        () => {
-          this.search()
-        },
-      )
-
-      this.trap = new Mousetrap(window)
-      this.trap.bind('esc', () => {
-        console.log('esc')
-      })
+      this.react(() => this.query, this.search)
 
       let hoverShow
       this.react(
         () => App.hoveredWordName,
         word => {
-          // ignore if holding option
-          if (Desktop.state.keyboard.option) return
+          if (Desktop.isHoldingOption) {
+            return
+          }
           clearTimeout(hoverShow)
           const peekHidden = !word
           hoverShow = setTimeout(() => {
             console.log('sethidden based on word', peekHidden)
             App.setState({ peekHidden })
           }, peekHidden ? 50 : 500)
+        },
+      )
+
+      this.react(
+        () => Desktop.state.keyboard.esc,
+        () => {
+          if (!App.state.peekHidden) {
+            App.setState({ peekHidden: true })
+          }
         },
       )
     }
@@ -76,10 +74,6 @@ const peekShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.05]]]
         console.log('tearing!', peekWindow)
         this.isTorn = true
       }
-    }
-
-    willUnmount() {
-      this.trap.reset()
     }
 
     closePeek = () => {

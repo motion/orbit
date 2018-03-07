@@ -89,7 +89,7 @@ const log = debug('Electron')
       }
       const isHolding = option > optionUp
       log(
-        `handleOptionKey option (${option}) optionUp (${optionUp}) isHolding (${isHolding}) peekHidden (${
+        `handleOptionKey isHolding (${isHolding}) peekHidden (${
           App.state.peekHidden
         })`,
       )
@@ -97,12 +97,12 @@ const log = debug('Electron')
         if (Electron.state.peekFocused) {
           log('mouse is over peek, dont hide')
         }
-        this.hideOra()
+        this.shouldHide()
         return
       }
       if (App.state.peekHidden) {
         // SHOW
-        this.optnEnter = setTimeout(this.showOra, 150)
+        this.optnEnter = setTimeout(this.shouldShow, 150)
       }
     }, 16)
 
@@ -118,21 +118,21 @@ const log = debug('Electron')
       if (App.state.pinned) return
       if (!this.appRef) return
       if (!App.state.peekHidden) {
-        this.hideOra()
+        this.shouldHide()
       } else {
-        this.showOra()
+        this.shouldShow()
         this.appRef.focus()
       }
     }
 
-    async showOra() {
-      log('showOra')
+    async shouldShow() {
+      log('shouldShow')
       this.appRef.show()
       Electron.setState({ shouldShow: Date.now() })
     }
 
-    async hideOra() {
-      log('hideOra')
+    async shouldHide() {
+      log('shouldHide')
       Electron.setState({ shouldHide: Date.now() })
     }
 

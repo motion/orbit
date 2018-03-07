@@ -6,6 +6,7 @@ import Tray from './views/Tray'
 import MenuItems from './views/MenuItems'
 import HighlightsWindow from './views/HighlightsWindow'
 import PeekWindow from './views/PeekWindow'
+import OrbitWindow from './views/OrbitWindow'
 import SettingsWindow from './views/SettingsWindow'
 import * as Helpers from '~/helpers'
 import { App, Electron, Desktop } from '@mcro/all'
@@ -41,7 +42,7 @@ const log = debug('Electron')
         showSettings: false,
         peekFocused: false,
         showDevTools: {
-          app: false,
+          orbit: false,
           peek: false,
           highlights: false,
           settings: true,
@@ -87,8 +88,8 @@ const log = debug('Electron')
       }
       const isHolding = option > optionUp
       log(
-        `handleOptionKey isHolding (${isHolding}) peekHidden (${
-          App.state.peekHidden
+        `handleOptionKey isHolding (${isHolding}) orbitHidden (${
+          App.state.orbitHidden
         })`,
       )
       if (!isHolding) {
@@ -98,7 +99,7 @@ const log = debug('Electron')
         this.shouldHide()
         return
       }
-      if (App.state.peekHidden) {
+      if (App.state.orbitHidden) {
         // SHOW
         this.optnEnter = setTimeout(this.shouldShow, 150)
       }
@@ -115,7 +116,7 @@ const log = debug('Electron')
     toggleShown = async () => {
       if (App.state.pinned) return
       if (!this.appRef) return
-      if (!App.state.peekHidden) {
+      if (!App.state.orbitHidden) {
         this.shouldHide()
       } else {
         this.shouldShow()
@@ -162,6 +163,7 @@ export default class ElectronWindow extends React.Component {
         <MenuItems />
         <HighlightsWindow />
         <PeekWindow />
+        <OrbitWindow />
         {/* <SettingsWindow /> */}
         <Tray />
       </AppWindow>

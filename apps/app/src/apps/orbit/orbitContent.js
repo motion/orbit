@@ -1,6 +1,6 @@
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import PeekIcon from './peekIcon'
+import OrbitIcon from './orbitIcon'
 
 const glowProps = {
   color: '#fff',
@@ -24,7 +24,7 @@ const Item = ({ title, type, subtitle, content }) => (
       ellipse
       css={{ alignItems: 'center', justifyContent: 'center' }}
     >
-      <PeekIcon
+      <OrbitIcon
         name={type}
         css={{
           width: 22,
@@ -46,7 +46,7 @@ const Item = ({ title, type, subtitle, content }) => (
 )
 
 @view
-export default class PeekContent {
+export default class OrbitContent {
   render({ store }) {
     return (
       <list>

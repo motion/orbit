@@ -15,8 +15,9 @@ class Electron {
     lastMove: null,
     settingsPosition: [],
     screenSize: [],
-    peekFocused: false,
-    peekState: {},
+    orbit: {
+      focused: false,
+    },
     shouldHide: null,
     shouldShow: null,
     shouldPause: null,

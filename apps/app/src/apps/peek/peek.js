@@ -1,20 +1,14 @@
 // @flow
 import * as React from 'react'
-import { debounce } from 'lodash'
 import { view, watch } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { App, Desktop, Electron } from '@mcro/all'
-import Knowledge from './knowledge'
-import PeekContent from './peekContent'
-import PaulGraham from '~/stores/language/pg.json'
-import Search from '@mcro/search'
+import { App, Electron } from '@mcro/all'
 import PeekHeader from './peekHeader'
 
 const keyParam = (window.location.search || '').match(/key=(.*)/)
 const KEY = keyParam && keyParam[1]
 const SHADOW_PAD = 15
 const BORDER_RADIUS = 12
-// const BORDER_COLOR = `rgba(255,255,255,0.25)`
 const background = 'rgba(0,0,0,0.9)'
 const peekShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.05]]]
 const log = debug('peek')
@@ -23,59 +17,8 @@ const log = debug('peek')
   store: class PeekStore {
     isTorn = false
     isPinned = false
-    query = ''
-    results = []
 
-    onChangeQuery = e => {
-      this.query = e.target.value
-    }
-
-    search = debounce(async () => {
-      const { results } = await this.searchStore.search.search(this.query)
-      this.results = results
-    }, 150)
-
-    willMount() {
-      this.searchStore = new Search()
-      this.searchStore.onDocuments(PaulGraham)
-      // react to do searches
-      this.react(() => this.query, this.search)
-      // react to hovered words
-      let hoverShow
-      this.react(
-        () => App.hoveredWordName,
-        word => {
-          if (Desktop.isHoldingOption) {
-            return
-          }
-          clearTimeout(hoverShow)
-          const peekHidden = !word
-          hoverShow = setTimeout(() => {
-            console.log('sethidden based on word', peekHidden)
-            App.setState({ peekHidden })
-          }, peekHidden ? 50 : 500)
-        },
-      )
-      // this.react(
-      //   () => [Electron.state.peekFocused, Desktop.isHoldingOption],
-      //   ([peekFocused, isHoldingOption]) => {
-      //     if (!peekFocused && !isHoldingOption) {
-      //       log(`hidePeek after let go`)
-      //       App.setState({ peekHidden: true })
-      //     }
-      //   },
-      // )
-      // react to close peek
-      this.react(
-        () => Desktop.state.keyboard.esc,
-        () => {
-          if (!App.state.peekHidden) {
-            log(`hidePeek on esc`)
-            App.setState({ peekHidden: true })
-          }
-        },
-      )
-    }
+    willMount() {}
 
     @watch
     watchTear = () => {
@@ -147,10 +90,7 @@ export default class PeekPage {
           ))}
           <content>
             <PeekHeader store={store} />
-            <contentInner>
-              <PeekContent store={store} />
-              <Knowledge if={App.state.knowledge} data={App.state.knowledge} />
-            </contentInner>
+            <contentInner>hello world</contentInner>
           </content>
         </peek>
       </UI.Theme>

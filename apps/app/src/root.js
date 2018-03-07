@@ -20,7 +20,7 @@ const log = debug('root')
         preventElectronHide: true,
         contextMessage: 'Orbit',
         closePeek: null,
-        peekHidden: true,
+        orbitHidden: true,
         knowledge: null,
       })
 
@@ -36,16 +36,16 @@ const log = debug('root')
             return
           }
           if (lastChange && lastChange > shouldShow) {
-            App.setState({ peekHidden: true })
+            App.setState({ orbitHidden: true })
             return
           }
-          const isHidden = App.state.peekHidden
+          const isHidden = App.state.orbitHidden
           const willBeHidden = shouldHide > shouldShow
-          if (Electron.state.peekFocused && !isHidden && willBeHidden) {
+          if (Electron.state.orbit.focused && !isHidden && willBeHidden) {
             log(`Peek is focused, ignore hide`)
             return
           }
-          App.setState({ peekHidden: willBeHidden })
+          App.setState({ orbitHidden: willBeHidden })
         },
         true,
       )

@@ -4,7 +4,7 @@ import Router from '@mcro/router'
 function runRouter() {
   return new Router({
     routes: {
-      '/': require('./apps/ora/ora').default,
+      '/orbit': require('./apps/orbit/orbit').default,
       '/settings': require('./apps/settings/settings').default,
       '/relevancy': require('./apps/relevancy').default,
       '/auth': require('./apps/auth').default,

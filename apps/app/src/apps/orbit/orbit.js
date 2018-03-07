@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react'
 import { debounce } from 'lodash'
-import { view, watch } from '@mcro/black'
+import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { App, Desktop, Electron } from '@mcro/all'
 import Knowledge from './knowledge'
@@ -10,8 +10,6 @@ import PaulGraham from '~/stores/language/pg.json'
 import Search from '@mcro/search'
 import OrbitHeader from './orbitHeader'
 
-const keyParam = (window.location.search || '').match(/key=(.*)/)
-const KEY = keyParam && keyParam[1]
 const SHADOW_PAD = 15
 const BORDER_RADIUS = 12
 // const BORDER_COLOR = `rgba(255,255,255,0.25)`
@@ -67,26 +65,11 @@ const log = debug('orbit')
         },
       )
     }
-
-    @watch
-    watchTear = () => {
-      if (this.isTorn) return
-      const { orbitWindow } = Electron
-      if (orbitWindow && orbitWindow.isTorn) {
-        console.log('tearing!', orbitWindow)
-        this.isTorn = true
-      }
-    }
-
-    closeOrbit = () => {
-      App.setState({ closeOrbit: KEY })
-    }
   },
 })
 export default class OrbitPage {
   render({ store }) {
-    const { orbitWindow } = Electron
-    const arrowTowards = (orbitWindow && orbitWindow.arrowTowards) || 'right'
+    const arrowTowards = Electron.orbitState.arrowTowards || 'right'
     const arrowSize = 28
     let arrowStyle
     let orbitStyle

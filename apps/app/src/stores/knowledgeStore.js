@@ -23,7 +23,7 @@ export default class KnowledgeStore {
       async () => {
         if (
           App.hoveredWordName &&
-          App.appState.highlightWords[App.hoveredWordName]
+          App.state.highlightWords[App.hoveredWordName]
         ) {
           this.word = App.hoveredWordName
           let knowledge = await this.getKnowledge(App.hoveredWordName)

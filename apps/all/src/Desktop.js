@@ -37,7 +37,6 @@ export type DesktopState = {
 @store
 class Desktop {
   get setState() {
-    log('setState')
     return Bridge._setState
   }
 
@@ -56,8 +55,8 @@ class Desktop {
     highlightWords: {},
   }
 
-  start(...args) {
-    return Bridge.start(this, this.state, ...args)
+  start(options) {
+    return Bridge.start(this, this.state, options)
   }
 
   get isHoldingOption() {
@@ -67,7 +66,6 @@ class Desktop {
 
 const desktop = new Desktop()
 global.Desktop = desktop
-
-console.log('desktop', desktop)
+Bridge.stores.Desktop = desktop
 
 export default desktop

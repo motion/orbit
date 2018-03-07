@@ -15,7 +15,7 @@ import * as Mobx from 'mobx'
 // the socket management is in SocketManager
 
 const log = debug('screenMaster')
-const DESKTOP_KEY = 'desktop'
+const DESKTOP_KEY = 'Desktop'
 const APP_ID = -1
 
 // prevent apps from clearing highlights
@@ -73,7 +73,7 @@ export default class ScreenMaster {
     // TODO make this go through the screenStore
     Desktop.start({
       ignoreSource: {
-        desktop: true,
+        [DESKTOP_KEY]: true,
       },
     })
     await this.socketManager.start()

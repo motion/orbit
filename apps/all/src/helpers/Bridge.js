@@ -15,20 +15,12 @@ class Bridge {
   _wsOpen = false
   _source = ''
   _initialState = []
-
-  // to be set once they start
+  _socket = null
+  // to be set once they are imported
   stores = {}
-
-  socket = new ReconnectingWebSocket('ws://localhost:40510', undefined, {
-    constructor: WebSocket,
-  })
 
   get state() {
     return this._store.state
-  }
-
-  get storeName() {
-    return `${this._store.constructor.name}`
   }
 
   // note: you have to call start to make it explicitly connect
@@ -36,25 +28,29 @@ class Bridge {
     if (!store) {
       throw new Error(`No source given for starting screen store`)
     }
-    if (this.store || this.ws) {
+    if (this.store || this._socket) {
       throw new Error(`Already started`)
     }
+    this._socket = new ReconnectingWebSocket(
+      'ws://localhost:40510',
+      undefined,
+      {
+        constructor: WebSocket,
+      },
+    )
     this._source = store.constructor.name
     console.log('store.constructor.name', store.constructor.name)
     this._store = store
-    // set this.stores.[Desktop|App|Electron]
-    this.stores[this._source] = this._store
     this._options = options
     // set initial state synchronously before
     this._initialState = initialState
     if (initialState) {
-      log('initialState', initialState)
       this._setState(initialState, true)
     }
     if (typeof window === 'undefined') {
       await waitPort({ host: 'localhost', port: 40510 })
     }
-    this.socket.onmessage = ({ data }) => {
+    this._socket.onmessage = ({ data }) => {
       if (!data) {
         console.log(`No data received over socket`)
         return
@@ -62,14 +58,14 @@ class Bridge {
       try {
         const messageObj = JSON.parse(data)
         if (messageObj && typeof messageObj === 'object') {
-          const { source, state } = messageObj
+          const { source, state: newState } = messageObj
           if (
             this._options.ignoreSource &&
             this._options.ignoreSource[source]
           ) {
             return
           }
-          if (!state) {
+          if (!newState) {
             throw new Error(`No state received from message: ${data}`)
           }
           if (!source) {
@@ -79,10 +75,21 @@ class Bridge {
             `)
           }
           if (!this.stores[source]) {
-            console.warn(`Store not imported: ${source}`)
+            console.warn(
+              `Store not imported:
+                this.stores: ${JSON.stringify(this.stores, 0, 2)}
+                source: ${source}`,
+            )
             return
           }
-          this._update(this.stores[source].state, state)
+          const store = this.stores[source]
+          const { state } = store
+          if (!state) {
+            throw new Error(
+              `No state found for source (${source}) state (${state}) store(${store})`,
+            )
+          }
+          this._update(state, newState)
         } else {
           throw new Error(`Non-object received`)
         }
@@ -94,21 +101,22 @@ class Bridge {
         )
       }
     }
-    this.socket.onopen = () => {
+    this._socket.onopen = () => {
       this._wsOpen = true
       // send state that hasnt been synced yet
       if (this._queuedState) {
-        this.socket.send(
+        console.log('sending queued state', this._source)
+        this._socket.send(
           JSON.stringify({ state: this.state, source: this._source }),
         )
         this._queuedState = false
       }
     }
-    this.socket.onclose = () => {
+    this._socket.onclose = () => {
       this._wsOpen = false
     }
-    this.socket.onerror = err => {
-      if (this.socket.readyState == 1) {
+    this._socket.onerror = err => {
+      if (this._socket.readyState == 1) {
         console.log('swift ws error', err)
       }
     }
@@ -136,8 +144,10 @@ class Bridge {
       return changed
     }
     if (changed.length) {
-      console.log('sending source', this.source)
-      this.ws.send(JSON.stringify({ state: newState, source: this.source }))
+      console.log('sending source', this._source)
+      this._socket.send(
+        JSON.stringify({ state: newState, source: this._source }),
+      )
     }
     return changed
   }
@@ -145,7 +155,7 @@ class Bridge {
   // private
   // return keys of changed items
   _update = (stateObj, newState, isInternal) => {
-    log('_update', stateObj, newState, isInternal)
+    // log('_update', stateObj, newState, isInternal)
     const changed = []
     for (const key of Object.keys(newState)) {
       if (isInternal && typeof this._initialState[key] === 'undefined') {

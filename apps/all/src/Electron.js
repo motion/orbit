@@ -22,8 +22,8 @@ class Electron {
     shouldPause: null,
   }
 
-  start(...args) {
-    Bridge.start(this, ...args)
+  start(options) {
+    return Bridge.start(this, this.state, options)
   }
 
   get peekWindow() {
@@ -37,6 +37,7 @@ class Electron {
 }
 
 const electron = new Electron()
+Bridge.stores.Electron = electron
 global.Electron = electron
 
 export default electron

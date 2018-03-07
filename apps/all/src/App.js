@@ -1,5 +1,5 @@
 // @flow
-import { Electron } from './Electron'
+import Electron from './Electron'
 import Bridge from './helpers/Bridge'
 import { store } from '@mcro/black/store'
 import global from 'global'
@@ -21,8 +21,8 @@ class App {
     return Bridge._setState
   }
 
-  start(...args) {
-    return Bridge.start(this, ...args)
+  start(options) {
+    return Bridge.start(this, this.state, options)
   }
 
   get hoveredWordName() {
@@ -48,5 +48,6 @@ class App {
 
 const app = new App()
 global.App = app
+Bridge.stores.App = app
 
 export default app

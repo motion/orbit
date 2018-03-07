@@ -3,7 +3,7 @@ import WebSocket from './helpers/websocket'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 
 @store
-export default class Swift {
+class Swift {
   isOpen = false
   state = {
     isRunning: false,
@@ -86,3 +86,5 @@ export default class Swift {
     }
   }
 }
+
+export default new Swift()

@@ -9,7 +9,7 @@ import { App, Desktop, Electron, Swift } from '@mcro/all'
 
 const idFn = _ => _
 const PAD = 15
-const INITIAL_SIZE = [350, 420]
+const INITIAL_SIZE = [330, 420]
 const log = debug('PeekWindow')
 
 const peekPosition = ({ left, top, width, height }: PeekTarget) => {

@@ -17,6 +17,7 @@ const BORDER_RADIUS = 12
 // const BORDER_COLOR = `rgba(255,255,255,0.25)`
 const background = 'rgba(0,0,0,0.9)'
 const peekShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.05]]]
+const log = debug('peek')
 
 @view({
   store: class PeekStore {
@@ -55,11 +56,21 @@ const peekShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.05]]]
           }, peekHidden ? 50 : 500)
         },
       )
+      this.react(
+        () => [Electron.state.peekFocused, Desktop.isHoldingOption],
+        ([peekFocused, isHoldingOption]) => {
+          if (!peekFocused && !isHoldingOption) {
+            log(`hidePeek after let go`)
+            App.setState({ peekHidden: true })
+          }
+        },
+      )
       // react to close peek
       this.react(
         () => Desktop.state.keyboard.esc,
         () => {
           if (!App.state.peekHidden) {
+            log(`hidePeek on esc`)
             App.setState({ peekHidden: true })
           }
         },

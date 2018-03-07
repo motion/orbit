@@ -55,19 +55,13 @@ export default class ScreenMaster {
   })
   watchSettings = {}
 
-  state = Object.freeze({
-    // start paused
-    paused: true,
-    appState: {},
-    ocrWords: null,
-    linePositions: null,
-    lastOCR: Date.now(),
-    lastScreenChange: Date.now(),
-    mousePosition: { x: 0, y: 0 },
-    keyboard: {},
-    clearWords: {},
-    restoreWords: {},
-  })
+  get state() {
+    return Desktop.state
+  }
+
+  set state(state) {
+    Desktop.setState({ state })
+  }
 
   start = async () => {
     // TODO make this go through the screenStore
@@ -299,6 +293,7 @@ export default class ScreenMaster {
     iohook.on(
       'mousemove',
       throttle(({ x, y }) => {
+        console.log('x', x, y)
         this.setState({
           mousePosition: { x, y },
         })
@@ -319,6 +314,7 @@ export default class ScreenMaster {
     }
     const oldState = this.state
     this.state = Object.freeze({ ...this.state, ...object })
+    Desktop.setState(object, true)
     // sends over (oldState, changedState, newState)
     this.onChangedState(oldState, object, this.state)
     // only send the changed things to reduce overhead

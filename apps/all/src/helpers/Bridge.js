@@ -39,7 +39,6 @@ class Bridge {
       },
     )
     this._source = store.constructor.name
-    console.log('store.constructor.name', store.constructor.name)
     this._store = store
     this._options = options
     // set initial state synchronously before
@@ -138,25 +137,25 @@ class Bridge {
       )
     }
     // update our own state immediately so its sync
-    const changed = this._update(this.state, newState, isInternal)
+    const changedState = this._update(this.state, newState, isInternal)
     if (!this._wsOpen) {
       this._queuedState = true
-      return changed
+      return changedState
     }
-    if (changed.length) {
+    if (changedState.length) {
       console.log('sending source', this._source)
       this._socket.send(
-        JSON.stringify({ state: newState, source: this._source }),
+        JSON.stringify({ state: changedState, source: this._source }),
       )
     }
-    return changed
+    return changedState
   }
 
   // private
   // return keys of changed items
   _update = (stateObj, newState, isInternal) => {
     // log('_update', stateObj, newState, isInternal)
-    const changed = []
+    const changed = {}
     for (const key of Object.keys(newState)) {
       if (isInternal && typeof this._initialState[key] === 'undefined') {
         console.error(
@@ -173,8 +172,9 @@ class Bridge {
         return changed
       }
       if (!isEqual(stateObj[key], newState[key])) {
-        stateObj[key] = newState[key]
-        changed.push(key)
+        const value = newState[key]
+        stateObj[key] = value
+        changed[key] = value
       }
     }
     return changed

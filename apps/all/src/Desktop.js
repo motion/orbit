@@ -41,18 +41,16 @@ class Desktop {
   }
 
   state = {
-    paused: null,
-    appState: null,
+    paused: true,
+    appState: {},
     ocrWords: null,
     linePositions: null,
-    lastOCR: null,
-    lastScreenChange: null,
-    mousePosition: {},
+    lastOCR: Date.now(),
+    lastScreenChange: Date.now(),
+    mousePosition: { x: 0, y: 0 },
     keyboard: {},
     clearWords: {},
     restoreWords: {},
-    // some test highlight words
-    highlightWords: {},
   }
 
   start(options) {

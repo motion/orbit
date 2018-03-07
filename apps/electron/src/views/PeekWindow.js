@@ -66,7 +66,6 @@ type PeekTarget = {
 @view.provide({
   store: class PeekStore {
     peekRefs = {}
-    focused = false
     get peek() {
       return (
         Electron.state.peekState.windows && Electron.state.peekState.windows[0]
@@ -119,28 +118,19 @@ type PeekTarget = {
     watchMouseForPeekFocus = () => {
       // if mouse within bounds + not hidden, focus peek
       this.react(
-        () => [
-          Desktop.state.mousePosition,
-          App.state.peekHidden,
-          Desktop.isHoldingOption,
-        ],
+        () => [Desktop.state.mousePosition, App.state.peekHidden],
         ([{ x, y }, isHidden]) => {
-          if (isHidden || !this.peek) {
-            this.focused = false
+          if (isHidden) {
+            Electron.setState({ peekFocused: true })
             return
           }
+          if (!this.peek) return
           const { position, size } = this.peek
           const withinX = x > position[0] && x < position[0] + size[0]
           const withinY = y > position[1] && y < position[1] + size[1]
-          this.focused = withinX && withinY
-        },
-      )
-      // second reaction so it only triggers if value changes
-      this.react(
-        () => this.focused,
-        focused => {
-          Electron.setState({ peekFocused: focused })
-          if (focused) {
+          const peekFocused = withinX && withinY
+          Electron.setState({ peekFocused })
+          if (peekFocused) {
             this.peekRef && this.peekRef.focus()
           } else {
             Swift.defocus()

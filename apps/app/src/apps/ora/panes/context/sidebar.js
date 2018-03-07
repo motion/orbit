@@ -4,7 +4,7 @@ import { watch } from '@mcro/black'
 import { isEqual } from 'lodash'
 import CrawlSetup from './crawlSetup'
 import CrawlerStore from '~/stores/crawlerStore'
-import { Desktop } from '@mcro/screen'
+import { Desktop } from '@mcro/all'
 
 // finds commons paths for knowledgebasey sites
 const GOOD_LOOKIN_PATH_LIMITS = /^(help|docs|faq|support|h)$/

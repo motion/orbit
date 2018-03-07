@@ -2,7 +2,7 @@ import * as React from 'react'
 import { Window } from '@mcro/reactron'
 import * as Constants from '~/constants'
 import { view } from '@mcro/black'
-import { App, Electron } from '@mcro/screen'
+import { App, Electron } from '@mcro/all'
 
 @view.electron
 export default class SettingsWindow {

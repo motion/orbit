@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Menu, SubMenu, MenuItem, MenuItems } from '@mcro/reactron'
 import { view } from '@mcro/black'
-import { Electron } from '@mcro/screen'
+import { Electron } from '@mcro/all'
 
 @view.electron
 export default class MenuEl {

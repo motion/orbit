@@ -4,7 +4,7 @@ import { debounce, isEqual, throttle, last } from 'lodash'
 import iohook from 'iohook'
 
 import { store } from '@mcro/black/store'
-import Screen from '@mcro/screen'
+import { Desktop, Electron } from '@mcro/all'
 import SocketManager from './helpers/socketManager'
 import * as Mobx from 'mobx'
 
@@ -71,15 +71,11 @@ export default class ScreenMaster {
 
   start = async () => {
     // TODO make this go through the screenStore
-    Screen.start(
-      'desktop',
-      {},
-      {
-        ignoreSource: {
-          desktop: true,
-        },
+    Desktop.start({
+      ignoreSource: {
+        desktop: true,
       },
-    )
+    })
     await this.socketManager.start()
     this.oracle.onWords(words => {
       this.hasResolvedOCR = true
@@ -91,14 +87,14 @@ export default class ScreenMaster {
 
     // watch paused
     this.react(
-      () => Screen.electronState.shouldPause,
+      () => Electron.state.shouldPause,
       () => {
         const paused = !this.state.paused
         this.setState({ paused })
         if (paused) {
-          Screen.swiftBridge.pause()
+          Swift.pause()
         } else {
-          Screen.swiftBridge.resume()
+          Swift.resume()
           this.rescanApp()
         }
       },

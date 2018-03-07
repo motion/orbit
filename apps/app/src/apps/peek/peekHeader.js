@@ -3,7 +3,7 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import ControlButton from '~/views/controlButton'
-import { App } from '@mcro/screen'
+import { App } from '@mcro/all'
 // import * as Constants from '~/constants'
 
 @view

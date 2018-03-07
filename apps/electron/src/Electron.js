@@ -8,7 +8,7 @@ import HighlightsWindow from './views/HighlightsWindow'
 import PeekWindow from './views/PeekWindow'
 import SettingsWindow from './views/SettingsWindow'
 import * as Helpers from '~/helpers'
-import Screen, { App, Electron, Desktop } from '@mcro/screen'
+import { App, Electron, Desktop } from '@mcro/all'
 import global from 'global'
 import { screen } from 'electron'
 import { debounce } from 'lodash'
@@ -33,9 +33,7 @@ const log = debug('Electron')
       const { position } = Helpers.getAppSize()
       const screenSize = screen.getPrimaryDisplay().workAreaSize
 
-      console.log('STARTING SCREEN')
-
-      Screen.start('electron', {
+      Electron.start({
         shouldHide: null,
         shouldShow: null,
         shouldPause: null,

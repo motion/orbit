@@ -1,7 +1,7 @@
 import { memoize } from 'lodash'
 import { store } from '@mcro/black'
 import { API_URL } from '~/constants'
-import { App } from '@mcro/screen'
+import { App } from '@mcro/all'
 import marginal from './language/marginal.json'
 
 @store

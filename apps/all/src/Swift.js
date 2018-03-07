@@ -3,7 +3,7 @@ import WebSocket from './helpers/websocket'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 
 @store
-export default class SwiftBridge {
+export default class Swift {
   isOpen = false
   state = {
     isRunning: false,

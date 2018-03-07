@@ -5,7 +5,7 @@ import * as Sidebars from './sidebars'
 import PaneView from './pane'
 import { ORA_WIDTH } from '~/constants'
 import getItem from '~/helpers/getItem'
-import { App } from '@mcro/screen'
+import { App } from '@mcro/all'
 
 // passes through all props to <PaneView />
 @view({

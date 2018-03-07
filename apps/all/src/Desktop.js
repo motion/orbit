@@ -1,7 +1,9 @@
 // @flow
-import Screen from './Screen'
+import Bridge from './Bridge'
 import { store } from '@mcro/black/store'
 import global from 'global'
+
+const log = debug('Desktop')
 
 type TappState = {
   name: string,
@@ -34,12 +36,28 @@ export type DesktopState = {
 
 @store
 class Desktop {
-  get state(): DesktopState {
-    return Screen.desktopState
+  get setState() {
+    log('setState')
+    return Bridge._setState
   }
 
-  get setState() {
-    return Screen._setState
+  state = {
+    paused: null,
+    appState: null,
+    ocrWords: null,
+    linePositions: null,
+    lastOCR: null,
+    lastScreenChange: null,
+    mousePosition: {},
+    keyboard: {},
+    clearWords: {},
+    restoreWords: {},
+    // some test highlight words
+    highlightWords: {},
+  }
+
+  start(...args) {
+    return Bridge.start(this, this.state, ...args)
   }
 
   get isHoldingOption() {
@@ -49,5 +67,7 @@ class Desktop {
 
 const desktop = new Desktop()
 global.Desktop = desktop
+
+console.log('desktop', desktop)
 
 export default desktop

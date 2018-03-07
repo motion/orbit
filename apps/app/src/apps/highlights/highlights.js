@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import quadtree from 'simple-quadtree'
-import Screen, { App, Desktop } from '@mcro/screen'
+import { Helpers, App, Desktop, Swift } from '@mcro/all'
 import { LINE_Y_ADJ, toTarget } from './helpers'
 import OCRWord from './ocrWord'
 import OCRLine from './ocrLine'
@@ -44,7 +44,7 @@ const log = debug('highlights')
     // }
 
     get showAll() {
-      if (Screen.swiftState.isPaused) {
+      if (Swift.state.isPaused) {
         log('swiftPaused')
         return true
       }
@@ -81,7 +81,7 @@ const log = debug('highlights')
           ...Desktop.state.mousePosition,
         }),
         function updateHovers({ word, line, x, y }) {
-          if (Screen.swiftState.isPaused) return
+          if (Swift.state.isPaused) return
           const hoveredWord = toTarget(word.get({ x, y, w: 0, h: 0 })[0])
           const hoveredLine = toTarget(
             line.get({ x, y: y - LINE_Y_ADJ, w: 0, h: 0 })[0],
@@ -104,7 +104,7 @@ const log = debug('highlights')
           y: item[1],
           w: item[2],
           h: item[3],
-          string: Screen.helpers.wordKey(item),
+          string: Helpers.wordKey(item),
         })
       }
     }
@@ -115,18 +115,10 @@ export default class HighlightsPage {
     return (
       <frame if={store.showAll}>
         {(ocrWords || []).map(item => (
-          <OCRWord
-            key={Screen.helpers.wordKey(item)}
-            item={item}
-            store={store}
-          />
+          <OCRWord key={Helpers.wordKey(item)} item={item} store={store} />
         ))}
         {(Desktop.state.linePositions || []).map(item => (
-          <OCRLine
-            key={Screen.helpers.wordKey(item)}
-            item={item}
-            store={store}
-          />
+          <OCRLine key={Helpers.wordKey(item)} item={item} store={store} />
         ))}
       </frame>
     )

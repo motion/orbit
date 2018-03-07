@@ -3,7 +3,7 @@ import { Window } from '@mcro/reactron'
 import * as Constants from '~/constants'
 import { once } from 'lodash'
 import { view } from '@mcro/black'
-import { Electron } from '@mcro/screen'
+import { Electron } from '@mcro/all'
 
 @view.electron
 export default class Windows {

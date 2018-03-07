@@ -9,7 +9,7 @@ import SearchStore from '~/stores/searchStore'
 import { CurrentUser } from '~/app'
 import After from '~/views/after'
 import { isEqual } from 'lodash'
-import { Desktop, App } from '@mcro/screen'
+import { Desktop, App } from '@mcro/all'
 
 const log = debug('ora')
 const useWorker = window.location.href.indexOf('?noWorker')

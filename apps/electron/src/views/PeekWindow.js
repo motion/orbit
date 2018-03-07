@@ -5,7 +5,7 @@ import { view } from '@mcro/black'
 import { Window } from '@mcro/reactron'
 import { isEqual, memoize } from 'lodash'
 import * as Helpers from '~/helpers'
-import { App, Desktop, Electron } from '@mcro/screen'
+import { App, Desktop, Electron, Swift } from '@mcro/all'
 
 const idFn = _ => _
 const PAD = 15
@@ -143,7 +143,7 @@ type PeekTarget = {
           if (focused) {
             this.peekRef && this.peekRef.focus()
           } else {
-            Screen.swiftBridge.defocus()
+            Swift.defocus()
           }
         },
       )

@@ -2,7 +2,7 @@ import * as Constants from '~/constants'
 import * as Injections from './injections'
 import { throttle } from 'lodash'
 import { store } from '@mcro/black/store'
-import { App } from '@mcro/screen'
+import { App } from '@mcro/all'
 
 @store
 export default class Auth {

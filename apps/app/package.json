@@ -19,7 +19,7 @@
     "@mcro/models": "^1.5.1",
     "@mcro/r2": "^1.5.1",
     "@mcro/router": "^1.5.1",
-    "@mcro/screen": "*",
+    "@mcro/all": "*",
     "@mcro/search": "*",
     "@mcro/ui": "^1.5.1",
     "apollo-fetch": "^0.6.0",

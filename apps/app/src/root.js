@@ -4,27 +4,25 @@ import Redbox from 'redbox-react'
 import * as UI from '@mcro/ui'
 import NotFound from '~/views/404'
 import Router from '~/router'
-import Screen, { App, Electron, Desktop } from '@mcro/screen'
+import { App, Electron, Desktop } from '@mcro/all'
 
 const log = debug('root')
 
 @view.provide({
   rootStore: class RootStore {
     willMount() {
-      if (!Screen.started) {
-        Screen.start('app', {
-          highlightWords: {},
-          hoveredWord: null,
-          hoveredLine: null,
-          disablePeek: false,
-          pinned: false,
-          preventElectronHide: true,
-          contextMessage: 'Orbit',
-          closePeek: null,
-          peekHidden: true,
-          knowledge: null,
-        })
-      }
+      App.start('app', {
+        highlightWords: {},
+        hoveredWord: null,
+        hoveredLine: null,
+        disablePeek: false,
+        pinned: false,
+        preventElectronHide: true,
+        contextMessage: 'Orbit',
+        closePeek: null,
+        peekHidden: true,
+        knowledge: null,
+      })
 
       this.react(
         () => [

@@ -4,7 +4,7 @@ import * as Constants from '~/constants'
 import { view } from '@mcro/black'
 import { Window } from '@mcro/reactron'
 import * as Helpers from '~/helpers'
-import { Electron } from '@mcro/screen'
+import { Electron } from '@mcro/all'
 
 @view.electron
 export default class HighlightsWindow extends React.Component {

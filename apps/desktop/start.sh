@@ -15,7 +15,7 @@ npx nodemon \
   --watch $(realpath node_modules/@mcro/debug) \
   --watch $(realpath node_modules/@mcro/dev) \
   --watch $(realpath node_modules/@mcro/macros) \
-  --watch $(realpath node_modules/@mcro/screen) \
+  --watch $(realpath node_modules/@mcro/all) \
   --watch $(realpath node_modules/@mcro/oracle)/lib \
   --watch ../../packages/automagical \
   --exec 'npx kill-port 3001 && \

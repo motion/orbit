@@ -38,7 +38,7 @@
     "@mcro/desktop": "^1.5.1",
     "@mcro/black": "^1.5.1",
     "@mcro/constants": "^1.5.1",
-    "@mcro/screen": "*",
+    "@mcro/all": "*",
     "@mcro/r2": "^1.5.1",
     "@mcro/reactron": "^1.5.1",
     "babel-polyfill": "^6.26.0",

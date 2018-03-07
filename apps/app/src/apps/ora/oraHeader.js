@@ -4,7 +4,7 @@ import * as UI from '@mcro/ui'
 import { CurrentUser } from '~/app'
 import * as Constants from '~/constants'
 import OraBanner from './oraBanner'
-import { App, Desktop } from '@mcro/screen'
+import { App, Desktop } from '@mcro/all'
 import whatKey from 'whatkey'
 
 const iconProps = {

@@ -7,7 +7,7 @@ import OraHeader from './oraHeader'
 import OraDrawer from './oraDrawer'
 import OraActionBar from './oraActionBar'
 import * as Constants from '~/constants'
-import { App } from '@mcro/screen'
+import { App } from '@mcro/all'
 
 const listProps = {
   virtualized: false,

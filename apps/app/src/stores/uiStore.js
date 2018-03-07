@@ -5,7 +5,7 @@ import * as Helpers from '~/helpers'
 import keycode from 'keycode'
 import * as _ from 'lodash'
 import pluralize from 'pluralize'
-import { App } from '@mcro/screen'
+import { App } from '@mcro/all'
 
 export SHORTCUTS from './shortcuts'
 

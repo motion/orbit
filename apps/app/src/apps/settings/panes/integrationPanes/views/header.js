@@ -7,7 +7,7 @@ import { formatDistance } from 'date-fns'
 import { includes } from 'lodash'
 import r2 from '@mcro/r2'
 import * as Constants from '~/constants'
-import { App } from '@mcro/screen'
+import { App } from '@mcro/all'
 
 class IntegrationHeaderStore {
   typeToJob = {

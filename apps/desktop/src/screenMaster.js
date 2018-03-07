@@ -4,7 +4,7 @@ import { debounce, isEqual, throttle, last } from 'lodash'
 import iohook from 'iohook'
 
 import { store } from '@mcro/black/store'
-import Screen from '@mcro/screen'
+import { Desktop, Electron, Swift } from '@mcro/all'
 import SocketManager from './helpers/socketManager'
 import * as Mobx from 'mobx'
 
@@ -15,7 +15,7 @@ import * as Mobx from 'mobx'
 // the socket management is in SocketManager
 
 const log = debug('screenMaster')
-const DESKTOP_KEY = 'desktop'
+const DESKTOP_KEY = 'Desktop'
 const APP_ID = -1
 
 // prevent apps from clearing highlights
@@ -50,36 +50,18 @@ export default class ScreenMaster {
     source: 'desktop',
     onConnection: socket => {
       // send current state
-      this.socketManager.send(socket, this.state)
+      this.socketManager.send(socket, Desktop.state)
     },
   })
   watchSettings = {}
 
-  state = Object.freeze({
-    // start paused
-    paused: true,
-    appState: {},
-    ocrWords: null,
-    linePositions: null,
-    lastOCR: Date.now(),
-    lastScreenChange: Date.now(),
-    mousePosition: { x: 0, y: 0 },
-    keyboard: {},
-    clearWords: {},
-    restoreWords: {},
-  })
-
   start = async () => {
     // TODO make this go through the screenStore
-    Screen.start(
-      'desktop',
-      {},
-      {
-        ignoreSource: {
-          desktop: true,
-        },
+    Desktop.start({
+      ignoreSource: {
+        [DESKTOP_KEY]: true,
       },
-    )
+    })
     await this.socketManager.start()
     this.oracle.onWords(words => {
       this.hasResolvedOCR = true
@@ -91,14 +73,14 @@ export default class ScreenMaster {
 
     // watch paused
     this.react(
-      () => Screen.electronState.shouldPause,
+      () => Electron.state.shouldPause,
       () => {
-        const paused = !this.state.paused
+        const paused = !Desktop.state.paused
         this.setState({ paused })
         if (paused) {
-          Screen.swiftBridge.pause()
+          Swift.pause()
         } else {
-          Screen.swiftBridge.resume()
+          Swift.resume()
           this.rescanApp()
         }
       },
@@ -116,7 +98,7 @@ export default class ScreenMaster {
         return
       }
       // if current app is a prevented app, treat like nothing happened
-      let nextState = { ...this.state.appState }
+      let nextState = { ...Desktop.state.appState }
       let id = this.curAppID
       switch (event) {
         case 'FrontmostWindowChangedEvent':
@@ -151,7 +133,7 @@ export default class ScreenMaster {
         this.oracle.pause()
         return
       }
-      if (!this.state.paused) {
+      if (!Desktop.state.paused) {
         this.oracle.resume()
       }
       const appState = JSON.parse(JSON.stringify(nextState))
@@ -161,7 +143,7 @@ export default class ScreenMaster {
       })
     })
     this.oracle.onBoxChanged(count => {
-      if (!Screen.state.ocrWords) {
+      if (!Desktop.state.ocrWords) {
         log('RESET oracle boxChanged (App)')
         this.resetHighlights()
         if (this.isWatching === 'OCR') {
@@ -207,7 +189,7 @@ export default class ScreenMaster {
   }
 
   resetHighlights = () => {
-    if (PREVENT_CLEAR[this.state.appState.name]) {
+    if (PREVENT_CLEAR[Desktop.state.appState.name]) {
       return
     }
     this.setState({
@@ -226,6 +208,7 @@ export default class ScreenMaster {
 
   watchKeyboard = () => {
     const codes = {
+      esc: 1,
       option: 56,
       up: 57416,
       down: 57424,
@@ -234,17 +217,48 @@ export default class ScreenMaster {
       pgDown: 3665,
     }
     const updateKeyboard = newState =>
-      this.setState({ keyboard: { ...this.state.keyboard, ...newState } })
+      this.setState({ keyboard: { ...Desktop.state.keyboard, ...newState } })
+
+    // only clear if necessary
+    const clearOption = () => {
+      const { option, optionUp } = Desktop.state
+      if (!option || !optionUp || option > optionUp) {
+        updateKeyboard({ optionUp: Date.now() })
+      }
+    }
+
+    // this is imperfect, iohook doesn't always match events perfectly
+    // so in cases of errors, we clear it after a little delay
+    const KeysDown = new Set()
+
+    let pauseTm
+    const clearDownKeysAfterPause = () => {
+      clearTimeout(pauseTm)
+      pauseTm = setTimeout(() => {
+        KeysDown.clear()
+      }, 3000)
+    }
 
     // keydown
     iohook.on('keydown', ({ keycode }) => {
-      // log('keycode', keycode)
-      if (keycode === codes.option) {
-        return updateKeyboard({ option: true, optionCleared: false })
+      KeysDown.add(keycode)
+      clearDownKeysAfterPause()
+      // log(`keydown: ${keycode}`)
+      if (keycode === codes.esc) {
+        return updateKeyboard({ esc: Date.now() })
       }
-      // clear option key if other key pressed during
-      if (this.state.keyboard.option) {
-        return updateKeyboard({ optionCleared: true })
+      const isOption = keycode === codes.option
+      if (KeysDown.size > 1 && isOption) {
+        log(`option: already holding ${KeysDown.size} keys`)
+        return clearOption()
+      }
+      if (isOption) {
+        log('option down')
+        return updateKeyboard({ option: Date.now() })
+      }
+      if (KeysDown.has(codes.option)) {
+        log('pressed key after option')
+        return clearOption()
       }
       switch (keycode) {
         // clear highlights keys
@@ -258,9 +272,11 @@ export default class ScreenMaster {
 
     // keyup
     iohook.on('keyup', ({ keycode }) => {
+      KeysDown.delete(keycode)
+      clearDownKeysAfterPause()
       // option off
       if (keycode === codes.option) {
-        updateKeyboard({ option: false, optionCleared: false })
+        clearOption()
       }
     })
   }
@@ -279,7 +295,7 @@ export default class ScreenMaster {
   setState = object => {
     let hasNewState = false
     for (const key of Object.keys(object)) {
-      if (!isEqual(Mobx.toJS(this.state[key]), object[key])) {
+      if (!isEqual(Mobx.toJS(Desktop.state[key]), object[key])) {
         hasNewState = true
         break
       }
@@ -287,16 +303,17 @@ export default class ScreenMaster {
     if (!hasNewState) {
       return
     }
-    const oldState = this.state
-    this.state = Object.freeze({ ...this.state, ...object })
+    const oldState = Desktop.state
+    Desktop.state = Object.freeze({ ...Desktop.state, ...object })
+    Desktop.setState(object, true)
     // sends over (oldState, changedState, newState)
-    this.onChangedState(oldState, object, this.state)
+    this.onChangedState(oldState, object, Desktop.state)
     // only send the changed things to reduce overhead
     this.socketManager.sendAll(DESKTOP_KEY, object)
   }
 
   onChangedState = async (oldState, newState) => {
-    if (this.state.paused) {
+    if (Desktop.state.paused) {
       return
     }
     if (newState.appState) {
@@ -310,7 +327,7 @@ export default class ScreenMaster {
 
   rescanApp = debounce(async () => {
     clearTimeout(this.clearOCRTimeout)
-    const { name, offset, bounds } = this.state.appState
+    const { name, offset, bounds } = Desktop.state.appState
     if (PREVENT_SCANNING[name] || PREVENT_APP_STATE[name]) return
     if (!offset || !bounds) return
     this.resetHighlights()
@@ -335,7 +352,7 @@ export default class ScreenMaster {
       ],
     })
     this.hasResolvedOCR = false
-    if (this.state.paused) {
+    if (Desktop.state.paused) {
       return
     }
     log('rescanApp.resume', name)
@@ -357,13 +374,13 @@ export default class ScreenMaster {
 
   handleOCRWords = () => {
     this.lastWordsSet = Date.now()
-    log(`> ${this.state.ocrWords.length} words`)
+    log(`> ${Desktop.state.ocrWords.length} words`)
     this.watchBounds('OCR', {
       fps: 12,
       sampleSpacing: 2,
       sensitivity: 1,
       showCursor: true,
-      boxes: this.state.ocrWords.map(([x, y, width, height, word], id) => ({
+      boxes: Desktop.state.ocrWords.map(([x, y, width, height, word], id) => ({
         id,
         x,
         y,

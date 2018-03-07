@@ -1,9 +1,9 @@
 import { store } from '@mcro/black/store'
-import WebSocket from './websocket'
+import WebSocket from './helpers/websocket'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 
 @store
-export default class SwiftBridge {
+class Swift {
   isOpen = false
   state = {
     isRunning: false,
@@ -86,3 +86,5 @@ export default class SwiftBridge {
     }
   }
 }
+
+export default new Swift()

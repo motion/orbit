@@ -5,7 +5,7 @@ import * as Helpers from '~/helpers'
 import keycode from 'keycode'
 import * as _ from 'lodash'
 import pluralize from 'pluralize'
-import Screen from '@mcro/screen'
+import { App } from '@mcro/all'
 
 export SHORTCUTS from './shortcuts'
 
@@ -33,7 +33,7 @@ export default class UIStore {
   }
 
   get showOra() {
-    const { pinned, hidden } = Screen.state
+    const { pinned, hidden } = App.state
     return pinned || !hidden
   }
 
@@ -82,7 +82,7 @@ export default class UIStore {
         const contextMessage = Object.keys(counts).map(
           key => `${counts[key]} ${_.capitalize(pluralize(key))}`,
         )
-        Screen.setState({
+        App.setState({
           contextMessage: contextMessage.join(', '),
         })
       }
@@ -90,7 +90,7 @@ export default class UIStore {
   }
 
   togglePinned = () => {
-    Screen.setState({ pinned: !Screen.state.pinned })
+    App.setState({ pinned: !App.state.pinned })
   }
 
   _watchContextMessage() {
@@ -103,7 +103,7 @@ export default class UIStore {
         const contextMessage = `${activeStore.title}: ${
           activeStore.results.length
         } items`
-        Screen.setState({
+        App.setState({
           contextMessage,
         })
       }
@@ -160,7 +160,7 @@ export default class UIStore {
   actions = {
     esc: e => {
       if (!this.barFocused) {
-        Screen.setState({ hoveredWord: null })
+        App.setState({ hoveredWord: null })
       }
       if (this.inputRef === document.activeElement) {
         if (this.textboxVal !== '') {
@@ -186,12 +186,12 @@ export default class UIStore {
 
   toggleHidden = () => {
     console.log('toggleHidden')
-    Screen.setState({ hidden: !Screen.state.hidden })
+    App.toggleHidden()
   }
 
   hide = () => {
     console.log('ui.hide')
-    Screen.setState({ hidden: true })
+    App.setState({ hidden: true })
   }
 
   focusBar = () => {
@@ -208,10 +208,10 @@ export default class UIStore {
 
   _watchBlurBarOnHide = () => {
     this.watch(function watchBlurBar() {
-      if (Screen.state.hidden) {
+      if (App.state.hidden) {
         // timeout based on animation
         this.setTimeout(this.blurBar, 150)
-        Screen.setState({ hoveredWord: null })
+        App.setState({ hoveredWord: null })
       }
     })
   }

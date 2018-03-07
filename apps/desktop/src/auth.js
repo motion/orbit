@@ -2,7 +2,7 @@ import * as Constants from '~/constants'
 import * as Injections from './injections'
 import { throttle } from 'lodash'
 import { store } from '@mcro/black/store'
-import Screen from '@mcro/screen'
+import { App } from '@mcro/all'
 
 @store
 export default class Auth {
@@ -17,7 +17,7 @@ export default class Auth {
       Injections.openAuth(getAuthUrl(service))
     const closeAuthWindow = (e, service) =>
       Injections.closeChromeTabWithUrl(getAuthUrl(service))
-    this.react(() => Screen.appState.authOpen, throttle(openAuthWindow, 2000))
-    this.react(() => Screen.appState.authClose, throttle(closeAuthWindow, 2000))
+    this.react(() => App.state.authOpen, throttle(openAuthWindow, 2000))
+    this.react(() => App.state.authClose, throttle(closeAuthWindow, 2000))
   }
 }

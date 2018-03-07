@@ -4,42 +4,49 @@ import Redbox from 'redbox-react'
 import * as UI from '@mcro/ui'
 import NotFound from '~/views/404'
 import Router from '~/router'
-import Screen from '@mcro/screen'
+import { App, Electron, Desktop } from '@mcro/all'
+
+const log = debug('root')
 
 @view.provide({
   rootStore: class RootStore {
     willMount() {
-      if (!Screen.started) {
-        Screen.start('app', {
-          highlightWords: {},
-          hoveredWord: null,
-          hoveredLine: null,
-          disablePeek: false,
-          pinned: false,
-          preventElectronHide: true,
-          contextMessage: 'Orbit',
-          closePeek: null,
-          peekHidden: true,
-          knowledge: null,
-        })
-      }
+      App.start('app', {
+        highlightWords: {},
+        hoveredWord: null,
+        hoveredLine: null,
+        disablePeek: false,
+        pinned: false,
+        preventElectronHide: true,
+        contextMessage: 'Orbit',
+        closePeek: null,
+        peekHidden: true,
+        knowledge: null,
+      })
 
       this.react(
         () => [
-          Screen.electronState.shouldHide,
-          Screen.desktopState.lastScreenChange,
-          Screen.electronState.shouldShow,
+          Electron.state.shouldHide,
+          Electron.state.shouldShow,
+          Desktop.state.lastScreenChange,
         ],
-        function handleHidden([shouldHide, lastChange, shouldShow]) {
-          if (!shouldHide && !shouldShow) return
+        function handleHidden([shouldHide, shouldShow, lastChange]) {
+          log(`handleHidden: ${shouldHide} ${shouldShow} ${lastChange}`)
+          if (!shouldHide && !shouldShow) {
+            return
+          }
+          if (Electron.state.peekFocused) {
+            log(`Peek is focused, ignore`)
+            return
+          }
           if (lastChange && lastChange > shouldShow) {
-            console.log('do peek hide')
-            Screen.setState({ peekHidden: true })
+            log('do peek hide')
+            App.setState({ peekHidden: true })
             return
           }
           const peekHidden = shouldHide > shouldShow
-          console.log('peekHidden', peekHidden)
-          Screen.setState({ peekHidden })
+          log('peekHidden', peekHidden)
+          App.setState({ peekHidden })
         },
         true,
       )

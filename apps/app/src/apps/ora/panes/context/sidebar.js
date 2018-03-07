@@ -4,7 +4,7 @@ import { watch } from '@mcro/black'
 import { isEqual } from 'lodash'
 import CrawlSetup from './crawlSetup'
 import CrawlerStore from '~/stores/crawlerStore'
-import Screen from '@mcro/screen'
+import { Desktop } from '@mcro/all'
 
 // finds commons paths for knowledgebasey sites
 const GOOD_LOOKIN_PATH_LIMITS = /^(help|docs|faq|support|h)$/
@@ -23,8 +23,7 @@ const getDefaultDepth = url => {
 }
 
 export default class ContextSidebar {
-  @watch
-  isPinned = () => this.app && Thing.findOne({ url: this.app.url })
+  @watch isPinned = () => this.app && Thing.findOne({ url: this.app.url })
   app = null
   previewCrawler = new CrawlerStore()
   crawlerSettings = {
@@ -35,7 +34,7 @@ export default class ContextSidebar {
   willMount() {
     this.watch(function watchAppState() {
       // prevent name from triggered changes
-      const { name, ...state } = Screen.desktopState.appState || {}
+      const { name, ...state } = Desktop.state.appState || {}
       idFn(name)
       if (state && state.url && !isEqual(state, this.app)) {
         this.app = state
@@ -108,11 +107,11 @@ export default class ContextSidebar {
   }
 
   pinCurrent = () => {
-    this.oraStore.pin.add(Screen.desktopState.appState)
+    this.oraStore.pin.add(Desktop.state.appState)
   }
 
   unpinCurrent = () => {
-    this.oraStore.pin.remove(Screen.desktopState.appState)
+    this.oraStore.pin.remove(Desktop.state.appState)
   }
 
   get actions() {
@@ -138,7 +137,7 @@ export default class ContextSidebar {
       ]
     }
     let websiteActions = []
-    if (Screen.desktopState.appState && Screen.desktopState.appState.url) {
+    if (Desktop.state.appState && Desktop.state.appState.url) {
       websiteActions = [
         this.isPinned && {
           icon: 'check',

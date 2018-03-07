@@ -4,7 +4,7 @@ import * as Constants from '~/constants'
 import { view } from '@mcro/black'
 import { Window } from '@mcro/reactron'
 import * as Helpers from '~/helpers'
-import Screen from '@mcro/screen'
+import { Electron } from '@mcro/all'
 
 @view.electron
 export default class HighlightsWindow extends React.Component {
@@ -32,7 +32,7 @@ export default class HighlightsWindow extends React.Component {
         show={this.state.show}
         frame={false}
         hasShadow={false}
-        showDevTools={Screen.state.showDevTools.highlights}
+        showDevTools={Electron.state.showDevTools.highlights}
         transparent
         background="#00000000"
         webPreferences={Constants.WEB_PREFERENCES}

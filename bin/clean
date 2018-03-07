@@ -1,6 +1,5 @@
 #!/bin/bash
 
-rm -rf apps/*/package-lock.json
 rm -rf apps/*/npm-debug.log.*
 rm -rf apps/*/lib
 rm -rf apps/*/dist
@@ -9,9 +8,10 @@ rm -rf packages/*/lib
 rm -rf packages/*/dist
 rm -rf packages/*/es6
 rm -rf packages/*/npm-debug.log.*
-rm -rf packages/*/package-lock.json
 rm -rf packages/*/shrinkwrap.json
 
+rm -rf apps/*/package-lock.json
+rm -rf packages/*/package-lock.json
 rm -rf node_modules
 rm -rf apps/*/node_modules
 rm -rf packages/*/node_modules

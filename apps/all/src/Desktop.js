@@ -1,5 +1,5 @@
 // @flow
-import Bridge from './Bridge'
+import Bridge from './helpers/Bridge'
 import { store } from '@mcro/black/store'
 import global from 'global'
 

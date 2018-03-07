@@ -5,13 +5,14 @@ import { view } from '@mcro/black'
 import { Window } from '@mcro/reactron'
 import * as Helpers from '~/helpers'
 import { App, Desktop, Electron, Swift } from '@mcro/all'
+import * as Mobx from 'mobx'
 
 const PAD = 15
 const INITIAL_SIZE = [330, 420]
 const log = debug('OrbitWindow')
 
 const orbitPosition = ({ left, top, width, height }) => {
-  const EDGE_PAD = 20
+  const EDGE_PAD = 15
   let [orbitW] = INITIAL_SIZE
   const [screenW, screenH] = Helpers.getScreenSize()
   const leftSpace = left
@@ -53,8 +54,8 @@ const orbitPosition = ({ left, top, width, height }) => {
     handleOrbitRef = ref => {
       if (!ref) return
       if (this.orbitRef) return
-      this.orbitRefs = ref.window
-      this.orbitRefs.focus() // puts it above highlights
+      this.orbitRef = ref.window
+      this.orbitRef.focus() // puts it above highlights
     }
 
     get linesBoundingBox() {
@@ -89,16 +90,19 @@ const orbitPosition = ({ left, top, width, height }) => {
         () => [Desktop.state.mousePosition, App.state.orbitHidden],
         ([{ x, y }, isHidden]) => {
           if (isHidden) {
-            Electron.setState({ orbitFocused: false })
+            if (Electron.orbitState.focused) {
+              log(`unfocus orbit`)
+              Electron.setOrbitState({ focused: false })
+            }
             return
           }
           if (!this.orbitRef) return
-          const { position, size } = this.orbit
+          const { position, size } = Electron.orbitState
           const withinX = x > position[0] && x < position[0] + size[0]
           const withinY = y > position[1] && y < position[1] + size[1]
           const focused = withinX && withinY
-          Electron.setState({
-            orbitState: { ...Electron.orbitState, focused },
+          Electron.setOrbitState({
+            focused,
           })
         },
       )
@@ -106,6 +110,7 @@ const orbitPosition = ({ left, top, width, height }) => {
       this.react(
         () => Electron.orbitState.focused,
         focused => {
+          log(`Electron.orbitState.focused ${focused}`)
           if (focused) {
             this.orbitRef && this.orbitRef.focus()
           } else {
@@ -118,15 +123,12 @@ const orbitPosition = ({ left, top, width, height }) => {
 })
 @view.electron
 export default class OrbitWindow extends React.Component {
-  mounted = false
-  state = {
-    size: INITIAL_SIZE,
-    position: [0, 0],
+  componentDidMount() {
+    this.positionOrbitBasedOnWindow()
   }
 
-  componentDidMount() {
-    this.mounted = true
-    this.positionOrbitBasedOnWindow()
+  componentWillUnmount() {
+    this.unmounted = true
   }
 
   positionOrbitBasedOnWindow = () => {
@@ -145,38 +147,35 @@ export default class OrbitWindow extends React.Component {
         // prefer using lines bounding box, fall back to app
         const box = linesBB || appBB
         if (!box) return
-        const newProps = orbitPosition(box)
+        let { position, size, arrowTowards } = orbitPosition(box)
         if (linesBB) {
           // add padding
-          newProps.position[0] += newProps.arrowTowards === 'left' ? PAD : -PAD
+          position[0] += arrowTowards === 'left' ? PAD : -PAD
         } else {
           // remove padding
-          newProps.position[0] += newProps.arrowTowards === 'right' ? PAD : -PAD
+          position[0] += arrowTowards === 'right' ? PAD : -PAD
         }
-        Electron.setState({
-          orbitState: {
-            ...Electron.state.orbit,
-            ...newProps,
-          },
-        })
+        Electron.setOrbitState({ position, size, arrowTowards })
       },
+      true,
     )
   }
 
   handleReadyToShow = () => {
     if (!Electron.orbitState.show) {
-      this.setState({ show: true })
+      Electron.setOrbitState({ show: true })
     }
   }
 
   handleOrbitMove = position => {
-    if (!this.mounted) {
-      return
-    }
-    this.setState({ position })
+    if (this.unmounted) return
+    log(`handleMove ${position}`)
+    Electron.setOrbitState({ position })
   }
 
   render({ store }) {
+    log(`OrbitWindow.render`)
+    const state = Mobx.toJS(Electron.orbitState)
     return (
       <Window
         frame={false}
@@ -186,10 +185,10 @@ export default class OrbitWindow extends React.Component {
         transparent={true}
         showDevTools={Electron.state.showDevTools.orbit}
         alwaysOnTop
-        animatePosition={Electron.orbitState.wasShowing}
-        show={Electron.orbitState.show}
-        size={Electron.orbitState.size}
-        position={Electron.orbitState.position}
+        animatePosition={state.wasShowing}
+        show={state.show}
+        size={state.size}
+        position={state.position}
         file={`${Constants.APP_URL}/orbit`}
         ref={store.handleOrbitRef}
         onReadyToShow={this.handleReadyToShow}

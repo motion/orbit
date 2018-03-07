@@ -9,8 +9,8 @@ const keyParam = (window.location.search || '').match(/key=(.*)/)
 const KEY = keyParam && keyParam[1]
 const SHADOW_PAD = 15
 const BORDER_RADIUS = 12
-const background = 'rgba(0,0,0,0.9)'
-const peekShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.05]]]
+const background = '#fff'
+const peekShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.1]]]
 const log = debug('peek')
 
 @view({
@@ -63,7 +63,7 @@ export default class PeekPage {
         break
     }
     return (
-      <UI.Theme name="dark">
+      <UI.Theme name="light">
         <peek css={peekStyle} $peekVisible={!App.state.peekHidden}>
           {/* first is arrow (above), second is arrow shadow (below) */}
           {[1, 2].map(key => (
@@ -125,10 +125,10 @@ export default class PeekPage {
       // border: [1, 'transparent'],
       background,
       borderRadius: BORDER_RADIUS,
+      boxShadow: [peekShadow],
       overflow: 'hidden',
       opacity: 1,
       transition: 'background ease-in 200ms',
-      // boxShadow: [peekShadow, `0 0 0 0.5px ${BORDER_COLOR}`],
     },
   }
 }

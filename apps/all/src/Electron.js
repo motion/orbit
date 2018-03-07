@@ -14,10 +14,11 @@ class Electron {
     shouldShow: null,
     shouldPause: null,
     settingsPosition: [], // todo: settingsState.position
-    orbitState: {},
-    peekState: {
+    orbitState: {
+      show: false,
       focused: false,
     },
+    peekState: {},
     showSettings: false,
     showDevTools: {
       orbit: false,
@@ -37,6 +38,14 @@ class Electron {
 
   get peekState() {
     return this.state.peekState
+  }
+
+  setOrbitState = nextState => {
+    this.setState({ orbitState: { ...this.state.orbitState, ...nextState } })
+  }
+
+  setPeekState = nextState => {
+    this.setState({ peekState: { ...this.state.peekState, ...nextState } })
   }
 }
 

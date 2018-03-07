@@ -7,11 +7,10 @@ import MenuItems from './views/MenuItems'
 import HighlightsWindow from './views/HighlightsWindow'
 import PeekWindow from './views/PeekWindow'
 import OrbitWindow from './views/OrbitWindow'
-import SettingsWindow from './views/SettingsWindow'
+// import SettingsWindow from './views/SettingsWindow'
 import * as Helpers from '~/helpers'
 import { App, Electron, Desktop } from '@mcro/all'
 import global from 'global'
-import { screen } from 'electron'
 import { debounce } from 'lodash'
 
 const log = debug('Electron')
@@ -29,29 +28,8 @@ const log = debug('Electron')
         this.stores = stores
         this.views = views
       })
-
-      // setup screen
-      const { position } = Helpers.getAppSize()
-      const screenSize = screen.getPrimaryDisplay().workAreaSize
-
-      Electron.start({
-        shouldHide: null,
-        shouldShow: null,
-        shouldPause: null,
-        peekState: {},
-        showSettings: false,
-        peekFocused: false,
-        showDevTools: {
-          orbit: false,
-          peek: false,
-          highlights: false,
-          settings: true,
-        },
-        lastMove: Date.now(),
-        settingsPosition: position,
-        screenSize,
-      })
-
+      Electron.start()
+      Electron.setState({ settingsPosition: Helpers.getAppSize().position })
       this.watchOptionPress()
     }
 
@@ -93,7 +71,7 @@ const log = debug('Electron')
         })`,
       )
       if (!isHolding) {
-        if (Electron.state.peekFocused) {
+        if (Electron.orbitState.focused) {
           log('mouse is over peek, dont hide')
         }
         this.shouldHide()
@@ -161,8 +139,8 @@ export default class ElectronWindow extends React.Component {
         ref={electron.handleAppRef}
       >
         <MenuItems />
-        <HighlightsWindow />
-        <PeekWindow />
+        {/* <HighlightsWindow />
+        <PeekWindow /> */}
         <OrbitWindow />
         {/* <SettingsWindow /> */}
         <Tray />

@@ -80,34 +80,7 @@ function getSecondary(result) {
 const getHoverProps = Helpers.hoverSettler({
   enterDelay: 600,
   onHovered: object => {
-    // add on the app position to inner position
-    if (object) {
-      if (!window.lastElectronState) {
-        console.error('no state')
-        return
-      }
-      const { oraPosition } = window.lastElectronState
-      if (!oraPosition) {
-        console.log('error no oraposition sent')
-        return
-      }
-      const [oraX, oraY] = oraPosition
-      // not all of pad because it looks nice slightly overlapped
-      object.left = object.left + oraX + Constants.ORA_PAD * 0.8
-      const contents = document.querySelector('.header > .contents')
-      const contentsHeight = contents ? contents.clientHeight : 0
-      object.top =
-        object.top +
-        oraY +
-        contentsHeight +
-        document.querySelector('.fade:last-child .pane .content').offsetTop -
-        (
-          document.querySelector('.fade:last-child .ReactVirtualized__Grid') ||
-          document.querySelector('.fade:last-child .list')
-        ).scrollTop
-    }
-    console.log('test: peek', object)
-    screenStore.setState({ hoveredWord: object })
+    console.log('hovered', object)
   },
 })
 

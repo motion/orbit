@@ -56,15 +56,6 @@ const log = debug('orbit')
           }, orbitHidden ? 50 : 500)
         },
       )
-      // this.react(
-      //   () => [Electron.orbitState, Desktop.isHoldingOption],
-      //   ([orbitFocused, isHoldingOption]) => {
-      //     if (!orbitFocused && !isHoldingOption) {
-      //       log(`hideOrbit after let go`)
-      //       App.setState({ orbitHidden: true })
-      //     }
-      //   },
-      // )
       // react to close orbit
       this.react(
         () => Desktop.state.keyboard.esc,
@@ -164,9 +155,9 @@ export default class OrbitPage {
       height: '100%',
       padding: SHADOW_PAD,
       pointerEvents: 'none !important',
+      position: 'relative',
       transition: 'all ease-in 100ms',
       opacity: 0,
-      position: 'relative',
     },
     orbitVisible: {
       pointerEvents: 'all !important',

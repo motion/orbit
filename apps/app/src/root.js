@@ -25,6 +25,7 @@ const log = debug('root')
             return
           }
           if (lastChange && lastChange > shouldShow) {
+            log(`lastChange, hide`)
             App.setState({ orbitHidden: true })
             return
           }
@@ -34,6 +35,7 @@ const log = debug('root')
             log(`Peek is focused, ignore hide`)
             return
           }
+          log(`orbitHidden: ${willBeHidden}`)
           App.setState({ orbitHidden: willBeHidden })
         },
         true,

@@ -23,9 +23,9 @@ const log = debug('peek')
     @watch
     watchTear = () => {
       if (this.isTorn) return
-      const { peekWindow } = Electron
-      if (peekWindow && peekWindow.isTorn) {
-        console.log('tearing!', peekWindow)
+      const { orbitState } = Electron
+      if (orbitState && orbitState.isTorn) {
+        console.log('tearing!', orbitState)
         this.isTorn = true
       }
     }
@@ -37,8 +37,8 @@ const log = debug('peek')
 })
 export default class PeekPage {
   render({ store }) {
-    const { peekWindow } = Electron
-    const arrowTowards = (peekWindow && peekWindow.arrowTowards) || 'right'
+    const { orbit } = Electron
+    const arrowTowards = (orbit && orbit.arrowTowards) || 'right'
     const arrowSize = 28
     let arrowStyle
     let peekStyle

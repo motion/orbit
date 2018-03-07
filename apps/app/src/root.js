@@ -11,18 +11,7 @@ const log = debug('root')
 @view.provide({
   rootStore: class RootStore {
     willMount() {
-      App.start('app', {
-        highlightWords: {},
-        hoveredWord: null,
-        hoveredLine: null,
-        disablePeek: false,
-        pinned: false,
-        preventElectronHide: true,
-        contextMessage: 'Orbit',
-        closePeek: null,
-        orbitHidden: true,
-        knowledge: null,
-      })
+      App.start()
 
       this.react(
         () => [
@@ -41,7 +30,7 @@ const log = debug('root')
           }
           const isHidden = App.state.orbitHidden
           const willBeHidden = shouldHide > shouldShow
-          if (Electron.state.orbit.focused && !isHidden && willBeHidden) {
+          if (Electron.orbitState.focused && !isHidden && willBeHidden) {
             log(`Peek is focused, ignore hide`)
             return
           }

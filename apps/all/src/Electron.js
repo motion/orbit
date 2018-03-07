@@ -10,30 +10,33 @@ class Electron {
   }
 
   state = {
-    showSettings: null,
-    showDevTools: {},
-    lastMove: null,
-    settingsPosition: [],
-    screenSize: [],
-    orbit: {
-      focused: false,
-    },
     shouldHide: null,
     shouldShow: null,
     shouldPause: null,
+    settingsPosition: [], // todo: settingsState.position
+    orbitState: {},
+    peekState: {
+      focused: false,
+    },
+    showSettings: false,
+    showDevTools: {
+      orbit: false,
+      peek: false,
+      highlights: false,
+      settings: true,
+    },
   }
 
   start(options) {
     return Bridge.start(this, this.state, options)
   }
 
-  get peekWindow() {
-    return (
-      (this.state.peekState &&
-        this.state.peekState.windows &&
-        this.state.peekState.windows[0]) ||
-      null
-    )
+  get orbitState() {
+    return this.state.orbitState
+  }
+
+  get peekState() {
+    return this.state.peekState
   }
 }
 

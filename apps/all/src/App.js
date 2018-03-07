@@ -10,11 +10,11 @@ class App {
     highlightWords: {},
     hoveredWord: null,
     hoveredLine: null,
-    orbitHidden: null,
-    preventElectronHide: null,
-    contextMessage: null,
+    preventElectronHide: true,
+    contextMessage: 'Orbit',
     closePeek: null,
-    disablePeek: null,
+    orbitHidden: true,
+    knowledge: null,
   }
 
   get setState() {
@@ -30,7 +30,7 @@ class App {
   }
 
   get showHeader() {
-    return Electron.state.orbit.focused
+    return Electron.orbitState.focused
   }
 
   togglePeek = () => {

@@ -57,7 +57,7 @@ const log = debug('orbit')
         },
       )
       // this.react(
-      //   () => [Electron.state.orbitFocused, Desktop.isHoldingOption],
+      //   () => [Electron.orbitState, Desktop.isHoldingOption],
       //   ([orbitFocused, isHoldingOption]) => {
       //     if (!orbitFocused && !isHoldingOption) {
       //       log(`hideOrbit after let go`)

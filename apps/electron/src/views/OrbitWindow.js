@@ -96,15 +96,17 @@ const orbitPosition = ({ left, top, width, height }) => {
           const { position, size } = this.orbit
           const withinX = x > position[0] && x < position[0] + size[0]
           const withinY = y > position[1] && y < position[1] + size[1]
-          const orbitFocused = withinX && withinY
-          Electron.setState({ orbitFocused })
+          const focused = withinX && withinY
+          Electron.setState({
+            orbitState: { ...Electron.orbitState, focused },
+          })
         },
       )
       // separate react to only call actions if value changes
       this.react(
-        () => Electron.state.orbitFocused,
-        orbitFocused => {
-          if (orbitFocused) {
+        () => Electron.orbitState.focused,
+        focused => {
+          if (focused) {
             this.orbitRef && this.orbitRef.focus()
           } else {
             Swift.defocus()
@@ -151,17 +153,18 @@ export default class OrbitWindow extends React.Component {
           // remove padding
           newProps.position[0] += newProps.arrowTowards === 'right' ? PAD : -PAD
         }
-        const newOrbit = {
-          ...this.state.orbit,
-          ...newProps,
-        }
-        Electron.setState({ orbit: newOrbit })
+        Electron.setState({
+          orbitState: {
+            ...Electron.state.orbit,
+            ...newProps,
+          },
+        })
       },
     )
   }
 
   handleReadyToShow = () => {
-    if (!this.state.show) {
+    if (!Electron.orbitState.show) {
       this.setState({ show: true })
     }
   }
@@ -174,9 +177,6 @@ export default class OrbitWindow extends React.Component {
   }
 
   render({ store }) {
-    if (App.state.disableOrbit) {
-      return null
-    }
     return (
       <Window
         frame={false}
@@ -186,10 +186,10 @@ export default class OrbitWindow extends React.Component {
         transparent={true}
         showDevTools={Electron.state.showDevTools.orbit}
         alwaysOnTop
-        animatePosition={this.state.wasShowing}
-        show={this.state.show}
-        size={this.state.size}
-        position={this.state.position}
+        animatePosition={Electron.orbitState.wasShowing}
+        show={Electron.orbitState.show}
+        size={Electron.orbitState.size}
+        position={Electron.orbitState.position}
         file={`${Constants.APP_URL}/orbit`}
         ref={store.handleOrbitRef}
         onReadyToShow={this.handleReadyToShow}

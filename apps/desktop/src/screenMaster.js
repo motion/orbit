@@ -257,7 +257,6 @@ export default class ScreenMaster {
         return updateKeyboard({ option: Date.now() })
       }
       if (KeysDown.has(codes.option)) {
-        log('pressed key after option')
         return clearOption()
       }
       switch (keycode) {

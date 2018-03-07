@@ -4,11 +4,11 @@ import { debounce } from 'lodash'
 import { view, watch } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { App, Desktop, Electron } from '@mcro/screen'
-import ControlButton from '~/views/controlButton'
 import Knowledge from './knowledge'
 import PeekContent from './peekContent'
 import PaulGraham from '~/stores/language/pg.json'
 import Search from '@mcro/search'
+import PeekHeader from './peekHeader'
 
 const keyParam = (window.location.search || '').match(/key=(.*)/)
 const KEY = keyParam && keyParam[1]
@@ -37,9 +37,9 @@ const peekShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.05]]]
     willMount() {
       this.searchStore = new Search()
       this.searchStore.onDocuments(PaulGraham)
-
+      // react to do searches
       this.react(() => this.query, this.search)
-
+      // react to hovered words
       let hoverShow
       this.react(
         () => App.hoveredWordName,
@@ -55,7 +55,7 @@ const peekShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.05]]]
           }, peekHidden ? 50 : 500)
         },
       )
-
+      // react to close peek
       this.react(
         () => Desktop.state.keyboard.esc,
         () => {
@@ -135,49 +135,7 @@ export default class PeekPage {
             />
           ))}
           <content>
-            <header $$draggable>
-              <buttons $$row if={store.isTorn} css={{ marginRight: 14 }}>
-                <ControlButton icon="x" store={store} />
-                <ControlButton icon="y" store={store} background="#F6BE4F" />
-                <ControlButton icon="z" store={store} background="#62C554" />
-              </buttons>
-              <title>
-                <UI.Input
-                  value={store.query}
-                  size={1.1}
-                  onChange={store.onChangeQuery}
-                  css={{ width: '100%' }}
-                />
-              </title>
-              <UI.Row
-                if={false}
-                $controls
-                $$undraggable
-                itemProps={{
-                  sizeIcon: 1,
-                  sizePadding: 1.8,
-                  sizeHeight: 0.75,
-                  sizeRadius: 0.6,
-                  borderWidth: 0,
-                  color: [0, 0, 0, 0.5],
-                  boxShadow: [
-                    'inset 0 0.5px 0 0px #fff',
-                    '0 0.25px 0.5px 0px rgba(0,0,0,0.35)',
-                  ],
-                  background: 'linear-gradient(#FDFDFD, #F1F1F1)',
-                  hover: {
-                    background: 'linear-gradient(#FDFDFD, #F1F1F1)',
-                  },
-                }}
-              >
-                <UI.Button
-                  if={false}
-                  icon="pin"
-                  onClick={store.ref('isPinned').toggle}
-                  highlight={store.isTorn || store.isPinned}
-                />
-              </UI.Row>
-            </header>
+            <PeekHeader store={store} />
             <contentInner>
               <PeekContent store={store} />
               <Knowledge if={App.state.knowledge} data={App.state.knowledge} />
@@ -220,20 +178,6 @@ export default class PeekPage {
       opacity: 1,
       transition: 'background ease-in 200ms',
       // boxShadow: [peekShadow, `0 0 0 0.5px ${BORDER_COLOR}`],
-    },
-    header: {
-      flexFlow: 'row',
-      alignItems: 'center',
-      justifyContent: 'center',
-      padding: [10, 10],
-      borderTopRadius: BORDER_RADIUS,
-      // boxShadow: [`inset 0 1px 0 ${BORDER_COLOR}`],
-    },
-    title: {
-      flex: 1,
-    },
-    controls: {
-      padding: [0, 0, 0, 10],
     },
   }
 }

@@ -1,4 +1,3 @@
-import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
 
 @view

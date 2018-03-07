@@ -17,6 +17,10 @@ class App {
     return 'none for now'
   }
 
+  get showHeader() {
+    return Screen.electronState.peekFocused
+  }
+
   togglePeek = () => {
     this.setState({ disablePeek: !this.state.disablePeek })
   }

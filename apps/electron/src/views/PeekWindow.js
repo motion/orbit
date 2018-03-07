@@ -120,6 +120,7 @@ type PeekTarget = {
       this.react(
         () => [Desktop.state.mousePosition, App.state.peekHidden],
         ([{ x, y }, isHidden]) => {
+          log(`watchMouseForPeekFocus ${isHidden}`)
           if (isHidden) {
             Electron.setState({ peekFocused: true })
             return

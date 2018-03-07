@@ -56,15 +56,15 @@ const log = debug('peek')
           }, peekHidden ? 50 : 500)
         },
       )
-      this.react(
-        () => [Electron.state.peekFocused, Desktop.isHoldingOption],
-        ([peekFocused, isHoldingOption]) => {
-          if (!peekFocused && !isHoldingOption) {
-            log(`hidePeek after let go`)
-            App.setState({ peekHidden: true })
-          }
-        },
-      )
+      // this.react(
+      //   () => [Electron.state.peekFocused, Desktop.isHoldingOption],
+      //   ([peekFocused, isHoldingOption]) => {
+      //     if (!peekFocused && !isHoldingOption) {
+      //       log(`hidePeek after let go`)
+      //       App.setState({ peekHidden: true })
+      //     }
+      //   },
+      // )
       // react to close peek
       this.react(
         () => Desktop.state.keyboard.esc,

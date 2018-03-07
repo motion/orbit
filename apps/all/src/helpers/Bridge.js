@@ -142,8 +142,10 @@ class Bridge {
       this._queuedState = true
       return changedState
     }
-    if (changedState.length) {
-      console.log('sending source', this._source)
+    if (Object.keys(changedState).length) {
+      if (process.env.NODE_ENV === 'development') {
+        log(`${this._source}.setState(${JSON.stringify(newState, 0, 2)})`)
+      }
       this._socket.send(
         JSON.stringify({ state: changedState, source: this._source }),
       )

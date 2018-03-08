@@ -3,13 +3,33 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import ControlButton from '~/views/controlButton'
-import { App } from '@mcro/all'
+import { App, Electron } from '@mcro/all'
 // import * as Constants from '~/constants'
 
+class HeaderStore {
+  inputRef = null
+
+  willMount() {
+    this.react(
+      () => Electron.state.lastAction === 'TOGGLE',
+      toggled => {
+        if (!toggled) return
+        console.log('toggled')
+        if (this.inputRef) {
+          this.inputRef.focus()
+          this.inputRef.select()
+        }
+      },
+    )
+  }
+}
+
 @view.attach('orbitStore')
-@view
+@view({
+  headerStore: HeaderStore,
+})
 export default class PeekHeader {
-  render({ orbitStore }) {
+  render({ orbitStore, headerStore }) {
     return (
       <header $$draggable $showHeader={App.showHeader}>
         <buttons $$row if={orbitStore.isTorn} css={{ marginRight: 14 }}>
@@ -23,6 +43,7 @@ export default class PeekHeader {
             value={orbitStore.query}
             size={1.1}
             onChange={orbitStore.onChangeQuery}
+            getRef={headerStore.ref('inputRef').set}
           />
         </title>
       </header>

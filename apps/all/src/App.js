@@ -28,7 +28,7 @@ class App {
   }
 
   get showHeader() {
-    return Electron.orbitState.focused
+    return Electron.orbitState.focused || Electron.state.lastAction === 'TOGGLE'
   }
 
   togglePeek = () => {

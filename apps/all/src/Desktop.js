@@ -57,8 +57,9 @@ class Desktop {
     this.setState = Bridge.setState
   }
 
-  get isHoldingOption() {
-    return this.state.keyboard.option > this.state.keyboard.optionUp
+  get isHoldingOption(): Boolean {
+    const { option, optionUp } = this.state.keyboard
+    return option && optionUp && option > (optionUp || 0)
   }
 
   updateKeyboard = newState =>

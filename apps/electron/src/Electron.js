@@ -39,40 +39,43 @@ const log = debug('Electron')
       this.lastToggle = Date.now()
 
       new ShortcutsStore().emitter.on('shortcut', shortcut => {
-        console.log('emit shortcut', shortcut)
         if (shortcut === 'Option+Space') {
-          // if (Desktop.state.keyboard.option) {
-          //   console.log('avoid toggle while holding option')
-          //   return
-          // }
-          this.lastToggle = Date.now()
-          console.log('got a toggle')
+          // if were holding peek
+          if (
+            Desktop.isHoldingOption &&
+            Electron.state.lastAction !== 'TOGGLE' &&
+            !App.state.orbitHidden
+          ) {
+            log('avoid toggle. TODO: make this "pin" it open')
+            return
+          }
           this.toggleShown()
         }
       })
 
       let optnEnter
-
       this.react(
-        () => [Desktop.state.keyboard.option, Desktop.state.keyboard.optionUp],
-        debounce(([option, optionUp]) => {
+        () => Desktop.isHoldingOption,
+        debounce(isHoldingOption => {
           clearTimeout(optnEnter)
-          const lastActionWasToggle = this.lastToggle > option
-          if (lastActionWasToggle) {
+          if (Electron.state.lastAction === 'TOGGLE') {
             log(`just toggled, avoid option handle`)
             return
           }
-          const isHolding = option > optionUp
-          if (!isHolding) {
-            if (1 === 1 || App.peek.focused) {
-              log('PREVENT HIDE WHEN PEEK IS HOVERED')
+          if (!isHoldingOption) {
+            // TODO
+            if (1 === 1 || App.state.peekFocused) {
+              log('TODO: PREVENT HIDE WHEN (PEEK) IS HOVERED')
             }
             this.shouldHide()
             return
           }
           if (App.state.orbitHidden) {
             // SHOW
-            optnEnter = setTimeout(this.shouldShow, 150)
+            optnEnter = setTimeout(() => {
+              Electron.setState({ lastAction: 'HOLD' })
+              this.shouldShow()
+            }, 150)
           }
         }, 16),
       )
@@ -89,6 +92,7 @@ const log = debug('Electron')
     toggleShown = async () => {
       if (App.state.pinned) return
       if (!this.appRef) return
+      Electron.setState({ lastAction: 'TOGGLE' })
       if (!App.state.orbitHidden) {
         this.shouldHide()
       } else {
@@ -105,7 +109,7 @@ const log = debug('Electron')
 
     async shouldHide() {
       log('shouldHide')
-      Electron.setState({ shouldHide: Date.now() })
+      Electron.setState({ shouldHide: Date.now(), lastAction: null })
     }
 
     handleAppRef = ref => ref && (this.appRef = ref.app)

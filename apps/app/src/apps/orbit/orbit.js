@@ -96,6 +96,7 @@ export default class OrbitPage {
         }
         break
     }
+    console.log('Orbit.render, hidden', App.state.orbitHidden)
     return (
       <UI.Theme name="dark">
         <orbit css={orbitStyle} $orbitVisible={!App.state.orbitHidden}>

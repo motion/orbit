@@ -10,6 +10,7 @@ class Electron {
     shouldShow: null,
     shouldPause: null,
     settingsPosition: [], // todo: settingsState.position
+    lastAction: null,
     orbitState: {
       show: false,
       focused: false,

@@ -17,18 +17,18 @@ const log = debug('root')
         () => [
           Electron.state.shouldHide,
           Electron.state.shouldShow,
-          Desktop.state.lastScreenChange,
+          // Desktop.state.lastScreenChange,
         ],
-        function handleHidden([shouldHide, shouldShow, lastChange]) {
-          log(`handleHidden: ${shouldHide} ${shouldShow} ${lastChange}`)
+        function handleHidden([shouldHide, shouldShow]) {
+          log(`handleHidden: ${shouldHide} ${shouldShow}`)
           if (!shouldHide && !shouldShow) {
             return
           }
-          if (lastChange && lastChange > shouldShow) {
-            log(`lastChange, hide`)
-            App.setState({ orbitHidden: true })
-            return
-          }
+          // if (lastChange && lastChange > shouldShow) {
+          //   log(`lastChange, hide`)
+          //   App.setState({ orbitHidden: true })
+          //   return
+          // }
           const isHidden = App.state.orbitHidden
           const willBeHidden = shouldHide > shouldShow
           // TODO implement this

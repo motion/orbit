@@ -4,8 +4,11 @@ import Bridge from './helpers/Bridge'
 import { store } from '@mcro/black/store'
 import global from 'global'
 
+const log = debug('App')
+let App
+
 @store
-class App {
+class AppStore {
   state = {
     highlightWords: {},
     hoveredWord: null,
@@ -21,6 +24,18 @@ class App {
   start(options) {
     Bridge.start(this, this.state, options)
     this.setState = Bridge.setState
+
+    this.react(
+      () => [Electron.state.lastAction === 'HOLD', Electron.orbitState.focused],
+      ([wasHolding, isFocused]) => {
+        if (wasHolding && !isFocused && !App.state.orbitHidden) {
+          log(
+            `hiding because your mouse moved outside the window after option release`,
+          )
+          this.setState({ orbitHidden: true })
+        }
+      },
+    )
   }
 
   get hoveredWordName() {
@@ -44,8 +59,8 @@ class App {
   }
 }
 
-const app = new App()
-global.App = app
-Bridge.stores.App = app
+App = new AppStore()
+global.App = App
+Bridge.stores.AppStore = App
 
-export default app
+export default App

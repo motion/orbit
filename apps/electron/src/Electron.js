@@ -41,6 +41,7 @@ const log = debug('Electron')
             Electron.setState({ lastAction: null })
           }
         },
+        true,
       )
     }
 
@@ -74,8 +75,12 @@ const log = debug('Electron')
           }
           if (!isHoldingOption) {
             // TODO
-            if (1 === 1 || App.state.peekFocused) {
-              log('TODO: PREVENT HIDE WHEN (PEEK) IS HOVERED')
+            if (
+              Electron.state.lastAction === 'HOLD' &&
+              Electron.orbitState.focused
+            ) {
+              log('prevent hide during mousehover after releasing hold')
+              return
             }
             this.shouldHide()
             return
@@ -106,6 +111,8 @@ const log = debug('Electron')
         this.shouldHide()
       } else {
         Electron.setState({ lastAction: 'TOGGLE' })
+        // focus orbit on toggle show
+        Electron.setOrbitState({ focused: true })
         this.shouldShow()
         this.appRef.focus()
       }
@@ -148,7 +155,7 @@ export default class ElectronWindow extends React.Component {
         ref={electron.handleAppRef}
       >
         <MenuItems />
-        {/* <HighlightsWindow /> */}
+        <HighlightsWindow />
         <PeekWindow />
         <OrbitWindow />
         {/* <SettingsWindow /> */}

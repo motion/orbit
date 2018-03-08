@@ -252,6 +252,8 @@ export default class ScreenMaster {
       }
       switch (keycode) {
         // clear highlights keys
+        case codes.space:
+          return Desktop.updateKeyboard({ space: Date.now() })
         case codes.up:
         case codes.down:
         case codes.pgUp:
@@ -265,8 +267,11 @@ export default class ScreenMaster {
       KeysDown.delete(keycode)
       clearDownKeysAfterPause()
       // option off
-      if (keycode === codes.option) {
-        Desktop.clearOption()
+      switch(keycode) {
+        case codes.option:
+          return Desktop.clearOption()
+        case codes.space:
+          return Desktop.updateKeyboard({ space: null })
       }
     })
   }

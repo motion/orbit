@@ -1,12 +1,12 @@
 import * as React from 'react'
 import { App as AppWindow } from '@mcro/reactron'
-import ShortcutsStore from '~/stores/shortcutsStore'
 import { view, debugState } from '@mcro/black'
 import Tray from './views/Tray'
 import MenuItems from './views/MenuItems'
 import HighlightsWindow from './views/HighlightsWindow'
 import PeekWindow from './views/PeekWindow'
 import OrbitWindow from './views/OrbitWindow'
+import ShortcutsStore from '~/stores/shortcutsStore'
 // import SettingsWindow from './views/SettingsWindow'
 import * as Helpers from '~/helpers'
 import { App, Electron, Desktop } from '@mcro/all'
@@ -32,64 +32,51 @@ const log = debug('Electron')
       Electron.start()
       Electron.setState({ settingsPosition: Helpers.getAppSize().position })
       this.watchOptionPress()
-
-      // clear last action on hide
-      this.react(
-        () => App.state.orbitHidden,
-        hidden => {
-          if (hidden) {
-            Electron.setState({ lastAction: null })
-          }
-        },
-        true,
-      )
     }
 
     watchOptionPress = () => {
-      // watch option hold
-      this.lastToggle = Date.now()
-
       new ShortcutsStore().emitter.on('shortcut', shortcut => {
         if (shortcut === 'Option+Space') {
+          log(`got option+space`)
           // if were holding peek
           if (
             Desktop.isHoldingOption &&
-            Electron.state.lastAction !== 'TOGGLE' &&
+            !Electron.orbitState.pinned &&
             !App.state.orbitHidden
           ) {
             log('avoid toggle. TODO: make this "pin" it open')
             return
           }
-          this.toggleShown()
+          this.togglePinned()
         }
       })
 
+      // peek behavior
       let optnEnter
       this.react(
         () => Desktop.isHoldingOption,
         debounce(isHoldingOption => {
           clearTimeout(optnEnter)
-          if (Electron.state.lastAction === 'TOGGLE') {
-            log(`just toggled, avoid option handle`)
+          if (Electron.orbitState.pinned) {
+            log(`pinned, avoid`)
             return
           }
           if (!isHoldingOption) {
             // TODO
-            if (
-              Electron.state.lastAction === 'HOLD' &&
-              Electron.orbitState.focused
-            ) {
-              log('prevent hide during mousehover after releasing hold')
+            if (!Electron.orbitState.pinned && Electron.orbitState.focused) {
+              log('prevent hide while mouseover after release hold')
               return
             }
-            this.shouldHide()
+            log('shouldHide')
+            Electron.setState({ shouldHide: Date.now(), lastAction: null })
             return
           }
           if (App.state.orbitHidden) {
             // SHOW
             optnEnter = setTimeout(() => {
-              Electron.setState({ lastAction: 'HOLD' })
-              this.shouldShow()
+              log('shouldShow')
+              this.appRef.show()
+              Electron.setState({ shouldShow: Date.now() })
             }, 150)
           }
         }, 16),
@@ -104,29 +91,15 @@ const log = debug('Electron')
       }
     }
 
-    toggleShown = async () => {
-      if (App.state.pinned) return
-      if (!this.appRef) return
-      if (!App.state.orbitHidden) {
-        this.shouldHide()
-      } else {
-        Electron.setState({ lastAction: 'TOGGLE' })
-        // focus orbit on toggle show
-        Electron.setOrbitState({ focused: true })
-        this.shouldShow()
+    togglePinned = async () => {
+      if (!this.appRef) {
+        throw new Error('No appRef')
+      }
+      const pinned = !Electron.orbitState.pinned
+      Electron.setOrbitState({ pinned, focused: pinned })
+      if (pinned) {
         this.appRef.focus()
       }
-    }
-
-    async shouldShow() {
-      log('shouldShow')
-      this.appRef.show()
-      Electron.setState({ shouldShow: Date.now() })
-    }
-
-    async shouldHide() {
-      log('shouldHide')
-      Electron.setState({ shouldHide: Date.now(), lastAction: null })
     }
 
     handleAppRef = ref => ref && (this.appRef = ref.app)

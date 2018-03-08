@@ -26,13 +26,18 @@ class AppStore {
     Bridge.start(this, this.state, options)
     this.setState = Bridge.setState
 
+    console.log('Electron.orbitState', Electron.orbitState)
     this.react(
-      () => [Electron.state.lastAction === 'HOLD', Electron.orbitState.focused],
-      ([wasHolding, isFocused]) => {
+      () => [
+        !App.state.orbitHidden,
+        Electron.orbitState.pinned,
+        Electron.orbitState.focused,
+      ],
+      ([isShown, isPinned, isFocused]) => {
         if (Desktop.isHoldingOption) {
           return
         }
-        if (wasHolding && !isFocused && !App.state.orbitHidden) {
+        if (isShown && !isPinned && !isFocused) {
           log(
             `hiding because your mouse moved outside the window after option release`,
           )
@@ -40,6 +45,15 @@ class AppStore {
         }
       },
     )
+
+    this.react(
+      () => Electron.orbitState.pinned,
+      pinned => App.setState({ orbitHidden: !pinned }),
+    )
+  }
+
+  get isShowingOrbit() {
+    return !this.state.orbitHidden || Electron.state.orbitState.pinned
   }
 
   get hoveredWordName() {

@@ -89,6 +89,9 @@ const orbitPosition = ({ left, top, width, height }) => {
       this.react(
         () => [Desktop.state.mousePosition, App.state.orbitHidden],
         ([{ x, y }, isHidden]) => {
+          if (Electron.orbitState.pinned) {
+            return
+          }
           if (isHidden) {
             if (Electron.orbitState.focused) {
               log(`unfocus orbit`)

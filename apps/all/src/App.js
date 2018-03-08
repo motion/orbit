@@ -3,6 +3,7 @@ import Electron from './Electron'
 import Bridge from './helpers/Bridge'
 import { store } from '@mcro/black/store'
 import global from 'global'
+import Desktop from './Desktop'
 
 const log = debug('App')
 let App
@@ -28,6 +29,9 @@ class AppStore {
     this.react(
       () => [Electron.state.lastAction === 'HOLD', Electron.orbitState.focused],
       ([wasHolding, isFocused]) => {
+        if (Desktop.isHoldingOption) {
+          return
+        }
         if (wasHolding && !isFocused && !App.state.orbitHidden) {
           log(
             `hiding because your mouse moved outside the window after option release`,

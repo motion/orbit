@@ -25,7 +25,7 @@ window.Router = AppRouter
 if (module.hot) {
   module.hot.accept('.', () => {
     AppRouter = runRouter()
-    window.App.render()
+    window.Root.render()
   })
 }
 

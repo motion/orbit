@@ -1,15 +1,15 @@
 import * as React from 'react'
 import { Menu, SubMenu, MenuItem, MenuItems } from '@mcro/reactron'
 import { view } from '@mcro/black'
-import Screen from '@mcro/screen'
+import { Electron } from '@mcro/all'
 
 @view.electron
 export default class MenuEl {
   toggleDevTools = appName => () => {
-    Screen.setState({
+    Electron.setState({
       showDevTools: {
-        ...Screen.state.showDevTools,
-        [appName]: !Screen.state.showDevTools[appName],
+        ...Electron.state.showDevTools,
+        [appName]: !Electron.state.showDevTools[appName],
       },
     })
   }
@@ -19,14 +19,14 @@ export default class MenuEl {
   }
 
   handleClose = () => {
-    if (Screen.state.showSettings) {
+    if (Electron.state.showSettings) {
       this.handleSettingsVisibility(false)
     }
   }
 
   handlePreferences = () => {
-    Screen.setState({
-      showSettings: !Screen.state.showSettings,
+    Electron.setState({
+      showSettings: !Electron.state.showSettings,
     })
   }
 

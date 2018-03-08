@@ -35,7 +35,8 @@ export default class SocketManager {
 
   sendAll = (source: string, state: Object) => {
     if (!source) {
-      throw new Error(`No source provided to state message`)
+      throw new Error(`No source (${source}) provided to state message
+        ${JSON.stringify(state, 0, 2)}`)
     }
     if (!state) {
       throw new Error(`No state provided for SocketManager.sendAll: ${state}`)
@@ -55,6 +56,32 @@ export default class SocketManager {
     this.activeSockets = this.activeSockets.filter(s => s.uid !== uid)
   }
 
+  decorateSocket = (uid, socket) => {
+    // listen for incoming
+    socket.on('message', str => {
+      const { action, value, state, source } = JSON.parse(str)
+      if (state) {
+        // console.log('should send', source || '---nostate:(', state)
+        this.sendAll(source, state)
+      }
+      if (action && this[action]) {
+        log('received action:', action)
+        this[action].call(this, value)
+      }
+    })
+    // handle events
+    socket.on('close', () => {
+      this.removeSocket(uid)
+    })
+    socket.on('error', err => {
+      // ignore ECONNRESET throw anything else
+      if (err.code !== 'ECONNRESET') {
+        throw err
+      }
+      this.removeSocket(uid)
+    })
+  }
+
   setupSocket() {
     let id = 0
     // log connections
@@ -71,28 +98,7 @@ export default class SocketManager {
       }
       // add to active sockets
       this.activeSockets.push({ uid, socket })
-      // listen for incoming
-      socket.on('message', str => {
-        const { action, value, state, source } = JSON.parse(str)
-        if (state) {
-          this.sendAll(source, state)
-        }
-        if (action && this[action]) {
-          log('received action:', action)
-          this[action].call(this, value)
-        }
-      })
-      // handle events
-      socket.on('close', () => {
-        this.removeSocket(uid)
-      })
-      socket.on('error', err => {
-        // ignore ECONNRESET throw anything else
-        if (err.code !== 'ECONNRESET') {
-          throw err
-        }
-        this.removeSocket(uid)
-      })
+      this.decorateSocket(uid, socket)
     })
     this.wss.on('close', () => {
       log('WE SHOULD HANDLE THIS CLOSE', ...arguments)

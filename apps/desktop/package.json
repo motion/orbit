@@ -16,7 +16,7 @@
     "@mcro/crawler": "^1.5.1",
     "@mcro/oracle": "*",
     "@mcro/passport-slack": "^1.5.1",
-    "@mcro/screen": "*",
+    "@mcro/all": "*",
     "@mcro/search": "^1.5.1",
     "@mcro/macros": "*",
     "babel-polyfill": "^6.23.0",

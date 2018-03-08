@@ -7,7 +7,7 @@ import OraHeader from './oraHeader'
 import OraDrawer from './oraDrawer'
 import OraActionBar from './oraActionBar'
 import * as Constants from '~/constants'
-import Screen from '@mcro/screen'
+import { App } from '@mcro/all'
 
 const listProps = {
   virtualized: false,
@@ -34,7 +34,7 @@ const listProps = {
   onScroll: () => {
     // TODO clear all popovers
     console.log('test: should clear peek')
-    Screen.setState({ hoveredWord: null })
+    App.setState({ hoveredWord: null })
   },
 }
 

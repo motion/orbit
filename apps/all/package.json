@@ -1,8 +1,8 @@
 {
-  "name": "@mcro/screen",
+  "name": "@mcro/all",
   "private": true,
   "version": "4.0.0",
-  "main": "es6/Screen",
+  "main": "es6/index",
   "scripts": {
     "build": "build prod,dev,es6",
     "watch": "npm run build -- --watch"

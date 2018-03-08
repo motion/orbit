@@ -181,7 +181,6 @@ export default class Oracle {
       this.awaitingSocket.push({ action, data })
       return
     }
-    // console.log('screen.socketSend', action, data)
     // send format is `action data`
     try {
       const strData =
@@ -193,7 +192,7 @@ export default class Oracle {
           if (err.message.indexOf('CLOSED')) {
             this.removeSocket(id)
           } else {
-            console.log('Screen.socketSend Err', err.stack)
+            console.log('oracle.socketSend Err', err.stack)
           }
         }
       }

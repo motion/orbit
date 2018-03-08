@@ -4,7 +4,7 @@ npx nodemon \
   --quiet \
   --ignore src \
   --watch lib \
-  --watch $(realpath node_modules/@mcro/screen) \
+  --watch $(realpath node_modules/@mcro/all) \
   --watch $(realpath node_modules/@mcro/black) \
   --watch $(realpath node_modules/@mcro/constants)  \
   --watch $(realpath node_modules/@mcro/reaction)  \

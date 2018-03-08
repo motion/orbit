@@ -5,7 +5,7 @@ import * as Constants from '~/constants'
 import { promisifyAll } from 'sb-promisify'
 import sudoPrompt_ from 'sudo-prompt'
 import ScreenMaster from './screenMaster'
-import Screen from '@mcro/screen'
+import { App } from '@mcro/all'
 import * as Helpers from '~/helpers'
 import { store, debugState } from '@mcro/black'
 import global from 'global'
@@ -23,7 +23,7 @@ export default class Desktop {
   stores = null
 
   async start() {
-    global.App = this
+    global.Root = this
     this.setupHosts()
     const port = await this.server.start()
     log(`starting desktop on ${port}`)
@@ -39,7 +39,7 @@ export default class Desktop {
   }
 
   watchBrowserOpen() {
-    this.react(() => Screen.appState.openBrowser, url => Helpers.open(url))
+    this.react(() => App.state.openBrowser, url => Helpers.open(url))
   }
 
   dispose = async () => {

@@ -1,45 +1,45 @@
 import * as React from 'react'
-import { App } from '@mcro/reactron'
+import { App as AppWindow } from '@mcro/reactron'
 import ShortcutsStore from '~/stores/shortcutsStore'
 import { view, debugState } from '@mcro/black'
 import Tray from './views/Tray'
 import MenuItems from './views/MenuItems'
 import HighlightsWindow from './views/HighlightsWindow'
-import OraWindow from './views/OraWindow'
 import PeekWindow from './views/PeekWindow'
 import SettingsWindow from './views/SettingsWindow'
 import * as Helpers from '~/helpers'
-import Screen from '@mcro/screen'
+import { App, Electron, Desktop } from '@mcro/all'
 import global from 'global'
 import { screen } from 'electron'
-import * as Constants from '~/constants'
+import { debounce } from 'lodash'
+
+const log = debug('Electron')
 
 @view.provide({
   electron: class ElectronStore {
     error = null
     appRef = null
-    oraRef = null
     stores = null
     views = null
 
     willMount() {
-      global.App = this
+      global.Root = this
       debugState(({ stores, views }) => {
         this.stores = stores
         this.views = views
       })
 
       // setup screen
-      const { position, size } = Helpers.getAppSize()
+      const { position } = Helpers.getAppSize()
       const screenSize = screen.getPrimaryDisplay().workAreaSize
-      const oraPosition = [screenSize.width - Constants.ORA_WIDTH, 20]
-      Screen.start('electron', {
+
+      Electron.start({
         shouldHide: null,
         shouldShow: null,
         shouldPause: null,
         peekState: {},
-        focused: false,
         showSettings: false,
+        peekFocused: false,
         showDevTools: {
           app: false,
           peek: false,
@@ -47,22 +47,8 @@ import * as Constants from '~/constants'
           settings: true,
         },
         lastMove: Date.now(),
-        show: true,
         settingsPosition: position,
-        size,
         screenSize,
-        oraPosition,
-      })
-
-      new ShortcutsStore().emitter.on('shortcut', shortcut => {
-        console.log('emit shortcut', shortcut)
-        if (shortcut === 'Option+Space') {
-          if (Screen.desktopState.keyboard.option) {
-            console.log('avoid toggle while holding option')
-            return
-          }
-          this.toggleShown()
-        }
       })
 
       this.watchOptionPress()
@@ -70,45 +56,53 @@ import * as Constants from '~/constants'
 
     watchOptionPress = () => {
       // watch option hold
-      let lastKeyboard = {}
-      let justCleared = false
-      let optnEnter
-      let optnLeave
-      this.react(() => Screen.desktopState.keyboard, function reactToKeyboard(
-        keyboard,
-      ) {
-        if (!keyboard) return
-        clearTimeout(optnLeave)
-        const { option, optionCleared } = keyboard
-        if (Screen.appState.hidden) {
-          // HIDDEN
-          // clear last if not opened yet
-          if (optionCleared) {
-            clearTimeout(optnEnter)
-          }
-          // delay before opening on option
-          if (!lastKeyboard.option && option) {
-            optnEnter = setTimeout(this.showOra, 150)
-          }
-        } else {
-          // SHOWN
-          // dont toggle
-          if (optionCleared) {
-            justCleared = true
-            return
-          }
-          // an option event comes again after cleared saying its false
-          if (justCleared) {
-            justCleared = false
-            return
-          }
-          if (lastKeyboard.option && !option) {
-            optnLeave = setTimeout(this.hideOra, 40)
-          }
+      this.lastToggle = Date.now()
+
+      new ShortcutsStore().emitter.on('shortcut', shortcut => {
+        console.log('emit shortcut', shortcut)
+        if (shortcut === 'Option+Space') {
+          // if (Desktop.state.keyboard.option) {
+          //   console.log('avoid toggle while holding option')
+          //   return
+          // }
+          this.lastToggle = Date.now()
+          console.log('got a toggle')
+          this.toggleShown()
         }
-        lastKeyboard = keyboard
       })
+
+      this.react(
+        () => [Desktop.state.keyboard.option, Desktop.state.keyboard.optionUp],
+        this.handleOptionKey,
+      )
     }
+
+    // debounced so it comes after toggles
+    handleOptionKey = debounce(([option, optionUp]) => {
+      clearTimeout(this.optnEnter)
+      // just toggled, ignore this
+      if (this.lastToggle > option) {
+        log(`just toggled, avoid option handle`)
+        return
+      }
+      const isHolding = option > optionUp
+      log(
+        `handleOptionKey isHolding (${isHolding}) peekHidden (${
+          App.state.peekHidden
+        })`,
+      )
+      if (!isHolding) {
+        if (Electron.state.peekFocused) {
+          log('mouse is over peek, dont hide')
+        }
+        this.shouldHide()
+        return
+      }
+      if (App.state.peekHidden) {
+        // SHOW
+        this.optnEnter = setTimeout(this.shouldShow, 150)
+      }
+    }, 16)
 
     restart() {
       if (process.env.NODE_ENV === 'development') {
@@ -119,36 +113,28 @@ import * as Constants from '~/constants'
     }
 
     toggleShown = async () => {
-      if (Screen.appState.pinned) return
+      if (App.state.pinned) return
       if (!this.appRef) return
-      if (!Screen.appState.hidden) {
-        this.hideOra()
+      if (!App.state.peekHidden) {
+        this.shouldHide()
       } else {
-        this.showOra()
+        this.shouldShow()
+        this.appRef.focus()
       }
     }
 
-    async showOra() {
+    async shouldShow() {
+      log('shouldShow')
       this.appRef.show()
-      Screen.setState({ shouldShow: Date.now() })
-      // await Helpers.sleep(250) // animate
-      // this.appRef && this.appRef.focus()
-      // this.oraRef && this.oraRef.focus()
+      Electron.setState({ shouldShow: Date.now() })
     }
 
-    async hideOra() {
-      Screen.setState({ shouldHide: Date.now() })
-      // await Helpers.sleep(150) // animate
-      // if (
-      //   !Screen.state.settingsVisible &&
-      //   !Screen.appState.preventElectronHide
-      // ) {
-      //   this.appRef.hide()
-      // }
+    async shouldHide() {
+      log('shouldHide')
+      Electron.setState({ shouldHide: Date.now() })
     }
 
     handleAppRef = ref => ref && (this.appRef = ref.app)
-    handleOraRef = ref => (this.oraRef = ref)
     handleBeforeQuit = () => console.log('before quit')
     handleQuit = () => {
       console.log('handling quit')
@@ -157,7 +143,7 @@ import * as Constants from '~/constants'
   },
 })
 @view.electron
-export default class Root extends React.Component {
+export default class ElectronWindow extends React.Component {
   componentDidCatch(error) {
     console.error(error)
     this.props.electron.error = error
@@ -168,18 +154,17 @@ export default class Root extends React.Component {
       return null
     }
     return (
-      <App
+      <AppWindow
         onBeforeQuit={electron.handleBeforeQuit}
         onQuit={electron.handleQuit}
         ref={electron.handleAppRef}
       >
         <MenuItems />
         <HighlightsWindow />
-        {/* <OraWindow onRef={electron.handleOraRef} /> */}
-        <PeekWindow appPosition={Screen.state.oraPosition.slice(0)} />
+        <PeekWindow />
         {/* <SettingsWindow /> */}
         <Tray />
-      </App>
+      </AppWindow>
     )
   }
 }

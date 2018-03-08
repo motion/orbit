@@ -9,7 +9,7 @@ import SearchStore from '~/stores/searchStore'
 import { CurrentUser } from '~/app'
 import After from '~/views/after'
 import { isEqual } from 'lodash'
-import Screen from '@mcro/screen'
+import { Desktop, App } from '@mcro/all'
 
 const log = debug('ora')
 const useWorker = window.location.href.indexOf('?noWorker')
@@ -52,7 +52,7 @@ export default class OraStore {
   }
 
   get appState() {
-    const { appState } = Screen.desktopState
+    const { appState } = Desktop.state
     // dont treat itself as a appState source
     if (
       !appState ||
@@ -175,7 +175,7 @@ export default class OraStore {
 
   actions = {
     openSettings: () => {
-      Screen.setState({ openSettings: Date.now() })
+      App.openSettings()
     },
     down: e => {
       if (this.stack.col === 0) {

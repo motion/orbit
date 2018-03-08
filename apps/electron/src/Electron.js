@@ -32,6 +32,16 @@ const log = debug('Electron')
       Electron.start()
       Electron.setState({ settingsPosition: Helpers.getAppSize().position })
       this.watchOptionPress()
+
+      // clear last action on hide
+      this.react(
+        () => App.state.orbitHidden,
+        hidden => {
+          if (hidden) {
+            Electron.setState({ lastAction: null })
+          }
+        },
+      )
     }
 
     watchOptionPress = () => {
@@ -92,10 +102,10 @@ const log = debug('Electron')
     toggleShown = async () => {
       if (App.state.pinned) return
       if (!this.appRef) return
-      Electron.setState({ lastAction: 'TOGGLE' })
       if (!App.state.orbitHidden) {
         this.shouldHide()
       } else {
+        Electron.setState({ lastAction: 'TOGGLE' })
         this.shouldShow()
         this.appRef.focus()
       }

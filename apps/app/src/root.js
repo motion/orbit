@@ -31,7 +31,9 @@ const log = debug('root')
           }
           const isHidden = App.state.orbitHidden
           const willBeHidden = shouldHide > shouldShow
-          if (Electron.orbitState.focused && !isHidden && willBeHidden) {
+          // TODO implement this
+          const PEEK_IS_FOCUSED = false
+          if (PEEK_IS_FOCUSED && !isHidden && willBeHidden) {
             log(`Peek is focused, ignore hide`)
             return
           }

@@ -24,6 +24,7 @@ const log = debug('Electron')
 
     willMount() {
       global.Root = this
+      global.restart = this.restart
       debugState(({ stores, views }) => {
         this.stores = stores
         this.views = views
@@ -50,38 +51,32 @@ const log = debug('Electron')
         }
       })
 
+      let optnEnter
+
       this.react(
         () => [Desktop.state.keyboard.option, Desktop.state.keyboard.optionUp],
-        this.handleOptionKey,
+        debounce(([option, optionUp]) => {
+          clearTimeout(optnEnter)
+          const lastActionWasToggle = this.lastToggle > option
+          if (lastActionWasToggle) {
+            log(`just toggled, avoid option handle`)
+            return
+          }
+          const isHolding = option > optionUp
+          if (!isHolding) {
+            if (1 === 1 || App.peek.focused) {
+              log('PREVENT HIDE WHEN PEEK IS HOVERED')
+            }
+            this.shouldHide()
+            return
+          }
+          if (App.state.orbitHidden) {
+            // SHOW
+            optnEnter = setTimeout(this.shouldShow, 150)
+          }
+        }, 16),
       )
     }
-
-    // debounced so it comes after toggles
-    handleOptionKey = debounce(([option, optionUp]) => {
-      clearTimeout(this.optnEnter)
-      // just toggled, ignore this
-      if (this.lastToggle > option) {
-        log(`just toggled, avoid option handle`)
-        return
-      }
-      const isHolding = option > optionUp
-      log(
-        `handleOptionKey isHolding (${isHolding}) orbitHidden (${
-          App.state.orbitHidden
-        })`,
-      )
-      if (!isHolding) {
-        if (Electron.orbitState.focused) {
-          log('mouse is over peek, dont hide')
-        }
-        this.shouldHide()
-        return
-      }
-      if (App.state.orbitHidden) {
-        // SHOW
-        this.optnEnter = setTimeout(this.shouldShow, 150)
-      }
-    }, 16)
 
     restart() {
       if (process.env.NODE_ENV === 'development') {

@@ -2,6 +2,9 @@
 import Bridge from './helpers/Bridge'
 import { store } from '@mcro/black/store'
 import global from 'global'
+import { debounce } from 'lodash'
+import Electron from './Electron'
+import App from './App'
 
 const log = debug('Desktop')
 
@@ -56,6 +59,17 @@ class Desktop {
 
   get isHoldingOption() {
     return this.state.keyboard.option > this.state.keyboard.optionUp
+  }
+
+  updateKeyboard = newState =>
+    this.setState({ keyboard: { ...this.state.keyboard, ...newState } })
+
+  // only clear if necessary
+  clearOption = () => {
+    const { option, optionUp } = this.state
+    if (!option || !optionUp || option > optionUp) {
+      this.updateKeyboard({ optionUp: Date.now() })
+    }
   }
 }
 

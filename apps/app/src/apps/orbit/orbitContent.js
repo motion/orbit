@@ -6,7 +6,12 @@ import { App, Electron } from '@mcro/all'
 
 const getHoverProps = Helpers.hoverSettler({
   enterDelay: 600,
-  onHovered: ({ id, result, top, left, width, height }) => {
+  onHovered: target => {
+    if (!target) {
+      // hide
+      App.setState({ peekTarget: null })
+    }
+    const { id, result, top, left, width, height } = target
     const position = {
       // add orbits offset
       left: left + Electron.orbitState.position[0],
@@ -61,12 +66,13 @@ const Item = ({ title, type, subtitle, content, ...props }) => (
   </UI.Surface>
 )
 
+@view.attach('orbitStore')
 @view
 export default class OrbitContent {
-  render({ store }) {
+  render({ orbitStore }) {
     return (
       <list>
-        {store.results.map(result => (
+        {orbitStore.results.map(result => (
           <Item
             type="gmail"
             title={result.item.title}

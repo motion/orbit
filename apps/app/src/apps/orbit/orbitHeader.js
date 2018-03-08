@@ -6,22 +6,23 @@ import ControlButton from '~/views/controlButton'
 import { App } from '@mcro/all'
 // import * as Constants from '~/constants'
 
+@view.attach('orbitStore')
 @view
 export default class PeekHeader {
-  render({ store }) {
+  render({ orbitStore }) {
     return (
       <header $$draggable $showHeader={App.showHeader}>
-        <buttons $$row if={store.isTorn} css={{ marginRight: 14 }}>
-          <ControlButton icon="x" store={store} />
-          <ControlButton icon="y" store={store} background="#F6BE4F" />
-          <ControlButton icon="z" store={store} background="#62C554" />
+        <buttons $$row if={orbitStore.isTorn} css={{ marginRight: 14 }}>
+          <ControlButton icon="x" store={orbitStore} />
+          <ControlButton icon="y" store={orbitStore} background="#F6BE4F" />
+          <ControlButton icon="z" store={orbitStore} background="#62C554" />
         </buttons>
         <title>
           <UI.Input
             $orbitInput
-            value={store.query}
+            value={orbitStore.query}
             size={1.1}
-            onChange={store.onChangeQuery}
+            onChange={orbitStore.onChangeQuery}
           />
         </title>
       </header>

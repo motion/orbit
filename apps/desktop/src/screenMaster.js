@@ -217,16 +217,6 @@ export default class ScreenMaster {
       pgUp: 3657,
       pgDown: 3665,
     }
-    const updateKeyboard = newState =>
-      this.setState({ keyboard: { ...Desktop.state.keyboard, ...newState } })
-
-    // only clear if necessary
-    const clearOption = () => {
-      const { option, optionUp } = Desktop.state
-      if (!option || !optionUp || option > optionUp) {
-        updateKeyboard({ optionUp: Date.now() })
-      }
-    }
 
     // this is imperfect, iohook doesn't always match events perfectly
     // so in cases of errors, we clear it after a little delay
@@ -246,19 +236,19 @@ export default class ScreenMaster {
       clearDownKeysAfterPause()
       // log(`keydown: ${keycode}`)
       if (keycode === codes.esc) {
-        return updateKeyboard({ esc: Date.now() })
+        return Desktop.updateKeyboard({ esc: Date.now() })
       }
       const isOption = keycode === codes.option || keycode === codes.optionRight
       if (KeysDown.size > 1 && isOption) {
         log(`option: already holding ${KeysDown.size} keys`)
-        return clearOption()
+        return Desktop.clearOption()
       }
       if (isOption) {
         log('option down')
-        return updateKeyboard({ option: Date.now() })
+        return Desktop.updateKeyboard({ option: Date.now() })
       }
       if (KeysDown.has(codes.option)) {
-        return clearOption()
+        return Desktop.clearOption()
       }
       switch (keycode) {
         // clear highlights keys
@@ -276,7 +266,7 @@ export default class ScreenMaster {
       clearDownKeysAfterPause()
       // option off
       if (keycode === codes.option) {
-        clearOption()
+        Desktop.clearOption()
       }
     })
   }

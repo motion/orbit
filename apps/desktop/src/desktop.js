@@ -24,6 +24,7 @@ export default class Desktop {
 
   async start() {
     global.Root = this
+    global.restart = this.restart
     this.setupHosts()
     const port = await this.server.start()
     log(`starting desktop on ${port}`)

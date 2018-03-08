@@ -17,8 +17,9 @@ const background = 'rgba(0,0,0,0.9)'
 const orbitShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.05]]]
 const log = debug('orbit')
 
-@view({
-  store: class OrbitStore {
+@view.provide({
+  orbitStore: class OrbitStore {
+    searchStore = new Search()
     isTorn = false
     isPinned = false
     query = 'test'
@@ -30,11 +31,11 @@ const log = debug('orbit')
 
     search = debounce(async () => {
       const { results } = await this.searchStore.search.search(this.query)
+      if (!results) return
       this.results = results
     }, 150)
 
     willMount() {
-      this.searchStore = new Search()
       this.searchStore.onDocuments(PaulGraham)
       // react to do searches
       this.react(() => this.query, this.search, true)
@@ -67,8 +68,10 @@ const log = debug('orbit')
     }
   },
 })
+@view.attach('orbitStore')
+@view
 export default class OrbitPage {
-  render({ store }) {
+  render({ orbitStore }) {
     const arrowTowards = Electron.orbitState.arrowTowards || 'right'
     const arrowSize = 28
     let arrowStyle
@@ -99,7 +102,7 @@ export default class OrbitPage {
           {/* first is arrow (above), second is arrow shadow (below) */}
           {[1, 2].map(key => (
             <UI.Arrow
-              if={!store.isTorn}
+              if={!orbitStore.isTorn}
               key={key}
               size={arrowSize}
               towards={arrowTowards}
@@ -120,9 +123,9 @@ export default class OrbitPage {
             />
           ))}
           <content>
-            <OrbitHeader store={store} />
+            <OrbitHeader />
             <contentInner>
-              <OrbitContent store={store} />
+              <OrbitContent />
               <Knowledge if={App.state.knowledge} data={App.state.knowledge} />
             </contentInner>
           </content>

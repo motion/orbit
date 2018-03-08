@@ -64,7 +64,7 @@ export default class PeekPage {
     }
     return (
       <UI.Theme name="light">
-        <peek css={peekStyle} $peekVisible={!App.state.peekHidden}>
+        <peek css={peekStyle} $peekVisible={!!App.state.peekTarget}>
           {/* first is arrow (above), second is arrow shadow (below) */}
           {[1, 2].map(key => (
             <UI.Arrow

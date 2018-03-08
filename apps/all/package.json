@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@mcro/black": "*",
+    "@mcro/debug": "*",
     "reconnecting-websocket": "^3.2.2",
     "html5-websocket": "^2.0.2",
     "wait-port": "^0.2.2",

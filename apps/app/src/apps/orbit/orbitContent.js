@@ -2,11 +2,18 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import OrbitIcon from './orbitIcon'
 import * as Helpers from '~/helpers'
-import { App } from '@mcro/all'
+import { App, Electron } from '@mcro/all'
 
 const getHoverProps = Helpers.hoverSettler({
   enterDelay: 600,
-  onHovered: ({ id, result, ...position }) => {
+  onHovered: ({ id, result, top, left, width, height }) => {
+    const position = {
+      // add orbits offset
+      left: left + Electron.orbitState.position[0],
+      top: top + Electron.orbitState.position[1],
+      width,
+      height,
+    }
     console.log('hovered', id, position, result)
     App.setState({ peekTarget: { id, position } })
   },

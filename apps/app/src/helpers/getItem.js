@@ -2,8 +2,6 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
 import * as Helpers from '~/helpers'
-import * as Constants from '~/constants'
-import screenStore from '@mcro/all'
 
 const INTEGRATION_ICONS = {
   pin: 'pin',

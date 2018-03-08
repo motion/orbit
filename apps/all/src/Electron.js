@@ -13,8 +13,15 @@ class Electron {
     orbitState: {
       show: false,
       focused: false,
+      arrowTowards: null,
+      position: null,
+      size: null,
     },
-    peekState: {},
+    peekState: {
+      arrowTowards: null,
+      position: null,
+      size: null,
+    },
     showSettings: false,
     showDevTools: {
       orbit: false,

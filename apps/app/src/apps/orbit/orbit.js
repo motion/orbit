@@ -21,7 +21,7 @@ const log = debug('orbit')
   store: class OrbitStore {
     isTorn = false
     isPinned = false
-    query = ''
+    query = 'test'
     results = []
 
     onChangeQuery = e => {
@@ -37,7 +37,7 @@ const log = debug('orbit')
       this.searchStore = new Search()
       this.searchStore.onDocuments(PaulGraham)
       // react to do searches
-      this.react(() => this.query, this.search)
+      this.react(() => this.query, this.search, true)
       // react to hovered words
       let hoverShow
       this.react(

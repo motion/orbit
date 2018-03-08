@@ -101,9 +101,9 @@ const orbitPosition = ({ left, top, width, height }) => {
           const withinX = x > position[0] && x < position[0] + size[0]
           const withinY = y > position[1] && y < position[1] + size[1]
           const focused = withinX && withinY
-          Electron.setOrbitState({
-            focused,
-          })
+          if (focused !== Electron.orbitState.focused) {
+            Electron.setOrbitState({ focused })
+          }
         },
       )
       // separate react to only call actions if value changes

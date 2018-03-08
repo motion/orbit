@@ -210,6 +210,7 @@ export default class ScreenMaster {
     const codes = {
       esc: 1,
       option: 56,
+      optionRight: 3640,
       up: 57416,
       down: 57424,
       space: 57,
@@ -247,7 +248,7 @@ export default class ScreenMaster {
       if (keycode === codes.esc) {
         return updateKeyboard({ esc: Date.now() })
       }
-      const isOption = keycode === codes.option
+      const isOption = keycode === codes.option || keycode === codes.optionRight
       if (KeysDown.size > 1 && isOption) {
         log(`option: already holding ${KeysDown.size} keys`)
         return clearOption()

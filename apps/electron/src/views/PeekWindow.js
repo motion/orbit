@@ -8,17 +8,6 @@ import * as Helpers from '~/helpers'
 import { App, Desktop, Electron } from '@mcro/all'
 import * as Mobx from 'mobx'
 
-type PeekStateItem = {
-  key: number,
-  position: Array<number | boolean>,
-  size: Array<number | boolean>,
-  show: boolean,
-}
-
-type PeekWindowState = {
-  peeks: Array<PeekStateItem>,
-}
-
 type PeekTarget = {
   key: string,
   top: number,
@@ -37,12 +26,21 @@ const updatePeek = (peek, cb) => {
 
 const idFn = _ => _
 const PAD = 15
-const INITIAL_SIZE = [330, 420]
+const INITIAL_SIZE = [420, 380]
 const log = debug('PeekWindow')
+const windowProps = {
+  frame: false,
+  hasShadow: false,
+  background: '#00000000',
+  webPreferences: Constants.WEB_PREFERENCES,
+  transparent: true,
+}
 
-const peekPosition = ({ left, top, width, height }: PeekTarget) => {
+const peekPosition = (target: PeekTarget) => {
+  const { left, top, width } = target
+  log(`peekPosition from target`, target)
   const EDGE_PAD = 20
-  let [peekW] = INITIAL_SIZE
+  let [peekW, peekH] = INITIAL_SIZE
   const [screenW, screenH] = Helpers.getScreenSize()
   const leftSpace = left
   const rightSpace = screenW - (left + width)
@@ -61,13 +59,14 @@ const peekPosition = ({ left, top, width, height }: PeekTarget) => {
       peekW = rightSpace
     }
   }
-  if (height + y + EDGE_PAD > screenH) {
-    // height = screenH - EDGE_PAD - y
-    log(`too big, adjusting height ${height} screenH ${screenH}`)
+  if (peekH + y + EDGE_PAD > screenH) {
+    log(`too big, adjusting y ${(peekH, y, EDGE_PAD, screenH)}`)
+    y -= 200
   }
+  log('ok', x, y)
   return {
     position: [Math.round(x), Math.round(y)],
-    size: [peekW, height],
+    size: [peekW, peekH],
     arrowTowards: peekOnLeft ? 'right' : 'left',
   }
 }
@@ -75,18 +74,6 @@ const peekPosition = ({ left, top, width, height }: PeekTarget) => {
 @view.provide({
   store: class PeekStore {
     peekRefs = {}
-    get peek() {
-      return (
-        Electron.state.peekState.windows && Electron.state.peekState.windows[0]
-      )
-    }
-    get peekRef() {
-      return this.peekRefs[this.peek && this.peek.key]
-    }
-
-    willMount() {
-      this.watchMouseForPeekFocus()
-    }
 
     handlePeekRef = memoize(peek => ref => {
       if (!ref) return
@@ -97,29 +84,10 @@ const peekPosition = ({ left, top, width, height }: PeekTarget) => {
         this.peekRefs[peek.key].focus()
       }
     })
-
-    watchMouseForPeekFocus = () => {
-      // if mouse within bounds + not hidden, focus peek
-      this.react(
-        () => [Desktop.state.mousePosition, App.state.peekHidden],
-        ([{ x, y }, isHidden]) => {
-          if (isHidden) {
-            Electron.setPeekState({ focused: false })
-            return
-          }
-          if (!this.peek) return
-          const { position, size } = this.peek
-          const withinX = x > position[0] && x < position[0] + size[0]
-          const withinY = y > position[1] && y < position[1] + size[1]
-          const focused = withinX && withinY
-          Electron.setPeekState({ focused })
-        },
-      )
-    }
   },
 })
 @view.electron
-export default class PeekWindow extends React.Component<{}, PeekWindowState> {
+export default class PeekWindow {
   // ui related state/functionality
   peekKey = 0
   mounted = false
@@ -143,14 +111,14 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
   componentDidMount() {
     this.mounted = true
     this.positionPeekBasedOnTarget()
-    this.watch(function watchPeekClose() {
-      const key = App.state.peekClose
-      if (!key) return
-      const windows = Electron.peekState.windows.filter(
-        p => `${p.key}` !== `${key}`,
-      )
-      Electron.setPeekState({ windows })
-    })
+    // this.watch(function watchPeekClose() {
+    //   const key = App.state.peekClose
+    //   if (!key) return
+    //   const windows = Electron.peekState.windows.filter(
+    //     p => `${p.key}` !== `${key}`,
+    //   )
+    //   Electron.setPeekState({ windows })
+    // })
   }
 
   positionPeekBasedOnTarget = () => {
@@ -220,13 +188,6 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
   }
 
   render({ store }) {
-    const windowProps = {
-      frame: false,
-      hasShadow: false,
-      background: '#00000000',
-      webPreferences: Constants.WEB_PREFERENCES,
-      transparent: true,
-    }
     return (
       <React.Fragment>
         {Mobx.toJS(Electron.peekState.windows).map((peek, index) => {

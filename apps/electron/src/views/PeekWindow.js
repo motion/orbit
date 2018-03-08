@@ -40,13 +40,14 @@ const peekPosition = (target: PeekTarget) => {
   const { left, top, width } = target
   log(`peekPosition from target`, target)
   const EDGE_PAD = 20
+  const TOP_OFFSET = -20
   let [peekW, peekH] = INITIAL_SIZE
   const [screenW, screenH] = Helpers.getScreenSize()
   const leftSpace = left
   const rightSpace = screenW - (left + width)
   const peekOnLeft = leftSpace > rightSpace
   let x
-  let y = top
+  let y = top + TOP_OFFSET
   if (peekOnLeft) {
     x = left - peekW
     if (peekW > leftSpace) {
@@ -60,8 +61,8 @@ const peekPosition = (target: PeekTarget) => {
     }
   }
   if (peekH + y + EDGE_PAD > screenH) {
-    log(`too big, adjusting y ${(peekH, y, EDGE_PAD, screenH)}`)
-    y -= 200
+    log(`too tall`)
+    y = screenH - EDGE_PAD - peekH
   }
   log('ok', x, y)
   return {

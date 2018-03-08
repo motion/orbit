@@ -8,7 +8,6 @@ import PeekHeader from './peekHeader'
 const keyParam = (window.location.search || '').match(/key=(.*)/)
 const KEY = keyParam && keyParam[1]
 const SHADOW_PAD = 15
-const BORDER_RADIUS = 12
 const background = '#fff'
 const peekShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.1]]]
 const log = debug('peek')
@@ -68,7 +67,7 @@ export default class PeekPage {
           {/* first is arrow (above), second is arrow shadow (below) */}
           {[1, 2].map(key => (
             <UI.Arrow
-              if={!store.isTorn}
+              if={false && !store.isTorn}
               key={key}
               size={arrowSize}
               towards={arrowTowards}
@@ -124,7 +123,7 @@ export default class PeekPage {
       flex: 1,
       // border: [1, 'transparent'],
       background,
-      borderRadius: BORDER_RADIUS,
+      borderRadius: 25,
       boxShadow: [peekShadow],
       overflow: 'hidden',
       opacity: 1,

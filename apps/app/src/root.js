@@ -11,40 +11,34 @@ const log = debug('root')
 @view.provide({
   rootStore: class RootStore {
     willMount() {
-      App.start('app', {
-        highlightWords: {},
-        hoveredWord: null,
-        hoveredLine: null,
-        disablePeek: false,
-        pinned: false,
-        preventElectronHide: true,
-        contextMessage: 'Orbit',
-        closePeek: null,
-        peekHidden: true,
-      })
+      App.start()
 
       this.react(
         () => [
           Electron.state.shouldHide,
           Electron.state.shouldShow,
-          Desktop.state.lastScreenChange,
+          // Desktop.state.lastScreenChange,
         ],
-        function handleHidden([shouldHide, shouldShow, lastChange]) {
-          log(`handleHidden: ${shouldHide} ${shouldShow} ${lastChange}`)
+        function handleHidden([shouldHide, shouldShow]) {
+          log(`handleHidden: ${shouldHide} ${shouldShow}`)
           if (!shouldHide && !shouldShow) {
             return
           }
-          if (lastChange && lastChange > shouldShow) {
-            App.setState({ peekHidden: true })
-            return
-          }
-          const isHidden = App.state.peekHidden
+          // if (lastChange && lastChange > shouldShow) {
+          //   log(`lastChange, hide`)
+          //   App.setState({ orbitHidden: true })
+          //   return
+          // }
+          const isHidden = App.state.orbitHidden
           const willBeHidden = shouldHide > shouldShow
-          if (Electron.state.peekFocused && !isHidden && willBeHidden) {
+          // TODO implement this
+          const PEEK_IS_FOCUSED = false
+          if (PEEK_IS_FOCUSED && !isHidden && willBeHidden) {
             log(`Peek is focused, ignore hide`)
             return
           }
-          App.setState({ peekHidden: willBeHidden })
+          log(`orbitHidden: ${willBeHidden}`)
+          App.setState({ orbitHidden: willBeHidden })
         },
         true,
       )

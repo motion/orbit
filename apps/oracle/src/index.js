@@ -248,8 +248,8 @@ export default class Oracle {
       }
       // coming from swift
       socket.on('message', str => {
-        const { action, value, state } = JSON.parse(str)
         try {
+          const { action, value, state } = JSON.parse(str)
           if (state) {
             this.setState(state)
           }
@@ -261,8 +261,8 @@ export default class Oracle {
             this.onWindowChangeCB(action, value)
           }
         } catch (err) {
-          console.log('!&!&@*&@*error sending reply', action, 'value', value)
-          console.log(err)
+          console.log('Error receiving message')
+          console.log(err.stack)
         }
       })
       // handle events

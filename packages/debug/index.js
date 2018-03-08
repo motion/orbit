@@ -1,9 +1,16 @@
 const global = require('global')
 const stringify = require('stringify-object')
+const Mobx = require('mobx')
 
 if (!global.__shouldLog) {
   global.__shouldLog = {
     '*': true,
+  }
+}
+
+if (typeof window !== 'undefined' && !global.restart) {
+  global.restart = () => {
+    window.location = window.location
   }
 }
 
@@ -19,7 +26,8 @@ module.exports = function debug(namespace) {
   }
 }
 
-function nodeStringify(thing) {
+function nodeStringify(_thing) {
+  let thing = Mobx.toJS(_thing)
   if (!thing) {
     return `${thing}`
   }

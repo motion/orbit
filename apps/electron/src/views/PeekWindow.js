@@ -3,24 +3,51 @@ import * as React from 'react'
 import * as Constants from '~/constants'
 import { view } from '@mcro/black'
 import { Window } from '@mcro/reactron'
-import { isEqual, memoize } from 'lodash'
+import { memoize } from 'lodash'
 import * as Helpers from '~/helpers'
-import { App, Desktop, Electron, Swift } from '@mcro/all'
+import { App, Desktop, Electron } from '@mcro/all'
+import * as Mobx from 'mobx'
+
+type PeekTarget = {
+  key: string,
+  top: number,
+  left: number,
+  width: number,
+  height: number,
+}
+
+const updatePeek = (peek, cb) => {
+  const windows = [...Electron.peekState.windows]
+  const nextPeek = windows.find(x => x.key === peek.key)
+  cb(nextPeek)
+  log(`updatePeek: before`, peek, nextPeek)
+  Electron.setPeekState({ windows })
+}
 
 const idFn = _ => _
 const PAD = 15
-const INITIAL_SIZE = [330, 420]
+const INITIAL_SIZE = [420, 380]
 const log = debug('PeekWindow')
+const windowProps = {
+  frame: false,
+  hasShadow: false,
+  background: '#00000000',
+  webPreferences: Constants.WEB_PREFERENCES,
+  transparent: true,
+}
 
-const peekPosition = ({ left, top, width, height }: PeekTarget) => {
+const peekPosition = (target: PeekTarget) => {
+  const { left, top, width } = target
+  log(`peekPosition from target`, target)
   const EDGE_PAD = 20
-  let [peekW] = INITIAL_SIZE
+  const TOP_OFFSET = -20
+  let [peekW, peekH] = INITIAL_SIZE
   const [screenW, screenH] = Helpers.getScreenSize()
   const leftSpace = left
   const rightSpace = screenW - (left + width)
   const peekOnLeft = leftSpace > rightSpace
   let x
-  let y = top
+  let y = top + TOP_OFFSET
   if (peekOnLeft) {
     x = left - peekW
     if (peekW > leftSpace) {
@@ -33,51 +60,21 @@ const peekPosition = ({ left, top, width, height }: PeekTarget) => {
       peekW = rightSpace
     }
   }
-  if (height + y + EDGE_PAD > screenH) {
-    // height = screenH - EDGE_PAD - y
-    log(`too big, adjusting height ${height} screenH ${screenH}`)
+  if (peekH + y + EDGE_PAD > screenH) {
+    log(`too tall`)
+    y = screenH - EDGE_PAD - peekH
   }
+  log('ok', x, y)
   return {
     position: [Math.round(x), Math.round(y)],
-    size: [peekW, height],
+    size: [peekW, peekH],
     arrowTowards: peekOnLeft ? 'right' : 'left',
   }
-}
-
-type PeekStateItem = {
-  key: number,
-  position: Array<number | boolean>,
-  size: Array<number | boolean>,
-  show: boolean,
-}
-
-type PeekWindowState = {
-  peeks: Array<PeekStateItem>,
-}
-
-type PeekTarget = {
-  key: string,
-  top: number,
-  left: number,
-  width: number,
-  height: number,
 }
 
 @view.provide({
   store: class PeekStore {
     peekRefs = {}
-    get peek() {
-      return (
-        Electron.state.peekState.windows && Electron.state.peekState.windows[0]
-      )
-    }
-    get peekRef() {
-      return this.peekRefs[this.peek && this.peek.key]
-    }
-
-    willMount() {
-      this.watchMouseForPeekFocus()
-    }
 
     handlePeekRef = memoize(peek => ref => {
       if (!ref) return
@@ -88,133 +85,57 @@ type PeekTarget = {
         this.peekRefs[peek.key].focus()
       }
     })
-
-    get linesBoundingBox() {
-      const { linePositions } = Desktop.state
-      if (!linePositions) return null
-      let left = 100000
-      let maxX = 0
-      let top = 100000
-      let maxY = 0
-      // found place for window to go
-      for (const [lx, ly, lw, lh] of linePositions) {
-        if (lx + lw > maxX) maxX = lx + lw
-        if (lx < left) left = lx
-        if (ly < top) top = ly
-        if (ly + lh > maxY) maxY = ly + lh
-      }
-      // maxX should never be past right edge of window frame
-      // this fixes logical issues in line finding from swift for now
-      if (Desktop.state.appState) {
-        const { offset, bounds } = Desktop.state.appState
-        maxX = Math.min(
-          offset[0] + bounds[0] - PAD * 2 /* reverse linepad */,
-          maxX,
-        )
-      }
-      return { left, top, width: maxX - left, height: maxY - top }
-    }
-
-    watchMouseForPeekFocus = () => {
-      // if mouse within bounds + not hidden, focus peek
-      this.react(
-        () => [Desktop.state.mousePosition, App.state.peekHidden],
-        ([{ x, y }, isHidden]) => {
-          if (isHidden) {
-            Electron.setState({ peekFocused: false })
-            return
-          }
-          if (!this.peek) return
-          const { position, size } = this.peek
-          const withinX = x > position[0] && x < position[0] + size[0]
-          const withinY = y > position[1] && y < position[1] + size[1]
-          const peekFocused = withinX && withinY
-          Electron.setState({ peekFocused })
-        },
-      )
-
-      // separate react to only call actions if value changes
-      this.react(
-        () => Electron.state.peekFocused,
-        peekFocused => {
-          if (peekFocused) {
-            this.peekRef && this.peekRef.focus()
-          } else {
-            Swift.defocus()
-          }
-        },
-      )
-    }
   },
 })
 @view.electron
-export default class PeekWindow extends React.Component<{}, PeekWindowState> {
+export default class PeekWindow {
   // ui related state/functionality
   peekKey = 0
   mounted = false
   isAnimatingPeek = true
-  state = {
-    windows: [
-      {
-        key: this.peekKey,
-        size: INITIAL_SIZE,
-        position: [0, 0],
-        show: false,
-      },
-    ],
-    lastTarget: null,
-    wasShowing: false,
+
+  componentWillMount() {
+    Electron.setPeekState({
+      windows: [
+        {
+          key: this.peekKey,
+          size: INITIAL_SIZE,
+          position: [0, 0],
+          show: false,
+        },
+      ],
+      lastTarget: null,
+      wasShowing: false,
+    })
   }
 
   componentDidMount() {
     this.mounted = true
-    this.positionPeekBasedOnWindow()
-    this.watch(function watchPeekClose() {
-      const key = App.state.peekClose
-      if (!key) return
-      const windows = this.state.windows.filter(p => `${p.key}` !== `${key}`)
-      this.setState({ windows })
-    })
+    this.positionPeekBasedOnTarget()
+    // this.watch(function watchPeekClose() {
+    //   const key = App.state.peekClose
+    //   if (!key) return
+    //   const windows = Electron.peekState.windows.filter(
+    //     p => `${p.key}` !== `${key}`,
+    //   )
+    //   Electron.setPeekState({ windows })
+    // })
   }
 
-  componentWillUpdate(nextProps, nextState) {
-    if (!isEqual(nextState, this.state)) {
-      Electron.setState({ peekState: nextState })
-    }
-  }
-
-  positionPeekBasedOnWindow = () => {
-    const appTarget = ({ offset, bounds }) => {
-      if (!offset || !bounds) return null
-      const [left, top] = offset
-      const [width, height] = bounds
-      return { top, left, width, height }
-    }
+  positionPeekBasedOnTarget = () => {
     this.react(
-      () => [
-        appTarget(Desktop.state.appState || {}),
-        this.props.store.linesBoundingBox,
-      ],
-      ([appBB, linesBB]) => {
-        // prefer using lines bounding box, fall back to app
-        const box = linesBB || appBB
-        if (!box) return
-        const newProps = peekPosition(box)
-        if (linesBB) {
-          // add padding
-          newProps.position[0] += newProps.arrowTowards === 'left' ? PAD : -PAD
-        } else {
-          // remove padding
-          newProps.position[0] += newProps.arrowTowards === 'right' ? PAD : -PAD
-        }
-        const [peek, ...rest] = this.state.windows
-        const newPeek = {
-          ...peek,
-          ...newProps,
-        }
-        if (!isEqual(newPeek, peek)) {
-          this.setState({ windows: [newPeek, ...rest] })
-        }
+      () => App.state.peekTarget,
+      peekTarget => {
+        if (!peekTarget) return
+        updatePeek(Electron.currentPeek, peek => {
+          let { position, size, arrowTowards } = peekPosition(
+            peekTarget.position,
+          )
+          position[0] += arrowTowards === 'right' ? PAD : -PAD
+          peek.position = position
+          peek.size = size
+          peek.arrowToward = arrowTowards
+        })
       },
     )
   }
@@ -223,8 +144,9 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
 
   handleReadyToShow = memoize(peek => () => {
     if (!peek.show) {
-      peek.show = true
-      this.setState({ windows: this.state.windows })
+      updatePeek(peek, peek => {
+        peek.show = true
+      })
     }
   })
 
@@ -232,55 +154,44 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
     if (!this.mounted) {
       return
     }
-    if (!this.isAnimatingPeek && !peek.isTorn) {
-      this.isAnimatingPeek = true // bug test fix
-      peek.position = newPosition
-      this.tearPeek()
-    } else {
-      peek.position = newPosition
-      this.setState({})
-    }
+    log(`handlePeekMove`, newPosition)
+    // updatePeek(peek, peek => {
+    //   if (!this.isAnimatingPeek && !peek.isTorn) {
+    //     this.isAnimatingPeek = true // bug test fix
+    //     peek.position = newPosition
+    //     this.tearPeek()
+    //   } else {
+    //     peek.position = newPosition
+    //   }
+    // })
   })
 
   tearPeek = () => {
-    if (true) {
-      console.log('want to tear this damn peek 123')
-      return
-    }
-    const [peek, ...otherPeeks] = this.state.windows
-    this.peekKey++
-    const windows = [
-      // new hidden peek window
-      {
-        ...peek,
-        key: this.peekKey,
-        show: false,
-      },
-      // current peek
-      {
-        ...peek,
-        show: true,
-      },
-      // keep the rest
-      ...otherPeeks,
-    ]
-    this.setState({ windows })
+    console.log('tearPeek')
+    // const [peek, ...otherPeeks] = Electron.peekState.windows
+    // this.peekKey++
+    // const windows = [
+    //   // new hidden peek window
+    //   {
+    //     ...peek,
+    //     key: this.peekKey,
+    //     show: false,
+    //   },
+    //   // current peek
+    //   {
+    //     ...peek,
+    //     show: true,
+    //   },
+    //   // keep the rest
+    //   ...otherPeeks,
+    // ]
+    // Electron.setPeekState({ windows })
   }
 
   render({ store }) {
-    if (App.state.disablePeek) {
-      return null
-    }
-    const windowProps = {
-      frame: false,
-      hasShadow: false,
-      background: '#00000000',
-      webPreferences: Constants.WEB_PREFERENCES,
-      transparent: true,
-    }
     return (
       <React.Fragment>
-        {this.state.windows.map((peek, index) => {
+        {Mobx.toJS(Electron.peekState.windows).map((peek, index) => {
           // peek always in front
           const isAttached = index === 0
           return (
@@ -292,7 +203,7 @@ export default class PeekWindow extends React.Component<{}, PeekWindowState> {
                   : peek.showDevTools
               }
               alwaysOnTop={isAttached || peek.alwaysOnTop}
-              animatePosition={this.state.wasShowing}
+              animatePosition={Electron.peekState.wasShowing}
               show={peek.show}
               file={`${Constants.APP_URL}/peek?key=${peek.key}`}
               ref={isAttached ? store.handlePeekRef(peek) : idFn}

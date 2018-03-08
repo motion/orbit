@@ -19,7 +19,7 @@ export default function hoverSettler({ enterDelay, onHovered }) {
   const setHovered = nextHovered => {
     if (!isEqual(nextHovered, lastHovered)) {
       // 🐛 object spread fixes comparison bugs later on
-      lastHovered = { ...nextHovered }
+      lastHovered = nextHovered ? { ...nextHovered } : nextHovered
       log('setHovered', nextHovered)
       if (onHovered) {
         onHovered(nextHovered)

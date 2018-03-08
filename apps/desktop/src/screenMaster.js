@@ -93,7 +93,7 @@ export default class ScreenMaster {
     })
     this.oracle.onWindowChange((event, value) => {
       if (event === 'ScrollEvent') {
-        this.resetHighlights()
+        this.lastScreenChange()
         this.rescanApp()
         return
       }
@@ -114,7 +114,7 @@ export default class ScreenMaster {
           const shouldClear =
             !PREVENT_CLEAR[this.curAppName] && !PREVENT_CLEAR[nextState.name]
           if (hasNewID && shouldClear) {
-            this.resetHighlights()
+            this.lastScreenChange()
           }
           // update these now so we can use to track
           this.curAppID = id
@@ -145,7 +145,7 @@ export default class ScreenMaster {
     this.oracle.onBoxChanged(count => {
       if (!Desktop.state.ocrWords) {
         log('RESET oracle boxChanged (App)')
-        this.resetHighlights()
+        this.lastScreenChange()
         if (this.isWatching === 'OCR') {
           log('reset is watching ocr to set back to app')
           this.rescanApp()
@@ -159,7 +159,7 @@ export default class ScreenMaster {
         } else {
           // else just clear it all
           log('RESET oracle boxChanged (NOTTTTTTT App)')
-          this.resetHighlights()
+          this.lastScreenChange()
           this.rescanApp()
         }
       }
@@ -182,13 +182,13 @@ export default class ScreenMaster {
 
   async restartScreen() {
     log('restartScreen')
-    this.resetHighlights()
+    this.lastScreenChange()
     await this.oracle.stop()
     this.watchBounds(this.watchSettings.name, this.watchSettings.settings)
     await this.oracle.start()
   }
 
-  resetHighlights = () => {
+  lastScreenChange = () => {
     if (PREVENT_CLEAR[Desktop.state.appState.name]) {
       return
     }
@@ -196,7 +196,7 @@ export default class ScreenMaster {
       lastScreenChange: Date.now(),
     })
     // after fast clear, empty data
-    this.clearOCRState()
+    setTimeout(this.clearOCRState)
   }
 
   clearOCRState = debounce(() => {
@@ -210,21 +210,12 @@ export default class ScreenMaster {
     const codes = {
       esc: 1,
       option: 56,
+      optionRight: 3640,
       up: 57416,
       down: 57424,
       space: 57,
       pgUp: 3657,
       pgDown: 3665,
-    }
-    const updateKeyboard = newState =>
-      this.setState({ keyboard: { ...Desktop.state.keyboard, ...newState } })
-
-    // only clear if necessary
-    const clearOption = () => {
-      const { option, optionUp } = Desktop.state
-      if (!option || !optionUp || option > optionUp) {
-        updateKeyboard({ optionUp: Date.now() })
-      }
     }
 
     // this is imperfect, iohook doesn't always match events perfectly
@@ -245,20 +236,19 @@ export default class ScreenMaster {
       clearDownKeysAfterPause()
       // log(`keydown: ${keycode}`)
       if (keycode === codes.esc) {
-        return updateKeyboard({ esc: Date.now() })
+        return Desktop.updateKeyboard({ esc: Date.now() })
       }
-      const isOption = keycode === codes.option
+      const isOption = keycode === codes.option || keycode === codes.optionRight
       if (KeysDown.size > 1 && isOption) {
         log(`option: already holding ${KeysDown.size} keys`)
-        return clearOption()
+        return Desktop.clearOption()
       }
       if (isOption) {
         log('option down')
-        return updateKeyboard({ option: Date.now() })
+        return Desktop.updateKeyboard({ option: Date.now() })
       }
       if (KeysDown.has(codes.option)) {
-        log('pressed key after option')
-        return clearOption()
+        return Desktop.clearOption()
       }
       switch (keycode) {
         // clear highlights keys
@@ -266,7 +256,7 @@ export default class ScreenMaster {
         case codes.down:
         case codes.pgUp:
         case codes.pgDown:
-          return this.resetHighlights()
+          return this.lastScreenChange()
       }
     })
 
@@ -276,7 +266,7 @@ export default class ScreenMaster {
       clearDownKeysAfterPause()
       // option off
       if (keycode === codes.option) {
-        clearOption()
+        Desktop.clearOption()
       }
     })
   }
@@ -330,7 +320,7 @@ export default class ScreenMaster {
     const { name, offset, bounds } = Desktop.state.appState
     if (PREVENT_SCANNING[name] || PREVENT_APP_STATE[name]) return
     if (!offset || !bounds) return
-    this.resetHighlights()
+    this.lastScreenChange()
     // we are watching the whole app for words
     await this.watchBounds('App', {
       fps: 10,
@@ -395,7 +385,7 @@ export default class ScreenMaster {
 
   async dispose() {
     // clear highlights on quit
-    this.resetHighlights()
+    this.lastScreenChange()
     if (this.oracle) {
       await this.oracle.stop()
     }

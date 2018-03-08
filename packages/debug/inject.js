@@ -1,8 +1,6 @@
 const debug = require('./index')
 const global = require('global')
 
-if (global.debug) {
-  throw new Error(`Already defined debug!`)
+if (!global.debug) {
+  global.debug = debug
 }
-
-global.debug = debug

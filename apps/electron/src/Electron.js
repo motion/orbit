@@ -106,6 +106,8 @@ const log = debug('Electron')
         this.shouldHide()
       } else {
         Electron.setState({ lastAction: 'TOGGLE' })
+        // focus orbit on toggle show
+        Electron.setOrbitState({ focused: true })
         this.shouldShow()
         this.appRef.focus()
       }

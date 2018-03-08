@@ -97,6 +97,8 @@ const orbitPosition = ({ left, top, width, height }) => {
             return
           }
           if (!this.orbitRef) return
+          // avoid defocusing if its pinned
+          if (Electron.state.lastAction === 'TOGGLE') return
           const { position, size } = Electron.orbitState
           const withinX = x > position[0] && x < position[0] + size[0]
           const withinY = y > position[1] && y < position[1] + size[1]

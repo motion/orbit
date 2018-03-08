@@ -123,7 +123,7 @@ export default class PeekPage {
       flex: 1,
       // border: [1, 'transparent'],
       background,
-      borderRadius: 25,
+      borderRadius: 45,
       boxShadow: [peekShadow],
       overflow: 'hidden',
       opacity: 1,

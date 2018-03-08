@@ -61,7 +61,7 @@ class AppStore {
   }
 
   get showHeader() {
-    return Electron.orbitState.focused || Electron.state.lastAction === 'TOGGLE'
+    return Electron.orbitState.focused || Electron.orbitState.pinned
   }
 
   togglePeek = () => {

@@ -6,11 +6,11 @@ import Tray from './views/Tray'
 import MenuItems from './views/MenuItems'
 import HighlightsWindow from './views/HighlightsWindow'
 import PeekWindow from './views/PeekWindow'
-import SettingsWindow from './views/SettingsWindow'
+import OrbitWindow from './views/OrbitWindow'
+// import SettingsWindow from './views/SettingsWindow'
 import * as Helpers from '~/helpers'
 import { App, Electron, Desktop } from '@mcro/all'
 import global from 'global'
-import { screen } from 'electron'
 import { debounce } from 'lodash'
 
 const log = debug('Electron')
@@ -24,34 +24,24 @@ const log = debug('Electron')
 
     willMount() {
       global.Root = this
+      global.restart = this.restart
       debugState(({ stores, views }) => {
         this.stores = stores
         this.views = views
       })
-
-      // setup screen
-      const { position } = Helpers.getAppSize()
-      const screenSize = screen.getPrimaryDisplay().workAreaSize
-
-      Electron.start({
-        shouldHide: null,
-        shouldShow: null,
-        shouldPause: null,
-        peekState: {},
-        showSettings: false,
-        peekFocused: false,
-        showDevTools: {
-          app: false,
-          peek: false,
-          highlights: false,
-          settings: true,
-        },
-        lastMove: Date.now(),
-        settingsPosition: position,
-        screenSize,
-      })
-
+      Electron.start()
+      Electron.setState({ settingsPosition: Helpers.getAppSize().position })
       this.watchOptionPress()
+
+      // clear last action on hide
+      this.react(
+        () => App.state.orbitHidden,
+        hidden => {
+          if (hidden) {
+            Electron.setState({ lastAction: null })
+          }
+        },
+      )
     }
 
     watchOptionPress = () => {
@@ -59,50 +49,47 @@ const log = debug('Electron')
       this.lastToggle = Date.now()
 
       new ShortcutsStore().emitter.on('shortcut', shortcut => {
-        console.log('emit shortcut', shortcut)
         if (shortcut === 'Option+Space') {
-          // if (Desktop.state.keyboard.option) {
-          //   console.log('avoid toggle while holding option')
-          //   return
-          // }
-          this.lastToggle = Date.now()
-          console.log('got a toggle')
+          // if were holding peek
+          if (
+            Desktop.isHoldingOption &&
+            Electron.state.lastAction !== 'TOGGLE' &&
+            !App.state.orbitHidden
+          ) {
+            log('avoid toggle. TODO: make this "pin" it open')
+            return
+          }
           this.toggleShown()
         }
       })
 
+      let optnEnter
       this.react(
-        () => [Desktop.state.keyboard.option, Desktop.state.keyboard.optionUp],
-        this.handleOptionKey,
+        () => Desktop.isHoldingOption,
+        debounce(isHoldingOption => {
+          clearTimeout(optnEnter)
+          if (Electron.state.lastAction === 'TOGGLE') {
+            log(`just toggled, avoid option handle`)
+            return
+          }
+          if (!isHoldingOption) {
+            // TODO
+            if (1 === 1 || App.state.peekFocused) {
+              log('TODO: PREVENT HIDE WHEN (PEEK) IS HOVERED')
+            }
+            this.shouldHide()
+            return
+          }
+          if (App.state.orbitHidden) {
+            // SHOW
+            optnEnter = setTimeout(() => {
+              Electron.setState({ lastAction: 'HOLD' })
+              this.shouldShow()
+            }, 150)
+          }
+        }, 16),
       )
     }
-
-    // debounced so it comes after toggles
-    handleOptionKey = debounce(([option, optionUp]) => {
-      clearTimeout(this.optnEnter)
-      // just toggled, ignore this
-      if (this.lastToggle > option) {
-        log(`just toggled, avoid option handle`)
-        return
-      }
-      const isHolding = option > optionUp
-      log(
-        `handleOptionKey isHolding (${isHolding}) peekHidden (${
-          App.state.peekHidden
-        })`,
-      )
-      if (!isHolding) {
-        if (Electron.state.peekFocused) {
-          log('mouse is over peek, dont hide')
-        }
-        this.shouldHide()
-        return
-      }
-      if (App.state.peekHidden) {
-        // SHOW
-        this.optnEnter = setTimeout(this.shouldShow, 150)
-      }
-    }, 16)
 
     restart() {
       if (process.env.NODE_ENV === 'development') {
@@ -115,9 +102,10 @@ const log = debug('Electron')
     toggleShown = async () => {
       if (App.state.pinned) return
       if (!this.appRef) return
-      if (!App.state.peekHidden) {
+      if (!App.state.orbitHidden) {
         this.shouldHide()
       } else {
+        Electron.setState({ lastAction: 'TOGGLE' })
         this.shouldShow()
         this.appRef.focus()
       }
@@ -131,7 +119,7 @@ const log = debug('Electron')
 
     async shouldHide() {
       log('shouldHide')
-      Electron.setState({ shouldHide: Date.now() })
+      Electron.setState({ shouldHide: Date.now(), lastAction: null })
     }
 
     handleAppRef = ref => ref && (this.appRef = ref.app)
@@ -160,8 +148,9 @@ export default class ElectronWindow extends React.Component {
         ref={electron.handleAppRef}
       >
         <MenuItems />
-        <HighlightsWindow />
+        {/* <HighlightsWindow /> */}
         <PeekWindow />
+        <OrbitWindow />
         {/* <SettingsWindow /> */}
         <Tray />
       </AppWindow>

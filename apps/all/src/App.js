@@ -10,19 +10,17 @@ class App {
     highlightWords: {},
     hoveredWord: null,
     hoveredLine: null,
-    peekHidden: null,
-    preventElectronHide: null,
-    contextMessage: null,
+    preventElectronHide: true,
+    contextMessage: 'Orbit',
     closePeek: null,
-    disablePeek: null,
-  }
-
-  get setState() {
-    return Bridge._setState
+    orbitHidden: true,
+    knowledge: null,
+    peekTarget: null,
   }
 
   start(options) {
-    return Bridge.start(this, this.state, options)
+    Bridge.start(this, this.state, options)
+    this.setState = Bridge.setState
   }
 
   get hoveredWordName() {
@@ -30,7 +28,7 @@ class App {
   }
 
   get showHeader() {
-    return Electron.state.peekFocused
+    return Electron.orbitState.focused || Electron.state.lastAction === 'TOGGLE'
   }
 
   togglePeek = () => {

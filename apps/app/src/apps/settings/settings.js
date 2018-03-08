@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import PaneView from '~/apps/ora/panes/pane'
+// import PaneView from '~/apps/ora/panes/pane'
 import * as CategoryPanes from './panes'
 import * as Constants from '~/constants'
 
@@ -105,7 +105,7 @@ export default class SettingsPage {
             }}
           />
           <sidebar $$draggable css={{ paddingTop: 36, width: 280 }}>
-            <PaneView
+            {/* <PaneView
               disableGlow
               transparent
               items={store.items}
@@ -115,7 +115,7 @@ export default class SettingsPage {
                 groupBy: 'category',
                 itemProps,
               }}
-            />
+            /> */}
           </sidebar>
           <UI.Theme name="light">
             <content>

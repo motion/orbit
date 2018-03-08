@@ -1,88 +1,30 @@
 // @flow
 import * as React from 'react'
-import { debounce } from 'lodash'
 import { view, watch } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { App, Desktop, Electron } from '@mcro/all'
-import Knowledge from './knowledge'
-import PeekContent from './peekContent'
-import PaulGraham from '~/stores/language/pg.json'
-import Search from '@mcro/search'
+import { App, Electron } from '@mcro/all'
 import PeekHeader from './peekHeader'
 
 const keyParam = (window.location.search || '').match(/key=(.*)/)
 const KEY = keyParam && keyParam[1]
 const SHADOW_PAD = 15
-const BORDER_RADIUS = 12
-// const BORDER_COLOR = `rgba(255,255,255,0.25)`
-const background = 'rgba(0,0,0,0.9)'
-const peekShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.05]]]
+const background = '#fff'
+const peekShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.1]]]
 const log = debug('peek')
 
 @view({
   store: class PeekStore {
     isTorn = false
     isPinned = false
-    query = ''
-    results = []
 
-    onChangeQuery = e => {
-      this.query = e.target.value
-    }
-
-    search = debounce(async () => {
-      const { results } = await this.searchStore.search.search(this.query)
-      this.results = results
-    }, 150)
-
-    willMount() {
-      this.searchStore = new Search()
-      this.searchStore.onDocuments(PaulGraham)
-      // react to do searches
-      this.react(() => this.query, this.search)
-      // react to hovered words
-      let hoverShow
-      this.react(
-        () => App.hoveredWordName,
-        word => {
-          if (Desktop.isHoldingOption) {
-            return
-          }
-          clearTimeout(hoverShow)
-          const peekHidden = !word
-          hoverShow = setTimeout(() => {
-            console.log('sethidden based on word', peekHidden)
-            App.setState({ peekHidden })
-          }, peekHidden ? 50 : 500)
-        },
-      )
-      // this.react(
-      //   () => [Electron.state.peekFocused, Desktop.isHoldingOption],
-      //   ([peekFocused, isHoldingOption]) => {
-      //     if (!peekFocused && !isHoldingOption) {
-      //       log(`hidePeek after let go`)
-      //       App.setState({ peekHidden: true })
-      //     }
-      //   },
-      // )
-      // react to close peek
-      this.react(
-        () => Desktop.state.keyboard.esc,
-        () => {
-          if (!App.state.peekHidden) {
-            log(`hidePeek on esc`)
-            App.setState({ peekHidden: true })
-          }
-        },
-      )
-    }
+    willMount() {}
 
     @watch
     watchTear = () => {
       if (this.isTorn) return
-      const { peekWindow } = Electron
-      if (peekWindow && peekWindow.isTorn) {
-        console.log('tearing!', peekWindow)
+      const { orbitState } = Electron
+      if (orbitState && orbitState.isTorn) {
+        console.log('tearing!', orbitState)
         this.isTorn = true
       }
     }
@@ -94,8 +36,8 @@ const log = debug('peek')
 })
 export default class PeekPage {
   render({ store }) {
-    const { peekWindow } = Electron
-    const arrowTowards = (peekWindow && peekWindow.arrowTowards) || 'right'
+    const { orbit } = Electron
+    const arrowTowards = (orbit && orbit.arrowTowards) || 'right'
     const arrowSize = 28
     let arrowStyle
     let peekStyle
@@ -120,12 +62,12 @@ export default class PeekPage {
         break
     }
     return (
-      <UI.Theme name="dark">
-        <peek css={peekStyle} $peekVisible={!App.state.peekHidden}>
+      <UI.Theme name="light">
+        <peek css={peekStyle} $peekVisible={!!App.state.peekTarget}>
           {/* first is arrow (above), second is arrow shadow (below) */}
           {[1, 2].map(key => (
             <UI.Arrow
-              if={!store.isTorn}
+              if={false && !store.isTorn}
               key={key}
               size={arrowSize}
               towards={arrowTowards}
@@ -147,10 +89,7 @@ export default class PeekPage {
           ))}
           <content>
             <PeekHeader store={store} />
-            <contentInner>
-              <PeekContent store={store} />
-              <Knowledge if={App.state.knowledge} data={App.state.knowledge} />
-            </contentInner>
+            <contentInner>hello world</contentInner>
           </content>
         </peek>
       </UI.Theme>
@@ -184,11 +123,11 @@ export default class PeekPage {
       flex: 1,
       // border: [1, 'transparent'],
       background,
-      borderRadius: BORDER_RADIUS,
+      borderRadius: 25,
+      boxShadow: [peekShadow],
       overflow: 'hidden',
       opacity: 1,
       transition: 'background ease-in 200ms',
-      // boxShadow: [peekShadow, `0 0 0 0.5px ${BORDER_COLOR}`],
     },
   }
 }

@@ -8,5 +8,8 @@
   "dependencies": {
     "global": "4.3.2",
     "stringify-object": "^3.2.2"
+  },
+  "peerDependencies": {
+    "mobx": "*"
   }
 }

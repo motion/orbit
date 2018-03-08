@@ -5,34 +5,56 @@ import global from 'global'
 
 @store
 class Electron {
-  get setState() {
-    return Bridge._setState
-  }
-
   state = {
-    showSettings: null,
-    showDevTools: {},
-    lastMove: null,
-    settingsPosition: [],
-    screenSize: [],
-    peekFocused: false,
-    peekState: {},
     shouldHide: null,
     shouldShow: null,
     shouldPause: null,
+    settingsPosition: [], // todo: settingsState.position
+    lastAction: null,
+    orbitState: {
+      show: false,
+      focused: false,
+      arrowTowards: null,
+      position: null,
+      size: null,
+    },
+    peekState: {
+      arrowTowards: null,
+      position: null,
+      size: null,
+    },
+    showSettings: false,
+    showDevTools: {
+      orbit: false,
+      peek: false,
+      highlights: false,
+      settings: true,
+    },
   }
 
   start(options) {
-    return Bridge.start(this, this.state, options)
+    Bridge.start(this, this.state, options)
+    this.setState = Bridge.setState
   }
 
-  get peekWindow() {
-    return (
-      (this.state.peekState &&
-        this.state.peekState.windows &&
-        this.state.peekState.windows[0]) ||
-      null
-    )
+  get orbitState() {
+    return this.state.orbitState
+  }
+
+  get peekState() {
+    return this.state.peekState
+  }
+
+  get currentPeek() {
+    return this.peekState.windows[0]
+  }
+
+  setOrbitState = nextState => {
+    this.setState({ orbitState: { ...this.state.orbitState, ...nextState } })
+  }
+
+  setPeekState = nextState => {
+    this.setState({ peekState: { ...this.state.peekState, ...nextState } })
   }
 }
 

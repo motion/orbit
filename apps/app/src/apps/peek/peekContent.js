@@ -50,7 +50,7 @@ export default class PeekContent {
   render({ store }) {
     return (
       <list>
-        {store.results.map(result => (
+        {(store.results || []).map(result => (
           <Item
             type="gmail"
             title={result.item.title}

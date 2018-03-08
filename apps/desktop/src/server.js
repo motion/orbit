@@ -1,4 +1,5 @@
 import http from 'http'
+import 'isomorphic-fetch'
 import logger from 'morgan'
 import express from 'express'
 import proxy from 'http-proxy-middleware'
@@ -11,6 +12,7 @@ import Passport from 'passport'
 import Crawler from '@mcro/crawler'
 import path from 'path'
 import killPort from 'kill-port'
+import getEmbedding from './embedding'
 
 const { SERVER_PORT } = Constants
 
@@ -82,8 +84,10 @@ export default class Server {
   }
 
   setupEmbedding() {
-    this.app.get('/hello', (req, res) => {
-      res.json({ hello: req.param('hello') })
+    this.app.get('/sentence', async (req, res) => {
+      console.log('(js) sentence is', req.query.sentence)
+      const values = await getEmbedding(req.query.sentence)
+      res.json({ values })
     })
   }
 

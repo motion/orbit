@@ -7,14 +7,12 @@ import {
   sortedUniqBy,
   max,
   sortBy,
-  range,
-  last,
-  uniq,
   flatten,
-  capitalize,
+  range,
+  uniq,
 } from 'lodash'
 import debug from 'debug'
-import stopwords from './stopwords'
+// import stopwords from './stopwords'
 import {
   minKBy,
   wordMoversDistance,
@@ -22,23 +20,11 @@ import {
   isAlphaNum,
   vectorsToCentroid,
   cosineSimilarity,
+  cosineSimilarities,
 } from '../helpers'
-import namedEntityRecognition from './namedEntityRecognition'
-import getFragments from './getFragments'
 
-const allIndexesString = (string, finding) => {
-  const indexes = []
-  const lower = string.toLowerCase()
-  let count = 0
-  while (true) {
-    const index = lower.indexOf(finding, last(indexes) ? last(indexes) + 1 : 0)
-
-    if (index === -1 && count > 25) return indexes
-    count += 1
-
-    indexes.push(index)
-  }
-}
+// TODO import from constants
+const API_URL = 'http://localhost:3001'
 
 const log = debug('indexer')
 log.enabled = true
@@ -52,29 +38,56 @@ export default class Indexer {
   embedding = null
   lastQuery = null
   centroids = null
+  documents = []
 
   @watch
-  entities = () => this.fragments && namedEntityRecognition(this.fragments)
+  paragraphs = () =>
+    flatten(
+      this.documents.map(({ paragraphs }, index) =>
+        paragraphs.map(sentences => ({
+          document: index,
+          sentences,
+        })),
+      ),
+    )
 
-  constructor({ embedding, documents }) {
+  async willMount({ embedding, documents }) {
     this.embedding = embedding
-    this.setDocuments(documents)
-    this.centroids = this.fragments.map(this.fragmentToCentroid)
+    await this.setDocuments(documents)
+    // this.centroids = this.fragments.map(this.fragmentToCentroid)
+    window.indexer = this
   }
 
-  setDocuments = documents => {
+  getSentences = async paragraph => {
+    const sentences = splitSentences(paragraph)
+    console.log('sentences are', sentences)
+    return await Promise.all(
+      sentences.map(async text => {
+        const vectors = await this.getVectors(text)
+        return { text, vectors }
+      }),
+    )
+  }
+
+  toParagraphs = async ({ title, text }, index) => {
+    return {
+      title,
+      index,
+      paragraphs: await Promise.all(text.split('\n').map(this.getSentences)),
+    }
+  }
+
+  setDocuments = async documents => {
     if (!documents) {
       return
     }
 
-    this.fragments = documents.map(({ title, text }, index) => ({
-      title,
-      index,
-      body: text,
-      lines: text.split('\n'),
-    }))
+    this.documentsSource = documents
 
-    this.engine = this.createEngine()
+    this.documents = await Promise.all(documents.map(this.toParagraphs))
+    console.log('fragments are', this.fragments)
+
+    // this.engine = this.createEngine()
   }
 
   toWords = text => {
@@ -82,8 +95,7 @@ export default class Indexer {
       return []
     }
 
-    const valid = word =>
-      word.length > 0 && isAlphaNum(word) && !includes(stopwords, word)
+    const valid = word => word.length > 0 && isAlphaNum(word)
 
     return text
       .toLowerCase()
@@ -116,265 +128,60 @@ export default class Indexer {
     return engine
   }
 
-  getSnippet = (text, item) => {
-    const sentences = splitSentences(item.body)
-    const distances = sentences.map(sentence => {
-      return {
-        sentence,
-        distance: wordMoversDistance(
-          this.toWords(text),
-          this.toWords(sentence),
-          this.embedding.vectors,
-        ).total,
-      }
-    })
+  getVectors = async sentence => {
+    const hash = `vectors-${sentence}`
 
-    const smallest = minKBy(distances, 1, _ => _.distance)[0]
-    if (!smallest) {
-      return ''
+    if (localStorage.getItem(hash)) {
+      return JSON.parse(localStorage.getItem(hash))
     }
-    return smallest.sentence
-  }
+    console.log('src getting vectors for', sentence)
 
-  queryToCentroid = query => {
-    const words = uniq(this.toWords(query))
-      .filter(word => this.embedding.vectors[word])
-      .map(word => ({
-        vec: this.embedding.vectors[word],
-        weight: 1,
-      }))
+    const val = await (await fetch(
+      `${API_URL}/sentence?sentence=${encodeURIComponent(sentence)}`,
+    )).json()
 
-    return vectorsToCentroid(words, this.embedding)
-  }
+    const { values } = val
 
-  fragmentToCentroid = fragment => {
-    const { title, body } = fragment
-    const combined = [title || '', body].join(' ')
+    localStorage.setItem(hash, JSON.stringify(values))
 
-    const words = uniq(this.toWords(combined)).filter(
-      word => this.embedding.vectors[word],
-    )
-    const weights = words.map(word => this.wordWeight(fragment, word))
-    const maxWeight = max(weights)
-
-    const vecs = words.map(word => ({
-      vec: this.embedding.vectors[word],
-      weight: this.wordWeight(fragment, word) / maxWeight,
-    }))
-
-    return vectorsToCentroid(vecs, this.embedding)
-  }
-
-  nearestFragments = vec => {
-    const distance = this.fragments.map((item, index) => {
-      return {
-        ...item,
-        index,
-        distance: cosineSimilarity(Math.random(), vec, this.centroids[index]),
-      }
-    })
-
-    const vals = sortBy(distance, _ => -_.distance).slice(0, 400)
-
-    return vals
-  }
-
-  nearestWords = fragment => {
-    return this.embedding.nearestWordsByVec(this.centroids[fragment.index])
-  }
-
-  wordWeight = (fragment, word) => {
-    const { prepareInput, documents, token2Index } = this.engine
-
-    const docToken = prepareInput(word, 'search')
-    const id = token2Index[docToken]
-    if (!id) {
-      return false
-    }
-
-    const val = documents[fragment.index].freq[id]
-    return val
-  }
-
-  fullText = fragment => [fragment.title, fragment.body].join(' ')
-
-  autocomplete = (queryWords, fragments) => {
-    const cooccur = {}
-
-    // co-occurance
-    fragments.forEach((fragment, index) => {
-      uniq(this.toWords(this.fullText(fragment))).forEach(word => {
-        if (!cooccur[word]) {
-          cooccur[word] = { weight: 0, indexes: new Set() }
-        }
-
-        cooccur[word].weight +=
-          Math.sqrt(this.wordWeight(fragment, word)) *
-          (1 - index / fragments.length)
-        cooccur[word].indexes.add(fragment.index)
-      })
-    })
-
-    const mostCooccur = reverse(
-      sortBy(
-        Object.keys(cooccur)
-          .filter(
-            word =>
-              !includes(queryWords, word) &&
-              Array.from(cooccur[word].indexes).length > 2,
-          )
-          .map(word => ({
-            weight: cooccur[word].weight, // * totalWeight(word),
-            word,
-          })),
-        'weight',
-      ),
-    ).filter(_ => !isNaN(_.weight))
-
-    return mostCooccur
+    return values
   }
 
   search = async (query, count = 10) => {
-    const words = uniq(this.toWords(query.toLowerCase()))
+    const vectors = await this.getVectors(query)
 
-    const queryCentroid = this.queryToCentroid(query)
-
-    const fragments = this.nearestFragments(queryCentroid)
-
-    /* last searched allows us to cancel mid-search requsest */
-    this.lastQuery = query
-
-    const results = fragments.map(() => 0)
-
-    const runWmd = async texts => {
-      const total = []
-      let i = 0
-      for (const text of texts) {
-        i++
-        if (this.lastQuery !== query) {
-          // there has been a new search and we should bail
-          return false
-        }
-
-        total.push(
-          wordMoversDistance(
-            words,
-            uniq(this.toWords(text.toLowerCase())),
-            this.embedding.vectors,
-          ).list,
-        )
-
-        if (i % 300 === 0) {
-          // sleep to check if query is still the same
-          await sleep(1)
-        }
-      }
-
-      return total
-    }
-
-    const titlesDistance = await runWmd(fragments.map(_ => _.title))
-    const bodyDistance = await runWmd(fragments.map(_ => _.body))
-
-    const addDistance = ({ word, weight }, index) => {
-      // word weight is how important that terms is to the document
-      // weight is how close the word is to the query word
-      const wordWeight = Math.pow(this.wordWeight(fragments[index], word), 0.8)
-
-      if (weight === Infinity || wordWeight === false) {
-        return 0
-      }
-
-      const val = (1 - weight) * Math.pow(wordWeight, 0.5) + results[index]
-
-      results[index] = val
-      return val
-    }
-
-    // Math.pow(freq, Math.max(0, 1 - weight))
-    // Iterate for every token in the preapred text.
-    const debugInfos = []
-    fragments.forEach((fragment, currentFragentIndex) => {
-      const debugInfo = { nearest: [] }
-      results[currentFragentIndex] = 0
-
-      range(words.length).forEach(termIndex => {
-        if (!titlesDistance[currentFragentIndex]) {
-          console.log('no distance found')
-          return
-        }
-        const titleTerm = titlesDistance[currentFragentIndex][termIndex]
-        const bodyTerm = bodyDistance[currentFragentIndex][termIndex]
-        const terms = [titleTerm, bodyTerm]
-
-        // if any of these pieces are missing a field, boost with previous val but dulled
-        let lastTermWeight = null
-        terms.forEach(term => {
-          if (term.weight === Infinity) {
-            if (lastTermWeight) {
-              results[currentFragentIndex] += lastTermWeight / 0.7
-            }
-          } else {
-            lastTermWeight = addDistance(term, currentFragentIndex)
+    const distances = flatten(
+      this.paragraphs.map(({ document, sentences }) => {
+        return sentences.map(sentence => {
+          const sim = cosineSimilarities(vectors, sentence.vectors)
+          return {
+            document,
+            sentence: sentence.text,
+            distance: sim / Math.pow(sentence.vectors.length, 0.6),
           }
         })
-      })
-      debugInfos.push(debugInfo)
-    })
+      }),
+    )
 
-    const fragmentsByDistance = reverse(
-      sortBy(
-        results.map((val, index) => ({
-          distance: val,
-          fragment: fragments[index],
-          closestWords: [...titlesDistance[index], ...bodyDistance[index]],
-          debug: debugInfos[index],
-        })),
-        'distance',
-      ),
-    ).slice(0, Math.max(count * 3, 1))
+    const sentences = reverse(sortBy(distances, 'distance')).slice(0, count)
+    console.log('sents are', sentences)
 
-    const resultsByDistance = fragmentsByDistance
-      .map(({ distance, closestWords, fragment, debug }) => {
-        const matchedWords = sortedUniqBy(
-          sortBy(closestWords, 'weight'),
-          _ => _.word,
-        ).slice(0, 5)
-
-        return {
-          item: this.fragments[fragment.index],
-          debug,
-          toBold: matchedWords.map(_ => _.word).slice(0, 3),
-          matched: matchedWords,
-          wmd: [],
-          index: fragment.index,
-          similarity: distance,
-          snippet: this.getSnippet(query, this.fragments[fragment.index]),
-        }
-      })
-      .filter(i => i.similarity !== Infinity)
-
-    // only return one for each title
-    const cachedTitles = []
-
-    /*
-    const noDuplicates = resultsByDistance.filter(result => {
-      if (includes(cachedTitles, result.item.documentIndex)) {
-        return false
+    const results = sentences.map(({ sentence, document, distance }) => {
+      return {
+        item: this.documentsSource[document],
+        debug: [],
+        toBold: [],
+        matched: [],
+        wmd: [],
+        index: document,
+        similarity: distance,
+        snippet: sentence,
       }
-      cachedTitles.push(result.item.documentIndex)
-      return true
     })
-    */
-
-    const finalResults = resultsByDistance.slice(0, count)
 
     return {
-      results: finalResults,
-      autocomplete: this.autocomplete(
-        query.split(' '),
-        resultsByDistance.map(_ => _.item),
-      ).slice(0, 10),
+      results,
+      autocomplete: [],
     }
   }
 }

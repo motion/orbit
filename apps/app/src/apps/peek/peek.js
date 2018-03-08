@@ -11,6 +11,25 @@ import PeekContent from './peekContent'
 import PaulGraham from '~/stores/language/pg.json'
 import Search from '@mcro/search'
 
+const docs = [
+  {
+    title: 'Graduate Programs in the humanities',
+    text: `Graduate programs today, especially in the humanities, are turning out far more Ph.D.s than the academic market can absorb. Now would be a good time to ask ourselves why we organize graduate training the way we do and how we can change it so that we don’t replicate and reinforce the same sort of power structures that so many of us do not hesitate to criticize in our scholarship.`,
+  },
+  {
+    title: 'Understanding Machine Learning',
+    text: `The machine learning community has primarily focused on developing powerful methods, such as feature visualization, attribution, and dimensionality reduction, for reasoning about neural networks. However, these techniques have been studied as isolated threads of research, and the corresponding work of reifying them has been neglected. On the other hand, the human-computer interaction community has begun to explore rich user interfaces for neural networks, but they have not yet engaged deeply with these abstractions.`,
+  },
+  {
+    title: 'Basics of Law',
+    text: `Law is a system of rules that are created and enforced through social or governmental institutions to regulate behavior. Law is a system that regulates and ensures that individuals or a community adhere to the will of the state. State-enforced laws can be made by a collective legislature or by a single legislator, resulting in statutes, by the executive through decrees and regulations, or established by judges through precedent, normally in common law jurisdictions. Private individuals can create legally binding contracts, including arbitration agreements that may elect to accept alternative arbitration to the normal court process. The formation of laws themselves may be influenced by a constitution, written or tacit, and the rights encoded therein. The law shapes politics, economics, history and society in various ways and serves as a mediator of relations between people.`,
+  },
+  {
+    title: 'Basics of Chemistry and atoms',
+    text: `Chemistry is the scientific discipline involved with compounds composed of atoms, i.e. elements, and molecules, i.e. combinations of atoms: their composition, structure, properties, behavior and the changes they undergo during a reaction with other compounds. Chemistry addresses topics such as how atoms and molecules interact via chemical bonds to form new chemical compounds. There are four types of chemical bonds: covalent bonds, in which compounds share one or more electron(s); ionic bonds, in which a compound donates one or more electrons to another compound to produce ions: cations and anions; hydrogen bonds; and Van der Waals force bonds. See glossary of chemistry.`,
+  },
+]
+
 const keyParam = (window.location.search || '').match(/key=(.*)/)
 const KEY = keyParam && keyParam[1]
 const SHADOW_PAD = 15
@@ -46,7 +65,14 @@ const peekShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.05]]]
 
     willMount() {
       this.searchStore = new Search()
-      this.searchStore.onDocuments(PaulGraham)
+      const docs = PaulGraham.slice(0, 30).map(({ title, text }) => ({
+        title,
+        text: text.slice(0, 300),
+      }))
+
+      console.log('docs are', docs)
+
+      this.searchStore.onDocuments(docs)
 
       this.react(
         () => this.query,

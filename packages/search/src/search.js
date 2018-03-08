@@ -14,19 +14,16 @@ export default class Search {
   resultsCount = null
   embedding = new Embedding()
 
-  @watch
-  indexer = () =>
-    this.documents &&
-    this.embedding &&
-    this.embedding.vectors &&
-    new Indexer({ documents: this.documents, embedding: this.embedding })
-
   willMount() {
     this.resultsCount = 10
   }
 
   setDocuments = documents => {
     this.documents = documents
+    this.indexer = new Indexer({
+      documents: this.documents,
+      embedding: this.embedding,
+    })
   }
 
   search = async query => {

@@ -53,8 +53,8 @@ export default class PeekContent {
         {(store.results || []).map(result => (
           <Item
             type="gmail"
-            title={result.item.title}
-            subtitle="Uber Receipts"
+            title={result.sentence}
+            subtitle={`distance: ${result.distance}`}
             content={result.snippet}
           />
         ))}

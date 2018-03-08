@@ -55,7 +55,7 @@ const log = debug('peek')
 
     willMount() {
       this.searchStore = new Search()
-      this.searchStore.onDocuments(PaulGraham.slice(0, 30))
+      this.searchStore.onDocuments(PaulGraham.slice(0, 5))
       // react to do searches
       this.react(() => this.query, this.search)
       // react to hovered words

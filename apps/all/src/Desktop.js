@@ -36,10 +36,6 @@ export type DesktopState = {
 
 @store
 class Desktop {
-  get setState() {
-    return Bridge._setState
-  }
-
   state = {
     paused: true,
     appState: {},
@@ -54,7 +50,8 @@ class Desktop {
   }
 
   start(options) {
-    return Bridge.start(this, this.state, options)
+    Bridge.start(this, this.state, options)
+    this.setState = Bridge.setState
   }
 
   get isHoldingOption() {

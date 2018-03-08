@@ -139,8 +139,8 @@ export default class ElectronWindow extends React.Component {
         ref={electron.handleAppRef}
       >
         <MenuItems />
-        {/* <HighlightsWindow />
-        <PeekWindow /> */}
+        {/* <HighlightsWindow /> */}
+        <PeekWindow />
         <OrbitWindow />
         {/* <SettingsWindow /> */}
         <Tray />

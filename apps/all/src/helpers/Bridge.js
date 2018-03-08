@@ -45,7 +45,7 @@ class Bridge {
     // set initial state synchronously before
     this._initialState = initialState
     if (initialState) {
-      this._setState(initialState, true)
+      this.setState(initialState, false)
     }
     if (typeof window === 'undefined') {
       await waitPort({ host: 'localhost', port: 40510 })
@@ -124,7 +124,7 @@ class Bridge {
 
   // this will go up to api and back down to all screen stores
   // set is only allowed from the source its set as initially
-  _setState = (newState, isInternal = false) => {
+  setState = newState => {
     if (!this._store) {
       throw new Error(
         `Called ${this.storeName}.setState before calling ${
@@ -138,7 +138,7 @@ class Bridge {
       )
     }
     // update our own state immediately so its sync
-    const changedState = this._update(this.state, newState, isInternal)
+    const changedState = this._update(this.state, newState, true)
     if (!this._wsOpen) {
       this._queuedState = true
       return changedState

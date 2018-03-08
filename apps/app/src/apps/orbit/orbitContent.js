@@ -1,23 +1,32 @@
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import OrbitIcon from './orbitIcon'
+import * as Helpers from '~/helpers'
+import { App } from '@mcro/all'
 
-const glowProps = {
-  color: '#fff',
-  scale: 1,
-  blur: 70,
-  opacity: 0.15,
-  show: false,
-  resist: 60,
-  zIndex: -1,
-}
+const getHoverProps = Helpers.hoverSettler({
+  enterDelay: 600,
+  onHovered: ({ id, result, ...position }) => {
+    console.log('hovered', id, position, result)
+    App.setState({ peekTarget: { id, position } })
+  },
+})
 
-const Item = ({ title, type, subtitle, content }) => (
+const Item = ({ title, type, subtitle, content, ...props }) => (
   <UI.Surface
     background="transparent"
     glow
-    glowProps={glowProps}
+    glowProps={{
+      color: '#fff',
+      scale: 1,
+      blur: 70,
+      opacity: 0.15,
+      show: false,
+      resist: 60,
+      zIndex: -1,
+    }}
     padding={[10, 18]}
+    {...props}
   >
     <UI.Title
       size={1.6}
@@ -56,6 +65,10 @@ export default class OrbitContent {
             title={result.item.title}
             subtitle="Uber Receipts"
             content={result.snippet}
+            {...getHoverProps({
+              result,
+              id: result.index,
+            })}
           />
         ))}
       </list>

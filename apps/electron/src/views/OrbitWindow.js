@@ -167,14 +167,13 @@ export default class OrbitWindow extends React.Component {
     }
   }
 
-  handleOrbitMove = position => {
-    if (this.unmounted) return
-    log(`handleMove ${position}`)
-    Electron.setOrbitState({ position })
-  }
+  // handleOrbitMove = position => {
+  //   if (this.unmounted) return
+  //   log(`handleMove ${position}`)
+  //   Electron.setOrbitState({ position })
+  // }
 
   render({ store }) {
-    log(`OrbitWindow.render`)
     const state = Mobx.toJS(Electron.orbitState)
     return (
       <Window

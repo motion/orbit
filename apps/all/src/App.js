@@ -15,14 +15,12 @@ class App {
     closePeek: null,
     orbitHidden: true,
     knowledge: null,
-  }
-
-  get setState() {
-    return Bridge._setState
+    peekTarget: null,
   }
 
   start(options) {
-    return Bridge.start(this, this.state, options)
+    Bridge.start(this, this.state, options)
+    this.setState = Bridge.setState
   }
 
   get hoveredWordName() {

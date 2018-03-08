@@ -5,10 +5,6 @@ import global from 'global'
 
 @store
 class Electron {
-  get setState() {
-    return Bridge._setState
-  }
-
   state = {
     shouldHide: null,
     shouldShow: null,
@@ -29,7 +25,8 @@ class Electron {
   }
 
   start(options) {
-    return Bridge.start(this, this.state, options)
+    Bridge.start(this, this.state, options)
+    this.setState = Bridge.setState
   }
 
   get orbitState() {
@@ -38,6 +35,10 @@ class Electron {
 
   get peekState() {
     return this.state.peekState
+  }
+
+  get currentPeek() {
+    return this.peekState.windows[0]
   }
 
   setOrbitState = nextState => {

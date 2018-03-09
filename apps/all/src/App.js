@@ -26,6 +26,7 @@ class AppStore {
     Bridge.start(this, this.state, options)
     this.setState = Bridge.setState
 
+    console.log('Electron.orbitState', Electron.orbitState)
     this.react(
       () => [
         !App.state.orbitHidden,

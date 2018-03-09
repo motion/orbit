@@ -28,6 +28,8 @@ const log = debug('orbit')
     showSettings = false
 
     willMount() {
+      App.runReactions()
+
       setTimeout(async () => {
         const allDocs = await Thing.getAll()
         this.searchStore.addDocuments(

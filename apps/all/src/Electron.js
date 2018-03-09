@@ -1,10 +1,13 @@
 // @flow
 import Bridge from './helpers/Bridge'
 import { store } from '@mcro/black/store'
+import { debounce } from 'lodash'
 import global from 'global'
 import App from './App'
+import Desktop from './Desktop'
 
 let Electron
+const log = debug('Electron')
 
 @store
 class ElectronStore {
@@ -50,6 +53,37 @@ class ElectronStore {
       },
       true,
     )
+
+    // orbit show/hide based on option hold
+    let optnEnter
+    this.react(
+      () => Desktop.isHoldingOption,
+      debounce(isHoldingOption => {
+        clearTimeout(optnEnter)
+        if (Electron.orbitState.pinned) {
+          log(`pinned, avoid`)
+          return
+        }
+        if (!isHoldingOption) {
+          // TODO
+          if (!Electron.orbitState.pinned && Electron.orbitState.focused) {
+            log('prevent hide while mouseover after release hold')
+            return
+          }
+          Electron.setState({
+            shouldHide: Date.now(),
+            lastAction: null,
+          })
+          return
+        }
+        if (App.state.orbitHidden) {
+          // SHOW
+          optnEnter = setTimeout(() => {
+            Electron.setState({ shouldShow: Date.now() })
+          }, 150)
+        }
+      }, 16),
+    )
   }
 
   get orbitState() {
@@ -62,6 +96,14 @@ class ElectronStore {
 
   get currentPeek() {
     return this.peekState.windows[0]
+  }
+
+  togglePinned = () => {
+    this.setPinned(!Electron.orbitState.pinned)
+  }
+
+  setPinned = pinned => {
+    Electron.setOrbitState({ pinned, focused: pinned })
   }
 
   setOrbitState = nextState => {

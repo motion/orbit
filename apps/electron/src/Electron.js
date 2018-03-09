@@ -11,12 +11,11 @@ import ShortcutsStore from '~/stores/shortcutsStore'
 import * as Helpers from '~/helpers'
 import { App, Electron, Desktop } from '@mcro/all'
 import global from 'global'
-import { debounce } from 'lodash'
 
 const log = debug('Electron')
 
 @view.provide({
-  electron: class ElectronStore {
+  electronStore: class ElectronStore {
     error = null
     appRef = null
     stores = null
@@ -32,6 +31,18 @@ const log = debug('Electron')
       Electron.start()
       Electron.setState({ settingsPosition: Helpers.getAppSize().position })
       this.watchOptionPress()
+
+      // focus on pinned
+      this.react(
+        () => Electron.orbitState.pinned,
+        pinned => pinned && this.appRef.focus(),
+      )
+
+      // show on show
+      this.react(
+        () => Electron.state.shouldShow,
+        shouldShow => shouldShow && this.appRef.show(),
+      )
     }
 
     watchOptionPress = () => {
@@ -45,42 +56,12 @@ const log = debug('Electron')
             !App.state.orbitHidden
           ) {
             log('avoid toggle. TODO: make this "pin" it open')
+            Electron.setPinned(true)
             return
           }
-          this.togglePinned()
+          Electron.togglePinned()
         }
       })
-
-      // peek behavior
-      let optnEnter
-      this.react(
-        () => Desktop.isHoldingOption,
-        debounce(isHoldingOption => {
-          clearTimeout(optnEnter)
-          if (Electron.orbitState.pinned) {
-            log(`pinned, avoid`)
-            return
-          }
-          if (!isHoldingOption) {
-            // TODO
-            if (!Electron.orbitState.pinned && Electron.orbitState.focused) {
-              log('prevent hide while mouseover after release hold')
-              return
-            }
-            log('shouldHide')
-            Electron.setState({ shouldHide: Date.now(), lastAction: null })
-            return
-          }
-          if (App.state.orbitHidden) {
-            // SHOW
-            optnEnter = setTimeout(() => {
-              log('shouldShow')
-              this.appRef.show()
-              Electron.setState({ shouldShow: Date.now() })
-            }, 150)
-          }
-        }, 16),
-      )
     }
 
     restart() {
@@ -88,17 +69,6 @@ const log = debug('Electron')
         require('touch')(
           require('path').join(__dirname, '..', 'lib', 'index.js'),
         )
-      }
-    }
-
-    togglePinned = async () => {
-      if (!this.appRef) {
-        throw new Error('No appRef')
-      }
-      const pinned = !Electron.orbitState.pinned
-      Electron.setOrbitState({ pinned, focused: pinned })
-      if (pinned) {
-        this.appRef.focus()
       }
     }
 
@@ -113,19 +83,19 @@ const log = debug('Electron')
 @view.electron
 export default class ElectronWindow extends React.Component {
   componentDidCatch(error) {
+    this.props.electronStore.error = error
     console.error(error)
-    this.props.electron.error = error
   }
 
-  render({ electron }) {
-    if (electron.error) {
+  render({ electronStore }) {
+    if (electronStore.error) {
       return null
     }
     return (
       <AppWindow
-        onBeforeQuit={electron.handleBeforeQuit}
-        onQuit={electron.handleQuit}
-        ref={electron.handleAppRef}
+        onBeforeQuit={electronStore.handleBeforeQuit}
+        onQuit={electronStore.handleQuit}
+        ref={electronStore.handleAppRef}
       >
         <MenuItems />
         <HighlightsWindow />

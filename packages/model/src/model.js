@@ -656,7 +656,7 @@ export default class Model {
   }
 
   // destroyAll
-  async destroyAll() {
+  destroyAll(query) {
     return {
       confirm: async () => {
         const remove = async item => {
@@ -672,7 +672,7 @@ export default class Model {
           }
           return true
         }
-        const all = await this.getAll()
+        const all = await this.getAll(query)
         if (!all) {
           return
         }

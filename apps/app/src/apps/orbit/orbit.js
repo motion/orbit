@@ -3,11 +3,11 @@ import * as React from 'react'
 import { debounce } from 'lodash'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { App, Desktop, Electron } from '@mcro/all'
+import { App, Electron } from '@mcro/all'
 import Knowledge from './knowledge'
 import OrbitContent from './orbitContent'
 import OrbitSettings from './orbitSettings'
-import PaulGraham from '~/stores/language/pg.json'
+import { Thing } from '@mcro/models'
 import Search from '@mcro/search'
 import OrbitHeader from './orbitHeader'
 
@@ -27,6 +27,17 @@ const log = debug('orbit')
     results = []
     showSettings = false
 
+    willMount() {
+      setTimeout(async () => {
+        const allDocs = await Thing.getAll()
+        this.searchStore.addDocuments(
+          allDocs.map(doc => ({ title: doc.title, text: doc.body })),
+        )
+      })
+      // react to do searches
+      this.react(() => this.query, this.search, true)
+    }
+
     onChangeQuery = e => {
       this.query = e.target.value
     }
@@ -40,38 +51,6 @@ const log = debug('orbit')
       if (!results) return
       this.results = results
     }, 150)
-
-    willMount() {
-      this.searchStore.onDocuments(PaulGraham)
-      // react to do searches
-      this.react(() => this.query, this.search, true)
-      // react to hovered words
-      let hoverShow
-      this.react(
-        () => App.hoveredWordName,
-        word => {
-          if (Desktop.isHoldingOption) {
-            return
-          }
-          clearTimeout(hoverShow)
-          const orbitHidden = !word
-          hoverShow = setTimeout(() => {
-            console.log('sethidden based on word', orbitHidden)
-            App.setState({ orbitHidden })
-          }, orbitHidden ? 50 : 500)
-        },
-      )
-      // react to close orbit
-      this.react(
-        () => Desktop.state.keyboard.esc,
-        () => {
-          if (!App.state.orbitHidden) {
-            log(`hideOrbit on esc`)
-            App.setState({ orbitHidden: true })
-          }
-        },
-      )
-    }
   },
 })
 @view.attach('orbitStore')

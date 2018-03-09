@@ -11,10 +11,10 @@ class HeaderStore {
 
   willMount() {
     this.react(
-      () => Electron.state.lastAction === 'TOGGLE',
-      toggled => {
-        if (!toggled) return
-        console.log('toggled')
+      () => Electron.orbitState.pinned,
+      pinned => {
+        if (!pinned) return
+        console.log('pinned')
         if (this.inputRef) {
           this.inputRef.focus()
           this.inputRef.select()

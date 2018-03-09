@@ -148,18 +148,19 @@ export default class ElectronWindow extends React.Component {
     if (electron.error) {
       return null
     }
+
     return (
       <AppWindow
         onBeforeQuit={electron.handleBeforeQuit}
         onQuit={electron.handleQuit}
         ref={electron.handleAppRef}
       >
-        <MenuItems />
-        <HighlightsWindow />
-        <PeekWindow />
+        {false && <MenuItems />}
+        {false && <HighlightsWindow />}
+        {false && <PeekWindow />}
         <OrbitWindow />
         {/* <SettingsWindow /> */}
-        <Tray />
+        {false && <Tray />}
       </AppWindow>
     )
   }

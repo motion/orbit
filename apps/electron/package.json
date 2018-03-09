@@ -45,7 +45,6 @@
     "kill-port": "^1.1.0",
     "wait-port": "^0.2.2",
     "iohook": "^0.1.11",
-    "electron": "1.7.10",
     "electron-context-menu": "^0.9.1",
     "electron-debug": "^1.4.0",
     "electron-localshortcut": "^2.0.2",
@@ -60,10 +59,11 @@
     "usage": "^0.7.1"
   },
   "devDependencies": {
-    "node-loader": "^0.6.0",
+    "electron": "^1.8.3",
     "electron-rebuild": "^1.7.3",
+    "node-loader": "^0.6.0",
     "nodemon": "^1.15.1",
-    "touch": "^3.1.0",
-    "tcp-port-used": "0.1.2"
+    "tcp-port-used": "0.1.2",
+    "touch": "^3.1.0"
   }
 }

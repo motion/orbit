@@ -4,7 +4,6 @@ import { debounce } from 'lodash'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { App, Desktop, Electron } from '@mcro/all'
-import Knowledge from './knowledge'
 import OrbitContent from './orbitContent'
 import PaulGraham from '~/stores/language/pg.json'
 import Search from '@mcro/search'
@@ -30,13 +29,13 @@ const log = debug('orbit')
     }
 
     search = debounce(async () => {
-      const { results } = await this.searchStore.search.search(this.query)
+      const results = await this.searchStore.search.search(this.query)
       if (!results) return
       this.results = results
     }, 150)
 
     willMount() {
-      this.searchStore.onDocuments(PaulGraham.slice(0, 4))
+      this.searchStore.onDocuments(PaulGraham)
       // react to do searches
       this.react(() => this.query, this.search, true)
       // react to hovered words
@@ -127,7 +126,6 @@ export default class OrbitPage {
             <OrbitHeader />
             <contentInner>
               <OrbitContent />
-              <Knowledge if={App.state.knowledge} data={App.state.knowledge} />
             </contentInner>
           </content>
         </orbit>

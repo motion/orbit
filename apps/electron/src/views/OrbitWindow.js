@@ -100,6 +100,9 @@ const orbitPosition = ({ left, top, width, height }) => {
           // avoid defocusing if its pinned
           if (Electron.state.lastAction === 'TOGGLE') return
           const { position, size } = Electron.orbitState
+          if (!position) {
+            return
+          }
           const withinX = x > position[0] && x < position[0] + size[0]
           const withinY = y > position[1] && y < position[1] + size[1]
           const focused = withinX && withinY
@@ -177,6 +180,7 @@ export default class OrbitWindow extends React.Component {
 
   render({ store }) {
     const state = Mobx.toJS(Electron.orbitState)
+
     return (
       <Window
         frame={false}

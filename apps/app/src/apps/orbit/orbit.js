@@ -31,6 +31,7 @@ const log = debug('orbit')
       App.runReactions()
 
       setTimeout(async () => {
+        console.log('adding docs to search...')
         const allDocs = await Thing.getAll()
         this.searchStore.addDocuments(
           allDocs.map(doc => ({ title: doc.title, text: doc.body })),
@@ -118,15 +119,18 @@ export default class OrbitPage {
             <controls
               css={{
                 position: 'absolute',
-                bottom: 20,
-                right: 20,
+                top: 18,
+                right: 18,
                 zIndex: 10000,
               }}
             >
               <UI.Button
                 icon="gear"
                 borderRadius={100}
-                borderWidth={0}
+                size={0.8}
+                opacity={0.25}
+                circular
+                chromeless
                 highlight={orbitStore.showSettings}
                 onClick={orbitStore.toggleSettings}
               />

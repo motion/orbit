@@ -12,7 +12,7 @@ class SearchManager {
     this.search = new Search()
   }
 
-  addDocuments = documents => {
+  setDocuments = documents => {
     this.search.setDocuments(documents)
   }
 

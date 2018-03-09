@@ -89,6 +89,9 @@ const orbitPosition = ({ left, top, width, height }) => {
       this.react(
         () => [Desktop.state.mousePosition, App.state.orbitHidden],
         ([{ x, y }, isHidden]) => {
+          if (Electron.orbitState.pinned) {
+            return
+          }
           if (isHidden) {
             if (Electron.orbitState.focused) {
               log(`unfocus orbit`)
@@ -97,8 +100,6 @@ const orbitPosition = ({ left, top, width, height }) => {
             return
           }
           if (!this.orbitRef) return
-          // avoid defocusing if its pinned
-          if (Electron.state.lastAction === 'TOGGLE') return
           const { position, size } = Electron.orbitState
           const withinX = x > position[0] && x < position[0] + size[0]
           const withinY = y > position[1] && y < position[1] + size[1]

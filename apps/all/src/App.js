@@ -3,6 +3,7 @@ import Electron from './Electron'
 import Bridge from './helpers/Bridge'
 import { store } from '@mcro/black/store'
 import global from 'global'
+import Desktop from './Desktop'
 
 const log = debug('App')
 let App
@@ -25,10 +26,18 @@ class AppStore {
     Bridge.start(this, this.state, options)
     this.setState = Bridge.setState
 
+    console.log('Electron.orbitState', Electron.orbitState)
     this.react(
-      () => [Electron.state.lastAction === 'HOLD', Electron.orbitState.focused],
-      ([wasHolding, isFocused]) => {
-        if (wasHolding && !isFocused && !App.state.orbitHidden) {
+      () => [
+        !App.state.orbitHidden,
+        Electron.orbitState.pinned,
+        Electron.orbitState.focused,
+      ],
+      ([isShown, isPinned, isFocused]) => {
+        if (Desktop.isHoldingOption) {
+          return
+        }
+        if (isShown && !isPinned && !isFocused) {
           log(
             `hiding because your mouse moved outside the window after option release`,
           )
@@ -36,6 +45,15 @@ class AppStore {
         }
       },
     )
+
+    this.react(
+      () => Electron.orbitState.pinned,
+      pinned => App.setState({ orbitHidden: !pinned }),
+    )
+  }
+
+  get isShowingOrbit() {
+    return !this.state.orbitHidden || Electron.state.orbitState.pinned
   }
 
   get hoveredWordName() {
@@ -43,7 +61,7 @@ class AppStore {
   }
 
   get showHeader() {
-    return Electron.orbitState.focused || Electron.state.lastAction === 'TOGGLE'
+    return Electron.orbitState.focused || Electron.orbitState.pinned
   }
 
   togglePeek = () => {

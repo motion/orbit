@@ -47,7 +47,7 @@ ensure-dep "realpath" -- brew install coreutils &
 restart-vscode &
 wait
 yarn install --silent
-npx lerna --loglevel=error bootstrap
+npx lerna --loglevel=warn bootstrap
 # internal tools
 ensure-file ./packages/hmr/es6/index.js -- build-builder-modules
 ensure-file ./packages/hmr-view/es6/index.js -- build-builder-modules

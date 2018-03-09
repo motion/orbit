@@ -2,9 +2,12 @@
 import Bridge from './helpers/Bridge'
 import { store } from '@mcro/black/store'
 import global from 'global'
+import App from './App'
+
+let Electron
 
 @store
-class Electron {
+class ElectronStore {
   state = {
     shouldHide: null,
     shouldShow: null,
@@ -14,6 +17,7 @@ class Electron {
     orbitState: {
       show: false,
       focused: false,
+      pinned: false,
       arrowTowards: null,
       position: null,
       size: null,
@@ -35,6 +39,17 @@ class Electron {
   start(options) {
     Bridge.start(this, this.state, options)
     this.setState = Bridge.setState
+
+    // clear pinned on explicit hide
+    this.react(
+      () => App.state.orbitHidden,
+      hidden => {
+        if (hidden) {
+          Electron.setOrbitState({ pinned: false })
+        }
+      },
+      true,
+    )
   }
 
   get orbitState() {
@@ -58,8 +73,8 @@ class Electron {
   }
 }
 
-const electron = new Electron()
-Bridge.stores.Electron = electron
-global.Electron = electron
+Electron = new ElectronStore()
+Bridge.stores.ElectronStore = Electron
+global.Electron = Electron
 
-export default electron
+export default Electron

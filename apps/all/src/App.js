@@ -26,7 +26,6 @@ class AppStore {
     Bridge.start(this, this.state, options)
     this.setState = Bridge.setState
 
-    console.log('Electron.orbitState', Electron.orbitState)
     this.react(
       () => [
         !App.state.orbitHidden,
@@ -41,7 +40,7 @@ class AppStore {
           log(
             `hiding because your mouse moved outside the window after option release`,
           )
-          this.setState({ orbitHidden: true })
+          App.setState({ orbitHidden: true })
         }
       },
     )

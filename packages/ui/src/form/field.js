@@ -28,6 +28,7 @@ type Props = {
   spacing: number,
   row?: boolean,
   name?: string,
+  label?: string,
   placeholder?: string,
   placeholderColor?: Color,
   elementStyle?: Object,

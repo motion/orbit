@@ -6,6 +6,7 @@ import * as UI from '@mcro/ui'
 import { App, Desktop, Electron } from '@mcro/all'
 import Knowledge from './knowledge'
 import OrbitContent from './orbitContent'
+import OrbitSettings from './orbitSettings'
 import PaulGraham from '~/stores/language/pg.json'
 import Search from '@mcro/search'
 import OrbitHeader from './orbitHeader'
@@ -24,9 +25,14 @@ const log = debug('orbit')
     isPinned = false
     query = 'test'
     results = []
+    showSettings = false
 
     onChangeQuery = e => {
       this.query = e.target.value
+    }
+
+    toggleSettings = () => {
+      this.showSettings = !this.showSettings
     }
 
     search = debounce(async () => {
@@ -125,10 +131,25 @@ export default class OrbitPage {
           ))}
           <content>
             <OrbitHeader />
-            <contentInner>
-              <OrbitContent />
-              <Knowledge if={App.state.knowledge} data={App.state.knowledge} />
-            </contentInner>
+            <OrbitContent if={!orbitStore.showSettings} />
+            <OrbitSettings if={orbitStore.showSettings} />
+            <Knowledge if={App.state.knowledge} data={App.state.knowledge} />
+            <controls
+              css={{
+                position: 'absolute',
+                bottom: 20,
+                right: 20,
+                zIndex: 10000,
+              }}
+            >
+              <UI.Button
+                icon="gear"
+                borderRadius={100}
+                borderWidth={0}
+                highlight={orbitStore.showSettings}
+                onClick={orbitStore.toggleSettings}
+              />
+            </controls>
           </content>
         </orbit>
       </UI.Theme>

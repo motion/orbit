@@ -16,7 +16,6 @@ class ElectronStore {
     shouldShow: null,
     shouldPause: null,
     settingsPosition: [], // todo: settingsState.position
-    lastAction: null,
     orbitState: {
       show: false,
       focused: false,
@@ -43,6 +42,9 @@ class ElectronStore {
     Bridge.start(this, this.state, options)
     this.setState = Bridge.setState
 
+    // toggle pinned from app
+    this.react(() => App.state.shouldTogglePinned, Electron.togglePinned)
+
     // clear pinned on explicit hide
     this.react(
       () => App.state.orbitHidden,
@@ -54,12 +56,29 @@ class ElectronStore {
       true,
     )
 
+    // option tap to clear if open
+    // let lastDown = 0
+    // this.react(
+    //   () => Desktop.isHoldingOption,
+    //   holding => {
+    //     const justTapped = !holding && Date.now() - lastDown < 100
+    //     if (justTapped) {
+    //       Electron.setState({ shouldHide: Date.now() })
+    //     }
+    //     if (holding) {
+    //       lastDown = Date.now()
+    //     }
+    //   },
+    // )
+
     // orbit show/hide based on option hold
-    let optnEnter
+    let showAfterDelay
+    let stickAfterDelay
     this.react(
       () => Desktop.isHoldingOption,
       debounce(isHoldingOption => {
-        clearTimeout(optnEnter)
+        clearTimeout(showAfterDelay)
+        clearTimeout(stickAfterDelay)
         if (Electron.orbitState.pinned) {
           log(`pinned, avoid`)
           return
@@ -70,17 +89,18 @@ class ElectronStore {
             log('prevent hide while mouseover after release hold')
             return
           }
-          Electron.setState({
-            shouldHide: Date.now(),
-            lastAction: null,
-          })
+          Electron.setState({ shouldHide: Date.now() })
           return
         }
         if (App.state.orbitHidden) {
           // SHOW
-          optnEnter = setTimeout(() => {
+          showAfterDelay = setTimeout(() => {
             Electron.setState({ shouldShow: Date.now() })
           }, 150)
+          stickAfterDelay = setTimeout(() => {
+            log(`held open for 3 seconds, sticking...`)
+            Electron.setPinned(true)
+          }, 2500)
         }
       }, 16),
     )

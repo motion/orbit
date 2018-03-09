@@ -12,9 +12,7 @@ export default class Toggle extends React.Component {
   static defaultProps = {
     dotSize: 14,
     onChange: _ => _,
-    color: [0, 0, 0, 0.9],
     defaultValue: false,
-    barColor: [0, 0, 0, 0.1],
   }
 
   state = {
@@ -130,12 +128,12 @@ export default class Toggle extends React.Component {
     },
   }
 
-  static theme = ({ dotSize, color, barColor }) => ({
+  static theme = ({ dotSize, color, barColor }, theme) => ({
     bar: {
-      background: barColor,
+      background: barColor || theme.base.background,
     },
     dot: {
-      background: color,
+      background: color || theme.base.color,
       width: dotSize,
       height: dotSize,
       marginTop: -((dotSize - BAR_HEIGHT) / 2) - BAR_INVISIBLE_PAD + 1,

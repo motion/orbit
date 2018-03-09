@@ -20,6 +20,7 @@ class AppStore {
     orbitHidden: true,
     knowledge: null,
     peekTarget: null,
+    shouldTogglePinned: null,
   }
 
   start(options) {
@@ -62,6 +63,10 @@ class AppStore {
 
   get showHeader() {
     return Electron.orbitState.focused || Electron.orbitState.pinned
+  }
+
+  togglePinned = () => {
+    this.setState({ shouldTogglePinned: Date.now() })
   }
 
   togglePeek = () => {

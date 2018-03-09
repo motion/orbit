@@ -1,21 +1,35 @@
-import { view } from '@mcro/black'
+import { view, watch } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { Setting } from '@mcro/models'
 
 @view({
-  settingsStore: class SettingsStore {
-    dataSources = Setting.get({ type: 'data-sources' })
+  settings: class SettingsStore {
+    @watch settingSources = () => Setting.get({ type: 'data-sources' })
 
     get sources() {
-      return Object.keys(this.dataSources || {}).filter(
-        k => !!this.dataSources.values[k],
-      )
+      if (!this.settingSources) return []
+      return Object.keys(this.settingSources.values)
+        .filter(k => !!this.settingSources.values[k])
+        .map(key => ({
+          id: key,
+          ...this.settingSources.values[key],
+        }))
+    }
+
+    handleChangeSourceActive = source => active => {
+      this.settingSources.mergeUpdate({
+        values: {
+          [source.id]: {
+            active,
+          },
+        },
+      })
     }
   },
 })
 export default class OrbitSettings {
-  render({ settingsStore: { sources } }) {
-    if (!sources.length) {
+  render({ settings }) {
+    if (!settings.sources.length) {
       console.log('no sources!!!!!!!!')
       // loading
       return null
@@ -24,7 +38,7 @@ export default class OrbitSettings {
       <settings css={{ padding: [0, 10] }}>
         <UI.Title fontWeight={600}>Sources</UI.Title>
         <content css={{ padding: [10, 5] }}>
-          {sources.map(source => (
+          {settings.sources.map(source => (
             <item
               key={source.title}
               css={{
@@ -34,7 +48,10 @@ export default class OrbitSettings {
               }}
             >
               <UI.Title size={1.5}>{source.title}</UI.Title>
-              <UI.Toggle />
+              <UI.Toggle
+                value={!!source.active}
+                onChange={settings.handleChangeSourceActive(source)}
+              />
             </item>
           ))}
         </content>

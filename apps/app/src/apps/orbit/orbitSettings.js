@@ -37,16 +37,9 @@ export default class OrbitSettings {
     return (
       <settings css={{ padding: [0, 10] }}>
         <UI.Title fontWeight={600}>Sources</UI.Title>
-        <content css={{ padding: [10, 5] }}>
+        <content css={{ padding: [10, 2] }}>
           {settings.sources.map(source => (
-            <item
-              key={source.title}
-              css={{
-                flexFlow: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-              }}
-            >
+            <item key={source.title}>
               <UI.Title size={1.5}>{source.title}</UI.Title>
               <UI.Toggle
                 value={!!source.active}
@@ -57,5 +50,18 @@ export default class OrbitSettings {
         </content>
       </settings>
     )
+  }
+
+  static style = {
+    item: {
+      flexFlow: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      padding: [5, 10],
+      margin: [0, -10],
+      '&:hover': {
+        background: [255, 255, 255, 0.1],
+      },
+    },
   }
 }

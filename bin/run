@@ -19,6 +19,25 @@ rm -rf ./packages/model/node_modules/mobx 2> /dev/null
 rm -rf ./apps/oracle/node_modules/mobx 2> /dev/null
 rm -rf ./apps/all/node_modules/mobx 2> /dev/null
 rm -rf ./apps/models/node_modules/mobx 2> /dev/null
+rm -rf ./packages/debug/node_modules/mobx 2> /dev/null
+rm -rf ./packages/ui/node_modules/react 2> /dev/null
+rm -rf ./packages/reactron/node_modules/react 2> /dev/null
+rm -rf ./packages/search/node_modules/react 2> /dev/null
+rm -rf ./packages/babel-preset-motion/node_modules/react 2> /dev/null
+rm -rf ./apps/oracle/node_modules/react 2> /dev/null
+rm -rf ./apps/all/node_modules/react 2> /dev/null
+rm -rf ./packages/gloss/node_modules/react 2> /dev/null
+rm -rf ./packages/black/node_modules/react 2> /dev/null
+rm -rf ./packages/decor/node_modules/react 2> /dev/null
+rm -rf ./packages/ui/node_modules/react-dom 2> /dev/null
+rm -rf ./packages/reactron/node_modules/react-dom 2> /dev/null
+rm -rf ./packages/search/node_modules/react-dom 2> /dev/null
+rm -rf ./packages/babel-preset-motion/node_modules/react-dom 2> /dev/null
+rm -rf ./apps/oracle/node_modules/react-dom 2> /dev/null
+rm -rf ./apps/all/node_modules/react-dom 2> /dev/null
+rm -rf ./packages/gloss/node_modules/react-dom 2> /dev/null
+rm -rf ./packages/black/node_modules/react-dom 2> /dev/null
+rm -rf ./packages/decor/node_modules/react-dom 2> /dev/null
 
 cd apps/$1
 npm run start -- ${@:2}

@@ -1,10 +1,6 @@
 {
   "name": "orbit",
   "private": true,
-  "workspaces": {
-    "packages": ["apps/*", "packages/*"],
-    "nohoist": ["**/*"]
-  },
   "scripts": {
     "start": "cd apps/dev && npm start"
   },

@@ -1,7 +1,8 @@
 import { store, watch } from '@mcro/black/store'
-import { reverse, range, sortBy, flatten } from 'lodash'
+import { reverse, sum, range, sortBy, flatten } from 'lodash'
 import debug from 'debug'
-import { splitSentences, cosineSimilarities } from '../helpers'
+import DB from './db'
+import { splitSentences, cosineSimilarity } from '../helpers'
 
 // for some reason lodash's was acting strangely so I rewrote it
 const sortedUniqBy = (xs, fn) => {
@@ -17,6 +18,11 @@ const sortedUniqBy = (xs, fn) => {
     return true
   })
 }
+
+const sleep = ms => new Promise(res => setTimeout(res, ms))
+
+const vecMean = xs =>
+  range(xs[0].length).map(dim => sum(xs.map(vec => vec[dim])) / xs.length)
 
 // TODO import from constants
 const API_URL = 'http://localhost:3001'
@@ -55,7 +61,16 @@ export default class Indexer {
   documents = []
   indexing = false
   totalIndexed = 0
+  totalIndexedSentences = 0
+  currentTotalSentences = 0
   totalDocuments = 0
+  @watch
+  indexedStatus = () =>
+    `documents: ${this.totalIndexed} / ${
+      this.totalDocuments
+    }. Indexing sentence: ${this.totalIndexedSentences} / ${
+      this.currentTotalSentences
+    } `
 
   @watch indexedPercentage = () => this.totalIndexed / this.totalDocuments * 100
 
@@ -73,6 +88,8 @@ export default class Indexer {
   async willMount({ documents }) {
     window.indexer = this
     window.pg = documents
+    this.db = new DB()
+    await sleep(300)
     await this.setDocuments(documents)
   }
 
@@ -88,11 +105,16 @@ export default class Indexer {
   }
 
   toDocument = async ({ title, text }, index) => {
+    this.totalIndexedSentences = 0
     const paragraphTexts = text.split('\n')
+    this.currentTotalSentences = paragraphTexts.length
     const paragraphs = await batchMapPromise(
       paragraphTexts,
       this.getSentences,
       2,
+      ({ end }) => {
+        this.totalIndexedSentences = end
+      },
     )
 
     return {
@@ -104,9 +126,7 @@ export default class Indexer {
 
   sentenceDistance = async (s, s2) => {
     const vectors = await this.getVectors(s)
-    return (
-      cosineSimilarities(vectors, await this.getVectors(s2)) / vectors.length
-    )
+    return cosineSimilarity(vectors, await this.getVectors(s2)) / vectors.length
   }
 
   setDocuments = async documentSources => {
@@ -116,7 +136,7 @@ export default class Indexer {
     await batchMapPromise(
       documentSources,
       this.toDocument,
-      2,
+      1,
       ({ end, items }) => {
         this.totalIndexed = end
         this.documentSources = documentSources.slice(0, end)
@@ -132,19 +152,24 @@ export default class Indexer {
   getVectors = async sentence => {
     const hash = `vectors-${sentence}`
 
-    if (localStorage.getItem(hash)) {
-      return JSON.parse(localStorage.getItem(hash))
+    const cachedValue = await this.db.getItem(hash)
+    if (cachedValue) {
+      return JSON.parse(cachedValue)
     }
 
     const url = `${API_URL}/sentence?sentence=${encodeURIComponent(sentence)}`
 
     const { values } = await (await fetch(url)).json()
+    const vector = vecMean(values).map(i => i.toFixed(4))
 
     try {
-      localStorage.setItem(hash, JSON.stringify(values))
-    } catch (err) {}
+      const str = JSON.stringify(vector)
+      this.db.setItem(hash, str)
+    } catch (err) {
+      console.log('err is', err)
+    }
 
-    return values
+    return vector
   }
 
   search = async (query, options = { count: 10, onePerDoc: true }) => {
@@ -153,7 +178,7 @@ export default class Indexer {
     const distances = flatten(
       this.paragraphs.map(({ document, sentences }) => {
         return sentences.map(sentence => {
-          const sim = cosineSimilarities(vectors, sentence.vectors)
+          const sim = cosineSimilarity(vectors, sentence.vectors)
           return {
             document: this.documentSources[document],
             documentIndex: document,

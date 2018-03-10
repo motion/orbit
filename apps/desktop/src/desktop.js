@@ -10,6 +10,8 @@ import * as Helpers from '~/helpers'
 import { store, debugState } from '@mcro/black'
 import global from 'global'
 import Path from 'path'
+import { getChromeContext } from './helpers/getContext'
+import { Desktop } from '@mcro/all'
 
 const log = debug('desktop')
 
@@ -17,7 +19,7 @@ const hostile = promisifyAll(hostile_)
 const sudoPrompt = promisifyAll(sudoPrompt_)
 
 @store
-export default class Desktop {
+export default class DesktopRoot {
   server = new Server()
   screenMaster = new ScreenMaster()
   stores = null
@@ -33,6 +35,14 @@ export default class Desktop {
     debugState(({ stores }) => {
       this.stores = stores
     })
+
+    // temp: get context
+    setInterval(async () => {
+      if (Desktop.state.appState.name === 'Chrome') {
+        const { selection } = await getChromeContext()
+        Desktop.setState({ selection })
+      }
+    }, 3000)
   }
 
   restart() {

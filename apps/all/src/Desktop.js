@@ -50,6 +50,7 @@ class Desktop {
     keyboard: {},
     clearWords: {},
     restoreWords: {},
+    selection: null,
   }
 
   start(options) {

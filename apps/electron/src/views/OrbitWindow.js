@@ -10,9 +10,12 @@ import * as Mobx from 'mobx'
 const PAD = 15
 const INITIAL_SIZE = [330, 420]
 const log = debug('OrbitWindow')
+const SCREEN_PAD = 15
+// small vertical pad allows you to resize attached window
+const VERT_PAD = 5
 
 const orbitPosition = ({ left, top, width, height }) => {
-  const EDGE_PAD = 15
+  let orbitH = height
   let [orbitW] = INITIAL_SIZE
   const [screenW, screenH] = Helpers.getScreenSize()
   const leftSpace = left
@@ -32,13 +35,15 @@ const orbitPosition = ({ left, top, width, height }) => {
       orbitW = rightSpace
     }
   }
-  if (height + y + EDGE_PAD > screenH) {
-    // height = screenH - EDGE_PAD - y
+  if (height + y + SCREEN_PAD > screenH) {
+    // height = screenH - SCREEN_PAD - y
     log(`too big, adjusting height ${height} screenH ${screenH}`)
   }
+  y += VERT_PAD
+  orbitH -= VERT_PAD
   return {
     position: [Math.round(x), Math.round(y)],
-    size: [orbitW, height],
+    size: [orbitW, orbitH],
     arrowTowards: orbitOnLeft ? 'right' : 'left',
   }
 }

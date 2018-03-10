@@ -83,7 +83,13 @@ export class Thing extends Model {
         throw new Error(`Thing already exists with this url`)
       }
 
-      console.log('creating doc', doc)
+      if (
+        doc.title &&
+        doc.bucket &&
+        (await ThingInstance.get({ title: doc.title, bucket: doc.bucket }))
+      ) {
+        throw new Error(`Thing already exists with this title/bucket`)
+      }
     },
   }
 

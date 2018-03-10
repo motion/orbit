@@ -60,7 +60,7 @@ export default class OrbitSettings {
       padding: [5, 10],
       margin: [0, -10],
       '&:hover': {
-        background: [255, 255, 255, 0.1],
+        background: [255, 255, 255, 0.05],
       },
     },
   }

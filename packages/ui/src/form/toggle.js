@@ -51,7 +51,7 @@ export default class Toggle extends React.Component {
     }
   }
 
-  toggleClick = () => {
+  toggleClick = e => {
     this.setOn(!this.value, true)
   }
 

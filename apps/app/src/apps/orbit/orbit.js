@@ -33,7 +33,7 @@ const log = debug('orbit')
       setTimeout(async () => {
         console.log('adding docs to search...')
         const allDocs = await Thing.getAll()
-        this.searchStore.addDocuments(
+        this.searchStore.setDocuments(
           allDocs.map(doc => ({ title: doc.title, text: doc.body })),
         )
       })

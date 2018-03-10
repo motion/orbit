@@ -1,5 +1,5 @@
 // @flow
-import matchSorter from 'match-sorter'
+// import matchSorter from 'match-sorter'
 
 type FuzzyOpts = {
   keys: Array<string>,
@@ -8,7 +8,8 @@ type FuzzyOpts = {
 export default function fuzzy(
   haystack: Array<any>,
   needle: string,
-  { keys = ['title', 'searchable'] }: FuzzyOpts = {}
+  { keys = ['title', 'searchable'] }: FuzzyOpts = {},
 ) {
-  return matchSorter(haystack, needle, { keys })
+  return []
+  // return matchSorter(haystack, needle, { keys })
 }

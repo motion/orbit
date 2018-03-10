@@ -1,4 +1,5 @@
 import http from 'http'
+import 'isomorphic-fetch'
 import logger from 'morgan'
 import express from 'express'
 import proxy from 'http-proxy-middleware'
@@ -11,7 +12,7 @@ import Passport from 'passport'
 import Crawler from '@mcro/crawler'
 import path from 'path'
 import killPort from 'kill-port'
-import KGSearch from 'google-kgsearch'
+import getEmbedding from './embedding'
 
 const { SERVER_PORT } = Constants
 
@@ -51,7 +52,7 @@ export default class Server {
     this.app.use(bodyParser.urlencoded({ limit: '2048mb', extended: true }))
     this.setupCrawler()
     this.setupSearch()
-    this.setupKnowledge()
+    this.setupEmbedding()
     this.setupCredPass()
     this.setupPassportRoutes()
     this.setupProxy()
@@ -82,21 +83,11 @@ export default class Server {
     }
   }
 
-  setupKnowledge() {
-    const apiKey = `AIzaSyARmEgX6uX-6ZDI9fKK0jUX00nLGcOMxR0`
-    const kGraph = KGSearch(apiKey)
-    log('setting up knowledge')
-
-    this.app.get('/knowledge', (req, res) => {
-      let params = {
-        query: req.query.entity,
-        limit: 1,
-      }
-
-      kGraph.search(params, (err, items) => {
-        if (err) console.error(err)
-        res.json(items)
-      })
+  setupEmbedding() {
+    this.app.get('/sentence', async (req, res) => {
+      console.log('(js) sentence is', req.query.sentence)
+      const values = await getEmbedding(req.query.sentence)
+      res.json({ values })
     })
   }
 

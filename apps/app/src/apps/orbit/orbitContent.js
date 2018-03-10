@@ -75,9 +75,9 @@ export default class OrbitContent {
         {orbitStore.results.map(result => (
           <Item
             type="gmail"
-            title={result.item.title}
-            subtitle="Uber Receipts"
-            content={result.snippet}
+            title={result.document.title}
+            subtitle={`distance: ${result.distance}`}
+            content={result.sentence}
             {...getHoverProps({
               result,
               id: result.index,

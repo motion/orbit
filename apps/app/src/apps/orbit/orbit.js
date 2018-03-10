@@ -4,7 +4,6 @@ import { debounce } from 'lodash'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { App, Electron } from '@mcro/all'
-import Knowledge from './knowledge'
 import OrbitContent from './orbitContent'
 import OrbitSettings from './orbitSettings'
 import { Thing } from '@mcro/models'
@@ -50,7 +49,7 @@ const log = debug('orbit')
     }
 
     search = debounce(async () => {
-      const { results } = await this.searchStore.search.search(this.query)
+      const results = await this.searchStore.search.search(this.query)
       if (!results) return
       this.results = results
     }, 150)

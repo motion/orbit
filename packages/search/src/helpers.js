@@ -1,4 +1,4 @@
-import { sortBy, last, memoize, range, sum } from 'lodash'
+import { sortBy, last, flatten, range, sum } from 'lodash'
 
 export const minKBy = (vals, k, fn) => {
   let stash = []
@@ -52,14 +52,19 @@ export const sumCounts = xs => {
   return total
 }
 
-export const cosineSimilarity = memoize((key, v, v2) => {
+export const cosineSimilarity = (v, v2) => {
   const r = range(v.length)
 
   const top = sum(r.map(i => v[i] * v2[i]))
   const l2 = vec => Math.sqrt(sum(r.map(i => Math.pow(vec[i], 2))))
   const bottom = l2(v) * l2(v2)
   return top / bottom
-})
+}
+
+export const cosineSimilarities = (v, v2) => {
+  const totals = flatten(v.map(_v => v2.map(_v2 => cosineSimilarity(_v, _v2))))
+  return sum(totals)
+}
 
 export const splitSentences = s =>
   s

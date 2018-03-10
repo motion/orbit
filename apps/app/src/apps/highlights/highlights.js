@@ -6,7 +6,6 @@ import { LINE_Y_ADJ, toTarget } from './helpers'
 import OCRWord from './ocrWord'
 import OCRLine from './ocrLine'
 import ner from '~/stores/language/ner'
-import KnowledgeStore from '~/stores/knowledgeStore'
 
 const log = debug('highlights')
 
@@ -20,7 +19,6 @@ const log = debug('highlights')
     hoverEvents = {}
     hoveredWord = null
     hoveredLine = null
-    knowledge = null
 
     get ocrWords() {
       return (Desktop.state.ocrWords || []).filter(
@@ -54,7 +52,6 @@ const log = debug('highlights')
 
     willMount() {
       // setup hover events
-      this.knowledge = new KnowledgeStore()
 
       this.react(
         () => this.content,

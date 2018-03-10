@@ -66,8 +66,7 @@
     "wink-bm25-text-search": "2.0.1",
     "wink-helpers": "^1.2.0",
     "wink-nlp-utils": "^1.7.0",
-    "regenerator-runtime": "^0.11.1",
-    "kv-idb": "1.1.0"
+    "regenerator-runtime": "^0.11.1"
   },
   "devDependencies": {
     "babel-core": "^6.26.0"

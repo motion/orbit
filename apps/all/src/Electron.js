@@ -1,10 +1,13 @@
 // @flow
 import Bridge from './helpers/Bridge'
 import { store } from '@mcro/black/store'
+import { debounce } from 'lodash'
 import global from 'global'
 import App from './App'
+import Desktop from './Desktop'
 
 let Electron
+const log = debug('Electron')
 
 @store
 class ElectronStore {
@@ -13,7 +16,6 @@ class ElectronStore {
     shouldShow: null,
     shouldPause: null,
     settingsPosition: [], // todo: settingsState.position
-    lastAction: null,
     orbitState: {
       show: false,
       focused: false,
@@ -40,6 +42,9 @@ class ElectronStore {
     Bridge.start(this, this.state, options)
     this.setState = Bridge.setState
 
+    // toggle pinned from app
+    this.react(() => App.state.shouldTogglePinned, Electron.togglePinned)
+
     // clear pinned on explicit hide
     this.react(
       () => App.state.orbitHidden,
@@ -49,6 +54,55 @@ class ElectronStore {
         }
       },
       true,
+    )
+
+    // option tap to clear if open
+    // let lastDown = 0
+    // this.react(
+    //   () => Desktop.isHoldingOption,
+    //   holding => {
+    //     const justTapped = !holding && Date.now() - lastDown < 100
+    //     if (justTapped) {
+    //       Electron.setState({ shouldHide: Date.now() })
+    //     }
+    //     if (holding) {
+    //       lastDown = Date.now()
+    //     }
+    //   },
+    // )
+
+    // orbit show/hide based on option hold
+    let showAfterDelay
+    let stickAfterDelay
+    this.react(
+      () => Desktop.isHoldingOption,
+      debounce(isHoldingOption => {
+        clearTimeout(showAfterDelay)
+        clearTimeout(stickAfterDelay)
+        if (Electron.orbitState.pinned) {
+          log(`pinned, avoid`)
+          return
+        }
+        if (!isHoldingOption) {
+          // TODO
+          if (!Electron.orbitState.pinned && Electron.orbitState.focused) {
+            log('prevent hide while mouseover after release hold')
+            return
+          }
+          Electron.setState({ shouldHide: Date.now() })
+          return
+        }
+        if (App.state.orbitHidden) {
+          // SHOW
+          showAfterDelay = setTimeout(() => {
+            Electron.setState({ shouldShow: Date.now() })
+          }, 150)
+          stickAfterDelay = setTimeout(() => {
+            log(`held open for 3 seconds, sticking...`)
+            Electron.setPinned(true)
+          }, 2500)
+        }
+      }, 16),
     )
   }
 
@@ -62,6 +116,14 @@ class ElectronStore {
 
   get currentPeek() {
     return this.peekState.windows[0]
+  }
+
+  togglePinned = () => {
+    this.setPinned(!Electron.orbitState.pinned)
+  }
+
+  setPinned = pinned => {
+    Electron.setOrbitState({ pinned, focused: pinned })
   }
 
   setOrbitState = nextState => {

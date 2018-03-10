@@ -1,5 +1,3 @@
-import { mean, uniq, sortBy, reverse, memoize } from 'lodash'
-
 import { store } from '@mcro/black'
 import dataset from './pg.json'
 import Search from '@mcro/search'
@@ -10,7 +8,7 @@ export default class LanguageStore {
 
   willMount() {
     this.search = new Search()
-    this.search.onDocuments(dataset)
+    this.search.addDocuments(dataset)
     window.s = this.search
   }
 }

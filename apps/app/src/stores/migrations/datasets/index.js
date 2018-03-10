@@ -1,0 +1,1 @@
+export paulGraham from './paulGraham'

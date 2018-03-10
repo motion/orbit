@@ -11,6 +11,7 @@ import AppStore from './stores/appStore'
 import adapter from 'pouchdb-adapter-idb'
 import Services from './services'
 import CurrentUser_ from './stores/currentUserStore'
+import Migrations from './stores/migrations'
 
 // ugly but we want to export these all here
 // this prevents hmr from going nuts when we edit models
@@ -42,6 +43,8 @@ class App {
 
   async start(quiet?: boolean) {
     await this.store.start(quiet)
+    this.migrations = new Migrations()
+    await this.migrations.runAll()
     this.sync = new Sync()
     if (Constants.IS_SETTINGS_PANE) {
       console.log('running syncers in settings pane, DISABLED')

@@ -4,7 +4,7 @@ import Redbox from 'redbox-react'
 import * as UI from '@mcro/ui'
 import NotFound from '~/views/404'
 import Router from '~/router'
-import { App, Electron, Desktop } from '@mcro/all'
+import { App, Electron } from '@mcro/all'
 
 const log = debug('root')
 

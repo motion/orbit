@@ -2,9 +2,9 @@
   "name": "@mcro/all",
   "private": true,
   "version": "4.0.0",
-  "main": "es6/index",
+  "main": "lib/index",
   "scripts": {
-    "build": "build prod,dev,es6",
+    "build": "build prod,dev",
     "watch": "npm run build -- --watch"
   },
   "dependencies": {

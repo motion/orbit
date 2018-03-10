@@ -71,22 +71,20 @@ const Item = ({ title, type, subtitle, content, ...props }) => (
 export default class OrbitContent {
   render({ orbitStore }) {
     return (
-      <content>
-        <list>
-          {orbitStore.results.map(result => (
-            <Item
-              type="gmail"
-              title={result.document.title}
-              subtitle={`distance: ${result.distance}`}
-              content={result.sentence}
-              {...getHoverProps({
-                result,
-                id: result.index,
-              })}
-            />
-          ))}
-        </list>
-      </content>
+      <list>
+        {orbitStore.results.map(result => (
+          <Item
+            type="gmail"
+            title={result.document.title}
+            subtitle={`distance: ${result.distance}`}
+            content={result.sentence}
+            {...getHoverProps({
+              result,
+              id: result.index,
+            })}
+          />
+        ))}
+      </list>
     )
   }
 }

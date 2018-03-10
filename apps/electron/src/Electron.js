@@ -128,12 +128,12 @@ export default class ElectronWindow extends React.Component {
         onQuit={electron.handleQuit}
         ref={electron.handleAppRef}
       >
-        {false && <MenuItems />}
-        {false && <HighlightsWindow />}
-        {false && <PeekWindow />}
+        <MenuItems />
+        <HighlightsWindow />
+        <PeekWindow />}
         <OrbitWindow />
         {/* <SettingsWindow /> */}
-        {false && <Tray />}
+        <Tray />
       </AppWindow>
     )
   }

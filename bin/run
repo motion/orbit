@@ -13,6 +13,12 @@ rm -rf ./packages/decor/node_modules/mobx 2> /dev/null
 rm -rf ./packages/router/node_modules/mobx 2> /dev/null
 rm -rf ./packages/black/node_modules/mobx 2> /dev/null
 rm -rf ./packages/automagical/node_modules/mobx 2> /dev/null
+rm -rf ./packages/ui/node_modules/mobx 2> /dev/null
+rm -rf ./packages/search/node_modules/mobx 2> /dev/null
+rm -rf ./packages/model/node_modules/mobx 2> /dev/null
+rm -rf ./apps/oracle/node_modules/mobx 2> /dev/null
+rm -rf ./apps/all/node_modules/mobx 2> /dev/null
+rm -rf ./apps/models/node_modules/mobx 2> /dev/null
 
 cd apps/$1
 npm run start -- ${@:2}

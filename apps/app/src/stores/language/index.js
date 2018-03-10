@@ -1,7 +1,5 @@
 import { store } from '@mcro/black'
-import Search from '@mcro/search'
+// import dataset from './pg.json'
 
 @store
-export default class LanguageStore {
-  q = 'hacker'
-}
+export default class LanguageStore {}

@@ -2,9 +2,9 @@
   "name": "@mcro/all",
   "private": true,
   "version": "4.0.0",
-  "main": "es6/index",
+  "main": "lib/index",
   "scripts": {
-    "build": "build prod,dev,es6",
+    "build": "build prod,dev",
     "watch": "npm run build -- --watch"
   },
   "dependencies": {
@@ -15,5 +15,8 @@
     "wait-port": "^0.2.2",
     "global": "^4.3.2",
     "lodash": "^4.17.5"
+  },
+  "peerDependencies": {
+    "mobx": "*"
   }
 }

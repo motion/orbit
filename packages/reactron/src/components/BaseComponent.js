@@ -19,6 +19,10 @@ export default class BaseComponent {
   }
 
   appendChild(child) {
+    if (typeof child !== 'object') {
+      console.log('weird child', child)
+      return
+    }
     this.children.push(child)
     child.parent = this
   }

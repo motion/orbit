@@ -9,7 +9,7 @@ import * as Constants from '~/constants'
 import OAuth from './server/oauth'
 import OAuthStrategies from './server/oauth.strategies'
 import Passport from 'passport'
-import Crawler from '@mcro/crawler'
+// import Crawler from '@mcro/crawler'
 import path from 'path'
 import killPort from 'kill-port'
 import getEmbedding from './embedding'
@@ -50,7 +50,7 @@ export default class Server {
     // ROUTES
     this.app.use(bodyParser.json({ limit: '2048mb' }))
     this.app.use(bodyParser.urlencoded({ limit: '2048mb', extended: true }))
-    this.setupCrawler()
+    // this.setupCrawler()
     this.setupSearch()
     this.setupEmbedding()
     this.setupCredPass()
@@ -97,78 +97,78 @@ export default class Server {
     this.app.use('/search', express.static(searchDist))
   }
 
-  setupCrawler() {
-    this.app.post('/crawler/single', async (req, res) => {
-      console.log('got a post')
-      const { options } = req.body
-      if (options) {
-        const crawler = new Crawler()
-        const results = await crawler.start(options.entry, {
-          maxPages: 1,
-        })
-        if (results && results.length) {
-          res.json({ result: results[0] })
-        } else {
-          res.json({ result: null })
-        }
-      } else {
-        res.sendStatus(500)
-      }
-    })
+  // setupCrawler() {
+  //   this.app.post('/crawler/single', async (req, res) => {
+  //     console.log('got a post')
+  //     const { options } = req.body
+  //     if (options) {
+  //       const crawler = new Crawler()
+  //       const results = await crawler.start(options.entry, {
+  //         maxPages: 1,
+  //       })
+  //       if (results && results.length) {
+  //         res.json({ result: results[0] })
+  //       } else {
+  //         res.json({ result: null })
+  //       }
+  //     } else {
+  //       res.sendStatus(500)
+  //     }
+  //   })
 
-    this.app.post('/crawler/exact', async (req, res) => {
-      const { options } = req.body
-      if (options && options.entries && options.entries.length) {
-        const crawler = new Crawler()
-        const [entry, ...queue] = options.entries
-        const results = await crawler.start(entry, {
-          disableLinkFinding: true,
-          disableStructureFinding: true,
-          queue,
-        })
-        res.json({ results })
-      } else {
-        console.log('no options.entries')
-        res.sendStatus(500)
-      }
-    })
+  //   this.app.post('/crawler/exact', async (req, res) => {
+  //     const { options } = req.body
+  //     if (options && options.entries && options.entries.length) {
+  //       const crawler = new Crawler()
+  //       const [entry, ...queue] = options.entries
+  //       const results = await crawler.start(entry, {
+  //         disableLinkFinding: true,
+  //         disableStructureFinding: true,
+  //         queue,
+  //       })
+  //       res.json({ results })
+  //     } else {
+  //       console.log('no options.entries')
+  //       res.sendStatus(500)
+  //     }
+  //   })
 
-    const crawler = new Crawler()
-    let results = null
+  //   const crawler = new Crawler()
+  //   let results = null
 
-    this.app.post('/crawler/start', async (req, res) => {
-      const { options } = req.body
-      if (options) {
-        await crawler.stop()
-        results = null
-        crawler.start(options.entry, options).then(vals => {
-          results = vals
-        })
-        // allow crawler to reset
-        res.sendStatus(200)
-      } else {
-        log('No options sent')
-        res.sendStatus(500)
-      }
-    })
+  //   this.app.post('/crawler/start', async (req, res) => {
+  //     const { options } = req.body
+  //     if (options) {
+  //       await crawler.stop()
+  //       results = null
+  //       crawler.start(options.entry, options).then(vals => {
+  //         results = vals
+  //       })
+  //       // allow crawler to reset
+  //       res.sendStatus(200)
+  //     } else {
+  //       log('No options sent')
+  //       res.sendStatus(500)
+  //     }
+  //   })
 
-    this.app.get('/crawler/results', (req, res) => {
-      log(`crawl results: ${(results || []).length} results`)
-      res.json(results || [])
-    })
+  //   this.app.get('/crawler/results', (req, res) => {
+  //     log(`crawl results: ${(results || []).length} results`)
+  //     res.json(results || [])
+  //   })
 
-    this.app.post('/crawler/stop', async (req, res) => {
-      if (await crawler.stop()) {
-        res.json({ success: true })
-      } else {
-        res.json({ success: false })
-      }
-    })
+  //   this.app.post('/crawler/stop', async (req, res) => {
+  //     if (await crawler.stop()) {
+  //       res.json({ success: true })
+  //     } else {
+  //       res.json({ success: false })
+  //     }
+  //   })
 
-    this.app.get('/crawler/status', async (req, res) => {
-      res.json({ status: crawler.getStatus({ includeResults: true }) })
-    })
-  }
+  //   this.app.get('/crawler/status', async (req, res) => {
+  //     res.json({ status: crawler.getStatus({ includeResults: true }) })
+  //   })
+  // }
 
   creds = {}
   setupCredPass() {

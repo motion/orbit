@@ -3,6 +3,7 @@ import { reverse, sum, range, sortBy, flatten } from 'lodash'
 import debug from 'debug'
 import DB from './db'
 import { splitSentences, cosineSimilarity } from '../helpers'
+import summarize from './summarize'
 
 // for some reason lodash's was acting strangely so I rewrote it
 const sortedUniqBy = (xs, fn) => {
@@ -64,6 +65,7 @@ export default class Indexer {
   totalIndexedSentences = 0
   currentTotalSentences = 0
   totalDocuments = 0
+
   @watch
   indexedStatus = () =>
     `documents: ${this.totalIndexed} / ${
@@ -89,7 +91,6 @@ export default class Indexer {
     window.indexer = this
     window.pg = documents
     this.db = new DB()
-    await sleep(300)
     await this.setDocuments(documents)
   }
 
@@ -130,6 +131,17 @@ export default class Indexer {
   }
 
   setDocuments = async documentSources => {
+    // lets keep the articles short for testing
+    documentSources = documentSources
+      .filter(({ text }) => text.length < 5000)
+      .map((obj, index) => {
+        console.log('summarizing', index, obj.text.length)
+        return {
+          ...obj,
+          text: summarize(obj.text),
+        }
+      })
+
     this.totalDocuments = documentSources.length
     this.indexing = true
     this.totalIndexed = 0
@@ -160,6 +172,7 @@ export default class Indexer {
     const url = `${API_URL}/sentence?sentence=${encodeURIComponent(sentence)}`
 
     const { values } = await (await fetch(url)).json()
+    await sleep(15)
     const vector = vecMean(values).map(i => i.toFixed(4))
 
     try {
@@ -200,8 +213,6 @@ export default class Indexer {
     if (!options.onePerDoc) {
       return sentences
     }
-    window.sortedUnique = sortedUniqBy
-    window.s
 
     return sortedUniqBy(sentences, _ => _.documentIndex).slice(0, options.count)
   }

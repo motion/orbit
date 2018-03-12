@@ -134,8 +134,7 @@ export default class Indexer {
     // lets keep the articles short for testing
     documentSources = documentSources
       .filter(({ text }) => text.length < 5000)
-      .map((obj, index) => {
-        console.log('summarizing', index, obj.text.length)
+      .map(obj => {
         return {
           ...obj,
           text: summarize(obj.text),

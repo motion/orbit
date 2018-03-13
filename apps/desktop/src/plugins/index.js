@@ -1,9 +1,12 @@
-import * as MacAppsPlugin from './macApps'
 import { flatten } from 'lodash'
 import { store } from '@mcro/black/store'
 import { App, Desktop } from '@mcro/all'
 
-const plugins = [MacAppsPlugin]
+// plugins
+import * as MacAppsPlugin from './macApps'
+import * as FilesPlugin from './files'
+
+const plugins = [MacAppsPlugin, FilesPlugin]
 
 @store
 export default class Plugins {
@@ -21,7 +24,9 @@ export default class Plugins {
   }
 
   async initializePlugins() {
-    await Promise.all(this.plugins.map(plugin => plugin.initialize()))
+    await Promise.all(
+      this.plugins.map(plugin => plugin.initialize && plugin.initialize()),
+    )
   }
 
   reactToSearches() {

@@ -1,4 +1,3 @@
-import { flatten } from 'lodash'
 import { store } from '@mcro/black/store'
 import { App, Desktop } from '@mcro/all'
 
@@ -33,29 +32,26 @@ export default class Plugins {
     this.react(
       () => App.state.query,
       async query => {
-        const uid = (this.searchId = Math.random())
-        const results = await this.search(query)
-        if (uid === this.searchId) {
-          Desktop.setState({ pluginResults: results })
-        }
+        const uid = Math.random()
+        this.searchId = uid
+        let results = []
+        this.search(query, newResults => {
+          if (uid === this.searchId) {
+            results = [...results, ...newResults]
+            Desktop.setState({ pluginResults: results.slice(0, 100) })
+          }
+        })
       },
     )
   }
 
-  search = async term => {
-    return flatten(
-      await Promise.all(
-        this.plugins.map(plugin => {
-          return new Promise(res => {
-            const display = results => res(results)
-            plugin.fn({
-              term,
-              actions: this.actions,
-              display,
-            })
-          })
-        }),
-      ),
-    )
+  search = async (term, onResults) => {
+    this.plugins.forEach(plugin => {
+      plugin.fn({
+        term,
+        actions: this.actions,
+        display: onResults,
+      })
+    })
   }
 }

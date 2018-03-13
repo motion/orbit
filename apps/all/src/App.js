@@ -46,6 +46,18 @@ class AppStore {
     this.hideOrbitOnMouseOut()
     this.showOrbitOnPin()
     this.hideOrbitOnEsc()
+    this.clearPeekOnUnfocus()
+  }
+
+  clearPeekOnUnfocus = () => {
+    this.react(
+      () => Electron.orbitState.focused,
+      focused => {
+        if (!focused) {
+          App.setState({ peekTarget: null })
+        }
+      },
+    )
   }
 
   hideOrbitOnEsc = () => {

@@ -2,13 +2,16 @@ import { debounce } from 'lodash'
 import { App, Desktop } from '@mcro/all'
 import { Thing } from '@mcro/models'
 import Search from '@mcro/search'
+import KeyboardStore from './keyboardStore'
 
 const log = debug('OrbitStore')
 
 export default class OrbitStore {
   searchStore = new Search()
+  keyboardStore = new KeyboardStore()
   searchResults = []
   showSettings = false
+  selectedIndex = 0
 
   get results() {
     return [...this.searchResults, ...Desktop.state.pluginResults]
@@ -27,6 +30,24 @@ export default class OrbitStore {
     })
     // search
     this.react(() => App.state.query, this.handleSearch, true)
+
+    this.on(this.keyboardStore, 'keydown', code => {
+      switch (code) {
+        case 40: // down
+          this.selectedIndex = Math.min(
+            this.results.length - 1,
+            this.selectedIndex + 1,
+          )
+          return
+        case 38: //up
+          this.selectedIndex = Math.max(0, this.selectedIndex - 1)
+          return
+      }
+    })
+  }
+
+  willUnmount() {
+    this.keyboard.willUnmount()
   }
 
   onChangeQuery = e => {

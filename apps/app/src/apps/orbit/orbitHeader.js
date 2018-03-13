@@ -33,7 +33,7 @@ export default class PeekHeader {
         <title>
           <UI.Input
             $orbitInput
-            value={orbitStore.query}
+            value={App.state.query}
             size={1.1}
             onChange={orbitStore.onChangeQuery}
             getRef={headerStore.ref('inputRef').set}

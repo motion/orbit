@@ -1,14 +1,12 @@
 // @flow
 import * as React from 'react'
-import { debounce } from 'lodash'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { App, Electron } from '@mcro/all'
 import OrbitContent from './orbitContent'
 import OrbitSettings from './orbitSettings'
-import { Thing } from '@mcro/models'
-import Search from '@mcro/search'
 import OrbitHeader from './orbitHeader'
+import OrbitStore from './orbitStore'
 
 const SHADOW_PAD = 15
 const BORDER_RADIUS = 12
@@ -18,42 +16,7 @@ const orbitShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.05]]]
 const log = debug('orbit')
 
 @view.provide({
-  orbitStore: class OrbitStore {
-    searchStore = new Search()
-    isTorn = false
-    isPinned = false
-    query = 'test'
-    results = []
-    showSettings = false
-
-    willMount() {
-      App.runReactions()
-
-      setTimeout(async () => {
-        console.log('adding docs to search...')
-        const allDocs = await Thing.getAll()
-        this.searchStore.setDocuments(
-          allDocs.map(doc => ({ title: doc.title, text: doc.body })),
-        )
-      })
-      // react to do searches
-      this.react(() => this.query, this.search, true)
-    }
-
-    onChangeQuery = e => {
-      this.query = e.target.value
-    }
-
-    toggleSettings = () => {
-      this.showSettings = !this.showSettings
-    }
-
-    search = debounce(async () => {
-      const results = await this.searchStore.search.search(this.query)
-      if (!results) return
-      this.results = results
-    }, 150)
-  },
+  orbitStore: OrbitStore,
 })
 @view.attach('orbitStore')
 @view

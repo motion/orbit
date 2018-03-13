@@ -12,6 +12,7 @@ import global from 'global'
 import Path from 'path'
 import { getChromeContext } from './helpers/getContext'
 import { Desktop } from '@mcro/all'
+import Plugins from './plugins'
 
 const log = debug('desktop')
 
@@ -22,6 +23,7 @@ const sudoPrompt = promisifyAll(sudoPrompt_)
 export default class DesktopRoot {
   server = new Server()
   screenMaster = new ScreenMaster()
+  plugins = new Plugins()
   stores = null
 
   async start() {

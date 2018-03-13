@@ -34,13 +34,15 @@ export type DesktopState = {
   keyboard: Object,
   highlightWords: { [String]: boolean },
   clearWords: { [String]: Number },
-  restoreWords: { [String]: Numbe },
+  restoreWords: { [String]: Number },
+  pluginResults: [{}],
 }
 
 @store
 class Desktop {
   state = {
     paused: true,
+    pluginResults: [],
     appState: {},
     ocrWords: null,
     linePositions: null,

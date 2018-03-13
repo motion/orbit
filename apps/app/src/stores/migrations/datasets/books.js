@@ -14,15 +14,16 @@ export default {
     await setting.update({
       values: { ...setting.values, [bucket]: { title } },
     })
-    for (const item of data) {
-      console.log('creating thing', item)
-      await Thing.create({
-        title: item.title,
-        body: item.text,
-        integration: 'web',
-        type: 'document',
-        bucket,
-      })
-    }
+    await Promise.all(
+      data.map(item =>
+        Thing.create({
+          title: item.title,
+          body: item.text,
+          integration: 'web',
+          type: 'document',
+          bucket,
+        }),
+      ),
+    )
   },
 }

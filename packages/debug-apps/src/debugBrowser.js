@@ -39,7 +39,8 @@ export default class DebugApps {
     this.browser = await puppeteer.launch({
       headless: false,
       args: [
-        `--window-size=${800},${720}`,
+        `--window-size=${800},${680}`,
+        `--no-startup-window`,
         // `--disable-extensions-except=${extNames.join(',')}`,
         // ...extensions,
       ],

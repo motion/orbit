@@ -187,14 +187,17 @@ export default class PeekWindow {
   }
 
   render({ store }) {
+    const peekWindows = Mobx.toJS(Electron.peekState.windows)
+    console.log('peekWindows', peekWindows)
     return (
       <React.Fragment>
-        {Mobx.toJS(Electron.peekState.windows).map((peek, index) => {
+        {peekWindows.map((peek, index) => {
           // peek always in front
           const isAttached = index === 0
           return (
             <Window
               key={peek.key}
+              focusable={false}
               showDevTools={
                 isAttached
                   ? Electron.state.showDevTools.peek

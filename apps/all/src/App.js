@@ -29,7 +29,7 @@ class AppStore {
     return (
       Electron.orbitState.fullScreen ||
       Electron.orbitState.pinned ||
-      !this.state.orbitHidden ||
+      !this.state.orbitHidden
     )
   }
 
@@ -38,7 +38,11 @@ class AppStore {
   }
 
   get showHeader() {
-    return Electron.orbitState.focused || Electron.orbitState.pinned
+    return (
+      Electron.orbitState.fullScreen ||
+      Electron.orbitState.focused ||
+      Electron.orbitState.pinned
+    )
   }
 
   start(options) {

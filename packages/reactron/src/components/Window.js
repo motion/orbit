@@ -45,17 +45,23 @@ export default class Window extends BaseComponent {
     this.updatePosition = () => configurePosition.call(this, this.props)
 
     // handles simple prop sync to
+    const focusable = this.handleSettableProp(
+      'focusable',
+      x => (x === undefined ? true : x),
+    )
     const ignoreMouseEvents = this.handleSettableProp(
       'ignoreMouseEvents',
       x => !!x,
     )
 
     ignoreMouseEvents(props.ignoreMouseEvents)
+    focusable(props.focusable)
 
     this.propHandlers = {
       kiosk: v => this.window.setKiosk(v),
       fullScreen: v => this.window.setFullScreen(v),
       ignoreMouseEvents,
+      focusable,
       devToolsExtensions: () => configureExtensions.call(this, this.props),
       showDevTools: propVal => {
         if (propVal) {

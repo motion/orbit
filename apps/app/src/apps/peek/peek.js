@@ -16,9 +16,6 @@ const borderRadius = 8
 @view({
   store: class PeekStore {
     isTorn = false
-    isPinned = false
-
-    willMount() {}
 
     @watch
     watchTear = () => {
@@ -69,7 +66,12 @@ export default class PeekPage {
     const towardsRight = Electron.currentPeek.arrowTowards === 'left'
     return (
       <UI.Theme name="light">
-        <peek css={peekStyle} $peekVisible={!!App.state.peekTarget}>
+        <peek
+          css={peekStyle}
+          $peekVisible={
+            !!App.state.peekTarget || Electron.orbitState.fullScreen
+          }
+        >
           {/* first is arrow (above), second is arrow shadow (below) */}
           {[1, 2].map(key => (
             <UI.Arrow

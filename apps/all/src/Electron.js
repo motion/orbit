@@ -20,6 +20,7 @@ class ElectronStore {
       show: false,
       focused: false,
       pinned: false,
+      fullScreen: false,
       arrowTowards: null,
       position: null,
       size: null,
@@ -132,6 +133,14 @@ class ElectronStore {
 
   setPinned = pinned => {
     Electron.setOrbitState({ pinned, focused: pinned })
+  }
+
+  toggleFullScreen = () => {
+    this.setFullScreen(!Electron.orbitState.fullScreen)
+  }
+
+  setFullScreen = fullScreen => {
+    Electron.setOrbitState({ fullScreen })
   }
 
   setOrbitState = nextState => {

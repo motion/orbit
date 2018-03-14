@@ -31,9 +31,7 @@ export default class DesktopRoot {
 
   async start() {
     Desktop.start({
-      ignoreSource: {
-        Desktop: true,
-      },
+      ignoreSelf: true,
     })
     this.keyboardStore.start()
     iohook.start()

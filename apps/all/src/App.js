@@ -26,7 +26,11 @@ class AppStore {
   }
 
   get isShowingOrbit() {
-    return !this.state.orbitHidden || Electron.state.orbitState.pinned
+    return (
+      Electron.orbitState.fullScreen ||
+      Electron.orbitState.pinned ||
+      !this.state.orbitHidden ||
+    )
   }
 
   get hoveredWordName() {

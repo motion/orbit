@@ -28,7 +28,9 @@ const log = debug('Electron')
         this.stores = stores
         this.views = views
       })
-      Electron.start()
+      Electron.start({
+        ignoreSelf: true,
+      })
       Electron.setState({ settingsPosition: Helpers.getAppSize().position })
       this.watchOptionPress()
 
@@ -49,18 +51,7 @@ const log = debug('Electron')
       this.shortcutStore = new ShortcutsStore(['Option+Space'])
       this.shortcutStore.emitter.on('shortcut', shortcut => {
         if (shortcut === 'Option+Space') {
-          log(`got Command+space`)
-          // if were holding peek
-          if (
-            Desktop.isHoldingOption &&
-            !Electron.orbitState.pinned &&
-            !App.state.orbitHidden
-          ) {
-            log('avoid toggle. TODO: make this "pin" it open')
-            Electron.setPinned(true)
-            return
-          }
-          Electron.togglePinned()
+          Electron.toggleFullScreen()
         }
       })
     }

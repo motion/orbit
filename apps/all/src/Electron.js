@@ -25,9 +25,7 @@ class ElectronStore {
       size: null,
     },
     peekState: {
-      arrowTowards: null,
-      position: null,
-      size: null,
+      windows: null,
     },
     showSettings: false,
     showDevTools: {
@@ -115,7 +113,7 @@ class ElectronStore {
   }
 
   get currentPeek() {
-    return this.peekState.windows[0]
+    return (this.peekState.windows || [])[0]
   }
 
   togglePinned = () => {

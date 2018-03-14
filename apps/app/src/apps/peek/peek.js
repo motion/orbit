@@ -11,6 +11,7 @@ const SHADOW_PAD = 15
 const background = '#fff'
 const peekShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.1]]]
 const log = debug('peek')
+const borderRadius = 8
 
 @view({
   store: class PeekStore {
@@ -61,6 +62,11 @@ export default class PeekPage {
         }
         break
     }
+    if (!Electron.currentPeek) {
+      console.log('no peek')
+      return null
+    }
+    const towardsRight = Electron.currentPeek.arrowTowards === 'left'
     return (
       <UI.Theme name="light">
         <peek css={peekStyle} $peekVisible={!!App.state.peekTarget}>
@@ -87,9 +93,16 @@ export default class PeekPage {
               }}
             />
           ))}
-          <content>
+          <content
+            css={{
+              borderRightRadius: !towardsRight ? 0 : borderRadius,
+              borderLeftRadius: towardsRight ? 0 : borderRadius,
+            }}
+          >
             <PeekHeader store={store} />
-            <contentInner>hello world</contentInner>
+            <contentInner if={Electron.currentPeek}>
+              hello {Electron.currentPeek.arrowTowards || 'none'} world
+            </contentInner>
           </content>
         </peek>
       </UI.Theme>
@@ -123,7 +136,6 @@ export default class PeekPage {
       flex: 1,
       // border: [1, 'transparent'],
       background,
-      borderRadius: 8,
       boxShadow: [peekShadow],
       overflow: 'hidden',
       opacity: 1,

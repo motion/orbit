@@ -104,8 +104,6 @@ export default class PeekWindow {
           show: false,
         },
       ],
-      lastTarget: null,
-      wasShowing: false,
     })
   }
 
@@ -134,7 +132,7 @@ export default class PeekWindow {
           position[0] += arrowTowards === 'right' ? PAD : -PAD
           peek.position = position
           peek.size = size
-          peek.arrowToward = arrowTowards
+          peek.arrowTowards = arrowTowards
         })
       },
     )

@@ -5,7 +5,7 @@ import { view } from '@mcro/black'
 import { Window } from '@mcro/reactron'
 import { memoize } from 'lodash'
 import * as Helpers from '~/helpers'
-import { App, Desktop, Electron } from '@mcro/all'
+import { App, Electron } from '@mcro/all'
 import * as Mobx from 'mobx'
 
 type PeekTarget = {
@@ -203,7 +203,7 @@ export default class PeekWindow {
                   : peek.showDevTools
               }
               alwaysOnTop={isAttached || peek.alwaysOnTop}
-              animatePosition={Electron.peekState.wasShowing}
+              animatePosition
               show={peek.show}
               file={`${Constants.APP_URL}/peek?key=${peek.key}`}
               ref={isAttached ? store.handlePeekRef(peek) : idFn}

@@ -2,8 +2,6 @@
 import Bridge from './helpers/Bridge'
 import { store } from '@mcro/black/store'
 import global from 'global'
-import { debounce } from 'lodash'
-import Electron from './Electron'
 import App from './App'
 
 const log = debug('Desktop')

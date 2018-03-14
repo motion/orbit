@@ -2,7 +2,7 @@
 import Bridge from './helpers/Bridge'
 import { store } from '@mcro/black/store'
 import global from 'global'
-import App from './App'
+// import App from './App'
 
 const log = debug('Desktop')
 
@@ -61,18 +61,6 @@ class Desktop {
   start(options) {
     Bridge.start(this, this.state, options)
     this.setState = Bridge.setState
-
-    // reactions
-    this.openAppOnSelect()
-  }
-
-  openAppOnSelect = () => {
-    this.react(
-      () => App.state.openResult,
-      result => {
-        console.log('should open result', result)
-      },
-    )
   }
 
   updateKeyboard = newState =>

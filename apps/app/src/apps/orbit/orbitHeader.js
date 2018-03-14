@@ -9,10 +9,10 @@ class HeaderStore {
 
   willMount() {
     this.react(
-      () => Electron.orbitState.pinned,
-      pinned => {
-        if (!pinned) return
-        console.log('pinned')
+      () => Electron.orbitState.pinned || Electron.orbitState.fullScreen,
+      shouldFocus => {
+        if (!shouldFocus) return
+        console.log('shouldFocus')
         if (this.inputRef) {
           this.inputRef.focus()
           this.inputRef.select()

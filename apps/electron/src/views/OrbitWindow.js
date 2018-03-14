@@ -171,6 +171,10 @@ export default class OrbitWindow extends React.Component {
           peek.size = [peekW, peekH].map(round)
           peek.arrowTowards = 'left'
           Electron.setPeekState({ windows: [peek, ...rest] })
+          // focus orbit window
+          if (this.props.store.orbitRef) {
+            this.props.store.orbitRef.focus()
+          }
           return
         }
       },

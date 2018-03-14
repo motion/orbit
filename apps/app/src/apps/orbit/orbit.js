@@ -12,8 +12,31 @@ const SHADOW_PAD = 15
 const BORDER_RADIUS = 12
 // const BORDER_COLOR = `rgba(255,255,255,0.25)`
 const background = 'rgba(0,0,0,0.9)'
-const orbitShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.05]]]
+const orbitShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.3]]]
 const log = debug('orbit')
+
+const OrbitArrow = ({ arrowSize, arrowTowards, arrowStyle }) =>
+  [1, 2].map(key => (
+    <UI.Arrow
+      key={key}
+      size={arrowSize}
+      towards={arrowTowards}
+      background={background}
+      css={{
+        position: 'absolute',
+        ...arrowStyle,
+        ...[
+          {
+            boxShadow: orbitShadow,
+            zIndex: -1,
+          },
+          {
+            zIndex: 100,
+          },
+        ][key],
+      }}
+    />
+  ))
 
 @view.provide({
   orbitStore: OrbitStore,
@@ -46,34 +69,27 @@ export default class OrbitPage {
         }
         break
     }
+    if (Electron.orbitState.fullScreen) {
+      orbitStyle.paddingRight = 0
+    }
     console.log('Orbit.render, hidden', App.isShowingOrbit)
     return (
       <UI.Theme name="dark">
         <orbit css={orbitStyle} $orbitVisible={App.isShowingOrbit}>
           {/* first is arrow (above), second is arrow shadow (below) */}
-          {[1, 2].map(key => (
-            <UI.Arrow
-              if={!orbitStore.isTorn}
-              key={key}
-              size={arrowSize}
-              towards={arrowTowards}
-              background={background}
-              css={{
-                position: 'absolute',
-                ...arrowStyle,
-                ...[
-                  {
-                    boxShadow: orbitShadow,
-                    zIndex: -1,
-                  },
-                  {
-                    zIndex: 100,
-                  },
-                ][key],
-              }}
-            />
-          ))}
-          <content>
+          <OrbitArrow
+            if={!Electron.orbitState.fullScreen}
+            arrowSize={arrowSize}
+            arrowTowards={arrowTowards}
+            arrowStyle={arrowStyle}
+          />
+          <content
+            css={{
+              borderRightRadius: Electron.orbitState.fullScreen
+                ? 0
+                : BORDER_RADIUS,
+            }}
+          >
             <OrbitHeader />
             <OrbitContent if={!orbitStore.showSettings} />
             <OrbitSettings if={orbitStore.showSettings} />
@@ -134,7 +150,7 @@ export default class OrbitPage {
       overflow: 'hidden',
       opacity: 1,
       transition: 'background ease-in 200ms',
-      // boxShadow: [orbitShadow, `0 0 0 0.5px ${BORDER_COLOR}`],
+      boxShadow: [orbitShadow],
     },
   }
 }

@@ -125,6 +125,10 @@ export default class PeekWindow {
       () => App.state.peekTarget,
       peekTarget => {
         if (!peekTarget) return
+        if (Electron.orbitState.fullScreen) {
+          log(`Avoid position on fullScreen`)
+          return
+        }
         updatePeek(Electron.currentPeek, peek => {
           let { position, size, arrowTowards } = peekPosition(
             peekTarget.position,

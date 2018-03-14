@@ -155,13 +155,12 @@ export default class OrbitWindow extends React.Component {
       fullScreen => {
         if (fullScreen) {
           const { round } = Math
-          const ORBIT_PAD = 40
           const [screenW, screenH] = Helpers.getScreenSize()
           const [appW, appH] = [screenW / 1.6, screenH / 1.4]
           const [orbitW, orbitH] = [appW * 1 / 3, appH]
           const [orbitX, orbitY] = [(screenW - appW) / 2, (screenH - appH) / 2]
           const [peekW, peekH] = [appW * 2 / 3, appH]
-          const [peekX, peekY] = [orbitX + orbitW - ORBIT_PAD, orbitY]
+          const [peekX, peekY] = [orbitX + orbitW, orbitY]
           Electron.setOrbitState({
             position: [orbitX, orbitY].map(round),
             size: [orbitW, orbitH].map(round),

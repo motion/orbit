@@ -28,8 +28,17 @@ export default class OrbitStore {
         allDocs.map(doc => ({ title: doc.title, text: doc.body })),
       )
     })
+
     // search
     this.react(() => App.state.query, this.handleSearch, true)
+
+    // selected
+    this.react(
+      () => this.selectedIndex,
+      index => {
+        App.setState({ selectedItem: this.results[index] })
+      },
+    )
 
     this.on(this.keyboardStore, 'keydown', code => {
       console.log('code', code)

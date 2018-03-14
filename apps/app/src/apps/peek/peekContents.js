@@ -2,7 +2,7 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 // import * as UI from '@mcro/ui'
-import { Electron } from '@mcro/all'
+import { App, Electron } from '@mcro/all'
 
 @view
 export default class PeekContents {
@@ -12,6 +12,9 @@ export default class PeekContents {
       <contents>
         got a peek:<br />
         {JSON.stringify(peek)}
+        <br />
+        selected item:<br />
+        {JSON.stringify(App.state.selectedItem || {})}
       </contents>
     )
   }

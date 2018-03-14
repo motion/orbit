@@ -12,11 +12,11 @@ let App
 class AppStore {
   state = {
     query: null,
+    selectedItem: null,
     openResult: null,
     highlightWords: {},
     hoveredWord: null,
     hoveredLine: null,
-    preventElectronHide: true,
     contextMessage: 'Orbit',
     closePeek: null,
     orbitHidden: true,

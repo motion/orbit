@@ -1,21 +1,42 @@
 // @flow
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, watch } from '@mcro/black'
 // import * as UI from '@mcro/ui'
 import { App, Electron } from '@mcro/all'
+import r2 from '@mcro/r2'
 
-@view
+@view({
+  peekContents: class PeekContentsStore {
+    @watch
+    selectedContents = () =>
+      this.selectedPath
+        ? r2.get(`/contents${this.selectedPath}`).json.then(x => x.file)
+        : null
+
+    get selectedPath() {
+      const selected = App.state.selectedItem
+      if (!selected.id) {
+        return null
+      }
+      return selected.id
+    }
+  },
+})
 export default class PeekContents {
-  render() {
+  render({ peekContents }) {
     const peek = Electron.currentPeek
+    console.log(peekContents.selectedContents)
     return (
-      <contents>
+      <peekContents>
         got a peek:<br />
         {JSON.stringify(peek)}
         <br />
         selected item:<br />
         {JSON.stringify(App.state.selectedItem || {})}
-      </contents>
+        <content if={peekContents.selectedContents}>
+          {JSON.stringify(peekContents.selectedContents || {})}
+        </content>
+      </peekContents>
     )
   }
 }

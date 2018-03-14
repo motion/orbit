@@ -57,7 +57,9 @@ export default class Server {
     // HACKY DANGEROUS
     app.use('/contents', (req, res) => {
       const filePath = Path.join('/', req.path.replace('/contents', ''))
-      const file = Fs.readFileSync(filePath).toString('utf8')
+      const file = Fs.readFileSync(filePath)
+        .toString('utf8')
+        .slice(0, 3000)
       res.json({ file })
     })
 

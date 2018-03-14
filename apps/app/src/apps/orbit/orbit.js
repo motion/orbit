@@ -46,10 +46,10 @@ export default class OrbitPage {
         }
         break
     }
-    console.log('Orbit.render, hidden', App.state.orbitHidden)
+    console.log('Orbit.render, hidden', App.isShowingOrbit)
     return (
       <UI.Theme name="dark">
-        <orbit css={orbitStyle} $orbitVisible={!App.state.orbitHidden}>
+        <orbit css={orbitStyle} $orbitVisible={App.isShowingOrbit}>
           {/* first is arrow (above), second is arrow shadow (below) */}
           {[1, 2].map(key => (
             <UI.Arrow

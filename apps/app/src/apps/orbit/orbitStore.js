@@ -49,10 +49,6 @@ export default class OrbitStore {
     })
   }
 
-  willUnmount() {
-    this.keyboardStore.willUnmount()
-  }
-
   onChangeQuery = e => {
     App.setState({ query: e.target.value })
   }

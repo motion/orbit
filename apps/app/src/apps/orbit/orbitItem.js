@@ -31,7 +31,7 @@ export default class Item {
           css={{ alignItems: 'center', justifyContent: 'center' }}
         >
           <OrbitIcon
-            icon={result.icon || result.type}
+            icon={result.icon ? `/icons/${result.icon}` : result.type}
             css={{
               width: 22,
               height: 22,

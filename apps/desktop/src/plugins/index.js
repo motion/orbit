@@ -1,6 +1,6 @@
 import { store } from '@mcro/black/store'
 import { App, Desktop } from '@mcro/all'
-import getIcon from './getIcon'
+import Icons from './icons'
 
 // plugins
 import * as MacAppsPlugin from './macApps'
@@ -14,7 +14,9 @@ export default class Plugins {
   results = []
   searchId = 0
 
-  constructor() {
+  constructor({ server }) {
+    this.server = server
+    this.icons = new Icons()
     this.start()
   }
 
@@ -40,7 +42,7 @@ export default class Plugins {
           const resultsWithIcons = await Promise.all(
             newResults.slice(0, 25).map(async result => ({
               ...result,
-              icon: result.icon ? await getIcon(result.icon) : null,
+              icon: result.icon ? await this.icons.getIcon(result.icon) : null,
             })),
           )
           if (uid === this.searchId) {

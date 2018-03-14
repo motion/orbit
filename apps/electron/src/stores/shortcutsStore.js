@@ -3,7 +3,7 @@ import { store } from '@mcro/black'
 
 @store
 export default class ShortcutsStore {
-  constructor(shortcuts = ['Option+Space']) {
+  constructor(shortcuts) {
     this.registerShortcuts(shortcuts)
   }
 

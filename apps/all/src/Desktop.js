@@ -2,9 +2,7 @@
 import Bridge from './helpers/Bridge'
 import { store } from '@mcro/black/store'
 import global from 'global'
-import { debounce } from 'lodash'
-import Electron from './Electron'
-import App from './App'
+// import App from './App'
 
 const log = debug('Desktop')
 
@@ -34,13 +32,16 @@ export type DesktopState = {
   keyboard: Object,
   highlightWords: { [String]: boolean },
   clearWords: { [String]: Number },
-  restoreWords: { [String]: Numbe },
+  restoreWords: { [String]: Number },
+  pluginResults: [{}],
 }
 
 @store
 class Desktop {
   state = {
+    shouldPin: null,
     paused: true,
+    pluginResults: [],
     appState: {},
     ocrWords: null,
     linePositions: null,
@@ -53,14 +54,14 @@ class Desktop {
     selection: null,
   }
 
-  start(options) {
-    Bridge.start(this, this.state, options)
-    this.setState = Bridge.setState
-  }
-
   get isHoldingOption(): Boolean {
     const { option, optionUp } = this.state.keyboard
     return option && optionUp && option > (optionUp || 0)
+  }
+
+  start(options) {
+    Bridge.start(this, this.state, options)
+    this.setState = Bridge.setState
   }
 
   updateKeyboard = newState =>

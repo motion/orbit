@@ -9,10 +9,10 @@ class HeaderStore {
 
   willMount() {
     this.react(
-      () => Electron.orbitState.pinned,
-      pinned => {
-        if (!pinned) return
-        console.log('pinned')
+      () => Electron.orbitState.pinned || Electron.orbitState.fullScreen,
+      shouldFocus => {
+        if (!shouldFocus) return
+        console.log('shouldFocus')
         if (this.inputRef) {
           this.inputRef.focus()
           this.inputRef.select()
@@ -33,8 +33,11 @@ export default class PeekHeader {
         <title>
           <UI.Input
             $orbitInput
-            value={orbitStore.query}
-            size={1.1}
+            value={App.state.query || ''}
+            size={1.2}
+            borderRadius={5}
+            borderWidth={0}
+            background="#222"
             onChange={orbitStore.onChangeQuery}
             getRef={headerStore.ref('inputRef').set}
           />
@@ -58,7 +61,7 @@ export default class PeekHeader {
       flexFlow: 'row',
       alignItems: 'center',
       justifyContent: 'center',
-      padding: [10, 10],
+      padding: [12, 10],
       transition: 'all ease-in 100ms',
       opacity: 0.2,
       // transform: {

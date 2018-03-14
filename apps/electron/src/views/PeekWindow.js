@@ -5,7 +5,7 @@ import { view } from '@mcro/black'
 import { Window } from '@mcro/reactron'
 import { memoize } from 'lodash'
 import * as Helpers from '~/helpers'
-import { App, Desktop, Electron } from '@mcro/all'
+import { App, Electron } from '@mcro/all'
 import * as Mobx from 'mobx'
 
 type PeekTarget = {
@@ -26,7 +26,7 @@ const updatePeek = (peek, cb) => {
 
 const idFn = _ => _
 const PAD = 15
-const INITIAL_SIZE = [420, 380]
+const INITIAL_SIZE = [450, 450]
 const log = debug('PeekWindow')
 const windowProps = {
   frame: false,
@@ -104,8 +104,6 @@ export default class PeekWindow {
           show: false,
         },
       ],
-      lastTarget: null,
-      wasShowing: false,
     })
   }
 
@@ -127,6 +125,10 @@ export default class PeekWindow {
       () => App.state.peekTarget,
       peekTarget => {
         if (!peekTarget) return
+        if (Electron.orbitState.fullScreen) {
+          log(`Avoid position on fullScreen`)
+          return
+        }
         updatePeek(Electron.currentPeek, peek => {
           let { position, size, arrowTowards } = peekPosition(
             peekTarget.position,
@@ -134,7 +136,7 @@ export default class PeekWindow {
           position[0] += arrowTowards === 'right' ? PAD : -PAD
           peek.position = position
           peek.size = size
-          peek.arrowToward = arrowTowards
+          peek.arrowTowards = arrowTowards
         })
       },
     )
@@ -189,21 +191,24 @@ export default class PeekWindow {
   }
 
   render({ store }) {
+    const peekWindows = Mobx.toJS(Electron.peekState.windows)
+    console.log('peekWindows', peekWindows)
     return (
       <React.Fragment>
-        {Mobx.toJS(Electron.peekState.windows).map((peek, index) => {
+        {peekWindows.map((peek, index) => {
           // peek always in front
           const isAttached = index === 0
           return (
             <Window
               key={peek.key}
+              focusable={false}
               showDevTools={
                 isAttached
                   ? Electron.state.showDevTools.peek
                   : peek.showDevTools
               }
               alwaysOnTop={isAttached || peek.alwaysOnTop}
-              animatePosition={Electron.peekState.wasShowing}
+              animatePosition
               show={peek.show}
               file={`${Constants.APP_URL}/peek?key=${peek.key}`}
               ref={isAttached ? store.handlePeekRef(peek) : idFn}

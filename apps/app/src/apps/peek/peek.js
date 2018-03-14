@@ -121,14 +121,13 @@ export default class PeekPage {
       height: '100%',
       padding: SHADOW_PAD,
       pointerEvents: 'none !important',
-      transition: 'all ease-in 100ms',
+      transition: 'opacity ease-in 100ms',
       opacity: 0,
       position: 'relative',
     },
     peekVisible: {
       pointerEvents: 'all !important',
       opacity: 1,
-      transition: 'all ease-out 100ms',
     },
     peekTorn: {
       pointerEvents: 'all !important',

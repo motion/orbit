@@ -26,7 +26,7 @@ const updatePeek = (peek, cb) => {
 
 const idFn = _ => _
 const PAD = 15
-const INITIAL_SIZE = [420, 380]
+const INITIAL_SIZE = [450, 450]
 const log = debug('PeekWindow')
 const windowProps = {
   frame: false,

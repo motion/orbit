@@ -45,4 +45,11 @@ export default class OrbitContent {
       </list>
     )
   }
+
+  static style = {
+    list: {
+      flex: 1,
+      overflowY: 'scroll',
+    },
+  }
 }

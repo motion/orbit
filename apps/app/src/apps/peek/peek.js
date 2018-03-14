@@ -4,6 +4,7 @@ import { view, watch } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { App, Electron } from '@mcro/all'
 import PeekHeader from './peekHeader'
+import PeekContents from './peekContents'
 
 const keyParam = (window.location.search || '').match(/key=(.*)/)
 const KEY = keyParam && keyParam[1]
@@ -22,7 +23,7 @@ const borderRadius = 8
       if (this.isTorn) return
       const { orbitState } = Electron
       if (orbitState && orbitState.isTorn) {
-        console.log('tearing!', orbitState)
+        log('tearing!', orbitState)
         this.isTorn = true
       }
     }
@@ -105,9 +106,7 @@ export default class PeekPage {
             }}
           >
             <PeekHeader store={store} />
-            <contentInner if={Electron.currentPeek}>
-              hello {Electron.currentPeek.arrowTowards || 'none'} world
-            </contentInner>
+            <PeekContents if={Electron.currentPeek} />
           </content>
         </peek>
       </UI.Theme>

@@ -23,28 +23,20 @@ const DOUBLE_TAP_OPTION = [
 const log = debug('KeyboardStore')
 
 export default class KeyboardStore {
+  // stores the last 4 keys pressed
+  // but clears after a little, so it only stores "purposeful sequences"
   lastKeys = []
   // this is imperfect, iohook doesn't always match events perfectly
   // so in cases of errors, we clear it after a little delay
   keysDown = new Set()
   pauseTm = null
 
-  constructor() {
-    console.log('start me')
-    this.watchKeyboard()
-  }
+  start = () => {
+    let clearLastKeys
 
-  clearDownKeysAfterPause = () => {
-    clearTimeout(this.pauseTm)
-    this.pauseTm = setTimeout(() => {
-      this.keysDown.clear()
-    }, 3000)
-  }
-
-  watchKeyboard = () => {
     // keydown
     iohook.on('keydown', ({ keycode }) => {
-      console.log('down', keycode)
+      clearTimeout(clearLastKeys)
       this.lastKeys.push(['down', keycode])
       this.keysDown.add(keycode)
       this.clearDownKeysAfterPause()
@@ -78,6 +70,7 @@ export default class KeyboardStore {
 
     // keyup
     iohook.on('keyup', ({ keycode }) => {
+      clearTimeout(clearLastKeys)
       this.lastKeys.push(['up', keycode])
       while (this.lastKeys.length > 4) {
         this.lastKeys.shift() // ensure only 4 max
@@ -96,6 +89,17 @@ export default class KeyboardStore {
       if (isEqual(this.lastKeys, DOUBLE_TAP_OPTION)) {
         Desktop.setState({ shouldPin: Date.now() })
       }
+      // be sure its a fast action not slow
+      clearLastKeys = setTimeout(() => {
+        this.lastKeys = []
+      }, 350)
     })
+  }
+
+  clearDownKeysAfterPause = () => {
+    clearTimeout(this.pauseTm)
+    this.pauseTm = setTimeout(() => {
+      this.keysDown.clear()
+    }, 3000)
   }
 }

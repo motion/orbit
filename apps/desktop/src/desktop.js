@@ -14,6 +14,7 @@ import { getChromeContext } from './helpers/getContext'
 import { Desktop } from '@mcro/all'
 import Plugins from './plugins'
 import open from 'opn'
+import iohook from 'iohook'
 
 const log = debug('desktop')
 
@@ -29,6 +30,13 @@ export default class DesktopRoot {
   stores = null
 
   async start() {
+    Desktop.start({
+      ignoreSource: {
+        Desktop: true,
+      },
+    })
+    this.keyboardStore.start()
+    iohook.start()
     global.Root = this
     global.restart = this.restart
     this.setupHosts()
@@ -66,7 +74,7 @@ export default class DesktopRoot {
   }
 
   dispose = async () => {
-    if (this.disposed) return false
+    if (this.disposed) return
     await this.screenMaster.dispose()
     this.disposed = true
     return true

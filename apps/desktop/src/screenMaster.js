@@ -56,12 +56,6 @@ export default class ScreenMaster {
   watchSettings = {}
 
   start = async () => {
-    // TODO make this go through the screenStore
-    Desktop.start({
-      ignoreSource: {
-        [DESKTOP_KEY]: true,
-      },
-    })
     await this.socketManager.start()
     this.oracle.onWords(words => {
       this.hasResolvedOCR = true
@@ -175,7 +169,6 @@ export default class ScreenMaster {
       this.restartScreen()
     })
     this.watchMouse()
-    iohook.start()
     await this.oracle.start()
   }
 

@@ -33,7 +33,7 @@ export default class PeekHeader {
         <title>
           <UI.Input
             $orbitInput
-            value={App.state.query}
+            value={App.state.query || ''}
             size={1.2}
             borderRadius={5}
             borderWidth={0}

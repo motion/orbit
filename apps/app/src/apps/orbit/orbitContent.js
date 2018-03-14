@@ -2,6 +2,7 @@ import { view } from '@mcro/black'
 import * as Helpers from '~/helpers'
 import { App, Electron } from '@mcro/all'
 import OrbitItem from './orbitItem'
+import { memoize } from 'lodash'
 
 const getHoverProps = Helpers.hoverSettler({
   enterDelay: 600,
@@ -23,15 +24,34 @@ const getHoverProps = Helpers.hoverSettler({
   },
 })
 
+const getKey = result => result.index || result.id || result.title
+
+const refs = {}
+
 @view.attach('orbitStore')
 @view
 export default class OrbitContent {
+  componentDidMount() {
+    this.react(
+      () => this.props.orbitStore.selectedIndex,
+      index => {
+        console.log('selected index', index, refs[index])
+      },
+    )
+  }
+
+  onRef = index => ref => {
+    console.log('add ref', index, ref)
+    refs[index] = ref
+  }
+
   render({ orbitStore }) {
     return (
       <list>
         {orbitStore.results.map((result, index) => (
           <OrbitItem
-            key={result.index || result.id || result.title || index}
+            key={getKey(result) || index}
+            ref={this.onRef(index)}
             type="gmail"
             orbitStore={orbitStore}
             index={index}

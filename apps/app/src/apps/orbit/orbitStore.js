@@ -62,7 +62,7 @@ export default class OrbitStore {
     const uid = this.searchId
     const searchResults = await this.searchStore.search.search(term)
     if (uid === this.searchId) {
-      this.searchResults = searchResults
+      this.searchResults = searchResults || []
     }
   }, 100)
 

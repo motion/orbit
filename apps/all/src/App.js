@@ -12,6 +12,7 @@ let App
 class AppStore {
   state = {
     query: null,
+    openResult: null,
     highlightWords: {},
     hoveredWord: null,
     hoveredLine: null,

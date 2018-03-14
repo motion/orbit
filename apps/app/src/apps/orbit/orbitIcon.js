@@ -16,4 +16,6 @@ const icons = {
   github: iconGithub,
 }
 
-export default ({ name, ...props }) => <img src={icons[name]} {...props} />
+export default ({ icon, ...props }) => (
+  <img src={icons[icon] || icon} {...props} />
+)

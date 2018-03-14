@@ -55,14 +55,26 @@ class Desktop {
     selection: null,
   }
 
-  start(options) {
-    Bridge.start(this, this.state, options)
-    this.setState = Bridge.setState
-  }
-
   get isHoldingOption(): Boolean {
     const { option, optionUp } = this.state.keyboard
     return option && optionUp && option > (optionUp || 0)
+  }
+
+  start(options) {
+    Bridge.start(this, this.state, options)
+    this.setState = Bridge.setState
+
+    // reactions
+    this.openAppOnSelect()
+  }
+
+  openAppOnSelect = () => {
+    this.react(
+      () => App.state.openResult,
+      result => {
+        console.log('should open result', result)
+      },
+    )
   }
 
   updateKeyboard = newState =>

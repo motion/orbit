@@ -1,4 +1,4 @@
-import { debounce } from 'lodash'
+import { debounce, memoize } from 'lodash'
 import { App, Desktop } from '@mcro/all'
 import { Thing } from '@mcro/models'
 import Search from '@mcro/search'
@@ -32,6 +32,7 @@ export default class OrbitStore {
     this.react(() => App.state.query, this.handleSearch, true)
 
     this.on(this.keyboardStore, 'keydown', code => {
+      console.log('code', code)
       switch (code) {
         case 40: // down
           this.selectedIndex = Math.min(
@@ -42,12 +43,14 @@ export default class OrbitStore {
         case 38: //up
           this.selectedIndex = Math.max(0, this.selectedIndex - 1)
           return
+        case 13: //enter
+          App.setState({ openResult: this.results[this.selectedIndex] })
       }
     })
   }
 
   willUnmount() {
-    this.keyboard.willUnmount()
+    this.keyboardStore.willUnmount()
   }
 
   onChangeQuery = e => {
@@ -62,6 +65,11 @@ export default class OrbitStore {
       this.searchResults = searchResults
     }
   }, 100)
+
+  selectItem = index =>
+    memoize(() => {
+      this.selectedIndex = index
+    })
 
   toggleSettings = () => {
     this.showSettings = !this.showSettings

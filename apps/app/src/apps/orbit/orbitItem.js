@@ -4,13 +4,13 @@ import OrbitIcon from './orbitIcon'
 
 @view
 export default class Item {
-  render({ orbitStore, index, title, type, subtitle, content, ...props }) {
+  render({ orbitStore, index, result, ...props }) {
     return (
       <UI.Surface
         background="transparent"
         glow
         background={
-          orbitStore.selectedIndex === index ? '#0364E4' : 'transparent'
+          orbitStore.selectedIndex === index ? '#102945' : 'transparent'
         }
         glowProps={{
           color: '#fff',
@@ -22,6 +22,7 @@ export default class Item {
           zIndex: -1,
         }}
         padding={[10, 18]}
+        onClick={orbitStore.selectItem(index)}
         {...props}
       >
         <UI.Title
@@ -30,7 +31,7 @@ export default class Item {
           css={{ alignItems: 'center', justifyContent: 'center' }}
         >
           <OrbitIcon
-            name={type}
+            icon={result.icon || result.type}
             css={{
               width: 22,
               height: 22,
@@ -39,13 +40,13 @@ export default class Item {
               display: 'inline-block',
             }}
           />{' '}
-          {title}
+          {result.title}
         </UI.Title>
         <UI.Text opacity={0.6} margin={[0, 0, 3]} size={1.1}>
-          {subtitle}
+          {result.subtitle}
         </UI.Text>
         <UI.Text opacity={0.8} ellipse={3} sizeLineHeight={1.15}>
-          {content}
+          {result.content}
         </UI.Text>
       </UI.Surface>
     )

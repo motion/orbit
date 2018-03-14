@@ -35,9 +35,7 @@ export default class OrbitContent {
             type="gmail"
             orbitStore={orbitStore}
             index={index}
-            title={result.title}
-            subtitle={`distance: ${result.distance}`}
-            content={result.sentence}
+            result={result}
             {...getHoverProps({
               result,
               id: result.index,

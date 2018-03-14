@@ -54,6 +54,16 @@ class ElectronStore {
       true,
     )
 
+    // option double tap to pin
+    this.react(
+      () => Desktop.state.shouldPin,
+      shouldPin => {
+        if (shouldPin) {
+          Electron.setOrbitState({ pinned: true })
+        }
+      },
+    )
+
     // option tap to clear if open
     // let lastDown = 0
     // this.react(

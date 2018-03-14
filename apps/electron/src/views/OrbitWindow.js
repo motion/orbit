@@ -196,8 +196,8 @@ export default class OrbitWindow extends React.Component {
         transparent={true}
         showDevTools={Electron.state.showDevTools.orbit}
         alwaysOnTop
-        animatePosition={state.wasShowing}
         show={state.show}
+        ignoreMouseEvents={!App.isShowingOrbit}
         size={state.size}
         position={state.position}
         file={`${Constants.APP_URL}/orbit`}

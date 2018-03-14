@@ -5,8 +5,8 @@ import * as Constants from '~/constants'
 import { promisifyAll } from 'sb-promisify'
 import sudoPrompt_ from 'sudo-prompt'
 import ScreenMaster from './screenMaster'
+import KeyboardStore from './stores/keyboardStore'
 import { App } from '@mcro/all'
-import * as Helpers from '~/helpers'
 import { store, debugState } from '@mcro/black'
 import global from 'global'
 import Path from 'path'
@@ -25,6 +25,7 @@ export default class DesktopRoot {
   server = new Server()
   screenMaster = new ScreenMaster()
   plugins = new Plugins()
+  keyboardStore = new KeyboardStore()
   stores = null
 
   async start() {

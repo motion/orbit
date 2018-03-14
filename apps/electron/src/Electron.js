@@ -46,9 +46,10 @@ const log = debug('Electron')
     }
 
     watchOptionPress = () => {
-      new ShortcutsStore().emitter.on('shortcut', shortcut => {
+      this.shortcutStore = new ShortcutsStore(['Option+Space'])
+      this.shortcutStore.emitter.on('shortcut', shortcut => {
         if (shortcut === 'Option+Space') {
-          log(`got option+space`)
+          log(`got Command+space`)
           // if were holding peek
           if (
             Desktop.isHoldingOption &&

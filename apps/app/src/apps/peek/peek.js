@@ -123,6 +123,7 @@ export default class PeekPage {
       transition: 'opacity ease-in 100ms',
       opacity: 0,
       position: 'relative',
+      flex: 1,
     },
     peekVisible: {
       pointerEvents: 'all !important',

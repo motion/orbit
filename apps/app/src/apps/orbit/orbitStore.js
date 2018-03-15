@@ -33,12 +33,9 @@ export default class OrbitStore {
     this.react(() => App.state.query, this.handleSearch, true)
 
     // selected
-    this.react(
-      () => this.selectedIndex,
-      index => {
-        App.setState({ selectedItem: this.results[index] })
-      },
-    )
+    this.watch(() => {
+      App.setState({ selectedItem: this.results[this.selectedIndex] })
+    })
 
     this.on(this.keyboardStore, 'keydown', code => {
       console.log('code', code)

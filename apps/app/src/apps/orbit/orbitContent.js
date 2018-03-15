@@ -1,6 +1,7 @@
 import { view } from '@mcro/black'
 import * as Helpers from '~/helpers'
-import { App, Electron } from '@mcro/all'
+import * as UI from '@mcro/ui'
+import { App, Desktop, Electron } from '@mcro/all'
 import OrbitItem from './orbitItem'
 
 const getHoverProps = Helpers.hoverSettler({
@@ -45,8 +46,22 @@ export default class OrbitContent {
   }
 
   render({ orbitStore }) {
+    const { appState } = Desktop.state
     return (
       <list>
+        <UI.Title
+          if={App.isAttachedToWindow && appState}
+          textTransform="uppercase"
+          css={{ padding: 10 }}
+        >
+          {appState.name}{' '}
+          <UI.Text
+            if={appState.title}
+            css={{ display: 'inline', opacity: 0.5, fontSize: '80%' }}
+          >
+            {appState.title}
+          </UI.Text>
+        </UI.Title>
         {orbitStore.results.map((result, index) => (
           <OrbitItem
             key={getKey(result) || index}

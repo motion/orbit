@@ -321,6 +321,7 @@ export default class Text extends React.Component<Props> {
         color,
         fontSize,
         lineHeight,
+        textTransform: props.textTransform,
         textShadow: props.textShadow,
         display: props.display,
         fontWeight: props.fontWeight || props.weight,

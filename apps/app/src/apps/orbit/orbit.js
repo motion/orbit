@@ -79,7 +79,7 @@ export default class OrbitPage {
         <orbit css={orbitStyle} $orbitVisible={App.isShowingOrbit}>
           {/* first is arrow (above), second is arrow shadow (below) */}
           <OrbitArrow
-            if={!Electron.orbitState.fullScreen}
+            if={App.isAttachedToWindow}
             arrowSize={arrowSize}
             arrowTowards={arrowTowards}
             arrowStyle={arrowStyle}

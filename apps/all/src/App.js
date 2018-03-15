@@ -37,6 +37,10 @@ class AppStore {
     return !!App.state.peekTarget || Electron.orbitState.fullScreen
   }
 
+  get isAttachedToWindow() {
+    return !Electron.orbitState.fullScreen && !!Desktop.state.appState
+  }
+
   get hoveredWordName() {
     return 'none for now'
   }

@@ -38,7 +38,7 @@ export default class OrbitStore {
       if (!this.results) {
         App.setState({ selectedItem: null })
       } else {
-        const selectedItem = Mobx.toJS(this.results[this.selectedIndex])
+        const selectedItem = Mobx.toJS(this.results[this.selectedIndex]) || null
         console.log('set selectedItem', selectedItem)
         App.setState({ selectedItem })
       }

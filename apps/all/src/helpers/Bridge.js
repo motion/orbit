@@ -14,7 +14,7 @@ class Bridge {
   _queuedState = false
   _wsOpen = false
   _source = ''
-  _initialState = []
+  _initialState = {}
   _socket = null
   // to be set once they are imported
   stores = {}
@@ -43,7 +43,8 @@ class Bridge {
     this._store = store
     this._options = options
     // set initial state synchronously before
-    this._initialState = initialState
+    this._initialState = JSON.parse(JSON.stringify(initialState))
+    console.log('GOT INITIAL STATE', initialState)
     if (initialState) {
       this.setState(initialState, false)
     }
@@ -169,15 +170,17 @@ class Bridge {
     for (const key of Object.keys(newState)) {
       if (isInternal && typeof this._initialState[key] === 'undefined') {
         console.error(
-          `${this.storeName}._update: tried to set a key not in initialState
+          `${this._source}._update: tried to set a key not in initialState
 
-            initial state: ${JSON.stringify(this._initialState)}
+            initial state:
+              ${JSON.stringify(this._initialState, 0, 2)}
 
             key: ${key}
 
             typeof initial state key: ${typeof this._initialState[key]}
 
-            value: ${JSON.stringify(newState, 0, 2)}`,
+            value:
+              ${JSON.stringify(newState, 0, 2)}`,
         )
         return changed
       }

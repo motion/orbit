@@ -1,22 +1,23 @@
 // @flow
-import Bridge from './helpers/Bridge'
-import { store } from '@mcro/black/store'
-import global from 'global'
-import Desktop from './Desktop'
-import Electron from './Electron'
+// import Bridge from './helpers/Bridge'
+// import { store } from '@mcro/black/store'
+// import global from 'global'
+// import Desktop from './Desktop'
+// import Electron from './Electron'
 
-const log = debug('App')
-let App
+// const log = debug('App')
+// let App
 
+/*
 @store
 class AppStore {
   state = {
     query: null,
+    selectedItem: null,
     openResult: null,
     highlightWords: {},
     hoveredWord: null,
     hoveredLine: null,
-    preventElectronHide: true,
     contextMessage: 'Orbit',
     closePeek: null,
     orbitHidden: true,
@@ -24,6 +25,8 @@ class AppStore {
     peekTarget: null,
     shouldTogglePinned: null,
   }
+
+  uid = 10
 
   get isShowingOrbit() {
     return (
@@ -48,6 +51,7 @@ class AppStore {
   start(options) {
     Bridge.start(this, this.state, options)
     this.setState = Bridge.setState
+    this.bridge = Bridge
   }
 
   runReactions() {
@@ -55,14 +59,22 @@ class AppStore {
     this.hideOrbitOnMouseOut()
     this.showOrbitOnPin()
     this.hideOrbitOnEsc()
-    this.clearPeekOnUnfocus()
+    this.clearPeekTarget()
   }
 
-  clearPeekOnUnfocus = () => {
+  clearPeekTarget = () => {
     this.react(
       () => Electron.orbitState.focused,
       focused => {
         if (!focused) {
+          App.setState({ peekTarget: null })
+        }
+      },
+    )
+    this.react(
+      () => Electron.orbitState.fullScreen,
+      fullScreen => {
+        if (!fullScreen) {
           App.setState({ peekTarget: null })
         }
       },
@@ -151,3 +163,5 @@ global.App = App
 Bridge.stores.AppStore = App
 
 export default App
+
+  */

@@ -2,7 +2,6 @@ import { view } from '@mcro/black'
 import * as Helpers from '~/helpers'
 import { App, Electron } from '@mcro/all'
 import OrbitItem from './orbitItem'
-import { memoize } from 'lodash'
 
 const getHoverProps = Helpers.hoverSettler({
   enterDelay: 600,

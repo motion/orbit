@@ -1,4 +1,3 @@
-import http from 'http'
 import 'isomorphic-fetch'
 import logger from 'morgan'
 import express from 'express'
@@ -13,6 +12,8 @@ import Passport from 'passport'
 import path from 'path'
 import killPort from 'kill-port'
 import getEmbedding from './embedding'
+import Fs from 'fs'
+import Path from 'path'
 
 const { SERVER_PORT } = Constants
 
@@ -53,6 +54,14 @@ export default class Server {
 
     // this.setupIcons
     app.use('/icons', express.static(Constants.TMP_DIR))
+    // HACKY DANGEROUS
+    app.use('/contents', (req, res) => {
+      const filePath = Path.join('/', req.path.replace('/contents', ''))
+      const file = Fs.readFileSync(filePath)
+        .toString('utf8')
+        .slice(0, 3000)
+      res.json({ file })
+    })
 
     // this.setupCrawler()
     this.app.get('/hello', (req, res) => res.send('hello world'))

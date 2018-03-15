@@ -2,7 +2,7 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { App, Electron, Desktop } from '@mcro/all'
+import { App, Electron } from '@mcro/all'
 import OrbitContent from './orbitContent'
 import OrbitSettings from './orbitSettings'
 import OrbitHeader from './orbitHeader'
@@ -93,6 +93,7 @@ export default class OrbitPage {
             <OrbitHeader />
             <OrbitContent if={!orbitStore.showSettings} />
             <OrbitSettings if={orbitStore.showSettings} />
+            <Knowledge if={App.state.knowledge} data={App.state.knowledge} />
             <controls
               css={{
                 position: 'absolute',
@@ -126,13 +127,12 @@ export default class OrbitPage {
       padding: SHADOW_PAD,
       pointerEvents: 'none !important',
       position: 'relative',
-      transition: 'all ease-in 100ms',
+      transition: 'opacity ease-in 100ms',
       opacity: 0,
     },
     orbitVisible: {
       pointerEvents: 'all !important',
       opacity: 1,
-      transition: 'all ease-out 100ms',
     },
     orbitTorn: {
       pointerEvents: 'all !important',

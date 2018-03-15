@@ -70,12 +70,7 @@ export default class PeekPage {
     const towardsRight = Electron.currentPeek.arrowTowards === 'left'
     return (
       <UI.Theme name="light">
-        <peek
-          css={peekStyle}
-          $peekVisible={
-            !!App.state.peekTarget || Electron.orbitState.fullScreen
-          }
-        >
+        <peek css={peekStyle} $peekVisible={App.isShowingPeek}>
           {/* first is arrow (above), second is arrow shadow (below) */}
           {[1, 2].map(key => (
             <UI.Arrow

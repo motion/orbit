@@ -56,14 +56,7 @@ class ElectronStore {
     )
 
     // option double tap to pin
-    this.react(
-      () => Desktop.state.shouldPin,
-      shouldPin => {
-        if (shouldPin) {
-          Electron.setOrbitState({ pinned: true })
-        }
-      },
-    )
+    this.react(() => Desktop.state.shouldTogglePin, Electron.togglePinned)
 
     // option tap to clear if open
     // let lastDown = 0
@@ -106,10 +99,10 @@ class ElectronStore {
           showAfterDelay = setTimeout(() => {
             Electron.setState({ shouldShow: Date.now() })
           }, 150)
-          stickAfterDelay = setTimeout(() => {
-            log(`held open for 3 seconds, sticking...`)
-            Electron.setPinned(true)
-          }, 2500)
+          // stickAfterDelay = setTimeout(() => {
+          //   log(`held open for 3 seconds, sticking...`)
+          //   Electron.setPinned(true)
+          // }, 2500)
         }
       }, 16),
     )
@@ -144,6 +137,7 @@ class ElectronStore {
   }
 
   setOrbitState = nextState => {
+    console.trace('setting state from here', nextState)
     this.setState({ orbitState: { ...this.state.orbitState, ...nextState } })
   }
 

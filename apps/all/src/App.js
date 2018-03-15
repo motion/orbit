@@ -25,14 +25,16 @@ class AppStore {
     shouldTogglePinned: null,
   }
 
-  uid = 10
-
   get isShowingOrbit() {
     return (
       Electron.orbitState.fullScreen ||
       Electron.orbitState.pinned ||
       !this.state.orbitHidden
     )
+  }
+
+  get isShowingPeek() {
+    return !!App.state.peekTarget || Electron.orbitState.fullScreen
   }
 
   get hoveredWordName() {

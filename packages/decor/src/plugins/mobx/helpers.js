@@ -1,6 +1,6 @@
 // @flow
 import * as AllHelpers from '@mcro/helpers'
-import { autorun, autorunAsync, reaction } from 'mobx'
+import { toJS, autorun, autorunAsync, reaction } from 'mobx'
 
 // subscribe-aware helpers
 export function watch(fn: Function, debounce): Function {
@@ -17,9 +17,23 @@ export function watch(fn: Function, debounce): Function {
 export function react(
   fn: Function,
   onReact: Function,
-  immediately: boolean = false,
+  userOptions?: Object | Boolean,
 ): Function {
-  const dispose = reaction(fn, onReact.bind(this), immediately)
+  let options = {
+    // fast-deep-equals + Mobx value support
+    equals: (_a, _b) => {
+      const a = _a && _a.$mobx ? toJS(_a) : _a
+      const b = _b && _b.$mobx ? toJS(_b) : _b
+      return AllHelpers.isEqual(a, b)
+    },
+  }
+  if (userOptions === true) {
+    options.fireImmediately = true
+  }
+  if (userOptions instanceof Object) {
+    options = { ...options, ...userOptions }
+  }
+  const dispose = reaction(fn, onReact.bind(this), options)
   this.subscriptions.add(dispose)
   return dispose
 }

@@ -192,7 +192,6 @@ export default class PeekWindow {
 
   render({ store }) {
     const peekWindows = Mobx.toJS(Electron.peekState.windows)
-    console.log('peekWindows', peekWindows)
     return (
       <React.Fragment>
         {peekWindows.map((peek, index) => {
@@ -208,7 +207,7 @@ export default class PeekWindow {
                   : peek.showDevTools
               }
               alwaysOnTop={isAttached || peek.alwaysOnTop}
-              animatePosition
+              animatePosition={App.isShowingPeek}
               show={peek.show}
               file={`${Constants.APP_URL}/peek?key=${peek.key}`}
               ref={isAttached ? store.handlePeekRef(peek) : idFn}

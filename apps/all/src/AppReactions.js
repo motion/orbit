@@ -37,19 +37,24 @@ export default class AppReactions {
 
   @react
   clearPeekOnMouseOut = [
-    () => Electron.orbitState.mouseOver,
+    () => Electron.isMouseInActiveArea,
     mouseOver => {
-      if (!mouseOver) {
+      if (!mouseOver && !App.state.peekTarget) {
+        console.log('CLEAR clearPeekOnMouseOut')
         App.setState({ peekTarget: null })
       }
+    },
+    {
+      delay: 500,
     },
   ]
 
   @react
-  clearPeekOnFullScreen = [
+  clearPeekTarget = [
     () => Electron.orbitState.fullScreen,
     fullScreen => {
       if (!fullScreen) {
+        console.log('CLEAR fullScreen')
         App.setState({ peekTarget: null })
       }
     },
@@ -76,7 +81,7 @@ export default class AppReactions {
     () => [
       !App.state.orbitHidden,
       Electron.orbitState.pinned,
-      Electron.orbitState.mouseOver,
+      Electron.orbitState.mouseOver || Electron.peekState.mouseOver,
     ],
     ([isShown, isPinned, mouseOver]) => {
       if (Desktop.isHoldingOption) {

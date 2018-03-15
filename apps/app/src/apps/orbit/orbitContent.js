@@ -3,15 +3,19 @@ import * as Helpers from '~/helpers'
 import * as UI from '@mcro/ui'
 import { App, Desktop, Electron } from '@mcro/all'
 import OrbitItem from './orbitItem'
+import { whenAsync } from 'mobx-utils'
 
 const getHoverProps = Helpers.hoverSettler({
   enterDelay: 600,
-  onHovered: target => {
+  onHovered: async target => {
     if (!target) {
       // hide
+      await whenAsync(() => !Electron.isMouseInActiveArea)
+      console.log('CLEAR hoverSettler')
       App.setState({ peekTarget: null })
+      return
     }
-    const { id, result, top, left, width, height } = target
+    const { id, top, left, width, height } = target
     const position = {
       // add orbits offset
       left: left + Electron.orbitState.position[0],
@@ -19,7 +23,6 @@ const getHoverProps = Helpers.hoverSettler({
       width,
       height,
     }
-    console.log('hovered', id, position, result)
     App.setState({ peekTarget: { id, position } })
   },
 })
@@ -41,7 +44,6 @@ export default class OrbitContent {
   }
 
   onRef = index => ref => {
-    console.log('add ref', index, ref)
     refs[index] = ref
   }
 

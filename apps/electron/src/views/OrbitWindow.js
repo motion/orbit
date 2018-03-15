@@ -90,33 +90,6 @@ const orbitPosition = ({ left, top, width, height }) => {
     }
 
     watchMouseForOrbitFocus = () => {
-      // if mouse within bounds + not hidden, focus orbit
-      this.react(
-        () => [Desktop.state.mousePosition, App.state.orbitHidden],
-        ([{ x, y }, isHidden]) => {
-          if (Electron.orbitState.pinned) {
-            return
-          }
-          if (isHidden) {
-            if (Electron.orbitState.mouseOver) {
-              log(`unfocus orbit`)
-              Electron.setOrbitState({ mouseOver: false })
-            }
-            return
-          }
-          if (!this.orbitRef) return
-          const { position, size } = Electron.orbitState
-          if (!position) {
-            return
-          }
-          const withinX = x > position[0] && x < position[0] + size[0]
-          const withinY = y > position[1] && y < position[1] + size[1]
-          const mouseOver = withinX && withinY
-          if (mouseOver !== Electron.orbitState.mouseOver) {
-            Electron.setOrbitState({ mouseOver })
-          }
-        },
-      )
       // separate react to only call actions if value changes
       this.react(
         () => Electron.orbitState.mouseOver,

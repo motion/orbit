@@ -20,7 +20,6 @@ const updatePeek = (peek, cb) => {
   const windows = [...Electron.peekState.windows]
   const nextPeek = windows.find(x => x.key === peek.key)
   cb(nextPeek)
-  log(`updatePeek: before`, peek, nextPeek)
   Electron.setPeekState({ windows })
 }
 

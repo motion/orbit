@@ -91,7 +91,7 @@ class Bridge {
           throw new Error(`Non-object received`)
         }
       } catch (err) {
-        console.log(
+        console.error(
           `${err.message}:\n${err.stack}\n
           Bridge error receiving or reacting to message. Initial message:
           ${data}`,

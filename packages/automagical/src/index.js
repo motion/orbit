@@ -249,6 +249,15 @@ function valueToObservable(inValue: any) {
         isObservable: true,
       }
     }
+    if (isPromise(value)) {
+      const promiseStream = fromPromise(value)
+      return {
+        get: () => promiseStream.value,
+        promiseStream,
+        dispose: promiseStream.dispose,
+        isObservable: true,
+      }
+    }
   }
   return value
 }
@@ -259,8 +268,8 @@ const uid = () => `__ID_${Math.random()}__`
 // watches values in an autorun, and resolves their results
 function mobxifyWatch(obj: MagicalObject, method, val) {
   let current = Mobx.observable.box(DEFAULT_VALUE)
-  let currentDisposable = null
-  let currentObservable = null
+  let curDisposable = null
+  let curObservable = null
   let autoObserveDispose = null
   let stopReaction
   let disposed = false
@@ -283,15 +292,13 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
   function runObservable() {
     stopAutoObserve()
     autoObserveDispose = Mobx.autorun(() => {
-      if (currentObservable) {
+      if (curObservable) {
         // 🐛 this fixes non-reaction for some odd reason
         // i think mobx things RxDocument looks "the same", so we follow version as well
-        if (currentObservable.mobxStream) {
-          currentObservable.mobxStream.currentVersion
+        if (curObservable.mobxStream) {
+          curObservable.mobxStream.currentVersion
         }
-        update(
-          currentObservable.get ? currentObservable.get() : currentObservable,
-        )
+        update(curObservable.get ? curObservable.get() : curObservable)
       }
     })
   }
@@ -300,8 +307,8 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
     if (disposed) {
       return
     }
-    if (currentDisposable) {
-      currentDisposable()
+    if (curDisposable) {
+      curDisposable()
     }
     if (stopReaction) {
       stopReaction()
@@ -317,12 +324,14 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
     obj.subscriptions.add(dispose)
   }
 
+  const isReaction = Array.isArray(val)
+
   function run() {
     if (disposed) {
       console.log('avoiding work', method)
       return
     }
-    if (Array.isArray(val)) {
+    if (isReaction) {
       // reaction
       const options = Helpers.getReactionOptions(val[3])
       stopReaction = Mobx.reaction(val[0], watcher(val[1]), {
@@ -345,12 +354,12 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
       stopAutoObserve()
 
       function replaceDisposable() {
-        if (currentDisposable) {
-          currentDisposable()
-          currentDisposable = null
+        if (curDisposable) {
+          curDisposable()
+          curDisposable = null
         }
         if (result && result.dispose) {
-          currentDisposable = result.dispose.bind(result)
+          curDisposable = result.dispose.bind(result)
         }
       }
 
@@ -369,24 +378,21 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
           return false
         }
         const isSameObservable =
-          currentObservable && currentObservable[AID] === result[AID]
-        if (isSameObservable && currentObservable) {
-          update(currentObservable.get())
+          curObservable && curObservable[AID] === result[AID]
+        if (isSameObservable && curObservable) {
+          update(curObservable.get())
           return
         }
         replaceDisposable()
-        currentObservable = result
-        if (currentObservable && currentObservable instanceof Object) {
-          currentObservable[AID] = currentObservable[AID] || uid()
+        curObservable = result
+        // track it for equality checks
+        if (curObservable && curObservable instanceof Object) {
+          curObservable[AID] = curObservable[AID] || uid()
         }
         runObservable()
       } else {
         replaceDisposable()
-        if (isPromise(result)) {
-          current.set(fromPromise(result))
-        } else {
-          update(result)
-        }
+        update(result)
       }
     }
   }
@@ -411,7 +417,7 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
 
   Object.defineProperty(obj, `${method}__automagic_source`, {
     get() {
-      return { result, current, currentObservable }
+      return { result, current, curObservable }
     },
   })
 

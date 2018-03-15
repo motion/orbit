@@ -1,6 +1,6 @@
 // @flow
 import Bridge from './helpers/Bridge'
-import { store } from '@mcro/black/store'
+import { store, react } from '@mcro/black/store'
 import { debounce } from 'lodash'
 import global from 'global'
 import App from './App'
@@ -8,6 +8,7 @@ import Desktop from './Desktop'
 
 let Electron
 const log = debug('Electron')
+const sleep = ms => new Promise(res => setTimeout(res, ms))
 
 @store
 class ElectronStore {
@@ -26,6 +27,7 @@ class ElectronStore {
       size: null,
     },
     peekState: {
+      mouseOver: false,
       windows: null,
     },
     showSettings: false,
@@ -36,6 +38,19 @@ class ElectronStore {
       settings: true,
     },
   }
+
+  // runs in every app independently
+  @react
+  isMouseInActiveArea = [
+    () =>
+      Electron.orbitState.mouseOver || Electron.peekState.mouseOver || false,
+    async over => {
+      // debounce mouseout by 100ms
+      await sleep(over ? 0 : 100)
+      return over
+    },
+    true,
+  ]
 
   start(options) {
     Bridge.start(this, this.state, options)
@@ -57,6 +72,46 @@ class ElectronStore {
 
     // option double tap to pin
     this.react(() => Desktop.state.shouldTogglePin, Electron.togglePinned)
+
+    // TODO ElectronReactions
+    // track mouseovers
+    // if mouse within bounds + not hidden, focus orbit
+    const isMouseOver = (app, mousePosition) => {
+      if (!app || !mousePosition) return false
+      const { x, y } = mousePosition
+      const { position, size } = app
+      if (!position || !size) return false
+      const withinX = x > position[0] && x < position[0] + size[0]
+      const withinY = y > position[1] && y < position[1] + size[1]
+      return withinX && withinY
+    }
+    this.react(
+      () => [Desktop.state.mousePosition, App.state.orbitHidden],
+      ([mousePosition, isHidden]) => {
+        if (Electron.orbitState.pinned) {
+          return
+        }
+        if (isHidden) {
+          if (Electron.orbitState.mouseOver) {
+            Electron.setOrbitState({ mouseOver: false })
+            Electron.setPeekState({ mouseOver: false })
+          }
+          return
+        }
+        if (Electron.orbitState.position) {
+          const mouseOver = isMouseOver(Electron.orbitState, mousePosition)
+          if (mouseOver !== Electron.orbitState.mouseOver) {
+            Electron.setOrbitState({ mouseOver })
+          }
+        }
+        if (App.isShowingPeek) {
+          const mouseOver = isMouseOver(Electron.currentPeek, mousePosition)
+          if (mouseOver !== Electron.peekState.mouseOver) {
+            Electron.setPeekState({ mouseOver })
+          }
+        }
+      },
+    )
 
     // option tap to clear if open
     // let lastDown = 0
@@ -87,7 +142,7 @@ class ElectronStore {
         }
         if (!isHoldingOption) {
           // TODO
-          if (!Electron.orbitState.pinned && Electron.orbitState.mouseOver) {
+          if (!Electron.orbitState.pinned && Electron.isMouseInActiveArea) {
             log('prevent hide while mouseover after release hold')
             return
           }

@@ -46,7 +46,7 @@ class AppStore {
     return 'none for now'
   }
 
-  get showHeader() {
+  get isShowingHeader() {
     return (
       Electron.orbitState.fullScreen ||
       Electron.orbitState.mouseOver ||

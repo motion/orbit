@@ -1,14 +1,13 @@
 // @flow
-// import Bridge from './helpers/Bridge'
-// import { store } from '@mcro/black/store'
-// import global from 'global'
-// import Desktop from './Desktop'
-// import Electron from './Electron'
+import Bridge from './helpers/Bridge'
+import { store } from '@mcro/black/store'
+import global from 'global'
+import Desktop from './Desktop'
+import Electron from './Electron'
 
-// const log = debug('App')
-// let App
+const log = debug('App')
+let App
 
-/*
 @store
 class AppStore {
   state = {
@@ -163,5 +162,3 @@ global.App = App
 Bridge.stores.AppStore = App
 
 export default App
-
-  */

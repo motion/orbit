@@ -1,8 +1,8 @@
 import { view } from '@mcro/black'
-import * as UI from '@mcro/ui'
-import OrbitIcon from './orbitIcon'
 import * as Helpers from '~/helpers'
 import { App, Electron } from '@mcro/all'
+import OrbitItem from './orbitItem'
+import { memoize } from 'lodash'
 
 const getHoverProps = Helpers.hoverSettler({
   enterDelay: 600,
@@ -24,62 +24,38 @@ const getHoverProps = Helpers.hoverSettler({
   },
 })
 
-const Item = ({ title, type, subtitle, content, ...props }) => (
-  <UI.Surface
-    background="transparent"
-    glow
-    glowProps={{
-      color: '#fff',
-      scale: 1,
-      blur: 70,
-      opacity: 0.15,
-      show: false,
-      resist: 60,
-      zIndex: -1,
-    }}
-    padding={[10, 18]}
-    {...props}
-  >
-    <UI.Title
-      size={1.3}
-      ellipse
-      css={{ alignItems: 'center', justifyContent: 'center' }}
-    >
-      <OrbitIcon
-        if={false}
-        name={type}
-        css={{
-          width: 22,
-          height: 22,
-          marginRight: 3,
-          marginBottom: 4,
-          display: 'inline-block',
-        }}
-      />{' '}
-      {title}
-    </UI.Title>
-    <UI.Text opacity={0.6} margin={[0, 0, 3]} size={0.9}>
-      {subtitle}
-    </UI.Text>
-    <UI.Text opacity={0.8} ellipse={3} sizeLineHeight={1.15}>
-      {content}
-    </UI.Text>
-  </UI.Surface>
-)
+const getKey = result => result.index || result.id || result.title
+
+const refs = {}
 
 @view.attach('orbitStore')
 @view
 export default class OrbitContent {
-  render({ orbitStore, onClick }) {
+  componentDidMount() {
+    this.react(
+      () => this.props.orbitStore.selectedIndex,
+      index => {
+        console.log('selected index', index, refs[index])
+      },
+    )
+  }
+
+  onRef = index => ref => {
+    console.log('add ref', index, ref)
+    refs[index] = ref
+  }
+
+  render({ orbitStore }) {
     return (
       <list>
-        {orbitStore.results.map(result => (
-          <Item
+        {orbitStore.results.map((result, index) => (
+          <OrbitItem
+            key={getKey(result) || index}
+            ref={this.onRef(index)}
             type="gmail"
-            title={result.document.title}
-            subtitle={`distance: ${('' + result.distance).slice(0, 6)}`}
-            content={result.sentence}
-            onClick={() => onClick(result)}
+            orbitStore={orbitStore}
+            index={index}
+            result={result}
             {...getHoverProps({
               result,
               id: result.index,
@@ -88,5 +64,12 @@ export default class OrbitContent {
         ))}
       </list>
     )
+  }
+
+  static style = {
+    list: {
+      flex: 1,
+      overflowY: 'scroll',
+    },
   }
 }

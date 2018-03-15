@@ -59,10 +59,7 @@ class Bridge {
         const messageObj = JSON.parse(data)
         if (messageObj && typeof messageObj === 'object') {
           const { source, state: newState } = messageObj
-          if (
-            this._options.ignoreSource &&
-            this._options.ignoreSource[source]
-          ) {
+          if (this._options.ignoreSelf && source === this._source) {
             return
           }
           if (!newState) {
@@ -138,14 +135,24 @@ class Bridge {
       )
     }
     // update our own state immediately so its sync
-    const changedState = this._update(this.state, newState, true)
+    const changedState = this._update(
+      this.state,
+      newState.toJS ? newState.toJS() : newState,
+      true,
+    )
     if (!this._wsOpen) {
       this._queuedState = true
       return changedState
     }
     if (Object.keys(changedState).length) {
       if (process.env.NODE_ENV === 'development') {
-        log(`${this._source}.setState(${JSON.stringify(newState, 0, 2)})`)
+        console.log(
+          `${this._source}.setState (changedState: ${JSON.stringify(
+            changedState,
+            0,
+            2,
+          )})`,
+        )
       }
       this._socket.send(
         JSON.stringify({ state: changedState, source: this._source }),

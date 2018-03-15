@@ -1,65 +1,45 @@
 // @flow
 import * as React from 'react'
-import { debounce } from 'lodash'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { App, Electron, Desktop } from '@mcro/all'
 import OrbitContent from './orbitContent'
 import OrbitSettings from './orbitSettings'
-import { Thing } from '@mcro/models'
 import OrbitHeader from './orbitHeader'
-import searchStore from '~/stores/searchStore'
+import OrbitStore from './orbitStore'
 
 const SHADOW_PAD = 15
 const BORDER_RADIUS = 12
 // const BORDER_COLOR = `rgba(255,255,255,0.25)`
 const background = 'rgba(0,0,0,0.9)'
-const orbitShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.05]]]
+const orbitShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.3]]]
 const log = debug('orbit')
 
+const OrbitArrow = ({ arrowSize, arrowTowards, arrowStyle }) =>
+  [1, 2].map(key => (
+    <UI.Arrow
+      key={key}
+      size={arrowSize}
+      towards={arrowTowards}
+      background={background}
+      css={{
+        position: 'absolute',
+        ...arrowStyle,
+        ...[
+          {
+            boxShadow: orbitShadow,
+            zIndex: -1,
+          },
+          {
+            zIndex: 100,
+          },
+        ][key],
+      }}
+    />
+  ))
+
 @view.provide({
-  orbitStore: class OrbitStore {
-    isTorn = false
-    isPinned = false
-    query = ''
-    results = []
-    showSettings = false
-
-    willMount() {
-      App.runReactions()
-      this.searchStore = new searchStore()
-
-      setTimeout(async () => {
-        console.log('adding docs to search...')
-        const allDocs = await Thing.getAll()
-        this.searchStore.call(
-          'setDocuments',
-          allDocs.map(doc => ({ title: doc.title, text: doc.body })),
-        )
-      })
-      // react to do searches
-      this.react(() => this.query, this.search, true)
-      // this.react(() => Desktop.state.selection, this.search, true)
-    }
-
-    onChangeQuery = e => {
-      this.query = e.target.value
-    }
-
-    toggleSettings = () => {
-      this.showSettings = !this.showSettings
-    }
-
-    search = debounce(async () => {
-      const query = this.query
-      const results = await this.searchStore.call('search', query)
-
-      // if it hasn't changed since we searched
-      if (results && query === this.query) {
-        this.results = results
-      }
-    }, 350)
-  },
+  orbitStore: OrbitStore,
 })
 @view.attach('orbitStore')
 @view
@@ -89,34 +69,27 @@ export default class OrbitPage {
         }
         break
     }
-    console.log('Orbit.render, hidden', App.state.orbitHidden)
+    if (Electron.orbitState.fullScreen) {
+      orbitStyle.paddingRight = 0
+    }
+    console.log('Orbit.render, hidden', App.isShowingOrbit)
     return (
       <UI.Theme name="dark">
-        <orbit css={orbitStyle} $orbitVisible={!App.state.orbitHidden}>
+        <orbit css={orbitStyle} $orbitVisible={App.isShowingOrbit}>
           {/* first is arrow (above), second is arrow shadow (below) */}
-          {[1, 2].map(key => (
-            <UI.Arrow
-              if={!orbitStore.isTorn}
-              key={key}
-              size={arrowSize}
-              towards={arrowTowards}
-              background={background}
-              css={{
-                position: 'absolute',
-                ...arrowStyle,
-                ...[
-                  {
-                    boxShadow: orbitShadow,
-                    zIndex: -1,
-                  },
-                  {
-                    zIndex: 100,
-                  },
-                ][key],
-              }}
-            />
-          ))}
-          <content>
+          <OrbitArrow
+            if={!Electron.orbitState.fullScreen}
+            arrowSize={arrowSize}
+            arrowTowards={arrowTowards}
+            arrowStyle={arrowStyle}
+          />
+          <content
+            css={{
+              borderRightRadius: Electron.orbitState.fullScreen
+                ? 0
+                : BORDER_RADIUS,
+            }}
+          >
             <OrbitHeader />
             <OrbitContent if={!orbitStore.showSettings} />
             <OrbitSettings if={orbitStore.showSettings} />
@@ -176,7 +149,7 @@ export default class OrbitPage {
       overflow: 'hidden',
       opacity: 1,
       transition: 'background ease-in 200ms',
-      // boxShadow: [orbitShadow, `0 0 0 0.5px ${BORDER_COLOR}`],
+      boxShadow: [orbitShadow],
     },
   }
 }

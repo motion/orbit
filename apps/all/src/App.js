@@ -11,6 +11,8 @@ let App
 @store
 class AppStore {
   state = {
+    query: null,
+    openResult: null,
     highlightWords: {},
     hoveredWord: null,
     hoveredLine: null,
@@ -24,7 +26,11 @@ class AppStore {
   }
 
   get isShowingOrbit() {
-    return !this.state.orbitHidden || Electron.state.orbitState.pinned
+    return (
+      Electron.orbitState.fullScreen ||
+      Electron.orbitState.pinned ||
+      !this.state.orbitHidden
+    )
   }
 
   get hoveredWordName() {
@@ -32,7 +38,11 @@ class AppStore {
   }
 
   get showHeader() {
-    return Electron.orbitState.focused || Electron.orbitState.pinned
+    return (
+      Electron.orbitState.fullScreen ||
+      Electron.orbitState.focused ||
+      Electron.orbitState.pinned
+    )
   }
 
   start(options) {
@@ -45,6 +55,18 @@ class AppStore {
     this.hideOrbitOnMouseOut()
     this.showOrbitOnPin()
     this.hideOrbitOnEsc()
+    this.clearPeekOnUnfocus()
+  }
+
+  clearPeekOnUnfocus = () => {
+    this.react(
+      () => Electron.orbitState.focused,
+      focused => {
+        if (!focused) {
+          App.setState({ peekTarget: null })
+        }
+      },
+    )
   }
 
   hideOrbitOnEsc = () => {

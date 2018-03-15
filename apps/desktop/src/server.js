@@ -50,6 +50,10 @@ export default class Server {
     // ROUTES
     this.app.use(bodyParser.json({ limit: '2048mb' }))
     this.app.use(bodyParser.urlencoded({ limit: '2048mb', extended: true }))
+
+    // this.setupIcons
+    app.use('/icons', express.static(Constants.TMP_DIR))
+
     // this.setupCrawler()
     this.app.get('/hello', (req, res) => res.send('hello world'))
     this.setupSearch()

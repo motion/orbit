@@ -56,12 +56,6 @@ export default class ScreenMaster {
   watchSettings = {}
 
   start = async () => {
-    // TODO make this go through the screenStore
-    Desktop.start({
-      ignoreSource: {
-        [DESKTOP_KEY]: true,
-      },
-    })
     await this.socketManager.start()
     this.oracle.onWords(words => {
       this.hasResolvedOCR = true
@@ -175,8 +169,6 @@ export default class ScreenMaster {
       this.restartScreen()
     })
     this.watchMouse()
-    this.watchKeyboard()
-    iohook.start()
     await this.oracle.start()
   }
 
@@ -205,76 +197,6 @@ export default class ScreenMaster {
       ocrWords: null,
     })
   }, 32)
-
-  watchKeyboard = () => {
-    const codes = {
-      esc: 1,
-      option: 56,
-      optionRight: 3640,
-      up: 57416,
-      down: 57424,
-      space: 57,
-      pgUp: 3657,
-      pgDown: 3665,
-    }
-
-    // this is imperfect, iohook doesn't always match events perfectly
-    // so in cases of errors, we clear it after a little delay
-    const KeysDown = new Set()
-
-    let pauseTm
-    const clearDownKeysAfterPause = () => {
-      clearTimeout(pauseTm)
-      pauseTm = setTimeout(() => {
-        KeysDown.clear()
-      }, 3000)
-    }
-
-    // keydown
-    iohook.on('keydown', ({ keycode }) => {
-      KeysDown.add(keycode)
-      clearDownKeysAfterPause()
-      // log(`keydown: ${keycode}`)
-      if (keycode === codes.esc) {
-        return Desktop.updateKeyboard({ esc: Date.now() })
-      }
-      const isOption = keycode === codes.option || keycode === codes.optionRight
-      if (KeysDown.size > 1 && isOption) {
-        log(`option: already holding ${KeysDown.size} keys`)
-        return Desktop.clearOption()
-      }
-      if (isOption) {
-        log('option down')
-        return Desktop.updateKeyboard({ option: Date.now() })
-      }
-      if (KeysDown.has(codes.option)) {
-        return Desktop.clearOption()
-      }
-      switch (keycode) {
-        // clear highlights keys
-        case codes.space:
-          return Desktop.updateKeyboard({ space: Date.now() })
-        case codes.up:
-        case codes.down:
-        case codes.pgUp:
-        case codes.pgDown:
-          return this.lastScreenChange()
-      }
-    })
-
-    // keyup
-    iohook.on('keyup', ({ keycode }) => {
-      KeysDown.delete(keycode)
-      clearDownKeysAfterPause()
-      // option off
-      switch(keycode) {
-        case codes.option:
-          return Desktop.clearOption()
-        case codes.space:
-          return Desktop.updateKeyboard({ space: null })
-      }
-    })
-  }
 
   watchMouse = () => {
     iohook.on(

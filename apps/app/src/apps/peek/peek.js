@@ -10,15 +10,13 @@ const keyParam = (window.location.search || '').match(/key=(.*)/)
 const KEY = keyParam && keyParam[1]
 const SHADOW_PAD = 15
 const background = '#fff'
-const peekShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.1]]]
+const peekShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.3]]]
 const log = debug('peek')
+const borderRadius = 8
 
 @view({
   store: class PeekStore {
     isTorn = false
-    isPinned = false
-
-    willMount() {}
 
     @watch
     watchTear = () => {
@@ -62,9 +60,22 @@ export default class PeekPage {
         }
         break
     }
+    if (!Electron.currentPeek) {
+      console.log('no peek')
+      return null
+    }
+    if (Electron.orbitState.fullScreen) {
+      peekStyle.paddingLeft = 0
+    }
+    const towardsRight = Electron.currentPeek.arrowTowards === 'left'
     return (
       <UI.Theme name="light">
-        <peek css={peekStyle} $peekVisible={!!App.state.peekTarget}>
+        <peek
+          css={peekStyle}
+          $peekVisible={
+            !!App.state.peekTarget || Electron.orbitState.fullScreen
+          }
+        >
           {/* first is arrow (above), second is arrow shadow (below) */}
           {[1, 2].map(key => (
             <UI.Arrow
@@ -88,7 +99,12 @@ export default class PeekPage {
               }}
             />
           ))}
-          <content>
+          <content
+            css={{
+              borderRightRadius: !towardsRight ? 0 : borderRadius,
+              borderLeftRadius: towardsRight ? 0 : borderRadius,
+            }}
+          >
             <PeekHeader store={store} />
             <PeekContent store={store} target={App.state.peekTarget} />
           </content>
@@ -124,7 +140,6 @@ export default class PeekPage {
       flex: 1,
       // border: [1, 'transparent'],
       background,
-      borderRadius: 15,
       boxShadow: [peekShadow],
       overflow: 'hidden',
       opacity: 1,

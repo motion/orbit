@@ -20,14 +20,13 @@ class ElectronStore {
       show: false,
       focused: false,
       pinned: false,
+      fullScreen: false,
       arrowTowards: null,
       position: null,
       size: null,
     },
     peekState: {
-      arrowTowards: null,
-      position: null,
-      size: null,
+      windows: null,
     },
     showSettings: false,
     showDevTools: {
@@ -54,6 +53,16 @@ class ElectronStore {
         }
       },
       true,
+    )
+
+    // option double tap to pin
+    this.react(
+      () => Desktop.state.shouldPin,
+      shouldPin => {
+        if (shouldPin) {
+          Electron.setOrbitState({ pinned: true })
+        }
+      },
     )
 
     // option tap to clear if open
@@ -115,7 +124,7 @@ class ElectronStore {
   }
 
   get currentPeek() {
-    return this.peekState.windows[0]
+    return (this.peekState.windows || [])[0]
   }
 
   togglePinned = () => {
@@ -124,6 +133,14 @@ class ElectronStore {
 
   setPinned = pinned => {
     Electron.setOrbitState({ pinned, focused: pinned })
+  }
+
+  toggleFullScreen = () => {
+    this.setFullScreen(!Electron.orbitState.fullScreen)
+  }
+
+  setFullScreen = fullScreen => {
+    Electron.setOrbitState({ fullScreen })
   }
 
   setOrbitState = nextState => {

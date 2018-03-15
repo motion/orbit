@@ -149,12 +149,47 @@ export default class OrbitWindow extends React.Component {
       const [width, height] = bounds
       return { top, left, width, height }
     }
+
+    this.react(
+      () => Electron.orbitState.fullScreen,
+      fullScreen => {
+        if (fullScreen) {
+          const { round } = Math
+          const [screenW, screenH] = Helpers.getScreenSize()
+          const [appW, appH] = [screenW / 1.6, screenH / 1.4]
+          const [orbitW, orbitH] = [appW * 1 / 3, appH]
+          const [orbitX, orbitY] = [(screenW - appW) / 2, (screenH - appH) / 2]
+          const [peekW, peekH] = [appW * 2 / 3, appH]
+          const [peekX, peekY] = [orbitX + orbitW, orbitY]
+          Electron.setOrbitState({
+            position: [orbitX, orbitY].map(round),
+            size: [orbitW, orbitH].map(round),
+            arrowTowards: 'right',
+          })
+          const [peek, ...rest] = Electron.peekState.windows
+          peek.position = [peekX, peekY].map(round)
+          peek.size = [peekW, peekH].map(round)
+          peek.arrowTowards = 'left'
+          Electron.setPeekState({ windows: [peek, ...rest] })
+          // focus orbit window
+          if (this.props.store.orbitRef) {
+            this.props.store.orbitRef.focus()
+          }
+          return
+        }
+      },
+    )
+
     this.react(
       () => [
         appTarget(Desktop.state.appState || {}),
         this.props.store.linesBoundingBox,
       ],
       ([appBB, linesBB]) => {
+        if (Electron.orbitState.fullScreen) {
+          return
+        }
+        console.log('reaction', appBB, linesBB)
         // prefer using lines bounding box, fall back to app
         const box = linesBB || appBB
         if (!box) return
@@ -186,7 +221,6 @@ export default class OrbitWindow extends React.Component {
 
   render({ store }) {
     const state = Mobx.toJS(Electron.orbitState)
-
     return (
       <Window
         frame={false}
@@ -196,8 +230,8 @@ export default class OrbitWindow extends React.Component {
         transparent={true}
         showDevTools={Electron.state.showDevTools.orbit}
         alwaysOnTop
-        animatePosition={state.wasShowing}
         show={state.show}
+        ignoreMouseEvents={!App.isShowingOrbit}
         size={state.size}
         position={state.position}
         file={`${Constants.APP_URL}/orbit`}

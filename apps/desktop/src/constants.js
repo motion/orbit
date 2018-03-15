@@ -18,4 +18,7 @@ export const PUBLIC_URL = IS_DEV
 
 export const API_HOST = IS_DEV ? 'localhost' : 'app.seemirai.com'
 export const SERVER_PORT = process.env.PORT || IS_DEV ? 3001 : 3009
-export const TMP_DIR = Path.join(__dirname, '..', 'tmp')
+
+// directories
+export const ROOT_DIR = Path.join(__dirname, '..')
+export const TMP_DIR = Path.join(ROOT_DIR, 'tmp')

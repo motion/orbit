@@ -8,19 +8,10 @@ export default class Item {
     return (
       <UI.Surface
         background="transparent"
-        glow
+        glow={false}
         background={
           orbitStore.selectedIndex === index ? '#102945' : 'transparent'
         }
-        glowProps={{
-          color: '#fff',
-          scale: 1,
-          blur: 70,
-          opacity: 0.15,
-          show: false,
-          resist: 60,
-          zIndex: -1,
-        }}
         padding={[10, 18]}
         onClick={orbitStore.selectItem(index)}
         {...props}

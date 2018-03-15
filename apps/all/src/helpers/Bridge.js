@@ -44,7 +44,6 @@ class Bridge {
     this._options = options
     // set initial state synchronously before
     this._initialState = JSON.parse(JSON.stringify(initialState))
-    console.log('GOT INITIAL STATE', initialState)
     if (initialState) {
       this.setState(initialState, false)
     }

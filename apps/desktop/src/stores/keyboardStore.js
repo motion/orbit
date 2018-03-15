@@ -31,6 +31,10 @@ export default class KeyboardStore {
   keysDown = new Set()
   pauseTm = null
 
+  constructor(opts = {}) {
+    this.onKeyClear = opts.onKeyClear
+  }
+
   start = () => {
     let clearLastKeys
 
@@ -64,7 +68,9 @@ export default class KeyboardStore {
         case codes.down:
         case codes.pgUp:
         case codes.pgDown:
-          return this.lastScreenChange()
+          if (this.onKeyClear) {
+            this.onKeyClear()
+          }
       }
     })
 

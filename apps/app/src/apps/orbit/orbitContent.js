@@ -2,7 +2,6 @@ import { view } from '@mcro/black'
 import * as Helpers from '~/helpers'
 import { App, Electron } from '@mcro/all'
 import OrbitItem from './orbitItem'
-import { memoize } from 'lodash'
 
 const getHoverProps = Helpers.hoverSettler({
   enterDelay: 600,
@@ -11,7 +10,6 @@ const getHoverProps = Helpers.hoverSettler({
       // hide
       App.setState({ peekTarget: null })
     }
-    console.log('target', target)
     const { id, result, top, left, width, height } = target
     const position = {
       // add orbits offset

@@ -26,7 +26,9 @@ export default class DesktopRoot {
   server = new Server()
   screenMaster = new ScreenMaster()
   plugins = new Plugins({ server: this.server })
-  keyboardStore = new KeyboardStore()
+  keyboardStore = new KeyboardStore({
+    onKeyClear: this.screenMaster.lastScreenChange,
+  })
   stores = null
 
   async start() {

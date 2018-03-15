@@ -99,10 +99,10 @@ class ElectronStore {
           showAfterDelay = setTimeout(() => {
             Electron.setState({ shouldShow: Date.now() })
           }, 150)
-          // stickAfterDelay = setTimeout(() => {
-          //   log(`held open for 3 seconds, sticking...`)
-          //   Electron.setPinned(true)
-          // }, 2500)
+          stickAfterDelay = setTimeout(() => {
+            log(`held open for 3 seconds, sticking...`)
+            Electron.setPinned(true)
+          }, 4000)
         }
       }, 16),
     )

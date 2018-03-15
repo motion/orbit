@@ -76,6 +76,15 @@ export default class OrbitPage {
     console.log('Orbit.render, hidden', App.isShowingOrbit)
     return (
       <UI.Theme name="dark">
+        <indicator
+          css={{
+            position: 'absolute',
+            background: 'red',
+            width: 5,
+            height: 10,
+            top: 10,
+          }}
+        />
         <orbit css={orbitStyle} $orbitVisible={App.isShowingOrbit}>
           {/* first is arrow (above), second is arrow shadow (below) */}
           <OrbitArrow

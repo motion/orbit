@@ -5,6 +5,22 @@ import * as UI from '@mcro/ui'
 import { App, Electron } from '@mcro/all'
 import r2 from '@mcro/r2'
 
+const EmptyContents = ({ item }) => (
+  <pane css={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+    <img
+      if={item.icon}
+      src={`/icons/${item.icon}`}
+      css={{ width: 64, height: 64 }}
+    />
+    <UI.Title size={2} fontWeight={600}>
+      {item.title}
+    </UI.Title>
+    <UI.Title if={item.subtitle} size={1}>
+      {item.subtitle}
+    </UI.Title>
+  </pane>
+)
+
 @view({
   peekContents: class PeekContentsStore {
     @watch
@@ -36,7 +52,7 @@ export default class PeekContents {
           {peekContents.selectedContents}
         </content>
         <content if={!peekContents.selectedContents}>
-          <UI.Text size={2}>No contents</UI.Text>
+          <EmptyContents item={selectedItem} />
         </content>
       </peekContents>
     )

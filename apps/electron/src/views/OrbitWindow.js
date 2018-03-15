@@ -98,9 +98,9 @@ const orbitPosition = ({ left, top, width, height }) => {
             return
           }
           if (isHidden) {
-            if (Electron.orbitState.focused) {
+            if (Electron.orbitState.mouseOver) {
               log(`unfocus orbit`)
-              Electron.setOrbitState({ focused: false })
+              Electron.setOrbitState({ mouseOver: false })
             }
             return
           }
@@ -111,18 +111,18 @@ const orbitPosition = ({ left, top, width, height }) => {
           }
           const withinX = x > position[0] && x < position[0] + size[0]
           const withinY = y > position[1] && y < position[1] + size[1]
-          const focused = withinX && withinY
-          if (focused !== Electron.orbitState.focused) {
-            Electron.setOrbitState({ focused })
+          const mouseOver = withinX && withinY
+          if (mouseOver !== Electron.orbitState.mouseOver) {
+            Electron.setOrbitState({ mouseOver })
           }
         },
       )
       // separate react to only call actions if value changes
       this.react(
-        () => Electron.orbitState.focused,
-        focused => {
-          log(`Electron.orbitState.focused ${focused}`)
-          if (focused) {
+        () => Electron.orbitState.mouseOver,
+        mouseOver => {
+          log(`Electron.orbitState.mouseOver ${mouseOver}`)
+          if (mouseOver) {
             this.orbitRef && this.orbitRef.focus()
           } else {
             Swift.defocus()
@@ -187,7 +187,6 @@ export default class OrbitWindow extends React.Component {
         Electron.orbitState.fullScreen,
       ],
       ([appBB, linesBB, fullScreen]) => {
-        console.log('reaction', appBB, linesBB, fullScreen)
         if (fullScreen) return
         // prefer using lines bounding box, fall back to app
         const box = linesBB || appBB

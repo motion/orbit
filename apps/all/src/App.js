@@ -48,7 +48,7 @@ class AppStore {
   get showHeader() {
     return (
       Electron.orbitState.fullScreen ||
-      Electron.orbitState.focused ||
+      Electron.orbitState.mouseOver ||
       Electron.orbitState.pinned
     )
   }
@@ -60,6 +60,7 @@ class AppStore {
   }
 
   runReactions() {
+    this.showHideApp()
     this.showOrbitOnHoverWord()
     this.hideOrbitOnMouseOut()
     this.showOrbitOnPin()
@@ -67,11 +68,34 @@ class AppStore {
     this.clearPeekTarget()
   }
 
+  showHideApp = () => {
+    this.react(
+      () => [Electron.state.shouldHide, Electron.state.shouldShow],
+      function handleHidden([shouldHide, shouldShow]) {
+        log(`handleHidden: ${shouldHide} ${shouldShow}`)
+        if (!shouldHide && !shouldShow) {
+          return
+        }
+        const isHidden = App.state.orbitHidden
+        const willBeHidden = shouldHide > shouldShow
+        // TODO implement this
+        const PEEK_IS_FOCUSED = false
+        if (PEEK_IS_FOCUSED && !isHidden && willBeHidden) {
+          log(`Peek is focused, ignore hide`)
+          return
+        }
+        log(`orbitHidden: ${willBeHidden}`)
+        App.setState({ orbitHidden: willBeHidden })
+      },
+      true,
+    )
+  }
+
   clearPeekTarget = () => {
     this.react(
-      () => Electron.orbitState.focused,
-      focused => {
-        if (!focused) {
+      () => Electron.orbitState.mouseOver,
+      mouseOver => {
+        if (!mouseOver) {
           App.setState({ peekTarget: null })
         }
       },
@@ -111,13 +135,13 @@ class AppStore {
       () => [
         !App.state.orbitHidden,
         Electron.orbitState.pinned,
-        Electron.orbitState.focused,
+        Electron.orbitState.mouseOver,
       ],
-      ([isShown, isPinned, isFocused]) => {
+      ([isShown, isPinned, mouseOver]) => {
         if (Desktop.isHoldingOption) {
           return
         }
-        if (isShown && !isPinned && !isFocused) {
+        if (isShown && !isPinned && !mouseOver) {
           log(
             `hiding because your mouse moved outside the window after option release`,
           )

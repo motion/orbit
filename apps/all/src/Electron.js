@@ -18,7 +18,7 @@ class ElectronStore {
     settingsPosition: [], // todo: settingsState.position
     orbitState: {
       show: false,
-      focused: false,
+      mouseOver: false,
       pinned: false,
       fullScreen: false,
       arrowTowards: null,
@@ -87,7 +87,7 @@ class ElectronStore {
         }
         if (!isHoldingOption) {
           // TODO
-          if (!Electron.orbitState.pinned && Electron.orbitState.focused) {
+          if (!Electron.orbitState.pinned && Electron.orbitState.mouseOver) {
             log('prevent hide while mouseover after release hold')
             return
           }
@@ -125,7 +125,7 @@ class ElectronStore {
   }
 
   setPinned = pinned => {
-    Electron.setOrbitState({ pinned, focused: pinned })
+    Electron.setOrbitState({ pinned })
   }
 
   toggleFullScreen = () => {
@@ -137,7 +137,6 @@ class ElectronStore {
   }
 
   setOrbitState = nextState => {
-    console.trace('setting state from here', nextState)
     this.setState({ orbitState: { ...this.state.orbitState, ...nextState } })
   }
 

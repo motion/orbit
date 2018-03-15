@@ -4,7 +4,7 @@ import Redbox from 'redbox-react'
 import * as UI from '@mcro/ui'
 import NotFound from '~/views/404'
 import Router from '~/router'
-import { App, Electron } from '@mcro/all'
+import { App } from '@mcro/all'
 
 const log = debug('root')
 
@@ -12,36 +12,6 @@ const log = debug('root')
   rootStore: class RootStore {
     willMount() {
       App.start()
-
-      this.react(
-        () => [
-          Electron.state.shouldHide,
-          Electron.state.shouldShow,
-          // Desktop.state.lastScreenChange,
-        ],
-        function handleHidden([shouldHide, shouldShow]) {
-          log(`handleHidden: ${shouldHide} ${shouldShow}`)
-          if (!shouldHide && !shouldShow) {
-            return
-          }
-          // if (lastChange && lastChange > shouldShow) {
-          //   log(`lastChange, hide`)
-          //   App.setState({ orbitHidden: true })
-          //   return
-          // }
-          const isHidden = App.state.orbitHidden
-          const willBeHidden = shouldHide > shouldShow
-          // TODO implement this
-          const PEEK_IS_FOCUSED = false
-          if (PEEK_IS_FOCUSED && !isHidden && willBeHidden) {
-            log(`Peek is focused, ignore hide`)
-            return
-          }
-          log(`orbitHidden: ${willBeHidden}`)
-          App.setState({ orbitHidden: willBeHidden })
-        },
-        true,
-      )
     }
   },
 })

@@ -3,6 +3,7 @@ import { App, Desktop } from '@mcro/all'
 import { Thing } from '@mcro/models'
 import Search from '@mcro/search'
 import KeyboardStore from './keyboardStore'
+import * as Mobx from 'mobx'
 
 const log = debug('OrbitStore')
 
@@ -28,8 +29,19 @@ export default class OrbitStore {
         allDocs.map(doc => ({ title: doc.title, text: doc.body })),
       )
     })
+
     // search
     this.react(() => App.state.query, this.handleSearch, true)
+
+    // selected
+    this.watch(() => {
+      if (!this.results) {
+        App.setState({ selectedItem: null })
+      } else {
+        const selectedItem = Mobx.toJS(this.results[this.selectedIndex]) || null
+        App.setState({ selectedItem })
+      }
+    })
 
     this.on(this.keyboardStore, 'keydown', code => {
       console.log('code', code)

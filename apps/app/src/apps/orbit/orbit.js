@@ -127,13 +127,12 @@ export default class OrbitPage {
       padding: SHADOW_PAD,
       pointerEvents: 'none !important',
       position: 'relative',
-      transition: 'all ease-in 100ms',
+      transition: 'opacity ease-in 100ms',
       opacity: 0,
     },
     orbitVisible: {
       pointerEvents: 'all !important',
       opacity: 1,
-      transition: 'all ease-out 100ms',
     },
     orbitTorn: {
       pointerEvents: 'all !important',

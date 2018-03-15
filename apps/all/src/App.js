@@ -12,11 +12,11 @@ let App
 class AppStore {
   state = {
     query: null,
+    selectedItem: null,
     openResult: null,
     highlightWords: {},
     hoveredWord: null,
     hoveredLine: null,
-    preventElectronHide: true,
     contextMessage: 'Orbit',
     closePeek: null,
     orbitHidden: true,
@@ -24,6 +24,8 @@ class AppStore {
     peekTarget: null,
     shouldTogglePinned: null,
   }
+
+  uid = 10
 
   get isShowingOrbit() {
     return (
@@ -48,6 +50,7 @@ class AppStore {
   start(options) {
     Bridge.start(this, this.state, options)
     this.setState = Bridge.setState
+    this.bridge = Bridge
   }
 
   runReactions() {
@@ -55,14 +58,22 @@ class AppStore {
     this.hideOrbitOnMouseOut()
     this.showOrbitOnPin()
     this.hideOrbitOnEsc()
-    this.clearPeekOnUnfocus()
+    this.clearPeekTarget()
   }
 
-  clearPeekOnUnfocus = () => {
+  clearPeekTarget = () => {
     this.react(
       () => Electron.orbitState.focused,
       focused => {
         if (!focused) {
+          App.setState({ peekTarget: null })
+        }
+      },
+    )
+    this.react(
+      () => Electron.orbitState.fullScreen,
+      fullScreen => {
+        if (!fullScreen) {
           App.setState({ peekTarget: null })
         }
       },

@@ -256,18 +256,22 @@ class Search {
       nearestNeighbors.map(({ sentenceIndex, paragraphIndex }, index) => {
         const paragraph = this.paragraphs[paragraphIndex]
         const sentence = paragraph.sentences[sentenceIndex]
-        const { document } = paragraph
+        const documentIndex = paragraph.document
         // incorporate sentence distance into weighting
         const penalizeNearest = index / nearestNeighbors.length
         const distance =
           wordMoversDistance(vectors, sentence.vectors).total / vectors.length +
           0.2 * penalizeNearest
+        const document = this.documentSources[documentIndex]
 
         return {
-          document: this.documentSources[document],
-          documentIndex: document,
+          document,
+          documentIndex,
           distance,
           sentence: sentence.text,
+          title: document.title,
+          subtitle: `distance: ${distance}`,
+          content: sentence.text,
         }
       }),
       'distance',

@@ -7,7 +7,7 @@ import KeyboardStore from './keyboardStore'
 const log = debug('OrbitStore')
 
 export default class OrbitStore {
-  searchStore = new Search()
+  searchStore = new searchStore()
   keyboardStore = new KeyboardStore()
   searchResults = []
   showSettings = false
@@ -60,7 +60,7 @@ export default class OrbitStore {
 
     // if it hasn't changed since we searched
     if (results && App.state.query === query) {
-      this.results = results
+      this.searchResults = results
     }
   }, 100)
 

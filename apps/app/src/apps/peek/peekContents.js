@@ -15,7 +15,8 @@ import r2 from '@mcro/r2'
 
     get selectedPath() {
       const selected = App.state.selectedItem
-      if (!selected.id || selected.id.indexOf('.txt') === -1) {
+      if (!selected) return null
+      if (!selected.id || (selected.id && selected.id.indexOf('.txt') === -1)) {
         return null
       }
       return selected.id

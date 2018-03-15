@@ -34,7 +34,11 @@ export default class OrbitStore {
 
     // selected
     this.watch(() => {
-      App.setState({ selectedItem: this.results[this.selectedIndex] })
+      if (!this.results) {
+        App.setState({ selectedItem: null })
+      } else {
+        App.setState({ selectedItem: this.results[this.selectedIndex] })
+      }
     })
 
     this.on(this.keyboardStore, 'keydown', code => {

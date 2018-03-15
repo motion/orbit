@@ -11,6 +11,7 @@ const getHoverProps = Helpers.hoverSettler({
       // hide
       App.setState({ peekTarget: null })
     }
+    console.log('target', target)
     const { id, result, top, left, width, height } = target
     const position = {
       // add orbits offset

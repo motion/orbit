@@ -171,11 +171,11 @@ class Bridge {
         console.error(
           `${this.storeName}._update: tried to set a key not in initialState
 
-            initial state keys: ${JSON.stringify(
-              Object.keys(this._initialState),
-            )}
+            initial state: ${JSON.stringify(this._initialState)}
 
             key: ${key}
+
+            typeof initial state key: ${typeof this._initialState[key]}
 
             value: ${JSON.stringify(newState, 0, 2)}`,
         )

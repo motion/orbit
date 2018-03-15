@@ -25,6 +25,8 @@ class AppStore {
     shouldTogglePinned: null,
   }
 
+  uid = 10
+
   get isShowingOrbit() {
     return (
       Electron.orbitState.fullScreen ||
@@ -48,6 +50,7 @@ class AppStore {
   start(options) {
     Bridge.start(this, this.state, options)
     this.setState = Bridge.setState
+    this.bridge = Bridge
   }
 
   runReactions() {

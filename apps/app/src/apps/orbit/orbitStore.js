@@ -3,6 +3,7 @@ import { App, Desktop } from '@mcro/all'
 import { Thing } from '@mcro/models'
 import Search from '@mcro/search'
 import KeyboardStore from './keyboardStore'
+import * as Mobx from 'mobx'
 
 const log = debug('OrbitStore')
 
@@ -37,7 +38,9 @@ export default class OrbitStore {
       if (!this.results) {
         App.setState({ selectedItem: null })
       } else {
-        App.setState({ selectedItem: this.results[this.selectedIndex] })
+        const selectedItem = Mobx.toJS(this.results[this.selectedIndex])
+        console.log('set selectedItem', selectedItem)
+        App.setState({ selectedItem })
       }
     })
 

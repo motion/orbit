@@ -19,6 +19,7 @@ import r2 from '@mcro/r2'
       if (!selected.id || (selected.id && selected.id.indexOf('.txt') === -1)) {
         return null
       }
+      console.log('selected.id', selected.id)
       return selected.id
     }
   },
@@ -28,10 +29,10 @@ export default class PeekContents {
     const { selectedItem } = App.state
     return (
       <peekContents>
-        <UI.Title size={2} fontWeight={700}>
-          {selectedItem.id}
-        </UI.Title>
         <content if={peekContents.selectedContents}>
+          <UI.Title size={2} fontWeight={700}>
+            {selectedItem.id}
+          </UI.Title>
           {peekContents.selectedContents}
         </content>
         <content if={!peekContents.selectedContents}>

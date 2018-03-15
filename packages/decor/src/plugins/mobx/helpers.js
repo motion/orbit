@@ -17,9 +17,9 @@ export function watch(fn: Function, debounce): Function {
 export function react(
   fn: Function,
   onReact: Function,
-  immediately: boolean = false,
+  userOptions?: Object | Boolean,
 ): Function {
-  const dispose = reaction(fn, onReact.bind(this), immediately)
+  const dispose = reaction(fn, onReact.bind(this), AllHelpers.getReactionOptions(userOptions))
   this.subscriptions.add(dispose)
   return dispose
 }

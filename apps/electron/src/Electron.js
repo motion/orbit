@@ -9,7 +9,7 @@ import OrbitWindow from './views/OrbitWindow'
 import ShortcutsStore from '~/stores/shortcutsStore'
 // import SettingsWindow from './views/SettingsWindow'
 import * as Helpers from '~/helpers'
-import { App, Electron, Desktop } from '@mcro/all'
+import { Electron } from '@mcro/all'
 import global from 'global'
 
 const log = debug('Electron')
@@ -91,7 +91,7 @@ export default class ElectronWindow extends React.Component {
         ref={electronStore.handleAppRef}
       >
         <MenuItems />
-        <HighlightsWindow />
+        {/* <HighlightsWindow /> */}
         <PeekWindow />}
         <OrbitWindow />
         {/* <SettingsWindow /> */}

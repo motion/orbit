@@ -18,7 +18,7 @@ class ElectronStore {
     settingsPosition: [], // todo: settingsState.position
     orbitState: {
       show: false,
-      focused: false,
+      mouseOver: false,
       pinned: false,
       fullScreen: false,
       arrowTowards: null,
@@ -56,14 +56,7 @@ class ElectronStore {
     )
 
     // option double tap to pin
-    this.react(
-      () => Desktop.state.shouldPin,
-      shouldPin => {
-        if (shouldPin) {
-          Electron.setOrbitState({ pinned: true })
-        }
-      },
-    )
+    this.react(() => Desktop.state.shouldTogglePin, Electron.togglePinned)
 
     // option tap to clear if open
     // let lastDown = 0
@@ -94,7 +87,7 @@ class ElectronStore {
         }
         if (!isHoldingOption) {
           // TODO
-          if (!Electron.orbitState.pinned && Electron.orbitState.focused) {
+          if (!Electron.orbitState.pinned && Electron.orbitState.mouseOver) {
             log('prevent hide while mouseover after release hold')
             return
           }
@@ -109,7 +102,7 @@ class ElectronStore {
           stickAfterDelay = setTimeout(() => {
             log(`held open for 3 seconds, sticking...`)
             Electron.setPinned(true)
-          }, 2500)
+          }, 4000)
         }
       }, 16),
     )
@@ -132,7 +125,7 @@ class ElectronStore {
   }
 
   setPinned = pinned => {
-    Electron.setOrbitState({ pinned, focused: pinned })
+    Electron.setOrbitState({ pinned })
   }
 
   toggleFullScreen = () => {

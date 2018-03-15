@@ -4,6 +4,7 @@ import { fromPromise, isPromiseBasedObservable } from 'mobx-utils'
 import fromStream from './fromStream'
 import * as Mobx from 'mobx'
 import { Observable } from 'rxjs'
+import * as Helpers from '@mcro/helpers'
 
 if (module && module.hot) {
   module.hot.accept('.', _ => _) // prevent aggressive hmrs
@@ -323,7 +324,12 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
     }
     if (Array.isArray(val)) {
       // reaction
-      stopReaction = Mobx.reaction(val[0], watcher(val[1]), val[3] || true)
+      const options = Helpers.getReactionOptions(val[3])
+      stopReaction = Mobx.reaction(val[0], watcher(val[1]), {
+        // pass name to reaction for debugging
+        name: method,
+        ...options,
+      })
     } else {
       //autorun
       stopReaction = Mobx.autorun(watcher(val))
@@ -333,8 +339,8 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
   function watcher(val) {
     let value = val
 
-    return function watcherCb() {
-      result = valueToObservable(value.call(obj, obj.props)) // hit user observables // pass in props
+    return function watcherCb(reactionValue) {
+      result = valueToObservable(value.call(obj, reactionValue || obj.props)) // hit user observables // pass in props
       const observableLike = isObservableLike(result)
       stopAutoObserve()
 

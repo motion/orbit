@@ -10,7 +10,7 @@ const keyParam = (window.location.search || '').match(/key=(.*)/)
 const KEY = keyParam && keyParam[1]
 const SHADOW_PAD = 15
 const background = '#fff'
-const peekShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.3]]]
+const peekShadow = [[0, 0, SHADOW_PAD, [0, 0, 0, 0.3]]]
 const log = debug('peek')
 const borderRadius = 8
 
@@ -70,12 +70,7 @@ export default class PeekPage {
     const towardsRight = Electron.currentPeek.arrowTowards === 'left'
     return (
       <UI.Theme name="light">
-        <peek
-          css={peekStyle}
-          $peekVisible={
-            !!App.state.peekTarget || Electron.orbitState.fullScreen
-          }
-        >
+        <peek css={peekStyle} $peekVisible={App.isShowingPeek}>
           {/* first is arrow (above), second is arrow shadow (below) */}
           {[1, 2].map(key => (
             <UI.Arrow
@@ -140,7 +135,7 @@ export default class PeekPage {
       flex: 1,
       // border: [1, 'transparent'],
       background,
-      boxShadow: [peekShadow],
+      boxShadow: peekShadow,
       overflow: 'hidden',
       opacity: 1,
       transition: 'background ease-in 200ms',

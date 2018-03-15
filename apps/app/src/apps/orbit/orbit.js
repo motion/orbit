@@ -13,6 +13,7 @@ const BORDER_RADIUS = 12
 // const BORDER_COLOR = `rgba(255,255,255,0.25)`
 const background = 'rgba(0,0,0,0.9)'
 const orbitShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.3]]]
+const orbitLightShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.1]]]
 const log = debug('orbit')
 
 const OrbitArrow = ({ arrowSize, arrowTowards, arrowStyle }) =>
@@ -46,6 +47,7 @@ const OrbitArrow = ({ arrowSize, arrowTowards, arrowStyle }) =>
 export default class OrbitPage {
   render({ orbitStore }) {
     const arrowTowards = Electron.orbitState.arrowTowards || 'right'
+    const towardsRight = arrowTowards === 'right'
     const arrowSize = 28
     let arrowStyle
     let orbitStyle
@@ -72,19 +74,34 @@ export default class OrbitPage {
     if (Electron.orbitState.fullScreen) {
       orbitStyle.paddingRight = 0
     }
-    console.log('Orbit.render, hidden', App.isShowingOrbit)
     return (
       <UI.Theme name="dark">
+        <indicator
+          css={{
+            position: 'absolute',
+            background: 'red',
+            width: 3,
+            height: 35,
+            top: 20,
+            right: towardsRight ? SHADOW_PAD : 'auto',
+            left: !towardsRight ? SHADOW_PAD : 'auto',
+            borderLeftRadius: towardsRight ? 5 : 0,
+            borderRightRadius: !towardsRight ? 5 : 0,
+          }}
+        />
         <orbit css={orbitStyle} $orbitVisible={App.isShowingOrbit}>
           {/* first is arrow (above), second is arrow shadow (below) */}
           <OrbitArrow
-            if={!Electron.orbitState.fullScreen}
+            if={App.isAttachedToWindow}
             arrowSize={arrowSize}
             arrowTowards={arrowTowards}
             arrowStyle={arrowStyle}
           />
           <content
             css={{
+              boxShadow: Electron.orbitState.fullScreen
+                ? orbitShadow
+                : orbitLightShadow,
               borderRightRadius: Electron.orbitState.fullScreen
                 ? 0
                 : BORDER_RADIUS,
@@ -149,7 +166,6 @@ export default class OrbitPage {
       overflow: 'hidden',
       opacity: 1,
       transition: 'background ease-in 200ms',
-      boxShadow: [orbitShadow],
     },
   }
 }

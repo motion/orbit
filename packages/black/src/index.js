@@ -7,6 +7,10 @@ import { observable, autorunAsync } from 'mobx'
 export log from './helpers/log'
 export watch from './helpers/watch'
 
+// react just takes alt syntax
+import watch from './helpers/watch'
+export const react = watch
+
 export const view = view_
 export const store = store_
 export const ProvideStore = ProvideStore_

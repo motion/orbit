@@ -47,6 +47,7 @@ const OrbitArrow = ({ arrowSize, arrowTowards, arrowStyle }) =>
 export default class OrbitPage {
   render({ orbitStore }) {
     const arrowTowards = Electron.orbitState.arrowTowards || 'right'
+    const towardsRight = arrowTowards === 'right'
     const arrowSize = 28
     let arrowStyle
     let orbitStyle
@@ -73,7 +74,6 @@ export default class OrbitPage {
     if (Electron.orbitState.fullScreen) {
       orbitStyle.paddingRight = 0
     }
-    console.log('Orbit.render, hidden', App.isShowingOrbit)
     return (
       <UI.Theme name="dark">
         <indicator
@@ -83,6 +83,8 @@ export default class OrbitPage {
             width: 5,
             height: 10,
             top: 10,
+            right: towardsRight ? 0 : 'auto',
+            left: !towardsRight ? 0 : 'auto',
           }}
         />
         <orbit css={orbitStyle} $orbitVisible={App.isShowingOrbit}>

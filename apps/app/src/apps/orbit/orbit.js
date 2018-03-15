@@ -80,11 +80,13 @@ export default class OrbitPage {
           css={{
             position: 'absolute',
             background: 'red',
-            width: 5,
-            height: 10,
-            top: 10,
-            right: towardsRight ? 0 : 'auto',
-            left: !towardsRight ? 0 : 'auto',
+            width: 3,
+            height: 35,
+            top: 20,
+            right: towardsRight ? SHADOW_PAD : 'auto',
+            left: !towardsRight ? SHADOW_PAD : 'auto',
+            borderLeftRadius: towardsRight ? 5 : 0,
+            borderRightRadius: !towardsRight ? 5 : 0,
           }}
         />
         <orbit css={orbitStyle} $orbitVisible={App.isShowingOrbit}>

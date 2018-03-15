@@ -4,6 +4,7 @@ import { view, watch } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { App, Electron } from '@mcro/all'
 import PeekHeader from './peekHeader'
+import PeekContent from './peekContent'
 
 const keyParam = (window.location.search || '').match(/key=(.*)/)
 const KEY = keyParam && keyParam[1]
@@ -89,7 +90,7 @@ export default class PeekPage {
           ))}
           <content>
             <PeekHeader store={store} />
-            <contentInner>hello world</contentInner>
+            <PeekContent store={store} target={App.state.peekTarget} />
           </content>
         </peek>
       </UI.Theme>
@@ -123,7 +124,7 @@ export default class PeekPage {
       flex: 1,
       // border: [1, 'transparent'],
       background,
-      borderRadius: 45,
+      borderRadius: 15,
       boxShadow: [peekShadow],
       overflow: 'hidden',
       opacity: 1,

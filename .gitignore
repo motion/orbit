@@ -29,6 +29,7 @@ apps/app/build
 apps/desktop/es6
 apps/desktop/build
 apps/site/build
+apps/search/build
 apps/electron/build
 apps/crawler/build
 

@@ -44,7 +44,6 @@ ensure-dep "brew" -- /usr/bin/ruby -e "$(curl -fsSL https://raw.githubuserconten
 ensure-dep "npm" -- brew install node &
 ensure-dep "yarn" -- npm i -g yarn &
 ensure-dep "realpath" -- brew install coreutils &
-restart-vscode &
 wait
 yarn install --silent
 npx lerna bootstrap --loglevel=warn

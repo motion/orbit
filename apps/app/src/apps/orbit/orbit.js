@@ -3,12 +3,12 @@ import * as React from 'react'
 import { debounce } from 'lodash'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { App, Electron } from '@mcro/all'
+import { App, Electron, Desktop } from '@mcro/all'
 import OrbitContent from './orbitContent'
 import OrbitSettings from './orbitSettings'
 import { Thing } from '@mcro/models'
-import Search from '@mcro/search'
 import OrbitHeader from './orbitHeader'
+import searchStore from '~/stores/searchStore'
 
 const SHADOW_PAD = 15
 const BORDER_RADIUS = 12
@@ -19,25 +19,27 @@ const log = debug('orbit')
 
 @view.provide({
   orbitStore: class OrbitStore {
-    searchStore = new Search()
     isTorn = false
     isPinned = false
-    query = 'test'
+    query = ''
     results = []
     showSettings = false
 
     willMount() {
       App.runReactions()
+      this.searchStore = new searchStore()
 
       setTimeout(async () => {
         console.log('adding docs to search...')
         const allDocs = await Thing.getAll()
-        this.searchStore.setDocuments(
+        this.searchStore.call(
+          'setDocuments',
           allDocs.map(doc => ({ title: doc.title, text: doc.body })),
         )
       })
       // react to do searches
       this.react(() => this.query, this.search, true)
+      // this.react(() => Desktop.state.selection, this.search, true)
     }
 
     onChangeQuery = e => {
@@ -49,10 +51,14 @@ const log = debug('orbit')
     }
 
     search = debounce(async () => {
-      const results = await this.searchStore.search.search(this.query)
-      if (!results) return
-      this.results = results
-    }, 150)
+      const query = this.query
+      const results = await this.searchStore.call('search', query)
+
+      // if it hasn't changed since we searched
+      if (results && query === this.query) {
+        this.results = results
+      }
+    }, 350)
   },
 })
 @view.attach('orbitStore')
@@ -114,7 +120,6 @@ export default class OrbitPage {
             <OrbitHeader />
             <OrbitContent if={!orbitStore.showSettings} />
             <OrbitSettings if={orbitStore.showSettings} />
-            <Knowledge if={App.state.knowledge} data={App.state.knowledge} />
             <controls
               css={{
                 position: 'absolute',

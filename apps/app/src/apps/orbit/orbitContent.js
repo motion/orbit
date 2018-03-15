@@ -20,7 +20,7 @@ const getHoverProps = Helpers.hoverSettler({
       height,
     }
     console.log('hovered', id, position, result)
-    App.setState({ peekTarget: { id, position } })
+    App.setState({ peekTarget: { id, result, position } })
   },
 })
 
@@ -41,11 +41,12 @@ const Item = ({ title, type, subtitle, content, ...props }) => (
     {...props}
   >
     <UI.Title
-      size={1.6}
+      size={1.3}
       ellipse
       css={{ alignItems: 'center', justifyContent: 'center' }}
     >
       <OrbitIcon
+        if={false}
         name={type}
         css={{
           width: 22,
@@ -57,7 +58,7 @@ const Item = ({ title, type, subtitle, content, ...props }) => (
       />{' '}
       {title}
     </UI.Title>
-    <UI.Text opacity={0.6} margin={[0, 0, 3]} size={1.1}>
+    <UI.Text opacity={0.6} margin={[0, 0, 3]} size={0.9}>
       {subtitle}
     </UI.Text>
     <UI.Text opacity={0.8} ellipse={3} sizeLineHeight={1.15}>
@@ -69,15 +70,16 @@ const Item = ({ title, type, subtitle, content, ...props }) => (
 @view.attach('orbitStore')
 @view
 export default class OrbitContent {
-  render({ orbitStore }) {
+  render({ orbitStore, onClick }) {
     return (
       <list>
         {orbitStore.results.map(result => (
           <Item
             type="gmail"
             title={result.document.title}
-            subtitle={`distance: ${result.distance}`}
+            subtitle={`distance: ${('' + result.distance).slice(0, 6)}`}
             content={result.sentence}
+            onClick={() => onClick(result)}
             {...getHoverProps({
               result,
               id: result.index,

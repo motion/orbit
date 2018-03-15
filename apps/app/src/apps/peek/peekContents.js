@@ -52,7 +52,8 @@ export default class PeekContents {
           {peekContents.selectedContents}
         </content>
         <content if={!peekContents.selectedContents}>
-          <EmptyContents item={selectedItem} />
+          <EmptyContents if={selectedItem} item={selectedItem} />
+          <EmptyContents if={!selectedItem} item={{ title: 'No Results' }} />
         </content>
       </peekContents>
     )

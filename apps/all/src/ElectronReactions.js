@@ -36,13 +36,13 @@ export default class ElectronReactions {
 
   @react
   unPinOnUnFullScreen = [
-    () => [Electron.orbitState.fullScreen, App.state.orbitHidden],
-    ([fullScreen, hidden]) => {
-      if (!fullScreen || !hidden) {
+    () => Electron.orbitState.fullScreen,
+    fullScreen => {
+      if (!fullScreen) {
         Electron.setPinned(false)
       }
     },
-    { delay: 300 },
+    { delay: 50 },
   ]
 
   @react

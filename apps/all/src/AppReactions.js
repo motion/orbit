@@ -20,7 +20,6 @@ export default class AppReactions {
     ([shouldShow, shouldHide]) => {
       if (!shouldShow) return
       const orbitHidden = shouldHide > shouldShow
-      log('orbitHidden', orbitHidden)
       App.setState({ orbitHidden })
     },
     true,
@@ -72,18 +71,14 @@ export default class AppReactions {
       !App.state.orbitHidden || Electron.orbitState.pinned,
       Electron.orbitState.mouseOver || Electron.peekState.mouseOver,
     ],
-    ([isShown, mouseOver]) => {
+    async ([isShown, mouseOver], { sleep }) => {
       clearTimeout(this.hideTm)
       if (Desktop.isHoldingOption) {
         return
       }
       if (isShown && !mouseOver) {
-        this.hideTm = setTimeout(() => {
-          log(
-            `hiding because your mouse moved outside the window after option release`,
-          )
-          App.setState({ orbitHidden: true })
-        }, 100)
+        await sleep(200)
+        App.setState({ orbitHidden: true })
       }
     },
   ]
@@ -91,16 +86,14 @@ export default class AppReactions {
   @react
   showOrbitOnHoverWord = [
     () => App.hoveredWordName,
-    word => {
+    async (word, { sleep }) => {
       if (Desktop.isHoldingOption) {
         return
       }
       clearTimeout(this.hoverShow)
       const orbitHidden = !word
-      this.hoverShow = setTimeout(() => {
-        console.log('sethidden based on word', orbitHidden)
-        App.setState({ orbitHidden })
-      }, orbitHidden ? 50 : 500)
+      await sleep(orbitHidden ? 50 : 500)
+      App.setState({ orbitHidden })
     },
   ]
 }

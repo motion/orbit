@@ -6,10 +6,26 @@ import * as Mobx from 'mobx'
 import { Observable } from 'rxjs'
 import * as Helpers from '@mcro/helpers'
 
+const log = debug('>')
+
 if (module && module.hot) {
   module.hot.accept('.', _ => _) // prevent aggressive hmrs
 }
 
+const PREFIX = `=>`
+const resultToConsole = res => {
+  if (typeof result === 'undefined') return []
+  if (res instanceof Promise) return [PREFIX, 'Promise']
+  return [PREFIX, res]
+}
+let lastName
+const getReactionName = (obj, simple) => {
+  const name = obj.constructor.name.replace('Store', '')
+  if (simple) return name
+  if (lastName === name) return ''
+  lastName = name
+  return name
+}
 const isObservable = x => {
   if (!x) {
     return false
@@ -326,6 +342,7 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
 
   const isReaction = Array.isArray(val)
   let preventLog = false
+  let timeoutActive = false
 
   function run() {
     if (disposed) {
@@ -350,18 +367,43 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
     let value = val
 
     return function watcherCb(reactionValue) {
-      result = valueToObservable(
-        value.call(obj, reactionValue || obj.props, {
-          preventLogging: () => (preventLog = true),
-        }),
-      ) // hit user observables // pass in props
+      // cancels on new reactions
+      timeoutActive = false
+      const reactionResult = value.call(obj, reactionValue || obj.props, {
+        preventLogging: () => (preventLog = true),
+        sleep: ms => {
+          log(`${getReactionName(obj)}.${method} sleep(${ms})`)
+          timeoutActive = true
+          return new Promise((res, rej) =>
+            setTimeout(() => {
+              if (timeoutActive) {
+                res()
+              } else {
+                rej('CANCELLED')
+              }
+            }, ms),
+          )
+        },
+      })
+      // handle cancels
+      if (reactionResult instanceof Promise) {
+        reactionResult.catch(err => {
+          if (err === 'CANCELLED') {
+            console.log(`Reaction cancelled`)
+          } else {
+            console.error(err)
+          }
+        })
+      }
+      // store result as observable
+      result = valueToObservable(reactionResult)
       if (!preventLog) {
         if (isReaction) {
-          console.log(
-            ` >> ${obj.constructor.name.replace('Store', '')}.${method}(`,
+          log(
+            `${getReactionName(obj)}.${method}(`,
             reactionValue,
-            `) =>`,
-            result,
+            `)`,
+            ...resultToConsole(result),
           )
         }
       }

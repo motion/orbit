@@ -87,9 +87,7 @@ export default class ElectronReactions {
   @react
   handleHoldingOption = [
     () => Desktop.isHoldingOption,
-    isHoldingOption => {
-      clearTimeout(this.showAfterDelay)
-      clearTimeout(this.stickAfterDelay)
+    async (isHoldingOption, { sleep }) => {
       if (Electron.orbitState.pinned) {
         log(`pinned, avoid`)
         return
@@ -106,14 +104,10 @@ export default class ElectronReactions {
         return
       }
       if (App.state.orbitHidden) {
-        // SHOW
-        this.showAfterDelay = setTimeout(() => {
-          Electron.setState({ shouldShow: Date.now() })
-        }, 150)
-        this.stickAfterDelay = setTimeout(() => {
-          log(`held open for 3 seconds, sticking...`)
-          Electron.setPinned(true)
-        }, 4000)
+        await sleep(150)
+        Electron.setState({ shouldShow: Date.now() })
+        await sleep(3500)
+        Electron.setPinned(true)
       }
     },
     { delay: 16 },

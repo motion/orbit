@@ -64,6 +64,12 @@ class ElectronStore {
     return (this.peekState.windows || [])[0]
   }
 
+  get recentlyToggled() {
+    if (Date.now() - Electron.state.shouldHide < 100) return true
+    if (Date.now() - Electron.state.shouldShow < 100) return true
+    return false
+  }
+
   onShortcut = shortcut => {
     if (shortcut === 'Option+Space') {
       if (Electron.orbitState.fullScreen) {
@@ -72,6 +78,7 @@ class ElectronStore {
       }
       if (App.state.orbitHidden) {
         Electron.toggleVisible()
+        Electron.setPinned(true)
         return
       }
       if (Electron.orbitState.pinned) {

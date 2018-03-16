@@ -60,7 +60,12 @@ export default class AppReactions {
   @react
   showOrbitOnPin = [
     () => Electron.orbitState.pinned,
-    pinned => App.setState({ orbitHidden: !pinned }),
+    pinned => {
+      if (Electron.recentlyToggled) {
+        return
+      }
+      App.setState({ orbitHidden: !pinned })
+    },
   ]
 
   @react
@@ -70,13 +75,16 @@ export default class AppReactions {
       Electron.orbitState.mouseOver || Electron.peekState.mouseOver,
     ],
     async ([isShown, mouseOver], { sleep }) => {
-      if (Desktop.isHoldingOption) {
+      if (Desktop.isHoldingOption || Electron.recentlyToggled) {
         return
       }
       if (isShown && !mouseOver) {
         await sleep(200)
         App.setState({ orbitHidden: true })
       }
+    },
+    {
+      delay: 50,
     },
   ]
 

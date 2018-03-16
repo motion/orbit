@@ -12,7 +12,6 @@ class HeaderStore {
       () => Electron.orbitState.pinned || Electron.orbitState.fullScreen,
       shouldFocus => {
         if (!shouldFocus) return
-        console.log('shouldFocus')
         if (this.inputRef) {
           this.inputRef.focus()
           this.inputRef.select()
@@ -44,14 +43,13 @@ export default class PeekHeader {
         </title>
         <logoButton
           if={!Electron.orbitState.fullScreen}
-          css={{ marginLeft: 10 }}
           onClick={App.togglePinned}
         >
           <logo
             css={{
               width: 14,
               height: 14,
-              background: Electron.orbitState.pinned ? '#555' : '#222',
+              background: Electron.orbitState.pinned ? '#643E96' : '#222',
               borderRadius: 1000,
             }}
           />
@@ -71,6 +69,13 @@ export default class PeekHeader {
       // transform: {
       //   y: -Constants.ORA_HEADER_HEIGHT,
       // },
+    },
+    logoButton: {
+      position: 'absolute',
+      top: 3,
+      right: 3,
+      border: [5, '#151515'],
+      borderRadius: 1000,
     },
     headerVisible: {
       opacity: 1,

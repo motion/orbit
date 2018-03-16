@@ -1,9 +1,10 @@
 // @flow
 import Bridge from './helpers/Bridge'
-import { store } from '@mcro/black/store'
+import { store, react } from '@mcro/black/store'
 import global from 'global'
 import Desktop from './Desktop'
 import Electron from './Electron'
+import AppReactions from './AppReactions'
 
 const log = debug('App')
 let App
@@ -25,14 +26,20 @@ class AppStore {
     shouldTogglePinned: null,
   }
 
-  uid = 10
-
   get isShowingOrbit() {
     return (
       Electron.orbitState.fullScreen ||
       Electron.orbitState.pinned ||
       !this.state.orbitHidden
     )
+  }
+
+  get isShowingPeek() {
+    return !!App.state.peekTarget || Electron.orbitState.fullScreen
+  }
+
+  get isAttachedToWindow() {
+    return !Electron.orbitState.fullScreen && !!Desktop.state.appState
   }
 
   get hoveredWordName() {
@@ -42,7 +49,7 @@ class AppStore {
   get showHeader() {
     return (
       Electron.orbitState.fullScreen ||
-      Electron.orbitState.focused ||
+      Electron.orbitState.mouseOver ||
       Electron.orbitState.pinned
     )
   }
@@ -54,90 +61,7 @@ class AppStore {
   }
 
   runReactions() {
-    this.showOrbitOnHoverWord()
-    this.hideOrbitOnMouseOut()
-    this.showOrbitOnPin()
-    this.hideOrbitOnEsc()
-    this.clearPeekTarget()
-  }
-
-  clearPeekTarget = () => {
-    this.react(
-      () => Electron.orbitState.focused,
-      focused => {
-        if (!focused) {
-          App.setState({ peekTarget: null })
-        }
-      },
-    )
-    this.react(
-      () => Electron.orbitState.fullScreen,
-      fullScreen => {
-        if (!fullScreen) {
-          App.setState({ peekTarget: null })
-        }
-      },
-    )
-  }
-
-  hideOrbitOnEsc = () => {
-    // react to close orbit
-    this.react(
-      () => Desktop.state.keyboard.esc,
-      () => {
-        if (!App.state.orbitHidden) {
-          log(`hideOrbit on esc`)
-          App.setState({ orbitHidden: true })
-        }
-      },
-    )
-  }
-
-  showOrbitOnPin = () => {
-    this.react(
-      () => Electron.orbitState.pinned,
-      pinned => App.setState({ orbitHidden: !pinned }),
-    )
-  }
-
-  hideOrbitOnMouseOut = () => {
-    this.react(
-      () => [
-        !App.state.orbitHidden,
-        Electron.orbitState.pinned,
-        Electron.orbitState.focused,
-      ],
-      ([isShown, isPinned, isFocused]) => {
-        if (Desktop.isHoldingOption) {
-          return
-        }
-        if (isShown && !isPinned && !isFocused) {
-          log(
-            `hiding because your mouse moved outside the window after option release`,
-          )
-          App.setState({ orbitHidden: true })
-        }
-      },
-    )
-  }
-
-  showOrbitOnHoverWord = () => {
-    // react to hovered words
-    let hoverShow
-    this.react(
-      () => App.hoveredWordName,
-      word => {
-        if (Desktop.isHoldingOption) {
-          return
-        }
-        clearTimeout(hoverShow)
-        const orbitHidden = !word
-        hoverShow = setTimeout(() => {
-          console.log('sethidden based on word', orbitHidden)
-          App.setState({ orbitHidden })
-        }, orbitHidden ? 50 : 500)
-      },
-    )
+    this.reactions = new AppReactions()
   }
 
   togglePinned = () => {

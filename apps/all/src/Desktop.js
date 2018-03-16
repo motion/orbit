@@ -39,7 +39,7 @@ export type DesktopState = {
 @store
 class Desktop {
   state = {
-    shouldPin: null,
+    shouldTogglePin: null,
     paused: true,
     pluginResults: [],
     appState: {},

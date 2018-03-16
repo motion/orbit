@@ -98,9 +98,9 @@ const orbitPosition = ({ left, top, width, height }) => {
             return
           }
           if (isHidden) {
-            if (Electron.orbitState.focused) {
+            if (Electron.orbitState.mouseOver) {
               log(`unfocus orbit`)
-              Electron.setOrbitState({ focused: false })
+              Electron.setOrbitState({ mouseOver: false })
             }
             return
           }
@@ -111,18 +111,18 @@ const orbitPosition = ({ left, top, width, height }) => {
           }
           const withinX = x > position[0] && x < position[0] + size[0]
           const withinY = y > position[1] && y < position[1] + size[1]
-          const focused = withinX && withinY
-          if (focused !== Electron.orbitState.focused) {
-            Electron.setOrbitState({ focused })
+          const mouseOver = withinX && withinY
+          if (mouseOver !== Electron.orbitState.mouseOver) {
+            Electron.setOrbitState({ mouseOver })
           }
         },
       )
       // separate react to only call actions if value changes
       this.react(
-        () => Electron.orbitState.focused,
-        focused => {
-          log(`Electron.orbitState.focused ${focused}`)
-          if (focused) {
+        () => Electron.orbitState.mouseOver,
+        mouseOver => {
+          log(`Electron.orbitState.mouseOver ${mouseOver}`)
+          if (mouseOver) {
             this.orbitRef && this.orbitRef.focus()
           } else {
             Swift.defocus()
@@ -142,6 +142,31 @@ export default class OrbitWindow extends React.Component {
     this.unmounted = true
   }
 
+  positionOrbitFullScreen = () => {
+    if (!Electron.orbitState.fullScreen) return
+    const { round } = Math
+    const [screenW, screenH] = Helpers.getScreenSize()
+    const [appW, appH] = [screenW / 1.6, screenH / 1.4]
+    const [orbitW, orbitH] = [appW * 1 / 3, appH]
+    const [orbitX, orbitY] = [(screenW - appW) / 2, (screenH - appH) / 2]
+    const [peekW, peekH] = [appW * 2 / 3, appH]
+    const [peekX, peekY] = [orbitX + orbitW, orbitY]
+    Electron.setOrbitState({
+      position: [orbitX, orbitY].map(round),
+      size: [orbitW, orbitH].map(round),
+      arrowTowards: 'right',
+    })
+    const [peek, ...rest] = Electron.peekState.windows
+    peek.position = [peekX, peekY].map(round)
+    peek.size = [peekW, peekH].map(round)
+    peek.arrowTowards = 'left'
+    Electron.setPeekState({ windows: [peek, ...rest] })
+    // focus orbit window
+    if (this.props.store.orbitRef) {
+      this.props.store.orbitRef.focus()
+    }
+  }
+
   positionOrbitBasedOnWindow = () => {
     const appTarget = ({ offset, bounds }) => {
       if (!offset || !bounds) return null
@@ -152,44 +177,17 @@ export default class OrbitWindow extends React.Component {
 
     this.react(
       () => Electron.orbitState.fullScreen,
-      fullScreen => {
-        if (fullScreen) {
-          const { round } = Math
-          const [screenW, screenH] = Helpers.getScreenSize()
-          const [appW, appH] = [screenW / 1.6, screenH / 1.4]
-          const [orbitW, orbitH] = [appW * 1 / 3, appH]
-          const [orbitX, orbitY] = [(screenW - appW) / 2, (screenH - appH) / 2]
-          const [peekW, peekH] = [appW * 2 / 3, appH]
-          const [peekX, peekY] = [orbitX + orbitW, orbitY]
-          Electron.setOrbitState({
-            position: [orbitX, orbitY].map(round),
-            size: [orbitW, orbitH].map(round),
-            arrowTowards: 'right',
-          })
-          const [peek, ...rest] = Electron.peekState.windows
-          peek.position = [peekX, peekY].map(round)
-          peek.size = [peekW, peekH].map(round)
-          peek.arrowTowards = 'left'
-          Electron.setPeekState({ windows: [peek, ...rest] })
-          // focus orbit window
-          if (this.props.store.orbitRef) {
-            this.props.store.orbitRef.focus()
-          }
-          return
-        }
-      },
+      this.positionOrbitFullScreen,
     )
 
     this.react(
       () => [
         appTarget(Desktop.state.appState || {}),
         this.props.store.linesBoundingBox,
+        Electron.orbitState.fullScreen,
       ],
-      ([appBB, linesBB]) => {
-        if (Electron.orbitState.fullScreen) {
-          return
-        }
-        console.log('reaction', appBB, linesBB)
+      ([appBB, linesBB, fullScreen]) => {
+        if (fullScreen) return
         // prefer using lines bounding box, fall back to app
         const box = linesBB || appBB
         if (!box) return

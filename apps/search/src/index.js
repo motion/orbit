@@ -114,7 +114,7 @@ class Search {
   }
 
   async willMount() {
-    console.log('mounted')
+    self.indexer = this
     this.db = new DB()
   }
 
@@ -158,6 +158,7 @@ class Search {
   }
 
   setDocuments = async documentSources => {
+    console.log('in set docs this is', this)
     console.log('setting documents', documentSources)
     // lets keep the articles short for testing
     documentSources = documentSources
@@ -169,6 +170,7 @@ class Search {
         }
       })
 
+    console.log('total docs are', documentSources.length)
     this.totalDocuments = documentSources.length
     this.indexing = true
     this.totalIndexed = 0

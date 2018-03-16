@@ -5,8 +5,6 @@ import global from 'global'
 import App from './App'
 
 let Electron
-// const log = debug('Electron')
-const sleep = ms => new Promise(res => setTimeout(res, ms))
 
 @store
 class ElectronStore {
@@ -41,11 +39,8 @@ class ElectronStore {
   isMouseInActiveArea = [
     () =>
       Electron.orbitState.mouseOver || Electron.peekState.mouseOver || false,
-    async over => {
-      // debounce mouseout by 100ms
-      console.time('out')
+    async (over, { sleep }) => {
       await sleep(over ? 0 : 100)
-      console.timeEnd('out')
       return over
     },
     true,

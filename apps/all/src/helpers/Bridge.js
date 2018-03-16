@@ -5,14 +5,15 @@ import ReconnectingWebSocket from 'reconnecting-websocket'
 import WebSocket from './websocket'
 import waitPort from 'wait-port'
 import { toJS } from 'mobx'
-import { diff } from 'deep-object-diff'
+import { updatedDiff } from 'deep-object-diff'
 import stringify from 'stringify-object'
 
-const stringifyObject = obj => stringify(obj, {
-	indent: '  ',
-	singleQuotes: true,
-	inlineCharacterLimit: 12
-});
+const stringifyObject = obj =>
+  stringify(obj, {
+    indent: '  ',
+    singleQuotes: true,
+    inlineCharacterLimit: 12,
+  })
 
 // const log = debug('Bridge')
 const requestIdle = () =>
@@ -219,7 +220,7 @@ class Bridge {
             stateObj[key] = newVal
           } else {
             merge(oldVal, newVal)
-            changed[key] = diff(toJS(stateObj[key]), newVal)
+            changed[key] = updatedDiff(toJS(stateObj[key]), newVal)
             stateObj[key] = oldVal
           }
         } else {

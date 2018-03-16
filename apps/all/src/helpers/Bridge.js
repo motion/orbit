@@ -6,7 +6,14 @@ import WebSocket from './websocket'
 import waitPort from 'wait-port'
 import { toJS } from 'mobx'
 
-const log = debug('Bridge')
+// const log = debug('Bridge')
+const requestIdle = () =>
+  new Promise(
+    res =>
+      typeof window !== 'undefined'
+        ? window.requestIdleCallback(res)
+        : setTimeout(res),
+  )
 
 @store
 class Bridge {
@@ -51,7 +58,8 @@ class Bridge {
     if (typeof window === 'undefined') {
       await waitPort({ host: 'localhost', port: 40510 })
     }
-    this._socket.onmessage = ({ data }) => {
+    this._socket.onmessage = async ({ data }) => {
+      await requestIdle()
       if (!data) {
         console.log(`No data received over socket`)
         return
@@ -87,6 +95,7 @@ class Bridge {
               `No state found for source (${source}) state (${state}) store(${store})`,
             )
           }
+          await requestIdle()
           this._update(state, newState)
         } else {
           throw new Error(`Non-object received`)

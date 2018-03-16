@@ -5,7 +5,6 @@ import ReconnectingWebSocket from 'reconnecting-websocket'
 import WebSocket from './websocket'
 import waitPort from 'wait-port'
 import * as Mobx from 'mobx'
-import { diff } from 'deep-object-diff'
 import stringify from 'stringify-object'
 
 const stringifyObject = obj =>
@@ -199,20 +198,17 @@ class Bridge {
       }
       if (!Mobx.comparer.structural(stateObj[key], newState[key])) {
         const oldVal = Mobx.toJS(stateObj[key])
-        const oldValForDiff = { ...oldVal }
         const newVal = Mobx.toJS(newState[key])
         if (isPlainObject(oldVal) && isPlainObject(newVal)) {
           // merge plain objects
-          const newState = mergeWith(oldVal, newVal, (objVal, newVal) => {
+          const newState = mergeWith(oldVal, newVal, (prev, next) => {
             // avoid inner array merge, just replace
-            if (Array.isArray(oldVal) || Array.isArray(newVal)) {
-              return newVal
+            if (Array.isArray(prev) || Array.isArray(next)) {
+              return next
             }
           })
           stateObj[key] = newState
-          // diff after change to capture real effects
-          // this is mostly for logging purposes, could just use a boolean
-          changed[key] = diff(oldValForDiff, newState)
+          changed[key] = newState
         } else {
           stateObj[key] = newVal
           changed[key] = newVal

@@ -2,7 +2,6 @@
 import Bridge from './helpers/Bridge'
 import { store, react } from '@mcro/black/store'
 import global from 'global'
-import ElectronReactions from './ElectronReactions'
 import App from './App'
 
 let Electron
@@ -55,6 +54,7 @@ class ElectronStore {
   start(options) {
     Bridge.start(this, this.state, options)
     this.setState = Bridge.setState
+    const ElectronReactions = require('./ElectronReactions').default
     this.reactions = new ElectronReactions()
   }
 

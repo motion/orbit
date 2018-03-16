@@ -3,8 +3,16 @@ import { store, react } from '@mcro/black/store'
 import App from './App'
 import Desktop from './Desktop'
 import Electron from './Electron'
+import orbitPosition from './helpers/orbitPosition'
+import screenSize from './helpers/screenSize'
 
 const log = debug('ElectronReactions')
+const appTarget = ({ offset, bounds }) => {
+  if (!offset || !bounds) return null
+  const [left, top] = offset
+  const [width, height] = bounds
+  return { top, left, width, height }
+}
 
 const isMouseOver = (app, mousePosition) => {
   if (!app || !mousePosition) return false
@@ -15,6 +23,8 @@ const isMouseOver = (app, mousePosition) => {
   const withinY = y > position[1] && y < position[1] + size[1]
   return withinX && withinY
 }
+
+const SCREEN_PAD = 15
 
 @store
 export default class ElectronReactions {
@@ -107,6 +117,56 @@ export default class ElectronReactions {
       }
     },
     { delay: 16 },
+  ]
+
+  @react
+  positionOrbitFullScreen = [
+    () => Electron.orbitState.fullScreen,
+    fullScreen => {
+      if (!fullScreen) return
+      const { round } = Math
+      const [screenW, screenH] = screenSize()
+      const [appW, appH] = [screenW / 1.5, screenH / 1.3]
+      const [orbitW, orbitH] = [appW * 1 / 3, appH]
+      const [orbitX, orbitY] = [(screenW - appW) / 2, (screenH - appH) / 2]
+      const [peekW, peekH] = [appW * 2 / 3, appH]
+      const [peekX, peekY] = [orbitX + orbitW, orbitY]
+      Electron.setOrbitState({
+        position: [orbitX, orbitY].map(round),
+        size: [orbitW, orbitH].map(round),
+        arrowTowards: 'right',
+      })
+      const [peek, ...rest] = Electron.peekState.windows
+      peek.position = [peekX, peekY].map(round)
+      peek.size = [peekW, peekH].map(round)
+      peek.arrowTowards = 'left'
+      Electron.setPeekState({ windows: [peek, ...rest] })
+    },
+  ]
+
+  @react
+  positionOrbitFromBoundingBox = [
+    () => [
+      appTarget(Desktop.state.appState || {}),
+      Desktop.linesBoundingBox,
+      Electron.orbitState.fullScreen,
+    ],
+    ([appBB, linesBB, fullScreen]) => {
+      if (fullScreen) return
+      // prefer using lines bounding box, fall back to app
+      const box = linesBB || appBB
+      if (!box) return
+      let { position, size, arrowTowards } = orbitPosition(box)
+      if (linesBB) {
+        // add padding
+        position[0] += arrowTowards === 'left' ? SCREEN_PAD : -SCREEN_PAD
+      } else {
+        // remove padding
+        position[0] += arrowTowards === 'right' ? SCREEN_PAD : -SCREEN_PAD
+      }
+      Electron.setOrbitState({ position, size, arrowTowards })
+    },
+    true,
   ]
 
   // option tap to clear if open

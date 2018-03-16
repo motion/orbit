@@ -15,7 +15,7 @@ import * as Mobx from 'mobx'
 // the socket management is in SocketManager
 
 const log = debug('screenMaster')
-const DESKTOP_KEY = 'Desktop'
+const DESKTOP_KEY = 'DesktopStore'
 const APP_ID = -1
 
 // prevent apps from clearing highlights
@@ -47,7 +47,7 @@ export default class ScreenMaster {
   oracle = new Oracle()
   socketManager = new SocketManager({
     port: 40510,
-    source: 'desktop',
+    source: 'DesktopStore',
     onConnection: socket => {
       // send current state
       this.socketManager.send(socket, Desktop.state)

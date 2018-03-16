@@ -82,9 +82,7 @@ class Bridge {
           }
           if (!this.stores[source]) {
             console.warn(
-              `Store not imported:
-                this.stores: ${JSON.stringify(this.stores, 0, 2)}
-                source: ${source}`,
+              `Store not imported: this.stores:`, this.stores, `source: ${source}`,
             )
             return
           }

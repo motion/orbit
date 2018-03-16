@@ -5,6 +5,7 @@ import ReconnectingWebSocket from 'reconnecting-websocket'
 import WebSocket from './websocket'
 import waitPort from 'wait-port'
 import { toJS } from 'mobx'
+import { diff } from 'deep-object-diff'
 
 // const log = debug('Bridge')
 const requestIdle = () =>
@@ -12,7 +13,7 @@ const requestIdle = () =>
     res =>
       typeof window !== 'undefined'
         ? window.requestIdleCallback(res)
-        : setTimeout(res),¸
+        : setTimeout(res),
   )
 
 @store
@@ -82,7 +83,9 @@ class Bridge {
           }
           if (!this.stores[source]) {
             console.warn(
-              `Store not imported: this.stores:`, this.stores, `source: ${source}`,
+              `Store not imported: this.stores:`,
+              this.stores,
+              `source: ${source}`,
             )
             return
           }
@@ -154,12 +157,16 @@ class Bridge {
     }
     if (Object.keys(changedState).length) {
       if (process.env.NODE_ENV === 'development') {
+        let changedStateStr
+        try {
+          changedStateStr = JSON.stringify(changedState, 0, 2)
+        } catch (err) {
+          changedStateStr = `${changedState}`
+        }
         console.log(
-          `${this._source}.setState (changedState: ${JSON.stringify(
-            changedState,
-            0,
-            2,
-          )})`,
+          `${this._source}.setState`,
+          newState,
+          `=> ${changedStateStr}`,
         )
       }
       this._socket.send(
@@ -205,12 +212,13 @@ class Bridge {
             stateObj[key] = newVal
           } else {
             merge(oldVal, newVal)
-            stateObj[key] = { ...oldVal }
+            changed[key] = diff(toJS(stateObj[key]), newVal)
+            stateObj[key] = oldVal
           }
         } else {
           stateObj[key] = newState[key]
+          changed[key] = newState[key]
         }
-        changed[key] = stateObj[key]
       }
     }
     return changed

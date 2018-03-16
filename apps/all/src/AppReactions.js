@@ -18,7 +18,7 @@ export default class AppReactions {
   shouldShowHideFromElectron = [
     () => [Electron.state.shouldShow, Electron.state.shouldHide],
     ([shouldShow, shouldHide]) => {
-      const orbitHidden = shouldHide || 0 > shouldShow || 1
+      const orbitHidden = shouldHide || 1 > shouldShow
       App.setState({ orbitHidden })
     },
     true,

@@ -358,7 +358,7 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
       if (!preventLog) {
         if (isReaction) {
           console.log(
-            `@react ${obj.constructor.name}.${method}(`,
+            ` >> ${obj.constructor.name.replace('Store', '')}.${method}(`,
             reactionValue,
             `) =>`,
             result,

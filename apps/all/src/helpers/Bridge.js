@@ -1,9 +1,10 @@
 // @flow
 import { store } from '@mcro/black/store'
-import { isEqual } from 'lodash'
+import { isEqual, merge } from 'lodash'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 import WebSocket from './websocket'
 import waitPort from 'wait-port'
+import { toJS } from 'mobx'
 
 const log = debug('Bridge')
 
@@ -183,10 +184,26 @@ class Bridge {
         )
         return changed
       }
-      if (!isEqual(stateObj[key], newState[key])) {
-        const value = newState[key]
-        stateObj[key] = value
-        changed[key] = value
+      // merges objects
+      const oldVal = toJS(stateObj[key])
+      const newVal = toJS(newState[key])
+      if (!isEqual(oldVal, newVal)) {
+        if (
+          !!oldVal &&
+          !!newVal &&
+          oldVal instanceof Object &&
+          newVal instanceof Object
+        ) {
+          if (Array.isArray(newVal) || Array.isArray(oldVal)) {
+            stateObj[key] = newVal
+          } else {
+            merge(oldVal, newVal)
+            stateObj[key] = { ...oldVal }
+          }
+        } else {
+          stateObj[key] = newState[key]
+        }
+        changed[key] = stateObj[key]
       }
     }
     return changed

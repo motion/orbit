@@ -104,7 +104,7 @@ class ElectronStore {
             Electron.setOrbitState({ mouseOver })
           }
         }
-        if (App.isShowingPeek) {
+        if (App.state.peekTarget) {
           const mouseOver = isMouseOver(Electron.currentPeek, mousePosition)
           if (mouseOver !== Electron.peekState.mouseOver) {
             Electron.setPeekState({ mouseOver })
@@ -133,7 +133,8 @@ class ElectronStore {
     let stickAfterDelay
     this.react(
       () => Desktop.isHoldingOption,
-      debounce(isHoldingOption => {
+      isHoldingOption => {
+        console.log('got hold', isHoldingOption)
         clearTimeout(showAfterDelay)
         clearTimeout(stickAfterDelay)
         if (Electron.orbitState.pinned) {
@@ -159,7 +160,8 @@ class ElectronStore {
             Electron.setPinned(true)
           }, 4000)
         }
-      }, 16),
+      },
+      { delay: 16 },
     )
   }
 
@@ -191,12 +193,12 @@ class ElectronStore {
     Electron.setOrbitState({ fullScreen })
   }
 
-  setOrbitState = nextState => {
-    this.setState({ orbitState: { ...this.state.orbitState, ...nextState } })
+  setOrbitState = orbitState => {
+    this.setState({ orbitState })
   }
 
-  setPeekState = nextState => {
-    this.setState({ peekState: { ...this.state.peekState, ...nextState } })
+  setPeekState = peekState => {
+    this.setState({ peekState })
   }
 }
 

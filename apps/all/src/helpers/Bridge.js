@@ -6,6 +6,13 @@ import WebSocket from './websocket'
 import waitPort from 'wait-port'
 import { toJS } from 'mobx'
 import { diff } from 'deep-object-diff'
+import stringify from 'stringify-object'
+
+const stringifyObject = obj => stringify(obj, {
+	indent: '  ',
+	singleQuotes: true,
+	inlineCharacterLimit: 12
+});
 
 // const log = debug('Bridge')
 const requestIdle = () =>
@@ -159,14 +166,14 @@ class Bridge {
       if (process.env.NODE_ENV === 'development') {
         let changedStateStr
         try {
-          changedStateStr = JSON.stringify(changedState, 0, 2)
+          changedStateStr = stringifyObject(changedState, 0, 2)
         } catch (err) {
           changedStateStr = `${changedState}`
         }
         console.log(
-          `${this._source}.setState`,
+          `${this._source.replace('Store', '')}.setState(`,
           newState,
-          `=> ${changedStateStr}`,
+          `) => ${changedStateStr}`,
         )
       }
       this._socket.send(
@@ -187,14 +194,14 @@ class Bridge {
           `${this._source}._update: tried to set a key not in initialState
 
             initial state:
-              ${JSON.stringify(this._initialState, 0, 2)}
+              ${stringifyObject(this._initialState, 0, 2)}
 
             key: ${key}
 
             typeof initial state key: ${typeof this._initialState[key]}
 
             value:
-              ${JSON.stringify(newState, 0, 2)}`,
+              ${stringifyObject(newState, 0, 2)}`,
         )
         return changed
       }

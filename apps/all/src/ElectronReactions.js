@@ -88,7 +88,6 @@ export default class ElectronReactions {
   handleHoldingOption = [
     () => Desktop.isHoldingOption,
     isHoldingOption => {
-      log('got hold', isHoldingOption)
       clearTimeout(this.showAfterDelay)
       clearTimeout(this.stickAfterDelay)
       if (Electron.orbitState.pinned) {
@@ -161,7 +160,6 @@ export default class ElectronReactions {
         // remove padding
         position[0] += arrowTowards === 'right' ? SCREEN_PAD : -SCREEN_PAD
       }
-      console.log('positioning', position)
       Electron.setOrbitState({ position, size, arrowTowards })
     },
     true,

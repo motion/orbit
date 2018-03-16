@@ -29,7 +29,7 @@ class HeaderStore {
 export default class PeekHeader {
   render({ orbitStore, headerStore }) {
     return (
-      <header $$draggable $showHeader={App.showHeader}>
+      <header $$draggable $headerVisible={App.isShowingHeader}>
         <title>
           <UI.Input
             $orbitInput
@@ -42,7 +42,11 @@ export default class PeekHeader {
             getRef={headerStore.ref('inputRef').set}
           />
         </title>
-        <logoButton css={{ marginLeft: 10 }} onClick={App.togglePinned}>
+        <logoButton
+          if={!Electron.orbitState.fullScreen}
+          css={{ marginLeft: 10 }}
+          onClick={App.togglePinned}
+        >
           <logo
             css={{
               width: 14,
@@ -68,7 +72,7 @@ export default class PeekHeader {
       //   y: -Constants.ORA_HEADER_HEIGHT,
       // },
     },
-    showHeader: {
+    headerVisible: {
       opacity: 1,
       transform: { y: 0 },
     },

@@ -4,7 +4,6 @@ import { store, react } from '@mcro/black/store'
 import global from 'global'
 import Desktop from './Desktop'
 import Electron from './Electron'
-import AppReactions from './AppReactions'
 
 const log = debug('App')
 let App
@@ -12,7 +11,7 @@ let App
 @store
 class AppStore {
   state = {
-    query: null,
+    query: '',
     selectedItem: null,
     openResult: null,
     highlightWords: {},
@@ -30,7 +29,7 @@ class AppStore {
     return (
       Electron.orbitState.fullScreen ||
       Electron.orbitState.pinned ||
-      !this.state.orbitHidden
+      !App.state.orbitHidden
     )
   }
 
@@ -46,7 +45,7 @@ class AppStore {
     return 'none for now'
   }
 
-  get showHeader() {
+  get isShowingHeader() {
     return (
       Electron.orbitState.fullScreen ||
       Electron.orbitState.mouseOver ||
@@ -61,6 +60,7 @@ class AppStore {
   }
 
   runReactions() {
+    const AppReactions = require('./AppReactions').default
     this.reactions = new AppReactions()
   }
 

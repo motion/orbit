@@ -1,11 +1,28 @@
 // @flow
 import { store } from '@mcro/black/store'
-import { isEqual } from 'lodash'
+import { isEqual, merge } from 'lodash'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 import WebSocket from './websocket'
 import waitPort from 'wait-port'
+import { toJS } from 'mobx'
+import { updatedDiff } from 'deep-object-diff'
+import stringify from 'stringify-object'
 
-const log = debug('Bridge')
+const stringifyObject = obj =>
+  stringify(obj, {
+    indent: '  ',
+    singleQuotes: true,
+    inlineCharacterLimit: 12,
+  })
+
+// const log = debug('Bridge')
+const requestIdle = () =>
+  new Promise(
+    res =>
+      typeof window !== 'undefined'
+        ? window.requestIdleCallback(res)
+        : setTimeout(res),
+  )
 
 @store
 class Bridge {
@@ -50,7 +67,8 @@ class Bridge {
     if (typeof window === 'undefined') {
       await waitPort({ host: 'localhost', port: 40510 })
     }
-    this._socket.onmessage = ({ data }) => {
+    this._socket.onmessage = async ({ data }) => {
+      await requestIdle()
       if (!data) {
         console.log(`No data received over socket`)
         return
@@ -73,9 +91,9 @@ class Bridge {
           }
           if (!this.stores[source]) {
             console.warn(
-              `Store not imported:
-                this.stores: ${JSON.stringify(this.stores, 0, 2)}
-                source: ${source}`,
+              `Store not imported: this.stores:`,
+              this.stores,
+              `source: ${source}`,
             )
             return
           }
@@ -86,12 +104,13 @@ class Bridge {
               `No state found for source (${source}) state (${state}) store(${store})`,
             )
           }
+          await requestIdle()
           this._update(state, newState)
         } else {
           throw new Error(`Non-object received`)
         }
       } catch (err) {
-        console.log(
+        console.error(
           `${err.message}:\n${err.stack}\n
           Bridge error receiving or reacting to message. Initial message:
           ${data}`,
@@ -146,12 +165,16 @@ class Bridge {
     }
     if (Object.keys(changedState).length) {
       if (process.env.NODE_ENV === 'development') {
+        let changedStateStr
+        try {
+          changedStateStr = stringifyObject(changedState, 0, 2)
+        } catch (err) {
+          changedStateStr = `${changedState}`
+        }
         console.log(
-          `${this._source}.setState (changedState: ${JSON.stringify(
-            changedState,
-            0,
-            2,
-          )})`,
+          `${this._source.replace('Store', '')}.setState(`,
+          newState,
+          `) => ${changedStateStr}`,
         )
       }
       this._socket.send(
@@ -172,21 +195,38 @@ class Bridge {
           `${this._source}._update: tried to set a key not in initialState
 
             initial state:
-              ${JSON.stringify(this._initialState, 0, 2)}
+              ${stringifyObject(this._initialState, 0, 2)}
 
             key: ${key}
 
             typeof initial state key: ${typeof this._initialState[key]}
 
             value:
-              ${JSON.stringify(newState, 0, 2)}`,
+              ${stringifyObject(newState, 0, 2)}`,
         )
         return changed
       }
-      if (!isEqual(stateObj[key], newState[key])) {
-        const value = newState[key]
-        stateObj[key] = value
-        changed[key] = value
+      // merges objects
+      const oldVal = toJS(stateObj[key])
+      const newVal = toJS(newState[key])
+      if (!isEqual(oldVal, newVal)) {
+        if (
+          !!oldVal &&
+          !!newVal &&
+          oldVal instanceof Object &&
+          newVal instanceof Object
+        ) {
+          if (Array.isArray(newVal) || Array.isArray(oldVal)) {
+            stateObj[key] = newVal
+          } else {
+            merge(oldVal, newVal)
+            changed[key] = updatedDiff(toJS(stateObj[key]), newVal)
+            stateObj[key] = oldVal
+          }
+        } else {
+          stateObj[key] = newState[key]
+          changed[key] = newState[key]
+        }
       }
     }
     return changed

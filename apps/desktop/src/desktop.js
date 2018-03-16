@@ -25,7 +25,10 @@ const sudoPrompt = promisifyAll(sudoPrompt_)
 export default class DesktopRoot {
   server = new Server()
   screenMaster = new ScreenMaster()
-  plugins = new Plugins({ server: this.server })
+  plugins = new Plugins({
+    server: this.server,
+    setState: this.screenMaster.setState,
+  })
   keyboardStore = new KeyboardStore({
     onKeyClear: this.screenMaster.lastScreenChange,
   })

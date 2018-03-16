@@ -24,10 +24,11 @@ export default class OrbitStore {
     // start indexing
     setTimeout(async () => {
       console.log('adding docs to search...')
-      const allDocs = await Thing.getAll()
+      const allDocs = (await Thing.getAll()).slice(0, 10)
       this.searchStore.setDocuments(
         allDocs.map(doc => ({ title: doc.title, text: doc.body })),
       )
+      console.log('Done')
     })
 
     // search

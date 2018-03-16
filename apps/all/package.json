@@ -14,7 +14,9 @@
     "html5-websocket": "^2.0.2",
     "wait-port": "^0.2.2",
     "global": "^4.3.2",
-    "lodash": "^4.17.5"
+    "lodash": "^4.17.5",
+    "deep-object-diff": "^1.1.0",
+    "stringify-object": "^3.2.2"
   },
   "peerDependencies": {
     "mobx": "*"

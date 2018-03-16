@@ -18,8 +18,8 @@ const log = debug('OrbitWindow')
       fullScreen => {
         if (!fullScreen) return
         // focus orbit window
-        if (this.props.store.orbitRef) {
-          this.props.store.orbitRef.focus()
+        if (this.orbitRef) {
+          this.orbitRef.focus()
         }
       },
     ]

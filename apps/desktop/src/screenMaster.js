@@ -147,9 +147,9 @@ export default class ScreenMaster {
       } else {
         // for not many clears, try it
         if (count < 20) {
-          this.setState({
-            clearWord: this.oracle.changedIds,
-          })
+          // this.setState({
+          //   clearWord: this.oracle.changedIds,
+          // })
         } else {
           // else just clear it all
           log('RESET oracle boxChanged (NOTTTTTTT App)')

@@ -11,7 +11,7 @@ let App
 @store
 class AppStore {
   state = {
-    query: null,
+    query: '',
     selectedItem: null,
     openResult: null,
     highlightWords: {},

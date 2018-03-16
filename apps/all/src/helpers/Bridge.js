@@ -1,11 +1,11 @@
 // @flow
 import { store } from '@mcro/black/store'
-import { isEqual, merge } from 'lodash'
+import { mergeWith, isPlainObject } from 'lodash'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 import WebSocket from './websocket'
 import waitPort from 'wait-port'
-import { toJS } from 'mobx'
-import { updatedDiff } from 'deep-object-diff'
+import * as Mobx from 'mobx'
+import { diff } from 'deep-object-diff'
 import stringify from 'stringify-object'
 
 const stringifyObject = obj =>
@@ -154,11 +154,7 @@ class Bridge {
       )
     }
     // update our own state immediately so its sync
-    const changedState = this._update(
-      this.state,
-      newState.toJS ? newState.toJS() : newState,
-      true,
-    )
+    const changedState = this._update(this.state, newState, true)
     if (!this._wsOpen) {
       this._queuedState = true
       return changedState
@@ -187,43 +183,32 @@ class Bridge {
   // private
   // return keys of changed items
   _update = (stateObj, newState, isInternal) => {
-    // log('_update', stateObj, newState, isInternal)
     const changed = {}
     for (const key of Object.keys(newState)) {
       if (isInternal && typeof this._initialState[key] === 'undefined') {
         console.error(
           `${this._source}._update: tried to set a key not in initialState
-
-            initial state:
+            - initial state:
               ${stringifyObject(this._initialState, 0, 2)}
-
-            key: ${key}
-
-            typeof initial state key: ${typeof this._initialState[key]}
-
-            value:
+            - key: ${key}
+            - typeof initial state key: ${typeof this._initialState[key]}
+            - value:
               ${stringifyObject(newState, 0, 2)}`,
         )
         return changed
       }
-      // merges objects
-      const oldVal = toJS(stateObj[key])
-      const newVal = toJS(newState[key])
-      if (!isEqual(oldVal, newVal)) {
-        if (
-          !!oldVal &&
-          !!newVal &&
-          oldVal instanceof Object &&
-          newVal instanceof Object
-        ) {
-          if (Array.isArray(newVal) || Array.isArray(oldVal)) {
-            stateObj[key] = newVal
-            changed[key] = newVal
-          } else {
-            merge(oldVal, newVal)
-            changed[key] = updatedDiff(toJS(stateObj[key]), newVal)
-            stateObj[key] = oldVal
-          }
+      if (!Mobx.comparer.structural(stateObj[key], newState[key])) {
+        const oldVal = Mobx.toJS(stateObj[key])
+        const newVal = Mobx.toJS(newState[key])
+        if (isPlainObject(oldVal) && isPlainObject(newVal)) {
+          // merge plain objects
+          changed[key] = diff(oldVal, newVal)
+          stateObj[key] = mergeWith(oldVal, newVal, (objVal, newVal) => {
+            // avoid inner array merge, just replace
+            if (Array.isArray(oldVal) || Array.isArray(newVal)) {
+              return newVal
+            }
+          })
         } else {
           stateObj[key] = newVal
           changed[key] = newVal

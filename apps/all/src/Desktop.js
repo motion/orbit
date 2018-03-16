@@ -59,7 +59,7 @@ class DesktopStore {
 
   get isHoldingOption(): Boolean {
     const { option, optionUp } = this.state.keyboard
-    return option && optionUp && option > (optionUp || 0)
+    return (option || 0) > (optionUp || 1)
   }
 
   get linesBoundingBox() {

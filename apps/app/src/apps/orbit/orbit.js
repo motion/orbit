@@ -158,6 +158,7 @@ export default class OrbitPage {
       overflow: 'hidden',
       opacity: 1,
       transition: 'background ease-in 200ms',
+      position: 'relative',
     },
     controls: {
       position: 'absolute',

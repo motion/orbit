@@ -79,12 +79,12 @@ export default class AppReactions {
         return
       }
       if (isShown && !mouseOver) {
-        await sleep(200)
+        await sleep(100)
         App.setState({ orbitHidden: true })
       }
     },
     {
-      delay: 50,
+      delay: 32,
     },
   ]
 

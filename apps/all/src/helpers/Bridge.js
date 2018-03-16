@@ -12,7 +12,7 @@ const requestIdle = () =>
     res =>
       typeof window !== 'undefined'
         ? window.requestIdleCallback(res)
-        : setTimeout(res),
+        : setTimeout(res),¸
   )
 
 @store

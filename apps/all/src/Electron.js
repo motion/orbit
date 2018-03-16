@@ -17,7 +17,6 @@ class ElectronStore {
     shouldPause: null,
     settingsPosition: [], // todo: settingsState.position
     orbitState: {
-      show: false,
       mouseOver: false,
       pinned: false,
       fullScreen: false,

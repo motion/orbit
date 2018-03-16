@@ -1,4 +1,4 @@
-import { isEqual } from 'lodash'
+import { isEqual, debounce } from 'lodash'
 
 const log = debug('hoverSettler')
 
@@ -16,7 +16,8 @@ export default function hoverSettler({ enterDelay, onHovered }) {
   let currentNode
   let lastHovered
 
-  const setHovered = nextHovered => {
+  // debounce - leave space for ui thread
+  const setHovered = debounce(nextHovered => {
     if (!isEqual(nextHovered, lastHovered)) {
       // 🐛 object spread fixes comparison bugs later on
       lastHovered = nextHovered ? { ...nextHovered } : nextHovered
@@ -25,7 +26,7 @@ export default function hoverSettler({ enterDelay, onHovered }) {
         onHovered(nextHovered)
       }
     }
-  }
+  }, 16)
 
   return extraProps => {
     let itemLastEnter

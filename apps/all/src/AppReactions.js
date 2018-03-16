@@ -4,8 +4,6 @@ import Desktop from './Desktop'
 import Electron from './Electron'
 import App from './App'
 
-const log = debug('AppReactions')
-
 @store
 export default class AppReactions {
   @react
@@ -72,7 +70,6 @@ export default class AppReactions {
       Electron.orbitState.mouseOver || Electron.peekState.mouseOver,
     ],
     async ([isShown, mouseOver], { sleep }) => {
-      clearTimeout(this.hideTm)
       if (Desktop.isHoldingOption) {
         return
       }
@@ -90,7 +87,6 @@ export default class AppReactions {
       if (Desktop.isHoldingOption) {
         return
       }
-      clearTimeout(this.hoverShow)
       const orbitHidden = !word
       await sleep(orbitHidden ? 50 : 500)
       App.setState({ orbitHidden })

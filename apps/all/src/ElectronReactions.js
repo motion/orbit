@@ -81,9 +81,6 @@ export default class ElectronReactions {
     },
   ]
 
-  showAfterDelay = 0
-  stickAfterDelay = 0
-
   @react
   handleHoldingOption = [
     () => Desktop.isHoldingOption,

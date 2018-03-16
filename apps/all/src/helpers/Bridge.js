@@ -1,6 +1,6 @@
 // @flow
 import { store } from '@mcro/black/store'
-import { isEqual, merge } from 'lodash'
+import { isEqual, mergeWith } from 'lodash'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 import WebSocket from './websocket'
 import waitPort from 'wait-port'
@@ -220,9 +220,13 @@ class Bridge {
             stateObj[key] = newVal
             changed[key] = newVal
           } else {
-            merge(oldVal, newVal)
-            changed[key] = updatedDiff(toJS(stateObj[key]), newVal)
-            stateObj[key] = oldVal
+            changed[key] = updatedDiff(oldVal, newVal)
+            stateObj[key] = mergeWith(oldVal, newVal, (objVal, newVal) => {
+              // dont merge arrays just replace them
+              if (Array.isArray(oldVal) || Array.isArray(newVal)) {
+                return newVal
+              }
+            })
           }
         } else {
           stateObj[key] = newVal

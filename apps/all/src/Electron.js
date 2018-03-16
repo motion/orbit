@@ -37,8 +37,7 @@ class ElectronStore {
   // runs in every app independently
   @react
   isMouseInActiveArea = [
-    () =>
-      Electron.orbitState.mouseOver || Electron.peekState.mouseOver || false,
+    () => !!(Electron.orbitState.mouseOver || Electron.peekState.mouseOver),
     async (over, { sleep }) => {
       await sleep(over ? 0 : 100)
       return over

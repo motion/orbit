@@ -3,9 +3,10 @@ import Bridge from './helpers/Bridge'
 import { store, react } from '@mcro/black/store'
 import global from 'global'
 import ElectronReactions from './ElectronReactions'
+import App from './App'
 
 let Electron
-const log = debug('Electron')
+// const log = debug('Electron')
 const sleep = ms => new Promise(res => setTimeout(res, ms))
 
 @store
@@ -68,6 +69,38 @@ class ElectronStore {
 
   get currentPeek() {
     return (this.peekState.windows || [])[0]
+  }
+
+  onShortcut = shortcut => {
+    if (shortcut === 'Option+Space') {
+      if (Electron.orbitState.fullScreen) {
+        Electron.toggleFullScreen()
+        return
+      }
+      if (App.state.orbitHidden) {
+        Electron.toggleVisible()
+        return
+      }
+      if (Electron.orbitState.pinned) {
+        Electron.togglePinned()
+        Electron.toggleVisible()
+        return
+      } else {
+        // !pinned
+        Electron.togglePinned()
+      }
+    }
+    if (shortcut === 'Option+Shift+Space') {
+      Electron.toggleFullScreen()
+    }
+  }
+
+  toggleVisible = () => {
+    if (App.state.orbitHidden) {
+      this.setState({ shouldShow: Date.now() })
+    } else {
+      this.setState({ shouldHide: Date.now() })
+    }
   }
 
   togglePinned = () => {

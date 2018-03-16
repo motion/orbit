@@ -79,19 +79,21 @@ export default class AppReactions {
   @react
   hideOrbitOnMouseOut = [
     () => [
-      !App.state.orbitHidden,
-      Electron.orbitState.pinned,
+      !App.state.orbitHidden || Electron.orbitState.pinned,
       Electron.orbitState.mouseOver || Electron.peekState.mouseOver,
     ],
-    ([isShown, isPinned, mouseOver]) => {
+    ([isShown, mouseOver]) => {
+      clearTimeout(this.hideTm)
       if (Desktop.isHoldingOption) {
         return
       }
-      if (isShown && !isPinned && !mouseOver) {
-        log(
-          `hiding because your mouse moved outside the window after option release`,
-        )
-        App.setState({ orbitHidden: true })
+      if (isShown && !mouseOver) {
+        this.hideTm = setTimeout(() => {
+          log(
+            `hiding because your mouse moved outside the window after option release`,
+          )
+          App.setState({ orbitHidden: true })
+        }, 100)
       }
     },
   ]

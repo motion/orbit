@@ -53,18 +53,7 @@ const log = debug('Electron')
         'Option+Shift+Space',
       ])
 
-      this.shortcutStore.emitter.on('shortcut', shortcut => {
-        if (shortcut === 'Option+Space') {
-          if (Electron.orbitState.fullScreen) {
-            Electron.toggleFullScreen()
-          } else {
-            Electron.togglePinned()
-          }
-        }
-        if (shortcut === 'Option+Shift+Space') {
-          Electron.toggleFullScreen()
-        }
-      })
+      this.shortcutStore.emitter.on('shortcut', Electron.onShortcut)
     }
 
     restart() {

@@ -26,13 +26,19 @@ export default class ElectronReactions {
 
   @react
   unPinOnUnFullScreen = [
-    () => [Electron.fullScreen, App.state.orbitHidden],
+    () => [Electron.orbitState.fullScreen, App.state.orbitHidden],
     ([fullScreen, hidden]) => {
       if (!fullScreen || !hidden) {
         Electron.setPinned(false)
       }
     },
     { delay: 300 },
+  ]
+
+  @react
+  unFullScreenOnHide = [
+    () => App.state.orbitHidden,
+    hid => hid && Electron.setOrbitState({ fullScreen: false }),
   ]
 
   @react
@@ -71,7 +77,7 @@ export default class ElectronReactions {
   handleHoldingOption = [
     () => Desktop.isHoldingOption,
     isHoldingOption => {
-      console.log('got hold', isHoldingOption)
+      log('got hold', isHoldingOption)
       clearTimeout(this.showAfterDelay)
       clearTimeout(this.stickAfterDelay)
       if (Electron.orbitState.pinned) {
@@ -84,7 +90,9 @@ export default class ElectronReactions {
           log('prevent hide while mouseover after release hold')
           return
         }
-        Electron.setState({ shouldHide: Date.now() })
+        if (!App.state.orbitHidden) {
+          Electron.setState({ shouldHide: Date.now() })
+        }
         return
       }
       if (App.state.orbitHidden) {

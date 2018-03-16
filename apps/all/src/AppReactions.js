@@ -15,22 +15,10 @@ export default class AppReactions {
   ]
 
   @react
-  showHideFromElectron = [
-    () => [Electron.state.shouldHide, Electron.state.shouldShow],
-    ([shouldHide, shouldShow]) => {
-      if (!shouldHide && !shouldShow) {
-        return
-      }
-      const isHidden = App.state.orbitHidden
-      const willBeHidden = shouldHide > shouldShow
-      // TODO implement this
-      const PEEK_IS_FOCUSED = false
-      if (PEEK_IS_FOCUSED && !isHidden && willBeHidden) {
-        log(`Peek is focused, ignore hide`)
-        return
-      }
-      log(`orbitHidden: ${willBeHidden}`)
-      App.setState({ orbitHidden: willBeHidden })
+  shouldShowHideFromElectron = [
+    () => Electron.state.shouldShow > Electron.state.shouldHide,
+    shouldShow => {
+      App.setState({ orbitHidden: shouldShow })
     },
     true,
   ]
@@ -40,7 +28,6 @@ export default class AppReactions {
     () => Electron.isMouseInActiveArea,
     mouseOver => {
       if (!mouseOver && !App.state.peekTarget) {
-        console.log('CLEAR clearPeekOnMouseOut')
         App.setState({ peekTarget: null })
       }
     },

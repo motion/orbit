@@ -350,6 +350,14 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
 
     return function watcherCb(reactionValue) {
       result = valueToObservable(value.call(obj, reactionValue || obj.props)) // hit user observables // pass in props
+      if (isReaction) {
+        console.log(
+          `@react ${obj.constructor.name}.${method}(`,
+          reactionValue,
+          `) =>`,
+          result,
+        )
+      }
       const observableLike = isObservableLike(result)
       stopAutoObserve()
 

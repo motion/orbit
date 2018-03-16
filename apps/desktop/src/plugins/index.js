@@ -1,4 +1,4 @@
-import { store } from '@mcro/black/store'
+import { store, react } from '@mcro/black/store'
 import { App, Desktop } from '@mcro/all'
 import Icons from './icons'
 
@@ -7,6 +7,7 @@ import * as MacAppsPlugin from './macApps'
 import * as FilesPlugin from './files'
 
 const plugins = [MacAppsPlugin, FilesPlugin]
+const log = debug('Plugins')
 
 @store
 export default class Plugins {
@@ -14,7 +15,8 @@ export default class Plugins {
   results = []
   searchId = 0
 
-  constructor({ server }) {
+  constructor({ server, setState }) {
+    this.setState = setState
     this.server = server
     this.icons = new Icons()
     this.start()
@@ -22,7 +24,6 @@ export default class Plugins {
 
   async start() {
     await this.initializePlugins()
-    await this.reactToSearches()
   }
 
   async initializePlugins() {
@@ -31,28 +32,28 @@ export default class Plugins {
     )
   }
 
-  reactToSearches() {
-    this.react(
-      () => App.state.query,
-      async query => {
-        const uid = Math.random()
-        this.searchId = uid
-        let results = []
-        this.search(query, async newResults => {
-          const resultsWithIcons = await Promise.all(
-            newResults.slice(0, 25).map(async result => ({
-              ...result,
-              icon: result.icon ? await this.icons.getIcon(result.icon) : null,
-            })),
-          )
-          if (uid === this.searchId) {
-            results = [...results, ...resultsWithIcons]
-            Desktop.setState({ pluginResults: results })
-          }
-        })
-      },
-    )
-  }
+  @react
+  reactToSearches = [
+    () => App.state.query,
+    async query => {
+      const uid = Math.random()
+      this.searchId = uid
+      let results = []
+      this.search(query, async newResults => {
+        const resultsWithIcons = await Promise.all(
+          newResults.slice(0, 25).map(async result => ({
+            ...result,
+            icon: result.icon ? await this.icons.getIcon(result.icon) : null,
+          })),
+        )
+        const isStillValid = uid === this.searchId
+        if (isStillValid) {
+          results = [...results, ...resultsWithIcons]
+          this.setState({ pluginResults: results })
+        }
+      })
+    },
+  ]
 
   search = async (term, onResults) => {
     this.plugins.forEach(plugin => {

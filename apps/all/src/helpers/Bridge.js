@@ -203,14 +203,16 @@ class Bridge {
         const newVal = Mobx.toJS(newState[key])
         if (isPlainObject(oldVal) && isPlainObject(newVal)) {
           // merge plain objects
-          stateObj[key] = mergeWith(oldVal, newVal, (objVal, newVal) => {
+          const newState = mergeWith(oldVal, newVal, (objVal, newVal) => {
             // avoid inner array merge, just replace
             if (Array.isArray(oldVal) || Array.isArray(newVal)) {
               return newVal
             }
           })
+          stateObj[key] = newState
           // diff after change to capture real effects
-          changed[key] = diff(oldValForDiff, stateObj[key])
+          // this is mostly for logging purposes, could just use a boolean
+          changed[key] = diff(oldValForDiff, newState)
         } else {
           stateObj[key] = newVal
           changed[key] = newVal

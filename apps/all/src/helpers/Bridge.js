@@ -218,14 +218,15 @@ class Bridge {
         ) {
           if (Array.isArray(newVal) || Array.isArray(oldVal)) {
             stateObj[key] = newVal
+            changed[key] = newVal
           } else {
             merge(oldVal, newVal)
             changed[key] = updatedDiff(toJS(stateObj[key]), newVal)
             stateObj[key] = oldVal
           }
         } else {
-          stateObj[key] = newState[key]
-          changed[key] = newState[key]
+          stateObj[key] = newVal
+          changed[key] = newVal
         }
       }
     }

@@ -325,6 +325,7 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
   }
 
   const isReaction = Array.isArray(val)
+  let preventLog = false
 
   function run() {
     if (disposed) {
@@ -349,14 +350,20 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
     let value = val
 
     return function watcherCb(reactionValue) {
-      result = valueToObservable(value.call(obj, reactionValue || obj.props)) // hit user observables // pass in props
-      if (isReaction) {
-        console.log(
-          `@react ${obj.constructor.name}.${method}(`,
-          reactionValue,
-          `) =>`,
-          result,
-        )
+      result = valueToObservable(
+        value.call(obj, reactionValue || obj.props, {
+          preventLogging: () => (preventLog = true),
+        }),
+      ) // hit user observables // pass in props
+      if (!preventLog) {
+        if (isReaction) {
+          console.log(
+            `@react ${obj.constructor.name}.${method}(`,
+            reactionValue,
+            `) =>`,
+            result,
+          )
+        }
       }
       const observableLike = isObservableLike(result)
       stopAutoObserve()

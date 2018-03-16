@@ -54,7 +54,8 @@ export default class ElectronReactions {
   @react
   setMouseOvers = [
     () => [Desktop.state.mousePosition, App.state.orbitHidden],
-    ([mousePosition, isHidden]) => {
+    ([mousePosition, isHidden], { preventLogging }) => {
+      preventLogging()
       if (Electron.orbitState.pinned) {
         return
       }
@@ -146,13 +147,9 @@ export default class ElectronReactions {
 
   @react
   positionOrbitFromBoundingBox = [
-    () => [
-      appTarget(Desktop.state.appState || {}),
-      Desktop.linesBoundingBox,
-      Electron.orbitState.fullScreen,
-    ],
-    ([appBB, linesBB, fullScreen]) => {
-      if (fullScreen) return
+    () => [appTarget(Desktop.state.appState || {}), Desktop.linesBoundingBox],
+    ([appBB, linesBB]) => {
+      if (Electron.orbitState.fullScreen) return
       // prefer using lines bounding box, fall back to app
       const box = linesBB || appBB
       if (!box) return
@@ -164,6 +161,7 @@ export default class ElectronReactions {
         // remove padding
         position[0] += arrowTowards === 'right' ? SCREEN_PAD : -SCREEN_PAD
       }
+      console.log('positioning', position)
       Electron.setOrbitState({ position, size, arrowTowards })
     },
     true,

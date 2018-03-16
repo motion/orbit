@@ -369,22 +369,26 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
     return function watcherCb(reactionValue) {
       // cancels on new reactions
       timeoutActive = false
-      const reactionResult = value.call(obj, reactionValue || obj.props, {
-        preventLogging: () => (preventLog = true),
-        sleep: ms => {
-          log(`${getReactionName(obj)}.${method} sleep(${ms})`)
-          timeoutActive = true
-          return new Promise((res, rej) =>
-            setTimeout(() => {
-              if (timeoutActive) {
-                res()
-              } else {
-                rej('CANCELLED')
-              }
-            }, ms),
-          )
+      const reactionResult = value.call(
+        obj,
+        isReaction ? reactionValue : obj.props,
+        {
+          preventLogging: () => (preventLog = true),
+          sleep: ms => {
+            log(`${getReactionName(obj)}.${method} sleep(${ms})`)
+            timeoutActive = true
+            return new Promise((res, rej) =>
+              setTimeout(() => {
+                if (timeoutActive) {
+                  res()
+                } else {
+                  rej('CANCELLED')
+                }
+              }, ms),
+            )
+          },
         },
-      })
+      )
       // handle cancels
       if (reactionResult instanceof Promise) {
         reactionResult.catch(err => {

@@ -28,7 +28,6 @@ const log = debug('OrbitWindow')
     watchMouseForOrbitFocus = [
       () => Electron.orbitState.mouseOver || Electron.peekState.mouseOver,
       mouseOver => {
-        log(`Electron.orbitState.mouseOver ${mouseOver}`)
         if (mouseOver) {
           this.orbitRef && this.orbitRef.focus()
         } else {

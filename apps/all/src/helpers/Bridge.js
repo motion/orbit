@@ -199,16 +199,18 @@ class Bridge {
       }
       if (!Mobx.comparer.structural(stateObj[key], newState[key])) {
         const oldVal = Mobx.toJS(stateObj[key])
+        const oldValForDiff = { ...oldVal }
         const newVal = Mobx.toJS(newState[key])
         if (isPlainObject(oldVal) && isPlainObject(newVal)) {
           // merge plain objects
-          changed[key] = diff(oldVal, newVal)
           stateObj[key] = mergeWith(oldVal, newVal, (objVal, newVal) => {
             // avoid inner array merge, just replace
             if (Array.isArray(oldVal) || Array.isArray(newVal)) {
               return newVal
             }
           })
+          // diff after change to capture real effects
+          changed[key] = diff(oldValForDiff, stateObj[key])
         } else {
           stateObj[key] = newVal
           changed[key] = newVal

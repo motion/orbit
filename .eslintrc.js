@@ -27,6 +27,7 @@ module.exports = {
     'react/jsx-uses-vars': 2,
     'react/jsx-uses-react': 'error',
     'no-case-declarations': 'off',
+    'no-debugger': 'off',
   },
   settings: {
     'import/resolver': {

@@ -1,6 +1,7 @@
-import * as React from 'react'
+import { Electron, Desktop } from '@mcro/all'
 import { App as AppWindow } from '@mcro/reactron'
 import { view, debugState } from '@mcro/black'
+import * as React from 'react'
 import Tray from './views/Tray'
 import MenuItems from './views/MenuItems'
 import HighlightsWindow from './views/HighlightsWindow'
@@ -9,7 +10,6 @@ import OrbitWindow from './views/OrbitWindow'
 import ShortcutsStore from '~/stores/shortcutsStore'
 // import SettingsWindow from './views/SettingsWindow'
 import * as Helpers from '~/helpers'
-import { Electron } from '@mcro/all'
 import global from 'global'
 
 const log = debug('Electron')
@@ -48,9 +48,20 @@ const log = debug('Electron')
     }
 
     watchOptionPress = () => {
-      this.shortcutStore = new ShortcutsStore(['Option+Space'])
+      this.shortcutStore = new ShortcutsStore([
+        'Option+Space',
+        'Option+Shift+Space',
+      ])
+
       this.shortcutStore.emitter.on('shortcut', shortcut => {
         if (shortcut === 'Option+Space') {
+          if (Electron.orbitState.fullScreen) {
+            Electron.toggleFullScreen()
+          } else {
+            Electron.togglePinned()
+          }
+        }
+        if (shortcut === 'Option+Shift+Space') {
           Electron.toggleFullScreen()
         }
       })

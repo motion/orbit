@@ -40,5 +40,13 @@ rm -rf ./packages/gloss/node_modules/react-dom 2> /dev/null
 rm -rf ./packages/black/node_modules/react-dom 2> /dev/null
 rm -rf ./packages/decor/node_modules/react-dom 2> /dev/null
 
-cd apps/$1
-npm run start -- ${@:2}
+if [[ "$1" == "" ]]; then
+  npx lerna --parallel \
+    --scope @mcro/desktop \
+    --scope @mcro/app \
+    --scope @mcro/electron \
+    exec -- npm run start -- ${@:2}
+else
+  cd apps/$1
+  npm run start -- ${@:2}
+fi

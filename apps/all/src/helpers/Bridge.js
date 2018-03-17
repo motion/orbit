@@ -169,7 +169,7 @@ class Bridge {
         console.log(
           `${this._source.replace('Store', '')}.setState(`,
           newState,
-          `) => ${changedStateStr}`,
+          `) => (changed) ${changedStateStr}`,
         )
       }
       this._socket.send(

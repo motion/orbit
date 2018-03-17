@@ -24,7 +24,7 @@ const getHoverProps = Helpers.hoverSettler({
       height,
     }
 
-    App.setState({ peekTarget: { id, result, position } })
+    App.setState({ peekTarget: { id, position } })
   },
 })
 

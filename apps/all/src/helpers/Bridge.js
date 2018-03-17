@@ -170,7 +170,7 @@ class Bridge {
         console.log(
           `${this._source.replace('Store', '')}.setState(`,
           newState,
-          `) => ${changedStateStr}`,
+          `) => (changed) ${changedStateStr}`,
         )
         */
       }

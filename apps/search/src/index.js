@@ -26,8 +26,15 @@ const sortedUniqBy = (xs, fn) => {
 
 const sleep = ms => new Promise(res => setTimeout(res, ms))
 
-const vecMean = xs =>
-  range(xs[0].length).map(dim => sum(xs.map(vec => vec[dim])) / xs.length)
+const vecMean = xs => {
+  if (xs.length === 0) {
+    return []
+  }
+
+  return range(xs[0].length).map(
+    dim => sum(xs.map(vec => vec[dim])) / xs.length,
+  )
+}
 
 // TODO import from constants
 const API_URL = 'http://localhost:3001'
@@ -44,6 +51,7 @@ const batchMapPromise = async (xs, fn, batchSize, callback = () => {}) => {
   const batches = Math.floor(xs.length / batchSize)
   let items = []
   for (const batch of range(batches)) {
+    await sleep(80)
     if (hasStopped) {
       break
     }
@@ -65,6 +73,7 @@ class Search {
   paragraphs = []
   documents = []
   indexing = false
+  wordEmbedding = false
   totalIndexed = 0
   totalIndexedSentences = 0
   currentTotalSentences = 0
@@ -72,11 +81,11 @@ class Search {
 
   @watch
   indexedStatus = () =>
-    `documents: ${this.totalIndexed} / ${
-      this.totalDocuments
-    }. Indexing sentence: ${this.totalIndexedSentences} / ${
-      this.currentTotalSentences
-    } `
+    `index: doc ${this.totalIndexed}/${this.totalDocuments} line ${
+      this.totalIndexedSentences
+    }/${this.currentTotalSentences} `
+
+  getIndexingStatus = () => this.indexedStatus
 
   @watch indexedPercentage = () => this.totalIndexed / this.totalDocuments * 100
 
@@ -90,10 +99,6 @@ class Search {
         })),
       ),
     )
-
-  sayHello = () => {
-    return 'hello world!'
-  }
 
   @watch
   space = () => {
@@ -113,10 +118,27 @@ class Search {
     }
   }
 
+  getEmbedding = async () => {
+    return await (await fetch('/dist/vectors.json')).json()
+  }
+
   async willMount() {
     self.indexer = this
     this.db = new DB()
+    this.wordEmbedding = await this.getEmbedding()
   }
+
+  waitForLoad = async () =>
+    new Promise(resolve => {
+      const check = () => {
+        if (this.wordEmbedding) {
+          resolve(true)
+        }
+        setTimeout(check, 100)
+      }
+
+      check()
+    })
 
   getSentences = async paragraph => {
     const sentences = splitSentences(paragraph)
@@ -158,8 +180,6 @@ class Search {
   }
 
   setDocuments = async documentSources => {
-    console.log('in set docs this is', this)
-    console.log('setting documents', documentSources)
     // lets keep the articles short for testing
     documentSources = documentSources
       .filter(({ text }) => text.length < 5000)
@@ -170,7 +190,6 @@ class Search {
         }
       })
 
-    console.log('total docs are', documentSources.length)
     this.totalDocuments = documentSources.length
     this.indexing = true
     this.totalIndexed = 0
@@ -218,6 +237,19 @@ class Search {
     return { vectors, sentenceVector }
   }
 
+  getSimpleSentenceVectors = async sentence => {
+    const getWord = word => {
+      return this.wordEmbedding[word]
+    }
+
+    const allVectors = sentence.split(' ').map(getWord)
+    const vectors = allVectors.filter(_ => _)
+
+    // take out empty ones
+    const val = { sentenceVector: vecMean(vectors), vectors }
+    return val
+  }
+
   getSentenceVector = async sentence => {
     const hash = `vectors-${sentence}`
 
@@ -248,11 +280,30 @@ class Search {
   }
 
   search = async (query, options = { count: 10, onePerDoc: true }) => {
-    const { vectors, sentenceVector } = await this.getWordVectors(query)
+    if (!query) {
+      return false
+    }
+
+    const start = +Date.now()
+    this.lastQuery = query
+
+    const { vectors, sentenceVector } = await this.getSimpleSentenceVectors(
+      query,
+    )
+
+    // bail if we're out of date
+    if (query !== this.lastQuery) {
+      return false
+    }
 
     const nearestNeighbors = this.space.tree
       .knn(sentenceVector, options.count * 3)
       .map(index => this.space.metaData[index])
+
+    // bail if we're out of date
+    if (query !== this.lastQuery) {
+      return false
+    }
 
     const sentences = sortBy(
       nearestNeighbors.map(({ sentenceIndex, paragraphIndex }, index) => {
@@ -266,25 +317,31 @@ class Search {
           0.2 * penalizeNearest
         const document = this.documentSources[documentIndex]
 
+        const context = paragraph.sentences.map(({ text }) => ({
+          active: text === sentence.text,
+          text,
+        }))
+
         return {
           document,
           documentIndex,
           distance,
           sentence: sentence.text,
+          context,
           title: document.title,
-          subtitle: `distance: ${distance}`,
+          subtitle: `distance: ${('' + distance).slice(0, 7)}`,
           content: sentence.text,
         }
       }),
       'distance',
     )
 
-    const vals = sortedUniqBy(sentences, _ => _.documentIndex).slice(
+    const results = sortedUniqBy(sentences, _ => _.documentIndex).slice(
       0,
       options.count,
     )
 
-    return vals
+    return { performance: +Date.now() - start, results }
   }
 }
 
@@ -299,7 +356,7 @@ onmessage = async e => {
 
   let data = search[name](args)
 
-  if (data.then) {
+  if (data && data.then) {
     data = await data
   }
 

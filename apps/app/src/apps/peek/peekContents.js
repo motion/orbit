@@ -6,7 +6,7 @@ import { App, Electron } from '@mcro/all'
 import r2 from '@mcro/r2'
 
 const EmptyContents = ({ item }) => (
-  <pane css={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+  <pane css={{ flex: 1 }}>
     <img
       if={item.icon}
       src={`/icons/${item.icon}`}
@@ -18,6 +18,13 @@ const EmptyContents = ({ item }) => (
     <UI.Title if={item.subtitle} size={1}>
       {item.subtitle}
     </UI.Title>
+    <UI.Text if={item.content} css={{ marginTop: 20 }} size={1}>
+      {item.context.map(({ active, text }) => (
+        <UI.Text $sentence opacity={active ? 1 : 0.2}>
+          {text}
+        </UI.Text>
+      ))}
+    </UI.Text>
   </pane>
 )
 

@@ -16,11 +16,8 @@ export default class SearchStore {
     })
 
   willMount() {
-    console.log('mounting search store')
-    window.ss = this
     const url = `http://localhost:3001/search/@mcro-search.js`
     this.worker = new Worker(url)
-    window.w = this.worker
     this.worker.onerror = err => {
       console.error(err)
     }

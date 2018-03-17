@@ -41,7 +41,6 @@ export default class OrbitContent {
   }
 
   onRef = index => ref => {
-    console.log('add ref', index, ref)
     refs[index] = ref
   }
 
@@ -49,19 +48,15 @@ export default class OrbitContent {
     const { appState } = Desktop.state
     return (
       <list>
-        <UI.Title
-          if={App.isAttachedToWindow && appState}
-          textTransform="uppercase"
-          css={{ padding: 10 }}
-        >
-          {appState.name}{' '}
+        <UI.Text if={App.isAttachedToWindow && appState} css={{ padding: 10 }}>
+          {orbitStore.indexingStatus}
           <UI.Text
             if={appState.title}
             css={{ display: 'inline', opacity: 0.5, fontSize: '80%' }}
           >
-            {appState.title}
+            took {orbitStore.searchPerformance}
           </UI.Text>
-        </UI.Title>
+        </UI.Text>
         {orbitStore.results.map((result, index) => (
           <OrbitItem
             key={getKey(result) || index}

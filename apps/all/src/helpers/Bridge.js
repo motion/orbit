@@ -146,6 +146,7 @@ class Bridge {
     }
     if (Object.keys(changedState).length) {
       if (process.env.NODE_ENV === 'development') {
+        /*
         console.log(
           `${this._source}.setState (changedState: ${JSON.stringify(
             changedState,
@@ -153,6 +154,7 @@ class Bridge {
             2,
           )})`,
         )
+        */
       }
       this._socket.send(
         JSON.stringify({ state: changedState, source: this._source }),

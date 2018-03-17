@@ -12,19 +12,27 @@ export default class OrbitStore {
   keyboardStore = new KeyboardStore()
   searchResults = []
   showSettings = false
+  indexingStatus = ''
   selectedIndex = 0
+  searchPerformance = 0
 
   get results() {
     return [...this.searchResults, ...Desktop.state.pluginResults]
   }
 
+  getIndexingStatus = async () => {
+    this.indexingStatus = await this.searchStore.call('getIndexingStatus')
+    this.setTimeout(this.getIndexingStatus, 500)
+    return this.indexingStatus
+  }
+
   willMount() {
     this.searchStore = new searchStore()
+    this.getIndexingStatus()
     // start app reactions
     App.runReactions()
     // start indexing
     setTimeout(async () => {
-      console.log('adding docs to search...')
       const allDocs = await Thing.getAll()
       this.searchStore.call(
         'setDocuments',
@@ -46,7 +54,6 @@ export default class OrbitStore {
     })
 
     this.on(this.keyboardStore, 'keydown', code => {
-      console.log('code', code)
       switch (code) {
         case 40: // down
           this.selectedIndex = Math.min(
@@ -68,10 +75,14 @@ export default class OrbitStore {
   }
 
   handleSearch = debounce(async query => {
-    const results = await this.searchStore.call('search', query)
+    const { performance, results } = await this.searchStore.call(
+      'search',
+      query,
+    )
 
     // if it hasn't changed since we searched
     if (results && App.state.query === query) {
+      this.searchPerformance = performance
       this.searchResults = results
     }
   }, 100)

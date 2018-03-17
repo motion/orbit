@@ -27,7 +27,6 @@ export default class OrbitStore {
   }
 
   willMount() {
-    this.searchStore = new searchStore()
     this.getIndexingStatus()
     // start app reactions
     App.runReactions()

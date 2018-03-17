@@ -3,11 +3,11 @@ import 'babel-polyfill'
 
 import { store, watch } from '@mcro/black/store'
 import { sum, range, sortBy, flatten } from 'lodash'
-import debug from 'debug'
 import DB from './db'
 import { splitSentences, wordMoversDistance, cosineSimilarity } from './helpers'
 import summarize from './summarize'
 import createKDTree from 'static-kdtree'
+import wordVectors from './vectors.json'
 
 // for some reason lodash's was acting strangely so I rewrote it
 const sortedUniqBy = (xs, fn) => {
@@ -38,9 +38,6 @@ const vecMean = xs => {
 
 // TODO import from constants
 const API_URL = 'http://localhost:3001'
-
-const log = debug('indexer')
-log.enabled = true
 
 const batchMapPromise = async (xs, fn, batchSize, callback = () => {}) => {
   let hasStopped = false
@@ -73,7 +70,6 @@ class Search {
   paragraphs = []
   documents = []
   indexing = false
-  wordEmbedding = false
   totalIndexed = 0
   totalIndexedSentences = 0
   currentTotalSentences = 0
@@ -125,20 +121,7 @@ class Search {
   async willMount() {
     self.indexer = this
     this.db = new DB()
-    this.wordEmbedding = await this.getEmbedding()
   }
-
-  waitForLoad = async () =>
-    new Promise(resolve => {
-      const check = () => {
-        if (this.wordEmbedding) {
-          resolve(true)
-        }
-        setTimeout(check, 100)
-      }
-
-      check()
-    })
 
   getSentences = async paragraph => {
     const sentences = splitSentences(paragraph)
@@ -239,7 +222,7 @@ class Search {
 
   getSimpleSentenceVectors = async sentence => {
     const getWord = word => {
-      return this.wordEmbedding[word]
+      return wordVectors[word]
     }
 
     const allVectors = sentence.split(' ').map(getWord)

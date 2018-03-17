@@ -48,7 +48,7 @@ class ElectronStore {
   start(options) {
     Bridge.start(this, this.state, options)
     this.setState = Bridge.setState
-    const ElectronReactions = require('./ElectronReactions').default
+    const ElectronReactions = eval(`require('./ElectronReactions')`).default
     this.reactions = new ElectronReactions()
   }
 

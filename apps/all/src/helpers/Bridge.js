@@ -165,14 +165,13 @@ class Bridge {
           changedStateStr = stringifyObject(changedState, 0, 2)
         } catch (err) {
           changedStateStr = `${changedState}`
-        }
-        /*
+        }}
+
         console.log(
           `${this._source.replace('Store', '')}.setState(`,
           newState,
           `) => (changed) ${changedStateStr}`,
         )
-        */
       }
       this._socket.send(
         JSON.stringify({ state: changedState, source: this._source }),

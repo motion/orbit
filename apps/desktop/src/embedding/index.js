@@ -1,12 +1,9 @@
 import path from 'path'
-import { spawn } from 'child_process'
+import execa from 'execa'
 
 const script = path.resolve(__dirname, '../../python/run_embedding.py')
 
-const job = spawn(`python3`, [script], {
-  detached: false,
-  stdio: [process.stdin, process.stdout, process.stderr],
-})
+execa.shell(`python3`, [script])
 
 export default async sentence => {
   const vectors = await (await fetch(

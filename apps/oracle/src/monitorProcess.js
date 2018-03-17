@@ -35,7 +35,7 @@ export default async function monitorScreenProcess(
           onRestart()
         }
       } catch (err) {
-        console.log('error getting process info, restarting')
+        console.log('error getting process info, restarting', err)
         onRestart()
       }
     }

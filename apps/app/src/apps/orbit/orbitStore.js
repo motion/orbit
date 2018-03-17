@@ -38,6 +38,7 @@ export default class OrbitStore {
         'setDocuments',
         allDocs.map(doc => ({ title: doc.title, text: doc.body })),
       )
+      console.log('Done')
     })
 
     // search

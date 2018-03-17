@@ -1,11 +1,27 @@
 // @flow
 import { store } from '@mcro/black/store'
-import { isEqual } from 'lodash'
+import { mergeWith, isPlainObject } from 'lodash'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 import WebSocket from './websocket'
 import waitPort from 'wait-port'
+import * as Mobx from 'mobx'
+import stringify from 'stringify-object'
 
-const log = debug('Bridge')
+const stringifyObject = obj =>
+  stringify(obj, {
+    indent: '  ',
+    singleQuotes: true,
+    inlineCharacterLimit: 12,
+  })
+
+// const log = debug('Bridge')
+const requestIdle = () =>
+  new Promise(
+    res =>
+      typeof window !== 'undefined'
+        ? window.requestIdleCallback(res)
+        : setTimeout(res),
+  )
 
 @store
 class Bridge {
@@ -50,7 +66,8 @@ class Bridge {
     if (typeof window === 'undefined') {
       await waitPort({ host: 'localhost', port: 40510 })
     }
-    this._socket.onmessage = ({ data }) => {
+    this._socket.onmessage = async ({ data }) => {
+      await requestIdle()
       if (!data) {
         console.log(`No data received over socket`)
         return
@@ -73,9 +90,9 @@ class Bridge {
           }
           if (!this.stores[source]) {
             console.warn(
-              `Store not imported:
-                this.stores: ${JSON.stringify(this.stores, 0, 2)}
-                source: ${source}`,
+              `Store not imported: this.stores:`,
+              this.stores,
+              `source: ${source}`,
             )
             return
           }
@@ -86,12 +103,13 @@ class Bridge {
               `No state found for source (${source}) state (${state}) store(${store})`,
             )
           }
+          await requestIdle()
           this._update(state, newState)
         } else {
           throw new Error(`Non-object received`)
         }
       } catch (err) {
-        console.log(
+        console.error(
           `${err.message}:\n${err.stack}\n
           Bridge error receiving or reacting to message. Initial message:
           ${data}`,
@@ -135,24 +153,24 @@ class Bridge {
       )
     }
     // update our own state immediately so its sync
-    const changedState = this._update(
-      this.state,
-      newState.toJS ? newState.toJS() : newState,
-      true,
-    )
+    const changedState = this._update(this.state, newState, true)
     if (!this._wsOpen) {
       this._queuedState = true
       return changedState
     }
     if (Object.keys(changedState).length) {
       if (process.env.NODE_ENV === 'development') {
+        let changedStateStr
+        try {
+          changedStateStr = stringifyObject(changedState, 0, 2)
+        } catch (err) {
+          changedStateStr = `${changedState}`
+        }
         /*
         console.log(
-          `${this._source}.setState (changedState: ${JSON.stringify(
-            changedState,
-            0,
-            2,
-          )})`,
+          `${this._source.replace('Store', '')}.setState(`,
+          newState,
+          `) => ${changedStateStr}`,
         )
         */
       }
@@ -166,29 +184,37 @@ class Bridge {
   // private
   // return keys of changed items
   _update = (stateObj, newState, isInternal) => {
-    // log('_update', stateObj, newState, isInternal)
     const changed = {}
     for (const key of Object.keys(newState)) {
       if (isInternal && typeof this._initialState[key] === 'undefined') {
         console.error(
           `${this._source}._update: tried to set a key not in initialState
-
-            initial state:
-              ${JSON.stringify(this._initialState, 0, 2)}
-
-            key: ${key}
-
-            typeof initial state key: ${typeof this._initialState[key]}
-
-            value:
-              ${JSON.stringify(newState, 0, 2)}`,
+            - initial state:
+              ${stringifyObject(this._initialState, 0, 2)}
+            - key: ${key}
+            - typeof initial state key: ${typeof this._initialState[key]}
+            - value:
+              ${stringifyObject(newState, 0, 2)}`,
         )
         return changed
       }
-      if (!isEqual(stateObj[key], newState[key])) {
-        const value = newState[key]
-        stateObj[key] = value
-        changed[key] = value
+      if (!Mobx.comparer.structural(stateObj[key], newState[key])) {
+        const oldVal = Mobx.toJS(stateObj[key])
+        const newVal = Mobx.toJS(newState[key])
+        if (isPlainObject(oldVal) && isPlainObject(newVal)) {
+          // merge plain objects
+          const newState = mergeWith(oldVal, newVal, (prev, next) => {
+            // avoid inner array merge, just replace
+            if (Array.isArray(prev) || Array.isArray(next)) {
+              return next
+            }
+          })
+          stateObj[key] = newState
+          changed[key] = newState
+        } else {
+          stateObj[key] = newVal
+          changed[key] = newVal
+        }
       }
     }
     return changed

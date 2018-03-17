@@ -17,10 +17,9 @@ type PeekTarget = {
 }
 
 const updatePeek = (peek, cb) => {
-  const windows = [...Electron.peekState.windows]
+  const windows = [...Mobx.toJS(Electron.peekState.windows)]
   const nextPeek = windows.find(x => x.key === peek.key)
   cb(nextPeek)
-  log(`updatePeek: before`, peek, nextPeek)
   Electron.setPeekState({ windows })
 }
 
@@ -38,7 +37,6 @@ const windowProps = {
 
 const peekPosition = (target: PeekTarget) => {
   const { left, top, width } = target
-  log(`peekPosition from target`, target)
   const EDGE_PAD = 20
   const TOP_OFFSET = -20
   let [peekW, peekH] = INITIAL_SIZE
@@ -64,7 +62,6 @@ const peekPosition = (target: PeekTarget) => {
     log(`too tall`)
     y = screenH - EDGE_PAD - peekH
   }
-  log('ok', x, y)
   return {
     position: [Math.round(x), Math.round(y)],
     size: [peekW, peekH],
@@ -156,7 +153,6 @@ export default class PeekWindow {
     if (!this.mounted) {
       return
     }
-    log(`handlePeekMove`, newPosition)
     // updatePeek(peek, peek => {
     //   if (!this.isAnimatingPeek && !peek.isTorn) {
     //     this.isAnimatingPeek = true // bug test fix

@@ -1,13 +1,10 @@
 // @flow
 import Bridge from './helpers/Bridge'
-import { store } from '@mcro/black/store'
-import { debounce } from 'lodash'
+import { store, react } from '@mcro/black/store'
 import global from 'global'
 import App from './App'
-import Desktop from './Desktop'
 
 let Electron
-const log = debug('Electron')
 
 @store
 class ElectronStore {
@@ -17,7 +14,6 @@ class ElectronStore {
     shouldPause: null,
     settingsPosition: [], // todo: settingsState.position
     orbitState: {
-      show: false,
       mouseOver: false,
       pinned: false,
       fullScreen: false,
@@ -26,6 +22,7 @@ class ElectronStore {
       size: null,
     },
     peekState: {
+      mouseOver: false,
       windows: null,
     },
     showSettings: false,
@@ -37,75 +34,22 @@ class ElectronStore {
     },
   }
 
+  // runs in every app independently
+  @react
+  isMouseInActiveArea = [
+    () => !!(Electron.orbitState.mouseOver || Electron.peekState.mouseOver),
+    async (over, { sleep }) => {
+      await sleep(over ? 0 : 100)
+      return over
+    },
+    true,
+  ]
+
   start(options) {
     Bridge.start(this, this.state, options)
     this.setState = Bridge.setState
-
-    // toggle pinned from app
-    this.react(() => App.state.shouldTogglePinned, Electron.togglePinned)
-
-    // clear pinned on explicit hide
-    this.react(
-      () => App.state.orbitHidden,
-      hidden => {
-        if (hidden) {
-          Electron.setOrbitState({ pinned: false })
-        }
-      },
-      true,
-    )
-
-    // option double tap to pin
-    this.react(() => Desktop.state.shouldTogglePin, Electron.togglePinned)
-
-    // option tap to clear if open
-    // let lastDown = 0
-    // this.react(
-    //   () => Desktop.isHoldingOption,
-    //   holding => {
-    //     const justTapped = !holding && Date.now() - lastDown < 100
-    //     if (justTapped) {
-    //       Electron.setState({ shouldHide: Date.now() })
-    //     }
-    //     if (holding) {
-    //       lastDown = Date.now()
-    //     }
-    //   },
-    // )
-
-    // orbit show/hide based on option hold
-    let showAfterDelay
-    let stickAfterDelay
-    this.react(
-      () => Desktop.isHoldingOption,
-      debounce(isHoldingOption => {
-        clearTimeout(showAfterDelay)
-        clearTimeout(stickAfterDelay)
-        if (Electron.orbitState.pinned) {
-          log(`pinned, avoid`)
-          return
-        }
-        if (!isHoldingOption) {
-          // TODO
-          if (!Electron.orbitState.pinned && Electron.orbitState.mouseOver) {
-            log('prevent hide while mouseover after release hold')
-            return
-          }
-          Electron.setState({ shouldHide: Date.now() })
-          return
-        }
-        if (App.state.orbitHidden) {
-          // SHOW
-          showAfterDelay = setTimeout(() => {
-            Electron.setState({ shouldShow: Date.now() })
-          }, 150)
-          stickAfterDelay = setTimeout(() => {
-            log(`held open for 3 seconds, sticking...`)
-            Electron.setPinned(true)
-          }, 4000)
-        }
-      }, 16),
-    )
+    const ElectronReactions = require('./ElectronReactions').default
+    this.reactions = new ElectronReactions()
   }
 
   get orbitState() {
@@ -118,6 +62,45 @@ class ElectronStore {
 
   get currentPeek() {
     return (this.peekState.windows || [])[0]
+  }
+
+  get recentlyToggled() {
+    if (Date.now() - Electron.state.shouldHide < 100) return true
+    if (Date.now() - Electron.state.shouldShow < 100) return true
+    return false
+  }
+
+  onShortcut = shortcut => {
+    if (shortcut === 'Option+Space') {
+      if (Electron.orbitState.fullScreen) {
+        Electron.toggleFullScreen()
+        return
+      }
+      if (App.state.orbitHidden) {
+        Electron.toggleVisible()
+        Electron.setPinned(true)
+        return
+      }
+      if (Electron.orbitState.pinned) {
+        Electron.togglePinned()
+        Electron.toggleVisible()
+        return
+      } else {
+        // !pinned
+        Electron.togglePinned()
+      }
+    }
+    if (shortcut === 'Option+Shift+Space') {
+      Electron.toggleFullScreen()
+    }
+  }
+
+  toggleVisible = () => {
+    if (App.state.orbitHidden) {
+      this.setState({ shouldShow: Date.now() })
+    } else {
+      this.setState({ shouldHide: Date.now() })
+    }
   }
 
   togglePinned = () => {
@@ -136,12 +119,12 @@ class ElectronStore {
     Electron.setOrbitState({ fullScreen })
   }
 
-  setOrbitState = nextState => {
-    this.setState({ orbitState: { ...this.state.orbitState, ...nextState } })
+  setOrbitState = orbitState => {
+    this.setState({ orbitState })
   }
 
-  setPeekState = nextState => {
-    this.setState({ peekState: { ...this.state.peekState, ...nextState } })
+  setPeekState = peekState => {
+    this.setState({ peekState })
   }
 }
 

@@ -111,19 +111,11 @@ export default class OrbitPage {
             <OrbitContent if={!orbitStore.showSettings} />
             <OrbitSettings if={orbitStore.showSettings} />
             <Knowledge if={App.state.knowledge} data={App.state.knowledge} />
-            <controls
-              css={{
-                position: 'absolute',
-                top: 18,
-                right: 18,
-                zIndex: 10000,
-              }}
-            >
+            <controls>
               <UI.Button
                 icon="gear"
                 borderRadius={100}
-                size={0.8}
-                opacity={0.25}
+                size={1.1}
                 circular
                 chromeless
                 highlight={orbitStore.showSettings}
@@ -166,6 +158,17 @@ export default class OrbitPage {
       overflow: 'hidden',
       opacity: 1,
       transition: 'background ease-in 200ms',
+      position: 'relative',
+    },
+    controls: {
+      position: 'absolute',
+      bottom: 15,
+      right: 12,
+      zIndex: 10000,
+      opacity: 0.2,
+      '&:hover': {
+        opacity: 0.9,
+      },
     },
   }
 }

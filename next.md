@@ -1,23 +1,35 @@
-# next
+* interaction
 
-* line finding (hough transforms gpuswift?)
-* recurrent net corrections
-* long line/char finding breaking
-* sync attention
-* ...
+  * option+space toggle fix
+  * esc to close fullscreen
+  * if click input on preview, pin it
+  * disable drag peek in fullscreen
+  * keyboard nav
+    * highlight does mini-peek
+    * right/left to open big-peek
 
-## Micro
+* ux
 
-* highlights needs to ensure its full screen every so often (display changes mess it up)
-* sync status improvements
-* slack: turn off room it should disable/delete attachments
-* cancel crawl from crawling... pane
-* crawling... pane glitch when on home
-* crawler breaks on lots of sites due to html parser, do readabiltiy injection
+  * orbit icon should be top right and look more mac-button-like (purple?)
+  * settings circle button on bottom right
+  * get better docs in place for peek design
+  * peek document display/design
+  * bottom of tray "mini peek" that previews hovered result
+    * then click does big-peek
+
+* bugs
+
+* fullscreen ux bugs:
+  * disable both from animating on open
+  * can see it transform back to sidebar on close
+  * disable drag
+  * certain windows/actions confuse swindler
+
+# old
+
+* highlights window needs to ensure its full screen every so often (display changes mess it up)
 * handle token refreshing
-* socket sync simpler architecture/code improvements
 * sync should handle disabling in a consistent manner
-* sync should be able to cancel/restart crawls
 * onboarding
 * prod build is downloading even if its older version
 * prod build is much bigger now

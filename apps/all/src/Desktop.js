@@ -4,7 +4,8 @@ import { store } from '@mcro/black/store'
 import global from 'global'
 // import App from './App'
 
-const log = debug('Desktop')
+// const log = debug('Desktop')
+const PAD_WINDOW = 15
 
 type TappState = {
   name: string,
@@ -36,8 +37,10 @@ export type DesktopState = {
   pluginResults: [{}],
 }
 
+let Desktop
+
 @store
-class Desktop {
+class DesktopStore {
   state = {
     shouldTogglePin: null,
     paused: true,
@@ -56,7 +59,33 @@ class Desktop {
 
   get isHoldingOption(): Boolean {
     const { option, optionUp } = this.state.keyboard
-    return option && optionUp && option > (optionUp || 0)
+    return (option || 0) > (optionUp || 1)
+  }
+
+  get linesBoundingBox() {
+    const { linePositions } = Desktop.state
+    if (!linePositions) return null
+    let left = 100000
+    let maxX = 0
+    let top = 100000
+    let maxY = 0
+    // found place for window to go
+    for (const [lx, ly, lw, lh] of linePositions) {
+      if (lx + lw > maxX) maxX = lx + lw
+      if (lx < left) left = lx
+      if (ly < top) top = ly
+      if (ly + lh > maxY) maxY = ly + lh
+    }
+    // maxX should never be past right edge of window frame
+    // this fixes logical issues in line finding from swift for now
+    if (Desktop.state.appState) {
+      const { offset, bounds } = Desktop.state.appState
+      maxX = Math.min(
+        offset[0] + bounds[0] - PAD_WINDOW * 2 /* reverse linepad */,
+        maxX,
+      )
+    }
+    return { left, top, width: maxX - left, height: maxY - top }
   }
 
   start(options) {
@@ -76,8 +105,8 @@ class Desktop {
   }
 }
 
-const desktop = new Desktop()
-global.Desktop = desktop
-Bridge.stores.Desktop = desktop
+Desktop = new DesktopStore()
+global.Desktop = Desktop
+Bridge.stores.DesktopStore = Desktop
 
-export default desktop
+export default Desktop

@@ -5,6 +5,7 @@ import fromStream from './fromStream'
 import * as Mobx from 'mobx'
 import { Observable } from 'rxjs'
 import * as Helpers from '@mcro/helpers'
+import debug from '@mcro/debug'
 
 const log = debug('>')
 

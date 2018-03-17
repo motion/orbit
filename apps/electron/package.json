@@ -59,7 +59,7 @@
     "usage": "^0.7.1"
   },
   "devDependencies": {
-    "electron": "1.7.10",
+    "electron": "^1.7.10",
     "electron-rebuild": "^1.7.3",
     "node-loader": "^0.6.0",
     "nodemon": "^1.15.1",

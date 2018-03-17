@@ -1,31 +1,40 @@
 import { debounce, memoize } from 'lodash'
 import { App, Desktop } from '@mcro/all'
 import { Thing } from '@mcro/models'
-import Search from '@mcro/search'
+import searchStore from '~/stores/searchStore'
 import KeyboardStore from './keyboardStore'
 import * as Mobx from 'mobx'
 
 const log = debug('OrbitStore')
 
 export default class OrbitStore {
-  searchStore = new Search()
+  searchStore = new searchStore()
   keyboardStore = new KeyboardStore()
   searchResults = []
   showSettings = false
+  indexingStatus = ''
   selectedIndex = 0
+  searchPerformance = 0
 
   get results() {
     return [...this.searchResults, ...Desktop.state.pluginResults]
   }
 
+  getIndexingStatus = async () => {
+    this.indexingStatus = await this.searchStore.call('getIndexingStatus')
+    this.setTimeout(this.getIndexingStatus, 500)
+    return this.indexingStatus
+  }
+
   willMount() {
+    this.getIndexingStatus()
     // start app reactions
     App.runReactions()
     // start indexing
     setTimeout(async () => {
-      console.log('adding docs to search...')
-      const allDocs = (await Thing.getAll()).slice(0, 10)
-      this.searchStore.setDocuments(
+      const allDocs = await Thing.getAll()
+      this.searchStore.call(
+        'setDocuments',
         allDocs.map(doc => ({ title: doc.title, text: doc.body })),
       )
       console.log('Done')
@@ -45,7 +54,6 @@ export default class OrbitStore {
     })
 
     this.on(this.keyboardStore, 'keydown', code => {
-      console.log('code', code)
       switch (code) {
         case 40: // down
           this.selectedIndex = Math.min(
@@ -66,12 +74,16 @@ export default class OrbitStore {
     App.setState({ query: e.target.value })
   }
 
-  handleSearch = debounce(async term => {
-    this.searchId = Math.random()
-    const uid = this.searchId
-    const searchResults = await this.searchStore.search.search(term)
-    if (uid === this.searchId) {
-      this.searchResults = searchResults || []
+  handleSearch = debounce(async query => {
+    const { performance, results } = await this.searchStore.call(
+      'search',
+      query,
+    )
+
+    // if it hasn't changed since we searched
+    if (results && App.state.query === query) {
+      this.searchPerformance = performance
+      this.searchResults = results
     }
   }, 100)
 

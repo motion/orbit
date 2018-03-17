@@ -64,6 +64,7 @@ export default class Server {
     })
 
     // this.setupCrawler()
+    this.app.get('/hello', (req, res) => res.send('hello world'))
     this.setupSearch()
     this.setupEmbedding()
     this.setupCredPass()
@@ -99,14 +100,18 @@ export default class Server {
   setupEmbedding() {
     this.app.get('/sentence', async (req, res) => {
       console.log('(js) sentence is', req.query.sentence)
-      const values = await getEmbedding(req.query.sentence)
+      const raw = await getEmbedding(req.query.sentence)
+      // cut to only a couple decimal places
+      const values = raw.map(word => word.map(i => +i.toFixed(4)))
+
       res.json({ values })
     })
   }
 
   setupSearch() {
+    console.log('setting up search')
     const searchIndex = require.resolve('@mcro/search')
-    const searchDist = path.join(searchIndex, '..', '..', 'build')
+    const searchDist = path.join(searchIndex, '..', '..', 'dist')
     this.app.use('/search', express.static(searchDist))
   }
 

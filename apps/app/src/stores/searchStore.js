@@ -1,107 +1,29 @@
 // @flow
 import { store } from '@mcro/black'
-import Search from '@mcro/search'
-
-// const log = debug('search')
-
-type WorkerSearchResult = {
-  debug: Object,
-  index: number,
-  item: {
-    body: string,
-    documentIndex: number,
-    index: number,
-    subtitle: string,
-    snippet: string,
-  },
-  toBold: Array<string>,
-  wmd: Array<string>,
-}
+import { random } from 'lodash'
 
 @store
 export default class SearchStore {
-  openQueries = {}
-  searchManager = null
-  worker = null
-  useWorker = true
-  results: Array<SearchResult> = []
-  query = ''
-  documents = []
+  openCalls = {}
 
-  get target() {
-    return this.useWorker ? this.worker : this.searchManager
-  }
-
-  constructor({ useWorker = false }) {
-    this.useWorker = useWorker
-  }
-
-  getResults = async (query: string): Array<SearchResult> => {
-    if (query.length === 0) {
-      return false
-    }
-    const response = this.useWorker
-      ? await this._searchWorker(query)
-      : await this.target.postMessage({ type: 'search', data: query })
-    return response
-  }
-
-  setQuery = async search => {
-    this.query = search
-    const response = await this.getResults(search)
-    if (response) {
-      const results = response.results.map(result => ({
-        document: this.documents[result.item.documentIndex],
-        highlightWords: result.toBold,
-        subtitle: result.item.subtitle,
-        snippet: result.snippet,
-      }))
-      this.results = results
-    } else {
-      this.results = this.documents.map(document => ({
-        document,
-        snippet: document.body,
-      }))
-    }
-  }
-
-  setDocuments = documents => {
-    if (documents && documents.length) {
-      this.documents = documents
-      this.target.postMessage({
-        type: 'documents',
-        data: documents.map(doc => ({
-          title: doc.title,
-          body: doc.body,
-        })),
-      })
-      this.setQuery(this.query)
-    }
-  }
+  call = (name, args) =>
+    new Promise(resolve => {
+      const uuid = random(0, 100000)
+      this.worker.postMessage({ uuid, name, args })
+      this.openCalls[uuid] = data => {
+        resolve(data)
+      }
+    })
 
   willMount() {
-    if (this.useWorker) {
-      this.worker = new Worker(`${window.location.href}search/app.js`)
-      window.w = this.worker
-      this.worker.onerror = err => {
-        console.error(err)
-      }
-      this.worker.onmessage = e => {
-        const { type, data: { query, results } } = e.data
-        if (type === 'results') {
-          if (this.openQueries[query]) {
-            this.openQueries[query](results)
-          }
-        }
-      }
-    } else {
-      this.searchManager = new Search()
+    const url = `http://localhost:3001/search/@mcro-search.js`
+    this.worker = new Worker(url)
+    this.worker.onerror = err => {
+      console.error(err)
+    }
+    this.worker.onmessage = ({ data }) => {
+      this.openCalls[data.uuid](data.data)
+      delete this.openCalls[data.uuid]
     }
   }
-
-  _searchWorker = async (query: string): WorkerSearchResult =>
-    new Promise(res => {
-      this.openQueries[query] = res
-      this.worker.postMessage({ type: 'search', data: query })
-    })
 }

@@ -1,7 +1,7 @@
 // @flow
 import Bridge from './helpers/Bridge'
 import proxySetters from './helpers/proxySetters'
-import { store, react } from '@mcro/black/store'
+import { store } from '@mcro/black/store'
 import global from 'global'
 import Desktop from './Desktop'
 import Electron from './Electron'

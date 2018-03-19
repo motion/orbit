@@ -6,7 +6,7 @@ import global from 'global'
 import Desktop from './Desktop'
 import Electron from './Electron'
 
-const log = debug('App')
+// const log = debug('App')
 let App
 
 @store
@@ -19,7 +19,6 @@ class AppStore {
     hoveredWord: null,
     hoveredLine: null,
     contextMessage: 'Orbit',
-    closePeek: null,
     orbitHidden: true,
     knowledge: null,
     peekTarget: null,

@@ -51,6 +51,16 @@ export default class ElectronReactions {
     hid => hid && Electron.setOrbitState({ fullScreen: false }),
   ]
 
+  // TODO: defocus fullscreen when click away
+  @react
+  unFullScreenOnDefocus = [
+    () => Desktop.state.appState,
+    appState => {
+      console.log('Desktop.state.appState', Desktop.state.appState)
+      // Electron.setOrbitState({ fullScreen: false })
+    },
+  ]
+
   @react
   setMouseOvers = [
     () => [Desktop.state.mousePosition, App.state.orbitHidden],
@@ -96,13 +106,13 @@ export default class ElectronReactions {
           return
         }
         if (!App.state.orbitHidden) {
-          Electron.setState({ shouldHide: Date.now() })
+          Electron.setShouldHide(Date.now())
         }
         return
       }
       if (App.state.orbitHidden) {
         await sleep(150)
-        Electron.setState({ shouldShow: Date.now() })
+        Electron.setShouldShow(Date.now())
         await sleep(3500)
         Electron.setPinned(true)
       }

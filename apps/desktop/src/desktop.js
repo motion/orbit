@@ -56,7 +56,7 @@ export default class DesktopRoot {
     setInterval(async () => {
       if (Desktop.state.appState.name === 'Chrome') {
         const { selection } = await getChromeContext()
-        Desktop.setState({ selection })
+        Desktop.setSelection(selection)
       }
     }, 3000)
   }

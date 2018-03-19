@@ -1,5 +1,6 @@
 // @flow
 import Bridge from './helpers/Bridge'
+import proxySetters from './helpers/proxySetters'
 import { store, react } from '@mcro/black/store'
 import global from 'global'
 import Desktop from './Desktop'
@@ -81,7 +82,7 @@ class AppStore {
   }
 }
 
-App = new AppStore()
+App = proxySetters(new AppStore())
 global.App = App
 Bridge.stores.AppStore = App
 

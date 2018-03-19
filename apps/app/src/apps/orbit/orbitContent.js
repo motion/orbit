@@ -12,7 +12,7 @@ const getHoverProps = Helpers.hoverSettler({
       // hide
       await whenAsync(() => !Electron.isMouseInActiveArea)
       console.log('CLEAR hoverSettler')
-      App.setState({ peekTarget: null })
+      App.setPeekTarget(null)
       return
     }
     const { id, top, left, width, height } = target
@@ -24,7 +24,7 @@ const getHoverProps = Helpers.hoverSettler({
       height,
     }
 
-    App.setState({ peekTarget: { id, position } })
+    App.setPeekTarget({ id, position })
   },
 })
 

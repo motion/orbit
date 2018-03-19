@@ -93,7 +93,7 @@ export default class KeyboardStore {
           break
       }
       if (isEqual(this.lastKeys, DOUBLE_TAP_OPTION)) {
-        Desktop.setState({ shouldTogglePin: Date.now() })
+        Desktop.setShouldTogglePin(Date.now())
       }
       // be sure its a fast action not slow
       clearLastKeys = setTimeout(() => {

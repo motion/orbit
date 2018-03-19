@@ -61,7 +61,7 @@ class IntegrationHeaderStore {
 
   startOauth(integration) {
     if (Constants.IS_ELECTRON) {
-      App.setState({ authOpen: integration })
+      App.setAuthOpen(integration)
     } else {
       window.open(`${Constants.API_URL}/auth?service=${integration}`)
     }
@@ -69,7 +69,7 @@ class IntegrationHeaderStore {
       const authorizations = await this.checkAuths()
       if (authorizations && authorizations[integration]) {
         await CurrentUser.setAuthorizations(authorizations)
-        App.setState({ authClose: integration })
+        App.setAuthClose(integration)
         clearInterval(checker)
       }
     }, 1000)

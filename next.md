@@ -8,6 +8,11 @@
     * highlight does mini-peek
     * right/left to open big-peek
 
+* apps
+  * Data
+  * Visual
+  * Preview
+
 * ux
 
   * orbit icon should be top right and look more mac-button-like (purple?)

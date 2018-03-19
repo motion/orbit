@@ -1,5 +1,6 @@
 // @flow
 import Bridge from './helpers/Bridge'
+import proxySetters from './helpers/proxySetters'
 import { store } from '@mcro/black/store'
 import global from 'global'
 // import App from './App'
@@ -105,7 +106,7 @@ class DesktopStore {
   }
 }
 
-Desktop = new DesktopStore()
+Desktop = proxySetters(new DesktopStore())
 global.Desktop = Desktop
 Bridge.stores.DesktopStore = Desktop
 

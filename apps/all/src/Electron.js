@@ -1,5 +1,6 @@
 // @flow
 import Bridge from './helpers/Bridge'
+import proxySetters from './helpers/proxySetters'
 import { store, react } from '@mcro/black/store'
 import global from 'global'
 import App from './App'
@@ -118,17 +119,9 @@ class ElectronStore {
   setFullScreen = fullScreen => {
     Electron.setOrbitState({ fullScreen })
   }
-
-  setOrbitState = orbitState => {
-    this.setState({ orbitState })
-  }
-
-  setPeekState = peekState => {
-    this.setState({ peekState })
-  }
 }
 
-Electron = new ElectronStore()
+Electron = proxySetters(new ElectronStore())
 Bridge.stores.ElectronStore = Electron
 global.Electron = Electron
 

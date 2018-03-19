@@ -46,10 +46,10 @@ export default class OrbitStore {
     // selected
     this.watch(() => {
       if (!this.results) {
-        App.setState({ selectedItem: null })
+        App.setSelectedItem(null)
       } else {
         const selectedItem = Mobx.toJS(this.results[this.selectedIndex]) || null
-        App.setState({ selectedItem })
+        App.setSelectedItem(selectedItem)
       }
     })
 
@@ -65,13 +65,13 @@ export default class OrbitStore {
           this.selectedIndex = Math.max(0, this.selectedIndex - 1)
           return
         case 13: //enter
-          App.setState({ openResult: this.results[this.selectedIndex] })
+          App.setOpenResult(this.results[this.selectedIndex])
       }
     })
   }
 
   onChangeQuery = e => {
-    App.setState({ query: e.target.value })
+    App.setQuery(e.target.value)
   }
 
   handleSearch = debounce(async query => {

@@ -7,10 +7,7 @@ import App from './App'
 @store
 export default class AppReactions {
   @react
-  showHideApp = [
-    () => App.state.openResult,
-    () => App.setState({ orbitHidden: true }),
-  ]
+  showHideApp = [() => App.state.openResult, () => App.setOrbitHidden(true)]
 
   @react
   shouldShowHideFromElectron = [
@@ -18,7 +15,7 @@ export default class AppReactions {
     ([shouldShow, shouldHide]) => {
       if (!shouldShow) return
       const orbitHidden = shouldHide > shouldShow
-      App.setState({ orbitHidden })
+      App.setOrbitHidden(orbitHidden)
     },
     true,
   ]
@@ -28,7 +25,7 @@ export default class AppReactions {
     () => Electron.isMouseInActiveArea,
     mouseOver => {
       if (!mouseOver && !App.state.peekTarget) {
-        App.setState({ peekTarget: null })
+        App.setPeekTarget(null)
       }
     },
     {
@@ -41,8 +38,7 @@ export default class AppReactions {
     () => Electron.orbitState.fullScreen,
     fullScreen => {
       if (!fullScreen) {
-        console.log('CLEAR fullScreen')
-        App.setState({ peekTarget: null })
+        App.setPeekTarget(null)
       }
     },
   ]
@@ -52,7 +48,7 @@ export default class AppReactions {
     () => Desktop.state.keyboard.esc,
     () => {
       if (!App.state.orbitHidden) {
-        App.setState({ orbitHidden: true })
+        App.setOrbitHidden(true)
       }
     },
   ]
@@ -64,7 +60,7 @@ export default class AppReactions {
       if (Electron.recentlyToggled) {
         return
       }
-      App.setState({ orbitHidden: !pinned })
+      App.setOrbitHidden(!pinned)
     },
   ]
 
@@ -80,7 +76,7 @@ export default class AppReactions {
       }
       if (isShown && !mouseOver) {
         await sleep(100)
-        App.setState({ orbitHidden: true })
+        App.setOrbitHidden(true)
       }
     },
     {
@@ -97,7 +93,7 @@ export default class AppReactions {
       }
       const orbitHidden = !word
       await sleep(orbitHidden ? 50 : 500)
-      App.setState({ orbitHidden })
+      App.setOrbitHidden(orbitHidden)
     },
   ]
 }

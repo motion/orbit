@@ -1,4 +1,4 @@
-import { Electron, Desktop } from '@mcro/all'
+import { Electron } from '@mcro/all'
 import { App as AppWindow } from '@mcro/reactron'
 import { view, debugState } from '@mcro/black'
 import * as React from 'react'
@@ -8,8 +8,6 @@ import HighlightsWindow from './views/HighlightsWindow'
 import PeekWindow from './views/PeekWindow'
 import OrbitWindow from './views/OrbitWindow'
 import ShortcutsStore from '~/stores/shortcutsStore'
-// import SettingsWindow from './views/SettingsWindow'
-import * as Helpers from '~/helpers'
 import global from 'global'
 
 const log = debug('Electron')
@@ -31,7 +29,6 @@ const log = debug('Electron')
       Electron.start({
         ignoreSelf: true,
       })
-      Electron.setState({ settingsPosition: Helpers.getAppSize().position })
       this.watchOptionPress()
 
       // focus on pinned
@@ -94,7 +91,6 @@ export default class ElectronWindow extends React.Component {
         {/* <HighlightsWindow /> */}
         <PeekWindow />}
         <OrbitWindow />
-        {/* <SettingsWindow /> */}
         <Tray />
       </AppWindow>
     )

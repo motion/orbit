@@ -29,7 +29,7 @@ const borderRadius = 8
     }
 
     closePeek = () => {
-      App.setState({ closePeek: KEY })
+      App.setClosePeek(KEY)
     }
   },
 })

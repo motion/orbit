@@ -56,12 +56,12 @@ const log = debug('highlights')
       this.react(
         () => this.content,
         () => {
-          App.setState({
-            highlightWords: ner(this.content).reduce(
+          App.setHighlightWords(
+            ner(this.content).reduce(
               (acc, item) => ({ ...acc, [item]: true }),
               {},
             ),
-          })
+          )
         },
       )
 

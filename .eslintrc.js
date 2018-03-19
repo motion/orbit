@@ -46,5 +46,7 @@ module.exports = {
     Set: true,
     Map: true,
     debug: true,
+    Reflect: true,
+    Proxy: true,
   },
 }

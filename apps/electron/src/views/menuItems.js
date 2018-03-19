@@ -6,11 +6,8 @@ import { Electron } from '@mcro/all'
 @view.electron
 export default class MenuEl {
   toggleDevTools = appName => () => {
-    Electron.setState({
-      showDevTools: {
-        ...Electron.state.showDevTools,
-        [appName]: !Electron.state.showDevTools[appName],
-      },
+    Electron.setShowDevTools({
+      [appName]: !Electron.state.showDevTools[appName],
     })
   }
 
@@ -25,9 +22,7 @@ export default class MenuEl {
   }
 
   handlePreferences = () => {
-    Electron.setState({
-      showSettings: !Electron.state.showSettings,
-    })
+    Electron.setShowSettings(!Electron.state.showSettings)
   }
 
   render() {

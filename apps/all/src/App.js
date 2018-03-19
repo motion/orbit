@@ -1,7 +1,7 @@
 // @flow
 import Bridge from './helpers/Bridge'
 import proxySetters from './helpers/proxySetters'
-import { store } from '@mcro/black/store'
+import { store, react } from '@mcro/black/store'
 import global from 'global'
 import Desktop from './Desktop'
 import Electron from './Electron'
@@ -37,6 +37,16 @@ class AppStore {
   get isShowingPeek() {
     return !!App.state.peekTarget || Electron.orbitState.fullScreen
   }
+
+  @react
+  wasShowingPeek = [
+    () => [App.state.peekTarget, Electron.orbitState.fullScreen],
+    () => {
+      const last = this.next
+      this.next = this.isShowingPeek
+      return last || false
+    },
+  ]
 
   get isAttachedToWindow() {
     return !Electron.orbitState.fullScreen && !!Desktop.state.appState

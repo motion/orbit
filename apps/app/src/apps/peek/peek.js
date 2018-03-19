@@ -115,7 +115,7 @@ export default class PeekPage {
       height: '100%',
       padding: SHADOW_PAD,
       pointerEvents: 'none !important',
-      transition: 'opacity ease-in 100ms',
+      // transition: 'opacity ease-in 100ms',
       opacity: 0,
       position: 'relative',
       flex: 1,

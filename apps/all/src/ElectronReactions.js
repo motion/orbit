@@ -51,13 +51,13 @@ export default class ElectronReactions {
     hid => hid && Electron.setOrbitState({ fullScreen: false }),
   ]
 
-  // TODO: defocus fullscreen when click away
   @react
   unFullScreenOnDefocus = [
     () => Desktop.state.appState,
-    appState => {
-      console.log('Desktop.state.appState', Desktop.state.appState)
-      // Electron.setOrbitState({ fullScreen: false })
+    () => {
+      if (Electron.orbitState.fullScreen) {
+        Electron.setOrbitState({ fullScreen: false })
+      }
     },
   ]
 

@@ -136,7 +136,7 @@ export default class OrbitPage {
       padding: SHADOW_PAD,
       pointerEvents: 'none !important',
       position: 'relative',
-      transition: 'opacity ease-in 100ms',
+      // transition: 'opacity ease-in 100ms',
       opacity: 0,
     },
     orbitVisible: {

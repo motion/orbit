@@ -16,16 +16,9 @@ type PeekTarget = {
   height: number,
 }
 
-const updatePeek = (peek, cb) => {
-  const windows = [...Mobx.toJS(Electron.peekState.windows)]
-  const nextPeek = windows.find(x => x.key === peek.key)
-  cb(nextPeek)
-  Electron.setPeekState({ windows })
-}
-
 const idFn = _ => _
 const PAD = 15
-const INITIAL_SIZE = [450, 450]
+const INITIAL_SIZE = [500, 550]
 const log = debug('PeekWindow')
 const windowProps = {
   frame: false,
@@ -126,7 +119,7 @@ export default class PeekWindow {
           log(`Avoid position on fullScreen`)
           return
         }
-        updatePeek(Electron.currentPeek, peek => {
+        Electron.updatePeek(Electron.currentPeek, peek => {
           let { position, size, arrowTowards } = peekPosition(
             peekTarget.position,
           )
@@ -143,7 +136,7 @@ export default class PeekWindow {
 
   handleReadyToShow = memoize(peek => () => {
     if (!peek.show) {
-      updatePeek(peek, peek => {
+      Electron.updatePeek(peek, peek => {
         peek.show = true
       })
     }
@@ -153,7 +146,7 @@ export default class PeekWindow {
     if (!this.mounted) {
       return
     }
-    // updatePeek(peek, peek => {
+    // Electron.updatePeek(peek, peek => {
     //   if (!this.isAnimatingPeek && !peek.isTorn) {
     //     this.isAnimatingPeek = true // bug test fix
     //     peek.position = newPosition
@@ -203,7 +196,7 @@ export default class PeekWindow {
                   : peek.showDevTools
               }
               alwaysOnTop={isAttached || peek.alwaysOnTop}
-              animatePosition={App.isShowingPeek}
+              animatePosition={App.isShowingPeek && App.wasShowingPeek}
               show={peek.show}
               file={`${Constants.APP_URL}/peek?key=${peek.key}`}
               ref={isAttached ? store.handlePeekRef(peek) : idFn}

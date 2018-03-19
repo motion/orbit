@@ -33,7 +33,7 @@ export default class SocketManager {
     }
   }
 
-  sendAll = (source: string, state: Object) => {
+  sendAll = (source: string, state: Object, { skipUID } = {}) => {
     if (!source) {
       throw new Error(`No source (${source}) provided to state message
         ${JSON.stringify(state, 0, 2)}`)
@@ -43,6 +43,9 @@ export default class SocketManager {
     }
     const strData = JSON.stringify({ state, source })
     for (const { socket, uid } of this.activeSockets) {
+      if (uid === skipUID) {
+        continue
+      }
       try {
         socket.send(strData)
       } catch (err) {
@@ -62,7 +65,7 @@ export default class SocketManager {
       const { action, value, state, source } = JSON.parse(str)
       if (state) {
         // console.log('should send', source || '---nostate:(', state)
-        this.sendAll(source, state)
+        this.sendAll(source, state, { skipUID: uid })
       }
       if (action && this[action]) {
         log('received action:', action)

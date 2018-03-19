@@ -165,8 +165,7 @@ class Bridge {
           changedStateStr = stringifyObject(changedState, 0, 2)
         } catch (err) {
           changedStateStr = `${changedState}`
-        }}
-
+        }
         console.log(
           `${this._source.replace('Store', '')}.setState(`,
           newState,

@@ -1,5 +1,5 @@
 import { store, react } from '@mcro/black/store'
-import { App, Desktop } from '@mcro/all'
+import { App } from '@mcro/all'
 import Icons from './icons'
 
 // plugins

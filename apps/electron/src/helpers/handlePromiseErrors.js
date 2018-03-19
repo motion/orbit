@@ -1,9 +1,7 @@
-process.on('unhandledRejection', function(error, p) {
-  console.log('Electron PromiseFail:')
+process.on('unhandledRejection', function(error) {
   if (error.stack) {
-    console.log(error.message)
-    console.log(error.stack)
+    console.log('Electron PromiseFail:', error.message, error.stack)
   } else {
-    console.log(error)
+    console.log('Electron PromiseFail:', error)
   }
 })

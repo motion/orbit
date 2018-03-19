@@ -29,7 +29,7 @@ export default class AppReactions {
       }
     },
     {
-      delay: 500,
+      delay: 300,
     },
   ]
 

@@ -74,6 +74,7 @@ export default class OrbitPage {
     if (Electron.orbitState.fullScreen) {
       orbitStyle.paddingRight = 0
     }
+    const { isShowingOrbit } = App
     return (
       <UI.Theme name="dark">
         <indicator
@@ -89,7 +90,12 @@ export default class OrbitPage {
             borderRightRadius: !towardsRight ? 5 : 0,
           }}
         />
-        <orbit css={orbitStyle} $orbitVisible={App.isShowingOrbit}>
+        <orbit
+          css={orbitStyle}
+          $orbitVisible={isShowingOrbit}
+          $offRight={!isShowingOrbit && towardsRight}
+          $offLeft={!isShowingOrbit && !towardsRight}
+        >
           {/* first is arrow (above), second is arrow shadow (below) */}
           <OrbitArrow
             if={App.isAttachedToWindow}
@@ -136,12 +142,25 @@ export default class OrbitPage {
       padding: SHADOW_PAD,
       pointerEvents: 'none !important',
       position: 'relative',
-      // transition: 'opacity ease-in 100ms',
+      transition: 'transform ease-in 100ms',
       opacity: 0,
+    },
+    offLeft: {
+      transform: {
+        x: -300,
+      },
+    },
+    offRight: {
+      transform: {
+        x: 300,
+      },
     },
     orbitVisible: {
       pointerEvents: 'all !important',
       opacity: 1,
+      transform: {
+        x: 0,
+      },
     },
     orbitTorn: {
       pointerEvents: 'all !important',

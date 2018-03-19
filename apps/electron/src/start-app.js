@@ -28,10 +28,6 @@ process.on('SIGUSR2', exitHandler)
 process.on('uncaughtException', err => {
   console.log('uncaughtException', err.stack)
 })
-process.on('unhandledRejection', function(reason, promise) {
-  console.log('Electron: Unhandled Rejection Promise ', promise, reason)
-  console.log(reason.stack)
-})
 
 // share state because node loads multiple copies
 extras.shareGlobalState()

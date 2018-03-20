@@ -167,8 +167,9 @@ export default class DebugApps {
           // delay to account for delayed title change on connect to debugger
           setTimeout(injectTitle, 500)
           // in iframe so simulate
-          await page.mouse.click(160, 10) // click console
-          await page.mouse.click(160, 70) // click into console
+          await sleep(50)
+          await page.mouse.click(110, 10) // click console
+          await page.mouse.click(110, 70) // click into console
           await page.keyboard.press('PageDown') // page down to bottom
         }
       }

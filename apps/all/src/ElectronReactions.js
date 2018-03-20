@@ -28,6 +28,23 @@ const SCREEN_PAD = 15
 
 @store
 export default class ElectronReactions {
+  // values
+
+  shouldRepositionAfterFullScreen = false
+
+  // side effects
+
+  @react
+  repositionAfterFullScreen = [
+    () => [Electron.orbitState.fullScreen, App.state.orbitHidden],
+    async ([fullScreen, hidden], { sleep }) => {
+      await sleep(App.animationDuration + 64)
+      if (hidden && !fullScreen) {
+        this.shouldRepositionAfterFullScreen = Date.now()
+      }
+    },
+  ]
+
   @react
   shouldTogglePinned = [
     () => [App.state.shouldTogglePinned, Desktop.state.shouldTogglePin],
@@ -156,12 +173,9 @@ export default class ElectronReactions {
     () => [
       appTarget(Desktop.state.appState || {}),
       Desktop.linesBoundingBox,
-      Electron.orbitState.fullScreen || App.isAnimatingOrbit,
+      this.shouldRepositionAfterFullScreen,
     ],
-    ([appBB, linesBB, fullScreen]) => {
-      if (fullScreen) {
-        return
-      }
+    ([appBB, linesBB]) => {
       // prefer using lines bounding box, fall back to app
       const box = linesBB || appBB
       if (!box) return

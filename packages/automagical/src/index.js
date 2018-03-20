@@ -429,7 +429,7 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
           })
           .catch(err => {
             if (err === RejectSleepSymbol) {
-              console.log(`Reaction cancelled`)
+              console.log(`Reaction cancelled [${id}]`)
             } else {
               throw err
             }

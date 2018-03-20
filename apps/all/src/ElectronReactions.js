@@ -111,13 +111,9 @@ export default class ElectronReactions {
         return
       }
       if (App.state.orbitHidden) {
-        let uid = Math.random()
-        console.log('hold uid', uid)
         await sleep(150)
-        console.log('CONTINUEINGSAASA')
         Electron.setShouldShow(Date.now())
         await sleep(3500)
-        console.log(`CONTINUE`, uid)
         Electron.setPinned(true)
       }
     },

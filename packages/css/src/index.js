@@ -177,7 +177,7 @@ export default function motionStyle(options: Object = {}) {
     const toReturn = {}
     const shouldSnake = !opts || opts.snakeCase !== false
     if (!styles || typeof styles !== 'object') {
-      throw new Error(`No styles given: ${styles}`)
+      return toReturn
     }
     for (let key of Object.keys(styles)) {
       let value = styles[key]

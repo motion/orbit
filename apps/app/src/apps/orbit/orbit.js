@@ -50,29 +50,19 @@ export default class OrbitPage {
     const towardsRight = arrowTowards === 'right'
     const arrowSize = 28
     let arrowStyle
-    let orbitStyle
     switch (arrowTowards) {
       case 'right':
-        orbitStyle = {
-          // marginRight: -4,
-        }
         arrowStyle = {
           top: 53,
           right: SHADOW_PAD - arrowSize,
         }
         break
       case 'left':
-        orbitStyle = {
-          // marginLeft: -2,
-        }
         arrowStyle = {
           top: 53,
           left: -3,
         }
         break
-    }
-    if (Electron.orbitState.fullScreen) {
-      orbitStyle.paddingRight = 0
     }
     const { isShowingOrbit } = App
     return (
@@ -91,10 +81,11 @@ export default class OrbitPage {
           }}
         />
         <orbit
-          css={orbitStyle}
+          css={{
+            paddingRight: Electron.orbitState.fullScreen ? 0 : SHADOW_PAD,
+          }}
+          $orbitStyle={[isShowingOrbit, towardsRight]}
           $orbitVisible={isShowingOrbit}
-          $offRight={!isShowingOrbit && towardsRight}
-          $offLeft={!isShowingOrbit && !towardsRight}
         >
           {/* first is arrow (above), second is arrow shadow (below) */}
           <OrbitArrow
@@ -142,22 +133,23 @@ export default class OrbitPage {
       padding: SHADOW_PAD,
       pointerEvents: 'none !important',
       position: 'relative',
-      transition: 'transform ease-in 100ms',
+      transition: 'all ease-in 80ms',
       opacity: 0,
     },
-    offLeft: {
-      transform: {
-        x: -300,
-      },
-    },
-    offRight: {
-      transform: {
-        x: 300,
-      },
+    orbitStyle: ([isShowing, towardsRight]) => {
+      if (!isShowing) {
+        return {
+          marginRight: towardsRight ? SHADOW_PAD : -SHADOW_PAD,
+          transform: {
+            x: towardsRight ? 50 : -50,
+          },
+        }
+      }
     },
     orbitVisible: {
       pointerEvents: 'all !important',
       opacity: 1,
+      marginRight: 0,
       transform: {
         x: 0,
       },

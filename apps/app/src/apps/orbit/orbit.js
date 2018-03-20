@@ -159,7 +159,7 @@ export default class OrbitPage {
         return {
           marginRight: towardsRight ? SHADOW_PAD : -SHADOW_PAD,
           transform: {
-            x: towardsRight ? 50 : -50,
+            x: towardsRight ? 25 : -25,
           },
         }
       }

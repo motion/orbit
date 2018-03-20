@@ -136,13 +136,12 @@ export default class DebugApps {
         if (!page) continue
         if (page.url() !== debugUrl) {
           await Promise.all([
+            page.goto(debugUrl),
             page.waitForNavigation({
               timeout: 0,
               waitUntil: 'domcontentloaded',
             }),
-            page.goto(debugUrl),
           ])
-          await sleep(100)
           if (!this.pages[index]) continue
           const injectTitle = debounce(() => {
             // TODO can restart app on browser refresh here if wanted
@@ -168,8 +167,8 @@ export default class DebugApps {
           // delay to account for delayed title change on connect to debugger
           setTimeout(injectTitle, 500)
           // in iframe so simulate
-          await page.mouse.click(110, 10) // click console
-          await page.mouse.click(110, 70) // click into console
+          await page.mouse.click(160, 10) // click console
+          await page.mouse.click(160, 70) // click into console
           await page.keyboard.press('PageDown') // page down to bottom
         }
       }

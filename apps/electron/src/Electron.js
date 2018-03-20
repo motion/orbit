@@ -9,6 +9,7 @@ import PeekWindow from './views/PeekWindow'
 import OrbitWindow from './views/OrbitWindow'
 import ShortcutsStore from '~/stores/shortcutsStore'
 import global from 'global'
+import { memoize } from 'lodash'
 
 const log = debug('Electron')
 
@@ -18,6 +19,7 @@ const log = debug('Electron')
     appRef = null
     stores = null
     views = null
+    peekRefs = {}
 
     willMount() {
       global.Root = this
@@ -43,6 +45,16 @@ const log = debug('Electron')
         shouldShow => shouldShow && this.appRef.show(),
       )
     }
+
+    handlePeekRef = memoize(peek => ref => {
+      if (!ref) return
+      if (this.peekRefs[peek.key]) return
+      this.peekRefs[peek.key] = ref.window
+      // make sure its in front of the ora window
+      if (!peek.isTorn) {
+        this.peekRefs[peek.key].focus()
+      }
+    })
 
     watchOptionPress = () => {
       this.shortcutStore = new ShortcutsStore([

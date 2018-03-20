@@ -51,38 +51,25 @@ const peekPosition = (target: PeekTarget) => {
       peekW = rightSpace
     }
   }
+  // why is this offset already?
+  x += peekOnLeft ? PAD * 2 : 0
   if (peekH + y + EDGE_PAD > screenH) {
     log(`too tall`)
     y = screenH - EDGE_PAD - peekH
   }
   return {
-    position: [Math.round(x) + 15, Math.round(y)],
+    position: [Math.round(x), Math.round(y)],
     size: [peekW, peekH],
     arrowTowards: peekOnLeft ? 'right' : 'left',
   }
 }
 
-@view.provide({
-  store: class PeekStore {
-    peekRefs = {}
-
-    handlePeekRef = memoize(peek => ref => {
-      if (!ref) return
-      if (this.peekRefs[peek.key]) return
-      this.peekRefs[peek.key] = ref.window
-      // make sure its in front of the ora window
-      if (!peek.isTorn) {
-        this.peekRefs[peek.key].focus()
-      }
-    })
-  },
-})
+@view.attach('electronStore')
 @view.electron
 export default class PeekWindow {
   // ui related state/functionality
   peekKey = 0
   mounted = false
-  isAnimatingPeek = true
 
   componentWillMount() {
     Electron.setPeekState({
@@ -120,19 +107,11 @@ export default class PeekWindow {
           return
         }
         Electron.updatePeek(Electron.currentPeek, peek => {
-          let { position, size, arrowTowards } = peekPosition(
-            peekTarget.position,
-          )
-          position[0] += arrowTowards === 'right' ? PAD : -PAD
-          peek.position = position
-          peek.size = size
-          peek.arrowTowards = arrowTowards
+          Object.assign(peek, peekPosition(peekTarget.position))
         })
       },
     )
   }
-
-  peekSend = () => console.log('peekSend, not started yet')
 
   handleReadyToShow = memoize(peek => () => {
     if (!peek.show) {
@@ -179,7 +158,7 @@ export default class PeekWindow {
     // Electron.setPeekState({ windows })
   }
 
-  render({ store }) {
+  render({ electronStore }) {
     const peekWindows = Mobx.toJS(Electron.peekState.windows)
     return (
       <React.Fragment>
@@ -189,7 +168,6 @@ export default class PeekWindow {
           return (
             <Window
               key={peek.key}
-              focusable={false}
               showDevTools={
                 isAttached
                   ? Electron.state.showDevTools.peek
@@ -199,7 +177,7 @@ export default class PeekWindow {
               animatePosition={App.isShowingPeek && App.wasShowingPeek}
               show={peek.show}
               file={`${Constants.APP_URL}/peek?key=${peek.key}`}
-              ref={isAttached ? store.handlePeekRef(peek) : idFn}
+              ref={isAttached ? electronStore.handlePeekRef(peek) : idFn}
               onReadyToShow={this.handleReadyToShow(peek)}
               {...windowProps}
               size={peek.size}

@@ -10,7 +10,10 @@ import PeekContents from './peekContents'
 // const KEY = keyParam && keyParam[1]
 const SHADOW_PAD = 15
 const background = '#fff'
-const peekShadow = [[0, 0, SHADOW_PAD, [0, 0, 0, 0.3]]]
+const peekShadow = [
+  [0, 0, SHADOW_PAD, [0, 0, 0, 0.2]],
+  [0, 0, 0, 1, [0, 0, 0, 0.05]],
+]
 // const log = debug('peek')
 const borderRadius = 8
 
@@ -19,7 +22,7 @@ export default class PeekPage {
   render() {
     const { orbit } = Electron
     const arrowTowards = (orbit && orbit.arrowTowards) || 'right'
-    const arrowSize = 28
+    const arrowSize = 24
     let arrowStyle
     let peekStyle
     switch (arrowTowards) {
@@ -83,6 +86,7 @@ export default class PeekPage {
             }}
           >
             <PeekHeader />
+            {arrowTowards}
             <PeekContents if={Electron.currentPeek} />
           </content>
         </peek>

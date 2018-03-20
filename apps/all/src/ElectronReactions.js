@@ -36,10 +36,10 @@ export default class ElectronReactions {
 
   @react
   repositionAfterFullScreen = [
-    () => [Electron.orbitState.fullScreen, App.state.orbitHidden],
-    async ([fullScreen, hidden], { sleep }) => {
+    () => [App.state.orbitHidden, Electron.orbitState.fullScreen],
+    async ([hidden], { sleep }) => {
       await sleep(App.animationDuration + 64)
-      if (hidden && !fullScreen) {
+      if (hidden) {
         this.shouldRepositionAfterFullScreen = Date.now()
       }
     },

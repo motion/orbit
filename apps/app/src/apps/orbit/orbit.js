@@ -48,7 +48,7 @@ export default class OrbitPage {
   render({ orbitStore }) {
     const arrowTowards = Electron.orbitState.arrowTowards || 'right'
     const towardsRight = arrowTowards === 'right'
-    const arrowSize = 28
+    const arrowSize = 24
     let arrowStyle
     switch (arrowTowards) {
       case 'right':
@@ -60,7 +60,7 @@ export default class OrbitPage {
       case 'left':
         arrowStyle = {
           top: 53,
-          left: -3,
+          left: 1,
         }
         break
     }
@@ -99,9 +99,11 @@ export default class OrbitPage {
                 boxShadow: Electron.orbitState.fullScreen
                   ? orbitShadow
                   : orbitLightShadow,
-                borderRightRadius: Electron.orbitState.fullScreen
-                  ? 0
-                  : BORDER_RADIUS,
+                borderLeftRadius: towardsRight ? BORDER_RADIUS : 0,
+                borderRightRadius:
+                  Electron.orbitState.fullScreen || towardsRight
+                    ? 0
+                    : BORDER_RADIUS,
               }}
             >
               <OrbitHeader />
@@ -145,7 +147,10 @@ export default class OrbitPage {
       padding: SHADOW_PAD,
       pointerEvents: 'none !important',
       position: 'relative',
-      transition: `transform ease-in ${App.animationDuration}ms`,
+      transition: `
+        transform linear ${App.animationDuration}ms,
+        opacity linear ${App.animationDuration}ms
+      `,
       opacity: 0,
       // background: 'red',
     },
@@ -178,7 +183,6 @@ export default class OrbitPage {
       flex: 1,
       // border: [1, 'transparent'],
       background,
-      borderRadius: BORDER_RADIUS,
       overflow: 'hidden',
       opacity: 1,
       position: 'relative',

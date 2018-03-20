@@ -56,7 +56,7 @@ const peekPosition = (target: PeekTarget) => {
     y = screenH - EDGE_PAD - peekH
   }
   return {
-    position: [Math.round(x), Math.round(y)],
+    position: [Math.round(x) + 15, Math.round(y)],
     size: [peekW, peekH],
     arrowTowards: peekOnLeft ? 'right' : 'left',
   }

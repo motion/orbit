@@ -103,11 +103,15 @@ class ElectronStore {
     Electron.setPeekState({ windows })
   }
 
+  shouldShow = () => Electron.setShouldShow(Date.now())
+  shouldHide = () => Electron.setShouldHide(Date.now())
+  shouldPause = () => Electron.setShouldPause(Date.now())
+
   toggleVisible = () => {
     if (App.state.orbitHidden) {
-      this.setState({ shouldShow: Date.now() })
+      this.shouldShow()
     } else {
-      this.setState({ shouldHide: Date.now() })
+      this.shouldHide()
     }
   }
 
@@ -120,7 +124,11 @@ class ElectronStore {
   }
 
   toggleFullScreen = () => {
-    this.setFullScreen(!Electron.orbitState.fullScreen)
+    if (Electron.orbitState.fullScreen) {
+      this.shouldHide()
+    } else {
+      this.setFullScreen(true)
+    }
   }
 
   setFullScreen = fullScreen => {

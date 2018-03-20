@@ -79,13 +79,17 @@ export default class OrbitPage {
             borderRightRadius: !towardsRight ? 5 : 0,
           }}
         />
-        <overflowWrap $shouldHide={!App.isShowingOrbit || App.isAnimatingOrbit}>
+        <overflowWrap
+          $avoidPad={Electron.orbitState.fullScreen}
+          $shouldHide={!App.isShowingOrbit || App.isAnimatingOrbit}
+        >
           <orbit
             css={{
               paddingRight: Electron.orbitState.fullScreen ? 0 : SHADOW_PAD,
             }}
             $orbitStyle={[App.isShowingOrbit, towardsRight]}
             $orbitVisible={App.isShowingOrbit}
+            $orbitFullScreen={Electron.orbitState.fullScreen}
           >
             {/* first is arrow (above), second is arrow shadow (below) */}
             <OrbitArrow
@@ -140,8 +144,11 @@ export default class OrbitPage {
     shouldHide: {
       overflow: 'hidden',
     },
+    avoidPad: {
+      right: 0,
+    },
     orbit: {
-      right: -15,
+      right: -SHADOW_PAD,
       width: 330,
       height: '100%',
       padding: SHADOW_PAD,
@@ -171,6 +178,10 @@ export default class OrbitPage {
       transform: {
         x: 0,
       },
+    },
+    orbitFullScreen: {
+      width: '100%',
+      right: 0,
     },
     orbitTorn: {
       pointerEvents: 'all !important',

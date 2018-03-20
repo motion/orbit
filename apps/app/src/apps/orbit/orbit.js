@@ -39,13 +39,40 @@ const OrbitArrow = ({ arrowSize, arrowTowards, arrowStyle }) =>
     />
   ))
 
+class OrbitPageStore {
+  isDragging = false
+  adjustHeight = 0
+
+  willMount() {
+    this.on(window, 'mousemove', e => {
+      if (!this.isDragging) return
+      const adjustHeight = Math.min(
+        window.innerHeight - e.clientY - SHADOW_PAD * 2,
+        window.innerHeight - 300, // no less than 300
+      )
+      console.log(adjustHeight)
+      this.adjustHeight = adjustHeight
+    })
+
+    this.on(window, 'mouseup', () => {
+      this.isDragging = false
+    })
+  }
+
+  barMouseDown = () => {
+    this.isDragging = true
+  }
+}
+
 @view.provide({
   orbitStore: OrbitStore,
 })
 @view.attach('orbitStore')
-@view
+@view({
+  orbitPage: OrbitPageStore,
+})
 export default class OrbitPage {
-  render({ orbitStore }) {
+  render({ orbitStore, orbitPage }) {
     const arrowTowards = Electron.orbitState.arrowTowards || 'right'
     const towardsRight = arrowTowards === 'right'
     const arrowSize = 24
@@ -87,6 +114,7 @@ export default class OrbitPage {
             css={{
               paddingRight: Electron.orbitState.fullScreen ? 0 : SHADOW_PAD,
             }}
+            $orbitHeight={orbitPage.adjustHeight}
             $orbitStyle={[App.isShowingOrbit, towardsRight]}
             $orbitVisible={App.isShowingOrbit}
             $orbitFullScreen={Electron.orbitState.fullScreen}
@@ -131,27 +159,36 @@ export default class OrbitPage {
                   bottom: 0,
                   left: 0,
                   right: 0,
+                  paddingTop: 40,
                   alignItems: 'center',
                   justifyContent: 'center',
                   flexFlow: 'row',
                   zIndex: 1000,
                   borderBottomRadius: BORDER_RADIUS,
+                  overflow: 'hidden',
                 }}
               >
                 <fade
-                  $$fullscreen
-                  css={{ background: `linear-gradient(transparent, #000)` }}
+                  css={{
+                    position: 'absolute',
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    top: 0,
+                    background: `linear-gradient(transparent, #111 80%)`,
+                  }}
                 />
                 <bar
                   css={{
-                    alignSelf: 'center',
                     flex: 1,
                     margin: 20,
-                    height: 6,
+                    height: 5,
                     borderRadius: 100,
                     background: [255, 255, 255, 0.1],
                     zIndex: 10,
+                    cursor: 'ns-resize',
                   }}
+                  onMouseDown={orbitPage.barMouseDown}
                 />
               </expand>
             </content>
@@ -179,7 +216,6 @@ export default class OrbitPage {
     orbit: {
       right: -SHADOW_PAD,
       width: 330,
-      height: '100%',
       padding: SHADOW_PAD,
       pointerEvents: 'none !important',
       position: 'relative',
@@ -189,6 +225,16 @@ export default class OrbitPage {
       `,
       opacity: 0,
       // background: 'red',
+    },
+    orbitHeight: adjust => {
+      if (!adjust) {
+        return {
+          height: '100%',
+        }
+      }
+      return {
+        height: `calc(100% - ${adjust}px)`,
+      }
     },
     orbitStyle: ([isShowing, towardsRight]) => {
       if (!isShowing) {
@@ -229,7 +275,7 @@ export default class OrbitPage {
     },
     controls: {
       position: 'absolute',
-      bottom: 15,
+      bottom: 35,
       right: 12,
       zIndex: 10000,
       opacity: 0.2,

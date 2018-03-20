@@ -80,8 +80,8 @@ export default class OrbitPage {
           }}
         />
         <overflowWrap
-          $avoidPad={Electron.orbitState.fullScreen}
-          $shouldHide={!App.isShowingOrbit || App.isAnimatingOrbit}
+          $unPad={Electron.orbitState.fullScreen}
+          $hideOverflow={!App.isShowingOrbit || App.isAnimatingOrbit}
         >
           <orbit
             css={{
@@ -141,10 +141,10 @@ export default class OrbitPage {
       right: 15,
       position: 'relative',
     },
-    shouldHide: {
+    hideOverflow: {
       overflow: 'hidden',
     },
-    avoidPad: {
+    unPad: {
       right: 0,
     },
     orbit: {

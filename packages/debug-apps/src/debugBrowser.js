@@ -3,9 +3,9 @@ import puppeteer from 'puppeteer'
 import { debounce, uniq, flatten, isEqual } from 'lodash'
 const sleep = ms => new Promise(res => setTimeout(res, ms))
 
-// import getExtensions from '@mcro/chrome-extensions'
-// const extNames = getExtensions(['mobx', 'react'])
-// const extensions = extNames.map(ext => `--load-extension=${ext}`)
+import getExtensions from '@mcro/chrome-extensions'
+const extNames = getExtensions(['mobx', 'react'])
+const extensions = extNames.map(ext => `--load-extension=${ext}`)
 
 // quiet exit handling
 let exiting = false
@@ -41,8 +41,10 @@ export default class DebugApps {
       args: [
         `--window-size=${800},${680}`,
         `--no-startup-window`,
-        // `--disable-extensions-except=${extNames.join(',')}`,
-        // ...extensions,
+        // `--enable-slim-navigation-manager`,
+        // `--top-controls-hide-threshold=0.5`,
+        `--disable-extensions-except=${extNames.join(',')}`,
+        ...extensions,
       ],
     })
     this.renderLoop()
@@ -167,8 +169,9 @@ export default class DebugApps {
           // delay to account for delayed title change on connect to debugger
           setTimeout(injectTitle, 500)
           // in iframe so simulate
-          await page.mouse.click(160, 10) // click console
-          await page.mouse.click(160, 70) // click into console
+          await sleep(50)
+          await page.mouse.click(110, 10) // click console
+          await page.mouse.click(110, 70) // click into console
           await page.keyboard.press('PageDown') // page down to bottom
         }
       }

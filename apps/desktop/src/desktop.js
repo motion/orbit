@@ -65,7 +65,7 @@ export default class DesktopRoot {
     this.react(
       () => App.state.openResult,
       result => {
-        if (result.id) {
+        if (result && result.id) {
           open(result.id)
         }
       },

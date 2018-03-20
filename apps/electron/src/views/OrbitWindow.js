@@ -38,6 +38,9 @@ class OrbitWindowStore {
   watchMouseForOrbitFocus = [
     () => Electron.orbitState.mouseOver || Electron.peekState.mouseOver,
     mouseOver => {
+      if (Electron.orbitState.pinned || Electron.orbitState.fullScreen) {
+        return
+      }
       if (mouseOver) {
         this.focusOrbit()
       } else {

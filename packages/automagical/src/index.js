@@ -10,6 +10,8 @@ import debug from '@mcro/debug'
 let id = 0
 const uid = () => id++ % Number.MAX_VALUE
 
+global.__trackStateChanges = {}
+
 const log = debug('>')
 const RejectSleepSymbol = Symbol('REJECT_SLEEP')
 
@@ -380,14 +382,14 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
   let reactionID
 
   function watcher(reactionFn) {
-    const name = `${getReactionName(obj)}.${method}`
-
     return function watcherCb(reactVal) {
+      const name = `${getReactionName(obj)}.${method}`
       reactionID = uid()
       // cancels on new reactions
       if (rejectSleep) {
         rejectSleep()
       }
+      global.__trackStateChanges.isActive = true
       const reactionResult = reactionFn.call(
         obj,
         isReaction ? reactVal : obj.props,
@@ -395,7 +397,9 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
           preventLogging: () => (preventLog = true),
           // allows setting multiple values in a reaction
           setValue: val => {
-            log(`${name}.setValue(`, val, `)`)
+            if (!preventLog) {
+              log(`${name}.setValue(`, val, `)`)
+            }
             update(val)
           },
           // allows delaying in a reaction, with automatic clearing on new reaction
@@ -411,6 +415,8 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
           },
         },
       )
+      const changed = global.__trackStateChanges.changed
+      global.__trackStateChanges = {}
       // handle promises
       if (reactionResult instanceof Promise) {
         const id = reactionID
@@ -429,7 +435,7 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
           })
           .catch(err => {
             if (err === RejectSleepSymbol) {
-              console.log(`Reaction cancelled`)
+              console.log(`Reaction cancelled [${id}]`)
             } else {
               throw err
             }
@@ -439,8 +445,15 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
       // store result as observable
       result = valueToObservable(reactionResult)
       if (!preventLog) {
-        if (isReaction) {
-          log(`${name}(`, reactVal, `)`, ...logRes(result))
+        if (isReaction && changed) {
+          log(
+            `${name}(`,
+            reactVal,
+            `)`,
+            ...logRes(result),
+            `\n  changed:`,
+            changed,
+          )
         }
       }
       const observableLike = isObservableLike(result)

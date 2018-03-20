@@ -303,6 +303,7 @@ body {
   height: 100%;
   overflow: hidden;
   pointer-events: none;
+  background: transparent;
 }
 
 #app {

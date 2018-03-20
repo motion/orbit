@@ -96,6 +96,13 @@ class ElectronStore {
     }
   }
 
+  updatePeek = (peek, cb) => {
+    const windows = Electron.peekState.windows.slice(0)
+    const nextPeek = windows.find(x => x.key === peek.key)
+    cb(nextPeek)
+    Electron.setPeekState({ windows })
+  }
+
   toggleVisible = () => {
     if (App.state.orbitHidden) {
       this.setState({ shouldShow: Date.now() })

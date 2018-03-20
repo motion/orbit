@@ -98,7 +98,7 @@ export default class KeyboardStore {
       // be sure its a fast action not slow
       clearLastKeys = setTimeout(() => {
         this.lastKeys = []
-      }, 350)
+      }, 150)
     })
   }
 

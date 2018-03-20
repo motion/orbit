@@ -6,13 +6,13 @@ import ControlButton from '~/views/controlButton'
 
 @view
 export default class PeekHeader {
-  render({ store }) {
+  render() {
     return (
       <header $$draggable>
-        <buttons $$row if={store.isTorn} css={{ marginRight: 14 }}>
-          <ControlButton icon="x" store={store} />
-          <ControlButton icon="y" store={store} background="#F6BE4F" />
-          <ControlButton icon="z" store={store} background="#62C554" />
+        <buttons $$row css={{ marginRight: 14 }}>
+          <ControlButton icon="x" />
+          <ControlButton icon="y" background="#F6BE4F" />
+          <ControlButton icon="z" background="#62C554" />
         </buttons>
         <title>
           <UI.Row
@@ -35,12 +35,7 @@ export default class PeekHeader {
               },
             }}
           >
-            <UI.Button
-              if={false}
-              icon="pin"
-              onClick={store.ref('isPinned').toggle}
-              highlight={store.isTorn || store.isPinned}
-            />
+            <UI.Button if={false} icon="pin" highlight />
           </UI.Row>
         </title>
       </header>

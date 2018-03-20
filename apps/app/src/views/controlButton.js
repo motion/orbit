@@ -12,9 +12,9 @@ const icons = {
 
 @view
 export default class ControlButton {
-  render({ store, background = '#ED6A5F', icon }) {
+  render({ background = '#ED6A5F', icon }) {
     return (
-      <controlButton onClick={store.closePeek} css={{ background }}>
+      <controlButton css={{ background }}>
         <img src={icons[icon]} />
       </controlButton>
     )

@@ -36,12 +36,12 @@ const refs = {}
 @view
 export default class OrbitContent {
   componentDidMount() {
-    this.react(
-      () => this.props.orbitStore.selectedIndex,
-      index => {
-        console.log('selected index', index, refs[index])
-      },
-    )
+    // this.react(
+    //   () => this.props.orbitStore.selectedIndex,
+    //   index => {
+    //     console.log('selected index', index, refs[index])
+    //   },
+    // )
   }
 
   onRef = index => ref => {

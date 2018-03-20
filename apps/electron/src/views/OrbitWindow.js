@@ -8,41 +8,55 @@ import * as Mobx from 'mobx'
 
 const log = debug('OrbitWindow')
 
-@view.provide({
-  store: class OrbitStore {
-    orbitRef = null
+class OrbitWindowStore {
+  orbitRef = null
 
-    @react
-    watchFullScreenForFocus = [
-      () => Electron.orbitState.fullScreen,
-      fullScreen => {
-        if (!fullScreen) return
-        // focus orbit window
-        if (this.orbitRef) {
-          this.orbitRef.focus()
-        }
-      },
-    ]
+  get peekWindow() {
+    return this.props.electronStore.peekRefs[0]
+  }
 
-    @react
-    watchMouseForOrbitFocus = [
-      () => Electron.orbitState.mouseOver || Electron.peekState.mouseOver,
-      mouseOver => {
-        if (mouseOver) {
-          this.orbitRef && this.orbitRef.focus()
-        } else {
-          Swift.defocus()
-        }
-      },
-    ]
-
-    handleOrbitRef = ref => {
-      if (!ref) return
-      if (this.orbitRef) return
-      this.orbitRef = ref.window
-      this.orbitRef.focus() // puts it above highlights
+  focusOrbit = () => {
+    if (this.orbitRef) {
+      this.orbitRef.focus()
     }
-  },
+    // then focus peek next so its above
+    if (this.peekWindow) {
+      this.peekWindow.focus()
+    }
+  }
+
+  @react
+  watchFullScreenForFocus = [
+    () => Electron.orbitState.fullScreen,
+    fullScreen => {
+      if (!fullScreen) return
+      this.focusOrbit()
+    },
+  ]
+
+  @react
+  watchMouseForOrbitFocus = [
+    () => Electron.orbitState.mouseOver || Electron.peekState.mouseOver,
+    mouseOver => {
+      if (mouseOver) {
+        this.focusOrbit()
+      } else {
+        Swift.defocus()
+      }
+    },
+  ]
+
+  handleOrbitRef = ref => {
+    if (!ref) return
+    if (this.orbitRef) return
+    this.orbitRef = ref.window
+    this.focusOrbit()
+  }
+}
+
+@view.attach('electronStore')
+@view.provide({
+  store: OrbitWindowStore,
 })
 @view.electron
 export default class OrbitWindow extends React.Component {

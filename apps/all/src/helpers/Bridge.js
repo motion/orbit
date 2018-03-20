@@ -160,16 +160,11 @@ class Bridge {
     }
     if (Object.keys(changedState).length) {
       if (process.env.NODE_ENV === 'development') {
-        let changedStateStr
-        try {
-          changedStateStr = stringifyObject(changedState, 0, 2)
-        } catch (err) {
-          changedStateStr = `${changedState}`
-        }
         console.log(
           `${this._source.replace('Store', '')}.setState(`,
           newState,
-          `) => (changed) ${changedStateStr}`,
+          `) =>`,
+          changedState,
         )
       }
       this._socket.send(
@@ -208,7 +203,12 @@ class Bridge {
             }
           })
           stateObj[key] = newState
-          changed[key] = newState
+          // minimal change diff
+          const diff = {}
+          for (const key of Object.keys(newVal)) {
+            diff[key] = Mobx.toJS(newState[key])
+          }
+          changed[key] = diff
         } else {
           stateObj[key] = newVal
           changed[key] = newVal

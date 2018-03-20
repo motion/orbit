@@ -6,38 +6,23 @@ import { App, Electron } from '@mcro/all'
 import PeekHeader from './peekHeader'
 import PeekContents from './peekContents'
 
-const keyParam = (window.location.search || '').match(/key=(.*)/)
-const KEY = keyParam && keyParam[1]
+// const keyParam = (window.location.search || '').match(/key=(.*)/)
+// const KEY = keyParam && keyParam[1]
 const SHADOW_PAD = 15
 const background = '#fff'
-const peekShadow = [[0, 0, SHADOW_PAD, [0, 0, 0, 0.3]]]
-const log = debug('peek')
+const peekShadow = [
+  [0, 0, SHADOW_PAD, [0, 0, 0, 0.2]],
+  [0, 0, 0, 1, [0, 0, 0, 0.05]],
+]
+// const log = debug('peek')
 const borderRadius = 8
 
-@view({
-  store: class PeekStore {
-    isTorn = false
-
-    @watch
-    watchTear = () => {
-      if (this.isTorn) return
-      const { orbitState } = Electron
-      if (orbitState && orbitState.isTorn) {
-        log('tearing!', orbitState)
-        this.isTorn = true
-      }
-    }
-
-    closePeek = () => {
-      App.setClosePeek(KEY)
-    }
-  },
-})
+@view
 export default class PeekPage {
-  render({ store }) {
+  render() {
     const { orbit } = Electron
     const arrowTowards = (orbit && orbit.arrowTowards) || 'right'
-    const arrowSize = 28
+    const arrowSize = 24
     let arrowStyle
     let peekStyle
     switch (arrowTowards) {
@@ -74,7 +59,7 @@ export default class PeekPage {
           {/* first is arrow (above), second is arrow shadow (below) */}
           {[1, 2].map(key => (
             <UI.Arrow
-              if={false && !store.isTorn}
+              if={!Electron.orbitState.fullScreen}
               key={key}
               size={arrowSize}
               towards={arrowTowards}
@@ -100,7 +85,8 @@ export default class PeekPage {
               borderLeftRadius: towardsRight ? 0 : borderRadius,
             }}
           >
-            <PeekHeader store={store} />
+            <PeekHeader />
+            {arrowTowards}
             <PeekContents if={Electron.currentPeek} />
           </content>
         </peek>
@@ -115,7 +101,7 @@ export default class PeekPage {
       height: '100%',
       padding: SHADOW_PAD,
       pointerEvents: 'none !important',
-      transition: 'opacity ease-in 100ms',
+      // transition: 'opacity ease-in 100ms',
       opacity: 0,
       position: 'relative',
       flex: 1,

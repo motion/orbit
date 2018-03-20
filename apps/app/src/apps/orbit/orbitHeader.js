@@ -26,6 +26,14 @@ class HeaderStore {
   headerStore: HeaderStore,
 })
 export default class PeekHeader {
+  handleKeyDown = e => {
+    // up/down
+    const { keyCode } = e
+    if (keyCode === 38 || keyCode === 40) {
+      e.preventDefault()
+    }
+  }
+
   render({ orbitStore, headerStore }) {
     return (
       <header $$draggable $headerVisible={App.isShowingHeader}>
@@ -38,6 +46,7 @@ export default class PeekHeader {
             borderWidth={0}
             background="#222"
             onChange={orbitStore.onChangeQuery}
+            onKeyDown={this.handleKeyDown}
             getRef={headerStore.ref('inputRef').set}
           />
         </title>

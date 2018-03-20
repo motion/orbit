@@ -48,5 +48,6 @@ module.exports = {
     debug: true,
     Reflect: true,
     Proxy: true,
+    Symbol: true,
   },
 }

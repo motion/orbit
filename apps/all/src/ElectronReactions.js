@@ -51,13 +51,23 @@ export default class ElectronReactions {
     hid => hid && Electron.setOrbitState({ fullScreen: false }),
   ]
 
-  // TODO: defocus fullscreen when click away
   @react
   unFullScreenOnDefocus = [
     () => Desktop.state.appState,
-    appState => {
-      console.log('Desktop.state.appState', Desktop.state.appState)
-      // Electron.setOrbitState({ fullScreen: false })
+    () => {
+      if (Electron.orbitState.fullScreen) {
+        Electron.setOrbitState({ fullScreen: false })
+      }
+    },
+  ]
+
+  @react
+  hideOnEsc = [
+    () => Desktop.state.keyboard.esc,
+    () => {
+      if (Electron.orbitState.fullScreen) {
+        Electron.setOrbitState({ fullScreen: false, shouldHide: true })
+      }
     },
   ]
 
@@ -165,19 +175,4 @@ export default class ElectronReactions {
     },
     true,
   ]
-
-  // option tap to clear if open
-  // let lastDown = 0
-  // this.react(
-  //   () => Desktop.isHoldingOption,
-  //   holding => {
-  //     const justTapped = !holding && Date.now() - lastDown < 100
-  //     if (justTapped) {
-  //       Electron.setState({ shouldHide: Date.now() })
-  //     }
-  //     if (holding) {
-  //       lastDown = Date.now()
-  //     }
-  //   },
-  // )
 }

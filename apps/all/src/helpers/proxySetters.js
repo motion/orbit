@@ -1,9 +1,6 @@
-const log = debug('Bridge')
-
 const getStateKey = key => {
   let unSet = `${key.replace('set', '')}`
   const unCapital = `${unSet[0].toLowerCase()}${unSet.slice(1)}`
-  console.log('unCapital', unCapital)
   return unCapital
 }
 
@@ -17,7 +14,6 @@ export default function decorateProxySetters(klass) {
         const stateKey = getStateKey(method)
         if (typeof target.state[stateKey] !== 'undefined') {
           return nextState => {
-            log(`${target.constructor.name}.${method}(`, nextState, `)`)
             return target.setState({ [stateKey]: nextState })
           }
         } else {

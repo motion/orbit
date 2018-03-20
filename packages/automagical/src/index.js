@@ -8,6 +8,7 @@ import * as Helpers from '@mcro/helpers'
 import debug from '@mcro/debug'
 
 const log = debug('>')
+const RejectSleepSymbol = Symbol('REJECT_SLEEP')
 
 if (module && module.hot) {
   module.hot.accept('.', _ => _) // prevent aggressive hmrs
@@ -129,11 +130,25 @@ function mobxifyPromise(obj, method, val) {
   })
 }
 
+function mobxifyRxObservable(obj, method) {
+  const value = obj[method]
+  const observable = Mobx.observable.box(undefined)
+  const stream = value.subscribe(res => {
+    observable.set(res)
+  })
+  obj.subscriptions.add(() => stream.unsubscribe())
+  Object.defineProperty(obj, method, {
+    get() {
+      return observable.get()
+    },
+  })
+}
+
 function mobxifyRxQuery(obj, method) {
   const value = obj[method]
   const observable = Mobx.observable.box(undefined)
   const runObservable = () => {
-    const stream = value.$.subscribe(res => {
+    const stream = value.subscribe(res => {
       observable.set(res)
     })
     obj.subscriptions.add(() => stream.unsubscribe())
@@ -153,12 +168,6 @@ function mobxifyRxQuery(obj, method) {
 // TODO use rxdb api
 function isRxDbQuery(query: any): boolean {
   return query && (query.isntConnected || !!query.mquery)
-}
-
-function mobxifyRxObservable(obj, method, val) {
-  const stream = fromStream(val || obj[method])
-  Mobx.extendShallowObservable(obj, { [method]: stream })
-  obj.subscriptions.add(stream)
 }
 
 type MagicalObject = {
@@ -342,17 +351,15 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
   }
 
   const isReaction = Array.isArray(val)
-  let preventLog = false
-  let timeoutActive = false
 
   function run() {
     if (disposed) {
-      console.log('avoiding work', method)
+      // this avoids work/bugs by cancelling reactions after disposed
       return
     }
     if (isReaction) {
       // reaction
-      const options = Helpers.getReactionOptions(val[3])
+      const options = Helpers.getReactionOptions(val[2])
       stopReaction = Mobx.reaction(val[0], watcher(val[1]), {
         // pass name to reaction for debugging
         name: method,
@@ -364,41 +371,56 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
     }
   }
 
-  function watcher(val) {
-    let value = val
+  // state used outside each watch/reaction
+  let preventLog = false
+  let rejectSleep
+  let reactionID
 
+  function watcher(reactionFn) {
     return function watcherCb(reactionValue) {
+      reactionID = Math.random()
       // cancels on new reactions
-      timeoutActive = false
-      const reactionResult = value.call(
+      if (rejectSleep) {
+        rejectSleep()
+      }
+      const reactionResult = reactionFn.call(
         obj,
         isReaction ? reactionValue : obj.props,
         {
           preventLogging: () => (preventLog = true),
+          // allows setting multiple values in a reaction
+          setValue: update,
+          // allows delaying in a reaction, with automatic clearing on new reaction
           sleep: ms => {
-            log(`${getReactionName(obj)}.${method} sleep(${ms})`)
-            timeoutActive = true
-            return new Promise((res, rej) =>
-              setTimeout(() => {
-                if (timeoutActive) {
-                  res()
-                } else {
-                  rej('CANCELLED')
-                }
-              }, ms),
-            )
+            log(`  ${getReactionName(obj)}.${method} sleeping for ${ms}`)
+            return new Promise((resolve, reject) => {
+              const sleepTimeout = setTimeout(resolve, ms)
+              rejectSleep = () => {
+                clearTimeout(sleepTimeout)
+                reject(RejectSleepSymbol)
+              }
+            })
           },
         },
       )
-      // handle cancels
+      // handle promises
       if (reactionResult instanceof Promise) {
-        reactionResult.catch(err => {
-          if (err === 'CANCELLED') {
-            console.log(`Reaction cancelled`)
-          } else {
-            console.error(err)
-          }
-        })
+        const uid = reactionID
+        reactionResult
+          .then(value => {
+            if (uid === reactionID) {
+              replaceDisposable()
+              update(value)
+            }
+          })
+          .catch(err => {
+            if (err === RejectSleepSymbol) {
+              console.log(`Reaction cancelled`)
+            } else {
+              throw err
+            }
+          })
+        return
       }
       // store result as observable
       result = valueToObservable(reactionResult)

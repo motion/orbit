@@ -1,12 +1,12 @@
 // @flow
 import Bridge from './helpers/Bridge'
 import proxySetters from './helpers/proxySetters'
-import { store } from '@mcro/black/store'
+import { store, react } from '@mcro/black/store'
 import global from 'global'
 import Desktop from './Desktop'
 import Electron from './Electron'
 
-const log = debug('App')
+// const log = debug('App')
 let App
 
 @store
@@ -19,7 +19,6 @@ class AppStore {
     hoveredWord: null,
     hoveredLine: null,
     contextMessage: 'Orbit',
-    closePeek: null,
     orbitHidden: true,
     knowledge: null,
     peekTarget: null,
@@ -34,9 +33,31 @@ class AppStore {
     )
   }
 
+  animationDuration = 100
+
+  @react
+  isAnimatingOrbit = [
+    () => App.isShowingOrbit,
+    async (_, { sleep, setValue }) => {
+      setValue(true)
+      await sleep(App.animationDuration)
+      return false
+    },
+  ]
+
   get isShowingPeek() {
     return !!App.state.peekTarget || Electron.orbitState.fullScreen
   }
+
+  @react
+  wasShowingPeek = [
+    () => [App.state.peekTarget, Electron.orbitState.fullScreen],
+    () => {
+      const last = this.next
+      this.next = this.isShowingPeek
+      return last || false
+    },
+  ]
 
   get isAttachedToWindow() {
     return !Electron.orbitState.fullScreen && !!Desktop.state.appState

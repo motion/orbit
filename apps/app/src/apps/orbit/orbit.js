@@ -48,31 +48,21 @@ export default class OrbitPage {
   render({ orbitStore }) {
     const arrowTowards = Electron.orbitState.arrowTowards || 'right'
     const towardsRight = arrowTowards === 'right'
-    const arrowSize = 28
+    const arrowSize = 24
     let arrowStyle
-    let orbitStyle
     switch (arrowTowards) {
       case 'right':
-        orbitStyle = {
-          // marginRight: -4,
-        }
         arrowStyle = {
           top: 53,
           right: SHADOW_PAD - arrowSize,
         }
         break
       case 'left':
-        orbitStyle = {
-          // marginLeft: -2,
-        }
         arrowStyle = {
           top: 53,
-          left: -3,
+          left: 1,
         }
         break
-    }
-    if (Electron.orbitState.fullScreen) {
-      orbitStyle.paddingRight = 0
     }
     return (
       <UI.Theme name="dark">
@@ -89,59 +79,98 @@ export default class OrbitPage {
             borderRightRadius: !towardsRight ? 5 : 0,
           }}
         />
-        <orbit css={orbitStyle} $orbitVisible={App.isShowingOrbit}>
-          {/* first is arrow (above), second is arrow shadow (below) */}
-          <OrbitArrow
-            if={App.isAttachedToWindow}
-            arrowSize={arrowSize}
-            arrowTowards={arrowTowards}
-            arrowStyle={arrowStyle}
-          />
-          <content
+        <overflowWrap $shouldHide={!App.isShowingOrbit || App.isAnimatingOrbit}>
+          <orbit
             css={{
-              boxShadow: Electron.orbitState.fullScreen
-                ? orbitShadow
-                : orbitLightShadow,
-              borderRightRadius: Electron.orbitState.fullScreen
-                ? 0
-                : BORDER_RADIUS,
+              paddingRight: Electron.orbitState.fullScreen ? 0 : SHADOW_PAD,
             }}
+            $orbitStyle={[App.isShowingOrbit, towardsRight]}
+            $orbitVisible={App.isShowingOrbit}
           >
-            <OrbitHeader />
-            <OrbitContent if={!orbitStore.showSettings} />
-            <OrbitSettings if={orbitStore.showSettings} />
-            <Knowledge if={App.state.knowledge} data={App.state.knowledge} />
-            <controls>
-              <UI.Button
-                icon="gear"
-                borderRadius={100}
-                size={1.1}
-                circular
-                chromeless
-                highlight={orbitStore.showSettings}
-                onClick={orbitStore.toggleSettings}
-              />
-            </controls>
-          </content>
-        </orbit>
+            {/* first is arrow (above), second is arrow shadow (below) */}
+            <OrbitArrow
+              if={App.isAttachedToWindow}
+              arrowSize={arrowSize}
+              arrowTowards={arrowTowards}
+              arrowStyle={arrowStyle}
+            />
+            <content
+              css={{
+                boxShadow: Electron.orbitState.fullScreen
+                  ? orbitShadow
+                  : orbitLightShadow,
+                borderLeftRadius: towardsRight ? BORDER_RADIUS : 0,
+                borderRightRadius:
+                  Electron.orbitState.fullScreen || towardsRight
+                    ? 0
+                    : BORDER_RADIUS,
+              }}
+            >
+              <OrbitHeader />
+              <OrbitContent if={!orbitStore.showSettings} />
+              <OrbitSettings if={orbitStore.showSettings} />
+              <Knowledge if={App.state.knowledge} data={App.state.knowledge} />
+              <controls>
+                <UI.Button
+                  icon="gear"
+                  borderRadius={100}
+                  size={1.1}
+                  circular
+                  chromeless
+                  highlight={orbitStore.showSettings}
+                  onClick={orbitStore.toggleSettings}
+                />
+              </controls>
+            </content>
+          </orbit>
+        </overflowWrap>
       </UI.Theme>
     )
   }
 
   static style = {
-    orbit: {
+    // used to hide edge overlap of drawer during in animation
+    overflowWrap: {
       alignSelf: 'flex-end',
       width: '100%',
+      height: '100%',
+      right: 15,
+      position: 'relative',
+    },
+    shouldHide: {
+      overflow: 'hidden',
+    },
+    orbit: {
+      right: -15,
+      width: 330,
       height: '100%',
       padding: SHADOW_PAD,
       pointerEvents: 'none !important',
       position: 'relative',
-      transition: 'opacity ease-in 100ms',
+      transition: `
+        transform linear ${App.animationDuration}ms,
+        opacity linear ${App.animationDuration}ms
+      `,
       opacity: 0,
+      // background: 'red',
+    },
+    orbitStyle: ([isShowing, towardsRight]) => {
+      if (!isShowing) {
+        return {
+          marginRight: towardsRight ? SHADOW_PAD : -SHADOW_PAD,
+          transform: {
+            x: towardsRight ? 25 : -25,
+          },
+        }
+      }
     },
     orbitVisible: {
       pointerEvents: 'all !important',
       opacity: 1,
+      marginRight: 0,
+      transform: {
+        x: 0,
+      },
     },
     orbitTorn: {
       pointerEvents: 'all !important',
@@ -154,10 +183,8 @@ export default class OrbitPage {
       flex: 1,
       // border: [1, 'transparent'],
       background,
-      borderRadius: BORDER_RADIUS,
       overflow: 'hidden',
       opacity: 1,
-      transition: 'background ease-in 200ms',
       position: 'relative',
     },
     controls: {

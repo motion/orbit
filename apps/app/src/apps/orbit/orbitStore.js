@@ -66,6 +66,10 @@ export default class OrbitStore {
           return
         case 13: //enter
           App.setOpenResult(this.results[this.selectedIndex])
+          // so hitting enter on a previous app works
+          setTimeout(() => {
+            App.setOpenResult(null)
+          }, 100)
       }
     })
   }

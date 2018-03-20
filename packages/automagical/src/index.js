@@ -130,11 +130,25 @@ function mobxifyPromise(obj, method, val) {
   })
 }
 
+function mobxifyRxObservable(obj, method) {
+  const value = obj[method]
+  const observable = Mobx.observable.box(undefined)
+  const stream = value.subscribe(res => {
+    observable.set(res)
+  })
+  obj.subscriptions.add(() => stream.unsubscribe())
+  Object.defineProperty(obj, method, {
+    get() {
+      return observable.get()
+    },
+  })
+}
+
 function mobxifyRxQuery(obj, method) {
   const value = obj[method]
   const observable = Mobx.observable.box(undefined)
   const runObservable = () => {
-    const stream = value.$.subscribe(res => {
+    const stream = value.subscribe(res => {
       observable.set(res)
     })
     obj.subscriptions.add(() => stream.unsubscribe())
@@ -154,12 +168,6 @@ function mobxifyRxQuery(obj, method) {
 // TODO use rxdb api
 function isRxDbQuery(query: any): boolean {
   return query && (query.isntConnected || !!query.mquery)
-}
-
-function mobxifyRxObservable(obj, method, val) {
-  const stream = fromStream(val || obj[method])
-  Mobx.extendShallowObservable(obj, { [method]: stream })
-  obj.subscriptions.add(stream)
 }
 
 type MagicalObject = {
@@ -346,12 +354,12 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
 
   function run() {
     if (disposed) {
-      console.log('avoiding work', method)
+      // this avoids work/bugs by cancelling reactions after disposed
       return
     }
     if (isReaction) {
       // reaction
-      const options = Helpers.getReactionOptions(val[3])
+      const options = Helpers.getReactionOptions(val[2])
       stopReaction = Mobx.reaction(val[0], watcher(val[1]), {
         // pass name to reaction for debugging
         name: method,
@@ -366,9 +374,11 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
   // state used outside each watch/reaction
   let preventLog = false
   let rejectSleep
+  let reactionID
 
   function watcher(reactionFn) {
     return function watcherCb(reactionValue) {
+      reactionID = Math.random()
       // cancels on new reactions
       if (rejectSleep) {
         rejectSleep()
@@ -378,6 +388,9 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
         isReaction ? reactionValue : obj.props,
         {
           preventLogging: () => (preventLog = true),
+          // allows setting multiple values in a reaction
+          setValue: update,
+          // allows delaying in a reaction, with automatic clearing on new reaction
           sleep: ms => {
             log(`  ${getReactionName(obj)}.${method} sleeping for ${ms}`)
             return new Promise((resolve, reject) => {
@@ -390,15 +403,24 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
           },
         },
       )
-      // handle cancels
+      // handle promises
       if (reactionResult instanceof Promise) {
-        reactionResult.catch(err => {
-          if (err === RejectSleepSymbol) {
-            console.log(`Reaction cancelled`)
-          } else {
-            throw err
-          }
-        })
+        const uid = reactionID
+        reactionResult
+          .then(value => {
+            if (uid === reactionID) {
+              replaceDisposable()
+              update(value)
+            }
+          })
+          .catch(err => {
+            if (err === RejectSleepSymbol) {
+              console.log(`Reaction cancelled`)
+            } else {
+              throw err
+            }
+          })
+        return
       }
       // store result as observable
       result = valueToObservable(reactionResult)

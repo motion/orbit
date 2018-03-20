@@ -19,6 +19,7 @@
     "stringify-object": "^3.2.2"
   },
   "peerDependencies": {
-    "mobx": "*"
+    "mobx": "*",
+    "rxjs": "*"
   }
 }

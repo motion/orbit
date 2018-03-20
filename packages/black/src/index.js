@@ -6,6 +6,7 @@ import { observable, autorunAsync } from 'mobx'
 
 export log from './helpers/log'
 export watch from './helpers/watch'
+export * from './helpers/mobx'
 
 // react just takes alt syntax
 import watch from './helpers/watch'

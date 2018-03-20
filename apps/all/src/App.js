@@ -33,6 +33,18 @@ class AppStore {
     )
   }
 
+  animationDuration = 100
+
+  @react
+  isAnimatingOrbit = [
+    () => App.isShowingOrbit,
+    async (_, { sleep, setValue }) => {
+      setValue(true)
+      await sleep(App.animationDuration)
+      return false
+    },
+  ]
+
   get isShowingPeek() {
     return !!App.state.peekTarget || Electron.orbitState.fullScreen
   }

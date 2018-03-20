@@ -8,12 +8,6 @@ if (!global.__shouldLog) {
   }
 }
 
-if (typeof window !== 'undefined' && !global.restart) {
-  global.restart = () => {
-    window.location = window.location
-  }
-}
-
 let id = 0
 
 module.exports = function debug(namespace) {

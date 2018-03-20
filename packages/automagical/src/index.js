@@ -241,10 +241,8 @@ function decorateMethodWithAutomagic(
     const NAME = `${target.constructor.name}.${method}`
     // TODO remove in prod
     const logWrappedMethod = (...args) => {
-      if (global.log && global.log.debug) {
-        if (global.log.filter && global.log.filter.test(NAME)) {
-          console.log(NAME, ...args)
-        }
+      if (global.__shouldLog && global.__shouldLog[NAME]) {
+        log(NAME, ...args)
       }
       return targetMethod(...args)
     }
@@ -445,7 +443,7 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
       // store result as observable
       result = valueToObservable(reactionResult)
       if (!preventLog) {
-        if (isReaction && changed) {
+        if (isReaction && changed && Object.keys(changed).length) {
           log(
             `${name}(`,
             reactVal,

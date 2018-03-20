@@ -40,6 +40,10 @@ export default class OrbitStore {
       console.log('Done')
     })
 
+    // hmr protect
+    if (this.started) return
+    this.started = true
+
     // search
     this.react(() => App.state.query, this.handleSearch, true)
 

@@ -125,6 +125,35 @@ export default class OrbitPage {
                   onClick={orbitStore.toggleSettings}
                 />
               </controls>
+              <expand
+                css={{
+                  position: 'absolute',
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexFlow: 'row',
+                  zIndex: 1000,
+                  borderBottomRadius: BORDER_RADIUS,
+                }}
+              >
+                <fade
+                  $$fullscreen
+                  css={{ background: `linear-gradient(transparent, #000)` }}
+                />
+                <bar
+                  css={{
+                    alignSelf: 'center',
+                    flex: 1,
+                    margin: 20,
+                    height: 6,
+                    borderRadius: 100,
+                    background: [255, 255, 255, 0.1],
+                    zIndex: 10,
+                  }}
+                />
+              </expand>
             </content>
           </orbit>
         </overflowWrap>

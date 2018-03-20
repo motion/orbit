@@ -86,6 +86,8 @@ class AppStore {
   }
 
   runReactions() {
+    // hmr protect
+    if (this.reactions) return
     const AppReactions = require('./AppReactions').default
     this.reactions = new AppReactions()
   }

@@ -108,7 +108,10 @@ class ElectronStore {
   }
 
   shouldShow = () => Electron.setShouldShow(Date.now())
-  shouldHide = () => Electron.setShouldHide(Date.now())
+  shouldHide = () => {
+    console.trace('SHOULD HIDE ME YEA')
+    Electron.setShouldHide(Date.now())
+  }
   shouldPause = () => Electron.setShouldPause(Date.now())
 
   toggleVisible = () => {

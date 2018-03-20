@@ -160,14 +160,6 @@ class Bridge {
       return changedState
     }
     if (Object.keys(changedState).length) {
-      // if (process.env.NODE_ENV === 'development') {
-      //   console.log(
-      //     `${this._source.replace('Store', '')}.setState(`,
-      //     newState,
-      //     `) =>`,
-      //     changedState,
-      //   )
-      // }
       this._socket.send(
         JSON.stringify({ state: changedState, source: this._source }),
       )
@@ -218,6 +210,15 @@ class Bridge {
     }
     if (global.__trackStateChanges && global.__trackStateChanges.isActive) {
       global.__trackStateChanges.changed = changed
+    } else {
+      if (process.env.NODE_ENV === 'development') {
+        if (isInternal && Object.keys(changed).length) {
+          console.log(
+            `${this._source.replace('Store', '')}.setState =>`,
+            changed,
+          )
+        }
+      }
     }
     return changed
   }

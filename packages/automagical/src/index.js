@@ -7,6 +7,9 @@ import { Observable } from 'rxjs'
 import * as Helpers from '@mcro/helpers'
 import debug from '@mcro/debug'
 
+let id = 0
+const uid = () => id++ % Number.MAX_VALUE
+
 const log = debug('>')
 const RejectSleepSymbol = Symbol('REJECT_SLEEP')
 
@@ -15,7 +18,7 @@ if (module && module.hot) {
 }
 
 const PREFIX = `=>`
-const resultToConsole = res => {
+const logRes = res => {
   if (typeof result === 'undefined') return []
   if (res instanceof Promise) return [PREFIX, 'Promise']
   return [PREFIX, res]
@@ -289,7 +292,7 @@ function valueToObservable(inValue: any) {
 }
 
 const AID = '__AUTOMAGICAL_ID__'
-const uid = () => `__ID_${Math.random()}__`
+const observableId = () => `__ID_${Math.random()}__`
 
 // watches values in an autorun, and resolves their results
 function mobxifyWatch(obj: MagicalObject, method, val) {
@@ -377,22 +380,27 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
   let reactionID
 
   function watcher(reactionFn) {
-    return function watcherCb(reactionValue) {
-      reactionID = Math.random()
+    const name = `${getReactionName(obj)}.${method}`
+
+    return function watcherCb(reactVal) {
+      reactionID = uid()
       // cancels on new reactions
       if (rejectSleep) {
         rejectSleep()
       }
       const reactionResult = reactionFn.call(
         obj,
-        isReaction ? reactionValue : obj.props,
+        isReaction ? reactVal : obj.props,
         {
           preventLogging: () => (preventLog = true),
           // allows setting multiple values in a reaction
-          setValue: update,
+          setValue: val => {
+            log(`${name}.setValue(`, val, `)`)
+            update(val)
+          },
           // allows delaying in a reaction, with automatic clearing on new reaction
           sleep: ms => {
-            log(`  ${getReactionName(obj)}.${method} sleeping for ${ms}`)
+            // log(`${name} sleeping for ${ms}`)
             return new Promise((resolve, reject) => {
               const sleepTimeout = setTimeout(resolve, ms)
               rejectSleep = () => {
@@ -405,11 +413,17 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
       )
       // handle promises
       if (reactionResult instanceof Promise) {
-        const uid = reactionID
+        const id = reactionID
+        if (!preventLog) {
+          log(`[async ${id}] ${name}(`, reactVal, `) ...`)
+        }
         reactionResult
           .then(value => {
-            if (uid === reactionID) {
+            if (id === reactionID) {
               replaceDisposable()
+              if (!preventLog && typeof value !== 'undefined') {
+                log(`[  ... ${id}] done`, ...logRes(value))
+              }
               update(value)
             }
           })
@@ -426,12 +440,7 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
       result = valueToObservable(reactionResult)
       if (!preventLog) {
         if (isReaction) {
-          log(
-            `${getReactionName(obj)}.${method}(`,
-            reactionValue,
-            `)`,
-            ...resultToConsole(result),
-          )
+          log(`${name}(`, reactVal, `)`, ...logRes(result))
         }
       }
       const observableLike = isObservableLike(result)
@@ -471,7 +480,7 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
         curObservable = result
         // track it for equality checks
         if (curObservable && curObservable instanceof Object) {
-          curObservable[AID] = curObservable[AID] || uid()
+          curObservable[AID] = curObservable[AID] || observableId()
         }
         runObservable()
       } else {

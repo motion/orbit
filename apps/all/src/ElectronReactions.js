@@ -55,24 +55,24 @@ export default class ElectronReactions {
     },
   ]
 
+  // @react
+  // unFullScreenOnHide = [
+  //   () => [App.state.orbitHidden, App.isAnimating],
+  //   ([isHidden, isAnimating]) => {
+  //     if (isAnimating) return
+  //     if (!Electron.orbitState.fullScreen) return
+  //     if (isHidden) {
+  //       Electron.setOrbitState({ fullScreen: false })
+  //     }
+  //   },
+  // ]
+
   @react
   hideFullScreenOnEsc = [
     () => Desktop.state.keyboard.esc,
     () => {
       if (Electron.orbitState.fullScreen) {
         Electron.shouldHide()
-      }
-    },
-  ]
-
-  @react
-  unFullScreenOnHide = [
-    () => App.state.orbitHidden,
-    async (willHide, { sleep }) => {
-      if (!Electron.orbitState.fullScreen) return
-      if (willHide) {
-        await sleep(App.animationDuration)
-        Electron.setOrbitState({ fullScreen: false })
       }
     },
   ]

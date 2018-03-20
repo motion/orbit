@@ -26,10 +26,13 @@ class AppStore {
   }
 
   get isShowingOrbit() {
+    return !App.state.orbitHidden
+  }
+
+  get isShowingPeek() {
     return (
-      Electron.orbitState.fullScreen ||
-      Electron.orbitState.pinned ||
-      !App.state.orbitHidden
+      !!App.state.peekTarget ||
+      (Electron.orbitState.fullScreen && this.isShowingOrbit)
     )
   }
 
@@ -44,10 +47,6 @@ class AppStore {
       return false
     },
   ]
-
-  get isShowingPeek() {
-    return !!App.state.peekTarget || Electron.orbitState.fullScreen
-  }
 
   @react
   wasShowingPeek = [

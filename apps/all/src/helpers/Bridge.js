@@ -6,6 +6,7 @@ import WebSocket from './websocket'
 import waitPort from 'wait-port'
 import * as Mobx from 'mobx'
 import stringify from 'stringify-object'
+import global from 'global'
 
 const stringifyObject = obj =>
   stringify(obj, {
@@ -159,14 +160,14 @@ class Bridge {
       return changedState
     }
     if (Object.keys(changedState).length) {
-      if (process.env.NODE_ENV === 'development') {
-        console.log(
-          `${this._source.replace('Store', '')}.setState(`,
-          newState,
-          `) =>`,
-          changedState,
-        )
-      }
+      // if (process.env.NODE_ENV === 'development') {
+      //   console.log(
+      //     `${this._source.replace('Store', '')}.setState(`,
+      //     newState,
+      //     `) =>`,
+      //     changedState,
+      //   )
+      // }
       this._socket.send(
         JSON.stringify({ state: changedState, source: this._source }),
       )
@@ -214,6 +215,9 @@ class Bridge {
           changed[key] = newVal
         }
       }
+    }
+    if (global.__trackStateChanges && global.__trackStateChanges.isActive) {
+      global.__trackStateChanges.changed = changed
     }
     return changed
   }

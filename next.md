@@ -1,22 +1,12 @@
 * interaction
 
-  * option+space toggle fix
-  * esc to close fullscreen
   * if click input on preview, pin it
   * disable drag peek in fullscreen
   * keyboard nav
-    * highlight does mini-peek
     * right/left to open big-peek
-
-* apps
-  * Data
-  * Visual
-  * Preview
 
 * ux
 
-  * orbit icon should be top right and look more mac-button-like (purple?)
-  * settings circle button on bottom right
   * get better docs in place for peek design
   * peek document display/design
   * bottom of tray "mini peek" that previews hovered result

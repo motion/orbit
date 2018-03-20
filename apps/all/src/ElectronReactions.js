@@ -55,18 +55,6 @@ export default class ElectronReactions {
     },
   ]
 
-  // @react
-  // unFullScreenOnHide = [
-  //   () => [App.state.orbitHidden, App.isAnimating],
-  //   ([isHidden, isAnimating]) => {
-  //     if (isAnimating) return
-  //     if (!Electron.orbitState.fullScreen) return
-  //     if (isHidden) {
-  //       Electron.setOrbitState({ fullScreen: false })
-  //     }
-  //   },
-  // ]
-
   @react
   hideFullScreenOnEsc = [
     () => Desktop.state.keyboard.esc,
@@ -140,7 +128,9 @@ export default class ElectronReactions {
   positionOrbitFullScreen = [
     () => Electron.orbitState.fullScreen,
     fullScreen => {
-      if (!fullScreen) return
+      if (!fullScreen) {
+        return
+      }
       const { round } = Math
       const [screenW, screenH] = screenSize()
       const [appW, appH] = [screenW / 1.5, screenH / 1.3]
@@ -163,9 +153,15 @@ export default class ElectronReactions {
 
   @react
   positionOrbitFromBoundingBox = [
-    () => [appTarget(Desktop.state.appState || {}), Desktop.linesBoundingBox],
-    ([appBB, linesBB]) => {
-      if (Electron.orbitState.fullScreen) return
+    () => [
+      appTarget(Desktop.state.appState || {}),
+      Desktop.linesBoundingBox,
+      Electron.orbitState.fullScreen || App.isAnimatingOrbit,
+    ],
+    ([appBB, linesBB, fullScreen]) => {
+      if (fullScreen) {
+        return
+      }
       // prefer using lines bounding box, fall back to app
       const box = linesBB || appBB
       if (!box) return
@@ -177,7 +173,12 @@ export default class ElectronReactions {
         // remove padding
         position[0] += arrowTowards === 'right' ? SCREEN_PAD : -SCREEN_PAD
       }
-      Electron.setOrbitState({ position, size, arrowTowards })
+      Electron.setOrbitState({
+        position,
+        size,
+        arrowTowards,
+        fullScreen: false,
+      })
     },
     true,
   ]

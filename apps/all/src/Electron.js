@@ -10,8 +10,8 @@ let Electron
 @store
 class ElectronStore {
   state = {
-    shouldHide: null,
-    shouldShow: null,
+    shouldHide: 1,
+    shouldShow: 0,
     shouldPause: null,
     settingsPosition: [], // todo: settingsState.position
     orbitState: {
@@ -66,8 +66,12 @@ class ElectronStore {
   }
 
   get recentlyToggled() {
-    if (Date.now() - Electron.state.shouldHide < 100) return true
-    if (Date.now() - Electron.state.shouldShow < 100) return true
+    if (
+      Date.now() - Electron.state.shouldHide <= App.animationDuration ||
+      Date.now() - Electron.state.shouldShow <= App.animationDuration
+    ) {
+      return true
+    }
     return false
   }
 
@@ -103,11 +107,15 @@ class ElectronStore {
     Electron.setPeekState({ windows })
   }
 
+  shouldShow = () => Electron.setShouldShow(Date.now())
+  shouldHide = () => Electron.setShouldHide(Date.now())
+  shouldPause = () => Electron.setShouldPause(Date.now())
+
   toggleVisible = () => {
     if (App.state.orbitHidden) {
-      this.setState({ shouldShow: Date.now() })
+      this.shouldShow()
     } else {
-      this.setState({ shouldHide: Date.now() })
+      this.shouldHide()
     }
   }
 
@@ -120,6 +128,7 @@ class ElectronStore {
   }
 
   toggleFullScreen = () => {
+    console.log('TOGGLE FULL SCREEN')
     this.setFullScreen(!Electron.orbitState.fullScreen)
   }
 

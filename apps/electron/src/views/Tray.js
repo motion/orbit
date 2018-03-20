@@ -10,7 +10,7 @@ export default class TrayEl {
   render() {
     return (
       <Tray
-        onClick={() => Electron.setShouldPause(Date.now())}
+        onClick={Electron.shouldPause}
         image={Path.join(
           Constants.ROOT_PATH,
           'resources',

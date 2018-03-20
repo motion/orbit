@@ -46,27 +46,33 @@ export default class ElectronReactions {
   ]
 
   @react
-  unFullScreenOnHide = [
-    () => App.state.orbitHidden,
-    hid => hid && Electron.setOrbitState({ fullScreen: false }),
-  ]
-
-  @react
-  unFullScreenOnDefocus = [
+  hideFullScreenOnDefocus = [
     () => Desktop.state.appState,
     () => {
       if (Electron.orbitState.fullScreen) {
-        Electron.setOrbitState({ fullScreen: false })
+        Electron.shouldHide()
       }
     },
   ]
 
+  // @react
+  // unFullScreenOnHide = [
+  //   () => [App.state.orbitHidden, App.isAnimating],
+  //   ([isHidden, isAnimating]) => {
+  //     if (isAnimating) return
+  //     if (!Electron.orbitState.fullScreen) return
+  //     if (isHidden) {
+  //       Electron.setOrbitState({ fullScreen: false })
+  //     }
+  //   },
+  // ]
+
   @react
-  hideOnEsc = [
+  hideFullScreenOnEsc = [
     () => Desktop.state.keyboard.esc,
     () => {
       if (Electron.orbitState.fullScreen) {
-        Electron.setOrbitState({ fullScreen: false, shouldHide: true })
+        Electron.shouldHide()
       }
     },
   ]
@@ -116,13 +122,13 @@ export default class ElectronReactions {
           return
         }
         if (!App.state.orbitHidden) {
-          Electron.setShouldHide(Date.now())
+          Electron.shouldHide()
         }
         return
       }
       if (App.state.orbitHidden) {
         await sleep(150)
-        Electron.setShouldShow(Date.now())
+        Electron.shouldShow()
         await sleep(3500)
         Electron.setPinned(true)
       }

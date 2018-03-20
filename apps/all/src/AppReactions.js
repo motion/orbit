@@ -13,11 +13,22 @@ export default class AppReactions {
   shouldShowHideFromElectron = [
     () => [Electron.state.shouldShow, Electron.state.shouldHide],
     ([shouldShow, shouldHide]) => {
-      if (!shouldShow) return
       const orbitHidden = shouldHide > shouldShow
       App.setOrbitHidden(orbitHidden)
     },
     true,
+  ]
+
+  @react
+  shouldShowHideFromElectronState = [
+    () => [Electron.orbitState.fullScreen, Electron.orbitState.pinned],
+    ([fullScreen, pinned]) => {
+      if (fullScreen || pinned) {
+        App.setOrbitHidden(false)
+      } else {
+        App.setOrbitHidden(true)
+      }
+    },
   ]
 
   @react
@@ -54,20 +65,9 @@ export default class AppReactions {
   ]
 
   @react
-  showOrbitOnPin = [
-    () => Electron.orbitState.pinned,
-    pinned => {
-      if (Electron.recentlyToggled) {
-        return
-      }
-      App.setOrbitHidden(!pinned)
-    },
-  ]
-
-  @react
   hideOrbitOnMouseOut = [
     () => [
-      !App.state.orbitHidden || Electron.orbitState.pinned,
+      !App.state.orbitHidden,
       Electron.orbitState.mouseOver || Electron.peekState.mouseOver,
     ],
     async ([isShown, mouseOver], { sleep }) => {
@@ -76,6 +76,9 @@ export default class AppReactions {
       }
       if (isShown && !mouseOver) {
         await sleep(100)
+        if (Electron.orbitState.pinned || Electron.orbitState.fullScreen) {
+          return
+        }
         App.setOrbitHidden(true)
       }
     },

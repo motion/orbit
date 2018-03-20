@@ -48,6 +48,10 @@ class AppStore {
     },
   ]
 
+  get isFullyHidden() {
+    return !this.isShowingOrbit && !this.isAnimatingOrbit
+  }
+
   @react
   wasShowingPeek = [
     () => [App.state.peekTarget, Electron.orbitState.fullScreen],

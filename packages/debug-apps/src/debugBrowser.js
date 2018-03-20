@@ -3,9 +3,9 @@ import puppeteer from 'puppeteer'
 import { debounce, uniq, flatten, isEqual } from 'lodash'
 const sleep = ms => new Promise(res => setTimeout(res, ms))
 
-// import getExtensions from '@mcro/chrome-extensions'
-// const extNames = getExtensions(['mobx', 'react'])
-// const extensions = extNames.map(ext => `--load-extension=${ext}`)
+import getExtensions from '@mcro/chrome-extensions'
+const extNames = getExtensions(['mobx', 'react'])
+const extensions = extNames.map(ext => `--load-extension=${ext}`)
 
 // quiet exit handling
 let exiting = false
@@ -41,8 +41,10 @@ export default class DebugApps {
       args: [
         `--window-size=${800},${680}`,
         `--no-startup-window`,
-        // `--disable-extensions-except=${extNames.join(',')}`,
-        // ...extensions,
+        // `--enable-slim-navigation-manager`,
+        // `--top-controls-hide-threshold=0.5`,
+        `--disable-extensions-except=${extNames.join(',')}`,
+        ...extensions,
       ],
     })
     this.renderLoop()

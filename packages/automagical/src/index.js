@@ -1,6 +1,6 @@
 // @flow
 import global from 'global'
-import { fromPromise, isPromiseBasedObservable } from 'mobx-utils'
+import { fromPromise, isPromiseBasedObservable, whenAsync } from 'mobx-utils'
 import fromStream from './fromStream'
 import * as Mobx from 'mobx'
 import { Observable } from 'rxjs'
@@ -13,7 +13,7 @@ const uid = () => id++ % Number.MAX_VALUE
 global.__trackStateChanges = {}
 
 const log = debug('>')
-const RejectSleepSymbol = Symbol('REJECT_SLEEP')
+const RejectReactionSymbol = Symbol('REJECT_REACTION')
 
 if (module && module.hot) {
   module.hot.accept('.', _ => _) // prevent aggressive hmrs
@@ -376,16 +376,19 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
 
   // state used outside each watch/reaction
   let preventLog = false
-  let rejectSleep
   let reactionID
+  let rejections = []
+  const rejectReaction = () => {
+    rejections.map(rej => rej())
+  }
 
   function watcher(reactionFn) {
     return function watcherCb(reactVal) {
       const name = `${getReactionName(obj)}.${method}`
       reactionID = uid()
       // cancels on new reactions
-      if (rejectSleep) {
-        rejectSleep()
+      if (rejectReaction) {
+        rejectReaction()
       }
       global.__trackStateChanges.isActive = true
       const reactionResult = reactionFn.call(
@@ -405,10 +408,26 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
             // log(`${name} sleeping for ${ms}`)
             return new Promise((resolve, reject) => {
               const sleepTimeout = setTimeout(resolve, ms)
-              rejectSleep = () => {
+              rejections.push(() => {
                 clearTimeout(sleepTimeout)
-                reject(RejectSleepSymbol)
-              }
+                reject(RejectReactionSymbol)
+              })
+            })
+          },
+          when: condition => {
+            // log(`${name} sleeping for ${ms}`)
+            return new Promise((resolve, reject) => {
+              let cancelWhen = false
+              whenAsync(condition)
+                .then(val => {
+                  if (cancelWhen) return
+                  resolve(val)
+                })
+                .catch(reject)
+              rejections.push(() => {
+                cancelWhen = true
+                reject()
+              })
             })
           },
         },
@@ -432,7 +451,7 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
             }
           })
           .catch(err => {
-            if (err === RejectSleepSymbol) {
+            if (err === RejectReactionSymbol) {
               console.log(`Reaction cancelled [${id}]`)
             } else {
               throw err

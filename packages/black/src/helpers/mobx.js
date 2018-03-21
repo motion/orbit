@@ -1,1 +1,1 @@
-export { fromStream, toStream } from 'mobx-utils'
+export { fromStream, toStream, whenAsync } from 'mobx-utils'

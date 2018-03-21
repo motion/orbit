@@ -1,23 +1,30 @@
 // @flow
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { App, Electron } from '@mcro/all'
+import * as Constants from '~/constants'
 
 class HeaderStore {
   inputRef = null
 
-  willMount() {
-    this.react(
-      () => Electron.orbitState.pinned || Electron.orbitState.fullScreen,
-      shouldFocus => {
-        if (!shouldFocus) return
-        if (this.inputRef) {
-          this.inputRef.focus()
-          this.inputRef.select()
-        }
-      },
-    )
+  @react
+  focusInput = [
+    () => App.isShowingHeader,
+    shouldFocus => {
+      if (!shouldFocus) return
+      if (this.inputRef) {
+        this.inputRef.focus()
+        this.inputRef.select()
+      }
+    },
+    true,
+  ]
+
+  onClickInput = () => {
+    if (!Electron.orbitState.pinned) {
+      App.togglePinned()
+    }
   }
 }
 
@@ -48,17 +55,22 @@ export default class PeekHeader {
             onChange={orbitStore.onChangeQuery}
             onKeyDown={this.handleKeyDown}
             getRef={headerStore.ref('inputRef').set}
+            onClick={headerStore.onClickInput}
           />
         </title>
         <logoButton
           if={!Electron.orbitState.fullScreen}
           onClick={App.togglePinned}
+          $onLeft={Electron.onLeft}
+          $onRight={!Electron.onLeft}
         >
           <logo
             css={{
-              width: 14,
-              height: 14,
-              background: Electron.orbitState.pinned ? '#643E96' : '#222',
+              width: 11,
+              height: 11,
+              background: Electron.orbitState.pinned
+                ? Constants.ORBIT_COLOR
+                : '#222',
               borderRadius: 1000,
             }}
           />
@@ -75,16 +87,18 @@ export default class PeekHeader {
       padding: [12, 10],
       transition: 'all ease-in 100ms',
       opacity: 0.2,
-      // transform: {
-      //   y: -Constants.ORA_HEADER_HEIGHT,
-      // },
     },
     logoButton: {
       position: 'absolute',
       top: 3,
-      right: 3,
-      border: [5, '#151515'],
+      border: [4, '#151515'],
       borderRadius: 1000,
+    },
+    onLeft: {
+      right: 3,
+    },
+    onRight: {
+      left: 0,
     },
     headerVisible: {
       opacity: 1,

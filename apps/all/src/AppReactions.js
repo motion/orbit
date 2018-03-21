@@ -32,6 +32,25 @@ export default class AppReactions {
   ]
 
   @react
+  showOnMouseOverOrbitBar = [
+    () => [Desktop.state.mousePosition, Electron.orbitState],
+    async ([{ x, y }, orbitState], { sleep, preventLogging }) => {
+      preventLogging()
+      if (!orbitState.position) return
+      const { position: [oX, oY], arrowTowards } = orbitState
+      // TODO: Constants.ORBIT_WIDTH
+      const adjX = arrowTowards === 'right' ? 300 : 0
+      const adjY = 44 // topbar + offset from top of orbit
+      const withinX = Math.abs(oX - x + adjX) < 10
+      const withinY = Math.abs(oY - y + adjY) < 10
+      if (withinX && withinY) {
+        await sleep(300)
+        App.setOrbitHidden(false)
+      }
+    },
+  ]
+
+  @react
   clearPeekOnMouseOut = [
     () => Electron.isMouseInActiveArea,
     mouseOver => {

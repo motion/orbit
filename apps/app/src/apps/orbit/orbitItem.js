@@ -1,5 +1,5 @@
 import { view } from '@mcro/black'
-import * as UI from '@mcro/ui'
+import { Title, Text, Surface } from '@mcro/ui'
 import OrbitIcon from './orbitIcon'
 
 const glowProps = {
@@ -12,28 +12,46 @@ const glowProps = {
   zIndex: -1,
 }
 
+const SubTitle = p => (
+  <Text
+    size={0.9}
+    css={{ textTransform: 'uppercase', opacity: 0.4, margin: [5, 0] }}
+    {...p}
+  />
+)
+const P = p => (
+  <Text
+    size={1.15}
+    css={{ marginBottom: 5, opacity: 0.85 }}
+    highlightWords={['Lorem', 'ipsum', 'adipisicing']}
+    {...p}
+  />
+)
+
 @view
 export default class Item {
   render({ orbitStore, index, result, ...props }) {
     const isSelected = orbitStore.selectedIndex === index
     return (
-      <UI.Surface
+      <Surface
         background="transparent"
         glow={false}
-        background={isSelected ? '#102945' : 'transparent'}
-        hover={{
-          background: isSelected ? '#102945' : [255, 255, 255, 0.04],
-        }}
-        glow={isSelected}
+        background={'transparent'}
         glowProps={glowProps}
         padding={[10, 18]}
         onClick={orbitStore.selectItem(index)}
         {...props}
       >
-        <UI.Title
+        <Title
           size={1.6}
           ellipse
-          css={{ alignItems: 'center', justifyContent: 'center' }}
+          css={{
+            fontWeight: isSelected ? 300 : 200,
+            letterSpacing: isSelected ? -0.25 : 0,
+            alignItems: 'center',
+            justifyContent: 'center',
+            textShadow: isSelected ? `0 0 5px rgba(255,255,255,0.3)` : 'none',
+          }}
         >
           <OrbitIcon
             icon={result.icon ? `/icons/${result.icon}` : result.type}
@@ -46,14 +64,26 @@ export default class Item {
             }}
           />{' '}
           {result.title}
-        </UI.Title>
-        <UI.Text opacity={0.6} margin={[0, 0, 3]} size={1.1}>
+        </Title>
+        <Text opacity={0.5} margin={[0, 0, 3]} size={0.95} ellipse>
           {result.subtitle}
-        </UI.Text>
-        <UI.Text opacity={0.8} ellipse={3} sizeLineHeight={1.15}>
-          {result.content}
-        </UI.Text>
-      </UI.Surface>
+        </Text>
+        <Text size={1} sizeLineHeight={1.15}>
+          <SubTitle>Section 1</SubTitle>
+          <P>
+            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Fuga at
+            optio cum enim ipsa rem doloribus nam atque.
+          </P>
+          <P>
+            Dolor quasi minima reiciendis, voluptatum delectus repellat ab quo
+            itaque libero perspiciatis.
+          </P>
+          <SubTitle>Section 2</SubTitle>
+          <P>
+            Sit amet consectetur adipisicing elit. Fuga at optio cum, nam atque.
+          </P>
+        </Text>
+      </Surface>
     )
   }
 }

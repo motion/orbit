@@ -58,11 +58,9 @@ class Tab {
           css={{
             ...chromeStyle,
             left: BORDER_LEFT_SIZE / 4,
-            background: Constants.ORA_BG_MAIN,
             borderBottom: 'none',
             boxShadow: [
               'inset -0.5px 0.5px 0 rgba(255,255,255,0.15)',
-              Constants.ORA_INNER_SHADOW,
             ],
           }}
         />

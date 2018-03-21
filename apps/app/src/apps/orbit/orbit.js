@@ -7,6 +7,7 @@ import OrbitContent from './orbitContent'
 import OrbitSettings from './orbitSettings'
 import OrbitHeader from './orbitHeader'
 import OrbitStore from './orbitStore'
+import * as Constants from '~/constants'
 
 const SHADOW_PAD = 15
 const BORDER_RADIUS = 12
@@ -39,15 +40,44 @@ const OrbitArrow = ({ arrowSize, arrowTowards, arrowStyle }) =>
     />
   ))
 
+class OrbitPageStore {
+  isDragging = false
+  adjustHeight = 0
+
+  willMount() {
+    this.on(window, 'mousemove', e => {
+      if (!this.isDragging) return
+      const adjustHeight = Math.min(
+        window.innerHeight - e.clientY - SHADOW_PAD * 2,
+        window.innerHeight - 300, // no less than 300
+      )
+      console.log(adjustHeight)
+      this.adjustHeight = adjustHeight
+    })
+
+    this.on(window, 'mouseup', () => {
+      this.isDragging = false
+    })
+  }
+
+  barMouseDown = () => {
+    this.isDragging = true
+  }
+}
+
+const iWidth = 4
+
 @view.provide({
   orbitStore: OrbitStore,
 })
 @view.attach('orbitStore')
-@view
+@view({
+  orbitPage: OrbitPageStore,
+})
 export default class OrbitPage {
-  render({ orbitStore }) {
+  render({ orbitStore, orbitPage }) {
     const arrowTowards = Electron.orbitState.arrowTowards || 'right'
-    const towardsRight = arrowTowards === 'right'
+    const onLeft = arrowTowards === 'right'
     const arrowSize = 24
     let arrowStyle
     switch (arrowTowards) {
@@ -64,33 +94,49 @@ export default class OrbitPage {
         }
         break
     }
+    const { fullScreen } = Electron.orbitState
     return (
       <UI.Theme name="dark">
-        <indicator
-          css={{
-            position: 'absolute',
-            background: 'red',
-            width: 3,
-            height: 35,
-            top: 20,
-            right: towardsRight ? SHADOW_PAD : 'auto',
-            left: !towardsRight ? SHADOW_PAD : 'auto',
-            borderLeftRadius: towardsRight ? 5 : 0,
-            borderRightRadius: !towardsRight ? 5 : 0,
-          }}
-        />
         <overflowWrap
-          $unPad={Electron.orbitState.fullScreen}
           $hideOverflow={!App.isShowingOrbit || App.isAnimatingOrbit}
+          css={
+            fullScreen
+              ? { right: 0 }
+              : {
+                  right: onLeft ? 15 : 'auto',
+                  left: !onLeft ? 15 : 'auto',
+                }
+          }
         >
           <orbit
             css={{
-              paddingRight: Electron.orbitState.fullScreen ? 0 : SHADOW_PAD,
+              paddingRight: fullScreen ? 0 : SHADOW_PAD,
             }}
-            $orbitStyle={[App.isShowingOrbit, towardsRight]}
+            $orbitHeight={orbitPage.adjustHeight}
+            $orbitStyle={[App.isShowingOrbit, onLeft]}
             $orbitVisible={App.isShowingOrbit}
-            $orbitFullScreen={Electron.orbitState.fullScreen}
+            $orbitFullScreen={fullScreen}
           >
+            <indicator
+              if={!fullScreen}
+              css={{
+                position: 'absolute',
+                background: Constants.ORBIT_COLOR,
+                boxShadow: [
+                  // [-5, 0, onLeft ? 10 : -10, 5, [255, 255, 255, 0.5]],
+                  [-2, 0, 10, 0, [0, 0, 0, 0.15]],
+                ],
+                width: iWidth,
+                height: 36,
+                top: 31,
+                left: onLeft ? SHADOW_PAD - iWidth : 'auto',
+                right: !onLeft ? SHADOW_PAD - iWidth : 'auto',
+                borderLeftRadius: onLeft ? 4 : 0,
+                borderRightRadius: !onLeft ? 4 : 0,
+                // opacity: App.isShowingOrbit ? 0 : 1,
+                transition: 'all ease-in 100ms',
+              }}
+            />
             {/* first is arrow (above), second is arrow shadow (below) */}
             <OrbitArrow
               if={App.isAttachedToWindow}
@@ -100,14 +146,9 @@ export default class OrbitPage {
             />
             <content
               css={{
-                boxShadow: Electron.orbitState.fullScreen
-                  ? orbitShadow
-                  : orbitLightShadow,
-                borderLeftRadius: towardsRight ? BORDER_RADIUS : 0,
-                borderRightRadius:
-                  Electron.orbitState.fullScreen || towardsRight
-                    ? 0
-                    : BORDER_RADIUS,
+                boxShadow: fullScreen ? orbitShadow : orbitLightShadow,
+                borderLeftRadius: onLeft ? BORDER_RADIUS : 0,
+                borderRightRadius: fullScreen || onLeft ? 0 : BORDER_RADIUS,
               }}
             >
               <OrbitHeader />
@@ -125,6 +166,44 @@ export default class OrbitPage {
                   onClick={orbitStore.toggleSettings}
                 />
               </controls>
+              <expand
+                css={{
+                  position: 'absolute',
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  paddingTop: 40,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexFlow: 'row',
+                  zIndex: 1000,
+                  borderBottomRadius: BORDER_RADIUS,
+                  overflow: 'hidden',
+                }}
+              >
+                <fade
+                  css={{
+                    position: 'absolute',
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    top: 0,
+                    background: `linear-gradient(transparent, #111 80%)`,
+                  }}
+                />
+                <bar
+                  css={{
+                    flex: 1,
+                    margin: 20,
+                    height: 5,
+                    borderRadius: 100,
+                    background: [255, 255, 255, 0.1],
+                    zIndex: 10,
+                    cursor: 'ns-resize',
+                  }}
+                  onMouseDown={orbitPage.barMouseDown}
+                />
+              </expand>
             </content>
           </orbit>
         </overflowWrap>
@@ -138,7 +217,6 @@ export default class OrbitPage {
       alignSelf: 'flex-end',
       width: '100%',
       height: '100%',
-      right: 15,
       position: 'relative',
     },
     hideOverflow: {
@@ -150,7 +228,6 @@ export default class OrbitPage {
     orbit: {
       right: -SHADOW_PAD,
       width: 330,
-      height: '100%',
       padding: SHADOW_PAD,
       pointerEvents: 'none !important',
       position: 'relative',
@@ -158,30 +235,39 @@ export default class OrbitPage {
         transform linear ${App.animationDuration}ms,
         opacity linear ${App.animationDuration}ms
       `,
-      opacity: 0,
-      // background: 'red',
     },
-    orbitStyle: ([isShowing, towardsRight]) => {
-      if (!isShowing) {
+    orbitHeight: adjust => {
+      if (!adjust) {
         return {
-          marginRight: towardsRight ? SHADOW_PAD : -SHADOW_PAD,
-          transform: {
-            x: towardsRight ? 25 : -25,
-          },
+          height: '100%',
         }
       }
+      return {
+        height: `calc(100% - ${adjust}px)`,
+      }
+    },
+    orbitStyle: ([isShowing, onLeft]) => {
+      return isShowing
+        ? {
+            transform: {
+              x: onLeft ? 0 : -SHADOW_PAD * 2,
+            },
+          }
+        : {
+            // marginRight: onLeft ? SHADOW_PAD : -SHADOW_PAD,
+            transform: {
+              x: onLeft ? 330 - SHADOW_PAD - (SHADOW_PAD + iWidth) + 4 : -330,
+            },
+          }
     },
     orbitVisible: {
       pointerEvents: 'all !important',
-      opacity: 1,
-      marginRight: 0,
-      transform: {
-        x: 0,
-      },
+      opacity: 1, //0.5,
     },
     orbitFullScreen: {
       width: '100%',
       right: 0,
+      transition: 'none',
     },
     orbitTorn: {
       pointerEvents: 'all !important',
@@ -200,7 +286,7 @@ export default class OrbitPage {
     },
     controls: {
       position: 'absolute',
-      bottom: 15,
+      bottom: 35,
       right: 12,
       zIndex: 10000,
       opacity: 0.2,

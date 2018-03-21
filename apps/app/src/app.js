@@ -29,6 +29,7 @@ class App {
   started = false
 
   constructor() {
+    window.restart = this.restart
     // this.render() // to render before db connects
     this.store = new AppStore({
       config: {

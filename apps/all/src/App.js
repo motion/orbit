@@ -75,7 +75,8 @@ class AppStore {
     return (
       Electron.orbitState.fullScreen ||
       Electron.orbitState.mouseOver ||
-      Electron.orbitState.pinned
+      Electron.orbitState.pinned ||
+      false
     )
   }
 
@@ -86,6 +87,8 @@ class AppStore {
   }
 
   runReactions() {
+    // hmr protect
+    if (this.reactions) return
     const AppReactions = require('./AppReactions').default
     this.reactions = new AppReactions()
   }

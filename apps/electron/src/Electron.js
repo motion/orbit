@@ -21,6 +21,10 @@ const log = debug('Electron')
     views = null
     peekRefs = {}
 
+    get peekRef() {
+      return this.peekRefs[0]
+    }
+
     willMount() {
       global.Root = this
       global.restart = this.restart

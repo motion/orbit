@@ -5,6 +5,8 @@ import { App, Desktop, Electron } from '@mcro/all'
 import OrbitItem from './orbitItem'
 import { whenAsync } from 'mobx-utils'
 
+const getKey = result => result.index || result.id || result.title
+
 const getHoverProps = Helpers.hoverSettler({
   enterDelay: 600,
   onHovered: async target => {
@@ -23,12 +25,9 @@ const getHoverProps = Helpers.hoverSettler({
       width,
       height,
     }
-
     App.setPeekTarget({ id, position })
   },
 })
-
-const getKey = result => result.index || result.id || result.title
 
 const refs = {}
 

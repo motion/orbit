@@ -5,29 +5,6 @@ import { App, Desktop, Electron } from '@mcro/all'
 import OrbitItem from './orbitItem'
 import { whenAsync } from 'mobx-utils'
 
-const getHoverProps = Helpers.hoverSettler({
-  enterDelay: 600,
-  onHovered: async target => {
-    if (!target) {
-      // hide
-      await whenAsync(() => !Electron.isMouseInActiveArea)
-      console.log('CLEAR hoverSettler')
-      App.setPeekTarget(null)
-      return
-    }
-    const { id, top, left, width, height } = target
-    const position = {
-      // add orbits offset
-      left: left + Electron.orbitState.position[0],
-      top: top + Electron.orbitState.position[1],
-      width,
-      height,
-    }
-
-    App.setPeekTarget({ id, position })
-  },
-})
-
 const getKey = result => result.index || result.id || result.title
 
 const refs = {}
@@ -50,6 +27,28 @@ export default class OrbitContent {
 
   render({ orbitStore }) {
     const { appState } = Desktop.state
+    const getHoverProps = Helpers.hoverSettler({
+      enterDelay: 600,
+      onHovered: async target => {
+        if (!target) {
+          // hide
+          await whenAsync(() => !Electron.isMouseInActiveArea)
+          console.log('CLEAR hoverSettler')
+          App.setPeekTarget(null)
+          return
+        }
+        const { id, top, left, width, height } = target
+        const position = {
+          // add orbits offset
+          left: left + Electron.orbitState.position[0],
+          top: top + Electron.orbitState.position[1],
+          width,
+          height,
+        }
+        App.setPeekTarget({ id, position })
+        orbitStore.selectedIndex = id
+      },
+    })
     return (
       <list>
         <UI.Text if={App.isAttachedToWindow && appState} css={{ padding: 10 }}>

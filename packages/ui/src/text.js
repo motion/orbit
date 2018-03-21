@@ -5,12 +5,16 @@ import keycode from 'keycode'
 import $ from 'color'
 import { pick } from 'lodash'
 
-const wrapHighlights = (text: string, highlightWords: Array<string>) => {
+const wrapHighlights = (
+  text: string,
+  highlightWordsColor,
+  highlightWords: Array<string>,
+) => {
   let result = text
   for (const word of highlightWords) {
     result = result.replace(
       new RegExp(`(${word})`, 'g'),
-      '<span style="color: yellow; font-weight: 500;">$1</span>',
+      `<span style="color: ${highlightWordsColor}; font-weight: 500;">$1</span>`,
     )
   }
   return result
@@ -209,6 +213,7 @@ export default class Text extends React.Component<Props> {
     placeholder,
     lineHeight,
     highlightWords,
+    highlightWordsColor,
     className,
     ...props
   }: Props) {
@@ -231,7 +236,11 @@ export default class Text extends React.Component<Props> {
       if (typeof children === 'string') {
         ellipseProps = {
           dangerouslySetInnerHTML: {
-            __html: wrapHighlights(children, highlightWords),
+            __html: wrapHighlights(
+              children,
+              highlightWordsColor,
+              highlightWords,
+            ),
           },
         }
       } else {
@@ -326,6 +335,16 @@ export default class Text extends React.Component<Props> {
         display: props.display,
         fontWeight: props.fontWeight || props.weight,
         opacity: props.opacity,
+        margin: props.margin,
+        marginBottom: props.marginBottom,
+        marginLeft: props.marginLeft,
+        marginRight: props.marginRight,
+        marginTop: props.marginTop,
+        padding: props.padding,
+        paddingBottom: props.paddingBottom,
+        paddingLeft: props.paddingLeft,
+        paddingRight: props.paddingRight,
+        paddingTop: props.paddingTop,
       },
       ellipse: {
         color,

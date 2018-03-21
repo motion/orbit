@@ -20,9 +20,9 @@ export default class OrbitStore {
   @react
   setSelectedFromPeekResult = [
     () => App.state.peekTarget || {},
-    ({ id }) => {
-      if (id) {
-        this.selectedIndex = id
+    target => {
+      if (typeof target.id !== 'undefined') {
+        this.selectedIndex = target.id
       }
     },
   ]

@@ -54,7 +54,8 @@ export default class AppReactions {
   clearPeekOnMouseOut = [
     () => Electron.isMouseInActiveArea,
     mouseOver => {
-      if (!mouseOver && !App.state.peekTarget) {
+      if (!mouseOver) {
+        // && !App.state.peekTarget
         App.setPeekTarget(null)
       }
     },

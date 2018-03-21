@@ -53,6 +53,7 @@ export default class Plugins {
         }
       })
     },
+    true,
   ]
 
   search = async (term, onResults) => {

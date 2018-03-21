@@ -56,29 +56,6 @@ export default class PeekPage {
     return (
       <UI.Theme name="light">
         <peek css={peekStyle} $peekVisible={App.isShowingPeek}>
-          {/* first is arrow (above), second is arrow shadow (below) */}
-          {[1, 2].map(key => (
-            <UI.Arrow
-              if={!Electron.orbitState.fullScreen}
-              key={key}
-              size={arrowSize}
-              towards={arrowTowards}
-              background={background}
-              css={{
-                position: 'absolute',
-                ...arrowStyle,
-                ...[
-                  {
-                    boxShadow: peekShadow,
-                    zIndex: -1,
-                  },
-                  {
-                    zIndex: 100,
-                  },
-                ][key],
-              }}
-            />
-          ))}
           <content
             css={{
               borderRightRadius: !towardsRight ? 0 : borderRadius,

@@ -1,4 +1,3 @@
-// @flow
 import * as React from 'react'
 import * as Constants from '~/constants'
 import { view, react } from '@mcro/black'
@@ -6,9 +5,8 @@ import { Window } from '@mcro/reactron'
 import { App, Electron, Swift } from '@mcro/all'
 import * as Mobx from 'mobx'
 
-const log = debug('OrbitWindow')
-
 class OrbitWindowStore {
+  show = false
   orbitRef = null
 
   focusOrbit = () => {
@@ -59,14 +57,6 @@ class OrbitWindowStore {
 })
 @view.electron
 export default class OrbitWindow extends React.Component {
-  state = {
-    show: false,
-  }
-
-  componentWillUnmount() {
-    this.unmounted = true
-  }
-
   render({ store }) {
     const state = Mobx.toJS(Electron.orbitState)
     return (
@@ -78,13 +68,13 @@ export default class OrbitWindow extends React.Component {
         transparent={true}
         showDevTools={Electron.state.showDevTools.orbit}
         alwaysOnTop
-        show={this.state.show}
+        show={store.show}
         ignoreMouseEvents={!App.isShowingOrbit}
         size={state.size}
         position={state.position}
         file={`${Constants.APP_URL}/orbit`}
         ref={store.handleOrbitRef}
-        onReadyToShow={() => this.setState({ show: true })}
+        onReadyToShow={store.ref('show').setter(true)}
       />
     )
   }

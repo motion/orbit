@@ -70,7 +70,7 @@ export default class OrbitContent {
             result={result}
             {...getHoverProps({
               result,
-              id: result.index,
+              id: index,
             })}
           />
         ))}

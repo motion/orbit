@@ -1,9 +1,5 @@
 # next
 
-* if not holding option and click input, dont pin
-* remove arrow in peek
-* hover => selectedItem
-* selectedItem nicer design
 * un-pin on switch app
 * animation fix:
   * unfullscreen glitches

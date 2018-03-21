@@ -8,6 +8,8 @@ import * as Mobx from 'mobx'
 import stringify from 'stringify-object'
 import global from 'global'
 
+const log = debug('Bridge')
+
 const stringifyObject = obj =>
   stringify(obj, {
     indent: '  ',
@@ -213,10 +215,7 @@ class Bridge {
     } else {
       if (process.env.NODE_ENV === 'development') {
         if (isInternal && Object.keys(changed).length) {
-          console.log(
-            `${this._source.replace('Store', '')}.setState =>`,
-            changed,
-          )
+          log(`${this._source.replace('Store', '')}.setState =>`, changed)
         }
       }
     }

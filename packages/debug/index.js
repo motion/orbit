@@ -6,6 +6,15 @@ if (!global.__shouldLog) {
   global.__shouldLog = {
     '*': true,
   }
+  if (!global.quiet) {
+    global.quiet = (logName = '*') => {
+      if (global.__shouldLog[logName] === false) {
+        global.__shouldLog[logName] = true
+      } else {
+        global.__shouldLog[logName] = false
+      }
+    }
+  }
 }
 
 let id = 0
@@ -13,7 +22,10 @@ let id = 0
 module.exports = function debug(namespace) {
   const uid = id++
   return function log(...messages) {
-    if (!global.__shouldLog[namespace] && !global.__shouldLog['*']) {
+    if (
+      global.__shouldLog['*'] === false ||
+      global.__shouldLog[namespace] === false
+    ) {
       return
     }
     colorfulLog(uid, namespace, messages)

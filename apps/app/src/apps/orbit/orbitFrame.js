@@ -1,18 +1,22 @@
 import * as React from 'react'
 import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { App, Electron } from '@mcro/all'
+import { App, Electron, Desktop } from '@mcro/all'
 
 const SHADOW_PAD = 15
 
 @view({
   store: class OrbitFrameStore {
     @react
-    delayOnLeft = [
-      () => Electron.onLeft,
+    isChanging = [
+      () => [
+        Desktop.state.appState.id,
+        ...Desktop.state.appState.bounds,
+        ...Desktop.state.appState.offset,
+      ],
       async (val, { sleep, setValue }) => {
         setValue(true)
-        await sleep(64)
+        await sleep(200)
         return false
       },
       true,
@@ -21,7 +25,7 @@ const SHADOW_PAD = 15
 })
 export default class OrbitFrame {
   render({ store, orbitPage, children, iWidth }) {
-    const { delayOnLeft } = store
+    const { isChanging } = store
     const { onLeft } = Electron
     const { fullScreen } = Electron.orbitState
     return (
@@ -36,7 +40,7 @@ export default class OrbitFrame {
                   left: !onLeft ? 15 : 'auto',
                 }
           }
-          $isChangingApps={delayOnLeft}
+          $isChangingApps={isChanging}
         >
           <orbit
             css={{
@@ -46,7 +50,7 @@ export default class OrbitFrame {
             $orbitStyle={[App.isShowingOrbit, onLeft, iWidth]}
             $orbitVisible={App.isShowingOrbit}
             $orbitFullScreen={fullScreen}
-            $isChangingApps={delayOnLeft}
+            $isChangingApps={isChanging}
           >
             {children}
           </orbit>

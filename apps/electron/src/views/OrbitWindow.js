@@ -19,6 +19,17 @@ class OrbitWindowStore {
     }
   }
 
+  delayedOrbitState = null
+
+  @react
+  updateDelayedOrbitState = [
+    () => Electron.orbitState,
+    val => {
+      this.delayedOrbitState = Mobx.toJS(val)
+    },
+    { delay: 100, fireImmediately: true },
+  ]
+
   @react
   watchFullScreenForFocus = [
     () => Electron.orbitState.fullScreen,
@@ -58,7 +69,10 @@ class OrbitWindowStore {
 @view.electron
 export default class OrbitWindow extends React.Component {
   render({ store }) {
-    const state = Mobx.toJS(Electron.orbitState)
+    if (!store.delayedOrbitState) {
+      return null
+    }
+    const state = Mobx.toJS(store.delayedOrbitState)
     return (
       <Window
         frame={false}

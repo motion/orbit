@@ -12,8 +12,8 @@ const getHoverProps = Helpers.hoverSettler({
   onHovered: async target => {
     if (!target) {
       // hide
+      await Helpers.sleep(50)
       await whenAsync(() => !Electron.isMouseInActiveArea)
-      console.log('CLEAR hoverSettler')
       App.setPeekTarget(null)
       return
     }

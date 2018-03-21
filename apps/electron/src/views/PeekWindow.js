@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react'
 import * as Constants from '~/constants'
-import { view } from '@mcro/black'
+import { view, react } from '@mcro/black'
 import { Window } from '@mcro/reactron'
 import { memoize } from 'lodash'
 import * as Helpers from '~/helpers'
@@ -64,7 +64,34 @@ const peekPosition = (target: PeekTarget) => {
   }
 }
 
+class PeekStore {
+  @react
+  positionPeekBasedOnTarget = [
+    () => App.state.peekTarget,
+    peekTarget => {
+      console.log('REACT TO PEEK TARGET')
+      if (!peekTarget) return
+      if (Electron.orbitState.fullScreen) {
+        log(`Avoid position on fullScreen`)
+        return
+      }
+      // focus peek new target
+      console.log('ok now do 1')
+      if (this.props.electronStore.peekRef) {
+        this.props.electronStore.peekRef.focus()
+      }
+      console.log('ok now do 2')
+      Electron.updatePeek(Electron.currentPeek, peek => {
+        Object.assign(peek, peekPosition(peekTarget.position))
+      })
+    },
+  ]
+}
+
 @view.attach('electronStore')
+@view.provide({
+  store: PeekStore,
+})
 @view.electron
 export default class PeekWindow {
   // ui related state/functionality
@@ -86,7 +113,6 @@ export default class PeekWindow {
 
   componentDidMount() {
     this.mounted = true
-    this.positionPeekBasedOnTarget()
     // this.watch(function watchPeekClose() {
     //   const key = App.state.peekClose
     //   if (!key) return
@@ -95,22 +121,6 @@ export default class PeekWindow {
     //   )
     //   Electron.setPeekState({ windows })
     // })
-  }
-
-  positionPeekBasedOnTarget = () => {
-    this.react(
-      () => App.state.peekTarget,
-      peekTarget => {
-        if (!peekTarget) return
-        if (Electron.orbitState.fullScreen) {
-          log(`Avoid position on fullScreen`)
-          return
-        }
-        Electron.updatePeek(Electron.currentPeek, peek => {
-          Object.assign(peek, peekPosition(peekTarget.position))
-        })
-      },
-    )
   }
 
   handleReadyToShow = memoize(peek => () => {

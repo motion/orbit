@@ -94,26 +94,31 @@ export default class OrbitPage {
         }
         break
     }
+    const { fullScreen } = Electron.orbitState
     return (
       <UI.Theme name="dark">
         <overflowWrap
-          $unPad={Electron.orbitState.fullScreen}
           $hideOverflow={!App.isShowingOrbit || App.isAnimatingOrbit}
-          css={{
-            right: onLeft ? 15 : 'auto',
-            left: !onLeft ? 15 : 'auto',
-          }}
+          css={
+            fullScreen
+              ? { right: 0 }
+              : {
+                  right: onLeft ? 15 : 'auto',
+                  left: !onLeft ? 15 : 'auto',
+                }
+          }
         >
           <orbit
             css={{
-              paddingRight: Electron.orbitState.fullScreen ? 0 : SHADOW_PAD,
+              paddingRight: fullScreen ? 0 : SHADOW_PAD,
             }}
             $orbitHeight={orbitPage.adjustHeight}
             $orbitStyle={[App.isShowingOrbit, onLeft]}
             $orbitVisible={App.isShowingOrbit}
-            $orbitFullScreen={Electron.orbitState.fullScreen}
+            $orbitFullScreen={fullScreen}
           >
             <indicator
+              if={!fullScreen}
               css={{
                 position: 'absolute',
                 background: Constants.ORBIT_COLOR,
@@ -141,12 +146,9 @@ export default class OrbitPage {
             />
             <content
               css={{
-                boxShadow: Electron.orbitState.fullScreen
-                  ? orbitShadow
-                  : orbitLightShadow,
+                boxShadow: fullScreen ? orbitShadow : orbitLightShadow,
                 borderLeftRadius: onLeft ? BORDER_RADIUS : 0,
-                borderRightRadius:
-                  Electron.orbitState.fullScreen || onLeft ? 0 : BORDER_RADIUS,
+                borderRightRadius: fullScreen || onLeft ? 0 : BORDER_RADIUS,
               }}
             >
               <OrbitHeader />
@@ -228,14 +230,11 @@ export default class OrbitPage {
       width: 330,
       padding: SHADOW_PAD,
       pointerEvents: 'none !important',
-      // background: 'red',
       position: 'relative',
       transition: `
         transform linear ${App.animationDuration}ms,
         opacity linear ${App.animationDuration}ms
       `,
-      // opacity: 0,
-      // background: 'red',
     },
     orbitHeight: adjust => {
       if (!adjust) {
@@ -268,6 +267,7 @@ export default class OrbitPage {
     orbitFullScreen: {
       width: '100%',
       right: 0,
+      transition: 'none',
     },
     orbitTorn: {
       pointerEvents: 'all !important',

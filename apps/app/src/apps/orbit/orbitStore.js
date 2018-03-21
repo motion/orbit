@@ -1,3 +1,4 @@
+import { react } from '@mcro/black'
 import { debounce, memoize } from 'lodash'
 import { App, Desktop } from '@mcro/all'
 import { Thing } from '@mcro/models'
@@ -15,6 +16,16 @@ export default class OrbitStore {
   indexingStatus = ''
   selectedIndex = 0
   searchPerformance = 0
+
+  @react
+  setSelectedFromPeekResult = [
+    () => App.state.peekTarget || {},
+    ({ id }) => {
+      if (id) {
+        this.selectedIndex = id
+      }
+    },
+  ]
 
   get results() {
     return [...this.searchResults, ...Desktop.state.pluginResults]

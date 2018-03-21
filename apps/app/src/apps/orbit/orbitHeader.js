@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { App, Electron } from '@mcro/all'
 import * as Constants from '~/constants'
@@ -8,18 +8,18 @@ import * as Constants from '~/constants'
 class HeaderStore {
   inputRef = null
 
-  willMount() {
-    this.react(
-      () => Electron.orbitState.pinned || Electron.orbitState.fullScreen,
-      shouldFocus => {
-        if (!shouldFocus) return
-        if (this.inputRef) {
-          this.inputRef.focus()
-          this.inputRef.select()
-        }
-      },
-    )
-  }
+  @react
+  focusInput = [
+    () => App.isShowingHeader,
+    shouldFocus => {
+      if (!shouldFocus) return
+      if (this.inputRef) {
+        this.inputRef.focus()
+        this.inputRef.select()
+      }
+    },
+    true,
+  ]
 }
 
 @view.attach('orbitStore')
@@ -59,8 +59,8 @@ export default class PeekHeader {
         >
           <logo
             css={{
-              width: 12,
-              height: 12,
+              width: 11,
+              height: 11,
               background: Electron.orbitState.pinned
                 ? Constants.ORBIT_COLOR
                 : '#222',
@@ -84,7 +84,7 @@ export default class PeekHeader {
     logoButton: {
       position: 'absolute',
       top: 3,
-      border: [5, '#151515'],
+      border: [4, '#151515'],
       borderRadius: 1000,
     },
     onLeft: {

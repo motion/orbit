@@ -75,7 +75,8 @@ class AppStore {
     return (
       Electron.orbitState.fullScreen ||
       Electron.orbitState.mouseOver ||
-      Electron.orbitState.pinned
+      Electron.orbitState.pinned ||
+      false
     )
   }
 

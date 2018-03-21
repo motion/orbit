@@ -11,18 +11,10 @@ const log = debug('OrbitWindow')
 class OrbitWindowStore {
   orbitRef = null
 
-  get peekWindow() {
-    return this.props.electronStore.peekRefs[0]
-  }
-
   focusOrbit = () => {
     try {
       if (this.orbitRef) {
         this.orbitRef.focus()
-      }
-      // then focus peek next so its above
-      if (this.peekWindow) {
-        this.peekWindow.focus()
       }
     } catch (err) {
       console.error('error on focus', err)

@@ -5,7 +5,7 @@ import * as Constants from '~/constants'
 const Theme = new ThemeMaker()
 
 const highlightColor = '#fff'
-const highlightBackground = Constants.oraBg
+const highlightBackground = Constants.ORBIT_COLOR
 
 const blank = {
   highlightBackground: 'transparent',

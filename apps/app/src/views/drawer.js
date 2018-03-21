@@ -1,9 +1,8 @@
-import * as Constants from '~/constants'
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 
-const HEADER_HEIGHT = 30
+const HEIGHT = 30
 
 @view
 export default class Drawer {
@@ -51,7 +50,7 @@ export default class Drawer {
           boxShadow={[[0, 0, 20, [20, 20, 20, 0.25]]]}
           background={background}
           borderTopRadius={5}
-          size={collapsed ? Constants.ACTION_BAR_HEIGHT + HEADER_HEIGHT : size}
+          size={collapsed ? HEIGHT : size}
           {...props}
         >
           <container if={open}>
@@ -101,7 +100,7 @@ export default class Drawer {
     },
     outerContent: {
       flex: 1,
-      paddingBottom: Constants.ACTION_BAR_HEIGHT,
+      paddingBottom: HEIGHT,
     },
     after: {
       padding: 5,
@@ -109,7 +108,7 @@ export default class Drawer {
       position: 'absolute',
       backdropFilter: 'blur(20px)',
       background: [0, 0, 0, 0.1],
-      bottom: Constants.ACTION_BAR_HEIGHT,
+      bottom: HEIGHT,
       left: 0,
       right: 0,
     },
@@ -124,7 +123,7 @@ export default class Drawer {
     title: {
       background: [0, 0, 0, 0.05],
       padding: [5, 7],
-      height: HEADER_HEIGHT,
+      height: HEIGHT,
       flexFlow: 'row',
       alignItems: 'center',
       position: 'relative',

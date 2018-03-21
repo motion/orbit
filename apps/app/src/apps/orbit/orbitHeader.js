@@ -3,6 +3,7 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { App, Electron } from '@mcro/all'
+import * as Constants from '~/constants'
 
 class HeaderStore {
   inputRef = null
@@ -58,7 +59,9 @@ export default class PeekHeader {
             css={{
               width: 14,
               height: 14,
-              background: Electron.orbitState.pinned ? '#643E96' : '#222',
+              background: Electron.orbitState.pinned
+                ? Constants.ORBIT_COLOR
+                : '#222',
               borderRadius: 1000,
             }}
           />
@@ -75,9 +78,6 @@ export default class PeekHeader {
       padding: [12, 10],
       transition: 'all ease-in 100ms',
       opacity: 0.2,
-      // transform: {
-      //   y: -Constants.ORA_HEADER_HEIGHT,
-      // },
     },
     logoButton: {
       position: 'absolute',

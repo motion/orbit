@@ -7,6 +7,7 @@ import OrbitContent from './orbitContent'
 import OrbitSettings from './orbitSettings'
 import OrbitHeader from './orbitHeader'
 import OrbitStore from './orbitStore'
+import * as Constants from '~/constants'
 
 const SHADOW_PAD = 15
 const BORDER_RADIUS = 12
@@ -64,7 +65,7 @@ class OrbitPageStore {
   }
 }
 
-const iWidth = 5
+const iWidth = 4
 
 @view.provide({
   orbitStore: OrbitStore,
@@ -115,18 +116,18 @@ export default class OrbitPage {
             <indicator
               css={{
                 position: 'absolute',
-                background: '#602DAA',
+                background: Constants.ORBIT_COLOR,
                 boxShadow: [
                   // [-5, 0, onLeft ? 10 : -10, 5, [255, 255, 255, 0.5]],
                   [-2, 0, 10, 0, [0, 0, 0, 0.15]],
                 ],
                 width: iWidth,
-                height: 60,
-                top: 30,
+                height: 36,
+                top: 31,
                 left: onLeft ? SHADOW_PAD - iWidth : 'auto',
                 right: !onLeft ? SHADOW_PAD - iWidth : 'auto',
-                borderLeftRadius: onLeft ? 5 : 0,
-                borderRightRadius: !onLeft ? 5 : 0,
+                borderLeftRadius: onLeft ? 4 : 0,
+                borderRightRadius: !onLeft ? 4 : 0,
                 // opacity: App.isShowingOrbit ? 0 : 1,
                 transition: 'all ease-in 100ms',
               }}
@@ -227,6 +228,7 @@ export default class OrbitPage {
       width: 330,
       padding: SHADOW_PAD,
       pointerEvents: 'none !important',
+      // background: 'red',
       position: 'relative',
       transition: `
         transform linear ${App.animationDuration}ms,
@@ -255,13 +257,13 @@ export default class OrbitPage {
         : {
             // marginRight: onLeft ? SHADOW_PAD : -SHADOW_PAD,
             transform: {
-              x: onLeft ? 330 - iWidth - 1 : -330,
+              x: onLeft ? 330 - SHADOW_PAD - (SHADOW_PAD + iWidth) + 4 : -330,
             },
           }
     },
     orbitVisible: {
       pointerEvents: 'all !important',
-      opacity: 1,
+      opacity: 1, //0.5,
     },
     orbitFullScreen: {
       width: '100%',

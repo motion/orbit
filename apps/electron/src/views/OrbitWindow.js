@@ -19,6 +19,16 @@ class OrbitWindowStore {
     }
   }
 
+  @react
+  setHasPositionedFullScreen = [
+    () => Electron.orbitState.fullScreen,
+    async (fs, { sleep }) => {
+      if (!fs) return
+      await sleep(0)
+      Electron.setOrbitState({ hasPositionedFullScreen: true })
+    },
+  ]
+
   delayedOrbitState = null
 
   @react

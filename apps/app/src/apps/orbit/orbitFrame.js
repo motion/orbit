@@ -38,12 +38,19 @@ const OrbitArrow = ({ arrowSize, arrowTowards, arrowStyle }) =>
     @react
     isChanging = [
       () => [
-        Electron.onLeft,
+        Electron.orbitState.fullScreen,
+        Electron.orbitState.hasPositionedFullScreen,
         Desktop.state.appState.id,
         ...(Desktop.state.appState.bounds || []),
         ...(Desktop.state.appState.offset || []),
       ],
-      async (val, { sleep, setValue }) => {
+      async ([fullScreen, hasPositionedFS], { sleep, setValue }) => {
+        if (fullScreen && !hasPositionedFS) {
+          return true
+        }
+        if (fullScreen) {
+          return false
+        }
         setValue(true)
         await sleep(250)
         return false
@@ -55,6 +62,9 @@ const OrbitArrow = ({ arrowSize, arrowTowards, arrowStyle }) =>
 export default class OrbitFrame {
   render({ store, orbitPage, children, iWidth }) {
     const { isChanging } = store
+    if (isChanging) {
+      return null
+    }
     const { onLeft } = Electron
     const { fullScreen, arrowTowards } = Electron.orbitState
     const arrowSize = 24
@@ -71,10 +81,12 @@ export default class OrbitFrame {
       }
     }
     const boxShadow = fullScreen ? orbitShadow : orbitLightShadow
+    const hideOverflow =
+      !fullScreen && (!App.isShowingOrbit || App.isAnimatingOrbit)
     return (
       <UI.Theme name="dark">
         <overflowWrap
-          $hideOverflow={!App.isShowingOrbit || App.isAnimatingOrbit}
+          $hideOverflow={hideOverflow}
           css={
             fullScreen
               ? { right: 0 }

@@ -182,7 +182,9 @@ export default class ElectronReactions {
       Desktop.linesBoundingBox,
       this.shouldRepositionAfterFullScreen,
     ],
-    ([appBB, linesBB]) => {
+    async ([appBB, linesBB], { sleep }) => {
+      // so app can hide before we transition
+      await sleep(32)
       // prefer using lines bounding box, fall back to app
       const box = linesBB || appBB
       if (!box) return

@@ -2,21 +2,50 @@ import * as React from 'react'
 import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { App, Electron, Desktop } from '@mcro/all'
+import * as Constants from '~/constants'
 
 const SHADOW_PAD = 15
+const BORDER_RADIUS = 12
+const background = 'rgba(0,0,0,0.9)'
+const orbitShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.3]]]
+const orbitLightShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.1]]]
+
+const OrbitArrow = ({ arrowSize, arrowTowards, arrowStyle }) =>
+  [1, 2].map(key => (
+    <UI.Arrow
+      key={key}
+      size={arrowSize}
+      towards={arrowTowards}
+      background={background}
+      css={{
+        position: 'absolute',
+        ...arrowStyle,
+        ...[
+          {
+            boxShadow: orbitShadow,
+            zIndex: -1,
+          },
+          {
+            zIndex: 100,
+          },
+        ][key],
+      }}
+    />
+  ))
 
 @view({
   store: class OrbitFrameStore {
     @react
     isChanging = [
       () => [
+        Electron.onLeft,
         Desktop.state.appState.id,
-        ...Desktop.state.appState.bounds,
-        ...Desktop.state.appState.offset,
+        ...(Desktop.state.appState.bounds || []),
+        ...(Desktop.state.appState.offset || []),
       ],
       async (val, { sleep, setValue }) => {
         setValue(true)
-        await sleep(200)
+        await sleep(250)
         return false
       },
       true,
@@ -27,7 +56,21 @@ export default class OrbitFrame {
   render({ store, orbitPage, children, iWidth }) {
     const { isChanging } = store
     const { onLeft } = Electron
-    const { fullScreen } = Electron.orbitState
+    const { fullScreen, arrowTowards } = Electron.orbitState
+    const arrowSize = 24
+    let arrowStyle
+    if (onLeft) {
+      arrowStyle = {
+        top: 53,
+        right: SHADOW_PAD - arrowSize,
+      }
+    } else {
+      arrowStyle = {
+        top: 53,
+        left: 1,
+      }
+    }
+    const boxShadow = fullScreen ? orbitShadow : orbitLightShadow
     return (
       <UI.Theme name="dark">
         <overflowWrap
@@ -52,7 +95,42 @@ export default class OrbitFrame {
             $orbitFullScreen={fullScreen}
             $isChangingApps={isChanging}
           >
-            {children}
+            <indicator
+              if={!fullScreen}
+              css={{
+                position: 'absolute',
+                background: Constants.ORBIT_COLOR,
+                boxShadow: [
+                  // [-5, 0, onLeft ? 10 : -10, 5, [255, 255, 255, 0.5]],
+                  [-2, 0, 10, 0, [0, 0, 0, 0.15]],
+                ],
+                width: iWidth,
+                height: 36,
+                top: 31,
+                left: onLeft ? SHADOW_PAD - iWidth : 'auto',
+                right: !onLeft ? SHADOW_PAD - iWidth : 'auto',
+                borderLeftRadius: onLeft ? 4 : 0,
+                borderRightRadius: !onLeft ? 4 : 0,
+                // opacity: App.isShowingOrbit ? 0 : 1,
+                transition: 'all ease-in 100ms',
+              }}
+            />
+            {/* first is arrow (above), second is arrow shadow (below) */}
+            <OrbitArrow
+              if={App.isAttachedToWindow}
+              arrowSize={arrowSize}
+              arrowTowards={arrowTowards}
+              arrowStyle={arrowStyle}
+            />
+            <content
+              css={{
+                boxShadow: App.isShowingOrbit ? boxShadow : 'none',
+                borderLeftRadius: onLeft ? BORDER_RADIUS : 0,
+                borderRightRadius: fullScreen || onLeft ? 0 : BORDER_RADIUS,
+              }}
+            >
+              {children}
+            </content>
           </orbit>
         </overflowWrap>
       </UI.Theme>
@@ -127,6 +205,14 @@ export default class OrbitFrame {
       transform: {
         y: 0,
       },
+    },
+    content: {
+      flex: 1,
+      // border: [1, 'transparent'],
+      background,
+      overflow: 'hidden',
+      opacity: 1,
+      position: 'relative',
     },
   }
 }

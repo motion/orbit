@@ -36,7 +36,7 @@ class AppStore {
     )
   }
 
-  animationDuration = 100
+  animationDuration = 80
 
   @react
   isAnimatingOrbit = [
@@ -55,11 +55,14 @@ class AppStore {
 
   @react
   wasShowingPeek = [
-    () => [App.state.peekTarget, Electron.orbitState.fullScreen],
-    () => {
-      const last = this.next
-      this.next = this.isShowingPeek
-      return last || false
+    () => this.isShowingPeek,
+    is => {
+      if (is === false) {
+        return false
+      }
+      const last = this.last
+      this.last = is
+      return is || last || false
     },
   ]
 

@@ -170,6 +170,12 @@ export default class PeekWindow {
 
   render({ electronStore }) {
     const peekWindows = Mobx.toJS(Electron.peekState.windows)
+    console.log(
+      'animatePeek = isShowing ',
+      App.isShowingPeek,
+      '&& wasShowing',
+      App.wasShowingPeek,
+    )
     return (
       <React.Fragment>
         {peekWindows.map((peek, index) => {

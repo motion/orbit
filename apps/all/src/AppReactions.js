@@ -91,11 +91,12 @@ export default class AppReactions {
       Electron.orbitState.mouseOver || Electron.peekState.mouseOver,
     ],
     async ([isShown, mouseOver], { sleep }) => {
-      if (Desktop.isHoldingOption || Electron.recentlyToggled) {
-        return
-      }
       if (isShown && !mouseOver) {
+        // 100ms leeway on mouse leave
         await sleep(100)
+        if (Desktop.isHoldingOption || Electron.recentlyToggled) {
+          return
+        }
         if (Electron.orbitState.pinned || Electron.orbitState.fullScreen) {
           return
         }

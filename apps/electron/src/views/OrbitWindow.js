@@ -16,12 +16,16 @@ class OrbitWindowStore {
   }
 
   focusOrbit = () => {
-    if (this.orbitRef) {
-      this.orbitRef.focus()
-    }
-    // then focus peek next so its above
-    if (this.peekWindow) {
-      this.peekWindow.focus()
+    try {
+      if (this.orbitRef) {
+        this.orbitRef.focus()
+      }
+      // then focus peek next so its above
+      if (this.peekWindow) {
+        this.peekWindow.focus()
+      }
+    } catch (err) {
+      console.error('error on focus', err)
     }
   }
 

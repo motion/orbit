@@ -54,11 +54,13 @@ export default class PeekHeader {
         <logoButton
           if={!Electron.orbitState.fullScreen}
           onClick={App.togglePinned}
+          $onLeft={Electron.onLeft}
+          $onRight={!Electron.onLeft}
         >
           <logo
             css={{
-              width: 14,
-              height: 14,
+              width: 12,
+              height: 12,
               background: Electron.orbitState.pinned
                 ? Constants.ORBIT_COLOR
                 : '#222',
@@ -82,9 +84,14 @@ export default class PeekHeader {
     logoButton: {
       position: 'absolute',
       top: 3,
-      right: 3,
       border: [5, '#151515'],
       borderRadius: 1000,
+    },
+    onLeft: {
+      right: 3,
+    },
+    onRight: {
+      left: 0,
     },
     headerVisible: {
       opacity: 1,

@@ -75,6 +75,14 @@ class ElectronStore {
     return false
   }
 
+  get onLeft() {
+    return this.orbitState.arrowTowards === 'right'
+  }
+
+  get peekOnLeft() {
+    return this.peekState.arrowTowards === 'right'
+  }
+
   onShortcut = shortcut => {
     if (shortcut === 'Option+Space') {
       if (Electron.orbitState.fullScreen) {

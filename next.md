@@ -1,6 +1,5 @@
 * interaction
 
-  * if click input on preview, pin it
   * disable drag peek in fullscreen
   * keyboard nav
     * right/left to open big-peek

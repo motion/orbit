@@ -20,6 +20,12 @@ class HeaderStore {
     },
     true,
   ]
+
+  onClickInput = () => {
+    if (!Electron.orbitState.pinned) {
+      App.togglePinned()
+    }
+  }
 }
 
 @view.attach('orbitStore')
@@ -49,6 +55,7 @@ export default class PeekHeader {
             onChange={orbitStore.onChangeQuery}
             onKeyDown={this.handleKeyDown}
             getRef={headerStore.ref('inputRef').set}
+            onClick={headerStore.onClickInput}
           />
         </title>
         <logoButton

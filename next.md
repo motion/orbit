@@ -1,23 +1,21 @@
-* interaction
+# next
 
-  * disable drag peek in fullscreen
-  * keyboard nav
-    * right/left to open big-peek
-
-* ux
-
-  * get better docs in place for peek design
-  * peek document display/design
-  * bottom of tray "mini peek" that previews hovered result
-    * then click does big-peek
-
-* bugs
-
-* fullscreen ux bugs:
-  * disable both from animating on open
-  * can see it transform back to sidebar on close
-  * disable drag
-  * certain windows/actions confuse swindler
+* if not holding option and click input, dont pin
+* remove arrow in peek
+* hover => selectedItem
+* selectedItem nicer design
+* un-pin on switch app
+* animation fix:
+  * unfullscreen glitches
+  * switch app: hide, re-show once repositioned
+  * first to second peek result doesnt animate
+  * first peek result animates in
+* when pinned: re-focusing current app should hide peek
+* click settings should pin
+* keyboard nav
+  * right/left to open big-peek
+* get better docs in place for peek design
+* peek document display/design
 
 # old
 

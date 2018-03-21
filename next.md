@@ -2,8 +2,6 @@
 
 * animation fix:
   * unfullscreen glitches
-  * first to second peek result doesnt animate
-  * first peek result animates in
 * click settings should pin
 * keyboard nav
   * right/left to open big-peek

@@ -70,16 +70,16 @@ export default class Item {
         </Text>
         <Text size={1} sizeLineHeight={1.15}>
           <SubTitle>Section 1</SubTitle>
-          <P>
+          <P selectable>
             Lorem ipsum, dolor sit amet consectetur adipisicing elit. Fuga at
             optio cum enim ipsa rem doloribus nam atque.
           </P>
-          <P>
+          <P selectable>
             Dolor quasi minima reiciendis, voluptatum delectus repellat ab quo
             itaque libero perspiciatis.
           </P>
           <SubTitle>Section 2</SubTitle>
-          <P>
+          <P selectable>
             Sit amet consectetur adipisicing elit. Fuga at optio cum, nam atque.
           </P>
         </Text>

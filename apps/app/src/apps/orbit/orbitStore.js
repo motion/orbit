@@ -28,7 +28,7 @@ export default class OrbitStore {
   ]
 
   get results() {
-    return [...this.searchResults, ...Desktop.state.pluginResults]
+    return [...Desktop.state.searchResults, ...Desktop.state.pluginResults]
   }
 
   getIndexingStatus = async () => {

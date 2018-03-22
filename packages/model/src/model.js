@@ -119,7 +119,6 @@ export default class Model {
   static defaultFilter: ?Function
 
   _collection: RxCollection
-  migrations: ?Object
   methods: ?Object
   statics: ?Object
   database: ?RxDB
@@ -364,7 +363,6 @@ export default class Model {
         schema: this.compiledSchema,
         statics: this.statics,
         pouchSettings: options.pouchSettings,
-        migrationStrategies: this.migrations,
         options: {
           asyncMethods: this.asyncMethods,
         },

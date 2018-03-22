@@ -6,8 +6,27 @@ import { sum, range, sortBy, flatten } from 'lodash'
 import DB from './db'
 import { splitSentences, wordMoversDistance, cosineSimilarity } from './helpers'
 import summarize from './summarize'
+import { react } from '@mcro/black/store'
 import createKDTree from 'static-kdtree'
-import wordVectors from './vectors.json'
+import { readFileSync } from 'fs'
+import path from 'path'
+import getVectors from '~/embedding'
+import { Desktop, App } from '@mcro/all'
+
+const readData = file => {
+  const filePath = path.resolve(__dirname, `../../../data/${file}`)
+  return JSON.parse(readFileSync(filePath, 'utf8'))
+}
+const stripPunctuation = s => s.replace(/[:".,/#!$%^&*;:{}=\-_`~()]/g, '')
+
+const sentenceToWords = sentence =>
+  sentence.split(' ').filter(i => i.trim().length > 0)
+const wordsToSentence = words => words.join(' ')
+
+// const wordVectors = readData('vectors.json')
+const dataset = flatten(
+  ['datasets/books.json', 'datasets/pg.json'].map(readData),
+)
 
 // for some reason lodash's was acting strangely so I rewrote it
 const sortedUniqBy = (xs, fn) => {
@@ -36,19 +55,16 @@ const vecMean = xs => {
   )
 }
 
-// TODO import from constants
-const API_URL = 'http://localhost:3001'
-
 const batchMapPromise = async (xs, fn, batchSize, callback = () => {}) => {
   let hasStopped = false
   const onStop = () => {
     hasStopped = true
   }
 
-  const batches = Math.floor(xs.length / batchSize)
+  const batches = Math.ceil(xs.length / batchSize)
   let items = []
   for (const batch of range(batches)) {
-    await sleep(80)
+    await sleep(150)
     if (hasStopped) {
       break
     }
@@ -66,7 +82,10 @@ const batchMapPromise = async (xs, fn, batchSize, callback = () => {}) => {
 }
 
 @store
-class Search {
+export default class Search {
+  getVectors = getVectors
+  stripPunctuation = stripPunctuation
+
   paragraphs = []
   documents = []
   indexing = false
@@ -76,14 +95,10 @@ class Search {
   totalDocuments = 0
 
   @watch
-  indexedStatus = () =>
+  indexStatus = () =>
     `index: doc ${this.totalIndexed}/${this.totalDocuments} line ${
       this.totalIndexedSentences
     }/${this.currentTotalSentences} `
-
-  getIndexingStatus = () => this.indexedStatus
-
-  @watch indexedPercentage = () => this.totalIndexed / this.totalDocuments * 100
 
   @watch
   paragraphs = () =>
@@ -114,9 +129,31 @@ class Search {
     }
   }
 
+  @react
+  setIndexStatus = [
+    () => this.indexStatus,
+    () => Desktop.setSearchIndexStatus(this.indexStatus),
+  ]
+
+  @react
+  runSearch = [
+    () => App.state.query,
+    async () => {
+      const { query } = App.state
+      const start = +Date.now()
+      const results = await this.search(query)
+      // make sure we haven't had a new query yet
+      if (App.state.query === query) {
+        Desktop.setSearchResults(results)
+        Desktop.setSearchPerformance(+Date.now() - start)
+      }
+    },
+  ]
+
   async willMount() {
-    self.indexer = this
     this.db = new DB()
+    await this.db.mount()
+    this.setDocuments(dataset)
   }
 
   getSentences = async paragraph => {
@@ -124,8 +161,10 @@ class Search {
 
     return await Promise.all(
       sentences.map(async text => {
-        const { vectors, sentenceVector } = await this.getWordVectors(text)
-        return { text, vectors, sentenceVector }
+        const words = sentenceToWords(text)
+        const { vectors, sentenceVector } = await this.getWordVectors(words)
+
+        return { text, words, vectors, sentenceVector }
       }),
     )
   }
@@ -158,6 +197,18 @@ class Search {
     )
   }
 
+  sentenceWMD = async (s, s2) => {
+    const w = sentenceToWords(s)
+    const w2 = sentenceToWords(s2)
+
+    const first = await this.getWordVectors(w)
+    const second = await this.getWordVectors(w2)
+    console.log('first is', first, 'second is', second)
+
+    const wmd = wordMoversDistance(first, second)
+    return wmd
+  }
+
   setDocuments = async documentSources => {
     // lets keep the articles short for testing
     documentSources = documentSources
@@ -188,20 +239,22 @@ class Search {
     return true
   }
 
-  getWordVectors = async sentence => {
+  getWordVectors = async words => {
+    const sentence = wordsToSentence(words)
     const hash = `word-vectors-${sentence}`
     const sentenceHash = `vectors-${sentence}`
 
-    const cachedValue = await this.db.getItem(hash)
-    if (cachedValue) {
-      const cachedSentenceValue = await this.db.getItem(sentenceHash)
+    const cachedVectors = await this.db.getItem(hash)
+    if (cachedVectors) {
+      const cachedSentenceVector = await this.db.getItem(sentenceHash)
       return {
-        vectors: JSON.parse(cachedValue),
-        sentenceVector: JSON.parse(cachedSentenceValue),
+        words,
+        vectors: cachedVectors,
+        sentenceVector: cachedSentenceVector,
       }
     }
 
-    const vectors = await this.getVectors(sentence)
+    const vectors = await getVectors(words.map(stripPunctuation))
     const sentenceVector = vecMean(vectors)
 
     try {
@@ -213,10 +266,11 @@ class Search {
       console.log('err is', err)
     }
 
-    return { vectors, sentenceVector }
+    return { words, vectors, sentenceVector }
   }
 
-  getSimpleSentenceVectors = async sentence => {
+  getSimpleSentenceVectors = async words => {
+    const sentence = wordsToSentence(words)
     const getWord = word => {
       return wordVectors[word]
     }
@@ -225,21 +279,20 @@ class Search {
     const vectors = allVectors.filter(_ => _)
 
     // take out empty ones
-    const val = { sentenceVector: vecMean(vectors), vectors }
+    const val = { words, sentenceVector: vecMean(vectors), vectors }
     return val
   }
 
-  getSentenceVector = async sentence => {
+  getSentenceVector = async words => {
+    const sentence = wordsToSentence(words)
     const hash = `vectors-${sentence}`
 
     const cachedValue = await this.db.getItem(hash)
     if (cachedValue) {
-      return JSON.parse(cachedValue)
+      return cachedValue
     }
 
-    const vector = vecMean(await this.getVectors(sentence)).map(
-      i => +i.toFixed(4),
-    )
+    const vector = vecMean(await getVectors(sentence)).map(i => +i.toFixed(4))
 
     try {
       const str = JSON.stringify(vector)
@@ -251,24 +304,16 @@ class Search {
     return vector
   }
 
-  getVectors = async sentence => {
-    const url = `${API_URL}/sentence?sentence=${encodeURIComponent(sentence)}`
-
-    const { values } = await (await fetch(url)).json()
-    return values
-  }
-
   search = async (query, options = { count: 10, onePerDoc: true }) => {
+    const words = sentenceToWords(query)
+
     if (!query) {
       return false
     }
 
-    const start = +Date.now()
     this.lastQuery = query
 
-    const { vectors, sentenceVector } = await this.getSimpleSentenceVectors(
-      query,
-    )
+    const { vectors, sentenceVector } = await this.getWordVectors(words)
 
     // bail if we're out of date
     if (query !== this.lastQuery) {
@@ -291,9 +336,14 @@ class Search {
         const documentIndex = paragraph.document
         // incorporate sentence distance into weighting
         const penalizeNearest = index / nearestNeighbors.length
-        const distance =
-          wordMoversDistance(vectors, sentence.vectors).total / vectors.length +
-          0.2 * penalizeNearest
+
+        const wmd = wordMoversDistance(
+          { words, vectors },
+          { words: sentence.words, vectors: sentence.vectors },
+        )
+
+        const distance = wmd.total / vectors.length + 0.2 * penalizeNearest
+
         const document = this.documentSources[documentIndex]
 
         const context = paragraph.sentences.map(({ text }) => ({
@@ -305,6 +355,7 @@ class Search {
           document,
           documentIndex,
           distance,
+          wmd,
           sentence: sentence.text,
           context,
           title: document.title,
@@ -320,24 +371,6 @@ class Search {
       options.count,
     )
 
-    return { performance: +Date.now() - start, results }
+    return results
   }
-}
-
-const search = new Search()
-
-onmessage = async e => {
-  if (!e.data || !e.data.uuid) {
-    return false
-  }
-
-  const { name, args, uuid } = e.data
-
-  let data = search[name](args)
-
-  if (data && data.then) {
-    data = await data
-  }
-
-  postMessage({ uuid, data })
 }

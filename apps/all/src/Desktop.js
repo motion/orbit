@@ -39,6 +39,8 @@ export type DesktopState = {
   pluginResults: [{}],
   focusedOnOrbit: boolean,
   appStateUpdatedAt: Number,
+  searchIndexStatus: String,
+  searchResults: [{}],
 }
 
 let Desktop
@@ -64,6 +66,8 @@ class DesktopStore {
     clearWords: {},
     restoreWords: {},
     selection: null,
+    searchIndexStatus: '',
+    searchResults: [],
   }
 
   get isHoldingOption(): Boolean {

@@ -13,6 +13,7 @@ import Path from 'path'
 import { getChromeContext } from './helpers/getContext'
 import { Desktop } from '@mcro/all'
 import Plugins from './plugins'
+import SearchStore from './stores/search'
 import open from 'opn'
 import iohook from 'iohook'
 
@@ -24,6 +25,7 @@ const sudoPrompt = promisifyAll(sudoPrompt_)
 @store
 export default class DesktopRoot {
   server = new Server()
+  searchStore = new SearchStore()
   screenMaster = new ScreenMaster()
   plugins = new Plugins({
     server: this.server,

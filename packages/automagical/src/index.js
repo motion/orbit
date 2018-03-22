@@ -384,8 +384,9 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
 
   function watcher(reactionFn) {
     return function watcherCb(reactVal) {
-      const name = `${getReactionName(obj)}.${method}`
       reactionID = uid()
+      const id = reactionID
+      const name = `${getReactionName(obj)}.${method}`
       // cancels on new reactions
       if (rejectReaction) {
         rejectReaction()
@@ -398,10 +399,14 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
           preventLogging: () => (preventLog = true),
           // allows setting multiple values in a reaction
           setValue: val => {
-            if (!preventLog) {
-              log(`${name}.setValue(`, val, `)`)
+            if (id === reactionID) {
+              replaceDisposable()
+              if (!preventLog) {
+                console.log('setting to', val)
+                log(`${name} = `, val)
+              }
+              update(val)
             }
-            update(val)
           },
           // allows delaying in a reaction, with automatic clearing on new reaction
           sleep: ms => {
@@ -436,27 +441,16 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
       global.__trackStateChanges = {}
       // handle promises
       if (reactionResult instanceof Promise) {
-        const id = reactionID
         if (!preventLog) {
           log(`[async ${id}] ${name}(`, reactVal, `) ...`)
         }
-        reactionResult
-          .then(value => {
-            if (id === reactionID) {
-              replaceDisposable()
-              if (!preventLog && typeof value !== 'undefined') {
-                log(`[  ... ${id}] done`, ...logRes(value))
-              }
-              update(value)
-            }
-          })
-          .catch(err => {
-            if (err === RejectReactionSymbol) {
-              console.log(`Reaction cancelled [${id}]`)
-            } else {
-              throw err
-            }
-          })
+        reactionResult.catch(err => {
+          if (err === RejectReactionSymbol) {
+            console.log(`Reaction cancelled [${id}]`)
+          } else {
+            throw err
+          }
+        })
         return
       }
       // store result as observable

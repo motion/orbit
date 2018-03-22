@@ -10,7 +10,6 @@ export default function decorateProxySetters(klass) {
       if (Reflect.has(target, method)) {
         return target[method]
       }
-      console.log('method', method)
       if (method.indexOf('set') === 0) {
         const stateKey = getStateKey(method)
         if (typeof target.state[stateKey] !== 'undefined') {

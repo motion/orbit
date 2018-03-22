@@ -99,12 +99,11 @@ export default class ScreenMaster {
     })
     this.oracle.onWindowChange((event, value) => {
       if (event === 'ScrollEvent') {
-        this.lastScreenChange()
         this.rescanApp()
         return
       }
       // if current app is a prevented app, treat like nothing happened
-      let nextState = { ...Desktop.state.appState }
+      let nextState = { ...Desktop.state.appState, updatedAt: Date.now() }
       let id = this.curAppID
       switch (event) {
         case 'FrontmostWindowChangedEvent':
@@ -116,10 +115,10 @@ export default class ScreenMaster {
             bounds: value.bounds,
             name: id ? last(id.split('.')) : value.title,
           }
-          const hasNewID = this.curAppID !== id
+          // const hasNewID = this.curAppID !== id
           const shouldClear =
             !PREVENT_CLEAR[this.curAppName] && !PREVENT_CLEAR[nextState.name]
-          if (hasNewID && shouldClear) {
+          if (shouldClear) {
             this.lastScreenChange()
           }
           // update these now so we can use to track
@@ -142,11 +141,14 @@ export default class ScreenMaster {
       if (!Desktop.state.paused) {
         this.oracle.resume()
       }
-      const appState = JSON.parse(JSON.stringify(nextState))
       // log('set.appState', appState)
-      this.setState({
-        appState,
-      })
+      clearTimeout(this.lastAppState)
+      this.lastAppState = this.setTimeout(() => {
+        const appState = JSON.parse(JSON.stringify(nextState))
+        this.setState({
+          appState,
+        })
+      }, 32)
     })
     this.oracle.onBoxChanged(count => {
       if (!Desktop.state.ocrWords) {

@@ -1,7 +1,7 @@
 // @flow
 import Bridge from './helpers/Bridge'
 import proxySetters from './helpers/proxySetters'
-import { store, react } from '@mcro/black/store'
+import { store } from '@mcro/black/store'
 import global from 'global'
 // import App from './App'
 
@@ -62,7 +62,12 @@ class DesktopStore {
 
   get isHoldingOption(): Boolean {
     const { option, optionUp } = this.state.keyboard
+    console.log('isHoldingOption', option, optionUp)
     return (option || 0) > (optionUp || 1)
+  }
+
+  get shouldHide() {
+    return this.state.lastScreenChange > this.state.appState.updatedAt
   }
 
   get linesBoundingBox() {

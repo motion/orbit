@@ -10,6 +10,30 @@ const background = 'rgba(0,0,0,0.9)'
 const orbitShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.3]]]
 const orbitLightShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.1]]]
 
+const Indicator = ({ iWidth, onLeft }) => {
+  return (
+    <indicator
+      css={{
+        position: 'absolute',
+        background: Constants.ORBIT_COLOR,
+        boxShadow: [
+          // [-5, 0, onLeft ? 10 : -10, 5, [255, 255, 255, 0.5]],
+          [-2, 0, 10, 0, [0, 0, 0, 0.15]],
+        ],
+        width: iWidth,
+        height: 36,
+        top: 31,
+        left: onLeft ? SHADOW_PAD - iWidth : 'auto',
+        right: !onLeft ? SHADOW_PAD - iWidth : 'auto',
+        borderLeftRadius: onLeft ? 4 : 0,
+        borderRightRadius: !onLeft ? 4 : 0,
+        // opacity: App.isShowingOrbit ? 0 : 1,
+        transition: 'all ease-in 100ms',
+      }}
+    />
+  )
+}
+
 const OrbitArrow = ({ arrowSize, arrowTowards, arrowStyle }) =>
   [1, 2].map(key => (
     <UI.Arrow
@@ -35,25 +59,38 @@ const OrbitArrow = ({ arrowSize, arrowTowards, arrowStyle }) =>
 
 @view({
   store: class OrbitFrameStore {
+    get wasFullScreen() {
+      const last = this._lastFullScreen || false
+      this._lastFullScreen = Electron.orbitState.fullScreen
+      return last
+    }
+
     @react
-    isChanging = [
-      () => [
-        Electron.orbitState.fullScreen,
-        Electron.orbitState.hasPositionedFullScreen,
-        Desktop.state.appState.id,
-        ...(Desktop.state.appState.bounds || []),
-        ...(Desktop.state.appState.offset || []),
-      ],
-      async ([fullScreen, hasPositionedFS], { sleep, setValue }) => {
-        if (fullScreen && !hasPositionedFS) {
-          return true
-        }
-        if (fullScreen) {
-          return false
+    shouldHideWhileMoving = [
+      () => Desktop.state.lastScreenChange,
+      async (_, { sleep, setValue }) => {
+        if (Electron.isMouseInActiveArea && App.isShowingOrbit) {
+          return
         }
         setValue(true)
-        await sleep(250)
-        return false
+        await sleep(300)
+        setValue(false)
+      },
+    ]
+
+    @react
+    orbitAnimate = [
+      () =>
+        Desktop.shouldHide ||
+        Electron.orbitState.fullScreen ||
+        this.wasFullScreen,
+      async (preventAnimation, { sleep, setValue }) => {
+        if (preventAnimation) {
+          setValue(false)
+        } else {
+          await sleep(App.animationDuration)
+          setValue(true)
+        }
       },
       true,
     ]
@@ -61,12 +98,8 @@ const OrbitArrow = ({ arrowSize, arrowTowards, arrowStyle }) =>
 })
 export default class OrbitFrame {
   render({ store, orbitPage, children, iWidth }) {
-    const { isChanging } = store
-    if (isChanging) {
-      return null
-    }
-    const { onLeft } = Electron
     const { fullScreen, arrowTowards } = Electron.orbitState
+    const { onLeft } = Electron
     const arrowSize = 24
     let arrowStyle
     if (onLeft) {
@@ -86,7 +119,10 @@ export default class OrbitFrame {
     return (
       <UI.Theme name="dark">
         <overflowWrap
+          $orbitAnimate={store.orbitAnimate}
+          $pointerEvents={App.isShowingOrbit}
           $hideOverflow={hideOverflow}
+          $isHidden={store.shouldHideWhileMoving}
           css={
             fullScreen
               ? { right: 0 }
@@ -95,38 +131,17 @@ export default class OrbitFrame {
                   left: !onLeft ? 15 : 'auto',
                 }
           }
-          $isChangingApps={isChanging}
         >
           <orbit
             css={{
               paddingRight: fullScreen ? 0 : SHADOW_PAD,
             }}
+            $orbitAnimate={store.orbitAnimate}
             $orbitHeight={orbitPage.adjustHeight}
             $orbitStyle={[App.isShowingOrbit, onLeft, iWidth]}
-            $orbitVisible={App.isShowingOrbit}
             $orbitFullScreen={fullScreen}
-            $isChangingApps={isChanging}
           >
-            <indicator
-              if={!fullScreen}
-              css={{
-                position: 'absolute',
-                background: Constants.ORBIT_COLOR,
-                boxShadow: [
-                  // [-5, 0, onLeft ? 10 : -10, 5, [255, 255, 255, 0.5]],
-                  [-2, 0, 10, 0, [0, 0, 0, 0.15]],
-                ],
-                width: iWidth,
-                height: 36,
-                top: 31,
-                left: onLeft ? SHADOW_PAD - iWidth : 'auto',
-                right: !onLeft ? SHADOW_PAD - iWidth : 'auto',
-                borderLeftRadius: onLeft ? 4 : 0,
-                borderRightRadius: !onLeft ? 4 : 0,
-                // opacity: App.isShowingOrbit ? 0 : 1,
-                transition: 'all ease-in 100ms',
-              }}
-            />
+            <Indicator if={!fullScreen} iWidth={iWidth} onLeft={onLeft} />
             {/* first is arrow (above), second is arrow shadow (below) */}
             <OrbitArrow
               if={App.isAttachedToWindow}
@@ -150,16 +165,19 @@ export default class OrbitFrame {
   }
 
   static style = {
-    isChangingApps: {
-      transition: 'none !important',
-      opacity: 0,
-    },
     // used to hide edge overlap of drawer during in animation
     overflowWrap: {
       alignSelf: 'flex-end',
       width: '100%',
       height: '100%',
       position: 'relative',
+      pointerEvents: 'none !important',
+    },
+    pointerEvents: {
+      pointerEvents: 'all !important',
+    },
+    isHidden: {
+      opacity: 0,
     },
     hideOverflow: {
       overflow: 'hidden',
@@ -171,9 +189,11 @@ export default class OrbitFrame {
       right: -SHADOW_PAD,
       width: 330,
       padding: SHADOW_PAD,
-      pointerEvents: 'none !important',
       position: 'relative',
       willChange: 'transform, opacity',
+      transition: 'none',
+    },
+    orbitAnimate: {
       transition: `
         transform linear ${App.animationDuration}ms,
         opacity linear ${App.animationDuration}ms
@@ -202,10 +222,6 @@ export default class OrbitFrame {
               x: onLeft ? 330 - SHADOW_PAD - (SHADOW_PAD + iWidth) + 4 : -330,
             },
           }
-    },
-    orbitVisible: {
-      pointerEvents: 'all !important',
-      opacity: 1, //0.5,
     },
     orbitFullScreen: {
       width: '100%',

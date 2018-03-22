@@ -47,7 +47,7 @@ class AppStore {
       preventLogging()
       setValue(true)
       await sleep(App.animationDuration)
-      return false
+      setValue(false)
     },
   ]
 

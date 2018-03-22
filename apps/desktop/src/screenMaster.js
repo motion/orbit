@@ -4,7 +4,7 @@ import { debounce, isEqual, throttle, last } from 'lodash'
 import iohook from 'iohook'
 
 import { store } from '@mcro/black/store'
-import { Desktop, Electron, Swift } from '@mcro/all'
+import { App, Desktop, Electron, Swift } from '@mcro/all'
 import SocketManager from './helpers/socketManager'
 import * as Mobx from 'mobx'
 
@@ -15,7 +15,7 @@ import * as Mobx from 'mobx'
 // the socket management is in SocketManager
 
 const log = debug('screenMaster')
-const DESKTOP_KEY = 'DesktopStore'
+const DESKTOP_KEY = 'Desktop'
 const APP_ID = -1
 
 // prevent apps from clearing highlights
@@ -42,18 +42,30 @@ const PREVENT_SCANNING = {
   ActivityMonitor: true,
 }
 
+const sources = {
+  App,
+  Electron,
+  Desktop,
+}
+
 @store
 export default class ScreenMaster {
+  watchSettings = {}
   oracle = new Oracle()
   socketManager = new SocketManager({
     port: 40510,
-    source: 'DesktopStore',
-    onConnection: socket => {
-      // send current state
-      this.socketManager.send(socket, Desktop.state)
+    source: 'Desktop',
+    actions: {
+      onGetState: ({ source, socket }) => {
+        // send current state of all apps besides the one requesting
+        for (const name of Object.keys(sources)) {
+          if (name === source) continue
+          // send state from source
+          this.socketManager.send(socket, sources[name].state, name)
+        }
+      },
     },
   })
-  watchSettings = {}
 
   start = async () => {
     await this.socketManager.start()

@@ -9,6 +9,8 @@ let Electron
 
 @store
 class ElectronStore {
+  source = 'Electron'
+
   state = {
     shouldHide: 1,
     shouldShow: 0,
@@ -164,7 +166,7 @@ class ElectronStore {
 }
 
 Electron = proxySetters(new ElectronStore())
-Bridge.stores.ElectronStore = Electron
+Bridge.stores[Electron.source] = Electron
 global.Electron = Electron
 
 export default Electron

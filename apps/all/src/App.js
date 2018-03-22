@@ -11,6 +11,8 @@ let App
 
 @store
 class AppStore {
+  source = 'App'
+
   state = {
     query: '',
     selectedItem: null,
@@ -115,6 +117,6 @@ class AppStore {
 
 App = proxySetters(new AppStore())
 global.App = App
-Bridge.stores.AppStore = App
+Bridge.stores[App.source] = App
 
 export default App

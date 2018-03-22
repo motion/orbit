@@ -21,9 +21,7 @@ const stringifyObject = obj =>
 const requestIdle = () =>
   new Promise(
     res =>
-      typeof window !== 'undefined'
-        ? window.requestIdleCallback(res)
-        : setTimeout(res),
+      typeof window !== 'undefined' ? window.requestIdleCallback(res) : res(),
   )
 
 @store
@@ -58,7 +56,7 @@ class Bridge {
         constructor: WebSocket,
       },
     )
-    this._source = store.constructor.name
+    this._source = store.source
     this._store = store
     this._options = options
     // set initial state synchronously before
@@ -129,6 +127,10 @@ class Bridge {
         )
         this._queuedState = false
       }
+      // get initial state
+      this._socket.send(
+        JSON.stringify({ action: 'getState', source: this._source }),
+      )
     }
     this._socket.onclose = () => {
       this._wsOpen = false
@@ -136,6 +138,8 @@ class Bridge {
     this._socket.onerror = err => {
       if (this._socket.readyState == 1) {
         console.log('swift ws error', err)
+      } else {
+        console.log('socket err', err)
       }
     }
   }

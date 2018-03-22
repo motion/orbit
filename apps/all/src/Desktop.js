@@ -42,6 +42,8 @@ let Desktop
 
 @store
 class DesktopStore {
+  source = 'Desktop'
+
   state = {
     shouldTogglePin: null,
     paused: true,
@@ -108,6 +110,6 @@ class DesktopStore {
 
 Desktop = proxySetters(new DesktopStore())
 global.Desktop = Desktop
-Bridge.stores.DesktopStore = Desktop
+Bridge.stores[Desktop.source] = Desktop
 
 export default Desktop

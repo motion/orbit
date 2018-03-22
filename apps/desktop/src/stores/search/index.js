@@ -6,6 +6,7 @@ import { sum, range, sortBy, flatten } from 'lodash'
 import DB from './db'
 import { splitSentences, wordMoversDistance, cosineSimilarity } from './helpers'
 import summarize from './summarize'
+import { react } from '@mcro/black/store'
 import createKDTree from 'static-kdtree'
 import { readFileSync } from 'fs'
 import path from 'path'
@@ -128,29 +129,30 @@ export default class Search {
     }
   }
 
+  @react
+  setIndexStatus = [
+    () => this.indexStatus,
+    () => Desktop.setSearchIndexStatus(this.indexStatus),
+  ]
+
+  @react
+  runSearch = [
+    () => App.state.query,
+    async () => {
+      const { query } = App.state
+      const start = +Date.now()
+      const results = await this.search(query)
+      // make sure we haven't had a new query yet
+      if (App.state.query === query) {
+        Desktop.setSearchResults(results)
+        Desktop.setSearchPerformance(+Date.now() - start)
+      }
+    },
+  ]
+
   async willMount() {
     this.db = new DB()
     await this.db.mount()
-
-    this.react(
-      () => this.indexStatus,
-      () => Desktop.setSearchIndexStatus(this.indexStatus),
-    )
-
-    this.react(
-      () => App.state.query,
-      async () => {
-        const { query } = App.state
-        const start = +Date.now()
-        const results = await this.search(query)
-        // make sure we haven't had a new query yet
-        if (App.state.query === query) {
-          Desktop.setSearchResults(results)
-          Desktop.setSearchPerformance(+Date.now() - start)
-        }
-      },
-    )
-
     this.setDocuments(dataset)
   }
 

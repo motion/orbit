@@ -59,10 +59,30 @@ const OrbitArrow = ({ arrowSize, arrowTowards, arrowStyle }) =>
 
 @view({
   store: class OrbitFrameStore {
+    @react
+    wasShowingOrbit = [
+      () => App.isShowingOrbit,
+      async (val, { sleep, setValue }) => {
+        if (!val) {
+          await sleep(App.animationDuration)
+          setValue(false)
+        } else {
+          setValue(val)
+        }
+      },
+    ]
+
     get wasFullScreen() {
-      const last = this._lastFullScreen || false
-      this._lastFullScreen = Electron.orbitState.fullScreen
+      const last = this._lastWFS || false
+      this._lastWFS = Electron.orbitState.fullScreen
       return last
+    }
+
+    get shouldAnimate() {
+      return (
+        (App.isShowingOrbit || this.wasShowingOrbit) &&
+        !(Electron.orbitState.fullScreen || this.wasFullScreen)
+      )
     }
 
     @react
@@ -78,27 +98,33 @@ const OrbitArrow = ({ arrowSize, arrowTowards, arrowStyle }) =>
       },
     ]
 
-    @react
-    orbitAnimate = [
-      () =>
-        Desktop.shouldHide ||
-        Electron.orbitState.fullScreen ||
-        this.wasFullScreen,
-      async (preventAnimation, { sleep, setValue }) => {
-        if (preventAnimation) {
-          setValue(false)
-        } else {
-          await sleep(App.animationDuration)
-          setValue(true)
-        }
-      },
-      true,
-    ]
+    // @react
+    // orbitAnimate = [
+    //   () =>
+    //     Desktop.shouldHide ||
+    //     Electron.orbitState.fullScreen ||
+    //     this.wasFullScreen,
+    //   async (preventAnimation, { sleep, setValue }) => {
+    //     if (preventAnimation) {
+    //       setValue(false)
+    //     } else {
+    //       await sleep(App.animationDuration)
+    //       setValue(true)
+    //     }
+    //   },
+    //   true,
+    // ]
   },
 })
 export default class OrbitFrame {
   render({ store, orbitPage, children, iWidth }) {
     const { fullScreen, arrowTowards } = Electron.orbitState
+    console.log('RENDER FRAME', {
+      wasShowingOrbit: store.wasShowingOrbit,
+      wasFullScreen: store.wasFullScreen,
+      shouldAnimate: store.shouldAnimate,
+      shouldHideWhileMoving: store.shouldHideWhileMoving,
+    })
     const { onLeft } = Electron
     const arrowSize = 24
     let arrowStyle
@@ -119,7 +145,7 @@ export default class OrbitFrame {
     return (
       <UI.Theme name="dark">
         <overflowWrap
-          $orbitAnimate={store.orbitAnimate}
+          $orbitAnimate={store.shouldAnimate}
           $pointerEvents={App.isShowingOrbit}
           $hideOverflow={hideOverflow}
           $isHidden={store.shouldHideWhileMoving}
@@ -136,7 +162,7 @@ export default class OrbitFrame {
             css={{
               paddingRight: fullScreen ? 0 : SHADOW_PAD,
             }}
-            $orbitAnimate={store.orbitAnimate}
+            $orbitAnimate={store.shouldAnimate}
             $orbitHeight={orbitPage.adjustHeight}
             $orbitStyle={[App.isShowingOrbit, onLeft, iWidth]}
             $orbitFullScreen={fullScreen}

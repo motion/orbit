@@ -38,7 +38,7 @@ class AppStore {
     )
   }
 
-  animationDuration = 100
+  animationDuration = 90
 
   @react({ log: false })
   isAnimatingOrbit = [

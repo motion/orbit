@@ -49,13 +49,18 @@ class OrbitWindowStore {
   ]
 
   @react({ delay: App.animationDuration })
-  defocusOnUnPin = [
-    () => !Electron.orbitState.pinned,
-    val => val && Swift.defocus(),
+  defocusAfterClosing = [
+    () => [Electron.orbitState.pinned, App.isShowingOrbit],
+    ([pinned, showing]) => {
+      if (pinned || showing || Electron.orbitState.mouseOver) {
+        return
+      }
+      Swift.defocus()
+    },
   ]
 
   @react
-  watchMouseForOrbitFocus = [
+  focusOnMouseOver = [
     () => Electron.orbitState.mouseOver || Electron.peekState.mouseOver,
     mouseOver => {
       if (Electron.orbitState.pinned || Electron.orbitState.fullScreen) {

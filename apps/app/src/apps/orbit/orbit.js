@@ -62,6 +62,10 @@ export default class OrbitPage {
             size={1.1}
             circular
             chromeless
+            opacity={0.4}
+            hover={{
+              opacity: 0.8,
+            }}
             highlight={orbitStore.showSettings}
             onClick={orbitStore.toggleSettings}
           />
@@ -81,28 +85,10 @@ export default class OrbitPage {
             overflow: 'hidden',
           }}
         >
-          <fade
-            css={{
-              position: 'absolute',
-              bottom: 0,
-              left: 0,
-              right: 0,
-              top: 0,
-              background: `linear-gradient(transparent, #111 80%)`,
-            }}
-          />
-          <bar
-            css={{
-              flex: 1,
-              margin: 20,
-              height: 5,
-              borderRadius: 100,
-              background: [255, 255, 255, 0.1],
-              zIndex: 10,
-              cursor: 'ns-resize',
-            }}
-            onMouseDown={orbitPage.barMouseDown}
-          />
+          <fade />
+          <barOuter onMouseDown={orbitPage.barMouseDown}>
+            <bar />
+          </barOuter>
         </expand>
       </OrbitFrame>
     )
@@ -118,6 +104,32 @@ export default class OrbitPage {
       '&:hover': {
         opacity: 0.9,
       },
+    },
+    fade: {
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      right: 0,
+      top: 0,
+      background: `linear-gradient(transparent, #111 80%)`,
+    },
+    barOuter: {
+      pointerEvents: 'all',
+      flex: 1,
+      margin: 10,
+      padding: 10,
+      cursor: 'ns-resize',
+      opacity: 0.5,
+      zIndex: 10,
+      '&:hover': {
+        opacity: 1,
+      },
+    },
+    bar: {
+      flex: 1,
+      height: 5,
+      borderRadius: 100,
+      background: [255, 255, 255, 0.2],
     },
   }
 }

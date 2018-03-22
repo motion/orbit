@@ -24,12 +24,13 @@ const Indicator = ({ iWidth, onLeft }) => {
         width: iWidth,
         height: 36,
         top: 31,
+        opacity: App.isShowingOrbit ? 0 : 1,
         left: onLeft ? SHADOW_PAD - iWidth : 'auto',
         right: !onLeft ? SHADOW_PAD - iWidth : 'auto',
         borderLeftRadius: onLeft ? 4 : 0,
         borderRightRadius: !onLeft ? 4 : 0,
         // opacity: App.isShowingOrbit ? 0 : 1,
-        transition: 'all ease-in 100ms',
+        transition: `opacity ease-in 50ms ${App.animationDuration}`,
       }}
     />
   )
@@ -216,11 +217,13 @@ export default class OrbitFrame {
       position: 'relative',
       willChange: 'transform, opacity',
       transition: 'none',
+      // opacity: 0,
     },
     orbitAnimate: {
       transition: `
         transform ease-in ${App.animationDuration}ms,
-        opacity ease-in ${App.animationDuration}ms
+        opacity ease-in ${App.animationDuration / 2}ms ${App.animationDuration /
+        2}ms
       `,
     },
     orbitHeight: adjust => {
@@ -236,16 +239,15 @@ export default class OrbitFrame {
     orbitStyle: ([isShowing, onLeft, iWidth]) => {
       return isShowing
         ? {
+            opacity: 1,
             transform: {
               x: onLeft ? 0 : -SHADOW_PAD * 2,
-              z: 0,
             },
           }
         : {
             // marginRight: onLeft ? SHADOW_PAD : -SHADOW_PAD,
             transform: {
               x: onLeft ? 330 - SHADOW_PAD - (SHADOW_PAD + iWidth) + 4 : -330,
-              z: 0,
             },
           }
     },

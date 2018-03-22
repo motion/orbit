@@ -115,7 +115,7 @@ export default class ScreenMaster {
         return
       }
       // if current app is a prevented app, treat like nothing happened
-      let nextState = { ...Desktop.state.appState, updatedAt: Date.now() }
+      let nextState = { ...Desktop.state.appState }
       let id = this.curAppID
       switch (event) {
         case 'FrontmostWindowChangedEvent':
@@ -150,6 +150,7 @@ export default class ScreenMaster {
         return
       }
       state.appState = JSON.parse(JSON.stringify(nextState))
+      state.appStateUpdatedAt = Date.now()
       if (!PREVENT_CLEAR[this.curAppName] && !PREVENT_CLEAR[nextState.name]) {
         state.lastAppChange = Date.now()
       }

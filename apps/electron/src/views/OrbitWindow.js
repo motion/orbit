@@ -9,7 +9,9 @@ class OrbitWindowStore {
   show = false
   orbitRef = null
 
+  // sitrep
   focusOrbit = () => {
+    console.error('focusORBIT')
     try {
       if (this.orbitRef) {
         this.orbitRef.focus()
@@ -29,16 +31,8 @@ class OrbitWindowStore {
     },
   ]
 
-  delayedOrbitState = null
-
-  @react
-  updateDelayedOrbitState = [
-    () => Electron.orbitState,
-    val => {
-      this.delayedOrbitState = Mobx.toJS(val)
-    },
-    { delay: 100, fireImmediately: true },
-  ]
+  @react({ delay: 100 })
+  delayedOrbitState = () => Mobx.toJS(Electron.orbitState)
 
   @react
   watchFullScreenForFocus = [
@@ -57,6 +51,7 @@ class OrbitWindowStore {
     () => Electron.orbitState.pinned,
     isPinned => {
       if (!isPinned) {
+        console.error('DEFOUCS')
         Swift.defocus()
       }
     },

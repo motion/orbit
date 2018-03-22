@@ -96,7 +96,7 @@ export default class ElectronWindow extends React.Component {
     if (electronStore.error) {
       return null
     }
-
+    // <HighlightsWindow if={false} />
     return (
       <AppWindow
         onBeforeQuit={electronStore.handleBeforeQuit}
@@ -104,7 +104,6 @@ export default class ElectronWindow extends React.Component {
         ref={electronStore.handleAppRef}
       >
         <MenuItems />
-        {/* <HighlightsWindow /> */}
         <PeekWindow />}
         <OrbitWindow />
         <Tray />

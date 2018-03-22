@@ -32,7 +32,7 @@ export default class Plugins {
     )
   }
 
-  @react
+  @react({ fireImmediately: true })
   reactToSearches = [
     () => App.state.query,
     async query => {
@@ -53,7 +53,6 @@ export default class Plugins {
         }
       })
     },
-    true,
   ]
 
   search = async (term, onResults) => {

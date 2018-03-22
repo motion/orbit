@@ -12,8 +12,8 @@ const uid = () => id++ % Number.MAX_VALUE
 
 global.__trackStateChanges = {}
 
-const log = debug('>> ')
-const logState = debug('>! ')
+const log = debug('-> ')
+const logState = debug('+> ')
 const RejectReactionSymbol = Symbol('REJECT_REACTION')
 
 if (module && module.hot) {
@@ -22,7 +22,7 @@ if (module && module.hot) {
 
 const PREFIX = `=>`
 const logRes = res => {
-  if (typeof result === 'undefined') return []
+  if (typeof res === 'undefined') return []
   if (res instanceof Promise) return [PREFIX, 'Promise']
   return [PREFIX, res]
 }
@@ -34,6 +34,7 @@ const getReactionName = (obj, simple) => {
   lastName = name
   return name
 }
+
 const isObservable = x => {
   if (!x) {
     return false
@@ -218,7 +219,12 @@ function decorateMethodWithAutomagic(
   }
   // @watch: autorun |> automagical (value)
   if (isWatch(value)) {
-    return mobxifyWatch(target, method, value)
+    return mobxifyWatch(
+      target,
+      method,
+      value,
+      typeof value.IS_AUTO_RUN === 'object' ? value.IS_AUTO_RUN : undefined,
+    )
   }
   if (isPromise(value)) {
     mobxifyPromise(target, method, value)
@@ -257,7 +263,7 @@ function decorateMethodWithAutomagic(
 }
 
 // * => Mobx
-function valueToObservable(inValue: any) {
+function specialValueToObservable(inValue: any) {
   let value = inValue
   // convert RxQuery to RxObservable
   if (value) {
@@ -296,8 +302,15 @@ const AID = '__AUTOMAGICAL_ID__'
 const observableId = () => `__ID_${Math.random()}__`
 
 // watches values in an autorun, and resolves their results
-function mobxifyWatch(obj: MagicalObject, method, val) {
+function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
+  const { log: shouldLog, delayValue, ...options } = Helpers.getReactionOptions(
+    {
+      name: method,
+      ...(val[2] || userOptions),
+    },
+  )
   let current = Mobx.observable.box(DEFAULT_VALUE)
+  let prev
   let curDisposable = null
   let curObservable = null
   let autoObserveDispose = null
@@ -313,7 +326,12 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
       return
     }
     let value = newValue
-    if (Mobx.isObservableArray(value) || Mobx.isObservableMap(value)) {
+    if (delayValue) {
+      value = prev
+      prev = newValue
+      log(`${getReactionName(obj)}.${method} =`, value)
+    }
+    if (Mobx.isObservable(value)) {
       value = Mobx.toJS(value)
     }
     current.set(Mobx.observable.box(value))
@@ -363,27 +381,15 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
     }
     if (isReaction) {
       // reaction
-      let options
-      if (val[2]) {
-        const { log, ...opts } = val[2]
-        if (log === false) {
-          preventLog = true
-        }
-        options = Helpers.getReactionOptions(opts)
-      }
-      stopReaction = Mobx.reaction(val[0], watcher(val[1]), {
-        // pass name to reaction for debugging
-        name: method,
-        ...options,
-      })
+      stopReaction = Mobx.reaction(val[0], watcher(val[1]), options)
     } else {
       //autorun
-      stopReaction = Mobx.autorun(watcher(val))
+      stopReaction = Mobx.autorun(watcher(val), options)
     }
   }
 
   // state used outside each watch/reaction
-  let preventLog = false
+  let preventLog = shouldLog === false
   let reactionID
   let rejections = []
 
@@ -392,7 +398,7 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
   }
 
   function watcher(reactionFn) {
-    return function watcherCb(reactVal) {
+    return function watcherCb(reactValArg) {
       reactionID = uid()
       const id = reactionID
       const name = `${getReactionName(obj)}.${method}`
@@ -401,12 +407,18 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
         rejectReaction()
       }
       let hasCalledSetValue = false
+      let isAsyncReaction = false
       const start = Date.now()
       const updateAsyncValue = val => {
         if (id === reactionID) {
           replaceDisposable()
           if (!preventLog) {
-            log(`${name} (${Date.now() - start}ms) = `, val)
+            log(
+              `${name} (${Date.now() - start}ms) ${
+                isAsyncReaction ? `[${id}]` : ''
+              } = `,
+              val,
+            )
           }
           update(val)
         }
@@ -414,7 +426,7 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
       global.__trackStateChanges.isActive = true
       const reactionResult = reactionFn.call(
         obj,
-        isReaction ? reactVal : obj.props,
+        isReaction ? reactValArg : obj.props,
         {
           preventLogging: () => (preventLog = true),
           // allows setting multiple values in a reaction
@@ -455,6 +467,7 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
       global.__trackStateChanges = {}
       // handle promises
       if (reactionResult instanceof Promise) {
+        isAsyncReaction = true
         reactionResult
           .then(val => {
             if (typeof val !== 'undefined') {
@@ -468,7 +481,9 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
           })
           .catch(err => {
             if (err === RejectReactionSymbol) {
-              log(`[${id}] cancelled`)
+              if (!preventLog) {
+                log(`[${id}] cancelled`)
+              }
             } else {
               throw err
             }
@@ -476,20 +491,20 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
         return
       }
       // store result as observable
-      result = valueToObservable(reactionResult)
-      if (!preventLog) {
+      result = specialValueToObservable(reactionResult)
+      if (!preventLog && !delayValue) {
         const prefix = `${name} ${isReaction ? `@r` : `@w`}`
         if (changed && Object.keys(changed).length) {
           logState(
             `${prefix}`,
-            reactVal,
+            reactValArg,
             ...logRes(result),
-            `\nchanged:`,
+            `\n\n CHANGED:`,
             changed,
-            `\n`,
+            `\n\n`,
           )
         } else {
-          log(`${prefix}`, reactVal)
+          log(`${prefix}`, isReaction ? reactValArg : '', ...logRes(result))
         }
       }
       const observableLike = isObservableLike(result)

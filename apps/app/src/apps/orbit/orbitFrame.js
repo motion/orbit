@@ -72,7 +72,7 @@ const OrbitArrow = view(({ arrowSize, arrowTowards, arrowStyle }) => {
   store: class OrbitFrameStore {
     orbitFrame = null
 
-    @react
+    @react({ delay: App.animationDuration * 10 })
     fixPinnedBug = [
       () => Electron.orbitState.pinned,
       pinned => {
@@ -82,7 +82,6 @@ const OrbitArrow = view(({ arrowSize, arrowTowards, arrowStyle }) => {
           this.orbitFrame.setState({ x: Math.random() })
         }
       },
-      { delay: App.animationDuration * 10 },
     ]
 
     @react

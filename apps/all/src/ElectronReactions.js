@@ -1,5 +1,5 @@
 // @flow
-import { store, react } from '@mcro/black/store'
+import { store, react, previous } from '@mcro/black/store'
 import App from './App'
 import Desktop from './Desktop'
 import Electron from './Electron'
@@ -30,25 +30,20 @@ const SCREEN_PAD = 15
 export default class ElectronReactions {
   // values
   screenSize = screenSize
-  shouldRepositionAfterFullScreen = false
+  afterUnFullScreen = false
 
   // side effects
 
+  @react({ delay: 500, delayValue: true })
+  wasFullScreen = () => Electron.orbitState.fullScreen
+
   @react
   repositionAfterFullScreen = [
-    () => [App.state.orbitHidden, Electron.orbitState.fullScreen],
-    async ([hidden, fullScreen], { sleep }) => {
-      if (fullScreen) {
-        return
-      }
-      await sleep(App.animationDuration + 80)
-      if (hidden) {
-        log(
-          `should reposition!`,
-          App.state.orbitHidden,
-          Electron.orbitState.fullScreen,
-        )
-        // this.shouldRepositionAfterFullScreen = Date.now()
+    () => [App.state.orbitHidden, this.wasFullScreen],
+    ([hidden, wasFullScreen]) => {
+      console.error(`reposition!`, hidden, wasFullScreen)
+      if (wasFullScreen && hidden) {
+        // this.afterUnFullScreen = Date.now()
       }
     },
   ]
@@ -127,12 +122,11 @@ export default class ElectronReactions {
     },
   ]
 
-  @react
+  @react({ delay: 16 })
   handleHoldingOption = [
     () => Desktop.isHoldingOption,
     async (isHoldingOption, { sleep }) => {
       if (Electron.orbitState.pinned) {
-        log(`pinned, avoid`)
         return
       }
       if (!isHoldingOption) {
@@ -153,15 +147,14 @@ export default class ElectronReactions {
         Electron.setPinned(true)
       }
     },
-    { delay: 16 },
   ]
 
-  @react
+  @react({ fireImmediately: true })
   positionOrbitFromBoundingBox = [
     () => [
       appTarget(Desktop.state.appState || {}),
       Desktop.linesBoundingBox,
-      this.shouldRepositionAfterFullScreen,
+      this.afterUnFullScreen,
     ],
     async ([appBB, linesBB], { sleep }) => {
       // so app can hide before we transition
@@ -185,6 +178,5 @@ export default class ElectronReactions {
         fullScreen: false,
       })
     },
-    true,
   ]
 }

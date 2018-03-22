@@ -8,7 +8,7 @@ import * as Constants from '~/constants'
 class HeaderStore {
   inputRef = null
 
-  @react
+  @react({ fireImmediately: true })
   focusInput = [
     () => App.isShowingHeader,
     shouldFocus => {
@@ -20,7 +20,6 @@ class HeaderStore {
         this.inputRef.select()
       }
     },
-    true,
   ]
 
   onClickInput = () => {

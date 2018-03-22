@@ -38,6 +38,7 @@ export type DesktopState = {
   restoreWords: { [String]: Number },
   pluginResults: [{}],
   focusedOnOrbit: boolean,
+  appStateUpdatedAt: Number,
 }
 
 let Desktop
@@ -52,6 +53,7 @@ class DesktopStore {
     focusedOnOrbit: true,
     pluginResults: [],
     appState: {},
+    appStateUpdatedAt: Date.now(),
     ocrWords: null,
     linePositions: null,
     lastOCR: Date.now(),
@@ -66,12 +68,11 @@ class DesktopStore {
 
   get isHoldingOption(): Boolean {
     const { option, optionUp } = this.state.keyboard
-    console.log('isHoldingOption', option, optionUp)
     return (option || 0) > (optionUp || 1)
   }
 
   get shouldHide() {
-    return this.state.lastScreenChange > this.state.appState.updatedAt
+    return this.state.lastScreenChange > this.state.appStateUpdatedAt
   }
 
   get linesBoundingBox() {

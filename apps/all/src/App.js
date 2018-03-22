@@ -40,7 +40,7 @@ class AppStore {
 
   animationDuration = 100
 
-  @react
+  @react({ log: false })
   isAnimatingOrbit = [
     () => App.isShowingOrbit,
     async (_, { sleep, setValue }) => {
@@ -48,7 +48,6 @@ class AppStore {
       await sleep(App.animationDuration)
       setValue(false)
     },
-    { log: false },
   ]
 
   get isFullyHidden() {

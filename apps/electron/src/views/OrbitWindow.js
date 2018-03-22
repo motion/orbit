@@ -2,7 +2,7 @@ import * as React from 'react'
 import * as Constants from '~/constants'
 import { view, react } from '@mcro/black'
 import { Window } from '@mcro/reactron'
-import { App, Electron, Desktop, Swift } from '@mcro/all'
+import { App, Electron, Swift } from '@mcro/all'
 import * as Mobx from 'mobx'
 
 class OrbitWindowStore {

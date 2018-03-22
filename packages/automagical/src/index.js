@@ -12,7 +12,8 @@ const uid = () => id++ % Number.MAX_VALUE
 
 global.__trackStateChanges = {}
 
-const log = debug('>')
+const log = debug('>> ')
+const logState = debug('>! ')
 const RejectReactionSymbol = Symbol('REJECT_REACTION')
 
 if (module && module.hot) {
@@ -467,7 +468,7 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
           })
           .catch(err => {
             if (err === RejectReactionSymbol) {
-              console.log(`Reaction cancelled [${id}]`)
+              log(`[${id}] cancelled`)
             } else {
               throw err
             }
@@ -477,15 +478,18 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
       // store result as observable
       result = valueToObservable(reactionResult)
       if (!preventLog) {
-        if (isReaction && changed && Object.keys(changed).length) {
-          log(
-            `${name}(`,
+        const prefix = `${name} ${isReaction ? `@r` : `@w`}`
+        if (changed && Object.keys(changed).length) {
+          logState(
+            `${prefix}`,
             reactVal,
-            `)`,
             ...logRes(result),
-            `\n  changed:`,
+            `\nchanged:`,
             changed,
+            `\n`,
           )
+        } else {
+          log(`${prefix}`, reactVal)
         }
       }
       const observableLike = isObservableLike(result)

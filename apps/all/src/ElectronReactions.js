@@ -43,7 +43,12 @@ export default class ElectronReactions {
       }
       await sleep(App.animationDuration + 80)
       if (hidden) {
-        this.shouldRepositionAfterFullScreen = Date.now()
+        log(
+          `should reposition!`,
+          App.state.orbitHidden,
+          Electron.orbitState.fullScreen,
+        )
+        // this.shouldRepositionAfterFullScreen = Date.now()
       }
     },
   ]
@@ -69,7 +74,7 @@ export default class ElectronReactions {
   @react
   unPinOnHidden = [
     () => App.isFullyHidden,
-    hidden => hidden && Electron.setPinned(false),
+    hidden => hidden && Electron.orbitState.pinned && Electron.setPinned(false),
   ]
 
   @react
@@ -160,6 +165,7 @@ export default class ElectronReactions {
     ],
     async ([appBB, linesBB], { sleep }) => {
       // so app can hide before we transition
+      log(`position from bounding`)
       await sleep(32)
       // prefer using lines bounding box, fall back to app
       const box = linesBB || appBB

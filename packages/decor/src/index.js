@@ -33,7 +33,7 @@ export default function decor(plugins: Array<[Plugin, Object] | Plugin>) {
     x &&
     x.prototype &&
     (x.toString().indexOf('class ') === 0 ||
-      x.toString().indexOf('_classCallCheck') > -1)
+      x.toString().indexOf('classCallCheck') > -1)
 
   // process plugins
   let index = -1

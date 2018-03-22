@@ -173,6 +173,7 @@ export default class OrbitFrame {
       padding: SHADOW_PAD,
       pointerEvents: 'none !important',
       position: 'relative',
+      willChange: 'transform, opacity',
       transition: `
         transform linear ${App.animationDuration}ms,
         opacity linear ${App.animationDuration}ms

@@ -14,7 +14,6 @@
     "@mcro/debug": "*",
     "@mcro/black": "*",
     "@mcro/crawler": "^1.5.1",
-    "@mcro/search": "1.0.0",
     "@mcro/oracle": "*",
     "@mcro/passport-slack": "^1.5.1",
     "@mcro/all": "*",
@@ -57,7 +56,8 @@
     "source-map-support": "^0.4.16",
     "sudo-prompt": "^7.1.1",
     "ws": "^3.3.3",
-    "python-shell": "0.5.0"
+    "sqlite": "2.9.1",
+    "static-kdtree": "1.0.2"
   },
   "devDependencies": {
     "touch": "^3.1.0",

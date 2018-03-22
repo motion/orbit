@@ -65,7 +65,6 @@ export default class Server {
 
     // this.setupCrawler()
     this.app.get('/hello', (req, res) => res.send('hello world'))
-    this.setupSearch()
     this.setupEmbedding()
     this.setupCredPass()
     this.setupPassportRoutes()
@@ -106,13 +105,6 @@ export default class Server {
 
       res.json({ values })
     })
-  }
-
-  setupSearch() {
-    console.log('setting up search')
-    const searchIndex = require.resolve('@mcro/search')
-    const searchDist = path.join(searchIndex, '..', '..', 'dist')
-    this.app.use('/search', express.static(searchDist))
   }
 
   // setupCrawler() {

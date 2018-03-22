@@ -12,11 +12,8 @@ import { readFileSync } from 'fs'
 import path from 'path'
 import getVectors from '~/embedding'
 import { Desktop, App } from '@mcro/all'
+import start from './start'
 
-const readData = file => {
-  const filePath = path.resolve(__dirname, `../../../data/${file}`)
-  return JSON.parse(readFileSync(filePath, 'utf8'))
-}
 const stripPunctuation = s => s.replace(/[:".,/#!$%^&*;:{}=\-_`~()]/g, '')
 
 const sentenceToWords = sentence =>
@@ -24,10 +21,6 @@ const sentenceToWords = sentence =>
 const wordsToSentence = words => words.join(' ')
 
 // const wordVectors = readData('vectors.json')
-const dataset = flatten(
-  ['datasets/books.json', 'datasets/pg.json'].map(readData),
-)
-
 // for some reason lodash's was acting strangely so I rewrote it
 const sortedUniqBy = (xs, fn) => {
   const seen = {}
@@ -94,13 +87,13 @@ export default class Search {
   currentTotalSentences = 0
   totalDocuments = 0
 
-  @watch
+  @watch({ log: false })
   indexStatus = () =>
     `index: doc ${this.totalIndexed}/${this.totalDocuments} line ${
       this.totalIndexedSentences
     }/${this.currentTotalSentences} `
 
-  @watch
+  @watch({ log: false })
   paragraphs = () =>
     flatten(
       this.documents.map(({ paragraphs }, index) =>
@@ -111,7 +104,7 @@ export default class Search {
       ),
     )
 
-  @watch
+  @watch({ log: false })
   space = () => {
     const vectors = []
     const metaData = []
@@ -129,13 +122,13 @@ export default class Search {
     }
   }
 
-  @react
+  @react({ log: false })
   setIndexStatus = [
     () => this.indexStatus,
     () => Desktop.setSearchIndexStatus(this.indexStatus),
   ]
 
-  @react
+  @react({ log: false })
   runSearch = [
     () => App.state.query,
     async () => {
@@ -153,6 +146,7 @@ export default class Search {
   async willMount() {
     this.db = new DB()
     await this.db.mount()
+    const dataset = await start()
     this.setDocuments(dataset)
   }
 

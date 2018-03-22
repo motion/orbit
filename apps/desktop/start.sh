@@ -7,10 +7,6 @@ if [[ "$1" != "--no-build" ]]; then
   (build --watch) &
 fi
 
-cd python
-python3 run_embedding.py &
-cd ..
-
 npx nodemon \
   --quiet \
   --ignore src \

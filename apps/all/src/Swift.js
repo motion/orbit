@@ -1,6 +1,7 @@
 import { store } from '@mcro/black/store'
 import WebSocket from './helpers/websocket'
 import ReconnectingWebSocket from 'reconnecting-websocket'
+import Desktop from './Desktop'
 
 @store
 class Swift {
@@ -29,7 +30,9 @@ class Swift {
   }
 
   defocus = () => {
-    this._send({ action: 'defocus' })
+    if (Desktop.state.focusedOnOrbit) {
+      this._send({ action: 'defocus' })
+    }
   }
 
   toggle = () => {

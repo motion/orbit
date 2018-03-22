@@ -25,8 +25,6 @@ export default class AppReactions {
     ([fullScreen, pinned]) => {
       if (fullScreen || pinned) {
         App.setOrbitHidden(false)
-      } else {
-        App.setOrbitHidden(true)
       }
     },
   ]

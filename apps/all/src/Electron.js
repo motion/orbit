@@ -5,6 +5,8 @@ import { store, react } from '@mcro/black/store'
 import global from 'global'
 import App from './App'
 
+const log = debug('ElectronStore')
+
 let Electron
 
 @store
@@ -147,6 +149,7 @@ class ElectronStore {
       const [orbitX, orbitY] = [(screenW - appW) / 2, (screenH - appH) / 2]
       const [peekW, peekH] = [appW * 2 / 3, appH]
       const [peekX, peekY] = [orbitX + orbitW, orbitY]
+      log(`toggle fullscreen`)
       Electron.setOrbitState({
         position: [orbitX, orbitY].map(round),
         size: [orbitW, orbitH].map(round),

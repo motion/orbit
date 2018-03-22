@@ -12,8 +12,10 @@ class HeaderStore {
   focusInput = [
     () => App.isShowingHeader,
     shouldFocus => {
-      if (!shouldFocus) return
-      if (this.inputRef) {
+      if (!this.inputRef) return
+      if (!shouldFocus) {
+        this.inputRef.blur()
+      } else {
         this.inputRef.focus()
         this.inputRef.select()
       }
@@ -48,7 +50,7 @@ export default class PeekHeader {
           <UI.Input
             $orbitInput
             value={App.state.query || ''}
-            size={1.2}
+            size={1.15}
             borderRadius={5}
             borderWidth={0}
             background="#222"

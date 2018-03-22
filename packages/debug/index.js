@@ -57,8 +57,8 @@ const isBrowser = typeof window !== 'undefined'
 
 function colorfulLog(id, namespace, messages) {
   if (!isBrowser) {
-    console.log(`${namespace}: ${messages.map(nodeStringify).join(' ')}`)
+    console.log(`${namespace} ${messages.map(nodeStringify).join(' ')}`)
   } else {
-    console.log(`${namespace}:`, ...messages)
+    console.log(`${namespace}`, ...messages)
   }
 }

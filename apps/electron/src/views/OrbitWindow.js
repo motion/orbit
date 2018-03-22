@@ -44,8 +44,21 @@ class OrbitWindowStore {
   watchFullScreenForFocus = [
     () => Electron.orbitState.fullScreen,
     fullScreen => {
-      if (!fullScreen) return
-      this.focusOrbit()
+      if (fullScreen) {
+        this.focusOrbit()
+      } else {
+        Swift.defocus()
+      }
+    },
+  ]
+
+  @react
+  defocusOnUnPin = [
+    () => Electron.orbitState.pinned,
+    isPinned => {
+      if (!isPinned) {
+        Swift.defocus()
+      }
     },
   ]
 

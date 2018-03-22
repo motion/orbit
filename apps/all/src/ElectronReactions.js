@@ -137,7 +137,6 @@ export default class ElectronReactions {
           return
         }
         if (!App.state.orbitHidden) {
-          log(`Hiding yo ${Electron.isMouseInActiveArea}`)
           Electron.shouldHide()
         }
         return

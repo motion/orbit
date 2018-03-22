@@ -102,6 +102,7 @@ export default class ScreenMaster {
         this.rescanApp()
         return
       }
+      this.setState({ lastAppChange: Date.now() })
       // if current app is a prevented app, treat like nothing happened
       let nextState = { ...Desktop.state.appState, updatedAt: Date.now() }
       let id = this.curAppID
@@ -115,10 +116,10 @@ export default class ScreenMaster {
             bounds: value.bounds,
             name: id ? last(id.split('.')) : value.title,
           }
-          // const hasNewID = this.curAppID !== id
+          const hasNewID = this.curAppID !== id
           const shouldClear =
             !PREVENT_CLEAR[this.curAppName] && !PREVENT_CLEAR[nextState.name]
-          if (shouldClear) {
+          if (hasNewID && shouldClear) {
             this.lastScreenChange()
           }
           // update these now so we can use to track

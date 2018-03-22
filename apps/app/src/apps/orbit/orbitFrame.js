@@ -67,7 +67,7 @@ const OrbitArrow = ({ arrowSize, arrowTowards, arrowStyle }) =>
 
     @react
     shouldHideWhileMoving = [
-      () => Desktop.state.lastScreenChange,
+      () => Desktop.state.lastAppChange,
       async (_, { sleep, setValue }) => {
         if (Electron.isMouseInActiveArea && App.isShowingOrbit) {
           return

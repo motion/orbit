@@ -26,13 +26,8 @@ const logRes = res => {
   if (res instanceof Promise) return [PREFIX, 'Promise']
   return [PREFIX, res]
 }
-let lastName
-const getReactionName = (obj, simple) => {
-  const name = obj.constructor.name.replace('Store', '')
-  if (simple) return name
-  if (lastName === name) return ''
-  lastName = name
-  return name
+const getReactionName = obj => {
+  return obj.constructor.name.replace('Store', '')
 }
 
 const isObservable = x => {
@@ -309,6 +304,10 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
       ...(val[2] || userOptions),
     },
   )
+  const name = `${
+    options && options.delay ? `(delay ${options.delay}) ` : ''
+  }${getReactionName(obj)}.${method}`
+  let preventLog = shouldLog === false
   let current = Mobx.observable.box(DEFAULT_VALUE)
   let prev
   let curDisposable = null
@@ -317,9 +316,8 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
   let stopReaction
   let disposed = false
   let result
-  const stopAutoObserve = () => autoObserveDispose && autoObserveDispose()
-
   let isntConnected = false
+  const stopAutoObserve = () => autoObserveDispose && autoObserveDispose()
 
   function update(newValue) {
     if (isntConnected) {
@@ -329,7 +327,9 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
     if (delayValue) {
       value = prev
       prev = newValue
-      log(`${getReactionName(obj)}.${method} =`, value)
+      if (!preventLog) {
+        log(`${name} (delayValue) =`, value)
+      }
     }
     if (Mobx.isObservable(value)) {
       value = Mobx.toJS(value)
@@ -389,7 +389,6 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
   }
 
   // state used outside each watch/reaction
-  let preventLog = shouldLog === false
   let reactionID
   let rejections = []
 
@@ -401,7 +400,6 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
     return function watcherCb(reactValArg) {
       reactionID = uid()
       const id = reactionID
-      const name = `${getReactionName(obj)}.${method}`
       // cancels on new reactions
       if (rejectReaction) {
         rejectReaction()

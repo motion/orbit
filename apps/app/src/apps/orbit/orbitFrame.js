@@ -112,7 +112,7 @@ const OrbitArrow = view(({ arrowSize, arrowTowards, arrowStyle }) => {
     shouldHideWhileMoving = [
       () => Desktop.state.lastAppChange,
       async (_, { sleep, setValue }) => {
-        if (Electron.isMouseInActiveArea && App.isShowingOrbit) {
+        if (App.isShowingOrbit) {
           return
         }
         setValue(true)

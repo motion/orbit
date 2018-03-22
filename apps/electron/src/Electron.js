@@ -1,6 +1,6 @@
-import { Electron } from '@mcro/all'
+import { App, Electron } from '@mcro/all'
 import { App as AppWindow } from '@mcro/reactron'
-import { view, debugState } from '@mcro/black'
+import { view, react, debugState } from '@mcro/black'
 import * as React from 'react'
 import Tray from './views/Tray'
 import MenuItems from './views/MenuItems'
@@ -25,6 +25,19 @@ const log = debug('Electron')
       return this.peekRefs[0]
     }
 
+    // focus on pinned
+    @react({ delay: App.animationDuration })
+    focusOnPin = [
+      () => Electron.orbitState.pinned,
+      pinned => pinned && this.appRef.focus(),
+    ]
+
+    @react
+    showOnShow = [
+      () => Electron.state.shouldShow,
+      shouldShow => shouldShow && this.appRef.show(),
+    ]
+
     willMount() {
       global.Root = this
       global.restart = this.restart
@@ -36,18 +49,6 @@ const log = debug('Electron')
         ignoreSelf: true,
       })
       this.watchOptionPress()
-
-      // focus on pinned
-      this.react(
-        () => Electron.orbitState.pinned,
-        pinned => pinned && this.appRef.focus(),
-      )
-
-      // show on show
-      this.react(
-        () => Electron.state.shouldShow,
-        shouldShow => shouldShow && this.appRef.show(),
-      )
     }
 
     handlePeekRef = memoize(peek => ref => {

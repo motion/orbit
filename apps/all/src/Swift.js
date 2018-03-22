@@ -30,6 +30,8 @@ class Swift {
   }
 
   defocus = () => {
+    console.trace('defocus')
+    console.log('Desktop.state.focusedOnOrbit', Desktop.state.focusedOnOrbit)
     if (Desktop.state.focusedOnOrbit) {
       this._send({ action: 'defocus' })
     }

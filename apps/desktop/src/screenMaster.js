@@ -140,29 +140,26 @@ export default class ScreenMaster {
           nextState.offset = value.pos
       }
       log('id', this.curAppID)
-      const shouldClear =
-        !PREVENT_CLEAR[this.curAppName] && !PREVENT_CLEAR[nextState.name]
-      const state = {}
-      if (shouldClear) {
-        state.lastAppChange = Date.now()
+      const state = {
+        focusedOnOrbit: this.curAppID === ORBIT_APP_ID,
       }
       // when were moving into focus prevent app, store its appName, pause then return
       if (PREVENT_APP_STATE[this.curAppName]) {
+        this.setState(state)
         this.oracle.pause()
         return
+      }
+      state.appState = JSON.parse(JSON.stringify(nextState))
+      if (!PREVENT_CLEAR[this.curAppName] && !PREVENT_CLEAR[nextState.name]) {
+        state.lastAppChange = Date.now()
       }
       if (!Desktop.state.paused) {
         this.oracle.resume()
       }
-      // log('set.appState', appState)
       clearTimeout(this.lastAppState)
       this.lastAppState = this.setTimeout(() => {
-        const appState = JSON.parse(JSON.stringify(nextState))
-        this.setState({
-          ...state,
-          focusedOnOrbit: this.curAppID === ORBIT_APP_ID,
-          appState,
-        })
+        log(`setting state`, state)
+        this.setState(state)
       }, 16)
     })
     this.oracle.onBoxChanged(count => {

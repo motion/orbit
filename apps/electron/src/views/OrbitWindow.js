@@ -48,14 +48,10 @@ class OrbitWindowStore {
     },
   ]
 
-  @react
+  @react({ delay: App.animationDuration })
   defocusOnUnPin = [
-    () => Electron.orbitState.pinned,
-    isPinned => {
-      if (!isPinned) {
-        Swift.defocus()
-      }
-    },
+    () => !Electron.orbitState.pinned,
+    val => val && Swift.defocus(),
   ]
 
   @react

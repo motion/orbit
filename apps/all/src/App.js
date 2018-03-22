@@ -50,9 +50,9 @@ class AppStore {
     },
   ]
 
-  get isFullyHidden() {
-    return !this.isShowingOrbit && !this.isAnimatingOrbit
-  }
+  // debounced a little to prevent aggressive reactions
+  @react({ delay: 32 })
+  isFullyHidden = [() => !this.isShowingOrbit && !this.isAnimatingOrbit, _ => _]
 
   @react
   wasShowingPeek = [

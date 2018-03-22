@@ -8,10 +8,11 @@ import * as Constants from '~/constants'
 class HeaderStore {
   inputRef = null
 
-  @react({ fireImmediately: true })
+  @react({ fireImmediately: true, delay: 32 })
   focusInput = [
-    () => App.isShowingHeader,
+    () => App.isShowingHeader && !App.isAnimatingOrbit,
     shouldFocus => {
+      log(`shouldFocus`, shouldFocus)
       if (!this.inputRef) return
       if (!shouldFocus) {
         this.inputRef.blur()

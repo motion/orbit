@@ -72,18 +72,6 @@ const OrbitArrow = view(({ arrowSize, arrowTowards, arrowStyle }) => {
   store: class OrbitFrameStore {
     orbitFrame = null
 
-    @react({ delay: App.animationDuration * 10 })
-    fixPinnedBug = [
-      () => Electron.orbitState.pinned,
-      pinned => {
-        if (pinned) return
-        console.log('FIX PIN BUG')
-        if (this.orbitFrame) {
-          this.orbitFrame.setState({ x: Math.random() })
-        }
-      },
-    ]
-
     @react
     wasShowingOrbit = [
       () => App.isShowingOrbit,
@@ -123,10 +111,6 @@ const OrbitArrow = view(({ arrowSize, arrowTowards, arrowStyle }) => {
   },
 })
 export default class OrbitFrame {
-  state = {
-    x: 0,
-  }
-
   componentDidMount() {
     this.props.store.orbitFrame = this
   }

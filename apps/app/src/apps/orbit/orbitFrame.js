@@ -27,8 +27,8 @@ const Indicator = ({ iWidth, onLeft }) => {
         opacity: App.isShowingOrbit ? 0 : 1,
         left: onLeft ? SHADOW_PAD - iWidth : 'auto',
         right: !onLeft ? SHADOW_PAD - iWidth : 'auto',
-        borderLeftRadius: onLeft ? 4 : 0,
-        borderRightRadius: !onLeft ? 4 : 0,
+        borderLeftRadius: onLeft ? 2 : 0,
+        borderRightRadius: !onLeft ? 2 : 0,
         // opacity: App.isShowingOrbit ? 0 : 1,
         transition: `opacity ease-in 50ms ${App.animationDuration}`,
       }}
@@ -115,15 +115,18 @@ export default class OrbitFrame {
     const arrowSize = 22
     let arrowStyle
     const boxShadow = fullScreen ? orbitShadow : orbitLightShadow
-    const hideOverflow =
-      !fullScreen && (!App.isShowingOrbit || App.isAnimatingOrbit)
-    log(`render`)
     return (
       <UI.Theme name="dark">
+        <OrbitArrow
+          if={App.isAttachedToWindow}
+          arrowSize={arrowSize}
+          arrowTowards={arrowTowards}
+          arrowStyle={arrowStyle}
+        />
         <overflowWrap
           $orbitAnimate={store.shouldAnimate}
           $pointerEvents={App.isShowingOrbit}
-          $hideOverflow={hideOverflow}
+          $hideOverflow
           $isHidden={store.shouldHideWhileMoving}
           css={{
             ...(fullScreen
@@ -144,13 +147,6 @@ export default class OrbitFrame {
             $orbitFullScreen={fullScreen}
           >
             <Indicator if={!fullScreen} iWidth={iWidth} onLeft={onLeft} />
-            {/* first is arrow (above), second is arrow shadow (below) */}
-            <OrbitArrow
-              if={App.isAttachedToWindow}
-              arrowSize={arrowSize}
-              arrowTowards={arrowTowards}
-              arrowStyle={arrowStyle}
-            />
             <content
               css={{
                 boxShadow: App.isShowingOrbit ? boxShadow : 'none',

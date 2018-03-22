@@ -50,7 +50,7 @@ export default class PeekHeader {
           <UI.Input
             $orbitInput
             value={App.state.query || ''}
-            size={1.2}
+            size={1.15}
             borderRadius={5}
             borderWidth={0}
             background="#222"

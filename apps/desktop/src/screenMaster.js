@@ -160,7 +160,7 @@ export default class ScreenMaster {
         const appState = JSON.parse(JSON.stringify(nextState))
         this.setState({
           ...state,
-          isFocusedOnOrbit: this.curAppID === ORBIT_APP_ID,
+          focusedOnOrbit: this.curAppID === ORBIT_APP_ID,
           appState,
         })
       }, 16)

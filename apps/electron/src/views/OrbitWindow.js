@@ -5,13 +5,15 @@ import { Window } from '@mcro/reactron'
 import { App, Electron, Swift } from '@mcro/all'
 import * as Mobx from 'mobx'
 
+const log = debug('OrbitWindow')
+
 class OrbitWindowStore {
   show = false
   orbitRef = null
 
   // sitrep
   focusOrbit = () => {
-    console.error('focusORBIT')
+    log('focusOrbit')
     try {
       if (this.orbitRef) {
         this.orbitRef.focus()
@@ -51,7 +53,6 @@ class OrbitWindowStore {
     () => Electron.orbitState.pinned,
     isPinned => {
       if (!isPinned) {
-        console.error('DEFOUCS')
         Swift.defocus()
       }
     },

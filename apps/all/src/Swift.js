@@ -3,6 +3,8 @@ import WebSocket from './helpers/websocket'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 import Desktop from './Desktop'
 
+const log = debug('Swift')
+
 @store
 class Swift {
   isOpen = false
@@ -31,7 +33,7 @@ class Swift {
 
   defocus = () => {
     if (Desktop.state.focusedOnOrbit) {
-      console.error('swift.defocus')
+      log('defocusing')
       this._send({ action: 'defocus' })
     }
   }

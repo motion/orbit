@@ -1,5 +1,5 @@
 // @flow
-import { store, react, previous } from '@mcro/black/store'
+import { store, react } from '@mcro/black/store'
 import App from './App'
 import Desktop from './Desktop'
 import Electron from './Electron'
@@ -35,13 +35,13 @@ export default class ElectronReactions {
   // side effects
 
   @react({ delay: 500, delayValue: true })
-  wasFullScreen = () => Electron.orbitState.fullScreen
+  wasFullScreen = [() => Electron.orbitState.fullScreen, _ => _]
 
   @react
   repositionAfterFullScreen = [
     () => [App.state.orbitHidden, this.wasFullScreen],
     ([hidden, wasFullScreen]) => {
-      console.error(`reposition!`, hidden, wasFullScreen)
+      log(`reposition!`, hidden, wasFullScreen)
       if (wasFullScreen && hidden) {
         // this.afterUnFullScreen = Date.now()
       }

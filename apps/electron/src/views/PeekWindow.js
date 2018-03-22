@@ -170,7 +170,7 @@ export default class PeekWindow {
 
   render({ electronStore }) {
     const peekWindows = Mobx.toJS(Electron.peekState.windows)
-    console.log(
+    log(
       'animatePeek = isShowing ',
       App.isShowingPeek,
       '&& wasShowing',

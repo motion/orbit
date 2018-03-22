@@ -37,6 +37,7 @@ export type DesktopState = {
   clearWords: { [String]: Number },
   restoreWords: { [String]: Number },
   pluginResults: [{}],
+  focusedOnOrbit: boolean,
 }
 
 let Desktop
@@ -48,6 +49,7 @@ class DesktopStore {
   state = {
     shouldTogglePin: null,
     paused: true,
+    focusedOnOrbit: true,
     pluginResults: [],
     appState: {},
     ocrWords: null,

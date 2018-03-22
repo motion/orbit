@@ -38,7 +38,7 @@ class AppStore {
     )
   }
 
-  animationDuration = 80
+  animationDuration = 100
 
   @react
   isAnimatingOrbit = [

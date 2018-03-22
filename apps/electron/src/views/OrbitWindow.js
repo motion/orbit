@@ -2,7 +2,7 @@ import * as React from 'react'
 import * as Constants from '~/constants'
 import { view, react } from '@mcro/black'
 import { Window } from '@mcro/reactron'
-import { App, Electron, Swift } from '@mcro/all'
+import { App, Electron, Desktop, Swift } from '@mcro/all'
 import * as Mobx from 'mobx'
 
 class OrbitWindowStore {
@@ -44,8 +44,21 @@ class OrbitWindowStore {
   watchFullScreenForFocus = [
     () => Electron.orbitState.fullScreen,
     fullScreen => {
-      if (!fullScreen) return
-      this.focusOrbit()
+      if (fullScreen) {
+        this.focusOrbit()
+      } else {
+        Swift.defocus()
+      }
+    },
+  ]
+
+  @react
+  defocusOnUnPin = [
+    () => Electron.orbitState.pinned,
+    isPinned => {
+      if (!isPinned) {
+        Swift.defocus()
+      }
     },
   ]
 

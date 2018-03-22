@@ -12,8 +12,10 @@ class HeaderStore {
   focusInput = [
     () => App.isShowingHeader,
     shouldFocus => {
-      if (!shouldFocus) return
-      if (this.inputRef) {
+      if (!this.inputRef) return
+      if (!shouldFocus) {
+        this.inputRef.blur()
+      } else {
         this.inputRef.focus()
         this.inputRef.select()
       }

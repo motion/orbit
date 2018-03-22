@@ -16,6 +16,7 @@ import * as Mobx from 'mobx'
 
 const log = debug('screenMaster')
 const DESKTOP_KEY = 'Desktop'
+const ORBIT_APP_ID = 'com.github.electron'
 const APP_ID = -1
 
 // prevent apps from clearing highlights
@@ -29,7 +30,7 @@ const PREVENT_CLEAR = {
 const PREVENT_APP_STATE = {
   // iterm2: true,
   electron: true,
-  // Chromium: true,
+  Chromium: true,
 }
 // prevent apps from OCR
 const PREVENT_SCANNING = {
@@ -138,11 +139,12 @@ export default class ScreenMaster {
           if (value.id !== id) return
           nextState.offset = value.pos
       }
+      log('id', this.curAppID)
       const shouldClear =
         !PREVENT_CLEAR[this.curAppName] && !PREVENT_CLEAR[nextState.name]
+      const state = {}
       if (shouldClear) {
-        // this.lastScreenChange()
-        this.setState({ lastAppChange: Date.now() })
+        state.lastAppChange = Date.now()
       }
       // when were moving into focus prevent app, store its appName, pause then return
       if (PREVENT_APP_STATE[this.curAppName]) {
@@ -157,9 +159,11 @@ export default class ScreenMaster {
       this.lastAppState = this.setTimeout(() => {
         const appState = JSON.parse(JSON.stringify(nextState))
         this.setState({
+          ...state,
+          isFocusedOnOrbit: this.curAppID === ORBIT_APP_ID,
           appState,
         })
-      }, 32)
+      }, 16)
     })
     this.oracle.onBoxChanged(count => {
       if (!Desktop.state.ocrWords) {

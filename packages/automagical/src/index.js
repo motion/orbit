@@ -393,12 +393,12 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
         rejectReaction()
       }
       let hasCalledSetValue = false
+      const start = Date.now()
       const updateAsyncValue = val => {
         if (id === reactionID) {
           replaceDisposable()
           if (!preventLog) {
-            console.log('setting to', val)
-            log(`${name} = `, val)
+            log(`${name} (${Date.now() - start}ms) = `, val)
           }
           update(val)
         }

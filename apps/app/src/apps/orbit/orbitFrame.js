@@ -5,10 +5,11 @@ import { App, Electron, Desktop } from '@mcro/all'
 import * as Constants from '~/constants'
 
 const SHADOW_PAD = 15
-const BORDER_RADIUS = 12
-const background = 'rgba(0,0,0,0.9)'
-const orbitShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.3]]]
+const BORDER_RADIUS = 11
+const background = 'rgba(0,0,0,0.89)'
+const orbitShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.2]]]
 const orbitLightShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.1]]]
+// const log = debug('OrbitFrame')
 
 const Indicator = ({ iWidth, onLeft }) => {
   return (
@@ -49,13 +50,28 @@ const OrbitArrow = ({ arrowSize, arrowTowards, arrowStyle }) => (
 
 @view({
   store: class OrbitFrameStore {
+    orbitFrame = null
+
+    @react
+    fixPinnedBug = [
+      () => Electron.orbitState.pinned,
+      pinned => {
+        if (pinned) return
+        console.log('FIX PIN BUG')
+        if (this.orbitFrame) {
+          this.orbitFrame.setState({ x: Math.random() })
+        }
+      },
+      { delay: App.animationDuration * 10 },
+    ]
+
     @react
     wasShowingOrbit = [
       () => App.isShowingOrbit,
       async (val, { sleep, setValue }) => {
         if (!val) {
-          // ew
-          await sleep(App.animationDuration + 32)
+          // ew, but can be lax
+          await sleep(App.animationDuration * 2)
           setValue(false)
         } else {
           setValue(val)
@@ -85,34 +101,19 @@ const OrbitArrow = ({ arrowSize, arrowTowards, arrowStyle }) => (
         setValue(false)
       },
     ]
-
-    // @react
-    // orbitAnimate = [
-    //   () =>
-    //     Desktop.shouldHide ||
-    //     Electron.orbitState.fullScreen ||
-    //     this.wasFullScreen,
-    //   async (preventAnimation, { sleep, setValue }) => {
-    //     if (preventAnimation) {
-    //       setValue(false)
-    //     } else {
-    //       await sleep(App.animationDuration)
-    //       setValue(true)
-    //     }
-    //   },
-    //   true,
-    // ]
   },
 })
 export default class OrbitFrame {
+  state = {
+    x: 0,
+  }
+
+  componentDidMount() {
+    this.props.store.orbitFrame = this
+  }
+
   render({ store, orbitPage, children, iWidth }) {
     const { fullScreen, arrowTowards } = Electron.orbitState
-    console.log('RENDER FRAME', {
-      wasShowingOrbit: store.wasShowingOrbit,
-      wasFullScreen: store.wasFullScreen,
-      shouldAnimate: store.shouldAnimate,
-      shouldHideWhileMoving: store.shouldHideWhileMoving,
-    })
     const { onLeft } = Electron
     const arrowSize = 24
     let arrowStyle
@@ -130,6 +131,7 @@ export default class OrbitFrame {
     const boxShadow = fullScreen ? orbitShadow : orbitLightShadow
     const hideOverflow =
       !fullScreen && (!App.isShowingOrbit || App.isAnimatingOrbit)
+    log(`render`)
     return (
       <UI.Theme name="dark">
         <overflowWrap
@@ -137,14 +139,14 @@ export default class OrbitFrame {
           $pointerEvents={App.isShowingOrbit}
           $hideOverflow={hideOverflow}
           $isHidden={store.shouldHideWhileMoving}
-          css={
-            fullScreen
+          css={{
+            ...(fullScreen
               ? { right: 0 }
               : {
                   right: onLeft ? 15 : 'auto',
                   left: !onLeft ? 15 : 'auto',
-                }
-          }
+                }),
+          }}
         >
           <orbit
             css={{
@@ -228,12 +230,14 @@ export default class OrbitFrame {
         ? {
             transform: {
               x: onLeft ? 0 : -SHADOW_PAD * 2,
+              z: 0,
             },
           }
         : {
             // marginRight: onLeft ? SHADOW_PAD : -SHADOW_PAD,
             transform: {
               x: onLeft ? 330 - SHADOW_PAD - (SHADOW_PAD + iWidth) + 4 : -330,
+              z: 0,
             },
           }
     },

@@ -54,13 +54,13 @@ export default class ElectronReactions {
   @react
   unPinOnSwitchApp = [
     () => Desktop.state.appState.id,
-    () => Electron.setPinned(false),
+    () => Electron.orbitState.pinned && Electron.setPinned(false),
   ]
 
   @react
   unPinOnFullScreen = [
     () => Electron.orbitState.fullScreen,
-    () => Electron.setPinned(false),
+    () => Electron.orbitState.pinned && Electron.setPinned(false),
   ]
 
   @react

@@ -30,12 +30,16 @@ export default class AppReactions {
     },
   ]
 
-  @react
+  @react({ log: false })
   showOnMouseOverOrbitBar = [
     () => [Desktop.state.mousePosition, Electron.orbitState],
-    async ([{ x, y }, orbitState], { sleep, preventLogging }) => {
-      preventLogging()
-      if (!orbitState.position) return
+    async ([{ x, y }, orbitState], { sleep }) => {
+      if (!orbitState.position) {
+        return
+      }
+      if (Electron.orbitState.fullScreen) {
+        return
+      }
       const { position: [oX, oY], arrowTowards } = orbitState
       // TODO: Constants.ORBIT_WIDTH
       const adjX = arrowTowards === 'right' ? 300 : 0

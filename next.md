@@ -1,16 +1,7 @@
 # next
 
-* if not holding option and click input, dont pin
-* remove arrow in peek
-* hover => selectedItem
-* selectedItem nicer design
-* un-pin on switch app
 * animation fix:
   * unfullscreen glitches
-  * switch app: hide, re-show once repositioned
-  * first to second peek result doesnt animate
-  * first peek result animates in
-* when pinned: re-focusing current app should hide peek
 * click settings should pin
 * keyboard nav
   * right/left to open big-peek

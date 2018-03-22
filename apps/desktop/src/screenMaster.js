@@ -4,7 +4,7 @@ import { debounce, isEqual, throttle, last } from 'lodash'
 import iohook from 'iohook'
 
 import { store } from '@mcro/black/store'
-import { Desktop, Electron, Swift } from '@mcro/all'
+import { App, Desktop, Electron, Swift } from '@mcro/all'
 import SocketManager from './helpers/socketManager'
 import * as Mobx from 'mobx'
 
@@ -15,7 +15,7 @@ import * as Mobx from 'mobx'
 // the socket management is in SocketManager
 
 const log = debug('screenMaster')
-const DESKTOP_KEY = 'DesktopStore'
+const DESKTOP_KEY = 'Desktop'
 const APP_ID = -1
 
 // prevent apps from clearing highlights
@@ -42,18 +42,41 @@ const PREVENT_SCANNING = {
   ActivityMonitor: true,
 }
 
+const sources = {
+  App,
+  Electron,
+  Desktop,
+}
+
 @store
 export default class ScreenMaster {
+  watchSettings = {}
   oracle = new Oracle()
   socketManager = new SocketManager({
     port: 40510,
-    source: 'DesktopStore',
-    onConnection: socket => {
-      // send current state
-      this.socketManager.send(socket, Desktop.state)
+    source: 'Desktop',
+    actions: {
+      getState: ({ source, socket }) => {
+        if (source === 'Desktop') {
+          return
+        }
+        // send current state of all apps besides the one requesting
+        for (const name of Object.keys(sources)) {
+          if (name === source) continue
+          console.log(
+            'sending initial state to',
+            source,
+            'from',
+            name,
+            'state',
+            sources[name].state,
+          )
+          // send state from source
+          this.socketManager.send(socket, sources[name].state, name)
+        }
+      },
     },
   })
-  watchSettings = {}
 
   start = async () => {
     await this.socketManager.start()
@@ -87,12 +110,11 @@ export default class ScreenMaster {
     })
     this.oracle.onWindowChange((event, value) => {
       if (event === 'ScrollEvent') {
-        this.lastScreenChange()
         this.rescanApp()
         return
       }
       // if current app is a prevented app, treat like nothing happened
-      let nextState = { ...Desktop.state.appState }
+      let nextState = { ...Desktop.state.appState, updatedAt: Date.now() }
       let id = this.curAppID
       switch (event) {
         case 'FrontmostWindowChangedEvent':
@@ -103,12 +125,6 @@ export default class ScreenMaster {
             offset: value.offset,
             bounds: value.bounds,
             name: id ? last(id.split('.')) : value.title,
-          }
-          const hasNewID = this.curAppID !== id
-          const shouldClear =
-            !PREVENT_CLEAR[this.curAppName] && !PREVENT_CLEAR[nextState.name]
-          if (hasNewID && shouldClear) {
-            this.lastScreenChange()
           }
           // update these now so we can use to track
           this.curAppID = id
@@ -122,6 +138,12 @@ export default class ScreenMaster {
           if (value.id !== id) return
           nextState.offset = value.pos
       }
+      const shouldClear =
+        !PREVENT_CLEAR[this.curAppName] && !PREVENT_CLEAR[nextState.name]
+      if (shouldClear) {
+        // this.lastScreenChange()
+        this.setState({ lastAppChange: Date.now() })
+      }
       // when were moving into focus prevent app, store its appName, pause then return
       if (PREVENT_APP_STATE[this.curAppName]) {
         this.oracle.pause()
@@ -130,11 +152,14 @@ export default class ScreenMaster {
       if (!Desktop.state.paused) {
         this.oracle.resume()
       }
-      const appState = JSON.parse(JSON.stringify(nextState))
       // log('set.appState', appState)
-      this.setState({
-        appState,
-      })
+      clearTimeout(this.lastAppState)
+      this.lastAppState = this.setTimeout(() => {
+        const appState = JSON.parse(JSON.stringify(nextState))
+        this.setState({
+          appState,
+        })
+      }, 32)
     })
     this.oracle.onBoxChanged(count => {
       if (!Desktop.state.ocrWords) {
@@ -220,16 +245,13 @@ export default class ScreenMaster {
     if (!hasNewState) {
       return
     }
-    const oldState = Desktop.state
-    Desktop.state = Object.freeze({ ...Desktop.state, ...object })
     Desktop.setState(object, true)
-    // sends over (oldState, changedState, newState)
-    this.onChangedState(oldState, object, Desktop.state)
+    this.onChangedState(object, Desktop.state)
     // only send the changed things to reduce overhead
     this.socketManager.sendAll(DESKTOP_KEY, object)
   }
 
-  onChangedState = async (oldState, newState) => {
+  onChangedState = async newState => {
     if (Desktop.state.paused) {
       return
     }

@@ -7,7 +7,8 @@ const log = debug('scrn')
 export default class SocketManager {
   activeSockets = []
 
-  constructor({ port, source }) {
+  constructor({ port, source, actions }) {
+    this.actions = actions
     this.source = source
     this.port = port
   }
@@ -22,12 +23,12 @@ export default class SocketManager {
     return !!this.activeSockets.length
   }
 
-  send = (socket, state: Object) => {
+  send = (socket, state: Object, source = this.source) => {
     if (!state) {
       throw new Error(`No state provided for SocketManager.send: ${state}`)
     }
     try {
-      socket.send(JSON.stringify({ source: this.source, state }))
+      socket.send(JSON.stringify({ source, state }))
     } catch (err) {
       log('error with scoket', err.message, err.stack)
     }
@@ -62,14 +63,13 @@ export default class SocketManager {
   decorateSocket = (uid, socket) => {
     // listen for incoming
     socket.on('message', str => {
-      const { action, value, state, source } = JSON.parse(str)
+      const { action, state, source } = JSON.parse(str)
       if (state) {
         // console.log('should send', source || '---nostate:(', state)
         this.sendAll(source, state, { skipUID: uid })
       }
-      if (action && this[action]) {
-        log('received action:', action)
-        this[action].call(this, value)
+      if (this.actions[action]) {
+        this.actions[action]({ source, socket })
       }
     })
     // handle events
@@ -96,9 +96,6 @@ export default class SocketManager {
     }, 5000)
     this.wss.on('connection', socket => {
       let uid = id++
-      if (this.onConnection) {
-        this.onConnection(socket)
-      }
       // add to active sockets
       this.activeSockets.push({ uid, socket })
       this.decorateSocket(uid, socket)

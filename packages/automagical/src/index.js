@@ -1,6 +1,6 @@
 // @flow
 import global from 'global'
-import { fromPromise, isPromiseBasedObservable } from 'mobx-utils'
+import { fromPromise, isPromiseBasedObservable, whenAsync } from 'mobx-utils'
 import fromStream from './fromStream'
 import * as Mobx from 'mobx'
 import { Observable } from 'rxjs'
@@ -13,7 +13,7 @@ const uid = () => id++ % Number.MAX_VALUE
 global.__trackStateChanges = {}
 
 const log = debug('>')
-const RejectSleepSymbol = Symbol('REJECT_SLEEP')
+const RejectReactionSymbol = Symbol('REJECT_REACTION')
 
 if (module && module.hot) {
   module.hot.accept('.', _ => _) // prevent aggressive hmrs
@@ -376,16 +376,20 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
 
   // state used outside each watch/reaction
   let preventLog = false
-  let rejectSleep
   let reactionID
+  let rejections = []
+  const rejectReaction = () => {
+    rejections.map(rej => rej())
+  }
 
   function watcher(reactionFn) {
     return function watcherCb(reactVal) {
-      const name = `${getReactionName(obj)}.${method}`
       reactionID = uid()
+      const id = reactionID
+      const name = `${getReactionName(obj)}.${method}`
       // cancels on new reactions
-      if (rejectSleep) {
-        rejectSleep()
+      if (rejectReaction) {
+        rejectReaction()
       }
       global.__trackStateChanges.isActive = true
       const reactionResult = reactionFn.call(
@@ -395,20 +399,40 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
           preventLogging: () => (preventLog = true),
           // allows setting multiple values in a reaction
           setValue: val => {
-            if (!preventLog) {
-              log(`${name}.setValue(`, val, `)`)
+            if (id === reactionID) {
+              replaceDisposable()
+              if (!preventLog) {
+                console.log('setting to', val)
+                log(`${name} = `, val)
+              }
+              update(val)
             }
-            update(val)
           },
           // allows delaying in a reaction, with automatic clearing on new reaction
           sleep: ms => {
             // log(`${name} sleeping for ${ms}`)
             return new Promise((resolve, reject) => {
               const sleepTimeout = setTimeout(resolve, ms)
-              rejectSleep = () => {
+              rejections.push(() => {
                 clearTimeout(sleepTimeout)
-                reject(RejectSleepSymbol)
-              }
+                reject(RejectReactionSymbol)
+              })
+            })
+          },
+          when: condition => {
+            // log(`${name} sleeping for ${ms}`)
+            return new Promise((resolve, reject) => {
+              let cancelWhen = false
+              whenAsync(condition)
+                .then(val => {
+                  if (cancelWhen) return
+                  resolve(val)
+                })
+                .catch(reject)
+              rejections.push(() => {
+                cancelWhen = true
+                reject()
+              })
             })
           },
         },
@@ -417,27 +441,16 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
       global.__trackStateChanges = {}
       // handle promises
       if (reactionResult instanceof Promise) {
-        const id = reactionID
         if (!preventLog) {
           log(`[async ${id}] ${name}(`, reactVal, `) ...`)
         }
-        reactionResult
-          .then(value => {
-            if (id === reactionID) {
-              replaceDisposable()
-              if (!preventLog && typeof value !== 'undefined') {
-                log(`[  ... ${id}] done`, ...logRes(value))
-              }
-              update(value)
-            }
-          })
-          .catch(err => {
-            if (err === RejectSleepSymbol) {
-              console.log(`Reaction cancelled [${id}]`)
-            } else {
-              throw err
-            }
-          })
+        reactionResult.catch(err => {
+          if (err === RejectReactionSymbol) {
+            console.log(`Reaction cancelled [${id}]`)
+          } else {
+            throw err
+          }
+        })
         return
       }
       // store result as observable

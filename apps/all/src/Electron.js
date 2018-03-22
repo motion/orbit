@@ -9,6 +9,8 @@ let Electron
 
 @store
 class ElectronStore {
+  source = 'Electron'
+
   state = {
     shouldHide: 1,
     shouldShow: 0,
@@ -39,9 +41,9 @@ class ElectronStore {
   @react
   isMouseInActiveArea = [
     () => !!(Electron.orbitState.mouseOver || Electron.peekState.mouseOver),
-    async (over, { sleep }) => {
+    async (over, { sleep, setValue }) => {
       await sleep(over ? 0 : 100)
-      return over
+      setValue(over)
     },
     true,
   ]
@@ -136,17 +138,35 @@ class ElectronStore {
   }
 
   toggleFullScreen = () => {
-    console.log('TOGGLE FULL SCREEN')
-    this.setFullScreen(!Electron.orbitState.fullScreen)
-  }
-
-  setFullScreen = fullScreen => {
-    Electron.setOrbitState({ fullScreen })
+    const fullScreen = !Electron.orbitState.fullScreen
+    if (fullScreen) {
+      const { round } = Math
+      const [screenW, screenH] = this.reactions.screenSize()
+      const [appW, appH] = [screenW / 1.5, screenH / 1.3]
+      const [orbitW, orbitH] = [appW * 1 / 3, appH]
+      const [orbitX, orbitY] = [(screenW - appW) / 2, (screenH - appH) / 2]
+      const [peekW, peekH] = [appW * 2 / 3, appH]
+      const [peekX, peekY] = [orbitX + orbitW, orbitY]
+      Electron.setOrbitState({
+        position: [orbitX, orbitY].map(round),
+        size: [orbitW, orbitH].map(round),
+        arrowTowards: 'right',
+        fullScreen: true,
+        hasPositionedFullScreen: false,
+      })
+      const [peek, ...rest] = Electron.peekState.windows
+      peek.position = [peekX, peekY].map(round)
+      peek.size = [peekW, peekH].map(round)
+      peek.arrowTowards = 'left'
+      Electron.setPeekState({ windows: [peek, ...rest] })
+    } else {
+      Electron.setOrbitState({ fullScreen: false })
+    }
   }
 }
 
 Electron = proxySetters(new ElectronStore())
-Bridge.stores.ElectronStore = Electron
+Bridge.stores[Electron.source] = Electron
 global.Electron = Electron
 
 export default Electron

@@ -8,6 +8,8 @@ export logClass from './logClass'
 
 export const trimSingleLine = str => str.trim().replace(/\s{2,}/g, ' ')
 
+export const sleep = ms => new Promise(res => setTimeout(res, ms))
+
 export const contextToResult = state => {
   const pretitle = state.selection || state.title
   return {

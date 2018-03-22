@@ -30,6 +30,7 @@ export type DesktopState = {
   linePositions?: [Number],
   lastOCR: Number,
   lastScreenChange: Number,
+  lastAppChange: Number,
   mousePosition: { x: Number, y: Number },
   keyboard: Object,
   highlightWords: { [String]: boolean },
@@ -42,6 +43,8 @@ let Desktop
 
 @store
 class DesktopStore {
+  source = 'Desktop'
+
   state = {
     shouldTogglePin: null,
     paused: true,
@@ -51,6 +54,7 @@ class DesktopStore {
     linePositions: null,
     lastOCR: Date.now(),
     lastScreenChange: Date.now(),
+    lastAppChange: Date.now(),
     mousePosition: { x: 0, y: 0 },
     keyboard: {},
     clearWords: {},
@@ -60,7 +64,12 @@ class DesktopStore {
 
   get isHoldingOption(): Boolean {
     const { option, optionUp } = this.state.keyboard
+    console.log('isHoldingOption', option, optionUp)
     return (option || 0) > (optionUp || 1)
+  }
+
+  get shouldHide() {
+    return this.state.lastScreenChange > this.state.appState.updatedAt
   }
 
   get linesBoundingBox() {
@@ -95,7 +104,7 @@ class DesktopStore {
   }
 
   updateKeyboard = newState =>
-    this.setState({ keyboard: { ...this.state.keyboard, ...newState } })
+    Desktop.setState({ keyboard: { ...this.state.keyboard, ...newState } })
 
   // only clear if necessary
   clearOption = () => {
@@ -108,6 +117,6 @@ class DesktopStore {
 
 Desktop = proxySetters(new DesktopStore())
 global.Desktop = Desktop
-Bridge.stores.DesktopStore = Desktop
+Bridge.stores[Desktop.source] = Desktop
 
 export default Desktop

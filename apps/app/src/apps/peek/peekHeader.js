@@ -1,14 +1,17 @@
 // @flow
 import * as React from 'react'
 import { view } from '@mcro/black'
-// import * as UI from '@mcro/ui'
+import * as UI from '@mcro/ui'
 import ControlButton from '~/views/controlButton'
 import { Electron } from '@mcro/all'
 
 @view
 export default class PeekHeader {
-  render() {
+  render({ peek }) {
     const { fullScreen } = Electron.orbitState
+    if (!Electron.currentPeek) {
+      return null
+    }
     const { isTorn } = Electron.currentPeek
     return (
       <header $$draggable={!fullScreen}>
@@ -17,7 +20,9 @@ export default class PeekHeader {
           <ControlButton icon="y" background="#F6BE4F" />
           <ControlButton icon="z" background="#62C554" />
         </buttons>
-        <title>title</title>
+        <title if={peek.peekItem}>
+          <UI.Title size={1.3}>{peek.peekItem.title}</UI.Title>
+        </title>
       </header>
     )
   }
@@ -27,7 +32,8 @@ export default class PeekHeader {
       flexFlow: 'row',
       alignItems: 'center',
       justifyContent: 'center',
-      padding: [10, 10],
+      padding: [15, 20],
+      borderBottom: [1, [0, 0, 0, 0.1]],
     },
     title: {
       flex: 1,

@@ -29,7 +29,7 @@ const SCREEN_PAD = 15
 @store
 export default class ElectronReactions {
   // values
-
+  screenSize = screenSize
   shouldRepositionAfterFullScreen = false
 
   // side effects
@@ -37,8 +37,11 @@ export default class ElectronReactions {
   @react
   repositionAfterFullScreen = [
     () => [App.state.orbitHidden, Electron.orbitState.fullScreen],
-    async ([hidden], { sleep }) => {
-      await sleep(App.animationDuration + 64)
+    async ([hidden, fullScreen], { sleep }) => {
+      if (fullScreen) {
+        return
+      }
+      await sleep(App.animationDuration + 80)
       if (hidden) {
         this.shouldRepositionAfterFullScreen = Date.now()
       }
@@ -49,6 +52,12 @@ export default class ElectronReactions {
   shouldTogglePinned = [
     () => [App.state.shouldTogglePinned, Desktop.state.shouldTogglePin],
     Electron.togglePinned,
+  ]
+
+  @react
+  unPinOnSwitchApp = [
+    () => Desktop.state.appState.id,
+    () => Electron.setPinned(false),
   ]
 
   @react
@@ -143,40 +152,15 @@ export default class ElectronReactions {
   ]
 
   @react
-  positionOrbitFullScreen = [
-    () => Electron.orbitState.fullScreen,
-    fullScreen => {
-      if (!fullScreen) {
-        return
-      }
-      const { round } = Math
-      const [screenW, screenH] = screenSize()
-      const [appW, appH] = [screenW / 1.5, screenH / 1.3]
-      const [orbitW, orbitH] = [appW * 1 / 3, appH]
-      const [orbitX, orbitY] = [(screenW - appW) / 2, (screenH - appH) / 2]
-      const [peekW, peekH] = [appW * 2 / 3, appH]
-      const [peekX, peekY] = [orbitX + orbitW, orbitY]
-      Electron.setOrbitState({
-        position: [orbitX, orbitY].map(round),
-        size: [orbitW, orbitH].map(round),
-        arrowTowards: 'right',
-      })
-      const [peek, ...rest] = Electron.peekState.windows
-      peek.position = [peekX, peekY].map(round)
-      peek.size = [peekW, peekH].map(round)
-      peek.arrowTowards = 'left'
-      Electron.setPeekState({ windows: [peek, ...rest] })
-    },
-  ]
-
-  @react
   positionOrbitFromBoundingBox = [
     () => [
       appTarget(Desktop.state.appState || {}),
       Desktop.linesBoundingBox,
       this.shouldRepositionAfterFullScreen,
     ],
-    ([appBB, linesBB]) => {
+    async ([appBB, linesBB], { sleep }) => {
+      // so app can hide before we transition
+      await sleep(32)
       // prefer using lines bounding box, fall back to app
       const box = linesBB || appBB
       if (!box) return

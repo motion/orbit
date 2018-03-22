@@ -11,6 +11,8 @@ let App
 
 @store
 class AppStore {
+  source = 'App'
+
   state = {
     query: '',
     selectedItem: null,
@@ -36,7 +38,7 @@ class AppStore {
     )
   }
 
-  animationDuration = 100
+  animationDuration = 80
 
   @react
   isAnimatingOrbit = [
@@ -45,7 +47,7 @@ class AppStore {
       preventLogging()
       setValue(true)
       await sleep(App.animationDuration)
-      return false
+      setValue(false)
     },
   ]
 
@@ -55,11 +57,14 @@ class AppStore {
 
   @react
   wasShowingPeek = [
-    () => [App.state.peekTarget, Electron.orbitState.fullScreen],
-    () => {
-      const last = this.next
-      this.next = this.isShowingPeek
-      return last || false
+    () => this.isShowingPeek,
+    is => {
+      if (is === false) {
+        return false
+      }
+      const last = this.last
+      this.last = is
+      return is || last || false
     },
   ]
 
@@ -112,6 +117,6 @@ class AppStore {
 
 App = proxySetters(new AppStore())
 global.App = App
-Bridge.stores.AppStore = App
+Bridge.stores[App.source] = App
 
 export default App

@@ -28,6 +28,7 @@ apps/oracle/swindler/Build
 apps/app/build
 apps/desktop/es6
 apps/desktop/build
+apps/desktop/data/database.sqlite
 apps/site/build
 apps/search/build
 apps/electron/build

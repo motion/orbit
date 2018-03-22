@@ -4,12 +4,13 @@ import execa from 'execa'
 const script = path.resolve(__dirname, '../../python/run_embedding.py')
 
 execa.shell(`python3`, [script])
-
-export default async sentence => {
+const serverUrl = `http://localhost:5000`
+export default async words => {
   const vectors = await (await fetch(
-    `http://localhost:5000/get_sentence?sentence=${encodeURIComponent(
-      sentence,
+    `${serverUrl}/get_sentence?words=${encodeURIComponent(
+      JSON.stringify(words),
     )}`,
   )).json()
-  return vectors
+
+  return vectors.map(vector => vector.map(i => +i.toFixed(4)))
 }

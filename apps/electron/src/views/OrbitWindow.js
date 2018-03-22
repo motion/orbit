@@ -33,7 +33,7 @@ class OrbitWindowStore {
     },
   ]
 
-  @react({ delay: 100 })
+  @react({ delay: 100, log: false })
   delayedOrbitState = () => Mobx.toJS(Electron.orbitState)
 
   @react

@@ -41,8 +41,8 @@ export default class ElectronReactions {
   repositionAfterFullScreen = [
     () => [App.state.orbitHidden, this.wasFullScreen],
     ([hidden, wasFullScreen]) => {
-      log(`reposition!`, hidden, wasFullScreen)
       if (wasFullScreen && hidden) {
+        log(`SHOULD reposition after fullscreen!`)
         // this.afterUnFullScreen = Date.now()
       }
     },

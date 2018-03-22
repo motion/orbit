@@ -10,7 +10,7 @@ type Helpers = {
 
 type Plugin = (
   options: Object,
-  Helpers: Helpers
+  Helpers: Helpers,
 ) => {
   name: string,
   once?: boolean,
@@ -29,7 +29,11 @@ export default function decor(plugins: Array<[Plugin, Object] | Plugin>) {
   const emit = (...args) => emitter.emit(...args)
   const on = (...args) => emitter.on(...args)
   const off = (...args) => emitter.off(...args)
-  const isClass = x => x && !!x.prototype
+  const isClass = x =>
+    x &&
+    x.prototype &&
+    (x.toString().indexOf('class ') === 0 ||
+      x.toString().indexOf('_classCallCheck') > -1)
 
   // process plugins
   let index = -1
@@ -90,7 +94,7 @@ export default function decor(plugins: Array<[Plugin, Object] | Plugin>) {
 
   function decorDecorator(
     KlassOrOpts: Class<any> | Function | Object,
-    opts?: Object
+    opts?: Object,
   ) {
     // optional: decorator-side props
     if (typeof KlassOrOpts === 'object') {

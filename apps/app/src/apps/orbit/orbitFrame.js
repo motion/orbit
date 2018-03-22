@@ -35,18 +35,36 @@ const Indicator = ({ iWidth, onLeft }) => {
   )
 }
 
-const OrbitArrow = ({ arrowSize, arrowTowards, arrowStyle }) => (
-  <UI.Arrow
-    size={arrowSize}
-    towards={arrowTowards}
-    background={background}
-    css={{
-      position: 'absolute',
-      ...arrowStyle,
-      zIndex: 100,
-    }}
-  />
-)
+const OrbitArrow = view(({ arrowSize, arrowTowards, arrowStyle }) => {
+  const { onLeft } = Electron
+  if (onLeft) {
+    arrowStyle = {
+      top: 53,
+      right: SHADOW_PAD - arrowSize,
+    }
+  } else {
+    arrowStyle = {
+      top: 53,
+      left: 1,
+    }
+  }
+  return (
+    <UI.Arrow
+      size={arrowSize}
+      towards={arrowTowards}
+      background={background}
+      css={{
+        position: 'absolute',
+        ...arrowStyle,
+        zIndex: 100,
+        transition: `all ease-in 100ms ${App.animationDuration}ms`,
+        transform: {
+          x: App.isShowingOrbit ? 0 : onLeft ? -arrowSize : arrowSize,
+        },
+      }}
+    />
+  )
+})
 
 @view({
   store: class OrbitFrameStore {
@@ -117,17 +135,6 @@ export default class OrbitFrame {
     const { onLeft } = Electron
     const arrowSize = 24
     let arrowStyle
-    if (onLeft) {
-      arrowStyle = {
-        top: 53,
-        right: SHADOW_PAD - arrowSize,
-      }
-    } else {
-      arrowStyle = {
-        top: 53,
-        left: 1,
-      }
-    }
     const boxShadow = fullScreen ? orbitShadow : orbitLightShadow
     const hideOverflow =
       !fullScreen && (!App.isShowingOrbit || App.isAnimatingOrbit)

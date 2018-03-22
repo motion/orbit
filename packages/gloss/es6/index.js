@@ -102,7 +102,7 @@ let Gloss = class Gloss {
       }
 
       // @view decorated style component
-      if (Child.prototype) {
+      if (Child.prototype.render) {
         const { attachStyles, css } = this;
 
         Child.prototype.glossElement = this.createElement;
@@ -183,27 +183,29 @@ let Gloss = class Gloss {
 
         let lastUpdatedStyles = null;
         const ogrender = Child.prototype.render;
-        Child.prototype.render = function (...args) {
-          // ONLY IN DEV -- ALWAYS UPDATE STYLESHEET SO HMR STYLE CHANGES WORK
-          if (!lastUpdatedStyles || typeof window !== 'undefined' && window.lastHotReload && lastUpdatedStyles > window.lastHotReload) {
-            attachStyles(Child.glossUID, Child.style, true);
-            lastUpdatedStyles = Date.now();
-          }
-          if (ogrender) {
-            return ogrender.call(this, ...args);
-          }
-        };
+        if (Child.prototype.render) {
+          Child.prototype.render = function (...args) {
+            // ONLY IN DEV -- ALWAYS UPDATE STYLESHEET SO HMR STYLE CHANGES WORK
+            if (!lastUpdatedStyles || typeof window !== 'undefined' && window.lastHotReload && lastUpdatedStyles > window.lastHotReload) {
+              attachStyles(Child.glossUID, Child.style, true);
+              lastUpdatedStyles = Date.now();
+            }
+            if (ogrender) {
+              return ogrender.call(this, ...args);
+            }
+          };
 
-        // on first mount, attach styles
-        const ogComponentWillMount = Child.prototype.componentWillMount;
-        Child.prototype.componentWillMount = function (...args) {
-          if (hasTheme) {
-            this.glossUpdateTheme(this.props);
-          }
-          if (ogComponentWillMount) {
-            return ogComponentWillMount.call(this, ...args);
-          }
-        };
+          // on first mount, attach styles
+          const ogComponentWillMount = Child.prototype.componentWillMount;
+          Child.prototype.componentWillMount = function (...args) {
+            if (hasTheme) {
+              this.glossUpdateTheme(this.props);
+            }
+            if (ogComponentWillMount) {
+              return ogComponentWillMount.call(this, ...args);
+            }
+          };
+        }
       }
     };
 

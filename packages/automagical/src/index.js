@@ -362,7 +362,14 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
     }
     if (isReaction) {
       // reaction
-      const options = Helpers.getReactionOptions(val[2])
+      let options
+      if (val[2]) {
+        const { log, ...opts } = val[2]
+        if (log === false) {
+          preventLog = true
+        }
+        options = Helpers.getReactionOptions(opts)
+      }
       stopReaction = Mobx.reaction(val[0], watcher(val[1]), {
         // pass name to reaction for debugging
         name: method,

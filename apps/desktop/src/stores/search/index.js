@@ -22,7 +22,7 @@ const sentenceToWords = sentence =>
   sentence.split(' ').filter(i => i.trim().length > 0)
 const wordsToSentence = words => words.join(' ')
 
-const wordVectors = readData('vectors.json')
+// const wordVectors = readData('vectors.json')
 const dataset = flatten(
   ['datasets/books.json', 'datasets/pg.json'].map(readData),
 )

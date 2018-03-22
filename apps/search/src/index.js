@@ -114,10 +114,6 @@ class Search {
     }
   }
 
-  getEmbedding = async () => {
-    return await (await fetch('/dist/vectors.json')).json()
-  }
-
   async willMount() {
     self.indexer = this
     this.db = new DB()

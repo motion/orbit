@@ -48,16 +48,16 @@ export default class OrbitContent {
   }
 
   render({ orbitStore }) {
-    const { appState } = Desktop.state
+    const { appState, searchIndexStatus, searchPerformance } = Desktop.state
     return (
       <list>
         <UI.Text if={App.isAttachedToWindow && appState} css={{ padding: 10 }}>
-          {orbitStore.indexingStatus}
+          {searchIndexStatus}
           <UI.Text
             if={appState.title}
             css={{ display: 'inline', opacity: 0.5, fontSize: '80%' }}
           >
-            took {orbitStore.searchPerformance}
+            took {searchPerformance}
           </UI.Text>
         </UI.Text>
         {orbitStore.results.map((result, index) => (

@@ -69,18 +69,14 @@ class PeekStore {
   positionPeekBasedOnTarget = [
     () => App.state.peekTarget,
     peekTarget => {
-      console.log('REACT TO PEEK TARGET')
       if (!peekTarget) return
       if (Electron.orbitState.fullScreen) {
-        log(`Avoid position on fullScreen`)
         return
       }
       // focus peek new target
-      console.log('ok now do 1')
-      if (this.props.electronStore.peekRef) {
-        this.props.electronStore.peekRef.focus()
-      }
-      console.log('ok now do 2')
+      // if (this.props.electronStore.peekRef) {
+      //   this.props.electronStore.peekRef.focus()
+      // }
       Electron.updatePeek(Electron.currentPeek, peek => {
         Object.assign(peek, peekPosition(peekTarget.position))
       })
@@ -170,12 +166,6 @@ export default class PeekWindow {
 
   render({ electronStore }) {
     const peekWindows = Mobx.toJS(Electron.peekState.windows)
-    log(
-      'animatePeek = isShowing ',
-      App.isShowingPeek,
-      '&& wasShowing',
-      App.wasShowingPeek,
-    )
     return (
       <React.Fragment>
         {peekWindows.map((peek, index) => {

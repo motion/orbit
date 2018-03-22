@@ -86,12 +86,6 @@ const OrbitArrow = view(({ arrowSize, arrowTowards, arrowStyle }) => {
       },
     ]
 
-    get wasFullScreen() {
-      const last = this._lastWFS || false
-      this._lastWFS = Electron.orbitState.fullScreen
-      return last
-    }
-
     get shouldAnimate() {
       return App.isShowingOrbit || this.wasShowingOrbit
     }

@@ -28,23 +28,20 @@ const SCREEN_PAD = 15
 
 @store
 export default class ElectronReactions {
-  // values
   screenSize = screenSize
-  afterUnFullScreen = false
-
-  // side effects
-
-  @react({ delay: 500, delayValue: true })
-  wasFullScreen = [() => Electron.orbitState.fullScreen, _ => _]
+  afterUnFullScreen = null
 
   @react
-  repositionAfterFullScreen = [
-    () => [App.state.orbitHidden, this.wasFullScreen],
-    ([hidden, wasFullScreen]) => {
-      if (wasFullScreen && hidden) {
-        log(`SHOULD reposition after fullscreen!`)
-        // this.afterUnFullScreen = Date.now()
+  unFullScreenOnHide = [
+    () => Electron.state.shouldHide,
+    async (_, { sleep }) => {
+      if (!Electron.orbitState.fullScreen || App.state.orbitHidden) {
+        return
       }
+      await sleep(16)
+      log(`u cray`)
+      Electron.setOrbitState({ fullScreen: false })
+      this.afterUnFullScreen = Date.now()
     },
   ]
 
@@ -61,7 +58,7 @@ export default class ElectronReactions {
   ]
 
   @react
-  unPinOnUnFullScreen = [
+  unPinOnFullScreen = [
     () => Electron.orbitState.fullScreen,
     () => Electron.setPinned(false),
   ]

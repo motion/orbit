@@ -104,7 +104,7 @@ class DesktopStore {
   }
 
   updateKeyboard = newState =>
-    this.setState({ keyboard: { ...this.state.keyboard, ...newState } })
+    Desktop.setState({ keyboard: { ...this.state.keyboard, ...newState } })
 
   // only clear if necessary
   clearOption = () => {

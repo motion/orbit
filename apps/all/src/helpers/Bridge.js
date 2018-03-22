@@ -146,7 +146,7 @@ class Bridge {
 
   // this will go up to api and back down to all screen stores
   // set is only allowed from the source its set as initially
-  setState = newState => {
+  setState = (newState, ignoreSocketSend) => {
     if (!this._store) {
       throw new Error(
         `Called ${this.storeName}.setState before calling ${
@@ -160,7 +160,15 @@ class Bridge {
       )
     }
     // update our own state immediately so its sync
-    const changedState = this._update(this.state, newState, true)
+    const changedState = this._update(
+      this.state,
+      newState,
+      true,
+      ignoreSocketSend,
+    )
+    if (ignoreSocketSend) {
+      return changedState
+    }
     if (!this._wsOpen) {
       this._queuedState = true
       return changedState
@@ -175,7 +183,7 @@ class Bridge {
 
   // private
   // return keys of changed items
-  _update = (stateObj, newState, isInternal) => {
+  _update = (stateObj, newState, isInternal, ignoreLog) => {
     const changed = {}
     for (const key of Object.keys(newState)) {
       if (isInternal && typeof this._initialState[key] === 'undefined') {
@@ -218,7 +226,7 @@ class Bridge {
       global.__trackStateChanges.changed = changed
     } else {
       if (process.env.NODE_ENV === 'development') {
-        if (isInternal && Object.keys(changed).length) {
+        if (!ignoreLog && isInternal && Object.keys(changed).length) {
           log(`${this._source.replace('Store', '')}.setState =>`, changed)
         }
       }

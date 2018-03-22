@@ -56,10 +56,21 @@ export default class ScreenMaster {
     port: 40510,
     source: 'Desktop',
     actions: {
-      onGetState: ({ source, socket }) => {
+      getState: ({ source, socket }) => {
+        if (source === 'Desktop') {
+          return
+        }
         // send current state of all apps besides the one requesting
         for (const name of Object.keys(sources)) {
           if (name === source) continue
+          console.log(
+            'sending initial state to',
+            source,
+            'from',
+            name,
+            'state',
+            sources[name].state,
+          )
           // send state from source
           this.socketManager.send(socket, sources[name].state, name)
         }
@@ -234,16 +245,13 @@ export default class ScreenMaster {
     if (!hasNewState) {
       return
     }
-    const oldState = Desktop.state
-    Desktop.state = Object.freeze({ ...Desktop.state, ...object })
     Desktop.setState(object, true)
-    // sends over (oldState, changedState, newState)
-    this.onChangedState(oldState, object, Desktop.state)
+    this.onChangedState(object, Desktop.state)
     // only send the changed things to reduce overhead
     this.socketManager.sendAll(DESKTOP_KEY, object)
   }
 
-  onChangedState = async (oldState, newState) => {
+  onChangedState = async newState => {
     if (Desktop.state.paused) {
       return
     }

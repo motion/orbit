@@ -34,28 +34,18 @@ const Indicator = ({ iWidth, onLeft }) => {
   )
 }
 
-const OrbitArrow = ({ arrowSize, arrowTowards, arrowStyle }) =>
-  [1, 2].map(key => (
-    <UI.Arrow
-      key={key}
-      size={arrowSize}
-      towards={arrowTowards}
-      background={background}
-      css={{
-        position: 'absolute',
-        ...arrowStyle,
-        ...[
-          {
-            boxShadow: orbitShadow,
-            zIndex: -1,
-          },
-          {
-            zIndex: 100,
-          },
-        ][key],
-      }}
-    />
-  ))
+const OrbitArrow = ({ arrowSize, arrowTowards, arrowStyle }) => (
+  <UI.Arrow
+    size={arrowSize}
+    towards={arrowTowards}
+    background={background}
+    css={{
+      position: 'absolute',
+      ...arrowStyle,
+      zIndex: 100,
+    }}
+  />
+)
 
 @view({
   store: class OrbitFrameStore {
@@ -64,7 +54,8 @@ const OrbitArrow = ({ arrowSize, arrowTowards, arrowStyle }) =>
       () => App.isShowingOrbit,
       async (val, { sleep, setValue }) => {
         if (!val) {
-          await sleep(App.animationDuration)
+          // ew
+          await sleep(App.animationDuration + 32)
           setValue(false)
         } else {
           setValue(val)
@@ -79,10 +70,7 @@ const OrbitArrow = ({ arrowSize, arrowTowards, arrowStyle }) =>
     }
 
     get shouldAnimate() {
-      return (
-        (App.isShowingOrbit || this.wasShowingOrbit) &&
-        !(Electron.orbitState.fullScreen || this.wasFullScreen)
-      )
+      return App.isShowingOrbit || this.wasShowingOrbit
     }
 
     @react
@@ -221,8 +209,8 @@ export default class OrbitFrame {
     },
     orbitAnimate: {
       transition: `
-        transform linear ${App.animationDuration}ms,
-        opacity linear ${App.animationDuration}ms
+        transform ease-in ${App.animationDuration}ms,
+        opacity ease-in ${App.animationDuration}ms
       `,
     },
     orbitHeight: adjust => {

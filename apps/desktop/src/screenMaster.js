@@ -102,7 +102,6 @@ export default class ScreenMaster {
         this.rescanApp()
         return
       }
-      this.setState({ lastAppChange: Date.now() })
       // if current app is a prevented app, treat like nothing happened
       let nextState = { ...Desktop.state.appState, updatedAt: Date.now() }
       let id = this.curAppID
@@ -116,12 +115,6 @@ export default class ScreenMaster {
             bounds: value.bounds,
             name: id ? last(id.split('.')) : value.title,
           }
-          const hasNewID = this.curAppID !== id
-          const shouldClear =
-            !PREVENT_CLEAR[this.curAppName] && !PREVENT_CLEAR[nextState.name]
-          if (hasNewID && shouldClear) {
-            this.lastScreenChange()
-          }
           // update these now so we can use to track
           this.curAppID = id
           this.curAppName = nextState.name
@@ -133,6 +126,12 @@ export default class ScreenMaster {
         case 'WindowPosChangedEvent':
           if (value.id !== id) return
           nextState.offset = value.pos
+      }
+      const shouldClear =
+        !PREVENT_CLEAR[this.curAppName] && !PREVENT_CLEAR[nextState.name]
+      if (shouldClear) {
+        // this.lastScreenChange()
+        this.setState({ lastAppChange: Date.now() })
       }
       // when were moving into focus prevent app, store its appName, pause then return
       if (PREVENT_APP_STATE[this.curAppName]) {

@@ -37,10 +37,11 @@ model.load_state_dict(torch.load('./autoencoder/model.pth'))
 @app.route('/')
 def get_index():
   return app.response_class(
-      response='hello',
-      status=200,
-      mimetype='application/text'
+    response='hello',
+    status=200,
+    mimetype='application/text'
   )
+
 
 @app.route('/get_sentence')
 def get_sentence():

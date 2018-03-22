@@ -9,14 +9,15 @@ export default class AppReactions {
   @react
   showHideApp = [() => App.state.openResult, () => App.setOrbitHidden(true)]
 
-  @react
+  @react({
+    fireImmediately: true,
+  })
   shouldShowHideFromElectron = [
     () => [Electron.state.shouldShow, Electron.state.shouldHide],
     ([shouldShow, shouldHide]) => {
       const orbitHidden = shouldHide > shouldShow
       App.setOrbitHidden(orbitHidden)
     },
-    true,
   ]
 
   @react
@@ -48,7 +49,9 @@ export default class AppReactions {
     },
   ]
 
-  @react
+  @react({
+    delay: 300,
+  })
   clearPeekOnMouseOut = [
     () => Electron.isMouseInActiveArea,
     mouseOver => {
@@ -56,9 +59,6 @@ export default class AppReactions {
         // && !App.state.peekTarget
         App.setPeekTarget(null)
       }
-    },
-    {
-      delay: 300,
     },
   ]
 
@@ -82,7 +82,9 @@ export default class AppReactions {
     },
   ]
 
-  @react
+  @react({
+    delay: 32,
+  })
   hideOrbitOnMouseOut = [
     () => [
       !App.state.orbitHidden,
@@ -100,9 +102,6 @@ export default class AppReactions {
         }
         App.setOrbitHidden(true)
       }
-    },
-    {
-      delay: 32,
     },
   ]
 

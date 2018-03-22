@@ -40,7 +40,7 @@ class AppStore {
 
   animationDuration = 100
 
-  @react
+  @react({ log: false })
   isAnimatingOrbit = [
     () => App.isShowingOrbit,
     async (_, { sleep, setValue }) => {
@@ -48,12 +48,11 @@ class AppStore {
       await sleep(App.animationDuration)
       setValue(false)
     },
-    { log: false },
   ]
 
-  get isFullyHidden() {
-    return !this.isShowingOrbit && !this.isAnimatingOrbit
-  }
+  // debounced a little to prevent aggressive reactions
+  @react({ delay: 32 })
+  isFullyHidden = [() => !this.isShowingOrbit && !this.isAnimatingOrbit, _ => _]
 
   @react
   wasShowingPeek = [

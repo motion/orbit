@@ -24,12 +24,13 @@ const Indicator = ({ iWidth, onLeft }) => {
         width: iWidth,
         height: 36,
         top: 31,
+        opacity: App.isShowingOrbit ? 0 : 1,
         left: onLeft ? SHADOW_PAD - iWidth : 'auto',
         right: !onLeft ? SHADOW_PAD - iWidth : 'auto',
         borderLeftRadius: onLeft ? 4 : 0,
         borderRightRadius: !onLeft ? 4 : 0,
         // opacity: App.isShowingOrbit ? 0 : 1,
-        transition: 'all ease-in 100ms',
+        transition: `opacity ease-in 50ms ${App.animationDuration}`,
       }}
     />
   )
@@ -45,7 +46,7 @@ const OrbitArrow = view(({ arrowSize, arrowTowards, arrowStyle }) => {
   } else {
     arrowStyle = {
       top: 53,
-      left: 1,
+      left: 3,
     }
   }
   return (
@@ -57,9 +58,10 @@ const OrbitArrow = view(({ arrowSize, arrowTowards, arrowStyle }) => {
         position: 'absolute',
         ...arrowStyle,
         zIndex: 100,
-        transition: `all ease-in 100ms ${App.animationDuration}ms`,
+        transition: `all ease-in 90ms ${App.animationDuration - 30}ms`,
+        opacity: App.isShowingOrbit ? 1 : 0,
         transform: {
-          x: App.isShowingOrbit ? 0 : onLeft ? -arrowSize : arrowSize,
+          x: App.isShowingOrbit ? 0 : (onLeft ? -arrowSize : arrowSize) / 3,
         },
       }}
     />
@@ -69,19 +71,6 @@ const OrbitArrow = view(({ arrowSize, arrowTowards, arrowStyle }) => {
 @view({
   store: class OrbitFrameStore {
     orbitFrame = null
-
-    @react
-    fixPinnedBug = [
-      () => Electron.orbitState.pinned,
-      pinned => {
-        if (pinned) return
-        console.log('FIX PIN BUG')
-        if (this.orbitFrame) {
-          this.orbitFrame.setState({ x: Math.random() })
-        }
-      },
-      { delay: App.animationDuration * 10 },
-    ]
 
     @react
     wasShowingOrbit = [
@@ -111,7 +100,7 @@ const OrbitArrow = view(({ arrowSize, arrowTowards, arrowStyle }) => {
     shouldHideWhileMoving = [
       () => Desktop.state.lastAppChange,
       async (_, { sleep, setValue }) => {
-        if (Electron.isMouseInActiveArea && App.isShowingOrbit) {
+        if (App.isShowingOrbit) {
           return
         }
         setValue(true)
@@ -122,10 +111,6 @@ const OrbitArrow = view(({ arrowSize, arrowTowards, arrowStyle }) => {
   },
 })
 export default class OrbitFrame {
-  state = {
-    x: 0,
-  }
-
   componentDidMount() {
     this.props.store.orbitFrame = this
   }
@@ -133,7 +118,7 @@ export default class OrbitFrame {
   render({ store, orbitPage, children, iWidth }) {
     const { fullScreen, arrowTowards } = Electron.orbitState
     const { onLeft } = Electron
-    const arrowSize = 24
+    const arrowSize = 22
     let arrowStyle
     const boxShadow = fullScreen ? orbitShadow : orbitLightShadow
     const hideOverflow =
@@ -175,8 +160,8 @@ export default class OrbitFrame {
             <content
               css={{
                 boxShadow: App.isShowingOrbit ? boxShadow : 'none',
-                borderLeftRadius: onLeft ? BORDER_RADIUS : 0,
-                borderRightRadius: fullScreen || onLeft ? 0 : BORDER_RADIUS,
+                borderLeftRadius: onLeft ? BORDER_RADIUS : 5,
+                borderRightRadius: fullScreen || onLeft ? 5 : BORDER_RADIUS,
               }}
             >
               {children}
@@ -215,11 +200,13 @@ export default class OrbitFrame {
       position: 'relative',
       willChange: 'transform, opacity',
       transition: 'none',
+      // opacity: 0,
     },
     orbitAnimate: {
       transition: `
         transform ease-in ${App.animationDuration}ms,
-        opacity ease-in ${App.animationDuration}ms
+        opacity ease-in ${App.animationDuration / 2}ms ${App.animationDuration /
+        2}ms
       `,
     },
     orbitHeight: adjust => {
@@ -235,16 +222,15 @@ export default class OrbitFrame {
     orbitStyle: ([isShowing, onLeft, iWidth]) => {
       return isShowing
         ? {
+            opacity: 1,
             transform: {
               x: onLeft ? 0 : -SHADOW_PAD * 2,
-              z: 0,
             },
           }
         : {
             // marginRight: onLeft ? SHADOW_PAD : -SHADOW_PAD,
             transform: {
               x: onLeft ? 330 - SHADOW_PAD - (SHADOW_PAD + iWidth) + 4 : -330,
-              z: 0,
             },
           }
     },

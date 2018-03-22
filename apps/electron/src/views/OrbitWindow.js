@@ -5,11 +5,15 @@ import { Window } from '@mcro/reactron'
 import { App, Electron, Swift } from '@mcro/all'
 import * as Mobx from 'mobx'
 
+const log = debug('OrbitWindow')
+
 class OrbitWindowStore {
   show = false
   orbitRef = null
 
+  // sitrep
   focusOrbit = () => {
+    log('focusOrbit')
     try {
       if (this.orbitRef) {
         this.orbitRef.focus()
@@ -29,16 +33,8 @@ class OrbitWindowStore {
     },
   ]
 
-  delayedOrbitState = null
-
-  @react
-  updateDelayedOrbitState = [
-    () => Electron.orbitState,
-    val => {
-      this.delayedOrbitState = Mobx.toJS(val)
-    },
-    { delay: 100, fireImmediately: true },
-  ]
+  @react({ delay: 100, log: false })
+  delayedOrbitState = () => Mobx.toJS(Electron.orbitState)
 
   @react
   watchFullScreenForFocus = [
@@ -52,14 +48,10 @@ class OrbitWindowStore {
     },
   ]
 
-  @react
+  @react({ delay: App.animationDuration })
   defocusOnUnPin = [
-    () => Electron.orbitState.pinned,
-    isPinned => {
-      if (!isPinned) {
-        Swift.defocus()
-      }
-    },
+    () => !Electron.orbitState.pinned,
+    val => val && Swift.defocus(),
   ]
 
   @react

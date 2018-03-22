@@ -152,7 +152,8 @@ export default class ScreenMaster {
       state.appState = JSON.parse(JSON.stringify(nextState))
       state.appStateUpdatedAt = Date.now()
       if (!PREVENT_CLEAR[this.curAppName] && !PREVENT_CLEAR[nextState.name]) {
-        state.lastAppChange = Date.now()
+        // send right away
+        this.setState({ lastAppChange: Date.now() })
       }
       if (!Desktop.state.paused) {
         this.oracle.resume()
@@ -161,7 +162,7 @@ export default class ScreenMaster {
       this.lastAppState = this.setTimeout(() => {
         log(`setting state`, state)
         this.setState(state)
-      }, 16)
+      }, 32)
     })
     this.oracle.onBoxChanged(count => {
       if (!Desktop.state.ocrWords) {

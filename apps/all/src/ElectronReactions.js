@@ -156,7 +156,7 @@ export default class ElectronReactions {
     async ([appBB, linesBB], { sleep }) => {
       // so app can hide before we transition
       log(`position from bounding`)
-      await sleep(32)
+      await sleep(150)
       // prefer using lines bounding box, fall back to app
       const box = linesBB || appBB
       if (!box) return

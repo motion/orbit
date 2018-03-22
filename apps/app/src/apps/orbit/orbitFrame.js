@@ -94,11 +94,11 @@ const OrbitArrow = view(({ arrowSize, arrowTowards, arrowStyle }) => {
     shouldHideWhileMoving = [
       () => Desktop.state.lastAppChange,
       async (_, { sleep, setValue }) => {
-        if (App.isShowingOrbit) {
-          return
-        }
+        // if (App.isShowingOrbit) {
+        //   return
+        // }
         setValue(true)
-        await sleep(300)
+        await sleep(350)
         setValue(false)
       },
     ]

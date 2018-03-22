@@ -45,7 +45,7 @@ const OrbitArrow = view(({ arrowSize, arrowTowards, arrowStyle }) => {
   } else {
     arrowStyle = {
       top: 53,
-      left: 1,
+      left: 3,
     }
   }
   return (
@@ -57,9 +57,10 @@ const OrbitArrow = view(({ arrowSize, arrowTowards, arrowStyle }) => {
         position: 'absolute',
         ...arrowStyle,
         zIndex: 100,
-        transition: `all ease-in 100ms ${App.animationDuration}ms`,
+        transition: `all ease-in 90ms ${App.animationDuration - 30}ms`,
+        opacity: App.isShowingOrbit ? 1 : 0,
         transform: {
-          x: App.isShowingOrbit ? 0 : onLeft ? -arrowSize : arrowSize,
+          x: App.isShowingOrbit ? 0 : (onLeft ? -arrowSize : arrowSize) / 3,
         },
       }}
     />
@@ -133,7 +134,7 @@ export default class OrbitFrame {
   render({ store, orbitPage, children, iWidth }) {
     const { fullScreen, arrowTowards } = Electron.orbitState
     const { onLeft } = Electron
-    const arrowSize = 24
+    const arrowSize = 22
     let arrowStyle
     const boxShadow = fullScreen ? orbitShadow : orbitLightShadow
     const hideOverflow =
@@ -175,8 +176,8 @@ export default class OrbitFrame {
             <content
               css={{
                 boxShadow: App.isShowingOrbit ? boxShadow : 'none',
-                borderLeftRadius: onLeft ? BORDER_RADIUS : 0,
-                borderRightRadius: fullScreen || onLeft ? 0 : BORDER_RADIUS,
+                borderLeftRadius: onLeft ? BORDER_RADIUS : 5,
+                borderRightRadius: fullScreen || onLeft ? 5 : BORDER_RADIUS,
               }}
             >
               {children}

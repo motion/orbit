@@ -16,9 +16,7 @@ const borderRadius = 8
 
 @view({
   peek: class PeekStore {
-    @watch
-    peekItem = () =>
-      Thing.get({ bucket: 'pg', title: 'General and Surprising' })
+    @watch peekItem = () => Thing.get({ bucket: 'pg' })
   },
 })
 export default class PeekPage {

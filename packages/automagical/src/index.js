@@ -378,6 +378,7 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
   let preventLog = false
   let reactionID
   let rejections = []
+
   const rejectReaction = () => {
     rejections.map(rej => rej())
   }
@@ -391,6 +392,17 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
       if (rejectReaction) {
         rejectReaction()
       }
+      let hasCalledSetValue = false
+      const updateAsyncValue = val => {
+        if (id === reactionID) {
+          replaceDisposable()
+          if (!preventLog) {
+            console.log('setting to', val)
+            log(`${name} = `, val)
+          }
+          update(val)
+        }
+      }
       global.__trackStateChanges.isActive = true
       const reactionResult = reactionFn.call(
         obj,
@@ -399,14 +411,8 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
           preventLogging: () => (preventLog = true),
           // allows setting multiple values in a reaction
           setValue: val => {
-            if (id === reactionID) {
-              replaceDisposable()
-              if (!preventLog) {
-                console.log('setting to', val)
-                log(`${name} = `, val)
-              }
-              update(val)
-            }
+            hasCalledSetValue = true
+            updateAsyncValue(val)
           },
           // allows delaying in a reaction, with automatic clearing on new reaction
           sleep: ms => {
@@ -441,16 +447,24 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
       global.__trackStateChanges = {}
       // handle promises
       if (reactionResult instanceof Promise) {
-        if (!preventLog) {
-          log(`[async ${id}] ${name}(`, reactVal, `) ...`)
-        }
-        reactionResult.catch(err => {
-          if (err === RejectReactionSymbol) {
-            console.log(`Reaction cancelled [${id}]`)
-          } else {
-            throw err
-          }
-        })
+        reactionResult
+          .then(val => {
+            if (typeof val !== 'undefined') {
+              if (hasCalledSetValue) {
+                throw new Error(
+                  `In ${name}, invalid operation: called setValue, then returned a value. Use one or the other for sanity`,
+                )
+              }
+              updateAsyncValue(val)
+            }
+          })
+          .catch(err => {
+            if (err === RejectReactionSymbol) {
+              console.log(`Reaction cancelled [${id}]`)
+            } else {
+              throw err
+            }
+          })
         return
       }
       // store result as observable

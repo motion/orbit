@@ -1,7 +1,11 @@
 # next
 
-* animation fix:
-  * unfullscreen glitches
+* unfullscreen animation glitch
+* pinned drawer closes weird
+* flicker still on move sides
+* faster hide on window change still
+* peek
+  *
 * click settings should pin
 * keyboard nav
   * right/left to open big-peek

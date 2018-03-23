@@ -9,7 +9,7 @@ const BORDER_RADIUS = 11
 const background = 'rgba(0,0,0,0.89)'
 const orbitShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.2]]]
 const orbitLightShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.1]]]
-const iWidth = 3
+const iWidth = 4
 // const log = debug('OrbitFrame')
 
 const Indicator = view(({ iWidth, orbitOnLeft }) => {
@@ -41,9 +41,8 @@ const Indicator = view(({ iWidth, orbitOnLeft }) => {
   )
 })
 
-const OrbitArrow = view(({ arrowSize }) => {
+const OrbitArrow = view(({ orbitOnLeft, arrowSize, css }) => {
   let arrowStyle
-  const { orbitOnLeft } = Electron
   if (orbitOnLeft) {
     arrowStyle = {
       top: 53,
@@ -55,6 +54,7 @@ const OrbitArrow = view(({ arrowSize }) => {
       left: 3,
     }
   }
+  const ms = App.animationDuration
   return (
     <UI.Arrow
       size={arrowSize}
@@ -64,13 +64,19 @@ const OrbitArrow = view(({ arrowSize }) => {
         position: 'absolute',
         ...arrowStyle,
         zIndex: 100,
-        transition: `all ease-in 90ms ${App.animationDuration - 30}ms`,
+        transition: App.isShowingOrbit
+          ? `
+            opacity ease-out ${ms * 0.5},
+            transform ease-out ${ms * 0.8}ms
+          `
+          : `all ease-in ${ms * 0.5}ms ${ms * 0.6}ms`,
         opacity: App.isShowingOrbit ? 1 : 0,
         transform: {
           x: App.isShowingOrbit
             ? 0
             : (orbitOnLeft ? -arrowSize : arrowSize) / 3,
         },
+        ...css,
       }}
     />
   )
@@ -86,7 +92,7 @@ const OrbitArrow = view(({ arrowSize }) => {
       async (val, { sleep, setValue }) => {
         if (!val) {
           // ew, but can be lax
-          await sleep(App.animationDuration * 2)
+          await sleep(App.animationDuration * 1.5)
           setValue(false)
         } else {
           setValue(val)
@@ -98,32 +104,25 @@ const OrbitArrow = view(({ arrowSize }) => {
       return App.isShowingOrbit || this.wasShowingOrbit
     }
 
+    get isDragging() {
+      return (
+        Desktop.state.mouseDown &&
+        Desktop.state.lastAppChange > Desktop.state.mouseDown.at
+      )
+    }
+
     hasRepositioned = true
 
-    @react({ log: false })
+    @react
     isRepositioning = [
       () => [Desktop.state.lastAppChange, Electron.state.willFullScreen],
       async ([app, fs], { when, sleep, setValue }) => {
         const isFullScreen = fs > app
         setValue(true)
-        if (isFullScreen) {
-          await sleep(100)
-        } else {
-          // log('HIDE')
-          ;(async () => {
-            await sleep(2000)
-            // log('CANCEL')
-            setValue(false)
-          })()
-          const curAppState = Desktop.state.appState
-          const curOrbitState = Electron.orbitState
-          await when(() => !isEqual(curAppState, Desktop.state.appState))
-          await when(() => !isEqual(curOrbitState, Electron.orbitState))
-          setValue('READY')
-          await when(() => this.hasRepositioned)
-          await sleep(50)
-          // log('SHOW')
-        }
+        await sleep(100)
+        setValue('READY')
+        await when(() => this.hasRepositioned)
+        await sleep(100)
         setValue(false)
       },
     ]
@@ -145,56 +144,58 @@ export default class OrbitFrame {
     const { orbitOnLeft } = Electron
     const arrowSize = 22
     const boxShadow = fullScreen ? orbitShadow : orbitLightShadow
-    // log(`${orbitOnLeft} repo ${store.isRepositioning}`)
+    const hide =
+      !App.isShowingOrbit && (store.isRepositioning || store.isDragging)
+    log(`${orbitOnLeft} repo ${store.isRepositioning}`)
     return (
       <UI.Theme name="dark">
-        <OrbitArrow
-          if={App.isAttachedToWindow}
-          arrowSize={arrowSize}
-          $$opacity={store.isRepositioning ? 0 : 1}
-        />
-        <Indicator
-          if={!fullScreen}
-          store={store}
-          iWidth={iWidth}
-          orbitOnLeft={orbitOnLeft}
-          key={Math.random()}
-        />
-        <overflowWrap
-          $orbitAnimate={store.shouldAnimate}
-          $pointerEvents={App.isShowingOrbit}
-          $hideOverflow
-          css={{
-            opacity: store.isRepositioning ? 0 : 1,
-            ...(fullScreen
-              ? { right: 0 }
-              : {
-                  right: orbitOnLeft ? 15 : 'auto',
-                  left: !orbitOnLeft ? 15 : 'auto',
-                }),
-          }}
-        >
-          <orbit
-            css={{
-              paddingRight: fullScreen ? 0 : SHADOW_PAD,
-            }}
+        <orbitFrame css={{ flex: 1, opacity: hide ? 0 : 1 }}>
+          <OrbitArrow
+            if={App.isAttachedToWindow}
+            arrowSize={arrowSize}
+            orbitOnLeft={orbitOnLeft}
+          />
+          <Indicator
+            if={!fullScreen}
+            store={store}
+            iWidth={iWidth}
+            orbitOnLeft={orbitOnLeft}
+          />
+          <overflowWrap
             $orbitAnimate={store.shouldAnimate}
-            $orbitHeight={orbitPage.adjustHeight}
-            $orbitStyle={[App.isShowingOrbit, orbitOnLeft, iWidth]}
-            $orbitFullScreen={fullScreen}
+            $pointerEvents={App.isShowingOrbit && !App.isAnimatingOrbit}
+            $hideOverflow
+            css={{
+              ...(fullScreen
+                ? { right: 0 }
+                : {
+                    right: orbitOnLeft ? 15 : 'auto',
+                    left: !orbitOnLeft ? 15 : 'auto',
+                  }),
+            }}
           >
-            <content
+            <orbit
               css={{
-                boxShadow: App.isShowingOrbit ? boxShadow : 'none',
-                borderLeftRadius: orbitOnLeft ? BORDER_RADIUS : 5,
-                borderRightRadius:
-                  fullScreen || orbitOnLeft ? 5 : BORDER_RADIUS,
+                paddingRight: fullScreen ? 0 : SHADOW_PAD,
               }}
+              $orbitAnimate={store.shouldAnimate}
+              $orbitHeight={orbitPage.adjustHeight}
+              $orbitStyle={[App.isShowingOrbit, orbitOnLeft, iWidth]}
+              $orbitFullScreen={fullScreen}
             >
-              {children}
-            </content>
-          </orbit>
-        </overflowWrap>
+              <content
+                css={{
+                  boxShadow: App.isShowingOrbit ? boxShadow : 'none',
+                  borderLeftRadius: orbitOnLeft ? BORDER_RADIUS : 5,
+                  borderRightRadius:
+                    fullScreen || orbitOnLeft ? 5 : BORDER_RADIUS,
+                }}
+              >
+                {children}
+              </content>
+            </orbit>
+          </overflowWrap>
+        </orbitFrame>
       </UI.Theme>
     )
   }
@@ -244,6 +245,7 @@ export default class OrbitFrame {
       }
     },
     orbitStyle: ([isShowing, orbitOnLeft, iWidth]) => {
+      console.log('orbitStyle', [isShowing, orbitOnLeft, iWidth])
       return isShowing
         ? {
             opacity: 1,
@@ -253,6 +255,7 @@ export default class OrbitFrame {
           }
         : {
             // marginRight: orbitOnLeft ? SHADOW_PAD : -SHADOW_PAD,
+            opacity: 0,
             transform: {
               x: orbitOnLeft
                 ? 330 - SHADOW_PAD - (SHADOW_PAD + iWidth) + 4

@@ -38,9 +38,7 @@ export default class ElectronReactions {
       if (!Electron.orbitState.fullScreen || App.state.orbitHidden) {
         return
       }
-      await sleep(16)
-      log(`u cray`)
-      Electron.setOrbitState({ fullScreen: false })
+      Electron.setState({ willFullScreen: Date.now() })
       this.afterUnFullScreen = Date.now()
     },
   ]
@@ -71,7 +69,7 @@ export default class ElectronReactions {
 
   @react
   hideFullScreenOnDefocus = [
-    () => Desktop.state.appState,
+    () => Desktop.state.appState && Date.now(),
     () => {
       if (Electron.orbitState.fullScreen) {
         Electron.shouldHide()

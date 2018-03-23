@@ -32,6 +32,7 @@ export type DesktopState = {
   lastScreenChange: Number,
   lastAppChange: Number,
   mousePosition: { x: Number, y: Number },
+  mouseDown?: { x: Number, y: Number, at: Number },
   keyboard: Object,
   highlightWords: { [String]: boolean },
   clearWords: { [String]: Number },
@@ -68,6 +69,7 @@ class DesktopStore {
     selection: null,
     searchIndexStatus: '',
     searchResults: [],
+    mouseDown: null,
   }
 
   get isHoldingOption(): Boolean {

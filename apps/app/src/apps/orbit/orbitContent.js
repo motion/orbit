@@ -7,31 +7,25 @@ import { whenAsync } from 'mobx-utils'
 
 const getKey = result => result.index || result.id || result.title
 
-const getHoverProps = Helpers.hoverSettler({
-  enterDelay: 600,
-  onHovered: async target => {
-    if (!target) {
-      // hide
-      await Helpers.sleep(50)
-      await whenAsync(() => !Electron.isMouseInActiveArea)
-      App.setPeekTarget(null)
-      return
-    }
-    const { id, top, left, width, height } = target
-    const position = {
-      // add orbits offset
-      left: left + Electron.orbitState.position[0],
-      top: top + Electron.orbitState.position[1],
-      width,
-      height,
-    }
-    if (App.isShowingOrbit) {
-      App.setPeekTarget({ id, position })
-    }
-  },
-})
-
 const refs = {}
+
+@view
+class OrbitStatus {
+  render() {
+    const { appState, searchIndexStatus, searchPerformance } = Desktop.state
+    return (
+      <UI.Text if={App.isAttachedToWindow && appState} css={{ padding: 10 }}>
+        {searchIndexStatus}
+        <UI.Text
+          if={appState.title}
+          css={{ display: 'inline', opacity: 0.5, fontSize: '80%' }}
+        >
+          took {searchPerformance}
+        </UI.Text>
+      </UI.Text>
+    )
+  }
+}
 
 @view.attach('orbitStore')
 @view
@@ -49,19 +43,41 @@ export default class OrbitContent {
     refs[index] = ref
   }
 
+  getHoverProps = Helpers.hoverSettler({
+    enterDelay: 600,
+    onHovered: async target => {
+      clearTimeout(this.updateTargetTm)
+      if (!target) {
+        // hide
+        await Helpers.sleep(50)
+        await whenAsync(() => !Electron.isMouseInActiveArea)
+        App.setPeekTarget(null)
+        return
+      }
+      const { id, top, left, width, height } = target
+      const position = {
+        // add orbits offset
+        left: left + Electron.orbitState.position[0],
+        top: top + Electron.orbitState.position[1],
+        width,
+        height,
+      }
+      if (App.isShowingOrbit) {
+        log(`set index ${target.id}`)
+        this.props.orbitStore.setSelectedIndex(target.id)
+        this.updateTargetTm = setTimeout(() => {
+          log(`set target ${target.id}`)
+          App.setPeekTarget({ id, position })
+        }, 64)
+      }
+    },
+  })
+
   render({ orbitStore }) {
-    const { appState, searchIndexStatus, searchPerformance } = Desktop.state
+    log(`OrbitContent`)
     return (
       <list>
-        <UI.Text if={App.isAttachedToWindow && appState} css={{ padding: 10 }}>
-          {searchIndexStatus}
-          <UI.Text
-            if={appState.title}
-            css={{ display: 'inline', opacity: 0.5, fontSize: '80%' }}
-          >
-            took {searchPerformance}
-          </UI.Text>
-        </UI.Text>
+        <OrbitStatus />
         {orbitStore.results.map((result, index) => (
           <OrbitItem
             key={getKey(result) || index}
@@ -70,7 +86,7 @@ export default class OrbitContent {
             orbitStore={orbitStore}
             index={index}
             result={result}
-            {...getHoverProps({
+            {...this.getHoverProps({
               result,
               id: index,
             })}

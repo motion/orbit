@@ -14,6 +14,7 @@ class ElectronStore {
   source = 'Electron'
 
   state = {
+    willFullScreen: Date.now(),
     shouldHide: 1,
     shouldShow: 0,
     shouldPause: null,
@@ -149,13 +150,17 @@ class ElectronStore {
       const [peekW, peekH] = [appW * 2 / 3, appH]
       const [peekX, peekY] = [orbitX + orbitW, orbitY]
       log(`toggle fullscreen`)
-      Electron.setOrbitState({
-        position: [orbitX, orbitY].map(round),
-        size: [orbitW, orbitH].map(round),
-        arrowTowards: 'right',
-        fullScreen: true,
-        hasPositionedFullScreen: false,
-      })
+      Electron.setState({ willFullScreen: Date.now() })
+      clearTimeout(this.show)
+      this.show = setTimeout(() => {
+        Electron.setOrbitState({
+          position: [orbitX, orbitY].map(round),
+          size: [orbitW, orbitH].map(round),
+          arrowTowards: 'right',
+          fullScreen: true,
+          hasPositionedFullScreen: false,
+        })
+      }, 32)
       const [peek, ...rest] = Electron.peekState.windows
       peek.position = [peekX, peekY].map(round)
       peek.size = [peekW, peekH].map(round)

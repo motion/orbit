@@ -3,7 +3,6 @@ import { view, react, isEqual } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { App, Electron, Desktop } from '@mcro/all'
 import * as Constants from '~/constants'
-import { comparer } from 'mobx'
 
 const SHADOW_PAD = 15
 const BORDER_RADIUS = 11
@@ -12,7 +11,7 @@ const orbitShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.2]]]
 const orbitLightShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.1]]]
 // const log = debug('OrbitFrame')
 
-const Indicator = ({ iWidth, onLeft }) => {
+const Indicator = ({ iWidth, onLeft, store }) => {
   // log('on', onLeft)
   return (
     <indicator
@@ -32,13 +31,14 @@ const Indicator = ({ iWidth, onLeft }) => {
         borderLeftRadius: onLeft ? 2 : 0,
         borderRightRadius: !onLeft ? 2 : 0,
         // opacity: App.isShowingOrbit ? 0 : 1,
-        transition: `opacity ease-in 50ms ${App.animationDuration}`,
+        transition: `opacity ease-in 70ms ${App.animationDuration}`,
       }}
     />
   )
 }
 
-const OrbitArrow = view(({ arrowSize, arrowTowards, arrowStyle }) => {
+const OrbitArrow = view(({ arrowSize, arrowTowards }) => {
+  let arrowStyle
   const { onLeft } = Electron
   if (onLeft) {
     arrowStyle = {
@@ -96,18 +96,28 @@ const OrbitArrow = view(({ arrowSize, arrowTowards, arrowStyle }) => {
 
     @react({ log: false })
     isRepositioning = [
-      () => Desktop.state.lastAppChange,
-      async (_, { when, sleep, setValue }) => {
+      () => [Desktop.state.lastAppChange, Electron.state.willFullScreen],
+      async ([app, fs], { when, sleep, setValue }) => {
+        const isFullScreen = fs > app
         setValue(true)
-        // log('HIDE')
-        const curAppState = Desktop.state.appState
-        const curOrbitState = Electron.orbitState
-        await when(() => !isEqual(curAppState, Desktop.state.appState))
-        await when(() => !isEqual(curOrbitState, Electron.orbitState))
-        setValue('READY')
-        await when(() => this.hasRepositioned)
-        await sleep(120)
-        // log('SHOW')
+        if (isFullScreen) {
+          await sleep(100)
+        } else {
+          // log('HIDE')
+          ;(async () => {
+            await sleep(2000)
+            // log('CANCEL')
+            setValue(false)
+          })()
+          const curAppState = Desktop.state.appState
+          const curOrbitState = Electron.orbitState
+          await when(() => !isEqual(curAppState, Desktop.state.appState))
+          await when(() => !isEqual(curOrbitState, Electron.orbitState))
+          setValue('READY')
+          await when(() => this.hasRepositioned)
+          await sleep(50)
+          // log('SHOW')
+        }
         setValue(false)
       },
     ]
@@ -128,15 +138,15 @@ export default class OrbitFrame {
     const { fullScreen, arrowTowards } = Electron.orbitState
     const { onLeft } = Electron
     const arrowSize = 22
-    let arrowStyle
     const boxShadow = fullScreen ? orbitShadow : orbitLightShadow
+    // log(`${onLeft} repo ${store.isRepositioning}`)
     return (
       <UI.Theme name="dark">
         <OrbitArrow
           if={App.isAttachedToWindow}
           arrowSize={arrowSize}
           arrowTowards={arrowTowards}
-          arrowStyle={arrowStyle}
+          $$opacity={store.isRepositioning ? 0 : 1}
         />
         <overflowWrap
           $orbitAnimate={store.shouldAnimate}
@@ -161,7 +171,13 @@ export default class OrbitFrame {
             $orbitStyle={[App.isShowingOrbit, onLeft, iWidth]}
             $orbitFullScreen={fullScreen}
           >
-            <Indicator if={!fullScreen} iWidth={iWidth} onLeft={onLeft} />
+            <Indicator
+              if={!fullScreen}
+              store={store}
+              iWidth={iWidth}
+              onLeft={onLeft}
+              key={Math.random()}
+            />
             <content
               css={{
                 boxShadow: App.isShowingOrbit ? boxShadow : 'none',

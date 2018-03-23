@@ -89,14 +89,10 @@ export default class ElectronReactions {
     },
   ]
 
-  @react
+  @react({ log: false })
   setMouseOvers = [
     () => [Desktop.state.mousePosition, App.state.orbitHidden],
-    ([mousePosition, isHidden], { preventLogging }) => {
-      preventLogging()
-      if (Electron.orbitState.pinned) {
-        return
-      }
+    ([mousePosition, isHidden]) => {
       if (isHidden) {
         if (Electron.orbitState.mouseOver) {
           Electron.setOrbitState({ mouseOver: false })
@@ -154,7 +150,7 @@ export default class ElectronReactions {
       this.afterUnFullScreen,
     ],
     async ([appBB, linesBB], { sleep }) => {
-      await sleep(32)
+      await sleep(64)
       // prefer using lines bounding box, fall back to app
       const box = linesBB || appBB
       if (!box) return

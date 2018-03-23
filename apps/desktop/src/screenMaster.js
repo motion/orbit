@@ -162,7 +162,7 @@ export default class ScreenMaster {
       this.lastAppState = this.setTimeout(() => {
         log(`setting state`, state)
         this.setState(state)
-      }, 64)
+      }, 32)
     })
     this.oracle.onBoxChanged(count => {
       if (!Desktop.state.ocrWords) {

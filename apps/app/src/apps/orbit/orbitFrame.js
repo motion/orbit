@@ -119,15 +119,10 @@ const OrbitArrow = view(({ orbitOnLeft, arrowSize, css }) => {
       async ([app, fs], { when, sleep, setValue }) => {
         const isFullScreen = fs > app
         setValue(true)
-        if (isFullScreen) {
-          await sleep(100)
-        } else {
-          await sleep(100)
-          setValue('READY')
-          await when(() => this.hasRepositioned)
-          await sleep(100)
-          // log('SHOW')
-        }
+        await sleep(100)
+        setValue('READY')
+        await when(() => this.hasRepositioned)
+        await sleep(100)
         setValue(false)
       },
     ]

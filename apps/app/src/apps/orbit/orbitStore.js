@@ -1,5 +1,5 @@
 import { react } from '@mcro/black'
-import { debounce, memoize } from 'lodash'
+import { debounce } from 'lodash'
 import { App, Desktop } from '@mcro/all'
 import { Thing } from '@mcro/models'
 import searchStore from '~/stores/searchStore'
@@ -106,10 +106,9 @@ export default class OrbitStore {
     }
   }, 100)
 
-  selectItem = index =>
-    memoize(() => {
-      this.selectedIndex = index
-    })
+  setSelectedIndex = index => {
+    this.selectedIndex = index
+  }
 
   toggleSettings = () => {
     this.showSettings = !this.showSettings

@@ -24,7 +24,6 @@ const requestIdle = () =>
       typeof window !== 'undefined' ? window.requestIdleCallback(res) : res(),
   )
 
-@store
 class Bridge {
   _store = null
   _options = {}

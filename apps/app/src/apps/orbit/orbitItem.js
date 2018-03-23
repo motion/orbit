@@ -30,8 +30,13 @@ const P = p => (
 
 @view
 export default class Item {
+  onClick = () => {
+    this.props.orbitStore.setSelectedIndex(this.props.index)
+  }
+
   render({ orbitStore, index, result, ...props }) {
     const isSelected = orbitStore.selectedIndex === index
+    log(`OrbitItem isSelected ${isSelected} ${index}`)
     return (
       <Surface
         background="transparent"
@@ -39,7 +44,7 @@ export default class Item {
         background={'transparent'}
         glowProps={glowProps}
         padding={[10, 18]}
-        onClick={orbitStore.selectItem(index)}
+        onClick={this.onClick}
         {...props}
       >
         <Title

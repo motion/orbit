@@ -41,9 +41,8 @@ const Indicator = view(({ iWidth, orbitOnLeft }) => {
   )
 })
 
-const OrbitArrow = view(({ arrowSize }) => {
+const OrbitArrow = view(({ orbitOnLeft, arrowSize, css }) => {
   let arrowStyle
-  const { orbitOnLeft } = Electron
   if (orbitOnLeft) {
     arrowStyle = {
       top: 53,
@@ -55,6 +54,7 @@ const OrbitArrow = view(({ arrowSize }) => {
       left: 3,
     }
   }
+  const ms = App.animationDuration
   return (
     <UI.Arrow
       size={arrowSize}
@@ -64,13 +64,19 @@ const OrbitArrow = view(({ arrowSize }) => {
         position: 'absolute',
         ...arrowStyle,
         zIndex: 100,
-        transition: `all ease-in 90ms ${App.animationDuration - 30}ms`,
+        transition: App.isShowingOrbit
+          ? `
+            opacity ease-out ${ms * 0.5},
+            transform ease-out ${ms * 0.8}ms
+          `
+          : `all ease-in ${ms * 0.5}ms ${ms * 0.6}ms`,
         opacity: App.isShowingOrbit ? 1 : 0,
         transform: {
           x: App.isShowingOrbit
             ? 0
             : (orbitOnLeft ? -arrowSize : arrowSize) / 3,
         },
+        ...css,
       }}
     />
   )
@@ -151,7 +157,8 @@ export default class OrbitFrame {
         <OrbitArrow
           if={App.isAttachedToWindow}
           arrowSize={arrowSize}
-          $$opacity={store.isRepositioning ? 0 : 1}
+          orbitOnLeft={orbitOnLeft}
+          css={{ opacity: store.isRepositioning ? 0 : 1 }}
         />
         <Indicator
           if={!fullScreen}

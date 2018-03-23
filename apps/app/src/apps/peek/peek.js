@@ -43,17 +43,20 @@ export default class PeekPage {
     if (!currentPeek) {
       return null
     }
+    const hasDocument = selectedItem && selectedItem.document
     return (
       <UI.Theme name="light">
         <peek
           css={{ paddingLeft: fullScreen ? 0 : 'auto' }}
           $peekVisible={App.isShowingPeek}
         >
-          <main if={selectedItem.document}>
-            <PeekHeader title={selectedItem.document.title} />
-            <content>{selectedItem.document.text}</content>
+          <main>
+            <div $$flex if={hasDocument}>
+              <PeekHeader title={selectedItem.document.title} />
+              <content>{selectedItem.document.text}</content>
+              <EmptyContents if={!hasDocument} item={selectedItem} />
+            </div>
           </main>
-          <EmptyContents if={!selectedItem.document} item={selectedItem} />
         </peek>
       </UI.Theme>
     )

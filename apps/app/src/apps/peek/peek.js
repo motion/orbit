@@ -48,7 +48,7 @@ export default class PeekPage {
       <UI.Theme name="light">
         <peek
           css={{
-            paddingLeft: fullScreen ? 0 : 'auto',
+            paddingLeft: fullScreen ? 0 : SHADOW_PAD,
           }}
           $peekVisible={App.isShowingPeek}
         >

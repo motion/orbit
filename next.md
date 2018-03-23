@@ -1,19 +1,8 @@
 # next
 
-* throttle/debounce setting selectedIndex so ui updates fast
-* close fullscreen on lastAppChange
-* mouse out while holding options flickers
-* unfullscreen animation glitch
-* pinned drawer closes weird
-* flicker still on move sides
-* faster hide on window change still
 * if peek is open, never hover delay
-  * (move mouse into peek and then back, then move, it has delay)
 * drag peek off to pin
-* click settings should pin
 * keyboard nav
-  * right/left to open big-peek
-* get better docs in place for peek design
 * peek document display/design
 
 # old

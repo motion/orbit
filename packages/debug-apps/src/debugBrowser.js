@@ -101,6 +101,9 @@ export default class DebugApps {
   pages = []
 
   getPages = async () => {
+    if (!this.browser) {
+      return []
+    }
     return (await this.browser.pages()) || []
   }
 
@@ -190,11 +193,7 @@ export default class DebugApps {
   }
 
   render = async () => {
-    if (this.isRendering || exiting) return
-    if (!this.browser) {
-      console.log('error no browser')
-      return
-    }
+    if (this.isRendering || exiting || !this.browser) return
     const sessions = await this.getSessions()
     const shouldUpdate = await this.shouldUpdateTabs(sessions)
     if (!shouldUpdate) {

@@ -130,7 +130,7 @@ export default class Search {
       // make sure we haven't had a new query yet
       if (App.state.query === query) {
         Desktop.setState({
-          searchResults: results,
+          searchResults: results || [],
           searchPerformance: +Date.now() - start,
         })
       }

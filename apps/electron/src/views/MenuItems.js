@@ -22,7 +22,7 @@ export default class MenuEl {
   }
 
   handlePreferences = () => {
-    Electron.setShowSettings(!Electron.state.showSettings)
+    Electron.setShouldShowSettings(Date.now())
   }
 
   render() {

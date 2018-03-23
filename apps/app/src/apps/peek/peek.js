@@ -12,7 +12,6 @@ const peekShadow = [
   [0, 0, SHADOW_PAD, [0, 0, 0, 0.2]],
   [0, 0, 0, 1, [0, 0, 0, 0.05]],
 ]
-const borderRadius = 8
 
 @view({
   peek: class PeekStore {
@@ -21,7 +20,7 @@ const borderRadius = 8
 })
 export default class PeekPage {
   render({ peek }) {
-    const { currentPeek, onLeft } = Electron
+    const { currentPeek, peekOnLeft } = Electron
     if (!currentPeek) {
       return null
     }
@@ -32,13 +31,9 @@ export default class PeekPage {
     return (
       <UI.Theme name="light">
         <peek css={peekStyle} $peekVisible={App.isShowingPeek}>
-          <content
-            css={{
-              borderRightRadius: !onLeft ? 0 : borderRadius,
-              borderLeftRadius: onLeft ? 0 : borderRadius,
-            }}
-          >
+          <content>
             <PeekHeader peek={peek} />
+            peekOnLeft {peekOnLeft}
             <PeekContents if={Electron.currentPeek} peek={peek} />
           </content>
         </peek>

@@ -154,18 +154,18 @@ export default class ElectronReactions {
       // prefer using lines bounding box, fall back to app
       const box = linesBB || appBB
       if (!box) return
-      let { position, size, arrowTowards } = orbitPosition(box)
+      let { position, size, orbitOnLeft } = orbitPosition(box)
       if (linesBB) {
         // add padding
-        position[0] += arrowTowards === 'left' ? SCREEN_PAD : -SCREEN_PAD
+        position[0] += orbitOnLeft ? -SCREEN_PAD : SCREEN_PAD
       } else {
         // remove padding
-        position[0] += arrowTowards === 'right' ? SCREEN_PAD : -SCREEN_PAD
+        position[0] += orbitOnLeft ? SCREEN_PAD : -SCREEN_PAD
       }
       Electron.setOrbitState({
         position,
         size,
-        arrowTowards,
+        orbitOnLeft,
         fullScreen: false,
       })
     },

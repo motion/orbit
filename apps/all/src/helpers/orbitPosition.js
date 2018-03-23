@@ -35,6 +35,6 @@ export default function orbitPosition({ left, top, width, height }) {
   return {
     position: [Math.round(x), Math.round(y)],
     size: [orbitW, orbitH],
-    arrowTowards: orbitOnLeft ? 'right' : 'left',
+    orbitOnLeft,
   }
 }

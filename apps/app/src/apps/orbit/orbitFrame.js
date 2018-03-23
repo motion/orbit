@@ -11,25 +11,25 @@ const orbitShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.2]]]
 const orbitLightShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.1]]]
 // const log = debug('OrbitFrame')
 
-const Indicator = ({ iWidth, onLeft, store }) => {
-  // log('on', onLeft)
+const Indicator = ({ iWidth, orbitOnLeft }) => {
+  // log('on', orbitOnLeft)
   return (
     <indicator
       css={{
         position: 'absolute',
         background: Constants.ORBIT_COLOR,
         boxShadow: [
-          // [-5, 0, onLeft ? 10 : -10, 5, [255, 255, 255, 0.5]],
+          // [-5, 0, orbitOnLeft ? 10 : -10, 5, [255, 255, 255, 0.5]],
           [-2, 0, 10, 0, [0, 0, 0, 0.15]],
         ],
         width: iWidth,
         height: 36,
         top: 31,
         opacity: App.isShowingOrbit ? 0 : 1,
-        left: onLeft ? SHADOW_PAD - iWidth : 'auto',
-        right: !onLeft ? SHADOW_PAD - iWidth : 'auto',
-        borderLeftRadius: onLeft ? 2 : 0,
-        borderRightRadius: !onLeft ? 2 : 0,
+        left: orbitOnLeft ? SHADOW_PAD - iWidth : 'auto',
+        right: !orbitOnLeft ? SHADOW_PAD - iWidth : 'auto',
+        borderLeftRadius: orbitOnLeft ? 2 : 0,
+        borderRightRadius: !orbitOnLeft ? 2 : 0,
         // opacity: App.isShowingOrbit ? 0 : 1,
         transition: `opacity ease-in 70ms ${App.animationDuration}`,
       }}
@@ -37,10 +37,10 @@ const Indicator = ({ iWidth, onLeft, store }) => {
   )
 }
 
-const OrbitArrow = view(({ arrowSize, arrowTowards }) => {
+const OrbitArrow = view(({ arrowSize }) => {
   let arrowStyle
-  const { onLeft } = Electron
-  if (onLeft) {
+  const { orbitOnLeft } = Electron
+  if (orbitOnLeft) {
     arrowStyle = {
       top: 53,
       right: SHADOW_PAD - arrowSize,
@@ -54,7 +54,7 @@ const OrbitArrow = view(({ arrowSize, arrowTowards }) => {
   return (
     <UI.Arrow
       size={arrowSize}
-      towards={arrowTowards}
+      towards={Electron.orbitArrowTowards}
       background={background}
       css={{
         position: 'absolute',
@@ -63,7 +63,9 @@ const OrbitArrow = view(({ arrowSize, arrowTowards }) => {
         transition: `all ease-in 90ms ${App.animationDuration - 30}ms`,
         opacity: App.isShowingOrbit ? 1 : 0,
         transform: {
-          x: App.isShowingOrbit ? 0 : (onLeft ? -arrowSize : arrowSize) / 3,
+          x: App.isShowingOrbit
+            ? 0
+            : (orbitOnLeft ? -arrowSize : arrowSize) / 3,
         },
       }}
     />
@@ -135,17 +137,16 @@ export default class OrbitFrame {
   }
 
   render({ store, orbitPage, children, iWidth }) {
-    const { fullScreen, arrowTowards } = Electron.orbitState
-    const { onLeft } = Electron
+    const { fullScreen } = Electron.orbitState
+    const { orbitOnLeft } = Electron
     const arrowSize = 22
     const boxShadow = fullScreen ? orbitShadow : orbitLightShadow
-    // log(`${onLeft} repo ${store.isRepositioning}`)
+    // log(`${orbitOnLeft} repo ${store.isRepositioning}`)
     return (
       <UI.Theme name="dark">
         <OrbitArrow
           if={App.isAttachedToWindow}
           arrowSize={arrowSize}
-          arrowTowards={arrowTowards}
           $$opacity={store.isRepositioning ? 0 : 1}
         />
         <overflowWrap
@@ -157,8 +158,8 @@ export default class OrbitFrame {
             ...(fullScreen
               ? { right: 0 }
               : {
-                  right: onLeft ? 15 : 'auto',
-                  left: !onLeft ? 15 : 'auto',
+                  right: orbitOnLeft ? 15 : 'auto',
+                  left: !orbitOnLeft ? 15 : 'auto',
                 }),
           }}
         >
@@ -168,21 +169,22 @@ export default class OrbitFrame {
             }}
             $orbitAnimate={store.shouldAnimate}
             $orbitHeight={orbitPage.adjustHeight}
-            $orbitStyle={[App.isShowingOrbit, onLeft, iWidth]}
+            $orbitStyle={[App.isShowingOrbit, orbitOnLeft, iWidth]}
             $orbitFullScreen={fullScreen}
           >
             <Indicator
               if={!fullScreen}
               store={store}
               iWidth={iWidth}
-              onLeft={onLeft}
+              orbitOnLeft={orbitOnLeft}
               key={Math.random()}
             />
             <content
               css={{
                 boxShadow: App.isShowingOrbit ? boxShadow : 'none',
-                borderLeftRadius: onLeft ? BORDER_RADIUS : 5,
-                borderRightRadius: fullScreen || onLeft ? 5 : BORDER_RADIUS,
+                borderLeftRadius: orbitOnLeft ? BORDER_RADIUS : 5,
+                borderRightRadius:
+                  fullScreen || orbitOnLeft ? 5 : BORDER_RADIUS,
               }}
             >
               {children}
@@ -237,18 +239,20 @@ export default class OrbitFrame {
         height: `calc(100% - ${adjust}px)`,
       }
     },
-    orbitStyle: ([isShowing, onLeft, iWidth]) => {
+    orbitStyle: ([isShowing, orbitOnLeft, iWidth]) => {
       return isShowing
         ? {
             opacity: 1,
             transform: {
-              x: onLeft ? 0 : -SHADOW_PAD * 2,
+              x: orbitOnLeft ? 0 : -SHADOW_PAD * 2,
             },
           }
         : {
-            // marginRight: onLeft ? SHADOW_PAD : -SHADOW_PAD,
+            // marginRight: orbitOnLeft ? SHADOW_PAD : -SHADOW_PAD,
             transform: {
-              x: onLeft ? 330 - SHADOW_PAD - (SHADOW_PAD + iWidth) + 4 : -330,
+              x: orbitOnLeft
+                ? 330 - SHADOW_PAD - (SHADOW_PAD + iWidth) + 4
+                : -330,
             },
           }
     },

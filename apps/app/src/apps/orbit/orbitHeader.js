@@ -63,8 +63,8 @@ export default class PeekHeader {
         <logoButton
           if={!Electron.orbitState.fullScreen}
           onClick={App.togglePinned}
-          $onLeft={Electron.onLeft}
-          $onRight={!Electron.onLeft}
+          $onLeft={Electron.orbitOnLeft}
+          $onRight={!Electron.orbitOnLeft}
         >
           <logo
             css={{

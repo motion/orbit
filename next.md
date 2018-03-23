@@ -1,5 +1,6 @@
 # next
 
+* throttle/debounce setting selectedIndex so ui updates fast
 * close fullscreen on lastAppChange
 * mouse out while holding options flickers
 * unfullscreen animation glitch

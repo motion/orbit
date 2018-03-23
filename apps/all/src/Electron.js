@@ -23,20 +23,19 @@ class ElectronStore {
       mouseOver: false,
       pinned: false,
       fullScreen: false,
-      arrowTowards: null,
+      orbitOnLeft: false,
       position: null,
       size: null,
     },
     peekState: {
       mouseOver: false,
       windows: null,
+      peekOnLeft: false,
     },
-    showSettings: false,
     showDevTools: {
       orbit: false,
       peek: false,
       highlights: false,
-      settings: true,
     },
   }
 
@@ -61,8 +60,20 @@ class ElectronStore {
     return this.state.orbitState
   }
 
+  get orbitArrowTowards() {
+    return this.orbitState.orbitOnLeft ? 'right' : 'left'
+  }
+
+  get orbitOnLeft() {
+    return this.orbitState.orbitOnLeft
+  }
+
   get peekState() {
     return this.state.peekState
+  }
+
+  get peekOnLeft() {
+    return this.peekState.peekOnLeft
   }
 
   get currentPeek() {
@@ -77,14 +88,6 @@ class ElectronStore {
       return true
     }
     return false
-  }
-
-  get onLeft() {
-    return this.orbitState.arrowTowards === 'right'
-  }
-
-  get peekOnLeft() {
-    return this.peekState.arrowTowards === 'right'
   }
 
   onShortcut = shortcut => {
@@ -156,15 +159,14 @@ class ElectronStore {
         Electron.setOrbitState({
           position: [orbitX, orbitY].map(round),
           size: [orbitW, orbitH].map(round),
-          arrowTowards: 'right',
+          orbitOnLeft: true,
           fullScreen: true,
-          hasPositionedFullScreen: false,
         })
       }, 32)
       const [peek, ...rest] = Electron.peekState.windows
       peek.position = [peekX, peekY].map(round)
       peek.size = [peekW, peekH].map(round)
-      peek.arrowTowards = 'left'
+      peek.peekOnLeft = false
       Electron.setPeekState({ windows: [peek, ...rest] })
     } else {
       Electron.setOrbitState({ fullScreen: false })

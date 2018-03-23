@@ -18,7 +18,8 @@ type PeekTarget = {
 
 const idFn = _ => _
 const PAD = 15
-const INITIAL_SIZE = [500, 550]
+const WIDTH = 500
+const INITIAL_SIZE = [WIDTH, 550]
 const log = debug('PeekWindow')
 const windowProps = {
   frame: false,
@@ -36,7 +37,15 @@ const peekPosition = (target: PeekTarget) => {
   const [screenW, screenH] = Helpers.getScreenSize()
   const leftSpace = left
   const rightSpace = screenW - (left + width)
-  const peekOnLeft = leftSpace > rightSpace
+  // prefer bigger area
+  let peekOnLeft = leftSpace > rightSpace
+  // prefer more strongly away from app if possible
+  if (peekOnLeft && !Electron.orbitOnLeft && rightSpace > WIDTH - 30) {
+    peekOnLeft = false
+  }
+  if (!peekOnLeft && Electron.orbitOnLeft && leftSpace > WIDTH - 30) {
+    peekOnLeft = true
+  }
   let x
   let y = top + TOP_OFFSET
   if (peekOnLeft) {
@@ -60,7 +69,7 @@ const peekPosition = (target: PeekTarget) => {
   return {
     position: [Math.round(x), Math.round(y)],
     size: [peekW, peekH],
-    arrowTowards: peekOnLeft ? 'right' : 'left',
+    peekOnLeft,
   }
 }
 

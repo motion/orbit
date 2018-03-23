@@ -9,7 +9,7 @@ const BORDER_RADIUS = 11
 const background = 'rgba(0,0,0,0.89)'
 const orbitShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.2]]]
 const orbitLightShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.1]]]
-const iWidth = 3
+const iWidth = 4
 // const log = debug('OrbitFrame')
 
 const Indicator = view(({ iWidth, orbitOnLeft }) => {
@@ -113,7 +113,7 @@ const OrbitArrow = view(({ orbitOnLeft, arrowSize, css }) => {
 
     hasRepositioned = true
 
-    @react({ log: false })
+    @react
     isRepositioning = [
       () => [Desktop.state.lastAppChange, Electron.state.willFullScreen],
       async ([app, fs], { when, sleep, setValue }) => {
@@ -122,19 +122,10 @@ const OrbitArrow = view(({ orbitOnLeft, arrowSize, css }) => {
         if (isFullScreen) {
           await sleep(100)
         } else {
-          // log('HIDE')
-          ;(async () => {
-            await sleep(2000)
-            // log('CANCEL')
-            setValue(false)
-          })()
-          const curAppState = Desktop.state.appState
-          const curOrbitState = Electron.orbitState
-          await when(() => !isEqual(curAppState, Desktop.state.appState))
-          await when(() => !isEqual(curOrbitState, Electron.orbitState))
+          await sleep(100)
           setValue('READY')
           await when(() => this.hasRepositioned)
-          await sleep(150)
+          await sleep(100)
           // log('SHOW')
         }
         setValue(false)
@@ -163,7 +154,7 @@ export default class OrbitFrame {
     log(`${orbitOnLeft} repo ${store.isRepositioning}`)
     return (
       <UI.Theme name="dark">
-        <orbitFrame css={{ opacity: hide ? 0 : 1 }}>
+        <orbitFrame css={{ flex: 1, opacity: hide ? 0 : 1 }}>
           <OrbitArrow
             if={App.isAttachedToWindow}
             arrowSize={arrowSize}
@@ -259,6 +250,7 @@ export default class OrbitFrame {
       }
     },
     orbitStyle: ([isShowing, orbitOnLeft, iWidth]) => {
+      console.log('orbitStyle', [isShowing, orbitOnLeft, iWidth])
       return isShowing
         ? {
             opacity: 1,
@@ -268,6 +260,7 @@ export default class OrbitFrame {
           }
         : {
             // marginRight: orbitOnLeft ? SHADOW_PAD : -SHADOW_PAD,
+            opacity: 0,
             transform: {
               x: orbitOnLeft
                 ? 330 - SHADOW_PAD - (SHADOW_PAD + iWidth) + 4

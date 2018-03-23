@@ -36,7 +36,7 @@ export default class Item {
 
   render({ orbitStore, index, result, ...props }) {
     const isSelected = orbitStore.selectedIndex === index
-    log(`OrbitItem isSelected ${isSelected} ${index}`)
+    // log(`OrbitItem isSelected ${isSelected} ${index}`)
     return (
       <Surface
         background="transparent"

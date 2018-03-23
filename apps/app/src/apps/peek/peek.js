@@ -37,7 +37,7 @@ const EmptyContents = ({ item }) => (
 @view
 export default class PeekPage {
   render() {
-    const { selectedItem } = App.state
+    const { selectedItem } = App
     const { currentPeek } = Electron
     const { fullScreen } = Electron.orbitState
     if (!currentPeek) {
@@ -55,7 +55,14 @@ export default class PeekPage {
           <main css={{ borderRightRadius: fullScreen ? 5 : 0 }}>
             <div $$flex if={hasDocument}>
               <PeekHeader title={selectedItem.document.title} />
-              <content>{selectedItem.document.text}</content>
+              <content
+                dangerouslySetInnerHTML={{
+                  __html: (selectedItem.document.text || '').replace(
+                    '\n',
+                    '<br />',
+                  ),
+                }}
+              />
               <EmptyContents if={!hasDocument} item={selectedItem} />
             </div>
           </main>
@@ -88,6 +95,11 @@ export default class PeekPage {
       overflow: 'hidden',
       opacity: 1,
       transition: 'background ease-in 200ms',
+    },
+    content: {
+      padding: 20,
+      overflowY: 'scroll',
+      flex: 1,
     },
   }
 }

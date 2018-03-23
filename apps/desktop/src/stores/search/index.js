@@ -129,8 +129,10 @@ export default class Search {
       const results = await this.search(query)
       // make sure we haven't had a new query yet
       if (App.state.query === query) {
-        Desktop.setSearchResults(results)
-        Desktop.setSearchPerformance(+Date.now() - start)
+        Desktop.setState({
+          searchResults: results || [],
+          searchPerformance: +Date.now() - start,
+        })
       }
     },
   ]

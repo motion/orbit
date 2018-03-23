@@ -69,6 +69,7 @@ class DesktopStore {
     selection: null,
     searchIndexStatus: '',
     searchResults: [],
+    searchPerformance: null,
     mouseDown: null,
   }
 

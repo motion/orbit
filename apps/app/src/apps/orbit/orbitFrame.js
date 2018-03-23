@@ -147,21 +147,6 @@ export default class OrbitFrame {
     const hide =
       !App.isShowingOrbit && (store.isRepositioning || store.isDragging)
     log(`OrbitFrame onLeft ${orbitOnLeft} hide ${hide}`)
-    const orbitStyle = App.isShowingOrbit
-      ? {
-          opacity: 1,
-          transform: {
-            x: orbitOnLeft ? 0 : -SHADOW_PAD * 2,
-          },
-        }
-      : {
-          opacity: 0,
-          transform: {
-            x: orbitOnLeft
-              ? 330 - SHADOW_PAD - (SHADOW_PAD + iWidth) + 4
-              : -330,
-          },
-        }
     return (
       <UI.Theme name="dark">
         <orbitFrame css={{ flex: 1, opacity: hide ? 0 : 1 }}>
@@ -191,8 +176,22 @@ export default class OrbitFrame {
           >
             <orbit
               css={{
-                ...orbitStyle,
                 paddingRight: fullScreen ? 0 : SHADOW_PAD,
+                ...(App.isShowingOrbit
+                  ? {
+                      opacity: 1,
+                      transform: {
+                        x: orbitOnLeft ? 0 : -SHADOW_PAD * 2,
+                      },
+                    }
+                  : {
+                      opacity: 0,
+                      transform: {
+                        x: orbitOnLeft
+                          ? 330 - SHADOW_PAD - (SHADOW_PAD + iWidth) + 4
+                          : -330,
+                      },
+                    }),
               }}
               $orbitAnimate={store.shouldAnimate}
               $orbitHeight={fullScreen ? 0 : orbitPage.adjustHeight}
@@ -208,22 +207,7 @@ export default class OrbitFrame {
                 }}
               >
                 {children}
-                <expand
-                  if={!fullScreen}
-                  css={{
-                    position: 'absolute',
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    paddingTop: 40,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    flexFlow: 'row',
-                    zIndex: 1000,
-                    borderBottomRadius: BORDER_RADIUS,
-                    overflow: 'hidden',
-                  }}
-                >
+                <expand if={!fullScreen}>
                   <fade />
                   <barOuter onMouseDown={orbitPage.barMouseDown}>
                     <bar />
@@ -308,6 +292,19 @@ export default class OrbitFrame {
       right: 0,
       top: 0,
       background: `linear-gradient(transparent, #111 80%)`,
+    },
+    expand: {
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      right: 0,
+      paddingTop: 40,
+      alignItems: 'center',
+      justifyContent: 'center',
+      flexFlow: 'row',
+      zIndex: 1000,
+      borderBottomRadius: BORDER_RADIUS,
+      overflow: 'hidden',
     },
     barOuter: {
       pointerEvents: 'all',

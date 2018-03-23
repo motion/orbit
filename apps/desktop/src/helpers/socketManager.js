@@ -21,8 +21,9 @@ export default class SocketManager {
 
   dispose() {
     for (const socket of this.activeSockets) {
-      socket.terminate()
+      socket.close()
     }
+    this.wss.terminate()
   }
 
   get hasListeners() {

@@ -79,7 +79,7 @@ export default class Search {
   currentTotalSentences = 0
   totalDocuments = 0
 
-  @watch
+  @watch({ log: false })
   indexStatus = () =>
     `index: doc ${this.totalIndexed}/${this.totalDocuments} line ${
       this.totalIndexedSentences

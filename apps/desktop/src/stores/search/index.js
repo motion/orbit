@@ -1,15 +1,9 @@
-import 'regenerator-runtime/runtime'
-import 'babel-polyfill'
-
-import { store, watch } from '@mcro/black/store'
+import { store, watch, react } from '@mcro/black/store'
 import { sum, range, sortBy, flatten } from 'lodash'
 import DB from './db'
 import { splitSentences, wordMoversDistance, cosineSimilarity } from './helpers'
 import summarize from './summarize'
-import { react } from '@mcro/black/store'
 import createKDTree from 'static-kdtree'
-import { readFileSync } from 'fs'
-import path from 'path'
 import getVectors from '~/embedding'
 import { Desktop, App } from '@mcro/all'
 import start from './start'
@@ -29,9 +23,7 @@ const sortedUniqBy = (xs, fn) => {
     if (seen[val]) {
       return false
     }
-
     seen[val] = true
-
     return true
   })
 }
@@ -93,7 +85,7 @@ export default class Search {
       this.totalIndexedSentences
     }/${this.currentTotalSentences} `
 
-  @watch
+  @watch({ log: false })
   paragraphs = () =>
     flatten(
       this.documents.map(({ paragraphs }, index) =>
@@ -104,7 +96,7 @@ export default class Search {
       ),
     )
 
-  @watch
+  @watch({ log: false })
   space = () => {
     const vectors = []
     const metaData = []
@@ -122,7 +114,7 @@ export default class Search {
     }
   }
 
-  @react
+  @react({ log: false })
   setIndexStatus = [
     () => this.indexStatus,
     () => Desktop.setSearchIndexStatus(this.indexStatus),

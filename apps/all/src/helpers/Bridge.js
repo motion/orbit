@@ -125,7 +125,6 @@ class Bridge {
       this._wsOpen = true
       // send state that hasnt been synced yet
       if (this._queuedState) {
-        console.log('sending queued state', this._source)
         this._socket.send(
           JSON.stringify({ state: this.state, source: this._source }),
         )
@@ -143,6 +142,9 @@ class Bridge {
       if (err.preventDefault) {
         err.preventDefault()
         err.stopPropagation()
+      }
+      if (err.code === 'ETIMEDOUT') {
+        return
       }
       if (this._socket.readyState == 1) {
         console.log('swift ws error', err)

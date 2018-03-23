@@ -170,7 +170,6 @@ export default class ScreenMaster {
       }
       clearTimeout(this.lastAppState)
       this.lastAppState = this.setTimeout(() => {
-        log(`setting state`, state)
         this.setState(state)
       }, 32)
     })

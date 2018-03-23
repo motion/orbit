@@ -13,7 +13,6 @@ class OrbitWindowStore {
 
   // sitrep
   focusOrbit = () => {
-    log('focusOrbit')
     try {
       if (this.orbitRef) {
         this.orbitRef.focus()

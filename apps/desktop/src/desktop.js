@@ -45,8 +45,7 @@ export default class DesktopRoot {
     global.Root = this
     global.restart = this.restart
     this.setupHosts()
-    const port = await this.server.start()
-    log(`starting desktop on ${port}`)
+    await this.server.start()
     this.screenMaster.start()
     debugState(({ stores }) => {
       this.stores = stores

@@ -12,7 +12,10 @@ const orbitLightShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.1]]]
 const iWidth = 3
 // const log = debug('OrbitFrame')
 
-const Indicator = ({ iWidth, orbitOnLeft }) => {
+const Indicator = view(({ iWidth, orbitOnLeft }) => {
+  if (Date.now() - Desktop.state.lastAppChange < 100) {
+    return null
+  }
   // log('on', orbitOnLeft)
   return (
     <indicator
@@ -36,7 +39,7 @@ const Indicator = ({ iWidth, orbitOnLeft }) => {
       }}
     />
   )
-}
+})
 
 const OrbitArrow = view(({ arrowSize }) => {
   let arrowStyle

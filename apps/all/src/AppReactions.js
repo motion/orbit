@@ -60,7 +60,6 @@ export default class AppReactions {
     () => Electron.isMouseInActiveArea,
     mouseOver => {
       if (!mouseOver) {
-        // && !App.state.peekTarget
         App.setPeekTarget(null)
       }
     },

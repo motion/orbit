@@ -23,8 +23,8 @@ const APP_ID = -1
 const PREVENT_CLEAR = {
   electron: true,
   Chromium: true,
-  iterm2: true,
-  VSCode: true,
+  // iterm2: true,
+  // VSCode: true,
 }
 // prevent apps from triggering appState updates
 const PREVENT_APP_STATE = {
@@ -162,7 +162,7 @@ export default class ScreenMaster {
       this.lastAppState = this.setTimeout(() => {
         log(`setting state`, state)
         this.setState(state)
-      }, 32)
+      }, 64)
     })
     this.oracle.onBoxChanged(count => {
       if (!Desktop.state.ocrWords) {

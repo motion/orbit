@@ -3,6 +3,7 @@ import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { App, Electron, Desktop } from '@mcro/all'
 import * as Constants from '~/constants'
+import { comparer } from 'mobx'
 
 const SHADOW_PAD = 15
 const BORDER_RADIUS = 11
@@ -12,6 +13,7 @@ const orbitLightShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.1]]]
 // const log = debug('OrbitFrame')
 
 const Indicator = ({ iWidth, onLeft }) => {
+  // log('on', onLeft)
   return (
     <indicator
       css={{
@@ -90,15 +92,26 @@ const OrbitArrow = view(({ arrowSize, arrowTowards, arrowStyle }) => {
       return App.isShowingOrbit || this.wasShowingOrbit
     }
 
-    @react
-    shouldHideWhileMoving = [
+    hasRepositioned = true
+
+    @react({ log: false })
+    isRepositioning = [
       () => Desktop.state.lastAppChange,
-      async (_, { sleep, setValue }) => {
-        // if (App.isShowingOrbit) {
-        //   return
-        // }
+      async (_, { when, sleep, setValue }) => {
         setValue(true)
-        await sleep(350)
+        // log('HIDE')
+        const curAppState = Desktop.state.appState
+        const curOrbitState = Electron.orbitState
+        await when(
+          () => !comparer.structural(curAppState, Desktop.state.appState),
+        )
+        await when(
+          () => !comparer.structural(curOrbitState, Electron.orbitState),
+        )
+        setValue('READY')
+        await when(() => this.hasRepositioned)
+        await sleep(120)
+        // log('SHOW')
         setValue(false)
       },
     ]
@@ -107,6 +120,12 @@ const OrbitArrow = view(({ arrowSize, arrowTowards, arrowStyle }) => {
 export default class OrbitFrame {
   componentDidMount() {
     this.props.store.orbitFrame = this
+  }
+
+  componentDidUpdate() {
+    if (this.props.store.isRepositioning === 'READY') {
+      this.props.store.hasRepositioned = true
+    }
   }
 
   render({ store, orbitPage, children, iWidth }) {
@@ -127,8 +146,8 @@ export default class OrbitFrame {
           $orbitAnimate={store.shouldAnimate}
           $pointerEvents={App.isShowingOrbit}
           $hideOverflow
-          $isHidden={store.shouldHideWhileMoving}
           css={{
+            opacity: store.isRepositioning ? 0 : 1,
             ...(fullScreen
               ? { right: 0 }
               : {
@@ -173,9 +192,6 @@ export default class OrbitFrame {
     },
     pointerEvents: {
       pointerEvents: 'all !important',
-    },
-    isHidden: {
-      opacity: 0,
     },
     hideOverflow: {
       overflow: 'hidden',

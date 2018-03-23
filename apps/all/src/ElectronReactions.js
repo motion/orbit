@@ -147,16 +147,14 @@ export default class ElectronReactions {
   ]
 
   @react({ fireImmediately: true })
-  positionOrbitFromBoundingBox = [
+  repositioningFromAppState = [
     () => [
       appTarget(Desktop.state.appState || {}),
       Desktop.linesBoundingBox,
       this.afterUnFullScreen,
     ],
     async ([appBB, linesBB], { sleep }) => {
-      // so app can hide before we transition
-      log(`position from bounding`)
-      await sleep(150)
+      await sleep(32)
       // prefer using lines bounding box, fall back to app
       const box = linesBB || appBB
       if (!box) return

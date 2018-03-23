@@ -1,1 +1,8 @@
-export { fromStream, toStream, whenAsync } from 'mobx-utils'
+export {
+  fromStream,
+  toStream,
+  whenAsync,
+  now,
+  fromPromise,
+  fromResource,
+} from 'mobx-utils'

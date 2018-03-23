@@ -66,11 +66,11 @@ export default class Item {
           {result.title}
         </Title>
         <Text opacity={0.5} margin={[0, 0, 3]} size={0.95} ellipse>
-          {result.subtitle}
+          {result.subtitle || ''}
         </Text>
         <Text size={1} sizeLineHeight={1.15}>
           <SubTitle if={false}>Section 1</SubTitle>
-          <P selectable>{result.sentence}</P>
+          <P selectable>{result.sentence || ''}</P>
         </Text>
       </Surface>
     )

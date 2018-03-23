@@ -135,6 +135,10 @@ class Bridge {
       this._wsOpen = false
     }
     this._socket.onerror = err => {
+      if (err.preventDefault) {
+        err.preventDefault()
+        err.stopPropagation()
+      }
       if (this._socket.readyState == 1) {
         console.log('swift ws error', err)
       } else {

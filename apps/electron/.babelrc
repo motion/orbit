@@ -15,7 +15,7 @@
         [
           "@mcro/babel-preset-motion",
           {
-            "targets": { "electron": "1.7.10" },
+            "targets": { "electron": "1.8.2" },
             "disable": [
               "@mcro/hmr",
               "@mcro/hmr-view",

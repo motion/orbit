@@ -1,7 +1,5 @@
-// @flow
 import 'regenerator-runtime/runtime'
 import 'babel-polyfill'
-
 import 'isomorphic-fetch'
 import '@mcro/debug/inject'
 import createElement from '@mcro/black/lib/createElement'
@@ -9,11 +7,14 @@ import createElement from '@mcro/black/lib/createElement'
 import React from 'react'
 import * as Constants from './constants'
 
+process.on('uncaughtException', err => {
+  console.log('App.uncaughtException', err.stack)
+})
+
 console.warn(
   `$ NODE_ENV=${process.env.NODE_ENV} run app ${window.location.pathname}`,
 )
 
-// $FlowIgnore
 React.createElement = createElement // any <tag /> can use $$style
 
 if (Constants.IS_PROD) {

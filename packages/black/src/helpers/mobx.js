@@ -1,3 +1,5 @@
+import { comparer } from 'mobx'
+
 export {
   fromStream,
   toStream,
@@ -6,3 +8,5 @@ export {
   fromPromise,
   fromResource,
 } from 'mobx-utils'
+
+export const isEqual = comparer.structural

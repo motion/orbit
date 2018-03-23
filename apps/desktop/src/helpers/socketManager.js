@@ -20,10 +20,9 @@ export default class SocketManager {
   }
 
   dispose() {
-    for (const socket of this.activeSockets) {
-      socket.close()
-    }
-    this.wss.terminate()
+    this.wss.clients.forEach(ws => {
+      ws.terminate()
+    })
   }
 
   get hasListeners() {

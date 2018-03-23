@@ -47,10 +47,12 @@ export default class PeekPage {
     return (
       <UI.Theme name="light">
         <peek
-          css={{ paddingLeft: fullScreen ? 0 : 'auto' }}
+          css={{
+            paddingLeft: fullScreen ? 0 : 'auto',
+          }}
           $peekVisible={App.isShowingPeek}
         >
-          <main>
+          <main css={{ borderRightRadius: fullScreen ? 5 : 0 }}>
             <div $$flex if={hasDocument}>
               <PeekHeader title={selectedItem.document.title} />
               <content>{selectedItem.document.text}</content>

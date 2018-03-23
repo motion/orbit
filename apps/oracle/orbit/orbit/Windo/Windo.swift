@@ -48,7 +48,7 @@ final class Windo {
         self.emit("{ \"action\": \"WindowDestroyedEvent\", \"value\": \"\(event.window.title.value)\" }")
       }
       self.swindler.on { (event: ApplicationMainWindowChangedEvent) in
-        //      self.frontmostWindowChanged()
+        self.frontmostWindowChanged()
       }
       self.swindler.on { (event: FrontmostApplicationChangedEvent) in
         if event.newValue == nil { return }

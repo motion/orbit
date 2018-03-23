@@ -8,8 +8,9 @@ const SHADOW_PAD = 15
 const BORDER_RADIUS = 11
 const background = 'rgba(0,0,0,0.89)'
 const orbitShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.2]]]
-const orbitLightShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.1]]]
+const orbitLightShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.2]]]
 const iWidth = 4
+const arrowSize = 22
 // const log = debug('OrbitFrame')
 
 const Indicator = view(({ iWidth, orbitOnLeft }) => {
@@ -142,11 +143,25 @@ export default class OrbitFrame {
   render({ store, orbitPage, children }) {
     const { fullScreen } = Electron.orbitState
     const { orbitOnLeft } = Electron
-    const arrowSize = 22
     const boxShadow = fullScreen ? orbitShadow : orbitLightShadow
     const hide =
       !App.isShowingOrbit && (store.isRepositioning || store.isDragging)
-    log(`${orbitOnLeft} repo ${store.isRepositioning}`)
+    log(`OrbitFrame onLeft ${orbitOnLeft} hide ${hide}`)
+    const orbitStyle = App.isShowingOrbit
+      ? {
+          opacity: 1,
+          transform: {
+            x: orbitOnLeft ? 0 : -SHADOW_PAD * 2,
+          },
+        }
+      : {
+          opacity: 0,
+          transform: {
+            x: orbitOnLeft
+              ? 330 - SHADOW_PAD - (SHADOW_PAD + iWidth) + 4
+              : -330,
+          },
+        }
     return (
       <UI.Theme name="dark">
         <orbitFrame css={{ flex: 1, opacity: hide ? 0 : 1 }}>
@@ -176,22 +191,44 @@ export default class OrbitFrame {
           >
             <orbit
               css={{
+                ...orbitStyle,
                 paddingRight: fullScreen ? 0 : SHADOW_PAD,
               }}
               $orbitAnimate={store.shouldAnimate}
-              $orbitHeight={orbitPage.adjustHeight}
-              $orbitStyle={[App.isShowingOrbit, orbitOnLeft, iWidth]}
+              $orbitHeight={fullScreen ? 0 : orbitPage.adjustHeight}
               $orbitFullScreen={fullScreen}
             >
               <content
                 css={{
                   boxShadow: App.isShowingOrbit ? boxShadow : 'none',
                   borderLeftRadius: orbitOnLeft ? BORDER_RADIUS : 5,
-                  borderRightRadius:
-                    fullScreen || orbitOnLeft ? 5 : BORDER_RADIUS,
+                  borderRightRadius: fullScreen
+                    ? 0
+                    : orbitOnLeft ? 5 : BORDER_RADIUS,
                 }}
               >
                 {children}
+                <expand
+                  if={!fullScreen}
+                  css={{
+                    position: 'absolute',
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    paddingTop: 40,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexFlow: 'row',
+                    zIndex: 1000,
+                    borderBottomRadius: BORDER_RADIUS,
+                    overflow: 'hidden',
+                  }}
+                >
+                  <fade />
+                  <barOuter onMouseDown={orbitPage.barMouseDown}>
+                    <bar />
+                  </barOuter>
+                </expand>
               </content>
             </orbit>
           </overflowWrap>
@@ -244,25 +281,6 @@ export default class OrbitFrame {
         height: `calc(100% - ${adjust}px)`,
       }
     },
-    orbitStyle: ([isShowing, orbitOnLeft, iWidth]) => {
-      console.log('orbitStyle', [isShowing, orbitOnLeft, iWidth])
-      return isShowing
-        ? {
-            opacity: 1,
-            transform: {
-              x: orbitOnLeft ? 0 : -SHADOW_PAD * 2,
-            },
-          }
-        : {
-            // marginRight: orbitOnLeft ? SHADOW_PAD : -SHADOW_PAD,
-            opacity: 0,
-            transform: {
-              x: orbitOnLeft
-                ? 330 - SHADOW_PAD - (SHADOW_PAD + iWidth) + 4
-                : -330,
-            },
-          }
-    },
     orbitFullScreen: {
       width: '100%',
       right: 0,
@@ -282,6 +300,32 @@ export default class OrbitFrame {
       overflow: 'hidden',
       opacity: 1,
       position: 'relative',
+    },
+    fade: {
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      right: 0,
+      top: 0,
+      background: `linear-gradient(transparent, #111 80%)`,
+    },
+    barOuter: {
+      pointerEvents: 'all',
+      flex: 1,
+      margin: 10,
+      padding: 10,
+      cursor: 'ns-resize',
+      opacity: 0.5,
+      zIndex: 10,
+      '&:hover': {
+        opacity: 1,
+      },
+    },
+    bar: {
+      flex: 1,
+      height: 5,
+      borderRadius: 100,
+      background: [255, 255, 255, 0.2],
     },
   }
 }

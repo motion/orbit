@@ -10,7 +10,6 @@ import OrbitHeader from './orbitHeader'
 import OrbitStore from './orbitStore'
 
 const SHADOW_PAD = 15
-const BORDER_RADIUS = 12
 // the little tab indicator
 // const log = debug('orbit')
 
@@ -69,26 +68,6 @@ export default class OrbitPage {
             onClick={orbitStore.toggleSettings}
           />
         </controls>
-        <expand
-          css={{
-            position: 'absolute',
-            bottom: 0,
-            left: 0,
-            right: 0,
-            paddingTop: 40,
-            alignItems: 'center',
-            justifyContent: 'center',
-            flexFlow: 'row',
-            zIndex: 1000,
-            borderBottomRadius: BORDER_RADIUS,
-            overflow: 'hidden',
-          }}
-        >
-          <fade />
-          <barOuter onMouseDown={orbitPage.barMouseDown}>
-            <bar />
-          </barOuter>
-        </expand>
       </OrbitFrame>
     )
   }
@@ -103,32 +82,6 @@ export default class OrbitPage {
       '&:hover': {
         opacity: 0.9,
       },
-    },
-    fade: {
-      position: 'absolute',
-      bottom: 0,
-      left: 0,
-      right: 0,
-      top: 0,
-      background: `linear-gradient(transparent, #111 80%)`,
-    },
-    barOuter: {
-      pointerEvents: 'all',
-      flex: 1,
-      margin: 10,
-      padding: 10,
-      cursor: 'ns-resize',
-      opacity: 0.5,
-      zIndex: 10,
-      '&:hover': {
-        opacity: 1,
-      },
-    },
-    bar: {
-      flex: 1,
-      height: 5,
-      borderRadius: 100,
-      background: [255, 255, 255, 0.2],
     },
   }
 }

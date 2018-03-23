@@ -79,7 +79,7 @@ export default class AppReactions {
   hideOrbitOnEsc = [
     () => Desktop.state.keyboard.esc,
     () => {
-      if (!App.state.orbitHidden) {
+      if (Desktop.focusedOnOrbit) {
         App.setOrbitHidden(true)
       }
     },

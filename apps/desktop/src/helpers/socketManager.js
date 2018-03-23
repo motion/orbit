@@ -19,6 +19,12 @@ export default class SocketManager {
     this.setupSocket()
   }
 
+  dispose() {
+    for (const socket of this.activeSockets) {
+      socket.terminate()
+    }
+  }
+
   get hasListeners() {
     return !!this.activeSockets.length
   }

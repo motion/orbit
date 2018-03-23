@@ -358,8 +358,7 @@ export default class ScreenMaster {
   }
 
   async dispose() {
-    // clear highlights on quit
-    this.lastScreenChange()
+    this.socketManager.dispose()
     if (this.oracle) {
       await this.oracle.stop()
     }

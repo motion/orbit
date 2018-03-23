@@ -63,9 +63,14 @@ class Bridge {
     if (initialState) {
       this.setState(initialState, false)
     }
-    if (typeof window === 'undefined') {
+    // setup start/quit actions
+    if (typeof window !== 'undefined') {
+      window.addEventListener('beforeunload', this.dispose)
+    } else {
       await waitPort({ host: 'localhost', port: 40510 })
+      process.on('exit', this.dispose)
     }
+    // socket setup
     this._socket.onmessage = async ({ data }) => {
       await requestIdle()
       if (!data) {
@@ -235,6 +240,11 @@ class Bridge {
       }
     }
     return changed
+  }
+
+  dispose = () => {
+    console.log('disposing websocket cleanly...')
+    this._socket.close()
   }
 }
 

@@ -235,6 +235,18 @@ export default class ScreenMaster {
         })
       }, 64),
     )
+
+    iohook.on('mousedown', ({ button, x, y }) => {
+      if (button === 1) {
+        this.setState({ mouseDown: { x, y, at: Date.now() } })
+      }
+    })
+
+    iohook.on('mouseup', ({ button }) => {
+      if (button === 1) {
+        this.setState({ mouseDown: null })
+      }
+    })
   }
 
   setState = object => {

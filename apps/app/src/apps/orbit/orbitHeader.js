@@ -10,16 +10,19 @@ class HeaderStore {
 
   @react({ fireImmediately: true, delay: 32 })
   focusInput = [
-    () => App.isShowingHeader && !App.isAnimatingOrbit,
-    shouldFocus => {
-      log(`shouldFocus`, shouldFocus)
+    () => App.isFullyShown,
+    () => {
       if (!this.inputRef) return
-      if (!shouldFocus) {
-        this.inputRef.blur()
-      } else {
-        this.inputRef.focus()
-        this.inputRef.select()
-      }
+      this.inputRef.focus()
+      this.inputRef.select()
+    },
+  ]
+
+  @react({ delay: 32 })
+  blurInput = [
+    () => App.isFullyHidden,
+    () => {
+      this.inputRef.blur()
     },
   ]
 

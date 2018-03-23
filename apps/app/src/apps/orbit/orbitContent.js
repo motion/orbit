@@ -9,6 +9,24 @@ const getKey = result => result.index || result.id || result.title
 
 const refs = {}
 
+@view
+class OrbitStatus {
+  render() {
+    const { appState, searchIndexStatus, searchPerformance } = Desktop.state
+    return (
+      <UI.Text if={App.isAttachedToWindow && appState} css={{ padding: 10 }}>
+        {searchIndexStatus}
+        <UI.Text
+          if={appState.title}
+          css={{ display: 'inline', opacity: 0.5, fontSize: '80%' }}
+        >
+          took {searchPerformance}
+        </UI.Text>
+      </UI.Text>
+    )
+  }
+}
+
 @view.attach('orbitStore')
 @view
 export default class OrbitContent {
@@ -56,19 +74,10 @@ export default class OrbitContent {
   })
 
   render({ orbitStore }) {
-    const { appState, searchIndexStatus, searchPerformance } = Desktop.state
     log(`OrbitContent`)
     return (
       <list>
-        <UI.Text if={App.isAttachedToWindow && appState} css={{ padding: 10 }}>
-          {searchIndexStatus}
-          <UI.Text
-            if={appState.title}
-            css={{ display: 'inline', opacity: 0.5, fontSize: '80%' }}
-          >
-            took {searchPerformance}
-          </UI.Text>
-        </UI.Text>
+        <OrbitStatus />
         {orbitStore.results.map((result, index) => (
           <OrbitItem
             key={getKey(result) || index}

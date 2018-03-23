@@ -12,7 +12,6 @@ import OrbitStore from './orbitStore'
 const SHADOW_PAD = 15
 const BORDER_RADIUS = 12
 // the little tab indicator
-const iWidth = 4
 // const log = debug('orbit')
 
 class OrbitPageStore {
@@ -50,7 +49,7 @@ class OrbitPageStore {
 export default class OrbitPage {
   render({ orbitStore, orbitPage }) {
     return (
-      <OrbitFrame orbitPage={orbitPage} iWidth={iWidth}>
+      <OrbitFrame orbitPage={orbitPage}>
         <OrbitHeader />
         <OrbitContent if={!orbitStore.showSettings} />
         <OrbitSettings if={orbitStore.showSettings} />

@@ -8,7 +8,7 @@ export const IS_PROD =
 export const IS_DEV = !IS_PROD
 export const VERSION = require('../package.json').version
 
-export const ORBIT_COLOR = '#5824CA'
+export const ORBIT_COLOR = '#6345CC'
 
 const protocol = `${window.location.protocol}//`
 export const API_HOST = IS_PROD ? `app.seemirai.com:3009` : `localhost:3001`

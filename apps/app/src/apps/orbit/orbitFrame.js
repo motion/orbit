@@ -9,6 +9,7 @@ const BORDER_RADIUS = 11
 const background = 'rgba(0,0,0,0.89)'
 const orbitShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.2]]]
 const orbitLightShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.1]]]
+const iWidth = 3
 // const log = debug('OrbitFrame')
 
 const Indicator = ({ iWidth, orbitOnLeft }) => {
@@ -23,13 +24,13 @@ const Indicator = ({ iWidth, orbitOnLeft }) => {
           [-2, 0, 10, 0, [0, 0, 0, 0.15]],
         ],
         width: iWidth,
-        height: 36,
-        top: 31,
+        height: 20,
+        top: 8,
         opacity: App.isShowingOrbit ? 0 : 1,
-        left: orbitOnLeft ? SHADOW_PAD - iWidth : 'auto',
-        right: !orbitOnLeft ? SHADOW_PAD - iWidth : 'auto',
-        borderLeftRadius: orbitOnLeft ? 2 : 0,
-        borderRightRadius: !orbitOnLeft ? 2 : 0,
+        right: orbitOnLeft ? SHADOW_PAD : 'auto',
+        left: !orbitOnLeft ? SHADOW_PAD : 'auto',
+        borderLeftRadius: orbitOnLeft ? 20 : 0,
+        borderRightRadius: !orbitOnLeft ? 20 : 0,
         // opacity: App.isShowingOrbit ? 0 : 1,
         transition: `opacity ease-in 70ms ${App.animationDuration}`,
       }}
@@ -136,7 +137,7 @@ export default class OrbitFrame {
     }
   }
 
-  render({ store, orbitPage, children, iWidth }) {
+  render({ store, orbitPage, children }) {
     const { fullScreen } = Electron.orbitState
     const { orbitOnLeft } = Electron
     const arrowSize = 22
@@ -148,6 +149,13 @@ export default class OrbitFrame {
           if={App.isAttachedToWindow}
           arrowSize={arrowSize}
           $$opacity={store.isRepositioning ? 0 : 1}
+        />
+        <Indicator
+          if={!fullScreen}
+          store={store}
+          iWidth={iWidth}
+          orbitOnLeft={orbitOnLeft}
+          key={Math.random()}
         />
         <overflowWrap
           $orbitAnimate={store.shouldAnimate}
@@ -172,13 +180,6 @@ export default class OrbitFrame {
             $orbitStyle={[App.isShowingOrbit, orbitOnLeft, iWidth]}
             $orbitFullScreen={fullScreen}
           >
-            <Indicator
-              if={!fullScreen}
-              store={store}
-              iWidth={iWidth}
-              orbitOnLeft={orbitOnLeft}
-              key={Math.random()}
-            />
             <content
               css={{
                 boxShadow: App.isShowingOrbit ? boxShadow : 'none',

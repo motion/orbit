@@ -6,6 +6,7 @@ import global from 'global'
 import Desktop from './Desktop'
 import Electron from './Electron'
 
+const isBrowser = typeof window !== 'undefined'
 // const log = debug('App')
 let App
 
@@ -55,10 +56,10 @@ class AppStore {
   ]
 
   // debounced a little to prevent aggressive reactions
-  @react({ delay: 32 })
+  @react({ delay: 32, log: isBrowser })
   isFullyHidden = [() => !this.isShowingOrbit && !this.isAnimatingOrbit, _ => _]
 
-  @react({ delay: 32 })
+  @react({ delay: 32, log: isBrowser })
   isFullyShown = [() => this.isShowingOrbit && !this.isAnimatingOrbit, _ => _]
 
   @react

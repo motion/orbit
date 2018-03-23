@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view, react } from '@mcro/black'
+import { view, react, isEqual } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { App, Electron, Desktop } from '@mcro/all'
 import * as Constants from '~/constants'
@@ -102,12 +102,8 @@ const OrbitArrow = view(({ arrowSize, arrowTowards, arrowStyle }) => {
         // log('HIDE')
         const curAppState = Desktop.state.appState
         const curOrbitState = Electron.orbitState
-        await when(
-          () => !comparer.structural(curAppState, Desktop.state.appState),
-        )
-        await when(
-          () => !comparer.structural(curOrbitState, Electron.orbitState),
-        )
+        await when(() => !isEqual(curAppState, Desktop.state.appState))
+        await when(() => !isEqual(curOrbitState, Electron.orbitState))
         setValue('READY')
         await when(() => this.hasRepositioned)
         await sleep(120)

@@ -1,10 +1,8 @@
 import * as React from 'react'
-import { view, watch } from '@mcro/black'
+import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { App, Electron } from '@mcro/all'
 import PeekHeader from './peekHeader'
-import PeekContents from './peekContents'
-import { Thing } from '@mcro/models'
 
 const SHADOW_PAD = 15
 const background = '#fff'
@@ -13,29 +11,49 @@ const peekShadow = [
   [0, 0, 0, 1, [0, 0, 0, 0.05]],
 ]
 
-@view({
-  peek: class PeekStore {
-    @watch peekItem = () => Thing.get({ bucket: 'pg' })
-  },
-})
+const EmptyContents = ({ item }) => (
+  <pane css={{ flex: 1 }}>
+    <img
+      if={item.icon}
+      src={`/icons/${item.icon}`}
+      css={{ width: 64, height: 64 }}
+    />
+    <UI.Title size={2} fontWeight={600}>
+      {item.title}
+    </UI.Title>
+    <UI.Title if={item.subtitle} size={1}>
+      {item.subtitle}
+    </UI.Title>
+    <UI.Text if={item.content} css={{ marginTop: 20 }} size={1}>
+      {item.context.map(({ active, text }) => (
+        <UI.Text $sentence opacity={active ? 1 : 0.2}>
+          {text}
+        </UI.Text>
+      ))}
+    </UI.Text>
+  </pane>
+)
+
+@view
 export default class PeekPage {
-  render({ peek }) {
-    const { currentPeek, peekOnLeft } = Electron
+  render() {
+    const { selectedItem } = App.state
+    const { currentPeek } = Electron
+    const { fullScreen } = Electron.orbitState
     if (!currentPeek) {
       return null
     }
-    let peekStyle = {}
-    if (Electron.orbitState.fullScreen) {
-      peekStyle.paddingLeft = 0
-    }
     return (
       <UI.Theme name="light">
-        <peek css={peekStyle} $peekVisible={App.isShowingPeek}>
-          <content>
-            <PeekHeader peek={peek} />
-            peekOnLeft {peekOnLeft}
-            <PeekContents if={Electron.currentPeek} peek={peek} />
-          </content>
+        <peek
+          css={{ paddingLeft: fullScreen ? 0 : 'auto' }}
+          $peekVisible={App.isShowingPeek}
+        >
+          <main if={selectedItem.document}>
+            <PeekHeader title={selectedItem.document.title} />
+            <content>{selectedItem.document.text}</content>
+          </main>
+          <EmptyContents if={!selectedItem.document} item={selectedItem} />
         </peek>
       </UI.Theme>
     )
@@ -57,14 +75,7 @@ export default class PeekPage {
       pointerEvents: 'all !important',
       opacity: 1,
     },
-    peekTorn: {
-      pointerEvents: 'all !important',
-      opacity: 1,
-      transform: {
-        y: 0,
-      },
-    },
-    content: {
+    main: {
       flex: 1,
       // border: [1, 'transparent'],
       background,

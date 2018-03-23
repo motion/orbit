@@ -7,7 +7,7 @@ import { Electron } from '@mcro/all'
 
 @view
 export default class PeekHeader {
-  render({ peek }) {
+  render({ title }) {
     const { fullScreen } = Electron.orbitState
     if (!Electron.currentPeek) {
       return null
@@ -20,8 +20,8 @@ export default class PeekHeader {
           <ControlButton icon="y" background="#F6BE4F" />
           <ControlButton icon="z" background="#62C554" />
         </buttons>
-        <title if={peek.peekItem}>
-          <UI.Title size={1.3}>{peek.peekItem.title}</UI.Title>
+        <title if={title}>
+          <UI.Title size={1.3}>{title}</UI.Title>
         </title>
       </header>
     )

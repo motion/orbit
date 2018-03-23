@@ -168,7 +168,7 @@ export default class OrbitFrame {
           />
           <overflowWrap
             $orbitAnimate={store.shouldAnimate}
-            $pointerEvents={App.isShowingOrbit}
+            $pointerEvents={App.isShowingOrbit && !App.isAnimatingOrbit}
             $hideOverflow
             css={{
               ...(fullScreen

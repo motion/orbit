@@ -1,9 +1,8 @@
 // @flow
 import Oracle from '@mcro/oracle'
-import { debounce, isEqual, throttle, last } from 'lodash'
+import { debounce, throttle, last } from 'lodash'
 import iohook from 'iohook'
-
-import { store } from '@mcro/black/store'
+import { store, isEqual } from '@mcro/black/store'
 import { App, Desktop, Electron, Swift } from '@mcro/all'
 import SocketManager from './helpers/socketManager'
 import * as Mobx from 'mobx'
@@ -117,6 +116,7 @@ export default class ScreenMaster {
       // if current app is a prevented app, treat like nothing happened
       let nextState = { ...Desktop.state.appState }
       let id = this.curAppID
+      const wasFocusedOnOrbit = this.curAppID === ORBIT_APP_ID
       switch (event) {
         case 'FrontmostWindowChangedEvent':
           id = value.id
@@ -151,9 +151,19 @@ export default class ScreenMaster {
       }
       state.appState = JSON.parse(JSON.stringify(nextState))
       state.appStateUpdatedAt = Date.now()
-      if (!PREVENT_CLEAR[this.curAppName] && !PREVENT_CLEAR[nextState.name]) {
-        // send right away
-        this.setState({ lastAppChange: Date.now() })
+      if (
+        !wasFocusedOnOrbit &&
+        !PREVENT_CLEAR[this.curAppName] &&
+        !PREVENT_CLEAR[nextState.name]
+      ) {
+        const { appState } = Desktop.state
+        if (
+          !isEqual(nextState.bounds, appState.bounds) ||
+          !isEqual(nextState.offset, appState.offset)
+        ) {
+          // immediate clear for moving
+          this.setState({ lastAppChange: Date.now() })
+        }
       }
       if (!Desktop.state.paused) {
         this.oracle.resume()

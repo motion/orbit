@@ -72,6 +72,10 @@ class DesktopStore {
     mouseDown: null,
   }
 
+  get results() {
+    return [...this.state.searchResults, ...this.state.pluginResults]
+  }
+
   get isHoldingOption(): Boolean {
     const { option, optionUp } = this.state.keyboard
     return (option || 0) > (optionUp || 1)

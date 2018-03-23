@@ -1,72 +1,22 @@
 import { react } from '@mcro/black'
-import { debounce } from 'lodash'
-import { App, Desktop } from '@mcro/all'
-import { Thing } from '@mcro/models'
-import searchStore from '~/stores/searchStore'
+import { App } from '@mcro/all'
 import KeyboardStore from './keyboardStore'
-import * as Mobx from 'mobx'
 
-const log = debug('OrbitStore')
+// const log = debug('OrbitStore')
 
 export default class OrbitStore {
-  searchStore = new searchStore()
   keyboardStore = new KeyboardStore()
   searchResults = []
   showSettings = false
   indexingStatus = ''
   selectedIndex = 0
-  searchPerformance = 0
 
-  @react
-  setSelectedFromPeekResult = [
-    () => App.state.peekTarget || {},
-    target => {
-      if (typeof target.id !== 'undefined') {
-        this.selectedIndex = target.id
-      }
-    },
-  ]
-
-  get results() {
-    return [...Desktop.state.searchResults, ...Desktop.state.pluginResults]
-  }
-
-  getIndexingStatus = async () => {
-    this.indexingStatus = await this.searchStore.call('getIndexingStatus')
-    this.setTimeout(this.getIndexingStatus, 500)
-    return this.indexingStatus
-  }
+  @react({ delay: 64 })
+  setAppSelectedIndex = [() => this.selectedIndex, App.setSelectedIndex]
 
   willMount() {
-    this.getIndexingStatus()
     // start app reactions
     App.runReactions()
-    // start indexing
-    setTimeout(async () => {
-      const allDocs = await Thing.getAll()
-      this.searchStore.call(
-        'setDocuments',
-        allDocs.map(doc => ({ title: doc.title, text: doc.body })),
-      )
-      console.log('Done')
-    })
-
-    // hmr protect
-    if (this.started) return
-    this.started = true
-
-    // search
-    this.react(() => App.state.query, this.handleSearch, true)
-
-    // selected
-    this.watch(() => {
-      if (!this.results) {
-        App.setSelectedItem(null)
-      } else {
-        const selectedItem = Mobx.toJS(this.results[this.selectedIndex]) || null
-        App.setSelectedItem(selectedItem)
-      }
-    })
 
     this.on(this.keyboardStore, 'keydown', code => {
       switch (code) {
@@ -92,19 +42,6 @@ export default class OrbitStore {
   onChangeQuery = e => {
     App.setQuery(e.target.value)
   }
-
-  handleSearch = debounce(async query => {
-    const { performance, results } = await this.searchStore.call(
-      'search',
-      query,
-    )
-
-    // if it hasn't changed since we searched
-    if (results && App.state.query === query) {
-      this.searchPerformance = performance
-      this.searchResults = results
-    }
-  }, 100)
 
   setSelectedIndex = index => {
     this.selectedIndex = index

@@ -15,7 +15,7 @@ class AppStore {
 
   state = {
     query: '',
-    selectedItem: null,
+    selectedIndex: null,
     openResult: null,
     highlightWords: {},
     hoveredWord: null,
@@ -25,6 +25,10 @@ class AppStore {
     knowledge: null,
     peekTarget: null,
     shouldTogglePinned: null,
+  }
+
+  get selectedItem() {
+    return Desktop.results[this.state.selectedIndex]
   }
 
   get isShowingOrbit() {

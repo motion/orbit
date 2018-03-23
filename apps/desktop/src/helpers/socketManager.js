@@ -19,6 +19,12 @@ export default class SocketManager {
     this.setupSocket()
   }
 
+  dispose() {
+    this.wss.clients.forEach(ws => {
+      ws.terminate()
+    })
+  }
+
   get hasListeners() {
     return !!this.activeSockets.length
   }

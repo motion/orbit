@@ -25,7 +25,9 @@ const getHoverProps = Helpers.hoverSettler({
       width,
       height,
     }
-    App.setPeekTarget({ id, position })
+    if (App.isShowingOrbit) {
+      App.setPeekTarget({ id, position })
+    }
   },
 })
 

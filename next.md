@@ -3,6 +3,12 @@
 each should take 2-4 weeks
 order mildly important
 
+## search metadata
+
+* store selections
+* use previous selections weight
+* mix multiple result sets together
+
 ## search model improvements
 
 * title included

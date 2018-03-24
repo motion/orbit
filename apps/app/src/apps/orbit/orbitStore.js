@@ -1,5 +1,5 @@
 import { react } from '@mcro/black'
-import { App, Desktop } from '@mcro/all'
+import { App } from '@mcro/all'
 import KeyboardStore from './keyboardStore'
 
 export default class OrbitStore {
@@ -19,7 +19,7 @@ export default class OrbitStore {
     switch (code) {
       case 40: // down
         this.selectedIndex = Math.min(
-          Desktop.results.length - 1,
+          App.results.length - 1,
           this.selectedIndex + 1,
         )
         return
@@ -27,7 +27,7 @@ export default class OrbitStore {
         this.selectedIndex = Math.max(0, this.selectedIndex - 1)
         return
       case 13: //enter
-        App.setOpenResult(Desktop.results[this.selectedIndex])
+        App.setOpenResult(App.results[this.selectedIndex])
         // so hitting enter on a previous app works
         setTimeout(() => {
           App.setOpenResult(null)

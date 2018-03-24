@@ -78,7 +78,7 @@ export default class OrbitContent {
     return (
       <list>
         <OrbitStatus />
-        {Desktop.results.map((result, index) => (
+        {App.results.map((result, index) => (
           <OrbitItem
             key={getKey(result) || index}
             ref={this.onRef(index)}

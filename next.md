@@ -1,27 +1,102 @@
-# next
+# ambitious chunks
 
-* throttle/debounce setting selectedIndex so ui updates fast
-* close fullscreen on lastAppChange
-* mouse out while holding options flickers
-* unfullscreen animation glitch
-* pinned drawer closes weird
-* flicker still on move sides
-* faster hide on window change still
-* if peek is open, never hover delay
-  * (move mouse into peek and then back, then move, it has delay)
-* drag peek off to pin
-* click settings should pin
-* keyboard nav
-  * right/left to open big-peek
-* get better docs in place for peek design
-* peek document display/design
+each should take 2-4 weeks
+order mildly important
 
-# old
+## search metadata
 
-* highlights window needs to ensure its full screen every so often (display changes mess it up)
-* handle token refreshing
-* sync should handle disabling in a consistent manner
-* onboarding
-* prod build is downloading even if its older version
-* prod build is much bigger now
-* hydrating a store should check if initial states changed, and then use new default state if so
+* store selections
+* use previous selections weight
+* mix multiple result sets together
+
+## search model improvements
+
+* title included
+* improved direct matches
+* doc 2 doc
+* refinining sentence subj/obj
+* returning relevant inner passage
+
+## base data sync + settings
+
+* better settings pane setup
+* restore auth flow stuff
+* gcloud (drive/docs/email)
+* local folders
+
+## finishing ocr
+
+* line finding improvements
+* better trained NN
+* some sort of spellcheck / recurrent corrections
+
+## highlight words finish
+
+* indicators next to lines
+* indicators open window on hover
+* detect selections for refining search
+
+## conversations
+
+* slack conversations
+* ml side and ux side
+
+## team level features
+
+* p2p sync
+* pin results to top
+
+## idea grabbag
+
+* MyWorkDay
+
+  * currently assigned
+
+* people pages
+
+  * company directory at your fingers
+  * should have very limited data
+  * show recent docs / tickets / assigned
+  * but not full on feed
+
+* eliminate wiki
+
+  * explorable-first interface
+  * auto categories
+  * customizable categories
+
+* company-wide daily summary
+
+  * attention sync
+  * topic over time modeling
+
+- pocket
+
+  * pin any site/snippet you're on into knowledge
+
+- interesting integrations
+
+  * calendar events
+  * general knowledge
+  * IDE: leave notes in code
+
+- company watch words
+
+  * important words to highlight
+  * can customize feed shown for them
+
+- interactions
+
+  * PM tool "status" toggles
+  * share buttons
+
+- app platform
+
+  * plugin system that has hooks for auth/import/search
+  * example apps
+
+## productionizing
+
+## launch (website)
+
+## launch (video)

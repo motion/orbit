@@ -34,7 +34,7 @@ export default class ElectronReactions {
   @react
   unFullScreenOnHide = [
     () => Electron.state.shouldHide,
-    async (_, { sleep }) => {
+    () => {
       if (!Electron.orbitState.fullScreen || App.state.orbitHidden) {
         return
       }

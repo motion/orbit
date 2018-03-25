@@ -39,8 +39,9 @@ const onFocus = page => {
 }
 
 export default class DebugApps {
-  constructor({ sessions = [] }) {
+  constructor({ sessions = [], ...options }) {
     this.sessions = sessions
+    this.options = options
   }
 
   setSessions(next) {
@@ -120,13 +121,30 @@ export default class DebugApps {
     return (await this.browser.pages()) || []
   }
 
+  numTabs = curSessions => {
+    return (
+      this.options.expectTabs ||
+      Math.max(curSessions.length, this.sessions.length)
+    )
+  }
+
   ensureEnoughTabs = async sessions => {
     const pages = await this.getPages()
-    const tabsToOpen = sessions.length - pages.length
+    const tabsToOpen = this.numTabs(sessions) - pages.length
     if (tabsToOpen > 0) {
       await Promise.all(
-        _.range(tabsToOpen).map(async () => await this.browser.newPage()),
+        _.range(tabsToOpen).map(async () => {
+          const page = await this.browser.newPage()
+          // this handily defocuses the url bar
+          await page.bringToFront()
+        }),
       )
+    }
+    const initialRender = pages.length === 0
+    if (initialRender) {
+      // focus first tab on startup
+      const pages = await this.getPages()
+      pages[0].bringToFront()
     }
   }
 
@@ -159,10 +177,10 @@ export default class DebugApps {
 
   removeExtraTabs = async sessions => {
     const pages = await this.getPages()
-    const extraPages = pages.length - sessions.length
+    const extraPages = this.numTabs(sessions) - pages.length
     if (extraPages > 0) {
       // close extras
-      for (const page of this.pages.slice(this.pages.length - extraPages)) {
+      for (const page of pages.slice(pages.length - extraPages)) {
         try {
           await page.close()
         } catch (err) {
@@ -174,7 +192,6 @@ export default class DebugApps {
   }
 
   finishLoadingPage = async (page, { url, port }) => {
-    await page.bringToFront()
     const injectTitle = () => {
       if (exiting || !this.browser) return
       // TODO can restart app on browser refresh here if wanted
@@ -189,19 +206,20 @@ export default class DebugApps {
             title = document.createElement('title')
             document.head.appendChild(title)
           }
-          title.innerHTML =
+          const titleText =
             PORT_NAMES[port] || url.replace('http://localhost:3001', '')
+          if (title.innerHTML !== titleText) {
+            title.innerHTML = titleText
+          }
         },
         port,
         url,
       )
     }
+    this.intervals.push(setInterval(injectTitle, 500))
     onFocus(page).then(async () => {
-      await page.focus('body')
-      console.log('WE FOCUSED OUT CHEA')
-      // delay to account for delayed title change on connect to debugger
-      this.intervals.push(setInterval(injectTitle, 500))
       await sleep(50)
+      await page.frames()[0].focus('body')
       await page.mouse.click(110, 10) // click console
       await page.mouse.click(110, 70) // click into console
       await page.keyboard.press('PageDown') // page down to bottom

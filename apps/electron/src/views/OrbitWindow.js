@@ -98,6 +98,7 @@ export default class OrbitWindow extends React.Component {
         file={`${Constants.APP_URL}/orbit`}
         ref={store.handleOrbitRef}
         onReadyToShow={store.ref('show').setter(true)}
+        devToolsExtensions={Constants.DEV_TOOLS_EXTENSIONS}
       />
     )
   }

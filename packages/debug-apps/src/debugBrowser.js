@@ -25,6 +25,19 @@ process.on('SIGSEGV', setExiting)
 process.on('SIGINT', setExiting)
 process.on('exit', setExiting)
 
+const onFocus = page => {
+  return page.evaluate(() => {
+    return new Promise(res => {
+      console.log('EVALUDATE', res)
+      if (document.hasFocus()) {
+        res()
+      } else {
+        window.onfocus = () => res()
+      }
+    })
+  })
+}
+
 export default class DebugApps {
   constructor({ sessions = [] }) {
     this.sessions = sessions
@@ -163,6 +176,7 @@ export default class DebugApps {
   finishLoadingPage = async (page, { url, port }) => {
     await page.bringToFront()
     const injectTitle = () => {
+      if (exiting || !this.browser) return
       // TODO can restart app on browser refresh here if wanted
       page.evaluate(
         (port, url) => {
@@ -182,14 +196,16 @@ export default class DebugApps {
         url,
       )
     }
-    await page.focus('body')
-    // delay to account for delayed title change on connect to debugger
-    setInterval(injectTitle, 500)
-    // in iframe so simulate
-    await sleep(50)
-    await page.mouse.click(110, 10) // click console
-    await page.mouse.click(110, 70) // click into console
-    await page.keyboard.press('PageDown') // page down to bottom
+    onFocus(page).then(async () => {
+      await page.focus('body')
+      console.log('WE FOCUSED OUT CHEA')
+      // delay to account for delayed title change on connect to debugger
+      this.intervals.push(setInterval(injectTitle, 500))
+      await sleep(50)
+      await page.mouse.click(110, 10) // click console
+      await page.mouse.click(110, 70) // click into console
+      await page.keyboard.press('PageDown') // page down to bottom
+    })
   }
 
   render = async () => {
@@ -201,6 +217,8 @@ export default class DebugApps {
     }
     // YO watch out:
     this.isRendering = true
+    if (this.intervals) this.intervals.map(clearInterval)
+    this.intervals = []
     try {
       await this.ensureEnoughTabs(sessions)
       const pages = await this.getPages()

@@ -1,34 +1,37 @@
-const global = require('global')
 const stringify = require('stringify-object')
 const Mobx = require('mobx')
 
-if (!global.__shouldLog) {
-  global.__shouldLog = {
-    '*': true,
-  }
-  if (!global.quiet) {
-    global.quiet = (logName = '*') => {
-      if (global.__shouldLog[logName] === false) {
-        global.__shouldLog[logName] = true
-      } else {
-        global.__shouldLog[logName] = false
-      }
-    }
-  }
-}
-
 let id = 0
+const namespaces = []
+const disableLogs = {}
 
-module.exports = function debug(namespace) {
+function debug(namespace) {
   const uid = id++
+  namespaces.push(namespace)
   return function log(...messages) {
-    if (
-      global.__shouldLog['*'] === false ||
-      global.__shouldLog[namespace] === false
-    ) {
+    if (disableLogs[namespace]) {
       return
     }
     colorfulLog(uid, namespace, messages)
+  }
+}
+
+debug.quiet = () => debug.disable(debug.list())
+debug.loud = () => debug.enable(debug.list())
+
+debug.list = () => {
+  return namespaces
+}
+
+debug.enable = (...logNames) => {
+  for (const name of logNames) {
+    disableLogs[name] = true
+  }
+}
+
+debug.disable = (...logNames) => {
+  for (const name of logNames) {
+    disableLogs[name] = false
   }
 }
 
@@ -62,3 +65,5 @@ function colorfulLog(id, namespace, messages) {
     console.log(`${namespace}`, ...messages)
   }
 }
+
+module.exports = debug

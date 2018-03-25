@@ -11,6 +11,8 @@ import { render } from '@mcro/reactron'
 import { extras } from 'mobx'
 import Electron from './Electron'
 
+Error.stackTraceLimit = Infinity
+
 if (process.env.NODE_ENV !== 'production') {
   require('./helpers/monitorResourceUsage')
   require('source-map-support/register')

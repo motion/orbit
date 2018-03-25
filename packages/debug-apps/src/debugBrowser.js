@@ -166,16 +166,17 @@ export default class DebugApps {
       // TODO can restart app on browser refresh here if wanted
       page.evaluate(
         (port, url) => {
-          setTimeout(() => {
-            const PORT_NAMES = {
-              9000: 'Desktop',
-              9001: 'Electron',
-            }
-            const title = document.createElement('title')
-            title.innerHTML =
-              PORT_NAMES[port] || url.replace('http://localhost:3001', '')
+          const PORT_NAMES = {
+            9000: 'Desktop',
+            9001: 'Electron',
+          }
+          let title = document.getElementsByTagName('title')[0]
+          if (!title) {
+            title = document.createElement('title')
             document.head.appendChild(title)
-          }, 500)
+          }
+          title.innerHTML =
+            PORT_NAMES[port] || url.replace('http://localhost:3001', '')
         },
         port,
         url,

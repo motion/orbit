@@ -9,6 +9,8 @@ const extensions = extNames.map(ext => `--load-extension=${ext}`)
 
 // quiet exit handling
 let exiting = false
+let restart
+
 const setExiting = () => {
   console.log('Exit debugbrowser...')
   exiting = true
@@ -17,7 +19,8 @@ const setExiting = () => {
 process.on('unhandledRejection', function(reason) {
   if (exiting) return
   console.log('debug.unhandledRejection', reason)
-  process.exit(0)
+  restart()
+  // process.exit(0)
 })
 process.on('SIGUSR1', setExiting)
 process.on('SIGUSR2', setExiting)
@@ -42,6 +45,7 @@ export default class DebugApps {
   constructor({ sessions = [], ...options }) {
     this.sessions = sessions
     this.options = options
+    restart = () => new DebugApps({ sessions, ...options })
   }
 
   setSessions(next) {

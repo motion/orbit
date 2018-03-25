@@ -1,4 +1,5 @@
 // @flow
+import { store } from '@mcro/black/store'
 import { mergeWith, isPlainObject } from 'lodash'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 import WebSocket from './websocket'
@@ -23,6 +24,8 @@ const requestIdle = () =>
       typeof window !== 'undefined' ? window.requestIdleCallback(res) : res(),
   )
 
+// we want non-granular updates on state changes
+@store
 class Bridge {
   _store = null
   _options = {}

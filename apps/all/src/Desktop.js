@@ -1,7 +1,7 @@
 // @flow
 import Bridge from './helpers/Bridge'
 import proxySetters from './helpers/proxySetters'
-import { store } from '@mcro/black/store'
+import { store, react } from '@mcro/black/store'
 import global from 'global'
 
 // const log = debug('Desktop')
@@ -88,12 +88,16 @@ class DesktopStore {
     lastAppChange: Date.now(),
   }
 
-  get results() {
-    return [
+  results = []
+
+  @react
+  memoizedResults = [
+    () => [
       ...Desktop.searchState.searchResults,
       ...Desktop.searchState.pluginResults,
-    ]
-  }
+    ],
+    x => (this.results = x),
+  ]
 
   get isHoldingOption(): Boolean {
     const { option, optionUp } = Desktop.keyboardState

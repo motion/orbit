@@ -48,6 +48,7 @@ export default class Plugins {
         const isStillValid = uid === this.searchId
         if (isStillValid) {
           results = [...results, ...resultsWithIcons]
+          console.log(';SETTINGS THIS SHIT')
           Desktop.setSearchState({ pluginResults: results })
         }
       })

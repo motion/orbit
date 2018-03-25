@@ -62,15 +62,15 @@ export const fn = ({ term, actions, display }) => {
         icon: path,
         subtitle: path,
         clipboard: path,
-        onKeyDown: event => {
-          if ((event.metaKey || event.ctrlKey) && event.keyCode === 82) {
-            // Show application in Finder by cmd+R shortcut
-            actions.reveal(path)
-            event.preventDefault()
-          }
-        },
-        onSelect: () => actions.open(`file://${path}`),
-        getPreview: () => <Preview name={name} path={path} />,
+        // onKeyDown: event => {
+        //   if ((event.metaKey || event.ctrlKey) && event.keyCode === 82) {
+        //     // Show application in Finder by cmd+R shortcut
+        //     actions.reveal(path)
+        //     event.preventDefault()
+        //   }
+        // },
+        // onSelect: () => actions.open(`file://${path}`),
+        // getPreview: () => <Preview name={name} path={path} />,
       }
     })
     display(result)

@@ -59,12 +59,12 @@ export const fn = ({ term, actions, display }) => {
             clipboard: filePath,
             term: autocomplete,
             icon: filePath,
-            onKeyDown: event => {
-              if ((event.metaKey || event.ctrlKey) && event.keyCode === 82) {
-                actions.reveal(filePath)
-                event.preventDefault()
-              }
-            },
+            // onKeyDown: event => {
+            //   if ((event.metaKey || event.ctrlKey) && event.keyCode === 82) {
+            //     actions.reveal(filePath)
+            //     event.preventDefault()
+            //   }
+            // },
             // onSelect: () => actions.open(`file://${filePath}`),
             // getPreview: () => <Preview path={filePath} />,
           })

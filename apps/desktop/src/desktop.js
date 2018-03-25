@@ -28,7 +28,7 @@ export default class DesktopRoot {
   stores = null
 
   async start() {
-    Desktop.start({
+    await Desktop.start({
       ignoreSelf: true,
       master: true,
       stores: {

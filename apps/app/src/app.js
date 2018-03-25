@@ -4,7 +4,6 @@ import ReactDOM from 'react-dom'
 import { ThemeProvide } from '@mcro/ui'
 import Themes from './themes'
 import Root from './root'
-import Sync from './sync'
 import { Models } from '@mcro/models'
 import * as Constants from '~/constants'
 import AppStore from './stores/appStore'
@@ -43,11 +42,6 @@ class App {
 
   async start(quiet?: boolean) {
     await this.store.start(quiet)
-    this.sync = new Sync()
-    if (Constants.IS_SETTINGS_PANE) {
-      console.log('running syncers in settings pane, DISABLED')
-      // this.sync.start()
-    }
     this.render()
     this.started = true
   }
@@ -58,9 +52,6 @@ class App {
 
   async dispose() {
     await this.store.dispose()
-    if (this.sync) {
-      this.sync.dispose()
-    }
   }
 
   render(): void {

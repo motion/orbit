@@ -38,14 +38,14 @@ const log = debug('Electron')
       shouldShow => shouldShow && this.appRef.show(),
     ]
 
-    willMount() {
+    async willMount() {
       global.Root = this
       global.restart = this.restart
       debugState(({ stores, views }) => {
         this.stores = stores
         this.views = views
       })
-      Electron.start({
+      await Electron.start({
         ignoreSelf: true,
       })
       this.watchOptionPress()

@@ -183,14 +183,14 @@ class Bridge {
   setState = (newState, ignoreSocketSend) => {
     if (!this._store) {
       throw new Error(
-        `Called ${this.storeName}.setState before calling ${
-          this.storeName
-        }.start`,
+        `Called ${this._source}.setState before calling ${
+          this._source
+        }.start with state ${JSON.stringify(newState, 0, 2)}`,
       )
     }
     if (!newState || typeof newState !== 'object') {
       throw new Error(
-        `Bad state passed to ${this.storeName}.setState: ${newState}`,
+        `Bad state passed to ${this._source}.setState: ${newState}`,
       )
     }
     // update our own state immediately so its sync

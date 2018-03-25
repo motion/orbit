@@ -10,8 +10,8 @@ const log = debug('root')
 
 @view.provide({
   rootStore: class RootStore {
-    willMount() {
-      App.start()
+    async willMount() {
+      await App.start()
     }
   },
 })

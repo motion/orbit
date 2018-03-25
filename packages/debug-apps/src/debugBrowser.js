@@ -195,26 +195,30 @@ export default class DebugApps {
     const injectTitle = () => {
       if (exiting || !this.browser) return
       // TODO can restart app on browser refresh here if wanted
-      page.evaluate(
-        (port, url) => {
-          const PORT_NAMES = {
-            9000: 'Desktop',
-            9001: 'Electron',
-          }
-          let title = document.getElementsByTagName('title')[0]
-          if (!title) {
-            title = document.createElement('title')
-            document.head.appendChild(title)
-          }
-          const titleText =
-            PORT_NAMES[port] || url.replace('http://localhost:3001', '')
-          if (title.innerHTML !== titleText) {
-            title.innerHTML = titleText
-          }
-        },
-        port,
-        url,
-      )
+      try {
+        page.evaluate(
+          (port, url) => {
+            const PORT_NAMES = {
+              9000: 'Desktop',
+              9001: 'Electron',
+            }
+            let title = document.getElementsByTagName('title')[0]
+            if (!title) {
+              title = document.createElement('title')
+              document.head.appendChild(title)
+            }
+            const titleText =
+              PORT_NAMES[port] || url.replace('http://localhost:3001', '')
+            if (title.innerHTML !== titleText) {
+              title.innerHTML = titleText
+            }
+          },
+          port,
+          url,
+        )
+      } catch (err) {
+        console.log('err in eval', err)
+      }
     }
     this.intervals.push(setInterval(injectTitle, 500))
     onFocus(page).then(async () => {

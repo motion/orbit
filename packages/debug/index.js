@@ -16,22 +16,17 @@ function debug(namespace) {
   }
 }
 
-debug.quiet = () => debug.disable(debug.list())
-debug.loud = () => debug.enable(debug.list())
-
-debug.list = () => {
-  return namespaces
-}
-
+debug.quiet = () => debug.disable(...debug.list())
+debug.loud = () => debug.enable(...debug.list())
+debug.list = () => namespaces
 debug.enable = (...logNames) => {
   for (const name of logNames) {
-    disableLogs[name] = true
+    disableLogs[name] = false
   }
 }
-
 debug.disable = (...logNames) => {
   for (const name of logNames) {
-    disableLogs[name] = false
+    disableLogs[name] = true
   }
 }
 

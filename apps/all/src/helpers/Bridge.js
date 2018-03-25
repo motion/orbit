@@ -199,12 +199,12 @@ class Bridge {
       if (isInternal && typeof this._initialState[key] === 'undefined') {
         console.error(
           `${this._source}._update: tried to set a key not in initialState
-            - initial state:
-              ${stringifyObject(this._initialState, 0, 2)}
             - key: ${key}
             - typeof initial state key: ${typeof this._initialState[key]}
             - value:
-              ${stringifyObject(newState, 0, 2)}`,
+              ${stringifyObject(newState, 0, 2)}
+            - initial state:
+              ${stringifyObject(this._initialState, 0, 2)}`,
         )
         return changed
       }
@@ -219,12 +219,11 @@ class Bridge {
               return next
             }
           })
-          stateObj[key] = newState
-          // minimal change diff
-          const diff = {}
+          const diff = {} // minimal change diff
           for (const key of Object.keys(newVal)) {
-            diff[key] = Mobx.toJS(newState[key])
+            diff[key] = newState[key]
           }
+          stateObj[key] = newState
           changed[key] = diff
         } else {
           stateObj[key] = newVal

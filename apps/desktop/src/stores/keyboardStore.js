@@ -46,7 +46,7 @@ export default class KeyboardStore {
       this.clearDownKeysAfterPause()
       // log(`keydown: ${keycode}`)
       if (keycode === codes.esc) {
-        return Desktop.updateKeyboard({ esc: Date.now() })
+        return Desktop.setKeyboardState({ esc: Date.now() })
       }
       const isOption = keycode === codes.option || keycode === codes.optionRight
       if (this.keysDown.size > 1 && isOption) {
@@ -55,7 +55,7 @@ export default class KeyboardStore {
       }
       if (isOption) {
         log('option down')
-        return Desktop.updateKeyboard({ option: Date.now() })
+        return Desktop.setKeyboardState({ option: Date.now() })
       }
       if (this.keysDown.has(codes.option)) {
         return Desktop.clearOption()
@@ -63,7 +63,7 @@ export default class KeyboardStore {
       switch (keycode) {
         // clear highlights keys
         case codes.space:
-          return Desktop.updateKeyboard({ space: Date.now() })
+          return Desktop.setKeyboardState({ space: Date.now() })
         case codes.up:
         case codes.down:
         case codes.pgUp:
@@ -89,7 +89,7 @@ export default class KeyboardStore {
           Desktop.clearOption()
           break
         case codes.space:
-          Desktop.updateKeyboard({ space: null })
+          Desktop.setKeyboardState({ space: null })
           break
       }
       if (isEqual(this.lastKeys, DOUBLE_TAP_OPTION)) {

@@ -49,7 +49,7 @@ export default class Plugins {
         const isStillValid = uid === this.searchId
         if (isStillValid) {
           results = [...results, ...resultsWithIcons]
-          this.setState({ pluginResults: results })
+          this.setState({ searchState: { pluginResults: results } })
         }
       })
     },

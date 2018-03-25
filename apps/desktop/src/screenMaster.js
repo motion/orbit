@@ -83,8 +83,10 @@ export default class ScreenMaster {
     this.oracle.onWords(words => {
       this.hasResolvedOCR = true
       this.setState({
-        ocrWords: words,
-        lastOCR: Date.now(),
+        ocrState: {
+          words: words,
+          updatedAt: Date.now(),
+        },
       })
     })
 
@@ -103,9 +105,11 @@ export default class ScreenMaster {
       },
     )
 
-    this.oracle.onLines(linePositions => {
+    this.oracle.onLines(lines => {
       this.setState({
-        linePositions,
+        ocrState: {
+          lines,
+        },
       })
     })
     this.oracle.onWindowChange((event, value) => {
@@ -114,7 +118,7 @@ export default class ScreenMaster {
         return
       }
       // if current app is a prevented app, treat like nothing happened
-      let nextState = { ...Desktop.state.appState }
+      let nextState = { ...Desktop.appState }
       let id = this.curAppID
       const wasFocusedOnOrbit = this.curAppID === ORBIT_APP_ID
       switch (event) {
@@ -174,7 +178,7 @@ export default class ScreenMaster {
       }, 32)
     })
     this.oracle.onBoxChanged(count => {
-      if (!Desktop.state.ocrWords) {
+      if (!Desktop.ocrState.words) {
         log('RESET oracle boxChanged (App)')
         this.lastScreenChange()
         if (this.isWatching === 'OCR') {
@@ -198,7 +202,9 @@ export default class ScreenMaster {
     this.oracle.onRestored(count => {
       log('restore', count)
       this.setState({
-        restoreWords: this.oracle.restoredIds,
+        ocrState: {
+          restoreWords: this.oracle.restoredIds,
+        },
       })
     })
     this.oracle.onError(async error => {
@@ -230,8 +236,10 @@ export default class ScreenMaster {
 
   clearOCRState = debounce(() => {
     this.setState({
-      linePositions: null,
-      ocrWords: null,
+      ocrState: {
+        words: null,
+        lines: null,
+      },
     })
   }, 32)
 
@@ -240,20 +248,22 @@ export default class ScreenMaster {
       'mousemove',
       throttle(({ x, y }) => {
         this.setState({
-          mousePosition: { x, y },
+          mouseState: {
+            position: { x, y },
+          },
         })
       }, 64),
     )
 
     iohook.on('mousedown', ({ button, x, y }) => {
       if (button === 1) {
-        this.setState({ mouseDown: { x, y, at: Date.now() } })
+        this.setState({ mouseState: { mouseDown: { x, y, at: Date.now() } } })
       }
     })
 
     iohook.on('mouseup', ({ button }) => {
       if (button === 1) {
-        this.setState({ mouseDown: null })
+        this.setState({ mouseState: { mouseDown: null } })
       }
     })
   }
@@ -283,14 +293,14 @@ export default class ScreenMaster {
       this.rescanApp()
       return
     }
-    if (newState.ocrWords) {
+    if (newState.ocrState.words) {
       this.handleOCRWords()
     }
   }
 
   rescanApp = debounce(async () => {
     clearTimeout(this.clearOCRTimeout)
-    const { name, offset, bounds } = Desktop.state.appState
+    const { name, offset, bounds } = Desktop.appState
     if (PREVENT_SCANNING[name] || PREVENT_APP_STATE[name]) return
     if (!offset || !bounds) return
     this.lastScreenChange()
@@ -337,13 +347,13 @@ export default class ScreenMaster {
 
   handleOCRWords = () => {
     this.lastWordsSet = Date.now()
-    log(`> ${Desktop.state.ocrWords.length} words`)
+    log(`> ${Desktop.ocrState.words.length} words`)
     this.watchBounds('OCR', {
       fps: 12,
       sampleSpacing: 2,
       sensitivity: 1,
       showCursor: true,
-      boxes: Desktop.state.ocrWords.map(([x, y, width, height, word], id) => ({
+      boxes: Desktop.ocrState.words.map(([x, y, width, height, word], id) => ({
         id,
         x,
         y,

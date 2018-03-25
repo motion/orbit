@@ -22,6 +22,13 @@ export default function decorateProxySetters(klass) {
           )
         }
       }
+      // shorthand getter for state items ending in State
+      if (
+        method.indexOf('State') === method.length - 5 &&
+        target.state[method]
+      ) {
+        return target.state[method]
+      }
     },
   })
 }

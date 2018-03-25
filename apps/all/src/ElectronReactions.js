@@ -51,7 +51,7 @@ export default class ElectronReactions {
 
   @react
   unPinOnSwitchApp = [
-    () => Desktop.state.appState.id,
+    () => Desktop.appState.id,
     () => Electron.orbitState.pinned && Electron.setPinned(false),
   ]
 
@@ -69,7 +69,7 @@ export default class ElectronReactions {
 
   @react
   hideFullScreenOnDefocus = [
-    () => Desktop.state.appState && Date.now(),
+    () => Desktop.appState && Date.now(),
     () => {
       if (Electron.orbitState.fullScreen) {
         Electron.shouldHide()
@@ -79,7 +79,7 @@ export default class ElectronReactions {
 
   @react
   hideFullScreenOnEsc = [
-    () => Desktop.state.keyboard.esc,
+    () => Desktop.keyboardState.esc,
     () => {
       if (Electron.orbitState.fullScreen) {
         Electron.shouldHide()
@@ -89,7 +89,7 @@ export default class ElectronReactions {
 
   @react({ log: false })
   setMouseOvers = [
-    () => [Desktop.state.mousePosition, App.state.orbitHidden],
+    () => [Desktop.mouseState.position, App.state.orbitHidden],
     ([mousePosition, isHidden]) => {
       if (isHidden) {
         if (Electron.orbitState.mouseOver) {
@@ -143,7 +143,7 @@ export default class ElectronReactions {
   @react({ fireImmediately: true })
   repositioningFromAppState = [
     () => [
-      appTarget(Desktop.state.appState || {}),
+      appTarget(Desktop.appState || {}),
       Desktop.linesBoundingBox,
       this.afterUnFullScreen,
     ],

@@ -3,20 +3,19 @@ import Bridge from './helpers/Bridge'
 import proxySetters from './helpers/proxySetters'
 import { store } from '@mcro/black/store'
 import global from 'global'
-// import App from './App'
 
 // const log = debug('Desktop')
 const PAD_WINDOW = 15
 
-type TappState = {
+type AppState = {
+  id: string,
   name: string,
   offset: [Number, Number],
   bounds: [Number, Number],
-  screen: [Number, Number],
 }
 
-type Word = {
-  word: string,
+type OCRItem = {
+  word?: string,
   weight: Number,
   top: Number,
   left: Number,
@@ -25,23 +24,28 @@ type Word = {
 }
 
 export type DesktopState = {
-  appState?: TappState,
-  ocrWords?: [Word],
-  linePositions?: [Number],
-  lastOCR: Number,
+  appState?: AppState,
   lastScreenChange: Number,
   lastAppChange: Number,
-  mousePosition: { x: Number, y: Number },
-  mouseDown?: { x: Number, y: Number, at: Number },
-  keyboard: Object,
+  mouseState: {
+    position: { x: Number, y: Number },
+    mouseDown?: { x: Number, y: Number, at: Number },
+  },
+  keyboardState: Object,
   highlightWords: { [String]: boolean },
-  clearWords: { [String]: Number },
-  restoreWords: { [String]: Number },
-  pluginResults: [{}],
+  ocrState: {
+    words?: [OCRItem],
+    lines?: [OCRItem],
+    clearWords: { [String]: Number },
+    restoreWords: { [String]: Number },
+  },
   focusedOnOrbit: boolean,
   appStateUpdatedAt: Number,
-  searchIndexStatus: String,
-  searchResults: [{}],
+  searchState: {
+    pluginResults: [{}],
+    indexStatus: String,
+    searchResults: [{}],
+  },
 }
 
 let Desktop
@@ -52,49 +56,63 @@ class DesktopStore {
 
   state = {
     shouldTogglePin: null,
+    appState: {
+      id: null,
+      name: null,
+      offset: [],
+      bounds: [],
+    },
+    ocrState: {
+      words: null,
+      lines: null,
+      clearWords: null,
+      restoreWords: null,
+      updatedAt: 0,
+    },
+    searchState: {
+      indexStatus: '',
+      performance: null,
+      searchResults: [],
+      pluginResults: [],
+    },
+    keyboardState: {},
+    mouseState: {
+      mouseDown: null,
+      position: { x: 0, y: 0 },
+    },
+    selection: null,
     paused: true,
     focusedOnOrbit: true,
-    pluginResults: [],
-    appState: {},
     appStateUpdatedAt: Date.now(),
-    ocrWords: null,
-    linePositions: null,
-    lastOCR: Date.now(),
     lastScreenChange: Date.now(),
     lastAppChange: Date.now(),
-    mousePosition: { x: 0, y: 0 },
-    keyboard: {},
-    clearWords: {},
-    restoreWords: {},
-    selection: null,
-    searchIndexStatus: '',
-    searchResults: [],
-    searchPerformance: null,
-    mouseDown: null,
   }
 
   get results() {
-    return [...this.state.searchResults, ...this.state.pluginResults]
+    return [
+      ...Desktop.searchState.searchResults,
+      ...Desktop.searchState.pluginResults,
+    ]
   }
 
   get isHoldingOption(): Boolean {
-    const { option, optionUp } = this.state.keyboard
+    const { option, optionUp } = Desktop.keyboardState
     return (option || 0) > (optionUp || 1)
   }
 
   get shouldHide() {
-    return this.state.lastScreenChange > this.state.appStateUpdatedAt
+    return Desktop.state.lastScreenChange > Desktop.state.appStateUpdatedAt
   }
 
   get linesBoundingBox() {
-    const { linePositions } = Desktop.state
-    if (!linePositions) return null
+    const { lines } = Desktop.ocrState
+    if (!lines) return null
     let left = 100000
     let maxX = 0
     let top = 100000
     let maxY = 0
     // found place for window to go
-    for (const [lx, ly, lw, lh] of linePositions) {
+    for (const [lx, ly, lw, lh] of lines) {
       if (lx + lw > maxX) maxX = lx + lw
       if (lx < left) left = lx
       if (ly < top) top = ly
@@ -102,8 +120,8 @@ class DesktopStore {
     }
     // maxX should never be past right edge of window frame
     // this fixes logical issues in line finding from swift for now
-    if (Desktop.state.appState) {
-      const { offset, bounds } = Desktop.state.appState
+    if (Desktop.appState) {
+      const { offset, bounds } = Desktop.appState
       maxX = Math.min(
         offset[0] + bounds[0] - PAD_WINDOW * 2 /* reverse linepad */,
         maxX,
@@ -112,19 +130,22 @@ class DesktopStore {
     return { left, top, width: maxX - left, height: maxY - top }
   }
 
+  get activeOCRWords() {
+    return (Desktop.ocrState.words || []).filter(
+      (_, index) => !Desktop.ocrState.shouldClear[index],
+    )
+  }
+
   start(options) {
     Bridge.start(this, this.state, options)
     this.setState = Bridge.setState
   }
 
-  updateKeyboard = newState =>
-    Desktop.setState({ keyboard: { ...this.state.keyboard, ...newState } })
-
   // only clear if necessary
   clearOption = () => {
     const { option, optionUp } = this.state
     if (!option || !optionUp || option > optionUp) {
-      this.updateKeyboard({ optionUp: Date.now() })
+      Desktop.setKeyboardState({ optionUp: Date.now() })
     }
   }
 }

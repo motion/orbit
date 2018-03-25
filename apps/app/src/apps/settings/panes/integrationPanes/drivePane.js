@@ -1,12 +1,11 @@
 import * as UI from '@mcro/ui'
-import { view, watch } from '@mcro/black'
+import { view } from '@mcro/black'
 import { sortBy, reverse } from 'lodash'
 import App from '~/app'
 import * as Collapse from './views/collapse'
 import { formatDistance } from 'date-fns'
 
 const baseId = '0AKfTFZu-thXbUk9PVA'
-
 const truncate = (s, n) => (s.length > n ? s.substring(0, n) + '...' : s)
 
 @view
@@ -23,8 +22,8 @@ class Folder {
     const childFiles = reverse(
       sortBy(
         files.filter(i => i.parentId === id),
-        item => item.data.modifiedTime
-      )
+        item => item.data.modifiedTime,
+      ),
     )
     const isBase = id === baseId
 
@@ -34,7 +33,7 @@ class Folder {
       : childFiles.filter(
           (item, index) =>
             index < 10 ||
-            +Date.now() - +new Date(item.data.modifiedTime) < yearInMs
+            +Date.now() - +new Date(item.data.modifiedTime) < yearInMs,
         )
 
     const moreFiles = childFiles.length - showFiles.length

@@ -101,7 +101,7 @@ class AppStore {
   ]
 
   get isAttachedToWindow() {
-    return !Electron.orbitState.fullScreen && !!Desktop.state.appState
+    return !Electron.orbitState.fullScreen && !!Desktop.appState
   }
 
   get hoveredWordName() {

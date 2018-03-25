@@ -47,7 +47,7 @@ class AppStore {
     const strongTitleMatches = fuzzySort
       .go(this.state.query, Desktop.results, {
         key: 'title',
-        threshold: -11,
+        threshold: -25,
       })
       .map(x => x.obj)
     return uniq([...strongTitleMatches, ...Desktop.results])

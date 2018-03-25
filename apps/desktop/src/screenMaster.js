@@ -2,19 +2,10 @@
 import Oracle from '@mcro/oracle'
 import { debounce, throttle, last } from 'lodash'
 import iohook from 'iohook'
-import { store, isEqual } from '@mcro/black/store'
-import { App, Desktop, Electron, Swift } from '@mcro/all'
-import SocketManager from './helpers/socketManager'
-import * as Mobx from 'mobx'
-
-// this is the desktop screen master
-// acts as the desktop Screen which is "special"
-// because it relays messages around for the other screen stores
-// this file only handles the state related to Screen.desktopState
-// the socket management is in SocketManager
+import { store, isEqual, react } from '@mcro/black/store'
+import { Desktop, Electron, Swift } from '@mcro/all'
 
 const log = debug('screenMaster')
-const DESKTOP_KEY = 'Desktop'
 const ORBIT_APP_ID = 'com.github.electron'
 const APP_ID = -1
 
@@ -42,51 +33,43 @@ const PREVENT_SCANNING = {
   ActivityMonitor: true,
 }
 
-const sources = {
-  App,
-  Electron,
-  Desktop,
-}
-
 @store
 export default class ScreenMaster {
   watchSettings = {}
   oracle = new Oracle()
-  socketManager = new SocketManager({
-    port: 40510,
-    source: 'Desktop',
-    actions: {
-      getState: ({ source, socket }) => {
-        if (source === 'Desktop') {
-          return
-        }
-        // send current state of all apps besides the one requesting
-        for (const name of Object.keys(sources)) {
-          if (name === source) continue
-          console.log(
-            'sending initial state to',
-            source,
-            'from',
-            name,
-            'state',
-            sources[name].state,
-          )
-          // send state from source
-          this.socketManager.send(socket, sources[name].state, name)
-        }
-      },
+
+  @react rescanOnNewAppState = [() => Desktop.appState, this.rescanApp]
+
+  @react
+  handleOCRWords = [
+    () => Desktop.ocrState.words,
+    words => {
+      log(`> ${words.length} words`)
+      this.watchBounds('OCR', {
+        fps: 12,
+        sampleSpacing: 2,
+        sensitivity: 1,
+        showCursor: true,
+        boxes: words.map(([x, y, width, height], id) => ({
+          id,
+          x,
+          y,
+          width,
+          height,
+          initialScreenshot: false,
+          findContent: false,
+          ocr: false,
+        })),
+      })
     },
-  })
+  ]
 
   start = async () => {
-    await this.socketManager.start()
     this.oracle.onWords(words => {
       this.hasResolvedOCR = true
-      this.setState({
-        ocrState: {
-          words: words,
-          updatedAt: Date.now(),
-        },
+      Desktop.setOcrState({
+        words: words,
+        updatedAt: Date.now(),
       })
     })
 
@@ -95,7 +78,7 @@ export default class ScreenMaster {
       () => Electron.state.shouldPause,
       () => {
         const paused = !Desktop.state.paused
-        this.setState({ paused })
+        Desktop.setPaused(!paused)
         if (paused) {
           Swift.pause()
         } else {
@@ -106,10 +89,8 @@ export default class ScreenMaster {
     )
 
     this.oracle.onLines(lines => {
-      this.setState({
-        ocrState: {
-          lines,
-        },
+      Desktop.setOcrState({
+        lines,
       })
     })
     this.oracle.onWindowChange((event, value) => {
@@ -149,7 +130,7 @@ export default class ScreenMaster {
       }
       // when were moving into focus prevent app, store its appName, pause then return
       if (PREVENT_APP_STATE[this.curAppName]) {
-        this.setState(state)
+        Desktop.setState(state)
         this.oracle.pause()
         return
       }
@@ -166,7 +147,7 @@ export default class ScreenMaster {
           !isEqual(nextState.offset, appState.offset)
         ) {
           // immediate clear for moving
-          this.setState({ lastAppChange: Date.now() })
+          Desktop.setState({ lastAppChange: Date.now() })
         }
       }
       if (!Desktop.state.paused) {
@@ -174,7 +155,7 @@ export default class ScreenMaster {
       }
       clearTimeout(this.lastAppState)
       this.lastAppState = this.setTimeout(() => {
-        this.setState(state)
+        Desktop.setState(state)
       }, 32)
     })
     this.oracle.onBoxChanged(count => {
@@ -188,7 +169,7 @@ export default class ScreenMaster {
       } else {
         // for not many clears, try it
         if (count < 20) {
-          // this.setState({
+          // Desktop.setState({
           //   clearWord: this.oracle.changedIds,
           // })
         } else {
@@ -201,10 +182,8 @@ export default class ScreenMaster {
     })
     this.oracle.onRestored(count => {
       log('restore', count)
-      this.setState({
-        ocrState: {
-          restoreWords: this.oracle.restoredIds,
-        },
+      Desktop.setOcrState({
+        restoreWords: this.oracle.restoredIds,
       })
     })
     this.oracle.onError(async error => {
@@ -227,19 +206,15 @@ export default class ScreenMaster {
     if (PREVENT_CLEAR[Desktop.state.appState.name]) {
       return
     }
-    this.setState({
-      lastScreenChange: Date.now(),
-    })
+    Desktop.setLastScreenChange(Date.now())
     // after fast clear, empty data
     setTimeout(this.clearOCRState)
   }
 
   clearOCRState = debounce(() => {
-    this.setState({
-      ocrState: {
-        words: null,
-        lines: null,
-      },
+    Desktop.setOcrState({
+      words: null,
+      lines: null,
     })
   }, 32)
 
@@ -247,59 +222,30 @@ export default class ScreenMaster {
     iohook.on(
       'mousemove',
       throttle(({ x, y }) => {
-        this.setState({
-          mouseState: {
-            position: { x, y },
-          },
+        Desktop.setMouseState({
+          position: { x, y },
         })
       }, 64),
     )
 
     iohook.on('mousedown', ({ button, x, y }) => {
       if (button === 1) {
-        this.setState({ mouseState: { mouseDown: { x, y, at: Date.now() } } })
+        Desktop.setMouseState({ mouseDown: { x, y, at: Date.now() } })
       }
     })
 
     iohook.on('mouseup', ({ button }) => {
       if (button === 1) {
-        this.setState({ mouseState: { mouseDown: null } })
+        Desktop.setMouseState({ mouseDown: null })
       }
     })
   }
 
-  setState = object => {
-    let hasNewState = false
-    for (const key of Object.keys(object)) {
-      if (!isEqual(Mobx.toJS(Desktop.state[key]), object[key])) {
-        hasNewState = true
-        break
-      }
-    }
-    if (!hasNewState) {
-      return
-    }
-    Desktop.setState(object, true)
-    this.onChangedState(object, Desktop.state)
-    // only send the changed things to reduce overhead
-    this.socketManager.sendAll(DESKTOP_KEY, object)
-  }
-
-  onChangedState = async newState => {
-    if (Desktop.state.paused) {
-      return
-    }
-    if (newState.appState) {
-      this.rescanApp()
-      return
-    }
-    if (newState.ocrState.words) {
-      this.handleOCRWords()
-    }
-  }
-
-  rescanApp = debounce(async () => {
+  async rescanApp() {
     clearTimeout(this.clearOCRTimeout)
+    if (!Desktop.appState.id) {
+      return
+    }
     const { name, offset, bounds } = Desktop.appState
     if (PREVENT_SCANNING[name] || PREVENT_APP_STATE[name]) return
     if (!offset || !bounds) return
@@ -336,7 +282,7 @@ export default class ScreenMaster {
         this.restartScreen()
       }
     }, 15000)
-  }, 32)
+  }
 
   watchBounds = async (name: String, settings: Object) => {
     this.isWatching = name
@@ -345,29 +291,7 @@ export default class ScreenMaster {
     this.oracle.watchBounds(settings)
   }
 
-  handleOCRWords = () => {
-    this.lastWordsSet = Date.now()
-    log(`> ${Desktop.ocrState.words.length} words`)
-    this.watchBounds('OCR', {
-      fps: 12,
-      sampleSpacing: 2,
-      sensitivity: 1,
-      showCursor: true,
-      boxes: Desktop.ocrState.words.map(([x, y, width, height, word], id) => ({
-        id,
-        x,
-        y,
-        width,
-        height,
-        initialScreenshot: false,
-        findContent: false,
-        ocr: false,
-      })),
-    })
-  }
-
   async dispose() {
-    this.socketManager.dispose()
     if (this.oracle) {
       await this.oracle.stop()
     }

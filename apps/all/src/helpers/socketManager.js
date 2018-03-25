@@ -7,9 +7,8 @@ const log = debug('scrn')
 export default class SocketManager {
   activeSockets = []
 
-  constructor({ port, source, actions }) {
+  constructor({ port, actions }) {
     this.actions = actions
-    this.source = source
     this.port = port
   }
 
@@ -29,7 +28,7 @@ export default class SocketManager {
     return !!this.activeSockets.length
   }
 
-  send = (socket, state: Object, source = this.source) => {
+  send = (socket, state: Object, source) => {
     if (!state) {
       throw new Error(`No state provided for SocketManager.send: ${state}`)
     }

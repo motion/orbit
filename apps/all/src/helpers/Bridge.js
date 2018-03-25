@@ -1,5 +1,4 @@
 // @flow
-import { store } from '@mcro/black/store'
 import { mergeWith, isPlainObject } from 'lodash'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 import WebSocket from './websocket'
@@ -48,13 +47,35 @@ class Bridge {
       console.warn(`Already started ${this._source}`)
       return
     }
-    this._socket = new ReconnectingWebSocket(
-      'ws://localhost:40510',
-      undefined,
-      {
-        constructor: WebSocket,
-      },
-    )
+    if (options.master) {
+      // TODO: once parcel can ignore requires
+      const SocketManager = eval(`require('./socketManager')`).default
+      const stores = options.stores
+      this.socketManager = new SocketManager({
+        port: 40510,
+        actions: {
+          // stores that first connect send a call to get initial state
+          getState: ({ source, socket }) => {
+            if (source === this._source) return
+            // send state of all besides requesting store
+            for (const name of Object.keys(stores)) {
+              if (name === source) continue
+              this.socketManager.send(socket, stores[name].state, name)
+            }
+          },
+        },
+      })
+      await this.socketManager.start()
+    } else {
+      this._socket = new ReconnectingWebSocket(
+        'ws://localhost:40510',
+        undefined,
+        {
+          constructor: WebSocket,
+        },
+      )
+      this.setupClientSocket()
+    }
     this._source = store.source
     this._store = store
     this._options = options
@@ -70,6 +91,9 @@ class Bridge {
       await waitPort({ host: 'localhost', port: 40510 })
       process.on('exit', this.dispose)
     }
+  }
+
+  setupClientSocket = () => {
     // socket setup
     this._socket.onmessage = async ({ data }) => {
       await requestIdle()
@@ -184,9 +208,13 @@ class Bridge {
       return changedState
     }
     if (Object.keys(changedState).length) {
-      this._socket.send(
-        JSON.stringify({ state: changedState, source: this._source }),
-      )
+      if (this._options.master) {
+        this.socketManager.sendAll(this._source, changedState)
+      } else {
+        this._socket.send(
+          JSON.stringify({ state: changedState, source: this._source }),
+        )
+      }
     }
     return changedState
   }
@@ -244,8 +272,12 @@ class Bridge {
   }
 
   dispose = () => {
-    console.log('disposing websocket cleanly...')
-    this._socket.close()
+    console.log('disposing Bridge...')
+    if (this._options.master) {
+      this.socketManager.dispose()
+    } else {
+      this._socket.close()
+    }
   }
 }
 

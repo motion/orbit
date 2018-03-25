@@ -17,7 +17,9 @@
     "lodash": "^4.17.5",
     "deep-object-diff": "^1.1.0",
     "stringify-object": "^3.2.2",
-    "fuzzysort": "^1.1.1"
+    "fuzzysort": "^1.1.1",
+    "ws": "^5.1.0",
+    "kill-port": "^1.1.0"
   },
   "peerDependencies": {
     "mobx": "*",

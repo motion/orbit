@@ -1,5 +1,5 @@
 import { store, react } from '@mcro/black/store'
-import { App } from '@mcro/all'
+import { App, Desktop } from '@mcro/all'
 import Icons from './icons'
 
 // plugins
@@ -15,8 +15,7 @@ export default class Plugins {
   results = []
   searchId = 0
 
-  constructor({ server, setState }) {
-    this.setState = setState
+  constructor({ server }) {
     this.server = server
     this.icons = new Icons()
     this.start()
@@ -49,7 +48,7 @@ export default class Plugins {
         const isStillValid = uid === this.searchId
         if (isStillValid) {
           results = [...results, ...resultsWithIcons]
-          this.setState({ searchState: { pluginResults: results } })
+          Desktop.setSearchState({ pluginResults: results })
         }
       })
     },

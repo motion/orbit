@@ -8,7 +8,7 @@ export default function decorateProxySetters(klass) {
   return new Proxy(klass, {
     get(target, method) {
       if (Reflect.has(target, method)) {
-        return target[method]
+        return Reflect.get(target, method)
       }
       if (method.indexOf('set') === 0) {
         const stateKey = getStateKey(method)

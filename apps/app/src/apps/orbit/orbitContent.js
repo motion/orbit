@@ -75,7 +75,7 @@ export default class OrbitContent {
   })
 
   render({ orbitStore }) {
-    log(`OrbitContent`)
+    log(`OrbitContent 123`)
     return (
       <list>
         <OrbitStatus />

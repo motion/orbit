@@ -162,7 +162,7 @@ export default class DebugApps {
 
   finishLoadingPage = async (page, { url, port }) => {
     await page.bringToFront()
-    const injectTitle = _.debounce(() => {
+    const injectTitle = () => {
       // TODO can restart app on browser refresh here if wanted
       page.evaluate(
         (port, url) => {
@@ -180,11 +180,10 @@ export default class DebugApps {
         port,
         url,
       )
-    }, 100)
-    page.on('load', () => setTimeout(injectTitle, 500))
+    }
     await page.focus('body')
     // delay to account for delayed title change on connect to debugger
-    setTimeout(injectTitle, 500)
+    setInterval(injectTitle, 500)
     // in iframe so simulate
     await sleep(50)
     await page.mouse.click(110, 10) // click console

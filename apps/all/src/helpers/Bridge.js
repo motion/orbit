@@ -203,14 +203,14 @@ class Bridge {
     if (ignoreSocketSend) {
       return changedState
     }
-    if (!this._wsOpen) {
-      this._queuedState = true
-      return changedState
-    }
     if (Object.keys(changedState).length) {
       if (this._options.master) {
         this.socketManager.sendAll(this._source, changedState)
       } else {
+        if (!this._wsOpen) {
+          this._queuedState = true
+          return changedState
+        }
         this._socket.send(
           JSON.stringify({ state: changedState, source: this._source }),
         )

@@ -65,8 +65,8 @@ export const fn = ({ term, actions, display }) => {
                 event.preventDefault()
               }
             },
-            onSelect: () => actions.open(`file://${filePath}`),
-            getPreview: () => <Preview path={filePath} />,
+            // onSelect: () => actions.open(`file://${filePath}`),
+            // getPreview: () => <Preview path={filePath} />,
           })
         })
         display(result)

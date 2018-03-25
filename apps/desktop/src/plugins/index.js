@@ -35,6 +35,7 @@ export default class Plugins {
   reactToSearches = [
     () => App.state.query,
     async query => {
+      console.log('react to query')
       const uid = Math.random()
       this.searchId = uid
       let results = []

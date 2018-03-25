@@ -62,9 +62,14 @@ export default function automagical() {
       Klass.prototype.automagic =
         Klass.prototype.automagic ||
         function() {
-          if (!this._isAutomagical) {
+          if (!this.__automagical) {
+            this.__automagical = {}
             decorateClassWithAutomagic(this)
-            this._isAutomagical = true
+            if (this.__automagical.watchers) {
+              for (const watcher of this.__automagical.watchers) {
+                watcher()
+              }
+            }
           }
         }
       return Klass
@@ -374,17 +379,25 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
   const isReaction = Array.isArray(val)
 
   function run() {
-    if (disposed) {
-      // this avoids work/bugs by cancelling reactions after disposed
-      return
-    }
-    if (isReaction) {
-      // reaction
-      stopReaction = Mobx.reaction(val[0], watcher(val[1]), options)
-    } else {
-      //autorun
-      stopReaction = Mobx.autorun(watcher(val), options)
-    }
+    setTimeout(() => {
+      if (disposed) {
+        // this avoids work/bugs by cancelling reactions after disposed
+        return
+      }
+      if (isReaction) {
+        if (typeof val[1] !== 'function') {
+          throw new Error(`Didn't supply a function to reaction ${name}`)
+        }
+        // reaction
+        stopReaction = Mobx.reaction(val[0], watcher(val[1]), options)
+      } else {
+        if (typeof val !== 'function') {
+          throw new Error(`Didn't supply a function to watcher ${name}`)
+        }
+        //autorun
+        stopReaction = Mobx.autorun(watcher(val), options)
+      }
+    })
   }
 
   // state used outside each watch/reaction
@@ -551,9 +564,9 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
     }
   }
 
-  // autorun vs reaction
-  // settimeout allows the watchers to run after react renders
-  setTimeout(run)
+  // add to __watchFns
+  obj.__automagical.watchers = obj.__automagical.watchers || []
+  obj.__automagical.watchers.push(run)
 
   Object.defineProperty(obj, method, {
     get() {

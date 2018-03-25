@@ -32,7 +32,7 @@ export default class AppReactions {
 
   @react({ log: false })
   showOnMouseOverOrbitBar = [
-    () => [Desktop.state.mousePosition, Electron.orbitState],
+    () => [Desktop.mouseState.position, Electron.orbitState],
     async ([{ x, y }, orbitState], { sleep }) => {
       if (!orbitState.position) {
         return
@@ -77,7 +77,7 @@ export default class AppReactions {
 
   @react
   hideOrbitOnEsc = [
-    () => Desktop.state.keyboard.esc,
+    () => Desktop.keyboardState.esc,
     () => {
       if (Desktop.focusedOnOrbit) {
         App.setOrbitHidden(true)

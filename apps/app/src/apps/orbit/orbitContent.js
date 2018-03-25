@@ -12,15 +12,16 @@ const refs = {}
 @view
 class OrbitStatus {
   render() {
-    const { appState, searchIndexStatus, searchPerformance } = Desktop.state
+    const { indexStatus, performance } = Desktop.searchState
+    const { appState } = Desktop
     return (
       <UI.Text if={App.isAttachedToWindow && appState} css={{ padding: 10 }}>
-        {searchIndexStatus}
+        {indexStatus}
         <UI.Text
           if={appState.title}
           css={{ display: 'inline', opacity: 0.5, fontSize: '80%' }}
         >
-          took {searchPerformance}
+          took {performance}
         </UI.Text>
       </UI.Text>
     )
@@ -74,7 +75,7 @@ export default class OrbitContent {
   })
 
   render({ orbitStore }) {
-    log(`OrbitContent`)
+    log(`OrbitContent 1234`)
     return (
       <list>
         <OrbitStatus />

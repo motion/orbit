@@ -8,7 +8,7 @@ export default function decorateProxySetters(klass) {
   return new Proxy(klass, {
     get(target, method) {
       if (Reflect.has(target, method)) {
-        return target[method]
+        return Reflect.get(target, method)
       }
       if (method.indexOf('set') === 0) {
         const stateKey = getStateKey(method)
@@ -21,6 +21,13 @@ export default function decorateProxySetters(klass) {
             `Attempted a setState on a key that doesn't exist! ${method}`,
           )
         }
+      }
+      // shorthand getter for state items ending in State
+      if (
+        method.indexOf('State') === method.length - 5 &&
+        target.state[method]
+      ) {
+        return target.state[method]
       }
     },
   })

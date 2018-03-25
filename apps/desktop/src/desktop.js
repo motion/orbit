@@ -6,12 +6,11 @@ import { promisifyAll } from 'sb-promisify'
 import sudoPrompt_ from 'sudo-prompt'
 import ScreenMaster from './screenMaster'
 import KeyboardStore from './stores/keyboardStore'
-import { App } from '@mcro/all'
+import { App, Electron, Desktop } from '@mcro/all'
 import { store, debugState } from '@mcro/black'
 import global from 'global'
 import Path from 'path'
 import { getChromeContext } from './helpers/getContext'
-import { Desktop } from '@mcro/all'
 import Plugins from './plugins'
 import SearchStore from './stores/search'
 import open from 'opn'
@@ -26,19 +25,24 @@ const sudoPrompt = promisifyAll(sudoPrompt_)
 export default class DesktopRoot {
   server = new Server()
   searchStore = new SearchStore()
-  screenMaster = new ScreenMaster()
-  plugins = new Plugins({
-    server: this.server,
-    setState: this.screenMaster.setState,
-  })
-  keyboardStore = new KeyboardStore({
-    onKeyClear: this.screenMaster.lastScreenChange,
-  })
   stores = null
 
   async start() {
-    Desktop.start({
+    await Desktop.start({
       ignoreSelf: true,
+      master: true,
+      stores: {
+        App,
+        Electron,
+        Desktop,
+      },
+    })
+    this.screenMaster = new ScreenMaster()
+    this.plugins = new Plugins({
+      server: this.server,
+    })
+    this.keyboardStore = new KeyboardStore({
+      onKeyClear: this.screenMaster.lastScreenChange,
     })
     this.keyboardStore.start()
     iohook.start()
@@ -55,7 +59,7 @@ export default class DesktopRoot {
 
     // temp: get context
     setInterval(async () => {
-      if (Desktop.state.appState.name === 'Chrome') {
+      if (Desktop.appState.name === 'Chrome') {
         const { selection } = await getChromeContext()
         Desktop.setSelection(selection)
       }

@@ -20,14 +20,8 @@ const log = debug('highlights')
     hoveredWord = null
     hoveredLine = null
 
-    get ocrWords() {
-      return (Desktop.state.ocrWords || []).filter(
-        (_, index) => !Desktop.state.clearWords[index],
-      )
-    }
-
     get content() {
-      return this.ocrWords.map(i => i[4]).join(' ')
+      return Desktop.activeOCRWords.map(i => i[4]).join(' ')
     }
 
     // test words
@@ -46,8 +40,12 @@ const log = debug('highlights')
         log('swiftPaused')
         return true
       }
-      const isTesting = this.ocrWords.length && this.ocrWords[0].length === 4
-      return isTesting || Desktop.state.lastOCR > Desktop.state.lastScreenChange
+      const isTesting =
+        Desktop.activeOCRWords.length && Desktop.activeOCRWords[0].length === 4
+      return (
+        isTesting ||
+        Desktop.state.ocrState.updatedAt > Desktop.state.lastScreenChange
+      )
     }
 
     willMount() {
@@ -65,17 +63,13 @@ const log = debug('highlights')
         },
       )
 
-      this.react(() => this.ocrWords, this.setupHover('word'), true)
-      this.react(
-        () => Desktop.state.linePositions,
-        this.setupHover('line'),
-        true,
-      )
+      this.react(() => Desktop.ocrState.words, this.setupHover('word'), true)
+      this.react(() => Desktop.ocrState.lines, this.setupHover('line'), true)
       // set hovered word/line
       this.react(
         () => ({
           ...this.trees,
-          ...Desktop.state.mousePosition,
+          ...Desktop.mouseState.position,
         }),
         function updateHovers({ word, line, x, y }) {
           if (Swift.state.isPaused) return
@@ -108,13 +102,13 @@ const log = debug('highlights')
   },
 })
 export default class HighlightsPage {
-  render({ store, store: { ocrWords } }) {
+  render({ store }) {
     return (
       <frame if={store.showAll}>
-        {(ocrWords || []).map(item => (
+        {(Desktop.activeOCRWords || []).map(item => (
           <OCRWord key={Helpers.wordKey(item)} item={item} store={store} />
         ))}
-        {(Desktop.state.linePositions || []).map(item => (
+        {(Desktop.ocrState.lines || []).map(item => (
           <OCRLine key={Helpers.wordKey(item)} item={item} store={store} />
         ))}
       </frame>

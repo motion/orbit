@@ -45,16 +45,16 @@ class AppStore {
 
   get results() {
     const strongTitleMatches = fuzzySort
-      .go(this.state.query, Desktop.results, {
+      .go(App.state.query, Desktop.results, {
         key: 'title',
-        threshold: -11,
+        threshold: -25,
       })
       .map(x => x.obj)
     return uniq([...strongTitleMatches, ...Desktop.results])
   }
 
   get selectedItem() {
-    return this.results[this.state.selectedIndex]
+    return App.results[App.state.selectedIndex]
   }
 
   get isShowingOrbit() {
@@ -64,7 +64,7 @@ class AppStore {
   get isShowingPeek() {
     return (
       !!App.state.peekTarget ||
-      (Electron.orbitState.fullScreen && this.isShowingOrbit)
+      (Electron.orbitState.fullScreen && App.isShowingOrbit)
     )
   }
 
@@ -82,14 +82,14 @@ class AppStore {
 
   // debounced a little to prevent aggressive reactions
   @react({ delay: 32, log: isBrowser })
-  isFullyHidden = [() => !this.isShowingOrbit && !this.isAnimatingOrbit, _ => _]
+  isFullyHidden = [() => !App.isShowingOrbit && !App.isAnimatingOrbit, _ => _]
 
   @react({ delay: 32, log: isBrowser })
-  isFullyShown = [() => this.isShowingOrbit && !this.isAnimatingOrbit, _ => _]
+  isFullyShown = [() => App.isShowingOrbit && !App.isAnimatingOrbit, _ => _]
 
   @react
   wasShowingPeek = [
-    () => this.isShowingPeek,
+    () => App.isShowingPeek,
     is => {
       if (is === false) {
         return false
@@ -101,7 +101,7 @@ class AppStore {
   ]
 
   get isAttachedToWindow() {
-    return !Electron.orbitState.fullScreen && !!Desktop.state.appState
+    return !Electron.orbitState.fullScreen && !!Desktop.appState
   }
 
   get hoveredWordName() {
@@ -131,19 +131,19 @@ class AppStore {
   }
 
   togglePinned = () => {
-    this.setState({ shouldTogglePinned: Date.now() })
+    App.setState({ shouldTogglePinned: Date.now() })
   }
 
   togglePeek = () => {
-    this.setState({ disablePeek: !this.state.disablePeek })
+    App.setState({ disablePeek: !App.state.disablePeek })
   }
 
   toggleHidden = () => {
-    this.setState({ hidden: !this.state.hidden })
+    App.setState({ hidden: !App.state.hidden })
   }
 
   openSettings = () => {
-    this.setState({ openSettings: Date.now() })
+    App.setState({ openSettings: Date.now() })
   }
 }
 

@@ -117,7 +117,7 @@ export default class Search {
   @react({ log: false })
   setIndexStatus = [
     () => this.indexStatus,
-    () => Desktop.setSearchIndexStatus(this.indexStatus),
+    indexStatus => Desktop.setSearchState({ indexStatus }),
   ]
 
   @react({ log: false })
@@ -129,9 +129,9 @@ export default class Search {
       const results = await this.search(query)
       // make sure we haven't had a new query yet
       if (App.state.query === query) {
-        Desktop.setState({
+        Desktop.setSearchState({
           searchResults: results || [],
-          searchPerformance: +Date.now() - start,
+          performance: +Date.now() - start,
         })
       }
     },

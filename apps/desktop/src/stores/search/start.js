@@ -8,9 +8,7 @@ const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
 const PYTHON_API = 'http://localhost:5000'
 const startPython = async () => {
   const cwd = path.resolve(__dirname, '..', '..', '..', './python')
-  console.log('cwd is', cwd)
-  const script = execa(`python3`, [`run_embedding.py`], { cwd })
-
+  execa(`python3`, [`run_embedding.py`], { cwd })
   let tries = 0
   while (true) {
     await sleep(450)
@@ -21,7 +19,9 @@ const startPython = async () => {
       }
     } catch (err) {}
     tries += 1
-    console.log('connecting to python, try', tries)
+    if (tries > 100) {
+      throw new Error(`Error connecting to python...`)
+    }
   }
 }
 

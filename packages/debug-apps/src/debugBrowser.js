@@ -9,6 +9,8 @@ const extensions = extNames.map(ext => `--load-extension=${ext}`)
 
 // quiet exit handling
 let exiting = false
+let restart
+
 const setExiting = () => {
   console.log('Exit debugbrowser...')
   exiting = true
@@ -17,7 +19,8 @@ const setExiting = () => {
 process.on('unhandledRejection', function(reason) {
   if (exiting) return
   console.log('debug.unhandledRejection', reason)
-  process.exit(0)
+  restart()
+  // process.exit(0)
 })
 process.on('SIGUSR1', setExiting)
 process.on('SIGUSR2', setExiting)
@@ -25,9 +28,24 @@ process.on('SIGSEGV', setExiting)
 process.on('SIGINT', setExiting)
 process.on('exit', setExiting)
 
+const onFocus = page => {
+  return page.evaluate(() => {
+    return new Promise(res => {
+      console.log('EVALUDATE', res)
+      if (document.hasFocus()) {
+        res()
+      } else {
+        window.onfocus = () => res()
+      }
+    })
+  })
+}
+
 export default class DebugApps {
-  constructor({ sessions = [] }) {
+  constructor({ sessions = [], ...options }) {
     this.sessions = sessions
+    this.options = options
+    restart = () => new DebugApps({ sessions, ...options })
   }
 
   setSessions(next) {
@@ -107,13 +125,30 @@ export default class DebugApps {
     return (await this.browser.pages()) || []
   }
 
+  numTabs = curSessions => {
+    return (
+      this.options.expectTabs ||
+      Math.max(curSessions.length, this.sessions.length)
+    )
+  }
+
   ensureEnoughTabs = async sessions => {
     const pages = await this.getPages()
-    const tabsToOpen = sessions.length - pages.length
+    const tabsToOpen = this.numTabs(sessions) - pages.length
     if (tabsToOpen > 0) {
       await Promise.all(
-        _.range(tabsToOpen).map(async () => await this.browser.newPage()),
+        _.range(tabsToOpen).map(async () => {
+          const page = await this.browser.newPage()
+          // this handily defocuses the url bar
+          await page.bringToFront()
+        }),
       )
+    }
+    const initialRender = pages.length === 0
+    if (initialRender) {
+      // focus first tab on startup
+      const pages = await this.getPages()
+      pages[0].bringToFront()
     }
   }
 
@@ -146,10 +181,10 @@ export default class DebugApps {
 
   removeExtraTabs = async sessions => {
     const pages = await this.getPages()
-    const extraPages = pages.length - sessions.length
+    const extraPages = this.numTabs(sessions) - pages.length
     if (extraPages > 0) {
       // close extras
-      for (const page of this.pages.slice(this.pages.length - extraPages)) {
+      for (const page of pages.slice(pages.length - extraPages)) {
         try {
           await page.close()
         } catch (err) {
@@ -161,35 +196,42 @@ export default class DebugApps {
   }
 
   finishLoadingPage = async (page, { url, port }) => {
-    await page.bringToFront()
-    const injectTitle = _.debounce(() => {
+    const injectTitle = () => {
+      if (exiting || !this.browser) return
       // TODO can restart app on browser refresh here if wanted
-      page.evaluate(
-        (port, url) => {
-          setTimeout(() => {
+      try {
+        page.evaluate(
+          (port, url) => {
             const PORT_NAMES = {
               9000: 'Desktop',
               9001: 'Electron',
             }
-            const title = document.createElement('title')
-            title.innerHTML =
+            let title = document.getElementsByTagName('title')[0]
+            if (!title) {
+              title = document.createElement('title')
+              document.head.appendChild(title)
+            }
+            const titleText =
               PORT_NAMES[port] || url.replace('http://localhost:3001', '')
-            document.head.appendChild(title)
-          }, 500)
-        },
-        port,
-        url,
-      )
-    }, 100)
-    page.on('load', () => setTimeout(injectTitle, 500))
-    await page.focus('body')
-    // delay to account for delayed title change on connect to debugger
-    setTimeout(injectTitle, 500)
-    // in iframe so simulate
-    await sleep(50)
-    await page.mouse.click(110, 10) // click console
-    await page.mouse.click(110, 70) // click into console
-    await page.keyboard.press('PageDown') // page down to bottom
+            if (title.innerHTML !== titleText) {
+              title.innerHTML = titleText
+            }
+          },
+          port,
+          url,
+        )
+      } catch (err) {
+        console.log('err in eval', err)
+      }
+    }
+    this.intervals.push(setInterval(injectTitle, 500))
+    onFocus(page).then(async () => {
+      await sleep(50)
+      await page.frames()[0].focus('body')
+      await page.mouse.click(110, 10) // click console
+      await page.mouse.click(110, 70) // click into console
+      await page.keyboard.press('PageDown') // page down to bottom
+    })
   }
 
   render = async () => {
@@ -201,6 +243,8 @@ export default class DebugApps {
     }
     // YO watch out:
     this.isRendering = true
+    if (this.intervals) this.intervals.map(clearInterval)
+    this.intervals = []
     try {
       await this.ensureEnoughTabs(sessions)
       const pages = await this.getPages()

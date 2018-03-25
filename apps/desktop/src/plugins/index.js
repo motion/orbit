@@ -16,6 +16,7 @@ export default class Plugins {
   searchId = 0
 
   constructor({ server }) {
+    console.log('CONSTRUCTING PLUGINS')
     this.server = server
     this.icons = new Icons()
     this.start()

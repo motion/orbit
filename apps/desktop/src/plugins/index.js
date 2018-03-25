@@ -16,6 +16,7 @@ export default class Plugins {
   searchId = 0
 
   constructor({ server }) {
+    console.log('CONSTRUCTING PLUGINS')
     this.server = server
     this.icons = new Icons()
     this.start()
@@ -35,6 +36,7 @@ export default class Plugins {
   reactToSearches = [
     () => App.state.query,
     async query => {
+      console.log('react to query')
       const uid = Math.random()
       this.searchId = uid
       let results = []

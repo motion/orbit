@@ -56,7 +56,7 @@ export default class PeekHeader {
             size={1.15}
             borderRadius={5}
             borderWidth={0}
-            background="#222"
+            background="#333"
             onChange={orbitStore.onChangeQuery}
             onKeyDown={this.handleKeyDown}
             getRef={headerStore.ref('inputRef').set}
@@ -75,7 +75,7 @@ export default class PeekHeader {
               height: 11,
               background: Electron.orbitState.pinned
                 ? Constants.ORBIT_COLOR
-                : '#222',
+                : '#333',
               borderRadius: 1000,
             }}
           />

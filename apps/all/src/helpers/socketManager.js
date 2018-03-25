@@ -7,7 +7,8 @@ const log = debug('scrn')
 export default class SocketManager {
   activeSockets = []
 
-  constructor({ port, actions }) {
+  constructor({ port, actions, onState }) {
+    this.onState = onState
     this.actions = actions
     this.port = port
   }
@@ -70,6 +71,9 @@ export default class SocketManager {
     socket.on('message', str => {
       const { action, state, source } = JSON.parse(str)
       if (state) {
+        if (this.onState) {
+          this.onState(source, state)
+        }
         // console.log('should send', source || '---nostate:(', state)
         this.sendAll(source, state, { skipUID: uid })
       }

@@ -56,6 +56,9 @@ class Bridge {
       const stores = options.stores
       this.socketManager = new SocketManager({
         port: 40510,
+        onState: (source, state) => {
+          this._update(stores[source].state, state)
+        },
         actions: {
           // stores that first connect send a call to get initial state
           getState: ({ source, socket }) => {

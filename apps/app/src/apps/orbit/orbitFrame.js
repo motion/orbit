@@ -6,7 +6,7 @@ import * as Constants from '~/constants'
 
 const SHADOW_PAD = 15
 const BORDER_RADIUS = 11
-const background = 'rgba(0,0,0,0.89)'
+const background = 'rgba(20,20,20,0.94)'
 const orbitShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.2]]]
 const orbitLightShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.2]]]
 const iWidth = 4
@@ -200,10 +200,10 @@ export default class OrbitFrame {
               <content
                 css={{
                   boxShadow: App.isShowingOrbit ? boxShadow : 'none',
-                  borderLeftRadius: orbitOnLeft ? BORDER_RADIUS : 5,
+                  borderLeftRadius: orbitOnLeft ? BORDER_RADIUS : 0,
                   borderRightRadius: fullScreen
                     ? 0
-                    : orbitOnLeft ? 5 : BORDER_RADIUS,
+                    : orbitOnLeft ? 0 : BORDER_RADIUS,
                 }}
               >
                 {children}

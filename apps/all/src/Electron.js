@@ -56,28 +56,20 @@ class ElectronStore {
     this.reactions = new ElectronReactions()
   }
 
-  get orbitState() {
-    return this.state.orbitState
-  }
-
   get orbitArrowTowards() {
-    return this.orbitState.orbitOnLeft ? 'right' : 'left'
+    return Electron.orbitState.orbitOnLeft ? 'right' : 'left'
   }
 
   get orbitOnLeft() {
-    return this.orbitState.orbitOnLeft
-  }
-
-  get peekState() {
-    return this.state.peekState
+    return Electron.orbitState.orbitOnLeft
   }
 
   get peekOnLeft() {
-    return this.peekState.peekOnLeft
+    return Electron.peekState.peekOnLeft
   }
 
   get currentPeek() {
-    return (this.peekState.windows || [])[0]
+    return (Electron.peekState.windows || [])[0]
   }
 
   get recentlyToggled() {

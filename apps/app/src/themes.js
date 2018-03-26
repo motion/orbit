@@ -56,10 +56,17 @@ const Themes = {
     color: '#999',
     borderColor: '#eee',
   }),
+  tan: Theme.fromStyles({
+    highlightBackground,
+    highlightColor,
+    background: '#EAE7D3',
+    color: '#444',
+    borderColor: '#000',
+  }),
   dark: Theme.fromStyles({
     highlightBackground: [0, 0, 0, 0.05],
     highlightColor,
-    background: '#333',
+    background: 'rgba(20,20,20,0.94)',
     color: '#fff',
     borderColor: '#222',
   }),

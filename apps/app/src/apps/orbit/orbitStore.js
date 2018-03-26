@@ -36,7 +36,6 @@ export default class OrbitStore {
   }
 
   onChangeQuery = e => {
-    console.log('changing')
     App.setQuery(e.target.value)
   }
 

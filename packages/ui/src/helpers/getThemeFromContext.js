@@ -24,6 +24,8 @@ export default function getThemeFromContext(propName = 'theme') {
           uiActiveTheme: theme,
         }
       }
+    } else {
+      return this.context
     }
   }
 }

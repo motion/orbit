@@ -1,12 +1,11 @@
 import * as React from 'react'
-import { view, react, isEqual } from '@mcro/black'
+import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { App, Electron, Desktop } from '@mcro/all'
 import * as Constants from '~/constants'
 
 const SHADOW_PAD = 15
 const BORDER_RADIUS = 11
-const background = 'rgba(20,20,20,0.94)'
 const orbitShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.2]]]
 const orbitLightShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.2]]]
 const iWidth = 4
@@ -42,7 +41,7 @@ const Indicator = view(({ iWidth, orbitOnLeft }) => {
   )
 })
 
-const OrbitArrow = view(({ orbitOnLeft, arrowSize, css }) => {
+const OrbitArrow = view(({ background, orbitOnLeft, arrowSize, css }) => {
   let arrowStyle
   if (orbitOnLeft) {
     arrowStyle = {
@@ -83,51 +82,54 @@ const OrbitArrow = view(({ orbitOnLeft, arrowSize, css }) => {
   )
 })
 
-@view({
-  store: class OrbitFrameStore {
-    orbitFrame = null
+class OrbitFrameStore {
+  orbitFrame = null
 
-    @react
-    wasShowingOrbit = [
-      () => App.isShowingOrbit,
-      async (val, { sleep, setValue }) => {
-        if (!val) {
-          // ew, but can be lax
-          await sleep(App.animationDuration * 1.5)
-          setValue(false)
-        } else {
-          setValue(val)
-        }
-      },
-    ]
-
-    get shouldAnimate() {
-      return App.isShowingOrbit || this.wasShowingOrbit
-    }
-
-    get isDragging() {
-      return (
-        Desktop.state.mouseDown &&
-        Desktop.state.lastAppChange > Desktop.state.mouseDown.at
-      )
-    }
-
-    hasRepositioned = true
-
-    @react
-    isRepositioning = [
-      () => [Desktop.state.lastAppChange, Electron.state.willFullScreen],
-      async ([app, fs], { when, sleep, setValue }) => {
-        const isFullScreen = fs > app
-        setValue(true)
-        await sleep(100)
-        setValue('READY')
-        await when(() => this.hasRepositioned)
-        await sleep(100)
+  @react
+  wasShowingOrbit = [
+    () => App.isShowingOrbit,
+    async (val, { sleep, setValue }) => {
+      if (!val) {
+        // ew, but can be lax
+        await sleep(App.animationDuration * 1.5)
         setValue(false)
-      },
-    ]
-  },
+      } else {
+        setValue(val)
+      }
+    },
+  ]
+
+  get shouldAnimate() {
+    return App.isShowingOrbit || this.wasShowingOrbit
+  }
+
+  get isDragging() {
+    return (
+      Desktop.state.mouseDown &&
+      Desktop.state.lastAppChange > Desktop.state.mouseDown.at
+    )
+  }
+
+  hasRepositioned = true
+
+  @react
+  isRepositioning = [
+    () => [Desktop.state.lastAppChange, Electron.state.willFullScreen],
+    async ([app, fs], { when, sleep, setValue }) => {
+      const isFullScreen = fs > app
+      setValue(true)
+      await sleep(100)
+      setValue('READY')
+      await when(() => this.hasRepositioned)
+      await sleep(100)
+      setValue(false)
+    },
+  ]
+}
+
+@UI.injectTheme
+@view({
+  store: OrbitFrameStore,
 })
 export default class OrbitFrame {
   componentDidMount() {
@@ -140,7 +142,7 @@ export default class OrbitFrame {
     }
   }
 
-  render({ store, orbitPage, children }) {
+  render({ store, orbitPage, children, theme }) {
     const { fullScreen } = Electron.orbitState
     const { orbitOnLeft } = Electron
     const boxShadow = fullScreen ? orbitShadow : orbitLightShadow
@@ -148,76 +150,76 @@ export default class OrbitFrame {
       !App.isShowingOrbit && (store.isRepositioning || store.isDragging)
     log(`OrbitFrame onLeft ${orbitOnLeft} hide ${hide}`)
     return (
-      <UI.Theme name="dark">
-        <orbitFrame css={{ flex: 1, opacity: hide ? 0 : 1 }}>
-          <OrbitArrow
-            if={App.isAttachedToWindow}
-            arrowSize={arrowSize}
-            orbitOnLeft={orbitOnLeft}
-          />
-          <Indicator
-            if={!fullScreen}
-            store={store}
-            iWidth={iWidth}
-            orbitOnLeft={orbitOnLeft}
-          />
-          <overflowWrap
-            $orbitAnimate={store.shouldAnimate}
-            $pointerEvents={App.isShowingOrbit && !App.isAnimatingOrbit}
-            $hideOverflow
+      <orbitFrame css={{ flex: 1, opacity: hide ? 0 : 1 }}>
+        <OrbitArrow
+          if={App.isAttachedToWindow}
+          arrowSize={arrowSize}
+          orbitOnLeft={orbitOnLeft}
+          background={theme.base.background}
+        />
+        <Indicator
+          if={!fullScreen}
+          store={store}
+          iWidth={iWidth}
+          orbitOnLeft={orbitOnLeft}
+        />
+        <overflowWrap
+          $orbitAnimate={store.shouldAnimate}
+          $pointerEvents={App.isShowingOrbit && !App.isAnimatingOrbit}
+          $hideOverflow
+          css={{
+            ...(fullScreen
+              ? { right: 0 }
+              : {
+                  right: orbitOnLeft ? 15 : 'auto',
+                  left: !orbitOnLeft ? 15 : 'auto',
+                }),
+          }}
+        >
+          <orbit
             css={{
-              ...(fullScreen
-                ? { right: 0 }
+              paddingRight: fullScreen ? 0 : SHADOW_PAD,
+              ...(App.isShowingOrbit
+                ? {
+                    opacity: 1,
+                    transform: {
+                      x: orbitOnLeft ? 0 : -SHADOW_PAD * 2,
+                    },
+                  }
                 : {
-                    right: orbitOnLeft ? 15 : 'auto',
-                    left: !orbitOnLeft ? 15 : 'auto',
+                    opacity: 0,
+                    transform: {
+                      x: orbitOnLeft
+                        ? 330 - SHADOW_PAD - (SHADOW_PAD + iWidth) + 4
+                        : -330,
+                    },
                   }),
             }}
+            $orbitAnimate={store.shouldAnimate}
+            $orbitHeight={fullScreen ? 0 : orbitPage.adjustHeight}
+            $orbitFullScreen={fullScreen}
           >
-            <orbit
+            <content
               css={{
-                paddingRight: fullScreen ? 0 : SHADOW_PAD,
-                ...(App.isShowingOrbit
-                  ? {
-                      opacity: 1,
-                      transform: {
-                        x: orbitOnLeft ? 0 : -SHADOW_PAD * 2,
-                      },
-                    }
-                  : {
-                      opacity: 0,
-                      transform: {
-                        x: orbitOnLeft
-                          ? 330 - SHADOW_PAD - (SHADOW_PAD + iWidth) + 4
-                          : -330,
-                      },
-                    }),
+                background: theme.base.background,
+                boxShadow: App.isShowingOrbit ? boxShadow : 'none',
+                borderLeftRadius: orbitOnLeft ? BORDER_RADIUS : 0,
+                borderRightRadius: fullScreen
+                  ? 0
+                  : orbitOnLeft ? 0 : BORDER_RADIUS,
               }}
-              $orbitAnimate={store.shouldAnimate}
-              $orbitHeight={fullScreen ? 0 : orbitPage.adjustHeight}
-              $orbitFullScreen={fullScreen}
             >
-              <content
-                css={{
-                  boxShadow: App.isShowingOrbit ? boxShadow : 'none',
-                  borderLeftRadius: orbitOnLeft ? BORDER_RADIUS : 0,
-                  borderRightRadius: fullScreen
-                    ? 0
-                    : orbitOnLeft ? 0 : BORDER_RADIUS,
-                }}
-              >
-                {children}
-                <expand if={!fullScreen}>
-                  <fade />
-                  <barOuter onMouseDown={orbitPage.barMouseDown}>
-                    <bar />
-                  </barOuter>
-                </expand>
-              </content>
-            </orbit>
-          </overflowWrap>
-        </orbitFrame>
-      </UI.Theme>
+              {children}
+              <expand if={!fullScreen}>
+                <fade />
+                <barOuter onMouseDown={orbitPage.barMouseDown}>
+                  <bar />
+                </barOuter>
+              </expand>
+            </content>
+          </orbit>
+        </overflowWrap>
+      </orbitFrame>
     )
   }
 
@@ -280,7 +282,6 @@ export default class OrbitFrame {
     content: {
       flex: 1,
       // border: [1, 'transparent'],
-      background,
       overflow: 'hidden',
       opacity: 1,
       position: 'relative',

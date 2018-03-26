@@ -4,7 +4,7 @@ import hostile_ from 'hostile'
 import * as Constants from '~/constants'
 import { promisifyAll } from 'sb-promisify'
 import sudoPrompt_ from 'sudo-prompt'
-import ScreenMaster from './screenMaster'
+import Screen from './screen'
 import KeyboardStore from './stores/keyboardStore'
 import { App, Electron, Desktop } from '@mcro/all'
 import { store, debugState } from '@mcro/black'
@@ -37,12 +37,12 @@ export default class DesktopRoot {
         Desktop,
       },
     })
-    this.screenMaster = new ScreenMaster()
+    this.screen = new Screen()
     this.plugins = new Plugins({
       server: this.server,
     })
     this.keyboardStore = new KeyboardStore({
-      onKeyClear: this.screenMaster.lastScreenChange,
+      onKeyClear: this.screen.lastScreenChange,
     })
     this.keyboardStore.start()
     iohook.start()
@@ -50,7 +50,7 @@ export default class DesktopRoot {
     global.restart = this.restart
     this.setupHosts()
     await this.server.start()
-    this.screenMaster.start()
+    this.screen.start()
     debugState(({ stores }) => {
       this.stores = stores
     })
@@ -83,7 +83,7 @@ export default class DesktopRoot {
 
   dispose = async () => {
     if (this.disposed) return
-    await this.screenMaster.dispose()
+    await this.screen.dispose()
     this.disposed = true
     return true
   }

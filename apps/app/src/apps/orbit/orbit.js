@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { App, Electron } from '@mcro/all'
 import OrbitFrame from './orbitFrame'
@@ -48,7 +48,7 @@ class OrbitPageStore {
 export default class OrbitPage {
   render({ orbitStore, orbitPage }) {
     return (
-      <UI.Theme name={Electron.orbitState.fullScreen ? 'tan' : 'dark'}>
+      <UI.Theme name={Electron.orbitState.fullScreen ? 'dark' : 'dark'}>
         <OrbitFrame orbitPage={orbitPage}>
           <OrbitHeader />
           <OrbitContent if={!orbitStore.showSettings} />

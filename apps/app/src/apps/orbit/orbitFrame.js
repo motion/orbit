@@ -4,9 +4,8 @@ import * as UI from '@mcro/ui'
 import { App, Electron, Desktop } from '@mcro/all'
 import * as Constants from '~/constants'
 
-const SHADOW_PAD = 15
+const { SHADOW_PAD, APP_SHADOW } = Constants
 const BORDER_RADIUS = 11
-const orbitShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.2]]]
 const orbitLightShadow = [[0, 3, SHADOW_PAD, 2, [0, 0, 0, 0.1]]]
 const iWidth = 4
 const arrowSize = 22
@@ -145,8 +144,9 @@ export default class OrbitFrame {
   render({ store, orbitPage, children, theme }) {
     const { fullScreen } = Electron.orbitState
     const { orbitOnLeft } = Electron
-    const boxShadow = fullScreen ? orbitShadow : orbitLightShadow
+    const boxShadow = fullScreen ? APP_SHADOW : orbitLightShadow
     const border = [1, theme.base.background.darken(0.1).desaturate(0.3)]
+    const background = theme.base.background.lighten(0.02)
     const hide =
       !App.isShowingOrbit && (store.isRepositioning || store.isDragging)
     log(`OrbitFrame onLeft ${orbitOnLeft} hide ${hide}`)
@@ -156,7 +156,7 @@ export default class OrbitFrame {
           if={App.isAttachedToWindow}
           arrowSize={arrowSize}
           orbitOnLeft={orbitOnLeft}
-          background={theme.base.background}
+          background={background}
         />
         <Indicator
           if={!fullScreen}
@@ -204,7 +204,7 @@ export default class OrbitFrame {
               css={{
                 border,
                 borderRight: orbitOnLeft ? 'none' : border,
-                background: theme.base.background,
+                background,
                 boxShadow: App.isShowingOrbit ? boxShadow : 'none',
                 borderLeftRadius: orbitOnLeft ? BORDER_RADIUS : 0,
                 borderRightRadius: fullScreen

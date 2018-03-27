@@ -48,7 +48,7 @@ export default class PeekHeader {
   }
 
   render({ orbitStore, headerStore, theme }) {
-    const darkerBg = theme.base.background.darken(0.1).desaturate(0.3)
+    const darkerBg = theme.base.background.darken(0.06).desaturate(0.3)
     return (
       <header $$draggable $headerVisible={App.isShowingHeader}>
         <title>

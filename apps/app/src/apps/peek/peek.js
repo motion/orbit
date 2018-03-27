@@ -3,13 +3,7 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { App, Electron } from '@mcro/all'
 import PeekHeader from './peekHeader'
-
-const SHADOW_PAD = 15
-const background = '#fff'
-const peekShadow = [
-  [0, 0, SHADOW_PAD, [0, 0, 0, 0.2]],
-  [0, 0, 0, 1, [0, 0, 0, 0.05]],
-]
+import { SHADOW_PAD, APP_SHADOW } from '~/constants'
 
 const EmptyContents = ({ item }) => (
   <pane css={{ flex: 1 }}>
@@ -34,9 +28,10 @@ const EmptyContents = ({ item }) => (
   </pane>
 )
 
+@UI.injectTheme
 @view
 export default class PeekPage {
-  render() {
+  render({ theme }) {
     const { selectedItem } = App
     const { currentPeek } = Electron
     const { fullScreen } = Electron.orbitState
@@ -44,15 +39,29 @@ export default class PeekPage {
       return null
     }
     const hasDocument = selectedItem && selectedItem.document
+    const border = fullScreen
+      ? [1, theme.base.background.darken(0.1).desaturate(0.3)]
+      : null
     return (
-      <UI.Theme name="light">
+      <UI.Theme name="tan">
         <peek
           css={{
             paddingLeft: fullScreen ? 0 : SHADOW_PAD,
           }}
           $peekVisible={App.isShowingPeek}
         >
-          <main css={{ borderRightRadius: fullScreen ? 5 : 0 }}>
+          <main
+            css={{
+              boxShadow: [
+                APP_SHADOW,
+                fullScreen ? null : ['inset', 0, 0, 0, 1, [0, 0, 0, 0.05]],
+              ].filter(Boolean),
+              borderRightRadius: fullScreen ? 5 : 0,
+              background: fullScreen ? theme.base.background : '#fff',
+              border,
+              borderLeft: fullScreen ? 'none' : border,
+            }}
+          >
             <div $$flex if={hasDocument}>
               <PeekHeader title={selectedItem.document.title} />
               <content
@@ -90,8 +99,6 @@ export default class PeekPage {
     main: {
       flex: 1,
       // border: [1, 'transparent'],
-      background,
-      boxShadow: peekShadow,
       overflow: 'hidden',
       opacity: 1,
       transition: 'background ease-in 200ms',

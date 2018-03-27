@@ -22,8 +22,15 @@ if (module && module.hot) {
 
 const PREFIX = `=>`
 const logRes = res => {
-  if (typeof res === 'undefined') return []
-  if (res instanceof Promise) return [PREFIX, 'Promise']
+  if (typeof res === 'undefined') {
+    return []
+  }
+  if (res instanceof Promise) {
+    return [PREFIX, 'Promise']
+  }
+  if (res && res.value && isQuery(res.value)) {
+    return [PREFIX, 'RxQuery']
+  }
   return [PREFIX, res]
 }
 const getReactionName = obj => {
@@ -45,7 +52,7 @@ const isObservable = x => {
   }
 }
 const isFunction = val => typeof val === 'function'
-const isQuery = val => val && !!val.$isQuery
+const isQuery = val => val && (val.$isQuery || (!!val.mquery && val.id))
 const isRxObservable = val =>
   val instanceof Observable || (val && val.subscribe && val.source)
 const isPromise = val => val instanceof Promise
@@ -324,6 +331,11 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
   const stopAutoObserve = () => autoObserveDispose && autoObserveDispose()
 
   function update(newValue) {
+    if (typeof val === 'undefined') {
+      // HELP this may be bad idea, but in practice we never ever set something undefined
+      // testing this out essentially
+      return
+    }
     if (isntConnected) {
       return
     }

@@ -7,31 +7,9 @@ import getExtensions from '@mcro/chrome-extensions'
 const extNames = getExtensions(['mobx', 'react'])
 const extensions = extNames.map(ext => `--load-extension=${ext}`)
 
-// quiet exit handling
-let exiting = false
-let restart
-
-const setExiting = () => {
-  console.log('Exit debugbrowser...')
-  exiting = true
-  process.kill(process.pid)
-}
-process.on('unhandledRejection', function(reason) {
-  if (exiting) return
-  console.log('debug.unhandledRejection', reason)
-  restart()
-  // process.exit(0)
-})
-process.on('SIGUSR1', setExiting)
-process.on('SIGUSR2', setExiting)
-process.on('SIGSEGV', setExiting)
-process.on('SIGINT', setExiting)
-process.on('exit', setExiting)
-
 const onFocus = page => {
   return page.evaluate(() => {
     return new Promise(res => {
-      console.log('EVALUDATE', res)
       if (document.hasFocus()) {
         res()
       } else {
@@ -42,35 +20,61 @@ const onFocus = page => {
 }
 
 export default class DebugApps {
+  intervals = []
+
   constructor({ sessions = [], ...options }) {
     this.sessions = sessions
     this.options = options
-    restart = () => new DebugApps({ sessions, ...options })
   }
 
   setSessions(next) {
     this.sessions = next
-    this.render()
+  }
+
+  get shouldRun() {
+    return this.browser && !this.disposed
   }
 
   async start() {
-    this.browser = await puppeteer.launch({
-      headless: false,
-      args: [
-        `--window-size=${800},${680}`,
-        `--no-startup-window`,
-        // `--enable-slim-navigation-manager`,
-        // `--top-controls-hide-threshold=0.5`,
-        `--disable-extensions-except=${extNames.join(',')}`,
-        ...extensions,
-      ],
-    })
-    this.renderLoop()
+    try {
+      this.browser = await puppeteer.launch({
+        headless: false,
+        args: [
+          `--window-size=${800},${680}`,
+          `--no-startup-window`,
+          // `--enable-slim-navigation-manager`,
+          // `--top-controls-hide-threshold=0.5`,
+          `--disable-extensions-except=${extNames.join(',')}`,
+          ...extensions,
+        ],
+      })
+      this.browser.on('disconnected', this.dispose)
+      this.renderLoop()
+    } catch (err) {
+      console.log('DebugBrowser Err', err)
+    }
+  }
+
+  dispose = async () => {
+    this.disposed = true
+    this.clearIntervals()
+    if (this.browser) {
+      await this.browser.close()
+    }
   }
 
   renderLoop = async () => {
-    while (true) {
-      await this.render()
+    while (this.shouldRun) {
+      const sessions = await this.getSessions()
+      if (await this.shouldUpdateTabs(sessions)) {
+        // when desktop restarts, the dev urls for some reason change in electron
+        // then the debugger attempts to change to that new url, which makes white bg appear
+        // then once desktop starts up again, the dev urls return again as they were
+        // so sleep 1s here when we see a change, and hope desktop has restarted, so we dont
+        // ever see those weird urls......
+        await sleep(1000)
+        await this.render()
+      }
       await sleep(500)
     }
   }
@@ -195,26 +199,32 @@ export default class DebugApps {
     }
   }
 
-  finishLoadingPage = async (page, { url, port }) => {
-    const injectTitle = () => {
-      if (exiting || !this.browser) return
+  finishLoadingPage = async (index, page, { url, port }) => {
+    const injectTitle = async () => {
+      if (!this.shouldRun) {
+        return
+      }
       // TODO can restart app on browser refresh here if wanted
       try {
-        page.evaluate(
+        await page.evaluate(
           (port, url) => {
-            const PORT_NAMES = {
-              9000: 'Desktop',
-              9001: 'Electron',
-            }
-            let title = document.getElementsByTagName('title')[0]
-            if (!title) {
-              title = document.createElement('title')
-              document.head.appendChild(title)
-            }
-            const titleText =
-              PORT_NAMES[port] || url.replace('http://localhost:3001', '')
-            if (title.innerHTML !== titleText) {
-              title.innerHTML = titleText
+            try {
+              const PORT_NAMES = {
+                9000: 'Desktop',
+                9001: 'Electron',
+              }
+              let title = document.getElementsByTagName('title')[0]
+              if (!title) {
+                title = document.createElement('title')
+                document.head.appendChild(title)
+              }
+              const titleText =
+                PORT_NAMES[port] || url.replace('http://localhost:3001', '')
+              if (title.innerHTML !== titleText) {
+                title.innerHTML = titleText
+              }
+            } catch (err) {
+              console.log('error doing this', err)
             }
           },
           port,
@@ -224,7 +234,8 @@ export default class DebugApps {
         console.log('err in eval', err)
       }
     }
-    this.intervals.push(setInterval(injectTitle, 500))
+    clearInterval(this.intervals[index])
+    this.intervals[index] = setInterval(injectTitle, 500)
     onFocus(page).then(async () => {
       await sleep(50)
       await page.frames()[0].focus('body')
@@ -235,33 +246,38 @@ export default class DebugApps {
   }
 
   render = async () => {
-    if (this.isRendering || exiting || !this.browser) return
+    if (this.isRendering || !this.shouldRun) {
+      return
+    }
     const sessions = await this.getSessions()
     const shouldUpdate = await this.shouldUpdateTabs(sessions)
-    if (!shouldUpdate) {
+    if (!shouldUpdate || !this.shouldRun) {
       return
     }
     // YO watch out:
     this.isRendering = true
-    if (this.intervals) this.intervals.map(clearInterval)
-    this.intervals = []
     try {
       await this.ensureEnoughTabs(sessions)
       const pages = await this.getPages()
+      console.log('updating', shouldUpdate)
       await this.openUrlsInTabs(sessions, pages, shouldUpdate)
       // synchronously
-      for (const [index, { url, port }] of sessions.entries()) {
-        if (shouldUpdate[index]) {
-          await this.finishLoadingPage(pages[index], { url, port })
-        }
+      for (const [index] of shouldUpdate.entries()) {
+        const { url, port } = sessions[index]
+        await this.finishLoadingPage(index, pages[index], { url, port })
       }
     } catch (err) {
-      if (!exiting) {
-        console.log('puppeteer.err', err)
-      }
+      console.log('puppeteer.err', err)
     }
     // delete extra tabs
     await this.removeExtraTabs(sessions)
     this.isRendering = false
+  }
+
+  clearIntervals = () => {
+    if (this.intervals) {
+      this.intervals.map(x => clearInterval(x))
+      this.intervals = []
+    }
   }
 }

@@ -27,8 +27,10 @@ export const Job = JobInstance
 export const Setting = SettingInstance
 export const Event = EventInstance
 export const Person = PersonInstance
+export CurrentUser from './currentUser'
 
 // ⭐️ DONT FORGET TO ADD HERE TOO:
+// this lets you connect them all at once
 
 export const Models = {
   Thing: ThingInstance,
@@ -115,7 +117,7 @@ export default class Database {
               Object.keys(asyncMethods).map(async key => {
                 const value = await asyncMethods[key].call(doc)
                 doc[key] = value
-              })
+              }),
             )
           }
         },
@@ -188,16 +190,18 @@ export default class Database {
         throw new Error(
           `No connect found for model ${
             model.name
-          } connect = ${typeof model.connect}`
+          } connect = ${typeof model.connect}`,
         )
       }
       connections.push(
         model.connect(this.database, {
           pouch: PouchDB,
-          remote: `${this.databaseConfig.remoteUrl}/${model.title}/`,
+          remote: this.databaseConfig.remoteUrl
+            ? `${this.databaseConfig.remoteUrl}/${model.title}/`
+            : null,
           ...this.modelOptions,
           pouchSettings: this.pouchOptions,
-        })
+        }),
       )
     }
     await Promise.all(connections)

@@ -20,6 +20,7 @@ export default class Button extends React.Component {
     glowProps,
     badgeProps,
     hovered,
+    theme,
     ...props
   }) {
     // patch until figure out why this doesnt trigger onSubmit

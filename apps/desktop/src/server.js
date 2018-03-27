@@ -11,9 +11,10 @@ import Passport from 'passport'
 // import Crawler from '@mcro/crawler'
 import path from 'path'
 import killPort from 'kill-port'
-import getEmbedding from './embedding'
+// import getEmbedding from './embedding'
 import Fs from 'fs'
 import Path from 'path'
+import expressPouch from 'express-pouchdb'
 
 const { SERVER_PORT } = Constants
 
@@ -22,7 +23,8 @@ const log = debug('desktop')
 export default class Server {
   login = null
 
-  constructor() {
+  constructor({ pouch }) {
+    this.pouch = pouch
     this.cache = {}
     this.oauth = new OAuth({
       strategies: OAuthStrategies,
@@ -97,14 +99,13 @@ export default class Server {
   }
 
   setupEmbedding() {
-    this.app.get('/sentence', async (req, res) => {
-      console.log('(js) sentence is', req.query.sentence)
-      const raw = await getEmbedding(req.query.sentence)
-      // cut to only a couple decimal places
-      const values = raw.map(word => word.map(i => +i.toFixed(4)))
-
-      res.json({ values })
-    })
+    // this.app.get('/sentence', async (req, res) => {
+    //   console.log('(js) sentence is', req.query.sentence)
+    //   const raw = await getEmbedding(req.query.sentence)
+    //   // cut to only a couple decimal places
+    //   const values = raw.map(word => word.map(i => +i.toFixed(4)))
+    //   res.json({ values })
+    // })
   }
 
   // setupCrawler() {
@@ -179,6 +180,33 @@ export default class Server {
   //     res.json({ status: crawler.getStatus({ includeResults: true }) })
   //   })
   // }
+
+  setupPouch() {
+    // const dbPaths = Object.keys(Models)
+    //   .map(model => Models[model].title)
+    //   .map(name => `/db/${name}`)
+
+    // rewrite rxdb paths to non-rxdb :)
+    this.app.use(
+      '/db',
+      proxy({
+        target: '/db2',
+        pathRewrite: path => {
+          if (path === '/db' || path === '/db/') {
+            return '/'
+          }
+          const newPath = path.replace(
+            /\/db\/(.*)([\/\?].*)?$/g,
+            '/username-rxdb-0-$1$2',
+          )
+          return newPath
+        },
+      }),
+    )
+
+    // pouch routes
+    this.app.use('/db2', expressPouch(this.pouch, { inMemoryConfig: true }))
+  }
 
   creds = {}
   setupCredPass() {

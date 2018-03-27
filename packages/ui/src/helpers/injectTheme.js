@@ -37,7 +37,6 @@ export default View => {
             theme: theme.uiActiveTheme,
           }
         : null
-
       return <View {...this.props} {...themeProps} />
     }
   }

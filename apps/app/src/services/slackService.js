@@ -1,7 +1,7 @@
 // @flow
 import Slack from 'slack'
 import { store, watch } from '@mcro/black'
-import { CurrentUser } from '~/app'
+import { CurrentUser } from '@mcro/models'
 
 @store
 export default class SlackService {

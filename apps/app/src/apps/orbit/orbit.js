@@ -1,8 +1,8 @@
 // @flow
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { App } from '@mcro/all'
+import { App, Electron } from '@mcro/all'
 import OrbitFrame from './orbitFrame'
 import OrbitContent from './orbitContent'
 import OrbitSettings from './orbitSettings'
@@ -48,27 +48,29 @@ class OrbitPageStore {
 export default class OrbitPage {
   render({ orbitStore, orbitPage }) {
     return (
-      <OrbitFrame orbitPage={orbitPage}>
-        <OrbitHeader />
-        <OrbitContent if={!orbitStore.showSettings} />
-        <OrbitSettings if={orbitStore.showSettings} />
-        <Knowledge if={App.state.knowledge} data={App.state.knowledge} />
-        <controls>
-          <UI.Button
-            icon="gear"
-            borderRadius={100}
-            size={1.1}
-            circular
-            chromeless
-            opacity={0.4}
-            hover={{
-              opacity: 0.8,
-            }}
-            highlight={orbitStore.showSettings}
-            onClick={orbitStore.toggleSettings}
-          />
-        </controls>
-      </OrbitFrame>
+      <UI.Theme name={Electron.orbitState.fullScreen ? 'dark' : 'dark'}>
+        <OrbitFrame orbitPage={orbitPage}>
+          <OrbitHeader />
+          <OrbitContent if={!orbitStore.showSettings} />
+          <OrbitSettings if={orbitStore.showSettings} />
+          <Knowledge if={App.state.knowledge} data={App.state.knowledge} />
+          <controls>
+            <UI.Button
+              icon="gear"
+              borderRadius={100}
+              size={1.1}
+              circular
+              chromeless
+              opacity={0.4}
+              hover={{
+                opacity: 0.8,
+              }}
+              highlight={orbitStore.showSettings}
+              onClick={orbitStore.toggleSettings}
+            />
+          </controls>
+        </OrbitFrame>
+      </UI.Theme>
     )
   }
 

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
-import { CurrentUser, Job } from '~/app'
+import { CurrentUser, Job } from '@mcro/models'
 import Logo from './logo'
 import { formatDistance } from 'date-fns'
 import { includes } from 'lodash'
@@ -46,33 +46,6 @@ class IntegrationHeaderStore {
       return null
     }
     return this.props.integrationStore.lastJobs[service + ':' + action]
-  }
-
-  checkAuths = async () => {
-    const { error, ...authorizations } = await r2.get(
-      `${Constants.API_URL}/getCreds`,
-    ).json
-    if (error) {
-      console.log('no creds')
-    } else {
-      return authorizations
-    }
-  }
-
-  startOauth(integration) {
-    if (Constants.IS_ELECTRON) {
-      App.setAuthOpen(integration)
-    } else {
-      window.open(`${Constants.API_URL}/auth?service=${integration}`)
-    }
-    const checker = this.setInterval(async () => {
-      const authorizations = await this.checkAuths()
-      if (authorizations && authorizations[integration]) {
-        await CurrentUser.setAuthorizations(authorizations)
-        App.setAuthClose(integration)
-        clearInterval(checker)
-      }
-    }, 1000)
   }
 }
 

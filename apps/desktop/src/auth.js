@@ -1,23 +1,27 @@
 import * as Constants from '~/constants'
-import * as Injections from './injections'
+import * as Injections from '~/helpers/injections'
 import { throttle } from 'lodash'
-import { store } from '@mcro/black/store'
+import { store, react } from '@mcro/black/store'
 import { App } from '@mcro/all'
+
+const getAuthUrl = id => `${Constants.APP_URL}/auth?service=` + id
 
 @store
 export default class Auth {
-  constructor({ socket }) {
-    this.socket = socket
-    this.listenForAuth()
-  }
+  @react
+  openAuthWindow = [
+    () => App.authState.openId,
+    throttle(id => {
+      console.log('opening auth for', id)
+      Injections.openAuth(getAuthUrl(id))
+    }, 2000),
+  ]
 
-  listenForAuth() {
-    const getAuthUrl = service => `${Constants.APP_URL}/auth?service=` + service
-    const openAuthWindow = (e, service) =>
-      Injections.openAuth(getAuthUrl(service))
-    const closeAuthWindow = (e, service) =>
-      Injections.closeChromeTabWithUrl(getAuthUrl(service))
-    this.react(() => App.state.authOpen, throttle(openAuthWindow, 2000))
-    this.react(() => App.state.authClose, throttle(closeAuthWindow, 2000))
-  }
+  @react
+  closeAuthWindow = [
+    () => App.authState.closeId,
+    throttle(id => {
+      Injections.closeChromeTabWithUrl(getAuthUrl(id))
+    }, 2000),
+  ]
 }

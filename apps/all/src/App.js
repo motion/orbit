@@ -29,6 +29,10 @@ class AppStore {
 
   state = {
     query: '',
+    authState: {
+      openId: null,
+      closeId: null,
+    },
     selectedIndex: null,
     openResult: null,
     highlightWords: {},

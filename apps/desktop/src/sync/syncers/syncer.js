@@ -1,77 +1,74 @@
 // @flow
 import * as Helpers from '../helpers'
-import type { Setting } from '@mcro/models'
+import { CurrentUser } from '@mcro/models'
 
 const log = debug('sync')
 const DEFAULT_CHECK_INTERVAL = 1000 * 60 // 1 minute
 
 export default class Syncer {
-  // external interface, must set:
-  static settings: {
-    syncers: Object<string, Object>,
-    type: string,
-    actions: Object,
-  }
-
-  constructor({ user, sync }) {
-    this.user = user
-    this.sync = sync
-  }
-
-  // internal
-  syncers = {}
   jobWatcher: ?number
 
-  get settings() {
-    return this.constructor.settings
+  get type(): string {
+    return this.settings.type
   }
 
-  start() {
-    this.createSyncers()
+  get actions(): string {
+    return this.settings.actions
+  }
 
+  get token(): ?string {
+    return CurrentUser.token(this.type)
+  }
+
+  async refreshToken() {
+    return await CurrentUser.refreshToken(this.type)
+  }
+
+  constructor({ settings, syncers, props }) {
+    this.settings = settings
+    this.syncerModels = syncers
+    this.props = props
+  }
+
+  start({ setting }) {
+    this.setting = setting
+    if (!this.token) {
+      throw new Error(`No token yo`)
+    }
+    const { syncerModels } = this
+    // setup syncers
+    if (syncerModels) {
+      for (const key of Object.keys(syncerModels)) {
+        if (this.syncers[key]) {
+          return
+        }
+        const Syncer = syncerModels[key]
+        if (!Syncer) {
+          console.error('no syncer for', key)
+        } else {
+          try {
+            this.syncers[key] = new Syncer({
+              setting: this.setting,
+              token: this.token,
+              ...this.props,
+            })
+            // helper to make checking syncers easier
+            if (!this[key]) {
+              this[key] = this.syncers[key]
+            }
+          } catch (err) {
+            log('error creating syncer', key, Syncer)
+            console.error(err)
+          }
+        }
+      }
+    }
     // every so often
     this.jobWatcher = setInterval(
       () => this.check(false),
       this.settings.checkInterval || DEFAULT_CHECK_INTERVAL,
     )
     this.check(false)
-  }
-
-  createSyncers() {
-    this.watch(function watchCreateSyncers() {
-      if (this.setting && this.token) {
-        const { syncers } = this.settings
-
-        // setup syncers
-        if (syncers) {
-          for (const key of Object.keys(syncers)) {
-            if (this.syncers[key]) {
-              return
-            }
-
-            const Syncer = syncers[key]
-            if (!Syncer) {
-              console.error('no syncer for', key)
-            } else {
-              try {
-                this.syncers[key] = new Syncer({
-                  setting: this.setting,
-                  token: this.token,
-                  helpers: this.helpers,
-                })
-                // helper to make checking syncers easier
-                if (!this[key]) {
-                  this[key] = this.syncers[key]
-                }
-              } catch (err) {
-                log('error creating syncer', key, Syncer)
-                console.error(err)
-              }
-            }
-          }
-        }
-      }
-    })
   }
 
   async run(action: string) {
@@ -95,32 +92,8 @@ export default class Syncer {
     await Promise.all(Object.keys(this.syncers).map(x => this.run(x)))
   }
 
-  get type(): string {
-    return this.constructor.settings.type
-  }
-
-  get actions(): string {
-    return this.constructor.settings.actions
-  }
-
-  get setting(): ?Setting {
-    return this.user.setting[this.type]
-  }
-
-  get token(): ?string {
-    return this.user.token(this.type)
-  }
-
-  async refreshToken() {
-    return await this.user.refreshToken(this.type)
-  }
-
   async check(loud: boolean = true): Array<any> {
     const { type, actions } = this
-    log('Syncer.check', this.sync.enabled, actions)
-    if (!this.sync.enabled) {
-      return
-    }
     if (!actions) {
       return
     }

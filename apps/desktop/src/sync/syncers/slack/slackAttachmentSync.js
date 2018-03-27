@@ -1,5 +1,5 @@
 // @flow
-import App, { Thing } from '~/app'
+import App, { Thing } from '@mcro/models'
 import * as _ from 'lodash'
 import * as r2 from '@mcro/r2'
 import { createInChunks } from '~/sync/helpers'

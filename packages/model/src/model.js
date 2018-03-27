@@ -227,13 +227,11 @@ export default class Model {
     // assign here to avoid changed `this` in proxy
     const { asyncFirstSync } = this.options
     const queryObject = x => (typeof x === 'string' ? { id: x } : x)
-
     return (queryParams: Object | string) => {
       const finalParams = defaultFilter(queryObject(queryParams))
       const query = target[baseMethod](finalParams)
       const sync = opts => this.syncQuery(query, opts)
       const executeQuery = query.exec.bind(query)
-
       const worm = object =>
         new Proxy(object, {
           get(target, method) {
@@ -275,7 +273,6 @@ export default class Model {
             }
           },
         })
-
       return worm(query)
     }
   }
@@ -284,16 +281,13 @@ export default class Model {
     if (this._collection) {
       return this._filteredCollection
     }
-
     // turns a serialized query back into a real query
     const getQuery = called => {
       return called.reduce((acc, cur) => {
         return acc[cur.name](...(cur.args || []))
       }, this.collection)
     }
-
     const { onConnection } = this
-
     // this worm returns when not yet connected, letting you still run queries before connect
     const worm = base => {
       const result = new Proxy(
@@ -325,7 +319,6 @@ export default class Model {
       )
       return result
     }
-
     return worm()
   }
 
@@ -347,16 +340,13 @@ export default class Model {
 
   connect = async (database: RxDB, options: Object): Promise<void> => {
     this.options = options || {}
-
     // avoid re-connect on hmr
     if (this.database || this.connected) {
       return
     }
-
     this.remote = options.remote
     this.database = database
     const name = options.remoteOnly ? options.remote : this.title
-
     try {
       this._collection = await database.collection({
         name,
@@ -372,7 +362,6 @@ export default class Model {
       console.log('TODO: delete data + retry')
       return
     }
-
     // sync PUSH
     const { shouldSyncPush } = this
     if (shouldSyncPush) {
@@ -388,18 +377,13 @@ export default class Model {
       })
       this.subscriptions.add(() => pushSync.cancel())
     }
-
     // bump listeners
     this.pouch.setMaxListeners(100)
-
     // create index
     await this.createIndexes()
-
     Helpers.applyHooks(this)
-
     // this makes our userdb react properly to login, no idea why
     this._collection.watchForChanges()
-
     // AND NOW
     this.setConnected(true)
   }
@@ -456,16 +440,15 @@ export default class Model {
     options: Object = { live: true, retry: false },
   ): Promise<boolean> => {
     const { shouldSyncPull } = this
-
     if (!shouldSyncPull) {
       return Promise.resolve(false)
     }
-
     let query = queryish
     if (query.query) {
       query = query.query
     }
     if (!isRxQuery(query)) {
+      console.log('about to error because this isnt a query', query)
       throw new Error(
         'Could not sync query, does not look like a proper RxQuery object.',
       )
@@ -620,7 +603,7 @@ export default class Model {
   }
 
   // create a model and persist
-  async create(object: Object | string) {
+  async create(object: Object | string = {}) {
     if (!this._collection) {
       await this.onConnection()
     }

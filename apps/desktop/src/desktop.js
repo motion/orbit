@@ -1,18 +1,22 @@
 // @flow
+import Database, { Models } from '@mcro/models'
+import adapter from 'pouchdb-adapter-memory'
 import Server from './server'
+import Plugins from './plugins'
+import Screen from './screen'
+import KeyboardStore from './stores/keyboardStore'
+import Auth from './auth'
 import hostile_ from 'hostile'
 import * as Constants from '~/constants'
 import { promisifyAll } from 'sb-promisify'
 import sudoPrompt_ from 'sudo-prompt'
-import ScreenMaster from './screenMaster'
-import KeyboardStore from './stores/keyboardStore'
+import Sync from './sync'
 import { App, Electron, Desktop } from '@mcro/all'
 import { store, debugState } from '@mcro/black'
 import global from 'global'
 import Path from 'path'
 import { getChromeContext } from './helpers/getContext'
-import Plugins from './plugins'
-import SearchStore from './stores/search'
+// import SearchStore from './stores/search'
 import open from 'opn'
 import iohook from 'iohook'
 
@@ -23,11 +27,23 @@ const sudoPrompt = promisifyAll(sudoPrompt_)
 
 @store
 export default class DesktopRoot {
-  server = new Server()
-  searchStore = new SearchStore()
+  // searchStore = new SearchStore()
+  database = new Database(
+    {
+      name: 'username',
+      password: 'password',
+      adapter,
+      adapterName: 'memory',
+    },
+    Models,
+  )
+  server = new Server({ pouch: this.database.pouch })
+  auth = new Auth()
   stores = null
 
   async start() {
+    global.Root = this
+    global.restart = this.restart
     await Desktop.start({
       ignoreSelf: true,
       master: true,
@@ -37,20 +53,26 @@ export default class DesktopRoot {
         Desktop,
       },
     })
-    this.screenMaster = new ScreenMaster()
+    await this.database.start({
+      modelOptions: {
+        // autoSync: true,
+        debug: true,
+      },
+    })
+    this.sync = new Sync()
+    this.screen = new Screen()
     this.plugins = new Plugins({
       server: this.server,
     })
     this.keyboardStore = new KeyboardStore({
-      onKeyClear: this.screenMaster.lastScreenChange,
+      onKeyClear: this.screen.lastScreenChange,
     })
     this.keyboardStore.start()
     iohook.start()
-    global.Root = this
-    global.restart = this.restart
     this.setupHosts()
     await this.server.start()
-    this.screenMaster.start()
+    this.screen.start()
+    this.sync.start()
     debugState(({ stores }) => {
       this.stores = stores
     })
@@ -83,7 +105,9 @@ export default class DesktopRoot {
 
   dispose = async () => {
     if (this.disposed) return
-    await this.screenMaster.dispose()
+    await this.screen.dispose()
+    this.sync.dispose()
+    await this.database.dispose()
     this.disposed = true
     return true
   }

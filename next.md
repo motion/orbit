@@ -1,8 +1,3 @@
-# ambitious chunks
-
-each should take 2-4 weeks
-order mildly important
-
 ## search metadata
 
 * store selections
@@ -43,52 +38,12 @@ order mildly important
 
 ## team level features
 
-* p2p sync
-* pin results to top
-
-## idea grabbag
-
-* MyWorkDay
-
-  * currently assigned
-
 * people pages
 
   * company directory at your fingers
   * should have very limited data
   * show recent docs / tickets / assigned
   * but not full on feed
-
-* eliminate wiki
-
-  * explorable-first interface
-  * auto categories
-  * customizable categories
-
-* company-wide daily summary
-
-  * attention sync
-  * topic over time modeling
-
-- pocket
-
-  * pin any site/snippet you're on into knowledge
-
-- interesting integrations
-
-  * calendar events
-  * general knowledge
-  * IDE: leave notes in code
-
-- company watch words
-
-  * important words to highlight
-  * can customize feed shown for them
-
-- interactions
-
-  * PM tool "status" toggles
-  * share buttons
 
 - app platform
 

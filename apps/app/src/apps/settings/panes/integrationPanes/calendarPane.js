@@ -1,6 +1,7 @@
 import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
-import App, { CurrentUser } from '~/app'
+import { CurrentUser } from '@mcro/models'
+import App from '~/app'
 import Things from './views/things'
 import * as Collapse from './views/collapse'
 

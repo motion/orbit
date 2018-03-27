@@ -227,13 +227,11 @@ export default class Model {
     // assign here to avoid changed `this` in proxy
     const { asyncFirstSync } = this.options
     const queryObject = x => (typeof x === 'string' ? { id: x } : x)
-
     return (queryParams: Object | string) => {
       const finalParams = defaultFilter(queryObject(queryParams))
       const query = target[baseMethod](finalParams)
       const sync = opts => this.syncQuery(query, opts)
       const executeQuery = query.exec.bind(query)
-
       const worm = object =>
         new Proxy(object, {
           get(target, method) {
@@ -275,12 +273,12 @@ export default class Model {
             }
           },
         })
-
       return worm(query)
     }
   }
 
   get collection(): RxCollection {
+    console.log('get me', this._collection)
     if (this._collection) {
       return this._filteredCollection
     }
@@ -456,11 +454,9 @@ export default class Model {
     options: Object = { live: true, retry: false },
   ): Promise<boolean> => {
     const { shouldSyncPull } = this
-
     if (!shouldSyncPull) {
       return Promise.resolve(false)
     }
-
     let query = queryish
     if (query.query) {
       query = query.query
@@ -621,7 +617,7 @@ export default class Model {
   }
 
   // create a model and persist
-  async create(object: Object | string) {
+  async create(object: Object | string = {}) {
     if (!this._collection) {
       await this.onConnection()
     }

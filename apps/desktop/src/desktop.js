@@ -15,7 +15,7 @@ import global from 'global'
 import Path from 'path'
 import { getChromeContext } from './helpers/getContext'
 import Plugins from './plugins'
-import SearchStore from './stores/search'
+// import SearchStore from './stores/search'
 import open from 'opn'
 import iohook from 'iohook'
 
@@ -26,9 +26,7 @@ const sudoPrompt = promisifyAll(sudoPrompt_)
 
 @store
 export default class DesktopRoot {
-  server = new Server()
-  searchStore = new SearchStore()
-  sync = new Sync()
+  // searchStore = new SearchStore()
   database = new Database(
     {
       name: 'username',
@@ -36,11 +34,14 @@ export default class DesktopRoot {
       adapter,
       adapterName: 'memory',
     },
-    Models
+    Models,
   )
+  server = new Server({ pouch: this.database.pouch })
   stores = null
 
   async start() {
+    global.Root = this
+    global.restart = this.restart
     await Desktop.start({
       ignoreSelf: true,
       master: true,
@@ -50,12 +51,15 @@ export default class DesktopRoot {
         Desktop,
       },
     })
+    console.log('db start')
     await this.database.start({
       modelOptions: {
-        autoSync: true,
+        // autoSync: true,
         debug: true,
       },
     })
+    console.log('db started')
+    this.sync = new Sync()
     this.screen = new Screen()
     this.plugins = new Plugins({
       server: this.server,
@@ -65,8 +69,6 @@ export default class DesktopRoot {
     })
     this.keyboardStore.start()
     iohook.start()
-    global.Root = this
-    global.restart = this.restart
     this.setupHosts()
     await this.server.start()
     this.screen.start()

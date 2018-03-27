@@ -1,7 +1,7 @@
 // @flow
 import { store, watch } from '@mcro/black'
 import * as Syncers from './syncers'
-import { Job } from '@mcro/models'
+import { Job, Setting } from '@mcro/models'
 
 const log = debug('sync')
 
@@ -19,7 +19,11 @@ function getRxError(error: Error) {
 @store
 export default class Sync {
   locks: Set<string> = new Set()
-  @watch pending: ?Array<Job> = () => Job.pending()
+  @watch
+  pending: ?Array<Job> = () => {
+    console.log('doing stuff')
+    return Job.pending()
+  }
   @watch nonPending: ?Array<Job> = () => Job.nonPending()
   syncers: ?Object = null
   enabled = true
@@ -80,13 +84,13 @@ export default class Sync {
   async startSyncers() {
     if (!this.syncers) {
       this.syncers = {}
+      console.log('Syncers', Syncers)
       for (const name of Object.keys(Syncers)) {
         try {
-          const syncer = new Syncers[name]({
-            sync: this,
-          })
+          const syncer = Syncers[name]
+          const setting = await Setting.get({ type: syncer.settings.type })
           if (syncer.start) {
-            await syncer.start()
+            await syncer.start({ setting })
           }
           this.syncers[name] = syncer
           if (!this[name]) {

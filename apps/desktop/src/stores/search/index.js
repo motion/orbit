@@ -138,6 +138,7 @@ export default class Search {
   ]
 
   async willMount() {
+    console.log('starting searhc..')
     this.db = new DB()
     await this.db.mount()
     const dataset = await start()

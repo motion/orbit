@@ -324,6 +324,7 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
   const stopAutoObserve = () => autoObserveDispose && autoObserveDispose()
 
   function update(newValue) {
+    console.log('update with newval', newValue, method)
     if (isntConnected) {
       return
     }
@@ -344,6 +345,7 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
   function runObservable() {
     stopAutoObserve()
     autoObserveDispose = Mobx.autorun(() => {
+      console.log('autorunnnn', curObservable)
       if (curObservable) {
         // 🐛 this fixes non-reaction for some odd reason
         // i think mobx things RxDocument looks "the same", so we follow version as well

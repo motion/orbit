@@ -5,10 +5,12 @@ import GoogleCalSync from './googleCalSync'
 import * as Constants from '~/constants'
 
 export default new Syncer({
-  type: 'google',
-  actions: {
-    // drive: { every: 60 },
-    cal: { every: 60 * 5 }, // 5 minutes
+  settings: {
+    type: 'google',
+    actions: {
+      // drive: { every: 60 },
+      cal: { every: 60 * 5 }, // 5 minutes
+    },
   },
   syncers: {
     drive: GoogleDriveSync,

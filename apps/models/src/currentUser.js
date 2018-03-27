@@ -1,7 +1,9 @@
-// @flow
-import { User, Setting, Thing } from '@mcro/models'
-import { store, watch } from '@mcro/black'
+import { store, watch } from '@mcro/black/store'
 import { omit } from 'lodash'
+import User from './user'
+import Setting from './setting'
+import Thing from './thing'
+import global from 'global'
 
 @store
 class CurrentUser {
@@ -87,7 +89,7 @@ class CurrentUser {
     return this.user && this.user.refreshToken
   }
 
-  get token(): (provider: string) => string {
+  get token() {
     return (this.user && this.user.token) || (_ => '')
   }
 
@@ -100,8 +102,6 @@ class CurrentUser {
 }
 
 const user = new CurrentUser()
-
-// because
-window.CurrentUser = user
+global.CurrentUser = user
 
 export default user

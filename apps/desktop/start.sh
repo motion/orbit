@@ -16,6 +16,7 @@ npx nodemon \
   --ignore src \
   --watch lib \
   --watch $(realpath node_modules/@mcro/black) \
+  --watch $(realpath node_modules/@mcro/models) \
   --watch $(realpath node_modules/@mcro/debug) \
   --watch $(realpath node_modules/@mcro/dev) \
   --watch $(realpath node_modules/@mcro/macros) \

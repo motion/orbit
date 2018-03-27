@@ -270,7 +270,7 @@ class Bridge {
     } else {
       if (process.env.NODE_ENV === 'development') {
         if (!ignoreLog && isInternal && Object.keys(changed).length) {
-          log(`${this._source.replace('Store', '')}.setState =>`, changed)
+          // log(`${this._source.replace('Store', '')}.setState =>`, changed)
         }
       }
     }

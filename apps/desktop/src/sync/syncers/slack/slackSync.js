@@ -7,8 +7,8 @@ export default new Syncer({
     actions: {
       attachments: { every: 60 * 60 * 24 },
     },
-    syncers: {
-      attachments: SlackAttachmentSync,
-    },
+  },
+  syncers: {
+    attachments: SlackAttachmentSync,
   },
 })

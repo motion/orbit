@@ -5,6 +5,7 @@ import iconGMail from '~/../public/icons/gmail.svg'
 import iconGSheets from '~/../public/icons/gsheets.svg'
 import iconSlack from '~/../public/icons/slack.svg'
 import iconGithub from '~/../public/icons/github.svg'
+import iconGithubWhite from '~/../public/icons/github-white.svg'
 
 const icons = {
   gcalendar: iconGCalendar,
@@ -14,6 +15,7 @@ const icons = {
   gsheets: iconGSheets,
   slack: iconSlack,
   github: iconGithub,
+  githubWhite: iconGithubWhite,
 }
 
 export default ({ icon, ...props }) => (

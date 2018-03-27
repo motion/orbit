@@ -47,33 +47,6 @@ class IntegrationHeaderStore {
     }
     return this.props.integrationStore.lastJobs[service + ':' + action]
   }
-
-  checkAuths = async () => {
-    const { error, ...authorizations } = await r2.get(
-      `${Constants.API_URL}/getCreds`,
-    ).json
-    if (error) {
-      console.log('no creds')
-    } else {
-      return authorizations
-    }
-  }
-
-  startOauth(integration) {
-    if (Constants.IS_ELECTRON) {
-      App.setAuthOpen(integration)
-    } else {
-      window.open(`${Constants.API_URL}/auth?service=${integration}`)
-    }
-    const checker = this.setInterval(async () => {
-      const authorizations = await this.checkAuths()
-      if (authorizations && authorizations[integration]) {
-        await CurrentUser.setAuthorizations(authorizations)
-        App.setAuthClose(integration)
-        clearInterval(checker)
-      }
-    }, 1000)
-  }
 }
 
 @view.attach('integrationStore')

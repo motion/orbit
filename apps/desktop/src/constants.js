@@ -16,6 +16,10 @@ export const PUBLIC_URL = IS_DEV
   ? 'http://localhost:3002'
   : 'http://seemirai.com'
 
+export const APP_URL = IS_DEV
+  ? 'http://localhost:3001'
+  : 'http://app.seemirai.com:3009'
+
 export const API_HOST = IS_DEV ? 'localhost' : 'app.seemirai.com'
 export const SERVER_PORT = process.env.PORT || IS_DEV ? 3001 : 3009
 

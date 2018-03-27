@@ -1,18 +1,49 @@
-// @flow
+import { store } from '@mcro/black/store'
+import { omit } from 'lodash'
+import Gun from 'gun/gun'
 import global from 'global'
-import { Model, array, object, str } from '@mcro/model'
-import * as Constants from '~/constants'
 
-export const methods = {
-  token(provider: string) {
+const gun = Gun()
+console.log('gun', gun)
+
+@store
+class User {
+  version = 0
+
+  get user() {
+    return gun.user()
+  }
+
+  get bucket() {
+    return 'Default'
+  }
+
+  get loggedIn() {
+    return !!this.user
+  }
+
+  get authorizations() {
+    this.version
+    return this.user && this.user.authorizations
+  }
+
+  constructor() {
+    try {
+      gun.user().create('username', 'password')
+    } catch (err) {
+      gun.user().auth('admin', 'password')
+    }
+  }
+
+  token(provider) {
     return (
       this.authorizations &&
       this.authorizations[provider] &&
       this.authorizations[provider].token
     )
-  },
+  }
 
-  async refreshToken(provider: string) {
+  async refreshToken(provider) {
     if (!provider) {
       throw new Error(`no provider ${provider}`)
     }
@@ -35,44 +66,24 @@ export const methods = {
       await this.mergeUpdate(update)
     }
     return info.refreshToken
-  },
+  }
+
+  async setAuthorizations(authorizations) {
+    await this.user.put({
+      authorizations,
+    })
+    this.version++
+  }
+
+  unlink = async provider => {
+    const user = this.user
+    console.log('omitted is', omit(user.authorizations, [provider]))
+    user.authorizations = omit(user.authorizations, [provider])
+    await user.save()
+  }
 }
 
-export class UserModel extends Model {
-  static props = {
-    id: str.primary,
-    name: str.optional,
-    username: str.optional,
-    type: str.optional,
-    roles: array.optional.items(str),
-    providers: array.optional.items(str),
-    unverifiedEmail: object.optional,
-    local: object.optional,
-    signUp: object.optional,
-    personalDBs: object.optional,
-    activity: array.optional.items(object),
-    session: object.optional,
-    authorizations: object,
-    settings: object,
-  }
+const user = new User()
+global.User = user
 
-  static defaultProps = {
-    authorizations: {},
-    settings: {},
-  }
-
-  settings = {
-    database: 'users',
-    autoSync: {
-      push: !!Constants.AUTH_SERVICE,
-      pull: false, //'basic',
-    },
-  }
-
-  methods = methods
-}
-
-const UserInstance = new UserModel()
-global.User = UserInstance
-
-export default UserInstance
+export default user

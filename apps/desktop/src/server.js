@@ -8,10 +8,9 @@ import * as Constants from '~/constants'
 import OAuth from './server/oauth'
 import OAuthStrategies from './server/oauth.strategies'
 import Passport from 'passport'
-// import Crawler from '@mcro/crawler'
-import path from 'path'
 import killPort from 'kill-port'
 // import getEmbedding from './embedding'
+import Gun from 'gun'
 import Fs from 'fs'
 import Path from 'path'
 import expressPouch from 'express-pouchdb'
@@ -54,6 +53,9 @@ export default class Server {
     this.app.use(bodyParser.json({ limit: '2048mb' }))
     this.app.use(bodyParser.urlencoded({ limit: '2048mb', extended: true }))
 
+    // gun
+    this.app.use(Gun.server)
+
     // this.setupIcons
     app.use('/icons', express.static(Constants.TMP_DIR))
     // HACKY DANGEROUS
@@ -77,9 +79,11 @@ export default class Server {
   async start() {
     // kill old processes
     await killPort(SERVER_PORT)
-    this.app.listen(SERVER_PORT, () => {
+    const server = this.app.listen(SERVER_PORT, () => {
       log('listening at port', SERVER_PORT)
     })
+
+    Gun({ file: Path.join(__dirname, '..', 'data', 'fun.json'), web: server })
 
     return SERVER_PORT
   }

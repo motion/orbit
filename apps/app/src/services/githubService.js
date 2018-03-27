@@ -1,7 +1,7 @@
 // @flow
 import Octokat from 'octokat'
 import { store, watch } from '@mcro/black'
-import { CurrentUser } from '~/app'
+import { CurrentUser } from '@mcro/model'
 
 @store
 export default class GithubService {
@@ -17,7 +17,7 @@ export default class GithubService {
           })
         }
       },
-      true
+      true,
     )
   }
 

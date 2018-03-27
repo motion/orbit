@@ -2,19 +2,20 @@
 import Database, { Models } from '@mcro/models'
 import adapter from 'pouchdb-adapter-memory'
 import Server from './server'
+import Plugins from './plugins'
+import Screen from './screen'
+import KeyboardStore from './stores/keyboardStore'
+import Auth from './auth'
 import hostile_ from 'hostile'
 import * as Constants from '~/constants'
 import { promisifyAll } from 'sb-promisify'
 import sudoPrompt_ from 'sudo-prompt'
-import Screen from './screen'
-import KeyboardStore from './stores/keyboardStore'
 import Sync from './sync'
 import { App, Electron, Desktop } from '@mcro/all'
 import { store, debugState } from '@mcro/black'
 import global from 'global'
 import Path from 'path'
 import { getChromeContext } from './helpers/getContext'
-import Plugins from './plugins'
 // import SearchStore from './stores/search'
 import open from 'opn'
 import iohook from 'iohook'
@@ -37,6 +38,7 @@ export default class DesktopRoot {
     Models,
   )
   server = new Server({ pouch: this.database.pouch })
+  auth = new Auth()
   stores = null
 
   async start() {

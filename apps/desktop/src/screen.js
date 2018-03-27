@@ -5,7 +5,7 @@ import iohook from 'iohook'
 import { store, isEqual, react } from '@mcro/black/store'
 import { Desktop, Electron, Swift } from '@mcro/all'
 
-const log = debug('screenMaster')
+const log = debug('Screen')
 const ORBIT_APP_ID = 'com.github.electron'
 const APP_ID = -1
 
@@ -124,7 +124,6 @@ export default class ScreenMaster {
           if (value.id !== id) return
           nextState.offset = value.pos
       }
-      log('id', this.curAppID)
       const state = {
         focusedOnOrbit: this.curAppID === ORBIT_APP_ID,
       }

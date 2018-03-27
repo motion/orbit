@@ -1,7 +1,7 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
-import { CurrentUser, Job } from '~/app'
+import { CurrentUser, Job } from '@mcro/models'
 import Logo from './logo'
 import { formatDistance } from 'date-fns'
 import { includes } from 'lodash'

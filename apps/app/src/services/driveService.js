@@ -1,6 +1,6 @@
 // @flow
 import { store } from '@mcro/black'
-import { CurrentUser } from '@mcro/model'
+import { CurrentUser } from '@mcro/models'
 
 @store
 export default class DriveService {

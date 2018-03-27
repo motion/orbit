@@ -1,7 +1,7 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
-import { Thing, CurrentUser } from '~/app'
+import { Thing, CurrentUser } from '@mcro/models'
 
 @view({
   store: class PinPaneStore {

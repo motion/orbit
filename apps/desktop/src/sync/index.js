@@ -19,11 +19,7 @@ function getRxError(error: Error) {
 @store
 export default class Sync {
   locks: Set<string> = new Set()
-  @watch
-  pending: ?Array<Job> = () => {
-    console.log('doing stuff')
-    return Job.pending()
-  }
+  @watch pending: ?Array<Job> = () => Job.pending()
   @watch nonPending: ?Array<Job> = () => Job.nonPending()
   syncers: ?Object = null
   enabled = true

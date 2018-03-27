@@ -1,5 +1,4 @@
-// import { store } from '@mcro/black'
-import CurrentUser from '~/stores/currentUserStore'
+import { CurrentUser } from '@mcro/models'
 import * as ServiceClasses from './all'
 
 // this sets up services on demand to avoid resource usage
@@ -23,7 +22,7 @@ const Services = new Proxy(
       target.services[method] = new ServiceClasses[method](CurrentUser)
       return target.services[method]
     },
-  }
+  },
 )
 
 window.Services = Services

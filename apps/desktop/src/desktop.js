@@ -53,14 +53,12 @@ export default class DesktopRoot {
         Desktop,
       },
     })
-    console.log('db start')
     await this.database.start({
       modelOptions: {
         // autoSync: true,
         debug: true,
       },
     })
-    console.log('db started')
     this.sync = new Sync()
     this.screen = new Screen()
     this.plugins = new Plugins({

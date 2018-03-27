@@ -16,7 +16,6 @@ export default class Plugins {
   searchId = 0
 
   constructor({ server }) {
-    console.log('CONSTRUCTING PLUGINS')
     this.server = server
     this.icons = new Icons()
     this.start()
@@ -36,7 +35,6 @@ export default class Plugins {
   reactToSearches = [
     () => App.state.query,
     async query => {
-      console.log('react to query')
       const uid = Math.random()
       this.searchId = uid
       let results = []
@@ -50,7 +48,6 @@ export default class Plugins {
         const isStillValid = uid === this.searchId
         if (isStillValid) {
           results = [...results, ...resultsWithIcons]
-          console.log(';SETTINGS THIS SHIT')
           Desktop.setSearchState({ pluginResults: results })
         }
       })

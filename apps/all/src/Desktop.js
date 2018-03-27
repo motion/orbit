@@ -90,7 +90,7 @@ class DesktopStore {
 
   results = []
 
-  @react
+  @react({ log: false })
   memoizedResults = [
     () => [
       ...Desktop.searchState.searchResults,

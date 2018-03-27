@@ -278,20 +278,16 @@ export default class Model {
   }
 
   get collection(): RxCollection {
-    console.log('get me', this._collection)
     if (this._collection) {
       return this._filteredCollection
     }
-
     // turns a serialized query back into a real query
     const getQuery = called => {
       return called.reduce((acc, cur) => {
         return acc[cur.name](...(cur.args || []))
       }, this.collection)
     }
-
     const { onConnection } = this
-
     // this worm returns when not yet connected, letting you still run queries before connect
     const worm = base => {
       const result = new Proxy(
@@ -323,7 +319,6 @@ export default class Model {
       )
       return result
     }
-
     return worm()
   }
 
@@ -345,16 +340,13 @@ export default class Model {
 
   connect = async (database: RxDB, options: Object): Promise<void> => {
     this.options = options || {}
-
     // avoid re-connect on hmr
     if (this.database || this.connected) {
       return
     }
-
     this.remote = options.remote
     this.database = database
     const name = options.remoteOnly ? options.remote : this.title
-
     try {
       this._collection = await database.collection({
         name,
@@ -370,7 +362,6 @@ export default class Model {
       console.log('TODO: delete data + retry')
       return
     }
-
     // sync PUSH
     const { shouldSyncPush } = this
     if (shouldSyncPush) {
@@ -386,18 +377,13 @@ export default class Model {
       })
       this.subscriptions.add(() => pushSync.cancel())
     }
-
     // bump listeners
     this.pouch.setMaxListeners(100)
-
     // create index
     await this.createIndexes()
-
     Helpers.applyHooks(this)
-
     // this makes our userdb react properly to login, no idea why
     this._collection.watchForChanges()
-
     // AND NOW
     this.setConnected(true)
   }

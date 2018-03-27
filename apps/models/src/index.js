@@ -27,10 +27,10 @@ export const Job = JobInstance
 export const Setting = SettingInstance
 export const Event = EventInstance
 export const Person = PersonInstance
-
 export CurrentUser from './currentUser'
 
 // ⭐️ DONT FORGET TO ADD HERE TOO:
+// this lets you connect them all at once
 
 export const Models = {
   Thing: ThingInstance,

@@ -546,7 +546,7 @@ export default class Model {
 
   // user facing!
 
-  sync = async (options = {}) => {
+  sync = async (options = { push: true, pull: true }) => {
     await this.onConnection()
     return await this._collection.sync({
       remote: this.remote,

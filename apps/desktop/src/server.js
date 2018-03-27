@@ -67,6 +67,7 @@ export default class Server {
 
     // this.setupCrawler()
     this.app.get('/hello', (req, res) => res.send('hello world'))
+    this.setupPouch()
     this.setupEmbedding()
     this.setupCredPass()
     this.setupPassportRoutes()
@@ -186,26 +187,44 @@ export default class Server {
     //   .map(model => Models[model].title)
     //   .map(name => `/db/${name}`)
 
+    // pouch routes
+    this.app.use('/db2', expressPouch(this.pouch, { inMemoryConfig: true }))
+
     // rewrite rxdb paths to non-rxdb :)
     this.app.use(
       '/db',
       proxy({
-        target: '/db2',
+        target: 'http://localhost:3001/db2',
         pathRewrite: path => {
+          console.log('pouch path,', path)
           if (path === '/db' || path === '/db/') {
             return '/'
+          }
+          if (path.indexOf('_utils')) {
+            return path.replace('/db', '')
           }
           const newPath = path.replace(
             /\/db\/(.*)([\/\?].*)?$/g,
             '/username-rxdb-0-$1$2',
           )
+          console.log('rewrite path', path, newPath)
           return newPath
         },
       }),
     )
 
-    // pouch routes
-    this.app.use('/db2', expressPouch(this.pouch, { inMemoryConfig: true }))
+    this.app.use(
+      '/dbadmin',
+      proxy({
+        target: 'http://localhost:3001/db2',
+        pathRewrite: { '^/dbadmin': '/_utils' },
+      }),
+    )
+
+    this.app.use(
+      '/dashboard.assets',
+      proxy({ target: 'http://localhost:3001/db2/_utils' }),
+    )
   }
 
   creds = {}

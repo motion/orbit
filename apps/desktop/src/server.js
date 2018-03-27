@@ -180,6 +180,33 @@ export default class Server {
   //   })
   // }
 
+  setupPouch() {
+    // const dbPaths = Object.keys(Models)
+    //   .map(model => Models[model].title)
+    //   .map(name => `/db/${name}`)
+
+    // rewrite rxdb paths to non-rxdb :)
+    this.app.use(
+      '/db',
+      proxy({
+        target: '/db2',
+        pathRewrite: path => {
+          if (path === '/db' || path === '/db/') {
+            return '/'
+          }
+          const newPath = path.replace(
+            /\/db\/(.*)([\/\?].*)?$/g,
+            '/username-rxdb-0-$1$2'
+          )
+          return newPath
+        },
+      })
+    )
+
+    // pouch routes
+    this.app.use('/db2', expressPouch(this.pouch, { inMemoryConfig: true }))
+  }
+
   creds = {}
   setupCredPass() {
     this.app.use('/getCreds', (req, res) => {

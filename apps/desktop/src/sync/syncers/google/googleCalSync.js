@@ -1,5 +1,5 @@
 // @flow
-import { Event } from '~/app'
+import { Event } from '@mcro/models'
 import { createInChunks } from '~/sync/helpers'
 
 const log = debug('sync')

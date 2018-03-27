@@ -1,4 +1,6 @@
 // @flow
+import Database, { Models } from '@mcro/models'
+import adapter from 'pouchdb-adapter-memory'
 import Server from './server'
 import hostile_ from 'hostile'
 import * as Constants from '~/constants'
@@ -6,6 +8,7 @@ import { promisifyAll } from 'sb-promisify'
 import sudoPrompt_ from 'sudo-prompt'
 import Screen from './screen'
 import KeyboardStore from './stores/keyboardStore'
+import Sync from './sync'
 import { App, Electron, Desktop } from '@mcro/all'
 import { store, debugState } from '@mcro/black'
 import global from 'global'
@@ -25,6 +28,16 @@ const sudoPrompt = promisifyAll(sudoPrompt_)
 export default class DesktopRoot {
   server = new Server()
   searchStore = new SearchStore()
+  sync = new Sync()
+  database = new Database(
+    {
+      name: 'username',
+      password: 'password',
+      adapter,
+      adapterName: 'memory',
+    },
+    Models
+  )
   stores = null
 
   async start() {
@@ -35,6 +48,12 @@ export default class DesktopRoot {
         App,
         Electron,
         Desktop,
+      },
+    })
+    await this.database.start({
+      modelOptions: {
+        autoSync: true,
+        debug: true,
       },
     })
     this.screen = new Screen()
@@ -51,6 +70,7 @@ export default class DesktopRoot {
     this.setupHosts()
     await this.server.start()
     this.screen.start()
+    this.sync.start()
     debugState(({ stores }) => {
       this.stores = stores
     })
@@ -84,6 +104,8 @@ export default class DesktopRoot {
   dispose = async () => {
     if (this.disposed) return
     await this.screen.dispose()
+    this.sync.dispose()
+    await this.database.dispose()
     this.disposed = true
     return true
   }

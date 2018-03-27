@@ -11,6 +11,7 @@
     "build-electron": "electron-rebuild -v 1.7.10"
   },
   "dependencies": {
+    "@mcro/r2": "*",
     "@mcro/debug": "*",
     "@mcro/black": "*",
     "@mcro/crawler": "^1.5.1",
@@ -18,9 +19,12 @@
     "@mcro/passport-slack": "^1.5.1",
     "@mcro/all": "*",
     "@mcro/macros": "*",
+    "@mcro/models": "*",
+    "pouchdb-adapter-memory": "^6.4.3",
     "file-icon": "^2.1.0",
     "opn": "^5.2.0",
     "event-stream": "^3.3.4",
+    "apollo-fetch": "^0.7.0",
     "cerebro-tools": "^0.1.8",
     "babel-polyfill": "^6.23.0",
     "body-parser": "^1.16.1",

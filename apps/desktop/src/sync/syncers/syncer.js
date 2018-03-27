@@ -6,29 +6,17 @@ const log = debug('sync')
 const DEFAULT_CHECK_INTERVAL = 1000 * 60 // 1 minute
 
 export default class Syncer {
-  // external interface, must set:
-  static settings: {
-    syncers: Object<string, Object>,
-    type: string,
-    actions: Object,
-  }
-
-  constructor({ user, sync }) {
-    this.user = user
-    this.sync = sync
-  }
-
-  // internal
-  syncers = {}
   jobWatcher: ?number
 
-  get settings() {
-    return this.constructor.settings
+  constructor({ user, sync, syncers, props }) {
+    this.user = user
+    this.sync = sync
+    this.syncerModels = syncers
+    this.props = props
   }
 
   start() {
     this.createSyncers()
-
     // every so often
     this.jobWatcher = setInterval(
       () => this.check(false),
@@ -40,16 +28,14 @@ export default class Syncer {
   createSyncers() {
     this.watch(function watchCreateSyncers() {
       if (this.setting && this.token) {
-        const { syncers } = this.settings
-
+        const { syncerModels } = this
         // setup syncers
-        if (syncers) {
-          for (const key of Object.keys(syncers)) {
+        if (syncerModels) {
+          for (const key of Object.keys(syncerModels)) {
             if (this.syncers[key]) {
               return
             }
-
-            const Syncer = syncers[key]
+            const Syncer = syncerModels[key]
             if (!Syncer) {
               console.error('no syncer for', key)
             } else {
@@ -57,7 +43,7 @@ export default class Syncer {
                 this.syncers[key] = new Syncer({
                   setting: this.setting,
                   token: this.token,
-                  helpers: this.helpers,
+                  ...this.props,
                 })
                 // helper to make checking syncers easier
                 if (!this[key]) {

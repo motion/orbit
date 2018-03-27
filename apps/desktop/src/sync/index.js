@@ -1,7 +1,7 @@
 // @flow
 import { store, watch } from '@mcro/black'
 import * as Syncers from './syncers'
-import { Job, CurrentUser } from '~/app'
+import { Job } from '@mcro/models'
 
 const log = debug('sync')
 
@@ -22,7 +22,7 @@ export default class Sync {
   @watch pending: ?Array<Job> = () => Job.pending()
   @watch nonPending: ?Array<Job> = () => Job.nonPending()
   syncers: ?Object = null
-  enabled = localStorage.getItem('runSyncers') !== 'false'
+  enabled = true
 
   start() {
     this.watchJobs()
@@ -36,10 +36,6 @@ export default class Sync {
         : 'SYNC DISABLED (enable: App.sync.enable())'
       console.log(`%c----${title}----`, 'background: orange')
     })
-  }
-
-  async stop() {
-    await this.disposeSyncers()
   }
 
   runAll() {
@@ -58,13 +54,11 @@ export default class Sync {
 
   enable() {
     this.enabled = true
-    localStorage.setItem('runSyncers', 'true')
     this.runAll()
   }
 
   disable() {
     this.enabled = false
-    localStorage.setItem('runSyncers', 'false')
   }
 
   async dispose() {
@@ -84,16 +78,11 @@ export default class Sync {
   }
 
   async startSyncers() {
-    const user = CurrentUser
-    if (!user) {
-      throw new Error('No CurrentUser')
-    }
     if (!this.syncers) {
       this.syncers = {}
       for (const name of Object.keys(Syncers)) {
         try {
           const syncer = new Syncers[name]({
-            user: CurrentUser,
             sync: this,
           })
           if (syncer.start) {

@@ -29,9 +29,15 @@ debug.disable = (...logNames) => {
     disableLogs[name] = true
   }
 }
+debug.settings = () => disableLogs
 
 function nodeStringify(_thing) {
-  let thing = Mobx.toJS(_thing)
+  let thing
+  try {
+    thing = Mobx.toJS(_thing)
+  } catch (err) {
+    thing = _thing
+  }
   if (!thing) {
     return `${thing}`
   }

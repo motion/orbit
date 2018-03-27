@@ -466,6 +466,7 @@ export default class Model {
       query = query.query
     }
     if (!isRxQuery(query)) {
+      console.log('about to error because this isnt a query', query)
       throw new Error(
         'Could not sync query, does not look like a proper RxQuery object.',
       )

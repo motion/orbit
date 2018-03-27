@@ -1,10 +1,8 @@
-import { store } from '@mcro/black/store'
 import Syncer from '../syncer'
 import SlackAttachmentSync from './slackAttachmentSync.js'
 
-@store
-export default class SlackSync extends Syncer {
-  static settings = {
+export default new Syncer({
+  settings: {
     type: 'slack',
     actions: {
       attachments: { every: 60 * 60 * 24 },
@@ -12,5 +10,5 @@ export default class SlackSync extends Syncer {
     syncers: {
       attachments: SlackAttachmentSync,
     },
-  }
-}
+  },
+})

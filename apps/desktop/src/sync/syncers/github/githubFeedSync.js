@@ -1,5 +1,5 @@
 // @flow
-import { Event, Thing } from '~/app'
+import { Event, Thing } from '@mcro/models'
 
 const log = debug('sync')
 

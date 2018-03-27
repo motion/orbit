@@ -1,5 +1,5 @@
 // @flow
-import { Thing } from '~/app'
+import { Thing } from '@mcro/models'
 import { createApolloFetch } from 'apollo-fetch'
 import { omit, flatten } from 'lodash'
 import { createInChunks } from '~/sync/helpers'

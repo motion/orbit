@@ -1,11 +1,16 @@
 export default class IndexedDB {
-  IDB = window.indexedDB ||
-    window.mozIndexedDB ||
-    window.webkitIndexedDB ||
-    window.msIndexedDB ||
-    window.shimIndexedDB
+  IDB = typeof window !== 'undefined'
+    ? window.indexedDB ||
+      window.mozIndexedDB ||
+      window.webkitIndexedDB ||
+      window.msIndexedDB ||
+      window.shimIndexedDB
+    : null
 
   constructor(options) {
+    if (!this.IDB) {
+      return
+    }
     this.options = this.getDefaultOptions(options)
     this.open = this.IDB.open(this.options.name, this.options.version)
     this.open.onupgradeneeded = this.handleUpgrade
@@ -38,7 +43,7 @@ export default class IndexedDB {
     const db = this.open.result
     const store = db.createObjectStore(
       this.options.storeName,
-      this.options.keyPath
+      this.options.keyPath,
     )
     for (const { name, fields } of this.options.indexes) {
       store.createIndex(name, fields)
@@ -72,7 +77,7 @@ export default class IndexedDB {
       getter.onsuccess = () => resolve(getter.result)
       getter.onerror = reject
     })
-  };
+  }
 
   close = () => {
     this.db.close()

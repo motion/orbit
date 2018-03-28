@@ -87,7 +87,6 @@ class Bridge {
     // set initial state synchronously before
     this._initialState = JSON.parse(JSON.stringify(initialState))
     if (initialState) {
-      console.log('setting inital state for', this._source)
       this.setState(initialState, false)
     }
     // setup start/quit actions

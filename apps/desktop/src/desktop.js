@@ -9,6 +9,7 @@ import * as Constants from '~/constants'
 import { promisifyAll } from 'sb-promisify'
 import sudoPrompt_ from 'sudo-prompt'
 import Sync from './sync'
+import SQLiteServer from './sqliteServer'
 import { App, Electron, Desktop } from '@mcro/all'
 import { store, debugState } from '@mcro/black'
 import global from 'global'
@@ -28,12 +29,12 @@ export default class DesktopRoot {
   // searchStore = new SearchStore()
   server = new Server()
   auth = new Auth()
+  sqlite = new SQLiteServer()
   stores = null
 
   async start() {
     global.Root = this
     global.restart = this.restart
-    console.log('start desktop')
     await Desktop.start({
       ignoreSelf: true,
       master: true,
@@ -43,8 +44,8 @@ export default class DesktopRoot {
         Desktop,
       },
     })
-    console.log('done w desktop, start other stuff')
-    this.sync = new Sync()
+    // this.sync = new Sync()
+    // this.sync.start()
     this.screen = new Screen()
     this.plugins = new Plugins({
       server: this.server,
@@ -57,7 +58,6 @@ export default class DesktopRoot {
     this.setupHosts()
     await this.server.start()
     this.screen.start()
-    this.sync.start()
     debugState(({ stores }) => {
       this.stores = stores
     })
@@ -91,7 +91,7 @@ export default class DesktopRoot {
   dispose = async () => {
     if (this.disposed) return
     await this.screen.dispose()
-    this.sync.dispose()
+    // this.sync.dispose()
     this.disposed = true
     return true
   }

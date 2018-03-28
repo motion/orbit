@@ -10,7 +10,6 @@ import OAuthStrategies from './server/oauth.strategies'
 import Passport from 'passport'
 import killPort from 'kill-port'
 import getEmbedding from './embedding'
-import Gun from 'gun'
 import Fs from 'fs'
 import Path from 'path'
 import * as _ from 'lodash'
@@ -52,9 +51,6 @@ export default class Server {
     this.app.use(bodyParser.json({ limit: '2048mb' }))
     this.app.use(bodyParser.urlencoded({ limit: '2048mb', extended: true }))
 
-    // gun
-    this.app.use(Gun.serve)
-
     // this.setupIcons
     app.use('/icons', express.static(Constants.TMP_DIR))
     // HACKY DANGEROUS
@@ -77,27 +73,8 @@ export default class Server {
   async start() {
     // kill old processes
     await killPort(SERVER_PORT)
-    const server = this.app.listen(SERVER_PORT, () => {
-      log('listening at port', SERVER_PORT)
-    })
-
-    const gun = Gun({
-      file: Path.join(__dirname, '..', 'data', 'fun.json'),
-      web: server,
-    })
-
-    gun
-      .get('jobs')
-      // .val()
-      .map()
-      .on(job => {
-        console.log('have job', job)
-      })
-
-    console.log('insert a job')
-    gun.get('jobs').set({
-      id: 1,
-      type: 'slack',
+    this.app.listen(SERVER_PORT, () => {
+      // log('listening at port', SERVER_PORT)
     })
 
     return SERVER_PORT
@@ -167,7 +144,7 @@ export default class Server {
     const router = {
       'http://localhost:3001': Constants.PUBLIC_URL,
     }
-    log('proxying', router)
+    // log('proxying', router)
     this.app.use(
       '/',
       proxy({

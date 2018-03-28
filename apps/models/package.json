@@ -5,16 +5,15 @@
   "main": "lib/index.js",
   "module": "lib/index.js",
   "scripts": {
-    "build": "build prod,dev",
+    "build": "tsc",
     "watch": "npm run build -- --watch"
   },
   "dependencies": {
     "@mcro/black": "*",
-    "gun": "^0.9.99",
-    "debug": "^3.1.0",
+    "@mcro/debug": "*",
+    "typeorm": "0.1.18",
     "global": "^4.3.2",
-    "lodash": "^4.17.4",
-    "is-my-ip-valid": "^1.0.0"
+    "lodash": "^4.17.4"
   },
   "peerDependencies": {
     "mobx": "*"

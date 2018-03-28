@@ -20,6 +20,7 @@
     "@mcro/r2": "^1.5.1",
     "@mcro/router": "^1.5.1",
     "@mcro/ui": "^1.5.1",
+    "primus": "^7.1.1",
     "babel-plugin-transform-regenerator": "6.26.0",
     "babel-polyfill": "^6.23.0",
     "color": "^2.0.1",

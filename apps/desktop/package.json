@@ -61,6 +61,8 @@
     "sudo-prompt": "^7.1.1",
     "ws": "^3.3.3",
     "sqlite": "2.9.1",
+    "sqlite3": "^3.0.4",
+    "primus": "^7.1.1",
     "static-kdtree": "1.0.2"
   },
   "devDependencies": {

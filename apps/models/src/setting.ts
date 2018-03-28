@@ -4,7 +4,8 @@ import * as T from './typeorm'
 export class Setting extends T.BaseEntity {
   @T.PrimaryGeneratedColumn() id: number
   @T.Column() type: string
-  @T.Column('simple-json') values: {}
+  @T.Column('simple-json', { default: '{}' })
+  values: Object
   @T.CreateDateColumn() createdAt: Date
   @T.UpdateDateColumn() updatedAt: Date
 }

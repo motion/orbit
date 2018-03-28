@@ -5,6 +5,16 @@ import { Job, Setting } from '@mcro/models'
 
 const log = debug('sync')
 
+async function findOrCreateSetting({ type }) {
+  let setting = await Setting.findOne({ type })
+  if (setting) {
+    return setting
+  }
+  setting = new Setting()
+  setting.type = type
+  return await setting.save()
+}
+
 function getRxError(error: Error) {
   const { message, stack } = error
   try {
@@ -132,7 +142,11 @@ export default class Sync {
     this.syncers = {}
     for (const name of Object.keys(Syncers)) {
       try {
-        const setting = await Setting.find({ type: name })
+        const setting = await findOrCreateSetting({ type: name })
+        if (!setting) {
+          console.log('no setting for', name)
+          continue
+        }
         const syncer = Syncers[name](setting)
         this.syncers[name] = syncer
         if (!this[name]) {
@@ -160,7 +174,7 @@ export default class Sync {
   }
 
   runJob = async (job: Job) => {
-    log('Running job', job.type, job.action)
+    log('runJob()', job.type, job.action)
     job.status = Job.statuses.PROCESSING
     job.tries += 1
     await job.save()
@@ -168,24 +182,22 @@ export default class Sync {
       return
     }
     const syncer = this.syncers[job.type]
-
-    if (syncer) {
-      try {
-        await syncer.run(job.action)
-      } catch (error) {
-        console.log('error running syncer', error)
-        job.status = Job.statuses.FAILED
-        job.lastError = getRxError(error)
-        await job.save()
-      }
-    } else {
+    if (!syncer) {
       console.log('no syncer found for', job)
+      return
     }
-
-    // update job
-    job.percent = 100
-    job.status = Job.statuses.COMPLETE
-    await job.save()
-    log('Job complete:', job.type, job.action, job.id)
+    try {
+      await syncer.run(job.action)
+      // update job
+      job.percent = 100
+      job.status = Job.statuses.COMPLETE
+      await job.save()
+      log('runJob() done', job.type, job.action)
+    } catch (error) {
+      console.log('error running syncer', error)
+      job.status = Job.statuses.FAILED
+      job.lastError = getRxError(error)
+      await job.save()
+    }
   }
 }

@@ -74,6 +74,7 @@ const getHelpers = setting => ({
 export default setting => {
   const helpers = getHelpers(setting)
   return new Syncer('github', {
+    setting,
     actions: {
       task: { every: 60 * 5 },
       feed: { every: 30 },

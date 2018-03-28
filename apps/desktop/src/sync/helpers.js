@@ -19,7 +19,7 @@ export async function ensureJob(
   options: Object = {},
   force?: boolean,
 ): ?Job {
-  log(`ensureJob: ${type} ${action}`)
+  log(`ensureJob() ${type} ${action}`)
   const createJob = () => {
     const job = new Job()
     job.type = type

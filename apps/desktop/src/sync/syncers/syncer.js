@@ -4,7 +4,12 @@ const log = debug('sync')
 const DEFAULT_CHECK_INTERVAL = 1000 * 60 // 1 minute
 
 export default class Syncer {
-  constructor(type, { settings, actions, syncers }) {
+  get token() {
+    return this.setting.values.token
+  }
+
+  constructor(type, { setting, settings, actions, syncers }) {
+    this.setting = setting
     this.actions = actions
     this.type = type
     this.syncers = syncers
@@ -22,13 +27,13 @@ export default class Syncer {
       throw new Error('Must provide action')
     }
     if (!this.token) {
-      log(`No token found for syncer ${this.type} ${action}`)
+      log(`run() no token! ${this.type} ${action}`)
       return
     }
     this.ensureSetting()
-    log(`Running ${this.type} ${action}`)
+    log(`run() ${this.type} ${action}`)
     if (!this.actions[action]) {
-      console.log('NO SYNCER FOUND', action)
+      console.warn('NO SYNCER FOUND', action)
     } else {
       await this.actions[action].run()
     }

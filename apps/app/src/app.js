@@ -16,12 +16,14 @@ class App {
   stores = null
   views = null
 
+  get errors(): ?Array<any> {
+    return this.appStore && this.appStore.errors
+  }
+
   constructor() {
     window.Root = this
     window.restart = this.restart
-    // this.render() // to render before db connects
     this.appStore = new AppStore()
-    // listen for stuff, attach here
     debugState(({ stores, views }) => {
       this.stores = stores
       this.views = views
@@ -51,18 +53,6 @@ class App {
       </ThemeProvide>,
       ROOT,
     )
-  }
-
-  get database(): Object {
-    return this.appStore && this.appStore.database
-  }
-
-  get errors(): ?Array<any> {
-    return this.appStore && this.appStore.errors
-  }
-
-  get models(): Object {
-    return this.appStore && this.appStore.models
   }
 }
 

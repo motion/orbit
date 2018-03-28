@@ -8,8 +8,6 @@ const {
   OneToMany,
 } = isBrowser ? require('typeorm/browser') : eval(`require('typeorm')`)
 
-console.log('BaseEntity', BaseEntity)
-
 export { BaseEntity, Entity, Column, PrimaryGeneratedColumn, OneToMany }
 
 // avoid

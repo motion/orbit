@@ -11,7 +11,7 @@ const {
 export { BaseEntity, Entity, Column, PrimaryGeneratedColumn, OneToMany }
 
 // avoid
-export const setGlobal = (name, val) => {
+export const setGlobal = (name: string, val: any) => {
   let Thing = val
   eval(`${typeof global === 'undefined' ? 'window' : 'global'}.${name} = Thing`)
 }

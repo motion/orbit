@@ -6,7 +6,7 @@
   "author": "Motion (http://motion.io)",
   "license": "MIT",
   "scripts": {
-    "build": "build dev",
+    "build": "build es6",
     "watch": "npm run build -- --watch"
   },
   "dependencies": {

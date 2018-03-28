@@ -4,13 +4,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _keys = require('babel-runtime/core-js/object/keys');
-
-var _keys2 = _interopRequireDefault(_keys);
-
-var _extends2 = require('babel-runtime/helpers/extends');
-
-var _extends3 = _interopRequireDefault(_extends2);
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 exports.default = fancyElementFactory;
 
@@ -30,15 +24,15 @@ var _svgTags = require('./svgTags');
 
 var _svgTags2 = _interopRequireDefault(_svgTags);
 
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 const electronTags = ['webview'];
 
 const $ = '$';
 const ogCreateElement = React.createElement.bind(React);
-const VALID_TAGS = [..._htmlTags2.default, ..._svgTags2.default, ...electronTags].reduce((acc, cur) => (0, _extends3.default)({}, acc, { [cur]: true }), {});
+const VALID_TAGS = [..._htmlTags2.default, ..._svgTags2.default, ...electronTags].reduce((acc, cur) => _extends({}, acc, { [cur]: true }), {});
 
 const arrayOfObjectsToObject = arr => {
   let res = {};
@@ -97,7 +91,7 @@ function fancyElementFactory(Gloss, styles) {
   // Fast object reduce
   function objToCamel(style) {
     let newStyle = {};
-    for (const name of (0, _keys2.default)(style)) {
+    for (const name of Object.keys(style)) {
       if (name.indexOf('-')) {
         newStyle[Gloss.helpers.snakeToCamel(name)] = style[name];
       } else {
@@ -132,7 +126,7 @@ function fancyElementFactory(Gloss, styles) {
       delete props.glossUID;
     }
 
-    const propNames = props ? (0, _keys2.default)(props) : null;
+    const propNames = props ? Object.keys(props) : null;
     const isTag = typeof type === 'string';
     const name = !isTag ? `${type.name}` : type;
     const finalProps = {};
@@ -174,15 +168,15 @@ function fancyElementFactory(Gloss, styles) {
         const val = props && props[prop];
         // style={}
         if (prop === 'style') {
-          style = (0, _extends3.default)({}, style, val);
+          style = _extends({}, style, val);
           continue;
         }
         // css={}
         if (options.glossProp && prop === options.glossProp) {
-          if (val && (0, _keys2.default)(val).length) {
+          if (val && Object.keys(val).length) {
             // css={}
             const extraStyle = css(val, { snakeCase: false });
-            style = (0, _extends3.default)({}, style, extraStyle);
+            style = _extends({}, style, extraStyle);
           }
           continue;
         }
@@ -215,7 +209,7 @@ function fancyElementFactory(Gloss, styles) {
           if (isParentStyle) {
             const inlineStyle = addStyle(styles, prop.slice(2), val, false);
             if (inlineStyle) {
-              style = (0, _extends3.default)({}, style, inlineStyle);
+              style = _extends({}, style, inlineStyle);
             }
             continue;
           }
@@ -224,7 +218,7 @@ function fancyElementFactory(Gloss, styles) {
         if (styles) {
           const inlineStyle = addStyle(styles, `${prop.slice(1)}--${glossUID}`, val, true);
           if (inlineStyle) {
-            style = (0, _extends3.default)({}, style, objToCamel(inlineStyle));
+            style = _extends({}, style, objToCamel(inlineStyle));
           }
         }
       }

@@ -5,13 +5,10 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = exports.Helpers = exports.ThemeProvide = exports.Theme = undefined;
 
-var _extends2 = require('babel-runtime/helpers/extends');
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-var _extends3 = _interopRequireDefault(_extends2);
+// exports
 
-var _keys = require('babel-runtime/core-js/object/keys');
-
-var _keys2 = _interopRequireDefault(_keys);
 
 var _fancyElement = require('./fancyElement');
 
@@ -37,7 +34,6 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-// exports
 const Theme = exports.Theme = _theme2.default;
 const ThemeProvide = exports.ThemeProvide = _themeProvide2.default;
 const Helpers = exports.Helpers = Helpers_;
@@ -77,7 +73,7 @@ let Gloss = class Gloss {
           // make propstyles work
           if (props && optionalPropStyles) {
             finalProps = {};
-            for (const key of (0, _keys2.default)(props)) {
+            for (const key of Object.keys(props)) {
               if (optionalPropStyles[key]) {
                 finalProps[`$${key}`] = props[key];
               } else {
@@ -87,10 +83,10 @@ let Gloss = class Gloss {
           } else {
             finalProps = props;
           }
-          return this.createElement(tagName, (0, _extends3.default)({ glossUID: id }, finalProps));
+          return this.createElement(tagName, _extends({ glossUID: id }, finalProps));
         };
         try {
-          this.attachStyles(id, (0, _extends3.default)({ [tagName]: styles }, optionalPropStyles));
+          this.attachStyles(id, _extends({ [tagName]: styles }, optionalPropStyles));
         } catch (err) {
           console.log('error attaching styles:', tagName, this, styles);
         }
@@ -150,13 +146,13 @@ let Gloss = class Gloss {
               ViewCache[this.themeKey] = 1;
 
               const rules = {};
-              for (const name of (0, _keys2.default)(childTheme)) {
+              for (const name of Object.keys(childTheme)) {
                 const style = css(childTheme[name]);
                 const selector = `${name}--${this.themeKey}--theme`;
                 rules[selector] = style;
                 this.theme.deleteRule(selector);
               }
-              this.themeActiveRules = (0, _keys2.default)(rules);
+              this.themeActiveRules = Object.keys(rules);
               this.theme.addRules(rules);
             }
           };
@@ -217,7 +213,7 @@ let Gloss = class Gloss {
       if (!styles) {
         return null;
       }
-      for (const key of (0, _keys2.default)(styles)) {
+      for (const key of Object.keys(styles)) {
         const style = styles[key];
         // @keyframes
         if (key[0] === '@') {

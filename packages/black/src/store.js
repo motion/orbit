@@ -1,13 +1,13 @@
 // @flow
 import decor from '@mcro/decor'
-import hydratable from '@mcro/decor/lib/plugins/core/hydratable'
-import emittable from '@mcro/decor/lib/plugins/core/emittable'
-import type { Emittable } from '@mcro/decor/lib/plugins/core/emittable'
+import hydratable from '@mcro/decor/es6/plugins/core/hydratable'
+import emittable from '@mcro/decor/es6/plugins/core/emittable'
+import type { Emittable } from '@mcro/decor/es6/plugins/core/emittable'
 import automagical from '@mcro/automagical'
-import subscribable from '@mcro/decor/lib/plugins/react/subscribable'
-import type { Subscribable } from '@mcro/decor/lib/plugins/react/subscribable'
-import helpers from '@mcro/decor/lib/plugins/mobx/helpers'
-import type { Helpers } from '@mcro/decor/lib/plugins/mobx/helpers'
+import subscribable from '@mcro/decor/es6/plugins/react/subscribable'
+import type { Subscribable } from '@mcro/decor/es6/plugins/react/subscribable'
+import helpers from '@mcro/decor/es6/plugins/mobx/helpers'
+import type { Helpers } from '@mcro/decor/es6/plugins/mobx/helpers'
 
 export type StoreClass = Emittable & Subscribable & Helpers
 

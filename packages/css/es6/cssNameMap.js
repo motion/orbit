@@ -3,17 +3,8 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.SNAKE_TO_CAMEL = exports.CAMEL_TO_SNAKE = undefined;
 
-var _extends2 = require('babel-runtime/helpers/extends');
-
-var _extends3 = _interopRequireDefault(_extends2);
-
-var _keys = require('babel-runtime/core-js/object/keys');
-
-var _keys2 = _interopRequireDefault(_keys);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 const CAMEL_TO_SNAKE = exports.CAMEL_TO_SNAKE = {
   pointerEvents: 'pointer-events',
@@ -169,5 +160,5 @@ const CAMEL_TO_SNAKE = exports.CAMEL_TO_SNAKE = {
   zIndex: 'z-index'
 };
 
-const SNAKE_TO_CAMEL = exports.SNAKE_TO_CAMEL = (0, _keys2.default)(CAMEL_TO_SNAKE).reduce((acc, cur) => (0, _extends3.default)({}, acc, { [CAMEL_TO_SNAKE[cur]]: cur }), {});
+const SNAKE_TO_CAMEL = exports.SNAKE_TO_CAMEL = Object.keys(CAMEL_TO_SNAKE).reduce((acc, cur) => _extends({}, acc, { [CAMEL_TO_SNAKE[cur]]: cur }), {});
 //# sourceMappingURL=cssNameMap.js.map

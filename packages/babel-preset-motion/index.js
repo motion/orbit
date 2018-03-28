@@ -11,10 +11,10 @@ module.exports = function(context, givenOpts) {
 
   const config = {
     plugins: [
-      getPlugin('babel-plugin-transform-runtime', {
-        polyfill: true,
-        regenerator: true,
-      }),
+      // getPlugin('babel-plugin-transform-runtime', {
+      //   polyfill: true,
+      //   regenerator: true,
+      // }),
       getPlugin('babel-plugin-macros'),
       // order important here
       getPlugin('babel-plugin-transform-decorators-legacy-without-clutter'),

@@ -3,7 +3,7 @@
   "main": "es6/index.js",
   "version": "1.5.1",
   "scripts": {
-    "build": "build dev",
+    "build": "build es6",
     "watch": "npm run build -- --watch"
   },
   "dependencies": {

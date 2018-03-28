@@ -1,20 +1,20 @@
 // @flow
 import decor from '@mcro/decor'
 import { object, string } from 'prop-types'
-import extendsReact from '@mcro/decor/lib/plugins/react/extendsReact'
+import extendsReact from '@mcro/decor/es6/plugins/react/extendsReact'
 // import type { ExtendsReact } from '@mcro/decor/src/plugins/react/extendsReact'
-import observer from '@mcro/decor/lib/plugins/mobx/observer'
+import observer from '@mcro/decor/es6/plugins/mobx/observer'
 import automagical from '@mcro/automagical'
-import helpers from '@mcro/decor/lib/plugins/mobx/helpers'
+import helpers from '@mcro/decor/es6/plugins/mobx/helpers'
 // import type { Helpers } from '@mcro/decor/src/plugins/mobx/helpers'
-import subscribable from '@mcro/decor/lib/plugins/react/subscribable'
+import subscribable from '@mcro/decor/es6/plugins/react/subscribable'
 // import type { Subscribable } from '@mcro/decor/src/plugins/react/subscribable'
-import emitsMount from '@mcro/decor/lib/plugins/react/emitsMount'
-import reactRenderArgs from '@mcro/decor/lib/plugins/react/reactRenderArgs'
+import emitsMount from '@mcro/decor/es6/plugins/react/emitsMount'
+import reactRenderArgs from '@mcro/decor/es6/plugins/react/reactRenderArgs'
 // import type { ReactRenderArgs } from '@mcro/decor/src/plugins/react/reactRenderArgs'
-import addContext from '@mcro/decor/lib/plugins/react/addContext'
-import attach from '@mcro/decor/lib/plugins/react/attach'
-import storeProvidable from '@mcro/decor/lib/plugins/react/storeProvidable'
+import addContext from '@mcro/decor/es6/plugins/react/addContext'
+import attach from '@mcro/decor/es6/plugins/react/attach'
+import storeProvidable from '@mcro/decor/es6/plugins/react/storeProvidable'
 import { storeOptions } from './store'
 import { decorator as glossDecorator } from './gloss'
 // import type { Glossy } from './gloss'
@@ -78,7 +78,7 @@ function createViewDecorator(): ViewDecorator {
   ]
 
   const base: FancyDecoratorFactory = decor(
-    decorations({ mobx: true, magic: false, ui: true })
+    decorations({ mobx: true, magic: false, ui: true }),
   )
 
   const view = (item: Decoratable, ...args) => {

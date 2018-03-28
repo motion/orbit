@@ -5,7 +5,7 @@
   "main": "es6/index.js",
   "license": "MIT",
   "scripts": {
-    "build": "build dev",
+    "build": "build es6",
     "watch": "npm run build -- --watch",
     "test": "electron lib/tests"
   },

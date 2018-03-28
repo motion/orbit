@@ -22,14 +22,17 @@ function prettyPrintArgs(args) {
 }
 
 function onConnection(options, spark) {
-  console.log('connection occured')
+  console.log('connection occured', options)
 
   spark.on('data', function(data) {
+    console.log('got args', data)
+    const { name = 'database' } = data.args[0]
+
     var db = null
 
     switch (data.command) {
       case 'open':
-        console.log('open: ', databaseDirectory + data.args[0].name)
+        console.log('open: ', databaseDirectory + name)
         break
       case 'close':
         console.log('open: ', databaseDirectory + data.args.dbname)
@@ -48,21 +51,22 @@ function onConnection(options, spark) {
         if (options.forceMemory) {
           databasePath = ':memory:'
         } else {
-          databasePath = databaseDirectory + data.args[0].name
+          databasePath = databaseDirectory + name
         }
-
+        console.log('opening...')
         // first check if its already opened
-        if (databasePathList[data.args[0].name]) {
+        if (databasePathList[name]) {
           spark.write({
             command: 'openComplete',
             err: null,
             id: data.id,
-            databaseID: databasePathList[data.args[0].name].databaseID,
+            databaseID: databasePathList[name].databaseID,
           })
           // else open it
         } else {
           var newDatabaseID = databaseID++
           // https://github.com/mapbox/node-sqlite3/wiki/Caching
+          console.log('create new db at', databasePath)
           db = new sqlite3.cached.Database(databasePath, null, function(err) {
             // TODO why is this not printing??
             console.log('openComplete: err: ', err)
@@ -77,7 +81,7 @@ function onConnection(options, spark) {
           })
           db.databaseID = newDatabaseID
           databaseList[newDatabaseID] = db
-          databasePathList[data.args[0].name] = db
+          databasePathList[name] = db
         }
         break
       case 'close':

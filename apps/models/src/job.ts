@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from './typeorm'
-import global from 'global'
+// import global from 'global'
 
 @Entity()
 export class Job {
@@ -11,6 +11,6 @@ export class Job {
   birthdate: Date
 }
 
-if (typeof window !== 'undefined') {
+if (typeof global === 'undefined') {
   eval(`window.Job = Job`)
 }

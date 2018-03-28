@@ -1,4 +1,4 @@
-const isBrowser = typeof window !== 'undefined'
+const isBrowser = typeof global === 'undefined'
 
 const { Entity, Column, PrimaryGeneratedColumn, OneToMany } = isBrowser
   ? require('typeorm/browser')

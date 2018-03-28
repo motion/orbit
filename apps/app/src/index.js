@@ -3,6 +3,8 @@ import './websqlClient'
 import { Job } from '@mcro/models'
 import { createConnection } from 'typeorm/browser'
 
+window.Job = Job
+
 createConnection({
   type: 'cordova',
   database: 'database',
@@ -10,9 +12,13 @@ createConnection({
   entities: [Job],
   logging: true,
   synchronize: true,
-}).then(async connection => {
-  console.log('got connection', connection)
 })
+  .then(async connection => {
+    console.log('got connection', connection)
+  })
+  .catch(error => {
+    console.log('Error: ', error)
+  })
 
 // import 'babel-polyfill'
 // import 'isomorphic-fetch'

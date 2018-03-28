@@ -62,6 +62,7 @@ function onConnection(options, spark) {
         console.log('opening...')
         // first check if its already opened
         if (databasePathList[name]) {
+          console.log('DONE')
           spark.write({
             command: 'openComplete',
             err: null,
@@ -70,6 +71,7 @@ function onConnection(options, spark) {
           })
           // else open it
         } else {
+          console.log('FIRST TIMER')
           var newDatabaseID = databaseID++
           // https://github.com/mapbox/node-sqlite3/wiki/Caching
           console.log('create new db at', databasePath)
@@ -79,6 +81,7 @@ function onConnection(options, spark) {
               Promise,
             })
             .then(db => {
+              console.log('DONE NOW OK')
               db.databaseID = newDatabaseID
               databaseList[newDatabaseID] = db
               databasePathList[name] = db
@@ -92,6 +95,11 @@ function onConnection(options, spark) {
         break
       case 'close':
         if (!databasePathList[data.args.dbname]) {
+          spark.write({
+            command: 'closeComplete',
+            err: null,
+            id: data.id,
+          })
           return
         }
         databasePathList[data.args.dbname].close(function(err) {
@@ -127,7 +135,6 @@ function onConnection(options, spark) {
           return
         }
         var queryArray = data.args[0].executes
-        console.log('data is', data)
         runQueries(data.id, spark, db, queryArray, [])
     }
   })
@@ -138,6 +145,7 @@ async function runQueries(id, spark, db, queryArray, accumAnswer) {
     console.log('retunr smll')
     spark.write({
       command: 'backgroundExecuteSqlBatchComplete',
+      err: null,
       answer: accumAnswer,
       id: id,
     })

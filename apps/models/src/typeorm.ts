@@ -1,7 +1,11 @@
 const isBrowser = typeof global === 'undefined'
 
-const { Entity, Column, PrimaryGeneratedColumn, OneToMany } = isBrowser
-  ? require('typeorm/browser')
-  : require('typeorm')
+const {
+  BaseEntity,
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  OneToMany,
+} = isBrowser ? require('typeorm/browser') : require('typeorm')
 
-export { Entity, Column, PrimaryGeneratedColumn, OneToMany }
+export { BaseEntity, Entity, Column, PrimaryGeneratedColumn, OneToMany }

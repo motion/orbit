@@ -1,8 +1,14 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from './typeorm'
+import {
+  BaseEntity,
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  OneToMany,
+} from './typeorm'
 // import global from 'global'
 
 @Entity()
-export class Job {
+export class Job extends BaseEntity {
   @PrimaryGeneratedColumn() id: number
 
   @Column() name: string

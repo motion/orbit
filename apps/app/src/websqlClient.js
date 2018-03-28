@@ -44,7 +44,7 @@ argsArray = function(fun) {
 
 SQLitePlugin = function(openargs, openSuccess, openError, primusAdaptor) {
   var dbname
-  console.log('SQLitePlugin openargs: ' + JSON.stringify(openargs))
+  console.log('SQLitePlugin openargs: ' + JSON.stringify(openargs), openSuccess)
   if (!(openargs && openargs['name'])) {
     throw new Error(
       'Cannot create a SQLitePlugin' + 'instance without a db name',
@@ -66,6 +66,7 @@ SQLitePlugin = function(openargs, openSuccess, openError, primusAdaptor) {
       console.log(e.message)
     }
   }
+  console.log('attemtping open')
   this.open(this.openSuccess, this.openError)
 }
 
@@ -144,6 +145,7 @@ SQLitePlugin.prototype.open = function(success, error) {
   })(this)
   if (!(this.dbname in this.openDBs)) {
     this.openDBs[this.dbname] = true
+    console.log('wait for primus open')
     this.primusAdaptor.open(onSuccess, error, [this.openargs])
   } else {
     /*
@@ -483,7 +485,9 @@ SQLitePluginTransaction.prototype.finish = function() {
 PrimusAdaptor = (function() {
   function PrimusAdaptor() {
     var self
-    this.primus = new Primus('http://localhost:8082', { websockets: true })
+    this.primus = new window.Primus('http://localhost:8082', {
+      websockets: true,
+    })
     this.id = 0
     this.cblist = []
     self = this
@@ -493,18 +497,21 @@ PrimusAdaptor = (function() {
   }
 
   PrimusAdaptor.prototype.onData = function(data) {
+    console.log('primus gettin data', data, this.cblist, data.id)
+    const callback = this.cblist[data.id]
+    delete this.cblist[data.id]
     switch (data.command) {
       case 'openComplete':
         if (data.err) {
-          this.cblist[data.id].e(data.err, data.databaseID)
+          callback.e(data.err, data.databaseID)
         } else {
-          this.cblist[data.id].s(data.err, data.databaseID)
+          callback.s(data.err, data.databaseID)
         }
-        return delete this.cblist[data.id]
+        return
       case 'backgroundExecuteSqlBatchFailed':
-        return this.cblist[data.id].e(data.err, data.databaseID)
+        return callback.e(data.err, data.databaseID)
       case 'backgroundExecuteSqlBatchComplete':
-        return this.cblist[data.id].s(data.answer)
+        return callback.s(data.answer)
     }
   }
 

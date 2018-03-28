@@ -1,9 +1,6 @@
 // @flow
 import { store } from '@mcro/black'
 import { uniqBy } from 'lodash'
-import Database, { Models } from '@mcro/models'
-import * as Constants from '~/constants'
-import adapter from 'pouchdb-adapter-idb'
 
 @store
 export default class AppStore {
@@ -20,25 +17,6 @@ export default class AppStore {
       )
       console.time('start')
     }
-    this.database = new Database(
-      {
-        ...Constants.DB_CONFIG,
-        remoteUrl: `${Constants.API_URL}/db`,
-        adapter,
-        adapterName: 'idb',
-      },
-      Models,
-    )
-    await this.database.start({
-      modelOptions: {
-        debug: true,
-        // autoSync: {
-        //   push: true,
-        //   pull: true,
-        // },
-        asyncFirstSync: true,
-      },
-    })
     this.connected = true
     this.catchErrors()
     if (!quiet) {

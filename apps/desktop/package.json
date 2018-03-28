@@ -21,8 +21,6 @@
     "@mcro/macros": "*",
     "@mcro/models": "*",
     "gun": "^0.9.99",
-    "express-pouchdb": "^4.0.0",
-    "pouchdb-adapter-memory": "^6.4.3",
     "file-icon": "^2.1.0",
     "opn": "^5.2.0",
     "event-stream": "^3.3.4",

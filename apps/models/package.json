@@ -5,7 +5,7 @@
   "main": "lib/index.js",
   "module": "lib/index.js",
   "scripts": {
-    "build": "build prod,dev,es6",
+    "build": "build prod,dev",
     "watch": "npm run build -- --watch"
   },
   "dependencies": {

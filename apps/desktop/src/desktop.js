@@ -1,6 +1,4 @@
 // @flow
-import Database, { Models } from '@mcro/models'
-import adapter from 'pouchdb-adapter-memory'
 import Server from './server'
 import Plugins from './plugins'
 import Screen from './screen'
@@ -28,22 +26,14 @@ const sudoPrompt = promisifyAll(sudoPrompt_)
 @store
 export default class DesktopRoot {
   // searchStore = new SearchStore()
-  database = new Database(
-    {
-      name: 'username',
-      password: 'password',
-      adapter,
-      adapterName: 'memory',
-    },
-    Models,
-  )
-  server = new Server({ pouch: this.database.pouch })
+  server = new Server()
   auth = new Auth()
   stores = null
 
   async start() {
     global.Root = this
     global.restart = this.restart
+    console.log('start desktop')
     await Desktop.start({
       ignoreSelf: true,
       master: true,
@@ -53,12 +43,7 @@ export default class DesktopRoot {
         Desktop,
       },
     })
-    await this.database.start({
-      modelOptions: {
-        // autoSync: true,
-        debug: true,
-      },
-    })
+    console.log('done w desktop, start other stuff')
     this.sync = new Sync()
     this.screen = new Screen()
     this.plugins = new Plugins({
@@ -107,7 +92,6 @@ export default class DesktopRoot {
     if (this.disposed) return
     await this.screen.dispose()
     this.sync.dispose()
-    await this.database.dispose()
     this.disposed = true
     return true
   }

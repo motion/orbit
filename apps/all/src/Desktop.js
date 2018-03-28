@@ -140,9 +140,11 @@ class DesktopStore {
     )
   }
 
-  start(options) {
+  start = options => {
+    console.log('d1')
     Bridge.start(this, this.state, options)
     this.setState = Bridge.setState
+    console.log('d2', Bridge)
   }
 
   // only clear if necessary

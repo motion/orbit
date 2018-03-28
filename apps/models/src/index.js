@@ -1,4 +1,5 @@
 // ⭐️ ADD MODELS HERE:
 
-export User from './user'
+export gun from './gun'
+export Setting from './setting'
 export Job from './job'

@@ -1,6 +1,6 @@
 // @flow
 import * as Helpers from '../helpers'
-import { CurrentUser } from '@mcro/models'
+// import { CurrentUser } from '@mcro/models'
 
 const log = debug('sync')
 const DEFAULT_CHECK_INTERVAL = 1000 * 60 // 1 minute
@@ -16,13 +16,9 @@ export default class Syncer {
     return this.settings.actions
   }
 
-  get token(): ?string {
-    return CurrentUser.token(this.type)
-  }
-
-  async refreshToken() {
-    return await CurrentUser.refreshToken(this.type)
-  }
+  // async refreshToken() {
+  //   return await CurrentUser.refreshToken(this.type)
+  // }
 
   constructor({ settings, syncers, props }) {
     this.settings = settings
@@ -30,9 +26,10 @@ export default class Syncer {
     this.props = props
   }
 
-  start({ setting }) {
+  start = ({ setting }) => {
     this.setting = setting
     if (!this.token) {
+      return
       throw new Error(`No token yo`)
     }
     const { syncerModels } = this

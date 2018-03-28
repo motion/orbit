@@ -8,7 +8,6 @@ import * as MobxUtils from 'mobx-utils'
 import ReactDOM from 'react-dom'
 import RxDB from 'rxdb'
 import Rx from 'rxjs'
-import PouchDB from 'pouchdb-core'
 import * as Constants from '~/constants'
 import mobxFormatters from 'mobx-formatters'
 import _ from 'lodash'
@@ -30,7 +29,6 @@ window.Mobx = Mobx
 window.MobxUtils = MobxUtils
 window.RxDB = RxDB
 window.Rx = Rx
-window.PouchDB = PouchDB
 window.Constants = Constants
 window._ = _
 window.log = Black.log

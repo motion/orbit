@@ -21,10 +21,10 @@ export default new Syncer({
     feed: GithubFeedSync,
     people: GithubPeopleSync,
   },
-  props: ({ setting }) => ({
+  props: {
     helpers: {
-      fetchHeaders: (uri: string, extraHeaders: Object = {}) => {
-        const lastSync = setting.values.lastSyncs[uri]
+      fetchHeaders(uri: string, extraHeaders: Object = {}) {
+        const lastSync = this.setting.values.lastSyncs[uri]
         if (lastSync && lastSync.date) {
           const modifiedSince = this.helpers.epochToGMTDate(lastSync.date)
           const etag = lastSync.etag ? lastSync.etag.replace('W/', '') : ''
@@ -36,7 +36,7 @@ export default new Syncer({
         }
         return new Headers(extraHeaders)
       },
-      fetch: async (path: string, options: Object = {}) => {
+      async fetch(path: string, options: Object = {}) {
         if (!this.token) {
           console.log('no App.sync.github.feed.token')
           return null
@@ -49,7 +49,7 @@ export default new Syncer({
         )
         const uri = `https://api.github.com${path}?${requestSearch.toString()}`
         // ensure lastsyncs
-        if (!setting.values.lastSyncs) {
+        if (!this.setting.values.lastSyncs) {
           await this.helpers.writeLastSyncs()
         }
         const requestHeaders = force ? null : this.fetchHeaders(uri, headers)
@@ -78,14 +78,14 @@ export default new Syncer({
         date.setUTCSeconds(epochDate)
         return date.toGMTString()
       },
-      writeLastSyncs: async (lastSyncs = this.lastSyncs) => {
+      async writeLastSyncs(lastSyncs = lastSyncs) {
         log('writing', lastSyncs)
-        await setting.mergeUpdate({
+        await this.setting.mergeUpdate({
           values: {
             lastSyncs,
           },
         })
       },
     },
-  }),
+  },
 })

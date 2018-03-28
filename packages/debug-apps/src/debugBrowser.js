@@ -231,7 +231,7 @@ export default class DebugApps {
           url,
         )
       } catch (err) {
-        console.log('err in eval', err)
+        console.log('err in eval', err.message)
       }
     }
     clearInterval(this.intervals[index])

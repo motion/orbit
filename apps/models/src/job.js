@@ -1,3 +1,3 @@
-import gun from 'gun/gun'
+import gun from './gun'
 
-export default gun('job')
+export default gun.get('jobs')

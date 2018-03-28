@@ -1,4 +1,4 @@
-import sqlite3 from 'sqlite3'
+import sqlite from 'sqlite'
 import fs from 'fs'
 import Primus from 'primus'
 import Path from 'path'
@@ -26,7 +26,13 @@ function onConnection(options, spark) {
 
   spark.on('data', function(data) {
     console.log('got args', data)
-    const { name = 'database' } = data.args[0]
+    let { name } = data.args[0]
+
+    console.log('got a name', name, typeof name)
+
+    if (typeof name === 'undefined') {
+      name = 'database'
+    }
 
     var db = null
 
@@ -35,7 +41,7 @@ function onConnection(options, spark) {
         console.log('open: ', databaseDirectory + name)
         break
       case 'close':
-        console.log('open: ', databaseDirectory + data.args.dbname)
+        console.log('close: ', databaseDirectory + data.args[0].path)
         break
       case 'delete':
         console.log('delete: ', databaseDirectory + data.openargs.dbname)
@@ -51,7 +57,7 @@ function onConnection(options, spark) {
         if (options.forceMemory) {
           databasePath = ':memory:'
         } else {
-          databasePath = databaseDirectory + name
+          databasePath = databaseDirectory + name + '.sqlite'
         }
         console.log('opening...')
         // first check if its already opened
@@ -67,21 +73,21 @@ function onConnection(options, spark) {
           var newDatabaseID = databaseID++
           // https://github.com/mapbox/node-sqlite3/wiki/Caching
           console.log('create new db at', databasePath)
-          db = new sqlite3.cached.Database(databasePath, null, function(err) {
-            // TODO why is this not printing??
-            console.log('openComplete: err: ', err)
-          })
-          db.on('open', function(err) {
-            spark.write({
-              command: 'openComplete',
-              err: err,
-              id: data.id,
-              databaseID: newDatabaseID,
+          sqlite
+            .open(databasePath, {
+              cached: true,
+              Promise,
             })
-          })
-          db.databaseID = newDatabaseID
-          databaseList[newDatabaseID] = db
-          databasePathList[name] = db
+            .then(db => {
+              db.databaseID = newDatabaseID
+              databaseList[newDatabaseID] = db
+              databasePathList[name] = db
+              spark.write({
+                command: 'openComplete',
+                id: data.id,
+                databaseID: newDatabaseID,
+              })
+            })
         }
         break
       case 'close':
@@ -121,13 +127,15 @@ function onConnection(options, spark) {
           return
         }
         var queryArray = data.args[0].executes
+        console.log('data is', data)
         runQueries(data.id, spark, db, queryArray, [])
     }
   })
 }
 
-function runQueries(id, spark, db, queryArray, accumAnswer) {
+async function runQueries(id, spark, db, queryArray, accumAnswer) {
   if (queryArray.length < 1) {
+    console.log('retunr smll')
     spark.write({
       command: 'backgroundExecuteSqlBatchComplete',
       answer: accumAnswer,
@@ -136,21 +144,10 @@ function runQueries(id, spark, db, queryArray, accumAnswer) {
     return
   }
   var top = queryArray.shift()
-  db.all(top.sql, top.params, function(err, rows) {
+  console.log('running', top.sql)
+  try {
+    const rows = await db.all(top.sql, top.params)
     var newAnswer = {}
-    if (err) {
-      newAnswer.type = 'error'
-      newAnswer.qid = top.qid
-      accumAnswer.push(newAnswer)
-      console.log('runFailed: ', err)
-      spark.write({
-        command: 'backgroundExecuteSqlBatchFailed',
-        err: err.toString(),
-        answer: accumAnswer,
-        id: id,
-      })
-      return
-    }
     newAnswer.type = 'success'
     newAnswer.qid = top.qid
     var newResult = {}
@@ -158,7 +155,18 @@ function runQueries(id, spark, db, queryArray, accumAnswer) {
     newAnswer.result = newResult
     accumAnswer.push(newAnswer)
     runQueries(id, spark, db, queryArray, accumAnswer)
-  })
+  } catch (err) {
+    newAnswer.type = 'error'
+    newAnswer.qid = top.qid
+    accumAnswer.push(newAnswer)
+    console.log('runFailed: ', err)
+    spark.write({
+      command: 'backgroundExecuteSqlBatchFailed',
+      err: err.toString(),
+      answer: accumAnswer,
+      id: id,
+    })
+  }
 }
 
 export default class SQLiteServer {

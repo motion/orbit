@@ -1,7 +1,19 @@
-// import './websqlClient'
+import 'regenerator-runtime/runtime'
+import './websqlClient'
 import { Job } from '@mcro/models'
+import { createConnection } from 'typeorm/browser'
 
-// import 'regenerator-runtime/runtime'
+createConnection({
+  type: 'cordova',
+  database: 'database',
+  location: 'default',
+  entities: [Job],
+  logging: true,
+  synchronize: true,
+}).then(async connection => {
+  console.log('got connection', connection)
+})
+
 // import 'babel-polyfill'
 // import 'isomorphic-fetch'
 // import '@mcro/debug/inject'

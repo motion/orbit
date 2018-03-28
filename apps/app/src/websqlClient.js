@@ -1,5 +1,3 @@
-import Primus from 'primus'
-
 var PrimusAdaptor,
   READ_ONLY_REGEX,
   SQLiteFactory,
@@ -485,7 +483,7 @@ SQLitePluginTransaction.prototype.finish = function() {
 PrimusAdaptor = (function() {
   function PrimusAdaptor() {
     var self
-    this.primus = Primus.connect('http://localhost:8082')
+    this.primus = new Primus('http://localhost:8082', { websockets: true })
     this.id = 0
     this.cblist = []
     self = this

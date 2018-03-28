@@ -1,11 +1,12 @@
 import sqlite3 from 'sqlite3'
 import fs from 'fs'
 import Primus from 'primus'
+import Path from 'path'
 
 var databaseID = 0
 var databaseList = []
 var databasePathList = []
-var databaseDirectory = 'data/'
+var databaseDirectory = Path.join(__dirname, '..', 'data/')
 
 function prettyPrintArgs(args) {
   var first = true
@@ -80,6 +81,9 @@ function onConnection(options, spark) {
         }
         break
       case 'close':
+        if (!databasePathList[data.args.dbname]) {
+          return
+        }
         databasePathList[data.args.dbname].close(function(err) {
           spark.write({
             command: 'closeComplete',
@@ -89,6 +93,9 @@ function onConnection(options, spark) {
         })
         break
       case 'delete':
+        if (!databasePathList[data.args.dbname]) {
+          return
+        }
         databasePathList[data.args.dbname].close(function(err) {
           fs.unlinkSync(databaseDirectory + data.openargs.dbname)
           spark.write({
@@ -152,11 +159,11 @@ function runQueries(id, spark, db, queryArray, accumAnswer) {
 
 export default class SQLiteServer {
   constructor() {
-    var primus = Primus.createServer({
-      port: 4111,
+    console.log('making server')
+    Primus.createServer(spark => onConnection({ forceMemory: false }, spark), {
+      port: 8082,
       transformer: 'websockets',
       iknowhttpsisbetter: true,
     })
-    primus.on('connection', spark => onConnection({}, spark))
   }
 }

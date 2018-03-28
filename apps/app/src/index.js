@@ -1,52 +1,32 @@
 import 'regenerator-runtime/runtime'
-import './websqlClient'
-import { Job } from '@mcro/models'
-import { createConnection } from 'typeorm/browser'
+import 'babel-polyfill'
+import 'isomorphic-fetch'
+import '@mcro/debug/inject'
+import createElement from '@mcro/black/lib/createElement'
+// dont import * as React, we need to overwrite createElement
+import React from 'react'
+import * as Constants from './constants'
 
-window.Job = Job
-
-createConnection({
-  type: 'cordova',
-  database: 'database',
-  location: 'default',
-  entities: [Job],
-  logging: true,
-  synchronize: true,
+process.on('uncaughtException', err => {
+  console.log('App.uncaughtException', err.stack)
 })
-  .then(async connection => {
-    console.log('got connection', connection)
-  })
-  .catch(error => {
-    console.log('Error: ', error)
-  })
 
-// import 'babel-polyfill'
-// import 'isomorphic-fetch'
-// import '@mcro/debug/inject'
-// import createElement from '@mcro/black/lib/createElement'
-// // dont import * as React, we need to overwrite createElement
-// import React from 'react'
-// import * as Constants from './constants'
+React.createElement = createElement // any <tag /> can use $$style
 
-// process.on('uncaughtException', err => {
-//   console.log('App.uncaughtException', err.stack)
-// })
+if (Constants.IS_PROD) {
+  require('./helpers/installProd')
+} else {
+  require('./helpers/installDevTools')
+}
 
-// console.warn(
-//   `$ NODE_ENV=${process.env.NODE_ENV} run app ${window.location.pathname}`,
-// )
+export async function start() {
+  if (!window.Root) {
+    console.warn(`NODE_ENV=${process.env.NODE_ENV} ${window.location.pathname}`)
+    console.timeEnd('splash')
+  }
+  console.log('---', window.regneratorRuntime)
+  await new Promise(r => setTimeout(r, 20))
+  require('./app')
+}
 
-// React.createElement = createElement // any <tag /> can use $$style
-
-// if (Constants.IS_PROD) {
-//   require('./helpers/installProd')
-// } else {
-//   require('./helpers/installDevTools')
-// }
-
-// export function start() {
-//   console.timeEnd('splash')
-//   require('./app')
-// }
-
-// start()
+start()

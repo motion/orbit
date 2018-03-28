@@ -1,12 +1,14 @@
 // @flow
 import { debugState } from '@mcro/black'
 import { ThemeProvide } from '@mcro/ui'
+import * as Models from '@mcro/models'
 import * as React from 'react'
 import ReactDOM from 'react-dom'
 import Themes from './themes'
 import Root from './root'
 import AppStore from './stores/appStore'
 import Services from './services'
+import connectModels from './helpers/connectModels'
 
 class App {
   started = false
@@ -28,6 +30,7 @@ class App {
 
   async start({ quiet } = {}) {
     await this.appStore.start(quiet)
+    await connectModels(Object.keys(Models).map(x => Models[x]))
     this.render()
     this.started = true
   }

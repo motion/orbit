@@ -4,8 +4,8 @@ import {
   Column,
   PrimaryGeneratedColumn,
   OneToMany,
+  setGlobal,
 } from './typeorm'
-// import global from 'global'
 
 @Entity()
 export class Job extends BaseEntity {
@@ -17,6 +17,4 @@ export class Job extends BaseEntity {
   birthdate: Date
 }
 
-if (typeof global === 'undefined') {
-  eval(`window.Job = Job`)
-}
+setGlobal('Job', Job)

@@ -19,9 +19,6 @@ export default class AppStore {
     }
     this.connected = true
     this.catchErrors()
-    if (!quiet) {
-      console.timeEnd('start')
-    }
     this.started = true
   }
 

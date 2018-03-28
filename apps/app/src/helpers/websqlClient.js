@@ -1,5 +1,4 @@
 var PrimusAdaptor,
-  READ_ONLY_REGEX,
   SQLiteFactory,
   SQLitePlugin,
   SQLitePluginTransaction,
@@ -8,9 +7,7 @@ var PrimusAdaptor,
   nextTick,
   txLocks
 
-const root = window
-
-READ_ONLY_REGEX = /^\s*(?:drop|delete|insert|update|create)\s/i
+const READ_ONLY_REGEX = /^\s*(?:drop|delete|insert|update|create)\s/i
 
 txLocks = {}
 
@@ -66,7 +63,6 @@ SQLitePlugin = function(openargs, openSuccess, openError, primusAdaptor) {
       console.log(e.message)
     }
   }
-  console.log('attemtping open')
   this.open(this.openSuccess, this.openError)
 }
 
@@ -145,7 +141,6 @@ SQLitePlugin.prototype.open = function(success, error) {
   })(this)
   if (!(this.dbname in this.openDBs)) {
     this.openDBs[this.dbname] = true
-    console.log('wait for primus open')
     this.primusAdaptor.open(onSuccess, error, [this.openargs])
   } else {
     /*
@@ -497,7 +492,7 @@ PrimusAdaptor = (function() {
   }
 
   PrimusAdaptor.prototype.onData = function(data) {
-    console.log('primus gettin data', data, this.cblist, data.id)
+    // console.log('primus gettin data', data, this.cblist, data.id)
     const callback = this.cblist[data.id]
     delete this.cblist[data.id]
     switch (data.command) {
@@ -643,7 +638,7 @@ SQLiteFactory = {
   },
 }
 
-root.sqlitePlugin = {
+window.sqlitePlugin = {
   sqliteFeatures: {
     isSQLitePlugin: true,
   },

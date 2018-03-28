@@ -45,7 +45,7 @@ const getHelpers = setting => ({
 
 export default setting => {
   const helpers = getHelpers(setting)
-  return new Syncer({
+  return new Syncer('google', {
     actions: {
       // drive: { every: 60 },
       cal: { every: 60 * 5 }, // 5 minutes

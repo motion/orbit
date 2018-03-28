@@ -138,9 +138,9 @@ async function runQueries(id, spark, db, queryArray, accumAnswer) {
     return
   }
   var top = queryArray.shift()
+  var newAnswer = {}
   try {
     const rows = await db.all(top.sql, top.params)
-    var newAnswer = {}
     newAnswer.type = 'success'
     newAnswer.qid = top.qid
     var newResult = {}

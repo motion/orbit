@@ -24,10 +24,9 @@ export default class Sync {
   enabled = true
 
   start() {
-    console.log('starting sync....')
     this.startSyncers()
     setInterval(async () => {
-      const jobs = await Job.find({ status: 'pending' })
+      const jobs = await Job.find({ status: Job.statuses.PENDING })
       this.jobs = jobs
     }, 2000)
   }
@@ -59,11 +58,11 @@ export default class Sync {
           log('Already locked job:', job.lock)
           return
         }
-        let completed = false
+        let complete = false
 
         // expire stale jobs
         setTimeout(async () => {
-          if (!completed) {
+          if (!complete) {
             await this.failJob(job, { message: 'timed out---' })
             this.locks.delete(job.lock)
             log('removed stale job', job.lock)
@@ -74,7 +73,7 @@ export default class Sync {
         try {
           log('Run job', job.type, job.action)
           await this.runJob(job)
-          completed = true
+          complete = true
         } catch (error) {
           let lastError = error
           try {
@@ -127,33 +126,31 @@ export default class Sync {
   }
 
   async startSyncers() {
-    if (!this.syncers) {
-      this.syncers = {}
-      console.log('Syncers', Syncers)
-      for (const name of Object.keys(Syncers)) {
-        try {
-          const setting = await Setting.find({ type: name })
-          const syncer = Syncers[name](setting)
-          this.syncers[name] = syncer
-          if (!this[name]) {
-            // $FlowIgnore
-            this[name] = syncer
-          }
-        } catch (err) {
-          console.log('error starting syncer', name)
-          console.log(err)
+    if (this.syncers) {
+      return
+    }
+    this.syncers = {}
+    for (const name of Object.keys(Syncers)) {
+      try {
+        const setting = await Setting.find({ type: name })
+        const syncer = Syncers[name](setting)
+        this.syncers[name] = syncer
+        if (!this[name]) {
+          this[name] = syncer
         }
+      } catch (err) {
+        console.log('error starting syncer', name)
+        console.log(err)
       }
     }
   }
 
   failJob = async (job: Job, lastError) => {
     try {
-      await job.update({
-        status: 3,
-        lastError,
-        tries: job.tries + 1,
-      })
+      job.status = 3
+      job.lastError = lastError
+      job.tries += 1
+      await job.save()
     } catch (err) {
       if (err.message && err.message.indexOf('cant save deleted document')) {
         return
@@ -164,12 +161,9 @@ export default class Sync {
 
   runJob = async (job: Job) => {
     log('Running job', job.type, job.action)
-    await job.update({
-      percent: 0,
-      status: Job.status.PROCESSING,
-      tries: job.tries + 1,
-    })
-
+    job.status = Job.statuses.PROCESSING
+    job.tries += 1
+    await job.save()
     if (!this.syncers) {
       return
     }
@@ -180,17 +174,18 @@ export default class Sync {
         await syncer.run(job.action)
       } catch (error) {
         console.log('error running syncer', error)
-        await job.update({
-          status: Job.status.FAILED,
-          lastError: getRxError(error),
-        })
+        job.status = Job.statuses.FAILED
+        job.lastError = getRxError(error)
+        await job.save()
       }
     } else {
       console.log('no syncer found for', job)
     }
 
     // update job
-    await job.update({ percent: 100, status: Job.status.COMPLETED })
-    log('Job completed:', job.type, job.action, job.id)
+    job.percent = 100
+    job.status = Job.statuses.COMPLETE
+    await job.save()
+    log('Job complete:', job.type, job.action, job.id)
   }
 }

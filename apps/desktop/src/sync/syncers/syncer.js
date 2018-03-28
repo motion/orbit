@@ -4,7 +4,7 @@ const log = debug('sync')
 const DEFAULT_CHECK_INTERVAL = 1000 * 60 // 1 minute
 
 export default class Syncer {
-  constructor({ settings, actions, type, syncers }) {
+  constructor(type, { settings, actions, syncers }) {
     this.actions = actions
     this.type = type
     this.syncers = syncers

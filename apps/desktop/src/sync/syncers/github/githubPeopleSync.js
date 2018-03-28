@@ -38,7 +38,6 @@ export default class GithubPeopleSync {
     let person = await Person.findOne()
       .where('ids.github')
       .eq(info.login)
-      .exec()
 
     if (!person) {
       person = await Person.create({

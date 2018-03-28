@@ -1,5 +1,4 @@
-import 'regenerator-runtime/runtime'
-import 'babel-polyfill'
+// import 'babel-polyfill'
 import 'isomorphic-fetch'
 import '@mcro/debug/inject'
 import createElement from '@mcro/black/lib/createElement'
@@ -19,13 +18,11 @@ if (Constants.IS_PROD) {
   require('./helpers/installDevTools')
 }
 
-export async function start() {
+export function start() {
   if (!window.Root) {
     console.warn(`NODE_ENV=${process.env.NODE_ENV} ${window.location.pathname}`)
     console.timeEnd('splash')
   }
-  console.log('---', window.regneratorRuntime)
-  await new Promise(r => setTimeout(r, 20))
   require('./app')
 }
 

@@ -12,8 +12,9 @@ export default async function connectModels(models) {
       synchronize: true,
     })
     for (const model of models) {
-      console.log('models', models)
-      model.useConnection(connection)
+      if (model.useConnection) {
+        model.useConnection(connection)
+      }
     }
   } catch (err) {
     console.log('Error: ', err)

@@ -3,6 +3,7 @@
   "private": true,
   "version": "1.5.40",
   "main": "src/index.js",
+  "browserslist": ["last 1 Chrome versions"],
   "scripts": {
     "start": "./start.sh",
     "start-prod": "static-server -p 3002 -n dist/index.html dist",

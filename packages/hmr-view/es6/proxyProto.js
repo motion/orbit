@@ -3,9 +3,24 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+
+var _getOwnPropertyNames = require('babel-runtime/core-js/object/get-own-property-names');
+
+var _getOwnPropertyNames2 = _interopRequireDefault(_getOwnPropertyNames);
+
+var _getOwnPropertyDescriptor = require('babel-runtime/core-js/object/get-own-property-descriptor');
+
+var _getOwnPropertyDescriptor2 = _interopRequireDefault(_getOwnPropertyDescriptor);
+
+var _defineProperty = require('babel-runtime/core-js/object/define-property');
+
+var _defineProperty2 = _interopRequireDefault(_defineProperty);
+
 exports.default = createPrototypeProxy;
 
 var _lodash = require('lodash');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function createPrototypeProxy() {
   let proxy = {};
@@ -74,14 +89,14 @@ function createPrototypeProxy() {
    * Defines a property on the proxy.
    */
   function defineProxyProperty(name, descriptor) {
-    Object.defineProperty(proxy, name, descriptor);
+    (0, _defineProperty2.default)(proxy, name, descriptor);
   }
 
   /**
    * Defines a property, attempting to keep the original descriptor configuration.
    */
   function defineProxyPropertyWithValue(name, value) {
-    const { enumerable = false, writable = true } = Object.getOwnPropertyDescriptor(current, name) || {};
+    const { enumerable = false, writable = true } = (0, _getOwnPropertyDescriptor2.default)(current, name) || {};
 
     defineProxyProperty(name, {
       configurable: true,
@@ -135,8 +150,8 @@ function createPrototypeProxy() {
     current = next;
 
     // Find changed property names
-    const currentNames = Object.getOwnPropertyNames(current);
-    const previousName = Object.getOwnPropertyNames(proxy);
+    const currentNames = (0, _getOwnPropertyNames2.default)(current);
+    const previousName = (0, _getOwnPropertyNames2.default)(proxy);
     const removedNames = (0, _lodash.difference)(previousName, currentNames);
 
     // Remove properties and methods that are no longer there
@@ -146,7 +161,7 @@ function createPrototypeProxy() {
 
     // Copy every descriptor
     currentNames.forEach(name => {
-      const descriptor = Object.getOwnPropertyDescriptor(current, name);
+      const descriptor = (0, _getOwnPropertyDescriptor2.default)(current, name);
       if (typeof descriptor.value === 'function') {
         // Functions require additional wrapping so they can be bound later
         defineProxyPropertyWithValue(name, proxyMethod(name));

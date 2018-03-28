@@ -5,12 +5,13 @@
   "module:production": "dist/index.js",
   "version": "1.5.1",
   "scripts": {
-    "build": "build prod,dev,es6",
+    "build": "tsc",
     "watch": "npm run build -- --watch"
   },
   "dependencies": {
     "@mcro/helpers": "*",
     "@mcro/debug": "*",
+    "@types/webpack-env": "*",
     "global": "^4.3.2",
     "rxjs": "^5.5.5",
     "mobx-utils": "^3.2.1"

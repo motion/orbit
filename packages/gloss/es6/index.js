@@ -9,6 +9,10 @@ var _extends2 = require('babel-runtime/helpers/extends');
 
 var _extends3 = _interopRequireDefault(_extends2);
 
+var _keys = require('babel-runtime/core-js/object/keys');
+
+var _keys2 = _interopRequireDefault(_keys);
+
 var _fancyElement = require('./fancyElement');
 
 var _fancyElement2 = _interopRequireDefault(_fancyElement);
@@ -73,7 +77,7 @@ let Gloss = class Gloss {
           // make propstyles work
           if (props && optionalPropStyles) {
             finalProps = {};
-            for (const key of Object.keys(props)) {
+            for (const key of (0, _keys2.default)(props)) {
               if (optionalPropStyles[key]) {
                 finalProps[`$${key}`] = props[key];
               } else {
@@ -146,13 +150,13 @@ let Gloss = class Gloss {
               ViewCache[this.themeKey] = 1;
 
               const rules = {};
-              for (const name of Object.keys(childTheme)) {
+              for (const name of (0, _keys2.default)(childTheme)) {
                 const style = css(childTheme[name]);
                 const selector = `${name}--${this.themeKey}--theme`;
                 rules[selector] = style;
                 this.theme.deleteRule(selector);
               }
-              this.themeActiveRules = Object.keys(rules);
+              this.themeActiveRules = (0, _keys2.default)(rules);
               this.theme.addRules(rules);
             }
           };
@@ -213,7 +217,7 @@ let Gloss = class Gloss {
       if (!styles) {
         return null;
       }
-      for (const key of Object.keys(styles)) {
+      for (const key of (0, _keys2.default)(styles)) {
         const style = styles[key];
         // @keyframes
         if (key[0] === '@') {

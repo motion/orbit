@@ -1,27 +1,34 @@
 // @flow
-import global from 'global'
 import { fromPromise, isPromiseBasedObservable, whenAsync } from 'mobx-utils'
-import fromStream from './fromStream'
+import { fromStream } from './fromStream'
 import * as Mobx from 'mobx'
 import { Observable } from 'rxjs'
 import * as Helpers from '@mcro/helpers'
 import debug from '@mcro/debug'
 
+const root = typeof window !== 'undefined' ? window : require('global')
+
+type MagicalObject = {
+  subscriptions: { add: (fn: Function) => void }
+  __automagical: { watchers?: [any] | undefined[] }
+  props?: {}
+}
+
 let id = 0
 const uid = () => id++ % Number.MAX_VALUE
 
-global.__trackStateChanges = {}
+root.__trackStateChanges = {}
 
 const log = debug('-> ')
 const logState = debug('+> ')
 const RejectReactionSymbol = Symbol('REJECT_REACTION')
 
 if (module && module.hot) {
-  module.hot.accept('.', _ => _) // prevent aggressive hmrs
+  module.hot.accept('.', () => void 0) // prevent aggressive hmrs
 }
 
 const PREFIX = `=>`
-const logRes = res => {
+const logRes = (res: any) => {
   if (typeof res === 'undefined') {
     return []
   }
@@ -33,11 +40,11 @@ const logRes = res => {
   }
   return [PREFIX, res]
 }
-const getReactionName = obj => {
+const getReactionName = (obj: MagicalObject) => {
   return obj.constructor.name.replace('Store', '')
 }
 
-const isObservable = x => {
+const isObservable = (x: any) => {
   if (!x) {
     return false
   }
@@ -65,7 +72,7 @@ const DEFAULT_VALUE = undefined
 export default function automagical() {
   return {
     name: 'automagical',
-    decorator: (Klass: Class<any> | Function) => {
+    decorator: (Klass: Function) => {
       Klass.prototype.automagic =
         Klass.prototype.automagic ||
         function() {
@@ -139,7 +146,9 @@ function mobxifyPromise(obj, method, val) {
   const observable = fromPromise(val)
   Object.defineProperty(obj, method, {
     get() {
-      return observable.value
+      if (observable.state === 'rejected' || observable.state === 'fulfilled') {
+        return observable.value
+      }
     },
   })
 }
@@ -184,10 +193,6 @@ function isRxDbQuery(query: any): boolean {
   return query && (query.isntConnected || !!query.mquery)
 }
 
-type MagicalObject = {
-  subscriptions: { add: (fn: Function) => void },
-}
-
 function decorateClassWithAutomagic(obj: MagicalObject) {
   const descriptors = {
     ...Object.getOwnPropertyDescriptors(obj),
@@ -201,9 +206,9 @@ function decorateClassWithAutomagic(obj: MagicalObject) {
 
 // * => mobx
 function decorateMethodWithAutomagic(
-  target: Object,
+  target: MagicalObject,
   method: string,
-  descriptor: Object,
+  descriptor: PropertyDescriptor,
 ) {
   // @computed get (do first to avoid hitting the getter on next line)
   if (descriptor && (!!descriptor.get || !!descriptor.set)) {
@@ -255,7 +260,7 @@ function decorateMethodWithAutomagic(
     const NAME = `${target.constructor.name}.${method}`
     // TODO remove in prod
     const logWrappedMethod = (...args) => {
-      if (global.__shouldLog && global.__shouldLog[NAME]) {
+      if (root.__shouldLog && root.__shouldLog[NAME]) {
         log(NAME, ...args)
       }
       return targetMethod(...args)
@@ -295,9 +300,15 @@ function specialValueToObservable(inValue: any) {
     if (isPromise(value)) {
       const promiseStream = fromPromise(value)
       return {
-        get: () => promiseStream.value,
+        get: () => {
+          if (
+            promiseStream.state === 'rejected' ||
+            promiseStream.state === 'fulfilled'
+          ) {
+            return promiseStream.value
+          }
+        },
         promiseStream,
-        dispose: promiseStream.dispose,
         isObservable: true,
       }
     }
@@ -445,7 +456,7 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
           update(val)
         }
       }
-      global.__trackStateChanges.isActive = true
+      root.__trackStateChanges.isActive = true
       const reactionResult = reactionFn.call(
         obj,
         isReaction ? reactValArg : obj.props,
@@ -472,7 +483,7 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
             return new Promise((resolve, reject) => {
               let cancelWhen = false
               whenAsync(condition)
-                .then(val => {
+                .then((val: any) => {
                   if (cancelWhen) return
                   resolve(val)
                 })
@@ -485,8 +496,8 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
           },
         },
       )
-      const changed = global.__trackStateChanges.changed
-      global.__trackStateChanges = {}
+      const changed = root.__trackStateChanges.changed
+      root.__trackStateChanges = {}
       // handle promises
       if (reactionResult instanceof Promise) {
         isAsyncReaction = true
@@ -577,14 +588,22 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
   }
 
   // add to __watchFns
-  obj.__automagical.watchers = obj.__automagical.watchers || []
-  obj.__automagical.watchers.push(run)
+  if (obj.__automagical) {
+    obj.__automagical.watchers = obj.__automagical.watchers || []
+    // @ts-ignore
+    obj.__automagical.watchers.push(run)
+  }
 
   Object.defineProperty(obj, method, {
     get() {
       const result = current.get()
       if (result && isPromiseBasedObservable(result)) {
-        return result.value
+        if (result.state === 'fulfilled' || result.state === 'rejected') {
+          // @ts-ignore
+          return result.value
+        } else {
+          return undefined
+        }
       }
       if (isObservable(result)) {
         let value = result.get()

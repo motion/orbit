@@ -33,3 +33,4 @@ function colorfulLog(id, namespace, messages) {
 }
 
 module.exports = debug
+module.exports.default = debug

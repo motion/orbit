@@ -1,20 +1,13 @@
-import {
-  BaseEntity,
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  OneToMany,
-  setGlobal,
-} from './typeorm'
+import * as T from './typeorm'
 
-@Entity()
-export class Job extends BaseEntity {
-  @PrimaryGeneratedColumn() id: number
+@T.Entity()
+export class Job extends T.BaseEntity {
+  @T.PrimaryGeneratedColumn() id: number
 
-  @Column() name: string
+  @T.Column() name: string
 
-  @Column({ nullable: true })
+  @T.Column({ nullable: true })
   birthdate: Date
 }
 
-setGlobal('Job', Job)
+T.setGlobal('Job', Job)

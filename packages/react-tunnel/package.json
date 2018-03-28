@@ -1,10 +1,9 @@
 {
   "name": "@mcro/react-tunnel",
-  "main": "lib/index.js",
-  "module": "lib/index.js",
+  "main": "es6/index.js",
   "version": "1.5.1",
   "scripts": {
-    "build": "build prod,dev",
+    "build": "build dev",
     "watch": "npm run build -- --watch"
   },
   "dependencies": {

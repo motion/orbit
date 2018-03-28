@@ -2,12 +2,10 @@
   "name": "@mcro/reactron",
   "version": "1.5.1",
   "description": "React renderer for Electron apps",
-  "main": "lib/index.js",
-  "module": "lib/index.js",
-  "module:production": "dist/index.js",
+  "main": "es6/index.js",
   "license": "MIT",
   "scripts": {
-    "build": "build prod,dev",
+    "build": "build dev",
     "watch": "npm run build -- --watch",
     "test": "electron lib/tests"
   },

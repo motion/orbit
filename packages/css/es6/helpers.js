@@ -4,6 +4,19 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.isColorLike = undefined;
+
+var _keys = require('babel-runtime/core-js/object/keys');
+
+var _keys2 = _interopRequireDefault(_keys);
+
+var _weakMap = require('babel-runtime/core-js/weak-map');
+
+var _weakMap2 = _interopRequireDefault(_weakMap);
+
+var _stringify = require('babel-runtime/core-js/json/stringify');
+
+var _stringify2 = _interopRequireDefault(_stringify);
+
 exports.hash = hash;
 exports.camelToSnake = camelToSnake;
 exports.snakeToCamel = snakeToCamel;
@@ -26,7 +39,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function hash(thing) {
   let str = thing;
   if (thing instanceof Object) {
-    str = JSON.stringify(thing);
+    str = (0, _stringify2.default)(thing);
   }
   if (typeof str === 'string') {
     let hash = 5381;
@@ -49,7 +62,7 @@ function snakeToCamel(key) {
 }
 
 function memoize(cb) {
-  const Cache = new WeakMap();
+  const Cache = new _weakMap2.default();
 
   return (key, ...rest) => {
     // use first argument as key
@@ -117,7 +130,7 @@ function isColorLikeArray(array) {
 }
 
 function isColorLikeObject(object) {
-  const keyLen = Object.keys(object).length;
+  const keyLen = (0, _keys2.default)(object).length;
   if (keyLen !== 3 || keyLen !== 4) return false;
   if (keyLen === 3 && object.r && object.g && object.b) return true;
   if (keyLen === 4 && object.a) return true;

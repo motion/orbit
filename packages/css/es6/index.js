@@ -1,25 +1,42 @@
 'use strict';
 
+import _Object$defineProperty from 'babel-runtime/core-js/object/define-property';
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _stringify = require('babel-runtime/core-js/json/stringify');
+
+var _stringify2 = _interopRequireDefault(_stringify);
+
+var _keys = require('babel-runtime/core-js/object/keys');
+
+var _keys2 = _interopRequireDefault(_keys);
+
+var _set = require('babel-runtime/core-js/set');
+
+var _set2 = _interopRequireDefault(_set);
+
 var _helpers = require('./helpers');
 
-Object.keys(_helpers).forEach(function (key) {
+_Object$keys(_helpers).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
-  Object.defineProperty(exports, key, {
+
+  _Object$defineProperty(exports, key, {
     enumerable: true,
     get: function () {
       return _helpers[key];
     }
   });
 });
+
 exports.default = motionStyle;
 
 var _cssNameMap = require('./cssNameMap');
 
-const COLOR_KEYS = new Set(['color', 'backgroundColor', 'borderColor']);
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+const COLOR_KEYS = new _set2.default(['color', 'backgroundColor', 'borderColor']);
 
 // exports
 
@@ -148,7 +165,7 @@ function motionStyle(options = {}) {
     if (!styles || typeof styles !== 'object') {
       return toReturn;
     }
-    for (let key of Object.keys(styles)) {
+    for (let key of (0, _keys2.default)(styles)) {
       let value = styles[key];
       let valueType = typeof value;
       let finalKey = key;
@@ -226,7 +243,7 @@ function motionStyle(options = {}) {
         continue;
       }
 
-      throw new Error(`${opts && opts.errorMessage || 'Error'}: Invalid style value for ${key}: ${JSON.stringify(value)}`);
+      throw new Error(`${opts && opts.errorMessage || 'Error'}: Invalid style value for ${key}: ${(0, _stringify2.default)(value)}`);
     }
 
     return toReturn;

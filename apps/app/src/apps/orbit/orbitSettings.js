@@ -1,8 +1,8 @@
-import { view } from '@mcro/black'
+import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { Setting } from '@mcro/models'
 import OrbitIcon from './orbitIcon'
-import { App } from '@mcro/all'
+import { App, Electron } from '@mcro/all'
 import * as Constants from '~/constants'
 import r2 from '@mcro/r2'
 import { partition } from 'lodash'
@@ -16,13 +16,31 @@ const integrations = [
 @UI.injectTheme
 @view
 class Card {
-  render({ id, icon, name, index, length, showAuth, theme, isActive }) {
+  render({ id, icon, name, index, length, theme, isActive, store }) {
+    const { startOauth } = store
+    const isSelected = store.selected === id
+    const isOdd = index % 2 == 0
     return (
       <card
         key={index}
         $first={index === 0}
-        $odd={index % 2 == 0}
-        $lastRow={index > length - 2}
+        $odd={isOdd}
+        $lastRow={index >= length - 2}
+        css={{
+          background: isSelected ? [255, 255, 255, 0.5] : [255, 255, 255, 0.05],
+          borderLeftRadius: isOdd ? 4 : 0,
+          borderRightRadius: !isOdd ? 4 : 0,
+        }}
+        onClick={() => {
+          if (!isActive) {
+            return
+          }
+          store.setSelected(id)
+        }}
+        ref={ref => {
+          if (!ref) return
+          store.refs[id] = ref
+        }}
       >
         <OrbitIcon $icon $iconActive={isActive} icon={icon} />
         <subtitle>
@@ -32,7 +50,7 @@ class Card {
         </subtitle>
         <UI.Button
           if={!isActive}
-          onClick={() => showAuth(id)}
+          onClick={() => startOauth(id)}
           size={0.9}
           icon="uiadd"
           background="transparent"
@@ -54,7 +72,6 @@ class Card {
       width: '50%',
       padding: [15, 5],
       // margin: [0, 5, 0],
-      background: [255, 255, 255, 0.05],
       alignItems: 'center',
       borderBottom: [4, [0, 0, 0, 0.1]],
       '&:hover': {
@@ -92,6 +109,21 @@ class Card {
 @view({
   store: class OrbitSettingsStore {
     settings = null
+    selected = null
+    refs = {}
+
+    setSelected = id => {
+      if (!id) return
+      const ref = this.refs[id]
+      if (!ref) return
+      const position = {
+        left: Electron.orbitState.position[0],
+        top: ref.offsetTop + Electron.orbitState.position[1],
+        width: ref.clientWidth,
+        height: ref.clientHeight,
+      }
+      App.setPeekTarget({ id, position, type: 'setting' })
+    }
 
     willMount() {
       this.getSettings()
@@ -150,7 +182,7 @@ export default class OrbitSettings {
             <Card
               key={index}
               index={index}
-              showAuth={store.startOauth}
+              store={store}
               length={activeIntegrations.length}
               isActive
               {...integration}
@@ -166,8 +198,8 @@ export default class OrbitSettings {
             <Card
               key={index}
               index={index}
-              showAuth={store.startOauth}
-              length={activeIntegrations.length}
+              store={store}
+              length={inactiveIntegrations.length}
               {...integration}
             />
           ))}

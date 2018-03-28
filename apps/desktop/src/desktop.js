@@ -1,4 +1,6 @@
 // @flow
+import * as Models from '@mcro/models'
+import connectModels from './helpers/connectModels'
 import Server from './server'
 import Plugins from './plugins'
 import Screen from './screen'
@@ -8,7 +10,7 @@ import hostile_ from 'hostile'
 import * as Constants from '~/constants'
 import { promisifyAll } from 'sb-promisify'
 import sudoPrompt_ from 'sudo-prompt'
-// import Sync from './sync'
+import Sync from './sync'
 import SQLiteServer from './sqliteServer'
 import { App, Electron, Desktop } from '@mcro/all'
 import { store, debugState } from '@mcro/black'
@@ -44,8 +46,9 @@ export default class DesktopRoot {
         Desktop,
       },
     })
-    // this.sync = new Sync()
-    // this.sync.start()
+    await connectModels(Object.keys(Models).map(x => Models[x]))
+    this.sync = new Sync()
+    this.sync.start()
     this.screen = new Screen()
     this.plugins = new Plugins({
       server: this.server,

@@ -5,15 +5,12 @@ import * as r2 from '@mcro/r2'
 import { createInChunks } from '~/sync/helpers'
 import * as Constants from '~/constants'
 
-const log = debug('sync')
+const log = debug('sync slackAttachment')
 
 export default class SlackAttachmentSync {
-  constructor({ setting, token, helpers }) {
+  constructor(setting, helpers) {
     this.setting = setting
-    this.token = token
     this.helpers = helpers
-    // TODO REMOVE THIS IS TESTING PURPOSES ONLY:
-    // this.run()
   }
 
   get service() {

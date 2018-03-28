@@ -1,10 +1,9 @@
-import './websqlClient'
-import { createConnection } from 'typeorm/browser'
+import { createConnection } from 'typeorm'
 
 export default async function connectModels(models) {
   try {
     const connection = await createConnection({
-      type: 'cordova',
+      type: 'sqlite',
       database: 'database',
       location: 'default',
       entities: models,

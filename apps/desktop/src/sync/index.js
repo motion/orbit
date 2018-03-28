@@ -24,11 +24,12 @@ export default class Sync {
   enabled = true
 
   start() {
+    console.log('starting sync....')
     this.startSyncers()
-
-    Job.on(jobs => {
-      console.log('got jobs', jobs)
-    })
+    setInterval(async () => {
+      const jobs = await Job.find({ status: 'pending' })
+      this.jobs = jobs
+    }, 2000)
   }
 
   @watch
@@ -131,11 +132,8 @@ export default class Sync {
       console.log('Syncers', Syncers)
       for (const name of Object.keys(Syncers)) {
         try {
-          const syncer = Syncers[name]
-          const setting = await Setting.get({ type: syncer.settings.type })
-          if (syncer.start) {
-            await syncer.start({ setting })
-          }
+          const setting = await Setting.find({ type: name })
+          const syncer = Syncers[name](setting)
           this.syncers[name] = syncer
           if (!this[name]) {
             // $FlowIgnore

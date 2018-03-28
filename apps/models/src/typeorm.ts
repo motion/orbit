@@ -6,9 +6,21 @@ const {
   Column,
   PrimaryGeneratedColumn,
   OneToMany,
+  CreateDateColumn,
+  UpdateDateColumn,
+  VersionColumn,
 } = isBrowser ? require('typeorm/browser') : eval(`require('typeorm')`)
 
-export { BaseEntity, Entity, Column, PrimaryGeneratedColumn, OneToMany }
+export {
+  CreateDateColumn,
+  UpdateDateColumn,
+  VersionColumn,
+  BaseEntity,
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  OneToMany,
+}
 
 // avoid
 export const setGlobal = (name: string, val: any) => {

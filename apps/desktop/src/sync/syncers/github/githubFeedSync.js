@@ -1,12 +1,11 @@
 // @flow
 import { Event, Thing } from '@mcro/models'
 
-const log = debug('sync')
+const log = debug('sync githubFeed')
 
 export default class GithubFeedSync {
-  constructor({ setting, token, helpers }) {
+  constructor(setting, helpers) {
     this.setting = setting
-    this.token = token
     this.helpers = helpers
   }
 

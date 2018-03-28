@@ -2,13 +2,13 @@
 import { debugState } from '@mcro/black'
 import { ThemeProvide } from '@mcro/ui'
 import * as Models from '@mcro/models'
+import connectModels from './helpers/connectModels'
 import * as React from 'react'
 import ReactDOM from 'react-dom'
 import Themes from './themes'
 import Root from './root'
 import AppStore from './stores/appStore'
 import Services from './services'
-import connectModels from './helpers/connectModels'
 
 class App {
   started = false

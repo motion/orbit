@@ -51,9 +51,8 @@ const repoGetIssues = `
 `
 
 export default class GithubIssueSync {
-  constructor({ setting, token, helpers }) {
+  constructor(setting, helpers) {
     this.setting = setting
-    this.token = token
     this.helpers = helpers
   }
 

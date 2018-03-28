@@ -41,7 +41,7 @@ argsArray = function(fun) {
 
 SQLitePlugin = function(openargs, openSuccess, openError, primusAdaptor) {
   var dbname
-  console.log('SQLitePlugin openargs: ' + JSON.stringify(openargs), openSuccess)
+  console.log('SQLitePlugin opening', openargs)
   if (!(openargs && openargs['name'])) {
     throw new Error(
       'Cannot create a SQLitePlugin' + 'instance without a db name',

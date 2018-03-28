@@ -17,7 +17,7 @@ function prettyPrintArgs(args) {
       first = false
     }
     for (var sql of e.executes) {
-      log('  params: ', sql.params, ' sql: ', sql.sql)
+      log('\n params:', sql.params, '\n sql: ', sql.sql)
     }
   }
 }
@@ -31,13 +31,13 @@ function onConnection(options, spark) {
     let db = null
     switch (data.command) {
       case 'open':
-        log('open: ', databaseDirectory + name)
+        log('open:', databaseDirectory + name)
         break
       case 'close':
-        log('close: ', databaseDirectory + data.args[0].path)
+        log('close:', databaseDirectory + data.args[0].path)
         break
       case 'delete':
-        log('delete: ', databaseDirectory + data.openargs.dbname)
+        log('delete:', databaseDirectory + data.openargs.dbname)
         break
       case 'backgroundExecuteSqlBatch':
         prettyPrintArgs(data.args)
@@ -49,7 +49,7 @@ function onConnection(options, spark) {
         if (options.forceMemory) {
           databasePath = ':memory:'
         } else {
-          databasePath = databaseDirectory + name + '.sqlite'
+          databasePath = databaseDirectory + name
         }
         // first check if its already opened
         if (databasePathList[name]) {
@@ -121,6 +121,7 @@ function onConnection(options, spark) {
           })
           return
         }
+        // console.log('setting query array', JSON.stringify(data))
         var queryArray = data.args[0].executes
         runQueries(data.id, spark, db, queryArray, [])
     }
@@ -129,6 +130,7 @@ function onConnection(options, spark) {
 
 async function runQueries(id, spark, db, queryArray, accumAnswer) {
   if (queryArray.length < 1) {
+    // log('runQueries answering with:', accumAnswer)
     spark.write({
       command: 'backgroundExecuteSqlBatchComplete',
       err: null,
@@ -140,12 +142,14 @@ async function runQueries(id, spark, db, queryArray, accumAnswer) {
   var top = queryArray.shift()
   var newAnswer = {}
   try {
+    // log(`runQueries doing stuff...`, top.sql, top.params)
     const rows = await db.all(top.sql, top.params)
     newAnswer.type = 'success'
     newAnswer.qid = top.qid
     var newResult = {}
     newResult.rows = rows
     newAnswer.result = newResult
+    // log('runQueries', top.sql, top.params, newResult)
     accumAnswer.push(newAnswer)
     runQueries(id, spark, db, queryArray, accumAnswer)
   } catch (err) {

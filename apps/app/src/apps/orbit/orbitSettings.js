@@ -1,6 +1,6 @@
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { CurrentUser } from '@mcro/models'
+import { Setting } from '@mcro/models'
 import OrbitIcon from './orbitIcon'
 import { App } from '@mcro/all'
 import * as Constants from '~/constants'
@@ -16,8 +16,7 @@ const integrations = [
 @UI.injectTheme
 @view
 class Card {
-  render({ id, icon, name, index, length, showAuth, theme }) {
-    const isActive = CurrentUser.authorizations[id]
+  render({ id, icon, name, index, length, showAuth, theme, isActive }) {
     return (
       <card
         key={index}
@@ -92,26 +91,43 @@ class Card {
 
 @view({
   store: class OrbitSettingsStore {
+    settings = null
+
+    willMount() {
+      this.getSettings()
+    }
+
+    getSettings = async () => {
+      this.settings = await Setting.find()
+    }
+
     checkAuths = async () => {
       const { error, ...authorizations } = await r2.get(
         `${Constants.API_URL}/getCreds`,
       ).json
       if (error) {
         console.log('no creds')
-      } else {
-        return authorizations
       }
+      return authorizations
     }
 
     startOauth = id => {
       App.setAuthState({ openId: id })
       const checker = this.setInterval(async () => {
-        const authorizations = await this.checkAuths()
-        if (authorizations && authorizations[id]) {
-          await CurrentUser.setAuthorizations(authorizations)
-          App.setAuthState({ closeId: id })
-          clearInterval(checker)
+        const auth = await this.checkAuths()
+        const oauth = auth && auth[id]
+        if (!oauth) return
+        clearInterval(checker)
+        const setting = await Setting.findOne({ type: id })
+        console.log('got oauth', oauth)
+        setting.token = oauth.token
+        setting.values = {
+          ...setting.values,
+          oauth,
         }
+        setting.save()
+        this.getSettings()
+        App.setAuthState({ closeId: id })
       }, 1000)
     }
   },
@@ -120,9 +136,10 @@ export default class OrbitSettings {
   render({ store }) {
     const [activeIntegrations, inactiveIntegrations] = partition(
       integrations,
-      x => CurrentUser.authorizations[x.id],
+      integration =>
+        store.settings &&
+        store.settings.find(x => x.type === integration.id && x.token),
     )
-
     return (
       <pane css={{ padding: [0, 10] }}>
         <UI.Title fontWeight={200} fontSize={16} marginBottom={10}>
@@ -135,6 +152,7 @@ export default class OrbitSettings {
               index={index}
               showAuth={store.startOauth}
               length={activeIntegrations.length}
+              isActive
               {...integration}
             />
           ))}

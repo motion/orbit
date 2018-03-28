@@ -1,4 +1,3 @@
-// import 'babel-polyfill'
 import 'isomorphic-fetch'
 import '@mcro/debug/inject'
 import createElement from '@mcro/black/es6/createElement'

@@ -60,7 +60,7 @@ SQLitePlugin = function(openargs, openSuccess, openError, primusAdaptor) {
   }
   if (!this.openError) {
     this.openError = function(e) {
-      console.log(e.message)
+      console.log('openError', e.message)
     }
   }
   this.open(this.openSuccess, this.openError)

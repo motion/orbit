@@ -3,6 +3,8 @@ import fs from 'fs'
 import Primus from 'primus'
 import Path from 'path'
 
+const log = debug('sqliteServer')
+
 var databaseID = 0
 var databaseList = []
 var databasePathList = []
@@ -12,45 +14,35 @@ function prettyPrintArgs(args) {
   var first = true
   for (var e of args) {
     if (first) {
-      console.log('backgroundExecuteSqlBatch: ', e.dbargs.dbname)
       first = false
     }
     for (var sql of e.executes) {
-      console.log('  params: ', sql.params, ' sql: ', sql.sql)
+      log('  params: ', sql.params, ' sql: ', sql.sql)
     }
   }
 }
 
 function onConnection(options, spark) {
-  console.log('connection occured', options)
-
   spark.on('data', function(data) {
-    console.log('got args', data)
     let { name } = data.args[0]
-
-    console.log('got a name', name, typeof name)
-
     if (typeof name === 'undefined') {
       name = 'database'
     }
-
-    var db = null
-
+    let db = null
     switch (data.command) {
       case 'open':
-        console.log('open: ', databaseDirectory + name)
+        log('open: ', databaseDirectory + name)
         break
       case 'close':
-        console.log('close: ', databaseDirectory + data.args[0].path)
+        log('close: ', databaseDirectory + data.args[0].path)
         break
       case 'delete':
-        console.log('delete: ', databaseDirectory + data.openargs.dbname)
+        log('delete: ', databaseDirectory + data.openargs.dbname)
         break
       case 'backgroundExecuteSqlBatch':
         prettyPrintArgs(data.args)
         break
     }
-
     switch (data.command) {
       case 'open':
         var databasePath = null
@@ -59,10 +51,8 @@ function onConnection(options, spark) {
         } else {
           databasePath = databaseDirectory + name + '.sqlite'
         }
-        console.log('opening...')
         // first check if its already opened
         if (databasePathList[name]) {
-          console.log('DONE')
           spark.write({
             command: 'openComplete',
             err: null,
@@ -71,17 +61,14 @@ function onConnection(options, spark) {
           })
           // else open it
         } else {
-          console.log('FIRST TIMER')
           var newDatabaseID = databaseID++
           // https://github.com/mapbox/node-sqlite3/wiki/Caching
-          console.log('create new db at', databasePath)
           sqlite
             .open(databasePath, {
               cached: true,
               Promise,
             })
             .then(db => {
-              console.log('DONE NOW OK')
               db.databaseID = newDatabaseID
               databaseList[newDatabaseID] = db
               databasePathList[name] = db
@@ -126,7 +113,7 @@ function onConnection(options, spark) {
       case 'backgroundExecuteSqlBatch':
         db = databasePathList[data.args[0].dbargs.dbname]
         if (!db) {
-          console.log('runFailed: db not found')
+          log('runFailed: db not found')
           spark.write({
             command: 'backgroundExecuteSqlBatchFailed',
             err: 'runFailed: db not found',
@@ -142,7 +129,6 @@ function onConnection(options, spark) {
 
 async function runQueries(id, spark, db, queryArray, accumAnswer) {
   if (queryArray.length < 1) {
-    console.log('retunr smll')
     spark.write({
       command: 'backgroundExecuteSqlBatchComplete',
       err: null,
@@ -152,7 +138,6 @@ async function runQueries(id, spark, db, queryArray, accumAnswer) {
     return
   }
   var top = queryArray.shift()
-  console.log('running', top.sql)
   try {
     const rows = await db.all(top.sql, top.params)
     var newAnswer = {}
@@ -167,7 +152,7 @@ async function runQueries(id, spark, db, queryArray, accumAnswer) {
     newAnswer.type = 'error'
     newAnswer.qid = top.qid
     accumAnswer.push(newAnswer)
-    console.log('runFailed: ', err)
+    log('runFailed: ', err)
     spark.write({
       command: 'backgroundExecuteSqlBatchFailed',
       err: err.toString(),
@@ -179,7 +164,6 @@ async function runQueries(id, spark, db, queryArray, accumAnswer) {
 
 export default class SQLiteServer {
   constructor() {
-    console.log('making server')
     Primus.createServer(spark => onConnection({ forceMemory: false }, spark), {
       port: 8082,
       transformer: 'websockets',

@@ -20,7 +20,6 @@ class IntegrationHeaderStore {
   runJob = () => {
     const { type } = this.props
     const { action, service } = this.typeToJob[type]
-    console.log('running', { type: service, action })
     Job.create({ type: service, action })
   }
 

@@ -13,14 +13,16 @@ console.log('PeekContents', PeekContents)
 export default class PeekPage {
   render({ theme }) {
     const { peekTarget } = App.state
-    if (!peekTarget) {
-      return null
+    let type = 'Empty'
+    if (peekTarget) {
+      type = capitalize(peekTarget.type) || 'Empty'
     }
-    const type = capitalize(peekTarget.type || 'empty')
     const View = PeekContents[type]
-    console.log('peek', peekTarget, type)
     const { currentPeek } = Electron
     const { fullScreen } = Electron.orbitState
+    if (!peekTarget && !fullScreen) {
+      return null
+    }
     if (!currentPeek) {
       return null
     }
@@ -47,7 +49,7 @@ export default class PeekPage {
               borderLeft: fullScreen ? 'none' : border,
             }}
           >
-            <View />
+            <View item={currentPeek} />
           </main>
         </peek>
       </UI.Theme>

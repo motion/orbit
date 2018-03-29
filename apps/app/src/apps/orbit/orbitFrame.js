@@ -115,11 +115,14 @@ class OrbitFrameStore {
   isRepositioning = [
     () => [Desktop.state.lastAppChange, Electron.state.willFullScreen],
     async ([app, fs], { when, sleep, setValue }) => {
-      const isFullScreen = fs > app
+      const willFullScreen = fs > app
       setValue(true)
-      await sleep(100)
+      await sleep(App.animationDuration)
       setValue('READY')
       await when(() => this.hasRepositioned)
+      if (willFullScreen) {
+        return setValue(false)
+      }
       await sleep(100)
       setValue(false)
     },
@@ -191,8 +194,8 @@ export default class OrbitFrame {
                     opacity: 0,
                     transform: {
                       x: orbitOnLeft
-                        ? 330 - SHADOW_PAD - (SHADOW_PAD + iWidth) + 4
-                        : -330,
+                        ? 330 / 2 - SHADOW_PAD - (SHADOW_PAD + iWidth) + 4
+                        : -(330 / 2),
                     },
                   }),
             }}

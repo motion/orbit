@@ -35,6 +35,7 @@ export default class PeekPage {
           css={{
             paddingLeft: fullScreen ? 0 : SHADOW_PAD,
           }}
+          $animate={fullScreen || App.isShowingPeek}
           $peekVisible={App.isShowingPeek}
         >
           <main
@@ -65,7 +66,16 @@ export default class PeekPage {
       pointerEvents: 'none !important',
       opacity: 0,
       position: 'relative',
+      transition: 'transform linear 80ms',
       flex: 1,
+      transform: {
+        y: -20,
+      },
+    },
+    animate: {
+      transform: {
+        y: 0,
+      },
     },
     peekVisible: {
       pointerEvents: 'all !important',

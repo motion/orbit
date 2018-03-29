@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react'
-import { view, react } from '@mcro/black'
+import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { App, Electron } from '@mcro/all'
 import OrbitFrame from './orbitFrame'
@@ -66,11 +66,11 @@ export default class Orbit {
               size={1.1}
               circular
               chromeless
-              opacity={0.4}
+              color={appStore.showSettings ? [0, 0, 0, 0.8] : [0, 0, 0, 0.2]}
               hover={{
+                color: appStore.showSettings ? [0, 0, 0, 0.9] : [0, 0, 0, 0.3],
                 opacity: 0.8,
               }}
-              highlight={appStore.showSettings}
               onClick={appStore.toggleSettings}
             />
           </controls>
@@ -85,9 +85,9 @@ export default class Orbit {
       bottom: 35,
       right: 12,
       zIndex: 10000,
-      opacity: 0.2,
+      opacity: 0.8,
       '&:hover': {
-        opacity: 0.9,
+        opacity: 1,
       },
     },
   }

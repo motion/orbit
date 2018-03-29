@@ -48,10 +48,7 @@ export default class OrbitSettings {
     )
     const allIntegrations = [...activeIntegrations, ...inactiveIntegrations]
     return (
-      <pane css={{ padding: [0, 10] }}>
-        <UI.Title fontWeight={200} fontSize={16} marginBottom={10}>
-          Integrations
-        </UI.Title>
+      <pane css={{ padding: 10 }}>
         <cards>
           {allIntegrations.map((integration, index) => (
             <Card

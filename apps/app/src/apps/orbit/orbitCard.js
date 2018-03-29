@@ -43,39 +43,41 @@ export default class Card {
           store.refs[index] = ref
         }}
       >
-        <OrbitIcon $icon $iconActive={isActive} icon={icon} />
-        <subtitle>
-          <UI.Text fontWeight={600} fontSize={13} textAlign="center">
-            {name}
-          </UI.Text>
-        </subtitle>
-        <UI.Button
-          if={!isActive}
-          onClick={() => {
-            if (oauth === false) {
-              const setting = store.settings.find(s => s.type === id)
-              setting.token = 'good'
-              setting.save()
-            } else {
-              appStore.startOauth(id)
-            }
-          }}
-          size={0.9}
-          icon="uiadd"
-          background="transparent"
-          borderColor={theme.base.background.darken(0.05)}
-          chromeless
-          circular
-          hover={{
-            background: [255, 255, 255, 0.5],
-          }}
-          color={theme.base.background.darken(0.2).alpha(0.5)}
-          css={{
-            position: 'absolute',
-            top: 5,
-            right: 5,
-          }}
-        />
+        <inner>
+          <OrbitIcon $icon $iconActive={isActive} icon={icon} />
+          <subtitle>
+            <UI.Text fontWeight={600} fontSize={13} textAlign="center">
+              {name}
+            </UI.Text>
+          </subtitle>
+          <UI.Button
+            if={!isActive}
+            onClick={() => {
+              if (oauth === false) {
+                const setting = store.settings.find(s => s.type === id)
+                setting.token = 'good'
+                setting.save()
+              } else {
+                appStore.startOauth(id)
+              }
+            }}
+            size={0.9}
+            icon="uiadd"
+            background="transparent"
+            borderColor={theme.base.background.darken(0.05)}
+            chromeless
+            circular
+            hover={{
+              background: [255, 255, 255, 0.5],
+            }}
+            color={theme.base.background.darken(0.2).alpha(0.5)}
+            css={{
+              position: 'absolute',
+              top: 5,
+              right: 5,
+            }}
+          />
+        </inner>
       </card>
     )
   }
@@ -87,6 +89,7 @@ export default class Card {
       padding: [15, 5],
       // margin: [0, 5, 0],
       alignItems: 'center',
+      justifyContent: 'center',
       borderBottom: [1, 'dotted', [0, 0, 0, 0.1]],
       '&:hover': {
         background: [255, 255, 255, 0.1],
@@ -94,6 +97,10 @@ export default class Card {
       '&:active': {
         background: [255, 255, 255, 0.15],
       },
+    },
+    inner: {
+      alignItems: 'center',
+      justifyContent: 'center',
     },
     odd: {
       borderRight: [1, 'dotted', [0, 0, 0, 0.1]],

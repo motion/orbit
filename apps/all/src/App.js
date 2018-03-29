@@ -6,10 +6,29 @@ import global from 'global'
 import Desktop from './Desktop'
 import Electron from './Electron'
 import fuzzySort from 'fuzzysort'
+import { Bit } from '@mcro/models'
 
 const isBrowser = typeof window !== 'undefined'
 // const log = debug('App')
 let App
+
+const presetAnswers = {
+  '1.txt': [
+    {
+      title: 'Hello world',
+      body: 'this is me',
+      type: 'document',
+      integration: 'gdocs',
+    },
+    {
+      title: 'Hello 2',
+      body: 'this is me',
+      type: 'email',
+      integration: 'github',
+    },
+    { title: 'Chat', body: 'this is me', type: 'chat', integration: 'slack' },
+  ],
+}
 
 const uniq = arr => {
   const added = {}
@@ -48,14 +67,35 @@ class AppStore {
   fuzzySort = fuzzySort
 
   get results() {
-    const strongTitleMatches = fuzzySort
-      .go(App.state.query, Desktop.results, {
-        key: 'title',
-        threshold: -25,
-      })
-      .map(x => x.obj)
-    return uniq([...strongTitleMatches, ...Desktop.results])
+    return this.bitResults || []
   }
+
+  @react({ fireImmediately: true })
+  bitResults = [
+    () => [App.state.query, Desktop.appState.id],
+    async ([query, id]) => {
+      if (!Bit.usedConnection) {
+        return
+      }
+      if (id === 'com.apple.TextEdit') {
+        return presetAnswers[Desktop.appState.title]
+      }
+      if (!query) {
+        return (await Bit.find({ take: 8 })) || []
+      }
+      const results = await Bit.find({
+        where: `title like "${query}%"`,
+        take: 8,
+      })
+      const strongTitleMatches = fuzzySort
+        .go(query, results, {
+          key: 'title',
+          threshold: -25,
+        })
+        .map(x => x.obj)
+      return uniq([...strongTitleMatches, ...results])
+    },
+  ]
 
   get selectedItem() {
     return App.results[App.state.selectedIndex]

@@ -67,6 +67,7 @@
     "wink-nlp-utils": "^1.7.0"
   },
   "devDependencies": {
+    "@mcro/babel-preset-motion": "*",
     "babel-core": "^6.26.0"
   }
 }

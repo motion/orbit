@@ -61,7 +61,7 @@ export default class Item {
           }}
         >
           <OrbitIcon
-            icon={result.icon ? `/icons/${result.icon}` : result.type}
+            icon={result.icon ? `/icons/${result.icon}` : result.integration}
             css={{
               width: 22,
               height: 22,

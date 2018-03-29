@@ -48,7 +48,18 @@ export default class AppStore {
         { id: 'folder', name: 'Folder', icon: 'folder', oauth: false },
       ]
     }
-    return this.bitResults || []
+    const results = [
+      ...(this.bitResults || []),
+      ...(Desktop.searchState.pluginResults || []),
+      ...(Desktop.searchState.searchResults || []),
+    ]
+    const strongTitleMatches = fuzzySort
+      .go(App.state.query, results, {
+        key: 'title',
+        threshold: -25,
+      })
+      .map(x => x.obj)
+    return uniq([...strongTitleMatches, ...results])
   }
 
   @react({ delay: 64 })
@@ -62,7 +73,7 @@ export default class AppStore {
     () => [App.state.query, Desktop.appState.id],
     async ([query, id]) => {
       if (this.showSettings || !Bit.usedConnection) {
-        return
+        return []
       }
       if (id === 'com.apple.TextEdit') {
         return presetAnswers[Desktop.appState.title]
@@ -70,17 +81,10 @@ export default class AppStore {
       if (!query) {
         return (await Bit.find({ take: 8 })) || []
       }
-      const results = await Bit.find({
-        where: `title like "${query}%"`,
+      return await Bit.find({
+        where: `title like "%${query.split('').join('%')}%"`,
         take: 8,
       })
-      const strongTitleMatches = fuzzySort
-        .go(query, results, {
-          key: 'title',
-          threshold: -25,
-        })
-        .map(x => x.obj)
-      return uniq([...strongTitleMatches, ...results])
     },
   ]
 

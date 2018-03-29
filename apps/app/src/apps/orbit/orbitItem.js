@@ -44,7 +44,7 @@ export default class Item {
         glow={false}
         background={isSelected ? [255, 255, 255, 0.25] : 'transparent'}
         glowProps={glowProps}
-        padding={[10, 18]}
+        padding={[10, 11]}
         onClick={this.onClick}
         {...props}
       >
@@ -54,7 +54,7 @@ export default class Item {
           css={{
             fontWeight: 300,
             // letterSpacing: isSelected ? -0.25 : 0,
-            opacity: isSelected ? 1 : 0.7,
+            opacity: isSelected ? 1 : 0.95,
             alignItems: 'center',
             justifyContent: 'center',
             textShadow: isSelected ? `0 0 5px rgba(255,255,255,0.3)` : 'none',

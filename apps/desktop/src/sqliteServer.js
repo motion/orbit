@@ -23,37 +23,40 @@ function prettyPrintArgs(args) {
   }
 }
 
-let queries = []
-let isRunning = false
-const processQueue = async action => {
-  if (action) {
-    queries.push(action)
+let lock
+let queue = []
+let numConnections = 0
+
+async function processQueue() {
+  if (!queue.length) return
+  lock = 'special'
+  while (queue.length) {
+    await runWithLock(...queue.shift())
   }
-  if (!queries.length) {
-    return
+  lock = null
+  if (queue.length) processQueue()
+}
+
+async function runWithLock(uid, run) {
+  if (lock && lock !== uid) {
+    queue.push(run)
+  } else {
+    await run()
+    if (!lock) {
+      processQueue()
+    }
   }
-  if (isRunning) {
-    return
-  }
-  const nextQueries = [...queries]
-  queries = []
-  isRunning = true
-  for (const query of nextQueries) {
-    await query()
-  }
-  isRunning = false
-  processQueue()
 }
 
 function onConnection(options, spark) {
-  spark.on('data', async data => {
-    processQueue(async () => {
-      await onData(options, spark, data)
-    })
+  let uid = ++numConnections
+  spark.on('data', data => {
+    const run = () => onData(options, spark, data, uid)
+    runWithLock(uid, run)
   })
 }
 
-async function onData(options, spark, data) {
+async function onData(options, spark, data, uid) {
   let { name } = data.args[0]
   // if (typeof name === 'undefined') {
   //   name = 'database'
@@ -158,7 +161,14 @@ async function onData(options, spark, data) {
         return
       }
       // console.log('setting query array', JSON.stringify(data))
-      await runQueries(data.id, spark, db, data.args[0].executes, [])
+      const queries = data.args[0].executes
+      if (queries[0].sql === 'BEGIN TRANSACTION') {
+        lock = uid
+      }
+      if (queries[0].sql.indexOf('END TRANSACTION') === 0) {
+        lock = null
+      }
+      await runQueries(data.id, spark, db, queries, [])
   }
 }
 

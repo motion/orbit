@@ -228,8 +228,9 @@ export default class OrbitFrame {
               <expand if={!fullScreen}>
                 <expandEnd
                   css={{
+                    opacity: 0.5,
                     background: `linear-gradient(transparent, ${theme.base.background.darken(
-                      0.025,
+                      0.02,
                     )})`,
                   }}
                 />
@@ -237,7 +238,7 @@ export default class OrbitFrame {
                   css={{
                     opacity: 0.5,
                     background: `linear-gradient(transparent, ${theme.base.background
-                      .darken(0.03)
+                      .darken(0.025)
                       .saturate(0.2)
                       .alpha(0.8)} 80%)`,
                   }}
@@ -330,7 +331,7 @@ export default class OrbitFrame {
       bottom: 0,
       left: 0,
       right: 0,
-      top: '30%',
+      top: '50%',
       alignItems: 'flex-end',
       justifyContent: 'center',
       flexFlow: 'row',

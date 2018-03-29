@@ -7,15 +7,15 @@ import PeekHeader from '../peekHeader'
 export class Document {
   render() {
     const { selectedItem } = App.state
-    if (!selectedItem || !selectedItem.document) {
+    if (!selectedItem) {
       return null
     }
     return (
       <React.Fragment>
-        <PeekHeader title={selectedItem.document.title} />
+        <PeekHeader title={selectedItem.title} />
         <content
           dangerouslySetInnerHTML={{
-            __html: (selectedItem.document.text || '').replace('\n', '<br />'),
+            __html: (selectedItem.text || '').replace('\n', '<br />'),
           }}
         />
       </React.Fragment>

@@ -1,19 +1,10 @@
 // @flow
 import { store, watch, react } from '@mcro/black'
 import * as Syncers from './syncers'
-import { Job, Setting } from '@mcro/models'
+import { Job, Setting, findOrCreate } from '@mcro/models'
 
 const log = debug('sync')
-
-async function findOrCreateSetting({ type }) {
-  let setting = await Setting.findOne({ type })
-  if (setting) {
-    return setting
-  }
-  setting = new Setting()
-  setting.type = type
-  return await setting.save()
-}
+debug.quiet('sync')
 
 function getRxError(error: Error) {
   const { message, stack } = error
@@ -142,7 +133,7 @@ export default class Sync {
     this.syncers = {}
     for (const name of Object.keys(Syncers)) {
       try {
-        const setting = await findOrCreateSetting({ type: name })
+        const setting = await findOrCreate(Setting, { type: name })
         if (!setting) {
           console.log('no setting for', name)
           continue

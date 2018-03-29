@@ -1,3 +1,5 @@
+import * as React from 'react'
+import * as UI from '@mcro/ui'
 import iconGCalendar from '~/../public/icons/gcalendar.svg'
 import iconGDocs from '~/../public/icons/gdocs.svg'
 import iconGDrive from '~/../public/icons/gdrive.svg'
@@ -19,5 +21,8 @@ const icons = {
 }
 
 export default ({ icon, ...props }) => (
-  <img src={icons[icon] || icon} {...props} />
+  <React.Fragment>
+    <img if={icons[icon]} src={icons[icon]} {...props} />
+    <UI.Icon if={!icons[icon]} name={icon} />
+  </React.Fragment>
 )

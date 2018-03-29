@@ -5,27 +5,23 @@ const disableLogs = {}
 function debug(namespace) {
   const uid = id++
   namespaces.push(namespace)
-  return function log(...messages) {
-    if (disableLogs[namespace]) {
-      return
-    }
+  function log(...messages) {
+    if (disableLogs[namespace]) return
     colorfulLog(uid, namespace, messages)
+  }
+  return log
+}
+
+const setLogging = (list, val) => {
+  const names = list.length ? list : debug.list()
+  for (const name of names) {
+    disableLogs[name] = val
   }
 }
 
-debug.quiet = () => debug.disable(...debug.list())
-debug.loud = () => debug.enable(...debug.list())
+debug.quiet = (...args) => setLogging(args, true)
+debug.loud = (...args) => setLogging(args, false)
 debug.list = () => namespaces
-debug.enable = (...logNames) => {
-  for (const name of logNames) {
-    disableLogs[name] = false
-  }
-}
-debug.disable = (...logNames) => {
-  for (const name of logNames) {
-    disableLogs[name] = true
-  }
-}
 debug.settings = () => disableLogs
 
 function colorfulLog(id, namespace, messages) {

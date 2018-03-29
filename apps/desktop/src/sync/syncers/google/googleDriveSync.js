@@ -1,8 +1,8 @@
 // @flow
-import { Thing } from '@mcro/models'
+import { Bit, createOrUpdate } from '@mcro/models'
 import { createInChunks } from '~/sync/helpers'
 
-const log = debug('sync googleDrive')
+const log = debug('googleDrive')
 const sleep = ms => new Promise(res => setTimeout(res, ms))
 
 export default class GoogleDriveSync {
@@ -38,7 +38,7 @@ export default class GoogleDriveSync {
     const { name, contents, ...data } = info
     const created = info.createdTime
     const updated = info.modifiedTime
-    return await Thing.findOrUpdate({
+    return await createOrUpdate(Bit, {
       id: info.id,
       integration: 'google',
       type: 'doc',

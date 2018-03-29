@@ -25,6 +25,12 @@ export class SettingView {
       <content>
         <PeekHeader title={capitalize(store.type)} />
         {JSON.stringify(store.setting)}
+        <input
+          onSubmit={e => {
+            store.setting.values.folders = [e.target.value]
+            store.setting.save()
+          }}
+        />
       </content>
     )
   }

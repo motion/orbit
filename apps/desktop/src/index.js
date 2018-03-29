@@ -6,6 +6,8 @@ import * as Mobx from 'mobx'
 
 Error.stackTraceLimit = Infinity
 global.Mobx = Mobx
+global.require = require
+global.Path = require('path')
 
 const log = debug('index')
 

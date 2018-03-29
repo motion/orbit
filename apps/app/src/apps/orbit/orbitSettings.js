@@ -11,12 +11,13 @@ const integrations = [
   { id: 'google', name: 'Google Drive', icon: 'gdrive' },
   { id: 'github', name: 'Github', icon: 'github' },
   { id: 'slack', name: 'Slack', icon: 'slack' },
+  { id: 'folder', name: 'Folder', icon: 'folder', oauth: false },
 ]
 
 @UI.injectTheme
 @view
 class Card {
-  render({ id, icon, name, index, length, theme, isActive, store }) {
+  render({ id, icon, name, index, length, theme, isActive, store, oauth }) {
     const { startOauth } = store
     const isSelected = store.selected === id
     const isOdd = index % 2 == 0
@@ -50,7 +51,15 @@ class Card {
         </subtitle>
         <UI.Button
           if={!isActive}
-          onClick={() => startOauth(id)}
+          onClick={() => {
+            if (oauth === false) {
+              const setting = store.settings.find(s => s.type === id)
+              setting.token = 'good'
+              setting.save()
+            } else {
+              startOauth(id)
+            }
+          }}
           size={0.9}
           icon="uiadd"
           background="transparent"

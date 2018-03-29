@@ -4,6 +4,7 @@ import Primus from 'primus'
 import Path from 'path'
 
 const log = debug('sqliteServer')
+debug.quiet('sqliteServer')
 
 var databaseID = 0
 var databaseList = []

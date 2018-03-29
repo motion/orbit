@@ -143,7 +143,7 @@ export default class OrbitFrame {
     }
   }
 
-  render({ store, orbitPage, children, theme }) {
+  render({ store, orbitPage, children, theme, headerBg }) {
     const { fullScreen } = Electron.orbitState
     const { orbitOnLeft } = Electron
     const borderShadow = [
@@ -167,7 +167,11 @@ export default class OrbitFrame {
           if={App.isAttachedToWindow}
           arrowSize={arrowSize}
           orbitOnLeft={orbitOnLeft}
-          background={background}
+          background={
+            orbitOnLeft
+              ? `linear-gradient(to right, ${headerBg}, #fff)`
+              : `linear-gradient(ro right, #fff, ${headerBg})`
+          }
         />
         <Indicator
           if={!fullScreen}
@@ -224,12 +228,20 @@ export default class OrbitFrame {
             >
               {children}
               <expand if={!fullScreen}>
-                <expandEnd />
-                <fade
+                <expandEnd
                   css={{
                     background: `linear-gradient(transparent, ${theme.base.background.darken(
-                      0.05,
-                    )} 80%)`,
+                      0.025,
+                    )})`,
+                  }}
+                />
+                <fade
+                  css={{
+                    opacity: 0.5,
+                    background: `linear-gradient(transparent, ${theme.base.background
+                      .darken(0.03)
+                      .saturate(0.2)
+                      .alpha(0.8)} 80%)`,
                   }}
                 />
                 <barOuter onMouseDown={orbitPage.barMouseDown}>

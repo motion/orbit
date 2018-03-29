@@ -42,6 +42,7 @@ class OrbitPageStore {
   }
 }
 
+@UI.injectTheme
 @view.attach('appStore')
 @view.provide({
   orbitStore: OrbitStore,
@@ -49,11 +50,12 @@ class OrbitPageStore {
 })
 @view
 export default class Orbit {
-  render({ appStore, orbitPage }) {
+  render({ appStore, orbitPage, theme }) {
+    const headerBg = theme.base.background.lighten(0.08)
     return (
       <UI.Theme name={Electron.orbitState.fullScreen ? 'tan' : 'tan'}>
-        <OrbitFrame orbitPage={orbitPage}>
-          <OrbitHeader />
+        <OrbitFrame headerBg={headerBg} orbitPage={orbitPage}>
+          <OrbitHeader headerBg={headerBg} />
           <OrbitContent if={!appStore.showSettings} />
           <OrbitSettings if={appStore.showSettings} />
           <Knowledge if={App.state.knowledge} data={App.state.knowledge} />

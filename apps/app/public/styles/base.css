@@ -181,11 +181,11 @@ select:-webkit-autofill:focus {
 }
 
 ::selection {
-  background: blue;
+  background: #714842;
   color: #fff;
 }
 *::selection {
-  background: blue;
+  background: #714842;
   color: #fff;
 }
 

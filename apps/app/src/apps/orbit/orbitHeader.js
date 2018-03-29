@@ -47,9 +47,8 @@ export default class PeekHeader {
     }
   }
 
-  render({ orbitStore, headerStore, theme }) {
+  render({ orbitStore, headerStore, theme, headerBg }) {
     const darkerBg = theme.base.background.darken(0.045).desaturate(0.3)
-    const headerBg = theme.base.background.lighten(0.08).alpha(0.5)
     return (
       <header
         $headerBg={headerBg}
@@ -80,7 +79,7 @@ export default class PeekHeader {
             getRef={headerStore.ref('inputRef').set}
             onClick={headerStore.onClickInput}
           />
-          <indicator $indicatorOn={App.isShowingHeader ? darkerBg : false} />
+          <inputLn $inputLnOn={App.isShowingHeader ? darkerBg : false} />
         </title>
         <logoButton
           if={!Electron.orbitState.fullScreen}
@@ -88,13 +87,16 @@ export default class PeekHeader {
           $onLeft={Electron.orbitOnLeft}
           $onRight={!Electron.orbitOnLeft}
           css={{
-            border: [3, headerBg],
+            boxShadow: ['inset', 0, 0.5, 0, 1, headerBg.darken(0.5)],
+            padding: 3,
+            margin: [0, 2],
+            border: [4, headerBg],
           }}
         >
           <logo
             css={{
-              width: 11,
-              height: 11,
+              width: 9,
+              height: 9,
               background: Electron.orbitState.pinned
                 ? Constants.ORBIT_COLOR.lighten(0.8)
                 : darkerBg,
@@ -112,8 +114,8 @@ export default class PeekHeader {
       alignItems: 'center',
       justifyContent: 'center',
       padding: [12, 10],
-      transition: 'all ease-in 100ms',
-      opacity: 0,
+      transition: 'all ease-in 300ms',
+      opacity: 0.5,
       '&:hover': {
         opacity: 1,
       },
@@ -128,7 +130,7 @@ export default class PeekHeader {
         background: background.lighten(0.05),
       },
     }),
-    indicator: {
+    inputLn: {
       width: 10,
       height: 2,
       flex: 1,
@@ -138,7 +140,7 @@ export default class PeekHeader {
       },
       transition: 'all ease-in 300ms',
     },
-    indicatorOn: background => ({
+    inputLnOn: background => ({
       background,
       opacity: 1,
       transform: {
@@ -149,6 +151,10 @@ export default class PeekHeader {
       position: 'absolute',
       top: 3,
       borderRadius: 1000,
+      opacity: 0.8,
+      '&:hover': {
+        opacity: 1,
+      },
     },
     onLeft: {
       right: 3,

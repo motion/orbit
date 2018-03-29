@@ -84,6 +84,7 @@ export default class PeekHeader {
               width: '100%',
               fontWeight: 300,
               boxShadow: ['inset', 0, 0, 0, 1, darkerBg.darken(0.5)],
+              opacity: App.state.query.length > 0 ? 1 : 0.6,
             }}
             background="transparent"
             onChange={orbitStore.onChangeQuery}
@@ -95,25 +96,18 @@ export default class PeekHeader {
             $inputLnOn={Electron.orbitState.mouseOver ? darkerBg : false}
           />
         </title>
-        <logoButton
+        <pinnedIcon
           if={!Electron.orbitState.fullScreen}
           onClick={App.togglePinned}
           $onLeft={Electron.orbitOnLeft}
           $onRight={!Electron.orbitOnLeft}
-          css={{
-            transition: 'all ease-in 100ms 150ms',
-            opacity: Electron.orbitState.pinned ? 1 : 0.5,
-            boxShadow: ['inset', 0, 0.5, 0, 1, '#000'],
-            padding: 3,
-            margin: [0, 2],
-            border: [4, headerBg],
-          }}
+          $isPinned={Electron.orbitState.pinned}
         >
           <UI.Icon
             color={
               Electron.orbitState.pinned
                 ? Constants.ORBIT_COLOR.lighten(0.25)
-                : Constants.ORBIT_COLOR.lighten(0.5)
+                : Constants.ORBIT_COLOR.lighten(0.5).alpha(0.5)
             }
             size={12}
             name="pin"
@@ -123,7 +117,7 @@ export default class PeekHeader {
               borderRadius: 1000,
             }}
           />
-        </logoButton>
+        </pinnedIcon>
       </header>
     )
   }
@@ -148,9 +142,9 @@ export default class PeekHeader {
       opacity: 1,
     },
     headerBg: background => ({
-      background,
+      background: background.alpha(0.5),
       '&:hover': {
-        background: background.lighten(0.05),
+        background: background.lighten(0.05).alpha(0.5),
       },
     }),
     inputLn: {
@@ -170,11 +164,20 @@ export default class PeekHeader {
         x: 10,
       },
     }),
-    logoButton: {
+    pinnedIcon: {
       position: 'absolute',
+      transition: 'all ease-in 100ms 100ms',
+      padding: 6,
+      margin: [2, 4],
       top: 3,
       borderRadius: 1000,
-      opacity: 0.5,
+      opacity: 0.2,
+      '&:hover': {
+        opacity: 0.4,
+      }
+    },
+    isPinned {
+      opacity: 0.9,
       '&:hover': {
         opacity: 1,
       },

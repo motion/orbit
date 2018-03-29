@@ -191,7 +191,6 @@ export default class OrbitFrame {
         >
           <orbit
             css={{
-              borderRight: orbitOnLeft ? [1, 'red'] : 0,
               paddingRight: fullScreen ? 0 : SHADOW_PAD,
               ...(App.isShowingOrbit
                 ? {
@@ -218,6 +217,7 @@ export default class OrbitFrame {
                 // borderRight: orbitOnLeft ? 'none' : border,
                 background,
                 boxShadow: App.isShowingOrbit ? boxShadow : 'none',
+                // borderRight: orbitOnLeft ? [1, [0, 0, 0, 0.1]] : 0,
                 borderLeftRadius: orbitOnLeft ? Constants.BORDER_RADIUS : 0,
                 borderRightRadius: fullScreen
                   ? 0

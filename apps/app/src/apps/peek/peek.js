@@ -26,9 +26,6 @@ export default class PeekPage {
     if (!currentPeek) {
       return null
     }
-    const border = fullScreen
-      ? [1, theme.base.background.darken(0.1).desaturate(0.3)]
-      : null
     return (
       <UI.Theme name="tan">
         <peek
@@ -42,12 +39,10 @@ export default class PeekPage {
             css={{
               boxShadow: [
                 APP_SHADOW,
-                fullScreen ? null : ['inset', 0, 0, 0, 1, [0, 0, 0, 0.05]],
+                fullScreen ? null : ['inset', 0, 0, 0, 1, [0, 0, 0, 0.5]],
               ].filter(Boolean),
               borderRightRadius: fullScreen ? 5 : 0,
               background: fullScreen ? theme.base.background : '#fff',
-              border,
-              borderLeft: fullScreen ? 'none' : border,
             }}
           >
             <View item={currentPeek} />

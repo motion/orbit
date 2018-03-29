@@ -42,7 +42,7 @@ export default class PeekPage {
                 fullScreen ? null : ['inset', 0, 0, 0, 1, [0, 0, 0, 0.5]],
               ].filter(Boolean),
               borderRightRadius: fullScreen ? 5 : 0,
-              background: fullScreen ? '#fff' || theme.base.background : '#fff',
+              background: fullScreen ? theme.base.background : '#fff',
             }}
           >
             <View item={currentPeek} />

@@ -38,6 +38,7 @@ export default ({ icon, size = 25, ...props }) => {
         if={!icons[icon]}
         name={icon}
         css={{ display: 'inline', ...sizeProps }}
+        size={size}
       />
     </icon>
   )

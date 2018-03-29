@@ -115,8 +115,6 @@ export default class Card {
     },
     icon: {
       marginBottom: 10,
-      width: 40,
-      height: 40,
       filter: 'grayscale(100%)',
       opacity: 0.5,
     },

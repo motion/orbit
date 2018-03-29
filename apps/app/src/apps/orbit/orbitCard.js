@@ -2,12 +2,23 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import OrbitIcon from './orbitIcon'
 
+@view.attach('appStore')
 @UI.injectTheme
 @view
 export default class Card {
-  render({ id, icon, name, index, length, theme, isActive, store, oauth }) {
-    const { startOauth } = store
-    const isSelected = store.selectedIndex === index
+  render({
+    id,
+    icon,
+    name,
+    index,
+    length,
+    theme,
+    isActive,
+    appStore,
+    store,
+    oauth,
+  }) {
+    const isSelected = appStore.selectedIndex === index
     const isOdd = index % 2 == 0
     return (
       <card
@@ -24,11 +35,12 @@ export default class Card {
           if (!isActive) {
             return
           }
-          store.setSelected(index)
+          appStore.setSelectedIndex(index)
+          store.showPeek(index)
         }}
         ref={ref => {
           if (!ref) return
-          store.refs[id] = ref
+          store.refs[index] = ref
         }}
       >
         <OrbitIcon $icon $iconActive={isActive} icon={icon} />
@@ -45,7 +57,7 @@ export default class Card {
               setting.token = 'good'
               setting.save()
             } else {
-              startOauth(id)
+              appStore.startOauth(id)
             }
           }}
           size={0.9}

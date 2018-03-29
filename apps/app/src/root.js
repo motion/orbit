@@ -1,30 +1,65 @@
 import React from 'react'
-import { view } from '@mcro/black'
+import { view, react } from '@mcro/black'
 import Redbox from 'redbox-react'
 import * as UI from '@mcro/ui'
 import NotFound from '~/views/404'
 import Router from '~/router'
 import { App } from '@mcro/all'
+import { Setting } from '@mcro/models'
 
 // const log = debug('root')
 
 @view.provide({
   appStore: class AppStore {
+    selectedIndex = 0
     showSettings = false
+    settings = []
+
+    @react({ delay: 64 })
+    setAppSelectedIndex = [() => this.selectedIndex, App.setSelectedIndex]
+
+    async willMount() {
+      await App.start()
+      this.getSettings()
+    }
+
+    setSelectedIndex = i => {
+      this.selectedIndex = i
+    }
 
     get results() {
       if (this.showSettings) {
-        return
+        return []
       }
       return App.results
+    }
+
+    getSettings = async () => {
+      this.settings = await Setting.find()
     }
 
     toggleSettings = () => {
       this.showSettings = !this.showSettings
     }
 
-    async willMount() {
-      await App.start()
+    startOauth = id => {
+      App.setAuthState({ openId: id })
+      const checker = this.setInterval(async () => {
+        const auth = await this.checkAuths()
+        const oauth = auth && auth[id]
+        if (!oauth) return
+        clearInterval(checker)
+        const setting = await Setting.findOne({ type: id })
+        console.log('got oauth', oauth)
+        setting.token = oauth.token
+        setting.values = {
+          ...setting.values,
+          oauth,
+        }
+        setting.save()
+        this.getSettings()
+        App.setAuthState({ closeId: id })
+      }, 1000)
     }
   },
 })

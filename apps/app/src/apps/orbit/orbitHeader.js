@@ -52,7 +52,7 @@ export default class PeekHeader {
     const darkerBg = theme.base.background.darken(0.045).desaturate(0.3)
     return (
       <header
-        $headerBg={fullScreen ? headerBg.alpha(0.3) : headerBg}
+        $headerBg={fullScreen ? headerBg.alpha(0.2) : headerBg}
         $$draggable
         $headerVisible={App.isShowingHeader}
         $headerMouseOver={Electron.orbitState.mouseOver}
@@ -127,7 +127,7 @@ export default class PeekHeader {
       flexFlow: 'row',
       alignItems: 'center',
       justifyContent: 'center',
-      padding: [12, 10],
+      padding: [5, 10],
       transition: 'all ease-in 300ms',
       opacity: 0.75,
       '&:hover': {

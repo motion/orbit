@@ -51,7 +51,7 @@ class OrbitPageStore {
 @view
 export default class Orbit {
   render({ appStore, orbitPage, theme }) {
-    const headerBg = theme.base.background.lighten(0.08)
+    const headerBg = theme.base.background.lighten(0.1)
     return (
       <UI.Theme name={Electron.orbitState.fullScreen ? 'tan' : 'tan'}>
         <OrbitFrame headerBg={headerBg} orbitPage={orbitPage}>

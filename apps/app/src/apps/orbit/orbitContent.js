@@ -64,7 +64,7 @@ export default class OrbitContent {
         height,
       }
       if (App.isShowingOrbit) {
-        this.props.orbitStore.setSelectedIndex(target.id)
+        this.props.appStore.setSelectedIndex(target.id)
         this.updateTargetTm = setTimeout(() => {
           App.setPeekTarget({ id, position, type: 'document' })
         }, 64)

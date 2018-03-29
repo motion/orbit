@@ -1,9 +1,6 @@
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { Setting } from '@mcro/models'
 import { App, Electron } from '@mcro/all'
-import * as Constants from '~/constants'
-import r2 from '@mcro/r2'
 import { partition } from 'lodash'
 import Card from './orbitCard'
 
@@ -14,9 +11,32 @@ const integrations = [
   { id: 'folder', name: 'Folder', icon: 'folder', oauth: false },
 ]
 
-@view
+class SettingsStore {
+  refs = {}
+
+  showPeek(index) {
+    const ref = this.refs[index]
+    if (!ref) return
+    const position = {
+      left: Electron.orbitState.position[0],
+      top: ref.offsetTop + Electron.orbitState.position[1],
+      width: ref.clientWidth,
+      height: ref.clientHeight,
+    }
+    App.setPeekTarget({
+      id: this.props.appStore.results[index],
+      position,
+      type: 'setting',
+    })
+  }
+}
+
+@view.attach('appStore')
+@view({
+  store: SettingsStore,
+})
 export default class OrbitSettings {
-  render({ appStore }) {
+  render({ store, appStore }) {
     if (!appStore.settings) {
       return null
     }
@@ -38,6 +58,7 @@ export default class OrbitSettings {
               key={index}
               index={index}
               appStore={appStore}
+              store={store}
               length={allIntegrations.length}
               isActive={appStore.settings.find(
                 x => x.type === integration.id && x.token,

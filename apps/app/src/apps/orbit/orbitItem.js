@@ -28,10 +28,11 @@ const P = p => (
   />
 )
 
+@view.attach('appStore')
 @view
 export default class Item {
   onClick = () => {
-    this.props.orbitStore.setSelectedIndex(this.props.index)
+    this.props.appStore.setSelectedIndex(this.props.index)
   }
 
   render({ orbitStore, index, result, ...props }) {

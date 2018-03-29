@@ -108,7 +108,7 @@ export default class ElectronWindow extends React.Component {
         onQuit={electronStore.handleQuit}
         ref={electronStore.handleAppRef}
       >
-        <MenuItems />
+        <MenuItems el />
         <PeekWindow />}
         <OrbitWindow />
         <Tray />

@@ -3,6 +3,7 @@ import { Menu, SubMenu, MenuItem, MenuItems } from '@mcro/reactron'
 import { view } from '@mcro/black'
 import { Electron } from '@mcro/all'
 
+@view.attach('electronStore')
 @view.electron
 export default class MenuEl {
   toggleDevTools = appName => () => {
@@ -25,7 +26,7 @@ export default class MenuEl {
     Electron.setShouldShowSettings(Date.now())
   }
 
-  render() {
+  render({ electronStore }) {
     return (
       <Menu>
         <SubMenu label="Orbit">
@@ -58,6 +59,11 @@ export default class MenuEl {
             onClick={this.handleClose}
           />
           <MenuItems.Minimize />
+          <MenuItem
+            label="Refresh"
+            accelerator="CmdOrCtrl+r"
+            onClick={electronStore.restart}
+          />
           <MenuItem
             label="Show Dev Tools [App]"
             accelerator="CmdOrCtrl+Option+i"

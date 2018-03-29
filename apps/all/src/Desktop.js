@@ -140,7 +140,7 @@ class DesktopStore {
     )
   }
 
-  start(options) {
+  start = options => {
     Bridge.start(this, this.state, options)
     this.setState = Bridge.setState
   }

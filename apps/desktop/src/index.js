@@ -1,4 +1,3 @@
-import 'babel-polyfill'
 import 'isomorphic-fetch'
 import '@mcro/debug/inject'
 import '@mcro/black/mlog'
@@ -7,6 +6,8 @@ import * as Mobx from 'mobx'
 
 Error.stackTraceLimit = Infinity
 global.Mobx = Mobx
+global.require = require
+global.Path = require('path')
 
 const log = debug('index')
 

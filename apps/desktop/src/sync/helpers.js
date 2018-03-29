@@ -19,12 +19,18 @@ export async function ensureJob(
   options: Object = {},
   force?: boolean,
 ): ?Job {
-  const createJob = () => Job.create({ type, action })
+  log(`ensureJob() ${type} ${action}`)
+  const createJob = () => {
+    const job = new Job()
+    job.type = type
+    job.action = action
+    return job.save()
+  }
   if (force) {
     return await createJob()
   }
 
-  const lastPending = await Job.lastPending({ type, action }).exec()
+  const lastPending = await Job.lastPending({ type, action })
   if (lastPending) {
     const secondsAgo =
       (Date.now() - Date.parse(lastPending.createdAt)) / UNITS_SECOND
@@ -45,9 +51,8 @@ export async function ensureJob(
       return
     }
   }
-  const lastCompleted = await Job.lastCompleted({ type, action }).exec()
+  const lastCompleted = await Job.lastCompleted({ type, action })
   if (!lastCompleted) {
-    log('No existing completed jobs')
     return await createJob()
   }
   if (olderThanSeconds(lastCompleted.updatedAt, options.every)) {

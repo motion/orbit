@@ -1,17 +1,16 @@
 // @flow
-import { Thing } from '@mcro/models'
+import { Bit, createOrUpdate } from '@mcro/models'
 import { createInChunks } from '~/sync/helpers'
 
-const log = debug('sync')
+const log = debug('googleDrive')
 const sleep = ms => new Promise(res => setTimeout(res, ms))
 
 export default class GoogleDriveSync {
   fetch2 = (path, opts) => this.helpers.fetch(`/drive/v2${path}`, opts)
   fetch = (path, opts) => this.helpers.fetch(`/drive/v3${path}`, opts)
 
-  constructor({ setting, token, helpers }) {
+  constructor(setting, helpers) {
     this.setting = setting
-    this.token = token
     this.helpers = helpers
   }
 
@@ -39,7 +38,7 @@ export default class GoogleDriveSync {
     const { name, contents, ...data } = info
     const created = info.createdTime
     const updated = info.modifiedTime
-    return await Thing.findOrUpdate({
+    return await createOrUpdate(Bit, {
       id: info.id,
       integration: 'google',
       type: 'doc',

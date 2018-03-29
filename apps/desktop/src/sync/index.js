@@ -1,9 +1,10 @@
 // @flow
-import { store, watch } from '@mcro/black'
+import { store, watch, react } from '@mcro/black'
 import * as Syncers from './syncers'
-import { Job, Setting } from '@mcro/models'
+import { Job, Setting, findOrCreate } from '@mcro/models'
 
 const log = debug('sync')
+debug.quiet('sync')
 
 function getRxError(error: Error) {
   const { message, stack } = error
@@ -19,24 +20,72 @@ function getRxError(error: Error) {
 @store
 export default class Sync {
   locks: Set<string> = new Set()
-  @watch pending: ?Array<Job> = () => Job.pending()
-  @watch nonPending: ?Array<Job> = () => Job.nonPending()
+  jobs = []
   syncers: ?Object = null
   enabled = true
 
   start() {
-    this.watchJobs()
     this.startSyncers()
-    this.watch(function watchSyncEnabled() {
-      if (this.enabled) {
+    setInterval(async () => {
+      const jobs = await Job.find({ status: Job.statuses.PENDING })
+      this.jobs = jobs
+    }, 2000)
+  }
+
+  @watch
+  syncLog = () => {
+    const title = this.enabled
+      ? 'SYNC ENABLED ✅ (disable: App.sync.disable())'
+      : 'SYNC DISABLED (enable: App.sync.enable())'
+    log(`%c----${title}----`)
+  }
+
+  @react
+  processJobs = [
+    () => this.jobs,
+    async jobs => {
+      log('startJobs jobs:', jobs ? jobs.length : 0)
+      if (!this.enabled) {
         return
       }
-      const title = this.enabled
-        ? 'SYNC ENABLED ✅ (disable: App.sync.disable())'
-        : 'SYNC DISABLED (enable: App.sync.enable())'
-      console.log(`%c----${title}----`, 'background: orange')
-    })
-  }
+      if (!jobs || !jobs.length) {
+        return
+      }
+      for (const job of jobs) {
+        if (!job) {
+          return
+        }
+        if (this.locks.has(job.lock)) {
+          log('Already locked job:', job.lock)
+          return
+        }
+        let complete = false
+
+        // expire stale jobs
+        setTimeout(async () => {
+          if (!complete) {
+            await this.failJob(job, { message: 'timed out---' })
+            this.locks.delete(job.lock)
+            log('removed stale job', job.lock)
+          }
+        }, 1000 * 60 * 2) // 2 min
+
+        this.locks.add(job.lock)
+        try {
+          log('Run job', job.type, job.action)
+          await this.runJob(job)
+          complete = true
+        } catch (error) {
+          let lastError = error
+          try {
+            lastError = getRxError(error)
+          } catch (err) {}
+          this.failJob(job, lastError)
+        }
+        this.locks.delete(job.lock)
+      }
+    },
+  ]
 
   runAll() {
     for (const name of Object.keys(this.syncers)) {
@@ -78,103 +127,35 @@ export default class Sync {
   }
 
   async startSyncers() {
-    if (!this.syncers) {
-      this.syncers = {}
-      console.log('Syncers', Syncers)
-      for (const name of Object.keys(Syncers)) {
-        try {
-          const syncer = Syncers[name]
-          const setting = await Setting.get({ type: syncer.settings.type })
-          if (syncer.start) {
-            await syncer.start({ setting })
-          }
-          this.syncers[name] = syncer
-          if (!this[name]) {
-            // $FlowIgnore
-            this[name] = syncer
-          }
-        } catch (err) {
-          console.log('error starting syncer', name)
-          console.log(err)
+    if (this.syncers) {
+      return
+    }
+    this.syncers = {}
+    for (const name of Object.keys(Syncers)) {
+      try {
+        const setting = await findOrCreate(Setting, { type: name })
+        if (!setting) {
+          console.log('no setting for', name)
+          continue
         }
+        const syncer = Syncers[name](setting)
+        this.syncers[name] = syncer
+        if (!this[name]) {
+          this[name] = syncer
+        }
+      } catch (err) {
+        console.log('error starting syncer', name)
+        console.log(err)
       }
     }
   }
 
-  watchJobs() {
-    this.react(
-      () => this.nonPending,
-      jobs => {
-        if (jobs) {
-          log('checking nonpending for extraneous locks')
-          for (const job of jobs) {
-            if (this.locks.has(job.lock)) {
-              log(
-                'unlock job that was removed/completed/failed outside sync',
-                job.lock,
-              )
-              this.locks.delete(job.lock)
-            }
-          }
-        }
-      },
-    )
-
-    this.react(
-      () => this.pending,
-      async jobs => {
-        log('startJobs jobs:', jobs ? jobs.length : 0)
-        if (!this.enabled) {
-          return
-        }
-        if (!jobs || !jobs.length) {
-          return
-        }
-        for (const job of jobs) {
-          if (!job) {
-            return
-          }
-          if (this.locks.has(job.lock)) {
-            log('Already locked job:', job.lock)
-            return
-          }
-          let completed = false
-
-          // expire stale jobs
-          setTimeout(async () => {
-            if (!completed) {
-              await this.failJob(job, { message: 'timed out---' })
-              this.locks.delete(job.lock)
-              log('removed stale job', job.lock)
-            }
-          }, 1000 * 60 * 2) // 2 min
-
-          this.locks.add(job.lock)
-          try {
-            log('Run job', job.type, job.action)
-            await this.runJob(job)
-            completed = true
-          } catch (error) {
-            let lastError = error
-            try {
-              lastError = getRxError(error)
-            } catch (err) {}
-            this.failJob(job, lastError)
-          }
-          this.locks.delete(job.lock)
-        }
-      },
-      true,
-    )
-  }
-
   failJob = async (job: Job, lastError) => {
     try {
-      await job.update({
-        status: 3,
-        lastError,
-        tries: job.tries + 1,
-      })
+      job.status = 3
+      job.lastError = lastError
+      job.tries += 1
+      await job.save()
     } catch (err) {
       if (err.message && err.message.indexOf('cant save deleted document')) {
         return
@@ -184,34 +165,30 @@ export default class Sync {
   }
 
   runJob = async (job: Job) => {
-    log('Running job', job.type, job.action)
-    await job.update({
-      percent: 0,
-      status: Job.status.PROCESSING,
-      tries: job.tries + 1,
-    })
-
+    log('runJob()', job.type, job.action)
+    job.status = Job.statuses.PROCESSING
+    job.tries += 1
+    await job.save()
     if (!this.syncers) {
       return
     }
     const syncer = this.syncers[job.type]
-
-    if (syncer) {
-      try {
-        await syncer.run(job.action)
-      } catch (error) {
-        console.log('error running syncer', error)
-        await job.update({
-          status: Job.status.FAILED,
-          lastError: getRxError(error),
-        })
-      }
-    } else {
+    if (!syncer) {
       console.log('no syncer found for', job)
+      return
     }
-
-    // update job
-    await job.update({ percent: 100, status: Job.status.COMPLETED })
-    log('Job completed:', job.type, job.action, job.id)
+    try {
+      await syncer.run(job.action)
+      // update job
+      job.percent = 100
+      job.status = Job.statuses.COMPLETE
+      await job.save()
+      log('runJob() done', job.type, job.action)
+    } catch (error) {
+      console.log('error running syncer', error)
+      job.status = Job.statuses.FAILED
+      job.lastError = getRxError(error)
+      await job.save()
+    }
   }
 }

@@ -2,12 +2,11 @@
 import { Person } from '@mcro/models'
 import { createInChunks } from '~/sync/helpers'
 
-const log = debug('sync')
+const log = debug('sync githubPeople')
 
 export default class GithubPeopleSync {
-  constructor({ setting, token, helpers }) {
+  constructor(setting, helpers) {
     this.setting = setting
-    this.token = token
     this.helpers = helpers
   }
 
@@ -39,7 +38,6 @@ export default class GithubPeopleSync {
     let person = await Person.findOne()
       .where('ids.github')
       .eq(info.login)
-      .exec()
 
     if (!person) {
       person = await Person.create({

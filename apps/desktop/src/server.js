@@ -8,13 +8,11 @@ import * as Constants from '~/constants'
 import OAuth from './server/oauth'
 import OAuthStrategies from './server/oauth.strategies'
 import Passport from 'passport'
-// import Crawler from '@mcro/crawler'
-import path from 'path'
 import killPort from 'kill-port'
-// import getEmbedding from './embedding'
+import getEmbedding from './embedding'
 import Fs from 'fs'
 import Path from 'path'
-import expressPouch from 'express-pouchdb'
+import * as _ from 'lodash'
 
 const { SERVER_PORT } = Constants
 
@@ -23,8 +21,7 @@ const log = debug('desktop')
 export default class Server {
   login = null
 
-  constructor({ pouch }) {
-    this.pouch = pouch
+  constructor() {
     this.cache = {}
     this.oauth = new OAuth({
       strategies: OAuthStrategies,
@@ -77,7 +74,7 @@ export default class Server {
     // kill old processes
     await killPort(SERVER_PORT)
     this.app.listen(SERVER_PORT, () => {
-      log('listening at port', SERVER_PORT)
+      // log('listening at port', SERVER_PORT)
     })
 
     return SERVER_PORT
@@ -99,113 +96,13 @@ export default class Server {
   }
 
   setupEmbedding() {
-    // this.app.get('/sentence', async (req, res) => {
-    //   console.log('(js) sentence is', req.query.sentence)
-    //   const raw = await getEmbedding(req.query.sentence)
-    //   // cut to only a couple decimal places
-    //   const values = raw.map(word => word.map(i => +i.toFixed(4)))
-    //   res.json({ values })
-    // })
-  }
-
-  // setupCrawler() {
-  //   this.app.post('/crawler/single', async (req, res) => {
-  //     console.log('got a post')
-  //     const { options } = req.body
-  //     if (options) {
-  //       const crawler = new Crawler()
-  //       const results = await crawler.start(options.entry, {
-  //         maxPages: 1,
-  //       })
-  //       if (results && results.length) {
-  //         res.json({ result: results[0] })
-  //       } else {
-  //         res.json({ result: null })
-  //       }
-  //     } else {
-  //       res.sendStatus(500)
-  //     }
-  //   })
-
-  //   this.app.post('/crawler/exact', async (req, res) => {
-  //     const { options } = req.body
-  //     if (options && options.entries && options.entries.length) {
-  //       const crawler = new Crawler()
-  //       const [entry, ...queue] = options.entries
-  //       const results = await crawler.start(entry, {
-  //         disableLinkFinding: true,
-  //         disableStructureFinding: true,
-  //         queue,
-  //       })
-  //       res.json({ results })
-  //     } else {
-  //       console.log('no options.entries')
-  //       res.sendStatus(500)
-  //     }
-  //   })
-
-  //   const crawler = new Crawler()
-  //   let results = null
-
-  //   this.app.post('/crawler/start', async (req, res) => {
-  //     const { options } = req.body
-  //     if (options) {
-  //       await crawler.stop()
-  //       results = null
-  //       crawler.start(options.entry, options).then(vals => {
-  //         results = vals
-  //       })
-  //       // allow crawler to reset
-  //       res.sendStatus(200)
-  //     } else {
-  //       log('No options sent')
-  //       res.sendStatus(500)
-  //     }
-  //   })
-
-  //   this.app.get('/crawler/results', (req, res) => {
-  //     log(`crawl results: ${(results || []).length} results`)
-  //     res.json(results || [])
-  //   })
-
-  //   this.app.post('/crawler/stop', async (req, res) => {
-  //     if (await crawler.stop()) {
-  //       res.json({ success: true })
-  //     } else {
-  //       res.json({ success: false })
-  //     }
-  //   })
-
-  //   this.app.get('/crawler/status', async (req, res) => {
-  //     res.json({ status: crawler.getStatus({ includeResults: true }) })
-  //   })
-  // }
-
-  setupPouch() {
-    // const dbPaths = Object.keys(Models)
-    //   .map(model => Models[model].title)
-    //   .map(name => `/db/${name}`)
-
-    // rewrite rxdb paths to non-rxdb :)
-    this.app.use(
-      '/db',
-      proxy({
-        target: '/db2',
-        pathRewrite: path => {
-          if (path === '/db' || path === '/db/') {
-            return '/'
-          }
-          const newPath = path.replace(
-            /\/db\/(.*)([\/\?].*)?$/g,
-            '/username-rxdb-0-$1$2',
-          )
-          return newPath
-        },
-      }),
-    )
-
-    // pouch routes
-    this.app.use('/db2', expressPouch(this.pouch, { inMemoryConfig: true }))
+    this.app.get('/sentence', async (req, res) => {
+      console.log('(js) sentence is', req.query.sentence)
+      const raw = await getEmbedding(req.query.sentence)
+      // cut to only a couple decimal places
+      const values = raw.map(word => word.map(i => +i.toFixed(4)))
+      res.json({ values })
+    })
   }
 
   creds = {}
@@ -247,7 +144,7 @@ export default class Server {
     const router = {
       'http://localhost:3001': Constants.PUBLIC_URL,
     }
-    log('proxying', router)
+    // log('proxying', router)
     this.app.use(
       '/',
       proxy({

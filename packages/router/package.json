@@ -2,13 +2,11 @@
   "name": "@mcro/router",
   "version": "1.5.1",
   "description": "",
-  "main": "lib/index.js",
-  "module": "lib/index.js",
-  "module:production": "dist/index.js",
+  "main": "es6/index.js",
   "author": "Motion (http://motion.io)",
   "license": "MIT",
   "scripts": {
-    "build": "build prod,dev",
+    "build": "build es6",
     "watch": "npm run build -- --watch"
   },
   "dependencies": {

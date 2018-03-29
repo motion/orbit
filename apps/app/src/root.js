@@ -70,7 +70,7 @@ export default class Root extends React.Component {
 
     const CurrentPage = Router.activeView || NotFound
     return (
-      <UI.Theme name="light">
+      <UI.Theme name="tan">
         <CurrentPage key={Router.key} {...Router.params} />
       </UI.Theme>
     )

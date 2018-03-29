@@ -29,6 +29,7 @@ apps/app/build
 apps/desktop/es6
 apps/desktop/build
 apps/desktop/data/database.sqlite
+apps/desktop/data/database
 apps/site/build
 apps/search/build
 apps/electron/build

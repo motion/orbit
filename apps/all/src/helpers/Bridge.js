@@ -1,5 +1,5 @@
 // @flow
-import { store } from '@mcro/black/store'
+import { action } from 'mobx'
 import { mergeWith, isPlainObject } from 'lodash'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 import WebSocket from './websocket'
@@ -25,7 +25,6 @@ const requestIdle = () =>
   )
 
 // we want non-granular updates on state changes
-@store
 class Bridge {
   _store = null
   _options = {}
@@ -188,6 +187,7 @@ class Bridge {
   // set is only allowed from the source its set as initially
   setState = (newState, ignoreSocketSend) => {
     if (!this._store) {
+      console.log('waht is this', this, this._source, this._store)
       throw new Error(
         `Called ${this._source}.setState before calling ${
           this._source
@@ -227,7 +227,8 @@ class Bridge {
 
   // private
   // return keys of changed items
-  _update = (stateObj, newState, isInternal, ignoreLog) => {
+  @action
+  _update(stateObj, newState, isInternal, ignoreLog) {
     const changed = {}
     for (const key of Object.keys(newState)) {
       if (isInternal && typeof this._initialState[key] === 'undefined') {

@@ -3,10 +3,8 @@
   "version": "1.5.1",
   "description": "Higher order component for nicer component styles",
   "main": "es6/index.js",
-  "module": "lib/index.js",
-  "module:production": "dist/index.js",
   "scripts": {
-    "build": "build prod,dev,es6",
+    "build": "build es6",
     "prebuild": "build es6",
     "watch": "npm run build -- --watch"
   },

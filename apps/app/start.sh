@@ -1,6 +1,7 @@
 #!/bin/bash
 npx kill-port 3002
-until ../../node_modules/.bin/parcel -p 3002 index.html; do
+echo "parcel -p 3002 index.html ${@:1}"
+until ../../node_modules/.bin/parcel -p 3002 index.html ${@:1}; do
   echo "AppError: parcel crash, restarting..." >&2
   sleep 1
 done

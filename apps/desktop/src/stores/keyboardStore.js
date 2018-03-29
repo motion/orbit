@@ -54,7 +54,6 @@ export default class KeyboardStore {
         return Desktop.clearOption()
       }
       if (isOption) {
-        log('option down')
         return Desktop.setKeyboardState({ option: Date.now() })
       }
       if (this.keysDown.has(codes.option)) {

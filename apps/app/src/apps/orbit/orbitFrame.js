@@ -4,10 +4,9 @@ import * as UI from '@mcro/ui'
 import { App, Electron, Desktop } from '@mcro/all'
 import * as Constants from '~/constants'
 
-const SHADOW_PAD = 15
+const { SHADOW_PAD, APP_SHADOW } = Constants
 const BORDER_RADIUS = 11
-const orbitShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.2]]]
-const orbitLightShadow = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.2]]]
+const orbitLightShadow = [[0, 3, SHADOW_PAD, 2, [0, 0, 0, 0.1]]]
 const iWidth = 4
 const arrowSize = 22
 // const log = debug('OrbitFrame')
@@ -145,7 +144,9 @@ export default class OrbitFrame {
   render({ store, orbitPage, children, theme }) {
     const { fullScreen } = Electron.orbitState
     const { orbitOnLeft } = Electron
-    const boxShadow = fullScreen ? orbitShadow : orbitLightShadow
+    const boxShadow = fullScreen ? APP_SHADOW : orbitLightShadow
+    const border = [1, theme.base.background.darken(0.1).desaturate(0.3)]
+    const background = theme.base.background.lighten(0.02)
     const hide =
       !App.isShowingOrbit && (store.isRepositioning || store.isDragging)
     log(`OrbitFrame onLeft ${orbitOnLeft} hide ${hide}`)
@@ -155,7 +156,7 @@ export default class OrbitFrame {
           if={App.isAttachedToWindow}
           arrowSize={arrowSize}
           orbitOnLeft={orbitOnLeft}
-          background={theme.base.background}
+          background={background}
         />
         <Indicator
           if={!fullScreen}
@@ -201,7 +202,9 @@ export default class OrbitFrame {
           >
             <content
               css={{
-                background: theme.base.background,
+                border,
+                borderRight: orbitOnLeft ? 'none' : border,
+                background,
                 boxShadow: App.isShowingOrbit ? boxShadow : 'none',
                 borderLeftRadius: orbitOnLeft ? BORDER_RADIUS : 0,
                 borderRightRadius: fullScreen
@@ -211,7 +214,13 @@ export default class OrbitFrame {
             >
               {children}
               <expand if={!fullScreen}>
-                <fade />
+                <fade
+                  css={{
+                    background: `linear-gradient(transparent, ${theme.base.background.darken(
+                      0.05,
+                    )} 80%)`,
+                  }}
+                />
                 <barOuter onMouseDown={orbitPage.barMouseDown}>
                   <bar />
                 </barOuter>
@@ -292,14 +301,13 @@ export default class OrbitFrame {
       left: 0,
       right: 0,
       top: 0,
-      background: `linear-gradient(transparent, #111 80%)`,
     },
     expand: {
       position: 'absolute',
       bottom: 0,
       left: 0,
       right: 0,
-      paddingTop: 40,
+      paddingTop: 60,
       alignItems: 'center',
       justifyContent: 'center',
       flexFlow: 'row',
@@ -323,7 +331,7 @@ export default class OrbitFrame {
       flex: 1,
       height: 5,
       borderRadius: 100,
-      background: [255, 255, 255, 0.2],
+      background: [255, 255, 255, 0.4],
     },
   }
 }

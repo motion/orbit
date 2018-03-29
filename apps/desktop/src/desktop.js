@@ -1,6 +1,6 @@
 // @flow
-import Database, { Models } from '@mcro/models'
-import adapter from 'pouchdb-adapter-memory'
+import * as Models from '@mcro/models'
+import connectModels from './helpers/connectModels'
 import Server from './server'
 import Plugins from './plugins'
 import Screen from './screen'
@@ -11,6 +11,7 @@ import * as Constants from '~/constants'
 import { promisifyAll } from 'sb-promisify'
 import sudoPrompt_ from 'sudo-prompt'
 import Sync from './sync'
+import SQLiteServer from './sqliteServer'
 import { App, Electron, Desktop } from '@mcro/all'
 import { store, debugState } from '@mcro/black'
 import global from 'global'
@@ -28,17 +29,9 @@ const sudoPrompt = promisifyAll(sudoPrompt_)
 @store
 export default class DesktopRoot {
   // searchStore = new SearchStore()
-  database = new Database(
-    {
-      name: 'username',
-      password: 'password',
-      adapter,
-      adapterName: 'memory',
-    },
-    Models,
-  )
-  server = new Server({ pouch: this.database.pouch })
+  server = new Server()
   auth = new Auth()
+  sqlite = new SQLiteServer()
   stores = null
 
   async start() {
@@ -53,13 +46,9 @@ export default class DesktopRoot {
         Desktop,
       },
     })
-    await this.database.start({
-      modelOptions: {
-        // autoSync: true,
-        debug: true,
-      },
-    })
+    await connectModels(Object.keys(Models).map(x => Models[x]))
     this.sync = new Sync()
+    this.sync.start()
     this.screen = new Screen()
     this.plugins = new Plugins({
       server: this.server,
@@ -72,7 +61,6 @@ export default class DesktopRoot {
     this.setupHosts()
     await this.server.start()
     this.screen.start()
-    this.sync.start()
     debugState(({ stores }) => {
       this.stores = stores
     })
@@ -106,8 +94,7 @@ export default class DesktopRoot {
   dispose = async () => {
     if (this.disposed) return
     await this.screen.dispose()
-    this.sync.dispose()
-    await this.database.dispose()
+    // this.sync.dispose()
     this.disposed = true
     return true
   }

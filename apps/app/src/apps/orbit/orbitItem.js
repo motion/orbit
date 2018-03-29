@@ -41,7 +41,7 @@ export default class Item {
       <Surface
         background="transparent"
         glow={false}
-        background={'transparent'}
+        background={isSelected ? [255, 255, 255, 0.25] : 'transparent'}
         glowProps={glowProps}
         padding={[10, 18]}
         onClick={this.onClick}
@@ -51,8 +51,9 @@ export default class Item {
           size={1.6}
           ellipse
           css={{
-            fontWeight: isSelected ? 300 : 200,
-            letterSpacing: isSelected ? -0.25 : 0,
+            fontWeight: 300,
+            // letterSpacing: isSelected ? -0.25 : 0,
+            opacity: isSelected ? 1 : 0.7,
             alignItems: 'center',
             justifyContent: 'center',
             textShadow: isSelected ? `0 0 5px rgba(255,255,255,0.3)` : 'none',

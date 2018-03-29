@@ -11,11 +11,16 @@ module.exports = function(context, givenOpts) {
 
   const config = {
     plugins: [
+      // getPlugin('babel-plugin-transform-runtime', {
+      //   polyfill: true,
+      //   regenerator: true,
+      // }),
+      // getPlugin('babel-plugin-transform-optional-chaining'),
       getPlugin('babel-plugin-macros'),
       // order important here
       getPlugin('babel-plugin-transform-decorators-legacy-without-clutter'),
       getPlugin('babel-plugin-transform-class-properties'),
-      getPlugin('babel-plugin-sitrep'),
+      // getPlugin('babel-plugin-sitrep'),
       getPlugin('@mcro/gloss/transform', {
         decoratorName: opts.decorator || 'view',
         jsxIf: opts.jsxIf || true,
@@ -47,9 +52,13 @@ module.exports = function(context, givenOpts) {
             // modules: process.env.MODULES ? false : true,
             useBuiltIns: 'entry',
             targets: opts.targets || {
-              node: opts.nodeTarget || '8',
+              node: opts.nodeTarget || '10',
             },
-            exclude: ['transform-regenerator'],
+            exclude: [
+              'transform-regenerator',
+              'babel-plugin-transform-regenerator',
+              'transform-async-to-generator',
+            ],
           },
           opts.env,
         ),

@@ -1,5 +1,4 @@
 // @flow
-import killPort from 'kill-port'
 import { Server } from 'ws'
 
 const log = debug('scrn')
@@ -14,7 +13,7 @@ export default class SocketManager {
   }
 
   async start() {
-    await killPort(this.port)
+    // await fastKill(this.port)
     this.wss = new Server({ port: this.port })
     this.setupSocket()
   }

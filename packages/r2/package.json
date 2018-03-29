@@ -1,11 +1,9 @@
 {
   "name": "@mcro/r2",
-  "main": "lib/index.js",
-  "module": "lib/index.js",
-  "module:production": "dist/index.js",
+  "main": "es6/index.js",
   "version": "1.5.1",
   "scripts": {
-    "build": "build prod,dev",
+    "build": "build es6",
     "watch": "npm run build -- --watch"
   },
   "dependencies": {

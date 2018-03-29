@@ -48,7 +48,7 @@ class OrbitPageStore {
 export default class OrbitPage {
   render({ orbitStore, orbitPage }) {
     return (
-      <UI.Theme name={Electron.orbitState.fullScreen ? 'dark' : 'dark'}>
+      <UI.Theme name={Electron.orbitState.fullScreen ? 'tan' : 'tan'}>
         <OrbitFrame orbitPage={orbitPage}>
           <OrbitHeader />
           <OrbitContent if={!orbitStore.showSettings} />

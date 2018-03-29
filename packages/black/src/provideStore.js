@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { storeOptions } from './store'
-import storeProvidable from '@mcro/decor/lib/plugins/react/storeProvidable'
+import storeProvidable from '@mcro/decor/es6/plugins/react/storeProvidable'
 
 const storeDecorator = storeProvidable(storeOptions).decorator
 

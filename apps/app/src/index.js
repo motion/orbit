@@ -1,8 +1,6 @@
-import 'regenerator-runtime/runtime'
-import 'babel-polyfill'
 import 'isomorphic-fetch'
 import '@mcro/debug/inject'
-import createElement from '@mcro/black/lib/createElement'
+import createElement from '@mcro/black/es6/createElement'
 // dont import * as React, we need to overwrite createElement
 import React from 'react'
 import * as Constants from './constants'
@@ -10,10 +8,6 @@ import * as Constants from './constants'
 process.on('uncaughtException', err => {
   console.log('App.uncaughtException', err.stack)
 })
-
-console.warn(
-  `$ NODE_ENV=${process.env.NODE_ENV} run app ${window.location.pathname}`,
-)
 
 React.createElement = createElement // any <tag /> can use $$style
 
@@ -24,7 +18,10 @@ if (Constants.IS_PROD) {
 }
 
 export function start() {
-  console.timeEnd('splash')
+  if (!window.Root) {
+    console.warn(`NODE_ENV=${process.env.NODE_ENV} ${window.location.pathname}`)
+    console.timeEnd('splash')
+  }
   require('./app')
 }
 

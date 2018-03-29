@@ -33,6 +33,7 @@ class HeaderStore {
   }
 }
 
+@UI.injectTheme
 @view.attach('orbitStore')
 @view({
   headerStore: HeaderStore,
@@ -46,7 +47,8 @@ export default class PeekHeader {
     }
   }
 
-  render({ orbitStore, headerStore }) {
+  render({ orbitStore, headerStore, theme }) {
+    const darkerBg = theme.base.background.darken(0.06).desaturate(0.3)
     return (
       <header $$draggable $headerVisible={App.isShowingHeader}>
         <title>
@@ -56,7 +58,7 @@ export default class PeekHeader {
             size={1.15}
             borderRadius={5}
             borderWidth={0}
-            background="#333"
+            background={darkerBg}
             onChange={orbitStore.onChangeQuery}
             onKeyDown={this.handleKeyDown}
             getRef={headerStore.ref('inputRef').set}
@@ -68,6 +70,9 @@ export default class PeekHeader {
           onClick={App.togglePinned}
           $onLeft={Electron.orbitOnLeft}
           $onRight={!Electron.orbitOnLeft}
+          css={{
+            border: [3, theme.base.background],
+          }}
         >
           <logo
             css={{
@@ -75,7 +80,7 @@ export default class PeekHeader {
               height: 11,
               background: Electron.orbitState.pinned
                 ? Constants.ORBIT_COLOR
-                : '#333',
+                : darkerBg,
               borderRadius: 1000,
             }}
           />
@@ -96,7 +101,6 @@ export default class PeekHeader {
     logoButton: {
       position: 'absolute',
       top: 3,
-      border: [4, '#151515'],
       borderRadius: 1000,
     },
     onLeft: {

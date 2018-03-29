@@ -1,45 +1,38 @@
 // @flow
+import { debugState } from '@mcro/black'
+import { ThemeProvide } from '@mcro/ui'
+import * as Models from '@mcro/models'
+import connectModels from './helpers/connectModels'
 import * as React from 'react'
 import ReactDOM from 'react-dom'
-import { ThemeProvide } from '@mcro/ui'
 import Themes from './themes'
 import Root from './root'
-import { Models } from '@mcro/models'
-import * as Constants from '~/constants'
 import AppStore from './stores/appStore'
-import adapter from 'pouchdb-adapter-idb'
 import Services from './services'
 
-// ugly but we want to export these all here
-// this prevents hmr from going nuts when we edit models
-export const User = Models.User
-export const Thing = Models.Thing
-export const Job = Models.Job
-export const Setting = Models.Setting
-export const Event = Models.Event
-export const Person = Models.Person
-
 class App {
-  sync: Sync
-  store: AppStore
   started = false
+  services = Services
+  stores = null
+  views = null
+
+  get errors(): ?Array<any> {
+    return this.appStore && this.appStore.errors
+  }
 
   constructor() {
+    window.Root = this
     window.restart = this.restart
-    // this.render() // to render before db connects
-    this.store = new AppStore({
-      config: {
-        ...Constants.DB_CONFIG,
-        remoteUrl: `${Constants.API_URL}/db`,
-        adapter,
-        adapterName: 'idb',
-      },
-      models: Models,
+    this.appStore = new AppStore()
+    debugState(({ stores, views }) => {
+      this.stores = stores
+      this.views = views
     })
   }
 
-  async start(quiet?: boolean) {
-    await this.store.start(quiet)
+  async start({ quiet } = {}) {
+    await this.appStore.start(quiet)
+    await connectModels(Object.keys(Models).map(x => Models[x]))
     this.render()
     this.started = true
   }
@@ -49,10 +42,10 @@ class App {
   }
 
   async dispose() {
-    await this.store.dispose()
+    await this.appStore.dispose()
   }
 
-  render(): void {
+  render() {
     let ROOT = document.querySelector('#app')
     ReactDOM.render(
       <ThemeProvide {...Themes}>
@@ -61,34 +54,10 @@ class App {
       ROOT,
     )
   }
-
-  // helpers that wrap appStore
-  get services(): Services {
-    return Services
-  }
-
-  get database(): Object {
-    return this.store && this.store.database
-  }
-
-  get errors(): ?Array<any> {
-    return this.store && this.store.errors
-  }
-
-  get stores(): Object {
-    return this.store && this.store.stores
-  }
-
-  get views(): Object {
-    return this.store && this.store.views
-  }
-
-  get models(): Object {
-    return this.store && this.store.models
-  }
 }
 
 let app = window.Root
+
 export async function start(recreate?: boolean) {
   if (window.Root || window._isDisposing) return
   window._isDisposing = true
@@ -97,7 +66,6 @@ export async function start(recreate?: boolean) {
   }
   if (recreate || !app) {
     app = new App()
-    window.Root = app
     await app.start({ quiet: recreate })
   }
   window._isDisposing = false

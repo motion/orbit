@@ -5,23 +5,16 @@
   "main": "lib/index.js",
   "module": "lib/index.js",
   "scripts": {
-    "build": "build prod,dev,es6",
+    "build": "tsc",
     "watch": "npm run build -- --watch"
   },
   "dependencies": {
-    "@mcro/model": "^1.5.1",
     "@mcro/black": "*",
-    "debug": "^3.1.0",
+    "@mcro/debug": "*",
+    "typeorm": "0.1.18",
     "global": "^4.3.2",
-    "lodash": "^4.17.4",
-    "pouchdb-adapter-http": "^6.3.4",
-    "pouchdb-core": "^6.3.0",
-    "pouchdb-mapreduce": "^6.3.4",
-    "pouchdb-replication": "^6.3.4",
-    "rxdb": "^7.2.0",
-    "rxjs": "^5.5.5",
-    "is-my-ip-valid": "^1.0.0",
-    "sillyname": "0.1.0"
+    "reflect-metadata": "^0.1.12",
+    "lodash": "^4.17.4"
   },
   "peerDependencies": {
     "mobx": "*"

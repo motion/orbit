@@ -1,58 +1,24 @@
 // @flow
-import { store, debugState } from '@mcro/black'
+import { store } from '@mcro/black'
 import { uniqBy } from 'lodash'
-import Database from '@mcro/models'
-
-type Options = {
-  config: Object,
-  models: Object,
-}
 
 @store
 export default class AppStore {
-  config: ?Object
-  models: ?Object
   database: Database
   started = false
   connected = false
   errors = []
-  stores = null
-  views = null
-
-  constructor({ config, models }: Options) {
-    this.config = config
-    this.models = models
-    // listen for stuff, attach here
-    debugState(({ stores, views }) => {
-      this.stores = stores
-      this.views = views
-    })
-  }
 
   async start({ quiet = true } = {}) {
     if (!quiet) {
       console.log(
-        '%cUse App.* (models, stores, sync, debug(false)...))',
+        '%cUse Root.* (models, stores, sync, debug(false)...))',
         'background: yellow',
       )
       console.time('start')
     }
-    this.database = new Database(this.config, this.models)
-    await this.database.start({
-      modelOptions: {
-        debug: true,
-        // autoSync: {
-        //   push: true,
-        //   pull: false,
-        // },
-        // asyncFirstSync: true,
-      },
-    })
     this.connected = true
     this.catchErrors()
-    if (!quiet) {
-      console.timeEnd('start')
-    }
     this.started = true
   }
 

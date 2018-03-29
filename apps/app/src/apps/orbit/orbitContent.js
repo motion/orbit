@@ -45,7 +45,7 @@ export default class OrbitContent {
   }
 
   getHoverProps = Helpers.hoverSettler({
-    enterDelay: 600,
+    enterDelay: 0,
     onHovered: async target => {
       clearTimeout(this.updateTargetTm)
       if (!target) {
@@ -55,20 +55,18 @@ export default class OrbitContent {
         App.setPeekTarget(null)
         return
       }
-      const { id, top, left, width, height } = target
+      const { id, top, width, height } = target
       const position = {
         // add orbits offset
-        left: left + Electron.orbitState.position[0],
+        left: Electron.orbitState.position[0],
         top: top + Electron.orbitState.position[1],
         width,
         height,
       }
       if (App.isShowingOrbit) {
-        log(`set index ${target.id}`)
         this.props.orbitStore.setSelectedIndex(target.id)
         this.updateTargetTm = setTimeout(() => {
-          log(`set target ${target.id}`)
-          App.setPeekTarget({ id, position })
+          App.setPeekTarget({ id, position, type: 'document' })
         }, 64)
       }
     },

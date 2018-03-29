@@ -1,68 +1,19 @@
-// @flow
 import * as Helpers from '../helpers'
-import { CurrentUser } from '@mcro/models'
 
 const log = debug('sync')
 const DEFAULT_CHECK_INTERVAL = 1000 * 60 // 1 minute
 
 export default class Syncer {
-  jobWatcher: ?number
-
-  get type(): string {
-    return this.settings.type
+  get token() {
+    return this.setting.token
   }
 
-  get actions(): string {
-    return this.settings.actions
-  }
-
-  get token(): ?string {
-    return CurrentUser.token(this.type)
-  }
-
-  async refreshToken() {
-    return await CurrentUser.refreshToken(this.type)
-  }
-
-  constructor({ settings, syncers, props }) {
-    this.settings = settings
-    this.syncerModels = syncers
-    this.props = props
-  }
-
-  start({ setting }) {
+  constructor(type, { setting, settings, actions, syncers }) {
     this.setting = setting
-    if (!this.token) {
-      throw new Error(`No token yo`)
-    }
-    const { syncerModels } = this
-    // setup syncers
-    if (syncerModels) {
-      for (const key of Object.keys(syncerModels)) {
-        if (this.syncers[key]) {
-          return
-        }
-        const Syncer = syncerModels[key]
-        if (!Syncer) {
-          console.error('no syncer for', key)
-        } else {
-          try {
-            this.syncers[key] = new Syncer({
-              setting: this.setting,
-              token: this.token,
-              ...this.props,
-            })
-            // helper to make checking syncers easier
-            if (!this[key]) {
-              this[key] = this.syncers[key]
-            }
-          } catch (err) {
-            log('error creating syncer', key, Syncer)
-            console.error(err)
-          }
-        }
-      }
-    }
+    this.actions = actions
+    this.type = type
+    this.syncers = syncers
+    this.settings = settings || {}
     // every so often
     this.jobWatcher = setInterval(
       () => this.check(false),
@@ -71,28 +22,29 @@ export default class Syncer {
     this.check(false)
   }
 
-  async run(action: string) {
+  run = async action => {
     if (!action) {
       throw new Error('Must provide action')
     }
     if (!this.token) {
-      log(`No token found for syncer ${this.type} ${action}`)
+      console.log(`run() no token ${this.type} ${action}`)
       return
     }
     this.ensureSetting()
-    log(`Running ${this.type} ${action}`)
-    if (!this.syncers[action]) {
-      console.log('NO SYNCER FOUND', action)
+    log(`run() ${this.type} ${action}`)
+    if (!this.actions[action]) {
+      console.warn('NO SYNCER FOUND', action)
     } else {
       await this.syncers[action].run()
     }
   }
 
   async runAll() {
-    await Promise.all(Object.keys(this.syncers).map(x => this.run(x)))
+    console.log('this.actions', this.actions)
+    await Promise.all(Object.keys(this.actions).map(this.run))
   }
 
-  async check(loud: boolean = true): Array<any> {
+  async check(loud = true) {
     const { type, actions } = this
     if (!actions) {
       return

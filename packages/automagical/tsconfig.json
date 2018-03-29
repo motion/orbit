@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "module": "CommonJS",
+    "noImplicitAny": false,
+    "removeComments": true,
+    "preserveConstEnums": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "outDir": "lib",
+    "sourceMap": true,
+    "skipLibCheck": true,
+    "lib": ["dom", "webworker", "es2017"],
+    "baseUrl": "src/",
+    "paths": {
+      "~/*": ["*"]
+    }
+  },
+  "include": ["src/**/*"],
+  "typeAcquisition": {
+    "enable": true
+  }
+}

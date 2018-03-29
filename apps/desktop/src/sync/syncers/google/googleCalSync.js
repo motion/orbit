@@ -2,15 +2,14 @@
 import { Event } from '@mcro/models'
 import { createInChunks } from '~/sync/helpers'
 
-const log = debug('sync')
+const log = debug('sync googleCal')
 
 export default class GoogleCalSync {
   fetch = (path, opts) => this.helpers.fetch(`/calendar/v3${path}`, opts)
   lastSyncTokens = {}
 
-  constructor({ setting, token, helpers }) {
+  constructor(setting, helpers) {
     this.setting = setting
-    this.token = token
     this.helpers = helpers
   }
 

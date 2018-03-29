@@ -102,7 +102,7 @@ let Gloss = class Gloss {
       }
 
       // @view decorated style component
-      if (Child.prototype.render) {
+      if (Child.prototype && Child.prototype.render) {
         const { attachStyles, css } = this;
 
         Child.prototype.glossElement = this.createElement;

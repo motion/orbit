@@ -4,10 +4,40 @@ import Redbox from 'redbox-react'
 import * as UI from '@mcro/ui'
 import NotFound from '~/views/404'
 import Router from '~/router'
-import { App } from '@mcro/all'
-import { Setting } from '@mcro/models'
+import { App, Desktop } from '@mcro/all'
+import { Bit, Setting } from '@mcro/models'
+import fuzzySort from 'fuzzysort'
 
 // const log = debug('root')
+const presetAnswers = {
+  '1.txt': [
+    {
+      title: 'Hello world',
+      body: 'this is me',
+      type: 'document',
+      integration: 'gdocs',
+    },
+    {
+      title: 'Hello 2',
+      body: 'this is me',
+      type: 'email',
+      integration: 'github',
+    },
+    { title: 'Chat', body: 'this is me', type: 'chat', integration: 'slack' },
+  ],
+}
+
+const uniq = arr => {
+  const added = {}
+  const final = []
+  for (const item of arr) {
+    if (!added[item.title]) {
+      final.push(item)
+      added[item.title] = true
+    }
+  }
+  return final
+}
 
 @view.provide({
   appStore: class AppStore {
@@ -15,8 +45,50 @@ import { Setting } from '@mcro/models'
     showSettings = false
     settings = []
 
+    get results() {
+      if (this.showSettings) {
+        return [
+          { id: 'google', name: 'Google Drive', icon: 'gdrive' },
+          { id: 'github', name: 'Github', icon: 'github' },
+          { id: 'slack', name: 'Slack', icon: 'slack' },
+          { id: 'folder', name: 'Folder', icon: 'folder', oauth: false },
+        ]
+      }
+      return this.bitResults || []
+    }
+
     @react({ delay: 64 })
-    setAppSelectedIndex = [() => this.selectedIndex, App.setSelectedIndex]
+    setAppSelectedItem = [
+      () => this.results[this.selectedIndex],
+      App.setSelectedItem,
+    ]
+
+    @react({ fireImmediately: true })
+    bitResults = [
+      () => [App.state.query, Desktop.appState.id],
+      async ([query, id]) => {
+        if (this.showSettings || !Bit.usedConnection) {
+          return
+        }
+        if (id === 'com.apple.TextEdit') {
+          return presetAnswers[Desktop.appState.title]
+        }
+        if (!query) {
+          return (await Bit.find({ take: 8 })) || []
+        }
+        const results = await Bit.find({
+          where: `title like "${query}%"`,
+          take: 8,
+        })
+        const strongTitleMatches = fuzzySort
+          .go(query, results, {
+            key: 'title',
+            threshold: -25,
+          })
+          .map(x => x.obj)
+        return uniq([...strongTitleMatches, ...results])
+      },
+    ]
 
     async willMount() {
       await App.start()
@@ -25,13 +97,6 @@ import { Setting } from '@mcro/models'
 
     setSelectedIndex = i => {
       this.selectedIndex = i
-    }
-
-    get results() {
-      if (this.showSettings) {
-        return []
-      }
-      return App.results
     }
 
     getSettings = async () => {

@@ -35,8 +35,8 @@ export default class Item {
     this.props.appStore.setSelectedIndex(this.props.index)
   }
 
-  render({ orbitStore, index, result, ...props }) {
-    const isSelected = orbitStore.selectedIndex === index
+  render({ appStore, index, result, ...props }) {
+    const isSelected = appStore.selectedIndex === index
     // log(`OrbitItem isSelected ${isSelected} ${index}`)
     return (
       <Surface

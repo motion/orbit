@@ -4,13 +4,6 @@ import { App, Electron } from '@mcro/all'
 import { partition } from 'lodash'
 import Card from './orbitCard'
 
-const integrations = [
-  { id: 'google', name: 'Google Drive', icon: 'gdrive' },
-  { id: 'github', name: 'Github', icon: 'github' },
-  { id: 'slack', name: 'Slack', icon: 'slack' },
-  { id: 'folder', name: 'Folder', icon: 'folder', oauth: false },
-]
-
 class SettingsStore {
   refs = {}
 
@@ -41,7 +34,7 @@ export default class OrbitSettings {
       return null
     }
     const [activeIntegrations, inactiveIntegrations] = partition(
-      integrations,
+      appStore.results,
       integration =>
         appStore.settings &&
         appStore.settings.find(x => x.type === integration.id && x.token),

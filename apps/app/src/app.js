@@ -33,7 +33,7 @@ class App {
     })
   }
 
-  async start({ quiet } = {}) {
+  async start() {
     await connectModels(Object.keys(Models).map(x => Models[x]))
     this.render()
     this.catchErrors()

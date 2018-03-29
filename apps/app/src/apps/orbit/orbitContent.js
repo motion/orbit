@@ -28,7 +28,7 @@ class OrbitStatus {
   }
 }
 
-@view.attach('orbitStore')
+@view.attach('appStore')
 @view
 export default class OrbitContent {
   componentDidMount() {
@@ -64,7 +64,7 @@ export default class OrbitContent {
         height,
       }
       if (App.isShowingOrbit) {
-        this.props.orbitStore.setSelectedIndex(target.id)
+        this.props.appStore.setSelectedIndex(target.id)
         this.updateTargetTm = setTimeout(() => {
           App.setPeekTarget({ id, position, type: 'document' })
         }, 64)
@@ -72,16 +72,15 @@ export default class OrbitContent {
     },
   })
 
-  render({ orbitStore }) {
+  render({ appStore }) {
     return (
       <list>
         <OrbitStatus />
-        {App.results.map((result, index) => (
+        {appStore.results.map((result, index) => (
           <OrbitItem
             key={getKey(result) || index}
             ref={this.onRef(index)}
             type="gmail"
-            orbitStore={orbitStore}
             index={index}
             result={result}
             {...this.getHoverProps({

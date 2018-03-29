@@ -5,23 +5,10 @@ import { store, react } from '@mcro/black/store'
 import global from 'global'
 import Desktop from './Desktop'
 import Electron from './Electron'
-import fuzzySort from 'fuzzysort'
 
 const isBrowser = typeof window !== 'undefined'
 // const log = debug('App')
 let App
-
-const uniq = arr => {
-  const added = {}
-  const final = []
-  for (const item of arr) {
-    if (!added[item.title]) {
-      final.push(item)
-      added[item.title] = true
-    }
-  }
-  return final
-}
 
 @store
 class AppStore {
@@ -33,32 +20,17 @@ class AppStore {
       openId: null,
       closeId: null,
     },
-    selectedIndex: null,
+    selectedItem: null,
     openResult: null,
     highlightWords: {},
     hoveredWord: null,
     hoveredLine: null,
     contextMessage: 'Orbit',
     orbitHidden: true,
+    orbitConnected: false,
     knowledge: null,
     peekTarget: null,
     shouldTogglePinned: null,
-  }
-
-  fuzzySort = fuzzySort
-
-  get results() {
-    const strongTitleMatches = fuzzySort
-      .go(App.state.query, Desktop.results, {
-        key: 'title',
-        threshold: -25,
-      })
-      .map(x => x.obj)
-    return uniq([...strongTitleMatches, ...Desktop.results])
-  }
-
-  get selectedItem() {
-    return App.results[App.state.selectedIndex]
   }
 
   get isShowingOrbit() {

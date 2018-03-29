@@ -21,8 +21,15 @@ const icons = {
 }
 
 export default ({ icon, ...props }) => (
-  <React.Fragment>
+  <icon
+    css={{
+      display: 'inline-block',
+      width: 25,
+      height: 25,
+      textAlign: 'center',
+    }}
+  >
     <img if={icons[icon]} src={icons[icon]} {...props} />
-    <UI.Icon if={!icons[icon]} name={icon} />
-  </React.Fragment>
+    <UI.Icon if={!icons[icon]} name={icon} css={{ display: 'inline' }} />
+  </icon>
 )

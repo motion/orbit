@@ -48,12 +48,12 @@ class IntegrationHeaderStore {
   }
 }
 
-@view.attach('integrationStore')
+@view.attach('integrationStore', 'appStore')
 @view({
   store: IntegrationHeaderStore,
 })
 export default class ServiceHeader {
-  render({ store, type }) {
+  render({ appStore, store, type }) {
     return (
       <header>
         <left>
@@ -96,7 +96,7 @@ export default class ServiceHeader {
         </right>
         <right if={!store.auth}>
           <UI.Button
-            onClick={() => store.startOauth(store.authName)}
+            onClick={() => appStore.startOauth(store.authName)}
             size={1}
             css={{ marginBottom: 2 }}
           >

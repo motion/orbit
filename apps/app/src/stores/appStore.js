@@ -1,81 +1,122 @@
-// @flow
-import { store } from '@mcro/black'
-import { uniqBy } from 'lodash'
+import { react } from '@mcro/black'
+import { App, Desktop } from '@mcro/all'
+import { Bit, Setting } from '@mcro/models'
+import fuzzySort from 'fuzzysort'
 
-@store
+// const log = debug('root')
+const presetAnswers = {
+  '1.txt': [
+    {
+      title: 'Hello world',
+      body: 'this is me',
+      type: 'document',
+      integration: 'gdocs',
+    },
+    {
+      title: 'Hello 2',
+      body: 'this is me',
+      type: 'email',
+      integration: 'github',
+    },
+    { title: 'Chat', body: 'this is me', type: 'chat', integration: 'slack' },
+  ],
+}
+
+const uniq = arr => {
+  const added = {}
+  const final = []
+  for (const item of arr) {
+    if (!added[item.title]) {
+      final.push(item)
+      added[item.title] = true
+    }
+  }
+  return final
+}
+
 export default class AppStore {
-  database: Database
-  started = false
-  connected = false
-  errors = []
+  selectedIndex = 0
+  showSettings = false
+  settings = []
 
-  async start({ quiet = true } = {}) {
-    if (!quiet) {
-      console.log(
-        '%cUse Root.* (models, stores, sync, debug(false)...))',
-        'background: yellow',
-      )
-      console.time('start')
+  get results() {
+    if (this.showSettings) {
+      return [
+        { id: 'google', name: 'Google Drive', icon: 'gdrive' },
+        { id: 'github', name: 'Github', icon: 'github' },
+        { id: 'slack', name: 'Slack', icon: 'slack' },
+        { id: 'folder', name: 'Folder', icon: 'folder', oauth: false },
+      ]
     }
-    this.connected = true
-    this.catchErrors()
-    this.started = true
+    return this.bitResults || []
   }
 
-  async dispose() {
-    if (this.database) {
-      await this.database.dispose()
-    }
-  }
+  @react({ delay: 64 })
+  setAppSelectedItem = [
+    () => this.results[this.selectedIndex],
+    App.setSelectedItem,
+  ]
 
-  handleError = (...errors: Array<Error>) => {
-    const unique = uniqBy(errors, err => err.name)
-    const final = []
-    for (const error of unique) {
-      try {
-        final.push(JSON.parse(error.message))
-      } catch (e) {
-        final.push({ id: Math.random(), ...error })
+  @react({ fireImmediately: true })
+  bitResults = [
+    () => [App.state.query, Desktop.appState.id],
+    async ([query, id]) => {
+      if (this.showSettings || !Bit.usedConnection) {
+        return
       }
-    }
-    this.errors = uniqBy([...final, ...this.errors], err => err.id)
-  }
-
-  catchErrors() {
-    window.addEventListener('unhandledrejection', event => {
-      event.promise.catch(err => {
-        this.handleError({ ...err, reason: event.reason })
+      if (id === 'com.apple.TextEdit') {
+        return presetAnswers[Desktop.appState.title]
+      }
+      if (!query) {
+        return (await Bit.find({ take: 8 })) || []
+      }
+      const results = await Bit.find({
+        where: `title like "${query}%"`,
+        take: 8,
       })
-    })
+      const strongTitleMatches = fuzzySort
+        .go(query, results, {
+          key: 'title',
+          threshold: -25,
+        })
+        .map(x => x.obj)
+      return uniq([...strongTitleMatches, ...results])
+    },
+  ]
+
+  async willMount() {
+    this.getSettings()
   }
 
-  clearErrors = () => {
-    this.errors = []
+  setSelectedIndex = i => {
+    this.selectedIndex = i
   }
 
-  clearLocalData() {
-    if (!this.models) {
-      return
-    }
-    Object.keys(this.models).forEach(async name => {
-      const model = this.models[name]
-      await model.database.remove()
-      console.log('Removed model local data', name)
-    })
+  getSettings = async () => {
+    this.settings = await Setting.find()
   }
 
-  clearAllData() {
-    if (!this.models) {
-      return
-    }
-    Object.keys(this.models)
-      .filter(name => name === 'Setting')
-      .forEach(async name => {
-        console.log('Removing', name)
-        const model = this.models[name]
-        const models = await model.getAll()
-        await Promise.all(models.map(model => model.remove()))
-        console.log('Removed all', name)
-      })
+  toggleSettings = () => {
+    this.showSettings = !this.showSettings
+  }
+
+  startOauth = id => {
+    App.setAuthState({ openId: id })
+    const checker = this.setInterval(async () => {
+      const auth = await this.checkAuths()
+      const oauth = auth && auth[id]
+      if (!oauth) return
+      clearInterval(checker)
+      const setting = await Setting.findOne({ type: id })
+      console.log('got oauth', oauth)
+      setting.token = oauth.token
+      setting.values = {
+        ...setting.values,
+        oauth,
+      }
+      setting.save()
+      this.getSettings()
+      App.setAuthState({ closeId: id })
+    }, 1000)
   }
 }

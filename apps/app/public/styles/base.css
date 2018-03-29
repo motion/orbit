@@ -180,15 +180,6 @@ select:-webkit-autofill:focus {
   transform: scaleX(1);
 }
 
-::selection {
-  background: blue;
-  color: #fff;
-}
-*::selection {
-  background: blue;
-  color: #fff;
-}
-
 body.dragging * {
   cursor: ew-resize !important;
   user-select: none;
@@ -470,11 +461,13 @@ html {
  */
 
 ::selection {
-  background: #3c66a2;
+  background: #71484299;
+  color: #fff;
   text-shadow: none;
 }
 *::selection {
-  background: #3c66a2;
+  background: #71484299;
+  color: #fff;
   text-shadow: none;
 }
 

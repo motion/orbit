@@ -28,14 +28,15 @@ const P = p => (
   />
 )
 
+@view.attach('appStore')
 @view
 export default class Item {
   onClick = () => {
-    this.props.orbitStore.setSelectedIndex(this.props.index)
+    this.props.appStore.setSelectedIndex(this.props.index)
   }
 
-  render({ orbitStore, index, result, ...props }) {
-    const isSelected = orbitStore.selectedIndex === index
+  render({ appStore, index, result, ...props }) {
+    const isSelected = appStore.selectedIndex === index
     // log(`OrbitItem isSelected ${isSelected} ${index}`)
     return (
       <Surface
@@ -60,7 +61,7 @@ export default class Item {
           }}
         >
           <OrbitIcon
-            icon={result.icon ? `/icons/${result.icon}` : result.type}
+            icon={result.icon ? `/icons/${result.icon}` : result.integration}
             css={{
               width: 22,
               height: 22,

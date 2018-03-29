@@ -1,39 +1,54 @@
 // @flow
-import { debugState } from '@mcro/black'
+import { App } from '@mcro/all'
+import { debugState, when } from '@mcro/black'
 import { ThemeProvide } from '@mcro/ui'
+import { sleep } from '~/helpers'
 import * as Models from '@mcro/models'
 import connectModels from './helpers/connectModels'
 import * as React from 'react'
 import ReactDOM from 'react-dom'
 import Themes from './themes'
 import Root from './root'
-import AppStore from './stores/appStore'
 import Services from './services'
+import { uniqBy } from 'lodash'
+import * as Constants from '~/constants'
 
-class App {
+// HMR
+if (module && module.hot) {
+  module.hot.accept('.', async () => {
+    await start(true)
+  })
+}
+
+class AppRoot {
   started = false
   services = Services
   stores = null
   views = null
-
-  get errors(): ?Array<any> {
-    return this.appStore && this.appStore.errors
-  }
+  errors = []
 
   constructor() {
     window.Root = this
     window.restart = this.restart
-    this.appStore = new AppStore()
     debugState(({ stores, views }) => {
       this.stores = stores
       this.views = views
     })
   }
 
-  async start({ quiet } = {}) {
-    await this.appStore.start(quiet)
+  async start() {
+    await App.start()
+    if (Constants.IS_PEEK) {
+      console.log('sleep for orbit connect')
+      await sleep(2000)
+      console.log('done orbit connect')
+    }
     await connectModels(Object.keys(Models).map(x => Models[x]))
+    if (Constants.IS_ORBIT) {
+      App.setOrbitConnected(true)
+    }
     this.render()
+    this.catchErrors()
     this.started = true
   }
 
@@ -41,9 +56,7 @@ class App {
     window.location = window.location
   }
 
-  async dispose() {
-    await this.appStore.dispose()
-  }
+  async dispose() {}
 
   render() {
     let ROOT = document.querySelector('#app')
@@ -53,6 +66,31 @@ class App {
       </ThemeProvide>,
       ROOT,
     )
+  }
+
+  handleError = (...errors: Array<Error>) => {
+    const unique = uniqBy(errors, err => err.name)
+    const final = []
+    for (const error of unique) {
+      try {
+        final.push(JSON.parse(error.message))
+      } catch (e) {
+        final.push({ id: Math.random(), ...error })
+      }
+    }
+    this.errors = uniqBy([...final, ...this.errors], err => err.id)
+  }
+
+  catchErrors() {
+    window.addEventListener('unhandledrejection', event => {
+      event.promise.catch(err => {
+        this.handleError({ ...err, reason: event.reason })
+      })
+    })
+  }
+
+  clearErrors = () => {
+    this.errors = []
   }
 }
 
@@ -65,7 +103,7 @@ export async function start(recreate?: boolean) {
     await app.dispose()
   }
   if (recreate || !app) {
-    app = new App()
+    app = new AppRoot()
     await app.start({ quiet: recreate })
   }
   window._isDisposing = false
@@ -75,13 +113,3 @@ export async function start(recreate?: boolean) {
 start()
 
 export default app
-
-// HMR
-if (module && module.hot) {
-  module.hot.accept('./stores/appStore', async () => {
-    await start(true)
-  })
-  module.hot.accept('.', async () => {
-    await start(true)
-  })
-}

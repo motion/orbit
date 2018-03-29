@@ -29,7 +29,11 @@ const log = debug('Electron')
     @react({ delay: App.animationDuration })
     focusOnPin = [
       () => Electron.orbitState.pinned,
-      pinned => pinned && this.appRef.focus(),
+      pinned => {
+        if (pinned && Electron.orbitState.mouseOver) {
+          this.appRef.focus()
+        }
+      },
     ]
 
     @react
@@ -81,7 +85,6 @@ const log = debug('Electron')
     handleAppRef = ref => ref && (this.appRef = ref.app)
     handleBeforeQuit = () => console.log('before quit')
     handleQuit = () => {
-      console.log('handling quit')
       process.exit(0)
     }
   },
@@ -104,7 +107,7 @@ export default class ElectronWindow extends React.Component {
         onQuit={electronStore.handleQuit}
         ref={electronStore.handleAppRef}
       >
-        <MenuItems />
+        <MenuItems el />
         <PeekWindow />}
         <OrbitWindow />
         <Tray />

@@ -5,7 +5,6 @@ import { App, Electron, Desktop } from '@mcro/all'
 import * as Constants from '~/constants'
 
 const { SHADOW_PAD, APP_SHADOW } = Constants
-const BORDER_RADIUS = 11
 const orbitLightShadow = [[0, 3, SHADOW_PAD, 2, [0, 0, 0, 0.1]]]
 const iWidth = 4
 const arrowSize = 22
@@ -59,6 +58,8 @@ const OrbitArrow = view(({ background, orbitOnLeft, arrowSize, css }) => {
       size={arrowSize}
       towards={Electron.orbitArrowTowards}
       background={background}
+      boxShadow={[['inset', 0, 0, 0, 0.5, background.darken(0.25)]]}
+      // border={[1, '#000']}
       css={{
         position: 'absolute',
         ...arrowStyle,
@@ -72,7 +73,7 @@ const OrbitArrow = view(({ background, orbitOnLeft, arrowSize, css }) => {
         opacity: App.isShowingOrbit ? 1 : 0,
         transform: {
           x: App.isShowingOrbit
-            ? 0
+            ? orbitOnLeft ? -0.5 : 0.5
             : (orbitOnLeft ? -arrowSize : arrowSize) / 3,
         },
         ...css,
@@ -115,11 +116,14 @@ class OrbitFrameStore {
   isRepositioning = [
     () => [Desktop.state.lastAppChange, Electron.state.willFullScreen],
     async ([app, fs], { when, sleep, setValue }) => {
-      const isFullScreen = fs > app
+      const willFullScreen = fs > app
       setValue(true)
-      await sleep(100)
+      await sleep(App.animationDuration)
       setValue('READY')
       await when(() => this.hasRepositioned)
+      if (willFullScreen) {
+        return setValue(false)
+      }
       await sleep(100)
       setValue(false)
     },
@@ -141,22 +145,30 @@ export default class OrbitFrame {
     }
   }
 
-  render({ store, orbitPage, children, theme }) {
+  render({ store, orbitPage, children, theme, headerBg }) {
     const { fullScreen } = Electron.orbitState
     const { orbitOnLeft } = Electron
-    const boxShadow = fullScreen ? APP_SHADOW : orbitLightShadow
-    const border = [1, theme.base.background.darken(0.1).desaturate(0.3)]
+    const borderColor = theme.base.background.darken(0.1).desaturate(0.3)
+    const borderShadow = ['inset', 0, 0, 0, 0.5, borderColor]
+    const boxShadow = fullScreen
+      ? [APP_SHADOW, borderShadow]
+      : [orbitLightShadow, borderShadow]
     const background = theme.base.background.lighten(0.02)
     const hide =
       !App.isShowingOrbit && (store.isRepositioning || store.isDragging)
     log(`OrbitFrame onLeft ${orbitOnLeft} hide ${hide}`)
     return (
-      <orbitFrame css={{ flex: 1, opacity: hide ? 0 : 1 }}>
+      <orbitFrame
+        css={{
+          flex: 1,
+          opacity: hide ? 0 : 1,
+        }}
+      >
         <OrbitArrow
           if={App.isAttachedToWindow}
           arrowSize={arrowSize}
           orbitOnLeft={orbitOnLeft}
-          background={background}
+          background={headerBg}
         />
         <Indicator
           if={!fullScreen}
@@ -191,8 +203,8 @@ export default class OrbitFrame {
                     opacity: 0,
                     transform: {
                       x: orbitOnLeft
-                        ? 330 - SHADOW_PAD - (SHADOW_PAD + iWidth) + 4
-                        : -330,
+                        ? 330 * 0.25 - SHADOW_PAD - (SHADOW_PAD + iWidth) + 4
+                        : -(330 * 0.25),
                     },
                   }),
             }}
@@ -202,23 +214,32 @@ export default class OrbitFrame {
           >
             <content
               css={{
-                border,
-                borderRight: orbitOnLeft ? 'none' : border,
+                // borderRight: orbitOnLeft ? 'none' : border,
                 background,
                 boxShadow: App.isShowingOrbit ? boxShadow : 'none',
-                borderLeftRadius: orbitOnLeft ? BORDER_RADIUS : 0,
+                // borderRight: orbitOnLeft ? [1, [0, 0, 0, 0.1]] : 0,
+                borderLeftRadius: orbitOnLeft ? Constants.BORDER_RADIUS : 0,
                 borderRightRadius: fullScreen
                   ? 0
-                  : orbitOnLeft ? 0 : BORDER_RADIUS,
+                  : orbitOnLeft ? 0 : Constants.BORDER_RADIUS,
               }}
             >
               {children}
               <expand if={!fullScreen}>
-                <fade
+                <expandEnd
                   css={{
                     background: `linear-gradient(transparent, ${theme.base.background.darken(
-                      0.05,
-                    )} 80%)`,
+                      0.025,
+                    )})`,
+                  }}
+                />
+                <fade
+                  css={{
+                    opacity: 0.5,
+                    background: `linear-gradient(transparent, ${theme.base.background
+                      .darken(0.03)
+                      .saturate(0.2)
+                      .alpha(0.8)} 80%)`,
                   }}
                 />
                 <barOuter onMouseDown={orbitPage.barMouseDown}>
@@ -274,6 +295,7 @@ export default class OrbitFrame {
       }
       return {
         height: `calc(100% - ${adjust}px)`,
+        maxHeight: '100%',
       }
     },
     orbitFullScreen: {
@@ -301,19 +323,28 @@ export default class OrbitFrame {
       left: 0,
       right: 0,
       top: 0,
+      pointerEvents: 'none',
     },
     expand: {
       position: 'absolute',
       bottom: 0,
       left: 0,
       right: 0,
-      paddingTop: 60,
-      alignItems: 'center',
+      top: '30%',
+      alignItems: 'flex-end',
       justifyContent: 'center',
       flexFlow: 'row',
       zIndex: 1000,
-      borderBottomRadius: BORDER_RADIUS,
       overflow: 'hidden',
+      pointerEvents: 'none',
+    },
+    expandEnd: {
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      right: 0,
+      height: 60,
+      alignItems: 'flex-end',
     },
     barOuter: {
       pointerEvents: 'all',

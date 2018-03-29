@@ -116,7 +116,6 @@ export default class Input extends React.PureComponent<Props> {
       <SizedSurface
         size={size}
         sizeFont
-        sizeRadius
         sizePadding
         sizeHeight
         borderWidth={1}

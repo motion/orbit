@@ -2,7 +2,7 @@
 import * as React from 'react'
 import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { App, Electron, Desktop } from '@mcro/all'
+import { App, Electron } from '@mcro/all'
 import * as Constants from '~/constants'
 
 class HeaderStore {
@@ -27,7 +27,7 @@ class HeaderStore {
   ]
 
   onClickInput = () => {
-    if (!Electron.orbitState.pinned && Desktop.isHoldingOption) {
+    if (!Electron.orbitState.pinned) {
       App.togglePinned()
     }
   }
@@ -47,44 +47,77 @@ export default class PeekHeader {
     }
   }
 
-  render({ orbitStore, headerStore, theme }) {
-    const darkerBg = theme.base.background.darken(0.06).desaturate(0.3)
+  render({ orbitStore, headerStore, theme, headerBg }) {
+    const { fullScreen } = Electron.orbitState
+    const darkerBg = theme.base.background.darken(0.045).desaturate(0.3)
     return (
-      <header $$draggable $headerVisible={App.isShowingHeader}>
+      <header
+        $headerBg={fullScreen ? headerBg.alpha(0.2) : headerBg}
+        $$draggable
+        $headerVisible={App.isShowingHeader}
+        $headerMouseOver={Electron.orbitState.mouseOver}
+        css={{
+          boxShadow: [
+            [
+              'inset',
+              0,
+              0,
+              0,
+              0.5,
+              theme.base.background.darken(0.1).desaturate(0.3),
+            ],
+          ],
+          borderTopLeftRadius: Electron.orbitOnLeft
+            ? Constants.BORDER_RADIUS
+            : 0,
+          borderTopRightRadius: !Electron.orbitOnLeft
+            ? Constants.BORDER_RADIUS
+            : 0,
+        }}
+      >
         <title>
           <UI.Input
-            $orbitInput
             value={App.state.query || ''}
-            size={1.15}
-            borderRadius={5}
-            borderWidth={0}
-            background={darkerBg}
+            size={1.35}
+            sizeRadius
+            css={{
+              width: '100%',
+              fontWeight: 300,
+              boxShadow: ['inset', 0, 0, 0, 1, darkerBg.darken(0.5)],
+              opacity: App.state.query.length > 0 ? 1 : 0.6,
+            }}
+            background="transparent"
             onChange={orbitStore.onChangeQuery}
             onKeyDown={this.handleKeyDown}
             getRef={headerStore.ref('inputRef').set}
             onClick={headerStore.onClickInput}
           />
+          <inputLn
+            $inputLnOn={Electron.orbitState.mouseOver ? darkerBg : false}
+          />
         </title>
-        <logoButton
+        <pinnedIcon
           if={!Electron.orbitState.fullScreen}
           onClick={App.togglePinned}
           $onLeft={Electron.orbitOnLeft}
           $onRight={!Electron.orbitOnLeft}
-          css={{
-            border: [3, theme.base.background],
-          }}
+          $isPinned={Electron.orbitState.pinned}
         >
-          <logo
+          <UI.Icon
+            color={
+              Electron.orbitState.pinned
+                ? Constants.ORBIT_COLOR.lighten(0.25)
+                : Constants.ORBIT_COLOR.lighten(0.5).alpha(0.5)
+            }
+            size={12}
+            name="pin"
             css={{
-              width: 11,
-              height: 11,
-              background: Electron.orbitState.pinned
-                ? Constants.ORBIT_COLOR
-                : darkerBg,
+              width: 9,
+              height: 9,
               borderRadius: 1000,
             }}
           />
-        </logoButton>
+        </pinnedIcon>
       </header>
     )
   }
@@ -94,14 +127,60 @@ export default class PeekHeader {
       flexFlow: 'row',
       alignItems: 'center',
       justifyContent: 'center',
-      padding: [12, 10],
-      transition: 'all ease-in 100ms',
-      opacity: 0.2,
+      padding: [5, 10],
+      transition: 'all ease-in 300ms',
+      opacity: 0.75,
+      '&:hover': {
+        opacity: 1,
+      },
     },
-    logoButton: {
+    headerVisible: {
+      opacity: 0.6,
+      transform: { y: 0 },
+    },
+    headerMouseOver: {
+      opacity: 1,
+    },
+    headerBg: background => ({
+      background: background.alpha(0.5),
+      '&:hover': {
+        background: background.lighten(0.05).alpha(0.5),
+      },
+    }),
+    inputLn: {
+      width: 10,
+      height: 2,
+      flex: 1,
+      opacity: 1,
+      transform: {
+        x: 0,
+      },
+      transition: 'all ease-in 300ms',
+    },
+    inputLnOn: background => ({
+      background,
+      opacity: 1,
+      transform: {
+        x: 10,
+      },
+    }),
+    pinnedIcon: {
       position: 'absolute',
+      transition: 'all ease-in 100ms 100ms',
+      padding: 6,
+      margin: [2, 4],
       top: 3,
       borderRadius: 1000,
+      opacity: 0.2,
+      '&:hover': {
+        opacity: 0.4,
+      },
+    },
+    isPinned: {
+      opacity: 0.9,
+      '&:hover': {
+        opacity: 1,
+      },
     },
     onLeft: {
       right: 3,
@@ -109,19 +188,11 @@ export default class PeekHeader {
     onRight: {
       left: 0,
     },
-    headerVisible: {
-      opacity: 1,
-      transform: { y: 0 },
-    },
     title: {
       flex: 1,
     },
     controls: {
       padding: [0, 0, 0, 10],
-    },
-    orbitInput: {
-      width: '100%',
-      // background: 'red',
     },
   }
 }

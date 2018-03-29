@@ -6,7 +6,7 @@ import PeekHeader from '../peekHeader'
 @view
 export class Document {
   render() {
-    const { selectedItem } = App
+    const { selectedItem } = App.state
     if (!selectedItem || !selectedItem.document) {
       return null
     }

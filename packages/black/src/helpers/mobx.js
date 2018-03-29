@@ -9,4 +9,6 @@ export {
   fromResource,
 } from 'mobx-utils'
 
+export { when } from 'mobx'
+
 export const isEqual = comparer.structural

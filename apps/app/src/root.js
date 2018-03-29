@@ -4,19 +4,13 @@ import Redbox from 'redbox-react'
 import * as UI from '@mcro/ui'
 import NotFound from '~/views/404'
 import Router from '~/router'
-import { App } from '@mcro/all'
-
-const log = debug('root')
+import AppStore from '~/stores/appStore'
 
 @view.provide({
-  rootStore: class RootStore {
-    async willMount() {
-      await App.start()
-    }
-  },
+  appStore: AppStore,
 })
 @view
-export default class Root extends React.Component {
+export default class AppRoot extends React.Component {
   state = {
     error: null,
   }
@@ -45,7 +39,7 @@ export default class Root extends React.Component {
           $$draggable
           css={{
             position: 'absolute',
-            top: 0,
+            top: this.state.error ? '80%' : 0,
             left: 0,
             zIndex: Number.MAX_SAFE_INTEGER,
           }}

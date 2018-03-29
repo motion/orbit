@@ -12,7 +12,7 @@ export default class AppReactions {
   @react({
     fireImmediately: true,
   })
-  shouldShowHideFromElectron = [
+  showHideFromElectron = [
     () => [Electron.state.shouldShow, Electron.state.shouldHide],
     ([shouldShow, shouldHide]) => {
       const orbitHidden = shouldHide > shouldShow
@@ -21,11 +21,25 @@ export default class AppReactions {
   ]
 
   @react
-  shouldShowHideFromElectronState = [
-    () => [Electron.orbitState.fullScreen, Electron.orbitState.pinned],
-    ([fullScreen, pinned]) => {
-      if (fullScreen || pinned) {
+  onFullScreen = [
+    () => Electron.orbitState.fullScreen,
+    full => {
+      if (full) {
         App.setOrbitHidden(false)
+      } else {
+        App.setPeekTarget(null)
+      }
+    },
+  ]
+
+  @react
+  onPinned = [
+    () => Electron.orbitState.pinned,
+    pinned => {
+      if (pinned) {
+        App.setOrbitHidden(false)
+      } else {
+        App.setOrbitHidden(true)
       }
     },
   ]
@@ -60,16 +74,6 @@ export default class AppReactions {
     () => Electron.isMouseInActiveArea,
     mouseOver => {
       if (!mouseOver) {
-        App.setPeekTarget(null)
-      }
-    },
-  ]
-
-  @react
-  clearPeekTarget = [
-    () => Electron.orbitState.fullScreen,
-    fullScreen => {
-      if (!fullScreen) {
         App.setPeekTarget(null)
       }
     },

@@ -2,7 +2,7 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { App, Electron } from '@mcro/all'
-import { SHADOW_PAD, APP_SHADOW } from '~/constants'
+import { SHADOW_PAD, APP_SHADOW, BORDER_RADIUS } from '~/constants'
 import * as PeekContents from './peekContents'
 import { capitalize } from 'lodash'
 
@@ -26,27 +26,23 @@ export default class PeekPage {
     if (!currentPeek) {
       return null
     }
-    const border = fullScreen
-      ? [1, theme.base.background.darken(0.1).desaturate(0.3)]
-      : null
     return (
       <UI.Theme name="tan">
         <peek
           css={{
             paddingLeft: fullScreen ? 0 : SHADOW_PAD,
           }}
+          $animate={fullScreen || App.isShowingPeek}
           $peekVisible={App.isShowingPeek}
         >
           <main
             css={{
               boxShadow: [
                 APP_SHADOW,
-                fullScreen ? null : ['inset', 0, 0, 0, 1, [0, 0, 0, 0.05]],
+                fullScreen ? null : ['inset', 0, 0, 0, 0.5, [0, 0, 0, 0.15]],
               ].filter(Boolean),
-              borderRightRadius: fullScreen ? 5 : 0,
+              borderRightRadius: fullScreen ? BORDER_RADIUS : 0,
               background: fullScreen ? theme.base.background : '#fff',
-              border,
-              borderLeft: fullScreen ? 'none' : border,
             }}
           >
             <View item={currentPeek} />
@@ -65,7 +61,16 @@ export default class PeekPage {
       pointerEvents: 'none !important',
       opacity: 0,
       position: 'relative',
+      transition: 'transform linear 80ms',
       flex: 1,
+      transform: {
+        y: -20,
+      },
+    },
+    animate: {
+      transform: {
+        y: 0,
+      },
     },
     peekVisible: {
       pointerEvents: 'all !important',

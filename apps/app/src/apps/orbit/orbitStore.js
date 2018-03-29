@@ -1,33 +1,45 @@
-import { react } from '@mcro/black'
 import { App } from '@mcro/all'
 import KeyboardStore from './keyboardStore'
 
 export default class OrbitStore {
   keyboardStore = new KeyboardStore()
-  showSettings = false
-  selectedIndex = 0
-
-  @react({ delay: 64 })
-  setAppSelectedIndex = [() => this.selectedIndex, App.setSelectedIndex]
 
   willMount() {
+    // only do reactions in one App
     App.runReactions()
     this.on(this.keyboardStore, 'keydown', this.handleKeyDown)
   }
 
   handleKeyDown = code => {
+    const {
+      results,
+      selectedIndex,
+      setSelectedIndex,
+      showSettings,
+    } = this.props.appStore
+    const increment = (by = 1) =>
+      setSelectedIndex(Math.min(results.length - 1, selectedIndex + by))
+    const decrement = (by = 1) =>
+      setSelectedIndex(Math.max(0, selectedIndex - by))
     switch (code) {
+      case 37: // left
+        if (showSettings) {
+          decrement()
+        }
+        return
+      case 39: // right
+        if (showSettings) {
+          increment()
+        }
+        return
       case 40: // down
-        this.selectedIndex = Math.min(
-          App.results.length - 1,
-          this.selectedIndex + 1,
-        )
+        increment(showSettings ? 2 : 1)
         return
       case 38: //up
-        this.selectedIndex = Math.max(0, this.selectedIndex - 1)
+        decrement(showSettings ? 2 : 1)
         return
       case 13: //enter
-        App.setOpenResult(App.results[this.selectedIndex])
+        App.setOpenResult(results[selectedIndex])
         // so hitting enter on a previous app works
         setTimeout(() => {
           App.setOpenResult(null)
@@ -37,13 +49,5 @@ export default class OrbitStore {
 
   onChangeQuery = e => {
     App.setQuery(e.target.value)
-  }
-
-  setSelectedIndex = index => {
-    this.selectedIndex = index
-  }
-
-  toggleSettings = () => {
-    this.showSettings = !this.showSettings
   }
 }

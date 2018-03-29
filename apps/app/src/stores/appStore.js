@@ -85,7 +85,6 @@ export default class AppStore {
   ]
 
   async willMount() {
-    await App.start()
     this.getSettings()
   }
 

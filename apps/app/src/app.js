@@ -1,6 +1,8 @@
 // @flow
-import { debugState } from '@mcro/black'
+import { App } from '@mcro/all'
+import { debugState, when } from '@mcro/black'
 import { ThemeProvide } from '@mcro/ui'
+import { sleep } from '~/helpers'
 import * as Models from '@mcro/models'
 import connectModels from './helpers/connectModels'
 import * as React from 'react'
@@ -9,6 +11,7 @@ import Themes from './themes'
 import Root from './root'
 import Services from './services'
 import { uniqBy } from 'lodash'
+import * as Constants from '~/constants'
 
 // HMR
 if (module && module.hot) {
@@ -17,7 +20,7 @@ if (module && module.hot) {
   })
 }
 
-class App {
+class AppRoot {
   started = false
   services = Services
   stores = null
@@ -34,7 +37,16 @@ class App {
   }
 
   async start() {
+    await App.start()
+    if (Constants.IS_PEEK) {
+      console.log('sleep for orbit connect')
+      await sleep(2000)
+      console.log('done orbit connect')
+    }
     await connectModels(Object.keys(Models).map(x => Models[x]))
+    if (Constants.IS_ORBIT) {
+      App.setOrbitConnected(true)
+    }
     this.render()
     this.catchErrors()
     this.started = true
@@ -91,7 +103,7 @@ export async function start(recreate?: boolean) {
     await app.dispose()
   }
   if (recreate || !app) {
-    app = new App()
+    app = new AppRoot()
     await app.start({ quiet: recreate })
   }
   window._isDisposing = false

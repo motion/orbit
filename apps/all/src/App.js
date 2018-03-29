@@ -27,6 +27,7 @@ class AppStore {
     hoveredLine: null,
     contextMessage: 'Orbit',
     orbitHidden: true,
+    orbitConnected: false,
     knowledge: null,
     peekTarget: null,
     shouldTogglePinned: null,

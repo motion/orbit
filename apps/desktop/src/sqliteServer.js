@@ -55,9 +55,9 @@ function onConnection(options, spark) {
 
 async function onData(options, spark, data) {
   let { name } = data.args[0]
-  if (typeof name === 'undefined') {
-    name = 'database'
-  }
+  // if (typeof name === 'undefined') {
+  //   name = 'database'
+  // }
   let db = null
   switch (data.command) {
     case 'open':
@@ -116,26 +116,35 @@ async function onData(options, spark, data) {
         })
         return
       }
-      databasePathList[data.args.dbname].close(function(err) {
-        spark.write({
-          command: 'closeComplete',
-          err: err,
-          id: data.id,
-        })
+      let err
+      try {
+        await databasePathList[data.args.dbname].close()
+      } catch (e) {
+        err = e
+      }
+      spark.write({
+        command: 'closeComplete',
+        err,
+        id: data.id,
       })
       break
     case 'delete':
       if (!databasePathList[data.args.dbname]) {
         return
       }
-      databasePathList[data.args.dbname].close(function(err) {
+      let error
+      try {
+        await databasePathList[data.args.dbname].close()
+      } catch (e) {
+        error = e
         fs.unlinkSync(databaseDirectory + data.openargs.dbname)
+      } finally {
         spark.write({
           command: 'deleteComplete',
-          err: err,
+          err: error,
           id: data.id,
         })
-      })
+      }
       break
     case 'backgroundExecuteSqlBatch':
       db = databasePathList[data.args[0].dbargs.dbname]
@@ -149,12 +158,11 @@ async function onData(options, spark, data) {
         return
       }
       // console.log('setting query array', JSON.stringify(data))
-      var queryArray = data.args[0].executes
-      await runQueries(data.id, spark, db, queryArray, [])
+      await runQueries(data.id, spark, db, data.args[0].executes, [])
   }
 }
 
-async function runQueries(id, spark, db, queryArray, accumAnswer, tries = 0) {
+async function runQueries(id, spark, db, queryArray, accumAnswer) {
   if (queryArray.length < 1) {
     // log('runQueries answering with:', accumAnswer)
     spark.write({
@@ -166,32 +174,20 @@ async function runQueries(id, spark, db, queryArray, accumAnswer, tries = 0) {
     return
   }
   var top = queryArray.shift()
-  var newAnswer = {}
   try {
-    // log(`runQueries doing stuff...`, top.sql, top.params)
     const rows = await db.all(top.sql, top.params)
-    newAnswer.type = 'success'
-    newAnswer.qid = top.qid
-    var newResult = {}
-    newResult.rows = rows
-    newAnswer.result = newResult
-    // log('runQueries', top.sql, top.params, newResult)
-    accumAnswer.push(newAnswer)
+    accumAnswer.push({
+      type: 'success',
+      qid: top.qid,
+      result: { rows },
+    })
     await runQueries(id, spark, db, queryArray, accumAnswer)
   } catch (err) {
-    console.log('error!', queryArray, top.qid, err)
-    if (
-      tries < 2 &&
-      err.toString().indexOf('cannot start a transaction within a transaction')
-    ) {
-      await new Promise(res => setTimeout(res, 32))
-      await runQueries(id, spark, db, queryArray, accumAnswer, tries + 1)
-      return
-    }
-    newAnswer.type = 'error'
-    newAnswer.qid = top.qid
-    accumAnswer.push(newAnswer)
-    log('runFailed: ', err)
+    console.log('error!', queryArray, top, accumAnswer, err)
+    accumAnswer.push({
+      type: 'error',
+      qid: top.qid,
+    })
     spark.write({
       command: 'backgroundExecuteSqlBatchFailed',
       err: err.toString(),

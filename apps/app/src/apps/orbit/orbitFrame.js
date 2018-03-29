@@ -336,6 +336,7 @@ export default class OrbitFrame {
       flexFlow: 'row',
       zIndex: 1000,
       overflow: 'hidden',
+      pointerEvents: 'none',
     },
     expandEnd: {
       position: 'absolute',

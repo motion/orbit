@@ -3,6 +3,8 @@ export * from '@mcro/constants'
 import { Constants } from '@mcro/black'
 import * as UI from '@mcro/ui'
 
+export const IS_ORBIT = window.location.pathname === '/orbit'
+export const IS_PEEK = window.location.pathname.indexOf('/peek') === 0
 export const IS_ELECTRON = Constants.IS_ELECTRON
 export const IS_PROD =
   process.env.NODE_ENV === 'production' || process.env.IS_PROD

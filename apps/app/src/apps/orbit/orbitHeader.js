@@ -48,13 +48,22 @@ export default class PeekHeader {
   }
 
   render({ orbitStore, headerStore, theme, headerBg }) {
+    const { fullScreen } = Electron.orbitState
     const darkerBg = theme.base.background.darken(0.045).desaturate(0.3)
     return (
       <header
-        $headerBg={headerBg}
+        $headerBg={fullScreen ? headerBg.alpha(0.3) : headerBg}
         $$draggable
         $headerVisible={App.isShowingHeader}
         css={{
+          boxShadow: [
+            'inset',
+            0,
+            0,
+            0,
+            0.5,
+            theme.base.background.darken(0.1).desaturate(0.3),
+          ],
           borderTopLeftRadius: Electron.orbitOnLeft
             ? Constants.BORDER_RADIUS
             : 0,
@@ -87,7 +96,9 @@ export default class PeekHeader {
           $onLeft={Electron.orbitOnLeft}
           $onRight={!Electron.orbitOnLeft}
           css={{
-            boxShadow: ['inset', 0, 0.5, 0, 1, headerBg.darken(0.5)],
+            transition: 'all ease-in 50ms 150ms',
+            opacity: Electron.orbitState.pinned ? 1 : 0,
+            boxShadow: ['inset', 0, 0.5, 0, 1, '#000'],
             padding: 3,
             margin: [0, 2],
             border: [4, headerBg],
@@ -98,11 +109,26 @@ export default class PeekHeader {
               width: 9,
               height: 9,
               background: Electron.orbitState.pinned
-                ? Constants.ORBIT_COLOR.lighten(0.8)
+                ? Constants.ORBIT_COLOR.lighten(0.3)
                 : darkerBg,
               borderRadius: 1000,
             }}
-          />
+          >
+            <UI.Arrow
+              towards="bottom"
+              background={Constants.ORBIT_COLOR.lighten(0.3)}
+              size={9}
+              css={{
+                position: 'absolute',
+                bottom: -5,
+                opacity: Electron.orbitState.pinned ? 1 : 0,
+                transition: 'all ease-in 50ms',
+                transform: {
+                  y: Electron.orbitState.pinned ? 0 : -5,
+                },
+              }}
+            />
+          </logo>
         </logoButton>
       </header>
     )
@@ -115,7 +141,7 @@ export default class PeekHeader {
       justifyContent: 'center',
       padding: [12, 10],
       transition: 'all ease-in 300ms',
-      opacity: 0.5,
+      opacity: 0.75,
       '&:hover': {
         opacity: 1,
       },
@@ -151,7 +177,7 @@ export default class PeekHeader {
       position: 'absolute',
       top: 3,
       borderRadius: 1000,
-      opacity: 0.8,
+      opacity: 0.5,
       '&:hover': {
         opacity: 1,
       },

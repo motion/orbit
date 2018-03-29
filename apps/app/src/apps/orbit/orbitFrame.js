@@ -151,7 +151,7 @@ export default class OrbitFrame {
       0,
       0,
       0,
-      0.5,
+      1,
       theme.base.background.darken(0.1).desaturate(0.3),
     ]
     const boxShadow = fullScreen

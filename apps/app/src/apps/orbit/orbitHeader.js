@@ -55,6 +55,7 @@ export default class PeekHeader {
         $headerBg={fullScreen ? headerBg.alpha(0.3) : headerBg}
         $$draggable
         $headerVisible={App.isShowingHeader}
+        $headerMouseOver={Electron.orbitState.mouseOver}
         css={{
           boxShadow: [
             [
@@ -90,7 +91,9 @@ export default class PeekHeader {
             getRef={headerStore.ref('inputRef').set}
             onClick={headerStore.onClickInput}
           />
-          <inputLn $inputLnOn={App.isShowingHeader ? darkerBg : false} />
+          <inputLn
+            $inputLnOn={Electron.orbitState.mouseOver ? darkerBg : false}
+          />
         </title>
         <logoButton
           if={!Electron.orbitState.fullScreen}
@@ -98,8 +101,8 @@ export default class PeekHeader {
           $onLeft={Electron.orbitOnLeft}
           $onRight={!Electron.orbitOnLeft}
           css={{
-            transition: 'all ease-in 150ms 150ms',
-            opacity: Electron.orbitState.pinned ? 1 : 0,
+            transition: 'all ease-in 100ms 150ms',
+            opacity: Electron.orbitState.pinned ? 1 : 0.5,
             boxShadow: ['inset', 0, 0.5, 0, 1, '#000'],
             padding: 3,
             margin: [0, 2],
@@ -138,8 +141,11 @@ export default class PeekHeader {
       },
     },
     headerVisible: {
-      opacity: 1,
+      opacity: 0.6,
       transform: { y: 0 },
+    },
+    headerMouseOver: {
+      opacity: 1,
     },
     headerBg: background => ({
       background,

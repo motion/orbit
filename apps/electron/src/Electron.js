@@ -29,7 +29,11 @@ const log = debug('Electron')
     @react({ delay: App.animationDuration })
     focusOnPin = [
       () => Electron.orbitState.pinned,
-      pinned => pinned && this.appRef.focus(),
+      pinned => {
+        if (pinned && Electron.orbitState.mouseOver) {
+          this.appRef.focus()
+        }
+      },
     ]
 
     @react

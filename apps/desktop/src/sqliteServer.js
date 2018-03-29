@@ -23,14 +23,33 @@ function prettyPrintArgs(args) {
   }
 }
 
-let lastQuery
+let queries = []
+let isRunning = false
+const processQueue = async action => {
+  if (action) {
+    queries.push(action)
+  }
+  if (!queries.length) {
+    return
+  }
+  if (isRunning) {
+    return
+  }
+  const nextQueries = [...queries]
+  queries = []
+  isRunning = true
+  for (const query of nextQueries) {
+    await query()
+  }
+  isRunning = false
+  processQueue()
+}
 
 function onConnection(options, spark) {
   spark.on('data', async data => {
-    if (lastQuery) {
-      await lastQuery
-    }
-    lastQuery = onData(options, spark, data)
+    processQueue(async () => {
+      await onData(options, spark, data)
+    })
   })
 }
 
@@ -135,7 +154,7 @@ async function onData(options, spark, data) {
   }
 }
 
-async function runQueries(id, spark, db, queryArray, accumAnswer) {
+async function runQueries(id, spark, db, queryArray, accumAnswer, tries = 0) {
   if (queryArray.length < 1) {
     // log('runQueries answering with:', accumAnswer)
     spark.write({
@@ -158,8 +177,17 @@ async function runQueries(id, spark, db, queryArray, accumAnswer) {
     newAnswer.result = newResult
     // log('runQueries', top.sql, top.params, newResult)
     accumAnswer.push(newAnswer)
-    runQueries(id, spark, db, queryArray, accumAnswer)
+    await runQueries(id, spark, db, queryArray, accumAnswer)
   } catch (err) {
+    console.log('error!', queryArray, top.qid, err)
+    if (
+      tries < 2 &&
+      err.toString().indexOf('cannot start a transaction within a transaction')
+    ) {
+      await new Promise(res => setTimeout(res, 32))
+      await runQueries(id, spark, db, queryArray, accumAnswer, tries + 1)
+      return
+    }
     newAnswer.type = 'error'
     newAnswer.qid = top.qid
     accumAnswer.push(newAnswer)

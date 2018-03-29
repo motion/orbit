@@ -85,7 +85,6 @@ const log = debug('Electron')
     handleAppRef = ref => ref && (this.appRef = ref.app)
     handleBeforeQuit = () => console.log('before quit')
     handleQuit = () => {
-      console.log('handling quit')
       process.exit(0)
     }
   },

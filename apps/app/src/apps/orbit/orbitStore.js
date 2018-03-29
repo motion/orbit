@@ -4,7 +4,6 @@ import KeyboardStore from './keyboardStore'
 
 export default class OrbitStore {
   keyboardStore = new KeyboardStore()
-  showSettings = false
   selectedIndex = 0
 
   @react({ delay: 64 })
@@ -16,10 +15,11 @@ export default class OrbitStore {
   }
 
   handleKeyDown = code => {
+    const { results } = this.props.appStore
     switch (code) {
       case 40: // down
         this.selectedIndex = Math.min(
-          App.results.length - 1,
+          results.length - 1,
           this.selectedIndex + 1,
         )
         return
@@ -27,7 +27,7 @@ export default class OrbitStore {
         this.selectedIndex = Math.max(0, this.selectedIndex - 1)
         return
       case 13: //enter
-        App.setOpenResult(App.results[this.selectedIndex])
+        App.setOpenResult(results[this.selectedIndex])
         // so hitting enter on a previous app works
         setTimeout(() => {
           App.setOpenResult(null)
@@ -41,9 +41,5 @@ export default class OrbitStore {
 
   setSelectedIndex = index => {
     this.selectedIndex = index
-  }
-
-  toggleSettings = () => {
-    this.showSettings = !this.showSettings
   }
 }

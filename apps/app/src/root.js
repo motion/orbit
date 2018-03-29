@@ -6,17 +6,30 @@ import NotFound from '~/views/404'
 import Router from '~/router'
 import { App } from '@mcro/all'
 
-const log = debug('root')
+// const log = debug('root')
 
 @view.provide({
-  rootStore: class RootStore {
+  appStore: class AppStore {
+    showSettings = false
+
+    get results() {
+      if (this.showSettings) {
+        return
+      }
+      return App.results
+    }
+
+    toggleSettings = () => {
+      this.showSettings = !this.showSettings
+    }
+
     async willMount() {
       await App.start()
     }
   },
 })
 @view
-export default class Root extends React.Component {
+export default class AppRoot extends React.Component {
   state = {
     error: null,
   }
@@ -45,7 +58,7 @@ export default class Root extends React.Component {
           $$draggable
           css={{
             position: 'absolute',
-            top: 0,
+            top: this.state.error ? '80%' : 0,
             left: 0,
             zIndex: Number.MAX_SAFE_INTEGER,
           }}

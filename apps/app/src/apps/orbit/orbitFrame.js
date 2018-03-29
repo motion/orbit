@@ -5,7 +5,6 @@ import { App, Electron, Desktop } from '@mcro/all'
 import * as Constants from '~/constants'
 
 const { SHADOW_PAD, APP_SHADOW } = Constants
-const BORDER_RADIUS = 11
 const orbitLightShadow = [[0, 3, SHADOW_PAD, 2, [0, 0, 0, 0.1]]]
 const iWidth = 4
 const arrowSize = 22
@@ -147,8 +146,17 @@ export default class OrbitFrame {
   render({ store, orbitPage, children, theme }) {
     const { fullScreen } = Electron.orbitState
     const { orbitOnLeft } = Electron
-    const boxShadow = fullScreen ? APP_SHADOW : orbitLightShadow
-    const border = [1, theme.base.background.darken(0.1).desaturate(0.3)]
+    const borderShadow = [
+      'inset',
+      0,
+      0,
+      0,
+      0.5,
+      theme.base.background.darken(0.1).desaturate(0.3),
+    ]
+    const boxShadow = fullScreen
+      ? [APP_SHADOW, borderShadow]
+      : [orbitLightShadow, borderShadow]
     const background = theme.base.background.lighten(0.02)
     const hide =
       !App.isShowingOrbit && (store.isRepositioning || store.isDragging)
@@ -205,18 +213,18 @@ export default class OrbitFrame {
           >
             <content
               css={{
-                border,
-                borderRight: orbitOnLeft ? 'none' : border,
+                // borderRight: orbitOnLeft ? 'none' : border,
                 background,
                 boxShadow: App.isShowingOrbit ? boxShadow : 'none',
-                borderLeftRadius: orbitOnLeft ? BORDER_RADIUS : 0,
+                borderLeftRadius: orbitOnLeft ? Constants.BORDER_RADIUS : 0,
                 borderRightRadius: fullScreen
                   ? 0
-                  : orbitOnLeft ? 0 : BORDER_RADIUS,
+                  : orbitOnLeft ? 0 : Constants.BORDER_RADIUS,
               }}
             >
               {children}
               <expand if={!fullScreen}>
+                <expandEnd />
                 <fade
                   css={{
                     background: `linear-gradient(transparent, ${theme.base.background.darken(
@@ -277,6 +285,7 @@ export default class OrbitFrame {
       }
       return {
         height: `calc(100% - ${adjust}px)`,
+        maxHeight: '100%',
       }
     },
     orbitFullScreen: {
@@ -310,13 +319,20 @@ export default class OrbitFrame {
       bottom: 0,
       left: 0,
       right: 0,
-      paddingTop: 60,
-      alignItems: 'center',
+      top: '30%',
+      alignItems: 'flex-end',
       justifyContent: 'center',
       flexFlow: 'row',
       zIndex: 1000,
-      borderBottomRadius: BORDER_RADIUS,
       overflow: 'hidden',
+    },
+    expandEnd: {
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      right: 0,
+      height: 60,
+      alignItems: 'flex-end',
     },
     barOuter: {
       pointerEvents: 'all',

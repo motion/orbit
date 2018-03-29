@@ -115,7 +115,6 @@ export default class Surface extends React.PureComponent<Props> {
 
   static defaultProps = {
     borderStyle: 'solid',
-    borderWidth: 0,
   }
 
   uniq = `SRFC-${Math.round(Math.random() * 100000000)}`
@@ -464,7 +463,9 @@ export default class Surface extends React.PureComponent<Props> {
     }
 
     const borderColor = $(
-      props.borderColor || theme[STATE].borderColor || 'transparent',
+      props.borderColor === true
+        ? theme[STATE].borderColor
+        : props.borderColor || 'transparent',
     )
     let hoverColor = $(
       (props.hover && props.hover.color) ||

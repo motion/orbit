@@ -8,8 +8,8 @@ import OrbitContent from './orbitContent'
 import OrbitSettings from './orbitSettings'
 import OrbitHeader from './orbitHeader'
 import OrbitStore from './orbitStore'
-
-const SHADOW_PAD = 15
+import { throttle } from 'lodash'
+import { SHADOW_PAD } from '~/constants'
 // the little tab indicator
 // const log = debug('orbit')
 
@@ -18,15 +18,19 @@ class OrbitPageStore {
   adjustHeight = 0
 
   willMount() {
-    this.on(window, 'mousemove', e => {
-      if (!this.isDragging) return
-      const adjustHeight = Math.min(
-        window.innerHeight - e.clientY - SHADOW_PAD * 2,
-        window.innerHeight - 300, // no less than 300
-      )
-      console.log(adjustHeight)
-      this.adjustHeight = adjustHeight
-    })
+    this.on(
+      window,
+      'mousemove',
+      throttle(e => {
+        if (!this.isDragging) return
+        const adjustHeight = Math.min(
+          window.innerHeight - e.clientY - SHADOW_PAD * 2,
+          window.innerHeight - 300, // no less than 300
+        )
+        console.log(adjustHeight)
+        this.adjustHeight = adjustHeight
+      }, 16),
+    )
 
     this.on(window, 'mouseup', () => {
       this.isDragging = false
@@ -38,21 +42,20 @@ class OrbitPageStore {
   }
 }
 
+@view.attach('appStore')
 @view.provide({
   orbitStore: OrbitStore,
-})
-@view.attach('orbitStore')
-@view({
   orbitPage: OrbitPageStore,
 })
-export default class OrbitPage {
-  render({ orbitStore, orbitPage }) {
+@view
+export default class Orbit {
+  render({ appStore, orbitPage }) {
     return (
       <UI.Theme name={Electron.orbitState.fullScreen ? 'tan' : 'tan'}>
         <OrbitFrame orbitPage={orbitPage}>
           <OrbitHeader />
-          <OrbitContent if={!orbitStore.showSettings} />
-          <OrbitSettings if={orbitStore.showSettings} />
+          <OrbitContent if={!appStore.showSettings} />
+          <OrbitSettings if={appStore.showSettings} />
           <Knowledge if={App.state.knowledge} data={App.state.knowledge} />
           <controls>
             <UI.Button
@@ -65,8 +68,8 @@ export default class OrbitPage {
               hover={{
                 opacity: 0.8,
               }}
-              highlight={orbitStore.showSettings}
-              onClick={orbitStore.toggleSettings}
+              highlight={appStore.showSettings}
+              onClick={appStore.toggleSettings}
             />
           </controls>
         </OrbitFrame>

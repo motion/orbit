@@ -48,22 +48,39 @@ export default class PeekHeader {
   }
 
   render({ orbitStore, headerStore, theme }) {
-    const darkerBg = theme.base.background.darken(0.06).desaturate(0.3)
+    const darkerBg = theme.base.background.darken(0.045).desaturate(0.3)
+    const headerBg = theme.base.background.lighten(0.08).alpha(0.5)
     return (
-      <header $$draggable $headerVisible={App.isShowingHeader}>
+      <header
+        $headerBg={headerBg}
+        $$draggable
+        $headerVisible={App.isShowingHeader}
+        css={{
+          borderTopLeftRadius: Electron.orbitOnLeft
+            ? Constants.BORDER_RADIUS
+            : 0,
+          borderTopRightRadius: !Electron.orbitOnLeft
+            ? Constants.BORDER_RADIUS
+            : 0,
+        }}
+      >
         <title>
           <UI.Input
-            $orbitInput
             value={App.state.query || ''}
-            size={1.15}
-            borderRadius={5}
-            borderWidth={0}
-            background={darkerBg}
+            size={1.35}
+            sizeRadius
+            css={{
+              width: '100%',
+              fontWeight: 300,
+              boxShadow: ['inset', 0, 0, 0, 1, darkerBg.darken(0.5)],
+            }}
+            background="transparent"
             onChange={orbitStore.onChangeQuery}
             onKeyDown={this.handleKeyDown}
             getRef={headerStore.ref('inputRef').set}
             onClick={headerStore.onClickInput}
           />
+          <indicator $indicatorOn={App.isShowingHeader ? darkerBg : false} />
         </title>
         <logoButton
           if={!Electron.orbitState.fullScreen}
@@ -71,7 +88,7 @@ export default class PeekHeader {
           $onLeft={Electron.orbitOnLeft}
           $onRight={!Electron.orbitOnLeft}
           css={{
-            border: [3, theme.base.background],
+            border: [3, headerBg],
           }}
         >
           <logo
@@ -79,7 +96,7 @@ export default class PeekHeader {
               width: 11,
               height: 11,
               background: Electron.orbitState.pinned
-                ? Constants.ORBIT_COLOR
+                ? Constants.ORBIT_COLOR.lighten(0.8)
                 : darkerBg,
               borderRadius: 1000,
             }}
@@ -96,8 +113,38 @@ export default class PeekHeader {
       justifyContent: 'center',
       padding: [12, 10],
       transition: 'all ease-in 100ms',
-      opacity: 0.2,
+      opacity: 0,
+      '&:hover': {
+        opacity: 1,
+      },
     },
+    headerVisible: {
+      opacity: 1,
+      transform: { y: 0 },
+    },
+    headerBg: background => ({
+      background,
+      '&:hover': {
+        background: background.lighten(0.05),
+      },
+    }),
+    indicator: {
+      width: 10,
+      height: 2,
+      flex: 1,
+      opacity: 1,
+      transform: {
+        x: 0,
+      },
+      transition: 'all ease-in 300ms',
+    },
+    indicatorOn: background => ({
+      background,
+      opacity: 1,
+      transform: {
+        x: 10,
+      },
+    }),
     logoButton: {
       position: 'absolute',
       top: 3,
@@ -109,19 +156,11 @@ export default class PeekHeader {
     onRight: {
       left: 0,
     },
-    headerVisible: {
-      opacity: 1,
-      transform: { y: 0 },
-    },
     title: {
       flex: 1,
     },
     controls: {
       padding: [0, 0, 0, 10],
-    },
-    orbitInput: {
-      width: '100%',
-      // background: 'red',
     },
   }
 }

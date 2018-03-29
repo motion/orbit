@@ -21,5 +21,6 @@ export const Empty = ({ item }) => (
         </UI.Text>
       ))}
     </UI.Text>
+    {item.body}
   </pane>
 )

@@ -29,16 +29,18 @@ let numConnections = 0
 
 async function processQueue() {
   if (!queue.length) return
-  lock = 'special'
   while (queue.length) {
+    console.log('clear queue')
+    // mutate remove one
     await runWithLock(...queue.shift())
   }
-  lock = null
+  console.log('clear queue done')
   if (queue.length) processQueue()
 }
 
 async function runWithLock(uid, run) {
   if (lock && lock !== uid) {
+    console.log('queue on', uid)
     queue.push(run)
   } else {
     await run()
@@ -51,8 +53,8 @@ async function runWithLock(uid, run) {
 function onConnection(options, spark) {
   let uid = ++numConnections
   spark.on('data', data => {
-    const run = () => onData(options, spark, data, uid)
-    runWithLock(uid, run)
+    onData(options, spark, data, uid)
+    // runWithLock(uid, run)
   })
 }
 
@@ -162,12 +164,15 @@ async function onData(options, spark, data, uid) {
       }
       // console.log('setting query array', JSON.stringify(data))
       const queries = data.args[0].executes
-      if (queries[0].sql === 'BEGIN TRANSACTION') {
-        lock = uid
-      }
-      if (queries[0].sql.indexOf('END TRANSACTION') === 0) {
-        lock = null
-      }
+      // if (queries[0].sql === 'BEGIN TRANSACTION') {
+      //   spark.write({
+      //     command: 'backgroundExecuteSqlBatchComplete',
+      //     err: null,
+      //     answer: [],
+      //     id: data.id,
+      //   })
+      //   return
+      // }
       await runQueries(data.id, spark, db, queries, [])
   }
 }

@@ -5,6 +5,7 @@ import { createInChunks } from '~/sync/helpers'
 import Path from 'path'
 import Fs from 'fs-extra'
 import readDir from 'recursive-readdir'
+import Yaml from 'js-yaml'
 
 const log = debug('folder')
 // const sleep = ms => new Promise(res => setTimeout(res, ms))
@@ -25,7 +26,7 @@ class FolderSync {
   }
 
   run = async () => {
-    console.log('run folder sync')
+    console.log('run folder sync', this.folders)
     for (const folder of this.folders) {
       await this.syncFolder(folder)
     }
@@ -38,27 +39,32 @@ class FolderSync {
   }
 
   createFile = async path => {
+    const title = Path.basename(path)
+    const extension = Path.extname(path)
+    if (extension !== '.yaml') {
+      console.log('ignore non-yaml')
+      return
+    }
     const fileStats = await Fs.stat(path)
     if (
       await Bit.findOne({
-        integration: 'folder',
         identifier: path,
-        bitUpdatedAt: fileStats.mtime,
+        bitUpdatedAt: fileStats.mtime.toString(),
       })
     ) {
-      console.log('found existing', path)
       return
     }
-    const fileContents = await Fs.readFile(path)
-    const bitCreatedAt = fileStats.ctime
-    const bitUpdatedAt = fileStats.mtime
+    const yamlData = Yaml.safeLoad(await Fs.readFile(path, 'utf8'))
+    const bitCreatedAt = fileStats.ctime.toString()
+    const bitUpdatedAt = fileStats.mtime.toString()
     const bit = new Bit()
     Object.assign(bit, {
       identifier: path,
       integration: 'folder',
       type: 'file',
-      title: Path.basename(path),
-      body: fileContents.toString(),
+      title,
+      body: 'none',
+      ...yamlData,
       bitCreatedAt,
       bitUpdatedAt,
     })

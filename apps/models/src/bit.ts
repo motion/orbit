@@ -14,8 +14,9 @@ export class Bit extends T.BaseEntity {
   url: string
   @T.Column('simple-json', { default: '{}' })
   data: Object
-  @T.Column() bitCreatedAt: Date
-  @T.Column() bitUpdatedAt: Date
+  // string is queryable
+  @T.Column() bitCreatedAt: string
+  @T.Column() bitUpdatedAt: string
   @T.CreateDateColumn() createdAt: Date
   @T.UpdateDateColumn() updatedAt: Date
 }

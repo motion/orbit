@@ -1,0 +1,14 @@
+title: none
+author: nick
+integration: slack
+type: chat
+data:
+  messages:
+    - user: nick
+      msg: Hello there from nick
+    - user: nate
+      msg: Hello there from nate
+    - user: jacob
+      msg: Hello there from jacob
+    - user: steel
+      msg: Hello there from steel

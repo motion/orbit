@@ -5,7 +5,7 @@ const DEFAULT_CHECK_INTERVAL = 1000 * 60 // 1 minute
 
 export default class Syncer {
   get token() {
-    return this.setting.values.token
+    return this.setting.token
   }
 
   constructor(type, { setting, settings, actions, syncers }) {
@@ -22,12 +22,12 @@ export default class Syncer {
     this.check(false)
   }
 
-  async run(action) {
+  run = async action => {
     if (!action) {
       throw new Error('Must provide action')
     }
     if (!this.token) {
-      log(`run() no token! ${this.type} ${action}`)
+      console.log(`run() no token ${this.type} ${action}`)
       return
     }
     this.ensureSetting()
@@ -35,12 +35,13 @@ export default class Syncer {
     if (!this.actions[action]) {
       console.warn('NO SYNCER FOUND', action)
     } else {
-      await this.actions[action].run()
+      await this.syncers[action].run()
     }
   }
 
   async runAll() {
-    await Promise.all(Object.keys(this.actions).map(x => this.run(x)))
+    console.log('this.actions', this.actions)
+    await Promise.all(Object.keys(this.actions).map(this.run))
   }
 
   async check(loud = true) {

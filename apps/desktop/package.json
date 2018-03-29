@@ -21,6 +21,7 @@
     "@mcro/macros": "*",
     "@mcro/models": "*",
     "@mcro/examples": "*",
+    "js-yaml": "^3.11.0",
     "typeorm": "0.1.19",
     "file-icon": "^2.1.0",
     "recursive-readdir": "^2.2.2",

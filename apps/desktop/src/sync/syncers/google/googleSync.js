@@ -6,7 +6,7 @@ import * as Constants from '~/constants'
 const getHelpers = setting => ({
   clientId: Constants.GOOGLE_CLIENT_ID,
   baseUrl: 'https://content.googleapis.com',
-  fetch: async (refreshToken, path, opts = {}) => {
+  async fetch(refreshToken, path, opts = {}) {
     const res = await fetch(
       `${this.baseUrl}${path}${
         opts.query ? `?${new URLSearchParams(Object.entries(opts.query))}` : ''
@@ -49,7 +49,7 @@ export default setting => {
     setting,
     actions: {
       // drive: { every: 60 },
-      cal: { every: 60 * 5 }, // 5 minutes
+      // cal: { every: 60 * 5 }, // 5 minutes
     },
     syncers: {
       drive: new GoogleDriveSync(setting, helpers),

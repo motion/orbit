@@ -9,7 +9,7 @@ export const IS_PROD =
 export const IS_DEV = !IS_PROD
 export const VERSION = require('../package.json').version
 
-export const BORDER_RADIUS = 11
+export const BORDER_RADIUS = 10
 export const SHADOW_PAD = 16
 export const APP_SHADOW = [[0, 3, SHADOW_PAD, [0, 0, 0, 0.2]]]
 export const ORBIT_COLOR = UI.color('#714842')

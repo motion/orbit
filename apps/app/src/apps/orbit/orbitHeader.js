@@ -57,12 +57,14 @@ export default class PeekHeader {
         $headerVisible={App.isShowingHeader}
         css={{
           boxShadow: [
-            'inset',
-            0,
-            0,
-            0,
-            0.5,
-            theme.base.background.darken(0.1).desaturate(0.3),
+            [
+              'inset',
+              0,
+              0,
+              0,
+              0.5,
+              theme.base.background.darken(0.1).desaturate(0.3),
+            ],
           ],
           borderTopLeftRadius: Electron.orbitOnLeft
             ? Constants.BORDER_RADIUS
@@ -96,7 +98,7 @@ export default class PeekHeader {
           $onLeft={Electron.orbitOnLeft}
           $onRight={!Electron.orbitOnLeft}
           css={{
-            transition: 'all ease-in 50ms 150ms',
+            transition: 'all ease-in 150ms 150ms',
             opacity: Electron.orbitState.pinned ? 1 : 0,
             boxShadow: ['inset', 0, 0.5, 0, 1, '#000'],
             padding: 3,
@@ -104,31 +106,20 @@ export default class PeekHeader {
             border: [4, headerBg],
           }}
         >
-          <logo
+          <UI.Icon
+            color={
+              Electron.orbitState.pinned
+                ? Constants.ORBIT_COLOR.lighten(0.25)
+                : Constants.ORBIT_COLOR.lighten(0.5)
+            }
+            size={12}
+            name="pin"
             css={{
               width: 9,
               height: 9,
-              background: Electron.orbitState.pinned
-                ? Constants.ORBIT_COLOR.lighten(0.3)
-                : darkerBg,
               borderRadius: 1000,
             }}
-          >
-            <UI.Arrow
-              towards="bottom"
-              background={Constants.ORBIT_COLOR.lighten(0.3)}
-              size={9}
-              css={{
-                position: 'absolute',
-                bottom: -5,
-                opacity: Electron.orbitState.pinned ? 1 : 0,
-                transition: 'all ease-in 50ms',
-                transform: {
-                  y: Electron.orbitState.pinned ? 0 : -5,
-                },
-              }}
-            />
-          </logo>
+          />
         </logoButton>
       </header>
     )

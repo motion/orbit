@@ -58,6 +58,8 @@ const OrbitArrow = view(({ background, orbitOnLeft, arrowSize, css }) => {
       size={arrowSize}
       towards={Electron.orbitArrowTowards}
       background={background}
+      boxShadow={[['inset', 0, 0, 0, 0.5, background.darken(0.25)]]}
+      // border={[1, '#000']}
       css={{
         position: 'absolute',
         ...arrowStyle,
@@ -71,7 +73,7 @@ const OrbitArrow = view(({ background, orbitOnLeft, arrowSize, css }) => {
         opacity: App.isShowingOrbit ? 1 : 0,
         transform: {
           x: App.isShowingOrbit
-            ? 0
+            ? orbitOnLeft ? -0.5 : 0.5
             : (orbitOnLeft ? -arrowSize : arrowSize) / 3,
         },
         ...css,
@@ -146,14 +148,8 @@ export default class OrbitFrame {
   render({ store, orbitPage, children, theme, headerBg }) {
     const { fullScreen } = Electron.orbitState
     const { orbitOnLeft } = Electron
-    const borderShadow = [
-      'inset',
-      0,
-      0,
-      0,
-      1,
-      theme.base.background.darken(0.1).desaturate(0.3),
-    ]
+    const borderColor = theme.base.background.darken(0.1).desaturate(0.3)
+    const borderShadow = ['inset', 0, 0, 0, 0.5, borderColor]
     const boxShadow = fullScreen
       ? [APP_SHADOW, borderShadow]
       : [orbitLightShadow, borderShadow]
@@ -162,16 +158,17 @@ export default class OrbitFrame {
       !App.isShowingOrbit && (store.isRepositioning || store.isDragging)
     log(`OrbitFrame onLeft ${orbitOnLeft} hide ${hide}`)
     return (
-      <orbitFrame css={{ flex: 1, opacity: hide ? 0 : 1 }}>
+      <orbitFrame
+        css={{
+          flex: 1,
+          opacity: hide ? 0 : 1,
+        }}
+      >
         <OrbitArrow
           if={App.isAttachedToWindow}
           arrowSize={arrowSize}
           orbitOnLeft={orbitOnLeft}
-          background={
-            orbitOnLeft
-              ? `linear-gradient(to right, ${headerBg}, #fff)`
-              : `linear-gradient(ro right, #fff, ${headerBg})`
-          }
+          background={headerBg}
         />
         <Indicator
           if={!fullScreen}
@@ -194,6 +191,7 @@ export default class OrbitFrame {
         >
           <orbit
             css={{
+              borderRight: orbitOnLeft ? [1, 'red'] : 0,
               paddingRight: fullScreen ? 0 : SHADOW_PAD,
               ...(App.isShowingOrbit
                 ? {
@@ -206,8 +204,8 @@ export default class OrbitFrame {
                     opacity: 0,
                     transform: {
                       x: orbitOnLeft
-                        ? 330 / 2 - SHADOW_PAD - (SHADOW_PAD + iWidth) + 4
-                        : -(330 / 2),
+                        ? 330 * 0.25 - SHADOW_PAD - (SHADOW_PAD + iWidth) + 4
+                        : -(330 * 0.25),
                     },
                   }),
             }}

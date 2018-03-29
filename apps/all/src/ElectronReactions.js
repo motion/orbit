@@ -134,8 +134,8 @@ export default class ElectronReactions {
       if (App.state.orbitHidden) {
         await sleep(150)
         Electron.shouldShow()
-        await sleep(3500)
-        Electron.setPinned(true)
+        // await sleep(3500)
+        // Electron.setPinned(true)
       }
     },
   ]

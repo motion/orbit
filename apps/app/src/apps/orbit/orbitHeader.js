@@ -174,9 +174,9 @@ export default class PeekHeader {
       opacity: 0.2,
       '&:hover': {
         opacity: 0.4,
-      }
+      },
     },
-    isPinned {
+    isPinned: {
       opacity: 0.9,
       '&:hover': {
         opacity: 1,

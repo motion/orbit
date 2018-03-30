@@ -13,8 +13,31 @@ function attachWatch(val, userOptions) {
 export default function watch(a, b, c) {
   // passing options
   if (!b) {
-    return (...args) => doWatch(...args, a)
+    const options = a
+    return (target, method, _descriptor) => {
+      let descriptor = _descriptor
+      const autorungetter = () => {}
+      autorungetter.IS_AUTO_RUN = true
+      autorungetter.options = options
+      if (!descriptor) {
+        return {
+          set(value) {
+            console.log('set to', value)
+            autorungetter.value = value
+          },
+          get: autorungetter,
+        }
+      }
+      return doWatch(target, method, descriptor, options)
+    }
   } else {
+    if (!c) {
+      return {
+        set(value) {
+          console.log('set to', value)
+        },
+      }
+    }
     return doWatch(a, b, c)
   }
 }
@@ -29,8 +52,8 @@ function doWatch(
   if (validWatch(target)) {
     return attachWatch(target, userOptions)
   }
-
   // decorator
+  // console.log('descriptor', target, method, descriptor)
   if (descriptor.initializer) {
     const ogInit = descriptor.initializer
     return {

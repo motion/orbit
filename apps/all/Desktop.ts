@@ -1,51 +1,49 @@
-// @flow
 import Bridge from './helpers/Bridge'
-import proxySetters from './helpers/proxySetters'
+import { setGlobal, proxySetters } from './helpers'
 import { store, react } from '@mcro/black/store'
-import global from 'global'
 
 // const log = debug('Desktop')
 const PAD_WINDOW = 15
 
 type AppState = {
-  id: string,
-  name: string,
-  offset: [Number, Number],
-  bounds: [Number, Number],
+  id: string
+  name: string
+  offset: [Number, Number]
+  bounds: [Number, Number]
 }
 
 type OCRItem = {
-  word?: string,
-  weight: Number,
-  top: Number,
-  left: Number,
-  width: Number,
-  height: Number,
+  word?: string
+  weight: Number
+  top: Number
+  left: Number
+  width: Number
+  height: Number
 }
 
 export type DesktopState = {
-  appState?: AppState,
-  lastScreenChange: Number,
-  lastAppChange: Number,
+  appState?: AppState
+  lastScreenChange: Number
+  lastAppChange: Number
   mouseState: {
-    position: { x: Number, y: Number },
-    mouseDown?: { x: Number, y: Number, at: Number },
-  },
-  keyboardState: Object,
-  highlightWords: { [String]: boolean },
+    position: { x: Number; y: Number }
+    mouseDown?: { x: Number; y: Number; at: Number }
+  }
+  keyboardState: { option?: Date; optionUp?: Date; space?: Date }
+  highlightWords: { [key: string]: boolean }
   ocrState: {
-    words?: [OCRItem],
-    lines?: [OCRItem],
-    clearWords: { [String]: Number },
-    restoreWords: { [String]: Number },
-  },
-  focusedOnOrbit: boolean,
-  appStateUpdatedAt: Number,
+    words?: [OCRItem]
+    lines?: [OCRItem]
+    clearWords: { [key: string]: Number }
+    restoreWords: { [key: string]: Number }
+  }
+  focusedOnOrbit: boolean
+  appStateUpdatedAt: Number
   searchState: {
-    pluginResults: [{}],
-    indexStatus: String,
-    searchResults: [{}],
-  },
+    pluginResults: [{}]
+    indexStatus: String
+    searchResults: [{}]
+  }
 }
 
 let Desktop
@@ -100,7 +98,7 @@ class DesktopStore {
   ]
 
   get isHoldingOption(): Boolean {
-    const { option, optionUp } = Desktop.keyboardState
+    const { option, optionUp } = Desktop.state.keyboardState
     return (option || 0) > (optionUp || 1)
   }
 
@@ -140,6 +138,8 @@ class DesktopStore {
     )
   }
 
+  setState: Function
+
   start = options => {
     Bridge.start(this, this.state, options)
     this.setState = Bridge.setState
@@ -147,7 +147,7 @@ class DesktopStore {
 
   // only clear if necessary
   clearOption = () => {
-    const { option, optionUp } = this.state
+    const { option, optionUp } = Desktop.state.keyboardState
     if (!option || !optionUp || option > optionUp) {
       Desktop.setKeyboardState({ optionUp: Date.now() })
     }
@@ -155,7 +155,7 @@ class DesktopStore {
 }
 
 Desktop = proxySetters(new DesktopStore())
-global.Desktop = Desktop
+setGlobal('Desktop', Desktop)
 Bridge.stores[Desktop.source] = Desktop
 
 export default Desktop

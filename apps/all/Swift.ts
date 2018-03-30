@@ -1,21 +1,24 @@
 import { store } from '@mcro/black/store'
 import WebSocket from './helpers/websocket'
-import ReconnectingWebSocket from 'reconnecting-websocket'
+import * as ReconnectingWebSocket from 'reconnecting-websocket'
 import Desktop from './Desktop'
+import debug from '@mcro/debug'
 
 const log = debug('Swift')
 
 @store
 class Swift {
+  ws: ReconnectingWebSocket
   isOpen = false
   state = {
     isRunning: false,
     isPaused: false,
   }
   queuedMessages = []
+  onStateChange: Function
 
-  constructor({ onStateChange } = {}) {
-    this.onStateChange = onStateChange || (_ => _)
+  constructor(props = { onStateChange: _ => _ }) {
+    this.onStateChange = props.onStateChange
     this._setupLink()
   }
 

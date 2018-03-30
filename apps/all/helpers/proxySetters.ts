@@ -4,7 +4,7 @@ const getStateKey = key => {
   return unCapital
 }
 
-export default function decorateProxySetters(klass) {
+export function proxySetters(klass) {
   return new Proxy(klass, {
     get(target, method) {
       if (Reflect.has(target, method) || typeof method !== 'string') {

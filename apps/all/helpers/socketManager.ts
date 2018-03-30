@@ -1,10 +1,14 @@
-// @flow
 import { Server } from 'ws'
+import debug from '@mcro/debug'
 
 const log = debug('scrn')
 
 export default class SocketManager {
   activeSockets = []
+  onState: Function
+  actions: Object
+  port: number
+  wss: Server
 
   constructor({ port, actions, onState }) {
     this.onState = onState
@@ -39,7 +43,11 @@ export default class SocketManager {
     }
   }
 
-  sendAll = (source: string, state: Object, { skipUID } = {}) => {
+  sendAll = (
+    source: string,
+    state: Object,
+    { skipUID }: { skipUID?: number } = {},
+  ) => {
     if (!source) {
       throw new Error(`No source (${source}) provided to state message
         ${JSON.stringify(state, 0, 2)}`)

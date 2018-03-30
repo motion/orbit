@@ -1,10 +1,9 @@
-// @flow
 import Bridge from './helpers/Bridge'
-import proxySetters from './helpers/proxySetters'
+import { proxySetters, setGlobal } from './helpers'
 import { store, react } from '@mcro/black/store'
-import global from 'global'
 import Desktop from './Desktop'
 import Electron from './Electron'
+import AppReactions from './AppReactions'
 
 const isBrowser = typeof window !== 'undefined'
 // const log = debug('App')
@@ -63,6 +62,8 @@ class AppStore {
   @react({ delay: 32, log: isBrowser })
   isFullyShown = [() => App.isShowingOrbit && !App.isAnimatingOrbit, _ => _]
 
+  last: Boolean
+
   @react
   wasShowingPeek = [
     () => App.isShowingPeek,
@@ -93,6 +94,10 @@ class AppStore {
     )
   }
 
+  setState: Function
+  bridge: any
+  reactions: AppReactions
+
   start(options) {
     Bridge.start(this, this.state, options)
     this.setState = Bridge.setState
@@ -102,6 +107,7 @@ class AppStore {
   runReactions() {
     // hmr protect
     if (this.reactions) return
+    // @ts-ignore
     const AppReactions = require('./AppReactions').default
     this.reactions = new AppReactions()
   }
@@ -124,7 +130,7 @@ class AppStore {
 }
 
 App = proxySetters(new AppStore())
-global.App = App
+setGlobal('App', App)
 Bridge.stores[App.source] = App
 
 export default App

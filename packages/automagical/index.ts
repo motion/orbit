@@ -195,11 +195,16 @@ function isRxDbQuery(query: any): boolean {
 
 function decorateClassWithAutomagic(obj: MagicalObject) {
   const descriptors = {
-    ...Object.getOwnPropertyDescriptors(obj),
+    ...Object.keys(obj).reduce(
+      (a, b) => ({ ...a, [b]: Object.getOwnPropertyDescriptor(obj, b) }),
+      {},
+    ),
     ...collectGetterPropertyDescriptors(Object.getPrototypeOf(obj)),
   }
+  console.log('all descriptors', descriptors)
   // mutate to be mobx observables
   for (const method of Object.keys(descriptors)) {
+    if (method === '__automagical') continue
     decorateMethodWithAutomagic(obj, method, descriptors[method])
   }
 }
@@ -211,6 +216,15 @@ function decorateMethodWithAutomagic(
   descriptor: PropertyDescriptor,
 ) {
   // @computed get (do first to avoid hitting the getter on next line)
+  if (descriptor && descriptor.get && descriptor.get.IS_AUTO_RUN) {
+    console.log('setting up ts watcher', descriptor.get.value)
+    return mobxifyWatch(
+      target,
+      method,
+      descriptor.get.value,
+      descriptor.get.options,
+    )
+  }
   if (descriptor && (!!descriptor.get || !!descriptor.set)) {
     if (descriptor.get) {
       Mobx.extendObservable(target, {

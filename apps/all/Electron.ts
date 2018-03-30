@@ -1,9 +1,10 @@
-// @flow
 import Bridge from './helpers/Bridge'
-import proxySetters from './helpers/proxySetters'
+import { setGlobal, proxySetters } from './helpers'
 import { store, react } from '@mcro/black/store'
 import global from 'global'
 import App from './App'
+import ElectronReactions from './ElectronReactions'
+import debug from '@mcro/debug'
 
 const log = debug('ElectronStore')
 
@@ -48,6 +49,9 @@ class ElectronStore {
       setValue(over)
     },
   ]
+
+  setState: Function
+  reactions: ElectronReactions
 
   start(options) {
     Bridge.start(this, this.state, options)
@@ -146,8 +150,7 @@ class ElectronStore {
       const [peekX, peekY] = [orbitX + orbitW, orbitY]
       log(`toggle fullscreen`)
       Electron.setState({ willFullScreen: Date.now() })
-      clearTimeout(this.show)
-      this.show = setTimeout(() => {
+      setTimeout(() => {
         Electron.setOrbitState({
           position: [orbitX, orbitY].map(round),
           size: [orbitW, orbitH].map(round),
@@ -168,6 +171,6 @@ class ElectronStore {
 
 Electron = proxySetters(new ElectronStore())
 Bridge.stores[Electron.source] = Electron
-global.Electron = Electron
+setGlobal('Electron', Electron)
 
 export default Electron

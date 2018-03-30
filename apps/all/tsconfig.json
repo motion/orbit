@@ -1,22 +1,24 @@
 {
   "compilerOptions": {
     "module": "CommonJS",
+    "target": "es2017",
     "noImplicitAny": false,
     "removeComments": true,
     "preserveConstEnums": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "outDir": "lib",
+    "outDir": "_",
+    "allowJs": true,
     "sourceMap": true,
-    "skipLibCheck": true,
-    "lib": ["dom", "webworker", "es6"],
+    // "skipLibCheck": true,
+    "lib": ["es6", "dom"],
     "baseUrl": "/",
     "paths": {
       "~/*": ["*"]
     }
   },
   "include": ["/**/*"],
-  "exclude": ["lib", "node_modules"],
+  "exclude": ["_", "node_modules"],
   "typeAcquisition": {
     "enable": true
   }

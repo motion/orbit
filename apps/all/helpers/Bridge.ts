@@ -1,14 +1,15 @@
-// @flow
 import { action } from 'mobx'
 import { mergeWith, isPlainObject } from 'lodash'
-import ReconnectingWebSocket from 'reconnecting-websocket'
+import * as ReconnectingWebSocket from 'reconnecting-websocket'
 import WebSocket from './websocket'
-import waitPort from 'wait-port'
+import * as waitPort from 'wait-port'
 import * as Mobx from 'mobx'
-import stringify from 'stringify-object'
-import global from 'global'
+import * as stringify from 'stringify-object'
+import T_SocketManager from './socketManager'
+import debug from '@mcro/debug'
 
 const log = debug('Bridge')
+const root = typeof window !== 'undefined' ? window : require('global')
 
 const stringifyObject = obj =>
   stringify(obj, {
@@ -24,10 +25,18 @@ const requestIdle = () =>
       typeof window !== 'undefined' ? window.requestIdleCallback(res) : res(),
   )
 
+type Options = {
+  master?: Boolean
+  ignoreSelf?: Boolean
+  stores?: Object
+}
+
 // we want non-granular updates on state changes
 class Bridge {
+  store: any
+  socketManager: T_SocketManager
   _store = null
-  _options = {}
+  _options: Options
   _queuedState = false
   _wsOpen = false
   _source = ''
@@ -41,7 +50,7 @@ class Bridge {
   }
 
   // note: you have to call start to make it explicitly connect
-  start = async (store, initialState, options = {}) => {
+  start = async (store, initialState, options: Options = {}) => {
     if (!store) {
       throw new Error(`No source given for starting screen store`)
     }
@@ -228,7 +237,12 @@ class Bridge {
   // private
   // return keys of changed items
   @action
-  _update(stateObj, newState, isInternal, ignoreLog) {
+  _update(
+    stateObj: Object,
+    newState: Object,
+    isInternal?: Boolean,
+    ignoreLog?: Boolean,
+  ) {
     const changed = {}
     for (const key of Object.keys(newState)) {
       if (isInternal && typeof this._initialState[key] === 'undefined') {
@@ -237,9 +251,9 @@ class Bridge {
             - key: ${key}
             - typeof initial state key: ${typeof this._initialState[key]}
             - value:
-              ${stringifyObject(newState, 0, 2)}
+              ${stringifyObject(newState)}
             - initial state:
-              ${stringifyObject(this._initialState, 0, 2)}`,
+              ${stringifyObject(this._initialState)}`,
         )
         return changed
       }
@@ -266,8 +280,8 @@ class Bridge {
         }
       }
     }
-    if (global.__trackStateChanges && global.__trackStateChanges.isActive) {
-      global.__trackStateChanges.changed = changed
+    if (root.__trackStateChanges && root.__trackStateChanges.isActive) {
+      root.__trackStateChanges.changed = changed
     } else {
       if (process.env.NODE_ENV === 'development') {
         if (!ignoreLog && isInternal && Object.keys(changed).length) {

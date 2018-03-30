@@ -2,9 +2,10 @@
   "name": "@mcro/all",
   "private": true,
   "version": "4.0.0",
-  "main": "es6/index",
+  "main": "_/index",
+  "types": "./index.d.ts",
   "scripts": {
-    "build": "build es6",
+    "build": "tsc",
     "watch": "npm run build -- --watch"
   },
   "dependencies": {
@@ -21,6 +22,10 @@
     "fuzzysort": "^1.1.1",
     "ws": "^5.1.0",
     "kill-port": "^1.1.0"
+  },
+  "devDependencies": {
+    "@types/ws": "^4.0.2",
+    "@types/reconnectingwebsocket": "^1.0.1"
   },
   "peerDependencies": {
     "mobx": "*",

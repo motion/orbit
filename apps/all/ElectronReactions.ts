@@ -5,8 +5,10 @@ import Desktop from './Desktop'
 import Electron from './Electron'
 import orbitPosition from './helpers/orbitPosition'
 import screenSize from './helpers/screenSize'
+import debug from '@mcro/debug'
 
 const log = debug('ElectronReactions')
+
 const appTarget = ({ offset, bounds }) => {
   if (!offset || !bounds) return null
   const [left, top] = offset

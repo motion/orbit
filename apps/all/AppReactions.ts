@@ -1,4 +1,3 @@
-// @flow
 import { store, react } from '@mcro/black/store'
 import Desktop from './Desktop'
 import Electron from './Electron'

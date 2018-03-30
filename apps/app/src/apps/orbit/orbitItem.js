@@ -47,7 +47,7 @@ export default class Item {
         glow={false}
         background={isSelected ? [255, 255, 255, 0.25] : 'transparent'}
         glowProps={glowProps}
-        padding={[10, 11]}
+        padding={[16, 11]}
         onClick={this.onClick}
         {...props}
       >
@@ -79,7 +79,7 @@ export default class Item {
         </Text>
         <Text size={1} sizeLineHeight={1.15}>
           <SubTitle if={false}>Section 1</SubTitle>
-          <P selectable>{result.sentence || ''}</P>
+          <P selectable>{result.sentence || 'Lorem Ipsum dolor sit amet'}</P>
         </Text>
       </Surface>
     )

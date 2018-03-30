@@ -10,6 +10,7 @@ import React from 'react'
 import { render } from '@mcro/reactron'
 import { extras } from 'mobx'
 import Electron from './Electron'
+import waitPort from 'wait-port'
 
 Error.stackTraceLimit = Infinity
 
@@ -36,8 +37,10 @@ extras.shareGlobalState()
 
 let started = false
 
-export function start() {
+export async function start() {
   if (started) return
+  await waitPort({ port: 3002 })
+  await waitPort({ port: 3001 })
   started = true
   console.warn(`$ NODE_ENV=${process.env.NODE_ENV} run electron`)
   render(<Electron />)

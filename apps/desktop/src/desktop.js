@@ -64,9 +64,7 @@ export default class DesktopRoot {
     debugState(({ stores }) => {
       this.stores = stores
     })
-
     this.openAppOnSelect()
-
     // temp: get context
     setInterval(async () => {
       if (Desktop.appState.name === 'Chrome') {

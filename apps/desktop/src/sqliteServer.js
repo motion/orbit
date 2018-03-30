@@ -23,42 +23,15 @@ function prettyPrintArgs(args) {
   }
 }
 
-let lock
-let queue = []
-let numConnections = 0
-
-async function processQueue() {
-  if (!queue.length) return
-  while (queue.length) {
-    console.log('clear queue')
-    // mutate remove one
-    await runWithLock(...queue.shift())
-  }
-  console.log('clear queue done')
-  if (queue.length) processQueue()
-}
-
-async function runWithLock(uid, run) {
-  if (lock && lock !== uid) {
-    console.log('queue on', uid)
-    queue.push(run)
-  } else {
-    await run()
-    if (!lock) {
-      processQueue()
-    }
-  }
-}
-
+let id = 0
 function onConnection(options, spark) {
-  let uid = ++numConnections
+  let uid = ++id
   spark.on('data', data => {
     onData(options, spark, data, uid)
-    // runWithLock(uid, run)
   })
 }
 
-async function onData(options, spark, data, uid) {
+async function onData(options, spark, data) {
   let { name } = data.args[0]
   // if (typeof name === 'undefined') {
   //   name = 'database'
@@ -162,17 +135,7 @@ async function onData(options, spark, data, uid) {
         })
         return
       }
-      // console.log('setting query array', JSON.stringify(data))
       const queries = data.args[0].executes
-      // if (queries[0].sql === 'BEGIN TRANSACTION') {
-      //   spark.write({
-      //     command: 'backgroundExecuteSqlBatchComplete',
-      //     err: null,
-      //     answer: [],
-      //     id: data.id,
-      //   })
-      //   return
-      // }
       await runQueries(data.id, spark, db, queries, [])
   }
 }

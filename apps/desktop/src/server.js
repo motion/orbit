@@ -9,7 +9,7 @@ import OAuth from './server/oauth'
 import OAuthStrategies from './server/oauth.strategies'
 import Passport from 'passport'
 import killPort from 'kill-port'
-import getEmbedding from './embedding'
+// import getEmbedding from './embedding'
 import Fs from 'fs'
 import Path from 'path'
 import * as _ from 'lodash'
@@ -96,13 +96,13 @@ export default class Server {
   }
 
   setupEmbedding() {
-    this.app.get('/sentence', async (req, res) => {
-      console.log('(js) sentence is', req.query.sentence)
-      const raw = await getEmbedding(req.query.sentence)
-      // cut to only a couple decimal places
-      const values = raw.map(word => word.map(i => +i.toFixed(4)))
-      res.json({ values })
-    })
+    // this.app.get('/sentence', async (req, res) => {
+    //   console.log('(js) sentence is', req.query.sentence)
+    //   const raw = await getEmbedding(req.query.sentence)
+    //   // cut to only a couple decimal places
+    //   const values = raw.map(word => word.map(i => +i.toFixed(4)))
+    //   res.json({ values })
+    // })
   }
 
   creds = {}

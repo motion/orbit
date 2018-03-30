@@ -9,7 +9,7 @@
     "outDir": "lib",
     "sourceMap": true,
     "skipLibCheck": true,
-    "lib": ["dom", "webworker", "es2017"],
+    "lib": ["dom", "webworker", "es6"],
     "baseUrl": "src/",
     "paths": {
       "~/*": ["*"]

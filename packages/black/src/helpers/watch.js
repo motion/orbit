@@ -9,34 +9,32 @@ function attachWatch(val, userOptions) {
   return val
 }
 
+function tsWatch(target, options) {
+  const autorungetter = () => {}
+  autorungetter.IS_AUTO_RUN = true
+  autorungetter.options = options
+  return {
+    set(value) {
+      autorungetter.value = value
+    },
+    get: autorungetter,
+  }
+}
+
 // @watch decorator
 export default function watch(a, b, c) {
   // passing options
   if (!b) {
     const options = a
-    return (target, method, _descriptor) => {
-      let descriptor = _descriptor
-      const autorungetter = () => {}
-      autorungetter.IS_AUTO_RUN = true
-      autorungetter.options = options
+    return (target, method, descriptor) => {
       if (!descriptor) {
-        return {
-          set(value) {
-            console.log('set to', value)
-            autorungetter.value = value
-          },
-          get: autorungetter,
-        }
+        return tsWatch(target, options)
       }
       return doWatch(target, method, descriptor, options)
     }
   } else {
     if (!c) {
-      return {
-        set(value) {
-          console.log('set to', value)
-        },
-      }
+      return tsWatch(a)
     }
     return doWatch(a, b, c)
   }

@@ -201,7 +201,6 @@ function decorateClassWithAutomagic(obj: MagicalObject) {
     ),
     ...collectGetterPropertyDescriptors(Object.getPrototypeOf(obj)),
   }
-  console.log('all descriptors', descriptors)
   // mutate to be mobx observables
   for (const method of Object.keys(descriptors)) {
     if (method === '__automagical') continue
@@ -217,7 +216,6 @@ function decorateMethodWithAutomagic(
 ) {
   // @computed get (do first to avoid hitting the getter on next line)
   if (descriptor && descriptor.get && descriptor.get.IS_AUTO_RUN) {
-    console.log('setting up ts watcher', descriptor.get.value)
     return mobxifyWatch(
       target,
       method,

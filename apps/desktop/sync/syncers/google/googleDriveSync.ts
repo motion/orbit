@@ -141,7 +141,7 @@ export default class GoogleDriveSync {
     return meta.map((file, i) => ({ ...file, contents: contents[i] }))
   }
 
-  async getFilesBasic(pages = 1, query) {
+  async getFilesBasic(pages = 1, query = {}) {
     let all = []
     let fetchedPages = 0
     while (fetchedPages < pages) {

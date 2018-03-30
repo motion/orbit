@@ -33,7 +33,7 @@ const getHelpers = setting => ({
         mode: 'cors',
         ...rest,
         headers: {
-          Authorization: `Bearer ${this.token}`,
+          Authorization: `Bearer ${setting.token}`,
           'Access-Control-Allow-Origin': Constants.API_HOST,
           'Access-Control-Allow-Methods': 'GET',
           ...headers,
@@ -60,12 +60,7 @@ const getHelpers = setting => ({
       }
       throw res.error
     }
-    if (res.status === 200) {
-      return res
-    }
-    if (res.status === 403) {
-      return null
-    }
+    return res
   },
 })
 

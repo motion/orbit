@@ -20,16 +20,26 @@ const icons = {
   githubWhite: iconGithubWhite,
 }
 
-export default ({ icon, ...props }) => (
-  <icon
-    css={{
-      display: 'inline-block',
-      width: 25,
-      height: 25,
-      textAlign: 'center',
-    }}
-  >
-    <img if={icons[icon]} src={icons[icon]} {...props} />
-    <UI.Icon if={!icons[icon]} name={icon} css={{ display: 'inline' }} />
-  </icon>
-)
+export default ({ icon, size = 25, ...props }) => {
+  const sizeProps = {
+    width: size,
+    height: size,
+  }
+  return (
+    <icon
+      css={{
+        display: 'inline-block',
+        textAlign: 'center',
+        ...sizeProps,
+      }}
+    >
+      <img if={icons[icon]} src={icons[icon]} {...props} />
+      <UI.Icon
+        if={!icons[icon]}
+        name={icon}
+        css={{ display: 'inline', ...sizeProps }}
+        size={size}
+      />
+    </icon>
+  )
+}

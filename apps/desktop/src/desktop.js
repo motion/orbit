@@ -64,9 +64,7 @@ export default class DesktopRoot {
     debugState(({ stores }) => {
       this.stores = stores
     })
-
     this.openAppOnSelect()
-
     // temp: get context
     setInterval(async () => {
       if (Desktop.appState.name === 'Chrome') {
@@ -94,7 +92,7 @@ export default class DesktopRoot {
   dispose = async () => {
     if (this.disposed) return
     await this.screen.dispose()
-    // this.sync.dispose()
+    this.sync.dispose()
     this.disposed = true
     return true
   }

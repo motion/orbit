@@ -61,7 +61,7 @@ export default class PeekHeader {
             [
               'inset',
               0,
-              0,
+              0.5,
               0,
               0.5,
               theme.base.background.darken(0.1).desaturate(0.3),
@@ -142,9 +142,9 @@ export default class PeekHeader {
       opacity: 1,
     },
     headerBg: background => ({
-      background: background.alpha(0.5),
+      background: background,
       '&:hover': {
-        background: background.lighten(0.05).alpha(0.5),
+        background: background.lighten(0.05),
       },
     }),
     inputLn: {

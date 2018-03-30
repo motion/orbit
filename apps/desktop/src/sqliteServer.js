@@ -23,33 +23,11 @@ function prettyPrintArgs(args) {
   }
 }
 
-let queries = []
-let isRunning = false
-const processQueue = async action => {
-  if (action) {
-    queries.push(action)
-  }
-  if (!queries.length) {
-    return
-  }
-  if (isRunning) {
-    return
-  }
-  const nextQueries = [...queries]
-  queries = []
-  isRunning = true
-  for (const query of nextQueries) {
-    await query()
-  }
-  isRunning = false
-  processQueue()
-}
-
+let id = 0
 function onConnection(options, spark) {
-  spark.on('data', async data => {
-    processQueue(async () => {
-      await onData(options, spark, data)
-    })
+  let uid = ++id
+  spark.on('data', data => {
+    onData(options, spark, data, uid)
   })
 }
 
@@ -157,8 +135,8 @@ async function onData(options, spark, data) {
         })
         return
       }
-      // console.log('setting query array', JSON.stringify(data))
-      await runQueries(data.id, spark, db, data.args[0].executes, [])
+      const queries = data.args[0].executes
+      await runQueries(data.id, spark, db, queries, [])
   }
 }
 

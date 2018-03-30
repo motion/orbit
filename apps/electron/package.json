@@ -53,7 +53,7 @@
     "lodash": "^4.17.4",
     "mobx": "^3.5.0",
     "raf": "^3.4.0",
-    "react": "^16.2.0",
+    "react": "16.2.0",
     "react-dom": "^16.2.0",
     "sb-promisify": "^2.0.2",
     "source-map-support": "^0.5.0",

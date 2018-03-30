@@ -82,10 +82,10 @@ class PeekStore {
       if (Electron.orbitState.fullScreen) {
         return
       }
-      // focus peek new target
-      // if (this.props.electronStore.peekRef) {
-      //   this.props.electronStore.peekRef.focus()
-      // }
+      // focus peek new target to move above orbit
+      if (this.props.electronStore.peekRef) {
+        this.props.electronStore.peekRef.focus()
+      }
       Electron.updatePeek(Electron.currentPeek, peek => {
         Object.assign(peek, peekPosition(peekTarget.position))
       })

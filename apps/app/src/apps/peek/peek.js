@@ -17,7 +17,7 @@ export default class PeekPage {
     if (peekTarget) {
       type = capitalize(peekTarget.type) || 'Empty'
     }
-    const View = PeekContents[type]
+    const PeekContentsView = PeekContents[type]
     const { currentPeek } = Electron
     const { fullScreen } = Electron.orbitState
     if (!peekTarget && !fullScreen) {
@@ -45,7 +45,7 @@ export default class PeekPage {
               background: fullScreen ? theme.base.background : '#fff',
             }}
           >
-            <View item={currentPeek} />
+            <PeekContentsView item={currentPeek} />
           </main>
         </peek>
       </UI.Theme>

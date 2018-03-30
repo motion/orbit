@@ -18,11 +18,11 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 const Desktop = require('./desktop').default
-const dTop = new Desktop()
+const rootStore = new Desktop()
 
 const exitHandler = async code => {
   console.log('handling exit', code)
-  if (await dTop.dispose()) {
+  if (await rootStore.dispose()) {
     // otherwise it wont exit :/
     process.kill(process.pid)
   }
@@ -56,7 +56,7 @@ process.on('unhandledRejection', function(reason, promise) {
 
 export async function run() {
   try {
-    await dTop.start()
+    await rootStore.start()
   } catch (err) {
     log('error', err)
   }

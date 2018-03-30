@@ -9,10 +9,9 @@ import OAuth from './server/oauth'
 import OAuthStrategies from './server/oauth.strategies'
 import Passport from 'passport'
 import killPort from 'kill-port'
-import getEmbedding from './embedding'
+// import getEmbedding from './embedding'
 import Fs from 'fs'
 import Path from 'path'
-import * as _ from 'lodash'
 
 const { SERVER_PORT } = Constants
 
@@ -74,7 +73,7 @@ export default class Server {
     // kill old processes
     await killPort(SERVER_PORT)
     this.app.listen(SERVER_PORT, () => {
-      // log('listening at port', SERVER_PORT)
+      console.log('listening at port', SERVER_PORT)
     })
 
     return SERVER_PORT
@@ -96,13 +95,13 @@ export default class Server {
   }
 
   setupEmbedding() {
-    this.app.get('/sentence', async (req, res) => {
-      console.log('(js) sentence is', req.query.sentence)
-      const raw = await getEmbedding(req.query.sentence)
-      // cut to only a couple decimal places
-      const values = raw.map(word => word.map(i => +i.toFixed(4)))
-      res.json({ values })
-    })
+    // this.app.get('/sentence', async (req, res) => {
+    //   console.log('(js) sentence is', req.query.sentence)
+    //   const raw = await getEmbedding(req.query.sentence)
+    //   // cut to only a couple decimal places
+    //   const values = raw.map(word => word.map(i => +i.toFixed(4)))
+    //   res.json({ values })
+    // })
   }
 
   creds = {}

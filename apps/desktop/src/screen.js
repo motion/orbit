@@ -40,10 +40,29 @@ export default class ScreenMaster {
 
   @react rescanOnNewAppState = [() => Desktop.appState, this.rescanApp]
 
+  // watch paused
+  @react
+  handlePause = [
+    () => Electron.state.shouldPause,
+    () => {
+      const paused = !Desktop.state.paused
+      Desktop.setPaused(paused)
+      if (paused) {
+        Swift.pause()
+      } else {
+        Swift.resume()
+        this.rescanApp()
+      }
+    },
+  ]
+
   @react
   handleOCRWords = [
     () => Desktop.ocrState.words,
     words => {
+      if (!words) {
+        return
+      }
       log(`> ${words.length} words`)
       this.watchBounds('OCR', {
         fps: 12,
@@ -68,25 +87,10 @@ export default class ScreenMaster {
     this.oracle.onWords(words => {
       this.hasResolvedOCR = true
       Desktop.setOcrState({
-        words: words,
+        words,
         updatedAt: Date.now(),
       })
     })
-
-    // watch paused
-    this.react(
-      () => Electron.state.shouldPause,
-      () => {
-        const paused = !Desktop.state.paused
-        Desktop.setPaused(!paused)
-        if (paused) {
-          Swift.pause()
-        } else {
-          Swift.resume()
-          this.rescanApp()
-        }
-      },
-    )
 
     this.oracle.onLines(lines => {
       Desktop.setOcrState({
@@ -242,7 +246,7 @@ export default class ScreenMaster {
 
   async rescanApp() {
     clearTimeout(this.clearOCRTimeout)
-    if (!Desktop.appState.id) {
+    if (!Desktop.appState.id || Desktop.state.paused) {
       return
     }
     const { name, offset, bounds } = Desktop.appState

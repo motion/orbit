@@ -2,6 +2,7 @@ import { react } from '@mcro/black'
 import { App, Desktop } from '@mcro/all'
 import { Bit, Setting } from '@mcro/models'
 import fuzzySort from 'fuzzysort'
+import * as Constants from '~/constants'
 
 // const log = debug('root')
 const presetAnswers = {
@@ -102,6 +103,16 @@ export default class AppStore {
 
   toggleSettings = () => {
     this.showSettings = !this.showSettings
+  }
+
+  checkAuths = async () => {
+    const { error, ...authorizations } = await r2.get(
+      `${Constants.API_URL}/getCreds`,
+    ).json
+    if (error) {
+      console.log('no creds')
+    }
+    return authorizations
   }
 
   startOauth = id => {

@@ -19,7 +19,7 @@
     "lodash": "^4.17.4",
     "mobx": "^3.5.0",
     "mobx-formatters": "^1.0.0",
-    "react": "^16.2.0",
+    "react": "16.2.0",
     "react-dom": "^16.2.0",
     "redbox-react": "^1.5.0"
   }

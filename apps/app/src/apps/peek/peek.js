@@ -27,17 +27,22 @@ export default class PeekPage {
     if (!selectedItem && !fullScreen) {
       return null
     }
+    const onLeft = !fullScreen && Electron.peekState.peekOnLeft
     return (
       <UI.Theme name="tan">
         <peek
           css={{
+            overflow: 'hidden',
             paddingLeft: fullScreen ? 0 : SHADOW_PAD,
+            marginRight: fullScreen ? 0 : !onLeft ? SHADOW_PAD : -SHADOW_PAD,
           }}
           $animate={fullScreen || App.isShowingPeek}
           $peekVisible={App.isShowingPeek}
         >
           <main
             css={{
+              marginRight: fullScreen ? 0 : !onLeft ? -SHADOW_PAD : 0,
+              marginLeft: fullScreen ? 0 : !onLeft ? SHADOW_PAD : 0,
               boxShadow: [
                 APP_SHADOW,
                 fullScreen ? null : ['inset', 0, 0, 0, 0.5, [0, 0, 0, 0.15]],

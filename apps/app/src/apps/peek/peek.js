@@ -70,10 +70,11 @@ export default class PeekPage {
       transition: 'transform linear 80ms',
       flex: 1,
       transform: {
-        y: -20,
+        y: -8,
       },
     },
     animate: {
+      opacity: 1,
       transform: {
         y: 0,
       },

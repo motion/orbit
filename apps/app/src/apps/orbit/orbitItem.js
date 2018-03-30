@@ -65,9 +65,8 @@ export default class Item {
         >
           <OrbitIcon
             icon={result.icon ? `/icons/${result.icon}` : result.integration}
+            size={16}
             css={{
-              width: 22,
-              height: 22,
               marginRight: 3,
               marginBottom: 4,
               display: 'inline-block',

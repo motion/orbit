@@ -1,10 +1,10 @@
 import { action } from 'mobx'
 import { mergeWith, isPlainObject } from 'lodash'
-import * as ReconnectingWebSocket from 'reconnecting-websocket'
+import ReconnectingWebSocket from 'reconnecting-websocket'
 import WebSocket from './websocket'
-import * as waitPort from 'wait-port'
+import waitPort from 'wait-port'
 import * as Mobx from 'mobx'
-import * as stringify from 'stringify-object'
+import stringify from 'stringify-object'
 import T_SocketManager from './socketManager'
 import debug from '@mcro/debug'
 

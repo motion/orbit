@@ -7,7 +7,11 @@ export class Setting extends T.BaseEntity {
   @T.Column({ nullable: true })
   token: string
   @T.Column('simple-json', { default: '{}' })
-  values: Object
+  values: {
+    repos?: Object
+    calendarsActive?: Object
+    syncTokens?: Object
+  }
   @T.CreateDateColumn() createdAt: Date
   @T.UpdateDateColumn() updatedAt: Date
 }

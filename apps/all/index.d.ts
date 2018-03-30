@@ -1,18 +1,15 @@
-interface RequestIdleCallbackHandle {}
-interface RequestIdleCallbackOptions {
+type RequestIdleCallbackHandle = {}
+type RequestIdleCallbackOptions = {
   timeout: number
 }
-interface RequestIdleCallbackDeadline {
+type RequestIdleCallbackDeadline = {
   readonly didTimeout: boolean
   timeRemaining: (() => number)
 }
-
-declare global {
-  interface Window {
-    requestIdleCallback: ((
-      callback: ((deadline: RequestIdleCallbackDeadline) => void),
-      opts?: RequestIdleCallbackOptions,
-    ) => RequestIdleCallbackHandle)
-    cancelIdleCallback: ((handle: RequestIdleCallbackHandle) => void)
-  }
+interface Window {
+  requestIdleCallback: ((
+    callback: ((deadline: RequestIdleCallbackDeadline) => void),
+    opts?: RequestIdleCallbackOptions,
+  ) => RequestIdleCallbackHandle)
+  cancelIdleCallback: ((handle: RequestIdleCallbackHandle) => void)
 }

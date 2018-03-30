@@ -92,7 +92,7 @@ export default class DesktopRoot {
   dispose = async () => {
     if (this.disposed) return
     await this.screen.dispose()
-    // this.sync.dispose()
+    this.sync.dispose()
     this.disposed = true
     return true
   }

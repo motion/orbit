@@ -20,46 +20,46 @@ if (process.env.NODE_ENV === 'development') {
 const Desktop = require('./desktop').default
 const rootStore = new Desktop()
 
-// const exitHandler = async code => {
-//   console.log('handling exit', code)
-//   // if (await rootStore.dispose()) {
-//   //   // otherwise it wont exit :/
-//   //   process.kill(process.pid)
-//   // }
-// }
+const exitHandler = async code => {
+  // console.log('handling exit', code)
+  // // if (await rootStore.dispose()) {
+  // //   // otherwise it wont exit :/
+  // //   process.kill(process.pid)
+  // // }
+}
 
-// // do something when app is closing
-// process.on('exit', exitHandler)
-// // ctrl+c event
-// process.on('SIGINT', exitHandler)
-// // "kill pid" (nodemon)
-// process.on('SIGUSR1', exitHandler)
-// process.on('SIGUSR2', exitHandler)
-// process.on('SIGSEGV', () => {
-//   console.log('Segmentation fault on exit')
-//   exitHandler(1)
-// })
-// // uncaught exceptions
-// process.on('uncaughtException', err => {
-//   console.log('uncaughtException', err.stack)
-// })
-// // promise exceptions
-// process.on('unhandledRejection', function(reason, promise) {
-//   console.log(
-//     'Desktop: Possibly Unhandled Rejection at: Promise ',
-//     promise,
-//     ' reason: ',
-//     reason,
-//   )
-//   console.log(reason.stack)
-// })
+// do something when app is closing
+process.on('exit', exitHandler)
+// ctrl+c event
+process.on('SIGINT', exitHandler)
+// "kill pid" (nodemon)
+process.on('SIGUSR1', exitHandler)
+process.on('SIGUSR2', exitHandler)
+process.on('SIGSEGV', () => {
+  console.log('Segmentation fault on exit')
+  exitHandler(1)
+})
+// uncaught exceptions
+process.on('uncaughtException', err => {
+  console.log('uncaughtException', err.stack)
+})
+// promise exceptions
+process.on('unhandledRejection', function(reason, promise) {
+  console.log(
+    'Desktop: Possibly Unhandled Rejection at: Promise ',
+    promise,
+    ' reason: ',
+    reason,
+  )
+  console.log(reason.stack)
+})
 
-// export async function run() {
-//   try {
-//     // await rootStore.start()
-//   } catch (err) {
-//     log('error', err)
-//   }
-// }
+export async function run() {
+  try {
+    await rootStore.start()
+  } catch (err) {
+    log('error', err)
+  }
+}
 
-// run()
+run()

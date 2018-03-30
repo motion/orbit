@@ -3,7 +3,7 @@
 
 echo $1
 
-if [[ "$1" != "--no-build" ]]; then
+if [[ "$1" == "--build" ]]; then
   (build --watch) &
 fi
 

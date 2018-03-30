@@ -12,7 +12,6 @@ import killPort from 'kill-port'
 // import getEmbedding from './embedding'
 import Fs from 'fs'
 import Path from 'path'
-import * as _ from 'lodash'
 
 const { SERVER_PORT } = Constants
 
@@ -74,7 +73,7 @@ export default class Server {
     // kill old processes
     await killPort(SERVER_PORT)
     this.app.listen(SERVER_PORT, () => {
-      // log('listening at port', SERVER_PORT)
+      console.log('listening at port', SERVER_PORT)
     })
 
     return SERVER_PORT

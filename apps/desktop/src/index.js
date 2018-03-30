@@ -21,11 +21,11 @@ const Desktop = require('./desktop').default
 const rootStore = new Desktop()
 
 const exitHandler = async code => {
-  // console.log('handling exit', code)
-  // // if (await rootStore.dispose()) {
-  // //   // otherwise it wont exit :/
-  // //   process.kill(process.pid)
-  // // }
+  console.log('handling exit', code)
+  if (await rootStore.dispose()) {
+    // otherwise it wont exit :/
+    process.kill(process.pid)
+  }
 }
 
 // do something when app is closing

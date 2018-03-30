@@ -1,21 +1,19 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import { App } from '@mcro/all'
 import PeekHeader from '../peekHeader'
 
 @view
 export class Document {
-  render() {
-    const { selectedItem } = App.state
-    if (!selectedItem) {
+  render({ item }) {
+    if (!item) {
       return null
     }
     return (
       <React.Fragment>
-        <PeekHeader title={selectedItem.title} />
+        <PeekHeader title={item.title} />
         <content
           dangerouslySetInnerHTML={{
-            __html: (selectedItem.text || '').replace('\n', '<br />'),
+            __html: (item.text || '').replace('\n', '<br />'),
           }}
         />
       </React.Fragment>

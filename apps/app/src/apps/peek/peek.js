@@ -12,18 +12,19 @@ console.log('PeekContents', PeekContents)
 @view
 export default class PeekPage {
   render({ theme }) {
-    const { peekTarget } = App.state
+    const { selectedItem } = App.state
     let type = 'Empty'
-    if (peekTarget) {
-      type = capitalize(peekTarget.type) || 'Empty'
+    if (selectedItem) {
+      type = capitalize(selectedItem.type) || 'Empty'
     }
     const PeekContentsView = PeekContents[type]
-    const { currentPeek } = Electron
-    const { fullScreen } = Electron.orbitState
-    if (!peekTarget && !fullScreen) {
-      return null
+    if (!PeekContentsView) {
+      console.error('none', type)
+      return <peek>no pane found</peek>
     }
-    if (!currentPeek) {
+    // const { currentPeek } = Electron
+    const { fullScreen } = Electron.orbitState
+    if (!selectedItem && !fullScreen) {
       return null
     }
     return (
@@ -45,7 +46,7 @@ export default class PeekPage {
               background: fullScreen ? theme.base.background : '#fff',
             }}
           >
-            <PeekContentsView item={currentPeek} />
+            <PeekContentsView item={selectedItem} />
           </main>
         </peek>
       </UI.Theme>

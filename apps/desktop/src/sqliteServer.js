@@ -33,9 +33,9 @@ function onConnection(options, spark) {
 
 async function onData(options, spark, data) {
   let { name } = data.args[0]
-  // if (typeof name === 'undefined') {
-  //   name = 'database'
-  // }
+  if (typeof name === 'undefined') {
+    name = 'database'
+  }
   let db = null
   switch (data.command) {
     case 'open':

@@ -58,9 +58,10 @@ export default class AppStore {
       .go(App.state.query, results, {
         key: 'title',
         threshold: -25,
+        limit: 8,
       })
       .map(x => x.obj)
-    return uniq([...strongTitleMatches, ...results])
+    return uniq([...strongTitleMatches, ...results].slice(0, 12))
   }
 
   @react({ delay: 64 })

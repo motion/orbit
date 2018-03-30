@@ -33,7 +33,7 @@ export default () => {
   return new Promise(resolve => {
     const { output, terminate } = mdfind({
       query: buildQuery(),
-      limit: 8,
+      limit: 1000,
     })
     cancelPrevious = terminate
     const result = []

@@ -38,13 +38,16 @@ export default class Item {
   render({ appStore, index, result, ...props }) {
     const isSelected = appStore.selectedIndex === index
     // log(`OrbitItem isSelected ${isSelected} ${index}`)
+    if (!result) {
+      return null
+    }
     return (
       <Surface
         background="transparent"
         glow={false}
         background={isSelected ? [255, 255, 255, 0.25] : 'transparent'}
         glowProps={glowProps}
-        padding={[10, 11]}
+        padding={[16, 11]}
         onClick={this.onClick}
         {...props}
       >
@@ -62,9 +65,8 @@ export default class Item {
         >
           <OrbitIcon
             icon={result.icon ? `/icons/${result.icon}` : result.integration}
+            size={16}
             css={{
-              width: 22,
-              height: 22,
               marginRight: 3,
               marginBottom: 4,
               display: 'inline-block',
@@ -77,7 +79,7 @@ export default class Item {
         </Text>
         <Text size={1} sizeLineHeight={1.15}>
           <SubTitle if={false}>Section 1</SubTitle>
-          <P selectable>{result.sentence || ''}</P>
+          <P selectable>{result.sentence || 'Lorem Ipsum dolor sit amet'}</P>
         </Text>
       </Surface>
     )

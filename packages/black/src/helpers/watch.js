@@ -9,12 +9,33 @@ function attachWatch(val, userOptions) {
   return val
 }
 
+function tsWatch(target, options) {
+  const autorungetter = () => {}
+  autorungetter.IS_AUTO_RUN = true
+  autorungetter.options = options
+  return {
+    set(value) {
+      autorungetter.value = value
+    },
+    get: autorungetter,
+  }
+}
+
 // @watch decorator
 export default function watch(a, b, c) {
   // passing options
   if (!b) {
-    return (...args) => doWatch(...args, a)
+    const options = a
+    return (target, method, descriptor) => {
+      if (!descriptor) {
+        return tsWatch(target, options)
+      }
+      return doWatch(target, method, descriptor, options)
+    }
   } else {
+    if (!c) {
+      return tsWatch(a)
+    }
     return doWatch(a, b, c)
   }
 }
@@ -29,8 +50,8 @@ function doWatch(
   if (validWatch(target)) {
     return attachWatch(target, userOptions)
   }
-
   // decorator
+  // console.log('descriptor', target, method, descriptor)
   if (descriptor.initializer) {
     const ogInit = descriptor.initializer
     return {

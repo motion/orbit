@@ -12,31 +12,37 @@ console.log('PeekContents', PeekContents)
 @view
 export default class PeekPage {
   render({ theme }) {
-    const { peekTarget } = App.state
+    const { selectedItem } = App.state
     let type = 'Empty'
-    if (peekTarget) {
-      type = capitalize(peekTarget.type) || 'Empty'
+    if (selectedItem) {
+      type = capitalize(selectedItem.type) || 'Empty'
     }
     const PeekContentsView = PeekContents[type]
-    const { currentPeek } = Electron
+    if (!PeekContentsView) {
+      console.error('none', type)
+      return <peek>no pane found</peek>
+    }
+    // const { currentPeek } = Electron
     const { fullScreen } = Electron.orbitState
-    if (!peekTarget && !fullScreen) {
+    if (!selectedItem && !fullScreen) {
       return null
     }
-    if (!currentPeek) {
-      return null
-    }
+    const onLeft = !fullScreen && Electron.peekState.peekOnLeft
     return (
       <UI.Theme name="tan">
         <peek
           css={{
+            overflow: 'hidden',
             paddingLeft: fullScreen ? 0 : SHADOW_PAD,
+            marginRight: fullScreen ? 0 : !onLeft ? SHADOW_PAD : -SHADOW_PAD,
           }}
-          $animate={fullScreen || App.isShowingPeek}
+          $animate={App.isShowingPeek}
           $peekVisible={App.isShowingPeek}
         >
           <main
             css={{
+              marginRight: fullScreen ? 0 : !onLeft ? -SHADOW_PAD : 0,
+              marginLeft: fullScreen ? 0 : !onLeft ? SHADOW_PAD : 0,
               boxShadow: [
                 APP_SHADOW,
                 fullScreen ? null : ['inset', 0, 0, 0, 0.5, [0, 0, 0, 0.15]],
@@ -45,7 +51,7 @@ export default class PeekPage {
               background: fullScreen ? theme.base.background : '#fff',
             }}
           >
-            <PeekContentsView item={currentPeek} />
+            <PeekContentsView item={selectedItem} />
           </main>
         </peek>
       </UI.Theme>
@@ -64,10 +70,11 @@ export default class PeekPage {
       transition: 'transform linear 80ms',
       flex: 1,
       transform: {
-        y: -20,
+        y: -8,
       },
     },
     animate: {
+      opacity: 1,
       transform: {
         y: 0,
       },

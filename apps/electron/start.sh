@@ -3,7 +3,7 @@
 npx nodemon \
   --quiet \
   --watch lib \
-  --watch $(realpath node_modules/@mcro/all)/es6 \
+  --watch $(realpath node_modules/@mcro/all)/_ \
   --watch $(realpath node_modules/@mcro/black)/es6 \
   --watch $(realpath node_modules/@mcro/constants)/es6  \
   --watch $(realpath node_modules/@mcro/reactron)/es6  \

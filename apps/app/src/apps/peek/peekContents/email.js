@@ -3,7 +3,7 @@ import { view } from '@mcro/black'
 import PeekHeader from '../peekHeader'
 
 @view
-export class File {
+export class Email {
   render({ item }) {
     return (
       <content>

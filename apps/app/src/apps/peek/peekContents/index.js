@@ -1,3 +1,5 @@
 export * from './document'
+export * from './email'
 export * from './empty'
+export * from './file'
 export { SettingView as Setting } from './setting'

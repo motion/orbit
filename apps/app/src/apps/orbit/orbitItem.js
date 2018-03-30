@@ -38,6 +38,9 @@ export default class Item {
   render({ appStore, index, result, ...props }) {
     const isSelected = appStore.selectedIndex === index
     // log(`OrbitItem isSelected ${isSelected} ${index}`)
+    if (!result) {
+      return null
+    }
     return (
       <Surface
         background="transparent"

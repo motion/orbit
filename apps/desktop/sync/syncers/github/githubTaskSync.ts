@@ -60,6 +60,7 @@ export default class GithubIssueSync {
   }
 
   run = async () => {
+    console.log('running github task')
     const res = await this.syncRepos()
     console.log('Created', res ? res.length : 0, 'issues', res)
   }

@@ -2,44 +2,70 @@ import Syncer from '../syncer'
 import GoogleDriveSync from './googleDriveSync'
 import GoogleCalSync from './googleCalSync'
 import * as Constants from '~/constants'
+import { URLSearchParams } from 'url'
+import r2 from '@mcro/r2'
 
 const getHelpers = setting => ({
   // clientId: Constants.GOOGLE_CLIENT_ID,
   baseUrl: 'https://content.googleapis.com',
-  async fetch(refreshToken, path, opts = {}) {
-    const res = await fetch(
+  async fetch(
+    path,
+    {
+      headers,
+      body,
+      query,
+      type = 'json',
+      isRetrying,
+      ...rest
+    }: {
+      isRetrying?: boolean
+      type?: string
+      query?: Object
+      headers?: Object
+      body?: Object
+    } = {},
+  ) {
+    const fetcher = r2.get(
       `${this.baseUrl}${path}${
-        opts.query ? `?${new URLSearchParams(Object.entries(opts.query))}` : ''
+        query ? `?${new URLSearchParams(Object.entries(query))}` : ''
       }`,
       {
-        method: 'GET',
         mode: 'cors',
-        ...opts,
-        headers: new Headers({
+        ...rest,
+        headers: {
           Authorization: `Bearer ${this.token}`,
           'Access-Control-Allow-Origin': Constants.API_HOST,
           'Access-Control-Allow-Methods': 'GET',
-          ...opts.headers,
-        }),
-        body: opts.body ? JSON.stringify(opts.body) : null,
+          ...headers,
+        },
+        body: body ? JSON.stringify(body) : null,
       },
     )
+    const res = await fetcher[type]
+    if (res.error) {
+      if (res.error.code === 401 && !isRetrying) {
+        console.log('attempt refresh token')
+        // retry if got new token
+        if (setting.values.oauth.refreshToken) {
+          return await this.fetch(path, {
+            headers,
+            body,
+            query,
+            type,
+            ...rest,
+            isRetrying: true,
+          })
+        }
+        return null
+      }
+      throw res.error
+    }
     if (res.status === 200) {
-      return await res[opts.type || 'json']()
+      return res
     }
     if (res.status === 403) {
       return null
     }
-    if (res.status === 401 && !opts.isRetrying) {
-      // retry if got new token
-      if (refreshToken) {
-        return await this.fetch(path, { ...opts, isRetrying: true })
-      }
-      return null
-    }
-    // gapi returns json errors
-    const { error } = await res.json()
-    throw error
   },
 })
 
@@ -48,7 +74,7 @@ export default setting => {
   return new Syncer('google', {
     setting,
     actions: {
-      // drive: { every: 60 },
+      drive: { every: 60 },
       // cal: { every: 60 * 5 }, // 5 minutes
     },
     syncers: {

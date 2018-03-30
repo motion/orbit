@@ -18,7 +18,11 @@ export default class GoogleDriveSync {
   }
 
   run = async () => {
-    await this.syncFiles()
+    try {
+      await this.syncFiles()
+    } catch (err) {
+      console.error(`Drive sync error ${err.message}`)
+    }
   }
 
   async syncFeed() {
@@ -137,7 +141,7 @@ export default class GoogleDriveSync {
     return meta.map((file, i) => ({ ...file, contents: contents[i] }))
   }
 
-  async getFilesBasic(pages = 1, query: Object = {}) {
+  async getFilesBasic(pages = 1, query) {
     let all = []
     let fetchedPages = 0
     while (fetchedPages < pages) {

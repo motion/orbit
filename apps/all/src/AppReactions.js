@@ -83,7 +83,11 @@ export default class AppReactions {
   hideOrbitOnEsc = [
     () => Desktop.keyboardState.esc,
     () => {
-      if (Desktop.focusedOnOrbit) {
+      if (
+        Desktop.state.focusedOnOrbit ||
+        Electron.orbitState.mouseOver ||
+        Electron.orbitState.fullScreen
+      ) {
         App.setOrbitHidden(true)
       }
     },

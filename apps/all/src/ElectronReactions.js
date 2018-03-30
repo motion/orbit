@@ -77,16 +77,6 @@ export default class ElectronReactions {
     },
   ]
 
-  @react
-  hideFullScreenOnEsc = [
-    () => Desktop.keyboardState.esc,
-    () => {
-      if (Electron.orbitState.fullScreen) {
-        Electron.shouldHide()
-      }
-    },
-  ]
-
   @react({ log: false })
   setMouseOvers = [
     () => [Desktop.mouseState.position, App.state.orbitHidden],

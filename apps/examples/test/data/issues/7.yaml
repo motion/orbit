@@ -1,0 +1,8 @@
+title: Allow reactions in mobile
+author: Nick Cammarata
+integration: github
+type: issue
+text: reactions and GIFs!
+queries:
+  - mobile reactions
+  - reactions

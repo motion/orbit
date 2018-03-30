@@ -1,0 +1,28 @@
+title: none
+integration: slack
+type: chat
+data:
+  messages:
+    - user: dylan
+      msg: when are we planning on shipping 0.2.0
+    - user: jessica
+      msg: Tuesday at some point
+    - user: jessica
+      msg: let me look up when
+    - user: jessica
+      msg: 11:30am
+    - user: dylan
+      msg: okay are we ready with the announcement blog post?
+    - user: john
+      msg: nope, but it'll be ready by Monday
+    - user: dylan
+      msg: who's reviewing
+    - user: john
+      msg: can you?
+    - user: dylan
+      msg: sure
+    - user: john
+      msg: okay will send it on Monday
+queries:
+  - blog post announcing
+  - 0.2.0

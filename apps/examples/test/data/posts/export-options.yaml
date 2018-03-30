@@ -1,0 +1,57 @@
+title: Export Options
+author: Nick Cammarata
+integration: gdocs
+type: document
+body: >
+  Exports are possible on any layer in Figma. Most commonly the Group and Slice primitives work best for export and have the most settings. Each represents a rectangular area to be exported with or without padding for the enclosed geometry.
+
+  You can export your work in Figma by selecting the export icon in the upper right corner of the Toolbar and selecting Export Images.
+
+
+  If you have no export settings added to any layers in your file, you will not see any option to export.
+
+
+  At the bottom of the Inspector is the Export section. Anything you want to export in a file, will first need an export setting selected.
+
+  ## Contents Only.
+  Checked. exports only the current child layers
+  Unchecked. exports all layers that intersect the layer or group boundary
+  If you are exporting a Group, you can also choose to include, or exclude, and background color you have added.
+
+  You can add/remove settings to an export list. The settings include the content scale, suffix, and format. 2x, @2x, PNG is a common export for Retina displays.
+
+  The content scale can be specified as a multiplier (e.g. 0.25x, 1x, 2x, 3x…) with a maximum of 1024x. The content scale can also be specified as the maximum dimension of the content in one dimension (e.g. 242w, 512w, 1024h, …), with the other dimension calculated automatically. Both dimensions must fall below the maximum export size or the exported size is reduced.
+
+  Figma supports exports of up to 32768 x 32768. For the image formats, that represents 2GB of uncompressed data and some viewers may not be able to open large exports.
+
+  Here are some details on our export formats.
+
+  SVG. v1.1, XML vector data with fills/strokes, effects, masks, and images
+
+  Strokes are converted to fills on export.
+  Text is written out as glyphs so the font is not needed.
+  Angular and Diamond Gradient export as a Radial Gradient.
+  Background Blur is not exported.
+  Images are embedded/copied into the SVG.
+  PNG. v1.2, 32-bit RGBA, zlib-based compression
+
+  JPG. 24-bit YCbCr @ 4.4.4 quality, no quantization
+
+  The Export Picker is one method to export from Figma once you have added an export setting. Select the layer and click on the Export toolbar button in the upper right. The Export Picker has the following features.
+
+  Click on the thumbnail and the viewport will jump to that layer on the canvas.
+  Hover over the thumbnail to get the filename exported.
+  Checkboxes control layer export from the picker. These are remembered only for the current session and are not shared with other viewers.
+  Hover over the warning signs to get more detail about export warnings.
+
+  Unaligned origin. export bounds can end up larger due to rounding for example. layer position 0.5,0 and size 100x100 → 101x100 export bound layer position 0,0 and size 100x100 → 100x100 export bounds
+  Duplicate name. name will change to unique name based on current selection
+  Maximum image size exceeded. image will be scaled down by half until it fits (example. 40000x1000 → 20000x500)
+  The Export button (in the bottom right of the Inspector) bypasses the picker (in the upper right corner) and the checkboxes that control layer export. If you select any layer or layers with exports, and then click the Export button, the export occurs and the save dialog is displayed.
+
+  When there is no selection, the entire canvas is considered the current selection, and all exports are available from there. All export buttons with the canvas selected go through the Export Picker.
+
+  Folder names can be added to the layer names of objects. When a folder or multiple exports are encountered, then a zip file is produced containing that content. Save this to a root folder, and unzip it to generate the file and folder content.
+
+  The native Figma app, which you can download here, can write files and folders directly off the root folder that you specify from the save dialog.
+

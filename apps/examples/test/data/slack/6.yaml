@@ -1,0 +1,22 @@
+title: none
+integration: slack
+type: chat
+data:
+  messages:
+    - user: jessica
+      msg: btw I upgraded our fb page to one that could do advertisements
+    - user: dylan
+      msg: cool I think we get some credits for adwords through fuel though
+    - user: jessica
+      msg: okay yeah we can use either platform
+    - user: tim
+      msg: I've heard better things about fb but I'm not sure
+    - user: dylan
+      msg: I think for design, fb might be better. We get more visual space too
+    - user: john
+      msg: I can design a ridiculously pretty ad
+    - user: jessica
+      msg: yes!
+queries:
+  - fb advertisements
+  - adwords

@@ -1,0 +1,9 @@
+title: Mobile viewer loading performance
+author: Nick Cammarata
+integration: github
+type: issue
+text: It’s really important that loading speed is fast on mobile, because downloading heavy files over 4g can take a long time. Perhaps the best way is to store a compression version of the file ahead of time, so that it can be downloaded more quickly.
+queries:
+  - mobile viewer slow
+  - mobile loading
+

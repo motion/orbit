@@ -1,0 +1,9 @@
+title: Improve editor load performance
+author: Nick Cammarata
+integration: github
+type: issue
+text: The editor is currently taking 760ms to load in the latest Chrome. The bulk of this loading time is simply downloading the JS bundle. In fact, by using better compression algorithms, we should be able to get it under 300ms. We should try this as a first step, and then moving forward, see if we can upgrade React to get perf improvements there.
+queries:
+  - editor performance
+  - better editor performance
+  - faster editor

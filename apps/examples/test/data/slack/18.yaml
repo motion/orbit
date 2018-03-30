@@ -1,0 +1,18 @@
+title: none
+integration: slack
+type: chat
+data:
+  messages:
+    - user: evan
+      msg: we should probably talk about how we're going to approach panning in webgl
+    - user: john
+      msg: yeah I was talking to Tim about it yesterday and he wasn't really sure
+    - user: evan
+      msg: how about we grab a meeting room in 20?
+    - user: john
+      msg: yeah @tim you down?
+    - user: tim
+      msg: yeah sounds good
+queries:
+  - webgl
+  - webgl panning with Tim

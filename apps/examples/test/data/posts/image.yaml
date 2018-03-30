@@ -1,0 +1,47 @@
+title:  Image Adjustments
+author: Nick Cammarata
+integration: gdocs
+type: document
+body: >
+  ## Modify the colors of your images
+
+  Sometimes you need to adjust the color of images you're using in your designs. Whereas blend modes affect layers, and can be used as a “workaround” in some situations, these image adjustments affect image fills specifically.
+
+  Adjusting image colors alters the image paints but it is not a destructive act. You can always come back and modify your images in the future.
+
+  Adjust the colors of your images with the steps below.
+
+  Select your image (.jpg or .png) on the canvas
+  Click the image swatch in the Properties Panel on the right side of the canvas
+  This will open up the image picker.
+
+  If you don't have an image on your canvas yet, you can.
+
+  Use one of the shape tools to drag out a shape on your canvas
+  Click the grey image swatch area under Fill in the properties panel
+  Select Image from the drop down menu in the upper left corner of the image picker
+  Click Choose Image to add an image from your computer to the shape you drew
+  In the image picker you'll see 7 options to choose from.
+
+  ## Exposure.
+  Adjust the brightness (overexposure) or darkness (underexposure).
+
+  ## Contrast.
+  Adjust the luminance, or the scale of difference between light and dark portions of your images.
+
+  ## Saturation.
+  Adjust the degree of intensity of the image colors. A low saturation will achieve a black and white image.
+
+  ## Temperature.
+  Adjust the axis between blues (cool) and red (hot) scale of the color wheel.
+
+  ## Tint.
+  Adjust the axis between the green and magenta scale of the color wheel.
+
+  ## Highlights.
+  Adjust the brightness or darkness of already light areas in the image.
+
+  ## Shadows.
+  Adjust the brightness or darkness of already dark areas in the image.
+
+  Be sure to check out our blog post!

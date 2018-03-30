@@ -1,0 +1,8 @@
+title: Multiplayer user list on mobile
+author: Nick Cammarata
+integration: github
+type: issue
+text: There’s no way to expand the list of who is currently in a workspace on mobile. We should add a modal that allows the user to see more items.
+queries:
+  - user list mobile multiplayer
+  - user list mobile

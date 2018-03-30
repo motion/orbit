@@ -1,0 +1,22 @@
+title: none
+integration: slack
+type: chat
+data:
+  messages:
+    - user: nick
+      msg: do we know what we're using for oauth yet? We need to be able to download the Slack chatrooms for the social features.
+    - user: nate
+      msg: I think we're using a library for this somewhere else? @tim
+    - user: tim
+      msg: We tried using Passport but we had some issues.
+    - user: nick
+      msg: is that called on the frontend or backend?
+    - user: tim
+      msg: backend, in node.
+    - user: nick
+      msg: cool - will look into it more!
+queries:
+  - oauth
+  - oauth library
+  - passport
+  - node oauth

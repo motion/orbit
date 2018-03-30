@@ -1,0 +1,17 @@
+title: none
+integration: slack
+type: chat
+data:
+  messages:
+    - user: evan
+      msg: when should we discuss the perf issue for zoom?
+    - user: dylan
+      msg: 3pm? who should be there
+    - user: evan
+      msg: you me and sara probably
+    - user: dylan
+      msg: sara work for you?
+    - user: sara
+      msg: yup!
+queries:
+  - performance issues for zoom

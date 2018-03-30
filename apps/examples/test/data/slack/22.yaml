@@ -1,0 +1,17 @@
+title: none
+integration: slack
+type: chat
+data:
+  messages:
+    - user: evan
+      msg: how are we handling compression during production?
+    - user: evan
+      msg: and how much storage has it saved
+    - user: tom
+      msg: it looks like we can compress it by about 70% using gzip in prod
+    - user: evan
+      msg: oh it's already shipped?
+    - user: tom
+      msg: yep!
+queries:
+  - compressing files

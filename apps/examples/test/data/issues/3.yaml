@@ -1,0 +1,9 @@
+title: Context menu doesn’t show up sometimes
+author: Nick Cammarata
+integration: github
+type: issue
+text: We’ve been getting reports that context menus aren’t showing up in certain situations. It seems to be mainly when the user’s UI thread is blocked, or when there’s a tool selected that isn’t the normal cursor. What should we do for right-click when different tools are selected? Potentially we could have different options for that tool, and autogenerate a context menu based on the settings there.
+queries:
+  - context menu not showing
+  - context menu hidden
+  - context hidden

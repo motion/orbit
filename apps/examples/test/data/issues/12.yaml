@@ -1,0 +1,7 @@
+title: Basic image editing features
+author: Nick Cammarata
+integration: github
+type: issue
+text: How much should we support image editing? Having no image editing capabilities is clearly wrong, because most mockups include at least a few images. At the same time, we don’t want to enter the territory of photoshop.
+queries:
+  - edit images

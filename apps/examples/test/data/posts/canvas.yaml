@@ -1,0 +1,14 @@
+title: Canvas
+author: Nick Cammarata
+integration: gdocs
+type: document
+body: >
+  ## Your workspace in Figma.
+
+  The Canvas in Figma is the backdrop on which all of your frames, groups, and layers live.
+
+  By default, vectors are rendered as resolution-independent paths in the canvas though you can turn on Pixel Preview at 1x and 2x resolutions to enable pixel-precise editing for raster assets.
+
+  You can change the background color of the canvas in the Inspector by de-selecting any layers and clicking the color picker labeled “Background.”
+
+  If you like having Rulers visible on your canvas, you can use the Shift + R shortcut to enable them. You can also use the search feature under the menu icon to search for rulers.

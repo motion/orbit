@@ -1,0 +1,8 @@
+title: Zooming on editor should be on GPU
+author: Nick Cammarata
+integration: github
+type: issue
+text: Currently the editor is loaded on the CPU, which makes sense. However, we should be able to put zoom on the GPU using linear transforms. Evan has done this already in a limited test case, but we haven’t shipped it into the product yet. We should be able to do this in Figma 2.1.0, and we may want to consider adding it to the list of deliverables.
+queries:
+  - editor zoom
+  - zoom speed

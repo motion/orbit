@@ -1,0 +1,17 @@
+title: none
+integration: slack
+type: chat
+data:
+  messages:
+    - user: evan
+      msg: are we launching 0.3 to all users or to a subset first
+    - user: john
+      msg: we're thinking of subsetting it to just educational users first
+    - user: evan
+      msg: which features?
+    - user: john
+      msg: they're tagged on github under #0.3beta
+    - user: evan
+      msg: okay cool
+queries:
+  - 0.3

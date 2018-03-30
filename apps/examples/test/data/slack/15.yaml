@@ -1,0 +1,13 @@
+title: none
+integration: slack
+type: chat
+data:
+  messages:
+    - user: evan
+      msg: weekly meeting in 20m?
+    - user: dylan
+      msg: push back 15m?
+    - user: evan
+      msg: sure
+queries:
+  - pushing back weekly meeting

@@ -1,0 +1,30 @@
+title: Version History
+author: Nick Cammarata
+integration: gdocs
+type: document
+body: >
+  ## View, restore or duplicate an older version of your project file
+
+  ## Overview
+  Version History allows you to view earlier versions of a file and restore or duplicate any version. Versions are automatically saved when there have been no changes to the file for 30 minutes. This means that if you work continuously on a file for 3 hours and then stop editing, one version will be created after 30 minutes of inactivity. Your changes are automatically saved so if you close your tab, your version will still be saved.
+
+  ## Viewing Versions
+  To view a file’s Version History:
+
+  Click a blank area of the Canvas to see the file name in the Toolbar
+  Select the drop down icon to the right of the file name
+  Choose Show Version History
+  Version History will replace the Properties Panel on the right side of the Canvas. You can see when the file was edited and who made the changes.
+
+  To close the Version History view and return to the Properties Panel click the blue Back to Editing button in the upper left corner of the toolbar.
+
+  ## Restoring Versions
+  Clicking a specific version will show that design and reveal who made the changes. You can also click on the menu button (the icon with three dots) to: label, restore, or duplicate the version.
+
+
+  ## Adding a Version
+  You can manually create your own Version History anytime by using the keyboard shortcut Command + Shift + S, or by choosing Save to Version History from the File Menu.
+
+  When you save this version, you’ll be able to add a short description. You can add details to describe the changes you’ve made in this design iteration, or any other details that may be relevant, such as a milestone.
+
+  The first line in your description will be used as the label for the version.

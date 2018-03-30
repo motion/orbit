@@ -1,0 +1,8 @@
+title: UI for download project as image
+author: Nick Cammarata
+integration: github
+type: issue
+text: We’ve heard feedback that it’s confusing how you can download the current workspace as an image. It’s currently available in the file menu under a sub-option, but perhaps we should make it a higher level button above the editor.
+queries:
+  - export image
+  - user interface for downloading project

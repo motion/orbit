@@ -1,0 +1,19 @@
+title: none
+integration: slack
+type: chat
+data:
+  messages:
+    - user: john
+      msg: alright guys, which snacks do we need
+    - user: jessica
+      msg: cheez-its, is that even a question
+    - user: tim
+      msg: beef jerkey that I can chew on for 12h
+    - user: jessica
+      msg: is there any other kind of beef jerkey?
+    - user: tim
+      msg: no need to be a jerkey about it ;)
+    - user: john
+      msg: ordered!
+queries:
+  - office snacks

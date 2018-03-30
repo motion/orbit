@@ -25,17 +25,17 @@ export class Job extends T.BaseEntity {
     COMPLETE: 'COMPLETE',
   }
 
-  static lastPending({ type, action }) {
+  static lastPending(query?: Object) {
     return this.findOne({
-      where: { type, action, status: 'pending' },
+      where: { ...query, status: 'pending' },
       order: { createdAt: 'asc' },
       take: 1,
     })
   }
 
-  static lastCompleted({ type, action }) {
+  static lastCompleted(query?: Object) {
     return this.findOne({
-      where: { type, action, status: 'completed' },
+      where: { ...query, status: 'completed' },
       order: { createdAt: 'asc' },
       take: 1,
     })

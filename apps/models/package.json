@@ -11,7 +11,7 @@
   "dependencies": {
     "@mcro/black": "*",
     "@mcro/debug": "*",
-    "typeorm": "0.1.18",
+    "typeorm": "0.1.19",
     "global": "^4.3.2",
     "reflect-metadata": "^0.1.12",
     "lodash": "^4.17.4"

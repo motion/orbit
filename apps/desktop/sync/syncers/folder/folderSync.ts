@@ -1,19 +1,19 @@
 import Syncer from '../syncer'
-// import * as Constants from '~/constants'
-import { Bit } from '@mcro/models'
+import { Bit, Setting } from '@mcro/models'
 import { createInChunks } from '~/sync/helpers'
 import Path from 'path'
 import Fs from 'fs-extra'
 import readDir from 'recursive-readdir'
 import Yaml from 'js-yaml'
+import debug from '@mcro/debug'
 
 const log = debug('folder')
-// const sleep = ms => new Promise(res => setTimeout(res, ms))
 
 class FolderSync {
-  constructor(setting, helpers) {
+  setting: Setting
+
+  constructor(setting) {
     this.setting = setting
-    this.helpers = helpers
   }
 
   get folders() {
@@ -26,7 +26,7 @@ class FolderSync {
   }
 
   run = async () => {
-    console.log('run folder sync', this.folders)
+    log('run folder sync', this.folders)
     for (const folder of this.folders) {
       await this.syncFolder(folder)
     }
@@ -42,7 +42,6 @@ class FolderSync {
     const title = Path.basename(path)
     const extension = Path.extname(path)
     if (extension !== '.yaml') {
-      console.log('ignore non-yaml')
       return
     }
     const fileStats = await Fs.stat(path)
@@ -73,11 +72,9 @@ class FolderSync {
 }
 
 export default setting => {
-  // const helpers = getHelpers(setting)
   return new Syncer('folder', {
     setting,
     actions: {
-      // drive: { every: 60 },
       folder: { every: 60 * 5 }, // 5 minutes
     },
     syncers: {

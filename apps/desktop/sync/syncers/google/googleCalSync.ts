@@ -1,21 +1,21 @@
 import { Bit, Setting } from '@mcro/models'
 import { createInChunks } from '~/sync/helpers'
 import { flatten } from 'lodash'
+import debug from '@mcro/debug'
+import getHelpers from './getHelpers'
 
 const log = debug('sync googleCal')
 
 export default class GoogleCalSync {
   setting: Setting
-  helpers: {
-    fetch: any
-  }
+  helpers = getHelpers({})
 
   fetch = (path, opts = {}) => this.helpers.fetch(`/calendar/v3${path}`, opts)
   lastSyncTokens = {}
 
-  constructor(setting, helpers) {
+  constructor(setting) {
     this.setting = setting
-    this.helpers = helpers
+    this.helpers = getHelpers(setting)
   }
 
   get activeCals() {

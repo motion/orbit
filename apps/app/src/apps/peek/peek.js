@@ -37,7 +37,7 @@ export default class PeekPage {
             marginRight: fullScreen ? 0 : !onLeft ? SHADOW_PAD : -SHADOW_PAD,
           }}
           $animate={App.isShowingPeek}
-          $peekVisible={App.isShowingPeek}
+          $peekVisible={true || App.isShowingPeek}
         >
           <main
             css={{
@@ -51,7 +51,7 @@ export default class PeekPage {
               background: fullScreen ? theme.base.background : '#fff',
             }}
           >
-            <PeekContentsView item={selectedItem} />
+            <PeekContentsView bit={selectedItem} item={selectedItem} />
           </main>
         </peek>
       </UI.Theme>

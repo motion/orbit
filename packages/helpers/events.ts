@@ -1,4 +1,3 @@
-// @flow
 import { CompositeDisposable } from 'sb-event-kit'
 import global from 'global'
 import _on from './on'

@@ -1,4 +1,3 @@
-// @flow
 import objectPath from 'object-path'
 
 // TODO make mobx-able
@@ -6,12 +5,12 @@ const action = (id, fn) => fn
 
 export type CursorPath = String | Array<string>
 export type Cursor = {
-  get: Function,
-  set: Function,
-  toggle: Function,
-  clear: Function,
-  setter: Function,
-  increment(x: number): () => undefined,
+  get: Function
+  set: Function
+  toggle: Function
+  clear: Function
+  setter: Function
+  increment(x: number): () => undefined
 }
 
 function firstSegment(path: CursorPath): string {

@@ -1,7 +1,5 @@
-// @flow
 import event from 'disposable-event'
 import { Disposable } from 'sb-event-kit'
-// import { Subject, Observable } from 'rxjs'
 
 export default function on(...args): Disposable {
   // allows calling with just on('eventName', callback) and using this
@@ -15,12 +13,17 @@ export default function on(...args): Disposable {
     }
     if (typeof args[1] !== 'function') {
       throw new Error(
-        `Function callback required as second arg when only two args passed`
+        `Function callback required as second arg when only two args passed`,
       )
     }
     return onSomething.call(this, this, ...args)
   }
   return onSomething.call(this, ...args)
+}
+
+type OnAble = {
+  subscribe?: Function
+  emitter?: Function
 }
 
 // listens to a three types of things:
@@ -29,9 +32,9 @@ export default function on(...args): Disposable {
 //    eventListeners (addEventListener, removeEventListener)
 // returns an off function
 function onSomething(
-  target: Object,
+  target: OnAble,
   eventName: String | Function,
-  callback: Function
+  callback: Function,
 ) {
   let disposable
   if (target.subscribe) {

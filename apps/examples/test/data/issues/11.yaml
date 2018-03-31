@@ -1,0 +1,9 @@
+title: Support Drag and Drop API for images outside of browser
+author: Nick Cammarata
+integration: github
+type: issue
+text: We need to look into how to support the drag and drop api as far back as it was available in browsers. We also need to figure out how to upload the image to our server, and which image types we want to support.
+queries:
+  - drag and drop
+  - drop images
+  - images browser

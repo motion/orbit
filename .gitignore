@@ -27,7 +27,6 @@ apps/oracle/orbit/Build
 apps/oracle/swindler/Carthage
 apps/oracle/swindler/Build
 apps/app/build
-apps/desktop/es6
 apps/desktop/build
 apps/desktop/data/database.sqlite
 apps/desktop/data/database
@@ -46,4 +45,4 @@ packages/search/build
 !packages/hmr/es6
 !packages/hmr-view/es6
 !packages/gloss/es6
-!packages/css/es6
+!packages/css/_

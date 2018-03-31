@@ -1,24 +1,43 @@
 import { Bit, Setting, createOrUpdate } from '@mcro/models'
 import { createInChunks } from '~/sync/helpers'
 import debug from '@mcro/debug'
+import getHelpers from './getHelpers'
 
 const log = debug('googleDrive')
 const sleep = ms => new Promise(res => setTimeout(res, ms))
 
+type FileObject = {
+  name: string
+  contents: string
+  id: string
+  spaces?: [string]
+  parents?: [string]
+  createdTime: string
+  modifiedTime: string
+}
+
+type PageQuery = {
+  pageToken?: string
+}
+
 export default class GoogleDriveSync {
-  helpers: Object
+  helpers = getHelpers({})
   setting: Setting
 
-  fetch2 = (path, opts) => this.helpers.fetch(`/drive/v2${path}`, opts)
-  fetch = (path, opts) => this.helpers.fetch(`/drive/v3${path}`, opts)
+  fetch2 = (path, ...rest) => this.helpers.fetch(`/drive/v2${path}`, ...rest)
+  fetch = (path, ...rest) => this.helpers.fetch(`/drive/v3${path}`, ...rest)
 
-  constructor(setting, helpers) {
+  constructor(setting) {
     this.setting = setting
-    this.helpers = helpers
+    this.helpers = getHelpers(setting)
   }
 
   run = async () => {
-    await this.syncFiles()
+    try {
+      await this.syncFiles()
+    } catch (err) {
+      console.error(`Drive sync error ${err.message}`)
+    }
   }
 
   async syncFeed() {
@@ -37,7 +56,7 @@ export default class GoogleDriveSync {
     return results
   }
 
-  async createFile(info: Object) {
+  async createFile(info: FileObject) {
     const { name, contents, ...data } = info
     const created = info.createdTime
     const updated = info.modifiedTime
@@ -86,7 +105,7 @@ export default class GoogleDriveSync {
     return changes
   }
 
-  async fetchChanges(lastPageToken: string, total = 1000) {
+  async fetchChanges(lastPageToken?: string, total = 1000) {
     let pageToken = lastPageToken
     if (!pageToken) {
       pageToken = (await this.fetch('/changes/startPageToken')).startPageToken
@@ -97,6 +116,7 @@ export default class GoogleDriveSync {
       includeTeamDriveItems: true,
       pageSize: Math.min(1000, total),
       spaces: 'drive',
+      pageToken: null,
     }
     if (pageToken) {
       query.pageToken = pageToken
@@ -106,7 +126,7 @@ export default class GoogleDriveSync {
     })
   }
 
-  async getFiles(pages = 1, query?: Object, fileQuery?: Object) {
+  async getFiles(pages = 1, query?: PageQuery, fileQuery?: Object) {
     log(`Getting ${pages} pages of files`)
     const files = await this.getFilesBasic(pages, query)
     // just docs
@@ -130,14 +150,14 @@ export default class GoogleDriveSync {
     return response
   }
 
-  async getFilesWithAllInfo(ids: Array<number>, fileQuery?: Object) {
+  async getFilesWithAllInfo(ids: Array<string>, fileQuery?: Object) {
     const meta = await Promise.all(ids.map(id => this.getFile(id, fileQuery)))
     const contents = await Promise.all(ids.map(id => this.getFileContents(id)))
     // zip
     return meta.map((file, i) => ({ ...file, contents: contents[i] }))
   }
 
-  async getFilesBasic(pages = 1, query: Object = {}) {
+  async getFilesBasic(pages = 1, query: PageQuery = {}) {
     let all = []
     let fetchedPages = 0
     while (fetchedPages < pages) {

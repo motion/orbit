@@ -2,5 +2,6 @@ title: Hello World
 author: nick@gmail.com
 integration: gmail
 type: email
-body: lorem ipsum dolor sit amet
- something something something
+body: >
+  lorem ipsum dolor sit amet
+  something something something

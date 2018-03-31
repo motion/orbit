@@ -23,7 +23,7 @@ const P = p => (
   <Text
     size={1.15}
     css={{ marginBottom: 5, opacity: 0.85 }}
-    highlightWords={['Lorem', 'ipsum', 'adipisicing']}
+    highlightWords={['ipsum', 'adipisicing', 'something']}
     {...p}
   />
 )
@@ -45,7 +45,7 @@ export default class Item {
       <Surface
         background="transparent"
         glow={false}
-        background={isSelected ? [255, 255, 255, 0.25] : 'transparent'}
+        background={isSelected ? [255, 255, 255, 0.6] : 'transparent'}
         glowProps={glowProps}
         padding={[16, 11]}
         onClick={this.onClick}
@@ -74,12 +74,14 @@ export default class Item {
           />{' '}
           {result.title}
         </Title>
-        <Text opacity={0.5} margin={[0, 0, 3]} size={0.95} ellipse>
-          {result.subtitle || ''}
+        <Text opacity={0.5} margin={[3, 0, 6]} size={0.95} ellipse>
+          {result.subtitle || 'Created Jan 24th'}
         </Text>
         <Text size={1} sizeLineHeight={1.15}>
           <SubTitle if={false}>Section 1</SubTitle>
-          <P selectable>{result.sentence || 'Lorem Ipsum dolor sit amet'}</P>
+          <P selectable ellipse={4}>
+            {result.body || 'Lorem Ipsum dolor sit amet'}
+          </P>
         </Text>
       </Surface>
     )

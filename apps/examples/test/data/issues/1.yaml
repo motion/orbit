@@ -1,0 +1,10 @@
+title: Editor doesn't load properly in Safari
+author: Nick Cammarata
+integration: github
+type: issue
+text: This is because Safari doesn’t support new Proxy, which is used in various ways. We have a couple options here shim using a JS library, or rewrite some of the bits to not use the proxy. Since the proxy code isn’t actually necessary, I think we might want to go in that direction. What do you think @John?
+queries:
+  - safari proxy
+  - safari doesn't new proxy
+  - editor doesnt load
+  - editor loading bug

@@ -1,0 +1,15 @@
+title: Exporting Files from Figma
+author: Nick Cammarata
+integration: gdocs
+type: document
+body: >
+  “Copy as SVG” in Figma → “Paste” in Adobe XD
+  “Copy as SVG” in Figma → “Paste” in Affinity Designer
+  Dragging Figma exported SVG files into Sketch and Illustrator works well. Sketch and Illustrator, unfortunately, paste a large blob of SVG XML text even from their own SVG clipboard.
+
+  Figma does not yet export to some vector formats. On macOS, the System Print Dialog provides conversions from SVG to some formats. The quality of this converter varies depending on the features used.
+
+  Export to SVG in Figma → Open SVG in Browser →
+
+  Print → PDF → Save As PDF
+  Print → PDF → Save As Postscript

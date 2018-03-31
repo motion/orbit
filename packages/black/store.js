@@ -1,5 +1,5 @@
-exports.store = require('./es6/store').default
-exports.watch = require('./es6/helpers/watch').default
-exports.log = require('./es6/helpers/log').default
+exports.store = require('./_/store').default
+exports.watch = require('./_/helpers/watch').default
+exports.log = require('./_/helpers/log').default
 exports.react = exports.watch
-Object.assign(exports, require('./es6/helpers/mobx'))
+Object.assign(exports, require('./_/helpers/mobx'))

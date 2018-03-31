@@ -2,7 +2,7 @@
 import 'babel-polyfill'
 import React from 'react'
 import ReactDOM from 'react-dom'
-import createElement from '@mcro/black/es6/createElement'
+import createElement from '@mcro/black/_/createElement'
 import Themes from '~/themes'
 import { ThemeProvide } from '@mcro/ui'
 import * as Black from '@mcro/black'

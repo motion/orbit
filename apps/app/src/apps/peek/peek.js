@@ -51,7 +51,7 @@ export default class PeekPage {
               background: fullScreen ? theme.base.background : '#fff',
             }}
           >
-            <PeekContentsView item={selectedItem} />
+            <PeekContentsView bit={selectedItem} item={selectedItem} />
           </main>
         </peek>
       </UI.Theme>

@@ -51,7 +51,6 @@ export default class Card {
             </UI.Text>
           </subtitle>
           <UI.Button
-            if={!isActive}
             onClick={() => {
               if (oauth === false) {
                 const setting = store.settings.find(s => s.type === id)

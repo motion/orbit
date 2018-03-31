@@ -1,0 +1,10 @@
+title: Multiplayer Presentations
+author: Nick Cammarata
+integration: github
+type: issue
+text: This is a big one. It would be nice if people could all access the same workspace at the same time so they can access it during a presentation. No more needing to ask for presentation links after. We could potentially even offer social features here, such as voting on questions during the presentation.
+queries:
+  - presentations
+  - presentation
+  - multiplayer presentations
+  - multiple person presentations

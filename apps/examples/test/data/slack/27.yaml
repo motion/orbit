@@ -1,0 +1,10 @@
+messages:
+  - user: dylan
+    msg: today we talked about performance for canvas loading time and whether we should just ditch it and move to WebGL. We think that we should give canvas another shot, because it has such better support that it might just be worth the extra effort it takes to rangle in.
+  - user: dylan
+    msg: I think the best situation is to try it for another three weeks, and move on if it doesn't wrok
+  - user: evan
+    msg: also we figured out that we need a specific new library that I'm going to work on this week
+queries:
+  - canvas performance time
+  - new webgl library

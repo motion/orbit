@@ -1,14 +1,13 @@
-// @flow
 import Gloss from '@mcro/gloss'
 import baseStyles from './baseStyles'
 
-export type Glossy = {
-  glossElement(
-    tagName: string,
-    props: ?Object,
-    children: ?any
-  ): React$Element<any>,
-}
+// export type Glossy = {
+//   glossElement(
+//     tagName: string,
+//     props: ?Object,
+//     children: ?any
+//   ): JSX.Element,
+// }
 
 const gloss = new Gloss({
   baseStyles,
@@ -29,7 +28,7 @@ const gloss = new Gloss({
     if (model === 'hsl') {
       const inner = `${color[0]}, ${Math.round(color[1], 4)}%, ${Math.round(
         color[2],
-        4
+        4,
       )}%`
       if (hasAlpha) {
         return `hsla(${inner}, ${valpha})`

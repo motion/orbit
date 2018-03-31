@@ -7,7 +7,7 @@ import { Electron } from '@mcro/all'
 
 @view
 export default class PeekHeader {
-  render({ title }) {
+  render({ title, date }) {
     const { fullScreen } = Electron.orbitState
     if (!Electron.currentPeek) {
       return null
@@ -22,6 +22,7 @@ export default class PeekHeader {
         </buttons>
         <title if={title}>
           <UI.Title size={1.3}>{title}</UI.Title>
+          <UI.Date css={{ opacity: 0.5 }}>{date}</UI.Date>
         </title>
       </header>
     )
@@ -32,8 +33,8 @@ export default class PeekHeader {
       flexFlow: 'row',
       alignItems: 'center',
       justifyContent: 'center',
-      padding: [15, 20],
-      borderBottom: [1, [0, 0, 0, 0.1]],
+      padding: [20, 20],
+      borderBottom: [1, [0, 0, 0, 0.05]],
     },
     title: {
       flex: 1,

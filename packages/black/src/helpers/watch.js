@@ -1,5 +1,3 @@
-// @flow
-
 function validWatch(val) {
   return Array.isArray(val) || typeof val === 'function'
 }
@@ -40,12 +38,7 @@ export default function watch(a, b, c) {
   }
 }
 
-function doWatch(
-  target: Object,
-  method: string,
-  descriptor: Object,
-  userOptions?: Object,
-) {
+function doWatch(target, method, descriptor, userOptions) {
   // non-decorator
   if (validWatch(target)) {
     return attachWatch(target, userOptions)

@@ -1,0 +1,38 @@
+title: Emoji
+author: Nick Cammarata
+integration: gdocs
+type: document
+body: >
+  ## Express yourself with your favorite tiny, yellow faces
+
+  Updated over a week ago
+  Yes, your beloved pictorial minions work in Figma! We currently use Apple emojis on all platforms. Emoji is supported in both text objects, as well as Comments.
+
+  Adding emoji to text objects
+  macOS users.
+  Create a text object
+  Use the control + command + spacebar  shortcut to display the emoji picker
+  Type the name of your favorite emoji, or click to select
+  When you select a single emoji from the picker, the picker will close. If you need to select more than one emoji, open the picker, then click and drag the picker window from it's original location.
+
+  ## Windows users.
+  First, make sure that the touch keyboard icon is visible in your taskbar.
+
+
+  If you don't see the icon, right-click on an empty area in the taskbar and select Show touch keyboard button
+
+
+  Note. The touch keyboard is not available on Windows 7.
+
+  Once you have enabled the touch keyboard button you can.
+
+  Create a text object
+  Click the touch keyboard icon
+  Select the emoji button in the keyboard
+
+  ## Adding emoji to comments
+  macOS and Windows users.
+
+  Select the Comment icon in the toolbar
+  Click where you want to add your comment
+  Choose the smiley face in the comment box and select your emoji

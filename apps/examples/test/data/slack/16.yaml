@@ -1,0 +1,18 @@
+title: none
+integration: slack
+type: chat
+data:
+  messages:
+    - user: dylan
+      msg: have you talked to Fuel recently?
+    - user: evan
+      msg: nope, why?
+    - user: dylan
+      msg: I'm meeting him at 7pm and I just wanted to know if there's any updates
+    - user: evan
+      msg: what does he think of multiplayer?
+    - user: dylan
+      msg: loves it!
+queries:
+  - Fuel
+  - meeting Fuel

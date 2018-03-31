@@ -11,6 +11,7 @@ export class Setting extends T.BaseEntity {
     repos?: Object
     calendarsActive?: Object
     syncTokens?: Object
+    folders?: [string]
   }
   @T.CreateDateColumn() createdAt: Date
   @T.UpdateDateColumn() updatedAt: Date

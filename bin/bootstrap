@@ -38,7 +38,6 @@ function build-builder-modules() {
 }
 
 file-exists ".env"
-file-exists ".env.dev"
 xcode-select --install 2> /dev/null
 ensure-dep "brew" -- /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 ensure-dep "npm" -- brew install node &
@@ -51,7 +50,7 @@ npx lerna bootstrap --loglevel=warn
 ensure-file ./packages/hmr/es6/index.js -- build-builder-modules
 ensure-file ./packages/hmr-view/es6/index.js -- build-builder-modules
 ensure-file ./packages/gloss/es6/index.js -- build-builder-modules
-ensure-file ./packages/css/es6/index.js -- build-builder-modules
+ensure-file ./packages/css/_/index.js -- build-builder-modules
 # link second
 ensure-symlink ./node_modules/@mcro/gloss -- link-root-modules
 copy-bootstrap-hook

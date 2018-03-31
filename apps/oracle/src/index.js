@@ -261,7 +261,7 @@ export default class Oracle {
             this.onWindowChangeCB(action, value)
           }
         } catch (err) {
-          console.log('Error receiving message')
+          console.log('Error receiving message', str)
           console.log(err.stack)
         }
       })

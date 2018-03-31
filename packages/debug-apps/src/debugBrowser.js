@@ -72,7 +72,7 @@ export default class DebugApps {
         // then once desktop starts up again, the dev urls return again as they were
         // so sleep 1s here when we see a change, and hope desktop has restarted, so we dont
         // ever see those weird urls......
-        await sleep(1000)
+        await sleep(2000)
         await this.render()
       }
       await sleep(500)

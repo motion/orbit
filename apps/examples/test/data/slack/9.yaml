@@ -1,0 +1,17 @@
+title: none
+integration: slack
+type: chat
+data:
+  messages:
+    - user: john
+      msg: stuck outside, what do we do
+    - user: dylan
+      msg: oh god, let me call the building security guard to let you in
+    - user: john
+      msg: thx
+    - user: dylan
+      msg: did he get you?
+    - user: john
+      msg: yea, all warm now :)
+queries:
+  - stuck outside building

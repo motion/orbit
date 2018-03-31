@@ -6,17 +6,6 @@ import debug from '@mcro/debug'
 const log = debug('sync')
 debug.quiet('sync')
 
-function getRxError(error: Error): Object {
-  const { message, stack } = error
-  try {
-    const parsedMessage = JSON.parse(message)
-    console.log(JSON.stringify(parsedMessage, null, 2))
-  } catch (e) {
-    console.trace(message)
-  }
-  return { message, stack }
-}
-
 @store
 export default class Sync {
   locks: Set<string> = new Set()
@@ -78,7 +67,7 @@ export default class Sync {
         } catch (error) {
           let lastError = error
           try {
-            lastError = getRxError(error)
+            lastError = error.message
           } catch (err) {}
           this.failJob(job, lastError)
         }
@@ -144,8 +133,7 @@ export default class Sync {
           this[name] = syncer
         }
       } catch (err) {
-        console.log('error starting syncer', name)
-        console.log(err)
+        console.log('error starting syncer', name, err)
       }
     }
   }
@@ -160,7 +148,7 @@ export default class Sync {
       if (err.message && err.message.indexOf('cant save deleted document')) {
         return
       }
-      console.log(err)
+      console.log('job failed', err)
     }
   }
 
@@ -185,7 +173,7 @@ export default class Sync {
       await job.save()
       log('runJob() done', job.type, job.action)
     } catch (error) {
-      console.log('error running syncer', error)
+      console.log('error running syncer', error.message)
       job.status = Job.statuses.FAILED
       job.lastError = JSON.stringify(getRxError(error))
       await job.save()

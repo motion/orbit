@@ -1,6 +1,6 @@
 import 'isomorphic-fetch'
 import '@mcro/debug/inject'
-import createElement from '@mcro/black/es6/createElement'
+import createElement from '@mcro/black/_/createElement'
 // dont import * as React, we need to overwrite createElement
 import React from 'react'
 import * as Constants from './constants'

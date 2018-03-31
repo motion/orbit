@@ -87,7 +87,7 @@ export default class Arrow extends React.Component<> {
       position: 'absolute',
       left: 0,
       borderRadius: 1,
-      transform: 'rotate(45deg)',
+      transform: { rotate: '45deg' },
     },
   }
 }

@@ -1,8 +1,7 @@
-// @flow
 export const IS_PROD = process.env.NODE_ENV === 'production'
 export const IS_ELECTRON = isElectron()
 
-function isElectron(): boolean {
+function isElectron() {
   if (
     typeof window !== 'undefined' &&
     window.process &&

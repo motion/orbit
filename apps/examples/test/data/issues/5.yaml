@@ -1,0 +1,10 @@
+title: Editor should expand when window resized
+author: Nick Cammarata
+integration: github
+type: issue
+text: Right now the editor expands when the window moves, but it sometimes has issues when the browser’s window is resized. Seems like a reversion in the last 2 pushes.
+queries:
+  - editor expand
+  - editor resize
+  - editor get bigger
+  - window doesn't get bigger

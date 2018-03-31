@@ -1,0 +1,9 @@
+title: Multiplayer user list, new visual indicator
+author: Nick Cammarata
+integration: github
+type: issue
+text: Currently we have a standard list for seeing who’s in the same workplace. However, this might be a fun area to innovate creatively on. Maybe we could have a neat graphic that animates based on the last person that entered. I don’t have any particular beliefs at the moment, but rather a general intuition that there’s something here!
+queries:
+  - user list
+  - multiplayer user list
+  - UI user list

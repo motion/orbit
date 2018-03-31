@@ -1,0 +1,23 @@
+title: none
+integration: slack
+type: chat
+data:
+  messages:
+    - user: evan
+      msg: morning guys!
+    - user: jessica
+      msg: morning
+    - user: john
+      msg: morning!!
+    - user: evan
+      msg: it's so hot in here
+    - user: john
+      msg: let me open window, it's ridiculous
+    - user: jessica
+      msg: got my iced tea, keepin it cool
+    - user: dylan
+      msg: I want to go back to the east coast
+    - user: evan
+      msg: lol
+queries:
+  - warm office

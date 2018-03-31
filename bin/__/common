@@ -30,7 +30,7 @@ function bin-exists {
 
 function file-exists {
   if [ ! -f "$1" ]; then
-    echo "$2 not found"
+    echo "$1 not found"
     exit 1
   fi
 }

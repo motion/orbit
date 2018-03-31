@@ -1,4 +1,3 @@
-// @flow
 import {
   colorToString,
   isColorLike,
@@ -6,11 +5,11 @@ import {
   camelToSnake,
   hash,
 } from './helpers'
-import type { Color } from './types'
+import { Color } from './types'
 import { CAMEL_TO_SNAKE } from './cssNameMap'
 
 // exports
-export type { Transform, Color } from './types'
+export { Transform, Color } from './types'
 export * from './helpers'
 
 const COLOR_KEYS = new Set(['color', 'backgroundColor', 'borderColor'])
@@ -137,7 +136,7 @@ export default function motionStyle(options: Object = {}) {
     radialGradient: processArray,
   }
 
-  function processObject(key: string, object: Object): string {
+  function processObject(key: string, object: any): string {
     if (
       key === 'background' ||
       key === 'color' ||
@@ -167,14 +166,14 @@ export default function motionStyle(options: Object = {}) {
   }
 
   type Opts = {
-    errorMessage?: string,
-    snakeCase?: boolean,
+    errorMessage?: string
+    snakeCase?: boolean
   }
 
   // RETURN THIS
   // style transformer
   function processStyles(styles: Object, opts: Opts): Object {
-    const toReturn = {}
+    const toReturn: any = {}
     const shouldSnake = !opts || opts.snakeCase !== false
     if (!styles || typeof styles !== 'object') {
       return toReturn
@@ -183,26 +182,21 @@ export default function motionStyle(options: Object = {}) {
       let value = styles[key]
       let valueType = typeof value
       let finalKey = key
-
       // convert camel to snake
       if (shouldSnake) {
         finalKey = CAMEL_TO_SNAKE[key] || key
       }
-
       // get real values
-      if (valueType === false) {
+      if (value === false) {
         value === FALSE_VALUES[key]
         valueType = typeof value
       }
-
       // simple syles
       if (valueType === 'undefined' || value === null || value === false) {
         continue
       }
-
       let respond
       const firstChar = key[0]
-
       if (valueType === 'string' || valueType === 'number') {
         toReturn[finalKey] = value
         respond = true
@@ -248,7 +242,6 @@ export default function motionStyle(options: Object = {}) {
         toReturn[key] = value
         respond = true
       }
-
       // shorthands
       if (SHORTHANDS[key]) {
         key = SHORTHANDS[key]
@@ -259,11 +252,9 @@ export default function motionStyle(options: Object = {}) {
           }
         }
       }
-
       if (respond) {
         continue
       }
-
       throw new Error(
         `${(opts && opts.errorMessage) ||
           'Error'}: Invalid style value for ${key}: ${JSON.stringify(value)}`,
@@ -272,8 +263,8 @@ export default function motionStyle(options: Object = {}) {
 
     return toReturn
   }
-
   // expose helpers
+  // @ts-ignore
   processStyles.helpers = {
     hash,
     toColor,
@@ -283,6 +274,5 @@ export default function motionStyle(options: Object = {}) {
     snakeToCamel,
     camelToSnake,
   }
-
   return processStyles
 }

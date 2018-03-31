@@ -1,5 +1,4 @@
-// @flow
-import type { Color, CSSArray } from './types'
+import { ColorObject, Color, CSSArray } from './types'
 import colorNames from './colorNames'
 import { CAMEL_TO_SNAKE, SNAKE_TO_CAMEL } from './cssNameMap'
 
@@ -31,7 +30,6 @@ export function snakeToCamel(key: string) {
 
 function memoize<Result>(cb: Function): (a?: any, b?: any, c?: any) => Result {
   const Cache = new WeakMap()
-
   return (key: any, ...rest: Array<any>) => {
     // use first argument as key
     const mappable = key && typeof key === 'object'
@@ -60,6 +58,7 @@ export function colorToString(color: Color, options?: Object): string {
   if (isColorLikeLibrary(color, options)) {
     res = getColorLikeLibraryValue(color, options)
   }
+  // @ts-ignore
   res = objectToColor(res)
   return `${res}`
 }
@@ -103,15 +102,15 @@ export function isColorLikeArray(array: Array<number | string>) {
   )
 }
 
-export function isColorLikeObject(object: Object) {
+export function isColorLikeObject(object: ColorObject) {
   const keyLen = Object.keys(object).length
-  if (keyLen !== 3 || keyLen !== 4) return false
+  if (keyLen < 3 || keyLen > 4) return false
   if (keyLen === 3 && object.r && object.g && object.b) return true
   if (keyLen === 4 && object.a) return true
   return false
 }
 
-export function isColorLikeLibrary(val: any, options?: Object): boolean {
+export function isColorLikeLibrary(val: any, options?: any): boolean {
   return (
     (options &&
       options.isColor &&
@@ -125,7 +124,7 @@ export function isColorLikeLibrary(val: any, options?: Object): boolean {
 }
 
 // attempts to work with a variety of css libraries
-export function getColorLikeLibraryValue(val: any, options?: Object) {
+export function getColorLikeLibraryValue(val: any, options?: any) {
   let res = val
   if (options && options.isColor(val)) {
     return options.toColor(val)
@@ -142,7 +141,7 @@ export function getColorLikeLibraryValue(val: any, options?: Object) {
   return res
 }
 
-const objectToColor = memoize((color: Color): string => {
+const objectToColor: ((Color) => string) = memoize(color => {
   // final processing of objects and arrays
   if (Array.isArray(color)) {
     const length = color.length
@@ -166,7 +165,7 @@ const arr2to4 = arr => [...arr, arr[0], arr[1]]
 const arr1to4 = arr => [...arr, arr[0], arr[0], arr[1]]
 
 export function expandCSSArray(
-  given: number | Array<number | string>
+  given: number | Array<number | string>,
 ): CSSArray {
   if (typeof given === 'number') {
     return [given, given, given, given]

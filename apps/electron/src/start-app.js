@@ -62,7 +62,7 @@ if (process.env.NODE_ENV === 'development') {
     }
     if (shouldRestart && webRunning) {
       console.log('restarting after parcel cycle...')
-      require('touch')(require('path').join(__dirname, '..', 'package.json'))
+      require('touch')(require('path').join(__dirname, '..', 'lib', 'index.js'))
       clearInterval(int)
     }
   }, 1000)

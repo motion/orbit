@@ -3,7 +3,7 @@
   "private": true,
   "version": "1.5.40",
   "bin": {
-    "dev-apps": "./dev-apps.js"
+    "dev-apps": "./_/dev-apps.js"
   },
   "scripts": {
     "start": "./start-apps.sh",

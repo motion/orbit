@@ -27,7 +27,7 @@ export default class Syncer {
       throw new Error('Must provide action')
     }
     if (!this.token) {
-      console.log(`run() no token ${this.type} ${action}`)
+      log(`run() no token ${this.type} ${action}`)
       return
     }
     this.ensureSetting()

@@ -1,4 +1,3 @@
-// @flow
 // helper that logs functions, works as decorator or plain
 // passes through the first argument
 
@@ -39,14 +38,14 @@ class StringToColor {
 
 const Color = new StringToColor()
 
-function cutoff(thing: string, amt = 150) {
+function cutoff(thing, amt = 150) {
   if (doCutoff && thing.length > amt) {
     return thing.slice(0, amt - 3) + '...'
   }
   return thing
 }
 
-function prettyPrint(thing: any) {
+function prettyPrint(thing) {
   if (typeof thing === 'function') {
     return (thing.toString && thing.toString()) || thing
   }
@@ -69,13 +68,13 @@ function prettyPrint(thing: any) {
   }
 }
 
-function doLog(...args: Array<any>) {
+function doLog(...args) {
   const [target, key, descriptor] = args
 
   const logger = (...things) => {
     console.log(
       `%c${things.map(prettyPrint).join(' ')}`,
-      `background: ${Color.getColor(things[0])}`
+      `background: ${Color.getColor(things[0])}`,
     )
   }
 
@@ -114,27 +113,27 @@ function doLog(...args: Array<any>) {
   }
 }
 
-export default function log(...args: Array<any>) {
+export default function log(...args) {
   doCutoff = true
   const res = doLog(...args)
   doCutoff = false
   return res
 }
 
-log.full = function(...args: Array<any>) {
+log.full = function(...args) {
   doCutoff = false
   return doLog(...args)
 }
 
-function wrapLogger(wrapFn: Function, parent: any, name?: string) {
-  const parentName: string =
+function wrapLogger(wrapFn, parent, name) {
+  const parentName =
     parent instanceof Object
       ? parent.name || (parent.constructor && parent.constructor.name) || ''
       : parent || ''
   const methodName = wrapFn.name || name || ''
   const color = Color.getColor(`${parentName}${methodName}`)
 
-  return function(...args: Array<any>) {
+  return function(...args) {
     const result = wrapFn.call(this, ...args)
     const state =
       this &&
@@ -144,13 +143,13 @@ function wrapLogger(wrapFn: Function, parent: any, name?: string) {
           ` | ${key.slice(0, 9).padEnd(10)}: ${`${this.state[key]}`
             .slice(0, 9)
             .padEnd(10)}${i % 3 === 0 ? '\n' : ''}${acc}`,
-        ''
+        '',
       )
     console.log(
       `%c${parent ? `${parentName}.` : ''}${methodName}(${args
         .map(prettyPrint)
         .join(',')}) => ${result}\nSTATE:\n${state}`,
-      `color: ${color}`
+      `color: ${color}`,
     )
     return result
   }

@@ -1,10 +1,10 @@
 {
   "name": "@mcro/black",
-  "main": "es6/index.js",
-  "module": "es6/index.js",
+  "main": "_/index.js",
+  "module": "_/index.js",
   "version": "1.5.1",
   "scripts": {
-    "build": "build es6",
+    "build": "tsc",
     "watch": "npm run build -- --watch"
   },
   "dependencies": {

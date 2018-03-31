@@ -1,15 +1,9 @@
-// @flow
 import decor from '@mcro/decor'
 import hydratable from '@mcro/decor/es6/plugins/core/hydratable'
 import emittable from '@mcro/decor/es6/plugins/core/emittable'
-import type { Emittable } from '@mcro/decor/es6/plugins/core/emittable'
 import automagical from '@mcro/automagical'
 import subscribable from '@mcro/decor/es6/plugins/react/subscribable'
-import type { Subscribable } from '@mcro/decor/es6/plugins/react/subscribable'
 import helpers from '@mcro/decor/es6/plugins/mobx/helpers'
-import type { Helpers } from '@mcro/decor/es6/plugins/mobx/helpers'
-
-export type StoreClass = Emittable & Subscribable & Helpers
 
 export const storeDecorator = decor([
   subscribable,
@@ -21,7 +15,7 @@ export const storeDecorator = decor([
 
 export const storeOptions = {
   storeDecorator,
-  onStoreMount(name: string, store: StoreClass, props: Object) {
+  onStoreMount(name, store, props) {
     if (store.automagic) {
       store.automagic()
     }
@@ -29,7 +23,7 @@ export const storeOptions = {
       store.willMount.call(store, props)
     }
   },
-  onStoreUnmount(store: StoreClass) {
+  onStoreUnmount(store) {
     if (store.willUnmount) {
       store.willUnmount(store)
     }
@@ -39,7 +33,7 @@ export const storeOptions = {
   },
 }
 
-export default function store(Store: Class<any>): StoreClass {
+export default function store(Store) {
   const DecoratedStore = storeDecorator(Store)
   const ProxyStore = function(...args) {
     const store = new DecoratedStore(...args)

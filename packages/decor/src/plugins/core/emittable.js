@@ -1,13 +1,12 @@
-// @flow
 import { Emitter } from 'sb-event-kit'
 
-declare class Emittable {
-  emitter: Emitter,
-  emit(name: string, data: any): void,
-}
+// declare class Emittable {
+//   emitter: Emitter,
+//   emit(name: string, data: any): void,
+// }
 
 // store.emitter
-export default function emittable(options: Object) {
+export default function emittable(options) {
   const emitterProp = options.emitterProp || 'emitter'
   const emitProp = options.emitProp || 'emit'
 
@@ -15,7 +14,7 @@ export default function emittable(options: Object) {
     name: 'emittable',
     once: true,
     onlyClass: true,
-    decorator: (Klass: Class<any> | Function) => {
+    decorator: Klass => {
       if (!Klass.prototype[emitterProp]) {
         Object.defineProperty(Klass.prototype, emitterProp, {
           get() {

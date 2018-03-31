@@ -1,4 +1,3 @@
-// @flow
 import { observable, computed, action, autorun } from 'mobx'
 import Router from './router'
 import browserHistory from 'history/createBrowserHistory'
@@ -128,7 +127,7 @@ export class ObservableRouter {
     }
   }
 
-  normalizeParams = (params: Object): Object => {
+  normalizeParams = params => {
     // remove false/null
     Object.keys(params).forEach(key => {
       const val = params[key]

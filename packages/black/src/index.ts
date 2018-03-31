@@ -1,11 +1,10 @@
-// @flow
 import view_ from './view'
 import store_ from './store'
 import ProvideStore_ from './provideStore'
 import { observable, autorunAsync } from 'mobx'
 
-export log from './helpers/log'
-export watch from './helpers/watch'
+export { default as log } from './helpers/log'
+export { default as watch } from './helpers/watch'
 export * from './helpers/mobx'
 
 // react just takes alt syntax
@@ -35,15 +34,15 @@ export function debugState(callback) {
     },
     mountedVersion: 0,
   })
-  const getKey = (name: string, thing: Class<any>) =>
+  const getKey = (name, thing) =>
     name === 'store' ? thing.constructor.name : name
-  const mount = (type: string) => ({ name, thing }) => {
+  const mount = type => ({ name, thing }) => {
     const key = getKey(name, thing)
     state.mounted[type][key] = state.mounted[type][key] || new Set()
     state.mounted[type][key].add(thing)
     state.mountedVersion++
   }
-  const unmount = (type: string) => ({ name, thing }) => {
+  const unmount = type => ({ name, thing }) => {
     const key = getKey(name, thing)
     if (state.mounted[type][key]) {
       state.mounted[type][key].delete(thing)

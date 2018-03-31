@@ -37,7 +37,7 @@ export default class PeekPage {
             marginRight: fullScreen ? 0 : !onLeft ? SHADOW_PAD : -SHADOW_PAD,
           }}
           $animate={App.isShowingPeek}
-          $peekVisible={true || App.isShowingPeek}
+          $peekVisible={App.isShowingPeek}
         >
           <main
             css={{

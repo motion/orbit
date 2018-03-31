@@ -2,6 +2,15 @@
   "compilerOptions": {
     "experimentalDecorators": true
   },
-  "include": ["apps/*/src", "packages/*/src"],
-  "exclude": ["node_modules", "Build", "infra", "assets"]
+  "include": ["apps/**/*", "packages/**/*"],
+  "exclude": [
+    "node_modules",
+    "Build",
+    "infra",
+    "assets",
+    "_",
+    "dist",
+    "es6",
+    "lib"
+  ]
 }

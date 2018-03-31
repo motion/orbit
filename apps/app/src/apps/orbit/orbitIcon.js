@@ -33,7 +33,12 @@ export default ({ icon, size = 25, ...props }) => {
         ...sizeProps,
       }}
     >
-      <img if={icons[icon]} src={icons[icon]} {...props} />
+      <img
+        if={icons[icon]}
+        src={icons[icon]}
+        {...props}
+        css={{ width: '100%', height: '100%' }}
+      />
       <UI.Icon
         if={!icons[icon]}
         name={icon}

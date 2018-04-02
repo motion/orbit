@@ -11,9 +11,10 @@ export default class Sync {
   locks: Set<string> = new Set()
   jobs = []
   syncers?: Object = null
-  enabled = true
+  enabled = false
 
   start() {
+    this.enabled = true
     this.startSyncers()
     setInterval(async () => {
       const jobs = await Job.find({ status: Job.statuses.PENDING })
@@ -122,16 +123,13 @@ export default class Sync {
     this.syncers = {}
     for (const name of Object.keys(Syncers)) {
       try {
-        const setting = await findOrCreate(Setting, { type: name })
-        if (!setting) {
-          console.log('no setting for', name)
-          continue
+        if (this[name]) {
+          throw `Already defined prop ${name}`
         }
-        const syncer = Syncers[name](setting)
+        const syncer = Syncers[name]
         this.syncers[name] = syncer
-        if (!this[name]) {
-          this[name] = syncer
-        }
+        this[name] = syncer
+        syncer.start()
       } catch (err) {
         console.log('error starting syncer', name, err)
       }
@@ -173,9 +171,9 @@ export default class Sync {
       await job.save()
       log('runJob() done', job.type, job.action)
     } catch (error) {
-      console.log('error running syncer', error.message)
+      console.log('error running syncer', error.message || error)
       job.status = Job.statuses.FAILED
-      job.lastError = JSON.stringify(getRxError(error))
+      job.lastError = JSON.stringify(error)
       await job.save()
     }
   }

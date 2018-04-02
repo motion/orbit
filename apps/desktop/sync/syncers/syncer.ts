@@ -1,20 +1,28 @@
 import * as Helpers from '../helpers'
+import debug from '@mcro/debug'
+import { Setting, findOrCreate } from '@mcro/models'
 
 const log = debug('sync')
 const DEFAULT_CHECK_INTERVAL = 1000 * 60 // 1 minute
 
 export default class Syncer {
-  get token() {
-    return this.setting.token
+  actions: Object
+  type: string
+  syncers: Object
+  getSyncers: (Setting) => Object
+  settings: {
+    checkInterval?: number
   }
+  jobWatcher: any
 
-  constructor(type, { setting, settings = {}, actions, syncers }) {
-    this.setting = setting
+  constructor(type, { settings = {}, actions, getSyncers }) {
     this.actions = actions
     this.type = type
-    this.syncers = syncers
+    this.getSyncers = getSyncers
     this.settings = settings
-    // every so often
+  }
+
+  start() {
     this.jobWatcher = setInterval(
       () => this.check(false),
       this.settings.checkInterval || DEFAULT_CHECK_INTERVAL,
@@ -26,21 +34,24 @@ export default class Syncer {
     if (!action) {
       throw new Error('Must provide action')
     }
-    if (!this.token) {
-      log(`run() no token ${this.type} ${action}`)
-      return
-    }
-    this.ensureSetting()
     log(`run() ${this.type} ${action}`)
     if (!this.actions[action]) {
-      console.warn('NO SYNCER FOUND', action)
-    } else {
-      await this.syncers[action].run()
+      throw new Error(`NO SYNCER FOUND ${action}`)
     }
+    const setting = await findOrCreate(Setting, { type: this.type })
+    if (!setting || !setting.token) {
+      throw `No setting token for syncer ${this.type}`
+    }
+    this.syncers = this.getSyncers(setting)
+    for (const name of Object.keys(this.syncers)) {
+      if (!this[name]) {
+        this[name] = this.syncers[name]
+      }
+    }
+    await this.syncers[action].run()
   }
 
   async runAll() {
-    console.log('this.actions', this.actions)
     await Promise.all(Object.keys(this.actions).map(this.run))
   }
 
@@ -55,12 +66,6 @@ export default class Syncer {
       syncers.push(Helpers.ensureJob(type, action, job, loud))
     }
     return await Promise.all(syncers)
-  }
-
-  ensureSetting() {
-    if (!this.setting) {
-      throw new Error('No setting found for ' + this.type)
-    }
   }
 
   dispose() {

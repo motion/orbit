@@ -12,13 +12,15 @@ import sudoPrompt_ from 'sudo-prompt'
 import Sync from './sync'
 import SQLiteServer from './sqliteServer'
 import { App, Electron, Desktop } from '@mcro/all'
-import { store, debugState } from '@mcro/black'
+import { sleep } from '@mcro/helpers'
+import { react, store, debugState } from '@mcro/black'
 import global from 'global'
 import Path from 'path'
 import { getChromeContext } from './helpers/getContext'
 // import SearchStore from './stores/search'
 import open from 'opn'
 import iohook from 'iohook'
+import debug from '@mcro/debug'
 
 const log = debug('desktop')
 
@@ -27,11 +29,26 @@ const sudoPrompt = promisifyAll(sudoPrompt_)
 
 @store
 export default class DesktopRoot {
+  disposed = false
+  sync: Sync
+  screen: Screen
+  plugins: Plugins
+  keyboardStore: KeyboardStore
   // searchStore = new SearchStore()
   server = new Server()
   auth = new Auth()
   sqlite = new SQLiteServer()
   stores = null
+
+  @react
+  openAppOnSelect = [
+    () => App.state.openResult,
+    result => {
+      if (result && result.id) {
+        open(result.id)
+      }
+    },
+  ]
 
   async start() {
     global.Root = this
@@ -56,14 +73,13 @@ export default class DesktopRoot {
       onKeyClear: this.screen.lastScreenChange,
     })
     this.keyboardStore.start()
-    iohook.start()
+    iohook.start(false)
     this.setupHosts()
     await this.server.start()
     this.screen.start()
     debugState(({ stores }) => {
       this.stores = stores
     })
-    this.openAppOnSelect()
     // temp: get context
     setInterval(async () => {
       if (Desktop.appState.name === 'Chrome') {
@@ -73,23 +89,14 @@ export default class DesktopRoot {
     }, 3000)
   }
 
-  openAppOnSelect = () => {
-    this.react(
-      () => App.state.openResult,
-      result => {
-        if (result && result.id) {
-          open(result.id)
-        }
-      },
-    )
-  }
-
   restart() {
-    require('touch')(Path.join(__dirname, '..', 'lib', 'index.js'))
+    require('touch')(Path.join(__dirname, '..', '_', 'index.js'))
   }
 
   dispose = async () => {
-    if (this.disposed) return
+    if (this.disposed) {
+      return
+    }
     await this.screen.dispose()
     this.sync.dispose()
     this.disposed = true

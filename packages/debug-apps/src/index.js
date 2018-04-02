@@ -17,7 +17,6 @@ const setExiting = async () => {
 }
 process.on('unhandledRejection', function(reason) {
   console.log('debug.unhandledRejection', reason.message)
-  console.log(reason)
 })
 process.on('SIGUSR1', setExiting)
 process.on('SIGUSR2', setExiting)

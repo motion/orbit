@@ -2,13 +2,11 @@ import 'isomorphic-fetch'
 import '@mcro/debug/inject'
 import '@mcro/black/mlog'
 import * as Mobx from 'mobx'
+import debug from '@mcro/debug'
 
 require('module-alias').addAlias('~', __dirname + '/')
 
 Error.stackTraceLimit = Infinity
-global.Mobx = Mobx
-global.require = require
-global.Path = require('path')
 
 const log = debug('index')
 
@@ -16,6 +14,16 @@ console.warn(`$ NODE_ENV=${process.env.NODE_ENV} run desktop`)
 
 if (process.env.NODE_ENV === 'development') {
   require('source-map-support/register')
+  // @ts-ignore
+  global.Mobx = Mobx
+  // @ts-ignore
+  global.require = require
+  // @ts-ignore
+  global.Path = require('path')
+  // @ts-ignore
+  global._ = require('lodash')
+  // @ts-ignore
+  global.r2 = require('@mcro/r2')
 }
 
 const Desktop = require('./desktop').default

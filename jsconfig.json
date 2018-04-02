@@ -4,13 +4,19 @@
   },
   "include": ["apps/**/*", "packages/**/*"],
   "exclude": [
+    ".cache",
+    "orbit",
+    "pyocr",
+    "swindler",
+    "public",
     "node_modules",
     "Build",
-    "infra",
     "assets",
     "_",
     "dist",
     "es6",
-    "lib"
+    "lib",
+    "bin",
+    "extensions"
   ]
 }

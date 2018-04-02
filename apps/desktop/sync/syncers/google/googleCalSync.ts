@@ -47,24 +47,24 @@ export default class GoogleCalSync {
   }
 
   async resetSetting(calendar: string) {
-    await this.setting.mergeUpdate({
-      values: {
-        syncTokens: {
-          [calendar]: null,
-        },
-      },
-    })
+    // await this.setting.mergeUpdate({
+    //   values: {
+    //     syncTokens: {
+    //       [calendar]: null,
+    //     },
+    //   },
+    // })
   }
 
   async setupSettings() {
     const { items } = await this.fetch(`/users/me/calendarList`)
-    await this.setting.mergeUpdate({
-      values: {
-        calendars: items,
-        calendarsActive: this.setting.values.calendarsActive || {},
-        syncTokens: this.setting.values.syncTokens || {},
-      },
-    })
+    // await this.setting.mergeUpdate({
+    //   values: {
+    //     calendars: items,
+    //     calendarsActive: this.setting.values.calendarsActive || {},
+    //     syncTokens: this.setting.values.syncTokens || {},
+    //   },
+    // })
   }
 
   async syncAllCalendars(): Promise<Array<Event>> {

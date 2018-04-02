@@ -8,16 +8,17 @@ const DEFAULT_CHECK_INTERVAL = 1000 * 60 // 1 minute
 export default class Syncer {
   actions: Object
   type: string
-  syncers: (Setting) => Object
+  syncers: Object
+  getSyncers: (Setting) => Object
   settings: {
     checkInterval?: number
   }
   jobWatcher: any
 
-  constructor(type, { settings = {}, actions, syncers }) {
+  constructor(type, { settings = {}, actions, getSyncers }) {
     this.actions = actions
     this.type = type
-    this.syncers = syncers
+    this.getSyncers = getSyncers
     this.settings = settings
   }
 
@@ -37,11 +38,12 @@ export default class Syncer {
     if (!this.actions[action]) {
       throw new Error(`NO SYNCER FOUND ${action}`)
     }
-    const setting = await findOrCreate(Setting, { type: name })
+    const setting = await findOrCreate(Setting, { type: this.type })
     if (!setting || !setting.token) {
-      throw `No setting token for syncer ${name}`
+      throw `No setting token for syncer ${this.type}`
     }
-    await this.syncers(setting)[action].run()
+    this.syncers = this.getSyncers(setting)
+    await this.syncers[action].run()
   }
 
   async runAll() {

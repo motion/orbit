@@ -78,7 +78,7 @@ export default new Syncer('github', {
     // feed: { every: 30 },
     // people: { every: 60 * 5 },
   },
-  syncers: setting => ({
+  getSyncers: setting => ({
     task: new GithubTaskSync(setting, getHelpers(setting)),
     // feed: new GithubFeedSync(setting, helpers),
     // people: new GithubPeopleSync(setting, helpers),

@@ -64,7 +64,7 @@ export default class DesktopRoot {
     })
     await connectModels(Object.keys(Models).map(x => Models[x]))
     this.sync = new Sync()
-    // this.sync.start()
+    this.sync.start()
     this.screen = new Screen()
     this.plugins = new Plugins({
       server: this.server,

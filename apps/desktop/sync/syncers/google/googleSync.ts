@@ -5,9 +5,9 @@ import GoogleCalSync from './googleCalSync'
 export default new Syncer('google', {
   actions: {
     drive: { every: 60 },
-    cal: { every: 60 * 5 }, // 5 minutes
+    // cal: { every: 60 * 5 }, // 5 minutes
   },
-  syncers: setting => ({
+  getSyncers: setting => ({
     drive: new GoogleDriveSync(setting),
     cal: new GoogleCalSync(setting),
   }),

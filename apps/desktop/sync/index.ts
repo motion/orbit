@@ -11,9 +11,10 @@ export default class Sync {
   locks: Set<string> = new Set()
   jobs = []
   syncers?: Object = null
-  enabled = true
+  enabled = false
 
   start() {
+    this.enabled = true
     this.startSyncers()
     setInterval(async () => {
       const jobs = await Job.find({ status: Job.statuses.PENDING })
@@ -127,7 +128,6 @@ export default class Sync {
         }
         const syncer = Syncers[name]
         this.syncers[name] = syncer
-        this[name] = syncer
         syncer.start()
       } catch (err) {
         console.log('error starting syncer', name, err)
@@ -170,7 +170,7 @@ export default class Sync {
       await job.save()
       log('runJob() done', job.type, job.action)
     } catch (error) {
-      console.log('error running syncer', error.message)
+      console.log('error running syncer', error.message || error)
       job.status = Job.statuses.FAILED
       job.lastError = JSON.stringify(error)
       await job.save()

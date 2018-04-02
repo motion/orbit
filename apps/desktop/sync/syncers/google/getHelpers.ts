@@ -1,6 +1,7 @@
 import * as Constants from '~/constants'
 import { URLSearchParams } from 'url'
 import r2 from '@mcro/r2'
+import Strategies from '~/server/oauth.strategies'
 
 type FetchOptions =
   | undefined
@@ -15,6 +16,21 @@ type FetchOptions =
 export default setting => ({
   // clientId: Constants.GOOGLE_CLIENT_ID,
   baseUrl: 'https://content.googleapis.com',
+  refreshToken() {
+    const body = {
+      refresh_token: setting.values.oauth.refreshToken,
+      client_id: Strategies.google.config.credentials.clientID,
+      client_secret: Strategies.google.config.credentials.clientSecret,
+      grant_type: 'refresh_token',
+    }
+    console.log('Refresh Google Token', body)
+    return r2.post('https://www.googleapis.com/oauth2/v4/token', {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body,
+    }).json
+  },
   async fetch(
     path,
     {

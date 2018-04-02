@@ -52,8 +52,8 @@ export default setting => ({
     const res = await fetcher[type]
     if (res.error) {
       if (res.error.code === 401 && !isRetrying) {
-        console.log('refreshing token')
-        setting.values.oauth.refreshToken = null
+        console.log('refreshing token', setting.values.oauth.refreshToken)
+        // setting.values.oauth.refreshToken = null
         await setting.save()
         console.log('got token', await this.refreshToken())
         // retry if got new token

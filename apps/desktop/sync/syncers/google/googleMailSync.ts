@@ -57,16 +57,21 @@ export default class GoogleMailSync {
     const firstMessage = first(messages)
     const bitCreatedAt = this.getDateFromThread(firstMessage)
     const bitUpdatedAt = this.getDateFromThread(last(messages))
-    return await createOrUpdate(Bit, {
-      identifier: id,
-      integration: 'google',
-      type: 'mail',
-      title: firstMessage.payload.headers.find(x => x.name === 'Subject').value,
-      body: firstMessage.snippet,
-      data,
-      bitCreatedAt,
-      bitUpdatedAt,
-    })
+    return await createOrUpdate(
+      Bit,
+      {
+        identifier: id,
+        integration: 'google',
+        type: 'mail',
+        title: firstMessage.payload.headers.find(x => x.name === 'Subject')
+          .value,
+        body: firstMessage.snippet,
+        data,
+        bitCreatedAt,
+        bitUpdatedAt,
+      },
+      ['identifier', 'integration', 'type'],
+    )
   }
 
   async getThreads(pages = 1, query: { pageToken?: any } = {}) {
@@ -95,6 +100,7 @@ export default class GoogleMailSync {
   async mapThreads(threads, onThread) {
     let results = []
     for (const { id } of threads) {
+      log(`mapThread`, id)
       const info = await this.fetchThread(id)
       await sleep(100)
       results.push(await onThread(info))

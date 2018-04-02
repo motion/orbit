@@ -85,7 +85,7 @@ export default class AppStore {
         return (await Bit.find({ take: 8 })) || []
       }
       return await Bit.find({
-        where: `title like "%${query.split('').join('%')}%"`,
+        where: `title like "%${query.replace(/\s+/g, '%')}%"`,
         take: 8,
       })
     },

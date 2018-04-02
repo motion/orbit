@@ -5,6 +5,15 @@ import getHelpers from './getHelpers'
 import { first, last } from 'lodash'
 
 const log = debug('googleMail')
+const timeCancel = (asyncFn, ms) => {
+  return new Promise((res, rej) => {
+    const cancel = setTimeout(() => rej('timeCancel: Took too long'), ms)
+    asyncFn.then(val => {
+      clearTimeout(cancel)
+      res(val)
+    })
+  })
+}
 
 type Message = {
   id: string
@@ -101,7 +110,13 @@ export default class GoogleMailSync {
     let results = []
     for (const { id } of threads) {
       log(`mapThread`, id)
-      const info = await this.fetchThread(id)
+      let info
+      try {
+        info = await this.fetchThread(id)
+      } catch (err) {
+        console.log('error fetching thread', id, err.message)
+        continue
+      }
       await sleep(500)
       results.push(await onThread(info))
       log('finish', id)
@@ -110,7 +125,8 @@ export default class GoogleMailSync {
   }
 
   fetchThreads = query => this.fetch('/users/me/threads', { query })
-  fetchThread = (id, query?) => this.fetch(`/users/me/threads/${id}`, { query })
+  fetchThread = (id, query?) =>
+    timeCancel(this.fetch(`/users/me/threads/${id}`, { query }), 1000)
 
   async getMessages() {
     console.log(await this.fetch(`/users/me/messages`))

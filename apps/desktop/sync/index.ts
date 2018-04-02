@@ -128,6 +128,7 @@ export default class Sync {
         }
         const syncer = Syncers[name]
         this.syncers[name] = syncer
+        this[name] = syncer
         syncer.start()
       } catch (err) {
         console.log('error starting syncer', name, err)

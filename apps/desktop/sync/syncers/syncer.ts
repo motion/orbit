@@ -43,6 +43,11 @@ export default class Syncer {
       throw `No setting token for syncer ${this.type}`
     }
     this.syncers = this.getSyncers(setting)
+    for (const name of Object.keys(this.syncers)) {
+      if (!this[name]) {
+        this[name] = this.syncers[name]
+      }
+    }
     await this.syncers[action].run()
   }
 

@@ -1,9 +1,9 @@
 {
   "name": "@mcro/passport-slack",
   "version": "1.5.1",
-  "main": "lib/index.js",
+  "main": "es6/index.js",
   "scripts": {
-    "build": "build prod,dev,es6",
+    "build": "build es6",
     "watch": "npm run build -- --watch"
   },
   "dependencies": {

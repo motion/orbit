@@ -45,7 +45,7 @@ export default setting => ({
     const res = await fetcher[type]
     if (res.error) {
       if (res.error.code === 401 && !isRetrying) {
-        console.log('attempt refresh token')
+        console.log('attempt refresh token', res)
         // retry if got new token
         if (setting.values.oauth.refreshToken) {
           return await this.fetch(path, {

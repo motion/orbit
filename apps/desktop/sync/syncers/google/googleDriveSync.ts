@@ -1,10 +1,10 @@
 import { Bit, Setting, createOrUpdate } from '@mcro/models'
 import { createInChunks } from '~/sync/helpers'
 import debug from '@mcro/debug'
+import { sleep } from '@mcro/helpers'
 import getHelpers from './getHelpers'
 
 const log = debug('googleDrive')
-const sleep = ms => new Promise(res => setTimeout(res, ms))
 
 type FileObject = {
   name: string
@@ -63,7 +63,7 @@ export default class GoogleDriveSync {
     return await createOrUpdate(Bit, {
       id: info.id,
       integration: 'google',
-      type: 'doc',
+      type: 'document',
       title: name,
       body: contents,
       data,
@@ -133,27 +133,32 @@ export default class GoogleDriveSync {
     const docs = files.filter(
       file => file.mimeType === 'application/vnd.google-apps.document',
     )
+    log(`Will fetch following docs`, docs)
     const fileIds = docs.map(file => file.id)
     const perSecond = 5
     let fetched = 0
     let response = []
     while (fetched < fileIds.length) {
-      const next = await this.getFilesWithAllInfo(
-        fileIds.slice(fetched, fetched + perSecond),
-        fileQuery,
-      )
-      log('getFiles', next, fetched)
+      const ids = fileIds.slice(fetched, fetched + perSecond)
+      log(`Fetching`, ids)
+      const next = await this.getFilesWithAllInfo(ids, fileQuery)
       response = [...response, ...next]
-      fetched += perSecond
-      await sleep(1000)
+      fetched = response.length
+      log('getFiles', next, fetched, 'out of', fileIds.length)
+      await sleep(2000)
     }
+    log('returning files', response)
     return response
   }
 
   async getFilesWithAllInfo(ids: Array<string>, fileQuery?: Object) {
+    const timeout = setTimeout(() => {
+      throw new Error('Timeout fetching file contents')
+    }, 2000)
     const meta = await Promise.all(ids.map(id => this.getFile(id, fileQuery)))
     const contents = await Promise.all(ids.map(id => this.getFileContents(id)))
     // zip
+    clearTimeout(timeout)
     return meta.map((file, i) => ({ ...file, contents: contents[i] }))
   }
 

@@ -22,6 +22,8 @@ if (process.env.NODE_ENV === 'development') {
   global.Path = require('path')
   // @ts-ignore
   global._ = require('lodash')
+  // @ts-ignore
+  global.r2 = require('@mcro/r2')
 }
 
 const Desktop = require('./desktop').default

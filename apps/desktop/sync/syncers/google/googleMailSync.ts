@@ -102,8 +102,9 @@ export default class GoogleMailSync {
     for (const { id } of threads) {
       log(`mapThread`, id)
       const info = await this.fetchThread(id)
-      await sleep(100)
+      await sleep(500)
       results.push(await onThread(info))
+      log('finish', id)
     }
     return results
   }

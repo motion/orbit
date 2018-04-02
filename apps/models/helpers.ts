@@ -13,7 +13,7 @@ export async function findOrCreate(Model: any, values: Object) {
 export async function createOrUpdate(
   Model: any,
   values: Object,
-  findFields?: [string],
+  findFields?: Array<string>,
 ) {
   const finalFields = findFields ? pick(values, findFields) : values
   let item = (await Model.findOne({ where: finalFields })) || new Model()

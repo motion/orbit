@@ -2,6 +2,7 @@ import 'isomorphic-fetch'
 import '@mcro/debug/inject'
 import '@mcro/black/mlog'
 import * as Mobx from 'mobx'
+import debug from '@mcro/debug'
 
 require('module-alias').addAlias('~', __dirname + '/')
 

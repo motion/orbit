@@ -3,6 +3,7 @@ import { App, Desktop } from '@mcro/all'
 import { Bit, Setting } from '@mcro/models'
 import fuzzySort from 'fuzzysort'
 import * as Constants from '~/constants'
+import * as r2 from '@mcro/r2'
 
 // const log = debug('root')
 const presetAnswers = {
@@ -130,7 +131,7 @@ export default class AppStore {
         ...setting.values,
         oauth,
       }
-      setting.save()
+      await setting.save()
       this.getSettings()
       App.setAuthState({ closeId: id })
     }, 1000)

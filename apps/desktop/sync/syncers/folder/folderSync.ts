@@ -71,14 +71,11 @@ class FolderSync {
   }
 }
 
-export default setting => {
-  return new Syncer('folder', {
-    setting,
-    actions: {
-      folder: { every: 60 * 5 }, // 5 minutes
-    },
-    syncers: {
-      folder: new FolderSync(setting),
-    },
-  })
-}
+export default new Syncer('folder', {
+  actions: {
+    folder: { every: 60 * 5 }, // 5 minutes
+  },
+  syncers: setting => ({
+    folder: new FolderSync(setting),
+  }),
+})

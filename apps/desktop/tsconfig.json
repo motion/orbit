@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
-    "module": "CommonJS",
+    "module": "commonjs",
+    "moduleResolution": "node",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "target": "es2017",
@@ -13,7 +14,7 @@
     "allowJs": true,
     "sourceMap": true,
     // "skipLibCheck": true,
-    "lib": ["es6", "dom", "es2017.object"],
+    "lib": ["es2015", "es2016", "es2017"],
     "baseUrl": "./",
     "paths": {
       "~/*": ["*"]

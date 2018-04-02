@@ -29,7 +29,6 @@ export async function ensureJob(
   if (force) {
     return await createJob()
   }
-
   const lastPending = await Job.lastPending({ type, action })
   if (lastPending) {
     const secondsAgo =
@@ -44,7 +43,7 @@ export async function ensureJob(
           lastError: { message: 'stale' },
         })
       } catch (e) {
-        console.log(e)
+        console.log('ensure job err', e)
       }
     } else {
       log('no need to run', type, action)
@@ -60,7 +59,7 @@ export async function ensureJob(
     return await createJob()
   } else {
     // not old enough
-    // log('Not old enough', type, action)
+    log('Not old enough', type, action)
   }
 }
 

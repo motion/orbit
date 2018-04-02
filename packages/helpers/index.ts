@@ -7,6 +7,8 @@ export const { CompositeDisposable } = EventKit
 export const { requestAnimationFrame, setTimeout, setInterval, on } = Events
 export const ref = ref_
 
+export const sleep = ms => new Promise(res => setTimeout(res, ms))
+
 import { comparer } from 'mobx'
 export const isEqual = comparer.structural
 

@@ -21,6 +21,7 @@
     "@mcro/macros": "*",
     "@mcro/models": "*",
     "@mcro/examples": "*",
+    "@mcro/helpers": "*",
     "module-alias": "^2.0.6",
     "js-yaml": "^3.11.0",
     "typeorm": "0.1.19",

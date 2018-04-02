@@ -1,10 +1,27 @@
 import { Bit, Setting, createOrUpdate } from '@mcro/models'
-import { createInChunks } from '~/sync/helpers'
 import debug from '@mcro/debug'
 import { sleep } from '@mcro/helpers'
 import getHelpers from './getHelpers'
+import { first, last } from 'lodash'
 
 const log = debug('googleMail')
+
+type Message = {
+  id: string
+  threadId: string
+  labelIds: [string]
+  snippet: string
+  historyId: string
+  internalDate: string
+  payload: {
+    headers: [{ name: string; value: string }]
+  }
+}
+
+type ThreadObject = {
+  id: string
+  messages: [Message]
+}
 
 export default class GoogleMailSync {
   helpers = getHelpers({})
@@ -27,49 +44,66 @@ export default class GoogleMailSync {
 
   async syncMail() {
     const threads = await this.getThreads()
-    // const results = await createInChunks(files, this.createMessage)
-    log('syncMessages', threads)
-    return threads
+    log('syncMail', threads)
+    const results = await this.mapThreads(threads.threads, this.createThread)
+    return results
   }
 
-  createMessage = async info => {
-    console.log('got message', info)
-    // const { name, contents, ...data } = info
-    // const created = info.createdTime
-    // const updated = info.modifiedTime
-    // return await createOrUpdate(Bit, {
-    //   id: info.id,
-    //   integration: 'google',
-    //   type: 'mail',
-    //   title: name,
-    //   body: contents,
-    //   data,
-    //   orgName: info.spaces ? info.spaces[0] : '',
-    //   parentId: info.parents ? info.parents[0] : '',
-    //   created,
-    //   updated,
-    // })
+  getDateFromThread = (message: Message) =>
+    message.payload.headers.find(x => x.name === 'Date').value
+
+  createThread = async (data: ThreadObject) => {
+    const { id, messages } = data
+    const firstMessage = first(messages)
+    const bitCreatedAt = this.getDateFromThread(firstMessage)
+    const bitUpdatedAt = this.getDateFromThread(last(messages))
+    return await createOrUpdate(Bit, {
+      identifier: id,
+      integration: 'google',
+      type: 'mail',
+      title: firstMessage.payload.headers.find(x => x.name === 'Subject').value,
+      body: firstMessage.snippet,
+      data,
+      bitCreatedAt,
+      bitUpdatedAt,
+    })
   }
 
   async getThreads(pages = 1, query: { pageToken?: any } = {}) {
-    let all = []
+    let threads = []
+    let pageToken
     let fetchedPages = 0
     while (fetchedPages < pages) {
       fetchedPages++
+      if (fetchedPages > 1) {
+        await sleep(80)
+      }
       const res = await this.fetchThreads(query)
       if (res) {
-        all = [...all, ...res.threads]
+        threads = [...threads, ...res.threads]
         if (res.nextPageToken) {
           query.pageToken = res.nextPageToken
+          pageToken = res.nextPageToken
         }
       } else {
         console.error('No res', res, query)
       }
     }
-    return all
+    return { threads, pageToken }
+  }
+
+  async mapThreads(threads, onThread) {
+    let results = []
+    for (const { id } of threads) {
+      const info = await this.fetchThread(id)
+      await sleep(100)
+      results.push(await onThread(info))
+    }
+    return results
   }
 
   fetchThreads = query => this.fetch('/users/me/threads', { query })
+  fetchThread = (id, query?) => this.fetch(`/users/me/threads/${id}`, { query })
 
   async getMessages() {
     console.log(await this.fetch(`/users/me/messages`))

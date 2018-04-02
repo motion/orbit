@@ -16,28 +16,28 @@ type FetchOptions =
 export default setting => ({
   // clientId: Constants.GOOGLE_CLIENT_ID,
   baseUrl: 'https://content.googleapis.com',
-  refreshToken() {
+  async refreshToken() {
     if (!setting.values.oauth.refreshToken) {
       return null
     }
-    const body = {
-      refresh_token: setting.values.oauth.refreshToken,
-      client_id: Strategies.google.config.credentials.clientID,
-      client_secret: Strategies.google.config.credentials.clientSecret,
-      grant_type: 'refresh_token',
-    }
-    console.log('Refresh Google Token', body)
-    return r2.post('https://www.googleapis.com/oauth2/v4/token', {
+    const reply = await r2.post('https://www.googleapis.com/oauth2/v4/token', {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
-      body,
+      formData: {
+        refresh_token: setting.values.oauth.refreshToken,
+        client_id: Strategies.google.config.credentials.clientID,
+        client_secret: Strategies.google.config.credentials.clientSecret,
+        grant_type: 'refresh_token',
+      },
     }).json
+    if (reply && reply.access_token) {
+      return reply.access_token
+    }
+    return null
   },
-  async fetch(
-    path,
-    { headers, body, type = 'json', isRetrying, ...rest }: FetchOptions = {},
-  ) {
+  async fetch(path, options: FetchOptions = {}) {
+    const { headers, body, type = 'json', isRetrying, ...rest } = options
     const fetcher = r2.get(`${this.baseUrl}${path}`, {
       mode: 'cors',
       ...rest,
@@ -52,22 +52,16 @@ export default setting => ({
     const res = await fetcher[type]
     if (res.error) {
       if (res.error.code === 401 && !isRetrying) {
-        console.log('refreshing token', setting.values.oauth.refreshToken)
-        // setting.values.oauth.refreshToken = null
-        await setting.save()
-        console.log('got token', await this.refreshToken())
-        // retry if got new token
-        if (setting.values.oauth.refreshToken) {
-          return await this.fetch(path, {
-            headers,
-            body,
-            query,
-            type,
-            ...rest,
-            isRetrying: true,
-          })
+        const accessToken = await this.refreshToken()
+        if (accessToken) {
+          setting.token = accessToken
+          await setting.save()
         }
-        return null
+        console.log(`trying again after refreshing token`)
+        return await this.fetch(path, {
+          ...options,
+          isRetrying: true,
+        })
       }
       throw res.error
     }

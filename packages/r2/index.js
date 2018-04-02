@@ -110,7 +110,7 @@ class R2 {
     return this
   }
   _request() {
-    const { query, json, body } = this.opts
+    const { formData, query, json, body } = this.opts
     let { url } = this.opts
     delete this.opts.url
     delete this.opts.query
@@ -120,6 +120,13 @@ class R2 {
         .map(k => `${esc(k)}=${esc(query[k])}`)
         .join('&')
       url = url + `?${queryString}`
+    }
+    if (formData && Object.keys(formData).length) {
+      const esc = encodeURIComponent
+      const body = Object.keys(formData)
+        .map(k => `${esc(k)}=${esc(formData[k])}`)
+        .join('&')
+      this.opts.body = body
     }
     if (json) {
       delete this.opts.json

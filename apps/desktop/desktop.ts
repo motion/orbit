@@ -90,7 +90,7 @@ export default class DesktopRoot {
   }
 
   restart() {
-    require('touch')(Path.join(__dirname, '..', 'lib', 'index.js'))
+    require('touch')(Path.join(__dirname, '..', '_', 'index.js'))
   }
 
   dispose = async () => {

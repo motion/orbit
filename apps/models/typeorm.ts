@@ -9,7 +9,7 @@ const {
   CreateDateColumn,
   UpdateDateColumn,
   VersionColumn,
-} = isBrowser ? require('typeorm/browser') : require('typeorm')
+} = isBrowser ? require('typeorm/browser') : eval(`require('typeorm')`)
 
 export {
   CreateDateColumn,

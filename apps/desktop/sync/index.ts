@@ -1,10 +1,10 @@
 import { store, watch, react } from '@mcro/black'
 import * as Syncers from './syncers'
-import { Job, Setting, findOrCreate } from '@mcro/models'
+import { Job, Setting, findOrCreate, remove } from '@mcro/models'
 import debug from '@mcro/debug'
 
 const log = debug('sync')
-debug.quiet('sync')
+// debug.quiet('sync')
 
 @store
 export default class Sync {
@@ -13,9 +13,13 @@ export default class Sync {
   syncers?: Object = null
   enabled = false
 
-  start() {
+  async start() {
     this.enabled = true
     this.startSyncers()
+    await remove(Job)
+      .where('status = :status', { status: Job.statuses.FAILED })
+      .orWhere('status = :status', { status: Job.statuses.COMPLETE })
+      .execute()
     setInterval(async () => {
       const jobs = await Job.find({ status: Job.statuses.PENDING })
       this.jobs = jobs
@@ -34,7 +38,6 @@ export default class Sync {
   processJobs = [
     () => this.jobs,
     async jobs => {
-      log('startJobs jobs:', jobs ? jobs.length : 0)
       if (!this.enabled) {
         return
       }
@@ -62,7 +65,6 @@ export default class Sync {
 
         this.locks.add(job.lock)
         try {
-          log('Run job', job.type, job.action)
           await this.runJob(job)
           complete = true
         } catch (error) {
@@ -151,13 +153,9 @@ export default class Sync {
   }
 
   runJob = async (job: Job) => {
-    log('runJob()', job.type, job.action)
     job.status = Job.statuses.PROCESSING
     job.tries += 1
     await job.save()
-    if (!this.syncers) {
-      return
-    }
     const syncer = this.syncers[job.type]
     if (!syncer) {
       console.log('no syncer found for', job)
@@ -169,7 +167,6 @@ export default class Sync {
       job.percent = 100
       job.status = Job.statuses.COMPLETE
       await job.save()
-      log('runJob() done', job.type, job.action)
     } catch (error) {
       console.log('error running syncer', error.message || error)
       job.status = Job.statuses.FAILED

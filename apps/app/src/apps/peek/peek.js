@@ -1,33 +1,40 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, watch } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { App, Electron } from '@mcro/all'
+import { Bit } from '@mcro/models'
 import { SHADOW_PAD, APP_SHADOW, BORDER_RADIUS } from '~/constants'
 import * as PeekContents from './peekContents'
 import { capitalize } from 'lodash'
 
-console.log('PeekContents', PeekContents)
+class PeekStore {
+  @watch
+  bit = () =>
+    App.state.selectedItem && Bit.findOne({ id: App.state.selectedItem.id })
+}
 
 @UI.injectTheme
-@view
+@view({
+  peekStore: PeekStore,
+})
 export default class PeekPage {
-  render({ theme }) {
+  render({ peekStore, theme }) {
     const { selectedItem } = App.state
-    let type = 'Empty'
-    if (selectedItem) {
-      type = capitalize(selectedItem.type) || 'Empty'
-    }
-    const PeekContentsView = PeekContents[type]
+    const type = (selectedItem && capitalize(selectedItem.type)) || 'Empty'
+    const PeekContentsView = PeekContents[type] || PeekContents['Empty']
     if (!PeekContentsView) {
       console.error('none', type)
       return <peek>no pane found</peek>
     }
-    // const { currentPeek } = Electron
     const { fullScreen } = Electron.orbitState
+    console.log('selectedItem', selectedItem)
     if (!selectedItem && !fullScreen) {
       return null
     }
     const onLeft = !fullScreen && Electron.peekState.peekOnLeft
+    const { isShowingPeek } = App
+    // const isShowingPeek = true
+    log(`rendering`, isShowingPeek, type)
     return (
       <UI.Theme name="tan">
         <peek
@@ -36,8 +43,8 @@ export default class PeekPage {
             paddingLeft: fullScreen ? 0 : SHADOW_PAD,
             marginRight: fullScreen ? 0 : !onLeft ? SHADOW_PAD : -SHADOW_PAD,
           }}
-          $animate={App.isShowingPeek}
-          $peekVisible={App.isShowingPeek}
+          $animate={isShowingPeek}
+          $peekVisible={isShowingPeek}
         >
           <main
             css={{
@@ -51,7 +58,7 @@ export default class PeekPage {
               background: fullScreen ? theme.base.background : '#fff',
             }}
           >
-            <PeekContentsView bit={selectedItem} item={selectedItem} />
+            <PeekContentsView bit={peekStore.bit} selectedItem={selectedItem} />
           </main>
         </peek>
       </UI.Theme>

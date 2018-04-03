@@ -13,7 +13,7 @@ const setExiting = async () => {
   }
   setTimeout(() => {
     process.kill(process.pid)
-  })
+  }, 10)
 }
 process.on('unhandledRejection', function(reason) {
   console.log('debug.unhandledRejection', reason.message)
@@ -25,7 +25,7 @@ process.on('SIGINT', setExiting)
 process.on('exit', setExiting)
 
 export default async function start({
-  expectTabs,
+  expectTabs = 1,
   sessions = [],
   port = 8000,
 } = {}) {

@@ -1,6 +1,5 @@
-// @flow
 import { App } from '@mcro/all'
-import { debugState, when } from '@mcro/black'
+import { debugState } from '@mcro/black'
 import { ThemeProvide } from '@mcro/ui'
 import { sleep } from '~/helpers'
 import * as Models from '@mcro/models'
@@ -39,9 +38,7 @@ class AppRoot {
   async start() {
     await App.start()
     if (Constants.IS_PEEK) {
-      console.log('sleep for orbit connect')
-      await sleep(2000)
-      console.log('done orbit connect')
+      await sleep(1000)
     }
     await connectModels(Object.keys(Models).map(x => Models[x]))
     if (Constants.IS_ORBIT) {
@@ -68,7 +65,7 @@ class AppRoot {
     )
   }
 
-  handleError = (...errors: Array<Error>) => {
+  handleError = (...errors) => {
     const unique = uniqBy(errors, err => err.name)
     const final = []
     for (const error of unique) {
@@ -96,7 +93,7 @@ class AppRoot {
 
 let app = window.Root
 
-export async function start(recreate?: boolean) {
+export async function start(recreate) {
   if (window.Root || window._isDisposing) return
   window._isDisposing = true
   if (app) {

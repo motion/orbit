@@ -1,4 +1,7 @@
 const isBrowser = eval(`typeof window !== 'undefined'`)
+const typeorm = isBrowser
+  ? require('typeorm/browser')
+  : eval(`require('typeorm')`)
 
 const {
   BaseEntity,
@@ -9,7 +12,7 @@ const {
   CreateDateColumn,
   UpdateDateColumn,
   VersionColumn,
-} = isBrowser ? require('typeorm/browser') : eval(`require('typeorm')`)
+} = typeorm
 
 export {
   CreateDateColumn,
@@ -20,6 +23,15 @@ export {
   Column,
   PrimaryGeneratedColumn,
   OneToMany,
+}
+
+// globals
+if (isBrowser) {
+  // @ts-ignore
+  window.typeorm = typeorm
+} else {
+  // @ts-ignore
+  global.typeorm = typeorm
 }
 
 // avoid

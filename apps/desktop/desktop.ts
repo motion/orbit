@@ -17,7 +17,6 @@ import { react, store, debugState } from '@mcro/black'
 import global from 'global'
 import Path from 'path'
 import { getChromeContext } from './helpers/getContext'
-// import SearchStore from './stores/search'
 import open from 'opn'
 import iohook from 'iohook'
 import debug from '@mcro/debug'
@@ -34,7 +33,6 @@ export default class DesktopRoot {
   screen: Screen
   plugins: Plugins
   keyboardStore: KeyboardStore
-  // searchStore = new SearchStore()
   server = new Server()
   auth = new Auth()
   sqlite = new SQLiteServer()

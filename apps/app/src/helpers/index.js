@@ -1,7 +1,5 @@
-// @flow
 import latinize from 'latinize'
 import * as React from 'react'
-import fuzzy_ from './fuzzy'
 
 export hoverSettler from './hoverSettler'
 export logClass from './logClass'
@@ -28,24 +26,20 @@ export const contextToResult = state => {
 // maybe im missing something in flow
 window.React = React
 
-export const fuzzy = fuzzy_
 export const Component = React.Component
 
 class Cache {
-  all: Set = new Set()
-  add = (item: any) => this.all.add(item)
-  remove = (item: any) => this.all.delete(item)
+  all = new Set()
+  add = item => this.all.add(item)
+  remove = item => this.all.delete(item)
 }
 export const viewCache = new Cache()
 
 import { HotKeys as OGHotKeys } from 'react-hotkeys'
 
 // ensures it doesnt interrupt flexing
-type Props = {
-  style: any,
-}
 
-export const HotKeys = ({ style, ...props }: Props) => (
+export const HotKeys = ({ style, ...props }) => (
   <OGHotKeys
     style={{
       flex: 'inherit',

@@ -66,15 +66,17 @@ export default class AppReactions {
     },
   ]
 
+  // TODO: need to only clear if something is "selected"
+  // and implement a "selected" vs "hovered state" / visuals
   @react({
     delay: 300,
   })
   clearPeekOnMouseOut = [
     () => Electron.isMouseInActiveArea,
     mouseOver => {
-      if (!mouseOver) {
-        App.setPeekTarget(null)
-      }
+      // if (!mouseOver) {
+      //   App.setPeekTarget(null)
+      // }
     },
   ]
 

@@ -1,6 +1,7 @@
 import iohook from 'iohook'
 import { Desktop } from '@mcro/all'
 import { isEqual } from 'lodash'
+import debug from '@mcro/debug'
 
 const codes = {
   esc: 1,
@@ -9,6 +10,8 @@ const codes = {
   up: 57416,
   down: 57424,
   space: 57,
+  shift: 42,
+  shiftRight: 54,
   pgUp: 3657,
   pgDown: 3665,
 }
@@ -30,8 +33,9 @@ export default class KeyboardStore {
   // so in cases of errors, we clear it after a little delay
   keysDown = new Set()
   pauseTm = null
+  onKeyClear?: Function
 
-  constructor(opts = {}) {
+  constructor(opts: { onKeyClear?: Function } = {}) {
     this.onKeyClear = opts.onKeyClear
   }
 
@@ -40,27 +44,38 @@ export default class KeyboardStore {
 
     // keydown
     iohook.on('keydown', ({ keycode }) => {
+      this.keysDown.add(keycode)
       clearTimeout(clearLastKeys)
       this.lastKeys.push(['down', keycode])
-      this.keysDown.add(keycode)
       this.clearDownKeysAfterPause()
       // log(`keydown: ${keycode}`)
       if (keycode === codes.esc) {
         return Desktop.setKeyboardState({ esc: Date.now() })
       }
       const isOption = keycode === codes.option || keycode === codes.optionRight
-      if (this.keysDown.size > 1 && isOption) {
-        log(`option: already holding ${this.keysDown.size} keys`)
+      const isShift = keycode === codes.shift || keycode === codes.shiftRight
+      const isHoldingShift = this.keysDown.has(codes.shift)
+      const holdingKeys = this.keysDown.size
+      // clears:
+      if (!isHoldingShift && holdingKeys > 1 && isOption) {
         return Desktop.clearOption()
+      }
+      const isHoldingOption = this.keysDown.has(codes.option)
+      if (holdingKeys > 2 && isHoldingShift && isHoldingOption) {
+        return Desktop.setKeyboardState({
+          optionUp: Date.now(),
+          spaceUp: Date.now(),
+        })
       }
       if (isOption) {
         return Desktop.setKeyboardState({ option: Date.now() })
       }
-      if (this.keysDown.has(codes.option)) {
+      if (this.keysDown.has(codes.option) && !isHoldingShift) {
         return Desktop.clearOption()
       }
       switch (keycode) {
-        // clear highlights keys
+        case codes.shift:
+          return Desktop.setKeyboardState({ shift: Date.now() })
         case codes.space:
           return Desktop.setKeyboardState({ space: Date.now() })
         case codes.up:
@@ -75,20 +90,23 @@ export default class KeyboardStore {
 
     // keyup
     iohook.on('keyup', ({ keycode }) => {
+      this.keysDown.delete(keycode)
       clearTimeout(clearLastKeys)
       this.lastKeys.push(['up', keycode])
       while (this.lastKeys.length > 4) {
         this.lastKeys.shift() // ensure only 4 max
       }
-      this.keysDown.delete(keycode)
       this.clearDownKeysAfterPause()
       // option off
       switch (keycode) {
+        case codes.shift:
+          Desktop.setKeyboardState({ shiftUp: Date.now() })
+          break
         case codes.option:
           Desktop.clearOption()
           break
         case codes.space:
-          Desktop.setKeyboardState({ space: null })
+          Desktop.setKeyboardState({ spaceUp: Date.now() })
           break
       }
       if (isEqual(this.lastKeys, DOUBLE_TAP_OPTION)) {

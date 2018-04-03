@@ -20,6 +20,11 @@ const onFocus = page => {
 }
 
 export default class DebugApps {
+  isRendering?: Boolean
+  disposed?: Boolean
+  browser: any
+  options: any
+  sessions = []
   intervals = []
 
   constructor({ sessions = [], ...options }) {
@@ -220,9 +225,7 @@ export default class DebugApps {
               }
               const titleText =
                 PORT_NAMES[port] || url.replace('http://localhost:3001', '')
-              if (title.innerHTML !== titleText) {
-                title.innerHTML = titleText
-              }
+              title.innerHTML = titleText
             } catch (err) {
               console.log('error doing this', err)
             }

@@ -1,4 +1,3 @@
-// @flow
 import Router from '@mcro/router'
 
 function runRouter() {

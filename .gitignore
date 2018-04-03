@@ -28,16 +28,13 @@ apps/oracle/swindler/Carthage
 apps/oracle/swindler/Build
 apps/app/build
 apps/desktop/build
-apps/desktop/data/database.sqlite
 apps/desktop/data/database
 apps/site/build
-apps/search/build
 apps/electron/build
 apps/crawler/build
 
 packages/screendump/build
 packages/electron-build/app
-packages/search/build
 
 **/*/Index
 

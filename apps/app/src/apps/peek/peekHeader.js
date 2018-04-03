@@ -1,4 +1,3 @@
-// @flow
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
@@ -7,7 +6,7 @@ import { Electron } from '@mcro/all'
 
 @view
 export default class PeekHeader {
-  render({ title, date }) {
+  render({ title, date, subtitle, after }) {
     const { fullScreen } = Electron.orbitState
     if (!Electron.currentPeek) {
       return null
@@ -22,8 +21,12 @@ export default class PeekHeader {
         </buttons>
         <title if={title}>
           <UI.Title size={1.3}>{title}</UI.Title>
+          <UI.Title if={subtitle} size={1}>
+            {subtitle}
+          </UI.Title>
           <UI.Date css={{ opacity: 0.5 }}>{date}</UI.Date>
         </title>
+        <after if={after}>{after}</after>
       </header>
     )
   }

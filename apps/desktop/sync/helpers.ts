@@ -19,7 +19,6 @@ export async function ensureJob(
   options: Object = {},
   force?: boolean,
 ): Promise<Job | undefined> {
-  log(`ensureJob() ${type} ${action}`)
   const createJob = () => {
     const job = new Job()
     job.type = type

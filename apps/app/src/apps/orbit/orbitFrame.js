@@ -5,7 +5,7 @@ import { App, Electron, Desktop } from '@mcro/all'
 import * as Constants from '~/constants'
 
 const { SHADOW_PAD, APP_SHADOW } = Constants
-const orbitLightShadow = [[0, 3, SHADOW_PAD, 2, [0, 0, 0, 0.1]]]
+const orbitLightShadow = [[0, 3, SHADOW_PAD, 0, [0, 0, 0, 0.1]]]
 const iWidth = 4
 const arrowSize = 22
 // const log = debug('OrbitFrame')

@@ -1,4 +1,3 @@
-// @flow
 import { ThemeMaker } from '@mcro/ui'
 import * as Constants from '~/constants'
 

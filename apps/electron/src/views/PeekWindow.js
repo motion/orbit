@@ -1,4 +1,3 @@
-// @flow
 import * as React from 'react'
 import * as Constants from '~/constants'
 import { view, react } from '@mcro/black'
@@ -8,13 +7,13 @@ import * as Helpers from '~/helpers'
 import { App, Electron } from '@mcro/all'
 import * as Mobx from 'mobx'
 
-type PeekTarget = {
-  key: string,
-  top: number,
-  left: number,
-  width: number,
-  height: number,
-}
+// type PeekTarget = {
+//   key: string,
+//   top: number,
+//   left: number,
+//   width: number,
+//   height: number,
+// }
 
 const idFn = _ => _
 const PAD = 15
@@ -29,7 +28,7 @@ const windowProps = {
   transparent: true,
 }
 
-const peekPosition = (target: PeekTarget) => {
+const peekPosition = target => {
   const { left, top, width } = target
   const EDGE_PAD = 20
   const TOP_OFFSET = -20
@@ -55,7 +54,7 @@ const peekPosition = (target: PeekTarget) => {
       x = 0
     }
   } else {
-    x = left + width
+    x = left + width + (!peekOnLeft ? 6 : 0)
     if (peekW > rightSpace) {
       peekW = rightSpace
     }
@@ -83,9 +82,9 @@ class PeekStore {
         return
       }
       // focus peek new target to move above orbit
-      if (this.props.electronStore.peekRef) {
-        this.props.electronStore.peekRef.focus()
-      }
+      // if (this.props.electronStore.peekRef) {
+      //   this.props.electronStore.peekRef.focus()
+      // }
       Electron.updatePeek(Electron.currentPeek, peek => {
         Object.assign(peek, peekPosition(peekTarget.position))
       })
@@ -118,14 +117,6 @@ export default class PeekWindow {
 
   componentDidMount() {
     this.mounted = true
-    // this.watch(function watchPeekClose() {
-    //   const key = App.state.peekClose
-    //   if (!key) return
-    //   const windows = Electron.peekState.windows.filter(
-    //     p => `${p.key}` !== `${key}`,
-    //   )
-    //   Electron.setPeekState({ windows })
-    // })
   }
 
   handleReadyToShow = memoize(peek => () => {

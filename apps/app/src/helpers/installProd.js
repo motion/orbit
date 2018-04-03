@@ -1,4 +1,3 @@
-// @flow
 import * as Constants from '~/constants'
 import r2 from '@mcro/r2'
 

@@ -2,6 +2,7 @@ import * as Constants from '~/constants'
 import { URLSearchParams } from 'url'
 import r2 from '@mcro/r2'
 import Strategies from '~/server/oauth.strategies'
+import Gmail from 'node-gmail-api'
 
 type FetchOptions =
   | undefined
@@ -32,10 +33,12 @@ export default setting => ({
       },
     }).json
     if (reply && reply.access_token) {
-      return reply.access_token
+      setting.token = reply.access_token
+      await setting.save()
     }
     return null
   },
+  batch: setting.token && new Gmail(setting.token),
   async fetch(path, options: FetchOptions = {}) {
     const { headers, body, type = 'json', isRetrying, ...rest } = options
     const fetcher = r2.get(`${this.baseUrl}${path}`, {
@@ -53,10 +56,6 @@ export default setting => ({
     if (res.error) {
       if (res.error.code === 401 && !isRetrying) {
         const accessToken = await this.refreshToken()
-        if (accessToken) {
-          setting.token = accessToken
-          await setting.save()
-        }
         console.log(`trying again after refreshing token`)
         return await this.fetch(path, {
           ...options,

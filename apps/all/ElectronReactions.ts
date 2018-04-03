@@ -1,4 +1,3 @@
-// @flow
 import { store, react } from '@mcro/black/store'
 import App from './App'
 import Desktop from './Desktop'
@@ -33,6 +32,11 @@ export default class ElectronReactions {
   screenSize = screenSize
   afterUnFullScreen = null
 
+  willFullScreen = () => {
+    Electron.setState({ willFullScreen: Date.now() })
+    this.afterUnFullScreen = Date.now()
+  }
+
   @react
   unFullScreenOnHide = [
     () => Electron.state.shouldHide,
@@ -40,8 +44,20 @@ export default class ElectronReactions {
       if (!Electron.orbitState.fullScreen || App.state.orbitHidden) {
         return
       }
-      Electron.setState({ willFullScreen: Date.now() })
-      this.afterUnFullScreen = Date.now()
+      this.willFullScreen()
+    },
+  ]
+
+  @react
+  fullScreenOnOptionShift = [
+    () => Desktop.isHoldingOptionShift,
+    async (x, { sleep }) => {
+      if (x) {
+        await sleep(250)
+        Electron.toggleFullScreen()
+      } else {
+        //
+      }
     },
   ]
 
@@ -51,11 +67,11 @@ export default class ElectronReactions {
     Electron.togglePinned,
   ]
 
-  @react
-  unPinOnSwitchApp = [
-    () => Desktop.appState.id,
-    () => Electron.orbitState.pinned && Electron.setPinned(false),
-  ]
+  // @react
+  // unPinOnSwitchApp = [
+  //   () => Desktop.appState.id,
+  //   () => Electron.orbitState.pinned && Electron.setPinned(false),
+  // ]
 
   @react
   unPinOnFullScreen = [
@@ -92,6 +108,7 @@ export default class ElectronReactions {
       }
       if (Electron.orbitState.position) {
         const mouseOver = isMouseOver(Electron.orbitState, mousePosition)
+        log('isover', mouseOver)
         if (mouseOver !== Electron.orbitState.mouseOver) {
           Electron.setOrbitState({ mouseOver })
         }

@@ -1,5 +1,4 @@
 import { view } from '@mcro/black'
-import * as UI from '@mcro/ui'
 import { App, Electron } from '@mcro/all'
 import { partition } from 'lodash'
 import Card from './orbitCard'

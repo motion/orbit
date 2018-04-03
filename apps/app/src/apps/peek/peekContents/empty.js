@@ -3,7 +3,7 @@ import * as UI from '@mcro/ui'
 
 export const Empty = ({ item }) =>
   item ? (
-    <pane css={{ flex: 1 }}>
+    <pane css={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <img
         if={item.icon}
         src={`/icons/${item.icon}`}

@@ -34,13 +34,12 @@ export default class Syncer {
     if (!action) {
       throw new Error('Must provide action')
     }
-    log(`run() ${this.type} ${action}`)
     if (!this.actions[action]) {
       throw new Error(`NO SYNCER FOUND ${action}`)
     }
     const setting = await findOrCreate(Setting, { type: this.type })
     if (!setting || !setting.token) {
-      throw `No setting token for syncer ${this.type}`
+      return
     }
     this.syncers = this.getSyncers(setting)
     for (const name of Object.keys(this.syncers)) {
@@ -48,6 +47,7 @@ export default class Syncer {
         this[name] = this.syncers[name]
       }
     }
+    log(`run() ${this.type} ${action}`)
     await this.syncers[action].run()
   }
 

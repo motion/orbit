@@ -98,6 +98,7 @@ export default class AppStore {
         // App.setSelectedItem(null)
         App.setSelectedItem({
           id: item.id || '',
+          icon: item.icon || '',
           title: item.title || '',
           body: item.body || '',
           type: item.type || '',

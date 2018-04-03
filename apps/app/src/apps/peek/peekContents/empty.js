@@ -2,7 +2,7 @@ import * as React from 'react'
 import * as UI from '@mcro/ui'
 import PeekFrame from '../peekFrame'
 
-export const Empty = ({ item }) =>
+export const Empty = ({ selectedItem: item }) =>
   item ? (
     <PeekFrame css={{ alignItems: 'center', justifyContent: 'center' }}>
       <img

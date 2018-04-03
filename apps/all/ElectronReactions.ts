@@ -32,6 +32,11 @@ export default class ElectronReactions {
   screenSize = screenSize
   afterUnFullScreen = null
 
+  willFullScreen = () => {
+    Electron.setState({ willFullScreen: Date.now() })
+    this.afterUnFullScreen = Date.now()
+  }
+
   @react
   unFullScreenOnHide = [
     () => Electron.state.shouldHide,
@@ -39,8 +44,19 @@ export default class ElectronReactions {
       if (!Electron.orbitState.fullScreen || App.state.orbitHidden) {
         return
       }
-      Electron.setState({ willFullScreen: Date.now() })
-      this.afterUnFullScreen = Date.now()
+      this.willFullScreen()
+    },
+  ]
+
+  @react
+  fullScreenOnOptionShift = [
+    () => Desktop.isHoldingOptionShift,
+    x => {
+      if (x) {
+        Electron.toggleFullScreen()
+      } else {
+        //
+      }
     },
   ]
 
@@ -50,11 +66,11 @@ export default class ElectronReactions {
     Electron.togglePinned,
   ]
 
-  @react
-  unPinOnSwitchApp = [
-    () => Desktop.appState.id,
-    () => Electron.orbitState.pinned && Electron.setPinned(false),
-  ]
+  // @react
+  // unPinOnSwitchApp = [
+  //   () => Desktop.appState.id,
+  //   () => Electron.orbitState.pinned && Electron.setPinned(false),
+  // ]
 
   @react
   unPinOnFullScreen = [

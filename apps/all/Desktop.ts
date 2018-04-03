@@ -29,7 +29,12 @@ export type DesktopState = {
     position: { x: Number; y: Number }
     mouseDown?: { x: Number; y: Number; at: Number }
   }
-  keyboardState: { option?: Date; optionUp?: Date; space?: Date }
+  keyboardState: {
+    option?: Date
+    optionUp?: Date
+    shiftUp?: Date
+    space?: Date
+  }
   highlightWords: { [key: string]: boolean }
   ocrState: {
     words?: [OCRItem]
@@ -102,6 +107,11 @@ class DesktopStore {
     return (option || 0) > (optionUp || 1)
   }
 
+  get isHoldingOptionShift(): Boolean {
+    const { shift, shiftUp } = Desktop.state.keyboardState
+    return (shift || 0) > (shiftUp || 1)
+  }
+
   get shouldHide() {
     return Desktop.state.lastScreenChange > Desktop.state.appStateUpdatedAt
   }
@@ -146,12 +156,7 @@ class DesktopStore {
   }
 
   // only clear if necessary
-  clearOption = () => {
-    const { option, optionUp } = Desktop.state.keyboardState
-    if (!option || !optionUp || option > optionUp) {
-      Desktop.setKeyboardState({ optionUp: Date.now() })
-    }
-  }
+  clearOption = () => Desktop.setKeyboardState({ optionUp: Date.now() })
 }
 
 Desktop = proxySetters(new DesktopStore())

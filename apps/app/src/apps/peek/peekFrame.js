@@ -7,7 +7,7 @@ import { SHADOW_PAD, APP_SHADOW, BORDER_RADIUS } from '~/constants'
 @UI.injectTheme
 @view
 export default class PeekFrame {
-  render({ children, theme }) {
+  render({ children, theme, ...props }) {
     const { selectedItem } = App.state
     const { fullScreen } = Electron.orbitState
     if (!selectedItem && !fullScreen) {
@@ -37,6 +37,7 @@ export default class PeekFrame {
             borderRightRadius: fullScreen ? BORDER_RADIUS : 0,
             background: fullScreen ? theme.base.background : '#fff',
           }}
+          {...props}
         >
           {children}
         </main>
@@ -46,7 +47,6 @@ export default class PeekFrame {
 
   static style = {
     peek: {
-      alignSelf: 'flex-end',
       width: '100%',
       height: '100%',
       padding: SHADOW_PAD,

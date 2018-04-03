@@ -56,7 +56,7 @@ export default class GoogleMailSync {
     }
   }
 
-  async syncMail(options = { max: 10, partial: true }) {
+  async syncMail(options = { max: 1000, partial: true }) {
     await this.updateSetting()
     const { max, partial } = options
     let historyId

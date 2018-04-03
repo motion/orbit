@@ -1,14 +1,10 @@
 next
 
-* gmail sync
-  * fix undefined threads
-  * fast resync
-  * sync up to 1k
-  * basic settings:
-    * see number of bits
-    * resync button
-    * cancel sync button
-    * sync progress
+* basic settings:
+  * see number of bits
+  * resync button
+  * cancel sync button
+  * sync progress
 * gmail view
   * show simple peek with threads
   * link to message (default app or browser?)

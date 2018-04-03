@@ -1,3 +1,5 @@
+let errorCb
+
 var PrimusAdaptor,
   SQLiteFactory,
   SQLitePlugin,
@@ -404,7 +406,10 @@ SQLitePluginTransaction.prototype.run = function() {
   errcb = (function(_this) {
     return function(err) {
       _this.error = function(err) {
-        return console.warn(err)
+        if (errorCb) {
+          errorCb()
+        }
+        console.warn(err)
       }
       return _this.abort(new Error(err))
     }
@@ -644,4 +649,10 @@ window.sqlitePlugin = {
   },
   openDatabase: SQLiteFactory.opendb,
   deleteDatabase: SQLiteFactory.deleteDb,
+}
+
+export default {
+  onError: userErrorCb => {
+    errorCb = userErrorCb
+  },
 }

@@ -13,12 +13,14 @@ export default class Sync {
   syncers?: Object = null
   enabled = false
 
-  start() {
+  async start() {
     this.enabled = true
     this.startSyncers()
-    remove(Job)
+    log('remove stale...')
+    await remove(Job)
       .where('status = :status', { status: Job.statuses.FAILED })
       .orWhere('status = :status', { status: Job.statuses.COMPLETE })
+      .execute()
     setInterval(async () => {
       const jobs = await Job.find({ status: Job.statuses.PENDING })
       this.jobs = jobs

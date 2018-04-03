@@ -55,8 +55,8 @@ export class SettingView {
                 icon="refresh"
                 onClick={() => {
                   const job = new Job()
-                  ;(job.type = store.selectedItem.integration),
-                    (job.action = 'mail')
+                  job.type = store.selectedItem.integration
+                  job.action = 'mail'
                   job.save()
                 }}
               />

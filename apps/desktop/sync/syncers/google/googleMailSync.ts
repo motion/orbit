@@ -59,7 +59,7 @@ export default class GoogleMailSync {
   get syncSettings() {
     return {
       max: 50,
-      ...(this.setting.values.syncSettings || {}),
+      ...((this.setting.values || {}).syncSettings || {}),
     }
   }
 

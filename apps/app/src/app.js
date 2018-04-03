@@ -1,6 +1,6 @@
 // @flow
 import { App } from '@mcro/all'
-import { debugState, when } from '@mcro/black'
+import { debugState } from '@mcro/black'
 import { ThemeProvide } from '@mcro/ui'
 import { sleep } from '~/helpers'
 import * as Models from '@mcro/models'
@@ -40,7 +40,7 @@ class AppRoot {
     await App.start()
     if (Constants.IS_PEEK) {
       console.log('sleep for orbit connect')
-      await sleep(2000)
+      await sleep(8000)
       console.log('done orbit connect')
     }
     await connectModels(Object.keys(Models).map(x => Models[x]))

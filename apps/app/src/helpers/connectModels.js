@@ -8,6 +8,7 @@ export default async function connectModels(models) {
       database: 'database',
       location: 'default',
       entities: models,
+      autoSchemaSync: true,
       logging: false,
       synchronize: true,
     })

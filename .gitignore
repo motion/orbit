@@ -28,7 +28,6 @@ apps/oracle/swindler/Carthage
 apps/oracle/swindler/Build
 apps/app/build
 apps/desktop/build
-apps/desktop/data/database.sqlite
 apps/desktop/data/database
 apps/site/build
 apps/search/build

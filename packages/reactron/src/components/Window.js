@@ -72,7 +72,11 @@ export default class Window extends BaseComponent {
       },
       show: propVal => {
         if (propVal) {
-          this.window.show()
+          if (this.props.focus) {
+            this.window.show()
+          } else {
+            this.window.showInactive()
+          }
         } else {
           this.window.hide()
         }

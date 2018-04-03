@@ -11,7 +11,8 @@ export default async function connectModels(models) {
       // location: 'default',
       entities: models,
       // logging: true,
-      // synchronize: true,
+      autoSchemaSync: true,
+      synchronize: true,
     })
     for (const model of models) {
       if (model.useConnection) {

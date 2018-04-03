@@ -2,23 +2,22 @@
   "compilerOptions": {
     "experimentalDecorators": true
   },
-  "include": ["apps/**/*"],
-  // , "packages/**/*"
+  "include": ["packages/**/*.ts"],
   "exclude": [
-    ".cache",
-    "orbit",
-    "pyocr",
-    "swindler",
-    "examples",
-    "public",
-    "node_modules",
-    "Build",
-    "assets",
-    "_",
-    "dist",
-    "es6",
-    "lib",
-    "bin",
-    "extensions"
+    "*/.cache",
+    "*/orbit",
+    "*/pyocr",
+    "*/swindler",
+    "*/examples",
+    "*/public",
+    "*/node_modules",
+    "*/Build",
+    "*/assets",
+    "*/_",
+    "*/dist",
+    "*/es6",
+    "*/lib",
+    "*/bin",
+    "*/extensions"
   ]
 }

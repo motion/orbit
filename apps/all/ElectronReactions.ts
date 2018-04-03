@@ -51,8 +51,9 @@ export default class ElectronReactions {
   @react
   fullScreenOnOptionShift = [
     () => Desktop.isHoldingOptionShift,
-    x => {
+    async (x, { sleep }) => {
       if (x) {
+        await sleep(250)
         Electron.toggleFullScreen()
       } else {
         //

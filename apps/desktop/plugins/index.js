@@ -40,6 +40,7 @@ export default class Plugins {
           newResults.slice(0, 25).map(async result => ({
             ...result,
             icon: result.icon ? await this.icons.getIcon(result.icon) : null,
+            type: 'app',
           })),
         )
         await sleep(64)

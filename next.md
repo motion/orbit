@@ -24,6 +24,7 @@ next
 
 queued ux stuff
 
+* hold option when text is selected and hit "delete", could pin
 * clicked vs hovered selections -- see AppReactions TODO
 * pin-on-click only when option holding
 * faster hover item highlight reaction time

@@ -56,12 +56,14 @@ export default class GoogleMailSync {
     }
   }
 
-  async syncMail(options = { max: 500, fullUpdate: false }) {
+  async syncMail(options = { max: 50, fullUpdate: false }) {
     await this.updateSetting()
     const { max, fullUpdate } = options
-    if (!fullUpdate) {
-      const { historyId } = this.setting.values
-      const history = await this.fetch('/users/me/history', { query: { startHistoryId: historyId } }))
+    const { historyId } = this.setting.values
+    if (!fullUpdate && historyId) {
+      const history = await this.fetch('/users/me/history', {
+        query: { startHistoryId: historyId },
+      })
       if (!history.history || !history.history.length) {
         log(`No new threads, sync up to date`)
         return
@@ -92,6 +94,7 @@ export default class GoogleMailSync {
 
   async syncThreads({ max }) {
     const { historyId } = this.setting.values
+    log(`syncThreads`, historyId)
     const { threads } = await this.getThreads(Math.ceil(max / 100), {
       historyId,
     })
@@ -99,12 +102,12 @@ export default class GoogleMailSync {
       threads.slice(0, max),
       this.createThread,
     )
-    if (results.length === max) {
-      log(`Successful sync`)
-      this.setting.values.historyId = threads[0].historyId
-      await this.setting.save()
+    const unCreated = max - results.length
+    if (unCreated) {
+      log(`Couldn't sync ${unCreated} threads`)
     }
-    console.log('finished mapping threads', threads, results)
+    this.setting.values.historyId = results[0].data.historyId
+    await this.setting.save()
   }
 
   streamThreads(query, options): Promise<string | null> {
@@ -135,7 +138,6 @@ export default class GoogleMailSync {
 
   createThread = async (data: ThreadObject) => {
     const { id, messages } = data
-    log(`Create thread ${id}`)
     const firstMessage = first(messages)
     const bitCreatedAt = this.getDateFromThread(firstMessage)
     const bitUpdatedAt = this.getDateFromThread(last(messages))
@@ -171,7 +173,10 @@ export default class GoogleMailSync {
       if (fetchedPages > 1) {
         await sleep(80)
       }
-      const query_ = pickBy({ pageToken: lastPageToken, historyId }, x => query[x])
+      const query_ = pickBy(
+        { pageToken: lastPageToken, historyId },
+        x => query[x],
+      )
       const res = await this.fetchThreads(query_)
       if (res) {
         threads = [...threads, ...res.threads]
@@ -186,23 +191,21 @@ export default class GoogleMailSync {
   async mapThreads(threads, onThread) {
     let results = []
     for (const { id } of threads) {
-      log(`mapThread`, id)
       let info
       try {
         info = await this.fetchThread(id)
-        await sleep(500)
+        await sleep(50)
       } catch (err) {
-        console.log('error fetching thread', id, err)
+        console.log(err, id)
         continue
       }
       results.push(await onThread(info))
-      log('finish', id)
     }
     return results
   }
 
   fetchThread = (id, query?) =>
-    timeCancel(this.fetch(`/users/me/threads/${id}`, { query }), 3000)
+    timeCancel(this.fetch(`/users/me/threads/${id}`, { query }), 5000)
 
   async getMessages() {
     console.log(await this.fetch(`/users/me/messages`))

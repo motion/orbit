@@ -120,11 +120,16 @@ export default class GoogleMailSync {
         let fetched = 0
         let threads = []
         const write = async () => {
-          const insertThreads = [...threads]
+          const date = Date.now()
+          const insertThreads = [...threads].map(thread => ({
+            ...thread,
+            createdAt: date,
+            updatedAt: date,
+          }))
           threads = []
           log('writing threads', insertThreads)
           await insert(Bit)
-            .values(threads)
+            .values(insertThreads)
             .execute()
         }
         threadSyncer.on('data', async (thread: ThreadObject) => {
@@ -138,7 +143,7 @@ export default class GoogleMailSync {
             res(newHistoryId || null)
             return
           }
-          if (fetched % 100 === 0) {
+          if (fetched % 25 === 0) {
             write()
           }
         })

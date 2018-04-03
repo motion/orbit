@@ -45,7 +45,7 @@ export default class GoogleMailSync {
 
   run = async () => {
     try {
-      await this.syncMail()
+      // await this.syncMail()
     } catch (err) {
       console.error(`GMail sync error ${err.message}`)
     }
@@ -93,6 +93,7 @@ export default class GoogleMailSync {
         await sleep(80)
       }
       const res = await this.fetchThreads(query)
+      console.log('got threads', res)
       if (res) {
         threads = [...threads, ...res.threads]
         if (res.nextPageToken) {
@@ -113,11 +114,11 @@ export default class GoogleMailSync {
       let info
       try {
         info = await this.fetchThread(id)
+        await sleep(500)
       } catch (err) {
-        console.log('error fetching thread', id, err.message)
+        console.log('error fetching thread', id, err)
         continue
       }
-      await sleep(500)
       results.push(await onThread(info))
       log('finish', id)
     }
@@ -126,7 +127,7 @@ export default class GoogleMailSync {
 
   fetchThreads = query => this.fetch('/users/me/threads', { query })
   fetchThread = (id, query?) =>
-    timeCancel(this.fetch(`/users/me/threads/${id}`, { query }), 1000)
+    timeCancel(this.fetch(`/users/me/threads/${id}`, { query }), 3000)
 
   async getMessages() {
     console.log(await this.fetch(`/users/me/messages`))

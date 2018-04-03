@@ -56,16 +56,16 @@ export default class GoogleMailSync {
     }
   }
 
-  async syncMail(options = { limit: 10, partial: true }) {
+  async syncMail(options = { max: 10, partial: true }) {
     await this.updateSetting()
-    const { limit, partial } = options
+    const { max, partial } = options
     let historyId
     if (partial) {
       historyId = this.setting.values.historyId
       log(`Using partial historyId`, historyId)
     }
     try {
-      const newHistoryId = await this.streamThreads('', { max: 10 })
+      const newHistoryId = await this.streamThreads('', { max })
       if (newHistoryId) {
         this.setting.values.historyId = newHistoryId
         await this.setting.save()

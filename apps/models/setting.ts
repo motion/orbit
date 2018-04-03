@@ -12,6 +12,7 @@ export class Setting extends T.BaseEntity {
     calendarsActive?: Object
     syncTokens?: Object
     folders?: [string]
+    historyId?: string
   }
   @T.CreateDateColumn() createdAt: Date
   @T.UpdateDateColumn() updatedAt: Date

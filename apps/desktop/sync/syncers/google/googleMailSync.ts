@@ -2,7 +2,7 @@ import { Bit, Setting, createOrUpdate } from '@mcro/models'
 import debug from '@mcro/debug'
 import { sleep } from '@mcro/helpers'
 import getHelpers from './getHelpers'
-import { first, last } from 'lodash'
+import { first, last, pickBy } from 'lodash'
 
 const log = debug('googleMail')
 const timeCancel = (asyncFn, ms) => {
@@ -51,10 +51,20 @@ export default class GoogleMailSync {
     }
   }
 
-  async syncMail() {
-    const threads = await this.getThreads()
-    log('syncMail', threads)
-    const results = await this.mapThreads(threads.threads, this.createThread)
+  async syncMail({ limit = 10, partial = true } = {}) {
+    let historyId
+    if (partial) {
+      historyId = await this.setting.values.historyId
+    }
+    const { threads } = await this.getThreads(Math.ceil(limit / 100), {
+      historyId,
+    })
+    const results = await this.mapThreads(
+      threads.slice(0, limit),
+      this.createThread,
+    )
+    this.setting.values.historyId = threads[0].historyId
+    await this.setting.save()
     return results
   }
 
@@ -83,28 +93,30 @@ export default class GoogleMailSync {
     )
   }
 
-  async getThreads(pages = 1, query: { pageToken?: any } = {}) {
+  async getThreads(
+    pages = 1,
+    query: { pageToken?: string; historyId?: string } = {},
+  ) {
+    const { pageToken, historyId } = query
     let threads = []
-    let pageToken
+    let lastPageToken = pageToken
     let fetchedPages = 0
     while (fetchedPages < pages) {
       fetchedPages++
       if (fetchedPages > 1) {
         await sleep(80)
       }
-      const res = await this.fetchThreads(query)
-      console.log('got threads', res)
+      const res = await this.fetchThreads(
+        pickBy({ pageToken: lastPageToken, historyId }, x => query[x]),
+      )
       if (res) {
         threads = [...threads, ...res.threads]
-        if (res.nextPageToken) {
-          query.pageToken = res.nextPageToken
-          pageToken = res.nextPageToken
-        }
+        lastPageToken = res.nextPageToken
       } else {
-        console.error('No res', res, query)
+        console.error('No res', res, { pageToken, historyId })
       }
     }
-    return { threads, pageToken }
+    return { threads, lastPageToken }
   }
 
   async mapThreads(threads, onThread) {

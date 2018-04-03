@@ -4,7 +4,7 @@ import { Job, Setting, findOrCreate, remove } from '@mcro/models'
 import debug from '@mcro/debug'
 
 const log = debug('sync')
-// debug.quiet('sync')
+debug.quiet('sync')
 
 @store
 export default class Sync {

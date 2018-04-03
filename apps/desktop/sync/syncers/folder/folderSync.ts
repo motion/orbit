@@ -8,6 +8,7 @@ import Yaml from 'js-yaml'
 import debug from '@mcro/debug'
 
 const log = debug('folder')
+debug.quiet('folder')
 
 class FolderSync {
   setting: Setting

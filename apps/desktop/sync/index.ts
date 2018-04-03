@@ -4,7 +4,7 @@ import { Job, Setting, findOrCreate, remove } from '@mcro/models'
 import debug from '@mcro/debug'
 
 const log = debug('sync')
-debug.quiet('sync')
+// debug.quiet('sync')
 
 @store
 export default class Sync {
@@ -16,7 +16,6 @@ export default class Sync {
   async start() {
     this.enabled = true
     this.startSyncers()
-    log('remove stale...')
     await remove(Job)
       .where('status = :status', { status: Job.statuses.FAILED })
       .orWhere('status = :status', { status: Job.statuses.COMPLETE })

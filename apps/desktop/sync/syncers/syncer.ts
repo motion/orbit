@@ -34,7 +34,6 @@ export default class Syncer {
     if (!action) {
       throw new Error('Must provide action')
     }
-    log(`run() ${this.type} ${action}`)
     if (!this.actions[action]) {
       throw new Error(`NO SYNCER FOUND ${action}`)
     }
@@ -48,6 +47,7 @@ export default class Syncer {
         this[name] = this.syncers[name]
       }
     }
+    log(`run() ${this.type} ${action}`)
     await this.syncers[action].run()
   }
 

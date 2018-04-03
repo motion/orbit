@@ -13,7 +13,7 @@ type MagicalObject = {
   props?: {}
 }
 
-let id = 0
+let id = 1
 const uid = () => id++ % Number.MAX_VALUE
 
 root.__trackStateChanges = {}
@@ -435,26 +435,67 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
   }
 
   // state used outside each watch/reaction
-  let reactionID
+  let isAsyncReaction = false
+  let reactionID = null
   let rejections = []
 
-  const rejectReaction = () => {
+  const reset = () => {
     rejections.map(rej => rej())
+    isAsyncReaction = false
+    reactionID = null
+  }
+
+  const preventLogging = () => (preventLog = true)
+  const sleep = ms => {
+    // log(`${name} sleeping for ${ms}`)
+    return new Promise((resolve, reject) => {
+      if (!reactionID) {
+        return reject(RejectReactionSymbol)
+      }
+      const sleepTimeout = setTimeout(resolve, ms)
+      rejections.push(() => {
+        clearTimeout(sleepTimeout)
+        reject(RejectReactionSymbol)
+      })
+    })
+  }
+  const when = condition => {
+    // log(`${name} sleeping for ${ms}`)
+    return new Promise((resolve, reject) => {
+      if (!reactionID) {
+        return reject(RejectReactionSymbol)
+      }
+      let cancelWhen = false
+      whenAsync(condition)
+        .then((val: any) => {
+          if (cancelWhen) return
+          resolve(val)
+        })
+        .catch(reject)
+      rejections.push(() => {
+        cancelWhen = true
+        reject(RejectReactionSymbol)
+      })
+    })
+  }
+
+  function replaceDisposable() {
+    if (curDisposable) {
+      curDisposable()
+      curDisposable = null
+    }
+    if (result && result.dispose) {
+      curDisposable = result.dispose.bind(result)
+    }
   }
 
   function watcher(reactionFn) {
     return function watcherCb(reactValArg) {
+      reset()
       reactionID = uid()
-      const id = reactionID
-      // cancels on new reactions
-      if (rejectReaction) {
-        rejectReaction()
-      }
-      let hasCalledSetValue = false
-      let isAsyncReaction = false
-      const start = Date.now()
+      const curID = reactionID
       const updateAsyncValue = val => {
-        if (id === reactionID) {
+        if (curID === reactionID) {
           replaceDisposable()
           if (!preventLog) {
             log(
@@ -467,44 +508,22 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
           update(val)
         }
       }
+      let hasCalledSetValue = false
+      const start = Date.now()
       root.__trackStateChanges.isActive = true
       const reactionResult = reactionFn.call(
         obj,
         isReaction ? reactValArg : obj.props,
         {
-          preventLogging: () => (preventLog = true),
+          preventLogging,
           // allows setting multiple values in a reaction
           setValue: val => {
             hasCalledSetValue = true
             updateAsyncValue(val)
           },
           // allows delaying in a reaction, with automatic clearing on new reaction
-          sleep: ms => {
-            // log(`${name} sleeping for ${ms}`)
-            return new Promise((resolve, reject) => {
-              const sleepTimeout = setTimeout(resolve, ms)
-              rejections.push(() => {
-                clearTimeout(sleepTimeout)
-                reject(RejectReactionSymbol)
-              })
-            })
-          },
-          when: condition => {
-            // log(`${name} sleeping for ${ms}`)
-            return new Promise((resolve, reject) => {
-              let cancelWhen = false
-              whenAsync(condition)
-                .then((val: any) => {
-                  if (cancelWhen) return
-                  resolve(val)
-                })
-                .catch(reject)
-              rejections.push(() => {
-                cancelWhen = true
-                reject()
-              })
-            })
-          },
+          sleep,
+          when,
         },
       )
       const changed = root.__trackStateChanges.changed
@@ -526,7 +545,7 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
           .catch(err => {
             if (err === RejectReactionSymbol) {
               if (!preventLog) {
-                log(`[${id}] cancelled`)
+                log(`${name} [${curID}] cancelled`)
               }
             } else {
               throw err
@@ -553,16 +572,6 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
       }
       const observableLike = isObservableLike(result)
       stopAutoObserve()
-
-      function replaceDisposable() {
-        if (curDisposable) {
-          curDisposable()
-          curDisposable = null
-        }
-        if (result && result.dispose) {
-          curDisposable = result.dispose.bind(result)
-        }
-      }
 
       if (observableLike) {
         if (result.isntConnected) {

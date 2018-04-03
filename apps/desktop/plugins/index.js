@@ -34,22 +34,16 @@ export default class Plugins {
   @react({ fireImmediately: true })
   reactToSearches = [
     () => App.state.query,
-    async query => {
-      const uid = Math.random()
-      this.searchId = uid
-      let results = []
+    async (query, { sleep }) => {
       this.search(query, async newResults => {
-        const resultsWithIcons = await Promise.all(
+        const pluginResults = await Promise.all(
           newResults.slice(0, 25).map(async result => ({
             ...result,
             icon: result.icon ? await this.icons.getIcon(result.icon) : null,
           })),
         )
-        const isStillValid = uid === this.searchId
-        if (isStillValid) {
-          results = [...results, ...resultsWithIcons]
-          Desktop.setSearchState({ pluginResults: results })
-        }
+        await sleep(64)
+        Desktop.setSearchState({ pluginResults })
       })
     },
   ]

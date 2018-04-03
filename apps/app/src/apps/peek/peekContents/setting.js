@@ -23,7 +23,7 @@ import { capitalize } from 'lodash'
       const { type, integration } = this.selectedItem
       console.log('this.selectedItem', this.selectedItem)
       this.setting = await Setting.findOne({ type })
-      this.bitsCount = await Bit.createQueryBuilder()
+      this.bitsCount = await Bit.queryBuilder()
         .where({ integration, type })
         .getCount()
     }

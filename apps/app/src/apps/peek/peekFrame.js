@@ -47,6 +47,7 @@ export default class PeekFrame {
 
   static style = {
     peek: {
+      alignSelf: 'flex-end',
       width: '100%',
       height: '100%',
       padding: SHADOW_PAD,

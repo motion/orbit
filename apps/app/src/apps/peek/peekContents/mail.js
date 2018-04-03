@@ -12,9 +12,19 @@ export class Mail {
       return null
     }
     const { messages } = bit.data
+    const getHeader = (message, key) =>
+      (
+        (message.payload.headers || []).find(x => x.name === key) || {
+          value: '',
+        }
+      ).value
     return (
       <PeekFrame>
-        <PeekHeader title={selectedItem.title} date={bit.createdAt} />
+        <PeekHeader
+          icon="email"
+          title={selectedItem.title}
+          date={bit.createdAt}
+        />
         <body>
           <message>
             <UI.Text size={1.2}>{bit.body}</UI.Text>
@@ -23,7 +33,37 @@ export class Mail {
             {messages.map(message => {
               return (
                 <message key={message.id}>
-                  <UI.Text>{message.snippet}</UI.Text>
+                  <row
+                    css={{
+                      flexFlow: 'row',
+                      opacity: 0.5,
+                      margin: [0, 0, 10, 0],
+                      flex: 1,
+                      alignItems: 'center',
+                      // justifyContent: 'center',
+                    }}
+                  >
+                    <UI.Icon
+                      name="arrows-1_redo"
+                      color="#ddd"
+                      size={12}
+                      css={{
+                        display: 'inline-block',
+                        marginTop: 2,
+                        marginRight: 6,
+                      }}
+                    />{' '}
+                    <rest $$row>
+                      from {getHeader(message, 'From').split(' ')[0]}&nbsp;
+                      <UI.Date>{getHeader(message, 'Date')}</UI.Date>
+                    </rest>
+                  </row>
+                  <UI.Text lineHeight={20} size={1.1}>
+                    {message.snippet}
+                  </UI.Text>
+                  <pre if={false}>
+                    {JSON.stringify(message.payload.headers, 0, 2)}
+                  </pre>
                 </message>
               )
             })}

@@ -21,7 +21,6 @@ import { capitalize } from 'lodash'
 
     update = async () => {
       const { type, integration } = this.selectedItem
-      console.log('this.selectedItem', this.selectedItem)
       this.setting = await Setting.findOne({ type })
       this.bitsCount = await Bit.createQueryBuilder()
         .where({ integration, type })

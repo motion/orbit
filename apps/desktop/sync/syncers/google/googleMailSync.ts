@@ -127,7 +127,6 @@ export default class GoogleMailSync {
             updatedAt: date,
           }))
           threads = []
-          log('writing threads', insertThreads)
           await insert(Bit)
             .values(insertThreads)
             .execute()
@@ -140,6 +139,7 @@ export default class GoogleMailSync {
           threads.push(this.createThreadObject(thread))
           if (fetched === max) {
             await write()
+            log('synced total threads', fetched)
             res(newHistoryId || null)
             return
           }
@@ -151,8 +151,10 @@ export default class GoogleMailSync {
     })
   }
 
-  getDateFromThread = (message: Message) =>
-    message.payload.headers.find(x => x.name === 'Date').value
+  getDateFromThread = (message: Message) => {
+    const dateHeader = message.payload.headers.find(x => x.name === 'Date')
+    return (dateHeader && dateHeader.value) || 0
+  }
 
   createThread = async (data: ThreadObject) => {
     const thread = this.createThreadObject(data)
@@ -168,11 +170,14 @@ export default class GoogleMailSync {
     const firstMessage = first(messages)
     const bitCreatedAt = this.getDateFromThread(firstMessage)
     const bitUpdatedAt = this.getDateFromThread(last(messages))
+    const subjectHeader = firstMessage.payload.headers.find(
+      x => x.name === 'Subject',
+    )
     return {
       identifier: id,
       integration: 'google',
       type: 'mail',
-      title: firstMessage.payload.headers.find(x => x.name === 'Subject').value,
+      title: (subjectHeader && subjectHeader.value) || '',
       body: firstMessage.snippet,
       data,
       bitCreatedAt,

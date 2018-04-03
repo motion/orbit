@@ -1,4 +1,3 @@
-// @flow
 import * as React from 'react'
 import * as Constants from '~/constants'
 import { view, react } from '@mcro/black'
@@ -8,13 +7,13 @@ import * as Helpers from '~/helpers'
 import { App, Electron } from '@mcro/all'
 import * as Mobx from 'mobx'
 
-type PeekTarget = {
-  key: string,
-  top: number,
-  left: number,
-  width: number,
-  height: number,
-}
+// type PeekTarget = {
+//   key: string,
+//   top: number,
+//   left: number,
+//   width: number,
+//   height: number,
+// }
 
 const idFn = _ => _
 const PAD = 15
@@ -29,7 +28,7 @@ const windowProps = {
   transparent: true,
 }
 
-const peekPosition = (target: PeekTarget) => {
+const peekPosition = target => {
   const { left, top, width } = target
   const EDGE_PAD = 20
   const TOP_OFFSET = -20

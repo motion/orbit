@@ -1,10 +1,8 @@
-// @flow
 import 'isomorphic-fetch'
 import { parse } from 'url'
 import puppeteer from 'puppeteer'
 import debug from 'debug'
 import CrawlerDB from './crawlerDB'
-import type { Options } from '~/types'
 import { uniq, range } from 'lodash'
 import readabilityFromString from 'readability-from-string'
 import upndown from 'upndown'

@@ -1,5 +1,3 @@
-// @flow
-
 function collectGetterPropertyDescriptors(proto) {
   const fproto = Object.getOwnPropertyNames(proto)
   return fproto.reduce(
@@ -7,11 +5,11 @@ function collectGetterPropertyDescriptors(proto) {
       ...acc,
       [cur]: Object.getOwnPropertyDescriptor(proto, cur),
     }),
-    {}
+    {},
   )
 }
 
-export default function logClass(klass: MagicalObject) {
+export default function logClass(klass) {
   const descriptors = {
     ...Object.getOwnPropertyDescriptors(klass),
     ...collectGetterPropertyDescriptors(Object.getPrototypeOf(klass)),
@@ -32,7 +30,7 @@ function logWrapFunction(fn, method) {
 }
 
 // * => mobx
-function logClassMethod(target: Object, method: string, descriptor: Object) {
+function logClassMethod(target, method, descriptor) {
   if (!descriptor.writable) {
     return
   }

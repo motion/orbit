@@ -2,7 +2,7 @@
   "compilerOptions": {
     "experimentalDecorators": true
   },
-  "include": ["packages/**/*.ts"],
+  "include": ["apps/all/**/*.ts"],
   "exclude": [
     "*/.cache",
     "*/orbit",

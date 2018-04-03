@@ -1,4 +1,3 @@
-// @flow
 import Router from '@mcro/router'
 import HomePage from '~/pages/home'
 import SalesPage from '~/pages/sales'

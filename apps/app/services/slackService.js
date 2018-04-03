@@ -1,4 +1,3 @@
-// @flow
 import Slack from 'slack'
 import { store, watch } from '@mcro/black'
 import { CurrentUser } from '@mcro/models'
@@ -29,7 +28,7 @@ export default class SlackService {
     )
   }
 
-  get setting(): ?string {
+  get setting() {
     return CurrentUser.setting.slack
   }
 

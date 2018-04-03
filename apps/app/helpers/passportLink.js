@@ -1,5 +1,3 @@
-// @flow
-
 function popup(url, title, win, w, h) {
   var y = win.top.screen.height / 2 - h / 2
   var x = win.top.screen.width / 2 - w / 2
@@ -13,14 +11,11 @@ function popup(url, title, win, w, h) {
       ', top=' +
       y +
       ', left=' +
-      x
+      x,
   )
 }
 
-export default function passportLink(
-  path: string,
-  options: Object = {}
-): Promise<any> {
+export default function passportLink(path, options = {}) {
   return new Promise((resolve, reject) => {
     const opts = {
       windowName: 'Login',
@@ -45,7 +40,7 @@ export default function passportLink(
       opts.windowName,
       window,
       opts.width,
-      opts.height
+      opts.height,
     )
     if (!authWindow) {
       return reject('Authorization popup blocked')

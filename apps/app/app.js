@@ -1,4 +1,3 @@
-// @flow
 import { App } from '@mcro/all'
 import { debugState } from '@mcro/black'
 import { ThemeProvide } from '@mcro/ui'
@@ -68,7 +67,7 @@ class AppRoot {
     )
   }
 
-  handleError = (...errors: Array<Error>) => {
+  handleError = (...errors) => {
     const unique = uniqBy(errors, err => err.name)
     const final = []
     for (const error of unique) {
@@ -96,7 +95,7 @@ class AppRoot {
 
 let app = window.Root
 
-export async function start(recreate?: boolean) {
+export async function start(recreate) {
   if (window.Root || window._isDisposing) return
   window._isDisposing = true
   if (app) {

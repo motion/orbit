@@ -1,4 +1,3 @@
-// @flow
 import { fromPromise, isPromiseBasedObservable, whenAsync } from 'mobx-utils'
 import { fromStream } from './fromStream'
 import * as Mobx from 'mobx'

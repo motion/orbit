@@ -1,4 +1,3 @@
-// @flow
 import { ThemeMaker } from '@mcro/ui'
 
 const Theme = new ThemeMaker()

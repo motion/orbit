@@ -1,4 +1,3 @@
-// @flow
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
@@ -8,8 +7,8 @@ const cleanDocText = text =>
   text
     // multiple spaces
     .replace(/\s\s+/g, ' ')
-    .replace(/\â\€\™/g, "'")
-    .replace(/\â\€\˜/g, "'")
+    .replace(/\â\€\™/g, '\'')
+    .replace(/\â\€\˜/g, '\'')
     .replace(/\â\€\¦/g, '')
     .replace(/\â\€\œ/g, '"')
     .replace(/\â\€\�/g, '"')

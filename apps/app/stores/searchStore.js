@@ -1,4 +1,3 @@
-// @flow
 import { store } from '@mcro/black'
 import { random } from 'lodash'
 

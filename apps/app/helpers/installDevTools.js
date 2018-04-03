@@ -1,4 +1,3 @@
-// @flow
 // 🐛 note: dont import router or app here
 // it causes the entire app to be imported before boot
 import '@mcro/black/mlog'

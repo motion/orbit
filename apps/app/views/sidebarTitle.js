@@ -1,8 +1,6 @@
-// @flow
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import * as Constants from '~/constants'
 
 const TAB_SLANT_X = 7
 const BORDER_LEFT_SIZE = 12
@@ -59,9 +57,7 @@ class Tab {
             ...chromeStyle,
             left: BORDER_LEFT_SIZE / 4,
             borderBottom: 'none',
-            boxShadow: [
-              'inset -0.5px 0.5px 0 rgba(255,255,255,0.15)',
-            ],
+            boxShadow: ['inset -0.5px 0.5px 0 rgba(255,255,255,0.15)'],
           }}
         />
         <inner

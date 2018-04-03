@@ -99,7 +99,6 @@ export default class ElectronReactions {
   setMouseOvers = [
     () => [Desktop.mouseState.position, App.state.orbitHidden],
     ([mousePosition, isHidden]) => {
-      log(`ok ${isHidden} ${Electron.orbitState.position}`)
       if (isHidden) {
         if (Electron.orbitState.mouseOver) {
           Electron.setOrbitState({ mouseOver: false })

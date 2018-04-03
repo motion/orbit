@@ -10,7 +10,6 @@ import { capitalize } from 'lodash'
 @view
 export default class PeekPage {
   render({ theme }) {
-    console.log('renderpeek')
     const { selectedItem } = App.state
     const type = (selectedItem && capitalize(selectedItem.type)) || 'Empty'
     const PeekContentsView = PeekContents[type] || PeekContents['Empty']
@@ -24,6 +23,9 @@ export default class PeekPage {
       return null
     }
     const onLeft = !fullScreen && Electron.peekState.peekOnLeft
+    // const { isShowingPeek } = App
+    const isShowingPeek = true
+    log(`rendering`, isShowingPeek, type)
     return (
       <UI.Theme name="tan">
         <peek
@@ -32,8 +34,8 @@ export default class PeekPage {
             paddingLeft: fullScreen ? 0 : SHADOW_PAD,
             marginRight: fullScreen ? 0 : !onLeft ? SHADOW_PAD : -SHADOW_PAD,
           }}
-          $animate={App.isShowingPeek}
-          $peekVisible={App.isShowingPeek}
+          $animate={isShowingPeek}
+          $peekVisible={isShowingPeek}
         >
           <main
             css={{

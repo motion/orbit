@@ -5,12 +5,13 @@ import PeekHeader from '../peekHeader'
 // import { Bit } from '@mcro/models'
 
 @view
-export class Email {
+export class Mail {
   render({ bit }) {
     return (
       <content>
         <PeekHeader title={bit.title} date={bit.createdAt} />
         <body>
+          123
           <UI.Text size={1.2}>{bit.body}</UI.Text>
         </body>
       </content>

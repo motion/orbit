@@ -1,4 +1,6 @@
 #!/bin/bash
+./start-debug.sh &
+
 npx kill-port 3002
 echo "parcel -p 3002 index.html ${@:1}"
 echo "parcel $(../../node_modules/.bin/parcel --version)"

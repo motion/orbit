@@ -51,7 +51,7 @@ export default class DebugServer {
     })
 
     // server
-    const server = http.Server(app)
+    const server = new http.Server(app)
     server.listen(app.get('port'), function() {
       log(
         '-:listening on port %d in %s mode',

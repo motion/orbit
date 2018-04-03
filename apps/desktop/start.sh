@@ -1,6 +1,4 @@
 #!/bin/bash
-./start-debug.sh &
-
 echo $1
 
 if [[ "$1" == "--build" ]]; then

@@ -50,9 +50,11 @@ export default class OrbitContent {
       clearTimeout(this.updateTargetTm)
       if (!target) {
         // hide
-        await Helpers.sleep(50)
         await whenAsync(() => !Electron.isMouseInActiveArea)
-        App.setPeekTarget(null)
+        await Helpers.sleep(50)
+        if (!Electron.isMouseInActiveArea) {
+          App.setPeekTarget(null)
+        }
         return
       }
       const { id, top, width, height } = target

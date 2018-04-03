@@ -20,6 +20,11 @@ const onFocus = page => {
 }
 
 export default class DebugApps {
+  isRendering?: Boolean
+  disposed?: Boolean
+  browser: any
+  options: any
+  sessions = []
   intervals = []
 
   constructor({ sessions = [], ...options }) {

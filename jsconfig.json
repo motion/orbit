@@ -2,7 +2,8 @@
   "compilerOptions": {
     "experimentalDecorators": true
   },
-  "include": ["apps/**/*", "packages/**/*"],
+  "include": ["apps/**/*"],
+  // , "packages/**/*"
   "exclude": [
     ".cache",
     "orbit",

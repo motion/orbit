@@ -11,8 +11,8 @@ import { capitalize } from 'lodash'
 export default class PeekPage {
   render({ theme }) {
     const { selectedItem } = App.state
-    const type = selectedItem && capitalize(selectedItem.type) || 'Empty'
-    const PeekContentsView = PeekContents[type]
+    const type = (selectedItem && capitalize(selectedItem.type)) || 'Empty'
+    const PeekContentsView = PeekContents[type] || PeekContents['Empty']
     if (!PeekContentsView) {
       console.error('none', type)
       return <peek>no pane found</peek>

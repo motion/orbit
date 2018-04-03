@@ -26,7 +26,7 @@ import * as UI from '@mcro/ui'
       const { integration } = this.selectedItem
       this.job = await Job.findOne({
         where: { type: integration },
-        order: { createdAt: 'asc' },
+        order: { createdAt: 'DESC' },
       })
       this.setting = await Setting.findOne({ type: integration })
       this.bitsCount = await Bit.createQueryBuilder()
@@ -53,11 +53,14 @@ export class SettingView {
             <div $$flex>
               <UI.Button
                 icon="refresh"
-                onClick={() => {
+                onClick={async () => {
                   const job = new Job()
                   job.type = store.selectedItem.integration
                   job.action = 'mail'
-                  job.save()
+                  job.status = Job.statuses.PENDING
+                  await job.save()
+                  console.log('created new job', job)
+                  store.update()
                 }}
               />
             </div>

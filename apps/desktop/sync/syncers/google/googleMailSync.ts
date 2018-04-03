@@ -45,7 +45,7 @@ export default class GoogleMailSync {
 
   run = async () => {
     try {
-      // await this.syncMail()
+      await this.syncMail()
     } catch (err) {
       console.error(`GMail sync error ${err.message}`)
     }
@@ -54,7 +54,8 @@ export default class GoogleMailSync {
   async syncMail({ limit = 10, partial = true } = {}) {
     let historyId
     if (partial) {
-      historyId = await this.setting.values.historyId
+      historyId = this.setting.values.historyId
+      log(`Using partial historyId`, historyId)
     }
     const { threads } = await this.getThreads(Math.ceil(limit / 100), {
       historyId,

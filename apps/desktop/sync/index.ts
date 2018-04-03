@@ -38,7 +38,6 @@ export default class Sync {
   processJobs = [
     () => this.jobs,
     async jobs => {
-      log('startJobs jobs:', jobs ? jobs.length : 0)
       if (!this.enabled) {
         return
       }

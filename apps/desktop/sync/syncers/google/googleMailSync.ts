@@ -59,7 +59,7 @@ export default class GoogleMailSync {
   async syncMail(options = { max: 50, fullUpdate: false }) {
     await this.updateSetting()
     const { max, fullUpdate } = options
-    const { historyId } = this.setting.values
+    const { historyId } = this.setting.values || { historyId: null }
     if (!fullUpdate && historyId) {
       const history = await this.fetch('/users/me/history', {
         query: { startHistoryId: historyId },

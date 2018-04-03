@@ -97,11 +97,11 @@ export default class AppStore {
       if (item) {
         // App.setSelectedItem(null)
         App.setSelectedItem({
-          id: item.id,
-          title: item.title,
-          body: item.body,
-          type: item.type,
-          integration: item.integration,
+          id: item.id || '',
+          title: item.title || '',
+          body: item.body || '',
+          type: item.type || '',
+          integration: item.integration || '',
         })
       }
     },

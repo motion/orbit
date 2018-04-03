@@ -4,7 +4,7 @@ import { createConnection } from 'typeorm/browser'
 export default async function connectModels(models) {
   const connect = async () => {
     try {
-      await createConnection({
+      const connection = await createConnection({
         type: 'cordova',
         database: 'database',
         location: 'default',
@@ -13,13 +13,16 @@ export default async function connectModels(models) {
         autoSchemaSync: true,
         synchronize: true,
       })
+      for (const model of models) {
+        model.useConnection(connection)
+      }
     } catch (err) {
       console.log('Error: ', err)
     }
   }
-  webSqlClient.onError(() => {
-    console.log('error, reconnecting...')
-    connect()
+  webSqlClient.onError(err => {
+    console.log('error, reconnecting...', err)
+    // connect()
   })
   return await connect()
 }

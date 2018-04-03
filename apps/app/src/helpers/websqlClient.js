@@ -407,7 +407,7 @@ SQLitePluginTransaction.prototype.run = function() {
     return function(err) {
       _this.error = function(err) {
         if (errorCb) {
-          errorCb()
+          errorCb(err)
         }
         console.warn(err)
       }

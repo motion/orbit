@@ -108,9 +108,9 @@ class DesktopStore {
   }
 
   get isHoldingOptionShift(): Boolean {
-    return false
     const { shift, shiftUp } = Desktop.state.keyboardState
-    return (shift || 0) > (shiftUp || 1)
+    const isHoldingShift = (shift || 0) > (shiftUp || 1)
+    return isHoldingShift && this.isHoldingOption
   }
 
   get shouldHide() {

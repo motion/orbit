@@ -38,9 +38,7 @@ class AppRoot {
   async start() {
     await App.start()
     if (Constants.IS_PEEK) {
-      console.log('sleep for orbit connect')
-      await sleep(8000)
-      console.log('done orbit connect')
+      await sleep(1000)
     }
     await connectModels(Object.keys(Models).map(x => Models[x]))
     if (Constants.IS_ORBIT) {

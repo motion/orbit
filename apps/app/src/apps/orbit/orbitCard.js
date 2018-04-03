@@ -51,6 +51,7 @@ export default class Card {
             </UI.Text>
           </subtitle>
           <UI.Button
+            if={!isActive}
             onClick={async () => {
               if (oauth === false) {
                 const setting = appStore.settings.find(s => s.type === id)

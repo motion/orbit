@@ -15,6 +15,7 @@ next
 
 queued ux stuff
 
+* bug option+space doesnt focus input text
 * hold option when text is selected and hit "delete", could pin
 * clicked vs hovered selections -- see AppReactions TODO
 * pin-on-click only when option holding

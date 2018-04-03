@@ -2,6 +2,7 @@ import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
 import PeekHeader from '../peekHeader'
+import PeekFrame from '../peekFrame'
 // import { Bit } from '@mcro/models'
 
 @view
@@ -12,7 +13,7 @@ export class Mail {
     }
     const { messages } = bit.data
     return (
-      <content>
+      <PeekFrame>
         <PeekHeader title={selectedItem.title} date={bit.createdAt} />
         <body>
           <message>
@@ -28,15 +29,11 @@ export class Mail {
             })}
           </messages>
         </body>
-      </content>
+      </PeekFrame>
     )
   }
 
   static style = {
-    content: {
-      overflowY: 'scroll',
-      flex: 1,
-    },
     body: {
       flex: 1,
       overflowY: 'scroll',

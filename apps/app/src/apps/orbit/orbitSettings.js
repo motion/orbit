@@ -2,6 +2,11 @@ import { view } from '@mcro/black'
 import { App, Electron } from '@mcro/all'
 import { partition } from 'lodash'
 import Card from './orbitCard'
+import * as UI from '@mcro/ui'
+
+const Title = props => (
+  <UI.Title size={1.1} fontWeight={600} margin={[10, 0]} {...props} />
+)
 
 class SettingsStore {
   refs = {}
@@ -12,7 +17,7 @@ class SettingsStore {
     const position = {
       left: Electron.orbitState.position[0],
       top: ref.offsetTop + Electron.orbitState.position[1],
-      width: ref.clientWidth,
+      width: Electron.orbitState.size[0],
       height: ref.clientHeight,
     }
     App.setPeekTarget({
@@ -38,24 +43,39 @@ export default class OrbitSettings {
         appStore.settings &&
         appStore.settings.find(x => x.type === integration.id && x.token),
     )
-    const allIntegrations = [...activeIntegrations, ...inactiveIntegrations]
+    // const allIntegrations = [...activeIntegrations, ...inactiveIntegrations]
+    const integrationCard = all => (integration, index) => (
+      <Card
+        key={index}
+        index={index}
+        appStore={appStore}
+        store={store}
+        length={all.length}
+        isActive={appStore.settings.find(
+          x => x.type === integration.id && x.token,
+        )}
+        {...integration}
+      />
+    )
     return (
       <pane css={{ padding: 10 }}>
-        <cards>
-          {allIntegrations.map((integration, index) => (
-            <Card
-              key={index}
-              index={index}
-              appStore={appStore}
-              store={store}
-              length={allIntegrations.length}
-              isActive={appStore.settings.find(
-                x => x.type === integration.id && x.token,
-              )}
-              {...integration}
-            />
-          ))}
-        </cards>
+        <section if={activeIntegrations.length}>
+          <Title>Active</Title>
+          <cards>
+            {activeIntegrations.map(integrationCard(activeIntegrations))}
+          </cards>
+        </section>
+        <section if={inactiveIntegrations.length}>
+          <Title>Inactive</Title>
+          <cards>
+            {inactiveIntegrations.map((item, index) =>
+              integrationCard(inactiveIntegrations)(
+                item,
+                index + activeIntegrations.index,
+              ),
+            )}
+          </cards>
+        </section>
       </pane>
     )
   }

@@ -1,15 +1,7 @@
 next
 
-* basic settings:
-  * resync button
-  * cancel sync button
-  * sync progress
 * gmail view
-  * show simple peek with threads
   * link to message (default app or browser?)
-* settings
-  * at top, show general stats line on Bits
-  * move settings toggle to top, straddling input line
 * design: sidebar + multi highlights
   * limit to 1 real email, design full screen
   * limit to 2, design half screens

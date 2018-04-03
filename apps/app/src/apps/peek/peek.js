@@ -1,15 +1,24 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, watch } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { App, Electron } from '@mcro/all'
+import { Bit } from '@mcro/models'
 import { SHADOW_PAD, APP_SHADOW, BORDER_RADIUS } from '~/constants'
 import * as PeekContents from './peekContents'
 import { capitalize } from 'lodash'
 
+class PeekStore {
+  @watch
+  bit = () =>
+    App.state.selectedItem && Bit.findOne({ id: App.state.selectedItem.id })
+}
+
 @UI.injectTheme
-@view
+@view({
+  peekStore: PeekStore,
+})
 export default class PeekPage {
-  render({ theme }) {
+  render({ peekStore, theme }) {
     const { selectedItem } = App.state
     const type = (selectedItem && capitalize(selectedItem.type)) || 'Empty'
     const PeekContentsView = PeekContents[type] || PeekContents['Empty']
@@ -49,8 +58,7 @@ export default class PeekPage {
               background: fullScreen ? theme.base.background : '#fff',
             }}
           >
-            <PeekContentsView bit={selectedItem} item={selectedItem} />
-            {JSON.stringify(selectedItem)}
+            <PeekContentsView bit={peekStore.bit} selectedItem={selectedItem} />
           </main>
         </peek>
       </UI.Theme>

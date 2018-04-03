@@ -6,13 +6,27 @@ import PeekHeader from '../peekHeader'
 
 @view
 export class Mail {
-  render({ bit }) {
+  render({ bit, selectedItem }) {
+    if (!bit) {
+      return null
+    }
+    const { messages } = bit.data
     return (
       <content>
-        <PeekHeader title={bit.title} date={bit.createdAt} />
+        <PeekHeader title={selectedItem.title} date={bit.createdAt} />
         <body>
-          123
-          <UI.Text size={1.2}>{bit.body}</UI.Text>
+          <message>
+            <UI.Text size={1.2}>{bit.body}</UI.Text>
+          </message>
+          <messages if={messages}>
+            {messages.map(message => {
+              return (
+                <message key={message.id}>
+                  <UI.Text>{message.snippet}</UI.Text>
+                </message>
+              )
+            })}
+          </messages>
         </body>
       </content>
     )
@@ -24,9 +38,12 @@ export class Mail {
       flex: 1,
     },
     body: {
-      padding: 20,
       flex: 1,
       overflowY: 'scroll',
+    },
+    message: {
+      padding: 20,
+      borderBottom: [1, 'dotted', '#eee'],
     },
   }
 }

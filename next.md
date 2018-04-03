@@ -1,7 +1,6 @@
 next
 
 * basic settings:
-  * see number of bits
   * resync button
   * cancel sync button
   * sync progress
@@ -28,6 +27,7 @@ queued ux stuff
 * pin-on-click only when option holding
 * faster hover item highlight reaction time
 * fix unpin glitchy animation
+* if large window, slide in from left side full height
 
 notes
 

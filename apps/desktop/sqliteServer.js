@@ -23,15 +23,31 @@ function prettyPrintArgs(args) {
   }
 }
 
-let id = 0
+let id = 1
+let txLock = null
+let queue = []
+
+function finishLock() {
+  txLock = null
+  const running = [...queue]
+  queue = []
+  for (const item of running) {
+    onData(...item)
+  }
+}
+
 function onConnection(options, spark) {
   let uid = ++id
   spark.on('data', data => {
+    if (txLock && txLock !== uid) {
+      queue.push([options, spark, data, uid])
+      return
+    }
     onData(options, spark, data, uid)
   })
 }
 
-async function onData(options, spark, data) {
+async function onData(options, spark, data, uid) {
   let { name } = data.args[0]
   if (typeof name === 'undefined') {
     name = 'database'
@@ -136,7 +152,14 @@ async function onData(options, spark, data) {
         return
       }
       const queries = data.args[0].executes
+      const sql = `${queries[0].sql}`
+      if (sql === 'BEGIN TRANSACTION') {
+        txLock = uid
+      }
       await runQueries(data.id, spark, db, queries, [])
+      if (sql === 'COMMIT') {
+        finishLock()
+      }
   }
 }
 

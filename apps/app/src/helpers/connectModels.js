@@ -8,8 +8,8 @@ export default async function connectModels(models) {
       database: 'database',
       location: 'default',
       entities: models,
+      // logging: true,
       autoSchemaSync: true,
-      logging: false,
       synchronize: true,
     })
     for (const model of models) {

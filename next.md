@@ -1,5 +1,6 @@
 next
 
+* gmail sync bulk insert
 * basic settings:
   * resync button
   * cancel sync button

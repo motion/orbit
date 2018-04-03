@@ -51,11 +51,12 @@ export default class Card {
             </UI.Text>
           </subtitle>
           <UI.Button
-            onClick={() => {
+            onClick={async () => {
               if (oauth === false) {
-                const setting = store.settings.find(s => s.type === id)
+                const setting = appStore.settings.find(s => s.type === id)
                 setting.token = 'good'
-                setting.save()
+                await setting.save()
+                appStore.getSettings()
               } else {
                 appStore.startOauth(id)
               }

@@ -1,4 +1,4 @@
-import { Bit, Setting, createOrUpdate } from '@mcro/models'
+import { Bit, Setting, createOrUpdate, insert } from '@mcro/models'
 import debug from '@mcro/debug'
 import { sleep } from '@mcro/helpers'
 import getHelpers from './getHelpers'
@@ -118,15 +118,28 @@ export default class GoogleMailSync {
         const threadSyncer = this.helpers.batch.threads(query, options)
         let newHistoryId
         let fetched = 0
-        threadSyncer.on('data', (thread: ThreadObject) => {
+        let threads = []
+        const write = async () => {
+          const insertThreads = [...threads]
+          threads = []
+          log('writing threads', insertThreads)
+          await insert(Bit)
+            .values(threads)
+            .execute()
+        }
+        threadSyncer.on('data', async (thread: ThreadObject) => {
           fetched++
           if (!newHistoryId) {
             newHistoryId = thread.historyId
           }
-          console.log('creating', fetched, thread.historyId, 'thread')
-          this.createThread(thread)
+          threads.push(this.createThreadObject(thread))
           if (fetched === max) {
+            await write()
             res(newHistoryId || null)
+            return
+          }
+          if (fetched % 100 === 0) {
+            write()
           }
         })
       })
@@ -137,25 +150,29 @@ export default class GoogleMailSync {
     message.payload.headers.find(x => x.name === 'Date').value
 
   createThread = async (data: ThreadObject) => {
+    const thread = this.createThreadObject(data)
+    return await createOrUpdate(Bit, thread, [
+      'identifier',
+      'integration',
+      'type',
+    ])
+  }
+
+  createThreadObject = (data: ThreadObject) => {
     const { id, messages } = data
     const firstMessage = first(messages)
     const bitCreatedAt = this.getDateFromThread(firstMessage)
     const bitUpdatedAt = this.getDateFromThread(last(messages))
-    return await createOrUpdate(
-      Bit,
-      {
-        identifier: id,
-        integration: 'google',
-        type: 'mail',
-        title: firstMessage.payload.headers.find(x => x.name === 'Subject')
-          .value,
-        body: firstMessage.snippet,
-        data,
-        bitCreatedAt,
-        bitUpdatedAt,
-      },
-      ['identifier', 'integration', 'type'],
-    )
+    return {
+      identifier: id,
+      integration: 'google',
+      type: 'mail',
+      title: firstMessage.payload.headers.find(x => x.name === 'Subject').value,
+      body: firstMessage.snippet,
+      data,
+      bitCreatedAt,
+      bitUpdatedAt,
+    }
   }
 
   fetchThreads = query => this.fetch('/users/me/threads', { query })

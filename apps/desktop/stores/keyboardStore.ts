@@ -55,9 +55,17 @@ export default class KeyboardStore {
       const isOption = keycode === codes.option || keycode === codes.optionRight
       const isShift = keycode === codes.shift || keycode === codes.shiftRight
       const isHoldingShift = this.keysDown.has(codes.shift)
-      if (!isHoldingShift && this.keysDown.size > 1 && isOption) {
-        log(`option: already holding ${this.keysDown.size} keys`)
+      const holdingKeys = this.keysDown.size
+      // clears:
+      if (!isHoldingShift && holdingKeys > 1 && isOption) {
         return Desktop.clearOption()
+      }
+      const isHoldingOption = this.keysDown.has(codes.option)
+      if (holdingKeys > 2 && isHoldingShift && isHoldingOption) {
+        return Desktop.setKeyboardState({
+          optionUp: Date.now(),
+          spaceUp: Date.now(),
+        })
       }
       if (isOption) {
         return Desktop.setKeyboardState({ option: Date.now() })

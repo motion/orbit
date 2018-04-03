@@ -111,7 +111,7 @@ export default class AppStore {
   bitResults = [
     () => [App.state.query, Desktop.appState.id],
     async ([query, id]) => {
-      if (this.showSettings || !Bit.usedConnection) {
+      if (this.showSettings) {
         return []
       }
       if (id === 'com.apple.TextEdit') {

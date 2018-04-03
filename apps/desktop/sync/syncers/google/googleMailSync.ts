@@ -29,6 +29,7 @@ type Message = {
 
 type ThreadObject = {
   id: string
+  historyId: string
   messages: [Message]
 }
 
@@ -39,34 +40,73 @@ export default class GoogleMailSync {
   fetch = (path, ...rest) => this.helpers.fetch(`/gmail/v1${path}`, ...rest)
 
   constructor(setting) {
-    this.setting = setting
-    this.helpers = getHelpers(setting)
+    this.updateSetting(setting)
+  }
+
+  updateSetting = async (setting?) => {
+    this.setting = setting || (await Setting.findOne({ type: 'google' }))
+    this.helpers = getHelpers(this.setting)
   }
 
   run = async () => {
     try {
       await this.syncMail()
     } catch (err) {
-      console.error(`GMail sync error ${err.message}`)
+      console.error(err)
     }
   }
 
-  async syncMail({ limit = 10, partial = true } = {}) {
+  async syncMail(options = { limit: 10, partial: true }) {
+    await this.updateSetting()
+    const { limit, partial } = options
     let historyId
     if (partial) {
       historyId = this.setting.values.historyId
       log(`Using partial historyId`, historyId)
     }
-    const { threads } = await this.getThreads(Math.ceil(limit / 100), {
-      historyId,
+    try {
+      const newHistoryId = await this.streamThreads('', { max: 10 })
+      if (newHistoryId) {
+        this.setting.values.historyId = newHistoryId
+        await this.setting.save()
+      }
+    } catch (err) {
+      if (err.message === 'Invalid Credentials') {
+        // refresh and try again
+        console.log('refreshing token...')
+        if (await this.helpers.refreshToken()) {
+          return await this.syncMail(options)
+        }
+        return
+      }
+      console.log('some other err', err)
+    }
+  }
+
+  streamThreads(query, options): Promise<string | null> {
+    return new Promise((res, rej) => {
+      this.helpers.batch.estimatedThreads(query, options, (err, estimate) => {
+        const max = Math.min(options.max || 0, estimate)
+        if (err) {
+          return rej(err)
+        }
+        console.log('getting threads', max)
+        const threadSyncer = this.helpers.batch.threads(query, options)
+        let newHistoryId
+        let fetched = 0
+        threadSyncer.on('data', (thread: ThreadObject) => {
+          fetched++
+          if (!newHistoryId) {
+            newHistoryId = thread.historyId
+          }
+          console.log('creating', fetched, 'thread')
+          this.createThread(thread)
+          if (fetched === max) {
+            res(newHistoryId || null)
+          }
+        })
+      })
     })
-    const results = await this.mapThreads(
-      threads.slice(0, limit),
-      this.createThread,
-    )
-    this.setting.values.historyId = threads[0].historyId
-    await this.setting.save()
-    return results
   }
 
   getDateFromThread = (message: Message) =>

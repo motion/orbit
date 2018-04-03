@@ -21,7 +21,8 @@ export default async function connectModels(models) {
     }
   }
   webSqlClient.onError(err => {
-    console.log('error, reconnecting...', err)
+    console.log('got a YUGE err, restarting...', err)
+    window.location = window.location
     // connect()
   })
   return await connect()

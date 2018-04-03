@@ -9,34 +9,36 @@ import { capitalize } from 'lodash'
   store: class SettingStore {
     setting = null
 
-    get type() {
-      const { peekTarget } = App.state
-      return peekTarget.id
+    get selectedItem() {
+      return App.state.selectedItem
     }
 
     async willMount() {
-      this.setting = await Setting.findOne({ type: this.type })
+      this.setting = await Setting.findOne({ type: this.selectedItem.type })
     }
   },
 })
 export class SettingView {
   render({ store }) {
     return (
-      <content>
-        <PeekHeader title={capitalize(store.type)} />
-        {JSON.stringify(store.setting)}
-        <input
-          onSubmit={e => {
-            store.setting.values.folders = [e.target.value]
-            store.setting.save()
-          }}
-        />
-      </content>
+      <React.Fragment>
+        <PeekHeader title={capitalize(store.selectedItem.integration)} />
+        <body>
+          setting: {JSON.stringify(store.setting)}
+          selectedItem: {JSON.stringify(App.state.selectedItem)}
+          <input
+            onSubmit={e => {
+              store.setting.values.folders = [e.target.value]
+              store.setting.save()
+            }}
+          />
+        </body>
+      </React.Fragment>
     )
   }
 
   static style = {
-    content: {
+    body: {
       padding: 20,
       overflowY: 'scroll',
       flex: 1,

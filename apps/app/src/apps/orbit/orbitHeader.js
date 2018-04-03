@@ -34,7 +34,7 @@ class HeaderStore {
 }
 
 @UI.injectTheme
-@view.attach('orbitStore')
+@view.attach('orbitStore', 'appStore')
 @view({
   headerStore: HeaderStore,
 })
@@ -47,7 +47,7 @@ export default class PeekHeader {
     }
   }
 
-  render({ orbitStore, headerStore, theme, headerBg }) {
+  render({ appStore, orbitStore, headerStore, theme, headerBg }) {
     const { fullScreen } = Electron.orbitState
     const darkerBg = theme.base.background.darken(0.045).desaturate(0.3)
     return (
@@ -118,6 +118,20 @@ export default class PeekHeader {
             }}
           />
         </pinnedIcon>
+        <controls if={false}>
+          <UI.Button
+            icon="gear"
+            borderRadius={100}
+            size={0.9}
+            circular
+            background={headerBg}
+            color={appStore.showSettings ? [0, 0, 0, 0.8] : [0, 0, 0, 0.2]}
+            hover={{
+              color: appStore.showSettings ? [0, 0, 0, 0.9] : [0, 0, 0, 0.3],
+            }}
+            onClick={appStore.toggleSettings}
+          />
+        </controls>
       </header>
     )
   }
@@ -130,6 +144,16 @@ export default class PeekHeader {
       padding: [5, 10],
       transition: 'all ease-in 300ms',
       opacity: 0.75,
+      '&:hover': {
+        opacity: 1,
+      },
+    },
+    controls: {
+      position: 'absolute',
+      bottom: -12,
+      right: 12,
+      zIndex: 10000,
+      opacity: 0.8,
       '&:hover': {
         opacity: 1,
       },
@@ -190,9 +214,6 @@ export default class PeekHeader {
     },
     title: {
       flex: 1,
-    },
-    controls: {
-      padding: [0, 0, 0, 10],
     },
   }
 }

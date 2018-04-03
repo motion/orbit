@@ -26,6 +26,7 @@ next
 
 queued ux stuff
 
+* clicked vs hovered selections -- see AppReactions TODO
 * pin-on-click only when option holding
 * faster hover item highlight reaction time
 * fix unpin glitchy animation

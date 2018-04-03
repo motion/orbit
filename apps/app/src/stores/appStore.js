@@ -44,10 +44,35 @@ export default class AppStore {
   get results() {
     if (this.showSettings) {
       return [
-        { id: 'google', name: 'Google Drive', icon: 'gdrive' },
-        { id: 'github', name: 'Github', icon: 'github' },
-        { id: 'slack', name: 'Slack', icon: 'slack' },
-        { id: 'folder', name: 'Folder', icon: 'folder', oauth: false },
+        {
+          id: 'google',
+          type: 'setting',
+          integration: 'google',
+          name: 'Google Drive',
+          icon: 'gdrive',
+        },
+        {
+          id: 'github',
+          type: 'setting',
+          integration: 'github',
+          name: 'Github',
+          icon: 'github',
+        },
+        {
+          id: 'slack',
+          type: 'setting',
+          integration: 'slack',
+          name: 'Slack',
+          icon: 'slack',
+        },
+        {
+          id: 'folder',
+          type: 'setting',
+          integration: 'folder',
+          name: 'Folder',
+          icon: 'folder',
+          oauth: false,
+        },
       ]
     }
     const results = [
@@ -68,7 +93,12 @@ export default class AppStore {
   @react({ delay: 64 })
   setAppSelectedItem = [
     () => this.results[this.selectedIndex],
-    App.setSelectedItem,
+    item => {
+      if (item) {
+        App.setSelectedItem(null)
+        App.setSelectedItem(item)
+      }
+    },
   ]
 
   @react({ fireImmediately: true })

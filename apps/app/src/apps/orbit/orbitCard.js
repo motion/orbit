@@ -100,6 +100,7 @@ export default class Card {
     inner: {
       alignItems: 'center',
       justifyContent: 'center',
+      padding: [10, 0],
     },
     odd: {
       borderRight: [1, 'dotted', [0, 0, 0, 0.1]],
@@ -109,6 +110,7 @@ export default class Card {
       borderBottom: 'none',
     },
     subtitle: {
+      marginTop: 10,
       flex: 1,
       justifyContent: 'center',
     },

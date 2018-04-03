@@ -8,6 +8,7 @@
     "orbit",
     "pyocr",
     "swindler",
+    "examples",
     "public",
     "node_modules",
     "Build",

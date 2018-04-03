@@ -6,8 +6,6 @@ import { SHADOW_PAD, APP_SHADOW, BORDER_RADIUS } from '~/constants'
 import * as PeekContents from './peekContents'
 import { capitalize } from 'lodash'
 
-console.log('PeekContents', PeekContents)
-
 @UI.injectTheme
 @view
 export default class PeekPage {
@@ -52,6 +50,7 @@ export default class PeekPage {
             }}
           >
             <PeekContentsView bit={selectedItem} item={selectedItem} />
+            {JSON.stringify(selectedItem)}
           </main>
         </peek>
       </UI.Theme>

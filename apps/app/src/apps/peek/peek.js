@@ -32,8 +32,8 @@ export default class PeekPage {
       return null
     }
     const onLeft = !fullScreen && Electron.peekState.peekOnLeft
-    // const { isShowingPeek } = App
-    const isShowingPeek = true
+    const { isShowingPeek } = App
+    // const isShowingPeek = true
     log(`rendering`, isShowingPeek, type)
     return (
       <UI.Theme name="tan">

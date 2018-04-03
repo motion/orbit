@@ -56,13 +56,20 @@ export default class GoogleMailSync {
     }
   }
 
-  async syncMail(options = { max: 1000, partial: true }) {
+  async syncMail(options = { max: 500, fullUpdate: false }) {
     await this.updateSetting()
-    const { max, partial } = options
-    let historyId
-    if (partial) {
-      historyId = this.setting.values.historyId
-      log(`Using partial historyId`, historyId)
+    const { max, fullUpdate } = options
+    if (!fullUpdate) {
+      const { historyId } = this.setting.values
+      const history = await this.fetch('/users/me/history', { query: { startHistoryId: historyId } }))
+      if (!history.history || !history.history.length) {
+        log(`No new threads, sync up to date`)
+        return
+      }
+      if (history.history.length < max) {
+        this.syncThreads({ max: history.history.length })
+        return
+      }
     }
     try {
       const newHistoryId = await this.streamThreads('', { max })
@@ -83,14 +90,28 @@ export default class GoogleMailSync {
     }
   }
 
+  async syncThreads({ max }) {
+    const { historyId } = this.setting.values
+    const { threads } = await this.getThreads(Math.ceil(max / 100), {
+      historyId,
+    })
+    const results = await this.mapThreads(
+      threads.slice(0, max),
+      this.createThread,
+    )
+    if (results.length === max) {
+      log(`Successful sync`)
+      this.setting.values.historyId = threads[0].historyId
+      await this.setting.save()
+    }
+    console.log('finished mapping threads', threads, results)
+  }
+
   streamThreads(query, options): Promise<string | null> {
     return new Promise((res, rej) => {
       this.helpers.batch.estimatedThreads(query, options, (err, estimate) => {
         const max = Math.min(options.max || 0, estimate)
-        if (err) {
-          return rej(err)
-        }
-        console.log('getting threads', max)
+        if (err) return rej(err)
         const threadSyncer = this.helpers.batch.threads(query, options)
         let newHistoryId
         let fetched = 0
@@ -99,7 +120,7 @@ export default class GoogleMailSync {
           if (!newHistoryId) {
             newHistoryId = thread.historyId
           }
-          console.log('creating', fetched, 'thread')
+          console.log('creating', fetched, thread.historyId, 'thread')
           this.createThread(thread)
           if (fetched === max) {
             res(newHistoryId || null)
@@ -114,6 +135,7 @@ export default class GoogleMailSync {
 
   createThread = async (data: ThreadObject) => {
     const { id, messages } = data
+    log(`Create thread ${id}`)
     const firstMessage = first(messages)
     const bitCreatedAt = this.getDateFromThread(firstMessage)
     const bitUpdatedAt = this.getDateFromThread(last(messages))
@@ -134,6 +156,8 @@ export default class GoogleMailSync {
     )
   }
 
+  fetchThreads = query => this.fetch('/users/me/threads', { query })
+
   async getThreads(
     pages = 1,
     query: { pageToken?: string; historyId?: string } = {},
@@ -147,9 +171,8 @@ export default class GoogleMailSync {
       if (fetchedPages > 1) {
         await sleep(80)
       }
-      const res = await this.fetchThreads(
-        pickBy({ pageToken: lastPageToken, historyId }, x => query[x]),
-      )
+      const query_ = pickBy({ pageToken: lastPageToken, historyId }, x => query[x])
+      const res = await this.fetchThreads(query_)
       if (res) {
         threads = [...threads, ...res.threads]
         lastPageToken = res.nextPageToken
@@ -178,7 +201,6 @@ export default class GoogleMailSync {
     return results
   }
 
-  fetchThreads = query => this.fetch('/users/me/threads', { query })
   fetchThread = (id, query?) =>
     timeCancel(this.fetch(`/users/me/threads/${id}`, { query }), 3000)
 

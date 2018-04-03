@@ -26,9 +26,6 @@ export class Mail {
           date={bit.createdAt}
         />
         <body>
-          <message>
-            <UI.Text size={1.2}>{bit.body}</UI.Text>
-          </message>
           <messages if={messages}>
             {messages.map(message => {
               return (

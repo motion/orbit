@@ -54,7 +54,7 @@ const peekPosition = target => {
       x = 0
     }
   } else {
-    x = left + width
+    x = left + width + (!peekOnLeft ? 6 : 0)
     if (peekW > rightSpace) {
       peekW = rightSpace
     }
@@ -117,14 +117,6 @@ export default class PeekWindow {
 
   componentDidMount() {
     this.mounted = true
-    // this.watch(function watchPeekClose() {
-    //   const key = App.state.peekClose
-    //   if (!key) return
-    //   const windows = Electron.peekState.windows.filter(
-    //     p => `${p.key}` !== `${key}`,
-    //   )
-    //   Electron.setPeekState({ windows })
-    // })
   }
 
   handleReadyToShow = memoize(peek => () => {

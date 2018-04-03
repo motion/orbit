@@ -6,7 +6,7 @@ import { Electron } from '@mcro/all'
 
 @view
 export default class PeekHeader {
-  render({ title, date, subtitle }) {
+  render({ title, date, subtitle, after }) {
     const { fullScreen } = Electron.orbitState
     if (!Electron.currentPeek) {
       return null
@@ -26,6 +26,7 @@ export default class PeekHeader {
           </UI.Title>
           <UI.Date css={{ opacity: 0.5 }}>{date}</UI.Date>
         </title>
+        <after if={after}>{after}</after>
       </header>
     )
   }

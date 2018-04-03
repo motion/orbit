@@ -13,6 +13,8 @@ export class Setting extends T.BaseEntity {
     syncTokens?: Object
     folders?: [string]
     historyId?: string
+    syncSettings?: any
+    lastSyncSettings?: any
   }
   @T.CreateDateColumn() createdAt: Date
   @T.UpdateDateColumn() updatedAt: Date

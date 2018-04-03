@@ -157,12 +157,12 @@ class ElectronStore {
           orbitOnLeft: true,
           fullScreen: true,
         })
+        const [peek, ...rest] = Electron.peekState.windows
+        peek.position = [peekX, peekY].map(round)
+        peek.size = [peekW, peekH].map(round)
+        peek.peekOnLeft = false
+        Electron.setPeekState({ windows: [peek, ...rest] })
       }, 32)
-      const [peek, ...rest] = Electron.peekState.windows
-      peek.position = [peekX, peekY].map(round)
-      peek.size = [peekW, peekH].map(round)
-      peek.peekOnLeft = false
-      Electron.setPeekState({ windows: [peek, ...rest] })
     } else {
       Electron.setOrbitState({ fullScreen: false })
     }

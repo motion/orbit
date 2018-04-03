@@ -56,11 +56,25 @@ export default class GoogleMailSync {
     }
   }
 
-  async syncMail(options = { max: 50, fullUpdate: false }) {
+  get syncSettings() {
+    return {
+      max: 50,
+      ...(this.setting.values.syncSettings || {}),
+    }
+  }
+
+  async syncMail(options = { fullUpdate: false }) {
     await this.updateSetting()
-    const { max, fullUpdate } = options
+    const { syncSettings } = this
+    const { lastSyncSettings = {} } = this.setting.values
+    const max = +(syncSettings.max || 0)
+    const hasNewMaxValue = max !== +(lastSyncSettings.max || 0)
+    const partialUpdate = options.fullUpdate !== true && !hasNewMaxValue
+    if (hasNewMaxValue) {
+      log(`Has new max: ${max} was  ${lastSyncSettings.max}`)
+    }
     const { historyId } = this.setting.values || { historyId: null }
-    if (!fullUpdate && historyId) {
+    if (partialUpdate && historyId) {
       const history = await this.fetch('/users/me/history', {
         query: { startHistoryId: historyId },
       })
@@ -74,9 +88,12 @@ export default class GoogleMailSync {
       }
     }
     try {
+      log(`Doing full sync with ${max} max`)
       const newHistoryId = await this.streamThreads('', { max })
+      // update setting after run
       if (newHistoryId) {
         this.setting.values.historyId = newHistoryId
+        this.setting.values.lastSyncSettings = syncSettings
         await this.setting.save()
       }
     } catch (err) {
@@ -120,6 +137,7 @@ export default class GoogleMailSync {
         let fetched = 0
         let threads = []
         const write = async () => {
+          await sleep(100) // dont choke resources on process
           const date = Date.now()
           const insertThreads = [...threads].map(thread => ({
             ...thread,
@@ -138,8 +156,8 @@ export default class GoogleMailSync {
           }
           threads.push(this.createThreadObject(thread))
           if (fetched === max) {
+            log('synced total threads', fetched, 'of', max)
             await write()
-            log('synced total threads', fetched)
             res(newHistoryId || null)
             return
           }

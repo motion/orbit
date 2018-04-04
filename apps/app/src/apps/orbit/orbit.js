@@ -7,10 +7,13 @@ import OrbitContent from './orbitContent'
 import OrbitSettings from './orbitSettings'
 import OrbitHeader from './orbitHeader'
 import OrbitStore from './orbitStore'
+import OrbitHeadsUp from './orbitHeadsUp'
 import { throttle } from 'lodash'
 import { SHADOW_PAD } from '~/constants'
+import * as Helpers from '~/helpers'
 // the little tab indicator
 // const log = debug('orbit')
+import { whenAsync } from 'mobx-utils'
 
 class OrbitPageStore {
   isDragging = false
@@ -49,13 +52,54 @@ class OrbitPageStore {
 })
 @view
 export default class Orbit {
+  refs = {}
+
+  onRef = index => ref => {
+    this.refs[index] = ref
+  }
+
+  getHoverProps = Helpers.hoverSettler({
+    enterDelay: 200,
+    onHovered: async target => {
+      clearTimeout(this.updateTargetTm)
+      if (!target) {
+        // hide
+        await whenAsync(() => !Electron.isMouseInActiveArea)
+        await Helpers.sleep(50)
+        if (!Electron.isMouseInActiveArea) {
+          App.setPeekTarget(null)
+        }
+        return
+      }
+      const { id, top, width, height } = target
+      const position = {
+        // add orbits offset
+        left: Electron.orbitState.position[0],
+        top: top + Electron.orbitState.position[1],
+        width,
+        height,
+      }
+      if (App.isShowingOrbit) {
+        this.props.appStore.setSelectedIndex(target.id)
+        this.updateTargetTm = setTimeout(() => {
+          App.setPeekTarget({ id, position, type: 'document' })
+        }, 200)
+      }
+    },
+  })
+
   render({ appStore, orbitPage, theme }) {
     const headerBg = theme.base.background
     return (
       <UI.Theme name={Electron.orbitState.fullScreen ? 'tan' : 'tan'}>
         <OrbitFrame headerBg={headerBg} orbitPage={orbitPage}>
           <OrbitHeader headerBg={headerBg} />
-          <OrbitContent if={!appStore.showSettings} />
+          <OrbitHeadsUp getHoverProps={this.getHoverProps} onRef={this.onRef} />
+          <OrbitContent
+            if={!appStore.showSettings}
+            getHoverProps={this.getHoverProps}
+            onRef={this.onRef}
+          />
           <OrbitSettings if={appStore.showSettings} />
           <Knowledge if={App.state.knowledge} data={App.state.knowledge} />
           <controls>

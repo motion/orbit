@@ -9,7 +9,7 @@ export default class Card {
   render({
     id,
     icon,
-    name,
+    title,
     index,
     length,
     theme,
@@ -47,7 +47,7 @@ export default class Card {
           <OrbitIcon $icon $iconActive={isActive} icon={icon} />
           <subtitle>
             <UI.Text fontWeight={600} fontSize={13} textAlign="center">
-              {name}
+              {title}
             </UI.Text>
           </subtitle>
           <UI.Button

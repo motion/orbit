@@ -36,7 +36,20 @@ const uniq = arr => {
   return final
 }
 
+const fuzzyResults = (query, results, extraOpts) =>
+  !query
+    ? results
+    : fuzzySort
+        .go(query, results, {
+          key: 'title',
+          // threshold: -25,
+          limit: 8,
+          ...extraOpts,
+        })
+        .map(x => x.obj)
+
 export default class AppStore {
+  refreshCycle = 0
   selectedIndex = 0
   showSettings = false
   settings = []
@@ -47,50 +60,44 @@ export default class AppStore {
 
   get results() {
     if (this.showSettings) {
-      return [
+      return fuzzyResults(App.state.query, [
         {
           id: 'google',
           type: 'setting',
           integration: 'google',
-          name: 'Google Drive',
+          title: 'Google Drive',
           icon: 'gdrive',
         },
         {
           id: 'github',
           type: 'setting',
           integration: 'github',
-          name: 'Github',
+          title: 'Github',
           icon: 'github',
         },
         {
           id: 'slack',
           type: 'setting',
           integration: 'slack',
-          name: 'Slack',
+          title: 'Slack',
           icon: 'slack',
         },
         {
           id: 'folder',
           type: 'setting',
           integration: 'folder',
-          name: 'Folder',
+          title: 'Folder',
           icon: 'folder',
           oauth: false,
         },
-      ]
+      ])
     }
     const results = [
       ...(this.bitResults || []),
       ...(Desktop.searchState.pluginResults || []),
       ...(Desktop.searchState.searchResults || []),
     ]
-    const strongTitleMatches = fuzzySort
-      .go(App.state.query, results, {
-        key: 'title',
-        threshold: -25,
-        limit: 8,
-      })
-      .map(x => x.obj)
+    const strongTitleMatches = fuzzyResults(App.state.query, results)
     return uniq([...strongTitleMatches, ...results].slice(0, 12))
   }
 
@@ -113,7 +120,7 @@ export default class AppStore {
 
   @react({ fireImmediately: true })
   bitResults = [
-    () => [App.state.query, Desktop.appState.id],
+    () => [App.state.query, Desktop.appState.id, this.refreshCycle],
     async ([query, id]) => {
       if (this.showSettings) {
         return []
@@ -133,6 +140,10 @@ export default class AppStore {
 
   async willMount() {
     this.getSettings()
+    // every two seconds, re-query bit results
+    this.setInterval(() => {
+      this.refreshCycle = Date.now()
+    }, 2000)
   }
 
   setSelectedIndex = i => {

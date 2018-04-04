@@ -43,7 +43,6 @@ export default class OrbitSettings {
         appStore.settings &&
         appStore.settings.find(x => x.type === integration.id && x.token),
     )
-    // const allIntegrations = [...activeIntegrations, ...inactiveIntegrations]
     const integrationCard = all => (integration, index) => (
       <Card
         key={index}

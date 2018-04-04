@@ -162,24 +162,23 @@ export default class GoogleMailSync {
               if (!threads.length) {
                 continue
               }
-              const next = _.take(threads, 100)
-              threads = threads.slice(next.length)
-              const values = next.map(thread => ({
-                ...thread,
-                createdAt: Date.now(),
-                updatedAt: Date.now(),
-              }))
-              const updateKeys = Object.keys(values[0])
-              for (const value of values) {
+              const rows = _.take(threads, 100)
+              threads = threads.slice(rows.length)
+              const updateKeys = Object.keys(rows[0])
+              for (const row of rows) {
                 // insert, ignore, update
-                let bit = await Bit.findOne(_.pick(value, Bit.identifyingKeys))
-                if (bit && _.isEqual(_.pick(bit, updateKeys), value)) {
-                  continue
+                let bit = await Bit.findOne(_.pick(row, Bit.identifyingKeys))
+                if (bit) {
+                  const cur = _.pick(bit, updateKeys)
+                  if (_.isEqual(cur, row)) {
+                    continue
+                  }
+                  log(`!equal, update`, cur, row)
                 }
                 if (!bit) {
                   bit = new Bit()
                 }
-                Object.assign(bit, value)
+                Object.assign(bit, row)
                 await bit.save()
               }
             }

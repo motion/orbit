@@ -71,7 +71,7 @@ export default class OrbitSettings {
             {inactiveIntegrations.map((item, index) =>
               integrationCard(inactiveIntegrations)(
                 item,
-                index + activeIntegrations.index,
+                index + activeIntegrations.length,
               ),
             )}
           </cards>

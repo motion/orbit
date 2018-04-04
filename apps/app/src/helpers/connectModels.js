@@ -17,9 +17,12 @@ export default async function connectModels(models) {
         model.useConnection(connection)
       }
       webSqlClient.onError(err => {
-        console.log('got a YUGE err, restarting...', err)
-        connection.close()
-        connect()
+        console.error('SQL Error', err)
+        if (err.message && err.message.indexOf('db not found')) {
+          console.log('Reconnecting...')
+          connection.close()
+          connect()
+        }
       })
     } catch (err) {
       console.log('Error: ', err)

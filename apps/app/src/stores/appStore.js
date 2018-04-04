@@ -158,14 +158,18 @@ export default class AppStore {
   }
 
   startOauth = id => {
-    App.setAuthState({ openId: id })
+    App.setAuthState({ openId: null })
+    setTimeout(() => App.setAuthState({ openId: id }), 16)
     const checker = this.setInterval(async () => {
       const auth = await this.checkAuths()
       const oauth = auth && auth[id]
       if (!oauth) return
       clearInterval(checker)
-      const setting = await Setting.findOne({ type: id })
-      console.log('got oauth', oauth)
+      let setting = await Setting.findOne({ type: id })
+      if (!setting) {
+        setting = new Setting()
+        setting.type = id
+      }
       setting.token = oauth.token
       setting.values = {
         ...setting.values,

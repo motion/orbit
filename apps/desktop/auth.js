@@ -12,6 +12,9 @@ export default class Auth {
   openAuthWindow = [
     () => App.authState.openId,
     throttle(id => {
+      if (!id) {
+        return
+      }
       console.log('opening auth for', id)
       Injections.openAuth(getAuthUrl(id))
     }, 2000),

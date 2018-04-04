@@ -20,6 +20,9 @@ class OrbitPageStore {
   adjustHeight = 0
 
   get realHeight() {
+    if (!Electron.state.orbitState.size) {
+      return 0
+    }
     return Electron.state.orbitState.size[1] - this.adjustHeight
   }
 

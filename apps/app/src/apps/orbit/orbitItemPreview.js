@@ -11,7 +11,7 @@ const SubTitle = p => (
 const P = p => (
   <UI.Text
     size={1.15}
-    css={{ marginBottom: 5, opacity: 0.85 }}
+    css={{ marginBottom: 5, opacity: 0.65 }}
     highlightWords={['ipsum', 'adipisicing', 'something']}
     {...p}
   />
@@ -19,27 +19,42 @@ const P = p => (
 
 @view
 export default class OrbitItemPreview {
-  render({ result }) {
+  render({ result, background }) {
     if (!result) {
       return null
     }
     return (
       <div $$flex result={result}>
-        <UI.Text opacity={0.5} margin={[3, 0, 6]} size={0.95} ellipse>
-          {result.subtitle || 'Created Jan 24th'}
-        </UI.Text>
-        <UI.Text size={1} sizeLineHeight={1.15}>
-          <SubTitle if={false}>Section 1</SubTitle>
-          <P ellipse={4}>{result.body || 'Lorem Ipsum dolor sit amet'}</P>
-          <space />
-          <P ellipse={4}>{result.body || 'Lorem Ipsum dolor sit amet'}</P>
-        </UI.Text>
+        <words>
+          <UI.Text opacity={0.5} margin={[3, 0, 6]} size={0.95} ellipse>
+            {result.subtitle || 'Created Jan 24th'}
+          </UI.Text>
+          <P if={result.body}>{result.body}</P>
+          <fadeEnd
+            if={result.body}
+            css={{
+              background: `linear-gradient(transparent 30%, ${background} 50%)`,
+            }}
+          />
+        </words>
       </div>
     )
   }
   static style = {
     space: {
       height: '1rem',
+    },
+    words: {
+      // background: 'red',
+    },
+    fadeEnd: {
+      position: 'absolute',
+      left: 0,
+      bottom: 0,
+      right: 0,
+      height: 50,
+      zIndex: 100,
+      pointerEvents: 'none',
     },
   }
 }

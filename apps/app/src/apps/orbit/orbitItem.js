@@ -2,6 +2,7 @@ import { view } from '@mcro/black'
 import { Title, Text, Surface } from '@mcro/ui'
 import OrbitIcon from './orbitIcon'
 import OrbitItemPreview from './orbitItemPreview'
+import * as UI from '@mcro/ui'
 
 const glowProps = {
   color: '#fff',
@@ -29,6 +30,7 @@ const P = p => (
   />
 )
 
+@UI.injectTheme
 @view.attach('appStore', 'orbitPage')
 @view
 export default class Item {
@@ -36,34 +38,51 @@ export default class Item {
     this.props.appStore.setSelectedIndex(this.props.index)
   }
 
-  render({ appStore, orbitPage, index, result, total, ...props }) {
+  render({ appStore, orbitPage, index, result, total, theme, ...props }) {
     const isSelected = appStore.selectedIndex === index
     // log(`OrbitItem isSelected ${isSelected} ${index}`)
     if (!result) {
       return null
     }
     const orbitHeight = orbitPage.contentHeight
-    const WORDS_PER_LINE_ROUGHLY = 30
-    const LINE_HEIGHT = 20
-    const TITLE_HEIGHT = Math.ceil(result.title.length / 20) * LINE_HEIGHT * 3
-    const maxItemHeight =
-      TITLE_HEIGHT +
-      LINE_HEIGHT * Math.ceil(result.body.length / WORDS_PER_LINE_ROUGHLY)
-    const MAX_PER_SCREEN = 4
-    const height = Math.min(
-      maxItemHeight,
-      Math.round(Math.max(orbitHeight / MAX_PER_SCREEN, orbitHeight / total)),
+    const WORDS_PER_LINE_ROUGHLY = 35
+    const ITEM_PAD = 15
+    const SUBTITLE_HEIGHT = 18
+    const LINE_HEIGHT = 16
+    const TITLE_LINE_HEIGHT = LINE_HEIGHT * 2.2
+    const TITLE_HEIGHT = Math.min(
+      Math.ceil((result.title || '').length / 25) * TITLE_LINE_HEIGHT,
+      TITLE_LINE_HEIGHT * 2,
     )
+    const itemHeight =
+      ITEM_PAD * 2 +
+      TITLE_HEIGHT +
+      SUBTITLE_HEIGHT +
+      LINE_HEIGHT *
+        Math.ceil((result.body || '').length / WORDS_PER_LINE_ROUGHLY)
+    const itemHeightContain = Math.min(orbitHeight, itemHeight)
+    const MAX_PER_SCREEN = 4
+    const wantsToShow = Math.min(total, Math.round(orbitHeight / 300))
+    const height = Math.min(
+      itemHeightContain,
+      Math.round(
+        Math.max(orbitHeight / MAX_PER_SCREEN, orbitHeight / wantsToShow),
+      ),
+    )
+    const background = isSelected
+      ? theme.base.background.lighten(0.08)
+      : theme.base.background
     return (
       <Surface
         background="transparent"
         glow={false}
-        background={isSelected ? [255, 255, 255, 0.5] : 'transparent'}
+        background={background}
         glowProps={glowProps}
-        padding={15}
+        padding={ITEM_PAD}
         onClick={this.onClick}
         borderWidth={0}
         height={height}
+        overflow="hidden"
         {...props}
       >
         <titles>
@@ -92,7 +111,7 @@ export default class Item {
             }}
           />
         </titles>
-        <OrbitItemPreview result={result} />
+        <OrbitItemPreview result={result} background={background} />
       </Surface>
     )
   }

@@ -58,7 +58,7 @@ const Themes = {
   tan: Theme.fromStyles({
     highlightBackground,
     highlightColor,
-    background: '#F2F3E8',
+    background: '#F2F3EC',
     color: '#444',
     borderColor: '#000',
   }),

@@ -14,7 +14,6 @@ export default async function connectModels(models) {
       autoSchemaSync: true,
       synchronize: true,
     })
-    console.log('connected')
   } catch (err) {
     console.log('Error: ', err)
   }

@@ -2,7 +2,7 @@ import { App } from '@mcro/all'
 import { debugState } from '@mcro/black'
 import { ThemeProvide } from '@mcro/ui'
 import { sleep } from '~/helpers'
-import * as Models from '@mcro/models'
+import { modelsList } from '@mcro/models'
 import connectModels from './helpers/connectModels'
 import * as React from 'react'
 import ReactDOM from 'react-dom'
@@ -40,7 +40,7 @@ class AppRoot {
     if (Constants.IS_PEEK) {
       await sleep(1000)
     }
-    await connectModels(Object.keys(Models).map(x => Models[x]))
+    await connectModels(modelsList)
     if (Constants.IS_ORBIT) {
       App.setOrbitConnected(true)
     }

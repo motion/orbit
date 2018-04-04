@@ -17,12 +17,23 @@ export default class PeekFrame {
     }
     const onLeft = Electron.peekOnLeft
     // log(`onleft`, onLeft)
-    const { isShowingPeek } = App
-    // const isShowingPeek = true
+    // const { isShowingPeek } = App
+    const isShowingPeek = true
     return (
       <container $$row $$flex>
         <Space if={onLeft} />
-        <crop css={{ flex: 1, padding: [SHADOW_PAD, 0], overflow: 'hidden' }}>
+        <crop
+          css={{
+            flex: 1,
+            padding: [
+              SHADOW_PAD,
+              onLeft ? SHADOW_PAD : 0,
+              SHADOW_PAD,
+              !onLeft ? SHADOW_PAD : 0,
+            ],
+            overflow: 'hidden',
+          }}
+        >
           <peek $animate={isShowingPeek} $peekVisible={isShowingPeek}>
             <main
               css={{

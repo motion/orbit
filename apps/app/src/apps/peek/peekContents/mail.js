@@ -4,6 +4,7 @@ import { view } from '@mcro/black'
 import PeekHeader from '../peekHeader'
 import PeekFrame from '../peekFrame'
 // import { Bit } from '@mcro/models'
+import * as _ from 'lodash'
 
 @view
 export class Mail {
@@ -27,14 +28,14 @@ export class Mail {
         />
         <body>
           <messages if={messages}>
-            {messages.map(message => {
+            {messages.map((message, index) => {
               return (
                 <message key={message.id}>
                   <row
                     css={{
                       flexFlow: 'row',
                       opacity: 0.7,
-                      margin: [0, 0, 12, -18],
+                      margin: [0, 0, 6, -15],
                       flex: 1,
                       alignItems: 'center',
                       // justifyContent: 'center',
@@ -45,21 +46,34 @@ export class Mail {
                       color="#ddd"
                       size={12}
                       css={{
+                        opacity: index === 0 ? 0 : 1,
                         display: 'inline-block',
                         marginTop: 2,
-                        marginRight: 6,
+                        marginRight: 8,
+                        marginLeft: -6,
                       }}
-                    />{' '}
-                    <rest $$row>
-                      from{' '}
+                    />
+                    <rest $$row $$centered>
                       <strong>
                         {getHeader(message, 'From').split(' ')[0]}
                       </strong>&nbsp;
-                      <UI.Date>{getHeader(message, 'Date')}</UI.Date>
+                      <UI.Date
+                        if={index !== 0}
+                        css={{
+                          opacity: 0.6,
+                          marginBottom: 2,
+                          marginLeft: 3,
+                          fontSize: 13,
+                        }}
+                      >
+                        {getHeader(message, 'Date')}
+                      </UI.Date>
                     </rest>
                   </row>
                   <UI.Text lineHeight={23} size={1.1}>
-                    {message.snippet}
+                    {_.flatten(
+                      message.snippet.split('\n').map(i => [i, <br />]),
+                    )}
                   </UI.Text>
                   <pre if={false}>
                     {JSON.stringify(message.payload.headers, 0, 2)}

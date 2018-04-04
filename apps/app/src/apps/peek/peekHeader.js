@@ -20,7 +20,7 @@ export default class PeekHeader {
           <ControlButton icon="z" background="#62C554" />
         </buttons>
         <title if={title}>
-          <UI.Icon $icon color="#ccc" if={icon} name={icon} />
+          <UI.Icon $icon color="#ccc" if={icon} name={icon} size={20} />
           <titlemain>
             <UI.Title size={1.3} marginBottom={5}>
               {title}
@@ -41,11 +41,11 @@ export default class PeekHeader {
       flexFlow: 'row',
       alignItems: 'center',
       justifyContent: 'center',
-      padding: [20, 20],
-      borderBottom: [1, [0, 0, 0, 0.05]],
+      padding: [18, 20, 0],
+      // borderBottom: [1, [0, 0, 0, 0.05]],
     },
     icon: {
-      padding: [0, 20, 0, 0],
+      padding: [0, 18, 0, 0],
     },
     title: {
       flex: 1,

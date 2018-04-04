@@ -108,7 +108,6 @@ export default class ElectronReactions {
       }
       if (Electron.orbitState.position) {
         const mouseOver = isMouseOver(Electron.orbitState, mousePosition)
-        log('isover', mouseOver)
         if (mouseOver !== Electron.orbitState.mouseOver) {
           Electron.setOrbitState({ mouseOver })
         }

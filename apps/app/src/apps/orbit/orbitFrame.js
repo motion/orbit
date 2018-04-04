@@ -229,18 +229,17 @@ export default class OrbitFrame {
                 <expandEnd
                   css={{
                     opacity: 0.5,
-                    background: `linear-gradient(transparent, ${theme.base.background.darken(
-                      0.02,
-                    )})`,
+                    background: `linear-gradient(transparent, ${
+                      theme.base.background
+                    })`,
                   }}
                 />
                 <fade
                   css={{
                     opacity: 0.5,
-                    background: `linear-gradient(transparent, ${theme.base.background
-                      .darken(0.025)
-                      .saturate(0.2)
-                      .alpha(0.8)} 80%)`,
+                    background: `linear-gradient(transparent, ${
+                      theme.base.background
+                    } 80%)`,
                   }}
                 />
                 <barOuter onMouseDown={orbitPage.barMouseDown}>
@@ -331,7 +330,7 @@ export default class OrbitFrame {
       bottom: 0,
       left: 0,
       right: 0,
-      top: '50%',
+      top: '80%',
       alignItems: 'flex-end',
       justifyContent: 'center',
       flexFlow: 'row',
@@ -344,7 +343,7 @@ export default class OrbitFrame {
       bottom: 0,
       left: 0,
       right: 0,
-      height: 60,
+      height: 50,
       alignItems: 'flex-end',
     },
     barOuter: {

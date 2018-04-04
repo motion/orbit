@@ -15,10 +15,13 @@ class OrbitStatus {
     const { indexStatus, performance } = Desktop.searchState
     const { appState } = Desktop
     return (
-      <UI.Text if={App.isAttachedToWindow && appState} css={{ padding: 10 }}>
+      <UI.Text
+        if={App.isAttachedToWindow && appState && (indexStatus || performance)}
+        css={{ padding: 10 }}
+      >
         {indexStatus}
         <UI.Text
-          if={appState.title}
+          if={performance && appState.title}
           css={{ display: 'inline', opacity: 0.5, fontSize: '80%' }}
         >
           took {performance}

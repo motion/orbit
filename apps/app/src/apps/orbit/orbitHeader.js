@@ -47,11 +47,11 @@ export default class PeekHeader {
   }
 
   render({ appStore, orbitStore, headerStore, theme, headerBg }) {
-    const { fullScreen } = Electron.orbitState
+    // const { fullScreen } = Electron.orbitState
     const darkerBg = theme.base.background.darken(0.045).desaturate(0.3)
     return (
       <header
-        $headerBg={fullScreen ? headerBg.alpha(0.2) : headerBg}
+        $headerBg={headerBg}
         $$draggable
         $headerVisible={App.isShowingHeader}
         $headerMouseOver={Electron.orbitState.mouseOver}

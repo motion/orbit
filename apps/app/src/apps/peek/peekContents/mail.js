@@ -33,8 +33,8 @@ export class Mail {
                   <row
                     css={{
                       flexFlow: 'row',
-                      opacity: 0.5,
-                      margin: [0, 0, 10, 0],
+                      opacity: 0.7,
+                      margin: [0, 0, 12, -18],
                       flex: 1,
                       alignItems: 'center',
                       // justifyContent: 'center',
@@ -51,11 +51,14 @@ export class Mail {
                       }}
                     />{' '}
                     <rest $$row>
-                      from {getHeader(message, 'From').split(' ')[0]}&nbsp;
+                      from{' '}
+                      <strong>
+                        {getHeader(message, 'From').split(' ')[0]}
+                      </strong>&nbsp;
                       <UI.Date>{getHeader(message, 'Date')}</UI.Date>
                     </rest>
                   </row>
-                  <UI.Text lineHeight={20} size={1.1}>
+                  <UI.Text lineHeight={23} size={1.1}>
                     {message.snippet}
                   </UI.Text>
                   <pre if={false}>
@@ -76,7 +79,7 @@ export class Mail {
       overflowY: 'scroll',
     },
     message: {
-      padding: 20,
+      padding: [22, 35],
       borderBottom: [1, 'dotted', '#eee'],
     },
   }

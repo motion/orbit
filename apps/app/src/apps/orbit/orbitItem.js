@@ -45,10 +45,11 @@ export default class Item {
       <Surface
         background="transparent"
         glow={false}
-        background={isSelected ? [255, 255, 255, 0.6] : 'transparent'}
+        background={isSelected ? [255, 255, 255, 0.5] : 'transparent'}
         glowProps={glowProps}
-        padding={[16, 11]}
+        padding={15}
         onClick={this.onClick}
+        borderWidth={0}
         {...props}
       >
         <Title
@@ -79,11 +80,17 @@ export default class Item {
         </Text>
         <Text size={1} sizeLineHeight={1.15}>
           <SubTitle if={false}>Section 1</SubTitle>
-          <P selectable ellipse={4}>
-            {result.body || 'Lorem Ipsum dolor sit amet'}
-          </P>
+          <P ellipse={4}>{result.body || 'Lorem Ipsum dolor sit amet'}</P>
+          <space />
+          <P ellipse={4}>{result.body || 'Lorem Ipsum dolor sit amet'}</P>
         </Text>
       </Surface>
     )
+  }
+
+  static style = {
+    space: {
+      height: 20,
+    },
   }
 }

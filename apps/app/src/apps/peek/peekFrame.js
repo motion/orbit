@@ -4,6 +4,8 @@ import * as UI from '@mcro/ui'
 import { App, Electron } from '@mcro/all'
 import { SHADOW_PAD, APP_SHADOW, BORDER_RADIUS } from '~/constants'
 
+const Space = () => <div css={{ width: SHADOW_PAD, height: '100%' }} />
+
 @UI.injectTheme
 @view
 export default class PeekFrame {
@@ -13,44 +15,39 @@ export default class PeekFrame {
     if (!selectedItem && !fullScreen) {
       return null
     }
-    const onLeft = !fullScreen && Electron.peekState.peekOnLeft
-    const { isShowingPeek } = App
-    // const isShowingPeek = true
+    const onLeft = Electron.peekOnLeft
+    // log(`onleft`, onLeft)
+    // const { isShowingPeek } = App
+    const isShowingPeek = true
     return (
-      <peek
-        css={{
-          overflow: 'hidden',
-          paddingLeft: fullScreen ? 0 : SHADOW_PAD,
-          marginRight: fullScreen ? 0 : !onLeft ? SHADOW_PAD : -SHADOW_PAD,
-        }}
-        $animate={isShowingPeek}
-        $peekVisible={isShowingPeek}
-      >
-        <main
-          css={{
-            marginRight: fullScreen ? 0 : !onLeft ? -SHADOW_PAD : 0,
-            marginLeft: fullScreen ? 0 : !onLeft ? SHADOW_PAD : 0,
-            boxShadow: [
-              APP_SHADOW,
-              fullScreen ? null : ['inset', 0, 0, 0, 0.5, [0, 0, 0, 0.15]],
-            ].filter(Boolean),
-            borderRightRadius: fullScreen ? BORDER_RADIUS : 0,
-            background: fullScreen ? theme.base.background : '#fff',
-          }}
-          {...props}
-        >
-          {children}
-        </main>
-      </peek>
+      <container $$row $$flex>
+        <Space if={onLeft} />
+        <crop css={{ flex: 1, padding: [SHADOW_PAD, 0], overflow: 'hidden' }}>
+          <peek $animate={isShowingPeek} $peekVisible={isShowingPeek}>
+            <main
+              css={{
+                boxShadow: [
+                  APP_SHADOW,
+                  fullScreen ? null : ['inset', 0, 0, 0, 0.5, [0, 0, 0, 0.15]],
+                ].filter(Boolean),
+                borderRightRadius: fullScreen ? BORDER_RADIUS : 0,
+                background: fullScreen ? theme.base.background : '#fff',
+              }}
+              {...props}
+            >
+              {children}
+            </main>
+          </peek>
+        </crop>
+        <Space if={!onLeft} />
+      </container>
     )
   }
 
   static style = {
     peek: {
       alignSelf: 'flex-end',
-      width: '100%',
       height: '100%',
-      padding: SHADOW_PAD,
       pointerEvents: 'none !important',
       opacity: 0,
       position: 'relative',

@@ -17,7 +17,7 @@ class SettingsStore {
     const position = {
       left: Electron.orbitState.position[0],
       top: ref.offsetTop + Electron.orbitState.position[1],
-      width: Electron.orbitState.size[0],
+      width: Electron.orbitState.size[0] - 36,
       height: ref.clientHeight,
     }
     App.setPeekTarget({

@@ -72,7 +72,12 @@ export class Mail {
                   </row>
                   <UI.Text lineHeight={23} size={1.1}>
                     {_.flatten(
-                      message.snippet.split('\n').map(i => [i, <br />]),
+                      message.snippet
+                        .split('\n')
+                        .map((i, idx) => [
+                          <p key={idx}>{i}</p>,
+                          <br key={`br-${idx}`} />,
+                        ]),
                     )}
                   </UI.Text>
                   <pre if={false}>

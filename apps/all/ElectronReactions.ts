@@ -160,7 +160,7 @@ export default class ElectronReactions {
       // prefer using lines bounding box, fall back to app
       const box = linesBB || appBB
       if (!box) return
-      let { position, size, orbitOnLeft } = orbitPosition(box)
+      let { position, size, orbitOnLeft, orbitDocked } = orbitPosition(box)
       if (linesBB) {
         // add padding
         position[0] += orbitOnLeft ? -SCREEN_PAD : SCREEN_PAD
@@ -172,6 +172,7 @@ export default class ElectronReactions {
         position,
         size,
         orbitOnLeft,
+        orbitDocked,
         fullScreen: false,
       })
     },

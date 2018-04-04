@@ -14,6 +14,9 @@ const Indicator = view(({ iWidth, orbitOnLeft }) => {
   if (Date.now() - Desktop.state.lastAppChange < 100) {
     return null
   }
+  if (Electron.orbitState.orbitDocked) {
+    return null
+  }
   // log('on', orbitOnLeft)
   return (
     <indicator
@@ -146,7 +149,7 @@ export default class OrbitFrame {
   }
 
   render({ store, orbitPage, children, theme, headerBg }) {
-    const { fullScreen } = Electron.orbitState
+    const { fullScreen, orbitDocked } = Electron.orbitState
     const { orbitOnLeft } = Electron
     const borderColor = theme.base.background.darken(0.1).desaturate(0.3)
     const borderShadow = ['inset', 0, 0, 0, 0.5, borderColor]
@@ -165,7 +168,7 @@ export default class OrbitFrame {
         }}
       >
         <OrbitArrow
-          if={App.isAttachedToWindow}
+          if={App.isAttachedToWindow && !orbitDocked}
           arrowSize={arrowSize}
           orbitOnLeft={orbitOnLeft}
           background={headerBg}
@@ -191,6 +194,7 @@ export default class OrbitFrame {
         >
           <orbit
             css={{
+              padding: orbitDocked ? 0 : SHADOW_PAD,
               paddingRight: fullScreen ? 0 : SHADOW_PAD,
               ...(App.isShowingOrbit
                 ? {
@@ -218,7 +222,8 @@ export default class OrbitFrame {
                 background,
                 boxShadow: App.isShowingOrbit ? boxShadow : 'none',
                 // borderRight: orbitOnLeft ? [1, [0, 0, 0, 0.1]] : 0,
-                borderLeftRadius: orbitOnLeft ? Constants.BORDER_RADIUS : 0,
+                borderLeftRadius:
+                  !orbitOnLeft || orbitDocked ? 0 : Constants.BORDER_RADIUS,
                 borderRightRadius: fullScreen
                   ? 0
                   : orbitOnLeft ? 0 : Constants.BORDER_RADIUS,
@@ -274,7 +279,6 @@ export default class OrbitFrame {
     orbit: {
       right: -SHADOW_PAD,
       width: 330,
-      padding: SHADOW_PAD,
       position: 'relative',
       willChange: 'transform, opacity',
       transition: 'none',

@@ -20,7 +20,6 @@ export default class PeekHeader {
           <ControlButton icon="z" background="#62C554" />
         </buttons>
         <title if={title}>
-          <UI.Icon $icon color="#ccc" if={icon} name={icon} size={20} />
           <titlemain>
             <UI.Title size={1.3} marginBottom={5}>
               {title}
@@ -30,6 +29,7 @@ export default class PeekHeader {
             </UI.Title>
             <UI.Date css={{ opacity: 0.5 }}>{date}</UI.Date>
           </titlemain>
+          <UI.Icon $icon color="#ddd" if={icon} name={icon} size={16} />
         </title>
         <after if={after}>{after}</after>
       </header>
@@ -45,7 +45,7 @@ export default class PeekHeader {
       // borderBottom: [1, [0, 0, 0, 0.05]],
     },
     icon: {
-      padding: [0, 18, 0, 0],
+      padding: [0, 5, 0, 18],
     },
     title: {
       flex: 1,

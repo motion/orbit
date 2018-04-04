@@ -66,12 +66,14 @@ export default class PeekHeader {
               theme.base.background.darken(0.1).desaturate(0.3),
             ],
           ],
-          borderTopLeftRadius: Electron.orbitOnLeft
-            ? Constants.BORDER_RADIUS
-            : 0,
-          borderTopRightRadius: !Electron.orbitOnLeft
-            ? Constants.BORDER_RADIUS
-            : 0,
+          borderTopLeftRadius:
+            !Electron.orbitOnLeft || Electron.orbitState.orbitDocked
+              ? 0
+              : Constants.BORDER_RADIUS,
+          borderTopRightRadius:
+            Electron.orbitOnLeft || Electron.orbitState.orbitDocker
+              ? 0
+              : Constants.BORDER_RADIUS,
         }}
       >
         <title>

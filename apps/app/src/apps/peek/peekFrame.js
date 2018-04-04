@@ -44,7 +44,9 @@ export default class PeekFrame {
                   fullScreen ? null : ['inset', 0, 0, 0, 0.5, [0, 0, 0, 0.15]],
                 ].filter(Boolean),
                 borderRightRadius: fullScreen ? BORDER_RADIUS : 0,
-                background: fullScreen ? theme.base.background : '#fff',
+                background: fullScreen
+                  ? theme.base.background.lighten(0.05)
+                  : '#fff',
               }}
               {...props}
             >
@@ -59,7 +61,6 @@ export default class PeekFrame {
 
   static style = {
     peek: {
-      alignSelf: 'flex-end',
       height: '100%',
       pointerEvents: 'none !important',
       opacity: 0,

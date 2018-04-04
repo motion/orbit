@@ -99,7 +99,6 @@ export default class AppStore {
     () => this.results[this.selectedIndex],
     item => {
       if (item) {
-        // App.setSelectedItem(null)
         App.setSelectedItem({
           id: item.id || '',
           icon: item.icon || '',

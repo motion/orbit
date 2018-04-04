@@ -48,7 +48,7 @@ export default class OrbitContent {
   }
 
   getHoverProps = Helpers.hoverSettler({
-    enterDelay: 0,
+    enterDelay: 200,
     onHovered: async target => {
       clearTimeout(this.updateTargetTm)
       if (!target) {
@@ -72,7 +72,7 @@ export default class OrbitContent {
         this.props.appStore.setSelectedIndex(target.id)
         this.updateTargetTm = setTimeout(() => {
           App.setPeekTarget({ id, position, type: 'document' })
-        }, 64)
+        }, 200)
       }
     },
   })

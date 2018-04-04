@@ -188,7 +188,7 @@ export default class OrbitFrame {
               ? { right: 0 }
               : {
                   right: orbitOnLeft ? 15 : 'auto',
-                  left: !orbitOnLeft ? 15 : 'auto',
+                  left: !orbitOnLeft ? SHADOW_PAD : 'auto',
                 }),
           }}
         >
@@ -196,6 +196,7 @@ export default class OrbitFrame {
             css={{
               padding: orbitDocked ? 0 : SHADOW_PAD,
               paddingRight: fullScreen ? 0 : SHADOW_PAD,
+              right: orbitOnLeft ? -SHADOW_PAD : -SHADOW_PAD * 2,
               ...(App.isShowingOrbit
                 ? {
                     opacity: 1,
@@ -259,6 +260,9 @@ export default class OrbitFrame {
   }
 
   static style = {
+    orbitFrame: {
+      // background: 'red',
+    },
     // used to hide edge overlap of drawer during in animation
     overflowWrap: {
       alignSelf: 'flex-end',
@@ -277,7 +281,6 @@ export default class OrbitFrame {
       right: 0,
     },
     orbit: {
-      right: -SHADOW_PAD,
       width: 330,
       position: 'relative',
       willChange: 'transform, opacity',

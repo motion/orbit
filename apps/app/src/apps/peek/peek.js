@@ -1,23 +1,14 @@
 import * as React from 'react'
-import { view, watch } from '@mcro/black'
+import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { App, Electron } from '@mcro/all'
-import { Bit } from '@mcro/models'
 import * as PeekContents from './peekContents'
 import { capitalize } from 'lodash'
 
-class PeekStore {
-  @watch
-  bit = () =>
-    App.state.selectedItem && Bit.findOne({ id: App.state.selectedItem.id })
-}
-
 @view.attach('appStore')
-@view({
-  peekStore: PeekStore,
-})
+@view
 export default class PeekPage {
-  render({ appStore, peekStore }) {
+  render({ appStore }) {
     const { selectedItem } = App.state
     const type = (selectedItem && capitalize(selectedItem.type)) || 'Empty'
     const PeekContentsView = PeekContents[type] || PeekContents['Empty']
@@ -32,7 +23,7 @@ export default class PeekPage {
     return (
       <UI.Theme name="tan">
         <PeekContentsView
-          bit={peekStore.bit}
+          bit={appStore.selectedBit}
           selectedItem={selectedItem}
           appStore={appStore}
         />

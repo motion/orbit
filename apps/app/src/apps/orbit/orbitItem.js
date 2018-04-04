@@ -1,6 +1,7 @@
 import { view } from '@mcro/black'
 import { Title, Text, Surface } from '@mcro/ui'
 import OrbitIcon from './orbitIcon'
+import OrbitItemPreview from './orbitItemPreview'
 
 const glowProps = {
   color: '#fff',
@@ -52,38 +53,33 @@ export default class Item {
         borderWidth={0}
         {...props}
       >
-        <Title
-          size={1.6}
-          ellipse
-          css={{
-            fontWeight: 300,
-            // letterSpacing: isSelected ? -0.25 : 0,
-            opacity: isSelected ? 1 : 0.95,
-            alignItems: 'center',
-            justifyContent: 'center',
-            textShadow: isSelected ? `0 0 5px rgba(255,255,255,0.3)` : 'none',
-          }}
-        >
+        <titles>
+          <Title
+            size={1.3}
+            sizeLineHeight={1}
+            ellipse={2}
+            css={{
+              fontWeight: 400,
+              width: 'calc(100% - 15px)',
+              // letterSpacing: isSelected ? -0.25 : 0,
+              opacity: isSelected ? 1 : 0.95,
+              // alignItems: 'center',
+              // justifyContent: 'center',
+              textShadow: isSelected ? `0 0 5px rgba(255,255,255,0.3)` : 'none',
+            }}
+          >
+            {result.title}
+          </Title>
           <OrbitIcon
             icon={result.icon ? `/icons/${result.icon}` : result.integration}
-            size={16}
+            size={18}
             css={{
-              marginRight: 3,
-              marginBottom: 4,
-              display: 'inline-block',
+              marginLeft: 0,
+              marginTop: 3,
             }}
-          />{' '}
-          {result.title}
-        </Title>
-        <Text opacity={0.5} margin={[3, 0, 6]} size={0.95} ellipse>
-          {result.subtitle || 'Created Jan 24th'}
-        </Text>
-        <Text size={1} sizeLineHeight={1.15}>
-          <SubTitle if={false}>Section 1</SubTitle>
-          <P ellipse={4}>{result.body || 'Lorem Ipsum dolor sit amet'}</P>
-          <space />
-          <P ellipse={4}>{result.body || 'Lorem Ipsum dolor sit amet'}</P>
-        </Text>
+          />
+        </titles>
+        <OrbitItemPreview result={result} />
       </Surface>
     )
   }
@@ -91,6 +87,11 @@ export default class Item {
   static style = {
     space: {
       height: 20,
+    },
+    titles: {
+      flexFlow: 'row',
+      alignItems: 'flex-start',
+      padding: [2, 5, 2, 0],
     },
   }
 }

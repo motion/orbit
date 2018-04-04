@@ -1,4 +1,4 @@
-import { react } from '@mcro/black'
+import { react, watch } from '@mcro/black'
 import { App, Desktop } from '@mcro/all'
 import { Bit, Setting } from '@mcro/models'
 import fuzzySort from 'fuzzysort'
@@ -40,6 +40,10 @@ export default class AppStore {
   selectedIndex = 0
   showSettings = false
   settings = []
+
+  @watch
+  selectedBit = () =>
+    App.state.selectedItem && Bit.findOne({ id: App.state.selectedItem.id })
 
   get results() {
     if (this.showSettings) {

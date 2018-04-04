@@ -41,6 +41,7 @@ export default class OrbitContent {
             type="gmail"
             index={index}
             result={result}
+            total={appStore.results.length}
             {...getHoverProps({
               result,
               id: index,

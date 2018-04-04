@@ -44,5 +44,6 @@ export default function orbitPosition({ left, top, width, height }) {
     position: [Math.round(x), Math.round(y)],
     size: [orbitW, orbitH],
     orbitOnLeft,
+    orbitDocked: false,
   }
 }

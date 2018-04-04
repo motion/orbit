@@ -1,6 +1,5 @@
 next
 
-* design: sidebar condensed recently
 * design: sidebar expanded context
   * limit to 1 real email, design full screen
   * limit to 2, design half screens
@@ -10,7 +9,6 @@ next
   * grouping messages into logical chunks?
     * first: time split by inactive periods
     * then further split big ones somehow if need
-* full screen sidebar positioning
 * various polish
   * prefix integration type search
 

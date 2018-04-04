@@ -19,6 +19,15 @@ class OrbitPageStore {
   isDragging = false
   adjustHeight = 0
 
+  get realHeight() {
+    return Electron.state.orbitState.size[1] - this.adjustHeight
+  }
+
+  get contentHeight() {
+    // todo: constants for header height
+    return this.realHeight - SHADOW_PAD * 2 - 80
+  }
+
   willMount() {
     this.on(
       window,
@@ -44,6 +53,8 @@ class OrbitPageStore {
   }
 }
 
+const refs = {}
+
 @UI.injectTheme
 @view.attach('appStore')
 @view.provide({
@@ -52,10 +63,8 @@ class OrbitPageStore {
 })
 @view
 export default class Orbit {
-  refs = {}
-
   onRef = index => ref => {
-    this.refs[index] = ref
+    refs[index] = ref
   }
 
   getHoverProps = Helpers.hoverSettler({
@@ -94,7 +103,11 @@ export default class Orbit {
       <UI.Theme name={Electron.orbitState.fullScreen ? 'tan' : 'tan'}>
         <OrbitFrame headerBg={headerBg} orbitPage={orbitPage}>
           <OrbitHeader headerBg={headerBg} />
-          <OrbitHeadsUp getHoverProps={this.getHoverProps} onRef={this.onRef} />
+          <OrbitHeadsUp
+            if={false}
+            getHoverProps={this.getHoverProps}
+            onRef={this.onRef}
+          />
           <OrbitContent
             if={!appStore.showSettings}
             getHoverProps={this.getHoverProps}

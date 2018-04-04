@@ -29,19 +29,31 @@ const P = p => (
   />
 )
 
-@view.attach('appStore')
+@view.attach('appStore', 'orbitPage')
 @view
 export default class Item {
   onClick = () => {
     this.props.appStore.setSelectedIndex(this.props.index)
   }
 
-  render({ appStore, index, result, ...props }) {
+  render({ appStore, orbitPage, index, result, total, ...props }) {
     const isSelected = appStore.selectedIndex === index
     // log(`OrbitItem isSelected ${isSelected} ${index}`)
     if (!result) {
       return null
     }
+    const orbitHeight = orbitPage.contentHeight
+    const WORDS_PER_LINE_ROUGHLY = 30
+    const LINE_HEIGHT = 20
+    const TITLE_HEIGHT = Math.ceil(result.title.length / 20) * LINE_HEIGHT * 3
+    const maxItemHeight =
+      TITLE_HEIGHT +
+      LINE_HEIGHT * Math.ceil(result.body.length / WORDS_PER_LINE_ROUGHLY)
+    const MAX_PER_SCREEN = 4
+    const height = Math.min(
+      maxItemHeight,
+      Math.round(Math.max(orbitHeight / MAX_PER_SCREEN, orbitHeight / total)),
+    )
     return (
       <Surface
         background="transparent"
@@ -51,6 +63,7 @@ export default class Item {
         padding={15}
         onClick={this.onClick}
         borderWidth={0}
+        height={height}
         {...props}
       >
         <titles>

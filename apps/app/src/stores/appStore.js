@@ -52,7 +52,7 @@ export default class AppStore {
   refreshCycle = 0
   selectedIndex = 0
   showSettings = false
-  settings = []
+  settings = {}
 
   @watch
   selectedBit = () =>
@@ -118,7 +118,7 @@ export default class AppStore {
     },
   ]
 
-  @react({ fireImmediately: true })
+  @react({ fireImmediately: true, log: false })
   bitResults = [
     () => [App.state.query, Desktop.appState.id, this.refreshCycle],
     async ([query, id]) => {
@@ -151,7 +151,10 @@ export default class AppStore {
   }
 
   getSettings = async () => {
-    this.settings = await Setting.find()
+    const settings = await Setting.find()
+    if (settings) {
+      this.settings = settings.reduce((a, b) => ({ ...a, [b.type]: b }), {})
+    }
   }
 
   toggleSettings = () => {

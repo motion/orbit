@@ -20,6 +20,12 @@ export default class AppReactions {
   ]
 
   @react
+  clearPeekTargetOnMouseLeave = [
+    () => Electron.isMouseInActiveArea,
+    isActive => !isActive && App.setPeekTarget(null),
+  ]
+
+  @react
   onFullScreen = [
     () => Electron.orbitState.fullScreen,
     full => {

@@ -40,8 +40,8 @@ export default class OrbitSettings {
     const [activeIntegrations, inactiveIntegrations] = partition(
       appStore.results,
       integration =>
-        appStore.settings &&
-        appStore.settings.find(x => x.type === integration.id && x.token),
+        appStore.settings[integration.id] &&
+        appStore.settings[integration.id].token,
     )
     const integrationCard = all => (integration, index) => (
       <Card
@@ -50,9 +50,10 @@ export default class OrbitSettings {
         appStore={appStore}
         store={store}
         length={all.length}
-        isActive={appStore.settings.find(
-          x => x.type === integration.id && x.token,
-        )}
+        isActive={
+          appStore.settings[integration.id] &&
+          appStore.settings[integration.id].token
+        }
         {...integration}
       />
     )

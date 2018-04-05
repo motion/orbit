@@ -1,21 +1,22 @@
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
+import DotDotDot from 'react-dotdotdot'
 
-const SubTitle = p => (
-  <UI.Text
-    size={0.9}
-    css={{ textTransform: 'uppercase', opacity: 0.4, margin: [5, 0] }}
-    {...p}
-  />
-)
-const P = p => (
-  <UI.Text
-    size={1.15}
-    css={{ marginBottom: 5, opacity: 0.65 }}
-    highlightWords={['ipsum', 'adipisicing', 'something']}
-    {...p}
-  />
-)
+// const SubTitle = p => (
+//   <UI.Text
+//     size={0.9}
+//     css={{ textTransform: 'uppercase', opacity: 0.4, margin: [5, 0] }}
+//     {...p}
+//   />
+// )
+// const P = p => (
+//   <UI.Text
+//     size={1.15}
+//     css={{ marginBottom: 5, opacity: 0.65 }}
+//     highlightWords={['ipsum', 'adipisicing', 'something']}
+//     {...p}
+//   />
+// )
 
 @view
 export default class OrbitItemPreview {
@@ -29,9 +30,11 @@ export default class OrbitItemPreview {
           <UI.Text opacity={0.5} margin={[3, 0, 6]} size={0.95} ellipse>
             {result.subtitle || 'Created Jan 24th'}
           </UI.Text>
-          <P if={result.body}>{result.body}</P>
+          <DotDotDot if={result.body} clamp="auto">
+            {result.body}
+          </DotDotDot>
           <fadeEnd
-            if={result.body}
+            if={false && result.body}
             css={{
               background: `linear-gradient(transparent 30%, ${background} 50%)`,
             }}
@@ -46,6 +49,8 @@ export default class OrbitItemPreview {
     },
     words: {
       // background: 'red',
+      // fontSize: 15,
+      // lineHeight: '33px',
     },
     fadeEnd: {
       position: 'absolute',

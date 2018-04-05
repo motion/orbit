@@ -14,21 +14,21 @@ const glowProps = {
   zIndex: -1,
 }
 
-const SubTitle = p => (
-  <Text
-    size={0.9}
-    css={{ textTransform: 'uppercase', opacity: 0.4, margin: [5, 0] }}
-    {...p}
-  />
-)
-const P = p => (
-  <Text
-    size={1.15}
-    css={{ marginBottom: 5, opacity: 0.85 }}
-    highlightWords={['ipsum', 'adipisicing', 'something']}
-    {...p}
-  />
-)
+// const SubTitle = p => (
+//   <Text
+//     size={0.9}
+//     css={{ textTransform: 'uppercase', opacity: 0.4, margin: [5, 0] }}
+//     {...p}
+//   />
+// )
+// const P = p => (
+//   <Text
+//     size={1.15}
+//     css={{ marginBottom: 5, opacity: 0.85 }}
+//     highlightWords={['ipsum', 'adipisicing', 'something']}
+//     {...p}
+//   />
+// )
 
 @UI.injectTheme
 @view.attach('appStore', 'orbitPage')
@@ -70,7 +70,7 @@ export default class Item {
       ),
     )
     const background = isSelected
-      ? theme.base.background.lighten(0.08)
+      ? theme.base.background.lighten(0.025)
       : theme.base.background
     return (
       <Surface
@@ -81,7 +81,6 @@ export default class Item {
         padding={ITEM_PAD}
         onClick={this.onClick}
         borderWidth={0}
-        height={height}
         overflow="hidden"
         {...props}
       >

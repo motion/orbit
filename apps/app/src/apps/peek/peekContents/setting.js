@@ -9,10 +9,13 @@ import * as UI from '@mcro/ui'
 
 @view({
   store: class SettingStore {
-    setting = null
     settingVersion = 0
     job = null
     bitsCount = null
+
+    get setting() {
+      return this.props.appStore.settings[this.selectedItem.integration]
+    }
 
     get selectedItem() {
       return App.state.selectedItem
@@ -29,7 +32,6 @@ import * as UI from '@mcro/ui'
         where: { type: integration },
         order: { createdAt: 'DESC' },
       })
-      this.setting = await Setting.findOne({ type: integration })
       this.bitsCount = await Bit.createQueryBuilder()
         .where({ integration })
         .getCount()

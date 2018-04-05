@@ -54,7 +54,7 @@ export default class Card {
             if={!isActive}
             onClick={async () => {
               if (oauth === false) {
-                const setting = appStore.settings.find(s => s.type === id)
+                const setting = appStore.settings[id]
                 setting.token = 'good'
                 await setting.save()
                 appStore.getSettings()

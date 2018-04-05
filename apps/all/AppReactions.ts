@@ -1,7 +1,7 @@
 import { store, react } from '@mcro/black/store'
-import Desktop from './Desktop'
-import Electron from './Electron'
-import App from './App'
+import { Desktop } from './Desktop'
+import { Electron } from './Electron'
+import { App } from './App'
 
 @store
 export default class AppReactions {

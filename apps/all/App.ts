@@ -1,13 +1,15 @@
 import Bridge from './helpers/Bridge'
 import { proxySetters, setGlobal } from './helpers'
 import { store, react } from '@mcro/black/store'
-import Desktop from './Desktop'
-import Electron from './Electron'
+import { Desktop } from './Desktop'
+import { Electron } from './Electron'
 import AppReactions from './AppReactions'
 
+export let App
+
+// @ts-ignore
 const isBrowser = typeof window !== 'undefined'
 // const log = debug('App')
-let App
 
 @store
 class AppStore {
@@ -132,5 +134,3 @@ class AppStore {
 App = proxySetters(new AppStore())
 setGlobal('App', App)
 Bridge.stores[App.source] = App
-
-export default App

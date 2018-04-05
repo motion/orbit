@@ -15,16 +15,17 @@ next
 queued ux stuff
 
 * bug option+space doesnt focus input text
-* hold option when text is selected and hit "delete", could pin
+* hold option when text is selected and hit "delete" or other char, should pin
 * clicked vs hovered selections -- see AppReactions TODO
 * pin-on-click only when option holding
 * faster hover item highlight reaction time
 * fix unpin glitchy animation
 * if large window, slide in from left side full height
+* OCR scanning - once its paused again it doesnt move wiht app anymore
 
 notes
 
-* potential metrics to track
+* potential metrics to
 
   * saved time searching
   * saved contextual switches

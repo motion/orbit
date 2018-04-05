@@ -1,7 +1,7 @@
 import { store, react } from '@mcro/black/store'
-import App from './App'
-import Desktop from './Desktop'
-import Electron from './Electron'
+import { App } from './App'
+import { Desktop } from './Desktop'
+import { Electron } from './Electron'
 import orbitPosition from './helpers/orbitPosition'
 import screenSize from './helpers/screenSize'
 import debug from '@mcro/debug'
@@ -64,7 +64,7 @@ export default class ElectronReactions {
   @react
   shouldTogglePinned = [
     () => [App.state.shouldTogglePinned, Desktop.state.shouldTogglePin],
-    Electron.togglePinned,
+    () => Electron.togglePinned(),
   ]
 
   // @react

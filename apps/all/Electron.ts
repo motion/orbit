@@ -2,13 +2,13 @@ import Bridge from './helpers/Bridge'
 import { setGlobal, proxySetters } from './helpers'
 import { store, react } from '@mcro/black/store'
 import global from 'global'
-import App from './App'
+import { App } from './App'
 import ElectronReactions from './ElectronReactions'
 import debug from '@mcro/debug'
 
 const log = debug('ElectronStore')
 
-let Electron
+export let Electron
 
 @store
 class ElectronStore {
@@ -172,5 +172,3 @@ class ElectronStore {
 Electron = proxySetters(new ElectronStore())
 Bridge.stores[Electron.source] = Electron
 setGlobal('Electron', Electron)
-
-export default Electron

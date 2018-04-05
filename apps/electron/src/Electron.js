@@ -10,6 +10,7 @@ import OrbitWindow from './views/OrbitWindow'
 import ShortcutsStore from '~/stores/shortcutsStore'
 import global from 'global'
 import { memoize } from 'lodash'
+import debug from '@mcro/debug'
 
 const log = debug('Electron')
 
@@ -100,7 +101,6 @@ export default class ElectronWindow extends React.Component {
     if (electronStore.error) {
       return null
     }
-    // <HighlightsWindow if={false} />
     return (
       <AppWindow
         onBeforeQuit={electronStore.handleBeforeQuit}
@@ -108,7 +108,8 @@ export default class ElectronWindow extends React.Component {
         ref={electronStore.handleAppRef}
       >
         <MenuItems el />
-        <PeekWindow />}
+        <HighlightsWindow />
+        <PeekWindow />
         <OrbitWindow />
         <Tray />
       </AppWindow>

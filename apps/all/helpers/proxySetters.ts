@@ -25,7 +25,7 @@ export function proxySetters(klass) {
       // shorthand getter for state items ending in State
       if (
         method.indexOf('State') === method.length - 5 &&
-        target.state[method]
+        typeof target.state[method] !== 'undefined'
       ) {
         return target.state[method]
       }

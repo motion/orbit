@@ -1,13 +1,15 @@
 import { store } from '@mcro/black/store'
 import WebSocket from './helpers/websocket'
 import ReconnectingWebSocket from 'reconnecting-websocket'
-import Desktop from './Desktop'
+import { Desktop } from './Desktop'
 import debug from '@mcro/debug'
+
+export let Swift
 
 const log = debug('Swift')
 
 @store
-class Swift {
+class SwiftStore {
   ws: ReconnectingWebSocket
   isOpen = false
   state = {
@@ -102,4 +104,4 @@ class Swift {
   }
 }
 
-export default new Swift()
+Swift = new SwiftStore()

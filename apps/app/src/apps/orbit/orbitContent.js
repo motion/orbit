@@ -86,25 +86,29 @@ class OrbitStatus {
 @view
 export default class OrbitContent {
   render({ appStore, getHoverProps, onRef }) {
+    const { query } = App.state
+    const tinyProps = {
+      hidePreview: true,
+      titleProps: {
+        ellipse: true,
+        fontWeight: 200,
+        size: 1,
+      },
+      iconProps: {
+        size: 14,
+        style: {
+          marginTop: 1,
+          marginLeft: 15,
+        },
+      },
+      padding: [3, 15],
+    }
     return (
       <orbitContent>
         <OrbitStatus />
-        {appStore.results.slice(0, 5).map((result, index) => (
+        {appStore.results.slice(0, query ? 12 : 5).map((result, index) => (
           <OrbitItem
-            hidePreview
-            titleProps={{
-              ellipse: true,
-              fontWeight: 200,
-              size: 1,
-            }}
-            iconProps={{
-              size: 14,
-              style: {
-                marginTop: 1,
-                marginLeft: 15,
-              },
-            }}
-            padding={[3, 15]}
+            {...!query && tinyProps}
             key={getKey(result) || index}
             ref={onRef(index)}
             type="gmail"
@@ -121,7 +125,7 @@ export default class OrbitContent {
             })}
           />
         ))}
-        <OrbitContext appStore={appStore} />
+        <OrbitContext if={!query} appStore={appStore} />
       </orbitContent>
     )
   }

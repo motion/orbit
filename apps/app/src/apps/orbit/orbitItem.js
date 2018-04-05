@@ -38,8 +38,22 @@ export default class Item {
     this.props.appStore.setSelectedIndex(this.props.index)
   }
 
-  render({ appStore, orbitPage, index, result, total, theme, ...props }) {
+  render({
+    hidePreview,
+    titleProps,
+    iconProps,
+    appStore,
+    orbitPage,
+    index,
+    result,
+    total,
+    theme,
+    results,
+    ...props
+  }) {
     const isSelected = appStore.selectedIndex === index
+    const shouldShowIcon =
+      !results[index - 1] || results[index - 1].type !== result.type
     // log(`OrbitItem isSelected ${isSelected} ${index}`)
     if (!result) {
       return null
@@ -70,12 +84,11 @@ export default class Item {
       ),
     )
     const background = isSelected
-      ? theme.base.background.lighten(0.025)
-      : theme.base.background
+      ? theme.base.background.lighten(0.25)
+      : 'transparent'
     return (
       <Surface
-        background="transparent"
-        glow={false}
+        glow={isSelected}
         background={background}
         glowProps={glowProps}
         padding={ITEM_PAD}
@@ -89,8 +102,8 @@ export default class Item {
             size={1.3}
             sizeLineHeight={1}
             ellipse={2}
+            fontWeight={400}
             css={{
-              fontWeight: 400,
               width: 'calc(100% - 15px)',
               // letterSpacing: isSelected ? -0.25 : 0,
               opacity: isSelected ? 1 : 0.95,
@@ -98,19 +111,26 @@ export default class Item {
               // justifyContent: 'center',
               textShadow: isSelected ? `0 0 5px rgba(255,255,255,0.3)` : 'none',
             }}
+            {...titleProps}
           >
             {result.title}
           </Title>
           <OrbitIcon
+            if={shouldShowIcon}
             icon={result.icon ? `/icons/${result.icon}` : result.integration}
             size={18}
             css={{
               marginLeft: 0,
               marginTop: 3,
             }}
+            {...iconProps}
           />
         </titles>
-        <OrbitItemPreview result={result} background={background} />
+        <OrbitItemPreview
+          if={!hidePreview}
+          result={result}
+          background={background}
+        />
       </Surface>
     )
   }

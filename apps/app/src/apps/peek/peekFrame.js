@@ -26,7 +26,7 @@ export default class PeekFrame {
           css={{
             flex: 1,
             padding: fullScreen
-              ? 0
+              ? [SHADOW_PAD, SHADOW_PAD, SHADOW_PAD, 0]
               : [
                   SHADOW_PAD,
                   onLeft ? SHADOW_PAD : 0,

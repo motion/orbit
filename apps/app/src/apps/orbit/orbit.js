@@ -11,9 +11,8 @@ import OrbitHeadsUp from './orbitHeadsUp'
 import { throttle } from 'lodash'
 import { SHADOW_PAD } from '~/constants'
 import * as Helpers from '~/helpers'
-// the little tab indicator
-// const log = debug('orbit')
-import { whenAsync } from 'mobx-utils'
+
+// const log = require('@mcro/debug')('orbit')
 
 class OrbitPageStore {
   isDragging = false

@@ -21,9 +21,9 @@ export default class DateView extends React.PureComponent<Props> {
     return dateWords
   }
 
-  render({ children, ...props }: Props) {
+  render({ children }: Props) {
     if (children) {
-      return <Text {...props}>{this.constructor.format(children)}</Text>
+      return this.constructor.format(children)
     }
     return null
   }

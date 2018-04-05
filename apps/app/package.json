@@ -7,7 +7,7 @@
   "scripts": {
     "start": "./start.sh",
     "start-prod": "static-server -p 3002 -n dist/index.html dist",
-    "build-app": "rm -r dist && parcel build --public-url /",
+    "build-app": "rm -r dist && parcel build --no-minify",
     "deploy": "./deploy.sh"
   },
   "dependencies": {
@@ -64,7 +64,8 @@
     "whatkey": "^2.0.1",
     "wink-bm25-text-search": "2.0.1",
     "wink-helpers": "^1.2.0",
-    "wink-nlp-utils": "^1.7.0"
+    "wink-nlp-utils": "^1.7.0",
+    "regenerator-runtime": "0.11.1"
   },
   "devDependencies": {
     "@mcro/dev": "*",

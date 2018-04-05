@@ -96,7 +96,7 @@ class OrbitStatus {
 @view.attach('appStore')
 @view
 export default class OrbitContent {
-  render({ appStore, getHoverProps, onRef }) {
+  render({ appStore, getHoverProps }) {
     const { query } = App.state
     const tinyProps = {
       hidePreview: true,
@@ -122,7 +122,6 @@ export default class OrbitContent {
             <OrbitItem
               {...!query && tinyProps}
               key={getKey(result) || index}
-              ref={onRef(index)}
               type="gmail"
               index={index}
               results={appStore.results}

@@ -1,3 +1,4 @@
+import 'regenerator-runtime/runtime'
 import * as Constants from '~/constants'
 import r2 from '@mcro/r2'
 

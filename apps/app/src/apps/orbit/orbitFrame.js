@@ -160,7 +160,6 @@ export default class OrbitFrame {
     const background = theme.base.background
     const hide =
       !App.isShowingOrbit && (store.isRepositioning || store.isDragging)
-    log(`OrbitFrame onLeft ${orbitOnLeft} hide ${hide}`)
     return (
       <orbitFrame
         css={{

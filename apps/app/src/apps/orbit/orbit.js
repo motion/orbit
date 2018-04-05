@@ -55,8 +55,6 @@ class OrbitPageStore {
   }
 }
 
-const refs = {}
-
 @UI.injectTheme
 @view.attach('appStore')
 @view.provide({
@@ -65,10 +63,6 @@ const refs = {}
 })
 @view
 export default class Orbit {
-  onRef = index => ref => {
-    refs[index] = ref
-  }
-
   getHoverProps = Helpers.hoverSettler({
     enterDelay: 100,
     onHovered: async target => {
@@ -105,15 +99,10 @@ export default class Orbit {
       <UI.Theme name={Electron.orbitState.fullScreen ? 'tan' : 'tan'}>
         <OrbitFrame headerBg={headerBg} orbitPage={orbitPage}>
           <OrbitHeader headerBg={headerBg} />
-          <OrbitHeadsUp
-            if={false}
-            getHoverProps={this.getHoverProps}
-            onRef={this.onRef}
-          />
+          <OrbitHeadsUp if={false} getHoverProps={this.getHoverProps} />
           <OrbitContent
             if={!appStore.showSettings}
             getHoverProps={this.getHoverProps}
-            onRef={this.onRef}
           />
           <OrbitSettings if={appStore.showSettings} />
           <Knowledge if={App.state.knowledge} data={App.state.knowledge} />

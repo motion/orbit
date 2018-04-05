@@ -43,6 +43,7 @@ export class SettingView {
     if (!store.setting || !store.setting.token) {
       return null
     }
+    console.log('setting', store.selectedItem)
     store.settingVersion
     const { setting } = store
     const { syncSettings = { max: 50 } } = setting.values

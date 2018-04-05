@@ -54,7 +54,7 @@ export default class AppStore {
   showSettings = false
   settings = {}
 
-  @watch
+  @watch({ log: false })
   selectedBit = () =>
     App.state.selectedItem && Bit.findOne({ id: App.state.selectedItem.id })
 
@@ -122,9 +122,6 @@ export default class AppStore {
   bitResults = [
     () => [App.state.query, Desktop.appState.id, this.refreshCycle],
     async ([query, id]) => {
-      if (this.showSettings) {
-        return []
-      }
       if (id === 'com.apple.TextEdit') {
         return presetAnswers[Desktop.appState.title]
       }

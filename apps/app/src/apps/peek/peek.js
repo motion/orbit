@@ -10,6 +10,7 @@ import { capitalize } from 'lodash'
 export default class PeekPage {
   render({ appStore }) {
     const { selectedItem } = App.state
+    console.log('selectedItem.type', selectedItem.type)
     const type = (selectedItem && capitalize(selectedItem.type)) || 'Empty'
     const PeekContentsView = PeekContents[type] || PeekContents['Empty']
     if (!PeekContentsView) {

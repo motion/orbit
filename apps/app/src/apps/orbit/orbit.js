@@ -71,14 +71,16 @@ export default class Orbit {
   }
 
   getHoverProps = Helpers.hoverSettler({
-    enterDelay: 200,
+    enterDelay: 100,
     onHovered: async target => {
       clearTimeout(this.updateTargetTm)
       if (!target) {
         this.updateTargetTm = setTimeout(() => {
-          console.log('clearing!')
-          App.setPeekTarget(null)
-        }, 100)
+          if (!Electron.isMouseInActiveArea) {
+            console.log('clearing!')
+            App.setPeekTarget(null)
+          }
+        }, 80)
         return
       }
       const { id, top, width, height } = target
@@ -93,7 +95,7 @@ export default class Orbit {
         this.props.appStore.setSelectedIndex(target.id)
         this.updateTargetTm = setTimeout(() => {
           App.setPeekTarget({ id, position, type: 'document' })
-        }, 200)
+        }, 80)
       }
     },
   })

@@ -15,7 +15,8 @@ class OrbitContext {
       <orbitContext>
         {appStore.results.slice(5).map((result, i) => {
           const index = i + 5
-          const isSelected = appStore.selectedIndex === index
+          const isSelected =
+            appStore.selectedIndex === index && !!App.state.peekTarget
           return (
             <card
               key={result.id}

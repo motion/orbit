@@ -1,4 +1,4 @@
-import { isEqual, debounce } from 'lodash'
+import { isEqual, throttle } from 'lodash'
 
 const log = debug('hoverSettler')
 
@@ -17,11 +17,10 @@ export default function hoverSettler({ enterDelay, onHovered }) {
   let lastHovered
 
   // debounce - leave space for ui thread
-  const setHovered = debounce(nextHovered => {
+  const setHovered = throttle(nextHovered => {
     if (!isEqual(nextHovered, lastHovered)) {
       // 🐛 object spread fixes comparison bugs later on
       lastHovered = nextHovered ? { ...nextHovered } : nextHovered
-      log('setHovered', nextHovered)
       if (onHovered) {
         onHovered(nextHovered)
       }
@@ -60,7 +59,7 @@ export default function hoverSettler({ enterDelay, onHovered }) {
 
       // dont delay enter at all if were already hovering other node
       const isAlreadyHovering = !!currentNode
-      if (isAlreadyHovering) {
+      if (isAlreadyHovering || enterDelay === 0) {
         updateHover()
       } else {
         itemLastEnter = lastEnter = setTimeout(updateHover, enterDelay)
@@ -68,9 +67,9 @@ export default function hoverSettler({ enterDelay, onHovered }) {
     }
 
     function onMouseEnter(e) {
-      // settimeout to be sure its behind the leave event
+      clearTimeout(itemLastLeave)
       const target = e.currentTarget
-      setTimeout(() => handleHover(target))
+      handleHover(target)
     }
 
     function onMouseMove(e) {

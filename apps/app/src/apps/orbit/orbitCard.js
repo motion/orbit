@@ -1,6 +1,7 @@
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import OrbitIcon from './orbitIcon'
+import { App } from '@mcro/all'
 
 @view.attach('appStore')
 @UI.injectTheme
@@ -18,7 +19,8 @@ export default class Card {
     store,
     oauth,
   }) {
-    const isSelected = appStore.selectedIndex === index
+    const isSelected =
+      appStore.selectedIndex === index && !!App.state.peekTarget
     const isOdd = index % 2 == 0
     return (
       <card

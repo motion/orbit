@@ -1,5 +1,4 @@
 import { Bit, Setting, createOrUpdate } from '@mcro/models'
-import { createInChunks } from '~/sync/helpers'
 import debug from '@mcro/debug'
 import { sleep } from '@mcro/helpers'
 import getHelpers from './getHelpers'
@@ -51,9 +50,9 @@ export default class GoogleDriveSync {
 
   async syncFiles() {
     const files = await this.getFiles()
-    const results = await createInChunks(files, file => this.createFile(file))
-    log('syncFiles', results)
-    return results
+    // const results = await createInChunks(files, file => this.createFile(file))
+    // log('syncFiles', results)
+    // return results
   }
 
   async createFile(info: FileObject) {

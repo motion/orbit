@@ -1,34 +1,9 @@
 import { view } from '@mcro/black'
-import { Title, Text, Surface } from '@mcro/ui'
+import { Title } from '@mcro/ui'
+import { App } from '@mcro/all'
 import OrbitIcon from './orbitIcon'
 import OrbitItemPreview from './orbitItemPreview'
 import * as UI from '@mcro/ui'
-
-const glowProps = {
-  color: '#fff',
-  scale: 1,
-  blur: 70,
-  opacity: 0.15,
-  show: false,
-  resist: 60,
-  zIndex: -1,
-}
-
-// const SubTitle = p => (
-//   <Text
-//     size={0.9}
-//     css={{ textTransform: 'uppercase', opacity: 0.4, margin: [5, 0] }}
-//     {...p}
-//   />
-// )
-// const P = p => (
-//   <Text
-//     size={1.15}
-//     css={{ marginBottom: 5, opacity: 0.85 }}
-//     highlightWords={['ipsum', 'adipisicing', 'something']}
-//     {...p}
-//   />
-// )
 
 @UI.injectTheme
 @view.attach('appStore', 'orbitPage')
@@ -48,10 +23,12 @@ export default class Item {
     result,
     total,
     theme,
+    padding,
     results,
     ...props
   }) {
-    const isSelected = appStore.selectedIndex === index
+    const isSelected =
+      appStore.selectedIndex === index && !!App.state.peekTarget
     const shouldShowIcon =
       !results[index - 1] || results[index - 1].type !== result.type
     // log(`OrbitItem isSelected ${isSelected} ${index}`)
@@ -85,14 +62,12 @@ export default class Item {
     )
     const background = isSelected ? theme.highlight.color : 'transparent'
     return (
-      <Surface
-        glow={isSelected}
-        background={background}
-        glowProps={glowProps}
-        padding={ITEM_PAD}
+      <orbitItem
+        css={{
+          padding: padding || ITEM_PAD,
+          background,
+        }}
         onClick={this.onClick}
-        borderWidth={0}
-        overflow="hidden"
         {...props}
       >
         <titles>
@@ -103,11 +78,6 @@ export default class Item {
             fontWeight={400}
             css={{
               width: 'calc(100% - 15px)',
-              // letterSpacing: isSelected ? -0.25 : 0,
-              opacity: isSelected ? 1 : 0.95,
-              // alignItems: 'center',
-              // justifyContent: 'center',
-              textShadow: isSelected ? `0 0 5px rgba(255,255,255,0.3)` : 'none',
             }}
             {...titleProps}
           >
@@ -129,11 +99,19 @@ export default class Item {
           result={result}
           background={background}
         />
-      </Surface>
+      </orbitItem>
     )
   }
 
   static style = {
+    orbitItem: {
+      position: 'relative',
+      // background: 'red',
+      overflow: 'hidden',
+      '&:hover bg': {
+        opacity: 1,
+      },
+    },
     space: {
       height: 20,
     },

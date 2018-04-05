@@ -1,6 +1,6 @@
 import { createConnection } from 'typeorm'
-import * as Constants from '~/constants'
-import Path from 'path'
+import * as Constants from '../constants'
+import recoverDB from './recoverDB'
 
 export default async function connectModels(models) {
   try {
@@ -11,10 +11,15 @@ export default async function connectModels(models) {
       // location: 'default',
       entities: models,
       // logging: true,
-      autoSchemaSync: true,
       synchronize: true,
     })
   } catch (err) {
-    console.log('Error: ', err)
+    console.log('connectModels Error: ', err)
+    const errorType = err.message.slice(0, err.message.indexOf(':'))
+    switch (errorType) {
+      case 'SQLITE_CORRUPT':
+        console.log('corrupted db, recreate from last backup...')
+        recoverDB()
+    }
   }
 }

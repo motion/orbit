@@ -25,7 +25,7 @@ export default async function connectModels(models) {
         }
       })
     } catch (err) {
-      console.log('Error: ', err)
+      console.log('connectModels Error: ', err)
     }
   }
   return await connect()

@@ -1,49 +1,58 @@
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { App, Desktop, Electron } from '@mcro/all'
+import { App, Desktop } from '@mcro/all'
 import OrbitItem from './orbitItem'
 
 @UI.injectTheme
 @view
 class OrbitContext {
-  render({ appStore, theme }) {
+  render({ appStore, theme, getHoverProps }) {
     const Text = props => (
       <UI.Text size={1.1} css={{ marginBottom: 10 }} {...props} />
     )
     return (
-      <orbitContext css={{ backgorund: theme.base.background }}>
-        {appStore.results.slice(5).map(result => (
-          <card
-            key={result.id}
-            css={{
-              background: theme.base.background.darken(0.08).saturate(0.2),
-            }}
-          >
-            <Text
-              size={1.2}
-              ellipse={2}
-              fontWeight={200}
-              css={{ marginBottom: 5 }}
+      <orbitContext>
+        {appStore.results.slice(5).map((result, i) => {
+          const index = i + 4
+          const isSelected = appStore.selectedIndex === index
+          return (
+            <card
+              key={result.id}
+              css={{
+                background: isSelected
+                  ? theme.base.background.darken(0.05).desaturate(0.5)
+                  : 'transparent',
+              }}
+              {...getHoverProps({ result, id: index })}
             >
-              {result.title}
-            </Text>
-            <Text opacity={0.8}>{result.body}</Text>
-            <Text opacity={0.8}>
-              We can't seem to find that file you filled out for us. We need you
-              to fill it out again
-            </Text>
-            <Text opacity={0.5} size={0.9} css={{ marginBottom: 3 }}>
-              via{' '}
-              <UI.Icon
-                name="mail"
-                size={10}
-                css={{ display: 'inline-block' }}
-              />
-              &nbsp;
-              <UI.Date>{result.bitUpdatedAt}</UI.Date>
-            </Text>
-          </card>
-        ))}
+              <Text
+                size={1.25}
+                ellipse={2}
+                fontWeight={200}
+                css={{ marginBottom: 5 }}
+              >
+                {result.title}
+              </Text>
+              <Text opacity={0.8} ellipse={5}>
+                {result.body}
+              </Text>
+              <Text opacity={0.8}>
+                We can't seem to find that file you filled out for us. We need
+                you to fill it out again
+              </Text>
+              <Text opacity={0.5} size={0.9} css={{ marginBottom: 3 }}>
+                via{' '}
+                <UI.Icon
+                  name="mail"
+                  size={10}
+                  css={{ display: 'inline-block' }}
+                />
+                &nbsp;
+                <UI.Date>{result.bitUpdatedAt}</UI.Date>
+              </Text>
+            </card>
+          )
+        })}
       </orbitContext>
     )
   }
@@ -128,7 +137,11 @@ export default class OrbitContent {
               })}
             />
           ))}
-          <OrbitContext if={!query} appStore={appStore} />
+          <OrbitContext
+            if={!query}
+            appStore={appStore}
+            getHoverProps={getHoverProps}
+          />
         </results>
         <space css={{ height: 20 }} />
       </orbitContent>

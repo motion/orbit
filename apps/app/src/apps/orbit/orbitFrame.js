@@ -156,7 +156,7 @@ export default class OrbitFrame {
     const boxShadow = fullScreen
       ? [APP_SHADOW, borderShadow]
       : [orbitLightShadow, borderShadow]
-    const background = theme.base.background.lighten(0.02)
+    const background = theme.base.background
     const hide =
       !App.isShowingOrbit && (store.isRepositioning || store.isDragging)
     log(`OrbitFrame onLeft ${orbitOnLeft} hide ${hide}`)

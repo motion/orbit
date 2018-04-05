@@ -233,6 +233,7 @@ export default class OrbitFrame {
               {children}
               <expand if={!fullScreen}>
                 <expandEnd
+                  if={false}
                   css={{
                     opacity: 0.5,
                     background: `linear-gradient(transparent, ${
@@ -241,6 +242,7 @@ export default class OrbitFrame {
                   }}
                 />
                 <fade
+                  if={false}
                   css={{
                     opacity: 0.5,
                     background: `linear-gradient(transparent, ${

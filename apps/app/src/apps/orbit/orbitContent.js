@@ -14,19 +14,19 @@ class OrbitContext {
           <card
             key={result.id}
             css={{
-              background: theme.base.background.lighten(0.25).saturate(0.3),
+              background: theme.base.background.lighten(0.08).saturate(0.2),
             }}
           >
             <Text
-              size={1.1}
+              size={1.2}
               ellipse={2}
-              fontWeight={500}
+              fontWeight={200}
               css={{ marginBottom: 5 }}
             >
               {result.title}
             </Text>
-            <Text>{result.body}</Text>
-            <Text>
+            <Text opacity={0.8}>{result.body}</Text>
+            <Text opacity={0.8}>
               We can't seem to find that file you filled out for us. We need you
               to fill it out again
             </Text>
@@ -50,9 +50,9 @@ class OrbitContext {
       flex: 1,
     },
     card: {
-      margin: 12,
+      margin: [10, 10],
       marginBottom: 0,
-      borderRadius: 14,
+      borderRadius: 10,
       padding: 12,
     },
   }
@@ -106,26 +106,29 @@ export default class OrbitContent {
     return (
       <orbitContent>
         <OrbitStatus />
-        {appStore.results.slice(0, query ? 12 : 5).map((result, index) => (
-          <OrbitItem
-            {...!query && tinyProps}
-            key={getKey(result) || index}
-            ref={onRef(index)}
-            type="gmail"
-            index={index}
-            results={appStore.results}
-            result={{
-              ...result,
-              title: result.title.slice(0, 18),
-            }}
-            total={appStore.results.length}
-            {...getHoverProps({
-              result,
-              id: index,
-            })}
-          />
-        ))}
-        <OrbitContext if={!query} appStore={appStore} />
+        <results>
+          {appStore.results.slice(0, query ? 12 : 5).map((result, index) => (
+            <OrbitItem
+              {...!query && tinyProps}
+              key={getKey(result) || index}
+              ref={onRef(index)}
+              type="gmail"
+              index={index}
+              results={appStore.results}
+              result={{
+                ...result,
+                title: result.title.slice(0, 18),
+              }}
+              total={appStore.results.length}
+              {...getHoverProps({
+                result,
+                id: index,
+              })}
+            />
+          ))}
+          <OrbitContext if={!query} appStore={appStore} />
+        </results>
+        <space css={{ height: 20 }} />
       </orbitContent>
     )
   }

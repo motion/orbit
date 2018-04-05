@@ -37,23 +37,22 @@ export default class OrbitSettings {
     if (!appStore.settings) {
       return null
     }
+    const isActive = integration =>
+      appStore.settings[integration.id] &&
+      appStore.settings[integration.id].token
     const [activeIntegrations, inactiveIntegrations] = partition(
       appStore.results,
-      integration =>
-        appStore.settings[integration.id] &&
-        appStore.settings[integration.id].token,
+      isActive,
     )
-    const integrationCard = all => (integration, index) => (
+    const integrationCard = all => (integration, index, offset) => (
       <Card
         key={index}
         index={index}
+        offset={offset}
         appStore={appStore}
         store={store}
         length={all.length}
-        isActive={
-          appStore.settings[integration.id] &&
-          appStore.settings[integration.id].token
-        }
+        isActive={isActive(integration)}
         {...integration}
       />
     )
@@ -62,7 +61,9 @@ export default class OrbitSettings {
         <section if={activeIntegrations.length}>
           <Title>Active</Title>
           <cards>
-            {activeIntegrations.map(integrationCard(activeIntegrations))}
+            {activeIntegrations.map((item, index) =>
+              integrationCard(activeIntegrations)(item, index, index),
+            )}
           </cards>
         </section>
         <section if={inactiveIntegrations.length}>
@@ -72,6 +73,7 @@ export default class OrbitSettings {
               integrationCard(inactiveIntegrations)(
                 item,
                 index + activeIntegrations.length,
+                index,
               ),
             )}
           </cards>

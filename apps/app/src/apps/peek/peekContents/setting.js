@@ -65,7 +65,7 @@ export class SettingView {
                   await job.save()
                   console.log('created new job', job)
                   store.update()
-                  appStore.setSetting()
+                  appStore.getSettings()
                 }}
               />
               <UI.Button

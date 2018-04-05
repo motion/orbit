@@ -16,11 +16,11 @@ export default async function connectModels(models) {
       for (const model of models) {
         model.useConnection(connection)
       }
-      webSqlClient.onError(err => {
+      webSqlClient.onError(async err => {
         console.error('SQL Error', err)
         if (err.message && err.message.indexOf('db not found')) {
           console.log('Reconnecting...')
-          connection.close()
+          await connection.close()
           connect()
         }
       })

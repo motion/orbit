@@ -12,6 +12,7 @@ export default class Card {
     icon,
     title,
     index,
+    offset,
     length,
     theme,
     isActive,
@@ -21,7 +22,7 @@ export default class Card {
   }) {
     const isSelected =
       appStore.selectedIndex === index && !!App.state.peekTarget
-    const isOdd = index % 2 == 0
+    const isOdd = offset % 2 == 0
     return (
       <card
         key={index}
@@ -29,7 +30,9 @@ export default class Card {
         $odd={isOdd}
         $lastRow={index >= length - 2}
         css={{
-          background: isSelected ? [255, 255, 255, 0.8] : [255, 255, 255, 0.05],
+          background: isSelected
+            ? theme.highlight.color
+            : [255, 255, 255, 0.05],
           borderLeftRadius: isOdd ? 4 : 0,
           borderRightRadius: !isOdd ? 4 : 0,
         }}
@@ -93,7 +96,7 @@ export default class Card {
       // margin: [0, 5, 0],
       alignItems: 'center',
       justifyContent: 'center',
-      borderBottom: [1, 'dotted', [0, 0, 0, 0.1]],
+      borderBottom: [1, [0, 0, 0, 0.1]],
       '&:hover': {
         background: [255, 255, 255, 0.1],
       },
@@ -107,7 +110,7 @@ export default class Card {
       padding: [10, 0],
     },
     odd: {
-      borderRight: [1, 'dotted', [0, 0, 0, 0.1]],
+      borderRight: [1, [0, 0, 0, 0.1]],
       paddingRight: 7,
     },
     lastRow: {

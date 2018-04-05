@@ -106,14 +106,16 @@ export default class AppStore {
     () => this.results[this.selectedIndex],
     item => {
       if (item) {
-        App.setSelectedItem({
+        const selectedItem = {
           id: item.id || '',
           icon: item.icon || '',
           title: item.title || '',
           body: item.body || '',
           type: item.type || '',
           integration: item.integration || '',
-        })
+        }
+        console.log('setting selected item', selectedItem)
+        App.setSelectedItem(selectedItem)
       }
     },
   ]

@@ -13,7 +13,7 @@ export default class PeekPage {
     if (!selectedItem) {
       return null
     }
-    console.log('selectedItem.type', selectedItem.type)
+    console.log('selectedItem', JSON.stringify(selectedItem))
     const type = (selectedItem && capitalize(selectedItem.type)) || 'Empty'
     const PeekContentsView = PeekContents[type] || PeekContents['Empty']
     if (!PeekContentsView) {

@@ -7,14 +7,16 @@ import OrbitItem from './orbitItem'
 @view
 class OrbitContext {
   render({ appStore, theme }) {
-    const Text = props => <UI.Text css={{ marginBottom: 10 }} {...props} />
+    const Text = props => (
+      <UI.Text size={1.1} css={{ marginBottom: 10 }} {...props} />
+    )
     return (
       <orbitContext css={{ backgorund: theme.base.background }}>
         {appStore.results.slice(5).map(result => (
           <card
             key={result.id}
             css={{
-              background: theme.base.background.lighten(0.08).saturate(0.2),
+              background: theme.base.background.darken(0.08).saturate(0.2),
             }}
           >
             <Text

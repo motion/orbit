@@ -3,6 +3,7 @@ import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { App, Electron, Desktop } from '@mcro/all'
 import * as Constants from '~/constants'
+import OrbitDivider from './orbitDivider'
 
 const { SHADOW_PAD, APP_SHADOW } = Constants
 const orbitLightShadow = [[0, 3, SHADOW_PAD, 0, [0, 0, 0, 0.1]]]
@@ -250,9 +251,7 @@ export default class OrbitFrame {
                     } 80%)`,
                   }}
                 />
-                <barOuter onMouseDown={orbitPage.barMouseDown}>
-                  <bar />
-                </barOuter>
+                <OrbitDivider onMouseDown={orbitPage.barMouseDown} />
               </expand>
             </content>
           </orbit>
@@ -354,24 +353,6 @@ export default class OrbitFrame {
       right: 0,
       height: 50,
       alignItems: 'flex-end',
-    },
-    barOuter: {
-      pointerEvents: 'all',
-      flex: 1,
-      margin: 10,
-      padding: 10,
-      cursor: 'ns-resize',
-      opacity: 0.5,
-      zIndex: 10,
-      '&:hover': {
-        opacity: 1,
-      },
-    },
-    bar: {
-      flex: 1,
-      height: 5,
-      borderRadius: 100,
-      background: [255, 255, 255, 0.4],
     },
   }
 }

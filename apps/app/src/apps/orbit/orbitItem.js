@@ -83,9 +83,7 @@ export default class Item {
         Math.max(orbitHeight / MAX_PER_SCREEN, orbitHeight / wantsToShow),
       ),
     )
-    const background = isSelected
-      ? theme.base.background.lighten(0.25)
-      : 'transparent'
+    const background = isSelected ? theme.highlight.color : 'transparent'
     return (
       <Surface
         glow={isSelected}

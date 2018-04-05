@@ -2,6 +2,7 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { App, Desktop } from '@mcro/all'
 import OrbitItem from './orbitItem'
+import OrbitDivider from './orbitDivider'
 
 @UI.injectTheme
 @view
@@ -13,23 +14,21 @@ class OrbitContext {
     return (
       <orbitContext>
         {appStore.results.slice(5).map((result, i) => {
-          const index = i + 4
+          const index = i + 5
           const isSelected = appStore.selectedIndex === index
           return (
             <card
               key={result.id}
               css={{
-                background: isSelected
-                  ? theme.base.background.darken(0.05).desaturate(0.5)
-                  : 'transparent',
+                background: isSelected ? theme.highlight.color : 'transparent',
               }}
               {...getHoverProps({ result, id: index })}
             >
               <Text
-                size={1.25}
+                size={1.35}
                 ellipse={2}
                 fontWeight={200}
-                css={{ marginBottom: 5 }}
+                css={{ marginBottom: 8 }}
               >
                 {result.title}
               </Text>
@@ -58,12 +57,13 @@ class OrbitContext {
   }
   static style = {
     orbitContext: {
+      marginTop: -15,
       flex: 1,
     },
     card: {
-      margin: [10, 10],
+      margin: [10, 8],
       marginBottom: 0,
-      borderRadius: 10,
+      borderRadius: 8,
       padding: 12,
     },
   }
@@ -137,6 +137,7 @@ export default class OrbitContent {
               })}
             />
           ))}
+          <OrbitDivider if={!query} />
           <OrbitContext
             if={!query}
             appStore={appStore}

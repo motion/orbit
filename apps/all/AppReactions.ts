@@ -26,6 +26,12 @@ export default class AppReactions {
   ]
 
   @react
+  clearPeekTargetOnOrbitClose = [
+    () => App.isShowingOrbit,
+    isShowing => !isShowing && App.setPeekTarget(null),
+  ]
+
+  @react
   onFullScreen = [
     () => Electron.orbitState.fullScreen,
     full => {

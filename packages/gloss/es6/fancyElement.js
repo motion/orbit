@@ -149,7 +149,7 @@ function fancyElementFactory(Gloss, styles) {
         finalStyles.push(style);
       }
       if (checkTheme && theme) {
-        const themeKey = `${key.replace(`--${glossUID}`, `--${this.themeKey}`)}--theme`;
+        const themeKey = `${key}--theme`;
         const themeStyle = theme.getRule(themeKey);
         if (themeStyle) {
           finalStyles.push(themeStyle);

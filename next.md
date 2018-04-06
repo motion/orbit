@@ -1,9 +1,8 @@
 next
 
-* design: sidebar expanded context
-  * limit to 1 real email, design full screen
-  * limit to 2, design half screens
-  * dynamic sizing
+* highlight cards on hover word
+* expand card on hover word
+* contract top area on hover word
 * design: peek context/rapportive relevant section
 * slack sync
   * grouping messages into logical chunks?

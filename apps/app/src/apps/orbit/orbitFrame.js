@@ -140,7 +140,7 @@ class OrbitFrameStore {
 
   hasRepositioned = true
 
-  @react
+  @react({ log: false })
   isRepositioning = [
     () => [Desktop.state.lastAppChange, Electron.state.willFullScreen],
     async ([app, fs], { when, sleep, setValue }) => {

@@ -124,8 +124,10 @@ export default class GoogleMailSync {
     if (unCreated) {
       log(`Couldn't sync ${unCreated} threads`)
     }
-    this.setting.values.historyId = results[0].data.historyId
-    await this.setting.save()
+    if (results[0]) {
+      this.setting.values.historyId = results[0].data.historyId
+      await this.setting.save()
+    }
   }
 
   streamThreads(query, options): Promise<string | null> {

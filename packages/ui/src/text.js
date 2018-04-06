@@ -1,15 +1,10 @@
-// @flow
 import * as React from 'react'
 import { view } from '@mcro/black'
 import keycode from 'keycode'
 import $ from 'color'
 import { pick } from 'lodash'
 
-const wrapHighlights = (
-  text: string,
-  highlightWordsColor,
-  highlightWords: Array<string>,
-) => {
+const wrapHighlights = (text, highlightWordsColor, highlightWords) => {
   let result = text
   for (const word of highlightWords) {
     result = result.replace(
@@ -46,35 +41,23 @@ const getTextProperties = props => {
   return { fontSize, fontSizeNum, lineHeight, lineHeightNum }
 }
 
-const DOM_EVENTS = [
-  'onClick',
-  'onDoubleClick',
-  'onMouseEnter',
-  'onMouseLeave',
-  'onMouseOver',
-  'onMouseOut',
-  'onHover',
-  'onFocus',
-  'onBlur',
-]
-
-export type Props = {
-  editable?: boolean,
-  autoselect?: boolean,
-  selectable?: boolean,
-  onFinishEdit?: Function,
-  onCancelEdit?: Function,
-  getRef?: Function,
-  ellipse?: boolean,
-  tagName: string,
-  fontWeight?: number,
-  lines?: number,
-  alpha?: number,
-}
+// export type Props = {
+//   editable?: boolean,
+//   autoselect?: boolean,
+//   selectable?: boolean,
+//   onFinishEdit?: Function,
+//   onCancelEdit?: Function,
+//   getRef?: Function,
+//   ellipse?: boolean,
+//   tagName: string,
+//   fontWeight?: number,
+//   lines?: number,
+//   alpha?: number,
+// }
 
 // click away from edit clears it
 @view.ui
-export default class Text extends React.Component<Props> {
+export default class Text {
   static defaultProps = {
     // not a p because tbh its nice to nest it
     tagName: 'text',
@@ -83,50 +66,56 @@ export default class Text extends React.Component<Props> {
 
   state = {
     doClamp: false,
+    textHeight: 0,
   }
 
-  editableReaction: ?Function
+  editableReaction
   selected = false
   editable = false
   node = null
 
+  get multiLineEllipse() {
+    return this.props.ellipse > 1 || this.props.ellipse === true
+  }
+
   componentWillMount() {
     this.handleProps(this.props)
-    this.handleKeydown = this.handleKeydown.bind(this)
-    this.getRef = this.getRef.bind(this)
   }
 
   componentDidMount() {
     // this fixes bug because clamp is hacky af and needs to re-measure to trigger
-    if (this.props.ellipse > 1) {
-      this.setState({ doClamp: true })
+    if (this.multiLineEllipse) {
+      this.setState({
+        doClamp: true,
+        textHeight: this.node ? this.node.clientHeight : 0,
+      })
     }
   }
 
-  componentWillReceiveProps(nextProps: Object) {
+  componentWillReceiveProps(nextProps) {
     this.handleProps(nextProps)
   }
 
-  handleProps(props: Object) {
+  handleProps(props) {
     // setup reaction for editing if necessary
-    if (!this.editableReaction && props.editable) {
-      this.editableReaction = this.react(
-        () => this.editable,
-        editable => {
-          if (this.clickaway) {
-            this.clickaway()
-          }
-          if (editable) {
-            // this.clickaway = this.on(window, 'click', (event: Event) => {
-            //   if (this.props.onFinishEdit) {
-            //     this.props.onFinishEdit(this.value)
-            //   }
-            // })
-          }
-        },
-        true,
-      )
-    }
+    // if (!this.editableReaction && props.editable) {
+    //   this.editableReaction = this.react(
+    //     () => this.editable,
+    //     editable => {
+    //       if (this.clickaway) {
+    //         this.clickaway()
+    //       }
+    //       if (editable) {
+    //         // this.clickaway = this.on(window, 'click', (event: Event) => {
+    //         //   if (this.props.onFinishEdit) {
+    //         //     this.props.onFinishEdit(this.value)
+    //         //   }
+    //         // })
+    //       }
+    //     },
+    //     true,
+    //   )
+    // }
     // set props
     if (typeof props.editing !== 'undefined') {
       if (!props.editing && this.selected) {
@@ -161,7 +150,7 @@ export default class Text extends React.Component<Props> {
     return (this.node && this.node.innerText) || ''
   }
 
-  handleKeydown(event: Event) {
+  handleKeydown(event) {
     const { onFinishEdit, onCancelEdit, editable, onKeyDown } = this.props
     if (editable) {
       const code = keycode(event)
@@ -179,7 +168,7 @@ export default class Text extends React.Component<Props> {
     }
   }
 
-  getRef(node: any) {
+  getRef(node) {
     if (node) {
       this.node = node
       if (this.props.getRef) {
@@ -217,20 +206,17 @@ export default class Text extends React.Component<Props> {
     className,
     ...props
   }: Props) {
+    const { multiLineEllipse } = this
+    const { doClamp, textHeight } = this.state
     const text = getTextProperties(this.props)
+    const numLinesToShow =
+      doClamp && Math.floor(textHeight / text.lineHeightNum)
+    log(`numLinesToShow ${numLinesToShow} ${textHeight}`)
     const maxHeight =
-      ellipse && text.lineHeightNum
+      typeof ellipse === 'number' && text.lineHeightNum
         ? `${ellipse * text.lineHeightNum}px`
         : 'auto'
-    const eventProps = {
-      onClick,
-      onMouseEnter,
-      onMouseLeave,
-      onFocus,
-      onBlur,
-    }
-    const oneLineEllipse = ellipse && typeof ellipse === 'boolean'
-    const multiLineEllipse = ellipse > 1
+    const oneLineEllipse = ellipse === 1
     let ellipseProps = { children }
     if (highlightWords) {
       if (typeof children === 'string') {
@@ -254,26 +240,32 @@ export default class Text extends React.Component<Props> {
         contentEditable={editable}
         $selectable={selectable}
         suppressContentEditableWarning={editable}
-        onKeyDown={this.handleKeydown}
-        ref={this.getRef}
+        onKeyDown={e => this.handleKeydown(e)}
+        ref={n => this.getRef(n)}
         css={props}
         style={style}
         $ellipseText={oneLineEllipse}
-        {...eventProps}
-        {...pick(props, DOM_EVENTS)}
+        {...{
+          onClick,
+          onMouseEnter,
+          onMouseLeave,
+          onFocus,
+          onBlur,
+        }}
       >
         {!ellipse && children}
         <span
           if={ellipse}
           $ellipseLines={multiLineEllipse}
-          $ellipseSingle={!multiLineEllipse}
+          $ellipseSingle={oneLineEllipse}
           style={
             multiLineEllipse
               ? {
-                  WebkitLineClamp: ellipse,
+                  WebkitLineClamp:
+                    ellipse === true ? numLinesToShow || 10000 : ellipse,
                   maxHeight,
-                  width: this.state.doClamp ? '100%' : '100.001%',
-                  opacity: this.state.doClamp ? 1 : 0,
+                  width: doClamp ? '100%' : '100.001%',
+                  opacity: doClamp ? 1 : 0,
                 }
               : null
           }

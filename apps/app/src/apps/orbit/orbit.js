@@ -76,6 +76,10 @@ export default class Orbit {
         }, 100)
         return
       }
+      if (!Electron.orbitState.position) {
+        console.log(`no position`)
+        return
+      }
       const { id, top, width, height } = target
       const position = {
         // add orbits offset

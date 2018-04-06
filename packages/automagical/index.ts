@@ -20,6 +20,9 @@ root.__trackStateChanges = {}
 
 const log = debug('-> ')
 const logState = debug('+> ')
+const logInfo = debug('automagical')
+debug.quiet('automagical')
+
 const RejectReactionSymbol = Symbol('REJECT_REACTION')
 
 if (module && module.hot) {
@@ -332,12 +335,15 @@ const observableId = () => `__ID_${Math.random()}__`
 
 // watches values in an autorun, and resolves their results
 function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
-  const { log: shouldLog, delayValue, ...options } = Helpers.getReactionOptions(
-    {
-      name: method,
-      ...(val[2] || userOptions),
-    },
-  )
+  const {
+    log: shouldLog,
+    delayValue,
+    onlyUpdateIfChanged,
+    ...options
+  } = Helpers.getReactionOptions({
+    name: method,
+    ...(val[2] || userOptions),
+  })
   const delayLog = options && options.delay ? ` (...${options.delay}ms)` : ''
   const name = `${getReactionName(obj)}.${method}${delayLog}`
   let preventLog = shouldLog === false
@@ -351,6 +357,23 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
   let result
   let isntConnected = false
   const stopAutoObserve = () => autoObserveDispose && autoObserveDispose()
+
+  function getCurrentValue() {
+    const result = current.get()
+    if (result && isPromiseBasedObservable(result)) {
+      if (result.state === 'fulfilled' || result.state === 'rejected') {
+        // @ts-ignore
+        return result.value
+      } else {
+        return undefined
+      }
+    }
+    if (isObservable(result)) {
+      let value = result.get()
+      return value
+    }
+    return result
+  }
 
   function update(newValue) {
     if (typeof val === 'undefined') {
@@ -368,6 +391,13 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
       if (!preventLog) {
         log(`${name} (delayValue) =`, value)
       }
+    }
+    if (
+      onlyUpdateIfChanged &&
+      Mobx.comparer.structural(getCurrentValue(), newValue)
+    ) {
+      logInfo(`${name} didnt change, avoid update`)
+      return
     }
     if (Mobx.isObservable(value)) {
       value = Mobx.toJS(value)
@@ -521,7 +551,6 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
             hasCalledSetValue = true
             updateAsyncValue(val)
           },
-          // allows delaying in a reaction, with automatic clearing on new reaction
           sleep,
           when,
         },
@@ -616,24 +645,8 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
   }
 
   Object.defineProperty(obj, method, {
-    get() {
-      const result = current.get()
-      if (result && isPromiseBasedObservable(result)) {
-        if (result.state === 'fulfilled' || result.state === 'rejected') {
-          // @ts-ignore
-          return result.value
-        } else {
-          return undefined
-        }
-      }
-      if (isObservable(result)) {
-        let value = result.get()
-        return value
-      }
-      return result
-    },
+    get: getCurrentValue,
   })
-
   Object.defineProperty(obj, `${method}__automagic_source`, {
     get() {
       return { result, current, curObservable }

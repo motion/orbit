@@ -115,7 +115,6 @@ const log = debug('highlights')
 })
 export default class HighlightsPage {
   render({ store }) {
-    console.log(`highlights ${store.showAll}`)
     return (
       <frame if={store.showAll}>
         {(store.ocrWords || []).map(item => (

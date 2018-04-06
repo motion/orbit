@@ -295,7 +295,6 @@ class Bridge {
   }
 
   dispose = () => {
-    console.log('disposing Bridge...')
     if (this._options.master) {
       this.socketManager.dispose()
     } else {

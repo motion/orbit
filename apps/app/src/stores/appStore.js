@@ -120,7 +120,7 @@ export default class AppStore {
     },
   ]
 
-  @react({ fireImmediately: true, log: false })
+  @react({ fireImmediately: true, log: false, onlyUpdateIfChanged: true })
   bitResults = [
     () => [App.state.query, Desktop.appState.id, this.refreshCycle],
     async ([query, id]) => {

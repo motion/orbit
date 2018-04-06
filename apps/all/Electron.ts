@@ -25,8 +25,8 @@ class ElectronStore {
       pinned: false,
       fullScreen: false,
       orbitOnLeft: false,
-      position: null,
-      size: null,
+      position: [],
+      size: [],
     },
     peekState: {
       mouseOver: false,

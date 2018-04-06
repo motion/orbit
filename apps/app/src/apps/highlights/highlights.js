@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view, react } from '@mcro/black'
 import quadtree from 'simple-quadtree'
-import { Helpers, App, Desktop, Swift } from '@mcro/all'
+import { Helpers, App, Electron, Desktop, Swift } from '@mcro/all'
 import { LINE_Y_ADJ, toTarget } from './helpers'
 import OCRWord from './ocrWord'
 import OCRLine from './ocrLine'
@@ -71,11 +71,12 @@ const log = debug('highlights')
 
     // test inline words - three above each other
     get ocrWords() {
-      return [
-        [200, 260, 120, 10, 'xx', 5, 'rgba(255,0,0,0.2)'],
-        [500, 350, 200, 10, 'xx', 6, 'rgba(255,0,0,0.2)'],
-        [300, 460, 300, 10, 'xx', 7, 'rgba(255,0,0,0.2)'],
-      ]
+      return []
+      // return [
+      //   [200, 260, 120, 10, 'xx', 5, 'rgba(255,0,0,0.2)'],
+      //   [500, 350, 200, 10, 'xx', 6, 'rgba(255,0,0,0.2)'],
+      //   [300, 460, 300, 10, 'xx', 7, 'rgba(255,0,0,0.2)'],
+      // ]
     }
 
     @react({ fireImmediately: true })
@@ -122,7 +123,7 @@ const log = debug('highlights')
 export default class HighlightsPage {
   render({ store }) {
     return (
-      <frame if={store.showAll}>
+      <frame if={store.showAll} $overlay={Electron.orbitState.fullScreen}>
         {(store.ocrWords || []).map(item => (
           <OCRWord key={Helpers.wordKey(item)} item={item} store={store} />
         ))}
@@ -140,6 +141,9 @@ export default class HighlightsPage {
       userSelect: 'none',
       position: 'relative',
       // background: [0, 0, 0, 0.5],
+    },
+    overlay: {
+      background: [0, 0, 0, 0.15],
     },
   }
 }

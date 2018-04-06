@@ -142,14 +142,14 @@ class OrbitFrameStore {
 
   @react({ log: false })
   isRepositioning = [
-    () => [Desktop.state.lastAppChange, Electron.state.willFullScreen],
+    () => [Desktop.state.lastAppChange, Electron.state.willReposition],
     async ([app, fs], { when, sleep, setValue }) => {
-      const willFullScreen = fs > app
+      const willReposition = fs > app
       setValue(true)
       await sleep(App.animationDuration)
       setValue('READY')
       await when(() => this.hasRepositioned)
-      if (willFullScreen) {
+      if (willReposition) {
         return setValue(false)
       }
       await sleep(100)
@@ -220,7 +220,7 @@ export default class OrbitFrame {
             css={{
               padding: orbitDocked ? 0 : SHADOW_PAD,
               paddingRight: fullScreen ? 0 : SHADOW_PAD,
-              right: -SHADOW_PAD,
+              right: fullScreen ? 0 : -SHADOW_PAD,
               ...(App.isShowingOrbit
                 ? {
                     opacity: 1,

@@ -15,7 +15,7 @@ class ElectronStore {
   source = 'Electron'
 
   state = {
-    willFullScreen: Date.now(),
+    willReposition: Date.now(),
     shouldHide: 1,
     shouldShow: 0,
     shouldPause: null,
@@ -140,32 +140,39 @@ class ElectronStore {
 
   toggleFullScreen = () => {
     const fullScreen = !Electron.orbitState.fullScreen
-    if (fullScreen) {
+    log(`toggle fullscreen`)
+    if (!fullScreen) {
+      Electron.setOrbitState({ fullScreen })
+      return
+    }
+    Electron.setState({ willReposition: Date.now() })
+    setTimeout(() => {
+      // orbit props
       const { round } = Math
       const [screenW, screenH] = this.reactions.screenSize()
       const [appW, appH] = [screenW / 1.5, screenH / 1.3]
       const [orbitW, orbitH] = [appW * 1 / 3, appH]
       const [orbitX, orbitY] = [(screenW - appW) / 2, (screenH - appH) / 2]
+      // peek props
       const [peekW, peekH] = [appW * 2 / 3, appH]
       const [peekX, peekY] = [orbitX + orbitW, orbitY]
-      log(`toggle fullscreen`)
-      Electron.setState({ willFullScreen: Date.now() })
-      setTimeout(() => {
-        Electron.setOrbitState({
+      const [peek, ...rest] = Electron.peekState.windows
+      peek.position = [peekX, peekY].map(round)
+      peek.size = [peekW, peekH].map(round)
+      peek.peekOnLeft = false
+      // update
+      Electron.setState({
+        orbitState: {
           position: [orbitX, orbitY].map(round),
           size: [orbitW, orbitH].map(round),
           orbitOnLeft: true,
           fullScreen: true,
-        })
-        const [peek, ...rest] = Electron.peekState.windows
-        peek.position = [peekX, peekY].map(round)
-        peek.size = [peekW, peekH].map(round)
-        peek.peekOnLeft = false
-        Electron.setPeekState({ windows: [peek, ...rest] })
-      }, 32)
-    } else {
-      Electron.setOrbitState({ fullScreen: false })
-    }
+        },
+        peekState: {
+          windows: [peek, ...rest],
+        },
+      })
+    }, 100)
   }
 }
 

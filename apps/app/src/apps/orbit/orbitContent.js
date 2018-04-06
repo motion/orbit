@@ -5,6 +5,7 @@ import OrbitItem from './orbitItem'
 import OrbitDivider from './orbitDivider'
 import Overdrive from 'react-overdrive'
 import DotDotDot from 'react-dotdotdot'
+import * as Constants from '~/constants'
 
 const Text = props => (
   <UI.Text size={1.1} css={{ marginBottom: 10 }} {...props} />
@@ -110,52 +111,35 @@ class OrbitContext {
         }}
       >
         <OrbitDivider if={!App.state.query} />
-        {appStore.results
-          .slice(5)
-          .map((result, i) => (
-            <OrbitCard
-              key={result.id}
-              appStore={appStore}
-              theme={theme}
-              getHoverProps={getHoverProps}
-              result={result}
-              index={i + 5}
-            />
-          ))}
+        <results>
+          {appStore.results
+            .slice(5)
+            .map((result, i) => (
+              <OrbitCard
+                key={result.id}
+                appStore={appStore}
+                theme={theme}
+                getHoverProps={getHoverProps}
+                result={result}
+                index={i + 5}
+              />
+            ))}
+        </results>
       </orbitContext>
     )
   }
   static style = {
     orbitContext: {
-      // marginTop: -15,
+      borderRadius: Constants.BORDER_RADIUS,
+    },
+    results: {
       flex: 1,
+      overflowY: 'scroll',
     },
   }
 }
 
 const getKey = result => result.index || result.id || result.title
-
-@view
-class OrbitStatus {
-  render() {
-    const { indexStatus, performance } = Desktop.searchState
-    const { appState } = Desktop
-    return (
-      <UI.Text
-        if={App.isAttachedToWindow && appState && (indexStatus || performance)}
-        css={{ padding: 10 }}
-      >
-        {indexStatus}
-        <UI.Text
-          if={performance && appState.title}
-          css={{ display: 'inline', opacity: 0.5, fontSize: '80%' }}
-        >
-          took {performance}
-        </UI.Text>
-      </UI.Text>
-    )
-  }
-}
 
 @view.attach('appStore')
 @view
@@ -181,32 +165,29 @@ export default class OrbitContent {
     }
     return (
       <orbitContent>
-        <OrbitStatus />
-        <results>
-          {appStore.results.slice(0, query ? 12 : 5).map((result, index) => (
-            <OrbitItem
-              {...!query && tinyProps}
-              key={getKey(result) || index}
-              type="gmail"
-              index={index}
-              results={appStore.results}
-              result={{
-                ...result,
-                title: result.title.slice(0, 18),
-              }}
-              total={appStore.results.length}
-              {...getHoverProps({
-                result,
-                id: index,
-              })}
-            />
-          ))}
-          <OrbitContext
-            if={!query}
-            appStore={appStore}
-            getHoverProps={getHoverProps}
+        {appStore.results.slice(0, query ? 12 : 5).map((result, index) => (
+          <OrbitItem
+            {...!query && tinyProps}
+            key={getKey(result) || index}
+            type="gmail"
+            index={index}
+            results={appStore.results}
+            result={{
+              ...result,
+              title: result.title.slice(0, 18),
+            }}
+            total={appStore.results.length}
+            {...getHoverProps({
+              result,
+              id: index,
+            })}
           />
-        </results>
+        ))}
+        <OrbitContext
+          if={!query}
+          appStore={appStore}
+          getHoverProps={getHoverProps}
+        />
         <space css={{ height: 20 }} />
       </orbitContent>
     )
@@ -215,7 +196,6 @@ export default class OrbitContent {
   static style = {
     orbitContent: {
       flex: 1,
-      overflowY: 'scroll',
     },
   }
 }

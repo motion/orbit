@@ -30,11 +30,11 @@ const SCREEN_PAD = 15
 @store
 export default class ElectronReactions {
   screenSize = screenSize
-  afterUnFullScreen = null
+  goingToReposition = null
 
-  willFullScreen = () => {
-    Electron.setState({ willFullScreen: Date.now() })
-    this.afterUnFullScreen = Date.now()
+  willReposition = () => {
+    Electron.setState({ willReposition: Date.now() })
+    // this.goingToReposition = Date.now()
   }
 
   @react
@@ -44,7 +44,7 @@ export default class ElectronReactions {
       if (!Electron.orbitState.fullScreen || App.state.orbitHidden) {
         return
       }
-      this.willFullScreen()
+      this.willReposition()
     },
   ]
 
@@ -153,9 +153,11 @@ export default class ElectronReactions {
     () => [
       appTarget(Desktop.appState || {}),
       Desktop.linesBoundingBox,
-      this.afterUnFullScreen,
+      // this.goingToReposition,
     ],
     async ([appBB, linesBB], { sleep }) => {
+      log('disabled for now')
+      return
       await sleep(64)
       // prefer using lines bounding box, fall back to app
       const box = linesBB || appBB

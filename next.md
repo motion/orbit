@@ -1,9 +1,5 @@
 next
 
-* highlight cards on hover word
-* expand card on hover word
-* contract top area on hover word
-* design: peek context/rapportive relevant section
 * slack sync
   * grouping messages into logical chunks?
     * first: time split by inactive periods
@@ -13,6 +9,10 @@ next
 
 queued ux stuff
 
+* overdrive
+  * may need to fork it
+  * need to fix text resizing based on how we end up doing that
+  * need to make it work with animations (not be outside the frame, or pause before animate)
 * hoverSettler: if under delay amount, dont reset the wait time
   * use case: move off of items quickly and back on, should be instant not re-delay
 * bug option+space doesnt focus input text

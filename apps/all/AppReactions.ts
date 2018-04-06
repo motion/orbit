@@ -96,6 +96,8 @@ export default class AppReactions {
   hideOrbitOnEsc = [
     () => Desktop.keyboardState.esc,
     () => {
+      log('disabled')
+      return
       if (
         Desktop.state.focusedOnOrbit ||
         Electron.orbitState.mouseOver ||

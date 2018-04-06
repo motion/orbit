@@ -107,8 +107,11 @@ export default class AppStore {
 
   @react.if
   hoverWordToSelectedIndex = [
-    () => App.state.hoveredWord && App.state.hoveredWord[5],
-    this.setSelectedIndex,
+    () => App.state.hoveredWord,
+    word => {
+      console.log('setting selected index', word)
+      this.setSelectedIndex(word.index)
+    },
   ]
 
   @react({ delay: 64 })

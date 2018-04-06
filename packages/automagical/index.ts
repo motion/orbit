@@ -217,11 +217,14 @@ function decorateMethodWithAutomagic(
   descriptor: PropertyDescriptor,
 ) {
   // @computed get (do first to avoid hitting the getter on next line)
+  // @ts-ignore
   if (descriptor && descriptor.get && descriptor.get.IS_AUTO_RUN) {
     return mobxifyWatch(
       target,
       method,
+      // @ts-ignore
       descriptor.get.value,
+      // @ts-ignore
       descriptor.get.options,
     )
   }
@@ -339,13 +342,15 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
     log: shouldLog,
     isIf,
     delayValue,
+    logReaction,
     onlyUpdateIfChanged,
     ...options
   } = Helpers.getReactionOptions({
     name: method,
-    ...(val[2] || userOptions),
+    ...userOptions,
   })
-  const delayLog = options && options.delay ? ` (...${options.delay}ms)` : ''
+  const delayLog =
+    options && options.delay >= 0 ? ` (...${options.delay}ms)` : ''
   const name = `${getReactionName(obj)}.${method}${delayLog}`
   let preventLog = shouldLog === false
   let current = Mobx.observable.box(DEFAULT_VALUE)
@@ -523,9 +528,12 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
 
   function watcher(reactionFn) {
     return function watcherCb(reactValArg) {
-      // @react.if check. for now just false
-      if (isIf && reactValArg === false) {
+      // @react.if check. avoids 0 bugs
+      if (isIf && (!reactValArg && reactValArg !== 0)) {
         return
+      }
+      if (isIf) {
+        console.log('reactin', reactValArg)
       }
       reset()
       reactionID = uid()
@@ -603,7 +611,9 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
             `\n\n`,
           )
         } else {
-          log(`${prefix}`, isReaction ? reactValArg : '', ...logRes(result))
+          if (logReaction !== false) {
+            log(`${prefix}`, isReaction ? reactValArg : '', ...logRes(result))
+          }
         }
       }
       const observableLike = isObservableLike(result)

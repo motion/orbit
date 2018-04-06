@@ -13,10 +13,7 @@ const Text = props => (
 @view({
   store: class OrbitCardStore {
     get isSelected() {
-      return (
-        this.props.appStore.selectedIndex === this.props.index &&
-        !!App.state.peekTarget
-      )
+      return this.props.appStore.selectedIndex === this.props.index
     }
 
     @react({ delayValue: true })

@@ -6,7 +6,7 @@ import { App, Desktop, Helpers } from '@mcro/all'
 @view
 export default class OCRWord {
   render({ item, store: { hoveredWord } }) {
-    const [x, y, width, height, word, color] = item
+    const [x, y, width, height, word, index, color] = item
     const key = Helpers.wordKey(item)
     const highlighted = App.state.highlightWords[word]
     return (
@@ -39,7 +39,7 @@ export default class OCRWord {
       borderBottom: [3, '#EDD71E'],
     },
     hovered: {
-      background: 'rgba(0,0,0,0.1) !important',
+      background: 'rgba(0,0,0,0.2) !important',
       opacity: 1,
     },
     wordInner: {

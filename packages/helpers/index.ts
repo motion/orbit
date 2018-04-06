@@ -16,6 +16,7 @@ type ReactionOptions = {
   fireImmediately?: boolean
   equals?: Function
   log?: boolean
+  logReaction?: boolean
   delay?: number
   isIf?: boolean
   delayValue?: boolean

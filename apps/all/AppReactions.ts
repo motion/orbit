@@ -19,16 +19,16 @@ export default class AppReactions {
     },
   ]
 
-  @react
+  @react.if
   clearPeekTargetOnMouseLeave = [
-    () => Electron.isMouseInActiveArea,
-    isActive => !isActive && App.setPeekTarget(null),
+    () => !Electron.isMouseInActiveArea,
+    () => App.setPeekTarget(null),
   ]
 
-  @react
+  @react.if
   clearPeekTargetOnOrbitClose = [
-    () => App.isShowingOrbit,
-    isShowing => !isShowing && App.setPeekTarget(null),
+    () => !App.isShowingOrbit,
+    () => App.setPeekTarget(null),
   ]
 
   @react

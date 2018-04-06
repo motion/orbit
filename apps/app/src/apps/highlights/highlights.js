@@ -17,8 +17,6 @@ const log = debug('highlights')
     }
     version = 0
     hoverEvents = {}
-    hoveredWord = null
-    hoveredLine = null
 
     get content() {
       return Desktop.activeOCRWords.map(i => i[4]).join(' ')
@@ -37,17 +35,25 @@ const log = debug('highlights')
       },
     ]
 
-    @react({ fireImmediately: true, log: false })
+    @react({ fireImmediately: true, logReaction: false })
     setHovered = [
       () => [this.trees, Desktop.mouseState.position],
       ([{ word, line }, { x, y }]) => {
         // if (Swift.state.isPaused) return
-        const hoveredWord = toTarget(word.get({ x, y, w: 0, h: 0 })[0])
-        const hoveredLine = toTarget(
+        let hoveredWord = null
+        let hoveredLine = null
+        const gotWord = toTarget(word.get({ x, y, w: 0, h: 0 })[0])
+        const gotLine = toTarget(
           line.get({ x, y: y - LINE_Y_ADJ, w: 0, h: 0 })[0],
         )
-        this.hoveredWord = hoveredWord
-        this.hoveredLine = hoveredLine
+        if (gotWord) {
+          const { key: wkey, ...wordT } = gotWord
+          hoveredWord = { ...wordT, index: +wkey }
+        }
+        if (gotLine) {
+          const { key: lkey, ...lineT } = gotLine
+          hoveredLine = { ...lineT, index: +lkey }
+        }
         App.setState({ hoveredWord, hoveredLine })
       },
     ]
@@ -66,9 +72,9 @@ const log = debug('highlights')
     // test inline words - three above each other
     get ocrWords() {
       return [
-        [200, 260, 120, 10, 'xx', 0, 'rgba(255,0,0,0.1)'],
-        [500, 350, 200, 10, 'xx', 1, 'rgba(255,0,0,0.1)'],
-        [300, 460, 300, 10, 'xx', 2, 'rgba(255,0,0,0.1)'],
+        [200, 260, 120, 10, 'xx', 5, 'rgba(255,0,0,0.2)'],
+        [500, 350, 200, 10, 'xx', 6, 'rgba(255,0,0,0.2)'],
+        [300, 460, 300, 10, 'xx', 7, 'rgba(255,0,0,0.2)'],
       ]
     }
 
@@ -106,7 +112,7 @@ const log = debug('highlights')
             y: item[1],
             w: item[2],
             h: item[3],
-            string: Helpers.wordKey(item),
+            string: `${item[5]}`,
           })
         }
       }
@@ -133,6 +139,7 @@ export default class HighlightsPage {
       pointerEvents: 'none',
       userSelect: 'none',
       position: 'relative',
+      // background: [0, 0, 0, 0.5],
     },
   }
 }

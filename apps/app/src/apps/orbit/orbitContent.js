@@ -131,6 +131,8 @@ class OrbitContext {
   static style = {
     orbitContext: {
       borderRadius: Constants.BORDER_RADIUS,
+      position: 'relative',
+      height: 'calc(100% - 35px)',
     },
     results: {
       flex: 1,

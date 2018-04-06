@@ -1,10 +1,10 @@
 {
   "name": "@mcro/constants",
   "private": true,
-  "main": "es6/constants",
+  "main": "_/constants",
   "version": "1.5.1",
   "scripts": {
-    "build": "build es6",
+    "build": "tsc",
     "watch": "npm run build -- --watch"
   }
 }

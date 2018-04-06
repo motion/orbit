@@ -1,4 +1,5 @@
 import { store, react } from '@mcro/black/store'
+import * as Constants from '@mcro/constants'
 import { Desktop } from './Desktop'
 import { Electron } from './Electron'
 import { App } from './App'
@@ -96,8 +97,9 @@ export default class AppReactions {
   hideOrbitOnEsc = [
     () => Desktop.keyboardState.esc,
     () => {
-      log('disabled')
-      return
+      if (Constants.FORCE_FULLSCREEN) {
+        return
+      }
       if (
         Desktop.state.focusedOnOrbit ||
         Electron.orbitState.mouseOver ||

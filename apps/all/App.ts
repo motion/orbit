@@ -4,6 +4,7 @@ import { store, react } from '@mcro/black/store'
 import { Desktop } from './Desktop'
 import { Electron } from './Electron'
 import AppReactions from './AppReactions'
+import * as Constants from '@mcro/constants'
 
 export let App
 
@@ -36,7 +37,10 @@ class AppStore {
   }
 
   get isShowingOrbit() {
-    return true || !App.state.orbitHidden
+    if (Constants.FORCE_FULLSCREEN) {
+      return true
+    }
+    return !App.state.orbitHidden
   }
 
   get isShowingPeek() {

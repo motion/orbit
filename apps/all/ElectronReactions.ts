@@ -5,6 +5,7 @@ import { Electron } from './Electron'
 import orbitPosition from './helpers/orbitPosition'
 import screenSize from './helpers/screenSize'
 import debug from '@mcro/debug'
+import * as Constants from '@mcro/constants'
 
 const log = debug('ElectronReactions')
 
@@ -156,8 +157,9 @@ export default class ElectronReactions {
       // this.goingToReposition,
     ],
     async ([appBB, linesBB], { sleep }) => {
-      log('disabled for now')
-      return
+      if (Constants.FORCE_FULLSCREEN) {
+        return
+      }
       await sleep(64)
       // prefer using lines bounding box, fall back to app
       const box = linesBB || appBB

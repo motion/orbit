@@ -12,7 +12,6 @@ export default class OrbitDivider {
   static style = {
     barOuter: {
       pointerEvents: 'all',
-      flex: 1,
       margin: [5, 10],
       padding: 10,
       cursor: 'ns-resize',

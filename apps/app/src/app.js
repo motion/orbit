@@ -8,7 +8,6 @@ import * as React from 'react'
 import ReactDOM from 'react-dom'
 import Themes from './themes'
 import Root from './root'
-import Services from './services'
 import { uniqBy } from 'lodash'
 import * as Constants from '~/constants'
 
@@ -21,7 +20,6 @@ if (module && module.hot) {
 
 class AppRoot {
   started = false
-  services = Services
   stores = null
   views = null
   errors = []

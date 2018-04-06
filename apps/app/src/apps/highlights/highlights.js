@@ -39,12 +39,9 @@ const log = debug('highlights')
 
     @react({ fireImmediately: true, log: false })
     setHovered = [
-      () => ({
-        ...this.trees,
-        ...Desktop.mouseState.position,
-      }),
-      ({ word, line, x, y }) => {
-        if (Swift.state.isPaused) return
+      () => [this.trees, Desktop.mouseState.position],
+      ([{ word, line }, { x, y }]) => {
+        // if (Swift.state.isPaused) return
         const hoveredWord = toTarget(word.get({ x, y, w: 0, h: 0 })[0])
         const hoveredLine = toTarget(
           line.get({ x, y: y - LINE_Y_ADJ, w: 0, h: 0 })[0],
@@ -55,25 +52,34 @@ const log = debug('highlights')
       },
     ]
 
-    // @react({ fireImmediately: true })
-    // ocrWords = [
-    //   () => Desktop.ocrState.words,
-    //   this.setupHover('word')
-    // ]
+    // test positions - all four corners + center
+    // get ocrWords() {
+    //   return [
+    //     [100, 60, 120, 10, 'xx', 'red'],
+    //     [1500, 60, 120, 10, 'xx', 'red'],
+    //     [1500, 1000, 120, 10, 'xx', 'red'],
+    //     [100, 1000, 120, 10, 'xx', 'red'],
+    //     [800, 500, 120, 10, 'xx', 'red'],
+    //   ]
+    // }
 
-    // test words
+    // test inline words - three above each other
     get ocrWords() {
       return [
-        [100, 60, 120, 10, 'xx', 'red'],
-        [1500, 60, 120, 10, 'xx', 'red'],
-        [1500, 1000, 120, 10, 'xx', 'red'],
-        [100, 1000, 120, 10, 'xx', 'red'],
-        [800, 500, 120, 10, 'xx', 'red'],
+        [200, 260, 120, 10, 'xx', 'rgba(255,0,0,0.5)'],
+        [500, 350, 200, 10, 'xx', 'rgba(255,0,0,0.5)'],
+        [300, 460, 300, 10, 'xx', 'rgba(255,0,0,0.5)'],
       ]
     }
 
     @react({ fireImmediately: true })
-    ocrLines = [() => Desktop.ocrState.lines, this.setupHover('line')]
+    hoverOCRLines = [() => Desktop.ocrState.lines, this.setupHover('line')]
+
+    @react({ fireImmediately: true })
+    hoverOCRWords = [
+      () => this.ocrWords, //Desktop.ocrState.words,
+      this.setupHover('word'),
+    ]
 
     get showAll() {
       if (Swift.state.isPaused) {
@@ -90,6 +96,7 @@ const log = debug('highlights')
 
     setupHover(name) {
       return items => {
+        log(`setuphover`, name, items)
         if (!items) return
         if (!items.length) return
         this.trees[name].clear()

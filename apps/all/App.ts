@@ -36,7 +36,7 @@ class AppStore {
   }
 
   get isShowingOrbit() {
-    return !App.state.orbitHidden
+    return true || !App.state.orbitHidden
   }
 
   get isShowingPeek() {

@@ -84,7 +84,13 @@ export default class Text {
 
   componentDidMount() {
     // this fixes bug because clamp is hacky af and needs to re-measure to trigger
+    console.log('mount', this.props)
+    this.measure()
+  }
+
+  measure() {
     if (this.multiLineEllipse) {
+      log(`measure: ${this.node.clientHeight}`)
       this.setState({
         doClamp: true,
         textHeight: this.node ? this.node.clientHeight : 0,
@@ -97,6 +103,13 @@ export default class Text {
   }
 
   handleProps(props) {
+    if (props.measure) {
+      this.setTimeout(() => {
+        this.setState({ clamp: false }, () => {
+          this.measure()
+        })
+      })
+    }
     // setup reaction for editing if necessary
     // if (!this.editableReaction && props.editable) {
     //   this.editableReaction = this.react(
@@ -204,6 +217,7 @@ export default class Text {
     highlightWords,
     highlightWordsColor,
     className,
+    measure,
     ...props
   }: Props) {
     const { multiLineEllipse } = this
@@ -211,7 +225,6 @@ export default class Text {
     const text = getTextProperties(this.props)
     const numLinesToShow =
       doClamp && Math.floor(textHeight / text.lineHeightNum)
-    log(`numLinesToShow ${numLinesToShow} ${textHeight}`)
     const maxHeight =
       typeof ellipse === 'number' && text.lineHeightNum
         ? `${ellipse * text.lineHeightNum}px`

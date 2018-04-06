@@ -1,4 +1,4 @@
-import { view } from '@mcro/black'
+import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { App, Desktop } from '@mcro/all'
 import OrbitItem from './orbitItem'
@@ -10,78 +10,83 @@ const Text = props => (
   <UI.Text size={1.1} css={{ marginBottom: 10 }} {...props} />
 )
 
-@UI.injectTheme
-@view
-class OrbitContext {
-  render({ appStore, theme, getHoverProps }) {
+@view({
+  store: class OrbitCardStore {
+    get isSelected() {
+      return (
+        this.props.appStore.selectedIndex === this.props.index &&
+        !!App.state.peekTarget
+      )
+    }
+
+    @react({ delayValue: true })
+    wasSelected = [() => this.isSelected, _ => _]
+  },
+})
+class OrbitCard {
+  render({ result, index, theme, getHoverProps, store }) {
+    const { isSelected, wasSelected } = store
+    const shouldResizeText = wasSelected !== isSelected
+    if (shouldResizeText) {
+      log(`RES ${index}`)
+    }
+    let cardWrapStyle = {
+      height: 200,
+    }
+    if (isSelected) {
+      cardWrapStyle = {
+        ...cardWrapStyle,
+        height: 400,
+      }
+    }
+    const textProps = {
+      ellipse: isSelected ? false : true,
+      measure: shouldResizeText,
+    }
     return (
-      <orbitContext>
-        {appStore.results.slice(5).map((result, i) => {
-          const index = i + 5
-          const isSelected =
-            appStore.selectedIndex === index && !!App.state.peekTarget
-          let cardWrapStyle = {
-            height: 200,
-          }
-          if (isSelected) {
-            cardWrapStyle = {
-              ...cardWrapStyle,
-              height: 400,
-              zIndex: 1000,
-            }
-          }
-          return (
-            <Overdrive key={result.id} id={`${result.id}`}>
-              <cardWrap
-                css={{ ...cardWrapStyle }}
-                {...getHoverProps({ result, id: index })}
-              >
-                <card
-                  css={{
-                    background: isSelected
-                      ? theme.highlight.color
-                      : 'transparent',
-                  }}
-                >
-                  <Text
-                    size={1.35}
-                    ellipse={2}
-                    fontWeight={200}
-                    css={{ marginBottom: 8 }}
-                  >
-                    {result.title}
-                  </Text>
-                  <content css={{ flex: 1, opacity: 0.8, overflow: 'hidden' }}>
-                    <Text ellipse css={{ maxHeight: '100%' }}>
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                      Ratione modi optio at neque ducimus ab aperiam dolores
-                      nemo? Quod quos nisi molestias velit reprehenderit veniam
-                      dicta, voluptatum vel voluptas a?
-                    </Text>
-                  </content>
-                  <Text opacity={0.5} size={0.9} css={{ marginBottom: 3 }}>
-                    via{' '}
-                    <UI.Icon
-                      name="mail"
-                      size={10}
-                      css={{ display: 'inline-block' }}
-                    />
-                    &nbsp;
-                    <UI.Date>{result.bitUpdatedAt}</UI.Date>
-                  </Text>
-                </card>
-              </cardWrap>
-            </Overdrive>
-          )
-        })}
-      </orbitContext>
+      <Overdrive key={result.id} id={`${result.id}`}>
+        <cardWrap css={cardWrapStyle} {...getHoverProps({ result, id: index })}>
+          <card
+            css={{
+              background: isSelected ? theme.highlight.color : 'transparent',
+            }}
+          >
+            <Text
+              size={1.35}
+              ellipse={2}
+              fontWeight={200}
+              css={{ marginBottom: 8 }}
+            >
+              {result.title}
+            </Text>
+            <content css={{ flex: 1, opacity: 0.8, overflow: 'hidden' }}>
+              <Text {...textProps} css={{ maxHeight: '100%' }}>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Ratione
+                modi optio at neque ducimus ab aperiam dolores nemo? Quod quos
+                nisi molestias velit reprehenderit veniam dicta, voluptatum vel
+                voluptas a? Lorem ipsum dolor sit amet consectetur adipisicing
+                elit. Ratione modi optio at neque ducimus ab aperiam dolores
+                nemo? Quod quos nisi molestias velit reprehenderit veniam dicta,
+                voluptatum vel voluptas a?
+              </Text>
+            </content>
+            <Text opacity={0.5} size={0.9} css={{ marginBottom: 3 }}>
+              via{' '}
+              <UI.Icon
+                name="mail"
+                size={10}
+                css={{ display: 'inline-block' }}
+              />
+              &nbsp;
+              <UI.Date>{result.bitUpdatedAt}</UI.Date>
+            </Text>
+          </card>
+        </cardWrap>
+      </Overdrive>
     )
   }
+
   static style = {
-    orbitContext: {
-      marginTop: -15,
-      flex: 1,
-    },
     cardWrap: {
       padding: [10, 8, 0],
       position: 'relative',
@@ -91,6 +96,35 @@ class OrbitContext {
       borderRadius: 8,
       padding: 12,
       overflow: 'hidden',
+    },
+  }
+}
+
+@UI.injectTheme
+@view
+class OrbitContext {
+  render({ appStore, theme, getHoverProps }) {
+    return (
+      <orbitContext>
+        {appStore.results
+          .slice(5)
+          .map((result, i) => (
+            <OrbitCard
+              key={result.id}
+              appStore={appStore}
+              theme={theme}
+              getHoverProps={getHoverProps}
+              result={result}
+              index={i + 5}
+            />
+          ))}
+      </orbitContext>
+    )
+  }
+  static style = {
+    orbitContext: {
+      marginTop: -15,
+      flex: 1,
     },
   }
 }

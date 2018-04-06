@@ -2,7 +2,9 @@ import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
 import PeekHeader from '../peekHeader'
+import PeekFrame from '../peekFrame'
 // import { Bit } from '@mcro/models'
+import * as _ from 'lodash'
 
 @view
 export class Mail {
@@ -11,38 +13,92 @@ export class Mail {
       return null
     }
     const { messages } = bit.data
+    const getHeader = (message, key) =>
+      (
+        (message.payload.headers || []).find(x => x.name === key) || {
+          value: '',
+        }
+      ).value
     return (
-      <content>
-        <PeekHeader title={selectedItem.title} date={bit.createdAt} />
+      <PeekFrame>
+        <PeekHeader
+          icon="email"
+          title={selectedItem.title}
+          date={bit.createdAt}
+        />
         <body>
-          <message>
-            <UI.Text size={1.2}>{bit.body}</UI.Text>
-          </message>
           <messages if={messages}>
-            {messages.map(message => {
+            {messages.map((message, index) => {
               return (
                 <message key={message.id}>
-                  <UI.Text>{message.snippet}</UI.Text>
+                  <row
+                    css={{
+                      flexFlow: 'row',
+                      opacity: 0.7,
+                      margin: [0, 0, 6, -15],
+                      flex: 1,
+                      alignItems: 'center',
+                      // justifyContent: 'center',
+                    }}
+                  >
+                    <UI.Icon
+                      name="arrows-1_redo"
+                      color="#ddd"
+                      size={12}
+                      css={{
+                        opacity: index === 0 ? 0 : 1,
+                        display: 'inline-block',
+                        marginTop: 2,
+                        marginRight: 8,
+                        marginLeft: -6,
+                      }}
+                    />
+                    <rest $$row $$centered>
+                      <strong>
+                        {getHeader(message, 'From').split(' ')[0]}
+                      </strong>&nbsp;
+                      <UI.Date
+                        if={index !== 0}
+                        css={{
+                          opacity: 0.6,
+                          marginBottom: 2,
+                          marginLeft: 3,
+                          fontSize: 13,
+                        }}
+                      >
+                        {getHeader(message, 'Date')}
+                      </UI.Date>
+                    </rest>
+                  </row>
+                  <UI.Text lineHeight={23} size={1.1}>
+                    {_.flatten(
+                      message.snippet
+                        .split('\n')
+                        .map((i, idx) => [
+                          <p key={idx}>{i}</p>,
+                          <br key={`br-${idx}`} />,
+                        ]),
+                    )}
+                  </UI.Text>
+                  <pre if={false}>
+                    {JSON.stringify(message.payload.headers, 0, 2)}
+                  </pre>
                 </message>
               )
             })}
           </messages>
         </body>
-      </content>
+      </PeekFrame>
     )
   }
 
   static style = {
-    content: {
-      overflowY: 'scroll',
-      flex: 1,
-    },
     body: {
       flex: 1,
       overflowY: 'scroll',
     },
     message: {
-      padding: 20,
+      padding: [22, 35],
       borderBottom: [1, 'dotted', '#eee'],
     },
   }

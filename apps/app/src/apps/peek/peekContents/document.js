@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import PeekHeader from '../peekHeader'
+import PeekFrame from '../peekFrame'
 
 @view
 export class Document {
@@ -9,14 +10,14 @@ export class Document {
       return null
     }
     return (
-      <React.Fragment>
+      <PeekFrame>
         <PeekHeader title={item.title} />
         <content
           dangerouslySetInnerHTML={{
             __html: (item.text || '').replace('\n', '<br />'),
           }}
         />
-      </React.Fragment>
+      </PeekFrame>
     )
   }
 

@@ -1,7 +1,8 @@
 import { store, react } from '@mcro/black/store'
-import Desktop from './Desktop'
-import Electron from './Electron'
-import App from './App'
+import * as Constants from '@mcro/constants'
+import { Desktop } from './Desktop'
+import { Electron } from './Electron'
+import { App } from './App'
 
 @store
 export default class AppReactions {
@@ -17,6 +18,18 @@ export default class AppReactions {
       const orbitHidden = shouldHide > shouldShow
       App.setOrbitHidden(orbitHidden)
     },
+  ]
+
+  @react.if
+  clearPeekTargetOnMouseLeave = [
+    () => !Electron.isMouseInActiveArea,
+    () => App.setPeekTarget(null),
+  ]
+
+  @react.if
+  clearPeekTargetOnOrbitClose = [
+    () => !App.isShowingOrbit,
+    () => App.setPeekTarget(null),
   ]
 
   @react
@@ -84,6 +97,9 @@ export default class AppReactions {
   hideOrbitOnEsc = [
     () => Desktop.keyboardState.esc,
     () => {
+      if (Constants.FORCE_FULLSCREEN) {
+        return
+      }
       if (
         Desktop.state.focusedOnOrbit ||
         Electron.orbitState.mouseOver ||

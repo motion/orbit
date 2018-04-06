@@ -6,7 +6,7 @@ import { Electron } from '@mcro/all'
 
 @view
 export default class PeekHeader {
-  render({ title, date, subtitle, after }) {
+  render({ icon, title, date, subtitle, after }) {
     const { fullScreen } = Electron.orbitState
     if (!Electron.currentPeek) {
       return null
@@ -20,11 +20,16 @@ export default class PeekHeader {
           <ControlButton icon="z" background="#62C554" />
         </buttons>
         <title if={title}>
-          <UI.Title size={1.3}>{title}</UI.Title>
-          <UI.Title if={subtitle} size={1}>
-            {subtitle}
-          </UI.Title>
-          <UI.Date css={{ opacity: 0.5 }}>{date}</UI.Date>
+          <titlemain>
+            <UI.Title size={1.3} marginBottom={5}>
+              {title}
+            </UI.Title>
+            <UI.Title if={subtitle} size={1}>
+              {subtitle}
+            </UI.Title>
+            <UI.Date css={{ opacity: 0.5 }}>{date}</UI.Date>
+          </titlemain>
+          <UI.Icon $icon color="#ddd" if={icon} name={icon} size={16} />
         </title>
         <after if={after}>{after}</after>
       </header>
@@ -36,10 +41,18 @@ export default class PeekHeader {
       flexFlow: 'row',
       alignItems: 'center',
       justifyContent: 'center',
-      padding: [20, 20],
-      borderBottom: [1, [0, 0, 0, 0.05]],
+      padding: [18, 20, 0],
+      // borderBottom: [1, [0, 0, 0, 0.05]],
+    },
+    icon: {
+      padding: [0, 5, 0, 18],
     },
     title: {
+      flex: 1,
+      flexFlow: 'row',
+      overflow: 'hidden',
+    },
+    titlemain: {
       flex: 1,
     },
     controls: {

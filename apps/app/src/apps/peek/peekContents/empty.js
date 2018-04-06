@@ -1,9 +1,10 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
+import PeekFrame from '../peekFrame'
 
-export const Empty = ({ item }) =>
+export const Empty = ({ selectedItem: item }) =>
   item ? (
-    <pane css={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+    <PeekFrame css={{ alignItems: 'center', justifyContent: 'center' }}>
       <img
         if={item.icon}
         src={`/icons/${item.icon}`}
@@ -23,5 +24,5 @@ export const Empty = ({ item }) =>
         ))}
       </UI.Text>
       {item.body}
-    </pane>
+    </PeekFrame>
   ) : null

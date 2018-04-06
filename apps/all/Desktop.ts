@@ -2,32 +2,35 @@ import Bridge from './helpers/Bridge'
 import { setGlobal, proxySetters } from './helpers'
 import { store, react } from '@mcro/black/store'
 
+export let Desktop
+
 // const log = debug('Desktop')
 const PAD_WINDOW = 15
 
-type AppState = {
+export type AppState = {
   id: string
   name: string
-  offset: [Number, Number]
-  bounds: [Number, Number]
+  title: string
+  offset: [number, number]
+  bounds: [number, number]
 }
 
-type OCRItem = {
+export type OCRItem = {
   word?: string
-  weight: Number
-  top: Number
-  left: Number
-  width: Number
-  height: Number
+  weight: number
+  top: number
+  left: number
+  width: number
+  height: number
 }
 
 export type DesktopState = {
   appState?: AppState
-  lastScreenChange: Number
-  lastAppChange: Number
+  lastScreenChange: number
+  lastAppChange: number
   mouseState: {
-    position: { x: Number; y: Number }
-    mouseDown?: { x: Number; y: Number; at: Number }
+    position: { x: number; y: number }
+    mouseDown?: { x: number; y: number; at: number }
   }
   keyboardState: {
     option?: Date
@@ -39,19 +42,17 @@ export type DesktopState = {
   ocrState: {
     words?: [OCRItem]
     lines?: [OCRItem]
-    clearWords: { [key: string]: Number }
-    restoreWords: { [key: string]: Number }
+    clearWords: { [key: string]: number }
+    restoreWords: { [key: string]: number }
   }
   focusedOnOrbit: boolean
-  appStateUpdatedAt: Number
+  appStateUpdatedAt: number
   searchState: {
     pluginResults: [{}]
     indexStatus: String
     searchResults: [{}]
   }
 }
-
-let Desktop
 
 @store
 class DesktopStore {
@@ -144,6 +145,9 @@ class DesktopStore {
   }
 
   get activeOCRWords() {
+    if (!Desktop.ocrState.shouldClear) {
+      return Desktop.ocrState.words || []
+    }
     return (Desktop.ocrState.words || []).filter(
       (_, index) => !Desktop.ocrState.shouldClear[index],
     )
@@ -163,5 +167,3 @@ class DesktopStore {
 Desktop = proxySetters(new DesktopStore())
 setGlobal('Desktop', Desktop)
 Bridge.stores[Desktop.source] = Desktop
-
-export default Desktop

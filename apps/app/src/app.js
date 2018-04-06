@@ -2,13 +2,12 @@ import { App } from '@mcro/all'
 import { debugState } from '@mcro/black'
 import { ThemeProvide } from '@mcro/ui'
 import { sleep } from '~/helpers'
-import * as Models from '@mcro/models'
+import { modelsList } from '@mcro/models'
 import connectModels from './helpers/connectModels'
 import * as React from 'react'
 import ReactDOM from 'react-dom'
 import Themes from './themes'
 import Root from './root'
-import Services from './services'
 import { uniqBy } from 'lodash'
 import * as Constants from '~/constants'
 
@@ -21,7 +20,6 @@ if (module && module.hot) {
 
 class AppRoot {
   started = false
-  services = Services
   stores = null
   views = null
   errors = []
@@ -40,7 +38,7 @@ class AppRoot {
     if (Constants.IS_PEEK) {
       await sleep(1000)
     }
-    await connectModels(Object.keys(Models).map(x => Models[x]))
+    await connectModels(modelsList)
     if (Constants.IS_ORBIT) {
       App.setOrbitConnected(true)
     }

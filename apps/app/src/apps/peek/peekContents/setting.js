@@ -3,15 +3,19 @@ import { view } from '@mcro/black'
 import { App } from '@mcro/all'
 import { Setting, Bit, Job } from '@mcro/models'
 import PeekHeader from '../peekHeader'
+import PeekFrame from '../peekFrame'
 import { capitalize, throttle } from 'lodash'
 import * as UI from '@mcro/ui'
 
 @view({
   store: class SettingStore {
-    setting = null
     settingVersion = 0
     job = null
     bitsCount = null
+
+    get setting() {
+      return this.props.appStore.settings[this.selectedItem.integration]
+    }
 
     get selectedItem() {
       return App.state.selectedItem
@@ -28,7 +32,6 @@ import * as UI from '@mcro/ui'
         where: { type: integration },
         order: { createdAt: 'DESC' },
       })
-      this.setting = await Setting.findOne({ type: integration })
       this.bitsCount = await Bit.createQueryBuilder()
         .where({ integration })
         .getCount()
@@ -36,21 +39,22 @@ import * as UI from '@mcro/ui'
   },
 })
 export class SettingView {
-  render({ store }) {
-    if (!store.setting) {
-      return <div>no setting</div>
+  render({ appStore, store }) {
+    if (!store.setting || !store.setting.token) {
+      return null
     }
+    console.log('setting', store.selectedItem)
     store.settingVersion
     const { setting } = store
     const { syncSettings = { max: 50 } } = setting.values
     const throttleSaveSetting = throttle(() => setting.save(), 500)
     return (
-      <React.Fragment>
+      <PeekFrame>
         <PeekHeader
           title={capitalize(store.selectedItem.integration)}
           subtitle={<div>Synced {store.bitsCount} total</div>}
           after={
-            <div $$flex>
+            <UI.Row $$flex>
               <UI.Button
                 icon="refresh"
                 onClick={async () => {
@@ -61,9 +65,19 @@ export class SettingView {
                   await job.save()
                   console.log('created new job', job)
                   store.update()
+                  appStore.getSettings()
                 }}
               />
-            </div>
+              <UI.Button
+                icon="remove"
+                onClick={async () => {
+                  store.setting.values = {}
+                  store.setting.token = ''
+                  await store.setting.save()
+                  store.update()
+                }}
+              />
+            </UI.Row>
           }
         />
         <body>
@@ -94,7 +108,7 @@ export class SettingView {
             </pre>
           </setting>
         </body>
-      </React.Fragment>
+      </PeekFrame>
     )
   }
 

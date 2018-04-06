@@ -1,7 +1,7 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, react } from '@mcro/black'
 import quadtree from 'simple-quadtree'
-import { Helpers, App, Desktop, Swift } from '@mcro/all'
+import { Helpers, App, Electron, Desktop, Swift } from '@mcro/all'
 import { LINE_Y_ADJ, toTarget } from './helpers'
 import OCRWord from './ocrWord'
 import OCRLine from './ocrLine'
@@ -17,14 +17,48 @@ const log = debug('highlights')
     }
     version = 0
     hoverEvents = {}
-    hoveredWord = null
-    hoveredLine = null
 
     get content() {
       return Desktop.activeOCRWords.map(i => i[4]).join(' ')
     }
 
-    // test words
+    @react
+    setHighlightWords = [
+      () => this.content,
+      () => {
+        App.setHighlightWords(
+          ner(this.content).reduce(
+            (acc, item) => ({ ...acc, [item]: true }),
+            {},
+          ),
+        )
+      },
+    ]
+
+    @react({ fireImmediately: true, logReaction: false })
+    setHovered = [
+      () => [this.trees, Desktop.mouseState.position],
+      ([{ word, line }, { x, y }]) => {
+        // if (Swift.state.isPaused) return
+        let hoveredWord = null
+        let hoveredLine = null
+        const gotWord = toTarget(word.get({ x, y, w: 0, h: 0 })[0])
+        const gotLine = toTarget(
+          line.get({ x, y: y - LINE_Y_ADJ, w: 0, h: 0 })[0],
+        )
+        if (gotWord) {
+          const { key: wkey, ...wordT } = gotWord
+          hoveredWord = { ...wordT, index: +wkey }
+        }
+        if (gotLine) {
+          const { key: lkey, ...lineT } = gotLine
+          hoveredLine = { ...lineT, index: +lkey }
+        }
+        App.setState({ hoveredWord, hoveredLine })
+      },
+    ]
+
+    // test positions - all four corners + center
     // get ocrWords() {
     //   return [
     //     [100, 60, 120, 10, 'xx', 'red'],
@@ -35,68 +69,53 @@ const log = debug('highlights')
     //   ]
     // }
 
+    // test inline words - three above each other
+    get ocrWords() {
+      return []
+      // return [
+      //   [200, 260, 120, 10, 'xx', 5, 'rgba(255,0,0,0.2)'],
+      //   [500, 350, 200, 10, 'xx', 6, 'rgba(255,0,0,0.2)'],
+      //   [300, 460, 300, 10, 'xx', 7, 'rgba(255,0,0,0.2)'],
+      // ]
+    }
+
+    @react({ fireImmediately: true })
+    hoverOCRLines = [() => Desktop.ocrState.lines, this.setupHover('line')]
+
+    @react({ fireImmediately: true })
+    hoverOCRWords = [
+      () => this.ocrWords, //Desktop.ocrState.words,
+      this.setupHover('word'),
+    ]
+
     get showAll() {
       if (Swift.state.isPaused) {
         log('swiftPaused')
         return true
       }
       const isTesting =
-        Desktop.activeOCRWords.length && Desktop.activeOCRWords[0].length === 4
+        Desktop.activeOCRWords.length && Desktop.activeOCRWords[0].length >= 6
       return (
         isTesting ||
         Desktop.state.ocrState.updatedAt > Desktop.state.lastScreenChange
       )
     }
 
-    willMount() {
-      // setup hover events
-
-      this.react(
-        () => this.content,
-        () => {
-          App.setHighlightWords(
-            ner(this.content).reduce(
-              (acc, item) => ({ ...acc, [item]: true }),
-              {},
-            ),
-          )
-        },
-      )
-
-      this.react(() => Desktop.ocrState.words, this.setupHover('word'), true)
-      this.react(() => Desktop.ocrState.lines, this.setupHover('line'), true)
-      // set hovered word/line
-      this.react(
-        () => ({
-          ...this.trees,
-          ...Desktop.mouseState.position,
-        }),
-        function updateHovers({ word, line, x, y }) {
-          if (Swift.state.isPaused) return
-          const hoveredWord = toTarget(word.get({ x, y, w: 0, h: 0 })[0])
-          const hoveredLine = toTarget(
-            line.get({ x, y: y - LINE_Y_ADJ, w: 0, h: 0 })[0],
-          )
-          this.hoveredWord = hoveredWord
-          this.hoveredLine = hoveredLine
-          App.setState({ hoveredWord, hoveredLine })
-        },
-        true,
-      )
-    }
-
-    setupHover = name => items => {
-      if (!items) return
-      if (!items.length) return
-      this.trees[name].clear()
-      for (const item of items) {
-        this.trees[name].put({
-          x: item[0],
-          y: item[1],
-          w: item[2],
-          h: item[3],
-          string: Helpers.wordKey(item),
-        })
+    setupHover(name) {
+      return items => {
+        log(`setuphover`, name, items)
+        if (!items) return
+        if (!items.length) return
+        this.trees[name].clear()
+        for (const item of items) {
+          this.trees[name].put({
+            x: item[0],
+            y: item[1],
+            w: item[2],
+            h: item[3],
+            string: `${item[5]}`,
+          })
+        }
       }
     }
   },
@@ -104,8 +123,8 @@ const log = debug('highlights')
 export default class HighlightsPage {
   render({ store }) {
     return (
-      <frame if={store.showAll}>
-        {(Desktop.activeOCRWords || []).map(item => (
+      <frame if={store.showAll} $overlay={Electron.orbitState.fullScreen}>
+        {(store.ocrWords || []).map(item => (
           <OCRWord key={Helpers.wordKey(item)} item={item} store={store} />
         ))}
         {(Desktop.ocrState.lines || []).map(item => (
@@ -121,6 +140,10 @@ export default class HighlightsPage {
       pointerEvents: 'none',
       userSelect: 'none',
       position: 'relative',
+      // background: [0, 0, 0, 0.5],
+    },
+    overlay: {
+      background: [0, 0, 0, 0.15],
     },
   }
 }

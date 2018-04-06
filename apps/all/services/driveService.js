@@ -1,4 +1,4 @@
-import { store } from '@mcro/black'
+import { store } from '@mcro/black/store'
 import { CurrentUser } from '@mcro/models'
 
 @store

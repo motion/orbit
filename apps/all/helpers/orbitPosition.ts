@@ -11,6 +11,14 @@ export default function orbitPosition({ left, top, width, height }) {
   const [screenW, screenH] = screenSize()
   const leftSpace = left
   const rightSpace = screenW - (left + width)
+  if (rightSpace < orbitW && leftSpace < orbitW) {
+    return {
+      position: [screenW - orbitW, 0],
+      size: [orbitW, orbitH],
+      orbitOnLeft: true,
+      orbitDocked: true,
+    }
+  }
   const orbitOnLeft = leftSpace > rightSpace
   let x
   let y = top
@@ -36,5 +44,6 @@ export default function orbitPosition({ left, top, width, height }) {
     position: [Math.round(x), Math.round(y)],
     size: [orbitW, orbitH],
     orbitOnLeft,
+    orbitDocked: false,
   }
 }

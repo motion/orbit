@@ -1,6 +1,7 @@
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import OrbitIcon from './orbitIcon'
+import { App } from '@mcro/all'
 
 @view.attach('appStore')
 @UI.injectTheme
@@ -9,8 +10,9 @@ export default class Card {
   render({
     id,
     icon,
-    name,
+    title,
     index,
+    offset,
     length,
     theme,
     isActive,
@@ -18,8 +20,9 @@ export default class Card {
     store,
     oauth,
   }) {
-    const isSelected = appStore.selectedIndex === index
-    const isOdd = index % 2 == 0
+    const isSelected =
+      appStore.selectedIndex === index && !!App.state.peekTarget
+    const isOdd = offset % 2 == 0
     return (
       <card
         key={index}
@@ -27,7 +30,9 @@ export default class Card {
         $odd={isOdd}
         $lastRow={index >= length - 2}
         css={{
-          background: isSelected ? [255, 255, 255, 0.8] : [255, 255, 255, 0.05],
+          background: isSelected
+            ? theme.highlight.color
+            : [255, 255, 255, 0.05],
           borderLeftRadius: isOdd ? 4 : 0,
           borderRightRadius: !isOdd ? 4 : 0,
         }}
@@ -47,13 +52,14 @@ export default class Card {
           <OrbitIcon $icon $iconActive={isActive} icon={icon} />
           <subtitle>
             <UI.Text fontWeight={600} fontSize={13} textAlign="center">
-              {name}
+              {title}
             </UI.Text>
           </subtitle>
           <UI.Button
+            if={!isActive}
             onClick={async () => {
               if (oauth === false) {
-                const setting = appStore.settings.find(s => s.type === id)
+                const setting = appStore.settings[id]
                 setting.token = 'good'
                 await setting.save()
                 appStore.getSettings()
@@ -90,7 +96,7 @@ export default class Card {
       // margin: [0, 5, 0],
       alignItems: 'center',
       justifyContent: 'center',
-      borderBottom: [1, 'dotted', [0, 0, 0, 0.1]],
+      borderBottom: [1, [0, 0, 0, 0.1]],
       '&:hover': {
         background: [255, 255, 255, 0.1],
       },
@@ -104,7 +110,7 @@ export default class Card {
       padding: [10, 0],
     },
     odd: {
-      borderRight: [1, 'dotted', [0, 0, 0, 0.1]],
+      borderRight: [1, [0, 0, 0, 0.1]],
       paddingRight: 7,
     },
     lastRow: {

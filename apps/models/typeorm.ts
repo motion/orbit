@@ -12,6 +12,7 @@ const {
   CreateDateColumn,
   UpdateDateColumn,
   VersionColumn,
+  getConnection,
 } = typeorm
 
 export {
@@ -23,6 +24,7 @@ export {
   Column,
   PrimaryGeneratedColumn,
   OneToMany,
+  getConnection,
 }
 
 // globals

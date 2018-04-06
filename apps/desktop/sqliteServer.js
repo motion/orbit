@@ -2,6 +2,7 @@ import sqlite from 'sqlite'
 import fs from 'fs'
 import Primus from 'primus'
 import * as Path from 'path'
+import recoverDB from '~/helpers/recoverDB'
 
 const log = debug('sqliteServer')
 debug.quiet('sqliteServer')
@@ -183,7 +184,9 @@ async function runQueries(id, spark, db, queryArray, accumAnswer) {
     })
     await runQueries(id, spark, db, queryArray, accumAnswer)
   } catch (err) {
-    console.log('error!', queryArray, top, accumAnswer, err)
+    if (err.message && err.message.indexOf('SQLITE_IOERR')) {
+      recoverDB()
+    }
     accumAnswer.push({
       type: 'error',
       qid: top.qid,

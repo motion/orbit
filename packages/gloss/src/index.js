@@ -17,18 +17,13 @@ export const Helpers = Helpers_
 // export type Color
 export type Options = {
   dontTheme?: boolean,
-  themeKey: string | boolean,
   baseStyles?: Object,
   tagName?: boolean,
   toColor?: Function,
   isColor?: Function,
 }
 
-const { hash } = Helpers
-
-const DEFAULT_OPTS = {
-  themeKey: 'theme',
-}
+const DEFAULT_OPTS = {}
 
 let idCounter = 0
 function uid() {
@@ -117,7 +112,6 @@ export default class Gloss {
 
       const hasTheme = Child.theme && typeof Child.theme === 'function'
       const themeSheet = JSS.createStyleSheet().attach()
-      const ViewCache = {}
       const id = uid()
       Child.glossUID = id
       this.themeSheets[id] = themeSheet
@@ -137,28 +131,10 @@ export default class Gloss {
           }
           if (activeTheme) {
             const childTheme = Child.theme(props, activeTheme, this)
-
-            // cache
-            const oldKey = this.themeKey
-            this.themeKey = `${id}${hash(childTheme)}`
-            if (ViewCache[this.themeKey]) {
-              ViewCache[this.themeKey]++
-              return
-            }
-            if (oldKey) {
-              ViewCache[this.themeKey]--
-              if (ViewCache[this.themeKey] === 0) {
-                for (const key of this.themeActiveRules) {
-                  this.theme.deleteRule(key)
-                }
-              }
-            }
-            ViewCache[this.themeKey] = 1
-
             const rules = {}
             for (const name of Object.keys(childTheme)) {
               const style = css(childTheme[name])
-              const selector = `${name}--${this.themeKey}--theme`
+              const selector = `${name}--${Child.glossUID}--theme`
               rules[selector] = style
               this.theme.deleteRule(selector)
             }
@@ -178,13 +154,6 @@ export default class Gloss {
 
         const ogcomponentWillUnmount = Child.prototype.componentWillUnmount
         Child.prototype.componentWillUnmount = function(...args) {
-          // remove cache
-          ViewCache[this.themeKey]--
-          if (ViewCache[this.themeKey] === 0 && this.themeActiveRules) {
-            for (const key of this.themeActiveRules) {
-              this.theme.deleteRule(key)
-            }
-          }
           if (ogcomponentWillUnmount) {
             return ogcomponentWillUnmount.call(this, ...args)
           }

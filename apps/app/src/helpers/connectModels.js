@@ -16,14 +16,17 @@ export default async function connectModels(models) {
       for (const model of models) {
         model.useConnection(connection)
       }
+      webSqlClient.onError(async err => {
+        console.error('SQL Error', err)
+        if (err.message && err.message.indexOf('db not found')) {
+          console.log('Reconnecting...')
+          await connection.close()
+          connect()
+        }
+      })
     } catch (err) {
-      console.log('Error: ', err)
+      console.log('connectModels Error: ', err)
     }
   }
-  webSqlClient.onError(err => {
-    console.log('got a YUGE err, restarting...', err)
-    window.location = window.location
-    // connect()
-  })
   return await connect()
 }

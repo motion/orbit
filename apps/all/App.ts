@@ -1,13 +1,17 @@
 import Bridge from './helpers/Bridge'
 import { proxySetters, setGlobal } from './helpers'
 import { store, react } from '@mcro/black/store'
-import Desktop from './Desktop'
-import Electron from './Electron'
+import { Desktop } from './Desktop'
+import { Electron } from './Electron'
 import AppReactions from './AppReactions'
+import * as Constants from '@mcro/constants'
 
+export let App
+
+// @ts-ignore
 const isBrowser = typeof window !== 'undefined'
+const isOrbit = isBrowser && window.location.pathname === '/orbit'
 // const log = debug('App')
-let App
 
 @store
 class AppStore {
@@ -33,6 +37,9 @@ class AppStore {
   }
 
   get isShowingOrbit() {
+    if (Constants.FORCE_FULLSCREEN) {
+      return true
+    }
     return !App.state.orbitHidden
   }
 
@@ -56,10 +63,10 @@ class AppStore {
   ]
 
   // debounced a little to prevent aggressive reactions
-  @react({ delay: 32, log: isBrowser })
+  @react({ delay: 32, log: isOrbit })
   isFullyHidden = [() => !App.isShowingOrbit && !App.isAnimatingOrbit, _ => _]
 
-  @react({ delay: 32, log: isBrowser })
+  @react({ delay: 32, log: isOrbit })
   isFullyShown = [() => App.isShowingOrbit && !App.isAnimatingOrbit, _ => _]
 
   last: Boolean
@@ -132,5 +139,3 @@ class AppStore {
 App = proxySetters(new AppStore())
 setGlobal('App', App)
 Bridge.stores[App.source] = App
-
-export default App

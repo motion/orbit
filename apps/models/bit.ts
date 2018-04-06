@@ -19,6 +19,8 @@ export class Bit extends T.BaseEntity {
   @T.Column() bitUpdatedAt: string
   @T.CreateDateColumn() createdAt: Date
   @T.UpdateDateColumn() updatedAt: Date
+
+  static identifyingKeys = ['identifier', 'type', 'integration']
 }
 
 T.setGlobal('Bit', Bit)

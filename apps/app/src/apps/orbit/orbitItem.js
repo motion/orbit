@@ -1,89 +1,123 @@
 import { view } from '@mcro/black'
-import { Title, Text, Surface } from '@mcro/ui'
+import { Title } from '@mcro/ui'
+import { App } from '@mcro/all'
 import OrbitIcon from './orbitIcon'
+import OrbitItemPreview from './orbitItemPreview'
+import * as UI from '@mcro/ui'
 
-const glowProps = {
-  color: '#fff',
-  scale: 1,
-  blur: 70,
-  opacity: 0.15,
-  show: false,
-  resist: 60,
-  zIndex: -1,
-}
-
-const SubTitle = p => (
-  <Text
-    size={0.9}
-    css={{ textTransform: 'uppercase', opacity: 0.4, margin: [5, 0] }}
-    {...p}
-  />
-)
-const P = p => (
-  <Text
-    size={1.15}
-    css={{ marginBottom: 5, opacity: 0.85 }}
-    highlightWords={['ipsum', 'adipisicing', 'something']}
-    {...p}
-  />
-)
-
-@view.attach('appStore')
+@UI.injectTheme
+@view.attach('appStore', 'orbitPage')
 @view
 export default class Item {
   onClick = () => {
     this.props.appStore.setSelectedIndex(this.props.index)
   }
 
-  render({ appStore, index, result, ...props }) {
+  render({
+    hidePreview,
+    titleProps,
+    iconProps,
+    appStore,
+    orbitPage,
+    index,
+    result,
+    total,
+    theme,
+    padding,
+    results,
+    ...props
+  }) {
     const isSelected = appStore.selectedIndex === index
+    const shouldShowIcon =
+      !results[index - 1] || results[index - 1].type !== result.type
     // log(`OrbitItem isSelected ${isSelected} ${index}`)
     if (!result) {
       return null
     }
+    const orbitHeight = orbitPage.contentHeight
+    const WORDS_PER_LINE_ROUGHLY = 35
+    const ITEM_PAD = 15
+    const SUBTITLE_HEIGHT = 18
+    const LINE_HEIGHT = 16
+    const TITLE_LINE_HEIGHT = LINE_HEIGHT * 2.2
+    const TITLE_HEIGHT = Math.min(
+      Math.ceil((result.title || '').length / 25) * TITLE_LINE_HEIGHT,
+      TITLE_LINE_HEIGHT * 2,
+    )
+    const itemHeight =
+      ITEM_PAD * 2 +
+      TITLE_HEIGHT +
+      SUBTITLE_HEIGHT +
+      LINE_HEIGHT *
+        Math.ceil((result.body || '').length / WORDS_PER_LINE_ROUGHLY)
+    const itemHeightContain = Math.min(orbitHeight, itemHeight)
+    const MAX_PER_SCREEN = 4
+    const wantsToShow = Math.min(total, Math.round(orbitHeight / 300))
+    const height = Math.min(
+      itemHeightContain,
+      Math.round(
+        Math.max(orbitHeight / MAX_PER_SCREEN, orbitHeight / wantsToShow),
+      ),
+    )
+    const background = isSelected ? theme.highlight.color : 'transparent'
     return (
-      <Surface
-        background="transparent"
-        glow={false}
-        background={isSelected ? [255, 255, 255, 0.6] : 'transparent'}
-        glowProps={glowProps}
-        padding={[16, 11]}
+      <orbitItem
+        css={{
+          padding: padding || ITEM_PAD,
+          background,
+        }}
         onClick={this.onClick}
         {...props}
       >
-        <Title
-          size={1.6}
-          ellipse
-          css={{
-            fontWeight: 300,
-            // letterSpacing: isSelected ? -0.25 : 0,
-            opacity: isSelected ? 1 : 0.95,
-            alignItems: 'center',
-            justifyContent: 'center',
-            textShadow: isSelected ? `0 0 5px rgba(255,255,255,0.3)` : 'none',
-          }}
-        >
-          <OrbitIcon
-            icon={result.icon ? `/icons/${result.icon}` : result.integration}
-            size={16}
+        <titles>
+          <Title
+            size={1.3}
+            sizeLineHeight={1}
+            ellipse={2}
+            fontWeight={400}
             css={{
-              marginRight: 3,
-              marginBottom: 4,
-              display: 'inline-block',
+              width: 'calc(100% - 15px)',
             }}
-          />{' '}
-          {result.title}
-        </Title>
-        <Text opacity={0.5} margin={[3, 0, 6]} size={0.95} ellipse>
-          {result.subtitle || 'Created Jan 24th'}
-        </Text>
-        <Text size={1} sizeLineHeight={1.15}>
-          <SubTitle if={false}>Section 1</SubTitle>
-          <P selectable ellipse={4}>
-            {result.body || 'Lorem Ipsum dolor sit amet'}
-          </P>
-        </Text>
-      </Surface>
+            {...titleProps}
+          >
+            {result.title}
+          </Title>
+          <OrbitIcon
+            if={shouldShowIcon}
+            icon={result.icon ? `/icons/${result.icon}` : result.integration}
+            size={18}
+            css={{
+              marginLeft: 0,
+              marginTop: 3,
+            }}
+            {...iconProps}
+          />
+        </titles>
+        <OrbitItemPreview
+          if={!hidePreview}
+          result={result}
+          background={background}
+        />
+      </orbitItem>
     )
+  }
+
+  static style = {
+    orbitItem: {
+      position: 'relative',
+      // background: 'red',
+      overflow: 'hidden',
+      '&:hover bg': {
+        opacity: 1,
+      },
+    },
+    space: {
+      height: 20,
+    },
+    titles: {
+      flexFlow: 'row',
+      alignItems: 'flex-start',
+      padding: [2, 5, 2, 0],
+    },
   }
 }

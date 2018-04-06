@@ -20,10 +20,10 @@ function tsWatch(target, options) {
 }
 
 // @watch decorator
-export default function watch(a, b, c) {
+export default function watch(a, b, c, opts) {
   // passing options
   if (!b) {
-    const options = a
+    const options = { ...a, ...opts }
     return (target, method, descriptor) => {
       if (!descriptor) {
         return tsWatch(target, options)
@@ -31,11 +31,20 @@ export default function watch(a, b, c) {
       return doWatch(target, method, descriptor, options)
     }
   } else {
+    // typescript
     if (!c) {
       return tsWatch(a)
     }
-    return doWatch(a, b, c)
+    return doWatch(a, b, c, opts)
   }
+}
+
+watch.if = function watchIf(a, b, c) {
+  // passing options
+  if (!b) {
+    return (d, e, f) => watch(d, e, f, { isIf: true, ...a })
+  }
+  return watch(a, b, c, { isIf: true })
 }
 
 function doWatch(target, method, descriptor, userOptions) {

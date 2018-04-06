@@ -1,5 +1,5 @@
 import Octokat from 'octokat'
-import { store, watch, react } from '@mcro/black'
+import { store, watch, react } from '@mcro/black/store'
 import { CurrentUser } from '@mcro/models'
 
 @store

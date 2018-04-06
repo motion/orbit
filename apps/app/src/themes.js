@@ -1,4 +1,4 @@
-import { ThemeMaker } from '@mcro/ui'
+import { ThemeMaker, color } from '@mcro/ui'
 import * as Constants from '~/constants'
 
 const Theme = new ThemeMaker()
@@ -14,6 +14,8 @@ const blank = {
   borderColor: 'transparent',
   buttonBackground: 'transparent',
 }
+
+const tanColor = color('rgb(255,255,245)')
 
 const Themes = {
   light: Theme.fromStyles({
@@ -57,8 +59,11 @@ const Themes = {
   }),
   tan: Theme.fromStyles({
     highlightBackground,
-    highlightColor,
-    background: '#F2F3E8',
+    highlightColor: tanColor
+      .darken(0.05)
+      .desaturate(0.5)
+      .toString(),
+    background: tanColor.toString(),
     color: '#444',
     borderColor: '#000',
   }),

@@ -1,6 +1,6 @@
 import { store, watch, react } from '@mcro/black'
 import * as Syncers from './syncers'
-import { Job, Setting, findOrCreate, remove } from '@mcro/models'
+import { Job, Setting, remove } from '@mcro/models'
 import debug from '@mcro/debug'
 
 const log = debug('sync')
@@ -49,7 +49,6 @@ export default class Sync {
           return
         }
         if (this.locks.has(job.lock)) {
-          log('Already locked job:', job.lock)
           return
         }
         let complete = false
@@ -61,7 +60,7 @@ export default class Sync {
             this.locks.delete(job.lock)
             log('removed stale job', job.lock)
           }
-        }, 1000 * 60 * 2) // 2 min
+        }, 1000 * 60 * 15) // 15 min
 
         this.locks.add(job.lock)
         try {

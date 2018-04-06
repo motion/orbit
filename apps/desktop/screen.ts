@@ -2,7 +2,8 @@ import Oracle from '@mcro/oracle'
 import { debounce, throttle, last } from 'lodash'
 import iohook from 'iohook'
 import { store, isEqual, react } from '@mcro/black/store'
-import { Desktop, Electron, Swift } from '@mcro/all'
+import { Desktop, Electron, Swift, AppState, DesktopState } from '@mcro/all'
+import debug from '@mcro/debug'
 
 const log = debug('Screen')
 const ORBIT_APP_ID = 'com.github.electron'
@@ -33,8 +34,14 @@ const PREVENT_SCANNING = {
 }
 
 @store
-export default class ScreenMaster {
-  watchSettings = {}
+export default class DesktopScreen {
+  hasResolvedOCR = false
+  appStateTm: any
+  clearOCRTm: any
+  isWatching = ''
+  curAppID = ''
+  curAppName = ''
+  watchSettings = { name: '', settings: {} }
   oracle = new Oracle()
 
   @react rescanOnNewAppState = [() => Desktop.appState, this.rescanApp]
@@ -102,7 +109,7 @@ export default class ScreenMaster {
         return
       }
       // if current app is a prevented app, treat like nothing happened
-      let nextState = { ...Desktop.appState }
+      let nextState: AppState = { ...Desktop.appState }
       let id = this.curAppID
       const wasFocusedOnOrbit = this.curAppID === ORBIT_APP_ID
       switch (event) {
@@ -127,7 +134,7 @@ export default class ScreenMaster {
           if (value.id !== id) return
           nextState.offset = value.pos
       }
-      const state = {
+      const state: Partial<DesktopState> = {
         focusedOnOrbit: this.curAppID === ORBIT_APP_ID,
       }
       // when were moving into focus prevent app, store its appName, pause then return
@@ -155,8 +162,9 @@ export default class ScreenMaster {
       if (!Desktop.state.paused) {
         this.oracle.resume()
       }
-      clearTimeout(this.lastAppState)
-      this.lastAppState = this.setTimeout(() => {
+      clearTimeout(this.appStateTm)
+      // @ts-ignore
+      this.appStateTm = this.setTimeout(() => {
         Desktop.setState(state)
       }, 32)
     })
@@ -208,9 +216,9 @@ export default class ScreenMaster {
     if (PREVENT_CLEAR[Desktop.state.appState.name]) {
       return
     }
-    Desktop.setLastScreenChange(Date.now())
     // after fast clear, empty data
-    setTimeout(this.clearOCRState)
+    Desktop.setLastScreenChange(Date.now())
+    this.clearOCRState()
   }
 
   clearOCRState = debounce(() => {
@@ -244,7 +252,7 @@ export default class ScreenMaster {
   }
 
   async rescanApp() {
-    clearTimeout(this.clearOCRTimeout)
+    clearTimeout(this.clearOCRTm)
     if (!Desktop.appState.id || Desktop.state.paused) {
       return
     }
@@ -278,7 +286,7 @@ export default class ScreenMaster {
     }
     log('rescanApp.resume', name)
     await this.oracle.resume()
-    this.clearOCRTimeout = setTimeout(async () => {
+    this.clearOCRTm = setTimeout(async () => {
       if (!this.hasResolvedOCR) {
         log('seems like ocr has stopped working, restarting...')
         this.restartScreen()

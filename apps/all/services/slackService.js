@@ -1,5 +1,5 @@
 import Slack from 'slack'
-import { store, watch } from '@mcro/black'
+import { store, watch } from '@mcro/black/store'
 import { CurrentUser } from '@mcro/models'
 
 @store

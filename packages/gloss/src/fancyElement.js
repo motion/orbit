@@ -91,7 +91,7 @@ export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
       throw new Error(
         `Didn't get a valid type: ${type}, children: ${
           children ? children.toString() : children
-        }`
+        }`,
       )
     }
     if (IS_BROWSER && props && props.onClick) {
@@ -137,10 +137,7 @@ export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
         finalStyles.push(style)
       }
       if (checkTheme && theme) {
-        const themeKey = `${key.replace(
-          `--${glossUID}`,
-          `--${this.themeKey}`
-        )}--theme`
+        const themeKey = `${key}--theme`
         const themeStyle = theme.getRule(themeKey)
         if (themeStyle) {
           finalStyles.push(themeStyle)
@@ -179,7 +176,7 @@ export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
           }
           if (typeof val !== 'string') {
             throw new Error(
-              `tagName must be a string (tag: ${name}, type received: ${typeof val})`
+              `tagName must be a string (tag: ${name}, type received: ${typeof val})`,
             )
           }
           type = val
@@ -213,7 +210,7 @@ export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
             styles,
             `${prop.slice(1)}--${glossUID}`,
             val,
-            true
+            true,
           )
           if (inlineStyle) {
             style = { ...style, ...objToCamel(inlineStyle) }
@@ -247,7 +244,7 @@ export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
             arrayOfObjectsToObject([
               ...finalStyles.map(style => style && style.style),
               finalProps.style,
-            ])
+            ]),
           )
         }
       }

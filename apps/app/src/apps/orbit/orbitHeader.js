@@ -47,31 +47,33 @@ export default class PeekHeader {
   }
 
   render({ appStore, orbitStore, headerStore, theme, headerBg }) {
-    const { fullScreen } = Electron.orbitState
-    const darkerBg = theme.base.background.darken(0.045).desaturate(0.3)
+    // const { fullScreen } = Electron.orbitState
+    const darkerBg = theme.base.background
     return (
       <header
-        $headerBg={fullScreen ? headerBg.alpha(0.2) : headerBg}
+        $headerBg={headerBg}
         $$draggable
         $headerVisible={App.isShowingHeader}
         $headerMouseOver={Electron.orbitState.mouseOver}
         css={{
-          boxShadow: [
-            [
-              'inset',
-              0,
-              0.5,
-              0,
-              0.5,
-              theme.base.background.darken(0.1).desaturate(0.3),
-            ],
-          ],
-          borderTopLeftRadius: Electron.orbitOnLeft
-            ? Constants.BORDER_RADIUS
-            : 0,
-          borderTopRightRadius: !Electron.orbitOnLeft
-            ? Constants.BORDER_RADIUS
-            : 0,
+          // boxShadow: [
+          //   [
+          //     'inset',
+          //     0,
+          //     0.5,
+          //     0,
+          //     0.5,
+          //     theme.base.background.darken(0.1).desaturate(0.3),
+          //   ],
+          // ],
+          borderTopLeftRadius:
+            !Electron.orbitOnLeft || Electron.orbitState.orbitDocked
+              ? 0
+              : Constants.BORDER_RADIUS,
+          borderTopRightRadius:
+            Electron.orbitOnLeft || Electron.orbitState.orbitDocker
+              ? 0
+              : Constants.BORDER_RADIUS,
         }}
       >
         <title>
@@ -82,7 +84,7 @@ export default class PeekHeader {
             css={{
               width: '100%',
               fontWeight: 300,
-              boxShadow: ['inset', 0, 0, 0, 1, darkerBg.darken(0.5)],
+              // boxShadow: ['inset', 0, 0, 0, 1, darkerBg.darken(0.5)],
               opacity: App.state.query.length > 0 ? 1 : 0.6,
             }}
             background="transparent"
@@ -165,10 +167,10 @@ export default class PeekHeader {
       opacity: 1,
     },
     headerBg: background => ({
-      background: background,
-      '&:hover': {
-        background: background.lighten(0.05),
-      },
+      // background: background,
+      // '&:hover': {
+      //   background: background.lighten(0.05),
+      // },
     }),
     inputLn: {
       width: 10,

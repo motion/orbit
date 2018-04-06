@@ -1,10 +1,11 @@
 import { store, react } from '@mcro/black/store'
-import App from './App'
-import Desktop from './Desktop'
-import Electron from './Electron'
+import { App } from './App'
+import { Desktop } from './Desktop'
+import { Electron } from './Electron'
 import orbitPosition from './helpers/orbitPosition'
 import screenSize from './helpers/screenSize'
 import debug from '@mcro/debug'
+import * as Constants from '@mcro/constants'
 
 const log = debug('ElectronReactions')
 
@@ -30,11 +31,11 @@ const SCREEN_PAD = 15
 @store
 export default class ElectronReactions {
   screenSize = screenSize
-  afterUnFullScreen = null
+  goingToReposition = null
 
-  willFullScreen = () => {
-    Electron.setState({ willFullScreen: Date.now() })
-    this.afterUnFullScreen = Date.now()
+  willReposition = () => {
+    Electron.setState({ willReposition: Date.now() })
+    // this.goingToReposition = Date.now()
   }
 
   @react
@@ -44,7 +45,7 @@ export default class ElectronReactions {
       if (!Electron.orbitState.fullScreen || App.state.orbitHidden) {
         return
       }
-      this.willFullScreen()
+      this.willReposition()
     },
   ]
 
@@ -64,7 +65,7 @@ export default class ElectronReactions {
   @react
   shouldTogglePinned = [
     () => [App.state.shouldTogglePinned, Desktop.state.shouldTogglePin],
-    Electron.togglePinned,
+    () => Electron.togglePinned(),
   ]
 
   // @react
@@ -108,7 +109,6 @@ export default class ElectronReactions {
       }
       if (Electron.orbitState.position) {
         const mouseOver = isMouseOver(Electron.orbitState, mousePosition)
-        log('isover', mouseOver)
         if (mouseOver !== Electron.orbitState.mouseOver) {
           Electron.setOrbitState({ mouseOver })
         }
@@ -154,14 +154,17 @@ export default class ElectronReactions {
     () => [
       appTarget(Desktop.appState || {}),
       Desktop.linesBoundingBox,
-      this.afterUnFullScreen,
+      // this.goingToReposition,
     ],
     async ([appBB, linesBB], { sleep }) => {
+      if (Constants.FORCE_FULLSCREEN) {
+        return
+      }
       await sleep(64)
       // prefer using lines bounding box, fall back to app
       const box = linesBB || appBB
       if (!box) return
-      let { position, size, orbitOnLeft } = orbitPosition(box)
+      let { position, size, orbitOnLeft, orbitDocked } = orbitPosition(box)
       if (linesBB) {
         // add padding
         position[0] += orbitOnLeft ? -SCREEN_PAD : SCREEN_PAD
@@ -173,6 +176,7 @@ export default class ElectronReactions {
         position,
         size,
         orbitOnLeft,
+        orbitDocked,
         fullScreen: false,
       })
     },

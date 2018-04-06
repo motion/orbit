@@ -1,8 +1,9 @@
-import { Bit, Setting, createOrUpdate, insert } from '@mcro/models'
+import { Bit, Setting, insert, createOrUpdate } from '@mcro/models'
 import debug from '@mcro/debug'
 import { sleep } from '@mcro/helpers'
 import getHelpers from './getHelpers'
-import { first, last, pickBy } from 'lodash'
+import * as _ from 'lodash'
+import { create } from 'domain'
 
 const log = debug('googleMail')
 const timeCancel = (asyncFn, ms) => {
@@ -123,49 +124,69 @@ export default class GoogleMailSync {
     if (unCreated) {
       log(`Couldn't sync ${unCreated} threads`)
     }
-    this.setting.values.historyId = results[0].data.historyId
-    await this.setting.save()
+    if (results[0]) {
+      this.setting.values.historyId = results[0].data.historyId
+      await this.setting.save()
+    }
   }
 
   streamThreads(query, options): Promise<string | null> {
     return new Promise((res, rej) => {
-      this.helpers.batch.estimatedThreads(query, options, (err, estimate) => {
-        const max = Math.min(options.max || 0, estimate)
-        if (err) return rej(err)
-        const threadSyncer = this.helpers.batch.threads(query, options)
-        let newHistoryId
-        let fetched = 0
-        let threads = []
-        const write = async () => {
-          await sleep(100) // dont choke resources on process
-          const date = Date.now()
-          const insertThreads = [...threads].map(thread => ({
-            ...thread,
-            createdAt: date,
-            updatedAt: date,
-          }))
-          threads = []
-          await insert(Bit)
-            .values(insertThreads)
-            .execute()
-        }
-        threadSyncer.on('data', async (thread: ThreadObject) => {
-          fetched++
-          if (!newHistoryId) {
-            newHistoryId = thread.historyId
+      this.helpers.batch.estimatedThreads(
+        query,
+        options,
+        async (err, estimate) => {
+          const max = Math.min(options.max || 0, estimate)
+          if (err) {
+            return rej(err)
           }
-          threads.push(this.createThreadObject(thread))
-          if (fetched === max) {
-            log('synced total threads', fetched, 'of', max)
-            await write()
-            res(newHistoryId || null)
-            return
+          const threadSyncer = this.helpers.batch.threads(query, options)
+          let newHistoryId
+          let fetched = 0
+          let threads = []
+          let syncing = true
+          threadSyncer.on('data', async (thread: ThreadObject) => {
+            fetched++
+            if (!newHistoryId) {
+              newHistoryId = thread.historyId
+            }
+            threads.push(this.createThreadObject(thread))
+            if (fetched === max) {
+              log('synced total threads', fetched, 'of', max)
+              syncing = false
+            }
+          })
+          await processQueue()
+          res(newHistoryId || null)
+          async function processQueue() {
+            while (syncing || threads.length) {
+              await sleep(500) // dont destroy resources
+              if (!threads.length) {
+                continue
+              }
+              const rows = _.take(threads, 100)
+              threads = threads.slice(rows.length)
+              const updateKeys = Object.keys(rows[0])
+              for (const row of rows) {
+                // insert, ignore, update
+                let bit = await Bit.findOne(_.pick(row, Bit.identifyingKeys))
+                if (bit) {
+                  const cur = _.pick(bit, updateKeys)
+                  if (_.isEqual(cur, row)) {
+                    continue
+                  }
+                  log(`!equal, update`, cur, row)
+                }
+                if (!bit) {
+                  bit = new Bit()
+                }
+                Object.assign(bit, row)
+                await bit.save()
+              }
+            }
           }
-          if (fetched % 25 === 0) {
-            write()
-          }
-        })
-      })
+        },
+      )
     })
   }
 
@@ -185,9 +206,9 @@ export default class GoogleMailSync {
 
   createThreadObject = (data: ThreadObject) => {
     const { id, messages } = data
-    const firstMessage = first(messages)
+    const firstMessage = _.first(messages)
     const bitCreatedAt = this.getDateFromThread(firstMessage)
-    const bitUpdatedAt = this.getDateFromThread(last(messages))
+    const bitUpdatedAt = this.getDateFromThread(_.last(messages))
     const subjectHeader = firstMessage.payload.headers.find(
       x => x.name === 'Subject',
     )
@@ -218,7 +239,7 @@ export default class GoogleMailSync {
       if (fetchedPages > 1) {
         await sleep(80)
       }
-      const query_ = pickBy(
+      const query_ = _.pickBy(
         { pageToken: lastPageToken, historyId },
         x => query[x],
       )

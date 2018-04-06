@@ -104,8 +104,15 @@ class OrbitCard {
 @view
 class OrbitContext {
   render({ appStore, theme, getHoverProps }) {
+    const isSelectedInContext = appStore.selectedIndex >= 5
     return (
-      <orbitContext>
+      <orbitContext
+        css={{
+          background: theme.base.background,
+          transform: { y: isSelectedInContext ? -100 : 0 },
+        }}
+      >
+        <OrbitDivider if={!App.state.query} />
         {appStore.results
           .slice(5)
           .map((result, i) => (
@@ -123,7 +130,7 @@ class OrbitContext {
   }
   static style = {
     orbitContext: {
-      marginTop: -15,
+      // marginTop: -15,
       flex: 1,
     },
   }
@@ -197,7 +204,6 @@ export default class OrbitContent {
               })}
             />
           ))}
-          <OrbitDivider if={!query} />
           <OrbitContext
             if={!query}
             appStore={appStore}

@@ -13,6 +13,8 @@ next
 
 queued ux stuff
 
+* hoverSettler: if under delay amount, dont reset the wait time
+  * use case: move off of items quickly and back on, should be instant not re-delay
 * bug option+space doesnt focus input text
 * hold option when text is selected and hit "delete" or other char, should pin
 * clicked vs hovered selections -- see AppReactions TODO

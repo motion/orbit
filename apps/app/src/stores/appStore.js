@@ -101,6 +101,16 @@ export default class AppStore {
     return uniq([...strongTitleMatches, ...results].slice(0, 8))
   }
 
+  setSelectedIndex = i => {
+    this.selectedIndex = i
+  }
+
+  @react.if
+  hoverWordToSelectedIndex = [
+    () => App.state.hoveredWord && App.state.hoveredWord[5],
+    this.setSelectedIndex,
+  ]
+
   @react({ delay: 64 })
   setAppSelectedItem = [
     () => this.results[this.selectedIndex],
@@ -143,10 +153,6 @@ export default class AppStore {
     this.setInterval(() => {
       this.refreshCycle = Date.now()
     }, 2000)
-  }
-
-  setSelectedIndex = i => {
-    this.selectedIndex = i
   }
 
   getSettings = async () => {

@@ -337,6 +337,7 @@ const observableId = () => `__ID_${Math.random()}__`
 function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
   const {
     log: shouldLog,
+    isIf,
     delayValue,
     onlyUpdateIfChanged,
     ...options
@@ -450,6 +451,7 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
       }
       if (isReaction) {
         if (typeof val[1] !== 'function') {
+          console.log(val)
           throw new Error(`Didn't supply a function to reaction ${name}`)
         }
         // reaction
@@ -521,6 +523,10 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
 
   function watcher(reactionFn) {
     return function watcherCb(reactValArg) {
+      // @react.if check. for now just false
+      if (isIf && reactValArg === false) {
+        return
+      }
       reset()
       reactionID = uid()
       const curID = reactionID

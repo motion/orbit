@@ -66,9 +66,9 @@ const log = debug('highlights')
     // test inline words - three above each other
     get ocrWords() {
       return [
-        [200, 260, 120, 10, 'xx', 'rgba(255,0,0,0.5)'],
-        [500, 350, 200, 10, 'xx', 'rgba(255,0,0,0.5)'],
-        [300, 460, 300, 10, 'xx', 'rgba(255,0,0,0.5)'],
+        [200, 260, 120, 10, 'xx', 0, 'rgba(255,0,0,0.1)'],
+        [500, 350, 200, 10, 'xx', 1, 'rgba(255,0,0,0.1)'],
+        [300, 460, 300, 10, 'xx', 2, 'rgba(255,0,0,0.1)'],
       ]
     }
 
@@ -87,7 +87,7 @@ const log = debug('highlights')
         return true
       }
       const isTesting =
-        Desktop.activeOCRWords.length && Desktop.activeOCRWords[0].length === 6
+        Desktop.activeOCRWords.length && Desktop.activeOCRWords[0].length >= 6
       return (
         isTesting ||
         Desktop.state.ocrState.updatedAt > Desktop.state.lastScreenChange

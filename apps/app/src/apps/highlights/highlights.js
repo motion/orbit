@@ -37,7 +37,7 @@ const log = debug('highlights')
       },
     ]
 
-    @react({ fireImmediately: true })
+    @react({ fireImmediately: true, log: false })
     setHovered = [
       () => ({
         ...this.trees,
@@ -81,7 +81,7 @@ const log = debug('highlights')
         return true
       }
       const isTesting =
-        Desktop.activeOCRWords.length && Desktop.activeOCRWords[0].length === 4
+        Desktop.activeOCRWords.length && Desktop.activeOCRWords[0].length === 6
       return (
         isTesting ||
         Desktop.state.ocrState.updatedAt > Desktop.state.lastScreenChange
@@ -108,9 +108,10 @@ const log = debug('highlights')
 })
 export default class HighlightsPage {
   render({ store }) {
+    console.log(`highlights ${store.showAll}`)
     return (
       <frame if={store.showAll}>
-        {(Desktop.activeOCRWords || []).map(item => (
+        {(store.ocrWords || []).map(item => (
           <OCRWord key={Helpers.wordKey(item)} item={item} store={store} />
         ))}
         {(Desktop.ocrState.lines || []).map(item => (

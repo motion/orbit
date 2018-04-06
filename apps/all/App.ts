@@ -9,6 +9,7 @@ export let App
 
 // @ts-ignore
 const isBrowser = typeof window !== 'undefined'
+const isOrbit = isBrowser && window.location.pathname === '/orbit'
 // const log = debug('App')
 
 @store
@@ -58,10 +59,10 @@ class AppStore {
   ]
 
   // debounced a little to prevent aggressive reactions
-  @react({ delay: 32, log: isBrowser })
+  @react({ delay: 32, log: isOrbit })
   isFullyHidden = [() => !App.isShowingOrbit && !App.isAnimatingOrbit, _ => _]
 
-  @react({ delay: 32, log: isBrowser })
+  @react({ delay: 32, log: isOrbit })
   isFullyShown = [() => App.isShowingOrbit && !App.isAnimatingOrbit, _ => _]
 
   last: Boolean

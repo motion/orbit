@@ -23,6 +23,9 @@ queued ux stuff
 * if large window, slide in from left side full height
 * OCR scanning - once its paused again it doesnt move wiht app anymore
 
+* high ux:
+  * should use mouse movement to prevent unwanted highlights
+
 notes
 
 * potential metrics to

@@ -20,7 +20,7 @@ export default class OCRWord {
           height: height + HL_PAD * 2,
           background: color,
           fontSize: 10,
-          opacity: highlighted || Desktop.isHoldingOption ? 1 : 0,
+          opacity: 1, //highlighted || Desktop.isHoldingOption ? 1 : 0,
         }}
       >
         <wordInner if={!highlighted}>{word}</wordInner>

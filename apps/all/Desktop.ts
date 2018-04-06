@@ -145,6 +145,9 @@ class DesktopStore {
   }
 
   get activeOCRWords() {
+    if (!Desktop.ocrState.shouldClear) {
+      return Desktop.ocrState.words || []
+    }
     return (Desktop.ocrState.words || []).filter(
       (_, index) => !Desktop.ocrState.shouldClear[index],
     )

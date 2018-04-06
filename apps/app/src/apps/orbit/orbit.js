@@ -64,7 +64,8 @@ class OrbitPageStore {
 @view
 export default class Orbit {
   getHoverProps = Helpers.hoverSettler({
-    enterDelay: 200,
+    enterDelay: 120,
+    betweenDelay: 120,
     onHovered: async target => {
       clearTimeout(this.updateTargetTm)
       if (!target) {

@@ -10,7 +10,12 @@ function isReallyEqual(a, b) {
   return isEqual(a, b)
 }
 
-export default function hoverSettler({ enterDelay, onHovered }) {
+export default function hoverSettler({
+  enterDelay = 0,
+  leaveDelay = 32,
+  betweenDelay = 0,
+  onHovered,
+}) {
   let lastEnter
   let lastLeave
   let currentNode
@@ -28,13 +33,17 @@ export default function hoverSettler({ enterDelay, onHovered }) {
   }, 16)
 
   return extraProps => {
-    let itemLastEnter
-    let itemLastLeave
+    let itemLastEnterTm
+    let itemLastLeaveTm
+    let fullyLeaveTm
+    let betweenTm
 
     function handleHover(target) {
       // remove any other enters/leaves
       clearTimeout(lastEnter)
       clearTimeout(lastLeave)
+      clearTimeout(fullyLeaveTm)
+      clearTimeout(betweenTm)
 
       const updateHover = () => {
         if (isReallyEqual(currentNode, target)) {
@@ -51,8 +60,8 @@ export default function hoverSettler({ enterDelay, onHovered }) {
           height: target.clientHeight,
           ...extraProps,
         })
-        if (itemLastEnter === lastEnter) {
-          itemLastEnter = null
+        if (itemLastEnterTm === lastEnter) {
+          itemLastEnterTm = null
           lastEnter = null
         }
       }
@@ -60,14 +69,19 @@ export default function hoverSettler({ enterDelay, onHovered }) {
       // dont delay enter at all if were already hovering other node
       const isAlreadyHovering = !!currentNode
       if (isAlreadyHovering || enterDelay === 0) {
-        updateHover()
+        if (betweenDelay) {
+          betweenTm = setTimeout(updateHover, betweenDelay)
+        } else {
+          updateHover()
+        }
       } else {
-        itemLastEnter = lastEnter = setTimeout(updateHover, enterDelay)
+        itemLastEnterTm = lastEnter = setTimeout(updateHover, enterDelay)
       }
     }
 
     function onMouseEnter(e) {
-      clearTimeout(itemLastLeave)
+      clearTimeout(itemLastLeaveTm)
+
       const target = e.currentTarget
       handleHover(target)
     }
@@ -77,18 +91,27 @@ export default function hoverSettler({ enterDelay, onHovered }) {
     }
 
     function onMouseLeave() {
-      clearTimeout(itemLastLeave)
+      clearTimeout(itemLastLeaveTm)
+      clearTimeout(fullyLeaveTm)
+      clearTimeout(betweenTm)
+
       // be sure to clear your own hovers
-      if (itemLastEnter === lastEnter) {
+      if (itemLastEnterTm === lastEnter) {
         clearTimeout(lastEnter)
       }
-      lastLeave = itemLastLeave = setTimeout(() => {
+      lastLeave = itemLastLeaveTm = setTimeout(() => {
         if (!lastEnter) {
           setHovered(null)
-          itemLastEnter = null
-          currentNode = null
+          itemLastEnterTm = null
         }
-      }, 32)
+      }, leaveDelay)
+      // clear this after enter delay finish
+      // lets your mouse leave the target and re-enter
+      // and as long as it re-enters before enterDelay time,
+      // you won't get an extra lag time
+      fullyLeaveTm = setTimeout(() => {
+        currentNode = null
+      }, Math.min(leaveDelay, enterDelay))
     }
 
     return {

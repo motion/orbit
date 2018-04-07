@@ -59,7 +59,7 @@ export default class OrbitContent {
       hidePreview: true,
       titleProps: {
         ellipse: true,
-        fontWeight: 200,
+        fontWeight: 400,
         size: 1,
       },
       iconProps: {

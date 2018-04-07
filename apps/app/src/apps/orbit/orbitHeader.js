@@ -168,7 +168,7 @@ export default class PeekHeader {
     },
     headerBg: background => ({
       background: `linear-gradient(${background
-        .darken(0.1)
+        .darken(0.09)
         .desaturate(0.5)}, transparent)`,
     }),
     inputLn: {

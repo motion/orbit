@@ -6,7 +6,7 @@ import * as Constants from '~/constants'
 import OrbitDivider from './orbitDivider'
 
 const { SHADOW_PAD, APP_SHADOW } = Constants
-const orbitLightShadow = [[0, 3, SHADOW_PAD, 0, [0, 0, 0, 0.1]]]
+const orbitLightShadow = [[0, 1, SHADOW_PAD, 0, [0, 0, 0, 0.15]]]
 const iWidth = 4
 const arrowSize = 22
 // const log = debug('OrbitFrame')
@@ -45,7 +45,7 @@ const Indicator = view(({ iWidth, orbitOnLeft }) => {
 
 @view
 class OrbitArrow {
-  render({ background, orbitOnLeft, arrowSize, css }) {
+  render({ borderColor, background, orbitOnLeft, arrowSize, css }) {
     let arrowStyle
     if (orbitOnLeft) {
       arrowStyle = {
@@ -81,7 +81,7 @@ class OrbitArrow {
         size={arrowSize}
         towards={Electron.orbitArrowTowards}
         background={background}
-        boxShadow={[['inset', 0, 0, 0, 0.5, background.darken(0.25)]]}
+        boxShadow={[['inset', 0, 0, 0, 0.5, borderColor]]}
         // border={[1, '#000']}
         css={{
           position: 'absolute',
@@ -176,7 +176,7 @@ export default class OrbitFrame {
   render({ store, orbitPage, children, theme, headerBg }) {
     const { fullScreen, orbitDocked } = Electron.orbitState
     const { orbitOnLeft } = Electron
-    const borderColor = theme.base.background.darken(0.2).desaturate(0.5)
+    const borderColor = theme.base.background.darken(0.25).desaturate(0.6)
     const borderShadow = ['inset', 0, 0, 0, 0.5, borderColor]
     const boxShadow = fullScreen ? [APP_SHADOW] : [orbitLightShadow]
     const background = theme.base.background
@@ -199,6 +199,7 @@ export default class OrbitFrame {
           arrowSize={arrowSize}
           orbitOnLeft={orbitOnLeft}
           background={headerBg}
+          borderColor={borderColor}
         />
         <Indicator
           if={!fullScreen}

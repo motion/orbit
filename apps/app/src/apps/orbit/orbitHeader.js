@@ -142,7 +142,7 @@ export default class PeekHeader {
       flexFlow: 'row',
       alignItems: 'center',
       justifyContent: 'center',
-      padding: [5, 10],
+      padding: [5, 2],
       transition: 'all ease-in 300ms',
       opacity: 0.75,
       '&:hover': {
@@ -167,10 +167,9 @@ export default class PeekHeader {
       opacity: 1,
     },
     headerBg: background => ({
-      // background: background,
-      // '&:hover': {
-      //   background: background.lighten(0.05),
-      // },
+      background: `linear-gradient(${background
+        .darken(0.09)
+        .desaturate(0.5)}, transparent)`,
     }),
     inputLn: {
       width: 10,

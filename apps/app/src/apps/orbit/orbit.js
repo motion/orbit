@@ -71,10 +71,9 @@ export default class Orbit {
       if (!target) {
         this.updateTargetTm = setTimeout(() => {
           if (!Electron.isMouseInActiveArea) {
-            console.log('clearing!')
             App.setPeekTarget(null)
           }
-        }, 100)
+        }, 400)
         return
       }
       if (!Electron.orbitState.position) {

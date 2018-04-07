@@ -1,0 +1,17 @@
+{
+  "name": "@mcro/overdrive",
+  "version": "1.5.1",
+  "main": "_/overdrive.js",
+  "scripts": {
+    "build": "tsc",
+    "watch": "npm run build -- --watch"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "react-dom": "*"
+  },
+  "dependencies": {
+    "@types/react": "^16.3.5",
+    "@types/react-dom": "^16.0.4"
+  }
+}

@@ -1,7 +1,7 @@
 import { view } from '@mcro/black'
 import { App, Electron } from '@mcro/all'
 import { partition } from 'lodash'
-import Card from './orbitCard'
+import SettingCard from './orbitSettingCard'
 import * as UI from '@mcro/ui'
 
 const Title = props => (
@@ -45,7 +45,7 @@ export default class OrbitSettings {
       isActive,
     )
     const integrationCard = all => (integration, index, offset) => (
-      <Card
+      <SettingCard
         key={index}
         index={index}
         offset={offset}

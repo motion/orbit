@@ -108,10 +108,7 @@ export default class AppStore {
   @react.if
   hoverWordToSelectedIndex = [
     () => App.state.hoveredWord,
-    word => {
-      console.log('setting selected index', word)
-      this.setSelectedIndex(word.index)
-    },
+    word => this.setSelectedIndex(word.index),
   ]
 
   @react({ delay: 64 })
@@ -127,7 +124,6 @@ export default class AppStore {
           type: item.type || '',
           integration: item.integration || '',
         }
-        console.log('setting selected item', selectedItem)
         App.setSelectedItem(selectedItem)
       }
     },
@@ -153,9 +149,9 @@ export default class AppStore {
   async willMount() {
     this.getSettings()
     // every two seconds, re-query bit results
-    this.setInterval(() => {
-      this.refreshCycle = Date.now()
-    }, 2000)
+    // this.setInterval(() => {
+    //   this.refreshCycle = Date.now()
+    // }, 2000)
   }
 
   getSettings = async () => {

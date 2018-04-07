@@ -58,8 +58,12 @@ const getTextProperties = props => {
 // click away from edit clears it
 @view.ui
 export default class Text {
+  selected = false
+  editable = false
+  node = null
+
   static defaultProps = {
-    // not a p because tbh its nice to nest it
+    // not a p because its nice to nest it
     tagName: 'text',
     size: 1,
   }
@@ -68,11 +72,6 @@ export default class Text {
     doClamp: false,
     textHeight: 0,
   }
-
-  editableReaction
-  selected = false
-  editable = false
-  node = null
 
   get multiLineEllipse() {
     return this.props.ellipse > 1 || this.props.ellipse === true
@@ -87,17 +86,37 @@ export default class Text {
     this.measure()
   }
 
-  measure() {
-    if (this.multiLineEllipse) {
-      this.setState({
-        doClamp: true,
-        textHeight: this.node ? this.node.clientHeight : 0,
-      })
+  componentWillReceiveProps(nextProps) {
+    this.handleProps(nextProps)
+  }
+
+  componentDidUpdate() {
+    if (
+      this.node &&
+      this.props.autoselect &&
+      this.props.editable &&
+      !this.selected
+    ) {
+      this.node.focus()
+      document.execCommand('selectAll', false, null)
+      this.selected = true
     }
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.handleProps(nextProps)
+  measure() {
+    if (this.multiLineEllipse) {
+      this.setState(
+        {
+          doClamp: true,
+          textHeight: this.node ? this.node.clientHeight : 0,
+        },
+        () => {
+          if (this.props.onMeasure) {
+            this.props.onMeasure()
+          }
+        },
+      )
+    }
   }
 
   handleProps(props) {
@@ -137,19 +156,6 @@ export default class Text {
       if (this.editable !== props.editable) {
         this.editable = props.editable
       }
-    }
-  }
-
-  componentDidUpdate() {
-    if (
-      this.node &&
-      this.props.autoselect &&
-      this.props.editable &&
-      !this.selected
-    ) {
-      this.node.focus()
-      document.execCommand('selectAll', false, null)
-      this.selected = true
     }
   }
 
@@ -216,8 +222,10 @@ export default class Text {
     highlightWordsColor,
     className,
     measure,
+    debug,
+    onMeasure,
     ...props
-  }: Props) {
+  }) {
     const { multiLineEllipse } = this
     const { doClamp, textHeight } = this.state
     const text = getTextProperties(this.props)

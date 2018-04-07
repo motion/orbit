@@ -51,7 +51,6 @@ export default class Overdrive extends React.Component {
   }
 
   animateEnd = () => {
-    console.log('animate end')
     this.animationTimeout = null
     this.setState({ loading: false })
     this.props.onAnimationEnd && this.props.onAnimationEnd()
@@ -177,7 +176,7 @@ export default class Overdrive extends React.Component {
     this.animationTimeout = setTimeout(() => {
       renderSubtreeIntoContainer(this, end, bodyElement)
       this.animationTimeout = setTimeout(this.animateEnd, duration)
-    }, 0)
+    }, 64)
   }
 
   clearAnimations() {

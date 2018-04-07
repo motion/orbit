@@ -23,7 +23,7 @@ export default class OrbitDivider {
     },
     bar: {
       flex: 1,
-      height: 4,
+      height: 3,
       borderRadius: 100,
       background: [0, 0, 0, 0.1],
     },

@@ -86,7 +86,7 @@ class OrbitArrow {
         css={{
           position: 'absolute',
           ...arrowStyle,
-          zIndex: 100,
+          zIndex: 1000000000,
           transition: App.isShowingOrbit
             ? `
               opacity ease-out ${ms * 0.5},
@@ -176,14 +176,17 @@ export default class OrbitFrame {
   render({ store, orbitPage, children, theme, headerBg }) {
     const { fullScreen, orbitDocked } = Electron.orbitState
     const { orbitOnLeft } = Electron
-    const borderColor = theme.base.background.darken(0.1).desaturate(0.3)
+    const borderColor = theme.base.background.darken(0.2).desaturate(0.5)
     const borderShadow = ['inset', 0, 0, 0, 0.5, borderColor]
-    const boxShadow = fullScreen
-      ? [APP_SHADOW, borderShadow]
-      : [orbitLightShadow, borderShadow]
+    const boxShadow = fullScreen ? [APP_SHADOW] : [orbitLightShadow]
     const background = theme.base.background
     const hide =
       !App.isShowingOrbit && (store.isRepositioning || store.isDragging)
+    const borderLeftRadius =
+      !orbitOnLeft || orbitDocked ? 0 : Constants.BORDER_RADIUS
+    const borderRightRadius = fullScreen
+      ? 0
+      : orbitOnLeft ? 0 : Constants.BORDER_RADIUS
     return (
       <orbitFrame
         css={{
@@ -202,6 +205,13 @@ export default class OrbitFrame {
           store={store}
           iWidth={iWidth}
           orbitOnLeft={orbitOnLeft}
+        />
+        <orbitBorder
+          css={{
+            boxShadow: [borderShadow],
+            borderLeftRadius,
+            borderRightRadius,
+          }}
         />
         <overflowWrap
           $orbitAnimate={store.shouldAnimate}
@@ -247,11 +257,8 @@ export default class OrbitFrame {
                 background,
                 boxShadow: App.isShowingOrbit ? boxShadow : 'none',
                 // borderRight: orbitOnLeft ? [1, [0, 0, 0, 0.1]] : 0,
-                borderLeftRadius:
-                  !orbitOnLeft || orbitDocked ? 0 : Constants.BORDER_RADIUS,
-                borderRightRadius: fullScreen
-                  ? 0
-                  : orbitOnLeft ? 0 : Constants.BORDER_RADIUS,
+                borderLeftRadius,
+                borderRightRadius,
               }}
             >
               {children}
@@ -286,6 +293,15 @@ export default class OrbitFrame {
   static style = {
     orbitFrame: {
       // background: 'red',
+      position: 'relative',
+    },
+    orbitBorder: {
+      position: 'absolute',
+      top: SHADOW_PAD,
+      left: SHADOW_PAD,
+      right: SHADOW_PAD,
+      bottom: SHADOW_PAD,
+      zIndex: 1000000,
     },
     // used to hide edge overlap of drawer during in animation
     overflowWrap: {

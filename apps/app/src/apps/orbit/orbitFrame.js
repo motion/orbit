@@ -191,7 +191,7 @@ export default class OrbitFrame {
       <orbitFrame
         css={{
           flex: 1,
-          opacity: App.isShowingOrbit && !App.isAnimatingOrbit ? 1 : 0,
+          opacity: hide ? 0 : 1,
         }}
       >
         <OrbitArrow
@@ -211,7 +211,7 @@ export default class OrbitFrame {
             boxShadow: [borderShadow],
             borderLeftRadius,
             borderRightRadius,
-            opacity: hide ? 0 : 1,
+            opacity: App.isShowingOrbit && !App.isAnimatingOrbit ? 1 : 0,
           }}
         />
         <overflowWrap
@@ -294,7 +294,7 @@ export default class OrbitFrame {
   static style = {
     orbitFrame: {
       // background: 'red',
-      position: 'relative',
+      // position: 'relative',
     },
     orbitBorder: {
       position: 'absolute',

@@ -4,6 +4,7 @@ import iohook from 'iohook'
 import { store, isEqual, react } from '@mcro/black/store'
 import { Desktop, Electron, Swift, AppState, DesktopState } from '@mcro/all'
 import debug from '@mcro/debug'
+import * as Mobx from 'mobx'
 
 const log = debug('Screen')
 const ORBIT_APP_ID = 'com.github.electron'
@@ -108,8 +109,8 @@ export default class DesktopScreen {
         this.rescanApp()
         return
       }
-      // if current app is a prevented app, treat like nothing happened
-      let nextState: AppState = { ...Desktop.appState }
+      const lastState = Mobx.toJS(Desktop.appState)
+      let nextState: Partial<AppState> = {}
       let id = this.curAppID
       const wasFocusedOnOrbit = this.curAppID === ORBIT_APP_ID
       switch (event) {
@@ -121,6 +122,10 @@ export default class DesktopScreen {
             offset: value.offset,
             bounds: value.bounds,
             name: id ? last(id.split('.')) : value.title,
+          }
+          // no change
+          if (isEqual(nextState, lastState)) {
+            return
           }
           // update these now so we can use to track
           this.curAppID = id
@@ -156,7 +161,7 @@ export default class DesktopScreen {
           !isEqual(nextState.offset, appState.offset)
         ) {
           // immediate clear for moving
-          Desktop.setState({ lastAppChange: Date.now() })
+          Desktop.setLastAppChange(Date.now())
         }
       }
       if (!Desktop.state.paused) {
@@ -229,26 +234,24 @@ export default class DesktopScreen {
   }, 32)
 
   watchMouse = () => {
-    iohook.on(
-      'mousemove',
-      throttle(({ x, y }) => {
-        Desktop.setMouseState({
-          position: { x, y },
-        })
-      }, 64),
-    )
-
-    iohook.on('mousedown', ({ button, x, y }) => {
-      if (button === 1) {
-        Desktop.setMouseState({ mouseDown: { x, y, at: Date.now() } })
-      }
-    })
-
-    iohook.on('mouseup', ({ button }) => {
-      if (button === 1) {
-        Desktop.setMouseState({ mouseDown: null })
-      }
-    })
+    // iohook.on(
+    //   'mousemove',
+    //   throttle(({ x, y }) => {
+    //     Desktop.setMouseState({
+    //       position: { x, y },
+    //     })
+    //   }, 64),
+    // )
+    // iohook.on('mousedown', ({ button, x, y }) => {
+    //   if (button === 1) {
+    //     Desktop.setMouseState({ mouseDown: { x, y, at: Date.now() } })
+    //   }
+    // })
+    // iohook.on('mouseup', ({ button }) => {
+    //   if (button === 1) {
+    //     Desktop.setMouseState({ mouseDown: null })
+    //   }
+    // })
   }
 
   async rescanApp() {

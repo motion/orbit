@@ -1,10 +1,9 @@
 import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { App, Desktop } from '@mcro/all'
+import { App } from '@mcro/all'
+import Overdrive from '@mcro/overdrive'
 import OrbitItem from './orbitItem'
 import OrbitDivider from './orbitDivider'
-import Overdrive from 'react-overdrive'
-import DotDotDot from 'react-dotdotdot'
 import * as Constants from '~/constants'
 
 const Text = props => (
@@ -38,8 +37,11 @@ class OrbitCard {
       }
     }
     const textProps = {
-      ellipse: isSelected ? false : true,
+      ellipse: true,
       measure: shouldResizeText,
+      style: {
+        flex: 1,
+      },
     }
     return (
       <Overdrive key={result.id} id={`${result.id}`}>
@@ -65,7 +67,10 @@ class OrbitCard {
                 voluptas a? Lorem ipsum dolor sit amet consectetur adipisicing
                 elit. Ratione modi optio at neque ducimus ab aperiam dolores
                 nemo? Quod quos nisi molestias velit reprehenderit veniam dicta,
-                voluptatum vel voluptas a?
+                voluptatum vel voluptas a? Lorem ipsum dolor sit amet
+                consectetur adipisicing elit. Ratione modi optio at neque
+                ducimus ab aperiam dolores nemo? Quod quos nisi molestias velit
+                reprehenderit veniam dicta, voluptatum vel voluptas a?
               </Text>
             </content>
             <Text opacity={0.5} size={0.9} css={{ marginBottom: 3 }}>
@@ -86,7 +91,7 @@ class OrbitCard {
 
   static style = {
     cardWrap: {
-      padding: [10, 8, 0],
+      padding: [0, 8, 10],
       position: 'relative',
     },
     card: {
@@ -133,6 +138,7 @@ class OrbitContext {
       borderRadius: Constants.BORDER_RADIUS,
       position: 'relative',
       height: 'calc(100% - 35px)',
+      transition: 'transform ease-in 300ms',
     },
     results: {
       flex: 1,
@@ -141,13 +147,10 @@ class OrbitContext {
   }
 }
 
-const getKey = result => result.index || result.id || result.title
-
 @view.attach('appStore')
 @view
 export default class OrbitContent {
   render({ appStore, getHoverProps }) {
-    log(`render content`)
     const { query } = App.state
     const tinyProps = {
       hidePreview: true,
@@ -170,7 +173,7 @@ export default class OrbitContent {
         {appStore.results.slice(0, query ? 12 : 5).map((result, index) => (
           <OrbitItem
             {...!query && tinyProps}
-            key={getKey(result) || index}
+            key={result.id}
             type="gmail"
             index={index}
             results={appStore.results}

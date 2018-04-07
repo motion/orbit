@@ -4,6 +4,7 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "target": "es2017",
+    "jsx": "react",
     "noImplicitAny": false,
     "removeComments": true,
     "preserveConstEnums": true,

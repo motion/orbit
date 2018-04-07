@@ -10,7 +10,7 @@ export default class Overdrive extends React.Component {
   animationDelayTimeout: any
   animationTimeout: any
   onShowLock?: boolean
-  element?: Node
+  element?: any
   bodyElement?: HTMLElement
   props: {
     id: string
@@ -31,100 +31,27 @@ export default class Overdrive extends React.Component {
     loading: true,
   }
 
-  animate(prevPosition, prevElement) {
-    const { duration } = this.props
-    prevPosition.top += window.pageYOffset || document.documentElement.scrollTop
-    const nextPosition = this.getPosition(true)
-    const noTransform = 'scaleX(1) scaleY(1) translateX(0px) translateY(0px)'
-    const targetScaleX = prevPosition.width / nextPosition.width
-    const targetScaleY = prevPosition.height / nextPosition.height
-    const targetTranslateX = prevPosition.left - nextPosition.left
-    const targetTranslateY = prevPosition.top - nextPosition.top
-
-    if (
-      targetScaleX === 1 &&
-      targetScaleY === 1 &&
-      targetTranslateX === 0 &&
-      targetTranslateY === 0
-    ) {
-      return
-    }
-
-    const transition = {
-      transition: `transform ${duration / 1000}s, opacity ${duration / 1000}s`,
-      transformOrigin: '0 0 0',
-    }
-
-    const sourceStart = React.cloneElement(prevElement, {
-      key: '1',
-      style: prefix({
-        ...transition,
-        ...prevPosition,
-        opacity: 1,
-        transform: noTransform,
-      }),
-    })
-
-    const sourceEnd = React.cloneElement(prevElement, {
-      key: '1',
-      style: prefix({
-        ...transition,
-        ...prevPosition,
-        margin: nextPosition.margin,
-        opacity: 0,
-        transform: `matrix(${1 / targetScaleX}, 0, 0, ${1 /
-          targetScaleY}, ${-targetTranslateX}, ${-targetTranslateY})`,
-      }),
-    })
-
-    const targetStart = React.cloneElement(this.props.children, {
-      key: '2',
-      style: prefix({
-        ...transition,
-        ...nextPosition,
-        margin: prevPosition.margin,
-        opacity: 0,
-        transform: `matrix(${targetScaleX}, 0, 0, ${targetScaleY}, ${targetTranslateX}, ${targetTranslateY})`,
-      }),
-    })
-
-    const targetEnd = React.cloneElement(this.props.children, {
-      key: '2',
-      style: prefix({
-        ...transition,
-        ...nextPosition,
-        opacity: 1,
-        transform: noTransform,
-      }),
-    })
-
-    const start = (
-      <div>
-        {sourceStart}
-        {targetStart}
-      </div>
-    )
-    const end = (
-      <div>
-        {sourceEnd}
-        {targetEnd}
-      </div>
-    )
-
-    this.setState({ loading: true })
-
-    const bodyElement = document.createElement('div')
-    window.document.body.appendChild(bodyElement)
-    this.bodyElement = bodyElement
-    renderSubtreeIntoContainer(this, start, bodyElement)
-
-    this.animationTimeout = setTimeout(() => {
-      renderSubtreeIntoContainer(this, end, bodyElement)
-      this.animationTimeout = setTimeout(this.animateEnd, duration)
-    }, 0)
+  componentDidMount() {
+    this.onShowLock = false
+    this.onShow()
   }
 
-  animateEnd() {
+  componentWillUnmount() {
+    this.onHide()
+    this.onShowLock = false
+  }
+
+  componentWillReceiveProps() {
+    this.onShowLock = false
+    this.onHide()
+  }
+
+  componentDidUpdate() {
+    this.onShow()
+  }
+
+  animateEnd = () => {
+    console.log('animate end')
     this.animationTimeout = null
     this.setState({ loading: false })
     this.props.onAnimationEnd && this.props.onAnimationEnd()
@@ -158,7 +85,7 @@ export default class Overdrive extends React.Component {
       components[id] = false
       if (animationDelay) {
         this.animationDelayTimeout = setTimeout(
-          this.animate.bind(this, prevPosition, prevElement),
+          () => this.animate(prevPosition, prevElement),
           animationDelay,
         )
       } else {
@@ -169,30 +96,96 @@ export default class Overdrive extends React.Component {
     }
   }
 
-  componentDidMount() {
-    this.onShow()
+  animate = (prevPosition, prevElement) => {
+    const { duration } = this.props
+    prevPosition.top += window.pageYOffset || document.documentElement.scrollTop
+    const nextPosition = this.getPosition(true)
+    const noTransform = 'scaleX(1) scaleY(1) translateX(0px) translateY(0px)'
+    const targetScaleX = prevPosition.width / nextPosition.width
+    const targetScaleY = prevPosition.height / nextPosition.height
+    const targetTranslateX = prevPosition.left - nextPosition.left
+    const targetTranslateY = prevPosition.top - nextPosition.top
+    if (
+      targetScaleX === 1 &&
+      targetScaleY === 1 &&
+      targetTranslateX === 0 &&
+      targetTranslateY === 0
+    ) {
+      this.setState({ loading: false })
+      return
+    }
+    const transition = {
+      transition: `transform ${duration / 1000}s, opacity ${duration / 1000}s`,
+      transformOrigin: '0 0 0',
+    }
+    const sourceStart = React.cloneElement(prevElement, {
+      key: '1',
+      style: prefix({
+        ...transition,
+        ...prevPosition,
+        opacity: 1,
+        transform: noTransform,
+      }),
+    })
+    const sourceEnd = React.cloneElement(prevElement, {
+      key: '1',
+      style: prefix({
+        ...transition,
+        ...prevPosition,
+        margin: nextPosition.margin,
+        opacity: 0,
+        transform: `matrix(${1 / targetScaleX}, 0, 0, ${1 /
+          targetScaleY}, ${-targetTranslateX}, ${-targetTranslateY})`,
+      }),
+    })
+    const targetStart = React.cloneElement(this.props.children, {
+      key: '2',
+      style: prefix({
+        ...transition,
+        ...nextPosition,
+        margin: prevPosition.margin,
+        opacity: 0,
+        transform: `matrix(${targetScaleX}, 0, 0, ${targetScaleY}, ${targetTranslateX}, ${targetTranslateY})`,
+      }),
+    })
+    const targetEnd = React.cloneElement(this.props.children, {
+      key: '2',
+      style: prefix({
+        ...transition,
+        ...nextPosition,
+        opacity: 1,
+        transform: noTransform,
+      }),
+    })
+    const start = (
+      <div>
+        {sourceStart}
+        {targetStart}
+      </div>
+    )
+    const end = (
+      <div>
+        {sourceEnd}
+        {targetEnd}
+      </div>
+    )
+    this.setState({ loading: true })
+    const bodyElement = document.createElement('div')
+    window.document.body.appendChild(bodyElement)
+    this.bodyElement = bodyElement
+    renderSubtreeIntoContainer(this, start, bodyElement)
+    this.animationTimeout = setTimeout(() => {
+      renderSubtreeIntoContainer(this, end, bodyElement)
+      this.animationTimeout = setTimeout(this.animateEnd, duration)
+    }, 0)
   }
 
   clearAnimations() {
     clearTimeout(this.animationDelayTimeout)
     clearTimeout(this.animationTimeout)
-
     if (this.animationTimeout) {
       this.animateEnd()
     }
-  }
-
-  componentWillUnmount() {
-    this.onHide()
-  }
-
-  componentWillReceiveProps() {
-    this.onShowLock = false
-    this.onHide()
-  }
-
-  componentDidUpdate() {
-    this.onShow()
   }
 
   getPosition(addOffset?: boolean) {
@@ -217,6 +210,10 @@ export default class Overdrive extends React.Component {
     }
   }
 
+  setRef = c => {
+    this.element = c && c.firstChild
+  }
+
   render() {
     const {
       id,
@@ -235,11 +232,12 @@ export default class Overdrive extends React.Component {
     return React.createElement(
       element,
       {
-        ref: c => (this.element = c && c.firstChild),
+        ref: this.setRef,
         style: newStyle,
         ...rest,
       },
       onlyChild,
     )
   }
+  s
 }

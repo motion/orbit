@@ -37,7 +37,6 @@ class AppStore {
   }
 
   get isShowingOrbit() {
-    return true
     if (Constants.FORCE_FULLSCREEN) {
       return true
     }

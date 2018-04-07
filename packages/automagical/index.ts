@@ -529,7 +529,7 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
   function watcher(reactionFn) {
     return function watcherCb(reactValArg) {
       // @react.if check. avoids 0 bugs
-      if (isIf && (!reactValArg && reactValArg !== 0)) {
+      if (isIf && !reactValArg && reactValArg !== 0) {
         return
       }
       if (isIf) {

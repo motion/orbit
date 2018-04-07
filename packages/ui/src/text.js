@@ -84,13 +84,11 @@ export default class Text {
 
   componentDidMount() {
     // this fixes bug because clamp is hacky af and needs to re-measure to trigger
-    console.log('mount', this.props)
     this.measure()
   }
 
   measure() {
     if (this.multiLineEllipse) {
-      log(`measure: ${this.node.clientHeight}`)
       this.setState({
         doClamp: true,
         textHeight: this.node ? this.node.clientHeight : 0,

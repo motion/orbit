@@ -24,9 +24,6 @@ class OrbitCard {
   render({ result, index, theme, getHoverProps, store }) {
     const { isSelected, wasSelected } = store
     const shouldResizeText = wasSelected !== isSelected
-    if (shouldResizeText) {
-      log(`RES ${index}`)
-    }
     let cardWrapStyle = {
       height: 200,
     }

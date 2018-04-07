@@ -191,7 +191,7 @@ export default class OrbitFrame {
       <orbitFrame
         css={{
           flex: 1,
-          opacity: hide ? 0 : 1,
+          opacity: App.isShowingOrbit && !App.isAnimatingOrbit ? 1 : 0,
         }}
       >
         <OrbitArrow
@@ -211,6 +211,7 @@ export default class OrbitFrame {
             boxShadow: [borderShadow],
             borderLeftRadius,
             borderRightRadius,
+            opacity: hide ? 0 : 1,
           }}
         />
         <overflowWrap

@@ -66,6 +66,7 @@ export default class OrbitContent {
         size: 14,
         style: {
           marginTop: 1,
+          paddingRight: 5,
           marginLeft: 15,
         },
       },
@@ -73,6 +74,7 @@ export default class OrbitContent {
     }
     return (
       <orbitContent>
+        <space css={{ height: 10 }} />
         {appStore.results.slice(0, query ? 12 : 5).map((result, index) => (
           <OrbitItem
             {...!query && tinyProps}

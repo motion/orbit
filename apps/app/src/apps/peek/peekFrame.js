@@ -43,14 +43,37 @@ export default class PeekFrame {
                   APP_SHADOW,
                   fullScreen ? null : ['inset', 0, 0, 0, 0.5, [0, 0, 0, 0.15]],
                 ].filter(Boolean),
-                borderRightRadius: fullScreen ? BORDER_RADIUS : 0,
+                borderRightRadius: fullScreen || onLeft ? BORDER_RADIUS : 0,
+                borderLeftRadius: !onLeft ? BORDER_RADIUS : 0,
                 background: fullScreen
                   ? theme.base.background.lighten(0.05)
-                  : '#fff',
+                  : theme.base.background,
               }}
               {...props}
             >
               {children}
+              <undoBorder
+                css={{
+                  background: theme.base.background,
+                  width: 1,
+                  position: 'absolute',
+                  top: 0,
+                  bottom: 0,
+                  // left: onLeft ? 0 : 'auto',
+                  right: !onLeft ? 0 : 'auto',
+                }}
+              />
+              <opposeShadow
+                css={{
+                  position: 'absolute',
+                  top: 0,
+                  right: 0,
+                  bottom: 0,
+                  width: 7,
+                  background: `linear-gradient(to right, transparent, #fff)`,
+                  zIndex: 10000,
+                }}
+              />
             </main>
           </peek>
         </crop>

@@ -76,7 +76,7 @@ export default class Item {
             ellipse={2}
             fontWeight={400}
             css={{
-              width: 'calc(100% - 15px)',
+              width: 'calc(100% - 25px)',
             }}
             {...titleProps}
           >

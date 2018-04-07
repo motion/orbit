@@ -102,8 +102,10 @@ export default class ElectronReactions {
     ([mousePosition, isHidden]) => {
       if (isHidden) {
         if (Electron.orbitState.mouseOver) {
-          Electron.setOrbitState({ mouseOver: false })
-          Electron.setPeekState({ mouseOver: false })
+          Electron.setState({
+            peekState: { mouseOver: false },
+            orbitState: { mouseOver: false },
+          })
         }
         return
       }

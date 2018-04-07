@@ -234,24 +234,24 @@ export default class DesktopScreen {
   }, 32)
 
   watchMouse = () => {
-    // iohook.on(
-    //   'mousemove',
-    //   throttle(({ x, y }) => {
-    //     Desktop.setMouseState({
-    //       position: { x, y },
-    //     })
-    //   }, 64),
-    // )
-    // iohook.on('mousedown', ({ button, x, y }) => {
-    //   if (button === 1) {
-    //     Desktop.setMouseState({ mouseDown: { x, y, at: Date.now() } })
-    //   }
-    // })
-    // iohook.on('mouseup', ({ button }) => {
-    //   if (button === 1) {
-    //     Desktop.setMouseState({ mouseDown: null })
-    //   }
-    // })
+    iohook.on(
+      'mousemove',
+      throttle(({ x, y }) => {
+        Desktop.setMouseState({
+          position: { x, y },
+        })
+      }, 40),
+    )
+    iohook.on('mousedown', ({ button, x, y }) => {
+      if (button === 1) {
+        Desktop.setMouseState({ mouseDown: { x, y, at: Date.now() } })
+      }
+    })
+    iohook.on('mouseup', ({ button }) => {
+      if (button === 1) {
+        Desktop.setMouseState({ mouseDown: null })
+      }
+    })
   }
 
   async rescanApp() {

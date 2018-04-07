@@ -2,6 +2,9 @@ import Passport from 'passport'
 import Refresh from 'passport-oauth2-refresh'
 
 export default class Oauth {
+  findInfo: Function
+  updateInfo: Function
+
   constructor({ strategies, onSuccess, findInfo, updateInfo }) {
     if (!strategies) {
       throw Error(`Need to provide strategies key`)

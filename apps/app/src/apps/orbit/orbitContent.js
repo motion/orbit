@@ -66,7 +66,6 @@ export default class OrbitContent {
         size: 14,
         style: {
           marginTop: 1,
-          paddingRight: 5,
           marginLeft: 15,
         },
       },

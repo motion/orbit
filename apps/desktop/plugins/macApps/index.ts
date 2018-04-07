@@ -9,31 +9,12 @@ const getAbbr = name =>
     .map(word => word[0])
     .join('')
 
-/**
- * Directories to watch.
- * Updates in these directories lead to force recache of apps
- * @type {Array}
- */
 const WATCH_DIRECTORIES = ['/Applications/']
-
-/**
- * Options for WATCH_DIRECTORIES fs.watch
- * @type {Object}
- */
 const WATCH_OPTIONS = {
   recursive: true,
 }
-
-/**
- * Time for apps list cache
- * @type {Integer}
- */
 const CACHE_TIME = 30 * 60 * 1000
 
-/**
- * Cache getAppsList function
- * @type {Function}
- */
 const cachedAppsList = memoize(getAppsList, {
   length: false,
   promise: 'then',
@@ -62,15 +43,6 @@ export const fn = ({ term, actions, display }) => {
         icon: path,
         subtitle: path,
         clipboard: path,
-        // onKeyDown: event => {
-        //   if ((event.metaKey || event.ctrlKey) && event.keyCode === 82) {
-        //     // Show application in Finder by cmd+R shortcut
-        //     actions.reveal(path)
-        //     event.preventDefault()
-        //   }
-        // },
-        // onSelect: () => actions.open(`file://${path}`),
-        // getPreview: () => <Preview name={name} path={path} />,
       }
     })
     display(result)
@@ -78,16 +50,12 @@ export const fn = ({ term, actions, display }) => {
 }
 
 export const initialize = () => {
-  // Cache apps cache and force cache reloading in background
   const recache = () => {
     cachedAppsList.clear()
     cachedAppsList()
   }
-  // Force recache before expiration
   setInterval(recache, CACHE_TIME * 0.95)
   recache()
-
-  // recache apps when apps directories changed
   WATCH_DIRECTORIES.forEach(dir => {
     fs.watch(dir, WATCH_OPTIONS, recache)
   })

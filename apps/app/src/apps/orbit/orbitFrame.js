@@ -210,8 +210,8 @@ export default class OrbitFrame {
         <orbitBorder
           css={{
             boxShadow: [borderShadow],
-            borderLeftRadius,
-            borderRightRadius,
+            borderLeftRadius: borderLeftRadius ? borderLeftRadius - 1 : 0,
+            borderRightRadius: borderRightRadius ? borderRightRadius - 1 : 0,
             opacity: App.isShowingOrbit && !App.isAnimatingOrbit ? 1 : 0,
           }}
         />

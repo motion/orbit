@@ -56,16 +56,6 @@ export default class PeekHeader {
         $headerVisible={App.isShowingHeader}
         $headerMouseOver={Electron.orbitState.mouseOver}
         css={{
-          boxShadow: [
-            [
-              'inset',
-              0,
-              0,
-              0,
-              0.5,
-              theme.base.background.darken(0.12).desaturate(0.5),
-            ],
-          ],
           borderTopLeftRadius:
             !Electron.orbitOnLeft || Electron.orbitState.orbitDocked
               ? 0
@@ -76,6 +66,25 @@ export default class PeekHeader {
               : Constants.BORDER_RADIUS,
         }}
       >
+        <bottomBorder
+          css={{
+            position: 'absolute',
+            bottom: 0,
+            left: -1,
+            right: 20,
+            top: 0,
+            boxShadow: [
+              [
+                'inset',
+                1,
+                0,
+                0,
+                0.5,
+                theme.base.background.darken(0.12).desaturate(0.5),
+              ],
+            ],
+          }}
+        />
         <title>
           <UI.Input
             value={orbitStore.query}

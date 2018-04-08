@@ -34,6 +34,7 @@ export default class OrbitCard {
       measure: shouldResizeText,
       style: {
         flex: 1,
+        lineHeight: '1.35rem',
       },
     }
     return (
@@ -47,12 +48,18 @@ export default class OrbitCard {
             <Text
               size={1.35}
               ellipse={2}
-              fontWeight={200}
-              css={{ marginBottom: 8 }}
+              fontWeight={400}
+              css={{ marginBottom: 5 }}
             >
               {result.title}
             </Text>
-            <content css={{ flex: 1, opacity: 0.8, overflow: 'hidden' }}>
+            <content
+              css={{
+                flex: 1,
+                opacity: 0.8,
+                overflow: 'hidden',
+              }}
+            >
               <Text {...textProps} css={{ maxHeight: '100%' }}>
                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Ratione
                 modi optio at neque ducimus ab aperiam dolores nemo? Quod quos
@@ -66,7 +73,11 @@ export default class OrbitCard {
                 reprehenderit veniam dicta, voluptatum vel voluptas a?
               </Text>
             </content>
-            <Text opacity={0.5} size={0.9} css={{ marginBottom: 3 }}>
+            <Text
+              opacity={0.5}
+              size={0.9}
+              css={{ marginBottom: 3, paddingTop: 10 }}
+            >
               via{' '}
               <UI.Icon
                 name="mail"

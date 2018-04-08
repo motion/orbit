@@ -78,7 +78,7 @@ export default class PeekHeader {
       >
         <title>
           <UI.Input
-            value={App.state.query || ''}
+            value={orbitStore.query}
             size={1.35}
             sizeRadius
             css={{

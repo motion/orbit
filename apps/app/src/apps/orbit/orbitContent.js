@@ -50,48 +50,55 @@ class OrbitContext {
   }
 }
 
+const tinyProps = {
+  hidePreview: true,
+  titleProps: {
+    ellipse: 1,
+    fontWeight: 400,
+    size: 1,
+  },
+  iconProps: {
+    size: 14,
+    style: {
+      marginTop: 1,
+      marginLeft: 15,
+    },
+  },
+  padding: [3, 15],
+  style: {
+    borderRadius: 5,
+  },
+}
+
 @view.attach('appStore')
 @view
 export default class OrbitContent {
   render({ appStore, getHoverProps }) {
     const { query } = App.state
-    const tinyProps = {
-      hidePreview: true,
-      titleProps: {
-        ellipse: true,
-        fontWeight: 400,
-        size: 1,
-      },
-      iconProps: {
-        size: 14,
-        style: {
-          marginTop: 1,
-          marginLeft: 15,
-        },
-      },
-      padding: [3, 15],
-    }
+    log(`render.OrbitContent`)
     return (
       <orbitContent>
         <space css={{ height: 10 }} />
-        {appStore.results.slice(0, query ? 12 : 5).map((result, index) => (
-          <OrbitItem
-            {...!query && tinyProps}
-            key={result.id}
-            type="gmail"
-            index={index}
-            results={appStore.results}
-            result={{
-              ...result,
-              title: result.title.slice(0, 18),
-            }}
-            total={appStore.results.length}
-            {...getHoverProps({
-              result,
-              id: index,
-            })}
-          />
-        ))}
+        <notifications $tiny={!query}>
+          {appStore.results.slice(0, query ? 12 : 5).map((result, index) => (
+            <OrbitItem
+              {...!query && tinyProps}
+              key={result.id}
+              type="gmail"
+              index={index}
+              results={appStore.results}
+              result={{
+                ...result,
+                title: result.title.slice(0, Math.random() * 35 + 10),
+              }}
+              total={appStore.results.length}
+              {...getHoverProps({
+                result,
+                id: index,
+              })}
+            />
+          ))}
+        </notifications>
         <OrbitContext
           if={!query}
           appStore={appStore}
@@ -105,6 +112,9 @@ export default class OrbitContent {
   static style = {
     orbitContent: {
       flex: 1,
+    },
+    tiny: {
+      margin: [0, 10],
     },
   }
 }

@@ -1,8 +1,19 @@
+import { react } from '@mcro/black'
 import { App } from '@mcro/all'
 import KeyboardStore from './keyboardStore'
+import { throttle } from 'lodash'
 
 export default class OrbitStore {
+  query = ''
   keyboardStore = new KeyboardStore()
+
+  @react
+  updateAppQuery = [
+    () => this.query,
+    throttle(query => {
+      App.setQuery(query)
+    }, 150),
+  ]
 
   willMount() {
     // only do reactions in one App
@@ -48,6 +59,6 @@ export default class OrbitStore {
   }
 
   onChangeQuery = e => {
-    App.setQuery(e.target.value)
+    this.query = e.target.value
   }
 }

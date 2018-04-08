@@ -59,12 +59,10 @@ export default class Item {
         Math.max(orbitHeight / MAX_PER_SCREEN, orbitHeight / wantsToShow),
       ),
     )
-    const background = isSelected ? theme.highlight.color : 'transparent'
     return (
       <orbitItem
         css={{
           padding: padding || ITEM_PAD,
-          background,
         }}
         onClick={this.onClick}
         {...props}
@@ -93,11 +91,7 @@ export default class Item {
             {...iconProps}
           />
         </titles>
-        <OrbitItemPreview
-          if={!hidePreview}
-          result={result}
-          background={background}
-        />
+        <OrbitItemPreview if={!hidePreview} result={result} />
       </orbitItem>
     )
   }
@@ -105,11 +99,7 @@ export default class Item {
   static style = {
     orbitItem: {
       position: 'relative',
-      // background: 'red',
       overflow: 'hidden',
-      '&:hover bg': {
-        opacity: 1,
-      },
     },
     space: {
       height: 20,
@@ -119,5 +109,19 @@ export default class Item {
       alignItems: 'flex-start',
       padding: [2, 5, 2, 0],
     },
+  }
+
+  static theme = (props, theme) => {
+    const isSelected = props.appStore.selectedIndex === props.index
+    const hlColor = theme.base.highlight.color
+    const background = isSelected ? hlColor : 'transparent'
+    return {
+      orbitItem: {
+        background,
+        '&:hover': {
+          background: isSelected ? hlColor.darken(0.1) : hlColor.darken(0.05),
+        },
+      },
+    }
   }
 }

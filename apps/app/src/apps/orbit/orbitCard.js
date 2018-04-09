@@ -36,8 +36,9 @@ export default class OrbitCard {
     if (!parentElement) {
       return null
     }
+    log(`render card`, index)
     return (
-      <Overdrive id={`${result.id}`} parentElement={parentElement}>
+      <Overdrive parentElement={parentElement}>
         {({ AnimateElement }) => {
           const { isSelected, wasSelected } = store
           const shouldResizeText = wasSelected !== isSelected
@@ -50,7 +51,6 @@ export default class OrbitCard {
               height: 400,
             }
           }
-          console.log('isSelected', isSelected, index, cardWrapStyle)
           const textProps = {
             // ellipse: true,
             // measure: shouldResizeText,
@@ -60,7 +60,7 @@ export default class OrbitCard {
             },
           }
           return (
-            <AnimateElement id={`${result.id}`} duration={3000}>
+            <AnimateElement id={`${result.id}`}>
               <cardWrap
                 css={cardWrapStyle}
                 {...getHoverProps({ result, id: index })}

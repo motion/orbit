@@ -20,7 +20,8 @@ class OrbitContext {
   }
 
   render({ appStore, theme, getHoverProps }, { resultsRef }) {
-    const isSelectedInContext = appStore.selectedIndex >= 5
+    const isSelectedInContext = false && appStore.selectedIndex >= 5
+    log(`context`)
     return (
       <orbitContext
         css={{
@@ -32,7 +33,7 @@ class OrbitContext {
         <results ref={this.setRef}>
           {resultsRef &&
             appStore.results
-              .slice(5)
+              .slice(0, 1)
               .map((result, i) => (
                 <OrbitCard
                   key={result.id}
@@ -92,7 +93,7 @@ export default class OrbitContent {
     return (
       <orbitContent>
         <space css={{ height: 10 }} />
-        <notifications $tiny={!query}>
+        <notifications if={false} $tiny={!query}>
           {appStore.results.slice(0, query ? 12 : 5).map((result, index) => (
             <OrbitItem
               {...!query && tinyProps}

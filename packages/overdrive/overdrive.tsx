@@ -2,6 +2,31 @@ import * as React from 'react'
 import OverdriveElement from './overdriveElement'
 import { debounce } from 'lodash'
 
+class AnimatedItem extends React.Component {
+  props: { position?: any; children?: any }
+
+  render() {
+    const { position, ...props } = this.props
+    if (!position) {
+      return <div style={{ transition: 'all ease-in 1000ms' }} {...props} />
+    }
+    const { left, top, width, height } = position
+    return (
+      <div
+        style={{
+          position: 'absolute',
+          overflow: 'hidden',
+          transition: 'all ease-in 1000ms',
+          transform: `translateX(${left}px) translateY(${top}px)`,
+          width,
+          height,
+        }}
+        {...props}
+      />
+    )
+  }
+}
+
 export default class Overdrive extends React.Component {
   props: {
     children?: any
@@ -31,10 +56,13 @@ export default class Overdrive extends React.Component {
     this.setState({
       hasRenderedNaturally: false,
       naturalChildren: this.props.children({
-        AnimateElement: props =>
-          React.cloneElement(props.children, {
-            ref: this.getNaturalChildRef(props.id),
-          }),
+        AnimateElement: props => (
+          <AnimatedItem>
+            {React.cloneElement(props.children, {
+              ref: this.getNaturalChildRef(props.id),
+            })}
+          </AnimatedItem>
+        ),
       }),
     })
   }
@@ -65,21 +93,12 @@ export default class Overdrive extends React.Component {
   }
 
   render() {
-    console.log(
-      'render overdrive',
-      this.childPositions,
-      this.state.hasRenderedNaturally,
-    )
     if (!this.state.hasRenderedNaturally) {
       return this.state.naturalChildren
     }
     return this.props.children({
       AnimateElement: props => (
-        <OverdriveElement
-          parentElement={this.props.parentElement}
-          naturalChild={this.naturalChildRef(props.id)}
-          {...props}
-        />
+        <AnimatedItem position={this.naturalChildRef(props.id)} {...props} />
       ),
     })
   }

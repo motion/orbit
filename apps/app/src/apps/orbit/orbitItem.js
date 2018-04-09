@@ -112,7 +112,6 @@ export default class Item {
   }
 
   static theme = (props, theme) => {
-    console.log('theme is ', theme)
     const isSelected = props.appStore.selectedIndex === props.index
     const hlColor = theme.highlight.color
     const background = isSelected ? hlColor : 'transparent'

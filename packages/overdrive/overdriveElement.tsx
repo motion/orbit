@@ -26,7 +26,7 @@ export default class Overdrive extends React.Component {
 
   static defaultProps = {
     element: 'div',
-    duration: 200,
+    duration: 1000,
   }
 
   state = {
@@ -138,7 +138,7 @@ export default class Overdrive extends React.Component {
     }
     const noTransform = 'scaleX(1) scaleY(1) translateX(0px) translateY(0px)'
     const transition = {
-      transition: `transform ${duration / 1000}s, opacity ${duration / 1000}s`,
+      transition: `transform ${duration}ms, opacity ${duration}ms`,
       transformOrigin: '0 0 0',
     }
     const sourceStart = React.cloneElement(prevElement, {
@@ -184,25 +184,27 @@ export default class Overdrive extends React.Component {
         transform: noTransform,
       }),
     })
-    const start = (
-      <React.Fragment>
-        {sourceStart}
-        {targetStart}
-      </React.Fragment>
-    )
-    const end = (
-      <React.Fragment>
-        {sourceEnd}
-        {targetEnd}
-      </React.Fragment>
-    )
     this.setState({ loading: true })
     const bodyElement = document.createElement('div')
     this.hiddenElement.appendChild(bodyElement)
     this.bodyElement = bodyElement
-    renderSubtreeIntoContainer(this, start, bodyElement)
+    renderSubtreeIntoContainer(
+      this,
+      <React.Fragment>
+        {sourceStart}
+        {targetStart}
+      </React.Fragment>,
+      bodyElement,
+    )
     this.animationTimeout = setTimeout(() => {
-      renderSubtreeIntoContainer(this, end, bodyElement)
+      renderSubtreeIntoContainer(
+        this,
+        <React.Fragment>
+          {sourceEnd}
+          {targetEnd}
+        </React.Fragment>,
+        bodyElement,
+      )
       this.animationTimeout = setTimeout(this.animateEnd, duration)
     }, 0)
   }
@@ -258,9 +260,6 @@ export default class Overdrive extends React.Component {
     if (!this.state.children) {
       return null
     }
-    if (!naturalChild) {
-      return null
-    }
     const newStyle = {
       ...style,
       position: 'absolute',
@@ -271,17 +270,26 @@ export default class Overdrive extends React.Component {
       height: naturalChild.height,
       opacity: this.state.loading ? 0 : 1,
     }
-    return ReactDOM.unstable_createPortal(
-      React.createElement(
-        element,
-        {
-          ref: this.setRef,
-          style: newStyle,
-          ...rest,
-        },
-        React.Children.only(this.state.children),
-      ),
-      parentElement,
+    // return ReactDOM.unstable_createPortal(
+    //   React.createElement(
+    //     element,
+    //     {
+    //       ref: this.setRef,
+    //       style: newStyle,
+    //       ...rest,
+    //     },
+    //     React.Children.only(this.state.children),
+    //   ),
+    //   parentElement,
+    // )
+    return React.createElement(
+      element,
+      {
+        ref: this.setRef,
+        style: newStyle,
+        ...rest,
+      },
+      React.Children.only(this.state.children),
     )
   }
 }

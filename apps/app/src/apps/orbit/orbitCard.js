@@ -52,8 +52,8 @@ export default class OrbitCard {
             }
           }
           const textProps = {
-            // ellipse: true,
-            // measure: shouldResizeText,
+            ellipse: true,
+            measure: shouldResizeText,
             style: {
               flex: 1,
               lineHeight: '1.35rem',
@@ -70,27 +70,15 @@ export default class OrbitCard {
                   onMouseEnter={this.setHovered}
                   onMouseLeave={this.setUnhovered}
                 >
-                  <AnimateElement id="HAHA">
-                    <div>
-                      dont show me on animate now mo? Quod quos nisi molestias
-                      velit reprehenderit veniam dicta, voluptatum vel voluptas
-                      a? Lorem ipsum dolor sit amet consectetur adipisicing
-                      elit. Ratione modi optio at neque ducimus ab aperiam
-                      dolores nemo? Quod quos nisi molestias velit reprehenderit
-                      veniam dicta, voluptatum vel voluptas a? Lob aperiam
-                      dolores nemo? Quod quos nisi molestias velit reprehenderit
-                      veniam dicta, voluptatum vel voluptas a? Lo
-                    </div>
-                  </AnimateElement>
-                  {/* <AnimateElement id={`${result.id}-title`}>
-                    <text
-                      // size={1.35}
-                      // ellipse={2}
-                      // fontWeight={400}
+                  <AnimateElement id={`${result.id}-title`}>
+                    <Text
+                      size={1.35}
+                      ellipse={2}
+                      fontWeight={400}
                       css={{ marginBottom: 5 }}
                     >
                       {result.title}
-                    </text>
+                    </Text>
                   </AnimateElement>
                   <content
                     css={{
@@ -100,7 +88,7 @@ export default class OrbitCard {
                     }}
                   >
                     <AnimateElement id={`${result.id}-text`}>
-                      <text {...textProps} css={{ maxHeight: '100%' }}>
+                      <Text {...textProps} css={{ maxHeight: '100%' }}>
                         Lorem ipsum dolor sit amet consectetur adipisicing elit.
                         Ratione modi optio at neque ducimus ab aperiam dolores
                         nemo? Quod quos nisi molestias velit reprehenderit
@@ -113,13 +101,13 @@ export default class OrbitCard {
                         neque ducimus ab aperiam dolores nemo? Quod quos nisi
                         molestias velit reprehenderit veniam dicta, voluptatum
                         vel voluptas a?
-                      </text>
+                      </Text>
                     </AnimateElement>
                   </content>
                   <AnimateElement id={`${result.id}-bottom`}>
-                    <text
-                      // opacity={0.5}
-                      // size={0.9}
+                    <Text
+                      opacity={0.5}
+                      size={0.9}
                       css={{ marginBottom: 3, paddingTop: 10 }}
                     >
                       via{' '}
@@ -130,8 +118,8 @@ export default class OrbitCard {
                       />
                       &nbsp;
                       <UI.Date>{result.bitUpdatedAt}</UI.Date>
-                    </text>
-                  </AnimateElement> */}
+                    </Text>
+                  </AnimateElement>
                 </card>
               </cardWrap>
             </AnimateElement>

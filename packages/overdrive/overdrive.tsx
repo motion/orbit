@@ -11,6 +11,9 @@ class PortalChild extends React.Component {
   }
 }
 
+const AnimateElement = ({ children }) => children
+AnimateElement.IS_ANIMATED_ELEMENT = true
+
 // depth first to capture changes
 const replaceAnimateNode = (child, replacer) => {
   let result
@@ -112,8 +115,8 @@ export default class Overdrive extends React.Component {
   }
 
   render() {
-    const AnimateElement = ({ children }) => children
-    AnimateElement.IS_ANIMATED_ELEMENT = true
+    return this.props.children({ AnimateElement })
+
     const portalChildren = this.flattenChildren(
       this.props.children({
         AnimateElement,

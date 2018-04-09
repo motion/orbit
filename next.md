@@ -29,6 +29,8 @@
   * slack sync
     * get working
     * group by time simply at first
+    * slack conversation sidebar design
+    * slack peek simple render
   * correctness
     * pin:
       * fix not focusing input on pin (option+space/doubletap doesnt focus input text)
@@ -45,10 +47,13 @@
 
 * WEDNESDAY
 
+  * google doc sync
+    * google doc design
+    * multiple section highlights:
+      * hover to scroll to in peek
   * correctness:
     * pin-on-click only when option holding
     * fix orbit not opening quickly after not using for a while
-  * github sync
   * search correctness:
     * avoid multiple renders on search
     * "gh" prefix to search integration
@@ -64,20 +69,26 @@
 
 * THURSDAY
 
-  * smoothness
+  * github sync
+    * design sidebar
+    * simple peek
+  * animation burst:
+    * nice "in" animations on fullscreen
     * fix unpin glitchy animation
+  * correctness:
+    * fix hover over <Indicator /> to show sidebar
+    * swindler fix not updating on some window resize/change
+  * settings:
+    * make various settings panes better
+  * mini productionize
+    * get builds working to .app
+    * get auto update working
+    * minimize builds to smaller size
+    * see if can share chromium or delay download
+  * mini onboarding:
+    * on empty, open settings by default
 
 * FRIDAY
 
-## queued ux stuff
-
-* OCR scanning - once its paused again it doesnt move wiht app anymore
-* should use mouse angle to prevent unwanted accidental selects
-
-## notes
-
-* potential metrics to
-
-  * saved time searching
-  * saved contextual switches
-  * time reduced in slack/email
+  * flying
+  * jank reduction sprint

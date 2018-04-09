@@ -40,11 +40,7 @@ export default class OrbitCard {
     return (
       <Overdrive id={`${result.id}`}>
         <cardWrap css={cardWrapStyle} {...getHoverProps({ result, id: index })}>
-          <card
-            css={{
-              background: isSelected ? theme.highlight.color : 'transparent',
-            }}
-          >
+          <card>
             <Text
               size={1.35}
               ellipse={2}
@@ -95,7 +91,7 @@ export default class OrbitCard {
 
   static style = {
     cardWrap: {
-      padding: [0, 8, 10],
+      padding: [0, 6, 8],
       position: 'relative',
     },
     card: {
@@ -104,5 +100,19 @@ export default class OrbitCard {
       padding: 12,
       overflow: 'hidden',
     },
+  }
+
+  static theme = ({ store }, theme) => {
+    const hlColor = theme.base.highlight.color
+    return {
+      card: {
+        background: store.isSelected ? hlColor : 'transparent',
+        '&:hover': {
+          background: store.isSelected
+            ? hlColor.darken(0.1)
+            : hlColor.darken(0.05),
+        },
+      },
+    }
   }
 }

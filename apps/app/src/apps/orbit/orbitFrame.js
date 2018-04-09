@@ -6,7 +6,7 @@ import * as Constants from '~/constants'
 import OrbitDivider from './orbitDivider'
 
 const { SHADOW_PAD, APP_SHADOW } = Constants
-const orbitLightShadow = [[0, 1, SHADOW_PAD, 0, [0, 0, 0, 0.15]]]
+const orbitLightShadow = [[0, 1, SHADOW_PAD, 0, [0, 0, 0, 0.04]]]
 const iWidth = 4
 const arrowSize = 22
 // const log = debug('OrbitFrame')

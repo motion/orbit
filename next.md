@@ -2,13 +2,6 @@
 
 * MONDAY
 
-  * ux
-    * hover cards color like orbititem
-  * themes
-    * upgrade gloss themes a little:
-      * title, subtitle, main text
-      * fix themes passed into static theme are different structure
-      * white and dark theme
   * cards
     * overdrive: deep investigate animate performance
     * dynamic sizing better with diff amounts of items

@@ -9,15 +9,17 @@ class Text {
   }
 }
 
-@view({
-  store: class OrbitCardStore {
-    get isSelected() {
-      return this.props.appStore.selectedIndex === this.props.index
-    }
+class OrbitCardStore {
+  get isSelected() {
+    return this.props.appStore.selectedIndex === this.props.index
+  }
 
-    @react({ delayValue: true })
-    wasSelected = [() => this.isSelected, _ => _]
-  },
+  @react({ delayValue: true })
+  wasSelected = [() => this.isSelected, _ => _]
+}
+
+@view({
+  store: OrbitCardStore,
 })
 export default class OrbitCard {
   hovered = false
@@ -30,27 +32,30 @@ export default class OrbitCard {
     this.hovered = false
   }
 
-  render({ result, index, parentElement, getHoverProps, store }) {
+  render({
+    result,
+    totalHeight,
+    total,
+    index,
+    parentElement,
+    getHoverProps,
+    store,
+  }) {
     store.isSelected
-    store.wasSelected
     if (!parentElement) {
       return null
     }
-    log(`render card`, index)
     return (
       <Overdrive parentElement={parentElement}>
         {({ AnimateElement }) => {
           const { isSelected, wasSelected } = store
+          const tallHeight = 400
+          const smallHeight = Math.max(
+            100,
+            (totalHeight - tallHeight) / Math.max(1, total - 1),
+          )
+          const height = isSelected ? tallHeight : smallHeight
           const shouldResizeText = wasSelected !== isSelected
-          let cardWrapStyle = {
-            height: 200,
-          }
-          if (isSelected) {
-            cardWrapStyle = {
-              ...cardWrapStyle,
-              height: 400,
-            }
-          }
           const textProps = {
             ellipse: true,
             measure: shouldResizeText,
@@ -59,23 +64,24 @@ export default class OrbitCard {
               lineHeight: '1.35rem',
             },
           }
+          const willTransition = false
           return (
             <AnimateElement id={`${result.id}`}>
               <cardWrap
-                css={cardWrapStyle}
+                css={{ height }}
                 {...getHoverProps({ result, id: index })}
               >
                 <card
-                  $cardHovered={this.hovered}
+                  $cardHovered={this.hovered && willTransition}
                   onMouseEnter={this.setHovered}
                   onMouseLeave={this.setUnhovered}
                 >
                   <AnimateElement id={`${result.id}-title`}>
                     <Text
-                      size={1.35}
-                      ellipse={2}
+                      size={isSelected ? 1.35 : 1.2}
+                      ellipse={isSelected ? 2 : 1}
                       fontWeight={400}
-                      css={{ marginBottom: 5 }}
+                      css={{ marginBottom: 0 }}
                     >
                       {result.title}
                     </Text>
@@ -131,12 +137,12 @@ export default class OrbitCard {
 
   static style = {
     cardWrap: {
-      padding: [0, 6, 8],
+      padding: [0, 6, 6],
       position: 'relative',
     },
     card: {
       flex: 1,
-      borderRadius: 8,
+      borderRadius: 7,
       padding: 12,
       overflow: 'hidden',
     },
@@ -144,13 +150,14 @@ export default class OrbitCard {
   }
 
   static theme = ({ store }, theme) => {
-    const hlColor = theme.highlight.color
     const hoveredStyle = {
-      background: store.isSelected ? hlColor.darken(0.1) : hlColor.darken(0.05),
+      background: store.isSelected
+        ? theme.activeHover.background
+        : theme.hover.background,
     }
     return {
       card: {
-        background: store.isSelected ? hlColor : 'transparent',
+        background: store.isSelected ? theme.active.background : 'transparent',
         '&:hover': hoveredStyle,
       },
       cardHovered: hoveredStyle,

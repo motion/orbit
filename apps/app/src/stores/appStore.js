@@ -98,7 +98,7 @@ export default class AppStore {
       ...(Desktop.searchState.searchResults || []),
     ]
     const strongTitleMatches = fuzzyResults(App.state.query, results)
-    return uniq([...strongTitleMatches, ...results].slice(0, 8))
+    return uniq([...strongTitleMatches, ...results].slice(0, 10))
   }
 
   setSelectedIndex = i => {

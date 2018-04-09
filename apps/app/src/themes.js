@@ -15,7 +15,10 @@ const blank = {
   buttonBackground: 'transparent',
 }
 
-const tanColor = color('rgb(255,255,245)')
+const tanBg = color('rgb(255,255,245)')
+const tanHoverBg = tanBg.darken(0.04).desaturate(0.5)
+const tanActiveBg = tanHoverBg.darken(0.05).desaturate(0.1)
+const tanActiveHoverBg = tanActiveBg.darken(0.05)
 
 const Themes = {
   light: Theme.fromStyles({
@@ -51,14 +54,18 @@ const Themes = {
     }),
   },
   tan: Theme.fromStyles({
-    highlightBackground,
-    highlightColor: tanColor
-      .darken(0.05)
-      .desaturate(0.5)
-      .toString(),
-    background: tanColor.toString(),
+    background: tanBg,
     color: '#444',
     borderColor: '#000',
+    hover: {
+      background: tanHoverBg,
+    },
+    active: {
+      background: tanActiveBg,
+    },
+    activeHover: {
+      background: tanActiveHoverBg,
+    },
   }),
   dark: Theme.fromStyles({
     highlightBackground: [0, 0, 0, 0.05],

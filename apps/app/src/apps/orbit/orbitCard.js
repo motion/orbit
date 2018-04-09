@@ -103,7 +103,7 @@ export default class OrbitCard {
   }
 
   static theme = ({ store }, theme) => {
-    const hlColor = theme.base.highlight.color
+    const hlColor = theme.highlight.color
     return {
       card: {
         background: store.isSelected ? hlColor : 'transparent',

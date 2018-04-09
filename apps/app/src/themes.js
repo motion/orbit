@@ -50,13 +50,6 @@ const Themes = {
       borderColor: [0, 0, 0, 0.1],
     }),
   },
-  gray: Theme.fromStyles({
-    highlightBackground,
-    highlightColor,
-    background: '#eee',
-    color: '#999',
-    borderColor: '#eee',
-  }),
   tan: Theme.fromStyles({
     highlightBackground,
     highlightColor: tanColor
@@ -73,23 +66,6 @@ const Themes = {
     background: 'rgba(20,20,20,0.94)',
     color: '#fff',
     borderColor: '#222',
-  }),
-  'clear-light': Theme.fromStyles({
-    highlightBackground,
-    highlightColor,
-    background: [0, 0, 0, 0],
-    color: [0, 0, 0, 0.6],
-    borderColor: [0, 0, 0, 0.3],
-  }),
-  'clear-dark': Theme.fromStyles({
-    highlightBackground,
-    highlightColor,
-    background: [25, 25, 25, 0],
-    color: [255, 255, 255, 0.78],
-    borderColor: [255, 255, 255, 0.3],
-    hover: {
-      background: [255, 255, 255, 0.025],
-    },
   }),
 }
 

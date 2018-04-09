@@ -8,8 +8,9 @@ export default class ThemeProvide extends React.Component {
   }
 
   getChildContext() {
+    const { children, ...themes } = this.props
     return {
-      uiThemes: this.props,
+      uiThemes: themes,
       provided: {},
     }
   }

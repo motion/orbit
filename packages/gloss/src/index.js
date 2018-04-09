@@ -11,10 +11,6 @@ export const Theme = Theme_
 export const ThemeProvide = ThemeProvide_
 export const Helpers = Helpers_
 
-// type exports
-// import { Transform, Color } from '@mcro/css'
-// export type Transform
-// export type Color
 export type Options = {
   dontTheme?: boolean,
   baseStyles?: Object,
@@ -105,30 +101,20 @@ export default class Gloss {
     // @view decorated style component
     if (Child.prototype && Child.prototype.render) {
       const { attachStyles, css } = this
-
       Child.prototype.glossElement = this.createElement
       Child.prototype.gloss = this
       Child.prototype.glossStylesheet = this.stylesheet
-
       const hasTheme = Child.theme && typeof Child.theme === 'function'
       const themeSheet = JSS.createStyleSheet().attach()
       const id = uid()
       Child.glossUID = id
       this.themeSheets[id] = themeSheet
-
       if (hasTheme) {
         Child.prototype.glossUpdateTheme = function(props) {
           this.theme = this.theme || themeSheet
-          let activeTheme
-          if (typeof props.theme === 'object') {
-            activeTheme = { base: props.theme }
-          } else {
-            activeTheme =
-              this.context.uiThemes &&
-              this.context.uiThemes[
-                props.theme || this.context.uiActiveThemeName
-              ]
-          }
+          const activeTheme =
+            this.context.uiThemes &&
+            this.context.uiThemes[this.context.uiActiveThemeName]
           if (activeTheme) {
             const childTheme = Child.theme(props, activeTheme, this)
             const rules = {}
@@ -142,7 +128,6 @@ export default class Gloss {
             this.theme.addRules(rules)
           }
         }
-
         // updateTheme on willUpdate
         const ogcomponentWillUpdate = Child.prototype.componentWillUpdate
         Child.prototype.componentWillUpdate = function(...args) {
@@ -151,7 +136,6 @@ export default class Gloss {
             return ogcomponentWillUpdate.call(this, ...args)
           }
         }
-
         const ogcomponentWillUnmount = Child.prototype.componentWillUnmount
         Child.prototype.componentWillUnmount = function(...args) {
           if (ogcomponentWillUnmount) {
@@ -178,7 +162,6 @@ export default class Gloss {
             return ogrender.call(this, ...args)
           }
         }
-
         // on first mount, attach styles
         const ogComponentWillMount = Child.prototype.componentWillMount
         Child.prototype.componentWillMount = function(...args) {
@@ -206,7 +189,6 @@ export default class Gloss {
       const style = styles[key]
       // @keyframes
       if (key[0] === '@') {
-        console.log('adding animation')
         this.stylesheet.addRule(key, style)
         continue
       }

@@ -9,7 +9,17 @@ import * as Constants from '~/constants'
 @UI.injectTheme
 @view
 class OrbitContext {
-  render({ appStore, theme, getHoverProps }) {
+  state = {
+    resultsRef: null,
+  }
+
+  setRef = resultsRef => {
+    if (resultsRef) {
+      this.setState({ resultsRef })
+    }
+  }
+
+  render({ appStore, theme, getHoverProps }, { resultsRef }) {
     const isSelectedInContext = appStore.selectedIndex >= 5
     return (
       <orbitContext
@@ -19,19 +29,21 @@ class OrbitContext {
         }}
       >
         <OrbitDivider if={!App.state.query} />
-        <results>
-          {appStore.results
-            .slice(5)
-            .map((result, i) => (
-              <OrbitCard
-                key={result.id}
-                appStore={appStore}
-                theme={theme}
-                getHoverProps={getHoverProps}
-                result={result}
-                index={i + 5}
-              />
-            ))}
+        <results ref={this.setRef}>
+          {resultsRef &&
+            appStore.results
+              .slice(5)
+              .map((result, i) => (
+                <OrbitCard
+                  key={result.id}
+                  parentElement={resultsRef}
+                  appStore={appStore}
+                  theme={theme}
+                  getHoverProps={getHoverProps}
+                  result={result}
+                  index={i + 5}
+                />
+              ))}
         </results>
       </orbitContext>
     )

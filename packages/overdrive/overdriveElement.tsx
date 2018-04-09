@@ -6,6 +6,25 @@ import PropTypes from 'prop-types'
 const renderSubtreeIntoContainer = ReactDOM.unstable_renderSubtreeIntoContainer
 const components = {}
 
+const removeAnimateNode = (child, parentNode) => {
+  if (Array.isArray(child)) {
+    return child.map(removeAnimateNode)
+  }
+  if (child.type.IS_ANIMATED_ELEMENT) {
+    return ReactDOM.createPortal(child, parentNode)
+  }
+  if (child.props.children) {
+    return {
+      ...child,
+      props: {
+        ...child.props,
+        children: removeAnimateNode(child.props.children, parentNode),
+      },
+    }
+  }
+  return child
+}
+
 export default class Overdrive extends React.Component {
   animationDelayTimeout: any
   animationTimeout: any
@@ -141,9 +160,15 @@ export default class Overdrive extends React.Component {
       transition: `transform ${duration}ms, opacity ${duration}ms`,
       transformOrigin: '0 0 0',
     }
-    const sourceStart = React.cloneElement(prevElement, {
+    const prev = removeAnimateNode(prevElement, this.props.parentElement)
+    const next = removeAnimateNode(
+      this.state.children,
+      this.props.parentElement,
+    )
+    console.log('prev/next', prev, next)
+    const sourceStart = React.cloneElement(prev, {
       key: '1',
-      children: null,
+      // children: null,
       style: prefix({
         ...transition,
         ...prevPosition,
@@ -151,9 +176,9 @@ export default class Overdrive extends React.Component {
         transform: noTransform,
       }),
     })
-    const sourceEnd = React.cloneElement(prevElement, {
+    const sourceEnd = React.cloneElement(prev, {
       key: '1',
-      children: null,
+      // children: null,
       style: prefix({
         ...transition,
         ...prevPosition,
@@ -163,9 +188,9 @@ export default class Overdrive extends React.Component {
           targetScaleY}, ${-targetTranslateX}, ${-targetTranslateY})`,
       }),
     })
-    const targetStart = React.cloneElement(this.state.children, {
+    const targetStart = React.cloneElement(next, {
       key: '2',
-      children: null,
+      // children: null,
       style: prefix({
         ...transition,
         ...nextPosition,
@@ -174,9 +199,9 @@ export default class Overdrive extends React.Component {
         transform: `matrix(${targetScaleX}, 0, 0, ${targetScaleY}, ${targetTranslateX}, ${targetTranslateY})`,
       }),
     })
-    const targetEnd = React.cloneElement(this.state.children, {
+    const targetEnd = React.cloneElement(next, {
       key: '2',
-      children: null,
+      // children: null,
       style: prefix({
         ...transition,
         ...nextPosition,
@@ -264,10 +289,10 @@ export default class Overdrive extends React.Component {
       ...style,
       position: 'absolute',
       overflow: 'hidden',
-      top: naturalChild.top,
-      left: naturalChild.left,
-      width: naturalChild.width,
-      height: naturalChild.height,
+      // top: naturalChild.top,
+      // left: naturalChild.left,
+      // width: naturalChild.width,
+      // height: naturalChild.height,
       opacity: this.state.loading ? 0 : 1,
     }
     // return ReactDOM.unstable_createPortal(

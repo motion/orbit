@@ -1,30 +1,37 @@
 import * as React from 'react'
+import ReactDOM from 'react-dom'
 import OverdriveElement from './overdriveElement'
 import { debounce } from 'lodash'
 
-class AnimatedItem extends React.Component {
-  props: { position?: any; children?: any }
-
+class PortalChild extends React.Component {
+  props: any
   render() {
-    const { position, ...props } = this.props
-    if (!position) {
-      return <div style={{ transition: 'all ease-in 1000ms' }} {...props} />
-    }
-    const { left, top, width, height } = position
-    return (
-      <div
-        style={{
-          position: 'absolute',
-          overflow: 'hidden',
-          transition: 'all ease-in 1000ms',
-          transform: `translateX(${left}px) translateY(${top}px)`,
-          width,
-          height,
-        }}
-        {...props}
-      />
-    )
+    const { child, parentElement } = this.props
+    return ReactDOM.createPortal(child, parentElement)
   }
+}
+
+// depth first to capture changes
+const replaceAnimateNode = (child, replacer) => {
+  let result
+  if (!child || !child.type) {
+    result = child
+  } else if (Array.isArray(child)) {
+    result = child.map(replaceAnimateNode)
+  } else if (child.props.children) {
+    const children = replaceAnimateNode(child.props.children, replacer)
+    result = {
+      ...child,
+      props: {
+        ...child.props,
+        children,
+      },
+    }
+  }
+  if (result && result.type && result.type.IS_ANIMATED_ELEMENT) {
+    return replacer(result, result.props.id)
+  }
+  return result
 }
 
 export default class Overdrive extends React.Component {
@@ -56,13 +63,10 @@ export default class Overdrive extends React.Component {
     this.setState({
       hasRenderedNaturally: false,
       naturalChildren: this.props.children({
-        AnimateElement: props => (
-          <AnimatedItem>
-            {React.cloneElement(props.children, {
-              ref: this.getNaturalChildRef(props.id),
-            })}
-          </AnimatedItem>
-        ),
+        AnimateElement: props =>
+          React.cloneElement(props.children, {
+            ref: this.getNaturalChildRef(props.id),
+          }),
       }),
     })
   }
@@ -92,14 +96,70 @@ export default class Overdrive extends React.Component {
     return this.childPositions[id]
   }
 
-  render() {
-    if (!this.state.hasRenderedNaturally) {
-      return this.state.naturalChildren
-    }
-    return this.props.children({
-      AnimateElement: props => (
-        <AnimatedItem position={this.naturalChildRef(props.id)} {...props} />
-      ),
+  flattenChildren = root => {
+    let result = []
+    replaceAnimateNode(root, (child, id) => {
+      result.push({ child, id })
+      return null
     })
+    return result
+  }
+
+  containers = {}
+
+  collectContainer = index => ref => {
+    this.containers[index] = ref
+  }
+
+  render() {
+    const AnimateElement = ({ children }) => children
+    AnimateElement.IS_ANIMATED_ELEMENT = true
+    const portalChildren = this.flattenChildren(
+      this.props.children({
+        AnimateElement,
+      }),
+    )
+    const { containers } = this
+    return (
+      <React.Fragment>
+        <div
+          style={{
+            opacity: 0,
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+          }}
+        >
+          {this.state.naturalChildren}
+        </div>
+        {portalChildren.map(({ child, id }, index) => {
+          const pos = this.childPositions[id]
+          return (
+            <div
+              key={`container-${id}`}
+              style={{
+                position: 'absolute',
+                transition: 'all ease-in 300ms',
+                zIndex: portalChildren.length - index,
+                ...pos,
+              }}
+              ref={this.collectContainer(id)}
+            />
+          )
+        })}
+        {portalChildren.map(
+          ({ child, id }) =>
+            containers[id] && (
+              <PortalChild
+                key={id}
+                child={child}
+                parentElement={containers[id]}
+              />
+            ),
+        )}
+      </React.Fragment>
+    )
   }
 }

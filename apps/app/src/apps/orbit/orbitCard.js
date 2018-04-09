@@ -70,7 +70,19 @@ export default class OrbitCard {
                   onMouseEnter={this.setHovered}
                   onMouseLeave={this.setUnhovered}
                 >
-                  <AnimateElement id={`${result.id}-title`}>
+                  <AnimateElement id="HAHA">
+                    <div>
+                      dont show me on animate now mo? Quod quos nisi molestias
+                      velit reprehenderit veniam dicta, voluptatum vel voluptas
+                      a? Lorem ipsum dolor sit amet consectetur adipisicing
+                      elit. Ratione modi optio at neque ducimus ab aperiam
+                      dolores nemo? Quod quos nisi molestias velit reprehenderit
+                      veniam dicta, voluptatum vel voluptas a? Lob aperiam
+                      dolores nemo? Quod quos nisi molestias velit reprehenderit
+                      veniam dicta, voluptatum vel voluptas a? Lo
+                    </div>
+                  </AnimateElement>
+                  {/* <AnimateElement id={`${result.id}-title`}>
                     <text
                       // size={1.35}
                       // ellipse={2}
@@ -119,7 +131,7 @@ export default class OrbitCard {
                       &nbsp;
                       <UI.Date>{result.bitUpdatedAt}</UI.Date>
                     </text>
-                  </AnimateElement>
+                  </AnimateElement> */}
                 </card>
               </cardWrap>
             </AnimateElement>

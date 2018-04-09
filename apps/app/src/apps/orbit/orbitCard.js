@@ -17,7 +17,19 @@ const Text = props => (
   },
 })
 export default class OrbitCard {
-  render({ result, index, theme, getHoverProps, store }) {
+  state = {
+    hovered: false,
+  }
+
+  setHovered = () => {
+    this.setState({ hovered: true })
+  }
+
+  setUnhovered = () => {
+    this.setState({ hovered: false })
+  }
+
+  render({ result, index, parentElement, getHoverProps, store }) {
     const { isSelected, wasSelected } = store
     const shouldResizeText = wasSelected !== isSelected
     let cardWrapStyle = {
@@ -38,53 +50,66 @@ export default class OrbitCard {
       },
     }
     return (
-      <Overdrive id={`${result.id}`}>
-        <cardWrap css={cardWrapStyle} {...getHoverProps({ result, id: index })}>
-          <card>
-            <Text
-              size={1.35}
-              ellipse={2}
-              fontWeight={400}
-              css={{ marginBottom: 5 }}
+      <Overdrive
+        id={`${result.id}`}
+        parentElement={parentElement || document.body}
+      >
+        {({ willTransition }) => (
+          <cardWrap
+            css={cardWrapStyle}
+            {...getHoverProps({ result, id: index })}
+          >
+            <card
+              $cardHovered={willTransition && this.state.hovered}
+              onMouseEnter={this.setHovered}
+              onMouseLeave={this.setUnhovered}
             >
-              {result.title}
-            </Text>
-            <content
-              css={{
-                flex: 1,
-                opacity: 0.8,
-                overflow: 'hidden',
-              }}
-            >
-              <Text {...textProps} css={{ maxHeight: '100%' }}>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Ratione
-                modi optio at neque ducimus ab aperiam dolores nemo? Quod quos
-                nisi molestias velit reprehenderit veniam dicta, voluptatum vel
-                voluptas a? Lorem ipsum dolor sit amet consectetur adipisicing
-                elit. Ratione modi optio at neque ducimus ab aperiam dolores
-                nemo? Quod quos nisi molestias velit reprehenderit veniam dicta,
-                voluptatum vel voluptas a? Lorem ipsum dolor sit amet
-                consectetur adipisicing elit. Ratione modi optio at neque
-                ducimus ab aperiam dolores nemo? Quod quos nisi molestias velit
-                reprehenderit veniam dicta, voluptatum vel voluptas a?
+              <Text
+                size={1.35}
+                ellipse={2}
+                fontWeight={400}
+                css={{ marginBottom: 5 }}
+              >
+                {result.title}
               </Text>
-            </content>
-            <Text
-              opacity={0.5}
-              size={0.9}
-              css={{ marginBottom: 3, paddingTop: 10 }}
-            >
-              via{' '}
-              <UI.Icon
-                name="mail"
-                size={10}
-                css={{ display: 'inline-block' }}
-              />
-              &nbsp;
-              <UI.Date>{result.bitUpdatedAt}</UI.Date>
-            </Text>
-          </card>
-        </cardWrap>
+              <content
+                css={{
+                  flex: 1,
+                  opacity: 0.8,
+                  overflow: 'hidden',
+                }}
+              >
+                <Text {...textProps} css={{ maxHeight: '100%' }}>
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                  Ratione modi optio at neque ducimus ab aperiam dolores nemo?
+                  Quod quos nisi molestias velit reprehenderit veniam dicta,
+                  voluptatum vel voluptas a? Lorem ipsum dolor sit amet
+                  consectetur adipisicing elit. Ratione modi optio at neque
+                  ducimus ab aperiam dolores nemo? Quod quos nisi molestias
+                  velit reprehenderit veniam dicta, voluptatum vel voluptas a?
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                  Ratione modi optio at neque ducimus ab aperiam dolores nemo?
+                  Quod quos nisi molestias velit reprehenderit veniam dicta,
+                  voluptatum vel voluptas a?
+                </Text>
+              </content>
+              <Text
+                opacity={0.5}
+                size={0.9}
+                css={{ marginBottom: 3, paddingTop: 10 }}
+              >
+                via{' '}
+                <UI.Icon
+                  name="mail"
+                  size={10}
+                  css={{ display: 'inline-block' }}
+                />
+                &nbsp;
+                <UI.Date>{result.bitUpdatedAt}</UI.Date>
+              </Text>
+            </card>
+          </cardWrap>
+        )}
       </Overdrive>
     )
   }
@@ -100,19 +125,20 @@ export default class OrbitCard {
       padding: 12,
       overflow: 'hidden',
     },
+    cardHovered: {},
   }
 
   static theme = ({ store }, theme) => {
     const hlColor = theme.highlight.color
+    const hoveredStyle = {
+      background: store.isSelected ? hlColor.darken(0.1) : hlColor.darken(0.05),
+    }
     return {
       card: {
         background: store.isSelected ? hlColor : 'transparent',
-        '&:hover': {
-          background: store.isSelected
-            ? hlColor.darken(0.1)
-            : hlColor.darken(0.05),
-        },
+        '&:hover': hoveredStyle,
       },
+      cardHovered: hoveredStyle,
     }
   }
 }

@@ -33,6 +33,9 @@ export default class OrbitCard {
   render({ result, index, parentElement, getHoverProps, store }) {
     store.isSelected
     store.wasSelected
+    if (!parentElement) {
+      return null
+    }
     return (
       <Overdrive id={`${result.id}`} parentElement={parentElement}>
         {({ AnimateElement }) => {

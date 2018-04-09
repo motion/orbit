@@ -40,19 +40,16 @@ export default class Overdrive extends React.Component {
   }
 
   getPosition = (node, addOffset?: boolean) => {
+    const parentRect = this.props.parentElement.getBoundingClientRect()
     const rect = node.getBoundingClientRect()
     const computedStyle = getComputedStyle(node)
     const marginTop = parseInt(computedStyle.marginTop, 10)
     const marginLeft = parseInt(computedStyle.marginLeft, 10)
     return {
-      top: rect.top - marginTop,
-      left: rect.left - marginLeft,
+      top: rect.top - marginTop - parentRect.top,
+      left: rect.left - marginLeft - parentRect.left,
       width: rect.width,
       height: rect.height,
-      margin: computedStyle.margin,
-      padding: computedStyle.padding,
-      borderRadius: computedStyle.borderRadius,
-      position: 'absolute',
     }
   }
 

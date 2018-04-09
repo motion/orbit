@@ -69,13 +69,6 @@ export default class Overdrive extends React.Component {
       : children
   }
 
-  animateEnd = () => {
-    this.animationTimeout = null
-    this.setState({ loading: false })
-    this.props.onAnimationEnd && this.props.onAnimationEnd()
-    this.bodyElement.parentNode.removeChild(this.bodyElement)
-  }
-
   onHide() {
     if (!this.state.children || !this.element) {
       return
@@ -220,6 +213,13 @@ export default class Overdrive extends React.Component {
     if (this.animationTimeout) {
       this.animateEnd()
     }
+  }
+
+  animateEnd = () => {
+    this.animationTimeout = null
+    this.setState({ loading: false })
+    this.props.onAnimationEnd && this.props.onAnimationEnd()
+    this.bodyElement.parentNode.removeChild(this.bodyElement)
   }
 
   getPosition = (node, addOffset?: boolean) => {

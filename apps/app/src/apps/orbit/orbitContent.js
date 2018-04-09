@@ -58,6 +58,7 @@ class OrbitContext {
     results: {
       flex: 1,
       overflowY: 'scroll',
+      position: 'relative',
     },
   }
 }

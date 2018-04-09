@@ -1,5 +1,6 @@
 import * as React from 'react'
 import OverdriveElement from './overdriveElement'
+import { debounce } from 'lodash'
 
 export default class Overdrive extends React.Component {
   props: {
@@ -9,6 +10,7 @@ export default class Overdrive extends React.Component {
 
   state = {
     naturalChildren: null,
+    hasRenderedNaturally: false,
   }
 
   componentWillMount() {
@@ -19,35 +21,66 @@ export default class Overdrive extends React.Component {
     this.updateNaturalChildren()
   }
 
-  childRefs = {}
+  reRenderAfterCollectingChildren = debounce(() => {
+    this.setState({ hasRenderedNaturally: true })
+  }, 16)
+
+  childPositions = {}
 
   updateNaturalChildren = () => {
     this.setState({
+      hasRenderedNaturally: false,
       naturalChildren: this.props.children({
         AnimateElement: props =>
           React.cloneElement(props.children, {
-            ref: this.collectNaturalChild(props.id),
+            ref: this.getNaturalChildRef(props.id),
           }),
       }),
     })
   }
 
-  collectNaturalChild = id => ref => {
-    this.childRefs[id] = ref
+  getPosition = (node, addOffset?: boolean) => {
+    const rect = node.getBoundingClientRect()
+    const computedStyle = getComputedStyle(node)
+    const marginTop = parseInt(computedStyle.marginTop, 10)
+    const marginLeft = parseInt(computedStyle.marginLeft, 10)
+    return {
+      top: rect.top - marginTop,
+      left: rect.left - marginLeft,
+      width: rect.width,
+      height: rect.height,
+      margin: computedStyle.margin,
+      padding: computedStyle.padding,
+      borderRadius: computedStyle.borderRadius,
+      position: 'absolute',
+    }
   }
 
-  getNaturalChild = id => {
-    return this.childRefs[id]
+  getNaturalChildRef = id => ref => {
+    if (ref) {
+      this.childPositions[id] = this.getPosition(ref)
+      this.reRenderAfterCollectingChildren()
+    }
+  }
+
+  naturalChildRef = id => {
+    return this.childPositions[id]
   }
 
   render() {
-    console.log('render overdrive')
-    return this.state.naturalChildren
+    console.log(
+      'render overdrive',
+      this.childPositions,
+      this.state.hasRenderedNaturally,
+    )
+    if (!this.state.hasRenderedNaturally) {
+      return this.state.naturalChildren
+    }
     return this.props.children({
       AnimateElement: props => (
         <OverdriveElement
           parentElement={this.props.parentElement}
-          naturalChild={this.getNaturalChild(props.id)}
+          naturalChild={this.naturalChildRef(props.id)}
           {...props}
         />
       ),

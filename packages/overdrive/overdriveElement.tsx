@@ -77,12 +77,12 @@ export default class Overdrive extends React.Component {
   }
 
   onHide() {
-    if (!this.state.children) {
+    if (!this.state.children || !this.element) {
       return
     }
     const { id } = this.props
     const prevElement = this.state.children
-    const prevPosition = this.getPosition()
+    const prevPosition = this.getPosition(this.element)
     components[id] = {
       prevPosition,
       prevElement,
@@ -129,7 +129,7 @@ export default class Overdrive extends React.Component {
   startAnimate(prevPosition, prevElement) {
     const { duration } = this.props
     prevPosition.top += this.scrollTop
-    const nextPosition = this.getPosition(true)
+    const nextPosition = this.getPosition(this.element, true)
     const targetScaleX = prevPosition.width / nextPosition.width
     const targetScaleY = prevPosition.height / nextPosition.height
     const targetTranslateX = prevPosition.left - nextPosition.left
@@ -222,8 +222,7 @@ export default class Overdrive extends React.Component {
     }
   }
 
-  getPosition(addOffset?: boolean) {
-    const node = this.element
+  getPosition = (node, addOffset?: boolean) => {
     const rect = node.getBoundingClientRect()
     const computedStyle = getComputedStyle(node)
     const marginTop = parseInt(computedStyle.marginTop, 10)
@@ -259,11 +258,19 @@ export default class Overdrive extends React.Component {
     if (!this.state.children) {
       return null
     }
+    if (!naturalChild) {
+      return null
+    }
     const newStyle = {
       ...style,
+      position: 'absolute',
+      overflow: 'hidden',
+      top: naturalChild.top,
+      left: naturalChild.left,
+      width: naturalChild.width,
+      height: naturalChild.height,
       opacity: this.state.loading ? 0 : 1,
     }
-    const onlyChild = React.Children.only(this.state.children)
     return ReactDOM.unstable_createPortal(
       React.createElement(
         element,
@@ -272,7 +279,7 @@ export default class Overdrive extends React.Component {
           style: newStyle,
           ...rest,
         },
-        onlyChild,
+        React.Children.only(this.state.children),
       ),
       parentElement,
     )

@@ -152,7 +152,7 @@ export default class ElectronReactions {
       if (Constants.FORCE_FULLSCREEN) {
         return
       }
-      await sleep(64)
+      // await sleep(64)
       // prefer using lines bounding box, fall back to app
       const box = linesBB || appBB
       if (!box) return

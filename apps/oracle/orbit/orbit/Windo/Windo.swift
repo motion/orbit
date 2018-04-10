@@ -6,6 +6,8 @@ import Swindler
 import PromiseKit
 import Darwin
 
+let orbitAppId = "com.github.electron"
+
 final class Windo {
   var emit: (String)->Void
   var swindler: Swindler.State
@@ -34,18 +36,25 @@ final class Windo {
       
       self.swindler.on { (event: WindowCreatedEvent) in
         let window = event.window
+        if window.application.bundleIdentifier == orbitAppId { return }
         self.emit("{ \"action\": \"WindowCreatedEvent\", \"value\": \"\(window.title.value)\" }")
       }
       self.swindler.on { (event: WindowPosChangedEvent) in
+        let bundleId = event.window.application.bundleIdentifier
         let val = event.newValue
-        self.emit("{ \"action\": \"WindowPosChangedEvent\", \"value\": { \"id\": \"\(event.window.application.bundleIdentifier ?? "")\", \"pos\": [\(val.x), \(val.y)] } }")
+        if bundleId == orbitAppId { return }
+        self.emit("{ \"action\": \"WindowPosChangedEvent\", \"value\": { \"id\": \"\(bundleId ?? "")\", \"pos\": [\(val.x), \(val.y)] } }")
       }
       self.swindler.on { (event: WindowSizeChangedEvent) in
         let val = event.newValue
-        self.emit("{ \"action\": \"WindowSizeChangedEvent\", \"value\": { \"id\": \"\(event.window.application.bundleIdentifier ?? "")\", \"size\": [\(val.width), \(val.height)] } }")
+        let bundleId = event.window.application.bundleIdentifier
+        if bundleId == orbitAppId { return }
+        self.emit("{ \"action\": \"WindowSizeChangedEvent\", \"value\": { \"id\": \"\(bundleId ?? "")\", \"size\": [\(val.width), \(val.height)] } }")
       }
       self.swindler.on { (event: WindowDestroyedEvent) in
-        self.emit("{ \"action\": \"WindowDestroyedEvent\", \"value\": \"\(event.window.title.value)\" }")
+        let window = event.window
+        if window.application.bundleIdentifier == orbitAppId { return }
+        self.emit("{ \"action\": \"WindowDestroyedEvent\", \"value\": \"\(window.title.value)\" }")
       }
       self.swindler.on { (event: ApplicationMainWindowChangedEvent) in
         self.frontmostWindowChanged()
@@ -83,6 +92,7 @@ final class Windo {
     let offset = window.position.value
     let bounds = window.size.value
     let id = app.bundleIdentifier
+    if id == orbitAppId { return }
     self.emit("{ \"action\": \"FrontmostWindowChangedEvent\", \"value\": { \"id\": \"\(id ?? "")\", \"title\": \(titleString), \"offset\": [\(offset.x),\(offset.y)], \"bounds\": [\(bounds.width),\(bounds.height)] } }")
   }
   

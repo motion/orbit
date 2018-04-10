@@ -53,15 +53,18 @@ export default class Window extends BaseComponent {
       'ignoreMouseEvents',
       x => !!x,
     )
+    const opacity = this.handleSettableProp('opacity', x => x)
 
     ignoreMouseEvents(props.ignoreMouseEvents)
     focusable(props.focusable)
+    opacity(props.opacity)
 
     this.propHandlers = {
       kiosk: v => this.window.setKiosk(v),
       fullScreen: v => this.window.setFullScreen(v),
       ignoreMouseEvents,
       focusable,
+      opacity,
       devToolsExtensions: () => configureExtensions.call(this, this.props),
       showDevTools: propVal => {
         if (propVal) {
@@ -72,11 +75,14 @@ export default class Window extends BaseComponent {
       },
       show: propVal => {
         if (propVal) {
-          if (this.props.focus) {
-            this.window.show()
-          } else {
-            this.window.showInactive()
-          }
+          // ensure it happens after positioning
+          setTimeout(() => {
+            if (this.props.focus) {
+              this.window.show()
+            } else {
+              this.window.showInactive()
+            }
+          }, 0)
         } else {
           this.window.hide()
         }

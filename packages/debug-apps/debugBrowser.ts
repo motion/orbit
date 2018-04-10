@@ -225,6 +225,10 @@ export default class DebugApps {
               }
               const titleText =
                 PORT_NAMES[port] || url.replace('http://localhost:3001', '')
+              // avoid freaking out our window watcher
+              if (title.innerText === titleText) {
+                return
+              }
               title.innerHTML = titleText
             } catch (err) {
               console.log('error doing this', err)

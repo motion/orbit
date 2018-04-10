@@ -18,6 +18,8 @@ class ElectronStore {
   reactions: ElectronReactions
   source = 'Electron'
 
+  lastAction = null
+
   state = {
     willReposition: Date.now(),
     shouldHide: 1,
@@ -99,6 +101,7 @@ class ElectronStore {
       }
       if (App.state.orbitHidden) {
         Electron.toggleVisible()
+        Electron.lastAction = 'Option+Space'
         Electron.setPinned(true)
         return
       }
@@ -112,6 +115,7 @@ class ElectronStore {
       }
     }
     if (shortcut === 'Option+Shift+Space') {
+      Electron.lastAction = 'Option+Shift+Space'
       Electron.toggleFullScreen()
     }
   }
@@ -145,7 +149,6 @@ class ElectronStore {
 
   toggleFullScreen = () => {
     const fullScreen = !Electron.orbitState.fullScreen
-    log(`toggle fullscreen`)
     if (!fullScreen) {
       Electron.setOrbitState({ fullScreen })
       return

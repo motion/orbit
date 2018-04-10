@@ -31,7 +31,11 @@ const log = debug('Electron')
     focusOnPin = [
       () => Electron.orbitState.pinned,
       pinned => {
-        if (pinned && Electron.orbitState.mouseOver) {
+        // only focus on option+space
+        if (Electron.lastAction !== 'Option+Space') {
+          return
+        }
+        if (pinned) {
           this.appRef.focus()
         }
       },

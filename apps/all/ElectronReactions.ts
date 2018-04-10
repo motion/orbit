@@ -65,7 +65,10 @@ export default class ElectronReactions {
   @react
   shouldTogglePinned = [
     () => [App.state.shouldTogglePinned, Desktop.state.shouldTogglePin],
-    () => Electron.togglePinned(),
+    () => {
+      Electron.lastAction = 'DoubleTap'
+      Electron.togglePinned()
+    },
   ]
 
   // @react

@@ -10,7 +10,7 @@ export default class OrbitItemPreview {
     return (
       <div $$flex result={result}>
         <words>
-          <UI.Text opacity={0.5} margin={[3, 0, 6]} size={0.95} ellipse>
+          <UI.Text opacity={0.5} margin={[3, 0, 6]} size={0.95} ellipse={1}>
             {result.subtitle || 'Created Jan 24th'}
           </UI.Text>
           <UI.Text if={result.body} ellipse>

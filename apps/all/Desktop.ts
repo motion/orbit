@@ -56,6 +56,9 @@ export type DesktopState = {
 
 @store
 class DesktopStore {
+  setState: typeof Bridge.setState
+  sendMessageTo: typeof Bridge.sendMessageTo
+  onMessage: typeof Bridge.onMessage
   source = 'Desktop'
 
   state = {
@@ -153,11 +156,11 @@ class DesktopStore {
     )
   }
 
-  setState: Function
-
   start = options => {
     Bridge.start(this, this.state, options)
     this.setState = Bridge.setState
+    this.sendMessageTo = Bridge.sendMessageTo
+    this.onMessage = Bridge.onMessage
   }
 
   // only clear if necessary

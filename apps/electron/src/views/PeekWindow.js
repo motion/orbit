@@ -48,7 +48,7 @@ const peekPosition = target => {
   let x
   let y = top + TOP_OFFSET
   if (peekOnLeft) {
-    x = left - peekW
+    x = left - peekW + PAD // this pad adjusts for orbits left side shadow pad
     if (peekW > leftSpace) {
       peekW = leftSpace
       x = 0
@@ -59,8 +59,6 @@ const peekPosition = target => {
       peekW = rightSpace
     }
   }
-  // why is this offset already?
-  x += peekOnLeft ? PAD * 2 : 0
   if (peekH + y + EDGE_PAD > screenH) {
     log(`too tall`)
     y = screenH - EDGE_PAD - peekH

@@ -162,7 +162,10 @@ export default class AppStore {
 
   getMousePosition = () => {
     return {
-      top: Desktop.mouseState.position.y,
+      top: Math.max(
+        Electron.orbitState.position[1] + 100,
+        Desktop.mouseState.position.y - 200,
+      ),
       left: Electron.orbitState.position[0],
       width: Electron.orbitState.size[0] - Constants.SHADOW_PAD,
     }

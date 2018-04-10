@@ -1,8 +1,8 @@
 import * as React from 'react'
 import * as Constants from '~/constants'
-import { view, react } from '@mcro/black'
+import { view, react, isEqual } from '@mcro/black'
 import { Window } from '@mcro/reactron'
-import { App, Electron, Swift } from '@mcro/all'
+import { App, Electron, Desktop, Swift } from '@mcro/all'
 import * as Mobx from 'mobx'
 
 const log = debug('OrbitWindow')
@@ -10,6 +10,30 @@ const log = debug('OrbitWindow')
 class OrbitWindowStore {
   show = false
   orbitRef = null
+  clear = 0
+
+  willMount() {
+    log(`mounting you`)
+    Electron.onMessage(msg => {
+      this.clear = Date.now()
+      console.log('got a messssssage', msg)
+    })
+  }
+
+  @react
+  clearOrbit = [
+    () => this.clear,
+    async (_, { when, sleep }) => {
+      if (!this.orbitRef) return
+      this.orbitRef.hide()
+      log(`hi mom`)
+      const lastState = Mobx.toJS(Desktop.appState)
+      await when(() => !isEqual(Desktop.appState, lastState))
+      await sleep(50)
+      log(`bye mom`)
+      this.orbitRef.showInactive()
+    },
+  ]
 
   // sitrep
   focusOrbit = () => {

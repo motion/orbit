@@ -15,6 +15,11 @@ const isOrbit = isBrowser && window.location.pathname === '/orbit'
 
 @store
 class AppStore {
+  setState: typeof Bridge.setState
+  sendMessageTo: typeof Bridge.sendMessageTo
+  onMessage: typeof Bridge.onMessage
+  bridge: any
+  reactions: AppReactions
   source = 'App'
 
   state = {
@@ -101,13 +106,11 @@ class AppStore {
     )
   }
 
-  setState: Function
-  bridge: any
-  reactions: AppReactions
-
-  start(options) {
+  start = (options) => {
     Bridge.start(this, this.state, options)
     this.setState = Bridge.setState
+    this.sendMessageTo = Bridge.sendMessageTo
+    this.onMessage = Bridge.onMessage
     this.bridge = Bridge
   }
 

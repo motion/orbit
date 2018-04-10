@@ -21,7 +21,7 @@ export default class PeekFrame {
     // const isShowingPeek = true
     return (
       <container $$row $$flex>
-        <Space if={onRight} />
+        <Space if={!onRight} />
         <crop
           css={{
             flex: 1,
@@ -44,7 +44,7 @@ export default class PeekFrame {
                   fullScreen ? null : ['inset', 0, 0, 0, 0.5, [0, 0, 0, 0.15]],
                 ].filter(Boolean),
                 borderRightRadius: fullScreen || onRight ? BORDER_RADIUS : 0,
-                borderLeftRadius: !onRight ? BORDER_RADIUS : 0,
+                borderLeftRadius: !fullScreen && !onRight ? BORDER_RADIUS : 0,
                 background: fullScreen
                   ? theme.base.background.lighten(0.05)
                   : theme.base.background,
@@ -59,30 +59,22 @@ export default class PeekFrame {
                   position: 'absolute',
                   top: 0,
                   bottom: 0,
-                  // left: onRight ? 0 : 'auto',
+                  left: onRight ? 0 : 'auto',
                   right: !onRight ? 0 : 'auto',
-                }}
-              />
-              <opposeShadow
-                css={{
-                  position: 'absolute',
-                  top: 0,
-                  right: 0,
-                  bottom: 0,
-                  width: 7,
-                  background: `linear-gradient(to right, transparent, #fff)`,
-                  zIndex: 10000,
                 }}
               />
             </main>
           </peek>
         </crop>
-        <Space if={!onRight} />
+        <Space if={onRight} />
       </container>
     )
   }
 
   static style = {
+    container: {
+      // background: 'red',
+    },
     peek: {
       height: '100%',
       pointerEvents: 'none !important',

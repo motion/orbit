@@ -86,16 +86,6 @@ export default class ElectronReactions {
     hidden => hidden && Electron.orbitState.pinned && Electron.setPinned(false),
   ]
 
-  @react
-  hideFullScreenOnDefocus = [
-    () => Desktop.appState && Date.now(),
-    () => {
-      if (Electron.orbitState.fullScreen) {
-        Electron.shouldHide()
-      }
-    },
-  ]
-
   @react({ log: false })
   setMouseOvers = [
     () => [Desktop.mouseState.position, App.state.orbitHidden],

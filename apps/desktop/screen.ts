@@ -105,12 +105,13 @@ export default class DesktopScreen {
       })
     })
     this.oracle.onWindowChange((event, value) => {
+      log(`got event ${event}`)
       if (event === 'ScrollEvent') {
         this.rescanApp()
         return
       }
       const lastState = Mobx.toJS(Desktop.appState)
-      let nextState: Partial<AppState> = {}
+      let nextState: AppState = { ...lastState }
       let id = this.curAppID
       const wasFocusedOnOrbit = this.curAppID === ORBIT_APP_ID
       switch (event) {
@@ -141,6 +142,7 @@ export default class DesktopScreen {
       }
       const state: Partial<DesktopState> = {
         focusedOnOrbit: this.curAppID === ORBIT_APP_ID,
+        appState: nextState,
       }
       // when were moving into focus prevent app, store its appName, pause then return
       if (PREVENT_APP_STATE[this.curAppName]) {
@@ -148,7 +150,6 @@ export default class DesktopScreen {
         this.oracle.pause()
         return
       }
-      state.appState = JSON.parse(JSON.stringify(nextState))
       state.appStateUpdatedAt = Date.now()
       if (
         !wasFocusedOnOrbit &&
@@ -161,7 +162,8 @@ export default class DesktopScreen {
           !isEqual(nextState.offset, appState.offset)
         ) {
           // immediate clear for moving
-          Desktop.setLastAppChange(Date.now())
+          log(`SENDING CLEAR`)
+          Desktop.sendMessageTo(Electron, 'CLEAR')
         }
       }
       if (!Desktop.state.paused) {

@@ -4,12 +4,8 @@
 
   * cards
     * overdrive: deep investigate animate performance
-    * dynamic sizing better with diff amounts of items
   * peek
-    * try only show on click
-    * clicked color state for cards
     * fix alignment vertically with cards
-    * fix peekOnLeft not working when on right
   * performance
     * make "fast message" for clearing things as quickly as possible
       * dont use setState mechanics or json.parse etc just simple message

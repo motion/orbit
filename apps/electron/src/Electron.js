@@ -110,7 +110,7 @@ export default class ElectronWindow extends React.Component {
       >
         <MenuItems el />
         <OrbitWindow />
-        <HighlightsWindow />
+        {/* <HighlightsWindow /> */}
         <PeekWindow />
         <Tray />
       </AppWindow>

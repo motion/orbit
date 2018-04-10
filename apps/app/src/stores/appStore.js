@@ -1,4 +1,4 @@
-import { react, watch } from '@mcro/black'
+import { react, watch, isEqual } from '@mcro/black'
 import { App, Desktop, Electron } from '@mcro/all'
 import { Bit, Setting } from '@mcro/models'
 import * as Constants from '~/constants'
@@ -198,16 +198,20 @@ export default class AppStore {
 
   async willMount() {
     this.getSettings()
-    // every two seconds, re-query bit results
-    // this.setInterval(() => {
-    //   this.refreshCycle = Date.now()
-    // }, 2000)
+    // every few seconds, re-query bit results
+    this.setInterval(this.getSettings, 2000)
   }
 
   getSettings = async () => {
     const settings = await Setting.find()
     if (settings) {
-      this.settings = settings.reduce((a, b) => ({ ...a, [b.type]: b }), {})
+      const nextSettings = settings.reduce(
+        (a, b) => ({ ...a, [b.type]: b }),
+        {},
+      )
+      if (!isEqual(this.settings, nextSettings)) {
+        this.settings = nextSettings
+      }
     }
   }
 

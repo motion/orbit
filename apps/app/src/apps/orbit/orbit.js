@@ -66,34 +66,8 @@ export default class Orbit {
   getHoverProps = Helpers.hoverSettler({
     enterDelay: 120,
     betweenDelay: 120,
-    onHovered: async target => {
-      clearTimeout(this.updateTargetTm)
-      if (!target) {
-        this.updateTargetTm = setTimeout(() => {
-          if (!Electron.isMouseInActiveArea) {
-            App.setPeekTarget(null)
-          }
-        }, 400)
-        return
-      }
-      if (!Electron.orbitState.position) {
-        console.log(`no position`)
-        return
-      }
-      const { id, top, width, height } = target
-      const position = {
-        // add orbits offset
-        left: Electron.orbitState.position[0],
-        top: top + Electron.orbitState.position[1],
-        width,
-        height,
-      }
-      if (App.isShowingOrbit) {
-        this.props.appStore.setSelectedIndex(target.id)
-        this.updateTargetTm = setTimeout(() => {
-          App.setPeekTarget({ id, position, type: 'document' })
-        }, 100)
-      }
+    onHovered: ({ id }) => {
+      this.props.appStore.hoveredIndex = id
     },
   })
 

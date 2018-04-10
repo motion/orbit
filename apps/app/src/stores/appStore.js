@@ -1,5 +1,5 @@
 import { react, watch } from '@mcro/black'
-import { App, Desktop } from '@mcro/all'
+import { App, Desktop, Electron } from '@mcro/all'
 import { Bit, Setting } from '@mcro/models'
 import fuzzySort from 'fuzzysort'
 import * as Constants from '~/constants'
@@ -51,8 +51,17 @@ const fuzzyResults = (query, results, extraOpts) =>
 export default class AppStore {
   refreshCycle = 0
   selectedIndex = 0
+  hoveredIndex = -1
   showSettings = false
   settings = {}
+
+  get activeIndex() {
+    if (App.state.peekTarget) {
+      return this.selectedIndex
+    } else {
+      return this.hoveredIndex
+    }
+  }
 
   @watch({ log: false })
   selectedBit = () =>
@@ -101,8 +110,50 @@ export default class AppStore {
     return uniq([...strongTitleMatches, ...results].slice(0, 10))
   }
 
-  setSelectedIndex = i => {
-    this.selectedIndex = i
+  clearSelected = () => {
+    this.updateTargetTm = setTimeout(() => {
+      if (!Electron.isMouseInActiveArea) {
+        App.setPeekTarget(null)
+      }
+    }, 400)
+  }
+
+  _setSelected = (id, position) => {
+    clearTimeout(this.updateTargetTm)
+    if (App.isShowingOrbit) {
+      this.selectedIndex = id
+      this.hoveredIndex = id
+      this.updateTargetTm = setTimeout(() => {
+        App.setPeekTarget({ id, position, type: 'document' })
+      }, 100)
+    }
+  }
+
+  setSelected = (i, target) => {
+    if (target) {
+      if (!Electron.orbitState.position) {
+        return
+      }
+      const { top, width, height } = target
+      const position = {
+        // add orbits offset
+        left: Electron.orbitState.position[0],
+        top: top + Electron.orbitState.position[1],
+        width,
+        height,
+      }
+      this._setSelected(i, position)
+    } else {
+      this._setSelected(i, this.getMousePosition())
+    }
+  }
+
+  getMousePosition = () => {
+    return {
+      top: Desktop.mouseState.position.y,
+      left: Electron.orbitState.position[0],
+      width: Electron.orbitState.size[0],
+    }
   }
 
   @react.if

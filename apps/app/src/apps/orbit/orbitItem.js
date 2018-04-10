@@ -88,7 +88,7 @@ export default class Item {
   }
 
   static theme = ({ appStore, index }, theme) => {
-    const isSelected = appStore.selectedIndex === index
+    const isSelected = appStore.activeIndex === index
     const hoveredStyle = {
       background: isSelected
         ? theme.activeHover.background

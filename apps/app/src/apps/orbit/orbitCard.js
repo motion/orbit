@@ -11,7 +11,7 @@ class Text {
 
 class OrbitCardStore {
   get isSelected() {
-    return this.props.appStore.selectedIndex === this.props.index
+    return this.props.appStore.hoveredIndex === this.props.index
   }
 
   @react({ delayValue: true })
@@ -111,20 +111,23 @@ export default class OrbitCard {
                     </AnimateElement>
                   </content>
                   <AnimateElement id={`${result.id}-bottom`}>
-                    <Text
-                      opacity={0.5}
-                      size={0.9}
-                      css={{ marginBottom: 3, paddingTop: 10 }}
-                    >
-                      via{' '}
-                      <UI.Icon
-                        name="mail"
-                        size={10}
-                        css={{ display: 'inline-block' }}
-                      />
-                      &nbsp;
-                      <UI.Date>{result.bitUpdatedAt}</UI.Date>
-                    </Text>
+                    <bottom>
+                      <orbital />
+                      <Text
+                        opacity={0.5}
+                        size={0.9}
+                        css={{ marginBottom: 3, paddingTop: 10 }}
+                      >
+                        via{' '}
+                        <UI.Icon
+                          name="mail"
+                          size={10}
+                          css={{ display: 'inline-block' }}
+                        />
+                        &nbsp;
+                        <UI.Date>{result.bitUpdatedAt}</UI.Date>
+                      </Text>
+                    </bottom>
                   </AnimateElement>
                 </card>
               </cardWrap>
@@ -147,6 +150,19 @@ export default class OrbitCard {
       overflow: 'hidden',
     },
     cardHovered: {},
+    bottom: {
+      flexFlow: 'row',
+      alignItems: 'center',
+      // justifyContent: 'center',
+      // flex: 1,
+    },
+    orbital: {
+      width: 10,
+      height: 10,
+      background: [0, 0, 0, 0.1],
+      margin: [0, 7, -4, 0],
+      borderRadius: 4,
+    },
   }
 
   static theme = ({ store }, theme) => {

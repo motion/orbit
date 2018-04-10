@@ -40,7 +40,7 @@ class OrbitContext {
     { resultsRef, isScrolled },
   ) {
     const OFFSET = 3
-    const isSelectedInContext = appStore.selectedIndex >= OFFSET
+    const isSelectedInContext = appStore.activeIndex >= OFFSET
     const total = appStore.results.length - OFFSET
     const y = isSelectedInContext ? -80 : 0
     const totalHeight = orbitPage.contentHeight + y
@@ -51,7 +51,7 @@ class OrbitContext {
           transform: { y },
         }}
       >
-        <fadeUp $$untouchable $fadeVisible={appStore.selectedIndex > 3} />
+        <fadeUp $$untouchable $fadeVisible={appStore.activeIndex > 3} />
         <OrbitDivider
           if={!App.state.query}
           css={{ paddingBottom: 0, zIndex: 1000, position: 'relative' }}
@@ -171,7 +171,7 @@ export default class OrbitContent {
               results={appStore.results}
               result={{
                 ...result,
-                title: result.title.slice(0, Math.random() * 35 + 10),
+                title: result.title,
               }}
               total={appStore.results.length}
               {...getHoverProps({

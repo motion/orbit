@@ -115,7 +115,7 @@ export default class Overdrive extends React.Component {
   }
 
   render() {
-    // return this.props.children({ AnimateElement })
+    return this.props.children({ AnimateElement })
     const portalChildren = this.flattenChildren(
       this.props.children({
         AnimateElement,
@@ -137,7 +137,10 @@ export default class Overdrive extends React.Component {
           {this.state.naturalChildren}
         </div>
         {portalChildren.map(({ child, id }, index) => {
-          const pos = this.childPositions[id]
+          if (!this.childPositions[id]) {
+            return null
+          }
+          const { top, left, ...style } = this.childPositions[id]
           return (
             <div
               key={`container-${id}`}
@@ -145,7 +148,8 @@ export default class Overdrive extends React.Component {
                 position: 'absolute',
                 transition: 'all ease-in 300ms',
                 zIndex: portalChildren.length - index,
-                ...pos,
+                ...style,
+                transform: `translateX$({top}px) translateY(${left})`,
               }}
               ref={this.collectContainer(id)}
             />

@@ -42,6 +42,9 @@ export class SlackService {
       options.oldest = oldestWanted()
     }
     let results = await this.getChannelHistory(options)
+    if (!results.length) {
+      return results
+    }
     // iterate until all found
     while (results.length < count) {
       const newcount = Math.min(1000, count - results.length)

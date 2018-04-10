@@ -34,15 +34,15 @@ export default class SlackMessagesSync {
       return
     }
     for (const channel of Object.keys(this.service.activeChannels)) {
-      const oldestSynced = this.lastSync[channel]
-      if (oldestSynced) {
-        log('oldestSynced', oldestSynced)
+      const newestSync = this.lastSync[channel]
+      if (newestSync) {
+        log('newestSync', newestSync)
       }
       const info = await this.service.slack.channels.info({ channel })
       const messages: Array<SlackMessage> = await this.service.channelHistory({
         channel,
-        oldest: oldestSynced,
-        count: 2000,
+        oldest: newestSync,
+        count: 500,
       })
       if (!messages.length) {
         return
@@ -70,11 +70,9 @@ export default class SlackMessagesSync {
         if (group.length) {
           await this.createConversation(channel, group)
         }
-        const oldestSyncedTime = messages[messages.length - 1].ts
-        console.log('update oldestSyncedTime', oldestSyncedTime)
         _.merge(this.setting.values, {
           lastMessageSync: {
-            [channel]: oldestSyncedTime,
+            [channel]: _.first(messages).ts,
           },
         })
         await this.setting.save()

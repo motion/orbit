@@ -1,14 +1,6 @@
 import Gloss from '@mcro/gloss'
 import baseStyles from './baseStyles'
 
-// export type Glossy = {
-//   glossElement(
-//     tagName: string,
-//     props: ?Object,
-//     children: ?any
-//   ): JSX.Element,
-// }
-
 const gloss = new Gloss({
   baseStyles,
   glossProp: 'css',

@@ -33,7 +33,7 @@ export const storeOptions = {
   },
 }
 
-export default function store(Store) {
+export function store(Store) {
   const DecoratedStore = storeDecorator(Store)
   const ProxyStore = function(...args) {
     const store = new DecoratedStore(...args)

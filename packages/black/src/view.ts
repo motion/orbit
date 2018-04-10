@@ -81,4 +81,4 @@ function createViewDecorator() {
   return view
 }
 
-export default createViewDecorator()
+export const view = createViewDecorator()

@@ -1,35 +1,23 @@
 import Slack from 'slack'
+import { Setting } from '../setting'
 import { store, watch } from '@mcro/black/store'
-import { CurrentUser } from '@mcro/models'
+
+type SlackOpts = { oldest?: number; count: number }
 
 @store
-export default class SlackService {
-  slack = null
+export class SlackService {
+  // @ts-ignore
+  slack: Slack
+  setting: Setting
 
   @watch
   allChannels = () =>
     this.slack && this.slack.channels.list({}).then(res => res.channels)
 
-  constructor() {
-    this.watch(function watchSlackToken() {
-      const { token } = this
-      if (token && !this.slack) {
-        this.slack = new Slack({ token })
-      }
-    })
-  }
-
-  get token() {
-    return (
-      CurrentUser.user &&
-      CurrentUser.authorizations &&
-      CurrentUser.authorizations.slack &&
-      CurrentUser.authorizations.slack.token
-    )
-  }
-
-  get setting() {
-    return CurrentUser.setting.slack
+  constructor(setting) {
+    this.setting = setting
+    // @ts-ignore
+    this.slack = new Slack({ token: setting.token })
   }
 
   get activeChannels() {
@@ -43,10 +31,10 @@ export default class SlackService {
 
   channelHistory = async ({ oldest, count, ...rest }) => {
     const oldestMessageTime = messages => messages[messages.length - 1].ts
-    const oldestWanted = ts =>
+    const oldestWanted = (ts = 0) =>
       ts && oldest ? Math.min(+oldest, +ts) : ts || oldest
     // initial results
-    const options = {
+    const options: SlackOpts = {
       count: Math.min(1000, count),
       ...rest,
     }

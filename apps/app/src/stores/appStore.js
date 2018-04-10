@@ -64,6 +64,16 @@ export default class AppStore {
     }
   }
 
+  @react
+  resetSelectedIndexOnSearch = [
+    () => App.state.query,
+    () => {
+      this.selectedIndex = -1
+      this.hoveredIndex = 0
+      App.setPeekTarget(null)
+    },
+  ]
+
   @watch({ log: false })
   selectedBit = () =>
     App.state.selectedItem && Bit.findOne({ id: App.state.selectedItem.id })

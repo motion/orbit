@@ -4,7 +4,9 @@ export const IS_ELECTRON = isElectron()
 function isElectron() {
   if (
     typeof window !== 'undefined' &&
+    // @ts-ignore
     window.process &&
+    // @ts-ignore
     window.process.type === 'renderer'
   ) {
     return true
@@ -12,6 +14,7 @@ function isElectron() {
   if (
     typeof process !== 'undefined' &&
     process.versions &&
+    // @ts-ignore
     !!process.versions.electron
   ) {
     return true

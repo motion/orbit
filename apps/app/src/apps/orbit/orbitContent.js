@@ -1,11 +1,15 @@
+import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { App } from '@mcro/all'
 import OrbitItem from './orbitItem'
 import OrbitDivider from './orbitDivider'
-import OrbitCard from './orbitCard'
 import * as Constants from '~/constants'
 import { throttle } from 'lodash'
+import elasticScroll from 'elasticscroll.js'
+import Results from '~/apps/results/results'
+
+console.log('elasticScroll', elasticScroll)
 
 const SPLIT_INDEX = 3
 
@@ -26,7 +30,9 @@ class OrbitContext {
         'scroll',
         throttle(() => {
           if (resultsRef.scrollTop > 0) {
-            this.setState({ isScrolled: true })
+            if (!this.state.isScrolled) {
+              this.setState({ isScrolled: true })
+            }
           } else {
             if (this.state.isScrolled) {
               this.setState({ isScrolled: false })
@@ -37,14 +43,9 @@ class OrbitContext {
     }
   }
 
-  render(
-    { appStore, theme, getHoverProps, orbitPage },
-    { resultsRef, isScrolled },
-  ) {
+  render({ appStore, theme }) {
     const isSelectedInContext = appStore.activeIndex >= SPLIT_INDEX
-    const total = appStore.results.length - SPLIT_INDEX
     const y = isSelectedInContext ? -(SPLIT_INDEX * 20) : 0
-    const totalHeight = orbitPage.contentHeight + y
     return (
       <orbitContext
         css={{
@@ -60,26 +61,13 @@ class OrbitContext {
           if={!App.state.query}
           css={{ paddingBottom: 0, zIndex: 1000, position: 'relative' }}
         />
-        <results ref={this.setRef}>
-          <fade $$untouchable $fadeVisible={isScrolled} />
-          <firstResultSpace $$untouchable css={{ height: 6 }} />
-          {resultsRef &&
-            appStore.results
-              .slice(SPLIT_INDEX)
-              .map((result, i) => (
-                <OrbitCard
-                  key={result.id}
-                  parentElement={resultsRef}
-                  appStore={appStore}
-                  theme={theme}
-                  getHoverProps={getHoverProps}
-                  result={result}
-                  index={i + SPLIT_INDEX}
-                  total={total}
-                  totalHeight={totalHeight}
-                />
-              ))}
-        </results>
+        <Results />
+        <webview
+          if={false}
+          $results
+          webpreferences="scrollBounce experimentalFeatures"
+          src="http://localhost:3001/results"
+        />
       </orbitContext>
     )
   }
@@ -92,8 +80,6 @@ class OrbitContext {
     },
     results: {
       flex: 1,
-      overflowY: 'scroll',
-      position: 'relative',
     },
     fade: {
       position: 'fixed',
@@ -106,17 +92,16 @@ class OrbitContext {
       transition: 'opacity ease-in-out 150ms',
     },
     fadeUp: {
-      opacity: 0,
       position: 'absolute',
       left: 0,
       right: 0,
       top: -40,
       height: 40,
-      zIndex: 100000,
+      zIndex: -1,
       transition: 'opacity ease-in 150ms',
     },
     fadeVisible: {
-      opacity: 1,
+      zIndex: 10000,
     },
   }
 
@@ -159,7 +144,7 @@ const tinyProps = {
 @view.attach('appStore')
 @view
 export default class OrbitContent {
-  render({ appStore, getHoverProps }) {
+  render({ appStore }) {
     const { query } = App.state
     log(`render.OrbitContent`)
     return (
@@ -182,24 +167,21 @@ export default class OrbitContent {
                 key={result.id}
                 type="gmail"
                 index={index}
+                appStore={appStore}
                 results={appStore.results}
                 result={{
                   ...result,
                   title: result.title,
                 }}
                 total={appStore.results.length}
-                {...getHoverProps({
+                {...appStore.getHoverProps({
                   result,
                   id: index,
                 })}
               />
             ))}
         </notifications>
-        <OrbitContext
-          if={!query}
-          appStore={appStore}
-          getHoverProps={getHoverProps}
-        />
+        <OrbitContext if={!query} appStore={appStore} />
         <space css={{ height: 20 }} />
       </orbitContent>
     )

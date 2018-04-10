@@ -67,6 +67,8 @@ export const debounceIdle = (fn, timeout) => {
   return (...args) => {
     if (clearId) cancelIdleCallback(clearId)
 
-    clearId = requestIdleCallback(() => fn(...args), { timeout })
+    clearId = (requestIdleCallback || setTimeout)(() => fn(...args), {
+      timeout,
+    })
   }
 }

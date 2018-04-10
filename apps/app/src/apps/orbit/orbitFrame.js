@@ -176,7 +176,6 @@ export default class OrbitFrame {
   render({ store, orbitPage, children, theme, headerBg }) {
     const { fullScreen, orbitDocked } = Electron.orbitState
     const { orbitOnLeft } = Electron
-    console.log(`ORBITONLEFT ${orbitOnLeft}`)
     const borderColor = theme.base.background.darken(0.25).desaturate(0.6)
     const borderShadow = ['inset', 0, 0, 0, 0.5, borderColor]
     const boxShadow = fullScreen ? [APP_SHADOW] : [orbitLightShadow]

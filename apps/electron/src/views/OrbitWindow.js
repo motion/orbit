@@ -123,6 +123,7 @@ export default class OrbitWindow extends React.Component {
         hasShadow={false}
         background="#00000000"
         webPreferences={Constants.WEB_PREFERENCES}
+        blinkFeatures="CSSOverscrollBehavior CSSOMSmoothScroll"
         transparent={true}
         showDevTools={Electron.state.showDevTools.orbit}
         alwaysOnTop

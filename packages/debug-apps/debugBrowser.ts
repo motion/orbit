@@ -225,10 +225,6 @@ export default class DebugApps {
               }
               const titleText =
                 PORT_NAMES[port] || url.replace('http://localhost:3001', '')
-              // avoid freaking out our window watcher
-              if (title.innerText === titleText) {
-                return
-              }
               title.innerHTML = titleText
             } catch (err) {
               console.log('error doing this', err)
@@ -242,7 +238,7 @@ export default class DebugApps {
       }
     }
     clearInterval(this.intervals[index])
-    this.intervals[index] = setInterval(injectTitle, 500)
+    this.intervals[index] = setInterval(injectTitle, 5000)
     onFocus(page).then(async () => {
       await sleep(50)
       await page.frames()[0].focus('body')

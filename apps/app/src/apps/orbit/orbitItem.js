@@ -6,7 +6,6 @@ import OrbitItemPreview from './orbitItemPreview'
 import * as UI from '@mcro/ui'
 
 @UI.injectTheme
-@view.attach('appStore', 'orbitPage')
 @view
 export default class Item {
   onClick = () => {
@@ -18,7 +17,6 @@ export default class Item {
     titleProps,
     iconProps,
     appStore,
-    orbitPage,
     index,
     result,
     total,
@@ -89,9 +87,7 @@ export default class Item {
   }
 
   static theme = ({ appStore, index }, theme) => {
-    console.log('s', appStore.activeIndex, index)
     const isSelected = appStore.activeIndex === index
-    log(`isSelected ${isSelected}`)
     const hoveredStyle = {
       background: isSelected
         ? theme.activeHover.background

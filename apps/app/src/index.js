@@ -1,3 +1,4 @@
+import 'regenerator-runtime/runtime'
 import 'isomorphic-fetch'
 import '@mcro/debug/inject'
 import createElement from '@mcro/black/_/createElement'

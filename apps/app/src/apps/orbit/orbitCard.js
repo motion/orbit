@@ -40,8 +40,8 @@ export default class OrbitCard {
     total,
     index,
     parentElement,
-    getHoverProps,
     store,
+    getRef,
   }) {
     store.isSelected
     if (!parentElement) {
@@ -71,8 +71,9 @@ export default class OrbitCard {
             <AnimateElement id={`${result.id}`}>
               <cardWrap
                 css={{ height }}
+                ref={getRef}
                 onClick={() => appStore.pinSelected(index)}
-                {...getHoverProps({ result, id: index })}
+                {...appStore.getHoverProps({ result, id: index })}
               >
                 <card
                   $cardHovered={this.hovered && willTransition}

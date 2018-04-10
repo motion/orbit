@@ -4,6 +4,7 @@ import { Bit, Setting } from '@mcro/models'
 import fuzzySort from 'fuzzysort'
 import * as Constants from '~/constants'
 import * as r2 from '@mcro/r2'
+import * as Helpers from '~/helpers'
 
 // const log = debug('root')
 const presetAnswers = {
@@ -159,6 +160,15 @@ export default class AppStore {
       position: this.getMousePosition(),
     })
   }
+
+  getHoverProps = Helpers.hoverSettler({
+    enterDelay: 120,
+    betweenDelay: 120,
+    onHovered: item => {
+      log(`hi`)
+      this.setSelected(item && item.id)
+    },
+  })
 
   getMousePosition = () => {
     return {

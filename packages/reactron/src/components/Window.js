@@ -32,6 +32,7 @@ export default class Window extends BaseComponent {
       vibrancy: props.vibrancy,
       transparent: !!props.transparent,
       webPreferences: props.webPreferences,
+      blinkFeatures: props.blinkFeatures,
       hasShadow: !!props.hasShadow,
       backgroundColor: props.backgroundColor,
       alwaysOnTop: !!props.alwaysOnTop,

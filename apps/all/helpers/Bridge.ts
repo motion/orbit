@@ -22,7 +22,7 @@ const stringifyObject = obj =>
 const requestIdle = () =>
   new Promise(
     res =>
-      typeof window !== 'undefined'
+      typeof window !== 'undefined' && window.requestIdleCallback
         ? window.requestIdleCallback(res)
         : setTimeout(res, 1),
   )

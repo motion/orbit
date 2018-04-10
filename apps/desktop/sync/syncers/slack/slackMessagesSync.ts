@@ -29,19 +29,25 @@ export default class SlackMessagesSync {
   }
 
   run = async () => {
-    console.log('Running slack sync')
+    log('Running slack sync')
     if (!this.service.activeChannels) {
       return
     }
     for (const channel of Object.keys(this.service.activeChannels)) {
       const oldestSynced = this.lastSync[channel]
+      if (oldestSynced) {
+        log('oldestSynced', oldestSynced)
+      }
       const info = await this.service.slack.channels.info({ channel })
       const messages: Array<SlackMessage> = await this.service.channelHistory({
         channel,
         oldest: oldestSynced,
         count: 2000,
       })
-      console.log('got messages', messages)
+      if (!messages.length) {
+        return
+      }
+      log('got new messages to sync', messages.length)
       try {
         let group = []
         for (const next of messages) {
@@ -50,8 +56,8 @@ export default class SlackMessagesSync {
             group.push(next)
             continue
           }
-          // within 15 seconds
-          const isGrouped = +next.ts - +last.ts < 15000
+          const distanceInSeconds = Math.abs(+next.ts - +last.ts)
+          const isGrouped = distanceInSeconds < 15
           if (isGrouped) {
             group.push(next)
             continue
@@ -66,13 +72,11 @@ export default class SlackMessagesSync {
         }
         const oldestSyncedTime = messages[messages.length - 1].ts
         console.log('update oldestSyncedTime', oldestSyncedTime)
-        this.setting.values = {
-          ...this.setting.values,
+        _.merge(this.setting.values, {
           lastMessageSync: {
-            ...this.setting.values.lastMessageSync,
             [channel]: oldestSyncedTime,
           },
-        }
+        })
         await this.setting.save()
       } catch (err) {
         log(`Error syncing slack message ${err.message}`)

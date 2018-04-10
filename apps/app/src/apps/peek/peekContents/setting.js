@@ -1,11 +1,14 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import { App } from '@mcro/all'
-import { Setting, Bit, Job } from '@mcro/models'
+import { Bit, Job } from '@mcro/models'
 import PeekHeader from '../peekHeader'
 import PeekFrame from '../peekFrame'
 import { capitalize, throttle } from 'lodash'
 import * as UI from '@mcro/ui'
+import * as SettingPanes from './settingPanes'
+
+const EmptyPane = () => <div>no setting pane</div>
 
 @view({
   store: class SettingStore {
@@ -43,11 +46,12 @@ export class SettingView {
     if (!store.setting || !store.setting.token) {
       return null
     }
-    console.log('setting', store.selectedItem)
     store.settingVersion
     const { setting } = store
     const { syncSettings = { max: 50 } } = setting.values
     const throttleSaveSetting = throttle(() => setting.save(), 500)
+    const SettingPane =
+      SettingPanes[store.selectedItem.integration] || EmptyPane
     return (
       <PeekFrame>
         <PeekHeader
@@ -89,6 +93,7 @@ export class SettingView {
             </UI.Text>
           </status>
           <setting>
+            <SettingPane />
             setting:
             <UI.Field
               row

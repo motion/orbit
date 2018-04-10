@@ -17,6 +17,10 @@ export default class SlackAttachmentSync {
     this.service = new SlackService(setting)
   }
 
+  get lastSync() {
+    return this.setting.values.lastAttachmentSync || {}
+  }
+
   run = async () => {
     console.log('Running slack sync')
     if (!this.service.activeChannels) {

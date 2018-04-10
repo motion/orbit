@@ -10,7 +10,7 @@ export class SlackService {
   slack: Slack
   setting: Setting
 
-  @watch
+  @watch({ log: false })
   allChannels = () =>
     this.slack && this.slack.channels.list({}).then(res => res.channels)
 

@@ -98,10 +98,12 @@ class OrbitContext {
       top: -40,
       height: 40,
       zIndex: -1,
+      opacity: 0,
       transition: 'opacity ease-in 150ms',
     },
     fadeVisible: {
       zIndex: 10000,
+      opacity: 1,
     },
   }
 

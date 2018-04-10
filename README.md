@@ -48,4 +48,9 @@ Your state should live as close as possible to where its used, and be easy to mo
 
 4.  Some magic is ok, with the right tools
 
-You should be able to test things out and see if they work. Simple syntax should let you guess, but it requires extremely helpful logging, a great REPL, and nice hot reload.
+Simple syntax with powerful abstractions should let you move fast, but it requires extremely the building blocks to be easy to understand, and should have:
+
+* types that help as you code
+* granular, adjustable, clear logging
+* an always-on REPL with all relevant things available as variables
+* hot reload that maintains state

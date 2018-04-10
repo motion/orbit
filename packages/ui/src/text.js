@@ -24,7 +24,7 @@ const getTextProperties = props => {
   }
   let lineHeight = props.lineHeight
   if (typeof lineHeight === 'undefined' && typeof fontSize === 'number') {
-    lineHeight = fontSize + 3 * (fontSize / 11)
+    lineHeight = fontSize + 5 * (fontSize / 14)
     if (props.sizeLineHeight) {
       lineHeight = lineHeight * props.sizeLineHeight
     }
@@ -120,7 +120,11 @@ export default class Text {
   }
 
   handleProps(props) {
-    if (props.measure) {
+    if (
+      props.measure ||
+      ((!!props.ellipse || props.ellipse > 0) &&
+        props.ellipse !== this.props.ellipse)
+    ) {
       this.setTimeout(() => {
         this.setState({ clamp: false }, () => {
           this.measure()
@@ -307,10 +311,10 @@ export default class Text {
     ellipseText: {
       display: 'flex',
       flex: 1,
-      overflow: 'hidden',
+      // overflow: 'hidden',
     },
     ellipseLines: {
-      overflow: 'hidden',
+      // overflow: 'hidden',
       textOverflow: 'ellipsis',
       display: '-webkit-box',
       WebkitBoxOrient: 'vertical',

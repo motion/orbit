@@ -22,7 +22,7 @@ const stringifyObject = obj =>
 const requestIdle = () =>
   new Promise(
     res =>
-      typeof window !== 'undefined'
+      typeof window !== 'undefined' && window.requestIdleCallback
         ? window.requestIdleCallback(res)
         : setTimeout(res, 1),
   )
@@ -46,6 +46,7 @@ class Bridge {
   _socket = null
   // to be set once they are imported
   stores = {}
+  messageListeners = new Set()
 
   get state() {
     return this._store.state
@@ -112,11 +113,18 @@ class Bridge {
   setupClientSocket = () => {
     // socket setup
     this._socket.onmessage = async ({ data }) => {
-      await requestIdle()
       if (!data) {
         console.log(`No data received over socket`)
         return
       }
+      if (data[0] === '-') {
+        const message = data.slice(1)
+        for (const listener of this.messageListeners) {
+          listener(message)
+        }
+        return
+      }
+      await requestIdle()
       try {
         const messageObj = JSON.parse(data)
         if (messageObj && typeof messageObj === 'object') {
@@ -192,6 +200,11 @@ class Bridge {
         console.log('socket err', err)
       }
     }
+  }
+
+  sendMessageTo = (Store: any, message: string) => {
+    if (!Store || !message) throw `no store || message`
+    this.socketManager.sendMessage(Store.source, message)
   }
 
   // this will go up to api and back down to all screen stores
@@ -292,6 +305,10 @@ class Bridge {
       }
     }
     return changed
+  }
+
+  onMessage = listener => {
+    this.messageListeners.add(listener)
   }
 
   dispose = () => {

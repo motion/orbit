@@ -100,6 +100,9 @@ export default {
   undraggable: {
     WebkitAppRegion: 'no-drag',
   },
+  untouchable: {
+    pointerEvents: 'none',
+  },
   scrollable: {
     flex: 1,
     overflowY: 'auto',

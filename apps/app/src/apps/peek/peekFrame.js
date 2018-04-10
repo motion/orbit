@@ -15,13 +15,13 @@ export default class PeekFrame {
     if (!selectedItem && !fullScreen) {
       return null
     }
-    const onLeft = Electron.peekOnLeft
-    // log(`onleft`, onLeft)
+    const onRight = !Electron.peekOnLeft
+    // log(`onRight`, onLeft)
     const { isShowingPeek } = App
     // const isShowingPeek = true
     return (
       <container $$row $$flex>
-        <Space if={onLeft} />
+        <Space if={!onRight} />
         <crop
           css={{
             flex: 1,
@@ -29,9 +29,9 @@ export default class PeekFrame {
               ? [SHADOW_PAD, SHADOW_PAD, SHADOW_PAD, 0]
               : [
                   SHADOW_PAD,
-                  onLeft ? SHADOW_PAD : 0,
+                  onRight ? SHADOW_PAD : 0,
                   SHADOW_PAD,
-                  !onLeft ? SHADOW_PAD : 0,
+                  !onRight ? SHADOW_PAD : 0,
                 ],
             overflow: 'hidden',
           }}
@@ -43,23 +43,38 @@ export default class PeekFrame {
                   APP_SHADOW,
                   fullScreen ? null : ['inset', 0, 0, 0, 0.5, [0, 0, 0, 0.15]],
                 ].filter(Boolean),
-                borderRightRadius: fullScreen ? BORDER_RADIUS : 0,
+                borderRightRadius: fullScreen || onRight ? BORDER_RADIUS : 0,
+                borderLeftRadius: !fullScreen && !onRight ? BORDER_RADIUS : 0,
                 background: fullScreen
                   ? theme.base.background.lighten(0.05)
-                  : '#fff',
+                  : theme.base.background,
               }}
               {...props}
             >
               {children}
+              <undoBorder
+                css={{
+                  background: theme.base.background,
+                  width: 1,
+                  position: 'absolute',
+                  top: 0,
+                  bottom: 0,
+                  left: onRight ? 0 : 'auto',
+                  right: !onRight ? 0 : 'auto',
+                }}
+              />
             </main>
           </peek>
         </crop>
-        <Space if={!onLeft} />
+        <Space if={onRight} />
       </container>
     )
   }
 
   static style = {
+    container: {
+      // background: 'red',
+    },
     peek: {
       height: '100%',
       pointerEvents: 'none !important',

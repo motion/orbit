@@ -1,25 +1,9 @@
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 
-// const SubTitle = p => (
-//   <UI.Text
-//     size={0.9}
-//     css={{ textTransform: 'uppercase', opacity: 0.4, margin: [5, 0] }}
-//     {...p}
-//   />
-// )
-// const P = p => (
-//   <UI.Text
-//     size={1.15}
-//     css={{ marginBottom: 5, opacity: 0.65 }}
-//     highlightWords={['ipsum', 'adipisicing', 'something']}
-//     {...p}
-//   />
-// )
-
 @view
 export default class OrbitItemPreview {
-  render({ result, background }) {
+  render({ result }) {
     if (!result) {
       return null
     }
@@ -32,12 +16,6 @@ export default class OrbitItemPreview {
           <UI.Text if={result.body} ellipse>
             {result.body}
           </UI.Text>
-          <fadeEnd
-            if={false && result.body}
-            css={{
-              background: `linear-gradient(transparent 30%, ${background} 50%)`,
-            }}
-          />
         </words>
       </div>
     )

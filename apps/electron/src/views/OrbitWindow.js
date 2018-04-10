@@ -1,15 +1,39 @@
 import * as React from 'react'
 import * as Constants from '~/constants'
-import { view, react } from '@mcro/black'
+import { view, react, isEqual } from '@mcro/black'
 import { Window } from '@mcro/reactron'
-import { App, Electron, Swift } from '@mcro/all'
+import { App, Electron, Desktop, Swift } from '@mcro/all'
 import * as Mobx from 'mobx'
 
 const log = debug('OrbitWindow')
 
 class OrbitWindowStore {
-  show = false
+  show = 0
   orbitRef = null
+  clear = 0
+
+  willMount() {
+    Electron.onMessage(msg => {
+      if (msg === 'CLEAR') {
+        this.clear = Date.now()
+      }
+    })
+  }
+
+  @react({ log: false })
+  clearOrbitPosition = [
+    () => this.clear,
+    async (_, { when, sleep }) => {
+      if (!this.orbitRef) return
+      this.orbitRef.hide()
+      const lastState = Mobx.toJS(Desktop.appState)
+      this.show = 0
+      await when(() => !isEqual(Desktop.appState, lastState))
+      this.show = 1
+      await sleep(250) // render opacity 0, let it update
+      this.show = 2
+    },
+  ]
 
   // sitrep
   focusOrbit = () => {
@@ -21,9 +45,6 @@ class OrbitWindowStore {
       console.error('error on focus', err)
     }
   }
-
-  @react({ delay: 100, log: false })
-  delayedOrbitState = () => Mobx.toJS(Electron.orbitState)
 
   @react
   watchFullScreenForFocus = [
@@ -82,6 +103,10 @@ class OrbitWindowStore {
     this.orbitRef = ref.window
     this.focusOrbit()
   }
+
+  handleReadyToShow = () => {
+    this.show = 2
+  }
 }
 
 @view.attach('electronStore')
@@ -91,26 +116,25 @@ class OrbitWindowStore {
 @view.electron
 export default class OrbitWindow extends React.Component {
   render({ store }) {
-    if (!store.delayedOrbitState) {
-      return null
-    }
-    const state = Mobx.toJS(store.delayedOrbitState)
+    const state = Mobx.toJS(Electron.orbitState)
     return (
       <Window
         frame={false}
         hasShadow={false}
         background="#00000000"
         webPreferences={Constants.WEB_PREFERENCES}
+        blinkFeatures="CSSOverscrollBehavior CSSOMSmoothScroll"
         transparent={true}
         showDevTools={Electron.state.showDevTools.orbit}
         alwaysOnTop
-        show={store.show}
+        show={store.show ? true : false}
+        opacity={store.show === 1 ? 0 : 1}
         ignoreMouseEvents={!App.isShowingOrbit}
         size={state.size}
         position={state.position}
         file={`${Constants.APP_URL}/orbit`}
         ref={store.handleOrbitRef}
-        onReadyToShow={store.ref('show').setter(true)}
+        onReadyToShow={store.handleReadyToShow}
         devToolsExtensions={Constants.DEV_TOOLS_EXTENSIONS}
       />
     )

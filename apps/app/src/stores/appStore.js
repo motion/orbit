@@ -1,9 +1,10 @@
 import { react, watch } from '@mcro/black'
-import { App, Desktop } from '@mcro/all'
+import { App, Desktop, Electron } from '@mcro/all'
 import { Bit, Setting } from '@mcro/models'
 import fuzzySort from 'fuzzysort'
 import * as Constants from '~/constants'
 import * as r2 from '@mcro/r2'
+import * as Helpers from '~/helpers'
 
 // const log = debug('root')
 const presetAnswers = {
@@ -50,9 +51,18 @@ const fuzzyResults = (query, results, extraOpts) =>
 
 export default class AppStore {
   refreshCycle = 0
-  selectedIndex = 0
+  selectedIndex = -1
+  hoveredIndex = -1
   showSettings = false
   settings = {}
+
+  get activeIndex() {
+    if (App.state.peekTarget) {
+      return this.selectedIndex
+    } else {
+      return this.hoveredIndex
+    }
+  }
 
   @watch({ log: false })
   selectedBit = () =>
@@ -98,17 +108,83 @@ export default class AppStore {
       ...(Desktop.searchState.searchResults || []),
     ]
     const strongTitleMatches = fuzzyResults(App.state.query, results)
-    return uniq([...strongTitleMatches, ...results].slice(0, 8))
+    return uniq([...strongTitleMatches, ...results].slice(0, 10))
   }
 
-  setSelectedIndex = i => {
-    this.selectedIndex = i
+  clearSelected = () => {
+    if (!Electron.isMouseInActiveArea) {
+      App.setPeekTarget(null)
+    }
+  }
+
+  _setSelected = id => {
+    if (App.isShowingOrbit) {
+      this.hoveredIndex = id
+      this.selectedIndex = id
+    }
+  }
+
+  setSelected = (i, target) => {
+    if (i === null) {
+      this.clearSelected()
+      return
+    }
+    if (target) {
+      if (!Electron.orbitState.position) {
+        return
+      }
+      const { top, width, height } = target
+      const position = {
+        // add orbits offset
+        left: Electron.orbitState.position[0],
+        top: top + Electron.orbitState.position[1],
+        width,
+        height,
+      }
+      this._setSelected(i, position)
+      return
+    }
+    if (App.state.peekTarget) {
+      this.pinSelected(i)
+      return
+    }
+    this._setSelected(i)
+  }
+
+  pinSelected = index => {
+    if (typeof index === 'number') {
+      this._setSelected(index)
+    }
+    App.setPeekTarget({
+      id: this.hoveredIndex,
+      position: this.getMousePosition(),
+    })
+  }
+
+  getHoverProps = Helpers.hoverSettler({
+    enterDelay: 120,
+    betweenDelay: 120,
+    onHovered: item => {
+      log(`hi`)
+      this.setSelected(item && item.id)
+    },
+  })
+
+  getMousePosition = () => {
+    return {
+      top: Math.max(
+        Electron.orbitState.position[1] + 100,
+        Desktop.mouseState.position.y - 200,
+      ),
+      left: Electron.orbitState.position[0],
+      width: Electron.orbitState.size[0] - Constants.SHADOW_PAD,
+    }
   }
 
   @react.if
   hoverWordToSelectedIndex = [
     () => App.state.hoveredWord,
-    word => this.setSelectedIndex(word.index),
+    word => this.setSelected(word.index),
   ]
 
   @react({ delay: 64 })

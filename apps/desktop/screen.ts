@@ -105,6 +105,7 @@ export default class DesktopScreen {
       })
     })
     this.oracle.onWindowChange((event, value) => {
+      log(`got event ${event}`, value)
       if (event === 'ScrollEvent') {
         this.rescanApp()
         return
@@ -139,8 +140,10 @@ export default class DesktopScreen {
           if (value.id !== id) return
           nextState.offset = value.pos
       }
+      // @ts-ignore
       const state: Partial<DesktopState> = {
         focusedOnOrbit: this.curAppID === ORBIT_APP_ID,
+        appState: nextState,
       }
       // when were moving into focus prevent app, store its appName, pause then return
       if (PREVENT_APP_STATE[this.curAppName]) {
@@ -148,7 +151,6 @@ export default class DesktopScreen {
         this.oracle.pause()
         return
       }
-      state.appState = JSON.parse(JSON.stringify(nextState))
       state.appStateUpdatedAt = Date.now()
       if (
         !wasFocusedOnOrbit &&
@@ -161,7 +163,7 @@ export default class DesktopScreen {
           !isEqual(nextState.offset, appState.offset)
         ) {
           // immediate clear for moving
-          Desktop.setLastAppChange(Date.now())
+          Desktop.sendMessageTo(Electron, 'CLEAR')
         }
       }
       if (!Desktop.state.paused) {

@@ -86,16 +86,6 @@ export default class ElectronReactions {
     hidden => hidden && Electron.orbitState.pinned && Electron.setPinned(false),
   ]
 
-  @react
-  hideFullScreenOnDefocus = [
-    () => Desktop.appState && Date.now(),
-    () => {
-      if (Electron.orbitState.fullScreen) {
-        Electron.shouldHide()
-      }
-    },
-  ]
-
   @react({ log: false })
   setMouseOvers = [
     () => [Desktop.mouseState.position, App.state.orbitHidden],
@@ -162,7 +152,7 @@ export default class ElectronReactions {
       if (Constants.FORCE_FULLSCREEN) {
         return
       }
-      await sleep(64)
+      // await sleep(64)
       // prefer using lines bounding box, fall back to app
       const box = linesBB || appBB
       if (!box) return

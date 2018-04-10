@@ -14,19 +14,8 @@ const USER_PATH = os
   .trim('/')
   .trim('\\')
 
-/**
- * Do not show some files in results, i.e. system files
- *
- * @param  {String} fileName
- * @return {Boolean}
- */
 const ignoreFile = fileName => fileName.match(/^\./)
 
-/**
- * Plugin to look and display local and external IPs
- * @param  {String} options.term
- * @param  {Function} options.display
- */
 export const fn = ({ term, actions, display }) => {
   let path = term
   let replaceHomePath = false

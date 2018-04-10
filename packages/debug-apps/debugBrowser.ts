@@ -238,7 +238,7 @@ export default class DebugApps {
       }
     }
     clearInterval(this.intervals[index])
-    this.intervals[index] = setInterval(injectTitle, 500)
+    this.intervals[index] = setInterval(injectTitle, 5000)
     onFocus(page).then(async () => {
       await sleep(50)
       await page.frames()[0].focus('body')

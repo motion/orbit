@@ -8,8 +8,10 @@ import * as React from 'react'
 import ReactDOM from 'react-dom'
 import Themes from './themes'
 import Root from './root'
+import Results from '~/apps/results/results'
 import { uniqBy } from 'lodash'
 import * as Constants from '~/constants'
+import * as UI from '@mcro/ui'
 
 // HMR
 if (module && module.hot) {
@@ -54,12 +56,16 @@ class AppRoot {
   async dispose() {}
 
   render() {
-    let ROOT = document.querySelector('#app')
+    const isResults = window.location.pathname === '/results'
+    const RootComponent = isResults ? Results : Root
+    console.log('RootComponent', RootComponent)
     ReactDOM.render(
       <ThemeProvide {...Themes}>
-        <Root />
+        <UI.Theme name="tan">
+          <RootComponent />
+        </UI.Theme>
       </ThemeProvide>,
-      ROOT,
+      document.querySelector('#app'),
     )
   }
 

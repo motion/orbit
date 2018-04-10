@@ -39,28 +39,26 @@ const peekPosition = target => {
   // prefer bigger area
   let peekOnLeft = leftSpace > rightSpace
   // prefer more strongly away from app if possible
-  if (peekOnLeft && !Electron.orbitOnLeft && rightSpace > WIDTH - 30) {
+  if (peekOnLeft && !Electron.orbitOnLeft && rightSpace > WIDTH - PAD * 2) {
     peekOnLeft = false
   }
-  if (!peekOnLeft && Electron.orbitOnLeft && leftSpace > WIDTH - 30) {
+  if (!peekOnLeft && Electron.orbitOnLeft && leftSpace > WIDTH - PAD * 2) {
     peekOnLeft = true
   }
   let x
   let y = top + TOP_OFFSET
   if (peekOnLeft) {
-    x = left - peekW
+    x = left - peekW + PAD // this pad adjusts for orbits left side shadow pad
     if (peekW > leftSpace) {
       peekW = leftSpace
       x = 0
     }
   } else {
-    x = left + width + (!peekOnLeft ? 6 : 0)
+    x = left + width
     if (peekW > rightSpace) {
       peekW = rightSpace
     }
   }
-  // why is this offset already?
-  x += peekOnLeft ? PAD * 2 : 0
   if (peekH + y + EDGE_PAD > screenH) {
     log(`too tall`)
     y = screenH - EDGE_PAD - peekH

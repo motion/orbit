@@ -25,7 +25,7 @@ function Strategy(options, verify) {
   // Details on Slack's identity scope - https://api.slack.com/methods/users.identity
   if (!this._skipUserProfile && this._scope.indexOf('identity.basic') === -1) {
     console.warn(
-      'Scope \'identity.basic\' is required to retrieve Slack user profile'
+      "Scope 'identity.basic' is required to retrieve Slack user profile",
     )
   }
 }
@@ -104,18 +104,14 @@ Strategy.prototype.get = function(url, callback) {
  * @return {Object}
  */
 Strategy.prototype.authorizationParams = function(options) {
-  const params = {}
-
-  params.scope = options.scope || this._scope
-
   const team = options.team || this._team
+  const params: { scope?: string; team?: string } = {
+    scope: options.scope || this._scope,
+  }
   if (team) {
     params.team = team
   }
   return params
 }
 
-/**
- * Expose `Strategy`.
- */
 export default Strategy

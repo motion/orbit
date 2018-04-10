@@ -10,7 +10,7 @@ export default class ThemeMaker {
         ...acc,
         [cur]: obj[cur] instanceof $ ? obj[cur] : $(obj[cur]),
       }),
-      {}
+      {},
     )
 
   fromColor = (colorName: string): Object => {
@@ -29,7 +29,6 @@ export default class ThemeMaker {
       }
       throw e
     }
-
     const opposite = base.mix(base.lighten(1))
     const theme = this.fromStyles({
       highlightColor: base,
@@ -60,7 +59,6 @@ export default class ThemeMaker {
       color,
       borderColor,
     })
-
     const lighten = {
       true: 'darken',
       false: 'lighten',
@@ -69,7 +67,6 @@ export default class ThemeMaker {
       true: 'lighten',
       false: 'darken',
     }
-
     const str = x => `${x}`
     const MIN_ADJUST = 0.1
     const smallAmt = color =>
@@ -80,12 +77,10 @@ export default class ThemeMaker {
       const direction = isLight ? darken[str(opposite)] : lighten[str(opposite)]
       return color[direction](adjuster(color))
     }
-
     const focused = {
       background: adjust(styles.background, largeAmt, true),
       borderColor: adjust(styles.borderColor, largeAmt, true),
     }
-
     const highlightColorFinal = hlColor || $('#fff')
     const highlightBgFinal = hlBackgorund || highlightColorFinal.negate()
     const highlight = {
@@ -93,7 +88,6 @@ export default class ThemeMaker {
       background: highlightBgFinal,
       borderColor: adjust(highlightBgFinal, largeAmt, true),
     }
-
     return {
       ...rest,
       base: styles,

@@ -254,7 +254,6 @@ function fancyElementFactory(Gloss, styles) {
       } else {
         finalProps.className += ` ${type_}`;
       }
-
       if (!VALID_TAGS[type]) {
         type = 'div';
       }

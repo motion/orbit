@@ -40,7 +40,7 @@ export default class Card {
           if (!isActive) {
             return
           }
-          appStore.setSelectedIndex(index)
+          appStore.setSelected(index)
           store.showPeek(index)
         }}
         ref={ref => {

@@ -12,6 +12,10 @@ export let Electron
 
 @store
 class ElectronStore {
+  setState: typeof Bridge.setState
+  sendMessageTo: typeof Bridge.sendMessageTo
+  onMessage: typeof Bridge.onMessage
+  reactions: ElectronReactions
   source = 'Electron'
 
   state = {
@@ -31,7 +35,6 @@ class ElectronStore {
     peekState: {
       mouseOver: false,
       windows: null,
-      peekOnLeft: false,
     },
     showDevTools: {
       orbit: false,
@@ -50,12 +53,11 @@ class ElectronStore {
     },
   ]
 
-  setState: Function
-  reactions: ElectronReactions
-
-  start(options) {
+  start = options => {
     Bridge.start(this, this.state, options)
     this.setState = Bridge.setState
+    this.sendMessageTo = Bridge.sendMessageTo
+    this.onMessage = Bridge.onMessage
     const ElectronReactions = eval(`require('./ElectronReactions')`).default
     this.reactions = new ElectronReactions()
   }
@@ -69,11 +71,11 @@ class ElectronStore {
   }
 
   get peekOnLeft() {
-    return Electron.peekState.peekOnLeft
+    return this.currentPeek.peekOnLeft
   }
 
   get currentPeek() {
-    return (Electron.peekState.windows || [])[0]
+    return (Electron.peekState.windows || [])[0] || {}
   }
 
   get recentlyToggled() {

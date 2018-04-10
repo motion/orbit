@@ -9,12 +9,6 @@ const REAL_KEYS = {
   kMDItemUseCount: 'useCount',
 }
 
-/**
- * Parse mdfind result line to JS object
- *
- * @param  {String} line
- * @return {Object}
- */
 function parseLine(line) {
   const attrs = line.split('   ')
   // First attr is always full path to the item

@@ -1,242 +1,168 @@
 import * as React from 'react'
 import ReactDOM from 'react-dom'
-import prefix from './prefix'
-import PropTypes from 'prop-types'
+import OverdriveElement from './overdriveElement'
+import { debounce } from 'lodash'
 
-const renderSubtreeIntoContainer = ReactDOM.unstable_renderSubtreeIntoContainer
-const components = {}
+class PortalChild extends React.Component {
+  props: any
+  render() {
+    const { child, parentElement } = this.props
+    return ReactDOM.createPortal(child, parentElement)
+  }
+}
+
+const AnimateElement = ({ children }) => children
+AnimateElement.IS_ANIMATED_ELEMENT = true
+
+// depth first to capture changes
+const replaceAnimateNode = (child, replacer) => {
+  let result
+  if (!child || !child.type) {
+    result = child
+  } else if (Array.isArray(child)) {
+    result = child.map(replaceAnimateNode)
+  } else if (child.props.children) {
+    const children = replaceAnimateNode(child.props.children, replacer)
+    result = {
+      ...child,
+      props: {
+        ...child.props,
+        children,
+      },
+    }
+  }
+  if (result && result.type && result.type.IS_ANIMATED_ELEMENT) {
+    return replacer(result, result.props.id)
+  }
+  return result
+}
 
 export default class Overdrive extends React.Component {
-  animationDelayTimeout: any
-  animationTimeout: any
-  onShowLock?: boolean
-  element?: any
-  bodyElement?: HTMLElement
   props: {
-    id: string
-    style?: Object
-    duration?: number
-    animationDelay?: number
-    element?: string
-    onAnimationEnd?: Function
     children?: any
-  }
-
-  static defaultProps = {
-    element: 'div',
-    duration: 200,
+    parentElement?: any
   }
 
   state = {
-    loading: true,
+    naturalChildren: null,
+    hasRenderedNaturally: false,
   }
 
-  componentDidMount() {
-    this.onShowLock = false
-    this.onShow()
-  }
-
-  componentWillUnmount() {
-    this.onHide()
-    this.onShowLock = false
+  componentWillMount() {
+    this.updateNaturalChildren()
   }
 
   componentWillReceiveProps() {
-    this.onShowLock = false
-    this.onHide()
+    this.updateNaturalChildren()
   }
 
-  componentDidUpdate() {
-    this.onShow()
-  }
+  reRenderAfterCollectingChildren = debounce(() => {
+    this.setState({ hasRenderedNaturally: true })
+  }, 16)
 
-  animateEnd = () => {
-    this.animationTimeout = null
-    this.setState({ loading: false })
-    this.props.onAnimationEnd && this.props.onAnimationEnd()
-    window.document.body.removeChild(this.bodyElement)
-  }
+  childPositions = {}
 
-  onHide() {
-    const { id } = this.props
-    const prevElement = React.cloneElement(this.props.children)
-    const prevPosition = this.getPosition()
-    components[id] = {
-      prevPosition,
-      prevElement,
-    }
-
-    this.clearAnimations()
-
-    setTimeout(() => {
-      components[id] = false
-    }, 100)
-  }
-
-  onShow() {
-    if (this.onShowLock) {
-      return
-    }
-    this.onShowLock = true
-    const { id, animationDelay } = this.props
-    if (components[id]) {
-      const { prevPosition, prevElement } = components[id]
-      components[id] = false
-      if (animationDelay) {
-        this.animationDelayTimeout = setTimeout(
-          () => this.animate(prevPosition, prevElement),
-          animationDelay,
-        )
-      } else {
-        this.animate(prevPosition, prevElement)
-      }
-    } else {
-      this.setState({ loading: false })
-    }
-  }
-
-  animate = (prevPosition, prevElement) => {
-    const { duration } = this.props
-    prevPosition.top += window.pageYOffset || document.documentElement.scrollTop
-    const nextPosition = this.getPosition(true)
-    const noTransform = 'scaleX(1) scaleY(1) translateX(0px) translateY(0px)'
-    const targetScaleX = prevPosition.width / nextPosition.width
-    const targetScaleY = prevPosition.height / nextPosition.height
-    const targetTranslateX = prevPosition.left - nextPosition.left
-    const targetTranslateY = prevPosition.top - nextPosition.top
-    if (
-      targetScaleX === 1 &&
-      targetScaleY === 1 &&
-      targetTranslateX === 0 &&
-      targetTranslateY === 0
-    ) {
-      this.setState({ loading: false })
-      return
-    }
-    const transition = {
-      transition: `transform ${duration / 1000}s, opacity ${duration / 1000}s`,
-      transformOrigin: '0 0 0',
-    }
-    const sourceStart = React.cloneElement(prevElement, {
-      key: '1',
-      style: prefix({
-        ...transition,
-        ...prevPosition,
-        opacity: 1,
-        transform: noTransform,
+  updateNaturalChildren = () => {
+    this.setState({
+      hasRenderedNaturally: false,
+      naturalChildren: this.props.children({
+        AnimateElement: props =>
+          React.cloneElement(props.children, {
+            ref: this.getNaturalChildRef(props.id),
+          }),
       }),
     })
-    const sourceEnd = React.cloneElement(prevElement, {
-      key: '1',
-      style: prefix({
-        ...transition,
-        ...prevPosition,
-        margin: nextPosition.margin,
-        opacity: 0,
-        transform: `matrix(${1 / targetScaleX}, 0, 0, ${1 /
-          targetScaleY}, ${-targetTranslateX}, ${-targetTranslateY})`,
-      }),
-    })
-    const targetStart = React.cloneElement(this.props.children, {
-      key: '2',
-      style: prefix({
-        ...transition,
-        ...nextPosition,
-        margin: prevPosition.margin,
-        opacity: 0,
-        transform: `matrix(${targetScaleX}, 0, 0, ${targetScaleY}, ${targetTranslateX}, ${targetTranslateY})`,
-      }),
-    })
-    const targetEnd = React.cloneElement(this.props.children, {
-      key: '2',
-      style: prefix({
-        ...transition,
-        ...nextPosition,
-        opacity: 1,
-        transform: noTransform,
-      }),
-    })
-    const start = (
-      <div>
-        {sourceStart}
-        {targetStart}
-      </div>
-    )
-    const end = (
-      <div>
-        {sourceEnd}
-        {targetEnd}
-      </div>
-    )
-    this.setState({ loading: true })
-    const bodyElement = document.createElement('div')
-    window.document.body.appendChild(bodyElement)
-    this.bodyElement = bodyElement
-    renderSubtreeIntoContainer(this, start, bodyElement)
-    this.animationTimeout = setTimeout(() => {
-      renderSubtreeIntoContainer(this, end, bodyElement)
-      this.animationTimeout = setTimeout(this.animateEnd, duration)
-    }, 64)
   }
 
-  clearAnimations() {
-    clearTimeout(this.animationDelayTimeout)
-    clearTimeout(this.animationTimeout)
-    if (this.animationTimeout) {
-      this.animateEnd()
-    }
-  }
-
-  getPosition(addOffset?: boolean) {
-    const node = this.element
+  getPosition = (node, addOffset?: boolean) => {
+    const parentRect = this.props.parentElement.getBoundingClientRect()
     const rect = node.getBoundingClientRect()
     const computedStyle = getComputedStyle(node)
     const marginTop = parseInt(computedStyle.marginTop, 10)
     const marginLeft = parseInt(computedStyle.marginLeft, 10)
     return {
-      top:
-        rect.top -
-        marginTop +
-        (addOffset ? 1 : 0) *
-          (window.pageYOffset || document.documentElement.scrollTop),
-      left: rect.left - marginLeft,
+      top: rect.top - marginTop - parentRect.top,
+      left: rect.left - marginLeft - parentRect.left,
       width: rect.width,
       height: rect.height,
-      margin: computedStyle.margin,
-      padding: computedStyle.padding,
-      borderRadius: computedStyle.borderRadius,
-      position: 'absolute',
     }
   }
 
-  setRef = c => {
-    this.element = c && c.firstChild
+  getNaturalChildRef = id => ref => {
+    if (ref) {
+      this.childPositions[id] = this.getPosition(ref)
+      this.reRenderAfterCollectingChildren()
+    }
+  }
+
+  naturalChildRef = id => {
+    return this.childPositions[id]
+  }
+
+  flattenChildren = root => {
+    let result = []
+    replaceAnimateNode(root, (child, id) => {
+      result.push({ child, id })
+      return null
+    })
+    return result
+  }
+
+  containers = {}
+
+  collectContainer = index => ref => {
+    this.containers[index] = ref
   }
 
   render() {
-    const {
-      id,
-      duration,
-      animationDelay,
-      style = {},
-      children,
-      element,
-      ...rest
-    } = this.props
-    const newStyle = {
-      ...style,
-      opacity: this.state.loading ? 0 : 1,
-    }
-    const onlyChild = React.Children.only(children)
-    return React.createElement(
-      element,
-      {
-        ref: this.setRef,
-        style: newStyle,
-        ...rest,
-      },
-      onlyChild,
+    return this.props.children({ AnimateElement })
+
+    const portalChildren = this.flattenChildren(
+      this.props.children({
+        AnimateElement,
+      }),
+    )
+    const { containers } = this
+    return (
+      <React.Fragment>
+        <div
+          style={{
+            opacity: 0,
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+          }}
+        >
+          {this.state.naturalChildren}
+        </div>
+        {portalChildren.map(({ child, id }, index) => {
+          const pos = this.childPositions[id]
+          return (
+            <div
+              key={`container-${id}`}
+              style={{
+                position: 'absolute',
+                transition: 'all ease-in 300ms',
+                zIndex: portalChildren.length - index,
+                ...pos,
+              }}
+              ref={this.collectContainer(id)}
+            />
+          )
+        })}
+        {portalChildren.map(
+          ({ child, id }) =>
+            containers[id] && (
+              <PortalChild
+                key={id}
+                child={child}
+                parentElement={containers[id]}
+              />
+            ),
+        )}
+      </React.Fragment>
     )
   }
-  s
 }

@@ -15,11 +15,16 @@ var _propTypes = require('prop-types');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+
 let ThemeProvide = (_temp = _class = class ThemeProvide extends _react2.default.Component {
 
   getChildContext() {
+    const _props = this.props,
+          { children } = _props,
+          themes = _objectWithoutProperties(_props, ['children']);
     return {
-      uiThemes: this.props,
+      uiThemes: themes,
       provided: {}
     };
   }

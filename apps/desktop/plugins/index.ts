@@ -2,11 +2,16 @@ import { store, react } from '@mcro/black/store'
 import { App, Desktop } from '@mcro/all'
 import Icons from './icons'
 
-// plugins
 import * as MacAppsPlugin from './macApps'
 import * as FilesPlugin from './files'
+import debug from '@mcro/debug'
 
-const plugins = [MacAppsPlugin, FilesPlugin]
+type Plugin = {
+  initialize?: Function
+  fn?: Function
+}
+
+const plugins: Array<Plugin> = [MacAppsPlugin, FilesPlugin]
 const log = debug('Plugins')
 
 @store
@@ -14,6 +19,8 @@ export default class Plugins {
   plugins = plugins
   results = []
   searchId = 0
+  server: any
+  icons: Icons
 
   constructor({ server }) {
     this.server = server

@@ -10,7 +10,6 @@ import OrbitStore from './orbitStore'
 import OrbitHeadsUp from './orbitHeadsUp'
 import { throttle } from 'lodash'
 import { SHADOW_PAD } from '~/constants'
-import * as Helpers from '~/helpers'
 
 // const log = require('@mcro/debug')('orbit')
 
@@ -63,51 +62,14 @@ class OrbitPageStore {
 })
 @view
 export default class Orbit {
-  getHoverProps = Helpers.hoverSettler({
-    enterDelay: 120,
-    betweenDelay: 120,
-    onHovered: async target => {
-      clearTimeout(this.updateTargetTm)
-      if (!target) {
-        this.updateTargetTm = setTimeout(() => {
-          if (!Electron.isMouseInActiveArea) {
-            App.setPeekTarget(null)
-          }
-        }, 400)
-        return
-      }
-      if (!Electron.orbitState.position) {
-        console.log(`no position`)
-        return
-      }
-      const { id, top, width, height } = target
-      const position = {
-        // add orbits offset
-        left: Electron.orbitState.position[0],
-        top: top + Electron.orbitState.position[1],
-        width,
-        height,
-      }
-      if (App.isShowingOrbit) {
-        this.props.appStore.setSelectedIndex(target.id)
-        this.updateTargetTm = setTimeout(() => {
-          App.setPeekTarget({ id, position, type: 'document' })
-        }, 100)
-      }
-    },
-  })
-
   render({ appStore, orbitPage, theme }) {
     const headerBg = theme.base.background
     return (
       <UI.Theme name={Electron.orbitState.fullScreen ? 'tan' : 'tan'}>
         <OrbitFrame headerBg={headerBg} orbitPage={orbitPage}>
           <OrbitHeader headerBg={headerBg} />
-          <OrbitHeadsUp if={false} getHoverProps={this.getHoverProps} />
-          <OrbitContent
-            if={!appStore.showSettings}
-            getHoverProps={this.getHoverProps}
-          />
+          <OrbitHeadsUp if={false} />
+          <OrbitContent if={!appStore.showSettings} />
           <OrbitSettings if={appStore.showSettings} />
           <Knowledge if={App.state.knowledge} data={App.state.knowledge} />
           <controls>

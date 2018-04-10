@@ -1,8 +1,19 @@
+import { react } from '@mcro/black'
 import { App } from '@mcro/all'
 import KeyboardStore from './keyboardStore'
+import { throttle } from 'lodash'
 
 export default class OrbitStore {
+  query = ''
   keyboardStore = new KeyboardStore()
+
+  @react
+  updateAppQuery = [
+    () => this.query,
+    throttle(query => {
+      App.setQuery(query)
+    }, 150),
+  ]
 
   willMount() {
     // only do reactions in one App
@@ -14,13 +25,12 @@ export default class OrbitStore {
     const {
       results,
       selectedIndex,
-      setSelectedIndex,
+      setSelected,
       showSettings,
     } = this.props.appStore
     const increment = (by = 1) =>
-      setSelectedIndex(Math.min(results.length - 1, selectedIndex + by))
-    const decrement = (by = 1) =>
-      setSelectedIndex(Math.max(0, selectedIndex - by))
+      setSelected(Math.min(results.length - 1, selectedIndex + by))
+    const decrement = (by = 1) => setSelected(Math.max(0, selectedIndex - by))
     switch (code) {
       case 37: // left
         if (showSettings) {
@@ -48,6 +58,6 @@ export default class OrbitStore {
   }
 
   onChangeQuery = e => {
-    App.setQuery(e.target.value)
+    this.query = e.target.value
   }
 }

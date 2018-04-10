@@ -6,11 +6,10 @@ import OrbitItemPreview from './orbitItemPreview'
 import * as UI from '@mcro/ui'
 
 @UI.injectTheme
-@view.attach('appStore', 'orbitPage')
 @view
 export default class Item {
   onClick = () => {
-    this.props.appStore.setSelectedIndex(this.props.index)
+    this.props.appStore.setSelected(this.props.index)
   }
 
   render({
@@ -18,7 +17,6 @@ export default class Item {
     titleProps,
     iconProps,
     appStore,
-    orbitPage,
     index,
     result,
     total,
@@ -27,44 +25,19 @@ export default class Item {
     results,
     ...props
   }) {
-    const isSelected = appStore.selectedIndex === index
+    appStore.activeIndex
+    // const isSelected = appStore.selectedIndex === index
     const shouldShowIcon =
       !results[index - 1] || results[index - 1].type !== result.type
     // log(`OrbitItem isSelected ${isSelected} ${index}`)
     if (!result) {
       return null
     }
-    const orbitHeight = orbitPage.contentHeight
-    const WORDS_PER_LINE_ROUGHLY = 35
     const ITEM_PAD = 15
-    const SUBTITLE_HEIGHT = 18
-    const LINE_HEIGHT = 16
-    const TITLE_LINE_HEIGHT = LINE_HEIGHT * 2.2
-    const TITLE_HEIGHT = Math.min(
-      Math.ceil((result.title || '').length / 25) * TITLE_LINE_HEIGHT,
-      TITLE_LINE_HEIGHT * 2,
-    )
-    const itemHeight =
-      ITEM_PAD * 2 +
-      TITLE_HEIGHT +
-      SUBTITLE_HEIGHT +
-      LINE_HEIGHT *
-        Math.ceil((result.body || '').length / WORDS_PER_LINE_ROUGHLY)
-    const itemHeightContain = Math.min(orbitHeight, itemHeight)
-    const MAX_PER_SCREEN = 4
-    const wantsToShow = Math.min(total, Math.round(orbitHeight / 300))
-    const height = Math.min(
-      itemHeightContain,
-      Math.round(
-        Math.max(orbitHeight / MAX_PER_SCREEN, orbitHeight / wantsToShow),
-      ),
-    )
-    const background = isSelected ? theme.highlight.color : 'transparent'
     return (
       <orbitItem
         css={{
           padding: padding || ITEM_PAD,
-          background,
         }}
         onClick={this.onClick}
         {...props}
@@ -76,7 +49,7 @@ export default class Item {
             ellipse={2}
             fontWeight={400}
             css={{
-              width: 'calc(100% - 15px)',
+              width: 'calc(100% - 25px)',
             }}
             {...titleProps}
           >
@@ -93,11 +66,7 @@ export default class Item {
             {...iconProps}
           />
         </titles>
-        <OrbitItemPreview
-          if={!hidePreview}
-          result={result}
-          background={background}
-        />
+        <OrbitItemPreview if={!hidePreview} result={result} />
       </orbitItem>
     )
   }
@@ -105,11 +74,7 @@ export default class Item {
   static style = {
     orbitItem: {
       position: 'relative',
-      // background: 'red',
       overflow: 'hidden',
-      '&:hover bg': {
-        opacity: 1,
-      },
     },
     space: {
       height: 20,
@@ -119,5 +84,20 @@ export default class Item {
       alignItems: 'flex-start',
       padding: [2, 5, 2, 0],
     },
+  }
+
+  static theme = ({ appStore, index }, theme) => {
+    const isSelected = appStore.activeIndex === index
+    const hoveredStyle = {
+      background: isSelected
+        ? theme.activeHover.background
+        : theme.hover.background,
+    }
+    return {
+      orbitItem: {
+        background: isSelected ? theme.active.background : 'transparent',
+        '&:hover': hoveredStyle,
+      },
+    }
   }
 }

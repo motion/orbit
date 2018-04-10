@@ -1,38 +1,73 @@
+import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { App } from '@mcro/all'
 import OrbitItem from './orbitItem'
 import OrbitDivider from './orbitDivider'
-import OrbitCard from './orbitCard'
 import * as Constants from '~/constants'
+import { throttle } from 'lodash'
+import elasticScroll from 'elasticscroll.js'
+import Results from '~/apps/results/results'
+
+console.log('elasticScroll', elasticScroll)
+
+const SPLIT_INDEX = 3
 
 @UI.injectTheme
+@view.attach('orbitPage')
 @view
 class OrbitContext {
-  render({ appStore, theme, getHoverProps }) {
-    const isSelectedInContext = appStore.selectedIndex >= 5
+  state = {
+    resultsRef: null,
+    isScrolled: false,
+  }
+
+  setRef = resultsRef => {
+    if (resultsRef) {
+      this.setState({ resultsRef })
+      this.on(
+        resultsRef,
+        'scroll',
+        throttle(() => {
+          if (resultsRef.scrollTop > 0) {
+            if (!this.state.isScrolled) {
+              this.setState({ isScrolled: true })
+            }
+          } else {
+            if (this.state.isScrolled) {
+              this.setState({ isScrolled: false })
+            }
+          }
+        }, 16),
+      )
+    }
+  }
+
+  render({ appStore, theme }) {
+    const isSelectedInContext = appStore.activeIndex >= SPLIT_INDEX
+    const y = isSelectedInContext ? -(SPLIT_INDEX * 20) : 0
     return (
       <orbitContext
         css={{
           background: theme.base.background,
-          transform: { y: isSelectedInContext ? -100 : 0 },
+          transform: { y },
         }}
       >
-        <OrbitDivider if={!App.state.query} />
-        <results>
-          {appStore.results
-            .slice(5)
-            .map((result, i) => (
-              <OrbitCard
-                key={result.id}
-                appStore={appStore}
-                theme={theme}
-                getHoverProps={getHoverProps}
-                result={result}
-                index={i + 5}
-              />
-            ))}
-        </results>
+        <fadeUp
+          $$untouchable
+          $fadeVisible={appStore.activeIndex >= SPLIT_INDEX}
+        />
+        <OrbitDivider
+          if={!App.state.query}
+          css={{ paddingBottom: 0, zIndex: 1000, position: 'relative' }}
+        />
+        <Results />
+        <webview
+          if={false}
+          $results
+          webpreferences="scrollBounce experimentalFeatures"
+          src="http://localhost:3001/results"
+        />
       </orbitContext>
     )
   }
@@ -41,61 +76,112 @@ class OrbitContext {
       borderRadius: Constants.BORDER_RADIUS,
       position: 'relative',
       height: 'calc(100% - 35px)',
-      transition: 'transform ease-in 300ms',
+      transition: 'transform ease-in-out 150ms',
     },
     results: {
       flex: 1,
-      overflowY: 'scroll',
+    },
+    fade: {
+      position: 'fixed',
+      left: 0,
+      right: 0,
+      top: 13,
+      height: 60,
+      opacity: 0,
+      zIndex: 100000,
+      transition: 'opacity ease-in-out 150ms',
+    },
+    fadeUp: {
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      top: -40,
+      height: 40,
+      zIndex: -1,
+      transition: 'opacity ease-in 150ms',
+    },
+    fadeVisible: {
+      zIndex: 10000,
     },
   }
+
+  static theme = (props, theme) => {
+    return {
+      fade: {
+        background: `linear-gradient(${
+          theme.base.background
+        } 40%, transparent)`,
+      },
+      fadeUp: {
+        background: `linear-gradient(transparent 45%, ${
+          theme.base.background
+        })`,
+      },
+    }
+  }
+}
+
+const tinyProps = {
+  hidePreview: true,
+  titleProps: {
+    ellipse: 1,
+    fontWeight: 400,
+    size: 1,
+  },
+  iconProps: {
+    size: 14,
+    style: {
+      marginTop: 1,
+      marginLeft: 15,
+    },
+  },
+  padding: [3, 8],
+  style: {
+    borderRadius: 5,
+  },
 }
 
 @view.attach('appStore')
 @view
 export default class OrbitContent {
-  render({ appStore, getHoverProps }) {
+  render({ appStore }) {
     const { query } = App.state
-    const tinyProps = {
-      hidePreview: true,
-      titleProps: {
-        ellipse: true,
-        fontWeight: 400,
-        size: 1,
-      },
-      iconProps: {
-        size: 14,
-        style: {
-          marginTop: 1,
-          marginLeft: 15,
-        },
-      },
-      padding: [3, 15],
-    }
+    log(`render.OrbitContent`)
     return (
       <orbitContent>
-        {appStore.results.slice(0, query ? 12 : 5).map((result, index) => (
-          <OrbitItem
-            {...!query && tinyProps}
-            key={result.id}
-            type="gmail"
-            index={index}
-            results={appStore.results}
-            result={{
-              ...result,
-              title: result.title.slice(0, 18),
-            }}
-            total={appStore.results.length}
-            {...getHoverProps({
-              result,
-              id: index,
-            })}
-          />
-        ))}
-        <OrbitContext
-          if={!query}
-          appStore={appStore}
-          getHoverProps={getHoverProps}
-        />
+        <space css={{ height: 10 }} />
+        <notifications
+          $tiny={!query}
+          css={{
+            opacity:
+              appStore.activeIndex >= 0 && appStore.activeIndex < SPLIT_INDEX
+                ? 1
+                : 0.5,
+          }}
+        >
+          {appStore.results
+            .slice(0, query ? 12 : SPLIT_INDEX)
+            .map((result, index) => (
+              <OrbitItem
+                {...!query && tinyProps}
+                key={result.id}
+                type="gmail"
+                index={index}
+                appStore={appStore}
+                results={appStore.results}
+                result={{
+                  ...result,
+                  title: result.title,
+                }}
+                total={appStore.results.length}
+                {...appStore.getHoverProps({
+                  result,
+                  id: index,
+                })}
+              />
+            ))}
+        </notifications>
+        <OrbitContext if={!query} appStore={appStore} />
         <space css={{ height: 20 }} />
       </orbitContent>
     )
@@ -104,6 +190,13 @@ export default class OrbitContent {
   static style = {
     orbitContent: {
       flex: 1,
+    },
+    tiny: {
+      margin: [0, 10],
+    },
+    notifications: {
+      position: 'relative',
+      transition: 'opacity ease-in-out 150ms',
     },
   }
 }

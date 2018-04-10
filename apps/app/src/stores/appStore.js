@@ -28,7 +28,7 @@ const uniq = arr => {
   const added = {}
   const final = []
   for (const item of arr) {
-    if (!added[item.title]) {
+    if (!added[item.identifier || item.title]) {
       final.push(item)
       added[item.title] = true
     }
@@ -138,7 +138,6 @@ export default class AppStore {
     betweenDelay: 30,
     onHovered: item => {
       if (item && typeof item.id === 'number') {
-        log(`select ${item}`)
         this.setSelected(item.id)
       }
     },

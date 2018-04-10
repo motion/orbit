@@ -31,9 +31,10 @@ export default class Slack {
   render({ store }) {
     return (
       <slack>
-        123
         <UI.Input
           marginBottom={10}
+          borderWidth={2}
+          borderColor="black"
           size={1.2}
           placeholder="Filter Channels..."
           onChange={e => (store.search = e.target.value)}
@@ -41,6 +42,7 @@ export default class Slack {
         />
         <content>
           <UI.List
+            scrollable
             itemsKey={store.search + store.channels && store.channels.length}
             items={store.channels}
             getItem={channel => (
@@ -58,12 +60,10 @@ export default class Slack {
 
   static style = {
     slack: {
-      padding: 10,
       flex: 1,
     },
     content: {
       flex: 1,
-      overflowY: 'scroll',
     },
   }
 }

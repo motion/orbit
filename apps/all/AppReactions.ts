@@ -20,11 +20,11 @@ export default class AppReactions {
     },
   ]
 
-  @react
-  clearPeekTargetOnMouseLeave = [
-    () => !Electron.isMouseInActiveArea,
-    outside => outside && App.setPeekTarget(null),
-  ]
+  // @react
+  // clearPeekTargetOnMouseLeave = [
+  //   () => !Electron.isMouseInActiveArea,
+  //   outside => outside && App.setPeekTarget(null),
+  // ]
 
   @react
   clearPeekTargetOnOrbitClose = [

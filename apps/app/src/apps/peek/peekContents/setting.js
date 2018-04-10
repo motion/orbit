@@ -56,7 +56,15 @@ export class SettingView {
       <PeekFrame>
         <PeekHeader
           title={capitalize(store.selectedItem.integration)}
-          subtitle={<div>Synced {store.bitsCount} total</div>}
+          subtitle={
+            <div $$row if={store.job}>
+              {store.bitsCount} total{' '}
+              <UI.Text>&nbsp;| {store.job.status}</UI.Text>
+              <UI.Text>
+                &nbsp;| <UI.Date>{store.job.updatedAt}</UI.Date>
+              </UI.Text>
+            </div>
+          }
           after={
             <UI.Row $$flex>
               <UI.Button
@@ -85,13 +93,7 @@ export class SettingView {
           }
         />
         <body>
-          <status if={store.job}>
-            <UI.Title>Last Sync</UI.Title>
-            <UI.Text>Status: {store.job.status}</UI.Text>
-            <UI.Text>
-              At: <UI.Date>{store.job.updatedAt}</UI.Date>
-            </UI.Text>
-          </status>
+          <status if={store.job} />
           <setting>
             <SettingPane appStore={appStore} />
             setting:

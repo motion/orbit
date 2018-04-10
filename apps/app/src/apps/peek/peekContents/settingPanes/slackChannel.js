@@ -3,15 +3,23 @@ import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
 
 @view
-export default class SlackChannel {
+export default class SlackChannel extends React.Component {
+  version = 0
+
+  get setting() {
+    return this.props.slackService.setting
+  }
+
   onChange = val => {
-    this.props.slackService.setting.mergeUpdate({
-      values: {
-        channels: {
-          [this.props.channel.id]: val,
-        },
+    this.setting.values = {
+      ...this.setting.values,
+      channels: {
+        ...this.setting.values.channels,
+        [this.props.channel.id]: val,
       },
-    })
+    }
+    this.setting.save()
+    this.version++
   }
 
   render({ channel, slackService }) {
@@ -45,7 +53,7 @@ export default class SlackChannel {
       maxWidth: '100%',
       overflow: 'hidden',
       alignItems: 'center',
-      padding: [5, 10],
+      padding: [5, 0],
     },
     span: {
       fontWeight: 300,

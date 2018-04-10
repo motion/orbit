@@ -2,6 +2,7 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import OrbitCard from '~/apps/orbit/orbitCard'
 import { throttle } from 'lodash'
+import * as UI from '@mcro/ui'
 // import AppStore from '~/stores/appStore'
 
 const SPLIT_INDEX = 3
@@ -9,6 +10,7 @@ const SPLIT_INDEX = 3
 // @view.provide({
 //   appStore: AppStore,
 // })
+@UI.injectTheme
 @view.attach('appStore')
 @view
 export default class Results {
@@ -38,7 +40,7 @@ export default class Results {
     }
   }
 
-  render({ appStore, getHoverProps }, { resultsRef, isScrolled }) {
+  render({ appStore, getHoverProps, theme }, { resultsRef, isScrolled }) {
     const isSelectedInContext = appStore.activeIndex >= SPLIT_INDEX
     const total = appStore.results.length - SPLIT_INDEX
     const y = isSelectedInContext ? -(SPLIT_INDEX * 20) : 0
@@ -60,6 +62,7 @@ export default class Results {
                 index={i + SPLIT_INDEX}
                 total={total}
                 totalHeight={totalHeight}
+                theme={theme}
               />
             ))}
       </results>

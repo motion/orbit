@@ -43,6 +43,7 @@ export default class OrbitCard {
     parentElement,
     store,
     getRef,
+    theme,
   }) {
     store.isSelected
     if (!parentElement) {
@@ -81,6 +82,18 @@ export default class OrbitCard {
                   onMouseEnter={this.setHovered}
                   onMouseLeave={this.setUnhovered}
                 >
+                  <UI.HoverGlow
+                    opacity={0.5}
+                    full
+                    resist={50}
+                    scale={1}
+                    blur={45}
+                    color={theme.base.background.lighten(0.05)}
+                    borderRadius={10}
+                    behind
+                    durationIn={500}
+                    durationOut={100}
+                  />
                   <AnimateElement id={`${result.id}-title`}>
                     <title $$row $$alignCenter>
                       <Text
@@ -178,6 +191,10 @@ export default class OrbitCard {
       borderRadius: 7,
       padding: 12,
       overflow: 'hidden',
+      position: 'relative',
+      transform: {
+        z: 0,
+      },
     },
     cardHovered: {},
     bottom: {

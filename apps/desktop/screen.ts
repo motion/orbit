@@ -111,7 +111,7 @@ export default class DesktopScreen {
         return
       }
       const lastState = Mobx.toJS(Desktop.appState)
-      let nextState: AppState = { ...lastState }
+      let nextState: Partial<AppState> = {}
       let id = this.curAppID
       const wasFocusedOnOrbit = this.curAppID === ORBIT_APP_ID
       switch (event) {
@@ -140,6 +140,7 @@ export default class DesktopScreen {
           if (value.id !== id) return
           nextState.offset = value.pos
       }
+      // @ts-ignore
       const state: Partial<DesktopState> = {
         focusedOnOrbit: this.curAppID === ORBIT_APP_ID,
         appState: nextState,
@@ -162,7 +163,6 @@ export default class DesktopScreen {
           !isEqual(nextState.offset, appState.offset)
         ) {
           // immediate clear for moving
-          log(`SENDING CLEAR`)
           Desktop.sendMessageTo(Electron, 'CLEAR')
         }
       }

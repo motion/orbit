@@ -13,10 +13,10 @@ class OrbitWindowStore {
   clear = 0
 
   willMount() {
-    log(`mounting you`)
     Electron.onMessage(msg => {
-      this.clear = Date.now()
-      console.log('got a messssssage', msg)
+      if (msg === 'CLEAR') {
+        this.clear = Date.now()
+      }
     })
   }
 
@@ -26,11 +26,9 @@ class OrbitWindowStore {
     async (_, { when, sleep }) => {
       if (!this.orbitRef) return
       this.orbitRef.hide()
-      log(`hi mom`)
       const lastState = Mobx.toJS(Desktop.appState)
       await when(() => !isEqual(Desktop.appState, lastState))
       await sleep(50)
-      log(`bye mom`)
       this.orbitRef.showInactive()
     },
   ]

@@ -88,7 +88,7 @@ class OrbitContext {
       borderRadius: Constants.BORDER_RADIUS,
       position: 'relative',
       height: 'calc(100% - 35px)',
-      transition: 'transform ease-in 120ms',
+      transition: 'transform ease-in-out 150ms',
     },
     results: {
       flex: 1,
@@ -103,7 +103,7 @@ class OrbitContext {
       height: 60,
       opacity: 0,
       zIndex: 100000,
-      transition: 'opacity ease-in 120ms',
+      transition: 'opacity ease-in-out 150ms',
     },
     fadeUp: {
       opacity: 0,
@@ -113,7 +113,7 @@ class OrbitContext {
       top: -40,
       height: 40,
       zIndex: 100000,
-      transition: 'opacity ease-in 120ms',
+      transition: 'opacity ease-in 150ms',
     },
     fadeVisible: {
       opacity: 1,
@@ -128,7 +128,7 @@ class OrbitContext {
         } 40%, transparent)`,
       },
       fadeUp: {
-        background: `linear-gradient(transparent 20%, ${
+        background: `linear-gradient(transparent 45%, ${
           theme.base.background
         })`,
       },
@@ -150,7 +150,7 @@ const tinyProps = {
       marginLeft: 15,
     },
   },
-  padding: [3, 15],
+  padding: [3, 8],
   style: {
     borderRadius: 5,
   },
@@ -165,7 +165,15 @@ export default class OrbitContent {
     return (
       <orbitContent>
         <space css={{ height: 10 }} />
-        <notifications $tiny={!query}>
+        <notifications
+          $tiny={!query}
+          css={{
+            opacity:
+              appStore.activeIndex >= 0 && appStore.activeIndex < SPLIT_INDEX
+                ? 1
+                : 0.5,
+          }}
+        >
           {appStore.results
             .slice(0, query ? 12 : SPLIT_INDEX)
             .map((result, index) => (
@@ -206,6 +214,7 @@ export default class OrbitContent {
     },
     notifications: {
       position: 'relative',
+      transition: 'opacity ease-in-out 150ms',
     },
   }
 }

@@ -11,13 +11,14 @@ class Text {
 
 class OrbitCardStore {
   get isSelected() {
-    return this.props.appStore.hoveredIndex === this.props.index
+    return this.props.appStore.activeIndex === this.props.index
   }
 
   @react({ delayValue: true })
   wasSelected = [() => this.isSelected, _ => _]
 }
 
+@view.attach('appStore')
 @view({
   store: OrbitCardStore,
 })
@@ -33,6 +34,7 @@ export default class OrbitCard {
   }
 
   render({
+    appStore,
     result,
     totalHeight,
     total,
@@ -69,6 +71,7 @@ export default class OrbitCard {
             <AnimateElement id={`${result.id}`}>
               <cardWrap
                 css={{ height }}
+                onClick={() => appStore.pinSelected(index)}
                 {...getHoverProps({ result, id: index })}
               >
                 <card
@@ -140,7 +143,7 @@ export default class OrbitCard {
 
   static style = {
     cardWrap: {
-      padding: [0, 6, 6],
+      padding: [0, 5, 3],
       position: 'relative',
     },
     card: {
@@ -166,17 +169,21 @@ export default class OrbitCard {
   }
 
   static theme = ({ store }, theme) => {
+    const { isSelected } = store
     const hoveredStyle = {
-      background: store.isSelected
+      background: isSelected
         ? theme.activeHover.background
         : theme.hover.background,
     }
     return {
       card: {
-        background: store.isSelected ? theme.active.background : 'transparent',
+        background: isSelected ? theme.active.background : 'transparent',
         '&:hover': hoveredStyle,
       },
       cardHovered: hoveredStyle,
+      bottom: {
+        opacity: isSelected ? 1 : 0.5,
+      },
     }
   }
 }

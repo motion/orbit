@@ -31,7 +31,6 @@ class ElectronStore {
     peekState: {
       mouseOver: false,
       windows: null,
-      peekOnLeft: false,
     },
     showDevTools: {
       orbit: false,
@@ -69,7 +68,7 @@ class ElectronStore {
   }
 
   get peekOnLeft() {
-    return Electron.peekState.peekOnLeft
+    return this.currentPeek.peekOnLeft
   }
 
   get currentPeek() {

@@ -50,7 +50,7 @@ const fuzzyResults = (query, results, extraOpts) =>
 
 export default class AppStore {
   refreshCycle = 0
-  selectedIndex = 0
+  selectedIndex = -1
   hoveredIndex = -1
   showSettings = false
   settings = {}
@@ -111,24 +111,15 @@ export default class AppStore {
   }
 
   clearSelected = () => {
-    clearTimeout(this.updateTargetTm)
-    this.updateTargetTm = setTimeout(() => {
-      if (!Electron.isMouseInActiveArea) {
-        App.setPeekTarget(null)
-      }
-    }, 200)
+    if (!Electron.isMouseInActiveArea) {
+      App.setPeekTarget(null)
+    }
   }
 
-  _setSelected = (id, position) => {
-    clearTimeout(this.updateTargetTm)
+  _setSelected = id => {
     if (App.isShowingOrbit) {
-      this.selectedIndex = id
       this.hoveredIndex = id
-      if (position) {
-        this.updateTargetTm = setTimeout(() => {
-          App.setPeekTarget({ id, position, type: 'document' })
-        }, 32)
-      }
+      this.selectedIndex = id
     }
   }
 
@@ -150,16 +141,30 @@ export default class AppStore {
         height,
       }
       this._setSelected(i, position)
-    } else {
-      this._setSelected(i, this.getMousePosition())
+      return
     }
+    if (App.state.peekTarget) {
+      this.pinSelected(i)
+      return
+    }
+    this._setSelected(i)
+  }
+
+  pinSelected = index => {
+    if (typeof index === 'number') {
+      this._setSelected(index)
+    }
+    App.setPeekTarget({
+      id: this.hoveredIndex,
+      position: this.getMousePosition(),
+    })
   }
 
   getMousePosition = () => {
     return {
       top: Desktop.mouseState.position.y,
       left: Electron.orbitState.position[0],
-      width: Electron.orbitState.size[0],
+      width: Electron.orbitState.size[0] - Constants.SHADOW_PAD,
     }
   }
 

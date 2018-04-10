@@ -67,8 +67,7 @@ export default class Orbit {
     enterDelay: 120,
     betweenDelay: 120,
     onHovered: item => {
-      const index = item ? item.id : -1
-      this.props.appStore.hoveredIndex = index
+      this.props.appStore.setSelected(item && item.id)
     },
   })
 

@@ -39,10 +39,10 @@ const peekPosition = target => {
   // prefer bigger area
   let peekOnLeft = leftSpace > rightSpace
   // prefer more strongly away from app if possible
-  if (peekOnLeft && !Electron.orbitOnLeft && rightSpace > WIDTH - 30) {
+  if (peekOnLeft && !Electron.orbitOnLeft && rightSpace > WIDTH - PAD * 2) {
     peekOnLeft = false
   }
-  if (!peekOnLeft && Electron.orbitOnLeft && leftSpace > WIDTH - 30) {
+  if (!peekOnLeft && Electron.orbitOnLeft && leftSpace > WIDTH - PAD * 2) {
     peekOnLeft = true
   }
   let x
@@ -54,7 +54,7 @@ const peekPosition = target => {
       x = 0
     }
   } else {
-    x = left + width + (!peekOnLeft ? 6 : 0)
+    x = left + width
     if (peekW > rightSpace) {
       peekW = rightSpace
     }

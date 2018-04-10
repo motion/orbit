@@ -12,6 +12,7 @@ final class Windo {
   var emit: (String)->Void
   var swindler: Swindler.State
   var observer: Observer!
+  private var currentId = ""
   private var lastApp: NSRunningApplication?
   private var currentApp: NSRunningApplication?
   private var lastSent = ""
@@ -73,7 +74,10 @@ final class Windo {
   
   // sends focus to last app besides our app
   public func defocus() {
-//    print("defocus \(self.lastApp?.bundleIdentifier ?? "") \(self.currentApp?.bundleIdentifier ?? "")")
+//    self.emit("defocus last \(self.lastApp?.bundleIdentifier ?? "") current \(self.currentApp?.bundleIdentifier ?? "")")
+    if self.currentId != orbitAppId {
+      return
+    }
     if let app = self.lastApp {
       app.activate(options: .activateIgnoringOtherApps)
     }
@@ -91,9 +95,10 @@ final class Windo {
     let titleString = "\"\(title)\"";
     let offset = window.position.value
     let bounds = window.size.value
-    let id = app.bundleIdentifier
+    let id = app.bundleIdentifier ?? ""
+    self.currentId = id
     if id == orbitAppId { return }
-    self.emit("{ \"action\": \"FrontmostWindowChangedEvent\", \"value\": { \"id\": \"\(id ?? "")\", \"title\": \(titleString), \"offset\": [\(offset.x),\(offset.y)], \"bounds\": [\(bounds.width),\(bounds.height)] } }")
+    self.emit("{ \"action\": \"FrontmostWindowChangedEvent\", \"value\": { \"id\": \"\(id)\", \"title\": \(titleString), \"offset\": [\(offset.x),\(offset.y)], \"bounds\": [\(bounds.width),\(bounds.height)] } }")
   }
   
 }

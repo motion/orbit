@@ -122,7 +122,6 @@ export default class ElectronReactions {
         return
       }
       if (!isHoldingOption) {
-        // TODO
         if (!Electron.orbitState.pinned && Electron.isMouseInActiveArea) {
           log('prevent hide while mouseover after release hold')
           return

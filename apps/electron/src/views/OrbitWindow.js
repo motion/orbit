@@ -25,12 +25,14 @@ class OrbitWindowStore {
     () => this.clear,
     async (_, { when, sleep }) => {
       if (!this.orbitRef) return
+      log(`hiding`)
       this.orbitRef.hide()
       const lastState = Mobx.toJS(Desktop.appState)
       this.show = 0
       await when(() => !isEqual(Desktop.appState, lastState))
       this.show = 1
       await sleep(250) // render opacity 0, let it update
+      await when(() => !Desktop.state.mouseDown)
       this.show = 2
     },
   ]

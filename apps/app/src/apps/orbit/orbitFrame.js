@@ -118,8 +118,7 @@ class OrbitFrameStore {
     () => App.isShowingOrbit,
     async (val, { sleep, setValue }) => {
       if (!val) {
-        // ew, but can be lax
-        await sleep(App.animationDuration * 1.5)
+        await sleep(App.animationDuration)
         setValue(false)
       } else {
         setValue(val)
@@ -130,32 +129,6 @@ class OrbitFrameStore {
   get shouldAnimate() {
     return App.isShowingOrbit || this.wasShowingOrbit
   }
-
-  get isDragging() {
-    return (
-      Desktop.state.mouseDown &&
-      Desktop.state.lastAppChange > Desktop.state.mouseDown.at
-    )
-  }
-
-  hasRepositioned = true
-
-  @react({ log: false })
-  isRepositioning = [
-    () => [Desktop.state.lastAppChange, Electron.state.willReposition],
-    async ([app, fs], { when, sleep, setValue }) => {
-      const willReposition = fs > app
-      setValue(true)
-      await sleep(App.animationDuration)
-      setValue('READY')
-      await when(() => this.hasRepositioned)
-      if (willReposition) {
-        return setValue(false)
-      }
-      await sleep(100)
-      setValue(false)
-    },
-  ]
 }
 
 @UI.injectTheme
@@ -167,12 +140,6 @@ export default class OrbitFrame {
     this.props.store.orbitFrame = this
   }
 
-  componentDidUpdate() {
-    if (this.props.store.isRepositioning === 'READY') {
-      this.props.store.hasRepositioned = true
-    }
-  }
-
   render({ store, orbitPage, children, theme, headerBg }) {
     const { fullScreen, orbitDocked } = Electron.orbitState
     const { orbitOnLeft } = Electron
@@ -181,18 +148,11 @@ export default class OrbitFrame {
     const boxShadow =
       fullScreen || orbitDocked ? [APP_SHADOW] : [orbitLightShadow]
     const background = theme.base.background
-    const hide =
-      !App.isShowingOrbit && (store.isRepositioning || store.isDragging)
     const borderLeftRadius = !orbitOnLeft ? 0 : Constants.BORDER_RADIUS
     const borderRightRadius =
       fullScreen || orbitDocked ? 0 : orbitOnLeft ? 0 : Constants.BORDER_RADIUS
     return (
-      <orbitFrame
-        css={{
-          flex: 1,
-          opacity: hide ? 0 : 1,
-        }}
-      >
+      <orbitFrame css={{ flex: 1 }}>
         <OrbitArrow
           if={App.isAttachedToWindow && !orbitDocked}
           arrowSize={arrowSize}
@@ -207,6 +167,7 @@ export default class OrbitFrame {
           orbitOnLeft={orbitOnLeft}
         />
         <orbitBorder
+          $orbitAnimate={store.shouldAnimate}
           css={{
             boxShadow: [borderShadow],
             ...(!orbitDocked && {
@@ -217,7 +178,7 @@ export default class OrbitFrame {
             right: fullScreen || orbitDocked ? 0 : SHADOW_PAD,
             borderLeftRadius: borderLeftRadius ? borderLeftRadius - 1 : 0,
             borderRightRadius: borderRightRadius ? borderRightRadius - 1 : 0,
-            opacity: App.isShowingOrbit && !App.isAnimatingOrbit ? 1 : 0,
+            opacity: App.isShowingOrbit ? 1 : 0,
           }}
         />
         <overflowWrap
@@ -303,6 +264,19 @@ export default class OrbitFrame {
       // background: 'red',
       // position: 'relative',
     },
+    orbit: {
+      width: 330,
+      position: 'relative',
+      willChange: 'transform, opacity',
+      transition: 'none',
+    },
+    orbitAnimate: {
+      transition: `
+        transform ease-in ${App.animationDuration}ms,
+        opacity ease-in ${App.animationDuration / 2}ms ${App.animationDuration /
+        2}ms
+      `,
+    },
     orbitBorder: {
       position: 'absolute',
       zIndex: 1000000,
@@ -323,20 +297,6 @@ export default class OrbitFrame {
     },
     unPad: {
       right: 0,
-    },
-    orbit: {
-      width: 330,
-      position: 'relative',
-      willChange: 'transform, opacity',
-      transition: 'none',
-      // opacity: 0,
-    },
-    orbitAnimate: {
-      transition: `
-        transform ease-in ${App.animationDuration}ms,
-        opacity ease-in ${App.animationDuration / 2}ms ${App.animationDuration /
-        2}ms
-      `,
     },
     orbitHeight: adjust => {
       if (!adjust) {

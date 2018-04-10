@@ -1,6 +1,7 @@
 import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import Overdrive from '@mcro/overdrive'
+import OrbitIcon from './orbitIcon'
 
 @view
 class Text {
@@ -81,14 +82,30 @@ export default class OrbitCard {
                   onMouseLeave={this.setUnhovered}
                 >
                   <AnimateElement id={`${result.id}-title`}>
-                    <Text
-                      size={isSelected ? 1.35 : 1.2}
-                      ellipse={isSelected ? 2 : 1}
-                      fontWeight={400}
-                      css={{ marginBottom: 0 }}
-                    >
-                      {result.title}
-                    </Text>
+                    <title $$row $$alignCenter>
+                      <Text
+                        size={isSelected ? 1.35 : 1.2}
+                        ellipse={isSelected ? 2 : 1}
+                        fontWeight={400}
+                        css={{ marginBottom: 0, marginRight: 20 }}
+                      >
+                        {result.title}
+                      </Text>
+                      <space $$flex />
+                      <OrbitIcon
+                        size={16}
+                        icon={
+                          result.icon
+                            ? `/icons/${result.icon}`
+                            : result.integration
+                        }
+                        size={18}
+                        css={{
+                          marginLeft: 0,
+                          marginTop: 3,
+                        }}
+                      />
+                    </title>
                   </AnimateElement>
                   <content
                     css={{
@@ -124,11 +141,16 @@ export default class OrbitCard {
                       >
                         via{' '}
                         <UI.Icon
-                          name="mail"
-                          size={10}
-                          css={{ display: 'inline-block' }}
+                          name={result.integration}
+                          size={7}
+                          css={{
+                            display: 'inline-block',
+                            opacity: 0.5,
+                            margin: [0, 2],
+                          }}
                         />
                         &nbsp;
+                        {result.integration}
                         <UI.Date>{result.bitUpdatedAt}</UI.Date>
                       </Text>
                     </bottom>
@@ -143,6 +165,10 @@ export default class OrbitCard {
   }
 
   static style = {
+    title: {
+      maxWidth: '100%',
+      overflow: 'hidden',
+    },
     cardWrap: {
       padding: [0, 5, 3],
       position: 'relative',
@@ -163,9 +189,9 @@ export default class OrbitCard {
     orbital: {
       width: 10,
       height: 10,
-      background: [0, 0, 0, 0.1],
       margin: [0, 7, -4, 0],
       borderRadius: 4,
+      position: 'relative',
     },
   }
 
@@ -184,6 +210,10 @@ export default class OrbitCard {
       cardHovered: hoveredStyle,
       bottom: {
         opacity: isSelected ? 1 : 0.5,
+      },
+      orbital: {
+        background: theme.active.background.desaturate(0.1),
+        border: [2, theme.active.background.desaturate(0.1).darken(0.1)],
       },
     }
   }

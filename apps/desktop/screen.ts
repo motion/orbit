@@ -6,7 +6,8 @@ import { Desktop, Electron, Swift, AppState, DesktopState } from '@mcro/all'
 import debug from '@mcro/debug'
 import * as Mobx from 'mobx'
 
-const log = debug('Screen')
+const log = debug('screen')
+debug.quiet('screen')
 const ORBIT_APP_ID = 'com.github.electron'
 const APP_ID = -1
 

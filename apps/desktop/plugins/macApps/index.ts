@@ -43,6 +43,7 @@ export const fn = ({ term, actions, display }) => {
         icon: path,
         subtitle: path,
         clipboard: path,
+        integration: 'apps',
       }
     })
     display(result)

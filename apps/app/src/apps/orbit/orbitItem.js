@@ -27,9 +27,7 @@ export default class Item {
   }) {
     appStore.activeIndex
     // const isSelected = appStore.selectedIndex === index
-    const shouldShowIcon =
-      !results[index - 1] || results[index - 1].type !== result.type
-    // log(`OrbitItem isSelected ${isSelected} ${index}`)
+    const shouldShowIcon = true
     if (!result) {
       return null
     }

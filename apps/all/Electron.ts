@@ -67,6 +67,9 @@ class ElectronStore {
   }
 
   get orbitOnLeft() {
+    if (Electron.orbitState.orbitDocked) {
+      return true
+    }
     return Electron.orbitState.orbitOnLeft
   }
 

@@ -14,65 +14,65 @@ const SPLIT_INDEX = 3
 @view.attach('appStore')
 @view
 export default class Results {
-  childrenHeight = 1
-
+  frameRef = null
   state = {
     resultsRef: null,
     isScrolled: false,
     isOverflowing: false,
   }
 
-  setRef = resultsRef => {
-    if (resultsRef) {
-      this.setState({ resultsRef })
-      this.on(
-        resultsRef,
-        'scroll',
-        throttle(() => {
-          let isScrolled
-          if (resultsRef.scrollTop > 0) {
-            isScrolled = true
-          } else {
-            isScrolled = false
-          }
-          if (
-            typeof isScrolled === 'boolean' &&
-            isScrolled !== this.state.isScrolled
-          ) {
-            this.setState({ isScrolled })
-          }
-          const isOverflowing =
-            this.childrenHeight <=
-            resultsRef.clientHeight + resultsRef.scrollTop
-          if (isOverflowing != this.state.isOverflowing) {
-            this.setState({ isOverflowing })
-          }
-        }, 16),
-      )
-    }
+  setResults = resultsRef => {
+    this.setState({ resultsRef })
   }
 
-  render(
-    { appStore, getHoverProps, theme },
-    { resultsRef, isScrolled, isOverflowing },
-  ) {
+  setResultsFrame = frameRef => {
+    if (!frameRef) return
+    this.frameRef = frameRef
+    this.on(frameRef, 'scroll', this.handleScroll)
+  }
+
+  handleScroll = throttle(() => {
+    let { isScrolled, resultsRef } = this.state
+    const { frameRef } = this
+    if (!frameRef) return
+    log(`scroll ${frameRef.scrollTop}`)
+    if (frameRef.scrollTop > 0) {
+      isScrolled = true
+    } else {
+      isScrolled = false
+    }
+    if (isScrolled !== this.state.isScrolled) {
+      this.setState({ isScrolled })
+    }
+    const scrolledDistance = resultsRef.clientHeight + resultsRef.scrollTop
+    const isOverflowing = frameRef.clientHeight <= scrolledDistance
+    log(
+      `set overflow ${isOverflowing} ${scrolledDistance} ${
+        frameRef.clientHeight
+      }`,
+    )
+    if (isOverflowing != this.state.isOverflowing) {
+      this.setState({ isOverflowing })
+    }
+  }, 16)
+
+  render({ appStore, theme }, { resultsRef, isScrolled, isOverflowing }) {
     const isSelectedInContext = appStore.activeIndex >= SPLIT_INDEX
     const total = appStore.results.length - SPLIT_INDEX
     const y = isSelectedInContext ? -(SPLIT_INDEX * 20) : 0
     const totalHeight = document.body.clientHeight
     return (
-      <results ref={this.setRef}>
+      <resultsFrame ref={this.setResultsFrame}>
         <fadeTop $fade $$untouchable $fadeVisible={isScrolled} />
-        <firstResultSpace $$untouchable css={{ height: 6 }} />
-        {resultsRef &&
-          appStore.results
+        <results ref={this.setResults}>
+          <firstResultSpace $$untouchable css={{ height: 6 }} />
+          {appStore.results
             .slice(SPLIT_INDEX)
             .map((result, i) => (
               <OrbitCard
                 key={result.id}
                 parentElement={resultsRef}
                 appStore={appStore}
-                getHoverProps={getHoverProps}
                 result={result}
                 index={i + SPLIT_INDEX}
                 total={total}
@@ -80,28 +80,32 @@ export default class Results {
                 theme={theme}
               />
             ))}
+          <lastResultSpace $$untouchable css={{ height: 12 }} />
+        </results>
         <fadeBottom $fade $$untouchable $fadeVisible={isOverflowing} />
-      </results>
+      </resultsFrame>
     )
   }
   static style = {
-    results: {
+    resultsFrame: {
       flex: 1,
-      overflowY: 'scroll',
-      zIndex: 0,
       position: 'relative',
+      overflowY: 'scroll',
       pointerEvents: 'all !important',
     },
     fade: {
-      position: 'absolute',
+      position: 'fixed',
       left: 0,
       right: 0,
       zIndex: 10000,
       opacity: 0,
-      transition: 'opacity ease-in 150ms',
+      transform: {
+        z: 0,
+      },
+      // transition: 'opacity ease-in 150ms',
     },
     fadeTop: {
-      top: -40,
+      top: 13,
       height: 40,
     },
     fadeBottom: {
@@ -109,22 +113,16 @@ export default class Results {
       height: 40,
     },
     fadeVisible: {
-      zIndex: 10000,
       opacity: 1,
     },
   }
 
   static theme = (props, theme) => {
     return {
-      fade: {
+      fadeTop: {
         background: `linear-gradient(${
           theme.base.background
-        } 40%, transparent)`,
-      },
-      fadeTop: {
-        background: `linear-gradient(transparent 45%, ${
-          theme.base.background
-        })`,
+        } 25%, transparent)`,
       },
       fadeBottom: {
         background: `linear-gradient(transparent 45%, ${

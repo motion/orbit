@@ -46,9 +46,6 @@ export default class OrbitCard {
     theme,
   }) {
     const { isSelected, wasSelected } = store
-    if (!parentElement) {
-      return null
-    }
     return (
       <Overdrive parentElement={parentElement}>
         {({ AnimateElement }) => {

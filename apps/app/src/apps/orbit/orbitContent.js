@@ -6,10 +6,7 @@ import OrbitItem from './orbitItem'
 import OrbitDivider from './orbitDivider'
 import * as Constants from '~/constants'
 import { throttle } from 'lodash'
-import elasticScroll from 'elasticscroll.js'
 import Results from '~/apps/results/results'
-
-console.log('elasticScroll', elasticScroll)
 
 const SPLIT_INDEX = 3
 
@@ -114,7 +111,7 @@ class OrbitContext {
           theme.base.background
         } 40%, transparent)`,
       },
-      fadeUp: {
+      fadeNotifications: {
         background: `linear-gradient(transparent 45%, ${
           theme.base.background
         })`,

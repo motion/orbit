@@ -66,8 +66,9 @@ export default class Orbit {
   getHoverProps = Helpers.hoverSettler({
     enterDelay: 120,
     betweenDelay: 120,
-    onHovered: ({ id }) => {
-      this.props.appStore.hoveredIndex = id
+    onHovered: item => {
+      const index = item ? item.id : -1
+      this.props.appStore.hoveredIndex = index
     },
   })
 

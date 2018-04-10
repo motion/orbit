@@ -111,11 +111,12 @@ export default class AppStore {
   }
 
   clearSelected = () => {
+    clearTimeout(this.updateTargetTm)
     this.updateTargetTm = setTimeout(() => {
       if (!Electron.isMouseInActiveArea) {
         App.setPeekTarget(null)
       }
-    }, 400)
+    }, 200)
   }
 
   _setSelected = (id, position) => {
@@ -123,13 +124,19 @@ export default class AppStore {
     if (App.isShowingOrbit) {
       this.selectedIndex = id
       this.hoveredIndex = id
-      this.updateTargetTm = setTimeout(() => {
-        App.setPeekTarget({ id, position, type: 'document' })
-      }, 100)
+      if (position) {
+        this.updateTargetTm = setTimeout(() => {
+          App.setPeekTarget({ id, position, type: 'document' })
+        }, 32)
+      }
     }
   }
 
   setSelected = (i, target) => {
+    if (i === null) {
+      this.clearSelected()
+      return
+    }
     if (target) {
       if (!Electron.orbitState.position) {
         return
@@ -159,7 +166,7 @@ export default class AppStore {
   @react.if
   hoverWordToSelectedIndex = [
     () => App.state.hoveredWord,
-    word => this.setSelectedIndex(word.index),
+    word => this.setSelected(word.index),
   ]
 
   @react({ delay: 64 })

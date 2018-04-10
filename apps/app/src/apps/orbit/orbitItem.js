@@ -10,7 +10,7 @@ import * as UI from '@mcro/ui'
 @view
 export default class Item {
   onClick = () => {
-    this.props.appStore.setSelectedIndex(this.props.index)
+    this.props.appStore.setSelected(this.props.index)
   }
 
   render({
@@ -27,6 +27,7 @@ export default class Item {
     results,
     ...props
   }) {
+    appStore.activeIndex
     // const isSelected = appStore.selectedIndex === index
     const shouldShowIcon =
       !results[index - 1] || results[index - 1].type !== result.type
@@ -88,7 +89,9 @@ export default class Item {
   }
 
   static theme = ({ appStore, index }, theme) => {
+    console.log('s', appStore.activeIndex, index)
     const isSelected = appStore.activeIndex === index
+    log(`isSelected ${isSelected}`)
     const hoveredStyle = {
       background: isSelected
         ? theme.activeHover.background

@@ -7,6 +7,8 @@ import OrbitCard from './orbitCard'
 import * as Constants from '~/constants'
 import { throttle } from 'lodash'
 
+const SPLIT_INDEX = 3
+
 @UI.injectTheme
 @view.attach('orbitPage')
 @view
@@ -39,10 +41,9 @@ class OrbitContext {
     { appStore, theme, getHoverProps, orbitPage },
     { resultsRef, isScrolled },
   ) {
-    const OFFSET = 3
-    const isSelectedInContext = appStore.activeIndex >= OFFSET
-    const total = appStore.results.length - OFFSET
-    const y = isSelectedInContext ? -80 : 0
+    const isSelectedInContext = appStore.activeIndex >= SPLIT_INDEX
+    const total = appStore.results.length - SPLIT_INDEX
+    const y = isSelectedInContext ? -(SPLIT_INDEX * 20) : 0
     const totalHeight = orbitPage.contentHeight + y
     return (
       <orbitContext
@@ -51,7 +52,10 @@ class OrbitContext {
           transform: { y },
         }}
       >
-        <fadeUp $$untouchable $fadeVisible={appStore.activeIndex > 3} />
+        <fadeUp
+          $$untouchable
+          $fadeVisible={appStore.activeIndex >= SPLIT_INDEX}
+        />
         <OrbitDivider
           if={!App.state.query}
           css={{ paddingBottom: 0, zIndex: 1000, position: 'relative' }}
@@ -61,7 +65,7 @@ class OrbitContext {
           <firstResultSpace $$untouchable css={{ height: 6 }} />
           {resultsRef &&
             appStore.results
-              .slice(OFFSET)
+              .slice(SPLIT_INDEX)
               .map((result, i) => (
                 <OrbitCard
                   key={result.id}
@@ -70,7 +74,7 @@ class OrbitContext {
                   theme={theme}
                   getHoverProps={getHoverProps}
                   result={result}
-                  index={i + OFFSET}
+                  index={i + SPLIT_INDEX}
                   total={total}
                   totalHeight={totalHeight}
                 />
@@ -84,7 +88,7 @@ class OrbitContext {
       borderRadius: Constants.BORDER_RADIUS,
       position: 'relative',
       height: 'calc(100% - 35px)',
-      transition: 'transform ease-in 300ms',
+      transition: 'transform ease-in 120ms',
     },
     results: {
       flex: 1,
@@ -162,24 +166,26 @@ export default class OrbitContent {
       <orbitContent>
         <space css={{ height: 10 }} />
         <notifications $tiny={!query}>
-          {appStore.results.slice(0, query ? 12 : 5).map((result, index) => (
-            <OrbitItem
-              {...!query && tinyProps}
-              key={result.id}
-              type="gmail"
-              index={index}
-              results={appStore.results}
-              result={{
-                ...result,
-                title: result.title,
-              }}
-              total={appStore.results.length}
-              {...getHoverProps({
-                result,
-                id: index,
-              })}
-            />
-          ))}
+          {appStore.results
+            .slice(0, query ? 12 : SPLIT_INDEX)
+            .map((result, index) => (
+              <OrbitItem
+                {...!query && tinyProps}
+                key={result.id}
+                type="gmail"
+                index={index}
+                results={appStore.results}
+                result={{
+                  ...result,
+                  title: result.title,
+                }}
+                total={appStore.results.length}
+                {...getHoverProps({
+                  result,
+                  id: index,
+                })}
+              />
+            ))}
         </notifications>
         <OrbitContext
           if={!query}

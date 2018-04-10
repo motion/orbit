@@ -148,7 +148,7 @@ export default class DesktopScreen {
       }
       // when were moving into focus prevent app, store its appName, pause then return
       if (PREVENT_APP_STATE[this.curAppName]) {
-        Desktop.setState(state)
+        // Desktop.setState(state)
         this.oracle.pause()
         return
       }
@@ -174,7 +174,7 @@ export default class DesktopScreen {
       // @ts-ignore
       this.appStateTm = this.setTimeout(() => {
         Desktop.setState(state)
-      }, 32)
+      }, 4)
     })
     this.oracle.onBoxChanged(count => {
       if (!Desktop.ocrState.words) {

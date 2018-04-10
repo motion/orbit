@@ -197,7 +197,7 @@ class Bridge {
       if (this._socket.readyState == 1) {
         console.log('swift ws error', err)
       } else {
-        console.log('socket err', err)
+        console.log('socket err', err.message)
       }
     }
   }

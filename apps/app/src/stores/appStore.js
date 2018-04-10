@@ -166,6 +166,7 @@ export default class AppStore {
     betweenDelay: 30,
     onHovered: item => {
       if (item && typeof item.id === 'number') {
+        log(`select ${item}`)
         this.setSelected(item.id)
       }
     },

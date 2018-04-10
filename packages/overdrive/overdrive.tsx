@@ -50,18 +50,18 @@ export default class Overdrive extends React.Component {
   }
 
   componentWillMount() {
-    this.updateNaturalChildren()
+    // this.updateNaturalChildren()
   }
 
   componentWillReceiveProps() {
-    this.setState({ needsMeasure: true })
-    this.updateNaturalChildren()
+    // this.setState({ needsMeasure: true })
+    // this.updateNaturalChildren()
   }
 
   componentDidUpdate() {
-    if (this.state.needsMeasure) {
-      this.setState({ needsMeasure: false })
-    }
+    // if (this.state.needsMeasure) {
+    //   this.setState({ needsMeasure: false })
+    // }
   }
 
   reRenderAfterCollectingChildren = () => {
@@ -125,62 +125,62 @@ export default class Overdrive extends React.Component {
 
   render() {
     return this.props.children({ AnimateElement })
-    const portalChildren = this.flattenChildren(
-      this.props.children({
-        AnimateElement,
-      }),
-    )
-    const { needsMeasure } = this.state
-    const { containers } = this
-    return (
-      <React.Fragment>
-        {!needsMeasure && (
-          <div
-            style={{
-              opacity: 0,
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-            }}
-          >
-            {this.state.naturalChildren}
-          </div>
-        )}
-        {portalChildren.map(({ child, id }, index) => {
-          if (!this.childPositions[id]) {
-            return null
-          }
-          const { top = 0, left = 0, ...style } = this.childPositions[id]
-          console.log('id', id, top, left)
-          return (
-            <div
-              key={`container-${id}`}
-              style={{
-                position: 'absolute',
-                transition: 'all ease-in 300ms',
-                zIndex: portalChildren.length - index,
-                ...style,
-                top,
-                left,
-                // transform: `translateX$({left}px) translateY(${top}px)`,
-              }}
-              ref={this.collectContainer(id)}
-            />
-          )
-        })}
-        {portalChildren.map(
-          ({ child, id }) =>
-            containers[id] && (
-              <PortalChild
-                key={id}
-                child={child}
-                parentElement={containers[id]}
-              />
-            ),
-        )}
-      </React.Fragment>
-    )
+    // const portalChildren = this.flattenChildren(
+    //   this.props.children({
+    //     AnimateElement,
+    //   }),
+    // )
+    // const { needsMeasure } = this.state
+    // const { containers } = this
+    // return (
+    //   <React.Fragment>
+    //     {!needsMeasure && (
+    //       <div
+    //         style={{
+    //           opacity: 0,
+    //           position: 'absolute',
+    //           top: 0,
+    //           left: 0,
+    //           right: 0,
+    //           bottom: 0,
+    //         }}
+    //       >
+    //         {this.state.naturalChildren}
+    //       </div>
+    //     )}
+    //     {portalChildren.map(({ child, id }, index) => {
+    //       if (!this.childPositions[id]) {
+    //         return null
+    //       }
+    //       const { top = 0, left = 0, ...style } = this.childPositions[id]
+    //       console.log('id', id, top, left)
+    //       return (
+    //         <div
+    //           key={`container-${id}`}
+    //           style={{
+    //             position: 'absolute',
+    //             transition: 'all ease-in 300ms',
+    //             zIndex: portalChildren.length - index,
+    //             ...style,
+    //             top,
+    //             left,
+    //             // transform: `translateX$({left}px) translateY(${top}px)`,
+    //           }}
+    //           ref={this.collectContainer(id)}
+    //         />
+    //       )
+    //     })}
+    //     {portalChildren.map(
+    //       ({ child, id }) =>
+    //         containers[id] && (
+    //           <PortalChild
+    //             key={id}
+    //             child={child}
+    //             parentElement={containers[id]}
+    //           />
+    //         ),
+    //     )}
+    //   </React.Fragment>
+    // )
   }
 }

@@ -45,14 +45,13 @@ export default class OrbitCard {
     getRef,
     theme,
   }) {
-    store.isSelected
+    const { isSelected, wasSelected } = store
     if (!parentElement) {
       return null
     }
     return (
       <Overdrive parentElement={parentElement}>
         {({ AnimateElement }) => {
-          const { isSelected, wasSelected } = store
           const tallHeight = 490
           const smallHeight = Math.max(
             100,
@@ -83,6 +82,7 @@ export default class OrbitCard {
                   onMouseLeave={this.setUnhovered}
                 >
                   <UI.HoverGlow
+                    if={false}
                     opacity={0.5}
                     full
                     resist={50}

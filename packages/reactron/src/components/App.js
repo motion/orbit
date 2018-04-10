@@ -18,7 +18,9 @@ export default class App extends BaseComponent {
       const val = this.props[key]
       if (EVENT_KEYS[key]) {
         this.handleEvent(this.root.app, EVENT_KEYS[key], val)
-        continue
+      }
+      if (key === 'path') {
+        this.app.setPath(val)
       }
     }
   }

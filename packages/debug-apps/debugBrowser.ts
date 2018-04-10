@@ -3,9 +3,9 @@ import puppeteer from 'puppeteer'
 import * as _ from 'lodash'
 const sleep = ms => new Promise(res => setTimeout(res, ms))
 
-import getExtensions from '@mcro/chrome-extensions'
-const extNames = getExtensions(['mobx', 'react'])
-const extensions = extNames.map(ext => `--load-extension=${ext}`)
+// import getExtensions from '@mcro/chrome-extensions'
+// const extNames = getExtensions(['mobx', 'react'])
+// const extensions = extNames.map(ext => `--load-extension=${ext}`)
 
 const onFocus = page => {
   return page.evaluate(() => {
@@ -49,8 +49,8 @@ export default class DebugApps {
           `--no-startup-window`,
           // `--enable-slim-navigation-manager`,
           // `--top-controls-hide-threshold=0.5`,
-          `--disable-extensions-except=${extNames.join(',')}`,
-          ...extensions,
+          // `--disable-extensions-except=${extNames.join(',')}`,
+          // ...extensions,
         ],
       })
       this.browser.on('disconnected', this.dispose)

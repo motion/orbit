@@ -45,7 +45,8 @@ export default class Overdrive extends React.Component {
 
   state = {
     naturalChildren: null,
-    hasRenderedNaturally: false,
+    rerender: false,
+    needsMeasure: false,
   }
 
   componentWillMount() {
@@ -53,18 +54,24 @@ export default class Overdrive extends React.Component {
   }
 
   componentWillReceiveProps() {
+    this.setState({ needsMeasure: true })
     this.updateNaturalChildren()
   }
 
-  reRenderAfterCollectingChildren = debounce(() => {
-    this.setState({ hasRenderedNaturally: true })
-  }, 16)
+  componentDidUpdate() {
+    if (this.state.needsMeasure) {
+      this.setState({ needsMeasure: false })
+    }
+  }
+
+  reRenderAfterCollectingChildren = () => {
+    this.setState({ rerender: true })
+  }
 
   childPositions = {}
 
   updateNaturalChildren = () => {
     this.setState({
-      hasRenderedNaturally: false,
       naturalChildren: this.props.children({
         AnimateElement: props =>
           React.cloneElement(props.children, {
@@ -80,12 +87,14 @@ export default class Overdrive extends React.Component {
     const computedStyle = getComputedStyle(node)
     const marginTop = parseInt(computedStyle.marginTop, 10)
     const marginLeft = parseInt(computedStyle.marginLeft, 10)
-    return {
-      top: rect.top - marginTop - parentRect.top,
-      left: rect.left - marginLeft - parentRect.left,
+    const res = {
+      top: rect.top - marginTop, // - parentRect.top,
+      left: rect.left - marginLeft, // - parentRect.left,
       width: rect.width,
       height: rect.height,
     }
+    console.log('getting psoition', res)
+    return res
   }
 
   getNaturalChildRef = id => ref => {
@@ -121,26 +130,30 @@ export default class Overdrive extends React.Component {
         AnimateElement,
       }),
     )
+    const { needsMeasure } = this.state
     const { containers } = this
     return (
       <React.Fragment>
-        <div
-          style={{
-            opacity: 0,
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-          }}
-        >
-          {this.state.naturalChildren}
-        </div>
+        {!needsMeasure && (
+          <div
+            style={{
+              opacity: 0,
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+            }}
+          >
+            {this.state.naturalChildren}
+          </div>
+        )}
         {portalChildren.map(({ child, id }, index) => {
           if (!this.childPositions[id]) {
             return null
           }
-          const { top, left, ...style } = this.childPositions[id]
+          const { top = 0, left = 0, ...style } = this.childPositions[id]
+          console.log('id', id, top, left)
           return (
             <div
               key={`container-${id}`}
@@ -149,7 +162,9 @@ export default class Overdrive extends React.Component {
                 transition: 'all ease-in 300ms',
                 zIndex: portalChildren.length - index,
                 ...style,
-                transform: `translateX$({top}px) translateY(${left})`,
+                top,
+                left,
+                // transform: `translateX$({left}px) translateY(${top}px)`,
               }}
               ref={this.collectContainer(id)}
             />

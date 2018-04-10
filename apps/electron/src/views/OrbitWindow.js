@@ -84,11 +84,13 @@ class OrbitWindowStore {
 
   @react
   focusOnMouseOver = [
-    () => Electron.orbitState.mouseOver || Electron.peekState.mouseOver,
+    () =>
+      Electron.orbitState.mouseOver ||
+      (!Electron.orbitState.fullScreen && Electron.peekState.mouseOver),
     mouseOver => {
-      if (Electron.orbitState.pinned || Electron.orbitState.fullScreen) {
-        return
-      }
+      // if (Electron.orbitState.pinned || Electron.orbitState.fullScreen) {
+      //   return
+      // }
       if (mouseOver) {
         this.focusOrbit()
       } else {

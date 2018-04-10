@@ -165,7 +165,9 @@ export default class AppStore {
     enterDelay: 40,
     betweenDelay: 30,
     onHovered: item => {
-      this.setSelected(item && item.id)
+      if (item && typeof item.id === 'number') {
+        this.setSelected(item.id)
+      }
     },
   })
 

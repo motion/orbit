@@ -75,7 +75,7 @@ class ElectronStore {
   }
 
   get currentPeek() {
-    return (Electron.peekState.windows || [])[0]
+    return (Electron.peekState.windows || [])[0] || {}
   }
 
   get recentlyToggled() {

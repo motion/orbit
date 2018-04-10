@@ -76,16 +76,18 @@ export default class Orbit {
             <UI.Button
               icon="gear"
               borderRadius={100}
-              size={1.1}
+              size={1.15}
+              sizeIcon={0.8}
               circular
-              chromeless
+              borderWidth={0}
+              background={theme.base.background}
               color={appStore.showSettings ? [0, 0, 0, 0.8] : [0, 0, 0, 0.2]}
               hover={{
                 color: appStore.showSettings ? [0, 0, 0, 0.9] : [0, 0, 0, 0.3],
-                opacity: 0.8,
               }}
               onClick={appStore.toggleSettings}
             />
+            <strip css={{ background: theme.base.background }} />
           </controls>
         </OrbitFrame>
       </UI.Theme>
@@ -95,13 +97,19 @@ export default class Orbit {
   static style = {
     controls: {
       position: 'absolute',
-      bottom: 35,
-      right: 12,
+      bottom: -5,
+      left: -5,
+      right: 0,
       zIndex: 10000,
-      opacity: 0.8,
-      '&:hover': {
-        opacity: 1,
-      },
+    },
+    strip: {
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      right: 0,
+      borderBottomRadius: 10,
+      height: 12,
+      zIndex: -1,
     },
   }
 }

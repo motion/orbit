@@ -256,10 +256,11 @@ export default class OrbitFrame {
           >
             <content
               css={{
-                // borderRight: orbitOnLeft ? 'none' : border,
                 background,
                 boxShadow: App.isShowingOrbit ? boxShadow : 'none',
-                // borderRight: orbitOnLeft ? [1, [0, 0, 0, 0.1]] : 0,
+                // makes the shadow go offscreen nicely
+                marginRight: fullScreen ? -SHADOW_PAD : 0,
+                paddingRight: fullScreen ? SHADOW_PAD : 0,
                 borderLeftRadius,
                 borderRightRadius,
               }}

@@ -55,6 +55,7 @@ export default class AppStore {
   hoveredIndex = -1
   showSettings = false
   settings = {}
+  getResults = null
 
   get activeIndex() {
     if (App.state.peekTarget) {
@@ -79,38 +80,8 @@ export default class AppStore {
     App.state.selectedItem && Bit.findOne({ id: App.state.selectedItem.id })
 
   get results() {
-    if (this.showSettings) {
-      return fuzzyResults(App.state.query, [
-        {
-          id: 'google',
-          type: 'setting',
-          integration: 'google',
-          title: 'Google Drive',
-          icon: 'gdrive',
-        },
-        {
-          id: 'github',
-          type: 'setting',
-          integration: 'github',
-          title: 'Github',
-          icon: 'github',
-        },
-        {
-          id: 'slack',
-          type: 'setting',
-          integration: 'slack',
-          title: 'Slack',
-          icon: 'slack',
-        },
-        {
-          id: 'folder',
-          type: 'setting',
-          integration: 'folder',
-          title: 'Folder',
-          icon: 'folder',
-          oauth: false,
-        },
-      ])
+    if (this.getResults) {
+      return fuzzyResults(App.state.query, this.getResults())
     }
     const results = [
       ...(this.bitResults || []),
@@ -169,6 +140,10 @@ export default class AppStore {
       id: this.hoveredIndex,
       position: this.getMousePosition(),
     })
+  }
+
+  setGetResults = fn => {
+    this.getResults = fn
   }
 
   getHoverProps = Helpers.hoverSettler({

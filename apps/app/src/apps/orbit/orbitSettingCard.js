@@ -17,7 +17,6 @@ export default class Card {
     theme,
     isActive,
     appStore,
-    store,
     oauth,
   }) {
     const isSelected =
@@ -41,11 +40,6 @@ export default class Card {
             return
           }
           appStore.setSelected(index)
-          store.showPeek(index)
-        }}
-        ref={ref => {
-          if (!ref) return
-          store.refs[index] = ref
         }}
       >
         <inner>

@@ -2,14 +2,14 @@ import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
 import { fuzzy } from '~/helpers'
-import { SlackService } from '@mcro/models'
+import { SlackService } from '@mcro/models/services'
 import * as _ from 'lodash'
 import SlackChannel from './slackChannel'
 
 @view({
   store: class SlackStore {
     search = ''
-    service = new SlackService()
+    service = new SlackService(this.props.appStore.settings.slack)
 
     get sortedChannels() {
       return _.orderBy(

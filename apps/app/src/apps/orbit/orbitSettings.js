@@ -1,5 +1,4 @@
 import { view } from '@mcro/black'
-import { App, Electron } from '@mcro/all'
 import { partition } from 'lodash'
 import SettingCard from './orbitSettingCard'
 import * as UI from '@mcro/ui'
@@ -8,51 +7,79 @@ const Title = props => (
   <UI.Title size={1.1} fontWeight={600} margin={[10, 0]} {...props} />
 )
 
-class SettingsStore {
-  refs = {}
-
-  showPeek(index) {
-    const ref = this.refs[index]
-    if (!ref) return
-    const position = {
-      left: Electron.orbitState.position[0],
-      top: ref.offsetTop + Electron.orbitState.position[1],
-      width: Electron.orbitState.size[0] - 36,
-      height: ref.clientHeight,
-    }
-    App.setPeekTarget({
-      id: this.props.appStore.results[index],
-      position,
-      type: 'setting',
-    })
-  }
-}
-
 @view.attach('appStore')
-@view({
-  store: SettingsStore,
-})
+@view
 export default class OrbitSettings {
-  render({ store, appStore }) {
+  isActive = integration =>
+    this.props.appStore.settings[integration.id] &&
+    this.props.appStore.settings[integration.id].token
+
+  rawResults = [
+    {
+      id: 'google',
+      type: 'setting',
+      integration: 'google',
+      title: 'Google Drive',
+      icon: 'gdrive',
+    },
+    {
+      id: 'github',
+      type: 'setting',
+      integration: 'github',
+      title: 'Github',
+      icon: 'github',
+    },
+    {
+      id: 'slack',
+      type: 'setting',
+      integration: 'slack',
+      title: 'Slack',
+      icon: 'slack',
+    },
+    {
+      id: 'folder',
+      type: 'setting',
+      integration: 'folder',
+      title: 'Folder',
+      icon: 'folder',
+      oauth: false,
+    },
+  ]
+
+  get splitActiveResults() {
+    const [activeIntegrations, inactiveIntegrations] = partition(
+      this.rawResults,
+      this.isActive,
+    )
+    return { activeIntegrations, inactiveIntegrations }
+  }
+
+  getResults = () => {
+    const { activeIntegrations, inactiveIntegrations } = this.splitActiveResults
+    return [...activeIntegrations, ...inactiveIntegrations]
+  }
+
+  componentWillMount() {
+    this.props.appStore.setGetResults(this.getResults)
+  }
+
+  componentWillUnmount() {
+    this.props.appStore.setGetResults(null)
+  }
+
+  render({ appStore }) {
     if (!appStore.settings) {
       return null
     }
-    const isActive = integration =>
-      appStore.settings[integration.id] &&
-      appStore.settings[integration.id].token
-    const [activeIntegrations, inactiveIntegrations] = partition(
-      appStore.results,
-      isActive,
-    )
+    const { activeIntegrations, inactiveIntegrations } = this.splitActiveResults
     const integrationCard = all => (integration, index, offset) => (
       <SettingCard
         key={index}
         index={index}
         offset={offset}
         appStore={appStore}
-        store={store}
         length={all.length}
-        isActive={isActive(integration)}
+        isActive={this.isActive(integration)}
         {...integration}
       />
     )

@@ -53,7 +53,7 @@ class OrbitContext {
           transform: { y },
         }}
       >
-        <fadeUp
+        <fadeNotifications
           $$untouchable
           $fadeVisible={appStore.activeIndex >= SPLIT_INDEX}
         />
@@ -62,12 +62,12 @@ class OrbitContext {
           css={{ paddingBottom: 0, zIndex: 1000, position: 'relative' }}
         />
         <Results />
-        <webview
+        {/* <webview
           if={false}
           $results
           webpreferences="scrollBounce experimentalFeatures"
           src="http://localhost:3001/results"
-        />
+        /> */}
       </orbitContext>
     )
   }
@@ -91,7 +91,7 @@ class OrbitContext {
       zIndex: 100000,
       transition: 'opacity ease-in-out 150ms',
     },
-    fadeUp: {
+    fadeNotifications: {
       position: 'absolute',
       left: 0,
       right: 0,

@@ -115,8 +115,7 @@ export default class Overdrive extends React.Component {
   }
 
   render() {
-    return this.props.children({ AnimateElement })
-
+    // return this.props.children({ AnimateElement })
     const portalChildren = this.flattenChildren(
       this.props.children({
         AnimateElement,

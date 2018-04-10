@@ -53,7 +53,7 @@ export default class OrbitCard {
       <Overdrive parentElement={parentElement}>
         {({ AnimateElement }) => {
           const { isSelected, wasSelected } = store
-          const tallHeight = 400
+          const tallHeight = 490
           const smallHeight = Math.max(
             100,
             (totalHeight - tallHeight) / Math.max(1, total - 1),
@@ -128,20 +128,22 @@ export default class OrbitCard {
                     }}
                   >
                     <AnimateElement id={`${result.id}-text`}>
-                      <Text {...textProps} css={{ maxHeight: '100%' }}>
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                        Ratione modi optio at neque ducimus ab aperiam dolores
-                        nemo? Quod quos nisi molestias velit reprehenderit
-                        veniam dicta, voluptatum vel voluptas a? Lorem ipsum
-                        dolor sit amet consectetur adipisicing elit. Ratione
-                        modi optio at neque ducimus ab aperiam dolores nemo?
-                        Quod quos nisi molestias velit reprehenderit veniam
-                        dicta, voluptatum vel voluptas a? Lorem ipsum dolor sit
-                        amet consectetur adipisicing elit. Ratione modi optio at
-                        neque ducimus ab aperiam dolores nemo? Quod quos nisi
-                        molestias velit reprehenderit veniam dicta, voluptatum
-                        vel voluptas a?
-                      </Text>
+                      <text $$flex>
+                        <Text {...textProps} css={{ maxHeight: '100%' }}>
+                          Lorem ipsum dolor sit amet consectetur adipisicing
+                          elit. Ratione modi optio at neque ducimus ab aperiam
+                          dolores nemo? Quod quos nisi molestias velit
+                          reprehenderit veniam dicta, voluptatum vel voluptas a?
+                          Lorem ipsum dolor sit amet consectetur adipisicing
+                          elit. Ratione modi optio at neque ducimus ab aperiam
+                          dolores nemo? Quod quos nisi molestias velit
+                          reprehenderit veniam dicta, voluptatum vel voluptas a?
+                          Lorem ipsum dolor sit amet consectetur adipisicing
+                          elit. Ratione modi optio at neque ducimus ab aperiam
+                          dolores nemo? Quod quos nisi molestias velit
+                          reprehenderit veniam dicta, voluptatum vel voluptas a?
+                        </Text>
+                      </text>
                     </AnimateElement>
                   </content>
                   <AnimateElement id={`${result.id}-bottom`}>

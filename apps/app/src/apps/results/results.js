@@ -14,9 +14,12 @@ const SPLIT_INDEX = 3
 @view.attach('appStore')
 @view
 export default class Results {
+  childrenHeight = 1
+
   state = {
     resultsRef: null,
     isScrolled: false,
+    isOverflowing: false,
   }
 
   setRef = resultsRef => {
@@ -26,28 +29,40 @@ export default class Results {
         resultsRef,
         'scroll',
         throttle(() => {
+          let isScrolled
           if (resultsRef.scrollTop > 0) {
-            if (!this.state.isScrolled) {
-              this.setState({ isScrolled: true })
-            }
+            isScrolled = true
           } else {
-            if (this.state.isScrolled) {
-              this.setState({ isScrolled: false })
-            }
+            isScrolled = false
+          }
+          if (
+            typeof isScrolled === 'boolean' &&
+            isScrolled !== this.state.isScrolled
+          ) {
+            this.setState({ isScrolled })
+          }
+          const isOverflowing =
+            this.childrenHeight <=
+            resultsRef.clientHeight + resultsRef.scrollTop
+          if (isOverflowing != this.state.isOverflowing) {
+            this.setState({ isOverflowing })
           }
         }, 16),
       )
     }
   }
 
-  render({ appStore, getHoverProps, theme }, { resultsRef, isScrolled }) {
+  render(
+    { appStore, getHoverProps, theme },
+    { resultsRef, isScrolled, isOverflowing },
+  ) {
     const isSelectedInContext = appStore.activeIndex >= SPLIT_INDEX
     const total = appStore.results.length - SPLIT_INDEX
     const y = isSelectedInContext ? -(SPLIT_INDEX * 20) : 0
     const totalHeight = document.body.clientHeight
     return (
       <results ref={this.setRef}>
-        <fade $$untouchable $fadeVisible={isScrolled} />
+        <fadeTop $fade $$untouchable $fadeVisible={isScrolled} />
         <firstResultSpace $$untouchable css={{ height: 6 }} />
         {resultsRef &&
           appStore.results
@@ -65,6 +80,7 @@ export default class Results {
                 theme={theme}
               />
             ))}
+        <fadeBottom $fade $$untouchable $fadeVisible={isOverflowing} />
       </results>
     )
   }
@@ -77,26 +93,24 @@ export default class Results {
       pointerEvents: 'all !important',
     },
     fade: {
-      position: 'fixed',
-      left: 0,
-      right: 0,
-      top: 13,
-      height: 60,
-      opacity: 0,
-      zIndex: 100000,
-      transition: 'opacity ease-in-out 150ms',
-    },
-    fadeUp: {
       position: 'absolute',
       left: 0,
       right: 0,
+      zIndex: 10000,
+      opacity: 0,
+      transition: 'opacity ease-in 150ms',
+    },
+    fadeTop: {
       top: -40,
       height: 40,
-      zIndex: -1,
-      transition: 'opacity ease-in 150ms',
+    },
+    fadeBottom: {
+      bottom: 0,
+      height: 40,
     },
     fadeVisible: {
       zIndex: 10000,
+      opacity: 1,
     },
   }
 
@@ -107,7 +121,12 @@ export default class Results {
           theme.base.background
         } 40%, transparent)`,
       },
-      fadeUp: {
+      fadeTop: {
+        background: `linear-gradient(transparent 45%, ${
+          theme.base.background
+        })`,
+      },
+      fadeBottom: {
         background: `linear-gradient(transparent 45%, ${
           theme.base.background
         })`,

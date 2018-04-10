@@ -1,7 +1,6 @@
 import { react, watch } from '@mcro/black'
 import { App, Desktop, Electron } from '@mcro/all'
 import { Bit, Setting } from '@mcro/models'
-import fuzzySort from 'fuzzysort'
 import * as Constants from '~/constants'
 import * as r2 from '@mcro/r2'
 import * as Helpers from '~/helpers'
@@ -37,18 +36,6 @@ const uniq = arr => {
   return final
 }
 
-const fuzzyResults = (query, results, extraOpts) =>
-  !query
-    ? results
-    : fuzzySort
-        .go(query, results, {
-          key: 'title',
-          // threshold: -25,
-          limit: 8,
-          ...extraOpts,
-        })
-        .map(x => x.obj)
-
 export default class AppStore {
   refreshCycle = 0
   selectedIndex = -1
@@ -81,14 +68,14 @@ export default class AppStore {
 
   get results() {
     if (this.getResults) {
-      return fuzzyResults(App.state.query, this.getResults())
+      return Helpers.fuzzy(App.state.query, this.getResults())
     }
     const results = [
       ...(this.bitResults || []),
       ...(Desktop.searchState.pluginResults || []),
       ...(Desktop.searchState.searchResults || []),
     ]
-    const strongTitleMatches = fuzzyResults(App.state.query, results)
+    const strongTitleMatches = Helpers.fuzzy(App.state.query, results)
     return uniq([...strongTitleMatches, ...results].slice(0, 10))
   }
 

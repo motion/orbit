@@ -39,6 +39,7 @@ export default class Card {
           if (!isActive) {
             return
           }
+          log(`set selected ${index}`)
           appStore.setSelected(index)
         }}
       >

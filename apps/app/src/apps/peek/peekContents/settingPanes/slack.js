@@ -21,8 +21,8 @@ import SlackChannel from './slackChannel'
 
     get channels() {
       this.service.setting.values
-      return fuzzy(this.sortedChannels, this.search, {
-        keys: ['name'],
+      return fuzzy(this.search, this.sortedChannels, {
+        keys: 'name',
       })
     }
   },
@@ -31,6 +31,7 @@ export default class Slack {
   render({ store }) {
     return (
       <slack>
+        123
         <UI.Input
           marginBottom={10}
           size={1.2}

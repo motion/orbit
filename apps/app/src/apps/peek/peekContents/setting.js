@@ -93,7 +93,7 @@ export class SettingView {
             </UI.Text>
           </status>
           <setting>
-            <SettingPane />
+            <SettingPane appStore={appStore} />
             setting:
             <UI.Field
               row

@@ -105,11 +105,11 @@ export default class DesktopScreen {
       })
     })
     this.oracle.onWindowChange((event, value) => {
-      log(`got event ${event}`, value)
       if (event === 'ScrollEvent') {
         this.rescanApp()
         return
       }
+      log(`got event ${event} ${JSON.stringify(value)}`)
       const lastState = Mobx.toJS(Desktop.appState)
       let nextState: Partial<AppState> = {}
       let id = this.curAppID

@@ -210,6 +210,7 @@ export default class OrbitFrame {
         <orbitBorder
           css={{
             boxShadow: [borderShadow],
+            right: fullScreen ? 0 : SHADOW_PAD,
             borderLeftRadius: borderLeftRadius ? borderLeftRadius - 1 : 0,
             borderRightRadius: borderRightRadius ? borderRightRadius - 1 : 0,
             opacity: App.isShowingOrbit && !App.isAnimatingOrbit ? 1 : 0,
@@ -301,7 +302,6 @@ export default class OrbitFrame {
       position: 'absolute',
       top: SHADOW_PAD,
       left: SHADOW_PAD,
-      right: SHADOW_PAD,
       bottom: SHADOW_PAD,
       zIndex: 1000000,
     },

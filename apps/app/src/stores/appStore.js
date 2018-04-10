@@ -165,7 +165,6 @@ export default class AppStore {
     enterDelay: 120,
     betweenDelay: 120,
     onHovered: item => {
-      log(`hi`)
       this.setSelected(item && item.id)
     },
   })

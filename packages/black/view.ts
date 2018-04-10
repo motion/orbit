@@ -11,7 +11,7 @@ import addContext from '@mcro/decor/es6/plugins/react/addContext'
 import attach from '@mcro/decor/es6/plugins/react/attach'
 import storeProvidable from '@mcro/decor/es6/plugins/react/storeProvidable'
 import { storeOptions } from './store'
-import { decorator as glossDecorator } from './gloss'
+import { decorator } from './gloss'
 
 const uiContext = [
   addContext,
@@ -23,7 +23,7 @@ const uiContext = [
   },
 ]
 
-const glossPlugin = () => ({ decorator: glossDecorator })
+const glossPlugin = () => ({ decorator })
 const decorations = (
   enable: { ui?: boolean; mobx?: boolean; magic?: boolean } = {},
 ) => [
@@ -56,7 +56,7 @@ interface ViewDecorator {
 function createViewDecorator() {
   const view = <ViewDecorator>function view(item, ...args) {
     if (typeof item === 'string') {
-      return glossDecorator(item, ...args)
+      return decorator(item, ...args)
     }
     // @view({ ...stores }) shorthand
     if (typeof item === 'object') {

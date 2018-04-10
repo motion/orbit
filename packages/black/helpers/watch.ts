@@ -7,7 +7,7 @@ function attachWatch(val, userOptions) {
   return val
 }
 
-function tsWatch(target, options) {
+function tsWatch(target, options?) {
   const autorungetter = () => {}
   // @ts-ignore
   autorungetter.IS_AUTO_RUN = true
@@ -15,6 +15,7 @@ function tsWatch(target, options) {
   autorungetter.options = options
   return {
     set(value) {
+      // @ts-ignore
       autorungetter.value = value
     },
     get: autorungetter,

@@ -16,9 +16,7 @@ export default class PeekFrame {
       return null
     }
     const onRight = !Electron.peekOnLeft
-    // log(`onRight`, onLeft)
     const { isShowingPeek } = App
-    // const isShowingPeek = true
     return (
       <container $$row $$flex>
         <Space if={!onRight} />

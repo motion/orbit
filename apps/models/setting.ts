@@ -17,6 +17,7 @@ export class Setting extends T.BaseEntity {
     lastSyncSettings?: any
     channels?: Array<string>
     lastAttachmentSync?: { [key: string]: string }
+    lastMessageSync?: { [key: string]: string }
   }
   @T.CreateDateColumn() createdAt: Date
   @T.UpdateDateColumn() updatedAt: Date

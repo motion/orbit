@@ -2,6 +2,7 @@ import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import Overdrive from '@mcro/overdrive'
 import OrbitIcon from './orbitIcon'
+import OrbitCardContent from './orbitCardContent'
 
 @view
 class Text {
@@ -64,6 +65,7 @@ export default class OrbitCard {
               lineHeight: '1.35rem',
             },
           }
+          const PreviewText = props => <Text {...textProps} {...props} />
           const willTransition = false
           return (
             <AnimateElement id={`${result.id}`}>
@@ -117,32 +119,17 @@ export default class OrbitCard {
                       />
                     </title>
                   </AnimateElement>
-                  <content
-                    css={{
-                      flex: 1,
-                      opacity: 0.8,
-                      overflow: 'hidden',
-                    }}
-                  >
-                    <AnimateElement id={`${result.id}-text`}>
-                      <text $$flex>
-                        <Text {...textProps} css={{ maxHeight: '100%' }}>
-                          Lorem ipsum dolor sit amet consectetur adipisicing
-                          elit. Ratione modi optio at neque ducimus ab aperiam
-                          dolores nemo? Quod quos nisi molestias velit
-                          reprehenderit veniam dicta, voluptatum vel voluptas a?
-                          Lorem ipsum dolor sit amet consectetur adipisicing
-                          elit. Ratione modi optio at neque ducimus ab aperiam
-                          dolores nemo? Quod quos nisi molestias velit
-                          reprehenderit veniam dicta, voluptatum vel voluptas a?
-                          Lorem ipsum dolor sit amet consectetur adipisicing
-                          elit. Ratione modi optio at neque ducimus ab aperiam
-                          dolores nemo? Quod quos nisi molestias velit
-                          reprehenderit veniam dicta, voluptatum vel voluptas a?
-                        </Text>
-                      </text>
-                    </AnimateElement>
-                  </content>
+                  <AnimateElement id={`${result.id}-content`}>
+                    <content
+                      css={{
+                        flex: 1,
+                        opacity: 0.8,
+                        overflow: 'hidden',
+                      }}
+                    >
+                      <OrbitCardContent result={result} Text={PreviewText} />
+                    </content>
+                  </AnimateElement>
                   <AnimateElement id={`${result.id}-bottom`}>
                     <bottom>
                       <orbital />

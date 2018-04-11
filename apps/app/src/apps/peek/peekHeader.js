@@ -17,7 +17,7 @@ export default class PeekHeader {
         <WindowControls
           onClose={() => {
             // TODO:
-            // Desktop.sendMessageTo(Electron, 'CLOSE_PEEK')
+            // Desktop.sendMessage(Electron, 'CLOSE_PEEK')
             App.setPeekTarget(null)
           }}
         />

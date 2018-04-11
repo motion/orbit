@@ -88,7 +88,9 @@ export default class SlackMessagesSync {
       {
         identifier: `slack-${Helpers.hash(person)}`,
         name: person.name,
-        data: person,
+        data: {
+          ...person,
+        },
       },
       Person.identifyingKeys,
     )

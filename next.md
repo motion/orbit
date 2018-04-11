@@ -6,7 +6,8 @@ learned:
 
 * electron 2.0
 * webview / overflow scroll bounce
-* Desktop.sendMessageTo(Electron) orbitRef.hide() quickly
+* Desktop.sendMessage(Electron, Electron.messages.MSG)
+* orbitRef.hide() quickly
 * Swindler dedupe animation improvements
 
 fallover:

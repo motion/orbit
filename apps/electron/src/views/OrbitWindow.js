@@ -12,6 +12,20 @@ class OrbitWindowStore {
   orbitRef = null
   clear = 0
 
+  @react
+  unFullScreenOnHide = [
+    () => App.isShowingOrbit,
+    showing => {
+      if (showing) {
+        return
+      }
+      if (Electron.orbitState.fullScreen) {
+        log(`clearing`)
+        this.clear = Date.now()
+      }
+    },
+  ]
+
   willMount() {
     Electron.onMessage(msg => {
       if (msg === 'CLEAR') {

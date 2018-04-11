@@ -15,8 +15,13 @@ const isOrbit = isBrowser && window.location.pathname === '/orbit'
 
 @store
 class AppStore {
+  messages = {
+    SHOW: 'SHOW',
+    HIDE: 'HIDE',
+  }
+
   setState: typeof Bridge.setState
-  sendMessageTo: typeof Bridge.sendMessageTo
+  sendMessage: typeof Bridge.sendMessage
   onMessage: typeof Bridge.onMessage
   bridge: any
   reactions: AppReactions
@@ -38,7 +43,6 @@ class AppStore {
     orbitConnected: false,
     knowledge: null,
     peekTarget: null,
-    shouldTogglePinned: null,
   }
 
   get isShowingOrbit() {
@@ -106,10 +110,10 @@ class AppStore {
     )
   }
 
-  start = (options) => {
+  start = options => {
     Bridge.start(this, this.state, options)
     this.setState = Bridge.setState
-    this.sendMessageTo = Bridge.sendMessageTo
+    this.sendMessage = Bridge.sendMessage
     this.onMessage = Bridge.onMessage
     this.bridge = Bridge
   }
@@ -123,7 +127,7 @@ class AppStore {
   }
 
   togglePinned = () => {
-    App.setState({ shouldTogglePinned: Date.now() })
+    App.sendMessage(Electron, Electron.message.TOGGLE_PINNED)
   }
 
   togglePeek = () => {

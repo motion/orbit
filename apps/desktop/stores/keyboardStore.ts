@@ -1,5 +1,6 @@
+import { store, react } from '@mcro/black/store'
 import iohook from 'iohook'
-import { Desktop } from '@mcro/all'
+import { Desktop, Electron } from '@mcro/all'
 import { isEqual } from 'lodash'
 import debug from '@mcro/debug'
 
@@ -25,6 +26,7 @@ const DOUBLE_TAP_OPTION = [
 
 const log = debug('KeyboardStore')
 
+@store
 export default class KeyboardStore {
   // stores the last 4 keys pressed
   // but clears after a little, so it only stores "purposeful sequences"
@@ -39,16 +41,16 @@ export default class KeyboardStore {
     this.onKeyClear = opts.onKeyClear
   }
 
-  start = () => {
-    let clearLastKeys
+  key = null
+  keyAt = 0
 
-    // keydown
-    iohook.on('keydown', ({ keycode }) => {
+  @react({ log: false })
+  onKey = [
+    () => [this.key, this.keyAt],
+    ([keycode]) => {
       this.keysDown.add(keycode)
-      clearTimeout(clearLastKeys)
       this.lastKeys.push(['down', keycode])
       this.clearDownKeysAfterPause()
-      // log(`keydown: ${keycode}`)
       if (keycode === codes.esc) {
         return Desktop.setKeyboardState({ esc: Date.now() })
       }
@@ -86,7 +88,19 @@ export default class KeyboardStore {
             this.onKeyClear()
           }
       }
-    })
+    },
+  ]
+
+  onKeyDown = ({ keycode }) => {
+    this.key = keycode
+    this.keyAt = Date.now()
+  }
+
+  start = () => {
+    let clearLastKeys
+
+    // keydown
+    iohook.on('keydown', this.onKeyDown)
 
     // keyup
     iohook.on('keyup', ({ keycode }) => {
@@ -110,7 +124,7 @@ export default class KeyboardStore {
           break
       }
       if (isEqual(this.lastKeys, DOUBLE_TAP_OPTION)) {
-        Desktop.setShouldTogglePin(Date.now())
+        Desktop.sendMessage(Electron, Electron.messages.TOGGLE_PINNED)
       }
       // be sure its a fast action not slow
       clearLastKeys = setTimeout(() => {

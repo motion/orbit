@@ -33,21 +33,19 @@ export default class ElectronReactions {
   screenSize = screenSize
   goingToReposition = null
 
+  constructor() {
+    Electron.onMessage(msg => {
+      switch (msg) {
+        case Electron.messages.TOGGLE_PINNED:
+          Electron.togglePinned()
+      }
+    })
+  }
+
   willReposition = () => {
     Electron.setState({ willReposition: Date.now() })
     // this.goingToReposition = Date.now()
   }
-
-  @react
-  unFullScreenOnHide = [
-    () => Electron.state.shouldHide,
-    () => {
-      if (!Electron.orbitState.fullScreen || App.state.orbitHidden) {
-        return
-      }
-      this.willReposition()
-    },
-  ]
 
   @react
   fullScreenOnOptionShift = [
@@ -59,15 +57,6 @@ export default class ElectronReactions {
       } else {
         //
       }
-    },
-  ]
-
-  @react
-  shouldTogglePinned = [
-    () => [App.state.shouldTogglePinned, Desktop.state.shouldTogglePin],
-    () => {
-      Electron.lastAction = 'DoubleTap'
-      Electron.togglePinned()
     },
   ]
 
@@ -117,7 +106,11 @@ export default class ElectronReactions {
     },
   ]
 
-  @react({ delay: 16 })
+  // one source of truth
+  // since electron needs to do stuff
+  // it handles it here primarily
+
+  @react
   handleHoldingOption = [
     () => Desktop.isHoldingOption,
     async (isHoldingOption, { sleep }) => {
@@ -130,13 +123,13 @@ export default class ElectronReactions {
           return
         }
         if (!App.state.orbitHidden) {
-          Electron.shouldHide()
+          Electron.sendMessage(App, App.messages.HIDE)
         }
         return
       }
       if (App.state.orbitHidden) {
         await sleep(150)
-        Electron.shouldShow()
+        Electron.sendMessage(App, App.messages.SHOW)
         // await sleep(3500)
         // Electron.setPinned(true)
       }

@@ -90,7 +90,12 @@ export default class SocketManager {
     // listen for incoming
     socket.on('message', str => {
       // message
-      const { action, state, source } = JSON.parse(str)
+      const { action, state, source, message, to } = JSON.parse(str)
+      if (to) {
+        console.log('sendmessage', to, message)
+        this.sendMessage(to, message)
+        return
+      }
       if (state) {
         if (this.onState) {
           this.onState(source, state)

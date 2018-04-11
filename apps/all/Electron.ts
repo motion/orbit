@@ -12,8 +12,13 @@ export let Electron
 
 @store
 class ElectronStore {
+  messages = {
+    CLEAR: 'CLEAR',
+    TOGGLE_PINNED: 'TOGGLE_PINNED',
+  }
+
   setState: typeof Bridge.setState
-  sendMessageTo: typeof Bridge.sendMessageTo
+  sendMessage: typeof Bridge.sendMessage
   onMessage: typeof Bridge.onMessage
   reactions: ElectronReactions
   source = 'Electron'
@@ -22,9 +27,6 @@ class ElectronStore {
 
   state = {
     willReposition: Date.now(),
-    shouldHide: 1,
-    shouldShow: 0,
-    shouldPause: null,
     settingsPosition: [], // todo: settingsState.position
     orbitState: {
       mouseOver: false,
@@ -58,7 +60,7 @@ class ElectronStore {
   start = options => {
     Bridge.start(this, this.state, options)
     this.setState = Bridge.setState
-    this.sendMessageTo = Bridge.sendMessageTo
+    this.sendMessage = Bridge.sendMessage
     this.onMessage = Bridge.onMessage
     const ElectronReactions = eval(`require('./ElectronReactions')`).default
     this.reactions = new ElectronReactions()
@@ -81,16 +83,6 @@ class ElectronStore {
 
   get currentPeek() {
     return (Electron.peekState.windows || [])[0] || {}
-  }
-
-  get recentlyToggled() {
-    if (
-      Date.now() - Electron.state.shouldHide <= App.animationDuration ||
-      Date.now() - Electron.state.shouldShow <= App.animationDuration
-    ) {
-      return true
-    }
-    return false
   }
 
   onShortcut = shortcut => {
@@ -127,15 +119,11 @@ class ElectronStore {
     Electron.setPeekState({ windows })
   }
 
-  shouldShow = () => Electron.setShouldShow(Date.now())
-  shouldHide = () => Electron.setShouldHide(Date.now())
-  shouldPause = () => Electron.setShouldPause(Date.now())
-
   toggleVisible = () => {
     if (App.state.orbitHidden) {
-      this.shouldShow()
+      Electron.sendMessage(App, App.messages.HIDE)
     } else {
-      this.shouldHide()
+      Electron.sendMessage(App, App.messages.SHOW)
     }
   }
 

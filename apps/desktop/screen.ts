@@ -48,22 +48,6 @@ export default class DesktopScreen {
 
   @react rescanOnNewAppState = [() => Desktop.appState, this.rescanApp]
 
-  // watch paused
-  @react
-  handlePause = [
-    () => Electron.state.shouldPause,
-    () => {
-      const paused = !Desktop.state.paused
-      Desktop.setPaused(paused)
-      if (paused) {
-        Swift.pause()
-      } else {
-        Swift.resume()
-        this.rescanApp()
-      }
-    },
-  ]
-
   @react
   handleOCRWords = [
     () => Desktop.ocrState.words,
@@ -91,7 +75,25 @@ export default class DesktopScreen {
     },
   ]
 
+  togglePaused = () => {
+    const paused = !Desktop.state.paused
+    Desktop.setPaused(paused)
+    if (paused) {
+      Swift.pause()
+    } else {
+      Swift.resume()
+      this.rescanApp()
+    }
+  }
+
   start = async () => {
+    Desktop.onMessage(msg => {
+      switch (msg) {
+        case Desktop.messages.TOGGLE_PAUSED:
+          this.togglePaused()
+      }
+    })
+
     this.oracle.onWords(words => {
       this.hasResolvedOCR = true
       Desktop.setOcrState({
@@ -164,7 +166,7 @@ export default class DesktopScreen {
           !isEqual(nextState.offset, appState.offset)
         ) {
           // immediate clear for moving
-          Desktop.sendMessageTo(Electron, 'CLEAR')
+          Desktop.sendMessage(Electron, Electron.messages.CLEAR)
         }
       }
       if (!Desktop.state.paused) {

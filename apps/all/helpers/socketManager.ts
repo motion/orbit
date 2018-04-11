@@ -45,11 +45,11 @@ export default class SocketManager {
 
   // really fast direct messages
   sendMessage = (source: string, message: string) => {
-    console.log('sendmessage', source, message)
     for (const { uid, socket } of this.activeSockets) {
       if (this.identities[uid] !== source) {
         continue
       }
+      console.log('sendmessage', source, message)
       socket.send(`-${message}`)
     }
   }

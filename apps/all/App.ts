@@ -127,7 +127,7 @@ class AppStore {
   }
 
   togglePinned = () => {
-    App.sendMessage(Electron, Electron.message.TOGGLE_PINNED)
+    App.sendMessage(Electron, Electron.messages.TOGGLE_PINNED)
   }
 
   togglePeek = () => {

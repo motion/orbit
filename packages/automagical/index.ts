@@ -6,6 +6,7 @@ import * as Helpers from '@mcro/helpers'
 import debug from '@mcro/debug'
 
 const root = typeof window !== 'undefined' ? window : require('global')
+const IS_PROD = process.env.NODE_ENV === 'production'
 
 type MagicalObject = {
   subscriptions: { add: (fn: Function) => void }
@@ -40,7 +41,10 @@ const logRes = (res: any) => {
   if (res && res.value && isQuery(res.value)) {
     return [PREFIX, 'RxQuery']
   }
-  return [PREFIX, res]
+  if (Mobx.isArrayLike(res)) {
+    return [PREFIX, res.map(x => Mobx.toJS(x))]
+  }
+  return [PREFIX, Mobx.toJS(res)]
 }
 const getReactionName = (obj: MagicalObject) => {
   return obj.constructor.name.replace('Store', '')
@@ -572,7 +576,7 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
       const updateAsyncValue = val => {
         if (curID === reactionID) {
           replaceDisposable()
-          if (!preventLog) {
+          if (!IS_PROD && !preventLog) {
             log(
               `${name} (${Date.now() - start}ms) ${
                 isAsyncReaction ? `[${id}]` : ''
@@ -619,7 +623,7 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
           })
           .catch(err => {
             if (err === RejectReactionSymbol) {
-              if (!preventLog) {
+              if (!IS_PROD && !preventLog) {
                 log(`${name} [${curID}] cancelled`)
               }
             } else {
@@ -631,7 +635,7 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
       }
       // store result as observable
       result = specialValueToObservable(reactionResult)
-      if (!preventLog && !delayValue) {
+      if (!IS_PROD && !preventLog && !delayValue) {
         const prefix = `${name} ${isReaction ? `@r` : `@w`}`
         if (changed && Object.keys(changed).length) {
           logState(

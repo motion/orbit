@@ -31,12 +31,14 @@ const tinyProps = {
 export default class OrbitContent {
   render({ appStore }) {
     const { query, results } = appStore.searchState
+    const hasQuery = query.length > 0
+    log(`content ${query}`)
     return (
       <orbitContent>
         <space css={{ height: 10 }} />
         <notifications
           if={results.length}
-          $tiny={!query}
+          $tiny={!hasQuery}
           css={{
             opacity:
               appStore.activeIndex >= 0 && appStore.activeIndex < SPLIT_INDEX
@@ -44,27 +46,29 @@ export default class OrbitContent {
                 : 0.5,
           }}
         >
-          {results.slice(0, query ? 12 : SPLIT_INDEX).map((result, index) => (
-            <OrbitItem
-              {...!query && tinyProps}
-              key={result.id}
-              type="gmail"
-              index={index}
-              appStore={appStore}
-              results={results}
-              result={{
-                ...result,
-                title: result.title,
-              }}
-              total={results.length}
-              {...appStore.getHoverProps({
-                result,
-                id: index,
-              })}
-            />
-          ))}
+          {results
+            .slice(0, hasQuery ? 12 : SPLIT_INDEX)
+            .map((result, index) => (
+              <OrbitItem
+                {...!hasQuery && tinyProps}
+                key={`${index}${result.identifier || result.id}`}
+                type="gmail"
+                index={index}
+                appStore={appStore}
+                results={results}
+                result={{
+                  ...result,
+                  title: result.title,
+                }}
+                total={results.length}
+                {...appStore.getHoverProps({
+                  result,
+                  id: index,
+                })}
+              />
+            ))}
         </notifications>
-        <OrbitContext if={!query} appStore={appStore} />
+        <OrbitContext if={!hasQuery} appStore={appStore} />
         <space css={{ height: 20 }} />
       </orbitContent>
     )

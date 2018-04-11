@@ -5,6 +5,7 @@ import * as Constants from '~/constants'
 import * as r2 from '@mcro/r2'
 import * as Helpers from '~/helpers'
 import * as _ from 'lodash'
+import * as Mobx from 'mobx'
 
 // const log = debug('root')
 const presetAnswers = {
@@ -91,7 +92,7 @@ export default class AppStore {
   @react({
     defaultValue: { results: [], query: '' },
     fireImmediately: true,
-    delay: 100,
+    delay: 120,
   })
   searchState = [
     () => [
@@ -106,7 +107,7 @@ export default class AppStore {
       } else {
         const unsorted = [...bitResults, ...pluginResults]
         const strongTitleMatches = Helpers.fuzzy(query, unsorted, {
-          threshold: -25,
+          threshold: -10,
         })
         results = uniq([...strongTitleMatches, ...unsorted].slice(0, 10))
       }

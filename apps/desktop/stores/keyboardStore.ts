@@ -1,7 +1,6 @@
-import { store, react } from '@mcro/black/store'
+import { store, react, isEqual } from '@mcro/black/store'
 import iohook from 'iohook'
 import { Desktop, Electron } from '@mcro/all'
-import { isEqual } from 'lodash'
 import debug from '@mcro/debug'
 
 const codes = {
@@ -26,11 +25,12 @@ const DOUBLE_TAP_OPTION = [
 
 const log = debug('KeyboardStore')
 
+// stores the last 4 keys pressed
+// but clears after a little, so it only stores "purposeful sequences"
+let lastKeys = []
+
 @store
 export default class KeyboardStore {
-  // stores the last 4 keys pressed
-  // but clears after a little, so it only stores "purposeful sequences"
-  lastKeys = []
   // this is imperfect, iohook doesn't always match events perfectly
   // so in cases of errors, we clear it after a little delay
   keysDown = new Set()
@@ -48,8 +48,6 @@ export default class KeyboardStore {
   onKey = [
     () => [this.key, this.keyAt],
     ([keycode]) => {
-      this.keysDown.add(keycode)
-      this.lastKeys.push(['down', keycode])
       this.clearDownKeysAfterPause()
       if (keycode === codes.esc) {
         return Desktop.setKeyboardState({ esc: Date.now() })
@@ -91,7 +89,7 @@ export default class KeyboardStore {
     },
   ]
 
-  onKeyDown = ({ keycode }) => {
+  keyDown = keycode => {
     this.key = keycode
     this.keyAt = Date.now()
   }
@@ -100,15 +98,19 @@ export default class KeyboardStore {
     let clearLastKeys
 
     // keydown
-    iohook.on('keydown', this.onKeyDown)
+    iohook.on('keydown', ({ keycode }) => {
+      this.keysDown.add(keycode)
+      lastKeys.push(['down', keycode])
+      this.keyDown(keycode)
+    })
 
     // keyup
     iohook.on('keyup', ({ keycode }) => {
       this.keysDown.delete(keycode)
       clearTimeout(clearLastKeys)
-      this.lastKeys.push(['up', keycode])
-      while (this.lastKeys.length > 4) {
-        this.lastKeys.shift() // ensure only 4 max
+      lastKeys.push(['up', keycode])
+      while (lastKeys.length > 4) {
+        lastKeys.shift() // ensure only 4 max
       }
       this.clearDownKeysAfterPause()
       // option off
@@ -123,13 +125,13 @@ export default class KeyboardStore {
           Desktop.setKeyboardState({ spaceUp: Date.now() })
           break
       }
-      if (isEqual(this.lastKeys, DOUBLE_TAP_OPTION)) {
+      if (isEqual(lastKeys, DOUBLE_TAP_OPTION)) {
         Desktop.sendMessage(Electron, Electron.messages.TOGGLE_PINNED)
       }
       // be sure its a fast action not slow
       clearLastKeys = setTimeout(() => {
-        this.lastKeys = []
-      }, 150)
+        lastKeys = []
+      }, 190)
     })
   }
 

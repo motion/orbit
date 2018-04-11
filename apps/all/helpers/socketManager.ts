@@ -45,6 +45,7 @@ export default class SocketManager {
 
   // really fast direct messages
   sendMessage = (source: string, message: string) => {
+    console.log('sendmessage', source, message)
     for (const { uid, socket } of this.activeSockets) {
       if (this.identities[uid] !== source) {
         continue
@@ -92,7 +93,6 @@ export default class SocketManager {
       // message
       const { action, state, source, message, to } = JSON.parse(str)
       if (to) {
-        console.log('sendmessage', to, message)
         this.sendMessage(to, message)
         return
       }

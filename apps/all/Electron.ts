@@ -147,6 +147,33 @@ class ElectronStore {
       })
     }, 100)
   }
+
+  onShortcut = shortcut => {
+    if (shortcut === 'Option+Space') {
+      if (Electron.orbitState.fullScreen) {
+        Electron.toggleFullScreen()
+        return
+      }
+      if (App.state.orbitHidden) {
+        Electron.toggleVisible()
+        Electron.lastAction = 'Option+Space'
+        Electron.setPinned(true)
+        return
+      }
+      if (Electron.orbitState.pinned) {
+        Electron.togglePinned()
+        Electron.toggleVisible()
+        return
+      } else {
+        // !pinned
+        Electron.togglePinned()
+      }
+    }
+    if (shortcut === 'Option+Shift+Space') {
+      Electron.lastAction = 'Option+Shift+Space'
+      Electron.toggleFullScreen()
+    }
+  }
 }
 
 Electron = proxySetters(new ElectronStore())

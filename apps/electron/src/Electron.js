@@ -30,7 +30,17 @@ const log = debug('Electron')
       return this.peekRefs[0]
     }
 
-    willMount() {
+    async willMount() {
+      global.Root = this
+      global.restart = this.restart
+      debugState(({ stores, views }) => {
+        this.stores = stores
+        this.views = views
+      })
+      await Electron.start({
+        ignoreSelf: true,
+      })
+      this.watchOptionPress()
       Electron.onMessage(msg => {
         if (msg === 'CLEAR') {
           this.clear = Date.now()
@@ -40,9 +50,10 @@ const log = debug('Electron')
         log(`clear from fs toggle`)
         this.clear = Date.now()
       }
+      Electron.onClear()
     }
 
-    @react({ log: false })
+    @react({ log: true })
     clearApp = [
       () => this.clear,
       async (_, { when, sleep }) => {
@@ -77,19 +88,6 @@ const log = debug('Electron')
       () => Electron.state.shouldShow,
       shouldShow => shouldShow && this.appRef.show(),
     ]
-
-    async willMount() {
-      global.Root = this
-      global.restart = this.restart
-      debugState(({ stores, views }) => {
-        this.stores = stores
-        this.views = views
-      })
-      await Electron.start({
-        ignoreSelf: true,
-      })
-      this.watchOptionPress()
-    }
 
     handlePeekRef = memoize(peek => ref => {
       if (!ref) return

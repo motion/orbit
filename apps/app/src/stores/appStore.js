@@ -4,27 +4,8 @@ import { Bit, Setting } from '@mcro/models'
 import * as Constants from '~/constants'
 import * as r2 from '@mcro/r2'
 import * as Helpers from '~/helpers'
-import * as _ from 'lodash'
-import * as Mobx from 'mobx'
 
 // const log = debug('root')
-const presetAnswers = {
-  '1.txt': [
-    {
-      title: 'Hello world',
-      body: 'this is me',
-      type: 'document',
-      integration: 'gdocs',
-    },
-    {
-      title: 'Hello 2',
-      body: 'this is me',
-      type: 'email',
-      integration: 'github',
-    },
-    { title: 'Chat', body: 'this is me', type: 'chat', integration: 'slack' },
-  ],
-}
 
 const uniq = arr => {
   const added = {}
@@ -36,6 +17,31 @@ const uniq = arr => {
     }
   }
   return final
+}
+
+const prefixes = {
+  gh: { integration: 'github' },
+  gd: { integration: 'google', type: 'document' },
+  gm: { integration: 'google', type: 'mail' },
+  sl: { integration: 'slack' },
+  m: { type: 'mail' },
+  d: { type: 'document' },
+  c: { type: 'conversation' },
+}
+
+const parseQuery = query => {
+  const prefix = query.split(' ')[0]
+  const q = prefixes[prefix]
+  if (q) {
+    return {
+      rest: query.replace(prefix, '').trim(),
+      conditions: Object.keys(q).reduce(
+        (query, key) => `${query} AND ${key} = "${q[key]}"`,
+        ``,
+      ),
+    }
+  }
+  return { rest: query, conditions: '' }
 }
 
 export default class AppStore {
@@ -71,11 +77,9 @@ export default class AppStore {
   @react({ fireImmediately: true, defaultValue: [], onlyUpdateIfChanged: true })
   bitResults = [
     () => [App.state.query, Desktop.appState.id],
-    async ([query, id]) => {
-      if (id === 'com.apple.TextEdit') {
-        return presetAnswers[Desktop.appState.title]
-      }
-      if (!query) {
+    async ([query]) => {
+      const { conditions, rest } = parseQuery(query)
+      if (!query || !rest) {
         return (
           (await Bit.find({
             take: 8,
@@ -85,7 +89,7 @@ export default class AppStore {
         )
       }
       return await Bit.find({
-        where: `title like "%${query.replace(/\s+/g, '%')}%"`,
+        where: `title like "%${rest.replace(/\s+/g, '%')}%"${conditions}`,
         order: { updatedAt: 'DESC' },
         take: 8,
       })
@@ -114,7 +118,8 @@ export default class AppStore {
         results = Helpers.fuzzy(query, getResults())
       } else {
         const unsorted = [...bitResults, ...pluginResults]
-        const strongTitleMatches = Helpers.fuzzy(query, unsorted, {
+        const { rest } = parseQuery(query)
+        const strongTitleMatches = Helpers.fuzzy(rest, unsorted, {
           threshold: -10,
         })
         results = uniq([...strongTitleMatches, ...unsorted].slice(0, 10))

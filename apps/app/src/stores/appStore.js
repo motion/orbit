@@ -103,9 +103,10 @@ export default class AppStore {
       if (this.getResults) {
         return Helpers.fuzzy(query, this.getResults())
       }
-      const results = [...pluginResults, ...bitResults]
-      console.log('results', results.slice())
-      const strongTitleMatches = Helpers.fuzzy(query, results)
+      const results = [...bitResults, ...pluginResults]
+      const strongTitleMatches = Helpers.fuzzy(query, results, {
+        threshold: -25,
+      })
       return {
         query,
         results: uniq([...strongTitleMatches, ...results].slice(0, 10)),

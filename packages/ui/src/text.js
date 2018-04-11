@@ -311,10 +311,10 @@ export default class Text {
     ellipseText: {
       display: 'flex',
       flex: 1,
-      // overflow: 'hidden',
+      overflow: 'hidden',
     },
     ellipseLines: {
-      // overflow: 'hidden',
+      overflow: 'hidden',
       textOverflow: 'ellipsis',
       display: '-webkit-box',
       WebkitBoxOrient: 'vertical',

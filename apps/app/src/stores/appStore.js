@@ -76,10 +76,11 @@ export default class AppStore {
         return presetAnswers[Desktop.appState.title]
       }
       if (!query) {
-        return (await Bit.find({ take: 8 })) || []
+        return (await Bit.find({ take: 8, order: { updatedAt: 'DESC' } })) || []
       }
       return await Bit.find({
         where: `title like "%${query.replace(/\s+/g, '%')}%"`,
+        order: { updatedAt: 'DESC' },
         take: 8,
       })
     },

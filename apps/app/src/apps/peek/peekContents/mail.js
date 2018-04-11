@@ -15,7 +15,9 @@ export class Mail {
     const { messages } = bit.data
     const getHeader = (message, key) =>
       (
-        (message.payload.headers || []).find(x => x.name === key) || {
+        ((message.payload && message.payload.headers) || []).find(
+          x => x.name === key,
+        ) || {
           value: '',
         }
       ).value
@@ -53,7 +55,7 @@ export class Mail {
                         marginLeft: -6,
                       }}
                     />
-                    <rest $$row $$centered>
+                    <rest if={message.payload} $$row $$centered>
                       <strong>
                         {getHeader(message, 'From').split(' ')[0]}
                       </strong>&nbsp;

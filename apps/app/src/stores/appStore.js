@@ -124,7 +124,7 @@ export default class AppStore {
       this._setSelected(index)
     }
     App.setPeekTarget({
-      id: this.hoveredIndex,
+      id: index > -1 ? index : this.hoveredIndex,
       position: this.getMousePosition(),
     })
   }

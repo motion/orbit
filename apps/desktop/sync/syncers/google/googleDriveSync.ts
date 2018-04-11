@@ -76,7 +76,10 @@ export default class GoogleDriveSync {
       {
         id: info.id,
         integration: 'google',
-        identifier: Helpers.hash(info),
+        identifier: Helpers.hash({
+          id: info.id,
+          modifiedTime: info.modifiedTime,
+        }),
         type: 'document',
         title: name,
         body: contents || 'empty',

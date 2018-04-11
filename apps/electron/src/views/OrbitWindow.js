@@ -102,6 +102,9 @@ class OrbitWindowStore {
   focusOnMouseOver = [
     () => Electron.isMouseInActiveArea,
     mouseOver => {
+      if (!App.isShowingOrbit) {
+        return
+      }
       if (mouseOver && Electron.orbitState.fullScreen) {
         this.focusOrbit()
         return

@@ -12,6 +12,7 @@ export default class OrbitDivider {
       </barOuter>
     )
   }
+
   static style = {
     barOuter: {
       pointerEvents: 'all',
@@ -26,6 +27,7 @@ export default class OrbitDivider {
       borderRadius: 100,
     },
   }
+
   static theme = (props, theme) => {
     return {
       barOuter: {

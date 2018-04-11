@@ -127,21 +127,19 @@ export default class DesktopScreen {
             bounds: value.bounds,
             name: id ? last(id.split('.')) : value.title,
           }
-          // no change
-          if (isEqual(nextState, lastState)) {
-            return
-          }
           // update these now so we can use to track
           this.curAppID = id
           this.curAppName = nextState.name
           break
         case 'WindowSizeChangedEvent':
-          if (value.id !== id) return
           nextState.bounds = value.size
           break
         case 'WindowPosChangedEvent':
-          if (value.id !== id) return
           nextState.offset = value.pos
+      }
+      // no change
+      if (isEqual(nextState, lastState)) {
+        return
       }
       const focusedOnOrbit = this.curAppID === ORBIT_APP_ID
       // @ts-ignore

@@ -128,7 +128,8 @@ export default class ElectronReactions {
         return
       }
       if (App.state.orbitHidden) {
-        await sleep(150)
+        await sleep(140)
+        log(`sending message show`)
         Electron.sendMessage(App, App.messages.SHOW)
         // await sleep(3500)
         // Electron.setPinned(true)

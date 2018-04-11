@@ -111,6 +111,8 @@ class OrbitWindowStore {
 export default class OrbitWindow extends React.Component {
   render({ electronStore, store }) {
     const state = Mobx.toJS(Electron.orbitState)
+    const show = electronStore.show >= 1 ? true : false
+    const opacity = electronStore.show <= 1 ? 0 : 1
     return (
       <Window
         frame={false}
@@ -121,8 +123,8 @@ export default class OrbitWindow extends React.Component {
         transparent={true}
         showDevTools={Electron.state.showDevTools.orbit}
         alwaysOnTop
-        show={electronStore.show ? true : false}
-        opacity={electronStore.show === 1 ? 0 : 1}
+        show={show}
+        opacity={opacity}
         ignoreMouseEvents={!App.isShowingOrbit}
         size={state.size}
         position={state.position}

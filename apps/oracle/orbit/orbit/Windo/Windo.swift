@@ -6,6 +6,11 @@ import Swindler
 import PromiseKit
 import Darwin
 
+enum Either<T1, T2> {
+  case Left(T1)
+  case Right(T2)
+}
+
 let orbitAppId = "com.github.electron"
 
 final class Windo {
@@ -15,6 +20,7 @@ final class Windo {
   private var currentId = ""
   private var lastApp: NSRunningApplication?
   private var currentApp: NSRunningApplication?
+  private var currentFrontWindow: Window?
   private var lastSent = ""
   @IBOutlet weak var window: NSWindow!
   
@@ -32,31 +38,25 @@ final class Windo {
     })
 
     // swindler bugs if started too quickly :/
-    DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+    DispatchQueue.main.asyncAfter(deadline: .now() + 6) {
       self.frontmostWindowChanged()
-      
-      self.swindler.on { (event: WindowCreatedEvent) in
-        let window = event.window
-        if window.application.bundleIdentifier == orbitAppId { return }
-        self.emit("{ \"action\": \"WindowCreatedEvent\", \"value\": \"\(window.title.value)\" }")
-      }
+
+//      self.swindler.on { (event: WindowCreatedEvent) in
+//        let window = event.window
+//        if window.application.bundleIdentifier == orbitAppId { return }
+//        self.emit("{ \"action\": \"WindowCreatedEvent\", \"value\": \"\(window.title.value)\" }")
+//      }
       self.swindler.on { (event: WindowPosChangedEvent) in
-        let bundleId = event.window.application.bundleIdentifier
-        let val = event.newValue
-        if bundleId == orbitAppId { return }
-        self.emit("{ \"action\": \"WindowPosChangedEvent\", \"value\": { \"id\": \"\(bundleId ?? "")\", \"pos\": [\(val.x), \(val.y)] } }")
+        self.updatePosition(event.window)
       }
       self.swindler.on { (event: WindowSizeChangedEvent) in
-        let val = event.newValue
-        let bundleId = event.window.application.bundleIdentifier
-        if bundleId == orbitAppId { return }
-        self.emit("{ \"action\": \"WindowSizeChangedEvent\", \"value\": { \"id\": \"\(bundleId ?? "")\", \"size\": [\(val.width), \(val.height)] } }")
+        self.updatePosition(event.window)
       }
-      self.swindler.on { (event: WindowDestroyedEvent) in
-        let window = event.window
-        if window.application.bundleIdentifier == orbitAppId { return }
-        self.emit("{ \"action\": \"WindowDestroyedEvent\", \"value\": \"\(window.title.value)\" }")
-      }
+//      self.swindler.on { (event: WindowDestroyedEvent) in
+//        let window = event.window
+//        if window.application.bundleIdentifier == orbitAppId { return }
+//        self.emit("{ \"action\": \"WindowDestroyedEvent\", \"value\": \"\(window.title.value)\" }")
+//      }
       self.swindler.on { (event: ApplicationMainWindowChangedEvent) in
         self.frontmostWindowChanged()
       }
@@ -72,9 +72,18 @@ final class Windo {
     }
   }
   
+  private func updatePosition(_ window: Window) {
+    let app = window.application
+    let bundleId = app.bundleIdentifier ?? ""
+    if bundleId == orbitAppId { return }
+    if bundleId != self.currentId { return }
+    let position = window.position.value
+    let size = window.size.value
+    self.emit("{ \"action\": \"WindowPosChangedEvent\", \"value\": { \"id\": \"\(bundleId)\", \"size\": [\(size.width), \(size.height)], \"position\": [\(position.x), \(position.y)] } }")
+  }
+  
   // sends focus to last app besides our app
   public func defocus() {
-//    self.emit("defocus last \(self.lastApp?.bundleIdentifier ?? "") current \(self.currentApp?.bundleIdentifier ?? "")")
     if self.currentId != orbitAppId {
       return
     }
@@ -88,9 +97,10 @@ final class Windo {
       print("no frontmost window")
       return
     }
-    let frontWindow = app.mainWindow.value
-    if (frontWindow == nil) { return }
-    let window = frontWindow!
+    guard let window = app.mainWindow.value else {
+      print("no main window")
+      return
+    }
     let title = String(window.title.value).replacingOccurrences(of: "\"", with: "")
     let titleString = "\"\(title)\"";
     let offset = window.position.value

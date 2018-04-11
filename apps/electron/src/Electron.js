@@ -50,6 +50,7 @@ const log = debug('Electron')
         log(`clear from fs toggle`)
         this.clear = Date.now()
       }
+      // clear to start
       Electron.onClear()
     }
 
@@ -62,7 +63,8 @@ const log = debug('Electron')
         this.show = 0
         await when(() => !isEqual(Desktop.appState, lastState))
         this.show = 1
-        await sleep(250) // render opacity 0, let it update
+        this.appRef.show() // downstream apps should now be hidden
+        await sleep(350) // render opacity 0, let it update
         await when(() => !Desktop.state.mouseDown)
         this.show = 2
       },
@@ -81,12 +83,6 @@ const log = debug('Electron')
           this.appRef.focus()
         }
       },
-    ]
-
-    @react
-    showOnShow = [
-      () => Electron.state.shouldShow,
-      shouldShow => shouldShow && this.appRef.show(),
     ]
 
     handlePeekRef = memoize(peek => ref => {

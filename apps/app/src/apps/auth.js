@@ -1,11 +1,15 @@
 import * as React from 'react'
+import { view } from '@mcro/black'
 import passportLink from '~/helpers/passportLink'
 import r2 from '@mcro/r2'
 import * as Constants from '~/constants'
+import * as UI from '@mcro/ui'
+import { capitalize } from 'lodash'
 
 const service = (window.location + '').split('service=')[1]
 
-export default class AuthPage extends React.Component {
+@view
+export default class AuthPage {
   link = async () => {
     console.log('linking service...', service)
     const info = await passportLink(`${Constants.API_URL}/auth/${service}`)
@@ -21,23 +25,31 @@ export default class AuthPage extends React.Component {
 
   render() {
     return (
-      <button
-        css={{
-          pointerEvents: 'auto',
-          width: '100%',
-          height: '100%',
-          alignitems: 'center',
-          justifyContent: 'center',
-          background: 'purple',
-          color: 'white',
-          fontSize: 100,
-        }}
-        id="link"
-        onClick={this.link}
-        onMouseUp={this.link}
-      >
-        >>link {service}
-      </button>
+      <wrap>
+        <UI.Button
+          size={1.5}
+          theme="#4C36C4"
+          $button
+          id="link"
+          onClick={this.link}
+          onMouseUp={this.link}
+        >
+          Link {capitalize(service)}
+        </UI.Button>
+      </wrap>
     )
+  }
+
+  static style = {
+    wrap: {
+      background: '#fff',
+      flex: 1,
+      width: '100%',
+      height: '100%',
+      alignItems: 'center',
+      justifyContent: 'center',
+      pointerEvents: 'auto',
+      padding: [0, 30],
+    },
   }
 }

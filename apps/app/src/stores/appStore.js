@@ -99,11 +99,12 @@ export default class AppStore {
       App.state.query,
       Desktop.searchState.pluginResults || [],
       this.bitResults || [],
+      this.getResults,
     ],
-    ([query, pluginResults, bitResults]) => {
+    ([query, pluginResults, bitResults, getResults]) => {
       let results
-      if (this.getResults) {
-        results = Helpers.fuzzy(query, this.getResults())
+      if (getResults) {
+        results = Helpers.fuzzy(query, getResults())
       } else {
         const unsorted = [...bitResults, ...pluginResults]
         const strongTitleMatches = Helpers.fuzzy(query, unsorted, {

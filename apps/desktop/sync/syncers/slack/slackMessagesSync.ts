@@ -1,4 +1,4 @@
-import { Setting, Bit, createOrUpdate } from '@mcro/models'
+import { Setting, Bit, Person, createOrUpdate } from '@mcro/models'
 import { SlackService } from '@mcro/models/services'
 // import { createInChunks } from '~/sync/helpers'
 import * as Constants from '~/constants'
@@ -15,6 +15,39 @@ type SlackMessage = {
   ts: string
 }
 
+type SlackPerson = {
+  id: string
+  deleted: boolean
+  is_app_user: boolean
+  is_bot: boolean
+  name: string
+  team_id: string
+  updated: number
+  profile: {
+    avatar_hash: string
+    display_name: string
+    display_name_normalized: string
+    email: string
+    first_name: string
+    image_24: string
+    image_32: string
+    image_48: string
+    image_72: string
+    image_192: string
+    image_512: string
+    last_name: string
+    phone: string
+    real_name: string
+    real_name_normalized: string
+    skype: string
+    status_emoji: string
+    status_expiration: number
+    status_text: string
+    team: string
+    title: string
+  }
+}
+
 export default class SlackMessagesSync {
   setting: Setting
   service: SlackService
@@ -25,31 +58,59 @@ export default class SlackMessagesSync {
   }
 
   get lastSync() {
-    return this.setting.values.lastMessageSync || {}
+    return
   }
 
   run = async () => {
-    log('Running slack sync')
+    const updated = [
+      ...(await this.syncPeople()),
+      ...(await this.syncMessages()),
+    ]
+    if (updated.length) {
+      log(`Slack: synced ${updated.length}`, updated)
+    }
+  }
+
+  syncPeople = async () => {
+    const { members, cache_ts } = await this.service.slack.users.list()
+    const created = []
+    for (const member of members) {
+      if (await this.updatePerson(member)) {
+        created.push(member)
+      }
+    }
+    return created
+  }
+
+  updatePerson = async (person: SlackPerson) => {
+    return await createOrUpdate(
+      Person,
+      {
+        identifier: `slack-${Helpers.hash(person)}`,
+        name: person.name,
+        data: person,
+      },
+      Person.identifyingKeys,
+    )
+  }
+
+  syncMessages = async () => {
+    this.setting.values.lastMessageSync =
+      this.setting.values.lastMessageSync || {}
+    await this.setting.save()
     if (!this.service.activeChannels) {
       return
     }
     for (const channel of Object.keys(this.service.activeChannels)) {
-      const newestSync = this.lastSync[channel]
-      if (newestSync) {
-        log('newestSync', newestSync)
-      }
       const info = await this.service.slack.channels.info({ channel })
       const messages: Array<SlackMessage> = await this.service.channelHistory({
         channel,
-        oldest: newestSync,
+        oldest: this.lastSync[channel],
         count: 500,
       })
-      if (!messages.length) {
-        return
-      }
-      log('got new messages to sync', messages.length)
       try {
         let group = []
+        let created = []
         for (const next of messages) {
           const last = group[group.length - 1]
           if (!last) {
@@ -63,12 +124,12 @@ export default class SlackMessagesSync {
             continue
           }
           if (group.length) {
-            await this.createConversation(channel, group)
+            created.push(await this.updateConversation(channel, group))
             group = []
           }
         }
         if (group.length) {
-          await this.createConversation(channel, group)
+          created.push(await this.updateConversation(channel, group))
         }
         _.merge(this.setting.values, {
           lastMessageSync: {
@@ -76,17 +137,19 @@ export default class SlackMessagesSync {
           },
         })
         await this.setting.save()
+        return created.filter(x => !!x)
       } catch (err) {
         log(`Error syncing slack message ${err.message}`)
+        return []
       }
     }
   }
 
-  createConversation = async (
+  updateConversation = async (
     channel: string,
     messages: Array<SlackMessage>,
   ) => {
-    await createOrUpdate(
+    return await createOrUpdate(
       Bit,
       {
         title: `Conversation in ${channel}`,

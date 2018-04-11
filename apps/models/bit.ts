@@ -3,7 +3,7 @@ import { Person } from './person'
 
 @T.Entity()
 export class Bit extends T.BaseEntity {
-  static identifyingKeys = ['identifier', 'type', 'integration', 'bitUpdatedAt']
+  static identifyingKeys = ['identifier', 'type', 'integration']
 
   @T.PrimaryGeneratedColumn() id: number
   @T.Column() identifier: string

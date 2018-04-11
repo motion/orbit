@@ -9,7 +9,7 @@ import * as UI from '@mcro/ui'
 @view
 export default class Item {
   onClick = () => {
-    this.props.appStore.setSelected(this.props.index)
+    this.props.appStore.pinSelected(this.props.index, 'click')
   }
 
   render({

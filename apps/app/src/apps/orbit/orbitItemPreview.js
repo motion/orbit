@@ -13,7 +13,7 @@ export default class OrbitItemPreview {
           <UI.Text opacity={0.5} margin={[3, 0, 6]} size={0.95} ellipse={1}>
             {result.subtitle || 'Created Jan 24th'}
           </UI.Text>
-          <UI.Text if={result.body} ellipse>
+          <UI.Text if={result.body} ellipse $body>
             {result.body}
           </UI.Text>
         </words>
@@ -37,6 +37,10 @@ export default class OrbitItemPreview {
       height: 50,
       zIndex: 100,
       pointerEvents: 'none',
+    },
+    body: {
+      maxHeight: 300,
+      overflow: 'hidden',
     },
   }
 }

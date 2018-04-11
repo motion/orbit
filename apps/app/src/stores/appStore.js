@@ -76,7 +76,13 @@ export default class AppStore {
         return presetAnswers[Desktop.appState.title]
       }
       if (!query) {
-        return (await Bit.find({ take: 8, order: { updatedAt: 'DESC' } })) || []
+        return (
+          (await Bit.find({
+            take: 8,
+            where: { integration: 'slack' },
+            order: { updatedAt: 'DESC' },
+          })) || []
+        )
       }
       return await Bit.find({
         where: `title like "%${query.replace(/\s+/g, '%')}%"`,
@@ -160,7 +166,16 @@ export default class AppStore {
     this._setSelected(i)
   }
 
-  pinSelected = index => {
+  pinSelected = (index, eventType) => {
+    // toggle if click again
+    if (
+      eventType === 'click' &&
+      index === this.selectedIndex &&
+      App.state.peekTarget
+    ) {
+      App.setPeekTarget(null)
+      return
+    }
     if (typeof index === 'number') {
       this._setSelected(index)
     }

@@ -1,8 +1,8 @@
 import * as React from 'react'
 import * as Constants from '~/constants'
-import { view, react, isEqual } from '@mcro/black'
+import { view, react } from '@mcro/black'
 import { Window } from '@mcro/reactron'
-import { App, Electron, Desktop, Swift } from '@mcro/all'
+import { App, Electron, Swift } from '@mcro/all'
 import * as Mobx from 'mobx'
 
 const log = debug('OrbitWindow')
@@ -10,7 +10,6 @@ const log = debug('OrbitWindow')
 class OrbitWindowStore {
   show = 0
   orbitRef = null
-  clear = 0
 
   @react
   unFullScreenOnHide = [
@@ -23,31 +22,6 @@ class OrbitWindowStore {
         log(`clearing`)
         this.clear = Date.now()
       }
-    },
-  ]
-
-  willMount() {
-    Electron.onMessage(msg => {
-      if (msg === 'CLEAR') {
-        this.clear = Date.now()
-      }
-    })
-  }
-
-  @react({ log: false })
-  clearOrbitPosition = [
-    () => this.clear,
-    async (_, { when, sleep }) => {
-      if (!this.orbitRef) return
-      log(`hiding`)
-      this.orbitRef.hide()
-      const lastState = Mobx.toJS(Desktop.appState)
-      this.show = 0
-      await when(() => !isEqual(Desktop.appState, lastState))
-      this.show = 1
-      await sleep(250) // render opacity 0, let it update
-      await when(() => !Desktop.state.mouseDown)
-      this.show = 2
     },
   ]
 
@@ -125,7 +99,7 @@ class OrbitWindowStore {
   }
 
   handleReadyToShow = () => {
-    this.show = 2
+    this.show = true
   }
 }
 
@@ -135,7 +109,7 @@ class OrbitWindowStore {
 })
 @view.electron
 export default class OrbitWindow extends React.Component {
-  render({ store }) {
+  render({ electronStore, store }) {
     const state = Mobx.toJS(Electron.orbitState)
     return (
       <Window
@@ -147,8 +121,8 @@ export default class OrbitWindow extends React.Component {
         transparent={true}
         showDevTools={Electron.state.showDevTools.orbit}
         alwaysOnTop
-        show={store.show ? true : false}
-        opacity={store.show === 1 ? 0 : 1}
+        show={electronStore.show ? true : false}
+        opacity={electronStore.show === 1 ? 0 : 1}
         ignoreMouseEvents={!App.isShowingOrbit}
         size={state.size}
         position={state.position}

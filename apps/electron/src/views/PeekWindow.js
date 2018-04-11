@@ -179,7 +179,8 @@ export default class PeekWindow {
               }
               alwaysOnTop={isAttached || peek.alwaysOnTop}
               animatePosition={App.isShowingPeek && App.wasShowingPeek}
-              show={peek.show}
+              show={electronStore.show ? peek.show : false}
+              opacity={electronStore.show === 1 ? 0 : 1}
               file={`${Constants.APP_URL}/peek?key=${peek.key}`}
               ref={isAttached ? electronStore.handlePeekRef(peek) : idFn}
               onReadyToShow={this.handleReadyToShow(peek)}

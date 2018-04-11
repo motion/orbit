@@ -35,7 +35,6 @@ export default class ElectronReactions {
 
   constructor() {
     Electron.onMessage(msg => {
-      console.log('got message', msg)
       switch (msg) {
         case Electron.messages.TOGGLE_PINNED:
           Electron.togglePinned()

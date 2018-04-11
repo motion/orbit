@@ -22,6 +22,7 @@ class ElectronStore {
   onMessage: typeof Bridge.onMessage
   reactions: ElectronReactions
   source = 'Electron'
+  onClear = null
 
   lastAction = null
 
@@ -85,33 +86,6 @@ class ElectronStore {
     return (Electron.peekState.windows || [])[0] || {}
   }
 
-  onShortcut = shortcut => {
-    if (shortcut === 'Option+Space') {
-      if (Electron.orbitState.fullScreen) {
-        Electron.toggleFullScreen()
-        return
-      }
-      if (App.state.orbitHidden) {
-        Electron.toggleVisible()
-        Electron.lastAction = 'Option+Space'
-        Electron.setPinned(true)
-        return
-      }
-      if (Electron.orbitState.pinned) {
-        Electron.togglePinned()
-        Electron.toggleVisible()
-        return
-      } else {
-        // !pinned
-        Electron.togglePinned()
-      }
-    }
-    if (shortcut === 'Option+Shift+Space') {
-      Electron.lastAction = 'Option+Shift+Space'
-      Electron.toggleFullScreen()
-    }
-  }
-
   updatePeek = (peek, cb) => {
     const windows = Electron.peekState.windows.slice(0)
     const nextPeek = windows.find(x => x.key === peek.key)
@@ -138,6 +112,9 @@ class ElectronStore {
   toggleFullScreen = () => {
     const fullScreen = !Electron.orbitState.fullScreen
     if (!fullScreen) {
+      if (this.onClear) {
+        this.onClear()
+      }
       Electron.setOrbitState({ fullScreen })
       return
     }

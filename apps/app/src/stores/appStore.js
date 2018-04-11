@@ -100,16 +100,19 @@ export default class AppStore {
       this.bitResults || [],
     ],
     ([query, pluginResults, bitResults]) => {
+      let results
       if (this.getResults) {
-        return Helpers.fuzzy(query, this.getResults())
+        results = Helpers.fuzzy(query, this.getResults())
+      } else {
+        const unsorted = [...bitResults, ...pluginResults]
+        const strongTitleMatches = Helpers.fuzzy(query, unsorted, {
+          threshold: -25,
+        })
+        results = uniq([...strongTitleMatches, ...unsorted].slice(0, 10))
       }
-      const results = [...bitResults, ...pluginResults]
-      const strongTitleMatches = Helpers.fuzzy(query, results, {
-        threshold: -25,
-      })
       return {
         query,
-        results: uniq([...strongTitleMatches, ...results].slice(0, 10)),
+        results,
       }
     },
   ]
@@ -198,8 +201,8 @@ export default class AppStore {
   @react
   setAppSelectedItem = [
     () =>
-      this.results && this.selectedIndex >= 0
-        ? this.results[this.selectedIndex]
+      this.selectedIndex >= 0
+        ? this.searchState.results[this.selectedIndex]
         : null,
     item => {
       if (!item) {

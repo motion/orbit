@@ -31,8 +31,6 @@ const tinyProps = {
 export default class OrbitContent {
   render({ appStore }) {
     const { query, results } = appStore.searchState
-    log(`render.OrbitContent`)
-    console.log('appStore.results', results.slice())
     return (
       <orbitContent>
         <space css={{ height: 10 }} />

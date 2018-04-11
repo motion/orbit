@@ -167,7 +167,7 @@ export default class Sync {
       job.status = Job.statuses.COMPLETE
       await job.save()
     } catch (error) {
-      console.log('error running syncer', error.message || error)
+      console.log('error running syncer', error.message || error, error.stack)
       job.status = Job.statuses.FAILED
       job.lastError = JSON.stringify(error)
       await job.save()

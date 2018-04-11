@@ -37,7 +37,7 @@ export default class Plugins {
     )
   }
 
-  @react({ fireImmediately: true })
+  @react({ fireImmediately: true, log: false })
   results = [
     () => App.state.query,
     async (query, { sleep }) => {

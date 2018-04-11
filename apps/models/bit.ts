@@ -3,6 +3,8 @@ import { Person } from './person'
 
 @T.Entity()
 export class Bit extends T.BaseEntity {
+  static identifyingKeys = ['identifier', 'type', 'integration', 'bitUpdatedAt']
+
   @T.PrimaryGeneratedColumn() id: number
   @T.Column() identifier: string
   @T.Column() integration: string
@@ -26,8 +28,6 @@ export class Bit extends T.BaseEntity {
   @T.ManyToMany(type => Person)
   @T.JoinTable()
   people: Person[]
-
-  static identifyingKeys = ['identifier', 'type', 'integration']
 }
 
 T.setGlobal('Bit', Bit)

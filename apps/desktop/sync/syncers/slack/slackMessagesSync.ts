@@ -58,7 +58,7 @@ export default class SlackMessagesSync {
   }
 
   get lastSync() {
-    return
+    return this.setting.values.lastMessageSync
   }
 
   run = async () => {
@@ -133,15 +133,17 @@ export default class SlackMessagesSync {
         if (group.length) {
           created.push(await this.updateConversation(channel, group))
         }
-        _.merge(this.setting.values, {
-          lastMessageSync: {
-            [channel]: _.first(messages).ts,
-          },
-        })
+        if (messages.length) {
+          _.merge(this.setting.values, {
+            lastMessageSync: {
+              [channel]: _.first(messages).ts,
+            },
+          })
+        }
         await this.setting.save()
         return created.filter(x => !!x)
       } catch (err) {
-        log(`Error syncing slack message ${err.message}`)
+        log(`Error syncing slack message ${err.message} ${err.stack}`)
         return []
       }
     }

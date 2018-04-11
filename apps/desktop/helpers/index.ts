@@ -8,5 +8,5 @@ export { default as recoverDB } from './recoverDB'
 import Crypto from 'crypto'
 export const hash = x =>
   Crypto.createHash('md5')
-    .update(x)
+    .update(x instanceof Object ? JSON.stringify(x) : `${x}`)
     .digest('hex')

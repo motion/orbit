@@ -135,7 +135,7 @@ class AppStore {
   }
 
   toggleHidden = () => {
-    App.setState({ hidden: !App.state.hidden })
+    App.setState({ orbitHidden: !App.state.orbitHidden })
   }
 
   openSettings = () => {

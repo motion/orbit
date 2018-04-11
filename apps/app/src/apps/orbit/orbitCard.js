@@ -106,6 +106,7 @@ export default class OrbitCard {
                       </Text>
                       <space $$flex />
                       <OrbitIcon
+                        if={result.icon}
                         size={16}
                         icon={
                           result.icon

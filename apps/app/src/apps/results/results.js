@@ -57,16 +57,17 @@ export default class Results {
   }, 16)
 
   render({ appStore, theme }, { resultsRef, isScrolled, isOverflowing }) {
+    const { results } = appStore.searchState
     const isSelectedInContext = appStore.activeIndex >= SPLIT_INDEX
-    const total = appStore.results.length - SPLIT_INDEX
+    const total = results.length - SPLIT_INDEX
     const y = isSelectedInContext ? -(SPLIT_INDEX * 20) : 0
     const totalHeight = document.body.clientHeight
     return (
       <resultsFrame ref={this.setResultsFrame}>
         <fadeTop $fade $$untouchable $fadeVisible={isScrolled} />
-        <results ref={this.setResults}>
+        <results if={results.length} ref={this.setResults}>
           <firstResultSpace $$untouchable css={{ height: 6 }} />
-          {appStore.results
+          {results
             .slice(SPLIT_INDEX)
             .map((result, i) => (
               <OrbitCard

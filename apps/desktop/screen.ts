@@ -131,11 +131,9 @@ export default class DesktopScreen {
           this.curAppID = id
           this.curAppName = nextState.name
           break
-        case 'WindowSizeChangedEvent':
-          nextState.bounds = value.size
-          break
         case 'WindowPosChangedEvent':
-          nextState.offset = value.pos
+          nextState.bounds = value.size
+          nextState.offset = value.position
       }
       // no change
       if (isEqual(nextState, lastState)) {

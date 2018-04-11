@@ -19,12 +19,12 @@ const stringifyObject = obj =>
   })
 
 // const log = debug('Bridge')
-const requestIdle = () =>
+const requestIdle = (cb) =>
   new Promise(
     res =>
       typeof window !== 'undefined' && window.requestIdleCallback
-        ? window.requestIdleCallback(res)
-        : setTimeout(res, 1),
+        ? window.requestIdleCallback(cb || res)
+        : setTimeout(cb || res, 1),
   )
 
 type Options = {
@@ -240,17 +240,19 @@ class Bridge {
       return changedState
     }
     if (Object.keys(changedState).length) {
-      if (this._options.master) {
-        this.socketManager.sendAll(this._source, changedState)
-      } else {
-        if (!this._wsOpen) {
-          this._queuedState = true
-          return changedState
+      requestIdle(() => {
+        if (this._options.master) {
+          this.socketManager.sendAll(this._source, changedState)
+        } else {
+          if (!this._wsOpen) {
+            this._queuedState = true
+            return changedState
+          }
+          this._socket.send(
+            JSON.stringify({ state: changedState, source: this._source }),
+          )
         }
-        this._socket.send(
-          JSON.stringify({ state: changedState, source: this._source }),
-        )
-      }
+      })
     }
     return changedState
   }

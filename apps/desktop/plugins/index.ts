@@ -1,7 +1,7 @@
 import { store, react } from '@mcro/black/store'
 import { App, Desktop } from '@mcro/all'
 import Icons from './icons'
-
+import * as _ from 'lodash'
 import * as MacAppsPlugin from './macApps'
 import * as FilesPlugin from './files'
 import debug from '@mcro/debug'
@@ -17,7 +17,6 @@ const log = debug('Plugins')
 @store
 export default class Plugins {
   plugins = plugins
-  results = []
   searchId = 0
   server: any
   icons: Icons
@@ -39,30 +38,32 @@ export default class Plugins {
   }
 
   @react({ fireImmediately: true })
-  reactToSearches = [
+  results = [
     () => App.state.query,
     async (query, { sleep }) => {
-      this.search(query, async newResults => {
-        const pluginResults = await Promise.all(
-          newResults.slice(0, 25).map(async result => ({
-            ...result,
-            icon: result.icon ? await this.icons.getIcon(result.icon) : null,
-            type: 'app',
-          })),
-        )
-        await sleep(64)
-        Desktop.setSearchState({ pluginResults })
-      })
+      const results = await this.search(query)
+      await sleep(0) // cancellation
+      const pluginResults = await Promise.all(
+        results.slice(0, 25).map(async result => ({
+          ...result,
+          // @ts-ignore
+          icon: result.icon ? await this.icons.getIcon(result.icon) : null,
+          type: 'app',
+        })),
+      )
+      await sleep(0) // cancellation
+      Desktop.setSearchState({ pluginResults })
+      return pluginResults
     },
   ]
 
-  search = async (term, onResults) => {
-    this.plugins.forEach(plugin => {
-      plugin.fn({
-        term,
-        actions: this.actions,
-        display: onResults,
-      })
-    })
+  search = async term => {
+    return _.flatten(
+      await Promise.all(
+        this.plugins.map(
+          plugin => new Promise(res => plugin.fn({ term, display: res })),
+        ),
+      ),
+    )
   }
 }

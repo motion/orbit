@@ -25,7 +25,7 @@ const cachedAppsList = memoize(getAppsList, {
 const toString = app =>
   `${app.name} ${app.filename.replace(/\.app$/, '')} ${getAbbr(app.name)}`
 
-export const fn = ({ term, actions, display }) => {
+export const fn = ({ term, display }) => {
   cachedAppsList().then(items => {
     const result = orderBy(
       search(items, term, toString),
@@ -34,18 +34,20 @@ export const fn = ({ term, actions, display }) => {
         ({ lastUsed = '0000' }) => lastUsed,
       ],
       ['desc', 'desc'],
-    ).map(file => {
-      const { path, name } = file
-      return {
-        id: path,
-        title: name,
-        term: name,
-        icon: path,
-        subtitle: path,
-        clipboard: path,
-        integration: 'apps',
-      }
-    })
+    )
+      .slice(0, 10)
+      .map(file => {
+        const { path, name } = file
+        return {
+          id: path,
+          title: name,
+          term: name,
+          icon: path,
+          subtitle: path,
+          clipboard: path,
+          integration: 'apps',
+        }
+      })
     display(result)
   })
 }

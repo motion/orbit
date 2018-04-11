@@ -27,7 +27,7 @@ export default class Item {
   }) {
     appStore.activeIndex
     // const isSelected = appStore.selectedIndex === index
-    const shouldShowIcon = true
+    const shouldShowIcon = result.icon
     if (!result) {
       return null
     }

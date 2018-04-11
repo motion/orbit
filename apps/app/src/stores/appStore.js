@@ -4,6 +4,7 @@ import { Bit, Setting } from '@mcro/models'
 import * as Constants from '~/constants'
 import * as r2 from '@mcro/r2'
 import * as Helpers from '~/helpers'
+import * as _ from 'lodash'
 
 // const log = debug('root')
 const presetAnswers = {
@@ -37,12 +38,16 @@ const uniq = arr => {
 }
 
 export default class AppStore {
-  refreshCycle = 0
   selectedIndex = -1
   hoveredIndex = -1
   showSettings = false
   settings = {}
   getResults = null
+
+  async willMount() {
+    this.getSettings()
+    this.setInterval(this.getSettings, 2000)
+  }
 
   get activeIndex() {
     if (App.state.peekTarget) {
@@ -62,22 +67,51 @@ export default class AppStore {
     },
   ]
 
-  @watch({ log: false })
+  @react({ fireImmediately: true, defaultValue: [], onlyUpdateIfChanged: true })
+  bitResults = [
+    () => [App.state.query, Desktop.appState.id],
+    async ([query, id]) => {
+      if (id === 'com.apple.TextEdit') {
+        return presetAnswers[Desktop.appState.title]
+      }
+      if (!query) {
+        return (await Bit.find({ take: 8 })) || []
+      }
+      return await Bit.find({
+        where: `title like "%${query.replace(/\s+/g, '%')}%"`,
+        take: 8,
+      })
+    },
+  ]
+
+  @watch({ log: false, delay: 64 })
   selectedBit = () =>
     App.state.selectedItem && Bit.findOne({ id: App.state.selectedItem.id })
 
-  get results() {
-    if (this.getResults) {
-      return Helpers.fuzzy(App.state.query, this.getResults())
-    }
-    const results = [
-      ...(this.bitResults || []),
-      ...(Desktop.searchState.pluginResults || []),
-      ...(Desktop.searchState.searchResults || []),
-    ]
-    const strongTitleMatches = Helpers.fuzzy(App.state.query, results)
-    return uniq([...strongTitleMatches, ...results].slice(0, 10))
-  }
+  @react({
+    defaultValue: { results: [], query: '' },
+    fireImmediately: true,
+    delay: 100,
+  })
+  searchState = [
+    () => [
+      App.state.query,
+      Desktop.searchState.pluginResults || [],
+      this.bitResults || [],
+    ],
+    ([query, pluginResults, bitResults]) => {
+      if (this.getResults) {
+        return Helpers.fuzzy(query, this.getResults())
+      }
+      const results = [...pluginResults, ...bitResults]
+      console.log('results', results.slice())
+      const strongTitleMatches = Helpers.fuzzy(query, results)
+      return {
+        query,
+        results: uniq([...strongTitleMatches, ...results].slice(0, 10)),
+      }
+    },
+  ]
 
   clearSelected = () => {
     if (!Electron.isMouseInActiveArea) {
@@ -160,46 +194,27 @@ export default class AppStore {
     word => this.setSelected(word.index),
   ]
 
-  @react({ delay: 64 })
+  @react
   setAppSelectedItem = [
-    () => this.results[this.selectedIndex],
+    () =>
+      this.results && this.selectedIndex >= 0
+        ? this.results[this.selectedIndex]
+        : null,
     item => {
-      if (item) {
-        const selectedItem = {
-          id: item.id || '',
-          icon: item.icon || '',
-          title: item.title || '',
-          body: item.body || '',
-          type: item.type || '',
-          integration: item.integration || '',
-        }
-        App.setSelectedItem(selectedItem)
+      if (!item) {
+        return
       }
+      const selectedItem = {
+        id: item.id || '',
+        icon: item.icon || '',
+        title: item.title || '',
+        body: item.body || '',
+        type: item.type || '',
+        integration: item.integration || '',
+      }
+      App.setSelectedItem(selectedItem)
     },
   ]
-
-  @react({ fireImmediately: true, log: false, onlyUpdateIfChanged: true })
-  bitResults = [
-    () => [App.state.query, Desktop.appState.id, this.refreshCycle],
-    async ([query, id]) => {
-      if (id === 'com.apple.TextEdit') {
-        return presetAnswers[Desktop.appState.title]
-      }
-      if (!query) {
-        return (await Bit.find({ take: 8 })) || []
-      }
-      return await Bit.find({
-        where: `title like "%${query.replace(/\s+/g, '%')}%"`,
-        take: 8,
-      })
-    },
-  ]
-
-  async willMount() {
-    this.getSettings()
-    // every few seconds, re-query bit results
-    this.setInterval(this.getSettings, 2000)
-  }
 
   getSettings = async () => {
     const settings = await Setting.find()

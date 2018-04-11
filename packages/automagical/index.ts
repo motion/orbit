@@ -343,6 +343,7 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
     isIf,
     delayValue,
     logReaction,
+    defaultValue,
     onlyUpdateIfChanged,
     ...options
   } = Helpers.getReactionOptions({
@@ -353,7 +354,7 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
     options && options.delay >= 0 ? ` (...${options.delay}ms)` : ''
   const name = `${getReactionName(obj)}.${method}${delayLog}`
   let preventLog = shouldLog === false
-  let current = Mobx.observable.box(DEFAULT_VALUE)
+  let current = Mobx.observable.box(defaultValue || DEFAULT_VALUE)
   let prev
   let curDisposable = null
   let curObservable = null
@@ -374,9 +375,9 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
         return undefined
       }
     }
-    if (isObservable(result)) {
-      let value = result.get()
-      return value
+    if (result && result instanceof Mobx.BaseAtom) {
+      // @ts-ignore
+      return result.get()
     }
     return result
   }
@@ -468,7 +469,7 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
         //autorun
         stopReaction = Mobx.autorun(watcher(val), options)
       }
-    })
+    }, 0)
   }
 
   // state used outside each watch/reaction
@@ -507,6 +508,36 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
         .then((val: any) => {
           if (cancelWhen) return
           resolve(val)
+        })
+        .catch(reject)
+      rejections.push(() => {
+        cancelWhen = true
+        reject(RejectReactionSymbol)
+      })
+    })
+  }
+  const whenChanged = (condition, dontCompare) => {
+    let oldVal
+    let curVal
+    return new Promise((resolve, reject) => {
+      if (!reactionID) {
+        return reject(RejectReactionSymbol)
+      }
+      let cancelWhen = false
+      whenAsync(() => {
+        if (typeof oldVal === 'undefined') {
+          oldVal = condition()
+          return false
+        }
+        curVal = condition()
+        if (dontCompare) {
+          return true
+        }
+        return !Mobx.comparer.structural(curVal, oldVal)
+      })
+        .then(() => {
+          if (cancelWhen) return
+          resolve(curVal)
         })
         .catch(reject)
       rejections.push(() => {
@@ -567,6 +598,7 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
           },
           sleep,
           when,
+          whenChanged,
         },
       )
       const changed = root.__trackStateChanges.changed

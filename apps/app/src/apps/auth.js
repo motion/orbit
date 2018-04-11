@@ -36,6 +36,22 @@ export default class AuthPage {
         >
           Link {capitalize(service)}
         </UI.Button>
+
+        <message>
+          <UI.Text fontWeight={500} size={1.2}>
+            Privacy notice
+          </UI.Text>
+          <br />
+          <UI.Text size={1.1}>
+            Only <strong>this computer</strong> will have access to your keys
+            and any data associated with this integration.
+            <br />
+            <br />
+            Remember, Orbit (the company) never touches in any form any data.
+            Only your local computer will use this to sync data down directly
+            from {service}.
+          </UI.Text>
+        </message>
       </wrap>
     )
   }
@@ -50,6 +66,13 @@ export default class AuthPage {
       justifyContent: 'center',
       pointerEvents: 'auto',
       padding: [0, 30],
+    },
+    message: {
+      width: 500,
+      padding: 20,
+      margin: 40,
+      borderRadius: 5,
+      background: '#f2f2f2',
     },
   }
 }

@@ -102,7 +102,7 @@ function doLog(...args) {
     // regular fn
     const [wrapFn] = args
     logger(wrapFn)
-    return wrapLogger(wrapFn)
+    return wrapLogger(wrapFn, null, null)
   }
 
   logger(...args)
@@ -113,13 +113,14 @@ function doLog(...args) {
   }
 }
 
-export default function log(...args) {
+export function log(...args) {
   doCutoff = true
   const res = doLog(...args)
   doCutoff = false
   return res
 }
 
+// @ts-ignore
 log.full = function(...args) {
   doCutoff = false
   return doLog(...args)
@@ -155,5 +156,7 @@ function wrapLogger(wrapFn, parent, name) {
   }
 }
 
+// @ts-ignore
 log.debug = true
+// @ts-ignore
 log.filter = /^(DocPage)/

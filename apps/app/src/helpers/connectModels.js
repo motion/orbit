@@ -20,8 +20,9 @@ export default async function connectModels(models) {
         console.error('SQL Error', err)
         if (err.message && err.message.indexOf('db not found')) {
           console.log('Reconnecting...')
-          await connection.close()
-          connect()
+          window.location = window.location
+          // await connection.close()
+          // connect()
         }
       })
     } catch (err) {

@@ -49,6 +49,7 @@ export default class SocketManager {
       if (this.identities[uid] !== source) {
         continue
       }
+      console.log('sendmessage', source, message)
       socket.send(`-${message}`)
     }
   }
@@ -90,7 +91,11 @@ export default class SocketManager {
     // listen for incoming
     socket.on('message', str => {
       // message
-      const { action, state, source } = JSON.parse(str)
+      const { action, state, source, message, to } = JSON.parse(str)
+      if (to) {
+        this.sendMessage(to, message)
+        return
+      }
       if (state) {
         if (this.onState) {
           this.onState(source, state)

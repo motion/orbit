@@ -7,6 +7,14 @@ import * as Constants from '~/constants'
 class HeaderStore {
   inputRef = null
 
+  hover = () => {
+    this.inputRef.focus()
+  }
+
+  blur = () => {
+    this.inputRef.blur()
+  }
+
   @react({ fireImmediately: true, delay: 32 })
   focusInput = [
     () => App.isFullyShown,
@@ -65,6 +73,10 @@ export default class PeekHeader {
               ? 0
               : Constants.BORDER_RADIUS,
         }}
+        {...appStore.getHoverProps({
+          onHover: headerStore.hover,
+          onBlur: headerStore.blur,
+        })}
       >
         <bottomBorder
           css={{

@@ -30,6 +30,9 @@ public extension Array {
     if count == 0 {
       return []
     }
+    if count == 1 {
+      return self.enumerated().map { transformer($0.element, $0.offset) }
+    }
     let cores = Swift.max(1, ProcessInfo.processInfo.activeProcessorCount / 2)
     let sampleSize = Int(ceil(Double(count) / Double(cores)))
     let group = DispatchGroup()

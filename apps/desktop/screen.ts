@@ -6,7 +6,8 @@ import { Desktop, Electron, Swift, AppState, DesktopState } from '@mcro/all'
 import debug from '@mcro/debug'
 import * as Mobx from 'mobx'
 
-const log = debug('Screen')
+const log = debug('screen')
+debug.quiet('screen')
 const ORBIT_APP_ID = 'com.github.electron'
 const APP_ID = -1
 
@@ -47,22 +48,6 @@ export default class DesktopScreen {
 
   @react rescanOnNewAppState = [() => Desktop.appState, this.rescanApp]
 
-  // watch paused
-  @react
-  handlePause = [
-    () => Electron.state.shouldPause,
-    () => {
-      const paused = !Desktop.state.paused
-      Desktop.setPaused(paused)
-      if (paused) {
-        Swift.pause()
-      } else {
-        Swift.resume()
-        this.rescanApp()
-      }
-    },
-  ]
-
   @react
   handleOCRWords = [
     () => Desktop.ocrState.words,
@@ -90,7 +75,25 @@ export default class DesktopScreen {
     },
   ]
 
+  togglePaused = () => {
+    const paused = !Desktop.state.paused
+    Desktop.setPaused(paused)
+    if (paused) {
+      Swift.pause()
+    } else {
+      Swift.resume()
+      this.rescanApp()
+    }
+  }
+
   start = async () => {
+    Desktop.onMessage(msg => {
+      switch (msg) {
+        case Desktop.messages.TOGGLE_PAUSED:
+          this.togglePaused()
+      }
+    })
+
     this.oracle.onWords(words => {
       this.hasResolvedOCR = true
       Desktop.setOcrState({
@@ -105,11 +108,11 @@ export default class DesktopScreen {
       })
     })
     this.oracle.onWindowChange((event, value) => {
-      log(`got event ${event}`, value)
       if (event === 'ScrollEvent') {
         this.rescanApp()
         return
       }
+      log(`got event ${event} ${JSON.stringify(value)}`)
       const lastState = Mobx.toJS(Desktop.appState)
       let nextState: Partial<AppState> = {}
       let id = this.curAppID
@@ -124,30 +127,29 @@ export default class DesktopScreen {
             bounds: value.bounds,
             name: id ? last(id.split('.')) : value.title,
           }
-          // no change
-          if (isEqual(nextState, lastState)) {
-            return
-          }
           // update these now so we can use to track
           this.curAppID = id
           this.curAppName = nextState.name
           break
         case 'WindowSizeChangedEvent':
-          if (value.id !== id) return
           nextState.bounds = value.size
           break
         case 'WindowPosChangedEvent':
-          if (value.id !== id) return
           nextState.offset = value.pos
       }
+      // no change
+      if (isEqual(nextState, lastState)) {
+        return
+      }
+      const focusedOnOrbit = this.curAppID === ORBIT_APP_ID
       // @ts-ignore
       const state: Partial<DesktopState> = {
-        focusedOnOrbit: this.curAppID === ORBIT_APP_ID,
+        focusedOnOrbit,
         appState: nextState,
       }
       // when were moving into focus prevent app, store its appName, pause then return
       if (PREVENT_APP_STATE[this.curAppName]) {
-        Desktop.setState(state)
+        Desktop.setFocusedOnOrbit(focusedOnOrbit)
         this.oracle.pause()
         return
       }
@@ -163,7 +165,7 @@ export default class DesktopScreen {
           !isEqual(nextState.offset, appState.offset)
         ) {
           // immediate clear for moving
-          Desktop.sendMessageTo(Electron, 'CLEAR')
+          Desktop.sendMessage(Electron, Electron.messages.CLEAR)
         }
       }
       if (!Desktop.state.paused) {
@@ -173,7 +175,7 @@ export default class DesktopScreen {
       // @ts-ignore
       this.appStateTm = this.setTimeout(() => {
         Desktop.setState(state)
-      }, 32)
+      }, 4)
     })
     this.oracle.onBoxChanged(count => {
       if (!Desktop.ocrState.words) {

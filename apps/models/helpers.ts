@@ -1,4 +1,4 @@
-import { pick } from 'lodash'
+import { pick, isEqual } from 'lodash'
 import { getConnection } from './typeorm'
 
 export * from './typeorm'
@@ -21,6 +21,13 @@ export async function createOrUpdate(
 ) {
   const finalFields = findFields ? pick(values, findFields) : values
   let item = (await Model.findOne({ where: finalFields })) || new Model()
+  const itemVals = Object.keys(values).reduce(
+    (a, b) => ({ ...a, [b]: item[b] }),
+    {},
+  )
+  if (isEqual(itemVals, values)) {
+    return null
+  }
   Object.assign(item, values)
   await item.save()
   return item

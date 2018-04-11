@@ -1,6 +1,9 @@
+import * as React from 'react'
 import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import Overdrive from '@mcro/overdrive'
+import OrbitIcon from './orbitIcon'
+import OrbitCardContent from './orbitCardContent'
 
 @view
 class Text {
@@ -42,16 +45,13 @@ export default class OrbitCard {
     parentElement,
     store,
     getRef,
+    theme,
   }) {
-    store.isSelected
-    if (!parentElement) {
-      return null
-    }
+    const { isSelected, wasSelected } = store
     return (
       <Overdrive parentElement={parentElement}>
         {({ AnimateElement }) => {
-          const { isSelected, wasSelected } = store
-          const tallHeight = 400
+          const tallHeight = 490
           const smallHeight = Math.max(
             100,
             (totalHeight - tallHeight) / Math.max(1, total - 1),
@@ -66,6 +66,7 @@ export default class OrbitCard {
               lineHeight: '1.35rem',
             },
           }
+          const PreviewText = props => <Text {...textProps} {...props} />
           const willTransition = false
           return (
             <AnimateElement id={`${result.id}`}>
@@ -80,40 +81,56 @@ export default class OrbitCard {
                   onMouseEnter={this.setHovered}
                   onMouseLeave={this.setUnhovered}
                 >
+                  <UI.HoverGlow
+                    if={false}
+                    opacity={0.5}
+                    full
+                    resist={50}
+                    scale={1}
+                    blur={45}
+                    color={theme.base.background.lighten(0.05)}
+                    borderRadius={10}
+                    behind
+                    durationIn={500}
+                    durationOut={100}
+                  />
                   <AnimateElement id={`${result.id}-title`}>
-                    <Text
-                      size={isSelected ? 1.35 : 1.2}
-                      ellipse={isSelected ? 2 : 1}
-                      fontWeight={400}
-                      css={{ marginBottom: 0 }}
-                    >
-                      {result.title}
-                    </Text>
-                  </AnimateElement>
-                  <content
-                    css={{
-                      flex: 1,
-                      opacity: 0.8,
-                      overflow: 'hidden',
-                    }}
-                  >
-                    <AnimateElement id={`${result.id}-text`}>
-                      <Text {...textProps} css={{ maxHeight: '100%' }}>
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                        Ratione modi optio at neque ducimus ab aperiam dolores
-                        nemo? Quod quos nisi molestias velit reprehenderit
-                        veniam dicta, voluptatum vel voluptas a? Lorem ipsum
-                        dolor sit amet consectetur adipisicing elit. Ratione
-                        modi optio at neque ducimus ab aperiam dolores nemo?
-                        Quod quos nisi molestias velit reprehenderit veniam
-                        dicta, voluptatum vel voluptas a? Lorem ipsum dolor sit
-                        amet consectetur adipisicing elit. Ratione modi optio at
-                        neque ducimus ab aperiam dolores nemo? Quod quos nisi
-                        molestias velit reprehenderit veniam dicta, voluptatum
-                        vel voluptas a?
+                    <title $$row $$alignCenter>
+                      <Text
+                        size={isSelected ? 1.35 : 1.2}
+                        ellipse={isSelected ? 2 : 1}
+                        fontWeight={400}
+                        css={{ marginBottom: 0, marginRight: 20 }}
+                      >
+                        {result.title}
                       </Text>
-                    </AnimateElement>
-                  </content>
+                      <space $$flex />
+                      <OrbitIcon
+                        size={16}
+                        icon={
+                          result.icon
+                            ? `/icons/${result.icon}`
+                            : result.integration
+                        }
+                        size={18}
+                        css={{
+                          marginLeft: 0,
+                          marginTop: 3,
+                        }}
+                      />
+                    </title>
+                  </AnimateElement>
+                  <AnimateElement id={`${result.id}-content`}>
+                    <content
+                      css={{
+                        flex: 1,
+                        opacity: 0.8,
+                        overflow: 'hidden',
+                      }}
+                    >
+                      <OrbitCardContent result={result} Text={PreviewText} />
+                    </content>
+                  </AnimateElement>
                   <AnimateElement id={`${result.id}-bottom`}>
                     <bottom>
                       <orbital />
@@ -124,11 +141,16 @@ export default class OrbitCard {
                       >
                         via{' '}
                         <UI.Icon
-                          name="mail"
-                          size={10}
-                          css={{ display: 'inline-block' }}
+                          name={result.integration}
+                          size={7}
+                          css={{
+                            display: 'inline-block',
+                            opacity: 0.5,
+                            margin: [0, 2],
+                          }}
                         />
                         &nbsp;
+                        {result.integration}
                         <UI.Date>{result.bitUpdatedAt}</UI.Date>
                       </Text>
                     </bottom>
@@ -143,6 +165,10 @@ export default class OrbitCard {
   }
 
   static style = {
+    title: {
+      maxWidth: '100%',
+      overflow: 'hidden',
+    },
     cardWrap: {
       padding: [0, 5, 3],
       position: 'relative',
@@ -152,6 +178,10 @@ export default class OrbitCard {
       borderRadius: 7,
       padding: 12,
       overflow: 'hidden',
+      position: 'relative',
+      transform: {
+        z: 0,
+      },
     },
     cardHovered: {},
     bottom: {
@@ -163,9 +193,9 @@ export default class OrbitCard {
     orbital: {
       width: 10,
       height: 10,
-      background: [0, 0, 0, 0.1],
       margin: [0, 7, -4, 0],
       borderRadius: 4,
+      position: 'relative',
     },
   }
 
@@ -184,6 +214,10 @@ export default class OrbitCard {
       cardHovered: hoveredStyle,
       bottom: {
         opacity: isSelected ? 1 : 0.5,
+      },
+      orbital: {
+        background: theme.active.background.desaturate(0.1),
+        border: [2, theme.active.background.desaturate(0.1).darken(0.1)],
       },
     }
   }

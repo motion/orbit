@@ -16,9 +16,7 @@ export default class PeekFrame {
       return null
     }
     const onRight = !Electron.peekOnLeft
-    // log(`onRight`, onLeft)
     const { isShowingPeek } = App
-    // const isShowingPeek = true
     return (
       <container $$row $$flex>
         <Space if={!onRight} />
@@ -43,6 +41,9 @@ export default class PeekFrame {
                   APP_SHADOW,
                   fullScreen ? null : ['inset', 0, 0, 0, 0.5, [0, 0, 0, 0.15]],
                 ].filter(Boolean),
+                // make shadow go under
+                marginLeft: fullScreen ? -SHADOW_PAD : 0,
+                paddingLeft: fullScreen ? SHADOW_PAD : 0,
                 borderRightRadius: fullScreen || onRight ? BORDER_RADIUS : 0,
                 borderLeftRadius: !fullScreen && !onRight ? BORDER_RADIUS : 0,
                 background: fullScreen

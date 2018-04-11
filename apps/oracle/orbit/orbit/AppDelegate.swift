@@ -16,6 +16,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   @IBOutlet weak var window: NSWindow!
   
   private func emit(_ msg: String) {
+//    print("sending \(msg)")
     self.socketBridge.send(msg)
   }
 
@@ -32,17 +33,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     if shouldRunTest {
       print("running in test mode...")
-      screen.watchBounds(
-        fps: 10,
-        boxes: [
-          Box(id: 1, x: 0, y: 23, width: 850, height: 1200, screenDir: "/tmp/screen", findContent: true, initialScreenshot: true, ocr: true)
-        ],
-        showCursor: true,
-        videoCodec: "mp4",
-        sampleSpacing: 10,
-        sensitivity: 2,
-        debug: true
-      )
+//      screen.watchBounds(
+//        fps: 10,
+//        boxes: [
+//          Box(id: 1, x: 0, y: 23, width: 850, height: 1200, screenDir: "/tmp/screen", findContent: true, initialScreenshot: true, ocr: true)
+//        ],
+//        showCursor: true,
+//        videoCodec: "mp4",
+//        sampleSpacing: 10,
+//        sensitivity: 2,
+//        debug: true
+//      )
       screen.start()
     }
 

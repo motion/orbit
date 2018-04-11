@@ -1,26 +1,5 @@
-import view_ from './view'
-import store_ from './store'
-import ProvideStore_ from './provideStore'
+import { view } from '../view'
 import { observable, autorunAsync } from 'mobx'
-
-export { default as log } from './helpers/log'
-export { default as watch } from './helpers/watch'
-export * from './helpers/mobx'
-
-// react just takes alt syntax
-import watch from './helpers/watch'
-export const react = watch
-
-export const view = view_
-export const store = store_
-export const ProvideStore = ProvideStore_
-
-// constants
-import * as Constants_ from './constants'
-export const Constants = Constants_
-
-import * as React from 'react'
-export const { Component } = React
 
 // allows easy tracking of all views/stores
 export function debugState(callback) {

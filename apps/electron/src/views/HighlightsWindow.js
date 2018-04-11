@@ -5,6 +5,7 @@ import { Window } from '@mcro/reactron'
 import * as Helpers from '~/helpers'
 import { Electron } from '@mcro/all'
 
+@view.attach('electronStore')
 @view.electron
 export default class HighlightsWindow extends React.Component {
   state = {
@@ -22,13 +23,14 @@ export default class HighlightsWindow extends React.Component {
     this.setState({ position })
   }
 
-  render() {
+  render({ electronStore }) {
     return (
       <Window
         alwaysOnTop
         ignoreMouseEvents
         file={`${Constants.APP_URL}/highlights`}
-        show={this.state.show}
+        show={electronStore.show ? this.state.show : false}
+        opacity={electronStore.show === 1 ? 0 : 1}
         frame={false}
         hasShadow={false}
         showDevTools={Electron.state.showDevTools.highlights}

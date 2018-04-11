@@ -17,7 +17,6 @@ export default class Card {
     theme,
     isActive,
     appStore,
-    store,
     oauth,
   }) {
     const isSelected =
@@ -31,7 +30,7 @@ export default class Card {
         $lastRow={index >= length - 2}
         css={{
           background: isSelected
-            ? theme.highlight.color
+            ? theme.active.background
             : [255, 255, 255, 0.05],
           borderLeftRadius: isOdd ? 4 : 0,
           borderRightRadius: !isOdd ? 4 : 0,
@@ -40,12 +39,7 @@ export default class Card {
           if (!isActive) {
             return
           }
-          appStore.setSelected(index)
-          store.showPeek(index)
-        }}
-        ref={ref => {
-          if (!ref) return
-          store.refs[index] = ref
+          appStore.pinSelected(index)
         }}
       >
         <inner>
@@ -93,7 +87,6 @@ export default class Card {
       position: 'relative',
       width: '50%',
       padding: [15, 5],
-      // margin: [0, 5, 0],
       alignItems: 'center',
       justifyContent: 'center',
       borderBottom: [1, [0, 0, 0, 0.1]],

@@ -7,12 +7,15 @@ function attachWatch(val, userOptions) {
   return val
 }
 
-function tsWatch(target, options) {
+function tsWatch(target, options?) {
   const autorungetter = () => {}
+  // @ts-ignore
   autorungetter.IS_AUTO_RUN = true
+  // @ts-ignore
   autorungetter.options = options
   return {
     set(value) {
+      // @ts-ignore
       autorungetter.value = value
     },
     get: autorungetter,
@@ -20,7 +23,7 @@ function tsWatch(target, options) {
 }
 
 // @watch decorator
-export default function watch(a, b, c, opts) {
+export function watch(a, b, c, opts) {
   // passing options
   if (!b) {
     const options = { ...a, ...opts }
@@ -39,6 +42,9 @@ export default function watch(a, b, c, opts) {
   }
 }
 
+export const react = watch
+
+// @ts-ignore
 watch.if = function watchIf(a, b, c) {
   // passing options
   if (!b) {

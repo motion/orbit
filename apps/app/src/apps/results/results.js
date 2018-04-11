@@ -2,6 +2,7 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import OrbitCard from '~/apps/orbit/orbitCard'
 import { throttle } from 'lodash'
+import * as UI from '@mcro/ui'
 // import AppStore from '~/stores/appStore'
 
 const SPLIT_INDEX = 3
@@ -9,102 +10,121 @@ const SPLIT_INDEX = 3
 // @view.provide({
 //   appStore: AppStore,
 // })
+@UI.injectTheme
 @view.attach('appStore')
 @view
 export default class Results {
+  frameRef = null
   state = {
     resultsRef: null,
     isScrolled: false,
+    isOverflowing: false,
   }
 
-  setRef = resultsRef => {
-    if (resultsRef) {
-      this.setState({ resultsRef })
-      this.on(
-        resultsRef,
-        'scroll',
-        throttle(() => {
-          if (resultsRef.scrollTop > 0) {
-            if (!this.state.isScrolled) {
-              this.setState({ isScrolled: true })
-            }
-          } else {
-            if (this.state.isScrolled) {
-              this.setState({ isScrolled: false })
-            }
-          }
-        }, 16),
-      )
+  setResults = resultsRef => {
+    this.setState({ resultsRef })
+  }
+
+  setResultsFrame = frameRef => {
+    if (!frameRef) return
+    this.frameRef = frameRef
+    this.on(frameRef, 'scroll', this.handleScroll)
+  }
+
+  handleScroll = throttle(() => {
+    let { isScrolled, resultsRef } = this.state
+    const { frameRef } = this
+    if (!frameRef) return
+    log(`scroll ${frameRef.scrollTop}`)
+    if (frameRef.scrollTop > 0) {
+      isScrolled = true
+    } else {
+      isScrolled = false
     }
-  }
+    if (isScrolled !== this.state.isScrolled) {
+      this.setState({ isScrolled })
+    }
+    const scrolledDistance = resultsRef.clientHeight + resultsRef.scrollTop
+    const isOverflowing = frameRef.clientHeight <= scrolledDistance
+    log(
+      `set overflow ${isOverflowing} ${scrolledDistance} ${
+        frameRef.clientHeight
+      }`,
+    )
+    if (isOverflowing != this.state.isOverflowing) {
+      this.setState({ isOverflowing })
+    }
+  }, 16)
 
-  render({ appStore, getHoverProps }, { resultsRef, isScrolled }) {
+  render({ appStore, theme }, { resultsRef, isScrolled, isOverflowing }) {
     const isSelectedInContext = appStore.activeIndex >= SPLIT_INDEX
     const total = appStore.results.length - SPLIT_INDEX
     const y = isSelectedInContext ? -(SPLIT_INDEX * 20) : 0
     const totalHeight = document.body.clientHeight
     return (
-      <results ref={this.setRef}>
-        <fade $$untouchable $fadeVisible={isScrolled} />
-        <firstResultSpace $$untouchable css={{ height: 6 }} />
-        {resultsRef &&
-          appStore.results
+      <resultsFrame ref={this.setResultsFrame}>
+        <fadeTop $fade $$untouchable $fadeVisible={isScrolled} />
+        <results ref={this.setResults}>
+          <firstResultSpace $$untouchable css={{ height: 6 }} />
+          {appStore.results
             .slice(SPLIT_INDEX)
             .map((result, i) => (
               <OrbitCard
                 key={result.id}
                 parentElement={resultsRef}
                 appStore={appStore}
-                getHoverProps={getHoverProps}
                 result={result}
                 index={i + SPLIT_INDEX}
                 total={total}
                 totalHeight={totalHeight}
+                theme={theme}
               />
             ))}
-      </results>
+          <lastResultSpace $$untouchable css={{ height: 12 }} />
+        </results>
+        <fadeBottom $fade $$untouchable $fadeVisible={isOverflowing} />
+      </resultsFrame>
     )
   }
   static style = {
-    results: {
+    resultsFrame: {
       flex: 1,
-      overflowY: 'scroll',
-      zIndex: 0,
       position: 'relative',
+      overflowY: 'scroll',
       pointerEvents: 'all !important',
     },
     fade: {
       position: 'fixed',
       left: 0,
       right: 0,
-      top: 13,
-      height: 60,
+      zIndex: 10000,
       opacity: 0,
-      zIndex: 100000,
-      transition: 'opacity ease-in-out 150ms',
+      transform: {
+        z: 0,
+      },
+      // transition: 'opacity ease-in 150ms',
     },
-    fadeUp: {
-      position: 'absolute',
-      left: 0,
-      right: 0,
-      top: -40,
+    fadeTop: {
+      top: 13,
       height: 40,
-      zIndex: -1,
-      transition: 'opacity ease-in 150ms',
+    },
+    fadeBottom: {
+      bottom: 0,
+      height: 40,
     },
     fadeVisible: {
-      zIndex: 10000,
+      opacity: 1,
     },
   }
 
   static theme = (props, theme) => {
     return {
-      fade: {
+      fadeTop: {
         background: `linear-gradient(${
           theme.base.background
-        } 40%, transparent)`,
+        } 25%, transparent)`,
       },
-      fadeUp: {
+      fadeBottom: {
         background: `linear-gradient(transparent 45%, ${
           theme.base.background
         })`,

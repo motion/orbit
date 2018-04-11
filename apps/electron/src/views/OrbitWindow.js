@@ -1,8 +1,8 @@
 import * as React from 'react'
 import * as Constants from '~/constants'
-import { view, react, isEqual } from '@mcro/black'
+import { view, react } from '@mcro/black'
 import { Window } from '@mcro/reactron'
-import { App, Electron, Desktop, Swift } from '@mcro/all'
+import { App, Electron, Swift } from '@mcro/all'
 import * as Mobx from 'mobx'
 
 const log = debug('OrbitWindow')
@@ -10,28 +10,18 @@ const log = debug('OrbitWindow')
 class OrbitWindowStore {
   show = 0
   orbitRef = null
-  clear = 0
 
-  willMount() {
-    Electron.onMessage(msg => {
-      if (msg === 'CLEAR') {
+  @react
+  unFullScreenOnHide = [
+    () => App.isShowingOrbit,
+    showing => {
+      if (showing) {
+        return
+      }
+      if (Electron.orbitState.fullScreen) {
+        log(`clearing`)
         this.clear = Date.now()
       }
-    })
-  }
-
-  @react({ log: false })
-  clearOrbitPosition = [
-    () => this.clear,
-    async (_, { when, sleep }) => {
-      if (!this.orbitRef) return
-      this.orbitRef.hide()
-      const lastState = Mobx.toJS(Desktop.appState)
-      this.show = 0
-      await when(() => !isEqual(Desktop.appState, lastState))
-      this.show = 1
-      await sleep(250) // render opacity 0, let it update
-      this.show = 2
     },
   ]
 
@@ -84,9 +74,13 @@ class OrbitWindowStore {
 
   @react
   focusOnMouseOver = [
-    () => Electron.orbitState.mouseOver || Electron.peekState.mouseOver,
+    () => Electron.isMouseInActiveArea,
     mouseOver => {
-      if (Electron.orbitState.pinned || Electron.orbitState.fullScreen) {
+      if (!App.isShowingOrbit) {
+        return
+      }
+      if (mouseOver && Electron.orbitState.fullScreen) {
+        this.focusOrbit()
         return
       }
       if (mouseOver) {
@@ -105,7 +99,7 @@ class OrbitWindowStore {
   }
 
   handleReadyToShow = () => {
-    this.show = 2
+    this.show = true
   }
 }
 
@@ -115,8 +109,10 @@ class OrbitWindowStore {
 })
 @view.electron
 export default class OrbitWindow extends React.Component {
-  render({ store }) {
+  render({ electronStore, store }) {
     const state = Mobx.toJS(Electron.orbitState)
+    const show = electronStore.show >= 1 ? true : false
+    const opacity = electronStore.show <= 1 ? 0 : 1
     return (
       <Window
         frame={false}
@@ -127,8 +123,8 @@ export default class OrbitWindow extends React.Component {
         transparent={true}
         showDevTools={Electron.state.showDevTools.orbit}
         alwaysOnTop
-        show={store.show ? true : false}
-        opacity={store.show === 1 ? 0 : 1}
+        show={show}
+        opacity={opacity}
         ignoreMouseEvents={!App.isShowingOrbit}
         size={state.size}
         position={state.position}

@@ -22,17 +22,20 @@ export default function hoverSettler({
   let lastHovered
 
   // debounce - leave space for ui thread
-  const setHovered = throttle(nextHovered => {
+  const setHovered = throttle((nextHovered, cb) => {
     if (!isEqual(nextHovered, lastHovered)) {
       // 🐛 object spread fixes comparison bugs later on
       lastHovered = nextHovered ? { ...nextHovered } : nextHovered
       if (onHovered) {
         onHovered(nextHovered)
       }
+      if (cb) {
+        cb()
+      }
     }
   }, 16)
 
-  return extraProps => {
+  return ({ onHover, onBlur, ...extraProps }) => {
     let itemLastEnterTm
     let itemLastLeaveTm
     let fullyLeaveTm
@@ -53,13 +56,16 @@ export default function hoverSettler({
         if (!target) {
           return
         }
-        setHovered({
-          top: target.offsetTop,
-          left: target.offsetLeft,
-          width: target.clientWidth,
-          height: target.clientHeight,
-          ...extraProps,
-        })
+        setHovered(
+          {
+            top: target.offsetTop,
+            left: target.offsetLeft,
+            width: target.clientWidth,
+            height: target.clientHeight,
+            ...extraProps,
+          },
+          onHover,
+        )
         if (itemLastEnterTm === lastEnter) {
           itemLastEnterTm = null
           lastEnter = null
@@ -101,7 +107,7 @@ export default function hoverSettler({
       }
       lastLeave = itemLastLeaveTm = setTimeout(() => {
         if (!lastEnter) {
-          setHovered(null)
+          setHovered(null, onBlur)
           itemLastEnterTm = null
         }
       }, leaveDelay)

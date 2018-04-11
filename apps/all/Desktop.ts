@@ -56,8 +56,12 @@ export type DesktopState = {
 
 @store
 class DesktopStore {
+  messages = {
+    TOGGLE_PAUSED: 'TOGGLE_PAUSED',
+  }
+
   setState: typeof Bridge.setState
-  sendMessageTo: typeof Bridge.sendMessageTo
+  sendMessage: typeof Bridge.sendMessage
   onMessage: typeof Bridge.onMessage
   source = 'Desktop'
 
@@ -159,7 +163,7 @@ class DesktopStore {
   start = options => {
     Bridge.start(this, this.state, options)
     this.setState = Bridge.setState
-    this.sendMessageTo = Bridge.sendMessageTo
+    this.sendMessage = Bridge.sendMessage
     this.onMessage = Bridge.onMessage
   }
 

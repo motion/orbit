@@ -58,7 +58,6 @@ class AppRoot {
   render() {
     const isResults = window.location.pathname === '/results'
     const RootComponent = isResults ? Results : Root
-    console.log('RootComponent', RootComponent)
     ReactDOM.render(
       <ThemeProvide {...Themes}>
         <UI.Theme name="tan">

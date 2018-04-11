@@ -37,10 +37,7 @@ class SwiftStore {
   }
 
   defocus = () => {
-    if (Desktop.state.focusedOnOrbit) {
-      log('defocusing')
-      this._send({ action: 'defocus' })
-    }
+    this._send({ action: 'defocus' })
   }
 
   toggle = () => {

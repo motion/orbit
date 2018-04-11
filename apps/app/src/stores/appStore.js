@@ -1,7 +1,6 @@
-import { react, watch } from '@mcro/black'
+import { react, watch, isEqual } from '@mcro/black'
 import { App, Desktop, Electron } from '@mcro/all'
 import { Bit, Setting } from '@mcro/models'
-import fuzzySort from 'fuzzysort'
 import * as Constants from '~/constants'
 import * as r2 from '@mcro/r2'
 import * as Helpers from '~/helpers'
@@ -29,7 +28,7 @@ const uniq = arr => {
   const added = {}
   const final = []
   for (const item of arr) {
-    if (!added[item.title]) {
+    if (!added[item.identifier || item.title]) {
       final.push(item)
       added[item.title] = true
     }
@@ -37,24 +36,13 @@ const uniq = arr => {
   return final
 }
 
-const fuzzyResults = (query, results, extraOpts) =>
-  !query
-    ? results
-    : fuzzySort
-        .go(query, results, {
-          key: 'title',
-          // threshold: -25,
-          limit: 8,
-          ...extraOpts,
-        })
-        .map(x => x.obj)
-
 export default class AppStore {
   refreshCycle = 0
   selectedIndex = -1
   hoveredIndex = -1
   showSettings = false
   settings = {}
+  getResults = null
 
   get activeIndex() {
     if (App.state.peekTarget) {
@@ -64,50 +52,30 @@ export default class AppStore {
     }
   }
 
+  @react
+  resetSelectedIndexOnSearch = [
+    () => App.state.query,
+    () => {
+      this.selectedIndex = -1
+      this.hoveredIndex = 0
+      App.setPeekTarget(null)
+    },
+  ]
+
   @watch({ log: false })
   selectedBit = () =>
     App.state.selectedItem && Bit.findOne({ id: App.state.selectedItem.id })
 
   get results() {
-    if (this.showSettings) {
-      return fuzzyResults(App.state.query, [
-        {
-          id: 'google',
-          type: 'setting',
-          integration: 'google',
-          title: 'Google Drive',
-          icon: 'gdrive',
-        },
-        {
-          id: 'github',
-          type: 'setting',
-          integration: 'github',
-          title: 'Github',
-          icon: 'github',
-        },
-        {
-          id: 'slack',
-          type: 'setting',
-          integration: 'slack',
-          title: 'Slack',
-          icon: 'slack',
-        },
-        {
-          id: 'folder',
-          type: 'setting',
-          integration: 'folder',
-          title: 'Folder',
-          icon: 'folder',
-          oauth: false,
-        },
-      ])
+    if (this.getResults) {
+      return Helpers.fuzzy(App.state.query, this.getResults())
     }
     const results = [
       ...(this.bitResults || []),
       ...(Desktop.searchState.pluginResults || []),
       ...(Desktop.searchState.searchResults || []),
     ]
-    const strongTitleMatches = fuzzyResults(App.state.query, results)
+    const strongTitleMatches = Helpers.fuzzy(App.state.query, results)
     return uniq([...strongTitleMatches, ...results].slice(0, 10))
   }
 
@@ -156,17 +124,22 @@ export default class AppStore {
       this._setSelected(index)
     }
     App.setPeekTarget({
-      id: this.hoveredIndex,
+      id: index > -1 ? index : this.hoveredIndex,
       position: this.getMousePosition(),
     })
   }
 
+  setGetResults = fn => {
+    this.getResults = fn
+  }
+
   getHoverProps = Helpers.hoverSettler({
-    enterDelay: 120,
-    betweenDelay: 120,
+    enterDelay: 40,
+    betweenDelay: 30,
     onHovered: item => {
-      log(`hi`)
-      this.setSelected(item && item.id)
+      if (item && typeof item.id === 'number') {
+        this.setSelected(item.id)
+      }
     },
   })
 
@@ -224,16 +197,20 @@ export default class AppStore {
 
   async willMount() {
     this.getSettings()
-    // every two seconds, re-query bit results
-    // this.setInterval(() => {
-    //   this.refreshCycle = Date.now()
-    // }, 2000)
+    // every few seconds, re-query bit results
+    this.setInterval(this.getSettings, 2000)
   }
 
   getSettings = async () => {
     const settings = await Setting.find()
     if (settings) {
-      this.settings = settings.reduce((a, b) => ({ ...a, [b.type]: b }), {})
+      const nextSettings = settings.reduce(
+        (a, b) => ({ ...a, [b.type]: b }),
+        {},
+      )
+      if (!isEqual(this.settings, nextSettings)) {
+        this.settings = nextSettings
+      }
     }
   }
 

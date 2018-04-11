@@ -6,10 +6,7 @@ import OrbitItem from './orbitItem'
 import OrbitDivider from './orbitDivider'
 import * as Constants from '~/constants'
 import { throttle } from 'lodash'
-import elasticScroll from 'elasticscroll.js'
 import Results from '~/apps/results/results'
-
-console.log('elasticScroll', elasticScroll)
 
 const SPLIT_INDEX = 3
 
@@ -53,7 +50,7 @@ class OrbitContext {
           transform: { y },
         }}
       >
-        <fadeUp
+        <fadeNotifications
           $$untouchable
           $fadeVisible={appStore.activeIndex >= SPLIT_INDEX}
         />
@@ -62,12 +59,12 @@ class OrbitContext {
           css={{ paddingBottom: 0, zIndex: 1000, position: 'relative' }}
         />
         <Results />
-        <webview
+        {/* <webview
           if={false}
           $results
           webpreferences="scrollBounce experimentalFeatures"
           src="http://localhost:3001/results"
-        />
+        /> */}
       </orbitContext>
     )
   }
@@ -91,17 +88,19 @@ class OrbitContext {
       zIndex: 100000,
       transition: 'opacity ease-in-out 150ms',
     },
-    fadeUp: {
+    fadeNotifications: {
       position: 'absolute',
       left: 0,
       right: 0,
       top: -40,
       height: 40,
       zIndex: -1,
+      opacity: 0,
       transition: 'opacity ease-in 150ms',
     },
     fadeVisible: {
       zIndex: 10000,
+      opacity: 1,
     },
   }
 
@@ -112,7 +111,7 @@ class OrbitContext {
           theme.base.background
         } 40%, transparent)`,
       },
-      fadeUp: {
+      fadeNotifications: {
         background: `linear-gradient(transparent 45%, ${
           theme.base.background
         })`,

@@ -12,17 +12,22 @@ export let Electron
 
 @store
 class ElectronStore {
+  messages = {
+    CLEAR: 'CLEAR',
+    TOGGLE_PINNED: 'TOGGLE_PINNED',
+  }
+
   setState: typeof Bridge.setState
-  sendMessageTo: typeof Bridge.sendMessageTo
+  sendMessage: typeof Bridge.sendMessage
   onMessage: typeof Bridge.onMessage
   reactions: ElectronReactions
   source = 'Electron'
+  onClear = null
+
+  lastAction = null
 
   state = {
     willReposition: Date.now(),
-    shouldHide: 1,
-    shouldShow: 0,
-    shouldPause: null,
     settingsPosition: [], // todo: settingsState.position
     orbitState: {
       mouseOver: false,
@@ -44,7 +49,7 @@ class ElectronStore {
   }
 
   // runs in every app independently
-  @react({ fireImmediately: true })
+  @react({ fireImmediately: true, log: false })
   isMouseInActiveArea = [
     () => !!(Electron.orbitState.mouseOver || Electron.peekState.mouseOver),
     async (over, { sleep, setValue }) => {
@@ -56,7 +61,7 @@ class ElectronStore {
   start = options => {
     Bridge.start(this, this.state, options)
     this.setState = Bridge.setState
-    this.sendMessageTo = Bridge.sendMessageTo
+    this.sendMessage = Bridge.sendMessage
     this.onMessage = Bridge.onMessage
     const ElectronReactions = eval(`require('./ElectronReactions')`).default
     this.reactions = new ElectronReactions()
@@ -67,6 +72,9 @@ class ElectronStore {
   }
 
   get orbitOnLeft() {
+    if (Electron.orbitState.orbitDocked) {
+      return true
+    }
     return Electron.orbitState.orbitOnLeft
   }
 
@@ -78,41 +86,6 @@ class ElectronStore {
     return (Electron.peekState.windows || [])[0] || {}
   }
 
-  get recentlyToggled() {
-    if (
-      Date.now() - Electron.state.shouldHide <= App.animationDuration ||
-      Date.now() - Electron.state.shouldShow <= App.animationDuration
-    ) {
-      return true
-    }
-    return false
-  }
-
-  onShortcut = shortcut => {
-    if (shortcut === 'Option+Space') {
-      if (Electron.orbitState.fullScreen) {
-        Electron.toggleFullScreen()
-        return
-      }
-      if (App.state.orbitHidden) {
-        Electron.toggleVisible()
-        Electron.setPinned(true)
-        return
-      }
-      if (Electron.orbitState.pinned) {
-        Electron.togglePinned()
-        Electron.toggleVisible()
-        return
-      } else {
-        // !pinned
-        Electron.togglePinned()
-      }
-    }
-    if (shortcut === 'Option+Shift+Space') {
-      Electron.toggleFullScreen()
-    }
-  }
-
   updatePeek = (peek, cb) => {
     const windows = Electron.peekState.windows.slice(0)
     const nextPeek = windows.find(x => x.key === peek.key)
@@ -120,15 +93,11 @@ class ElectronStore {
     Electron.setPeekState({ windows })
   }
 
-  shouldShow = () => Electron.setShouldShow(Date.now())
-  shouldHide = () => Electron.setShouldHide(Date.now())
-  shouldPause = () => Electron.setShouldPause(Date.now())
-
   toggleVisible = () => {
     if (App.state.orbitHidden) {
-      this.shouldShow()
+      Electron.sendMessage(App, App.messages.HIDE)
     } else {
-      this.shouldHide()
+      Electron.sendMessage(App, App.messages.SHOW)
     }
   }
 
@@ -142,8 +111,10 @@ class ElectronStore {
 
   toggleFullScreen = () => {
     const fullScreen = !Electron.orbitState.fullScreen
-    log(`toggle fullscreen`)
     if (!fullScreen) {
+      if (this.onClear) {
+        this.onClear()
+      }
       Electron.setOrbitState({ fullScreen })
       return
     }
@@ -175,6 +146,33 @@ class ElectronStore {
         },
       })
     }, 100)
+  }
+
+  onShortcut = shortcut => {
+    if (shortcut === 'Option+Space') {
+      if (Electron.orbitState.fullScreen) {
+        Electron.toggleFullScreen()
+        return
+      }
+      if (App.state.orbitHidden) {
+        Electron.toggleVisible()
+        Electron.lastAction = 'Option+Space'
+        Electron.setPinned(true)
+        return
+      }
+      if (Electron.orbitState.pinned) {
+        Electron.togglePinned()
+        Electron.toggleVisible()
+        return
+      } else {
+        // !pinned
+        Electron.togglePinned()
+      }
+    }
+    if (shortcut === 'Option+Shift+Space') {
+      Electron.lastAction = 'Option+Shift+Space'
+      Electron.toggleFullScreen()
+    }
   }
 }
 

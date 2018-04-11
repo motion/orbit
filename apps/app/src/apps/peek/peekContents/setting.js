@@ -1,11 +1,14 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import { App } from '@mcro/all'
-import { Setting, Bit, Job } from '@mcro/models'
+import { Bit, Job } from '@mcro/models'
 import PeekHeader from '../peekHeader'
 import PeekFrame from '../peekFrame'
 import { capitalize, throttle } from 'lodash'
 import * as UI from '@mcro/ui'
+import * as SettingPanes from './settingPanes'
+
+const EmptyPane = () => <div>no setting pane</div>
 
 @view({
   store: class SettingStore {
@@ -41,18 +44,28 @@ import * as UI from '@mcro/ui'
 export class SettingView {
   render({ appStore, store }) {
     if (!store.setting || !store.setting.token) {
+      console.log('no setting or token', store.setting)
       return null
     }
-    console.log('setting', store.selectedItem)
     store.settingVersion
     const { setting } = store
     const { syncSettings = { max: 50 } } = setting.values
     const throttleSaveSetting = throttle(() => setting.save(), 500)
+    const SettingPane =
+      SettingPanes[store.selectedItem.integration] || EmptyPane
     return (
       <PeekFrame>
         <PeekHeader
           title={capitalize(store.selectedItem.integration)}
-          subtitle={<div>Synced {store.bitsCount} total</div>}
+          subtitle={
+            <div $$row if={store.job}>
+              {store.bitsCount} total{' '}
+              <UI.Text>&nbsp;| {store.job.status}</UI.Text>
+              <UI.Text>
+                &nbsp;| <UI.Date>{store.job.updatedAt}</UI.Date>
+              </UI.Text>
+            </div>
+          }
           after={
             <UI.Row $$flex>
               <UI.Button
@@ -81,14 +94,9 @@ export class SettingView {
           }
         />
         <body>
-          <status if={store.job}>
-            <UI.Title>Last Sync</UI.Title>
-            <UI.Text>Status: {store.job.status}</UI.Text>
-            <UI.Text>
-              At: <UI.Date>{store.job.updatedAt}</UI.Date>
-            </UI.Text>
-          </status>
+          <status if={store.job} />
           <setting>
+            <SettingPane appStore={appStore} />
             setting:
             <UI.Field
               row

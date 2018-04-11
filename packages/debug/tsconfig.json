@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "module": "CommonJS",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "es2017",
+    "noImplicitAny": false,
+    "removeComments": true,
+    "preserveConstEnums": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "outDir": "_",
+    "allowJs": true,
+    "sourceMap": true,
+    // "skipLibCheck": true,
+    "lib": ["es2015", "es2016", "es2017", "dom"],
+    "baseUrl": "./",
+    "paths": {
+      "~/*": ["*"]
+    }
+  },
+  "include": ["/**/*"],
+  "exclude": ["_", "node_modules", "tmp"],
+  "typeAcquisition": {
+    "enable": true
+  }
+}

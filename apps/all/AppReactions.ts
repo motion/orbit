@@ -6,25 +6,25 @@ import { App } from './App'
 
 @store
 export default class AppReactions {
+  constructor() {
+    App.onMessage(msg => {
+      switch (msg) {
+        case App.messages.HIDE:
+          return App.setOrbitHidden(true)
+        case App.messages.SHOW:
+          return App.setOrbitHidden(false)
+      }
+    })
+  }
+
   @react
   showHideApp = [() => App.state.openResult, () => App.setOrbitHidden(true)]
 
-  @react({
-    fireImmediately: true,
-  })
-  showHideFromElectron = [
-    () => [Electron.state.shouldShow, Electron.state.shouldHide],
-    ([shouldShow, shouldHide]) => {
-      const orbitHidden = shouldHide > shouldShow
-      App.setOrbitHidden(orbitHidden)
-    },
-  ]
-
-  @react
-  clearPeekTargetOnMouseLeave = [
-    () => !Electron.isMouseInActiveArea,
-    outside => outside && App.setPeekTarget(null),
-  ]
+  // @react
+  // clearPeekTargetOnMouseLeave = [
+  //   () => !Electron.isMouseInActiveArea,
+  //   outside => outside && App.setPeekTarget(null),
+  // ]
 
   @react
   clearPeekTargetOnOrbitClose = [
@@ -122,7 +122,7 @@ export default class AppReactions {
       if (isShown && !mouseOver) {
         // 100ms leeway on mouse leave
         await sleep(100)
-        if (Desktop.isHoldingOption || Electron.recentlyToggled) {
+        if (Desktop.isHoldingOption || App.isAnimatingOrbit) {
           return
         }
         if (Electron.orbitState.pinned || Electron.orbitState.fullScreen) {

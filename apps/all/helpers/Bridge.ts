@@ -197,14 +197,20 @@ class Bridge {
       if (this._socket.readyState == 1) {
         console.log('swift ws error', err)
       } else {
-        console.log('socket err', err)
+        console.log('socket err', err.message)
       }
     }
   }
 
-  sendMessageTo = (Store: any, message: string) => {
-    if (!Store || !message) throw `no store || message`
-    this.socketManager.sendMessage(Store.source, message)
+  sendMessage = (Store: any, message: string) => {
+    if (!Store || !message) {
+      throw `no store || message`
+    }
+    if (this._options.master) {
+      this.socketManager.sendMessage(Store.source, message)
+    } else {
+      this._socket.send(JSON.stringify({ message, to: Store.source })
+    }
   }
 
   // this will go up to api and back down to all screen stores

@@ -83,6 +83,9 @@ class OrbitWindowStore {
         this.focusOrbit()
         return
       }
+      if (Electron.orbitState.pinned) {
+        return
+      }
       if (mouseOver) {
         this.focusOrbit()
       } else {

@@ -258,6 +258,10 @@ export default class AppStore {
 
   toggleSettings = () => {
     this.showSettings = !this.showSettings
+    // pin if not pinned
+    if (this.showSettings && !Electron.orbitState.pinned) {
+      App.sendMessage(Electron, Electron.messages.TOGGLE_PINNED)
+    }
   }
 
   checkAuths = async () => {

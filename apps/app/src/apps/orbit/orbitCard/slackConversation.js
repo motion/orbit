@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import OrbitCardSlackMessage from './orbitCard/slackMessage'
+import OrbitCardSlackMessage from './slackMessage'
 
 const isntAttachment = x => !x.text.match(/\<([a-z]+:\/\/[^>]+)\>/g)
 

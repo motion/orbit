@@ -8,7 +8,7 @@ import OrbitCardContent from './orbitCardContent'
 @view
 class Text {
   render(props) {
-    return <UI.Text size={1.1} css={{ marginBottom: 10 }} {...props} />
+    return <UI.Text size={1.1} {...props} />
   }
 }
 
@@ -63,7 +63,6 @@ export default class OrbitCard {
             ellipse: true,
             measure: shouldResizeText,
             style: {
-              flex: 1,
               lineHeight: '1.35rem',
             },
           }

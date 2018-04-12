@@ -1,45 +1,47 @@
 import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
-import App, { Thing } from '~/app'
-import Things from '../views/things'
+import { Bit } from '@mcro/models'
+import { GithubService } from '@mcro/models/services'
+import Bits from '~/views/bits'
 
 class GithubStore {
-  things = Thing.find()
+  get setting() {
+    return this.props.appStore.settings.github
+  }
+
+  issues = Bit.find({ where: { integration: 'github', type: 'task' } })
+  githubService = new GithubService(this.setting)
   active = 'repos'
   syncing = {}
   syncVersion = 0
   userOrgs = []
 
-  get issues() {
-    return (this.things || []).filter(t => t.type === 'task')
-  }
-
   get allOrgs() {
-    return (
-      (App.services.Github.allOrgs &&
-        App.services.Github.allOrgs.map(org => org.login)) ||
-      []
-    )
+    return []
+    // return (
+    //   (App.services.Github.allOrgs &&
+    //     App.services.Github.allOrgs.map(org => org.login)) ||
+    //   []
+    // )
   }
 
-  onSync = (repo, val) => {
-    const { Github } = App.services
+  onSync = async (repo, val) => {
     this.syncVersion++
-    Github.setting.mergeUpdate({
-      values: {
-        repos: {
-          [repo.fullName]: val,
-        },
+    this.setting.values = {
+      ...this.setting.values,
+      repos: {
+        ...this.setting.values.repos,
+        [repo.fullName]: val,
       },
-    })
+    }
+    await this.setting.save()
   }
 
   isSyncing = repo => {
-    const { Github } = App.services
-    if (!Github.setting || !Github.setting.values.repos) {
+    if (!this.setting || !this.setting.values.repos) {
       return false
     }
-    return Github.setting.values.repos[repo.fullName] || false
+    return this.setting.values.repos[repo.fullName] || false
   }
 
   newOrg = ''
@@ -54,7 +56,9 @@ class GithubStore {
 export default class Github {
   render({ githubStore: store }) {
     const active = { background: 'rgba(0,0,0,0.15)' }
-
+    if (!store.issues) {
+      return null
+    }
     return (
       <container>
         <UI.Row css={{ margin: [10, 0] }}>
@@ -91,7 +95,7 @@ export default class Github {
           </add>
         </repos>
         <issues if={store.active === 'issues'}>
-          <Things things={store.issues} />
+          <Bits bits={store.issues} />
         </issues>
       </container>
     )

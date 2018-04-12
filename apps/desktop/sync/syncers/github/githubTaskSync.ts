@@ -1,4 +1,4 @@
-import { Bit, Setting, findOrCreate } from '@mcro/models'
+import { Bit, Setting, createOrUpdate } from '@mcro/models'
 import { createApolloFetch } from 'apollo-fetch'
 import { omit, flatten } from 'lodash'
 import { createInChunks } from '~/sync/helpers'
@@ -141,17 +141,21 @@ export default class GithubIssueSync {
     // ensure if one is set, the other gets set too
     const created = issue.createdAt || issue.updatedAt || ''
     const updated = issue.updatedAt || created
-    return await findOrCreate(Bit, {
-      id,
-      integration: 'github',
-      type: 'task',
-      title: issue.title,
-      body: issue.bodyText,
-      data,
-      author: issue.author.login,
-      created,
-      updated,
-    })
+    return await createOrUpdate(
+      Bit,
+      {
+        id,
+        integration: 'github',
+        type: 'task',
+        title: issue.title,
+        body: issue.bodyText,
+        data,
+        author: issue.author.login,
+        created,
+        updated,
+      },
+      Bit.identifyingKeys,
+    )
   }
 
   getRepositoriesForOrg = async (

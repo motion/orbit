@@ -6,12 +6,16 @@ const INITIAL_SIZE = [330, 420]
 const VERT_PAD = 5 // small vertical pad allows you to resize attached window
 
 export default function orbitPosition({ left, top, width, height }) {
-  let orbitH = height
   let [orbitW] = INITIAL_SIZE
   const [screenW, screenH] = screenSize()
+  let orbitH = height
   const leftSpace = left
   const rightSpace = screenW - (left + width)
-  if (rightSpace < orbitW && leftSpace < orbitW) {
+  const smallOrbit = orbitH < 950
+  if ((rightSpace < orbitW && leftSpace < orbitW) || smallOrbit) {
+    if (smallOrbit) {
+      orbitH = screenH
+    }
     return {
       position: [screenW - orbitW, 0],
       size: [orbitW, orbitH],
@@ -37,7 +41,7 @@ export default function orbitPosition({ left, top, width, height }) {
   y += VERT_PAD
   orbitH -= VERT_PAD
   if (orbitH + y > screenH) {
-    // height = screenH - SCREEN_PAD - y
+    height -= screenH - (orbitH + y)
     log(`too big, adjusting height ${orbitH} screenH ${screenH}`)
   }
   return {

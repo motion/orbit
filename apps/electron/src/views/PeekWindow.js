@@ -58,7 +58,7 @@ const peekPosition = target => {
     }
     if (pW > leftSpace) {
       pW = leftSpace
-      x = 0
+      x = -+pW - leftSpace
     }
   } else {
     x = left + width
@@ -94,6 +94,11 @@ class PeekStore {
       //   this.props.electronStore.peekRef.focus()
       // }
       Electron.updatePeek(Electron.currentPeek, peek => {
+        console.log(
+          'set position',
+          peekTarget.position,
+          peekPosition(peekTarget.position),
+        )
         Object.assign(peek, peekPosition(peekTarget.position))
       })
     },

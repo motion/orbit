@@ -1,3 +1,5 @@
+ctrl + drag off
+
 ## review
 
 monday
@@ -25,6 +27,9 @@ fallover:
 * use messages for current uses of state like shouldUpdate shouldHide etc
 
 wed
+
+* peek position limits more ofen fullscreen
+* peek pos height adjust better
 
 add:
 

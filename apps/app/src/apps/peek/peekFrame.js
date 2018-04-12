@@ -38,7 +38,7 @@ export default class PeekFrame {
             <main
               css={{
                 boxShadow: [
-                  APP_SHADOW,
+                  [0, 0, SHADOW_PAD, [0, 0, 0, 0.08]],
                   fullScreen ? null : ['inset', 0, 0, 0, 0.5, [0, 0, 0, 0.15]],
                 ].filter(Boolean),
                 // make shadow go under

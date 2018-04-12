@@ -64,7 +64,7 @@ export default class GoogleDriveSync {
       }
     }
     if (created.length) {
-      log('synced new files', created)
+      log(`synced ${created.length} new files`)
     }
     return created
   }

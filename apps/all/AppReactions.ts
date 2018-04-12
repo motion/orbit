@@ -4,6 +4,10 @@ import { Desktop } from './Desktop'
 import { Electron } from './Electron'
 import { App } from './App'
 
+// todo: move this reaction stuff into specialized sub-stores of appstore
+// prevents hard restarts
+// and groups by logical unit (piece of state)
+
 @store
 export default class AppReactions {
   constructor({ onPinKey }) {
@@ -80,37 +84,6 @@ export default class AppReactions {
       if (withinX && withinY) {
         await sleep(300)
         App.setOrbitHidden(false)
-      }
-    },
-  ]
-
-  // TODO: need to only clear if something is "selected"
-  // and implement a "selected" vs "hovered state" / visuals
-  @react({
-    delay: 300,
-  })
-  clearPeekOnMouseOut = [
-    () => Electron.isMouseInActiveArea,
-    mouseOver => {
-      // if (!mouseOver) {
-      //   App.setPeekTarget(null)
-      // }
-    },
-  ]
-
-  @react
-  hideOrbitOnEsc = [
-    () => Desktop.keyboardState.esc,
-    () => {
-      if (Constants.FORCE_FULLSCREEN) {
-        return
-      }
-      if (
-        Desktop.state.focusedOnOrbit ||
-        Electron.orbitState.mouseOver ||
-        Electron.orbitState.fullScreen
-      ) {
-        App.setOrbitHidden(true)
       }
     },
   ]

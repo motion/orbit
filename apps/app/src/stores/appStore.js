@@ -55,6 +55,18 @@ export default class AppStore {
   async willMount() {
     this.getSettings()
     this.setInterval(this.getSettings, 2000)
+    // this.setInterval(() => {
+    //   if (
+    //     App.isShowingOrbit &&
+    //     App.state.peekTarget &&
+    //     Electron.orbitState.mouseOver
+    //   ) {
+    //     App.setPeekTarget({
+    //       ...App.state.peekTarget,
+    //       position: this.getMousePosition(),
+    //     })
+    //   }
+    // }, 1000)
   }
 
   get activeIndex() {
@@ -136,6 +148,17 @@ export default class AppStore {
     },
   ]
 
+  getMousePosition = () => {
+    return {
+      top: Math.max(
+        Electron.orbitState.position[1] + 100,
+        Desktop.mouseState.position.y - 200,
+      ),
+      left: Electron.orbitState.position[0],
+      width: Electron.orbitState.size[0] - Constants.SHAD,
+    }
+  }
+
   clearSelected = () => {
     if (!Electron.isMouseInActiveArea) {
       App.setPeekTarget(null)
@@ -176,24 +199,20 @@ export default class AppStore {
     this._setSelected(i)
   }
 
-  pinSelected = throttle((index, eventType) => {
-    // toggle if click again
-    if (
-      eventType === 'click' &&
-      index === this.selectedIndex &&
-      App.state.peekTarget
-    ) {
-      App.setPeekTarget(null)
-      return
-    }
+  pinSelected = throttle(index => {
     if (typeof index === 'number') {
       this._setSelected(index)
+      console.log('pinning')
+      App.setPeekTarget({
+        id: index > -1 ? index : this.hoveredIndex || this.activeIndex,
+        position: this.getMousePosition(),
+      })
     }
-    App.setPeekTarget({
-      id: index > -1 ? index : this.hoveredIndex,
-      position: this.getMousePosition(),
-    })
-  }, 400)
+  }, 500)
+
+  clearPinned = () => {
+    App.setPeekTarget(null)
+  }
 
   setGetResults = fn => {
     this.getResults = fn
@@ -209,16 +228,26 @@ export default class AppStore {
     },
   })
 
-  getMousePosition = () => {
-    return {
-      top: Math.max(
-        Electron.orbitState.position[1] + 100,
-        Desktop.mouseState.position.y - 200,
-      ),
-      left: Electron.orbitState.position[0],
-      width: Electron.orbitState.size[0] - Constants.SHADOW_PAD,
-    }
-  }
+  @react
+  hideOrbitOnEsc = [
+    () => Desktop.keyboardState.esc,
+    () => {
+      if (Constants.FORCE_FULLSCREEN) {
+        return
+      }
+      if (App.state.peekTarget) {
+        App.setPeekTarget(null)
+        return
+      }
+      if (
+        Desktop.state.focusedOnOrbit ||
+        Electron.orbitState.mouseOver ||
+        Electron.orbitState.fullScreen
+      ) {
+        App.setOrbitHidden(true)
+      }
+    },
+  ]
 
   @react.if
   hoverWordToSelectedIndex = [

@@ -19,11 +19,11 @@ const stringifyObject = obj =>
   })
 
 // const log = debug('Bridge')
-const requestIdle = (cb) =>
+const requestIdle = (cb?: Function) =>
   new Promise(
     res =>
       typeof window !== 'undefined' && window.requestIdleCallback
-        ? window.requestIdleCallback(cb || res)
+        ? window.requestIdleCallback(() => cb ? cb() : res())
         : setTimeout(cb || res, 1),
   )
 
@@ -72,11 +72,11 @@ class Bridge {
         },
         actions: {
           // stores that first connect send a call to get initial state
+          // this is where its received by other apps
           getState: ({ source, socket }) => {
+            // dont sync you to yourself
             if (source === this._source) return
-            // send state of all besides requesting store
             for (const name of Object.keys(stores)) {
-              if (name === source) continue
               this.socketManager.send(socket, stores[name].state, name)
             }
           },

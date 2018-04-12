@@ -58,15 +58,7 @@ export default class OrbitCard {
             (totalHeight - tallHeight) / Math.max(1, total - 1),
           )
           const height = isSelected ? tallHeight : smallHeight
-          const shouldResizeText = wasSelected !== isSelected
-          const textProps = {
-            ellipse: true,
-            measure: shouldResizeText,
-            style: {
-              lineHeight: '1.35rem',
-            },
-          }
-          const PreviewText = props => <Text {...textProps} {...props} />
+          // const shouldResizeText = wasSelected !== isSelected
           const willTransition = false
           return (
             <AnimateElement id={`${result.id}`}>
@@ -133,7 +125,10 @@ export default class OrbitCard {
                         overflow: 'hidden',
                       }}
                     >
-                      <OrbitCardContent result={result} Text={PreviewText} />
+                      <OrbitCardContent if={isSelected} result={result} />
+                      <preview if={!isSelected}>
+                        {result.body || result.text}
+                      </preview>
                     </content>
                   </AnimateElement>
                   <AnimateElement id={`${result.id}-bottom`}>

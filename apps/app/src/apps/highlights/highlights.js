@@ -123,7 +123,10 @@ const log = debug('highlights')
 export default class HighlightsPage {
   render({ store }) {
     return (
-      <frame if={store.showAll} $overlay={Electron.orbitState.fullScreen}>
+      <frame
+        if={store.showAll}
+        $overlay={Electron.orbitState.fullScreen && App.isShowingOrbit}
+      >
         {(store.ocrWords || []).map(item => (
           <OCRWord key={Helpers.wordKey(item)} item={item} store={store} />
         ))}
@@ -140,6 +143,7 @@ export default class HighlightsPage {
       pointerEvents: 'none',
       userSelect: 'none',
       position: 'relative',
+      transition: 'all ease-in 200ms',
       // background: [0, 0, 0, 0.5],
     },
     overlay: {

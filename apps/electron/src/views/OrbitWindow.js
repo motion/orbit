@@ -56,6 +56,12 @@ class OrbitWindowStore {
     },
   ]
 
+  unRegisterKeyShortcuts = () => {
+    for (const { shortcut } of this.keyShortcuts) {
+      globalShortcut.unregister(shortcut)
+    }
+  }
+
   // sitrep
   focusOrbit = () => {
     try {
@@ -130,6 +136,7 @@ class OrbitWindowStore {
     if (this.orbitRef) return
     this.orbitRef = ref.window
     this.focusOrbit()
+    this.props.onRef(this.orbitRef)
   }
 
   handleReadyToShow = () => {

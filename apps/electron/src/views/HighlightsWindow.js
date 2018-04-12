@@ -23,11 +23,12 @@ export default class HighlightsWindow extends React.Component {
     this.setState({ position })
   }
 
-  render({ electronStore }) {
+  render({ electronStore, onRef }) {
     return (
       <Window
         alwaysOnTop
         ignoreMouseEvents
+        ref={ref => ref && onRef(ref.window)}
         file={`${Constants.APP_URL}/highlights`}
         show={electronStore.show ? this.state.show : false}
         opacity={electronStore.show === 1 ? 0 : 1}

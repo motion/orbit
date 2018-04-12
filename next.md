@@ -32,3 +32,5 @@ add:
   * resize have it transition smoothly to fullscreen
   * back to corner
   * dont loose peek after move while pinned open
+
+thurs

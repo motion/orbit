@@ -107,7 +107,6 @@ final class Windo {
     let bounds = window.size.value
     let id = app.bundleIdentifier ?? ""
     self.currentId = id
-    if id == orbitAppId { return }
     self.emit("{ \"action\": \"FrontmostWindowChangedEvent\", \"value\": { \"id\": \"\(id)\", \"title\": \(titleString), \"offset\": [\(offset.x),\(offset.y)], \"bounds\": [\(bounds.width),\(bounds.height)] } }")
   }
   

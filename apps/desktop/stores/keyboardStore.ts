@@ -49,7 +49,6 @@ export default class KeyboardStore {
   onKey = [
     () => [this.key, this.keyAt],
     ([keycode]) => {
-      console.log('key is', this.key)
       this.clearDownKeysAfterPause()
       if (keycode === codes.esc) {
         return Desktop.setKeyboardState({ esc: Date.now() })

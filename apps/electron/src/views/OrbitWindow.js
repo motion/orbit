@@ -2,8 +2,9 @@ import * as React from 'react'
 import * as Constants from '~/constants'
 import { view, react } from '@mcro/black'
 import { Window } from '@mcro/reactron'
-import { App, Electron, Swift } from '@mcro/all'
+import { App, Electron, Desktop, Swift } from '@mcro/all'
 import * as Mobx from 'mobx'
+import { globalShortcut } from 'electron'
 
 const log = debug('OrbitWindow')
 
@@ -21,6 +22,36 @@ class OrbitWindowStore {
       if (Electron.orbitState.fullScreen) {
         log(`clearing`)
         this.clear = Date.now()
+      }
+    },
+  ]
+
+  keyShortcuts = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    .split('')
+    .map(key => ({ key, shortcut: `Option+${key}` }))
+
+  @react
+  easyPinWithLetter = [
+    () => Desktop.isHoldingOption && App.isShowingOrbit,
+    async (down, { when }) => {
+      await when(() => !App.isAnimatingOrbit)
+      if (down) {
+        for (const { key, shortcut } of this.keyShortcuts) {
+          globalShortcut.register(shortcut, () => {
+            // PIN
+            if (!Electron.orbitState.pinned) {
+              Electron.setOrbitState({ pinned: true })
+            }
+            // TYPE THE KEY
+            Electron.sendMessage(App, `${App.messages.PIN}-${key}`)
+            // FOCUS
+            this.focusOrbit()
+            // then register shortcuts
+            this.unRegisterKeyShortcuts()
+          })
+        }
+      } else {
+        this.unRegisterKeyShortcuts()
       }
     },
   ]

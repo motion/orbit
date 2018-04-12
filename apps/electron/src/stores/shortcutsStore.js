@@ -7,6 +7,12 @@ export default class ShortcutsStore {
     this.registerShortcuts(shortcuts)
   }
 
+  unRegisterKeyShortcuts = () => {
+    for (const { shortcut } of this.keyShortcuts) {
+      globalShortcut.unregister(shortcut)
+    }
+  }
+
   registerShortcuts = shortcuts => {
     for (const shortcut of shortcuts) {
       const ret = globalShortcut.register(shortcut, () => {

@@ -12,12 +12,16 @@ export default class OrbitStore {
     () => this.query,
     throttle(query => {
       App.setQuery(query)
-    }, 150),
+    }, 100),
   ]
 
   willMount() {
     // only do reactions in one App
-    App.runReactions()
+    App.runReactions({
+      onPinKey: key => {
+        this.query = key
+      },
+    })
     this.on(this.keyboardStore, 'keydown', this.handleKeyDown)
   }
 

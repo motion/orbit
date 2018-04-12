@@ -5,6 +5,7 @@ import global from 'global'
 import { App } from './App'
 import ElectronReactions from './ElectronReactions'
 import debug from '@mcro/debug'
+import { globalState } from 'mobx/lib/core/globalstate'
 
 const log = debug('ElectronStore')
 

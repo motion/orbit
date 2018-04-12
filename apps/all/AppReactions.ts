@@ -6,13 +6,18 @@ import { App } from './App'
 
 @store
 export default class AppReactions {
-  constructor() {
+  constructor({ onPinKey }) {
     App.onMessage(msg => {
+      console.log('got a message', msg)
       switch (msg) {
         case App.messages.HIDE:
           return App.setOrbitHidden(true)
         case App.messages.SHOW:
           return App.setOrbitHidden(false)
+      }
+      if (msg.indexOf(App.messages.PIN) === 0) {
+        const key = msg.split('-')[1]
+        onPinKey(key.toLowerCase())
       }
     })
   }

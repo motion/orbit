@@ -18,6 +18,7 @@ class AppStore {
   messages = {
     SHOW: 'SHOW',
     HIDE: 'HIDE',
+    PIN: 'PIN',
   }
 
   setState: typeof Bridge.setState
@@ -118,12 +119,12 @@ class AppStore {
     this.bridge = Bridge
   }
 
-  runReactions() {
+  runReactions(options) {
     // hmr protect
     if (this.reactions) return
     // @ts-ignore
     const AppReactions = require('./AppReactions').default
-    this.reactions = new AppReactions()
+    this.reactions = new AppReactions(options)
   }
 
   togglePinned = () => {

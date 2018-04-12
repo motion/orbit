@@ -11,7 +11,7 @@ export default function orbitPosition({ left, top, width, height }) {
   let orbitH = height
   const leftSpace = left
   const rightSpace = screenW - (left + width)
-  const smallOrbit = orbitH < 950
+  const smallOrbit = orbitH < 700
   if ((rightSpace < orbitW && leftSpace < orbitW) || smallOrbit) {
     if (smallOrbit) {
       orbitH = screenH

@@ -51,7 +51,8 @@ export default class OrbitCard {
     return (
       <Overdrive parentElement={parentElement}>
         {({ AnimateElement }) => {
-          const tallHeight = 490
+          // TODO: content height should determing large height
+          const tallHeight = Math.min(450, Math.max(300, totalHeight / 2))
           const smallHeight = Math.max(
             100,
             (totalHeight - tallHeight) / Math.max(1, total - 1),
@@ -95,18 +96,22 @@ export default class OrbitCard {
                     durationOut={100}
                   />
                   <AnimateElement id={`${result.id}-title`}>
-                    <title $$row $$alignCenter>
+                    <title
+                      css={{ flexFlow: 'row', justifyContent: 'space-between' }}
+                    >
                       <Text
                         size={isSelected ? 1.35 : 1.2}
                         ellipse={isSelected ? 2 : 1}
                         fontWeight={400}
-                        css={{ marginBottom: 0, marginRight: 20 }}
+                        css={{
+                          marginBottom: 0,
+                          maxWidth: `calc(100% - 30px)`,
+                        }}
                       >
                         {result.title}
                       </Text>
-                      <space $$flex />
                       <OrbitIcon
-                        if={result.icon}
+                        if={result.icon || result.integration}
                         size={16}
                         icon={
                           result.icon

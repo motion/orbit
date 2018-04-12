@@ -47,7 +47,10 @@ const logRes = (res: any) => {
   return [PREFIX, Mobx.toJS(res)]
 }
 const getReactionName = (obj: MagicalObject) => {
-  return obj.constructor.name.replace('Store', '')
+  return obj.constructor.name
+    .replace('Store', '')
+    .padEnd(30, ' ')
+    .slice(0, 30)
 }
 
 const isObservable = (x: any) => {
@@ -356,7 +359,7 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
   })
   const delayLog =
     options && options.delay >= 0 ? ` (...${options.delay}ms)` : ''
-  const name = `${getReactionName(obj)}.${method}${delayLog}`
+  const name = `${getReactionName(obj)} ${method}${delayLog}`
   let preventLog = shouldLog === false
   let current = Mobx.observable.box(defaultValue || DEFAULT_VALUE)
   let prev

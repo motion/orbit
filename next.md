@@ -25,3 +25,10 @@ fallover:
 * use messages for current uses of state like shouldUpdate shouldHide etc
 
 wed
+
+add:
+
+* on resize window fixes
+  * resize have it transition smoothly to fullscreen
+  * back to corner
+  * dont loose peek after move while pinned open

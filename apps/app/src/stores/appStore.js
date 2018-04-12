@@ -4,6 +4,7 @@ import { Bit, Setting } from '@mcro/models'
 import * as Constants from '~/constants'
 import * as r2 from '@mcro/r2'
 import * as Helpers from '~/helpers'
+import { throttle } from 'lodash'
 
 // const log = debug('root')
 
@@ -100,6 +101,10 @@ export default class AppStore {
   selectedBit = () =>
     App.state.selectedItem && Bit.findOne({ id: App.state.selectedItem.id })
 
+  get results() {
+    return this.searchState.results || []
+  }
+
   @react({
     defaultValue: { results: [], query: '' },
     fireImmediately: true,
@@ -171,7 +176,7 @@ export default class AppStore {
     this._setSelected(i)
   }
 
-  pinSelected = (index, eventType) => {
+  pinSelected = throttle((index, eventType) => {
     // toggle if click again
     if (
       eventType === 'click' &&
@@ -188,7 +193,7 @@ export default class AppStore {
       id: index > -1 ? index : this.hoveredIndex,
       position: this.getMousePosition(),
     })
-  }
+  }, 400)
 
   setGetResults = fn => {
     this.getResults = fn

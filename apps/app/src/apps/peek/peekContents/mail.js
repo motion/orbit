@@ -72,7 +72,7 @@ export class Mail {
                       </UI.Date>
                     </rest>
                   </row>
-                  <UI.Text lineHeight={23} size={1.1}>
+                  <UI.Text if={message.snippet} lineHeight={23} size={1.1}>
                     {_.flatten(
                       message.snippet
                         .split('\n')

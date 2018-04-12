@@ -78,8 +78,7 @@ export default class AppStore {
   bitResults = [
     () => [App.state.query, Desktop.appState.id],
     async ([query]) => {
-      const { conditions, rest } = parseQuery(query)
-      if (!query || !rest) {
+      if (!query) {
         return (
           (await Bit.find({
             take: 8,
@@ -88,6 +87,7 @@ export default class AppStore {
           })) || []
         )
       }
+      const { conditions, rest } = parseQuery(query)
       return await Bit.find({
         where: `title like "%${rest.replace(/\s+/g, '%')}%"${conditions}`,
         order: { updatedAt: 'DESC' },

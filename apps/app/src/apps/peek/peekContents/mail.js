@@ -56,7 +56,7 @@ export class Mail {
                       }}
                     />
                     <rest if={message.payload} $$row $$centered>
-                      <strong>
+                      <strong if={getHeader(message, 'From')}>
                         {getHeader(message, 'From').split(' ')[0]}
                       </strong>&nbsp;
                       <UI.Date

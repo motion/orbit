@@ -1,24 +1,25 @@
 import { react } from '@mcro/black'
 import { App } from '@mcro/all'
-import KeyboardStore from './keyboardStore'
 import { throttle } from 'lodash'
 
 export default class OrbitStore {
   query = ''
-  keyboardStore = new KeyboardStore()
 
   @react
   updateAppQuery = [
     () => this.query,
     throttle(query => {
       App.setQuery(query)
-    }, 150),
+    }, 100),
   ]
 
   willMount() {
-    // only do reactions in one App
-    App.runReactions()
-    this.on(this.keyboardStore, 'keydown', this.handleKeyDown)
+    App.runReactions({
+      onPinKey: key => {
+        this.query = key
+      },
+    })
+    this.on(window, 'keydown', x => this.handleKeyDown(x.keyCode))
   }
 
   handleKeyDown = code => {

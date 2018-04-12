@@ -167,7 +167,7 @@ export default class OrbitFrame {
           orbitOnLeft={orbitOnLeft}
         />
         <orbitBorder
-          $orbitAnimate={store.shouldAnimate}
+          $orbitAnimate={App.isShowingOrbit}
           css={{
             boxShadow: [borderShadow],
             ...(!orbitDocked && {
@@ -210,8 +210,8 @@ export default class OrbitFrame {
                     opacity: 0,
                     transform: {
                       x: orbitOnLeft
-                        ? 330 * 0.25 - SHADOW_PAD - (SHADOW_PAD + iWidth) + 4
-                        : -(330 * 0.25),
+                        ? 330 * 0.15 - SHADOW_PAD - (SHADOW_PAD + iWidth) + 4
+                        : -(330 * 0.15),
                     },
                   }),
             }}

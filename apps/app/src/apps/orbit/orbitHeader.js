@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { App, Electron } from '@mcro/all'
+import { App, Desktop, Electron } from '@mcro/all'
 import * as Constants from '~/constants'
 
 class HeaderStore {
@@ -34,7 +34,7 @@ class HeaderStore {
   ]
 
   onClickInput = () => {
-    if (!Electron.orbitState.pinned) {
+    if (!Electron.orbitState.pinned && Desktop.isHoldingOption) {
       App.togglePinned()
     }
   }

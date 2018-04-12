@@ -131,25 +131,22 @@ export default class DesktopScreen {
           this.curAppID = id
           this.curAppName = nextState.name
           break
-        case 'WindowSizeChangedEvent':
-          nextState.bounds = value.size
-          break
         case 'WindowPosChangedEvent':
-          nextState.offset = value.pos
+          nextState.bounds = value.size
+          nextState.offset = value.position
       }
       // no change
       if (isEqual(nextState, lastState)) {
         return
       }
       const focusedOnOrbit = this.curAppID === ORBIT_APP_ID
+      Desktop.setFocusedOnOrbit(focusedOnOrbit)
       // @ts-ignore
       const state: Partial<DesktopState> = {
-        focusedOnOrbit,
         appState: nextState,
       }
       // when were moving into focus prevent app, store its appName, pause then return
       if (PREVENT_APP_STATE[this.curAppName]) {
-        Desktop.setFocusedOnOrbit(focusedOnOrbit)
         this.oracle.pause()
         return
       }

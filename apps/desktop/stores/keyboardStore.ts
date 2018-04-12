@@ -1,7 +1,8 @@
 import { store, react, isEqual } from '@mcro/black/store'
 import iohook from 'iohook'
-import { Desktop, Electron } from '@mcro/all'
+import { Desktop, App, Electron } from '@mcro/all'
 import debug from '@mcro/debug'
+import keyCode from 'keycode'
 
 const codes = {
   esc: 1,
@@ -61,6 +62,13 @@ export default class KeyboardStore {
         return Desktop.clearOption()
       }
       const isHoldingOption = this.keysDown.has(codes.option)
+      // holding option + press key === pin
+      if (isHoldingOption && App.isShowingOrbit) {
+        // a - z, our secret pin keys, let them go
+        if (keycode >= 14 && keycode <= 49) {
+          return
+        }
+      }
       if (holdingKeys > 2 && isHoldingShift && isHoldingOption) {
         return Desktop.setKeyboardState({
           optionUp: Date.now(),

@@ -16,7 +16,7 @@ const USER_PATH = os
 
 const ignoreFile = fileName => fileName.match(/^\./)
 
-export const fn = ({ term, actions, display }) => {
+export const fn = ({ term, display }) => {
   let path = term
   let replaceHomePath = false
   if (path.match(HOME_DIR_REGEXP)) {
@@ -41,6 +41,9 @@ export const fn = ({ term, actions, display }) => {
           if (fs.statSync(filePath).isDirectory()) {
             autocomplete += os.platform() === 'win32' ? '\\' : '/'
           }
+          if (result.length == 10) {
+            return
+          }
           result.push({
             id: filePath,
             title: file,
@@ -49,17 +52,11 @@ export const fn = ({ term, actions, display }) => {
             term: autocomplete,
             icon: filePath,
             integration: 'files',
-            // onKeyDown: event => {
-            //   if ((event.metaKey || event.ctrlKey) && event.keyCode === 82) {
-            //     actions.reveal(filePath)
-            //     event.preventDefault()
-            //   }
-            // },
-            // onSelect: () => actions.open(`file://${filePath}`),
-            // getPreview: () => <Preview path={filePath} />,
           })
         })
         display(result)
       })
+  } else {
+    display([])
   }
 }

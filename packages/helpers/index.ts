@@ -21,6 +21,7 @@ type ReactionOptions = {
   isIf?: boolean
   delayValue?: boolean
   onlyUpdateIfChanged?: boolean
+  defaultValue?: any
 }
 
 export function getReactionOptions(userOptions?: ReactionOptions) {

@@ -4,25 +4,9 @@ import { Bit, Setting } from '@mcro/models'
 import * as Constants from '~/constants'
 import * as r2 from '@mcro/r2'
 import * as Helpers from '~/helpers'
+import { throttle } from 'lodash'
 
 // const log = debug('root')
-const presetAnswers = {
-  '1.txt': [
-    {
-      title: 'Hello world',
-      body: 'this is me',
-      type: 'document',
-      integration: 'gdocs',
-    },
-    {
-      title: 'Hello 2',
-      body: 'this is me',
-      type: 'email',
-      integration: 'github',
-    },
-    { title: 'Chat', body: 'this is me', type: 'chat', integration: 'slack' },
-  ],
-}
 
 const uniq = arr => {
   const added = {}
@@ -36,13 +20,54 @@ const uniq = arr => {
   return final
 }
 
+const prefixes = {
+  gh: { integration: 'github' },
+  gd: { integration: 'google', type: 'document' },
+  gm: { integration: 'google', type: 'mail' },
+  sl: { integration: 'slack' },
+  m: { type: 'mail' },
+  d: { type: 'document' },
+  c: { type: 'conversation' },
+}
+
+const parseQuery = query => {
+  const prefix = query.split(' ')[0]
+  const q = prefixes[prefix]
+  if (q) {
+    return {
+      rest: query.replace(prefix, '').trim(),
+      conditions: Object.keys(q).reduce(
+        (query, key) => `${query} AND ${key} = "${q[key]}"`,
+        ``,
+      ),
+    }
+  }
+  return { rest: query, conditions: '' }
+}
+
 export default class AppStore {
-  refreshCycle = 0
   selectedIndex = -1
   hoveredIndex = -1
   showSettings = false
   settings = {}
   getResults = null
+
+  async willMount() {
+    this.getSettings()
+    this.setInterval(this.getSettings, 2000)
+    // this.setInterval(() => {
+    //   if (
+    //     App.isShowingOrbit &&
+    //     App.state.peekTarget &&
+    //     Electron.orbitState.mouseOver
+    //   ) {
+    //     App.setPeekTarget({
+    //       ...App.state.peekTarget,
+    //       position: this.getMousePosition(),
+    //     })
+    //   }
+    // }, 1000)
+  }
 
   get activeIndex() {
     if (App.state.peekTarget) {
@@ -62,21 +87,76 @@ export default class AppStore {
     },
   ]
 
-  @watch({ log: false })
+  @react({ fireImmediately: true, defaultValue: [], onlyUpdateIfChanged: true })
+  bitResults = [
+    () => [App.state.query, Desktop.appState.id],
+    async ([query]) => {
+      if (!query) {
+        return (
+          (await Bit.find({
+            take: 8,
+            where: { integration: 'slack' },
+            order: { updatedAt: 'DESC' },
+          })) || []
+        )
+      }
+      const { conditions, rest } = parseQuery(query)
+      return await Bit.find({
+        where: `title like "%${rest.replace(/\s+/g, '%')}%"${conditions}`,
+        order: { updatedAt: 'DESC' },
+        take: 8,
+      })
+    },
+  ]
+
+  @watch({ log: false, delay: 64 })
   selectedBit = () =>
     App.state.selectedItem && Bit.findOne({ id: App.state.selectedItem.id })
 
   get results() {
-    if (this.getResults) {
-      return Helpers.fuzzy(App.state.query, this.getResults())
+    return this.searchState.results || []
+  }
+
+  @react({
+    defaultValue: { results: [], query: '' },
+    fireImmediately: true,
+    delay: 120,
+  })
+  searchState = [
+    () => [
+      App.state.query,
+      Desktop.searchState.pluginResults || [],
+      this.bitResults || [],
+      this.getResults,
+    ],
+    ([query, pluginResults, bitResults, getResults]) => {
+      let results
+      if (getResults) {
+        results = Helpers.fuzzy(query, getResults())
+      } else {
+        const unsorted = [...bitResults, ...pluginResults]
+        const { rest } = parseQuery(query)
+        const strongTitleMatches = Helpers.fuzzy(rest, unsorted, {
+          threshold: -10,
+        })
+        results = uniq([...strongTitleMatches, ...unsorted].slice(0, 10))
+      }
+      return {
+        query,
+        results,
+      }
+    },
+  ]
+
+  getMousePosition = () => {
+    return {
+      top: Math.max(
+        Electron.orbitState.position[1] + 100,
+        Desktop.mouseState.position.y - 200,
+      ),
+      left: Electron.orbitState.position[0],
+      width: Electron.orbitState.size[0] - Constants.SHAD,
     }
-    const results = [
-      ...(this.bitResults || []),
-      ...(Desktop.searchState.pluginResults || []),
-      ...(Desktop.searchState.searchResults || []),
-    ]
-    const strongTitleMatches = Helpers.fuzzy(App.state.query, results)
-    return uniq([...strongTitleMatches, ...results].slice(0, 10))
   }
 
   clearSelected = () => {
@@ -119,14 +199,19 @@ export default class AppStore {
     this._setSelected(i)
   }
 
-  pinSelected = index => {
+  pinSelected = throttle(index => {
     if (typeof index === 'number') {
       this._setSelected(index)
+      console.log('pinning')
+      App.setPeekTarget({
+        id: index > -1 ? index : this.hoveredIndex || this.activeIndex,
+        position: this.getMousePosition(),
+      })
     }
-    App.setPeekTarget({
-      id: index > -1 ? index : this.hoveredIndex,
-      position: this.getMousePosition(),
-    })
+  }, 500)
+
+  clearPinned = () => {
+    App.setPeekTarget(null)
   }
 
   setGetResults = fn => {
@@ -143,16 +228,26 @@ export default class AppStore {
     },
   })
 
-  getMousePosition = () => {
-    return {
-      top: Math.max(
-        Electron.orbitState.position[1] + 100,
-        Desktop.mouseState.position.y - 200,
-      ),
-      left: Electron.orbitState.position[0],
-      width: Electron.orbitState.size[0] - Constants.SHADOW_PAD,
-    }
-  }
+  @react
+  hideOrbitOnEsc = [
+    () => Desktop.keyboardState.esc,
+    () => {
+      if (Constants.FORCE_FULLSCREEN) {
+        return
+      }
+      if (App.state.peekTarget) {
+        App.setPeekTarget(null)
+        return
+      }
+      if (
+        Desktop.state.focusedOnOrbit ||
+        Electron.orbitState.mouseOver ||
+        Electron.orbitState.fullScreen
+      ) {
+        App.setOrbitHidden(true)
+      }
+    },
+  ]
 
   @react.if
   hoverWordToSelectedIndex = [
@@ -160,46 +255,27 @@ export default class AppStore {
     word => this.setSelected(word.index),
   ]
 
-  @react({ delay: 64 })
+  @react
   setAppSelectedItem = [
-    () => this.results[this.selectedIndex],
+    () =>
+      this.selectedIndex >= 0
+        ? this.searchState.results[this.selectedIndex]
+        : null,
     item => {
-      if (item) {
-        const selectedItem = {
-          id: item.id || '',
-          icon: item.icon || '',
-          title: item.title || '',
-          body: item.body || '',
-          type: item.type || '',
-          integration: item.integration || '',
-        }
-        App.setSelectedItem(selectedItem)
+      if (!item) {
+        return
       }
+      const selectedItem = {
+        id: item.id || '',
+        icon: item.icon || '',
+        title: item.title || '',
+        body: item.body || '',
+        type: item.type || '',
+        integration: item.integration || '',
+      }
+      App.setSelectedItem(selectedItem)
     },
   ]
-
-  @react({ fireImmediately: true, log: false, onlyUpdateIfChanged: true })
-  bitResults = [
-    () => [App.state.query, Desktop.appState.id, this.refreshCycle],
-    async ([query, id]) => {
-      if (id === 'com.apple.TextEdit') {
-        return presetAnswers[Desktop.appState.title]
-      }
-      if (!query) {
-        return (await Bit.find({ take: 8 })) || []
-      }
-      return await Bit.find({
-        where: `title like "%${query.replace(/\s+/g, '%')}%"`,
-        take: 8,
-      })
-    },
-  ]
-
-  async willMount() {
-    this.getSettings()
-    // every few seconds, re-query bit results
-    this.setInterval(this.getSettings, 2000)
-  }
 
   getSettings = async () => {
     const settings = await Setting.find()
@@ -216,6 +292,10 @@ export default class AppStore {
 
   toggleSettings = () => {
     this.showSettings = !this.showSettings
+    // pin if not pinned
+    if (this.showSettings && !Electron.orbitState.pinned) {
+      App.sendMessage(Electron, Electron.messages.TOGGLE_PINNED)
+    }
   }
 
   checkAuths = async () => {

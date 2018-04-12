@@ -23,6 +23,8 @@ const log = debug('Electron')
     stores = null
     views = null
     peekRefs = {}
+    orbitRef = null
+    highlightRef = null
     clear = Date.now()
     show = 0
 
@@ -59,6 +61,7 @@ const log = debug('Electron')
       () => this.clear,
       async (_, { when, sleep }) => {
         this.appRef.hide()
+        this.highlightRef.hide()
         const lastState = Mobx.toJS(Desktop.appState)
         this.show = 0
         await when(() => !isEqual(Desktop.appState, lastState))
@@ -81,6 +84,18 @@ const log = debug('Electron')
         }
         if (pinned) {
           this.appRef.focus()
+        }
+      },
+    ]
+
+    // focus on fullscreen
+    @react
+    focusOnFullScreen = [
+      () => Electron.orbitState.fullScreen,
+      fs => {
+        if (fs) {
+          this.peekRef.focus()
+          this.orbitRef.focus()
         }
       },
     ]
@@ -138,8 +153,8 @@ export default class ElectronWindow extends React.Component {
         ref={electronStore.handleAppRef}
       >
         <MenuItems el />
-        <OrbitWindow />
-        <HighlightsWindow />
+        <OrbitWindow onRef={ref => (electronStore.orbitRef = ref)} />
+        <HighlightsWindow onRef={ref => (electronStore.highlightRef = ref)} />
         <PeekWindow />
         <Tray />
       </AppWindow>

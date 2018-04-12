@@ -3,6 +3,7 @@ import * as Injections from '~/helpers/injections'
 import { throttle } from 'lodash'
 import { store, react } from '@mcro/black/store'
 import { App } from '@mcro/all'
+import open from 'opn'
 
 const getAuthUrl = id => `${Constants.APP_URL}/auth?service=` + id
 
@@ -12,12 +13,9 @@ export default class Auth {
   openAuthWindow = [
     () => App.authState.openId,
     throttle(id => {
-      if (!id) {
-        return
-      }
-      console.log('opening auth for', id)
-      Injections.openAuth(getAuthUrl(id))
-    }, 2000),
+      if (!id) return
+      open(getAuthUrl(id))
+    }, 1000),
   ]
 
   @react
@@ -25,6 +23,6 @@ export default class Auth {
     () => App.authState.closeId,
     throttle(id => {
       Injections.closeChromeTabWithUrl(getAuthUrl(id))
-    }, 2000),
+    }, 1000),
   ]
 }

@@ -73,7 +73,7 @@ export default class OrbitCard {
               <cardWrap
                 css={{ height }}
                 ref={getRef}
-                onClick={() => appStore.pinSelected(index)}
+                onClick={() => appStore.pinSelected(index, 'click')}
                 {...appStore.getHoverProps({ result, id: index })}
               >
                 <card
@@ -106,6 +106,7 @@ export default class OrbitCard {
                       </Text>
                       <space $$flex />
                       <OrbitIcon
+                        if={result.icon}
                         size={16}
                         icon={
                           result.icon

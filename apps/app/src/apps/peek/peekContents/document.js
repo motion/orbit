@@ -5,16 +5,16 @@ import PeekFrame from '../peekFrame'
 
 @view
 export class Document {
-  render({ item }) {
-    if (!item) {
+  render({ bit }) {
+    if (!bit) {
       return null
     }
     return (
       <PeekFrame>
-        <PeekHeader title={item.title} />
+        <PeekHeader title={bit.title} />
         <content
           dangerouslySetInnerHTML={{
-            __html: (item.text || '').replace('\n', '<br />'),
+            __html: (bit.body || '').replace('\n', '<br />'),
           }}
         />
       </PeekFrame>

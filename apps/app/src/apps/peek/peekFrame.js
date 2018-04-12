@@ -17,6 +17,7 @@ export default class PeekFrame {
     }
     const onRight = !Electron.peekOnLeft
     const { isShowingPeek } = App
+    const borderShadow = ['inset', 0, 0, 0, 0.5, [0, 0, 0, 0.15]]
     return (
       <container $$row $$flex>
         <Space if={!onRight} />
@@ -37,10 +38,9 @@ export default class PeekFrame {
           <peek $animate={isShowingPeek} $peekVisible={isShowingPeek}>
             <main
               css={{
-                boxShadow: [
-                  APP_SHADOW,
-                  fullScreen ? null : ['inset', 0, 0, 0, 0.5, [0, 0, 0, 0.15]],
-                ].filter(Boolean),
+                boxShadow: fullScreen
+                  ? [APP_SHADOW, borderShadow]
+                  : [[0, 0, SHADOW_PAD, [0, 0, 0, 0.08]], borderShadow],
                 // make shadow go under
                 marginLeft: fullScreen ? -SHADOW_PAD : 0,
                 paddingLeft: fullScreen ? SHADOW_PAD : 0,

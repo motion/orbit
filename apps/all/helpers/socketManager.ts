@@ -49,7 +49,6 @@ export default class SocketManager {
       if (this.identities[uid] !== source) {
         continue
       }
-      console.log('sendmessage', source, message)
       socket.send(`-${message}`)
     }
   }

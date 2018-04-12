@@ -39,7 +39,7 @@ export default class Card {
           if (!isActive) {
             return
           }
-          appStore.pinSelected(index)
+          appStore.pinSelected(index, 'click')
         }}
       >
         <inner>

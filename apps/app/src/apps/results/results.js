@@ -58,10 +58,9 @@ export default class Results {
 
   render({ appStore, theme }, { resultsRef, isScrolled, isOverflowing }) {
     const { results } = appStore.searchState
-    const isSelectedInContext = appStore.activeIndex >= SPLIT_INDEX
+    // const isSelectedInContext = appStore.activeIndex >= SPLIT_INDEX
     const total = results.length - SPLIT_INDEX
-    const y = isSelectedInContext ? -(SPLIT_INDEX * 20) : 0
-    const totalHeight = document.body.clientHeight
+    // const y = isSelectedInContext ? -(SPLIT_INDEX * 20) : 0
     return (
       <resultsFrame ref={this.setResultsFrame}>
         <fadeTop $fade $$untouchable $fadeVisible={isScrolled} />
@@ -77,8 +76,7 @@ export default class Results {
                 result={result}
                 index={i + SPLIT_INDEX}
                 total={total}
-                totalHeight={totalHeight}
-                theme={theme}
+                listItem
               />
             ))}
           <lastResultSpace $$untouchable css={{ height: 12 }} />

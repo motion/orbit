@@ -1,29 +1,9 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import OrbitItem from './orbitItem'
+import OrbitCard from './orbitCard'
 import OrbitContext from './orbitContext'
 
 const SPLIT_INDEX = 3
-
-const tinyProps = {
-  hidePreview: true,
-  titleProps: {
-    ellipse: 1,
-    fontWeight: 400,
-    size: 1,
-  },
-  iconProps: {
-    size: 14,
-    style: {
-      marginTop: 1,
-      marginLeft: 15,
-    },
-  },
-  padding: [3, 8],
-  style: {
-    borderRadius: 5,
-  },
-}
 
 @view.attach('appStore')
 @view
@@ -48,22 +28,13 @@ export default class OrbitContent {
           {results
             .slice(0, hasQuery ? 12 : SPLIT_INDEX)
             .map((result, index) => (
-              <OrbitItem
-                {...!hasQuery && tinyProps}
+              <OrbitCard
+                tiny={!hasQuery}
                 key={`${index}${result.identifier || result.id}`}
-                type="gmail"
                 index={index}
-                appStore={appStore}
-                results={results}
-                result={{
-                  ...result,
-                  title: result.title,
-                }}
                 total={results.length}
-                {...appStore.getHoverProps({
-                  result,
-                  id: index,
-                })}
+                result={result}
+                listItem
               />
             ))}
         </notifications>

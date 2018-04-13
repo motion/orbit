@@ -13,6 +13,7 @@ export class SlackService {
   slack: Slack
   setting: Setting
   allChannels: Array<Object> = []
+  watchInterval: any
 
   constructor(setting) {
     this.setting = setting
@@ -21,8 +22,12 @@ export class SlackService {
     this.watchData()
   }
 
+  dispose() {
+    clearInterval(this.watchInterval)
+  }
+
   watchData() {
-    setInterval(this.updateData, 15000)
+    this.watchInterval = setInterval(this.updateData, 15000)
     this.updateData()
   }
 

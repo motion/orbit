@@ -27,7 +27,8 @@ export class SlackService {
   }
 
   watchData() {
-    this.watchInterval = setInterval(this.updateData, 15000)
+    // 15 m
+    this.watchInterval = setInterval(this.updateData, 15 * 60 * 1000)
     this.updateData()
   }
 

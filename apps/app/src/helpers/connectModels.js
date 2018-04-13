@@ -1,6 +1,8 @@
 import createClient from './websqlClient'
 import { createConnection } from 'typeorm/browser'
 
+const originalLocation = window.location
+
 export default async function connectModels(models) {
   window.createConnection = createConnection
   window.models = models
@@ -39,7 +41,7 @@ export default async function connectModels(models) {
           // setTimeout(() => {
           //   connect()
           // }, 1000)
-          window.location = window.location
+          window.location = originalLocation
         }
       })
     } catch (err) {

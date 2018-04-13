@@ -39,3 +39,7 @@ add:
   * dont loose peek after move while pinned open
 
 thurs
+
+* meeting kevin
+
+fri

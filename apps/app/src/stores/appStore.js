@@ -200,7 +200,8 @@ export default class AppStore {
   }
 
   toggleSelected = index => {
-    if (App.state.peekTarget) {
+    const isSame = this.selectedIndex === index
+    if (isSame && App.state.peekTarget) {
       App.setPeekTarget(null)
     } else {
       this.pinSelected(index)

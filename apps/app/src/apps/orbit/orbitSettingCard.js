@@ -19,22 +19,16 @@ export default class Card {
     appStore,
     oauth,
   }) {
+    const isOdd = offset % 2 == 0
     const isSelected =
       appStore.selectedIndex === index && !!App.state.peekTarget
-    const isOdd = offset % 2 == 0
     return (
       <card
         key={index}
         $first={index === 0}
         $odd={isOdd}
         $lastRow={index >= length - 2}
-        css={{
-          background: isSelected
-            ? theme.active.background
-            : [255, 255, 255, 0.05],
-          borderLeftRadius: isOdd ? 4 : 0,
-          borderRightRadius: !isOdd ? 4 : 0,
-        }}
+        $isSelected={isSelected}
         onClick={() => {
           if (!isActive) {
             return
@@ -97,6 +91,7 @@ export default class Card {
         background: [255, 255, 255, 0.15],
       },
     },
+    isSelected: {},
     inner: {
       alignItems: 'center',
       justifyContent: 'center',
@@ -123,5 +118,25 @@ export default class Card {
       filter: 'none',
       opacity: 1,
     },
+  }
+
+  static theme = ({ offset }, theme) => {
+    const isOdd = offset % 2 == 0
+    return {
+      card: {
+        borderLeftRadius: isOdd ? 4 : 0,
+        borderRightRadius: !isOdd ? 4 : 0,
+        background: 'transparent',
+        '&:hover': {
+          background: theme.hover.background,
+        },
+      },
+      isSelected: {
+        background: theme.active.background,
+        '&:hover': {
+          background: theme.activeHover.background,
+        },
+      },
+    }
   }
 }

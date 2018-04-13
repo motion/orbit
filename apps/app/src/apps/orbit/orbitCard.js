@@ -20,7 +20,7 @@ const getNaturalHeight = result => {
         ) * 80
       )
   }
-  return 200
+  return result.body ? 200 : 50
 }
 
 @view

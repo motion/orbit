@@ -3,11 +3,11 @@ function validWatch(val) {
 }
 
 function attachWatch(val, userOptions) {
-  val.IS_AUTO_RUN = userOptions || true
+  val.IS_AUTO_RUN = userOptions
   return val
 }
 
-function tsWatch(target, options?) {
+function tsWatch(options) {
   const autorungetter = () => {}
   // @ts-ignore
   autorungetter.IS_AUTO_RUN = true
@@ -29,7 +29,7 @@ export function watch(a, b, c, opts) {
     const options = { ...a, ...opts }
     return (target, method, descriptor) => {
       if (!descriptor) {
-        return tsWatch(target, options)
+        return tsWatch(options)
       }
       return doWatch(target, method, descriptor, options)
     }
@@ -53,7 +53,7 @@ watch.if = function watchIf(a, b, c) {
   return watch(a, b, c, { isIf: true })
 }
 
-function doWatch(target, method, descriptor, userOptions) {
+function doWatch(target, _, descriptor, userOptions) {
   // non-decorator
   if (validWatch(target)) {
     return attachWatch(target, userOptions)

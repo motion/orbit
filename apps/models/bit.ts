@@ -25,7 +25,7 @@ export class Bit extends T.BaseEntity {
   @T.Column('simple-json', { default: '{}' })
   data: Object
 
-  @T.ManyToMany(type => Person)
+  @T.ManyToMany(_ => Person)
   @T.JoinTable()
   people: Person[]
 }

@@ -26,10 +26,6 @@ debug.quiet('automagical')
 
 const RejectReactionSymbol = Symbol('REJECT_REACTION')
 
-if (module && module.hot) {
-  module.hot.accept('.', () => void 0) // prevent aggressive hmrs
-}
-
 const PREFIX = `=>`
 const logRes = (res: any) => {
   if (typeof res === 'undefined') {
@@ -468,6 +464,7 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
           throw new Error(`Didn't supply a function to reaction ${name}`)
         }
         // reaction
+        // @ts-ignore
         stopReaction = Mobx.reaction(val[0], watcher(val[1]), options)
       } else {
         if (typeof val !== 'function') {

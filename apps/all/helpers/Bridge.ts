@@ -6,9 +6,9 @@ import waitPort from 'wait-port'
 import * as Mobx from 'mobx'
 import stringify from 'stringify-object'
 import T_SocketManager from './socketManager'
-import debug from '@mcro/debug'
+// import debug from '@mcro/debug'
 
-const log = debug('Bridge')
+// const log = debug('Bridge')
 const root = typeof window !== 'undefined' ? window : require('global')
 
 const stringifyObject = obj =>

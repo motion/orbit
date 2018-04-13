@@ -1,10 +1,4 @@
-import {
-  computed,
-  observable,
-  IObservableValue,
-  action,
-  runInAction,
-} from 'mobx'
+import { computed, observable, action, runInAction } from 'mobx'
 
 declare var Symbol: any
 

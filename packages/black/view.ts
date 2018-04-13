@@ -10,7 +10,7 @@ import reactRenderArgs from '@mcro/decor/es6/plugins/react/reactRenderArgs'
 import addContext from '@mcro/decor/es6/plugins/react/addContext'
 import attach from '@mcro/decor/es6/plugins/react/attach'
 import storeProvidable from '@mcro/decor/es6/plugins/react/storeProvidable'
-import { storeOptions } from './store'
+import { storeOptions } from './storeDecorator'
 import { decorator } from './gloss'
 
 const uiContext = [

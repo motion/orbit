@@ -1,10 +1,12 @@
-import Slack from 'slack'
+import * as SlackStuff from 'slack'
 import { Setting } from '../setting'
 import { store, watch } from '@mcro/black/store'
 
-type SlackOpts = { oldest?: number; count: number }
+// weird...
+// @ts-ignore
+const Slack = SlackStuff.default
 
-console.log('Slack', Slack)
+type SlackOpts = { oldest?: number; count: number }
 
 @store
 export class SlackService {

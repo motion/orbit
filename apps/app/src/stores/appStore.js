@@ -92,18 +92,15 @@ export default class AppStore {
     () => [App.state.query, Desktop.appState.id],
     async ([query]) => {
       if (!query) {
-        return (
-          (await Bit.find({
-            take: 8,
-            where: { integration: 'slack' },
-            order: { updatedAt: 'DESC' },
-          })) || []
-        )
+        return await Bit.find({
+          take: 8,
+          order: { updatedAt: 'DESC' },
+        })
       }
       const { conditions, rest } = parseQuery(query)
       return await Bit.find({
         where: `title like "%${rest.replace(/\s+/g, '%')}%"${conditions}`,
-        order: { updatedAt: 'DESC' },
+        order: { updatedAt: 'DE SC' },
         take: 8,
       })
     },

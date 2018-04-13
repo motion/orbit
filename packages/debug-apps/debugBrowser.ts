@@ -179,6 +179,7 @@ export default class DebugApps {
       updateTabs.map(async (shouldUpdate, index) => {
         if (!shouldUpdate) return
         const page = pages[index]
+        if (!page) return
         page.goto(sessions[index].debugUrl)
         await page.waitForNavigation({
           timeout: 0,

@@ -39,6 +39,8 @@ export default class Slack {
           marginBottom={10}
           sizeRadius
           size={1.1}
+          borderColor="#ccc"
+          background="#fff"
           placeholder="Filter Channels..."
           onChange={e => (store.search = e.target.value)}
           value={store.search}
@@ -46,6 +48,7 @@ export default class Slack {
         <content>
           <UI.List
             scrollable
+            height="100%"
             itemsKey={store.search + store.channels && store.channels.length}
             items={store.channels}
             getItem={channel => (

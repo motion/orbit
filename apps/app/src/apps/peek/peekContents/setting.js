@@ -108,13 +108,10 @@ export class SettingView {
           }
         />
         <body>
-          <status if={store.job} />
-          <setting>
-            <SettingPane appStore={appStore} setting={setting} />
-            <pre if={false} css={{ opacity: 0.5 }}>
-              {JSON.stringify(store.setting.values.oauth || null, 0, 2)}
-            </pre>
-          </setting>
+          <SettingPane appStore={appStore} setting={setting} />
+          <pre if={false} css={{ opacity: 0.5 }}>
+            {JSON.stringify(store.setting.values.oauth || null, 0, 2)}
+          </pre>
         </body>
       </PeekFrame>
     )
@@ -123,7 +120,6 @@ export class SettingView {
   static style = {
     body: {
       padding: 20,
-      overflowY: 'scroll',
       flex: 1,
     },
   }

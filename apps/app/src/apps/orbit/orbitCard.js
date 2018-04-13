@@ -91,6 +91,7 @@ export default class OrbitCard {
             450,
             Math.max(150, getNaturalHeight(result)),
           )
+          console.log('talleigt', tallHeight)
           const smallHeight = Math.max(
             100,
             (totalHeight - tallHeight) / Math.max(1, total - 1),

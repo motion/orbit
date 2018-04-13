@@ -5,7 +5,7 @@ import Overdrive from '@mcro/overdrive'
 import OrbitIcon from './orbitIcon'
 import OrbitCardContent from './orbitCardContent'
 
-const getTitle = result => (result.integration === 'slack' ? '' : result.title)
+const getTitle = result => result.title
 
 const getNaturalHeight = result => {
   switch (result.integration) {

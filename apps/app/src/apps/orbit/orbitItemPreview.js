@@ -41,6 +41,7 @@ export default class OrbitItemPreview {
     body: {
       maxHeight: 300,
       overflow: 'hidden',
+      whiteSpace: 'pre-line',
     },
   }
 }

@@ -12,11 +12,13 @@ export class Document {
     return (
       <PeekFrame>
         <PeekHeader title={bit.title} />
-        <content
-          dangerouslySetInnerHTML={{
-            __html: (bit.body || '').replace('\n', '<br />'),
-          }}
-        />
+        <content>
+          <bodyContents
+            dangerouslySetInnerHTML={{
+              __html: (bit.body || '').replace('\n', '<br />'),
+            }}
+          />
+        </content>
       </PeekFrame>
     )
   }
@@ -26,6 +28,13 @@ export class Document {
       padding: 20,
       overflowY: 'scroll',
       flex: 1,
+    },
+    bodyContents: {
+      whiteSpace: 'pre-line',
+      width: '100%',
+      overflow: 'hidden',
+      fontSize: 16,
+      lineHeight: '1.4rem',
     },
   }
 }

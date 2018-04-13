@@ -6,21 +6,23 @@ import { SlackService } from '@mcro/models/services'
 import * as _ from 'lodash'
 import SlackChannel from './slackChannel'
 
+// TODO fix slack service interval dispose so it can be reinstantiated
+const service = new SlackService(this.props.appStore.settings.slack)
+
 @view({
   store: class SlackStore {
     search = ''
-    service = new SlackService(this.props.appStore.settings.slack)
 
     get sortedChannels() {
       return _.orderBy(
-        this.service.allChannels || [],
+        service.allChannels || [],
         ['is_private', 'num_members'],
         ['asc', 'desc'],
       )
     }
 
     get channels() {
-      this.service.setting.values
+      service.setting.values
       return fuzzy(this.search, this.sortedChannels, {
         keys: 'name',
       })

@@ -12,7 +12,7 @@ export class SlackService {
   // @ts-ignore
   slack: Slack
   setting: Setting
-  allChannels?: Array<Object>
+  allChannels: Array<Object> = []
 
   constructor(setting) {
     this.setting = setting

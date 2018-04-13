@@ -1,6 +1,21 @@
 // @flow
 import $ from 'color'
 
+const lighten = {
+  true: 'darken',
+  false: 'lighten',
+}
+const darken = {
+  true: 'lighten',
+  false: 'darken',
+}
+const str = x => `${x}`
+const adjust = (color, adjuster, opposite = false) => {
+  const isLight = color.lightness() > 50
+  const direction = isLight ? darken[str(opposite)] : lighten[str(opposite)]
+  return color[direction](adjuster(color))
+}
+
 export default class ThemeMaker {
   cache = {}
 
@@ -48,69 +63,43 @@ export default class ThemeMaker {
     borderColor,
     ...rest
   }: Object): Object => {
-    const {
-      highlightColor: hlColor,
-      highlightBackground: hlBackgorund,
-      ...styles
-    } = this.colorize({
+    const base = this.colorize({
       highlightColor,
       highlightBackground,
       background,
       color,
       borderColor,
     })
-    const lighten = {
-      true: 'darken',
-      false: 'lighten',
-    }
-    const darken = {
-      true: 'lighten',
-      false: 'darken',
-    }
-    const str = x => `${x}`
     const MIN_ADJUST = 0.1
     const smallAmt = color =>
       Math.min(0.5, Math.max(MIN_ADJUST, 2 * Math.log(20 / color.lightness()))) // goes 0 #fff to 0.3 #000
     const largeAmt = color => smallAmt(color) * 1.25
-    const adjust = (color, adjuster, opposite = false) => {
-      const isLight = color.lightness() > 50
-      const direction = isLight ? darken[str(opposite)] : lighten[str(opposite)]
-      return color[direction](adjuster(color))
-    }
     const focused = {
-      background: adjust(styles.background, largeAmt, true),
-      borderColor: adjust(styles.borderColor, largeAmt, true),
-    }
-    const highlightColorFinal = hlColor || $('#fff')
-    const highlightBgFinal = hlBackgorund || highlightColorFinal.negate()
-    const highlight = {
-      color: highlightColorFinal,
-      background: highlightBgFinal,
-      borderColor: adjust(highlightBgFinal, largeAmt, true),
+      background: adjust(base.background, largeAmt, true),
+      borderColor: adjust(base.borderColor, largeAmt, true),
     }
     return {
       ...rest,
-      base: styles,
+      base,
       hover: {
-        ...styles,
-        color: adjust(styles.color, smallAmt),
-        background: adjust(styles.background, smallAmt),
-        borderColor: adjust(styles.borderColor, smallAmt),
+        ...base,
+        color: adjust(base.color, smallAmt),
+        background: adjust(base.background, smallAmt),
+        borderColor: adjust(base.borderColor, smallAmt),
         ...rest.hover,
       },
       active: {
-        ...styles,
+        ...base,
         ...focused,
         ...rest.active,
       },
       focus: {
-        ...styles,
+        ...base,
         ...focused,
         ...rest.focus,
       },
       highlight: {
-        ...styles,
-        ...highlight,
+        ...base,
         ...rest.highlight,
       },
     }

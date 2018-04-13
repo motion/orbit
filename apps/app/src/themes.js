@@ -16,9 +16,9 @@ const blank = {
 }
 
 const tanBg = color('rgb(255,255,245)')
-const tanHoverBg = tanBg.darken(0.02).desaturate(0.5)
-const tanActiveBg = tanHoverBg.darken(0.05).desaturate(0.1)
-const tanActiveHoverBg = tanHoverBg.darken(0.06).desaturate(0.1)
+const tanHoverBg = tanBg.darken(0.02).desaturate(0.3)
+const tanActiveBg = tanHoverBg.darken(0.05).desaturate(0.3)
+const tanActiveHoverBg = tanHoverBg.darken(0.06).desaturate(0.3)
 
 const Themes = {
   light: Theme.fromStyles({

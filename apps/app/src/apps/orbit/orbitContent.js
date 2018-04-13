@@ -11,7 +11,6 @@ export default class OrbitContent {
   render({ appStore }) {
     const { query, results } = appStore.searchState
     const hasQuery = query.length > 0
-    log(`content ${query}`)
     return (
       <orbitContent>
         <space css={{ height: 10 }} />

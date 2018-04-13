@@ -111,7 +111,6 @@ export default class Card {
     },
     icon: {
       marginBottom: 10,
-      filter: 'grayscale(100%)',
       opacity: 0.5,
     },
     iconActive: {
@@ -120,16 +119,18 @@ export default class Card {
     },
   }
 
-  static theme = ({ offset }, theme) => {
+  static theme = ({ offset, isActive }, theme) => {
     const isOdd = offset % 2 == 0
     return {
       card: {
         borderLeftRadius: isOdd ? 4 : 0,
         borderRightRadius: !isOdd ? 4 : 0,
         background: 'transparent',
-        '&:hover': {
-          background: theme.hover.background,
-        },
+        '&:hover': isActive
+          ? {
+              background: theme.hover.background,
+            }
+          : {},
       },
       isSelected: {
         background: theme.active.background,

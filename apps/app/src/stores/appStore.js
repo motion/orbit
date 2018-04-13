@@ -165,8 +165,11 @@ export default class AppStore {
     }
   }
 
+  lastSelectAt = 0
+
   _setSelected = id => {
     if (App.isShowingOrbit) {
+      this.lastSelectAt = Date.now()
       this.hoveredIndex = id
       this.selectedIndex = id
     }
@@ -200,6 +203,10 @@ export default class AppStore {
   }
 
   toggleSelected = index => {
+    if (Date.now() - this.lastSelectAt < 450) {
+      // ignore double clicks
+      return
+    }
     const isSame = this.selectedIndex === index
     if (isSame && App.state.peekTarget) {
       App.setPeekTarget(null)

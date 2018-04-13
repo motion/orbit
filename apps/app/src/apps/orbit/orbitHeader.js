@@ -190,7 +190,7 @@ export default class PeekHeader {
     },
     headerBg: background => ({
       background: `linear-gradient(${background
-        .darken(0.09)
+        .darken(0.06)
         .desaturate(0.5)}, transparent)`,
     }),
     inputLn: {

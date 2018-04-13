@@ -48,8 +48,7 @@ const log = debug('Electron')
         }
       })
       Electron.onClear = () => {
-        log(`clear from fs toggle`)
-        Electron.sendMessage(App, App.messages.HIDE)
+        log(`Electron.onClear`)
         this.clear = Date.now()
       }
       // clear to start
@@ -68,6 +67,7 @@ const log = debug('Electron')
         })
         const lastState = getState()
         this.show = 0
+        Electron.sendMessage(App, App.messages.HIDE)
         await when(() => !App.isShowingOrbit) // ensure hidden
         await when(() => !isEqual(getState(), lastState)) // ensure moved
         this.show = 1 // now render with 0 opacity so chrome updates visuals

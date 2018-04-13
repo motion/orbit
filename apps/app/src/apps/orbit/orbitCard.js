@@ -10,15 +10,10 @@ const getTitle = result => result.title
 const getNaturalHeight = result => {
   switch (result.integration) {
     case 'slack':
-      return (
-        Math.min(
-          3,
-          (result.data &&
-            result.data.messages &&
-            result.data.messages.length) ||
-            0,
-        ) * 80
-      )
+      const numMessages =
+        (result.data && result.data.messages && result.data.messages.length) ||
+        0
+      return Math.min(3, numMessages) * 80
   }
   return result.body ? 200 : 50
 }
@@ -115,7 +110,7 @@ export default class OrbitCard {
                 <card
                   $cardHovered={this.hovered && willTransition}
                   css={{
-                    padding: tiny ? 8 : 12,
+                    padding: tiny ? [6, 8] : 12,
                     borderRadius,
                   }}
                   onMouseEnter={this.setHovered}

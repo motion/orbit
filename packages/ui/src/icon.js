@@ -134,7 +134,7 @@ export default class Icon extends React.PureComponent<Props> {
       hover,
       background,
     },
-    theme
+    theme,
   ) => {
     return {
       icon: {
@@ -143,7 +143,7 @@ export default class Icon extends React.PureComponent<Props> {
         opacity,
         alignSelf,
         background,
-        color: (theme && theme.color) || color,
+        color: color || (theme && theme.color) || '#000',
         width: (width || size) + widthPadding(padding),
         height: (height || size) + heightPadding(padding),
         fontSize: size,

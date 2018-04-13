@@ -37,9 +37,6 @@ class AppRoot {
 
   async start() {
     await App.start()
-    if (Constants.IS_PEEK) {
-      await sleep(1000)
-    }
     await connectModels(modelsList)
     if (Constants.IS_ORBIT) {
       App.setOrbitConnected(true)

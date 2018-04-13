@@ -67,9 +67,10 @@ export class SettingView {
             </div>
           }
           after={
-            <UI.Row $$flex>
+            <UI.Row $$flex css={{ opacity: 0.2 }}>
               <UI.Button
                 icon="refresh"
+                tooltip="Refresh"
                 onClick={async () => {
                   const job = new Job()
                   job.type = store.selectedItem.integration
@@ -81,15 +82,21 @@ export class SettingView {
                   appStore.getSettings()
                 }}
               />
-              <UI.Button
-                icon="remove"
-                onClick={async () => {
-                  store.setting.values = {}
-                  store.setting.token = ''
-                  await store.setting.save()
-                  store.update()
-                }}
-              />
+              <UI.Popover
+                target={
+                  <UI.Button
+                    icon="gear"
+                    onClick={async () => {
+                      store.setting.values = {}
+                      store.setting.token = ''
+                      await store.setting.save()
+                      store.update()
+                    }}
+                  />
+                }
+              >
+                <UI.List background />
+              </UI.Popover>
             </UI.Row>
           }
         />
@@ -111,7 +118,7 @@ export class SettingView {
                 throttleSaveSetting()
               }}
             />
-            <pre>
+            <pre css={{ opacity: 0.1 }}>
               {JSON.stringify(store.setting.values.oauth || null, 0, 2)}
             </pre>
           </setting>

@@ -65,6 +65,16 @@ export default class AppReactions {
     },
   ]
 
+  @react
+  clearPinnedOnReposition = [
+    () => Electron.orbitState.position,
+    () => {
+      if (App.state.peekTarget) {
+        App.setPeekTarget(null)
+      }
+    },
+  ]
+
   @react({ log: false })
   showOnMouseOverOrbitBar = [
     () => [Desktop.mouseState.position, Electron.orbitState],

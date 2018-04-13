@@ -235,7 +235,7 @@ export default class AppStore {
       if (Constants.FORCE_FULLSCREEN) {
         return
       }
-      if (App.state.peekTarget) {
+      if (App.state.peekTarget && Electron.isMouseInActiveArea) {
         App.setPeekTarget(null)
         return
       }

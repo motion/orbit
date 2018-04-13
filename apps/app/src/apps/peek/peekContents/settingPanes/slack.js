@@ -33,8 +33,8 @@ export default class Slack {
       <slack>
         <UI.Input
           marginBottom={10}
-          borderWidth={2}
-          borderColor="black"
+          borderWidth={1}
+          sizeRadius
           size={1.2}
           placeholder="Filter Channels..."
           onChange={e => (store.search = e.target.value)}

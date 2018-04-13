@@ -1,10 +1,6 @@
-import * as SlackStuff from 'slack'
+import * as Slack from 'slack'
 import { Setting } from '../setting'
 import { store, watch } from '@mcro/black/store'
-
-// weird...
-// @ts-ignore
-const Slack = SlackStuff.default
 
 type SlackOpts = { oldest?: number; count: number }
 
@@ -20,6 +16,7 @@ export class SlackService {
 
   constructor(setting) {
     this.setting = setting
+    console.log('Slack', Slack)
     // @ts-ignore
     this.slack = new Slack({ token: setting.token })
   }

@@ -148,11 +148,11 @@ async function onData(options, spark, data, uid) {
     case 'backgroundExecuteSqlBatch':
       db = databasePathList[data.args[0].dbargs.dbname]
       if (!db) {
-        console.log(
-          'err, no db found',
-          databasePathList,
-          data.args[0].dbargs.dbname,
-        )
+        // console.log(
+        //   'err, no db found',
+        //   databasePathList,
+        //   data.args[0].dbargs.dbname,
+        // )
         spark.write({
           command: 'backgroundExecuteSqlBatchFailed',
           err: `runFailed: db not found`,

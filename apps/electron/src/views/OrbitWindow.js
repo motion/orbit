@@ -37,7 +37,7 @@ class OrbitWindowStore {
       await when(() => !App.isAnimatingOrbit)
       if (down) {
         for (const { key, shortcut } of this.keyShortcuts) {
-          globalShortcut.register(shortcut, () => {
+          globalShortcut.register(shortcut, async () => {
             // PIN
             if (!Electron.orbitState.pinned) {
               Electron.setOrbitState({ pinned: true })
@@ -47,6 +47,7 @@ class OrbitWindowStore {
             // FOCUS
             this.focusOrbit()
             // then register shortcuts
+            await when(() => !Desktop.isHoldingOption)
             this.unRegisterKeyShortcuts()
           })
         }

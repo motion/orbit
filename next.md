@@ -41,6 +41,7 @@ add:
 thurs
 
 * meeting kevin
+* option+key to pin
 
 add:
 

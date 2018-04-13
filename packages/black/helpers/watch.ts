@@ -38,6 +38,7 @@ export function watch(a, b, c, opts) {
     if (!c) {
       return tsWatch(a)
     }
+    console.log(a, b, c, opts)
     return doWatch(a, b, c, opts)
   }
 }
@@ -59,7 +60,6 @@ function doWatch(target, _, descriptor, userOptions) {
     return attachWatch(target, userOptions)
   }
   // decorator
-  // console.log('descriptor', target, method, descriptor)
   if (descriptor.initializer) {
     const ogInit = descriptor.initializer
     return {

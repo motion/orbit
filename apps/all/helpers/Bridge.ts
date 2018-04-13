@@ -37,6 +37,7 @@ type Options = {
 class Bridge {
   store: any
   socketManager: T_SocketManager
+  _awaitingSocket = []
   _store = null
   _options: Options
   _queuedState = false
@@ -171,6 +172,10 @@ class Bridge {
     }
     this._socket.onopen = () => {
       this._wsOpen = true
+      if (this._awaitingSocket.length) {
+        this._awaitingSocket.map(x => x())
+        this._awaitingSocket = []
+      }
       // send state that hasnt been synced yet
       if (this._queuedState) {
         this._socket.send(
@@ -202,13 +207,22 @@ class Bridge {
     }
   }
 
-  sendMessage = (Store: any, message: string) => {
+  onOpenSocket = () => {
+    return new Promise(res => {
+      this._awaitingSocket.push(res)
+    })
+  }
+
+  sendMessage = async (Store: any, message: string) => {
     if (!Store || !message) {
       throw `no store || message`
     }
     if (this._options.master) {
       this.socketManager.sendMessage(Store.source, message)
     } else {
+      if (!this._wsOpen) {
+        await this.onOpenSocket()
+      }
       this._socket.send(JSON.stringify({ message, to: Store.source })
     }
   }

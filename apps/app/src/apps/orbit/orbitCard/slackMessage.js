@@ -5,6 +5,9 @@ import { view } from '@mcro/black'
 @view
 export default class SlackMessage {
   render({ bit, message }) {
+    if (!message.text) {
+      return null
+    }
     if (message.text.indexOf('uploaded a file') >= 0) {
       const src = message.text.match(/\<([a-z]+:\/\/[^>]+)\>/g).map(link =>
         link

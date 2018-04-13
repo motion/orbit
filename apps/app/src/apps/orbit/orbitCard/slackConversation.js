@@ -2,7 +2,7 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import OrbitCardSlackMessage from './slackMessage'
 
-const isntAttachment = x => !x.text.match(/\<([a-z]+:\/\/[^>]+)\>/g)
+const isntAttachment = x => !x.text || !x.text.match(/\<([a-z]+:\/\/[^>]+)\>/g)
 
 @view
 export default class SlackConversation {

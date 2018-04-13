@@ -4,7 +4,7 @@ import { App } from '@mcro/all'
 import { Bit, Job } from '@mcro/models'
 import PeekHeader from '../peekHeader'
 import PeekFrame from '../peekFrame'
-import { capitalize, throttle } from 'lodash'
+import { capitalize } from 'lodash'
 import * as UI from '@mcro/ui'
 import * as SettingPanes from './settingPanes'
 
@@ -48,15 +48,18 @@ export class SettingView {
       return null
     }
     store.settingVersion
-    const { setting } = store
-    const { syncSettings = { max: 50 } } = setting.values
-    const throttleSaveSetting = throttle(() => setting.save(), 500)
+    const { setting, selectedItem } = store
+    const { integration, type } = selectedItem
+    // tries googleMail
+    // falls back to google
     const SettingPane =
-      SettingPanes[store.selectedItem.integration] || EmptyPane
+      SettingPanes[`${integration}${capitalize(type)}`] ||
+      SettingPanes[integration] ||
+      EmptyPane
     return (
       <PeekFrame>
         <PeekHeader
-          title={capitalize(store.selectedItem.integration)}
+          title={capitalize(integration)}
           subtitle={
             <div $$row if={store.job}>
               {store.bitsCount} total{' '}
@@ -73,7 +76,7 @@ export class SettingView {
                 tooltip="Refresh"
                 onClick={async () => {
                   const job = new Job()
-                  job.type = store.selectedItem.integration
+                  job.type = integration
                   job.action = 'mail'
                   job.status = Job.statuses.PENDING
                   await job.save()
@@ -103,22 +106,8 @@ export class SettingView {
         <body>
           <status if={store.job} />
           <setting>
-            <SettingPane appStore={appStore} />
-            setting:
-            <UI.Field
-              row
-              label="Max"
-              value={syncSettings.max}
-              onChange={e => {
-                setting.values.syncSettings = {
-                  ...syncSettings,
-                  max: e.target.value,
-                }
-                store.settingVersion += 1
-                throttleSaveSetting()
-              }}
-            />
-            <pre css={{ opacity: 0.1 }}>
+            <SettingPane appStore={appStore} setting={setting} />
+            <pre if={false} css={{ opacity: 0.5 }}>
               {JSON.stringify(store.setting.values.oauth || null, 0, 2)}
             </pre>
           </setting>

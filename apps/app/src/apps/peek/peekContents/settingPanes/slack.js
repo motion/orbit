@@ -26,7 +26,7 @@ import SlackChannel from './slackChannel'
     get channels() {
       this.service.setting.values
       return fuzzy(this.search, this.sortedChannels, {
-        keys: 'name',
+        key: 'name',
       })
     }
   },

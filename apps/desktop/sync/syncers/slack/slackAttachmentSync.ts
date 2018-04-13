@@ -12,9 +12,9 @@ export default class SlackAttachmentSync {
   setting: Setting
   service: SlackService
 
-  constructor(setting) {
+  constructor(setting, service: SlackService) {
     this.setting = setting
-    this.service = new SlackService(setting)
+    this.service = service
   }
 
   get lastSync() {

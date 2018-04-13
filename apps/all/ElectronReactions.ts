@@ -50,6 +50,8 @@ export default class ElectronReactions {
         return
       }
       await sleep(100) // sleep because dont want to trigger this accidentaly
+      console.log('send clear before fs or un-fs for quick hide test')
+      Electron.onClear()
       this.toggleFullScreen()
     },
   ]
@@ -152,11 +154,10 @@ export default class ElectronReactions {
       Desktop.linesBoundingBox,
       this.repositionToAppState,
     ],
-    ([appBB, linesBB], { sleep }) => {
+    ([appBB, linesBB]) => {
       if (Constants.FORCE_FULLSCREEN) {
         return
       }
-      // await sleep(64)
       // prefer using lines bounding box, fall back to app
       const box = linesBB || appBB
       if (!box) return
@@ -184,6 +185,7 @@ export default class ElectronReactions {
       if (Electron.onClear) {
         Electron.onClear()
       }
+      console.log('SHOULD REPOSITION AFTER FS')
       this.repositionToAppState = Date.now()
       return
     }

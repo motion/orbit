@@ -47,6 +47,9 @@ export default class Syncer {
         this[name] = this.syncers[name]
       }
     }
+    if (!this.syncers[action]) {
+      throw `No syncer ${this.type} ${action}`
+    }
     log(`run() ${this.type} ${action}`)
     await this.syncers[action].run()
   }

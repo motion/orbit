@@ -11,7 +11,6 @@ import ShortcutsStore from '~/stores/shortcutsStore'
 import global from 'global'
 import { memoize } from 'lodash'
 import debug from '@mcro/debug'
-import * as Mobx from 'mobx'
 import { isEqual } from '@mcro/black'
 
 const log = debug('Electron')

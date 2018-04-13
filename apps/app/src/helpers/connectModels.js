@@ -1,8 +1,17 @@
-import webSqlClient from './websqlClient'
+import createClient from './websqlClient'
 import { createConnection } from 'typeorm/browser'
 
 export default async function connectModels(models) {
+  window.createConnection = createConnection
+  window.models = models
+
   const connect = async () => {
+    console.log('connecting models...')
+    // reset this on each connect
+    const WebSqlClient = createClient()
+    window.sqlitePlugin = WebSqlClient.sqlitePlugin
+
+    let started = true
     try {
       const connection = await createConnection({
         type: 'cordova',
@@ -16,13 +25,21 @@ export default async function connectModels(models) {
       for (const model of models) {
         model.useConnection(connection)
       }
-      webSqlClient.onError(async err => {
+      WebSqlClient.onError(async err => {
+        if (!started) {
+          return
+        }
         console.error('SQL Error', err)
         if (err.message && err.message.indexOf('db not found')) {
-          console.log('Reconnecting...')
+          console.log('Reconnecting models...')
+          started = false
+          // error is here: typeorm wont close...
+          // connection.close()
+          // // reconnect
+          // setTimeout(() => {
+          //   connect()
+          // }, 1000)
           window.location = window.location
-          // await connection.close()
-          // connect()
         }
       })
     } catch (err) {

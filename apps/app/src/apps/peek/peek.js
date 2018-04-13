@@ -10,19 +10,11 @@ import { capitalize } from 'lodash'
 export default class PeekPage {
   render({ appStore }) {
     const { selectedItem } = App.state
-    if (!selectedItem) {
-      return null
-    }
     const type = (selectedItem && capitalize(selectedItem.type)) || 'Empty'
     const PeekContentsView = PeekContents[type] || PeekContents['Empty']
-    log(`peek type ${type}`)
     if (!PeekContentsView) {
       console.error('none', type)
       return <peek>no pane found</peek>
-    }
-    const { fullScreen } = Electron.orbitState
-    if (!selectedItem && !fullScreen) {
-      return null
     }
     return (
       <UI.Theme name="tan">

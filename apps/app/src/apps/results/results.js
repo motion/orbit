@@ -2,15 +2,9 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import OrbitCard from '~/apps/orbit/orbitCard'
 import { throttle } from 'lodash'
-import * as UI from '@mcro/ui'
-// import AppStore from '~/stores/appStore'
 
 const SPLIT_INDEX = 3
 
-// @view.provide({
-//   appStore: AppStore,
-// })
-@UI.injectTheme
 @view.attach('appStore')
 @view
 export default class Results {
@@ -35,7 +29,6 @@ export default class Results {
     let { isScrolled, resultsRef } = this.state
     const { frameRef } = this
     if (!frameRef) return
-    log(`scroll ${frameRef.scrollTop}`)
     if (frameRef.scrollTop > 0) {
       isScrolled = true
     } else {
@@ -46,24 +39,14 @@ export default class Results {
     }
     const scrolledDistance = resultsRef.clientHeight + resultsRef.scrollTop
     const isOverflowing = frameRef.clientHeight <= scrolledDistance
-    log(
-      `set overflow ${isOverflowing} ${scrolledDistance} ${
-        frameRef.clientHeight
-      }`,
-    )
     if (isOverflowing != this.state.isOverflowing) {
       this.setState({ isOverflowing })
     }
   }, 16)
 
-  render(
-    { appStore, theme, isContext },
-    { resultsRef, isScrolled, isOverflowing },
-  ) {
+  render({ appStore, isContext }, { resultsRef, isScrolled, isOverflowing }) {
     const { results } = appStore.searchState
-    // const isSelectedInContext = appStore.activeIndex >= SPLIT_INDEX
     const total = results.length - SPLIT_INDEX
-    // const y = isSelectedInContext ? -(SPLIT_INDEX * 20) : 0
     return (
       <resultsFrame ref={this.setResultsFrame}>
         <fadeTop $fade $$untouchable $fadeVisible={isScrolled} />

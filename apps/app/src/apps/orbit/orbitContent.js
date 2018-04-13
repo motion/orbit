@@ -30,7 +30,7 @@ export default class OrbitContent {
             .map((result, index) => (
               <OrbitCard
                 tiny={!hasQuery}
-                key={`${index}${result.identifier || result.id}`}
+                key={`${index}${result.identifier || result.id}${hasQuery}`}
                 index={index}
                 total={results.length}
                 result={result}

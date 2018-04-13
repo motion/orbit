@@ -51,6 +51,7 @@ class OrbitWindowStore {
           })
         }
       } else {
+        await when(() => !Desktop.isHoldingOption)
         this.unRegisterKeyShortcuts()
       }
     },

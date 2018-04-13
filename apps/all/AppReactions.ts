@@ -1,5 +1,5 @@
 import { store, react } from '@mcro/black/store'
-import * as Constants from '@mcro/constants'
+// import * as Constants from '@mcro/constants'
 import { Desktop } from './Desktop'
 import { Electron } from './Electron'
 import { App } from './App'
@@ -28,12 +28,6 @@ export default class AppReactions {
 
   @react
   showHideApp = [() => App.state.openResult, () => App.setOrbitHidden(true)]
-
-  // @react
-  // clearPeekTargetOnMouseLeave = [
-  //   () => !Electron.isMouseInActiveArea,
-  //   outside => outside && App.setPeekTarget(null),
-  // ]
 
   @react
   clearPeekTargetOnOrbitClose = [

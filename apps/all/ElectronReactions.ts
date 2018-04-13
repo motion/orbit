@@ -124,6 +124,7 @@ export default class ElectronReactions {
   handleHoldingOption = [
     () => Desktop.isHoldingOption,
     async (isHoldingOption, { sleep }) => {
+      console.log('HOLD OPTION?', Desktop.isHoldingOption)
       if (Electron.orbitState.pinned) {
         return
       }

@@ -79,6 +79,7 @@ export default class OrbitCard {
     listItem,
     borderRadius: borderRadius_,
   }) {
+    const maxHeight = totalHeight ? totalHeight : 400
     const borderRadius = listItem && tiny ? 4 : listItem ? 0 : borderRadius_
     store.isSelected
     return (
@@ -91,19 +92,23 @@ export default class OrbitCard {
             450,
             Math.max(150, getNaturalHeight(result)),
           )
-          console.log('talleigt', tallHeight)
           const smallHeight = Math.max(
             100,
-            (totalHeight - tallHeight) / Math.max(1, total - 1),
+            (maxHeight - tallHeight) / Math.max(1, total - 1),
           )
-          const height = isExpanded ? tallHeight : smallHeight
+          const height = tiny ? 'auto' : isExpanded ? tallHeight : smallHeight
+          console.log('height', index, height, smallHeight)
           // const shouldResizeText = wasSelected !== isSelected
           const willTransition = false
           const title = getTitle(result)
           return (
             <AnimateElement id={`${result.id}`}>
               <cardWrap
-                css={{ height, padding: listItem ? 0 : [0, 5, 3] }}
+                css={{
+                  maxHeight: height,
+                  height,
+                  padding: listItem ? 0 : [0, 5, 3],
+                }}
                 ref={getRef}
                 onClick={() => appStore.toggleSelected(index)}
                 {...appStore.getHoverProps({ result, id: index })}

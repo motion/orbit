@@ -18,9 +18,8 @@ export default class OrbitStore {
   willMount() {
     App.runReactions({
       onPinKey: key => {
-        console.log('onpinkey', key)
         const { lastPinKey } = this
-        if (!lastPinKey || lastPinKey == this.query[this.query.length - 1]) {
+        if (!lastPinKey || lastPinKey != this.query[this.query.length - 1]) {
           this.query = key
         } else {
           this.query += key

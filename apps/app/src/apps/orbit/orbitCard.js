@@ -13,7 +13,10 @@ const getNaturalHeight = result => {
       return (
         Math.min(
           3,
-          result.data && result.data.messages && result.data.messages.length,
+          (result.data &&
+            result.data.messages &&
+            result.data.messages.length) ||
+            0,
         ) * 80
       )
   }

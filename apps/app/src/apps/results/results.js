@@ -56,7 +56,10 @@ export default class Results {
     }
   }, 16)
 
-  render({ appStore, theme }, { resultsRef, isScrolled, isOverflowing }) {
+  render(
+    { appStore, theme, isContext },
+    { resultsRef, isScrolled, isOverflowing },
+  ) {
     const { results } = appStore.searchState
     // const isSelectedInContext = appStore.activeIndex >= SPLIT_INDEX
     const total = results.length - SPLIT_INDEX
@@ -76,7 +79,7 @@ export default class Results {
                 result={result}
                 index={i + SPLIT_INDEX}
                 total={total}
-                listItem
+                listItem={!isContext}
               />
             ))}
           <lastResultSpace $$untouchable css={{ height: 12 }} />

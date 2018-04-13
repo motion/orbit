@@ -57,7 +57,7 @@ export default class OrbitContext {
           if={!appStore.searchState.query}
           css={{ paddingBottom: 0, zIndex: 1000, position: 'relative' }}
         />
-        <Results />
+        <Results isContext />
         {/* <webview
           if={false}
           $results

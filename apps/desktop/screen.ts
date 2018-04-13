@@ -112,7 +112,7 @@ export default class DesktopScreen {
         this.rescanApp()
         return
       }
-      log(`got event ${event} ${JSON.stringify(value)}`)
+      console.log(`got event ${event} ${JSON.stringify(value)}`)
       const lastState = Mobx.toJS(Desktop.appState)
       let nextState: Partial<AppState> = {}
       let id = this.curAppID

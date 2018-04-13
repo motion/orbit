@@ -19,7 +19,6 @@ export class SlackService {
 
   constructor(setting) {
     this.setting = setting
-    console.log('Slack', Slack)
     // @ts-ignore
     this.slack = new Slack({ token: setting.token })
   }

@@ -47,10 +47,10 @@ final class Windo {
 //        self.emit("{ \"action\": \"WindowCreatedEvent\", \"value\": \"\(window.title.value)\" }")
 //      }
       self.swindler.on { (event: WindowPosChangedEvent) in
-        self.updatePosition(event.window)
+        self.updatePosition(event.window, size: nil, position: [Int(event.newValue.x), Int(event.newValue.y)])
       }
       self.swindler.on { (event: WindowSizeChangedEvent) in
-        self.updatePosition(event.window)
+        self.updatePosition(event.window, size: [Int(event.newValue.width), Int(event.newValue.height)], position: nil)
       }
 //      self.swindler.on { (event: WindowDestroyedEvent) in
 //        let window = event.window
@@ -72,14 +72,14 @@ final class Windo {
     }
   }
   
-  private func updatePosition(_ window: Window) {
-    let app = window.application
-    let bundleId = app.bundleIdentifier ?? ""
+  private func updatePosition(_ window: Window, size: [Int]?, position: [Int]?) {
+    let movingApp = window.application
+    let bundleId = movingApp.bundleIdentifier ?? ""
     if bundleId == orbitAppId { return }
     if bundleId != self.currentId { return }
-    let position = window.position.value
-    let size = window.size.value
-    self.emit("{ \"action\": \"WindowPosChangedEvent\", \"value\": { \"id\": \"\(bundleId)\", \"size\": [\(size.width), \(size.height)], \"position\": [\(position.x), \(position.y)] } }")
+    let position = position ?? [Int(window.position.value.x), Int(window.position.value.y)]
+    let size = size ?? [Int(window.size.value.width), Int(window.size.value.height)]
+    self.emit("{ \"action\": \"WindowPosChangedEvent\", \"value\": { \"id\": \"\(bundleId)\", \"size\": [\(size[0]), \(size[1])], \"position\": [\(position[0]), \(position[1])] } }")
   }
   
   // sends focus to last app besides our app

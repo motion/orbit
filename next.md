@@ -42,4 +42,8 @@ thurs
 
 * meeting kevin
 
+add:
+
+* Primus error catching
+
 fri

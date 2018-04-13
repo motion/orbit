@@ -74,13 +74,13 @@ export default class OrbitCard {
                   onMouseLeave={this.setUnhovered}
                 >
                   <UI.HoverGlow
-                    if={false}
-                    opacity={0.5}
+                    if={isSelected}
+                    opacity={0.8}
                     full
                     resist={50}
                     scale={1}
                     blur={45}
-                    color={theme.base.background.lighten(0.05)}
+                    color={'#fff'}
                     borderRadius={10}
                     behind
                     durationIn={500}
@@ -99,7 +99,7 @@ export default class OrbitCard {
                           maxWidth: `calc(100% - 30px)`,
                         }}
                       >
-                        {result.title}
+                        {result.integration === 'slack' ? '' : result.title}
                       </Text>
                       <OrbitIcon
                         if={result.icon || result.integration}

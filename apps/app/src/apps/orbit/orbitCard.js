@@ -5,6 +5,14 @@ import Overdrive from '@mcro/overdrive'
 import OrbitIcon from './orbitIcon'
 import OrbitCardContent from './orbitCardContent'
 
+const getNaturalHeight = result => {
+  switch (result.integration) {
+    case 'slack':
+      return Math.min(3, result.data.messages.length) * 80
+  }
+  return 200
+}
+
 @view
 class Text {
   render(props) {
@@ -52,7 +60,10 @@ export default class OrbitCard {
       <Overdrive parentElement={parentElement}>
         {({ AnimateElement }) => {
           // TODO: content height should determing large height
-          const tallHeight = Math.min(450, Math.max(300, totalHeight / 2))
+          const tallHeight = Math.min(
+            450,
+            Math.max(150, getNaturalHeight(result)),
+          )
           const smallHeight = Math.max(
             100,
             (totalHeight - tallHeight) / Math.max(1, total - 1),

@@ -45,7 +45,11 @@ export default class ElectronReactions {
   fullScreenOnOptionShift = [
     () => Desktop.isHoldingOptionShift,
     async (x, { sleep }) => {
-      // await sleep(250)
+      if (!x) {
+        // if not mouse over active area, toggleFullScreen
+        return
+      }
+      await sleep(100) // sleep because dont want to trigger this accidentaly
       this.toggleFullScreen()
     },
   ]

@@ -5,6 +5,8 @@ import Overdrive from '@mcro/overdrive'
 import OrbitIcon from './orbitIcon'
 import OrbitCardContent from './orbitCardContent'
 
+const getTitle = result => (result.integration === 'slack' ? '' : result.title)
+
 const getNaturalHeight = result => {
   switch (result.integration) {
     case 'slack':
@@ -71,6 +73,7 @@ export default class OrbitCard {
           const height = isSelected ? tallHeight : smallHeight
           // const shouldResizeText = wasSelected !== isSelected
           const willTransition = false
+          const title = getTitle(result)
           return (
             <AnimateElement id={`${result.id}`}>
               <cardWrap
@@ -110,7 +113,7 @@ export default class OrbitCard {
                           maxWidth: `calc(100% - 30px)`,
                         }}
                       >
-                        {result.integration === 'slack' ? '' : result.title}
+                        {title}
                       </Text>
                       <OrbitIcon
                         if={result.icon || result.integration}

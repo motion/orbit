@@ -13,6 +13,14 @@ type SlackMessage = {
   ts: string
 }
 
+type ChannelInfo = {
+  name: string
+  name_normalized: string
+  purpose: { value: string }
+  topic: { value: string }
+  members: Array<string>
+}
+
 export default class SlackMessagesSync {
   setting: Setting
   service: SlackService
@@ -41,7 +49,13 @@ export default class SlackMessagesSync {
       return
     }
     for (const channel of Object.keys(this.service.activeChannels)) {
-      // const info = await this.service.slack.channels.info({ channel })
+      const channelInfo = await this.service.slack.channels
+        .info({ channel })
+        .then(res => res && res.ok && res.channel)
+      if (!channelInfo) {
+        console.log('no channel info')
+        continue
+      }
       const messages: Array<SlackMessage> = await this.service.channelHistory({
         channel,
         oldest: this.lastSync[channel],
@@ -63,12 +77,12 @@ export default class SlackMessagesSync {
             continue
           }
           if (group.length) {
-            created.push(await this.updateConversation(channel, group))
+            created.push(await this.updateConversation(channelInfo, group))
             group = []
           }
         }
         if (group.length) {
-          created.push(await this.updateConversation(channel, group))
+          created.push(await this.updateConversation(channelInfo, group))
         }
         if (messages.length) {
           _.merge(this.setting.values, {
@@ -87,21 +101,27 @@ export default class SlackMessagesSync {
   }
 
   updateConversation = async (
-    channel: string,
+    channelInfo: ChannelInfo,
     messages: Array<SlackMessage>,
   ) => {
+    const data = {
+      channel: {
+        purpose: channelInfo.purpose.value,
+        topic: channelInfo.topic.value,
+        members: channelInfo.members,
+      },
+      messages,
+    }
     return await createOrUpdate(
       Bit,
       {
-        title: `Conversation in ${channel}`,
+        title: `#${channelInfo.name}`,
         body: messages
           .map(message => message.text)
           .join(' ... ')
           .slice(0, 255),
-        identifier: Helpers.hash(messages.map(x => JSON.stringify(x)).join('')),
-        data: {
-          messages,
-        },
+        identifier: Helpers.hash(data),
+        data,
         bitCreatedAt: _.last(messages).ts,
         bitUpdatedAt: _.first(messages).ts,
         type: 'conversation',

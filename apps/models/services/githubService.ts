@@ -1,5 +1,5 @@
 import { Setting } from '../setting'
-import { store, watch, react } from '@mcro/black/store'
+import { store, watch } from '@mcro/black/store'
 import Octokat from 'octokat'
 
 @store

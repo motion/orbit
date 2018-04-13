@@ -30,52 +30,46 @@ const SCREEN_PAD = 15
 
 @store
 export default class ElectronReactions {
-  screenSize = screenSize
-  goingToReposition = null
+  repositionToAppState = null
 
   constructor() {
     Electron.onMessage(msg => {
       switch (msg) {
         case Electron.messages.TOGGLE_PINNED:
-          Electron.togglePinned()
+          this.togglePinned()
       }
     })
-  }
-
-  willReposition = () => {
-    Electron.setState({ willReposition: Date.now() })
-    // this.goingToReposition = Date.now()
   }
 
   @react
   fullScreenOnOptionShift = [
     () => Desktop.isHoldingOptionShift,
     async (x, { sleep }) => {
-      if (x) {
-        await sleep(250)
-        Electron.toggleFullScreen()
-      } else {
-        //
+      if (!x) {
+        // if not mouse over active area, toggleFullScreen
+        return
       }
+      await sleep(100) // sleep because dont want to trigger this accidentaly
+      this.toggleFullScreen()
     },
   ]
 
   // @react
   // unPinOnSwitchApp = [
   //   () => Desktop.appState.id,
-  //   () => Electron.orbitState.pinned && Electron.setPinned(false),
+  //   () => Electron.orbitState.pinned && this.updatePinned(false),
   // ]
 
   @react
   unPinOnFullScreen = [
     () => Electron.orbitState.fullScreen,
-    () => Electron.orbitState.pinned && Electron.setPinned(false),
+    () => Electron.orbitState.pinned && this.updatePinned(false),
   ]
 
   @react
   unPinOnHidden = [
     () => App.isFullyHidden,
-    hidden => hidden && Electron.orbitState.pinned && Electron.setPinned(false),
+    hidden => hidden && Electron.orbitState.pinned && this.updatePinned(false),
   ]
 
   @react({ log: false })
@@ -132,7 +126,7 @@ export default class ElectronReactions {
         log(`sending message show`)
         Electron.sendMessage(App, App.messages.SHOW)
         // await sleep(3500)
-        // Electron.setPinned(true)
+        // this.updatePinned(true)
       }
     },
   ]
@@ -142,9 +136,9 @@ export default class ElectronReactions {
     () => [
       appTarget(Desktop.appState || {}),
       Desktop.linesBoundingBox,
-      // this.goingToReposition,
+      this.repositionToAppState,
     ],
-    async ([appBB, linesBB], { sleep }) => {
+    ([appBB, linesBB], { sleep }) => {
       if (Constants.FORCE_FULLSCREEN) {
         return
       }
@@ -169,4 +163,83 @@ export default class ElectronReactions {
       })
     },
   ]
+
+  toggleFullScreen = () => {
+    const fullScreen = !Electron.orbitState.fullScreen
+    if (!fullScreen) {
+      if (Electron.onClear) {
+        Electron.onClear()
+      }
+      this.repositionToAppState = Date.now()
+      return
+    }
+    // orbit props
+    const { round } = Math
+    const [screenW, screenH] = screenSize()
+    const [appW, appH] = [screenW / 1.5, screenH / 1.3]
+    const [orbitW, orbitH] = [appW * 1 / 3, appH]
+    const [orbitX, orbitY] = [(screenW - appW) / 2, (screenH - appH) / 2]
+    // peek props
+    const [peekW, peekH] = [appW * 2 / 3, appH]
+    const [peekX, peekY] = [orbitX + orbitW, orbitY]
+    const [peek, ...rest] = Electron.peekState.windows
+    peek.position = [peekX, peekY].map(round)
+    peek.size = [peekW, peekH].map(round)
+    peek.peekOnLeft = false
+    // update
+    Electron.setState({
+      orbitState: {
+        position: [orbitX, orbitY].map(round),
+        size: [orbitW, orbitH].map(round),
+        orbitOnLeft: true,
+        fullScreen: true,
+      },
+      peekState: {
+        windows: [peek, ...rest],
+      },
+    })
+  }
+
+  onShortcut = shortcut => {
+    if (shortcut === 'Option+Space') {
+      if (Electron.orbitState.fullScreen) {
+        this.toggleFullScreen()
+        return
+      }
+      if (App.state.orbitHidden) {
+        this.toggleVisible()
+        Electron.lastAction = 'Option+Space'
+        this.updatePinned(true)
+        return
+      }
+      if (Electron.orbitState.pinned) {
+        this.togglePinned()
+        this.toggleVisible()
+        return
+      } else {
+        // !pinned
+        this.togglePinned()
+      }
+    }
+    if (shortcut === 'Option+Shift+Space') {
+      Electron.lastAction = 'Option+Shift+Space'
+      this.toggleFullScreen()
+    }
+  }
+
+  toggleVisible = () => {
+    if (App.state.orbitHidden) {
+      Electron.sendMessage(App, App.messages.HIDE)
+    } else {
+      Electron.sendMessage(App, App.messages.SHOW)
+    }
+  }
+
+  togglePinned = () => {
+    this.updatePinned(!Electron.orbitState.pinned)
+  }
+
+  updatePinned = pinned => {
+    Electron.setOrbitState({ pinned })
+  }
 }

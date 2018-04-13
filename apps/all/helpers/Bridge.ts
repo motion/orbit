@@ -6,9 +6,9 @@ import waitPort from 'wait-port'
 import * as Mobx from 'mobx'
 import stringify from 'stringify-object'
 import T_SocketManager from './socketManager'
-import debug from '@mcro/debug'
+// import debug from '@mcro/debug'
 
-const log = debug('Bridge')
+// const log = debug('Bridge')
 const root = typeof window !== 'undefined' ? window : require('global')
 
 const stringifyObject = obj =>
@@ -19,11 +19,11 @@ const stringifyObject = obj =>
   })
 
 // const log = debug('Bridge')
-const requestIdle = (cb) =>
+const requestIdle = (cb?: Function) =>
   new Promise(
     res =>
       typeof window !== 'undefined' && window.requestIdleCallback
-        ? window.requestIdleCallback(cb || res)
+        ? window.requestIdleCallback(() => cb ? cb() : res())
         : setTimeout(cb || res, 1),
   )
 
@@ -37,6 +37,7 @@ type Options = {
 class Bridge {
   store: any
   socketManager: T_SocketManager
+  _awaitingSocket = []
   _store = null
   _options: Options
   _queuedState = false
@@ -72,11 +73,11 @@ class Bridge {
         },
         actions: {
           // stores that first connect send a call to get initial state
+          // this is where its received by other apps
           getState: ({ source, socket }) => {
+            // dont sync you to yourself
             if (source === this._source) return
-            // send state of all besides requesting store
             for (const name of Object.keys(stores)) {
-              if (name === source) continue
               this.socketManager.send(socket, stores[name].state, name)
             }
           },
@@ -171,6 +172,10 @@ class Bridge {
     }
     this._socket.onopen = () => {
       this._wsOpen = true
+      if (this._awaitingSocket.length) {
+        this._awaitingSocket.map(x => x())
+        this._awaitingSocket = []
+      }
       // send state that hasnt been synced yet
       if (this._queuedState) {
         this._socket.send(
@@ -202,13 +207,22 @@ class Bridge {
     }
   }
 
-  sendMessage = (Store: any, message: string) => {
+  onOpenSocket = () => {
+    return new Promise(res => {
+      this._awaitingSocket.push(res)
+    })
+  }
+
+  sendMessage = async (Store: any, message: string) => {
     if (!Store || !message) {
       throw `no store || message`
     }
     if (this._options.master) {
       this.socketManager.sendMessage(Store.source, message)
     } else {
+      if (!this._wsOpen) {
+        await this.onOpenSocket()
+      }
       this._socket.send(JSON.stringify({ message, to: Store.source })
     }
   }

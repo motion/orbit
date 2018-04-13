@@ -32,7 +32,8 @@ const windowProps = {
 
 const peekPosition = target => {
   const { orbitOnLeft } = Electron
-  const { left, top, width } = target
+  const [width] = Electron.orbitState.size
+  const { left, top } = target
   const [screenW, screenH] = Helpers.getScreenSize()
   const leftSpace = left
   const rightSpace = screenW - (left + width)
@@ -53,17 +54,21 @@ const peekPosition = target => {
   }
   if (peekOnLeft) {
     x = left - pW
-    if (orbitOnLeft) {
-      x += PAD * 2
-    }
     if (pW > leftSpace) {
       pW = leftSpace
       x = 0
     }
+    if (orbitOnLeft) {
+      x += PAD
+    } else {
+      x += PAD
+    }
   } else {
     x = left + width
-    if (!orbitOnLeft) {
-      x -= PAD * 2
+    if (orbitOnLeft) {
+      x -= PAD
+    } else {
+      x -= PAD
     }
     if (pW > rightSpace) {
       pW = rightSpace
@@ -94,6 +99,11 @@ class PeekStore {
       //   this.props.electronStore.peekRef.focus()
       // }
       Electron.updatePeek(Electron.currentPeek, peek => {
+        console.log(
+          'set position',
+          peekTarget.position,
+          peekPosition(peekTarget.position),
+        )
         Object.assign(peek, peekPosition(peekTarget.position))
       })
     },

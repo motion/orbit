@@ -26,6 +26,7 @@ const getHelpers = setting => ({
       console.log('no App.sync.github.feed.token')
       return null
     }
+    // @ts-ignore
     const { search, headers, force, ...opts } = options
     // setup options
     const syncDate = Date.now()
@@ -74,7 +75,7 @@ const getHelpers = setting => ({
 
 export default new Syncer('github', {
   actions: {
-    // task: { every: 60 * 5 },
+    task: { every: 60 * 5 },
     // feed: { every: 30 },
     // people: { every: 60 * 5 },
   },

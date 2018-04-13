@@ -15,7 +15,7 @@ export const storeDecorator = decor([
 
 export const storeOptions = {
   storeDecorator,
-  onStoreMount(name, store, props) {
+  onStoreMount(_, store, props) {
     if (store.automagic) {
       store.automagic()
     }

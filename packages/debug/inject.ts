@@ -1,6 +1,6 @@
-const mcroDebug = require('./index')
-const root = require('global')
+import debug from './debug'
+import root from 'global'
 
 if (!root.debug) {
-  root.debug = mcroDebug
+  root.debug = debug
 }

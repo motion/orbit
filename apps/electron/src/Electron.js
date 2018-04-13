@@ -50,6 +50,7 @@ const log = debug('Electron')
       })
       Electron.onClear = () => {
         log(`clear from fs toggle`)
+        Electron.sendMessage(App, App.messages.HIDE)
         this.clear = Date.now()
       }
       // clear to start
@@ -62,13 +63,19 @@ const log = debug('Electron')
       async (_, { when, sleep }) => {
         this.appRef.hide()
         this.highlightRef.hide()
-        const lastState = Mobx.toJS(Desktop.appState)
+        const getState = () => ({
+          ...Desktop.appState,
+          ...Electron.state.orbitState,
+        })
+        const lastState = getState()
         this.show = 0
-        await when(() => !isEqual(Desktop.appState, lastState))
-        this.show = 1
+        await when(() => !App.isShowingOrbit) // ensure hidden
+        await when(() => !isEqual(getState(), lastState)) // ensure moved
+        this.show = 1 // now render with 0 opacity so chrome updates visuals
+        await sleep(50) // likely not necessary, ensure its ready for app show
         this.appRef.show() // downstream apps should now be hidden
-        await sleep(350) // render opacity 0, let it update
-        await when(() => !Desktop.state.mouseDown)
+        await sleep(200) // render opacity 0, let it update
+        await when(() => !Desktop.state.mouseDown) // ensure not moving window
         this.show = 2
       },
     ]
@@ -116,7 +123,7 @@ const log = debug('Electron')
         'Option+Shift+Space',
       ])
 
-      this.shortcutStore.emitter.on('shortcut', Electron.onShortcut)
+      this.shortcutStore.emitter.on('shortcut', Electron.reactions.onShortcut)
     }
 
     restart() {

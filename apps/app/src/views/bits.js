@@ -5,10 +5,9 @@ import { capitalize } from 'lodash'
 import { format, formatDistance } from 'date-fns'
 
 @view
-export default class Things {
+export default class Bits {
   getTask = task => {
     const { title, id } = task.data
-
     return {
       key: id,
       primary: title,
@@ -26,7 +25,6 @@ export default class Things {
 
   getCalendar = cal => {
     const { summary, start, attendees } = cal.data
-
     return {
       key: cal.id,
       primary: summary,
@@ -42,9 +40,9 @@ export default class Things {
     }
   }
 
-  render({ things }) {
+  render({ bits }) {
     return (
-      <things>
+      <bits>
         <items>
           <UI.List
             itemProps={{
@@ -52,16 +50,16 @@ export default class Things {
               padding: [8, 15],
               iconSize: 18,
             }}
-            items={things}
-            getItem={thing => this['get' + capitalize(thing.type)](thing)}
+            items={bits}
+            getItem={bit => this['get' + capitalize(bit.type)](bit)}
           />
         </items>
-      </things>
+      </bits>
     )
   }
 
   static style = {
-    things: {
+    bits: {
       maxHeight: 300,
       overflow: 'scroll',
     },

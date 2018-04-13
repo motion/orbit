@@ -4,6 +4,8 @@ import { store, watch } from '@mcro/black/store'
 
 type SlackOpts = { oldest?: number; count: number }
 
+console.log('Slack', Slack)
+
 @store
 export class SlackService {
   // @ts-ignore

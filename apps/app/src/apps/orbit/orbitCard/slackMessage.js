@@ -1,9 +1,13 @@
 import * as React from 'react'
+import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
 
 @view
 export default class SlackMessage {
-  render({ Text, message }) {
+  render({ bit, message }) {
+    if (!message.text) {
+      return null
+    }
     if (message.text.indexOf('uploaded a file') >= 0) {
       const src = message.text.match(/\<([a-z]+:\/\/[^>]+)\>/g).map(link =>
         link
@@ -20,9 +24,34 @@ export default class SlackMessage {
       )
     }
     return (
-      <Text ellipse={5}>
-        {message.user} {message.text}
-      </Text>
+      <message>
+        <UI.Text ellipse={15}>
+          <user>
+            <strong>{message.user}</strong>
+            &nbsp;&nbsp;
+            <UI.Date $date>{new Date(message.ts.split('.')[0] * 1000)}</UI.Date>
+          </user>
+          <content>{message.text} </content>
+        </UI.Text>
+      </message>
     )
+  }
+  static style = {
+    message: {
+      padding: [10, 0, 0],
+    },
+    user: {
+      fontSize: 13,
+      flexFlow: 'row',
+    },
+    strong: {
+      fontWeight: 600,
+      color: '#000',
+    },
+    date: {
+      fontSize: 12,
+      fontWeight: 300,
+      opacity: 0.5,
+    },
   }
 }

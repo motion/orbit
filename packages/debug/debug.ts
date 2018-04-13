@@ -1,13 +1,21 @@
-let id = 0
+// let id = 0
 const namespaces = []
 const disableLogs = {}
 
-function debug(namespace) {
-  const uid = id++
+interface Debug {
+  (ns: string): (...msg: Array<any>) => void
+  quiet: any
+  loud: any
+  list: any
+  settings: any
+}
+
+const debug = <Debug>function(namespace) {
+  // const uid = id++
   namespaces.push(namespace)
   function log(...messages) {
     if (disableLogs[namespace]) return
-    colorfulLog(uid, namespace, messages)
+    colorfulLog(namespace, messages)
   }
   return log
 }
@@ -24,9 +32,8 @@ debug.loud = (...args) => setLogging(args, false)
 debug.list = () => namespaces
 debug.settings = () => disableLogs
 
-function colorfulLog(id, namespace, messages) {
+function colorfulLog(namespace, messages) {
   console.log(`${namespace}`, ...messages)
 }
 
-module.exports = debug
-module.exports.default = debug
+export default debug

@@ -28,7 +28,6 @@ class ElectronStore {
   lastAction = null
 
   state = {
-    willReposition: Date.now(),
     settingsPosition: [], // todo: settingsState.position
     orbitState: {
       mouseOver: false,
@@ -92,88 +91,6 @@ class ElectronStore {
     const nextPeek = windows.find(x => x.key === peek.key)
     cb(nextPeek)
     Electron.setPeekState({ windows })
-  }
-
-  toggleVisible = () => {
-    if (App.state.orbitHidden) {
-      Electron.sendMessage(App, App.messages.HIDE)
-    } else {
-      Electron.sendMessage(App, App.messages.SHOW)
-    }
-  }
-
-  togglePinned = () => {
-    this.setPinned(!Electron.orbitState.pinned)
-  }
-
-  setPinned = pinned => {
-    Electron.setOrbitState({ pinned })
-  }
-
-  toggleFullScreen = () => {
-    const fullScreen = !Electron.orbitState.fullScreen
-    if (!fullScreen) {
-      if (this.onClear) {
-        this.onClear()
-      }
-      Electron.setOrbitState({ fullScreen })
-      return
-    }
-    Electron.setState({ willReposition: Date.now() })
-    setTimeout(() => {
-      // orbit props
-      const { round } = Math
-      const [screenW, screenH] = this.reactions.screenSize()
-      const [appW, appH] = [screenW / 1.5, screenH / 1.3]
-      const [orbitW, orbitH] = [appW * 1 / 3, appH]
-      const [orbitX, orbitY] = [(screenW - appW) / 2, (screenH - appH) / 2]
-      // peek props
-      const [peekW, peekH] = [appW * 2 / 3, appH]
-      const [peekX, peekY] = [orbitX + orbitW, orbitY]
-      const [peek, ...rest] = Electron.peekState.windows
-      peek.position = [peekX, peekY].map(round)
-      peek.size = [peekW, peekH].map(round)
-      peek.peekOnLeft = false
-      // update
-      Electron.setState({
-        orbitState: {
-          position: [orbitX, orbitY].map(round),
-          size: [orbitW, orbitH].map(round),
-          orbitOnLeft: true,
-          fullScreen: true,
-        },
-        peekState: {
-          windows: [peek, ...rest],
-        },
-      })
-    }, 100)
-  }
-
-  onShortcut = shortcut => {
-    if (shortcut === 'Option+Space') {
-      if (Electron.orbitState.fullScreen) {
-        Electron.toggleFullScreen()
-        return
-      }
-      if (App.state.orbitHidden) {
-        Electron.toggleVisible()
-        Electron.lastAction = 'Option+Space'
-        Electron.setPinned(true)
-        return
-      }
-      if (Electron.orbitState.pinned) {
-        Electron.togglePinned()
-        Electron.toggleVisible()
-        return
-      } else {
-        // !pinned
-        Electron.togglePinned()
-      }
-    }
-    if (shortcut === 'Option+Shift+Space') {
-      Electron.lastAction = 'Option+Shift+Space'
-      Electron.toggleFullScreen()
-    }
   }
 }
 

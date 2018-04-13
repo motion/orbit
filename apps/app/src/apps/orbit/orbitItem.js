@@ -27,7 +27,7 @@ export default class Item {
   }) {
     appStore.activeIndex
     // const isSelected = appStore.selectedIndex === index
-    const shouldShowIcon = result.icon
+    const shouldShowIcon = result.icon || result.integration || result.type
     if (!result) {
       return null
     }
@@ -53,11 +53,13 @@ export default class Item {
           >
             {result.title}
           </Title>
+          <div $$flex />
           <OrbitIcon
             if={shouldShowIcon}
-            icon={result.icon ? `/icons/${result.icon}` : result.integration}
-            size={18}
+            icon={result.icon ? `/icons/${result.icon}` : result.type}
+            size={12}
             css={{
+              opacity: 0.5,
               marginLeft: 0,
               marginTop: 3,
             }}

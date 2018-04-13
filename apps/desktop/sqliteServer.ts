@@ -3,6 +3,7 @@ import fs from 'fs'
 import Primus from 'primus'
 import * as Path from 'path'
 import recoverDB from '~/helpers/recoverDB'
+import debug from '@mcro/debug'
 
 const log = debug('sqliteServer')
 debug.quiet('sqliteServer')
@@ -32,8 +33,8 @@ function finishLock() {
   txLock = null
   const running = [...queue]
   queue = []
-  for (const item of running) {
-    onData(...item)
+  for (const [a, b, c, d] of running) {
+    onData(a, b, c, d)
   }
 }
 
@@ -89,9 +90,10 @@ async function onData(options, spark, data, uid) {
         var newDatabaseID = databaseID++
         // https://github.com/mapbox/node-sqlite3/wiki/Caching
         const db = await sqlite.open(databasePath, {
-          cached: true,
-          Promise,
+          // cached: true,
+          promise: Promise,
         })
+        // @ts-ignore
         db.databaseID = newDatabaseID
         databaseList[newDatabaseID] = db
         databasePathList[name] = db

@@ -1,17 +1,18 @@
 import * as React from 'react'
-import ReactDOM from 'react-dom'
-import OverdriveElement from './overdriveElement'
-import { debounce } from 'lodash'
+// import ReactDOM from 'react-dom'
+// import OverdriveElement from './overdriveElement'
+// import { debounce } from 'lodash'
 
-class PortalChild extends React.Component {
-  props: any
-  render() {
-    const { child, parentElement } = this.props
-    return ReactDOM.createPortal(child, parentElement)
-  }
-}
+// class PortalChild extends React.Component {
+//   props: any
+//   render() {
+//     const { child, parentElement } = this.props
+//     return ReactDOM.createPortal(child, parentElement)
+//   }
+// }
 
 const AnimateElement = ({ children }) => children
+// @ts-ignore
 AnimateElement.IS_ANIMATED_ELEMENT = true
 
 // depth first to capture changes
@@ -81,8 +82,8 @@ export default class Overdrive extends React.Component {
     })
   }
 
-  getPosition = (node, addOffset?: boolean) => {
-    const parentRect = this.props.parentElement.getBoundingClientRect()
+  getPosition = (node /*, addOffset?: boolean*/) => {
+    // const parentRect = this.props.parentElement.getBoundingClientRect()
     const rect = node.getBoundingClientRect()
     const computedStyle = getComputedStyle(node)
     const marginTop = parseInt(computedStyle.marginTop, 10)

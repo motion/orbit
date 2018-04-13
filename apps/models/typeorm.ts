@@ -44,8 +44,9 @@ if (isBrowser) {
   global.typeorm = typeorm
 }
 
-// avoid
+// avoid typescript being mad
 export const setGlobal = (name: string, val: any) => {
+  // @ts-ignore
   let Thing = val
   eval(`${typeof global === 'undefined' ? 'window' : 'global'}.${name} = Thing`)
 }

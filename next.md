@@ -1,3 +1,5 @@
+ctrl + drag off
+
 ## review
 
 monday
@@ -26,9 +28,14 @@ fallover:
 
 wed
 
+* peek position limits more ofen fullscreen
+* peek pos height adjust better
+
 add:
 
 * on resize window fixes
   * resize have it transition smoothly to fullscreen
   * back to corner
   * dont loose peek after move while pinned open
+
+thurs

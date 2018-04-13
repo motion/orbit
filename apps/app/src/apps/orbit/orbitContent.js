@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import { App } from '@mcro/all'
 import OrbitItem from './orbitItem'
 import OrbitContext from './orbitContext'
 

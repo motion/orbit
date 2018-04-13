@@ -44,26 +44,17 @@ export default class PeekFrame {
                 // make shadow go under
                 marginLeft: fullScreen ? -SHADOW_PAD : 0,
                 paddingLeft: fullScreen ? SHADOW_PAD : 0,
-                borderRightRadius: fullScreen || onRight ? BORDER_RADIUS : 0,
+                borderRightRadius: fullScreen
+                  ? BORDER_RADIUS
+                  : !onRight ? Math.ceil(BORDER_RADIUS / 1.5) : 0,
                 borderLeftRadius: !fullScreen && !onRight ? BORDER_RADIUS : 0,
-                background: fullScreen
-                  ? theme.base.background.lighten(0.05)
-                  : theme.base.background,
+                background: `radial-gradient(#fff 70%, ${
+                  theme.base.background
+                }`,
               }}
               {...props}
             >
               {children}
-              <undoBorder
-                css={{
-                  background: theme.base.background,
-                  width: 1,
-                  position: 'absolute',
-                  top: 0,
-                  bottom: 0,
-                  left: onRight ? 0 : 'auto',
-                  right: !onRight ? 0 : 'auto',
-                }}
-              />
             </main>
           </peek>
         </crop>

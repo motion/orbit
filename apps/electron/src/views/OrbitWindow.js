@@ -62,15 +62,10 @@ class OrbitWindowStore {
     }
   }
 
-  // sitrep
   focusOrbit = () => {
-    try {
-      if (this.orbitRef) {
-        this.orbitRef.focus()
-      }
-    } catch (err) {
-      console.error('error on focus', err)
-    }
+    if (!this.orbitRef) return
+    if (Electron.orbitState.fullScreen) return
+    this.orbitRef.focus()
   }
 
   @react

@@ -310,7 +310,6 @@ export default class Text {
     },
     ellipseText: {
       display: 'flex',
-      flex: 1,
       overflow: 'hidden',
     },
     ellipseLines: {

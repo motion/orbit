@@ -10,7 +10,12 @@ const getTitle = result => result.title
 const getNaturalHeight = result => {
   switch (result.integration) {
     case 'slack':
-      return Math.min(3, result.data.messages.length) * 80
+      return (
+        Math.min(
+          3,
+          result.data && result.data.messages && result.data.messages.length,
+        ) * 80
+      )
   }
   return 200
 }

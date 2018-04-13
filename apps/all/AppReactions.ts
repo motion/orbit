@@ -69,29 +69,6 @@ export default class AppReactions {
     },
   ]
 
-  @react({ log: false })
-  showOnMouseOverOrbitBar = [
-    () => [Desktop.mouseState.position, Electron.orbitState],
-    async ([{ x, y }, orbitState], { sleep }) => {
-      if (!orbitState.position) {
-        return
-      }
-      if (Electron.orbitState.fullScreen) {
-        return
-      }
-      const { position: [oX, oY] } = orbitState
-      // TODO: Constants.ORBIT_WIDTH
-      const adjX = Electron.orbitOnLeft ? 300 : 0
-      const adjY = 44 // topbar + offset from top of orbit
-      const withinX = Math.abs(oX - x + adjX) < 10
-      const withinY = Math.abs(oY - y + adjY) < 10
-      if (withinX && withinY) {
-        await sleep(300)
-        App.setOrbitHidden(false)
-      }
-    },
-  ]
-
   @react({
     delay: 32,
   })

@@ -74,8 +74,12 @@ export default class ElectronReactions {
 
   @react({ log: false })
   setMouseOvers = [
-    () => [Desktop.mouseState.position, App.state.orbitHidden],
-    ([mousePosition, isHidden]) => {
+    () => [
+      Desktop.mouseState.position,
+      App.state.orbitHidden,
+      Electron.orbitState.position,
+    ],
+    async ([mP, isHidden, orbitPosition], { sleep }) => {
       if (isHidden) {
         if (Electron.orbitState.mouseOver) {
           Electron.setState({
@@ -83,16 +87,26 @@ export default class ElectronReactions {
             orbitState: { mouseOver: false },
           })
         }
+        const [oX, oY] = orbitPosition
+        // TODO: Constants.ORBIT_WIDTH
+        const adjX = Electron.orbitOnLeft ? 315 : 15
+        const adjY = 36
+        const withinX = Math.abs(oX - mP.x + adjX) < 6
+        const withinY = Math.abs(oY - mP.y + adjY) < 15
+        if (withinX && withinY) {
+          await sleep(250)
+          Electron.sendMessage(App, App.messages.SHOW)
+        }
         return
       }
       if (Electron.orbitState.position) {
-        const mouseOver = isMouseOver(Electron.orbitState, mousePosition)
+        const mouseOver = isMouseOver(Electron.orbitState, mP)
         if (mouseOver !== Electron.orbitState.mouseOver) {
           Electron.setOrbitState({ mouseOver })
         }
       }
       if (App.state.peekTarget) {
-        const mouseOver = isMouseOver(Electron.currentPeek, mousePosition)
+        const mouseOver = isMouseOver(Electron.currentPeek, mP)
         if (mouseOver !== Electron.peekState.mouseOver) {
           Electron.setPeekState({ mouseOver })
         }

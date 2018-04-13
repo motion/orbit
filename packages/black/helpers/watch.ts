@@ -3,7 +3,7 @@ function validWatch(val) {
 }
 
 function attachWatch(val, userOptions) {
-  val.IS_AUTO_RUN = userOptions
+  val.IS_AUTO_RUN = userOptions || true
   return val
 }
 

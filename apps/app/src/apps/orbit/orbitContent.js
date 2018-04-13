@@ -29,7 +29,6 @@ const tinyProps = {
 @view
 export default class OrbitContent {
   render({ appStore }) {
-    console.log('appStore.searchState', appStore.searchState)
     const { query, results } = appStore.searchState
     const hasQuery = query.length > 0
     log(`content ${query}`)

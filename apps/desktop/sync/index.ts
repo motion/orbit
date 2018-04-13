@@ -51,32 +51,34 @@ export default class Sync {
         if (this.locks.has(job.lock)) {
           return
         }
-        let complete = false
-
-        // expire stale jobs
-        setTimeout(async () => {
-          if (!complete) {
-            await this.failJob(job, { message: 'timed out---' })
-            this.locks.delete(job.lock)
-            log('removed stale job', job.lock)
-          }
-        }, 1000 * 60 * 15) // 15 min
-
-        this.locks.add(job.lock)
-        try {
-          await this.runJob(job)
-          complete = true
-        } catch (error) {
-          let lastError = error
-          try {
-            lastError = error.message
-          } catch (err) {}
-          this.failJob(job, lastError)
-        }
-        this.locks.delete(job.lock)
+        // dont await, run by type in parallel
+        this.completeJob(job)
       }
     },
   ]
+
+  completeJob = async job => {
+    this.locks.add(job.lock)
+    let complete = false
+    setTimeout(async () => {
+      if (!complete) {
+        await this.failJob(job, { message: 'timed out---' })
+        this.locks.delete(job.lock)
+        log('removed stale job', job.lock)
+      }
+    }, 1000 * 60 * 25) // 25 min
+    try {
+      await this.runJob(job)
+      complete = true
+    } catch (error) {
+      let lastError = error
+      try {
+        lastError = error.message
+      } catch (err) {}
+      this.failJob(job, lastError)
+    }
+    this.locks.delete(job.lock)
+  }
 
   runAll() {
     for (const name of Object.keys(this.syncers)) {

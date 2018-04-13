@@ -199,6 +199,14 @@ export default class AppStore {
     this._setSelected(i)
   }
 
+  toggleSelected = index => {
+    if (App.state.peekTarget) {
+      App.setPeekTarget(null)
+    } else {
+      this.pinSelected(index)
+    }
+  }
+
   pinSelected = throttle(index => {
     if (typeof index === 'number') {
       this._setSelected(index)

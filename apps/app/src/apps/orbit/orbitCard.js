@@ -65,7 +65,7 @@ export default class OrbitCard {
               <cardWrap
                 css={{ height }}
                 ref={getRef}
-                onClick={() => appStore.pinSelected(index, 'click')}
+                onClick={() => appStore.toggleSelected(index)}
                 {...appStore.getHoverProps({ result, id: index })}
               >
                 <card

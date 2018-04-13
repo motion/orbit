@@ -107,7 +107,6 @@ export default class PeekHeader {
               fontWeight: 300,
               // boxShadow: ['inset', 0, 0, 0, 1, darkerBg.darken(0.5)],
               opacity: App.state.query.length > 0 ? 1 : 0.6,
-              color: theme.base.color,
             }}
             background="transparent"
             onChange={orbitStore.onChangeQuery}
@@ -161,6 +160,7 @@ export default class PeekHeader {
 
   static style = {
     header: {
+      position: 'relative',
       flexFlow: 'row',
       alignItems: 'center',
       justifyContent: 'center',

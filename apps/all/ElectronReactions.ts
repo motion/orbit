@@ -57,19 +57,19 @@ export default class ElectronReactions {
   // @react
   // unPinOnSwitchApp = [
   //   () => Desktop.appState.id,
-  //   () => Electron.orbitState.pinned && Electron.setPinned(false),
+  //   () => Electron.orbitState.pinned && this.updatePinned(false),
   // ]
 
   @react
   unPinOnFullScreen = [
     () => Electron.orbitState.fullScreen,
-    () => Electron.orbitState.pinned && Electron.setPinned(false),
+    () => Electron.orbitState.pinned && this.updatePinned(false),
   ]
 
   @react
   unPinOnHidden = [
     () => App.isFullyHidden,
-    hidden => hidden && Electron.orbitState.pinned && Electron.setPinned(false),
+    hidden => hidden && Electron.orbitState.pinned && this.updatePinned(false),
   ]
 
   @react({ log: false })
@@ -126,7 +126,7 @@ export default class ElectronReactions {
         log(`sending message show`)
         Electron.sendMessage(App, App.messages.SHOW)
         // await sleep(3500)
-        // Electron.setPinned(true)
+        // this.updatePinned(true)
       }
     },
   ]
@@ -209,7 +209,7 @@ export default class ElectronReactions {
       if (App.state.orbitHidden) {
         this.toggleVisible()
         Electron.lastAction = 'Option+Space'
-        this.setPinned(true)
+        this.updatePinned(true)
         return
       }
       if (Electron.orbitState.pinned) {
@@ -236,10 +236,10 @@ export default class ElectronReactions {
   }
 
   togglePinned = () => {
-    this.setPinned(!Electron.orbitState.pinned)
+    this.updatePinned(!Electron.orbitState.pinned)
   }
 
-  setPinned = pinned => {
+  updatePinned = pinned => {
     Electron.setOrbitState({ pinned })
   }
 }

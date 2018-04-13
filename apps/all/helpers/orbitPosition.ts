@@ -42,7 +42,6 @@ export default function orbitPosition({ left, top, width, height }) {
   orbitH -= VERT_PAD
   if (orbitH + y > screenH) {
     height -= screenH - (orbitH + y)
-    log(`too big, adjusting height ${orbitH} screenH ${screenH}`)
   }
   return {
     position: [Math.round(x), Math.round(y)],

@@ -1,5 +1,5 @@
 import * as Constants from '~/constants'
-import { URLSearchParams } from 'url'
+// import { URLSearchParams } from 'url'
 import r2 from '@mcro/r2'
 import Strategies from '~/server/oauth.strategies'
 import Gmail from 'node-gmail-api'
@@ -35,8 +35,9 @@ export default setting => ({
     if (reply && reply.access_token) {
       setting.token = reply.access_token
       await setting.save()
+      return true
     }
-    return null
+    return false
   },
   batch: setting.token && new Gmail(setting.token),
   async fetch(path, options: FetchOptions = {}) {
@@ -55,12 +56,16 @@ export default setting => ({
     const res = await fetcher[type]
     if (res.error) {
       if (res.error.code === 401 && !isRetrying) {
-        const accessToken = await this.refreshToken()
-        console.log(`trying again after refreshing token`)
-        return await this.fetch(path, {
-          ...options,
-          isRetrying: true,
-        })
+        const didRefresh = await this.refreshToken()
+        if (didRefresh) {
+          return await this.fetch(path, {
+            ...options,
+            isRetrying: true,
+          })
+        } else {
+          console.error('Couldnt refresh access toekn :(')
+          return null
+        }
       }
       throw res.error
     }

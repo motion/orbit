@@ -86,9 +86,15 @@ export class SettingView {
                 }}
               />
               <UI.Popover
-                target={
-                  <UI.Button
-                    icon="gear"
+                openOnHover
+                openOnClick
+                target={<UI.Button icon="gear" />}
+              >
+                <UI.List background>
+                  <UI.ListItem primary="hello2" />
+                  <UI.ListItem primary="hello3" />
+                  <UI.ListItem
+                    primary="remove integration"
                     onClick={async () => {
                       store.setting.values = {}
                       store.setting.token = ''
@@ -96,9 +102,7 @@ export class SettingView {
                       store.update()
                     }}
                   />
-                }
-              >
-                <UI.List background />
+                </UI.List>
               </UI.Popover>
             </UI.Row>
           }

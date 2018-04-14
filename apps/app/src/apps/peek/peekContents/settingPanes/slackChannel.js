@@ -23,6 +23,9 @@ export default class SlackChannel extends React.Component {
   }
 
   render({ channel, slackService }) {
+    if (!slackService.setting) {
+      return null
+    }
     const { channels = {} } = slackService.setting.values
     return (
       <channel>

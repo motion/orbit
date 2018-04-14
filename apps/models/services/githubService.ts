@@ -17,6 +17,7 @@ export class GithubService {
   @watch allOrgs = () => this.github && this.github.user.orgs.fetchAll()
 
   get activeRepos() {
+    if (!this.setting) return
     return this.setting.values.repos
   }
 

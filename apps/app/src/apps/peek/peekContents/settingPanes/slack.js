@@ -32,9 +32,10 @@ import SlackChannel from './slackChannel'
   },
 })
 export default class Slack {
-  render({ store }) {
+  render({ store, setting }) {
+    console.log('store.channels', store.channels, store)
     return (
-      <slack>
+      <slack if={setting}>
         <UI.Input
           marginBottom={10}
           sizeRadius
@@ -45,7 +46,7 @@ export default class Slack {
           onChange={e => (store.search = e.target.value)}
           value={store.search}
         />
-        <content>
+        <content if={store.service}>
           <UI.List
             scrollable
             height="100%"

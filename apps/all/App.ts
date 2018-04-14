@@ -18,6 +18,7 @@ class AppStore {
   messages = {
     SHOW: 'SHOW',
     HIDE: 'HIDE',
+    HIDE_PEEK: 'HIDE_PEEK',
     PIN: 'PIN',
   }
 

@@ -8,19 +8,16 @@ import * as _ from 'lodash'
 @view
 export class Conversation {
   render({ bit, selectedItem }) {
-    if (!bit) {
-      return null
-    }
-    log.full(bit)
     const { messages } = bit.data
     return (
       <PeekFrame>
         <PeekHeader
+          if={bit}
           icon="chat"
           title={selectedItem.title}
           date={bit.createdAt}
         />
-        <body>
+        <body if={bit}>
           <messages if={messages}>
             {messages.map((message, index) => {
               return (

@@ -11,13 +11,19 @@ import { App } from './App'
 @store
 export default class AppReactions {
   constructor({ onPinKey }) {
-    App.onMessage(msg => {
+    App.onMessage(async msg => {
       console.log('got a message', msg)
       switch (msg) {
         case App.messages.HIDE:
+          if (App.state.peekTarget) {
+            App.setPeekTarget(null)
+            await new Promise(res => setTimeout(res, 80)) // sleep 80
+          }
           return App.setOrbitHidden(true)
         case App.messages.SHOW:
           return App.setOrbitHidden(false)
+        case App.messages.HIDE_PEEK:
+          return App.setPeekTarget(null)
       }
       if (msg.indexOf(App.messages.PIN) === 0) {
         const key = msg.split('-')[1]

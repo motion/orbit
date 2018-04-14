@@ -1,8 +1,8 @@
 import { store, react, isEqual } from '@mcro/black/store'
 import iohook from 'iohook'
 import { Desktop, App, Electron } from '@mcro/all'
-import debug from '@mcro/debug'
-import keyCode from 'keycode'
+// import debug from '@mcro/debug'
+// const log = debug('KeyboardStore')
 
 const codes = {
   esc: 1,
@@ -23,8 +23,6 @@ const DOUBLE_TAP_OPTION = [
   ['down', codes.option],
   ['up', codes.option],
 ]
-
-const log = debug('KeyboardStore')
 
 // stores the last 4 keys pressed
 // but clears after a little, so it only stores "purposeful sequences"
@@ -51,10 +49,20 @@ export default class KeyboardStore {
     ([keycode]) => {
       this.clearDownKeysAfterPause()
       if (keycode === codes.esc) {
-        return Desktop.setKeyboardState({ esc: Date.now() })
+        if (App.state.peekTarget && Electron.isMouseInActiveArea) {
+          Desktop.sendMessage(App, App.messages.HIDE_PEEK)
+          return
+        }
+        if (
+          Desktop.state.focusedOnOrbit ||
+          Electron.orbitState.mouseOver ||
+          Electron.orbitState.fullScreen
+        ) {
+          Desktop.sendMessage(App, App.messages.HIDE)
+        }
       }
       const isOption = keycode === codes.option || keycode === codes.optionRight
-      const isShift = keycode === codes.shift || keycode === codes.shiftRight
+      // const isShift = keycode === codes.shift || keycode === codes.shiftRight
       const isHoldingShift = this.keysDown.has(codes.shift)
       const holdingKeys = this.keysDown.size
       // clears:

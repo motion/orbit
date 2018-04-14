@@ -43,8 +43,10 @@ const log = debug('Electron')
       })
       this.watchOptionPress()
       Electron.onMessage(msg => {
-        if (msg === 'CLEAR') {
-          this.clear = Date.now()
+        switch (msg) {
+          case Electron.messages.CLEAR:
+            this.clear = Date.now()
+            return
         }
       })
       Electron.onClear = () => {

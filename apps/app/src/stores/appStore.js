@@ -212,16 +212,23 @@ export default class AppStore {
     }
   }
 
-  pinSelected = throttle(index => {
+  pinSelected = index => {
     if (typeof index === 'number') {
       this._setSelected(index)
-      console.log('pinning')
       App.setPeekTarget({
         id: index > -1 ? index : this.hoveredIndex || this.activeIndex,
         position: this.getMousePosition(),
       })
+      console.log(
+        'set peek target',
+        {
+          id: index > -1 ? index : this.hoveredIndex || this.activeIndex,
+          position: this.getMousePosition(),
+        },
+        App.state.peekTarget,
+      )
     }
-  }, 500)
+  }
 
   clearPinned = () => {
     App.setPeekTarget(null)

@@ -195,7 +195,7 @@ class HoverGlow extends React.PureComponent<Props, State> {
       height = this.bounds.height
     }
     if (isNaN(width) || isNaN(height)) {
-      console.log('weird')
+      console.log('hoverglow NaN width or height')
       return null
     }
     const { position, clicked } = this.state

@@ -1,4 +1,5 @@
 on fs focus input
+accidental fullscreen at times
 
 ## review
 
@@ -42,3 +43,6 @@ add:
 * long tail: bridge both setState and receiveState should batch a tiny bit
   * if multiple setstate called before settimeout, group them
   * if multiple recevied before timeout, group them
+
+research
+"keeping chromium warm"

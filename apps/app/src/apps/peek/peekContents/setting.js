@@ -12,7 +12,7 @@ const EmptyPane = () => <div>no setting pane</div>
 
 @view({
   store: class SettingStore {
-    settingVersion = 0
+    version = 0
     job = null
     bitsCount = null
 
@@ -38,6 +38,7 @@ const EmptyPane = () => <div>no setting pane</div>
       this.bitsCount = await Bit.createQueryBuilder()
         .where({ integration })
         .getCount()
+      this.version += 1
     }
   },
 })
@@ -47,7 +48,7 @@ export class SettingView {
       console.log('no setting or token', store.setting)
       return null
     }
-    store.settingVersion
+    store.version
     const { setting, selectedItem } = store
     const { integration, type } = selectedItem
     // tries googleMail
@@ -108,7 +109,11 @@ export class SettingView {
           }
         />
         <body>
-          <SettingPane appStore={appStore} setting={setting} />
+          <SettingPane
+            appStore={appStore}
+            setting={setting}
+            update={store.update}
+          />
           <pre if={false} css={{ opacity: 0.5 }}>
             {JSON.stringify(store.setting.values.oauth || null, 0, 2)}
           </pre>

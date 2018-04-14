@@ -1,28 +1,36 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
-import { throttle } from 'lodash'
 import OrbitIcon from '~/apps/orbit/orbitIcon'
 
-@view
+@view({
+  store: class {
+    max = ''
+
+    willMount() {
+      const settings = this.props.setting.values.syncSettings
+      this.max = settings.max
+    }
+  },
+})
 export default class GoogleMailSetting {
-  render({ setting }) {
+  render({ store, setting, update }) {
     const { syncSettings = { max: 50 } } = setting.values
-    const throttleSaveSetting = throttle(() => setting.save(), 500)
     return (
       <gmailSetting>
         <OrbitIcon icon="gmail" />
         <UI.Field
           row
           label="Max"
-          value={syncSettings.max}
-          onChange={e => {
+          value={store.max}
+          onChange={async e => {
+            store.max = e.target.value
             setting.values.syncSettings = {
               ...syncSettings,
-              max: e.target.value,
+              max: store.max,
             }
-            store.settingVersion += 1
-            throttleSaveSetting()
+            await setting.save()
+            update()
           }}
         />
       </gmailSetting>

@@ -51,6 +51,9 @@ final class Windo {
       }
       self.swindler.on { (event: WindowSizeChangedEvent) in
         self.updatePosition(event.window, size: [Int(event.newValue.width), Int(event.newValue.height)], position: nil)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+          self.updatePosition(event.window, size: nil, position: nil)
+        }
       }
 //      self.swindler.on { (event: WindowDestroyedEvent) in
 //        let window = event.window

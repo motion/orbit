@@ -79,14 +79,15 @@ export default class AppReactions {
     ],
     async ([isShown, mouseOver], { sleep }) => {
       if (isShown && !mouseOver) {
-        // 100ms leeway on mouse leave
-        await sleep(100)
+        // some leeway on mouse leave
+        await sleep(150)
         if (Desktop.isHoldingOption || App.isAnimatingOrbit) {
           return
         }
         if (Electron.orbitState.pinned || Electron.orbitState.fullScreen) {
           return
         }
+        console.log(`hiding orbit from mouseout`)
         App.setOrbitHidden(true)
       }
     },

@@ -91,7 +91,7 @@ export default class ElectronReactions {
         }
         const [oX, oY] = orbitPosition
         // TODO: Constants.ORBIT_WIDTH
-        const adjX = Electron.orbitOnLeft ? 315 : 15
+        const adjX = Electron.orbitOnLeft ? 313 : 17
         const adjY = 36
         const withinX = Math.abs(oX - mP.x + adjX) < 6
         const withinY = Math.abs(oY - mP.y + adjY) < 15
@@ -124,7 +124,12 @@ export default class ElectronReactions {
   handleHoldingOption = [
     () => Desktop.isHoldingOption,
     async (isHoldingOption, { sleep }) => {
-      console.log('HOLD OPTION?', Desktop.isHoldingOption)
+      console.log(
+        'HOLD OPTION?',
+        Desktop.isHoldingOption,
+        Electron.orbitState.pinned,
+        App.state.orbitHidden,
+      )
       if (Electron.orbitState.pinned) {
         return
       }
@@ -138,13 +143,11 @@ export default class ElectronReactions {
         }
         return
       }
-      if (App.state.orbitHidden) {
-        await sleep(140)
-        log(`sending message show`)
-        Electron.sendMessage(App, App.messages.SHOW)
-        // await sleep(3500)
-        // this.updatePinned(true)
-      }
+      await sleep(140)
+      log(`sending message show`)
+      Electron.sendMessage(App, App.messages.SHOW)
+      // await sleep(3500)
+      // this.updatePinned(true)
     },
   ]
 

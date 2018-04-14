@@ -48,3 +48,7 @@ add:
 * Primus error catching
 
 fri
+
+add:
+
+* long tail: disable when super low battery

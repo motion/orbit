@@ -60,7 +60,6 @@ const log = debug('Electron')
       () => this.clear,
       async (_, { when, sleep }) => {
         this.appRef.hide()
-        this.highlightRef.hide()
         const getState = () => ({
           ...Desktop.appState,
           ...Electron.state.orbitState,
@@ -74,7 +73,7 @@ const log = debug('Electron')
         await sleep(50) // likely not necessary, ensure its ready for app show
         this.appRef.show() // downstream apps should now be hidden
         await sleep(200) // render opacity 0, let it update
-        await when(() => !Desktop.state.mouseDown) // ensure not moving window
+        await when(() => !Desktop.mouseState.mouseDown) // ensure not moving window
         this.show = 2
       },
     ]

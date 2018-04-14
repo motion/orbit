@@ -248,27 +248,6 @@ export default class AppStore {
     },
   })
 
-  @react
-  hideOrbitOnEsc = [
-    () => Desktop.keyboardState.esc,
-    () => {
-      if (Constants.FORCE_FULLSCREEN) {
-        return
-      }
-      if (App.state.peekTarget && Electron.isMouseInActiveArea) {
-        App.setPeekTarget(null)
-        return
-      }
-      if (
-        Desktop.state.focusedOnOrbit ||
-        Electron.orbitState.mouseOver ||
-        Electron.orbitState.fullScreen
-      ) {
-        App.setOrbitHidden(true)
-      }
-    },
-  ]
-
   @react.if
   hoverWordToSelectedIndex = [
     () => App.state.hoveredWord,

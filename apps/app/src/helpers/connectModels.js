@@ -41,7 +41,7 @@ export default async function connectModels(models) {
           // setTimeout(() => {
           //   connect()
           // }, 1000)
-          window.location = originalLocation
+          window.restart()
         }
       })
     } catch (err) {

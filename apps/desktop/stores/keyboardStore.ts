@@ -49,7 +49,10 @@ export default class KeyboardStore {
     ([keycode]) => {
       this.clearDownKeysAfterPause()
       if (keycode === codes.esc) {
-        if (App.state.peekTarget && Electron.isMouseInActiveArea) {
+        if (
+          App.state.peekTarget &&
+          (Electron.isMouseInActiveArea || Desktop.state.focusedOnOrbit)
+        ) {
           Desktop.sendMessage(App, App.messages.HIDE_PEEK)
           return
         }

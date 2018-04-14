@@ -1,4 +1,4 @@
-ctrl + drag off
+on fs focus input
 
 ## review
 

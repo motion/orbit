@@ -35,7 +35,7 @@ const log = debug('highlights')
       },
     ]
 
-    @react({ fireImmediately: true, logReaction: false })
+    @react({ fireImmediately: true, log: 'state' })
     setHovered = [
       () => [this.trees, Desktop.mouseState.position],
       ([{ word, line }, { x, y }]) => {

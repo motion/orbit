@@ -504,8 +504,7 @@ Transaction batching object:
         this.primus.end()
       })
       this.primus.on('close', () => {
-        console.log('got a close, restarting...')
-        window.location = originalLocation
+        window.restart()
         // this.primus.end()
       })
     }

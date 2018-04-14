@@ -47,7 +47,8 @@ class AppRoot {
   }
 
   restart() {
-    window.location = window.location
+    console.trace('should restart')
+    // window.location = window.location
   }
 
   async dispose() {}

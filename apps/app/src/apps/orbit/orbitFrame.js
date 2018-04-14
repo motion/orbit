@@ -146,7 +146,9 @@ export default class OrbitFrame {
     const borderColor = theme.base.background.darken(0.25).desaturate(0.6)
     const borderShadow = ['inset', 0, 0, 0, 0.5, borderColor]
     const boxShadow =
-      fullScreen || orbitDocked ? [APP_SHADOW] : [orbitLightShadow]
+      fullScreen || orbitDocked
+        ? [APP_SHADOW]
+        : [App.state.peekTarget ? [0, 0, 10, [0, 0, 0.5]] : orbitLightShadow]
     const background = theme.base.background
     const borderLeftRadius = !orbitOnLeft ? 0 : Constants.BORDER_RADIUS
     const borderRightRadius =

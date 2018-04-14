@@ -15,8 +15,7 @@ export const isEqual = comparer.structural
 type ReactionOptions = {
   fireImmediately?: boolean
   equals?: Function
-  log?: boolean
-  logReaction?: boolean
+  log?: boolean | 'state'
   delay?: number
   isIf?: boolean
   delayValue?: boolean

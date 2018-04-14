@@ -2,10 +2,11 @@ import * as T from './typeorm'
 
 @T.Entity()
 export class Person extends T.BaseEntity {
-  static identifyingKeys = ['identifier', 'bitUpdatedAt']
+  static identifyingKeys = ['identifier', 'integration']
 
   @T.PrimaryGeneratedColumn() id: number
   @T.Column() identifier: string
+  @T.Column() integration: string
   @T.Column() name: string
   @T.CreateDateColumn() createdAt: Date
   @T.UpdateDateColumn() updatedAt: Date

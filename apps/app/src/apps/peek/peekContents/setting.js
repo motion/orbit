@@ -4,7 +4,7 @@ import { App } from '@mcro/all'
 import { Bit, Job } from '@mcro/models'
 import PeekHeader from '../peekHeader'
 import PeekFrame from '../peekFrame'
-import { capitalize, throttle } from 'lodash'
+import { capitalize } from 'lodash'
 import * as UI from '@mcro/ui'
 import * as SettingPanes from './settingPanes'
 
@@ -12,7 +12,7 @@ const EmptyPane = () => <div>no setting pane</div>
 
 @view({
   store: class SettingStore {
-    settingVersion = 0
+    version = 0
     job = null
     bitsCount = null
 
@@ -38,6 +38,7 @@ const EmptyPane = () => <div>no setting pane</div>
       this.bitsCount = await Bit.createQueryBuilder()
         .where({ integration })
         .getCount()
+      this.version += 1
     }
   },
 })
@@ -47,16 +48,19 @@ export class SettingView {
       console.log('no setting or token', store.setting)
       return null
     }
-    store.settingVersion
-    const { setting } = store
-    const { syncSettings = { max: 50 } } = setting.values
-    const throttleSaveSetting = throttle(() => setting.save(), 500)
+    store.version
+    const { setting, selectedItem } = store
+    const { integration, type } = selectedItem
+    // tries googleMail
+    // falls back to google
     const SettingPane =
-      SettingPanes[store.selectedItem.integration] || EmptyPane
+      SettingPanes[`${integration}${capitalize(type)}`] ||
+      SettingPanes[integration] ||
+      EmptyPane
     return (
       <PeekFrame>
         <PeekHeader
-          title={capitalize(store.selectedItem.integration)}
+          title={capitalize(integration)}
           subtitle={
             <div $$row if={store.job}>
               {store.bitsCount} total{' '}
@@ -67,12 +71,13 @@ export class SettingView {
             </div>
           }
           after={
-            <UI.Row $$flex>
+            <UI.Row $$flex css={{ opacity: 0.2 }}>
               <UI.Button
                 icon="refresh"
+                tooltip="Refresh"
                 onClick={async () => {
                   const job = new Job()
-                  job.type = store.selectedItem.integration
+                  job.type = integration
                   job.action = 'mail'
                   job.status = Job.statuses.PENDING
                   await job.save()
@@ -81,40 +86,37 @@ export class SettingView {
                   appStore.getSettings()
                 }}
               />
-              <UI.Button
-                icon="remove"
-                onClick={async () => {
-                  store.setting.values = {}
-                  store.setting.token = ''
-                  await store.setting.save()
-                  store.update()
-                }}
-              />
+              <UI.Popover
+                openOnHover
+                openOnClick
+                target={<UI.Button icon="gear" />}
+              >
+                <UI.List background>
+                  <UI.ListItem primary="hello2" />
+                  <UI.ListItem primary="hello3" />
+                  <UI.ListItem
+                    primary="remove integration"
+                    onClick={async () => {
+                      store.setting.values = {}
+                      store.setting.token = ''
+                      await store.setting.save()
+                      store.update()
+                    }}
+                  />
+                </UI.List>
+              </UI.Popover>
             </UI.Row>
           }
         />
         <body>
-          <status if={store.job} />
-          <setting>
-            <SettingPane appStore={appStore} />
-            setting:
-            <UI.Field
-              row
-              label="Max"
-              value={syncSettings.max}
-              onChange={e => {
-                setting.values.syncSettings = {
-                  ...syncSettings,
-                  max: e.target.value,
-                }
-                store.settingVersion += 1
-                throttleSaveSetting()
-              }}
-            />
-            <pre>
-              {JSON.stringify(store.setting.values.oauth || null, 0, 2)}
-            </pre>
-          </setting>
+          <SettingPane
+            appStore={appStore}
+            setting={setting}
+            update={store.update}
+          />
+          <pre if={false} css={{ opacity: 0.5 }}>
+            {JSON.stringify(store.setting.values.oauth || null, 0, 2)}
+          </pre>
         </body>
       </PeekFrame>
     )
@@ -123,7 +125,6 @@ export class SettingView {
   static style = {
     body: {
       padding: 20,
-      overflowY: 'scroll',
       flex: 1,
     },
   }

@@ -41,7 +41,7 @@ export default class GoogleDriveSync {
     try {
       await this.syncFiles()
     } catch (err) {
-      console.error(`Drive sync error ${err.message}`)
+      console.error(`Drive sync error ${err.message}\n${err.stack}`)
     }
   }
 

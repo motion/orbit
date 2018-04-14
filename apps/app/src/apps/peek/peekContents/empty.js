@@ -2,11 +2,11 @@ import * as React from 'react'
 import * as UI from '@mcro/ui'
 import PeekFrame from '../peekFrame'
 
-export const Empty = ({ selectedItem: item }) =>
-  item ? (
-    <PeekFrame css={{ alignItems: 'center', justifyContent: 'center' }}>
+export const Empty = ({ selectedItem: item }) => (
+  <PeekFrame css={{ alignItems: 'center', justifyContent: 'center' }}>
+    <contents if={item}>
       <img
-        if={item.icon}
+        if={item && item.icon}
         src={`/icons/${item.icon}`}
         css={{ width: 64, height: 64 }}
       />
@@ -24,5 +24,6 @@ export const Empty = ({ selectedItem: item }) =>
         ))}
       </UI.Text>
       {item.body}
-    </PeekFrame>
-  ) : null
+    </contents>
+  </PeekFrame>
+)

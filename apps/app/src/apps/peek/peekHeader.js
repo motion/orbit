@@ -15,9 +15,18 @@ export default class PeekHeader {
     return (
       <header $$draggable={!fullScreen}>
         <WindowControls
+          css={
+            Electron.peekOnLeft
+              ? {
+                  order: 2,
+                  marginLeft: 14,
+                }
+              : {
+                  order: 0,
+                  marginRight: 14,
+                }
+          }
           onClose={() => {
-            // TODO:
-            // Desktop.sendMessage(Electron, 'CLOSE_PEEK')
             App.setPeekTarget(null)
           }}
         />

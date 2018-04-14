@@ -17,7 +17,11 @@ class HeaderStore {
 
   @react({ fireImmediately: true, delay: 32 })
   focusInput = [
-    () => App.isFullyShown,
+    () => [
+      App.isFullyShown,
+      Electron.orbitState.pinned,
+      Electron.isMouseInActiveArea,
+    ],
     () => {
       if (!this.inputRef) return
       this.inputRef.focus()
@@ -160,6 +164,7 @@ export default class PeekHeader {
 
   static style = {
     header: {
+      position: 'relative',
       flexFlow: 'row',
       alignItems: 'center',
       justifyContent: 'center',
@@ -189,7 +194,7 @@ export default class PeekHeader {
     },
     headerBg: background => ({
       background: `linear-gradient(${background
-        .darken(0.09)
+        .darken(0.06)
         .desaturate(0.5)}, transparent)`,
     }),
     inputLn: {

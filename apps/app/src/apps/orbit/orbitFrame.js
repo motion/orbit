@@ -29,8 +29,8 @@ const Indicator = view(({ iWidth, orbitOnLeft }) => {
           [-2, 0, 10, 0, [0, 0, 0, 0.15]],
         ],
         width: iWidth,
-        height: 20,
-        top: 8,
+        height: 25,
+        top: 16,
         opacity: App.isShowingOrbit ? 0 : 1,
         right: orbitOnLeft ? SHADOW_PAD : 'auto',
         left: !orbitOnLeft ? SHADOW_PAD : 'auto',
@@ -146,7 +146,9 @@ export default class OrbitFrame {
     const borderColor = theme.base.background.darken(0.25).desaturate(0.6)
     const borderShadow = ['inset', 0, 0, 0, 0.5, borderColor]
     const boxShadow =
-      fullScreen || orbitDocked ? [APP_SHADOW] : [orbitLightShadow]
+      fullScreen || orbitDocked
+        ? [APP_SHADOW]
+        : [App.state.peekTarget ? [0, 0, 10, [0, 0, 0.5]] : orbitLightShadow]
     const background = theme.base.background
     const borderLeftRadius = !orbitOnLeft ? 0 : Constants.BORDER_RADIUS
     const borderRightRadius =

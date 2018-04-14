@@ -32,10 +32,10 @@ export default class OrbitDivider {
     return {
       barOuter: {
         '& .bar': {
-          background: theme.hover.background,
+          background: theme.active.background,
         },
         '&:hover .bar': {
-          background: theme.active.background,
+          background: theme.activeHover.background,
         },
       },
     }

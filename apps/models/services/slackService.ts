@@ -1,25 +1,41 @@
-import Slack from 'slack'
+import * as Slack1 from 'slack'
 import { Setting } from '../setting'
-import { store, watch } from '@mcro/black/store'
+import { store } from '@mcro/black/store'
 
 type SlackOpts = { oldest?: number; count: number }
 
-console.log('Slack', Slack)
+// @ts-ignore
+const Slack = Slack1.default || Slack1
 
 @store
 export class SlackService {
   // @ts-ignore
   slack: Slack
   setting: Setting
-
-  @watch({ log: false })
-  allChannels = () =>
-    this.slack && this.slack.channels.list({}).then(res => res.channels)
+  allChannels: Array<Object> = []
+  watchInterval: any
 
   constructor(setting) {
     this.setting = setting
     // @ts-ignore
     this.slack = new Slack({ token: setting.token })
+    this.watchData()
+  }
+
+  dispose() {
+    clearInterval(this.watchInterval)
+  }
+
+  watchData() {
+    // 15 m
+    this.watchInterval = setInterval(this.updateData, 15 * 60 * 1000)
+    this.updateData()
+  }
+
+  updateData = async () => {
+    this.allChannels = await this.slack.channels
+      .list({})
+      .then(res => res && res.channels)
   }
 
   get activeChannels() {

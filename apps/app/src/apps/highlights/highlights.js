@@ -35,7 +35,7 @@ const log = debug('highlights')
       },
     ]
 
-    @react({ fireImmediately: true, logReaction: false })
+    @react({ fireImmediately: true, log: 'state' })
     setHovered = [
       () => [this.trees, Desktop.mouseState.position],
       ([{ word, line }, { x, y }]) => {
@@ -122,11 +122,10 @@ const log = debug('highlights')
 })
 export default class HighlightsPage {
   render({ store }) {
+    const isFullScreen =
+      false && Electron.orbitState.fullScreen && App.isShowingOrbit
     return (
-      <frame
-        if={store.showAll}
-        $overlay={Electron.orbitState.fullScreen && App.isShowingOrbit}
-      >
+      <frame if={store.showAll} $overlay={isFullScreen}>
         {(store.ocrWords || []).map(item => (
           <OCRWord key={Helpers.wordKey(item)} item={item} store={store} />
         ))}

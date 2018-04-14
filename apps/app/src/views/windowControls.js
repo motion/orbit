@@ -4,9 +4,9 @@ import ControlButton from '~/views/controlButton'
 
 @view
 export default class WindowControls {
-  render({ onClose, onMax, onMin }) {
+  render({ onClose, onMax, onMin, style }) {
     return (
-      <buttons $$row css={{ marginRight: 14 }}>
+      <buttons $$row style={style}>
         <ControlButton if={onClose} icon="x" onClick={onClose} />
         <ControlButton
           if={onMax}

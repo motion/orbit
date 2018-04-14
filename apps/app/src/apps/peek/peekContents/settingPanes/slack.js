@@ -8,8 +8,12 @@ import SlackChannel from './slackChannel'
 
 @view({
   store: class SlackStore {
-    search = ''
     service = new SlackService(this.props.appStore.settings.slack)
+    search = ''
+
+    willUnmount() {
+      this.service.dispose()
+    }
 
     get sortedChannels() {
       return _.orderBy(
@@ -22,7 +26,7 @@ import SlackChannel from './slackChannel'
     get channels() {
       this.service.setting.values
       return fuzzy(this.search, this.sortedChannels, {
-        keys: 'name',
+        key: 'name',
       })
     }
   },
@@ -33,9 +37,10 @@ export default class Slack {
       <slack>
         <UI.Input
           marginBottom={10}
-          borderWidth={2}
-          borderColor="black"
-          size={1.2}
+          sizeRadius
+          size={1.1}
+          borderColor="#ccc"
+          background="#fff"
           placeholder="Filter Channels..."
           onChange={e => (store.search = e.target.value)}
           value={store.search}
@@ -43,6 +48,7 @@ export default class Slack {
         <content>
           <UI.List
             scrollable
+            height="100%"
             itemsKey={store.search + store.channels && store.channels.length}
             items={store.channels}
             getItem={channel => (

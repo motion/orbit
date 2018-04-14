@@ -50,6 +50,8 @@ export default class ElectronReactions {
         return
       }
       await sleep(100) // sleep because dont want to trigger this accidentaly
+      console.log('send clear before fs or un-fs for quick hide test')
+      Electron.onClear()
       this.toggleFullScreen()
     },
   ]
@@ -74,8 +76,12 @@ export default class ElectronReactions {
 
   @react({ log: false })
   setMouseOvers = [
-    () => [Desktop.mouseState.position, App.state.orbitHidden],
-    ([mousePosition, isHidden]) => {
+    () => [
+      Desktop.mouseState.position,
+      App.state.orbitHidden,
+      Electron.orbitState.position,
+    ],
+    async ([mP, isHidden, orbitPosition], { sleep }) => {
       if (isHidden) {
         if (Electron.orbitState.mouseOver) {
           Electron.setState({
@@ -83,16 +89,26 @@ export default class ElectronReactions {
             orbitState: { mouseOver: false },
           })
         }
+        const [oX, oY] = orbitPosition
+        // TODO: Constants.ORBIT_WIDTH
+        const adjX = Electron.orbitOnLeft ? 313 : 17
+        const adjY = 36
+        const withinX = Math.abs(oX - mP.x + adjX) < 6
+        const withinY = Math.abs(oY - mP.y + adjY) < 15
+        if (withinX && withinY) {
+          await sleep(250)
+          Electron.sendMessage(App, App.messages.SHOW)
+        }
         return
       }
       if (Electron.orbitState.position) {
-        const mouseOver = isMouseOver(Electron.orbitState, mousePosition)
+        const mouseOver = isMouseOver(Electron.orbitState, mP)
         if (mouseOver !== Electron.orbitState.mouseOver) {
           Electron.setOrbitState({ mouseOver })
         }
       }
       if (App.state.peekTarget) {
-        const mouseOver = isMouseOver(Electron.currentPeek, mousePosition)
+        const mouseOver = isMouseOver(Electron.currentPeek, mP)
         if (mouseOver !== Electron.peekState.mouseOver) {
           Electron.setPeekState({ mouseOver })
         }
@@ -108,6 +124,7 @@ export default class ElectronReactions {
   handleHoldingOption = [
     () => Desktop.isHoldingOption,
     async (isHoldingOption, { sleep }) => {
+      console.log('HOLD OPTION?', Desktop.isHoldingOption)
       if (Electron.orbitState.pinned) {
         return
       }
@@ -116,18 +133,14 @@ export default class ElectronReactions {
           log('prevent hide while mouseover after release hold')
           return
         }
-        if (!App.state.orbitHidden) {
-          Electron.sendMessage(App, App.messages.HIDE)
-        }
+        Electron.sendMessage(App, App.messages.HIDE)
         return
       }
-      if (App.state.orbitHidden) {
-        await sleep(140)
-        log(`sending message show`)
-        Electron.sendMessage(App, App.messages.SHOW)
-        // await sleep(3500)
-        // this.updatePinned(true)
-      }
+      await sleep(140)
+      console.log(`sending message show`)
+      Electron.sendMessage(App, App.messages.SHOW)
+      // await sleep(3500)
+      // this.updatePinned(true)
     },
   ]
 
@@ -138,11 +151,10 @@ export default class ElectronReactions {
       Desktop.linesBoundingBox,
       this.repositionToAppState,
     ],
-    ([appBB, linesBB], { sleep }) => {
+    ([appBB, linesBB]) => {
       if (Constants.FORCE_FULLSCREEN) {
         return
       }
-      // await sleep(64)
       // prefer using lines bounding box, fall back to app
       const box = linesBB || appBB
       if (!box) return
@@ -170,6 +182,7 @@ export default class ElectronReactions {
       if (Electron.onClear) {
         Electron.onClear()
       }
+      console.log('SHOULD REPOSITION AFTER FS')
       this.repositionToAppState = Date.now()
       return
     }

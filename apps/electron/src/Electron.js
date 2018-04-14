@@ -11,7 +11,6 @@ import ShortcutsStore from '~/stores/shortcutsStore'
 import global from 'global'
 import { memoize } from 'lodash'
 import debug from '@mcro/debug'
-import * as Mobx from 'mobx'
 import { isEqual } from '@mcro/black'
 
 const log = debug('Electron')
@@ -44,13 +43,14 @@ const log = debug('Electron')
       })
       this.watchOptionPress()
       Electron.onMessage(msg => {
-        if (msg === 'CLEAR') {
-          this.clear = Date.now()
+        switch (msg) {
+          case Electron.messages.CLEAR:
+            this.clear = Date.now()
+            return
         }
       })
       Electron.onClear = () => {
-        log(`clear from fs toggle`)
-        Electron.sendMessage(App, App.messages.HIDE)
+        log(`Electron.onClear`)
         this.clear = Date.now()
       }
       // clear to start
@@ -62,20 +62,20 @@ const log = debug('Electron')
       () => this.clear,
       async (_, { when, sleep }) => {
         this.appRef.hide()
-        this.highlightRef.hide()
         const getState = () => ({
           ...Desktop.appState,
           ...Electron.state.orbitState,
         })
         const lastState = getState()
         this.show = 0
+        Electron.sendMessage(App, App.messages.HIDE)
         await when(() => !App.isShowingOrbit) // ensure hidden
         await when(() => !isEqual(getState(), lastState)) // ensure moved
         this.show = 1 // now render with 0 opacity so chrome updates visuals
         await sleep(50) // likely not necessary, ensure its ready for app show
         this.appRef.show() // downstream apps should now be hidden
         await sleep(200) // render opacity 0, let it update
-        await when(() => !Desktop.state.mouseDown) // ensure not moving window
+        await when(() => !Desktop.mouseState.mouseDown) // ensure not moving window
         this.show = 2
       },
     ]

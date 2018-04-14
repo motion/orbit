@@ -12,9 +12,9 @@ const icons = {
 
 @view
 export default class ControlButton {
-  render({ background = '#ED6A5F', icon }) {
+  render({ background = '#ED6A5F', icon, ...props }) {
     return (
-      <controlButton css={{ background }}>
+      <controlButton css={{ background }} {...props}>
         <img src={icons[icon]} />
       </controlButton>
     )

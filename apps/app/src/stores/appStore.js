@@ -92,18 +92,15 @@ export default class AppStore {
     () => [App.state.query, Desktop.appState.id],
     async ([query]) => {
       if (!query) {
-        return (
-          (await Bit.find({
-            take: 8,
-            where: { integration: 'slack' },
-            order: { updatedAt: 'DESC' },
-          })) || []
-        )
+        return await Bit.find({
+          take: 8,
+          order: { updatedAt: 'DESC' },
+        })
       }
       const { conditions, rest } = parseQuery(query)
       return await Bit.find({
         where: `title like "%${rest.replace(/\s+/g, '%')}%"${conditions}`,
-        order: { updatedAt: 'DESC' },
+        order: { updatedAt: 'DE SC' },
         take: 8,
       })
     },
@@ -165,8 +162,11 @@ export default class AppStore {
     }
   }
 
+  lastSelectAt = 0
+
   _setSelected = id => {
     if (App.isShowingOrbit) {
+      this.lastSelectAt = Date.now()
       this.hoveredIndex = id
       this.selectedIndex = id
     }
@@ -199,16 +199,36 @@ export default class AppStore {
     this._setSelected(i)
   }
 
-  pinSelected = throttle(index => {
+  toggleSelected = index => {
+    if (Date.now() - this.lastSelectAt < 450) {
+      // ignore double clicks
+      return
+    }
+    const isSame = this.selectedIndex === index
+    if (isSame && App.state.peekTarget) {
+      App.setPeekTarget(null)
+    } else {
+      this.pinSelected(index)
+    }
+  }
+
+  pinSelected = index => {
     if (typeof index === 'number') {
       this._setSelected(index)
-      console.log('pinning')
       App.setPeekTarget({
         id: index > -1 ? index : this.hoveredIndex || this.activeIndex,
         position: this.getMousePosition(),
       })
+      console.log(
+        'set peek target',
+        {
+          id: index > -1 ? index : this.hoveredIndex || this.activeIndex,
+          position: this.getMousePosition(),
+        },
+        App.state.peekTarget,
+      )
     }
-  }, 500)
+  }
 
   clearPinned = () => {
     App.setPeekTarget(null)
@@ -227,27 +247,6 @@ export default class AppStore {
       }
     },
   })
-
-  @react
-  hideOrbitOnEsc = [
-    () => Desktop.keyboardState.esc,
-    () => {
-      if (Constants.FORCE_FULLSCREEN) {
-        return
-      }
-      if (App.state.peekTarget) {
-        App.setPeekTarget(null)
-        return
-      }
-      if (
-        Desktop.state.focusedOnOrbit ||
-        Electron.orbitState.mouseOver ||
-        Electron.orbitState.fullScreen
-      ) {
-        App.setOrbitHidden(true)
-      }
-    },
-  ]
 
   @react.if
   hoverWordToSelectedIndex = [

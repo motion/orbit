@@ -22,9 +22,7 @@ const stringifyObject = obj =>
 const requestIdle = (cb?: Function) =>
   new Promise(
     res =>
-      typeof window !== 'undefined' && window.requestIdleCallback
-        ? window.requestIdleCallback(() => cb ? cb() : res())
-        : setTimeout(cb || res, 1),
+      setTimeout(cb || res, 0),
   )
 
 type Options = {
@@ -231,11 +229,11 @@ class Bridge {
   // set is only allowed from the source its set as initially
   setState = (newState, ignoreSocketSend) => {
     if (!this._store) {
-      console.log('waht is this', this, this._source, this._store)
+      console.warn('waht is this', this, this._source, this._store)
       throw new Error(
         `Called ${this._source}.setState before calling ${
           this._source
-        }.start with state ${JSON.stringify(newState, 0, 2)}`,
+        }.start with state ${JSON.stringify(newState, null, 2)}`,
       )
     }
     if (!newState || typeof newState !== 'object') {
@@ -259,6 +257,7 @@ class Bridge {
           this.socketManager.sendAll(this._source, changedState)
         } else {
           if (!this._wsOpen) {
+            console.log('queueing', changedState)
             this._queuedState = true
             return changedState
           }

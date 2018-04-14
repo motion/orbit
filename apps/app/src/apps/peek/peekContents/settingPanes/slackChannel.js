@@ -27,11 +27,11 @@ export default class SlackChannel extends React.Component {
     return (
       <channel>
         <info>
-          <UI.Text $title fontWeight={600} size={1.2}>
+          <UI.Text $title fontWeight={500} size={1.2}>
             #{channel.name} <span>({channel.num_members} Members)</span>
           </UI.Text>
-          <UI.Text $description ellipse size={1.1} opacity={0.6}>
-            {channel.topic.value}
+          <UI.Text $description ellipse={1} size={1.1} opacity={0.6}>
+            {channel.topic && channel.topic.value}
           </UI.Text>
         </info>
         <options>
@@ -50,7 +50,6 @@ export default class SlackChannel extends React.Component {
     channel: {
       flex: 1,
       flexFlow: 'row',
-      maxWidth: '100%',
       overflow: 'hidden',
       alignItems: 'center',
       padding: [5, 0],
@@ -65,7 +64,8 @@ export default class SlackChannel extends React.Component {
     },
     options: {
       flexFlow: 'row',
-      flexShrink: 0,
+      width: 40,
+      marginLeft: 20,
     },
   }
 }

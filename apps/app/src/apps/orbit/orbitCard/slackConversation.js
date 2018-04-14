@@ -8,7 +8,7 @@ const isntAttachment = x => !x.text || !x.text.match(/\<([a-z]+:\/\/[^>]+)\>/g)
 export default class SlackConversation {
   render({ bit }) {
     return (
-      <React.Fragment>
+      <convo>
         {bit.data.messages
           .reverse()
           .filter(isntAttachment)
@@ -21,9 +21,11 @@ export default class SlackConversation {
               Text={Text}
             />
           ))}
-      </React.Fragment>
+      </convo>
     )
   }
 
-  static style = {}
+  static style = {
+    convo: {},
+  }
 }

@@ -5,6 +5,19 @@ import Overdrive from '@mcro/overdrive'
 import OrbitIcon from './orbitIcon'
 import OrbitCardContent from './orbitCardContent'
 
+const getTitle = result => result.title
+
+const getNaturalHeight = result => {
+  switch (result.integration) {
+    case 'slack':
+      const numMessages =
+        (result.data && result.data.messages && result.data.messages.length) ||
+        0
+      return Math.min(3, numMessages) * 80
+  }
+  return result.body ? 200 : 50
+}
+
 @view
 class Text {
   render(props) {
@@ -21,11 +34,28 @@ class OrbitCardStore {
   wasSelected = [() => this.isSelected, _ => _]
 }
 
+const tinyProps = {
+  titleProps: {
+    size: 1,
+  },
+  iconProps: {
+    size: 14,
+    style: {
+      marginTop: 1,
+      marginLeft: 15,
+    },
+  },
+}
+
 @view.attach('appStore')
 @view({
   store: OrbitCardStore,
 })
 export default class OrbitCard {
+  static defaultProps = {
+    borderRadius: 7,
+  }
+
   hovered = false
 
   setHovered = () => {
@@ -45,43 +75,61 @@ export default class OrbitCard {
     parentElement,
     store,
     getRef,
-    theme,
+    tiny,
+    listItem,
+    borderRadius: borderRadius_,
   }) {
-    const { isSelected, wasSelected } = store
+    const maxHeight = totalHeight ? totalHeight : 400
+    const borderRadius = listItem && tiny ? 4 : listItem ? 0 : borderRadius_
+    store.isSelected
     return (
       <Overdrive parentElement={parentElement}>
         {({ AnimateElement }) => {
+          const { isSelected } = store
+          const isExpanded = isSelected && !tiny
           // TODO: content height should determing large height
-          const tallHeight = Math.min(450, Math.max(300, totalHeight / 2))
-          const smallHeight = Math.max(
-            100,
-            (totalHeight - tallHeight) / Math.max(1, total - 1),
+          const tallHeight = Math.min(
+            450,
+            Math.max(108, getNaturalHeight(result)),
           )
-          const height = isSelected ? tallHeight : smallHeight
+          const smallHeight = Math.max(
+            70,
+            (maxHeight - tallHeight) / Math.max(1, total - 1),
+          )
+          const height = tiny ? 'auto' : isExpanded ? tallHeight : smallHeight
           // const shouldResizeText = wasSelected !== isSelected
           const willTransition = false
+          const title = getTitle(result)
           return (
             <AnimateElement id={`${result.id}`}>
               <cardWrap
-                css={{ height }}
+                css={{
+                  maxHeight: height,
+                  height,
+                  padding: listItem ? 0 : [0, 5, 3],
+                }}
                 ref={getRef}
-                onClick={() => appStore.pinSelected(index, 'click')}
+                onClick={() => appStore.toggleSelected(index)}
                 {...appStore.getHoverProps({ result, id: index })}
               >
                 <card
                   $cardHovered={this.hovered && willTransition}
+                  css={{
+                    padding: tiny ? [6, 8] : 12,
+                    borderRadius,
+                  }}
                   onMouseEnter={this.setHovered}
                   onMouseLeave={this.setUnhovered}
                 >
                   <UI.HoverGlow
-                    if={false}
-                    opacity={0.5}
+                    if={isExpanded}
+                    opacity={0.8}
                     full
                     resist={50}
                     scale={1}
                     blur={45}
-                    color={theme.base.background.lighten(0.05)}
-                    borderRadius={10}
+                    color={'#fff'}
+                    borderRadius={borderRadius}
                     behind
                     durationIn={500}
                     durationOut={100}
@@ -91,15 +139,16 @@ export default class OrbitCard {
                       css={{ flexFlow: 'row', justifyContent: 'space-between' }}
                     >
                       <Text
-                        size={isSelected ? 1.35 : 1.2}
-                        ellipse={isSelected ? 2 : 1}
+                        size={isExpanded ? 1.35 : 1.2}
+                        ellipse={isExpanded ? 2 : 1}
                         fontWeight={400}
                         css={{
                           marginBottom: 0,
                           maxWidth: `calc(100% - 30px)`,
                         }}
+                        {...tiny && tinyProps.titleProps}
                       >
-                        {result.title}
+                        {title}
                       </Text>
                       <OrbitIcon
                         if={result.icon || result.integration}
@@ -114,10 +163,14 @@ export default class OrbitCard {
                           marginLeft: 0,
                           marginTop: 3,
                         }}
+                        {...tiny && tinyProps.iconProps}
                       />
                     </title>
                   </AnimateElement>
-                  <AnimateElement id={`${result.id}-content`}>
+                  <AnimateElement
+                    if={!tiny && result.body}
+                    id={`${result.id}-content`}
+                  >
                     <content
                       css={{
                         flex: 1,
@@ -125,13 +178,11 @@ export default class OrbitCard {
                         overflow: 'hidden',
                       }}
                     >
-                      <OrbitCardContent if={isSelected} result={result} />
-                      <preview if={!isSelected}>
-                        {result.body || result.text}
-                      </preview>
+                      <OrbitCardContent if={isExpanded} result={result} />
+                      <preview if={!tiny && !isSelected}>{result.body}</preview>
                     </content>
                   </AnimateElement>
-                  <AnimateElement id={`${result.id}-bottom`}>
+                  <AnimateElement if={!tiny} id={`${result.id}-bottom`}>
                     <bottom>
                       <orbital />
                       <Text
@@ -170,13 +221,10 @@ export default class OrbitCard {
       overflow: 'hidden',
     },
     cardWrap: {
-      padding: [0, 5, 3],
       position: 'relative',
     },
     card: {
       flex: 1,
-      borderRadius: 7,
-      padding: 12,
       overflow: 'hidden',
       position: 'relative',
       transform: {

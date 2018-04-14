@@ -1,13 +1,10 @@
 import Bridge from './helpers/Bridge'
 import { setGlobal, proxySetters } from './helpers'
 import { store, react } from '@mcro/black/store'
-import global from 'global'
-import { App } from './App'
 import ElectronReactions from './ElectronReactions'
-import debug from '@mcro/debug'
-import { globalState } from 'mobx/lib/core/globalstate'
+// import debug from '@mcro/debug'
 
-const log = debug('ElectronStore')
+// const log = debug('ElectronStore')
 
 export let Electron
 

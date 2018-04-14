@@ -35,7 +35,7 @@ export default class Syncer {
       throw new Error('Must provide action')
     }
     if (!this.actions[action]) {
-      throw new Error(`NO SYNCER FOUND ${action}`)
+      throw new Error(`NO SYNCER FOUND ${this.type} ${action}`)
     }
     const setting = await findOrCreate(Setting, { type: this.type })
     if (!setting || !setting.token) {
@@ -46,6 +46,9 @@ export default class Syncer {
       if (!this[name]) {
         this[name] = this.syncers[name]
       }
+    }
+    if (!this.syncers[action]) {
+      throw `No syncer ${this.type} ${action}`
     }
     log(`run() ${this.type} ${action}`)
     await this.syncers[action].run()

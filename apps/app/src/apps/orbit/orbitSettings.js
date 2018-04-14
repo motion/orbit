@@ -61,9 +61,17 @@ export default class OrbitSettings {
 
   componentWillMount() {
     this.props.appStore.setGetResults(this.getResults)
+    const updateInt = setInterval(() => {
+      if (this.mounted) {
+        this.props.appStore.setGetResults(this.getResults)
+      } else {
+        clearInterval(updateInt)
+      }
+    }, 1000)
   }
 
   componentWillUnmount() {
+    this.mounted = false
     this.props.appStore.setGetResults(null)
   }
 

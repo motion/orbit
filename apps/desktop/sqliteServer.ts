@@ -105,27 +105,29 @@ async function onData(options, spark, data, uid) {
       }
       break
     case 'close':
-      if (!databasePathList[data.args.dbname]) {
-        spark.write({
-          command: 'closeComplete',
-          err: null,
-          id: data.id,
-        })
-        return
-      }
-      let err
-      try {
-        await databasePathList[data.args.dbname].close()
-      } catch (e) {
-        err = e
-      }
       spark.write({
         command: 'closeComplete',
-        err,
+        err: null,
         id: data.id,
       })
+      // dont close because we have many clients connecting!
+      // if (!databasePathList[data.args.dbname]) {
+      //   return
+      // }
+      // let err
+      // try {
+      //   await databasePathList[data.args.dbname].close()
+      // } catch (e) {
+      //   err = e
+      // }
+      // spark.write({
+      //   command: 'closeComplete',
+      //   err,
+      //   id: data.id,
+      // })
       break
     case 'delete':
+      console.log('wants to delete omg')
       if (!databasePathList[data.args.dbname]) {
         return
       }
@@ -146,9 +148,14 @@ async function onData(options, spark, data, uid) {
     case 'backgroundExecuteSqlBatch':
       db = databasePathList[data.args[0].dbargs.dbname]
       if (!db) {
+        // console.log(
+        //   'err, no db found',
+        //   databasePathList,
+        //   data.args[0].dbargs.dbname,
+        // )
         spark.write({
           command: 'backgroundExecuteSqlBatchFailed',
-          err: 'runFailed: db not found',
+          err: `runFailed: db not found`,
           id: data.id,
         })
         return

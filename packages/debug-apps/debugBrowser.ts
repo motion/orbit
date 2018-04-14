@@ -179,6 +179,7 @@ export default class DebugApps {
       updateTabs.map(async (shouldUpdate, index) => {
         if (!shouldUpdate) return
         const page = pages[index]
+        if (!page) return
         page.goto(sessions[index].debugUrl)
         await page.waitForNavigation({
           timeout: 0,
@@ -242,8 +243,8 @@ export default class DebugApps {
     onFocus(page).then(async () => {
       await sleep(50)
       await page.frames()[0].focus('body')
-      await page.mouse.click(110, 10) // click console
-      await page.mouse.click(110, 70) // click into console
+      await page.mouse.click(105, 10) // click console
+      await page.mouse.click(105, 70) // click into console
       await page.keyboard.press('PageDown') // page down to bottom
     })
   }

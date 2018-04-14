@@ -13,10 +13,18 @@ export default class OrbitStore {
     }, 100),
   ]
 
+  lastPinKey = ''
+
   willMount() {
     App.runReactions({
       onPinKey: key => {
-        this.query = key
+        const { lastPinKey } = this
+        if (!lastPinKey || lastPinKey != this.query[this.query.length - 1]) {
+          this.query = key
+        } else {
+          this.query += key
+        }
+        this.lastPinKey = key
       },
     })
     this.on(window, 'keydown', x => this.handleKeyDown(x.keyCode))

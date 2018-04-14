@@ -1,7 +1,5 @@
-import { Setting, Bit, Person, createOrUpdate } from '@mcro/models'
+import { Setting, Bit, createOrUpdate } from '@mcro/models'
 import { SlackService } from '@mcro/models/services'
-// import { createInChunks } from '~/sync/helpers'
-import * as Constants from '~/constants'
 import debug from '@mcro/debug'
 import * as _ from 'lodash'
 import * as Helpers from '~/helpers'
@@ -15,46 +13,21 @@ type SlackMessage = {
   ts: string
 }
 
-type SlackPerson = {
-  id: string
-  deleted: boolean
-  is_app_user: boolean
-  is_bot: boolean
+type ChannelInfo = {
   name: string
-  team_id: string
-  updated: number
-  profile: {
-    avatar_hash: string
-    display_name: string
-    display_name_normalized: string
-    email: string
-    first_name: string
-    image_24: string
-    image_32: string
-    image_48: string
-    image_72: string
-    image_192: string
-    image_512: string
-    last_name: string
-    phone: string
-    real_name: string
-    real_name_normalized: string
-    skype: string
-    status_emoji: string
-    status_expiration: number
-    status_text: string
-    team: string
-    title: string
-  }
+  name_normalized: string
+  purpose: { value: string }
+  topic: { value: string }
+  members: Array<string>
 }
 
 export default class SlackMessagesSync {
   setting: Setting
   service: SlackService
 
-  constructor(setting) {
+  constructor(setting, service: SlackService) {
     this.setting = setting
-    this.service = new SlackService(setting)
+    this.service = service
   }
 
   get lastSync() {
@@ -62,38 +35,10 @@ export default class SlackMessagesSync {
   }
 
   run = async () => {
-    const updated = [
-      ...(await this.syncPeople()),
-      ...(await this.syncMessages()),
-    ]
+    const updated = await this.syncMessages()
     if (updated.length) {
-      log(`Slack: synced ${updated.length}`, updated)
+      log(`Slack: synced messages ${updated.length}`, updated)
     }
-  }
-
-  syncPeople = async () => {
-    const { members, cache_ts } = await this.service.slack.users.list()
-    const created = []
-    for (const member of members) {
-      if (await this.updatePerson(member)) {
-        created.push(member)
-      }
-    }
-    return created
-  }
-
-  updatePerson = async (person: SlackPerson) => {
-    return await createOrUpdate(
-      Person,
-      {
-        identifier: `slack-${Helpers.hash(person)}`,
-        name: person.name,
-        data: {
-          ...person,
-        },
-      },
-      Person.identifyingKeys,
-    )
   }
 
   syncMessages = async () => {
@@ -104,7 +49,13 @@ export default class SlackMessagesSync {
       return
     }
     for (const channel of Object.keys(this.service.activeChannels)) {
-      const info = await this.service.slack.channels.info({ channel })
+      const channelInfo = await this.service.slack.channels
+        .info({ channel })
+        .then(res => res && res.ok && res.channel)
+      if (!channelInfo) {
+        console.log('no channel info')
+        continue
+      }
       const messages: Array<SlackMessage> = await this.service.channelHistory({
         channel,
         oldest: this.lastSync[channel],
@@ -120,18 +71,18 @@ export default class SlackMessagesSync {
             continue
           }
           const distanceInSeconds = Math.abs(+next.ts - +last.ts)
-          const isGrouped = distanceInSeconds < 15
+          const isGrouped = distanceInSeconds < 150
           if (isGrouped) {
             group.push(next)
             continue
           }
           if (group.length) {
-            created.push(await this.updateConversation(channel, group))
+            created.push(await this.updateConversation(channelInfo, group))
             group = []
           }
         }
         if (group.length) {
-          created.push(await this.updateConversation(channel, group))
+          created.push(await this.updateConversation(channelInfo, group))
         }
         if (messages.length) {
           _.merge(this.setting.values, {
@@ -150,21 +101,27 @@ export default class SlackMessagesSync {
   }
 
   updateConversation = async (
-    channel: string,
+    channelInfo: ChannelInfo,
     messages: Array<SlackMessage>,
   ) => {
+    const data = {
+      channel: {
+        purpose: channelInfo.purpose.value,
+        topic: channelInfo.topic.value,
+        members: channelInfo.members,
+      },
+      messages,
+    }
     return await createOrUpdate(
       Bit,
       {
-        title: `Conversation in ${channel}`,
+        title: `#${channelInfo.name}`,
         body: messages
           .map(message => message.text)
           .join(' ... ')
           .slice(0, 255),
-        identifier: Helpers.hash(messages.map(x => JSON.stringify(x)).join('')),
-        data: {
-          messages,
-        },
+        identifier: Helpers.hash(data),
+        data,
         bitCreatedAt: _.last(messages).ts,
         bitUpdatedAt: _.first(messages).ts,
         type: 'conversation',

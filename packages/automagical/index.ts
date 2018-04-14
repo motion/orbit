@@ -2,7 +2,7 @@ import { fromPromise, isPromiseBasedObservable, whenAsync } from 'mobx-utils'
 import { fromStream } from './fromStream'
 import * as Mobx from 'mobx'
 import { Observable } from 'rxjs'
-import * as Helpers from '@mcro/helpers'
+import * as McroHelpers from '@mcro/helpers'
 import debug from '@mcro/debug'
 
 const root = typeof window !== 'undefined' ? window : require('global')
@@ -342,21 +342,19 @@ const observableId = () => `__ID_${Math.random()}__`
 // watches values in an autorun, and resolves their results
 function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
   const {
-    log: shouldLog,
     isIf,
     delayValue,
-    logReaction,
     defaultValue,
     onlyUpdateIfChanged,
     ...options
-  } = Helpers.getReactionOptions({
+  } = McroHelpers.getReactionOptions({
     name: method,
     ...userOptions,
   })
   const delayLog =
     options && options.delay >= 0 ? ` (...${options.delay}ms)` : ''
   const name = `${getReactionName(obj)} | ${method} | ${delayLog}`
-  let preventLog = shouldLog === false
+  let preventLog = options.log === false
   let current = Mobx.observable.box(defaultValue || DEFAULT_VALUE)
   let prev
   let curDisposable = null
@@ -563,6 +561,7 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
 
   function watcher(reactionFn) {
     return function watcherCb(reactValArg) {
+      reset()
       // @react.if check. avoids 0 bugs
       if (isIf && !reactValArg && reactValArg !== 0) {
         return
@@ -570,7 +569,6 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
       if (isIf) {
         console.log('reactin', reactValArg)
       }
-      reset()
       reactionID = uid()
       const curID = reactionID
       const updateAsyncValue = val => {
@@ -647,7 +645,7 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
             `\n\n`,
           )
         } else {
-          if (logReaction !== false) {
+          if (options.log !== 'state') {
             log(`${prefix}`, isReaction ? reactValArg : '', ...logRes(result))
           }
         }

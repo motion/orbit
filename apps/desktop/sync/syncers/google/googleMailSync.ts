@@ -163,7 +163,7 @@ export default class GoogleMailSync {
               if (!threads.length) {
                 continue
               }
-              const rows = _.take(threads, 100)
+              const rows = _.take(threads, 50)
               threads = threads.slice(rows.length)
               const updateKeys = Object.keys(rows[0])
               for (const row of rows) {

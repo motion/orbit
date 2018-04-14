@@ -19,7 +19,6 @@ import OrbitIcon from '~/apps/orbit/orbitIcon'
 })
 export default class GoogleMailSetting {
   render({ store, setting, update }) {
-    if (setting.values) return null
     const { syncSettings } = setting.values
     return (
       <gmailSetting>

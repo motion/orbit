@@ -22,9 +22,7 @@ const stringifyObject = obj =>
 const requestIdle = (cb?: Function) =>
   new Promise(
     res =>
-      typeof window !== 'undefined' && window.requestIdleCallback
-        ? window.requestIdleCallback(() => cb ? cb() : res())
-        : setTimeout(cb || res, 1),
+      setTimeout(cb || res, 0),
   )
 
 type Options = {

@@ -90,10 +90,10 @@ export default class OrbitCard {
           // TODO: content height should determing large height
           const tallHeight = Math.min(
             450,
-            Math.max(150, getNaturalHeight(result)),
+            Math.max(108, getNaturalHeight(result)),
           )
           const smallHeight = Math.max(
-            100,
+            70,
             (maxHeight - tallHeight) / Math.max(1, total - 1),
           )
           const height = tiny ? 'auto' : isExpanded ? tallHeight : smallHeight
@@ -167,7 +167,10 @@ export default class OrbitCard {
                       />
                     </title>
                   </AnimateElement>
-                  <AnimateElement if={!tiny} id={`${result.id}-content`}>
+                  <AnimateElement
+                    if={!tiny && result.body}
+                    id={`${result.id}-content`}
+                  >
                     <content
                       css={{
                         flex: 1,
@@ -176,9 +179,7 @@ export default class OrbitCard {
                       }}
                     >
                       <OrbitCardContent if={isExpanded} result={result} />
-                      <preview if={!tiny && !isSelected}>
-                        {result.body || result.text}
-                      </preview>
+                      <preview if={!tiny && !isSelected}>{result.body}</preview>
                     </content>
                   </AnimateElement>
                   <AnimateElement if={!tiny} id={`${result.id}-bottom`}>

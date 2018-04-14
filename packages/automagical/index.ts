@@ -563,6 +563,7 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
 
   function watcher(reactionFn) {
     return function watcherCb(reactValArg) {
+      reset()
       // @react.if check. avoids 0 bugs
       if (isIf && !reactValArg && reactValArg !== 0) {
         return
@@ -570,7 +571,6 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
       if (isIf) {
         console.log('reactin', reactValArg)
       }
-      reset()
       reactionID = uid()
       const curID = reactionID
       const updateAsyncValue = val => {

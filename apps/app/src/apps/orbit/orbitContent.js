@@ -19,7 +19,8 @@ export default class OrbitContent {
           $tiny={!hasQuery}
           css={{
             opacity:
-              appStore.activeIndex >= 0 && appStore.activeIndex < SPLIT_INDEX
+              query ||
+              (appStore.activeIndex >= 0 && appStore.activeIndex < SPLIT_INDEX)
                 ? 1
                 : 0.5,
           }}

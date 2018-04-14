@@ -124,12 +124,7 @@ export default class ElectronReactions {
   handleHoldingOption = [
     () => Desktop.isHoldingOption,
     async (isHoldingOption, { sleep }) => {
-      console.log(
-        'HOLD OPTION?',
-        Desktop.isHoldingOption,
-        Electron.orbitState.pinned,
-        App.state.orbitHidden,
-      )
+      console.log('HOLD OPTION?', Desktop.isHoldingOption)
       if (Electron.orbitState.pinned) {
         return
       }
@@ -138,13 +133,11 @@ export default class ElectronReactions {
           log('prevent hide while mouseover after release hold')
           return
         }
-        if (!App.state.orbitHidden) {
-          Electron.sendMessage(App, App.messages.HIDE)
-        }
+        Electron.sendMessage(App, App.messages.HIDE)
         return
       }
       await sleep(140)
-      log(`sending message show`)
+      console.log(`sending message show`)
       Electron.sendMessage(App, App.messages.SHOW)
       // await sleep(3500)
       // this.updatePinned(true)

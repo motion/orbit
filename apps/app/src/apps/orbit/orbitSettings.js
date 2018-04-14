@@ -19,8 +19,8 @@ export default class OrbitSettings {
       id: 'google',
       type: 'setting',
       integration: 'google',
-      title: 'Google Drive',
-      icon: 'gdrive',
+      title: 'Google',
+      icon: 'google',
     },
     {
       id: 'github',

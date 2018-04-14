@@ -74,7 +74,11 @@ export default class ElectronReactions {
 
   @react({ log: false })
   setMouseOvers = [
-    () => [Desktop.mouseState.position, App.state.orbitHidden],
+    () => [
+      Desktop.mouseState.position,
+      App.state.orbitHidden,
+      App.state.peekTarget,
+    ],
     ([mousePosition, isHidden]) => {
       if (isHidden) {
         if (Electron.orbitState.mouseOver) {

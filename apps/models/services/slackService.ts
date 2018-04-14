@@ -1,9 +1,11 @@
-import Slack from 'slack'
+import Slack1 from 'slack'
+import * as Slack2 from 'slack'
 import { Setting } from '../setting'
 import { store, watch } from '@mcro/black/store'
 
 type SlackOpts = { oldest?: number; count: number }
 
+const Slack = Slack1 || Slack2
 console.log('Slack', Slack)
 
 @store
@@ -11,15 +13,19 @@ export class SlackService {
   // @ts-ignore
   slack: Slack
   setting: Setting
-
-  @watch({ log: false })
-  allChannels = () =>
-    this.slack && this.slack.channels.list({}).then(res => res.channels)
+  allChannels = null
 
   constructor(setting) {
     this.setting = setting
     // @ts-ignore
     this.slack = new Slack({ token: setting.token })
+    this.setAll()
+  }
+
+  async setAll() {
+    this.allChannels = await this.slack.channels
+      .list({})
+      .then(res => res.channels)
   }
 
   get activeChannels() {

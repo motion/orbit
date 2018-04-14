@@ -96,7 +96,7 @@ export class SettingView {
         <body>
           <status if={store.job} />
           <setting>
-            <SettingPane appStore={appStore} />
+            <SettingPane appStore={appStore} setting={store.setting} />
             setting:
             <UI.Field
               row

@@ -23,6 +23,9 @@ export default class SlackChannel extends React.Component {
   }
 
   render({ channel, slackService }) {
+    if (!slackService.setting) {
+      return null
+    }
     const { channels = {} } = slackService.setting.values
     return (
       <channel>
@@ -30,7 +33,13 @@ export default class SlackChannel extends React.Component {
           <UI.Text $title fontWeight={600} size={1.2}>
             #{channel.name} <span>({channel.num_members} Members)</span>
           </UI.Text>
-          <UI.Text $description ellipse size={1.1} opacity={0.6}>
+          <UI.Text
+            if={channel.topic}
+            $description
+            ellipse
+            size={1.1}
+            opacity={0.6}
+          >
             {channel.topic.value}
           </UI.Text>
         </info>

@@ -8,8 +8,9 @@ import OrbitIcon from '~/apps/orbit/orbitIcon'
     max = ''
 
     willMount() {
-      if (!this.props.setting.values) {
-        return
+      this.props.setting.values = {
+        syncSettings: { max: 50 },
+        ...this.props.setting.values,
       }
       const settings = this.props.setting.values.syncSettings
       this.max = settings.max
@@ -19,7 +20,7 @@ import OrbitIcon from '~/apps/orbit/orbitIcon'
 export default class GoogleMailSetting {
   render({ store, setting, update }) {
     if (setting.values) return null
-    const { syncSettings = { max: 50 } } = setting.values
+    const { syncSettings } = setting.values
     return (
       <gmailSetting>
         <OrbitIcon icon="gmail" />

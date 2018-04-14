@@ -14,34 +14,21 @@ learned:
 
 fallover:
 
-* peek positioning
 * overdrive animation
-* swift defocus bug still active
-
-tues
-
-fallover:
-
-* createOrUpdate should return only if updated, can be used in syncers to output # changed
-* peek needs to clear using messages
-* use messages for current uses of state like shouldUpdate shouldHide etc
 
 wed
 
 * peek position limits more ofen fullscreen
-* peek pos height adjust better
 
 add:
 
 * on resize window fixes
   * resize have it transition smoothly to fullscreen
   * back to corner
-  * dont loose peek after move while pinned open
 
 thurs
 
 * meeting kevin
-* option+key to pin
 
 add:
 
@@ -52,3 +39,6 @@ fri
 add:
 
 * long tail: disable when super low battery
+* long tail: bridge both setState and receiveState should batch a tiny bit
+  * if multiple setstate called before settimeout, group them
+  * if multiple recevied before timeout, group them

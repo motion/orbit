@@ -17,7 +17,11 @@ class HeaderStore {
 
   @react({ fireImmediately: true, delay: 32 })
   focusInput = [
-    () => App.isFullyShown,
+    () => [
+      App.isFullyShown,
+      Electron.orbitState.pinned,
+      Electron.isMouseInActiveArea,
+    ],
     () => {
       if (!this.inputRef) return
       this.inputRef.focus()

@@ -113,8 +113,7 @@ class OrbitWindowStore {
       if (!App.isShowingOrbit) {
         return
       }
-      if (mouseOver && Electron.orbitState.fullScreen) {
-        this.focusOrbit()
+      if (Electron.orbitState.fullScreen) {
         return
       }
       if (Electron.orbitState.pinned) {

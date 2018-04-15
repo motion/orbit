@@ -20,11 +20,11 @@ if (module && module.hot) {
 }
 
 const onPort = async cb => {
-  await sleep(100)
-  if (await fetch('http://localhost:3001').then(x => x.text())) {
+  await sleep(200)
+  try {
+    await fetch('http://localhost:3001')
     cb()
-  } else {
-    await sleep(100)
+  } catch (_) {
     onPort(cb)
   }
 }

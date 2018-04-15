@@ -307,18 +307,17 @@ export default class AppStore {
     return authorizations
   }
 
-  startOauth = id => {
-    App.setAuthState({ openId: null })
-    setTimeout(() => App.setAuthState({ openId: id }), 16)
+  startOauth = type => {
+    App.sendMessage(Desktop, Desktop.messages.OPEN_AUTH, type)
     const checker = this.setInterval(async () => {
       const auth = await this.checkAuths()
-      const oauth = auth && auth[id]
+      const oauth = auth && auth[type]
       if (!oauth) return
       clearInterval(checker)
-      let setting = await Setting.findOne({ type: id })
+      let setting = await Setting.findOne({ type })
       if (!setting) {
         setting = new Setting()
-        setting.type = id
+        setting.type = type
       }
       setting.token = oauth.token
       setting.values = {
@@ -327,7 +326,7 @@ export default class AppStore {
       }
       await setting.save()
       this.getSettings()
-      App.setAuthState({ closeId: id })
+      App.sendMessage(Desktop, Desktop.messages.CLOSE_AUTH, type)
     }, 1000)
   }
 }

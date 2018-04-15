@@ -9,6 +9,8 @@
 
 - triage
 
+small polish
+
 * design
 
   * OrbitCard
@@ -22,6 +24,7 @@
 
 * sidebar
 
+  * [ ] click to link to the Bit
   * [ ] design better info display for items, better meta info
   * [ ] slack: sync People, Chat Rooms
   * [ ] list: movement + animations + keyboard/scroll select orbit list
@@ -39,30 +42,36 @@
   * [ ] on fs focus input
   * [ ] accidental fullscreen at times
 
-* profiles
+- peek
+
+  * click header input clear peek
+  * peek auto link links
+  * peek show images
+
+- profiles
 
   * [ ] sync people info from google
   * [ ] sync people info from github
   * [ ] basic peek view with aggregate info + avatar
   * [ ] NLP: related things, common rooms
 
-* sync
+- sync
 
   * [ ] need to normalize bitUpdatedAt and bitCreatedAt
   * [ ] github sync
   * [ ] github simple sidebar/peek
 
-* settings
+- settings
 
   * [ ] adjust setting based on storage size
   * [ ] easy automatic setting setup: common rooms, etc
   * [ ] remove setting + clear bits
 
-* stack
+- stack
 
   * [ ] fix electron devtools not working
 
-* productionize
+- productionize
 
   * [ ] get builds working to .app
   * [ ] get auto update working
@@ -75,5 +84,5 @@
       * if multiple setstate called before settimeout, group them
       * if multiple recevied before timeout, group them
 
-* research
+- research
   * [ ] keeping chromium warm

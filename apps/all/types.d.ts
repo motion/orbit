@@ -4,6 +4,7 @@ export type AppState = {
   title?: string
   offset: [number, number]
   bounds: [number, number]
+  selectedText?: string
 }
 
 export type OCRItem = {

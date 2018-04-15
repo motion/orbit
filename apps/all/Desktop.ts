@@ -23,6 +23,7 @@ class DesktopStore {
 
   state: DesktopState = {
     appState: {
+      selectedText: '',
       id: null,
       name: null,
       title: null,

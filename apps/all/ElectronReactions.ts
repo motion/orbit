@@ -62,13 +62,13 @@ export default class ElectronReactions {
   //   () => Electron.orbitState.pinned && this.updatePinned(false),
   // ]
 
-  @react
+  @react({ log: 'state' })
   unPinOnFullScreen = [
     () => Electron.orbitState.fullScreen,
     () => Electron.orbitState.pinned && this.updatePinned(false),
   ]
 
-  @react
+  @react({ log: 'state' })
   unPinOnHidden = [
     () => App.isFullyHidden,
     hidden => hidden && Electron.orbitState.pinned && this.updatePinned(false),

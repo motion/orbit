@@ -12,7 +12,7 @@ class OrbitWindowStore {
   show = 0
   orbitRef = null
 
-  @react
+  @react({ log: 'state' })
   unFullScreenOnHide = [
     () => App.isShowingOrbit,
     showing => {
@@ -82,20 +82,7 @@ class OrbitWindowStore {
     },
   ]
 
-  @react({ delay: App.animationDuration })
-  defocusAfterClosing = [
-    () =>
-      Electron.orbitState.pinned ||
-      (App.isShowingOrbit && Electron.orbitState.mouseOver),
-    showing => {
-      if (showing || Electron.orbitState.fullScreen) {
-        return
-      }
-      Swift.defocus()
-    },
-  ]
-
-  @react({ delay: App.animationDuration })
+  @react({ delay: App.animationDuration, log: 'state' })
   defocusAfterClosing = [
     () => [Electron.orbitState.pinned, App.isShowingOrbit],
     ([pinned, showing]) => {

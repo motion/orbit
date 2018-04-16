@@ -5,7 +5,7 @@ import { view } from '@mcro/black'
 @view
 export default class SlackMessage {
   render({ bit, message }) {
-    if (!message.text) {
+    if (!message.text || !bit) {
       return null
     }
     if (message.text.indexOf('uploaded a file') >= 0) {
@@ -23,11 +23,19 @@ export default class SlackMessage {
         </div>
       )
     }
+    const person = bit.people.find(
+      person => person.integrationId === message.user,
+    )
+    if (!person) {
+      return null
+    }
+    const avatar = person.data.profile.image_48
     return (
       <message>
         <UI.Text ellipse={15}>
           <user>
-            <strong>{message.user}</strong>
+            <img $avatar if={avatar} src={avatar} />
+            <strong>{message.name || message.user}</strong>
             &nbsp;&nbsp;
             <UI.Date $date>{new Date(message.ts.split('.')[0] * 1000)}</UI.Date>
           </user>
@@ -43,6 +51,7 @@ export default class SlackMessage {
     user: {
       fontSize: 13,
       flexFlow: 'row',
+      margin: [0, 0, 5],
     },
     strong: {
       fontWeight: 600,
@@ -52,6 +61,12 @@ export default class SlackMessage {
       fontSize: 12,
       fontWeight: 300,
       opacity: 0.5,
+    },
+    avatar: {
+      borderRadius: 100,
+      margin: [0, 4, 0, 0],
+      width: 18,
+      height: 18,
     },
   }
 }

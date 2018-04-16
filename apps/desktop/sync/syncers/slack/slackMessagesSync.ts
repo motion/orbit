@@ -140,10 +140,11 @@ export default class SlackMessagesSync {
         peopleIds.add(person.integrationId)
         return {
           ...message,
-          name: person.name,
+          name: person.data.name,
         }
       }),
     )
+    const people = [...peopleIds].map(id => this.peopleCache[id])
     const data = {
       channel: {
         purpose: channelInfo.purpose.value,
@@ -152,7 +153,6 @@ export default class SlackMessagesSync {
       },
       messages: fullMessages,
     }
-    const people = [...peopleIds].map(id => this.peopleCache[id])
     return await createOrUpdate(
       Bit,
       {

@@ -7,7 +7,10 @@
 * Swindler dedupe animation improvements
 * meeting kevin
   * stripe scale, how would we solve it
-  * follow up with mike
+  * hes interested in:
+    * better seeing what teams are all about
+    * better seeing the structure of the company
+  * should follow up with him+mike in a couple weeks
   * he did mention calendar integration being interesting
   * linking notes to calendar meetings -- startups do this, could be simple
     * http://www.shellyapps.com.au/ see "our vision"
@@ -31,7 +34,6 @@ small polish
 
   * [ ] click to link to the Bit
   * [ ] design better info display for items, better meta info
-    * [x] start on preview resolvers for each type
   * [ ] slack: sync People, Chat Rooms
   * [ ] list: movement + animations + keyboard/scroll select orbit list
   * [ ] overdrive: deep investigate animate performance

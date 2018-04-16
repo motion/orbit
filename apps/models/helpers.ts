@@ -18,6 +18,7 @@ export async function createOrUpdate(
   Model: any,
   values: Object,
   findFields?: Array<string>,
+  returnIfUnchanged = false,
 ) {
   const finalFields = findFields ? pick(values, findFields) : values
   let item = (await Model.findOne({ where: finalFields })) || new Model()
@@ -25,11 +26,14 @@ export async function createOrUpdate(
     (a, b) => ({ ...a, [b]: item[b] }),
     {},
   )
-  if (isEqual(itemVals, values)) {
+  const changed = !isEqual(itemVals, values)
+  if (!returnIfUnchanged && !changed) {
     return null
   }
-  Object.assign(item, values)
-  await item.save()
+  if (changed) {
+    Object.assign(item, values)
+    await item.save()
+  }
   return item
 }
 

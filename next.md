@@ -16,6 +16,7 @@
     * http://www.shellyapps.com.au/ see "our vision"
 
 - triage
+  * db not found fix for websql driver
 
 small polish
 

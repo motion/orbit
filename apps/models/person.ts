@@ -6,6 +6,7 @@ export class Person extends T.BaseEntity {
 
   @T.PrimaryGeneratedColumn() id: number
   @T.Column() identifier: string
+  @T.Column() integrationId: string
   @T.Column() integration: string
   @T.Column() name: string
   @T.CreateDateColumn() createdAt: Date

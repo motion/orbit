@@ -56,7 +56,8 @@ class AppRoot {
   }
 
   async restart() {
-    onPort(() => (window.location = window.location))
+    console.trace('calling restart, not doing it for now')
+    // onPort(() => (window.location = window.location))
   }
 
   async dispose() {}

@@ -3,9 +3,7 @@ import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import Overdrive from '@mcro/overdrive'
 import OrbitIcon from './orbitIcon'
-import OrbitCardContent from './orbitCardContent'
-
-const getTitle = result => result.title
+import orbitContent from './orbitCardContent'
 
 const getNaturalHeight = result => {
   switch (result.integration) {
@@ -17,6 +15,10 @@ const getNaturalHeight = result => {
   }
   return result.body ? 200 : 50
 }
+
+const SubTitle = props => (
+  <UI.Title size={0.9} opacity={0.7} ellipse={1} {...props} />
+)
 
 @view
 class Text {
@@ -79,6 +81,7 @@ export default class OrbitCard {
     listItem,
     borderRadius: borderRadius_,
   }) {
+    const { title, icon, content, subtitle } = orbitContent(result)
     const maxHeight = totalHeight ? totalHeight : 400
     const borderRadius = listItem && tiny ? 4 : listItem ? 0 : borderRadius_
     store.isSelected
@@ -99,7 +102,6 @@ export default class OrbitCard {
           const height = tiny ? 'auto' : isExpanded ? tallHeight : smallHeight
           // const shouldResizeText = wasSelected !== isSelected
           const willTransition = false
-          const title = getTitle(result)
           return (
             <AnimateElement id={`${result.id}`}>
               <cardWrap
@@ -135,51 +137,33 @@ export default class OrbitCard {
                     durationOut={100}
                   />
                   <AnimateElement id={`${result.id}-title`}>
-                    <title
-                      css={{ flexFlow: 'row', justifyContent: 'space-between' }}
-                    >
+                    <title>
                       <Text
                         size={isExpanded ? 1.35 : 1.2}
                         ellipse={isExpanded ? 2 : 1}
                         fontWeight={400}
-                        css={{
-                          marginBottom: 0,
-                          maxWidth: `calc(100% - 30px)`,
-                        }}
+                        $titleText
                         {...tiny && tinyProps.titleProps}
                       >
                         {title}
                       </Text>
                       <OrbitIcon
-                        if={result.icon || result.integration}
+                        if={icon}
                         size={16}
-                        icon={
-                          result.icon
-                            ? `/icons/${result.icon}`
-                            : result.integration
-                        }
+                        icon={icon}
                         size={18}
-                        css={{
-                          marginLeft: 0,
-                          marginTop: 3,
-                        }}
+                        $icon
                         {...tiny && tinyProps.iconProps}
                       />
                     </title>
                   </AnimateElement>
+                  <SubTitle if={subtitle}>{subtitle}</SubTitle>
                   <AnimateElement
-                    if={!tiny && result.body}
+                    if={!tiny && content}
                     id={`${result.id}-content`}
                   >
-                    <content
-                      css={{
-                        flex: 1,
-                        opacity: 0.8,
-                        overflow: 'hidden',
-                      }}
-                    >
-                      <OrbitCardContent if={isExpanded} result={result} />
-                      <preview if={!tiny && !isSelected}>{result.body}</preview>
+                    <content>
+                      <preview if={!tiny && isSelected}>{content}</preview>
                     </content>
                   </AnimateElement>
                   <AnimateElement if={!tiny} id={`${result.id}-bottom`}>
@@ -194,11 +178,7 @@ export default class OrbitCard {
                         <UI.Icon
                           name={result.integration}
                           size={7}
-                          css={{
-                            display: 'inline-block',
-                            opacity: 0.5,
-                            margin: [0, 2],
-                          }}
+                          $bottomIcon
                         />
                         &nbsp;
                         {result.integration}
@@ -220,6 +200,12 @@ export default class OrbitCard {
     title: {
       maxWidth: '100%',
       overflow: 'hidden',
+      flexFlow: 'row',
+      justifyContent: 'space-between',
+    },
+    titleText: {
+      marginBottom: 0,
+      maxWidth: `calc(100% - 30px)`,
     },
     cardWrap: {
       position: 'relative',
@@ -233,11 +219,25 @@ export default class OrbitCard {
       },
     },
     cardHovered: {},
+    content: {
+      flex: 1,
+      opacity: 0.8,
+      overflow: 'hidden',
+    },
+    icon: {
+      marginLeft: 0,
+      marginTop: 3,
+    },
     bottom: {
       flexFlow: 'row',
       alignItems: 'center',
       // justifyContent: 'center',
       // flex: 1,
+    },
+    bottomIcon: {
+      display: 'inline-block',
+      opacity: 0.5,
+      margin: [0, 2],
     },
     orbital: {
       width: 10,

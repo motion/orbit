@@ -94,13 +94,13 @@ export default class AppStore {
       if (!query) {
         return await Bit.find({
           take: 8,
-          order: { updatedAt: 'DESC' },
+          order: { updatedAt: 'ASC' },
         })
       }
       const { conditions, rest } = parseQuery(query)
       return await Bit.find({
         where: `title like "%${rest.replace(/\s+/g, '%')}%"${conditions}`,
-        order: { updatedAt: 'DE SC' },
+        order: { updatedAt: 'ASC' },
         take: 8,
       })
     },

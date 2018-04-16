@@ -31,6 +31,7 @@ small polish
 
   * [ ] click to link to the Bit
   * [ ] design better info display for items, better meta info
+    * [x] start on preview resolvers for each type
   * [ ] slack: sync People, Chat Rooms
   * [ ] list: movement + animations + keyboard/scroll select orbit list
   * [ ] overdrive: deep investigate animate performance

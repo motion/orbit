@@ -202,6 +202,7 @@ export default class OrbitCard {
                         />
                         &nbsp;
                         {result.integration}
+                        &nbsp;
                         <UI.Date>{result.bitUpdatedAt}</UI.Date>
                       </Text>
                     </bottom>

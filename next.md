@@ -6,6 +6,11 @@
 * orbitRef.hide() quickly
 * Swindler dedupe animation improvements
 * meeting kevin
+  * stripe scale, how would we solve it
+  * follow up with mike
+  * he did mention calendar integration being interesting
+  * linking notes to calendar meetings -- startups do this, could be simple
+    * http://www.shellyapps.com.au/ see "our vision"
 
 - triage
 
@@ -57,7 +62,7 @@ small polish
 
 - sync
 
-  * [ ] need to normalize bitUpdatedAt and bitCreatedAt
+  * [x] need to normalize bitUpdatedAt and bitCreatedAt
   * [ ] github sync
   * [ ] github simple sidebar/peek
 

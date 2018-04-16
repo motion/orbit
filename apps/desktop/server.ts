@@ -27,7 +27,7 @@ export default class Server {
     this.oauth = new OAuth({
       strategies: OAuthStrategies,
       onSuccess: async (service, token, refreshToken, info) => {
-        return { token, refreshToken, info }
+        return { token, refreshToken, info, service }
       },
       findInfo: provider => {
         return this.cache[provider]

@@ -1,6 +1,6 @@
 import { react, watch, isEqual } from '@mcro/black'
 import { App, Desktop, Electron } from '@mcro/all'
-import { Bit, Setting } from '@mcro/models'
+import { Bit, Setting, findOrCreate } from '@mcro/models'
 import * as Constants from '~/constants'
 import * as r2 from '@mcro/r2'
 import * as Helpers from '~/helpers'
@@ -314,10 +314,9 @@ export default class AppStore {
       const oauth = auth && auth[type]
       if (!oauth) return
       clearInterval(checker)
-      let setting = await Setting.findOne({ type })
-      if (!setting) {
-        setting = new Setting()
-        setting.type = type
+      let setting = await findOrCreate(Setting, { type })
+      if (!oauth.token) {
+        throw new Error(`No token returned ${JSON.stringify(oauth)}`)
       }
       setting.token = oauth.token
       setting.values = {

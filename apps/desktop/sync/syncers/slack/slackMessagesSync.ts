@@ -5,6 +5,7 @@ import * as _ from 'lodash'
 import * as Helpers from '~/helpers'
 
 const log = debug('sync slackMessages')
+const slackDate = ts => new Date(+ts.split('.')[0] + 1000)
 
 type SlackMessage = {
   type: string
@@ -122,8 +123,8 @@ export default class SlackMessagesSync {
           .slice(0, 255),
         identifier: Helpers.hash(data),
         data,
-        bitCreatedAt: _.last(messages).ts,
-        bitUpdatedAt: _.first(messages).ts,
+        bitCreatedAt: slackDate(_.last(messages).ts),
+        bitUpdatedAt: slackDate(_.first(messages).ts),
         type: 'conversation',
         integration: 'slack',
       },

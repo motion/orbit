@@ -39,6 +39,7 @@ export default class Syncer {
     }
     const setting = await findOrCreate(Setting, { type: this.type })
     if (!setting || !setting.token) {
+      log(`no setting/token ${this.type}`)
       return
     }
     this.syncers = this.getSyncers(setting)

@@ -70,13 +70,17 @@ export default class GoogleDriveSync {
   }
 
   async createFile(info: FileObject) {
+    if (!info) {
+      console.trace('no info given')
+      return null
+    }
     const { name, contents, ...data } = info
     return await createOrUpdate(
       Bit,
       {
-        id: info.id,
         integration: 'google',
         identifier: Helpers.hash({
+          contents,
           id: info.id,
           modifiedTime: info.modifiedTime,
         }),
@@ -84,8 +88,8 @@ export default class GoogleDriveSync {
         title: name,
         body: contents || 'empty',
         data,
-        bitCreatedAt: info.createdTime,
-        bitUpdatedAt: info.modifiedTime,
+        bitCreatedAt: new Date(info.createdTime),
+        bitUpdatedAt: new Date(info.modifiedTime),
       },
       Bit.identifyingKeys,
     )

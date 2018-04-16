@@ -191,7 +191,11 @@ export default class GoogleMailSync {
 
   getDateFromThread = (message: Message) => {
     const dateHeader = message.payload.headers.find(x => x.name === 'Date')
-    return (dateHeader && dateHeader.value) || 0
+    const date = dateHeader && dateHeader.value
+    if (date) {
+      return new Date(date)
+    }
+    return 0
   }
 
   createThread = async (data: ThreadObject) => {

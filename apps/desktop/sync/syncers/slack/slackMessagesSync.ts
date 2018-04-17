@@ -16,6 +16,7 @@ type SlackMessage = {
 }
 
 type ChannelInfo = {
+  id: string
   name: string
   name_normalized: string
   purpose: { value: string }
@@ -63,9 +64,7 @@ export default class SlackMessagesSync {
       if (!this.service.activeChannels[channel]) {
         continue
       }
-      const channelInfo = await this.service.slack.channels
-        .info({ channel })
-        .then(res => res && res.ok && res.channel)
+      const channelInfo = await this.getChannelInfo(channel)
       if (!channelInfo) {
         console.log('no channel info')
         continue
@@ -114,6 +113,16 @@ export default class SlackMessagesSync {
     }
   }
 
+  getChannelInfo = async (channel): Promise<ChannelInfo> => {
+    const info = await this.service.slack.channels
+      .info({ channel })
+      .then(res => res && res.ok && res.channel)
+    return {
+      ...info,
+      id: channel,
+    }
+  }
+
   // cache so that we can use a Set later
   peopleCache = {}
   personCache = (id, person) => {
@@ -157,6 +166,7 @@ export default class SlackMessagesSync {
     const people = [...peopleIds].map(id => this.peopleCache[id])
     const data = {
       channel: {
+        id: channelInfo.id,
         purpose: channelInfo.purpose.value,
         topic: channelInfo.topic.value,
         members: channelInfo.members,

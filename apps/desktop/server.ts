@@ -63,7 +63,7 @@ export default class Server {
       res.json({ file })
     })
 
-    this.app.get('/hello', (req, res) => res.send('hello world'))
+    this.app.get('/hello', (_, res) => res.send('hello world'))
     this.setupCredPass()
     this.setupPassportRoutes()
     this.setupProxy()
@@ -96,7 +96,7 @@ export default class Server {
 
   creds = {}
   setupCredPass() {
-    this.app.use('/getCreds', (req, res) => {
+    this.app.use('/getCreds', (_, res) => {
       if (Object.keys(this.creds).length) {
         res.json(this.creds)
       } else {

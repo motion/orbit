@@ -11,12 +11,13 @@ const mapH = 300
 
 @view
 export class Person {
-  render({ person }) {
+  render({ person, appStore }) {
     if (!person || !person.data.profile) {
       log(`no person`)
       return null
     }
     console.log('person', person)
+    const setting = appStore.settings.slack
     return (
       <PeekFrame>
         <PeekHeader />
@@ -26,18 +27,20 @@ export class Person {
             <info>
               <name>{person.name}</name>
               <br />
-              <email>{person.data.profile.email}</email>
+              <a $email href={`mailto:${person.data.profile.email}`}>
+                {person.data.profile.email}
+              </a>
               <br />
               <icons>
-                <intButton>
-                  <OrbitIcon
-                    $intIcon
-                    icon="slack"
-                    size={18}
-                    onClick={() => {}}
-                  />
+                <a
+                  $intButton
+                  href={`slack://user?team=${
+                    setting.values.oauth.info.team.id
+                  }&id=${person.data.id}`}
+                >
+                  <OrbitIcon $intIcon icon="slack" size={18} />
                   Slack
-                </intButton>
+                </a>
               </icons>
             </info>
           </cardContent>

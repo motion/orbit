@@ -488,8 +488,6 @@ Transaction batching object:
       this.connect()
     }
 
-    const originalLocation = window.location
-
     PrimusAdaptor.prototype.connect = function() {
       this.primus = new window.Primus('http://localhost:8082', {
         websockets: true,
@@ -504,7 +502,7 @@ Transaction batching object:
         this.primus.end()
       })
       this.primus.on('close', () => {
-        window.restart()
+        console.log('promise was closed, may need to reconnect?')
         // this.primus.end()
       })
     }

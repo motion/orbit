@@ -55,7 +55,7 @@ export default class TiltHoverGlow extends React.PureComponent<Props> {
             borderRadius={8}
             zIndex={100000}
             opacity={1}
-            transition={30}
+            duration={30}
           />
           <HoverGlow
             show

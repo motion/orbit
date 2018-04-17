@@ -6,7 +6,7 @@ const log = debug('scrn')
 export default class SocketManager {
   activeSockets = []
   onState: Function
-  actions: Object
+  actions: { onMessage?: Function }
   port: number
   wss: Server
 
@@ -43,6 +43,16 @@ export default class SocketManager {
     }
   }
 
+  // really fast direct messages
+  sendMessage = (source: string, message: string) => {
+    for (const { uid, socket } of this.activeSockets) {
+      if (this.identities[uid] !== source) {
+        continue
+      }
+      socket.send(`-${message}`)
+    }
+  }
+
   sendAll = (
     source: string,
     state: Object,
@@ -71,18 +81,30 @@ export default class SocketManager {
 
   removeSocket = uid => {
     this.activeSockets = this.activeSockets.filter(s => s.uid !== uid)
+    delete this.identities[uid]
   }
+
+  identities = {}
 
   decorateSocket = (uid, socket) => {
     // listen for incoming
     socket.on('message', str => {
-      const { action, state, source } = JSON.parse(str)
+      // message
+      const { action, state, source, message, to } = JSON.parse(str)
+      if (to) {
+        this.sendMessage(to, message)
+        return
+      }
       if (state) {
         if (this.onState) {
           this.onState(source, state)
         }
         // console.log('should send', source || '---nostate:(', state)
         this.sendAll(source, state, { skipUID: uid })
+      }
+      // initial message
+      if (action === 'getState') {
+        this.identities[uid] = source
       }
       if (this.actions[action]) {
         this.actions[action]({ source, socket })

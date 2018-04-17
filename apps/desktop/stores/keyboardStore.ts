@@ -1,7 +1,8 @@
+import { store, react, isEqual } from '@mcro/black/store'
 import iohook from 'iohook'
-import { Desktop } from '@mcro/all'
-import { isEqual } from 'lodash'
-import debug from '@mcro/debug'
+import { Desktop, App, Electron } from '@mcro/all'
+// import debug from '@mcro/debug'
+// const log = debug('KeyboardStore')
 
 const codes = {
   esc: 1,
@@ -23,12 +24,12 @@ const DOUBLE_TAP_OPTION = [
   ['up', codes.option],
 ]
 
-const log = debug('KeyboardStore')
+// stores the last 4 keys pressed
+// but clears after a little, so it only stores "purposeful sequences"
+let lastKeys = []
 
+@store
 export default class KeyboardStore {
-  // stores the last 4 keys pressed
-  // but clears after a little, so it only stores "purposeful sequences"
-  lastKeys = []
   // this is imperfect, iohook doesn't always match events perfectly
   // so in cases of errors, we clear it after a little delay
   keysDown = new Set()
@@ -39,21 +40,32 @@ export default class KeyboardStore {
     this.onKeyClear = opts.onKeyClear
   }
 
-  start = () => {
-    let clearLastKeys
+  key = null
+  keyAt = 0
 
-    // keydown
-    iohook.on('keydown', ({ keycode }) => {
-      this.keysDown.add(keycode)
-      clearTimeout(clearLastKeys)
-      this.lastKeys.push(['down', keycode])
+  @react({ log: false })
+  onKey = [
+    () => [this.key, this.keyAt],
+    ([keycode]) => {
       this.clearDownKeysAfterPause()
-      // log(`keydown: ${keycode}`)
       if (keycode === codes.esc) {
-        return Desktop.setKeyboardState({ esc: Date.now() })
+        if (
+          App.state.peekTarget &&
+          (Electron.isMouseInActiveArea || Desktop.state.focusedOnOrbit)
+        ) {
+          Desktop.sendMessage(App, App.messages.HIDE_PEEK)
+          return
+        }
+        if (
+          Desktop.state.focusedOnOrbit ||
+          Electron.orbitState.mouseOver ||
+          Electron.orbitState.fullScreen
+        ) {
+          Desktop.sendMessage(App, App.messages.HIDE)
+        }
       }
       const isOption = keycode === codes.option || keycode === codes.optionRight
-      const isShift = keycode === codes.shift || keycode === codes.shiftRight
+      // const isShift = keycode === codes.shift || keycode === codes.shiftRight
       const isHoldingShift = this.keysDown.has(codes.shift)
       const holdingKeys = this.keysDown.size
       // clears:
@@ -61,6 +73,13 @@ export default class KeyboardStore {
         return Desktop.clearOption()
       }
       const isHoldingOption = this.keysDown.has(codes.option)
+      // holding option + press key === pin
+      if (isHoldingOption && App.isShowingOrbit) {
+        // a - z, our secret pin keys, let them go
+        if (keycode >= 14 && keycode <= 49) {
+          return
+        }
+      }
       if (holdingKeys > 2 && isHoldingShift && isHoldingOption) {
         return Desktop.setKeyboardState({
           optionUp: Date.now(),
@@ -86,15 +105,31 @@ export default class KeyboardStore {
             this.onKeyClear()
           }
       }
+    },
+  ]
+
+  keyDown = keycode => {
+    this.key = keycode
+    this.keyAt = Date.now()
+  }
+
+  start = () => {
+    let clearLastKeys
+
+    // keydown
+    iohook.on('keydown', ({ keycode }) => {
+      this.keysDown.add(keycode)
+      lastKeys.push(['down', keycode])
+      this.keyDown(keycode)
     })
 
     // keyup
     iohook.on('keyup', ({ keycode }) => {
       this.keysDown.delete(keycode)
       clearTimeout(clearLastKeys)
-      this.lastKeys.push(['up', keycode])
-      while (this.lastKeys.length > 4) {
-        this.lastKeys.shift() // ensure only 4 max
+      lastKeys.push(['up', keycode])
+      while (lastKeys.length > 4) {
+        lastKeys.shift() // ensure only 4 max
       }
       this.clearDownKeysAfterPause()
       // option off
@@ -109,13 +144,13 @@ export default class KeyboardStore {
           Desktop.setKeyboardState({ spaceUp: Date.now() })
           break
       }
-      if (isEqual(this.lastKeys, DOUBLE_TAP_OPTION)) {
-        Desktop.setShouldTogglePin(Date.now())
+      if (isEqual(lastKeys, DOUBLE_TAP_OPTION)) {
+        Desktop.sendMessage(Electron, Electron.messages.TOGGLE_PINNED)
       }
       // be sure its a fast action not slow
       clearLastKeys = setTimeout(() => {
-        this.lastKeys = []
-      }, 150)
+        lastKeys = []
+      }, 190)
     })
   }
 

@@ -15,6 +15,18 @@ const isOrbit = isBrowser && window.location.pathname === '/orbit'
 
 @store
 class AppStore {
+  messages = {
+    SHOW: 'SHOW',
+    HIDE: 'HIDE',
+    HIDE_PEEK: 'HIDE_PEEK',
+    PIN: 'PIN',
+  }
+
+  setState: typeof Bridge.setState
+  sendMessage: typeof Bridge.sendMessage
+  onMessage: typeof Bridge.onMessage
+  bridge: any
+  reactions: AppReactions
   source = 'App'
 
   state = {
@@ -33,7 +45,6 @@ class AppStore {
     orbitConnected: false,
     knowledge: null,
     peekTarget: null,
-    shouldTogglePinned: null,
   }
 
   get isShowingOrbit() {
@@ -101,26 +112,24 @@ class AppStore {
     )
   }
 
-  setState: Function
-  bridge: any
-  reactions: AppReactions
-
-  start(options) {
+  start = options => {
     Bridge.start(this, this.state, options)
     this.setState = Bridge.setState
+    this.sendMessage = Bridge.sendMessage
+    this.onMessage = Bridge.onMessage
     this.bridge = Bridge
   }
 
-  runReactions() {
+  runReactions(options) {
     // hmr protect
     if (this.reactions) return
     // @ts-ignore
     const AppReactions = require('./AppReactions').default
-    this.reactions = new AppReactions()
+    this.reactions = new AppReactions(options)
   }
 
   togglePinned = () => {
-    App.setState({ shouldTogglePinned: Date.now() })
+    App.sendMessage(Electron, Electron.messages.TOGGLE_PINNED)
   }
 
   togglePeek = () => {
@@ -128,7 +137,7 @@ class AppStore {
   }
 
   toggleHidden = () => {
-    App.setState({ hidden: !App.state.hidden })
+    App.setState({ orbitHidden: !App.state.orbitHidden })
   }
 
   openSettings = () => {

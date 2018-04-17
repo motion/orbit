@@ -22,18 +22,18 @@ export default class DebugServer {
     app.set('port', process.env.PORT || 8000)
     app.use(express.static('web'))
 
-    app.get('/', function(req, res) {
+    app.get('/', function(_, res) {
       log('http:index')
       res.json({
         msg: 'Hello from DevToolsRemote',
       })
     })
 
-    app.get('/sessions', function(req, res) {
+    app.get('/sessions', function(_, res) {
       res.json(sessions)
     })
 
-    app.get('/_stats', function(req, res) {
+    app.get('/_stats', function(_, res) {
       log('http:stats')
       res.json({
         count: {

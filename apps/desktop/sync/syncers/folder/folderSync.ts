@@ -18,12 +18,13 @@ class FolderSync {
   }
 
   get folders() {
-    const defaultPath = Path.join(
-      require.resolve('@mcro/examples'),
-      '..',
-      'test',
-    )
-    return this.setting.values.folders || [defaultPath]
+    return this.setting.values.folders || []
+    // const defaultPath = Path.join(
+    //   require.resolve('@mcro/examples'),
+    //   '..',
+    //   'test',
+    // )
+    // return this.setting.values.folders || [defaultPath]
   }
 
   run = async () => {

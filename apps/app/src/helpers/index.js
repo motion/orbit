@@ -1,3 +1,17 @@
+import fuzzySort from 'fuzzysort'
+
+export const fuzzy = (query, results, extraOpts) =>
+  !query
+    ? results
+    : fuzzySort
+        .go(query, results, {
+          key: 'title',
+          // threshold: -25,
+          limit: 8,
+          ...extraOpts,
+        })
+        .map(x => x.obj)
+
 import latinize from 'latinize'
 import * as React from 'react'
 
@@ -67,6 +81,8 @@ export const debounceIdle = (fn, timeout) => {
   return (...args) => {
     if (clearId) cancelIdleCallback(clearId)
 
-    clearId = requestIdleCallback(() => fn(...args), { timeout })
+    clearId = (requestIdleCallback || setTimeout)(() => fn(...args), {
+      timeout,
+    })
   }
 }

@@ -1,35 +1,44 @@
 import { store, react } from '@mcro/black/store'
-import * as Constants from '@mcro/constants'
+// import * as Constants from '@mcro/constants'
 import { Desktop } from './Desktop'
 import { Electron } from './Electron'
 import { App } from './App'
 
+// todo: move this reaction stuff into specialized sub-stores of appstore
+// prevents hard restarts
+// and groups by logical unit (piece of state)
+
 @store
 export default class AppReactions {
+  constructor({ onPinKey }) {
+    App.onMessage(async msg => {
+      console.log('got a message', msg)
+      switch (msg) {
+        case App.messages.HIDE:
+          if (App.state.peekTarget) {
+            App.setPeekTarget(null)
+            await new Promise(res => setTimeout(res, 80)) // sleep 80
+          }
+          return App.setOrbitHidden(true)
+        case App.messages.SHOW:
+          return App.setOrbitHidden(false)
+        case App.messages.HIDE_PEEK:
+          return App.setPeekTarget(null)
+      }
+      if (msg.indexOf(App.messages.PIN) === 0) {
+        const key = msg.split('-')[1]
+        onPinKey(key.toLowerCase())
+      }
+    })
+  }
+
   @react
   showHideApp = [() => App.state.openResult, () => App.setOrbitHidden(true)]
 
-  @react({
-    fireImmediately: true,
-  })
-  showHideFromElectron = [
-    () => [Electron.state.shouldShow, Electron.state.shouldHide],
-    ([shouldShow, shouldHide]) => {
-      const orbitHidden = shouldHide > shouldShow
-      App.setOrbitHidden(orbitHidden)
-    },
-  ]
-
-  @react.if
-  clearPeekTargetOnMouseLeave = [
-    () => !Electron.isMouseInActiveArea,
-    () => App.setPeekTarget(null),
-  ]
-
-  @react.if
+  @react({ log: 'state' })
   clearPeekTargetOnOrbitClose = [
     () => !App.isShowingOrbit,
-    () => App.setPeekTarget(null),
+    hidden => hidden && App.setPeekTarget(null),
   ]
 
   @react
@@ -56,56 +65,12 @@ export default class AppReactions {
     },
   ]
 
-  @react({ log: false })
-  showOnMouseOverOrbitBar = [
-    () => [Desktop.mouseState.position, Electron.orbitState],
-    async ([{ x, y }, orbitState], { sleep }) => {
-      if (!orbitState.position) {
-        return
-      }
-      if (Electron.orbitState.fullScreen) {
-        return
-      }
-      const { position: [oX, oY] } = orbitState
-      // TODO: Constants.ORBIT_WIDTH
-      const adjX = Electron.orbitOnLeft ? 300 : 0
-      const adjY = 44 // topbar + offset from top of orbit
-      const withinX = Math.abs(oX - x + adjX) < 10
-      const withinY = Math.abs(oY - y + adjY) < 10
-      if (withinX && withinY) {
-        await sleep(300)
-        App.setOrbitHidden(false)
-      }
-    },
-  ]
-
-  // TODO: need to only clear if something is "selected"
-  // and implement a "selected" vs "hovered state" / visuals
-  @react({
-    delay: 300,
-  })
-  clearPeekOnMouseOut = [
-    () => Electron.isMouseInActiveArea,
-    mouseOver => {
-      // if (!mouseOver) {
-      //   App.setPeekTarget(null)
-      // }
-    },
-  ]
-
   @react
-  hideOrbitOnEsc = [
-    () => Desktop.keyboardState.esc,
+  clearPinnedOnReposition = [
+    () => Electron.orbitState.position,
     () => {
-      if (Constants.FORCE_FULLSCREEN) {
-        return
-      }
-      if (
-        Desktop.state.focusedOnOrbit ||
-        Electron.orbitState.mouseOver ||
-        Electron.orbitState.fullScreen
-      ) {
-        App.setOrbitHidden(true)
+      if (App.state.peekTarget) {
+        App.setPeekTarget(null)
       }
     },
   ]
@@ -120,14 +85,15 @@ export default class AppReactions {
     ],
     async ([isShown, mouseOver], { sleep }) => {
       if (isShown && !mouseOver) {
-        // 100ms leeway on mouse leave
-        await sleep(100)
-        if (Desktop.isHoldingOption || Electron.recentlyToggled) {
+        // some leeway on mouse leave
+        await sleep(150)
+        if (Desktop.isHoldingOption || App.isAnimatingOrbit) {
           return
         }
         if (Electron.orbitState.pinned || Electron.orbitState.fullScreen) {
           return
         }
+        console.log(`hiding orbit from mouseout`)
         App.setOrbitHidden(true)
       }
     },

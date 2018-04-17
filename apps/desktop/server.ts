@@ -9,7 +9,6 @@ import OAuth from './server/oauth'
 import OAuthStrategies from './server/oauth.strategies'
 import Passport from 'passport'
 import killPort from 'kill-port'
-// import getEmbedding from './embedding'
 import Fs from 'fs'
 import Path from 'path'
 import debug from '@mcro/debug'
@@ -22,6 +21,7 @@ export default class Server {
   oauth: OAuth
   cache = {}
   login = null
+  app: express.Application
 
   constructor() {
     this.oauth = new OAuth({
@@ -63,9 +63,7 @@ export default class Server {
       res.json({ file })
     })
 
-    // this.setupCrawler()
     this.app.get('/hello', (req, res) => res.send('hello world'))
-    this.setupEmbedding()
     this.setupCredPass()
     this.setupPassportRoutes()
     this.setupProxy()
@@ -94,16 +92,6 @@ export default class Server {
       )
       next()
     }
-  }
-
-  setupEmbedding() {
-    // this.app.get('/sentence', async (req, res) => {
-    //   console.log('(js) sentence is', req.query.sentence)
-    //   const raw = await getEmbedding(req.query.sentence)
-    //   // cut to only a couple decimal places
-    //   const values = raw.map(word => word.map(i => +i.toFixed(4)))
-    //   res.json({ values })
-    // })
   }
 
   creds = {}

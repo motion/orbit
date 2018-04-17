@@ -5,18 +5,20 @@ import PeekFrame from '../peekFrame'
 
 @view
 export class Document {
-  render({ item }) {
-    if (!item) {
+  render({ bit }) {
+    if (!bit) {
       return null
     }
     return (
       <PeekFrame>
-        <PeekHeader title={item.title} />
-        <content
-          dangerouslySetInnerHTML={{
-            __html: (item.text || '').replace('\n', '<br />'),
-          }}
-        />
+        <PeekHeader title={bit.title} />
+        <content>
+          <bodyContents
+            dangerouslySetInnerHTML={{
+              __html: (bit.body || '').replace('\n', '<br />'),
+            }}
+          />
+        </content>
       </PeekFrame>
     )
   }
@@ -26,6 +28,13 @@ export class Document {
       padding: 20,
       overflowY: 'scroll',
       flex: 1,
+    },
+    bodyContents: {
+      whiteSpace: 'pre-line',
+      width: '100%',
+      overflow: 'hidden',
+      fontSize: 16,
+      lineHeight: '1.4rem',
     },
   }
 }

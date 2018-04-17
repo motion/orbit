@@ -41,6 +41,7 @@ export async function start() {
   if (started) return
   await waitPort({ port: 3002 })
   await waitPort({ port: 3001 })
+  await new Promise(res => setTimeout(res, 500)) // parcels sometimes needs a bit
   started = true
   console.warn(`$ NODE_ENV=${process.env.NODE_ENV} run electron`)
   render(<Electron />)
@@ -61,8 +62,9 @@ if (process.env.NODE_ENV === 'development') {
       shouldRestart = true
     }
     if (shouldRestart && webRunning) {
-      console.log('restarting after parcel cycle...')
-      require('touch')(require('path').join(__dirname, '..', 'lib', 'index.js'))
+      const touchFile = require('path').join(__dirname, '..', 'lib', 'index.js')
+      console.log('restarting after parcel cycle...', touchFile)
+      require('touch')(touchFile)
       clearInterval(int)
     }
   }, 1000)

@@ -2,6 +2,7 @@ import { Bit, Setting, createOrUpdate } from '@mcro/models'
 import debug from '@mcro/debug'
 import { sleep } from '@mcro/helpers'
 import getHelpers from './getHelpers'
+import * as Helpers from '~/helpers'
 
 const log = debug('googleDrive')
 
@@ -27,15 +28,20 @@ export default class GoogleDriveSync {
   fetch = (path, ...rest) => this.helpers.fetch(`/drive/v3${path}`, ...rest)
 
   constructor(setting) {
-    this.setting = setting
-    this.helpers = getHelpers(setting)
+    this.updateSetting(setting)
+  }
+
+  updateSetting = async (setting?) => {
+    this.setting = setting || (await Setting.findOne({ type: 'google' }))
+    this.helpers = getHelpers(this.setting)
   }
 
   run = async () => {
+    await this.updateSetting()
     try {
       await this.syncFiles()
     } catch (err) {
-      console.error(`Drive sync error ${err.message}`)
+      console.error(`Drive sync error ${err.message}\n${err.stack}`)
     }
   }
 
@@ -50,27 +56,39 @@ export default class GoogleDriveSync {
 
   async syncFiles() {
     const files = await this.getFiles()
-    // const results = await createInChunks(files, file => this.createFile(file))
-    // log('syncFiles', results)
-    // return results
+    let created = []
+    for (const file of files) {
+      const result = await this.createFile(file)
+      if (result) {
+        created.push(result)
+      }
+    }
+    if (created.length) {
+      log(`synced ${created.length} new files`)
+    }
+    return created
   }
 
   async createFile(info: FileObject) {
     const { name, contents, ...data } = info
-    const created = info.createdTime
-    const updated = info.modifiedTime
-    return await createOrUpdate(Bit, {
-      id: info.id,
-      integration: 'google',
-      type: 'document',
-      title: name,
-      body: contents,
-      data,
-      orgName: info.spaces ? info.spaces[0] : '',
-      parentId: info.parents ? info.parents[0] : '',
-      created,
-      updated,
-    })
+    return await createOrUpdate(
+      Bit,
+      {
+        id: info.id,
+        integration: 'google',
+        identifier: Helpers.hash({
+          id: info.id,
+          modifiedTime: info.modifiedTime,
+        }),
+        type: 'document',
+        title: name,
+        body: contents || 'empty',
+        data,
+        bitCreatedAt: info.createdTime,
+        bitUpdatedAt: info.modifiedTime,
+      },
+      Bit.identifyingKeys,
+    )
   }
 
   async getRevisions(fileId: string) {
@@ -126,39 +144,43 @@ export default class GoogleDriveSync {
   }
 
   async getFiles(pages = 1, query?: PageQuery, fileQuery?: Object) {
-    log(`Getting ${pages} pages of files`)
     const files = await this.getFilesBasic(pages, query)
     // just docs
     const docs = files.filter(
       file => file.mimeType === 'application/vnd.google-apps.document',
     )
-    log(`Will fetch following docs`, docs)
     const fileIds = docs.map(file => file.id)
     const perSecond = 5
     let fetched = 0
     let response = []
     while (fetched < fileIds.length) {
       const ids = fileIds.slice(fetched, fetched + perSecond)
-      log(`Fetching`, ids)
       const next = await this.getFilesWithAllInfo(ids, fileQuery)
       response = [...response, ...next]
       fetched = response.length
-      log('getFiles', next, fetched, 'out of', fileIds.length)
+      // log('getFiles', next, fetched, 'out of', fileIds.length)
       await sleep(2000)
     }
-    log('returning files', response)
     return response
   }
 
-  async getFilesWithAllInfo(ids: Array<string>, fileQuery?: Object) {
-    const timeout = setTimeout(() => {
-      throw new Error('Timeout fetching file contents')
-    }, 2000)
-    const meta = await Promise.all(ids.map(id => this.getFile(id, fileQuery)))
-    const contents = await Promise.all(ids.map(id => this.getFileContents(id)))
-    // zip
-    clearTimeout(timeout)
-    return meta.map((file, i) => ({ ...file, contents: contents[i] }))
+  getFilesWithAllInfo(
+    ids: Array<string>,
+    fileQuery?: Object,
+  ): Promise<Array<any>> {
+    return new Promise(async (res, rej) => {
+      const timeout = setTimeout(() => {
+        console.log('timeout getting all files')
+        res(ids.map(() => null))
+      }, 5000)
+      const meta = await Promise.all(ids.map(id => this.getFile(id, fileQuery)))
+      const contents = await Promise.all(
+        ids.map(id => this.getFileContents(id)),
+      )
+      // zip
+      clearTimeout(timeout)
+      res(meta.map((file, i) => ({ ...file, contents: contents[i] })))
+    })
   }
 
   async getFilesBasic(pages = 1, query: PageQuery = {}) {
@@ -231,13 +253,21 @@ export default class GoogleDriveSync {
     })
   }
 
-  async getFileContents(id: string) {
-    return await this.fetch(`/files/${id}/export`, {
-      type: 'text',
-      query: {
-        mimeType: 'text/plain',
-        alt: 'media',
-      },
+  getFileContents(id: string) {
+    return new Promise(async (res, rej) => {
+      const timeout = setTimeout(() => {
+        console.log('timeout getting file contents', id)
+        res(null)
+      }, 2000)
+      const result = await this.fetch(`/files/${id}/export`, {
+        type: 'text',
+        query: {
+          mimeType: 'text/plain',
+          alt: 'media',
+        },
+      })
+      clearTimeout(timeout)
+      res(result)
     })
   }
 

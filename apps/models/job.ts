@@ -18,6 +18,10 @@ export class Job extends T.BaseEntity {
   @T.CreateDateColumn() createdAt: Date
   @T.UpdateDateColumn() updatedAt: Date
 
+  get lock() {
+    return `${this.type}`
+  }
+
   static statuses = {
     PENDING: 'PENDING',
     FAILED: 'FAILED',

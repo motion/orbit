@@ -1,8 +1,8 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import ControlButton from '~/views/controlButton'
-import { Electron } from '@mcro/all'
+import { App, Electron, Desktop } from '@mcro/all'
+import WindowControls from '~/views/windowControls'
 
 @view
 export default class PeekHeader {
@@ -11,14 +11,25 @@ export default class PeekHeader {
     if (!Electron.currentPeek) {
       return null
     }
-    const { isTorn } = Electron.currentPeek
+    // const { isTorn } = Electron.currentPeek
     return (
       <header $$draggable={!fullScreen}>
-        <buttons if={isTorn} $$row css={{ marginRight: 14 }}>
-          <ControlButton icon="x" />
-          <ControlButton icon="y" background="#F6BE4F" />
-          <ControlButton icon="z" background="#62C554" />
-        </buttons>
+        <WindowControls
+          css={
+            Electron.peekOnLeft
+              ? {
+                  order: 2,
+                  marginLeft: 14,
+                }
+              : {
+                  order: 0,
+                  marginRight: 14,
+                }
+          }
+          onClose={() => {
+            App.setPeekTarget(null)
+          }}
+        />
         <title if={title}>
           <titlemain>
             <UI.Title size={1.3} marginBottom={5}>
@@ -54,9 +65,6 @@ export default class PeekHeader {
     },
     titlemain: {
       flex: 1,
-    },
-    controls: {
-      padding: [0, 0, 0, 10],
     },
     orbitInput: {
       width: '100%',

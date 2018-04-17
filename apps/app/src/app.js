@@ -1,21 +1,32 @@
 import { App } from '@mcro/all'
-import { debugState } from '@mcro/black'
+import { sleep, debugState } from '@mcro/black'
 import { ThemeProvide } from '@mcro/ui'
-import { sleep } from '~/helpers'
 import { modelsList } from '@mcro/models'
 import connectModels from './helpers/connectModels'
 import * as React from 'react'
 import ReactDOM from 'react-dom'
 import Themes from './themes'
 import Root from './root'
+import Results from '~/apps/results/results'
 import { uniqBy } from 'lodash'
 import * as Constants from '~/constants'
+import * as UI from '@mcro/ui'
 
 // HMR
 if (module && module.hot) {
   module.hot.accept('.', async () => {
     await start(true)
   })
+}
+
+const onPort = async cb => {
+  await sleep(100)
+  if (await fetch('http://localhost:3001').then(x => x.text())) {
+    cb()
+  } else {
+    await sleep(100)
+    onPort(cb)
+  }
 }
 
 class AppRoot {
@@ -35,9 +46,6 @@ class AppRoot {
 
   async start() {
     await App.start()
-    if (Constants.IS_PEEK) {
-      await sleep(1000)
-    }
     await connectModels(modelsList)
     if (Constants.IS_ORBIT) {
       App.setOrbitConnected(true)
@@ -47,19 +55,22 @@ class AppRoot {
     this.started = true
   }
 
-  restart() {
-    window.location = window.location
+  async restart() {
+    onPort(() => (window.location = window.location))
   }
 
   async dispose() {}
 
   render() {
-    let ROOT = document.querySelector('#app')
+    const isResults = window.location.pathname === '/results'
+    const RootComponent = isResults ? Results : Root
     ReactDOM.render(
       <ThemeProvide {...Themes}>
-        <Root />
+        <UI.Theme name="tan">
+          <RootComponent />
+        </UI.Theme>
       </ThemeProvide>,
-      ROOT,
+      document.querySelector('#app'),
     )
   }
 

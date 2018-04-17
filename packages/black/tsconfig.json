@@ -1,28 +1,12 @@
 {
+  "extends": "../../tsconfig.base",
   "compilerOptions": {
-    "module": "CommonJS",
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "target": "es2017",
-    "noImplicitAny": false,
-    "removeComments": true,
-    "preserveConstEnums": true,
-    "jsx": "react",
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
     "outDir": "_",
-    "allowJs": true,
-    "sourceMap": true,
-    // "skipLibCheck": true,
-    "lib": ["es6", "dom", "es2017.object"],
-    "baseUrl": "./src",
+    "baseUrl": "./",
     "paths": {
       "~/*": ["*"]
     }
   },
-  "include": ["src/**/*"],
-  "exclude": ["_", "node_modules", "tmp"],
-  "typeAcquisition": {
-    "enable": true
-  }
+  "include": ["/**/*"],
+  "exclude": ["_", "node_modules", "tmp", "*.js"]
 }

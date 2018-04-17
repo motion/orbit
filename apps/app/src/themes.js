@@ -15,7 +15,10 @@ const blank = {
   buttonBackground: 'transparent',
 }
 
-const tanColor = color('rgb(255,255,245)')
+const tanBg = color('rgb(255,255,245)')
+const tanHoverBg = tanBg.darken(0.02).desaturate(0.3)
+const tanActiveBg = tanHoverBg.darken(0.05).desaturate(0.3)
+const tanActiveHoverBg = tanHoverBg.darken(0.06).desaturate(0.3)
 
 const Themes = {
   light: Theme.fromStyles({
@@ -50,22 +53,19 @@ const Themes = {
       borderColor: [0, 0, 0, 0.1],
     }),
   },
-  gray: Theme.fromStyles({
-    highlightBackground,
-    highlightColor,
-    background: '#eee',
-    color: '#999',
-    borderColor: '#eee',
-  }),
   tan: Theme.fromStyles({
-    highlightBackground,
-    highlightColor: tanColor
-      .darken(0.05)
-      .desaturate(0.5)
-      .toString(),
-    background: tanColor.toString(),
+    background: tanBg,
     color: '#444',
     borderColor: '#000',
+    hover: {
+      background: tanHoverBg,
+    },
+    active: {
+      background: tanActiveBg,
+    },
+    activeHover: {
+      background: tanActiveHoverBg,
+    },
   }),
   dark: Theme.fromStyles({
     highlightBackground: [0, 0, 0, 0.05],
@@ -73,23 +73,6 @@ const Themes = {
     background: 'rgba(20,20,20,0.94)',
     color: '#fff',
     borderColor: '#222',
-  }),
-  'clear-light': Theme.fromStyles({
-    highlightBackground,
-    highlightColor,
-    background: [0, 0, 0, 0],
-    color: [0, 0, 0, 0.6],
-    borderColor: [0, 0, 0, 0.3],
-  }),
-  'clear-dark': Theme.fromStyles({
-    highlightBackground,
-    highlightColor,
-    background: [25, 25, 25, 0],
-    color: [255, 255, 255, 0.78],
-    borderColor: [255, 255, 255, 0.3],
-    hover: {
-      background: [255, 255, 255, 0.025],
-    },
   }),
 }
 

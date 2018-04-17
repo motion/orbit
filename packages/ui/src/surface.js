@@ -213,6 +213,8 @@ export default class Surface extends React.PureComponent<Props> {
       width,
       wrapElement,
       ignoreSegment,
+      alignItems,
+      justifyContent,
       ...props
     } = this.props
     const hasIconBefore = icon && !iconAfter
@@ -653,7 +655,7 @@ export default class Surface extends React.PureComponent<Props> {
         background,
         boxShadow,
         fontWeight: props.fontWeight,
-        justifyContent: props.justify,
+        justifyContent: props.justify || props.justifyContent,
         alignItems: props.align || props.alignItems,
         alignSelf: props.alignSelf,
         flexFlow,

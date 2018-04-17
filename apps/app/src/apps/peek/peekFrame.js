@@ -15,13 +15,12 @@ export default class PeekFrame {
     if (!selectedItem && !fullScreen) {
       return null
     }
-    const onLeft = Electron.peekOnLeft
-    // log(`onleft`, onLeft)
+    const onRight = !Electron.peekOnLeft
     const { isShowingPeek } = App
-    // const isShowingPeek = true
+    const borderShadow = ['inset', 0, 0, 0, 0.5, [0, 0, 0, 0.15]]
     return (
       <container $$row $$flex>
-        <Space if={onLeft} />
+        <Space if={!onRight} />
         <crop
           css={{
             flex: 1,
@@ -29,9 +28,9 @@ export default class PeekFrame {
               ? [SHADOW_PAD, SHADOW_PAD, SHADOW_PAD, 0]
               : [
                   SHADOW_PAD,
-                  onLeft ? SHADOW_PAD : 0,
+                  onRight ? SHADOW_PAD : 0,
                   SHADOW_PAD,
-                  !onLeft ? SHADOW_PAD : 0,
+                  !onRight ? SHADOW_PAD : 0,
                 ],
             overflow: 'hidden',
           }}
@@ -39,14 +38,19 @@ export default class PeekFrame {
           <peek $animate={isShowingPeek} $peekVisible={isShowingPeek}>
             <main
               css={{
-                boxShadow: [
-                  APP_SHADOW,
-                  fullScreen ? null : ['inset', 0, 0, 0, 0.5, [0, 0, 0, 0.15]],
-                ].filter(Boolean),
-                borderRightRadius: fullScreen ? BORDER_RADIUS : 0,
-                background: fullScreen
-                  ? theme.base.background.lighten(0.05)
-                  : '#fff',
+                boxShadow: fullScreen
+                  ? [APP_SHADOW, borderShadow]
+                  : [[0, 0, SHADOW_PAD, [0, 0, 0, 0.08]], borderShadow],
+                // make shadow go under
+                marginLeft: fullScreen ? -SHADOW_PAD : 0,
+                paddingLeft: fullScreen ? SHADOW_PAD : 0,
+                borderRightRadius: fullScreen
+                  ? BORDER_RADIUS
+                  : !onRight ? Math.ceil(BORDER_RADIUS / 1.5) : 0,
+                borderLeftRadius: !fullScreen && !onRight ? BORDER_RADIUS : 0,
+                background: `radial-gradient(#fff 70%, ${
+                  theme.base.background
+                }`,
               }}
               {...props}
             >
@@ -54,12 +58,15 @@ export default class PeekFrame {
             </main>
           </peek>
         </crop>
-        <Space if={!onLeft} />
+        <Space if={onRight} />
       </container>
     )
   }
 
   static style = {
+    container: {
+      // background: 'red',
+    },
     peek: {
       height: '100%',
       pointerEvents: 'none !important',

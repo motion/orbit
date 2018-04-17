@@ -6,9 +6,9 @@ import waitPort from 'wait-port'
 import * as Mobx from 'mobx'
 import stringify from 'stringify-object'
 import T_SocketManager from './socketManager'
-import debug from '@mcro/debug'
+// import debug from '@mcro/debug'
 
-const log = debug('Bridge')
+// const log = debug('Bridge')
 const root = typeof window !== 'undefined' ? window : require('global')
 
 const stringifyObject = obj =>
@@ -19,12 +19,10 @@ const stringifyObject = obj =>
   })
 
 // const log = debug('Bridge')
-const requestIdle = () =>
+const requestIdle = (cb?: Function) =>
   new Promise(
     res =>
-      typeof window !== 'undefined'
-        ? window.requestIdleCallback(res)
-        : setTimeout(res, 1),
+      setTimeout(cb || res, 0),
   )
 
 type Options = {
@@ -37,6 +35,7 @@ type Options = {
 class Bridge {
   store: any
   socketManager: T_SocketManager
+  _awaitingSocket = []
   _store = null
   _options: Options
   _queuedState = false
@@ -46,6 +45,7 @@ class Bridge {
   _socket = null
   // to be set once they are imported
   stores = {}
+  messageListeners = new Set()
 
   get state() {
     return this._store.state
@@ -71,11 +71,11 @@ class Bridge {
         },
         actions: {
           // stores that first connect send a call to get initial state
+          // this is where its received by other apps
           getState: ({ source, socket }) => {
+            // dont sync you to yourself
             if (source === this._source) return
-            // send state of all besides requesting store
             for (const name of Object.keys(stores)) {
-              if (name === source) continue
               this.socketManager.send(socket, stores[name].state, name)
             }
           },
@@ -112,11 +112,18 @@ class Bridge {
   setupClientSocket = () => {
     // socket setup
     this._socket.onmessage = async ({ data }) => {
-      await requestIdle()
       if (!data) {
         console.log(`No data received over socket`)
         return
       }
+      if (data[0] === '-') {
+        const message = data.slice(1)
+        for (const listener of this.messageListeners) {
+          listener(message)
+        }
+        return
+      }
+      await requestIdle()
       try {
         const messageObj = JSON.parse(data)
         if (messageObj && typeof messageObj === 'object') {
@@ -163,6 +170,10 @@ class Bridge {
     }
     this._socket.onopen = () => {
       this._wsOpen = true
+      if (this._awaitingSocket.length) {
+        this._awaitingSocket.map(x => x())
+        this._awaitingSocket = []
+      }
       // send state that hasnt been synced yet
       if (this._queuedState) {
         this._socket.send(
@@ -189,8 +200,28 @@ class Bridge {
       if (this._socket.readyState == 1) {
         console.log('swift ws error', err)
       } else {
-        console.log('socket err', err)
+        console.log('socket err', err.message, err.stack)
       }
+    }
+  }
+
+  onOpenSocket = () => {
+    return new Promise(res => {
+      this._awaitingSocket.push(res)
+    })
+  }
+
+  sendMessage = async (Store: any, message: string) => {
+    if (!Store || !message) {
+      throw `no store || message`
+    }
+    if (this._options.master) {
+      this.socketManager.sendMessage(Store.source, message)
+    } else {
+      if (!this._wsOpen) {
+        await this.onOpenSocket()
+      }
+      this._socket.send(JSON.stringify({ message, to: Store.source })
     }
   }
 
@@ -198,11 +229,11 @@ class Bridge {
   // set is only allowed from the source its set as initially
   setState = (newState, ignoreSocketSend) => {
     if (!this._store) {
-      console.log('waht is this', this, this._source, this._store)
+      console.warn('waht is this', this, this._source, this._store)
       throw new Error(
         `Called ${this._source}.setState before calling ${
           this._source
-        }.start with state ${JSON.stringify(newState, 0, 2)}`,
+        }.start with state ${JSON.stringify(newState, null, 2)}`,
       )
     }
     if (!newState || typeof newState !== 'object') {
@@ -221,17 +252,20 @@ class Bridge {
       return changedState
     }
     if (Object.keys(changedState).length) {
-      if (this._options.master) {
-        this.socketManager.sendAll(this._source, changedState)
-      } else {
-        if (!this._wsOpen) {
-          this._queuedState = true
-          return changedState
+      requestIdle(() => {
+        if (this._options.master) {
+          this.socketManager.sendAll(this._source, changedState)
+        } else {
+          if (!this._wsOpen) {
+            console.log('queueing', changedState)
+            this._queuedState = true
+            return changedState
+          }
+          this._socket.send(
+            JSON.stringify({ state: changedState, source: this._source }),
+          )
         }
-        this._socket.send(
-          JSON.stringify({ state: changedState, source: this._source }),
-        )
-      }
+      })
     }
     return changedState
   }
@@ -292,6 +326,10 @@ class Bridge {
       }
     }
     return changed
+  }
+
+  onMessage = listener => {
+    this.messageListeners.add(listener)
   }
 
   dispose = () => {

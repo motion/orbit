@@ -256,7 +256,6 @@ export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
       } else {
         finalProps.className += ` ${type_}`
       }
-
       if (!VALID_TAGS[type]) {
         type = 'div'
       }

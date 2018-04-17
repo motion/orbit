@@ -1,15 +1,27 @@
 import * as React from 'react'
 import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { App, Electron } from '@mcro/all'
+import { App, Desktop, Electron } from '@mcro/all'
 import * as Constants from '~/constants'
 
 class HeaderStore {
   inputRef = null
 
+  hover = () => {
+    this.inputRef.focus()
+  }
+
+  blur = () => {
+    this.inputRef.blur()
+  }
+
   @react({ fireImmediately: true, delay: 32 })
   focusInput = [
-    () => App.isFullyShown,
+    () => [
+      App.isFullyShown,
+      Electron.orbitState.pinned,
+      Electron.isMouseInActiveArea,
+    ],
     () => {
       if (!this.inputRef) return
       this.inputRef.focus()
@@ -26,7 +38,7 @@ class HeaderStore {
   ]
 
   onClickInput = () => {
-    if (!Electron.orbitState.pinned) {
+    if (!Electron.orbitState.pinned && Desktop.isHoldingOption) {
       App.togglePinned()
     }
   }
@@ -56,16 +68,6 @@ export default class PeekHeader {
         $headerVisible={App.isShowingHeader}
         $headerMouseOver={Electron.orbitState.mouseOver}
         css={{
-          // boxShadow: [
-          //   [
-          //     'inset',
-          //     0,
-          //     0.5,
-          //     0,
-          //     0.5,
-          //     theme.base.background.darken(0.1).desaturate(0.3),
-          //   ],
-          // ],
           borderTopLeftRadius:
             !Electron.orbitOnLeft || Electron.orbitState.orbitDocked
               ? 0
@@ -75,10 +77,33 @@ export default class PeekHeader {
               ? 0
               : Constants.BORDER_RADIUS,
         }}
+        {...appStore.getHoverProps({
+          onHover: headerStore.hover,
+          onBlur: headerStore.blur,
+        })}
       >
+        <bottomBorder
+          css={{
+            position: 'absolute',
+            bottom: 0,
+            left: -1,
+            right: 20,
+            top: 0,
+            boxShadow: [
+              [
+                'inset',
+                1,
+                0,
+                0,
+                0.5,
+                theme.base.background.darken(0.12).desaturate(0.5),
+              ],
+            ],
+          }}
+        />
         <title>
           <UI.Input
-            value={App.state.query || ''}
+            value={orbitStore.query}
             size={1.35}
             sizeRadius
             css={{
@@ -139,10 +164,11 @@ export default class PeekHeader {
 
   static style = {
     header: {
+      position: 'relative',
       flexFlow: 'row',
       alignItems: 'center',
       justifyContent: 'center',
-      padding: [5, 10],
+      padding: [5, 2],
       transition: 'all ease-in 300ms',
       opacity: 0.75,
       '&:hover': {
@@ -167,10 +193,9 @@ export default class PeekHeader {
       opacity: 1,
     },
     headerBg: background => ({
-      // background: background,
-      // '&:hover': {
-      //   background: background.lighten(0.05),
-      // },
+      background: `linear-gradient(${background
+        .darken(0.06)
+        .desaturate(0.5)}, transparent)`,
     }),
     inputLn: {
       width: 10,

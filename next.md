@@ -1,36 +1,68 @@
-next
+# new
 
-* slack sync
-  * grouping messages into logical chunks?
-    * first: time split by inactive periods
-    * then further split big ones somehow if need
-* various polish
-  * prefix integration type search
+* electron 2.0
+* webview / overflow scroll bounce
+* Desktop.sendMessage(Electron, Electron.messages.MSG)
+* orbitRef.hide() quickly
+* Swindler dedupe animation improvements
+* meeting kevin
+* long tail: disable when super low battery
+* long tail: bridge both setState and receiveState should batch a tiny bit
+  * if multiple setstate called before settimeout, group them
+  * if multiple recevied before timeout, group them
 
-queued ux stuff
+- indicator
 
-* overdrive
-  * may need to fork it
-  * need to fix text resizing based on how we end up doing that
-  * need to make it work with animations (not be outside the frame, or pause before animate)
-* hoverSettler: if under delay amount, dont reset the wait time
-  * use case: move off of items quickly and back on, should be instant not re-delay
-* bug option+space doesnt focus input text
-* hold option when text is selected and hit "delete" or other char, should pin
-* clicked vs hovered selections -- see AppReactions TODO
-* pin-on-click only when option holding
-* faster hover item highlight reaction time
-* fix unpin glitchy animation
-* if large window, slide in from left side full height
-* OCR scanning - once its paused again it doesnt move wiht app anymore
+  * [ ] design
 
-* high ux:
-  * should use mouse movement to prevent unwanted highlights
+- sidebar
 
-notes
+  * [ ] design better info display for items, better meta info
+  * [ ] slack: sync People, Chat Rooms
+  * [ ] list: movement + animations + keyboard/scroll select orbit list
+  * [ ] overdrive: deep investigate animate performance
 
-* potential metrics to
+- positioning
 
-  * saved time searching
-  * saved contextual switches
-  * time reduced in slack/email
+  * [ ] swindler fix not updating on some window resize/change
+
+- fullscreen
+
+  * [ ] nice "in" animations on fullscreen
+  * [ ] fix last glitches on out/animation
+  * [ ] make peek + orbit show at same time
+  * [ ] on fs focus input
+  * [ ] accidental fullscreen at times
+
+- profiles
+
+  * [ ] sync people info from google
+  * [ ] sync people info from github
+  * [ ] basic peek view with aggregate info + avatar
+  * [ ] NLP: related things, common rooms
+
+- sync
+
+  * [ ] need to normalize bitUpdatedAt and bitCreatedAt
+  * [ ] github sync
+  * [ ] github simple sidebar/peek
+
+- settings
+
+  * [ ] adjust setting based on storage size
+  * [ ] easy automatic setting setup: common rooms, etc
+  * [ ] remove setting + clear bits
+
+- stack
+
+  * [ ] fix electron devtools not working
+
+- productionize
+
+  * [ ] get builds working to .app
+  * [ ] get auto update working
+  * [ ] minimize builds to smaller size
+  * [ ] see if can share chromium or delay download
+
+- research
+  * [ ] keeping chromium warm

@@ -2,10 +2,11 @@ import { fromPromise, isPromiseBasedObservable, whenAsync } from 'mobx-utils'
 import { fromStream } from './fromStream'
 import * as Mobx from 'mobx'
 import { Observable } from 'rxjs'
-import * as Helpers from '@mcro/helpers'
+import * as McroHelpers from '@mcro/helpers'
 import debug from '@mcro/debug'
 
 const root = typeof window !== 'undefined' ? window : require('global')
+const IS_PROD = process.env.NODE_ENV === 'production'
 
 type MagicalObject = {
   subscriptions: { add: (fn: Function) => void }
@@ -25,10 +26,6 @@ debug.quiet('automagical')
 
 const RejectReactionSymbol = Symbol('REJECT_REACTION')
 
-if (module && module.hot) {
-  module.hot.accept('.', () => void 0) // prevent aggressive hmrs
-}
-
 const PREFIX = `=>`
 const logRes = (res: any) => {
   if (typeof res === 'undefined') {
@@ -40,10 +37,16 @@ const logRes = (res: any) => {
   if (res && res.value && isQuery(res.value)) {
     return [PREFIX, 'RxQuery']
   }
-  return [PREFIX, res]
+  if (Mobx.isArrayLike(res)) {
+    return [PREFIX, res.map(x => Mobx.toJS(x))]
+  }
+  return [PREFIX, Mobx.toJS(res)]
 }
 const getReactionName = (obj: MagicalObject) => {
-  return obj.constructor.name.replace('Store', '')
+  return obj.constructor.name
+    .replace('Store', '')
+    .padEnd(12, ' ')
+    .slice(0, 12)
 }
 
 const isObservable = (x: any) => {
@@ -339,21 +342,20 @@ const observableId = () => `__ID_${Math.random()}__`
 // watches values in an autorun, and resolves their results
 function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
   const {
-    log: shouldLog,
     isIf,
     delayValue,
-    logReaction,
+    defaultValue,
     onlyUpdateIfChanged,
     ...options
-  } = Helpers.getReactionOptions({
+  } = McroHelpers.getReactionOptions({
     name: method,
     ...userOptions,
   })
   const delayLog =
     options && options.delay >= 0 ? ` (...${options.delay}ms)` : ''
-  const name = `${getReactionName(obj)}.${method}${delayLog}`
-  let preventLog = shouldLog === false
-  let current = Mobx.observable.box(DEFAULT_VALUE)
+  const name = `${getReactionName(obj)} | ${method} | ${delayLog}`
+  let preventLog = options.log === false
+  let current = Mobx.observable.box(defaultValue || DEFAULT_VALUE)
   let prev
   let curDisposable = null
   let curObservable = null
@@ -374,9 +376,9 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
         return undefined
       }
     }
-    if (isObservable(result)) {
-      let value = result.get()
-      return value
+    if (result && result instanceof Mobx.BaseAtom) {
+      // @ts-ignore
+      return result.get()
     }
     return result
   }
@@ -460,6 +462,7 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
           throw new Error(`Didn't supply a function to reaction ${name}`)
         }
         // reaction
+        // @ts-ignore
         stopReaction = Mobx.reaction(val[0], watcher(val[1]), options)
       } else {
         if (typeof val !== 'function') {
@@ -468,7 +471,7 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
         //autorun
         stopReaction = Mobx.autorun(watcher(val), options)
       }
-    })
+    }, 0)
   }
 
   // state used outside each watch/reaction
@@ -515,6 +518,36 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
       })
     })
   }
+  const whenChanged = (condition, dontCompare) => {
+    let oldVal
+    let curVal
+    return new Promise((resolve, reject) => {
+      if (!reactionID) {
+        return reject(RejectReactionSymbol)
+      }
+      let cancelWhen = false
+      whenAsync(() => {
+        if (typeof oldVal === 'undefined') {
+          oldVal = condition()
+          return false
+        }
+        curVal = condition()
+        if (dontCompare) {
+          return true
+        }
+        return !Mobx.comparer.structural(curVal, oldVal)
+      })
+        .then(() => {
+          if (cancelWhen) return
+          resolve(curVal)
+        })
+        .catch(reject)
+      rejections.push(() => {
+        cancelWhen = true
+        reject(RejectReactionSymbol)
+      })
+    })
+  }
 
   function replaceDisposable() {
     if (curDisposable) {
@@ -528,20 +561,20 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
 
   function watcher(reactionFn) {
     return function watcherCb(reactValArg) {
+      reset()
       // @react.if check. avoids 0 bugs
-      if (isIf && (!reactValArg && reactValArg !== 0)) {
+      if (isIf && !reactValArg && reactValArg !== 0) {
         return
       }
       if (isIf) {
         console.log('reactin', reactValArg)
       }
-      reset()
       reactionID = uid()
       const curID = reactionID
       const updateAsyncValue = val => {
         if (curID === reactionID) {
           replaceDisposable()
-          if (!preventLog) {
+          if (!IS_PROD && !preventLog) {
             log(
               `${name} (${Date.now() - start}ms) ${
                 isAsyncReaction ? `[${id}]` : ''
@@ -567,6 +600,7 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
           },
           sleep,
           when,
+          whenChanged,
         },
       )
       const changed = root.__trackStateChanges.changed
@@ -587,7 +621,7 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
           })
           .catch(err => {
             if (err === RejectReactionSymbol) {
-              if (!preventLog) {
+              if (!IS_PROD && !preventLog) {
                 log(`${name} [${curID}] cancelled`)
               }
             } else {
@@ -599,7 +633,7 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
       }
       // store result as observable
       result = specialValueToObservable(reactionResult)
-      if (!preventLog && !delayValue) {
+      if (!IS_PROD && !preventLog && !delayValue) {
         const prefix = `${name} ${isReaction ? `@r` : `@w`}`
         if (changed && Object.keys(changed).length) {
           logState(
@@ -611,7 +645,7 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
             `\n\n`,
           )
         } else {
-          if (logReaction !== false) {
+          if (options.log !== 'state') {
             log(`${prefix}`, isReaction ? reactValArg : '', ...logRes(result))
           }
         }

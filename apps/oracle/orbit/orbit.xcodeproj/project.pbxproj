@@ -266,7 +266,7 @@
 				TargetAttributes = {
 					CFBEEE1A202D838D005F925A = {
 						CreatedOnToolsVersion = 9.2;
-						ProvisioningStyle = Manual;
+						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.Sandbox = {
 								enabled = 0;
@@ -334,7 +334,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "touch ../../../apps/desktop/src/index.js";
+			shellScript = "touch ../../../apps/desktop/_/index.js";
 		};
 /* End PBXShellScriptBuildPhase section */
 

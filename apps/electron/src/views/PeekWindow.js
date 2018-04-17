@@ -17,8 +17,10 @@ import * as Mobx from 'mobx'
 
 const idFn = _ => _
 const PAD = 15
-const WIDTH = 500
-const INITIAL_SIZE = [WIDTH, 550]
+const peekW = 520
+const peekH = 700
+const EDGE_PAD = 20
+const TOP_OFFSET = -20
 const log = debug('PeekWindow')
 const windowProps = {
   frame: false,
@@ -29,45 +31,56 @@ const windowProps = {
 }
 
 const peekPosition = target => {
-  const { left, top, width } = target
-  const EDGE_PAD = 20
-  const TOP_OFFSET = -20
-  let [peekW, peekH] = INITIAL_SIZE
+  const { orbitOnLeft } = Electron
+  const [width] = Electron.orbitState.size
+  const { left, top } = target
   const [screenW, screenH] = Helpers.getScreenSize()
   const leftSpace = left
   const rightSpace = screenW - (left + width)
+
   // prefer bigger area
   let peekOnLeft = leftSpace > rightSpace
-  // prefer more strongly away from app if possible
-  if (peekOnLeft && !Electron.orbitOnLeft && rightSpace > WIDTH - 30) {
-    peekOnLeft = false
-  }
-  if (!peekOnLeft && Electron.orbitOnLeft && leftSpace > WIDTH - 30) {
-    peekOnLeft = true
-  }
+  let pW = peekW
+  let pH = peekH
   let x
   let y = top + TOP_OFFSET
+
+  // prefer more strongly away from app if possible
+  if (peekOnLeft && !orbitOnLeft && rightSpace > pW - PAD * 2) {
+    peekOnLeft = false
+  }
+  if (!peekOnLeft && orbitOnLeft && leftSpace > pW - PAD * 2) {
+    peekOnLeft = true
+  }
   if (peekOnLeft) {
-    x = left - peekW
-    if (peekW > leftSpace) {
-      peekW = leftSpace
+    x = left - pW
+    if (pW > leftSpace) {
+      pW = leftSpace
       x = 0
     }
+    if (orbitOnLeft) {
+      x += PAD
+    } else {
+      x += PAD
+    }
   } else {
-    x = left + width + (!peekOnLeft ? 6 : 0)
-    if (peekW > rightSpace) {
-      peekW = rightSpace
+    x = left + width
+    if (orbitOnLeft) {
+      x -= PAD
+    } else {
+      x -= PAD
+    }
+    if (pW > rightSpace) {
+      pW = rightSpace
     }
   }
-  // why is this offset already?
-  x += peekOnLeft ? PAD * 2 : 0
-  if (peekH + y + EDGE_PAD > screenH) {
+  if (pH + y + EDGE_PAD > screenH) {
     log(`too tall`)
     y = screenH - EDGE_PAD - peekH
   }
   return {
     position: [Math.round(x), Math.round(y)],
-    size: [peekW, peekH],
+    size: [pW, pH],
     peekOnLeft,
   }
 }
@@ -86,6 +99,11 @@ class PeekStore {
       //   this.props.electronStore.peekRef.focus()
       // }
       Electron.updatePeek(Electron.currentPeek, peek => {
+        console.log(
+          'set position',
+          peekTarget.position,
+          peekPosition(peekTarget.position),
+        )
         Object.assign(peek, peekPosition(peekTarget.position))
       })
     },
@@ -107,7 +125,8 @@ export default class PeekWindow {
       windows: [
         {
           key: this.peekKey,
-          size: INITIAL_SIZE,
+
+          size: [peekW, peekH],
           position: [0, 0],
           show: false,
         },
@@ -166,11 +185,14 @@ export default class PeekWindow {
 
   render({ electronStore }) {
     const peekWindows = Mobx.toJS(Electron.peekState.windows)
+    electronStore.show
     return (
       <React.Fragment>
         {peekWindows.map((peek, index) => {
           // peek always in front
           const isAttached = index === 0
+          const show = electronStore.show >= 1 ? peek.show : false
+          const opacity = electronStore.show <= 1 ? 0 : 1
           return (
             <Window
               key={peek.key}
@@ -181,7 +203,8 @@ export default class PeekWindow {
               }
               alwaysOnTop={isAttached || peek.alwaysOnTop}
               animatePosition={App.isShowingPeek && App.wasShowingPeek}
-              show={peek.show}
+              show={show}
+              opacity={opacity}
               file={`${Constants.APP_URL}/peek?key=${peek.key}`}
               ref={isAttached ? electronStore.handlePeekRef(peek) : idFn}
               onReadyToShow={this.handleReadyToShow(peek)}

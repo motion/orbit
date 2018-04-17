@@ -20,7 +20,7 @@ type Props = {
   clickable: boolean,
   clickDuration: number,
   clickScale: number,
-  transition: number,
+  duration: number,
   overlayZIndex: number,
   blur: number,
 }
@@ -48,7 +48,7 @@ class HoverGlow extends React.PureComponent<Props, State> {
     clickable: false,
     clickDuration: 150,
     clickScale: 2,
-    transition: 0,
+    duration: 0,
     overlayZIndex: 1,
     blur: 15,
     backdropFilter: 'contrast(100%)',
@@ -165,7 +165,9 @@ class HoverGlow extends React.PureComponent<Props, State> {
     clickDuration,
     clickScale,
     draggable,
-    transition,
+    duration: _duration,
+    durationIn,
+    durationOut,
     parent,
     children,
     behind,
@@ -178,13 +180,13 @@ class HoverGlow extends React.PureComponent<Props, State> {
     show,
     ...props
   }) {
+    const durationArg = show ? durationOut : durationIn
+    const duration = durationArg >= 0 ? durationArg : _duration
     const setRootRef = this.ref('rootRef').set
     const { track } = this.state
-
-    if (!show && !transition && ((!track && !children) || !track)) {
+    if (!show && !duration && ((!track && !children) || !track)) {
       return <overlay ref={setRootRef} style={{ opacity: 0 }} />
     }
-
     // find width / height (full == match size of container)
     let width = size || propWidth
     let height = size || propHeight
@@ -192,16 +194,13 @@ class HoverGlow extends React.PureComponent<Props, State> {
       width = this.bounds.width
       height = this.bounds.height
     }
-
     if (isNaN(width) || isNaN(height)) {
-      console.log('weird')
+      console.log('hoverglow NaN width or height')
       return null
     }
-
     const { position, clicked } = this.state
     const x = position.x || 0
     const y = position.y || 0
-
     // resists being moved (towards center)
     const resisted = coord => {
       if (resist === 0) return coord
@@ -223,13 +222,12 @@ class HoverGlow extends React.PureComponent<Props, State> {
     }
     const colorRGB = $(color).toString()
     const translateX = inversed(
-      bounded(resisted(x), width * scale, this.bounds.width)
+      bounded(resisted(x), width * scale, this.bounds.width),
     )
     const translateY = inversed(
-      bounded(resisted(y), height * scale, this.bounds.height)
+      bounded(resisted(y), height * scale, this.bounds.height),
     )
     const extraScale = clicked ? clickScale : 1
-
     const glow = (
       <overlay
         ref={setRootRef}
@@ -247,7 +245,7 @@ class HoverGlow extends React.PureComponent<Props, State> {
             zIndex: behind ? -1 : 1,
             opacity: 1,
             transition: `
-              transform linear ${transition}ms
+              transform linear ${duration}ms
             `,
             transform: `
                 translateX(${translateX + offsetLeft}px)
@@ -274,7 +272,7 @@ class HoverGlow extends React.PureComponent<Props, State> {
                   : colorRGB,
               borderRadius,
               transition: `
-                  opacity linear ${transition}ms
+                  opacity linear ${duration}ms
                 `,
             }}
           />

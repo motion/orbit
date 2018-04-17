@@ -10,7 +10,6 @@ import OrbitStore from './orbitStore'
 import OrbitHeadsUp from './orbitHeadsUp'
 import { throttle } from 'lodash'
 import { SHADOW_PAD } from '~/constants'
-import * as Helpers from '~/helpers'
 
 // const log = require('@mcro/debug')('orbit')
 
@@ -63,68 +62,32 @@ class OrbitPageStore {
 })
 @view
 export default class Orbit {
-  getHoverProps = Helpers.hoverSettler({
-    enterDelay: 120,
-    betweenDelay: 120,
-    onHovered: async target => {
-      clearTimeout(this.updateTargetTm)
-      if (!target) {
-        this.updateTargetTm = setTimeout(() => {
-          if (!Electron.isMouseInActiveArea) {
-            console.log('clearing!')
-            App.setPeekTarget(null)
-          }
-        }, 100)
-        return
-      }
-      if (!Electron.orbitState.position) {
-        console.log(`no position`)
-        return
-      }
-      const { id, top, width, height } = target
-      const position = {
-        // add orbits offset
-        left: Electron.orbitState.position[0],
-        top: top + Electron.orbitState.position[1],
-        width,
-        height,
-      }
-      if (App.isShowingOrbit) {
-        this.props.appStore.setSelectedIndex(target.id)
-        this.updateTargetTm = setTimeout(() => {
-          App.setPeekTarget({ id, position, type: 'document' })
-        }, 100)
-      }
-    },
-  })
-
   render({ appStore, orbitPage, theme }) {
     const headerBg = theme.base.background
     return (
-      <UI.Theme name={Electron.orbitState.fullScreen ? 'tan' : 'tan'}>
+      <UI.Theme name="tan">
         <OrbitFrame headerBg={headerBg} orbitPage={orbitPage}>
           <OrbitHeader headerBg={headerBg} />
-          <OrbitHeadsUp if={false} getHoverProps={this.getHoverProps} />
-          <OrbitContent
-            if={!appStore.showSettings}
-            getHoverProps={this.getHoverProps}
-          />
+          <OrbitHeadsUp if={false} />
+          <OrbitContent if={!appStore.showSettings} />
           <OrbitSettings if={appStore.showSettings} />
           <Knowledge if={App.state.knowledge} data={App.state.knowledge} />
           <controls>
             <UI.Button
               icon="gear"
               borderRadius={100}
-              size={1.1}
+              size={1.15}
+              sizeIcon={0.8}
               circular
-              chromeless
+              borderWidth={0}
+              background={theme.base.background}
               color={appStore.showSettings ? [0, 0, 0, 0.8] : [0, 0, 0, 0.2]}
               hover={{
                 color: appStore.showSettings ? [0, 0, 0, 0.9] : [0, 0, 0, 0.3],
-                opacity: 0.8,
               }}
               onClick={appStore.toggleSettings}
             />
+            <strip css={{ background: theme.base.background }} />
           </controls>
         </OrbitFrame>
       </UI.Theme>
@@ -134,13 +97,19 @@ export default class Orbit {
   static style = {
     controls: {
       position: 'absolute',
-      bottom: 35,
-      right: 12,
+      bottom: -5,
+      left: -5,
+      right: 0,
       zIndex: 10000,
-      opacity: 0.8,
-      '&:hover': {
-        opacity: 1,
-      },
+    },
+    strip: {
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      right: 0,
+      borderBottomRadius: 10,
+      height: 12,
+      zIndex: -1,
     },
   }
 }

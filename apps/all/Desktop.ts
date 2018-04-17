@@ -56,6 +56,13 @@ export type DesktopState = {
 
 @store
 class DesktopStore {
+  messages = {
+    TOGGLE_PAUSED: 'TOGGLE_PAUSED',
+  }
+
+  setState: typeof Bridge.setState
+  sendMessage: typeof Bridge.sendMessage
+  onMessage: typeof Bridge.onMessage
   source = 'Desktop'
 
   state = {
@@ -103,15 +110,23 @@ class DesktopStore {
     x => (this.results = x),
   ]
 
-  get isHoldingOption(): Boolean {
+  get isHoldingOptionPure(): Boolean {
     const { option, optionUp } = Desktop.state.keyboardState
     return (option || 0) > (optionUp || 1)
   }
 
-  get isHoldingOptionShift(): Boolean {
+  // dont count if holding option+shift (fullscreen)
+  get isHoldingOption(): Boolean {
+    return this.isHoldingOptionPure && !this.isHoldingShift
+  }
+
+  get isHoldingShift() {
     const { shift, shiftUp } = Desktop.state.keyboardState
-    const isHoldingShift = (shift || 0) > (shiftUp || 1)
-    return isHoldingShift && this.isHoldingOption
+    return (shift || 0) > (shiftUp || 1)
+  }
+
+  get isHoldingOptionShift(): Boolean {
+    return this.isHoldingShift && this.isHoldingOptionPure
   }
 
   get shouldHide() {
@@ -153,11 +168,11 @@ class DesktopStore {
     )
   }
 
-  setState: Function
-
   start = options => {
     Bridge.start(this, this.state, options)
     this.setState = Bridge.setState
+    this.sendMessage = Bridge.sendMessage
+    this.onMessage = Bridge.onMessage
   }
 
   // only clear if necessary

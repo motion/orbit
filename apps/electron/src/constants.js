@@ -20,9 +20,10 @@ export const DEV_TOOLS_EXTENSIONS = getExtensions([
 
 export const WEB_PREFERENCES = {
   nativeWindowOpen: true,
-  experimentalFeatures: true,
+  experimentalFeatures: false,
   transparentVisuals: true,
-  allowRunningInsecureContent: true,
+  allowRunningInsecureContent: false,
   plugins: true,
+  scrollBounce: true,
   // offscreen: true,
 }

@@ -1,4 +1,4 @@
-import { App, Electron } from '@mcro/all'
+import { App, Electron, Desktop } from '@mcro/all'
 import { App as AppWindow } from '@mcro/reactron'
 import { view, react, debugState } from '@mcro/black'
 import * as React from 'react'
@@ -11,6 +11,7 @@ import ShortcutsStore from '~/stores/shortcutsStore'
 import global from 'global'
 import { memoize } from 'lodash'
 import debug from '@mcro/debug'
+import { isEqual } from '@mcro/black'
 
 const log = debug('Electron')
 
@@ -21,27 +22,14 @@ const log = debug('Electron')
     stores = null
     views = null
     peekRefs = {}
+    orbitRef = null
+    highlightRef = null
+    clear = Date.now()
+    show = 0
 
     get peekRef() {
       return this.peekRefs[0]
     }
-
-    // focus on pinned
-    @react({ delay: App.animationDuration })
-    focusOnPin = [
-      () => Electron.orbitState.pinned,
-      pinned => {
-        if (pinned && Electron.orbitState.mouseOver) {
-          this.appRef.focus()
-        }
-      },
-    ]
-
-    @react
-    showOnShow = [
-      () => Electron.state.shouldShow,
-      shouldShow => shouldShow && this.appRef.show(),
-    ]
 
     async willMount() {
       global.Root = this
@@ -54,7 +42,70 @@ const log = debug('Electron')
         ignoreSelf: true,
       })
       this.watchOptionPress()
+      Electron.onMessage(msg => {
+        switch (msg) {
+          case Electron.messages.CLEAR:
+            this.clear = Date.now()
+            return
+        }
+      })
+      Electron.onClear = () => {
+        log(`Electron.onClear`)
+        this.clear = Date.now()
+      }
+      // clear to start
+      Electron.onClear()
     }
+
+    @react({ log: true })
+    clearApp = [
+      () => this.clear,
+      async (_, { when, sleep }) => {
+        this.appRef.hide()
+        const getState = () => ({
+          ...Desktop.appState,
+          ...Electron.state.orbitState,
+        })
+        const lastState = getState()
+        this.show = 0
+        Electron.sendMessage(App, App.messages.HIDE)
+        await when(() => !App.isShowingOrbit) // ensure hidden
+        await when(() => !isEqual(getState(), lastState)) // ensure moved
+        this.show = 1 // now render with 0 opacity so chrome updates visuals
+        await sleep(50) // likely not necessary, ensure its ready for app show
+        this.appRef.show() // downstream apps should now be hidden
+        await sleep(200) // render opacity 0, let it update
+        await when(() => !Desktop.mouseState.mouseDown) // ensure not moving window
+        this.show = 2
+      },
+    ]
+
+    // focus on pinned
+    @react({ delay: App.animationDuration })
+    focusOnPin = [
+      () => Electron.orbitState.pinned,
+      pinned => {
+        // only focus on option+space
+        if (Electron.lastAction !== 'Option+Space') {
+          return
+        }
+        if (pinned) {
+          this.appRef.focus()
+        }
+      },
+    ]
+
+    // focus on fullscreen
+    @react
+    focusOnFullScreen = [
+      () => Electron.orbitState.fullScreen,
+      fs => {
+        if (fs) {
+          this.peekRef.focus()
+          this.orbitRef.focus()
+        }
+      },
+    ]
 
     handlePeekRef = memoize(peek => ref => {
       if (!ref) return
@@ -72,7 +123,7 @@ const log = debug('Electron')
         'Option+Shift+Space',
       ])
 
-      this.shortcutStore.emitter.on('shortcut', Electron.onShortcut)
+      this.shortcutStore.emitter.on('shortcut', Electron.reactions.onShortcut)
     }
 
     restart() {
@@ -109,8 +160,8 @@ export default class ElectronWindow extends React.Component {
         ref={electronStore.handleAppRef}
       >
         <MenuItems el />
-        <OrbitWindow />
-        <HighlightsWindow />
+        <OrbitWindow onRef={ref => (electronStore.orbitRef = ref)} />
+        <HighlightsWindow onRef={ref => (electronStore.highlightRef = ref)} />
         <PeekWindow />
         <Tray />
       </AppWindow>

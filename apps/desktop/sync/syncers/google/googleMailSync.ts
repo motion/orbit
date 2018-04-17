@@ -80,7 +80,6 @@ export default class GoogleMailSync {
         query: { startHistoryId: historyId },
       })
       if (!history.history || !history.history.length) {
-        log(`No new threads, sync up to date`)
         return
       }
       if (history.history.length < max) {
@@ -164,7 +163,7 @@ export default class GoogleMailSync {
               if (!threads.length) {
                 continue
               }
-              const rows = _.take(threads, 100)
+              const rows = _.take(threads, 50)
               threads = threads.slice(rows.length)
               const updateKeys = Object.keys(rows[0])
               for (const row of rows) {
@@ -196,12 +195,11 @@ export default class GoogleMailSync {
   }
 
   createThread = async (data: ThreadObject) => {
-    const thread = this.createThreadObject(data)
-    return await createOrUpdate(Bit, thread, [
-      'identifier',
-      'integration',
-      'type',
-    ])
+    return await createOrUpdate(
+      Bit,
+      this.createThreadObject(data),
+      Bit.identifyingKeys,
+    )
   }
 
   createThreadObject = (data: ThreadObject) => {

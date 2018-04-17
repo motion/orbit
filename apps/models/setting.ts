@@ -11,10 +11,13 @@ export class Setting extends T.BaseEntity {
     repos?: Object
     calendarsActive?: Object
     syncTokens?: Object
-    folders?: [string]
+    folders?: Array<string>
     historyId?: string
     syncSettings?: any
     lastSyncSettings?: any
+    channels?: Array<string>
+    lastAttachmentSync?: { [key: string]: string }
+    lastMessageSync?: { [key: string]: string }
   }
   @T.CreateDateColumn() createdAt: Date
   @T.UpdateDateColumn() updatedAt: Date

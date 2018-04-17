@@ -18,7 +18,7 @@
   },
   "cmake-js": {
     "runtime": "electron",
-    "runtimeVersion": "1.7.10"
+    "runtimeVersion": "2.0.0-beta.7"
   },
   "iohook": {
     "targets": [
@@ -60,7 +60,7 @@
     "usage": "^0.7.1"
   },
   "devDependencies": {
-    "electron": "1.8.2",
+    "electron": "2.0.0-beta.7",
     "electron-rebuild": "^1.7.3",
     "node-loader": "^0.6.0",
     "nodemon": "^1.15.1",

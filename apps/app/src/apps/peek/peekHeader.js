@@ -57,6 +57,8 @@ export default class PeekHeader {
       flexFlow: 'row',
       alignItems: 'center',
       justifyContent: 'center',
+      position: 'relative',
+      zIndex: 100,
       // borderBottom: [1, [0, 0, 0, 0.05]],
     },
     icon: {

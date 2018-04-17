@@ -2,6 +2,8 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import PeekHeader from '../peekHeader'
 import PeekFrame from '../peekFrame'
+import OrbitIcon from '~/apps/orbit/orbitIcon'
+import * as UI from '@mcro/ui'
 
 const mapW = 700
 const mapH = 300
@@ -17,13 +19,17 @@ export class Person {
     return (
       <PeekFrame>
         <PeekHeader />
-        <card>
+        <frame>
           <cardContent>
             <img $avatar src={person.data.profile.image_512} />
             <info>
               <name>{person.name}</name>
               <br />
-              <email>natewienert@gmail.com</email>
+              <email>{person.data.profile.email}</email>
+              <br />
+              <icons>
+                <OrbitIcon icon="slack" size={18} onClick={() => {}} />
+              </icons>
             </info>
           </cardContent>
           <map>
@@ -35,23 +41,32 @@ export class Person {
               }&zoom=12&format=png&maptype=roadmap&style=element:geometry%7Ccolor:0xf5f5f5&style=element:labels.icon%7Cvisibility:off&style=element:labels.text.fill%7Ccolor:0x616161&style=element:labels.text.stroke%7Ccolor:0xf5f5f5&style=feature:administrative.land_parcel%7Celement:labels.text.fill%7Ccolor:0xbdbdbd&style=feature:poi%7Celement:geometry%7Ccolor:0xeeeeee&style=feature:poi%7Celement:labels.text.fill%7Ccolor:0x757575&style=feature:poi.park%7Celement:geometry%7Ccolor:0xe5e5e5&style=feature:poi.park%7Celement:labels.text.fill%7Ccolor:0x9e9e9e&style=feature:road%7Celement:geometry%7Ccolor:0xffffff&style=feature:road.arterial%7Celement:labels.text.fill%7Ccolor:0x757575&style=feature:road.highway%7Celement:geometry%7Ccolor:0xdadada&style=feature:road.highway%7Celement:labels.text.fill%7Ccolor:0x616161&style=feature:road.local%7Celement:labels.text.fill%7Ccolor:0x9e9e9e&style=feature:transit.line%7Celement:geometry%7Ccolor:0xe5e5e5&style=feature:transit.station%7Celement:geometry%7Ccolor:0xeeeeee&style=feature:water%7Celement:geometry%7Ccolor:0xc9c9c9&style=feature:water%7Celement:labels.text.fill%7Ccolor:0x9e9e9e&size=${mapW}x${mapH}`}
             />
           </map>
-        </card>
-        <content>hi</content>
+          <content>
+            <card>
+              <UI.Title fontWeight={800}>Spends time in...</UI.Title>
+              <item>#general</item>
+              <item>#status</item>
+              <item>#showoff</item>
+            </card>
+          </content>
+        </frame>
       </PeekFrame>
     )
   }
 
   static style = {
-    content: {
-      padding: 20,
-      overflowY: 'scroll',
-      flex: 1,
-    },
-    card: {
+    frame: {
       width: '100%',
       height: '100%',
       overflow: 'hidden',
       position: 'relative',
+    },
+    content: {
+      padding: 30,
+      overflowY: 'scroll',
+      flex: 1,
+      position: 'relative',
+      zIndex: 100,
     },
     cardContent: {
       position: 'relative',
@@ -71,6 +86,7 @@ export class Person {
       left: 0,
       right: 0,
       bottom: 0,
+      opacity: 0.8,
     },
     fadeMap: {
       position: 'absolute',
@@ -84,7 +100,7 @@ export class Person {
     info: {
       display: 'block',
       position: 'absolute',
-      top: 90,
+      top: 60,
       left: 120,
     },
     name: {
@@ -103,10 +119,15 @@ export class Person {
       marginLeft: 10,
     },
     avatar: {
-      margin: [-20, 0, 20, -100],
+      margin: [-20, 0, 20, -70],
       width: 256,
       height: 256,
       borderRadius: 1000,
+    },
+    icons: {
+      position: 'relative',
+      top: 25,
+      left: 90,
     },
   }
 }

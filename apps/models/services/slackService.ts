@@ -1,7 +1,7 @@
 import * as Slack1 from 'slack'
 import { Setting } from '../setting'
 import { store } from '@mcro/black/store'
-import { sleep } from 'helpers'
+import { sleep } from '~/helpers'
 
 type SlackOpts = { oldest?: number; count: number }
 

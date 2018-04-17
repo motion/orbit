@@ -154,7 +154,7 @@ export default class OrbitCard {
                       />
                     </title>
                   </AnimateElement>
-                  <SubTitle if={subtitle}>{subtitle}</SubTitle>
+                  <SubTitle if={!tiny && subtitle}>{subtitle}</SubTitle>
                   <AnimateElement
                     if={!tiny && content}
                     id={`${result.id}-content`}

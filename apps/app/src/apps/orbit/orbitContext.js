@@ -10,7 +10,7 @@ import Results from '~/apps/results/results'
 const SPLIT_INDEX = 3
 
 @UI.injectTheme
-@view.attach('orbitPage')
+@view.attach('appStore', 'orbitPage')
 @view
 export default class OrbitContext {
   state = {

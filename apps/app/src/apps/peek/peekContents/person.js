@@ -4,6 +4,7 @@ import PeekHeader from '../peekHeader'
 import PeekFrame from '../peekFrame'
 import OrbitIcon from '~/apps/orbit/orbitIcon'
 import * as UI from '@mcro/ui'
+import Results from '~/apps/results/results'
 
 const mapW = 700
 const mapH = 300
@@ -28,7 +29,15 @@ export class Person {
               <email>{person.data.profile.email}</email>
               <br />
               <icons>
-                <OrbitIcon icon="slack" size={18} onClick={() => {}} />
+                <intButton>
+                  <OrbitIcon
+                    $intIcon
+                    icon="slack"
+                    size={18}
+                    onClick={() => {}}
+                  />
+                  Slack
+                </intButton>
               </icons>
             </info>
           </cardContent>
@@ -43,10 +52,27 @@ export class Person {
           </map>
           <content>
             <card>
-              <UI.Title fontWeight={800}>Spends time in...</UI.Title>
-              <item>#general</item>
-              <item>#status</item>
-              <item>#showoff</item>
+              <UI.Title fontWeight={800} css={{ margin: [0, 0, 5] }}>
+                Spends time in...
+              </UI.Title>
+              <row $$row>
+                <item>
+                  <itemTitle>#general</itemTitle>
+                </item>
+                <item>
+                  <itemTitle>#status</itemTitle>
+                </item>
+                <item>
+                  <itemTitle>#showoff</itemTitle>
+                </item>
+              </row>
+            </card>
+
+            <card>
+              <UI.Title fontWeight={800} css={{ margin: [0, 0, 5] }}>
+                Recently...
+              </UI.Title>
+              <Results />
             </card>
           </content>
         </frame>
@@ -62,7 +88,7 @@ export class Person {
       position: 'relative',
     },
     content: {
-      padding: 30,
+      padding: [10, 30],
       overflowY: 'scroll',
       flex: 1,
       position: 'relative',
@@ -86,7 +112,7 @@ export class Person {
       left: 0,
       right: 0,
       bottom: 0,
-      opacity: 0.8,
+      opacity: 0.6,
     },
     fadeMap: {
       position: 'absolute',
@@ -124,10 +150,49 @@ export class Person {
       height: 256,
       borderRadius: 1000,
     },
+    card: {
+      marginBottom: 25,
+    },
     icons: {
       position: 'relative',
-      top: 25,
+      top: 35,
       left: 90,
+      flexFlow: 'row',
+    },
+    intButton: {
+      padding: 5,
+      flexFlow: 'row',
+      fontSize: 14,
+      fontWeight: 600,
+      background: '#fff',
+    },
+    intIcon: {
+      marginRight: 8,
+    },
+    row: {
+      margin: [0, -8],
+    },
+    item: {
+      userSelect: 'none',
+      cursor: 'default',
+      color: '#3E88E0',
+      fontWeight: 600,
+      fontSize: 14,
+      padding: [7, 10],
+      margin: [4, 2, 0, 0],
+      borderRadius: 100,
+      '&:hover': {
+        background: [0, 0, 0, 0.025],
+      },
+      '&:hover > .itemTitle': {
+        borderBottom: [2, [44, 64, 87, 0.1]],
+      },
+    },
+    itemTitle: {
+      lineHeight: '1rem',
+      display: 'inline-block',
+      // padding: [2, 0, 2],
+      borderBottom: [2, 'transparent'],
     },
   }
 }

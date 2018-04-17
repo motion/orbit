@@ -18,6 +18,8 @@ export default class PeekFrame {
     const onRight = !Electron.peekOnLeft
     const { isShowingPeek } = App
     const borderShadow = ['inset', 0, 0, 0, 0.5, [0, 0, 0, 0.15]]
+    const borderRightRadius = fullScreen || onRight ? BORDER_RADIUS : 0
+    const borderLeftRadius = !fullScreen && !onRight ? BORDER_RADIUS : 0
     return (
       <container $$row $$flex>
         <Space if={!onRight} />
@@ -36,6 +38,20 @@ export default class PeekFrame {
           }}
         >
           <peek $animate={isShowingPeek} $peekVisible={isShowingPeek}>
+            <peekFrameBorder
+              css={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                borderRightRadius,
+                borderLeftRadius,
+                zIndex: 10000,
+                pointerEvents: 'none',
+                border: [2, '#fff'],
+              }}
+            />
             <main
               css={{
                 boxShadow: fullScreen
@@ -44,8 +60,8 @@ export default class PeekFrame {
                 // make shadow go under
                 marginLeft: fullScreen ? -SHADOW_PAD : 0,
                 paddingLeft: fullScreen ? SHADOW_PAD : 0,
-                borderRightRadius: fullScreen || onRight ? BORDER_RADIUS : 0,
-                borderLeftRadius: !fullScreen && !onRight ? BORDER_RADIUS : 0,
+                borderRightRadius,
+                borderLeftRadius,
                 background: `radial-gradient(#fff 70%, ${
                   theme.base.background
                 }`,

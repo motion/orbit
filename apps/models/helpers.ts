@@ -1,6 +1,8 @@
 import { pick, isEqual } from 'lodash'
 import { getConnection } from './typeorm'
 
+export const sleep = ms => new Promise(res => setTimeout(res, ms))
+
 export * from './typeorm'
 // import { BaseEntity } from 'typeorm'
 

@@ -28,6 +28,7 @@ export default class ControlButton {
       margin: -4,
       marginRight: 8,
       borderRadius: 100,
+      // border: [2, '#fff'],
       boxShadow: ['inset 0 0 0 0.5px rgba(0,0,0,0.15)'],
       alignItems: 'center',
       justifyContent: 'center',

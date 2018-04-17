@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import PeekHeader from '../peekHeader'
 import PeekFrame from '../peekFrame'
 import OrbitIcon from '~/apps/orbit/orbitIcon'
 import * as UI from '@mcro/ui'
@@ -14,13 +13,12 @@ export class Person {
   render({ person, appStore }) {
     if (!person || !person.data.profile) {
       log(`no person`)
-      return null
+      return <PeekFrame />
     }
     console.log('person', person)
     const setting = appStore.settings.slack
     return (
       <PeekFrame>
-        <PeekHeader />
         <frame>
           <cardContent>
             <img $avatar src={person.data.profile.image_512} />

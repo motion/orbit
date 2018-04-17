@@ -3,6 +3,7 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { App, Electron } from '@mcro/all'
 import { SHADOW_PAD, APP_SHADOW, BORDER_RADIUS } from '~/constants'
+import WindowControls from '~/views/windowControls'
 
 const Space = () => <div css={{ width: SHADOW_PAD, height: '100%' }} />
 
@@ -38,6 +39,23 @@ export default class PeekFrame {
           }}
         >
           <peek $animate={isShowingPeek} $peekVisible={isShowingPeek}>
+            <WindowControls
+              css={{
+                position: 'absolute',
+                top: 20,
+                zIndex: 10000,
+                ...(Electron.peekOnLeft
+                  ? {
+                      right: 10,
+                    }
+                  : {
+                      left: 20,
+                    }),
+              }}
+              onClose={() => {
+                App.setPeekTarget(null)
+              }}
+            />
             <peekFrameBorder
               css={{
                 position: 'absolute',

@@ -44,7 +44,6 @@ function createWebSQLPlugin() {
 
   SQLitePlugin = function(openargs, openSuccess, openError, primusAdaptor) {
     var dbname
-    console.log('SQLitePlugin opening', openargs)
     if (!(openargs && openargs['name'])) {
       throw new Error(
         'Cannot create a SQLitePlugin' + 'instance without a db name',
@@ -588,7 +587,6 @@ Transaction batching object:
     primusAdaptor: null,
 
     opendb: argsArray(function(args) {
-      console.log('calling opendb', args)
       var dblocation, errorcb, first, okcb, openargs, primusAdaptor
       if (args.length < 1) {
         return null

@@ -16,6 +16,7 @@ export default class PeekPage {
       console.error('none', type)
       return <peek>no pane found</peek>
     }
+    console.log('rendering peek', selectedItem)
     return (
       <UI.Theme name="tan">
         <PeekContentsView

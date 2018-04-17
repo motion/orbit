@@ -1,8 +1,7 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { App, Electron, Desktop } from '@mcro/all'
-import WindowControls from '~/views/windowControls'
+import { Electron } from '@mcro/all'
 
 @view
 export default class PeekHeader {
@@ -19,22 +18,6 @@ export default class PeekHeader {
           padding: title ? [18, 20, 0] : 0,
         }}
       >
-        <WindowControls
-          css={{
-            position: 'absolute',
-            top: 20,
-            ...(Electron.peekOnLeft
-              ? {
-                  right: 10,
-                }
-              : {
-                  left: 10,
-                }),
-          }}
-          onClose={() => {
-            App.setPeekTarget(null)
-          }}
-        />
         <title if={title}>
           <titlemain>
             <UI.Title size={1.8} fontWeight={700} marginBottom={5}>

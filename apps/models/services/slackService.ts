@@ -1,6 +1,7 @@
 import * as Slack1 from 'slack'
 import { Setting } from '../setting'
 import { store } from '@mcro/black/store'
+import { sleep } from 'helpers'
 
 type SlackOpts = { oldest?: number; count: number }
 
@@ -47,28 +48,23 @@ export class SlackService {
     return res.messages
   }
 
-  channelHistory = async ({ oldest, count = 5000, ...rest }) => {
+  channelHistory = async ({ oldest, max = 5000, ...rest }) => {
     const oldestMessageTime = messages => messages[messages.length - 1].ts
-    const oldestWanted = (ts = 0) =>
-      ts && oldest ? Math.min(+oldest, +ts) : ts || oldest
     // initial results
     const options: SlackOpts = {
-      count,
+      count: max,
+      oldest,
       ...rest,
-    }
-    if (oldestWanted()) {
-      options.oldest = oldestWanted()
     }
     let results = await this.getChannelHistory(options)
     if (!results.length) {
       return results
     }
     // iterate until all found
-    while (results.length < count) {
-      const newcount = count - results.length
+    while (results.length < max) {
       const moreResults = await this.getChannelHistory({
-        count: newcount,
-        oldest: oldestWanted(oldestMessageTime(results)),
+        count: max - results.length,
+        oldest: oldest || oldestMessageTime(results),
         ...rest,
       })
       // no more left
@@ -76,6 +72,10 @@ export class SlackService {
         break
       }
       results = [...results, ...moreResults]
+      // throttle
+      if (results.length > 2000) {
+        await sleep(300)
+      }
     }
     return results
   }

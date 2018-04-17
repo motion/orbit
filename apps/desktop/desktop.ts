@@ -60,6 +60,7 @@ export default class DesktopRoot {
         Desktop,
       },
     })
+    Desktop.onMessage(Desktop.messages.OPEN, open)
     await connectModels(Object.keys(Models).map(x => Models[x]))
     this.sync = new Sync()
     this.sync.start()

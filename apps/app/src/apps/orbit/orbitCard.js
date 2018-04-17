@@ -78,7 +78,7 @@ export default class OrbitCard {
       content,
       subtitle,
       preview,
-    } = orbitContent(result)
+    } = orbitContent({ result, appStore })
     const maxHeight = totalHeight ? totalHeight : 400
     const borderRadius = listItem && tiny ? 4 : listItem ? 0 : borderRadius_
     store.isSelected
@@ -154,7 +154,12 @@ export default class OrbitCard {
                       />
                     </title>
                   </AnimateElement>
-                  <SubTitle if={!tiny && subtitle}>{subtitle}</SubTitle>
+                  <SubTitle if={!tiny && typeof subtitle === 'string'}>
+                    {subtitle}
+                  </SubTitle>
+                  <React.Fragment if={!tiny && typeof subtitle === 'object'}>
+                    {subtitle}
+                  </React.Fragment>
                   <AnimateElement
                     if={!tiny && content}
                     id={`${result.id}-content`}

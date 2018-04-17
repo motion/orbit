@@ -380,7 +380,7 @@ export default class Surface extends React.PureComponent<Props> {
   }
 
   static inlineStyle = {
-    margin: [-3, 0],
+    margin: [-2, 0],
     borderRadius: 1000,
   }
 
@@ -639,6 +639,7 @@ export default class Surface extends React.PureComponent<Props> {
           : 0,
       },
       surface: {
+        ...(props.inline && self.constructor.inlineStyle),
         transform: props.transform,
         position: props.position,
         zIndex: props.zIndex,
@@ -693,7 +694,6 @@ export default class Surface extends React.PureComponent<Props> {
           '&:active': activeStyle,
         }),
         ...(props.hovered && hoverStyle),
-        ...(props.inline && self.constructor.inlineStyle),
         ...(props.dimmed && self.constructor.dimmedStyle),
         ...(props.dim && self.constructor.dimStyle),
         ...(props.spaced && self.constructor.spacedStyle),

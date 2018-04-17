@@ -14,6 +14,7 @@ class DesktopStore {
     TOGGLE_PAUSED: 'TOGGLE_PAUSED',
     OPEN_AUTH: 'OPEN_AUTH',
     CLOSE_AUTH: 'CLOSE_AUTH',
+    OPEN: 'OPEN',
   }
 
   setState: typeof Bridge.setState

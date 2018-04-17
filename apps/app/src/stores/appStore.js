@@ -95,7 +95,7 @@ export default class AppStore {
     fireImmediately: true,
     defaultValue: [],
     onlyUpdateIfChanged: true,
-    log: 'state',
+    log: false,
   })
   bitResults = [
     () => [App.state.query, Desktop.appState.id, this.refreshInterval],

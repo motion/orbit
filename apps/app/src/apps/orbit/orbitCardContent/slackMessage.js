@@ -6,6 +6,7 @@ import { view } from '@mcro/black'
 export default class SlackMessage {
   render({ bit, message, previousMessage }) {
     if (!message.text || !bit) {
+      log(`no messagetext/bit ${JSON.stringify(message)}`)
       return null
     }
     if (message.text.indexOf('uploaded a file') >= 0) {
@@ -27,6 +28,7 @@ export default class SlackMessage {
       person => person.integrationId === message.user,
     )
     if (!person) {
+      log(`no person for message ${message.text}`)
       return null
     }
     let previousBySameAuthor = false
@@ -37,6 +39,7 @@ export default class SlackMessage {
     }
     const hideHeader = previousBySameAuthor && previousWithinOneMinute
     const avatar = person.data.profile.image_48
+    // const [firstWord, ...rest] = message.text.split(' ')
     return (
       <message>
         <header if={!hideHeader}>
@@ -54,12 +57,12 @@ export default class SlackMessage {
   }
   static style = {
     message: {
-      padding: [5, 0, 3],
+      padding: [5, 0, 0],
     },
     header: {
       flexFlow: 'row',
       alignItems: 'center',
-      margin: [0, 0, 5],
+      margin: [3, 0, 5],
     },
     username: {
       fontWeight: 600,
@@ -81,7 +84,20 @@ export default class SlackMessage {
       height: 16,
     },
     content: {
+      display: 'block',
+      position: 'relative',
       // color: '#000',
+      // '&::first-letter': {
+      //   fontWeight: 400,
+      //   fontSize: 18,
+      // },
+    },
+    firstWord: {
+      fontWeight: 400,
+      // background: [0, 0, 0, 0.05],
+      // borderRadius: 2,
+      // borderBottom: [1, [0, 0, 0, 0.1]],
+      display: 'inline',
     },
   }
 }

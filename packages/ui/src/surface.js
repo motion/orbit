@@ -215,6 +215,7 @@ export default class Surface extends React.PureComponent<Props> {
       ignoreSegment,
       alignItems,
       justifyContent,
+      backgroundAlpha,
       ...props
     } = this.props
     const hasIconBefore = icon && !iconAfter

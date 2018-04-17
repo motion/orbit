@@ -2,6 +2,7 @@ import * as React from 'react'
 import OrbitCardSlackMessage from './slackMessage'
 import * as UI from '@mcro/ui'
 import { App, Desktop } from '@mcro/all'
+// import pluralize from 'pluralize'
 
 const isntAttachment = x => !x.text || !x.text.match(/\<([a-z]+:\/\/[^>]+)\>/g)
 
@@ -23,30 +24,35 @@ export default ({ result, appStore }) => {
     title: exampleTitles[uid],
     icon: 'slack',
     subtitle: (
-      <row $$row $$flex>
+      <row $$row $$flex css={{ opacity: 0.7 }}>
         <UI.Button
-          ellipse={1}
           sizeRadius={2}
           sizeHeight={0.8}
           sizePadding={1.1}
           borderWidth={0}
           inline
           margin={[-2, -5]}
+          backgroundAlpha={0.3}
           onClick={e => {
             e.stopPropagation()
             const url = `slack://channel?id=${result.data.channel.id}&team=${
               setting.values.oauth.info.team.id
             }`
-            console.log('opening', url)
             App.sendMessage(Desktop, Desktop.messages.OPEN, url)
           }}
         >
           {result.title}
         </UI.Button>
         <div $$flex />
-        <UI.Text opacity={0.5}>
-          {result.data.messages.length - 1} replies
-        </UI.Text>
+        <row $$row $$centered css={{ opacity: 0.5 }}>
+          {result.people.length}
+          &nbsp;
+          <UI.Icon size={10} opacity={0.35} name="users_single-01" />
+          &nbsp;&middot;&nbsp;
+          {result.data.messages.length - 1}
+          &nbsp;
+          <UI.Icon size={10} opacity={0.35} name="reply" />
+        </row>
       </row>
     ),
     // via: result.title,

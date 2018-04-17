@@ -6,7 +6,7 @@ import OrbitIcon from './orbitIcon'
 import orbitContent from './orbitCardContent'
 
 const SubTitle = props => (
-  <UI.Title size={0.9} opacity={0.7} ellipse={1} marginBottom={3} {...props} />
+  <UI.Title size={0.9} opacity={0.7} ellipse={1} {...props} />
 )
 
 @view
@@ -154,18 +154,25 @@ export default class OrbitCard {
                       />
                     </title>
                   </AnimateElement>
-                  <SubTitle if={!tiny && typeof subtitle === 'string'}>
+                  <SubTitle
+                    $subtitle
+                    if={!tiny && typeof subtitle === 'string'}
+                  >
                     {subtitle}
                   </SubTitle>
-                  <React.Fragment if={!tiny && typeof subtitle === 'object'}>
+                  <subtitle if={!tiny && typeof subtitle === 'object'}>
                     {subtitle}
-                  </React.Fragment>
+                  </subtitle>
                   <AnimateElement
                     if={!tiny && content}
                     id={`${result.id}-content`}
                   >
                     <content>
-                      <UI.Text ellipse={2} if={!tiny && !isSelected}>
+                      <UI.Text
+                        opacity={0.75}
+                        ellipse={2}
+                        if={!tiny && !isSelected}
+                      >
                         {preview}
                       </UI.Text>
                       {!tiny && isSelected && content}
@@ -201,6 +208,9 @@ export default class OrbitCard {
       flexFlow: 'row',
       justifyContent: 'space-between',
     },
+    subtitle: {
+      margin: [2, 0, 0],
+    },
     titleText: {
       maxWidth: `calc(100% - 30px)`,
     },
@@ -218,7 +228,6 @@ export default class OrbitCard {
     cardHovered: {},
     content: {
       flex: 1,
-      overflow: 'hidden',
     },
     icon: {
       marginLeft: 0,

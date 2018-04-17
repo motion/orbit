@@ -66,7 +66,11 @@
     "wink-bm25-text-search": "2.0.1",
     "wink-helpers": "^1.2.0",
     "wink-nlp-utils": "^1.7.0",
-    "regenerator-runtime": "0.11.1"
+    "regenerator-runtime": "0.11.1",
+    "compute-cosine-distance": "1.0.0",
+    "compute-covariance": "1.0.1",
+    "@tensorflow/tfjs": "0.9.1",
+    "mathjs": "4.1.1"
   },
   "devDependencies": {
     "@mcro/dev": "*",

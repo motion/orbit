@@ -84,7 +84,6 @@ export default class Text {
 
   componentDidMount() {
     // this fixes bug because clamp is hacky af and needs to re-measure to trigger
-    console.log('mount', this.props)
     this.measure()
   }
 

@@ -4,7 +4,7 @@ function runRouter() {
   return new Router({
     routes: {
       '/orbit': require('./apps/orbit/orbit').default,
-      '/relevancy': require('./apps/relevancy').default,
+      '/cosal': require('./apps/cosal').default,
       '/auth': require('./apps/auth').default,
       '/peek': require('./apps/peek/peek').default,
       '/highlights': require('./apps/highlights/highlights').default,

@@ -1,4 +1,4 @@
-import { Setting } from '@mcro/models'
+import { Setting, Person } from '@mcro/models'
 import { SlackService } from '@mcro/models/services'
 import debug from '@mcro/debug'
 import createOrUpdatePerson from './slackCreateOrUpdatePerson'
@@ -19,6 +19,11 @@ export default class SlackPeopleSync {
     if (updated.length) {
       log(`Slack: synced people ${updated.length}`, updated)
     }
+  }
+
+  reset = async () => {
+    const people = await Person.find({ integration: 'slack' })
+    await Promise.all(people.map(person => person.remove()))
   }
 
   syncPeople = async () => {

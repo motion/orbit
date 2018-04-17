@@ -44,6 +44,13 @@ export default class SlackMessagesSync {
     }
   }
 
+  reset = async () => {
+    const bits = await Bit.find({ integration: 'slack', type: 'conversation' })
+    await Promise.all(bits.map(bit => bit.remove()))
+    this.setting.values.lastMessageSync = {}
+    await this.setting.save()
+  }
+
   syncMessages = async () => {
     this.setting.values.lastMessageSync =
       this.setting.values.lastMessageSync || {}
@@ -53,6 +60,9 @@ export default class SlackMessagesSync {
       return
     }
     for (const channel of Object.keys(this.service.activeChannels)) {
+      if (!this.service.activeChannels[channel]) {
+        continue
+      }
       const channelInfo = await this.service.slack.channels
         .info({ channel })
         .then(res => res && res.ok && res.channel)
@@ -63,7 +73,7 @@ export default class SlackMessagesSync {
       const messages: Array<SlackMessage> = await this.service.channelHistory({
         channel,
         oldest: this.lastSync[channel],
-        count: 500,
+        count: 1000,
       })
       try {
         let group = []
@@ -81,12 +91,12 @@ export default class SlackMessagesSync {
             continue
           }
           if (group.length) {
-            created.push(await this.updateConversation(channelInfo, group))
-            group = []
+            created.push(await this.createConversation(channelInfo, group))
           }
+          group = [next]
         }
         if (group.length) {
-          created.push(await this.updateConversation(channelInfo, group))
+          created.push(await this.createConversation(channelInfo, group))
         }
         if (messages.length) {
           _.merge(this.setting.values, {
@@ -94,8 +104,8 @@ export default class SlackMessagesSync {
               [channel]: _.first(messages).ts,
             },
           })
+          await this.setting.save()
         }
-        await this.setting.save()
         return created.filter(x => !!x)
       } catch (err) {
         log(`Error syncing slack message ${err.message} ${err.stack}`)
@@ -128,14 +138,14 @@ export default class SlackMessagesSync {
     return person
   }
 
-  updateConversation = async (
+  createConversation = async (
     channelInfo: ChannelInfo,
-    messages: Array<SlackMessage>,
+    rawMessages: Array<SlackMessage>,
   ) => {
     // turns user ids into names
     const peopleIds = new Set()
-    const fullMessages = await Promise.all(
-      messages.map(async message => {
+    const messages = await Promise.all(
+      rawMessages.reverse().map(async message => {
         const person = await this.getPerson(message.user)
         peopleIds.add(person.integrationId)
         return {
@@ -151,7 +161,7 @@ export default class SlackMessagesSync {
         topic: channelInfo.topic.value,
         members: channelInfo.members,
       },
-      messages: fullMessages,
+      messages,
     }
     return await createOrUpdate(
       Bit,

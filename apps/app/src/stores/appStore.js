@@ -46,6 +46,7 @@ const parseQuery = query => {
 }
 
 export default class AppStore {
+  refreshInterval = Date.now()
   selectedIndex = -1
   hoveredIndex = -1
   showSettings = false
@@ -55,6 +56,9 @@ export default class AppStore {
   async willMount() {
     this.getSettings()
     this.setInterval(this.getSettings, 2000)
+    this.setInterval(() => {
+      this.refreshInterval = Date.now()
+    }, 1000)
     // this.setInterval(() => {
     //   if (
     //     App.isShowingOrbit &&
@@ -87,22 +91,27 @@ export default class AppStore {
     },
   ]
 
-  @react({ fireImmediately: true, defaultValue: [], onlyUpdateIfChanged: true })
+  @react({
+    fireImmediately: true,
+    defaultValue: [],
+    onlyUpdateIfChanged: true,
+    log: 'state',
+  })
   bitResults = [
-    () => [App.state.query, Desktop.appState.id],
+    () => [App.state.query, Desktop.appState.id, this.refreshInterval],
     async ([query]) => {
       if (!query) {
         return await Bit.find({
           take: 8,
           relations: ['people'],
-          order: { updatedAt: 'ASC' },
+          order: { bitCreatedAt: 'DESC' },
         })
       }
       const { conditions, rest } = parseQuery(query)
       return await Bit.find({
         where: `title like "%${rest.replace(/\s+/g, '%')}%"${conditions}`,
         relations: ['people'],
-        order: { updatedAt: 'ASC' },
+        order: { bitCreatedAt: 'DESC' },
         take: 8,
       })
     },

@@ -75,7 +75,7 @@ export default class SlackMessagesSync {
             continue
           }
           const distanceInSeconds = Math.abs(+next.ts - +last.ts)
-          const isGrouped = distanceInSeconds < 150
+          const isGrouped = distanceInSeconds < 60 * 4
           if (isGrouped) {
             group.push(next)
             continue

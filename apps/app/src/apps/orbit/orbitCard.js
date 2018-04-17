@@ -5,19 +5,8 @@ import Overdrive from '@mcro/overdrive'
 import OrbitIcon from './orbitIcon'
 import orbitContent from './orbitCardContent'
 
-const getNaturalHeight = result => {
-  switch (result.integration) {
-    case 'slack':
-      const numMessages =
-        (result.data && result.data.messages && result.data.messages.length) ||
-        0
-      return Math.min(3, numMessages) * 80
-  }
-  return result.body ? 200 : 50
-}
-
 const SubTitle = props => (
-  <UI.Title size={0.9} opacity={0.7} ellipse={1} {...props} />
+  <UI.Title size={0.9} opacity={0.7} ellipse={1} marginBottom={3} {...props} />
 )
 
 @view
@@ -81,7 +70,15 @@ export default class OrbitCard {
     listItem,
     borderRadius: borderRadius_,
   }) {
-    const { title, icon, content, subtitle } = orbitContent(result)
+    const {
+      title,
+      postTitle,
+      via,
+      icon,
+      content,
+      subtitle,
+      preview,
+    } = orbitContent(result)
     const maxHeight = totalHeight ? totalHeight : 400
     const borderRadius = listItem && tiny ? 4 : listItem ? 0 : borderRadius_
     store.isSelected
@@ -91,10 +88,7 @@ export default class OrbitCard {
           const { isSelected } = store
           const isExpanded = isSelected && !tiny
           // TODO: content height should determing large height
-          const tallHeight = Math.min(
-            450,
-            Math.max(108, getNaturalHeight(result)),
-          )
+          const tallHeight = 'auto'
           const smallHeight = Math.max(
             70,
             (maxHeight - tallHeight) / Math.max(1, total - 1),
@@ -143,15 +137,18 @@ export default class OrbitCard {
                         ellipse={isExpanded ? 2 : 1}
                         fontWeight={400}
                         $titleText
+                        css={{
+                          marginBottom: isExpanded ? 2 : 0,
+                        }}
                         {...tiny && tinyProps.titleProps}
                       >
                         {title}
                       </Text>
+                      <posttitle if={postTitle}>{postTitle}</posttitle>
                       <OrbitIcon
                         if={icon}
-                        size={16}
                         icon={icon}
-                        size={18}
+                        size={16}
                         $icon
                         {...tiny && tinyProps.iconProps}
                       />
@@ -163,25 +160,21 @@ export default class OrbitCard {
                     id={`${result.id}-content`}
                   >
                     <content>
-                      <preview if={!tiny && isSelected}>{content}</preview>
+                      <UI.Text ellipse={2} if={!tiny && !isSelected}>
+                        {preview}
+                      </UI.Text>
+                      {!tiny && isSelected && content}
                     </content>
                   </AnimateElement>
                   <AnimateElement if={!tiny} id={`${result.id}-bottom`}>
                     <bottom>
-                      <orbital />
+                      <orbital if={false} />
                       <Text
                         opacity={0.5}
                         size={0.9}
                         css={{ marginBottom: 3, paddingTop: 10 }}
                       >
-                        via{' '}
-                        <UI.Icon
-                          name={result.integration}
-                          size={7}
-                          $bottomIcon
-                        />
-                        &nbsp;
-                        {result.integration}
+                        in {via || result.integration}
                         &nbsp;
                         <UI.Date>{result.bitUpdatedAt}</UI.Date>
                       </Text>
@@ -204,7 +197,6 @@ export default class OrbitCard {
       justifyContent: 'space-between',
     },
     titleText: {
-      marginBottom: 0,
       maxWidth: `calc(100% - 30px)`,
     },
     cardWrap: {
@@ -221,7 +213,6 @@ export default class OrbitCard {
     cardHovered: {},
     content: {
       flex: 1,
-      opacity: 0.8,
       overflow: 'hidden',
     },
     icon: {

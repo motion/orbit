@@ -4,7 +4,7 @@ import { view } from '@mcro/black'
 
 @view
 export default class SlackMessage {
-  render({ bit, message }) {
+  render({ bit, message, previousMessage }) {
     if (!message.text || !bit) {
       return null
     }
@@ -29,44 +29,59 @@ export default class SlackMessage {
     if (!person) {
       return null
     }
+    let previousBySameAuthor = false
+    let previousWithinOneMinute = false
+    if (previousMessage) {
+      previousBySameAuthor = message.user === previousMessage.user
+      previousWithinOneMinute = +message.ts - +previousMessage.ts < 1000 * 60
+    }
+    const hideHeader = previousBySameAuthor && previousWithinOneMinute
     const avatar = person.data.profile.image_48
     return (
       <message>
-        <UI.Text ellipse={15}>
-          <user>
-            <img $avatar if={avatar} src={avatar} />
-            <strong>{message.name || message.user}</strong>
-            &nbsp;&nbsp;
-            <UI.Date $date>{new Date(message.ts.split('.')[0] * 1000)}</UI.Date>
-          </user>
-          <content>{message.text} </content>
-        </UI.Text>
+        <header if={!hideHeader}>
+          <img $avatar if={avatar} src={avatar} />
+          <space />
+          <username>{message.name}</username>
+          <space />
+          <date>
+            <UI.Date>{new Date(message.ts.split('.')[0] * 1000)}</UI.Date>
+          </date>
+        </header>
+        <content>{message.text}</content>
       </message>
     )
   }
   static style = {
     message: {
-      padding: [10, 0, 0],
+      padding: [5, 0, 3],
     },
-    user: {
-      fontSize: 13,
+    header: {
       flexFlow: 'row',
+      alignItems: 'center',
       margin: [0, 0, 5],
     },
-    strong: {
+    username: {
       fontWeight: 600,
+      fontSize: 14,
       color: '#000',
     },
     date: {
+      marginBottom: -1,
       fontSize: 12,
       fontWeight: 300,
-      opacity: 0.5,
+      opacity: 0.45,
+    },
+    space: {
+      width: 6,
     },
     avatar: {
       borderRadius: 100,
-      margin: [0, 4, 0, 0],
-      width: 18,
-      height: 18,
+      width: 16,
+      height: 16,
+    },
+    content: {
+      // color: '#000',
     },
   }
 }

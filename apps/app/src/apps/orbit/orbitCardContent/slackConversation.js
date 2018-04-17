@@ -2,6 +2,7 @@ import * as React from 'react'
 import OrbitCardSlackMessage from './slackMessage'
 import * as UI from '@mcro/ui'
 import { App, Desktop } from '@mcro/all'
+import { RoundButton } from '~/views'
 // import pluralize from 'pluralize'
 
 const isntAttachment = x => !x.text || !x.text.match(/\<([a-z]+:\/\/[^>]+)\>/g)
@@ -25,14 +26,7 @@ export default ({ result, appStore }) => {
     icon: 'slack',
     subtitle: (
       <row $$row $$flex css={{ opacity: 0.7 }}>
-        <UI.Button
-          sizeRadius={2}
-          sizeHeight={0.8}
-          sizePadding={1.1}
-          borderWidth={0}
-          inline
-          margin={[-2, -5]}
-          backgroundAlpha={0.3}
+        <RoundButton
           onClick={e => {
             e.stopPropagation()
             const url = `slack://channel?id=${result.data.channel.id}&team=${
@@ -42,7 +36,7 @@ export default ({ result, appStore }) => {
           }}
         >
           {result.title}
-        </UI.Button>
+        </RoundButton>
         <div $$flex />
         <row $$row $$centered css={{ opacity: 0.5 }}>
           {result.people.length}

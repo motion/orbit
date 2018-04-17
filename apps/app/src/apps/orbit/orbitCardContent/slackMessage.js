@@ -1,6 +1,7 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
+import { RoundButton } from '~/views'
 
 @view
 export default class SlackMessage {
@@ -43,10 +44,13 @@ export default class SlackMessage {
     return (
       <message>
         <header if={!hideHeader}>
-          <img $avatar if={avatar} src={avatar} />
-          <space />
-          <username>{message.name}</username>
-          <space />
+          <RoundButton>
+            <inner $$row $$centered>
+              <img $avatar if={avatar} src={avatar} />
+              <username>{message.name}</username>
+            </inner>
+          </RoundButton>
+          <space $$flex />
           <date>
             <UI.Date>{new Date(message.ts.split('.')[0] * 1000)}</UI.Date>
           </date>
@@ -82,10 +86,14 @@ export default class SlackMessage {
       borderRadius: 100,
       width: 16,
       height: 16,
+      marginRight: 3,
+      marginLeft: -1,
     },
     content: {
       display: 'block',
       position: 'relative',
+      lineHeight: '1.15rem',
+      margin: [2, 0],
       // color: '#000',
       // '&::first-letter': {
       //   fontWeight: 400,

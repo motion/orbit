@@ -60,7 +60,7 @@ export default ({ result, appStore }) => {
           message={message}
           previousMessage={result.data.messages[index - 1]}
           bit={result}
-          Text={Text}
+          appStore={appStore}
         />
       )),
   }

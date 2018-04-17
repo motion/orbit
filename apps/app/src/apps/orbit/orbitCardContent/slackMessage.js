@@ -2,10 +2,11 @@ import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
 import { RoundButton } from '~/views'
+import { App } from '@mcro/all'
 
 @view
 export default class SlackMessage {
-  render({ bit, message, previousMessage }) {
+  render({ bit, message, previousMessage, appStore }) {
     if (!message.text || !bit) {
       log(`no messagetext/bit ${JSON.stringify(message)}`)
       return null
@@ -44,7 +45,20 @@ export default class SlackMessage {
     return (
       <message>
         <header if={!hideHeader}>
-          <RoundButton>
+          <RoundButton
+            onClick={e => {
+              e.stopPropagation()
+              App.setSelectedItem({
+                id: person.id,
+                icon: avatar,
+                title: message.name,
+                body: '',
+                type: 'person',
+                integration: '',
+              })
+              appStore.pinSelected()
+            }}
+          >
             <inner $$row $$centered>
               <img $avatar if={avatar} src={avatar} />
               <username>{message.name}</username>
@@ -66,16 +80,17 @@ export default class SlackMessage {
     header: {
       flexFlow: 'row',
       alignItems: 'center',
+      justifyContent: 'center',
       margin: [3, 0, 5],
     },
     username: {
       fontWeight: 600,
       fontSize: 14,
       color: '#000',
+      marginBottom: 1,
     },
     date: {
-      marginBottom: -1,
-      fontSize: 12,
+      fontSize: 13,
       fontWeight: 300,
       opacity: 0.45,
     },

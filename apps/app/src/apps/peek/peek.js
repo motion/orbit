@@ -20,6 +20,7 @@ export default class PeekPage {
       <UI.Theme name="tan">
         <PeekContentsView
           bit={appStore.selectedBit}
+          person={appStore.selectedBit}
           selectedItem={selectedItem}
           appStore={appStore}
         />

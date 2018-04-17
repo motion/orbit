@@ -91,9 +91,9 @@ export default class OrbitCard {
           const tallHeight = 'auto'
           const smallHeight = Math.max(
             70,
-            (maxHeight - tallHeight) / Math.max(1, total - 1),
+            (maxHeight - 200) / Math.max(1, total - 1),
           )
-          const height = tiny ? 'auto' : isExpanded ? tallHeight : smallHeight
+          const height = 'auto' //tiny ? 'auto' : isExpanded ? tallHeight : smallHeight
           // const shouldResizeText = wasSelected !== isSelected
           const willTransition = false
           return (

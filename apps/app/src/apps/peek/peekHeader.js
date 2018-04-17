@@ -13,26 +13,31 @@ export default class PeekHeader {
     }
     // const { isTorn } = Electron.currentPeek
     return (
-      <header $$draggable={!fullScreen}>
+      <header
+        $$draggable={!fullScreen}
+        css={{
+          padding: title ? [18, 20, 0] : 0,
+        }}
+      >
         <WindowControls
-          css={
-            Electron.peekOnLeft
+          css={{
+            position: 'absolute',
+            top: 14,
+            ...(Electron.peekOnLeft
               ? {
-                  order: 2,
-                  marginLeft: 14,
+                  right: 6,
                 }
               : {
-                  order: 0,
-                  marginRight: 14,
-                }
-          }
+                  left: 6,
+                }),
+          }}
           onClose={() => {
             App.setPeekTarget(null)
           }}
         />
         <title if={title}>
           <titlemain>
-            <UI.Title size={1.3} marginBottom={5}>
+            <UI.Title size={1.8} fontWeight={700} marginBottom={5}>
               {title}
             </UI.Title>
             <UI.Title if={subtitle} size={1}>
@@ -52,7 +57,6 @@ export default class PeekHeader {
       flexFlow: 'row',
       alignItems: 'center',
       justifyContent: 'center',
-      padding: [18, 20, 0],
       // borderBottom: [1, [0, 0, 0, 0.05]],
     },
     icon: {

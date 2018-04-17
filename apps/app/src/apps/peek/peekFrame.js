@@ -44,9 +44,7 @@ export default class PeekFrame {
                 // make shadow go under
                 marginLeft: fullScreen ? -SHADOW_PAD : 0,
                 paddingLeft: fullScreen ? SHADOW_PAD : 0,
-                borderRightRadius: fullScreen
-                  ? BORDER_RADIUS
-                  : !onRight ? Math.ceil(BORDER_RADIUS / 1.5) : 0,
+                borderRightRadius: fullScreen || onRight ? BORDER_RADIUS : 0,
                 borderLeftRadius: !fullScreen && !onRight ? BORDER_RADIUS : 0,
                 background: `radial-gradient(#fff 70%, ${
                   theme.base.background

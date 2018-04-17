@@ -1,6 +1,6 @@
 import { react, watch, isEqual } from '@mcro/black'
 import { App, Desktop, Electron } from '@mcro/all'
-import { Bit, Setting, findOrCreate } from '@mcro/models'
+import { Bit, Person, Setting, findOrCreate } from '@mcro/models'
 import * as Constants from '~/constants'
 import * as r2 from '@mcro/r2'
 import * as Helpers from '~/helpers'
@@ -118,8 +118,16 @@ export default class AppStore {
   ]
 
   @watch({ log: false, delay: 64 })
-  selectedBit = () =>
-    App.state.selectedItem && Bit.findOne({ id: App.state.selectedItem.id })
+  selectedBit = () => {
+    const { selectedItem } = App.state
+    if (!selectedItem) {
+      return null
+    }
+    if (selectedItem.type === 'person') {
+      return Person.findOne({ id: selectedItem.id })
+    }
+    return Bit.findOne({ id: App.state.selectedItem.id })
+  }
 
   get results() {
     return this.searchState.results || []
@@ -223,21 +231,18 @@ export default class AppStore {
     }
   }
 
-  pinSelected = index => {
-    if (typeof index === 'number') {
-      this._setSelected(index)
+  pinSelected = thing => {
+    if (typeof thing === 'number') {
+      this._setSelected(thing)
       App.setPeekTarget({
-        id: index > -1 ? index : this.hoveredIndex || this.activeIndex,
+        id: thing > -1 ? thing : this.hoveredIndex || this.activeIndex,
         position: this.getMousePosition(),
       })
-      console.log(
-        'set peek target',
-        {
-          id: index > -1 ? index : this.hoveredIndex || this.activeIndex,
-          position: this.getMousePosition(),
-        },
-        App.state.peekTarget,
-      )
+    } else {
+      App.setPeekTarget({
+        id: thing ? thing.id : null,
+        position: this.getMousePosition(),
+      })
     }
   }
 

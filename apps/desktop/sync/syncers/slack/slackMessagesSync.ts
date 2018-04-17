@@ -163,8 +163,13 @@ export default class SlackMessagesSync {
         }
       }),
     )
+    const permalink = await this.service.slack.chat.getPermalink({
+      channel: channelInfo.id,
+      message_ts: messages[0].ts,
+    })
     const people = [...peopleIds].map(id => this.peopleCache[id])
     const data = {
+      permalink,
       channel: {
         id: channelInfo.id,
         purpose: channelInfo.purpose.value,
@@ -189,7 +194,7 @@ export default class SlackMessagesSync {
         type: 'conversation',
         integration: 'slack',
       },
-      ['identifier', 'integration', 'type'],
+      ['identifier'],
     )
   }
 }

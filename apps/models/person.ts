@@ -5,7 +5,8 @@ export class Person extends T.BaseEntity {
   static identifyingKeys = ['identifier', 'integration']
 
   @T.PrimaryGeneratedColumn() id: number
-  @T.Column() identifier: string
+  @T.Column({ unique: true })
+  identifier: string
   @T.Column() integrationId: string
   @T.Column() integration: string
   @T.Column() name: string

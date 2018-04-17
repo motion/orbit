@@ -107,7 +107,7 @@ export default class ElectronReactions {
           Electron.setOrbitState({ mouseOver })
         }
       }
-      if (App.state.peekTarget) {
+      if (App.state.peekTarget || Electron.peekState.mouseOver) {
         const mouseOver = isMouseOver(Electron.currentPeek, mP)
         if (mouseOver !== Electron.peekState.mouseOver) {
           Electron.setPeekState({ mouseOver })

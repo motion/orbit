@@ -6,7 +6,8 @@ export class Bit extends T.BaseEntity {
   static identifyingKeys = ['identifier', 'type', 'integration']
 
   @T.PrimaryGeneratedColumn() id: number
-  @T.Column() identifier: string
+  @T.Column({ unique: true })
+  identifier: string
   @T.Column() integration: string
   @T.Column() title: string
   @T.Column() body: string

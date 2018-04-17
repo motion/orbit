@@ -22,13 +22,13 @@ export default class PeekHeader {
         <WindowControls
           css={{
             position: 'absolute',
-            top: 16,
+            top: 20,
             ...(Electron.peekOnLeft
               ? {
-                  right: 15,
+                  right: 10,
                 }
               : {
-                  left: 15,
+                  left: 10,
                 }),
           }}
           onClose={() => {

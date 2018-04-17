@@ -1,6 +1,6 @@
 import { store, watch, react } from '@mcro/black'
 import * as Syncers from './syncers'
-import { Job, Setting, remove } from '@mcro/models'
+import { Job, remove } from '@mcro/models'
 import debug from '@mcro/debug'
 
 const log = debug('sync')

@@ -68,19 +68,16 @@ export default class SlackMessagesSync {
       if (!this.service.activeChannels[channel]) {
         continue
       }
-      console.log('gooooooooo', channel)
       const channelInfo = await this.getChannelInfo(channel)
       if (!channelInfo) {
         console.log('no channel info')
         continue
       }
-      console.log('1234')
       const messages: Array<SlackMessage> = await this.service.channelHistory({
         channel,
         oldest: this.lastSync[channel],
         count: 1000,
       })
-      console.log('got messages', messages)
       if (!messages.length) {
         log(`No new slack messages`)
         return []

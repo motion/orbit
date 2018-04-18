@@ -1,15 +1,22 @@
-* search
+## next
 
+* [ ] slack long convo (... + x more display at bottom)
+* [ ] peek design (share resolver that gets info)
+* [ ] list: granular re-render on index change
+* [ ] make "#" show a list of slack rooms
   * [ ] search "#gen some" searches #general filtered by some
-  * [ ] make the homepage just opacity 0 during searches, so it comes back more quickly when empty
-  * [ ] on searches, when typing a new char, make opacity go down on current results until new ones show (feels much better)
+* [ ] make "@" show a list of slack people
+* [ ] search people directly
+* [ ] attachments/images handled in resolver
+* [ ] make the homepage just opacity 0 during searches, so it comes back more quickly when empty
+* [ ] on searches, when typing a new char, make opacity go down on current results until new ones show (feels much better)
+
+## next next
 
 * sidebar
 
   * [ ] icon improvements (gmail, gdocs)
-  * [ ] links to actual items in Bottom
   * [ ] overflow title flicker on expand
-  * [ ] list: granular re-render on index change
   * [ ] list: animations between active
   * [ ] better fill to height when not having many results
   * [ ] default view: your day -- how it shows various things, grouping, etc
@@ -18,10 +25,6 @@
 * slack
 
   * [ ] cosal keywords for convo
-  * [ ] slack long convo (... + x more display at bottom)
-  * [ ] bottom: link to convo
-  * [ ] peek design (share resolver that gets info)
-  * [ ] attachments/images handled in resolver
 
 * design
 
@@ -58,36 +61,35 @@
   * [ ] on fs focus input
   * [ ] accidental fullscreen at times
 
-- peek
+* peek
 
-  * click header input clear peek
-  * peek auto link links
-  * peek show images
+  * [ ] click header input clear peek
+  * [ ] peek auto link links
+  * [ ] peek show images
 
-- profiles
+* profiles
 
-  * [ ] sync people info from google
   * [ ] sync people info from github
-  * [ ] basic peek view with aggregate info + avatar
+  * [ ] sync people info from google
+  * [ ] peek view with aggregate info
   * [ ] NLP: related things, common rooms
 
-- sync
+* sync
 
-  * [ ] syncers are running multple/parallel sometimes: investigate / fix
   * [ ] github sync
   * [ ] github simple sidebar/peek
 
-- settings
+* settings
 
   * [ ] adjust setting based on storage size
   * [ ] easy automatic setting setup: common rooms, etc
   * [ ] remove setting + clear bits
 
-- stack
+* stack
 
   * [ ] fix electron devtools not working
 
-- productionize
+* productionize
 
   * [ ] get builds working to .app
   * [ ] get auto update working
@@ -100,6 +102,6 @@
       * if multiple setstate called before settimeout, group them
       * if multiple recevied before timeout, group them
 
-- research
+* research
 
   * [ ] keeping chromium warm

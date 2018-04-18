@@ -12,13 +12,11 @@ export default class PeekPage {
   render({ appStore }) {
     const { selectedItem } = App.state
     const type = (selectedItem && capitalize(selectedItem.type)) || 'Empty'
-    console.log('type is', type)
     const PeekContentsView = PeekContents[type] || PeekContents['Empty']
     if (!PeekContentsView) {
       console.error('none', type)
       return <peek>no pane found</peek>
     }
-    console.log('rendering peek', selectedItem)
     return (
       <UI.Theme name="tan">
         <PeekFrame>

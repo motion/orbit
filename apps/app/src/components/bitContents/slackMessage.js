@@ -16,7 +16,6 @@ const getLink = x => {
 @view
 export default class BitSlackMessage {
   render({ bit, message, previousMessage, appStore }) {
-    console.log('got a message', bit, message)
     if (!message.text || !bit) {
       log(`no messagetext/bit ${JSON.stringify(message)}`)
       return null

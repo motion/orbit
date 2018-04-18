@@ -117,17 +117,25 @@ export default class AppStore {
     },
   ]
 
-  @watch({ log: false, delay: 64 })
-  selectedBit = () => {
-    const { selectedItem } = App.state
-    if (!selectedItem) {
-      return null
-    }
-    if (selectedItem.type === 'person') {
-      return Person.findOne({ id: selectedItem.id })
-    }
-    return Bit.findOne({ id: App.state.selectedItem.id, relations: ['people'] })
-  }
+  @react({ log: false, delay: 32 })
+  selectedBit = [
+    () => App.state.selectedItem,
+    async item => {
+      if (!item) {
+        return null
+      }
+      if (item.type === 'person') {
+        return await Person.findOne({ id: item.id })
+      }
+      const res = await Bit.findOne({
+        where: {
+          id: item.id,
+        },
+        relations: ['people'],
+      })
+      return res
+    },
+  ]
 
   get results() {
     return this.searchState.results || []

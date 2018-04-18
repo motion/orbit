@@ -82,7 +82,7 @@ class AppStore {
 
   last: Boolean
 
-  @react
+  @react({ log: false })
   wasShowingPeek = [
     () => App.isShowingPeek,
     is => {

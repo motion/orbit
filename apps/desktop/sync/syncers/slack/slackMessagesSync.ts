@@ -46,6 +46,7 @@ export default class SlackMessagesSync {
 
   run = async () => {
     if (await Job.lastProcessing()) {
+      console.log('await Job.lastProcessing()', await Job.lastProcessing())
       log(`Already processing! Try .reset() to clear`)
       return
     }

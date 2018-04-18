@@ -19,6 +19,7 @@ export default class Sync {
     await remove(Job)
       .where('status = :status', { status: Job.statuses.FAILED })
       .orWhere('status = :status', { status: Job.statuses.COMPLETE })
+      .orWhere('status = :status', { status: Job.statuses.PROCESSING })
       .execute()
     setInterval(async () => {
       const jobs = await Job.find({ status: Job.statuses.PENDING })
@@ -28,12 +29,12 @@ export default class Sync {
 
   // save in 3.2.s
 
-  @watch
+  @watch({ log: false })
   syncLog = () => {
     const title = this.enabled
-      ? 'SYNC ENABLED ✅ (disable: App.sync.disable())'
-      : 'SYNC DISABLED (enable: App.sync.enable())'
-    log(`%c----${title}----`)
+      ? 'SYNC ENABLED ✅ (Root.sync.disable())'
+      : 'SYNC DISABLED (Root.sync.enable())'
+    console.log(`----${title}----`)
   }
 
   @react
@@ -62,11 +63,6 @@ export default class Sync {
   completeJob = async (job: Job) => {
     this.locks.add(job.lock)
     // clear old processing jobs
-    const oldProcessing = await Job.find({ type: job.type, action: job.action })
-    if (oldProcessing.length) {
-      log(`Removing old processing job for ${job.type} ${job.action}`)
-      await Promise.all(oldProcessing.map(job => job.remove()))
-    }
     let complete = false
     setTimeout(async () => {
       if (!complete) {

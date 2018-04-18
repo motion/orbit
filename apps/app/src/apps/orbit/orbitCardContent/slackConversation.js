@@ -40,6 +40,20 @@ export default class SlackConversation {
           </RoundButton>
         </subtitle>
       ),
+      bottom: (
+        <UI.Icon
+          name="link2"
+          size={11}
+          opacity={0.35}
+          onClick={() =>
+            App.sendMessage(
+              Desktop,
+              Desktop.messages.OPEN,
+              result.data.permalink,
+            )
+          }
+        />
+      ),
       bottomAfter: (
         <row $meta>
           {result.people.length}

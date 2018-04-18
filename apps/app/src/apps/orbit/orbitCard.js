@@ -1,9 +1,8 @@
 import * as React from 'react'
 import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import Overdrive from '@mcro/overdrive'
 import OrbitIcon from './orbitIcon'
-import orbitContent from './orbitCardContent'
+import bitContents from '~/components/bitContents'
 
 const SubTitle = props => (
   <UI.Title size={0.9} opacity={0.7} ellipse={1} {...props} />
@@ -71,27 +70,24 @@ export default class OrbitCard {
     borderRadius: borderRadius_,
     style,
   }) {
-    const CardContentView = orbitContent(result)
+    const BitContent = bitContents(result)
     const borderRadius = listItem && tiny ? 4 : listItem ? 0 : borderRadius_
     store.isSelected
     const { isSelected } = store
     const isExpanded = isSelected && !tiny
     return (
-      <CardContentView
-        appStore={appStore}
-        result={result}
-        isExpanded={isExpanded}
-      >
+      <BitContent appStore={appStore} result={result} isExpanded={isExpanded}>
         {({
           bottom,
           bottomAfter,
           title,
-          postTitle,
           via,
           icon,
           content,
           subtitle,
+          location,
           preview,
+          permalink,
         }) => (
           <cardWrap
             css={{
@@ -118,7 +114,7 @@ export default class OrbitCard {
                 resist={50}
                 scale={1}
                 blur={45}
-                color={'#fff'}
+                color={'#000'}
                 borderRadius={borderRadius}
                 behind
                 durationIn={500}
@@ -137,7 +133,6 @@ export default class OrbitCard {
                 >
                   {title}
                 </Text>
-                <posttitle if={postTitle}>{postTitle}</posttitle>
                 <OrbitIcon
                   if={icon}
                   icon={icon}
@@ -152,6 +147,10 @@ export default class OrbitCard {
               <subtitle if={!tiny && typeof subtitle === 'object'}>
                 {subtitle}
               </subtitle>
+              <location if={location}>
+                <div $$flex />
+                {location}
+              </location>
               <content>
                 <UI.Text
                   $preview
@@ -164,6 +163,7 @@ export default class OrbitCard {
                 {!tiny && isSelected && content}
               </content>
               <bottom if={!tiny}>
+                {permalink}
                 {bottom}
                 <orbital if={false} />
                 <UI.Date>{result.bitUpdatedAt}</UI.Date>
@@ -176,7 +176,7 @@ export default class OrbitCard {
             </card>
           </cardWrap>
         )}
-      </CardContentView>
+      </BitContent>
     )
   }
 
@@ -232,6 +232,10 @@ export default class OrbitCard {
       margin: [0, 7, -4, 0],
       borderRadius: 4,
       position: 'relative',
+    },
+    location: {
+      flexFlow: 'row',
+      opacity: 0.5,
     },
   }
 

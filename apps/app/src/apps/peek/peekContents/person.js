@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import PeekFrame from '../peekFrame'
 import OrbitIcon from '~/apps/orbit/orbitIcon'
 import * as UI from '@mcro/ui'
 import Results from '~/apps/results/results'
@@ -15,69 +14,66 @@ export class Person {
       log(`no person`)
       return <PeekFrame />
     }
-    console.log('person', person)
     const setting = appStore.settings.slack
     return (
-      <PeekFrame>
-        <frame>
-          <cardContent>
-            <img $avatar src={person.data.profile.image_512} />
-            <info>
-              <name>{person.name}</name>
-              <br />
-              <a $email href={`mailto:${person.data.profile.email}`}>
-                {person.data.profile.email}
+      <frame>
+        <cardContent>
+          <img $avatar src={person.data.profile.image_512} />
+          <info>
+            <name>{person.name}</name>
+            <br />
+            <a $email href={`mailto:${person.data.profile.email}`}>
+              {person.data.profile.email}
+            </a>
+            <br />
+            <icons>
+              <a
+                $intButton
+                href={`slack://user?team=${
+                  setting.values.oauth.info.team.id
+                }&id=${person.data.id}`}
+              >
+                <OrbitIcon $intIcon icon="slack" size={18} />
+                Slack
               </a>
-              <br />
-              <icons>
-                <a
-                  $intButton
-                  href={`slack://user?team=${
-                    setting.values.oauth.info.team.id
-                  }&id=${person.data.id}`}
-                >
-                  <OrbitIcon $intIcon icon="slack" size={18} />
-                  Slack
-                </a>
-              </icons>
-            </info>
-          </cardContent>
-          <map>
-            <fadeMap />
-            <img
-              $mapImg
-              src={`https://maps.googleapis.com/maps/api/staticmap?key=AIzaSyAsT_1IWdFZ-aV68sSYLwqwCdP_W0jCknA&center=${
-                person.data.tz
-              }&zoom=12&format=png&maptype=roadmap&style=element:geometry%7Ccolor:0xf5f5f5&style=element:labels.icon%7Cvisibility:off&style=element:labels.text.fill%7Ccolor:0x616161&style=element:labels.text.stroke%7Ccolor:0xf5f5f5&style=feature:administrative.land_parcel%7Celement:labels.text.fill%7Ccolor:0xbdbdbd&style=feature:poi%7Celement:geometry%7Ccolor:0xeeeeee&style=feature:poi%7Celement:labels.text.fill%7Ccolor:0x757575&style=feature:poi.park%7Celement:geometry%7Ccolor:0xe5e5e5&style=feature:poi.park%7Celement:labels.text.fill%7Ccolor:0x9e9e9e&style=feature:road%7Celement:geometry%7Ccolor:0xffffff&style=feature:road.arterial%7Celement:labels.text.fill%7Ccolor:0x757575&style=feature:road.highway%7Celement:geometry%7Ccolor:0xdadada&style=feature:road.highway%7Celement:labels.text.fill%7Ccolor:0x616161&style=feature:road.local%7Celement:labels.text.fill%7Ccolor:0x9e9e9e&style=feature:transit.line%7Celement:geometry%7Ccolor:0xe5e5e5&style=feature:transit.station%7Celement:geometry%7Ccolor:0xeeeeee&style=feature:water%7Celement:geometry%7Ccolor:0xc9c9c9&style=feature:water%7Celement:labels.text.fill%7Ccolor:0x9e9e9e&size=${mapW}x${mapH}`}
-            />
-          </map>
-          <content>
-            <card>
-              <UI.Title fontWeight={800} css={{ margin: [0, 0, 5] }}>
-                Spends time in...
-              </UI.Title>
-              <row $$row>
-                <item>
-                  <itemTitle>#general</itemTitle>
-                </item>
-                <item>
-                  <itemTitle>#status</itemTitle>
-                </item>
-                <item>
-                  <itemTitle>#showoff</itemTitle>
-                </item>
-              </row>
-            </card>
+            </icons>
+          </info>
+        </cardContent>
+        <map>
+          <fadeMap />
+          <img
+            $mapImg
+            src={`https://maps.googleapis.com/maps/api/staticmap?key=AIzaSyAsT_1IWdFZ-aV68sSYLwqwCdP_W0jCknA&center=${
+              person.data.tz
+            }&zoom=12&format=png&maptype=roadmap&style=element:geometry%7Ccolor:0xf5f5f5&style=element:labels.icon%7Cvisibility:off&style=element:labels.text.fill%7Ccolor:0x616161&style=element:labels.text.stroke%7Ccolor:0xf5f5f5&style=feature:administrative.land_parcel%7Celement:labels.text.fill%7Ccolor:0xbdbdbd&style=feature:poi%7Celement:geometry%7Ccolor:0xeeeeee&style=feature:poi%7Celement:labels.text.fill%7Ccolor:0x757575&style=feature:poi.park%7Celement:geometry%7Ccolor:0xe5e5e5&style=feature:poi.park%7Celement:labels.text.fill%7Ccolor:0x9e9e9e&style=feature:road%7Celement:geometry%7Ccolor:0xffffff&style=feature:road.arterial%7Celement:labels.text.fill%7Ccolor:0x757575&style=feature:road.highway%7Celement:geometry%7Ccolor:0xdadada&style=feature:road.highway%7Celement:labels.text.fill%7Ccolor:0x616161&style=feature:road.local%7Celement:labels.text.fill%7Ccolor:0x9e9e9e&style=feature:transit.line%7Celement:geometry%7Ccolor:0xe5e5e5&style=feature:transit.station%7Celement:geometry%7Ccolor:0xeeeeee&style=feature:water%7Celement:geometry%7Ccolor:0xc9c9c9&style=feature:water%7Celement:labels.text.fill%7Ccolor:0x9e9e9e&size=${mapW}x${mapH}`}
+          />
+        </map>
+        <content>
+          <card>
+            <UI.Title fontWeight={800} css={{ margin: [0, 0, 5] }}>
+              Spends time in...
+            </UI.Title>
+            <row $$row>
+              <item>
+                <itemTitle>#general</itemTitle>
+              </item>
+              <item>
+                <itemTitle>#status</itemTitle>
+              </item>
+              <item>
+                <itemTitle>#showoff</itemTitle>
+              </item>
+            </row>
+          </card>
 
-            <card>
-              <UI.Title fontWeight={800} css={{ margin: [0, 0, 5] }}>
-                Recently...
-              </UI.Title>
-              <Results />
-            </card>
-          </content>
-        </frame>
-      </PeekFrame>
+          <card>
+            <UI.Title fontWeight={800} css={{ margin: [0, 0, 5] }}>
+              Recently...
+            </UI.Title>
+            <Results />
+          </card>
+        </content>
+      </frame>
     )
   }
 

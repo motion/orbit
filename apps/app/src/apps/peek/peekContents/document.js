@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import PeekHeader from '../peekHeader'
-import PeekFrame from '../peekFrame'
 
 @view
 export class Document {
@@ -10,7 +9,7 @@ export class Document {
       return null
     }
     return (
-      <PeekFrame>
+      <React.Fragment>
         <PeekHeader title={bit.title} />
         <content>
           <bodyContents
@@ -19,7 +18,7 @@ export class Document {
             }}
           />
         </content>
-      </PeekFrame>
+      </React.Fragment>
     )
   }
 

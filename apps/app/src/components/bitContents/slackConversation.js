@@ -1,6 +1,6 @@
 import { view } from '@mcro/black'
 import * as React from 'react'
-import OrbitCardSlackMessage from './slackMessage'
+import BitSlackMessage from './slackMessage'
 import * as UI from '@mcro/ui'
 import { App, Desktop } from '@mcro/all'
 import { RoundButton } from '~/views'
@@ -16,8 +16,12 @@ const exampleTitles = [
 const uids = {}
 
 @view
-export default class SlackConversation {
-  render({ children, result, appStore, isExpanded }) {
+export default class BitSlackConversation {
+  static defaultProps = {
+    shownLimit: 3,
+  }
+
+  render({ children, result, appStore, shownLimit }) {
     const setting = appStore.settings.slack
     const uid =
       uids[result.id] || Math.floor(Math.random() * exampleTitles.length)
@@ -28,44 +32,40 @@ export default class SlackConversation {
     return children({
       title: exampleTitles[uid],
       icon: 'slack',
-      subtitle: (
-        <subtitle>
-          <div $$flex />
-          <RoundButton
-            onClick={e => {
-              e.stopPropagation()
-              App.sendMessage(Desktop, Desktop.messages.OPEN, slackChannelUrl)
-            }}
-          >
-            {result.title}
-          </RoundButton>
-        </subtitle>
+      location: (
+        <RoundButton
+          onClick={e => {
+            e.stopPropagation()
+            App.sendMessage(Desktop, Desktop.messages.OPEN, slackChannelUrl)
+          }}
+        >
+          {result.title}
+        </RoundButton>
+      ),
+      permalink: (
+        <UI.Icon
+          name="link69"
+          size={11}
+          opacity={0.6}
+          onClick={e => {
+            e.stopPropagation()
+            App.sendMessage(
+              Desktop,
+              Desktop.messages.OPEN,
+              `${slackChannelUrl}&message=${result.data.messages[0].ts}`,
+              // result.data.permalink,
+            )
+          }}
+        />
       ),
       bottom: (
-        <bottom $$row>
-          <UI.Icon
-            name="link69"
-            size={11}
-            opacity={0.6}
-            onClick={e => {
-              e.stopPropagation()
-              App.sendMessage(
-                Desktop,
-                Desktop.messages.OPEN,
-                `${slackChannelUrl}&message=${result.data.messages[0].ts}`,
-                // result.data.permalink,
-              )
-            }}
-          />
-          <space />
-          <more if={result.data.messages.length > 3}>
-            + {result.data.messages.length - 3}&nbsp;more&nbsp;
-            {pluralize('reply', result.data.messages.length - 3)}
-          </more>
-        </bottom>
+        <more if={result.data.messages.length > 3}>
+          + {result.data.messages.length - 3}&nbsp;more&nbsp;
+          {pluralize('reply', result.data.messages.length - 3)}
+        </more>
       ),
       bottomAfter: (
-        <row $meta>
+        <row if={result.people} $meta>
           {result.people.length}
           &nbsp;
           <UI.Icon size={10} opacity={0.35} name="users_single-01" />
@@ -78,9 +78,9 @@ export default class SlackConversation {
       // via: result.title,
       preview: result.body,
       content: result.data.messages
-        .slice(0, 3)
+        .slice(0, shownLimit)
         .map((message, index) => (
-          <OrbitCardSlackMessage
+          <BitSlackMessage
             key={index}
             message={message}
             previousMessage={result.data.messages[index - 1]}

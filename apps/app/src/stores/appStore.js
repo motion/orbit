@@ -126,7 +126,7 @@ export default class AppStore {
     if (selectedItem.type === 'person') {
       return Person.findOne({ id: selectedItem.id })
     }
-    return Bit.findOne({ id: App.state.selectedItem.id })
+    return Bit.findOne({ id: App.state.selectedItem.id, relations: ['people'] })
   }
 
   get results() {

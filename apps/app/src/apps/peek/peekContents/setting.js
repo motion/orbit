@@ -3,7 +3,6 @@ import { view } from '@mcro/black'
 import { App } from '@mcro/all'
 import { Bit, Job } from '@mcro/models'
 import PeekHeader from '../peekHeader'
-import PeekFrame from '../peekFrame'
 import { capitalize } from 'lodash'
 import * as UI from '@mcro/ui'
 import * as SettingPanes from './settingPanes'
@@ -58,7 +57,7 @@ export class SettingView {
       SettingPanes[integration] ||
       EmptyPane
     return (
-      <PeekFrame>
+      <React.Fragment>
         <PeekHeader
           title={capitalize(integration)}
           subtitle={
@@ -118,7 +117,7 @@ export class SettingView {
             {JSON.stringify(store.setting.values.oauth || null, 0, 2)}
           </pre>
         </body>
-      </PeekFrame>
+      </React.Fragment>
     )
   }
 

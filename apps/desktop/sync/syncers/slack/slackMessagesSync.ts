@@ -1,4 +1,4 @@
-import { Setting, Bit, Person, createOrUpdate } from '@mcro/models'
+import { Setting, Bit, Person, createOrUpdate, Job } from '@mcro/models'
 import { SlackService } from '@mcro/models/services'
 import debug from '@mcro/debug'
 import * as _ from 'lodash'
@@ -45,6 +45,10 @@ export default class SlackMessagesSync {
   }
 
   run = async () => {
+    if (await Job.lastProcessing()) {
+      log(`Already processing! Try .reset() to clear`)
+      return
+    }
     await this.setupSetting()
     const updated = await this.syncMessages()
     if (updated && updated.length) {
@@ -57,6 +61,11 @@ export default class SlackMessagesSync {
     await Promise.all(bits.map(bit => bit.remove()))
     this.setting.values.lastMessageSync = {}
     await this.setting.save()
+    await Promise.all(
+      Job.find({ where: { type: 'slack', action: 'messages' } }).map(j =>
+        j.remove(),
+      ),
+    )
   }
 
   syncMessages = async () => {

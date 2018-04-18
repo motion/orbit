@@ -31,7 +31,7 @@ export class Job extends T.BaseEntity {
 
   static lastPending(query?: Object) {
     return this.findOne({
-      where: { ...query, status: 'pending' },
+      where: { ...query, status: Job.statuses.PENDING },
       order: { createdAt: 'DESC' },
       take: 1,
     })
@@ -39,7 +39,15 @@ export class Job extends T.BaseEntity {
 
   static lastCompleted(query?: Object) {
     return this.findOne({
-      where: { ...query, status: 'completed' },
+      where: { ...query, status: Job.statuses.COMPLETE },
+      order: { createdAt: 'DESC' },
+      take: 1,
+    })
+  }
+
+  static lastProcessing(query?: Object) {
+    return this.findOne({
+      where: { ...query, status: Job.statuses.PROCESSING },
       order: { createdAt: 'DESC' },
       take: 1,
     })

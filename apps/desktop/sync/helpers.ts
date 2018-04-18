@@ -1,7 +1,7 @@
 import { Job } from '@mcro/models'
 import debug from '@mcro/debug'
 
-const log = debug('sync.ensureJob')
+const log = debug('sync')
 
 const SECONDS_UNTIL_JOB_STALE = 60 * 10
 const UNITS_SECOND = 1000

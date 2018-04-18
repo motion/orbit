@@ -1,11 +1,11 @@
-import { Setting, Bit, Person, createOrUpdate } from '@mcro/models'
+import { Setting, Bit, Person, createOrUpdate, Job } from '@mcro/models'
 import { SlackService } from '@mcro/models/services'
 import debug from '@mcro/debug'
 import * as _ from 'lodash'
 import * as Helpers from '~/helpers'
 import createOrUpdatePerson from './slackCreateOrUpdatePerson'
 
-const log = debug('sync slackMessages')
+const log = debug('sync.slackMessages')
 const slackDate = ts => new Date(+ts.split('.')[0] + 1000)
 
 type SlackMessage = {
@@ -38,7 +38,19 @@ export default class SlackMessagesSync {
     return this.setting.values.lastMessageSync
   }
 
+  setupSetting = async () => {
+    this.setting.values.lastMessageSync =
+      this.setting.values.lastMessageSync || {}
+    await this.setting.save()
+  }
+
   run = async () => {
+    if (await Job.lastProcessing()) {
+      console.log('await Job.lastProcessing()', await Job.lastProcessing())
+      log(`Already processing! Try .reset() to clear`)
+      return
+    }
+    await this.setupSetting()
     const updated = await this.syncMessages()
     if (updated && updated.length) {
       log(`Slack: synced messages ${updated.length}`, updated)
@@ -50,12 +62,14 @@ export default class SlackMessagesSync {
     await Promise.all(bits.map(bit => bit.remove()))
     this.setting.values.lastMessageSync = {}
     await this.setting.save()
+    await Promise.all(
+      Job.find({ where: { type: 'slack', action: 'messages' } }).map(j =>
+        j.remove(),
+      ),
+    )
   }
 
   syncMessages = async () => {
-    this.setting.values.lastMessageSync =
-      this.setting.values.lastMessageSync || {}
-    await this.setting.save()
     if (!this.service.activeChannels) {
       log(`Slack no active channels selected`)
       return
@@ -74,6 +88,10 @@ export default class SlackMessagesSync {
         oldest: this.lastSync[channel],
         count: 1000,
       })
+      if (!messages.length) {
+        log(`No new slack messages`)
+        return []
+      }
       try {
         let group = []
         let created = []
@@ -97,14 +115,13 @@ export default class SlackMessagesSync {
         if (group.length) {
           created.push(await this.createConversation(channelInfo, group))
         }
-        if (messages.length) {
-          _.merge(this.setting.values, {
-            lastMessageSync: {
-              [channel]: _.first(messages).ts,
-            },
-          })
-          await this.setting.save()
-        }
+        // update setting
+        _.merge(this.setting.values, {
+          lastMessageSync: {
+            [channel]: _.first(messages).ts,
+          },
+        })
+        await this.setting.save()
         return created.filter(x => !!x)
       } catch (err) {
         log(`Error syncing slack message ${err.message} ${err.stack}`)
@@ -164,7 +181,7 @@ export default class SlackMessagesSync {
         }
       }),
     )
-    const permalink = await this.service.slack.chat.getPermalink({
+    const { permalink } = await this.service.slack.chat.getPermalink({
       channel: channelInfo.id,
       message_ts: messages[0].ts,
     })
@@ -179,7 +196,6 @@ export default class SlackMessagesSync {
       },
       messages,
     }
-    console.log('slakc convo created at', slackDate(_.last(messages).ts))
     return await createOrUpdate(
       Bit,
       {

@@ -1,10 +1,19 @@
 import { Bit, Setting } from '@mcro/models'
 import { createInChunks } from '~/sync/helpers'
-import { flatten } from 'lodash'
+import * as _ from 'lodash'
 import debug from '@mcro/debug'
 import getHelpers from './getHelpers'
 
-const log = debug('sync googleCal')
+const log = debug('sync.googleCal')
+
+type GoogleCalItem = {
+  id: string
+  created: string
+  updated: string
+  organizer: {
+    email: string
+  }
+}
 
 export default class GoogleCalSync {
   setting: Setting
@@ -47,28 +56,24 @@ export default class GoogleCalSync {
   }
 
   async resetSetting(calendar: string) {
-    // await this.setting.mergeUpdate({
-    //   values: {
-    //     syncTokens: {
-    //       [calendar]: null,
-    //     },
-    //   },
-    // })
+    _.merge(this.setting.values, {
+      [calendar]: null,
+    })
+    await this.setting.save()
   }
 
   async setupSettings() {
     const { items } = await this.fetch(`/users/me/calendarList`)
-    // await this.setting.mergeUpdate({
-    //   values: {
-    //     calendars: items,
-    //     calendarsActive: this.setting.values.calendarsActive || {},
-    //     syncTokens: this.setting.values.syncTokens || {},
-    //   },
-    // })
+    _.merge(this.setting.values, {
+      calendars: items,
+      calendarsActive: this.setting.values.calendarsActive || {},
+      syncTokens: this.setting.values.syncTokens || {},
+    })
+    await this.setting.save()
   }
 
   async syncAllCalendars(): Promise<Array<Event>> {
-    return flatten(await Promise.all(this.activeCals.map(this.syncCalendar)))
+    return _.flatten(await Promise.all(this.activeCals.map(this.syncCalendar)))
   }
 
   syncCalendar = async (calendar: string): Promise<Array<Event>> => {
@@ -88,25 +93,20 @@ export default class GoogleCalSync {
     return created
   }
 
-  async createEvent(calendar: string, data: Object): Promise<Event> {
+  async createEvent(calendar: string, data: GoogleCalItem) {
     const { id, created, updated } = data
-    try {
-      return await Event.findOrUpdate({
-        id,
-        integration: 'google',
-        type: 'calendar',
-        action: '',
-        author: data.organizer ? data.organizer.email : '',
-        org: calendar,
-        parentId: calendar,
-        created,
-        updated,
-        data,
-      })
-    } catch (err) {
-      console.error(err)
-      return null
-    }
+    console.log('create event', {
+      id,
+      integration: 'google',
+      type: 'calendar',
+      action: '',
+      author: data.organizer ? data.organizer.email : '',
+      org: calendar,
+      parentId: calendar,
+      created,
+      updated,
+      data,
+    })
   }
 
   async getEvents(
@@ -119,6 +119,7 @@ export default class GoogleCalSync {
     const syncToken = this.setting.values.syncTokens[calendarId]
     if (syncToken) {
       log('using sync token from previous fetch', syncToken)
+      // @ts-ignore
       finalQuery.syncToken = syncToken
     }
     const path = `/calendars/${calendarId}/events`

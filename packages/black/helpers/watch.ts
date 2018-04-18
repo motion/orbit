@@ -23,7 +23,7 @@ function tsWatch(options) {
 }
 
 // @watch decorator
-export function watch(a, b, c, opts) {
+export function watch(a, b?, c?, opts?) {
   // passing options
   if (!b) {
     const options = { ...a, ...opts }
@@ -45,7 +45,7 @@ export function watch(a, b, c, opts) {
 export const react = watch
 
 // @ts-ignore
-watch.if = function watchIf(a, b, c) {
+watch.if = function watchIf(a, b?, c?) {
   // passing options
   if (!b) {
     return (d, e, f) => watch(d, e, f, { isIf: true, ...a })

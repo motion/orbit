@@ -62,16 +62,21 @@ export class SlackService {
     }
     // iterate until all found
     while (results.length < max) {
+      // 1000 is max per-call
+      const count = Math.min(1000, max - results.length)
       const moreResults = await this.getChannelHistory({
-        count: max - results.length,
+        count,
         oldest: oldest || oldestMessageTime(results),
         ...rest,
       })
-      // no more left
-      if (!moreResults || !moreResults.length) {
+      if (!moreResults) {
         break
       }
       results = [...results, ...moreResults]
+      // reached end
+      if (moreResults.length < count) {
+        break
+      }
       // throttle
       if (results.length > 2000) {
         await sleep(300)

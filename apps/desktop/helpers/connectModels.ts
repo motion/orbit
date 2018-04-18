@@ -1,6 +1,7 @@
 import { createConnection } from 'typeorm'
 import * as Constants from '../constants'
 import recoverDB from './recoverDB'
+import * as Path from 'path'
 
 export default async function connectModels(models) {
   try {

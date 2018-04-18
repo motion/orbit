@@ -147,10 +147,6 @@ export default class OrbitCard {
               <subtitle if={!tiny && typeof subtitle === 'object'}>
                 {subtitle}
               </subtitle>
-              <location if={location}>
-                <div $$flex />
-                {location}
-              </location>
               <content>
                 <UI.Text
                   $preview
@@ -158,9 +154,15 @@ export default class OrbitCard {
                   ellipse={2}
                   if={!tiny && !isSelected}
                 >
-                  {preview}
+                  {location} {preview}
                 </UI.Text>
-                {!tiny && isSelected && content}
+                <full if={!tiny && isSelected}>
+                  <subtitle $$row>
+                    <div $$flex />
+                    {location}
+                  </subtitle>
+                  {content}
+                </full>
               </content>
               <bottom if={!tiny}>
                 {permalink}

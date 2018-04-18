@@ -12,7 +12,7 @@ export class Person {
   render({ person, appStore }) {
     if (!person || !person.data.profile) {
       log(`no person`)
-      return <PeekFrame />
+      return null
     }
     const setting = appStore.settings.slack
     return (

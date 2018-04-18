@@ -168,7 +168,7 @@ export default class OrbitFrame {
           iWidth={iWidth}
           orbitOnLeft={orbitOnLeft}
         />
-        <orbitShadow
+        {/* <orbitShadow
           if={false}
           css={{
             position: 'absolute',
@@ -183,7 +183,7 @@ export default class OrbitFrame {
               : 'none',
             opacity: App.isShowingOrbit ? 1 : 0,
           }}
-        />
+        /> */}
         <orbitBorder
           $orbitAnimate={App.isShowingOrbit}
           css={{
@@ -250,25 +250,14 @@ export default class OrbitFrame {
             >
               {children}
               <expand if={!fullScreen}>
-                <expandEnd
-                  if={false}
-                  css={{
-                    opacity: 0.5,
-                    background: `linear-gradient(transparent, ${
-                      theme.base.background
-                    })`,
-                  }}
-                />
                 <fade
-                  if={false}
                   css={{
-                    opacity: 0.5,
+                    opacity: 1,
                     background: `linear-gradient(transparent, ${
                       theme.base.background
-                    } 80%)`,
+                    } 95%)`,
                   }}
                 />
-                <OrbitDivider onMouseDown={orbitPage.barMouseDown} />
               </expand>
             </content>
           </orbit>
@@ -357,7 +346,7 @@ export default class OrbitFrame {
       bottom: 0,
       left: 0,
       right: 0,
-      top: '80%',
+      top: '85%',
       alignItems: 'flex-end',
       justifyContent: 'center',
       flexFlow: 'row',

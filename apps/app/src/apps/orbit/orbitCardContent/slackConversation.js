@@ -45,14 +45,15 @@ export default class SlackConversation {
           name="link2"
           size={11}
           opacity={0.35}
-          onClick={() =>
+          onClick={e => {
+            e.stopPropagation()
             App.sendMessage(
               Desktop,
               Desktop.messages.OPEN,
               `${slackChannelUrl}&message=${result.data.messages[0].ts}`,
               // result.data.permalink,
             )
-          }
+          }}
         />
       ),
       bottomAfter: (

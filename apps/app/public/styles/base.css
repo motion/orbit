@@ -461,13 +461,13 @@ html {
  */
 
 ::selection {
-  background: #71484299;
-  color: #fff;
+  background: #e9cd88;
+  color: #222;
   text-shadow: none;
 }
 *::selection {
-  background: #71484299;
-  color: #fff;
+  background: #e9cd88;
+  color: #222;
   text-shadow: none;
 }
 

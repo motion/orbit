@@ -64,8 +64,8 @@ export default class SlackMessage {
               <username>{message.name}</username>
             </inner>
           </RoundButton>
-          <space $$flex />
-          <date>
+          <space />
+          <date if={previousMessage && !previousWithinOneMinute}>
             <UI.Date>{new Date(message.ts.split('.')[0] * 1000)}</UI.Date>
           </date>
         </header>
@@ -80,7 +80,6 @@ export default class SlackMessage {
     header: {
       flexFlow: 'row',
       alignItems: 'center',
-      justifyContent: 'center',
       margin: [3, 0, 5],
     },
     username: {

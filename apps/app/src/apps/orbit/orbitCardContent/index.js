@@ -16,12 +16,12 @@ const results = {
   },
 }
 
-export default ({ result, appStore }) => {
+export default result => {
   const resolveIntegration = results[result.integration]
   const resolver = resolveIntegration && resolveIntegration[result.type]
   if (!resolver) {
     console.error('no resolver for', result.integration, result.type)
     return { title: '' }
   }
-  return resolver({ result, appStore })
+  return resolver
 }

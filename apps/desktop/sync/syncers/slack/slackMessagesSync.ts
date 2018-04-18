@@ -153,6 +153,7 @@ export default class SlackMessagesSync {
   ) => {
     // turns user ids into names
     const peopleIds = new Set()
+    // oldest to newest
     const messages = await Promise.all(
       rawMessages.reverse().map(async message => {
         const person = await this.getPerson(message.user)
@@ -178,6 +179,7 @@ export default class SlackMessagesSync {
       },
       messages,
     }
+    console.log('slakc convo created at', slackDate(_.last(messages).ts))
     return await createOrUpdate(
       Bit,
       {
@@ -188,8 +190,8 @@ export default class SlackMessagesSync {
           .slice(0, 255),
         identifier: Helpers.hash(data),
         data,
-        bitCreatedAt: slackDate(_.last(messages).ts),
-        bitUpdatedAt: slackDate(_.first(messages).ts),
+        bitCreatedAt: slackDate(_.first(messages).ts),
+        bitUpdatedAt: slackDate(_.last(messages).ts),
         people,
         type: 'conversation',
         integration: 'slack',

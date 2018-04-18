@@ -1,8 +1,6 @@
 import createClient from './websqlClient'
 import { createConnection } from 'typeorm/browser'
 
-const originalLocation = window.location
-
 export default async function connectModels(models) {
   window.createConnection = createConnection
   window.models = models
@@ -32,17 +30,6 @@ export default async function connectModels(models) {
           return
         }
         console.error('SQL Error', err)
-        if (err.message && err.message.indexOf('db not found')) {
-          console.log('Reconnecting models...')
-          started = false
-          // error is here: typeorm wont close...
-          // connection.close()
-          // // reconnect
-          // setTimeout(() => {
-          //   connect()
-          // }, 1000)
-          window.restart()
-        }
       })
     } catch (err) {
       console.log('connectModels Error: ', err)

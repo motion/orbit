@@ -1,6 +1,8 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
 
+export * from './roundButton'
+
 export const Title = props => {
   const minSize = 1.8
   const maxSize = 2.5

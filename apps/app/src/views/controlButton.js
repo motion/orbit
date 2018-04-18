@@ -24,10 +24,13 @@ export default class ControlButton {
     controlButton: {
       width: 12,
       height: 12,
+      padding: 4,
+      margin: -4,
+      marginRight: 8,
       borderRadius: 100,
+      // border: [2, '#fff'],
       boxShadow: ['inset 0 0 0 0.5px rgba(0,0,0,0.15)'],
       alignItems: 'center',
-      marginRight: 8,
       justifyContent: 'center',
       '& > img': {
         opacity: 0,

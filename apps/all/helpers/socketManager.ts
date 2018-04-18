@@ -6,14 +6,16 @@ const log = debug('scrn')
 export default class SocketManager {
   activeSockets = []
   onState: Function
-  actions: { onMessage?: Function }
+  actions: { getState?: Function; onMessage: Function }
   port: number
   wss: Server
+  masterSource: string
 
-  constructor({ port, actions, onState }) {
+  constructor({ port, actions, onState, masterSource }) {
     this.onState = onState
     this.actions = actions
     this.port = port
+    this.masterSource = masterSource
   }
 
   async start() {
@@ -92,13 +94,14 @@ export default class SocketManager {
       // message
       const { action, state, source, message, to } = JSON.parse(str)
       if (to) {
+        if (to === this.masterSource) {
+          this.actions.onMessage(message)
+          return
+        }
         this.sendMessage(to, message)
         return
       }
       if (state) {
-        if (this.onState) {
-          this.onState(source, state)
-        }
         // console.log('should send', source || '---nostate:(', state)
         this.sendAll(source, state, { skipUID: uid })
       }

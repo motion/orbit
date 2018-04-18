@@ -1,0 +1,20 @@
+{
+  "name": "@mcro/cosal",
+  "main": "_/index.js",
+  "module": "_/index.js",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "tsc",
+    "watch": "npm run build -- --watch"
+  },
+  "dependencies": {
+    "@mcro/automagical": "^1.5.1",
+    "@mcro/black": "*",
+    "static-kdtree": "1.0.2",
+    "mathjs": "4.1.2",
+    "propel": "3.3.1"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

@@ -1,3 +1,4 @@
+// @ts-ignore provided by some apps
 import { screen } from 'electron'
 
 export default function screenSize() {

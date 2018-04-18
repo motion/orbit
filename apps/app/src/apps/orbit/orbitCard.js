@@ -3,20 +3,11 @@ import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import Overdrive from '@mcro/overdrive'
 import OrbitIcon from './orbitIcon'
-import OrbitCardContent from './orbitCardContent'
+import orbitContent from './orbitCardContent'
 
-const getTitle = result => result.title
-
-const getNaturalHeight = result => {
-  switch (result.integration) {
-    case 'slack':
-      const numMessages =
-        (result.data && result.data.messages && result.data.messages.length) ||
-        0
-      return Math.min(3, numMessages) * 80
-  }
-  return result.body ? 200 : 50
-}
+const SubTitle = props => (
+  <UI.Title size={0.9} opacity={0.7} ellipse={1} {...props} />
+)
 
 @view
 class Text {
@@ -78,140 +69,112 @@ export default class OrbitCard {
     tiny,
     listItem,
     borderRadius: borderRadius_,
+    style,
   }) {
-    const maxHeight = totalHeight ? totalHeight : 400
+    const CardContentView = orbitContent(result)
     const borderRadius = listItem && tiny ? 4 : listItem ? 0 : borderRadius_
     store.isSelected
+    const { isSelected } = store
+    const isExpanded = isSelected && !tiny
     return (
-      <Overdrive parentElement={parentElement}>
-        {({ AnimateElement }) => {
-          const { isSelected } = store
-          const isExpanded = isSelected && !tiny
-          // TODO: content height should determing large height
-          const tallHeight = Math.min(
-            450,
-            Math.max(108, getNaturalHeight(result)),
-          )
-          const smallHeight = Math.max(
-            70,
-            (maxHeight - tallHeight) / Math.max(1, total - 1),
-          )
-          const height = tiny ? 'auto' : isExpanded ? tallHeight : smallHeight
-          // const shouldResizeText = wasSelected !== isSelected
-          const willTransition = false
-          const title = getTitle(result)
-          return (
-            <AnimateElement id={`${result.id}`}>
-              <cardWrap
-                css={{
-                  maxHeight: height,
-                  height,
-                  padding: listItem ? 0 : [0, 5, 3],
-                }}
-                ref={getRef}
-                onClick={() => appStore.toggleSelected(index)}
-                {...appStore.getHoverProps({ result, id: index })}
-              >
-                <card
-                  $cardHovered={this.hovered && willTransition}
+      <CardContentView
+        appStore={appStore}
+        result={result}
+        isExpanded={isExpanded}
+      >
+        {({
+          bottomAfter,
+          title,
+          postTitle,
+          via,
+          icon,
+          content,
+          subtitle,
+          preview,
+        }) => (
+          <cardWrap
+            css={{
+              padding: listItem ? 0 : [0, 5, 3],
+            }}
+            ref={getRef}
+            onClick={() => appStore.toggleSelected(index)}
+            {...appStore.getHoverProps({ result, id: index })}
+            style={style}
+          >
+            <card
+              $cardHovered={this.hovered}
+              css={{
+                padding: tiny ? [6, 8] : 12,
+                borderRadius,
+              }}
+              onMouseEnter={this.setHovered}
+              onMouseLeave={this.setUnhovered}
+            >
+              <UI.HoverGlow
+                if={isExpanded}
+                opacity={0.8}
+                full
+                resist={50}
+                scale={1}
+                blur={45}
+                color={'#fff'}
+                borderRadius={borderRadius}
+                behind
+                durationIn={500}
+                durationOut={100}
+              />
+              <title>
+                <Text
+                  size={isExpanded ? 1.35 : 1.2}
+                  ellipse={isExpanded ? 2 : 1}
+                  fontWeight={400}
+                  $titleText
                   css={{
-                    padding: tiny ? [6, 8] : 12,
-                    borderRadius,
+                    marginBottom: isExpanded ? 2 : 0,
                   }}
-                  onMouseEnter={this.setHovered}
-                  onMouseLeave={this.setUnhovered}
+                  {...tiny && tinyProps.titleProps}
                 >
-                  <UI.HoverGlow
-                    if={isExpanded}
-                    opacity={0.8}
-                    full
-                    resist={50}
-                    scale={1}
-                    blur={45}
-                    color={'#fff'}
-                    borderRadius={borderRadius}
-                    behind
-                    durationIn={500}
-                    durationOut={100}
-                  />
-                  <AnimateElement id={`${result.id}-title`}>
-                    <title
-                      css={{ flexFlow: 'row', justifyContent: 'space-between' }}
-                    >
-                      <Text
-                        size={isExpanded ? 1.35 : 1.2}
-                        ellipse={isExpanded ? 2 : 1}
-                        fontWeight={400}
-                        css={{
-                          marginBottom: 0,
-                          maxWidth: `calc(100% - 30px)`,
-                        }}
-                        {...tiny && tinyProps.titleProps}
-                      >
-                        {title}
-                      </Text>
-                      <OrbitIcon
-                        if={result.icon || result.integration}
-                        size={16}
-                        icon={
-                          result.icon
-                            ? `/icons/${result.icon}`
-                            : result.integration
-                        }
-                        size={18}
-                        css={{
-                          marginLeft: 0,
-                          marginTop: 3,
-                        }}
-                        {...tiny && tinyProps.iconProps}
-                      />
-                    </title>
-                  </AnimateElement>
-                  <AnimateElement
-                    if={!tiny && result.body}
-                    id={`${result.id}-content`}
-                  >
-                    <content
-                      css={{
-                        flex: 1,
-                        opacity: 0.8,
-                        overflow: 'hidden',
-                      }}
-                    >
-                      <OrbitCardContent if={isExpanded} result={result} />
-                      <preview if={!tiny && !isSelected}>{result.body}</preview>
-                    </content>
-                  </AnimateElement>
-                  <AnimateElement if={!tiny} id={`${result.id}-bottom`}>
-                    <bottom>
-                      <orbital />
-                      <Text
-                        opacity={0.5}
-                        size={0.9}
-                        css={{ marginBottom: 3, paddingTop: 10 }}
-                      >
-                        via{' '}
-                        <UI.Icon
-                          name={result.integration}
-                          size={7}
-                          css={{
-                            display: 'inline-block',
-                            opacity: 0.5,
-                            margin: [0, 2],
-                          }}
-                        />
-                        &nbsp;
-                        {result.integration}
-                        <UI.Date>{result.bitUpdatedAt}</UI.Date>
-                      </Text>
-                    </bottom>
-                  </AnimateElement>
-                </card>
-              </cardWrap>
-            </AnimateElement>
-          )
-        }}
-      </Overdrive>
+                  {title}
+                </Text>
+                <posttitle if={postTitle}>{postTitle}</posttitle>
+                <OrbitIcon
+                  if={icon}
+                  icon={icon}
+                  size={16}
+                  $icon
+                  {...tiny && tinyProps.iconProps}
+                />
+              </title>
+              <SubTitle $subtitle if={!tiny && typeof subtitle === 'string'}>
+                {subtitle}
+              </SubTitle>
+              <subtitle if={!tiny && typeof subtitle === 'object'}>
+                {subtitle}
+              </subtitle>
+              <content>
+                <UI.Text
+                  $preview
+                  opacity={0.75}
+                  ellipse={2}
+                  if={!tiny && !isSelected}
+                >
+                  {preview}
+                </UI.Text>
+                {!tiny && isSelected && content}
+              </content>
+              <bottom if={!tiny}>
+                <orbital if={false} />
+                <UI.Date>{result.bitUpdatedAt}</UI.Date>
+                <Text if={via} opacity={0.5} size={0.9}>
+                  {via || result.integration}
+                </Text>
+                <div $$flex />
+                {bottomAfter}
+              </bottom>
+            </card>
+          </cardWrap>
+        )}
+      </CardContentView>
     )
   }
 
@@ -219,24 +182,47 @@ export default class OrbitCard {
     title: {
       maxWidth: '100%',
       overflow: 'hidden',
+      flexFlow: 'row',
+      justifyContent: 'space-between',
+    },
+    subtitle: {
+      margin: [2, 0, 0],
+    },
+    titleText: {
+      maxWidth: `calc(100% - 30px)`,
     },
     cardWrap: {
       position: 'relative',
+      width: '100%',
     },
     card: {
       flex: 1,
       overflow: 'hidden',
       position: 'relative',
-      transform: {
-        z: 0,
-      },
+      // transition: 'all ease-in 2500ms',
     },
     cardHovered: {},
+    preview: {
+      margin: [3, 0],
+    },
+    content: {
+      flex: 1,
+      overflow: 'hidden',
+    },
+    icon: {
+      marginLeft: 0,
+      marginTop: 3,
+    },
     bottom: {
       flexFlow: 'row',
       alignItems: 'center',
       // justifyContent: 'center',
       // flex: 1,
+    },
+    bottomIcon: {
+      display: 'inline-block',
+      opacity: 0.5,
+      margin: [0, 2],
     },
     orbital: {
       width: 10,

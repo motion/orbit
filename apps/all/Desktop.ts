@@ -1,84 +1,41 @@
 import Bridge from './helpers/Bridge'
 import { setGlobal, proxySetters } from './helpers'
 import { store, react } from '@mcro/black/store'
+import { DesktopState } from './types'
 
 export let Desktop
 
 // const log = debug('Desktop')
 const PAD_WINDOW = 15
 
-export type AppState = {
-  id: string
-  name: string
-  title: string
-  offset: [number, number]
-  bounds: [number, number]
-}
-
-export type OCRItem = {
-  word?: string
-  weight: number
-  top: number
-  left: number
-  width: number
-  height: number
-}
-
-export type DesktopState = {
-  appState?: AppState
-  lastScreenChange: number
-  lastAppChange: number
-  mouseState: {
-    position: { x: number; y: number }
-    mouseDown?: { x: number; y: number; at: number }
-  }
-  keyboardState: {
-    option?: Date
-    optionUp?: Date
-    shiftUp?: Date
-    space?: Date
-  }
-  highlightWords: { [key: string]: boolean }
-  ocrState: {
-    words?: [OCRItem]
-    lines?: [OCRItem]
-    clearWords: { [key: string]: number }
-    restoreWords: { [key: string]: number }
-  }
-  focusedOnOrbit: boolean
-  appStateUpdatedAt: number
-  searchState: {
-    pluginResults: [{}]
-    indexStatus: String
-    searchResults: [{}]
-  }
-}
-
 @store
 class DesktopStore {
   messages = {
     TOGGLE_PAUSED: 'TOGGLE_PAUSED',
+    OPEN_AUTH: 'OPEN_AUTH',
+    CLOSE_AUTH: 'CLOSE_AUTH',
+    OPEN: 'OPEN',
   }
 
   setState: typeof Bridge.setState
-  sendMessage: typeof Bridge.sendMessage
-  onMessage: typeof Bridge.onMessage
+  sendMessage = Bridge.sendMessage
+  onMessage = Bridge.onMessage
   source = 'Desktop'
 
-  state = {
-    shouldTogglePin: null,
+  state: DesktopState = {
     appState: {
+      selectedText: '',
       id: null,
       name: null,
-      offset: [],
-      bounds: [],
+      title: null,
+      offset: [0, 0],
+      bounds: [0, 0],
     },
     ocrState: {
       words: null,
       lines: null,
       clearWords: null,
       restoreWords: null,
-      updatedAt: 0,
     },
     searchResults: [],
     keyboardState: {},
@@ -86,7 +43,6 @@ class DesktopStore {
       mouseDown: null,
       position: { x: 0, y: 0 },
     },
-    selection: null,
     paused: true,
     focusedOnOrbit: true,
     appStateUpdatedAt: Date.now(),
@@ -155,8 +111,6 @@ class DesktopStore {
   start = options => {
     Bridge.start(this, this.state, options)
     this.setState = Bridge.setState
-    this.sendMessage = Bridge.sendMessage
-    this.onMessage = Bridge.onMessage
   }
 
   // only clear if necessary

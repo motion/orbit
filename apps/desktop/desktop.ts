@@ -61,8 +61,9 @@ export default class DesktopRoot {
         Desktop,
       },
     })
+    Desktop.onMessage(Desktop.messages.OPEN, open)
     await connectModels(Object.keys(Models).map(x => Models[x]))
-    this.cosalStore = new CosalStore()
+    // this.cosalStore = new CosalStore()
     this.sync = new Sync()
     this.sync.start()
     this.screen = new Screen()
@@ -84,7 +85,7 @@ export default class DesktopRoot {
     setInterval(async () => {
       if (Desktop.appState.name === 'Chrome') {
         const { selection } = await getChromeContext()
-        Desktop.setSelection(selection)
+        Desktop.setAppState({ selectedText: selection })
       }
     }, 3000)
   }
@@ -93,6 +94,8 @@ export default class DesktopRoot {
   setResults = [
     () => App.state.query,
     async (query, { sleep }) => {
+      Desktop.setSearchResults([])
+      return []
       const results = await this.cosalStore.search({
         id: Math.random(),
         fields: [{ weight: 1, content: query }],

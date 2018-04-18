@@ -1,10 +1,12 @@
-import { Setting, Bit, createOrUpdate } from '@mcro/models'
+import { Setting, Bit, Person, createOrUpdate } from '@mcro/models'
 import { SlackService } from '@mcro/models/services'
 import debug from '@mcro/debug'
 import * as _ from 'lodash'
 import * as Helpers from '~/helpers'
+import createOrUpdatePerson from './slackCreateOrUpdatePerson'
 
 const log = debug('sync slackMessages')
+const slackDate = ts => new Date(+ts.split('.')[0] + 1000)
 
 type SlackMessage = {
   type: string
@@ -14,6 +16,7 @@ type SlackMessage = {
 }
 
 type ChannelInfo = {
+  id: string
   name: string
   name_normalized: string
   purpose: { value: string }
@@ -24,6 +27,7 @@ type ChannelInfo = {
 export default class SlackMessagesSync {
   setting: Setting
   service: SlackService
+  userInfo = {}
 
   constructor(setting, service: SlackService) {
     this.setting = setting
@@ -36,9 +40,16 @@ export default class SlackMessagesSync {
 
   run = async () => {
     const updated = await this.syncMessages()
-    if (updated.length) {
+    if (updated && updated.length) {
       log(`Slack: synced messages ${updated.length}`, updated)
     }
+  }
+
+  reset = async () => {
+    const bits = await Bit.find({ integration: 'slack', type: 'conversation' })
+    await Promise.all(bits.map(bit => bit.remove()))
+    this.setting.values.lastMessageSync = {}
+    await this.setting.save()
   }
 
   syncMessages = async () => {
@@ -46,12 +57,14 @@ export default class SlackMessagesSync {
       this.setting.values.lastMessageSync || {}
     await this.setting.save()
     if (!this.service.activeChannels) {
+      log(`Slack no active channels selected`)
       return
     }
     for (const channel of Object.keys(this.service.activeChannels)) {
-      const channelInfo = await this.service.slack.channels
-        .info({ channel })
-        .then(res => res && res.ok && res.channel)
+      if (!this.service.activeChannels[channel]) {
+        continue
+      }
+      const channelInfo = await this.getChannelInfo(channel)
       if (!channelInfo) {
         console.log('no channel info')
         continue
@@ -59,7 +72,7 @@ export default class SlackMessagesSync {
       const messages: Array<SlackMessage> = await this.service.channelHistory({
         channel,
         oldest: this.lastSync[channel],
-        count: 500,
+        count: 1000,
       })
       try {
         let group = []
@@ -71,18 +84,18 @@ export default class SlackMessagesSync {
             continue
           }
           const distanceInSeconds = Math.abs(+next.ts - +last.ts)
-          const isGrouped = distanceInSeconds < 150
+          const isGrouped = distanceInSeconds < 60 * 4
           if (isGrouped) {
             group.push(next)
             continue
           }
           if (group.length) {
-            created.push(await this.updateConversation(channelInfo, group))
-            group = []
+            created.push(await this.createConversation(channelInfo, group))
           }
+          group = [next]
         }
         if (group.length) {
-          created.push(await this.updateConversation(channelInfo, group))
+          created.push(await this.createConversation(channelInfo, group))
         }
         if (messages.length) {
           _.merge(this.setting.values, {
@@ -90,8 +103,8 @@ export default class SlackMessagesSync {
               [channel]: _.first(messages).ts,
             },
           })
+          await this.setting.save()
         }
-        await this.setting.save()
         return created.filter(x => !!x)
       } catch (err) {
         log(`Error syncing slack message ${err.message} ${err.stack}`)
@@ -100,18 +113,73 @@ export default class SlackMessagesSync {
     }
   }
 
-  updateConversation = async (
+  getChannelInfo = async (channel): Promise<ChannelInfo> => {
+    const info = await this.service.slack.channels
+      .info({ channel })
+      .then(res => res && res.ok && res.channel)
+    return {
+      ...info,
+      id: channel,
+    }
+  }
+
+  // cache so that we can use a Set later
+  peopleCache = {}
+  personCache = (id, person) => {
+    this.peopleCache[id] = person
+  }
+
+  getPerson = async (userId): Promise<Person> => {
+    if (this.peopleCache[userId]) {
+      return this.peopleCache[userId]
+    }
+    let person = await Person.findOne({ integrationId: userId })
+    if (person) {
+      this.personCache(userId, person)
+      return person
+    }
+    const { ok, user } = await this.service.slack.users.info({ user: userId })
+    if (!ok) {
+      throw new Error(`Not ok user ${userId}`)
+    }
+    person = await createOrUpdatePerson(user, true)
+    this.personCache(userId, person)
+    return person
+  }
+
+  createConversation = async (
     channelInfo: ChannelInfo,
-    messages: Array<SlackMessage>,
+    rawMessages: Array<SlackMessage>,
   ) => {
+    // turns user ids into names
+    const peopleIds = new Set()
+    // oldest to newest
+    const messages = await Promise.all(
+      rawMessages.reverse().map(async message => {
+        const person = await this.getPerson(message.user)
+        peopleIds.add(person.integrationId)
+        return {
+          ...message,
+          name: person.data.name,
+        }
+      }),
+    )
+    const permalink = await this.service.slack.chat.getPermalink({
+      channel: channelInfo.id,
+      message_ts: messages[0].ts,
+    })
+    const people = [...peopleIds].map(id => this.peopleCache[id])
     const data = {
+      permalink,
       channel: {
+        id: channelInfo.id,
         purpose: channelInfo.purpose.value,
         topic: channelInfo.topic.value,
         members: channelInfo.members,
       },
       messages,
     }
+    console.log('slakc convo created at', slackDate(_.last(messages).ts))
     return await createOrUpdate(
       Bit,
       {
@@ -122,12 +190,13 @@ export default class SlackMessagesSync {
           .slice(0, 255),
         identifier: Helpers.hash(data),
         data,
-        bitCreatedAt: _.last(messages).ts,
-        bitUpdatedAt: _.first(messages).ts,
+        bitCreatedAt: slackDate(_.first(messages).ts),
+        bitUpdatedAt: slackDate(_.last(messages).ts),
+        people,
         type: 'conversation',
         integration: 'slack',
       },
-      ['identifier', 'integration', 'type'],
+      ['identifier'],
     )
   }
 }

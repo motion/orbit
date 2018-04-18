@@ -238,6 +238,9 @@ export default class DebugApps {
         console.log('err in eval', err.message)
       }
     }
+    page.on('close', () => {
+      clearInterval(this.intervals[index])
+    })
     clearInterval(this.intervals[index])
     this.intervals[index] = setInterval(injectTitle, 5000)
     onFocus(page).then(async () => {

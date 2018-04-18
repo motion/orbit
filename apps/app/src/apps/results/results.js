@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import OrbitCard from '~/apps/orbit/orbitCard'
+import { Desktop } from '@mcro/all'
 import { throttle } from 'lodash'
 
 const SPLIT_INDEX = 3
@@ -45,7 +46,8 @@ export default class Results {
   }, 16)
 
   render({ appStore, isContext }, { resultsRef, isScrolled, isOverflowing }) {
-    const { results } = appStore.searchState
+    const results = Desktop.state.searchResults
+
     const total = results.length - SPLIT_INDEX
     return (
       <resultsFrame ref={this.setResultsFrame}>

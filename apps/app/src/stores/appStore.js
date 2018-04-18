@@ -100,7 +100,7 @@ export default class AppStore {
       const { conditions, rest } = parseQuery(query)
       return await Bit.find({
         where: `title like "%${rest.replace(/\s+/g, '%')}%"${conditions}`,
-        order: { updatedAt: 'DE SC' },
+        order: { updatedAt: 'DESC' },
         take: 8,
       })
     },
@@ -109,41 +109,6 @@ export default class AppStore {
   @watch({ log: false, delay: 64 })
   selectedBit = () =>
     App.state.selectedItem && Bit.findOne({ id: App.state.selectedItem.id })
-
-  get results() {
-    return this.searchState.results || []
-  }
-
-  @react({
-    defaultValue: { results: [], query: '' },
-    fireImmediately: true,
-    delay: 120,
-  })
-  searchState = [
-    () => [
-      App.state.query,
-      Desktop.searchState.pluginResults || [],
-      this.bitResults || [],
-      this.getResults,
-    ],
-    ([query, pluginResults, bitResults, getResults]) => {
-      let results
-      if (getResults) {
-        results = Helpers.fuzzy(query, getResults())
-      } else {
-        const unsorted = [...bitResults, ...pluginResults]
-        const { rest } = parseQuery(query)
-        const strongTitleMatches = Helpers.fuzzy(rest, unsorted, {
-          threshold: -10,
-        })
-        results = uniq([...strongTitleMatches, ...unsorted].slice(0, 10))
-      }
-      return {
-        query,
-        results,
-      }
-    },
-  ]
 
   getMousePosition = () => {
     return {

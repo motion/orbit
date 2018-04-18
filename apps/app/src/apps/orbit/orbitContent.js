@@ -2,6 +2,7 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import OrbitCard from './orbitCard'
 import OrbitContext from './orbitContext'
+import { App, Desktop } from '@mcro/all'
 
 const SPLIT_INDEX = 3
 
@@ -9,8 +10,12 @@ const SPLIT_INDEX = 3
 @view
 export default class OrbitContent {
   render({ appStore }) {
-    const { query, results } = appStore.searchState
+    console.log('state is', App.state.query)
+    const { query } = App.state
+    const results = Desktop.state.searchResults || []
+    console.log('results are', results)
     const hasQuery = query.length > 0
+
     return (
       <orbitContent>
         <space css={{ height: 10 }} />

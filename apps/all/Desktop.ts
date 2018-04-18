@@ -80,12 +80,7 @@ class DesktopStore {
       restoreWords: null,
       updatedAt: 0,
     },
-    searchState: {
-      indexStatus: '',
-      performance: null,
-      searchResults: [],
-      pluginResults: [],
-    },
+    searchResults: [],
     keyboardState: {},
     mouseState: {
       mouseDown: null,
@@ -98,17 +93,6 @@ class DesktopStore {
     lastScreenChange: Date.now(),
     lastAppChange: Date.now(),
   }
-
-  results = []
-
-  @react({ log: false })
-  memoizedResults = [
-    () => [
-      ...Desktop.searchState.searchResults,
-      ...Desktop.searchState.pluginResults,
-    ],
-    x => (this.results = x),
-  ]
 
   get isHoldingOptionPure(): Boolean {
     const { option, optionUp } = Desktop.state.keyboardState

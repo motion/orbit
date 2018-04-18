@@ -52,7 +52,7 @@ export default class Plugins {
         })),
       )
       await sleep(0) // cancellation
-      Desktop.setSearchState({ pluginResults })
+      // Desktop.setSearchState({ pluginResults })
       return pluginResults
     },
   ]

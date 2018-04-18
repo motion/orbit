@@ -1,6 +1,4 @@
-import { sum, find, reverse, includes, without, sortBy } from 'lodash'
 import { watch, react } from '@mcro/black/store'
-import trumpSpeech from './trumpSpeech'
 import { processDocument, mCosSimilarities, loadVectors } from './cosal'
 import kdTree from 'static-kdTree'
 
@@ -144,11 +142,6 @@ export default class CosalStore {
     )
     const vecs = await this.getVectors(texts, debug)
     return vecs
-  }
-
-  trump = async () => {
-    const val = await this.getVectors([trumpSpeech])
-    return val
   }
 
   getVectors = async (documents, debug) => {

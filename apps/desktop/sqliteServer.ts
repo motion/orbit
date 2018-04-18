@@ -156,7 +156,6 @@ async function onData(options, spark, data, uid) {
       if (!db) {
         // if desktop was interrupted, try re-opening
         try {
-          console.log('attempting a re-open')
           await openDb(data.args[0].dbargs.dbname)
           db = databasePathList[data.args[0].dbargs.dbname]
         } catch (err) {

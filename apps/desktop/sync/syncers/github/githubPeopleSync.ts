@@ -1,57 +1,72 @@
-// import { Person } from '@mcro/models'
-// import { createInChunks } from '~/sync/helpers'
+import { Person, Setting, createOrUpdate } from '@mcro/models'
+import getHelpers from './getHelpers'
+import * as Helpers from '~/helpers'
+import debug from '@mcro/debug'
 
-// const log = debug('sync githubPeople')
+const log = debug('sync githubPeople')
 
-// export default class GithubPeopleSync {
-//   constructor(setting, helpers) {
-//     this.setting = setting
-//     this.helpers = helpers
-//   }
+type GithubPerson = {
+  id: string
+  login: string
+  location: string
+  bio: string
+  avatar_url: string
+  email: string
+}
 
-//   run = async () => {
-//     const orgs = this.setting.orgs
-//     if (orgs) {
-//       await Promise.all(orgs.map(this.syncMembers))
-//     } else {
-//       log('No orgs selected')
-//     }
-//   }
+export default class GithubPeopleSync {
+  setting: Setting
+  helpers = getHelpers({})
 
-//   syncMembers = async (org: string) => {
-//     log('SYNC github people', org)
-//     const people = await this.helpers.fetch(`/orgs/${org}/members`)
-//     if (!people) {
-//       console.log('no people found')
-//       return null
-//     }
-//     const fullPeople = await Promise.all(
-//       people.map(person => this.helpers.fetch(`/users/${person.login}`)),
-//     )
-//     return await createInChunks(fullPeople, this.createPerson)
-//   }
+  constructor(setting) {
+    this.setting = setting
+    this.helpers = getHelpers(setting)
+  }
 
-//   createPerson = async (info: Object) => {
-//     // use email for UID for now
-//     // use login as github primary id key
-//     let person = await Person.findOne()
-//       .where('ids.github')
-//       .eq(info.login)
+  run = async () => {
+    const orgs = this.setting.orgs
+    if (orgs) {
+      await Promise.all(orgs.map(this.syncMembers))
+    } else {
+      log('No orgs selected')
+    }
+  }
 
-//     if (!person) {
-//       person = await Person.create({
-//         ids: { github: info.login },
-//       })
-//     }
+  syncMembers = async (org: string) => {
+    const people = await this.helpers.fetch(`/orgs/${org}/members`)
+    if (!people) {
+      console.log('no people found')
+      return null
+    }
+    const fullPeople = await Promise.all(
+      people.map(person => this.helpers.fetch(`/users/${person.login}`)),
+    )
+    const created = await Promise.all(fullPeople.map(this.createPerson))
+    return created.filter(x => !!x)
+  }
 
-//     return await person.mergeUpdate({
-//       location: info.location || '',
-//       bio: info.bio || '',
-//       avatar: info.avatar_url || '',
-//       emails: info.email ? [info.email] : [],
-//       data: {
-//         github: info,
-//       },
-//     })
-//   }
-// }
+  createPerson = async (info: GithubPerson) => {
+    const person = {
+      location: info.location || '',
+      bio: info.bio || '',
+      avatar: info.avatar_url || '',
+      emails: info.email ? [info.email] : [],
+      data: {
+        github: info,
+      },
+    }
+    return await createOrUpdate(
+      Person,
+      {
+        identifier: `github-${Helpers.hash(person)}`,
+        integrationId: info.id,
+        integration: 'github',
+        name: info.login,
+        data: {
+          ...person,
+        },
+      },
+      Person.identifyingKeys,
+    )
+  }
+}

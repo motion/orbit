@@ -2,7 +2,7 @@ import * as Helpers from '../helpers'
 import debug from '@mcro/debug'
 import { Setting, findOrCreate } from '@mcro/models'
 
-const log = debug('sync')
+const log = debug('syncer')
 const DEFAULT_CHECK_INTERVAL = 1000 * 60 // 1 minute
 
 export default class Syncer {
@@ -39,7 +39,7 @@ export default class Syncer {
     }
     const setting = await findOrCreate(Setting, { type: this.type })
     if (!setting || !setting.token) {
-      log(`no setting/token ${this.type}`)
+      // log(`no setting/token ${this.type}`)
       return
     }
     this.syncers = this.getSyncers(setting)

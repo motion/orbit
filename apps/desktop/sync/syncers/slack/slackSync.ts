@@ -6,9 +6,9 @@ import { SlackService } from '@mcro/models/services'
 
 export default new Syncer('slack', {
   actions: {
-    messages: { every: 60 * 5 },
-    people: { every: 60 * 20 },
-    // attachments: { every: 60 * 60 * 24 },
+    messages: { secondsBetween: 60 * 5 },
+    people: { secondsBetween: 60 * 20 },
+    // attachments: { secondsBetween: 60 * 60 * 24 },
   },
   getSyncers: setting => {
     const slackService = new SlackService(setting)

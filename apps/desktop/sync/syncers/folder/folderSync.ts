@@ -75,7 +75,7 @@ class FolderSync {
 
 export default new Syncer('folder', {
   actions: {
-    folder: { every: 60 * 5 }, // 5 minutes
+    folder: { secondsBetween: 60 * 5 },
   },
   getSyncers: setting => ({
     folder: new FolderSync(setting),

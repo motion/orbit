@@ -4,8 +4,14 @@ import { view } from '@mcro/black'
 import { RoundButton } from '~/views'
 import { App } from '@mcro/all'
 
-const linkRegex = /\<(?:[a-z]+:\/\/[^>]+)\>/g
-const getAttachment = x => x.text && linkRegex.exec(x.text)
+const linkRegex = /\<([a-z]+:\/\/[^>]+)\>/
+const getLink = x => {
+  const match = x.text && x.text.match(linkRegex)
+  if (match && match.length) {
+    return match[1]
+  }
+  return null
+}
 
 @view
 export default class SlackMessage {
@@ -15,10 +21,18 @@ export default class SlackMessage {
       log(`no messagetext/bit ${JSON.stringify(message)}`)
       return null
     }
-    const attachment = getAttachment(message)
-    if (attachment) {
-      console.log(attachment)
-      return <miniImg>img</miniImg>
+    const link = getLink(message)
+    if (link && link.indexOf('.png')) {
+      console.log('attachment', link)
+      return (
+        <miniImg>
+          <img src={link} />
+        </miniImg>
+      )
+    }
+    if (link) {
+      console.log('link', link)
+      return <a href={link}>{link}</a>
     }
     if (message.text.indexOf('uploaded a file') >= 0) {
       const src = message.text.match(/\<([a-z]+:\/\/[^>]+)\>/g).map(link =>

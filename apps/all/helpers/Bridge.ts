@@ -241,26 +241,24 @@ class Bridge {
       this.state,
       newState,
       true,
-      ignoreSocketSend,
+      // ignoreSocketSend,
     )
     if (ignoreSocketSend) {
       return changedState
     }
     if (Object.keys(changedState).length) {
-      requestIdle(() => {
-        if (this._options.master) {
-          this.socketManager.sendAll(this._source, changedState)
-        } else {
-          if (!this._wsOpen) {
-            console.log('queueing', changedState)
-            this._queuedState = true
-            return changedState
-          }
-          this._socket.send(
-            JSON.stringify({ state: changedState, source: this._source }),
-          )
+      if (this._options.master) {
+        this.socketManager.sendAll(this._source, changedState)
+      } else {
+        if (!this._wsOpen) {
+          console.log('queueing', changedState)
+          this._queuedState = true
+          return changedState
         }
-      })
+        this._socket.send(
+          JSON.stringify({ state: changedState, source: this._source }),
+        )
+      }
     }
     return changedState
   }
@@ -272,7 +270,7 @@ class Bridge {
     stateObj: Object,
     newState: Object,
     isInternal?: Boolean,
-    ignoreLog?: Boolean,
+    // ignoreLog?: Boolean,
   ) {
     const changed = {}
     for (const key of Object.keys(newState)) {
@@ -313,12 +311,6 @@ class Bridge {
     }
     if (root.__trackStateChanges && root.__trackStateChanges.isActive) {
       root.__trackStateChanges.changed = changed
-    } else {
-      if (process.env.NODE_ENV === 'development') {
-        if (!ignoreLog && isInternal && Object.keys(changed).length) {
-          // log(`${this._source.replace('Store', '')}.setState =>`, changed)
-        }
-      }
     }
     return changed
   }

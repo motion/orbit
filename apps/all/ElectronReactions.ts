@@ -62,13 +62,13 @@ export default class ElectronReactions {
   //   () => Electron.orbitState.pinned && this.updatePinned(false),
   // ]
 
-  @react
+  @react({ log: 'state' })
   unPinOnFullScreen = [
     () => Electron.orbitState.fullScreen,
     () => Electron.orbitState.pinned && this.updatePinned(false),
   ]
 
-  @react
+  @react({ log: 'state' })
   unPinOnHidden = [
     () => App.isFullyHidden,
     hidden => hidden && Electron.orbitState.pinned && this.updatePinned(false),
@@ -107,7 +107,7 @@ export default class ElectronReactions {
           Electron.setOrbitState({ mouseOver })
         }
       }
-      if (App.state.peekTarget) {
+      if (App.state.peekTarget || Electron.peekState.mouseOver) {
         const mouseOver = isMouseOver(Electron.currentPeek, mP)
         if (mouseOver !== Electron.peekState.mouseOver) {
           Electron.setPeekState({ mouseOver })

@@ -1,6 +1,6 @@
 import { store, watch, react } from '@mcro/black'
 import * as Syncers from './syncers'
-import { Job, Setting, remove } from '@mcro/models'
+import { Job, remove } from '@mcro/models'
 import debug from '@mcro/debug'
 
 const log = debug('sync')
@@ -25,6 +25,8 @@ export default class Sync {
       this.jobs = jobs
     }, 2000)
   }
+
+  // save in 3.2.s
 
   @watch
   syncLog = () => {

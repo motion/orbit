@@ -60,6 +60,7 @@ export default class DesktopRoot {
         Desktop,
       },
     })
+    Desktop.onMessage(Desktop.messages.OPEN, open)
     await connectModels(Object.keys(Models).map(x => Models[x]))
     this.sync = new Sync()
     this.sync.start()
@@ -82,7 +83,7 @@ export default class DesktopRoot {
     setInterval(async () => {
       if (Desktop.appState.name === 'Chrome') {
         const { selection } = await getChromeContext()
-        Desktop.setSelection(selection)
+        Desktop.setAppState({ selectedText: selection })
       }
     }, 3000)
   }

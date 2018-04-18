@@ -82,20 +82,30 @@ export default class AppReactions {
     () => [
       !App.state.orbitHidden,
       Electron.orbitState.mouseOver || Electron.peekState.mouseOver,
+      // react to peek closing to see if app should too
+      App.state.peekTarget,
     ],
-    async ([isShown, mouseOver], { sleep }) => {
-      if (isShown && !mouseOver) {
-        // some leeway on mouse leave
-        await sleep(150)
-        if (Desktop.isHoldingOption || App.isAnimatingOrbit) {
-          return
-        }
-        if (Electron.orbitState.pinned || Electron.orbitState.fullScreen) {
-          return
-        }
-        console.log(`hiding orbit from mouseout`)
-        App.setOrbitHidden(true)
+    async ([isShown, mouseOver, peekTarget], { sleep }) => {
+      if (!isShown) {
+        return
       }
+      const peekGoingAway =
+        Electron.orbitState.mouseOver &&
+        !Electron.orbitState.mouseOver &&
+        !peekTarget
+      if (mouseOver && !peekGoingAway) {
+        return
+      }
+      // some leeway on mouse leave
+      await sleep(150)
+      if (Desktop.isHoldingOption || App.isAnimatingOrbit) {
+        return
+      }
+      if (Electron.orbitState.pinned || Electron.orbitState.fullScreen) {
+        return
+      }
+      console.log(`hiding orbit from mouseout`)
+      App.setOrbitHidden(true)
     },
   ]
 

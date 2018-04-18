@@ -69,14 +69,29 @@ async function onData(options, spark, data, uid) {
       prettyPrintArgs(data.args)
       break
   }
+
+  async function openDb(name) {
+    var databasePath = null
+    if (options.forceMemory) {
+      databasePath = ':memory:'
+    } else {
+      databasePath = databaseDirectory + name
+    }
+    var newDatabaseID = databaseID++
+    // https://github.com/mapbox/node-sqlite3/wiki/Caching
+    const db = await sqlite.open(databasePath, {
+      // cached: true,
+      promise: Promise,
+    })
+    // @ts-ignore
+    db.databaseID = newDatabaseID
+    databaseList[newDatabaseID] = db
+    databasePathList[name] = db
+    return newDatabaseID
+  }
+
   switch (data.command) {
     case 'open':
-      var databasePath = null
-      if (options.forceMemory) {
-        databasePath = ':memory:'
-      } else {
-        databasePath = databaseDirectory + name
-      }
       // first check if its already opened
       if (databasePathList[name]) {
         spark.write({
@@ -87,16 +102,7 @@ async function onData(options, spark, data, uid) {
         })
         // else open it
       } else {
-        var newDatabaseID = databaseID++
-        // https://github.com/mapbox/node-sqlite3/wiki/Caching
-        const db = await sqlite.open(databasePath, {
-          // cached: true,
-          promise: Promise,
-        })
-        // @ts-ignore
-        db.databaseID = newDatabaseID
-        databaseList[newDatabaseID] = db
-        databasePathList[name] = db
+        const newDatabaseID = await openDb(name)
         spark.write({
           command: 'openComplete',
           id: data.id,
@@ -148,17 +154,22 @@ async function onData(options, spark, data, uid) {
     case 'backgroundExecuteSqlBatch':
       db = databasePathList[data.args[0].dbargs.dbname]
       if (!db) {
-        // console.log(
-        //   'err, no db found',
-        //   databasePathList,
-        //   data.args[0].dbargs.dbname,
-        // )
-        spark.write({
-          command: 'backgroundExecuteSqlBatchFailed',
-          err: `runFailed: db not found`,
-          id: data.id,
-        })
-        return
+        // if desktop was interrupted, try re-opening
+        try {
+          console.log('attempting a re-open')
+          await openDb(data.args[0].dbargs.dbname)
+          db = databasePathList[data.args[0].dbargs.dbname]
+        } catch (err) {
+          console.log('error opening', err)
+        }
+        if (!db) {
+          spark.write({
+            command: 'backgroundExecuteSqlBatchFailed',
+            err: `runFailed: db not found`,
+            id: data.id,
+          })
+          return
+        }
       }
       const queries = data.args[0].executes
       const sql = `${queries[0].sql}`

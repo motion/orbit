@@ -121,7 +121,7 @@ export default class Row extends React.Component<Props> {
         const { text, id, icon, ...segmentProps } =
           typeof seg === 'object' ? seg : { text: seg, id: seg }
         if (segmentProps.flex) {
-          return <flexer $$flex={segmentProps.flex} />
+          return <div $$flex={segmentProps.flex} />
         }
         return (
           <Provider key={index} provide={getContext(index, items.length)}>

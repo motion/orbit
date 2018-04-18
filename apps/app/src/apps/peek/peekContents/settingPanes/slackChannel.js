@@ -10,7 +10,8 @@ export default class SlackChannel extends React.Component {
     return this.props.slackService.setting
   }
 
-  onChange = val => {
+  async onChange(val) {
+    console.log('changing', val)
     this.setting.values = {
       ...this.setting.values,
       channels: {
@@ -18,7 +19,8 @@ export default class SlackChannel extends React.Component {
         [this.props.channel.id]: val,
       },
     }
-    this.setting.save()
+    await this.setting.save()
+    console.log('saved')
     this.version++
   }
 
@@ -42,7 +44,7 @@ export default class SlackChannel extends React.Component {
             size={1.2}
             type="toggle"
             value={channels[channel.id]}
-            onChange={this.onChange}
+            onChange={val => this.onChange(val)}
           />
         </options>
       </channel>

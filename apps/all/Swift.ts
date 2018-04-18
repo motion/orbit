@@ -1,12 +1,10 @@
 import { store } from '@mcro/black/store'
 import WebSocket from './helpers/websocket'
 import ReconnectingWebSocket from 'reconnecting-websocket'
-import { Desktop } from './Desktop'
-import debug from '@mcro/debug'
+// import debug from '@mcro/debug'
+// const log = debug('Swift')
 
 export let Swift
-
-const log = debug('Swift')
 
 @store
 class SwiftStore {

@@ -87,12 +87,7 @@ export default class DesktopScreen {
   }
 
   start = async () => {
-    Desktop.onMessage(msg => {
-      switch (msg) {
-        case Desktop.messages.TOGGLE_PAUSED:
-          this.togglePaused()
-      }
-    })
+    Desktop.onMessage(Desktop.messages.TOGGLE_PAUSED, this.togglePaused)
 
     this.oracle.onWords(words => {
       this.hasResolvedOCR = true

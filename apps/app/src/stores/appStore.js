@@ -1,6 +1,6 @@
 import { react, watch, isEqual } from '@mcro/black'
 import { App, Desktop, Electron } from '@mcro/all'
-import { Bit, Setting } from '@mcro/models'
+import { Bit, Person, Setting, findOrCreate } from '@mcro/models'
 import * as Constants from '~/constants'
 import * as r2 from '@mcro/r2'
 import * as Helpers from '~/helpers'
@@ -46,6 +46,7 @@ const parseQuery = query => {
 }
 
 export default class AppStore {
+  refreshInterval = Date.now()
   selectedIndex = -1
   hoveredIndex = -1
   showSettings = false
@@ -55,6 +56,9 @@ export default class AppStore {
   async willMount() {
     this.getSettings()
     this.setInterval(this.getSettings, 2000)
+    this.setInterval(() => {
+      this.refreshInterval = Date.now()
+    }, 1000)
     // this.setInterval(() => {
     //   if (
     //     App.isShowingOrbit &&
@@ -87,28 +91,43 @@ export default class AppStore {
     },
   ]
 
-  @react({ fireImmediately: true, defaultValue: [], onlyUpdateIfChanged: true })
+  @react({
+    fireImmediately: true,
+    defaultValue: [],
+    onlyUpdateIfChanged: true,
+    log: false,
+  })
   bitResults = [
-    () => [App.state.query, Desktop.appState.id],
+    () => [App.state.query, Desktop.appState.id, this.refreshInterval],
     async ([query]) => {
       if (!query) {
         return await Bit.find({
           take: 8,
-          order: { updatedAt: 'DESC' },
+          relations: ['people'],
+          order: { bitCreatedAt: 'DESC' },
         })
       }
       const { conditions, rest } = parseQuery(query)
       return await Bit.find({
         where: `title like "%${rest.replace(/\s+/g, '%')}%"${conditions}`,
-        order: { updatedAt: 'DE SC' },
+        relations: ['people'],
+        order: { bitCreatedAt: 'DESC' },
         take: 8,
       })
     },
   ]
 
   @watch({ log: false, delay: 64 })
-  selectedBit = () =>
-    App.state.selectedItem && Bit.findOne({ id: App.state.selectedItem.id })
+  selectedBit = () => {
+    const { selectedItem } = App.state
+    if (!selectedItem) {
+      return null
+    }
+    if (selectedItem.type === 'person') {
+      return Person.findOne({ id: selectedItem.id })
+    }
+    return Bit.findOne({ id: App.state.selectedItem.id })
+  }
 
   get results() {
     return this.searchState.results || []
@@ -212,21 +231,18 @@ export default class AppStore {
     }
   }
 
-  pinSelected = index => {
-    if (typeof index === 'number') {
-      this._setSelected(index)
+  pinSelected = thing => {
+    if (typeof thing === 'number') {
+      this._setSelected(thing)
       App.setPeekTarget({
-        id: index > -1 ? index : this.hoveredIndex || this.activeIndex,
+        id: thing > -1 ? thing : this.hoveredIndex || this.activeIndex,
         position: this.getMousePosition(),
       })
-      console.log(
-        'set peek target',
-        {
-          id: index > -1 ? index : this.hoveredIndex || this.activeIndex,
-          position: this.getMousePosition(),
-        },
-        App.state.peekTarget,
-      )
+    } else {
+      App.setPeekTarget({
+        id: thing ? thing.id : null,
+        position: this.getMousePosition(),
+      })
     }
   }
 
@@ -239,8 +255,8 @@ export default class AppStore {
   }
 
   getHoverProps = Helpers.hoverSettler({
-    enterDelay: 40,
-    betweenDelay: 30,
+    enterDelay: 80,
+    betweenDelay: 60,
     onHovered: item => {
       if (item && typeof item.id === 'number') {
         this.setSelected(item.id)
@@ -307,18 +323,16 @@ export default class AppStore {
     return authorizations
   }
 
-  startOauth = id => {
-    App.setAuthState({ openId: null })
-    setTimeout(() => App.setAuthState({ openId: id }), 16)
+  startOauth = type => {
+    App.sendMessage(Desktop, Desktop.messages.OPEN_AUTH, type)
     const checker = this.setInterval(async () => {
       const auth = await this.checkAuths()
-      const oauth = auth && auth[id]
+      const oauth = auth && auth[type]
       if (!oauth) return
       clearInterval(checker)
-      let setting = await Setting.findOne({ type: id })
-      if (!setting) {
-        setting = new Setting()
-        setting.type = id
+      let setting = await findOrCreate(Setting, { type })
+      if (!oauth.token) {
+        throw new Error(`No token returned ${JSON.stringify(oauth)}`)
       }
       setting.token = oauth.token
       setting.values = {
@@ -327,7 +341,7 @@ export default class AppStore {
       }
       await setting.save()
       this.getSettings()
-      App.setAuthState({ closeId: id })
+      App.sendMessage(Desktop, Desktop.messages.CLOSE_AUTH, type)
     }, 1000)
   }
 }

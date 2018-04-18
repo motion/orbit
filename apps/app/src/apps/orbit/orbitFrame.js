@@ -154,7 +154,7 @@ export default class OrbitFrame {
     const borderRightRadius =
       fullScreen || orbitDocked ? 0 : orbitOnLeft ? 0 : Constants.BORDER_RADIUS
     return (
-      <orbitFrame css={{ flex: 1 }}>
+      <orbitFrame>
         <OrbitArrow
           if={App.isAttachedToWindow && !orbitDocked}
           arrowSize={arrowSize}
@@ -167,6 +167,22 @@ export default class OrbitFrame {
           store={store}
           iWidth={iWidth}
           orbitOnLeft={orbitOnLeft}
+        />
+        <orbitShadow
+          if={false}
+          css={{
+            position: 'absolute',
+            zIndex: -1,
+            top: 25,
+            bottom: 25,
+            left: SHADOW_PAD * 1.5,
+            right: SHADOW_PAD * 1.5,
+            boxShadow: [[0, 0, SHADOW_PAD * 2, [0, 0, 0, 0.2]]],
+            transition: App.isShowingOrbit
+              ? `opacity ease-in 200ms ${App.animationDuration * 1.5}ms`
+              : 'none',
+            opacity: App.isShowingOrbit ? 1 : 0,
+          }}
         />
         <orbitBorder
           $orbitAnimate={App.isShowingOrbit}
@@ -263,8 +279,7 @@ export default class OrbitFrame {
 
   static style = {
     orbitFrame: {
-      // background: 'red',
-      // position: 'relative',
+      flex: 1,
     },
     orbit: {
       width: 330,

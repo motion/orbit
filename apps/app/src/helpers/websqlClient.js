@@ -44,7 +44,6 @@ function createWebSQLPlugin() {
 
   SQLitePlugin = function(openargs, openSuccess, openError, primusAdaptor) {
     var dbname
-    console.log('SQLitePlugin opening', openargs)
     if (!(openargs && openargs['name'])) {
       throw new Error(
         'Cannot create a SQLitePlugin' + 'instance without a db name',
@@ -488,8 +487,6 @@ Transaction batching object:
       this.connect()
     }
 
-    const originalLocation = window.location
-
     PrimusAdaptor.prototype.connect = function() {
       this.primus = new window.Primus('http://localhost:8082', {
         websockets: true,
@@ -504,7 +501,7 @@ Transaction batching object:
         this.primus.end()
       })
       this.primus.on('close', () => {
-        window.restart()
+        console.log('promise was closed, may need to reconnect?')
         // this.primus.end()
       })
     }
@@ -590,7 +587,6 @@ Transaction batching object:
     primusAdaptor: null,
 
     opendb: argsArray(function(args) {
-      console.log('calling opendb', args)
       var dblocation, errorcb, first, okcb, openargs, primusAdaptor
       if (args.length < 1) {
         return null

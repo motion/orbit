@@ -1,7 +1,7 @@
 import screenSize from './screenSize'
-import debug from '@mcro/debug'
+// import debug from '@mcro/debug'
+// const log = debug('orbitPosition')
 
-const log = debug('orbitPosition')
 const INITIAL_SIZE = [330, 420]
 const VERT_PAD = 5 // small vertical pad allows you to resize attached window
 

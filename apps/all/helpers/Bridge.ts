@@ -9,21 +9,17 @@ import T_SocketManager from './socketManager'
 // import debug from '@mcro/debug'
 
 // const log = debug('Bridge')
-const root = typeof window !== 'undefined' ? window : require('global')
 
+const root = typeof window !== 'undefined' ? window : require('global')
+const MESSAGE_SPLIT_VAL = '**|**'
 const stringifyObject = obj =>
   stringify(obj, {
     indent: '  ',
     singleQuotes: true,
     inlineCharacterLimit: 12,
   })
-
-// const log = debug('Bridge')
 const requestIdle = (cb?: Function) =>
-  new Promise(
-    res =>
-      setTimeout(cb || res, 0),
-  )
+  new Promise(res => setTimeout(cb || res, 0))
 
 type Options = {
   master?: Boolean
@@ -65,6 +61,7 @@ class Bridge {
       const SocketManager = eval(`require('./socketManager')`).default
       const stores = options.stores
       this.socketManager = new SocketManager({
+        masterSource: 'Desktop',
         port: 40510,
         onState: (source, state) => {
           this._update(stores[source].state, state)
@@ -79,6 +76,8 @@ class Bridge {
               this.socketManager.send(socket, stores[name].state, name)
             }
           },
+          // message coming to Desktop
+          onMessage: this.handleMessage,
         },
       })
       await this.socketManager.start()
@@ -117,10 +116,7 @@ class Bridge {
         return
       }
       if (data[0] === '-') {
-        const message = data.slice(1)
-        for (const listener of this.messageListeners) {
-          listener(message)
-        }
+        this.handleMessage(data.slice(1))
         return
       }
       await requestIdle()
@@ -205,24 +201,23 @@ class Bridge {
     }
   }
 
+  handleMessage = data => {
+    const getMessage = str => str.split(MESSAGE_SPLIT_VAL)
+    const [message, value] = getMessage(data)
+    console.log('message', message, value)
+    for (const { type, listener } of this.messageListeners) {
+      if (!type) {
+        listener(message, value)
+      } else if (message === type) {
+        listener(value)
+      }
+    }
+  }
+
   onOpenSocket = () => {
     return new Promise(res => {
       this._awaitingSocket.push(res)
     })
-  }
-
-  sendMessage = async (Store: any, message: string) => {
-    if (!Store || !message) {
-      throw `no store || message`
-    }
-    if (this._options.master) {
-      this.socketManager.sendMessage(Store.source, message)
-    } else {
-      if (!this._wsOpen) {
-        await this.onOpenSocket()
-      }
-      this._socket.send(JSON.stringify({ message, to: Store.source })
-    }
   }
 
   // this will go up to api and back down to all screen stores
@@ -328,8 +323,29 @@ class Bridge {
     return changed
   }
 
-  onMessage = listener => {
-    this.messageListeners.add(listener)
+  onMessage = (type, listener) => {
+    if (!listener) {
+      this.messageListeners.add({ type: null, listener: type })
+    } else {
+      this.messageListeners.add({ type, listener })
+    }
+  }
+
+  sendMessage = async (Store: any, ogMessage: string, value: string) => {
+    if (!Store || !ogMessage) {
+      throw `no store || message`
+    }
+    const message = value
+      ? `${ogMessage}${MESSAGE_SPLIT_VAL}${value}`
+      : ogMessage
+    if (this._options.master) {
+      this.socketManager.sendMessage(Store.source, message)
+    } else {
+      if (!this._wsOpen) {
+        await this.onOpenSocket()
+      }
+      this._socket.send(JSON.stringify({ message, to: Store.source }))
+    }
   }
 
   dispose = () => {

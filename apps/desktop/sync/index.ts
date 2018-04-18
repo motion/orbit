@@ -26,6 +26,8 @@ export default class Sync {
     }, 2000)
   }
 
+  // save in 3.2.s
+
   @watch
   syncLog = () => {
     const title = this.enabled

@@ -16,6 +16,9 @@ const setExiting = async () => {
   }, 10)
 }
 process.on('unhandledRejection', function(reason) {
+  if (reason.message.indexOf('Execution context was destroyed.')) {
+    return
+  }
   console.log('debug.unhandledRejection', reason.message, reason.stack)
 })
 process.on('SIGUSR1', setExiting)

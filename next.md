@@ -15,9 +15,6 @@
   * linking notes to calendar meetings -- startups do this, could be simple
     * http://www.shellyapps.com.au/ see "our vision"
 
-- triage
-  * db not found fix for websql driver
-
 small polish
 
 * design

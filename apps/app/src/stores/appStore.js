@@ -81,7 +81,7 @@ export default class AppStore {
     }
   }
 
-  @react
+  @react({ log: 'state' })
   resetSelectedIndexOnSearch = [
     () => App.state.query,
     () => {
@@ -137,6 +137,7 @@ export default class AppStore {
     defaultValue: { results: [], query: '' },
     fireImmediately: true,
     delay: 120,
+    log: false,
   })
   searchState = [
     () => [

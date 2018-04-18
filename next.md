@@ -34,6 +34,10 @@
 
   * [ ] design
 
+* smoothness
+
+  * [ ] re-focus app after animation finish (when not holding option)
+
 * sidebar
 
   * [ ] click to link to the Bit

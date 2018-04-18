@@ -21,6 +21,9 @@ export default class SlackConversation {
     const uid =
       uids[result.id] || Math.floor(Math.random() * exampleTitles.length)
     uids[result.id] = uid
+    const slackChannelUrl = `slack://channel?id=${
+      result.data.channel.id
+    }&team=${setting.values.oauth.info.team.id}`
     return children({
       title: exampleTitles[uid],
       icon: 'slack',
@@ -30,10 +33,7 @@ export default class SlackConversation {
           <RoundButton
             onClick={e => {
               e.stopPropagation()
-              const url = `slack://channel?id=${result.data.channel.id}&team=${
-                setting.values.oauth.info.team.id
-              }`
-              App.sendMessage(Desktop, Desktop.messages.OPEN, url)
+              App.sendMessage(Desktop, Desktop.messages.OPEN, slackChannelUrl)
             }}
           >
             {result.title}
@@ -49,7 +49,8 @@ export default class SlackConversation {
             App.sendMessage(
               Desktop,
               Desktop.messages.OPEN,
-              result.data.permalink,
+              `${slackChannelUrl}&message=${result.data.messages[0].ts}`,
+              // result.data.permalink,
             )
           }
         />

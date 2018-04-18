@@ -1,21 +1,27 @@
-# new
+* search
 
-* electron 2.0
-* webview / overflow scroll bounce
-* Desktop.sendMessage(Electron, Electron.messages.MSG)
-* orbitRef.hide() quickly
-* Swindler dedupe animation improvements
-* meeting kevin
-  * stripe scale, how would we solve it
-  * hes interested in:
-    * better seeing what teams are all about
-    * better seeing the structure of the company
-  * should follow up with him+mike in a couple weeks
-  * he did mention calendar integration being interesting
-  * linking notes to calendar meetings -- startups do this, could be simple
-    * http://www.shellyapps.com.au/ see "our vision"
+  * [ ] search "#gen some" searches #general filtered by some
+  * [ ] make the homepage just opacity 0 during searches, so it comes back more quickly when empty
+  * [ ] on searches, when typing a new char, make opacity go down on current results until new ones show (feels much better)
 
-small polish
+* sidebar
+
+  * [ ] icon improvements (gmail, gdocs)
+  * [ ] links to actual items in Bottom
+  * [ ] overflow title flicker on expand
+  * [ ] list: granular re-render on index change
+  * [ ] list: animations between active
+  * [ ] better fill to height when not having many results
+  * [ ] default view: your day -- how it shows various things, grouping, etc
+    * [ ] upcoming, haven't seen
+
+* slack
+
+  * [ ] cosal keywords for convo
+  * [ ] slack long convo (... + x more display at bottom)
+  * [ ] bottom: link to convo
+  * [ ] peek design (share resolver that gets info)
+  * [ ] attachments/images handled in resolver
 
 * design
 
@@ -63,7 +69,7 @@ small polish
 
 - sync
 
-  * [x] need to normalize bitUpdatedAt and bitCreatedAt
+  * [ ] syncers are running multple/parallel sometimes: investigate / fix
   * [ ] github sync
   * [ ] github simple sidebar/peek
 
@@ -91,4 +97,5 @@ small polish
       * if multiple recevied before timeout, group them
 
 - research
+
   * [ ] keeping chromium warm

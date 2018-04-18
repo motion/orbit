@@ -3,6 +3,36 @@ import { createApolloFetch } from 'apollo-fetch'
 import { omit, flatten } from 'lodash'
 import { createInChunks } from '~/sync/helpers'
 import debug from '@mcro/debug'
+import getHelpers from './getHelpers'
+
+type GithubIssue = {
+  id: string
+  title: string
+  number: number
+  body: string
+  bodyText: string
+  createdAt: string
+  updatedAt: string
+  author: {
+    avatarUrl: string
+    login: string
+  }
+  labels: {
+    edges: Array<{ node: { name: string } }>
+  }
+  comments: {
+    edges: Array<{
+      node: {
+        author: {
+          avatarUrl: string
+          login: string
+        }
+        createdAt: string
+        body: string
+      }
+    }>
+  }
+}
 
 const log = debug('sync')
 const issueGet = `
@@ -52,11 +82,11 @@ const repoGetIssues = `
 
 export default class GithubIssueSync {
   setting: Setting
-  helpers: Object
+  helpers = getHelpers({})
 
-  constructor(setting: Setting, helpers: Object) {
+  constructor(setting: Setting) {
     this.setting = setting
-    this.helpers = helpers
+    this.helpers = getHelpers(setting)
   }
 
   run = async () => {
@@ -73,7 +103,7 @@ export default class GithubIssueSync {
     return flatten(issues).filter(Boolean)
   }
 
-  syncRepos = (repos?: Array<boolean>) => {
+  syncRepos = (repos?: Array<string>) => {
     const repoSettings = this.setting.values.repos
     const repoNames = repos || Object.keys(repoSettings || {})
     return Promise.all(
@@ -126,13 +156,15 @@ export default class GithubIssueSync {
     }))
   }
 
-  unwrapIssue = (obj: Object) => {
-    obj.labels = obj.labels.edges.map(edge => edge.node)
-    obj.comments = obj.comments.edges.map(edge => edge.node)
-    return obj
+  unwrapIssue = (obj: GithubIssue) => {
+    return {
+      ...obj,
+      labels: obj.labels.edges.map(edge => edge.node),
+      comments: obj.comments.edges.map(edge => edge.node),
+    }
   }
 
-  createIssue = async (issue: Object, orgLogin: string) => {
+  createIssue = async (issue: GithubIssue, orgLogin: string) => {
     const data = {
       ...this.unwrapIssue(omit(issue, ['bodyText'])),
       orgLogin,
@@ -186,7 +218,7 @@ export default class GithubIssueSync {
 
   apolloFetch = createApolloFetch({
     uri: 'https://api.github.com/graphql',
-  }).use(({ request, options }, next) => {
+  }).use(({ options }, next) => {
     if (!options.headers) {
       options.headers = {}
     }
@@ -194,8 +226,9 @@ export default class GithubIssueSync {
     next()
   })
 
-  async graphFetch(...args) {
-    const results = this.apolloFetch(...args)
+  async graphFetch(query) {
+    const results = this.apolloFetch(query)
+    // @ts-ignore
     if (results.message) {
       console.error('Error doing fetch', results)
       return null

@@ -1,4 +1,3 @@
-// @flow
 import { view } from '@mcro/black'
 import * as React from 'react'
 import Popover from './popover'
@@ -25,7 +24,7 @@ const heightPadding = x => {
 }
 
 const cache = {}
-const findMatch = (name: string) => {
+const findMatch = name => {
   if (cache[name]) return cache[name]
   if (iconNames[name]) return iconNames[name]
   const matches = fuzzy.filter(name, iconNames)
@@ -34,16 +33,16 @@ const findMatch = (name: string) => {
   return match
 }
 
-export type Props = {
-  size: number,
-  color: Array | string,
-  type: 'mini' | 'outline',
-  button?: Boolean,
-  opacity?: number,
-}
+// export type Props = {
+//   size: number,
+//   color: Array | string,
+//   type: 'mini' | 'outline',
+//   button?: Boolean,
+//   opacity?: number,
+// }
 
 @view.ui
-export default class Icon extends React.PureComponent<Props> {
+export default class Icon extends React.PureComponent {
   static defaultProps = {
     size: 16,
     type: 'mini',

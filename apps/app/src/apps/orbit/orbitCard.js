@@ -83,6 +83,7 @@ export default class OrbitCard {
         isExpanded={isExpanded}
       >
         {({
+          bottom,
           bottomAfter,
           title,
           postTitle,
@@ -163,6 +164,7 @@ export default class OrbitCard {
                 {!tiny && isSelected && content}
               </content>
               <bottom if={!tiny}>
+                {bottom}
                 <orbital if={false} />
                 <UI.Date>{result.bitUpdatedAt}</UI.Date>
                 <Text if={via} opacity={0.5} size={0.9}>

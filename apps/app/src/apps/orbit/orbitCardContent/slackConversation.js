@@ -4,8 +4,9 @@ import OrbitCardSlackMessage from './slackMessage'
 import * as UI from '@mcro/ui'
 import { App, Desktop } from '@mcro/all'
 import { RoundButton } from '~/views'
+import pluralize from 'pluralize'
 
-const isntAttachment = x => !x.text || !x.text.match(/\<([a-z]+:\/\/[^>]+)\>/g)
+// const isntAttachment = x => !x.text || !x.text.match(/\<([a-z]+:\/\/[^>]+)\>/g)
 const exampleTitles = [
   `Context, TSNE, Mobile App`,
   `Superhuman, Funny`,
@@ -21,6 +22,9 @@ export default class SlackConversation {
     const uid =
       uids[result.id] || Math.floor(Math.random() * exampleTitles.length)
     uids[result.id] = uid
+    const slackChannelUrl = `slack://channel?id=${
+      result.data.channel.id
+    }&team=${setting.values.oauth.info.team.id}`
     return children({
       title: exampleTitles[uid],
       icon: 'slack',
@@ -30,15 +34,35 @@ export default class SlackConversation {
           <RoundButton
             onClick={e => {
               e.stopPropagation()
-              const url = `slack://channel?id=${result.data.channel.id}&team=${
-                setting.values.oauth.info.team.id
-              }`
-              App.sendMessage(Desktop, Desktop.messages.OPEN, url)
+              App.sendMessage(Desktop, Desktop.messages.OPEN, slackChannelUrl)
             }}
           >
             {result.title}
           </RoundButton>
         </subtitle>
+      ),
+      bottom: (
+        <bottom $$row>
+          <UI.Icon
+            name="link69"
+            size={11}
+            opacity={0.6}
+            onClick={e => {
+              e.stopPropagation()
+              App.sendMessage(
+                Desktop,
+                Desktop.messages.OPEN,
+                `${slackChannelUrl}&message=${result.data.messages[0].ts}`,
+                // result.data.permalink,
+              )
+            }}
+          />
+          <space />
+          <more if={result.data.messages.length > 3}>
+            + {result.data.messages.length - 3}&nbsp;more&nbsp;
+            {pluralize('reply', result.data.messages.length - 3)}
+          </more>
+        </bottom>
       ),
       bottomAfter: (
         <row $meta>
@@ -54,7 +78,6 @@ export default class SlackConversation {
       // via: result.title,
       preview: result.body,
       content: result.data.messages
-        .filter(isntAttachment)
         .slice(0, 3)
         .map((message, index) => (
           <OrbitCardSlackMessage
@@ -77,6 +100,9 @@ export default class SlackConversation {
     meta: {
       flexFlow: 'row',
       opacity: 0.5,
+    },
+    space: {
+      width: 6,
     },
   }
 }

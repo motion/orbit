@@ -13,10 +13,14 @@ export const olderThanSeconds = (date: string, seconds: number) => {
   return answer
 }
 
+type JobOptions = {
+  secondsBetween: number
+}
+
 export async function ensureJob(
   type: string,
   action: string,
-  options: Object = {},
+  options: JobOptions = { secondsBetween: 60 * 60 * 24 },
   force?: boolean,
 ): Promise<Job | undefined> {
   const createJob = () => {
@@ -28,6 +32,7 @@ export async function ensureJob(
   if (force) {
     return await createJob()
   }
+  // pending
   const lastPending = await Job.lastPending({ type, action })
   if (lastPending) {
     const secondsAgo =
@@ -36,66 +41,32 @@ export async function ensureJob(
       log(
         `Stale job, removing... ${type} ${action}, ${secondsAgo} seconds ago (${SECONDS_UNTIL_JOB_STALE} until stale)`,
       )
-      try {
-        await lastPending.update({
-          status: Job.status.FAILED,
-          lastError: { message: 'stale' },
-        })
-      } catch (e) {
-        console.log('ensure job err', e)
-      }
+      lastPending.status = Job.status.FAILED
+      lastPending.lastError = 'stale'
+      await lastPending.save()
     } else {
       log('no need to run', type, action)
       return
     }
   }
+  // failed
+  const failed = await Job.find({
+    where: { type, action, status: Job.statuses.FAILED },
+  })
+  if (failed.length) {
+    log(`removing ${failed.length} jobs of type ${type} action ${action}`)
+    await Promise.all(failed.map(j => j.remove()))
+  }
+  // completed
   const lastCompleted = await Job.lastCompleted({ type, action })
   if (!lastCompleted) {
     return await createJob()
   }
-  if (olderThanSeconds(lastCompleted.updatedAt, options.every)) {
+  if (olderThanSeconds(lastCompleted.updatedAt, options.secondsBetween)) {
     log('Creating new job', type, action)
     return await createJob()
   } else {
     // not old enough
     log('Not old enough', type, action)
   }
-}
-
-export async function createInChunks(
-  items: Array<any>,
-  callback: (any) => Promise<any>,
-  chunk = 10,
-) {
-  if (!callback) {
-    throw new Error('Need to provide a function that handles creation')
-  }
-  let finished = []
-  let creating = []
-  async function waitForCreating() {
-    try {
-      const successful = (await Promise.all(creating)).filter(Boolean)
-      finished = [...finished, ...successful]
-      creating = []
-    } catch (err) {
-      console.log('error creating', err)
-      return false
-    }
-    return true
-  }
-  for (const item of items) {
-    // pause for every 10 to finish
-    if (creating.length === chunk) {
-      if (!await waitForCreating()) {
-        break
-      }
-    }
-    const promise = callback(item)
-    if (!(promise instanceof Promise)) {
-      throw new Error(`Didn't return a promise from your creation function`)
-    }
-    creating.push(promise)
-  }
-  await waitForCreating()
-  return finished.filter(Boolean)
 }

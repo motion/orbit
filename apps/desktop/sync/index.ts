@@ -4,7 +4,7 @@ import { Job, remove } from '@mcro/models'
 import debug from '@mcro/debug'
 
 const log = debug('sync')
-// debug.quiet('sync')
+debug.quiet('sync')
 
 @store
 export default class Sync {
@@ -19,6 +19,7 @@ export default class Sync {
     await remove(Job)
       .where('status = :status', { status: Job.statuses.FAILED })
       .orWhere('status = :status', { status: Job.statuses.COMPLETE })
+      .orWhere('status = :status', { status: Job.statuses.PROCESSING })
       .execute()
     setInterval(async () => {
       const jobs = await Job.find({ status: Job.statuses.PENDING })
@@ -28,12 +29,12 @@ export default class Sync {
 
   // save in 3.2.s
 
-  @watch
+  @watch({ log: false })
   syncLog = () => {
     const title = this.enabled
-      ? 'SYNC ENABLED ✅ (disable: App.sync.disable())'
-      : 'SYNC DISABLED (enable: App.sync.enable())'
-    log(`%c----${title}----`)
+      ? 'SYNC ENABLED ✅ (Root.sync.disable())'
+      : 'SYNC DISABLED (Root.sync.enable())'
+    console.log(`----${title}----`)
   }
 
   @react
@@ -59,16 +60,17 @@ export default class Sync {
     },
   ]
 
-  completeJob = async job => {
+  completeJob = async (job: Job) => {
     this.locks.add(job.lock)
+    // clear old processing jobs
     let complete = false
     setTimeout(async () => {
       if (!complete) {
         await this.failJob(job, { message: 'timed out---' })
         this.locks.delete(job.lock)
-        log('removed stale job', job.lock)
+        log('job timed out, removing...', job.lock)
       }
-    }, 1000 * 60 * 25) // 25 min
+    }, 1000 * 60 * 20) // 20 min to fail
     try {
       await this.runJob(job)
       complete = true

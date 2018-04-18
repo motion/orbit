@@ -5,9 +5,9 @@ import GoogleMailSync from './googleMailSync'
 
 export default new Syncer('google', {
   actions: {
-    drive: { every: 60 * 2 },
-    mail: { every: 60 * 2 },
-    // cal: { every: 60 * 5 }, // 5 minutes
+    drive: { secondsBetween: 60 * 2 },
+    mail: { secondsBetween: 60 * 2 },
+    // cal: { secondsBetween: 60 * 5 }, // 5 minutes
   },
   getSyncers: setting => ({
     drive: new GoogleDriveSync(setting),

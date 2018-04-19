@@ -19,23 +19,26 @@ export class Conversation {
         isExpanded
         shownLimit={Infinity}
       >
-        {({ permalink, location, title, icon, content }) => (
-          <React.Fragment>
-            <PeekHeader
-              if={bit}
-              title={title}
-              subtitle={location}
-              date={bit.createdAt}
-              after={
-                <after $$row>
-                  {permalink}
-                  <OrbitIcon if={icon} icon={icon} size={16} />
-                </after>
-              }
-            />
-            <content>{content}</content>
-          </React.Fragment>
-        )}
+        {({ permalink, location, title, icon, content }) => {
+          console.log({ permalink, location, title, icon, content })
+          return (
+            <React.Fragment>
+              <PeekHeader
+                if={bit}
+                title={title}
+                subtitle={location}
+                date={bit.createdAt}
+                after={
+                  <after $$row>
+                    {permalink}
+                    <OrbitIcon if={icon} icon={icon} size={16} />
+                  </after>
+                }
+              />
+              <content>{content}</content>
+            </React.Fragment>
+          )
+        }}
       </BitContent>
     )
   }

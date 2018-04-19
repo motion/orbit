@@ -20,10 +20,11 @@ export default class BitSlackMessage {
       log(`no messagetext/bit ${JSON.stringify(message)}`)
       return null
     }
+    let content
     const link = getLink(message)
     if (link && link.indexOf('.png')) {
       console.log('attachment', link)
-      return (
+      content = (
         <miniImg>
           <img src={link} />
         </miniImg>
@@ -31,7 +32,7 @@ export default class BitSlackMessage {
     }
     if (link) {
       console.log('link', link)
-      return <a href={link}>{link}</a>
+      content = <a href={link}>{link}</a>
     }
     if (message.text.indexOf('uploaded a file') >= 0) {
       const src = message.text.match(/\<([a-z]+:\/\/[^>]+)\>/g).map(link =>
@@ -41,7 +42,7 @@ export default class BitSlackMessage {
           .replace(/\|.*$/g, ''),
       )[0]
       console.log('src', src)
-      return (
+      content = (
         <div $$flex>
           image
           <img src={src} css={{ maxWidth: '100%' }} />
@@ -91,7 +92,7 @@ export default class BitSlackMessage {
             <UI.Date>{new Date(message.ts.split('.')[0] * 1000)}</UI.Date>
           </date>
         </header>
-        <content>{message.text}</content>
+        <content>{content || message.text}</content>
       </message>
     )
   }

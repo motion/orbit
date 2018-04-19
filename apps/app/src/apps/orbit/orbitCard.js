@@ -70,6 +70,7 @@ export default class OrbitCard {
     listItem,
     borderRadius: borderRadius_,
     style,
+    hoverToSelect,
   }) {
     const BitContent = bitContents(result)
     const borderRadius = listItem && tiny ? 4 : listItem ? 0 : borderRadius_
@@ -97,7 +98,7 @@ export default class OrbitCard {
             }}
             ref={getRef}
             onClick={() => appStore.toggleSelected(index)}
-            {...appStore.getHoverProps({ result, id: index })}
+            {...hoverToSelect && appStore.getHoverProps({ result, id: index })}
             style={style}
           >
             <UI.HoverGlow
@@ -191,19 +192,8 @@ export default class OrbitCard {
   }
 
   static style = {
-    title: {
-      maxWidth: '100%',
-      overflow: 'hidden',
-      flexFlow: 'row',
-      justifyContent: 'space-between',
-    },
-    subtitle: {
-      margin: [2, 0, 0],
-    },
-    titleText: {
-      maxWidth: `calc(100% - 30px)`,
-    },
     cardWrap: {
+      pointerEvents: 'all',
       position: 'relative',
       width: '100%',
       transform: {
@@ -215,6 +205,18 @@ export default class OrbitCard {
       overflow: 'hidden',
       position: 'relative',
       // transition: 'all ease-in 2500ms',
+    },
+    title: {
+      maxWidth: '100%',
+      overflow: 'hidden',
+      flexFlow: 'row',
+      justifyContent: 'space-between',
+    },
+    subtitle: {
+      margin: [2, 0, 0],
+    },
+    titleText: {
+      maxWidth: `calc(100% - 30px)`,
     },
     cardHovered: {},
     preview: {
@@ -260,32 +262,42 @@ export default class OrbitCard {
   static theme = ({ store, tiny, listItem }, theme) => {
     const { isSelected } = store
     const hoveredStyle = {
-      background: isSelected ? theme.selected.background : 'transparent',
+      background: isSelected
+        ? theme.selected.background
+        : theme.hover.background,
     }
-    return {
-      card: isSelected
+    let card
+    if (listItem || tiny) {
+      card = isSelected
         ? {
-            background: listItem ? theme.active.background : '#fff',
-            boxShadow:
-              tiny || listItem
-                ? []
-                : [
-                    [
-                      'inset',
-                      0,
-                      0,
-                      0,
-                      0.5,
-                      theme.active.background.darken(0.1),
-                    ],
-                    [2, 0, 25, [0, 0, 0, 0.05]],
-                  ],
+            background: theme.active.background,
+            '&:hover': {
+              background: theme.activeHover.background,
+            },
+          }
+        : {
+            background: 'transparent',
+            '&:hover': {
+              background: theme.hover.background,
+            },
+          }
+    } else {
+      card = isSelected
+        ? {
+            background: '#fff',
+            boxShadow: [
+              ['inset', 0, 0, 0, 0.5, theme.active.background.darken(0.1)],
+              [2, 0, 25, [0, 0, 0, 0.05]],
+            ],
             margin: [0, -1],
           }
         : {
             background: 'transparent',
             '&:hover': hoveredStyle,
-          },
+          }
+    }
+    return {
+      card,
       cardHovered: hoveredStyle,
       bottom: {
         opacity: isSelected ? 1 : 0.5,

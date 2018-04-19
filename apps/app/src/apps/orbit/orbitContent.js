@@ -35,6 +35,7 @@ export default class OrbitContent {
                 total={results.length}
                 result={result}
                 listItem
+                hoverToSelect={appStore.activeIndex >= SPLIT_INDEX}
               />
             ))}
         </notifications>

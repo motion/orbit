@@ -62,7 +62,7 @@ export default class SocketManager {
   ) => {
     if (!source) {
       throw new Error(`No source (${source}) provided to state message
-        ${JSON.stringify(state, 0, 2)}`)
+        ${JSON.stringify(state, null, 2)}`)
     }
     if (!state) {
       throw new Error(`No state provided for SocketManager.sendAll: ${state}`)

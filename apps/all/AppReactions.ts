@@ -12,16 +12,16 @@ import { App } from './App'
 export default class AppReactions {
   constructor({ onPinKey }) {
     App.onMessage(async msg => {
-      console.log('got a message', msg)
       switch (msg) {
+        case App.messages.TOGGLE_SHOWN:
+          this.toggle()
+          return
         case App.messages.HIDE:
-          if (App.state.peekTarget) {
-            App.setPeekTarget(null)
-            await new Promise(res => setTimeout(res, 80)) // sleep 80
-          }
-          return App.setOrbitHidden(true)
+          this.hide()
+          return
         case App.messages.SHOW:
-          return App.setOrbitHidden(false)
+          this.show()
+          return
         case App.messages.HIDE_PEEK:
           return App.setPeekTarget(null)
       }
@@ -32,13 +32,35 @@ export default class AppReactions {
     })
   }
 
-  @react
-  showHideApp = [() => App.state.openResult, () => App.setOrbitHidden(true)]
+  toggle() {
+    if (App.state.orbitHidden) {
+      this.show()
+    } else {
+      this.hide()
+    }
+  }
 
-  @react({ log: 'state' })
+  show() {
+    App.setOrbitHidden(false)
+  }
+
+  async hide() {
+    if (App.state.peekTarget) {
+      App.setPeekTarget(null)
+      await new Promise(res => setTimeout(res, 80)) // sleep 80
+    }
+    App.setOrbitHidden(true)
+  }
+
+  @react
   clearPeekTargetOnOrbitClose = [
     () => !App.isShowingOrbit,
-    hidden => hidden && App.setPeekTarget(null),
+    hidden => {
+      if (!hidden) {
+        throw react.cancel
+      }
+      App.setPeekTarget(null)
+    },
   ]
 
   @react
@@ -66,12 +88,21 @@ export default class AppReactions {
   ]
 
   @react
-  clearPinnedOnReposition = [
+  clearPeekOnReposition = [
     () => Electron.orbitState.position,
-    () => {
-      if (App.state.peekTarget) {
-        App.setPeekTarget(null)
+    () => App.setPeekTarget(null),
+  ]
+
+  @react
+  closePeekOnMouseOut = [
+    () => Electron.peekState.mouseOver,
+    async (mouseOver, { sleep }) => {
+      if (mouseOver || Electron.orbitState.mouseOver) {
+        return
       }
+      // wait a bit
+      await sleep(400)
+      App.setPeekTarget(null)
     },
   ]
 
@@ -102,6 +133,9 @@ export default class AppReactions {
         return
       }
       if (Electron.orbitState.pinned || Electron.orbitState.fullScreen) {
+        return
+      }
+      if (Electron.orbitState.dockedPinned) {
         return
       }
       console.log(`hiding orbit from mouseout`)

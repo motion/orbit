@@ -12,12 +12,12 @@ class OrbitWindowStore {
   show = 0
   orbitRef = null
 
-  @react({ log: 'state' })
+  @react
   unFullScreenOnHide = [
     () => App.isShowingOrbit,
     showing => {
       if (showing) {
-        return
+        throw react.cancel
       }
       if (Electron.orbitState.fullScreen) {
         log(`clearing`)
@@ -75,6 +75,18 @@ class OrbitWindowStore {
     () => Electron.orbitState.fullScreen,
     fullScreen => {
       if (fullScreen) {
+        this.focusOrbit()
+      } else {
+        Swift.defocus()
+      }
+    },
+  ]
+
+  @react
+  focusOnDocked = [
+    () => Electron.orbitState.dockedPinned && App.isShowingOrbit,
+    dockedPinned => {
+      if (dockedPinned) {
         this.focusOrbit()
       } else {
         Swift.defocus()

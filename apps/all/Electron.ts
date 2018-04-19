@@ -20,8 +20,8 @@ class ElectronStore {
   onMessage: typeof Bridge.onMessage
   reactions: ElectronReactions
   source = 'Electron'
-  onClear = null
 
+  onClear = null
   lastAction = null
 
   state = {

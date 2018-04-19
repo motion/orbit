@@ -17,6 +17,9 @@ const results = {
 }
 
 export default result => {
+  if (!result.integration || !result.type) {
+    return ({ children }) => children(result)
+  }
   const resolveIntegration = results[result.integration]
   const resolver = resolveIntegration && resolveIntegration[result.type]
   if (!resolver) {

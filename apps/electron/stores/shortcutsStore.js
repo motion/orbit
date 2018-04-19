@@ -3,6 +3,8 @@ import { store } from '@mcro/black'
 
 @store
 export default class ShortcutsStore {
+  // emitter: EventEmitter
+
   constructor(shortcuts) {
     this.registerShortcuts(shortcuts)
   }

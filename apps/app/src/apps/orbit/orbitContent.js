@@ -9,11 +9,12 @@ const SPLIT_INDEX = 3
 @view
 export default class OrbitContent {
   render({ appStore }) {
-    const { query, results } = appStore.searchState
+    const { query, results, message } = appStore.searchState
     const hasQuery = query.length > 0
     return (
       <orbitContent>
         <space css={{ height: 10 }} />
+        <message if={message}>{message}</message>
         <notifications
           if={results.length}
           $tiny={!hasQuery}
@@ -35,6 +36,7 @@ export default class OrbitContent {
                 total={results.length}
                 result={result}
                 listItem
+                hoverToSelect={appStore.activeIndex >= SPLIT_INDEX}
               />
             ))}
         </notifications>
@@ -47,6 +49,11 @@ export default class OrbitContent {
   static style = {
     orbitContent: {
       flex: 1,
+    },
+    message: {
+      padding: [5, 10],
+      fontSize: 12,
+      opacity: 0.3,
     },
     tiny: {
       margin: [0, 10],

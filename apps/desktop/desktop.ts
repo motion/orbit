@@ -38,16 +38,6 @@ export default class DesktopRoot {
   sqlite = new SQLiteServer()
   stores = null
 
-  @react
-  openAppOnSelect = [
-    () => App.state.openResult,
-    result => {
-      if (result && result.id) {
-        open(result.id)
-      }
-    },
-  ]
-
   async start() {
     global.Root = this
     global.restart = this.restart

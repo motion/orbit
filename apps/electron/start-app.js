@@ -1,16 +1,20 @@
 import 'source-map-support/register'
 import 'raf/polyfill'
 import '@mcro/debug/inject'
-import './helpers/handlePromiseErrors'
-import './helpers/updateChecker'
 import '@mcro/black/mlog'
 import electronContextMenu from 'electron-context-menu'
 import electronDebug from 'electron-debug'
 import React from 'react'
 import { render } from '@mcro/reactron'
 import { extras } from 'mobx'
-import Electron from './Electron'
 import waitPort from 'wait-port'
+
+require('module-alias').addAlias('~', __dirname + '/')
+
+// now stuff that uses relative paths
+require('./helpers/handlePromiseErrors')
+require('./helpers/updateChecker')
+const Electron = require('./Electron').default
 
 Error.stackTraceLimit = Infinity
 

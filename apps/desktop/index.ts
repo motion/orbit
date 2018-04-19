@@ -29,7 +29,7 @@ if (process.env.NODE_ENV === 'development') {
 const Desktop = require('./desktop').default
 const rootStore = new Desktop()
 
-const exitHandler = async code => {
+const exitHandler = async (code?: any) => {
   console.log('handling exit', code)
   if (await rootStore.dispose()) {
     // otherwise it wont exit :/

@@ -4,6 +4,14 @@ import { store } from '@mcro/black/store'
 import { sleep } from '../helpers'
 
 type SlackOpts = { oldest?: number; count: number }
+type ChannelInfo = {
+  id: string
+  name: string
+  name_normalized: string
+  purpose: { value: string }
+  topic: { value: string }
+  members: Array<string>
+}
 
 // @ts-ignore
 const Slack = Slack1.default || Slack1
@@ -13,7 +21,7 @@ export class SlackService {
   // @ts-ignore
   slack: Slack
   setting: Setting
-  allChannels: Array<Object> = []
+  allChannels: Array<ChannelInfo> = []
   watchInterval: any
 
   constructor(setting) {
@@ -28,8 +36,8 @@ export class SlackService {
   }
 
   watchData() {
-    // 15 m
-    this.watchInterval = setInterval(this.updateData, 15 * 60 * 1000)
+    // 5m
+    this.watchInterval = setInterval(this.updateData, 5 * 60 * 1000)
     this.updateData()
   }
 
@@ -39,8 +47,15 @@ export class SlackService {
       .then(res => res && res.channels)
   }
 
+  get activeChannelIds() {
+    const settings = this.setting.values.channels
+    return Object.keys(settings).filter(x => settings[x])
+  }
+
   get activeChannels() {
-    return this.setting.values.channels
+    return this.activeChannelIds.map(id =>
+      this.allChannels.find(x => x.id === id),
+    )
   }
 
   getChannelHistory = async options => {

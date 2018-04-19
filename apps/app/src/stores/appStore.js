@@ -1,9 +1,16 @@
 import { react, isEqual } from '@mcro/black'
 import { App, Desktop, Electron } from '@mcro/all'
 import { Bit, Person, Setting, findOrCreate } from '@mcro/models'
+import * as ServiceModels from '@mcro/models/services'
 import * as Constants from '~/constants'
 import * as r2 from '@mcro/r2'
 import * as Helpers from '~/helpers'
+
+const Services = {
+  slack: ServiceModels.SlackService,
+  drive: ServiceModels.DriveService,
+  github: ServiceModels.GithubService,
+}
 
 // const log = debug('root')
 
@@ -50,6 +57,7 @@ export default class AppStore {
   hoveredIndex = -1
   showSettings = false
   settings = {}
+  services = {}
   getResults = null
 
   async willMount() {
@@ -58,18 +66,6 @@ export default class AppStore {
     this.setInterval(() => {
       this.refreshInterval = Date.now()
     }, 1000)
-    // this.setInterval(() => {
-    //   if (
-    //     App.isShowingOrbit &&
-    //     App.state.peekTarget &&
-    //     Electron.orbitState.mouseOver
-    //   ) {
-    //     App.setPeekTarget({
-    //       ...App.state.peekTarget,
-    //       position: this.getMousePosition(),
-    //     })
-    //   }
-    // }, 1000)
   }
 
   get activeIndex() {
@@ -155,7 +151,15 @@ export default class AppStore {
     ],
     ([query, pluginResults, bitResults, getResults]) => {
       let results
-      if (getResults) {
+      let message
+      if (query === '#' && this.services.slack) {
+        message = 'Slack channels:'
+        results = this.services.slack.activeChannels.map(channel => ({
+          id: channel.id,
+          title: `#${channel.name}`,
+        }))
+      } else if (getResults) {
+        message = 'Settings'
         results = Helpers.fuzzy(query, getResults())
       } else {
         const unsorted = [...bitResults, ...pluginResults]
@@ -165,8 +169,12 @@ export default class AppStore {
         })
         results = uniq([...strongTitleMatches, ...unsorted].slice(0, 10))
       }
+      if (query.length > 1 && query.indexOf('#') === 0) {
+        message = `Searching ${results[0].title}`
+      }
       return {
         query,
+        message,
         results,
       }
     },
@@ -309,6 +317,15 @@ export default class AppStore {
       )
       if (!isEqual(this.settings, nextSettings)) {
         this.settings = nextSettings
+        for (const name of Object.keys(nextSettings)) {
+          const setting = nextSettings[name]
+          if (!setting.token) {
+            continue
+          }
+          if (!this.services[name] && Services[name]) {
+            this.services[name] = new Services[name](setting)
+          }
+        }
       }
     }
   }

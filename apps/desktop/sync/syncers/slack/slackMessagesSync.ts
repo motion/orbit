@@ -74,18 +74,15 @@ export default class SlackMessagesSync {
       log(`Slack no active channels selected`)
       return
     }
-    for (const channel of Object.keys(this.service.activeChannels)) {
-      if (!this.service.activeChannels[channel]) {
-        continue
-      }
-      const channelInfo = await this.getChannelInfo(channel)
+    for (const channelInfo of this.service.activeChannels) {
       if (!channelInfo) {
         console.log('no channel info')
         continue
       }
+      const { id } = channelInfo
       const messages: Array<SlackMessage> = await this.service.channelHistory({
-        channel,
-        oldest: this.lastSync[channel],
+        channel: id,
+        oldest: this.lastSync[id],
         count: 1000,
       })
       if (!messages.length) {
@@ -127,16 +124,6 @@ export default class SlackMessagesSync {
         log(`Error syncing slack message ${err.message} ${err.stack}`)
         return []
       }
-    }
-  }
-
-  getChannelInfo = async (channel): Promise<ChannelInfo> => {
-    const info = await this.service.slack.channels
-      .info({ channel })
-      .then(res => res && res.ok && res.channel)
-    return {
-      ...info,
-      id: channel,
     }
   }
 

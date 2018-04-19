@@ -138,6 +138,9 @@ export default class AppReactions {
       if (Electron.orbitState.pinned || Electron.orbitState.fullScreen) {
         return
       }
+      if (Electron.orbitState.dockedPinned) {
+        return
+      }
       console.log(`hiding orbit from mouseout`)
       App.setOrbitHidden(true)
     },

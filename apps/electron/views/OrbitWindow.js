@@ -82,6 +82,18 @@ class OrbitWindowStore {
     },
   ]
 
+  @react
+  focusOnDocked = [
+    () => Electron.orbitState.dockedPinned,
+    dockedPinned => {
+      if (dockedPinned) {
+        this.focusOrbit()
+      } else {
+        Swift.defocus()
+      }
+    },
+  ]
+
   @react({ delay: App.animationDuration, log: 'state' })
   defocusAfterClosing = [
     () => [Electron.orbitState.pinned, App.isShowingOrbit],

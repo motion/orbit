@@ -168,8 +168,8 @@ export default class ElectronWindow extends React.Component {
       >
         <MenuItems el />
         <OrbitWindow onRef={ref => (electronStore.orbitRef = ref)} />
-        <HighlightsWindow onRef={ref => (electronStore.highlightRef = ref)} />
-        <PeekWindow />
+        {/* <HighlightsWindow onRef={ref => (electronStore.highlightRef = ref)} />
+        <PeekWindow /> */}
         <Tray />
       </AppWindow>
     )

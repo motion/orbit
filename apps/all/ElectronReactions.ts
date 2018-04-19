@@ -151,14 +151,13 @@ export default class ElectronReactions {
     () => [
       appTarget(Desktop.appState || {}),
       Desktop.linesBoundingBox,
-      Electron.lastAction,
       this.repositionToAppState,
     ],
-    ([appBB, linesBB, lastAction]) => {
+    ([appBB, linesBB]) => {
       if (Constants.FORCE_FULLSCREEN) {
         throw react.cancel
       }
-      const forceDocked = lastAction === 'CommandOrCtrl+Space'
+      const forceDocked = Electron.lastAction === 'CommandOrControl+Space'
       const box = linesBB || appBB // prefer using lines bounding box, fall back to app
       if (!box && !forceDocked) {
         throw react.cancel
@@ -180,6 +179,7 @@ export default class ElectronReactions {
         size,
         orbitOnLeft,
         orbitDocked,
+        dockedPinned: orbitDocked && forceDocked,
         fullScreen: false,
       })
     },
@@ -226,6 +226,7 @@ export default class ElectronReactions {
     if (shortcut === 'CommandOrControl+Space') {
       if (App.state.orbitHidden) {
         Electron.lastAction = shortcut
+        this.repositionToAppState = Date.now()
         await sleep(80)
         Electron.sendMessage(App, App.messages.SHOW)
       } else {

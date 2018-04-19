@@ -2,7 +2,7 @@
 
 npx nodemon \
   --quiet \
-  --watch lib \
+  --watch _ \
   --watch $(realpath node_modules/@mcro/all)/_ \
   --watch $(realpath node_modules/@mcro/black)/_ \
   --watch $(realpath node_modules/@mcro/constants)/_  \

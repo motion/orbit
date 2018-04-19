@@ -46,12 +46,21 @@ const Themes = {
     borderColor: '#222',
   }),
   light: Theme.fromStyles({
-    highlightBackground,
-    highlightColor,
     background: '#fff',
-    color: [0, 0, 0, 0.8],
-    borderColor: '#eee',
-    buttonBackground: 'linear-gradient(#fff, #fefefe)',
+    color: '#444',
+    borderColor: '#999',
+    hover: {
+      background: '#eee',
+    },
+    selected: {
+      background: '#ddd',
+    },
+    active: {
+      background: '#ddd',
+    },
+    activeHover: {
+      background: '#ccc',
+    },
   }),
   blank: {
     base: blank,

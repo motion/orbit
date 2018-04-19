@@ -96,6 +96,7 @@ export default class BitSlackMessage {
       </message>
     )
   }
+
   static style = {
     message: {
       padding: [3, 0, 0],

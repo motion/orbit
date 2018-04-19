@@ -17,6 +17,10 @@ const results = {
 }
 
 export default result => {
+  if (!result.integration || !result.type) {
+    console.log('no result.type or result.integration', result)
+    return () => <div>no result.type</div>
+  }
   const resolveIntegration = results[result.integration]
   const resolver = resolveIntegration && resolveIntegration[result.type]
   if (!resolver) {

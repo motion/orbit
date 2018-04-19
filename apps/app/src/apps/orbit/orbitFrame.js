@@ -19,18 +19,22 @@ const Indicator = view(({ iWidth, orbitOnLeft }) => {
     return null
   }
   // log('on', orbitOnLeft)
+  const border = [1, UI.color('#E9B73A').darken(0.2)]
   return (
     <indicator
       css={{
         position: 'absolute',
-        background: Constants.ORBIT_COLOR,
+        background: '#E9B73A',
+        border,
+        borderRight: orbitOnLeft ? 0 : border,
+        borderLeft: !orbitOnLeft ? 0 : border,
         boxShadow: [
           // [-5, 0, orbitOnLeft ? 10 : -10, 5, [255, 255, 255, 0.5]],
-          [-2, 0, 10, 0, [0, 0, 0, 0.15]],
+          // [-2, 0, 10, 0, [0, 0, 0, 0.15]],
         ],
-        width: iWidth,
-        height: 25,
-        top: 16,
+        width: iWidth * 1.5,
+        height: iWidth * 6,
+        top: 0,
         opacity: App.isShowingOrbit ? 0 : 1,
         right: orbitOnLeft ? SHADOW_PAD : 'auto',
         left: !orbitOnLeft ? SHADOW_PAD : 'auto',

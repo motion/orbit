@@ -16,6 +16,7 @@ const isOrbit = isBrowser && window.location.pathname === '/orbit'
 @store
 class AppStore {
   messages = {
+    TOGGLE_SHOWN: 'TOGGLE_SHOWN',
     SHOW: 'SHOW',
     HIDE: 'HIDE',
     HIDE_PEEK: 'HIDE_PEEK',

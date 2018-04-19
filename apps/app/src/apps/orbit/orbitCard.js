@@ -93,9 +93,7 @@ export default class OrbitCard {
   }) {
     const {
       store,
-      appStore,
       result,
-      index,
       getRef,
       tiny,
       listItem,

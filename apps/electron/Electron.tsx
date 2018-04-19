@@ -121,6 +121,7 @@ class ElectronStore {
     this.shortcutStore = new ShortcutsStore([
       'Option+Space',
       'Option+Shift+Space',
+      'CommandOrControl+Space',
     ])
 
     // @ts-ignore

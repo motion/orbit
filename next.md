@@ -1,11 +1,5 @@
 ## next
 
-Make App Feel Buttery Again
-
-* [x] nice custom cancelations. this solves weird react.if stuff too nicely.
-* [x] list: granular re-render on index change
-* [x] make "#" show a list of slack rooms
-  * [ ] search "#gen some" searches #general filtered by some
 * [ ] make "@" show a list of slack people
 * [ ] search people directly
 * [ ] attachments/images handled in resolver

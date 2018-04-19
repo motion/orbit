@@ -1,4 +1,4 @@
-import { store, react } from '@mcro/black/store'
+import { store, react, sleep } from '@mcro/black/store'
 import { App } from './App'
 import { Desktop } from './Desktop'
 import { Electron } from './Electron'
@@ -151,18 +151,23 @@ export default class ElectronReactions {
     () => [
       appTarget(Desktop.appState || {}),
       Desktop.linesBoundingBox,
+      Electron.lastAction,
       this.repositionToAppState,
     ],
-    ([appBB, linesBB]) => {
+    ([appBB, linesBB, lastAction]) => {
       if (Constants.FORCE_FULLSCREEN) {
         throw react.cancel
       }
-      // prefer using lines bounding box, fall back to app
-      const box = linesBB || appBB
-      if (!box) {
+      const forceDocked = lastAction === 'CommandOrCtrl+Space'
+      const box = linesBB || appBB // prefer using lines bounding box, fall back to app
+      if (!box && !forceDocked) {
         throw react.cancel
       }
-      let { position, size, orbitOnLeft, orbitDocked } = orbitPosition(box)
+      console.log('positioning', forceDocked)
+      let { position, size, orbitOnLeft, orbitDocked } = orbitPosition(
+        box,
+        forceDocked,
+      )
       if (linesBB) {
         // add padding
         position[0] += orbitOnLeft ? -SCREEN_PAD : SCREEN_PAD
@@ -217,7 +222,18 @@ export default class ElectronReactions {
     })
   }
 
-  onShortcut = shortcut => {
+  onShortcut = async shortcut => {
+    if (shortcut === 'CommandOrControl+Space') {
+      if (App.state.orbitHidden) {
+        Electron.lastAction = shortcut
+        await sleep(80)
+        Electron.sendMessage(App, App.messages.SHOW)
+      } else {
+        Electron.lastAction = null
+        Electron.sendMessage(App, App.messages.HIDE)
+      }
+      return
+    }
     if (shortcut === 'Option+Space') {
       if (Electron.orbitState.fullScreen) {
         this.toggleFullScreen()
@@ -225,7 +241,7 @@ export default class ElectronReactions {
       }
       if (App.state.orbitHidden) {
         this.toggleVisible()
-        Electron.lastAction = 'Option+Space'
+        Electron.lastAction = shortcut
         this.updatePinned(true)
         return
       }
@@ -239,7 +255,7 @@ export default class ElectronReactions {
       }
     }
     if (shortcut === 'Option+Shift+Space') {
-      Electron.lastAction = 'Option+Shift+Space'
+      Electron.lastAction = shortcut
       this.toggleFullScreen()
     }
   }

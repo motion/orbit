@@ -12,16 +12,16 @@ import { App } from './App'
 export default class AppReactions {
   constructor({ onPinKey }) {
     App.onMessage(async msg => {
-      console.log('got a message', msg)
       switch (msg) {
+        case App.messages.TOGGLE_SHOWN:
+          this.toggle()
+          return
         case App.messages.HIDE:
-          if (App.state.peekTarget) {
-            App.setPeekTarget(null)
-            await new Promise(res => setTimeout(res, 80)) // sleep 80
-          }
-          return App.setOrbitHidden(true)
+          this.hide()
+          return
         case App.messages.SHOW:
-          return App.setOrbitHidden(false)
+          this.show()
+          return
         case App.messages.HIDE_PEEK:
           return App.setPeekTarget(null)
       }
@@ -30,6 +30,26 @@ export default class AppReactions {
         onPinKey(key.toLowerCase())
       }
     })
+  }
+
+  toggle() {
+    if (App.state.orbitHidden) {
+      this.show()
+    } else {
+      this.hide()
+    }
+  }
+
+  show() {
+    App.setOrbitHidden(false)
+  }
+
+  async hide() {
+    if (App.state.peekTarget) {
+      App.setPeekTarget(null)
+      await new Promise(res => setTimeout(res, 80)) // sleep 80
+    }
+    App.setOrbitHidden(true)
   }
 
   @react

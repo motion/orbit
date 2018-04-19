@@ -20,7 +20,7 @@ import { getChromeContext } from './helpers/getContext'
 import open from 'opn'
 import iohook from 'iohook'
 import debug from '@mcro/debug'
-import CosalStore from './cosal'
+import CosalStore from './stores/cosalStore'
 
 const log = debug('desktop')
 
@@ -63,7 +63,7 @@ export default class DesktopRoot {
     })
     Desktop.onMessage(Desktop.messages.OPEN, open)
     await connectModels(Object.keys(Models).map(x => Models[x]))
-    // this.cosalStore = new CosalStore()
+    this.cosalStore = new CosalStore()
     this.sync = new Sync()
     this.sync.start()
     this.screen = new Screen()
@@ -89,22 +89,6 @@ export default class DesktopRoot {
       }
     }, 3000)
   }
-
-  @react({ delay: 500 })
-  setResults = [
-    () => App.state.query,
-    async (query, { sleep }) => {
-      Desktop.setSearchResults([])
-      return []
-      const results = await this.cosalStore.search({
-        id: Math.random(),
-        fields: [{ weight: 1, content: query }],
-        createdAt: +Date.now(),
-      })
-      await sleep(1)
-      Desktop.setSearchResults(results.map(({ bit }) => bit))
-    },
-  ]
 
   restart() {
     require('touch')(Path.join(__dirname, '..', '_', 'index.js'))

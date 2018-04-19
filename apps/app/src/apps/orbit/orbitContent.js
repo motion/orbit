@@ -12,8 +12,7 @@ export default class OrbitContent {
   render({ appStore }) {
     console.log('state is', App.state.query)
     const { query } = App.state
-    const results = Desktop.state.searchResults || []
-    console.log('results are', results)
+    const { results } = appStore
     const hasQuery = query.length > 0
 
     return (

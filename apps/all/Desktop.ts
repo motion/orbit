@@ -37,7 +37,11 @@ class DesktopStore {
       clearWords: null,
       restoreWords: null,
     },
-    searchResults: [],
+    searchState: {
+      indexStatus: '',
+      searchResults: [2, 4, 6, 8, 62],
+      pluginResults: [],
+    },
     keyboardState: {},
     mouseState: {
       mouseDown: null,

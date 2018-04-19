@@ -4,7 +4,7 @@ import { Bit, Person, Setting, findOrCreate } from '@mcro/models'
 import * as Constants from '~/constants'
 import * as r2 from '@mcro/r2'
 import * as Helpers from '~/helpers'
-import { throttle } from 'lodash'
+import { find, throttle } from 'lodash'
 
 // const log = debug('root')
 
@@ -58,7 +58,7 @@ export default class AppStore {
     this.setInterval(this.getSettings, 2000)
     this.setInterval(() => {
       this.refreshInterval = Date.now()
-    }, 1000)
+    }, 4000)
     // this.setInterval(() => {
     //   if (
     //     App.isShowingOrbit &&
@@ -100,20 +100,31 @@ export default class AppStore {
   bitResults = [
     () => [App.state.query, Desktop.appState.id, this.refreshInterval],
     async ([query]) => {
-      if (!query) {
+      if (false && !query) {
         return await Bit.find({
           take: 8,
           relations: ['people'],
           order: { bitCreatedAt: 'DESC' },
         })
       }
-      const { conditions, rest } = parseQuery(query)
-      return await Bit.find({
-        where: `title like "%${rest.replace(/\s+/g, '%')}%"${conditions}`,
-        relations: ['people'],
-        order: { bitCreatedAt: 'DESC' },
-        take: 8,
-      })
+
+      console.log(
+        'finding bits by ids',
+        Mobx.toJS(Desktop.state.searchState.searchResults),
+      )
+      const bitResults = await Bit.findByIds(
+        Desktop.state.searchState.searchResults,
+        {
+          relations: ['people'],
+        },
+      )
+      console.log('bit results are', bitResults.filter(bit => bit.id === 1))
+      const bitVals = Desktop.state.searchState.searchResults.map(
+        id => bitResults.filter(bit => +bit.id === +id)[0],
+      )
+
+      console.log('bit vals are', bitVals)
+      return bitVals
     },
   ]
 
@@ -128,6 +139,42 @@ export default class AppStore {
     }
     return Bit.findOne({ id: App.state.selectedItem.id })
   }
+
+  get results() {
+    return this.searchState.results || []
+  }
+
+  @react({
+    defaultValue: { results: [], query: '' },
+    fireImmediately: true,
+    delay: 120,
+    log: false,
+  })
+  searchState = [
+    () => [
+      App.state.query,
+      Desktop.searchState.pluginResults || [],
+      this.bitResults || [],
+      this.getResults,
+    ],
+    ([query, pluginResults, bitResults, getResults]) => {
+      let results
+      if (getResults) {
+        results = Helpers.fuzzy(query, getResults())
+      } else {
+        const unsorted = [...bitResults, ...pluginResults]
+        const { rest } = parseQuery(query)
+        const strongTitleMatches = [] /*Helpers.fuzzy(rest, unsorted, {
+          threshold: -10,
+        })*/
+        results = uniq([...strongTitleMatches, ...unsorted].slice(0, 10))
+      }
+      return {
+        query,
+        results,
+      }
+    },
+  ]
 
   getMousePosition = () => {
     return {

@@ -22,6 +22,7 @@
     "@mcro/models": "*",
     "@mcro/examples": "*",
     "@mcro/helpers": "*",
+    "@mcro/cosal": "*",
     "module-alias": "^2.0.6",
     "node-gmail-api": "^0.6.1",
     "js-yaml": "^3.11.0",

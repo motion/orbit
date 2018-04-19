@@ -3,26 +3,31 @@ import harmonicMean from './harmonicMean'
 import { inv } from 'mathjs'
 import { memoize, range, random, sum } from 'lodash'
 import { Doc, Cosal } from './types'
-import { tensor } from 'propel'
+import { Matrix, Vector } from 'vectorious/withoutblas'
+// @ts-ignore
+const vectors = require('../vecs.json')
+// import vectors from '../vecs.json'
 
 //const vecFile = path.join(__filename, '../../../data/vecs.json')
 // const vectors = JSON.parse(readFileSync(vecFile, 'utf8'))
-const vectors = {}
 const horizontal = 8.6
 const vertical = 0.784
 
-const corpusCovarInverse = tensor(inv(corpusCovar))
+const corpusCovarInverse = new Matrix(inv(corpusCovar))
 
 const ourSigmoid = (x, horizontal, vertical) =>
   (1 / (1 + Math.exp((-x + 0.5) * horizontal)) - 0.5) * vertical + 0.5
 
-const getWordVector = memoize(word =>
-  tensor([vectors[word] || vectors['hello'].map(() => random(-0.05, -0.05))]),
+const getWordVector = memoize(
+  word =>
+    new Vector(
+      vectors[word] || vectors['hello'].map(() => random(-0.05, 0.05)),
+    ),
 )
 
 const getDistance = async (word, vector) => {
   if (distanceCache[word]) return distanceCache[word]
-  const val = (await distance(vector).data())[0]
+  const val = distance(vector)
   distanceCache[word] = val
   return val
 }
@@ -35,11 +40,16 @@ const toWords = s =>
 
 // words to distance
 const distanceCache = {}
-const distance = vector =>
-  vector
-    .matmul(corpusCovarInverse)
-    .matmul(vector.transpose())
-    .sqrt()
+const distance = vector => {
+  let m = new Matrix([vector.data])
+
+  return Math.sqrt(
+    m
+      .multiply(corpusCovarInverse)
+      .multiply(m.transpose())
+      .toArray()[0][0],
+  )
+}
 
 export async function toCosal(doc: Doc): Promise<Cosal> {
   const words = toWords(doc.fields[0].content.toLowerCase())
@@ -63,14 +73,14 @@ export async function toCosal(doc: Doc): Promise<Cosal> {
   }
   const weights = allDistances
 
-  let vector = tensor([range(100).map(() => 0)])
+  let vector = new Vector(range(100).map(() => 0))
 
   allWordVectors.forEach((vec, index) => {
     const weight = weights[index]
-    vector = vector.add(vec.mul(tensor(weight)))
+    vector = vector.add(vec.scale(weight))
   })
-  vector = vector.div(tensor(sum(weights)))
-  vector = Array.from(await vector.data())
+  vector = vector.scale(1 / sum(weights))
+  vector = vector.toArray()
 
   const pairs = words.map((word, index) => ({ word, weight: weights[index] }))
   const fields = doc.fields.map(({ content, weight }) => ({
@@ -84,34 +94,26 @@ export async function toCosal(doc: Doc): Promise<Cosal> {
 }
 
 export async function mCosSimilarities(vec1, vec2s) {
-  vec1 = tensor([vec1])
-  const c1 = distance(vec1)
-  const top = c1.square()
+  const v1 = new Vector(vec1)
+  return vec2s.map(vec2 => {
+    const v2 = new Vector(vec2)
+    return v1.dot(v2) / (v1.magnitude(2) * v2.magnitude(2))
+  })
+}
+/*
+export async function mCosSimilarities(vec1, vec2s) {
+  vec1 = new Vector(vec1)
+  const d1 = distance(vec1)
 
   return await Promise.all(
     vec2s.map(async vec2 => {
-      vec2 = tensor([vec2])
-      const c2 = distance(vec2)
-
-      const newTop = top.add(c2.square()).sub(distance(vec1.sub(vec2)).square())
-
-      const bottom = c1.matmul(c2).mul(tensor(2))
-      return (await newTop.div(bottom).data())[0]
+      vec2 = new Vector(vec2)
+      const d2 = distance(vec2)
+      const top = d1 * d1 + d2 * d2 - Math.pow(distance(vec1.subtract(vec2)), 2)
+      const bottom = 2 * d1 * d2
+      console.log('top is', top, 'bottom is', bottom)
+      return top / bottom
     }),
   )
 }
-
-export async function mCosSimilarity(vec1, vec2) {
-  vec1 = vec1.toJS()
-  vec2 = vec2.toJS()
-  vec1 = tensor([vec1])
-  vec2 = tensor([vec2])
-  const c1 = distance(vec1)
-  const c2 = distance(vec2)
-  const top = c1
-    .square()
-    .add(c2.square())
-    .sub(distance(vec1.sub(vec2)).square())
-  const bottom = c1.matmul(c2).mul(tensor(2))
-  return (await top.div(bottom).data())[0]
-}
+*/

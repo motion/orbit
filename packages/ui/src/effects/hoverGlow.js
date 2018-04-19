@@ -1,37 +1,35 @@
-// @flow
 import * as React from 'react'
 import { view } from '@mcro/black'
 import $ from 'color'
 import offset from '~/helpers/offset'
 import throttle from 'raf-throttle'
-import type { Color } from 'gloss'
 
-type Props = {
-  width: number,
-  height: number,
-  color: Color,
-  zIndex: number,
-  resist: number,
-  scale: number,
-  opacity: number,
-  boundPct: number | string,
-  offsetTop: number,
-  offsetLeft: number,
-  clickable: boolean,
-  clickDuration: number,
-  clickScale: number,
-  duration: number,
-  overlayZIndex: number,
-  blur: number,
-}
+// type Props = {
+//   width: number,
+//   height: number,
+//   color: Color,
+//   zIndex: number,
+//   resist: number,
+//   scale: number,
+//   opacity: number,
+//   boundPct: number | string,
+//   offsetTop: number,
+//   offsetLeft: number,
+//   clickable: boolean,
+//   clickDuration: number,
+//   clickScale: number,
+//   duration: number,
+//   overlayZIndex: number,
+//   blur: number,
+// }
 
-type State = {
-  track: boolean,
-  position: Object,
-}
+// type State = {
+//   track: boolean,
+//   position: Object,
+// }
 
 @view.ui
-class HoverGlow extends React.PureComponent<Props, State> {
+class HoverGlow extends React.PureComponent {
   static acceptsHovered = 'show'
 
   static defaultProps = {
@@ -231,7 +229,8 @@ class HoverGlow extends React.PureComponent<Props, State> {
     )
     const extraScale = clicked ? clickScale : 1
     const glow = (
-      <overlay
+      <div
+        $overlay
         ref={setRootRef}
         $$draggable={draggable}
         css={{
@@ -242,7 +241,8 @@ class HoverGlow extends React.PureComponent<Props, State> {
         }}
         {...props}
       >
-        <glow
+        <div
+          $glow
           style={{
             zIndex: behind ? -1 : 1,
             opacity: 1,
@@ -255,12 +255,13 @@ class HoverGlow extends React.PureComponent<Props, State> {
               `,
           }}
         >
-          <blur
+          <div
+            $blur
             height={height}
             width={width}
             style={{
               transform: `scale(${scale * extraScale})`,
-              opacity: track || !hide ? opacity : 0,
+              opacity: track || hide ? 0 : opacity,
               width,
               height,
               marginLeft: -width / 2,
@@ -278,8 +279,8 @@ class HoverGlow extends React.PureComponent<Props, State> {
                 `,
             }}
           />
-        </glow>
-      </overlay>
+        </div>
+      </div>
     )
 
     if (!children) {

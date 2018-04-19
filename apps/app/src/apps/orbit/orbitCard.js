@@ -101,15 +101,15 @@ export default class OrbitCard {
             style={style}
           >
             <UI.HoverGlow
-              if={!listItem}
+              if={!listItem && isExpanded}
               hide={!isExpanded || !Electron.orbitState.mouseOver}
               behind
               resist={85}
-              scale={0.8}
+              scale={0.85}
               width={300 - 30}
-              blur={36}
+              blur={25}
               inverse
-              offsetTop={2}
+              offsetTop={4}
               color={[0, 0, 0]}
               opacity={0.06}
               borderRadius={5}
@@ -265,7 +265,7 @@ export default class OrbitCard {
     return {
       card: isSelected
         ? {
-            background: '#fff',
+            background: listItem ? theme.active.background : '#fff',
             boxShadow:
               tiny || listItem
                 ? []

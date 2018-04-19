@@ -101,7 +101,7 @@ export default class OrbitCard {
             style={style}
           >
             <UI.HoverGlow
-              if={!listItem && isExpanded}
+              if={false && !listItem && isExpanded}
               hide={!isExpanded || !Electron.orbitState.mouseOver}
               behind
               resist={85}
@@ -278,7 +278,7 @@ export default class OrbitCard {
                       0.5,
                       theme.active.background.darken(0.1),
                     ],
-                    // [0, 0, 30, [0, 0, 0, 0.15]],
+                    [2, 0, 25, [0, 0, 0, 0.05]],
                   ],
             margin: [0, -1],
           }

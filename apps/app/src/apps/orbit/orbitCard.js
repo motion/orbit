@@ -162,10 +162,10 @@ export default class OrbitCard {
                   <UI.Text
                     if={!tiny && !isSelected}
                     $preview
-                    opacity={0.75}
+                    opacity={0.8}
                     ellipse={2}
                   >
-                    {location} {preview}
+                    {location} <span css={{ opacity: 0.7 }}>{preview}</span>
                   </UI.Text>
                   <subtitle
                     if={!tiny && isSelected}

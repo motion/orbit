@@ -64,7 +64,9 @@ export default class BitSlackConversation {
       bottom: (
         <UI.Text size={0.85} if={result.data.messages.length > 3}>
           + {result.data.messages.length - 3}&nbsp;more&nbsp;
-          {pluralize('reply', result.data.messages.length - 3)}
+          <span if={false}>
+            {pluralize('reply', result.data.messages.length - 3)}
+          </span>
         </UI.Text>
       ),
       bottomAfter: (

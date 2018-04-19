@@ -84,8 +84,10 @@ class OrbitArrow {
       <UI.Arrow
         size={arrowSize}
         towards={Electron.orbitArrowTowards}
-        background={background}
-        boxShadow={[['inset', 0, 0, 0, 0.5, borderColor]]}
+        background={`linear-gradient(45deg, ${background
+          .darken(0.05)
+          .desaturate(0.25)}, ${background.darken(0.02).desaturate(0.25)})`}
+        boxShadow={[['inset', 0, 0, 0, 0.5, borderColor.darken(0.1)]]}
         // border={[1, '#000']}
         css={{
           position: 'absolute',

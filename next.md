@@ -13,6 +13,10 @@
 
 ## next next
 
+* interaction
+
+  * [ ] when docked, dont hide during window move
+
 * sidebar
 
   * [ ] icon improvements (gmail, gdocs)

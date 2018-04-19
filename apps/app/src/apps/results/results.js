@@ -2,6 +2,7 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import OrbitCard from '~/apps/orbit/orbitCard'
 import { throttle } from 'lodash'
+import { App } from '@mcro/all'
 
 const SPLIT_INDEX = 3
 const getPosition = node => {
@@ -147,6 +148,7 @@ export default class Results {
                 index={i + SPLIT_INDEX}
                 total={total}
                 listItem={!isContext}
+                hoverToSelect={!App.state.peekTarget}
               />
             ))}
           <lastResultSpace $$untouchable css={{ height: 12 }} />

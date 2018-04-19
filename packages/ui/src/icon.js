@@ -116,6 +116,7 @@ export default class Icon extends React.PureComponent {
 
   static style = {
     icon: {
+      userSelect: 'none',
       alignItems: 'center',
       justifyContent: 'center',
     },

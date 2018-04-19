@@ -29,7 +29,6 @@
     "@types/reconnectingwebsocket": "^1.0.1"
   },
   "peerDependencies": {
-    "mobx": "*",
-    "rxjs": "*"
+    "mobx": "*"
   }
 }

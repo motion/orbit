@@ -206,6 +206,9 @@ export default class DebugApps {
   }
 
   finishLoadingPage = async (index, page, { url, port }) => {
+    if (!page) {
+      return
+    }
     const injectTitle = async () => {
       if (!this.shouldRun) {
         return

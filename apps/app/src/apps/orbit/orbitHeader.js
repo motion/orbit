@@ -32,7 +32,9 @@ class HeaderStore {
       Electron.isMouseInActiveArea,
     ],
     () => {
-      if (!this.inputRef) return
+      if (!this.inputRef) {
+        throw react.cancel
+      }
       this.inputRef.focus()
       this.inputRef.select()
     },
@@ -58,7 +60,7 @@ class HeaderStore {
 @view({
   headerStore: HeaderStore,
 })
-export default class PeekHeader {
+export default class OrbitHeader {
   handleKeyDown = e => {
     // up/down
     const { keyCode } = e

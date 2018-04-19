@@ -16,7 +16,6 @@
     "sb-event-kit": "^3.0.0"
   },
   "peerDependencies": {
-    "rxjs": "^5.5.5",
     "mobx": "*"
   },
   "publishConfig": {

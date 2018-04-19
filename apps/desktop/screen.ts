@@ -76,6 +76,7 @@ export default class DesktopScreen {
   ]
 
   togglePaused = () => {
+    console.log('toggle paused screen')
     const paused = !Desktop.state.paused
     Desktop.setPaused(paused)
     if (paused) {

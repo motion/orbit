@@ -1,5 +1,5 @@
 import * as React from 'react'
-import * as UI from '@mcro/ui'
+// import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
 import PeekHeader from '../peekHeader'
 import bitContents from '~/components/bitContents'
@@ -7,7 +7,7 @@ import OrbitIcon from '~/apps/orbit/orbitIcon'
 
 @view
 export class Conversation {
-  render({ bit, selectedItem, appStore }) {
+  render({ bit, appStore }) {
     if (!bit) {
       return null
     }

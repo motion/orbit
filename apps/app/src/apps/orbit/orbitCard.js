@@ -17,9 +17,18 @@ class Text {
 }
 
 class OrbitCardStore {
-  get isSelected() {
-    return this.props.appStore.activeIndex === this.props.index
-  }
+  isSelected = false
+
+  @react
+  updateIsSelected = [
+    () => this.props.appStore.activeIndex,
+    index => {
+      const isSelected = index === this.props.index
+      if (isSelected !== this.isSelected) {
+        this.isSelected = isSelected
+      }
+    },
+  ]
 
   @react({ delayValue: true })
   wasSelected = [() => this.isSelected, _ => _]
@@ -60,10 +69,10 @@ export default class OrbitCard {
   render({
     appStore,
     result,
-    totalHeight,
-    total,
+    // totalHeight,
+    // total,
     index,
-    parentElement,
+    // parentElement,
     store,
     getRef,
     tiny,

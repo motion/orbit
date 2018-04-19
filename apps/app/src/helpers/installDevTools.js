@@ -5,8 +5,6 @@ import * as React from 'react'
 import * as Mobx from 'mobx'
 import * as MobxUtils from 'mobx-utils'
 import ReactDOM from 'react-dom'
-import RxDB from 'rxdb'
-import Rx from 'rxjs'
 import * as Constants from '~/constants'
 import mobxFormatters from 'mobx-formatters'
 import _ from 'lodash'
@@ -26,8 +24,6 @@ window.ReactDOM = ReactDOM
 window.Constants = Constants
 window.Mobx = Mobx
 window.MobxUtils = MobxUtils
-window.RxDB = RxDB
-window.Rx = Rx
 window.Constants = Constants
 window._ = _
 window.log = Black.log

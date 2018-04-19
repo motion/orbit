@@ -1,8 +1,5 @@
 ## next
 
-* [x] slack long convo (... + x more display at bottom)
-* [x] peek design (share resolver that gets info)
-
 Make App Feel Buttery Again
 
 * [ ] list: granular re-render on index change
@@ -15,6 +12,19 @@ Make App Feel Buttery Again
 * [ ] on searches, when typing a new char, make opacity go down on current results until new ones show (feels much better)
 
 ## next next
+
+* dev/stack
+
+  * [x] nice custom cancelations. this solves weird react.if stuff too nicely.
+
+@react x = [
+() => a,
+(a, { cancel }) => {
+if (!a) { throw cancel }
+}
+]
+
+lets us also not log the reaction super easily, so much less `log: false`
 
 * interaction
 

@@ -48,7 +48,6 @@
     "kill-port": "^1.1.0",
     "lodash": "^4.17.4",
     "morgan": "^1.8.2",
-    "rxjs": "^5.5.5",
     "node-osascript": "~2.0.0",
     "osx-mouse": "^1.2.1",
     "passport": "^0.4.0",

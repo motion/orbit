@@ -70,7 +70,11 @@ export default class BitSlackConversation {
         </UI.Text>
       ),
       bottomAfter: (
-        <row if={result.people} $meta css={{ color: theme.active.color }}>
+        <row
+          if={result.people && result.people.length > 1}
+          $meta
+          css={{ color: theme.active.color }}
+        >
           {result.people.length}
           &nbsp;
           <UI.Icon
@@ -79,10 +83,6 @@ export default class BitSlackConversation {
             opacity={0.35}
             name="users_single-01"
           />
-          &nbsp;&nbsp;
-          {result.data.messages.length - 1}
-          &nbsp;
-          <UI.Icon color="inherit" size={10} opacity={0.35} name="chat" />
         </row>
       ),
       // via: result.title,

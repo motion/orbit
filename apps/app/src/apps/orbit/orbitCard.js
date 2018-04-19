@@ -76,8 +76,13 @@ export default class OrbitCard {
   }
 
   get isExpanded() {
+    const expanded = this.props.expanded
+    if (typeof expanded === 'boolean') {
+      return expanded
+    }
     return (
-      this.props.expanded || (this.props.store.isSelected && !this.props.tiny)
+      (this.props.store.isSelected && !this.props.tiny) ||
+      (this.props.listItem && this.props.store.isSelected)
     )
   }
 
@@ -94,7 +99,6 @@ export default class OrbitCard {
     permalink,
   }) {
     const {
-      store,
       result,
       getRef,
       tiny,
@@ -105,7 +109,6 @@ export default class OrbitCard {
     } = this.props
     const borderRadius = listItem && tiny ? 4 : listItem ? 0 : borderRadius_
     const isExpanded = this.isExpanded
-    const isSelected = store.isSelected
     return (
       <cardWrap
         css={{
@@ -159,7 +162,7 @@ export default class OrbitCard {
           </subtitle>
           <content if={preview || content}>
             <UI.Text
-              if={!tiny && !isSelected}
+              if={!tiny && !isExpanded}
               $preview
               opacity={0.8}
               ellipse={2}
@@ -167,12 +170,12 @@ export default class OrbitCard {
               {location} <span css={{ opacity: 0.7 }}>{preview}</span>
             </UI.Text>
             <subtitle
-              if={!tiny && isSelected}
+              if={!tiny && isExpanded}
               css={{ flexFlow: 'row', opacity: 0.5 }}
             >
               {location}
             </subtitle>
-            <full if={!tiny && isSelected}>{content}</full>
+            <full if={!tiny && isExpanded}>{content}</full>
           </content>
           <bottom if={!tiny}>
             {permalink}
@@ -191,7 +194,7 @@ export default class OrbitCard {
     )
   }
 
-  render({ appStore, result, store, listItem }) {
+  render({ appStore, result, store, listItem, itemProps }) {
     const BitContent = bitContents(result)
     store.isSelected
     return (
@@ -200,6 +203,7 @@ export default class OrbitCard {
           appStore={appStore}
           result={result}
           isExpanded={this.isExpanded}
+          {...itemProps}
         >
           {this.getOrbitCard}
         </BitContent>
@@ -240,7 +244,7 @@ export default class OrbitCard {
     },
     content: {
       flex: 1,
-      // overflow: 'hidden',
+      overflow: 'hidden',
     },
     icon: {
       marginLeft: 0,

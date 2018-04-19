@@ -15,7 +15,7 @@ const getLink = x => {
 
 @view
 export default class BitSlackMessage {
-  render({ bit, message, previousMessage, appStore }) {
+  render({ bit, message, previousMessage, appStore, contentStyle }) {
     if (!message.text || !bit) {
       log(`no messagetext/bit ${JSON.stringify(message)}`)
       return null
@@ -65,6 +65,7 @@ export default class BitSlackMessage {
     const hideHeader = previousBySameAuthor && previousWithinOneMinute
     const avatar = person.data.profile.image_48
     // const [firstWord, ...rest] = message.text.split(' ')
+    console.log('contentStyle', contentStyle)
     return (
       <message>
         <header if={!hideHeader}>
@@ -92,7 +93,7 @@ export default class BitSlackMessage {
             <UI.Date>{new Date(message.ts.split('.')[0] * 1000)}</UI.Date>
           </date>
         </header>
-        <content>{content || message.text}</content>
+        <content css={contentStyle}>{content || message.text}</content>
       </message>
     )
   }

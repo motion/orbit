@@ -22,7 +22,7 @@ export default class BitSlackConversation {
     shownLimit: 3,
   }
 
-  render({ children, result, appStore, shownLimit, theme }) {
+  render({ children, result, appStore, shownLimit, theme, contentStyle }) {
     const setting = appStore.settings.slack
     const uid =
       uids[result.id] || Math.floor(Math.random() * exampleTitles.length)
@@ -96,6 +96,7 @@ export default class BitSlackConversation {
             previousMessage={result.data.messages[index - 1]}
             bit={result}
             appStore={appStore}
+            contentStyle={contentStyle}
           />
         )),
     })

@@ -14,10 +14,10 @@ export default class Carousel {
             result={item}
             index={index}
             total={items.length}
-            expanded
+            expanded={false}
             style={{
               width: 220,
-              height: 300,
+              height: 200,
             }}
           />
         ))}

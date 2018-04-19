@@ -1,10 +1,10 @@
 ## next
 
-* [ ] peek: horizontal carousel / similar hardcoded
+* [x] peek: horizontal carousel / similar hardcoded
 * [ ] finish fixing up docked cmd+space stuff
 * [ ] search+enter for slack convo permalink
 * [ ] when docked, dont hide during window move
-
+* [ ] peek back button + history
 * [ ] make "@" show a list of slack people
 * [ ] search people directly
 * [ ] attachments/images handled in resolver

@@ -80,6 +80,19 @@ export default class ElectronReactions {
     })
   }
 
+  @react
+  repositionAfterDocked = [
+    () => App.state.orbitHidden,
+    async (hidden, { sleep }) => {
+      if (!hidden || !Electron.orbitState.dockPinned) {
+        throw react.cancel
+      }
+      await sleep(() => App.animationDuration)
+      Electron.lastAction = null
+      this.repositionToAppState = Date.now()
+    },
+  ]
+
   onShortcut = async shortcut => {
     if (shortcut === 'CommandOrControl+Space') {
       if (App.state.orbitHidden) {

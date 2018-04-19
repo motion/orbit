@@ -45,12 +45,11 @@ export default class PeekHeader {
     },
     title: {
       flex: 1,
-      flexFlow: 'row',
       overflow: 'hidden',
     },
     titleMain: {
       flex: 1,
-      marginBottom: 5,
+      marginBottom: 8,
     },
     subtitle: {
       opacity: 0.8,

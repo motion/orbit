@@ -17,11 +17,15 @@ export class Conversation {
       <BitContent
         appStore={appStore}
         result={bit}
-        isExpanded
         shownLimit={Infinity}
+        itemProps={{
+          contentStyle: {
+            paddingLeft: 17,
+            background: 'red',
+          },
+        }}
       >
         {({ permalink, location, title, icon, content }) => {
-          console.log({ permalink, location, title, icon, content })
           return (
             <React.Fragment>
               <PeekHeader
@@ -65,7 +69,7 @@ export class Conversation {
       padding: [20, 20, 0],
     },
     carouselInner: {
-      margin: [0, -25],
+      margin: [0, -10, 0, -30],
     },
     after: {
       flexFlow: 'row',

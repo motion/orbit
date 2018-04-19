@@ -2,6 +2,9 @@
 
 * [x] slack long convo (... + x more display at bottom)
 * [x] peek design (share resolver that gets info)
+
+Make App Feel Buttery Again
+
 * [ ] list: granular re-render on index change
 * [ ] make "#" show a list of slack rooms
   * [ ] search "#gen some" searches #general filtered by some

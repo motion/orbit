@@ -265,7 +265,7 @@ export default class AppStore {
 
   getHoverProps = Helpers.hoverSettler({
     enterDelay: 80,
-    betweenDelay: 60,
+    betweenDelay: 30,
     onHovered: item => {
       if (item && typeof item.id === 'number') {
         this.setSelected(item.id)

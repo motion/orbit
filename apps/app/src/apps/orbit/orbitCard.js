@@ -101,8 +101,8 @@ export default class OrbitCard {
             style={style}
           >
             <UI.HoverGlow
-              if={isExpanded && !listItem}
-              hide={!Electron.orbitState.mouseOver}
+              if={!listItem}
+              hide={!isExpanded || !Electron.orbitState.mouseOver}
               behind
               resist={85}
               scale={0.8}
@@ -111,9 +111,9 @@ export default class OrbitCard {
               inverse
               offsetTop={2}
               color={[0, 0, 0]}
-              opacity={0.07}
+              opacity={0.06}
               borderRadius={5}
-              duration={300}
+              duration={450}
             />
             <card
               $cardHovered={this.hovered}
@@ -142,6 +142,10 @@ export default class OrbitCard {
                   icon={icon}
                   size={16}
                   $icon
+                  css={{
+                    filter: isExpanded ? 'none' : 'grayscale(100%)',
+                    opacity: isExpanded ? 1 : 0.25,
+                  }}
                   {...tiny && tinyProps.iconProps}
                 />
               </title>
@@ -202,6 +206,9 @@ export default class OrbitCard {
     cardWrap: {
       position: 'relative',
       width: '100%',
+      transform: {
+        z: 0,
+      },
     },
     card: {
       flex: 1,
@@ -253,9 +260,7 @@ export default class OrbitCard {
   static theme = ({ store, tiny, listItem }, theme) => {
     const { isSelected } = store
     const hoveredStyle = {
-      background: isSelected
-        ? theme.selected.background
-        : theme.hover.background,
+      background: isSelected ? theme.selected.background : 'transparent',
     }
     return {
       card: isSelected

@@ -23,13 +23,9 @@ export default class BitSlackConversation {
   }
 
   render({ children, result, appStore, shownLimit, theme, contentStyle }) {
-    const setting = appStore.settings.slack
     const uid =
       uids[result.id] || Math.floor(Math.random() * exampleTitles.length)
     uids[result.id] = uid
-    const slackChannelUrl = `slack://channel?id=${
-      result.data.channel.id
-    }&team=${setting.values.oauth.info.team.id}`
     return children({
       title: exampleTitles[uid],
       icon: 'slack',
@@ -37,7 +33,7 @@ export default class BitSlackConversation {
         <RoundButton
           onClick={e => {
             e.stopPropagation()
-            App.sendMessage(Desktop, Desktop.messages.OPEN, slackChannelUrl)
+            appStore.open(result, 'channel')
           }}
         >
           {result.title}
@@ -52,12 +48,7 @@ export default class BitSlackConversation {
           opacity={0.6}
           onClick={e => {
             e.stopPropagation()
-            App.sendMessage(
-              Desktop,
-              Desktop.messages.OPEN,
-              `${slackChannelUrl}&message=${result.data.messages[0].ts}`,
-              // result.data.permalink,
-            )
+            appStore.open(result)
           }}
         />
       ),

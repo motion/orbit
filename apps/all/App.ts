@@ -37,7 +37,6 @@ class AppStore {
       closeId: null,
     },
     selectedItem: null,
-    openResult: null,
     highlightWords: {},
     hoveredWord: null,
     hoveredLine: null,
@@ -122,6 +121,11 @@ class AppStore {
     // @ts-ignore
     const AppReactions = require('./AppReactions').default
     this.reactions = new AppReactions(options)
+  }
+
+  open = async url => {
+    App.sendMessage(Desktop, Desktop.messages.OPEN, url)
+    App.setOrbitHidden(true)
   }
 
   togglePinned = () => {

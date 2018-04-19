@@ -72,7 +72,7 @@ export default class ElectronReactions {
         orbitOnLeft: true,
         fullScreen: true,
         orbitDocked: false,
-        dockPinned: false,
+        dockedPinned: false,
       },
       peekState: {
         windows: [peek, ...rest],
@@ -84,10 +84,10 @@ export default class ElectronReactions {
   repositionAfterDocked = [
     () => App.state.orbitHidden,
     async (hidden, { sleep }) => {
-      if (!hidden || !Electron.orbitState.dockPinned) {
+      if (!hidden || !Electron.orbitState.dockedPinned) {
         throw react.cancel
       }
-      await sleep(() => App.animationDuration)
+      await sleep(() => App.animationDuration + 40)
       Electron.lastAction = null
       this.repositionToAppState = Date.now()
     },

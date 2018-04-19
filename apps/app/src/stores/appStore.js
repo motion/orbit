@@ -6,6 +6,23 @@ import * as Constants from '~/constants'
 import * as r2 from '@mcro/r2'
 import * as Helpers from '~/helpers'
 
+const getPermalink = async (result, type) => {
+  if (result.type === 'app') {
+    return result.id
+  }
+  if (result.integration === 'slack') {
+    const setting = await Setting.findOne({ type: 'slack' })
+    let url = `slack://channel?id=${result.data.channel.id}&team=${
+      setting.values.oauth.info.team.id
+    }`
+    if (type === 'channel') {
+      return url
+    }
+    return `${url}&message=${result.data.messages[0].ts}`
+  }
+  return result.id
+}
+
 const Services = {
   slack: ServiceModels.SlackService,
   drive: ServiceModels.DriveService,
@@ -387,5 +404,10 @@ export default class AppStore {
       this.getSettings()
       App.sendMessage(Desktop, Desktop.messages.CLOSE_AUTH, type)
     }, 1000)
+  }
+
+  open = async (result, openType) => {
+    const url = await getPermalink(result, openType)
+    App.open(url)
   }
 }

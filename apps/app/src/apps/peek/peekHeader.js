@@ -19,16 +19,12 @@ export default class PeekHeader {
         }}
       >
         <title if={title}>
-          <titlemain>
-            <UI.Title size={1.8} fontWeight={700} marginBottom={5}>
-              {title}
-            </UI.Title>
-            <UI.Title if={subtitle} size={1}>
-              {subtitle}
-            </UI.Title>
-            <UI.Date css={{ opacity: 0.5 }}>{date}</UI.Date>
-          </titlemain>
-          <UI.Icon $icon color="#ddd" if={icon} name={icon} size={16} />
+          <UI.Title $titleMain size={1.3} fontWeight={700} marginBottom={5}>
+            {title}
+          </UI.Title>
+          <UI.Title if={subtitle} size={1} $subtitle>
+            {subtitle} <UI.Date>{date}</UI.Date>
+          </UI.Title>
         </title>
         <after if={after}>{after}</after>
       </header>
@@ -52,9 +48,15 @@ export default class PeekHeader {
       flexFlow: 'row',
       overflow: 'hidden',
     },
-    titlemain: {
+    titleMain: {
       flex: 1,
+      marginBottom: 5,
     },
+    subtitle: {
+      opacity: 0.8,
+      marginBottom: 5,
+    },
+    date: { opacity: 0.5, fontSize: 14 },
     orbitInput: {
       width: '100%',
       // background: 'red',

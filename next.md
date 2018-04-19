@@ -1,22 +1,15 @@
 ## next
 
+* [ ] peek: horizontal carousel / similar hardcoded
+* [ ] finish fixing up docked cmd+space stuff
+* [ ] search+enter for slack convo permalink
+* [ ] when docked, dont hide during window move
+
 * [ ] make "@" show a list of slack people
 * [ ] search people directly
 * [ ] attachments/images handled in resolver
 * [ ] make the homepage just opacity 0 during searches, so it comes back more quickly when empty
 * [ ] on searches, when typing a new char, make opacity go down on current results until new ones show (feels much better)
-
-## sorted
-
-* (demo/beta) replace cmd+space for search
-
-  * cmd+space modifier support (alfred overrides?)
-  * cmd+space triggers docked
-  * esc clears docked / repositions
-  * cmd+space after docked clears / repositions
-  * ensure search + enter works for apps
-    * and for slack convo permalinks
-  * when docked, dont hide during window move
 
 ## triage
 

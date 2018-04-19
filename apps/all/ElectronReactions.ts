@@ -41,6 +41,101 @@ export default class ElectronReactions {
     })
   }
 
+  toggleFullScreen = () => {
+    const fullScreen = !Electron.orbitState.fullScreen
+    if (!fullScreen) {
+      if (Electron.onClear) {
+        Electron.onClear()
+      }
+      console.log('SHOULD REPOSITION AFTER FS')
+      this.repositionToAppState = Date.now()
+      return
+    }
+    // orbit props
+    const { round } = Math
+    const [screenW, screenH] = screenSize()
+    const [appW, appH] = [screenW / 1.5, screenH / 1.3]
+    const [orbitW, orbitH] = [appW * 1 / 3, appH]
+    const [orbitX, orbitY] = [(screenW - appW) / 2, (screenH - appH) / 2]
+    // peek props
+    const [peekW, peekH] = [appW * 2 / 3, appH]
+    const [peekX, peekY] = [orbitX + orbitW, orbitY]
+    const [peek, ...rest] = Electron.peekState.windows
+    peek.position = [peekX, peekY].map(round)
+    peek.size = [peekW, peekH].map(round)
+    peek.peekOnLeft = false
+    // update
+    Electron.setState({
+      orbitState: {
+        position: [orbitX, orbitY].map(round),
+        size: [orbitW, orbitH].map(round),
+        orbitOnLeft: true,
+        fullScreen: true,
+        orbitDocked: false,
+        dockPinned: false,
+      },
+      peekState: {
+        windows: [peek, ...rest],
+      },
+    })
+  }
+
+  onShortcut = async shortcut => {
+    if (shortcut === 'CommandOrControl+Space') {
+      if (App.state.orbitHidden) {
+        Electron.lastAction = shortcut
+        this.repositionToAppState = Date.now()
+        await sleep(20)
+        Electron.sendMessage(App, App.messages.SHOW)
+      } else {
+        Electron.lastAction = null
+        Electron.sendMessage(App, App.messages.HIDE)
+        this.repositionToAppState = Date.now()
+      }
+      return
+    }
+    if (shortcut === 'Option+Space') {
+      if (Electron.orbitState.fullScreen) {
+        this.toggleFullScreen()
+        return
+      }
+      if (App.state.orbitHidden) {
+        this.toggleVisible()
+        Electron.lastAction = shortcut
+        this.updatePinned(true)
+        return
+      }
+      if (Electron.orbitState.pinned) {
+        this.togglePinned()
+        this.toggleVisible()
+        return
+      } else {
+        // !pinned
+        this.togglePinned()
+      }
+    }
+    if (shortcut === 'Option+Shift+Space') {
+      Electron.lastAction = shortcut
+      this.toggleFullScreen()
+    }
+  }
+
+  toggleVisible = () => {
+    if (App.state.orbitHidden) {
+      Electron.sendMessage(App, App.messages.HIDE)
+    } else {
+      Electron.sendMessage(App, App.messages.SHOW)
+    }
+  }
+
+  togglePinned = () => {
+    this.updatePinned(!Electron.orbitState.pinned)
+  }
+
+  updatePinned = pinned => {
+    Electron.setOrbitState({ pinned })
+  }
+
   @react
   fullScreenOnOptionShift = [
     () => Desktop.isHoldingOptionShift,
@@ -184,96 +279,4 @@ export default class ElectronReactions {
       })
     },
   ]
-
-  toggleFullScreen = () => {
-    const fullScreen = !Electron.orbitState.fullScreen
-    if (!fullScreen) {
-      if (Electron.onClear) {
-        Electron.onClear()
-      }
-      console.log('SHOULD REPOSITION AFTER FS')
-      this.repositionToAppState = Date.now()
-      return
-    }
-    // orbit props
-    const { round } = Math
-    const [screenW, screenH] = screenSize()
-    const [appW, appH] = [screenW / 1.5, screenH / 1.3]
-    const [orbitW, orbitH] = [appW * 1 / 3, appH]
-    const [orbitX, orbitY] = [(screenW - appW) / 2, (screenH - appH) / 2]
-    // peek props
-    const [peekW, peekH] = [appW * 2 / 3, appH]
-    const [peekX, peekY] = [orbitX + orbitW, orbitY]
-    const [peek, ...rest] = Electron.peekState.windows
-    peek.position = [peekX, peekY].map(round)
-    peek.size = [peekW, peekH].map(round)
-    peek.peekOnLeft = false
-    // update
-    Electron.setState({
-      orbitState: {
-        position: [orbitX, orbitY].map(round),
-        size: [orbitW, orbitH].map(round),
-        orbitOnLeft: true,
-        fullScreen: true,
-      },
-      peekState: {
-        windows: [peek, ...rest],
-      },
-    })
-  }
-
-  onShortcut = async shortcut => {
-    if (shortcut === 'CommandOrControl+Space') {
-      if (App.state.orbitHidden) {
-        Electron.lastAction = shortcut
-        this.repositionToAppState = Date.now()
-        await sleep(80)
-        Electron.sendMessage(App, App.messages.SHOW)
-      } else {
-        Electron.lastAction = null
-        Electron.sendMessage(App, App.messages.HIDE)
-      }
-      return
-    }
-    if (shortcut === 'Option+Space') {
-      if (Electron.orbitState.fullScreen) {
-        this.toggleFullScreen()
-        return
-      }
-      if (App.state.orbitHidden) {
-        this.toggleVisible()
-        Electron.lastAction = shortcut
-        this.updatePinned(true)
-        return
-      }
-      if (Electron.orbitState.pinned) {
-        this.togglePinned()
-        this.toggleVisible()
-        return
-      } else {
-        // !pinned
-        this.togglePinned()
-      }
-    }
-    if (shortcut === 'Option+Shift+Space') {
-      Electron.lastAction = shortcut
-      this.toggleFullScreen()
-    }
-  }
-
-  toggleVisible = () => {
-    if (App.state.orbitHidden) {
-      Electron.sendMessage(App, App.messages.HIDE)
-    } else {
-      Electron.sendMessage(App, App.messages.SHOW)
-    }
-  }
-
-  togglePinned = () => {
-    this.updatePinned(!Electron.orbitState.pinned)
-  }
-
-  updatePinned = pinned => {
-    Electron.setOrbitState({ pinned })
-  }
 }

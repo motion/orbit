@@ -189,7 +189,6 @@ export default class AppStore {
       } else {
         const unsorted = [...bitResults, ...pluginResults]
         const { rest } = parseQuery(query)
-        console.log('asdsadasdas', unsorted, rest)
         results = matchSort(rest, unsorted)
       }
       return {

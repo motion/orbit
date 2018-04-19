@@ -84,7 +84,7 @@ class OrbitWindowStore {
 
   @react
   focusOnDocked = [
-    () => Electron.orbitState.dockedPinned,
+    () => Electron.orbitState.dockedPinned && App.isShowingOrbit,
     dockedPinned => {
       if (dockedPinned) {
         this.focusOrbit()

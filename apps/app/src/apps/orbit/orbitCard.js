@@ -76,7 +76,9 @@ export default class OrbitCard {
   }
 
   get isExpanded() {
-    return this.props.store.isSelected && !this.props.tiny
+    return (
+      this.props.expanded || (this.props.store.isSelected && !this.props.tiny)
+    )
   }
 
   getOrbitCard({

@@ -12,12 +12,12 @@ class OrbitWindowStore {
   show = 0
   orbitRef = null
 
-  @react({ log: 'state' })
+  @react
   unFullScreenOnHide = [
     () => App.isShowingOrbit,
     showing => {
       if (showing) {
-        return
+        throw react.cancel
       }
       if (Electron.orbitState.fullScreen) {
         log(`clearing`)

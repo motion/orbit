@@ -35,10 +35,15 @@ export default class AppReactions {
   @react
   showHideApp = [() => App.state.openResult, () => App.setOrbitHidden(true)]
 
-  @react({ log: 'state' })
+  @react
   clearPeekTargetOnOrbitClose = [
     () => !App.isShowingOrbit,
-    hidden => hidden && App.setPeekTarget(null),
+    hidden => {
+      if (!hidden) {
+        throw react.cancel
+      }
+      App.setPeekTarget(null)
+    },
   ]
 
   @react

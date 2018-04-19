@@ -1,10 +1,9 @@
-import { react, watch, isEqual } from '@mcro/black'
+import { react, isEqual } from '@mcro/black'
 import { App, Desktop, Electron } from '@mcro/all'
 import { Bit, Person, Setting, findOrCreate } from '@mcro/models'
 import * as Constants from '~/constants'
 import * as r2 from '@mcro/r2'
 import * as Helpers from '~/helpers'
-import { throttle } from 'lodash'
 
 // const log = debug('root')
 
@@ -287,7 +286,7 @@ export default class AppStore {
         : null,
     item => {
       if (!item) {
-        return
+        throw react.cancel
       }
       const selectedItem = {
         id: item.id || '',

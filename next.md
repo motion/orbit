@@ -2,7 +2,8 @@
 
 Make App Feel Buttery Again
 
-* [ ] list: granular re-render on index change
+* [x] nice custom cancelations. this solves weird react.if stuff too nicely.
+* [x] list: granular re-render on index change
 * [ ] make "#" show a list of slack rooms
   * [ ] search "#gen some" searches #general filtered by some
 * [ ] make "@" show a list of slack people
@@ -12,19 +13,6 @@ Make App Feel Buttery Again
 * [ ] on searches, when typing a new char, make opacity go down on current results until new ones show (feels much better)
 
 ## next next
-
-* dev/stack
-
-  * [x] nice custom cancelations. this solves weird react.if stuff too nicely.
-
-@react x = [
-() => a,
-(a, { cancel }) => {
-if (!a) { throw cancel }
-}
-]
-
-lets us also not log the reaction super easily, so much less `log: false`
 
 * interaction
 

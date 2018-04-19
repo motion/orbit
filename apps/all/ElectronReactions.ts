@@ -56,22 +56,26 @@ export default class ElectronReactions {
     },
   ]
 
-  // @react
-  // unPinOnSwitchApp = [
-  //   () => Desktop.appState.id,
-  //   () => Electron.orbitState.pinned && this.updatePinned(false),
-  // ]
-
-  @react({ log: 'state' })
+  @react
   unPinOnFullScreen = [
     () => Electron.orbitState.fullScreen,
-    () => Electron.orbitState.pinned && this.updatePinned(false),
+    () => {
+      if (!Electron.orbitState.pinned) {
+        throw react.cancel
+      }
+      this.updatePinned(false)
+    },
   ]
 
-  @react({ log: 'state' })
+  @react
   unPinOnHidden = [
     () => App.isFullyHidden,
-    hidden => hidden && Electron.orbitState.pinned && this.updatePinned(false),
+    hidden => {
+      if (!hidden || !Electron.orbitState.pinned) {
+        throw react.cancel
+      }
+      this.updatePinned(false)
+    },
   ]
 
   @react({ log: false })
@@ -124,20 +128,18 @@ export default class ElectronReactions {
   handleHoldingOption = [
     () => Desktop.isHoldingOption,
     async (isHoldingOption, { sleep }) => {
-      console.log('HOLD OPTION?', Desktop.isHoldingOption)
       if (Electron.orbitState.pinned) {
-        return
+        throw react.cancel
       }
       if (!isHoldingOption) {
         if (!Electron.orbitState.pinned && Electron.isMouseInActiveArea) {
           log('prevent hide while mouseover after release hold')
-          return
+          throw react.cancel
         }
         Electron.sendMessage(App, App.messages.HIDE)
-        return
+        throw react.cancel
       }
       await sleep(140)
-      console.log(`sending message show`)
       Electron.sendMessage(App, App.messages.SHOW)
       // await sleep(3500)
       // this.updatePinned(true)
@@ -153,11 +155,13 @@ export default class ElectronReactions {
     ],
     ([appBB, linesBB]) => {
       if (Constants.FORCE_FULLSCREEN) {
-        return
+        throw react.cancel
       }
       // prefer using lines bounding box, fall back to app
       const box = linesBB || appBB
-      if (!box) return
+      if (!box) {
+        throw react.cancel
+      }
       let { position, size, orbitOnLeft, orbitDocked } = orbitPosition(box)
       if (linesBB) {
         // add padding

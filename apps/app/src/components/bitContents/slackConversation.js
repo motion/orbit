@@ -15,13 +15,14 @@ const exampleTitles = [
 ]
 const uids = {}
 
+@UI.injectTheme
 @view
 export default class BitSlackConversation {
   static defaultProps = {
     shownLimit: 3,
   }
 
-  render({ children, result, appStore, shownLimit }) {
+  render({ children, result, appStore, shownLimit, theme }) {
     const setting = appStore.settings.slack
     const uid =
       uids[result.id] || Math.floor(Math.random() * exampleTitles.length)
@@ -46,6 +47,7 @@ export default class BitSlackConversation {
         <UI.Button
           circular
           icon="link69"
+          color={theme.active.color}
           size={0.8}
           opacity={0.6}
           onClick={e => {
@@ -66,14 +68,19 @@ export default class BitSlackConversation {
         </UI.Text>
       ),
       bottomAfter: (
-        <row if={result.people} $meta>
+        <row if={result.people} $meta css={{ color: theme.active.color }}>
           {result.people.length}
           &nbsp;
-          <UI.Icon size={10} opacity={0.35} name="users_single-01" />
+          <UI.Icon
+            color="inherit"
+            size={10}
+            opacity={0.35}
+            name="users_single-01"
+          />
           &nbsp;&nbsp;
           {result.data.messages.length - 1}
           &nbsp;
-          <UI.Icon size={10} opacity={0.35} name="chat" />
+          <UI.Icon color="inherit" size={10} opacity={0.35} name="chat" />
         </row>
       ),
       // via: result.title,

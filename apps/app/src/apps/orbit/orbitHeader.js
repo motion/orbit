@@ -7,6 +7,15 @@ import * as Constants from '~/constants'
 class HeaderStore {
   inputRef = null
 
+  get isShowingHeader() {
+    return (
+      Electron.orbitState.fullScreen ||
+      Electron.orbitState.mouseOver ||
+      Electron.orbitState.pinned ||
+      false
+    )
+  }
+
   hover = () => {
     this.inputRef.focus()
   }
@@ -65,7 +74,7 @@ export default class PeekHeader {
       <header
         $headerBg={headerBg}
         $$draggable
-        $headerVisible={App.isShowingHeader}
+        $headerVisible={headerStore.isShowingHeader}
         $headerMouseOver={Electron.orbitState.mouseOver}
         css={{
           borderTopLeftRadius:

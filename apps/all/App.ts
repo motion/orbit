@@ -103,15 +103,6 @@ class AppStore {
     return 'none for now'
   }
 
-  get isShowingHeader() {
-    return (
-      Electron.orbitState.fullScreen ||
-      Electron.orbitState.mouseOver ||
-      Electron.orbitState.pinned ||
-      false
-    )
-  }
-
   get aboutToShow() {
     return App.isAnimatingOrbit && App.state.orbitHidden
   }

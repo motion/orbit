@@ -261,19 +261,16 @@ export default class OrbitCard {
 
   static theme = ({ store, tiny, listItem }, theme) => {
     const { isSelected } = store
-    const hoveredStyle = {
-      background: isSelected
-        ? theme.selected.background
-        : theme.hover.background,
-    }
+    let hoveredStyle
     let card
     if (listItem || tiny) {
+      hoveredStyle = {
+        background: theme.activeHover.background,
+      }
       card = isSelected
         ? {
             background: theme.active.background,
-            '&:hover': {
-              background: theme.activeHover.background,
-            },
+            '&:hover': hoveredStyle,
           }
         : {
             background: 'transparent',
@@ -282,6 +279,11 @@ export default class OrbitCard {
             },
           }
     } else {
+      hoveredStyle = {
+        background: isSelected
+          ? theme.selected.background
+          : theme.hover.background,
+      }
       card = isSelected
         ? {
             background: '#fff',

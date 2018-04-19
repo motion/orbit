@@ -162,7 +162,7 @@ export default class Results {
       overflowY: 'scroll',
       paddingTop: 40,
       marginTop: -40,
-      poitnerEvents: 'none',
+      pointerEvents: 'none',
     },
     fade: {
       position: 'fixed',

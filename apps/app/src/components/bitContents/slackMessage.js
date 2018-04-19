@@ -105,6 +105,8 @@ export default class BitSlackMessage {
       flexFlow: 'row',
       alignItems: 'center',
       margin: [4, 0],
+      userSelect: 'none',
+      cursor: 'default',
     },
     inner: {
       flexFlow: 'row',

@@ -135,24 +135,26 @@ export default class Results {
     return (
       <resultsFrame ref={this.setResultsFrame}>
         <fadeTop $fade $$untouchable $fadeVisible={isScrolled} />
-        <results if={results.length} ref={this.setResults}>
-          <firstResultSpace $$untouchable css={{ height: 6 }} />
-          {results
-            .slice(SPLIT_INDEX)
-            .map((result, i) => (
-              <OrbitCard
-                key={result.id}
-                parentElement={resultsRef}
-                appStore={appStore}
-                result={result}
-                index={i + SPLIT_INDEX}
-                total={total}
-                listItem={!isContext}
-                hoverToSelect={!App.state.peekTarget}
-              />
-            ))}
-          <lastResultSpace $$untouchable css={{ height: 12 }} />
-        </results>
+        <resultsScroller>
+          <results if={results.length} ref={this.setResults}>
+            <firstResultSpace $$untouchable css={{ height: 6 }} />
+            {results
+              .slice(SPLIT_INDEX)
+              .map((result, i) => (
+                <OrbitCard
+                  key={result.id}
+                  parentElement={resultsRef}
+                  appStore={appStore}
+                  result={result}
+                  index={i + SPLIT_INDEX}
+                  total={total}
+                  listItem={!isContext}
+                  hoverToSelect={!App.state.peekTarget}
+                />
+              ))}
+            <lastResultSpace $$untouchable css={{ height: 12 }} />
+          </results>
+        </resultsScroller>
         <fadeBottom $fade $$untouchable $fadeVisible={isOverflowing} />
       </resultsFrame>
     )
@@ -161,10 +163,15 @@ export default class Results {
     resultsFrame: {
       flex: 1,
       position: 'relative',
-      overflowY: 'scroll',
+      // because its above some stuff, no pointer events here
       paddingTop: 40,
       marginTop: -40,
       pointerEvents: 'none',
+    },
+    resultsScroller: {
+      flex: 1,
+      overflowY: 'scroll',
+      pointerEvents: 'all',
     },
     fade: {
       position: 'fixed',

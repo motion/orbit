@@ -43,9 +43,10 @@ export default class BitSlackConversation {
         </RoundButton>
       ),
       permalink: (
-        <UI.Icon
-          name="link69"
-          size={11}
+        <UI.Button
+          circular
+          icon="link69"
+          size={0.8}
           opacity={0.6}
           onClick={e => {
             e.stopPropagation()
@@ -59,10 +60,10 @@ export default class BitSlackConversation {
         />
       ),
       bottom: (
-        <more if={result.data.messages.length > 3}>
+        <UI.Text size={0.85} if={result.data.messages.length > 3}>
           + {result.data.messages.length - 3}&nbsp;more&nbsp;
           {pluralize('reply', result.data.messages.length - 3)}
-        </more>
+        </UI.Text>
       ),
       bottomAfter: (
         <row if={result.people} $meta>

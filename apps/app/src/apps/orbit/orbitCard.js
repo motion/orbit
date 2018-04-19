@@ -149,10 +149,10 @@ export default class OrbitCard {
               </subtitle>
               <content>
                 <UI.Text
+                  if={!tiny && !isSelected}
                   $preview
                   opacity={0.75}
                   ellipse={2}
-                  if={!tiny && !isSelected}
                 >
                   {location} {preview}
                 </UI.Text>
@@ -166,6 +166,7 @@ export default class OrbitCard {
               </content>
               <bottom if={!tiny}>
                 {permalink}
+                <space if={permalink} />
                 {bottom}
                 <orbital if={false} />
                 <UI.Date>{result.bitUpdatedAt}</UI.Date>
@@ -218,6 +219,7 @@ export default class OrbitCard {
       marginTop: 3,
     },
     bottom: {
+      marginTop: 4,
       flexFlow: 'row',
       alignItems: 'center',
       // justifyContent: 'center',
@@ -238,6 +240,9 @@ export default class OrbitCard {
     location: {
       flexFlow: 'row',
       opacity: 0.5,
+    },
+    space: {
+      width: 6,
     },
   }
 

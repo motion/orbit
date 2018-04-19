@@ -72,9 +72,9 @@ export default class Icon extends React.PureComponent {
     let content
     if (type === 'detailed') {
       content = (
-        <detailIcon css={{ transform: { scale: 0.01 * size } }}>
+        <div $detailedIcon css={{ transform: { scale: 0.01 * size } }}>
           {iconsDetailed[name]}
-        </detailIcon>
+        </div>
       )
     }
     if (name[0] === '/') {
@@ -83,7 +83,8 @@ export default class Icon extends React.PureComponent {
     const iconName = findMatch(name)
     content = content || children
     return (
-      <icon {...props}>
+      // @ts-ignore
+      <div $icon {...props}>
         <div
           className={`nc-icon-${type} ${iconName}`}
           style={{
@@ -109,7 +110,7 @@ export default class Icon extends React.PureComponent {
             {tooltip}
           </Popover>
         )}
-      </icon>
+      </div>
     )
   }
 
@@ -145,7 +146,7 @@ export default class Icon extends React.PureComponent {
         color: color || (theme && theme.color) || '#000',
         width: (width || size) + widthPadding(padding),
         height: (height || size) + heightPadding(padding),
-        fontSize: size,
+        fontSize: size * 1.2,
         lineHeight: `${size / 12 - 1}rem`, // scale where 1 when 14
         '&:hover': {
           color: (hover && hover.color) || theme.color || color,

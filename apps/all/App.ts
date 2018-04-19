@@ -112,6 +112,10 @@ class AppStore {
     )
   }
 
+  get aboutToShow() {
+    return App.isAnimatingOrbit && App.state.orbitHidden
+  }
+
   start = options => {
     Bridge.start(this, this.state, options)
     this.setState = Bridge.setState

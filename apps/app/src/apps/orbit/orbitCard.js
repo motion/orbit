@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { view, react } from '@mcro/black'
+import { Electron } from '@mcro/all'
 import * as UI from '@mcro/ui'
 import OrbitIcon from './orbitIcon'
 import bitContents from '~/components/bitContents'
@@ -92,12 +93,28 @@ export default class OrbitCard {
           <cardWrap
             css={{
               padding: listItem ? 0 : [0, 5, 3],
+              zIndex: isExpanded ? 5 : 4,
             }}
             ref={getRef}
             onClick={() => appStore.toggleSelected(index)}
             {...appStore.getHoverProps({ result, id: index })}
             style={style}
           >
+            <UI.HoverGlow
+              if={isExpanded && !listItem}
+              hide={!Electron.orbitState.mouseOver}
+              behind
+              resist={85}
+              scale={0.8}
+              width={300 - 30}
+              blur={36}
+              inverse
+              offsetTop={2}
+              color={[0, 0, 0]}
+              opacity={0.07}
+              borderRadius={5}
+              duration={300}
+            />
             <card
               $cardHovered={this.hovered}
               css={{
@@ -107,22 +124,9 @@ export default class OrbitCard {
               onMouseEnter={this.setHovered}
               onMouseLeave={this.setUnhovered}
             >
-              <UI.HoverGlow
-                if={isExpanded}
-                opacity={0.8}
-                full
-                resist={50}
-                scale={1}
-                blur={45}
-                color={'#000'}
-                borderRadius={borderRadius}
-                behind
-                durationIn={500}
-                durationOut={100}
-              />
               <title>
                 <Text
-                  size={isExpanded ? 1.35 : 1.2}
+                  size={1.2}
                   ellipse={isExpanded ? 2 : 1}
                   fontWeight={400}
                   $titleText
@@ -157,8 +161,7 @@ export default class OrbitCard {
                   {location} {preview}
                 </UI.Text>
                 <full if={!tiny && isSelected}>
-                  <subtitle $$row>
-                    <div $$flex />
+                  <subtitle css={{ flexFlow: 'row', opacity: 0.5 }}>
                     {location}
                   </subtitle>
                   {content}
@@ -219,6 +222,7 @@ export default class OrbitCard {
       marginTop: 3,
     },
     bottom: {
+      opacity: 0.5,
       marginTop: 4,
       flexFlow: 'row',
       alignItems: 'center',
@@ -246,25 +250,44 @@ export default class OrbitCard {
     },
   }
 
-  static theme = ({ store }, theme) => {
+  static theme = ({ store, tiny, listItem }, theme) => {
     const { isSelected } = store
     const hoveredStyle = {
       background: isSelected
-        ? theme.activeHover.background
+        ? theme.selected.background
         : theme.hover.background,
     }
     return {
-      card: {
-        background: isSelected ? theme.active.background : 'transparent',
-        '&:hover': hoveredStyle,
-      },
+      card: isSelected
+        ? {
+            background: '#fff',
+            boxShadow:
+              tiny || listItem
+                ? []
+                : [
+                    [
+                      'inset',
+                      0,
+                      0,
+                      0,
+                      0.5,
+                      theme.active.background.darken(0.1),
+                    ],
+                    // [0, 0, 30, [0, 0, 0, 0.15]],
+                  ],
+            margin: [0, -1],
+          }
+        : {
+            background: 'transparent',
+            '&:hover': hoveredStyle,
+          },
       cardHovered: hoveredStyle,
       bottom: {
         opacity: isSelected ? 1 : 0.5,
       },
       orbital: {
-        background: theme.active.background.desaturate(0.1),
-        border: [2, theme.active.background.desaturate(0.1).darken(0.1)],
+        background: theme.selected.background.desaturate(0.1),
+        border: [2, theme.selected.background.desaturate(0.1).darken(0.1)],
       },
     }
   }

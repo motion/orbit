@@ -160,6 +160,8 @@ export default class Results {
       flex: 1,
       position: 'relative',
       overflowY: 'scroll',
+      paddingTop: 40,
+      marginTop: -40,
       pointerEvents: 'all !important',
     },
     fade: {

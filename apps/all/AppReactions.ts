@@ -66,12 +66,21 @@ export default class AppReactions {
   ]
 
   @react
-  clearPinnedOnReposition = [
+  clearPeekOnReposition = [
     () => Electron.orbitState.position,
-    () => {
-      if (App.state.peekTarget) {
-        App.setPeekTarget(null)
+    () => App.setPeekTarget(null),
+  ]
+
+  @react
+  closePeekOnMouseOut = [
+    () => Electron.peekState.mouseOver,
+    async (mouseOver, { sleep }) => {
+      if (mouseOver || Electron.orbitState.mouseOver) {
+        return
       }
+      // wait a bit
+      await sleep(400)
+      App.setPeekTarget(null)
     },
   ]
 

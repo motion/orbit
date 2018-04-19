@@ -26,6 +26,16 @@ const uniq = arr => {
   return final
 }
 
+const matchSort = (query, results) => {
+  if (!results.length) {
+    return results
+  }
+  const strongTitleMatches = Helpers.fuzzy(query, results, {
+    threshold: -10,
+  })
+  return uniq([...strongTitleMatches, ...results].slice(0, 10))
+}
+
 const prefixes = {
   gh: { integration: 'github' },
   gd: { integration: 'google', type: 'document' },
@@ -151,26 +161,36 @@ export default class AppStore {
     ],
     ([query, pluginResults, bitResults, getResults]) => {
       let results
+      let channelResults
       let message
-      if (query === '#' && this.services.slack) {
-        message = 'Slack channels:'
-        results = this.services.slack.activeChannels.map(channel => ({
-          id: channel.id,
-          title: `#${channel.name}`,
-        }))
+      // do stuff to prepare for getting results...
+      const isFilteringSlack = query[0] === '#'
+      const isFilteringChannel = isFilteringSlack && query.indexOf(' ') === -1
+      if (isFilteringSlack) {
+        channelResults = matchSort(
+          query.split(' ')[0],
+          this.services.slack.activeChannels.map(channel => ({
+            id: channel.id,
+            title: `#${channel.name}`,
+            icon: 'slack',
+          })),
+        )
+      }
+      if (isFilteringSlack && !isFilteringChannel) {
+        message = `Searching ${channelResults[0].title}`
+      }
+      // do stuff to get results....
+      if (isFilteringChannel && this.services.slack) {
+        message = 'SPACE to search selected channel'
+        results = channelResults
       } else if (getResults) {
         message = 'Settings'
         results = Helpers.fuzzy(query, getResults())
       } else {
         const unsorted = [...bitResults, ...pluginResults]
         const { rest } = parseQuery(query)
-        const strongTitleMatches = Helpers.fuzzy(rest, unsorted, {
-          threshold: -10,
-        })
-        results = uniq([...strongTitleMatches, ...unsorted].slice(0, 10))
-      }
-      if (query.length > 1 && query.indexOf('#') === 0) {
-        message = `Searching ${results[0].title}`
+        console.log('asdsadasdas', unsorted, rest)
+        results = matchSort(rest, unsorted)
       }
       return {
         query,

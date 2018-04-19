@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { view, react } from '@mcro/black'
-import { Electron } from '@mcro/all'
 import * as UI from '@mcro/ui'
 import OrbitIcon from './orbitIcon'
 import bitContents from '~/components/bitContents'
@@ -19,7 +18,7 @@ class Text {
 class OrbitCardStore {
   isSelected = false
 
-  @react
+  @react({ fireImmediately: true })
   updateIsSelected = [
     () => this.props.appStore.activeIndex,
     index => {
@@ -58,6 +57,12 @@ export default class OrbitCard {
 
   hovered = false
 
+  componentWillMount() {
+    this.getOrbitCard = this.getOrbitCard.bind(this)
+    const { appStore, index, result } = this.props
+    this.hoverProps = appStore.getHoverProps({ result, id: index })
+  }
+
   setHovered = () => {
     this.hovered = true
   }
@@ -66,139 +71,137 @@ export default class OrbitCard {
     this.hovered = false
   }
 
-  render({
-    appStore,
-    result,
-    // totalHeight,
-    // total,
-    index,
-    // parentElement,
-    store,
-    getRef,
-    tiny,
-    listItem,
-    borderRadius: borderRadius_,
-    style,
-    hoverToSelect,
+  toggleSelected = () => {
+    this.props.appStore.toggleSelected(this.props.index)
+  }
+
+  get isExpanded() {
+    return this.props.store.isSelected && !this.props.tiny
+  }
+
+  getOrbitCard({
+    bottom,
+    bottomAfter,
+    title,
+    via,
+    icon,
+    content,
+    subtitle,
+    location,
+    preview,
+    permalink,
   }) {
-    const BitContent = bitContents(result)
+    const {
+      store,
+      appStore,
+      result,
+      index,
+      getRef,
+      tiny,
+      listItem,
+      style,
+      hoverToSelect,
+      borderRadius: borderRadius_,
+    } = this.props
     const borderRadius = listItem && tiny ? 4 : listItem ? 0 : borderRadius_
-    store.isSelected
-    const { isSelected } = store
-    const isExpanded = isSelected && !tiny
+    const isExpanded = this.isExpanded
+    const isSelected = store.isSelected
     return (
-      <UI.Theme name={isExpanded && !listItem ? 'light' : 'tan'}>
-        <BitContent appStore={appStore} result={result} isExpanded={isExpanded}>
-          {({
-            bottom,
-            bottomAfter,
-            title,
-            via,
-            icon,
-            content,
-            subtitle,
-            location,
-            preview,
-            permalink,
-          }) => (
-            <cardWrap
+      <cardWrap
+        css={{
+          padding: listItem ? 0 : [0, 5, 3],
+          zIndex: isExpanded ? 5 : 4,
+        }}
+        ref={getRef}
+        onClick={this.toggleSelected}
+        {...hoverToSelect && this.hoverProps}
+        style={style}
+      >
+        <card
+          $cardHovered={this.hovered}
+          css={{
+            padding: tiny ? [6, 8] : 12,
+            borderRadius,
+          }}
+          onMouseEnter={this.setHovered}
+          onMouseLeave={this.setUnhovered}
+        >
+          <title>
+            <Text
+              size={1.2}
+              ellipse={isExpanded ? 2 : 1}
+              fontWeight={400}
+              $titleText
               css={{
-                padding: listItem ? 0 : [0, 5, 3],
-                zIndex: isExpanded ? 5 : 4,
+                marginBottom: isExpanded ? 2 : 0,
               }}
-              ref={getRef}
-              onClick={() => appStore.toggleSelected(index)}
-              {...hoverToSelect &&
-                appStore.getHoverProps({ result, id: index })}
-              style={style}
+              {...tiny && tinyProps.titleProps}
             >
-              <UI.HoverGlow
-                if={false && !listItem && isExpanded}
-                hide={!isExpanded || !Electron.orbitState.mouseOver}
-                behind
-                resist={85}
-                scale={0.85}
-                width={300 - 30}
-                blur={25}
-                inverse
-                offsetTop={4}
-                color={[0, 0, 0]}
-                opacity={0.06}
-                borderRadius={5}
-                duration={450}
-              />
-              <card
-                $cardHovered={this.hovered}
-                css={{
-                  padding: tiny ? [6, 8] : 12,
-                  borderRadius,
-                }}
-                onMouseEnter={this.setHovered}
-                onMouseLeave={this.setUnhovered}
-              >
-                <title>
-                  <Text
-                    size={1.2}
-                    ellipse={isExpanded ? 2 : 1}
-                    fontWeight={400}
-                    $titleText
-                    css={{
-                      marginBottom: isExpanded ? 2 : 0,
-                    }}
-                    {...tiny && tinyProps.titleProps}
-                  >
-                    {title}
-                  </Text>
-                  <OrbitIcon
-                    if={icon}
-                    icon={icon}
-                    size={16}
-                    $icon
-                    css={{
-                      filter: isExpanded ? 'none' : 'grayscale(100%)',
-                      opacity: isExpanded ? 1 : 0.25,
-                    }}
-                    {...tiny && tinyProps.iconProps}
-                  />
-                </title>
-                <SubTitle $subtitle if={!tiny && typeof subtitle === 'string'}>
-                  {subtitle}
-                </SubTitle>
-                <subtitle if={!tiny && typeof subtitle === 'object'}>
-                  {subtitle}
-                </subtitle>
-                <content>
-                  <UI.Text
-                    if={!tiny && !isSelected}
-                    $preview
-                    opacity={0.8}
-                    ellipse={2}
-                  >
-                    {location} <span css={{ opacity: 0.7 }}>{preview}</span>
-                  </UI.Text>
-                  <subtitle
-                    if={!tiny && isSelected}
-                    css={{ flexFlow: 'row', opacity: 0.5 }}
-                  >
-                    {location}
-                  </subtitle>
-                  <full if={!tiny && isSelected}>{content}</full>
-                </content>
-                <bottom if={!tiny}>
-                  {permalink}
-                  <space if={permalink} />
-                  {bottom}
-                  <orbital if={false} />
-                  <UI.Date>{result.bitUpdatedAt}</UI.Date>
-                  <Text if={via} opacity={0.5} size={0.9}>
-                    {via || result.integration}
-                  </Text>
-                  <div $$flex />
-                  {bottomAfter}
-                </bottom>
-              </card>
-            </cardWrap>
-          )}
+              {title}
+            </Text>
+            <OrbitIcon
+              if={icon}
+              icon={icon}
+              size={16}
+              $icon
+              css={{
+                filter: isExpanded ? 'none' : 'grayscale(100%)',
+                opacity: isExpanded ? 1 : 0.25,
+              }}
+              {...tiny && tinyProps.iconProps}
+            />
+          </title>
+          <SubTitle $subtitle if={!tiny && typeof subtitle === 'string'}>
+            {subtitle}
+          </SubTitle>
+          <subtitle if={!tiny && typeof subtitle === 'object'}>
+            {subtitle}
+          </subtitle>
+          <content if={preview || content}>
+            <UI.Text
+              if={!tiny && !isSelected}
+              $preview
+              opacity={0.8}
+              ellipse={2}
+            >
+              {location} <span css={{ opacity: 0.7 }}>{preview}</span>
+            </UI.Text>
+            <subtitle
+              if={!tiny && isSelected}
+              css={{ flexFlow: 'row', opacity: 0.5 }}
+            >
+              {location}
+            </subtitle>
+            <full if={!tiny && isSelected}>{content}</full>
+          </content>
+          <bottom if={!tiny}>
+            {permalink}
+            <space if={permalink} />
+            {bottom}
+            <orbital if={false} />
+            <UI.Date>{result.bitUpdatedAt}</UI.Date>
+            <Text if={via} opacity={0.5} size={0.9}>
+              {via || result.integration}
+            </Text>
+            <div $$flex />
+            {bottomAfter}
+          </bottom>
+        </card>
+      </cardWrap>
+    )
+  }
+
+  render({ appStore, result, store, listItem }) {
+    const BitContent = bitContents(result)
+    store.isSelected
+    return (
+      <UI.Theme name={this.isExpanded && !listItem ? 'light' : 'tan'}>
+        <BitContent
+          appStore={appStore}
+          result={result}
+          isExpanded={this.isExpanded}
+        >
+          {this.getOrbitCard}
         </BitContent>
       </UI.Theme>
     )

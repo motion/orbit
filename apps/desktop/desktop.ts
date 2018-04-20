@@ -20,6 +20,7 @@ import { getChromeContext } from './helpers/getContext'
 import open from 'opn'
 import iohook from 'iohook'
 import debug from '@mcro/debug'
+import CosalStore from './stores/cosalStore'
 
 const log = debug('desktop')
 
@@ -52,6 +53,7 @@ export default class DesktopRoot {
     })
     Desktop.onMessage(Desktop.messages.OPEN, open)
     await connectModels(Object.keys(Models).map(x => Models[x]))
+    this.cosalStore = new CosalStore()
     this.sync = new Sync()
     this.sync.start()
     this.screen = new Screen()

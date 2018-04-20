@@ -54,17 +54,6 @@ class DesktopStore {
     lastAppChange: Date.now(),
   }
 
-  results = []
-
-  @react({ log: false })
-  memoizedResults = [
-    () => [
-      ...Desktop.searchState.searchResults,
-      ...Desktop.searchState.pluginResults,
-    ],
-    x => (this.results = x),
-  ]
-
   get isHoldingOptionPure(): Boolean {
     const { option, optionUp } = Desktop.state.keyboardState
     return (option || 0) > (optionUp || 1)

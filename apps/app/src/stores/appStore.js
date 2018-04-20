@@ -92,7 +92,7 @@ export default class AppStore {
     this.setInterval(this.getSettings, 2000)
     this.setInterval(() => {
       this.refreshInterval = Date.now()
-    }, 1000)
+    }, 10000)
   }
 
   get activeIndex() {
@@ -129,13 +129,22 @@ export default class AppStore {
           order: { bitCreatedAt: 'DESC' },
         })
       }
-      const { conditions, rest } = parseQuery(query)
-      return await Bit.find({
-        where: `title like "%${rest.replace(/\s+/g, '%')}%"${conditions}`,
+
+      const ids = Desktop.state.searchState.searchResults
+
+      const bitResults = await Bit.findByIds(ids, {
         relations: ['people'],
-        order: { bitCreatedAt: 'DESC' },
-        take: 8,
       })
+
+      // things have changed in the meantime
+      if (ids.join(',') !== Desktop.state.searchState.searchResults.join(',')) {
+        throw react.cancel
+      }
+      const bitVals = ids.map(
+        id => bitResults.filter(bit => +bit.id === +id)[0],
+      )
+
+      return bitVals
     },
   ]
 

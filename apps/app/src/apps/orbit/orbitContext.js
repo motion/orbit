@@ -54,7 +54,7 @@ export default class OrbitContext {
           $fadeVisible={appStore.activeIndex >= SPLIT_INDEX}
         />
         <OrbitDivider
-          if={!appStore.searchState.query}
+          if={!App.state.query}
           css={{ paddingBottom: 0, zIndex: 1000, position: 'relative' }}
         />
         <Results isContext />

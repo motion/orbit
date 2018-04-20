@@ -1,7 +1,7 @@
 import * as Slack1 from 'slack'
 import { Setting } from '../setting'
 import { store } from '@mcro/black/store'
-import { watchSetting, sleep } from '../helpers'
+import { watchModel, sleep } from '../helpers'
 
 type SlackOpts = { oldest?: number; count: number }
 type ChannelInfo = {
@@ -29,7 +29,7 @@ export class SlackService {
   }
 
   async start() {
-    this.watch = await watchSetting({ type: 'slack' }, async setting => {
+    this.watch = await watchModel(Setting, { type: 'slack' }, async setting => {
       this.setting = setting
       this.slack = new Slack({ token: this.setting.token })
       this.allChannels = await this.slack.channels

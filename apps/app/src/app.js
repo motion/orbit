@@ -1,13 +1,9 @@
 import { App } from '@mcro/all'
 import { sleep, debugState } from '@mcro/black'
 import { ThemeProvide } from '@mcro/ui'
-import { modelsList } from '@mcro/models'
-import connectModels from './helpers/connectModels'
 import * as React from 'react'
 import ReactDOM from 'react-dom'
 import Themes from './themes'
-import Root from './root'
-import Results from '~/apps/results/results'
 import { uniqBy } from 'lodash'
 import * as Constants from '~/constants'
 import * as UI from '@mcro/ui'
@@ -46,8 +42,10 @@ class AppRoot {
 
   async start() {
     if (window.location.pathname !== '/auth') {
-      await App.start()
+      const { modelsList } = require('@mcro/models')
+      const connectModels = require('./helpers/connectModels').default
       await connectModels(modelsList)
+      await App.start()
       if (Constants.IS_ORBIT) {
         App.setOrbitConnected(true)
       }
@@ -65,7 +63,9 @@ class AppRoot {
 
   render() {
     const isResults = window.location.pathname === '/results'
-    const RootComponent = isResults ? Results : Root
+    const RootComponent = isResults
+      ? require('./apps/results/results').default
+      : require('./root').default
     ReactDOM.render(
       <ThemeProvide {...Themes}>
         <UI.Theme name="tan">

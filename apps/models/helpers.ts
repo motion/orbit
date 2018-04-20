@@ -1,27 +1,27 @@
 import { pick, isEqual } from 'lodash'
 import { getConnection } from './typeorm'
-import { Setting } from './setting'
 
 export const sleep = ms => new Promise(res => setTimeout(res, ms))
 
 export * from './typeorm'
 // import { BaseEntity } from 'typeorm'
 
-export async function watchSetting(
+export async function watchModel(
+  Model: any,
   query: Object,
-  onSetting: Function,
+  onChange: Function,
   options?,
 ) {
   const { interval = 1000 } = options || {}
-  let setting = await Setting.findOne(query)
-  onSetting(setting)
+  let setting = await Model.findOne(query)
+  onChange(setting)
   const refreshInterval = setInterval(async () => {
-    const next = await Setting.findOne(query)
+    const next = await Model.findOne(query)
     if (Date.parse(next.updatedAt) === Date.parse(setting.updatedAt)) {
       return
     }
     setting = next
-    onSetting(setting)
+    onChange(setting)
   }, interval)
   return {
     cancel: () => {

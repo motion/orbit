@@ -116,7 +116,7 @@ export default class SlackMessagesSync {
         // update setting
         _.merge(this.setting.values, {
           lastMessageSync: {
-            [channel]: _.first(messages).ts,
+            [id]: _.first(messages).ts,
           },
         })
         await this.setting.save()

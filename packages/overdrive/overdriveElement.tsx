@@ -1,7 +1,6 @@
 import * as React from 'react'
 import ReactDOM from 'react-dom'
 import prefix from './prefix'
-import PropTypes from 'prop-types'
 
 const renderSubtreeIntoContainer = ReactDOM.unstable_renderSubtreeIntoContainer
 const components = {}

@@ -197,6 +197,10 @@ export default class OrbitCard {
   render({ appStore, result, store, listItem, itemProps }) {
     const BitContent = bitContents(result)
     store.isSelected
+    if (typeof BitContent !== 'function') {
+      console.error('got a weird one', BitContent)
+      return null
+    }
     return (
       <UI.Theme name={this.isExpanded && !listItem ? 'light' : 'tan'}>
         <BitContent

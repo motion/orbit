@@ -139,6 +139,36 @@ export default class AppStore {
     },
   ]
 
+  @react({
+    fireImmediately: true,
+    defaultValue: [],
+  })
+  summaryResults = [
+    () => 0,
+    async () => {
+      return await Bit.find({
+        take: 6,
+        relations: ['people'],
+        order: { bitCreatedAt: 'DESC' },
+      })
+    },
+  ]
+
+  @react({
+    fireImmediately: true,
+    defaultValue: [],
+  })
+  contextResults = [
+    () => 0,
+    async () => {
+      return await Bit.find({
+        take: 6,
+        relations: ['people'],
+        order: { bitCreatedAt: 'DESC' },
+      })
+    },
+  ]
+
   @react({ log: false, delay: 32 })
   selectedBit = [
     () => App.state.selectedItem,

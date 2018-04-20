@@ -23,7 +23,6 @@ export default function passportLink(path, options = {}) {
       height: 600,
       ...options,
     }
-
     // setup new response object
     let resolved = false
     window.passport = {}
@@ -34,7 +33,6 @@ export default function passportLink(path, options = {}) {
       }
       return reject(`Got an oauth error: ${JSON.stringify(info)}`)
     }
-
     const authWindow = popup(
       path,
       opts.windowName,

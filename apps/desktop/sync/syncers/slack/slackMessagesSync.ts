@@ -25,12 +25,14 @@ type ChannelInfo = {
 }
 
 export default class SlackMessagesSync {
-  setting: Setting
   service: SlackService
   userInfo = {}
 
-  constructor(setting, service: SlackService) {
-    this.setting = setting
+  get setting() {
+    return this.service.setting
+  }
+
+  constructor(service: SlackService) {
     this.service = service
   }
 

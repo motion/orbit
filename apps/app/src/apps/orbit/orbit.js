@@ -1,17 +1,16 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { App, Electron } from '@mcro/all'
+import { Electron } from '@mcro/all'
 import OrbitFrame from './orbitFrame'
-import OrbitContent from './orbitContent'
+import OrbitHome from './orbitHome'
+import OrbitSearchResults from './orbitSearchResults'
 import OrbitSettings from './orbitSettings'
 import OrbitHeader from './orbitHeader'
 import OrbitStore from './orbitStore'
-import OrbitHeadsUp from './orbitHeadsUp'
+import AppStore from '~/stores/appStore'
 import { throttle } from 'lodash'
 import { SHADOW_PAD } from '~/constants'
-
-// const log = require('@mcro/debug')('orbit')
 
 class OrbitPageStore {
   isDragging = false
@@ -55,7 +54,9 @@ class OrbitPageStore {
 }
 
 @UI.injectTheme
-@view.attach('appStore')
+@view.provide({
+  appStore: AppStore,
+})
 @view.provide({
   orbitStore: OrbitStore,
   orbitPage: OrbitPageStore,
@@ -68,10 +69,9 @@ export default class Orbit {
       <UI.Theme name="tan">
         <OrbitFrame headerBg={headerBg} orbitPage={orbitPage}>
           <OrbitHeader headerBg={headerBg} />
-          <OrbitHeadsUp if={false} />
-          <OrbitContent if={!appStore.showSettings} />
+          <OrbitHome if={!appStore.showSettings} />
           <OrbitSettings if={appStore.showSettings} />
-          <Knowledge if={App.state.knowledge} data={App.state.knowledge} />
+          <OrbitSearchResults />
           <controls>
             <UI.Button
               icon="gear"

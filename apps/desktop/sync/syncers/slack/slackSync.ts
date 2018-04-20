@@ -11,11 +11,12 @@ export default new Syncer('slack', {
     // attachments: { secondsBetween: 60 * 60 * 24 },
   },
   getSyncers: setting => {
-    const slackService = new SlackService(setting)
+    console.log('run syncer')
+    const slackService = new SlackService()
     return {
-      attachments: new SlackAttachmentSync(setting, slackService),
-      messages: new SlackMessagesSync(setting, slackService),
-      people: new SlackPeopleSync(setting, slackService),
+      attachments: new SlackAttachmentSync(slackService),
+      messages: new SlackMessagesSync(slackService),
+      people: new SlackPeopleSync(slackService),
     }
   },
 })

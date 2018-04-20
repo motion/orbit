@@ -5,8 +5,11 @@ import { App } from '@mcro/all'
 import * as PeekContents from './peekContents'
 import { capitalize } from 'lodash'
 import PeekFrame from './peekFrame'
+import AppStore from '~/stores/appStore'
 
-@view.attach('appStore')
+@view.provide({
+  appStore: AppStore,
+})
 @view
 export default class PeekPage {
   render({ appStore }) {

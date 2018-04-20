@@ -1,4 +1,4 @@
-import { Setting, Person } from '@mcro/models'
+import { Person } from '@mcro/models'
 import { SlackService } from '@mcro/models/services'
 import debug from '@mcro/debug'
 import createOrUpdatePerson from './slackCreateOrUpdatePerson'
@@ -6,11 +6,9 @@ import createOrUpdatePerson from './slackCreateOrUpdatePerson'
 const log = debug('sync slackPeople')
 
 export default class SlackPeopleSync {
-  setting: Setting
   service: SlackService
 
-  constructor(setting, service: SlackService) {
-    this.setting = setting
+  constructor(service: SlackService) {
     this.service = service
   }
 

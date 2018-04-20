@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { App } from '@mcro/all'
 import OrbitDivider from './orbitDivider'
 import * as Constants from '~/constants'
 import { throttle } from 'lodash'
@@ -12,7 +11,7 @@ const SPLIT_INDEX = 3
 @UI.injectTheme
 @view.attach('appStore', 'orbitPage')
 @view
-export default class OrbitContext {
+export default class OrbitHomeContext {
   state = {
     resultsRef: null,
     isScrolled: false,

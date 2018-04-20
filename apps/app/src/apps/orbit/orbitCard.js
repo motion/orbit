@@ -28,9 +28,6 @@ class OrbitCardStore {
       }
     },
   ]
-
-  @react({ delayValue: true })
-  wasSelected = [() => this.isSelected, _ => _]
 }
 
 const tinyProps = {

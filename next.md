@@ -1,18 +1,22 @@
 ## next
 
-* [ ] when docked, dont hide during window move
+* [x] when docked, dont hide during window move
+* [ ] split Search from Home (summary/context)
+* [ ] design slightly better summary/context
+* [ ] make Search/Home just hide on empty, not null (speed)
+* [ ] make search opacity 0 during refresh
+* [ ] remove search jumpiness
 * [ ] peek back button + history
-* [ ] make "@" show a list of slack people
-* [ ] search people directly
-* [ ] attachments/images handled in resolver
-* [ ] make the homepage just opacity 0 during searches, so it comes back more quickly when empty
-* [ ] on searches, when typing a new char, make opacity go down on current results until new ones show (feels much better)
+* [ ] make "@" show a list of slack people + search people
+* [ ] slack views: show attachments/images
+* [ ] disable fullscreen option+shift shortcuts
+* [ ] docked: have taller peeks
 
 ## triage
 
 * sidebar
 
-  * [ ] icon improvements (gmail, gdocs)
+  * [x] icon improvements (gmail, gdocs)
   * [ ] overflow title flicker on expand
   * [ ] list: animations between active
   * [ ] better fill to height when not having many results
@@ -26,9 +30,9 @@
 * design
 
   * OrbitCard
-    * [ ] highlight vs active state - active is "clicked", hl should be current active
+    * [x] highlight vs active state - active is "clicked", hl should be current active
     * [ ] for icons - try result.integration + result.type first, fallback to result.int
-    * [ ] peek scroll to different sub-sections in card
+    * [ ] ~peek scroll to different sub-sections in card~
 
 * indicator
 
@@ -41,7 +45,7 @@
 * sidebar
 
   * [ ] click to link to the Bit
-  * [ ] design better info display for items, better meta info
+  * [x] design better info display for items, better meta info
   * [ ] slack: sync People, Chat Rooms
   * [ ] list: movement + animations + keyboard/scroll select orbit list
   * [ ] overdrive: deep investigate animate performance
@@ -49,14 +53,6 @@
 * positioning
 
   * [ ] swindler fix not updating on some window resize/change
-
-* fullscreen
-
-  * [ ] nice "in" animations on fullscreen
-  * [ ] fix last glitches on out/animation
-  * [ ] make peek + orbit show at same time
-  * [ ] on fs focus input
-  * [ ] accidental fullscreen at times
 
 * peek
 

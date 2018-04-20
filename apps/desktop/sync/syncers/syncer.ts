@@ -22,8 +22,8 @@ export default class Syncer {
     this.settings = settings
   }
 
-  start() {
-    this.ensureActions()
+  async start() {
+    await this.setup()
     this.jobWatcher = setInterval(
       () => this.check(false),
       this.settings.checkInterval || DEFAULT_CHECK_INTERVAL,
@@ -31,14 +31,16 @@ export default class Syncer {
     this.check(false)
   }
 
-  ensureActions = async () => {
+  setup = async () => {
     const setting = await findOrCreate(Setting, { type: this.type })
     if (!setting || !setting.token) {
       return
     }
     this.syncers = this.getSyncers(setting)
     for (const name of Object.keys(this.syncers)) {
-      this[name] = this.syncers[name]
+      if (!this[name]) {
+        this[name] = this.syncers[name]
+      }
     }
   }
 
@@ -49,7 +51,7 @@ export default class Syncer {
     if (!this.actions[action]) {
       throw new Error(`NO SYNCER FOUND ${this.type} ${action}`)
     }
-    await this.ensureActions()
+    await this.setup()
     if (!this.syncers || !this.syncers[action]) {
       return
     }
@@ -67,7 +69,6 @@ export default class Syncer {
     if (!actions) {
       return
     }
-    await this.ensureActions()
     const syncers = []
     for (const action of Object.keys(actions)) {
       const job = actions[action]

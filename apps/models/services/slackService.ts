@@ -49,6 +49,10 @@ export class SlackService {
 
   get activeChannelIds() {
     const settings = this.setting.values.channels
+    if (!settings) {
+      console.log('no active channels', this.setting)
+      return []
+    }
     return Object.keys(settings).filter(x => settings[x])
   }
 

@@ -39,7 +39,7 @@ class DesktopStore {
     },
     searchState: {
       indexStatus: '',
-      searchResults: [2, 4, 6, 8, 62],
+      searchResults: [],
       pluginResults: [],
     },
     keyboardState: {},

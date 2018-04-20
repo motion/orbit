@@ -2,7 +2,7 @@ import Syncer from '../syncer'
 import SlackAttachmentSync from './slackAttachmentSync'
 import SlackMessagesSync from './slackMessagesSync'
 import SlackPeopleSync from './slackPeopleSync'
-import { SlackService } from '@mcro/models/services'
+import { SlackService } from '@mcro/services'
 
 export default new Syncer('slack', {
   actions: {
@@ -11,8 +11,7 @@ export default new Syncer('slack', {
     // attachments: { secondsBetween: 60 * 60 * 24 },
   },
   getSyncers: setting => {
-    console.log('run syncer')
-    const slackService = new SlackService()
+    const slackService = new SlackService(setting)
     return {
       attachments: new SlackAttachmentSync(slackService),
       messages: new SlackMessagesSync(slackService),

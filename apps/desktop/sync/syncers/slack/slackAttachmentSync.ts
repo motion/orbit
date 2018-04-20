@@ -1,5 +1,5 @@
 import { Bit } from '@mcro/models'
-import { SlackService } from '@mcro/models/services'
+import { SlackService } from '@mcro/services'
 import * as _ from 'lodash'
 import * as r2 from '@mcro/r2'
 import { createInChunks } from '~/sync/helpers'

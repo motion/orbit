@@ -1,5 +1,5 @@
 import { Person } from '@mcro/models'
-import { SlackService } from '@mcro/models/services'
+import { SlackService } from '@mcro/services'
 import debug from '@mcro/debug'
 import createOrUpdatePerson from './slackCreateOrUpdatePerson'
 

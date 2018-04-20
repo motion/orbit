@@ -1,4 +1,4 @@
-import { Setting } from '../setting'
+import { Setting } from '@mcro/models'
 import { store, watch } from '@mcro/black/store'
 import Octokat from 'octokat'
 

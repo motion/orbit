@@ -6,30 +6,6 @@ export const sleep = ms => new Promise(res => setTimeout(res, ms))
 export * from './typeorm'
 // import { BaseEntity } from 'typeorm'
 
-export async function watchModel(
-  Model: any,
-  query: Object,
-  onChange: Function,
-  options?,
-) {
-  const { interval = 1000 } = options || {}
-  let setting = await Model.findOne(query)
-  onChange(setting)
-  const refreshInterval = setInterval(async () => {
-    const next = await Model.findOne(query)
-    if (Date.parse(next.updatedAt) === Date.parse(setting.updatedAt)) {
-      return
-    }
-    setting = next
-    onChange(setting)
-  }, interval)
-  return {
-    cancel: () => {
-      clearInterval(refreshInterval)
-    },
-  }
-}
-
 export async function findOrCreate(Model: any, values: Object) {
   let item = await Model.findOne({ where: values })
   if (item) {

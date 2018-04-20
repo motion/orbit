@@ -1,5 +1,5 @@
-import { Setting, Bit, Person, createOrUpdate, Job } from '@mcro/models'
-import { SlackService } from '@mcro/models/services'
+import { Bit, Person, createOrUpdate, Job } from '@mcro/models'
+import { SlackService } from '@mcro/services'
 import debug from '@mcro/debug'
 import * as _ from 'lodash'
 import * as Helpers from '~/helpers'

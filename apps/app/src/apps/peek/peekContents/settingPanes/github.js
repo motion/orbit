@@ -1,7 +1,7 @@
 import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
 import { Bit } from '@mcro/models'
-import { GithubService } from '@mcro/models/services'
+import { GithubService } from '@mcro/services'
 import Bits from '~/views/bits'
 
 class GithubStore {

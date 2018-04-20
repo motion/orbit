@@ -1,7 +1,8 @@
 import * as Slack1 from 'slack'
-import { Setting } from '../setting'
 import { store } from '@mcro/black/store'
-import { watchModel, sleep } from '../helpers'
+import { watchModel } from '@mcro/helpers'
+
+const sleep = ms => new Promise(res => setTimeout(res, ms))
 
 type SlackOpts = { oldest?: number; count: number }
 type ChannelInfo = {
@@ -18,24 +19,27 @@ const Slack = Slack1.default || Slack1
 
 @store
 export class SlackService {
-  setting?: Setting = null
+  setting: any = null
   // @ts-ignore
   slack: Slack
   allChannels: Array<ChannelInfo> = []
   watch: { cancel: Function }
 
-  constructor() {
-    this.start()
-  }
-
-  async start() {
-    this.watch = await watchModel(Setting, { type: 'slack' }, async setting => {
-      this.setting = setting
-      this.slack = new Slack({ token: this.setting.token })
-      this.allChannels = await this.slack.channels
-        .list({})
-        .then(res => res && res.channels)
-    })
+  constructor(setting) {
+    if (!setting) {
+      throw new Error('No setting')
+    }
+    this.watch = watchModel(
+      setting.constructor,
+      { type: 'slack' },
+      async setting => {
+        this.setting = setting
+        this.slack = new Slack({ token: this.setting.token })
+        this.allChannels = await this.slack.channels
+          .list({})
+          .then(res => res && res.channels)
+      },
+    )
   }
 
   dispose() {

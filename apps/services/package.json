@@ -1,0 +1,24 @@
+{
+  "name": "@mcro/services",
+  "private": true,
+  "version": "1.5.1",
+  "main": "_/index.js",
+  "module": "_/index.js",
+  "scripts": {
+    "build": "tsc",
+    "watch": "npm run build -- --watch"
+  },
+  "dependencies": {
+    "@mcro/helpers": "*",
+    "@mcro/models": "*",
+    "@mcro/black": "*",
+    "@mcro/debug": "*",
+    "global": "^4.3.2",
+    "lodash": "^4.17.4",
+    "slack": "^11.0.0",
+    "octokat": "0.10.0"
+  },
+  "peerDependencies": {
+    "mobx": "*"
+  }
+}

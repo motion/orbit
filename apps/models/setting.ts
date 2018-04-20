@@ -3,8 +3,7 @@ import * as T from './typeorm'
 @T.Entity()
 export class Setting extends T.BaseEntity {
   @T.PrimaryGeneratedColumn() id: number
-  @T.Column({ unique: true })
-  type: string
+  @T.Column() type: string
   @T.Column({ nullable: true })
   token: string
   @T.Column('simple-json', { default: '{}' })

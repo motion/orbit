@@ -1,6 +1,7 @@
 import * as Helpers from '../helpers'
 import debug from '@mcro/debug'
 import { Setting, findOrCreate } from '@mcro/models'
+import { watchModel } from '@mcro/helpers'
 
 const log = debug('syncer')
 const DEFAULT_CHECK_INTERVAL = 1000 * 60 // 1 minute
@@ -23,25 +24,23 @@ export default class Syncer {
   }
 
   async start() {
-    await this.setup()
+    await findOrCreate(Setting, { type: this.type })
+    const watch = watchModel(Setting, { type: this.type }, async setting => {
+      if (setting.token) {
+        watch.cancel()
+        this.syncers = this.getSyncers(setting)
+        for (const name of Object.keys(this.syncers)) {
+          if (!this[name]) {
+            this[name] = this.syncers[name]
+          }
+        }
+      }
+    })
     this.jobWatcher = setInterval(
       () => this.check(false),
       this.settings.checkInterval || DEFAULT_CHECK_INTERVAL,
     )
     this.check(false)
-  }
-
-  setup = async () => {
-    const setting = await findOrCreate(Setting, { type: this.type })
-    if (!setting || !setting.token) {
-      return
-    }
-    this.syncers = this.getSyncers(setting)
-    for (const name of Object.keys(this.syncers)) {
-      if (!this[name]) {
-        this[name] = this.syncers[name]
-      }
-    }
   }
 
   run = async action => {
@@ -51,7 +50,6 @@ export default class Syncer {
     if (!this.actions[action]) {
       throw new Error(`NO SYNCER FOUND ${this.type} ${action}`)
     }
-    await this.setup()
     if (!this.syncers || !this.syncers[action]) {
       return
     }

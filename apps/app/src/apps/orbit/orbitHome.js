@@ -26,8 +26,7 @@ export default class OrbitHome {
               index={index}
               total={summaryResults.length}
               result={result}
-              listItem
-              hoverToSelect={appStore.activeIndex >= summaryResults.length}
+              hoverToSelect
             />
           ))}
         </summary>

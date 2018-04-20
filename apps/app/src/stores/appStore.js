@@ -130,13 +130,17 @@ export default class AppStore {
         })
       }
 
-      const bitResults = await Bit.findByIds(
-        Desktop.state.searchState.searchResults,
-        {
-          relations: ['people'],
-        },
-      )
-      const bitVals = Desktop.state.searchState.searchResults.map(
+      const ids = Desktop.state.searchState.searchResults
+
+      const bitResults = await Bit.findByIds(ids, {
+        relations: ['people'],
+      })
+
+      // things have changed in the meantime
+      if (ids.join(',') !== Desktop.state.searchState.searchResults.join(',')) {
+        throw react.cancel
+      }
+      const bitVals = ids.map(
         id => bitResults.filter(bit => +bit.id === +id)[0],
       )
 

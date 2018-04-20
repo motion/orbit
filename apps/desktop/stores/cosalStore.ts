@@ -38,8 +38,6 @@ export default class CosalStore {
         createdAt: +Date.now(),
       })
 
-      console.log('vals for query', query, 'is', vals)
-
       return vals.slice(0, 10)
     },
   ]

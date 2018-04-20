@@ -67,7 +67,6 @@ export default class CosalStore {
       return this.docsVersion
     },
     () => {
-      console.log('in get nearest')
       if (this.tree) {
         this.tree.dispose()
       }
@@ -93,7 +92,6 @@ export default class CosalStore {
 
   search = async (doc: Doc): Promise<Array<{ weight: number; doc: Doc }>> => {
     const { vector } = await toCosal(doc)
-    console.log('query vector is', vector)
 
     // @ts-ignore
     const candidates = this.getNearest(vector, 100)

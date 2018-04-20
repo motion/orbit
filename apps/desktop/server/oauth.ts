@@ -1,5 +1,6 @@
 import Passport from 'passport'
 import Refresh from 'passport-oauth2-refresh'
+import { access } from 'fs'
 
 export default class Oauth {
   findInfo: Function

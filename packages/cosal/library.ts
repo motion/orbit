@@ -1,9 +1,17 @@
 import corpusCovar from './corpusCovar'
 import harmonicMean from './harmonicMean'
 import { inv } from 'mathjs'
-import { memoize, range, random, sum } from 'lodash'
+import { memoize, range, random, sum, flatten } from 'lodash'
 import { Doc, Cosal } from './types'
 import { Matrix, Vector } from 'vectorious/withoutblas'
+import computeCovariance from 'compute-covariance'
+
+import mostCommonText from './commonWords'
+const isCommonWord = mostCommonText
+  .split('\n')
+  .slice(0, 100)
+  .reduce((acc, item) => ({ ...acc, [item]: true }), {})
+
 // @ts-ignore
 const vectors = require('../vecs.json')
 // import vectors from '../vecs.json'
@@ -13,7 +21,8 @@ const vectors = require('../vecs.json')
 const horizontal = 8.6
 const vertical = 0.784
 
-const corpusCovarInverse = new Matrix(inv(corpusCovar))
+const docCov = null
+let corpusCovarInverse = new Matrix(inv(corpusCovar))
 
 const ourSigmoid = (x, horizontal, vertical) =>
   (1 / (1 + Math.exp((-x + 0.5) * horizontal)) - 0.5) * vertical + 0.5
@@ -91,6 +100,24 @@ export async function toCosal(doc: Doc): Promise<Cosal> {
 
   // add new fields and vector to doc
   return { ...doc, fields, vector }
+}
+
+export function getCovariance(docs) {
+  const words = flatten(
+    docs.map(doc => toWords(doc.fields[0].content.toLowerCase())),
+  )
+
+  const vectors = words
+    .filter(word => !isCommonWord[word])
+    .map(getWordVector)
+    .map(v => v.toArray())
+
+  const transposed = new Matrix(vectors).transpose().toArray()
+  const docCov = new Matrix(computeCovariance(transposed))
+  const corpusCovarMatrix = new Matrix(corpusCovar)
+  const totalCovar = corpusCovarMatrix.product(docCov).toArray()
+  // const covarPrime = .sign(corpusCovar) * (abs(docCovar) * p + abs(corpCovar) * (1 - p))
+  corpusCovarInverse = new Matrix(inv(totalCovar))
 }
 
 export async function mCosSimilarities(vec1, vec2s) {

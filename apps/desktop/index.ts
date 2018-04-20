@@ -50,7 +50,7 @@ process.on('SIGSEGV', () => {
 })
 // uncaught exceptions
 process.on('uncaughtException', err => {
-  console.log('uncaughtException', err.stack)
+  console.log('uncaughtException', err)
 })
 // promise exceptions
 process.on('unhandledRejection', function(reason, promise) {

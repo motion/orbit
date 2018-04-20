@@ -1,3 +1,7 @@
+.wrap {
+  flex-wrap: wrap !important;
+}
+
 /* for markdown content in tasks */
 .innerContent ul,
 .innerContent ol {

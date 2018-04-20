@@ -18,7 +18,7 @@ export default class CoSalPage {
             <result>
               <content>
                 <text if={index >= 5}>{cosal.fields[0].content}</text>
-                <words $$row if={index < 5}>
+                <words className="wrap" $$row if={index < 5}>
                   {cosal.fields[0].words.map(({ word, weight }) => (
                     <word css={{ opacity: weight }}>{word}</word>
                   ))}
@@ -33,6 +33,12 @@ export default class CoSalPage {
   }
 
   static style = {
+    content: {
+      width: 450,
+    },
+    similarity: {
+      margin: [10, 20],
+    },
     cosalViewer: {
       margin: 30,
       pointerEvents: 'all',
@@ -40,8 +46,8 @@ export default class CoSalPage {
       overflow: 'scroll',
     },
     word: {
-      marginLeft: 3,
-      marginRight: 3,
+      marginLeft: 2,
+      marginRight: 2,
     },
     query: {
       fontSize: 20,

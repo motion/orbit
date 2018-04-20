@@ -10,7 +10,7 @@ export default class CosalStore {
 
   async willMount() {
     this.cosal = new Cosal()
-    await this.cosal.warm()
+    // await this.cosal.warm()
     await this.cosal.addDocuments(
       pg.map(content => ({
         id: Math.random() + '',

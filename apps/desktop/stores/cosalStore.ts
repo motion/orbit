@@ -1,6 +1,6 @@
 import Cosal from '@mcro/cosal'
 import { App, Desktop } from '@mcro/all'
-import { uniqBy } from 'lodash'
+import { uniqBy, sortBy, reverse } from 'lodash'
 import { react, store } from '@mcro/black'
 import { Bit } from '@mcro/models'
 
@@ -11,9 +11,9 @@ export default class CosalStore {
   cosal = new Cosal()
   lastIndex = 0
 
-  bitToDoc = ({ id, title, createdAt }) => ({
+  bitToDoc = ({ id, body, createdAt }) => ({
     id,
-    fields: [{ weight: 1, content: title }],
+    fields: [{ weight: 1, content: body }],
     createdAt: createdAt,
   })
 
@@ -25,6 +25,17 @@ export default class CosalStore {
     await this.cosal.warm()
     const start = +Date.now()
     await this.cosal.addDocuments(bits.map(this.bitToDoc))
+    bits.forEach(async bit => {
+      // if (!bit.data.summary) {
+      const words = reverse(
+        sortBy(this.cosal.cosals[bit.id].fields[0].words, 'weight'),
+      )
+        .slice(0, 3)
+        .map(({ word }) => word)
+      bit.data.summary = words.join('::')
+      await bit.save()
+      // }
+    })
     this.cosal.docsVersion += 1
     // @ts-ignore
     this.setTimeout(this.updateSince, 10000)

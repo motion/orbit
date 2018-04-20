@@ -12,7 +12,8 @@
     "@mcro/black": "*",
     "static-kdtree": "1.0.2",
     "mathjs": "4.1.2",
-    "vectorious": "4.8.1"
+    "vectorious": "4.8.1",
+    "compute-covariance": "1.0.1"
   },
   "publishConfig": {
     "access": "public"

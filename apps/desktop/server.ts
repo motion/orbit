@@ -176,7 +176,9 @@ export default class Server {
     for (const name of Object.keys(OAuthStrategies)) {
       const path = `/auth/${name}`
       const options = OAuthStrategies[name].options
-      this.app.get(path, Passport.authenticate(name, options, null))
+      this.app.get(path, (req, res) => {
+        return Passport.authenticate(name, options, null)(req, res)
+      })
       this.app.get(
         `/auth/${name}/callback`,
         Passport.authenticate(name, options, null),

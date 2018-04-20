@@ -1,5 +1,5 @@
 import { react, store } from '@mcro/black'
-import { toCosal, mCosSimilarities } from './library'
+import { toCosal, mCosSimilarities, getCovariance } from './library'
 import { reverse, sum, sortBy } from 'lodash'
 import { Doc } from './types'
 import commonWordsText from './commonWords'
@@ -16,6 +16,7 @@ export default class CosalStore {
   bitById = {}
   cosals = {}
   docsVersion = 1
+  localCovariance = []
 
   addDocuments = async docs => {
     const newDocs = docs.filter(bit => !this.bitById[bit.id])
@@ -23,6 +24,8 @@ export default class CosalStore {
     newDocs.forEach(bit => {
       this.bitById[bit.id] = bit
     })
+
+    // getCovariance(docs)
 
     const cosals = await Promise.all(newDocs.map(toCosal))
 

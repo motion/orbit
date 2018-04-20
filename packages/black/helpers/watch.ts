@@ -1,3 +1,5 @@
+const RejectReactionSymbol = '___REJECT_REACTION___'
+
 function validWatch(val) {
   return Array.isArray(val) || typeof val === 'function'
 }
@@ -43,6 +45,9 @@ export function watch(a, b?, c?, opts?) {
 }
 
 export const react = watch
+
+// @ts-ignore
+watch.cancel = RejectReactionSymbol
 
 // @ts-ignore
 watch.if = function watchIf(a, b?, c?) {

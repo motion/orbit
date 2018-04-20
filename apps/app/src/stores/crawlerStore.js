@@ -3,7 +3,7 @@ import { store } from '@mcro/black'
 import { API_URL } from '~/constants'
 import { createInChunks } from '~/sync/helpers'
 import { Thing } from '~/app'
-import * as BannerStore from '~/stores/oraBannerStore'
+// import * as BannerStore from '~/stores/oraBannerStore'
 
 @store
 export default class Crawler {
@@ -20,12 +20,12 @@ export default class Crawler {
   }
 
   commitResults = async () => {
-    BannerStore.note({ message: 'Saving...' })
+    // BannerStore.note({ message: 'Saving...' })
     const { results } = this.crawler
     this.reset()
     if (results) {
       await createInChunks(results, Thing.createFromCrawl)
-      BannerStore.success({ message: 'Saved results!' })
+      // BannerStore.success({ message: 'Saved results!' })
     }
   }
 

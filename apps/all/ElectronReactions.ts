@@ -1,4 +1,4 @@
-import { store, react } from '@mcro/black/store'
+import { store, react, sleep } from '@mcro/black/store'
 import { App } from './App'
 import { Desktop } from './Desktop'
 import { Electron } from './Electron'
@@ -41,6 +41,114 @@ export default class ElectronReactions {
     })
   }
 
+  toggleFullScreen = () => {
+    const fullScreen = !Electron.orbitState.fullScreen
+    if (!fullScreen) {
+      if (Electron.onClear) {
+        Electron.onClear()
+      }
+      console.log('SHOULD REPOSITION AFTER FS')
+      this.repositionToAppState = Date.now()
+      return
+    }
+    // orbit props
+    const { round } = Math
+    const [screenW, screenH] = screenSize()
+    const [appW, appH] = [screenW / 1.5, screenH / 1.3]
+    const [orbitW, orbitH] = [appW * 1 / 3, appH]
+    const [orbitX, orbitY] = [(screenW - appW) / 2, (screenH - appH) / 2]
+    // peek props
+    const [peekW, peekH] = [appW * 2 / 3, appH]
+    const [peekX, peekY] = [orbitX + orbitW, orbitY]
+    const [peek, ...rest] = Electron.peekState.windows
+    peek.position = [peekX, peekY].map(round)
+    peek.size = [peekW, peekH].map(round)
+    peek.peekOnLeft = false
+    // update
+    Electron.setState({
+      orbitState: {
+        position: [orbitX, orbitY].map(round),
+        size: [orbitW, orbitH].map(round),
+        orbitOnLeft: true,
+        fullScreen: true,
+        orbitDocked: false,
+        dockedPinned: false,
+      },
+      peekState: {
+        windows: [peek, ...rest],
+      },
+    })
+  }
+
+  @react
+  repositionAfterDocked = [
+    () => App.state.orbitHidden,
+    async (hidden, { sleep }) => {
+      if (!hidden || !Electron.orbitState.dockedPinned) {
+        throw react.cancel
+      }
+      await sleep(() => App.animationDuration + 40)
+      Electron.lastAction = null
+      this.repositionToAppState = Date.now()
+    },
+  ]
+
+  onShortcut = async shortcut => {
+    if (shortcut === 'CommandOrControl+Space') {
+      if (App.state.orbitHidden) {
+        Electron.lastAction = shortcut
+        this.repositionToAppState = Date.now()
+        await sleep(20)
+        Electron.sendMessage(App, App.messages.SHOW)
+      } else {
+        Electron.lastAction = null
+        Electron.sendMessage(App, App.messages.HIDE)
+        this.repositionToAppState = Date.now()
+      }
+      return
+    }
+    if (shortcut === 'Option+Space') {
+      if (Electron.orbitState.fullScreen) {
+        this.toggleFullScreen()
+        return
+      }
+      if (App.state.orbitHidden) {
+        this.toggleVisible()
+        Electron.lastAction = shortcut
+        this.updatePinned(true)
+        return
+      }
+      if (Electron.orbitState.pinned) {
+        this.togglePinned()
+        this.toggleVisible()
+        return
+      } else {
+        // !pinned
+        this.togglePinned()
+      }
+    }
+    if (shortcut === 'Option+Shift+Space') {
+      Electron.lastAction = shortcut
+      this.toggleFullScreen()
+    }
+  }
+
+  toggleVisible = () => {
+    if (App.state.orbitHidden) {
+      Electron.sendMessage(App, App.messages.HIDE)
+    } else {
+      Electron.sendMessage(App, App.messages.SHOW)
+    }
+  }
+
+  togglePinned = () => {
+    this.updatePinned(!Electron.orbitState.pinned)
+  }
+
+  updatePinned = pinned => {
+    Electron.setOrbitState({ pinned })
+  }
+
   @react
   fullScreenOnOptionShift = [
     () => Desktop.isHoldingOptionShift,
@@ -56,22 +164,26 @@ export default class ElectronReactions {
     },
   ]
 
-  // @react
-  // unPinOnSwitchApp = [
-  //   () => Desktop.appState.id,
-  //   () => Electron.orbitState.pinned && this.updatePinned(false),
-  // ]
-
-  @react({ log: 'state' })
+  @react
   unPinOnFullScreen = [
     () => Electron.orbitState.fullScreen,
-    () => Electron.orbitState.pinned && this.updatePinned(false),
+    () => {
+      if (!Electron.orbitState.pinned) {
+        throw react.cancel
+      }
+      this.updatePinned(false)
+    },
   ]
 
-  @react({ log: 'state' })
+  @react
   unPinOnHidden = [
     () => App.isFullyHidden,
-    hidden => hidden && Electron.orbitState.pinned && this.updatePinned(false),
+    hidden => {
+      if (!hidden || !Electron.orbitState.pinned) {
+        throw react.cancel
+      }
+      this.updatePinned(false)
+    },
   ]
 
   @react({ log: false })
@@ -124,20 +236,18 @@ export default class ElectronReactions {
   handleHoldingOption = [
     () => Desktop.isHoldingOption,
     async (isHoldingOption, { sleep }) => {
-      console.log('HOLD OPTION?', Desktop.isHoldingOption)
       if (Electron.orbitState.pinned) {
-        return
+        throw react.cancel
       }
       if (!isHoldingOption) {
         if (!Electron.orbitState.pinned && Electron.isMouseInActiveArea) {
           log('prevent hide while mouseover after release hold')
-          return
+          throw react.cancel
         }
         Electron.sendMessage(App, App.messages.HIDE)
-        return
+        throw react.cancel
       }
       await sleep(140)
-      console.log(`sending message show`)
       Electron.sendMessage(App, App.messages.SHOW)
       // await sleep(3500)
       // this.updatePinned(true)
@@ -153,12 +263,18 @@ export default class ElectronReactions {
     ],
     ([appBB, linesBB]) => {
       if (Constants.FORCE_FULLSCREEN) {
-        return
+        throw react.cancel
       }
-      // prefer using lines bounding box, fall back to app
-      const box = linesBB || appBB
-      if (!box) return
-      let { position, size, orbitOnLeft, orbitDocked } = orbitPosition(box)
+      const forceDocked = Electron.lastAction === 'CommandOrControl+Space'
+      const box = linesBB || appBB // prefer using lines bounding box, fall back to app
+      if (!box && !forceDocked) {
+        throw react.cancel
+      }
+      console.log('positioning', forceDocked)
+      let { position, size, orbitOnLeft, orbitDocked } = orbitPosition(
+        box,
+        forceDocked,
+      )
       if (linesBB) {
         // add padding
         position[0] += orbitOnLeft ? -SCREEN_PAD : SCREEN_PAD
@@ -171,88 +287,9 @@ export default class ElectronReactions {
         size,
         orbitOnLeft,
         orbitDocked,
+        dockedPinned: orbitDocked && forceDocked,
         fullScreen: false,
       })
     },
   ]
-
-  toggleFullScreen = () => {
-    const fullScreen = !Electron.orbitState.fullScreen
-    if (!fullScreen) {
-      if (Electron.onClear) {
-        Electron.onClear()
-      }
-      console.log('SHOULD REPOSITION AFTER FS')
-      this.repositionToAppState = Date.now()
-      return
-    }
-    // orbit props
-    const { round } = Math
-    const [screenW, screenH] = screenSize()
-    const [appW, appH] = [screenW / 1.5, screenH / 1.3]
-    const [orbitW, orbitH] = [appW * 1 / 3, appH]
-    const [orbitX, orbitY] = [(screenW - appW) / 2, (screenH - appH) / 2]
-    // peek props
-    const [peekW, peekH] = [appW * 2 / 3, appH]
-    const [peekX, peekY] = [orbitX + orbitW, orbitY]
-    const [peek, ...rest] = Electron.peekState.windows
-    peek.position = [peekX, peekY].map(round)
-    peek.size = [peekW, peekH].map(round)
-    peek.peekOnLeft = false
-    // update
-    Electron.setState({
-      orbitState: {
-        position: [orbitX, orbitY].map(round),
-        size: [orbitW, orbitH].map(round),
-        orbitOnLeft: true,
-        fullScreen: true,
-      },
-      peekState: {
-        windows: [peek, ...rest],
-      },
-    })
-  }
-
-  onShortcut = shortcut => {
-    if (shortcut === 'Option+Space') {
-      if (Electron.orbitState.fullScreen) {
-        this.toggleFullScreen()
-        return
-      }
-      if (App.state.orbitHidden) {
-        this.toggleVisible()
-        Electron.lastAction = 'Option+Space'
-        this.updatePinned(true)
-        return
-      }
-      if (Electron.orbitState.pinned) {
-        this.togglePinned()
-        this.toggleVisible()
-        return
-      } else {
-        // !pinned
-        this.togglePinned()
-      }
-    }
-    if (shortcut === 'Option+Shift+Space') {
-      Electron.lastAction = 'Option+Shift+Space'
-      this.toggleFullScreen()
-    }
-  }
-
-  toggleVisible = () => {
-    if (App.state.orbitHidden) {
-      Electron.sendMessage(App, App.messages.HIDE)
-    } else {
-      Electron.sendMessage(App, App.messages.SHOW)
-    }
-  }
-
-  togglePinned = () => {
-    this.updatePinned(!Electron.orbitState.pinned)
-  }
-
-  updatePinned = pinned => {
-    Electron.setOrbitState({ pinned })
-  }
 }

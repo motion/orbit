@@ -14,17 +14,17 @@ const getLink = x => {
 }
 
 @view
-export default class SlackMessage {
-  render({ bit, message, previousMessage, appStore }) {
-    console.log('got a message', bit, message)
+export default class BitSlackMessage {
+  render({ bit, message, previousMessage, appStore, contentStyle }) {
     if (!message.text || !bit) {
       log(`no messagetext/bit ${JSON.stringify(message)}`)
       return null
     }
+    let content
     const link = getLink(message)
     if (link && link.indexOf('.png')) {
       console.log('attachment', link)
-      return (
+      content = (
         <miniImg>
           <img src={link} />
         </miniImg>
@@ -32,7 +32,7 @@ export default class SlackMessage {
     }
     if (link) {
       console.log('link', link)
-      return <a href={link}>{link}</a>
+      content = <a href={link}>{link}</a>
     }
     if (message.text.indexOf('uploaded a file') >= 0) {
       const src = message.text.match(/\<([a-z]+:\/\/[^>]+)\>/g).map(link =>
@@ -42,7 +42,7 @@ export default class SlackMessage {
           .replace(/\|.*$/g, ''),
       )[0]
       console.log('src', src)
-      return (
+      content = (
         <div $$flex>
           image
           <img src={src} css={{ maxWidth: '100%' }} />
@@ -65,6 +65,7 @@ export default class SlackMessage {
     const hideHeader = previousBySameAuthor && previousWithinOneMinute
     const avatar = person.data.profile.image_48
     // const [firstWord, ...rest] = message.text.split(' ')
+    console.log('contentStyle', contentStyle)
     return (
       <message>
         <header if={!hideHeader}>
@@ -82,39 +83,50 @@ export default class SlackMessage {
               appStore.pinSelected()
             }}
           >
-            <inner $$row $$centered>
+            <inner>
               <img $avatar if={avatar} src={avatar} />
               <username>{message.name}</username>
             </inner>
           </RoundButton>
           <space />
-          <date if={previousMessage && !previousWithinOneMinute}>
+          <date if={!previousMessage || !previousWithinOneMinute}>
             <UI.Date>{new Date(message.ts.split('.')[0] * 1000)}</UI.Date>
           </date>
         </header>
-        <content>{message.text}</content>
+        <content css={contentStyle}>{content || message.text}</content>
       </message>
     )
   }
+
   static style = {
     message: {
-      padding: [5, 0, 0],
+      padding: [3, 0, 0],
     },
     header: {
       flexFlow: 'row',
       alignItems: 'center',
-      margin: [3, 0, 5],
+      margin: [4, 0],
+      userSelect: 'none',
+      cursor: 'default',
+    },
+    inner: {
+      flexFlow: 'row',
+      alignItems: 'center',
     },
     username: {
       fontWeight: 600,
       fontSize: 14,
       color: '#000',
-      marginBottom: 1,
+      margin: [0, 0, 1],
+      alignItems: 'center',
     },
     date: {
-      fontSize: 13,
+      fontSize: 12,
       fontWeight: 300,
       opacity: 0.45,
+      marginTop: 1,
+      marginBottom: -1,
+      lineHeight: '1rem',
     },
     space: {
       width: 6,
@@ -127,9 +139,10 @@ export default class SlackMessage {
       marginLeft: -1,
     },
     content: {
+      fontSize: 15,
+      lineHeight: '1.25rem',
       display: 'block',
       position: 'relative',
-      lineHeight: '1.15rem',
       margin: [2, 0],
       // color: '#000',
       // '&::first-letter': {

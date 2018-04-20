@@ -70,7 +70,7 @@ export default class PeekFrame {
                 border: [2, '#fff'],
               }}
             />
-            <main
+            <peekMain
               css={{
                 boxShadow: fullScreen
                   ? [APP_SHADOW, borderShadow]
@@ -87,7 +87,7 @@ export default class PeekFrame {
               {...props}
             >
               {children}
-            </main>
+            </peekMain>
           </peek>
         </crop>
         <Space if={onRight} />
@@ -120,7 +120,8 @@ export default class PeekFrame {
       pointerEvents: 'all !important',
       opacity: 1,
     },
-    main: {
+    peekMain: {
+      background: 'red',
       flex: 1,
       overflow: 'hidden',
       opacity: 1,

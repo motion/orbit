@@ -5,13 +5,13 @@
   "author": "Orbit",
   "version": "1.5.34",
   "private": true,
-  "main": "lib/index.js",
+  "main": "_/index.js",
   "updater": {
     "url": "https://raw.githubusercontent.com/motion/orbit-updates/master/updates.json"
   },
   "scripts": {
     "start": "./start.sh",
-    "build": "build dev",
+    "build": "tsc",
     "watch": "npm run build -- --watch",
     "deploy": "cd ../electron-build && npm run deploy",
     "postinstall": "electron-rebuild"
@@ -42,7 +42,7 @@
     "@mcro/r2": "^1.5.1",
     "@mcro/reactron": "^1.5.1",
     "babel-polyfill": "^6.26.0",
-    "rxjs": "^5.5.5",
+    "module-alias": "^2.0.6",
     "kill-port": "^1.1.0",
     "wait-port": "^0.2.2",
     "iohook": "^0.1.11",

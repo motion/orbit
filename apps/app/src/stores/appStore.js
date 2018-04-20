@@ -1,10 +1,33 @@
-import { react, watch, isEqual } from '@mcro/black'
+import { react, isEqual } from '@mcro/black'
 import { App, Desktop, Electron } from '@mcro/all'
 import { Bit, Person, Setting, findOrCreate } from '@mcro/models'
+import * as ServiceModels from '@mcro/models/services'
 import * as Constants from '~/constants'
 import * as r2 from '@mcro/r2'
 import * as Helpers from '~/helpers'
-import { find, throttle } from 'lodash'
+
+const getPermalink = async (result, type) => {
+  if (result.type === 'app') {
+    return result.id
+  }
+  if (result.integration === 'slack') {
+    const setting = await Setting.findOne({ type: 'slack' })
+    let url = `slack://channel?id=${result.data.channel.id}&team=${
+      setting.values.oauth.info.team.id
+    }`
+    if (type === 'channel') {
+      return url
+    }
+    return `${url}&message=${result.data.messages[0].ts}`
+  }
+  return result.id
+}
+
+const Services = {
+  slack: ServiceModels.SlackService,
+  drive: ServiceModels.DriveService,
+  github: ServiceModels.GithubService,
+}
 
 // const log = debug('root')
 
@@ -18,6 +41,16 @@ const uniq = arr => {
     }
   }
   return final
+}
+
+const matchSort = (query, results) => {
+  if (!results.length) {
+    return results
+  }
+  const strongTitleMatches = Helpers.fuzzy(query, results, {
+    threshold: -10,
+  })
+  return uniq([...strongTitleMatches, ...results].slice(0, 10))
 }
 
 const prefixes = {
@@ -51,6 +84,7 @@ export default class AppStore {
   hoveredIndex = -1
   showSettings = false
   settings = {}
+  services = {}
   getResults = null
 
   async willMount() {
@@ -58,19 +92,7 @@ export default class AppStore {
     this.setInterval(this.getSettings, 2000)
     this.setInterval(() => {
       this.refreshInterval = Date.now()
-    }, 4000)
-    // this.setInterval(() => {
-    //   if (
-    //     App.isShowingOrbit &&
-    //     App.state.peekTarget &&
-    //     Electron.orbitState.mouseOver
-    //   ) {
-    //     App.setPeekTarget({
-    //       ...App.state.peekTarget,
-    //       position: this.getMousePosition(),
-    //     })
-    //   }
-    // }, 1000)
+    }, 10000)
   }
 
   get activeIndex() {
@@ -108,37 +130,39 @@ export default class AppStore {
         })
       }
 
-      console.log(
-        'finding bits by ids',
-        Mobx.toJS(Desktop.state.searchState.searchResults),
-      )
       const bitResults = await Bit.findByIds(
         Desktop.state.searchState.searchResults,
         {
           relations: ['people'],
         },
       )
-      console.log('bit results are', bitResults.filter(bit => bit.id === 1))
       const bitVals = Desktop.state.searchState.searchResults.map(
         id => bitResults.filter(bit => +bit.id === +id)[0],
       )
 
-      console.log('bit vals are', bitVals)
       return bitVals
     },
   ]
 
-  @watch({ log: false, delay: 64 })
-  selectedBit = () => {
-    const { selectedItem } = App.state
-    if (!selectedItem) {
-      return null
-    }
-    if (selectedItem.type === 'person') {
-      return Person.findOne({ id: selectedItem.id })
-    }
-    return Bit.findOne({ id: App.state.selectedItem.id })
-  }
+  @react({ log: false, delay: 32 })
+  selectedBit = [
+    () => App.state.selectedItem,
+    async item => {
+      if (!item) {
+        return null
+      }
+      if (item.type === 'person') {
+        return await Person.findOne({ id: item.id })
+      }
+      const res = await Bit.findOne({
+        where: {
+          id: item.id,
+        },
+        relations: ['people'],
+      })
+      return res
+    },
+  ]
 
   get results() {
     return this.searchState.results || []
@@ -159,18 +183,39 @@ export default class AppStore {
     ],
     ([query, pluginResults, bitResults, getResults]) => {
       let results
-      if (getResults) {
+      let channelResults
+      let message
+      // do stuff to prepare for getting results...
+      const isFilteringSlack = query[0] === '#'
+      const isFilteringChannel = isFilteringSlack && query.indexOf(' ') === -1
+      if (isFilteringSlack) {
+        channelResults = matchSort(
+          query.split(' ')[0],
+          this.services.slack.activeChannels.map(channel => ({
+            id: channel.id,
+            title: `#${channel.name}`,
+            icon: 'slack',
+          })),
+        )
+      }
+      if (isFilteringSlack && !isFilteringChannel) {
+        message = `Searching ${channelResults[0].title}`
+      }
+      // do stuff to get results....
+      if (isFilteringChannel && this.services.slack) {
+        message = 'SPACE to search selected channel'
+        results = channelResults
+      } else if (getResults) {
+        message = 'Settings'
         results = Helpers.fuzzy(query, getResults())
       } else {
         const unsorted = [...bitResults, ...pluginResults]
         const { rest } = parseQuery(query)
-        const strongTitleMatches = [] /*Helpers.fuzzy(rest, unsorted, {
-          threshold: -10,
-        })*/
-        results = uniq([...strongTitleMatches, ...unsorted].slice(0, 10))
+        results = matchSort(rest, unsorted)
       }
       return {
         query,
+        message,
         results,
       }
     },
@@ -268,7 +313,7 @@ export default class AppStore {
 
   getHoverProps = Helpers.hoverSettler({
     enterDelay: 80,
-    betweenDelay: 60,
+    betweenDelay: 30,
     onHovered: item => {
       if (item && typeof item.id === 'number') {
         this.setSelected(item.id)
@@ -290,7 +335,7 @@ export default class AppStore {
         : null,
     item => {
       if (!item) {
-        return
+        throw react.cancel
       }
       const selectedItem = {
         id: item.id || '',
@@ -313,6 +358,15 @@ export default class AppStore {
       )
       if (!isEqual(this.settings, nextSettings)) {
         this.settings = nextSettings
+        for (const name of Object.keys(nextSettings)) {
+          const setting = nextSettings[name]
+          if (!setting.token) {
+            continue
+          }
+          if (!this.services[name] && Services[name]) {
+            this.services[name] = new Services[name](setting)
+          }
+        }
       }
     }
   }
@@ -355,5 +409,10 @@ export default class AppStore {
       this.getSettings()
       App.sendMessage(Desktop, Desktop.messages.CLOSE_AUTH, type)
     }, 1000)
+  }
+
+  open = async (result, openType) => {
+    const url = await getPermalink(result, openType)
+    App.open(url)
   }
 }

@@ -1,7 +1,5 @@
 import { fromPromise, isPromiseBasedObservable, whenAsync } from 'mobx-utils'
-import { fromStream } from './fromStream'
 import * as Mobx from 'mobx'
-import { Observable } from 'rxjs'
 import * as McroHelpers from '@mcro/helpers'
 import debug from '@mcro/debug'
 
@@ -24,7 +22,7 @@ const logState = debug('+> ')
 const logInfo = debug('automagical')
 debug.quiet('automagical')
 
-const RejectReactionSymbol = Symbol('REJECT_REACTION')
+const RejectReactionSymbol = '___REJECT_REACTION___'
 
 const PREFIX = `=>`
 const logRes = (res: any) => {
@@ -65,8 +63,6 @@ const isObservable = (x: any) => {
 }
 const isFunction = val => typeof val === 'function'
 const isQuery = val => val && (val.$isQuery || (!!val.mquery && val.id))
-const isRxObservable = val =>
-  val instanceof Observable || (val && val.subscribe && val.source)
 const isPromise = val => val instanceof Promise
 const isWatch = (val: any) => val && val.IS_AUTO_RUN
 const isObservableLike = val =>
@@ -158,46 +154,6 @@ function mobxifyPromise(obj, method, val) {
   })
 }
 
-function mobxifyRxObservable(obj, method) {
-  const value = obj[method]
-  const observable = Mobx.observable.box(undefined)
-  const stream = value.subscribe(res => {
-    observable.set(res)
-  })
-  obj.subscriptions.add(() => stream.unsubscribe())
-  Object.defineProperty(obj, method, {
-    get() {
-      return observable.get()
-    },
-  })
-}
-
-function mobxifyRxQuery(obj, method) {
-  const value = obj[method]
-  const observable = Mobx.observable.box(undefined)
-  const runObservable = () => {
-    const stream = value.subscribe(res => {
-      observable.set(res)
-    })
-    obj.subscriptions.add(() => stream.unsubscribe())
-  }
-  if (value.isntConnected) {
-    value.onConnection().then(runObservable)
-  } else {
-    runObservable()
-  }
-  Object.defineProperty(obj, method, {
-    get() {
-      return observable.get()
-    },
-  })
-}
-
-// TODO use rxdb api
-function isRxDbQuery(query: any): boolean {
-  return query && (query.isntConnected || !!query.mquery)
-}
-
 function decorateClassWithAutomagic(obj: MagicalObject) {
   const descriptors = {
     ...Object.keys(obj).reduce(
@@ -266,14 +222,6 @@ function decorateMethodWithAutomagic(
     mobxifyQuery(target, method, value)
     return
   }
-  if (isRxObservable(value)) {
-    mobxifyRxObservable(target, method)
-    return
-  }
-  if (isRxDbQuery(value)) {
-    mobxifyRxQuery(target, method)
-    return
-  }
   if (isFunction(value)) {
     // @action
     const targetMethod = target[method].bind(target)
@@ -297,26 +245,7 @@ function decorateMethodWithAutomagic(
 // * => Mobx
 function specialValueToObservable(inValue: any) {
   let value = inValue
-  // convert RxQuery to RxObservable
   if (value) {
-    if (isRxDbQuery(value)) {
-      if (value.isntConnected) {
-        return value
-      } else {
-        value = value.$
-      }
-    }
-    // let this fall through from rxdbquerys
-    if (isRxObservable(value)) {
-      const mobxStream = fromStream(value)
-      return {
-        get: () => mobxStream.current,
-        mobxStream,
-        value: inValue,
-        dispose: mobxStream.dispose,
-        isObservable: true,
-      }
-    }
     if (isPromise(value)) {
       const promiseStream = fromPromise(value)
       return {
@@ -588,21 +517,36 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
       let hasCalledSetValue = false
       const start = Date.now()
       root.__trackStateChanges.isActive = true
-      const reactionResult = reactionFn.call(
-        obj,
-        isReaction ? reactValArg : obj.props,
-        {
-          preventLogging,
-          // allows setting multiple values in a reaction
-          setValue: val => {
-            hasCalledSetValue = true
-            updateAsyncValue(val)
+
+      let reactionResult
+
+      // to allow cancels!
+      try {
+        reactionResult = reactionFn.call(
+          obj,
+          isReaction ? reactValArg : obj.props,
+          {
+            preventLogging,
+            // allows setting multiple values in a reaction
+            setValue: val => {
+              hasCalledSetValue = true
+              updateAsyncValue(val)
+            },
+            sleep,
+            when,
+            whenChanged,
+            cancel: RejectReactionSymbol,
           },
-          sleep,
-          when,
-          whenChanged,
-        },
-      )
+        )
+      } catch (err) {
+        // got a nice cancel!
+        if (err === RejectReactionSymbol) {
+          return
+        }
+        console.error(err)
+        return
+      }
+
       const changed = root.__trackStateChanges.changed
       root.__trackStateChanges = {}
       // handle promises

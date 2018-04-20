@@ -16,6 +16,7 @@ const isOrbit = isBrowser && window.location.pathname === '/orbit'
 @store
 class AppStore {
   messages = {
+    TOGGLE_SHOWN: 'TOGGLE_SHOWN',
     SHOW: 'SHOW',
     HIDE: 'HIDE',
     HIDE_PEEK: 'HIDE_PEEK',
@@ -36,7 +37,6 @@ class AppStore {
       closeId: null,
     },
     selectedItem: null,
-    openResult: null,
     highlightWords: {},
     hoveredWord: null,
     hoveredLine: null,
@@ -82,7 +82,7 @@ class AppStore {
 
   last: Boolean
 
-  @react
+  @react({ log: false })
   wasShowingPeek = [
     () => App.isShowingPeek,
     is => {
@@ -103,13 +103,8 @@ class AppStore {
     return 'none for now'
   }
 
-  get isShowingHeader() {
-    return (
-      Electron.orbitState.fullScreen ||
-      Electron.orbitState.mouseOver ||
-      Electron.orbitState.pinned ||
-      false
-    )
+  get aboutToShow() {
+    return App.isAnimatingOrbit && App.state.orbitHidden
   }
 
   start = options => {
@@ -126,6 +121,11 @@ class AppStore {
     // @ts-ignore
     const AppReactions = require('./AppReactions').default
     this.reactions = new AppReactions(options)
+  }
+
+  open = async url => {
+    App.sendMessage(Desktop, Desktop.messages.OPEN, url)
+    App.setOrbitHidden(true)
   }
 
   togglePinned = () => {

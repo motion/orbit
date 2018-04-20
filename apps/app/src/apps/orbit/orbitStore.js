@@ -54,15 +54,12 @@ export default class OrbitStore {
       case 40: // down
         increment(showSettings ? 2 : 1)
         return
-      case 38: //up
+      case 38: // up
         decrement(showSettings ? 2 : 1)
         return
-      case 13: //enter
-        App.setOpenResult(results[selectedIndex])
-        // so hitting enter on a previous app works
-        setTimeout(() => {
-          App.setOpenResult(null)
-        }, 100)
+      case 13: // enter
+        this.props.appStore.open(results[selectedIndex])
+        return
     }
   }
 

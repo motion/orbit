@@ -51,6 +51,14 @@ struct LinePosition {
 }
 
 final class Screen: NSObject {
+  var isRunning = false
+  var isPaused = false
+  var isScanning = false
+  var fps = 0
+  var ignoreNextScan = false
+  var shouldCancel = false
+  var shouldRunNextTime = false
+
   var emit: (String)->Void
   var queue: AsyncGroup
   var isCleared = [Int: Bool]()
@@ -71,29 +79,11 @@ final class Screen: NSObject {
   var characters: Characters?
   var ocr: OCRInterface?
   var changeHandle: AsyncBlock<Void, ()>?
-  var isScanning = false
-  var fps = 0
-  var ignoreNextScan = false
-  var shouldCancel = false
-  var shouldRunNextTime = false
-
   var onStart: (() -> Void)?
   var onFinish: (() -> Void)?
   var onError: ((Error) -> Void)?
 
   private let simpleDebugImages = ProcessInfo.processInfo.environment["DEBUG_IMAGES"] == "true"
-
-  var isRecording: Bool {
-    return false
-  }
-
-  var isPaused: Bool {
-    return false
-  }
-
-  func onFrame(image: CGImage) {
-    print("captured")
-  }
 
   init(emit: @escaping (String)->Void, queue: AsyncGroup, displayId: CGDirectDisplayID = CGMainDisplayID()) throws {
     // load python ocr
@@ -153,7 +143,10 @@ final class Screen: NSObject {
   }
 
   func start() {
-//    debug("oracle.start()")
+    if self.isRunning {
+      return
+    }
+    self.isRunning = true
     if self.shouldCancel {
       self.shouldRunNextTime = true
     }
@@ -165,6 +158,10 @@ final class Screen: NSObject {
   }
 
   func stop() {
+    if !self.isRunning {
+      return
+    }
+    self.isRunning = false
     if session.isRunning {
       session.stopRunning()
       self.emit("{ \"state\": { \"isRunning\": false } }")
@@ -172,12 +169,20 @@ final class Screen: NSObject {
   }
 
   func resume() {
+    if !self.isPaused {
+      return
+    }
+    self.isPaused = false
     print("screen: resuming...")
     self.start()
     self.emit("{ \"state\": { \"isPaused\": false } }")
   }
 
   func pause() {
+    if self.isPaused {
+      return
+    }
+    self.isPaused = true
     self.stop()
     self.emit("{ \"state\": { \"isPaused\": true } }")
   }

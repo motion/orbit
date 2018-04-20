@@ -381,6 +381,7 @@ export default class Surface extends React.PureComponent<Props> {
   }
 
   static inlineStyle = {
+    display: 'inline-block',
     margin: [-2, 0],
     borderRadius: 1000,
   }

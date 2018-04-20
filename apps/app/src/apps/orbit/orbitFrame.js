@@ -19,18 +19,22 @@ const Indicator = view(({ iWidth, orbitOnLeft }) => {
     return null
   }
   // log('on', orbitOnLeft)
+  const border = [1, UI.color('#E9B73A').darken(0.2)]
   return (
     <indicator
       css={{
         position: 'absolute',
-        background: Constants.ORBIT_COLOR,
+        background: '#E9B73A',
+        border,
+        borderRight: orbitOnLeft ? 0 : border,
+        borderLeft: !orbitOnLeft ? 0 : border,
         boxShadow: [
           // [-5, 0, orbitOnLeft ? 10 : -10, 5, [255, 255, 255, 0.5]],
-          [-2, 0, 10, 0, [0, 0, 0, 0.15]],
+          // [-2, 0, 10, 0, [0, 0, 0, 0.15]],
         ],
-        width: iWidth,
-        height: 25,
-        top: 16,
+        width: iWidth * 1.5,
+        height: iWidth * 6,
+        top: 0,
         opacity: App.isShowingOrbit ? 0 : 1,
         right: orbitOnLeft ? SHADOW_PAD : 'auto',
         left: !orbitOnLeft ? SHADOW_PAD : 'auto',
@@ -80,8 +84,10 @@ class OrbitArrow {
       <UI.Arrow
         size={arrowSize}
         towards={Electron.orbitArrowTowards}
-        background={background}
-        boxShadow={[['inset', 0, 0, 0, 0.5, borderColor]]}
+        background={`linear-gradient(45deg, ${background
+          .darken(0.05)
+          .desaturate(0.25)}, ${background.darken(0.02).desaturate(0.25)})`}
+        boxShadow={[['inset', 0, 0, 0, 0.5, borderColor.darken(0.1)]]}
         // border={[1, '#000']}
         css={{
           position: 'absolute',
@@ -168,7 +174,7 @@ export default class OrbitFrame {
           iWidth={iWidth}
           orbitOnLeft={orbitOnLeft}
         />
-        <orbitShadow
+        {/* <orbitShadow
           if={false}
           css={{
             position: 'absolute',
@@ -183,7 +189,7 @@ export default class OrbitFrame {
               : 'none',
             opacity: App.isShowingOrbit ? 1 : 0,
           }}
-        />
+        /> */}
         <orbitBorder
           $orbitAnimate={App.isShowingOrbit}
           css={{
@@ -250,25 +256,14 @@ export default class OrbitFrame {
             >
               {children}
               <expand if={!fullScreen}>
-                <expandEnd
-                  if={false}
-                  css={{
-                    opacity: 0.5,
-                    background: `linear-gradient(transparent, ${
-                      theme.base.background
-                    })`,
-                  }}
-                />
                 <fade
-                  if={false}
                   css={{
-                    opacity: 0.5,
+                    opacity: 1,
                     background: `linear-gradient(transparent, ${
                       theme.base.background
-                    } 80%)`,
+                    } 95%)`,
                   }}
                 />
-                <OrbitDivider onMouseDown={orbitPage.barMouseDown} />
               </expand>
             </content>
           </orbit>
@@ -357,7 +352,7 @@ export default class OrbitFrame {
       bottom: 0,
       left: 0,
       right: 0,
-      top: '80%',
+      top: '85%',
       alignItems: 'flex-end',
       justifyContent: 'center',
       flexFlow: 'row',

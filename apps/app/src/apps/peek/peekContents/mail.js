@@ -2,7 +2,6 @@ import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
 import PeekHeader from '../peekHeader'
-import PeekFrame from '../peekFrame'
 // import { Bit } from '@mcro/models'
 import * as _ from 'lodash'
 
@@ -22,7 +21,7 @@ export class Mail {
         }
       ).value
     return (
-      <PeekFrame>
+      <React.Fragment>
         <PeekHeader
           icon="email"
           title={selectedItem.title}
@@ -90,7 +89,7 @@ export class Mail {
             })}
           </messages>
         </body>
-      </PeekFrame>
+      </React.Fragment>
     )
   }
 

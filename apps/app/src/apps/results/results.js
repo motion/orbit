@@ -131,7 +131,6 @@ export default class Results {
 
   render({ appStore, isContext }, { resultsRef, isScrolled, isOverflowing }) {
     const { results } = appStore.searchState
-    console.log('in render, results are', results)
     const total = results.length - SPLIT_INDEX
     return (
       <resultsFrame ref={this.setResultsFrame}>

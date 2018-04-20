@@ -94,11 +94,6 @@ export default class BitSlackConversation {
   }
 
   static style = {
-    subtitle: {
-      flexFlow: 'row',
-      flex: 1,
-      opacity: 0.7,
-    },
     meta: {
       flexFlow: 'row',
       opacity: 0.5,

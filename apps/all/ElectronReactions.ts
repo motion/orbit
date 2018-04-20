@@ -99,12 +99,11 @@ export default class ElectronReactions {
       if (App.state.orbitHidden) {
         Electron.lastAction = shortcut
         this.repositionToAppState = Date.now()
-        await sleep(20)
+        await sleep(30)
         Electron.sendMessage(App, App.messages.SHOW)
       } else {
         Electron.lastAction = null
         Electron.sendMessage(App, App.messages.HIDE)
-        this.repositionToAppState = Date.now()
       }
       return
     }
@@ -266,16 +265,24 @@ export default class ElectronReactions {
       if (Constants.FORCE_FULLSCREEN) {
         throw react.cancel
       }
-      const forceDocked = Electron.lastAction === 'CommandOrControl+Space'
-      const box = linesBB || appBB // prefer using lines bounding box, fall back to app
-      if (!box && !forceDocked) {
+      // dont reposition while showing + dockedPinned
+      if (!App.state.orbitHidden && Electron.orbitState.dockedPinned) {
         throw react.cancel
       }
-      console.log('positioning', forceDocked)
-      let { position, size, orbitOnLeft, orbitDocked } = orbitPosition(
-        box,
-        forceDocked,
-      )
+      // prefer using lines bounding box, fall back to app
+      const box = linesBB || appBB
+      if (!box) {
+        throw react.cancel
+      }
+      // pinning to side
+      if (Electron.lastAction === 'CommandOrControl+Space') {
+        Electron.setOrbitState({
+          ...orbitPosition(box, true),
+          dockedPinned: true,
+        })
+        return
+      }
+      let { position, size, orbitOnLeft, orbitDocked } = orbitPosition(box)
       if (linesBB) {
         // add padding
         position[0] += orbitOnLeft ? -SCREEN_PAD : SCREEN_PAD
@@ -288,7 +295,7 @@ export default class ElectronReactions {
         size,
         orbitOnLeft,
         orbitDocked,
-        dockedPinned: orbitDocked && forceDocked,
+        dockedPinned: false,
         fullScreen: false,
       })
     },

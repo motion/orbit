@@ -1,8 +1,5 @@
 ## next
 
-* [x] peek: horizontal carousel / similar hardcoded
-* [ ] finish fixing up docked cmd+space stuff
-* [ ] search+enter for slack convo permalink
 * [ ] when docked, dont hide during window move
 * [ ] peek back button + history
 * [ ] make "@" show a list of slack people
@@ -13,9 +10,7 @@
 
 ## triage
 
-* interaction
-
-- sidebar
+* sidebar
 
   * [ ] icon improvements (gmail, gdocs)
   * [ ] overflow title flicker on expand
@@ -24,26 +19,26 @@
   * [ ] default view: your day -- how it shows various things, grouping, etc
     * [ ] upcoming, haven't seen
 
-- slack
+* slack
 
   * [ ] cosal keywords for convo
 
-- design
+* design
 
   * OrbitCard
     * [ ] highlight vs active state - active is "clicked", hl should be current active
     * [ ] for icons - try result.integration + result.type first, fallback to result.int
     * [ ] peek scroll to different sub-sections in card
 
-- indicator
+* indicator
 
   * [ ] design
 
-- smoothness
+* smoothness
 
   * [ ] re-focus app after animation finish (when not holding option)
 
-- sidebar
+* sidebar
 
   * [ ] click to link to the Bit
   * [ ] design better info display for items, better meta info
@@ -51,11 +46,11 @@
   * [ ] list: movement + animations + keyboard/scroll select orbit list
   * [ ] overdrive: deep investigate animate performance
 
-- positioning
+* positioning
 
   * [ ] swindler fix not updating on some window resize/change
 
-- fullscreen
+* fullscreen
 
   * [ ] nice "in" animations on fullscreen
   * [ ] fix last glitches on out/animation
@@ -63,35 +58,35 @@
   * [ ] on fs focus input
   * [ ] accidental fullscreen at times
 
-- peek
+* peek
 
   * [ ] click header input clear peek
   * [ ] peek auto link links
   * [ ] peek show images
 
-- profiles
+* profiles
 
   * [ ] sync people info from github
   * [ ] sync people info from google
   * [ ] peek view with aggregate info
   * [ ] NLP: related things, common rooms
 
-- sync
+* sync
 
   * [ ] github sync
   * [ ] github simple sidebar/peek
 
-- settings
+* settings
 
   * [ ] adjust setting based on storage size
   * [ ] easy automatic setting setup: common rooms, etc
   * [ ] remove setting + clear bits
 
-- stack
+* stack
 
   * [ ] fix electron devtools not working
 
-- productionize
+* productionize
 
   * [ ] get builds working to .app
   * [ ] get auto update working
@@ -104,6 +99,6 @@
       * if multiple setstate called before settimeout, group them
       * if multiple recevied before timeout, group them
 
-- research
+* research
 
   * [ ] keeping chromium warm

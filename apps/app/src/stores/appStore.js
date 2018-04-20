@@ -122,7 +122,7 @@ export default class AppStore {
   bitResults = [
     () => [App.state.query, Desktop.appState.id, this.refreshInterval],
     async ([query]) => {
-      if (false && !query) {
+      if (!query) {
         return await Bit.find({
           take: 8,
           relations: ['people'],

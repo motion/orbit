@@ -25,10 +25,6 @@ class SlackSettingStore {
   }
 
   get channels() {
-    if (!this.service) {
-      return []
-    }
-    this.service.setting.values
     return fuzzy(this.search, this.sortedChannels, {
       key: 'name',
     })

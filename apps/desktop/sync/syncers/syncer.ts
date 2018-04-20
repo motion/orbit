@@ -38,9 +38,7 @@ export default class Syncer {
     }
     this.syncers = this.getSyncers(setting)
     for (const name of Object.keys(this.syncers)) {
-      if (!this[name]) {
-        this[name] = this.syncers[name]
-      }
+      this[name] = this.syncers[name]
     }
   }
 
@@ -69,6 +67,7 @@ export default class Syncer {
     if (!actions) {
       return
     }
+    await this.ensureActions()
     const syncers = []
     for (const action of Object.keys(actions)) {
       const job = actions[action]

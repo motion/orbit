@@ -83,14 +83,16 @@ class OrbitWindowStore {
   ]
 
   @react
-  focusOnDocked = [
-    () => Electron.orbitState.dockedPinned && App.isShowingOrbit,
-    dockedPinned => {
-      if (dockedPinned) {
-        this.focusOrbit()
-      } else {
+  focusOnPinned = [
+    () => Electron.orbitState.dockedPinned || Electron.orbitState.pinned,
+    async (pinned, { sleep, when }) => {
+      if (!pinned) {
         Swift.defocus()
+        return
       }
+      await sleep(App.animationDuration)
+      await when(() => !App.isAnimatingOrbit)
+      this.focusOrbit()
     },
   ]
 
@@ -99,7 +101,7 @@ class OrbitWindowStore {
     () => [Electron.orbitState.pinned, App.isShowingOrbit],
     ([pinned, showing]) => {
       if (pinned || showing || Electron.orbitState.mouseOver) {
-        return
+        throw react.cancel
       }
       Swift.defocus()
     },

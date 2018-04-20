@@ -83,11 +83,12 @@ export default class ElectronReactions {
   @react
   repositionAfterDocked = [
     () => App.state.orbitHidden,
-    async (hidden, { sleep }) => {
+    async (hidden, { sleep, when }) => {
       if (!hidden || !Electron.orbitState.dockedPinned) {
         throw react.cancel
       }
-      await sleep(() => App.animationDuration + 40)
+      await sleep(() => App.animationDuration)
+      await when(() => !App.isAnimatingOrbit)
       Electron.lastAction = null
       this.repositionToAppState = Date.now()
     },

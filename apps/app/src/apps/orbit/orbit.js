@@ -69,32 +69,40 @@ export default class Orbit {
       <UI.Theme name="tan">
         <OrbitFrame headerBg={headerBg} orbitPage={orbitPage}>
           <OrbitHeader headerBg={headerBg} />
-          <OrbitHome if={!appStore.showSettings} />
-          <OrbitSettings if={appStore.showSettings} />
-          <OrbitSearchResults />
-          <controls>
-            <UI.Button
-              icon="gear"
-              borderRadius={100}
-              size={1.15}
-              sizeIcon={0.8}
-              circular
-              borderWidth={0}
-              background={theme.base.background}
-              color={appStore.showSettings ? [0, 0, 0, 0.8] : [0, 0, 0, 0.2]}
-              hover={{
-                color: appStore.showSettings ? [0, 0, 0, 0.9] : [0, 0, 0, 0.3],
-              }}
-              onClick={appStore.toggleSettings}
-            />
-            <strip css={{ background: theme.base.background }} />
-          </controls>
+          <orbitInner>
+            <OrbitHome if={!appStore.showSettings} />
+            <OrbitSettings if={appStore.showSettings} />
+            <OrbitSearchResults />
+            <controls>
+              <UI.Button
+                icon="gear"
+                borderRadius={100}
+                size={1.15}
+                sizeIcon={0.8}
+                circular
+                borderWidth={0}
+                background={theme.base.background}
+                color={appStore.showSettings ? [0, 0, 0, 0.8] : [0, 0, 0, 0.2]}
+                hover={{
+                  color: appStore.showSettings
+                    ? [0, 0, 0, 0.9]
+                    : [0, 0, 0, 0.3],
+                }}
+                onClick={appStore.toggleSettings}
+              />
+              <strip css={{ background: theme.base.background }} />
+            </controls>
+          </orbitInner>
         </OrbitFrame>
       </UI.Theme>
     )
   }
 
   static style = {
+    orbitInner: {
+      position: 'relative',
+      flex: 1,
+    },
     controls: {
       position: 'absolute',
       bottom: -5,

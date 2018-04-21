@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import OrbitCard from './orbitCard'
+import { App } from '@mcro/all'
 
 const SPLIT_INDEX = 3
 
@@ -8,9 +9,10 @@ const SPLIT_INDEX = 3
 @view
 export default class OrbitSearchResults {
   render({ appStore }) {
-    const { query, results, message } = appStore
+    const { query, results, message } = appStore.searchState
+    const isChanging = App.state.query !== query
     return (
-      <orbitSearchResults $visible={!!query}>
+      <orbitSearchResults $visible={!!App.state.query} $isChanging={isChanging}>
         <space css={{ height: 10 }} />
         <message if={message}>{message}</message>
         <results
@@ -30,7 +32,7 @@ export default class OrbitSearchResults {
               total={results.length}
               result={result}
               listItem
-              hoverToSelect={appStore.activeIndex >= SPLIT_INDEX}
+              hoverToSelect
             />
           ))}
         </results>
@@ -46,6 +48,9 @@ export default class OrbitSearchResults {
     },
     visible: {
       opacity: 1,
+    },
+    isChanging: {
+      opacity: 0.7,
     },
     message: {
       padding: [5, 10],

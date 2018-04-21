@@ -62,10 +62,11 @@ export default class OrbitHomeContext {
   }
   static style = {
     orbitContext: {
-      borderRadius: Constants.BORDER_RADIUS,
+      borderBottomRadius: Constants.BORDER_RADIUS,
       position: 'relative',
       height: 'calc(100% - 35px)',
       transition: 'transform ease-in-out 150ms',
+      zIndex: 100,
     },
     results: {
       flex: 1,

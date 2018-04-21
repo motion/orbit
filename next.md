@@ -1,10 +1,10 @@
 ## next
 
 * [x] when docked, dont hide during window move
-* [ ] split Search from Home (summary/context)
+* [x] split Search from Home (summary/context)
 * [ ] design slightly better summary/context
-* [ ] make Search/Home just hide on empty, not null (speed)
-* [ ] make search opacity 0 during refresh
+* [x] make Search/Home just hide on empty, not null (speed)
+* [x] make search opacity 0 during refresh
 * [ ] remove search jumpiness
 * [ ] peek back button + history
 * [ ] make "@" show a list of slack people + search people

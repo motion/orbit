@@ -18,6 +18,10 @@ export default class OrbitStore {
   willMount() {
     App.runReactions({
       onPinKey: key => {
+        if (key === 'Delete') {
+          this.query = ''
+          return
+        }
         const { lastPinKey } = this
         if (!lastPinKey || lastPinKey != this.query[this.query.length - 1]) {
           this.query = key

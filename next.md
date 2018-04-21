@@ -10,6 +10,10 @@
 
 ## areas
 
+* interaction
+
+  * [ ] option+key to pin needs some bugfixing (~30m)
+
 * sidebar
 
   * [ ] overflow title flicker on expand

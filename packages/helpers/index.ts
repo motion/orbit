@@ -35,3 +35,31 @@ export function getReactionOptions(userOptions?: ReactionOptions) {
   }
   return options
 }
+
+export function watchModel(
+  Model: any,
+  where: Object,
+  onChange: Function,
+  options?,
+) {
+  const { interval = 1000 } = options || {}
+  let setting
+  let refreshInterval
+  Model.findOne({ where }).then(first => {
+    setting = first
+    onChange(setting)
+    refreshInterval = setInterval(async () => {
+      const next = await Model.findOne({ where })
+      if (Date.parse(next.updatedAt) === Date.parse(setting.updatedAt)) {
+        return
+      }
+      setting = next
+      onChange(setting)
+    }, interval)
+  })
+  return {
+    cancel: () => {
+      clearInterval(refreshInterval)
+    },
+  }
+}

@@ -1,18 +1,18 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { App } from '@mcro/all'
 import OrbitDivider from './orbitDivider'
 import * as Constants from '~/constants'
 import { throttle } from 'lodash'
 import Results from '~/apps/results/results'
+import { Title, SubTitle, Circle } from '~/views'
 
 const SPLIT_INDEX = 3
 
 @UI.injectTheme
 @view.attach('appStore', 'orbitPage')
 @view
-export default class OrbitContext {
+export default class OrbitHomeContext {
   state = {
     resultsRef: null,
     isScrolled: false,
@@ -57,16 +57,22 @@ export default class OrbitContext {
           if={!appStore.searchState.query}
           css={{ paddingBottom: 0, zIndex: 1000, position: 'relative' }}
         />
+        <space css={{ height: 20 }} />
+        <Title>Context</Title>
+        <SubTitle>
+          <Circle>4</Circle> Relevant Items
+        </SubTitle>
         <Results isContext />
       </orbitContext>
     )
   }
   static style = {
     orbitContext: {
-      borderRadius: Constants.BORDER_RADIUS,
+      borderBottomRadius: Constants.BORDER_RADIUS,
       position: 'relative',
       height: 'calc(100% - 35px)',
       transition: 'transform ease-in-out 150ms',
+      zIndex: 100,
     },
     results: {
       flex: 1,

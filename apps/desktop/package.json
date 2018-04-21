@@ -20,6 +20,7 @@
     "@mcro/all": "*",
     "@mcro/macros": "*",
     "@mcro/models": "*",
+    "@mcro/services": "*",
     "@mcro/examples": "*",
     "@mcro/helpers": "*",
     "module-alias": "^2.0.6",

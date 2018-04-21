@@ -28,9 +28,6 @@ class OrbitCardStore {
       }
     },
   ]
-
-  @react({ delayValue: true })
-  wasSelected = [() => this.isSelected, _ => _]
 }
 
 const tinyProps = {
@@ -112,7 +109,7 @@ export default class OrbitCard {
     return (
       <cardWrap
         css={{
-          padding: listItem ? 0 : [0, 5, 3],
+          padding: listItem ? 0 : [0, 4, 3],
           zIndex: isExpanded ? 5 : 4,
         }}
         ref={getRef}
@@ -123,7 +120,7 @@ export default class OrbitCard {
         <card
           $cardHovered={this.hovered}
           css={{
-            padding: tiny ? [6, 8] : 12,
+            padding: tiny ? [6, 8] : [9, 12],
             borderRadius,
           }}
           onMouseEnter={this.setHovered}
@@ -131,7 +128,7 @@ export default class OrbitCard {
         >
           <title>
             <Text
-              size={1.2}
+              size={1.1}
               ellipse={isExpanded ? 2 : 1}
               fontWeight={400}
               $titleText
@@ -142,17 +139,6 @@ export default class OrbitCard {
             >
               {title}
             </Text>
-            <OrbitIcon
-              if={icon}
-              icon={icon}
-              size={16}
-              $icon
-              css={{
-                filter: isExpanded ? 'none' : 'grayscale(100%)',
-                opacity: isExpanded ? 1 : 0.25,
-              }}
-              {...tiny && tinyProps.iconProps}
-            />
           </title>
           <SubTitle $subtitle if={!tiny && typeof subtitle === 'string'}>
             {subtitle}
@@ -160,15 +146,40 @@ export default class OrbitCard {
           <subtitle if={!tiny && typeof subtitle === 'object'}>
             {subtitle}
           </subtitle>
-          <content if={preview || content}>
+          <preview
+            if={preview && !isExpanded}
+            css={{
+              margin: [3, 0],
+              flexFlow: 'row',
+              alignItems: 'center',
+            }}
+          >
+            <OrbitIcon
+              if={icon}
+              icon={icon}
+              size={14}
+              $icon
+              css={{
+                filter: isExpanded ? 'none' : 'grayscale(50%)',
+                opacity: isExpanded ? 1 : 0.85,
+                margin: [0, 10, -1, 0],
+              }}
+              {...tiny && tinyProps.iconProps}
+            />
+            <UI.Text>{location}</UI.Text>
             <UI.Text
               if={!tiny && !isExpanded}
-              $preview
-              opacity={0.8}
-              ellipse={2}
+              ellipse={1}
+              css={{ maxWidth: 'calc(100% - 70px)', opacity: 0.8 }}
             >
-              {location} <span css={{ opacity: 0.7 }}>{preview}</span>
+              {preview}
             </UI.Text>
+            <space $$flex />
+            <date css={{ fontWeight: 700, width: 30, textAlign: 'right' }}>
+              <UI.Text>2m</UI.Text>
+            </date>
+          </preview>
+          <content if={content}>
             <subtitle
               if={!tiny && isExpanded}
               css={{ flexFlow: 'row', opacity: 0.5 }}
@@ -178,7 +189,7 @@ export default class OrbitCard {
             <full if={!tiny && isExpanded}>{content}</full>
           </content>
           <bottom if={!tiny}>
-            {permalink}
+            <permalink if={isExpanded}>{permalink}</permalink>
             <space if={permalink} />
             {bottom}
             <orbital if={false} />
@@ -243,9 +254,6 @@ export default class OrbitCard {
       maxWidth: `calc(100% - 30px)`,
     },
     cardHovered: {},
-    preview: {
-      margin: [3, 0],
-    },
     content: {
       flex: 1,
       overflow: 'hidden',
@@ -316,10 +324,10 @@ export default class OrbitCard {
         ? {
             background: '#fff',
             boxShadow: [
-              ['inset', 0, 0, 0, 0.5, theme.active.background.darken(0.1)],
-              [2, 0, 25, [0, 0, 0, 0.05]],
+              ['inset', 0, 0, 0, 0.5, theme.active.background.darken(0.2)],
+              // [2, 0, 25, [0, 0, 0, 0.05]],
             ],
-            margin: [0, -1],
+            margin: [0, 2],
           }
         : {
             background: 'transparent',

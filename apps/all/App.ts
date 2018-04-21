@@ -43,7 +43,6 @@ class AppStore {
     contextMessage: 'Orbit',
     orbitHidden: true,
     orbitConnected: false,
-    knowledge: null,
     peekTarget: null,
   }
 

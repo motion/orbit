@@ -1,7 +1,6 @@
 import { react, isEqual } from '@mcro/black'
 import { App, Desktop, Electron } from '@mcro/all'
 import { Bit, Person, Setting, findOrCreate } from '@mcro/models'
-import * as ServiceModels from '@mcro/models/services'
 import * as Constants from '~/constants'
 import * as r2 from '@mcro/r2'
 import * as Helpers from '~/helpers'
@@ -23,10 +22,11 @@ const getPermalink = async (result, type) => {
   return result.id
 }
 
-const Services = {
-  slack: ServiceModels.SlackService,
-  drive: ServiceModels.DriveService,
-  github: ServiceModels.GithubService,
+// note: importing services causes hell for some reason
+const allServices = {
+  slack: () => require('@mcro/services').SlackService,
+  drive: () => require('@mcro/services').DriveService,
+  github: () => require('@mcro/services').GithubService,
 }
 
 // const log = debug('root')
@@ -87,6 +87,13 @@ export default class AppStore {
   services = {}
   getResults = null
 
+  get innerHeight() {
+    const HEADER_HEIGHT = 90
+    return (
+      Electron.orbitState.size[1] - Constants.SHADOW_PAD * 2 - HEADER_HEIGHT
+    )
+  }
+
   async willMount() {
     this.getSettings()
     this.setInterval(this.getSettings, 2000)
@@ -135,6 +142,36 @@ export default class AppStore {
         relations: ['people'],
         order: { bitCreatedAt: 'DESC' },
         take: 8,
+      })
+    },
+  ]
+
+  @react({
+    fireImmediately: true,
+    defaultValue: [],
+  })
+  summaryResults = [
+    () => 0,
+    async () => {
+      return await Bit.find({
+        take: 6,
+        relations: ['people'],
+        order: { bitCreatedAt: 'DESC' },
+      })
+    },
+  ]
+
+  @react({
+    fireImmediately: true,
+    defaultValue: [],
+  })
+  contextResults = [
+    () => 0,
+    async () => {
+      return await Bit.find({
+        take: 6,
+        relations: ['people'],
+        order: { bitCreatedAt: 'DESC' },
       })
     },
   ]
@@ -358,8 +395,9 @@ export default class AppStore {
           if (!setting.token) {
             continue
           }
-          if (!this.services[name] && Services[name]) {
-            this.services[name] = new Services[name](setting)
+          if (!this.services[name] && allServices[name]) {
+            const ServiceConstructor = allServices[name]()
+            this.services[name] = new ServiceConstructor(setting)
           }
         }
       }

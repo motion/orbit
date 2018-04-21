@@ -6,6 +6,7 @@ import debug from '@mcro/debug'
 const log = debug('sync')
 debug.quiet('sync')
 
+// @ts-ignore
 @store
 export default class Sync {
   locks: Set<string> = new Set()

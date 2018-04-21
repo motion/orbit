@@ -1,4 +1,4 @@
-const isBrowser = eval(`typeof window !== 'undefined'`)
+const isBrowser = typeof window !== 'undefined'
 const typeorm = isBrowser
   ? require('typeorm/browser')
   : eval(`require('typeorm')`)

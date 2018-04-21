@@ -267,7 +267,7 @@ export default class Text {
         ref={n => this.getRef(n)}
         css={props}
         style={style}
-        $ellipseText={oneLineEllipse}
+        $oneLineEllipse={oneLineEllipse}
         {...{
           onClick,
           onMouseEnter,
@@ -292,7 +292,6 @@ export default class Text {
                 }
               : null
           }
-          $$ellipse={oneLineEllipse}
           {...ellipseProps}
         />
       </text>
@@ -308,7 +307,7 @@ export default class Text {
       position: 'relative',
       maxWidth: '100%',
     },
-    ellipseText: {
+    oneLineEllipse: {
       display: 'flex',
       overflow: 'hidden',
     },
@@ -320,7 +319,10 @@ export default class Text {
       width: '100%',
     },
     ellipseSingle: {
+      display: 'block',
+      textOverflow: 'ellipsis',
       whiteSpace: 'nowrap',
+      overflow: 'hidden',
     },
     span: {
       margin: ['auto', 0],

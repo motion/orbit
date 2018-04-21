@@ -1,5 +1,5 @@
 import { store } from '@mcro/black/store'
-import { Setting } from '../setting'
+import { Setting } from '@mcro/models'
 
 @store
 export class DriveService {

@@ -4,6 +4,8 @@ import Icons from './icons'
 import * as _ from 'lodash'
 import * as MacAppsPlugin from './macApps'
 import * as FilesPlugin from './files'
+import * as CalculatorPlugin from './calculator'
+import * as ConversionPlugin from './conversion'
 import debug from '@mcro/debug'
 
 type Plugin = {
@@ -11,7 +13,12 @@ type Plugin = {
   fn?: Function
 }
 
-const plugins: Array<Plugin> = [MacAppsPlugin, FilesPlugin]
+const plugins: Plugin[] = [
+  MacAppsPlugin,
+  FilesPlugin,
+  CalculatorPlugin,
+  ConversionPlugin,
+]
 const log = debug('Plugins')
 
 @store

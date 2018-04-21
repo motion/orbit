@@ -1,15 +1,5 @@
 ## next
 
-* [x] design better info display for items, better meta info
-* [x] highlight vs active state - active is "clicked", hl should be current active
-* [x] icon improvements (gmail, gdocs)
-* [x] when docked, dont hide during window move
-* [x] split Search from Home (summary/context)
-* [x] make Search/Home just hide on empty, not null (speed)
-* [x] make search opacity 0 during refresh
-* [x] design slightly better summary/context
-* [x] disable fullscreen option+shift shortcuts
-
 ## triage
 
 * [ ] remove search jumpiness

@@ -4,30 +4,7 @@ import OrbitCard from './orbitCard'
 import OrbitHomeContext from './orbitHomeContext'
 import { App } from '@mcro/all'
 import * as UI from '@mcro/ui'
-
-const Title = UI.injectTheme(({ center, theme, children, ...props }) => (
-  <UI.Title
-    fontWeight={600}
-    color={theme.base.color}
-    css={{
-      padding: [0, 15],
-      alignSelf: 'center',
-      alignItems: center ? 'center' : 'flex-start',
-    }}
-    {...props}
-  >
-    {children}
-  </UI.Title>
-))
-
-const SubTitle = props => (
-  <Title
-    size={0.9}
-    fontWeight={400}
-    css={{ textTransform: 'uppercase', opacity: 0.5 }}
-    {...props}
-  />
-)
+import { Title, SubTitle, Circle } from '~/views'
 
 @UI.injectTheme
 @view.attach('appStore')
@@ -53,23 +30,29 @@ export default class OrbitHome {
         <summary if={summaryResults.length} css={{ maxHeight }}>
           <Title center>Friday's Highlights</Title>
 
-          <SubTitle>Three Slack Conversations</SubTitle>
+          <SubTitle>
+            <Circle>3</Circle> Slack Conversations
+          </SubTitle>
           <OrbitCard
             index={0}
             total={summaryResults.length}
             result={summaryResults[0]}
             hoverToSelect
           />
-
-          <SubTitle>One Document</SubTitle>
+          <verticalSpace />
+          <SubTitle>
+            <Circle>1</Circle> Document
+          </SubTitle>
           <OrbitCard
             index={1}
             total={summaryResults.length}
             result={summaryResults[1]}
             hoverToSelect
           />
-
-          <SubTitle>Two Issues</SubTitle>
+          <verticalSpace />
+          <SubTitle>
+            <Circle>2</Circle> Issues
+          </SubTitle>
           <OrbitCard
             index={2}
             total={summaryResults.length}
@@ -95,6 +78,9 @@ export default class OrbitHome {
       position: 'relative',
       transition: 'opacity ease-in-out 150ms',
       overflowY: 'scroll',
+    },
+    verticalSpace: {
+      height: 5,
     },
   }
 }

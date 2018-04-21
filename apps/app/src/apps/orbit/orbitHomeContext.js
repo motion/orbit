@@ -5,6 +5,7 @@ import OrbitDivider from './orbitDivider'
 import * as Constants from '~/constants'
 import { throttle } from 'lodash'
 import Results from '~/apps/results/results'
+import { Title, SubTitle, Circle } from '~/views'
 
 const SPLIT_INDEX = 3
 
@@ -56,6 +57,10 @@ export default class OrbitHomeContext {
           if={!appStore.searchState.query}
           css={{ paddingBottom: 0, zIndex: 1000, position: 'relative' }}
         />
+        <Title>Context</Title>
+        <SubTitle>
+          <Circle>4</Circle> Relevant Items
+        </SubTitle>
         <Results isContext />
       </orbitContext>
     )

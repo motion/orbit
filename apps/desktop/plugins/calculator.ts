@@ -1,9 +1,12 @@
 import Mexp from 'math-expression-evaluator'
 
 export const fn = ({ term, display }) => {
+  if (!term) {
+    return display([])
+  }
   let res
   try {
-    res = Mexp.eval(term)
+    res = `${Mexp.eval(term)}`
   } catch (err) {
     display([])
     return
@@ -12,7 +15,7 @@ export const fn = ({ term, display }) => {
     display([
       {
         id: -1,
-        title: `${res}`,
+        title: res,
       },
     ])
   } else {

@@ -9,13 +9,16 @@
 * [x] make search opacity 0 during refresh
 * [x] design slightly better summary/context
 * [x] disable fullscreen option+shift shortcuts
+
+## triage
+
 * [ ] remove search jumpiness
 * [ ] peek back button + history
 * [ ] make "@" show a list of slack people + search people
 * [ ] slack views: show attachments/images
 * [ ] docked: have taller peeks
 
-## triage
+## areas
 
 * sidebar
 

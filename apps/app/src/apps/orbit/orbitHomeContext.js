@@ -57,6 +57,7 @@ export default class OrbitHomeContext {
           if={!appStore.searchState.query}
           css={{ paddingBottom: 0, zIndex: 1000, position: 'relative' }}
         />
+        <space css={{ height: 20 }} />
         <Title>Context</Title>
         <SubTitle>
           <Circle>4</Circle> Relevant Items

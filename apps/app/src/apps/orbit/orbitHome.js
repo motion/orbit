@@ -73,6 +73,7 @@ export default class OrbitHome {
       left: 0,
       right: 0,
       bottom: 0,
+      padding: [8, 0, 0],
     },
     summary: {
       position: 'relative',

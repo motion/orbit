@@ -3,6 +3,8 @@ import * as UI from '@mcro/ui'
 
 export * from './roundButton'
 
+export const highlightColor = UI.color('#696549')
+
 export const Circle = props => (
   <circle
     css={{
@@ -14,11 +16,13 @@ export const Circle = props => (
       alignItems: 'center',
       justifyContent: 'center',
       textAlign: 'center',
-      background: '#696549',
-      color: '#fff',
-      fontWeight: 600,
+      // background: .alpha(0.75),
+      // border: [1, highlightColor],
+      boxShadow: [[0, 0, 0, 0.5, highlightColor]],
+      color: highlightColor,
+      fontWeight: 500,
       fontSize: 12,
-      margin: [-2, 6, -2, -2],
+      margin: [-2, 4, -2, -2],
     }}
     {...props}
   />
@@ -30,7 +34,6 @@ export const Title = ({ center, children, ...props }) => (
     fontWeight={300}
     css={{
       padding: [0, 15, 2],
-      alignSelf: 'center',
       alignItems: center ? 'center' : 'flex-start',
     }}
     {...props}
@@ -46,10 +49,11 @@ export const SubTitle = props => (
       fontSize: 13,
       alignItems: 'center',
       flexFlow: 'row',
-      padding: [5, 15],
+      padding: [5, 15, 0],
       textTransform: 'uppercase',
       opacity: 0.5,
       marginBottom: 5,
+      color: highlightColor,
     }}
     {...props}
   />

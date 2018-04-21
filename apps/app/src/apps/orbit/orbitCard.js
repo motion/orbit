@@ -162,7 +162,7 @@ export default class OrbitCard {
               css={{
                 filter: isExpanded ? 'none' : 'grayscale(50%)',
                 opacity: isExpanded ? 1 : 0.85,
-                margin: [1, 8, -1, 0],
+                margin: [0, 10, -1, 0],
               }}
               {...tiny && tinyProps.iconProps}
             />
@@ -324,10 +324,10 @@ export default class OrbitCard {
         ? {
             background: '#fff',
             boxShadow: [
-              ['inset', 0, 0, 0, 0.5, theme.active.background.darken(0.1)],
-              [2, 0, 25, [0, 0, 0, 0.05]],
+              ['inset', 0, 0, 0, 0.5, theme.active.background.darken(0.2)],
+              // [2, 0, 25, [0, 0, 0, 0.05]],
             ],
-            margin: [0, -1],
+            margin: [0, 2],
           }
         : {
             background: 'transparent',

@@ -7,11 +7,8 @@ import Themes from './themes'
 import { uniqBy } from 'lodash'
 import * as Constants from '~/constants'
 import * as UI from '@mcro/ui'
-import { Setting, Bit, Job, Person } from '@mcro/models'
+import { modelsList } from '@mcro/models'
 import connectModels from './helpers/connectModels'
-
-const modelsList = [Setting, Bit, Job, Person]
-console.log('modelsList', modelsList)
 
 // HMR
 if (module && module.hot) {

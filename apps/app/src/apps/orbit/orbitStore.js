@@ -33,13 +33,13 @@ export default class OrbitStore {
   handleKeyDown = code => {
     const {
       results,
-      selectedIndex,
+      activeIndex,
       setSelected,
       showSettings,
     } = this.props.appStore
     const increment = (by = 1) =>
-      setSelected(Math.min(results.length - 1, selectedIndex + by))
-    const decrement = (by = 1) => setSelected(Math.max(0, selectedIndex - by))
+      setSelected(Math.min(results.length - 1, activeIndex + by))
+    const decrement = (by = 1) => setSelected(Math.max(0, activeIndex - by))
     switch (code) {
       case 37: // left
         if (showSettings) {
@@ -58,7 +58,7 @@ export default class OrbitStore {
         decrement(showSettings ? 2 : 1)
         return
       case 13: // enter
-        this.props.appStore.open(results[selectedIndex])
+        this.props.appStore.open(results[activeIndex])
         return
     }
   }

@@ -45,11 +45,9 @@ final class Windo {
     })
     if (x != nil) { print("\(x!)") }
     
-
     // swindler bugs if started too quickly :/
     DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
       self.frontmostWindowChanged()
-
 //      self.swindler.on { (event: WindowCreatedEvent) in
 //        let window = event.window
 //        if window.application.bundleIdentifier == orbitAppId { return }
@@ -62,18 +60,7 @@ final class Windo {
       }
       self.swindler.on { (event: WindowSizeChangedEvent) in
         let size = [Int(event.newValue.width), Int(event.newValue.height)]
-
-        // get real position, swindler has a bug that doesnt update when resizing from edges
-        var position = [Int(event.window.position.value.x), Int(event.window.position.value.y)]
-        NSWorkspace.shared.frontmostApplication!.windows.map {
-          guard let cur = self.currentFrontWindow else { return }
-          // ensure we have the right window, its hacky
-          if (cur.title.value != $0.title) { return }
-          if (cur.size.value.width != $0.frame.width) { return }
-          if (cur.size.value.height != $0.frame.height) { return }
-          position = [Int($0.origin.x), Int($0.origin.y)]
-        }
-
+        let position = self.getPosition() ?? [Int(event.window.position.value.x), Int(event.window.position.value.y)]
         self.updatePosition(event.window, size: size, position: position)
       }
 //      self.swindler.on { (event: WindowDestroyedEvent) in
@@ -94,6 +81,19 @@ final class Windo {
         self.frontmostWindowChanged()
       }
     }
+  }
+
+  private func getPosition() -> [Int]? {
+    var position: [Int]? = nil
+    NSWorkspace.shared.frontmostApplication!.windows.forEach {
+      guard let cur = self.currentFrontWindow else { return }
+      // ensure we have the right window, its hacky
+      if (cur.title.value != $0.title) { return }
+      if (cur.size.value.width != $0.frame.width) { return }
+      if (cur.size.value.height != $0.frame.height) { return }
+      position = [Int($0.origin.x), Int($0.origin.y)]
+    }
+    return position
   }
   
   private func updatePosition(_ window: Window, size: [Int]?, position: [Int]?) {
@@ -128,11 +128,11 @@ final class Windo {
     self.currentFrontWindow = window
     let title = String(window.title.value).replacingOccurrences(of: "\"", with: "")
     let titleString = "\"\(title)\"";
-    let offset = window.position.value
-    let bounds = window.size.value
+    let position = self.getPosition() ?? [Int(window.position.value.x), Int(window.position.value.y)]
+    let size = window.size.value
     let id = app.bundleIdentifier ?? ""
     self.currentId = id
-    self.emit("{ \"action\": \"FrontmostWindowChangedEvent\", \"value\": { \"id\": \"\(id)\", \"title\": \(titleString), \"offset\": [\(offset.x),\(offset.y)], \"bounds\": [\(bounds.width),\(bounds.height)] } }")
+    self.emit("{ \"action\": \"FrontmostWindowChangedEvent\", \"value\": { \"id\": \"\(id)\", \"title\": \(titleString), \"position\": [\(position[0]),\(position[1])], \"size\": [\(size.width),\(size.height)] } }")
   }
   
 }

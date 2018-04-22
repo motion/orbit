@@ -31,7 +31,7 @@ export default class OrbitHome {
           <Title center>Friday's Highlights</Title>
 
           <SubTitle>
-            <Circle>3</Circle> Slack Conversations
+            <Circle>3</Circle> Conversations
           </SubTitle>
           <OrbitCard
             index={0}

@@ -12,7 +12,13 @@
 
 * interaction
 
+  * [ ] slightly faster orbit hide on mouseout
+  * [ ] space to peek
+    * appStore.hasNavigated = false on new query, true on keydown
+    * use that to make space open peek
   * [ ] option+key to pin needs some bugfixing (~30m)
+    * if opened/closed again, select text in header
+    * fix option+backspace to pin/delete
 
 * sidebar
 
@@ -53,6 +59,9 @@
 
 * peek
 
+  * horizontal carousel fixing
+  * design
+    * open/close interactions
   * [ ] click header input clear peek
   * [ ] peek auto link links
   * [ ] peek show images

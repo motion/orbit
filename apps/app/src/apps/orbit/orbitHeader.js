@@ -36,7 +36,7 @@ class HeaderStore {
         throw react.cancel
       }
       this.inputRef.focus()
-      this.inputRef.select()
+      // this.inputRef.select()
     },
   ]
 

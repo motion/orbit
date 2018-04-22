@@ -20,8 +20,8 @@ our goals
   * fix notification overload (noise to signal)
   * stop missing out on conversations/topics (unknown unknowns)
   * make personal search great (tame the cloud)
-  * dramatically reduce need for wikis + make existing wikis much more useful
-  * completely replace intranet systems:
+  * reduce intranet need + make wiki/knowledge more useful (wiki is dead, long live wiki)
+  * completely replace intranet systems: (intranet 2.0)
     * "who is this?"
     * "whats the latest on?"
     * "whats important about?"
@@ -29,6 +29,7 @@ our goals
   * show what were capable of (a letter to: the world)
   * make us a valuable acquisition
   * do something beautiful because the world lacks great products
+  * deliver on software 2.0 promise
 
 our general strategy
 
@@ -46,7 +47,7 @@ our unique product strategies
 
 our unique go to market strategies
 
-* no cloud = privacy + aligment with end users = user confidence (no one but apple does)
+* no cloud = privacy / aligment with end users = user confidence (no one but apple does)
 * high user alignment + beautiful product = super high potential end user brand dedication
 * invest more into branding = more ability to work with people during beta for launch
 * free personal app = easy to get high user count initially

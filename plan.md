@@ -14,7 +14,7 @@ our goals
 
 * broadly
   * reduce workplace stress
-  * increase ability to focuse / deep work
+  * increase ability to focus / deep work
   * make day to day more enjoyable/interpretable/controlled
 * narrowly
   * fix notification overload (noise to signal)

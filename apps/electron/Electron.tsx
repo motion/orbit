@@ -134,7 +134,11 @@ class ElectronStore {
     }
   }
 
-  handleAppRef = ref => ref && (this.appRef = ref.app)
+  handleAppRef = ref => {
+    if (!ref) return
+    this.appRef = ref.app
+    this.appRef.dock.hide()
+  }
   handleBeforeQuit = () => console.log('before quit')
   handleQuit = () => {
     process.exit(0)

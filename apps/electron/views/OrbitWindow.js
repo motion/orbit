@@ -26,10 +26,10 @@ class OrbitWindowStore {
     },
   ]
 
-  keyShortcuts = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-    .split('')
-    .map(key => ({ key, shortcut: `Option+${key}` }))
-    .concat(['Delete'])
+  keyShortcuts = [
+    ...'0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),
+    'Delete',
+  ].map(key => ({ key, shortcut: `Option+${key}` }))
 
   @react
   easyPinWithLetter = [

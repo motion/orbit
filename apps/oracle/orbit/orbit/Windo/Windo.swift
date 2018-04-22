@@ -36,9 +36,18 @@ final class Windo {
         lastScroll = DispatchTime.now()
       }
     })
+    
+    print("obs")
+    let app = NSWorkspace.shared.frontmostApplication!
+    let x = try? Observer(processID: app.processIdentifier, callback: { (a: Observer, b: UIElement, c: AXNotification, d: [String : AnyObject]?) in
+      let x = try? b.attributesAsStrings()
+      print("ok \(x!)")
+    })
+    if (x != nil) { print("\(x!)") }
+    
 
     // swindler bugs if started too quickly :/
-    DispatchQueue.main.asyncAfter(deadline: .now() + 6) {
+    DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
       self.frontmostWindowChanged()
 
 //      self.swindler.on { (event: WindowCreatedEvent) in
@@ -47,13 +56,25 @@ final class Windo {
 //        self.emit("{ \"action\": \"WindowCreatedEvent\", \"value\": \"\(window.title.value)\" }")
 //      }
       self.swindler.on { (event: WindowPosChangedEvent) in
-        self.updatePosition(event.window, size: nil, position: [Int(event.newValue.x), Int(event.newValue.y)])
+        let position = [Int(event.newValue.x), Int(event.newValue.y)]
+        print("pos changed \(position)")
+        self.updatePosition(event.window, size: nil, position: position)
       }
       self.swindler.on { (event: WindowSizeChangedEvent) in
-        self.updatePosition(event.window, size: [Int(event.newValue.width), Int(event.newValue.height)], position: nil)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-          self.updatePosition(event.window, size: nil, position: nil)
+        let size = [Int(event.newValue.width), Int(event.newValue.height)]
+
+        // get real position, swindler has a bug that doesnt update when resizing from edges
+        var position = [Int(event.window.position.value.x), Int(event.window.position.value.y)]
+        NSWorkspace.shared.frontmostApplication!.windows.map {
+          guard let cur = self.currentFrontWindow else { return }
+          // ensure we have the right window, its hacky
+          if (cur.title.value != $0.title) { return }
+          if (cur.size.value.width != $0.frame.width) { return }
+          if (cur.size.value.height != $0.frame.height) { return }
+          position = [Int($0.origin.x), Int($0.origin.y)]
         }
+
+        self.updatePosition(event.window, size: size, position: position)
       }
 //      self.swindler.on { (event: WindowDestroyedEvent) in
 //        let window = event.window
@@ -104,6 +125,7 @@ final class Windo {
       print("no main window")
       return
     }
+    self.currentFrontWindow = window
     let title = String(window.title.value).replacingOccurrences(of: "\"", with: "")
     let titleString = "\"\(title)\"";
     let offset = window.position.value

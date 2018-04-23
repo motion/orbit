@@ -9,7 +9,6 @@ import OrbitIndicator from './orbitIndicator'
 
 const { SHADOW_PAD } = Constants
 const APP_SHADOW = [0, 0, 120, [0, 0, 0, 0.35]]
-const orbitLightShadow = [[0, 1, SHADOW_PAD, 0, [0, 0, 0, 0.04]]]
 const iWidth = 4
 const arrowSize = 22
 // const log = debug('OrbitFrame')
@@ -49,17 +48,15 @@ export default class OrbitFrame {
     const { orbitOnLeft } = Electron
     const borderColor = theme.base.background.darken(0.25).desaturate(0.6)
     const borderShadow = ['inset', 0, 0, 0, 0.5, borderColor]
-    const boxShadow =
-      fullScreen || orbitDocked
-        ? [APP_SHADOW]
-        : [App.state.peekTarget ? [0, 0, 10, [0, 0, 0.5]] : orbitLightShadow]
     const background = theme.base.background
     const borderLeftRadius = !orbitOnLeft ? 0 : Constants.BORDER_RADIUS
     const borderRightRadius =
       fullScreen || orbitDocked ? 0 : orbitOnLeft ? 0 : Constants.BORDER_RADIUS
+    const orbitLightShadow = [[0, 2, 30, 0, [0, 0, 0, 0.08]]]
     return (
       <orbitFrame
         css={{
+          width: orbitDocked ? 'auto' : size[0],
           height: size[1],
           transform: {
             x: position[0],
@@ -83,10 +80,13 @@ export default class OrbitFrame {
         <orbitBorder
           $orbitAnimate={App.isShowingOrbit}
           css={{
-            boxShadow: [borderShadow, boxShadow],
+            boxShadow: [
+              borderShadow,
+              fullScreen || orbitDocked ? [APP_SHADOW] : null,
+            ].filter(Boolean),
             top: orbitDocked ? 0 : SHADOW_PAD,
             bottom: orbitDocked ? 0 : SHADOW_PAD,
-            left: SHADOW_PAD,
+            left: orbitDocked ? SHADOW_PAD : 0,
             right: SHADOW_PAD,
             borderLeftRadius: borderLeftRadius ? borderLeftRadius - 1 : 0,
             borderRightRadius: borderRightRadius ? borderRightRadius - 1 : 0,
@@ -97,6 +97,7 @@ export default class OrbitFrame {
           $orbitAnimate={store.shouldAnimate}
           $pointerEvents={App.isShowingOrbit && !App.isAnimatingOrbit}
           css={{
+            padding: orbitDocked ? [0, 0, 0, SHADOW_PAD] : SHADOW_PAD,
             ...(fullScreen || orbitDocked
               ? { right: 0 }
               : {
@@ -107,9 +108,10 @@ export default class OrbitFrame {
         >
           <orbit
             css={{
-              padding: orbitDocked ? [0, 0, 0, SHADOW_PAD] : SHADOW_PAD,
+              borderLeftRadius,
+              borderRightRadius,
+              boxShadow: fullScreen || orbitDocked ? null : [orbitLightShadow],
               paddingRight: fullScreen || orbitDocked ? 0 : SHADOW_PAD,
-              right: fullScreen || orbitDocked ? 0 : -SHADOW_PAD,
               ...(App.isShowingOrbit
                 ? {
                     opacity: 1,
@@ -173,10 +175,10 @@ export default class OrbitFrame {
     orbit: {
       width: ORBIT_WIDTH,
       position: 'relative',
-      willChange: 'transform, opacity',
       transition: 'none',
     },
     orbitAnimate: {
+      willChange: 'transform, opacity',
       transition: `
         transform ease-in ${App.animationDuration}ms,
         opacity ease-in ${App.animationDuration / 2}ms ${App.animationDuration /

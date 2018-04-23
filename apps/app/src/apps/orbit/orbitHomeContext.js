@@ -2,7 +2,6 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { Desktop } from '@mcro/all'
-import OrbitDivider from './orbitDivider'
 import * as Constants from '~/constants'
 import { throttle } from 'lodash'
 import Results from '~/apps/results/results'
@@ -41,24 +40,16 @@ export default class OrbitHomeContext {
   }
 
   render({ appStore, theme }) {
-    const isSelectedInContext = appStore.activeIndex >= SPLIT_INDEX
-    const y = isSelectedInContext ? -(SPLIT_INDEX * 20) : 0
     return (
       <orbitContext
         css={{
           background: theme.base.background,
-          // transform: { y },
         }}
       >
         <fadeNotifications
           $$untouchable
           $fadeVisible={appStore.activeIndex >= SPLIT_INDEX}
         />
-        <OrbitDivider
-          if={!appStore.searchState.query}
-          css={{ paddingBottom: 0, zIndex: 1000, position: 'relative' }}
-        />
-        <space css={{ height: 20 }} />
         <Title>Context</Title>
         <SubTitle>
           <Circle>4</Circle> {Desktop.appState.title}

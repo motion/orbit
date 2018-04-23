@@ -278,6 +278,11 @@ export default class OrbitFrame {
   static style = {
     orbitFrame: {
       flex: 1,
+      width: ORBIT_WIDTH,
+      position: 'absolute',
+      top: 0,
+      right: 0,
+      bottom: 0,
     },
     orbit: {
       width: ORBIT_WIDTH,

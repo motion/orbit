@@ -2,10 +2,9 @@
 
 ## triaged
 
-* beta sprint
+* beta sprint (~2 weeks, May 4)
 
-  * goal: have simple beta we can begin deploying by May 4
-  * working: slack, mail, summary, search, peek, generally feel good
+  * working: slack/mail, summary, search, generally work well
 
   * nate
 

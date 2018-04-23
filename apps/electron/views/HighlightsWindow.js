@@ -1,11 +1,31 @@
 import * as React from 'react'
 import * as Constants from '~/constants'
-import { view } from '@mcro/black'
+import { view, react } from '@mcro/black'
 import { Window } from '@mcro/reactron'
 import * as Helpers from '~/helpers'
 import { Electron } from '@mcro/all'
+import screenSize from '../helpers/getScreenSize'
+import { ORBIT_WIDTH } from '@mcro/constants'
+import { Desktop } from '@mcro/all'
+
+class HighlightsStore {
+  willMount() {
+    this.screenSize = screenSize()[0]
+  }
+
+  @react
+  mouseInActiveArea = [
+    () => Desktop.mouseState.position,
+    ({ x }) => {
+      return x >= this.screenSize - ORBIT_WIDTH
+    },
+  ]
+}
 
 @view.attach('electronStore')
+@view.provide({
+  store: HighlightsStore,
+})
 @view.electron
 export default class HighlightsWindow extends React.Component {
   state = {
@@ -23,11 +43,11 @@ export default class HighlightsWindow extends React.Component {
     this.setState({ position })
   }
 
-  render({ electronStore, onRef }) {
+  render({ store, electronStore, onRef }) {
     return (
       <Window
         alwaysOnTop
-        ignoreMouseEvents
+        ignoreMouseEvents={!store.mouseInActiveArea}
         ref={ref => ref && onRef(ref.window)}
         file={`${Constants.APP_URL}/highlights`}
         show={electronStore.show ? this.state.show : false}

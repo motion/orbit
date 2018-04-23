@@ -42,6 +42,7 @@
 
 ### unsorted
 
+* [ ] swindler on close window need to reposition
 * [ ] ? filtering/exploring various integrations
 * [ ] remove search jumpiness
 * [ ] peek back button + history

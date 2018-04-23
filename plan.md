@@ -74,7 +74,13 @@ our keys to success
 
 our featureset
 
+what people think we are: organizational tool
+what we really are: replace your notification drawer + spotlight with something useful
+
 * news
+  * trends
+    * simple trends would help people see whats important today
+    * lower stress because you're not out of loop
   * daily highlights
     * goals
       * avoid context switch between many things
@@ -85,7 +91,12 @@ our featureset
       * broadly interesting things happening in your company
       * smart, clean summary of notifications across your integrations
 * search
-  * nlp question type search
+  * nlp search
     * nate works with
     * nate document 2 weeks ago
 * explore
+  * simple Projects / People
+  * later Teams
+  * later Wiki features
+* context
+  * unknown unknowns and pr value

@@ -1,4 +1,4 @@
-## next
+# next
 
 * [x] swindler fix not updating on some window resize/change
 
@@ -6,7 +6,7 @@
 
 * filtering/exploring various integrations
 
-## triage
+## nate
 
 * [ ] research into unread metadata from slack (read/unread especially)
 * [ ] remove search jumpiness
@@ -14,8 +14,6 @@
 * [ ] make "@" show a list of slack people + search people
 * [ ] slack views: show attachments/images
 * [ ] docked: have taller peeks
-
-## areas
 
 * interaction
 
@@ -114,21 +112,26 @@
 
   * [ ] keeping chromium warm
 
-## theoretical division of labor for first employee
+## launch
 
-sums up to about ~8 months of work. i'd estimate we still have at least another 16 months outside of this work.
-
-big pieces _outside first employee_ would be:
-
+* unknown unknowns and over-optimism (~3-4 months or ~20% of rest of work)
 * great daily summaries (~3 months)
 * finishing ux/peek/search interaction and features (~2 months)
 * likely refactors for final interface (~1 month)
 * lots of time on site, beta, video (~4 months)
 * ocr and contextual relevants/highlights (~2 months)
 * algorithm improvements (~?1month)
-* unknown unknowns and optimism (~4 months or ~20% of rest of work)
+* deep focus on interface smoothness (~1month)
+  * really nice animations for lists would go a long way but require pretty intense react work
+  * making an orbit indicator/highlight words probably needs slim native app interface
+  * upgrade to react 16.4 async/react may require building abstractions on top of mobx
 
-then _for employee_:
+security (~~~2weeks)
+
+* we likely either need to contract or get someone for this directly
+* involved auditing entire codebase, probably doing a variety of https things
+* encrypting a few pieces
+* local oauth system needs some work probably (hardcodes keys locally now)
 
 syncers (~1-2months)
 
@@ -140,20 +143,16 @@ syncers (~1-2months)
 * maybe dropbox/paper
 * maybe alternative email platforms
 
-deep focus on interface smoothness (~1month)
-
-* really nice animations for lists would go a long way but require pretty intense react work
-* making an orbit indicator/highlight words probably needs slim native app interface
-* upgrade to react 16.4 async/react may require building abstractions on top of mobx
-
 rich people/teams/explore (2weeks-Infinity)
 
 * would provide a much more thorough value on launch if we have explore (feels full featured from day 1)
 * smart linking together of people across different integrations
 * smart team or "commonly works together features"
 
-simple curation architecture (~2-3weeks)
+sync / simple curation architecture (~2-3weeks)
 
+* p2p may be simpler, or necessary
+* could be required for onboarding so everoyne doesn't need to reconfigure things
 * "pin result" feature for search
 * "create grouping" for wiki/explore
 * "define team"
@@ -192,3 +191,8 @@ variety of stack improvements (~1month)
 * getting our hmr working on babel 7 would allow us to use typescript everywhere
   * means app and ui kit can be typed, much easier to work with
 * could even help release a couple packages, getting us some PR and contributors to make our stack a bit safer long term
+
+attention (?)
+
+* may be required for good trends
+* may be really beneficial for what you've missed

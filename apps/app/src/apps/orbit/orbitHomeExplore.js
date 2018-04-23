@@ -10,49 +10,66 @@ export default class OrbitExplore {
   items = [
     {
       id: 'google',
-      type: 'setting',
-      title: 'Google',
-      icon: 'som',
+      title: 'People',
+      icon: 'user',
     },
     {
       id: 'google',
-      type: 'setting',
-      title: 'Google',
-      icon: 'som',
+      title: 'Projects',
+      icon: 'business',
     },
   ]
 
   render({ appStore }) {
     return (
       <pane>
-        <Title>Explore</Title>
+        <Title size={1.7}>
+          Sunday, Apr 22<span css={{ verticalAlign: 'super', fontSize: 12 }}>
+            nd
+          </span>
+        </Title>
         <section $explore>
           {[
-            'Fast Projects',
-            'Onboarding Docs',
-            'Popular this week',
-            'People directory',
-          ].map((item, index) => (
-            <item
-              key={index}
-              css={{ flexFlow: 'row', alignItems: 'center', padding: [8, 10] }}
-            >
-              <UI.Arrow
-                size={14}
-                background="red"
+            'Model 3 Transmission',
+            'Recall Potential',
+            'Lithium Contract',
+            'Elon Letter',
+          ].map((item, index) => {
+            const isDown = index % 2 === 0
+            return (
+              <item
+                key={index}
                 css={{
-                  transform: { scaleX: 0.75 },
-                  margin: 2,
+                  flexFlow: 'row',
+                  alignItems: 'center',
+                  padding: [8, 10],
+                  fontSize: 16,
                 }}
-              />{' '}
-              Model 3 Parts Supply
-            </item>
-          ))}
+              >
+                <UI.Arrow
+                  size={14}
+                  towards={isDown ? 'bottom' : 'top'}
+                  background={isDown ? 'red' : 'green'}
+                  css={{
+                    transform: { scaleX: 0.75 },
+                    marginTop: isDown ? 4 : -10,
+                    marginRight: 8,
+                  }}
+                />{' '}
+                {item}
+              </item>
+            )
+          })}
         </section>
 
+        <verticalSpace />
+
+        <Title>You may have missed</Title>
         <OrbitHomeHighlights />
 
-        <Title>In your Orbit</Title>
+        <verticalSpace $$flex />
+
+        <Title>Explore</Title>
         <cards>
           {this.items.map((item, index) => (
             <SettingCard
@@ -72,16 +89,20 @@ export default class OrbitExplore {
 
   static style = {
     pane: {
-      padding: [20, 0],
+      padding: [0, 0],
+      flex: 1,
     },
     section: {
-      padding: [5, 4],
+      padding: [5, 0],
     },
     cards: {
       flexFlow: 'row',
       flexWrap: 'wrap',
       userSelect: 'none',
       marginBottom: 20,
+    },
+    verticalSpace: {
+      height: 20,
     },
   }
 }

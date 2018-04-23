@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import OrbitCard from './orbitCard'
-import { Title, SubTitle, Circle } from '~/views'
+import { SubTitle, Circle } from '~/views'
 
 @view.attach('appStore')
 @view
@@ -17,36 +17,65 @@ export default class OrbitHomeHighlights {
     )
     return (
       <summary if={summaryResults.length} css={{ maxHeight }}>
-        <Title center>Friday's Highlights</Title>
-        <SubTitle>
-          <Circle>3</Circle> Conversations
-        </SubTitle>
-        <OrbitCard
-          index={0}
-          total={summaryResults.length}
-          result={summaryResults[0]}
-          hoverToSelect
-        />
+        <SubTitle>Conversations</SubTitle>
+        <section>
+          <OrbitCard
+            index={0}
+            total={summaryResults.length}
+            result={summaryResults[0]}
+            hoverToSelect
+            expanded={false}
+            listItem
+          />
+          <OrbitCard
+            index={1}
+            total={summaryResults.length}
+            result={summaryResults[0]}
+            hoverToSelect
+            expanded={false}
+            listItem
+          />
+          <OrbitCard
+            index={2}
+            total={summaryResults.length}
+            result={summaryResults[0]}
+            hoverToSelect
+            expanded={false}
+            listItem
+          />
+        </section>
         <verticalSpace />
-        <SubTitle>
-          <Circle>1</Circle> Document
-        </SubTitle>
-        <OrbitCard
-          index={1}
-          total={summaryResults.length}
-          result={summaryResults[1]}
-          hoverToSelect
-        />
+        <SubTitle>Documents</SubTitle>
+        <section>
+          <OrbitCard
+            index={1}
+            total={summaryResults.length}
+            result={summaryResults[1]}
+            hoverToSelect
+            expanded={false}
+            listItem
+          />
+        </section>
         <verticalSpace />
-        <SubTitle>
-          <Circle>2</Circle> Issues
-        </SubTitle>
-        <OrbitCard
-          index={2}
-          total={summaryResults.length}
-          result={summaryResults[2]}
-          hoverToSelect
-        />
+        <SubTitle>Issues</SubTitle>
+        <section>
+          <OrbitCard
+            index={2}
+            total={summaryResults.length}
+            result={summaryResults[2]}
+            hoverToSelect
+            expanded={false}
+            listItem
+          />
+          <OrbitCard
+            index={2}
+            total={summaryResults.length}
+            result={summaryResults[2]}
+            hoverToSelect
+            expanded={false}
+            listItem
+          />
+        </section>
       </summary>
     )
   }
@@ -59,6 +88,9 @@ export default class OrbitHomeHighlights {
       position: 'relative',
       transition: 'opacity ease-in-out 150ms',
       overflowY: 'scroll',
+    },
+    section: {
+      padding: [0, 4],
     },
   }
 }

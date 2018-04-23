@@ -120,7 +120,7 @@ export default class OrbitCard {
         <card
           $cardHovered={this.hovered}
           css={{
-            padding: tiny ? [6, 8] : [9, 12],
+            padding: listItem ? [15, 12] : tiny ? [6, 8] : [9, 12],
             borderRadius,
           }}
           onMouseEnter={this.setHovered}
@@ -149,7 +149,7 @@ export default class OrbitCard {
           <preview
             if={preview && !isExpanded}
             css={{
-              margin: [3, 0],
+              margin: [3, 0, 0],
               flexFlow: 'row',
               alignItems: 'center',
             }}
@@ -188,7 +188,7 @@ export default class OrbitCard {
             </subtitle>
             <full if={!tiny && isExpanded}>{content}</full>
           </content>
-          <bottom if={!tiny}>
+          <bottom if={!tiny && (bottom || permalink || via)}>
             <permalink if={isExpanded}>{permalink}</permalink>
             <space if={permalink} />
             {bottom}

@@ -147,7 +147,7 @@ export default class OrbitFrame {
   }
 
   render({ store, orbitPage, children, theme, headerBg }) {
-    const { fullScreen, orbitDocked } = Electron.orbitState
+    const { fullScreen, orbitDocked, position, size } = Electron.orbitState
     const { orbitOnLeft } = Electron
     const borderColor = theme.base.background.darken(0.25).desaturate(0.6)
     const borderShadow = ['inset', 0, 0, 0, 0.5, borderColor]
@@ -160,7 +160,12 @@ export default class OrbitFrame {
     const borderRightRadius =
       fullScreen || orbitDocked ? 0 : orbitOnLeft ? 0 : Constants.BORDER_RADIUS
     return (
-      <orbitFrame>
+      <orbitFrame
+        css={{
+          height: size[1],
+          transform: { x: position[0], y: position[1] - 23 },
+        }}
+      >
         <OrbitArrow
           if={App.isAttachedToWindow && !orbitDocked}
           arrowSize={arrowSize}
@@ -281,8 +286,7 @@ export default class OrbitFrame {
       width: ORBIT_WIDTH,
       position: 'absolute',
       top: 0,
-      right: 0,
-      bottom: 0,
+      left: 0,
     },
     orbit: {
       width: ORBIT_WIDTH,

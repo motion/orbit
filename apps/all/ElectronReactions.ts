@@ -192,8 +192,9 @@ export default class ElectronReactions {
       Desktop.mouseState.position,
       App.state.orbitHidden,
       Electron.orbitState.position,
+      App.state.peekTarget,
     ],
-    async ([mP, isHidden, orbitPosition], { sleep }) => {
+    async ([mP, isHidden, orbitPosition, peekTarget], { sleep }) => {
       if (isHidden) {
         if (Electron.orbitState.mouseOver) {
           Electron.setState({
@@ -201,6 +202,7 @@ export default class ElectronReactions {
             orbitState: { mouseOver: false },
           })
         }
+        // open if hovering indicator
         const [oX, oY] = orbitPosition
         // TODO: Constants.ORBIT_WIDTH
         const adjX = Electron.orbitOnLeft ? 313 : 17
@@ -215,11 +217,14 @@ export default class ElectronReactions {
       }
       if (Electron.orbitState.position) {
         const mouseOver = isMouseOver(Electron.orbitState, mP)
+        // TODO: think we can avoid this check because we do it in Bridge
         if (mouseOver !== Electron.orbitState.mouseOver) {
           Electron.setOrbitState({ mouseOver })
         }
       }
-      if (App.state.peekTarget || Electron.peekState.mouseOver) {
+      if (!peekTarget) {
+        Electron.setPeekState({ mouseOver: false })
+      } else {
         const mouseOver = isMouseOver(Electron.currentPeek, mP)
         if (mouseOver !== Electron.peekState.mouseOver) {
           Electron.setPeekState({ mouseOver })

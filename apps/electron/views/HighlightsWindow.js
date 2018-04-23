@@ -1,25 +1,14 @@
 import * as React from 'react'
 import * as Constants from '~/constants'
-import { view, react } from '@mcro/black'
+import { view } from '@mcro/black'
 import { Window } from '@mcro/reactron'
 import * as Helpers from '~/helpers'
 import { Electron } from '@mcro/all'
-import screenSize from '../helpers/getScreenSize'
-import { ORBIT_WIDTH } from '@mcro/constants'
-import { Desktop } from '@mcro/all'
 
 class HighlightsStore {
-  willMount() {
-    this.screenSize = screenSize()[0]
+  get mouseInActiveArea() {
+    return Electron.peekState.mouseOver || Electron.orbitState.mouseOver
   }
-
-  @react
-  mouseInActiveArea = [
-    () => Desktop.mouseState.position,
-    ({ x }) => {
-      return x >= this.screenSize - ORBIT_WIDTH
-    },
-  ]
 }
 
 @view.attach('electronStore')

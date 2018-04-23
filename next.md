@@ -150,17 +150,17 @@
 
 ## launch
 
-* unknown unknowns and over-optimism (~3-4 months or ~20% of rest of work)
+* unknown unknowns and over-optimism (~3 months or ~15% of rest of work)
 * great daily summaries / trends (~3 months)
 * ocr and contextual relevants/highlights (~1 month)
 * finishing ux/peek/search interaction and features (~2 months)
-* likely refactors for final interface (~1 month)
-* lots of time on site, beta, video (~4 months)
-* algorithm improvements (~?1month)
-* deep focus on interface smoothness (~1month)
-  * really nice animations for lists would go a long way but require pretty intense react work
+* site, beta, video (~4 months)
+* algorithm improvements (~1month)
+* deep focus on interface smoothness (~2weeks)
+  * nice animations would go a long way but require pretty intense react work
   * making an orbit indicator/highlight words probably needs slim native app interface
-  * upgrade to react 16.4 async/react may require building abstractions on top of mobx
+  * upgrade to react 16.4 async/react may take a while (require abstractions on mobx even)
+  * weve not done any real profiling
 
 security (~~~2weeks)
 
@@ -219,6 +219,11 @@ testing, polish, productioninizing (~2-3weeks)
 * improving various auto updates
 * having a continuous integration process so we can deploy quickly
 
+attention (?)
+
+* may be required for good trends
+* may be really beneficial for what you've missed
+
 stack improvements (~1month)
 
 * improving typing and architecture in variety of sketchy areas
@@ -227,8 +232,3 @@ stack improvements (~1month)
 * getting our hmr working on babel 7 would allow us to use typescript everywhere
   * means app and ui kit can be typed, much easier to work with
 * could even help release a couple packages, getting us some PR and contributors to make our stack a bit safer long term
-
-attention (?)
-
-* may be required for good trends
-* may be really beneficial for what you've missed

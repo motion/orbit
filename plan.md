@@ -65,6 +65,13 @@ our unique go to market strategies
   * people like patrick collison, john gruber, various high influence programmers, etc
   * anyone who promoted superhuman, meteor, + influential in design community (khoi vinh etc)
 
+our keys to success
+
+* context should be addicting in a good way
+  * shows interesting things in pleasant way
+* displaying alignment with users
+  * we are in precarious territory, need to prove were good actors
+
 our featureset
 
 * news

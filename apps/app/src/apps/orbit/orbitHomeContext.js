@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
+import { Desktop } from '@mcro/all'
 import OrbitDivider from './orbitDivider'
 import * as Constants from '~/constants'
 import { throttle } from 'lodash'
@@ -46,7 +47,7 @@ export default class OrbitHomeContext {
       <orbitContext
         css={{
           background: theme.base.background,
-          transform: { y },
+          // transform: { y },
         }}
       >
         <fadeNotifications
@@ -60,7 +61,7 @@ export default class OrbitHomeContext {
         <space css={{ height: 20 }} />
         <Title>Context</Title>
         <SubTitle>
-          <Circle>4</Circle> Relevant Items
+          <Circle>4</Circle> {Desktop.appState.title}
         </SubTitle>
         <Results isContext />
       </orbitContext>

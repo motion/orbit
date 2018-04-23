@@ -45,9 +45,11 @@ export default class OrbitSearchResults {
     orbitSearchResults: {
       flex: 1,
       opacity: 0,
+      pointerEvents: 'none',
     },
     visible: {
       opacity: 1,
+      pointerEvents: 'all',
     },
     isChanging: {
       opacity: 0.7,

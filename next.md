@@ -116,18 +116,23 @@
 
 ## theoretical division of labor for first employee
 
-sums up to about ~8 months of work. i'd estimate we still have at least another 16 months outside of this work. big pieces outside this are:
+sums up to about ~8 months of work. i'd estimate we still have at least another 16 months outside of this work.
+
+big pieces _outside first employee_ would be:
 
 * great daily summaries (~3 months)
-* great ux/peek/search interaction and features (~2 months)
-* likely refactors for final interface improvements (~1 month)
+* finishing ux/peek/search interaction and features (~2 months)
+* likely refactors for final interface (~1 month)
 * lots of time on site, beta, video (~4 months)
 * ocr and contextual relevants/highlights (~2 months)
+* algorithm improvements (~?1month)
 * unknown unknowns and optimism (~4 months or ~20% of rest of work)
+
+then _for employee_:
 
 syncers (~1-2months)
 
-* more stable, reliable, rich data
+* more stable, reliable, configurable with rich data
 * github
 * jira
 * confluence

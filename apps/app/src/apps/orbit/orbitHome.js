@@ -1,25 +1,16 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import OrbitCard from './orbitCard'
 import OrbitHomeContext from './orbitHomeContext'
-import { App } from '@mcro/all'
-import * as UI from '@mcro/ui'
-import { Title, SubTitle, Circle } from '~/views'
+import { App, Electron } from '@mcro/all'
+import OrbitHomeExplore from './orbitHomeExplore'
 
-@UI.injectTheme
 @view.attach('appStore')
 @view
 export default class OrbitHome {
-  render({ appStore, theme }) {
-    const { summaryResults, contextResults } = appStore
-    if (!summaryResults.length) {
-      return null
-    }
+  render({ appStore }) {
     const hasQuery = App.state.query
-    const maxHeight = Math.max(
-      appStore.innerHeight * 0.75,
-      appStore.innerHeight - contextResults.length * 80,
-    )
+    const isDocked = Electron.orbitState.dockedPinned
+    console.log('isDocked', isDocked)
     return (
       <orbitHome
         css={{
@@ -27,40 +18,12 @@ export default class OrbitHome {
         }}
       >
         <space css={{ height: 10 }} />
-        <summary if={summaryResults.length} css={{ maxHeight }}>
-          <Title center>Friday's Highlights</Title>
-
-          <SubTitle>
-            <Circle>3</Circle> Conversations
-          </SubTitle>
-          <OrbitCard
-            index={0}
-            total={summaryResults.length}
-            result={summaryResults[0]}
-            hoverToSelect
-          />
-          <verticalSpace />
-          <SubTitle>
-            <Circle>1</Circle> Document
-          </SubTitle>
-          <OrbitCard
-            index={1}
-            total={summaryResults.length}
-            result={summaryResults[1]}
-            hoverToSelect
-          />
-          <verticalSpace />
-          <SubTitle>
-            <Circle>2</Circle> Issues
-          </SubTitle>
-          <OrbitCard
-            index={2}
-            total={summaryResults.length}
-            result={summaryResults[2]}
-            hoverToSelect
-          />
-        </summary>
-        <OrbitHomeContext appStore={appStore} />
+        <content if={isDocked}>
+          <OrbitHomeExplore />
+        </content>
+        <content if={!isDocked}>
+          <OrbitHomeContext appStore={appStore} />
+        </content>
         <space css={{ height: 20 }} />
       </orbitHome>
     )
@@ -75,13 +38,8 @@ export default class OrbitHome {
       bottom: 0,
       padding: [8, 0, 0],
     },
-    summary: {
-      position: 'relative',
-      transition: 'opacity ease-in-out 150ms',
-      overflowY: 'scroll',
-    },
-    verticalSpace: {
-      height: 5,
+    content: {
+      flex: 1,
     },
   }
 }

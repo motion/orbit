@@ -6,11 +6,9 @@ import type { Color } from '@mcro/gloss'
 export type Props = {
   size: number,
   towards: 'top' | 'right' | 'bottom' | 'left',
-  color?: Color,
-  boxShadow?: string,
   theme?: string | Object,
   boxShadow?: any,
-  background?: any,
+  background?: Color,
 }
 
 @view.ui

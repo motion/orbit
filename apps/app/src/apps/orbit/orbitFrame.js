@@ -8,7 +8,7 @@ import OrbitArrow from './orbitArrow'
 import OrbitIndicator from './orbitIndicator'
 
 const { SHADOW_PAD } = Constants
-const APP_SHADOW = [0, 0, 120, [0, 0, 0, 0.4]]
+const APP_SHADOW = [0, 0, 120, [0, 0, 0, 0.35]]
 const orbitLightShadow = [[0, 1, SHADOW_PAD, 0, [0, 0, 0, 0.04]]]
 const iWidth = 4
 const arrowSize = 22
@@ -80,32 +80,14 @@ export default class OrbitFrame {
           iWidth={iWidth}
           orbitOnLeft={orbitOnLeft}
         />
-        {/* <orbitShadow
-          if={false}
-          css={{
-            position: 'absolute',
-            zIndex: -1,
-            top: 25,
-            bottom: 25,
-            left: SHADOW_PAD * 1.5,
-            right: SHADOW_PAD * 1.5,
-            boxShadow: [[0, 0, SHADOW_PAD * 2, [0, 0, 0, 0.2]]],
-            transition: App.isShowingOrbit
-              ? `opacity ease-in 200ms ${App.animationDuration * 1.5}ms`
-              : 'none',
-            opacity: App.isShowingOrbit ? 1 : 0,
-          }}
-        /> */}
         <orbitBorder
           $orbitAnimate={App.isShowingOrbit}
           css={{
-            boxShadow: [borderShadow],
-            ...(!orbitDocked && {
-              top: SHADOW_PAD,
-              left: SHADOW_PAD,
-              bottom: SHADOW_PAD,
-            }),
-            right: fullScreen || orbitDocked ? 0 : SHADOW_PAD,
+            boxShadow: [borderShadow, boxShadow],
+            top: orbitDocked ? 0 : SHADOW_PAD,
+            bottom: orbitDocked ? 0 : SHADOW_PAD,
+            left: SHADOW_PAD,
+            right: SHADOW_PAD,
             borderLeftRadius: borderLeftRadius ? borderLeftRadius - 1 : 0,
             borderRightRadius: borderRightRadius ? borderRightRadius - 1 : 0,
             opacity: App.isShowingOrbit ? 1 : 0,
@@ -154,7 +136,6 @@ export default class OrbitFrame {
             <content
               css={{
                 background,
-                boxShadow: App.isShowingOrbit ? boxShadow : 'none',
                 // makes the shadow go offscreen nicely
                 marginRight: fullScreen ? -SHADOW_PAD : 0,
                 paddingRight: fullScreen ? SHADOW_PAD : 0,
@@ -208,6 +189,7 @@ export default class OrbitFrame {
     },
     // used to hide edge overlap of drawer during in animation
     overflowWrap: {
+      overflow: 'hidden',
       alignSelf: 'flex-end',
       width: '100%',
       height: '100%',

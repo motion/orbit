@@ -5,31 +5,24 @@ import * as React from 'react'
 import Tray from './views/Tray'
 import MenuItems from './views/MenuItems'
 import HighlightsWindow from './views/HighlightsWindow'
-import PeekWindow from './views/PeekWindow'
-import OrbitWindow from './views/OrbitWindow'
 import ShortcutsStore from '~/stores/shortcutsStore'
+import WindowFocusStore from '~/stores/windowFocusStore'
 import global from 'global'
-import { memoize } from 'lodash'
 import debug from '@mcro/debug'
 import { isEqual } from '@mcro/black'
 
 const log = debug('Electron')
 
 class ElectronStore {
-  shortcutStore: ShortcutsStore
+  shortcutStore?: ShortcutsStore = null
+  windowFocusStore?: WindowFocusStore = null
   error = null
   appRef = null
   stores = null
   views = null
-  peekRefs = {}
   orbitRef = null
-  highlightRef = null
   clear = Date.now()
   show = 0
-
-  get peekRef() {
-    return this.peekRefs[0]
-  }
 
   async willMount() {
     global.Root = this
@@ -41,7 +34,14 @@ class ElectronStore {
     await Electron.start({
       ignoreSelf: true,
     })
-    this.watchOptionPress()
+    this.windowFocusStore = new WindowFocusStore()
+    this.shortcutStore = new ShortcutsStore([
+      'Option+Space',
+      'Option+Shift+Space',
+      'CommandOrControl+Space',
+    ])
+    // @ts-ignore
+    this.shortcutStore.emitter.on('shortcut', Electron.reactions.onShortcut)
     Electron.onMessage(msg => {
       switch (msg) {
         case Electron.messages.CLEAR:
@@ -95,39 +95,6 @@ class ElectronStore {
     },
   ]
 
-  // focus on fullscreen
-  @react
-  focusOnFullScreen = [
-    () => Electron.orbitState.fullScreen,
-    fs => {
-      if (fs) {
-        this.peekRef.focus()
-        this.orbitRef.focus()
-      }
-    },
-  ]
-
-  handlePeekRef = memoize(peek => ref => {
-    if (!ref) return
-    if (this.peekRefs[peek.key]) return
-    this.peekRefs[peek.key] = ref.window
-    // make sure its in front of the ora window
-    if (!peek.isTorn) {
-      this.peekRefs[peek.key].focus()
-    }
-  })
-
-  watchOptionPress = () => {
-    this.shortcutStore = new ShortcutsStore([
-      'Option+Space',
-      'Option+Shift+Space',
-      'CommandOrControl+Space',
-    ])
-
-    // @ts-ignore
-    this.shortcutStore.emitter.on('shortcut', Electron.reactions.onShortcut)
-  }
-
   restart() {
     if (process.env.NODE_ENV === 'development') {
       require('touch')(require('path').join(__dirname, '..', '_', 'index.js'))
@@ -163,7 +130,9 @@ export default class ElectronWindow extends React.Component {
     if (electronStore.error) {
       return null
     }
-
+    if (!electronStore.windowFocusStore) {
+      return null
+    }
     return (
       <AppWindow
         onBeforeQuit={electronStore.handleBeforeQuit}
@@ -171,9 +140,7 @@ export default class ElectronWindow extends React.Component {
         ref={electronStore.handleAppRef}
       >
         <MenuItems el />
-        {/* <OrbitWindow onRef={ref => (electronStore.orbitRef = ref)} /> */}
-        <HighlightsWindow onRef={ref => (electronStore.highlightRef = ref)} />
-        {/* <PeekWindow /> */}
+        <HighlightsWindow onRef={electronStore.windowFocusStore.setOrbitRef} />
         <Tray />
       </AppWindow>
     )

@@ -75,7 +75,6 @@ export default class OrbitHeader {
     return (
       <header
         $headerBg={headerBg}
-        $$draggable
         $headerVisible={headerStore.isShowingHeader}
         $headerMouseOver={Electron.orbitState.mouseOver}
         css={{

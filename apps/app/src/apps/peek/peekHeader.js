@@ -13,7 +13,6 @@ export default class PeekHeader {
     // const { isTorn } = Electron.currentPeek
     return (
       <header
-        $$draggable={!fullScreen}
         css={{
           padding: title ? [18, 20, 0] : 0,
         }}

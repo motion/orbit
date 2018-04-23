@@ -30,7 +30,7 @@ export default function orbitPosition(
   }
   const orbitOnLeft = leftSpace > rightSpace
   let x
-  let y = top
+  let y = top - 23
   if (orbitOnLeft) {
     x = left - orbitW
     if (orbitW > leftSpace) {

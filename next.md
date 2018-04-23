@@ -1,15 +1,11 @@
-# next
+## now
 
-* [x] swindler fix not updating on some window resize/change
-
-## nate
-
-### triaged
+## triaged
 
 * beta sprint
 
   * goal: have simple beta we can begin deploying by May 4
-  * working: slack, mail, summary, search, generally feel good
+  * working: slack, mail, summary, search, peek, generally feel good
 
   * nate
 
@@ -23,6 +19,11 @@
       * better selection of the right rooms to sync
       * finish setting pane nicely
       * show attachments/images
+    * peek movement
+      * clicking items in peek lets you move around
+    * interaction/bugs
+      * generally make sure its not breaking/bugging
+      * improve and make clear shortcuts
     * productionize
       * build to .app
       * slim it a bit so ~250mb not ~700
@@ -151,11 +152,11 @@
 ## launch
 
 * unknown unknowns and over-optimism (~3-4 months or ~20% of rest of work)
-* great daily summaries (~3 months)
+* great daily summaries / trends (~3 months)
+* ocr and contextual relevants/highlights (~1 month)
 * finishing ux/peek/search interaction and features (~2 months)
 * likely refactors for final interface (~1 month)
 * lots of time on site, beta, video (~4 months)
-* ocr and contextual relevants/highlights (~2 months)
 * algorithm improvements (~?1month)
 * deep focus on interface smoothness (~1month)
   * really nice animations for lists would go a long way but require pretty intense react work
@@ -195,7 +196,7 @@ sync / simple curation architecture (~2-3weeks)
 * "mark stale" etc
 * could even have it generate a wiki on-prem
 
-generally assisting with improving existing features (1month-Infinity)
+improving existing features (1month-Infinity)
 
 * explore better news interfaces and queries/metadata
 * help interview and test app with various beta testers
@@ -212,14 +213,14 @@ beta to launch work (~1month)
   * various sub-pages and sections
   * pricing page + buying stuff
 
-tons of testing, polish, productioninizing (~2-3weeks)
+testing, polish, productioninizing (~2-3weeks)
 
 * testing across multiple mac versions
 * slimming bundle size
 * improving various auto updates
 * having a continuous integration process so we can deploy quickly
 
-variety of stack improvements (~1month)
+stack improvements (~1month)
 
 * improving typing and architecture in variety of sketchy areas
 * optimizing performance in areas where its important

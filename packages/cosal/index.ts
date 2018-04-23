@@ -76,6 +76,10 @@ export default class CosalStore {
 
       const ids = Object.keys(this.cosals)
       const values = ids.map(id => Array.from(this.cosals[id].vector))
+      if (values.length === 0) {
+        return () => []
+      }
+
       const tree = kdTree(values)
       this.tree = tree
       return (vec, knn) =>

@@ -7,6 +7,7 @@ export default class SlackChannel extends React.Component {
   version = 0
 
   get setting() {
+    console.log('props are', this.props)
     return this.props.slackService.setting
   }
 

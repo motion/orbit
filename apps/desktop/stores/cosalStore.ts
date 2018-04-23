@@ -1,8 +1,12 @@
 import Cosal from '@mcro/cosal'
 import { App, Desktop } from '@mcro/all'
-import { uniqBy, sortBy, reverse } from 'lodash'
+import { uniqBy, uniq, sortBy, reverse } from 'lodash'
 import { react, store } from '@mcro/black'
 import { Bit } from '@mcro/models'
+
+const filterText = (text: string): string => {
+  return text.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '')
+}
 
 @store
 export default class CosalStore {
@@ -13,28 +17,31 @@ export default class CosalStore {
 
   bitToDoc = ({ id, body, createdAt }) => ({
     id,
-    fields: [{ weight: 1, content: body }],
+    fields: [{ weight: 1, content: filterText(body) }],
     createdAt: createdAt,
   })
 
   async willMount() {
-    const startingHistory = 3000
+    const startingHistory = 150
 
     const bits: any = uniqBy(await Bit.find({ take: startingHistory }), 'id')
+    console.log('in cosal bits are', bits)
     this.lastIndex = +Date.now()
     await this.cosal.warm()
-    const start = +Date.now()
     await this.cosal.addDocuments(bits.map(this.bitToDoc))
+    console.log('rewriting summaries')
     bits.forEach(async bit => {
-      // if (!bit.data.summary) {
-      const words = reverse(
-        sortBy(this.cosal.cosals[bit.id].fields[0].words, 'weight'),
-      )
-        .slice(0, 3)
-        .map(({ word }) => word)
-      bit.data.summary = words.join('::')
-      await bit.save()
-      // }
+      if (true || !bit.data.summary) {
+        const words = reverse(
+          sortBy(this.cosal.cosals[bit.id].fields[0].words, 'weight'),
+        )
+          .slice(0, 6)
+          .map(({ word }) => word)
+        bit.data.summary = uniq(words)
+          .slice(0, 3)
+          .join('::')
+        await bit.save()
+      }
     })
     this.cosal.docsVersion += 1
     // @ts-ignore

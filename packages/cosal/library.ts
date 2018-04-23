@@ -30,7 +30,7 @@ const ourSigmoid = (x, horizontal, vertical) =>
 const getWordVector = memoize(
   word =>
     new Vector(
-      vectors[word] || vectors['hello'].map(() => random(-0.05, 0.05)),
+      vectors[word] || vectors['hello'].map(() => random(-0.15, 0.15)),
     ),
 )
 
@@ -43,7 +43,7 @@ const getDistance = async (word, vector) => {
 
 const toWords = s =>
   s
-    .replace(/[^a-z0-9]/gi, ' ')
+    .replace(/[^\'a-z0-9]/gi, ' ')
     .split(' ')
     .filter(w => w.trim().length > 0)
 
@@ -67,6 +67,14 @@ export async function toCosal(doc: Doc): Promise<Cosal> {
   let allDistances: any = await Promise.all(
     words.map((word, index) => getDistance(word, allWordVectors[index])),
   )
+
+  if (doc.fields[0].content.indexOf('vscode') > -1) {
+    console.log('all word vectors are', allWordVectors)
+    console.log(
+      'allDistances are',
+      allDistances.map((distance, index) => ({ distance, word: words[index] })),
+    )
+  }
 
   if (allDistances.length > 1) {
     const maxDistance = Math.max.apply(null, allDistances)

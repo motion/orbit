@@ -13,6 +13,11 @@ export default class CoSalPage {
           value={store.query}
           onChange={e => (store.query = e.target.value)}
         />
+        <queryCosal if={store.queryCosal} $$row className="wrap">
+          {store.queryCosal.fields[0].words.map(({ word, weight }) => (
+            <word css={{ opacity: weight }}>{word}</word>
+          ))}
+        </queryCosal>
         <results>
           {(store.results || []).map(({ similarity, cosal }, index) => (
             <result>
@@ -38,6 +43,9 @@ export default class CoSalPage {
     },
     similarity: {
       margin: [10, 20],
+    },
+    queryCosal: {
+      width: 500,
     },
     cosalViewer: {
       margin: 30,

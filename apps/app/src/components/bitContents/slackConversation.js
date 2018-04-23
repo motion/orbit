@@ -7,12 +7,6 @@ import { RoundButton } from '~/views'
 import pluralize from 'pluralize'
 
 // const isntAttachment = x => !x.text || !x.text.match(/\<([a-z]+:\/\/[^>]+)\>/g)
-const exampleTitles = [
-  `Context, TSNE, Mobile App`,
-  `Superhuman, Funny`,
-  `Search, nlp, fluid`,
-  `Sketching, creatively`,
-]
 const uids = {}
 
 @UI.injectTheme
@@ -23,11 +17,10 @@ export default class BitSlackConversation {
   }
 
   render({ children, result, appStore, shownLimit, theme, contentStyle }) {
-    const uid =
-      uids[result.id] || Math.floor(Math.random() * exampleTitles.length)
-    uids[result.id] = uid
     return children({
-      title: exampleTitles[uid],
+      title: result.data.summary
+        ? result.data.summary.split('::').join(', ')
+        : '',
       icon: 'slack',
       location: (
         <RoundButton

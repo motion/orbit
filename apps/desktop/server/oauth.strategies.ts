@@ -8,8 +8,11 @@ export default {
     config: {
       credentials: {
         callbackURL: '/auth/slack/callback',
-        clientID: '19222037265.219986189088',
-        clientSecret: '281011e25d0c473136b4caa5807ada6d',
+        clientID: `19222037265.351557679894`,
+        clientSecret: `7ae7e2b4e4bb4beb36a08e057846f7f0`,
+        // nate's
+        // clientID: '19222037265.219986189088',
+        // clientSecret: '281011e25d0c473136b4caa5807ada6d',
       },
     },
     options: {

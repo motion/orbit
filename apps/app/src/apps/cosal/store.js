@@ -6,6 +6,7 @@ const pg = pgText.split('\n')
 @store
 export default class CosalStore {
   query = ''
+  queryCosal = null
   loading = false
 
   async willMount() {
@@ -30,11 +31,14 @@ export default class CosalStore {
       if (this.loading) {
         return []
       }
-      const vals = await this.cosal.search({
+
+      const doc = {
         id: Math.random() + '',
         fields: [{ weight: 1, content: this.query }],
         createdAt: +Date.now(),
-      })
+      }
+      this.queryCosal = await this.cosal.toCosal(doc)
+      const vals = await this.cosal.search(doc)
 
       return vals
     },

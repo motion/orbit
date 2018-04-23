@@ -132,9 +132,11 @@ export default class AppStore {
 
       const ids = Desktop.state.searchState.searchResults
 
+      console.log('ids are', ids)
       const bitResults = await Bit.findByIds(ids, {
         relations: ['people'],
       })
+      console.log('bit results are', bitResults)
 
       // things have changed in the meantime
       if (ids.join(',') !== Desktop.state.searchState.searchResults.join(',')) {
@@ -143,6 +145,8 @@ export default class AppStore {
       const bitVals = ids.map(
         id => bitResults.filter(bit => +bit.id === +id)[0],
       )
+
+      console.log('bit vals are', bitVals)
 
       return bitVals
     },

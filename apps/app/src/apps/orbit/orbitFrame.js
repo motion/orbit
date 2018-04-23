@@ -3,7 +3,7 @@ import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { App, Electron, Desktop } from '@mcro/all'
 import * as Constants from '~/constants'
-import OrbitDivider from './orbitDivider'
+import { ORBIT_WIDTH } from '@mcro/constants'
 
 const { SHADOW_PAD, APP_SHADOW } = Constants
 const orbitLightShadow = [[0, 1, SHADOW_PAD, 0, [0, 0, 0, 0.04]]]
@@ -234,8 +234,11 @@ export default class OrbitFrame {
                     opacity: 0,
                     transform: {
                       x: orbitOnLeft
-                        ? 330 * 0.15 - SHADOW_PAD - (SHADOW_PAD + iWidth) + 4
-                        : -(330 * 0.15),
+                        ? ORBIT_WIDTH * 0.15 -
+                          SHADOW_PAD -
+                          (SHADOW_PAD + iWidth) +
+                          4
+                        : -(ORBIT_WIDTH * 0.15),
                     },
                   }),
             }}
@@ -277,7 +280,7 @@ export default class OrbitFrame {
       flex: 1,
     },
     orbit: {
-      width: 330,
+      width: ORBIT_WIDTH,
       position: 'relative',
       willChange: 'transform, opacity',
       transition: 'none',

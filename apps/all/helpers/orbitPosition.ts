@@ -1,15 +1,15 @@
 import screenSize from './screenSize'
+import { ORBIT_WIDTH } from '@mcro/constants'
 // import debug from '@mcro/debug'
 // const log = debug('orbitPosition')
 
-const INITIAL_SIZE = [330, 420]
 const VERT_PAD = 5 // small vertical pad allows you to resize attached window
 
 export default function orbitPosition(
   { left, top, width, height },
   forceDocked = false,
 ) {
-  let [orbitW] = INITIAL_SIZE
+  let orbitW = ORBIT_WIDTH
   const [screenW, screenH] = screenSize()
   let orbitH = height
   const leftSpace = left

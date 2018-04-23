@@ -1,9 +1,10 @@
 ## now
 
-## triaged
+## triage
 
 * beta sprint (~2 weeks, May 4)
 
+  * could extend this to 4 weeks, but aim for 2 and re-assess
   * working: slack/mail, summary, search, generally work well
 
   * nate
@@ -20,7 +21,7 @@
       * show attachments/images
     * peek movement
       * clicking items in peek lets you move around
-    * interaction/bugs
+    * interaction/visual/bugs
       * generally make sure its not breaking/bugging
       * improve and make clear shortcuts
     * productionize

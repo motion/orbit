@@ -2,18 +2,52 @@
 
 * [x] swindler fix not updating on some window resize/change
 
-### home/design
-
-* filtering/exploring various integrations
-
 ## nate
 
-* [ ] research into unread metadata from slack (read/unread especially)
+### triaged
+
+* beta sprint
+
+  * goal: have simple beta we can begin deploying by May 4
+  * working: slack, mail, summary, search, generally feel good
+
+  * nate
+
+    * design/feel
+      * design home/news/summary/explore
+      * interaction for summary/peeks
+    * slack
+      * read/unread metadata from slack in sortable sql form
+      * better design for peek/move between related convos
+      * better grouping of conversations
+      * better selection of the right rooms to sync
+      * finish setting pane nicely
+      * show attachments/images
+    * productionize
+      * build to .app
+      * slim it a bit so ~250mb not ~700
+      * working oauth on fresh machine
+
+  * nick
+
+    * cosal
+      * continue to test across various searches and improve until good
+    * slack convo summary
+      * various tweaks to filter weird words, combine words
+      * test and iterate
+    * daily summary
+      * make model of seen things and find weights that are good
+      * generate summary of non-seen things
+
+### unsorted
+
+* [ ] ? filtering/exploring various integrations
 * [ ] remove search jumpiness
 * [ ] peek back button + history
 * [ ] make "@" show a list of slack people + search people
-* [ ] slack views: show attachments/images
 * [ ] docked: have taller peeks
+
+### sorted by area
 
 * interaction
 
@@ -103,6 +137,8 @@
 
 * long tail polish
 
+  * may want to fork electron to get better always-on-top functionality like Helium.app
+    * would let us do better spotlight stuff
   * disable when super low battery
   * bridge both setState and receiveState should batch a tiny bit
     * if multiple setstate called before settimeout, group them

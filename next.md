@@ -42,6 +42,8 @@
 
 ### unsorted
 
+* [ ] fix option hold not working sometimes after a delay, until you move cursor
+* [ ] double click to open OrbitCard item
 * [ ] swindler on close window need to reposition
 * [ ] ? filtering/exploring various integrations
 * [ ] remove search jumpiness
@@ -153,6 +155,26 @@
 ## launch
 
 * unknown unknowns and over-optimism (~3 months or ~15% of rest of work)
+  * also keep in mind the rough trend over the last few months has been:
+    * tasks take longer than expected due to lots of detail
+    * keep adding new things we didn't think of that are outside of our current plan
+    * various life events and blockers have been coming up and will continue
+    * random libraries and apis changing, breaking
+    * especially: we realize there are new constraints to work with/arounds
+* spend some time iterating once we get to "feature complete" (? 2+ months)
+  * this is one of my core principles:
+    1.  get ready to launch as soon as you can
+    2.  iterate in a private beta with that product
+    3.  be ready to capitalize on all your various meme's (write the articles in advance)
+    4.  have launch article ready, have reached out to PR people
+    5.  announce the public beta to capitalize on the big meme's of your product
+    6.  iterate in private beta now for longer
+    7.  have a second launch, get even more press, and be way more prepared/good
+  * so really the only planning i care about mostly is getting to the "ready for beta announcement/launch" phase so we can capitalize on our general unique problem solving in this area
+  * once we do that, we can cruise in beta for as long as possible really, and write a really nice article every month to keep ourselves in peoples minds
+  * lets us fix lots of major issues that usually crop up post-launch
+  * also lets us find cool unknown unknowns that may be really good for launch
+  * and lets us really flesh out branding and onboarding experience
 * great daily summaries / trends (~3 months)
 * ocr and contextual relevants/highlights (~1 month)
 * finishing ux/peek/search interaction and features (~2 months)

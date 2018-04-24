@@ -4,7 +4,7 @@ import { view, react, debugState } from '@mcro/black'
 import * as React from 'react'
 import Tray from './views/Tray'
 import MenuItems from './views/MenuItems'
-import HighlightsWindow from './views/HighlightsWindow'
+import MainWindow from './views/MainWindow'
 import ShortcutsStore from '~/stores/shortcutsStore'
 import WindowFocusStore from '~/stores/windowFocusStore'
 import global from 'global'
@@ -140,7 +140,7 @@ export default class ElectronWindow extends React.Component {
         ref={electronStore.handleAppRef}
       >
         <MenuItems el />
-        <HighlightsWindow onRef={electronStore.windowFocusStore.setOrbitRef} />
+        <MainWindow onRef={electronStore.windowFocusStore.setOrbitRef} />
         <Tray />
       </AppWindow>
     )

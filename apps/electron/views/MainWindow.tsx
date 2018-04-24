@@ -5,7 +5,7 @@ import { Window } from '@mcro/reactron'
 import * as Helpers from '~/helpers'
 import { Electron } from '@mcro/all'
 
-class HighlightsStore {
+class MainStore {
   get mouseInActiveArea() {
     return Electron.peekState.mouseOver || Electron.orbitState.mouseOver
   }
@@ -13,10 +13,10 @@ class HighlightsStore {
 
 @view.attach('electronStore')
 @view.provide({
-  store: HighlightsStore,
+  store: MainStore,
 })
 @view.electron
-export default class HighlightsWindow extends React.Component {
+export default class MainWindow extends React.Component {
   state = {
     show: false,
     position: [0, 0],
@@ -38,7 +38,7 @@ export default class HighlightsWindow extends React.Component {
         alwaysOnTop
         ignoreMouseEvents={!store.mouseInActiveArea}
         ref={ref => ref && onRef(ref.window)}
-        file={`${Constants.APP_URL}/highlights`}
+        file={Constants.APP_URL}
         show={electronStore.show ? this.state.show : false}
         opacity={electronStore.show === 1 ? 0 : 1}
         frame={false}

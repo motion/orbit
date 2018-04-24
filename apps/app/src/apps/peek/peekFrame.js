@@ -1,4 +1,5 @@
 import * as React from 'react'
+import * as Constants from '~/constants'
 import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { App, Electron } from '@mcro/all'
@@ -127,8 +128,8 @@ export default class PeekFrame {
 
   static style = {
     peekFrame: {
-      width: peekW,
-      height: peekH,
+      width: Constants.PEEK_SIZE[0],
+      height: Constants.PEEK_SIZE[1],
     },
     peek: {
       height: '100%',

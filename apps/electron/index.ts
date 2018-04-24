@@ -2,8 +2,10 @@
 // runs both api and electron
 
 import 'babel-polyfill'
+// @ts-ignore
 import { setTimeout } from 'core-js/library/web/timers'
 
+// @ts-ignore
 process.env.HAS_BABEL_POLYFILL = true
 process.env.NODE_ENV = 'production'
 

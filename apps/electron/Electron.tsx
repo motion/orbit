@@ -31,9 +31,11 @@ class ElectronStore {
       this.stores = stores
       this.views = views
     })
+    console.log('starting electron', Electron)
     await Electron.start({
       ignoreSelf: true,
     })
+    global.el = Electron
     this.windowFocusStore = new WindowFocusStore()
     this.shortcutStore = new ShortcutsStore([
       'Option+Space',

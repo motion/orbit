@@ -1,4 +1,3 @@
-import { Electron } from '../electron'
 import screenSize from './screenSize'
 import * as Constants from '@mcro/constants'
 
@@ -6,7 +5,7 @@ const PAD = 15
 const EDGE_PAD = 20
 const TOP_OFFSET = -20
 
-export default function peekPosition(target) {
+export default function peekPosition(target, Electron) {
   const [screenW, screenH] = screenSize()
   const { orbitOnLeft } = Electron
   const [width] = Electron.orbitState.size

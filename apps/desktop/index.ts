@@ -24,6 +24,8 @@ if (process.env.NODE_ENV === 'development') {
   global._ = require('lodash')
   // @ts-ignore
   global.r2 = require('@mcro/r2')
+  // @ts-ignore
+  global.Constants = require('./constants')
 }
 
 const Desktop = require('./desktop').default

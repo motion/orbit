@@ -204,7 +204,6 @@ class Bridge {
   handleMessage = data => {
     const getMessage = str => str.split(MESSAGE_SPLIT_VAL)
     const [message, value] = getMessage(data)
-    console.log('message', message, value)
     for (const { type, listener } of this.messageListeners) {
       if (!type) {
         listener(message, value)

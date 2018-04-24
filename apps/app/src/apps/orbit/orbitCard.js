@@ -18,7 +18,7 @@ class Text {
 class OrbitCardStore {
   isSelected = false
 
-  @react({ fireImmediately: true })
+  @react({ fireImmediately: true, log: 'state' })
   updateIsSelected = [
     () => this.props.appStore.activeIndex,
     index => {

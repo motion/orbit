@@ -1,15 +1,16 @@
-import { Desktop, Electron } from '@mcro/all'
+import { Electron } from '@mcro/all'
 import * as Constants from '~/constants'
 
 const PAD = 15
 const EDGE_PAD = 20
 const TOP_OFFSET = -20
+const screenH = window.innerHeight
+const screenW = window.innerWidth
 
 export default function peekPosition(target) {
   const { orbitOnLeft } = Electron
   const [width] = Electron.orbitState.size
   const { left, top } = target
-  const [screenW, screenH] = Desktop.state.screenSize
   const leftSpace = left
   const rightSpace = screenW - (left + width)
   // prefer bigger area
@@ -47,8 +48,8 @@ export default function peekPosition(target) {
     }
   }
   if (pH + y + EDGE_PAD > screenH) {
-    console.log(`too tall`)
-    y = screenH - EDGE_PAD
+    y = EDGE_PAD
+    pH = screenH - EDGE_PAD * 2
   }
   return {
     position: [Math.round(x), Math.round(y)],

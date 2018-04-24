@@ -75,10 +75,6 @@ class ElectronStore {
     return Electron.orbitState.orbitOnLeft
   }
 
-  get peekOnLeft() {
-    return this.currentPeek.peekOnLeft
-  }
-
   get currentPeek() {
     return (Electron.peekState.windows || [])[0] || {}
   }

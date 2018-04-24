@@ -63,7 +63,6 @@ export default class ElectronReactions {
     const [peek, ...rest] = Electron.peekState.windows
     peek.position = [peekX, peekY].map(round)
     peek.size = [peekW, peekH].map(round)
-    peek.peekOnLeft = false
     // update
     Electron.setState({
       orbitState: {

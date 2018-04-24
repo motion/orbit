@@ -23,21 +23,22 @@ class PeekFrameStore {
 }
 
 @UI.injectTheme
-@view({
-  store: PeekFrameStore,
+@view.provide({
+  peekFrame: PeekFrameStore,
 })
+@view
 export default class PeekFrame {
-  render({ store, children, theme, ...props }) {
-    if (!store.peekPosition) {
+  render({ peekFrame, children, theme, ...props }) {
+    if (!peekFrame.peekPosition) {
       return null
     }
-    const { peekPosition } = store
+    const { peekPosition } = peekFrame
     const { selectedItem } = App.state
     const { fullScreen } = Electron.orbitState
     if (!selectedItem && !fullScreen) {
       return null
     }
-    const onRight = !Electron.peekOnLeft
+    const onRight = !peekPosition.peekOnLeft
     const { isShowingPeek } = App
     const borderShadow = ['inset', 0, 0, 0, 0.5, [0, 0, 0, 0.15]]
     const borderRightRadius = fullScreen || onRight ? BORDER_RADIUS : 0

@@ -1,44 +1,23 @@
 import * as React from 'react'
-import { view, react } from '@mcro/black'
+import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { App, Electron } from '@mcro/all'
 import { SHADOW_PAD, APP_SHADOW, BORDER_RADIUS } from '~/constants'
 import WindowControls from '~/views/windowControls'
-import peekPosition from './peekPosition'
 
 const Space = () => <div css={{ width: SHADOW_PAD, height: '100%' }} />
 
-class PeekFrameStore {
-  @react
-  peekPosition = [
-    () => App.state.peekTarget,
-    peekTarget => {
-      if (!peekTarget) return
-      if (Electron.orbitState.fullScreen) {
-        return
-      }
-      return peekPosition(peekTarget.position)
-    },
-  ]
-}
-
 @UI.injectTheme
-@view.provide({
-  peekFrame: PeekFrameStore,
-})
 @view
 export default class PeekFrame {
-  render({ peekFrame, children, theme, ...props }) {
-    if (!peekFrame.peekPosition) {
-      return null
-    }
-    const { peekPosition } = peekFrame
+  render({ children, theme, ...props }) {
+    const { peekState } = Electron
     const { selectedItem } = App.state
     const { fullScreen } = Electron.orbitState
     if (!selectedItem && !fullScreen) {
       return null
     }
-    const onRight = !peekPosition.peekOnLeft
+    const onRight = !peekState.peekOnLeft
     const { isShowingPeek } = App
     const borderShadow = ['inset', 0, 0, 0, 0.5, [0, 0, 0, 0.15]]
     const borderRightRadius = fullScreen || onRight ? BORDER_RADIUS : 0
@@ -46,11 +25,11 @@ export default class PeekFrame {
     return (
       <peekFrame
         css={{
-          width: peekPosition.size[0],
-          height: peekPosition.size[1],
+          width: peekState.size[0],
+          height: peekState.size[1],
           transform: {
-            x: peekPosition.position[0],
-            y: peekPosition.position[1],
+            x: peekState.position[0],
+            y: peekState.position[1],
           },
         }}
       >

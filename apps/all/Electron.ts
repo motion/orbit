@@ -36,7 +36,9 @@ class ElectronStore {
     },
     peekState: {
       mouseOver: false,
-      windows: null,
+      peekOnLeft: false,
+      position: [],
+      size: [],
     },
     showDevTools: {
       orbit: false,
@@ -73,17 +75,6 @@ class ElectronStore {
       return true
     }
     return Electron.orbitState.orbitOnLeft
-  }
-
-  get currentPeek() {
-    return (Electron.peekState.windows || [])[0] || {}
-  }
-
-  updatePeek = (peek, cb) => {
-    const windows = Electron.peekState.windows.slice(0)
-    const nextPeek = windows.find(x => x.key === peek.key)
-    cb(nextPeek)
-    Electron.setPeekState({ windows })
   }
 }
 

@@ -3,8 +3,6 @@ export * from '@mcro/constants'
 import { Constants } from '@mcro/black'
 import * as UI from '@mcro/ui'
 
-export const PEEK_SIZE = [520, 700]
-
 export const IS_ORBIT = window.location.pathname === '/orbit'
 export const IS_PEEK = window.location.pathname.indexOf('/peek') === 0
 export const IS_ELECTRON = Constants.IS_ELECTRON

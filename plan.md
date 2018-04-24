@@ -1,21 +1,9 @@
-# make a really well done master plan
-
-# agree and hash out the steps to launch
-
-# likely find someone great to join us to get there
-
-# finish the simplest beta version that feels nice
-
-# master plan
-
-## scope
-
 our goals
 
 * broadly
-  * reduce workplace stress
+  * significantly reduce workplace stress
   * increase ability to focus / deep work
-  * make day to day more enjoyable/interpretable/controlled
+  * make internal company ops 10x clearer
 * narrowly
   * fix notification overload (noise to signal)
   * stop missing out on conversations/topics (unknown unknowns)
@@ -26,10 +14,10 @@ our goals
     * "whats the latest on?"
     * "whats important about?"
 * personally
-  * show what were capable of (a letter to: the world)
-  * make us a valuable acquisition
-  * do something beautiful because the world lacks great products
+  * make a statement on how to make software
+  * show that the world lacks great products
   * deliver on software 2.0 promise
+  * give people the feeling of power over their cpu
 
 our general strategy
 

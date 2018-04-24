@@ -48,7 +48,7 @@ export default function peekPosition(target) {
   }
   if (pH + y + EDGE_PAD > screenH) {
     console.log(`too tall`)
-    y = screenH - EDGE_PAD - Constants.PEEK_SIZE[1]
+    y = screenH - EDGE_PAD
   }
   return {
     position: [Math.round(x), Math.round(y)],

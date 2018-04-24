@@ -1,5 +1,4 @@
 import * as React from 'react'
-import * as Constants from '~/constants'
 import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { App, Electron } from '@mcro/all'
@@ -57,7 +56,6 @@ export default class PeekFrame {
         <Space if={!onRight} />
         <crop
           css={{
-            flex: 1,
             padding: fullScreen
               ? [SHADOW_PAD, SHADOW_PAD, SHADOW_PAD, 0]
               : [
@@ -66,7 +64,6 @@ export default class PeekFrame {
                   SHADOW_PAD,
                   !onRight ? SHADOW_PAD : 0,
                 ],
-            overflow: 'hidden',
           }}
         >
           <peek $animate={isShowingPeek} $peekVisible={isShowingPeek}>
@@ -89,16 +86,8 @@ export default class PeekFrame {
             />
             <peekFrameBorder
               css={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
                 borderRightRadius,
                 borderLeftRadius,
-                zIndex: 10000,
-                pointerEvents: 'none',
-                border: [2, '#fff'],
               }}
             />
             <peekMain
@@ -128,11 +117,10 @@ export default class PeekFrame {
 
   static style = {
     peekFrame: {
-      width: Constants.PEEK_SIZE[0],
-      height: Constants.PEEK_SIZE[1],
+      flexFlow: 'row',
+      flex: 1,
     },
     peek: {
-      height: '100%',
       pointerEvents: 'none !important',
       opacity: 0,
       position: 'relative',
@@ -142,18 +130,32 @@ export default class PeekFrame {
         y: -8,
       },
     },
+    crop: {
+      overflow: 'hidden',
+      flex: 1,
+      height: '100%',
+    },
     animate: {
       opacity: 1,
       transform: {
         y: 0,
       },
     },
+    peekFrameBorder: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      zIndex: 10000,
+      pointerEvents: 'none',
+      border: [2, '#fff'],
+    },
     peekVisible: {
       pointerEvents: 'all !important',
       opacity: 1,
     },
     peekMain: {
-      background: 'red',
       flex: 1,
       overflow: 'hidden',
       opacity: 1,

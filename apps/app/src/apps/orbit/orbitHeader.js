@@ -73,7 +73,7 @@ export default class OrbitHeader {
     // const { fullScreen } = Electron.orbitState
     const darkerBg = theme.base.background
     return (
-      <header
+      <orbitHeader
         $headerBg={headerBg}
         $headerVisible={headerStore.isShowingHeader}
         $headerMouseOver={Electron.orbitState.mouseOver}
@@ -168,12 +168,12 @@ export default class OrbitHeader {
             onClick={appStore.toggleSettings}
           />
         </controls>
-      </header>
+      </orbitHeader>
     )
   }
 
   static style = {
-    header: {
+    orbitHeader: {
       position: 'relative',
       flexFlow: 'row',
       alignItems: 'center',

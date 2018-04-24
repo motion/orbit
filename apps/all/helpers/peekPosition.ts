@@ -1,7 +1,7 @@
 import screenSize from './screenSize'
 import * as Constants from '@mcro/constants'
 
-const PAD = 15
+// const PAD = 15
 const EDGE_PAD = 20
 const TOP_OFFSET = -20
 
@@ -18,10 +18,10 @@ export default function peekPosition(target, Electron) {
   let x
   let y = top + TOP_OFFSET
   // prefer more strongly away from app if possible
-  if (peekOnLeft && !orbitOnLeft && rightSpace > pW - PAD * 2) {
+  if (peekOnLeft && !orbitOnLeft && rightSpace > pW + EDGE_PAD) {
     peekOnLeft = false
   }
-  if (!peekOnLeft && orbitOnLeft && leftSpace > pW - PAD * 2) {
+  if (!peekOnLeft && orbitOnLeft && leftSpace > pW + EDGE_PAD) {
     peekOnLeft = true
   }
   if (peekOnLeft) {
@@ -30,18 +30,8 @@ export default function peekPosition(target, Electron) {
       pW = leftSpace
       x = 0
     }
-    if (orbitOnLeft) {
-      x += PAD
-    } else {
-      x += PAD
-    }
   } else {
     x = left + width
-    if (orbitOnLeft) {
-      x -= PAD
-    } else {
-      x -= PAD
-    }
     if (pW > rightSpace) {
       pW = rightSpace
     }
@@ -49,6 +39,13 @@ export default function peekPosition(target, Electron) {
   if (pH + y + EDGE_PAD > screenH) {
     y = EDGE_PAD
     pH = screenH - EDGE_PAD * 2
+  }
+  // adjust for when the peek is facing the arrow side of orbit
+  if (orbitOnLeft && !peekOnLeft) {
+    x -= Constants.ARROW_PAD
+  }
+  if (!orbitOnLeft && peekOnLeft) {
+    x += Constants.ARROW_PAD
   }
   return {
     position: [Math.round(x), Math.round(y)],

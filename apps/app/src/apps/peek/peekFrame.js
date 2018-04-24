@@ -2,10 +2,10 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { App, Electron } from '@mcro/all'
-import { SHADOW_PAD, APP_SHADOW, BORDER_RADIUS } from '~/constants'
+import { BORDER_RADIUS } from '~/constants'
 import WindowControls from '~/views/windowControls'
 
-const Space = () => <div css={{ width: SHADOW_PAD, height: '100%' }} />
+const SHADOW_PAD = 60
 
 @UI.injectTheme
 @view
@@ -19,31 +19,32 @@ export default class PeekFrame {
     }
     const onRight = !peekState.peekOnLeft
     const { isShowingPeek } = App
-    const borderShadow = ['inset', 0, 0, 0, 0.5, [0, 0, 0, 0.15]]
     const borderRightRadius = fullScreen || onRight ? BORDER_RADIUS : 0
     const borderLeftRadius = !fullScreen && !onRight ? BORDER_RADIUS : 0
+    const padding = [
+      SHADOW_PAD,
+      onRight ? SHADOW_PAD : 0,
+      SHADOW_PAD,
+      !onRight ? SHADOW_PAD : 0,
+    ]
+    const margin = padding.map(x => -x)
+    const borderShadow = ['inset', 0, 0, 0, 0.5, [0, 0, 0, 0.3]]
+    const boxShadow = [[0, 0, SHADOW_PAD, [0, 0, 0, 0.2]], borderShadow]
     return (
       <peekFrame
         css={{
           width: peekState.size[0],
-          height: peekState.size[1],
+          height: peekState.size[1] + SHADOW_PAD,
           transform: {
             x: peekState.position[0],
             y: peekState.position[1],
           },
         }}
       >
-        <Space if={!onRight} />
         <crop
           css={{
-            padding: fullScreen
-              ? [SHADOW_PAD, SHADOW_PAD, SHADOW_PAD, 0]
-              : [
-                  SHADOW_PAD,
-                  onRight ? SHADOW_PAD : 0,
-                  SHADOW_PAD,
-                  !onRight ? SHADOW_PAD : 0,
-                ],
+            padding,
+            margin,
           }}
         >
           <peek $animate={isShowingPeek} $peekVisible={isShowingPeek}>
@@ -72,12 +73,10 @@ export default class PeekFrame {
             />
             <peekMain
               css={{
-                boxShadow: fullScreen
-                  ? [APP_SHADOW, borderShadow]
-                  : [[0, 0, SHADOW_PAD, [0, 0, 0, 0.08]], borderShadow],
+                boxShadow,
                 // make shadow go under
-                marginLeft: fullScreen ? -SHADOW_PAD : 0,
-                paddingLeft: fullScreen ? SHADOW_PAD : 0,
+                // marginLeft: fullScreen ? -SHADOW_PAD : 0,
+                // paddingLeft: fullScreen ? SHADOW_PAD : 0,
                 borderRightRadius,
                 borderLeftRadius,
                 background: `radial-gradient(#fff 70%, ${
@@ -90,13 +89,13 @@ export default class PeekFrame {
             </peekMain>
           </peek>
         </crop>
-        <Space if={onRight} />
       </peekFrame>
     )
   }
 
   static style = {
     peekFrame: {
+      // background: [0, 0, 0, 0.5],
       flexFlow: 'row',
       flex: 1,
     },

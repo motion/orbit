@@ -1,16 +1,37 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { App, Electron } from '@mcro/all'
 import { SHADOW_PAD, APP_SHADOW, BORDER_RADIUS } from '~/constants'
 import WindowControls from '~/views/windowControls'
+import peekPosition from './peekPosition'
 
 const Space = () => <div css={{ width: SHADOW_PAD, height: '100%' }} />
 
+class PeekFrameStore {
+  @react
+  peekPosition = [
+    () => App.state.peekTarget,
+    peekTarget => {
+      if (!peekTarget) return
+      if (Electron.orbitState.fullScreen) {
+        return
+      }
+      return peekPosition(peekTarget.position)
+    },
+  ]
+}
+
 @UI.injectTheme
-@view
+@view({
+  store: PeekFrameStore,
+})
 export default class PeekFrame {
-  render({ children, theme, ...props }) {
+  render({ store, children, theme, ...props }) {
+    if (!store.peekPosition) {
+      return null
+    }
+    const { peekPosition } = store
     const { selectedItem } = App.state
     const { fullScreen } = Electron.orbitState
     if (!selectedItem && !fullScreen) {
@@ -22,7 +43,16 @@ export default class PeekFrame {
     const borderRightRadius = fullScreen || onRight ? BORDER_RADIUS : 0
     const borderLeftRadius = !fullScreen && !onRight ? BORDER_RADIUS : 0
     return (
-      <container $$row $$flex>
+      <peekFrame
+        css={{
+          width: peekPosition.size[0],
+          height: peekPosition.size[1],
+          transform: {
+            x: peekPosition.position[0],
+            y: peekPosition.position[1],
+          },
+        }}
+      >
         <Space if={!onRight} />
         <crop
           css={{
@@ -91,13 +121,14 @@ export default class PeekFrame {
           </peek>
         </crop>
         <Space if={onRight} />
-      </container>
+      </peekFrame>
     )
   }
 
   static style = {
-    container: {
-      // background: 'red',
+    peekFrame: {
+      width: peekW,
+      height: peekH,
     },
     peek: {
       height: '100%',

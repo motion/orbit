@@ -7,6 +7,7 @@ import OCRWord from './ocrWord'
 import OCRLine from './ocrLine'
 import ner from '~/stores/language/ner'
 import Orbit from '~/apps/orbit/orbit'
+import Peek from '~/apps/peek/peek'
 
 const log = debug('highlights')
 
@@ -128,6 +129,7 @@ export default class HighlightsPage {
     return (
       <frame if={store.showAll} $overlay={isFullScreen}>
         <Orbit />
+        <Peek />
         {(store.ocrWords || []).map(item => (
           <OCRWord key={Helpers.wordKey(item)} item={item} store={store} />
         ))}

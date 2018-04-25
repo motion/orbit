@@ -107,7 +107,7 @@ export default class OrbitHeader {
                 0,
                 0,
                 0.5,
-                theme.base.background.darken(0.12).desaturate(0.5),
+                theme.base.background.darken(0.3).desaturate(0.5),
               ],
             ],
           }}
@@ -136,24 +136,11 @@ export default class OrbitHeader {
         <ControlButton
           if={!Electron.orbitState.dockedPinned}
           onClick={App.togglePinned}
+          $pinnedIcon
           $onLeft={Electron.orbitOnLeft}
           $onRight={!Electron.orbitOnLeft}
           $isPinned={Electron.orbitState.pinned}
         />
-        <controls if={false}>
-          <UI.Button
-            icon="gear"
-            borderRadius={100}
-            size={0.9}
-            circular
-            background={headerBg}
-            color={appStore.showSettings ? [0, 0, 0, 0.8] : [0, 0, 0, 0.2]}
-            hover={{
-              color: appStore.showSettings ? [0, 0, 0, 0.9] : [0, 0, 0, 0.3],
-            }}
-            onClick={appStore.toggleSettings}
-          />
-        </controls>
       </orbitHeader>
     )
   }
@@ -211,22 +198,15 @@ export default class OrbitHeader {
       },
     }),
     pinnedIcon: {
-      position: 'absolute',
       transition: 'all ease-in 100ms 100ms',
-      padding: 6,
-      margin: [2, 4],
-      top: 3,
-      borderRadius: 1000,
+      marginRight: 12,
       opacity: 0.2,
       '&:hover': {
         opacity: 0.4,
       },
     },
     isPinned: {
-      opacity: 0.9,
-      '&:hover': {
-        opacity: 1,
-      },
+      opacity: 1,
     },
     onLeft: {
       right: 3,

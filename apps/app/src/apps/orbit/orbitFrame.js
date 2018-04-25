@@ -54,8 +54,23 @@ export default class OrbitFrame {
     const borderRightRadius =
       fullScreen || orbitDocked ? 0 : orbitOnLeft ? 0 : Constants.BORDER_RADIUS
     const orbitLightShadow = [
-      [orbitOnLeft ? -18 : 18, 8, 50, 0, [0, 0, 0, 0.07]],
+      [orbitOnLeft ? -15 : 15, 4, 35, 0, [0, 0, 0, 0.05]],
     ]
+    const animationStyles = App.isShowingOrbit
+      ? {
+          opacity: 1,
+          transform: {
+            x: orbitOnLeft ? 0 : -SHADOW_PAD * 2,
+          },
+        }
+      : {
+          opacity: 0,
+          transform: {
+            x: orbitOnLeft
+              ? ORBIT_WIDTH * 0.15 - SHADOW_PAD - (SHADOW_PAD + iWidth) + 4
+              : -(ORBIT_WIDTH * 0.15),
+          },
+        }
     return (
       <orbitFrame
         css={{
@@ -81,19 +96,20 @@ export default class OrbitFrame {
           orbitOnLeft={orbitOnLeft}
         />
         <orbitBorder
-          $orbitAnimate={App.isShowingOrbit}
+          $orbitAnimate={store.shouldAnimate}
           css={{
             boxShadow: [
               borderShadow,
               fullScreen || orbitDocked ? [DOCKED_SHADOW] : [orbitLightShadow],
             ].filter(Boolean),
+            // background: 'red',
             top: orbitDocked ? 0 : SHADOW_PAD,
             bottom: orbitDocked ? 0 : SHADOW_PAD,
-            left: orbitOnLeft ? 0 : SHADOW_PAD,
-            right: !orbitOnLeft ? 0 : SHADOW_PAD,
+            left: orbitOnLeft ? 0 : SHADOW_PAD * 3,
+            right: !orbitOnLeft ? -SHADOW_PAD * 2 : SHADOW_PAD,
             borderLeftRadius: borderLeftRadius ? borderLeftRadius - 1 : 0,
             borderRightRadius: borderRightRadius ? borderRightRadius - 1 : 0,
-            opacity: App.isShowingOrbit ? 1 : 0,
+            ...animationStyles,
           }}
         />
         <overflowWrap
@@ -116,24 +132,7 @@ export default class OrbitFrame {
               marginLeft: fullScreen || orbitDocked ? 0 : SHADOW_PAD,
               paddingLeft: orbitOnLeft ? 0 : SHADOW_PAD,
               paddingRight: !orbitOnLeft || orbitDocked ? 0 : SHADOW_PAD,
-              ...(App.isShowingOrbit
-                ? {
-                    opacity: 1,
-                    transform: {
-                      x: orbitOnLeft ? 0 : -SHADOW_PAD * 2,
-                    },
-                  }
-                : {
-                    opacity: 0,
-                    transform: {
-                      x: orbitOnLeft
-                        ? ORBIT_WIDTH * 0.15 -
-                          SHADOW_PAD -
-                          (SHADOW_PAD + iWidth) +
-                          4
-                        : -(ORBIT_WIDTH * 0.15),
-                    },
-                  }),
+              ...animationStyles,
             }}
             $orbitAnimate={store.shouldAnimate}
             $orbitHeight={fullScreen ? 0 : orbitPage.adjustHeight}

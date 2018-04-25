@@ -49,13 +49,14 @@ export default class PeekFrame {
       >
         <UI.Arrow
           size={arrowSize}
-          towards="left"
+          towards={onRight ? 'left' : 'right'}
           background="#fff"
           boxShadow={[['inset', 0, 0, 0, 0.5, [0, 0, 0, 0.25]]]}
           css={{
             position: 'absolute',
             top: peekTarget.position.top + arrowSize + 10,
-            left: -30,
+            left: !onRight ? 'auto' : -30,
+            right: !onRight ? -40 : 'auto',
             zIndex: 100,
           }}
         />

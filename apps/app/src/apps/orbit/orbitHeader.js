@@ -3,6 +3,7 @@ import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { App, Desktop, Electron } from '@mcro/all'
 import * as Constants from '~/constants'
+import ControlButton from '~/views/controlButton'
 
 class HeaderStore {
   inputRef = null
@@ -132,28 +133,13 @@ export default class OrbitHeader {
             $inputLnOn={Electron.orbitState.mouseOver ? darkerBg : false}
           />
         </title>
-        <pinnedIcon
-          if={!Electron.orbitState.fullScreen}
+        <ControlButton
+          if={!Electron.orbitState.dockedPinned}
           onClick={App.togglePinned}
           $onLeft={Electron.orbitOnLeft}
           $onRight={!Electron.orbitOnLeft}
           $isPinned={Electron.orbitState.pinned}
-        >
-          <UI.Icon
-            color={
-              Electron.orbitState.pinned
-                ? Constants.ORBIT_COLOR.lighten(0.25)
-                : Constants.ORBIT_COLOR.lighten(0.5).alpha(0.5)
-            }
-            size={12}
-            name="pin"
-            css={{
-              width: 9,
-              height: 9,
-              borderRadius: 1000,
-            }}
-          />
-        </pinnedIcon>
+        />
         <controls if={false}>
           <UI.Button
             icon="gear"

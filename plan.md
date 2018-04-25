@@ -1,12 +1,19 @@
-it's a personal mac app that unifies various work information (mail, slack, jira, etc...) and uses nlp to give a daily summary of what you've missed that may be important in your company as well as a rich search and explore interface for whats going on (projects, teams, etc). it's aim is to reduce notification overload, communication noise and work FOMO.
+what we are
 
-think Stripe Home meets Spotlight 2.0, with a dash of Clippy. If it sounds a bit messy, it's because we're still in mid-r&d so we're constraint fitting the final featureset.
+a personal mac app that unifies various work information (mail, slack, jira, etc...) and uses nlp to give a daily summary of what you've missed / important in your company as well as a rich search and explore interface for your cloud (with projects, teams, etc).
+
+it's aim is to reduce notification overload, communication silos & work FOMO.
+
+a potential final "one more thing" feature that we have partially working is that while it normally takes over spotlight as a sidebar drawer, it also can operate contextually to any app. so holding option anywhere on your mac attaches it to that app and uses some pretty cool and very fast custom OCR/content finding to actually use your current screen as a search to see if you missed any related conversations, documents, etc.
+
+it's nearest neighbors would be Stripe Home, Spotlight, maybe Rapportive/Clippy for the context part, running privately/locally on your computer. If it sounds a bit messy, it's because we're still in mid-r&d so we're constraint fitting the final featureset.
 
 goals
 
 * broadly
   * significantly reduce workplace stress
   * increase ability to focus / deep work
+  * reduce communication silos and unknowns
   * make internal company ops 10x clearer
 * narrowly
   * dailys heads up
@@ -54,9 +61,8 @@ keys to success
 * making the summary really work well
 * befriending our integration companies
 * working a long beta with influential people
-* ensuring the PR around user-alignment catches
-  * we need to be seen as "the apple of startup" in terms of user-alignment
-  * this requires us to have clear direct-from-user/company monetization plan from start
+* ensuring the PR around user-alignment catches (not scary big brother)
+  * this requires us to have clear user-friendly monetization plan from start
 
 how features justify inclusion
 

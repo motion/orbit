@@ -1,29 +1,21 @@
-our goals
+goals
 
 * broadly
   * significantly reduce workplace stress
   * increase ability to focus / deep work
   * make internal company ops 10x clearer
 * narrowly
-  * fix notification overload (noise to signal)
-  * stop missing out on conversations/topics (unknown unknowns)
-  * make personal search great (tame the cloud)
-  * reduce intranet need + make wiki/knowledge more useful (wiki is dead, long live wiki)
-  * completely replace intranet systems: (intranet 2.0)
-    * "who is this?"
-    * "whats the latest on?"
-    * "whats important about?"
-* personally
-  * make a statement on how to make software
-  * show that the world lacks great products
-  * deliver on software 2.0 promise
-  * give people the feeling of power over their cpu
+  * dailys heads up
+  * reduce notification overload
+  * reduce missing out on conversations/topics
+  * make latent org knowledge more useful
+  * (later) replace intranet
 
-our general strategy
+strategy
 
 * replace your spotlight/notification drawer with a smart intranet work-focused app
 
-our unique product strategies
+product strategy
 
 * desktop app = far more powerful, present minute to minute (super high engagement)
 * attach to any window = contextually relevant, smarter, engagement
@@ -33,7 +25,7 @@ our unique product strategies
 * nlp = able to tackle bigger problem areas with less tools and time
 * ocr = able to work with any app you use + makes a badass demo
 
-our unique go to market strategies
+go to market strategy
 
 * no cloud = privacy / aligment with end users = user confidence (no one but apple does)
 * high user alignment + beautiful product = super high potential end user brand dedication
@@ -53,7 +45,7 @@ our unique go to market strategies
   * people like patrick collison, john gruber, various high influence programmers, etc
   * anyone who promoted superhuman, meteor, + influential in design community (khoi vinh etc)
 
-our keys to success
+keys to success
 
 * making the summary really work well
 * befriending our integration companies
@@ -62,15 +54,14 @@ our keys to success
   * we need to be seen as "the apple of startup" in terms of user-alignment
   * this requires us to have clear direct-from-user/company monetization plan from start
 
-features
+how features justify inclusion
 
 * news
-  * gets us into users hands directly
-  * very strong for marketing
-  * simple summary of globally interesting things + personally interesting things
+  * makes us valuable to end-users directly
+  * does the previously impossible (what did i miss)
 * search
-  * justifies us to take over cmd+space and spotlight
-  * gives us high engagement and gets users used to using us
+  * allows us to take over cmd+space/spotlight/notifications drawer
+    * == high engagement, nice design
 * explore
   * it's what we can sell to _companies_ because it gives them control
     * they can curate their home sections

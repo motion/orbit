@@ -1,3 +1,7 @@
+it's a personal mac app that unifies various work information (mail, slack, jira, etc...) and uses nlp to give a daily summary of what you've missed that may be important in your company as well as a rich search and explore interface for whats going on (projects, teams, etc). it's aim is to reduce notification overload, communication noise and work FOMO.
+
+think Stripe Home meets Spotlight 2.0, with a dash of Clippy. If it sounds a bit messy, it's because we're still in mid-r&d so we're constraint fitting the final featureset.
+
 goals
 
 * broadly

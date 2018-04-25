@@ -106,7 +106,7 @@ export default class OrbitHeader {
                 0,
                 0,
                 0.5,
-                theme.base.background.darken(0.25).desaturate(0.5),
+                theme.base.background.darken(0.15).desaturate(0.5),
               ],
             ],
           }}

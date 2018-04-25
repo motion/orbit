@@ -44,14 +44,13 @@ export const Title = ({ center, children, ...props }) => (
 )
 
 export const SubTitle = props => (
-  <subtitle
+  <UI.Text
     css={{
       fontWeight: 300,
       fontSize: 16,
       alignItems: 'center',
       flexFlow: 'row',
       padding: [5, 15, 0],
-      // textTransform: 'uppercase',
       opacity: 0.5,
       marginBottom: 5,
       color: highlightColor,

@@ -71,7 +71,6 @@ export default class OrbitHeader {
   }
 
   render({ appStore, orbitStore, headerStore, theme, headerBg }) {
-    // const { fullScreen } = Electron.orbitState
     const darkerBg = theme.base.background
     return (
       <orbitHeader
@@ -107,7 +106,7 @@ export default class OrbitHeader {
                 0,
                 0,
                 0.5,
-                theme.base.background.darken(0.3).desaturate(0.5),
+                theme.base.background.darken(0.25).desaturate(0.5),
               ],
             ],
           }}
@@ -136,10 +135,17 @@ export default class OrbitHeader {
         <ControlButton
           if={!Electron.orbitState.dockedPinned}
           onClick={App.togglePinned}
+          borderWidth={Electron.orbitState.pinned ? 0.5 : 2}
           $pinnedIcon
           $onLeft={Electron.orbitOnLeft}
           $onRight={!Electron.orbitOnLeft}
           $isPinned={Electron.orbitState.pinned}
+          background={Electron.orbitState.pinned ? '#7954F9' : 'transparent'}
+          borderColor={
+            Electron.orbitState.pinned
+              ? null
+              : theme.base.background.darken(0.4).desaturate(0.6)
+          }
         />
       </orbitHeader>
     )
@@ -153,10 +159,6 @@ export default class OrbitHeader {
       justifyContent: 'center',
       padding: [3, 2],
       transition: 'all ease-in 300ms',
-      opacity: 0.75,
-      '&:hover': {
-        opacity: 1,
-      },
     },
     controls: {
       position: 'absolute',
@@ -169,7 +171,6 @@ export default class OrbitHeader {
       },
     },
     headerVisible: {
-      opacity: 0.6,
       transform: { y: 0 },
     },
     headerMouseOver: {

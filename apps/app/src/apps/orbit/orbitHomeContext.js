@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { Desktop } from '@mcro/all'
+import { Desktop, Electron } from '@mcro/all'
 import * as Constants from '~/constants'
 import { throttle } from 'lodash'
 import Results from '~/apps/results/results'
@@ -40,19 +40,21 @@ export default class OrbitHomeContext {
   }
 
   render({ appStore, theme }) {
+    const { orbitOnLeft } = Electron
     return (
       <orbitContext
         css={{
           background: theme.base.background,
+          textAlign: orbitOnLeft ? 'right' : 'left',
         }}
       >
         <fadeNotifications
           $$untouchable
           $fadeVisible={appStore.activeIndex >= SPLIT_INDEX}
         />
-        <Title>Context</Title>
-        <SubTitle>
-          <Circle>4</Circle> {Desktop.appState.title}
+        <Title ellipse={1}>{Desktop.appState.name}</Title>
+        <SubTitle if={Desktop.appState.title}>
+          {Desktop.appState.title}
         </SubTitle>
         <Results isContext />
       </orbitContext>

@@ -179,14 +179,14 @@ export default class OrbitCard {
               <UI.Text>2m</UI.Text>
             </date>
           </preview>
-          <content if={content}>
+          <content if={location || content}>
             <subtitle
-              if={!tiny && isExpanded}
+              if={location && !tiny && isExpanded}
               css={{ flexFlow: 'row', opacity: 0.5 }}
             >
               {location}
             </subtitle>
-            <full if={!tiny && isExpanded}>{content}</full>
+            <full if={content && !tiny && isExpanded}>{content}</full>
           </content>
           <bottom if={!tiny && (bottom || permalink || via)}>
             <permalink if={isExpanded}>{permalink}</permalink>

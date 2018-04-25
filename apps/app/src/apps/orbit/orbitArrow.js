@@ -12,12 +12,12 @@ export default class OrbitArrow {
     let arrowStyle
     if (orbitOnLeft) {
       arrowStyle = {
-        top: 53,
+        top: 83,
         right: SHADOW_PAD - arrowSize,
       }
     } else {
       arrowStyle = {
-        top: 53,
+        top: 83,
         left: 3,
       }
     }
@@ -36,9 +36,7 @@ export default class OrbitArrow {
       <UI.Arrow
         size={arrowSize}
         towards={Electron.orbitArrowTowards}
-        background={`linear-gradient(45deg, ${background
-          .darken(0.05)
-          .desaturate(0.25)}, ${background.darken(0.02).desaturate(0.25)})`}
+        background={background}
         boxShadow={[['inset', 0, 0, 0, 0.5, borderColor.darken(0.1)]]}
         // border={[1, '#000']}
         css={{

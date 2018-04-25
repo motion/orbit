@@ -45,17 +45,18 @@ export default class OrbitHomeContext {
       <orbitContext
         css={{
           background: theme.base.background,
-          textAlign: orbitOnLeft ? 'right' : 'left',
         }}
       >
         <fadeNotifications
           $$untouchable
           $fadeVisible={appStore.activeIndex >= SPLIT_INDEX}
         />
-        <Title ellipse={1}>{Desktop.appState.name}</Title>
-        <SubTitle if={Desktop.appState.title}>
-          {Desktop.appState.title}
-        </SubTitle>
+        <contextHeader css={{ textAlign: orbitOnLeft ? 'right' : 'left' }}>
+          <Title ellipse={1}>{Desktop.appState.name}</Title>
+          <SubTitle if={Desktop.appState.title}>
+            {Desktop.appState.title}
+          </SubTitle>
+        </contextHeader>
         <Results isContext />
       </orbitContext>
     )

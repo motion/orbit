@@ -76,10 +76,10 @@ export default class OrbitFrame {
         css={{
           width: orbitDocked ? 'auto' : size[0],
           // TODO HACKINESS fix the size/y calc in orbitPosition.js
-          height: size[1] - 15,
+          height: size[1] - (orbitDocked ? 0 : 15),
           transform: {
             x: position[0],
-            y: 5 + position[1],
+            y: position[1] + (orbitDocked ? 0 : 5),
           },
         }}
       >
@@ -100,9 +100,9 @@ export default class OrbitFrame {
           $orbitAnimate={store.shouldAnimate}
           $pointerEvents={App.isShowingOrbit && !App.isAnimatingOrbit}
           css={{
-            // background: [255, 0, 0, 0.2],
+            overflow: orbitDocked ? 'visible' : 'hidden',
             padding: orbitDocked ? 0 : SHADOW_PAD,
-            margin: -SHADOW_PAD,
+            margin: orbitDocked ? 0 : -SHADOW_PAD,
             ...(orbitDocked
               ? { right: 0 }
               : {
@@ -119,9 +119,6 @@ export default class OrbitFrame {
             css={{
               borderLeftRadius,
               borderRightRadius,
-              // marginLeft: fullScreen || orbitDocked ? 0 : ARROW_PAD,
-              // paddingLeft: orbitOnLeft ? 0 : ARROW_PAD,
-              // paddingRight: !orbitOnLeft || orbitDocked ? 0 : ARROW_PAD,
               ...animationStyles,
             }}
             $orbitAnimate={store.shouldAnimate}
@@ -209,7 +206,7 @@ export default class OrbitFrame {
     },
     // used to hide edge overlap of drawer during in animation
     overflowWrap: {
-      overflow: 'hidden',
+      // overflow: 'hidden',
       alignSelf: 'flex-end',
       flex: 1,
       position: 'relative',

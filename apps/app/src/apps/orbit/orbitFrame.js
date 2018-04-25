@@ -139,6 +139,23 @@ export default class OrbitFrame {
             $orbitHeight={fullScreen ? 0 : orbitPage.adjustHeight}
             $orbitFullScreen={fullScreen}
           >
+            {/* <bg
+              css={{
+                background: `linear-gradient(45deg, #EC98B1, #F5F1B1)`,
+                opacity: 0.5,
+              }}
+            />
+            <bg
+              css={{
+                background: `radial-gradient(#EC98B1, #F5F1B1)`,
+                opacity: 0.5,
+              }}
+            />
+            <bg
+              css={{
+                background: `linear-gradient(-45deg, #EC98B1, #F5F1B1)`,
+              }}
+            /> */}
             <content
               css={{
                 background,
@@ -168,6 +185,14 @@ export default class OrbitFrame {
   }
 
   static style = {
+    bg: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      zIndex: 0,
+    },
     orbitFrame: {
       flex: 1,
       position: 'absolute',

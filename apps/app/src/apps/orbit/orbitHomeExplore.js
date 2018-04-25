@@ -5,6 +5,7 @@ import * as UI from '@mcro/ui'
 import OrbitHomeHighlights from './orbitHomeHighlights'
 
 @view.attach('appStore')
+@UI.injectTheme
 @view
 export default class OrbitExplore {
   items = [
@@ -20,9 +21,25 @@ export default class OrbitExplore {
     },
   ]
 
-  render({ appStore }) {
+  render({ appStore, theme }) {
     return (
       <pane>
+        <UI.Button
+          icon="home"
+          size={1.1}
+          circular
+          borderWidth={1}
+          borderColor={[0, 0, 0, 0.1]}
+          iconProps={{
+            color: theme.base.color.darken(0.2),
+            size: 14,
+          }}
+          css={{
+            position: 'absolute',
+            top: -20,
+            right: 12,
+          }}
+        />
         <Title size={1.7}>
           Sunday, Apr 22<span css={{ verticalAlign: 'super', fontSize: 12 }}>
             nd
@@ -30,10 +47,13 @@ export default class OrbitExplore {
         </Title>
         <section $explore>
           {[
-            'Model 3 Transmission',
-            'Recall Potential',
-            'Lithium Contract',
-            'Elon Letter',
+            { title: 'Model 3 Transmission', subtitle: '12 conversations' },
+            {
+              title: 'Recall Potential',
+              subtitle: '2 conversations and 4 tickets',
+            },
+            { title: 'Lithium Contract', subtitle: '1 ticket' },
+            { title: 'Elon Letter', subtitle: '6 conversations' },
           ].map((item, index) => {
             const isDown = index % 2 === 0
             return (
@@ -56,7 +76,12 @@ export default class OrbitExplore {
                     marginRight: 8,
                   }}
                 />{' '}
-                {item}
+                <content>
+                  {item.title}
+                  <subtitle css={{ opacity: 0.5, fontSize: 13 }}>
+                    {item.subtitle}
+                  </subtitle>
+                </content>
               </item>
             )
           })}
@@ -66,23 +91,6 @@ export default class OrbitExplore {
 
         <Title>You may have missed</Title>
         <OrbitHomeHighlights />
-
-        <verticalSpace $$flex />
-
-        <Title>Explore</Title>
-        <cards>
-          {this.items.map((item, index) => (
-            <SettingCard
-              key={index}
-              index={index}
-              offset={index}
-              appStore={appStore}
-              length={this.items.length}
-              isActive
-              {...item}
-            />
-          ))}
-        </cards>
       </pane>
     )
   }

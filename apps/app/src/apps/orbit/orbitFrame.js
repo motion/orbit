@@ -53,7 +53,9 @@ export default class OrbitFrame {
       !orbitOnLeft || orbitDocked ? 0 : Constants.BORDER_RADIUS
     const borderRightRadius =
       fullScreen || orbitDocked ? 0 : orbitOnLeft ? 0 : Constants.BORDER_RADIUS
-    const orbitLightShadow = [[0, 2, 30, 0, [0, 0, 0, 0.08]]]
+    const orbitLightShadow = [
+      [orbitOnLeft ? -20 : 20, 8, 50, 0, [0, 0, 0, 0.07]],
+    ]
     return (
       <orbitFrame
         css={{
@@ -87,7 +89,7 @@ export default class OrbitFrame {
             ].filter(Boolean),
             top: orbitDocked ? 0 : SHADOW_PAD,
             bottom: orbitDocked ? 0 : SHADOW_PAD,
-            left: !orbitDocked && orbitOnLeft ? 0 : SHADOW_PAD,
+            left: orbitOnLeft ? 0 : SHADOW_PAD,
             right: !orbitOnLeft ? 0 : SHADOW_PAD,
             borderLeftRadius: borderLeftRadius ? borderLeftRadius - 1 : 0,
             borderRightRadius: borderRightRadius ? borderRightRadius - 1 : 0,
@@ -98,7 +100,7 @@ export default class OrbitFrame {
           $orbitAnimate={store.shouldAnimate}
           $pointerEvents={App.isShowingOrbit && !App.isAnimatingOrbit}
           css={{
-            padding: orbitDocked ? [0, 0, 0, SHADOW_PAD] : [SHADOW_PAD, 0],
+            padding: orbitDocked ? 0 : [SHADOW_PAD, 0],
             ...(fullScreen || orbitDocked
               ? { right: 0 }
               : {
@@ -113,7 +115,7 @@ export default class OrbitFrame {
               borderRightRadius,
               marginLeft: fullScreen || orbitDocked ? 0 : SHADOW_PAD,
               paddingLeft: orbitOnLeft ? 0 : SHADOW_PAD,
-              paddingRight: !orbitOnLeft ? 0 : SHADOW_PAD,
+              paddingRight: !orbitOnLeft || orbitDocked ? 0 : SHADOW_PAD,
               ...(App.isShowingOrbit
                 ? {
                     opacity: 1,
@@ -173,6 +175,7 @@ export default class OrbitFrame {
       left: 0,
       right: 0,
       bottom: 0,
+      zIndex: 1,
     },
     orbit: {
       width: ORBIT_WIDTH,

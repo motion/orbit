@@ -29,13 +29,6 @@ export default class OrbitArrow {
       const arrowMinY = orbitY + 40
       const arrowMaxY = orbitY + orbitH - 40
       const offsetY = Math.min(arrowMaxY, Math.max(arrowMinY, top - orbitY))
-      console.log(
-        'adjust for hovered word',
-        App.state.hoveredWord,
-        top,
-        orbitY,
-        offsetY,
-      )
       arrowTransformY = offsetY - arrowStyle.top
     }
     const ms = App.animationDuration

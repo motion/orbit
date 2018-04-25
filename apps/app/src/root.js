@@ -40,6 +40,7 @@ export default class AppRoot extends React.Component {
             top: this.state.error ? '80%' : 0,
             left: 0,
             zIndex: Number.MAX_SAFE_INTEGER,
+            opacity: 0.5,
           }}
         >
           <UI.Portal>

@@ -12,15 +12,17 @@ const SHADOW_PAD = 60
 export default class PeekFrame {
   render({ children, theme, ...props }) {
     const { peekState } = Electron
-    const { selectedItem } = App.state
+    const { selectedItem, peekTarget } = App.state
     const { fullScreen } = Electron.orbitState
-    if (!selectedItem && !fullScreen) {
+    if ((!selectedItem && !fullScreen) || !peekTarget) {
       return null
     }
     const onRight = !peekState.peekOnLeft
     const { isShowingPeek } = App
-    const borderRightRadius = fullScreen || onRight ? BORDER_RADIUS : 0
-    const borderLeftRadius = !fullScreen && !onRight ? BORDER_RADIUS : 0
+    const borderRightRadius =
+      fullScreen || onRight ? BORDER_RADIUS : BORDER_RADIUS
+    const borderLeftRadius =
+      !fullScreen && !onRight ? BORDER_RADIUS : BORDER_RADIUS
     const padding = [
       SHADOW_PAD,
       onRight ? SHADOW_PAD : 0,
@@ -29,7 +31,11 @@ export default class PeekFrame {
     ]
     const margin = padding.map(x => -x)
     const borderShadow = ['inset', 0, 0, 0, 0.5, [0, 0, 0, 0.3]]
-    const boxShadow = [[0, 0, SHADOW_PAD, [0, 0, 0, 0.2]], borderShadow]
+    const boxShadow = [
+      [onRight ? 10 : -10, 0, SHADOW_PAD, [0, 0, 0, 0.2]],
+      borderShadow,
+    ]
+    const arrowSize = 40
     return (
       <peekFrame
         css={{
@@ -41,6 +47,18 @@ export default class PeekFrame {
           },
         }}
       >
+        <UI.Arrow
+          size={arrowSize}
+          towards="left"
+          background="#fff"
+          boxShadow={[['inset', 0, 0, 0, 0.5, [0, 0, 0, 0.25]]]}
+          css={{
+            position: 'absolute',
+            top: peekTarget.position.top + arrowSize + 10,
+            left: -30,
+            zIndex: 100,
+          }}
+        />
         <crop
           css={{
             padding,
@@ -49,6 +67,7 @@ export default class PeekFrame {
         >
           <peek $animate={isShowingPeek} $peekVisible={isShowingPeek}>
             <WindowControls
+              if={false}
               css={{
                 position: 'absolute',
                 top: 20,
@@ -98,6 +117,8 @@ export default class PeekFrame {
       // background: [0, 0, 0, 0.5],
       flexFlow: 'row',
       flex: 1,
+      position: 'relative',
+      zIndex: 1000,
     },
     peek: {
       pointerEvents: 'none !important',
@@ -110,7 +131,7 @@ export default class PeekFrame {
       },
     },
     crop: {
-      overflow: 'hidden',
+      // overflow: 'hidden',
       flex: 1,
       height: '100%',
     },

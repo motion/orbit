@@ -8,7 +8,7 @@ import OrbitArrow from './orbitArrow'
 import OrbitIndicator from './orbitIndicator'
 
 const { SHADOW_PAD } = Constants
-const APP_SHADOW = [0, 0, 60, [0, 0, 0, 0.25]]
+const DOCKED_SHADOW = [0, 0, 85, [0, 0, 0, 0.16]]
 const iWidth = 4
 const arrowSize = 22
 // const log = debug('OrbitFrame')
@@ -54,7 +54,7 @@ export default class OrbitFrame {
     const borderRightRadius =
       fullScreen || orbitDocked ? 0 : orbitOnLeft ? 0 : Constants.BORDER_RADIUS
     const orbitLightShadow = [
-      [orbitOnLeft ? -20 : 20, 8, 50, 0, [0, 0, 0, 0.07]],
+      [orbitOnLeft ? -18 : 18, 8, 50, 0, [0, 0, 0, 0.07]],
     ]
     return (
       <orbitFrame
@@ -85,7 +85,7 @@ export default class OrbitFrame {
           css={{
             boxShadow: [
               borderShadow,
-              fullScreen || orbitDocked ? [APP_SHADOW] : [orbitLightShadow],
+              fullScreen || orbitDocked ? [DOCKED_SHADOW] : [orbitLightShadow],
             ].filter(Boolean),
             top: orbitDocked ? 0 : SHADOW_PAD,
             bottom: orbitDocked ? 0 : SHADOW_PAD,

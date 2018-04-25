@@ -5,7 +5,7 @@ import { App, Electron } from '@mcro/all'
 import { BORDER_RADIUS } from '~/constants'
 import WindowControls from '~/views/windowControls'
 
-const SHADOW_PAD = 60
+const SHADOW_PAD = 55
 
 @UI.injectTheme
 @view
@@ -32,7 +32,7 @@ export default class PeekFrame {
     const margin = padding.map(x => -x)
     const borderShadow = ['inset', 0, 0, 0, 0.5, [0, 0, 0, 0.3]]
     const boxShadow = [
-      [onRight ? 10 : -10, 0, SHADOW_PAD, [0, 0, 0, 0.2]],
+      [onRight ? 6 : -6, 8, SHADOW_PAD, [0, 0, 0, 0.1]],
       borderShadow,
     ]
     const arrowSize = 40
@@ -41,6 +41,7 @@ export default class PeekFrame {
         css={{
           width: peekState.size[0],
           height: peekState.size[1] + SHADOW_PAD,
+          transition: 'all ease-in 300ms',
           transform: {
             x: peekState.position[0],
             y: peekState.position[1],

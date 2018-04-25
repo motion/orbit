@@ -55,36 +55,27 @@ our unique go to market strategies
 
 our keys to success
 
-* context should be addicting in a good way
-  * shows interesting things in pleasant way
-* displaying alignment with users
-  * we are in precarious territory, need to prove were good actors
+* making the summary really work well
+* befriending our integration companies
+* working a long beta with influential people
+* ensuring the PR around user-alignment catches
+  * we need to be seen as "the apple of startup" in terms of user-alignment
+  * this requires us to have clear direct-from-user/company monetization plan from start
 
-our featureset
-
-what people think we are: organizational tool
-what we really are: replace your notification drawer + spotlight with something useful
+features
 
 * news
-  * trends
-    * simple trends would help people see whats important today
-    * lower stress because you're not out of loop
-  * daily highlights
-    * goals
-      * avoid context switch between many things
-      * see whats going on in your interest area
-      * stop worrying about notification / turn off notifications
-    * features
-      * nlp based on what you do/care about => what you missed
-      * broadly interesting things happening in your company
-      * smart, clean summary of notifications across your integrations
+  * simple summary of globally interesting things
+  * and personally interesting things
 * search
-  * nlp search
-    * nate works with
-    * nate document 2 weeks ago
+  * justifies us to take over cmd+space and spotlight
+    * gives us super high interaction
 * explore
-  * simple Projects / People
-  * later Teams
-  * later Wiki features
-* context
-  * unknown unknowns and pr value
+  * it's what we can sell to _companies_ because it gives them control
+    * they can curate their home sections
+    * they get value from a nice org chart
+* context "one more thing"
+  * amazing for demo / brand
+  * gives us novelty factor which increases virality big time
+  * actually has huge business case once it works well
+    * dont forget how awesome it would feel to have an agent looking out for you

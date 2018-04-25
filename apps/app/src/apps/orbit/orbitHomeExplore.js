@@ -1,5 +1,4 @@
 import { view } from '@mcro/black'
-import SettingCard from './orbitSettingCard'
 import { Title } from '~/views'
 import * as UI from '@mcro/ui'
 import OrbitHomeHighlights from './orbitHomeHighlights'

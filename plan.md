@@ -65,17 +65,25 @@ our keys to success
 features
 
 * news
-  * simple summary of globally interesting things
-  * and personally interesting things
+  * gets us into users hands directly
+  * very strong for marketing
+  * simple summary of globally interesting things + personally interesting things
 * search
   * justifies us to take over cmd+space and spotlight
-    * gives us super high interaction
+  * gives us high engagement and gets users used to using us
 * explore
   * it's what we can sell to _companies_ because it gives them control
     * they can curate their home sections
     * they get value from a nice org chart
+  * its the area that can grow most in terms of price-point value
 * context "one more thing"
+  * helps justify the big ask of taking over their various shortcuts and onboard time
   * amazing for demo / brand
   * gives us novelty factor which increases virality big time
   * actually has huge business case once it works well
     * dont forget how awesome it would feel to have an agent looking out for you
+
+risks
+
+* setup time with integrations will take a while
+  * onboard focus and demo impressiveness should help

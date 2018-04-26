@@ -4,11 +4,7 @@ import Redbox from 'redbox-react'
 import * as UI from '@mcro/ui'
 import NotFound from '~/views/404'
 import Router from '~/router'
-import AppStore from '~/stores/appStore'
 
-@view.provide({
-  appStore: AppStore,
-})
 @view
 export default class AppRoot extends React.Component {
   state = {

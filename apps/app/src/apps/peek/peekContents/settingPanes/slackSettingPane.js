@@ -5,7 +5,7 @@ import { fuzzy } from '~/helpers'
 import * as _ from 'lodash'
 import SlackChannel from './slackChannel'
 
-class SlackStore {
+class SlackSettingStore {
   search = ''
 
   get service() {
@@ -25,7 +25,6 @@ class SlackStore {
   }
 
   get channels() {
-    this.service.setting.values
     return fuzzy(this.search, this.sortedChannels, {
       key: 'name',
     })
@@ -34,7 +33,7 @@ class SlackStore {
 
 @view.attach('appStore')
 @view({
-  store: SlackStore,
+  store: SlackSettingStore,
 })
 export default class Slack {
   render({ store, setting }) {

@@ -5,6 +5,8 @@ import OrbitCard from '~/apps/orbit/orbitCard'
 @view
 export default class Carousel {
   render({ items, appStore }) {
+    console.log('carousel items are', items)
+
     return (
       <carousel>
         {items.map((item, index) => (

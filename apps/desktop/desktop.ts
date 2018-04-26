@@ -53,6 +53,7 @@ export default class DesktopRoot {
     })
     Desktop.onMessage(Desktop.messages.OPEN, open)
     await connectModels(Object.keys(Models).map(x => Models[x]))
+    console.log('creating new cosal store')
     this.cosalStore = new CosalStore()
     this.sync = new Sync()
     this.sync.start()

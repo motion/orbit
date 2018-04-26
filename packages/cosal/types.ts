@@ -1,3 +1,13 @@
+export type Covariance = {
+  hash: string
+  matrix: any
+}
+
+export type WordVector = {
+  vector: Array<number>
+  string: string
+}
+
 export type Doc = {
   id: string
   fields: Array<{ weight: number; content: string }>

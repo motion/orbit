@@ -45,7 +45,7 @@ export class Conversation {
                 <carousel>
                   <UI.Title fontWeight={600}>Related</UI.Title>
                   <carouselInner>
-                    <Carousel items={appStore.searchState.results} />
+                    <Carousel items={appStore.similarBits || []} />
                   </carouselInner>
                 </carousel>
               </main>

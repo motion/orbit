@@ -23,7 +23,7 @@ const tanActiveHoverBg = tanHoverBg.darken(0.06).desaturate(0.3)
 const Themes = {
   tan: Theme.fromStyles({
     background: tanBg,
-    color: '#444',
+    color: '#656141',
     borderColor: '#000',
     hover: {
       background: tanHoverBg,

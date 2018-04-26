@@ -40,6 +40,7 @@ class DesktopStore {
     searchState: {
       indexStatus: '',
       searchResults: [],
+      similarBits: [],
       pluginResults: [],
     },
     keyboardState: {},

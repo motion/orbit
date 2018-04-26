@@ -34,20 +34,18 @@ export const fn = ({ term, display }) => {
         ({ lastUsed = '0000' }) => lastUsed,
       ],
       ['desc', 'desc'],
-    )
-      .slice(0, 10)
-      .map(file => {
-        const { path, name } = file
-        return {
-          id: path,
-          title: name,
-          term: name,
-          icon: path,
-          subtitle: path,
-          clipboard: path,
-          integration: 'apps',
-        }
-      })
+    ).map(file => {
+      const { path, name } = file
+      return {
+        id: path,
+        title: name,
+        term: name,
+        icon: path,
+        subtitle: path,
+        clipboard: path,
+        integration: 'apps',
+      }
+    })
     display(result)
   })
 }

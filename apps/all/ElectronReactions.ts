@@ -127,10 +127,10 @@ export default class ElectronReactions {
         this.togglePinned()
       }
     }
-    if (shortcut === 'Option+Shift+Space') {
-      Electron.lastAction = shortcut
-      this.toggleFullScreen()
-    }
+    // if (shortcut === 'Option+Shift+Space') {
+    //   Electron.lastAction = shortcut
+    //   this.toggleFullScreen()
+    // }
   }
 
   toggleVisible = () => {
@@ -149,20 +149,20 @@ export default class ElectronReactions {
     Electron.setOrbitState({ pinned })
   }
 
-  @react
-  fullScreenOnOptionShift = [
-    () => Desktop.isHoldingOptionShift,
-    async (x, { sleep }) => {
-      if (!x) {
-        // if not mouse over active area, toggleFullScreen
-        return
-      }
-      await sleep(100) // sleep because dont want to trigger this accidentaly
-      console.log('send clear before fs or un-fs for quick hide test')
-      Electron.onClear()
-      this.toggleFullScreen()
-    },
-  ]
+  // @react
+  // fullScreenOnOptionShift = [
+  //   () => Desktop.isHoldingOptionShift,
+  //   async (x, { sleep }) => {
+  //     if (!x) {
+  //       // if not mouse over active area, toggleFullScreen
+  //       return
+  //     }
+  //     await sleep(100) // sleep because dont want to trigger this accidentaly
+  //     console.log('send clear before fs or un-fs for quick hide test')
+  //     Electron.onClear()
+  //     this.toggleFullScreen()
+  //   },
+  // ]
 
   @react
   unPinOnFullScreen = [

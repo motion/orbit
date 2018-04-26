@@ -1,5 +1,5 @@
-import { Setting, Bit, Person, createOrUpdate, Job } from '@mcro/models'
-import { SlackService } from '@mcro/models/services'
+import { Bit, Person, createOrUpdate, Job } from '@mcro/models'
+import { SlackService } from '@mcro/services'
 import debug from '@mcro/debug'
 import * as _ from 'lodash'
 import * as Helpers from '~/helpers'
@@ -25,12 +25,14 @@ type ChannelInfo = {
 }
 
 export default class SlackMessagesSync {
-  setting: Setting
   service: SlackService
   userInfo = {}
 
-  constructor(setting, service: SlackService) {
-    this.setting = setting
+  get setting() {
+    return this.service.setting
+  }
+
+  constructor(service: SlackService) {
     this.service = service
   }
 

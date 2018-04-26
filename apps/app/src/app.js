@@ -1,16 +1,14 @@
 import { App } from '@mcro/all'
 import { sleep, debugState } from '@mcro/black'
 import { ThemeProvide } from '@mcro/ui'
-import { modelsList } from '@mcro/models'
-import connectModels from './helpers/connectModels'
 import * as React from 'react'
 import ReactDOM from 'react-dom'
 import Themes from './themes'
-import Root from './root'
-import Results from '~/apps/results/results'
 import { uniqBy } from 'lodash'
 import * as Constants from '~/constants'
 import * as UI from '@mcro/ui'
+import { modelsList } from '@mcro/models'
+import connectModels from './helpers/connectModels'
 
 // HMR
 if (module && module.hot) {
@@ -45,10 +43,13 @@ class AppRoot {
   }
 
   async start() {
-    await App.start()
-    await connectModels(modelsList)
-    if (Constants.IS_ORBIT) {
-      App.setOrbitConnected(true)
+    if (window.location.pathname !== '/auth') {
+      await connectModels(modelsList)
+      // wierd ass bugfix
+      await App.start()
+      if (Constants.IS_ORBIT) {
+        App.setOrbitConnected(true)
+      }
     }
     this.render()
     this.catchErrors()
@@ -63,7 +64,9 @@ class AppRoot {
 
   render() {
     const isResults = window.location.pathname === '/results'
-    const RootComponent = isResults ? Results : Root
+    const RootComponent = isResults
+      ? require('./apps/results/results').default
+      : require('./root').default
     ReactDOM.render(
       <ThemeProvide {...Themes}>
         <UI.Theme name="tan">

@@ -42,6 +42,7 @@ export type DesktopState = {
   searchState: {
     pluginResults: Array<{}>
     indexStatus: string
+    similarBits: Array<{}>
     searchResults: Array<{}>
   }
 }

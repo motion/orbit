@@ -1,9 +1,10 @@
 import { react, store } from '@mcro/black'
-import { toCosal, mCosSimilarities, getCovariance } from './library'
-import { reverse, sum, sortBy } from 'lodash'
-import { Doc } from './types'
+import { toCosal, mCosSimilarities } from './library'
+import { reverse, sum, sortBy, uniqBy } from 'lodash'
+import { Doc, Cosal, Covariance } from './types'
 import commonWordsText from './commonWords'
 import kdTree from 'static-kdTree'
+import getInverseCovariance from './covariance'
 
 const commonWords = commonWordsText.split('\n')
 
@@ -16,18 +17,49 @@ export default class CosalStore {
   bitById = {}
   cosals = {}
   docsVersion = 1
+  loading = true
+
+  inverseCovariance?: Covariance = null
   localCovariance = []
+
+  getSummary = cosal => {
+    const wordsWithIndex = cosal.fields[0].words.map((word, index) => ({
+      ...word,
+      index,
+    }))
+
+    const words = reverse(sortBy(wordsWithIndex, 'weight')).slice(0, 6)
+
+    return sortBy(uniqBy(words, 'string').slice(0, 3), 'index')
+      .map(({ string }) => string)
+      .join('::')
+  }
+
+  toCosal = doc => {
+    return toCosal(doc, this.inverseCovariance)
+  }
 
   addDocuments = async docs => {
     const newDocs = docs.filter(bit => !this.bitById[bit.id])
+
+    if (newDocs.length === 0) {
+      return false
+    }
+
+    console.log('new docs are', newDocs)
 
     newDocs.forEach(bit => {
       this.bitById[bit.id] = bit
     })
 
-    // getCovariance(docs)
+    console.log('getting covar for new docs', newDocs)
+    const val = getInverseCovariance(newDocs)
+    console.log('val is', val)
+    this.inverseCovariance = val
 
-    const cosals = await Promise.all(newDocs.map(toCosal))
+    const cosals = (await Promise.all(newDocs.map(this.toCosal))).filter(
+      i => i !== null,
+    )
 
     cosals.forEach((cosal: any) => {
       this.cosals[cosal.id] = cosal
@@ -47,7 +79,7 @@ export default class CosalStore {
   async warm() {
     await Promise.all(
       commonWords.slice(0, 1000).map(async word => {
-        return await toCosal({
+        return await this.toCosal({
           id: '' + Math.random(),
           fields: [{ weight: 1, content: word }],
           createdAt: Math.random(),
@@ -87,9 +119,11 @@ export default class CosalStore {
     },
   ]
 
-  toCosal = toCosal
-
   searchQuery = (query: string): any => {
+    if (this.loading) {
+      return []
+    }
+
     return this.search({
       id: '' + Math.random(),
       fields: [{ weight: 1, content: query }],
@@ -97,8 +131,13 @@ export default class CosalStore {
     })
   }
 
-  search = async (doc: Doc): Promise<Array<{ weight: number; doc: Doc }>> => {
-    const { vector } = await toCosal(doc)
+  search = async (
+    doc: Doc,
+  ): Promise<Array<{ similarity: number; cosal: Cosal; id: number }>> => {
+    if (!doc) {
+      return null
+    }
+    const { vector } = await this.toCosal(doc)
 
     // @ts-ignore
     const candidates = this.getNearest(vector, 100)
@@ -122,11 +161,10 @@ export default class CosalStore {
       query.fields[0].words.map(({ word }) => {
         doc.fields
           .filter(({ content }) => content.indexOf(word) > -1)
-          .map(
-            ({ weight, words }) =>
-              words
-                .filter(item => item.word === word)
-                .map(({ weight }) => weight) * weight,
+          .map(({ weight, words }) =>
+            words
+              .filter(item => item.word === word)
+              .map(item => item.weight * weight),
           )
       }),
     )

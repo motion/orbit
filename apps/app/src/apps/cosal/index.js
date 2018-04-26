@@ -14,18 +14,21 @@ export default class CoSalPage {
           onChange={e => (store.query = e.target.value)}
         />
         <queryCosal if={store.queryCosal} $$row className="wrap">
-          {store.queryCosal.fields[0].words.map(({ word, weight }) => (
-            <word css={{ opacity: weight }}>{word}</word>
+          {store.queryCosal.fields[0].words.map(({ string, weight }) => (
+            <word css={{ opacity: weight }}>{string}</word>
           ))}
         </queryCosal>
+        <summary if={store.queryCosal}>
+          summary: {store.cosal && store.cosal.getSummary(store.queryCosal)}
+        </summary>
         <results>
           {(store.results || []).map(({ similarity, cosal }, index) => (
             <result>
               <content>
                 <text if={index >= 5}>{cosal.fields[0].content}</text>
                 <words className="wrap" $$row if={index < 5}>
-                  {cosal.fields[0].words.map(({ word, weight }) => (
-                    <word css={{ opacity: weight }}>{word}</word>
+                  {cosal.fields[0].words.map(({ string, weight }) => (
+                    <word css={{ opacity: weight }}>{string}</word>
                   ))}
                 </words>
               </content>
@@ -52,6 +55,9 @@ export default class CoSalPage {
       pointerEvents: 'all',
       height: '100%',
       overflow: 'scroll',
+    },
+    results: {
+      marginTop: 15,
     },
     word: {
       marginLeft: 2,

@@ -103,9 +103,8 @@ export default class Server {
         res.json({ error: 'no creds' })
       }
     })
-
     this.app.use('/setCreds', (req, res) => {
-      log('set', typeof req.body, req.body)
+      log('setCreds', typeof req.body, req.body)
       if (req.body) {
         this.creds = req.body
       }

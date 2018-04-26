@@ -2,11 +2,8 @@ import createClient from './websqlClient'
 import { createConnection } from 'typeorm/browser'
 
 export default async function connectModels(models) {
-  window.createConnection = createConnection
-  window.models = models
-
   const connect = async () => {
-    console.log('connecting models...')
+    console.log('connecting models...', models)
     // reset this on each connect
     const WebSqlClient = createClient()
     window.sqlitePlugin = WebSqlClient.sqlitePlugin
@@ -31,6 +28,7 @@ export default async function connectModels(models) {
         }
         console.error('SQL Error', err)
       })
+      return connection
     } catch (err) {
       console.log('connectModels Error: ', err)
     }

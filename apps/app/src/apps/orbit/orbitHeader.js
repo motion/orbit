@@ -115,7 +115,7 @@ export default class OrbitHeader {
         <title>
           <UI.Input
             value={orbitStore.query}
-            size={1.35}
+            size={1.3}
             sizeRadius
             css={{
               width: '100%',
@@ -179,7 +179,7 @@ export default class OrbitHeader {
       flexFlow: 'row',
       alignItems: 'center',
       justifyContent: 'center',
-      padding: [5, 2],
+      padding: [3, 2],
       transition: 'all ease-in 300ms',
       opacity: 0.75,
       '&:hover': {

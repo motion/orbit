@@ -2,7 +2,7 @@ import Syncer from '../syncer'
 import SlackAttachmentSync from './slackAttachmentSync'
 import SlackMessagesSync from './slackMessagesSync'
 import SlackPeopleSync from './slackPeopleSync'
-import { SlackService } from '@mcro/models/services'
+import { SlackService } from '@mcro/services'
 
 export default new Syncer('slack', {
   actions: {
@@ -13,9 +13,9 @@ export default new Syncer('slack', {
   getSyncers: setting => {
     const slackService = new SlackService(setting)
     return {
-      attachments: new SlackAttachmentSync(setting, slackService),
-      messages: new SlackMessagesSync(setting, slackService),
-      people: new SlackPeopleSync(setting, slackService),
+      attachments: new SlackAttachmentSync(slackService),
+      messages: new SlackMessagesSync(slackService),
+      people: new SlackPeopleSync(slackService),
     }
   },
 })

@@ -1,6 +1,6 @@
 import Cosal from '@mcro/cosal'
 import { App, Desktop } from '@mcro/all'
-import { uniqBy, uniq, sortBy, reverse } from 'lodash'
+import { uniqBy, isNumber } from 'lodash'
 import { react, store } from '@mcro/black'
 import { Bit } from '@mcro/models'
 
@@ -10,7 +10,6 @@ const filterText = (text: string): string => {
 
 @store
 export default class CosalStore {
-  query = ''
   loading = true
   cosal = new Cosal()
   lastIndex = 0
@@ -25,24 +24,19 @@ export default class CosalStore {
     const startingHistory = 150
 
     const bits: any = uniqBy(await Bit.find({ take: startingHistory }), 'id')
-    console.log('in cosal bits are', bits)
     this.lastIndex = +Date.now()
-    await this.cosal.warm()
+    // await this.cosal.warm()
     await this.cosal.addDocuments(bits.map(this.bitToDoc))
     console.log('rewriting summaries')
+    /*
     bits.forEach(async bit => {
       if (true || !bit.data.summary) {
-        const words = reverse(
-          sortBy(this.cosal.cosals[bit.id].fields[0].words, 'weight'),
-        )
-          .slice(0, 6)
-          .map(({ word }) => word)
-        bit.data.summary = uniq(words)
-          .slice(0, 3)
-          .join('::')
+        const cosal = this.cosal.cosals[bit.id]
+        bit.data.summary = this.cosal.getSummary(cosal)
         await bit.save()
       }
     })
+    */
     this.cosal.docsVersion += 1
     // @ts-ignore
     this.setTimeout(this.updateSince, 10000)
@@ -62,27 +56,42 @@ export default class CosalStore {
   }
 
   // @ts-ignore
-  @react
-  results = [
-    () => App.state.query,
-    async query => {
-      if (this.loading) {
-        return []
-      }
-      const vals = await this.cosal.search({
-        id: Math.random() + '',
-        fields: [{ weight: 1, content: query }],
-        createdAt: +Date.now(),
-      })
+  getResults = async query => {
+    if (this.loading) {
+      return []
+    }
 
-      return vals.slice(0, 10)
+    const vals = await this.cosal.search({
+      id: Math.random() + '',
+      fields: [{ weight: 1, content: query }],
+      createdAt: +Date.now(),
+    })
+
+    console.log('returning for query', query)
+    return vals.filter(({ similarity }) => !isNaN(similarity)).slice(0, 10)
+  }
+
+  @react
+  setSimilarBits = [
+    () => App.state.selectedItem,
+    async item => {
+      const content = item.body
+      const results = await this.getResults(content)
+      const similarBits = results
+        .map(({ id }) => id)
+        .filter(id => +id !== +item.id)
+      Desktop.setSearchState({
+        similarBits,
+      })
     },
   ]
 
   @react
   setSearch = [
-    () => this.results,
-    results => {
+    () => App.state.query,
+    async query => {
+      const results = await this.getResults(query)
+      console.log('results are', results)
       Desktop.setSearchState({ searchResults: results.map(({ id }) => id) })
     },
   ]

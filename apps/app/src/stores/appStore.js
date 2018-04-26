@@ -1,7 +1,6 @@
 import { react, isEqual } from '@mcro/black'
 import { App, Desktop, Electron } from '@mcro/all'
 import { Bit, Person, Setting, findOrCreate } from '@mcro/models'
-import * as ServiceModels from '@mcro/models/services'
 import * as Constants from '~/constants'
 import * as r2 from '@mcro/r2'
 import * as Helpers from '~/helpers'
@@ -23,10 +22,11 @@ const getPermalink = async (result, type) => {
   return result.id
 }
 
-const Services = {
-  slack: ServiceModels.SlackService,
-  drive: ServiceModels.DriveService,
-  github: ServiceModels.GithubService,
+// note: importing services causes hell for some reason
+const allServices = {
+  slack: () => require('@mcro/services').SlackService,
+  drive: () => require('@mcro/services').DriveService,
+  github: () => require('@mcro/services').GithubService,
 }
 
 // const log = debug('root')
@@ -87,6 +87,13 @@ export default class AppStore {
   services = {}
   getResults = null
 
+  get innerHeight() {
+    const HEADER_HEIGHT = 90
+    return (
+      Electron.orbitState.size[1] - Constants.SHADOW_PAD * 2 - HEADER_HEIGHT
+    )
+  }
+
   async willMount() {
     this.getSettings()
     this.setInterval(this.getSettings, 2000)
@@ -119,10 +126,12 @@ export default class AppStore {
     onlyUpdateIfChanged: true,
     log: false,
   })
-  bitResults = [
-    () => [App.state.query, Desktop.appState.id, this.refreshInterval],
-    async ([query]) => {
-      if (!query) {
+  similarBits = [
+    () => Desktop.state.searchState.similarBits,
+    async () => {
+      const ids = Desktop.state.searchState.similarBits.toJS().map(i => +i)
+
+      if (ids.length === 0) {
         return await Bit.find({
           take: 8,
           relations: ['people'],
@@ -130,25 +139,84 @@ export default class AppStore {
         })
       }
 
-      const ids = Desktop.state.searchState.searchResults
+      const bitResults = await Promise.all(
+        ids.map(
+          async id =>
+            (await Bit.findByIds([id], { id, relations: ['people'] }))[0],
+        ),
+      )
 
-      console.log('ids are', ids)
-      const bitResults = await Bit.findByIds(ids, {
-        relations: ['people'],
-      })
-      console.log('bit results are', bitResults)
+      // things have changed in the meantime
+      if (ids.join(',') !== Desktop.state.searchState.similarBits.join(',')) {
+        throw react.cancel
+      }
+
+      return bitResults
+    },
+  ]
+
+  @react({
+    fireImmediately: true,
+    defaultValue: [],
+    onlyUpdateIfChanged: true,
+    log: false,
+  })
+  bitResults = [
+    () => Desktop.state.searchState.searchResults,
+    async () => {
+      const ids = Desktop.state.searchState.searchResults.toJS().map(i => +i)
+
+      if (ids.length === 0) {
+        return await Bit.find({
+          take: 8,
+          relations: ['people'],
+          order: { bitCreatedAt: 'DESC' },
+        })
+      }
+
+      const bitResults = await Promise.all(
+        ids.map(
+          async id =>
+            (await Bit.findByIds([id], { id, relations: ['people'] }))[0],
+        ),
+      )
 
       // things have changed in the meantime
       if (ids.join(',') !== Desktop.state.searchState.searchResults.join(',')) {
         throw react.cancel
       }
-      const bitVals = ids.map(
-        id => bitResults.filter(bit => +bit.id === +id)[0],
-      )
 
-      console.log('bit vals are', bitVals)
+      return bitResults
+    },
+  ]
 
-      return bitVals
+  @react({
+    fireImmediately: true,
+    defaultValue: [],
+  })
+  summaryResults = [
+    () => 0,
+    async () => {
+      return await Bit.find({
+        take: 6,
+        relations: ['people'],
+        order: { bitCreatedAt: 'DESC' },
+      })
+    },
+  ]
+
+  @react({
+    fireImmediately: true,
+    defaultValue: [],
+  })
+  contextResults = [
+    () => 0,
+    async () => {
+      return await Bit.find({
+        take: 6,
+        relations: ['people'],
+        order: { bitCreatedAt: 'DESC' },
+      })
     },
   ]
 
@@ -185,11 +253,13 @@ export default class AppStore {
   searchState = [
     () => [
       App.state.query,
-      Desktop.searchState.pluginResults || [],
+      // Desktop.searchState.pluginResults || [],
       this.bitResults || [],
-      this.getResults,
+      // this.getResults,
     ],
     ([query, pluginResults, bitResults, getResults]) => {
+      bitResults = this.bitResults
+      console.log('in search state reaction', query, [...this.bitResults])
       let results
       let channelResults
       let message
@@ -221,6 +291,7 @@ export default class AppStore {
         const { rest } = parseQuery(query)
         results = matchSort(rest, unsorted)
       }
+
       return {
         query,
         message,
@@ -371,8 +442,9 @@ export default class AppStore {
           if (!setting.token) {
             continue
           }
-          if (!this.services[name] && Services[name]) {
-            this.services[name] = new Services[name](setting)
+          if (!this.services[name] && allServices[name]) {
+            const ServiceConstructor = allServices[name]()
+            this.services[name] = new ServiceConstructor(setting)
           }
         }
       }

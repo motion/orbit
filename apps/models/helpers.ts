@@ -7,7 +7,7 @@ export * from './typeorm'
 // import { BaseEntity } from 'typeorm'
 
 export async function findOrCreate(Model: any, values: Object) {
-  let item = await Model.findOne(values)
+  let item = await Model.findOne({ where: values })
   if (item) {
     return item
   }

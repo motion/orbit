@@ -1,7 +1,7 @@
 import screenSize from './screenSize'
 import * as Constants from '@mcro/constants'
 
-// const PAD = 15
+const SHADOW_PAD = 15
 const EDGE_PAD = 20
 const TOP_OFFSET = -20
 
@@ -26,6 +26,9 @@ export default function peekPosition(target, Electron) {
   }
   if (peekOnLeft) {
     x = left - pW
+    if (orbitOnLeft) {
+      x -= SHADOW_PAD
+    }
     if (pW > leftSpace) {
       pW = leftSpace
       x = 0
@@ -36,9 +39,10 @@ export default function peekPosition(target, Electron) {
       pW = rightSpace
     }
   }
+  // too tall
   if (pH + y + EDGE_PAD > screenH) {
-    y = EDGE_PAD
-    pH = screenH - EDGE_PAD * 2
+    console.log('y, pH, screenH', y, pH, screenH)
+    y = screenH - pH - EDGE_PAD
   }
   // adjust for when the peek is facing the arrow side of orbit
   if (orbitOnLeft && !peekOnLeft) {

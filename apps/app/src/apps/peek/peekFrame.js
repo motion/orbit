@@ -2,10 +2,11 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { App, Electron } from '@mcro/all'
-import { BORDER_RADIUS } from '~/constants'
 import WindowControls from '~/views/windowControls'
 
-const SHADOW_PAD = 55
+const SHADOW_PAD = 50
+const BORDER_RADIUS = 5
+const background = '#f9f9f9'
 
 @UI.injectTheme
 @view
@@ -32,10 +33,11 @@ export default class PeekFrame {
     const margin = padding.map(x => -x)
     const borderShadow = ['inset', 0, 0, 0, 0.5, [0, 0, 0, 0.3]]
     const boxShadow = [
-      [onRight ? 6 : -6, 8, SHADOW_PAD, [0, 0, 0, 0.1]],
+      [onRight ? 6 : -6, 3, SHADOW_PAD, [0, 0, 0, 0.15]],
       borderShadow,
     ]
     const arrowSize = 40
+    const peekOverlapOrbitPx = onRight ? -4 : 4
     return (
       <peekFrame
         css={{
@@ -43,7 +45,7 @@ export default class PeekFrame {
           height: peekState.size[1] + SHADOW_PAD,
           transition: 'all ease-in 300ms',
           transform: {
-            x: peekState.position[0],
+            x: peekState.position[0] + peekOverlapOrbitPx,
             y: peekState.position[1],
           },
         }}
@@ -51,14 +53,22 @@ export default class PeekFrame {
         <UI.Arrow
           size={arrowSize}
           towards={onRight ? 'left' : 'right'}
-          background="#fff"
-          boxShadow={[['inset', 0, 0, 0, 0.5, [0, 0, 0, 0.25]]]}
+          background={background}
+          boxShadow={[
+            [0, 0, 10, [0, 0, 0, 0.05]],
+            ['inset', 0, 0, 0, 0.5, [0, 0, 0, 0.25]],
+          ]}
           css={{
             position: 'absolute',
-            top: peekTarget.position.top + arrowSize + 10,
+            top:
+              peekState.position[1] +
+              (peekState.position[1] - peekTarget.position.top),
             left: !onRight ? 'auto' : -30,
             right: !onRight ? -40 : 'auto',
             zIndex: 100,
+            transform: {
+              x: onRight ? 0.5 : -0.5,
+            },
           }}
         />
         <crop
@@ -95,14 +105,9 @@ export default class PeekFrame {
             <peekMain
               css={{
                 boxShadow,
-                // make shadow go under
-                // marginLeft: fullScreen ? -SHADOW_PAD : 0,
-                // paddingLeft: fullScreen ? SHADOW_PAD : 0,
                 borderRightRadius,
                 borderLeftRadius,
-                background: `radial-gradient(#fff 70%, ${
-                  theme.base.background
-                }`,
+                background,
               }}
               {...props}
             >
@@ -135,7 +140,6 @@ export default class PeekFrame {
     crop: {
       // overflow: 'hidden',
       flex: 1,
-      height: '100%',
     },
     animate: {
       opacity: 1,
@@ -151,7 +155,6 @@ export default class PeekFrame {
       bottom: 0,
       zIndex: 10000,
       pointerEvents: 'none',
-      border: [2, '#fff'],
     },
     peekVisible: {
       pointerEvents: 'all !important',

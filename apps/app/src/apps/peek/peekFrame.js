@@ -1,24 +1,46 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { App, Electron } from '@mcro/all'
 import WindowControls from '~/views/windowControls'
+import { isEqual } from 'lodash'
 
 const SHADOW_PAD = 50
-const BORDER_RADIUS = 5
+const BORDER_RADIUS = 6
 const background = '#f9f9f9'
 
+class PeekFrameStore {
+  get nextState() {
+    return {
+      target: App.state.peekTarget,
+      ...Electron.peekState,
+    }
+  }
+
+  @react({ delay: 100 })
+  curState = [() => this.nextState, _ => _]
+
+  get willShow() {
+    return this.curState && !isEqual(this.nextState, this.curState)
+  }
+}
+
 @UI.injectTheme
-@view
+@view({
+  store: PeekFrameStore,
+})
 export default class PeekFrame {
-  render({ children, theme, ...props }) {
-    const { peekState } = Electron
-    const { selectedItem, peekTarget } = App.state
-    const { fullScreen } = Electron.orbitState
-    if ((!selectedItem && !fullScreen) || !peekTarget) {
+  render({ store, children, ...props }) {
+    const { nextState, willShow } = store
+    if (
+      !nextState.position ||
+      !nextState.position.length ||
+      !nextState.target
+    ) {
       return null
     }
-    const onRight = !peekState.peekOnLeft
+    const { fullScreen, orbitDocked } = Electron.orbitState
+    const onRight = !nextState.peekOnLeft
     const { isShowingPeek } = App
     const borderRightRadius =
       fullScreen || onRight ? BORDER_RADIUS : BORDER_RADIUS
@@ -36,17 +58,20 @@ export default class PeekFrame {
       [onRight ? 6 : -6, 3, SHADOW_PAD, [0, 0, 0, 0.15]],
       borderShadow,
     ]
-    const arrowSize = 40
-    const peekOverlapOrbitPx = onRight ? -4 : 4
+    const arrowSize = 33
+    let peekAdjustX = orbitDocked ? 13 : 0
+    peekAdjustX += onRight ? -4 : 4
     return (
       <peekFrame
         css={{
-          width: peekState.size[0],
-          height: peekState.size[1] + SHADOW_PAD,
+          background: willShow ? 'red' : 'transparent',
+          opacity: willShow ? 0 : 1,
+          width: nextState.size[0],
+          height: nextState.size[1] + SHADOW_PAD,
           transition: 'all ease-in 300ms',
           transform: {
-            x: peekState.position[0] + peekOverlapOrbitPx,
-            y: peekState.position[1],
+            x: nextState.position[0] + peekAdjustX,
+            y: nextState.position[1],
           },
         }}
       >
@@ -61,10 +86,10 @@ export default class PeekFrame {
           css={{
             position: 'absolute',
             top:
-              peekState.position[1] +
-              (peekState.position[1] - peekTarget.position.top),
+              nextState.position[1] +
+              (nextState.position[1] - nextState.target.position.top),
             left: !onRight ? 'auto' : -30,
-            right: !onRight ? -40 : 'auto',
+            right: !onRight ? -arrowSize : 'auto',
             zIndex: 100,
             transform: {
               x: onRight ? 0.5 : -0.5,
@@ -121,11 +146,7 @@ export default class PeekFrame {
 
   static style = {
     peekFrame: {
-      // background: [0, 0, 0, 0.5],
-      flexFlow: 'row',
-      flex: 1,
-      position: 'relative',
-      zIndex: 1000,
+      zIndex: 2,
     },
     peek: {
       pointerEvents: 'none !important',

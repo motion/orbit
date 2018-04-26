@@ -16,6 +16,9 @@ export default class OrbitMain extends React.Component {
 
   static style = {
     main: {
+      maxWidth: '100%',
+      maxHeight: '100%',
+      overflow: 'hidden',
       width: '100%',
       height: '100%',
       pointerEvents: 'none',

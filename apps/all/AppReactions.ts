@@ -93,18 +93,19 @@ export default class AppReactions {
     () => App.setPeekTarget(null),
   ]
 
-  @react
-  closePeekOnMouseOut = [
-    () => Electron.peekState.mouseOver,
-    async (mouseOver, { sleep }) => {
-      if (mouseOver || Electron.orbitState.mouseOver) {
-        return
-      }
-      // wait a bit
-      await sleep(400)
-      App.setPeekTarget(null)
-    },
-  ]
+  // disabled during testing, reenable
+  // @react
+  // clearPeekOnMouseOut = [
+  //   () => Electron.peekState.mouseOver,
+  //   async (mouseOver, { sleep }) => {
+  //     if (mouseOver || Electron.orbitState.mouseOver) {
+  //       return
+  //     }
+  //     // wait a bit
+  //     await sleep(400)
+  //     App.setPeekTarget(null)
+  //   },
+  // ]
 
   @react({
     delay: 32,

@@ -1,120 +1,17 @@
 import * as React from 'react'
 import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { App, Electron, Desktop } from '@mcro/all'
+import { App, Electron } from '@mcro/all'
 import * as Constants from '~/constants'
-import OrbitDivider from './orbitDivider'
+import { ORBIT_WIDTH } from '@mcro/constants'
+import OrbitArrow from './orbitArrow'
+import OrbitIndicator from './orbitIndicator'
 
-const { SHADOW_PAD, APP_SHADOW } = Constants
-const orbitLightShadow = [[0, 1, SHADOW_PAD, 0, [0, 0, 0, 0.04]]]
+const animationDuration = App.animationDuration
+const SHADOW_PAD = 85
+const ARROW_PAD = 15
+const DOCKED_SHADOW = [0, 0, SHADOW_PAD, [0, 0, 0, 0.16]]
 const iWidth = 4
-const arrowSize = 22
-// const log = debug('OrbitFrame')
-
-const Indicator = view(({ iWidth, orbitOnLeft }) => {
-  if (Date.now() - Desktop.state.lastAppChange < 100) {
-    return null
-  }
-  if (Electron.orbitState.orbitDocked) {
-    return null
-  }
-  // log('on', orbitOnLeft)
-  const border = [1, UI.color('#E9B73A').darken(0.2)]
-  return (
-    <indicator
-      css={{
-        position: 'absolute',
-        background: '#E9B73A',
-        border,
-        borderRight: orbitOnLeft ? 0 : border,
-        borderLeft: !orbitOnLeft ? 0 : border,
-        boxShadow: [
-          // [-5, 0, orbitOnLeft ? 10 : -10, 5, [255, 255, 255, 0.5]],
-          // [-2, 0, 10, 0, [0, 0, 0, 0.15]],
-        ],
-        width: iWidth * 1.5,
-        height: iWidth * 6,
-        top: 0,
-        opacity: App.isShowingOrbit ? 0 : 1,
-        right: orbitOnLeft ? SHADOW_PAD : 'auto',
-        left: !orbitOnLeft ? SHADOW_PAD : 'auto',
-        borderLeftRadius: orbitOnLeft ? 20 : 0,
-        borderRightRadius: !orbitOnLeft ? 20 : 0,
-        // opacity: App.isShowingOrbit ? 0 : 1,
-        transition: `opacity ease-in 70ms ${App.animationDuration}`,
-      }}
-    />
-  )
-})
-
-@view
-class OrbitArrow {
-  render({ borderColor, background, orbitOnLeft, arrowSize, css }) {
-    let arrowStyle
-    if (orbitOnLeft) {
-      arrowStyle = {
-        top: 53,
-        right: SHADOW_PAD - arrowSize,
-      }
-    } else {
-      arrowStyle = {
-        top: 53,
-        left: 3,
-      }
-    }
-    let arrowTransformY
-    if (App.state.hoveredWord) {
-      const { top } = App.state.hoveredWord
-      const orbitY = Electron.orbitState.position[1]
-      const orbitH = Electron.orbitState.size[1]
-      const arrowMinY = orbitY + 40
-      const arrowMaxY = orbitY + orbitH - 40
-      const offsetY = Math.min(arrowMaxY, Math.max(arrowMinY, top - orbitY))
-      console.log(
-        'adjust for hovered word',
-        App.state.hoveredWord,
-        top,
-        orbitY,
-        offsetY,
-      )
-      arrowTransformY = offsetY - arrowStyle.top
-    }
-    const ms = App.animationDuration
-    return (
-      <UI.Arrow
-        size={arrowSize}
-        towards={Electron.orbitArrowTowards}
-        background={`linear-gradient(45deg, ${background
-          .darken(0.05)
-          .desaturate(0.25)}, ${background.darken(0.02).desaturate(0.25)})`}
-        boxShadow={[['inset', 0, 0, 0, 0.5, borderColor.darken(0.1)]]}
-        // border={[1, '#000']}
-        css={{
-          position: 'absolute',
-          ...arrowStyle,
-          zIndex: 1000000000,
-          transition: App.isShowingOrbit
-            ? `
-              opacity ease-out ${ms * 0.5},
-              transform ease-out ${ms * 0.8}ms
-            `
-            : `
-              opacity ease-in ${ms * 0.5}ms ${ms * 0.6}ms,
-              transform ease-in 180ms
-            `,
-          opacity: App.isShowingOrbit ? 1 : 0,
-          transform: {
-            y: arrowTransformY || 0,
-            x: App.isShowingOrbit
-              ? orbitOnLeft ? -0.5 : 0.5
-              : (orbitOnLeft ? -arrowSize : arrowSize) / 3,
-          },
-          ...css,
-        }}
-      />
-    )
-  }
-}
 
 class OrbitFrameStore {
   orbitFrame = null
@@ -124,7 +21,7 @@ class OrbitFrameStore {
     () => App.isShowingOrbit,
     async (val, { sleep, setValue }) => {
       if (!val) {
-        await sleep(App.animationDuration)
+        await sleep(animationDuration)
         setValue(false)
       } else {
         setValue(val)
@@ -146,116 +43,110 @@ export default class OrbitFrame {
     this.props.store.orbitFrame = this
   }
 
-  render({ store, orbitPage, children, theme, headerBg }) {
-    const { fullScreen, orbitDocked } = Electron.orbitState
+  render({ store, children, theme, headerBg }) {
+    const { fullScreen, orbitDocked, position, size } = Electron.orbitState
     const { orbitOnLeft } = Electron
     const borderColor = theme.base.background.darken(0.25).desaturate(0.6)
     const borderShadow = ['inset', 0, 0, 0, 0.5, borderColor]
-    const boxShadow =
-      fullScreen || orbitDocked
-        ? [APP_SHADOW]
-        : [App.state.peekTarget ? [0, 0, 10, [0, 0, 0.5]] : orbitLightShadow]
     const background = theme.base.background
-    const borderLeftRadius = !orbitOnLeft ? 0 : Constants.BORDER_RADIUS
+    const borderLeftRadius =
+      !orbitOnLeft || orbitDocked ? 0 : Constants.BORDER_RADIUS
     const borderRightRadius =
       fullScreen || orbitDocked ? 0 : orbitOnLeft ? 0 : Constants.BORDER_RADIUS
+    const orbitLightShadow = [
+      [orbitOnLeft ? -15 : 15, 4, 35, 0, [0, 0, 0, 0.05]],
+    ]
+    const animationStyles = App.isShowingOrbit
+      ? {
+          opacity: 1,
+          transform: {
+            x: 0,
+          },
+        }
+      : {
+          opacity: 0,
+          transform: {
+            x: orbitOnLeft
+              ? ORBIT_WIDTH * 0.15 - ARROW_PAD - (ARROW_PAD + iWidth) + 4
+              : -(ORBIT_WIDTH * 0.15),
+          },
+        }
     return (
-      <orbitFrame>
+      <orbitFrame
+        css={{
+          width: orbitDocked ? 'auto' : size[0],
+          // TODO HACKINESS fix the size/y calc in orbitPosition.js
+          height: size[1] - (orbitDocked ? 0 : 15),
+          transform: {
+            x: position[0],
+            y: position[1] + (orbitDocked ? 0 : 5),
+          },
+        }}
+      >
         <OrbitArrow
           if={App.isAttachedToWindow && !orbitDocked}
-          arrowSize={arrowSize}
+          arrowSize={22}
           orbitOnLeft={orbitOnLeft}
           background={headerBg}
           borderColor={borderColor}
         />
-        <Indicator
-          if={!fullScreen}
+        <OrbitIndicator
           store={store}
           iWidth={iWidth}
           orbitOnLeft={orbitOnLeft}
         />
-        {/* <orbitShadow
-          if={false}
-          css={{
-            position: 'absolute',
-            zIndex: -1,
-            top: 25,
-            bottom: 25,
-            left: SHADOW_PAD * 1.5,
-            right: SHADOW_PAD * 1.5,
-            boxShadow: [[0, 0, SHADOW_PAD * 2, [0, 0, 0, 0.2]]],
-            transition: App.isShowingOrbit
-              ? `opacity ease-in 200ms ${App.animationDuration * 1.5}ms`
-              : 'none',
-            opacity: App.isShowingOrbit ? 1 : 0,
-          }}
-        /> */}
-        <orbitBorder
-          $orbitAnimate={App.isShowingOrbit}
-          css={{
-            boxShadow: [borderShadow],
-            ...(!orbitDocked && {
-              top: SHADOW_PAD,
-              left: SHADOW_PAD,
-              bottom: SHADOW_PAD,
-            }),
-            right: fullScreen || orbitDocked ? 0 : SHADOW_PAD,
-            borderLeftRadius: borderLeftRadius ? borderLeftRadius - 1 : 0,
-            borderRightRadius: borderRightRadius ? borderRightRadius - 1 : 0,
-            opacity: App.isShowingOrbit ? 1 : 0,
-          }}
-        />
+        {/* <orbitInnerShadow /> */}
         <overflowWrap
           $orbitAnimate={store.shouldAnimate}
           $pointerEvents={App.isShowingOrbit && !App.isAnimatingOrbit}
-          $hideOverflow
           css={{
-            ...(fullScreen || orbitDocked
+            overflow: orbitDocked ? 'visible' : 'hidden',
+            padding: orbitDocked ? 0 : SHADOW_PAD,
+            margin: orbitDocked ? 0 : -SHADOW_PAD,
+            ...(orbitDocked
               ? { right: 0 }
               : {
-                  right: orbitOnLeft ? 15 : 'auto',
-                  left: !orbitOnLeft ? 15 : 'auto',
+                  right: orbitOnLeft ? ARROW_PAD : 'auto',
+                  left: !orbitOnLeft ? ARROW_PAD : 'auto',
+                  paddingRight: orbitOnLeft ? 0 : SHADOW_PAD,
+                  marginRight: orbitOnLeft ? 0 : -SHADOW_PAD,
+                  paddingLeft: !orbitOnLeft ? 0 : SHADOW_PAD,
+                  marginLeft: !orbitOnLeft ? 0 : -SHADOW_PAD,
                 }),
           }}
         >
           <orbit
             css={{
-              padding: orbitDocked ? [0, 0, 0, SHADOW_PAD] : SHADOW_PAD,
-              paddingRight: fullScreen || orbitDocked ? 0 : SHADOW_PAD,
-              right: fullScreen || orbitDocked ? 0 : -SHADOW_PAD,
-              ...(App.isShowingOrbit
-                ? {
-                    opacity: 1,
-                    transform: {
-                      x: orbitOnLeft ? 0 : -SHADOW_PAD * 2,
-                    },
-                  }
-                : {
-                    opacity: 0,
-                    transform: {
-                      x: orbitOnLeft
-                        ? 330 * 0.15 - SHADOW_PAD - (SHADOW_PAD + iWidth) + 4
-                        : -(330 * 0.15),
-                    },
-                  }),
+              borderLeftRadius,
+              borderRightRadius,
+              ...animationStyles,
             }}
             $orbitAnimate={store.shouldAnimate}
-            $orbitHeight={fullScreen ? 0 : orbitPage.adjustHeight}
-            $orbitFullScreen={fullScreen}
           >
+            <orbitBorder
+              css={{
+                borderLeftRadius: borderLeftRadius ? borderLeftRadius - 1 : 0,
+                borderRightRadius: borderRightRadius
+                  ? borderRightRadius - 1
+                  : 0,
+                boxShadow: [
+                  borderShadow,
+                  orbitDocked ? [DOCKED_SHADOW] : [orbitLightShadow],
+                ].filter(Boolean),
+              }}
+            />
             <content
               css={{
                 background,
-                boxShadow: App.isShowingOrbit ? boxShadow : 'none',
                 // makes the shadow go offscreen nicely
-                marginRight: fullScreen ? -SHADOW_PAD : 0,
-                paddingRight: fullScreen ? SHADOW_PAD : 0,
+                marginRight: 0,
+                paddingRight: 0,
                 borderLeftRadius,
                 borderRightRadius,
               }}
             >
               {children}
-              <expand if={!fullScreen}>
+              <expand>
                 <fade
                   css={{
                     opacity: 1,
@@ -275,29 +166,49 @@ export default class OrbitFrame {
   static style = {
     orbitFrame: {
       flex: 1,
-    },
-    orbit: {
-      width: 330,
-      position: 'relative',
-      willChange: 'transform, opacity',
-      transition: 'none',
-    },
-    orbitAnimate: {
-      transition: `
-        transform ease-in ${App.animationDuration}ms,
-        opacity ease-in ${App.animationDuration / 2}ms ${App.animationDuration /
-        2}ms
-      `,
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      zIndex: 1,
     },
     orbitBorder: {
+      pointerEvents: 'none',
       position: 'absolute',
-      zIndex: 1000000,
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      zIndex: 10000000,
+    },
+    orbitInnerShadow: {
+      position: 'absolute',
+      top: 20,
+      bottom: 20,
+      left: ARROW_PAD,
+      right: ARROW_PAD,
+      boxShadow: [[0, 0, 90, 0, [0, 0, 0, 0.075]]],
+      zIndex: -1,
+    },
+    orbit: {
+      width: ORBIT_WIDTH,
+      position: 'relative',
+      transition: 'none',
+      flex: 1,
+    },
+    orbitAnimate: {
+      willChange: 'transform, opacity',
+      transition: `
+        transform ease-in ${animationDuration}ms,
+        opacity ease-in ${animationDuration / 2}ms ${animationDuration / 2}ms
+      `,
     },
     // used to hide edge overlap of drawer during in animation
     overflowWrap: {
+      // overflow: 'hidden',
       alignSelf: 'flex-end',
-      width: '100%',
-      height: '100%',
+      flex: 1,
       position: 'relative',
       pointerEvents: 'none !important',
     },
@@ -306,9 +217,6 @@ export default class OrbitFrame {
     },
     hideOverflow: {
       overflow: 'hidden',
-    },
-    unPad: {
-      right: 0,
     },
     orbitHeight: adjust => {
       if (!adjust) {

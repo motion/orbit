@@ -119,8 +119,8 @@ export default class DesktopScreen {
           nextState = {
             id,
             title: value.title,
-            offset: value.offset,
-            bounds: value.bounds,
+            offset: value.position,
+            bounds: value.size,
             name: id ? last(id.split('.')) : value.title,
           }
           // update these now so we can use to track

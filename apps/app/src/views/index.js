@@ -36,6 +36,7 @@ export const Title = ({ center, children, ...props }) => (
       padding: [0, 15, 2],
       alignItems: center ? 'center' : 'flex-start',
     }}
+    color="#000"
     {...props}
   >
     {children}
@@ -43,14 +44,13 @@ export const Title = ({ center, children, ...props }) => (
 )
 
 export const SubTitle = props => (
-  <subtitle
+  <UI.Text
     css={{
-      fontWeight: 400,
-      fontSize: 13,
+      fontWeight: 300,
+      fontSize: 16,
       alignItems: 'center',
       flexFlow: 'row',
       padding: [5, 15, 0],
-      textTransform: 'uppercase',
       opacity: 0.5,
       marginBottom: 5,
       color: highlightColor,

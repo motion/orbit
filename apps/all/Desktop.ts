@@ -23,6 +23,7 @@ class DesktopStore {
   source = 'Desktop'
 
   state: DesktopState = {
+    screenSize: [0, 0],
     appState: {
       selectedText: '',
       id: null,

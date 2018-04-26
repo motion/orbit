@@ -3,6 +3,7 @@ import { view } from '@mcro/black'
 import controlX from '~/../public/images/control-x.png'
 import controlY from '~/../public/images/control-y.png'
 import controlZ from '~/../public/images/control-z.png'
+import * as UI from '@mcro/ui'
 
 const icons = {
   x: controlX,
@@ -12,9 +13,29 @@ const icons = {
 
 @view
 export default class ControlButton {
-  render({ background = '#ED6A5F', icon, ...props }) {
+  static defaultProps = {
+    background: '#ED6A5F',
+    borderWidth: 0.5,
+  }
+
+  render({ background, icon, borderColor, borderWidth, ...props }) {
     return (
-      <controlButton css={{ background }} {...props}>
+      <controlButton
+        css={{
+          background,
+          boxShadow: [
+            [
+              'inset',
+              0,
+              0,
+              0,
+              borderWidth,
+              borderColor || UI.color(background).darken(0.1),
+            ],
+          ],
+        }}
+        {...props}
+      >
         <img src={icons[icon]} />
       </controlButton>
     )
@@ -29,7 +50,6 @@ export default class ControlButton {
       marginRight: 8,
       borderRadius: 100,
       // border: [2, '#fff'],
-      boxShadow: ['inset 0 0 0 0.5px rgba(0,0,0,0.15)'],
       alignItems: 'center',
       justifyContent: 'center',
       '& > img': {

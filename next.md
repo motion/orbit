@@ -1,6 +1,7 @@
 ## now
 
-* [ ] peek alignment and animation
+* [x] peek alignment and animation
+* [ ] peek arrow alignment
 * [ ] hardcode doc/mail/slack card in summary
   * [ ] design polish
 * [ ] peek view for slack convo

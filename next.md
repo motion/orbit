@@ -1,55 +1,24 @@
 ## now
 
-## triage
-
-* beta sprint (~2 weeks, May 4)
-
-  * could extend this to 4 weeks, but aim for 2 and re-assess
-  * working: slack/mail, summary, search, generally work well
-
-  * nate
-
-    * design/feel
-      * design home/news/summary/explore
-      * interaction for summary/peeks
-    * slack
-      * read/unread metadata from slack in sortable sql form
-      * better design for peek/move between related convos
-      * better grouping of conversations
-      * better selection of the right rooms to sync
-      * finish setting pane nicely
-      * show attachments/images
-    * peek movement
-      * clicking items in peek lets you move around
-    * interaction/visual/bugs
-      * generally make sure its not breaking/bugging
-      * improve and make clear shortcuts
-    * productionize
-      * build to .app
-      * slim it a bit so ~250mb not ~700
-      * working oauth on fresh machine
-
-  * nick
-
-    * cosal
-      * continue to test across various searches and improve until good
-    * slack convo summary
-      * various tweaks to filter weird words, combine words
-      * test and iterate
-    * daily summary
-      * make model of seen things and find weights that are good
-      * generate summary of non-seen things
-
-### unsorted
-
+* [ ] peek alignment and animation
+* [ ] upgrade card design
+* [ ] gmail content display/info
+* [ ] peek window design
+* [ ] home design
+* [ ] interaction finish bugs
+* [ ] search jitter
+* [ ] fix keyboard movement bugs
+* [ ] peek navigation between items
+* [ ] slack attachments/images/emojis
+* [ ] slack unread/read sql
+* [ ] setting pane improvements
+* [ ] productionize
 * [ ] fix option hold not working sometimes after a delay, until you move cursor
 * [ ] double click to open OrbitCard item
 * [ ] swindler on close window need to reposition
-* [ ] ? filtering/exploring various integrations
-* [ ] remove search jumpiness
-* [ ] peek back button + history
+* [ ] explore mockup
+* [ ] home animations
 * [ ] make "@" show a list of slack people + search people
-* [ ] docked: have taller peeks
 
 ### sorted by area
 

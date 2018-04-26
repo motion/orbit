@@ -52,7 +52,7 @@ export default class AppReactions {
     App.setOrbitHidden(true)
   }
 
-  @react
+  @react({ log: 'state' })
   clearPeekTargetOnOrbitClose = [
     () => !App.isShowingOrbit,
     hidden => {
@@ -63,7 +63,7 @@ export default class AppReactions {
     },
   ]
 
-  @react
+  @react({ log: 'state' })
   onFullScreen = [
     () => Electron.orbitState.fullScreen,
     full => {
@@ -75,7 +75,7 @@ export default class AppReactions {
     },
   ]
 
-  @react
+  @react({ log: 'state' })
   onPinned = [
     () => Electron.orbitState.pinned,
     pinned => {
@@ -87,7 +87,7 @@ export default class AppReactions {
     },
   ]
 
-  @react
+  @react({ log: 'state' })
   clearPeekOnReposition = [
     () => Electron.orbitState.position,
     () => App.setPeekTarget(null),

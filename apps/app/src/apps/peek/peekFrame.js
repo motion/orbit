@@ -23,6 +23,15 @@ class PeekFrameStore {
   get willShow() {
     return this.curState && !isEqual(this.nextState, this.curState)
   }
+
+  @react({ delayValue: true })
+  wasShowing = [
+    () => this.nextState.target,
+    target => {
+      console.log('target??', target)
+      return !!target
+    },
+  ]
 }
 
 @UI.injectTheme
@@ -31,16 +40,13 @@ class PeekFrameStore {
 })
 export default class PeekFrame {
   render({ store, children, ...props }) {
-    const { nextState, willShow } = store
-    if (
-      !nextState.position ||
-      !nextState.position.length ||
-      !nextState.target
-    ) {
+    const { curState, willShow, wasShowing } = store
+    if (!curState || !curState.position || !curState.position.length) {
       return null
     }
+    const isHidden = !curState.target
     const { fullScreen, orbitDocked } = Electron.orbitState
-    const onRight = !nextState.peekOnLeft
+    const onRight = !curState.peekOnLeft
     const { isShowingPeek } = App
     const borderRightRadius =
       fullScreen || onRight ? BORDER_RADIUS : BORDER_RADIUS
@@ -61,17 +67,19 @@ export default class PeekFrame {
     const arrowSize = 33
     let peekAdjustX = orbitDocked ? 13 : 0
     peekAdjustX += onRight ? -4 : 4
+    log(`gogo ${willShow} ${wasShowing}`)
     return (
       <peekFrame
         css={{
-          background: willShow ? 'red' : 'transparent',
-          opacity: willShow ? 0 : 1,
-          width: nextState.size[0],
-          height: nextState.size[1] + SHADOW_PAD,
-          transition: 'all ease-in 300ms',
+          transition: isHidden
+            ? 'none'
+            : wasShowing ? 'all ease-in 200ms' : 'opacity ease-in 200ms 80ms',
+          opacity: isHidden || (willShow && !wasShowing) ? 0 : 1,
+          width: curState.size[0],
+          height: curState.size[1] + SHADOW_PAD,
           transform: {
-            x: nextState.position[0] + peekAdjustX,
-            y: nextState.position[1],
+            x: curState.position[0] + peekAdjustX,
+            y: curState.position[1],
           },
         }}
       >
@@ -86,8 +94,10 @@ export default class PeekFrame {
           css={{
             position: 'absolute',
             top:
-              nextState.position[1] +
-              (nextState.position[1] - nextState.target.position.top),
+              curState.position[1] +
+              (curState.position[1] - isHidden
+                ? 0
+                : curState.target.position.top),
             left: !onRight ? 'auto' : -30,
             right: !onRight ? -arrowSize : 'auto',
             zIndex: 100,

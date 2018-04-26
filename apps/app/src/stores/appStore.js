@@ -4,6 +4,7 @@ import { Bit, Person, Setting, findOrCreate } from '@mcro/models'
 import * as Constants from '~/constants'
 import * as r2 from '@mcro/r2'
 import * as Helpers from '~/helpers'
+import { memoize } from 'lodash'
 
 const getPermalink = async (result, type) => {
   if (result.type === 'app') {
@@ -86,6 +87,7 @@ export default class AppStore {
   settings = {}
   services = {}
   getResults = null
+  resultRefs = {}
 
   get innerHeight() {
     const HEADER_HEIGHT = 90
@@ -253,14 +255,24 @@ export default class AppStore {
     },
   ]
 
-  getMousePosition = () => {
+  setResultRef = memoize(index => ref => {
+    this.resultRefs[index] = ref
+  })
+
+  getTargetPosition = index => {
+    const ref = this.resultRefs[index]
+    let height = 60
+    if (ref) {
+      height = ref.clientHeight
+    }
     return {
       top: Math.max(
         Electron.orbitState.position[1] + 100,
         Desktop.mouseState.position.y - 200,
       ),
       left: Electron.orbitState.position[0],
-      width: Electron.orbitState.size[0] - Constants.SHAD,
+      width: Electron.orbitState.size[0],
+      height,
     }
   }
 
@@ -272,11 +284,11 @@ export default class AppStore {
 
   lastSelectAt = 0
 
-  _setSelected = id => {
+  _setSelected = index => {
     if (App.isShowingOrbit) {
       this.lastSelectAt = Date.now()
-      this.hoveredIndex = id
-      this.selectedIndex = id
+      this.hoveredIndex = index
+      this.selectedIndex = index
     }
   }
 
@@ -321,18 +333,17 @@ export default class AppStore {
   }
 
   pinSelected = thing => {
+    let index
     if (typeof thing === 'number') {
-      this._setSelected(thing)
-      App.setPeekTarget({
-        id: thing > -1 ? thing : this.hoveredIndex || this.activeIndex,
-        position: this.getMousePosition(),
-      })
+      index = thing > -1 ? thing : this.hoveredIndex || this.activeIndex
+      this._setSelected(index)
     } else {
-      App.setPeekTarget({
-        id: thing ? thing.id : null,
-        position: this.getMousePosition(),
-      })
+      index = thing ? thing.id : null
     }
+    App.setPeekTarget({
+      id: index,
+      position: this.getTargetPosition(index),
+    })
   }
 
   clearPinned = () => {

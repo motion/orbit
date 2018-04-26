@@ -54,9 +54,7 @@ class OrbitPageStore {
 }
 
 @UI.injectTheme
-@view.provide({
-  appStore: AppStore,
-})
+@view.attach('appStore')
 @view.provide({
   orbitStore: OrbitStore,
   orbitPage: OrbitPageStore,

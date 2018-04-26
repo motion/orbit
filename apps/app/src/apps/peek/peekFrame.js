@@ -4,6 +4,7 @@ import * as UI from '@mcro/ui'
 import { App, Electron } from '@mcro/all'
 import WindowControls from '~/views/windowControls'
 import { isEqual } from 'lodash'
+import * as Constants from '~/constants'
 
 const SHADOW_PAD = 50
 const BORDER_RADIUS = 6
@@ -17,7 +18,7 @@ class PeekFrameStore {
     }
   }
 
-  @react({ delay: 100 })
+  @react({ delay: 100, fireImmediately: true })
   curState = [() => this.nextState, _ => _]
 
   get willShow() {
@@ -28,7 +29,6 @@ class PeekFrameStore {
   wasShowing = [
     () => this.nextState.target,
     target => {
-      console.log('target??', target)
       return !!target
     },
   ]
@@ -66,8 +66,7 @@ export default class PeekFrame {
     ]
     const arrowSize = 33
     let peekAdjustX = orbitDocked ? 13 : 0
-    peekAdjustX += onRight ? -4 : 4
-    log(`gogo ${willShow} ${wasShowing}`)
+    peekAdjustX += onRight ? -4 + Constants.SHADOW_PAD : 4
     return (
       <peekFrame
         css={{
@@ -93,12 +92,16 @@ export default class PeekFrame {
           ]}
           css={{
             position: 'absolute',
-            top:
-              curState.position[1] +
-              (curState.position[1] - isHidden
-                ? 0
-                : curState.target.position.top),
-            left: !onRight ? 'auto' : -30,
+            top: isHidden
+              ? 0
+              : curState.target.position.top +
+                curState.target.position.height -
+                curState.position[1],
+            // curState.position[1] +
+            // (curState.position[1] - isHidden
+            //   ? 0
+            //   : curState.target.position.top),
+            left: !onRight ? 'auto' : -23,
             right: !onRight ? -arrowSize : 'auto',
             zIndex: 100,
             transform: {
@@ -156,6 +159,8 @@ export default class PeekFrame {
 
   static style = {
     peekFrame: {
+      position: 'absolute',
+      left: 0,
       zIndex: 2,
     },
     peek: {

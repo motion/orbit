@@ -34,8 +34,7 @@ export default class AppRoot extends React.Component {
     if (this.state.error && window.location.pathname !== '/highlights') {
       return (
         <aboveredbox
-          $$draggable
-          css={{
+          style={{
             position: 'absolute',
             top: this.state.error ? '80%' : 0,
             left: 0,
@@ -56,7 +55,7 @@ export default class AppRoot extends React.Component {
               Refresh
             </UI.Button>
           </UI.Portal>
-          <Redbox error={this.state.error} />
+          <Redbox style={{ opacity: 0.5 }} error={this.state.error} />
         </aboveredbox>
       )
     }

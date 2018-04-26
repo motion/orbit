@@ -45,7 +45,7 @@ export default class PeekFrame {
       return null
     }
     const isHidden = !curState.target
-    const { fullScreen, orbitDocked } = Electron.orbitState
+    const { fullScreen, orbitDocked, orbitOnLeft } = Electron.orbitState
     const onRight = !curState.peekOnLeft
     const { isShowingPeek } = App
     const borderRightRadius =
@@ -66,7 +66,7 @@ export default class PeekFrame {
     ]
     const arrowSize = 33
     let peekAdjustX = orbitDocked ? 13 : 0
-    peekAdjustX += onRight ? -4 + Constants.SHADOW_PAD : 4
+    peekAdjustX += onRight ? -4 + (!orbitOnLeft ? Constants.SHADOW_PAD : 0) : 4
     return (
       <peekFrame
         css={{

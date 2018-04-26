@@ -96,13 +96,13 @@ export default class OrbitHeader {
           css={{
             position: 'absolute',
             bottom: 0,
-            left: -1,
-            right: 20,
+            right: Electron.orbitOnLeft ? 20 : -1,
+            left: Electron.orbitOnLeft ? -1 : 20,
             top: 0,
             boxShadow: [
               [
                 'inset',
-                1,
+                Electron.orbitOnLeft ? 1 : -1,
                 0,
                 0,
                 0.5,
@@ -178,7 +178,7 @@ export default class OrbitHeader {
     },
     headerBg: background => ({
       background: `linear-gradient(${background
-        .darken(0.06)
+        .darken(0.03)
         .desaturate(0.5)}, transparent)`,
     }),
     inputLn: {

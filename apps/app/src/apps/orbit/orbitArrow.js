@@ -12,12 +12,12 @@ export default class OrbitArrow {
     let arrowStyle
     if (orbitOnLeft) {
       arrowStyle = {
-        top: 83,
+        top: 49,
         right: SHADOW_PAD - arrowSize,
       }
     } else {
       arrowStyle = {
-        top: 83,
+        top: 49,
         left: 3,
       }
     }

@@ -2,17 +2,24 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import OrbitCard from './orbitCard'
 import { App } from '@mcro/all'
+import * as UI from '@mcro/ui'
 
 const SPLIT_INDEX = 3
 
+@UI.injectTheme
 @view.attach('appStore')
 @view
 export default class OrbitSearchResults {
-  render({ appStore }) {
+  render({ appStore, theme }) {
     const { query, results, message } = appStore.searchState
+    const hasQuery = !!App.state.query
     const isChanging = App.state.query !== query
     return (
-      <orbitSearchResults $visible={!!App.state.query} $isChanging={isChanging}>
+      <orbitSearchResults
+        css={{ background: theme.base.background, opacity: hasQuery ? 1 : 0 }}
+        $visible={hasQuery}
+        $isChanging={isChanging}
+      >
         <space css={{ height: 10 }} />
         <message if={message}>{message}</message>
         <results

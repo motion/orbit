@@ -1,24 +1,36 @@
 ## now
 
 * [ ] peek alignment and animation
-* [ ] upgrade card design
-* [ ] gmail content display/info
-* [ ] peek window design
+* [ ] hardcode doc/mail/slack card in summary
+  * [ ] design polish
+* [ ] peek view for slack convo
+  * [ ] nice design
+  * [ ] related things design
+  * [ ] related things hardcode different types
+* [ ] peek view click between items + back
+  * [ ] go between bits
+  * [ ] go between people
 * [ ] home design
+* [ ] nicer avatar/meta news
+
+--- demo
+
+* [ ] think through news / design
+* [ ] reach: mockup opening news item
+* [ ] slack attachments/images/emojis
+
 * [ ] interaction finish bugs
 * [ ] search jitter
 * [ ] fix keyboard movement bugs
-* [ ] peek navigation between items
-* [ ] slack attachments/images/emojis
 * [ ] slack unread/read sql
 * [ ] setting pane improvements
-* [ ] productionize
 * [ ] fix option hold not working sometimes after a delay, until you move cursor
 * [ ] double click to open OrbitCard item
 * [ ] swindler on close window need to reposition
 * [ ] explore mockup
 * [ ] home animations
 * [ ] make "@" show a list of slack people + search people
+* [ ] productionize
 
 ### sorted by area
 

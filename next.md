@@ -1,15 +1,16 @@
 ## now
 
+* [x] prevent option tap from clearing docked sidebar
+* [x] peek view for slack convo
+* [x] nice design
+* [x] related things design
+* [x] related things hardcode different types
+
+* [ ] peek carousel show people + docs
+* [ ] peek view click between items fixes
+* [ ] peek view click between history + back button
 * [ ] fix new bug with cmd+space showing in context before showing sidebar
-  * [ ] split sidebar from context sidebar
-* [ ] prevent option tap from clearing docked sidebar
-* [ ] peek view for slack convo
-  * [ ] nice design
-  * [ ] related things design
-  * [ ] related things hardcode different types
-* [ ] peek view click between items + back
-  * [ ] go between bits
-  * [ ] go between people
+* [ ] split sidebar from context sidebar
 * [ ] more home design
 * [ ] nicer avatar/meta news
 

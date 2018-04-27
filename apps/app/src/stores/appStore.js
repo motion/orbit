@@ -4,7 +4,7 @@ import { Bit, Person, Setting, findOrCreate } from '@mcro/models'
 import * as Constants from '~/constants'
 import * as r2 from '@mcro/r2'
 import * as Helpers from '~/helpers'
-import { memoize, flatten } from 'lodash'
+import * as _ from 'lodash'
 
 const getPermalink = async (result, type) => {
   if (result.type === 'app') {
@@ -155,17 +155,31 @@ export default class AppStore {
   summaryResults = [
     () => 0,
     async () => {
-      const findType = integration =>
-        Bit.find({
-          take: 2,
+      const findType = (integration, type, skip = 0) =>
+        Bit.findOne({
+          skip,
+          take: 1,
           where: {
+            type,
             integration,
           },
           relations: ['people'],
           order: { bitCreatedAt: 'DESC' },
         })
 
-      return flatten(await Promise.all([findType('slack'), findType('google')]))
+      return [
+        ...(await Promise.all([
+          findType('slack', 'conversation'),
+          findType('slack', 'conversation', 1),
+          findType('slack', 'conversation', 2),
+          findType('google', 'document'),
+          findType('google', 'mail'),
+          findType('google', 'mail', 1),
+          findType('slack', 'conversation'),
+          findType('slack', 'conversation'),
+          findType('slack', 'conversation'),
+        ])),
+      ].filter(Boolean)
     },
   ]
 
@@ -261,7 +275,7 @@ export default class AppStore {
     },
   ]
 
-  setResultRef = memoize(index => ref => {
+  setResultRef = _.memoize(index => ref => {
     this.resultRefs[index] = ref
   })
 

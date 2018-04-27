@@ -2,9 +2,9 @@
 
 * [x] peek alignment and animation
 * [x] peek arrow alignment
+* [x] hardcode query to ensure doc/mail/slack card in summary
 
-* [ ] hardcode query to ensure doc/mail/slack card in summary
-  * [ ] design polish
+* [ ] design polish
 * [ ] peek view for slack convo
   * [ ] nice design
   * [ ] related things design

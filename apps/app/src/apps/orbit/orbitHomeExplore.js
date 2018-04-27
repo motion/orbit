@@ -15,6 +15,7 @@ export default class OrbitExplore {
           circular
           borderWidth={1}
           borderColor={[0, 0, 0, 0.1]}
+          background={'red' || theme.base.background}
           iconProps={{
             color: theme.base.color.darken(0.2),
             size: 14,
@@ -23,6 +24,7 @@ export default class OrbitExplore {
             position: 'absolute',
             top: -20,
             right: 12,
+            zIndex: 100000,
           }}
         />
         <Title size={1.7}>

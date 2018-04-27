@@ -65,7 +65,6 @@ export default class BitSlackMessage {
     const hideHeader = previousBySameAuthor && previousWithinOneMinute
     const avatar = person.data.profile.image_48
     // const [firstWord, ...rest] = message.text.split(' ')
-    console.log('contentStyle', contentStyle)
     return (
       <message>
         <header if={!hideHeader}>

@@ -71,7 +71,7 @@ export default class PeekFrame {
             : wasShowing ? 'all ease-in 200ms' : 'opacity ease-in 200ms 80ms',
           opacity: isHidden || (willShow && !wasShowing) ? 0 : 1,
           width: curState.size[0],
-          height: curState.size[1] + SHADOW_PAD,
+          height: curState.size[1],
           transform: {
             x: curState.position[0] + peekAdjustX,
             y: curState.position[1],

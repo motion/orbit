@@ -31,7 +31,7 @@ export default class OrbitHomeHighlights {
           <OrbitCard
             index={1}
             total={summaryResults.length}
-            result={summaryResults[0]}
+            result={summaryResults[1]}
             hoverToSelect
             expanded={false}
             listItem
@@ -40,7 +40,7 @@ export default class OrbitHomeHighlights {
           <OrbitCard
             index={2}
             total={summaryResults.length}
-            result={summaryResults[0]}
+            result={summaryResults[2]}
             hoverToSelect
             expanded={false}
             listItem
@@ -53,7 +53,7 @@ export default class OrbitHomeHighlights {
           <OrbitCard
             index={3}
             total={summaryResults.length}
-            result={summaryResults[1]}
+            result={summaryResults[3]}
             hoverToSelect
             expanded={false}
             listItem
@@ -61,12 +61,12 @@ export default class OrbitHomeHighlights {
           />
         </section>
         <verticalSpace />
-        <SubTitle>Issues</SubTitle>
+        <SubTitle>Email</SubTitle>
         <section>
           <OrbitCard
             index={4}
             total={summaryResults.length}
-            result={summaryResults[2]}
+            result={summaryResults[4]}
             hoverToSelect
             expanded={false}
             listItem
@@ -75,7 +75,7 @@ export default class OrbitHomeHighlights {
           <OrbitCard
             index={5}
             total={summaryResults.length}
-            result={summaryResults[2]}
+            result={summaryResults[5]}
             hoverToSelect
             expanded={false}
             listItem

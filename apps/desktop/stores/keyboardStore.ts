@@ -56,13 +56,10 @@ export default class KeyboardStore {
           Desktop.sendMessage(App, App.messages.HIDE_PEEK)
           return
         }
-        if (
-          Desktop.state.focusedOnOrbit ||
-          Electron.orbitState.mouseOver ||
-          Electron.orbitState.fullScreen
-        ) {
+        if (Desktop.state.focusedOnOrbit || Electron.orbitState.mouseOver) {
           Desktop.sendMessage(App, App.messages.HIDE)
         }
+        return
       }
       const isOption = keycode === codes.option || keycode === codes.optionRight
       // const isShift = keycode === codes.shift || keycode === codes.shiftRight

@@ -94,6 +94,7 @@ export default class OrbitCard {
     location,
     preview,
     permalink,
+    date,
   }) {
     const {
       result,
@@ -106,6 +107,7 @@ export default class OrbitCard {
     } = this.props
     const borderRadius = listItem && tiny ? 4 : listItem ? 0 : borderRadius_
     const isExpanded = this.isExpanded
+    const showPreview = !tiny && !isExpanded
     return (
       <cardWrap
         css={{
@@ -168,14 +170,18 @@ export default class OrbitCard {
             />
             <UI.Text if={location}>{location}&nbsp;&nbsp;</UI.Text>
             <UI.Text
-              if={!tiny && !isExpanded}
+              if={showPreview && typeof preview === 'string'}
               ellipse={1}
               css={{ maxWidth: 'calc(100% - 115px)', opacity: 0.8 }}
             >
               {preview}
             </UI.Text>
-            <space $$flex />
-            <date css={{ fontWeight: 500, width: 30, textAlign: 'right' }}>
+            {typeof preview !== 'string' && preview}
+            <space if={date} $$flex />
+            <date
+              if={date}
+              css={{ fontWeight: 500, width: 30, textAlign: 'right' }}
+            >
               <UI.Text color={[0, 0, 0, 0.5]}>2m</UI.Text>
             </date>
           </preview>

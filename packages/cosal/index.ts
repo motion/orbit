@@ -46,15 +46,11 @@ export default class CosalStore {
       return false
     }
 
-    console.log('new docs are', newDocs)
-
     newDocs.forEach(bit => {
       this.bitById[bit.id] = bit
     })
 
-    console.log('getting covar for new docs', newDocs)
     const val = getInverseCovariance(newDocs)
-    console.log('val is', val)
     this.inverseCovariance = val
 
     const cosals = (await Promise.all(newDocs.map(this.toCosal))).filter(

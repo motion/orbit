@@ -4,21 +4,20 @@ import OrbitCard from '~/apps/orbit/orbitCard'
 import { throttle } from 'lodash'
 import { App } from '@mcro/all'
 
-const SPLIT_INDEX = 3
-const getPosition = node => {
-  const parentRect = node.parentElement.parentElement.getBoundingClientRect()
-  const rect = node.getBoundingClientRect()
-  const computedStyle = getComputedStyle(node)
-  const marginTop = parseInt(computedStyle.marginTop, 10)
-  const marginLeft = parseInt(computedStyle.marginLeft, 10)
-  const res = {
-    top: rect.top - marginTop - parentRect.top,
-    left: rect.left - marginLeft - parentRect.left,
-    width: rect.width,
-    height: rect.height,
-  }
-  return res
-}
+// const getPosition = node => {
+//   const parentRect = node.parentElement.parentElement.getBoundingClientRect()
+//   const rect = node.getBoundingClientRect()
+//   const computedStyle = getComputedStyle(node)
+//   const marginTop = parseInt(computedStyle.marginTop, 10)
+//   const marginLeft = parseInt(computedStyle.marginLeft, 10)
+//   const res = {
+//     top: rect.top - marginTop - parentRect.top,
+//     left: rect.left - marginLeft - parentRect.left,
+//     width: rect.width,
+//     height: rect.height,
+//   }
+//   return res
+// }
 
 // @view
 // class AnimateItem extends React.Component {
@@ -131,27 +130,26 @@ export default class Results {
 
   render({ appStore, isContext }, { resultsRef, isScrolled, isOverflowing }) {
     const { results } = appStore.searchState
-    const total = results.length - SPLIT_INDEX
+    const total = results.length
     return (
       <resultsFrame ref={this.setResultsFrame}>
         <fadeTop $fade $$untouchable $fadeVisible={isScrolled} />
         <resultsScroller>
           <results if={results.length} ref={this.setResults}>
             <firstResultSpace $$untouchable css={{ height: 6 }} />
-            {results
-              .slice(SPLIT_INDEX)
-              .map((result, i) => (
-                <OrbitCard
-                  key={result.id}
-                  parentElement={resultsRef}
-                  appStore={appStore}
-                  result={result}
-                  index={i + SPLIT_INDEX}
-                  total={total}
-                  listItem={!isContext}
-                  hoverToSelect={!App.state.peekTarget}
-                />
-              ))}
+            {results.map((result, i) => (
+              <OrbitCard
+                key={result.id}
+                parentElement={resultsRef}
+                appStore={appStore}
+                result={result}
+                index={i}
+                total={total}
+                listItem={!isContext}
+                hoverToSelect={!App.state.peekTarget}
+                getRef={appStore.setResultRef(i)}
+              />
+            ))}
             <lastResultSpace $$untouchable css={{ height: 12 }} />
           </results>
         </resultsScroller>

@@ -52,7 +52,7 @@ export default class AppReactions {
     App.setOrbitHidden(true)
   }
 
-  @react
+  @react({ log: 'state' })
   clearPeekTargetOnOrbitClose = [
     () => !App.isShowingOrbit,
     hidden => {
@@ -63,7 +63,7 @@ export default class AppReactions {
     },
   ]
 
-  @react
+  @react({ log: 'state' })
   onFullScreen = [
     () => Electron.orbitState.fullScreen,
     full => {
@@ -75,7 +75,7 @@ export default class AppReactions {
     },
   ]
 
-  @react
+  @react({ log: 'state' })
   onPinned = [
     () => Electron.orbitState.pinned,
     pinned => {
@@ -87,24 +87,25 @@ export default class AppReactions {
     },
   ]
 
-  @react
+  @react({ log: 'state' })
   clearPeekOnReposition = [
     () => Electron.orbitState.position,
     () => App.setPeekTarget(null),
   ]
 
-  @react
-  closePeekOnMouseOut = [
-    () => Electron.peekState.mouseOver,
-    async (mouseOver, { sleep }) => {
-      if (mouseOver || Electron.orbitState.mouseOver) {
-        return
-      }
-      // wait a bit
-      await sleep(400)
-      App.setPeekTarget(null)
-    },
-  ]
+  // disabled during testing, reenable
+  // @react
+  // clearPeekOnMouseOut = [
+  //   () => Electron.peekState.mouseOver,
+  //   async (mouseOver, { sleep }) => {
+  //     if (mouseOver || Electron.orbitState.mouseOver) {
+  //       return
+  //     }
+  //     // wait a bit
+  //     await sleep(400)
+  //     App.setPeekTarget(null)
+  //   },
+  // ]
 
   @react({
     delay: 32,

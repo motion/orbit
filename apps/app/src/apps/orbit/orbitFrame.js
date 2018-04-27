@@ -10,7 +10,7 @@ import OrbitIndicator from './orbitIndicator'
 const animationDuration = App.animationDuration
 const SHADOW_PAD = 85
 const ARROW_PAD = 15
-const DOCKED_SHADOW = [0, 0, SHADOW_PAD, [0, 0, 0, 0.16]]
+const DOCKED_SHADOW = [0, 0, SHADOW_PAD, [0, 0, 0, 0.2]]
 const iWidth = 4
 
 class OrbitFrameStore {
@@ -45,6 +45,9 @@ export default class OrbitFrame {
 
   render({ store, children, theme, headerBg }) {
     const { fullScreen, orbitDocked, position, size } = Electron.orbitState
+    if (!size.length) {
+      return null
+    }
     const { orbitOnLeft } = Electron
     const borderColor = theme.base.background.darken(0.25).desaturate(0.6)
     const borderShadow = ['inset', 0, 0, 0, 0.5, borderColor]
@@ -74,7 +77,7 @@ export default class OrbitFrame {
     return (
       <orbitFrame
         css={{
-          width: orbitDocked ? 'auto' : size[0],
+          width: size[0],
           // TODO HACKINESS fix the size/y calc in orbitPosition.js
           height: size[1] - (orbitDocked ? 0 : 15),
           transform: {
@@ -165,12 +168,7 @@ export default class OrbitFrame {
 
   static style = {
     orbitFrame: {
-      flex: 1,
       position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
       zIndex: 1,
     },
     orbitBorder: {

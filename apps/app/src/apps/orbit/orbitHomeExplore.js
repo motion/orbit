@@ -3,26 +3,12 @@ import { Title } from '~/views'
 import * as UI from '@mcro/ui'
 import OrbitHomeHighlights from './orbitHomeHighlights'
 
-@view.attach('appStore')
 @UI.injectTheme
 @view
 export default class OrbitExplore {
-  items = [
-    {
-      id: 'google',
-      title: 'People',
-      icon: 'user',
-    },
-    {
-      id: 'google',
-      title: 'Projects',
-      icon: 'business',
-    },
-  ]
-
-  render({ appStore, theme }) {
+  render({ theme }) {
     return (
-      <pane>
+      <pane css={{ background: theme.base.background }}>
         <UI.Button
           icon="home"
           size={1.1}

@@ -1,55 +1,40 @@
 ## now
 
-## triage
+* [x] peek alignment and animation
+* [x] peek arrow alignment
 
-* beta sprint (~2 weeks, May 4)
+* [ ] hardcode query to ensure doc/mail/slack card in summary
+  * [ ] design polish
+* [ ] peek view for slack convo
+  * [ ] nice design
+  * [ ] related things design
+  * [ ] related things hardcode different types
+* [ ] peek view click between items + back
+  * [ ] go between bits
+  * [ ] go between people
+* [ ] home design
+* [ ] nicer avatar/meta news
 
-  * could extend this to 4 weeks, but aim for 2 and re-assess
-  * working: slack/mail, summary, search, generally work well
+--- demo
 
-  * nate
+* [ ] think through news / design
+* [ ] reach: mockup opening news item
+* [ ] slack attachments/images/emojis
 
-    * design/feel
-      * design home/news/summary/explore
-      * interaction for summary/peeks
-    * slack
-      * read/unread metadata from slack in sortable sql form
-      * better design for peek/move between related convos
-      * better grouping of conversations
-      * better selection of the right rooms to sync
-      * finish setting pane nicely
-      * show attachments/images
-    * peek movement
-      * clicking items in peek lets you move around
-    * interaction/visual/bugs
-      * generally make sure its not breaking/bugging
-      * improve and make clear shortcuts
-    * productionize
-      * build to .app
-      * slim it a bit so ~250mb not ~700
-      * working oauth on fresh machine
-
-  * nick
-
-    * cosal
-      * continue to test across various searches and improve until good
-    * slack convo summary
-      * various tweaks to filter weird words, combine words
-      * test and iterate
-    * daily summary
-      * make model of seen things and find weights that are good
-      * generate summary of non-seen things
-
-### unsorted
-
+* [ ] only close peek on esc if electron focused
+* [ ] focus electron on mouseover peek
+* [ ] interaction finish bugs
+* [ ] search jitter
+* [ ] fix keyboard movement bugs
+* [ ] slack unread/read sql
+* [ ] setting pane improvements
 * [ ] fix option hold not working sometimes after a delay, until you move cursor
 * [ ] double click to open OrbitCard item
 * [ ] swindler on close window need to reposition
-* [ ] ? filtering/exploring various integrations
-* [ ] remove search jumpiness
-* [ ] peek back button + history
+* [ ] explore mockup
+* [ ] home animations
 * [ ] make "@" show a list of slack people + search people
-* [ ] docked: have taller peeks
+* [ ] productionize
 
 ### sorted by area
 
@@ -124,6 +109,7 @@
 
 * sync
 
+  * [ ] deletes! needs to sync when something deletes :/
   * [ ] github sync
   * [ ] github simple sidebar/peek
 

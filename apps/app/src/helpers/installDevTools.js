@@ -17,6 +17,13 @@ import * as Helpers from '~/helpers'
 // install console formatters
 mobxFormatters(Mobx)
 
+Object.defineProperty(Object.prototype, 'toJS', {
+  enumerable: false,
+  value: function() {
+    return Mobx.toJS(this)
+  },
+})
+
 // the heavy hitters
 window.React = React
 window.ReactDOM = ReactDOM

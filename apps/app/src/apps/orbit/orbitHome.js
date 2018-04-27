@@ -10,7 +10,6 @@ export default class OrbitHome {
   render({ appStore }) {
     const hasQuery = App.state.query
     const isDocked = Electron.orbitState.dockedPinned
-    console.log('isDocked', isDocked)
     return (
       <orbitHome
         css={{

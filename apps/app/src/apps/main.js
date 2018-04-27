@@ -1,9 +1,15 @@
 import * as React from 'react'
+import { view } from '@mcro/black'
 import Highlights from './highlights/highlights'
 import Orbit from './orbit/orbit'
 import Peek from './peek/peek'
+import AppStore from '~/stores/appStore'
 
-export default class OrbitMain extends React.Component {
+@view.provide({
+  appStore: AppStore,
+})
+@view
+export default class OrbitMain {
   render() {
     return (
       <main>
@@ -16,9 +22,12 @@ export default class OrbitMain extends React.Component {
 
   static style = {
     main: {
+      maxWidth: '100%',
+      maxHeight: '100%',
+      overflow: 'hidden',
       width: '100%',
       height: '100%',
-      pointerEvents: 'none',
+      // pointerEvents: 'none',
       userSelect: 'none',
       position: 'relative',
     },

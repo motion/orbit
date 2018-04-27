@@ -90,7 +90,6 @@ const log = debug('highlights')
 
     get showAll() {
       if (Swift.state.isPaused) {
-        log('swiftPaused')
         return true
       }
       const isTesting =
@@ -103,7 +102,6 @@ const log = debug('highlights')
 
     setupHover(name) {
       return items => {
-        log(`setuphover`, name, items)
         if (!items) return
         if (!items.length) return
         this.trees[name].clear()

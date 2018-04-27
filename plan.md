@@ -41,7 +41,7 @@ go to market strategy
 * no cloud = privacy / aligment with end users = user confidence (no one but apple does)
 * high user alignment + beautiful product = super high potential end user brand dedication
 * invest more into branding = more ability to work with people during beta for launch
-* free personal app = easy to get high user count initially
+* app = easy to get high user count initially
   * because of this makes sense generally to have:
     * longer beta
     * give to big names for launch

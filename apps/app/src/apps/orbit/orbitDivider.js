@@ -3,7 +3,7 @@ import { view } from '@mcro/black'
 
 @view
 export default class OrbitDivider {
-  render({ ...props }) {
+  render({ height, ...props }) {
     return (
       <barOuter {...props}>
         <bar />
@@ -21,13 +21,15 @@ export default class OrbitDivider {
     },
     bar: {
       flex: 1,
-      height: 3,
       borderRadius: 100,
     },
   }
 
   static theme = (props, theme) => {
     return {
+      bar: {
+        height: props.height || 3,
+      },
       barOuter: {
         '& .bar': {
           background: theme.active.background,

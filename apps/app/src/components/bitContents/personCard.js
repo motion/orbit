@@ -31,8 +31,8 @@ export default class BitSlackConversation {
     },
     avatar: {
       borderRadius: 100,
-      width: 100,
-      height: 100,
+      width: 70,
+      height: 70,
       margin: [10, 0],
     },
     subtitles: {

@@ -16,8 +16,8 @@ export default class Carousel {
             total={items.length}
             expanded={false}
             style={{
-              width: 220,
-              height: 200,
+              width: 150,
+              height: 150,
             }}
           />
         ))}
@@ -28,7 +28,7 @@ export default class Carousel {
   static style = {
     carousel: {
       flexFlow: 'row',
-      padding: 20,
+      padding: [0, 20],
       overflowX: 'scroll',
     },
   }

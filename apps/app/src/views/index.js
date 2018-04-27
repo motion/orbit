@@ -50,7 +50,7 @@ export const SubTitle = props => (
       fontSize: 16,
       alignItems: 'center',
       flexFlow: 'row',
-      padding: [5, 13, 0],
+      padding: [5, 13, 5],
       opacity: 0.75,
       marginBottom: 5,
       color: highlightColor,

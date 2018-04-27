@@ -16,6 +16,7 @@ export default class OrbitHomeHighlights {
     )
     return (
       <summary if={results.length} css={{ maxHeight, marginTop: 10 }}>
+        <SubTitle>Conversations</SubTitle>
         <section>
           <OrbitCard
             index={0}
@@ -82,7 +83,7 @@ export default class OrbitHomeHighlights {
       overflowY: 'scroll',
     },
     section: {
-      padding: [0, 4],
+      padding: [0],
     },
   }
 }

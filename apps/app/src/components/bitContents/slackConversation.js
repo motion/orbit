@@ -19,7 +19,7 @@ const uids = {}
 @view
 export default class BitSlackConversation {
   static defaultProps = {
-    shownLimit: 3,
+    shownLimit: 5,
   }
 
   render({ children, result, appStore, shownLimit, theme, contentStyle }) {

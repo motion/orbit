@@ -1,4 +1,3 @@
-// @flow
 import $ from 'color'
 
 const lighten = {
@@ -19,16 +18,19 @@ const adjust = (color, adjuster, opposite = false) => {
 export default class ThemeMaker {
   cache = {}
 
-  colorize = (obj: Object) =>
+  colorize = obj =>
     Object.keys(obj).reduce(
       (acc, cur) => ({
         ...acc,
-        [cur]: obj[cur] instanceof $ ? obj[cur] : $(obj[cur]),
+        [cur]:
+          typeof obj[cur] === 'string' || Array.isArray(obj[cur])
+            ? $(obj[cur])
+            : obj[cur],
       }),
       {},
     )
 
-  fromColor = (colorName: string): Object => {
+  fromColor = colorName => {
     if (typeof colorName !== 'string') {
       return null
     }
@@ -62,7 +64,7 @@ export default class ThemeMaker {
     color,
     borderColor,
     ...rest
-  }: Object): Object => {
+  }) => {
     const base = this.colorize({
       highlightColor,
       highlightBackground,
@@ -78,7 +80,7 @@ export default class ThemeMaker {
       background: adjust(base.background, largeAmt, true),
       borderColor: adjust(base.borderColor, largeAmt, true),
     }
-    return {
+    return this.colorize({
       ...rest,
       base,
       hover: {
@@ -102,6 +104,6 @@ export default class ThemeMaker {
         ...base,
         ...rest.highlight,
       },
-    }
+    })
   }
 }

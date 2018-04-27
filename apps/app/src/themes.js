@@ -46,20 +46,20 @@ const Themes = {
     borderColor: '#222',
   }),
   light: Theme.fromStyles({
-    background: '#fff',
-    color: '#444',
-    borderColor: '#999',
+    background: color('#fff'),
+    color: color('#444'),
+    borderColor: color('#999'),
     hover: {
-      background: '#eee',
+      background: color('#eee'),
     },
     selected: {
       background: color('#ddd'),
     },
     active: {
-      background: '#ddd',
+      background: color('#ddd'),
     },
     activeHover: {
-      background: '#ccc',
+      background: color('#ccc'),
     },
   }),
   blank: {

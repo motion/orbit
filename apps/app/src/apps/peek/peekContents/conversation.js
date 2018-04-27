@@ -57,38 +57,45 @@ export class Conversation {
                 }
               />
               <main>
-                <content>{content}</content>
-                <OrbitDivider />
-                <section>
-                  <SubTitle>Related</SubTitle>
-                  <carouselInner>
-                    <Carousel items={store.related} />
-                  </carouselInner>
-                </section>
-                <OrbitDivider />
-                <section>
-                  <SubTitle>Recent and Related Conversations</SubTitle>
-                  <br />
-                  {appStore.summaryResults.slice(0, 3).map((item, index) => (
-                    <React.Fragment key={`${item.id}${index}`}>
-                      <BitContent
-                        appStore={appStore}
-                        result={item}
-                        shownLimit={Infinity}
-                        itemProps={{
-                          contentStyle: {
-                            paddingLeft: 17,
-                          },
-                        }}
-                      >
-                        {({ content }) => content}
-                      </BitContent>
-                      <OrbitDivider if={index < 2} />
-                    </React.Fragment>
-                  ))}
-                  <br />
-                  <br />
-                </section>
+                <mainInner>
+                  <content>{content}</content>
+                  <OrbitDivider />
+                  <section>
+                    <SubTitle>Related</SubTitle>
+                    <carouselInner>
+                      <Carousel items={store.related} />
+                    </carouselInner>
+                  </section>
+                  <OrbitDivider />
+                  <section>
+                    <SubTitle>Recent and Related Conversations</SubTitle>
+                    <br />
+                    {appStore.summaryResults.slice(0, 3).map((item, index) => (
+                      <React.Fragment key={`${item.id}${index}`}>
+                        <BitContent
+                          appStore={appStore}
+                          result={item}
+                          shownLimit={Infinity}
+                          itemProps={{
+                            contentStyle: {
+                              paddingLeft: 17,
+                            },
+                          }}
+                        >
+                          {({ content }) => content}
+                        </BitContent>
+                        <OrbitDivider
+                          if={index < 2}
+                          height={2}
+                          css={{ margin: [20, 0, 10] }}
+                        />
+                      </React.Fragment>
+                    ))}
+                    <br />
+                    <br />
+                    <br />
+                  </section>
+                </mainInner>
               </main>
             </React.Fragment>
           )
@@ -101,15 +108,19 @@ export class Conversation {
     main: {
       flex: 1,
       overflowY: 'scroll',
+      margin: 10,
+    },
+    mainInner: {
+      margin: [0, -10, -5],
     },
     content: {
       padding: [10, 20],
     },
     section: {
-      padding: [20, 20, 0],
+      padding: [10, 20, 0],
     },
     carouselInner: {
-      margin: [0, -10, 0, -30],
+      margin: [0, -10, 10, -30],
     },
     after: {
       flexFlow: 'row',

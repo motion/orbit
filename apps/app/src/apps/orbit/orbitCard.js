@@ -130,7 +130,7 @@ export default class OrbitCard {
         >
           <title>
             <Text
-              size={1.1}
+              size={1.2}
               ellipse={isExpanded ? 2 : 1}
               fontWeight={400}
               $titleText

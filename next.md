@@ -6,8 +6,8 @@
 * [x] related things design
 * [x] related things hardcode different types
 
-* [ ] highlighted item index
-* [ ] expanding on highlight
+* [x] highlighted item index
+* [x] expanding on highlight
 * [ ] highlight top items
 * [ ] fake peek for top items
 

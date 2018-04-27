@@ -117,8 +117,6 @@ export default class OrbitExplore {
         </section>
 
         <OrbitDivider />
-
-        <SubTitle>For You</SubTitle>
         <OrbitHomeHighlights results={appStore.summaryResults} />
       </pane>
     )

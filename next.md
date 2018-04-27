@@ -19,6 +19,10 @@
 * [ ] more home design
 * [ ] nicer avatar/meta news
 
+--- idea
+
+* [ ] match color to the app
+
 --- demo
 
 * [ ] think through news / design

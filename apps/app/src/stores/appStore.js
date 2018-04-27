@@ -4,7 +4,7 @@ import { Bit, Person, Setting, findOrCreate } from '@mcro/models'
 import * as Constants from '~/constants'
 import * as r2 from '@mcro/r2'
 import * as Helpers from '~/helpers'
-import { memoize } from 'lodash'
+import { memoize, flatten } from 'lodash'
 
 const getPermalink = async (result, type) => {
   if (result.type === 'app') {
@@ -155,11 +155,17 @@ export default class AppStore {
   summaryResults = [
     () => 0,
     async () => {
-      return await Bit.find({
-        take: 6,
-        relations: ['people'],
-        order: { bitCreatedAt: 'DESC' },
-      })
+      const findType = integration =>
+        Bit.find({
+          take: 2,
+          where: {
+            integration,
+          },
+          relations: ['people'],
+          order: { bitCreatedAt: 'DESC' },
+        })
+
+      return flatten(await Promise.all([findType('slack'), findType('google')]))
     },
   ]
 
@@ -262,14 +268,15 @@ export default class AppStore {
   getTargetPosition = index => {
     const ref = this.resultRefs[index]
     let height = 60
+    let top = Math.max(
+      Electron.orbitState.position[1] + 100,
+      Desktop.mouseState.position.y - 200,
+    )
     if (ref) {
-      height = ref.clientHeight
+      ;({ top, height } = ref.getBoundingClientRect())
     }
     return {
-      top: Math.max(
-        Electron.orbitState.position[1] + 100,
-        Desktop.mouseState.position.y - 200,
-      ),
+      top,
       left: Electron.orbitState.position[0],
       width: Electron.orbitState.size[0],
       height,

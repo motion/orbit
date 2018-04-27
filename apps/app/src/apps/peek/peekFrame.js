@@ -18,7 +18,7 @@ class PeekFrameStore {
     }
   }
 
-  @react({ delay: 100, fireImmediately: true })
+  @react({ delay: 100, fireImmediately: true, log: false })
   curState = [() => this.nextState, _ => _]
 
   get willShow() {
@@ -86,17 +86,17 @@ export default class PeekFrame {
             [0, 0, 10, [0, 0, 0, 0.05]],
             ['inset', 0, 0, 0, 0.5, [0, 0, 0, 0.25]],
           ]}
+          $arrow
           css={{
-            position: 'absolute',
-            top: isHidden
-              ? 0
-              : curState.target.position.top +
-                curState.target.position.height -
-                curState.position[1],
             left: !onRight ? 'auto' : -23,
             right: !onRight ? -arrowSize : 'auto',
-            zIndex: 100,
             transform: {
+              y: isHidden
+                ? 0
+                : curState.target.position.top +
+                  curState.target.position.height / 2 -
+                  curState.position[1] -
+                  arrowSize / 2,
               x: onRight ? 0.5 : -0.5,
             },
           }}
@@ -172,6 +172,12 @@ export default class PeekFrame {
       transform: {
         y: 0,
       },
+    },
+    arrow: {
+      position: 'absolute',
+      top: 0,
+      zIndex: 100,
+      transition: 'transform ease-in 100ms',
     },
     peekFrameBorder: {
       position: 'absolute',

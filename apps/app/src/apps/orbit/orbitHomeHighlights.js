@@ -26,6 +26,7 @@ export default class OrbitHomeHighlights {
             hoverToSelect
             expanded={false}
             listItem
+            getRef={appStore.setResultRef(0)}
           />
           <OrbitCard
             index={1}
@@ -34,6 +35,7 @@ export default class OrbitHomeHighlights {
             hoverToSelect
             expanded={false}
             listItem
+            getRef={appStore.setResultRef(1)}
           />
           <OrbitCard
             index={2}
@@ -42,38 +44,42 @@ export default class OrbitHomeHighlights {
             hoverToSelect
             expanded={false}
             listItem
+            getRef={appStore.setResultRef(2)}
           />
         </section>
         <verticalSpace />
         <SubTitle>Documents</SubTitle>
         <section>
           <OrbitCard
-            index={1}
+            index={3}
             total={summaryResults.length}
             result={summaryResults[1]}
             hoverToSelect
             expanded={false}
             listItem
+            getRef={appStore.setResultRef(3)}
           />
         </section>
         <verticalSpace />
         <SubTitle>Issues</SubTitle>
         <section>
           <OrbitCard
-            index={2}
+            index={4}
             total={summaryResults.length}
             result={summaryResults[2]}
             hoverToSelect
             expanded={false}
             listItem
+            getRef={appStore.setResultRef(4)}
           />
           <OrbitCard
-            index={2}
+            index={5}
             total={summaryResults.length}
             result={summaryResults[2]}
             hoverToSelect
             expanded={false}
             listItem
+            getRef={appStore.setResultRef(5)}
           />
         </section>
       </summary>

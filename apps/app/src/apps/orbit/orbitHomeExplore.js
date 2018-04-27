@@ -6,19 +6,6 @@ import OrbitHomeHighlights from './orbitHomeHighlights'
 @UI.injectTheme
 @view
 export default class OrbitExplore {
-  items = [
-    {
-      id: 'google',
-      title: 'People',
-      icon: 'user',
-    },
-    {
-      id: 'google',
-      title: 'Projects',
-      icon: 'business',
-    },
-  ]
-
   render({ theme }) {
     return (
       <pane css={{ background: theme.base.background }}>

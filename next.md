@@ -2,6 +2,8 @@
 
 * [x] peek alignment and animation
 * [ ] peek arrow alignment
+* [ ] only close peek on esc if electron focused
+* [ ] focus electron on mouseover peek
 * [ ] hardcode query to ensure doc/mail/slack card in summary
   * [ ] design polish
 * [ ] peek view for slack convo
@@ -106,6 +108,7 @@
 
 * sync
 
+  * [ ] deletes! needs to sync when something deletes :/
   * [ ] github sync
   * [ ] github simple sidebar/peek
 

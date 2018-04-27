@@ -1,11 +1,5 @@
 ## now
 
-* [x] peek alignment and animation
-* [x] peek arrow alignment
-* [x] hardcode query to ensure doc/mail/slack card in summary
-* [x] design polish
-* [x] redo home results to integration with appStore.searchState.results
-
 * [ ] fix new bug with cmd+space showing in context before showing sidebar
   * [ ] split sidebar from context sidebar
 * [ ] prevent option tap from clearing docked sidebar

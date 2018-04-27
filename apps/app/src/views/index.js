@@ -33,7 +33,7 @@ export const Title = ({ center, children, ...props }) => (
     size={1.4}
     fontWeight={300}
     css={{
-      padding: [0, 15, 2],
+      padding: [0, 13, 2],
       alignItems: center ? 'center' : 'flex-start',
     }}
     color="#000"
@@ -50,8 +50,8 @@ export const SubTitle = props => (
       fontSize: 16,
       alignItems: 'center',
       flexFlow: 'row',
-      padding: [5, 15, 0],
-      opacity: 0.5,
+      padding: [5, 13, 0],
+      opacity: 0.75,
       marginBottom: 5,
       color: highlightColor,
     }}

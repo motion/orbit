@@ -4,7 +4,7 @@ import { Bit, Person, Setting, findOrCreate } from '@mcro/models'
 import * as Constants from '~/constants'
 import * as r2 from '@mcro/r2'
 import * as Helpers from '~/helpers'
-import { memoize, flatten } from 'lodash'
+import * as _ from 'lodash'
 
 const getPermalink = async (result, type) => {
   if (result.type === 'app') {
@@ -152,27 +152,6 @@ export default class AppStore {
     fireImmediately: true,
     defaultValue: [],
   })
-  summaryResults = [
-    () => 0,
-    async () => {
-      const findType = integration =>
-        Bit.find({
-          take: 2,
-          where: {
-            integration,
-          },
-          relations: ['people'],
-          order: { bitCreatedAt: 'DESC' },
-        })
-
-      return flatten(await Promise.all([findType('slack'), findType('google')]))
-    },
-  ]
-
-  @react({
-    fireImmediately: true,
-    defaultValue: [],
-  })
   contextResults = [
     () => 0,
     async () => {
@@ -222,6 +201,13 @@ export default class AppStore {
       this.getResults,
     ],
     ([query, pluginResults, bitResults, getResults]) => {
+      if (getResults) {
+        return {
+          query,
+          message: 'Settings',
+          results: Helpers.fuzzy(query, getResults()),
+        }
+      }
       let results
       let channelResults
       let message
@@ -245,9 +231,6 @@ export default class AppStore {
       if (isFilteringChannel && this.services.slack) {
         message = 'SPACE to search selected channel'
         results = channelResults
-      } else if (getResults) {
-        message = 'Settings'
-        results = Helpers.fuzzy(query, getResults())
       } else {
         const unsorted = [...bitResults, ...pluginResults]
         const { rest } = parseQuery(query)
@@ -261,7 +244,42 @@ export default class AppStore {
     },
   ]
 
-  setResultRef = memoize(index => ref => {
+  @react({
+    fireImmediately: true,
+    defaultValue: [],
+  })
+  summaryResults = [
+    () => 0,
+    async () => {
+      const findType = (integration, type, skip = 0) =>
+        Bit.findOne({
+          skip,
+          take: 1,
+          where: {
+            type,
+            integration,
+          },
+          relations: ['people'],
+          order: { bitCreatedAt: 'DESC' },
+        })
+
+      return [
+        ...(await Promise.all([
+          findType('slack', 'conversation'),
+          findType('slack', 'conversation', 1),
+          findType('slack', 'conversation', 2),
+          findType('google', 'document'),
+          findType('google', 'mail'),
+          findType('google', 'mail', 1),
+          findType('slack', 'conversation'),
+          findType('slack', 'conversation'),
+          findType('slack', 'conversation'),
+        ])),
+      ].filter(Boolean)
+    },
+  ]
+
+  setResultRef = _.memoize(index => ref => {
     this.resultRefs[index] = ref
   })
 

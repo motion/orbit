@@ -1,49 +1,47 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import OrbitCard from './orbitCard'
-import { SubTitle, Circle } from '~/views'
+import { SubTitle } from '~/views'
 
 @view.attach('appStore')
 @view
 export default class OrbitHomeHighlights {
-  render({ appStore }) {
-    const { summaryResults, contextResults } = appStore
-    if (!summaryResults.length) {
+  render({ results, appStore }) {
+    if (!results || !results.length) {
       return null
     }
     const maxHeight = Math.max(
       appStore.innerHeight * 0.75,
-      appStore.innerHeight - contextResults.length * 80,
+      appStore.innerHeight - results.length * 80,
     )
     return (
-      <summary if={summaryResults.length} css={{ maxHeight }}>
-        <SubTitle>Conversations</SubTitle>
-        <section>
+      <summary if={results.length} css={{ maxHeight, marginTop: 10 }}>
+        <section css={{ margin: [0, -5] }}>
           <OrbitCard
             index={0}
-            total={summaryResults.length}
-            result={summaryResults[0]}
+            total={results.length}
+            result={results[0]}
             hoverToSelect
-            expanded={false}
             listItem
+            expanded
             getRef={appStore.setResultRef(0)}
           />
           <OrbitCard
             index={1}
-            total={summaryResults.length}
-            result={summaryResults[0]}
+            total={results.length}
+            result={results[1]}
             hoverToSelect
-            expanded={false}
             listItem
+            expanded={false}
             getRef={appStore.setResultRef(1)}
           />
           <OrbitCard
             index={2}
-            total={summaryResults.length}
-            result={summaryResults[0]}
+            total={results.length}
+            result={results[2]}
             hoverToSelect
-            expanded={false}
             listItem
+            expanded={false}
             getRef={appStore.setResultRef(2)}
           />
         </section>
@@ -52,8 +50,8 @@ export default class OrbitHomeHighlights {
         <section>
           <OrbitCard
             index={3}
-            total={summaryResults.length}
-            result={summaryResults[1]}
+            total={results.length}
+            result={results[3]}
             hoverToSelect
             expanded={false}
             listItem
@@ -61,12 +59,12 @@ export default class OrbitHomeHighlights {
           />
         </section>
         <verticalSpace />
-        <SubTitle>Issues</SubTitle>
+        <SubTitle>Email</SubTitle>
         <section>
           <OrbitCard
             index={4}
-            total={summaryResults.length}
-            result={summaryResults[2]}
+            total={results.length}
+            result={results[4]}
             hoverToSelect
             expanded={false}
             listItem
@@ -74,8 +72,8 @@ export default class OrbitHomeHighlights {
           />
           <OrbitCard
             index={5}
-            total={summaryResults.length}
-            result={summaryResults[2]}
+            total={results.length}
+            result={results[5]}
             hoverToSelect
             expanded={false}
             listItem

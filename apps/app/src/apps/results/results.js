@@ -139,7 +139,7 @@ export default class Results {
             <firstResultSpace $$untouchable css={{ height: 6 }} />
             {results.map((result, i) => (
               <OrbitCard
-                key={result.id}
+                key={`${i}${result.id}`}
                 parentElement={resultsRef}
                 appStore={appStore}
                 result={result}

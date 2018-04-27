@@ -53,10 +53,7 @@ class AppStore {
   }
 
   get isShowingPeek() {
-    return (
-      !!App.state.peekTarget ||
-      (Electron.orbitState.fullScreen && App.isShowingOrbit)
-    )
+    return !!App.state.peekTarget
   }
 
   animationDuration = 90

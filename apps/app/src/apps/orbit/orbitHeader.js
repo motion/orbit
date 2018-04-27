@@ -98,20 +98,30 @@ export default class OrbitHeader {
             bottom: 0,
             right: Electron.orbitOnLeft ? 20 : -1,
             left: Electron.orbitOnLeft ? -1 : 20,
-            top: 0,
-            boxShadow: [
-              [
-                'inset',
-                Electron.orbitOnLeft ? 1 : -1,
-                0,
-                0,
-                0.5,
-                theme.base.background.darken(0.15).desaturate(0.5),
-              ],
-            ],
+            height: 1,
+            background: `linear-gradient(to right, ${theme.base.background}, ${
+              theme.active.background
+            })`,
+            zIndex: 1,
+            // boxShadow: [
+            //   [
+            //     'inset',
+            //     Electron.orbitOnLeft ? 1 : -1,
+            //     0,
+            //     0,
+            //     0.5,
+            //     theme.base.background.darken(0.15).desaturate(0.5),
+            //   ],
+            // ],
           }}
         />
         <title>
+          <UI.Icon
+            $searchIcon
+            name="ui-1_zoom"
+            size={15}
+            color={theme.active.background.darken(0.15).desaturate(0.4)}
+          />
           <UI.Input
             value={orbitStore.query}
             size={1.3}
@@ -121,6 +131,7 @@ export default class OrbitHeader {
               fontWeight: 300,
               // boxShadow: ['inset', 0, 0, 0, 1, darkerBg.darken(0.5)],
               opacity: App.state.query.length > 0 ? 1 : 0.6,
+              paddingLeft: 42,
             }}
             background="transparent"
             onChange={orbitStore.onChangeQuery}
@@ -199,6 +210,8 @@ export default class OrbitHeader {
       },
     }),
     pinnedIcon: {
+      position: 'relative',
+      zIndex: 10000,
       transition: 'all ease-in 100ms 100ms',
       marginRight: 12,
       opacity: 0.2,
@@ -217,6 +230,15 @@ export default class OrbitHeader {
     },
     title: {
       flex: 1,
+    },
+    searchIcon: {
+      position: 'absolute',
+      top: 0,
+      left: 14,
+      bottom: 0,
+      marginBottom: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
     },
   }
 }

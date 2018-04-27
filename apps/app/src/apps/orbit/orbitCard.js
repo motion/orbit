@@ -166,17 +166,17 @@ export default class OrbitCard {
               }}
               {...tiny && tinyProps.iconProps}
             />
-            <UI.Text>{location}</UI.Text>
+            <UI.Text if={location}>{location}&nbsp;&nbsp;</UI.Text>
             <UI.Text
               if={!tiny && !isExpanded}
               ellipse={1}
-              css={{ maxWidth: 'calc(100% - 70px)', opacity: 0.8 }}
+              css={{ maxWidth: 'calc(100% - 115px)', opacity: 0.8 }}
             >
               {preview}
             </UI.Text>
             <space $$flex />
-            <date css={{ fontWeight: 700, width: 30, textAlign: 'right' }}>
-              <UI.Text>2m</UI.Text>
+            <date css={{ fontWeight: 500, width: 30, textAlign: 'right' }}>
+              <UI.Text color={[0, 0, 0, 0.5]}>2m</UI.Text>
             </date>
           </preview>
           <content if={location || content}>
@@ -267,7 +267,7 @@ export default class OrbitCard {
     },
     bottom: {
       opacity: 0.5,
-      marginTop: 4,
+      marginTop: 3,
       flexFlow: 'row',
       alignItems: 'center',
       userSelect: 'none',

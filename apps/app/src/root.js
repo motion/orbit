@@ -31,35 +31,41 @@ export default class AppRoot extends React.Component {
   }
 
   render() {
-    if (this.state.error && window.location.pathname !== '/highlights') {
+    if (this.state.error) {
       return (
         <aboveredbox
-          style={{
+          css={{
+            background: [255, 0, 0, 0.1],
             position: 'absolute',
-            top: this.state.error ? '80%' : 0,
+            top: 0,
             left: 0,
+            right: 0,
+            bottom: 0,
             zIndex: Number.MAX_SAFE_INTEGER,
-            opacity: 0.5,
+            alignItems: 'center',
+            justifyContent: 'center',
           }}
         >
-          <UI.Portal>
-            <UI.Button
-              css={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                zIndex: Number.MAX_SAFE_INTEGER,
-              }}
-              onClick={this.clearHmr}
-            >
-              Refresh
-            </UI.Button>
-          </UI.Portal>
-          <Redbox style={{ opacity: 0.5 }} error={this.state.error} />
+          <error
+            css={{
+              width: '60%',
+              height: '50%',
+              background: [0, 0, 0, 0.1],
+              padding: 40,
+              lineHeight: '2.5rem',
+              color: 'red',
+              fontWeight: 900,
+            }}
+          >
+            <h1>Orbit Error</h1>
+            <h2>{this.state.error.message}</h2>
+            <pre css={{ lineHeight: '1.4rem', fontSize: 16, color: '#000' }}>
+              {this.state.error.stack}
+            </pre>
+          </error>
         </aboveredbox>
       )
     }
-
     const CurrentPage = Router.activeView || NotFound
     return (
       <UI.Theme name="tan">

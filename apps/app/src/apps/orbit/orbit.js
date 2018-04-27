@@ -100,6 +100,7 @@ export default class Orbit {
     orbitInner: {
       position: 'relative',
       flex: 1,
+      zIndex: 10,
     },
     controls: {
       position: 'absolute',

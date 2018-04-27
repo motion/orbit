@@ -66,7 +66,7 @@ export default class BitSlackMessage {
     const avatar = person.data.profile.image_48
     return (
       <message>
-        <topSpace if={!hideHeader && previousMessage} css={{ height: 10 }} />
+        <topSpace if={!hideHeader && previousMessage} css={{ height: 14 }} />
         <header if={!hideHeader}>
           <RoundButton
             onClick={e => {
@@ -104,7 +104,7 @@ export default class BitSlackMessage {
     header: {
       flexFlow: 'row',
       alignItems: 'center',
-      margin: [4, 0],
+      margin: [3, 0, 5],
       userSelect: 'none',
       cursor: 'default',
     },
@@ -142,7 +142,7 @@ export default class BitSlackMessage {
       lineHeight: '1.25rem',
       display: 'block',
       position: 'relative',
-      margin: [2, 0],
+      margin: [1, 0, 0],
       userSelect: 'auto',
     },
   }

@@ -1,16 +1,31 @@
 import * as React from 'react'
-import * as UI from '@mcro/ui'
-import { view } from '@mcro/black'
+// import * as UI from '@mcro/ui'
+import { view, react } from '@mcro/black'
 import PeekHeader from '../peekHeader'
 import bitContents from '~/components/bitContents'
 import OrbitIcon from '~/apps/orbit/orbitIcon'
 import Carousel from '~/components/carousel'
 import { SubTitle } from '~/views'
 import OrbitDivider from '~/apps/orbit/orbitDivider'
+import { Bit, Person } from '@mcro/models'
 
-@view
+class ConversationPeek {
+  @react({ fireImmediately: true, defaultValue: [] })
+  related = [
+    () => 0,
+    async () => {
+      const people = await Person.find({ take: 3, skip: 7 })
+      const bits = await Bit.find({ take: 3, relations: ['people'] })
+      return [...people, ...bits]
+    },
+  ]
+}
+
+@view({
+  store: ConversationPeek,
+})
 export class Conversation {
-  render({ bit, appStore, showRelated }) {
+  render({ store, bit, appStore }) {
     if (!bit) {
       return null
     }
@@ -47,7 +62,7 @@ export class Conversation {
                 <section>
                   <SubTitle>Related</SubTitle>
                   <carouselInner>
-                    <Carousel items={appStore.searchState.results} />
+                    <Carousel items={store.related} />
                   </carouselInner>
                 </section>
                 <OrbitDivider />

@@ -2,6 +2,8 @@ import SlackConversation from './slackConversation'
 import Document from './document'
 import Mail from './mail'
 import App from './app'
+import PersonCard from './personCard'
+import { Person } from '@mcro/models'
 
 const results = {
   slack: {
@@ -17,6 +19,9 @@ const results = {
 }
 
 export default result => {
+  if (result instanceof Person) {
+    return PersonCard
+  }
   if (!result.integration || !result.type) {
     return ({ children }) => children(result)
   }

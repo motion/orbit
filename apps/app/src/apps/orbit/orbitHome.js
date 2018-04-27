@@ -18,7 +18,7 @@ export default class OrbitHome {
       >
         <space css={{ height: 10 }} />
         <content if={isDocked}>
-          <OrbitHomeExplore />
+          <OrbitHomeExplore appStore={appStore} />
         </content>
         <content if={!isDocked}>
           <OrbitHomeContext appStore={appStore} />

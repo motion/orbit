@@ -9,7 +9,7 @@ export default class Carousel {
       <carousel>
         {items.map((item, index) => (
           <OrbitCard
-            key={item.id}
+            key={`${index}${item.id}`}
             appStore={appStore}
             result={item}
             index={index}

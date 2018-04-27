@@ -152,41 +152,6 @@ export default class AppStore {
     fireImmediately: true,
     defaultValue: [],
   })
-  summaryResults = [
-    () => 0,
-    async () => {
-      const findType = (integration, type, skip = 0) =>
-        Bit.findOne({
-          skip,
-          take: 1,
-          where: {
-            type,
-            integration,
-          },
-          relations: ['people'],
-          order: { bitCreatedAt: 'DESC' },
-        })
-
-      return [
-        ...(await Promise.all([
-          findType('slack', 'conversation'),
-          findType('slack', 'conversation', 1),
-          findType('slack', 'conversation', 2),
-          findType('google', 'document'),
-          findType('google', 'mail'),
-          findType('google', 'mail', 1),
-          findType('slack', 'conversation'),
-          findType('slack', 'conversation'),
-          findType('slack', 'conversation'),
-        ])),
-      ].filter(Boolean)
-    },
-  ]
-
-  @react({
-    fireImmediately: true,
-    defaultValue: [],
-  })
   contextResults = [
     () => 0,
     async () => {
@@ -236,6 +201,13 @@ export default class AppStore {
       this.getResults,
     ],
     ([query, pluginResults, bitResults, getResults]) => {
+      if (getResults) {
+        return {
+          query,
+          message: 'Settings',
+          results: Helpers.fuzzy(query, getResults()),
+        }
+      }
       let results
       let channelResults
       let message
@@ -259,9 +231,6 @@ export default class AppStore {
       if (isFilteringChannel && this.services.slack) {
         message = 'SPACE to search selected channel'
         results = channelResults
-      } else if (getResults) {
-        message = 'Settings'
-        results = Helpers.fuzzy(query, getResults())
       } else {
         const unsorted = [...bitResults, ...pluginResults]
         const { rest } = parseQuery(query)

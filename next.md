@@ -1,9 +1,8 @@
 ## now
 
 * [x] peek alignment and animation
-* [ ] peek arrow alignment
-* [ ] only close peek on esc if electron focused
-* [ ] focus electron on mouseover peek
+* [x] peek arrow alignment
+
 * [ ] hardcode query to ensure doc/mail/slack card in summary
   * [ ] design polish
 * [ ] peek view for slack convo
@@ -22,6 +21,8 @@
 * [ ] reach: mockup opening news item
 * [ ] slack attachments/images/emojis
 
+* [ ] only close peek on esc if electron focused
+* [ ] focus electron on mouseover peek
 * [ ] interaction finish bugs
 * [ ] search jitter
 * [ ] fix keyboard movement bugs

@@ -3,8 +3,11 @@
 * [x] peek alignment and animation
 * [x] peek arrow alignment
 * [x] hardcode query to ensure doc/mail/slack card in summary
+* [x] design polish
 
-* [ ] design polish
+* [ ] fix new bug with cmd+space showing in context before showing sidebar
+* [ ] prevent option tap from clearing docked sidebar
+* [ ] redo home results to integration with appStore.searchState.results
 * [ ] peek view for slack convo
   * [ ] nice design
   * [ ] related things design
@@ -12,7 +15,7 @@
 * [ ] peek view click between items + back
   * [ ] go between bits
   * [ ] go between people
-* [ ] home design
+* [ ] more home design
 * [ ] nicer avatar/meta news
 
 --- demo

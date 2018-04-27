@@ -26,7 +26,7 @@ class PeekFrameStore {
     },
   ]
 
-  @react({ delay: 100, fireImmediately: true, log: false })
+  @react({ delay: 16, fireImmediately: true, log: false })
   lastState = [() => this.curState, _ => _]
 
   get willHide() {

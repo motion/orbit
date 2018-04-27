@@ -7,7 +7,7 @@ import { isEqual } from 'lodash'
 import * as Constants from '~/constants'
 
 const SHADOW_PAD = 50
-const BORDER_RADIUS = 6
+const borderRadius = 6
 const background = '#f9f9f9'
 
 class PeekFrameStore {
@@ -45,13 +45,9 @@ export default class PeekFrame {
       return null
     }
     const isHidden = !curState.target
-    const { fullScreen, orbitDocked, orbitOnLeft } = Electron.orbitState
+    const { orbitDocked, orbitOnLeft } = Electron.orbitState
     const onRight = !curState.peekOnLeft
     const { isShowingPeek } = App
-    const borderRightRadius =
-      fullScreen || onRight ? BORDER_RADIUS : BORDER_RADIUS
-    const borderLeftRadius =
-      !fullScreen && !onRight ? BORDER_RADIUS : BORDER_RADIUS
     const padding = [
       SHADOW_PAD,
       onRight ? SHADOW_PAD : 0,
@@ -97,10 +93,6 @@ export default class PeekFrame {
               : curState.target.position.top +
                 curState.target.position.height -
                 curState.position[1],
-            // curState.position[1] +
-            // (curState.position[1] - isHidden
-            //   ? 0
-            //   : curState.target.position.top),
             left: !onRight ? 'auto' : -23,
             right: !onRight ? -arrowSize : 'auto',
             zIndex: 100,
@@ -136,15 +128,13 @@ export default class PeekFrame {
             />
             <peekFrameBorder
               css={{
-                borderRightRadius,
-                borderLeftRadius,
+                borderRadius,
               }}
             />
             <peekMain
               css={{
                 boxShadow,
-                borderRightRadius,
-                borderLeftRadius,
+                borderRadius,
                 background,
               }}
               {...props}

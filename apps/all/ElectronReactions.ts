@@ -192,7 +192,10 @@ export default class ElectronReactions {
       if (!peekTarget) {
         throw react.cancel
       }
-      Electron.setPeekState(peekPosition(peekTarget.position, Electron))
+      Electron.setPeekState({
+        id: Math.random(),
+        ...peekPosition(peekTarget.position, Electron),
+      })
     },
   ]
 

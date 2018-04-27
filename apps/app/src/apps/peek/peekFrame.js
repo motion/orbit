@@ -3,7 +3,6 @@ import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { App, Electron } from '@mcro/all'
 import WindowControls from '~/views/windowControls'
-import { isEqual } from 'lodash'
 import * as Constants from '~/constants'
 
 const SHADOW_PAD = 50
@@ -11,30 +10,35 @@ const borderRadius = 6
 const background = '#f9f9f9'
 
 class PeekFrameStore {
-  get curState() {
-    return {
-      target: App.state.peekTarget,
-      ...Electron.peekState,
-    }
-  }
+  @react
+  curState = [
+    () => App.state.peekTarget,
+    async (target, { whenChanged }) => {
+      if (!target) {
+        return null
+      }
+      // wait for related peek state
+      await whenChanged(() => Electron.peekState.id)
+      return {
+        target,
+        ...Electron.peekState,
+      }
+    },
+  ]
 
   @react({ delay: 100, fireImmediately: true, log: false })
   lastState = [() => this.curState, _ => _]
 
   get willHide() {
-    return !App.state.target && this.lastState && !!this.lastState.target
+    return !!this.lastState && !this.curState
   }
 
   get willShow() {
-    return (
-      !this.wasShowing &&
-      this.lastState &&
-      !isEqual(this.curState, this.lastState)
-    )
+    return !!this.curState && !this.lastState
   }
 
   get willStayShown() {
-    return this.lastState && this.lastState.target && !!this.curState.target
+    return !!this.lastState && !!this.curState
   }
 }
 
@@ -52,7 +56,7 @@ export default class PeekFrame {
     if (!state || !state.position || !state.position.length) {
       return null
     }
-    const isHidden = !state.target
+    const isHidden = !state
     const { orbitDocked, orbitOnLeft } = Electron.orbitState
     const onRight = !state.peekOnLeft
     const padding = [
@@ -81,7 +85,7 @@ export default class PeekFrame {
           height: state.size[1],
           transform: {
             x: state.position[0] + peekAdjustX,
-            y: state.position[1] + (willShow ? -8 : 0),
+            y: state.position[1] + (willShow && !willStayShown ? -8 : 0),
           },
         }}
       >

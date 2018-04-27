@@ -1,5 +1,13 @@
 what we are
 
+"operating system for your company"
+
+nearest neighbors:
+
+* openfin
+* stripe home
+* fb/google internal intranets
+
 a personal mac app that unifies various work information (mail, slack, jira, etc...) and uses nlp to give a daily summary of what you've missed / important in your company as well as a rich search and explore interface for your cloud (with projects, teams, etc).
 
 it's aim is to reduce notification overload, communication silos & work FOMO.

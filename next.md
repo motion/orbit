@@ -35,6 +35,7 @@
 * [ ] search jitter
 * [ ] fix keyboard movement bugs
 * [ ] slack unread/read sql
+* [ ] slack various formatting issues: backticks ``, inline html
 * [ ] setting pane improvements
 * [ ] fix option hold not working sometimes after a delay, until you move cursor
 * [ ] double click to open OrbitCard item
@@ -107,6 +108,7 @@
   * [ ] click header input clear peek
   * [ ] peek auto link links
   * [ ] peek show images
+  * [ ] gmail formatting issues (apostrophe's are html escaped)
 
 * profiles
 

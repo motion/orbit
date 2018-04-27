@@ -1,8 +1,6 @@
 import * as React from 'react'
-import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
 
-@UI.injectTheme
 @view
 export default class OrbitDivider {
   render({ ...props }) {

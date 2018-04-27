@@ -53,7 +53,7 @@ const Themes = {
       background: '#eee',
     },
     selected: {
-      background: '#ddd',
+      background: color('#ddd'),
     },
     active: {
       background: '#ddd',

@@ -51,11 +51,24 @@ export default class OrbitExplore {
             zIndex: 100000,
           }}
         />
-        <Title size={1.7}>
-          Sunday, Apr 22<span css={{ verticalAlign: 'super', fontSize: 12 }}>
-            nd
-          </span>
-        </Title>
+        <title css={{ fontSize: 23, padding: [0, 15] }}>
+          Orbit
+          <SubTitle
+            css={{
+              lineHeight: '1.5rem',
+              marginTop: 3,
+              fontSize: '72%',
+              padding: 0,
+            }}
+            $$row
+          >
+            Sunday, Apr 22<span
+              css={{ verticalAlign: 'super', marginTop: -2, fontSize: 12 }}
+            >
+              nd
+            </span>
+          </SubTitle>
+        </title>
         {/* <SubTitle>In your orbit</SubTitle> */}
         <section $explore>
           {[
@@ -105,7 +118,7 @@ export default class OrbitExplore {
 
         <OrbitDivider />
 
-        <SubTitle>Highlights</SubTitle>
+        <SubTitle>For You</SubTitle>
         <OrbitHomeHighlights results={appStore.summaryResults} />
       </pane>
     )

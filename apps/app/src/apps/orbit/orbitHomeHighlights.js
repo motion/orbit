@@ -22,8 +22,6 @@ export default class OrbitHomeHighlights {
             total={results.length}
             result={results[0]}
             hoverToSelect
-            listItem
-            expanded
             getRef={appStore.setResultRef(0)}
           />
           <OrbitCard
@@ -31,8 +29,6 @@ export default class OrbitHomeHighlights {
             total={results.length}
             result={results[1]}
             hoverToSelect
-            listItem
-            expanded={false}
             getRef={appStore.setResultRef(1)}
           />
           <OrbitCard
@@ -40,8 +36,6 @@ export default class OrbitHomeHighlights {
             total={results.length}
             result={results[2]}
             hoverToSelect
-            listItem
-            expanded={false}
             getRef={appStore.setResultRef(2)}
           />
         </section>
@@ -53,8 +47,6 @@ export default class OrbitHomeHighlights {
             total={results.length}
             result={results[3]}
             hoverToSelect
-            expanded={false}
-            listItem
             getRef={appStore.setResultRef(3)}
           />
         </section>
@@ -66,8 +58,6 @@ export default class OrbitHomeHighlights {
             total={results.length}
             result={results[4]}
             hoverToSelect
-            expanded={false}
-            listItem
             getRef={appStore.setResultRef(4)}
           />
           <OrbitCard
@@ -75,8 +65,6 @@ export default class OrbitHomeHighlights {
             total={results.length}
             result={results[5]}
             hoverToSelect
-            expanded={false}
-            listItem
             getRef={appStore.setResultRef(5)}
           />
         </section>

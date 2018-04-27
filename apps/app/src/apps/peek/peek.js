@@ -18,7 +18,7 @@ export default class PeekPage {
       return <peek>no pane found</peek>
     }
     return (
-      <UI.Theme name="tan">
+      <UI.Theme name="light">
         <PeekFrame>
           <PeekContentsView
             bit={appStore.selectedBit}

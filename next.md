@@ -6,6 +6,11 @@
 * [x] related things design
 * [x] related things hardcode different types
 
+* [ ] highlighted item index
+* [ ] expanding on highlight
+* [ ] highlight top items
+* [ ] fake peek for top items
+
 * [ ] peek carousel show people + docs
 * [ ] peek view click between items fixes
 * [ ] peek view click between history + back button
@@ -171,6 +176,7 @@ syncers (~4-5months)
 * dropbox/paper
 * outlook
 * arbitrary imap/email
+* trello, etc...
 * maybe some hr tools
 
 rich people/teams/explore (2weeks-Infinity)

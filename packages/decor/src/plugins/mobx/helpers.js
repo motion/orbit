@@ -1,9 +1,8 @@
-// @flow
 import * as AllHelpers from '@mcro/helpers'
 import { autorun, autorunAsync, reaction } from 'mobx'
 
 // subscribe-aware helpers
-export function watch(fn: Function, debounce): Function {
+export function watch(fn, debounce) {
   let runner
   if (typeof debounce === 'number') {
     runner = autorunAsync(fn.bind(this))
@@ -14,26 +13,22 @@ export function watch(fn: Function, debounce): Function {
   return runner
 }
 
-export function react(
-  fn: Function,
-  onReact: Function,
-  userOptions?: Object | Boolean,
-): Function {
-  const dispose = reaction(fn, onReact.bind(this), AllHelpers.getReactionOptions(userOptions))
+export function react(fn, onReact, userOptions) {
+  const dispose = reaction(
+    fn,
+    onReact.bind(this),
+    // @ts-ignore
+    AllHelpers.getReactionOptions(userOptions),
+  )
   this.subscriptions.add(dispose)
   return dispose
-}
-
-export type Helpers = AllHelpers & {
-  react: typeof react,
-  watch: typeof watch,
 }
 
 export default () => ({
   name: 'helpers',
   once: true,
   onlyClass: true,
-  decorator: (Klass: Class<any> | Function) => {
+  decorator: Klass => {
     Object.assign(Klass.prototype, {
       ...AllHelpers,
       watch,

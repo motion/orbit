@@ -64,7 +64,6 @@ export default class BitSlackMessage {
     }
     const hideHeader = previousBySameAuthor && previousWithinOneMinute
     const avatar = person.data.profile.image_48
-    // const [firstWord, ...rest] = message.text.split(' ')
     return (
       <message>
         <topSpace if={!hideHeader && previousMessage} css={{ height: 10 }} />
@@ -144,18 +143,7 @@ export default class BitSlackMessage {
       display: 'block',
       position: 'relative',
       margin: [2, 0],
-      // color: '#000',
-      // '&::first-letter': {
-      //   fontWeight: 400,
-      //   fontSize: 18,
-      // },
-    },
-    firstWord: {
-      fontWeight: 400,
-      // background: [0, 0, 0, 0.05],
-      // borderRadius: 2,
-      // borderBottom: [1, [0, 0, 0, 0.1]],
-      display: 'inline',
+      userSelect: 'auto',
     },
   }
 }

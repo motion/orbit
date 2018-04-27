@@ -345,12 +345,12 @@ export default class AppStore {
   }
 
   toggleSelected = index => {
-    if (Date.now() - this.lastSelectAt < 450) {
-      // ignore double clicks
-      return
-    }
     const isSame = this.selectedIndex === index
     if (isSame && App.state.peekTarget) {
+      if (Date.now() - this.lastSelectAt < 450) {
+        // ignore double clicks
+        return
+      }
       App.setPeekTarget(null)
     } else {
       this.pinSelected(index)
@@ -365,6 +365,7 @@ export default class AppStore {
     } else {
       index = thing ? thing.id : null
     }
+    log(`pinning ${index}`)
     App.setPeekTarget({
       id: index,
       position: this.getTargetPosition(index),

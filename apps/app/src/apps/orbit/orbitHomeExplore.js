@@ -15,7 +15,7 @@ export default class OrbitExplore {
           circular
           borderWidth={1}
           borderColor={[0, 0, 0, 0.1]}
-          background={'red' || theme.base.background}
+          background={theme.base.background}
           iconProps={{
             color: theme.base.color.darken(0.2),
             size: 14,

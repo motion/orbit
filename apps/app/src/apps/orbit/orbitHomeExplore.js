@@ -6,50 +6,20 @@ import { Bit } from '@mcro/models'
 import { App } from '@mcro/all'
 
 class OrbitExploreStore {
+  willUnmount() {
+    this.props.appStore.setGetResults(null)
+  }
+
   @react({ fireImmediately: true })
   setExploreResults = [
     () => !!App.state.query,
     hasQuery => {
+      const { appStore } = this.props
       if (hasQuery) {
-        this.props.appStore.setGetResults(null)
+        appStore.setGetResults(null)
       } else {
-        this.props.appStore.setGetResults(() => this.summaryResults)
+        appStore.setGetResults(() => appStore.summaryResults)
       }
-    },
-  ]
-
-  @react({
-    fireImmediately: true,
-    defaultValue: [],
-  })
-  summaryResults = [
-    () => 0,
-    async () => {
-      const findType = (integration, type, skip = 0) =>
-        Bit.findOne({
-          skip,
-          take: 1,
-          where: {
-            type,
-            integration,
-          },
-          relations: ['people'],
-          order: { bitCreatedAt: 'DESC' },
-        })
-
-      return [
-        ...(await Promise.all([
-          findType('slack', 'conversation'),
-          findType('slack', 'conversation', 1),
-          findType('slack', 'conversation', 2),
-          findType('google', 'document'),
-          findType('google', 'mail'),
-          findType('google', 'mail', 1),
-          findType('slack', 'conversation'),
-          findType('slack', 'conversation'),
-          findType('slack', 'conversation'),
-        ])),
-      ].filter(Boolean)
     },
   ]
 }
@@ -60,7 +30,7 @@ class OrbitExploreStore {
 @UI.injectTheme
 @view
 export default class OrbitExplore {
-  render({ store, theme }) {
+  render({ appStore, theme }) {
     return (
       <pane css={{ background: theme.base.background }}>
         <UI.Button
@@ -134,7 +104,7 @@ export default class OrbitExplore {
         </section>
 
         <SubTitle css={{ textAlign: 'center' }}>In Orbit</SubTitle>
-        <OrbitHomeHighlights results={store.summaryResults} />
+        <OrbitHomeHighlights results={appStore.summaryResults} />
       </pane>
     )
   }

@@ -22,6 +22,7 @@ export default class OrbitHomeHighlights {
             total={results.length}
             result={results[0]}
             hoverToSelect
+            listItem
             expanded
             getRef={appStore.setResultRef(0)}
           />
@@ -30,6 +31,7 @@ export default class OrbitHomeHighlights {
             total={results.length}
             result={results[1]}
             hoverToSelect
+            listItem
             expanded={false}
             getRef={appStore.setResultRef(1)}
           />
@@ -38,6 +40,7 @@ export default class OrbitHomeHighlights {
             total={results.length}
             result={results[2]}
             hoverToSelect
+            listItem
             expanded={false}
             getRef={appStore.setResultRef(2)}
           />

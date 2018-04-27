@@ -244,6 +244,41 @@ export default class AppStore {
     },
   ]
 
+  @react({
+    fireImmediately: true,
+    defaultValue: [],
+  })
+  summaryResults = [
+    () => 0,
+    async () => {
+      const findType = (integration, type, skip = 0) =>
+        Bit.findOne({
+          skip,
+          take: 1,
+          where: {
+            type,
+            integration,
+          },
+          relations: ['people'],
+          order: { bitCreatedAt: 'DESC' },
+        })
+
+      return [
+        ...(await Promise.all([
+          findType('slack', 'conversation'),
+          findType('slack', 'conversation', 1),
+          findType('slack', 'conversation', 2),
+          findType('google', 'document'),
+          findType('google', 'mail'),
+          findType('google', 'mail', 1),
+          findType('slack', 'conversation'),
+          findType('slack', 'conversation'),
+          findType('slack', 'conversation'),
+        ])),
+      ].filter(Boolean)
+    },
+  ]
+
   setResultRef = _.memoize(index => ref => {
     this.resultRefs[index] = ref
   })

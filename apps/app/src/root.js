@@ -57,7 +57,7 @@ export default class AppRoot extends React.Component {
               fontWeight: 900,
             }}
           >
-            <h1>Error</h1>
+            <h1>Orbit Error</h1>
             <h2>{this.state.error.message}</h2>
             <pre css={{ lineHeight: '1.4rem', fontSize: 16, color: '#000' }}>
               {this.state.error.stack}

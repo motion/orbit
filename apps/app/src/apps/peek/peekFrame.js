@@ -11,7 +11,7 @@ const borderRadius = 6
 const background = '#f9f9f9'
 
 class PeekFrameStore {
-  get nextState() {
+  get curState() {
     return {
       target: App.state.peekTarget,
       ...Electron.peekState,
@@ -19,19 +19,23 @@ class PeekFrameStore {
   }
 
   @react({ delay: 100, fireImmediately: true, log: false })
-  curState = [() => this.nextState, _ => _]
+  lastState = [() => this.curState, _ => _]
 
-  get willShow() {
-    return this.curState && !isEqual(this.nextState, this.curState)
+  get willHide() {
+    return !App.state.target && this.lastState && !!this.lastState.target
   }
 
-  @react({ delayValue: true })
-  wasShowing = [
-    () => this.nextState.target,
-    target => {
-      return !!target
-    },
-  ]
+  get willShow() {
+    return (
+      !this.wasShowing &&
+      this.lastState &&
+      !isEqual(this.curState, this.lastState)
+    )
+  }
+
+  get willStayShown() {
+    return this.lastState && this.lastState.target && !!this.curState.target
+  }
 }
 
 @UI.injectTheme
@@ -40,14 +44,17 @@ class PeekFrameStore {
 })
 export default class PeekFrame {
   render({ store, children, ...props }) {
-    const { curState, willShow, wasShowing } = store
-    if (!curState || !curState.position || !curState.position.length) {
+    const { willShow, willHide, curState, lastState, willStayShown } = store
+    let state = curState
+    if (willHide) {
+      state = lastState
+    }
+    if (!state || !state.position || !state.position.length) {
       return null
     }
-    const isHidden = !curState.target
+    const isHidden = !state.target
     const { orbitDocked, orbitOnLeft } = Electron.orbitState
-    const onRight = !curState.peekOnLeft
-    const { isShowingPeek } = App
+    const onRight = !state.peekOnLeft
     const padding = [
       SHADOW_PAD,
       onRight ? SHADOW_PAD : 0,
@@ -68,13 +75,13 @@ export default class PeekFrame {
         css={{
           transition: isHidden
             ? 'none'
-            : wasShowing ? 'all ease-in 200ms' : 'opacity ease-in 200ms 80ms',
-          opacity: isHidden || (willShow && !wasShowing) ? 0 : 1,
-          width: curState.size[0],
-          height: curState.size[1],
+            : willHide ? 'all ease-in 200ms' : 'all ease-in 150ms',
+          opacity: isHidden || (willShow && !willStayShown) ? 0 : 1,
+          width: state.size[0],
+          height: state.size[1],
           transform: {
-            x: curState.position[0] + peekAdjustX,
-            y: curState.position[1],
+            x: state.position[0] + peekAdjustX,
+            y: state.position[1] + (willShow ? -8 : 0),
           },
         }}
       >
@@ -93,9 +100,9 @@ export default class PeekFrame {
             transform: {
               y: isHidden
                 ? 0
-                : curState.target.position.top +
-                  curState.target.position.height / 2 -
-                  curState.position[1] -
+                : state.target.position.top +
+                  state.target.position.height / 2 -
+                  state.position[1] -
                   arrowSize / 2,
               x: onRight ? 0.5 : -0.5,
             },
@@ -107,7 +114,7 @@ export default class PeekFrame {
             margin,
           }}
         >
-          <peek $animate={isShowingPeek} $peekVisible={isShowingPeek}>
+          <peek>
             <WindowControls
               if={false}
               css={{
@@ -154,24 +161,13 @@ export default class PeekFrame {
       zIndex: 2,
     },
     peek: {
-      pointerEvents: 'none !important',
-      opacity: 0,
+      pointerEvents: 'all !important',
       position: 'relative',
-      transition: 'transform linear 80ms',
       flex: 1,
-      transform: {
-        y: -8,
-      },
     },
     crop: {
       // overflow: 'hidden',
       flex: 1,
-    },
-    animate: {
-      opacity: 1,
-      transform: {
-        y: 0,
-      },
     },
     arrow: {
       position: 'absolute',
@@ -187,10 +183,6 @@ export default class PeekFrame {
       bottom: 0,
       zIndex: 10000,
       pointerEvents: 'none',
-    },
-    peekVisible: {
-      pointerEvents: 'all !important',
-      opacity: 1,
     },
     peekMain: {
       flex: 1,

@@ -22,19 +22,23 @@ export default class CoSalPage {
           summary: {store.cosal && store.cosal.getSummary(store.queryCosal)}
         </summary>
         <results>
-          {(store.results || []).map(({ similarity, cosal }, index) => (
-            <result>
-              <content>
-                <text if={index >= 5}>{cosal.fields[0].content}</text>
-                <words className="wrap" $$row if={index < 5}>
-                  {cosal.fields[0].words.map(({ string, weight }) => (
-                    <word css={{ opacity: weight }}>{string}</word>
-                  ))}
-                </words>
-              </content>
-              <similarity>similarity {similarity}</similarity>
-            </result>
-          ))}
+          {(store.results || []).map(
+            ({ docSimilarity, exactSimilarity, similarity, cosal }, index) => (
+              <result>
+                <content>
+                  <text if={index >= 5}>{cosal.fields[0].content}</text>
+                  <words className="wrap" $$row if={index < 5}>
+                    {cosal.fields[0].words.map(({ string, weight }) => (
+                      <word css={{ opacity: weight }}>{string}</word>
+                    ))}
+                  </words>
+                </content>
+                <similarity>similarity {similarity}</similarity>
+                <similarity>doc {docSimilarity}</similarity>
+                <similarity>exactSimilarity {exactSimilarity}</similarity>
+              </result>
+            ),
+          )}
         </results>
       </cosalViewer>
     )

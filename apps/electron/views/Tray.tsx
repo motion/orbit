@@ -10,7 +10,9 @@ export default class TrayEl {
   render() {
     return (
       <Tray
-        onClick={Electron.shouldPause}
+        onClick={() => {
+          Electron.sendMessage(Desktop, Desktop.messages.TOGGLE_PAUSED)
+        }}
         image={Path.join(
           Constants.ROOT_PATH,
           'resources',

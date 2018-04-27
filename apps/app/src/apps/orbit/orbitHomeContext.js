@@ -1,11 +1,11 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import OrbitDivider from './orbitDivider'
+import { Desktop, Electron } from '@mcro/all'
 import * as Constants from '~/constants'
 import { throttle } from 'lodash'
 import Results from '~/apps/results/results'
-import { Title, SubTitle, Circle } from '~/views'
+import { Title, SubTitle } from '~/views'
 
 const SPLIT_INDEX = 3
 
@@ -40,29 +40,24 @@ export default class OrbitHomeContext {
   }
 
   render({ appStore, theme }) {
-    const isSelectedInContext = appStore.activeIndex >= SPLIT_INDEX
-    const y = isSelectedInContext ? -(SPLIT_INDEX * 20) : 0
+    const { orbitOnLeft } = Electron
     return (
       <orbitContext
         css={{
           background: theme.base.background,
-          transform: { y },
         }}
       >
         <fadeNotifications
           $$untouchable
           $fadeVisible={appStore.activeIndex >= SPLIT_INDEX}
         />
-        <OrbitDivider
-          if={!App.state.query}
-          css={{ paddingBottom: 0, zIndex: 1000, position: 'relative' }}
-        />
-        <space css={{ height: 20 }} />
-        <Title>Context</Title>
-        <SubTitle>
-          <Circle>4</Circle> Relevant Items
-        </SubTitle>
-        <Results if={false} isContext />
+        <contextHeader css={{ textAlign: orbitOnLeft ? 'right' : 'left' }}>
+          <Title ellipse={1}>{Desktop.appState.name}</Title>
+          <SubTitle if={Desktop.appState.title}>
+            {Desktop.appState.title}
+          </SubTitle>
+        </contextHeader>
+        <Results isContext />
       </orbitContext>
     )
   }

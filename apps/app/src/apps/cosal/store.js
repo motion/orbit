@@ -4,7 +4,7 @@ import pgText from './pg'
 import { Bit } from '@mcro/models'
 
 const pg = pgText.split('\n')
-const filterText = (text: string): string => {
+const filterText = text => {
   return text.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '')
 }
 
@@ -60,6 +60,7 @@ export default class CosalStore {
       }
       this.queryCosal = await this.cosal.toCosal(doc)
       const vals = await this.cosal.search(doc)
+      console.log('vals are', vals)
 
       return vals
     },

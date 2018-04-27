@@ -17,6 +17,7 @@ export type OCRItem = {
 }
 
 export type DesktopState = {
+  screenSize: [number, number]
   paused: boolean
   appState?: AppState
   lastScreenChange: number

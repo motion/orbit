@@ -137,7 +137,8 @@ export default class CosalStore {
     if (!doc) {
       return null
     }
-    const { vector } = await this.toCosal(doc)
+    const queryCosal = await this.toCosal(doc)
+    const { vector } = queryCosal
 
     // @ts-ignore
     const candidates = this.getNearest(vector, 100)
@@ -147,32 +148,44 @@ export default class CosalStore {
       candidates.map(id => this.cosals[id].vector),
     )
 
-    const docs = similarities.map((similarity, index) => ({
-      similarity,
+    const docs = similarities.map((docSimilarity, index) => ({
+      docSimilarity,
       cosal: this.cosals[candidates[index]],
       id: candidates[index],
     }))
 
-    return reverse(sortBy(docs, 'similarity')) //reverse(sortBy(this.addExactMatch(docs), 'similarity'))
+    const n = 20
+    const topN = reverse(sortBy(docs, 'docSimilarity')).slice(0, n)
+
+    const withExact = topN.map(item => {
+      const exactSimilarity = this.getExactMatch(queryCosal, item.cosal)
+      return {
+        ...item,
+        exactSimilarity,
+        similarity: 0.7 * item.docSimilarity + 0.3 * exactSimilarity,
+      }
+    })
+
+    return reverse(sortBy(withExact, 'similarity')).slice(0, 10)
   }
 
-  getExactMatch = (query: Cosal, doc: Cosal): number =>
-    sum(
-      query.fields[0].words.map(({ word }) => {
-        doc.fields
-          .filter(({ content }) => content.indexOf(word) > -1)
-          .map(({ weight, words }) =>
-            words
-              .filter(item => item.word === word)
-              .map(item => item.weight * weight),
-          )
-      }),
-    )
+  getExactMatch = (query: Cosal, doc: Cosal): number => {
+    const vals = query.fields[0].words.map(({ string, weight }) => {
+      if (weight < 0.5) {
+        return 0
+      }
 
-  /*
-  salientDocs = async (
-    docCosals: Array<Cosal>,
-  ): Promise<Array<{ weight: number; doc: Doc }>> =>
-    saliency(docCosals, this.docCosals)
-  */
+      return sum(
+        doc.fields
+          .filter(({ content }) => content.indexOf(string) > -1)
+          .map(({ words, weight }) => {
+            return words
+              .filter(item => item.weight > 0.5 && item.string === string)
+              .map(item => item.weight * weight)
+          }),
+      )
+    })
+
+    return sum(vals)
+  }
 }

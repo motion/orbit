@@ -1,16 +1,18 @@
-import * as React from 'react'
-import * as Constants from '~/constants'
-import { view, react } from '@mcro/black'
-import { Window } from '@mcro/reactron'
+import { react, store } from '@mcro/black'
 import { App, Electron, Desktop, Swift } from '@mcro/all'
-import * as Mobx from 'mobx'
 import { globalShortcut } from 'electron'
+import debug from '@mcro/debug'
 
 const log = debug('OrbitWindow')
 
-class OrbitWindowStore {
+@store
+export default class WindowFocusStore {
   show = 0
   orbitRef = null
+
+  setOrbitRef = ref => {
+    this.orbitRef = ref
+  }
 
   @react
   unFullScreenOnHide = [
@@ -26,10 +28,10 @@ class OrbitWindowStore {
     },
   ]
 
-  keyShortcuts = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-    .split('')
-    .map(key => ({ key, shortcut: `Option+${key}` }))
-    .concat(['Delete'])
+  keyShortcuts = [
+    ...'0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),
+    'Delete',
+  ].map(key => ({ key, shortcut: `Option+${key}` }))
 
   @react
   easyPinWithLetter = [
@@ -139,39 +141,5 @@ class OrbitWindowStore {
 
   handleReadyToShow = () => {
     this.show = true
-  }
-}
-
-@view.attach('electronStore')
-@view.provide({
-  store: OrbitWindowStore,
-})
-@view.electron
-export default class OrbitWindow extends React.Component {
-  render({ electronStore, store }) {
-    const state = Mobx.toJS(Electron.orbitState)
-    const show = electronStore.show >= 1 ? true : false
-    const opacity = electronStore.show <= 1 ? 0 : 1
-    return (
-      <Window
-        frame={false}
-        hasShadow={false}
-        background="#00000000"
-        webPreferences={Constants.WEB_PREFERENCES}
-        blinkFeatures="CSSOverscrollBehavior CSSOMSmoothScroll"
-        transparent={true}
-        showDevTools={Electron.state.showDevTools.orbit}
-        alwaysOnTop
-        show={show}
-        opacity={opacity}
-        ignoreMouseEvents={!App.isShowingOrbit}
-        size={state.size}
-        position={state.position}
-        file={`${Constants.APP_URL}/orbit`}
-        ref={store.handleOrbitRef}
-        onReadyToShow={store.handleReadyToShow}
-        devToolsExtensions={Constants.DEV_TOOLS_EXTENSIONS}
-      />
-    )
   }
 }

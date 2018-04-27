@@ -41,7 +41,7 @@ export async function ensureJob(
       log(
         `Stale job, removing... ${type} ${action}, ${secondsAgo} seconds ago (${SECONDS_UNTIL_JOB_STALE} until stale)`,
       )
-      lastPending.status = Job.status.FAILED
+      lastPending.status = Job.statuses.FAILED
       lastPending.lastError = 'stale'
       await lastPending.save()
     } else {

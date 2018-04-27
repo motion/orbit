@@ -2,7 +2,10 @@ import * as React from 'react'
 import * as UI from '@mcro/ui'
 
 export const Empty = ({ selectedItem: item }) => (
-  <contents if={item} css={{ alignItems: 'center', justifyContent: 'center' }}>
+  <contents
+    if={item}
+    css={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}
+  >
     <img
       if={item && item.icon}
       src={`/icons/${item.icon}`}

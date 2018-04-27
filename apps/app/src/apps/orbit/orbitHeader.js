@@ -3,6 +3,7 @@ import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { App, Desktop, Electron } from '@mcro/all'
 import * as Constants from '~/constants'
+import ControlButton from '~/views/controlButton'
 
 class HeaderStore {
   inputRef = null
@@ -36,7 +37,7 @@ class HeaderStore {
         throw react.cancel
       }
       this.inputRef.focus()
-      this.inputRef.select()
+      // this.inputRef.select()
     },
   ]
 
@@ -70,12 +71,10 @@ export default class OrbitHeader {
   }
 
   render({ appStore, orbitStore, headerStore, theme, headerBg }) {
-    // const { fullScreen } = Electron.orbitState
     const darkerBg = theme.base.background
     return (
-      <header
+      <orbitHeader
         $headerBg={headerBg}
-        $$draggable
         $headerVisible={headerStore.isShowingHeader}
         $headerMouseOver={Electron.orbitState.mouseOver}
         css={{
@@ -97,17 +96,17 @@ export default class OrbitHeader {
           css={{
             position: 'absolute',
             bottom: 0,
-            left: -1,
-            right: 20,
+            right: Electron.orbitOnLeft ? 20 : -1,
+            left: Electron.orbitOnLeft ? -1 : 20,
             top: 0,
             boxShadow: [
               [
                 'inset',
-                1,
+                Electron.orbitOnLeft ? 1 : -1,
                 0,
                 0,
                 0.5,
-                theme.base.background.darken(0.12).desaturate(0.5),
+                theme.base.background.darken(0.15).desaturate(0.5),
               ],
             ],
           }}
@@ -133,58 +132,33 @@ export default class OrbitHeader {
             $inputLnOn={Electron.orbitState.mouseOver ? darkerBg : false}
           />
         </title>
-        <pinnedIcon
-          if={!Electron.orbitState.fullScreen}
+        <ControlButton
+          if={!Electron.orbitState.dockedPinned}
           onClick={App.togglePinned}
+          borderWidth={Electron.orbitState.pinned ? 0.5 : 2}
+          $pinnedIcon
           $onLeft={Electron.orbitOnLeft}
           $onRight={!Electron.orbitOnLeft}
           $isPinned={Electron.orbitState.pinned}
-        >
-          <UI.Icon
-            color={
-              Electron.orbitState.pinned
-                ? Constants.ORBIT_COLOR.lighten(0.25)
-                : Constants.ORBIT_COLOR.lighten(0.5).alpha(0.5)
-            }
-            size={12}
-            name="pin"
-            css={{
-              width: 9,
-              height: 9,
-              borderRadius: 1000,
-            }}
-          />
-        </pinnedIcon>
-        <controls if={false}>
-          <UI.Button
-            icon="gear"
-            borderRadius={100}
-            size={0.9}
-            circular
-            background={headerBg}
-            color={appStore.showSettings ? [0, 0, 0, 0.8] : [0, 0, 0, 0.2]}
-            hover={{
-              color: appStore.showSettings ? [0, 0, 0, 0.9] : [0, 0, 0, 0.3],
-            }}
-            onClick={appStore.toggleSettings}
-          />
-        </controls>
-      </header>
+          background={Electron.orbitState.pinned ? '#7954F9' : 'transparent'}
+          borderColor={
+            Electron.orbitState.pinned
+              ? null
+              : theme.base.background.darken(0.4).desaturate(0.6)
+          }
+        />
+      </orbitHeader>
     )
   }
 
   static style = {
-    header: {
+    orbitHeader: {
       position: 'relative',
       flexFlow: 'row',
       alignItems: 'center',
       justifyContent: 'center',
       padding: [3, 2],
       transition: 'all ease-in 300ms',
-      opacity: 0.75,
-      '&:hover': {
-        opacity: 1,
-      },
     },
     controls: {
       position: 'absolute',
@@ -197,7 +171,6 @@ export default class OrbitHeader {
       },
     },
     headerVisible: {
-      opacity: 0.6,
       transform: { y: 0 },
     },
     headerMouseOver: {
@@ -205,7 +178,7 @@ export default class OrbitHeader {
     },
     headerBg: background => ({
       background: `linear-gradient(${background
-        .darken(0.06)
+        .darken(0.03)
         .desaturate(0.5)}, transparent)`,
     }),
     inputLn: {
@@ -226,22 +199,15 @@ export default class OrbitHeader {
       },
     }),
     pinnedIcon: {
-      position: 'absolute',
       transition: 'all ease-in 100ms 100ms',
-      padding: 6,
-      margin: [2, 4],
-      top: 3,
-      borderRadius: 1000,
+      marginRight: 12,
       opacity: 0.2,
       '&:hover': {
         opacity: 0.4,
       },
     },
     isPinned: {
-      opacity: 0.9,
-      '&:hover': {
-        opacity: 1,
-      },
+      opacity: 1,
     },
     onLeft: {
       right: 3,

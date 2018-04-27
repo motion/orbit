@@ -1,0 +1,96 @@
+import * as React from 'react'
+import { view } from '@mcro/black'
+import OrbitCard from './orbitCard'
+import { SubTitle, Circle } from '~/views'
+
+@view.attach('appStore')
+@view
+export default class OrbitHomeHighlights {
+  render({ appStore }) {
+    const { summaryResults, contextResults } = appStore
+    if (!summaryResults.length) {
+      return null
+    }
+    const maxHeight = Math.max(
+      appStore.innerHeight * 0.75,
+      appStore.innerHeight - contextResults.length * 80,
+    )
+    return (
+      <summary if={summaryResults.length} css={{ maxHeight }}>
+        <SubTitle>Conversations</SubTitle>
+        <section>
+          <OrbitCard
+            index={0}
+            total={summaryResults.length}
+            result={summaryResults[0]}
+            hoverToSelect
+            expanded={false}
+            listItem
+          />
+          <OrbitCard
+            index={1}
+            total={summaryResults.length}
+            result={summaryResults[0]}
+            hoverToSelect
+            expanded={false}
+            listItem
+          />
+          <OrbitCard
+            index={2}
+            total={summaryResults.length}
+            result={summaryResults[0]}
+            hoverToSelect
+            expanded={false}
+            listItem
+          />
+        </section>
+        <verticalSpace />
+        <SubTitle>Documents</SubTitle>
+        <section>
+          <OrbitCard
+            index={1}
+            total={summaryResults.length}
+            result={summaryResults[1]}
+            hoverToSelect
+            expanded={false}
+            listItem
+          />
+        </section>
+        <verticalSpace />
+        <SubTitle>Issues</SubTitle>
+        <section>
+          <OrbitCard
+            index={2}
+            total={summaryResults.length}
+            result={summaryResults[2]}
+            hoverToSelect
+            expanded={false}
+            listItem
+          />
+          <OrbitCard
+            index={2}
+            total={summaryResults.length}
+            result={summaryResults[2]}
+            hoverToSelect
+            expanded={false}
+            listItem
+          />
+        </section>
+      </summary>
+    )
+  }
+
+  static style = {
+    verticalSpace: {
+      height: 5,
+    },
+    summary: {
+      position: 'relative',
+      transition: 'opacity ease-in-out 150ms',
+      overflowY: 'scroll',
+    },
+    section: {
+      padding: [0, 4],
+    },
+  }
+}

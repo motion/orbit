@@ -2,6 +2,7 @@
 import BaseComponent from './BaseComponent'
 import { BrowserWindow } from 'electron'
 import debug from 'debug'
+import isEqual from 'lodash.isequal'
 
 const log = debug('reactron')
 
@@ -45,27 +46,18 @@ export default class Window extends BaseComponent {
     this.updateSize = () => configureSize.call(this, this.props)
     this.updatePosition = () => configurePosition.call(this, this.props)
 
-    // handles simple prop sync to
-    const focusable = this.handleSettableProp(
-      'focusable',
-      x => (x === undefined ? true : x),
-    )
-    const ignoreMouseEvents = this.handleSettableProp(
-      'ignoreMouseEvents',
-      x => !!x,
-    )
-    const opacity = this.handleSettableProp('opacity', x => x)
-
-    ignoreMouseEvents(props.ignoreMouseEvents)
-    focusable(props.focusable)
-    opacity(props.opacity)
-
     this.propHandlers = {
-      kiosk: v => this.window.setKiosk(v),
-      fullScreen: v => this.window.setFullScreen(v),
-      ignoreMouseEvents,
-      focusable,
-      opacity,
+      kiosk: this.handleSetProp('kiosk'),
+      fullScreen: this.handleSetProp('fullScreen'),
+      visibleOnAllWorkspaces: this.handleSetProp('visibleOnAllWorkspaces'),
+      fullScreenable: this.handleSetProp('fullScreenable'),
+      ignoreMouseEvents: this.handleSetProp('ignoreMouseEvents', x => !!x),
+      focusable: this.handleSetProp(
+        'focusable',
+        x => (x === undefined ? true : x),
+      ),
+      opacity: this.handleSetProp('opacity'),
+      alwaysOnTop: this.handleSetProp('alwaysOnTop', x => !!x),
       devToolsExtensions: () => configureExtensions.call(this, this.props),
       showDevTools: propVal => {
         if (propVal) {
@@ -97,7 +89,6 @@ export default class Window extends BaseComponent {
       onMoved: this.updatePosition,
       animatePosition: this.updatePosition,
       animateSize: this.updateSize,
-      alwaysOnTop: this.handleSettableProp('alwaysOnTop', x => !!x),
       file: () => configureFile.call(this, this.props),
       acceptFirstMouse: () => {
         if (process.env.NODE_ENV !== 'production') {
@@ -111,22 +102,21 @@ export default class Window extends BaseComponent {
     }
   }
 
-  handleSettableProp(key, handler = _ => _) {
-    return propVal => {
-      if (this.unmounted) {
-        return
-      }
+  handleSetProp(key, handler = _ => _) {
+    const setter = propVal => {
+      if (this.unmounted) return
       // changed value
-      const newVal = handler(propVal)
-      if (this.options[key] !== newVal) {
+      const newVal = [].concat(handler(propVal))
+      if (!isEqual(this.options[key], newVal)) {
         const setter = this.window[`set${properCase(key)}`]
         if (setter) {
           log('update window, set', key, newVal)
-          setter.call(this.window, newVal)
+          setter.call(this.window, ...newVal)
           this.options[key] = newVal
         }
       }
     }
+    return setter
   }
 
   unmount() {
@@ -134,9 +124,9 @@ export default class Window extends BaseComponent {
     this.window.close()
   }
 
-  handleNewProps(keys: Array<string>) {
+  handleNewProps(keys) {
     if (!this.window) {
-      log('no window ey')
+      console.log('no window ey')
       return
     }
     try {

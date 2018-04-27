@@ -1,19 +1,12 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { Electron } from '@mcro/all'
 
 @view
 export default class PeekHeader {
-  render({ icon, title, date, subtitle, after }) {
-    const { fullScreen } = Electron.orbitState
-    if (!Electron.currentPeek) {
-      return null
-    }
-    // const { isTorn } = Electron.currentPeek
+  render({ title, date, subtitle, after }) {
     return (
       <header
-        $$draggable={!fullScreen}
         css={{
           padding: title ? [18, 20, 0] : 0,
         }}

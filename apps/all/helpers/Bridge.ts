@@ -204,7 +204,6 @@ class Bridge {
   handleMessage = data => {
     const getMessage = str => str.split(MESSAGE_SPLIT_VAL)
     const [message, value] = getMessage(data)
-    console.log('message', message, value)
     for (const { type, listener } of this.messageListeners) {
       if (!type) {
         listener(message, value)
@@ -293,7 +292,7 @@ class Bridge {
           // merge plain objects
           const newState = mergeWith(oldVal, newVal, (prev, next) => {
             // avoid inner array merge, just replace
-            if (Array.isArray(prev) || Array.isArray(next)) {
+            if (Mobx.isArrayLike(prev) || Mobx.isArrayLike(next)) {
               return next
             }
           })

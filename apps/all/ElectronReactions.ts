@@ -3,9 +3,8 @@ import { App } from './App'
 import { Desktop } from './Desktop'
 import { Electron } from './Electron'
 import orbitPosition from './helpers/orbitPosition'
-import screenSize from './helpers/screenSize'
+import peekPosition from './helpers/peekPosition'
 import debug from '@mcro/debug'
-import * as Constants from '@mcro/constants'
 
 const log = debug('ElectronReactions')
 
@@ -41,45 +40,6 @@ export default class ElectronReactions {
     })
   }
 
-  toggleFullScreen = () => {
-    const fullScreen = !Electron.orbitState.fullScreen
-    if (!fullScreen) {
-      if (Electron.onClear) {
-        Electron.onClear()
-      }
-      console.log('SHOULD REPOSITION AFTER FS')
-      this.repositionToAppState = Date.now()
-      return
-    }
-    // orbit props
-    const { round } = Math
-    const [screenW, screenH] = screenSize()
-    const [appW, appH] = [screenW / 1.5, screenH / 1.3]
-    const [orbitW, orbitH] = [appW * 1 / 3, appH]
-    const [orbitX, orbitY] = [(screenW - appW) / 2, (screenH - appH) / 2]
-    // peek props
-    const [peekW, peekH] = [appW * 2 / 3, appH]
-    const [peekX, peekY] = [orbitX + orbitW, orbitY]
-    const [peek, ...rest] = Electron.peekState.windows
-    peek.position = [peekX, peekY].map(round)
-    peek.size = [peekW, peekH].map(round)
-    peek.peekOnLeft = false
-    // update
-    Electron.setState({
-      orbitState: {
-        position: [orbitX, orbitY].map(round),
-        size: [orbitW, orbitH].map(round),
-        orbitOnLeft: true,
-        fullScreen: true,
-        orbitDocked: false,
-        dockedPinned: false,
-      },
-      peekState: {
-        windows: [peek, ...rest],
-      },
-    })
-  }
-
   @react
   repositionAfterDocked = [
     () => App.state.orbitHidden,
@@ -108,10 +68,6 @@ export default class ElectronReactions {
       return
     }
     if (shortcut === 'Option+Space') {
-      if (Electron.orbitState.fullScreen) {
-        this.toggleFullScreen()
-        return
-      }
       if (App.state.orbitHidden) {
         this.toggleVisible()
         Electron.lastAction = shortcut
@@ -127,10 +83,6 @@ export default class ElectronReactions {
         this.togglePinned()
       }
     }
-    // if (shortcut === 'Option+Shift+Space') {
-    //   Electron.lastAction = shortcut
-    //   this.toggleFullScreen()
-    // }
   }
 
   toggleVisible = () => {
@@ -149,32 +101,6 @@ export default class ElectronReactions {
     Electron.setOrbitState({ pinned })
   }
 
-  // @react
-  // fullScreenOnOptionShift = [
-  //   () => Desktop.isHoldingOptionShift,
-  //   async (x, { sleep }) => {
-  //     if (!x) {
-  //       // if not mouse over active area, toggleFullScreen
-  //       return
-  //     }
-  //     await sleep(100) // sleep because dont want to trigger this accidentaly
-  //     console.log('send clear before fs or un-fs for quick hide test')
-  //     Electron.onClear()
-  //     this.toggleFullScreen()
-  //   },
-  // ]
-
-  @react
-  unPinOnFullScreen = [
-    () => Electron.orbitState.fullScreen,
-    () => {
-      if (!Electron.orbitState.pinned) {
-        throw react.cancel
-      }
-      this.updatePinned(false)
-    },
-  ]
-
   @react
   unPinOnHidden = [
     () => App.isFullyHidden,
@@ -192,8 +118,9 @@ export default class ElectronReactions {
       Desktop.mouseState.position,
       App.state.orbitHidden,
       Electron.orbitState.position,
+      App.state.peekTarget,
     ],
-    async ([mP, isHidden, orbitPosition], { sleep }) => {
+    async ([mP, isHidden, orbitPosition, peekTarget], { sleep }) => {
       if (isHidden) {
         if (Electron.orbitState.mouseOver) {
           Electron.setState({
@@ -201,6 +128,7 @@ export default class ElectronReactions {
             orbitState: { mouseOver: false },
           })
         }
+        // open if hovering indicator
         const [oX, oY] = orbitPosition
         // TODO: Constants.ORBIT_WIDTH
         const adjX = Electron.orbitOnLeft ? 313 : 17
@@ -215,12 +143,15 @@ export default class ElectronReactions {
       }
       if (Electron.orbitState.position) {
         const mouseOver = isMouseOver(Electron.orbitState, mP)
+        // TODO: think we can avoid this check because we do it in Bridge
         if (mouseOver !== Electron.orbitState.mouseOver) {
           Electron.setOrbitState({ mouseOver })
         }
       }
-      if (App.state.peekTarget || Electron.peekState.mouseOver) {
-        const mouseOver = isMouseOver(Electron.currentPeek, mP)
+      if (!peekTarget) {
+        Electron.setPeekState({ mouseOver: false })
+      } else {
+        const mouseOver = isMouseOver(Electron.peekState, mP)
         if (mouseOver !== Electron.peekState.mouseOver) {
           Electron.setPeekState({ mouseOver })
         }
@@ -255,6 +186,17 @@ export default class ElectronReactions {
   ]
 
   @react({ fireImmediately: true })
+  peekPosition = [
+    () => App.state.peekTarget,
+    peekTarget => {
+      if (!peekTarget) {
+        throw react.cancel
+      }
+      Electron.setPeekState(peekPosition(peekTarget.position, Electron))
+    },
+  ]
+
+  @react({ fireImmediately: true })
   repositioningFromAppState = [
     () => [
       appTarget(Desktop.appState || {}),
@@ -262,9 +204,6 @@ export default class ElectronReactions {
       this.repositionToAppState,
     ],
     ([appBB, linesBB]) => {
-      if (Constants.FORCE_FULLSCREEN) {
-        throw react.cancel
-      }
       // dont reposition while showing + dockedPinned
       if (!App.state.orbitHidden && Electron.orbitState.dockedPinned) {
         throw react.cancel
@@ -296,7 +235,6 @@ export default class ElectronReactions {
         orbitOnLeft,
         orbitDocked,
         dockedPinned: false,
-        fullScreen: false,
       })
     },
   ]

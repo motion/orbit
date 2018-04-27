@@ -3,11 +3,12 @@ import Router from '@mcro/router'
 function runRouter() {
   return new Router({
     routes: {
+      '/': require('./apps/main').default,
       '/orbit': require('./apps/orbit/orbit').default,
-      '/cosal': require('./apps/cosal').default,
-      '/auth': require('./apps/auth').default,
       '/peek': require('./apps/peek/peek').default,
+      '/cosal': require('./apps/cosal').default,
       '/highlights': require('./apps/highlights/highlights').default,
+      '/auth': require('./apps/auth').default,
     },
   })
 }

@@ -45,11 +45,7 @@ class AppRoot {
   async start() {
     if (window.location.pathname !== '/auth') {
       await connectModels(modelsList)
-      // wierd ass bugfix
       await App.start()
-      if (Constants.IS_ORBIT) {
-        App.setOrbitConnected(true)
-      }
     }
     this.render()
     this.catchErrors()

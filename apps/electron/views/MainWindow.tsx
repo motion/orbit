@@ -5,9 +5,18 @@ import { Window } from '@mcro/reactron'
 import * as Helpers from '~/helpers'
 import { Electron } from '@mcro/all'
 
+class MainStore {
+  get mouseInActiveArea() {
+    return Electron.peekState.mouseOver || Electron.orbitState.mouseOver
+  }
+}
+
 @view.attach('electronStore')
+@view.provide({
+  store: MainStore,
+})
 @view.electron
-export default class HighlightsWindow extends React.Component {
+export default class MainWindow extends React.Component {
   state = {
     show: false,
     position: [0, 0],
@@ -23,13 +32,13 @@ export default class HighlightsWindow extends React.Component {
     this.setState({ position })
   }
 
-  render({ electronStore, onRef }) {
+  render({ store, electronStore, onRef }) {
     return (
       <Window
         alwaysOnTop
-        ignoreMouseEvents
+        ignoreMouseEvents={!store.mouseInActiveArea}
         ref={ref => ref && onRef(ref.window)}
-        file={`${Constants.APP_URL}/highlights`}
+        file={Constants.APP_URL}
         show={electronStore.show ? this.state.show : false}
         opacity={electronStore.show === 1 ? 0 : 1}
         frame={false}

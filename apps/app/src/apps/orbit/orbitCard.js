@@ -18,7 +18,7 @@ class Text {
 class OrbitCardStore {
   isSelected = false
 
-  @react({ fireImmediately: true })
+  @react({ fireImmediately: true, log: 'state' })
   updateIsSelected = [
     () => this.props.appStore.activeIndex,
     index => {
@@ -121,7 +121,7 @@ export default class OrbitCard {
         <card
           $cardHovered={this.hovered}
           css={{
-            padding: tiny ? [6, 8] : [9, 12],
+            padding: listItem ? [15, 12] : tiny ? [6, 8] : [9, 12],
             borderRadius,
           }}
           onMouseEnter={this.setHovered}
@@ -150,7 +150,7 @@ export default class OrbitCard {
           <preview
             if={preview && !isExpanded}
             css={{
-              margin: [3, 0],
+              margin: [3, 0, 0],
               flexFlow: 'row',
               alignItems: 'center',
             }}
@@ -180,16 +180,16 @@ export default class OrbitCard {
               <UI.Text>2m</UI.Text>
             </date>
           </preview>
-          <content if={content}>
+          <content if={location || content}>
             <subtitle
-              if={!tiny && isExpanded}
+              if={location && !tiny && isExpanded}
               css={{ flexFlow: 'row', opacity: 0.5 }}
             >
               {location}
             </subtitle>
-            <full if={!tiny && isExpanded}>{content}</full>
+            <full if={content && !tiny && isExpanded}>{content}</full>
           </content>
-          <bottom if={!tiny}>
+          <bottom if={!tiny && (bottom || permalink || via)}>
             <permalink if={isExpanded}>{permalink}</permalink>
             <space if={permalink} />
             {bottom}

@@ -16,7 +16,7 @@ export default class OrbitHomeHighlights {
     )
     return (
       <summary if={results.length} css={{ maxHeight, marginTop: 10 }}>
-        <section css={{ margin: [0, -5] }}>
+        <section>
           <OrbitCard
             index={0}
             total={results.length}

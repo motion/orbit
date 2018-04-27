@@ -2,8 +2,8 @@ import { view, react } from '@mcro/black'
 import { Title, SubTitle } from '~/views'
 import * as UI from '@mcro/ui'
 import OrbitHomeHighlights from './orbitHomeHighlights'
-import { Bit } from '@mcro/models'
 import { App } from '@mcro/all'
+import OrbitDivider from './orbitDivider'
 
 class OrbitExploreStore {
   willUnmount() {
@@ -103,7 +103,9 @@ export default class OrbitExplore {
           })}
         </section>
 
-        <SubTitle css={{ textAlign: 'center' }}>In Orbit</SubTitle>
+        <OrbitDivider />
+
+        <SubTitle>Highlights</SubTitle>
         <OrbitHomeHighlights results={appStore.summaryResults} />
       </pane>
     )

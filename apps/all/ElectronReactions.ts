@@ -167,7 +167,7 @@ export default class ElectronReactions {
   handleHoldingOption = [
     () => Desktop.isHoldingOption,
     async (isHoldingOption, { sleep }) => {
-      if (Electron.orbitState.pinned) {
+      if (Electron.orbitState.pinned || Electron.orbitState.dockedPinned) {
         throw react.cancel
       }
       if (!isHoldingOption) {

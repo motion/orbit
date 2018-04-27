@@ -67,6 +67,7 @@ export default class BitSlackMessage {
     // const [firstWord, ...rest] = message.text.split(' ')
     return (
       <message>
+        <topSpace if={!hideHeader && previousMessage} css={{ height: 10 }} />
         <header if={!hideHeader}>
           <RoundButton
             onClick={e => {

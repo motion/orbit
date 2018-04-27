@@ -147,43 +147,44 @@
 
 * great daily summaries / trends (~3 months)
 * ocr and contextual relevants/highlights + long tail fixes there (~1 month)
-* finishing ux/peek/search interaction and features (~2 months)
-* site, beta, video (~4 months)
-* algorithm improvements (~1month)
-* deep focus on interface smoothness (~2weeks)
-  * nice animations would go a long way but require pretty intense react work
-  * making an orbit indicator/highlight words proba bly needs slim native app interface
-  * upgrade to react 16.4 async/react may take a while (require abstractions on mobx even)
-  * weve not done any real profiling
+* finishing ux/peek/search interaction and features (~1 month)
+* site, (2 months)
+* video (~1 month)
+* beta setup (1 week)
 
-security (~~~2weeks)
+security (~3weeks)
 
 * we likely either need to contract or get someone for this directly
 * involved auditing entire codebase, probably doing a variety of https things
 * encrypting a few pieces
 * local oauth system needs some work probably (hardcodes keys locally now)
 
-syncers (~1-2months)
+syncers (~4-5months)
 
 * more stable, reliable, configurable with rich data
+  * support deletions etc
 * github
 * jira
+* asana
 * confluence
+* crawler
+* dropbox/paper
+* outlook
+* arbitrary imap/email
 * maybe some hr tools
-* maybe dropbox/paper
-* maybe alternative email platforms
 
 rich people/teams/explore (2weeks-Infinity)
 
+* automatic project collation and explore
 * would provide a much more thorough value on launch if we have explore (feels full featured from day 1)
 * smart linking together of people across different integrations
 * smart team or "commonly works together features"
 
-sync / simple curation architecture (~2-3weeks)
+sync / simple explore/curation architecture (~2-3weeks)
 
-* p2p may be simpler, or necessary
-* could be required for onboarding so everoyne doesn't need to reconfigure things
 * "pin result" feature for search
+* simple explore manager
+* could be help onboarding so everoyne doesn't need to reconfigure things
 * "create grouping" for wiki/explore
 * "define team"
 * "mark stale" etc
@@ -212,25 +213,3 @@ testing, polish, productioninizing (~2-3weeks)
 * slimming bundle size
 * improving various auto updates
 * having a continuous integration process so we can deploy quickly
-
-attention (?)
-
-* may be required for good trends
-* may be really beneficial for what you've missed
-
-stack improvements (~1month)
-
-* improving typing and architecture in variety of sketchy areas
-* optimizing performance in areas where its important
-* adding checks and fixing bugs as we run into them, allowing us to focus more on design/research
-* getting our hmr working on babel 7 would allow us to use typescript everywhere
-  * means app and ui kit can be typed, much easier to work with
-* could even help release a couple packages, getting us some PR and contributors to make our stack a bit safer long term
-
-* unknown unknowns and over-optimism (~3 months or ~15% of rest of work)
-  * also keep in mind the rough trend over the last few months has been:
-    * tasks take longer than expected due to lots of detail
-    * keep adding new things we didn't think of that are outside of our current plan
-    * various life events and blockers have been coming up and will continue
-    * random libraries and apis changing, breaking
-    * especially: we realize there are new constraints to work with/arounds

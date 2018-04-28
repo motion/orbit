@@ -1,33 +1,41 @@
 ## now
 
-* [x] prevent option tap from clearing docked sidebar
-* [x] peek view for slack convo
-* [x] nice design
-* [x] related things design
-* [x] related things hardcode different types
-* [x] highlighted item index
-* [x] expanding on highlight
-* [ ] more peek alignment
-* [ ] highlight top items
-* [ ] fake peek for top items
-* [ ] peek carousel show people + docs
-* [ ] peek view click between items fixes
-* [ ] peek view click between history + back button
-* [ ] fix new bug with cmd+space showing in context before showing sidebar
-* [ ] split sidebar from context sidebar
-* [ ] more home design
-* [ ] nicer avatar/meta news
+demo for Formidable on May 12th:
 
---- idea
+* daily summary really smooth (2 days)
+  * various ux and interaction, design for peeks, slack formatting fixes (1day)
+  * include peek window design for top area with global trends (0.5day)
+  * finishing cosal merge and showing better summary, plus reason why each card is placed (0.5day)
+* basic search for stuff and app launch showing nlp (2 days)
+  * improve various list item results and try and remove jitter/lag (0.5 day)
+  * better peek for a document (0.5day)
+* contextual/OCR related content (~2 days, can bail if necessary)
+  * be sure we can enable it and run it on a page easily
+  * come up with a simple highlight words design that shows it
+* finish profiles with better design (1 day)
+  * includes moving between them
+  * should aggregate even if faked from multiple sources
+* bring back tear away peeks to demonstrate apps (2 days)
+* simple demo of coding an app and deploying it, mostly hardcoded but working (3 days)
+  * need to figure this out, but honestly just showing the ease of code => deploy and syntax is big
+  * hmr is cool here too
+* simple app we built showing a chart that tears away and stays on screen (1-2 day)
+* ensure settings panes generally work so we can show it quickly (2hr)
+* building a general walkthrough of demo and plan for pitching the various pieces
+  * can just be our content, they dont care about it being fake just as long as it works and has right features
+* better theme and style polish all around
 
-* [ ] match color to the app
+* reach goals for demo
+  * make "@" show a list of slack people + search people
+    * solidifies the company directory feel
+  * make the "Home" button show hardcoded active projects and recent activity summary of each
+  * maybe: color themes for ocr/context (if can do in 1 day)
+    * think this is actually big because shows how nice the system is for deploying to your team
+    * this + news + ocr, really solidifies defensibility x how we are trustworthy for executing well in future
 
 --- demo
 
-* [ ] think through news / design
-* [ ] reach: mockup opening news item
 * [ ] slack attachments/images/emojis
-
 * [ ] only close peek on esc if electron focused
 * [ ] focus electron on mouseover peek
 * [ ] interaction finish bugs
@@ -41,7 +49,7 @@
 * [ ] swindler on close window need to reposition
 * [ ] explore mockup
 * [ ] home animations
-* [ ] make "@" show a list of slack people + search people
+
 * [ ] productionize
 
 ### sorted by area

@@ -85,15 +85,7 @@ export default class OrbitExplore {
           ].map((item, index) => {
             const isDown = index % 2 === 0
             return (
-              <item
-                key={index}
-                css={{
-                  flexFlow: 'row',
-                  alignItems: 'center',
-                  padding: [8, 15],
-                  fontSize: 16,
-                }}
-              >
+              <item key={index}>
                 <content>
                   {item.title}
                   <subtitle css={{ opacity: 0.5, fontSize: 13 }}>
@@ -139,5 +131,27 @@ export default class OrbitExplore {
     verticalSpace: {
       height: 20,
     },
+    explore: {
+      flexFlow: 'row',
+      overflowX: 'scroll',
+      padding: [10, 10],
+    },
+    item: {
+      flexFlow: 'row',
+      alignItems: 'center',
+      padding: [8, 15],
+      fontSize: 16,
+      pointerEvents: 'auto',
+    },
+  }
+
+  static theme = (props, theme) => {
+    return {
+      item: {
+        '&:hover': {
+          background: theme.hover.background,
+        },
+      },
+    }
   }
 }

@@ -16,7 +16,12 @@ export default class OrbitSearchResults {
     const isChanging = App.state.query !== query
     return (
       <orbitSearchResults
-        css={{ background: theme.base.background, opacity: hasQuery ? 1 : 0 }}
+        css={{
+          background: theme.base.background,
+          opacity: hasQuery ? 1 : 0,
+          pointerEvents: !hasQuery ? 'none' : 'auto',
+          zIndex: !hasQuery ? -1 : 1,
+        }}
         $visible={hasQuery}
         $isChanging={isChanging}
       >

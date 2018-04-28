@@ -10,80 +10,40 @@ export default class OrbitHomeHighlights {
     if (!results || !results.length) {
       return null
     }
-    const maxHeight = Math.max(
-      appStore.innerHeight * 0.75,
-      appStore.innerHeight - results.length * 80,
-    )
     return (
-      <summary if={results.length} css={{ maxHeight, marginTop: 10 }}>
-        <SubTitle>Conversations</SubTitle>
-        <section>
-          <OrbitCard
-            index={0}
-            total={results.length}
-            result={results[0]}
-            hoverToSelect
-            getRef={appStore.setResultRef(0)}
-          />
-          <OrbitCard
-            index={1}
-            total={results.length}
-            result={results[1]}
-            hoverToSelect
-            getRef={appStore.setResultRef(1)}
-          />
-          <OrbitCard
-            index={2}
-            total={results.length}
-            result={results[2]}
-            hoverToSelect
-            getRef={appStore.setResultRef(2)}
-          />
-        </section>
-        <verticalSpace />
-        <SubTitle>Documents</SubTitle>
-        <section>
-          <OrbitCard
-            index={3}
-            total={results.length}
-            result={results[3]}
-            hoverToSelect
-            getRef={appStore.setResultRef(3)}
-          />
-        </section>
-        <verticalSpace />
-        <SubTitle>Email</SubTitle>
-        <section>
-          <OrbitCard
-            index={4}
-            total={results.length}
-            result={results[4]}
-            hoverToSelect
-            getRef={appStore.setResultRef(4)}
-          />
-          <OrbitCard
-            index={5}
-            total={results.length}
-            result={results[5]}
-            hoverToSelect
-            getRef={appStore.setResultRef(5)}
-          />
+      <summary if={results.length} css={{ marginTop: 5 }}>
+        <section $grid>
+          {[0, 1, 2, 3, 4, 5, 6, 7].map(item => (
+            <OrbitCard
+              key={item}
+              index={item}
+              total={results.length}
+              result={results[item]}
+              hoverToSelect
+              expanded
+              getRef={appStore.setResultRef(item)}
+              css={{
+                width: '50%',
+                marginBottom: 8,
+              }}
+            />
+          ))}
         </section>
       </summary>
     )
   }
 
   static style = {
-    verticalSpace: {
-      height: 5,
-    },
     summary: {
+      flex: 1,
       position: 'relative',
       transition: 'opacity ease-in-out 150ms',
       overflowY: 'scroll',
     },
-    section: {
-      padding: [0],
+    grid: {
+      padding: [0, 5],
+      flexFlow: 'row',
+      flexWrap: 'wrap',
     },
   }
 }

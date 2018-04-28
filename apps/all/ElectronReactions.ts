@@ -218,10 +218,7 @@ export default class ElectronReactions {
       }
       // pinning to side
       if (Electron.lastAction === 'CommandOrControl+Space') {
-        Electron.setOrbitState({
-          ...orbitPosition(box, true),
-          dockedPinned: true,
-        })
+        Electron.setOrbitState(orbitPosition(box, { dockedPinned: true }))
         return
       }
       let { position, size, orbitOnLeft, orbitDocked } = orbitPosition(box)

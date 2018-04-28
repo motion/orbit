@@ -5,12 +5,11 @@
 * [x] nice design
 * [x] related things design
 * [x] related things hardcode different types
-
 * [x] highlighted item index
 * [x] expanding on highlight
+* [ ] more peek alignment
 * [ ] highlight top items
 * [ ] fake peek for top items
-
 * [ ] peek carousel show people + docs
 * [ ] peek view click between items fixes
 * [ ] peek view click between history + back button

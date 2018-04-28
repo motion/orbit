@@ -7,7 +7,7 @@ const VERT_PAD = 5 // small vertical pad allows you to resize attached window
 
 export default function orbitPosition(
   { left, top, width, height },
-  forceDocked = false,
+  extraOptions = { dockedPinned: false },
 ) {
   let orbitW = ORBIT_WIDTH
   const [screenW, screenH] = screenSize()
@@ -16,16 +16,21 @@ export default function orbitPosition(
   const rightSpace = screenW - (left + width)
   const smallOrbit = orbitH < 700
   if (
-    forceDocked ||
+    extraOptions.dockedPinned ||
     (rightSpace < orbitW && leftSpace < orbitW) ||
     smallOrbit
   ) {
     orbitH = screenH
+    // bigger for docked pinned
+    if (extraOptions.dockedPinned) {
+      orbitW = orbitW * 1.5
+    }
     return {
       position: [screenW - orbitW, 0],
       size: [orbitW, orbitH],
       orbitOnLeft: true,
       orbitDocked: true,
+      dockedPinned: extraOptions.dockedPinned,
     }
   }
   const orbitOnLeft = leftSpace > rightSpace

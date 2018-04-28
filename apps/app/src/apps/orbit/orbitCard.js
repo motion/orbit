@@ -16,15 +16,21 @@ class Text {
 }
 
 class OrbitCardStore {
-  isSelected = false
+  _isSelected = false
+
+  get isSelected() {
+    return typeof this.props.isSelected === 'boolean'
+      ? this.props.isSelected
+      : this._isSelected
+  }
 
   @react({ fireImmediately: true, log: 'state' })
   updateIsSelected = [
     () => this.props.appStore.activeIndex,
     index => {
       const isSelected = index === this.props.index
-      if (isSelected !== this.isSelected) {
-        this.isSelected = isSelected
+      if (isSelected !== this._isSelected) {
+        this._isSelected = isSelected
       }
     },
   ]
@@ -149,7 +155,7 @@ export default class OrbitCard {
             {subtitle}
           </subtitle>
           <preview
-            if={preview && !isExpanded}
+            if={preview}
             css={{
               margin: [3, 0, 0],
               flexFlow: 'row',
@@ -186,13 +192,12 @@ export default class OrbitCard {
             </date>
           </preview>
           <content if={location || content}>
-            <subtitle
-              if={location && !tiny && isExpanded}
-              css={{ flexFlow: 'row', opacity: 0.5 }}
-            >
-              {location}
-            </subtitle>
-            <full if={content && !tiny && isExpanded}>{content}</full>
+            <full if={content && !tiny && isExpanded}>
+              {typeof content !== 'string' && content}
+              <UI.Text if={typeof content === 'string'} ellipse={5}>
+                {content}
+              </UI.Text>
+            </full>
           </content>
           <bottom if={!tiny && (bottom || permalink || via)}>
             <permalink if={isExpanded}>{permalink}</permalink>

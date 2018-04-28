@@ -120,6 +120,7 @@ export default class OrbitFrame {
         >
           <orbit
             css={{
+              width: size[0],
               borderLeftRadius,
               borderRightRadius,
               ...animationStyles,
@@ -190,7 +191,6 @@ export default class OrbitFrame {
       zIndex: -1,
     },
     orbit: {
-      width: ORBIT_WIDTH,
       position: 'relative',
       transition: 'none',
       flex: 1,

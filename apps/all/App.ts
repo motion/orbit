@@ -3,7 +3,6 @@ import { proxySetters, setGlobal } from './helpers'
 import { store, react } from '@mcro/black/store'
 import { Desktop } from './Desktop'
 import { Electron } from './Electron'
-import AppReactions from './AppReactions'
 import * as Constants from '@mcro/constants'
 
 export let App
@@ -143,14 +142,6 @@ class AppStore {
     this.sendMessage = Bridge.sendMessage
     this.onMessage = Bridge.onMessage
     this.bridge = Bridge
-  }
-
-  runReactions(options) {
-    // hmr protect
-    if (this.reactions) return
-    // @ts-ignore
-    const AppReactions = require('./AppReactions').default
-    this.reactions = new AppReactions(options)
   }
 
   open = async url => {

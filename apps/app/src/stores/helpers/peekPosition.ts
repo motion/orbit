@@ -1,9 +1,9 @@
-import screenSize from './screenSize'
 import * as Constants from '@mcro/constants'
 
 const SHADOW_PAD = 15
 const EDGE_PAD = 20
 const TOP_OFFSET = -20
+const screenSize = () => [window.innerWidth, window.innerHeight]
 
 export default function peekPosition(target, App) {
   const [screenW, screenH] = screenSize()

@@ -18,10 +18,10 @@ class PeekFrameStore {
         return null
       }
       // wait for related peek state
-      await whenChanged(() => Electron.peekState.id)
+      await whenChanged(() => App.peekState.id)
       return {
         target,
-        ...Electron.peekState,
+        ...App.peekState,
       }
     },
   ]

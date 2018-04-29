@@ -1,15 +1,10 @@
 import { store, react } from '@mcro/black/store'
-// import * as Constants from '@mcro/constants'
-import { Desktop } from './Desktop'
-import { App } from './App'
+import { App, Desktop } from '@mcro/all'
 import orbitPosition from './helpers/orbitPosition'
+import peekPosition from './helpers/peekPosition'
 import debug from '@mcro/debug'
 
 const log = debug('AppReactions')
-
-// todo: move this reaction stuff into specialized sub-stores of appstore
-// prevents hard restarts
-// and groups by logical unit (piece of state)
 
 const SCREEN_PAD = 15
 const appTarget = ({ offset, bounds }) => {
@@ -226,6 +221,20 @@ export default class AppReactions {
         size,
         orbitOnLeft,
         orbitDocked,
+      })
+    },
+  ]
+
+  @react({ fireImmediately: true })
+  peekPosition = [
+    () => App.state.peekTarget,
+    peekTarget => {
+      if (!peekTarget) {
+        throw react.cancel
+      }
+      App.setPeekState({
+        id: Math.random(),
+        ...peekPosition(peekTarget.position, App),
       })
     },
   ]

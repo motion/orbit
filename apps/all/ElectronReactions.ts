@@ -1,8 +1,6 @@
-import { store, react, sleep } from '@mcro/black/store'
+import { store } from '@mcro/black/store'
 import { App } from './App'
-import { Desktop } from './Desktop'
 import { Electron } from './Electron'
-import peekPosition from './helpers/peekPosition'
 import debug from '@mcro/debug'
 
 const log = debug('ElectronReactions')
@@ -46,18 +44,4 @@ export default class ElectronReactions {
   togglePinned = () => {
     Electron.sendMessage(App, App.messages.TOGGLE_PINNED)
   }
-
-  @react({ fireImmediately: true })
-  peekPosition = [
-    () => App.state.peekTarget,
-    peekTarget => {
-      if (!peekTarget) {
-        throw react.cancel
-      }
-      Electron.setPeekState({
-        id: Math.random(),
-        ...peekPosition(peekTarget.position, App),
-      })
-    },
-  ]
 }

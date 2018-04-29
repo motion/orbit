@@ -20,6 +20,11 @@ const tanHoverBg = tanBg.darken(0.02).desaturate(0.3)
 const tanActiveBg = tanHoverBg.darken(0.05).desaturate(0.3)
 const tanActiveHoverBg = tanHoverBg.darken(0.06).desaturate(0.3)
 
+const dbBg = color('rgb(11, 60, 117)')
+const dbHoverBg = dbBg.darken(0.02).desaturate(0.3)
+const dbActiveBg = dbHoverBg.darken(0.05).desaturate(0.3)
+const dbActiveHoverBg = dbHoverBg.darken(0.06).desaturate(0.3)
+
 const Themes = {
   tan: Theme.fromStyles({
     background: tanBg,
@@ -36,6 +41,23 @@ const Themes = {
     },
     activeHover: {
       background: tanActiveHoverBg,
+    },
+  }),
+  darkBlue: Theme.fromStyles({
+    background: dbBg,
+    color: '#fff',
+    borderColor: '#000',
+    hover: {
+      background: dbHoverBg,
+    },
+    selected: {
+      background: color('#fff'),
+    },
+    active: {
+      background: dbActiveBg,
+    },
+    activeHover: {
+      background: dbActiveHoverBg,
     },
   }),
   dark: Theme.fromStyles({

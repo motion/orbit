@@ -17,8 +17,8 @@ class OrbitFrameStore {
   orbitFrame = null
 
   @react
-  wasShowingOrbit = [
-    () => App.isShowingOrbit,
+  wasShowing = [
+    () => this.isShowing,
     async (val, { sleep, setValue }) => {
       if (!val) {
         await sleep(animationDuration)
@@ -29,8 +29,12 @@ class OrbitFrameStore {
     },
   ]
 
+  get isShowing() {
+    return this.props.shouldShow()
+  }
+
   get shouldAnimate() {
-    return App.isShowingOrbit || this.wasShowingOrbit
+    return this.isShowing || this.wasShowing
   }
 }
 
@@ -59,7 +63,7 @@ export default class OrbitFrame {
     const orbitLightShadow = [
       [orbitOnLeft ? -15 : 15, 4, 35, 0, [0, 0, 0, 0.05]],
     ]
-    const animationStyles = App.isShowingOrbit
+    const animationStyles = store.isShowing
       ? {
           opacity: 1,
           transform: {
@@ -77,6 +81,8 @@ export default class OrbitFrame {
     return (
       <orbitFrame
         css={{
+          pointerEvents:
+            store.isShowing && !App.isAnimatingOrbit ? 'auto' : 'none',
           width: size[0],
           // TODO HACKINESS fix the size/y calc in orbitPosition.js
           height: size[1] - (orbitDocked ? 0 : 15),
@@ -101,7 +107,6 @@ export default class OrbitFrame {
         {/* <orbitInnerShadow /> */}
         <overflowWrap
           $orbitAnimate={store.shouldAnimate}
-          $pointerEvents={App.isShowingOrbit && !App.isAnimatingOrbit}
           css={{
             overflow: orbitDocked ? 'visible' : 'hidden',
             padding: orbitDocked ? 0 : SHADOW_PAD,
@@ -174,6 +179,7 @@ export default class OrbitFrame {
     },
     orbitBorder: {
       pointerEvents: 'none',
+      userSelect: 'none',
       position: 'absolute',
       top: 0,
       left: 0,
@@ -208,10 +214,6 @@ export default class OrbitFrame {
       alignSelf: 'flex-end',
       flex: 1,
       position: 'relative',
-      pointerEvents: 'none !important',
-    },
-    pointerEvents: {
-      pointerEvents: 'all !important',
     },
     hideOverflow: {
       overflow: 'hidden',
@@ -232,7 +234,6 @@ export default class OrbitFrame {
       transition: 'none',
     },
     orbitTorn: {
-      pointerEvents: 'all !important',
       opacity: 1,
       transform: {
         y: 0,
@@ -275,4 +276,10 @@ export default class OrbitFrame {
       alignItems: 'flex-end',
     },
   }
+
+  static theme = (props, theme) => ({
+    orbitFrame: {
+      color: theme.base.color,
+    },
+  })
 }

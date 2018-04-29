@@ -36,7 +36,6 @@ export const Title = ({ center, children, ...props }) => (
       padding: [0, 13, 2],
       alignItems: center ? 'center' : 'flex-start',
     }}
-    color="#000"
     {...props}
   >
     {children}

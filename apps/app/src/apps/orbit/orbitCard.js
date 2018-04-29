@@ -139,8 +139,8 @@ export default class OrbitCard {
               size={1.2}
               ellipse={isExpanded ? 2 : 1}
               fontWeight={400}
-              $titleText
               css={{
+                maxWidth: `calc(100% - 30px)`,
                 marginBottom: isExpanded ? 2 : 0,
               }}
               {...tiny && tinyProps.titleProps}
@@ -188,7 +188,7 @@ export default class OrbitCard {
               if={date}
               css={{ fontWeight: 500, width: 30, textAlign: 'right' }}
             >
-              <UI.Text color={[0, 0, 0, 0.5]}>2m</UI.Text>
+              <UI.Text opacity={0.5}>2m</UI.Text>
             </date>
           </preview>
           <content if={location || content}>
@@ -223,23 +223,24 @@ export default class OrbitCard {
       console.error('got a weird one', BitContent)
       return null
     }
-    return (
-      <UI.Theme name={this.isExpanded && !listItem ? 'light' : 'tan'}>
-        <BitContent
-          appStore={appStore}
-          result={result}
-          isExpanded={this.isExpanded}
-          {...itemProps}
-        >
-          {this.getOrbitCard}
-        </BitContent>
-      </UI.Theme>
+    const contents = (
+      <BitContent
+        appStore={appStore}
+        result={result}
+        isExpanded={this.isExpanded}
+        {...itemProps}
+      >
+        {this.getOrbitCard}
+      </BitContent>
     )
+    if (this.isExpanded && !listItem) {
+      return <UI.Theme name="light">{contents}</UI.Theme>
+    }
+    return contents
   }
 
   static style = {
     cardWrap: {
-      pointerEvents: 'all',
       position: 'relative',
       width: '100%',
       transform: {
@@ -260,9 +261,6 @@ export default class OrbitCard {
     },
     subtitle: {
       margin: [2, 0, 0],
-    },
-    titleText: {
-      maxWidth: `calc(100% - 30px)`,
     },
     cardHovered: {},
     content: {

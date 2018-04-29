@@ -27,7 +27,6 @@ export default class OrbitMain {
       overflow: 'hidden',
       width: '100%',
       height: '100%',
-      // pointerEvents: 'none',
       userSelect: 'none',
       position: 'relative',
     },

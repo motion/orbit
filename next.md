@@ -33,8 +33,22 @@ demo for Formidable on May 12th:
     * think this is actually big because shows how nice the system is for deploying to your team
     * this + news + ocr, really solidifies defensibility x how we are trustworthy for executing well in future
 
---- demo
+demo video:
+song: https://www.youtube.com/watch?v=1FFqVXlyJ98 "said it once before but it bears repeating now"
 
+* BIG bold super fast transitions
+* themes need to be there and custom apps
+* moves super fast with big text
+* get dillon to do it
+* YOUR COMPANY
+* HAS
+* A
+* HOME
+* Orbit
+
+--- me
+
+* [ ] themes or surfaces really need well thought lighten/darken functionality
 * [ ] slack attachments/images/emojis
 * [ ] only close peek on esc if electron focused
 * [ ] focus electron on mouseover peek

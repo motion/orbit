@@ -141,7 +141,6 @@ export default class OrbitExplore {
       alignItems: 'center',
       padding: [8, 15],
       fontSize: 16,
-      pointerEvents: 'auto',
     },
   }
 

@@ -9,7 +9,7 @@ import OrbitHomeExplore from './orbitHomeExplore'
 export default class OrbitHome {
   render({ appStore }) {
     const hasQuery = App.state.query
-    const isDocked = Electron.orbitState.dockedPinned
+    const isDocked = App.dockState.pinned
     return (
       <orbitHome
         css={{

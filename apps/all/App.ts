@@ -16,6 +16,8 @@ const isOrbit = isBrowser && window.location.pathname === '/orbit'
 @store
 class AppStore {
   messages = {
+    SHOW_DOCKED: 'SHOW_DOCKED',
+    HIDE_DOCKED: 'HIDE_DOCKED',
     TOGGLE_SHOWN: 'TOGGLE_SHOWN',
     SHOW: 'SHOW',
     HIDE: 'HIDE',
@@ -32,6 +34,17 @@ class AppStore {
 
   state = {
     query: '',
+    orbitState: {
+      mouseOver: false,
+      pinned: false,
+      fullScreen: false,
+      orbitOnLeft: false,
+      position: [],
+      size: [],
+    },
+    dockState: {
+      pinned: false,
+    },
     authState: {
       openId: null,
       closeId: null,
@@ -90,8 +103,15 @@ class AppStore {
     },
   ]
 
+  get orbitOnLeft() {
+    if (App.orbitState.orbitDocked) {
+      return true
+    }
+    return App.orbitState.orbitOnLeft
+  }
+
   get isAttachedToWindow() {
-    return !Electron.orbitState.fullScreen && !!Desktop.appState
+    return !!Desktop.appState
   }
 
   get hoveredWordName() {

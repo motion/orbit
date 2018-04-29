@@ -3,10 +3,19 @@ import { store, react } from '@mcro/black/store'
 import { Desktop } from './Desktop'
 import { Electron } from './Electron'
 import { App } from './App'
+import orbitPosition from './helpers/orbitPosition'
 
 // todo: move this reaction stuff into specialized sub-stores of appstore
 // prevents hard restarts
 // and groups by logical unit (piece of state)
+
+const SCREEN_PAD = 15
+const appTarget = ({ offset, bounds }) => {
+  if (!offset || !bounds) return null
+  const [left, top] = offset
+  const [width, height] = bounds
+  return { top, left, width, height }
+}
 
 @store
 export default class AppReactions {
@@ -15,6 +24,12 @@ export default class AppReactions {
       switch (msg) {
         case App.messages.TOGGLE_SHOWN:
           this.toggle()
+          return
+        case App.messages.SHOW_DOCKED:
+          App.setDockState({ pinned: true })
+          return
+        case App.messages.SHOW_DOCKED:
+          App.setDockState({ pinned: false })
           return
         case App.messages.HIDE:
           this.hide()
@@ -64,20 +79,8 @@ export default class AppReactions {
   ]
 
   @react({ log: 'state' })
-  onFullScreen = [
-    () => Electron.orbitState.fullScreen,
-    full => {
-      if (full) {
-        App.setOrbitHidden(false)
-      } else {
-        App.setPeekTarget(null)
-      }
-    },
-  ]
-
-  @react({ log: 'state' })
   onPinned = [
-    () => Electron.orbitState.pinned,
+    () => App.orbitState.pinned,
     pinned => {
       if (pinned) {
         App.setOrbitHidden(false)
@@ -89,7 +92,7 @@ export default class AppReactions {
 
   @react({ log: 'state' })
   clearPeekOnReposition = [
-    () => Electron.orbitState.position,
+    () => App.orbitState.position,
     () => App.setPeekTarget(null),
   ]
 
@@ -98,7 +101,7 @@ export default class AppReactions {
   // clearPeekOnMouseOut = [
   //   () => Electron.peekState.mouseOver,
   //   async (mouseOver, { sleep }) => {
-  //     if (mouseOver || Electron.orbitState.mouseOver) {
+  //     if (mouseOver || App.orbitState.mouseOver) {
   //       return
   //     }
   //     // wait a bit
@@ -113,31 +116,29 @@ export default class AppReactions {
   hideOrbitOnMouseOut = [
     () => [
       !App.state.orbitHidden,
-      Electron.orbitState.mouseOver || Electron.peekState.mouseOver,
+      App.orbitState.mouseOver || Electron.peekState.mouseOver,
       // react to peek closing to see if app should too
       App.state.peekTarget,
     ],
     async ([isShown, mouseOver, peekTarget], { sleep }) => {
       if (!isShown) {
-        return
+        throw react.cancel
       }
       const peekGoingAway =
-        Electron.orbitState.mouseOver &&
-        !Electron.orbitState.mouseOver &&
-        !peekTarget
+        App.orbitState.mouseOver && !App.orbitState.mouseOver && !peekTarget
       if (mouseOver && !peekGoingAway) {
-        return
+        throw react.cancel
       }
       // some leeway on mouse leave
       await sleep(150)
       if (Desktop.isHoldingOption || App.isAnimatingOrbit) {
-        return
+        throw react.cancel
       }
-      if (Electron.orbitState.pinned || Electron.orbitState.fullScreen) {
-        return
+      if (App.orbitState.pinned || App.orbitState.fullScreen) {
+        throw react.cancel
       }
-      if (Electron.orbitState.dockedPinned) {
-        return
+      if (App.dockedState.pinned) {
+        throw react.cancel
       }
       console.log(`hiding orbit from mouseout`)
       App.setOrbitHidden(true)
@@ -149,11 +150,40 @@ export default class AppReactions {
     () => App.hoveredWordName,
     async (word, { sleep }) => {
       if (Desktop.isHoldingOption) {
-        return
+        throw react.cancel
       }
       const orbitHidden = !word
       await sleep(orbitHidden ? 50 : 500)
       App.setOrbitHidden(orbitHidden)
+    },
+  ]
+
+  @react({ fireImmediately: true })
+  repositioningFromAppState = [
+    () => [appTarget(Desktop.appState || {}), Desktop.linesBoundingBox],
+    ([appBB, linesBB]) => {
+      if (App.dockState.pinned) {
+        throw react.cancel
+      }
+      // prefer using lines bounding box, fall back to app
+      const box = linesBB || appBB
+      if (!box) {
+        throw react.cancel
+      }
+      let { position, size, orbitOnLeft, orbitDocked } = orbitPosition(box)
+      if (linesBB) {
+        // add padding
+        position[0] += orbitOnLeft ? -SCREEN_PAD : SCREEN_PAD
+      } else {
+        // remove padding
+        position[0] += orbitOnLeft ? SCREEN_PAD : -SCREEN_PAD
+      }
+      App.setOrbitState({
+        position,
+        size,
+        orbitOnLeft,
+        orbitDocked,
+      })
     },
   ]
 }

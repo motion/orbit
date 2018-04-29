@@ -87,7 +87,7 @@ export default class WindowFocusStore {
 
   @react
   focusOnPinned = [
-    () => Electron.orbitState.dockedPinned || Electron.orbitState.pinned,
+    () => App.dockState.pinned || Electron.orbitState.pinned,
     async (pinned, { sleep, when }) => {
       if (!pinned) {
         Swift.defocus()

@@ -26,14 +26,6 @@ class ElectronStore {
 
   state = {
     settingsPosition: [], // todo: settingsState.position
-    orbitState: {
-      mouseOver: false,
-      pinned: false,
-      fullScreen: false,
-      orbitOnLeft: false,
-      position: [],
-      size: [],
-    },
     peekState: {
       mouseOver: false,
       peekOnLeft: false,
@@ -68,13 +60,6 @@ class ElectronStore {
 
   get orbitArrowTowards() {
     return Electron.orbitState.orbitOnLeft ? 'right' : 'left'
-  }
-
-  get orbitOnLeft() {
-    if (Electron.orbitState.orbitDocked) {
-      return true
-    }
-    return Electron.orbitState.orbitOnLeft
   }
 }
 

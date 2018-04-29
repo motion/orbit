@@ -5,7 +5,7 @@ import OrbitFrame from './orbitFrame'
 import OrbitHome from './orbitHome'
 import OrbitSettings from './orbitSettings'
 import OrbitHeader from './orbitHeader'
-import { App, Electron } from '@mcro/all'
+import { App } from '@mcro/all'
 
 @UI.injectTheme
 @view.attach('appStore')
@@ -19,7 +19,7 @@ export default class OrbitDocked {
           headerBg={headerBg}
           orbitPage={orbitPage}
           shouldShow={() =>
-            App.isShowingOrbit && Electron.orbitState.dockedPinned
+            App.isShowingOrbit && App.dockState.pinned
           }
         >
           <OrbitHeader headerBg={headerBg} />

@@ -45,6 +45,8 @@ class DesktopStore {
     },
     keyboardState: {},
     mouseState: {
+      orbitHovered: false,
+      peekHovered: false,
       mouseDown: null,
       position: { x: 0, y: 0 },
     },

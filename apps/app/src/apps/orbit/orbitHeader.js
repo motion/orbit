@@ -10,9 +10,9 @@ class HeaderStore {
 
   get isShowingHeader() {
     return (
-      Electron.orbitState.fullScreen ||
-      Electron.orbitState.mouseOver ||
-      Electron.orbitState.pinned ||
+      App.orbitState.fullScreen ||
+      App.orbitState.mouseOver ||
+      App.orbitState.pinned ||
       false
     )
   }
@@ -29,7 +29,7 @@ class HeaderStore {
   focusInput = [
     () => [
       App.isFullyShown,
-      Electron.orbitState.pinned,
+      App.orbitState.pinned,
       Electron.isMouseInActiveArea,
     ],
     () => {
@@ -50,7 +50,7 @@ class HeaderStore {
   ]
 
   onClickInput = () => {
-    if (!Electron.orbitState.pinned && Desktop.isHoldingOption) {
+    if (!App.orbitState.pinned && Desktop.isHoldingOption) {
       App.togglePinned()
     }
   }
@@ -76,14 +76,14 @@ export default class OrbitHeader {
       <orbitHeader
         $headerBg={headerBg}
         $headerVisible={headerStore.isShowingHeader}
-        $headerMouseOver={Electron.orbitState.mouseOver}
+        $headerMouseOver={App.orbitState.mouseOver}
         css={{
           borderTopLeftRadius:
-            !Electron.orbitOnLeft || Electron.orbitState.orbitDocked
+            !App.orbitOnLeft || App.orbitState.orbitDocked
               ? 0
               : Constants.BORDER_RADIUS,
           borderTopRightRadius:
-            Electron.orbitOnLeft || Electron.orbitState.orbitDocker
+            App.orbitOnLeft || App.orbitState.orbitDocked
               ? 0
               : Constants.BORDER_RADIUS,
         }}
@@ -96,8 +96,8 @@ export default class OrbitHeader {
           css={{
             position: 'absolute',
             bottom: 0,
-            right: Electron.orbitOnLeft ? 20 : -1,
-            left: Electron.orbitOnLeft ? -1 : 20,
+            right: App.orbitOnLeft ? 20 : -1,
+            left: App.orbitOnLeft ? -1 : 20,
             height: 1,
             background: `linear-gradient(to right, ${theme.base.background}, ${
               theme.active.background
@@ -106,7 +106,7 @@ export default class OrbitHeader {
             // boxShadow: [
             //   [
             //     'inset',
-            //     Electron.orbitOnLeft ? 1 : -1,
+            //     App.orbitOnLeft ? 1 : -1,
             //     0,
             //     0,
             //     0.5,
@@ -139,21 +139,19 @@ export default class OrbitHeader {
             getRef={headerStore.ref('inputRef').set}
             onClick={headerStore.onClickInput}
           />
-          <inputLn
-            $inputLnOn={Electron.orbitState.mouseOver ? darkerBg : false}
-          />
+          <inputLn $inputLnOn={App.orbitState.mouseOver ? darkerBg : false} />
         </title>
         <ControlButton
-          if={!Electron.orbitState.dockedPinned}
+          if={!App.dockState.pinned}
           onClick={App.togglePinned}
-          borderWidth={Electron.orbitState.pinned ? 0.5 : 2}
+          borderWidth={App.orbitState.pinned ? 0.5 : 2}
           $pinnedIcon
-          $onLeft={Electron.orbitOnLeft}
-          $onRight={!Electron.orbitOnLeft}
-          $isPinned={Electron.orbitState.pinned}
-          background={Electron.orbitState.pinned ? '#7954F9' : 'transparent'}
+          $onLeft={App.orbitOnLeft}
+          $onRight={!App.orbitOnLeft}
+          $isPinned={App.orbitState.pinned}
+          background={App.orbitState.pinned ? '#7954F9' : 'transparent'}
           borderColor={
-            Electron.orbitState.pinned
+            App.orbitState.pinned
               ? null
               : theme.base.background.darken(0.4).desaturate(0.6)
           }

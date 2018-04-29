@@ -20,7 +20,7 @@ export default class Orbit {
           headerBg={headerBg}
           orbitPage={orbitPage}
           shouldShow={() =>
-            App.isShowingOrbit && !Electron.orbitState.dockedPinned
+            App.isShowingOrbit && !App.dockState.pinned
           }
         >
           <OrbitHeader headerBg={headerBg} />

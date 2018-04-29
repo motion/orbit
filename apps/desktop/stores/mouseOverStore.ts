@@ -11,9 +11,11 @@ const isMouseOver = (app, mousePosition) => {
   return withinX && withinY
 }
 
+// one place to track mouse position really closely
+
 @store
 export default class MouseOverReactions {
-  @react({ log: false })
+  @react({ log: 'state' })
   setMouseOvers = [
     () => [
       Desktop.mouseState.position,
@@ -21,7 +23,7 @@ export default class MouseOverReactions {
       App.orbitState.position,
       App.state.peekTarget,
     ],
-    async ([mP, isHidden, orbitPosition, peekTarget], { sleep }) => {
+    async ([mousePos, isHidden, orbitPosition, peekTarget], { sleep }) => {
       if (isHidden) {
         if (Desktop.mouseState.orbitHovered) {
           Desktop.setMouseState({
@@ -34,8 +36,8 @@ export default class MouseOverReactions {
         // TODO: Constants.ORBIT_WIDTH
         const adjX = App.orbitOnLeft ? 313 : 17
         const adjY = 36
-        const withinX = Math.abs(oX - mP.x + adjX) < 6
-        const withinY = Math.abs(oY - mP.y + adjY) < 15
+        const withinX = Math.abs(oX - mousePos.x + adjX) < 6
+        const withinY = Math.abs(oY - mousePos.y + adjY) < 15
         if (withinX && withinY) {
           await sleep(250)
           Desktop.sendMessage(App, App.messages.SHOW)
@@ -43,7 +45,7 @@ export default class MouseOverReactions {
         return
       }
       if (App.orbitState.position) {
-        const mouseOver = isMouseOver(App.orbitState, mP)
+        const mouseOver = isMouseOver(App.orbitState, mousePos)
         // TODO: think we can avoid this check because we do it in Bridge
         if (mouseOver !== Desktop.mouseState.orbitHovered) {
           Desktop.setMouseState({ orbitHovered: false })
@@ -52,7 +54,7 @@ export default class MouseOverReactions {
       if (!peekTarget) {
         Desktop.setMouseState({ peekHovered: false })
       } else {
-        const peekHovered = isMouseOver(Electron.peekState, mP)
+        const peekHovered = isMouseOver(Electron.peekState, mousePos)
         if (peekHovered !== Electron.peekState.mouseOver) {
           Desktop.setMouseState({ peekHovered })
         }

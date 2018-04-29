@@ -8,15 +8,6 @@ import ControlButton from '~/views/controlButton'
 class HeaderStore {
   inputRef = null
 
-  get isShowingHeader() {
-    return (
-      App.orbitState.fullScreen ||
-      Desktop.mouseState.orbitHovered ||
-      App.orbitState.pinned ||
-      false
-    )
-  }
-
   hover = () => {
     this.inputRef.focus()
   }
@@ -27,11 +18,7 @@ class HeaderStore {
 
   @react({ fireImmediately: true, delay: 32 })
   focusInput = [
-    () => [
-      App.isFullyShown,
-      App.orbitState.pinned,
-      App.isMouseInActiveArea,
-    ],
+    () => [App.isFullyShown, App.orbitState.pinned, App.isMouseInActiveArea],
     () => {
       if (!this.inputRef) {
         throw react.cancel
@@ -75,7 +62,6 @@ export default class OrbitHeader {
     return (
       <orbitHeader
         $headerBg={headerBg}
-        $headerVisible={headerStore.isShowingHeader}
         $headerMouseOver={Desktop.mouseState.orbitHovered}
         css={{
           borderTopLeftRadius:
@@ -139,7 +125,9 @@ export default class OrbitHeader {
             getRef={headerStore.ref('inputRef').set}
             onClick={headerStore.onClickInput}
           />
-          <inputLn $inputLnOn={Desktop.mouseState.orbitHovered ? darkerBg : false} />
+          <inputLn
+            $inputLnOn={Desktop.mouseState.orbitHovered ? darkerBg : false}
+          />
         </title>
         <ControlButton
           if={!App.dockState.pinned}
@@ -178,9 +166,6 @@ export default class OrbitHeader {
       '&:hover': {
         opacity: 1,
       },
-    },
-    headerVisible: {
-      transform: { y: 0 },
     },
     headerMouseOver: {
       opacity: 1,

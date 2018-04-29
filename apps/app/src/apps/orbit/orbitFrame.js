@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { App, Electron } from '@mcro/all'
+import { App } from '@mcro/all'
 import * as Constants from '~/constants'
 import { ORBIT_WIDTH } from '@mcro/constants'
 import OrbitArrow from './orbitArrow'
@@ -52,14 +52,15 @@ export default class OrbitFrame {
     if (!size.length) {
       return null
     }
-    const { orbitOnLeft } = Electron
+    const { orbitOnLeft } = App
     const borderColor = theme.base.background.darken(0.25).desaturate(0.6)
     const borderShadow = ['inset', 0, 0, 0, 0.5, borderColor]
     const background = theme.base.background
     const borderLeftRadius =
       !orbitOnLeft || orbitDocked ? 0 : Constants.BORDER_RADIUS
-    const borderRightRadius =
-      orbitDocked ? 0 : orbitOnLeft ? 0 : Constants.BORDER_RADIUS
+    const borderRightRadius = orbitDocked
+      ? 0
+      : orbitOnLeft ? 0 : Constants.BORDER_RADIUS
     const orbitLightShadow = [
       [orbitOnLeft ? -15 : 15, 4, 35, 0, [0, 0, 0, 0.05]],
     ]

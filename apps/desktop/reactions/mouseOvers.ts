@@ -1,5 +1,5 @@
 import { store, react } from '@mcro/black/store'
-import { App, Desktopm Electron } from '@mcro/all'
+import { App, Desktop, Electron } from '@mcro/all'
 
 const isMouseOver = (app, mousePosition) => {
   if (!app || !mousePosition) return false
@@ -17,7 +17,7 @@ export default class MouseOverReactions {
   setMouseOvers = [
     () => [
       Desktop.mouseState.position,
-      App.state.orbitHidden,
+      App.orbitState.hidden,
       App.orbitState.position,
       App.state.peekTarget,
     ],

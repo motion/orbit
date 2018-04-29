@@ -11,7 +11,7 @@ const log = debug('ElectronReactions')
 export default class ElectronReactions {
   onShortcut = async shortcut => {
     if (shortcut === 'CommandOrControl+Space') {
-      if (App.state.orbitHidden) {
+      if (App.orbitState.hidden) {
         Electron.sendMessage(App, App.messages.SHOW_DOCKED)
       } else {
         Electron.sendMessage(App, App.messages.HIDE_DOCKED)
@@ -19,9 +19,9 @@ export default class ElectronReactions {
       return
     }
     if (shortcut === 'Option+Space') {
-      if (App.state.orbitHidden) {
+      if (App.orbitState.hidden) {
         this.toggleVisible()
-        this.updatePinned(true)
+        Electron.sendMessage(App, App.messages.PIN)
         return
       }
       if (App.orbitState.pinned) {
@@ -36,7 +36,7 @@ export default class ElectronReactions {
   }
 
   toggleVisible = () => {
-    if (App.state.orbitHidden) {
+    if (App.orbitState.hidden) {
       Electron.sendMessage(App, App.messages.HIDE)
     } else {
       Electron.sendMessage(App, App.messages.SHOW)
@@ -46,43 +46,6 @@ export default class ElectronReactions {
   togglePinned = () => {
     Electron.sendMessage(App, App.messages.TOGGLE_PINNED)
   }
-
-  @react
-  unPinOnHidden = [
-    () => App.isFullyHidden,
-    hidden => {
-      if (!hidden) {
-        throw react.cancel
-      }
-      this.updatePinned(false)
-    },
-  ]
-
-  // one source of truth
-  // since electron needs to do stuff
-  // it handles it here primarily
-
-  @react
-  handleHoldingOption = [
-    () => Desktop.isHoldingOption,
-    async (isHoldingOption, { sleep }) => {
-      if (App.orbitState.pinned || App.dockState.pinned) {
-        throw react.cancel
-      }
-      if (!isHoldingOption) {
-        if (!App.orbitState.pinned && App.isMouseInActiveArea) {
-          log('prevent hide while mouseover after release hold')
-          throw react.cancel
-        }
-        Electron.sendMessage(App, App.messages.HIDE)
-        throw react.cancel
-      }
-      await sleep(140)
-      Electron.sendMessage(App, App.messages.SHOW)
-      // await sleep(3500)
-      // this.updatePinned(true)
-    },
-  ]
 
   @react({ fireImmediately: true })
   peekPosition = [

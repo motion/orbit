@@ -37,6 +37,7 @@ class AppStore {
   state = {
     query: '',
     orbitState: {
+      hidden: true,
       pinned: false,
       fullScreen: false,
       orbitOnLeft: false,
@@ -55,7 +56,6 @@ class AppStore {
     hoveredWord: null,
     hoveredLine: null,
     contextMessage: 'Orbit',
-    orbitHidden: true,
     peekTarget: null,
   }
 
@@ -63,7 +63,7 @@ class AppStore {
     if (Constants.FORCE_FULLSCREEN) {
       return true
     }
-    return !App.state.orbitHidden
+    return !App.orbitState.hidden
   }
 
   get isShowingPeek() {
@@ -134,7 +134,7 @@ class AppStore {
   }
 
   get aboutToShow() {
-    return App.isAnimatingOrbit && App.state.orbitHidden
+    return App.isAnimatingOrbit && App.orbitState.hidden
   }
 
   start = options => {
@@ -155,7 +155,7 @@ class AppStore {
 
   open = async url => {
     App.sendMessage(Desktop, Desktop.messages.OPEN, url)
-    App.setOrbitHidden(true)
+    App.setOrbitState({ hidden: true })
   }
 
   togglePinned = () => {
@@ -167,7 +167,7 @@ class AppStore {
   }
 
   toggleHidden = () => {
-    App.setState({ orbitHidden: !App.state.orbitHidden })
+    App.setOrbitState({ hidden: !App.orbitState.hidden })
   }
 
   openSettings = () => {

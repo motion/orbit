@@ -324,7 +324,7 @@ class Bridge {
 
   sendMessage = async (Store: any, ogMessage: string, value: string) => {
     if (!Store || !ogMessage) {
-      throw `no store || message`
+      throw `no store || message ${Store} ${ogMessage} ${value}`
     }
     const message = value
       ? `${ogMessage}${MESSAGE_SPLIT_VAL}${value}`

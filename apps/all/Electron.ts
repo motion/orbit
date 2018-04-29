@@ -25,11 +25,6 @@ class ElectronStore {
 
   state = {
     settingsPosition: [], // todo: settingsState.position
-    peekState: {
-      peekOnLeft: false,
-      position: [],
-      size: [],
-    },
     showDevTools: {
       orbit: false,
       peek: false,

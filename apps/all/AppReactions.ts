@@ -1,9 +1,11 @@
 import { store, react } from '@mcro/black/store'
 // import * as Constants from '@mcro/constants'
 import { Desktop } from './Desktop'
-import { Electron } from './Electron'
 import { App } from './App'
 import orbitPosition from './helpers/orbitPosition'
+import debug from '@mcro/debug'
+
+const log = debug('AppReactions')
 
 // todo: move this reaction stuff into specialized sub-stores of appstore
 // prevents hard restarts
@@ -58,7 +60,7 @@ export default class AppReactions {
   }
 
   toggle() {
-    if (App.state.orbitHidden) {
+    if (App.orbitState.hidden) {
       this.show()
     } else {
       this.hide()
@@ -66,7 +68,7 @@ export default class AppReactions {
   }
 
   show() {
-    App.setOrbitHidden(false)
+    App.setOrbitState({ hidden: false })
   }
 
   async hide() {
@@ -74,8 +76,30 @@ export default class AppReactions {
       App.setPeekTarget(null)
       await new Promise(res => setTimeout(res, 80)) // sleep 80
     }
-    App.setOrbitHidden(true)
+    App.setOrbitState({ hidden: true })
   }
+
+  @react
+  handleHoldingOption = [
+    () => Desktop.isHoldingOption,
+    async (isHoldingOption, { sleep }) => {
+      if (App.orbitState.pinned || App.dockState.pinned) {
+        throw react.cancel
+      }
+      if (!isHoldingOption) {
+        if (!App.orbitState.pinned && App.isMouseInActiveArea) {
+          log('prevent hide while mouseover after release hold')
+          throw react.cancel
+        }
+        App.setOrbitState({ hidden: true })
+        throw react.cancel
+      }
+      await sleep(140)
+      App.setOrbitState({ hidden: false })
+      // await sleep(3500)
+      // this.updatePinned(true)
+    },
+  ]
 
   @react({ log: 'state' })
   clearPeekTargetOnOrbitClose = [
@@ -93,10 +117,21 @@ export default class AppReactions {
     () => App.orbitState.pinned,
     pinned => {
       if (pinned) {
-        App.setOrbitHidden(false)
+        App.setOrbitState({ hidden: false })
       } else {
-        App.setOrbitHidden(true)
+        App.setOrbitState({ hidden: true })
       }
+    },
+  ]
+
+  @react
+  unPinOnHidden = [
+    () => App.isFullyHidden,
+    hidden => {
+      if (!hidden) {
+        throw react.cancel
+      }
+      App.setOrbitState({ pinned: false })
     },
   ]
 
@@ -109,9 +144,9 @@ export default class AppReactions {
   // disabled during testing, reenable
   // @react
   // clearPeekOnMouseOut = [
-  //   () => Electron.peekState.mouseOver,
+  //   () => Desktop.mouseState.peekHovered,
   //   async (mouseOver, { sleep }) => {
-  //     if (mouseOver || App.orbitState.mouseOver) {
+  //     if (mouseOver || Desktop.mouseState.orbitHovered) {
   //       return
   //     }
   //     // wait a bit
@@ -125,12 +160,12 @@ export default class AppReactions {
   })
   hideOrbitOnMouseOut = [
     () => [
-      !App.state.orbitHidden,
+      !App.orbitState.hidden,
       Desktop.mouseState.orbitHovered || Desktop.mouseState.peekHovered,
       // react to peek closing to see if app should too
       App.state.peekTarget,
     ],
-    async ([isShown, mouseOver, peekTarget], { sleep }) => {
+    async ([isShown, mouseOver], { sleep }) => {
       if (!isShown) {
         throw react.cancel
       }
@@ -149,7 +184,7 @@ export default class AppReactions {
         throw react.cancel
       }
       console.log(`hiding orbit from mouseout`)
-      App.setOrbitHidden(true)
+      App.setOrbitState({ hidden: true })
     },
   ]
 
@@ -160,9 +195,9 @@ export default class AppReactions {
       if (Desktop.isHoldingOption) {
         throw react.cancel
       }
-      const orbitHidden = !word
-      await sleep(orbitHidden ? 50 : 500)
-      App.setOrbitHidden(orbitHidden)
+      const hidden = !word
+      await sleep(hidden ? 50 : 500)
+      App.setOrbitState({ hidden })
     },
   ]
 

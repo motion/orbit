@@ -18,9 +18,7 @@ export default class OrbitDocked {
         <OrbitFrame
           headerBg={headerBg}
           orbitPage={orbitPage}
-          shouldShow={() =>
-            App.isShowingOrbit && App.dockState.pinned
-          }
+          shouldShow={() => App.dockState.pinned}
         >
           <OrbitHeader headerBg={headerBg} />
           <orbitInner>

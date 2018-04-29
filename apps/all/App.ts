@@ -15,8 +15,7 @@ const isOrbit = isBrowser && window.location.pathname === '/orbit'
 @store
 class AppStore {
   messages = {
-    SHOW_DOCKED: 'SHOW_DOCKED',
-    HIDE_DOCKED: 'HIDE_DOCKED',
+    TOGGLE_DOCKED: 'TOGGLE_DOCKED',
     TOGGLE_SHOWN: 'TOGGLE_SHOWN',
     SHOW: 'SHOW',
     HIDE: 'HIDE',
@@ -30,7 +29,6 @@ class AppStore {
   sendMessage: typeof Bridge.sendMessage
   onMessage: typeof Bridge.onMessage
   bridge: any
-  reactions: AppReactions
   source = 'App'
 
   state = {

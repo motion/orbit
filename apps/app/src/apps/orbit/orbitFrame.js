@@ -48,7 +48,8 @@ export default class OrbitFrame {
   }
 
   render({ store, children, theme, headerBg }) {
-    const { orbitDocked, position, size } = App.orbitState
+    const orbitDocked = App.dockState.pinned
+    const { position, size } = App.orbitState
     if (!size.length) {
       return null
     }

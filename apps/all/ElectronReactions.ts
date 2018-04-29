@@ -9,11 +9,7 @@ const log = debug('ElectronReactions')
 export default class ElectronReactions {
   onShortcut = async shortcut => {
     if (shortcut === 'CommandOrControl+Space') {
-      if (App.orbitState.hidden) {
-        Electron.sendMessage(App, App.messages.SHOW_DOCKED)
-      } else {
-        Electron.sendMessage(App, App.messages.HIDE_DOCKED)
-      }
+      Electron.sendMessage(App, App.messages.TOGGLE_DOCKED)
       return
     }
     if (shortcut === 'Option+Space') {

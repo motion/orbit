@@ -22,11 +22,8 @@ export default class AppReactions {
         case App.messages.TOGGLE_SHOWN:
           this.toggle()
           return
-        case App.messages.SHOW_DOCKED:
-          App.setDockState({ pinned: true })
-          return
-        case App.messages.SHOW_DOCKED:
-          App.setDockState({ pinned: false })
+        case App.messages.TOGGLE_DOCKED:
+          App.setDockState({ pinned: !App.dockState.pinned })
           return
         case App.messages.HIDE:
           this.hide()
@@ -200,10 +197,6 @@ export default class AppReactions {
   repositioningFromAppState = [
     () => [appTarget(Desktop.appState || {}), Desktop.linesBoundingBox],
     ([appBB, linesBB]) => {
-      log(`hiiiiiiiiiiiiiii`)
-      if (App.dockState.pinned) {
-        throw react.cancel
-      }
       // prefer using lines bounding box, fall back to app
       const box = linesBB || appBB
       if (!box) {

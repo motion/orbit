@@ -1,5 +1,5 @@
 import { store, react } from '@mcro/black/store'
-import { App, Desktop, Electron } from '@mcro/all'
+import { App, Desktop } from '@mcro/all'
 
 const isMouseOver = (app, mousePosition) => {
   if (!app || !mousePosition) return false
@@ -45,17 +45,17 @@ export default class MouseOverReactions {
         return
       }
       if (App.orbitState.position) {
-        const mouseOver = isMouseOver(App.orbitState, mousePos)
+        const orbitHovered = isMouseOver(App.orbitState, mousePos)
         // TODO: think we can avoid this check because we do it in Bridge
-        if (mouseOver !== Desktop.mouseState.orbitHovered) {
-          Desktop.setMouseState({ orbitHovered: false })
+        if (orbitHovered !== Desktop.mouseState.orbitHovered) {
+          Desktop.setMouseState({ orbitHovered })
         }
       }
       if (!peekTarget) {
         Desktop.setMouseState({ peekHovered: false })
       } else {
-        const peekHovered = isMouseOver(Electron.peekState, mousePos)
-        if (peekHovered !== Electron.peekState.mouseOver) {
+        const peekHovered = isMouseOver(App.peekState, mousePos)
+        if (peekHovered !== App.peekState.mouseOver) {
           Desktop.setMouseState({ peekHovered })
         }
       }

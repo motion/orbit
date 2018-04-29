@@ -200,6 +200,7 @@ export default class AppReactions {
   repositioningFromAppState = [
     () => [appTarget(Desktop.appState || {}), Desktop.linesBoundingBox],
     ([appBB, linesBB]) => {
+      log(`hiiiiiiiiiiiiiii`)
       if (App.dockState.pinned) {
         throw react.cancel
       }

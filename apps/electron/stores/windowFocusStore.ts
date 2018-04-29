@@ -14,20 +14,6 @@ export default class WindowFocusStore {
     this.orbitRef = ref
   }
 
-  @react
-  unFullScreenOnHide = [
-    () => App.isShowingOrbit,
-    showing => {
-      if (showing) {
-        throw react.cancel
-      }
-      if (Electron.orbitState.fullScreen) {
-        log(`clearing`)
-        this.clear = Date.now()
-      }
-    },
-  ]
-
   keyShortcuts = [
     ...'0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),
     'Delete',
@@ -41,10 +27,6 @@ export default class WindowFocusStore {
       if (down) {
         for (const { key, shortcut } of this.keyShortcuts) {
           globalShortcut.register(shortcut, async () => {
-            // PIN
-            if (!Electron.orbitState.pinned) {
-              Electron.setOrbitState({ pinned: true })
-            }
             // TYPE THE KEY
             Electron.sendMessage(App, `${App.messages.PIN}-${key}`)
             // FOCUS
@@ -69,25 +51,12 @@ export default class WindowFocusStore {
 
   focusOrbit = () => {
     if (!this.orbitRef) return
-    if (Electron.orbitState.fullScreen) return
     this.orbitRef.focus()
   }
 
   @react
-  watchFullScreenForFocus = [
-    () => Electron.orbitState.fullScreen,
-    fullScreen => {
-      if (fullScreen) {
-        this.focusOrbit()
-      } else {
-        Swift.defocus()
-      }
-    },
-  ]
-
-  @react
   focusOnPinned = [
-    () => App.dockState.pinned || Electron.orbitState.pinned,
+    () => App.dockState.pinned || App.orbitState.pinned,
     async (pinned, { sleep, when }) => {
       if (!pinned) {
         Swift.defocus()
@@ -101,9 +70,9 @@ export default class WindowFocusStore {
 
   @react({ delay: App.animationDuration, log: 'state' })
   defocusAfterClosing = [
-    () => [Electron.orbitState.pinned, App.isShowingOrbit],
+    () => [App.orbitState.pinned, App.isShowingOrbit],
     ([pinned, showing]) => {
-      if (pinned || showing || Electron.orbitState.mouseOver) {
+      if (pinned || showing || Desktop.mouseState.orbitHovered) {
         throw react.cancel
       }
       Swift.defocus()
@@ -112,16 +81,13 @@ export default class WindowFocusStore {
 
   @react
   focusOnMouseOver = [
-    () => Electron.isMouseInActiveArea,
+    () => App.isMouseInActiveArea,
     mouseOver => {
       if (!App.isShowingOrbit) {
-        return
+        throw react.cancel
       }
-      if (Electron.orbitState.fullScreen) {
-        return
-      }
-      if (Electron.orbitState.pinned) {
-        return
+      if (App.orbitState.pinned) {
+        throw react.cancel
       }
       if (mouseOver) {
         this.focusOrbit()

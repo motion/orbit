@@ -57,7 +57,7 @@ export default class PeekFrame {
       return null
     }
     const isHidden = !state
-    const { orbitDocked, orbitOnLeft } = Electron.orbitState
+    const { orbitDocked, orbitOnLeft } = App.orbitState
     const onRight = !state.peekOnLeft
     const padding = [
       SHADOW_PAD,

@@ -92,7 +92,7 @@ export default class AppStore {
   get innerHeight() {
     const HEADER_HEIGHT = 90
     return (
-      Electron.orbitState.size[1] - Constants.SHADOW_PAD * 2 - HEADER_HEIGHT
+      App.orbitState.size[1] - Constants.SHADOW_PAD * 2 - HEADER_HEIGHT
     )
   }
 
@@ -287,7 +287,7 @@ export default class AppStore {
     const ref = this.resultRefs[index]
     let height = 60
     let top = Math.max(
-      Electron.orbitState.position[1] + 100,
+      App.orbitState.position[1] + 100,
       Desktop.mouseState.position.y - 200,
     )
     if (ref) {
@@ -295,14 +295,14 @@ export default class AppStore {
     }
     return {
       top,
-      left: Electron.orbitState.position[0],
-      width: Electron.orbitState.size[0],
+      left: App.orbitState.position[0],
+      width: App.orbitState.size[0],
       height,
     }
   }
 
   clearSelected = () => {
-    if (!Electron.isMouseInActiveArea) {
+    if (!App.isMouseInActiveArea) {
       App.setPeekTarget(null)
     }
   }
@@ -323,14 +323,14 @@ export default class AppStore {
       return
     }
     if (target) {
-      if (!Electron.orbitState.position) {
+      if (!App.orbitState.position) {
         return
       }
       const { top, width, height } = target
       const position = {
         // add orbits offset
-        left: Electron.orbitState.position[0],
-        top: top + Electron.orbitState.position[1],
+        left: App.orbitState.position[0],
+        top: top + App.orbitState.position[1],
         width,
         height,
       }
@@ -444,7 +444,7 @@ export default class AppStore {
   toggleSettings = () => {
     this.showSettings = !this.showSettings
     // pin if not pinned
-    if (this.showSettings && !Electron.orbitState.pinned) {
+    if (this.showSettings && !App.orbitState.pinned) {
       App.sendMessage(Electron, Electron.messages.TOGGLE_PINNED)
     }
   }

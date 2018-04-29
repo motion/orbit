@@ -12,7 +12,6 @@ export let Electron
 class ElectronStore {
   messages = {
     CLEAR: 'CLEAR',
-    TOGGLE_PINNED: 'TOGGLE_PINNED',
   }
 
   setState: typeof Bridge.setState
@@ -27,7 +26,6 @@ class ElectronStore {
   state = {
     settingsPosition: [], // todo: settingsState.position
     peekState: {
-      mouseOver: false,
       peekOnLeft: false,
       position: [],
       size: [],
@@ -39,16 +37,6 @@ class ElectronStore {
     },
   }
 
-  // runs in every app independently
-  @react({ fireImmediately: true, log: false })
-  isMouseInActiveArea = [
-    () => !!(Electron.orbitState.mouseOver || Electron.peekState.mouseOver),
-    async (over, { sleep, setValue }) => {
-      await sleep(over ? 0 : 100)
-      setValue(over)
-    },
-  ]
-
   start = options => {
     Bridge.start(this, this.state, options)
     this.setState = Bridge.setState
@@ -56,10 +44,6 @@ class ElectronStore {
     this.onMessage = Bridge.onMessage
     const ElectronReactions = eval(`require('./ElectronReactions')`).default
     this.reactions = new ElectronReactions()
-  }
-
-  get orbitArrowTowards() {
-    return Electron.orbitState.orbitOnLeft ? 'right' : 'left'
   }
 }
 

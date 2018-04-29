@@ -51,12 +51,12 @@ export default class KeyboardStore {
       if (keycode === codes.esc) {
         if (
           App.state.peekTarget &&
-          (Electron.isMouseInActiveArea || Desktop.state.focusedOnOrbit)
+          (App.isMouseInActiveArea || Desktop.state.focusedOnOrbit)
         ) {
           Desktop.sendMessage(App, App.messages.HIDE_PEEK)
           return
         }
-        if (Desktop.state.focusedOnOrbit || Electron.orbitState.mouseOver) {
+        if (Desktop.state.focusedOnOrbit || Desktop.mouseState.orbitHovered) {
           Desktop.sendMessage(App, App.messages.HIDE)
         }
         return

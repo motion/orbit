@@ -9,15 +9,6 @@ const log = debug('ElectronReactions')
 
 @store
 export default class ElectronReactions {
-  constructor() {
-    Electron.onMessage(msg => {
-      switch (msg) {
-        case Electron.messages.TOGGLE_PINNED:
-          this.togglePinned()
-      }
-    })
-  }
-
   onShortcut = async shortcut => {
     if (shortcut === 'CommandOrControl+Space') {
       if (App.state.orbitHidden) {
@@ -33,7 +24,7 @@ export default class ElectronReactions {
         this.updatePinned(true)
         return
       }
-      if (Electron.orbitState.pinned) {
+      if (App.orbitState.pinned) {
         this.togglePinned()
         this.toggleVisible()
         return
@@ -53,11 +44,7 @@ export default class ElectronReactions {
   }
 
   togglePinned = () => {
-    this.updatePinned(!Electron.orbitState.pinned)
-  }
-
-  updatePinned = pinned => {
-    Electron.setOrbitState({ pinned })
+    Electron.sendMessage(App, App.messages.TOGGLE_PINNED)
   }
 
   @react
@@ -79,11 +66,11 @@ export default class ElectronReactions {
   handleHoldingOption = [
     () => Desktop.isHoldingOption,
     async (isHoldingOption, { sleep }) => {
-      if (Electron.orbitState.pinned || App.dockState.pinned) {
+      if (App.orbitState.pinned || App.dockState.pinned) {
         throw react.cancel
       }
       if (!isHoldingOption) {
-        if (!Electron.orbitState.pinned && Electron.isMouseInActiveArea) {
+        if (!App.orbitState.pinned && App.isMouseInActiveArea) {
           log('prevent hide while mouseover after release hold')
           throw react.cancel
         }
@@ -106,7 +93,7 @@ export default class ElectronReactions {
       }
       Electron.setPeekState({
         id: Math.random(),
-        ...peekPosition(peekTarget.position, Electron),
+        ...peekPosition(peekTarget.position, App),
       })
     },
   ]

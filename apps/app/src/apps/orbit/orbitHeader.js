@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { App, Desktop, Electron } from '@mcro/all'
+import { App, Desktop } from '@mcro/all'
 import * as Constants from '~/constants'
 import ControlButton from '~/views/controlButton'
 
@@ -11,7 +11,7 @@ class HeaderStore {
   get isShowingHeader() {
     return (
       App.orbitState.fullScreen ||
-      App.orbitState.mouseOver ||
+      Desktop.mouseState.orbitHovered ||
       App.orbitState.pinned ||
       false
     )
@@ -30,7 +30,7 @@ class HeaderStore {
     () => [
       App.isFullyShown,
       App.orbitState.pinned,
-      Electron.isMouseInActiveArea,
+      App.isMouseInActiveArea,
     ],
     () => {
       if (!this.inputRef) {
@@ -76,7 +76,7 @@ export default class OrbitHeader {
       <orbitHeader
         $headerBg={headerBg}
         $headerVisible={headerStore.isShowingHeader}
-        $headerMouseOver={App.orbitState.mouseOver}
+        $headerMouseOver={Desktop.mouseState.orbitHovered}
         css={{
           borderTopLeftRadius:
             !App.orbitOnLeft || App.orbitState.orbitDocked
@@ -139,7 +139,7 @@ export default class OrbitHeader {
             getRef={headerStore.ref('inputRef').set}
             onClick={headerStore.onClickInput}
           />
-          <inputLn $inputLnOn={App.orbitState.mouseOver ? darkerBg : false} />
+          <inputLn $inputLnOn={Desktop.mouseState.orbitHovered ? darkerBg : false} />
         </title>
         <ControlButton
           if={!App.dockState.pinned}

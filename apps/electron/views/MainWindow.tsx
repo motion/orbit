@@ -3,11 +3,11 @@ import * as Constants from '~/constants'
 import { view } from '@mcro/black'
 import { Window } from '@mcro/reactron'
 import * as Helpers from '~/helpers'
-import { Electron } from '@mcro/all'
+import { Electron, Desktop } from '@mcro/all'
 
 class MainStore {
   get mouseInActiveArea() {
-    return Electron.peekState.mouseOver || Electron.orbitState.mouseOver
+    return Desktop.mouseState.peekHovered || Desktop.mouseState.orbitHovered
   }
 }
 

@@ -23,6 +23,8 @@ class AppStore {
     HIDE: 'HIDE',
     HIDE_PEEK: 'HIDE_PEEK',
     PIN: 'PIN',
+    UNPIN: 'UNPIN',
+    TOGGLE_PINNED: 'TOGGLE_PINNED',
   }
 
   setState: typeof Bridge.setState
@@ -35,7 +37,6 @@ class AppStore {
   state = {
     query: '',
     orbitState: {
-      mouseOver: false,
       pinned: false,
       fullScreen: false,
       orbitOnLeft: false,
@@ -88,6 +89,16 @@ class AppStore {
   @react({ delay: 32, log: isOrbit })
   isFullyShown = [() => App.isShowingOrbit && !App.isAnimatingOrbit, _ => _]
 
+  // runs in every app independently
+  @react({ fireImmediately: true, log: false })
+  isMouseInActiveArea = [
+    () => !!(Desktop.mouseState.orbitHovered || Desktop.mouseState.peekHovered),
+    async (over, { sleep, setValue }) => {
+      await sleep(over ? 0 : 100)
+      setValue(over)
+    },
+  ]
+
   last: Boolean
 
   @react({ log: false })
@@ -108,6 +119,10 @@ class AppStore {
       return true
     }
     return App.orbitState.orbitOnLeft
+  }
+
+  get orbitArrowTowards() {
+    return App.orbitState.orbitOnLeft ? 'right' : 'left'
   }
 
   get isAttachedToWindow() {

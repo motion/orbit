@@ -5,10 +5,10 @@ const SHADOW_PAD = 15
 const EDGE_PAD = 20
 const TOP_OFFSET = -20
 
-export default function peekPosition(target, Electron) {
+export default function peekPosition(target, App) {
   const [screenW, screenH] = screenSize()
-  const { orbitOnLeft } = Electron
-  const [width] = Electron.orbitState.size
+  const { orbitOnLeft } = App
+  const [width] = App.orbitState.size
   const { left, top } = target
   const leftSpace = left
   const rightSpace = screenW - (left + width)

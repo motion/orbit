@@ -84,7 +84,7 @@ class ElectronStore {
   // focus on pinned
   @react({ delay: App.animationDuration })
   focusOnPin = [
-    () => Electron.orbitState.pinned,
+    () => App.orbitState.pinned,
     pinned => {
       // only focus on option+space
       if (Electron.lastAction !== 'Option+Space') {

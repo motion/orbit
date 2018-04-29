@@ -39,9 +39,19 @@ export default class AppReactions {
           return
         case App.messages.HIDE_PEEK:
           return App.setPeekTarget(null)
+        case App.messages.PIN:
+          App.setOrbitState({ pinned: true })
+          return
+        case App.messages.UNPIN:
+          App.setOrbitState({ pinned: false })
+          return
+        case App.messages.TOGGLE_PINNED:
+          App.setOrbitState({ pinned: !App.orbitState.pinned })
+          return
       }
       if (msg.indexOf(App.messages.PIN) === 0) {
         const key = msg.split('-')[1]
+        App.setOrbitState({ pinned: true })
         onPinKey(key.toLowerCase())
       }
     })
@@ -116,7 +126,7 @@ export default class AppReactions {
   hideOrbitOnMouseOut = [
     () => [
       !App.state.orbitHidden,
-      App.orbitState.mouseOver || Electron.peekState.mouseOver,
+      Desktop.mouseState.orbitHovered || Desktop.mouseState.peekHovered,
       // react to peek closing to see if app should too
       App.state.peekTarget,
     ],
@@ -124,9 +134,7 @@ export default class AppReactions {
       if (!isShown) {
         throw react.cancel
       }
-      const peekGoingAway =
-        App.orbitState.mouseOver && !App.orbitState.mouseOver && !peekTarget
-      if (mouseOver && !peekGoingAway) {
+      if (mouseOver) {
         throw react.cancel
       }
       // some leeway on mouse leave

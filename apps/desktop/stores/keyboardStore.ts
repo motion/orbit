@@ -56,7 +56,7 @@ export default class KeyboardStore {
           Desktop.sendMessage(App, App.messages.HIDE_PEEK)
           return
         }
-        if (Desktop.state.focusedOnOrbit || Desktop.mouseState.orbitHovered) {
+        if (Desktop.state.focusedOnOrbit || Desktop.hoverState.orbitHovered) {
           Desktop.sendMessage(App, App.messages.HIDE)
         }
         return

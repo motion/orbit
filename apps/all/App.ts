@@ -85,7 +85,7 @@ class AppStore {
   // runs in every app independently
   @react({ fireImmediately: true, log: false })
   isMouseInActiveArea = [
-    () => !!(Desktop.mouseState.orbitHovered || Desktop.mouseState.peekHovered),
+    () => !!(Desktop.hoverState.orbitHovered || Desktop.hoverState.peekHovered),
     async (over, { sleep, setValue }) => {
       await sleep(over ? 0 : 100)
       setValue(over)

@@ -27,15 +27,15 @@ export default class MouseOverReactions {
     async ([mousePos, isHidden, orbitPosition, peekTarget], { sleep }) => {
       if (App.orbitState.docked) {
         if (mousePos.x > App.state.screenSize[0] - App.dockedWidth) {
-          Desktop.setMouseState({ orbitHovered: true })
+          Desktop.setHoverState({ orbitHovered: true })
         } else {
-          Desktop.setMouseState({ orbitHovered: false })
+          Desktop.setHoverState({ orbitHovered: false })
         }
         return
       }
       if (isHidden) {
-        if (Desktop.mouseState.orbitHovered) {
-          Desktop.setMouseState({
+        if (Desktop.hoverState.orbitHovered || Desktop.hoverState.peekHovered) {
+          Desktop.setHoverState({
             orbitHovered: false,
             peekHovered: false,
           })
@@ -56,17 +56,15 @@ export default class MouseOverReactions {
       if (App.orbitState.position) {
         const orbitHovered = isMouseOver(App.orbitState, mousePos)
         // TODO: think we can avoid this check because we do it in Bridge
-        if (orbitHovered !== Desktop.mouseState.orbitHovered) {
-          Desktop.setMouseState({ orbitHovered })
+        if (orbitHovered !== Desktop.hoverState.orbitHovered) {
+          Desktop.setHoverState({ orbitHovered })
         }
       }
-      if (!peekTarget) {
-        Desktop.setMouseState({ peekHovered: false })
-      } else {
-        const peekHovered = isMouseOver(App.peekState, mousePos)
-        if (peekHovered !== App.peekState.mouseOver) {
-          Desktop.setMouseState({ peekHovered })
-        }
+      const peekHovered = !peekTarget
+        ? false
+        : isMouseOver(App.peekState, mousePos)
+      if (peekHovered !== Desktop.hoverState.peekHovered) {
+        Desktop.setHoverState({ peekHovered })
       }
     },
   ]

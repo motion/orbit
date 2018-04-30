@@ -32,6 +32,9 @@ class HeaderStore {
   blurInput = [
     () => App.isFullyHidden,
     () => {
+      if (!this.inputRef) {
+        throw react.cancel
+      }
       this.inputRef.blur()
     },
   ]
@@ -62,7 +65,7 @@ export default class OrbitHeader {
     return (
       <orbitHeader
         $headerBg={headerBg}
-        $headerMouseOver={Desktop.mouseState.orbitHovered}
+        $headerMouseOver={Desktop.hoverState.orbitHovered}
         css={{
           borderTopLeftRadius:
             !App.orbitOnLeft || App.orbitState.orbitDocked
@@ -126,7 +129,7 @@ export default class OrbitHeader {
             onClick={headerStore.onClickInput}
           />
           <inputLn
-            $inputLnOn={Desktop.mouseState.orbitHovered ? darkerBg : false}
+            $inputLnOn={Desktop.hoverState.orbitHovered ? darkerBg : false}
           />
         </title>
         <ControlButton

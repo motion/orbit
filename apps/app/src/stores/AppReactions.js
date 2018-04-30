@@ -136,9 +136,9 @@ export default class AppReactions {
   // disabled during testing, reenable
   // @react
   // clearPeekOnMouseOut = [
-  //   () => Desktop.mouseState.peekHovered,
+  //   () => Desktop.hoverState.peekHovered,
   //   async (mouseOver, { sleep }) => {
-  //     if (mouseOver || Desktop.mouseState.orbitHovered) {
+  //     if (mouseOver || Desktop.hoverState.orbitHovered) {
   //       return
   //     }
   //     // wait a bit
@@ -153,15 +153,13 @@ export default class AppReactions {
   hideOrbitOnMouseOut = [
     () => [
       !App.orbitState.hidden,
-      Desktop.mouseState.orbitHovered || Desktop.mouseState.peekHovered,
+      Desktop.hoverState.orbitHovered || Desktop.hoverState.peekHovered,
       // react to peek closing to see if app should too
       App.state.peekTarget,
     ],
-    async ([isShown, mouseOver], { sleep }) => {
-      if (!isShown) {
-        throw react.cancel
-      }
-      if (mouseOver) {
+    async ([isShown, mouseOver, target], { sleep }) => {
+      console.log(`hideOrbit ${isShown} ${mouseOver} ${target}`)
+      if (!isShown || mouseOver) {
         throw react.cancel
       }
       // some leeway on mouse leave

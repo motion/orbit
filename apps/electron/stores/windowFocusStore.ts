@@ -72,7 +72,7 @@ export default class WindowFocusStore {
   defocusAfterClosing = [
     () => [App.orbitState.pinned, App.isShowingOrbit],
     ([pinned, showing]) => {
-      if (pinned || showing || Desktop.mouseState.orbitHovered) {
+      if (pinned || showing || Desktop.hoverState.orbitHovered) {
         throw react.cancel
       }
       Swift.defocus()

@@ -44,9 +44,11 @@ class DesktopStore {
       pluginResults: [],
     },
     keyboardState: {},
-    mouseState: {
+    hoverState: {
       orbitHovered: false,
       peekHovered: false,
+    },
+    mouseState: {
       mouseDown: null,
       position: { x: 0, y: 0 },
     },

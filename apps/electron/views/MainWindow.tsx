@@ -7,7 +7,7 @@ import { Electron, Desktop } from '@mcro/all'
 
 class MainStore {
   get mouseInActiveArea() {
-    return Desktop.mouseState.peekHovered || Desktop.mouseState.orbitHovered
+    return Desktop.hoverState.peekHovered || Desktop.hoverState.orbitHovered
   }
 }
 

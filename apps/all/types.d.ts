@@ -22,9 +22,11 @@ export type DesktopState = {
   appState?: AppState
   lastScreenChange: number
   lastAppChange: number
-  mouseState: {
+  hoverState: {
     orbitHovered: boolean
     peekHovered: boolean
+  },
+  mouseState: {
     position: { x: number; y: number }
     mouseDown?: { x: number; y: number; at: number }
   }

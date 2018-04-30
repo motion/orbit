@@ -22,8 +22,17 @@ export default class MouseOverReactions {
       App.orbitState.hidden,
       App.orbitState.position,
       App.state.peekTarget,
+      App.orbitState.docked,
     ],
     async ([mousePos, isHidden, orbitPosition, peekTarget], { sleep }) => {
+      if (App.orbitState.docked) {
+        if (mousePos.x > App.state.screenSize[0] - App.dockedWidth) {
+          Desktop.setMouseState({ orbitHovered: true })
+        } else {
+          Desktop.setMouseState({ orbitHovered: false })
+        }
+        return
+      }
       if (isHidden) {
         if (Desktop.mouseState.orbitHovered) {
           Desktop.setMouseState({

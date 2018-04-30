@@ -97,6 +97,9 @@ export default class AppStore {
   }
 
   async willMount() {
+    App.setState({
+      screenSize: [window.innerWidth, window.innerHeight]
+    })
     this.getSettings()
     this.setInterval(this.getSettings, 2000)
     this.setInterval(() => {

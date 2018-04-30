@@ -23,7 +23,7 @@ export default class AppReactions {
           this.toggle()
           return
         case App.messages.TOGGLE_DOCKED:
-          App.setDockState({ pinned: !App.dockState.pinned })
+          App.setOrbitState({ docked: !App.orbitState.docked })
           return
         case App.messages.HIDE:
           this.hide()
@@ -75,7 +75,7 @@ export default class AppReactions {
   handleHoldingOption = [
     () => Desktop.isHoldingOption,
     async (isHoldingOption, { sleep }) => {
-      if (App.orbitState.pinned || App.dockState.pinned) {
+      if (App.orbitState.pinned || App.orbitState.docked) {
         throw react.cancel
       }
       if (!isHoldingOption) {

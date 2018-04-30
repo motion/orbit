@@ -1,5 +1,5 @@
 import { view, react } from '@mcro/black'
-import { Title, SubTitle } from '~/views'
+import { SubTitle } from '~/views'
 import * as UI from '@mcro/ui'
 import OrbitHomeHighlights from './orbitHomeHighlights'
 import { App } from '@mcro/all'

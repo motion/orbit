@@ -1,40 +1,67 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import OrbitFrame from './orbitFrame'
-import OrbitHome from './orbitHome'
+import OrbitHomeExplore from './orbitHomeExplore'
 import OrbitSettings from './orbitSettings'
 import OrbitHeader from './orbitHeader'
 import { App } from '@mcro/all'
 
+const SHADOW_PAD = 85
+const DOCKED_SHADOW = [0, 0, SHADOW_PAD, [0, 0, 0, 0.2]]
+
 @UI.injectTheme
 @view.attach('appStore')
 @view
-export default class OrbitDocked {
-  render({ appStore, orbitPage, theme }) {
-    const headerBg = theme.base.background
+class OrbitDocked {
+  render({ appStore, theme }) {
+    const background = theme.base.background
+    const borderColor = theme.base.background.darken(0.25).desaturate(0.6)
+    const borderShadow = ['inset', 0, 0, 0, 0.5, borderColor]
     return (
-      <UI.Theme name="tan">
-        <OrbitFrame
-          headerBg={headerBg}
-          orbitPage={orbitPage}
-          shouldShow={() => App.dockState.pinned}
-        >
-          <OrbitHeader headerBg={headerBg} />
-          <orbitInner>
-            <OrbitHome if={!appStore.showSettings} />
-            <OrbitSettings />
-          </orbitInner>
-        </OrbitFrame>
-      </UI.Theme>
+      <frame
+        $visible={App.orbitState.docked}
+        css={{ background, boxShadow: [borderShadow, DOCKED_SHADOW] }}
+      >
+        <OrbitHeader headerBg={background} />
+        <orbitInner>
+          <OrbitHomeExplore if={!appStore.showSettings} appStore={appStore} />
+          <OrbitSettings />
+        </orbitInner>
+      </frame>
     )
   }
 
   static style = {
+    frame: {
+      position: 'absolute',
+      top: 0,
+      right: 0,
+      zIndex: 2,
+      flex: 1,
+      pointerEvents: 'auto',
+      width: App.dockedWidth,
+      height: '100%',
+      transition: 'all ease-in 100ms',
+      opacity: 0,
+      transform: {
+        x: 10,
+      },
+    },
+    visible: {
+      opacity: 1,
+      transform: {
+        x: 0,
+      },
+    },
     orbitInner: {
       position: 'relative',
       flex: 1,
-      zIndex: 10,
     },
   }
 }
+
+export default props => (
+  <UI.Theme name="tan">
+    <OrbitDocked {...props} />
+  </UI.Theme>
+)

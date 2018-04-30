@@ -33,16 +33,14 @@ class AppStore {
 
   state = {
     query: '',
+    screenSize: [0, 0],
     orbitState: {
       hidden: true,
       pinned: false,
-      fullScreen: false,
+      docked: false,
       orbitOnLeft: false,
-      position: [],
-      size: [],
-    },
-    dockState: {
-      pinned: false,
+      position: [0, 0],
+      size: [0, 0],
     },
     authState: {
       openId: null,
@@ -57,9 +55,6 @@ class AppStore {
   }
 
   get isShowingOrbit() {
-    if (Constants.FORCE_FULLSCREEN) {
-      return true
-    }
     return !App.orbitState.hidden
   }
 
@@ -68,6 +63,7 @@ class AppStore {
   }
 
   animationDuration = 90
+  dockedWidth = 550
 
   @react({ log: false })
   isAnimatingOrbit = [
@@ -120,10 +116,6 @@ class AppStore {
 
   get orbitArrowTowards() {
     return App.orbitState.orbitOnLeft ? 'right' : 'left'
-  }
-
-  get isAttachedToWindow() {
-    return !!Desktop.appState
   }
 
   get hoveredWordName() {

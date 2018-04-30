@@ -130,7 +130,7 @@ export default class OrbitHeader {
           />
         </title>
         <ControlButton
-          if={!App.dockState.pinned}
+          if={!App.orbitState.docked}
           onClick={App.togglePinned}
           borderWidth={App.orbitState.pinned ? 0.5 : 2}
           $pinnedIcon

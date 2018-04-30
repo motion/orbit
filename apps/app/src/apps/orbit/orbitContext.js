@@ -2,11 +2,11 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import OrbitFrame from './orbitFrame'
-import OrbitHome from './orbitHome'
 import OrbitSearchResults from './orbitSearchResults'
 import OrbitSettings from './orbitSettings'
 import OrbitHeader from './orbitHeader'
-import { App, Electron } from '@mcro/all'
+import OrbitHomeContext from './orbitHomeContext'
+import { App } from '@mcro/all'
 
 @UI.injectTheme
 @view.attach('appStore')
@@ -19,13 +19,11 @@ export default class Orbit {
         <OrbitFrame
           headerBg={headerBg}
           orbitPage={orbitPage}
-          shouldShow={() =>
-            App.isShowingOrbit && !App.dockState.pinned
-          }
+          shouldShow={() => !App.orbitState.hidden && !App.orbitState.docked}
         >
           <OrbitHeader headerBg={headerBg} />
           <orbitInner>
-            <OrbitHome if={!appStore.showSettings} />
+            <OrbitHomeContext if={!appStore.showSettings} appStore={appStore} />
             <OrbitSettings />
             <OrbitSearchResults />
           </orbitInner>

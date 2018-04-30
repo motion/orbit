@@ -7,24 +7,24 @@ nearest neighbors:
 * stripe home
 * openfin
 * any advanced tech company internal intranet
-* rapportive-like "inline info" for any app on your OS
+* rapportive ("inline related info" for any app on your OS)
 
 short pitch:
 
-it's your company intranet as a an upgrade to your mac that provides a unified search and news interface for your company with custom apps. it unifies all your cloud services privately on device (mail, slack, jira, etc...), and then provides powerful tools and interface for seeing whats happening and what you should know at your company.
+it's your company intranet as a an upgrade to your mac that provides a unified search and news interface for your company + custom apps. it unifies all your cloud services privately on device (mail, slack, jira, etc...), and then provides powerful tools and interface for seeing whats happening and what you should know at your company.
 
 ## features
 
 * beautiful sidebar to search and explore your company
-* projects, profiles automatically from slack, github, gcal, etc
+* projects, profiles automatically from across integrations
 * nlp search across everything
-* allows you to pin / curate your intranet organization/directory
+* p2p pin / curate your intranet organization/directory
 
-* beautiful news for whats going on at your company, relevant to you.
+* beautiful news for whats going on at your company, relevant to you
 
   * using novel, state of the art and well productionized nlp to generate a newspaper daily
-    * from slack convos, to emails, to projects and docs you personally missed
-  * summarizes into keywords long conversations, projects, documents
+    * from slack convos, to ticket convos, to emails & docs you didn't catch
+  * summarizes long conversations into easy headlines + peek into them instantly
   * trending globally interesting items
   * includes showing very accurate related conversations
 
@@ -34,19 +34,18 @@ it's your company intranet as a an upgrade to your mac that provides a unified s
     * nlp summarizing
     * all cloud data within your company
     * linking to any person, project
+    * full featured ui kit, charts, anything on npm
   * these apps are then part of your directory and can be searched by anyone
   * they feel native: you can drag them into their own window and keep them alive on your desktop
-  * they are reactive: a powerful yet simple mobx system gives you immense reactive power
 
 * contextual related items, for every app on your computer
 
-  * an extremely accurate, fast, and completely private OCR system runs with almost no CPU overhead
-  * if it recognizes key project names, people, or topics that are important in your company, it shows an indicator
-  * this means less communication overhead in your company
-    * and makes your smarter as you work (check to see if you missed a convo before sending an email)
-  * hover the indicator to see updates on whats going on with that thing
-  * hold Option key anytime to see a list of relevant things to what you are looking at
-    * uses nlp to determine both whats important on screen, and in your document space and intersects them
+  * extremely accurate, fast, and private OCR system runs with almost no CPU overhead
+  * recognizes key project names, people, topics important to your company & shows indicator
+  * answers your questions before you have to ask them or hit "reply" to that email
+  * works with any app, and can even power customer support agents augmenting with knowledge
+  * hold Option key anytime to open it manually within 150ms
+  * powered by the same nlp: (whats important in what youre looking at | at your company)
 
 goals
 

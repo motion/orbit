@@ -38,7 +38,7 @@ class OrbitDocked {
       right: 0,
       zIndex: 2,
       flex: 1,
-      pointerEvents: 'auto',
+      pointerEvents: 'none',
       width: App.dockedWidth,
       height: '100%',
       transition: 'all ease-in 100ms',
@@ -48,6 +48,7 @@ class OrbitDocked {
       },
     },
     visible: {
+      pointerEvents: 'auto',
       opacity: 1,
       transform: {
         x: 0,

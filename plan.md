@@ -6,7 +6,7 @@ nearest neighbors:
 
 * stripe home
 * openfin
-* any advanced tech company internal intranet
+* advanced tech companies' internal intranet
 * rapportive ("inline related info" for any app on your OS)
 
 short pitch:

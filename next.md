@@ -1,5 +1,26 @@
 ## now
 
+* remove mousePosition from state just do it all desktop side
+* finish cleanup and refactor
+  * peeks working
+  * position stuff
+  * search fixes
+  * focusing orbit glitching animation
+* peeks point to the grid items properly
+* masonry for news area
+* get dark blue theme working for news area
+  * work on themes
+* news area do some design for documents and emails
+* have the cards show _why_ they are there
+* global trends peek
+* profiles design iteration
+
+need to mockup for demo:
+
+* pinning item to top of news for a day
+* move home button to left side of trending projects
+* put a person button next to it
+
 demo for Formidable on May 12th:
 
 * daily summary really smooth (2 days)

@@ -91,19 +91,23 @@ export default class AppStore {
 
   get innerHeight() {
     const HEADER_HEIGHT = 90
-    return (
-      App.orbitState.size[1] - Constants.SHADOW_PAD * 2 - HEADER_HEIGHT
-    )
+    return App.orbitState.size[1] - Constants.SHADOW_PAD * 2 - HEADER_HEIGHT
   }
 
   async willMount() {
-    App.setState({
-      screenSize: [window.innerWidth, window.innerHeight]
-    })
+    this.updateScreenSize()
     this.getSettings()
     this.setInterval(this.getSettings, 2000)
     this.setInterval(() => {
       this.refreshInterval = Date.now()
+    }, 1000)
+  }
+
+  updateScreenSize() {
+    this.setInterval(() => {
+      App.setState({
+        screenSize: [window.innerWidth, window.innerHeight],
+      })
     }, 1000)
   }
 

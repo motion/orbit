@@ -31,26 +31,19 @@ class OrbitExploreStore {
 @view
 export default class OrbitExplore {
   render({ appStore, theme }) {
+    const exploreButton = {
+      size: 1.2,
+      circular: true,
+      borderWidth: 1,
+      borderColor: theme.base.borderColor,
+      background: theme.base.background,
+      iconProps: {
+        color: theme.base.color.darken(0.2),
+        size: 14,
+      },
+    }
     return (
       <pane css={{ background: theme.base.background }}>
-        <UI.Button
-          icon="home"
-          size={1.1}
-          circular
-          borderWidth={1}
-          borderColor={[0, 0, 0, 0.1]}
-          background={theme.base.background}
-          iconProps={{
-            color: theme.base.color.darken(0.2),
-            size: 14,
-          }}
-          css={{
-            position: 'absolute',
-            top: -20,
-            right: 12,
-            zIndex: 100000,
-          }}
-        />
         <title css={{ fontSize: 23, padding: [0, 15] }}>
           Orbit
           <SubTitle
@@ -71,6 +64,8 @@ export default class OrbitExplore {
         </title>
         {/* <SubTitle>In your orbit</SubTitle> */}
         <section $explore>
+          <UI.Button icon="home" $exploreButton {...exploreButton} />
+          <UI.Button icon="user" $exploreButton {...exploreButton} />
           {[
             {
               title: 'Model 3 Transmission',
@@ -92,7 +87,7 @@ export default class OrbitExplore {
                     {item.subtitle}
                   </subtitle>
                 </content>
-                <div $$flex />
+                <div css={{ width: 8 }} />
                 <UI.Arrow
                   size={14}
                   towards={isDown ? 'bottom' : 'top'}
@@ -100,7 +95,6 @@ export default class OrbitExplore {
                   css={{
                     transform: { scaleX: 0.75 },
                     marginTop: isDown ? 4 : -10,
-                    marginRight: 8,
                   }}
                 />
               </item>
@@ -135,12 +129,16 @@ export default class OrbitExplore {
       flexFlow: 'row',
       overflowX: 'scroll',
       padding: [10, 10],
+      alignItems: 'center',
     },
     item: {
       flexFlow: 'row',
       alignItems: 'center',
       padding: [8, 15],
       fontSize: 16,
+    },
+    exploreButton: {
+      margin: [0, 8, 0, 3],
     },
   }
 

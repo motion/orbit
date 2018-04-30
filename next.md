@@ -52,19 +52,6 @@ demo for Formidable on May 12th:
     * think this is actually big because shows how nice the system is for deploying to your team
     * this + news + ocr, really solidifies defensibility x how we are trustworthy for executing well in future
 
-demo video:
-song: https://www.youtube.com/watch?v=1FFqVXlyJ98 "said it once before but it bears repeating now"
-
-* BIG bold super fast transitions
-* themes need to be there and custom apps
-* moves super fast with big text
-* get dillon to do it
-* YOUR COMPANY
-* HAS
-* A
-* HOME
-* Orbit
-
 deploying beta for company like formidable (est dev time: 3m)
 
 * Merged cosal daily summaries
@@ -197,15 +184,6 @@ deploying beta for company like formidable (est dev time: 3m)
 
   * [ ] keeping chromium warm
 
-## launch
-
-* great daily summaries / trends (~3 months)
-* ocr and contextual relevants/highlights + long tail fixes there (~1 month)
-* finishing ux/peek/search interaction and features (~1 month)
-* site, (2 months)
-* video (~1 month)
-* beta setup (1 week)
-
 security (~3weeks)
 
 * we likely either need to contract or get someone for this directly
@@ -227,13 +205,6 @@ syncers (~4-5months)
 * arbitrary imap/email
 * trello, etc...
 * maybe some hr tools
-
-rich people/teams/explore (2weeks-Infinity)
-
-* automatic project collation and explore
-* would provide a much more thorough value on launch if we have explore (feels full featured from day 1)
-* smart linking together of people across different integrations
-* smart team or "commonly works together features"
 
 sync / simple explore/curation architecture (~2-3weeks)
 

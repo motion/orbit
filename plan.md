@@ -1,44 +1,66 @@
-what we are
+## what we are
 
-"operating system for your company"
+"intranet meets operating system for your company"
 
 nearest neighbors:
 
-* openfin
 * stripe home
-* fb/google internal intranets
+* openfin
+* any advanced tech company internal intranet
+* rapportive-like "inline info" for any app on your OS
 
-a personal mac app that unifies various work information (mail, slack, jira, etc...) and uses nlp to give a daily summary of what you've missed / important in your company as well as a rich search and explore interface for your cloud (with projects, teams, etc).
+short pitch:
 
-it's aim is to reduce notification overload, communication silos & work FOMO.
+it's your company intranet as a an upgrade to your mac that provides a unified search and news interface for your company with custom apps. it unifies all your cloud services privately on device (mail, slack, jira, etc...), and then provides powerful tools and interface for seeing whats happening and what you should know at your company.
 
-a potential final "one more thing" feature that we have partially working is that while it normally takes over spotlight as a sidebar drawer, it also can operate contextually to any app. so holding option anywhere on your mac attaches it to that app and uses some pretty cool and very fast custom OCR/content finding to actually use your current screen as a search to see if you missed any related conversations, documents, etc.
+## features
 
-it's nearest neighbors would be Stripe Home, Spotlight, maybe Rapportive/Clippy for the context part, running privately/locally on your computer. If it sounds a bit messy, it's because we're still in mid-r&d so we're constraint fitting the final featureset.
+* beautiful sidebar to search and explore your company
+* projects, profiles automatically from slack, github, gcal, etc
+* nlp search across everything
+* allows you to pin / curate your intranet organization/directory
+
+* beautiful news for whats going on at your company, relevant to you.
+
+  * using novel, state of the art and well productionized nlp to generate a newspaper daily
+    * from slack convos, to emails, to projects and docs you personally missed
+  * summarizes into keywords long conversations, projects, documents
+  * trending globally interesting items
+  * includes showing very accurate related conversations
+
+* instantly deploy custom apps to your team
+
+  * super easy, full-featured HMR powered environment for building react apps with access to all the powerful tools we have including:
+    * nlp summarizing
+    * all cloud data within your company
+    * linking to any person, project
+  * these apps are then part of your directory and can be searched by anyone
+  * they feel native: you can drag them into their own window and keep them alive on your desktop
+  * they are reactive: a powerful yet simple mobx system gives you immense reactive power
+
+* contextual related items, for every app on your computer
+
+  * an extremely accurate, fast, and completely private OCR system runs with almost no CPU overhead
+  * if it recognizes key project names, people, or topics that are important in your company, it shows an indicator
+  * this means less communication overhead in your company
+    * and makes your smarter as you work (check to see if you missed a convo before sending an email)
+  * hover the indicator to see updates on whats going on with that thing
+  * hold Option key anytime to see a list of relevant things to what you are looking at
+    * uses nlp to determine both whats important on screen, and in your document space and intersects them
 
 goals
 
 * broadly
+  * make internal company ops 10x clearer
   * significantly reduce workplace stress
   * increase ability to focus / deep work
   * reduce communication silos and unknowns
-  * make internal company ops 10x clearer
-* narrowly
-  * dailys heads up
-  * reduce notification overload
-  * reduce missing out on conversations/topics
-  * make latent org knowledge more useful
-  * (later) replace intranet
-
-strategy
-
-* replace your spotlight/notification drawer with a smart intranet work-focused app
 
 product strategy
 
 * desktop app = far more powerful, present minute to minute (super high engagement)
 * attach to any window = contextually relevant, smarter, engagement
-* no cloud = can aggressively soak in all their integrations (more value)
+* no cloud = can safely soak in all their integrations (more value)
 * no cloud = enables extreme cross integration features (calendar x docs x hr x ...)
 * nlp = able to answer harder questions and do more useful summaries
 * nlp = able to tackle bigger problem areas with less tools and time
@@ -47,9 +69,10 @@ product strategy
 go to market strategy
 
 * no cloud = privacy / aligment with end users = user confidence (no one but apple does)
-* high user alignment + beautiful product = super high potential end user brand dedication
-* invest more into branding = more ability to work with people during beta for launch
-* app = easy to get high user count initially
+* no cloud = insanely easy onboarding, no big sales process
+* private on device = useful to any user not just whole team or company
+* high user alignment + beautiful product = high potential end user brand dedication
+* smart app = easy to get high user count initially
   * because of this makes sense generally to have:
     * longer beta
     * give to big names for launch
@@ -67,10 +90,10 @@ go to market strategy
 keys to success
 
 * making the summary really work well
-* befriending our integration companies
-* working a long beta with influential people
-* ensuring the PR around user-alignment catches (not scary big brother)
-  * this requires us to have clear user-friendly monetization plan from start
+* having a properly impressive launch
+* working with some big SV influencers early in beta to get hype
+* ensuring the messaging around user-alignment is clear (not scary big brother)
+* monetize from the start
 
 how features justify inclusion
 
@@ -96,3 +119,19 @@ risks
 
 * setup time with integrations will take a while
   * onboard focus and demo impressiveness should help
+* this is a hard problem, lots to solve
+* many companies have different needs, may be pit of complexity in real world
+* may be hard to scale doing on-devices
+
+demo video
+
+* song: https://www.youtube.com/watch?v=1FFqVXlyJ98 "said it once before but it bears repeating now"
+* big/bold text, fast transitions
+* themes need to be there and custom apps
+* moves super fast with big text
+* get dillon to do it
+* YOUR COMPANY
+* HAS
+* A
+* HOME
+* Orbit

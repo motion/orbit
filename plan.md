@@ -51,8 +51,10 @@ goals
 
 * broadly
   * make internal company ops 10x clearer
-  * significantly reduce workplace stress
-  * increase ability to focus / deep work
+  * make your company feel cohesive and up to date
+  * improve remote workers sense of unity
+  * reduce workplace stress and FOMO
+  * increase ability to turn off notifications and focus / deep work
   * reduce communication silos and unknowns
 
 product strategy

@@ -18,8 +18,6 @@
 need to mockup for demo:
 
 * pinning item to top of news for a day
-* move home button to left side of trending projects
-* put a person button next to it
 
 demo for Formidable on May 12th:
 

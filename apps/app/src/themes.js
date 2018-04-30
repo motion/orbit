@@ -29,7 +29,7 @@ const Themes = {
   tan: Theme.fromStyles({
     background: tanBg,
     color: '#656141',
-    borderColor: dbActiveBg,
+    borderColor: tanActiveBg,
     hover: {
       background: tanHoverBg,
     },
@@ -46,7 +46,7 @@ const Themes = {
   darkBlue: Theme.fromStyles({
     background: dbBg,
     color: '#fff',
-    borderColor: '#000',
+    borderColor: dbActiveBg,
     hover: {
       background: dbHoverBg,
     },

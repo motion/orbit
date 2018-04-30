@@ -34,7 +34,7 @@ export default class OrbitExplore {
     const exploreButton = {
       size: 1.2,
       circular: true,
-      borderWidth: 1,
+      borderWidth: 0,
       borderColor: theme.base.borderColor,
       background: theme.base.background,
       iconProps: {
@@ -44,13 +44,13 @@ export default class OrbitExplore {
     }
     return (
       <pane css={{ background: theme.base.background }}>
-        <title css={{ fontSize: 23, padding: [0, 15] }}>
-          Orbit
+        <title css={{ padding: [0, 15] }}>
           <SubTitle
             css={{
+              fontSize: 24,
               lineHeight: '1.5rem',
-              marginTop: 3,
-              fontSize: '72%',
+              marginTop: 12,
+              marginBottom: 8,
               padding: 0,
             }}
             $$row
@@ -62,10 +62,19 @@ export default class OrbitExplore {
             </span>
           </SubTitle>
         </title>
-        {/* <SubTitle>In your orbit</SubTitle> */}
         <section $explore>
-          <UI.Button icon="home" $exploreButton {...exploreButton} />
-          <UI.Button icon="user" $exploreButton {...exploreButton} />
+          <UI.Button
+            icon="menu"
+            tooltip="Explore"
+            $exploreButton
+            {...exploreButton}
+          />
+          <UI.Button
+            icon="userscir"
+            tooltip="Directory"
+            $exploreButton
+            {...exploreButton}
+          />
           {[
             {
               title: 'Model 3 Transmission',
@@ -103,6 +112,8 @@ export default class OrbitExplore {
         </section>
 
         <OrbitDivider />
+
+        <SubTitle css={{ margin: [6, 0, 0, 4] }}>In your orbit</SubTitle>
         <OrbitHomeHighlights results={appStore.summaryResults} />
       </pane>
     )

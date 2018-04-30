@@ -8,7 +8,7 @@ const screenSize = () => [window.innerWidth, window.innerHeight]
 export default function peekPosition(target, App) {
   const [screenW, screenH] = screenSize()
   const { orbitOnLeft } = App
-  const [width] = App.orbitState.size
+  const width = App.orbitState.docked ? App.dockedWidth : App.orbitState.size[0]
   const { left, top } = target
   const leftSpace = left
   const rightSpace = screenW - (left + width)

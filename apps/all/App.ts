@@ -42,6 +42,12 @@ class AppStore {
       position: [0, 0],
       size: [0, 0],
     },
+    peekState: {
+      id: 0,
+      peekOnLeft: false,
+      position: [0, 0],
+      size: [0, 0],
+    },
     authState: {
       openId: null,
       closeId: null,

@@ -157,20 +157,17 @@ export default class AppReactions {
       // react to peek closing to see if app should too
       App.state.peekTarget,
     ],
-    async ([isShown, mouseOver, target], { sleep }) => {
-      console.log(`hideOrbit ${isShown} ${mouseOver} ${target}`)
+    async ([isShown, mouseOver], { sleep }) => {
       if (!isShown || mouseOver) {
         throw react.cancel
       }
       // some leeway on mouse leave
       await sleep(150)
-      if (Desktop.isHoldingOption || App.isAnimatingOrbit) {
-        throw react.cancel
-      }
-      if (App.orbitState.pinned || App.orbitState.fullScreen) {
-        throw react.cancel
-      }
-      if (App.dockedState.pinned) {
+      if (
+        App.orbitState.pinned ||
+        Desktop.isHoldingOption ||
+        App.isAnimatingOrbit
+      ) {
         throw react.cancel
       }
       console.log(`hiding orbit from mouseout`)

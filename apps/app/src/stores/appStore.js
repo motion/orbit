@@ -302,7 +302,9 @@ export default class AppStore {
     }
     return {
       top,
-      left: App.orbitState.position[0],
+      left: App.orbitState.docked
+        ? App.state.screenSize[0] - App.dockedWidth
+        : App.orbitState.position[0],
       width: App.orbitState.size[0],
       height,
     }

@@ -10,18 +10,16 @@ const borderRadius = 6
 const background = '#f9f9f9'
 
 class PeekFrameStore {
-  @react
+  @react({ delay: 32 })
   curState = [
-    () => App.state.peekTarget,
-    async (target, { whenChanged }) => {
-      if (!target) {
+    () => [App.state.peekTarget, App.peekState],
+    ([peekTarget, peekState]) => {
+      if (!peekTarget) {
         return null
       }
-      // wait for related peek state
-      await whenChanged(() => App.peekState.id)
       return {
-        target,
-        ...App.peekState,
+        peekTarget,
+        ...peekState,
       }
     },
   ]
@@ -49,10 +47,12 @@ class PeekFrameStore {
 export default class PeekFrame {
   render({ store, children, ...props }) {
     const { willShow, willHide, curState, lastState, willStayShown } = store
+    log(`render peekframe ${curState} ${lastState}`)
     let state = curState
     if (willHide) {
       state = lastState
     }
+    console.log('state is', state)
     if (!state || !state.position || !state.position.length) {
       return null
     }
@@ -104,8 +104,8 @@ export default class PeekFrame {
             transform: {
               y: isHidden
                 ? 0
-                : state.target.position.top +
-                  state.target.position.height / 2 -
+                : state.peekTarget.position.top +
+                  state.peekTarget.position.height / 2 -
                   state.position[1] -
                   arrowSize / 2,
               x: onRight ? 0.5 : -0.5,

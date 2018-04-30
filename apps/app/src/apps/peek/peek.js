@@ -13,6 +13,7 @@ export default class PeekPage {
     const { selectedItem } = App.state
     const type = (selectedItem && capitalize(selectedItem.type)) || 'Empty'
     const PeekContentsView = PeekContents[type] || PeekContents['Empty']
+    log(`render peek pages`)
     if (!PeekContentsView) {
       console.error('none', type)
       return <peek>no pane found</peek>

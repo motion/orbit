@@ -1,7 +1,6 @@
 import { store, react } from '@mcro/black/store'
 import { App, Desktop } from '@mcro/all'
 import orbitPosition from './helpers/orbitPosition'
-import peekPosition from './helpers/peekPosition'
 import debug from '@mcro/debug'
 
 const log = debug('AppReactions')
@@ -32,7 +31,7 @@ export default class AppReactions {
           this.show()
           return
         case App.messages.HIDE_PEEK:
-          return App.setPeekTarget(null)
+          return App.clearPeek()
         case App.messages.PIN:
           App.setOrbitState({ pinned: true })
           return
@@ -64,8 +63,8 @@ export default class AppReactions {
   }
 
   async hide() {
-    if (App.state.peekTarget) {
-      App.setPeekTarget(null)
+    if (App.peekState.target) {
+      App.clearPeek()
       await new Promise(res => setTimeout(res, 80)) // sleep 80
     }
     App.setOrbitState({ hidden: true })
@@ -94,13 +93,13 @@ export default class AppReactions {
   ]
 
   @react({ log: 'state' })
-  clearPeekTargetOnOrbitClose = [
+  clearPeekOnOrbitClose = [
     () => !App.isShowingOrbit,
     hidden => {
       if (!hidden) {
         throw react.cancel
       }
-      App.setPeekTarget(null)
+      App.clearPeek()
     },
   ]
 
@@ -130,7 +129,7 @@ export default class AppReactions {
   @react({ log: 'state' })
   clearPeekOnReposition = [
     () => App.orbitState.position,
-    () => App.setPeekTarget(null),
+    App.clearPeek
   ]
 
   // disabled during testing, reenable
@@ -143,7 +142,7 @@ export default class AppReactions {
   //     }
   //     // wait a bit
   //     await sleep(400)
-  //     App.setPeekTarget(null)
+  //     App.clearPeek()
   //   },
   // ]
 
@@ -155,7 +154,7 @@ export default class AppReactions {
       !App.orbitState.hidden,
       Desktop.hoverState.orbitHovered || Desktop.hoverState.peekHovered,
       // react to peek closing to see if app should too
-      App.state.peekTarget,
+      App.peekState.target,
     ],
     async ([isShown, mouseOver], { sleep }) => {
       if (!isShown || mouseOver) {
@@ -210,20 +209,6 @@ export default class AppReactions {
         size,
         orbitOnLeft,
         orbitDocked,
-      })
-    },
-  ]
-
-  @react({ fireImmediately: true })
-  peekPosition = [
-    () => App.state.peekTarget,
-    peekTarget => {
-      if (!peekTarget) {
-        throw react.cancel
-      }
-      App.setPeekState({
-        id: Math.random(),
-        ...peekPosition(peekTarget.position, App),
       })
     },
   ]

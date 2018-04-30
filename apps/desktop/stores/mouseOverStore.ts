@@ -21,7 +21,7 @@ export default class MouseOverReactions {
       Desktop.mouseState.position,
       App.orbitState.hidden,
       App.orbitState.position,
-      App.state.peekTarget,
+      App.peekState.target,
       App.orbitState.docked,
     ],
     async ([mousePos, isHidden, orbitPosition, peekTarget], { sleep }) => {

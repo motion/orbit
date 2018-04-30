@@ -43,6 +43,8 @@ class AppStore {
       size: [0, 0],
     },
     peekState: {
+      target: null,
+      item: null,
       id: 0,
       peekOnLeft: false,
       position: [0, 0],
@@ -57,7 +59,6 @@ class AppStore {
     hoveredWord: null,
     hoveredLine: null,
     contextMessage: 'Orbit',
-    peekTarget: null,
   }
 
   get isShowingOrbit() {
@@ -65,7 +66,7 @@ class AppStore {
   }
 
   get isShowingPeek() {
-    return !!App.state.peekTarget
+    return !!App.peekState.target
   }
 
   animationDuration = 90
@@ -159,6 +160,13 @@ class AppStore {
 
   openSettings = () => {
     App.setState({ openSettings: Date.now() })
+  }
+
+  clearPeek = () => {
+    App.setPeekState({
+      target: null,
+      id: null,
+    })
   }
 }
 

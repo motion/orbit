@@ -1,11 +1,12 @@
 import * as Constants from '@mcro/constants'
+import { App } from '@mcro/all'
 
 const SHADOW_PAD = 15
 const EDGE_PAD = 20
 const TOP_OFFSET = -20
 const screenSize = () => [window.innerWidth, window.innerHeight]
 
-export default function peekPosition(target, App) {
+export default function peekPosition(target) {
   const [screenW, screenH] = screenSize()
   const { orbitOnLeft } = App
   const width = App.orbitState.docked ? App.dockedWidth : App.orbitState.size[0]

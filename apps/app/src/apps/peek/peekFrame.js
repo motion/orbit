@@ -10,17 +10,14 @@ const borderRadius = 6
 const background = '#f9f9f9'
 
 class PeekFrameStore {
-  @react({ delay: 32 })
+  @react
   curState = [
-    () => [App.state.peekTarget, App.peekState],
-    ([peekTarget, peekState]) => {
-      if (!peekTarget) {
+    () => App.peekState,
+    peekState => {
+      if (!peekState.target) {
         return null
       }
-      return {
-        peekTarget,
-        ...peekState,
-      }
+      return peekState
     },
   ]
 
@@ -47,15 +44,14 @@ class PeekFrameStore {
 export default class PeekFrame {
   render({ store, children, ...props }) {
     const { willShow, willHide, curState, lastState, willStayShown } = store
-    log(`render peekframe ${curState} ${lastState}`)
     let state = curState
     if (willHide) {
       state = lastState
     }
-    console.log('state is', state)
-    if (!state || !state.position || !state.position.length) {
+    if (!state || !state.position || !state.position.length || !state.target) {
       return null
     }
+    console.log('PEEK FRAME STATE', state)
     const isHidden = !state
     const { orbitDocked, orbitOnLeft } = App.orbitState
     const onRight = !state.peekOnLeft
@@ -104,8 +100,8 @@ export default class PeekFrame {
             transform: {
               y: isHidden
                 ? 0
-                : state.peekTarget.position.top +
-                  state.peekTarget.position.height / 2 -
+                : state.target.top +
+                  state.target.height / 2 -
                   state.position[1] -
                   arrowSize / 2,
               x: onRight ? 0.5 : -0.5,
@@ -133,9 +129,7 @@ export default class PeekFrame {
                       left: 20,
                     }),
               }}
-              onClose={() => {
-                App.setPeekTarget(null)
-              }}
+              onClose={App.clearPeek}
             />
             <peekFrameBorder
               css={{

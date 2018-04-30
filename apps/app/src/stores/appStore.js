@@ -5,6 +5,7 @@ import * as Constants from '~/constants'
 import * as r2 from '@mcro/r2'
 import * as Helpers from '~/helpers'
 import * as _ from 'lodash'
+import peekPosition from './helpers/peekPosition'
 
 const getPermalink = async (result, type) => {
   if (result.type === 'app') {
@@ -112,7 +113,7 @@ export default class AppStore {
   }
 
   get activeIndex() {
-    if (App.state.peekTarget) {
+    if (App.peekState.target) {
       return this.selectedIndex
     } else {
       return this.hoveredIndex
@@ -125,7 +126,7 @@ export default class AppStore {
     () => {
       this.selectedIndex = -1
       this.hoveredIndex = 0
-      App.setPeekTarget(null)
+      App.clearPeek()
     },
   ]
 
@@ -312,7 +313,7 @@ export default class AppStore {
 
   clearSelected = () => {
     if (!App.isMouseInActiveArea) {
-      App.setPeekTarget(null)
+      App.clearPeek()
     }
   }
 
@@ -346,7 +347,7 @@ export default class AppStore {
       this._setSelected(i, position)
       return
     }
-    if (App.state.peekTarget) {
+    if (App.peekState.target) {
       this.pinSelected(i)
       return
     }
@@ -355,12 +356,12 @@ export default class AppStore {
 
   toggleSelected = index => {
     const isSame = this.selectedIndex === index
-    if (isSame && App.state.peekTarget) {
+    if (isSame && App.peekState.target) {
       if (Date.now() - this.lastSelectAt < 450) {
         // ignore double clicks
         return
       }
-      App.setPeekTarget(null)
+      App.clearPeek()
     } else {
       this.pinSelected(index)
     }
@@ -374,15 +375,13 @@ export default class AppStore {
     } else {
       index = thing ? thing.id : null
     }
-    log(`pinning ${index}`)
-    App.setPeekTarget({
+    const target = this.getTargetPosition(index)
+    App.setPeekState({
       id: index,
-      position: this.getTargetPosition(index),
+      target,
+      item: this.setSelectedItem(index),
+      ...peekPosition(target),
     })
-  }
-
-  clearPinned = () => {
-    App.setPeekTarget(null)
   }
 
   setGetResults = fn => {
@@ -405,27 +404,25 @@ export default class AppStore {
     word => this.setSelected(word.index),
   ]
 
-  @react
-  setAppSelectedItem = [
-    () =>
-      this.selectedIndex >= 0
-        ? this.searchState.results[this.selectedIndex]
-        : null,
-    item => {
-      if (!item) {
-        throw react.cancel
-      }
-      const selectedItem = {
-        id: item.id || '',
-        icon: item.icon || '',
-        title: item.title || '',
-        body: item.body || '',
-        type: item.type || '',
-        integration: item.integration || '',
-      }
-      App.setSelectedItem(selectedItem)
-    },
-  ]
+  setSelectedItem = index => {
+    if (index < 0) {
+      console.log('none selected')
+      return
+    }
+    const item = this.searchState.results[index]
+    if (!item) {
+      console.log('none found')
+      return
+    }
+    return {
+      id: item.id || '',
+      icon: item.icon || '',
+      title: item.title || '',
+      body: item.body || '',
+      type: item.type || '',
+      integration: item.integration || '',
+    }
+  }
 
   getSettings = async () => {
     const settings = await Setting.find()

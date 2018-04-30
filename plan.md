@@ -47,7 +47,7 @@ it's your company intranet as a an upgrade to your mac that provides a unified s
   * hold Option key anytime to open it manually within 150ms
   * powered by the same nlp: (whats important in what youre looking at | at your company)
 
-goals
+## goals
 
 * broadly
   * make internal company ops 10x clearer
@@ -57,7 +57,7 @@ goals
   * increase ability to turn off notifications and focus / deep work
   * reduce communication silos and unknowns
 
-product strategy
+## product strategy
 
 * desktop app = far more powerful, present minute to minute (super high engagement)
 * attach to any window = contextually relevant, smarter, engagement
@@ -67,7 +67,7 @@ product strategy
 * nlp = able to tackle bigger problem areas with less tools and time
 * ocr = able to work with any app you use + makes a badass demo
 
-go to market strategy
+## go to market strategy
 
 * no cloud = privacy / aligment with end users = user confidence (no one but apple does)
 * no cloud = insanely easy onboarding, no big sales process
@@ -88,7 +88,7 @@ go to market strategy
   * people like patrick collison, john gruber, various high influence programmers, etc
   * anyone who promoted superhuman, meteor, + influential in design community (khoi vinh etc)
 
-keys to success
+## keys to success
 
 * making the summary really work well
 * having a properly impressive launch
@@ -96,7 +96,7 @@ keys to success
 * ensuring the messaging around user-alignment is clear (not scary big brother)
 * monetize from the start
 
-how features justify inclusion
+## how features justify inclusion
 
 * news
   * makes us valuable to end-users directly
@@ -116,7 +116,7 @@ how features justify inclusion
   * actually has huge business case once it works well
     * dont forget how awesome it would feel to have an agent looking out for you
 
-risks
+## risks
 
 * setup time with integrations will take a while
   * onboard focus and demo impressiveness should help
@@ -124,15 +124,9 @@ risks
 * many companies have different needs, may be pit of complexity in real world
 * may be hard to scale doing on-devices
 
-demo video
+## demo video
 
-* song: https://www.youtube.com/watch?v=1FFqVXlyJ98 "said it once before but it bears repeating now"
+* https://www.youtube.com/watch?v=1FFqVXlyJ98
 * big/bold text, fast transitions
 * themes need to be there and custom apps
 * moves super fast with big text
-* get dillon to do it
-* YOUR COMPANY
-* HAS
-* A
-* HOME
-* Orbit

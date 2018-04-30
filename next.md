@@ -65,6 +65,15 @@ song: https://www.youtube.com/watch?v=1FFqVXlyJ98 "said it once before but it be
 * HOME
 * Orbit
 
+deploying beta for company like formidable (est dev time: 3m)
+
+* Merged cosal daily summaries
+* Basic version of app creation deployable
+* Basic p2p or slack based sync system for simple curation of intranet content
+* Basic project collation logic
+* finish: search, peek, profile, syncers, polish, productionize
+* maybe: simple or toggleable OCR/context bar
+
 --- me
 
 * [ ] themes or surfaces really need well thought lighten/darken functionality

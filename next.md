@@ -171,15 +171,6 @@ deploying beta for company like formidable (est dev time: 3m)
   * [ ] see if can share chromium or delay download
   * [ ] check small screen, big screen, change screens
 
-* long tail polish
-
-  * may want to fork electron to get better always-on-top functionality like Helium.app
-    * would let us do better spotlight stuff
-  * disable when super low battery
-  * bridge both setState and receiveState should batch a tiny bit
-    * if multiple setstate called before settimeout, group them
-    * if multiple recevied before timeout, group them
-
 * research
 
   * [ ] keeping chromium warm
@@ -215,27 +206,3 @@ sync / simple explore/curation architecture (~2-3weeks)
 * "define team"
 * "mark stale" etc
 * could even have it generate a wiki on-prem
-
-improving existing features (1month-Infinity)
-
-* explore better news interfaces and queries/metadata
-* help interview and test app with various beta testers
-* do tests of feature ideas for daily summaries
-* longer tail search features that really make it powerful (filters, time span etc)
-* scaling everything up to work on bigger data sets or filter them down better
-
-beta to launch work (~1month)
-
-* help building out various sections for website
-* help coordinate finding good designer or video creators
-* help reach out to get people into the beta
-* help build beta site / mailing lists / chat rooms etc
-  * various sub-pages and sections
-  * pricing page + buying stuff
-
-testing, polish, productioninizing (~2-3weeks)
-
-* testing across multiple mac versions
-* slimming bundle size
-* improving various auto updates
-* having a continuous integration process so we can deploy quickly

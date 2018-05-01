@@ -1,0 +1,15 @@
+{
+  "name": "@mcro/slackdown",
+  "version": "1.5.1",
+  "description": "",
+  "main": "_/slackdown.js",
+  "author": "Motion (http://motion.io)",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc",
+    "watch": "npm run build -- --watch"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

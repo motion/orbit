@@ -139,7 +139,7 @@ export default class OrbitExplore {
             </span>.
           </UI.Text>
         </section>
-        <OrbitDivider />
+
         <summary>
           <Masonry>
             {appStore.summaryResults.map((item, index) => (

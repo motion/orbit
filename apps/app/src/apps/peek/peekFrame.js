@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { App, Electron } from '@mcro/all'
+import { App } from '@mcro/all'
 import WindowControls from '~/views/windowControls'
 import * as Constants from '~/constants'
 
@@ -10,16 +10,12 @@ const borderRadius = 6
 const background = '#f9f9f9'
 
 class PeekFrameStore {
-  @react({ fireImmediately: true, log: false })
-  curState = [
-    () => App.peekState,
-    peekState => {
-      if (!peekState.target) {
-        return null
-      }
-      return { ...peekState }
-    },
-  ]
+  get curState() {
+    if (!App.peekState.target) {
+      return null
+    }
+    return App.peekState
+  }
 
   @react({ delay: 16, fireImmediately: true, log: false })
   lastState = [() => this.curState, _ => _]
@@ -68,9 +64,12 @@ export default class PeekFrame {
       borderShadow,
     ]
     const arrowSize = 30
-    let peekAdjustX = docked ? -13 : 0
+    let peekAdjustX = docked ? -18 : 0
     const leftAdjustX = !docked && !orbitOnLeft ? Constants.SHADOW_PAD : 0
     peekAdjustX += onRight ? -4 + leftAdjustX : 4
+    const x = state.position[0] + peekAdjustX
+    const y = state.position[1] + (willShow && !willStayShown ? -8 : 0)
+    log(`peekpos ${x} ${y} (${peekAdjustX} ${docked})`)
     return (
       <peekFrame
         css={{
@@ -81,8 +80,8 @@ export default class PeekFrame {
           width: state.size[0],
           height: state.size[1],
           transform: {
-            x: state.position[0] + peekAdjustX,
-            y: state.position[1] + (willShow && !willStayShown ? -8 : 0),
+            x,
+            y,
           },
         }}
       >

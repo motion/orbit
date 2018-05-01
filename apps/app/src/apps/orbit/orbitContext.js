@@ -3,15 +3,12 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import OrbitFrame from './orbitFrame'
 import OrbitSearchResults from './orbitSearchResults'
-import OrbitSettings from './orbitSettings'
 import OrbitHeader from './orbitHeader'
 import { App, Desktop } from '@mcro/all'
 import { throttle } from 'lodash'
 import { Title, SubTitle } from '~/views'
 import Results from '~/apps/results/results'
 import * as Constants from '~/constants'
-
-const SPLIT_INDEX = 3
 
 @UI.injectTheme
 @view.attach('appStore', 'orbitPage')
@@ -63,7 +60,7 @@ export default class Orbit {
             >
               <fadeNotifications
                 $$untouchable
-                $fadeVisible={appStore.activeIndex >= SPLIT_INDEX}
+                $fadeVisible={appStore.activeIndex >= 0}
               />
               <contextHeader
                 css={{ textAlign: orbitOnLeft ? 'right' : 'left' }}
@@ -75,7 +72,6 @@ export default class Orbit {
               </contextHeader>
               <Results isContext />
             </orbitContext>
-            <OrbitSettings />
             <OrbitSearchResults />
           </orbitInner>
         </OrbitFrame>

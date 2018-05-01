@@ -110,25 +110,13 @@ deploying beta for company like formidable (est dev time: 3m)
   * OrbitCard
     * [ ] for icons - try result.integration + result.type first, fallback to result.int
 
-* indicator
-
-  * likely needs to be done as native osx if we want it
-  * [ ] design
-
-* smoothness
-
-  * [ ] re-focus app after animation finish (when not holding option)
-
 * sidebar
 
   * [ ] click to link to the Bit
-  * [ ] slack: sync People, Chat Rooms
   * [ ] list: movement + animations + keyboard/scroll select orbit list
-  * [ ] overdrive: deep investigate animate performance
 
 * peek
 
-  * horizontal carousel fixing
   * design
     * open/close interactions
   * [ ] click header input clear peek

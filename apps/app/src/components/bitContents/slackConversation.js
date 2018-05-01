@@ -36,7 +36,7 @@ export default class BitSlackConversation {
             appStore.open(result, 'channel')
           }}
         >
-          {result.title}
+          {result.title.slice(1)}
         </RoundButton>
       ),
       permalink: (

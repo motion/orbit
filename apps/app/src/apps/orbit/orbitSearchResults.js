@@ -4,8 +4,6 @@ import OrbitCard from './orbitCard'
 import { App } from '@mcro/all'
 import * as UI from '@mcro/ui'
 
-const SPLIT_INDEX = 3
-
 @UI.injectTheme
 @view.attach('appStore')
 @view
@@ -30,11 +28,7 @@ export default class OrbitSearchResults {
         <results
           if={results.length}
           css={{
-            opacity:
-              query ||
-              (appStore.activeIndex >= 0 && appStore.activeIndex < SPLIT_INDEX)
-                ? 1
-                : 0.5,
+            opacity: query || appStore.activeIndex >= 0 ? 1 : 0.5,
           }}
         >
           {results.map((result, index) => (
@@ -44,6 +38,7 @@ export default class OrbitSearchResults {
               total={results.length}
               result={result}
               listItem
+              expanded={false}
               hoverToSelect
             />
           ))}

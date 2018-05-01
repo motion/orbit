@@ -128,11 +128,12 @@ export default class OrbitCard {
         >
           <title>
             <UI.Text
-              size={1.3}
+              size={1.25}
               ellipse={isExpanded ? 2 : 1}
               fontWeight={400}
               css={{
                 maxWidth: `calc(100% - 30px)`,
+                marginBottom: 1,
               }}
               {...tiny && tinyProps.titleProps}
             >
@@ -149,7 +150,7 @@ export default class OrbitCard {
             <OrbitIcon
               if={icon}
               icon={icon}
-              size={14}
+              size={12}
               $icon
               css={{
                 filter: isExpanded ? 'none' : 'grayscale(50%)',

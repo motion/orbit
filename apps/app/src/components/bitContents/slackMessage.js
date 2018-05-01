@@ -3,6 +3,7 @@ import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
 import { RoundButton } from '~/views'
 import { App } from '@mcro/all'
+import slackDown from '@mcro/slackdown'
 
 const linkRegex = /\<([a-z]+:\/\/[^>]+)\>/
 const getLink = x => {
@@ -20,37 +21,7 @@ export default class BitSlackMessage {
       log(`no messagetext/bit ${JSON.stringify(message)}`)
       return null
     }
-    let content
-    const link = getLink(message)
-    if (link && link.indexOf('.png')) {
-      content = (
-        <miniImg>
-          <img src={link} />
-        </miniImg>
-      )
-    }
-    if (link) {
-      content = (
-        <a href={link} onClick={appStore.handleLink}>
-          {link}
-        </a>
-      )
-    }
-    if (message.text.indexOf('uploaded a file') >= 0) {
-      const src = message.text.match(/\<([a-z]+:\/\/[^>]+)\>/g).map(link =>
-        link
-          .slice(1, link.length)
-          .slice(0, link.length - 2)
-          .replace(/\|.*$/g, ''),
-      )[0]
-      console.log('src', src)
-      content = (
-        <div $$flex>
-          image
-          <img src={src} css={{ maxWidth: '100%' }} />
-        </div>
-      )
-    }
+    const htmlText = slackDown(message.text)
     const person = bit.people.find(
       person => person.integrationId === message.user,
     )
@@ -96,7 +67,10 @@ export default class BitSlackMessage {
             <UI.Date>{new Date(message.ts.split('.')[0] * 1000)}</UI.Date>
           </date>
         </header>
-        <content css={contentStyle}>{content || message.text}</content>
+        <content
+          css={contentStyle}
+          dangerouslySetInnerHTML={{ __html: htmlText }}
+        />
       </message>
     )
   }

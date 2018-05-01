@@ -364,11 +364,13 @@ export default class AppStore {
       index = thing ? thing.id : null
     }
     const target = this.getTargetPosition(index)
+    const position = peekPosition(target)
+    console.log('setting to', target, position)
     App.setPeekState({
       id: Math.random(),
       target,
       item: this.getPeekItem(index),
-      ...peekPosition(target),
+      ...position,
     })
   }
 

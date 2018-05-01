@@ -62,10 +62,15 @@ export default class AppReactions {
     App.setOrbitState({ hidden: false })
   }
 
-  async hide() {
+  hide = async () => {
     if (App.peekState.target) {
       App.clearPeek()
       await new Promise(res => setTimeout(res, 80)) // sleep 80
+      return
+    }
+    if (App.orbitState.docked) {
+      App.setOrbitState({ docked: false })
+      return
     }
     App.setOrbitState({ hidden: true })
   }

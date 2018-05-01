@@ -145,7 +145,7 @@ export default class Results {
                 result={result}
                 index={i}
                 total={total}
-                listItem={!isContext}
+                listItem
                 hoverToSelect={!App.peekState.target}
                 getRef={appStore.setResultRef(i)}
               />

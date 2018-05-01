@@ -6,8 +6,8 @@ import { App } from '@mcro/all'
 import OrbitDivider from './orbitDivider'
 import OrbitCard from './orbitCard'
 
-const rowHeight = 10
-const gridGap = 10
+const rowHeight = 2
+const gridGap = 6
 
 @view
 class Masonry extends React.Component {
@@ -45,7 +45,10 @@ class Masonry extends React.Component {
       )
     }
     return (
-      <grid style={{ gridAutoRows: rowHeight, gridGap }} {...props}>
+      <grid
+        style={{ gridAutoRows: rowHeight, gridGap, gridColumnGap: 8 }}
+        {...props}
+      >
         {React.Children.map(children, (child, index) => {
           return React.cloneElement(child, {
             style: this.styles[index],
@@ -188,7 +191,7 @@ export default class OrbitExplore {
     },
     explore: {
       flexFlow: 'row',
-      padding: [10, 10],
+      padding: [10, 10, 8],
       alignItems: 'center',
     },
     item: {

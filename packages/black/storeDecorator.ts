@@ -33,7 +33,10 @@ export const storeOptions = {
     }
     // unmount stores attached to root of stores
     for (const key of Object.keys(store)) {
-      if (store[key].subscriptions instanceof CompositeDisposable) {
+      if (
+        store[key] &&
+        store[key].subscriptions instanceof CompositeDisposable
+      ) {
         console.log('dispsoing store', key)
         store[key].subscriptions.dispose()
       }

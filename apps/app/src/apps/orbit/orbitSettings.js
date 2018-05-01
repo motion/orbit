@@ -77,7 +77,6 @@ export default class OrbitSettings {
   }
 
   render({ appStore, theme }) {
-    return null
     if (!appStore.settings) {
       return null
     }

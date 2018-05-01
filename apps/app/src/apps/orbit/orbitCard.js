@@ -55,7 +55,7 @@ const tinyProps = {
 })
 export default class OrbitCard {
   static defaultProps = {
-    borderRadius: 7,
+    borderRadius: 8,
   }
 
   hovered = false
@@ -135,7 +135,7 @@ export default class OrbitCard {
         >
           <title>
             <Text
-              size={1.2}
+              size={1.3}
               ellipse={isExpanded ? 2 : 1}
               fontWeight={400}
               css={{
@@ -164,7 +164,9 @@ export default class OrbitCard {
               }}
               {...tiny && tinyProps.iconProps}
             />
-            <UI.Text if={location}>{location}&nbsp;&nbsp;</UI.Text>
+            <UI.Text if={location} opacity={0.7}>
+              {location}&nbsp;&nbsp;
+            </UI.Text>
             <UI.Text
               if={showPreview && typeof preview === 'string'}
               ellipse={1}

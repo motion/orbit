@@ -25,7 +25,7 @@ class Masonry extends React.Component {
     this.styles = []
     for (const item of Array.from(grid.children)) {
       const content = item.querySelector('.card')
-      const contentHeight = content.getBoundingClientRect().height
+      const contentHeight = content.getBoundingClientRect().height + 50
       const rowSpan = Math.ceil(
         (contentHeight + gridGap) / (rowHeight + gridGap),
       )
@@ -104,22 +104,9 @@ export default class OrbitExplore {
     }
     return (
       <pane css={{ background: theme.base.background }}>
-        <title css={{ padding: [0, 15] }}>
-          <SubTitle
-            css={{
-              fontSize: 24,
-              lineHeight: '1.5rem',
-              marginTop: 12,
-              marginBottom: 8,
-              padding: 0,
-            }}
-            $$row
-          >
-            Sunday, Apr 22<span
-              css={{ verticalAlign: 'super', marginTop: -2, fontSize: 12 }}
-            >
-              nd
-            </span>
+        <title>
+          <SubTitle $subtitle>
+            Sunday, Apr 22<span $super>nd</span>
           </SubTitle>
         </title>
         <section $explore>
@@ -140,9 +127,7 @@ export default class OrbitExplore {
             follow.
           </UI.Text>
         </section>
-
         <OrbitDivider />
-
         <summary>
           <Masonry>
             {appStore.summaryResults.map((item, index) => (
@@ -168,6 +153,16 @@ export default class OrbitExplore {
       padding: [0, 0],
       flex: 1,
     },
+    title: { padding: [0, 15] },
+    subtitle: {
+      fontSize: 24,
+      lineHeight: '1.5rem',
+      marginTop: 12,
+      marginBottom: 8,
+      padding: 0,
+      flexFlow: 'row',
+    },
+    super: { verticalAlign: 'super', marginTop: -2, fontSize: 12 },
     section: {
       padding: [5, 0],
     },

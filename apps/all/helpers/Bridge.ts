@@ -277,9 +277,9 @@ class Bridge {
             - initial state:
               ${stringifyObject(this._initialState)}`,
         )
-        return changed
+        continue
       }
-      // fail on same object
+      // avoid on same object
       const bothObjects =
         Mobx.isObservableObject(stateObj[key]) && isPlainObject(newState[key])
       if (bothObjects) {
@@ -288,33 +288,35 @@ class Bridge {
           {},
         )
         if (isEqual(compareOriginal, newState)) {
-          return changed
+          continue
         }
-      } else {
-        // fail on same val
-        if (stateObj[key] === newState[key]) {
-          return changed
-        }
-      }
-      const oldVal = Mobx.toJS(stateObj[key])
-      const newVal = Mobx.toJS(newState[key])
-      if (isPlainObject(oldVal) && isPlainObject(newVal)) {
-        // merge plain objects
-        const newState = mergeWith(oldVal, newVal, (prev, next) => {
-          // avoid inner array merge, just replace
-          if (Mobx.isArrayLike(prev) || Mobx.isArrayLike(next)) {
-            return next
+        const oldVal = Mobx.toJS(stateObj[key])
+        const newVal = Mobx.toJS(newState[key])
+        if (isPlainObject(oldVal) && isPlainObject(newVal)) {
+          // merge plain objects
+          const newState = mergeWith(oldVal, newVal, (prev, next) => {
+            // avoid inner array merge, just replace
+            if (Mobx.isArrayLike(prev) || Mobx.isArrayLike(next)) {
+              return next
+            }
+          })
+          const diff = {} // minimal change diff
+          for (const key of Object.keys(newVal)) {
+            diff[key] = newState[key]
           }
-        })
-        const diff = {} // minimal change diff
-        for (const key of Object.keys(newVal)) {
-          diff[key] = newState[key]
+          stateObj[key] = newState
+          changed[key] = diff
         }
-        stateObj[key] = newState
-        changed[key] = diff
       } else {
-        stateObj[key] = newVal
-        changed[key] = newVal
+        // avoid on same val
+        if (stateObj[key] === newState[key]) {
+          continue
+        }
+        if (Mobx.comparer.structural(stateObj[key], newState[key])) {
+          continue
+        }
+        stateObj[key] = newState[key]
+        changed[key] = newState[key]
       }
     }
     if (root.__trackStateChanges && root.__trackStateChanges.isActive) {

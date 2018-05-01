@@ -141,7 +141,6 @@ export default class OrbitCard {
               fontWeight={400}
               css={{
                 maxWidth: `calc(100% - 30px)`,
-                marginBottom: isExpanded ? 2 : 0,
               }}
               {...tiny && tinyProps.titleProps}
             >
@@ -154,14 +153,7 @@ export default class OrbitCard {
           <subtitle if={!tiny && typeof subtitle === 'object'}>
             {subtitle}
           </subtitle>
-          <preview
-            if={preview}
-            css={{
-              margin: [3, 0, 0],
-              flexFlow: 'row',
-              alignItems: 'center',
-            }}
-          >
+          <preview if={preview}>
             <OrbitIcon
               if={icon}
               icon={icon}
@@ -170,7 +162,6 @@ export default class OrbitCard {
               css={{
                 filter: isExpanded ? 'none' : 'grayscale(50%)',
                 opacity: isExpanded ? 1 : 0.85,
-                margin: [0, 10, -1, 0],
               }}
               {...tiny && tinyProps.iconProps}
             />
@@ -265,11 +256,9 @@ export default class OrbitCard {
     cardHovered: {},
     content: {
       flex: 1,
-      overflow: 'hidden',
     },
     icon: {
-      marginLeft: 0,
-      marginTop: 3,
+      margin: [-4, 8, 0, 0],
     },
     full: {
       padding: [2, 0],
@@ -282,6 +271,12 @@ export default class OrbitCard {
       userSelect: 'none',
       // justifyContent: 'center',
       // flex: 1,
+    },
+    preview: {
+      margin: [3, 0, 2],
+      flexFlow: 'row',
+      alignItems: 'center',
+      // justifyContent: 'center',
     },
     bottomIcon: {
       display: 'inline-block',

@@ -17,6 +17,7 @@ const appTarget = ({ offset, bounds }) => {
 export default class AppReactions {
   constructor({ onPinKey }) {
     App.onMessage(async msg => {
+      console.log('appmsg', msg)
       switch (msg) {
         case App.messages.TOGGLE_SHOWN:
           this.toggle()

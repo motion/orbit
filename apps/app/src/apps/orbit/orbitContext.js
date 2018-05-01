@@ -5,7 +5,6 @@ import OrbitFrame from './orbitFrame'
 import OrbitSearchResults from './orbitSearchResults'
 import OrbitSettings from './orbitSettings'
 import OrbitHeader from './orbitHeader'
-import OrbitHomeContext from './orbitHomeContext'
 import { App, Desktop } from '@mcro/all'
 import { throttle } from 'lodash'
 import { Title, SubTitle } from '~/views'
@@ -55,7 +54,6 @@ export default class Orbit {
         >
           <OrbitHeader headerBg={headerBg} />
           <orbitInner>
-            <OrbitHomeContext appStore={appStore} />
             <orbitContext
               if={!appStore.showSettings}
               css={{

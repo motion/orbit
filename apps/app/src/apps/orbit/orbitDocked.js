@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import OrbitHomeExplore from './orbitHomeExplore'
+import OrbitHome from './orbitHome'
 import OrbitSettings from './orbitSettings'
 import OrbitHeader from './orbitHeader'
 import { App } from '@mcro/all'
@@ -24,7 +24,7 @@ class OrbitDocked {
       >
         <OrbitHeader headerBg={background} />
         <orbitInner>
-          <OrbitHomeExplore if={!appStore.showSettings} appStore={appStore} />
+          <OrbitHome if={!appStore.showSettings} appStore={appStore} />
           <OrbitSettings />
         </orbitInner>
       </frame>

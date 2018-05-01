@@ -25,6 +25,20 @@ class OrbitDocked {
       >
         <OrbitHeader headerBg={background} />
         <orbitInner>
+          <UI.Button
+            $settingsButton
+            icon="gear"
+            borderRadius={100}
+            size={1.15}
+            sizeIcon={0.8}
+            circular
+            borderWidth={0}
+            background={theme.base.background}
+            iconProps={{
+              color: theme.active.background,
+            }}
+            onClick={appStore.toggleSettings}
+          />
           <OrbitHome if={!appStore.showSettings} appStore={appStore} />
           <OrbitSearchResults />
           <OrbitSettings />
@@ -59,6 +73,12 @@ class OrbitDocked {
     orbitInner: {
       position: 'relative',
       flex: 1,
+    },
+    settingsButton: {
+      position: 'absolute',
+      top: -20,
+      right: 0,
+      zIndex: 1000,
     },
   }
 }

@@ -293,7 +293,6 @@ export default class AppStore {
   })
 
   setDockedResultRef = _.memoize(index => ref => {
-    console.log('getting it for', index, ref)
     this.dockedResultRefs[index] = ref
   })
 

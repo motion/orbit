@@ -9,6 +9,7 @@ const log = debug('ElectronReactions')
 export default class ElectronReactions {
   onShortcut = async shortcut => {
     if (shortcut === 'CommandOrControl+Space') {
+      console.log('send toggle docked')
       Electron.sendMessage(App, App.messages.TOGGLE_DOCKED)
       return
     }

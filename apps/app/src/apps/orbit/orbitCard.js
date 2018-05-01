@@ -323,10 +323,12 @@ export default class OrbitCard {
         ? {
             border: [1, 'transparent'],
             background: '#fff',
-            boxShadow: [
-              ['inset', 0, 0, 0, 0.5, theme.active.background.darken(0.2)],
-              // [2, 0, 25, [0, 0, 0, 0.05]],
-            ],
+            boxShadow: isSelected
+              ? [
+                  ['inset', 0, 0, 0, 0.5, theme.active.background.darken(0.2)],
+                  // [2, 0, 25, [0, 0, 0, 0.05]],
+                ]
+              : null,
           }
         : {
             border: [1, theme.active.background],

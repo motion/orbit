@@ -57,6 +57,14 @@ it's your company intranet as a an upgrade to your mac that provides a unified s
   * increase ability to turn off notifications and focus / deep work
   * reduce communication silos and unknowns
 
+## product x market strategy
+
+* high user alignment
+  * this means our customers are direct end users
+  * make them love it, and companies will pay for it
+  * personal version is how we get people on board
+  * company features make more money, so how to retain high user alignment?
+
 ## product strategy
 
 * desktop app = far more powerful, present minute to minute (super high engagement)
@@ -72,7 +80,6 @@ it's your company intranet as a an upgrade to your mac that provides a unified s
 * no cloud = privacy / aligment with end users = user confidence (no one but apple does)
 * no cloud = insanely easy onboarding, no big sales process
 * private on device = useful to any user not just whole team or company
-* high user alignment + beautiful product = high potential end user brand dedication
 * smart app = easy to get high user count initially
   * because of this makes sense generally to have:
     * longer beta

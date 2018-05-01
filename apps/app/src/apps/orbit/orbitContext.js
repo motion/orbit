@@ -9,6 +9,7 @@ import { App, Desktop } from '@mcro/all'
 import { throttle } from 'lodash'
 import { Title, SubTitle } from '~/views'
 import Results from '~/apps/results/results'
+import * as Constants from '~/constants'
 
 const SPLIT_INDEX = 3
 
@@ -94,6 +95,9 @@ export default class Orbit {
       height: 'calc(100% - 35px)',
       transition: 'transform ease-in-out 150ms',
       zIndex: 100,
+    },
+    contextHeader: {
+      padding: [15, 0, 0],
     },
     results: {
       flex: 1,

@@ -124,9 +124,19 @@ export default class OrbitExplore {
             $exploreButton
             {...exploreButton}
           />
-          <UI.Text size={1.1} css={{ width: 'calc(100% - 120px)' }}>
-            There have been <strong>4 conversations</strong> on topics you
-            follow.
+          <UI.Text
+            size={1.1}
+            css={{ width: 'calc(100% - 120px)', marginLeft: 8 }}
+          >
+            <strong>4</strong> new conversations and items on{' '}
+            <span
+              css={{
+                paddingBottom: 2,
+                borderBottom: [2, theme.active.background.lighten(0.02)],
+              }}
+            >
+              topics you follow
+            </span>.
           </UI.Text>
         </section>
         <OrbitDivider />

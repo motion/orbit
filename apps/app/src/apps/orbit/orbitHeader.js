@@ -166,8 +166,9 @@ export default class OrbitHeader {
     input: {
       width: '100%',
       fontWeight: 300,
-      fontSize: 28,
+      fontSize: 22,
       padding: [10, 10, 10, 36],
+      height: 54,
       border: 'none',
       background: 'transparent',
     },

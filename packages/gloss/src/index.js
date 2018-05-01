@@ -136,6 +136,19 @@ export default class Gloss {
             this.theme.addRules(rules)
           }
         }
+
+        // for HMR needs to re-run on mount idk why
+        if (process.env.NODE_ENV === 'development') {
+          const ogComponentWillMount = Child.prototype.componentWillMount
+          Child.prototype.componentWillMount = function(...args) {
+            if (hasTheme) {
+              this.glossUpdateTheme(this.props)
+            }
+            if (ogComponentWillMount) {
+              return ogComponentWillMount.call(this, ...args)
+            }
+          }
+        }
       }
 
       let lastUpdatedStyles = null

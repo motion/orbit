@@ -87,23 +87,13 @@ export default class OrbitHeader {
           css={{
             position: 'absolute',
             bottom: 0,
+            height: 1,
+            zIndex: 1,
             right: App.orbitOnLeft ? 20 : -1,
             left: App.orbitOnLeft ? -1 : 20,
-            height: 1,
             background: `linear-gradient(to right, ${theme.base.background}, ${
               theme.active.background
             })`,
-            zIndex: 1,
-            // boxShadow: [
-            //   [
-            //     'inset',
-            //     App.orbitOnLeft ? 1 : -1,
-            //     0,
-            //     0,
-            //     0.5,
-            //     theme.base.background.darken(0.15).desaturate(0.5),
-            //   ],
-            // ],
           }}
         />
         <title>
@@ -113,16 +103,13 @@ export default class OrbitHeader {
             size={15}
             color={theme.active.background.darken(0.15).desaturate(0.4)}
           />
-          <UI.Input
+          <input
             value={orbitStore.query}
             size={1.3}
             sizeRadius
+            $input
             css={{
-              width: '100%',
-              fontWeight: 300,
-              // boxShadow: ['inset', 0, 0, 0, 1, darkerBg.darken(0.5)],
               opacity: App.state.query.length > 0 ? 1 : 0.6,
-              paddingLeft: 42,
             }}
             background="transparent"
             onChange={orbitStore.onChangeQuery}
@@ -175,6 +162,18 @@ export default class OrbitHeader {
       },
       transition: 'all ease-in 300ms',
     },
+    searchIcon: {
+      paddingLeft: 34,
+      margin: 0,
+    },
+    input: {
+      width: '100%',
+      fontWeight: 300,
+      fontSize: 28,
+      padding: [10, 10, 10, 36],
+      border: 'none',
+      background: 'transparent',
+    },
     pinnedIcon: {
       position: 'relative',
       zIndex: 10000,
@@ -195,12 +194,10 @@ export default class OrbitHeader {
       left: 0,
     },
     title: {
+      flexFlow: 'row',
       flex: 1,
-    },
-    searchIcon: {
-      marginBottom: 1,
-      alignItems: 'center',
       justifyContent: 'center',
+      alignItems: 'center',
     },
   }
 }

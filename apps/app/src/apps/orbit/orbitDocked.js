@@ -57,7 +57,7 @@ class OrbitDocked {
       pointerEvents: 'none',
       width: App.dockedWidth,
       height: '100%',
-      transition: 'all ease-in 100ms',
+      transition: `all ease-in ${App.animationDuration}ms`,
       opacity: 0,
       transform: {
         x: 10,

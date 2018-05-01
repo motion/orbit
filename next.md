@@ -9,17 +9,11 @@
 * global trends peek
 * profiles design iteration
 * search smoothness
-
-need to mockup for demo:
-
+* prototype for watching topics
 * pinning item to top of news for a day
 
 demo for Formidable on May 12th:
 
-* daily summary really smooth (2 days)
-  * various ux and interaction, design for peeks, slack formatting fixes (1day)
-  * include peek window design for top area with global trends (0.5day)
-  * finishing cosal merge and showing better summary, plus reason why each card is placed (0.5day)
 * basic search for stuff and app launch showing nlp (2 days)
   * improve various list item results and try and remove jitter/lag (0.5 day)
   * better peek for a document (0.5day)

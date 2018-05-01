@@ -1,8 +1,5 @@
 ## now
 
-* finish cleanup and refactor
-  * peeks working
-  * position stuff
 * peeks point to the grid items properly
 * tear away peeks + super simple app
 * get dark blue theme working for news area

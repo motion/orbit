@@ -43,7 +43,7 @@ export default class MainWindow extends React.Component {
         opacity={electronStore.show === 1 ? 0 : 1}
         frame={false}
         hasShadow={false}
-        showDevTools={Electron.state.showDevTools.highlights}
+        showDevTools={Electron.state.showDevTools.app}
         transparent
         background="#00000000"
         webPreferences={Constants.WEB_PREFERENCES}

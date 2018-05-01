@@ -89,6 +89,7 @@ export default class AppStore {
   services = {}
   getResults = null
   resultRefs = {}
+  dockedResultRefs = {}
 
   get innerHeight() {
     const HEADER_HEIGHT = 90
@@ -291,17 +292,23 @@ export default class AppStore {
     this.resultRefs[index] = ref
   })
 
+  setDockedResultRef = _.memoize(index => ref => {
+    console.log('getting it for', index, ref)
+    this.dockedResultRefs[index] = ref
+  })
+
   getTargetPosition = index => {
-    const ref = this.resultRefs[index]
+    const ref = App.orbitState.docked
+      ? this.dockedResultRefs[index]
+      : this.resultRefs[index]
     if (!ref) {
       throw 'errrrrrr'
     }
-    const { top, height } = ref.getBoundingClientRect()
+    const { top, left, height } = ref.getBoundingClientRect()
+    console.log('get bounds', ref, top, left)
     return {
       top,
-      left: App.orbitState.docked
-        ? App.state.screenSize[0] - App.dockedWidth
-        : App.orbitState.position[0],
+      left: left,
       width: App.orbitState.size[0],
       height,
     }
@@ -350,7 +357,6 @@ export default class AppStore {
 
   toggleSelected = index => {
     const isSame = this.selectedIndex === index
-    console.log('toggle', index, this.selectedIndex)
     if (isSame && App.peekState.target) {
       if (Date.now() - this.lastSelectAt < 450) {
         // ignore double clicks

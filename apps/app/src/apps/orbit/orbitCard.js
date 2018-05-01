@@ -128,7 +128,7 @@ export default class OrbitCard {
         <card
           $cardHovered={this.hovered}
           css={{
-            padding: listItem ? [15, 12] : tiny ? [6, 8] : [9, 12],
+            padding: listItem ? [15, 12] : tiny ? [6, 8] : [9, 10],
             borderRadius,
           }}
           onMouseEnter={this.setHovered}

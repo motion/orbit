@@ -9,11 +9,11 @@ class HeaderStore {
   inputRef = null
 
   hover = () => {
-    this.inputRef.focus()
+    this.inputRef && this.inputRef.focus()
   }
 
   blur = () => {
-    this.inputRef.blur()
+    this.inputRef && this.inputRef.blur()
   }
 
   @react({ delay: 32, log: false })
@@ -23,11 +23,13 @@ class HeaderStore {
       App.isMouseInActiveArea,
     ],
     async ([shown], { when }) => {
-      if (!this.inputRef || !shown) {
+      if (!shown) {
         throw react.cancel
       }
       await when(() => !App.isAnimatingOrbit)
-      this.inputRef.focus()
+      if (this.inputRef) {
+        this.inputRef.focus()
+      }
     },
   ]
 
@@ -106,7 +108,6 @@ export default class OrbitHeader {
           <input
             value={orbitStore.query}
             size={1.3}
-            sizeRadius
             $input
             css={{
               opacity: App.state.query.length > 0 ? 1 : 0.6,
@@ -114,7 +115,7 @@ export default class OrbitHeader {
             background="transparent"
             onChange={orbitStore.onChangeQuery}
             onKeyDown={this.handleKeyDown}
-            getRef={headerStore.ref('inputRef').set}
+            ref={headerStore.ref('inputRef').set}
             onClick={headerStore.onClickInput}
           />
           <inputLn />

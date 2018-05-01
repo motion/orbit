@@ -52,7 +52,7 @@ export default class PeekFrame {
       return null
     }
     const isHidden = !state
-    const { orbitDocked, orbitOnLeft } = App.orbitState
+    const { docked, orbitOnLeft } = App.orbitState
     const onRight = !state.peekOnLeft
     const padding = [
       SHADOW_PAD,
@@ -66,9 +66,8 @@ export default class PeekFrame {
       [onRight ? 6 : -6, 3, SHADOW_PAD, [0, 0, 0, 0.15]],
       borderShadow,
     ]
-    console.log(state.position.slice(), App.peekState.position.slice())
     const arrowSize = 33
-    let peekAdjustX = orbitDocked ? 13 : 0
+    let peekAdjustX = docked ? -13 : 0
     peekAdjustX += onRight ? -4 + (!orbitOnLeft ? Constants.SHADOW_PAD : 0) : 4
     return (
       <peekFrame

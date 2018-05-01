@@ -26,7 +26,7 @@ class MasonryCard {
         result={item}
         hoverToSelect
         expanded
-        getRef={appStore.setResultRef(item)}
+        getRef={appStore.setDockedResultRef(index)}
         style={{
           ...style,
           height: 200,

@@ -1,9 +1,40 @@
+import * as React from 'react'
 import { view, react } from '@mcro/black'
 import { SubTitle } from '~/views'
 import * as UI from '@mcro/ui'
-import OrbitHomeHighlights from './orbitHomeHighlights'
 import { App } from '@mcro/all'
 import OrbitDivider from './orbitDivider'
+import Masonry from '~/views/masonry'
+import OrbitCard from './orbitCard'
+
+@view.attach('appStore')
+@view
+class MasonryCard {
+  static getColumnSpanFromProps = (props, getState) => {
+    return 1
+  }
+  static getHeightFromProps = (getState, props, columnSpan, columnGutter) => {
+    return 200
+  }
+  render() {
+    const { index, appStore, item, style } = this.props
+    return (
+      <OrbitCard
+        index={index}
+        item={this.props}
+        total={appStore.summaryResults.length}
+        result={item}
+        hoverToSelect
+        expanded
+        getRef={appStore.setResultRef(item)}
+        style={{
+          ...style,
+          height: 200,
+        }}
+      />
+    )
+  }
+}
 
 class OrbitExploreStore {
   willUnmount() {
@@ -114,7 +145,19 @@ export default class OrbitExplore {
         <OrbitDivider />
 
         <SubTitle css={{ margin: [6, 0, 0, 4] }}>In your orbit</SubTitle>
-        <OrbitHomeHighlights results={appStore.summaryResults} />
+        <summary>
+          <Masonry
+            items={appStore.summaryResults}
+            itemComponent={MasonryCard}
+            alignCenter={true}
+            loadingElement={<span>Loading...</span>}
+            columnWidth={265}
+            columnGutter={10}
+            hasMore={false}
+            isLoading={false}
+            onInfiniteLoad={() => {}}
+          />
+        </summary>
       </pane>
     )
   }
@@ -126,6 +169,17 @@ export default class OrbitExplore {
     },
     section: {
       padding: [5, 0],
+    },
+    summary: {
+      flex: 1,
+      position: 'relative',
+      transition: 'opacity ease-in-out 150ms',
+      overflowY: 'scroll',
+    },
+    grid: {
+      padding: [0, 5],
+      flexFlow: 'row',
+      flexWrap: 'wrap',
     },
     cards: {
       flexFlow: 'row',

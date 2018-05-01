@@ -4,7 +4,6 @@ import Server from './server'
 import Plugins from './plugins'
 import Screen from './screen'
 import KeyboardStore from './stores/keyboardStore'
-import MouseOverStore from './stores/mouseOverStore'
 import Auth from './auth'
 import hostile_ from 'hostile'
 import * as Constants from '~/constants'
@@ -34,7 +33,6 @@ export default class DesktopRoot {
   screen: Screen
   plugins: Plugins
   keyboardStore: KeyboardStore
-  mouseOverStore: MouseOverStore
   server = new Server()
   auth = new Auth()
   sqlite = new SQLiteServer()
@@ -63,7 +61,6 @@ export default class DesktopRoot {
     this.keyboardStore = new KeyboardStore({
       onKeyClear: this.screen.lastScreenChange,
     })
-    this.mouseOverStore = new MouseOverStore()
     this.keyboardStore.start()
     iohook.start(false)
     this.setupHosts()

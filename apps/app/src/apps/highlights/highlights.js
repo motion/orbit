@@ -35,28 +35,28 @@ const log = debug('highlights')
       },
     ]
 
-    @react({ fireImmediately: true, log: 'state' })
-    setHovered = [
-      () => [this.trees, Desktop.mouseState.position],
-      ([{ word, line }, { x, y }]) => {
-        // if (Swift.state.isPaused) return
-        let hoveredWord = null
-        let hoveredLine = null
-        const gotWord = toTarget(word.get({ x, y, w: 0, h: 0 })[0])
-        const gotLine = toTarget(
-          line.get({ x, y: y - LINE_Y_ADJ, w: 0, h: 0 })[0],
-        )
-        if (gotWord) {
-          const { key: wkey, ...wordT } = gotWord
-          hoveredWord = { ...wordT, index: +wkey }
-        }
-        if (gotLine) {
-          const { key: lkey, ...lineT } = gotLine
-          hoveredLine = { ...lineT, index: +lkey }
-        }
-        App.setState({ hoveredWord, hoveredLine })
-      },
-    ]
+    // @react({ fireImmediately: true, log: 'state' })
+    // setHovered = [
+    //   () => [this.trees, Desktop.mouseState.position],
+    //   ([{ word, line }, { x, y }]) => {
+    //     // if (Swift.state.isPaused) return
+    //     let hoveredWord = null
+    //     let hoveredLine = null
+    //     const gotWord = toTarget(word.get({ x, y, w: 0, h: 0 })[0])
+    //     const gotLine = toTarget(
+    //       line.get({ x, y: y - LINE_Y_ADJ, w: 0, h: 0 })[0],
+    //     )
+    //     if (gotWord) {
+    //       const { key: wkey, ...wordT } = gotWord
+    //       hoveredWord = { ...wordT, index: +wkey }
+    //     }
+    //     if (gotLine) {
+    //       const { key: lkey, ...lineT } = gotLine
+    //       hoveredLine = { ...lineT, index: +lkey }
+    //     }
+    //     App.setState({ hoveredWord, hoveredLine })
+    //   },
+    // ]
 
     // test positions - all four corners + center
     // get ocrWords() {

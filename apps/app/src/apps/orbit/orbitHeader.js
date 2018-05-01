@@ -65,7 +65,6 @@ export default class OrbitHeader {
     return (
       <orbitHeader
         $headerBg={headerBg}
-        $headerMouseOver={Desktop.hoverState.orbitHovered}
         css={{
           borderTopLeftRadius:
             !App.orbitOnLeft || App.orbitState.orbitDocked
@@ -159,19 +158,6 @@ export default class OrbitHeader {
       justifyContent: 'center',
       padding: [3, 2],
       transition: 'all ease-in 300ms',
-    },
-    controls: {
-      position: 'absolute',
-      bottom: -12,
-      right: 12,
-      zIndex: 10000,
-      opacity: 0.8,
-      '&:hover': {
-        opacity: 1,
-      },
-    },
-    headerMouseOver: {
-      opacity: 1,
     },
     headerBg: background => ({
       background: `linear-gradient(${background

@@ -293,14 +293,10 @@ export default class AppStore {
 
   getTargetPosition = index => {
     const ref = this.resultRefs[index]
-    let height = 60
-    let top = Math.max(
-      App.orbitState.position[1] + 100,
-      Desktop.mouseState.position.y - 200,
-    )
-    if (ref) {
-      ;({ top, height } = ref.getBoundingClientRect())
+    if (!ref) {
+      throw 'errrrrrr'
     }
+    const { top, height } = ref.getBoundingClientRect()
     return {
       top,
       left: App.orbitState.docked

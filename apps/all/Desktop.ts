@@ -50,7 +50,6 @@ class DesktopStore {
     },
     mouseState: {
       mouseDown: null,
-      position: { x: 0, y: 0 },
     },
     paused: true,
     focusedOnOrbit: true,

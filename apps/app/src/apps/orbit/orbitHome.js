@@ -6,7 +6,7 @@ import { App } from '@mcro/all'
 import OrbitDivider from './orbitDivider'
 import OrbitCard from './orbitCard'
 
-const rowHeight = 20
+const rowHeight = 10
 const gridGap = 10
 
 @view
@@ -25,7 +25,7 @@ class Masonry extends React.Component {
     this.styles = []
     for (const item of Array.from(grid.children)) {
       const content = item.querySelector('.card')
-      const contentHeight = content.getBoundingClientRect().height + 50
+      const contentHeight = content.clientHeight
       const rowSpan = Math.ceil(
         (contentHeight + gridGap) / (rowHeight + gridGap),
       )
@@ -45,7 +45,7 @@ class Masonry extends React.Component {
       )
     }
     return (
-      <grid style={{ gridAutoRows: rowHeight }} {...props}>
+      <grid style={{ gridAutoRows: rowHeight, gridGap }} {...props}>
         {React.Children.map(children, (child, index) => {
           return React.cloneElement(child, {
             style: this.styles[index],
@@ -59,7 +59,6 @@ class Masonry extends React.Component {
     grid: {
       minHeight: '100%',
       display: 'grid',
-      gridGap,
       gridTemplateColumns: 'repeat(auto-fill, minmax(250px,1fr))',
     },
   }
@@ -171,6 +170,7 @@ export default class OrbitExplore {
       position: 'relative',
       transition: 'opacity ease-in-out 150ms',
       overflowY: 'scroll',
+      padding: [0, gridGap],
     },
     grid: {
       padding: [0, 5],

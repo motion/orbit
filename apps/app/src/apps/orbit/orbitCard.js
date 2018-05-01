@@ -117,7 +117,6 @@ export default class OrbitCard {
     return (
       <cardWrap
         css={{
-          padding: listItem ? 0 : [0, 4, 3],
           zIndex: isExpanded ? 5 : 4,
         }}
         ref={getRef}

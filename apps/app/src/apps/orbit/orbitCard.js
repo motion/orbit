@@ -250,6 +250,7 @@ export default class OrbitCard {
     card: {
       overflow: 'hidden',
       position: 'relative',
+      maxHeight: '100%',
       // transition: 'all ease-in 2500ms',
     },
     title: {

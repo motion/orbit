@@ -25,12 +25,10 @@ class Masonry extends React.Component {
     this.styles = []
     for (const item of Array.from(grid.children)) {
       const content = item.querySelector('.card')
-      console.log('finding content', content)
+      const contentHeight = content.getBoundingClientRect().height
       const rowSpan = Math.ceil(
-        (content.getBoundingClientRect().height + 100 + gridGap) /
-          (rowHeight + gridGap),
+        (contentHeight + gridGap) / (rowHeight + gridGap),
       )
-      console.log('rowSpan', rowSpan, item.getBoundingClientRect().height)
       this.styles.push({ gridRowEnd: `span ${rowSpan}` })
     }
     this.setState({ measured: true })
@@ -49,7 +47,6 @@ class Masonry extends React.Component {
     return (
       <grid style={{ gridAutoRows: rowHeight }} {...props}>
         {React.Children.map(children, (child, index) => {
-          console.log('cloning with style', this.styles[index], index)
           return React.cloneElement(child, {
             style: this.styles[index],
           })

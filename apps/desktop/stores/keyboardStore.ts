@@ -56,6 +56,9 @@ export default class KeyboardStore {
           Desktop.sendMessage(App, App.messages.HIDE_PEEK)
           return
         }
+        if (!App.isMouseInActiveArea) {
+          return
+        }
         Desktop.sendMessage(App, App.messages.HIDE)
         return
       }

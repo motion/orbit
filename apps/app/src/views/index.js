@@ -16,13 +16,11 @@ export const Circle = props => (
       alignItems: 'center',
       justifyContent: 'center',
       textAlign: 'center',
-      // background: .alpha(0.75),
-      // border: [1, highlightColor],
       boxShadow: [[0, 0, 0, 0.5, highlightColor]],
       color: highlightColor,
       fontWeight: 500,
       fontSize: 12,
-      margin: [-2, 4, -2, -2],
+      margin: [-3, 4, 0, -2],
     }}
     {...props}
   />

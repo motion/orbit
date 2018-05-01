@@ -41,7 +41,6 @@ export default class Circle extends React.Component {
       alignItems: 'center',
       justifyContent: 'center',
       background: '#fff',
-      color: '#111',
       fontWeight: 400,
       cursor: 'pointer',
       userSelect: 'none',

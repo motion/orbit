@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { view, react } from '@mcro/black'
-import { SubTitle } from '~/views'
+import { SubTitle, Circle } from '~/views'
 import * as UI from '@mcro/ui'
 import { App } from '@mcro/all'
 import OrbitCard from './orbitCard'
@@ -130,7 +130,6 @@ export default class OrbitExplore {
     const day = now.toLocaleDateString(locale, { weekday: 'long' })
     const month = now.toLocaleDateString(locale, { month: 'short' })
     const dayNum = now.getMonth()
-
     const exploreButton = {
       size: 1.2,
       circular: true,
@@ -146,7 +145,9 @@ export default class OrbitExplore {
       <pane css={{ background: theme.base.background }}>
         <title>
           <SubTitle $subtitle>
-            <span $bolder>{day}</span> {month} {dayNum}
+            <span $bolder>{day}</span>
+            &nbsp;&nbsp;
+            {month} {dayNum}
             <span $super>{postfix[dayNum - 1]}</span>
           </SubTitle>
         </title>
@@ -167,7 +168,7 @@ export default class OrbitExplore {
             size={1.1}
             css={{ width: 'calc(100% - 120px)', marginLeft: 8 }}
           >
-            <strong>4</strong> new interesting things on{' '}
+            &nbsp;<strong>4</strong> interesting things on{' '}
             <span
               css={{
                 paddingBottom: 2,
@@ -206,8 +207,8 @@ export default class OrbitExplore {
     },
     title: { padding: [0, 15] },
     subtitle: {
-      fontSize: 26,
-      fontWeight: 200,
+      fontSize: 18,
+      fontWeight: 300,
       lineHeight: '1.5rem',
       marginTop: 16,
       marginBottom: 3,
@@ -215,13 +216,14 @@ export default class OrbitExplore {
       flexFlow: 'row',
     },
     bolder: {
+      fontSize: 26,
       fontWeight: 200,
     },
     super: {
       verticalAlign: 'super',
-      marginTop: -3,
       marginLeft: 1,
-      fontSize: 14,
+      fontSize: 11,
+      opacity: 0.6,
     },
     section: {
       padding: [5, 0],

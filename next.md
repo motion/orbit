@@ -1,6 +1,6 @@
 ## broadly
 
-* bugs (2 days)
+* correctness/smoothness/perf/bugs (3 days)
 * ui/ux (3 days)
 * fake hardcoded demo features (3 days)
 * explore ui (1 day)

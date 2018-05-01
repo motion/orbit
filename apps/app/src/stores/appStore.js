@@ -490,4 +490,10 @@ export default class AppStore {
     const url = await getPermalink(result, openType)
     App.open(url)
   }
+
+  handleLink = e => {
+    e.preventDefault()
+    e.stopPropagation()
+    App.open(e.target.href)
+  }
 }

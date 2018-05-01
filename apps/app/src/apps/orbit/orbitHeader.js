@@ -16,7 +16,7 @@ class HeaderStore {
     this.inputRef.blur()
   }
 
-  @react({ fireImmediately: true, delay: 32 })
+  @react({ fireImmediately: true, delay: 32, log: false })
   focusInput = [
     () => [App.isFullyShown, App.orbitState.pinned, App.isMouseInActiveArea],
     () => {

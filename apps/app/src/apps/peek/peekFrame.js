@@ -10,14 +10,14 @@ const borderRadius = 6
 const background = '#f9f9f9'
 
 class PeekFrameStore {
-  @react
+  @react({ log: false })
   curState = [
     () => App.peekState,
     peekState => {
       if (!peekState.target) {
         return null
       }
-      return peekState
+      return { ...peekState }
     },
   ]
 
@@ -51,7 +51,6 @@ export default class PeekFrame {
     if (!state || !state.position || !state.position.length || !state.target) {
       return null
     }
-    console.log('PEEK FRAME STATE', App.peekState.toJS(), state.toJS())
     const isHidden = !state
     const { orbitDocked, orbitOnLeft } = App.orbitState
     const onRight = !state.peekOnLeft
@@ -67,6 +66,7 @@ export default class PeekFrame {
       [onRight ? 6 : -6, 3, SHADOW_PAD, [0, 0, 0, 0.15]],
       borderShadow,
     ]
+    console.log(state.position.slice(), App.peekState.position.slice())
     const arrowSize = 33
     let peekAdjustX = orbitDocked ? 13 : 0
     peekAdjustX += onRight ? -4 + (!orbitOnLeft ? Constants.SHADOW_PAD : 0) : 4

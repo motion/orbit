@@ -23,7 +23,6 @@ export default class BitSlackMessage {
     let content
     const link = getLink(message)
     if (link && link.indexOf('.png')) {
-      console.log('attachment', link)
       content = (
         <miniImg>
           <img src={link} />
@@ -31,8 +30,11 @@ export default class BitSlackMessage {
       )
     }
     if (link) {
-      console.log('link', link)
-      content = <a href={link}>{link}</a>
+      content = (
+        <a href={link} onClick={appStore.handleLink}>
+          {link}
+        </a>
+      )
     }
     if (message.text.indexOf('uploaded a file') >= 0) {
       const src = message.text.match(/\<([a-z]+:\/\/[^>]+)\>/g).map(link =>

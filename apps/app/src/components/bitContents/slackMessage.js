@@ -73,13 +73,15 @@ export default class BitSlackMessage {
           <RoundButton
             onClick={e => {
               e.stopPropagation()
-              App.setSelectedItem({
-                id: person.id,
-                icon: avatar,
-                title: message.name,
-                body: '',
-                type: 'person',
-                integration: '',
+              App.setPeekState({
+                item: {
+                  id: person.id,
+                  icon: avatar,
+                  title: message.name,
+                  body: '',
+                  type: 'person',
+                  integration: '',
+                },
               })
               appStore.pinSelected()
             }}

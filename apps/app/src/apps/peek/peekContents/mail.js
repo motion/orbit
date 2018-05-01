@@ -7,7 +7,7 @@ import * as _ from 'lodash'
 
 @view
 export class Mail {
-  render({ bit, selectedItem }) {
+  render({ bit, item }) {
     if (!bit) {
       return null
     }
@@ -22,11 +22,7 @@ export class Mail {
       ).value
     return (
       <React.Fragment>
-        <PeekHeader
-          icon="email"
-          title={selectedItem.title}
-          date={bit.createdAt}
-        />
+        <PeekHeader icon="email" title={item.title} date={bit.createdAt} />
         <body>
           <messages if={messages}>
             {messages.map((message, index) => {

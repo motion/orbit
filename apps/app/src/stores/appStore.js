@@ -173,7 +173,7 @@ export default class AppStore {
 
   @react({ log: false, delay: 32 })
   selectedBit = [
-    () => App.state.selectedItem,
+    () => App.peekState.item,
     async item => {
       if (!item) {
         return null

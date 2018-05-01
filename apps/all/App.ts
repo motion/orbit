@@ -54,7 +54,6 @@ class AppStore {
       openId: null,
       closeId: null,
     },
-    selectedItem: null,
     highlightWords: {},
     hoveredWord: null,
     hoveredLine: null,

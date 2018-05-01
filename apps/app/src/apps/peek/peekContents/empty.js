@@ -1,7 +1,7 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
 
-export const Empty = ({ selectedItem: item }) => (
+export const Empty = ({ item }) => (
   <contents
     if={item}
     css={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}

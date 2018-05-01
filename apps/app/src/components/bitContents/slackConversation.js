@@ -8,10 +8,10 @@ import pluralize from 'pluralize'
 
 // const isntAttachment = x => !x.text || !x.text.match(/\<([a-z]+:\/\/[^>]+)\>/g)
 const exampleTitles = [
-  `Context, TSNE, Mobile App`,
-  `Superhuman, Funny`,
-  `Search, nlp, fluid`,
-  `Sketching, creatively`,
+  `Context and TSNE`,
+  `Superhuman and funny`,
+  `Search and nlp`,
+  `Sketching and creatively`,
 ]
 const uids = {}
 

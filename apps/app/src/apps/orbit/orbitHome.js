@@ -188,7 +188,6 @@ export default class OrbitExplore {
     },
     explore: {
       flexFlow: 'row',
-      overflowX: 'scroll',
       padding: [10, 10],
       alignItems: 'center',
     },

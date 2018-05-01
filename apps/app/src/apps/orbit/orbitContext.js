@@ -45,6 +45,7 @@ export default class Orbit {
   render({ appStore, orbitPage, theme }) {
     const headerBg = theme.base.background
     const { orbitOnLeft } = App
+    return null
     return (
       <UI.Theme name="tan">
         <OrbitFrame

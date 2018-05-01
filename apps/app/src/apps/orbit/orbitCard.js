@@ -333,6 +333,7 @@ export default class OrbitCard {
             margin: [0, 2],
           }
         : {
+            border: [1, theme.active.background],
             background: 'transparent',
             '&:hover': hoveredStyle,
           }

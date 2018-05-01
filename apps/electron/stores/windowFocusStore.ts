@@ -1,4 +1,4 @@
-import { react, store } from '@mcro/black'
+import { react, store, sleep } from '@mcro/black'
 import { App, Electron, Desktop, Swift } from '@mcro/all'
 import { globalShortcut } from 'electron'
 import debug from '@mcro/debug'
@@ -68,27 +68,14 @@ export default class WindowFocusStore {
     },
   ]
 
-  @react({ delay: App.animationDuration, log: 'state' })
-  defocusAfterClosing = [
-    () => [App.orbitState.pinned, App.isShowingOrbit],
-    ([pinned, showing]) => {
-      if (pinned || showing || Desktop.hoverState.orbitHovered) {
-        throw react.cancel
-      }
-      Swift.defocus()
-    },
-  ]
-
   @react
   focusOnMouseOver = [
     () => App.isMouseInActiveArea,
-    mouseOver => {
-      if (!App.isShowingOrbit) {
+    async (mouseOver, { sleep, when }) => {
+      if (!App.isShowingOrbit || App.orbitState.pinned) {
         throw react.cancel
       }
-      if (App.orbitState.pinned) {
-        throw react.cancel
-      }
+      await when(() => !App.isAnimatingOrbit)
       if (mouseOver) {
         this.focusOrbit()
       } else {

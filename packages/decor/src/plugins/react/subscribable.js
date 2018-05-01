@@ -1,26 +1,18 @@
-// @flow
 import { CompositeDisposable } from 'sb-event-kit'
-
-declare class Subscribable {
-  subscriptions: CompositeDisposable;
-}
-
-declare class Object {
-  static defineProperty(any, any, any): void;
-}
 
 export default () => ({
   name: 'subscribable',
   once: true,
   onlyClass: true,
-  decorator: (Klass: Class<any> | Function) => {
+  decorator: Klass => {
     if (Klass.prototype.subscriptions) {
-      console.log('skip, already has subscriptions')
-      return Klass
+      throw new Error(
+        'skip, already has subscriptions or dispsose already defined! ${Klass.constructor.name}',
+      )
     }
     Object.defineProperty(Klass.prototype, 'subscriptions', {
       configurable: true,
-      enumerable: true,
+      enumerable: false,
       get() {
         if (!this.__subscriptions) {
           this.__subscriptions = new CompositeDisposable()

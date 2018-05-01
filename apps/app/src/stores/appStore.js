@@ -82,8 +82,7 @@ const parseQuery = query => {
 
 export default class AppStore {
   refreshInterval = Date.now()
-  selectedIndex = -1
-  hoveredIndex = -1
+  activeIndex = -1
   showSettings = false
   settings = {}
   services = {}
@@ -113,20 +112,11 @@ export default class AppStore {
     }, 1000)
   }
 
-  get activeIndex() {
-    if (App.peekState.target) {
-      return this.selectedIndex
-    } else {
-      return this.hoveredIndex
-    }
-  }
-
   @react({ log: 'state' })
-  resetSelectedIndexOnSearch = [
+  resetActiveIndexOnSearch = [
     () => App.state.query,
     () => {
-      this.selectedIndex = -1
-      this.hoveredIndex = 0
+      this.activeIndex = 0
       App.clearPeek()
     },
   ]
@@ -304,7 +294,6 @@ export default class AppStore {
       throw 'errrrrrr'
     }
     const { top, left, height } = ref.getBoundingClientRect()
-    console.log('get bounds', ref, top, left)
     return {
       top,
       left: left,
@@ -321,10 +310,9 @@ export default class AppStore {
 
   lastSelectAt = 0
 
-  _setSelected = index => {
+  setActive = index => {
     this.lastSelectAt = Date.now()
-    this.hoveredIndex = index
-    this.selectedIndex = index
+    this.activeIndex = index
   }
 
   setSelected = (i, target) => {
@@ -344,18 +332,18 @@ export default class AppStore {
         width,
         height,
       }
-      this._setSelected(i, position)
+      this.setActive(i, position)
       return
     }
     if (App.peekState.target) {
       this.pinSelected(i)
       return
     }
-    this._setSelected(i)
+    this.setActive(i)
   }
 
   toggleSelected = index => {
-    const isSame = this.selectedIndex === index
+    const isSame = this.activeIndex === index
     if (isSame && App.peekState.target) {
       if (Date.now() - this.lastSelectAt < 450) {
         // ignore double clicks
@@ -370,8 +358,8 @@ export default class AppStore {
   pinSelected = thing => {
     let index
     if (typeof thing === 'number') {
-      index = thing > -1 ? thing : this.hoveredIndex || this.activeIndex
-      this._setSelected(index)
+      index = thing > -1 ? thing : this.activeIndex
+      this.setActive(index)
     } else {
       index = thing ? thing.id : null
     }
@@ -399,7 +387,7 @@ export default class AppStore {
   })
 
   @react.if
-  hoverWordToSelectedIndex = [
+  hoverWordToActiveIndex = [
     () => App.state.hoveredWord,
     word => this.setSelected(word.index),
   ]

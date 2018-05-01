@@ -2,8 +2,6 @@ import Bridge from './helpers/Bridge'
 import { proxySetters, setGlobal } from './helpers'
 import { store, react } from '@mcro/black/store'
 import { Desktop } from './Desktop'
-import { Electron } from './Electron'
-import * as Constants from '@mcro/constants'
 
 export let App
 
@@ -146,7 +144,7 @@ class AppStore {
   }
 
   togglePinned = () => {
-    App.sendMessage(Electron, Electron.messages.TOGGLE_PINNED)
+    App.setOrbitState({ pinned: !App.orbitState.pinned })
   }
 
   togglePeek = () => {

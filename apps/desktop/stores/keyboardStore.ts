@@ -140,7 +140,7 @@ export default class KeyboardStore {
           break
       }
       if (isEqual(lastKeys, DOUBLE_TAP_OPTION)) {
-        Desktop.sendMessage(Electron, Electron.messages.TOGGLE_PINNED)
+        Desktop.sendMessage(App, App.messages.TOGGLE_PINNED)
       }
       // be sure its a fast action not slow
       clearLastKeys = setTimeout(() => {

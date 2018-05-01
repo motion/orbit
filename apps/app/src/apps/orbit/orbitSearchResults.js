@@ -25,7 +25,6 @@ export default class OrbitSearchResults {
         $visible={hasQuery}
         $isChanging={isChanging}
       >
-        <space css={{ height: 10 }} />
         <message if={message}>{message}</message>
         <results
           if={results.length}
@@ -55,12 +54,13 @@ export default class OrbitSearchResults {
 
   static style = {
     orbitSearchResults: {
-      flex: 1,
       opacity: 0,
       pointerEvents: 'none',
       position: 'absolute',
       top: 0,
       left: 0,
+      right: 0,
+      bottom: 0,
     },
     visible: {
       opacity: 1,

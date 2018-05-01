@@ -142,7 +142,7 @@ class AppStore {
 
   open = async url => {
     App.sendMessage(Desktop, Desktop.messages.OPEN, url)
-    App.setOrbitState({ hidden: true })
+    App.setOrbitState({ hidden: true, docked: false })
   }
 
   togglePinned = () => {

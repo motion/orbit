@@ -7,6 +7,7 @@ import OrbitCard from './orbitCard'
 
 const rowHeight = 2
 const gridGap = 6
+const gridColumnGap = 8
 const postfix = [
   'st',
   'nd',
@@ -78,7 +79,7 @@ class Masonry extends React.Component {
     }
     return (
       <grid
-        style={{ gridAutoRows: rowHeight, gridGap, gridColumnGap: 8 }}
+        style={{ gridAutoRows: rowHeight, gridGap, gridColumnGap }}
         {...props}
       >
         {React.Children.map(children, (child, index) => {
@@ -202,10 +203,11 @@ export default class OrbitExplore {
 
   static style = {
     pane: {
-      padding: [0, 0],
       flex: 1,
     },
-    title: { padding: [0, 15] },
+    title: {
+      padding: [0, 15],
+    },
     subtitle: {
       fontSize: 18,
       fontWeight: 300,
@@ -233,7 +235,7 @@ export default class OrbitExplore {
       position: 'relative',
       transition: 'opacity ease-in-out 150ms',
       overflowY: 'scroll',
-      padding: [0, gridGap],
+      padding: [0, gridColumnGap],
     },
     grid: {
       padding: [0, 5],
@@ -251,7 +253,7 @@ export default class OrbitExplore {
     },
     explore: {
       flexFlow: 'row',
-      padding: [8, 10, 10],
+      padding: [8, 8, 10],
       alignItems: 'center',
     },
     item: {

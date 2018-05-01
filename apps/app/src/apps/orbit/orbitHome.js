@@ -27,7 +27,7 @@ class Masonry extends React.Component {
       const content = item.querySelector('.card')
       console.log('finding content', content)
       const rowSpan = Math.ceil(
-        (content.getBoundingClientRect().height + gridGap) /
+        (content.getBoundingClientRect().height + 100 + gridGap) /
           (rowHeight + gridGap),
       )
       console.log('rowSpan', rowSpan, item.getBoundingClientRect().height)

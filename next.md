@@ -1,3 +1,14 @@
+## broadly
+
+* bugs (2 days)
+* ui/ux (3 days)
+* fake hardcoded demo features (3 days)
+* explore ui (1 day)
+* people directory (1 day)
+* highlight words (2 days)
+* improve syncers/settings (2 days)
+* profiles (1 day)
+
 ## now
 
 * peeks point to the grid items properly
@@ -54,10 +65,9 @@ deploying beta for company like formidable (est dev time: 3m)
 
 * [ ] intercept all a=href and open in native browser (slack)
 * [ ] themes or surfaces really need well thought lighten/darken functionality
-* [ ] slack attachments/images/emojis
+* [ ] slack emojis
 * [ ] only close peek on esc if electron focused
 * [ ] focus electron on mouseover peek
-* [ ] interaction finish bugs
 * [ ] search jitter
 * [ ] fix keyboard movement bugs
 * [ ] slack unread/read sql

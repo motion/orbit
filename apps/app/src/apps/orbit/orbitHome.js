@@ -3,7 +3,6 @@ import { view, react } from '@mcro/black'
 import { SubTitle } from '~/views'
 import * as UI from '@mcro/ui'
 import { App } from '@mcro/all'
-import OrbitDivider from './orbitDivider'
 import OrbitCard from './orbitCard'
 
 const rowHeight = 2
@@ -128,7 +127,7 @@ export default class OrbitExplore {
             size={1.1}
             css={{ width: 'calc(100% - 120px)', marginLeft: 8 }}
           >
-            <strong>4</strong> new conversations and items on{' '}
+            <strong>4</strong> new interesting things on{' '}
             <span
               css={{
                 paddingBottom: 2,
@@ -167,10 +166,11 @@ export default class OrbitExplore {
     },
     title: { padding: [0, 15] },
     subtitle: {
-      fontSize: 24,
+      fontSize: 26,
+      fontWeight: 200,
       lineHeight: '1.5rem',
-      marginTop: 12,
-      marginBottom: 8,
+      marginTop: 16,
+      marginBottom: 3,
       padding: 0,
       flexFlow: 'row',
     },
@@ -201,7 +201,7 @@ export default class OrbitExplore {
     },
     explore: {
       flexFlow: 'row',
-      padding: [10, 10, 8],
+      padding: [8, 10, 10],
       alignItems: 'center',
     },
     item: {

@@ -12,7 +12,6 @@ export default class OrbitSearchResults {
     const { query, results, message } = appStore.searchState
     const hasQuery = !!query
     const isChanging = App.state.query !== query
-    log(`isChanging ${isChanging}`)
     return (
       <orbitSearchResults
         css={{
@@ -28,7 +27,7 @@ export default class OrbitSearchResults {
         <results
           if={results.length}
           css={{
-            opacity: query || appStore.activeIndex >= 0 ? 1 : 0.5,
+            opacity: !isChanging ? 1 : 0.5,
           }}
         >
           {results.map((result, index) => (

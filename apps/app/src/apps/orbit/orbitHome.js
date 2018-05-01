@@ -7,6 +7,39 @@ import OrbitCard from './orbitCard'
 
 const rowHeight = 2
 const gridGap = 6
+const postfix = [
+  'st',
+  'nd',
+  'rd',
+  'th',
+  'th',
+  'th',
+  'th',
+  'th',
+  'th',
+  'th',
+  'th',
+  'th',
+  'th',
+  'th',
+  'th',
+  'th',
+  'th',
+  'th',
+  'th',
+  'th',
+  'st',
+  'nd',
+  'rd',
+  'th',
+  'th',
+  'th',
+  'th',
+  'th',
+  'th',
+  'th',
+  'st',
+]
 
 @view
 class Masonry extends React.Component {
@@ -92,6 +125,12 @@ class OrbitExploreStore {
 @view
 export default class OrbitExplore {
   render({ appStore, theme }) {
+    const locale = 'en-US'
+    const now = new Date()
+    const day = now.toLocaleDateString(locale, { weekday: 'long' })
+    const month = now.toLocaleDateString(locale, { month: 'short' })
+    const dayNum = now.getMonth()
+
     const exploreButton = {
       size: 1.2,
       circular: true,
@@ -107,7 +146,8 @@ export default class OrbitExplore {
       <pane css={{ background: theme.base.background }}>
         <title>
           <SubTitle $subtitle>
-            Sunday, Apr 22<span $super>nd</span>
+            <span $bolder>{day}</span> {month} {dayNum}
+            <span $super>{postfix[dayNum - 1]}</span>
           </SubTitle>
         </title>
         <section $explore>
@@ -174,7 +214,15 @@ export default class OrbitExplore {
       padding: 0,
       flexFlow: 'row',
     },
-    super: { verticalAlign: 'super', marginTop: -2, fontSize: 12 },
+    bolder: {
+      fontWeight: 300,
+    },
+    super: {
+      verticalAlign: 'super',
+      marginTop: -3,
+      marginLeft: 1,
+      fontSize: 14,
+    },
     section: {
       padding: [5, 0],
     },

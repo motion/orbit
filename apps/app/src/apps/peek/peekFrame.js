@@ -51,7 +51,7 @@ export default class PeekFrame {
     if (!state || !state.position || !state.position.length || !state.target) {
       return null
     }
-    console.log('PEEK FRAME STATE', state)
+    console.log('PEEK FRAME STATE', App.peekState.toJS(), state.toJS())
     const isHidden = !state
     const { orbitDocked, orbitOnLeft } = App.orbitState
     const onRight = !state.peekOnLeft

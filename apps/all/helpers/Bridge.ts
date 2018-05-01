@@ -1,5 +1,5 @@
 import { action } from 'mobx'
-import { mergeWith, isPlainObject } from 'lodash'
+import { mergeWith, isPlainObject, isEqual } from 'lodash'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 import WebSocket from './websocket'
 import waitPort from 'wait-port'
@@ -122,40 +122,39 @@ class Bridge {
       await requestIdle()
       try {
         const messageObj = JSON.parse(data)
-        if (messageObj && typeof messageObj === 'object') {
-          const { source, state: newState } = messageObj
-          if (this._options.ignoreSelf && source === this._source) {
-            return
-          }
-          if (!newState) {
-            throw new Error(`No state received from message: ${data}`)
-          }
-          if (!source) {
-            throw new Error(`No source store
-              source: ${source}
-              data: ${data}
-            `)
-          }
-          if (!this.stores[source]) {
-            console.warn(
-              `Store not imported: this.stores:`,
-              this.stores,
-              `source: ${source}`,
-            )
-            return
-          }
-          const store = this.stores[source]
-          const { state } = store
-          if (!state) {
-            throw new Error(
-              `No state found for source (${source}) state (${state}) store(${store})`,
-            )
-          }
-          await requestIdle()
-          this._update(state, newState)
-        } else {
+        if (!messageObj || typeof messageObj !== 'object') {
           throw new Error(`Non-object received`)
         }
+        const { source, state: newState } = messageObj
+        if (this._options.ignoreSelf && source === this._source) {
+          return
+        }
+        if (!newState) {
+          throw new Error(`No state received from message: ${data}`)
+        }
+        if (!source) {
+          throw new Error(`No source store
+            source: ${source}
+            data: ${data}
+          `)
+        }
+        if (!this.stores[source]) {
+          console.warn(
+            `Store not imported: this.stores:`,
+            this.stores,
+            `source: ${source}`,
+          )
+          return
+        }
+        const store = this.stores[source]
+        const { state } = store
+        if (!state) {
+          throw new Error(
+            `No state found for source (${source}) state (${state}) store(${store})`,
+          )
+        }
+        await requestIdle()
+        this._update(state, newState)
       } catch (err) {
         console.error(
           `${err.message}:\n${err.stack}\n
@@ -236,12 +235,7 @@ class Bridge {
       )
     }
     // update our own state immediately so its sync
-    const changedState = this._update(
-      this.state,
-      newState,
-      true,
-      // ignoreSocketSend,
-    )
+    const changedState = this._update(this.state, newState, true)
     if (ignoreSocketSend) {
       return changedState
     }
@@ -285,27 +279,42 @@ class Bridge {
         )
         return changed
       }
-      if (!Mobx.comparer.structural(stateObj[key], newState[key])) {
-        const oldVal = Mobx.toJS(stateObj[key])
-        const newVal = Mobx.toJS(newState[key])
-        if (isPlainObject(oldVal) && isPlainObject(newVal)) {
-          // merge plain objects
-          const newState = mergeWith(oldVal, newVal, (prev, next) => {
-            // avoid inner array merge, just replace
-            if (Mobx.isArrayLike(prev) || Mobx.isArrayLike(next)) {
-              return next
-            }
-          })
-          const diff = {} // minimal change diff
-          for (const key of Object.keys(newVal)) {
-            diff[key] = newState[key]
-          }
-          stateObj[key] = newState
-          changed[key] = diff
-        } else {
-          stateObj[key] = newVal
-          changed[key] = newVal
+      // fail on same object
+      const bothObjects =
+        Mobx.isObservableObject(stateObj[key]) && isPlainObject(newState[key])
+      if (bothObjects) {
+        const compareOriginal = Object.keys(stateObj[key]).reduce(
+          (a, b) => ({ ...a, [b]: stateObj[b] }),
+          {},
+        )
+        if (isEqual(compareOriginal, newState)) {
+          return changed
         }
+      } else {
+        // fail on same val
+        if (stateObj[key] === newState[key]) {
+          return changed
+        }
+      }
+      const oldVal = Mobx.toJS(stateObj[key])
+      const newVal = Mobx.toJS(newState[key])
+      if (isPlainObject(oldVal) && isPlainObject(newVal)) {
+        // merge plain objects
+        const newState = mergeWith(oldVal, newVal, (prev, next) => {
+          // avoid inner array merge, just replace
+          if (Mobx.isArrayLike(prev) || Mobx.isArrayLike(next)) {
+            return next
+          }
+        })
+        const diff = {} // minimal change diff
+        for (const key of Object.keys(newVal)) {
+          diff[key] = newState[key]
+        }
+        stateObj[key] = newState
+        changed[key] = diff
+      } else {
+        stateObj[key] = newVal
+        changed[key] = newVal
       }
     }
     if (root.__trackStateChanges && root.__trackStateChanges.isActive) {

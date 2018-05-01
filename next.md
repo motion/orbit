@@ -63,6 +63,7 @@ deploying beta for company like formidable (est dev time: 3m)
 
 --- me
 
+* [ ] intercept all a=href and open in native browser (slack)
 * [ ] themes or surfaces really need well thought lighten/darken functionality
 * [ ] slack attachments/images/emojis
 * [ ] only close peek on esc if electron focused

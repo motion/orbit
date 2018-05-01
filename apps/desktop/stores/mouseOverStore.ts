@@ -1,10 +1,10 @@
 import { store, react } from '@mcro/black/store'
 import { App, Desktop } from '@mcro/all'
 
-const isMouseOver = (app, mousePosition) => {
-  if (!app || !mousePosition) return false
+const isMouseOver = (bounds, mousePosition) => {
+  if (!bounds || !mousePosition) return false
   const { x, y } = mousePosition
-  const { position, size } = app
+  const { position, size } = bounds
   if (!position || !size) return false
   const withinX = x > position[0] && x < position[0] + size[0]
   const withinY = y > position[1] && y < position[1] + size[1]
@@ -53,19 +53,10 @@ export default class MouseOverReactions {
         }
         return
       }
-      if (App.orbitState.position) {
-        const orbitHovered = isMouseOver(App.orbitState, mousePos)
-        // TODO: think we can avoid this check because we do it in Bridge
-        if (orbitHovered !== Desktop.hoverState.orbitHovered) {
-          Desktop.setHoverState({ orbitHovered })
-        }
-      }
-      const peekHovered = !peekTarget
-        ? false
-        : isMouseOver(App.peekState, mousePos)
-      if (peekHovered !== Desktop.hoverState.peekHovered) {
-        Desktop.setHoverState({ peekHovered })
-      }
+      const orbitHovered =
+        orbitPosition && isMouseOver(App.orbitState, mousePos)
+      const peekHovered = peekTarget && isMouseOver(App.peekState, mousePos)
+      Desktop.setHoverState({ orbitHovered, peekHovered })
     },
   ]
 }

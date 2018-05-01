@@ -74,6 +74,7 @@ export default class AppReactions {
   handleHoldingOption = [
     () => Desktop.isHoldingOption,
     async (isHoldingOption, { sleep }) => {
+      console.log('react to holding option')
       if (App.orbitState.pinned || App.orbitState.docked) {
         throw react.cancel
       }
@@ -145,6 +146,7 @@ export default class AppReactions {
 
   @react({
     delay: 32,
+    log: 'state',
   })
   hideOrbitOnMouseOut = [
     () => [

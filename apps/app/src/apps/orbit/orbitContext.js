@@ -68,7 +68,7 @@ export default class Orbit {
                 css={{ textAlign: orbitOnLeft ? 'right' : 'left' }}
               >
                 <Title ellipse={1}>{Desktop.appState.name}</Title>
-                <SubTitle if={Desktop.appState.title}>
+                <SubTitle if={Desktop.appState.title} ellipse={2}>
                   {Desktop.appState.title}
                 </SubTitle>
               </contextHeader>

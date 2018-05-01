@@ -37,6 +37,8 @@ class PeekFrameStore {
   }
 }
 
+const borderShadow = ['inset', 0, 0, 0, 0.5, [0, 0, 0, 0.3]]
+
 @UI.injectTheme
 @view({
   store: PeekFrameStore,
@@ -61,7 +63,6 @@ export default class PeekFrame {
       !onRight ? SHADOW_PAD : 0,
     ]
     const margin = padding.map(x => -x)
-    const borderShadow = ['inset', 0, 0, 0, 0.5, [0, 0, 0, 0.3]]
     const boxShadow = [
       [onRight ? 6 : -6, 3, SHADOW_PAD, [0, 0, 0, 0.15]],
       borderShadow,
@@ -95,7 +96,7 @@ export default class PeekFrame {
           ]}
           $arrow
           css={{
-            left: !onRight ? 'auto' : -23,
+            left: !onRight ? 'auto' : -20,
             right: !onRight ? -arrowSize : 'auto',
             transform: {
               y: isHidden

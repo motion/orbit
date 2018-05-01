@@ -12,8 +12,9 @@ const SPLIT_INDEX = 3
 export default class OrbitSearchResults {
   render({ appStore, theme }) {
     const { query, results, message } = appStore.searchState
-    const hasQuery = !!App.state.query
+    const hasQuery = !!query
     const isChanging = App.state.query !== query
+    log(`isChanging ${isChanging}`)
     return (
       <orbitSearchResults
         css={{

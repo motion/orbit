@@ -200,7 +200,7 @@ export default class AppStore {
       this.getResults,
     ],
     ([query, pluginResults, bitResults, getResults]) => {
-      if (getResults) {
+      if (getResults && this.showSettings) {
         return {
           query,
           message: 'Settings',

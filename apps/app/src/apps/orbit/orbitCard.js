@@ -8,13 +8,6 @@ const SubTitle = props => (
   <UI.Title size={0.9} opacity={0.7} ellipse={1} {...props} />
 )
 
-@view
-class Text {
-  render(props) {
-    return <UI.Text size={1.1} {...props} />
-  }
-}
-
 class OrbitCardStore {
   _isSelected = false
 
@@ -134,7 +127,7 @@ export default class OrbitCard {
           onMouseLeave={this.setUnhovered}
         >
           <title>
-            <Text
+            <UI.Text
               size={1.3}
               ellipse={isExpanded ? 2 : 1}
               fontWeight={400}
@@ -144,7 +137,7 @@ export default class OrbitCard {
               {...tiny && tinyProps.titleProps}
             >
               {title}
-            </Text>
+            </UI.Text>
           </title>
           <SubTitle $subtitle if={!tiny && typeof subtitle === 'string'}>
             {subtitle}

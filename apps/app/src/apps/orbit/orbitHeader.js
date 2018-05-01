@@ -19,7 +19,7 @@ class HeaderStore {
   @react({ delay: 32, log: false })
   focusInput = [
     () => [
-      App.isFullyShown || App.orbitState.pinned || App.orbitState.docked,
+      App.orbitState.pinned || App.orbitState.docked,
       App.isMouseInActiveArea,
     ],
     async ([shown], { when }) => {

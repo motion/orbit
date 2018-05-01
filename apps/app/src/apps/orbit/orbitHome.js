@@ -215,7 +215,7 @@ export default class OrbitExplore {
       flexFlow: 'row',
     },
     bolder: {
-      fontWeight: 300,
+      fontWeight: 200,
     },
     super: {
       verticalAlign: 'super',

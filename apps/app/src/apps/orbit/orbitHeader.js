@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view, react } from '@mcro/black'
+import { view, react, when } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { App, Desktop } from '@mcro/all'
 import * as Constants from '~/constants'
@@ -18,11 +18,17 @@ class HeaderStore {
 
   @react({ fireImmediately: true, delay: 32, log: false })
   focusInput = [
-    () => [App.isFullyShown, App.orbitState.pinned, App.isMouseInActiveArea],
-    () => {
+    () => [
+      App.isFullyShown,
+      App.orbitState.pinned,
+      App.orbitState.docked,
+      App.isMouseInActiveArea,
+    ],
+    async () => {
       if (!this.inputRef) {
         throw react.cancel
       }
+      await when(() => !App.isAnimatingOrbit)
       this.inputRef.focus()
       // this.inputRef.select()
     },

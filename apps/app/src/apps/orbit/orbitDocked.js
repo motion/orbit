@@ -4,6 +4,7 @@ import * as UI from '@mcro/ui'
 import OrbitHome from './orbitHome'
 import OrbitSettings from './orbitSettings'
 import OrbitHeader from './orbitHeader'
+import OrbitSearchResults from './orbitSearchResults'
 import { App } from '@mcro/all'
 
 const SHADOW_PAD = 85
@@ -25,6 +26,7 @@ class OrbitDocked {
         <OrbitHeader headerBg={background} />
         <orbitInner>
           <OrbitHome if={!appStore.showSettings} appStore={appStore} />
+          <OrbitSearchResults />
           <OrbitSettings />
         </orbitInner>
       </frame>

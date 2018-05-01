@@ -1,11 +1,8 @@
 ## now
 
-* remove mousePosition from state just do it all desktop side
 * finish cleanup and refactor
   * peeks working
   * position stuff
-  * search fixes
-  * focusing orbit glitching animation
 * peeks point to the grid items properly
 * masonry for news area
 * get dark blue theme working for news area

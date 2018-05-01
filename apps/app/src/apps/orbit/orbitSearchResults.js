@@ -20,7 +20,7 @@ export default class OrbitSearchResults {
           background: theme.base.background,
           opacity: hasQuery ? 1 : 0,
           pointerEvents: !hasQuery ? 'none' : 'auto',
-          zIndex: !hasQuery ? -1 : 1,
+          zIndex: !hasQuery ? -1 : 10000,
         }}
         $visible={hasQuery}
         $isChanging={isChanging}
@@ -58,6 +58,9 @@ export default class OrbitSearchResults {
       flex: 1,
       opacity: 0,
       pointerEvents: 'none',
+      position: 'absolute',
+      top: 0,
+      left: 0,
     },
     visible: {
       opacity: 1,

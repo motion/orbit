@@ -150,9 +150,12 @@ export const CAMEL_TO_SNAKE = {
   wordSpacing: 'word-spacing',
   wordWrap: 'word-wrap',
   zIndex: 'z-index',
+  gridGap: 'grid-gap',
+  gridTemplateColumns: 'grid-template-columns',
+  gridAutoRows: 'grid-auto-rows',
 }
 
 export const SNAKE_TO_CAMEL = Object.keys(CAMEL_TO_SNAKE).reduce(
   (acc, cur) => ({ ...acc, [CAMEL_TO_SNAKE[cur]]: cur }),
-  {}
+  {},
 )

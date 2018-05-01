@@ -248,7 +248,6 @@ export default class OrbitCard {
       },
     },
     card: {
-      flex: 1,
       overflow: 'hidden',
       position: 'relative',
       // transition: 'all ease-in 2500ms',

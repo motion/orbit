@@ -152,6 +152,9 @@ exports.CAMEL_TO_SNAKE = {
     wordSpacing: 'word-spacing',
     wordWrap: 'word-wrap',
     zIndex: 'z-index',
+    gridGap: 'grid-gap',
+    gridTemplateColumns: 'grid-template-columns',
+    gridAutoRows: 'grid-auto-rows',
 };
 exports.SNAKE_TO_CAMEL = Object.keys(exports.CAMEL_TO_SNAKE).reduce((acc, cur) => (Object.assign({}, acc, { [exports.CAMEL_TO_SNAKE[cur]]: cur })), {});
 //# sourceMappingURL=cssNameMap.js.map

@@ -4,35 +4,67 @@ import { SubTitle } from '~/views'
 import * as UI from '@mcro/ui'
 import { App } from '@mcro/all'
 import OrbitDivider from './orbitDivider'
-import Masonry from '~/views/masonry'
 import OrbitCard from './orbitCard'
 
-@view.attach('appStore')
+const rowHeight = 20
+const gridGap = 10
+
 @view
-class MasonryCard {
-  static getColumnSpanFromProps = (props, getState) => {
-    return 1
+class Masonry extends React.Component {
+  state = {
+    measured: false,
   }
-  static getHeightFromProps = (getState, props, columnSpan, columnGutter) => {
-    return 200
+
+  componentWillReceiveProps() {
+    this.setState({ measured: false })
   }
+
+  setGrid(grid) {
+    if (!grid) return
+    if (this.state.measured) return
+    this.styles = []
+    for (const item of Array.from(grid.children)) {
+      const content = item.querySelector('.card')
+      console.log('finding content', content)
+      const rowSpan = Math.ceil(
+        (content.getBoundingClientRect().height + gridGap) /
+          (rowHeight + gridGap),
+      )
+      console.log('rowSpan', rowSpan, item.getBoundingClientRect().height)
+      this.styles.push({ gridRowEnd: `span ${rowSpan}` })
+    }
+    this.setState({ measured: true })
+  }
+
   render() {
-    const { index, appStore, item, style } = this.props
+    const { measured } = this.state
+    const { children, ...props } = this.props
+    if (!measured) {
+      return (
+        <grid ref={ref => this.setGrid(ref)} {...props}>
+          {children}
+        </grid>
+      )
+    }
     return (
-      <OrbitCard
-        index={index}
-        item={this.props}
-        total={appStore.summaryResults.length}
-        result={item}
-        hoverToSelect
-        expanded
-        getRef={appStore.setDockedResultRef(index)}
-        style={{
-          ...style,
-          height: 200,
-        }}
-      />
+      <grid style={{ gridAutoRows: rowHeight }} {...props}>
+        {React.Children.map(children, (child, index) => {
+          console.log('cloning with style', this.styles[index], index)
+          return React.cloneElement(child, {
+            style: this.styles[index],
+          })
+        })}
+      </grid>
     )
+  }
+
+  static style = {
+    grid: {
+      minHeight: '100%',
+      display: 'grid',
+      gridGap,
+      gridTemplateColumns: 'repeat(auto-fill, minmax(250px,1fr))',
+    },
   }
 }
 
@@ -115,17 +147,20 @@ export default class OrbitExplore {
         <OrbitDivider />
 
         <summary>
-          <Masonry
-            items={appStore.summaryResults}
-            itemComponent={MasonryCard}
-            alignCenter={true}
-            loadingElement={<span>Loading...</span>}
-            columnWidth={265}
-            columnGutter={10}
-            hasMore={false}
-            isLoading={false}
-            onInfiniteLoad={() => {}}
-          />
+          <Masonry>
+            {appStore.summaryResults.map((item, index) => (
+              <OrbitCard
+                key={index}
+                index={index}
+                item={item}
+                total={appStore.summaryResults.length}
+                result={item}
+                hoverToSelect
+                expanded
+                getRef={appStore.setDockedResultRef(index)}
+              />
+            ))}
+          </Masonry>
         </summary>
       </pane>
     )

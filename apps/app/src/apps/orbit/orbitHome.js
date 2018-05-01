@@ -106,45 +106,14 @@ export default class OrbitExplore {
             $exploreButton
             {...exploreButton}
           />
-          {[
-            {
-              title: 'Model 3 Transmission',
-              subtitle: '4 people in 7 conversations',
-            },
-            {
-              title: 'Recall Potential',
-              subtitle: '2 conversations and 4 tickets',
-            },
-            { title: 'Lithium Contract', subtitle: '1 ticket' },
-            // { title: 'Elon Letter', subtitle: '6 conversations' },
-          ].map((item, index) => {
-            const isDown = index % 2 === 0
-            return (
-              <item key={index}>
-                <content>
-                  {item.title}
-                  <subtitle css={{ opacity: 0.5, fontSize: 13 }}>
-                    {item.subtitle}
-                  </subtitle>
-                </content>
-                <div css={{ width: 8 }} />
-                <UI.Arrow
-                  size={14}
-                  towards={isDown ? 'bottom' : 'top'}
-                  background={isDown ? 'red' : 'green'}
-                  css={{
-                    transform: { scaleX: 0.75 },
-                    marginTop: isDown ? 4 : -10,
-                  }}
-                />
-              </item>
-            )
-          })}
+          <UI.Text size={1.1} css={{ width: 'calc(100% - 120px)' }}>
+            There have been <strong>4 conversations</strong> on topics you
+            follow.
+          </UI.Text>
         </section>
 
         <OrbitDivider />
 
-        <SubTitle css={{ margin: [6, 0, 0, 4] }}>In your orbit</SubTitle>
         <summary>
           <Masonry
             items={appStore.summaryResults}

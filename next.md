@@ -4,12 +4,14 @@
   * peeks working
   * position stuff
 * peeks point to the grid items properly
+* tear away peeks + super simple app
 * get dark blue theme working for news area
   * work on themes
 * news area do some design for documents and emails
 * have the cards show _why_ they are there
 * global trends peek
 * profiles design iteration
+* search smoothness
 
 need to mockup for demo:
 

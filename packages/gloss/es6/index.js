@@ -22,6 +22,10 @@ var _stylesheet = require('./stylesheet');
 
 var _stylesheet2 = _interopRequireDefault(_stylesheet);
 
+var _reactFastCompare = require('react-fast-compare');
+
+var _reactFastCompare2 = _interopRequireDefault(_reactFastCompare);
+
 var _themeProvide = require('./components/themeProvide');
 
 var _themeProvide2 = _interopRequireDefault(_themeProvide);
@@ -100,10 +104,17 @@ let Gloss = class Gloss {
         const hasTheme = Child.theme && typeof Child.theme === 'function';
         const themeSheet = _stylesheet2.default.createStyleSheet().attach();
         const id = uid();
+        // @ts-ignore
         Child.glossUID = id;
         this.themeSheets[id] = themeSheet;
         if (hasTheme) {
+          let lastProps;
           Child.prototype.glossUpdateTheme = function (props) {
+            const noChange = (0, _reactFastCompare2.default)(props, lastProps);
+            lastProps = props;
+            if (noChange) {
+              return;
+            }
             this.theme = this.theme || themeSheet;
             const activeTheme = this.context.uiThemes && this.context.uiThemes[this.context.uiActiveThemeName];
             if (activeTheme) {
@@ -119,26 +130,15 @@ let Gloss = class Gloss {
               this.theme.addRules(rules);
             }
           };
-          // updateTheme on willUpdate
-          const ogcomponentWillUpdate = Child.prototype.componentWillUpdate;
-          Child.prototype.componentWillUpdate = function (...args) {
-            this.glossUpdateTheme(args[0]);
-            if (ogcomponentWillUpdate) {
-              return ogcomponentWillUpdate.call(this, ...args);
-            }
-          };
-          const ogcomponentWillUnmount = Child.prototype.componentWillUnmount;
-          Child.prototype.componentWillUnmount = function (...args) {
-            if (ogcomponentWillUnmount) {
-              return ogcomponentWillUnmount.call(this, ...args);
-            }
-          };
         }
 
         let lastUpdatedStyles = null;
         const ogrender = Child.prototype.render;
         if (Child.prototype.render) {
           Child.prototype.render = function (...args) {
+            if (hasTheme) {
+              this.glossUpdateTheme(this.props);
+            }
             // ONLY IN DEV -- ALWAYS UPDATE STYLESHEET SO HMR STYLE CHANGES WORK
             if (!lastUpdatedStyles || typeof window !== 'undefined' && window.lastHotReload && lastUpdatedStyles > window.lastHotReload) {
               attachStyles(Child.glossUID, Child.style, true);
@@ -146,16 +146,6 @@ let Gloss = class Gloss {
             }
             if (ogrender) {
               return ogrender.call(this, ...args);
-            }
-          };
-          // on first mount, attach styles
-          const ogComponentWillMount = Child.prototype.componentWillMount;
-          Child.prototype.componentWillMount = function (...args) {
-            if (hasTheme) {
-              this.glossUpdateTheme(this.props);
-            }
-            if (ogComponentWillMount) {
-              return ogComponentWillMount.call(this, ...args);
             }
           };
         }

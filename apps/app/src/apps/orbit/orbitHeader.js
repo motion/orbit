@@ -70,11 +70,11 @@ export default class OrbitHeader {
         $headerBg={headerBg}
         css={{
           borderTopLeftRadius:
-            !App.orbitOnLeft || App.orbitState.orbitDocked
+            !App.orbitOnLeft || App.orbitState.docked
               ? 0
               : Constants.BORDER_RADIUS,
           borderTopRightRadius:
-            App.orbitOnLeft || App.orbitState.orbitDocked
+            App.orbitOnLeft || App.orbitState.docked
               ? 0
               : Constants.BORDER_RADIUS,
         }}
@@ -130,9 +130,7 @@ export default class OrbitHeader {
             getRef={headerStore.ref('inputRef').set}
             onClick={headerStore.onClickInput}
           />
-          <inputLn
-            $inputLnOn={Desktop.hoverState.orbitHovered ? darkerBg : false}
-          />
+          <inputLn />
         </title>
         <ControlButton
           if={!App.orbitState.docked}
@@ -177,13 +175,6 @@ export default class OrbitHeader {
       },
       transition: 'all ease-in 300ms',
     },
-    inputLnOn: background => ({
-      background,
-      opacity: 1,
-      transform: {
-        x: 10,
-      },
-    }),
     pinnedIcon: {
       position: 'relative',
       zIndex: 10000,

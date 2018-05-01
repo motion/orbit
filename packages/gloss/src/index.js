@@ -3,6 +3,7 @@ import fancyElement from './fancyElement'
 import css from '@mcro/css'
 import JSS from '~/stylesheet'
 import * as Helpers_ from '@mcro/css'
+import isEqual from 'react-fast-compare'
 
 // exports
 import ThemeProvide_ from './components/themeProvide'
@@ -107,10 +108,17 @@ export default class Gloss {
       const hasTheme = Child.theme && typeof Child.theme === 'function'
       const themeSheet = JSS.createStyleSheet().attach()
       const id = uid()
+      // @ts-ignore
       Child.glossUID = id
       this.themeSheets[id] = themeSheet
       if (hasTheme) {
+        let lastProps
         Child.prototype.glossUpdateTheme = function(props) {
+          const noChange = isEqual(props, lastProps)
+          lastProps = props
+          if (noChange) {
+            return
+          }
           this.theme = this.theme || themeSheet
           const activeTheme =
             this.context.uiThemes &&
@@ -128,26 +136,15 @@ export default class Gloss {
             this.theme.addRules(rules)
           }
         }
-        // updateTheme on willUpdate
-        const ogcomponentWillUpdate = Child.prototype.componentWillUpdate
-        Child.prototype.componentWillUpdate = function(...args) {
-          this.glossUpdateTheme(args[0])
-          if (ogcomponentWillUpdate) {
-            return ogcomponentWillUpdate.call(this, ...args)
-          }
-        }
-        const ogcomponentWillUnmount = Child.prototype.componentWillUnmount
-        Child.prototype.componentWillUnmount = function(...args) {
-          if (ogcomponentWillUnmount) {
-            return ogcomponentWillUnmount.call(this, ...args)
-          }
-        }
       }
 
       let lastUpdatedStyles = null
       const ogrender = Child.prototype.render
       if (Child.prototype.render) {
         Child.prototype.render = function(...args) {
+          if (hasTheme) {
+            this.glossUpdateTheme(this.props)
+          }
           // ONLY IN DEV -- ALWAYS UPDATE STYLESHEET SO HMR STYLE CHANGES WORK
           if (
             !lastUpdatedStyles ||
@@ -160,16 +157,6 @@ export default class Gloss {
           }
           if (ogrender) {
             return ogrender.call(this, ...args)
-          }
-        }
-        // on first mount, attach styles
-        const ogComponentWillMount = Child.prototype.componentWillMount
-        Child.prototype.componentWillMount = function(...args) {
-          if (hasTheme) {
-            this.glossUpdateTheme(this.props)
-          }
-          if (ogComponentWillMount) {
-            return ogComponentWillMount.call(this, ...args)
           }
         }
       }

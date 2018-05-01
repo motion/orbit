@@ -10,7 +10,7 @@ const borderRadius = 6
 const background = '#f9f9f9'
 
 class PeekFrameStore {
-  @react({ log: false })
+  @react({ fireImmediately: true, log: false })
   curState = [
     () => App.peekState,
     peekState => {
@@ -66,9 +66,10 @@ export default class PeekFrame {
       [onRight ? 6 : -6, 3, SHADOW_PAD, [0, 0, 0, 0.15]],
       borderShadow,
     ]
-    const arrowSize = 33
+    const arrowSize = 30
     let peekAdjustX = docked ? -13 : 0
-    peekAdjustX += onRight ? -4 + (!orbitOnLeft ? Constants.SHADOW_PAD : 0) : 4
+    const leftAdjustX = !docked && !orbitOnLeft ? Constants.SHADOW_PAD : 0
+    peekAdjustX += onRight ? -4 + leftAdjustX : 4
     return (
       <peekFrame
         css={{
@@ -115,18 +116,14 @@ export default class PeekFrame {
         >
           <peek>
             <WindowControls
-              if={false}
               css={{
                 position: 'absolute',
-                top: 20,
+                top: 12,
+                right: 0,
                 zIndex: 10000,
-                ...(Electron.peekOnLeft
-                  ? {
-                      right: 10,
-                    }
-                  : {
-                      left: 20,
-                    }),
+                transform: {
+                  scale: 0.9,
+                },
               }}
               onClose={App.clearPeek}
             />

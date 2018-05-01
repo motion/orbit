@@ -66,7 +66,6 @@ export default class OrbitHeader {
   }
 
   render({ appStore, orbitStore, headerStore, theme, headerBg }) {
-    const darkerBg = theme.base.background
     return (
       <orbitHeader
         $headerBg={headerBg}
@@ -93,9 +92,9 @@ export default class OrbitHeader {
             zIndex: 1,
             right: App.orbitOnLeft ? 20 : -1,
             left: App.orbitOnLeft ? -1 : 20,
-            background: `linear-gradient(to right, ${theme.base.background}, ${
-              theme.active.background
-            })`,
+            background: `linear-gradient(to right, ${
+              theme.base.background
+            }, ${theme.active.background.darken(0.05)})`,
           }}
         />
         <title>
@@ -109,9 +108,6 @@ export default class OrbitHeader {
             value={orbitStore.query}
             size={1.3}
             $input
-            css={{
-              opacity: App.state.query.length > 0 ? 1 : 0.6,
-            }}
             background="transparent"
             onChange={orbitStore.onChangeQuery}
             onKeyDown={this.handleKeyDown}

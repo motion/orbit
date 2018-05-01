@@ -4,7 +4,6 @@
   * peeks working
   * position stuff
 * peeks point to the grid items properly
-* masonry for news area
 * get dark blue theme working for news area
   * work on themes
 * news area do some design for documents and emails

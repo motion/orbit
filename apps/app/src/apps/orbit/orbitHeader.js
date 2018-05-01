@@ -198,10 +198,6 @@ export default class OrbitHeader {
       flex: 1,
     },
     searchIcon: {
-      position: 'absolute',
-      top: 0,
-      left: 14,
-      bottom: 0,
       marginBottom: 1,
       alignItems: 'center',
       justifyContent: 'center',

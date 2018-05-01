@@ -7,14 +7,13 @@ import svgTags from './svgTags'
 const electronTags = ['webview']
 
 const $ = '$'
-const ogCreateElement: Function = React.createElement.bind(React)
-const VALID_TAGS: { [string]: boolean } = [
-  ...tags,
-  ...svgTags,
-  ...electronTags,
-].reduce((acc, cur) => ({ ...acc, [cur]: true }), {})
+const ogCreateElement = React.createElement.bind(React)
+const VALID_TAGS = [...tags, ...svgTags, ...electronTags].reduce(
+  (acc, cur) => ({ ...acc, [cur]: true }),
+  {},
+)
 
-const arrayOfObjectsToObject = (arr: Array<?Object>) => {
+const arrayOfObjectsToObject = arr => {
   let res = {}
   for (let i = 0; i < arr.length; i++) {
     if (!arr[i]) {
@@ -64,7 +63,7 @@ setTimeout(() => {
 }, 100)
 
 // factory that returns fancyElement helper
-export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
+export default function fancyElementFactory(Gloss, styles) {
   const { baseStyles, options, css } = Gloss
   const tagNameOption = options.tagName
 
@@ -79,6 +78,29 @@ export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
       }
     }
     return newStyle
+  }
+
+  const addStyle = (finalStyles, theme, obj, key, val, checkTheme) => {
+    let style = obj[key]
+    if (!style) {
+      style = obj.getRule ? obj.getRule(key) : obj[key]
+    }
+    if (!style) {
+      return null
+    }
+    // dynamic
+    if (typeof style === 'function') {
+      return css(style(val))
+    } else {
+      finalStyles.push(style)
+    }
+    if (checkTheme && theme) {
+      const themeKey = `${key}--theme`
+      const themeStyle = theme.getRule(themeKey)
+      if (themeStyle) {
+        finalStyles.push(themeStyle)
+      }
+    }
   }
 
   function fancyElement(
@@ -107,50 +129,23 @@ export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
     if (!this) {
       return ogCreateElement(type, props, ...children)
     }
-
-    let { glossUID } = this.constructor
+    let glossUID = this.constructor.glossUID
     if (props && props.glossUID) {
       glossUID = props.glossUID
       delete props.glossUID
     }
-
     const propNames = props ? Object.keys(props) : null
     const isTag = typeof type === 'string'
     const name: string = !isTag ? `${type.name}` : type
     const finalProps = {}
     const finalStyles = []
-
-    const { theme } = this
-
-    const addStyle = (obj, key, val, checkTheme): ?Object => {
-      let style = obj[key]
-      if (!style) {
-        style = obj.getRule ? obj.getRule(key) : obj[key]
-      }
-      if (!style) {
-        return null
-      }
-      // dynamic
-      if (typeof style === 'function') {
-        return css(style(val))
-      } else {
-        finalStyles.push(style)
-      }
-      if (checkTheme && theme) {
-        const themeKey = `${key}--theme`
-        const themeStyle = theme.getRule(themeKey)
-        if (themeStyle) {
-          finalStyles.push(themeStyle)
-        }
-      }
-    }
+    const theme = this.theme
 
     if (name) {
-      addStyle(styles, `${name}--${glossUID}`, null, true)
+      addStyle(finalStyles, theme, styles, `${name}--${glossUID}`, null, true)
     }
 
     let style
-
     if (propNames) {
       for (const prop of propNames) {
         const val = props && props[prop]
@@ -197,7 +192,14 @@ export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
         if (baseStyles) {
           const isParentStyle = prop[1] === $
           if (isParentStyle) {
-            const inlineStyle = addStyle(styles, prop.slice(2), val, false)
+            const inlineStyle = addStyle(
+              finalStyles,
+              theme,
+              styles,
+              prop.slice(2),
+              val,
+              false,
+            )
             if (inlineStyle) {
               style = { ...style, ...inlineStyle }
             }
@@ -207,6 +209,8 @@ export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
         // $style={}
         if (styles) {
           const inlineStyle = addStyle(
+            finalStyles,
+            theme,
             styles,
             `${prop.slice(1)}--${glossUID}`,
             val,
@@ -251,15 +255,17 @@ export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
     }
 
     if (isTag) {
-      if (!finalProps.className) {
-        finalProps.className = type_
-      } else {
-        finalProps.className += ` ${type_}`
+      if (name !== 'div') {
+        if (!finalProps.className) {
+          finalProps.className = name
+        } else {
+          finalProps.className += ` ${name}`
+        }
+        if (!VALID_TAGS[name]) {
+          type = 'div'
+        }
       }
-      if (!VALID_TAGS[type]) {
-        type = 'div'
-      }
-      type = TAG_NAME_MAP[type] || type
+      type = TAG_NAME_MAP[name] || type
     }
 
     return ogCreateElement(type, finalProps, ...children)

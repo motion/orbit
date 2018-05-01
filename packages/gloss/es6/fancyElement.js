@@ -101,6 +101,29 @@ function fancyElementFactory(Gloss, styles) {
     return newStyle;
   }
 
+  const addStyle = (finalStyles, theme, obj, key, val, checkTheme) => {
+    let style = obj[key];
+    if (!style) {
+      style = obj.getRule ? obj.getRule(key) : obj[key];
+    }
+    if (!style) {
+      return null;
+    }
+    // dynamic
+    if (typeof style === 'function') {
+      return css(style(val));
+    } else {
+      finalStyles.push(style);
+    }
+    if (checkTheme && theme) {
+      const themeKey = `${key}--theme`;
+      const themeStyle = theme.getRule(themeKey);
+      if (themeStyle) {
+        finalStyles.push(themeStyle);
+      }
+    }
+  };
+
   function fancyElement(type_, props, ...children) {
     let type = type_;
     if (!type) {
@@ -119,50 +142,23 @@ function fancyElementFactory(Gloss, styles) {
     if (!this) {
       return ogCreateElement(type, props, ...children);
     }
-
-    let { glossUID } = this.constructor;
+    let glossUID = this.constructor.glossUID;
     if (props && props.glossUID) {
       glossUID = props.glossUID;
       delete props.glossUID;
     }
-
     const propNames = props ? Object.keys(props) : null;
     const isTag = typeof type === 'string';
     const name = !isTag ? `${type.name}` : type;
     const finalProps = {};
     const finalStyles = [];
-
-    const { theme } = this;
-
-    const addStyle = (obj, key, val, checkTheme) => {
-      let style = obj[key];
-      if (!style) {
-        style = obj.getRule ? obj.getRule(key) : obj[key];
-      }
-      if (!style) {
-        return null;
-      }
-      // dynamic
-      if (typeof style === 'function') {
-        return css(style(val));
-      } else {
-        finalStyles.push(style);
-      }
-      if (checkTheme && theme) {
-        const themeKey = `${key}--theme`;
-        const themeStyle = theme.getRule(themeKey);
-        if (themeStyle) {
-          finalStyles.push(themeStyle);
-        }
-      }
-    };
+    const theme = this.theme;
 
     if (name) {
-      addStyle(styles, `${name}--${glossUID}`, null, true);
+      addStyle(finalStyles, theme, styles, `${name}--${glossUID}`, null, true);
     }
 
     let style;
-
     if (propNames) {
       for (const prop of propNames) {
         const val = props && props[prop];
@@ -207,7 +203,7 @@ function fancyElementFactory(Gloss, styles) {
         if (baseStyles) {
           const isParentStyle = prop[1] === $;
           if (isParentStyle) {
-            const inlineStyle = addStyle(styles, prop.slice(2), val, false);
+            const inlineStyle = addStyle(finalStyles, theme, styles, prop.slice(2), val, false);
             if (inlineStyle) {
               style = _extends({}, style, inlineStyle);
             }
@@ -216,7 +212,7 @@ function fancyElementFactory(Gloss, styles) {
         }
         // $style={}
         if (styles) {
-          const inlineStyle = addStyle(styles, `${prop.slice(1)}--${glossUID}`, val, true);
+          const inlineStyle = addStyle(finalStyles, theme, styles, `${prop.slice(1)}--${glossUID}`, val, true);
           if (inlineStyle) {
             style = _extends({}, style, objToCamel(inlineStyle));
           }
@@ -249,15 +245,17 @@ function fancyElementFactory(Gloss, styles) {
     }
 
     if (isTag) {
-      if (!finalProps.className) {
-        finalProps.className = type_;
-      } else {
-        finalProps.className += ` ${type_}`;
+      if (name !== 'div') {
+        if (!finalProps.className) {
+          finalProps.className = name;
+        } else {
+          finalProps.className += ` ${name}`;
+        }
+        if (!VALID_TAGS[name]) {
+          type = 'div';
+        }
       }
-      if (!VALID_TAGS[type]) {
-        type = 'div';
-      }
-      type = TAG_NAME_MAP[type] || type;
+      type = TAG_NAME_MAP[name] || type;
     }
 
     return ogCreateElement(type, finalProps, ...children);

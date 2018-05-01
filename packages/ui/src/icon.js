@@ -44,7 +44,7 @@ const findMatch = name => {
 // }
 
 @view.ui
-export default class Icon extends React.PureComponent {
+export default class Icon extends React.Component {
   static defaultProps = {
     size: 16,
     type: 'mini',
@@ -61,7 +61,6 @@ export default class Icon extends React.PureComponent {
     tooltipProps,
     name,
     type,
-    className,
     children,
     margin,
     opacity,
@@ -141,7 +140,6 @@ export default class Icon extends React.PureComponent {
   ) => {
     const width = (propWidth || size) + widthPadding(padding)
     const height = (propHeight || size) + heightPadding(padding)
-    log(`width, height ${width},${height}`)
     return {
       icon: {
         margin,

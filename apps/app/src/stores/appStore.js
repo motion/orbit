@@ -320,11 +320,9 @@ export default class AppStore {
   lastSelectAt = 0
 
   _setSelected = index => {
-    if (App.isShowingOrbit) {
-      this.lastSelectAt = Date.now()
-      this.hoveredIndex = index
-      this.selectedIndex = index
-    }
+    this.lastSelectAt = Date.now()
+    this.hoveredIndex = index
+    this.selectedIndex = index
   }
 
   setSelected = (i, target) => {
@@ -356,6 +354,7 @@ export default class AppStore {
 
   toggleSelected = index => {
     const isSame = this.selectedIndex === index
+    console.log('toggle', index, this.selectedIndex)
     if (isSame && App.peekState.target) {
       if (Date.now() - this.lastSelectAt < 450) {
         // ignore double clicks
@@ -377,9 +376,9 @@ export default class AppStore {
     }
     const target = this.getTargetPosition(index)
     App.setPeekState({
-      id: index,
+      id: Math.random(),
       target,
-      item: this.setSelectedItem(index),
+      item: this.getPeekItem(index),
       ...peekPosition(target),
     })
   }
@@ -404,15 +403,15 @@ export default class AppStore {
     word => this.setSelected(word.index),
   ]
 
-  setSelectedItem = index => {
+  getPeekItem = index => {
     if (index < 0) {
       console.log('none selected')
-      return
+      return null
     }
     const item = this.searchState.results[index]
     if (!item) {
       console.log('none found')
-      return
+      return null
     }
     return {
       id: item.id || '',

@@ -127,10 +127,7 @@ export default class AppReactions {
   ]
 
   @react({ log: 'state' })
-  clearPeekOnReposition = [
-    () => App.orbitState.position,
-    App.clearPeek
-  ]
+  clearPeekOnReposition = [() => App.orbitState.position, App.clearPeek]
 
   // disabled during testing, reenable
   // @react
@@ -157,16 +154,12 @@ export default class AppReactions {
       App.peekState.target,
     ],
     async ([isShown, mouseOver], { sleep }) => {
-      if (!isShown || mouseOver) {
+      if (!isShown || mouseOver || App.orbitState.pinned) {
         throw react.cancel
       }
       // some leeway on mouse leave
       await sleep(150)
-      if (
-        App.orbitState.pinned ||
-        Desktop.isHoldingOption ||
-        App.isAnimatingOrbit
-      ) {
+      if (Desktop.isHoldingOption || App.isAnimatingOrbit) {
         throw react.cancel
       }
       console.log(`hiding orbit from mouseout`)

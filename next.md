@@ -11,17 +11,17 @@
 
 ## now
 
-* peeks point to the grid items properly
+* news area do some design for documents and emails
+* have the cards show _why_ they are there
+* peek mouseover works
 * tear away peeks + super simple app
 * get dark blue theme working for news area
   * work on themes
-* news area do some design for documents and emails
-* have the cards show _why_ they are there
-* global trends peek
+* topics you follow dropdown
 * profiles design iteration
 * search smoothness
-* prototype for watching topics
 * pinning item to top of news for a day
+* clear peek on scroll
 
 demo for Formidable on May 12th:
 

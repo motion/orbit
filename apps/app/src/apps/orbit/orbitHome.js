@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { view, react } from '@mcro/black'
-import { SubTitle, Circle } from '~/views'
+import { SubTitle, RoundButton } from '~/views'
 import * as UI from '@mcro/ui'
 import { App } from '@mcro/all'
 import OrbitCard from './orbitCard'
@@ -165,11 +165,9 @@ export default class OrbitExplore {
             $exploreButton
             {...exploreButton}
           />
-          <UI.Text
-            size={1.1}
-            css={{ width: 'calc(100% - 120px)', marginLeft: 8 }}
-          >
-            &nbsp;<strong>4</strong> interesting things on{' '}
+          <space $$flex />
+          <UI.Text size={1.1} css={{ margin: [0, 15] }}>
+            <strong>4</strong> new from{' '}
             <span
               css={{
                 paddingBottom: 2,
@@ -180,6 +178,22 @@ export default class OrbitExplore {
             </span>.
           </UI.Text>
         </section>
+
+        <filters>
+          {['all', 'general', 'status', 'showoff', 'releases'].map(
+            (name, index) => (
+              <RoundButton
+                fontSize={18}
+                sizePadding={1.2}
+                sizeHeight={1.2}
+                margin={[0, 5]}
+                key={index}
+              >
+                {name}
+              </RoundButton>
+            ),
+          )}
+        </filters>
 
         <summary>
           <Masonry>
@@ -251,6 +265,7 @@ export default class OrbitExplore {
       height: 20,
     },
     explore: {
+      width: '100%',
       flexFlow: 'row',
       padding: [8, 8, 10],
       alignItems: 'center',
@@ -263,6 +278,12 @@ export default class OrbitExplore {
     },
     exploreButton: {
       margin: [0, 8, 0, 3],
+    },
+    filters: {
+      flexFlow: 'row',
+      padding: [5, 20, 20],
+      alignItems: 'center',
+      justifyContent: 'center',
     },
   }
 

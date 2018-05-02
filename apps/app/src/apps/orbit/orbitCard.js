@@ -126,7 +126,7 @@ export default class OrbitCard {
         <card
           $cardHovered={this.hovered}
           css={{
-            padding: listItem ? [15, 15] : tiny ? [6, 8] : [9, 10],
+            padding: listItem ? 15 : tiny ? [6, 8] : [10, 11],
             borderRadius,
           }}
           onMouseEnter={this.setHovered}
@@ -135,6 +135,7 @@ export default class OrbitCard {
           <title>
             <UI.Text
               size={1.25}
+              lineHeight="1.4rem"
               ellipse={isExpanded ? 2 : 1}
               fontWeight={400}
               css={{
@@ -170,6 +171,7 @@ export default class OrbitCard {
             {typeof location !== 'string' && location}
             <UI.Text
               if={showPreview && typeof preview === 'string'}
+              color="#333"
               ellipse={1}
               css={{ maxWidth: 'calc(100% - 115px)', opacity: 0.8 }}
             >
@@ -187,7 +189,11 @@ export default class OrbitCard {
           <content if={location || content}>
             <full if={content && !tiny && isExpanded}>
               {typeof content !== 'string' && content}
-              <UI.Text if={typeof content === 'string'} ellipse={5}>
+              <UI.Text
+                if={typeof content === 'string'}
+                color="#333"
+                ellipse={5}
+              >
                 {content}
               </UI.Text>
             </full>
@@ -260,7 +266,7 @@ export default class OrbitCard {
       flex: 1,
     },
     orbitIcon: {
-      margin: [0, 5, 0, 0],
+      margin: [0, 6, 0, 0],
     },
     full: {
       padding: [2, 0],
@@ -275,7 +281,7 @@ export default class OrbitCard {
       // flex: 1,
     },
     preview: {
-      margin: [0, 0, 2, 0],
+      margin: [2, 0, 3, 0],
       height: 20,
       flexFlow: 'row',
       alignItems: 'center',

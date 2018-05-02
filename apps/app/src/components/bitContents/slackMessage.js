@@ -89,7 +89,7 @@ export default class BitSlackMessage {
     header: {
       flexFlow: 'row',
       alignItems: 'center',
-      margin: [3, 0, 5],
+      margin: [3, 0, 5, -4],
       userSelect: 'none',
       cursor: 'default',
     },

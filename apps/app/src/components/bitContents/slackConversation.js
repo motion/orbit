@@ -28,6 +28,7 @@ export default class BitSlackConversation {
       icon: 'slack',
       location: (
         <RoundButton
+          style={{ marginLeft: -3 }}
           onClick={e => {
             e.stopPropagation()
             appStore.open(bit, 'channel')

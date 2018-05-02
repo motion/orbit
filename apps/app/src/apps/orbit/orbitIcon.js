@@ -20,7 +20,25 @@ const icons = {
   githubWhite: iconGithubWhite,
 }
 
-export default ({ icon, size = 25, ...props }) => {
+const adjust = name => {
+  if (name === 'slack') {
+    return {
+      transform: {
+        y: 1,
+        scale: 0.95,
+      },
+    }
+  }
+  if (name === 'gmail') {
+    return {
+      transform: {
+        scale: 0.95,
+      },
+    }
+  }
+}
+
+export default ({ icon, size = 25, style, ...props }) => {
   const sizeProps = {
     width: size,
     height: size,
@@ -30,7 +48,9 @@ export default ({ icon, size = 25, ...props }) => {
       css={{
         display: 'inline-block',
         textAlign: 'center',
+        ...adjust(icon),
         ...sizeProps,
+        ...style,
       }}
       {...props}
     >

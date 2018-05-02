@@ -77,13 +77,14 @@ export default class PeekFrame {
     // small adjust to overlap
     peekAdjustX += onRight ? -2 : 2
     const x = state.position[0] + peekAdjustX
-    const y =
-      state.position[1] + ((willShow && !willStayShown) || willHide ? -8 : 0)
+    const animationAdjust = (willShow && !willStayShown) || willHide ? -8 : 0
+    const y = state.position[1] + animationAdjust
+    const ARROW_CARD_TOP_OFFSET = 60
     const arrowY = Math.min(
       isHidden
         ? 0
         : state.target.top +
-          state.target.height / 2 -
+          ARROW_CARD_TOP_OFFSET -
           state.position[1] -
           arrowSize / 2,
       state.size[1] - borderRadius * 2 - arrowSize,

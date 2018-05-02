@@ -5,6 +5,14 @@ import * as UI from '@mcro/ui'
 import { App } from '@mcro/all'
 import OrbitCard from './orbitCard'
 
+const roundBtnProps = {
+  fontSize: 15,
+  sizePadding: 1.5,
+  sizeHeight: 1,
+  sizeRadius: 0.9,
+  margin: [0, 1],
+}
+
 const rowHeight = 2
 const gridGap = 6
 const gridColumnGap = 8
@@ -131,6 +139,7 @@ export default class OrbitExplore {
     const day = now.toLocaleDateString(locale, { weekday: 'short' })
     const month = now.toLocaleDateString(locale, { month: 'short' })
     const dayNum = now.getMonth()
+    const buttonColor = theme.base.color.darken(0.15)
     const exploreButton = {
       size: 1.2,
       circular: true,
@@ -138,7 +147,7 @@ export default class OrbitExplore {
       borderColor: theme.base.borderColor,
       background: theme.base.background,
       iconProps: {
-        color: theme.base.color.darken(0.15),
+        color: buttonColor,
         size: 14,
       },
     }
@@ -181,23 +190,20 @@ export default class OrbitExplore {
           </title>
           <div $$flex />
           <filters>
-            {['all', 'general', 'status', 'showoff', 'releases'].map(
-              (name, index) => (
-                <RoundButton
-                  fontSize={15}
-                  sizePadding={1.5}
-                  sizeHeight={1}
-                  sizeRadius={0.9}
-                  margin={[0, 1]}
-                  key={index}
-                  css={{
-                    opacity: index === 0 ? 1 : 0.7,
-                  }}
-                >
-                  {name}
-                </RoundButton>
-              ),
-            )}
+            {['all', 'general', 'status', 'showoff'].map((name, index) => (
+              <RoundButton {...roundBtnProps} key={index} active={index === 0}>
+                {name}
+              </RoundButton>
+            ))}
+            <RoundButton
+              {...roundBtnProps}
+              sizePadding={1.3}
+              icon="arrowsmalldown"
+              iconProps={{
+                color: theme.active.background.darken(0.15),
+                style: { marginTop: 3 },
+              }}
+            />
           </filters>
         </section>
 

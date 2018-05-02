@@ -1,16 +1,66 @@
+# outline
+
+* what problems
+
+  * notification noise / incoming overload
+  * stress / deep work / fomo
+  * duplicate work
+  * reducing unecessary reach-out interruptions
+  * lack of a coherent home for your company (you have a shitty intranet)
+
+* how we do it
+
+  * UNIFIED SIDEBAR
+    * unified home
+    * notification noise
+    * deep work
+    * how:
+      * unified cloud sidebar (upgrade your cmd+space)
+      * DAILY SUMMARY: novel nlp news on what you missed (PULL not PUSH)
+      * TOPICS: see and search anything by meaning to get clearer view of company
+      * PROFILES: aggregated profiles: where they hang, talk about, recent activity
+      * SEARCH: meaning based search for all your stuff
+  * CONTEXTUAL SIDEBAR / HIGHLIGHT WORDS
+    * unknown unknowns
+    * duplicate work
+    * prevents interruptions
+    * how:
+      * OCR scans with almost no cpu usage as you work
+      * hold option to see sidebar on every app
+      * NLP then shows relevant mail, docs, convos, projects in sidebar
+      * works with every app, even with slack in realtime while talking
+      * indicates if there is an important term, person, or project
+
+* what we want to do going forward
+
+  * give your company a really nice home
+  * better project & profile views
+  * better explore/curation
+    * pin results to top of searches
+    * explorable sets of things
+  * custom applications with insant deploy
+    * hook into all the cool features (contextual, nlp)
+    * provide a really nice base for building (data, style, ui kit)
+
+# in english
+
 ## INTODUCTION
 
-#1 im excited because this is something we've been working on for quite a while now and i think formidable is the exact type of company we've been talking with and aiming at but have been waiting to prove out a few things, and we're finally not just there but close to ready to deploy it at a company your size.
+#1 im excited because this is something we've been working on for quite a while now and i think formidable is the exact type of company we've been talking with in our research but have been waiting to get to your guys before we really proved out a few things, and we're finally pretty close!
 
-so what is orbit? it's essentially a really great way to keep up to date with things going on in your company, especially things you missed that you may have wanted to see.
+[very very briefly introduce us/company]
 
-the goal is really to reduce a huge amount of noise and FOMO, while giving everyone the feeling that this is their home plate for whats happening in the company.
+so for the past year we've been really working hard at solving the base problem that people are stressed, overloaded by inbound, and generally unclear on what other people are doing in their company.
 
-so thats a big bag of nice words, let me break down how it workss.
+specifically, as we talked more and more with people we got consistent feedback: we love slack, but it causes a ton of noise and stress. the airtable CEO told me: "solve the mess of slack, and i'll throw money at you". so that's really been our first foot forward.
+
+so how does it work exactly?
 
 ## PROBLEMS AND SOLUTIONS
 
-the big problem we started with was how do we allow people to focus and just get work done, given the massive noise going on in slack, and epecially in not missing things they would normally be interested in that would require massive time sink in checking lots of chat rooms.
+so how do you solve this big problem of taming all the noise going on in your company. when we first set out to solve this we had the same idea we think many people have
+
+, and epecially in not missing things they would normally be interested in that would require massive time sink in checking lots of chat rooms.
 
 [solution to slack noise explanation]
 

@@ -2,7 +2,6 @@ import { view } from '@mcro/black'
 import * as React from 'react'
 import BitSlackMessage from './slackMessage'
 import * as UI from '@mcro/ui'
-import { App, Desktop } from '@mcro/all'
 import { RoundButton } from '~/views'
 import pluralize from 'pluralize'
 
@@ -54,9 +53,6 @@ export default class BitSlackConversation {
       bottom: (
         <UI.Text size={0.85} if={bit.data.messages.length > 3}>
           + {bit.data.messages.length - 3}&nbsp;more&nbsp;
-          <span if={false}>
-            {pluralize('reply', bit.data.messages.length - 3)}
-          </span>
         </UI.Text>
       ),
       bottomAfter: (

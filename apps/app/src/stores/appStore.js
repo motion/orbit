@@ -384,7 +384,6 @@ export default class AppStore {
       if (!res) {
         this.clearSelected()
       } else {
-        console.log('hover pin', res)
         this.pinSelected(res.id, res.bit)
       }
     },

@@ -29,7 +29,6 @@ class OrbitCardStore {
       }
       const isSelected = index === this.props.index
       if (isSelected !== this._isSelected) {
-        console.log('set selected', index, this.props.pane, isSelected)
         this._isSelected = isSelected
       }
     },

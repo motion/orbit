@@ -15,7 +15,6 @@ class ConversationPeek {
     async () => {
       const people = await Person.find({ take: 3, skip: 7 })
       const bits = await Bit.find({ take: 3, relations: ['people'] })
-      console.log('carousel results', people, bits)
       return [...people, ...bits]
     },
   ]

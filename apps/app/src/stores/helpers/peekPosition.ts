@@ -46,7 +46,6 @@ export default function peekPosition(target) {
   }
   // too tall
   if (pH + y + EDGE_PAD > screenH) {
-    console.log('y, pH, screenH', y, pH, screenH)
     y = screenH - pH - EDGE_PAD
   }
   // adjust for when the peek is facing the arrow side of orbit

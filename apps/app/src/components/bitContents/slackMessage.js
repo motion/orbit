@@ -5,13 +5,15 @@ import { RoundButton } from '~/views'
 import { App } from '@mcro/all'
 import slackDown from '@mcro/slackdown'
 
-const linkRegex = /\<([a-z]+:\/\/[^>]+)\>/
-const getLink = x => {
-  const match = x.text && x.text.match(linkRegex)
-  if (match && match.length) {
-    return match[1]
+const getSlackDate = message => {
+  if (!message.ts) {
+    return null
   }
-  return null
+  const split = message.ts.split('.')
+  if (!split.length) {
+    return null
+  }
+  return new Date(split[0] * 1000)
 }
 
 @view
@@ -21,7 +23,12 @@ export default class BitSlackMessage {
       log(`no messagetext/bit ${JSON.stringify(message)}`)
       return null
     }
-    const htmlText = slackDown(message.text)
+    let htmlText = message.text
+    try {
+      htmlText = slackDown(message.text)
+    } catch (err) {
+      console.log('err parsing', err)
+    }
     const person = bit.people.find(
       person => person.integrationId === message.user,
     )
@@ -64,7 +71,7 @@ export default class BitSlackMessage {
           </RoundButton>
           <space />
           <date if={!previousMessage || !previousWithinOneMinute}>
-            <UI.Date>{new Date(message.ts.split('.')[0] * 1000)}</UI.Date>
+            <UI.Date>{getSlackDate(message)}</UI.Date>
           </date>
         </header>
         <content

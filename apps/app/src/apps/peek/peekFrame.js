@@ -79,6 +79,15 @@ export default class PeekFrame {
     const x = state.position[0] + peekAdjustX
     const y =
       state.position[1] + ((willShow && !willStayShown) || willHide ? -8 : 0)
+    const arrowY = Math.min(
+      isHidden
+        ? 0
+        : state.target.top +
+          state.target.height / 2 -
+          state.position[1] -
+          arrowSize / 2,
+      state.size[1] - borderRadius * 2 - arrowSize,
+    )
     return (
       <peekFrame
         css={{
@@ -107,12 +116,7 @@ export default class PeekFrame {
             left: !onRight ? 'auto' : -20,
             right: !onRight ? -arrowSize : 'auto',
             transform: {
-              y: isHidden
-                ? 0
-                : state.target.top +
-                  state.target.height / 2 -
-                  state.position[1] -
-                  arrowSize / 2,
+              y: arrowY,
               x: onRight ? 0.5 : -0.5,
             },
           }}
